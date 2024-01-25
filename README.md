@@ -1,7 +1,7 @@
 # A Framework for Fuzz Target Generation and Evaluation
 
 This framework generates fuzz targets for real-world `C`/`C++` projects with
-various Large Language Models (LLM) and benchmarks them via the
+Large Language Models (LLM) and benchmarks them via the
 [`OSS-Fuzz` platform](https://github.com/google/oss-fuzz).
 
 More details available in [AI-Powered Fuzzing: Breaking the Bug Hunting Barrier](https://security.googleblog.com/2023/08/ai-powered-fuzzing-breaking-bug-hunting.html):
@@ -46,6 +46,6 @@ by this framework:
 
 ## Collaborations
 Interested in research or open-source community collaborations?
-Please feel free to create an issue or email us: oss-fuzz-team@google.com.
+Please feel free to create an issue or email us: oss-fuzz@google.com.
 
 <img src="images/Collaboration.png" width="200" height="200">
