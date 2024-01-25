@@ -37,7 +37,7 @@ def parse_function_name(function_signature: str) -> str:
   # Invalid matches:
   # 1. __attribute__((.*))
   # 2. __attribute__((alloc_size(1)))
-  names = re.findall(r'.*?\s*([\w:<>+*~])\s*\([^\(]*\)', function_signature)
+  names = re.findall(r'.*?\s*([\w:<>+*~]+)\s*\([^\(]*\)', function_signature)
   if names:
     # Normalize names.
     return re.sub(r'[^\w:]', '-', names[-1])
