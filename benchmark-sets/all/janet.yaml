@@ -1,0 +1,12 @@
+functions:
+- int janet_dostring(struct JanetTable * , char * , char * , union.Janet * )
+- int janet_dobytes(struct JanetTable * , char * , int , char * , union.Janet * )
+- size_t cfun_ev_thread(int , union.Janet * )
+- void janet_go_thread_subr(struct JanetEVGenericMessage * args, struct JanetEVGenericMessage
+  * )
+- void janetc_fn(struct JanetSlot * opts, struct JanetFopts * , int , union.Janet
+  * )
+project: janet
+target_name: fuzz_dostring
+target_path: /src/janet/test/fuzzers/fuzz_dostring.c
+

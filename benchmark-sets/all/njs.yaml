@@ -1,0 +1,15 @@
+functions:
+- int njs_parser_import(struct njs_parser_s * parser, struct njs_lexer_token_t * token,
+  struct njs_queue_link_s * current)
+- struct njs_mod_s * njs_parser_module(struct njs_parser_s * parser, struct njs_str_t
+  * name)
+- struct njs_mod_s * njs_default_module_loader(struct njs_vm_s * vm, char * external,
+  struct njs_str_t * name)
+- struct njs_mod_s * njs_vm_compile_module(struct njs_vm_s * vm, struct njs_str_t
+  * name, char ** start, char * end)
+- int njs_parser_call_expression(struct njs_parser_s * parser, struct njs_lexer_token_t
+  * token, struct njs_queue_link_s * current)
+project: njs
+target_name: njs_process_script_fuzzer
+target_path: /src/njs/external/njs_shell.c
+

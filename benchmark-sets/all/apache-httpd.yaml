@@ -1,0 +1,10 @@
+functions:
+- void register_hooks(struct apr_pool_t * p)
+- void event_hooks(struct apr_pool_t * p)
+- int ap_process_http_connection(struct conn_rec * c)
+- int ap_process_http_sync_connection(struct conn_rec * c)
+- int ap_process_http_async_connection(struct conn_rec * c)
+project: apache-httpd
+target_name: fuzz_utils
+target_path: /src/fuzz_utils.c
+

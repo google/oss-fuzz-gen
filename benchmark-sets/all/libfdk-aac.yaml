@@ -1,0 +1,20 @@
+functions:
+- int aacEncEncode(struct AACENCODER * hAacEncoder, struct AACENC_BufDesc * inBufDesc,
+  struct AACENC_BufDesc * outBufDesc, struct AACENC_InArgs * inargs, struct QMF_SCALE_FACTOR
+  * outargs)
+- int aacEncInit(struct AACENCODER * hAacEncoder, int InitFlags, struct USER_PARAM
+  * config)
+- int FDKaacEnc_EncodeFrame(struct AAC_ENC * hAacEnc, struct TRANSPORTENC * hTpEnc,
+  short * inputBuffer, int inputBufferBufSize, int * nOutBytes, struct AACENC_EXT_PAYLOAD
+  * extPayload)
+- int sbrEncoder_Init(struct SBR_ENCODER * hSbrEncoder, struct SBR_ELEMENT_INFO *
+  elInfo, int noElements, short * inputBuffer, int inputBufferBufSize, int * coreBandwidth,
+  int * inputBufferOffset, int * numChannels, int syntaxFlags, int * coreSampleRate,
+  int * downSampleFactor, int * frameLength, int aot, int * delay, int transformFactor,
+  int headerPeriod, int statesInitFlag)
+- int sbrEncoder_EncodeFrame(struct SBR_ENCODER * hSbrEncoder, short * samples, int
+  samplesBufSize, int * sbrDataBits, bool  sbrData)
+project: libfdk-aac
+target_name: aacDecoder_DecodeFrame
+target_path: /src/aacDecoder_DecodeFrame.cpp
+

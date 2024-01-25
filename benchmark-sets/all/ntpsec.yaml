@@ -1,0 +1,10 @@
+functions:
+- void nts_init2()
+- bool nts_probe(struct peer * peer)
+- bool nts_server_init2()
+- char * nts_ke_listener(char * arg)
+- bool nts_ke_request(struct ssl_st * ssl)
+project: ntpsec
+target_name: FuzzClient
+target_path: /src/ntpsec/fuzz/FuzzClient.c
+

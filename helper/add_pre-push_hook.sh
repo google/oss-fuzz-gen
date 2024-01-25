@@ -1,0 +1,47 @@
+#!/bin/bash
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Adds a pre-push hook to automatically format and lint code.
+
+# Define the hook script content.
+HOOK_SCRIPT='#!/bin/sh
+# A pre-push hook to format and lint code.
+
+# Run the format and lint script.
+./helper/presubmit.bash
+
+# Capture the exit status of the format script.
+STATUS=$?
+
+# Check if the script passed (exit status 0).
+if [ $STATUS -eq 0 ]; then
+  echo "Code formatted and linted successfully."
+  exit 0
+else
+  echo "Formatting or linting errors, please fix them before pushing."
+  exit 1
+fi'
+
+# Path to the pre-push hook.
+HOOK_PATH="$(git rev-parse --show-toplevel)/.git/hooks/pre-push"
+
+# Write the hook script to the pre-push file.
+echo "$HOOK_SCRIPT" > "$HOOK_PATH"
+
+# Make the pre-push hook executable.
+chmod +x "$HOOK_PATH"
+
+# Confirm the creation of the hook.
+echo "Pre-push hook created successfully."

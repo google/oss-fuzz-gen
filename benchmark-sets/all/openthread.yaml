@@ -1,0 +1,13 @@
+functions:
+- void ot::MeshCoP::Commissioner::HandleTimer(ot::MeshCoP::Commissioner * this)
+- void ot::MeshCoP::Joiner::HandleDiscoverResult(struct otActiveScanResult * aResult,
+  char * aContext)
+- void ot::MeshCoP::Joiner::HandleDiscoverResult(ot::MeshCoP::Joiner * this, struct
+  otActiveScanResult * aResult)
+- void ot::MeshCoP::Joiner::TryNextJoinerRouter(ot::MeshCoP::Joiner * this, int aPrevError)
+- int ot::MeshCoP::Joiner::Connect(ot::MeshCoP::Joiner * this, struct ot::MeshCoP::Joiner::JoinerRouter
+  * aRouter)
+project: openthread
+target_name: ot-ip6-send-fuzzer
+target_path: /src/openthread/tests/fuzz/ip6_send.cpp
+

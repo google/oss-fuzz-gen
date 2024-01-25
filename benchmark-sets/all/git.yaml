@@ -1,0 +1,10 @@
+functions:
+- int cmd_merge(int , char ** , char * )
+- int cmd_rebase(int , char ** , char * )
+- int cmd_am(int , char ** , char * )
+- int run_specific_rebase(struct rebase_options * )
+- int run_sequencer_rebase(struct rebase_options * )
+project: git
+target_name: oss-fuzz/fuzz-date.c
+target_path: /src/git/oss-fuzz/fuzz-date.c
+

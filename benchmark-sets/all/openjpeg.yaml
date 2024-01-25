@@ -1,0 +1,15 @@
+functions:
+- int opj_jp2_get_tile(struct opj_jp2 * , struct opj_stream_private * , struct opj_image
+  * , struct opj_event_mgr * , int )
+- int opj_j2k_get_tile(struct opj_j2k * , struct opj_stream_private * , struct opj_image
+  * , struct opj_event_mgr * , int )
+- int opj_j2k_setup_decoding_tile(struct opj_procedure_list * , struct opj_event_mgr
+  * )
+- int opj_j2k_decode_one_tile(struct opj_j2k * , struct opj_stream_private * , struct
+  opj_event_mgr * )
+- int opj_jp2_decode_tile(struct opj_jp2 * , int , char * , int , struct opj_stream_private
+  * , struct opj_event_mgr * )
+project: openjpeg
+target_name: fuzzingengine
+target_path: /src/openjpeg/tests/fuzzers/fuzzingengine.c
+

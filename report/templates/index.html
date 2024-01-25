@@ -1,0 +1,40 @@
+<!--
+ Copyright 2024 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<table>
+    <tr>
+        <th>Benchmark</th>
+        <th>Status</th>
+        <th>Build rate</th>
+        <th>Crash rate</th>
+        <th>Coverage</th>
+        <th>Line coverage diff</th>
+    </tr>
+{% for benchmark in benchmarks %}
+    <tr>
+        <td><a href="benchmark/{{ benchmark.id }}">{{ benchmark.id }}</a></li></td>
+        <td>{{ benchmark.status }}</td>
+        <td>{{ benchmark.result.build_success_rate|percent}}</td>
+        <td>{{ benchmark.result.crash_rate|percent }} </td>
+        <td>{{ benchmark.result.max_coverage |percent }}</td>
+        <td><a href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{ benchmark.result.max_line_coverage_diff|percent }}</a></td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

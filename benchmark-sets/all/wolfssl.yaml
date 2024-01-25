@@ -1,0 +1,12 @@
+functions:
+- int wolfSSL_X509_print_fp(struct _IO_FILE * , struct WOLFSSL_X509 * )
+- int wolfSSL_X509_LOOKUP_add_dir(struct WOLFSSL_X509_LOOKUP * , char * , size_t )
+- int wolfSSL_X509_LOOKUP_ctrl(struct WOLFSSL_X509_LOOKUP * , int , char * , size_t
+  , char ** )
+- int wolfSSL_X509_load_cert_crl_file(struct WOLFSSL_X509_LOOKUP * , char * , int
+  )
+- int wolfSSL_X509_print(struct WOLFSSL_BIO * , struct WOLFSSL_X509 * )
+project: wolfssl
+target_name: srp
+target_path: /src/wolf-ssl-ssh-fuzzers/oss-fuzz/projects/wolf-ssl-ssh/fuzzers/wolfssl-fuzzers/srp.cpp
+

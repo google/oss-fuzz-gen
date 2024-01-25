@@ -1,0 +1,13 @@
+functions:
+- int cb_vivo_init(struct flb_output_instance * ins, struct flb_config * config, char
+  * data)
+- struct prom_http * vivo_http_server_create(struct vivo_exporter * ctx, char * listen,
+  int tcp_port, struct flb_config * config)
+- int flb_start_trace(struct flb_lib_ctx * ctx)
+- int flb_config_load_config_format(struct flb_config * config, struct flb_cf * cf)
+- int k8s_events_init(struct flb_input_instance * ins, struct flb_config * config,
+  char * data)
+project: fluent-bit
+target_name: flb-it-fuzz-msgpack_to_gelf_fuzzer_OSSFUZZ
+target_path: /src/fluent-bit/tests/internal/fuzzers/msgpack_to_gelf_fuzzer.c
+

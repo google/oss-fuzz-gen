@@ -1,0 +1,13 @@
+{
+  "exclude": [
+    "results/",
+    "results-*/",
+    "oss-fuzz/",
+    "oss-fuzz-data/",
+    "benchmark-sets/split_benchmarks/",
+    "venv/",
+    ".venv/",
+    "requirements.txt",
+    ".venv",
+  ]
+}

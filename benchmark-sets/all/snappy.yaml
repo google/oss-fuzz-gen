@@ -1,0 +1,15 @@
+functions:
+- bool snappy::Uncompress(snappy::Sink * compressed, snappy::Sink * uncompressed)
+- size_t snappy::UncompressAsMuchAsPossible(snappy::Sink * compressed, snappy::Sink
+  * uncompressed)
+- bool snappy::InternalUncompress<snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator>
+  >(snappy::Sink * r, snappy::SnappyScatteredWriter * writer)
+- bool snappy::InternalUncompressAllTags<snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator>
+  >(snappy::SnappyDecompressor * decompressor, snappy::SnappyScatteredWriter * writer,
+  int compressed_len, int uncompressed_len)
+- bool snappy::RawUncompressToIOVec(char * compressed, size_t compressed_length, struct
+  snappy::SnappySinkAllocator::Datablock * iov, size_t iov_cnt)
+project: snappy
+target_name: snappy_compress_fuzzer
+target_path: /src/snappy/snappy_compress_fuzzer.cc
+

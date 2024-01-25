@@ -1,0 +1,13 @@
+functions:
+- int parse_file(struct archive_read * a, struct archive_entry * entry, struct mtree
+  * mtree, struct mtree_entry * mentry, int * use_next)
+- void archive_entry_linkify(struct archive_entry_linkresolver * res, struct archive_entry
+  ** e, struct archive_entry ** f)
+- int * archive_entry_acl_text_w(struct archive_entry * entry, int flags)
+- int _archive_entry_acl_text_l(struct archive_entry * entry, int flags, char ** acl_text,
+  size_t * len, struct archive_string_conv * sc)
+- char * archive_entry_acl_text(struct archive_entry * entry, int flags)
+project: libarchive
+target_name: libarchive_fuzzer
+target_path: /src/libarchive_fuzzer.cc
+

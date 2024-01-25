@@ -1,0 +1,13 @@
+functions:
+- int lou_translatePrehyphenated(char * tableList, short * inbufx, int * inlen, short
+  * outbuf, int * outlen, short * typeform, char * spacing, int * outputPos, int *
+  inputPos, int * cursorPos, char * inputHyphens, char * outputHyphens, int mode)
+- int lou_hyphenate(char * tableList, short * inbuf, int inlen, char * hyphens, int
+  mode)
+- short lou_getTypeformForEmphClass(char * tableList, char * emphClass)
+- char ** lou_getEmphClasses(char * tableList)
+- struct TranslationTableHeader * _lou_getTranslationTable(char * tableList)
+project: liblouis
+target_name: table_fuzzer
+target_path: /src/liblouis/tests/fuzzing/table_fuzzer.cc
+

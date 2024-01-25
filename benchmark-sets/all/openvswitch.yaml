@@ -1,0 +1,12 @@
+functions:
+- void dpif_dummy_register(int level)
+- bool dpif_netdev_run(struct dpif * dpif)
+- int dpif_netdev_open(struct dpif_3273 * class, char * name, bool create, struct
+  dpif.3187 ** dpifp)
+- int create_dp_netdev(char * name, struct dpif_3273 * class, struct dp_netdev **
+  dpp)
+- int dpif_netdev_port_add(struct dpif * dpif, struct netdev * netdev, int * port_nop)
+project: openvswitch
+target_name: ofp_print_target
+target_path: /src/openvswitch/tests/oss-fuzz/ofp_print_target.c
+

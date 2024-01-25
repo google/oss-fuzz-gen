@@ -1,0 +1,10 @@
+functions:
+- int gzsetparams(struct gzFile_s * file, int level, int strategy)
+- int gzputc(struct gzFile_s * file, int c)
+- int gzputs(struct gzFile_s * file, char * s)
+- size_t gzfwrite(char * buf, size_t size, size_t nitems, struct gzFile_s * file)
+- int gzprintf(struct gzFile_s * file, char * format)
+project: zlib
+target_name: zlib_uncompress_fuzzer
+target_path: /src/zlib_uncompress_fuzzer.cc
+

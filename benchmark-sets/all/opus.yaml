@@ -1,0 +1,15 @@
+functions:
+- int opus_projection_encode_float(struct OpusProjectionEncoder * st, float * pcm,
+  int frame_size, char * data, int max_data_bytes)
+- int opus_multistream_encode_float(struct OpusMSEncoder * st, float * pcm, int frame_size,
+  char * data, int max_data_bytes)
+- int opus_encode_float(struct OpusEncoder * st, float * pcm, int analysis_frame_size,
+  char * data, int out_data_bytes)
+- int opus_decode(struct OpusDecoder * st, char * data, int len, short * pcm, int
+  frame_size, int decode_fec)
+- int opus_decode_float(struct OpusDecoder * st, char * data, int len, float * pcm,
+  int frame_size, int decode_fec)
+project: opus
+target_name: opus_multistream_encode_fuzzer_floating
+target_path: /src/opus/tests/opus_multistream_encode_fuzzer.cc
+

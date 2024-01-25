@@ -1,0 +1,11 @@
+functions:
+- void burl_append(struct buffer * b, char * str, size_t len, int flags)
+- void burl_append_encode_psnde(struct buffer * b, char * str, size_t len)
+- void burl_append_encode_nde(struct buffer * b, char * str, size_t len)
+- void burl_append_encode_all(struct buffer * b, char * str, size_t len)
+- char * buffer_append_base64_decode(struct buffer * out, char * in, size_t in_length,
+  int charset)
+project: lighttpd
+target_name: fuzz_burl
+target_path: /src/fuzz_burl.c
+

@@ -1,0 +1,76 @@
+#!/bin/bash
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+## Usage:
+##   bash report/upload_report.sh results_dir [gcs_dir]
+##
+##   results_dir is the local directory with the experiment results.
+##   gcs_dir is the name of the directory for the report in gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/.
+##     Defaults to '$(whoami)-%YY-%MM-%DD'.
+
+RESULTS_DIR=$1
+GCS_DIR=$2
+WEB_PORT=8080
+DATE=$(date '+%Y-%m-%d')
+
+# Sleep 5 minutes for the experiment to start.
+sleep 300
+
+if [[ $RESULTS_DIR = '' ]]
+then
+  echo 'This script takes the results directory as the first argument'
+  exit 1
+fi
+
+if [[ $GCS_DIR = '' ]]
+then
+  GCS_DIR="$(whoami)-${DATE:?}"
+  echo "GCS directory was not specified as the second argument. Defaulting to ${GCS_DIR:?}."
+fi
+
+# Spin up the web server generating the report (and bg the process)
+PYTHONPATH=. /venv/bin/python3 report/web.py ${RESULTS_DIR:?} ${WEB_PORT:?} &
+
+while true; do
+  mkdir results-report
+  cd results-report
+
+  # Recursively get all the experiment results
+  wget2 --inet4-only --no-host-directories --http2-request-window 10 --recursive localhost:${WEB_PORT:?}/
+
+  # Also fetch the sorted line cov diff report
+  wget2 --inet4-only localhost:${WEB_PORT:?}/sort -O sort.html
+
+  # Upload the report to GCS
+  gsutil -m -h "Content-Type:text/html" \
+         -h "Cache-Control:public, max-age=3600" \
+         cp -r . gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}
+
+  cd ..
+
+  # Upload the raw results into the same GCS directory
+  gsutil -m cp -r ${RESULTS_DIR:?} \
+         gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}
+
+  echo "See the published report at https://llm-exp.oss-fuzz.com/Result-reports/${GCS_DIR:?}/"
+  if [[ -f /experiment_status ]] && [[ "$(cat /experiment_status)" == "1" ]]; then
+    echo "Experiment finished."
+    break
+  else
+    echo "Experiment is running..."
+    sleep 600
+  fi
+done

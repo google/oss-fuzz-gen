@@ -1,0 +1,6 @@
+functions:
+- int parse_complex_format_second(char * input)
+project: oss-fuzz-example
+target_name: fuzz_complex_parser
+target_path: /src/oss-fuzz-example/fuzz_complex_parser.c
+

@@ -1,0 +1,18 @@
+functions:
+- struct UA_Server * UA_Server_newFromFile(size_t json_config, char * )
+- struct UA_Server * UA_Server_new()
+- void Service_CreateSession(struct UA_Server * server, struct UA_SecureChannel *
+  channel, struct UA_CreateSessionRequest * request, struct UA_CreateSessionResponse
+  * response)
+- int UA_ServerConfig_setDefaultWithSecureSecurityPolicies(struct UA_ServerConfig
+  * conf, short portNumber, struct UA_String * certificate, struct UA_String * privateKey,
+  struct UA_String * trustList, size_t trustListSize, struct UA_String * issuerList,
+  size_t issuerListSize, struct UA_String * revocationList, size_t revocationListSize)
+- int UA_ServerConfig_setDefaultWithSecurityPolicies(struct UA_ServerConfig * conf,
+  short portNumber, struct UA_String * certificate, struct UA_String * privateKey,
+  struct UA_String * trustList, size_t trustListSize, struct UA_String * issuerList,
+  size_t issuerListSize, struct UA_String * revocationList, size_t revocationListSize)
+project: open62541
+target_name: fuzz_mdns_message
+target_path: /src/open62541/deps/mdnsd/tests/fuzz/fuzz_mdns_message.cc
+

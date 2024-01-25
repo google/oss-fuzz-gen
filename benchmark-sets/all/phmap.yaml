@@ -1,0 +1,27 @@
+functions:
+- void phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<unsigned int, int>,
+  phmap::Hash<unsigned int>, phmap::EqualTo<unsigned int>, std::__1::allocator<std::__1::pair<unsigned
+  int const, int> > >::drop_deletes_without_resize(phmap::priv::raw_hash_set * this)
+- void phmap::priv::ConvertDeletedToEmptyAndFullToDeleted(char * ctrl, size_t capacity)
+- phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<std::string, std::string>,
+  phmap::Hash<std::string>, phmap::EqualTo<std::string>, std::allocator<std::pair<const
+  std::string, std::string>>>::iterator * phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<std::__1::basic_string<char,
+  std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char,
+  std::__1::char_traits<char>, std::__1::allocator<char> > >, phmap::Hash<std::__1::basic_string<char,
+  std::__1::char_traits<char>, std::__1::allocator<char> > >, phmap::EqualTo<std::__1::basic_string<char,
+  std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char,
+  std::__1::char_traits<char>, std::__1::allocator<char> > const, std::__1::basic_string<char,
+  std::__1::char_traits<char>, std::__1::allocator<char> > > > >::iterator::operator++(phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<std::string,
+  std::string>, phmap::Hash<std::string>, phmap::EqualTo<std::string>, std::allocator<std::pair<const
+  std::string, std::string>>>::iterator * this)
+- void phmap::priv::Deallocate<8ul, std::__1::allocator<std::__1::pair<std::__1::basic_string<char,
+  std::__1::char_traits<char>, std::__1::allocator<char> > const, std::__1::basic_string<char,
+  std::__1::char_traits<char>, std::__1::allocator<char> > > > >(phmap::priv::HashtablezInfoHandle
+  * alloc, char * p, size_t n)
+- size_t phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<unsigned int, int>,
+  phmap::Hash<unsigned int>, phmap::EqualTo<unsigned int>, std::__1::allocator<std::__1::pair<unsigned
+  int const, int> > >::drop_deletes_without_resize(anon * this, size_t pos) const
+project: phmap
+target_name: phashmap_fuzz
+target_path: /src/phashmap_fuzz.cc
+

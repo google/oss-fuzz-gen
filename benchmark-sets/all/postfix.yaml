@@ -1,0 +1,10 @@
+functions:
+- void mail_conf_read()
+- void mail_params_init()
+- struct DICT * dict_regexp_open(char * , int , int )
+- struct DICT * dict_tcp_open(char * , int , int )
+- struct DICT * dict_cidr_open(char * , int , int )
+project: postfix
+target_name: fuzz_tok822
+target_path: /src/fuzz_tok822.c
+

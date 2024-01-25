@@ -1,0 +1,10 @@
+functions:
+- void box_cfg()
+- void box_cfg_xc()
+- void box_storage_init()
+- void iproto_init(int threads_count)
+- void iproto_thread_init(struct iproto_thread * iproto_thread)
+project: tarantool
+target_name: csv_fuzzer
+target_path: /src/tarantool/test/fuzz/csv_fuzzer.c
+

@@ -1,0 +1,10 @@
+functions:
+- int save_seed(char * opt)
+- size_t LLVMFuzzerCustomMutator(char * data, size_t size, size_t maxsize, int seed)
+- size_t pack_dummy(char * ptr, size_t len)
+- void parse_mutate_flags(char * opt, int * mutate_flags)
+- void mutate(struct param * p, int seed, int flags)
+project: libfido2
+target_name: fuzz_netlink
+target_path: /src/libfido2/fuzz/libfuzzer.c
+

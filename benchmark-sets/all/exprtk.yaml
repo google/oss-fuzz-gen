@@ -1,0 +1,24 @@
+functions:
+- exprtk::details::expression_node * exprtk::parser<float>::expression_generator<float>::operator(exprtk::parser<float>::expression_generator
+  * , int * , bool  )
+- exprtk::details::expression_node * exprtk::parser<double>::expression_generator<double>::operator(exprtk::parser<double>::expression_generator
+  * , int * , bool  )
+- exprtk::details::expression_node * exprtk::details::expression_node<exprtk::details::vec_binop_vecvec_node<float,
+  exprtk::details::sub_op<float> >::value_type>* exprtk::details::node_allocator::allocate_rrr<exprtk::details::vec_binop_vecvec_node<float,
+  exprtk::details::sub_op<float> >, exprtk::details::operator_type const, exprtk::details::expression_node<float>*,
+  exprtk::details::expression_node<float>*>(std::allocator * , int * , exprtk::details::expression_node.3444
+  ** , exprtk::details::expression_node.3444 ** ) const
+- exprtk::details::expression_node * exprtk::details::expression_node<exprtk::details::vec_binop_vecvec_node<float,
+  exprtk::details::mul_op<float> >::value_type>* exprtk::details::node_allocator::allocate_rrr<exprtk::details::vec_binop_vecvec_node<float,
+  exprtk::details::mul_op<float> >, exprtk::details::operator_type const, exprtk::details::expression_node<float>*,
+  exprtk::details::expression_node<float>*>(std::allocator * , int * , exprtk::details::expression_node.3444
+  ** , exprtk::details::expression_node.3444 ** ) const
+- exprtk::details::expression_node * exprtk::details::expression_node<exprtk::details::vec_binop_vecvec_node<float,
+  exprtk::details::div_op<float> >::value_type>* exprtk::details::node_allocator::allocate_rrr<exprtk::details::vec_binop_vecvec_node<float,
+  exprtk::details::div_op<float> >, exprtk::details::operator_type const, exprtk::details::expression_node<float>*,
+  exprtk::details::expression_node<float>*>(std::allocator * , int * , exprtk::details::expression_node.3444
+  ** , exprtk::details::expression_node.3444 ** ) const
+project: exprtk
+target_name: exprtk_fuzzer
+target_path: /src/exprtk_fuzzer.cpp
+

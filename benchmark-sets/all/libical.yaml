@@ -1,0 +1,16 @@
+functions:
+- void icalcomponent_merge_component(struct icalcomponent_impl * comp, struct icalcomponent_impl
+  * comp_to_merge)
+- void icalcomponent_merge_vtimezone(struct icalcomponent_impl * comp, struct icalcomponent_impl
+  * vtimezone, struct _icalarray * tzids_to_rename)
+- void icalcomponent_handle_conflicting_vtimezones(struct icalcomponent_impl * comp,
+  struct icalcomponent_impl * vtimezone, struct icalproperty_impl * tzid_prop, char
+  * tzid, struct _icalarray * tzids_to_rename)
+- void icalcomponent_foreach_recurrence(struct icalcomponent_impl * comp, struct icaltimetype
+  * start, struct icaltimetype * end, func_type * callback, char * callback_data)
+- void icaltimezone_truncate_vtimezone(struct icalcomponent_impl * vtz, struct icaltimetype
+  * start, struct icaltimetype * end, int ms_compatible)
+project: libical
+target_name: libical_extended_fuzzer
+target_path: /src/libical_extended_fuzzer.cc
+

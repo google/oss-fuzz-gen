@@ -1,0 +1,14 @@
+functions:
+- size_t FC_CreateObject(size_t , struct CK_ATTRIBUTE * , size_t , size_t * )
+- size_t FC_Initialize(char * )
+- size_t sftk_CreateNewSlot(struct SFTKSlotStr * , size_t , struct SFTKObjectStr *
+  )
+- size_t sftk_DBInit(char * , char * , char * , char * , char * , char * , char *
+  , int , int , int , int , int , struct SFTKDBHandleStr ** , struct SFTKDBHandleStr
+  ** )
+- size_t s_open(char * , char * , char * , int , int , int , struct SDBStr.2311 **
+  , struct SDBStr.2311 ** , int * )
+project: nss
+target_name: mpi-sqr
+target_path: /src/nss/fuzz/mpi_sqr_target.cc
+

@@ -1,0 +1,20 @@
+functions:
+- int stun_set_binding_response(struct _stun_buffer * buf, struct stun_tid * tid,
+  union.ioa_addr * reflexive_addr, int error_code, char * reason)
+- int stun_set_allocate_response(struct _stun_buffer * buf, struct stun_tid * tid,
+  union.ioa_addr * relayed_addr1, union.ioa_addr * relayed_addr2, union.ioa_addr *
+  reflexive_addr, int lifetime, int max_lifetime, int error_code, char * reason, size_t
+  reservation_token, char * mobile_id)
+- int stun_set_binding_response_str(char * buf, size_t * len, struct stun_tid * tid,
+  union.ioa_addr * reflexive_addr, int error_code, char * reason, int cookie, int
+  old_stun, int no_stun_backward_compatibility)
+- int stun_set_allocate_response_str(char * buf, size_t * len, struct stun_tid * tid,
+  union.ioa_addr * relayed_addr1, union.ioa_addr * relayed_addr2, union.ioa_addr *
+  reflexive_addr, int lifetime, int max_lifetime, int error_code, char * reason, size_t
+  reservation_token, char * mobile_id)
+- short stun_set_channel_bind_request(struct _stun_buffer * buf, union.ioa_addr *
+  peer_addr, short channel_number)
+project: coturn
+target_name: FuzzStun
+target_path: /src/coturn/fuzzing/FuzzStun.c
+

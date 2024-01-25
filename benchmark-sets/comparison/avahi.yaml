@@ -1,0 +1,23 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+functions:
+- struct AvahiDnsPacket * avahi_dns_packet_new_reply(struct AvahiDnsPacket *p, int mtu,
+  int copy_queries, int aa)
+- char * avahi_dns_packet_append_record(struct AvahiDnsPacket *p, struct AvahiRecord
+  *r, int cache_flush, int max_ttl)
+- size_t avahi_rdata_serialize(struct AvahiRecord *record, char *rdata, size_t max_size)
+project: avahi
+target_path: /src/avahi/fuzz/fuzz-consume-record.c
+

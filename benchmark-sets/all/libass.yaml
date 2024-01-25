@@ -1,0 +1,16 @@
+functions:
+- void hb_ot_shape_glyphs_closure(struct hb_font_t * font, struct hb_buffer_t * buffer,
+  struct ASS_Rect * features, int num_features, struct hb_set_t * glyphs)
+- struct hb_shape_plan_t * hb_shape_plan_create_cached(struct hb_face_t * face, struct
+  hb_segment_properties_t * props, struct ASS_Rect * user_features, int num_user_features,
+  char ** shaper_list)
+- struct hb_shape_plan_t * hb_shape_plan_create(struct hb_face_t * face, struct hb_segment_properties_t
+  * props, struct ASS_Rect * user_features, int num_user_features, char ** shaper_list)
+- void hb_ot_layout_lookups_substitute_closure(struct hb_face_t * face, struct hb_set_t
+  * lookups, struct hb_set_t * glyphs)
+- void hb_ot_layout_lookup_substitute_closure(struct hb_face_t * face, int lookup_index,
+  struct hb_set_t * glyphs)
+project: libass
+target_name: libass_fuzzer
+target_path: /src/libass/fuzz/fuzz.c
+

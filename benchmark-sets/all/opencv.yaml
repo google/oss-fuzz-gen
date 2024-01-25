@@ -1,0 +1,15 @@
+functions:
+- void cv::dnn::dnn4_v20231225::readNetFromTensorflow(cv::dnn::dnn4_v20231225::Net
+  * , std::string * , std::string * )
+- void cv::dnn::dnn4_v20231225::Net cv::dnn::dnn4_v20231225::detail::readNetDiagnostic<cv::dnn::dnn4_v20231225::(cv::dnn::dnn4_v20231225::Net
+  * , char ** , char ** )
+- void cv::dnn::dnn4_v20231225::readNetFromTensorflow(cv::dnn::dnn4_v20231225::Net
+  * , std::vector * , std::vector * )
+- void cv::dnn::dnn4_v20231225::Net cv::dnn::dnn4_v20231225::detail::readNet<cv::dnn::dnn4_v20231225::(cv::dnn::dnn4_v20231225::Net
+  * , char ** , char ** )
+- void cv::dnn::dnn4_v20231225::(cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter
+  * , cv::dnn::dnn4_v20231225::Net * , char * , char * )
+project: opencv
+target_name: imencode_fuzzer
+target_path: /src/imencode_fuzzer.cc
+

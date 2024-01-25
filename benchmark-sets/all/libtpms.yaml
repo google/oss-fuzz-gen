@@ -1,0 +1,16 @@
+functions:
+- int TPM_Process_DAAJoin(struct tdTPM_STATE * tpm_state, struct tdTPM_STORE_BUFFER
+  * response, short tag, int paramSize, int ordinal, char * command, struct tdTPM_TRANSPORT_INTERNAL
+  * transportInternal)
+- int TPM2_ValidateState(int st, int flags)
+- int TPM_Process_DAASign(struct tdTPM_STATE * tpm_state, struct tdTPM_STORE_BUFFER
+  * response, short tag, int paramSize, int ordinal, char * command, struct tdTPM_TRANSPORT_INTERNAL
+  * transportInternal)
+- int TPM_Process_GetCapabilitySigned(struct tdTPM_STATE * tpm_state, struct tdTPM_STORE_BUFFER
+  * response, short tag, int paramSize, int ordinal, char * command, struct tdTPM_TRANSPORT_INTERNAL
+  * transportInternal)
+- int TPM12_MainInit()
+project: libtpms
+target_name: fuzz-main
+target_path: /src/libtpms/tests/fuzz-main.c
+

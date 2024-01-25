@@ -1,0 +1,14 @@
+functions:
+- char * _ppdCreateFromIPP(char * buffer, size_t bufsize, struct _ipp_s * supported)
+- char * _ppdCreateFromIPP2(char * buffer, size_t bufsize, struct _ipp_s * supported,
+  struct cups_lang_s * lang)
+- struct _ipp_s * cupsDoFileRequest(struct _http_s * http, struct _ipp_s * request,
+  char * resource, char * filename)
+- struct _ipp_s * cupsDoRequest(struct _http_s * http, struct _ipp_s * request, char
+  * resource)
+- struct _ipp_s * cupsDoIORequest(struct _http_s * http, struct _ipp_s * request,
+  char * resource, int infile, int outfile)
+project: cups
+target_name: FuzzIPP
+target_path: /src/cups/fuzzer/FuzzIPP.c
+

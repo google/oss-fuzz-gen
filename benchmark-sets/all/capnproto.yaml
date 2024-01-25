@@ -1,0 +1,12 @@
+functions:
+- void capnp::_::initDynamicTestMessage(capnp::DynamicStruct::Builder * builder)
+- void capnp::_::(capnp::DynamicStruct::Builder * builder)
+- void capnp::DynamicStruct::Builder::adopt(capnp::DynamicStruct::Builder * this,
+  char * name, size_t orphan, capnp::Orphan * )
+- void capnp::DynamicStruct::Builder::adopt(capnp::DynamicStruct::Builder * this,
+  capnp::StructSchema::Field * field, capnp::Orphan * orphan)
+- void capnp::_::checkDynamicTestMessage(capnp::DynamicStruct::Builder * builder)
+project: capnproto
+target_name: capnp-llvm-fuzzer-testcase
+target_path: /src/capnproto/c++/src/capnp/llvm-fuzzer-testcase.c++
+

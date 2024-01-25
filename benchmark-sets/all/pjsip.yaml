@@ -1,0 +1,15 @@
+functions:
+- int pjsip_endpt_respond(struct pjsip_endpoint * endpt, struct pjsip_module * tsx_user,
+  struct pjsip_rx_data * rdata, int st_code, struct pj_str_t * st_text, struct pjsip_hdr
+  * hdr_list, struct pjsip_msg_body * body, struct pjsip_transaction ** p_tsx)
+- int pjsip_tsx_create_uas(struct pjsip_module * tsx_user, struct pjsip_rx_data *
+  rdata, struct pjsip_transaction ** p_tsx)
+- int pjsip_tsx_create_uas2(struct pjsip_module * tsx_user, struct pjsip_rx_data *
+  rdata, struct pj_grp_lock_t * grp_lock, struct pjsip_transaction ** p_tsx)
+- int pjsip_endpt_send_request(struct pjsip_endpoint * endpt, struct pjsip_tx_data
+  * tdata, int timeout, char * token, func_type * cb)
+- int tsx_on_state_calling(struct pjsip_transaction * tsx, struct pjsip_event * event)
+project: pjsip
+target_name: fuzz-http
+target_path: /src/pjsip/tests/fuzz/fuzz-http.c
+

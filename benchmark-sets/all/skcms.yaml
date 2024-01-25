@@ -1,0 +1,14 @@
+functions:
+- bool skcms_ApproximatelyEqualProfiles(struct skcms_ICCProfile * A, struct skcms_ICCProfile
+  * B)
+- bool skcms_MakeUsableAsDestinationWithSingleCurve(struct skcms_ICCProfile * profile)
+- bool skcms_TRCs_AreApproximateInverse(struct skcms_ICCProfile * profile, struct
+  skcms_TransferFunction * inv_tf)
+- bool skcms_AreApproximateInverses(union.skcms_Curve * curve, struct skcms_TransferFunction
+  * inv_tf)
+- bool skcms_PrimariesToXYZD50(float rx, float ry, float gx, float gy, float bx, float
+  by, float wx, float wy, struct skcms_Matrix3x3 * toXYZD50)
+project: skcms
+target_name: iccprofile_info
+target_path: /src/skcms/fuzz/fuzz_iccprofile_info.c
+

@@ -1,0 +1,15 @@
+functions:
+- void ArduinoJson::V701HB4::detail::MsgPackDeserializer<ArduinoJson::V701HB4::detail::BoundedReader<unsigned
+  char const*, void> >::~MsgPackDeserializer(ArduinoJson::V701HB4::detail::MsgPackDeserializer
+  * this)
+- void ArduinoJson::V701HB4::detail::JsonDeserializer<ArduinoJson::V701HB4::detail::BoundedReader<unsigned
+  char const*, void> >::~JsonDeserializer(ArduinoJson::V701HB4::detail::JsonDeserializer
+  * this)
+- size_t ArduinoJson::V701HB4::SerializedValue<char const*>::size(ArduinoJson::V701HB4::SerializedValue
+  * this) const
+- void ArduinoJson::V701HB4::detail::VariantSlot::operator delete(char * , char *
+  )
+project: arduinojson
+target_name: msgpack_fuzzer
+target_path: /src/arduinojson/extras/fuzzing/msgpack_fuzzer.cpp
+

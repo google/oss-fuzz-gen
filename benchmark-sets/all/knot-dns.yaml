@@ -1,0 +1,10 @@
+functions:
+- int handshake_client(struct gnutls_session_int * session)
+- int handshake_server(struct gnutls_session_int * session)
+- size_t check_session_status(struct gnutls_session_int * session, int ms)
+- int recv_handshake_final(struct gnutls_session_int * session, int init)
+- int gnutls_handshake(struct gnutls_session_int * session)
+project: knot-dns
+target_name: fuzz_zscanner
+target_path: /src/knot-dns/tests-fuzz/fuzz_zscanner.c
+

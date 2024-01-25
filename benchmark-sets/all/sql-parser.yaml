@@ -1,0 +1,12 @@
+functions:
+- bool hsql::SQLParser::parseSQLString(char * sql, hsql::SQLParserResult * result)
+- bool hsql::SQLParser::parseSQLString(std::string * sql, hsql::SQLParserResult *
+  result)
+- bool hsql::SQLParser::tokenize(std::string * sql, std::vector * tokens)
+- void hsql_push_buffer_state(struct yy_buffer_state * new_buffer, char * yyscanner)
+- std::ostream * hsql::operator<<(std::ostream * stream, struct hsql::ColumnType *
+  column_type)
+project: sql-parser
+target_name: fuzz_sql_parse
+target_path: /src/sql-parser/fuzz_sql_parse.cpp
+

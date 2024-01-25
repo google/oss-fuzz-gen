@@ -1,0 +1,10 @@
+functions:
+- void svr_ensure_hostkey()
+- int signkey_generate(int keytype, int bits, char * filename, int skip_exist)
+- void recv_msg_userauth_pk_ok()
+- struct dropbear_DSS_Key * gen_rsa_priv_key(int size)
+- struct dropbear_DSS_Key * gen_dss_priv_key(int size)
+project: dropbear
+target_name: fuzzer-verify
+target_path: /src/dropbear/fuzz/fuzzer-verify.c
+

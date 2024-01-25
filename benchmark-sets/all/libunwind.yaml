@@ -1,0 +1,14 @@
+functions:
+- int _ULx86_64_dwarf_apply_reg_state(struct dwarf_cursor * c, struct dwarf_reg_state
+  * rs)
+- int _ULx86_64_local_resume(struct unw_addr_space * as, struct unw_cursor * cursor,
+  char * arg)
+- int _ULx86_64_dwarf_reg_states_iterate(struct dwarf_cursor * c, func_type * cb,
+  char * token)
+- int _ULx86_64_dwarf_make_proc_info(struct dwarf_cursor * c)
+- int dwarf_reg_states_table_iterate(struct dwarf_cursor * c, func_type * cb, char
+  * token)
+project: libunwind
+target_name: fuzz_libunwind
+target_path: /src/fuzz_libunwind.c
+

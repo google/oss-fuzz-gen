@@ -1,0 +1,14 @@
+functions:
+- int wabt::ParseWastScript(wabt::WastLexer * , std::unique_ptr * , std::vector *
+  , struct wabt::WastParseOptions * )
+- int wabt::WastParser::ParseScript(wabt::WastParser * , std::unique_ptr * )
+- int wabt::WastParser::ParseCommandList(wabt::WastParser * , struct wabt::Script
+  * , std::vector * )
+- int wabt::WastParser::ParseCommand(wabt::WastParser * , struct wabt::Script * ,
+  std::unique_ptr * )
+- int wabt::WastParser::ParseAssertTrapCommand(wabt::WastParser * , std::unique_ptr
+  * )
+project: wabt
+target_name: wasm2wat_fuzzer
+target_path: /src/wasm2wat_fuzzer.cc
+

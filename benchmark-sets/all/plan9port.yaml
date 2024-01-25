@@ -1,0 +1,11 @@
+functions:
+- void X509dump(char * cert, int ncert)
+- char * X509verify(char * cert, int ncert, struct RSApub * pk)
+- char * X509gen(struct RSApriv * priv, char * subj, size_t * valid, int * certlen)
+- char * X509req(struct RSApriv * priv, char * subj, int * certlen)
+- char * verify_signature(struct Bytes * signature, struct RSApub * pk, char * edigest,
+  struct Elem ** psigalg)
+project: plan9port
+target_name: fuzz_libsec
+target_path: /src/fuzz_libsec.c
+

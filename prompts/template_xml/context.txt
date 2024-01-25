@@ -1,0 +1,8 @@
+The function is defined in
+<include_file>
+{CONTEXT_HEADER}
+</include_file>
+
+<code>
+{CONTEXT_TYPES}
+</code>

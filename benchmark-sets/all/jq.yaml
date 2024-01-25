@@ -1,0 +1,12 @@
+functions:
+- void f_modulemeta(struct jq_state * jq, size_t a, struct jv_refcnt * )
+- void load_module_meta(struct jq_state * jq, size_t mod_relpath, struct jv_refcnt
+  * )
+- void jq_util_input_next_input_cb(struct jq_state * jq, char * data)
+- void jq_util_input_next_input(struct jq_util_input_state * state)
+- void f_min_by_impl(struct jq_state * jq, size_t x, struct jv_refcnt * y, size_t
+  , struct jv_refcnt * )
+project: jq
+target_name: jq_fuzz_execute
+target_path: /src/jq/tests/jq_fuzz_execute.cpp
+

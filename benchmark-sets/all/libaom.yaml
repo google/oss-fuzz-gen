@@ -1,0 +1,13 @@
+functions:
+- int decoder_inspect(struct aom_codec_alg_priv * , char * , size_t , char * )
+- int read_and_decode_one_tile_list(struct AV1Decoder * , struct aom_read_bit_buffer
+  * , char * , char * , char ** , int * )
+- char * decode_tiles_mt(struct AV1Decoder * , char * , char * , int , int )
+- int tile_worker_hook(char * , char * )
+- struct yv12_buffer_config * av1_realloc_and_scale_if_required(struct AV1Common *
+  , struct yv12_buffer_config * , struct yv12_buffer_config * , char , int , bool
+  , bool , int , int )
+project: libaom
+target_name: av1_dec_fuzzer
+target_path: /src/aom/examples/av1_dec_fuzzer.cc
+

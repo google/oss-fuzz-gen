@@ -1,0 +1,14 @@
+functions:
+- char * ngx_http_grpc_pass(struct ngx_conf_s * cf, struct ngx_command_s * cmd, char
+  * conf)
+- size_t ngx_http_grpc_handler(struct ngx_http_request_s * r)
+- char * ngx_http_fastcgi_pass(struct ngx_conf_s * cf, struct ngx_command_s * cmd,
+  char * conf)
+- char * ngx_http_uwsgi_pass(struct ngx_conf_s * cf, struct ngx_command_s * cmd, char
+  * conf)
+- char * ngx_http_scgi_pass(struct ngx_conf_s * cf, struct ngx_command_s * cmd, char
+  * conf)
+project: nginx
+target_name: target
+target_path: /src/fuzzer-test-suite/re2-2014-12-09/target.cc
+

@@ -1,0 +1,15 @@
+functions:
+- float double_conversion::StringToDoubleConverter::StringTo<float>(double_conversion::StringToDoubleConverter
+  * this, short * buffer, int length, int * processed_characters_count) const
+- double double_conversion::StringToDoubleConverter::StringTo<double>(double_conversion::StringToDoubleConverter
+  * this, short * buffer, int length, int * processed_characters_count) const
+- float double_conversion::StringToDoubleConverter::StringTo<float>(double_conversion::StringToDoubleConverter
+  * this, char * buffer, int length, int * processed_characters_count) const
+- double double_conversion::StringToDoubleConverter::StringTo<double>(double_conversion::StringToDoubleConverter
+  * this, char * buffer, int length, int * processed_characters_count) const
+- float double_conversion::StringToDoubleConverter::StringToFloat(double_conversion::StringToDoubleConverter
+  * this, short * buffer, int length, int * processed_characters_count) const
+project: double-conversion
+target_name: string_to_double_fuzzer
+target_path: /src/string_to_double_fuzzer.cc
+

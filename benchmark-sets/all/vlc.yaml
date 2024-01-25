@@ -1,0 +1,10 @@
+functions:
+- int vlc_demux_process_memory(struct vlc_run_args * args, char * buf, size_t length)
+- int vlc_demux_process_path(struct vlc_run_args * args, char * path)
+- int vlc_demux_process_url(struct vlc_run_args * args, char * url)
+- struct vlm_t * vlm_New(struct libvlc_int_t * libvlc, char * psz_vlmconf)
+- char * Manage(char * p_object)
+project: vlc
+target_name: vlc-demux-libfuzzer
+target_path: /src/vlc/test/vlc-demux-libfuzzer.c
+

@@ -1,0 +1,12 @@
+# .gitignore
+results/
+results-*/
+oss-fuzz/
+oss-fuzz-data/
+benchmark-sets/split_benchmarks/
+venv/
+.venv/
+
+
+# docker-specific
+Dockerfile

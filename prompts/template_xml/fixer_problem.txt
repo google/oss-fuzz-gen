@@ -1,0 +1,15 @@
+Below is the code needs to be built:
+<code>
+{CODE_TO_BE_FIXED}
+</code>
+
+The code has the following build issues:
+<error>
+{ERROR_MESSAGES}
+</error>
+
+Fix code:
+1. Consider the possible solution for the issues listed above.
+2. Apply the solutions to the original code.
+It's important to show the complete code, not only the fixed line.
+<solution>

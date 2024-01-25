@@ -1,0 +1,11 @@
+functions:
+- int reload_routing_script()
+- int proto_tcp_init(struct proto_info * pi)
+- int tcp_read_req(struct tcp_connection * con, int * bytes_read)
+- int tcp_handle_req(struct tcp_req * req, struct tcp_connection * con, int _max_msg_chunks,
+  int _parallel_handling)
+- int w_forward(struct sip_msg * msg, struct proxy_l * dest)
+project: opensips
+target_name: fuzz_core_funcs
+target_path: /src/opensips/test/fuzz/fuzz_core_funcs.c
+

@@ -1,0 +1,16 @@
+functions:
+- struct bio_st * CMS_SignedData_verify(struct CMS_SignedData_st * sd, struct bio_st
+  * detached_data, struct stack_st_X509 * scerts, struct x509_store_st * store, struct
+  stack_st_X509 * extra, struct stack_st_X509_CRL * crls, int flags, struct ossl_lib_ctx_st
+  * libctx, char * propq)
+- int CMS_verify_receipt(struct CMS_ContentInfo_st * rcms, struct CMS_ContentInfo_st
+  * ocms, struct stack_st_X509 * certs, struct x509_store_st * store, int flags)
+- int CMS_verify(struct CMS_ContentInfo_st * cms, struct stack_st_X509 * certs, struct
+  x509_store_st * store, struct bio_st * dcont, struct bio_st * out, int flags)
+- struct ossl_cmp_msg_st * OSSL_CMP_CTX_server_perform(struct ossl_cmp_ctx_st * client_ctx,
+  struct ossl_cmp_msg_st * req)
+- size_t dtls1_ctrl(struct ssl_st * ssl, int cmd, size_t larg, char * parg)
+project: openssl
+target_name: ct
+target_path: /src/openssl/fuzz/driver.c
+

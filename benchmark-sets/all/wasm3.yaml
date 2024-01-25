@@ -1,0 +1,12 @@
+functions:
+- char * op_CallIndirect(char ** , int * , struct M3MemoryHeader * , size_t , double
+  )
+- char * m3_CompileModule(struct M3Module * )
+- char * m3_GetTableFunction(struct M3Function ** , struct M3Module * , int )
+- char * op_Compile(char ** , int * , struct M3MemoryHeader * , size_t , double )
+- char * CompileRawFunction(struct M3Module * , struct M3Function * , char * , char
+  * )
+project: wasm3
+target_name: fuzzer
+target_path: /src/wasm3/platforms/app_fuzz/fuzzer.c
+

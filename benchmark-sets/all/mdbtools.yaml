@@ -1,0 +1,13 @@
+functions:
+- int mdb_print_schema(struct MdbHandle * mdb, struct _IO_FILE * outfile, char * tabname,
+  char * dbnamespace, int export_options)
+- char * mdb_get_relationships(struct MdbHandle * mdb, char * dbnamespace, char *
+  tablename)
+- void mdb_dump_catalog(struct MdbHandle * mdb, int obj_type)
+- struct S_MdbTableDef * mdb_read_table_by_name(struct MdbHandle * mdb, char * table_name,
+  int obj_type)
+- void mdb_data_dump(struct S_MdbTableDef * table)
+project: mdbtools
+target_name: fuzz_mdb
+target_path: /src/mdbtools/src/fuzz/fuzz_mdb.c
+

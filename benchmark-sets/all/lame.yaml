@@ -1,0 +1,10 @@
+functions:
+- bool EncoderCore<float, true>::Run(EncoderCore * , char * , size_t , bool )
+- bool EncoderCore<double, true>::Run(EncoderCore * , char * , size_t , bool )
+- bool EncoderCore<long, true>::Run(EncoderCore * , char * , size_t , bool )
+- bool EncoderCore<int, true>::Run(EncoderCore * , char * , size_t , bool )
+- bool EncoderCore<short, true>::Run(EncoderCore * , char * , size_t , bool )
+project: lame
+target_name: fuzzer-encoder
+target_path: /src/LAME-fuzzers/fuzzer-encoder.cpp
+

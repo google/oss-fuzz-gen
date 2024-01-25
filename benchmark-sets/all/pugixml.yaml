@@ -1,0 +1,16 @@
+functions:
+- size_t pugi::xpath_query::evaluate_string(pugi::xpath_query * this, char * buffer,
+  size_t capacity, pugi::xpath_node * n) const
+- void pugi::xml_node::append_buffer(struct pugi::xml_parse_result * this, pugi::xml_node
+  * contents, char * size, size_t options, int encoding, int )
+- void pugi::xml_document::load_buffer_inplace_own(struct pugi::xml_parse_result *
+  this, pugi::xml_document * contents, char * size, size_t options, int encoding,
+  int )
+- void pugi::xml_document::load_buffer_inplace(struct pugi::xml_parse_result * this,
+  pugi::xml_document * contents, char * size, size_t options, int encoding, int )
+- void pugi::xml_node::select_single_node(pugi::xml_node * this, char * query, pugi::xpath_variable_set
+  * variables) const
+project: pugixml
+target_name: fuzz_parse
+target_path: /src/pugixml/tests/fuzz_parse.cpp
+

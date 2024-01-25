@@ -1,0 +1,12 @@
+functions:
+- struct _IXML_Document * ixmlParseBuffer(char * buffer)
+- struct _IXML_Document * ixmlLoadDocument(char * xmlFile)
+- int ixmlParseBufferEx(char * buffer, struct _IXML_Document.1 ** retDoc)
+- int ixmlDocument_importNode(struct _IXML_Document * doc, struct _IXML_Node * importNode,
+  int deep, struct _IXML_Node.0 ** rtNode)
+- struct _IXML_Node * ixmlNode_cloneNodeTreeRecursive(struct _IXML_Node * nodeptr,
+  int deep)
+project: pupnp
+target_name: FuzzIxml
+target_path: /src/pupnp/fuzzer/FuzzIxml.c
+

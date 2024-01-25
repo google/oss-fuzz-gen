@@ -1,0 +1,10 @@
+functions:
+- int main2(int argc, char ** argv)
+- void init(int argc, char ** argv)
+- void mworker_loop()
+- char * run_thread_poll_loop(char * data)
+- void run_poll_loop()
+project: haproxy
+target_name: fuzz_cfg_parser
+target_path: /src/fuzz_cfg_parser.c
+

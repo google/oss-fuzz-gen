@@ -1,0 +1,6 @@
+<task>
+Your goal is to write a fuzzing harness for the provided function header using <code>LLVMFuzzerTestOneInput</code>. It is important that the provided solution compiles and actually calls the function specified by the function header:
+<function header>
+{PROBLEM_CONTENT}
+</function header>
+</task>

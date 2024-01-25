@@ -1,0 +1,12 @@
+functions:
+- char * register_string_index(size_t * name, size_t name_len, char * cp)
+- int register_int_index(size_t * name, size_t name_len, int val)
+- struct variable_list * register_oid_index(size_t * name, size_t name_len, size_t
+  * value, size_t value_len)
+- int unregister_oid_index(size_t * name, size_t name_len, size_t * value, size_t
+  value_len)
+- int unregister_int_index(size_t * name, size_t name_len, int val)
+project: net-snmp
+target_name: snmp_pdu_parse_fuzzer
+target_path: /src/net-snmp/testing/fuzzing/snmp_pdu_parse_fuzzer.c
+

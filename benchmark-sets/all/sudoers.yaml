@@ -1,0 +1,11 @@
+functions:
+- int display_cmnd_check(struct sudoers_context * ctx, struct sudoers_parse_tree *
+  parse_tree, struct passwd * pw, size_t now, struct sudoers_match_info * match_info)
+- struct cache_item * sudo_make_grlist_item(struct passwd * pw, char ** unused1)
+- size_t fill_runas_group(char * str, size_t strsize, char * v)
+- size_t fill_group(char * str, size_t strsize, char * v)
+- int sudo_set_grlist(struct passwd * pw, char ** groups)
+project: sudoers
+target_name: fuzz_sudoers_ldif
+target_path: /src/sudo/plugins/sudoers/regress/fuzz/fuzz_sudoers_ldif.c
+

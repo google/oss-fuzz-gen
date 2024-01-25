@@ -1,0 +1,16 @@
+functions:
+- void Alembic::AbcCoreOgawa::v12::AprImpl::getSample(Alembic::AbcCoreOgawa::v12::AprImpl
+  * , size_t , std::shared_ptr * )
+- void Alembic::AbcCoreOgawa::v12::ReadArraySample(std::shared_ptr * iDims, std::shared_ptr
+  * iData, size_t , Alembic::AbcCoreAbstract::v12::DataType * , std::shared_ptr *
+  )
+- void Alembic::AbcCoreFactory::v12::IFactory::getArchive(Alembic::Abc::v12::IArchive
+  * , Alembic::AbcCoreFactory::v12::IFactory * , std::vector * )
+- void Alembic::AbcCoreFactory::v12::IFactory::getArchive(Alembic::Abc::v12::IArchive
+  * , Alembic::AbcCoreFactory::v12::IFactory * , std::vector * , int * )
+- void Alembic::AbcCoreOgawa::v12::SprImpl::getSample(Alembic::AbcCoreOgawa::v12::SprImpl
+  * , size_t , char * )
+project: alembic
+target_name: alembic_dump_info_fuzzer
+target_path: /src/alembic_dump_info_fuzzer.cc
+

@@ -1,0 +1,13 @@
+functions:
+- bool ada_can_parse_with_base(char * input, size_t input_length, char * base, size_t
+  base_length)
+- bool ada_can_parse(char * input, size_t length)
+- char * ada_parse_with_base(char * input, size_t input_length, char * base, size_t
+  base_length)
+- bool ada_set_href(char * result, char * input, size_t length)
+- bool ada::url_aggregator::set_href(struct ada::url_aggregator * this, char * input,
+  size_t )
+project: ada-url
+target_name: parse
+target_path: /src/ada-url/fuzz/parse.cc
+

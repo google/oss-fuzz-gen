@@ -1,0 +1,10 @@
+functions:
+- int match(struct Reinst * pc, char * sp, char * bol, int flags, struct Resub * out)
+- int re_regexec(struct Reprog * prog, char * sp, struct Resub * sub, int eflags)
+- int strncmpcanon(char * a, char * b, int n)
+- int incclasscanon(struct Reclass * cc, int c)
+- int iswordchar(int c)
+project: librdkafka
+target_name: fuzz_regex
+target_path: /src/librdkafka/tests/fuzzers/fuzz_regex.c
+

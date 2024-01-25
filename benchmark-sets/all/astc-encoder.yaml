@@ -1,0 +1,12 @@
+functions:
+- void symbolic_to_physical(struct block_size_descriptor * bsd, struct symbolic_compressed_block
+  * scb, char * pcb)
+- int get_quant_level(int method)
+- void encode_ise(int quant_level, int character_count, char * input_data, char *
+  output_data, int bit_offset)
+- bool is_legal_2d_block_size(int xdim, int ydim)
+- bool is_legal_3d_block_size(int xdim, int ydim, int zdim)
+project: astc-encoder
+target_name: fuzz_astc_physical_to_symbolic
+target_path: /src/astc-encoder/Source/Fuzzers/fuzz_astc_physical_to_symbolic.cpp
+

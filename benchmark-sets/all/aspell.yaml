@@ -1,0 +1,9 @@
+functions:
+- void aspeller::create_default_readonly_dict(acommon::PosibErr * els, struct AspellStringEnumeration
+  * config, acommon::Config * )
+- void acommon::set_mode_from_extension(acommon::PosibErr * config, acommon::Config
+  * filename, char * in, int , struct _IO_FILE * )
+project: aspell
+target_name: aspell_fuzzer
+target_path: /src/aspell-fuzz/aspell_fuzzer.cpp
+

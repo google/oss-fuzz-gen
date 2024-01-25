@@ -1,0 +1,11 @@
+functions:
+- int dashdmx_process(struct __gf_filter * filter)
+- void dashdmx_switch_segment(struct GF_DASHDmxCtx * ctx, struct GF_DASHGroup * group)
+- int gf_dash_update_manifest(struct __dash_client * dash)
+- int ctxload_process(struct __gf_filter * filter)
+- int gf_sc_scene_update(struct __tag_compositor * compositor, char * type, char *
+  com)
+project: gpac
+target_name: fuzz_parse
+target_path: /src/testsuite/oss-fuzzers/fuzz_parse.c
+

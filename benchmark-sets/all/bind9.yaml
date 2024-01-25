@@ -1,0 +1,12 @@
+functions:
+- int dns_view_freezezones(struct dns_view * view, bool value)
+- int dns_zt_freezezones(struct dns_zt * zt, struct dns_view * view, bool freeze)
+- int freezezones(struct dns_zone * zone, char * uap)
+- int dns_view_asyncload(struct dns_view * view, bool newonly, func_type * callback,
+  char * arg)
+- int dns_zt_asyncload(struct dns_zt * zt, bool newonly, func_type * loaddone, char
+  * arg)
+project: bind9
+target_name: isc_lex_gettoken_fuzzer
+target_path: /src/bind9/fuzz/isc_lex_gettoken.c
+

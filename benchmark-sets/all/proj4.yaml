@@ -1,0 +1,14 @@
+functions:
+- void proj_factors(struct P5_FACTORS * , struct PJconsts * lp, union.PJ_COORD * )
+- int proj_get_suggested_operation(struct pj_ctx * , struct PJ_OBJ_LIST * , int ,
+  union.PJ_COORD * coord)
+- std::vector * PJ_OPERATION_LIST::getPreparedOperations(struct PJ_OPERATION_LIST
+  * , struct pj_ctx * )
+- void osgeo::proj::crs::BoundCRS::_identify(std::list * , osgeo::proj::crs::BoundCRS
+  * , std::shared_ptr * ) const
+- void osgeo::proj::crs::CRS::createBoundCRSToWGS84IfPossible(dropbox::oxygen::nn
+  * , osgeo::proj::crs::CRS * , std::shared_ptr * , int ) const
+project: proj4
+target_name: proj_crs_to_crs_fuzzer
+target_path: /src/PROJ/test/fuzzers/proj_crs_to_crs_fuzzer.cpp
+

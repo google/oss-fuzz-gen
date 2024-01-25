@@ -1,0 +1,13 @@
+functions:
+- int lzma_lzma_encoder_init(struct lzma_next_coder_s * next, struct lzma_allocator
+  * allocator, struct lzma_filter_info_s * filters)
+- int lzma_encoder_init(struct lzma_lz_encoder * lz, struct lzma_allocator * allocator,
+  size_t id, char * options, struct lzma_lz_options * lz_options)
+- int lzma_encode(char * coder, struct lzma_mf_s * mf, char * out, size_t * out_pos,
+  size_t out_size)
+- size_t lzma_lzma2_encoder_memusage(char * options)
+- size_t lzma_lzma_encoder_memusage(char * options)
+project: xz
+target_name: fuzz_decode_stream
+target_path: /src/xz/tests/ossfuzz/fuzz_decode_stream.c
+

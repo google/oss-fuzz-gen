@@ -1,0 +1,15 @@
+functions:
+- bool absl::str_format_internal::FormatArgImpl::Dispatch<long long>(char * arg, size_t
+  spec, int out, char * )
+- bool absl::str_format_internal::FormatArgImpl::Dispatch<long>(char * arg, size_t
+  spec, int out, char * )
+- bool absl::str_format_internal::FormatArgImpl::Dispatch<short>(char * arg, size_t
+  spec, int out, char * )
+- bool absl::str_format_internal::FormatArgImpl::Dispatch<signed char>(char * arg,
+  size_t spec, int out, char * )
+- bool absl::str_format_internal::FormatArgImpl::Dispatch<char>(char * arg, size_t
+  spec, int out, char * )
+project: abseil-cpp
+target_name: string_escape_fuzzer
+target_path: /src/string_escape_fuzzer.cc
+

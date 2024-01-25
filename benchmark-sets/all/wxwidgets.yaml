@@ -1,0 +1,11 @@
+functions:
+- size_t wxGetFreeMemory()
+- void wxPlatformInfo::wxPlatformInfo(wxPlatformInfo * this)
+- wxPlatformInfo * wxPlatformInfo::Get()
+- void wxPlatformInfo::InitForCurrentPlatform(wxPlatformInfo * this)
+- wxMsgCatalog * wxFileTranslationsLoader::LoadCatalog(wxAppTraits * this, wxString
+  * domain, wxString * lang)
+project: wxwidgets
+target_name: zip
+target_path: /src/wxwidgets/src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c
+

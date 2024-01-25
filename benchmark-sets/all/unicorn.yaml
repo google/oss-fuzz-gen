@@ -1,0 +1,11 @@
+functions:
+- int decode_nanomips_opc(struct CPUMIPSState * env, struct DisasContext * ctx)
+- int decode_nanomips_32_48_opc(struct CPUMIPSState * env, struct DisasContext * ctx)
+- int decode_micromips_opc(struct CPUMIPSState * env, struct DisasContext * ctx)
+- void decode_micromips32_opc(struct CPUMIPSState * env, struct DisasContext * ctx)
+- void tricore_tr_translate_insn(struct DisasContextBase * dcbase, struct CPUState
+  * cpu)
+project: unicorn
+target_name: fuzz_emu_m68k_be
+target_path: /src/unicorn/tests/fuzz/fuzz_emu_m68k_be.c
+

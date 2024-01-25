@@ -1,0 +1,11 @@
+functions:
+- int omain(int argc, char ** argv)
+- int main262(int argc, char ** argv)
+- char * fxRunFileThread(char * it)
+- void fxRunContext(struct sxPool * pool, struct sxContext * context)
+- int fxRunTestCase(struct sxPool * pool, struct sxContext * context, char * path,
+  int flags, int async, char * message)
+project: xs
+target_name: xst_jsonparse
+target_path: /src/moddable/xs/tools/xst.c
+

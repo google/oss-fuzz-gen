@@ -1,0 +1,11 @@
+functions:
+- bool Json::Reader::readObject(Json::Reader * , Json::OurReader::Token * )
+- bool Json::Reader::readArray(Json::Reader * , Json::OurReader::Token * )
+- bool Json::Reader::readValue(Json::Reader * )
+- bool Json::Reader::parse(Json::Reader * , std::istream * , Json::Value * , bool
+  )
+- bool Json::Reader::parse(Json::Reader * , std::string * , Json::Value * , bool )
+project: jsoncpp
+target_name: jsoncpp_fuzzer
+target_path: /src/jsoncpp/src/test_lib_json/fuzz.cpp
+

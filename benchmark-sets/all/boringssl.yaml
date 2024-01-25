@@ -1,0 +1,15 @@
+functions:
+- struct ec_key_st * PEM_read_ECPrivateKey(struct _IO_FILE * , struct ec_key_st.4884
+  ** , func_type * , char * )
+- struct dsa_st * PEM_read_DSAPrivateKey(struct _IO_FILE * , struct dsa_st ** , func_type
+  * , char * )
+- struct rsa_st * PEM_read_RSAPrivateKey(struct _IO_FILE * , struct rsa_st ** , func_type
+  * , char * )
+- struct evp_pkey_st * PEM_read_PrivateKey(struct _IO_FILE * , struct evp_pkey_st
+  ** , func_type * , char * )
+- struct ec_key_st * PEM_read_bio_ECPrivateKey(struct bio_st * , struct ec_key_st.4884
+  ** , func_type * , char * )
+project: boringssl
+target_name: ssl_ctx_api
+target_path: /src/boringssl/fuzz/ssl_ctx_api.cc
+

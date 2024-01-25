@@ -1,0 +1,11 @@
+functions:
+- void msgpack::v1::zone::~zone(msgpack::v1::zone * this)
+- void _GLOBAL__sub_I_unpack_pack_fuzzer.cpp()
+- void __cxx_global_var_init()
+- void msgpack::v1::type_error::~type_error(msgpack::v1::type_error * this)
+- void msgpack::v1::container_size_overflow::~container_size_overflow(std::length_error
+  * this)
+project: msgpack-c
+target_name: unpack_pack_fuzzer
+target_path: /src/msgpack-c/fuzz/unpack_pack_fuzzer.cpp
+

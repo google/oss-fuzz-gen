@@ -1,0 +1,11 @@
+functions:
+- int ov_time_seek(struct OggVorbis_File * vf, size_t milliseconds)
+- int ov_pcm_seek(struct OggVorbis_File * vf, size_t pos)
+- int ov_fopen(char * path, struct OggVorbis_File * vf)
+- int ov_open(struct _IO_FILE * f, struct OggVorbis_File * vf, char * initial, size_t
+  ibytes)
+- int ov_test_open(struct OggVorbis_File * vf)
+project: tremor
+target_name: decode_fuzzer
+target_path: /src/tremor/decode_fuzzer.cc
+

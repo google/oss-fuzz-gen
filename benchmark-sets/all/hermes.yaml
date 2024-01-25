@@ -1,0 +1,16 @@
+functions:
+- void facebook::jsi::detail::ThreadSafeRuntimeImpl<facebook::hermes::HermesRuntimeImpl,
+  facebook::hermes::(facebook::jsi::detail::ThreadSafeRuntimeImpl * , hermes::vm::RuntimeConfig
+  * )
+- void hermes::vm::asyncFunctionConstructor(char * , hermes::vm::Runtime * , hermes::vm::NativeArgs
+  * args)
+- void hermes::vm::generatorFunctionConstructor(char * , hermes::vm::Runtime * , hermes::vm::NativeArgs
+  * args)
+- void hermes::vm::functionConstructor(char * , hermes::vm::Runtime * , hermes::vm::NativeArgs
+  * args)
+- void hermes::vm::createDynamicFunction(hermes::vm::Runtime * , hermes::vm::NativeArgs
+  * args, int )
+project: hermes
+target_name: /src/hermes/tools/fuzzers/libfuzzer/fuzzer-jsi-entry.cpp
+target_path: /src/hermes/tools/fuzzers/libfuzzer/fuzzer-jsi-entry.cpp
+

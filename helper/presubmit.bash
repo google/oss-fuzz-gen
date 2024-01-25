@@ -1,0 +1,43 @@
+#! /bin/bash -eu
+
+source "$(git rev-parse --show-toplevel)/.venv/bin/activate"
+
+# Always use the latest Pyright.
+export PYRIGHT_PYTHON_FORCE_VERSION=latest
+
+# Reformat changed Python code.
+CHANGED_PY=$(git diff origin/main --name-only | grep "\.py$" || echo "")
+for file in $CHANGED_PY; do
+    if [ -f "$file" ]; then
+        yapf -p -i -m "$file"
+        isort "$file"
+    fi
+done
+
+# Type Check and lint all Python code.
+pyright "./" \
+    --project="./.pyrightconfig.json" \
+    --venvpath="./.venv"
+
+# Ignore long lines with URLs.
+pylint "./" \
+    --rcfile="./.pylintrc" \
+    --ignore-long-lines='^\s*(# .*)?<?https?://\S+>?$' \
+    --score=no \
+    --jobs=0
+
+
+# Check and remove trailing spaces.
+## Exclude Markdown which allows trailing spaces.
+FILES=$(git ls-files './*' | grep -Ev '\.md$|images/*')
+TRAILING_SPACES=$(echo "$FILES" | xargs egrep -l " +$" || echo "")
+
+if [ -n "$TRAILING_SPACES" ]; then
+    echo "$TRAILING_SPACES" | xargs sed -i -e 's/[ \t]*$//'
+    echo "Removing trailing spaces in:"
+    echo "  $TRAILING_SPACES"
+fi
+
+# Exit 1 if anything has changed.
+git diff --quiet --
+exit $?

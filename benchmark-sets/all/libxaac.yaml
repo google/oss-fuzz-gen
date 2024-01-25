@@ -1,0 +1,11 @@
+functions:
+- int Codec::setXAACDRCInfo(Codec * , int , int , int , int , int )
+- void ixheaacd_hbe_apply_ifft_336(float * , float * , int , int )
+- void ixheaacd_hbe_apply_fft_288(float * , float * , int , int )
+- void ixheaacd_hbe_apply_ifft_224(float * , float * , int , int )
+- void ixheaacd_apply_rot_dec(struct ia_ps_dec_struct * , int * , int * , int * ,
+  int * , struct ia_sbr_tables_struct * , short * )
+project: libxaac
+target_name: xaac_enc_fuzzer
+target_path: /src/libxaac/fuzzer/xaac_enc_fuzzer.cpp
+

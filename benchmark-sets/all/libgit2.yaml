@@ -1,0 +1,15 @@
+functions:
+- int git_submodule_update(struct git_submodule * sm, int init, struct git_submodule_update_options
+  * _update_options)
+- int git_submodule_clone(struct git_repository ** out, struct git_submodule * submodule,
+  struct git_submodule_update_options * given_opts)
+- int git_clone__submodule(struct git_repository ** out, char * url, char * local_path,
+  struct git_clone_options * _options)
+- int git_clone(struct git_repository ** out, char * url, char * local_path, struct
+  git_clone_options * _options)
+- int git__clone(struct git_repository ** out, char * url, char * local_path, struct
+  git_clone_options * _options, int use_existing)
+project: libgit2
+target_name: commit_graph_fuzzer
+target_path: /src/libgit2/fuzzers/commit_graph_fuzzer.c
+

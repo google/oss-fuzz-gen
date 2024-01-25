@@ -1,0 +1,15 @@
+functions:
+- int test_fapi_checks_pre(struct TSS2_TEST_FAPI_CONTEXT * test_ctx)
+- int test_esys_checks_pre(struct TSS2_TEST_ESYS_CONTEXT * test_ctx)
+- int test_fapi_checks_post(struct TSS2_TEST_FAPI_CONTEXT * test_ctx)
+- int test_esys_checks_post(struct TSS2_TEST_ESYS_CONTEXT * test_ctx)
+- int Tss2_Sys_Create(struct _TSS2_SYS_OPAQUE_CONTEXT_BLOB * sysContext, int parentHandle,
+  struct TSS2L_SYS_AUTH_COMMAND * cmdAuthsArray, struct TPM2B_SENSITIVE_CREATE * inSensitive,
+  struct TPM2B_PUBLIC * inPublic, struct TPM2B_DIGEST * outsideInfo, struct TPML_PCR_SELECTION
+  * creationPCR, struct TPM2B_PRIVATE * outPrivate, struct TPM2B_PUBLIC * outPublic,
+  struct TPM2B_CREATION_DATA * creationData, struct TPM2B_DIGEST * creationHash, struct
+  TPMT_TK_CREATION * creationTicket, struct TSS2L_SYS_AUTH_RESPONSE * rspAuthsArray)
+project: tpm2-tss
+target_name: Tss2_Sys_PCR_SetAuthPolicy_Prepare
+target_path: /src/tpm2-tss/test/fuzz/main-sys.c
+

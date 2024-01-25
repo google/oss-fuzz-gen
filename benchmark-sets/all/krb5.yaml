@@ -1,0 +1,35 @@
+functions:
+- int iakerb_gss_accept_sec_context(int * minor_status, struct gss_ctx_id_struct **
+  context_handle, struct gss_cred_id_struct * verifier_cred_handle, struct gss_buffer_desc_struct
+  * input_token, struct gss_channel_bindings_struct * input_chan_bindings, struct
+  gss_name_struct ** src_name, struct gss_OID_desc_struct ** mech_type, struct gss_buffer_desc_struct
+  * output_token, int * ret_flags, int * time_rec, struct gss_cred_id_struct ** delegated_cred_handle)
+- int iakerb_gss_init_sec_context(int * minor_status, struct gss_cred_id_struct *
+  claimant_cred_handle, struct gss_ctx_id_struct ** context_handle, struct gss_name_struct
+  * target_name, struct gss_OID_desc_struct * mech_type, int req_flags, int time_req,
+  struct gss_channel_bindings_struct * input_chan_bindings, struct gss_buffer_desc_struct
+  * input_token, struct gss_OID_desc_struct ** actual_mech_type, struct gss_buffer_desc_struct
+  * output_token, int * ret_flags, int * time_rec)
+- int kg_accept_krb5(int * minor_status, struct gss_ctx_id_struct ** context_handle,
+  struct gss_cred_id_struct * verifier_cred_handle, struct gss_buffer_desc_struct
+  * input_token, struct gss_channel_bindings_struct * input_chan_bindings, struct
+  gss_name_struct ** src_name, struct gss_OID_desc_struct ** mech_type, struct gss_buffer_desc_struct
+  * output_token, int * ret_flags, int * time_rec, struct gss_cred_id_struct ** delegated_cred_handle,
+  struct _krb5_gss_ctx_ext_rec * exts)
+- int krb5_gss_init_sec_context(int * minor_status, struct gss_cred_id_struct * claimant_cred_handle,
+  struct gss_ctx_id_struct ** context_handle, struct gss_name_struct * target_name,
+  struct gss_OID_desc_struct * mech_type, int req_flags, int time_req, struct gss_channel_bindings_struct
+  * input_chan_bindings, struct gss_buffer_desc_struct * input_token, struct gss_OID_desc_struct
+  ** actual_mech_type, struct gss_buffer_desc_struct * output_token, int * ret_flags,
+  int * time_rec)
+- int krb5_gss_init_sec_context_ext(int * minor_status, struct gss_cred_id_struct
+  * claimant_cred_handle, struct gss_ctx_id_struct ** context_handle, struct gss_name_struct
+  * target_name, struct gss_OID_desc_struct * mech_type, int req_flags, int time_req,
+  struct gss_channel_bindings_struct * input_chan_bindings, struct gss_buffer_desc_struct
+  * input_token, struct gss_OID_desc_struct ** actual_mech_type, struct gss_buffer_desc_struct
+  * output_token, int * ret_flags, int * time_rec, struct _krb5_gss_ctx_ext_rec *
+  exts)
+project: krb5
+target_name: Fuzz_profile
+target_path: /src/krb5/fuzzing/Fuzz_profile.c
+

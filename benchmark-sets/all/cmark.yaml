@@ -1,0 +1,10 @@
+functions:
+- char * cmark_markdown_to_html(char * , size_t , int )
+- struct cmark_node * cmark_parse_file(struct _IO_FILE * , int )
+- void cmark_parser_feed(struct cmark_parser * , char * , size_t )
+- int _scan_entity(char * )
+- int houdini_escape_html(struct cmark_strbuf * , char * , int )
+project: cmark
+target_name: cmark_fuzzer
+target_path: /src/cmark/test/cmark-fuzz.c
+

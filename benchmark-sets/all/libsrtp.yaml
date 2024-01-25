@@ -1,0 +1,13 @@
+functions:
+- int srtp_update(struct srtp_ctx_t_ * session, struct srtp_policy_t * policy)
+- int srtp_stream_update(struct srtp_ctx_t_ * session, struct srtp_policy_t * policy)
+- int update_template_streams(struct srtp_ctx_t_ * session, struct srtp_policy_t *
+  policy)
+- int stream_update(struct srtp_ctx_t_ * session, struct srtp_policy_t * policy)
+- int srtp_unprotect_aead(struct srtp_ctx_t_ * ctx, struct srtp_stream_ctx_t_ * stream,
+  size_t delta, size_t est, char * srtp_hdr, size_t * pkt_octet_len, struct srtp_session_keys_t
+  * session_keys, size_t mki_size, bool advance_packet_index)
+project: libsrtp
+target_name: srtp-fuzzer
+target_path: /src/libsrtp/fuzzer/fuzzer.c
+

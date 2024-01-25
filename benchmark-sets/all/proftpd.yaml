@@ -1,0 +1,10 @@
+functions:
+- struct modret_struc * ls_stat(struct cmd_struc * cmd)
+- struct modret_struc * ls_list(struct cmd_struc * cmd)
+- struct modret_struc * genericlist(struct cmd_struc * cmd)
+- int dolist(struct cmd_struc * cmd, char * opt, char * resp_code, int clear_flags)
+- struct modret_struc * ls_nlst(struct cmd_struc * cmd)
+project: proftpd
+target_name: json_fuzzer
+target_path: /src/proftpd/tests/fuzzing/json_fuzzer.c
+

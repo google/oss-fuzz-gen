@@ -1,0 +1,17 @@
+functions:
+- int nb_encode(char * state, char * vin, struct SpeexBits * bits)
+- int sb_encode(char * state, char * vin, struct SpeexBits * bits)
+- void split_cb_search_shape_sign(float * target, float * ak, float * awk1, float
+  * awk2, char * par, int p, int nsf, float * exc, float * r, struct SpeexBits * bits,
+  char * stack, int complexity, int update_target)
+- int pitch_search_3tap(float * target, float * sw, float * ak, float * awk1, float
+  * awk2, float * exc, char * par, int start, int end, float pitch_coef, int p, int
+  nsf, struct SpeexBits * bits, char * stack, float * exc2, float * r, int complexity,
+  int cdbk_offset, int plc_tuning, float * cumul_gain)
+- void split_cb_search_shape_sign_N1(float * target, float * ak, float * awk1, float
+  * awk2, char * par, int p, int nsf, float * exc, float * r, struct SpeexBits * bits,
+  char * stack, int update_target)
+project: speex
+target_name: speex_decode_fuzzer_float
+target_path: /src/speex/contrib/oss-fuzz/speexdec_fuzzer.cc
+

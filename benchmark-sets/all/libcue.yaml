@@ -1,0 +1,10 @@
+functions:
+- struct Cd * cue_parse_file(struct _IO_FILE * )
+- void cd_dump(struct Cd * )
+- void cd_track_dump(struct Track * )
+- void cdtext_dump(struct Cdtext * , int )
+- char * cdtext_get_key(int , int )
+project: libcue
+target_name: fuzz
+target_path: /src/libcue/oss-fuzz/fuzz.cpp
+

@@ -1,0 +1,12 @@
+functions:
+- int LLVMFuzzerInitialize(int * argc, char *** argv)
+- void Environment::Environment(struct Environment * this, std::string * data_dir)
+- int magic_list(struct magic_set * ms, char * magicfile)
+- int magic_load_buffers(struct magic_set * ms, char ** bufs, size_t * sizes, size_t
+  nbufs)
+- int buffer_apprentice(struct magic_set * ms, struct magic ** bufs, size_t * sizes,
+  size_t nbufs)
+project: file
+target_name: magic_fuzzer
+target_path: /src/file/fuzz/magic_fuzzer.c
+

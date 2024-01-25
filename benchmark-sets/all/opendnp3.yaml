@@ -1,0 +1,12 @@
+functions:
+- std::bad_function_call * opendnp3::StateUnsolicitedConfirmWait::OnNewNonReadRequest(std::bad_array_new_length
+  * , opendnp3::OContext * , struct opendnp3::ParsedRequest * )
+- std::bad_function_call * opendnp3::StateSolicitedConfirmWait::OnNewNonReadRequest(std::bad_array_new_length
+  * , opendnp3::OContext * , struct opendnp3::ParsedRequest * )
+- bool opendnp3::OContext::OnTxReady(opendnp3::OContext * )
+- void opendnp3::OContext::RestartUnsolConfirmTimer(anon * ) const
+- void opendnp3::OContext::RestartSolConfirmTimer(anon * ) const
+project: opendnp3
+target_name: onefile
+target_path: /src/opendnp3/cpp/tests/fuzz/onefile.cpp
+

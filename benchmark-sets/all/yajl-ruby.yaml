@@ -1,0 +1,13 @@
+functions:
+- int yajl_parse_complete(struct yajl_handle_t * hand)
+- int yajl_lex_peek(struct yajl_lexer_t * lexer, char * jsonText, int jsonTextLen,
+  int offset)
+- char * yajl_get_error(struct yajl_handle_t * hand, int verbose, char * jsonText,
+  int jsonTextLen)
+- void yajl_string_encode(struct yajl_buf_t * buf, char * str, int len, int htmlSafe)
+- char * yajl_render_error_string(struct yajl_handle_t * hand, char * jsonText, int
+  jsonTextLen, int verbose)
+project: yajl-ruby
+target_name: json_fuzzer
+target_path: /src/yajl-ruby/fuzz/json_fuzzer.c
+

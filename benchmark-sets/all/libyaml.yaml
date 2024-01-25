@@ -1,0 +1,13 @@
+functions:
+- void yaml_parser_set_input_file(struct yaml_parser_s * parser, struct _IO_FILE *
+  file)
+- void yaml_emitter_set_output_file(struct yaml_emitter_s * emitter, struct _IO_FILE
+  * file)
+- void yaml_emitter_set_indent(struct yaml_emitter_s * emitter, int indent)
+- void yaml_emitter_set_output_string(struct yaml_emitter_s * emitter, char * output,
+  size_t size, size_t * size_written)
+- int yaml_file_read_handler(char * data, char * buffer, size_t size, size_t * size_read)
+project: libyaml
+target_name: libyaml_parser_fuzzer
+target_path: /src/libyaml_parser_fuzzer.c
+

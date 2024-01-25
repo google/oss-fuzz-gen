@@ -1,0 +1,15 @@
+functions:
+- size_t meshopt_encodeIndexBuffer(char * buffer, size_t buffer_size, int * indices,
+  size_t index_count)
+- size_t meshopt_encodeVertexBuffer(char * buffer, size_t buffer_size, char * vertices,
+  size_t vertex_count, size_t vertex_size)
+- char * meshopt::decodeVertexBlock(char * data, char * data_end, char * vertex_data,
+  size_t vertex_count, size_t vertex_size, char * last_vertex)
+- char * meshopt::decodeBytes(char * data, char * data_end, char * buffer, size_t
+  buffer_size)
+- char * meshopt::encodeVertexBlock(char * data, char * data_end, char * vertex_data,
+  size_t vertex_count, size_t vertex_size, char * last_vertex)
+project: meshoptimizer
+target_name: gltfpack
+target_path: /src/meshoptimizer/gltf/gltfpack.cpp
+

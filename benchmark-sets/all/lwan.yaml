@@ -1,0 +1,10 @@
+functions:
+- void lwan_init(struct lwan * l)
+- void lwan_init_with_config(struct lwan * l, struct lwan_config * config)
+- void lwan_thread_init(struct lwan * l)
+- void create_thread(struct lwan * l, struct lwan_thread * thread)
+- char * thread_io_loop(char * data)
+project: lwan
+target_name: config_fuzzer
+target_path: /src/lwan/src/bin/fuzz/config_fuzzer.cc
+

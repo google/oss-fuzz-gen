@@ -1,0 +1,15 @@
+functions:
+- bool tinygltf::TinyGLTF::LoadBinaryFromFile(tinygltf::TinyGLTF * , tinygltf::Model
+  * , std::string * , std::string * , std::string * , int )
+- bool tinygltf::TinyGLTF::LoadASCIIFromFile(tinygltf::TinyGLTF * , tinygltf::Model
+  * , std::string * , std::string * , std::string * , int )
+- bool tinygltf::TinyGLTF::LoadBinaryFromMemory(tinygltf::TinyGLTF * , tinygltf::Model
+  * , std::string * , std::string * , char * , int , std::string * , int )
+- bool tinygltf::TinyGLTF::WriteGltfSceneToFile(tinygltf::TinyGLTF * , tinygltf::Model
+  * , std::string * , bool , bool , bool , bool )
+- bool tinygltf::TinyGLTF::WriteGltfSceneToStream(tinygltf::TinyGLTF * , tinygltf::Model
+  * , std::ostream * , bool , bool )
+project: tinygltf
+target_name: fuzz_gltf
+target_path: /src/tinygltf/tests/fuzzer/fuzz_gltf.cc
+

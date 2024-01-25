@@ -1,0 +1,10 @@
+functions:
+- bool QPluginLoader::load(QLibrary * )
+- bool (struct QVariant::Private * , int , char * , char * )
+- bool (struct QVariant::Private * , int , char * , char * )
+- bool QLibraryPrivate::isPlugin(QLibraryPrivate * )
+- void QLibraryPrivate::updatePluginState(QLibraryPrivate * )
+project: kcodecs
+target_name: kcodecs_fuzzer
+target_path: /src/kcodecs_fuzzer.cc
+

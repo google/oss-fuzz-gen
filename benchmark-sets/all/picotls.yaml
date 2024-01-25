@@ -1,0 +1,18 @@
+functions:
+- int ptls_handle_message(struct st_ptls_t * tls, struct st_ptls_buffer_t * sendbuf,
+  size_t * epoch_offsets, size_t in_epoch, char * input, size_t inlen, struct st_ptls_handshake_properties_t
+  * properties)
+- int ptls_server_handle_message(struct st_ptls_t * tls, struct st_ptls_buffer_t *
+  sendbuf, size_t * epoch_offsets, size_t in_epoch, char * input, size_t inlen, struct
+  st_ptls_handshake_properties_t * properties)
+- int ptls_client_handle_message(struct st_ptls_t * tls, struct st_ptls_buffer_t *
+  sendbuf, size_t * epoch_offsets, size_t in_epoch, char * input, size_t inlen, struct
+  st_ptls_handshake_properties_t * properties)
+- int client_handle_finished(struct st_ptls_t * tls, struct st_ptls_message_emitter_t
+  * emitter, char * message, size_t )
+- int ptls_send(struct st_ptls_t * tls, struct st_ptls_buffer_t * sendbuf, char *
+  input, size_t inlen)
+project: picotls
+target_name: fuzz-client-hello
+target_path: /src/picotls/fuzz/fuzz-client-hello.c
+

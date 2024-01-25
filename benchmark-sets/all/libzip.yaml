@@ -1,0 +1,15 @@
+functions:
+- struct zip_source * zip_source_zip_file(struct zip * za, struct zip * srcza, size_t
+  srcidx, int flags, size_t start, size_t len, char * password)
+- int zip_file_replace(struct zip * za, size_t idx, struct zip_source * source, int
+  flags)
+- struct zip_source * zip_source_window_create(struct zip_source * src, size_t start,
+  size_t len, struct zip_error * error)
+- struct zip_source * zip_source_buffer_with_attributes(struct zip * za, char * data,
+  size_t len, int freep, struct zip_file_attributes * attributes)
+- struct zip_source * zip_source_buffer_fragment(struct zip * za, struct zip_buffer_fragment
+  * fragments, size_t nfragments, int freep)
+project: libzip
+target_name: fuzz_main
+target_path: /src/libzip/ossfuzz/fuzz_main.c
+

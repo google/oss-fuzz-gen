@@ -1,0 +1,17 @@
+{
+    "benchmarks": [
+{% for benchmark in benchmarks %}
+    {
+        "benchmark": "{{ benchmark.id }}",
+        "status": "{{ benchmark.status }}",
+        "build_success_rate": "{{ benchmark.result.build_success_rate|percent }}",
+        "crash_rate": "{{ benchmark.result.crash_rate|percent }}",
+        "max_coverage": "{{ benchmark.result.max_coverage |percent }}",
+        "max_line_coverage_diff": "{{ benchmark.result.max_line_coverage_diff|percent }}"
+        {% if benchmark.result.max_coverage_diff_report %}
+        ,"max_line_coverage_diff_report": "{{ benchmark.result.max_coverage_diff_report }}"
+        {%- endif %}
+    }{% if not loop.last %},{% endif %}
+{% endfor %}
+    ]
+}

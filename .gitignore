@@ -1,0 +1,8 @@
+results/
+results-*/
+oss-fuzz/
+oss-fuzz-data/
+benchmark-sets/split_benchmarks/
+venv/
+.venv/
+__pycache__/
