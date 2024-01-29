@@ -18,7 +18,9 @@ import argparse
 import logging
 import os
 import sys
+import time
 import traceback
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from multiprocessing import Pool
 
 import run_one_experiment
@@ -219,11 +221,25 @@ def main():
       result = run_experiments(*config)
       experiment_results.append(result)
       _print_experiment_result(result)
+  elif args.cloud_experiment_name:
+    # Use multi-threads for cloud experiments, because each thread only needs to
+    # wait for cloud build results or conduct simple I/O tasks.
+    with ThreadPoolExecutor(max_workers=NUM_EXP) as executor:
+      # Using list comprehension to submit tasks with arguments
+      futures = []
+      for config in experiment_configs:
+        futures.append(executor.submit(run_experiments, *config))
+        time.sleep(30)
+      for future in as_completed(futures):
+        result = future.result()
+        _print_experiment_result(result)
+        experiment_results.append(result)
   else:
+    # Use multi-process for local experiments, because each process needs to
+    # built fuzz targets in local docker containers.
     with Pool(NUM_EXP) as p:
       for result in p.starmap(run_experiments, experiment_configs):
         experiment_results.append(result)
-        _print_experiment_result(result)
 
   _print_experiment_results(experiment_results)
 
