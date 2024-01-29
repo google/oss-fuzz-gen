@@ -229,6 +229,10 @@ def main():
       futures = []
       for config in experiment_configs:
         futures.append(executor.submit(run_experiments, *config))
+        # Sleep to avoid having a peak CPU usage at the beginning because of
+        # creating too many threads.
+        # Approx. 30s is sufficient because these threads will soon become idle
+        # when waiting for cloud build results.
         time.sleep(30)
       for future in as_completed(futures):
         result = future.result()
