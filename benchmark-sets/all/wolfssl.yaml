@@ -7,6 +7,6 @@ functions:
   )
 - int wolfSSL_X509_print(struct WOLFSSL_BIO * , struct WOLFSSL_X509 * )
 project: wolfssl
-target_name: srp
+target_name: fuzzer-wolfssl-srp
 target_path: /src/wolf-ssl-ssh-fuzzers/oss-fuzz/projects/wolf-ssl-ssh/fuzzers/wolfssl-fuzzers/srp.cpp
 

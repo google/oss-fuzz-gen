@@ -9,6 +9,5 @@ functions:
   true, test(struct uWS::TopicTree * , struct uWS::Subscriber * , char * topic, size_t
   , struct uWS::TopicTreeBigMessage * cb)
 project: uwebsockets
-target_name: ssl_ctx_api
-target_path: /src/uWebSockets/uSockets/boringssl/fuzz/ssl_ctx_api.cc
-
+target_name: Http
+target_path: /src/uWebSockets/uSockets/fuzzing/Http.cpp
