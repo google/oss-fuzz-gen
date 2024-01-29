@@ -23,6 +23,7 @@
 
 RESULTS_DIR=$1
 GCS_DIR=$2
+PYTHON="${3:-python3}"
 WEB_PORT=8080
 DATE=$(date '+%Y-%m-%d')
 
@@ -45,7 +46,7 @@ mkdir results-report
 
 while true; do
   # Spin up the web server generating the report (and bg the process).
-  PYTHONPATH=. /venv/bin/python3 report/web.py "${RESULTS_DIR:?}" "${WEB_PORT:?}" &
+  $PYTHON -m report.web "${RESULTS_DIR:?}" "${WEB_PORT:?}" &
   pid_web=$!
 
   cd results-report || exit 1

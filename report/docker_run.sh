@@ -69,7 +69,7 @@ EXPERIMENT_NAME="${DATE:?}-${FREQUENCY_LABEL:?}-${BENCHMARK_SET:?}"
 GCS_REPORT_DIR=${EXPERIMENT_NAME:?}
 
 # Generate a report and upload it to GCS
-bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" &
+bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" "/venv/bin/python3" &
 pid_report=$!
 
 # Run the experiment
