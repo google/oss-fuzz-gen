@@ -24,8 +24,8 @@ that contains `functions`.
 Use [`introspector.py`](introspector.py) to generate a YAML file of a `C`/`C++` project in `OSS-Fuzz`:
 ```
 # In virtual env under root directory.
-PYTHONPATH=. ./data_prep/introspector.py <project-name> > <project-name>.yaml
-# E.g., PYTHONPATH=. ./data_prep/introspector.py tinyxml2 > tinyxml2.yaml
+python -m data_prep.introspector <project-name> > <project-name>.yaml
+# E.g., python -m data_prep.introspector tinyxml2 > tinyxml2.yaml
 ```
 
 Benchmark files generated in this way prioritize [far-reach-but-low-coverage](https://introspector.oss-fuzz.com/api#api-far-reach-but-low-coverage) functions in `OSS-Fuzz` production, hence easier to achieve higher [`max line coverage diff`](../README.md#Visualizing-Results).
@@ -49,11 +49,11 @@ The examples are **automatically** added into prompts via `generate_data()` in [
 Use [`project_src.py`](project_src.py) to retrieve all fuzz target files of a `C`/`C++` project in `OSS-Fuzz` to a local directory (`example_targets/<project_name>`, by default):
 ```
 # In virtual env under root directory.
-PYTHONPATH=. ./data_prep/project_src.py -p <project-name>
+python -m data_prep.project_src -p <project-name>
 # E.g., retrieve all human-written fuzz targets for TinyXML-2:
-# PYTHONPATH=. ./data_prep/project_src.py -p tinyxml2
+# python -m data_prep.project_src -p tinyxml2
 # E.g., retrieve all fuzz targets for all projects:
-PYTHONPATH=. ./data_prep/project_src.py -p all
+python -m data_prep.project_src -p all
 ```
 
 ## Training Data
@@ -74,9 +74,9 @@ multiple `function_signature`s may share the same `fuzz_target`, i.e.:
 Use [`project_targets.py`](project_targets.py) to generate a JSON file based on a `C`/`C++` project in `OSS-Fuzz`:
 ```
 # In virtual env under root directory.
-PYTHONPATH=. ./data_prep/project_targets.py --project-name <project-name>
+python -m data_prep.project_targets --project-name <project-name>
 # E.g., generate data for TinyXML-2:
-# PYTHONPATH=. ./data_prep/project_targets.py --project-name tinyxml2
+# python -m data_prep.project_targets --project-name tinyxml2
 # E.g., generate data for all C/C++ projects:
-# PYTHONPATH=. ./data_prep/project_targets.py --project-name all
+# python -m data_prep.project_targets --project-name all
 ```
