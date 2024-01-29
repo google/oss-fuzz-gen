@@ -11,6 +11,6 @@ functions:
   * transportInternal)
 - int TPM12_MainInit()
 project: libtpms
-target_name: fuzz-main
-target_path: /src/libtpms/tests/fuzz-main.c
+target_name: fuzz
+target_path: /src/libtpms/tests/fuzz.cc
 

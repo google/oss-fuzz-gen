@@ -6,6 +6,6 @@ functions:
 - int spng_set_text(struct spng_ctx * ctx, struct spng_text * text, int n_text)
 - int spng_set_splt(struct spng_ctx * ctx, struct spng_splt * splt, int n_splt)
 project: libspng
-target_name: fuzz_main
-target_path: /src/libspng/tests/fuzz_main.c
+target_name: spng_read_fuzzer
+target_path: /src/libspng/tests/spng_read_fuzzer.c
 
