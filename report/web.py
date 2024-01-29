@@ -15,6 +15,7 @@
 
 import dataclasses
 import json
+import logging
 import os
 import re
 import sys
@@ -26,6 +27,9 @@ import run_one_experiment
 from experiment import evaluator
 
 app = Flask(__name__)
+# Disable Flask request logs
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 RESULTS_DIR = ''
 
