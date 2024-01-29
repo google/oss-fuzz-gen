@@ -35,7 +35,7 @@ RUN_TIMEOUT=$3
 # When running on GCP this step is unnecessary.
 if [[ $GOOGLE_APPLICATION_CREDENTIALS != '' ]]
 then
-  gcloud auth activate-service-account LLM-EVAL@oss-fuzz.iam.gserviceaccount.com --key-file=${GOOGLE_APPLICATION_CREDENTIALS:?}
+  gcloud auth activate-service-account LLM-EVAL@oss-fuzz.iam.gserviceaccount.com --key-file="${GOOGLE_APPLICATION_CREDENTIALS:?}"
 fi
 
 if [[ $BENCHMARK_SET = '' ]]
@@ -69,17 +69,26 @@ EXPERIMENT_NAME="${DATE:?}-${FREQUENCY_LABEL:?}-${BENCHMARK_SET:?}"
 GCS_REPORT_DIR=${EXPERIMENT_NAME:?}
 
 # Generate a report and upload it to GCS
-bash report/upload_report.sh ${LOCAL_RESULTS_DIR:?} ${GCS_REPORT_DIR:?} &
+bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" &
+pid_report=$!
 
 # Run the experiment
 /venv/bin/python3 run_all_experiments.py \
   --benchmarks-directory "benchmark-sets/${BENCHMARK_SET:?}" \
-  --run-timeout ${RUN_TIMEOUT:?} \
-  --cloud-experiment-name ${EXPERIMENT_NAME:?} \
+  --run-timeout "${RUN_TIMEOUT:?}" \
+  --cloud-experiment-name "${EXPERIMENT_NAME:?}" \
   --cloud-experiment-bucket 'oss-fuzz-gcb-experiment-run-logs' \
   --template-directory 'prompts/template_xml' \
   --work-dir ${LOCAL_RESULTS_DIR:?} \
   --num-samples 10 \
   --mode 'vertex_ai_code-bison-32k'
 
-echo 1 > /experiment_status
+export ret_val=$?
+
+touch /experiment_ended
+
+# Wait for the report process to finish uploading.
+wait $pid_report
+
+# Exit with the return value of `./run_all_experiments`.
+exit $ret_val
