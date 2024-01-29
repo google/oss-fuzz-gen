@@ -10,6 +10,6 @@ functions:
 - char * meshopt::encodeVertexBlock(char * data, char * data_end, char * vertex_data,
   size_t vertex_count, size_t vertex_size, char * last_vertex)
 project: meshoptimizer
-target_name: gltfpack
-target_path: /src/meshoptimizer/gltf/gltfpack.cpp
+target_name: codecfuzzer
+target_path: /src/meshoptimizer/tools/codecfuzz.cpp
 
