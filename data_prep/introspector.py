@@ -27,6 +27,7 @@ from google.cloud import storage
 
 from data_prep import project_src
 from experiment import benchmark as benchmarklib
+from experiment import oss_fuzz_checkout
 
 TIMEOUT = 10
 INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
@@ -311,6 +312,8 @@ if __name__ == '__main__':
   if len(sys.argv) > 2:
     max_num_function = int(sys.argv[2])
 
+  oss_fuzz_checkout.clone_oss_fuzz()
+  oss_fuzz_checkout.postprocess_oss_fuzz()
   benchmarks = populate_benchmarks_using_introspector(sys.argv[1],
                                                       max_num_function)
   if benchmarks:
