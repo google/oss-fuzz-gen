@@ -1,11 +1,27 @@
 # Usage guide
 
 Running an experiment requires three steps:
+1. Install [dependencies](#Dependencies).
 1. Setting up [LLM access](#LLM-Access).
-2. Install [dependencies](#Python-Dependencies).
 3. Launch [experiment](#Run).
 
 ## Prerequisites
+
+### Dependencies
+You must install:
+1. Python 3.11
+2. Git
+3. [Docker](https://www.docker.com/)
+4. [Google Cloud SDK](https://cloud.google.com/sdk)
+5. (optional for [`project_src.py`](./data_prep/project_src.py)) [clang-format](https://clang.llvm.org/docs/ClangFormat.html)
+
+#### Python Dependencies
+Install required dependencies in a `Python` virtual environment:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
 ### LLM Access
 Setup [Vertex AI](#Vertex-AI) or [OpenAI](#OpenAI) with the following steps.
@@ -36,13 +52,6 @@ Then set it as an ENV variable:
 export OPENAI_API_KEY='<your-api-key>'
 ```
 
-### Python Dependencies
-Install required dependencies in a `Python` virtual environment:
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
 
 ## Running experiments
 To generate and evaluate the fuzz targets in a benchmark set via *local* experiments:
