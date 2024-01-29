@@ -18,7 +18,6 @@ import dataclasses
 import json
 import logging
 import os
-import random
 import re
 import subprocess as sp
 import time
@@ -342,7 +341,7 @@ class CloudBuilderRunner(BuilderRunner):
     coverage_name = f'{uid}.coverage'
     coverage_path = f'gs://{self.experiment_bucket}/{coverage_name}'
 
-    for attempts in range(CLOUD_EXP_MAX_ATTEMPT):
+    for attempt_id in range(1, CLOUD_EXP_MAX_ATTEMPT + 1):
       try:
         sp.run([
             f'./{oss_fuzz_checkout.VENV_DIR}/bin/python3',
@@ -360,16 +359,24 @@ class CloudBuilderRunner(BuilderRunner):
                cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
         break
       except sp.CalledProcessError as e:
-        logging.warning(f'Failed to evaluate target on cloud:\n'
-                        f'{e.stdout.decode("utf-8")}\n'
-                        f'{e.stderr.decode("utf-8")}')
-        # Temp workaround for issue #12
-        if (attempts != CLOUD_EXP_MAX_ATTEMPT - 1 and
-            'You do not currently have an active account selected'
-            in e.stderr.decode("utf-8")):
-          delay = 60 * 2**attempts + random.randint(0, 30)
-          print(f'Retry in {delay}s...')
+        stdout = e.stdout.decode("utf-8")
+        stderr = e.stderr.decode("utf-8")
+        # Temp workaround for issue #12.
+        if ('You do not currently have an active account selected' in stderr and
+            attempt_id < CLOUD_EXP_MAX_ATTEMPT):
+          delay = 5 * 2**attempt_id
+          logging.warning(f'Failed to evaluate {target_path} on cloud, '
+                          f'attempt {attempt_id}:\n'
+                          f'{stdout}\n'
+                          f'{stderr}\n'
+                          f'Retry in {delay}s...')
           time.sleep(delay)
+        else:
+          logging.error(f'Failed to evaluate {target_path} on cloud, '
+                        f'attempt {attempt_id}:\n'
+                        f'{stdout}\n'
+                        f'{stderr}')
+          break
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(self.experiment_bucket)
