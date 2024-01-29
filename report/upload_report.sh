@@ -41,36 +41,45 @@ then
   echo "GCS directory was not specified as the second argument. Defaulting to ${GCS_DIR:?}."
 fi
 
-# Spin up the web server generating the report (and bg the process)
-PYTHONPATH=. /venv/bin/python3 report/web.py ${RESULTS_DIR:?} ${WEB_PORT:?} &
+mkdir results-report
 
 while true; do
-  mkdir results-report
-  cd results-report
+  # Spin up the web server generating the report (and bg the process).
+  PYTHONPATH=. /venv/bin/python3 report/web.py "${RESULTS_DIR:?}" "${WEB_PORT:?}" &
+  pid_web=$!
 
-  # Recursively get all the experiment results
-  wget2 --inet4-only --no-host-directories --http2-request-window 10 --recursive localhost:${WEB_PORT:?}/
+  cd results-report || exit 1
 
-  # Also fetch the sorted line cov diff report
-  wget2 --inet4-only localhost:${WEB_PORT:?}/sort -O sort.html
+  # Recursively get all the experiment results.
+  echo "Download results from localhost."
+  wget2 --quiet --inet4-only --no-host-directories --http2-request-window 10 --recursive localhost:${WEB_PORT:?}/ 2>&1
 
-  # Upload the report to GCS
-  gsutil -m -h "Content-Type:text/html" \
+  # Also fetch the sorted line cov diff report.
+  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort -O sort.html 2>&1
+
+  # Stop the server.
+  kill -9 "$pid_web"
+
+  # Upload the report to GCS.
+  echo "Uploading the report."
+  gsutil -q -m -h "Content-Type:text/html" \
          -h "Cache-Control:public, max-age=3600" \
-         cp -r . gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}
+         cp -r . "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
 
   cd ..
 
   # Upload the raw results into the same GCS directory
-  gsutil -m cp -r ${RESULTS_DIR:?} \
-         gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}
+  echo "Uploading the raw results."
+  gsutil -q -m cp -r "${RESULTS_DIR:?}" \
+         "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
 
   echo "See the published report at https://llm-exp.oss-fuzz.com/Result-reports/${GCS_DIR:?}/"
-  if [[ -f /experiment_status ]] && [[ "$(cat /experiment_status)" == "1" ]]; then
+
+  if [[ -f /experiment_ended ]]; then
     echo "Experiment finished."
-    break
-  else
-    echo "Experiment is running..."
-    sleep 600
+    exit
   fi
+
+  echo "Experiment is running..."
+  sleep 600
 done

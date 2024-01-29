@@ -365,18 +365,20 @@ class CloudBuilderRunner(BuilderRunner):
         if ('You do not currently have an active account selected' in stderr and
             attempt_id < CLOUD_EXP_MAX_ATTEMPT):
           delay = 5 * 2**attempt_id
-          logging.warning(f'Failed to evaluate {target_path} on cloud, '
-                          f'attempt {attempt_id}:\n'
+          logging.warning(f'Failed to evaluate {os.path.realpath(target_path)} '
+                          f'on cloud, attempt {attempt_id}:\n'
                           f'{stdout}\n'
                           f'{stderr}\n'
                           f'Retry in {delay}s...')
           time.sleep(delay)
         else:
-          logging.error(f'Failed to evaluate {target_path} on cloud, '
-                        f'attempt {attempt_id}:\n'
+          logging.error(f'Failed to evaluate {os.path.realpath(target_path)} '
+                        f'on cloud, attempt {attempt_id}:\n'
                         f'{stdout}\n'
                         f'{stderr}')
-          break
+          return build_result, None
+
+    print(f'Evaluated {os.path.realpath(target_path)} on cloud.')
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(self.experiment_bucket)
@@ -389,19 +391,33 @@ class CloudBuilderRunner(BuilderRunner):
         'wb') as f:
       blob = bucket.blob(build_log_name)
       if blob.exists():
+        print(f'Downloading cloud build log of {os.path.realpath(target_path)}:'
+              f' {build_log_name} to {f}')
         blob.download_to_file(f)
+      else:
+        print(f'Cannot find cloud build log of {os.path.realpath(target_path)} '
+              f':{build_log_name}')
 
     with open(self.work_dirs.run_logs_target(generated_target_name), 'wb') as f:
       blob = bucket.blob(run_log_name)
       if blob.exists():
         build_result.succeeded = True
+        print(f'Downloading cloud run log of {os.path.realpath(target_path)}:'
+              f' {run_log_name} to {f}')
         blob.download_to_file(f)
+      else:
+        print(f'Cannot find cloud run log of {os.path.realpath(target_path)} '
+              f':{run_log_name}')
 
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(
           self.work_dirs.build_logs_target(generated_target_name, iteration))
       build_result.errors = errors
+      print(f'Cloud evaluation of {os.path.realpath(target_path)} indicates a '
+            f'failure: {errors}')
       return build_result, None
+    print(f'Cloud evaluation of {os.path.realpath(target_path)} indicates a '
+          'success.')
 
     corpus_dir = self.work_dirs.corpus(generated_target_name)
     with open(os.path.join(corpus_dir, 'corpus.zip'), 'wb') as f:
