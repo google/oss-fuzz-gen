@@ -17,10 +17,22 @@ from __future__ import annotations
 
 import dataclasses
 import re
+import subprocess
 from typing import List, Optional
 
-FUNCTION_PATTERN = re.compile(r'^([\w\:\.]+):')
+# No spaces at t he beginning, and ends with a ":".
+FUNCTION_PATTERN = re.compile(r'^[^\s](.+):$')
 LINE_PATTERN = re.compile(r'^\s*\d+\|\s*([\d\.a-zA-Z]+)\|(.*)')
+
+
+def demangle(data: str) -> str:
+  """Demangle a string containing mangled C++ symbols."""
+  return subprocess.check_output(['c++filt'], input=data, encoding='utf-8')
+
+
+def normalize_template_args(name: str) -> str:
+  """Normalize template arguments."""
+  return re.sub(r'<.*>', '<>', name)
 
 
 def _parse_hitcount(data: str) -> float:
@@ -104,10 +116,12 @@ class Textcov:
 
     current_function_name: str = ''
     current_function: Function = Function()
-    for line in file_handle:
+    demangled = demangle(file_handle.read())
+    for line in demangled.split('\n'):
       match = FUNCTION_PATTERN.match(line)
       if match:
-        current_function_name = match.group(1)
+        # Normalize templates.
+        current_function_name = normalize_template_args(match.group(1))
         if any(
             p.match(current_function_name) for p in ignore_function_patterns):
           # Ignore this function.
