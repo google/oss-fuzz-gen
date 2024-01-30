@@ -5,6 +5,7 @@ import subprocess
 from collections import defaultdict
 from typing import List, Tuple
 import uuid
+import shutil
 
 
 class ContextRetriever:
@@ -266,10 +267,7 @@ class ContextRetriever:
   
   def cleanup_asts(self):
     """Removes ASTs for the given project."""
-    for ast_file in os.listdir(self._ast_path):
-      os.remove(f'{self._ast_path}/{ast_file}')
-  
-    os.rmdir(self._ast_path)
+      shutil.rmtree(self._ast_path)
 
   def generate_lookups(self):
     """Goes through all AST files downloaded.
