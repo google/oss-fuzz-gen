@@ -362,8 +362,8 @@ class CloudBuilderRunner(BuilderRunner):
         stdout = e.stdout.decode("utf-8")
         stderr = e.stderr.decode("utf-8")
         # Temp workaround for issue #12.
-        if ('You do not currently have an active account selected' in stderr and
-            attempt_id < CLOUD_EXP_MAX_ATTEMPT):
+        if ('You do not currently have an active account selected'
+            in stdout + stderr and attempt_id < CLOUD_EXP_MAX_ATTEMPT):
           delay = 5 * 2**attempt_id
           logging.warning(f'Failed to evaluate {os.path.realpath(target_path)} '
                           f'on cloud, attempt {attempt_id}:\n'
