@@ -242,6 +242,7 @@ def run(benchmark: Benchmark,
       print(context_header)
       context_types = '\n'.join(retriever.get_type_info())
       context_info = (context_header, context_types)
+      retriever.cleanup_asts()
 
     model.prompt_path = model.prepare_generate_prompt(
         work_dirs.prompt,
