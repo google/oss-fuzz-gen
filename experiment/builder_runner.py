@@ -16,9 +16,11 @@ Project local/cloud builder and runner.
 """
 import dataclasses
 import json
+import logging
 import os
 import re
 import subprocess as sp
+import time
 import uuid
 from typing import Any, Optional
 
@@ -35,6 +37,7 @@ from llm_toolkit.models import DefaultModel
 JCC_DIR = '/usr/local/bin'
 
 RUN_TIMEOUT: int = 30
+CLOUD_EXP_MAX_ATTEMPT = 5
 
 
 @dataclasses.dataclass
@@ -338,25 +341,42 @@ class CloudBuilderRunner(BuilderRunner):
     coverage_name = f'{uid}.coverage'
     coverage_path = f'gs://{self.experiment_bucket}/{coverage_name}'
 
-    try:
-      sp.run([
-          f'./{oss_fuzz_checkout.VENV_DIR}/bin/python3',
-          'infra/build/functions/target_experiment.py',
-          f'--project={generated_project}',
-          f'--target={self.benchmark.target_name}',
-          f'--upload_build_log={build_log_path}',
-          f'--upload_output_log={run_log_path}',
-          f'--upload_corpus={corpus_path}',
-          f'--upload_coverage={coverage_path}',
-          f'--experiment_name={self.experiment_name}', '--'
-      ] + self._libfuzzer_args(),
-             capture_output=True,
-             check=True,
-             cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
-    except sp.CalledProcessError as e:
-      print(f'Failed to evaluate {os.path.realpath(target_path)} on cloud:',
-            e.stdout, e.stderr)
-      return build_result, None
+    for attempt_id in range(1, CLOUD_EXP_MAX_ATTEMPT + 1):
+      try:
+        sp.run([
+            f'./{oss_fuzz_checkout.VENV_DIR}/bin/python3',
+            'infra/build/functions/target_experiment.py',
+            f'--project={generated_project}',
+            f'--target={self.benchmark.target_name}',
+            f'--upload_build_log={build_log_path}',
+            f'--upload_output_log={run_log_path}',
+            f'--upload_corpus={corpus_path}',
+            f'--upload_coverage={coverage_path}',
+            f'--experiment_name={self.experiment_name}', '--'
+        ] + self._libfuzzer_args(),
+               capture_output=True,
+               check=True,
+               cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
+        break
+      except sp.CalledProcessError as e:
+        stdout = e.stdout.decode("utf-8")
+        stderr = e.stderr.decode("utf-8")
+        # Temp workaround for issue #12.
+        if ('You do not currently have an active account selected'
+            in stdout + stderr and attempt_id < CLOUD_EXP_MAX_ATTEMPT):
+          delay = 5 * 2**attempt_id
+          logging.warning(f'Failed to evaluate {os.path.realpath(target_path)} '
+                          f'on cloud, attempt {attempt_id}:\n'
+                          f'{stdout}\n'
+                          f'{stderr}\n'
+                          f'Retry in {delay}s...')
+          time.sleep(delay)
+        else:
+          logging.error(f'Failed to evaluate {os.path.realpath(target_path)} '
+                        f'on cloud, attempt {attempt_id}:\n'
+                        f'{stdout}\n'
+                        f'{stderr}')
+          return build_result, None
 
     print(f'Evaluated {os.path.realpath(target_path)} on cloud.')
 
