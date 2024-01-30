@@ -68,7 +68,6 @@ def function_name_regex(function_name, include_top_level=False) -> str:
   for i in range(len(parts) - start, -1, -1):
     options.append('::'.join(parts[i:]))
 
-  print('(' + '|'.join(options) + ')')
   return '(' + '|'.join(options) + ')'
 
 
