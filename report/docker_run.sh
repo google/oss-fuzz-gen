@@ -29,6 +29,9 @@
 BENCHMARK_SET=$1
 FREQUENCY_LABEL=$2
 RUN_TIMEOUT=$3
+# Uses python3 by default and /venv/bin/python3 for Docker containers.
+PYTHON="$( [[ -x "/venv/bin/python3" ]] && echo "/venv/bin/python3" || echo "python3" )"
+export PYTHON
 
 # When running the docker container locally we need to activate the service
 # account from the env variable.
@@ -69,11 +72,11 @@ EXPERIMENT_NAME="${DATE:?}-${FREQUENCY_LABEL:?}-${BENCHMARK_SET:?}"
 GCS_REPORT_DIR=${EXPERIMENT_NAME:?}
 
 # Generate a report and upload it to GCS
-bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" "/venv/bin/python3" &
+bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" &
 pid_report=$!
 
 # Run the experiment
-/venv/bin/python3 run_all_experiments.py \
+$PYTHON run_all_experiments.py \
   --benchmarks-directory "benchmark-sets/${BENCHMARK_SET:?}" \
   --run-timeout "${RUN_TIMEOUT:?}" \
   --cloud-experiment-name "${EXPERIMENT_NAME:?}" \

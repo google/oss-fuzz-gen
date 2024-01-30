@@ -23,7 +23,6 @@
 
 RESULTS_DIR=$1
 GCS_DIR=$2
-PYTHON="${3:-python3}"
 WEB_PORT=8080
 DATE=$(date '+%Y-%m-%d')
 
