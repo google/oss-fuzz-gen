@@ -47,6 +47,10 @@ def parse_function_name(function_signature: str) -> str:
 
 def function_name_regex(function_name, include_top_level=False) -> str:
   """The regex to capture function name"""
+  # TODO: Temp workaround for issue #27, allows fuzzy match for special chars
+  #  to be removed when we have feature from FI to properly fix this.
+  # function<type~> -> function[^\w:]type[^\w:][^\w:]
+  function_name = re.sub(r'[^\w:]', '[^\\\\w:]', function_name)
   parts = function_name.split('::')
   if len(parts) < 2:
     return function_name
@@ -64,6 +68,7 @@ def function_name_regex(function_name, include_top_level=False) -> str:
   for i in range(len(parts) - start, -1, -1):
     options.append('::'.join(parts[i:]))
 
+  print('(' + '|'.join(options) + ')')
   return '(' + '|'.join(options) + ')'
 
 
