@@ -6,6 +6,7 @@ import subprocess
 import uuid
 from collections import defaultdict
 from typing import List, Tuple
+import uuid
 
 
 class ContextRetriever:
@@ -264,6 +265,13 @@ class ContextRetriever:
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
+  
+  def cleanup_asts(self):
+    """Removes ASTs for the given project."""
+    for ast_file in os.listdir(self._ast_path):
+      os.remove(f'{self._ast_path}/{ast_file}')
+  
+    os.rmdir(self._ast_path)
 
   def cleanup_asts(self):
     """Removes ASTs for the given project."""
