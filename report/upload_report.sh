@@ -45,7 +45,7 @@ mkdir results-report
 
 while true; do
   # Spin up the web server generating the report (and bg the process).
-  PYTHONPATH=. /venv/bin/python3 report/web.py "${RESULTS_DIR:?}" "${WEB_PORT:?}" &
+  $PYTHON -m report.web "${RESULTS_DIR:?}" "${WEB_PORT:?}" &
   pid_web=$!
 
   cd results-report || exit 1
