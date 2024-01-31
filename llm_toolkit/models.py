@@ -57,6 +57,26 @@ EXAMPLES = [
     [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
 ]
 
+# Code fixing examples.
+FIXER_EXAMPLE_PATH = os.path.join('prompts', 'fixer_example')
+
+FIXER_EXAMPLE_1_CODE = os.path.join(FIXER_EXAMPLE_PATH,
+                                    'parse_complex_format_second-code.cc')
+FIXER_EXAMPLE_1_ERROR = os.path.join(FIXER_EXAMPLE_PATH,
+                                     'parse_complex_format_second-error.txt')
+FIXER_EXAMPLE_1_FIX = os.path.join(FIXER_EXAMPLE_PATH,
+                                   'parse_complex_format_second-fix.cc')
+FIXER_EXAMPLE_2_CODE = os.path.join(FIXER_EXAMPLE_PATH,
+                                    'fribidi_log2vis-code.cc')
+FIXER_EXAMPLE_2_ERROR = os.path.join(FIXER_EXAMPLE_PATH,
+                                     'fribidi_log2vis-error.txt')
+FIXER_EXAMPLE_2_FIX = os.path.join(FIXER_EXAMPLE_PATH, 'fribidi_log2vis-fix.cc')
+
+FIXER_EXAMPLES = [
+    [FIXER_EXAMPLE_2_CODE, FIXER_EXAMPLE_2_ERROR, FIXER_EXAMPLE_2_FIX],
+    [FIXER_EXAMPLE_1_CODE, FIXER_EXAMPLE_1_ERROR, FIXER_EXAMPLE_1_FIX],
+]
+
 
 class LLM:
   """Base LLM."""
@@ -330,6 +350,8 @@ class LLM:
     """Formats a problem for code fixer based on the template."""
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
+    # Last 2 lines removed for LLM to complete.
+    problem = problem.rsplit("\n", 2)[0]
     problem = problem.replace('{CODE_TO_BE_FIXED}', raw_code)
 
     problem_prompt = self._create_prompt_piece(problem, 'user')
@@ -346,7 +368,14 @@ class LLM:
 
     # We are adding errors one by one until we reach the maximum prompt size
     selected_errors = []
+    skip_line = 0
     for error in errors:
+      # TODO: remove this
+      if "fatal error: 'algorithm' file not found" in error:
+        skip_line = 3
+      if skip_line > 0:
+        skip_line -= 1
+        continue
       error_prompt = self._create_prompt_piece(error, 'user')
       error_token_num = self._estimate_token_num(error_prompt)
       if prompt_size + error_token_num >= self.context_window:
@@ -360,6 +389,28 @@ class LLM:
     error_message = '\n'.join(selected_errors)
     return problem.replace('{ERROR_MESSAGES}', error_message)
 
+  def format_fixer_examples(self, example_files: list[list[str]]):
+    """Formats code fixing examples based on the problem template."""
+    # TODO(jimchoi): calculate the prompt size and select example
+    #  when size is too large, maybe refactor and reuse _select_examples()
+    examples = []
+    for code, error, fix in example_files:
+      with open(self.fixer_problem_template_file) as f:
+        problem = f.read().strip()
+      with open(code) as f:
+        code = f.read().strip()
+        problem = problem.replace('{CODE_TO_BE_FIXED}',
+                                  project_targets.filter_target_lines(code))
+      with open(error) as f:
+        error = f.read().strip()
+        problem = problem.replace('{ERROR_MESSAGES}', error)
+      with open(fix) as f:
+        fix = f.read().strip()
+        problem = problem.replace('{FIXED_CODE}',
+                                  project_targets.filter_target_lines(fix))
+      examples.append(problem)
+    return '\n\n'.join(examples)
+
   def prepare_fix_prompt(self, prompt_path: str, raw_code: str,
                          errors: list[str]) -> str:
     """Prepares the code-fixing prompt."""
@@ -367,7 +418,10 @@ class LLM:
     priming_weight = self._estimate_token_num(priming)
     problem = self.format_fixer_problem(raw_code, errors, priming_weight)
 
-    return self.prepare_prompt(prompt_path, priming, problem)
+    examples = self.format_fixer_examples(FIXER_EXAMPLES)
+
+    return self.prepare_prompt(prompt_path, priming,
+                               examples + '\n\n' + problem)
 
   def prepare_prompt(
       self,

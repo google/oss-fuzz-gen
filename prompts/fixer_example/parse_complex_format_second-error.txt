@@ -1,0 +1,4 @@
+fuzz_char_lib.cpp:11:3: error: use of undeclared identifier 'parse_complex_format_second'
+  parse_complex_format_second(const_cast<char*>(input.c_str()));
+  ^
+1 error generated.

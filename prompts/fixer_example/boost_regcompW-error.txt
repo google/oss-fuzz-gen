@@ -1,0 +1,7 @@
+../boost_ptree_jsonread_fuzzer.cc:15:13: error: no matching function for call to 'regcompW'
+  int err = regcompW(&expression, reinterpret_cast<int*>(const_cast<char*>(pattern.c_str())), flags);
+            ^~~~~~~~
+./boost/regex/v5/cregex.hpp:169:40: note: candidate function not viable: no known conversion from 'int *' to 'const wchar_t *' for 2nd argument
+BOOST_REGEX_DECL int BOOST_REGEX_CCALL regcompW(regex_tW*, const wchar_t*, int);
+                                       ^
+1 error generated.

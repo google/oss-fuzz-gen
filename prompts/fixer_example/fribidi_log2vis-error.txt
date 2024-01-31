@@ -1,0 +1,31 @@
+../../src/fribidi/bin/fribidi-fuzzer.c:26:8: error: conflicting types for 'fribidi_log2vis'
+  char fribidi_log2vis(int *str, intlen, int *pbase_dir, int *visual_str, int *positions_L_to_V, int *positions_V_to_L, char *embedding_levels);
+       ^
+../../src/fribidi/lib/fribidi.h:99:28: note: previous declaration is here
+FRIBIDI_ENTRY FriBidiLevel fribidi_log2vis (
+                           ^
+1 error generated.
+
+Fix failure
+../../src/fribidi/bin/fribidi-fuzzer.cpp:14:20: error: cannot initialize a variable of type 'FriBidiCharType *' (aka 'unsigned int *') with an rvalue of type 'void *'
+  FriBidiCharType *types = calloc (str_len, sizeof (FriBidiCharType));
+                   ^       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../src/fribidi/bin/fribidi-fuzzer.cpp:15:23: error: cannot initialize a variable of type 'FriBidiBracketType *' (aka 'unsigned int *') with an rvalue of type 'void *'
+  FriBidiBracketType *btypes = calloc (str_len, sizeof (FriBidiBracketType));
+                      ^        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../src/fribidi/bin/fribidi-fuzzer.cpp:16:17: error: cannot initialize a variable of type 'FriBidiLevel *' (aka 'signed char *') with an rvalue of type 'void *'
+  FriBidiLevel *levels = calloc (str_len, sizeof (FriBidiLevel));
+                ^        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../src/fribidi/bin/fribidi-fuzzer.cpp:23:8: error: cannot initialize a variable of type 'int *' with an rvalue of type 'void *'
+  int *vis_str = calloc (str_len, sizeof (int));
+       ^         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../src/fribidi/bin/fribidi-fuzzer.cpp:24:8: error: cannot initialize a variable of type 'int *' with an rvalue of type 'void *'
+  int *pos_L_to_V = calloc (str_len, sizeof (int));
+       ^            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../src/fribidi/bin/fribidi-fuzzer.cpp:25:8: error: cannot initialize a variable of type 'int *' with an rvalue of type 'void *'
+  int *pos_V_to_L = calloc (str_len, sizeof (int));
+       ^            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../src/fribidi/bin/fribidi-fuzzer.cpp:26:34: error: unknown type name 'intlen'
+  char fribidi_log2vis(int *str, intlen, int *pbase_dir, int *visual_str, int *positions_L_to_V, int *positions_V_to_L, char *embedding_levels);
+                                 ^
+7 errors generated.
