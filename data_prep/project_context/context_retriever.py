@@ -267,7 +267,7 @@ class ContextRetriever:
   
   def cleanup_asts(self):
     """Removes ASTs for the given project."""
-      shutil.rmtree(self._ast_path)
+    shutil.rmtree(self._ast_path)
 
   def generate_lookups(self):
     """Goes through all AST files downloaded.
