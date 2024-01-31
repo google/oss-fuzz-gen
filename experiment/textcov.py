@@ -26,12 +26,12 @@ LINE_PATTERN = re.compile(r'^\s*\d+\|\s*([\d\.a-zA-Z]+)\|(.*)')
 
 
 def demangle(data: str) -> str:
-  """Demangle a string containing mangled C++ symbols."""
+  """Demangles a string containing mangled C++ symbols."""
   return subprocess.check_output(['c++filt'], input=data, encoding='utf-8')
 
 
 def normalize_template_args(name: str) -> str:
-  """Normalize template arguments."""
+  """Normalizes template arguments."""
   return re.sub(r'<.*>', '<>', name)
 
 
