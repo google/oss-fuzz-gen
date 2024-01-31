@@ -13,7 +13,8 @@ You must install:
 2. Git
 3. [Docker](https://www.docker.com/)
 4. [Google Cloud SDK](https://cloud.google.com/sdk)
-5. (optional for [`project_src.py`](./data_prep/project_src.py)) [clang-format](https://clang.llvm.org/docs/ClangFormat.html)
+5. [c++filt](https://www.gnu.org/software/binutils/) must be available in PATH.
+6. (optional for [`project_src.py`](./data_prep/project_src.py)) [clang-format](https://clang.llvm.org/docs/ClangFormat.html)
 
 #### Python Dependencies
 Install required dependencies in a `Python` virtual environment:
