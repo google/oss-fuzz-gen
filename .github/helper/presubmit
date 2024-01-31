@@ -5,6 +5,9 @@ source "$(git rev-parse --show-toplevel)/.venv/bin/activate"
 # Always use the latest Pyright.
 export PYRIGHT_PYTHON_FORCE_VERSION=latest
 
+# Ensure we have the latest code from the repository.
+git fetch origin > /dev/null
+
 # Reformat changed Python code.
 CHANGED_PY=$(git diff origin/main --name-only | grep "\.py$" || echo "")
 for file in $CHANGED_PY; do
