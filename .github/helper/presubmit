@@ -9,7 +9,9 @@ export PYRIGHT_PYTHON_FORCE_VERSION=latest
 CHANGED_PY=$(git diff origin/main --name-only | grep "\.py$" || echo "")
 for file in $CHANGED_PY; do
     if [ -f "$file" ]; then
-        yapf -p -i -m "$file"
+        # Ensure the script continues after yapf --diff
+        yapf --diff "$file" || true
+        yapf --parallel --in-place --print-modified "$file"
         isort "$file"
     fi
 done
@@ -30,12 +32,12 @@ pylint "./" \
 # Check and remove trailing spaces.
 ## Exclude Markdown which allows trailing spaces.
 FILES=$(git ls-files './*' | grep -Ev '\.md$|images/*')
-TRAILING_SPACES=$(echo "$FILES" | xargs egrep -l " +$" || echo "")
+TRAILING_SPACES=$(echo "$FILES" | xargs grep -lE " +$" || echo "")
 
 if [ -n "$TRAILING_SPACES" ]; then
-    echo "$TRAILING_SPACES" | xargs sed -i -e 's/[ \t]*$//'
     echo "Removing trailing spaces in:"
-    echo "  $TRAILING_SPACES"
+    echo "$TRAILING_SPACES" | xargs grep -En " +$"
+    echo "$TRAILING_SPACES" | xargs sed -i -e 's/[ \t]*$//'
 fi
 
 # Exit 1 if anything has changed.
