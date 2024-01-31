@@ -25,9 +25,8 @@ The experiment included [1300+ benchmarks](./benchmark-sets/all) from 297 open-s
 
 ![image](https://github.com/google/oss-fuzz-gen/assets/759062/fa53698b-e44c-4b58-b5e7-798337c8b752)
 
-Overall, the framework successfully instructed LLM to generate some valid fuzz
-targets with non-zero coverage increases for 160 C/C++ projects, with increases
-of up to 30% line coverage from the existing human-written targets.
+Overall, this framework manages to successfully leverage LLMs to generate valid fuzz targets (which generate non-zero coverage increase)
+for 160 C/C++ projects. The maximum line coverage increase is 29% from the existing human-written targets.
 
 Note that these reports are not public as they may contain undisclosed vulnerabilities. 
 
