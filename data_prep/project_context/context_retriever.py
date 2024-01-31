@@ -27,10 +27,10 @@ class ContextRetriever:
     self._function_signature = function_signature
     self._download_from_path = f'{self.AST_BASE_PATH}/{self._project_name}/*'
     self._uuid = uuid.uuid4()
-    self._ast_path = f'{self.DOWNLOAD_TO_PATH}/{self._project_name}{self._uuid}'
+    self._ast_path = f'{self.DOWNLOAD_TO_PATH}/{self._project_name}-{self._uuid}'
 
   def _get_function_name(self, target_function_signature: str) -> str:
-    """Retrieve the function name from the target function signature."""
+    """Retrieves the function name from the target function signature."""
     # Grabs the function name by getting anything before '(' and then remove the type by grabbing any character after space.
     target_function = target_function_signature.split('(')[0].split(' ')[-1]
     # Removes possible pointer.
