@@ -1,11 +1,11 @@
 import json
 import os
 import re
+import shutil
 import subprocess
+import uuid
 from collections import defaultdict
 from typing import List, Tuple
-import uuid
-import shutil
 
 
 class ContextRetriever:
@@ -264,7 +264,7 @@ class ContextRetriever:
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
-  
+
   def cleanup_asts(self):
     """Removes ASTs for the given project."""
     shutil.rmtree(self._ast_path)
