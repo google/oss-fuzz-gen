@@ -6,6 +6,7 @@ import subprocess
 import uuid
 from collections import defaultdict
 from typing import List, Tuple
+from google.cloud import storage
 
 
 class ContextRetriever:
@@ -19,6 +20,8 @@ class ContextRetriever:
 
   DOWNLOAD_TO_PATH = 'oss-fuzz-data/asts'
 
+  OSS_FUZZ_EXP_BUCKET = 'oss-fuzz-llm-public'
+
   def __init__(self, project_name: str, function_signature: str):
     self._record_decl_nodes = defaultdict(list)
     self._typedef_decl_nodes = defaultdict(list)
@@ -27,7 +30,7 @@ class ContextRetriever:
     self._function_signature = function_signature
     self._download_from_path = f'{self.AST_BASE_PATH}/{self._project_name}/*'
     self._uuid = uuid.uuid4()
-    self._ast_path = f'{self.DOWNLOAD_TO_PATH}/{self._project_name}-{self._uuid}'
+    self._ast_path = os.path.join(self.DOWNLOAD_TO_PATH, f'{self._project_name}-{self._uuid}')
 
   def _get_function_name(self, target_function_signature: str) -> str:
     """Retrieves the function name from the target function signature."""
@@ -253,17 +256,18 @@ class ContextRetriever:
 
   def retrieve_asts(self):
     """Downloads ASTs for the given project."""
-    os.makedirs(self._ast_path, exist_ok=True)
+    storage_client = storage.Client.create_anonymous_client()
+    bucket = storage_client.bucket(self.OSS_FUZZ_EXP_BUCKET)
+    project_prefix = os.path.join('project_asts', self._project_name)
+    blobs = bucket.list_blobs(prefix=project_prefix)
+    ast_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', self._ast_path))
 
-    download_command = [
-        'gsutil', '-m', 'cp', '-r', self._download_from_path, self._ast_path
-    ]
-    subprocess.run(
-        download_command,
-        check=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
+    os.makedirs(ast_dir, exist_ok=True)
+
+    for blob in blobs:
+        file_relpath = blob.name.replace(f'{project_prefix}/', '')
+        blob.download_to_filename(os.path.join(ast_dir, file_relpath))
+
 
   def cleanup_asts(self):
     """Removes ASTs for the given project."""
