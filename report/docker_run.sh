@@ -19,7 +19,7 @@
 ##
 ##   benchmark_set determines the set of benchmarks used for the experiment.
 ##     The value should be the name of `benchmark-sets` directory.
-##     Default: comp_benchmarks
+##     Default: comparison
 ##   frequency_label: Examples: daily, weekly, manual, etc. This is used as part of
 ##     Cloud Build tags and GCS report directory.
 ##     Default: daily
@@ -43,7 +43,7 @@ fi
 
 if [[ $BENCHMARK_SET = '' ]]
 then
-  BENCHMARK_SET='comp_benchmarks'
+  BENCHMARK_SET='comparison'
   echo "Benchmark set was not specified as the first argument. Defaulting to ${BENCHMARK_SET:?}."
 fi
 
@@ -64,7 +64,7 @@ LOCAL_RESULTS_DIR='results'
 # Experiment name is used to label the Cloud Builds and as part of the
 # GCS directory that build logs are stored in.
 #
-# Example directory: 2023-12-02-daily-comp_benchmarks
+# Example directory: 2023-12-02-daily-comparison
 EXPERIMENT_NAME="${DATE:?}-${FREQUENCY_LABEL:?}-${BENCHMARK_SET:?}"
 # The subdirectory for the generated report in GCS. Use the same name as
 # experiment.
