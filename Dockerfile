@@ -62,7 +62,5 @@ RUN apt-get update && \
     docker-compose-plugin
 
 
-COPY . /experiment
-WORKDIR /experiment
-RUN /venv/bin/pip install --disable-pip-version-check -r requirements.txt
-ENTRYPOINT ["./report/docker_run.sh"]
+COPY ./report/docker_run.sh /docker_run.sh
+ENTRYPOINT ["/docker_run.sh"]
