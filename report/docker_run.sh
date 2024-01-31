@@ -26,8 +26,7 @@
 ##   run_timeout: Timeout in seconds for each fuzzing target.
 ##     Default: 300
 
-git clone --depth=1 --branch=main https://github.com/google/oss-fuzz-gen.git /experiment
-cd /experiment
+echo "Using OSS-Fuzz-Gen version: $(git rev-parse HEAD)"
 /venv/bin/pip install --disable-pip-version-check -r requirements.txt
 
 BENCHMARK_SET=$1

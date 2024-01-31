@@ -62,5 +62,6 @@ RUN apt-get update && \
     docker-compose-plugin
 
 
-COPY ./report/docker_run.sh /docker_run.sh
-ENTRYPOINT ["/docker_run.sh"]
+CMD git clone --depth=1 --branch=main https://github.com/google/oss-fuzz-gen.git /experiment && \
+    cd /experiment && \
+    ./report/docker_run.sh
