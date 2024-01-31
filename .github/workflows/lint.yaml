@@ -43,5 +43,5 @@ jobs:
         run: source .venv/bin/activate && pip install -r requirements.txt
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Run pylint and yapf, go vet
-        run: ./helper/presubmit.sh
+      - name: Run presubmit
+        run: .github/helper/presubmit

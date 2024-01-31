@@ -20,7 +20,7 @@ HOOK_SCRIPT='#!/bin/sh
 # A pre-push hook to format and lint code.
 
 # Run the format and lint script.
-./helper/presubmit.bash
+.github/helper/presubmit
 
 # Capture the exit status of the format script.
 STATUS=$?

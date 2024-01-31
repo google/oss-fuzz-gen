@@ -185,13 +185,13 @@ human-written fuzz targets from `OSS-Fuzz` in production.
 You can a Git pre-push hook to auto-format/-lint your code:
 
 ```bash
-./helper/add_pre-push_hook.sh
+./helper/add_pre-push_hook
 ```
 
 Or manually run the formater/linter by running:
 
 ```bash
-./helper/presubmit.bash
+.github/helper/presubmit
 ```
 
 #### Updating Dependencies
