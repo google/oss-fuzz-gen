@@ -10,11 +10,13 @@ Running an experiment requires three steps:
 ### Dependencies
 You must install:
 1. Python 3.11
-2. Git
-3. [Docker](https://www.docker.com/)
-4. [Google Cloud SDK](https://cloud.google.com/sdk)
-5. [c++filt](https://www.gnu.org/software/binutils/) must be available in PATH.
-6. (optional for [`project_src.py`](./data_prep/project_src.py)) [clang-format](https://clang.llvm.org/docs/ClangFormat.html)
+2. pip
+3. python3.11-venv
+4. Git
+5. [Docker](https://www.docker.com/)
+6. [Google Cloud SDK](https://cloud.google.com/sdk)
+7. [c++filt](https://www.gnu.org/software/binutils/) must be available in PATH.
+8. (optional for [`project_src.py`](./data_prep/project_src.py)) [clang-format](https://clang.llvm.org/docs/ClangFormat.html)
 
 #### Python Dependencies
 Install required dependencies in a `Python` virtual environment:
