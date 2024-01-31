@@ -1,7 +1,9 @@
 import json
 import os
 import re
+import shutil
 import subprocess
+import uuid
 from collections import defaultdict
 from typing import List, Tuple
 
@@ -24,10 +26,11 @@ class ContextRetriever:
     self._project_name = project_name
     self._function_signature = function_signature
     self._download_from_path = f'{self.AST_BASE_PATH}/{self._project_name}/*'
-    self._ast_path = f'{self.DOWNLOAD_TO_PATH}/{self._project_name}'
+    self._uuid = uuid.uuid4()
+    self._ast_path = f'{self.DOWNLOAD_TO_PATH}/{self._project_name}-{self._uuid}'
 
   def _get_function_name(self, target_function_signature: str) -> str:
-    """Retrieve the function name from the target function signature."""
+    """Retrieves the function name from the target function signature."""
     # Grabs the function name by getting anything before '(' and then remove the type by grabbing any character after space.
     target_function = target_function_signature.split('(')[0].split(' ')[-1]
     # Removes possible pointer.
@@ -229,8 +232,7 @@ class ContextRetriever:
     Retrieve that node's loc->file to get the file where the FunctionDecl exists."""
     target_function = self._get_function_name(self._function_signature)
 
-    with open(f'{fully_qualified_path}') as ast_file:
-      print(f'Opening for...{fully_qualified_path}')
+    with open(fully_qualified_path) as ast_file:
       ast_json = json.load(ast_file)
       # AST nodes are all wrapped in an inner node.
       ast_nodes = ast_json.get('inner', [])
@@ -250,7 +252,7 @@ class ContextRetriever:
     return ''
 
   def retrieve_asts(self):
-    """Downloads ASTS for the given project."""
+    """Downloads ASTs for the given project."""
     os.makedirs(self._ast_path, exist_ok=True)
 
     download_command = [
@@ -262,6 +264,10 @@ class ContextRetriever:
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
+
+  def cleanup_asts(self):
+    """Removes ASTs for the given project."""
+    shutil.rmtree(self._ast_path)
 
   def generate_lookups(self):
     """Goes through all AST files downloaded.
