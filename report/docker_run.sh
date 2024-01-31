@@ -19,7 +19,7 @@
 ##
 ##   benchmark_set determines the set of benchmarks used for the experiment.
 ##     The value should be the name of `benchmark-sets` directory.
-##     Default: comp_benchmarks
+##     Default: comparison
 ##   frequency_label: Examples: daily, weekly, manual, etc. This is used as part of
 ##     Cloud Build tags and GCS report directory.
 ##     Default: daily
@@ -47,7 +47,7 @@ fi
 
 if [[ $BENCHMARK_SET = '' ]]
 then
-  BENCHMARK_SET='comp_benchmarks'
+  BENCHMARK_SET='comparison'
   echo "Benchmark set was not specified as the first argument. Defaulting to ${BENCHMARK_SET:?}."
 fi
 
