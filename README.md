@@ -51,7 +51,7 @@ by this framework:
 
 ## Current top coverage improvements by project
 
-| Project  | Coverage increase % |
+| Project  | Coverage increase % * |
 |----------|-------------------|
 | tinyxml2 | 29.84 |
 | inih | 29.67 |   
@@ -70,4 +70,5 @@ by this framework:
 | libusb | 11.12 | 
 | json | 10.84 |
 
-
+\* Percentage coverage is calculated using a denominator of the total lines of source code compiled during the
+OSS-Fuzz build process for the entire project.
