@@ -1,0 +1,27 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag gcr.io/oss-fuzz-base/oss-fuzz-gen:daily
+    - name: Authenticate to gcloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: '${{ secrets.GCLOUD_CREDENTIAL }}'
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+    - name: Push to GCR
+      run: gcloud docker -- push gcr.io/oss-fuzz-base/oss-fuzz-gen:daily
