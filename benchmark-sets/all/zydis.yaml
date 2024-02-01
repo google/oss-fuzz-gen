@@ -1,0 +1,13 @@
+Retrieving human-written fuzz targets of zydis from local Docker build.
+functions:
+- int ZydisCalcAbsoluteAddressEx(struct ZydisDecodedInstruction_ * , struct ZydisDecodedOperand_
+  * , size_t , struct ZydisRegisterContext_ * , size_t * )
+- int ZydisFormatterBufferGetString(struct ZydisFormatterBuffer_ * , struct ZyanString_
+  ** )
+- int ZydisFormatterSetHook(struct ZydisFormatter_ * , int , char ** )
+- int ZydisEncoderNopFill(char * , size_t )
+- size_t ZydisStdinRead(char * ctx, char * buf, size_t max_len)
+project: zydis
+target_name: ZydisFuzzReEncoding
+target_path: /src/zydis/tools/ZydisFuzzShared.c
+
