@@ -21,6 +21,6 @@ jobs:
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
     - name: Auth to Artifact Registry
-      run: gcloud auth configure-docker us-central1-docker.pkg.dev
+      run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
     - name: Push to Artifact Registry
       run: docker push us-central1-docker.pkg.dev/oss-fuzz-base/testing/oss-fuzz-gen:daily
