@@ -13,7 +13,7 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag gcr.io/oss-fuzz-base/oss-fuzz-gen:daily
+      run: docker build . --file Dockerfile --tag us-central1-docker.pkg.dev/oss-fuzz-base/testing/oss-fuzz-gen:daily
     - name: Authenticate to gcloud
       uses: google-github-actions/auth@v2
       with:
