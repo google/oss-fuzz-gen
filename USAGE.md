@@ -61,13 +61,13 @@ To generate and evaluate the fuzz targets in a benchmark set via *local* experim
 ```bash
 ./run_all_experiments.py \
     --model=<model-name> \
-    --benchmark-directory='./benchmarks-sets/comp_benchmarks' \
+    --benchmark-directory='./benchmarks-sets/comparison' \
     [--ai-binary=<llm-access-binary>] \
     [--template-directory=prompts/custom_template] \
     [--work-dir=results-dir]
     [...]
 # E.g., generate fuzz targets for TinyXML-2 with default template and fuzz for 30 seconds.
-# ./run_all_experiments.py -y ./benchmark-sets/comp_benchmarks/tinyxml2.yaml
+# ./run_all_experiments.py -y ./benchmark-sets/comparison/tinyxml2.yaml
 ```
 where the `<mode-name>` can be:
 1. `vertex_ai_code-bison` or `vertex_ai_code-bison-32k` for the Code Bison models on Vertex AI.
@@ -81,7 +81,7 @@ where `<bucket>` is the name of a Google Cloud Storage bucket your Google Cloud 
 
 ### Benchmarks
 We currently offer two sets of benchmarks:
-1. [`comp_benchmarks`](./benchmark-sets/comp_benchmarks): A small selection of OSS-Fuzz C/C++ projects.
+1. [`comparison`](./benchmark-sets/comparison): A small selection of OSS-Fuzz C/C++ projects.
 2. [`all`](./benchmark-sets/all): All benchmarks across all OSS-Fuzz C/C++ projects.
 
 
@@ -130,7 +130,7 @@ Configure and use framework in the following five steps:
 ### Configure Benchmark
 Prepare a [benchmark YAML](data_prep/README.md#Benchmark-YAML) that specifies
 the function to test, here is
-[an example](benchmark-sets/comp_benchmarks/tinyxml2.yaml). Follow the link above
+[an example](benchmark-sets/comparison/tinyxml2.yaml). Follow the link above
 to automatically generate one for a `C`/`C++` project in `OSS-Fuzz`. Note that
 the project under test needs to be integrated into `OSS-Fuzz` to build.
 

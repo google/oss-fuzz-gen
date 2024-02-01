@@ -7,7 +7,7 @@ This directory help you prepare three kinds of data to benefit fuzz target gener
 
 ## Benchmark YAML
 A benchmark YAML file (e.g.,
-[`tinyxml2.yaml`](../benchmark-sets/comp_benchmarks/tinyxml2.yaml)) is required
+[`tinyxml2.yaml`](../benchmark-sets/comparison/tinyxml2.yaml)) is required
 for fuzz target generation, it specifies `functions`, `project`, `target_path`,
   and optionally `target_name`:
 * `functions` lists the signatures of the function to generate fuzz targets.
