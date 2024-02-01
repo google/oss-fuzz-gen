@@ -1,0 +1,13 @@
+Retrieving human-written fuzz targets of expat from local Docker build.
+functions:
+- struct encoding * XmlInitUnknownEncodingNS(char * mem, int * table, func_type *
+  convert, char * userData)
+- struct encoding * XmlInitUnknownEncoding(char * mem, int * table, func_type * convert,
+  char * userData)
+- int sip24_valid()
+- int XML_SetBase(struct XML_ParserStruct * parser, char * p)
+- int initScanContentNS(struct encoding * enc, char * ptr, char * end, char ** nextTokPtr)
+project: expat
+target_name: xml_parsebuffer_fuzzer_UTF-16LE
+target_path: /src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c
+
