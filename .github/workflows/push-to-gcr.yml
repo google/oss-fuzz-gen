@@ -20,5 +20,7 @@ jobs:
         credentials_json: '${{ secrets.GCLOUD_CREDENTIAL }}'
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
-    - name: Push to GCR
-      run: gcloud docker -- push gcr.io/oss-fuzz-base/oss-fuzz-gen:daily
+    - name: Auth to Artifact Registry
+      run: gcloud auth configure-docker us-central1-docker.pkg.dev
+    - name: Push to Artifact Registry
+      run: docker push us-central1-docker.pkg.dev/oss-fuzz-base/testing/oss-fuzz-gen:daily
