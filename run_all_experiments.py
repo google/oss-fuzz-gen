@@ -38,7 +38,7 @@ NUM_SAMPLES: int = run_one_experiment.NUM_SAMPLES
 RUN_TIMEOUT: int = run_one_experiment.RUN_TIMEOUT
 TEMPERATURE: float = run_one_experiment.TEMPERATURE
 
-BENCHMARK_DIR: str = './benchmark-sets/comp_benchmarks'
+BENCHMARK_DIR: str = './benchmark-sets/comparison'
 RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
 
 
