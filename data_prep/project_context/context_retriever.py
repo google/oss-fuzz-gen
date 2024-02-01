@@ -263,7 +263,9 @@ class ContextRetriever:
     project_prefix = os.path.join('project_asts', self._project_name)
     blobs = bucket.list_blobs(prefix=project_prefix)
     ast_dir = os.path.abspath(
-        os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), self._ast_path))
+        os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+            self._ast_path))
 
     os.makedirs(ast_dir, exist_ok=True)
 
