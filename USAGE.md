@@ -69,7 +69,7 @@ To generate and evaluate the fuzz targets in a benchmark set via *local* experim
 # E.g., generate fuzz targets for TinyXML-2 with default template and fuzz for 30 seconds.
 # ./run_all_experiments.py -y ./benchmark-sets/comparison/tinyxml2.yaml
 ```
-where the `<mode-name>` can be:
+where the `<model-name>` can be:
 1. `vertex_ai_code-bison` or `vertex_ai_code-bison-32k` for the Code Bison models on Vertex AI.
 2. `vertex_ai_gemini-pro` for Gemini Pro on Vertex AI.
 3. `gpt-3.5-turbo` or `gpt-4` for OpenAI.
