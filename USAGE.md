@@ -61,7 +61,7 @@ To generate and evaluate the fuzz targets in a benchmark set via *local* experim
 ```bash
 ./run_all_experiments.py \
     --model=<model-name> \
-    --benchmark-directory='./benchmarks-sets/comparison' \
+    --benchmarks-directory='./benchmarks-sets/comparison' \
     [--ai-binary=<llm-access-binary>] \
     [--template-directory=prompts/custom_template] \
     [--work-dir=results-dir]
