@@ -178,7 +178,7 @@ def populate_benchmarks_using_introspector(project: str, limit: int):
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
       logging.error('error: %s %s', filename, interesting.keys())
       continue
-
+    # TODO(dongge): Remove this line when FI provides function_signature.
     function_signature = formulate_function_signature(function)
     if not function_signature:
       continue
@@ -187,6 +187,10 @@ def populate_benchmarks_using_introspector(project: str, limit: int):
         benchmarklib.Benchmark('cli',
                                project,
                                function_signature,
+                               function.get('function_name'),
+                               function.get('return_type'),
+                               function.get('function_argument_names'),
+                               function.get('function_arguments'),
                                harness,
                                target_name,
                                function_dict=function))
@@ -317,7 +321,7 @@ if __name__ == '__main__':
   benchmarks = populate_benchmarks_using_introspector(sys.argv[1],
                                                       max_num_function)
   if benchmarks:
-    print(benchmarklib.Benchmark.to_yaml(benchmarks))
+    benchmarklib.Benchmark.to_yaml(benchmarks)
   else:
-    logging.error(f'Nothing found for {sys.argv[1]}')
+    logging.error('Nothing found for %s', sys.argv[1])
     sys.exit(1)

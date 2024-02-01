@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import os
 import re
-import traceback
 from enum import Enum
 from typing import List, Optional
 
@@ -71,19 +70,40 @@ def function_name_regex(function_name, include_top_level=False) -> str:
   return '(' + '|'.join(options) + ')'
 
 
+# Define a custom representer for quoting strings
+def quoted_string_presenter(dumper, data):
+  if '\n' in data:
+    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+  return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='"')
+
+
 class Benchmark:
   """Represents a benchmark."""
 
   @classmethod
   def to_yaml(cls, benchmarks: list[Benchmark]) -> str:
+    """Converts and saves selected fields of a benchmark to a YAML file."""
+    # Register the custom representer
+    yaml.add_representer(str, quoted_string_presenter)
     result = {
-        'project': benchmarks[0].project,
-        'target_path': benchmarks[0].target_path,
-        'target_name': benchmarks[0].target_name,
-        'functions': [b.function_signature for b in benchmarks],
+        'project':
+            benchmarks[0].project,
+        'target_path':
+            benchmarks[0].target_path,
+        'target_name':
+            benchmarks[0].target_name,
+        'functions': [{
+            'signature': b.function_signature,
+            'name': b.function_name,
+            'return_type': b.return_type,
+            'param_names': b.param_names,
+            'param_types': b.param_types,
+        } for b in benchmarks],
     }
 
-    return yaml.dump(result)
+    with open(f'{benchmarks[0].project}.yaml', 'w') as file:
+      yaml.dump(result, file, default_flow_style=False, width=-1)
+    return yaml.dump(result, default_flow_style=False, width=-1)
 
   @classmethod
   def from_yaml(cls, benchmark_path: str) -> List:
@@ -99,20 +119,15 @@ class Benchmark:
     cppify_headers = data.get('cppify_headers', False)
     commit = data.get('commit')
     functions = data.get('functions', [])
-    for function_signature in functions:
-      try:
-        function_name = parse_function_name(function_signature)
-      except ValueError:
-        print(f'WARNING: Invalid benchmark config: {benchmark_path}')
-        traceback.print_exc()
-        continue
-
-      # Prevent ':' from causing issues as it propagates to other places.
-      function_name = function_name.replace('::', '-')
+    for function in functions:
       benchmarks.append(
-          cls(f'{benchmark_name}-{function_name}'.lower(),
+          cls(f'{benchmark_name}-{function.get("function_name")}'.lower(),
               data['project'],
-              function_signature,
+              function.get('signature'),
+              function.get('name'),
+              function.get('return_type'),
+              function.get('param_names'),
+              function.get('param_types'),
               data['target_path'],
               data.get('target_name'),
               use_project_examples=use_project_examples,
@@ -126,6 +141,10 @@ class Benchmark:
                benchmark_id: Optional[str],
                project: str,
                function_signature: str,
+               function_name: str,
+               return_type: str,
+               param_names: list[str],
+               param_types: list[str],
                target_path: str,
                preferred_target_name: Optional[str] = None,
                use_project_examples=True,
@@ -136,13 +155,11 @@ class Benchmark:
     self.id = benchmark_id
     self.project = project
     self.function_signature = function_signature
-    # TODO(dongge): Refactor Benchmark YAML so that it stores functions as
-    # dictionaries instead of strings.
-    # Added this a temporary mitigation for parsing failure.
-    if function_dict:
-      self.function_name = function_dict.get('function_name', '')
-    else:
-      self.function_name = parse_function_name(function_signature)
+    self.function_name = function_name
+    self.return_type = return_type
+    self.param_types = param_types
+    self.param_names = param_names
+    self.function_dict = function_dict
 
     if not self.id:
       # Prevent ':' from causing issues as it propagates to other places.
@@ -159,7 +176,10 @@ class Benchmark:
   def __str__(self):
     return (f'Benchmark<id={self.id}, project={self.project}, '
             f'function_signature={self.function_signature}, '
-            f'target_path={self.target_path}, '
+            f'function_name={self.function_name}, '
+            f'return_type={self.return_type}, '
+            f'param_types={self.param_types}, '
+            f'param_names={self.param_names}, '
             f'target_name={self.target_name}, '
             f'use_context={self.use_context}>')
 
