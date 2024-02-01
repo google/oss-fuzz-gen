@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import os
 import re
+import sys
 from enum import Enum
 from typing import List, Optional
 
@@ -81,7 +82,7 @@ class Benchmark:
   """Represents a benchmark."""
 
   @classmethod
-  def to_yaml(cls, benchmarks: list[Benchmark]) -> str:
+  def to_yaml(cls, benchmarks: list[Benchmark], outdir: str = './'):
     """Converts and saves selected fields of a benchmark to a YAML file."""
     # Register the custom representer
     yaml.add_representer(str, quoted_string_presenter)
@@ -100,10 +101,9 @@ class Benchmark:
             'param_types': b.param_types,
         } for b in benchmarks],
     }
-
-    with open(f'{benchmarks[0].project}.yaml', 'w') as file:
-      yaml.dump(result, file, default_flow_style=False, width=-1)
-    return yaml.dump(result, default_flow_style=False, width=-1)
+    with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
+              'w') as file:
+      yaml.dump(result, file, default_flow_style=False, width=sys.maxsize)
 
   @classmethod
   def from_yaml(cls, benchmark_path: str) -> List:

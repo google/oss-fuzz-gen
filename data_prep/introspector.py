@@ -315,13 +315,18 @@ if __name__ == '__main__':
   max_num_function = 3
   if len(sys.argv) > 2:
     max_num_function = int(sys.argv[2])
+  if len(sys.argv) > 3:
+    outdir = sys.argv[3]
+    os.makedirs(outdir, exist_ok=True)
+  else:
+    outdir = ''
 
   oss_fuzz_checkout.clone_oss_fuzz()
   oss_fuzz_checkout.postprocess_oss_fuzz()
   benchmarks = populate_benchmarks_using_introspector(sys.argv[1],
                                                       max_num_function)
   if benchmarks:
-    benchmarklib.Benchmark.to_yaml(benchmarks)
+    benchmarklib.Benchmark.to_yaml(benchmarks, outdir)
   else:
     logging.error('Nothing found for %s', sys.argv[1])
     sys.exit(1)

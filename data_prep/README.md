@@ -24,8 +24,8 @@ that contains `functions`.
 Use [`introspector.py`](introspector.py) to generate a YAML file of a `C`/`C++` project in `OSS-Fuzz`:
 ```
 # In virtual env under root directory.
-python -m data_prep.introspector <project-name> > <project-name>.yaml
-# E.g., python -m data_prep.introspector tinyxml2 > tinyxml2.yaml
+python -m data_prep.introspector <project-name> <num_benchmark_per_project> <output_dir>
+# E.g., python -m data_prep.introspector tinyxml2 5 benchmark-sets/new
 ```
 
 Benchmark files generated in this way prioritize [far-reach-but-low-coverage](https://introspector.oss-fuzz.com/api#api-far-reach-but-low-coverage) functions in `OSS-Fuzz` production, hence easier to achieve higher [`max line coverage diff`](../README.md#Visualizing-Results).
