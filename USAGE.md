@@ -3,7 +3,7 @@
 Running an experiment requires three steps:
 1. Install [dependencies](#Dependencies).
 1. Setting up [LLM access](#LLM-Access).
-3. Launch [experiment](#Run).
+3. Launch [experiment](#Running-Experiments).
 
 ## Prerequisites
 
