@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""A local server to visualize experiment result."""
 
 import dataclasses
 import json
@@ -61,12 +62,14 @@ def sample_ids(target_paths: list[str]):
     yield os.path.splitext(os.path.basename(target))[0]
 
 
-def get_results(benchmark) -> tuple[list[evaluator.Result], list[str]]:
-  """Return results of all samples. Items can be None if they're not complete."""
-  targets = get_generated_targets(benchmark)
+def get_results(bnmk) -> tuple[list[evaluator.Result], list[str]]:
+  """
+  Returns results of all samples. Items can be None if they're not complete.
+  """
+  targets = get_generated_targets(bnmk)
 
   results = []
-  status_dir = os.path.join(RESULTS_DIR, benchmark, 'status')
+  status_dir = os.path.join(RESULTS_DIR, bnmk, 'status')
 
   for sample_id in sample_ids(targets):
     results_path = os.path.join(status_dir, sample_id, 'result.json')
@@ -85,8 +88,8 @@ def get_results(benchmark) -> tuple[list[evaluator.Result], list[str]]:
   return results, targets
 
 
-def get_prompt(benchmark) -> Optional[str]:
-  root_dir = os.path.join(RESULTS_DIR, benchmark)
+def get_prompt(bnmk) -> Optional[str]:
+  root_dir = os.path.join(RESULTS_DIR, bnmk)
   for name in os.listdir(root_dir):
     if re.match(r'^prompt.*txt$', name):
       with open(os.path.join(root_dir, name)) as f:
@@ -95,9 +98,9 @@ def get_prompt(benchmark) -> Optional[str]:
   return None
 
 
-def get_generated_targets(benchmark: str) -> list[str]:
+def get_generated_targets(bnmk: str) -> list[str]:
   targets = []
-  raw_targets_dir = os.path.join(RESULTS_DIR, benchmark, 'raw_targets')
+  raw_targets_dir = os.path.join(RESULTS_DIR, bnmk, 'raw_targets')
   for filename in sorted(os.listdir(raw_targets_dir)):
     if os.path.splitext(filename)[1] in ('.c', '.cc', '.cpp', '.cxx'):
       targets.append(os.path.join(raw_targets_dir, filename))
@@ -106,6 +109,7 @@ def get_generated_targets(benchmark: str) -> list[str]:
 
 
 def list_benchmarks() -> List[Benchmark]:
+  """Lists benchmarks in the result directory."""
   benchmarks = []
   benchmark_names = sorted(os.listdir(RESULTS_DIR))
   # Not sure why there is a `lost+found` dir in |RESULTS_DIR|, which caused
@@ -114,8 +118,8 @@ def list_benchmarks() -> List[Benchmark]:
   # TODO(erfan): Check if not mounting to the root dir can solve this.
   benchmark_names = sorted(
       [dir for dir in os.listdir(RESULTS_DIR) if dir != 'lost+found'])
-  for benchmark in benchmark_names:
-    results, targets = get_results(benchmark)
+  for bnmk in benchmark_names:
+    results, targets = get_results(bnmk)
     status = 'Done' if all(r for r in results) and results else 'Running'
 
     filtered_results = []
@@ -128,7 +132,7 @@ def list_benchmarks() -> List[Benchmark]:
     else:
       result = run_one_experiment.AggregatedResult()
 
-    benchmarks.append(Benchmark(benchmark, status, result))
+    benchmarks.append(Benchmark(bnmk, status, result))
 
   return benchmarks
 
@@ -141,11 +145,12 @@ def sort_benchmarks(benchmarks: List[Benchmark]) -> List[Benchmark]:
   return sorted_benchmarks
 
 
-def get_samples(benchmark: str) -> list[Sample]:
+def get_samples(bnmk: str) -> list[Sample]:
+  """Gets the samples and their status of the given benchmark |bnmk|."""
   samples = []
-  results, _ = get_results(benchmark)
+  results, _ = get_results(bnmk)
 
-  for i, sample_id in enumerate(sample_ids(get_generated_targets(benchmark))):
+  for i, sample_id in enumerate(sample_ids(get_generated_targets(bnmk))):
     status = 'Running'
     result = None
     if results[i]:
@@ -165,9 +170,9 @@ def truncate_logs(logs: str, max_len: int) -> str:
                                                             1:]
 
 
-def get_logs(benchmark: str, sample: str) -> str:
-  status_dir = os.path.join(RESULTS_DIR, benchmark, 'status')
-  results_path = os.path.join(status_dir, sample, 'log.txt')
+def get_logs(bnmk: str, smp: str) -> str:
+  status_dir = os.path.join(RESULTS_DIR, bnmk, 'status')
+  results_path = os.path.join(status_dir, smp, 'log.txt')
   if not os.path.exists(results_path):
     return ''
 
@@ -175,10 +180,10 @@ def get_logs(benchmark: str, sample: str) -> str:
     return f.read()
 
 
-def get_run_logs(benchmark: str, sample: str) -> str:
-  run_logs_dir = os.path.join(RESULTS_DIR, benchmark, 'logs', 'run')
+def get_run_logs(bnmk: str, smp: str) -> str:
+  run_logs_dir = os.path.join(RESULTS_DIR, bnmk, 'logs', 'run')
   for name in os.listdir(run_logs_dir):
-    if name.startswith(sample + '.'):
+    if name.startswith(smp + '.'):
       with open(os.path.join(run_logs_dir, name), errors='replace') as f:
         return truncate_logs(f.read(), MAX_RUN_LOGS_LEN)
 
@@ -186,6 +191,7 @@ def get_run_logs(benchmark: str, sample: str) -> str:
 
 
 def get_fixed_target(path):
+  """Gets the fixed fuzz target from the benchmark's result |path|."""
   code = ''
   fixer_prompt = ''
   for name in os.listdir(path):
@@ -200,19 +206,20 @@ def get_fixed_target(path):
   return Target(code, fixer_prompt)
 
 
-def get_targets(benchmark: str, sample: str) -> list[Target]:
-  targets_dir = os.path.join(RESULTS_DIR, benchmark, 'fixed_targets')
+def get_targets(bnmk: str, smp: str) -> list[Target]:
+  """Gets the targets of benchmark |bnmk| with sample ID |smp|."""
+  targets_dir = os.path.join(RESULTS_DIR, bnmk, 'fixed_targets')
   targets = []
 
   for name in sorted(os.listdir(targets_dir)):
     path = os.path.join(targets_dir, name)
-    if os.path.isfile(path) and name.startswith(sample + '.'):
+    if os.path.isfile(path) and name.startswith(smp + '.'):
       print(path)
       with open(path) as f:
         code = f.read()
       targets.insert(0, Target(code=code))
 
-    if os.path.isdir(path) and name.startswith(sample + '-F'):
+    if os.path.isdir(path) and name.startswith(smp + '-F'):
       targets.append(get_fixed_target(path))
 
   return targets
@@ -235,21 +242,21 @@ def index_sort():
 
 
 @app.route('/benchmark/<benchmark>')
-def benchmark(benchmark):
+def benchmark(bnmk):
   return render_template('benchmark.html',
-                         benchmark=benchmark,
-                         samples=get_samples(benchmark),
-                         prompt=get_prompt(benchmark))
+                         bnmk=bnmk,
+                         samples=get_samples(bnmk),
+                         prompt=get_prompt(bnmk))
 
 
 @app.route('/sample/<benchmark>/<sample>')
-def sample(benchmark, sample):
+def sample(bnmk, smp):
   return render_template('sample.html',
-                         benchmark=benchmark,
-                         sample=sample,
-                         logs=get_logs(benchmark, sample),
-                         run_logs=get_run_logs(benchmark, sample),
-                         targets=get_targets(benchmark, sample))
+                         bnmk=bnmk,
+                         smp=smp,
+                         logs=get_logs(bnmk, smp),
+                         run_logs=get_run_logs(bnmk, smp),
+                         targets=get_targets(bnmk, smp))
 
 
 @app.template_filter()
@@ -266,14 +273,14 @@ def cov_report_link(link: str):
   return f'https://llm-exp.oss-fuzz.com/{path}/report/linux/report.html'
 
 
-def serve(results_dir: str, port: int):
+def serve(directory: str, port: int):
   global RESULTS_DIR
-  RESULTS_DIR = results_dir
+  RESULTS_DIR = directory
   app.run(host='localhost', port=port)
 
 
 if __name__ == '__main__':
   results_dir = sys.argv[1]
-  port = int(sys.argv[2])
+  server_port = int(sys.argv[2])
 
-  serve(results_dir, port)
+  serve(results_dir, server_port)
