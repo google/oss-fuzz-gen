@@ -1,0 +1,57 @@
+"functions":
+- "name": "XmlInitUnknownEncodingNS"
+  "param_names":
+  - "mem"
+  - "table"
+  - "convert"
+  - "userData"
+  "param_types":
+  - "char *"
+  - "int *"
+  - "func_type *"
+  - "char *"
+  "return_type": "struct.encoding *"
+  "signature": "struct encoding * XmlInitUnknownEncodingNS(char * mem, int * table, func_type * convert, char * userData)"
+- "name": "XmlInitUnknownEncoding"
+  "param_names":
+  - "mem"
+  - "table"
+  - "convert"
+  - "userData"
+  "param_types":
+  - "char *"
+  - "int *"
+  - "func_type *"
+  - "char *"
+  "return_type": "struct.encoding *"
+  "signature": "struct encoding * XmlInitUnknownEncoding(char * mem, int * table, func_type * convert, char * userData)"
+- "name": "sip24_valid"
+  "param_names": []
+  "param_types": []
+  "return_type": "int"
+  "signature": "int sip24_valid()"
+- "name": "XML_SetBase"
+  "param_names":
+  - "parser"
+  - "p"
+  "param_types":
+  - "struct.XML_ParserStruct *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int XML_SetBase(struct XML_ParserStruct * parser, char * p)"
+- "name": "initScanContentNS"
+  "param_names":
+  - "enc"
+  - "ptr"
+  - "end"
+  - "nextTokPtr"
+  "param_types":
+  - "struct.encoding *"
+  - "char *"
+  - "char *"
+  - "char **"
+  "return_type": "int"
+  "signature": "int initScanContentNS(struct encoding * enc, char * ptr, char * end, char ** nextTokPtr)"
+"project": "expat"
+"target_name": "xml_parsebuffer_fuzzer_US-ASCII"
+"target_path": "/src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c"

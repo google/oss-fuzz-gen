@@ -1,0 +1,57 @@
+"functions":
+- "name": "ssh_userauth_publickey_auto"
+  "param_names":
+  - "session"
+  - "username"
+  - "passphrase"
+  "param_types":
+  - "struct.ssh_session_struct.521 *"
+  - "char *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int ssh_userauth_publickey_auto(struct ssh_session_struct 521 * session, char * username, char * passphrase)"
+- "name": "ssh_userauth_agent"
+  "param_names":
+  - "session"
+  - "username"
+  "param_types":
+  - "struct.ssh_session_struct.521 *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int ssh_userauth_agent(struct ssh_session_struct 521 * session, char * username)"
+- "name": "ssh_userauth_agent_pubkey"
+  "param_names":
+  - "session"
+  - "username"
+  - "publickey"
+  "param_types":
+  - "struct.ssh_session_struct.521 *"
+  - "char *"
+  - "struct.ssh_public_key_struct *"
+  "return_type": "int"
+  "signature": "int ssh_userauth_agent_pubkey(struct ssh_session_struct 521 * session, char * username, struct ssh_public_key_struct * publickey)"
+- "name": "ssh_userauth_agent_publickey"
+  "param_names":
+  - "session"
+  - "username"
+  - "pubkey"
+  "param_types":
+  - "struct.ssh_session_struct.521 *"
+  - "char *"
+  - "struct.ssh_key_struct *"
+  "return_type": "int"
+  "signature": "int ssh_userauth_agent_publickey(struct ssh_session_struct 521 * session, char * username, struct ssh_key_struct * pubkey)"
+- "name": "ssh_userauth_publickey"
+  "param_names":
+  - "session"
+  - "username"
+  - "privkey"
+  "param_types":
+  - "struct.ssh_session_struct.521 *"
+  - "char *"
+  - "struct.ssh_key_struct *"
+  "return_type": "int"
+  "signature": "int ssh_userauth_publickey(struct ssh_session_struct 521 * session, char * username, struct ssh_key_struct * privkey)"
+"project": "libssh"
+"target_name": "ssh_client_fuzzer"
+"target_path": "/src/libssh/tests/fuzz/ssh_client_fuzzer.c"

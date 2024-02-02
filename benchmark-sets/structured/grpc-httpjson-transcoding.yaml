@@ -1,0 +1,55 @@
+"functions":
+- "name": "google::grpc::transcoding::testing::JsonArrayTester::TestElement(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.google::grpc::transcoding::testing::JsonArrayTester *"
+  - "class.std::__1::basic_string *"
+  - "class.std::__1::basic_string *"
+  "return_type": "bool"
+  "signature": "bool google::grpc::transcoding::testing::JsonArrayTester::TestElement(google::grpc::transcoding::testing::JsonArrayTester * , std::string * , std::string * )"
+- "name": "google::grpc::transcoding::testing::JsonArrayTester::TestChunk(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,bool)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.google::grpc::transcoding::testing::JsonArrayTester *"
+  - "class.std::__1::basic_string *"
+  - "class.std::__1::basic_string *"
+  - "bool"
+  "return_type": "bool"
+  "signature": "bool google::grpc::transcoding::testing::JsonArrayTester::TestChunk(google::grpc::transcoding::testing::JsonArrayTester * , std::string * , std::string * , bool )"
+- "name": "google::grpc::transcoding::testing::JsonArrayTester::TestClosed(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.google::grpc::transcoding::testing::JsonArrayTester *"
+  - "class.std::__1::basic_string *"
+  "return_type": "bool"
+  "signature": "bool google::grpc::transcoding::testing::JsonArrayTester::TestClosed(google::grpc::transcoding::testing::JsonArrayTester * , std::string * )"
+- "name": "google::grpc::transcoding::testing::ExpectJsonArrayEq(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.std::__1::basic_string *"
+  - "class.std::__1::basic_string *"
+  "return_type": "bool"
+  "signature": "bool google::grpc::transcoding::testing::ExpectJsonArrayEq(std::string * , std::string * )"
+- "name": "google::grpc::transcoding::testing::ExpectJsonObjectEq(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.std::__1::basic_string *"
+  - "class.std::__1::basic_string *"
+  "return_type": "bool"
+  "signature": "bool google::grpc::transcoding::testing::ExpectJsonObjectEq(std::string * , std::string * )"
+"project": "grpc-httpjson-transcoding"
+"target_name": "message_reader_fuzz_test"
+"target_path": "/src/grpc-httpjson-transcoding/test/message_reader_fuzz_test.cc"

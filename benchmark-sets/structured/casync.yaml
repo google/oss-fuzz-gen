@@ -1,0 +1,55 @@
+"functions":
+- "name": "xopendirat"
+  "param_names":
+  - "fd"
+  - "name"
+  - "flags"
+  - "ret"
+  "param_types":
+  - "int"
+  - "char *"
+  - "int"
+  - "struct.__dirstream **"
+  "return_type": "int"
+  "signature": "int xopendirat(int fd, char * name, int flags, struct __dirstream ** ret)"
+- "name": "compressor_encode"
+  "param_names":
+  - "c"
+  - "finalize"
+  - "p"
+  - "sz"
+  - "ret_done"
+  "param_types":
+  - "struct.CompressorContext *"
+  - "bool"
+  - "char *"
+  - "size_t"
+  - "size_t *"
+  "return_type": "int"
+  "signature": "int compressor_encode(struct CompressorContext * c, bool finalize, char * p, size_t sz, size_t * ret_done)"
+- "name": "compressor_start_encode"
+  "param_names":
+  - "c"
+  - "compressor"
+  "param_types":
+  - "struct.CompressorContext *"
+  - "int"
+  "return_type": "int"
+  "signature": "int compressor_start_encode(struct CompressorContext * c, int compressor)"
+- "name": "tmp_dir"
+  "param_names":
+  - "ret"
+  "param_types":
+  - "char **"
+  "return_type": "int"
+  "signature": "int tmp_dir(char ** ret)"
+- "name": "var_tmp_dir"
+  "param_names":
+  - "ret"
+  "param_types":
+  - "char **"
+  "return_type": "int"
+  "signature": "int var_tmp_dir(char ** ret)"
+"project": "casync"
+"target_name": "fuzz-compress"
+"target_path": "/src/casync/test/fuzz/fuzz-compress.c"

@@ -1,0 +1,55 @@
+"functions":
+- "name": "bam_index_build"
+  "param_names":
+  - "fn"
+  - "min_shift"
+  "param_types":
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int bam_index_build(char * fn, int min_shift)"
+- "name": "sam_index_build2"
+  "param_names":
+  - "fn"
+  - "fnidx"
+  - "min_shift"
+  "param_types":
+  - "char *"
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int sam_index_build2(char * fn, char * fnidx, int min_shift)"
+- "name": "sam_index_build"
+  "param_names":
+  - "fn"
+  - "min_shift"
+  "param_types":
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int sam_index_build(char * fn, int min_shift)"
+- "name": "sam_index_build3"
+  "param_names":
+  - "fn"
+  - "fnidx"
+  - "min_shift"
+  - "nthreads"
+  "param_types":
+  - "char *"
+  - "char *"
+  - "int"
+  - "int"
+  "return_type": "int"
+  "signature": "int sam_index_build3(char * fn, char * fnidx, int min_shift, int nthreads)"
+- "name": "bcf_index_build"
+  "param_names":
+  - "fn"
+  - "min_shift"
+  "param_types":
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int bcf_index_build(char * fn, int min_shift)"
+"project": "htslib"
+"target_name": "hts_open_fuzzer"
+"target_path": "/src/htslib/test/fuzz/hts_open_fuzzer.c"

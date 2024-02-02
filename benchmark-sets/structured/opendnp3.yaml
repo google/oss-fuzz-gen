@@ -1,0 +1,47 @@
+"functions":
+- "name": "opendnp3::StateUnsolicitedConfirmWait::OnNewNonReadRequest(opendnp3::OContext&,opendnp3::ParsedRequestconst&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.std::bad_array_new_length *"
+  - "class.opendnp3::OContext *"
+  - "struct.opendnp3::ParsedRequest *"
+  "return_type": "class.std::__1::bad_function_call *"
+  "signature": "std::bad_function_call * opendnp3::StateUnsolicitedConfirmWait::OnNewNonReadRequest(std::bad_array_new_length * , opendnp3::OContext * , struct opendnp3::ParsedRequest * )"
+- "name": "opendnp3::StateSolicitedConfirmWait::OnNewNonReadRequest(opendnp3::OContext&,opendnp3::ParsedRequestconst&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.std::bad_array_new_length *"
+  - "class.opendnp3::OContext *"
+  - "struct.opendnp3::ParsedRequest *"
+  "return_type": "class.std::__1::bad_function_call *"
+  "signature": "std::bad_function_call * opendnp3::StateSolicitedConfirmWait::OnNewNonReadRequest(std::bad_array_new_length * , opendnp3::OContext * , struct opendnp3::ParsedRequest * )"
+- "name": "opendnp3::OContext::OnTxReady()"
+  "param_names":
+  - ""
+  "param_types":
+  - "class.opendnp3::OContext *"
+  "return_type": "bool"
+  "signature": "bool opendnp3::OContext::OnTxReady(opendnp3::OContext * )"
+- "name": "opendnp3::OContext::RestartUnsolConfirmTimer()::$_2::operator()()const"
+  "param_names":
+  - ""
+  "param_types":
+  - "class.anon.232 *"
+  "return_type": "void"
+  "signature": "void opendnp3::OContext::RestartUnsolConfirmTimer(anon * ) const"
+- "name": "opendnp3::OContext::RestartSolConfirmTimer()::$_1::operator()()const"
+  "param_names":
+  - ""
+  "param_types":
+  - "class.anon.232 *"
+  "return_type": "void"
+  "signature": "void opendnp3::OContext::RestartSolConfirmTimer(anon * ) const"
+"project": "opendnp3"
+"target_name": "onefile"
+"target_path": "/src/opendnp3/cpp/tests/fuzz/onefile.cpp"

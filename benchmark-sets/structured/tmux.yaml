@@ -1,0 +1,63 @@
+"functions":
+- "name": "cmd_new_session_exec"
+  "param_names":
+  - "self"
+  - "item"
+  "param_types":
+  - "struct.cmd *"
+  - "struct.cmdq_item *"
+  "return_type": "int"
+  "signature": "int cmd_new_session_exec(struct cmd * self, struct cmdq_item * item)"
+- "name": "client_main"
+  "param_names":
+  - "base"
+  - "argc"
+  - "argv"
+  - "flags"
+  - "feat"
+  "param_types":
+  - "struct.event_base *"
+  - "int"
+  - "char **"
+  - "size_t"
+  - "int"
+  "return_type": "int"
+  "signature": "int client_main(struct event_base * base, int argc, char ** argv, size_t flags, int feat)"
+- "name": "client_connect"
+  "param_names":
+  - "base"
+  - "path"
+  - "flags"
+  "param_types":
+  - "struct.event_base *"
+  - "char *"
+  - "size_t"
+  "return_type": "int"
+  "signature": "int client_connect(struct event_base * base, char * path, size_t flags)"
+- "name": "server_start"
+  "param_names":
+  - "client"
+  - "flags"
+  - "base"
+  - "lockfd"
+  - "lockfile"
+  "param_types":
+  - "struct.tmuxproc *"
+  - "int"
+  - "struct.event_base *"
+  - "int"
+  - "char *"
+  "return_type": "int"
+  "signature": "int server_start(struct tmuxproc * client, int flags, struct event_base * base, int lockfd, char * lockfile)"
+- "name": "cmd_attach_session_exec"
+  "param_names":
+  - "self"
+  - "item"
+  "param_types":
+  - "struct.cmd *"
+  - "struct.cmdq_item *"
+  "return_type": "int"
+  "signature": "int cmd_attach_session_exec(struct cmd * self, struct cmdq_item * item)"
+"project": "tmux"
+"target_name": "input-fuzzer"
+"target_path": "/src/tmux/fuzz/input-fuzzer.c"

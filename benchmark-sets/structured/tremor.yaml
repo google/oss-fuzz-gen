@@ -1,0 +1,51 @@
+"functions":
+- "name": "ov_time_seek"
+  "param_names":
+  - "vf"
+  - "milliseconds"
+  "param_types":
+  - "struct.OggVorbis_File *"
+  - "size_t"
+  "return_type": "int"
+  "signature": "int ov_time_seek(struct OggVorbis_File * vf, size_t milliseconds)"
+- "name": "ov_pcm_seek"
+  "param_names":
+  - "vf"
+  - "pos"
+  "param_types":
+  - "struct.OggVorbis_File *"
+  - "size_t"
+  "return_type": "int"
+  "signature": "int ov_pcm_seek(struct OggVorbis_File * vf, size_t pos)"
+- "name": "ov_fopen"
+  "param_names":
+  - "path"
+  - "vf"
+  "param_types":
+  - "char *"
+  - "struct.OggVorbis_File *"
+  "return_type": "int"
+  "signature": "int ov_fopen(char * path, struct OggVorbis_File * vf)"
+- "name": "ov_open"
+  "param_names":
+  - "f"
+  - "vf"
+  - "initial"
+  - "ibytes"
+  "param_types":
+  - "struct._IO_FILE *"
+  - "struct.OggVorbis_File *"
+  - "char *"
+  - "size_t"
+  "return_type": "int"
+  "signature": "int ov_open(struct _IO_FILE * f, struct OggVorbis_File * vf, char * initial, size_t ibytes)"
+- "name": "ov_test_open"
+  "param_names":
+  - "vf"
+  "param_types":
+  - "struct.OggVorbis_File *"
+  "return_type": "int"
+  "signature": "int ov_test_open(struct OggVorbis_File * vf)"
+"project": "tremor"
+"target_name": "decode_fuzzer"
+"target_path": "/src/tremor/decode_fuzzer.cc"

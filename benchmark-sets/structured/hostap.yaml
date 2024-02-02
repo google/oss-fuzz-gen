@@ -1,0 +1,47 @@
+"functions":
+- "name": "wpa_supplicant_add_iface"
+  "param_names":
+  - "global"
+  - "iface"
+  - "parent"
+  "param_types":
+  - "struct.wpa_global *"
+  - "struct.wpa_interface *"
+  - "struct.wpa_supplicant *"
+  "return_type": "struct.wpa_supplicant *"
+  "signature": "struct wpa_supplicant * wpa_supplicant_add_iface(struct wpa_global * global, struct wpa_interface * iface, struct wpa_supplicant * parent)"
+- "name": "wpa_supplicant_init_iface"
+  "param_names":
+  - "wpa_s"
+  - "iface"
+  "param_types":
+  - "struct.wpa_supplicant *"
+  - "struct.wpa_interface *"
+  "return_type": "int"
+  "signature": "int wpa_supplicant_init_iface(struct wpa_supplicant * wpa_s, struct wpa_interface * iface)"
+- "name": "hostapd_reload_config"
+  "param_names":
+  - "iface"
+  "param_types":
+  - "struct.hostapd_iface.610 *"
+  "return_type": "int"
+  "signature": "int hostapd_reload_config(struct hostapd_iface * iface)"
+- "name": "wpa_supplicant_run"
+  "param_names":
+  - "global"
+  "param_types":
+  - "struct.wpa_global *"
+  "return_type": "int"
+  "signature": "int wpa_supplicant_run(struct wpa_global * global)"
+- "name": "hostapd_add_iface"
+  "param_names":
+  - "interfaces"
+  - "buf"
+  "param_types":
+  - "struct.hapd_interfaces.606 *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int hostapd_add_iface(struct hapd_interfaces * interfaces, char * buf)"
+"project": "hostap"
+"target_name": "fuzzer-common"
+"target_path": "/src/hostap/tests/fuzzing/fuzzer-common.c"

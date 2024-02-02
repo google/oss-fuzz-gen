@@ -1,0 +1,61 @@
+"functions":
+- "name": "cv::dnn::dnn4_v20231225::readNetFromTensorflow(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.cv::dnn::dnn4_v20231225::Net *"
+  - "class.std::__1::basic_string *"
+  - "class.std::__1::basic_string *"
+  "return_type": "void"
+  "signature": "void cv::dnn::dnn4_v20231225::readNetFromTensorflow(cv::dnn::dnn4_v20231225::Net * , std::string * , std::string * )"
+- "name": "cv::dnn::dnn4_v20231225::Netcv::dnn::dnn4_v20231225::detail::readNetDiagnostic<cv::dnn::dnn4_v20231225::(anonymousnamespace)::TFImporter,charconst*,charconst*>(charconst*&&,charconst*&&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.cv::dnn::dnn4_v20231225::Net *"
+  - "char **"
+  - "char **"
+  "return_type": "void"
+  "signature": "void cv::dnn::dnn4_v20231225::Net cv::dnn::dnn4_v20231225::detail::readNetDiagnostic<cv::dnn::dnn4_v20231225::(cv::dnn::dnn4_v20231225::Net * , char ** , char ** )"
+- "name": "cv::dnn::dnn4_v20231225::readNetFromTensorflow(std::__1::vector<unsignedchar,std::__1::allocator<unsignedchar>>const&,std::__1::vector<unsignedchar,std::__1::allocator<unsignedchar>>const&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.cv::dnn::dnn4_v20231225::Net *"
+  - "class.std::__1::vector.855 *"
+  - "class.std::__1::vector.855 *"
+  "return_type": "void"
+  "signature": "void cv::dnn::dnn4_v20231225::readNetFromTensorflow(cv::dnn::dnn4_v20231225::Net * , std::vector * , std::vector * )"
+- "name": "cv::dnn::dnn4_v20231225::Netcv::dnn::dnn4_v20231225::detail::readNet<cv::dnn::dnn4_v20231225::(anonymousnamespace)::TFImporter,charconst*,charconst*>(charconst*&&,charconst*&&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.cv::dnn::dnn4_v20231225::Net *"
+  - "char **"
+  - "char **"
+  "return_type": "void"
+  "signature": "void cv::dnn::dnn4_v20231225::Net cv::dnn::dnn4_v20231225::detail::readNet<cv::dnn::dnn4_v20231225::(cv::dnn::dnn4_v20231225::Net * , char ** , char ** )"
+- "name": "cv::dnn::dnn4_v20231225::(anonymousnamespace)::TFImporter::TFImporter(cv::dnn::dnn4_v20231225::Net&,charconst*,charconst*)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter *"
+  - "class.cv::dnn::dnn4_v20231225::Net *"
+  - "char *"
+  - "char *"
+  "return_type": "void"
+  "signature": "void cv::dnn::dnn4_v20231225::(cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter * , cv::dnn::dnn4_v20231225::Net * , char * , char * )"
+"project": "opencv"
+"target_name": "imencode_fuzzer"
+"target_path": "/src/imencode_fuzzer.cc"

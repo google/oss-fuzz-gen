@@ -1,0 +1,47 @@
+"functions":
+- "name": "cbor_array_set"
+  "param_names":
+  - "item"
+  - "index"
+  - "value"
+  "param_types":
+  - "struct.cbor_item_t *"
+  - "size_t"
+  - "struct.cbor_item_t *"
+  "return_type": "bool"
+  "signature": "bool cbor_array_set(struct cbor_item_t * item, size_t index, struct cbor_item_t * value)"
+- "name": "cbor_array_replace"
+  "param_names":
+  - "item"
+  - "index"
+  - "value"
+  "param_types":
+  - "struct.cbor_item_t *"
+  - "size_t"
+  - "struct.cbor_item_t *"
+  "return_type": "bool"
+  "signature": "bool cbor_array_replace(struct cbor_item_t * item, size_t index, struct cbor_item_t * value)"
+- "name": "cbor_intermediate_decref"
+  "param_names":
+  - "item"
+  "param_types":
+  - "struct.cbor_item_t *"
+  "return_type": "void"
+  "signature": "void cbor_intermediate_decref(struct cbor_item_t * item)"
+- "name": "cbor_build_string"
+  "param_names":
+  - "val"
+  "param_types":
+  - "char *"
+  "return_type": "struct.cbor_item_t *"
+  "signature": "struct cbor_item_t * cbor_build_string(char * val)"
+- "name": "cbor_build_negint64"
+  "param_names":
+  - "value"
+  "param_types":
+  - "size_t"
+  "return_type": "struct.cbor_item_t *"
+  "signature": "struct cbor_item_t * cbor_build_negint64(size_t value)"
+"project": "libcbor"
+"target_name": "cbor_load_fuzzer"
+"target_path": "/src/libcbor/oss-fuzz/cbor_load_fuzzer.cc"

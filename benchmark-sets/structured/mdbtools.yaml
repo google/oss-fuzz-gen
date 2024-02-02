@@ -1,0 +1,57 @@
+"functions":
+- "name": "mdb_print_schema"
+  "param_names":
+  - "mdb"
+  - "outfile"
+  - "tabname"
+  - "dbnamespace"
+  - "export_options"
+  "param_types":
+  - "struct.MdbHandle *"
+  - "struct._IO_FILE *"
+  - "char *"
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int mdb_print_schema(struct MdbHandle * mdb, struct _IO_FILE * outfile, char * tabname, char * dbnamespace, int export_options)"
+- "name": "mdb_get_relationships"
+  "param_names":
+  - "mdb"
+  - "dbnamespace"
+  - "tablename"
+  "param_types":
+  - "struct.MdbHandle *"
+  - "char *"
+  - "char *"
+  "return_type": "char *"
+  "signature": "char * mdb_get_relationships(struct MdbHandle * mdb, char * dbnamespace, char * tablename)"
+- "name": "mdb_dump_catalog"
+  "param_names":
+  - "mdb"
+  - "obj_type"
+  "param_types":
+  - "struct.MdbHandle *"
+  - "int"
+  "return_type": "void"
+  "signature": "void mdb_dump_catalog(struct MdbHandle * mdb, int obj_type)"
+- "name": "mdb_read_table_by_name"
+  "param_names":
+  - "mdb"
+  - "table_name"
+  - "obj_type"
+  "param_types":
+  - "struct.MdbHandle *"
+  - "char *"
+  - "int"
+  "return_type": "struct.S_MdbTableDef *"
+  "signature": "struct S_MdbTableDef * mdb_read_table_by_name(struct MdbHandle * mdb, char * table_name, int obj_type)"
+- "name": "mdb_data_dump"
+  "param_names":
+  - "table"
+  "param_types":
+  - "struct.S_MdbTableDef *"
+  "return_type": "void"
+  "signature": "void mdb_data_dump(struct S_MdbTableDef * table)"
+"project": "mdbtools"
+"target_name": "fuzz_mdb"
+"target_path": "/src/mdbtools/src/fuzz/fuzz_mdb.c"

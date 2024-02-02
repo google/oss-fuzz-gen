@@ -1,0 +1,63 @@
+"functions":
+- "name": "toc_header"
+  "param_names":
+  - "ob"
+  - "content"
+  - "attr"
+  - "level"
+  - "data"
+  "param_types":
+  - "struct.hoedown_buffer *"
+  - "struct.hoedown_buffer *"
+  - "struct.hoedown_buffer *"
+  - "int"
+  - "struct.hoedown_renderer_data *"
+  "return_type": "void"
+  "signature": "void toc_header(struct hoedown_buffer * ob, struct hoedown_buffer * content, struct hoedown_buffer * attr, int level, struct hoedown_renderer_data * data)"
+- "name": "hoedown_document_render_inline"
+  "param_names":
+  - "doc"
+  - "ob"
+  - "data"
+  - "size"
+  "param_types":
+  - "struct.hoedown_document *"
+  - "struct.hoedown_buffer *"
+  - "char *"
+  - "size_t"
+  "return_type": "void"
+  "signature": "void hoedown_document_render_inline(struct hoedown_document * doc, struct hoedown_buffer * ob, char * data, size_t size)"
+- "name": "toc_finalize"
+  "param_names":
+  - "ob"
+  - "inline_render"
+  - "data"
+  "param_types":
+  - "struct.hoedown_buffer *"
+  - "int"
+  - "struct.hoedown_renderer_data *"
+  "return_type": "void"
+  "signature": "void toc_finalize(struct hoedown_buffer * ob, int inline_render, struct hoedown_renderer_data * data)"
+- "name": "rndr_raw_block"
+  "param_names":
+  - "ob"
+  - "text"
+  - "data"
+  "param_types":
+  - "struct.hoedown_buffer *"
+  - "struct.hoedown_buffer *"
+  - "struct.hoedown_renderer_data *"
+  "return_type": "void"
+  "signature": "void rndr_raw_block(struct hoedown_buffer * ob, struct hoedown_buffer * text, struct hoedown_renderer_data * data)"
+- "name": "hoedown_buffer_put_utf8"
+  "param_names":
+  - "buf"
+  - "c"
+  "param_types":
+  - "struct.hoedown_buffer *"
+  - "int"
+  "return_type": "void"
+  "signature": "void hoedown_buffer_put_utf8(struct hoedown_buffer * buf, int c)"
+"project": "hoextdown"
+"target_name": "hoedown_fuzzer"
+"target_path": "/src/hoextdown/test/hoedown_fuzzer.c"

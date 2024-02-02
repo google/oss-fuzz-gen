@@ -1,0 +1,61 @@
+"functions":
+- "name": "tesseract::TessTsvRenderer::AddImageHandler(tesseract::TessBaseAPI*)"
+  "param_names":
+  - "this"
+  - "api"
+  "param_types":
+  - "class.tesseract::TessTsvRenderer *"
+  - "class.tesseract::TessBaseAPI *"
+  "return_type": "bool"
+  "signature": "bool tesseract::TessTsvRenderer::AddImageHandler(tesseract::TessTsvRenderer * this, tesseract::TessBaseAPI * api)"
+- "name": "tesseract::TessBaseAPI::GetTSVText(int)"
+  "param_names":
+  - "this"
+  - "page_number"
+  "param_types":
+  - "class.tesseract::TessBaseAPI *"
+  - "int"
+  "return_type": "char *"
+  "signature": "char * tesseract::TessBaseAPI::GetTSVText(tesseract::TessBaseAPI * this, int page_number)"
+- "name": "tesseract::TessBaseAPI::ProcessPages(charconst*,charconst*,int,tesseract::TessResultRenderer*)"
+  "param_names":
+  - "this"
+  - "filename"
+  - "retry_config"
+  - "timeout_millisec"
+  - "renderer"
+  "param_types":
+  - "class.tesseract::TessBaseAPI *"
+  - "char *"
+  - "char *"
+  - "int"
+  - "class.tesseract::TessResultRenderer *"
+  "return_type": "bool"
+  "signature": "bool tesseract::TessBaseAPI::ProcessPages(tesseract::TessBaseAPI * this, char * filename, char * retry_config, int timeout_millisec, tesseract::TessResultRenderer * renderer)"
+- "name": "tesseract::TessBoxTextRenderer::AddImageHandler(tesseract::TessBaseAPI*)"
+  "param_names":
+  - "this"
+  - "api"
+  "param_types":
+  - "class.tesseract::TessOsdRenderer *"
+  - "class.tesseract::TessBaseAPI *"
+  "return_type": "bool"
+  "signature": "bool tesseract::TessBoxTextRenderer::AddImageHandler(tesseract::TessOsdRenderer * this, tesseract::TessBaseAPI * api)"
+- "name": "tesseract::TessBaseAPI::ProcessPagesInternal(charconst*,charconst*,int,tesseract::TessResultRenderer*)"
+  "param_names":
+  - "this"
+  - "filename"
+  - "retry_config"
+  - "timeout_millisec"
+  - "renderer"
+  "param_types":
+  - "class.tesseract::TessBaseAPI *"
+  - "char *"
+  - "char *"
+  - "int"
+  - "class.tesseract::TessResultRenderer *"
+  "return_type": "bool"
+  "signature": "bool tesseract::TessBaseAPI::ProcessPagesInternal(tesseract::TessBaseAPI * this, char * filename, char * retry_config, int timeout_millisec, tesseract::TessResultRenderer * renderer)"
+"project": "tesseract-ocr"
+"target_name": "fuzzer-api-512x256"
+"target_path": "/src/tesseract/unittest/fuzzers/fuzzer-api.cpp"

@@ -1,0 +1,55 @@
+"functions":
+- "name": "cb_vivo_init"
+  "param_names":
+  - "ins"
+  - "config"
+  - "data"
+  "param_types":
+  - "struct.flb_output_instance.11539 *"
+  - "struct.flb_config *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int cb_vivo_init(struct flb_output_instance * ins, struct flb_config * config, char * data)"
+- "name": "vivo_http_server_create"
+  "param_names":
+  - "ctx"
+  - "listen"
+  - "tcp_port"
+  - "config"
+  "param_types":
+  - "struct.vivo_exporter.11651 *"
+  - "char *"
+  - "int"
+  - "struct.flb_config *"
+  "return_type": "struct.prom_http *"
+  "signature": "struct prom_http * vivo_http_server_create(struct vivo_exporter * ctx, char * listen, int tcp_port, struct flb_config * config)"
+- "name": "flb_start_trace"
+  "param_names":
+  - "ctx"
+  "param_types":
+  - "struct.flb_lib_ctx *"
+  "return_type": "int"
+  "signature": "int flb_start_trace(struct flb_lib_ctx * ctx)"
+- "name": "flb_config_load_config_format"
+  "param_names":
+  - "config"
+  - "cf"
+  "param_types":
+  - "struct.flb_config *"
+  - "struct.flb_cf *"
+  "return_type": "int"
+  "signature": "int flb_config_load_config_format(struct flb_config * config, struct flb_cf * cf)"
+- "name": "k8s_events_init"
+  "param_names":
+  - "ins"
+  - "config"
+  - "data"
+  "param_types":
+  - "struct.flb_input_instance.4897 *"
+  - "struct.flb_config *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int k8s_events_init(struct flb_input_instance * ins, struct flb_config * config, char * data)"
+"project": "fluent-bit"
+"target_name": "ares-test-fuzz-name"
+"target_path": "/src/fluent-bit/lib/c-ares-1.24.0/test/ares-test-fuzz-name.c"

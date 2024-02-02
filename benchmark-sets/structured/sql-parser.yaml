@@ -1,0 +1,49 @@
+"functions":
+- "name": "hsql::SQLParser::parseSQLString(charconst*,hsql::SQLParserResult*)"
+  "param_names":
+  - "sql"
+  - "result"
+  "param_types":
+  - "char *"
+  - "class.hsql::SQLParserResult *"
+  "return_type": "bool"
+  "signature": "bool hsql::SQLParser::parseSQLString(char * sql, hsql::SQLParserResult * result)"
+- "name": "hsql::SQLParser::parseSQLString(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,hsql::SQLParserResult*)"
+  "param_names":
+  - "sql"
+  - "result"
+  "param_types":
+  - "class.std::__1::basic_string *"
+  - "class.hsql::SQLParserResult *"
+  "return_type": "bool"
+  "signature": "bool hsql::SQLParser::parseSQLString(std::string * sql, hsql::SQLParserResult * result)"
+- "name": "hsql::SQLParser::tokenize(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,std::__1::vector<short,std::__1::allocator<short>>*)"
+  "param_names":
+  - "sql"
+  - "tokens"
+  "param_types":
+  - "class.std::__1::basic_string *"
+  - "class.std::__1::vector.21 *"
+  "return_type": "bool"
+  "signature": "bool hsql::SQLParser::tokenize(std::string * sql, std::vector * tokens)"
+- "name": "hsql_push_buffer_state(yy_buffer_state*,void*)"
+  "param_names":
+  - "new_buffer"
+  - "yyscanner"
+  "param_types":
+  - "struct.yy_buffer_state *"
+  - "char *"
+  "return_type": "void"
+  "signature": "void hsql_push_buffer_state(struct yy_buffer_state * new_buffer, char * yyscanner)"
+- "name": "hsql::operator<<(std::__1::basic_ostream<char,std::__1::char_traits<char>>&,hsql::ColumnTypeconst&)"
+  "param_names":
+  - "stream"
+  - "column_type"
+  "param_types":
+  - "class.std::__1::basic_ostream *"
+  - "struct.hsql::ColumnType *"
+  "return_type": "class.std::__1::basic_ostream *"
+  "signature": "std::ostream * hsql::operator<<(std::ostream * stream, struct hsql::ColumnType * column_type)"
+"project": "sql-parser"
+"target_name": "fuzz_sql_parse"
+"target_path": "/src/sql-parser/fuzz_sql_parse.cpp"

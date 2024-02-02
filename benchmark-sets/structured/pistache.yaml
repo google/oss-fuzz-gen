@@ -1,0 +1,51 @@
+"functions":
+- "name": "Pistache::Http::(anonymousnamespace)::writeCookies(Pistache::Http::CookieJarconst&,Pistache::DynamicStreamBuf&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.Pistache::Http::Uri::Query *"
+  - "class.Pistache::ArrayStreamBuf *"
+  "return_type": "bool"
+  "signature": "bool Pistache::Http::(Pistache::Http::Uri::Query * , Pistache::ArrayStreamBuf * )"
+- "name": "Pistache::Http::operator<<(std::__1::basic_ostream<char,std::__1::char_traits<char>>&,Pistache::Http::Cookieconst&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.std::__1::basic_ostream *"
+  - "struct.Pistache::Http::Cookie *"
+  "return_type": "class.std::__1::basic_ostream *"
+  "signature": "std::ostream * Pistache::Http::operator<<(std::ostream * , struct Pistache::Http::Cookie * )"
+- "name": "Pistache::Http::Cookie::write(std::__1::basic_ostream<char,std::__1::char_traits<char>>&)const"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "struct.Pistache::Http::Cookie *"
+  - "class.std::__1::basic_ostream *"
+  "return_type": "void"
+  "signature": "void Pistache::Http::Cookie::write(struct Pistache::Http::Cookie * , std::ostream * ) const"
+- "name": "Pistache::Http::Header::Date::write(std::__1::basic_ostream<char,std::__1::char_traits<char>>&)const"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.Pistache::Http::Header::Date *"
+  - "class.std::__1::basic_ostream *"
+  "return_type": "void"
+  "signature": "void Pistache::Http::Header::Date::write(Pistache::Http::Header::Date * , std::ostream * ) const"
+- "name": "Pistache::Http::FullDate::write(std::__1::basic_ostream<char,std::__1::char_traits<char>>&,Pistache::Http::FullDate::Type)const"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.std::__1::__bucket_list_deallocator *"
+  - "class.std::__1::basic_ostream *"
+  - "int"
+  "return_type": "void"
+  "signature": "void Pistache::Http::FullDate::write(std::__bucket_list_deallocator * , std::ostream * , int ) const"
+"project": "pistache"
+"target_name": "fuzz_parsers"
+"target_path": "/src/pistache/tests/fuzzers/fuzz_parser.cpp"

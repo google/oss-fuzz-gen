@@ -1,0 +1,61 @@
+"functions":
+- "name": "flatbuffers::Parser::Serialize()"
+  "param_names":
+  - ""
+  "param_types":
+  - "class.flatbuffers::Parser *"
+  "return_type": "void"
+  "signature": "void flatbuffers::Parser::Serialize(flatbuffers::Parser * )"
+- "name": "flatbuffers::(anonymousnamespace)::TextCodeGenerator::GenerateCode(flatbuffers::Parserconst&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.flatbuffers::(anonymous namespace)::TextCodeGenerator *"
+  - "class.flatbuffers::Parser *"
+  - "class.std::__1::basic_string *"
+  - "class.std::__1::basic_string *"
+  "return_type": "int"
+  "signature": "int flatbuffers::(flatbuffers::(anonymous namespace)::TextCodeGenerator * , flatbuffers::Parser * , std::string * , std::string * )"
+- "name": "flatbuffers::GenerateTextFile(flatbuffers::Parserconst&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.flatbuffers::Parser *"
+  - "class.std::__1::basic_string *"
+  - "class.std::__1::basic_string *"
+  "return_type": "char *"
+  "signature": "char * flatbuffers::GenerateTextFile(flatbuffers::Parser * , std::string * , std::string * )"
+- "name": "flatbuffers::GenTextFile(flatbuffers::Parserconst&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.flatbuffers::Parser *"
+  - "class.std::__1::basic_string *"
+  - "class.std::__1::basic_string *"
+  "return_type": "char *"
+  "signature": "char * flatbuffers::GenTextFile(flatbuffers::Parser * , std::string * , std::string * )"
+- "name": "charconst*flatbuffers::JsonPrinter::PrintVector<flatbuffers::Offset64<void>,unsignedint>(voidconst*,flatbuffers::Typeconst&,int,unsignedcharconst*)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.flatbuffers::JsonPrinter *"
+  - "char *"
+  - "struct.flatbuffers::Type *"
+  - "int"
+  - "char *"
+  "return_type": "char *"
+  "signature": "char * char const* flatbuffers::JsonPrinter::PrintVector<flatbuffers::Offset64<void>, unsigned int>(struct flatbuffers::JsonPrinter * , char * , struct flatbuffers::Type * , int , char * )"
+"project": "flatbuffers"
+"target_name": "64bit_fuzzer"
+"target_path": "/src/flatbuffers/tests/fuzzer/flatbuffers_64bit_fuzzer.cc"

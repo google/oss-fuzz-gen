@@ -1,0 +1,55 @@
+"functions":
+- "name": "main2"
+  "param_names":
+  - "argc"
+  - "argv"
+  "param_types":
+  - "int"
+  - "char **"
+  "return_type": "int"
+  "signature": "int main2(int argc, char ** argv)"
+- "name": "scanopt_usage"
+  "param_names":
+  - "scanner"
+  - "fp"
+  - "usage"
+  "param_types":
+  - "char **"
+  - "struct._IO_FILE *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int scanopt_usage(char ** scanner, struct _IO_FILE * fp, char * usage)"
+- "name": "buf_prints"
+  "param_names":
+  - "buf"
+  - "fmt"
+  - "s"
+  "param_types":
+  - "struct.Buf *"
+  - "char *"
+  - "char *"
+  "return_type": "struct.Buf *"
+  "signature": "struct Buf * buf_prints(struct Buf * buf, char * fmt, char * s)"
+- "name": "regmatch_strtol"
+  "param_names":
+  - "m"
+  - "src"
+  - "endptr"
+  - "base"
+  "param_types":
+  - "struct.regmatch_t *"
+  - "char *"
+  - "char **"
+  - "int"
+  "return_type": "int"
+  "signature": "int regmatch_strtol(struct regmatch_t * m, char * src, char ** endptr, int base)"
+- "name": "yy_flex_xmalloc"
+  "param_names":
+  - "size"
+  "param_types":
+  - "int"
+  "return_type": "char *"
+  "signature": "char * yy_flex_xmalloc(int size)"
+"project": "flex"
+"target_name": "fuzz-main"
+"target_path": "/src/fuzz-main.c"

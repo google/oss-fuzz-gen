@@ -1,0 +1,33 @@
+"functions":
+- "name": "parse"
+  "param_names":
+  - "fname"
+  "param_types":
+  - "char *"
+  "return_type": "void"
+  "signature": "void parse(char * fname)"
+- "name": "ini_parse_string"
+  "param_names":
+  - "string"
+  - "handler"
+  - "user"
+  "param_types":
+  - "char *"
+  - "func_type *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int ini_parse_string(char * string, func_type * handler, char * user)"
+- "name": "ini_reader_string"
+  "param_names":
+  - "str"
+  - "num"
+  - "stream"
+  "param_types":
+  - "char *"
+  - "int"
+  - "char *"
+  "return_type": "char *"
+  "signature": "char * ini_reader_string(char * str, int num, char * stream)"
+"project": "inih"
+"target_name": "inihfuzz"
+"target_path": "/src/inih/fuzzing/inihfuzz.c"

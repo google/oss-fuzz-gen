@@ -1,0 +1,35 @@
+"functions":
+- "name": "BZ2_compressBlock"
+  "param_names":
+  - "s"
+  - "is_last_block"
+  "param_types":
+  - "struct.EState *"
+  - "char"
+  "return_type": "void"
+  "signature": "void BZ2_compressBlock(struct EState * s, char is_last_block)"
+- "name": "_GLOBAL__sub_I_ftfuzzer.cc"
+  "param_names": []
+  "param_types": []
+  "return_type": "void"
+  "signature": "void _GLOBAL__sub_I_ftfuzzer.cc()"
+- "name": "_GLOBAL__sub_I_template.cpp"
+  "param_names": []
+  "param_types": []
+  "return_type": "void"
+  "signature": "void _GLOBAL__sub_I_template.cpp()"
+- "name": "__cxx_global_var_init"
+  "param_names": []
+  "param_types": []
+  "return_type": "void"
+  "signature": "void __cxx_global_var_init()"
+- "name": "freetype::LzwFuzzTarget::LzwFuzzTarget()"
+  "param_names":
+  - "this"
+  "param_types":
+  - "class.freetype::LzwFuzzTarget *"
+  "return_type": "void"
+  "signature": "void freetype::LzwFuzzTarget::LzwFuzzTarget(freetype::LzwFuzzTarget * this)"
+"project": "freetype2"
+"target_name": "DriverInternals"
+"target_path": "/src/freetype2-testing/fuzzing/src/driver/DriverInternals.cpp"

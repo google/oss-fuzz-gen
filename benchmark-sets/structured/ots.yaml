@@ -1,0 +1,55 @@
+"functions":
+- "name": "woff2::ConvertWOFF2ToTTF(unsignedchar*,unsignedlong,unsignedcharconst*,unsignedlong)"
+  "param_names":
+  - "result"
+  - "result_length"
+  - "data"
+  - "length"
+  "param_types":
+  - "char *"
+  - "size_t"
+  - "char *"
+  - "size_t"
+  "return_type": "bool"
+  "signature": "bool woff2::ConvertWOFF2ToTTF(char * result, size_t result_length, char * data, size_t length)"
+- "name": "ots::OpenTypeFEAT::FeatureSettingDefn::ParsePart(ots::Buffer&)"
+  "param_names":
+  - "this"
+  - "table"
+  "param_types":
+  - "struct.ots::OpenTypeFEAT::FeatureSettingDefn *"
+  - "class.ots::Buffer *"
+  "return_type": "bool"
+  "signature": "bool ots::OpenTypeFEAT::FeatureSettingDefn::ParsePart(struct ots::OpenTypeFEAT::FeatureSettingDefn * this, ots::Buffer * table)"
+- "name": "inflateSetDictionary"
+  "param_names":
+  - "strm"
+  - "dictionary"
+  - "dictLength"
+  "param_types":
+  - "struct.z_stream_s *"
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int inflateSetDictionary(struct z_stream_s * strm, char * dictionary, int dictLength)"
+- "name": "ots::OpenTypeSILF::SILSub::SILPass::SILPass(ots::OpenTypeSILF::SILSub::SILPassconst&)"
+  "param_names":
+  - "this"
+  - ""
+  "param_types":
+  - "struct.ots::OpenTypeSILF::SILSub::SILPass *"
+  - "struct.ots::OpenTypeSILF::SILSub::SILPass *"
+  "return_type": "void"
+  "signature": "void ots::OpenTypeSILF::SILSub::SILPass::SILPass(struct ots::OpenTypeSILF::SILSub::SILPass * this, struct ots::OpenTypeSILF::SILSub::SILPass * )"
+- "name": "ots::OpenTypeSILF::SILSub::SILSub(ots::OpenTypeSILF::SILSubconst&)"
+  "param_names":
+  - "this"
+  - ""
+  "param_types":
+  - "struct.ots::OpenTypeSILF::SILSub *"
+  - "struct.ots::OpenTypeSILF::SILSub *"
+  "return_type": "void"
+  "signature": "void ots::OpenTypeSILF::SILSub::SILSub(struct ots::OpenTypeSILF::SILSub * this, struct ots::OpenTypeSILF::SILSub * )"
+"project": "ots"
+"target_name": "ots-fuzzer"
+"target_path": "/src/ots/util/ots-fuzzer.cc"

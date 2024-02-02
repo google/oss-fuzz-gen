@@ -1,0 +1,59 @@
+"functions":
+- "name": "cellBoundaryInsidePolygon"
+  "param_names":
+  - "geoPolygon"
+  - "bboxes"
+  - "boundary"
+  - "boundaryBBox"
+  "param_types":
+  - "struct.GeoPolygon *"
+  - "struct.BBox *"
+  - "struct.CellBoundary *"
+  - "struct.BBox *"
+  "return_type": "bool"
+  "signature": "bool cellBoundaryInsidePolygon(struct GeoPolygon * geoPolygon, struct BBox * bboxes, struct CellBoundary * boundary, struct BBox * boundaryBBox)"
+- "name": "iterStepRes"
+  "param_names":
+  - "itR"
+  "param_types":
+  - "struct.IterCellsResolution *"
+  "return_type": "void"
+  "signature": "void iterStepRes(struct IterCellsResolution * itR)"
+- "name": "cellBoundaryCrossesPolygon"
+  "param_names":
+  - "geoPolygon"
+  - "bboxes"
+  - "boundary"
+  - "boundaryBBox"
+  "param_types":
+  - "struct.GeoPolygon *"
+  - "struct.BBox *"
+  - "struct.CellBoundary *"
+  - "struct.BBox *"
+  "return_type": "bool"
+  "signature": "bool cellBoundaryCrossesPolygon(struct GeoPolygon * geoPolygon, struct BBox * bboxes, struct CellBoundary * boundary, struct BBox * boundaryBBox)"
+- "name": "cellBoundaryCrossesGeoLoop"
+  "param_names":
+  - "geoloop"
+  - "loopBBox"
+  - "boundary"
+  - "boundaryBBox"
+  "param_types":
+  - "struct.GeoLoop *"
+  - "struct.BBox *"
+  - "struct.CellBoundary *"
+  - "struct.BBox *"
+  "return_type": "bool"
+  "signature": "bool cellBoundaryCrossesGeoLoop(struct GeoLoop * geoloop, struct BBox * loopBBox, struct CellBoundary * boundary, struct BBox * boundaryBBox)"
+- "name": "iterInitRes"
+  "param_names":
+  - "res"
+  - ""
+  "param_types":
+  - "struct.IterCellsResolution *"
+  - "int"
+  "return_type": "void"
+  "signature": "void iterInitRes(struct IterCellsResolution * res, int )"
+"project": "h3"
+"target_name": "fuzzerResolutions"
+"target_path": "/src/h3/src/apps/fuzzers/fuzzerResolutions.c"

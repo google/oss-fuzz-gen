@@ -1,0 +1,49 @@
+"functions":
+- "name": "decode_nanomips_opc"
+  "param_names":
+  - "env"
+  - "ctx"
+  "param_types":
+  - "struct.CPUMIPSState.20808 *"
+  - "struct.DisasContext.20809 *"
+  "return_type": "int"
+  "signature": "int decode_nanomips_opc(struct CPUMIPSState * env, struct DisasContext * ctx)"
+- "name": "decode_nanomips_32_48_opc"
+  "param_names":
+  - "env"
+  - "ctx"
+  "param_types":
+  - "struct.CPUMIPSState.20808 *"
+  - "struct.DisasContext.20809 *"
+  "return_type": "int"
+  "signature": "int decode_nanomips_32_48_opc(struct CPUMIPSState * env, struct DisasContext * ctx)"
+- "name": "decode_micromips_opc"
+  "param_names":
+  - "env"
+  - "ctx"
+  "param_types":
+  - "struct.CPUMIPSState.20808 *"
+  - "struct.DisasContext.20809 *"
+  "return_type": "int"
+  "signature": "int decode_micromips_opc(struct CPUMIPSState * env, struct DisasContext * ctx)"
+- "name": "decode_micromips32_opc"
+  "param_names":
+  - "env"
+  - "ctx"
+  "param_types":
+  - "struct.CPUMIPSState.20808 *"
+  - "struct.DisasContext.20809 *"
+  "return_type": "void"
+  "signature": "void decode_micromips32_opc(struct CPUMIPSState * env, struct DisasContext * ctx)"
+- "name": "tricore_tr_translate_insn"
+  "param_names":
+  - "dcbase"
+  - "cpu"
+  "param_types":
+  - "struct.DisasContextBase.7005 *"
+  - "struct.CPUState.34934 *"
+  "return_type": "void"
+  "signature": "void tricore_tr_translate_insn(struct DisasContextBase * dcbase, struct CPUState * cpu)"
+"project": "unicorn"
+"target_name": "fuzz_emu_m68k_be"
+"target_path": "/src/unicorn/tests/fuzz/fuzz_emu_m68k_be.c"

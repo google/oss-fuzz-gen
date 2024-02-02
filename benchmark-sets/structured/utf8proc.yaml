@@ -1,0 +1,36 @@
+"functions":
+- "name": "utf8proc_decompose"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "char *"
+  - "size_t"
+  - "int *"
+  - "size_t"
+  - "int"
+  "return_type": "size_t"
+  "signature": "size_t utf8proc_decompose(char * , size_t , int * , size_t , int )"
+- "name": "utf8proc_errmsg"
+  "param_names":
+  - ""
+  "param_types":
+  - "size_t"
+  "return_type": "char *"
+  "signature": "char * utf8proc_errmsg(size_t )"
+- "name": "utf8proc_unicode_version"
+  "param_names": []
+  "param_types": []
+  "return_type": "char *"
+  "signature": "char * utf8proc_unicode_version()"
+- "name": "utf8proc_version"
+  "param_names": []
+  "param_types": []
+  "return_type": "char *"
+  "signature": "char * utf8proc_version()"
+"project": "utf8proc"
+"target_name": "utf8proc_fuzzer"
+"target_path": "/src/utf8proc/test/fuzzer.c"

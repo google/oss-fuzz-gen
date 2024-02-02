@@ -1,0 +1,59 @@
+"functions":
+- "name": "nghttp2_session_recv"
+  "param_names":
+  - ""
+  "param_types":
+  - "struct.nghttp2_session *"
+  "return_type": "int"
+  "signature": "int nghttp2_session_recv(struct nghttp2_session * )"
+- "name": "nghttp2_session_send"
+  "param_names":
+  - ""
+  "param_types":
+  - "struct.nghttp2_session *"
+  "return_type": "int"
+  "signature": "int nghttp2_session_send(struct nghttp2_session * )"
+- "name": "nghttp2_session_upgrade2"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.nghttp2_session *"
+  - "char *"
+  - "size_t"
+  - "int"
+  - "char *"
+  "return_type": "int"
+  "signature": "int nghttp2_session_upgrade2(struct nghttp2_session * , char * , size_t , int , char * )"
+- "name": "nghttp2_session_upgrade"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.nghttp2_session *"
+  - "char *"
+  - "size_t"
+  - "char *"
+  "return_type": "int"
+  "signature": "int nghttp2_session_upgrade(struct nghttp2_session * , char * , size_t , char * )"
+- "name": "nghttp2_session_upgrade_internal"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.nghttp2_session *"
+  - "char *"
+  - "size_t"
+  - "char *"
+  "return_type": "int"
+  "signature": "int nghttp2_session_upgrade_internal(struct nghttp2_session * , char * , size_t , char * )"
+"project": "nghttp2"
+"target_name": "nghttp2_fuzzer"
+"target_path": "/src/nghttp2/fuzz/fuzz_target.cc"

@@ -1,0 +1,53 @@
+"functions":
+- "name": "nxt_router_conf_data_handler"
+  "param_names":
+  - "task"
+  - "msg"
+  "param_types":
+  - "struct.nxt_task_s *"
+  - "struct.nxt_port_recv_msg_s *"
+  "return_type": "void"
+  "signature": "void nxt_router_conf_data_handler(struct nxt_task_s * task, struct nxt_port_recv_msg_s * msg)"
+- "name": "nxt_router_conf_create"
+  "param_names":
+  - "task"
+  - "tmcf"
+  - "start"
+  - "end"
+  "param_types":
+  - "struct.nxt_task_s *"
+  - "struct.nxt_router_temp_conf_t *"
+  - "char *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int nxt_router_conf_create(struct nxt_task_s * task, struct nxt_router_temp_conf_t * tmcf, char * start, char * end)"
+- "name": "nxt_runtime_create"
+  "param_names":
+  - "task"
+  "param_types":
+  - "struct.nxt_task_s *"
+  "return_type": "int"
+  "signature": "int nxt_runtime_create(struct nxt_task_s * task)"
+- "name": "nxt_http_action_create"
+  "param_names":
+  - "task"
+  - "tmcf"
+  - "pass"
+  "param_types":
+  - "struct.nxt_task_s *"
+  - "struct.nxt_router_temp_conf_t *"
+  - "struct.nxt_str_t *"
+  "return_type": "struct.nxt_http_action_s *"
+  "signature": "struct nxt_http_action_s * nxt_http_action_create(struct nxt_task_s * task, struct nxt_router_temp_conf_t * tmcf, struct nxt_str_t * pass)"
+- "name": "nxt_main_port_modules_handler"
+  "param_names":
+  - "task"
+  - "msg"
+  "param_types":
+  - "struct.nxt_task_s.2887 *"
+  - "struct.nxt_port_recv_msg_s.2872 *"
+  "return_type": "void"
+  "signature": "void nxt_main_port_modules_handler(struct nxt_task_s * task, struct nxt_port_recv_msg_s * msg)"
+"project": "unit"
+"target_name": "Fuzz_json"
+"target_path": "/src/unit/fuzzer/Fuzz_json.c"

@@ -1,0 +1,43 @@
+"functions":
+- "name": "json_object_from_file"
+  "param_names":
+  - "filename"
+  "param_types":
+  - "char *"
+  "return_type": "struct.json_object *"
+  "signature": "struct json_object * json_object_from_file(char * filename)"
+- "name": "json_object_from_fd"
+  "param_names":
+  - "fd"
+  "param_types":
+  - "int"
+  "return_type": "struct.json_object *"
+  "signature": "struct json_object * json_object_from_fd(int fd)"
+- "name": "json_object_from_fd_ex"
+  "param_names":
+  - "fd"
+  - "in_depth"
+  "param_types":
+  - "int"
+  - "int"
+  "return_type": "struct.json_object *"
+  "signature": "struct json_object * json_object_from_fd_ex(int fd, int in_depth)"
+- "name": "json_tokener_parse"
+  "param_names":
+  - "str"
+  "param_types":
+  - "char *"
+  "return_type": "struct.json_object *"
+  "signature": "struct json_object * json_tokener_parse(char * str)"
+- "name": "json_tokener_parse_verbose"
+  "param_names":
+  - "str"
+  - "error"
+  "param_types":
+  - "char *"
+  - "int *"
+  "return_type": "struct.json_object *"
+  "signature": "struct json_object * json_tokener_parse_verbose(char * str, int * error)"
+"project": "json-c"
+"target_name": "tokener_parse_ex_fuzzer"
+"target_path": "/src/json-c/fuzz/tokener_parse_ex_fuzzer.cc"

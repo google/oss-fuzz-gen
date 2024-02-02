@@ -1,0 +1,59 @@
+"functions":
+- "name": "display_cmnd_check"
+  "param_names":
+  - "ctx"
+  - "parse_tree"
+  - "pw"
+  - "now"
+  - "match_info"
+  "param_types":
+  - "struct.sudoers_context *"
+  - "struct.sudoers_parse_tree *"
+  - "struct.passwd *"
+  - "size_t"
+  - "struct.sudoers_match_info *"
+  "return_type": "int"
+  "signature": "int display_cmnd_check(struct sudoers_context * ctx, struct sudoers_parse_tree * parse_tree, struct passwd * pw, size_t now, struct sudoers_match_info * match_info)"
+- "name": "sudo_make_grlist_item"
+  "param_names":
+  - "pw"
+  - "unused1"
+  "param_types":
+  - "struct.passwd *"
+  - "char **"
+  "return_type": "struct.cache_item *"
+  "signature": "struct cache_item * sudo_make_grlist_item(struct passwd * pw, char ** unused1)"
+- "name": "fill_runas_group"
+  "param_names":
+  - "str"
+  - "strsize"
+  - "v"
+  "param_types":
+  - "char *"
+  - "size_t"
+  - "char *"
+  "return_type": "size_t"
+  "signature": "size_t fill_runas_group(char * str, size_t strsize, char * v)"
+- "name": "fill_group"
+  "param_names":
+  - "str"
+  - "strsize"
+  - "v"
+  "param_types":
+  - "char *"
+  - "size_t"
+  - "char *"
+  "return_type": "size_t"
+  "signature": "size_t fill_group(char * str, size_t strsize, char * v)"
+- "name": "sudo_set_grlist"
+  "param_names":
+  - "pw"
+  - "groups"
+  "param_types":
+  - "struct.passwd *"
+  - "char **"
+  "return_type": "int"
+  "signature": "int sudo_set_grlist(struct passwd * pw, char ** groups)"
+"project": "sudoers"
+"target_name": "fuzz_sudoers_ldif"
+"target_path": "/src/sudo/plugins/sudoers/regress/fuzz/fuzz_sudoers_ldif.c"

@@ -1,0 +1,45 @@
+"functions":
+- "name": "muduo::Thread::start()"
+  "param_names":
+  - ""
+  "param_types":
+  - "class.muduo::Thread *"
+  "return_type": "void"
+  "signature": "void muduo::Thread::start(muduo::Thread * )"
+- "name": "muduo::TimeZone::loadZoneFile(charconst*)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.muduo::TimeZone *"
+  - "char *"
+  "return_type": "void"
+  "signature": "void muduo::TimeZone::loadZoneFile(muduo::TimeZone * , char * )"
+- "name": "muduo::detail::readTimeZoneFile(charconst*,muduo::TimeZone::Data*)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "char *"
+  - "struct.muduo::TimeZone::Data *"
+  "return_type": "bool"
+  "signature": "bool muduo::detail::readTimeZoneFile(char * , struct muduo::TimeZone::Data * )"
+- "name": "muduo::net::sockets::isSelfConnect(int)"
+  "param_names":
+  - ""
+  "param_types":
+  - "int"
+  "return_type": "bool"
+  "signature": "bool muduo::net::sockets::isSelfConnect(int )"
+- "name": "muduo::net::sockets::accept(int,sockaddr_in6*)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "int"
+  - "struct.sockaddr_in6 *"
+  "return_type": "int"
+  "signature": "int muduo::net::sockets::accept(int , struct sockaddr_in6 * )"
+"project": "muduo"
+"target_name": "muduo_http_fuzzer"
+"target_path": "/src/muduo_http_fuzzer.cpp"

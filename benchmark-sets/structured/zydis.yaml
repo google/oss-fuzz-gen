@@ -1,0 +1,59 @@
+"functions":
+- "name": "ZydisCalcAbsoluteAddressEx"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.ZydisDecodedInstruction_ *"
+  - "struct.ZydisDecodedOperand_ *"
+  - "size_t"
+  - "struct.ZydisRegisterContext_ *"
+  - "size_t *"
+  "return_type": "int"
+  "signature": "int ZydisCalcAbsoluteAddressEx(struct ZydisDecodedInstruction_ * , struct ZydisDecodedOperand_ * , size_t , struct ZydisRegisterContext_ * , size_t * )"
+- "name": "ZydisFormatterBufferGetString"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "struct.ZydisFormatterBuffer_ *"
+  - "struct.ZyanString_ **"
+  "return_type": "int"
+  "signature": "int ZydisFormatterBufferGetString(struct ZydisFormatterBuffer_ * , struct ZyanString_ ** )"
+- "name": "ZydisFormatterSetHook"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.ZydisFormatter_ *"
+  - "int"
+  - "char **"
+  "return_type": "int"
+  "signature": "int ZydisFormatterSetHook(struct ZydisFormatter_ * , int , char ** )"
+- "name": "ZydisEncoderNopFill"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "char *"
+  - "size_t"
+  "return_type": "int"
+  "signature": "int ZydisEncoderNopFill(char * , size_t )"
+- "name": "ZydisStdinRead"
+  "param_names":
+  - "ctx"
+  - "buf"
+  - "max_len"
+  "param_types":
+  - "char *"
+  - "char *"
+  - "size_t"
+  "return_type": "size_t"
+  "signature": "size_t ZydisStdinRead(char * ctx, char * buf, size_t max_len)"
+"project": "zydis"
+"target_name": "ZydisFuzzReEncoding"
+"target_path": "/src/zydis/tools/ZydisFuzzShared.c"

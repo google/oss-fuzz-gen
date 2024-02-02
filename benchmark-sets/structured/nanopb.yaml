@@ -1,0 +1,28 @@
+"functions":
+- "name": "pb_encode_ex"
+  "param_names":
+  - "stream"
+  - "fields"
+  - "src_struct"
+  - "flags"
+  "param_types":
+  - "struct.pb_ostream_s *"
+  - "struct.pb_msgdesc_s *"
+  - "char *"
+  - "int"
+  "return_type": "bool"
+  "signature": "bool pb_encode_ex(struct pb_ostream_s * stream, struct pb_msgdesc_s * fields, char * src_struct, int flags)"
+- "name": "pb_get_encoded_size"
+  "param_names":
+  - "size"
+  - "fields"
+  - "src_struct"
+  "param_types":
+  - "size_t *"
+  - "struct.pb_msgdesc_s *"
+  - "char *"
+  "return_type": "bool"
+  "signature": "bool pb_get_encoded_size(size_t * size, struct pb_msgdesc_s * fields, char * src_struct)"
+"project": "nanopb"
+"target_name": "fuzztest"
+"target_path": "/src/nanopb/tests/fuzztest/fuzztest.c"

@@ -1,0 +1,61 @@
+"functions":
+- "name": "X509dump"
+  "param_names":
+  - "cert"
+  - "ncert"
+  "param_types":
+  - "char *"
+  - "int"
+  "return_type": "void"
+  "signature": "void X509dump(char * cert, int ncert)"
+- "name": "X509verify"
+  "param_names":
+  - "cert"
+  - "ncert"
+  - "pk"
+  "param_types":
+  - "char *"
+  - "int"
+  - "struct.RSApub *"
+  "return_type": "char *"
+  "signature": "char * X509verify(char * cert, int ncert, struct RSApub * pk)"
+- "name": "X509gen"
+  "param_names":
+  - "priv"
+  - "subj"
+  - "valid"
+  - "certlen"
+  "param_types":
+  - "struct.RSApriv *"
+  - "char *"
+  - "size_t *"
+  - "int *"
+  "return_type": "char *"
+  "signature": "char * X509gen(struct RSApriv * priv, char * subj, size_t * valid, int * certlen)"
+- "name": "X509req"
+  "param_names":
+  - "priv"
+  - "subj"
+  - "certlen"
+  "param_types":
+  - "struct.RSApriv *"
+  - "char *"
+  - "int *"
+  "return_type": "char *"
+  "signature": "char * X509req(struct RSApriv * priv, char * subj, int * certlen)"
+- "name": "verify_signature"
+  "param_names":
+  - "signature"
+  - "pk"
+  - "edigest"
+  - "psigalg"
+  "param_types":
+  - "struct.Bytes *"
+  - "struct.RSApub *"
+  - "char *"
+  - "struct.Elem **"
+  "return_type": "char *"
+  "signature": "char * verify_signature(struct Bytes * signature, struct RSApub * pk, char * edigest, struct Elem ** psigalg)"
+"project": "plan9port"
+"target_name": "fuzz_libsec"
+"target_path": "/src/fuzz_libsec.c"

@@ -1,0 +1,9 @@
+"functions":
+- "name": "_GLOBAL__sub_I_serializer.cc"
+  "param_names": []
+  "param_types": []
+  "return_type": "void"
+  "signature": "void _GLOBAL__sub_I_serializer.cc()"
+"project": "lua"
+"target_name": "fuzz_lua"
+"target_path": "/src/fuzz_lua.c"

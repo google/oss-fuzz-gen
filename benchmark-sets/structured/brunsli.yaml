@@ -1,0 +1,53 @@
+"functions":
+- "name": "brunsli::BrunsliDecoder::Decode(unsignedlong*,unsignedcharconst**,unsignedlong*,unsignedchar**)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.brunsli::BrunsliDecoder *"
+  - "size_t *"
+  - "char **"
+  - "size_t *"
+  - "char **"
+  "return_type": "int"
+  "signature": "int brunsli::BrunsliDecoder::Decode(brunsli::BrunsliDecoder * , size_t * , char ** , size_t * , char ** )"
+- "name": "brunsli::BrunsliEstimateDecoderPeakMemoryUsage(unsignedcharconst*,unsignedlong)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "char *"
+  - "size_t"
+  "return_type": "size_t"
+  "signature": "size_t brunsli::BrunsliEstimateDecoderPeakMemoryUsage(char * , size_t )"
+- "name": "brunsli::BrunsliDecoder::BrunsliDecoder()"
+  "param_names":
+  - ""
+  "param_types":
+  - "class.brunsli::BrunsliDecoder *"
+  "return_type": "void"
+  "signature": "void brunsli::BrunsliDecoder::BrunsliDecoder(brunsli::BrunsliDecoder * )"
+- "name": "brunsli::internal::dec::InternalState::~InternalState()"
+  "param_names":
+  - ""
+  "param_types":
+  - "struct.brunsli::internal::dec::InternalState *"
+  "return_type": "void"
+  "signature": "void brunsli::internal::dec::InternalState::~InternalState(struct brunsli::internal::dec::InternalState * )"
+- "name": "brunsli::FindBestMatrix(intconst*,bool,unsignedchar*)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "int *"
+  - "bool"
+  - "char *"
+  "return_type": "int"
+  "signature": "int brunsli::FindBestMatrix(int * , bool , char * )"
+"project": "brunsli"
+"target_name": "fuzz_decode_streaming"
+"target_path": "/src/brunsli/c/tests/fuzz_decode_streaming.cc"

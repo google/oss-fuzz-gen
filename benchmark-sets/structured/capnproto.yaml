@@ -1,0 +1,49 @@
+"functions":
+- "name": "capnp::_::initDynamicTestMessage(capnp::DynamicStruct::Builder)"
+  "param_names":
+  - "builder"
+  "param_types":
+  - "class.capnp::DynamicStruct::Builder *"
+  "return_type": "void"
+  "signature": "void capnp::_::initDynamicTestMessage(capnp::DynamicStruct::Builder * builder)"
+- "name": "capnp::_::(anonymousnamespace)::dynamicInitTestMessage(capnp::DynamicStruct::Builder)"
+  "param_names":
+  - "builder"
+  "param_types":
+  - "class.capnp::DynamicStruct::Builder *"
+  "return_type": "void"
+  "signature": "void capnp::_::(capnp::DynamicStruct::Builder * builder)"
+- "name": "capnp::DynamicStruct::Builder::adopt(kj::StringPtr,capnp::Orphan<capnp::DynamicValue>&&)"
+  "param_names":
+  - "this"
+  - "name"
+  - "orphan"
+  - ""
+  "param_types":
+  - "class.capnp::DynamicStruct::Builder *"
+  - "char *"
+  - "size_t"
+  - "class.capnp::Orphan *"
+  "return_type": "void"
+  "signature": "void capnp::DynamicStruct::Builder::adopt(capnp::DynamicStruct::Builder * this, char * name, size_t orphan, capnp::Orphan * )"
+- "name": "capnp::DynamicStruct::Builder::adopt(capnp::StructSchema::Field,capnp::Orphan<capnp::DynamicValue>&&)"
+  "param_names":
+  - "this"
+  - "field"
+  - "orphan"
+  "param_types":
+  - "class.capnp::DynamicStruct::Builder *"
+  - "class.capnp::StructSchema::Field *"
+  - "class.capnp::Orphan *"
+  "return_type": "void"
+  "signature": "void capnp::DynamicStruct::Builder::adopt(capnp::DynamicStruct::Builder * this, capnp::StructSchema::Field * field, capnp::Orphan * orphan)"
+- "name": "capnp::_::checkDynamicTestMessage(capnp::DynamicStruct::Builder)"
+  "param_names":
+  - "builder"
+  "param_types":
+  - "class.capnp::DynamicStruct::Builder *"
+  "return_type": "void"
+  "signature": "void capnp::_::checkDynamicTestMessage(capnp::DynamicStruct::Builder * builder)"
+"project": "capnproto"
+"target_name": "capnp-llvm-fuzzer-testcase"
+"target_path": "/src/capnproto/c++/src/capnp/llvm-fuzzer-testcase.c++"

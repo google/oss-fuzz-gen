@@ -1,0 +1,57 @@
+"functions":
+- "name": "cil_write_post_ast"
+  "param_names":
+  - "out"
+  - "db"
+  "param_types":
+  - "struct._IO_FILE *"
+  - "struct.cil_db *"
+  "return_type": "int"
+  "signature": "int cil_write_post_ast(struct _IO_FILE * out, struct cil_db * db)"
+- "name": "cil_write_resolve_ast"
+  "param_names":
+  - "out"
+  - "db"
+  "param_types":
+  - "struct._IO_FILE *"
+  - "struct.cil_db *"
+  "return_type": "int"
+  "signature": "int cil_write_resolve_ast(struct _IO_FILE * out, struct cil_db * db)"
+- "name": "cil_write_build_ast"
+  "param_names":
+  - "out"
+  - "db"
+  "param_types":
+  - "struct._IO_FILE *"
+  - "struct.cil_db *"
+  "return_type": "int"
+  "signature": "int cil_write_build_ast(struct _IO_FILE * out, struct cil_db * db)"
+- "name": "sepol_policydb_to_image"
+  "param_names":
+  - "handle"
+  - "p"
+  - "newdata"
+  - "newlen"
+  "param_types":
+  - "struct.sepol_handle *"
+  - "struct.sepol_policydb *"
+  - "char **"
+  - "size_t *"
+  "return_type": "int"
+  "signature": "int sepol_policydb_to_image(struct sepol_handle * handle, struct sepol_policydb * p, char ** newdata, size_t * newlen)"
+- "name": "policydb_to_image"
+  "param_names":
+  - "handle"
+  - "policydb"
+  - "newdata"
+  - "newlen"
+  "param_types":
+  - "struct.sepol_handle *"
+  - "struct.policydb *"
+  - "char **"
+  - "size_t *"
+  "return_type": "int"
+  "signature": "int policydb_to_image(struct sepol_handle * handle, struct policydb * policydb, char ** newdata, size_t * newlen)"
+"project": "selinux"
+"target_name": "binpolicy-fuzzer"
+"target_path": "/src/selinux/libsepol/fuzz/binpolicy-fuzzer.c"

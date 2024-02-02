@@ -1,0 +1,61 @@
+"functions":
+- "name": "plist_read_from_file"
+  "param_names":
+  - "filename"
+  - "plist"
+  - "format"
+  "param_types":
+  - "char *"
+  - "char **"
+  - "int *"
+  "return_type": "int"
+  "signature": "int plist_read_from_file(char * filename, char ** plist, int * format)"
+- "name": "plist_from_memory"
+  "param_names":
+  - "plist_data"
+  - "length"
+  - "plist"
+  - "format"
+  "param_types":
+  - "char *"
+  - "int"
+  - "char **"
+  - "int *"
+  "return_type": "int"
+  "signature": "int plist_from_memory(char * plist_data, int length, char ** plist, int * format)"
+- "name": "plist_write_to_file"
+  "param_names":
+  - "plist"
+  - "filename"
+  - "format"
+  - "options"
+  "param_types":
+  - "char *"
+  - "char *"
+  - "int"
+  - "int"
+  "return_type": "int"
+  "signature": "int plist_write_to_file(char * plist, char * filename, int format, int options)"
+- "name": "plist_print"
+  "param_names":
+  - "plist"
+  "param_types":
+  - "char *"
+  "return_type": "void"
+  "signature": "void plist_print(char * plist)"
+- "name": "plist_write_to_stream"
+  "param_names":
+  - "plist"
+  - "stream"
+  - "format"
+  - "options"
+  "param_types":
+  - "char *"
+  - "struct._IO_FILE *"
+  - "int"
+  - "int"
+  "return_type": "int"
+  "signature": "int plist_write_to_stream(char * plist, struct _IO_FILE * stream, int format, int options)"
+"project": "libplist"
+"target_name": "oplist_fuzzer"
+"target_path": "/src/libplist/fuzz/oplist_fuzzer.cc"

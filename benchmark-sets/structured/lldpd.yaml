@@ -1,0 +1,43 @@
+"functions":
+- "name": "levent_loop"
+  "param_names":
+  - "cfg"
+  "param_types":
+  - "struct.lldpd.129 *"
+  "return_type": "void"
+  "signature": "void levent_loop(struct lldpd * cfg)"
+- "name": "levent_init"
+  "param_names":
+  - "cfg"
+  "param_types":
+  - "struct.lldpd.129 *"
+  "return_type": "void"
+  "signature": "void levent_init(struct lldpd * cfg)"
+- "name": "levent_update_and_send"
+  "param_names":
+  - "fd"
+  - "what"
+  - "arg"
+  "param_types":
+  - "int"
+  - "short"
+  - "char *"
+  "return_type": "void"
+  "signature": "void levent_update_and_send(int fd, short what, char * arg)"
+- "name": "lldpd_loop"
+  "param_names":
+  - "cfg"
+  "param_types":
+  - "struct.lldpd *"
+  "return_type": "void"
+  "signature": "void lldpd_loop(struct lldpd * cfg)"
+- "name": "netlink_initialize"
+  "param_names":
+  - "cfg"
+  "param_types":
+  - "struct.lldpd.434 *"
+  "return_type": "int"
+  "signature": "int netlink_initialize(struct lldpd * cfg)"
+"project": "lldpd"
+"target_name": "fuzz_lldp"
+"target_path": "/src/lldpd/tests/fuzz_lldp.c"

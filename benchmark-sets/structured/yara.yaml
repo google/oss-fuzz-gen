@@ -1,0 +1,61 @@
+"functions":
+- "name": "LLVMFuzzerInitialize"
+  "param_names":
+  - "argc"
+  - "argv"
+  "param_types":
+  - "int *"
+  - "char ***"
+  "return_type": "int"
+  "signature": "int LLVMFuzzerInitialize(int * argc, char *** argv)"
+- "name": "yr_compiler_add_fd"
+  "param_names":
+  - "compiler"
+  - "rules_fd"
+  - "namespace_"
+  - "file_name"
+  "param_types":
+  - "struct._YR_COMPILER *"
+  - "int"
+  - "char *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int yr_compiler_add_fd(struct _YR_COMPILER * compiler, int rules_fd, char * namespace_, char * file_name)"
+- "name": "yr_compiler_add_file"
+  "param_names":
+  - "compiler"
+  - "rules_file"
+  - "namespace_"
+  - "file_name"
+  "param_types":
+  - "struct._YR_COMPILER *"
+  - "struct._IO_FILE *"
+  - "char *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int yr_compiler_add_file(struct _YR_COMPILER * compiler, struct _IO_FILE * rules_file, char * namespace_, char * file_name)"
+- "name": "yr_compiler_add_bytes"
+  "param_names":
+  - "compiler"
+  - "rules_data"
+  - "rules_size"
+  - "namespace_"
+  "param_types":
+  - "struct._YR_COMPILER *"
+  - "char *"
+  - "size_t"
+  - "char *"
+  "return_type": "int"
+  "signature": "int yr_compiler_add_bytes(struct _YR_COMPILER * compiler, char * rules_data, size_t rules_size, char * namespace_)"
+- "name": "yr_lex_parse_rules_fd"
+  "param_names":
+  - "rules_fd"
+  - "compiler"
+  "param_types":
+  - "int"
+  - "struct._YR_COMPILER *"
+  "return_type": "int"
+  "signature": "int yr_lex_parse_rules_fd(int rules_fd, struct _YR_COMPILER * compiler)"
+"project": "yara"
+"target_name": "dotnet_fuzzer"
+"target_path": "/src/yara/tests/oss-fuzz/dotnet_fuzzer.cc"

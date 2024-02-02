@@ -1,0 +1,57 @@
+"functions":
+- "name": "load_string_section"
+  "param_names":
+  - "this"
+  - "settings"
+  - "merge"
+  - "key"
+  "param_types":
+  - "struct.private_settings_t *"
+  - "char *"
+  - "bool"
+  - "char *"
+  "return_type": "bool"
+  "signature": "bool load_string_section(struct private_settings_t * this, char * settings, bool merge, char * key)"
+- "name": "load_files_section"
+  "param_names":
+  - "this"
+  - "pattern"
+  - "merge"
+  - "key"
+  "param_types":
+  - "struct.private_settings_t *"
+  - "char *"
+  - "bool"
+  - "char *"
+  "return_type": "bool"
+  "signature": "bool load_files_section(struct private_settings_t * this, char * pattern, bool merge, char * key)"
+- "name": "settings_create_string"
+  "param_names":
+  - "settings"
+  "param_types":
+  - "char *"
+  "return_type": "struct.settings_t *"
+  "signature": "struct settings_t * settings_create_string(char * settings)"
+- "name": "load_string"
+  "param_names":
+  - "this"
+  - "settings"
+  - "merge"
+  "param_types":
+  - "struct.private_settings_t *"
+  - "char *"
+  - "bool"
+  "return_type": "bool"
+  "signature": "bool load_string(struct private_settings_t * this, char * settings, bool merge)"
+- "name": "x509_ac_load"
+  "param_names":
+  - "type"
+  - "args"
+  "param_types":
+  - "int"
+  - "struct.__va_list_tag *"
+  "return_type": "struct.x509_ac_t *"
+  "signature": "struct x509_ac_t * x509_ac_load(int type, struct __va_list_tag * args)"
+"project": "strongswan"
+"target_name": "libFuzzerLocal"
+"target_path": "/src/strongswan/fuzz/libFuzzerLocal.c"

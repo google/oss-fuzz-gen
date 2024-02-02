@@ -1,0 +1,51 @@
+"functions":
+- "name": "QPluginLoader::load()"
+  "param_names":
+  - ""
+  "param_types":
+  - "class.QLibrary *"
+  "return_type": "bool"
+  "signature": "bool QPluginLoader::load(QLibrary * )"
+- "name": "(anonymousnamespace)::customConvert(QVariant::Privateconst*,int,void*,bool*)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.QVariant::Private *"
+  - "int"
+  - "char *"
+  - "char *"
+  "return_type": "bool"
+  "signature": "bool (struct QVariant::Private * , int , char * , char * )"
+- "name": "(anonymousnamespace)::convert(QVariant::Privateconst*,int,void*,bool*)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.QVariant::Private *"
+  - "int"
+  - "char *"
+  - "char *"
+  "return_type": "bool"
+  "signature": "bool (struct QVariant::Private * , int , char * , char * )"
+- "name": "QLibraryPrivate::isPlugin()"
+  "param_names":
+  - ""
+  "param_types":
+  - "class.QLibraryPrivate.7033 *"
+  "return_type": "bool"
+  "signature": "bool QLibraryPrivate::isPlugin(QLibraryPrivate * )"
+- "name": "QLibraryPrivate::updatePluginState()"
+  "param_names":
+  - ""
+  "param_types":
+  - "class.QLibraryPrivate.7033 *"
+  "return_type": "void"
+  "signature": "void QLibraryPrivate::updatePluginState(QLibraryPrivate * )"
+"project": "kcodecs"
+"target_name": "kcodecs_fuzzer"
+"target_path": "/src/kcodecs_fuzzer.cc"
