@@ -57,11 +57,6 @@ def get_unreached_functions(project):
   return functions
 
 
-def clean_signature(signature: str) -> str:
-  # Delete any { and also function definitions on the same line.
-  return re.sub('{.*', '', signature).strip()
-
-
 def demangle(name: str) -> str:
   return subprocess.run(['c++filt', name],
                         check=True,
