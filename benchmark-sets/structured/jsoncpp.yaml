@@ -1,0 +1,55 @@
+"functions":
+- "name": "Json::Reader::readObject(Json::Reader::Token&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.Json::Reader *"
+  - "class.Json::OurReader::Token *"
+  "return_type": "bool"
+  "signature": "bool Json::Reader::readObject(Json::Reader * , Json::OurReader::Token * )"
+- "name": "Json::Reader::readArray(Json::Reader::Token&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.Json::Reader *"
+  - "class.Json::OurReader::Token *"
+  "return_type": "bool"
+  "signature": "bool Json::Reader::readArray(Json::Reader * , Json::OurReader::Token * )"
+- "name": "Json::Reader::readValue()"
+  "param_names":
+  - ""
+  "param_types":
+  - "class.Json::Reader *"
+  "return_type": "bool"
+  "signature": "bool Json::Reader::readValue(Json::Reader * )"
+- "name": "Json::Reader::parse(std::__1::basic_istream<char,std::__1::char_traits<char>>&,Json::Value&,bool)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.Json::Reader *"
+  - "class.std::__1::basic_istream *"
+  - "class.Json::Value *"
+  - "bool"
+  "return_type": "bool"
+  "signature": "bool Json::Reader::parse(Json::Reader * , std::istream * , Json::Value * , bool )"
+- "name": "Json::Reader::parse(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,Json::Value&,bool)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.Json::Reader *"
+  - "class.std::__1::basic_string *"
+  - "class.Json::Value *"
+  - "bool"
+  "return_type": "bool"
+  "signature": "bool Json::Reader::parse(Json::Reader * , std::string * , Json::Value * , bool )"
+"project": "jsoncpp"
+"target_name": "utf8_validity_fuzzer"
+"target_path": "/src/jsoncpp/LPM/external.protobuf/src/external.protobuf/third_party/utf8_range/fuzz/utf8_validity_fuzzer.cc"

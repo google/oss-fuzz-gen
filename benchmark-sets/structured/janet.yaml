@@ -1,0 +1,63 @@
+"functions":
+- "name": "janet_dostring"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.JanetTable *"
+  - "char *"
+  - "char *"
+  - "union.Janet *"
+  "return_type": "int"
+  "signature": "int janet_dostring(struct JanetTable * , char * , char * , union.Janet * )"
+- "name": "janet_dobytes"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.JanetTable *"
+  - "char *"
+  - "int"
+  - "char *"
+  - "union.Janet *"
+  "return_type": "int"
+  "signature": "int janet_dobytes(struct JanetTable * , char * , int , char * , union.Janet * )"
+- "name": "cfun_ev_thread"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "int"
+  - "union.Janet *"
+  "return_type": "size_t"
+  "signature": "size_t cfun_ev_thread(int , union.Janet * )"
+- "name": "janet_go_thread_subr"
+  "param_names":
+  - "args"
+  - ""
+  "param_types":
+  - "struct.JanetEVGenericMessage *"
+  - "struct.JanetEVGenericMessage *"
+  "return_type": "void"
+  "signature": "void janet_go_thread_subr(struct JanetEVGenericMessage * args, struct JanetEVGenericMessage * )"
+- "name": "janetc_fn"
+  "param_names":
+  - "opts"
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.JanetSlot *"
+  - "struct.JanetFopts *"
+  - "int"
+  - "union.Janet *"
+  "return_type": "void"
+  "signature": "void janetc_fn(struct JanetSlot * opts, struct JanetFopts * , int , union.Janet * )"
+"project": "janet"
+"target_name": "fuzz_dostring"
+"target_path": "/src/janet/test/fuzzers/fuzz_dostring.c"

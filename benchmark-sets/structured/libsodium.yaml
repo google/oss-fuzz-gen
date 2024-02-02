@@ -1,0 +1,53 @@
+"functions":
+- "name": "argon2_initialize"
+  "param_names":
+  - "instance"
+  - "context"
+  "param_types":
+  - "struct.Argon2_instance_t *"
+  - "struct.Argon2_Context *"
+  "return_type": "int"
+  "signature": "int argon2_initialize(struct Argon2_instance_t * instance, struct Argon2_Context * context)"
+- "name": "argon2_finalize"
+  "param_names":
+  - "context"
+  - "instance"
+  "param_types":
+  - "struct.Argon2_Context *"
+  - "struct.Argon2_instance_t *"
+  "return_type": "void"
+  "signature": "void argon2_finalize(struct Argon2_Context * context, struct Argon2_instance_t * instance)"
+- "name": "argon2_fill_first_blocks"
+  "param_names":
+  - "blockhash"
+  - "instance"
+  "param_types":
+  - "char *"
+  - "struct.Argon2_instance_t *"
+  "return_type": "void"
+  "signature": "void argon2_fill_first_blocks(char * blockhash, struct Argon2_instance_t * instance)"
+- "name": "blake2b_long"
+  "param_names":
+  - "pout"
+  - "outlen"
+  - "in"
+  - "inlen"
+  "param_types":
+  - "char *"
+  - "size_t"
+  - "char *"
+  - "size_t"
+  "return_type": "int"
+  "signature": "int blake2b_long(char * pout, size_t outlen, char * in, size_t inlen)"
+- "name": "ge25519_from_hash"
+  "param_names":
+  - "s"
+  - "h"
+  "param_types":
+  - "char *"
+  - "char *"
+  "return_type": "void"
+  "signature": "void ge25519_from_hash(char * s, char * h)"
+"project": "libsodium"
+"target_name": "secret_key_auth_fuzzer"
+"target_path": "/src/secret_key_auth_fuzzer.cc"

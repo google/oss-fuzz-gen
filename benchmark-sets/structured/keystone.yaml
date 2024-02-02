@@ -1,0 +1,53 @@
+"functions":
+- "name": "p_simp_re"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "struct.parse *"
+  - "int"
+  "return_type": "int"
+  "signature": "int p_simp_re(struct parse * , int )"
+- "name": "p_bre"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.parse *"
+  - "int"
+  - "int"
+  "return_type": "void"
+  "signature": "void p_bre(struct parse * , int , int )"
+- "name": "lmatcher"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.re_guts *"
+  - "char *"
+  - "size_t"
+  - "struct.timespec *"
+  - "int"
+  "return_type": "int"
+  "signature": "int lmatcher(struct re_guts * , char * , size_t , struct timespec * , int )"
+- "name": "p_str"
+  "param_names":
+  - ""
+  "param_types":
+  - "struct.parse *"
+  "return_type": "void"
+  "signature": "void p_str(struct parse * )"
+- "name": "nonnewline"
+  "param_names":
+  - ""
+  "param_types":
+  - "struct.parse *"
+  "return_type": "void"
+  "signature": "void nonnewline(struct parse * )"
+"project": "keystone"
+"target_name": "fuzz_asm_arm_thumbbe"
+"target_path": "/src/keystone/suite/fuzz/fuzz_asm_arm_thumbbe.c"

@@ -1,0 +1,57 @@
+"functions":
+- "name": "ck_double_hash_insert"
+  "param_names":
+  - "key"
+  - "value"
+  - "table"
+  "param_types":
+  - "double"
+  - "char *"
+  - "struct.ck_hash_table_s *"
+  "return_type": "int"
+  "signature": "int ck_double_hash_insert(double key, char * value, struct ck_hash_table_s * table)"
+- "name": "ck_float_hash_insert"
+  "param_names":
+  - "key"
+  - "value"
+  - "table"
+  "param_types":
+  - "float"
+  - "char *"
+  - "struct.ck_hash_table_s *"
+  "return_type": "int"
+  "signature": "int ck_float_hash_insert(float key, char * value, struct ck_hash_table_s * table)"
+- "name": "readstat_value_is_missing"
+  "param_names":
+  - "value"
+  - "variable"
+  - ""
+  "param_types":
+  - "size_t"
+  - "size_t"
+  - "struct.readstat_variable_s *"
+  "return_type": "int"
+  "signature": "int readstat_value_is_missing(size_t value, size_t variable, struct readstat_variable_s * )"
+- "name": "readstat_value_is_defined_missing"
+  "param_names":
+  - "value"
+  - "variable"
+  - ""
+  "param_types":
+  - "size_t"
+  - "size_t"
+  - "struct.readstat_variable_s *"
+  "return_type": "int"
+  "signature": "int readstat_value_is_defined_missing(size_t value, size_t variable, struct readstat_variable_s * )"
+- "name": "sas_rle_compressed_len"
+  "param_names":
+  - "bytes"
+  - "len"
+  "param_types":
+  - "char *"
+  - "size_t"
+  "return_type": "size_t"
+  "signature": "size_t sas_rle_compressed_len(char * bytes, size_t len)"
+"project": "readstat"
+"target_name": "fuzz_grammar_sav_date"
+"target_path": "/src/readstat/src/fuzz/fuzz_grammar_sav_date.c"

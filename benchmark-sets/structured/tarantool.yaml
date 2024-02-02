@@ -1,0 +1,33 @@
+"functions":
+- "name": "box_cfg"
+  "param_names": []
+  "param_types": []
+  "return_type": "void"
+  "signature": "void box_cfg()"
+- "name": "box_cfg_xc()"
+  "param_names": []
+  "param_types": []
+  "return_type": "void"
+  "signature": "void box_cfg_xc()"
+- "name": "box_storage_init()"
+  "param_names": []
+  "param_types": []
+  "return_type": "void"
+  "signature": "void box_storage_init()"
+- "name": "iproto_init"
+  "param_names":
+  - "threads_count"
+  "param_types":
+  - "int"
+  "return_type": "void"
+  "signature": "void iproto_init(int threads_count)"
+- "name": "iproto_thread_init(iproto_thread*)"
+  "param_names":
+  - "iproto_thread"
+  "param_types":
+  - "struct.iproto_thread *"
+  "return_type": "void"
+  "signature": "void iproto_thread_init(struct iproto_thread * iproto_thread)"
+"project": "tarantool"
+"target_name": "xrow_decode_call_fuzzer"
+"target_path": "/src/tarantool/test/fuzz/xrow_decode_call_fuzzer.c"

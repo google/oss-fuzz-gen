@@ -1,0 +1,21 @@
+"functions":
+- "name": "ZopfliBlockSplitSimple"
+  "param_names":
+  - "in"
+  - "instart"
+  - "inend"
+  - "blocksize"
+  - "splitpoints"
+  - "npoints"
+  "param_types":
+  - "char *"
+  - "size_t"
+  - "size_t"
+  - "size_t"
+  - "size_t **"
+  - "size_t *"
+  "return_type": "void"
+  "signature": "void ZopfliBlockSplitSimple(char * in, size_t instart, size_t inend, size_t blocksize, size_t ** splitpoints, size_t * npoints)"
+"project": "zopfli"
+"target_name": "zopfli_deflate_fuzzer"
+"target_path": "/src/zopfli_deflate_fuzzer.cc"

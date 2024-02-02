@@ -1,0 +1,47 @@
+"functions":
+- "name": "tpm_server_main"
+  "param_names":
+  - "argc"
+  - "argv"
+  "param_types":
+  - "int"
+  - "char **"
+  "return_type": "int"
+  "signature": "int tpm_server_main(int argc, char ** argv)"
+- "name": "StartTcpServer"
+  "param_names":
+  - "PortNumber"
+  - "PortNumberPlatform"
+  "param_types":
+  - "int *"
+  - "int *"
+  "return_type": "int"
+  "signature": "int StartTcpServer(int * PortNumber, int * PortNumberPlatform)"
+- "name": "RegularCommandService"
+  "param_names":
+  - "PortNumber"
+  "param_types":
+  - "int *"
+  "return_type": "int"
+  "signature": "int RegularCommandService(int * PortNumber)"
+- "name": "TPM2_CreateLoaded"
+  "param_names":
+  - "in"
+  - "out"
+  "param_types":
+  - "struct.CreateLoaded_In *"
+  - "struct.CreateLoaded_Out *"
+  "return_type": "int"
+  "signature": "int TPM2_CreateLoaded(struct CreateLoaded_In * in, struct CreateLoaded_Out * out)"
+- "name": "TPM2_CreatePrimary"
+  "param_names":
+  - "in"
+  - "out"
+  "param_types":
+  - "struct.CreatePrimary_In *"
+  - "struct.CreatePrimary_Out *"
+  "return_type": "int"
+  "signature": "int TPM2_CreatePrimary(struct CreatePrimary_In * in, struct CreatePrimary_Out * out)"
+"project": "ibmswtpm2"
+"target_name": "fuzz_tpm_server"
+"target_path": "/src/ibmswtpm2/src/fuzzer.cc"

@@ -1,0 +1,43 @@
+"functions":
+- "name": "cue_parse_file"
+  "param_names":
+  - ""
+  "param_types":
+  - "struct._IO_FILE *"
+  "return_type": "struct.Cd *"
+  "signature": "struct Cd * cue_parse_file(struct _IO_FILE * )"
+- "name": "cd_dump"
+  "param_names":
+  - ""
+  "param_types":
+  - "struct.Cd *"
+  "return_type": "void"
+  "signature": "void cd_dump(struct Cd * )"
+- "name": "cd_track_dump"
+  "param_names":
+  - ""
+  "param_types":
+  - "struct.Track *"
+  "return_type": "void"
+  "signature": "void cd_track_dump(struct Track * )"
+- "name": "cdtext_dump"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "struct.Cdtext *"
+  - "int"
+  "return_type": "void"
+  "signature": "void cdtext_dump(struct Cdtext * , int )"
+- "name": "cdtext_get_key"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "int"
+  - "int"
+  "return_type": "char *"
+  "signature": "char * cdtext_get_key(int , int )"
+"project": "libcue"
+"target_name": "fuzz"
+"target_path": "/src/libcue/oss-fuzz/fuzz.cpp"

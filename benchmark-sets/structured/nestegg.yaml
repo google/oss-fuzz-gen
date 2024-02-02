@@ -1,0 +1,59 @@
+"functions":
+- "name": "nestegg_track_seek"
+  "param_names":
+  - "ctx"
+  - "track"
+  - "tstamp"
+  "param_types":
+  - "struct.nestegg *"
+  - "int"
+  - "size_t"
+  "return_type": "int"
+  "signature": "int nestegg_track_seek(struct nestegg * ctx, int track, size_t tstamp)"
+- "name": "nestegg_get_cue_point"
+  "param_names":
+  - "ctx"
+  - "cluster_num"
+  - "max_offset"
+  - "start_pos"
+  - "end_pos"
+  - "tstamp"
+  "param_types":
+  - "struct.nestegg *"
+  - "int"
+  - "size_t"
+  - "size_t *"
+  - "size_t *"
+  - "size_t *"
+  "return_type": "int"
+  "signature": "int nestegg_get_cue_point(struct nestegg * ctx, int cluster_num, size_t max_offset, size_t * start_pos, size_t * end_pos, size_t * tstamp)"
+- "name": "nestegg_sniff"
+  "param_names":
+  - "buffer"
+  - "length"
+  "param_types":
+  - "char *"
+  - "size_t"
+  "return_type": "int"
+  "signature": "int nestegg_sniff(char * buffer, size_t length)"
+- "name": "ne_init_cue_points"
+  "param_names":
+  - "ctx"
+  - "max_offset"
+  "param_types":
+  - "struct.nestegg *"
+  - "size_t"
+  "return_type": "int"
+  "signature": "int ne_init_cue_points(struct nestegg * ctx, size_t max_offset)"
+- "name": "ne_match_webm"
+  "param_names":
+  - "io"
+  - "max_offset"
+  "param_types":
+  - "struct.nestegg_io *"
+  - "size_t"
+  "return_type": "int"
+  "signature": "int ne_match_webm(struct nestegg_io * io, size_t max_offset)"
+"project": "nestegg"
+"target_name": "fuzz"
+"target_path": "/src/nestegg/test/fuzz.cc"

@@ -1,0 +1,59 @@
+"functions":
+- "name": "tsk_fs_open_vol"
+  "param_names":
+  - "a_part_info"
+  - "a_ftype"
+  "param_types":
+  - "struct.TSK_VS_PART_INFO *"
+  - "int"
+  "return_type": "struct.TSK_FS_INFO *"
+  "signature": "struct TSK_FS_INFO * tsk_fs_open_vol(struct TSK_VS_PART_INFO * a_part_info, int a_ftype)"
+- "name": "tsk_fs_open_vol_decrypt"
+  "param_names":
+  - "a_part_info"
+  - "a_ftype"
+  - "a_pass"
+  "param_types":
+  - "struct.TSK_VS_PART_INFO *"
+  - "int"
+  - "char *"
+  "return_type": "struct.TSK_FS_INFO *"
+  "signature": "struct TSK_FS_INFO * tsk_fs_open_vol_decrypt(struct TSK_VS_PART_INFO * a_part_info, int a_ftype, char * a_pass)"
+- "name": "APFSFSCompat::load_attrs(TSK_FS_FILE*)const"
+  "param_names":
+  - "this"
+  - "file"
+  "param_types":
+  - "class.APFSFSCompat *"
+  - "struct.TSK_FS_FILE *"
+  "return_type": "char"
+  "signature": "char APFSFSCompat::load_attrs(APFSFSCompat * this, struct TSK_FS_FILE * file) const"
+- "name": "APFSFSCompat::istat(TSK_FS_ISTAT_FLAG_ENUM,_IO_FILE*,unsignedlong,unsignedlong,int)const"
+  "param_names":
+  - "this"
+  - "istat_flags"
+  - "hFile"
+  - "inode_num"
+  - "numblock"
+  - "sec_skew"
+  "param_types":
+  - "class.APFSFSCompat *"
+  - "int"
+  - "struct._IO_FILE *"
+  - "size_t"
+  - "size_t"
+  - "int"
+  "return_type": "char"
+  "signature": "char APFSFSCompat::istat(APFSFSCompat * this, int istat_flags, struct _IO_FILE * hFile, size_t inode_num, size_t numblock, int sec_skew) const"
+- "name": "APFSPoolCompat::poolstat(_IO_FILE*)const"
+  "param_names":
+  - "this"
+  - "hFile"
+  "param_types":
+  - "class.APFSPoolCompat *"
+  - "struct._IO_FILE *"
+  "return_type": "char"
+  "signature": "char APFSPoolCompat::poolstat(APFSPoolCompat * this, struct _IO_FILE * hFile) const"
+"project": "sleuthkit"
+"target_name": "sleuthkit_mmls_mac_fuzzer"
+"target_path": "/src/sleuthkit_mmls_fuzzer.cc"

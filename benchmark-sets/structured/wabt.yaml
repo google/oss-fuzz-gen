@@ -1,0 +1,57 @@
+"functions":
+- "name": "wabt::ParseWastScript(wabt::WastLexer*,std::__1::unique_ptr<wabt::Script,std::__1::default_delete<wabt::Script>>*,std::__1::vector<wabt::Error,std::__1::allocator<wabt::Error>>*,wabt::WastParseOptions*)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.wabt::WastLexer *"
+  - "class.std::__1::unique_ptr.257 *"
+  - "class.std::__1::vector *"
+  - "struct.wabt::WastParseOptions *"
+  "return_type": "int"
+  "signature": "int wabt::ParseWastScript(wabt::WastLexer * , std::unique_ptr * , std::vector * , struct wabt::WastParseOptions * )"
+- "name": "wabt::WastParser::ParseScript(std::__1::unique_ptr<wabt::Script,std::__1::default_delete<wabt::Script>>*)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.wabt::WastParser *"
+  - "class.std::__1::unique_ptr.257 *"
+  "return_type": "int"
+  "signature": "int wabt::WastParser::ParseScript(wabt::WastParser * , std::unique_ptr * )"
+- "name": "wabt::WastParser::ParseCommandList(wabt::Script*,std::__1::vector<std::__1::unique_ptr<wabt::Command,std::__1::default_delete<wabt::Command>>,std::__1::allocator<std::__1::unique_ptr<wabt::Command,std::__1::default_delete<wabt::Command>>>>*)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.wabt::WastParser *"
+  - "struct.wabt::Script *"
+  - "class.std::__1::vector.230 *"
+  "return_type": "int"
+  "signature": "int wabt::WastParser::ParseCommandList(wabt::WastParser * , struct wabt::Script * , std::vector * )"
+- "name": "wabt::WastParser::ParseCommand(wabt::Script*,std::__1::unique_ptr<wabt::Command,std::__1::default_delete<wabt::Command>>*)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.wabt::WastParser *"
+  - "struct.wabt::Script *"
+  - "class.std::__1::unique_ptr.248 *"
+  "return_type": "int"
+  "signature": "int wabt::WastParser::ParseCommand(wabt::WastParser * , struct wabt::Script * , std::unique_ptr * )"
+- "name": "wabt::WastParser::ParseAssertTrapCommand(std::__1::unique_ptr<wabt::Command,std::__1::default_delete<wabt::Command>>*)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.wabt::WastParser *"
+  - "class.std::__1::unique_ptr.248 *"
+  "return_type": "int"
+  "signature": "int wabt::WastParser::ParseAssertTrapCommand(wabt::WastParser * , std::unique_ptr * )"
+"project": "wabt"
+"target_name": "wasm2wat-fuzz"
+"target_path": "/src/wabt/src/tools/wasm2wat-fuzz.cc"

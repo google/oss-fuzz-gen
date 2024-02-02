@@ -1,0 +1,49 @@
+"functions":
+- "name": "MqttClient_Publish_ex"
+  "param_names":
+  - "client"
+  - "publish"
+  - "pubCb"
+  "param_types":
+  - "struct._MqttClient *"
+  - "struct._MqttMessage *"
+  - "func_type *"
+  "return_type": "int"
+  "signature": "int MqttClient_Publish_ex(struct _MqttClient * client, struct _MqttMessage * publish, func_type * pubCb)"
+- "name": "MqttClient_Ping"
+  "param_names":
+  - "client"
+  "param_types":
+  - "struct._MqttClient *"
+  "return_type": "int"
+  "signature": "int MqttClient_Ping(struct _MqttClient * client)"
+- "name": "MqttClient_Disconnect"
+  "param_names":
+  - "client"
+  "param_types":
+  - "struct._MqttClient *"
+  "return_type": "int"
+  "signature": "int MqttClient_Disconnect(struct _MqttClient * client)"
+- "name": "MqttClient_Disconnect_ex"
+  "param_names":
+  - "client"
+  - "p_disconnect"
+  "param_types":
+  - "struct._MqttClient *"
+  - "struct._MqttDisconnect *"
+  "return_type": "int"
+  "signature": "int MqttClient_Disconnect_ex(struct _MqttClient * client, struct _MqttDisconnect * p_disconnect)"
+- "name": "wolfSSL_writev"
+  "param_names":
+  - "ssl"
+  - "iov"
+  - "iovcnt"
+  "param_types":
+  - "struct.WOLFSSL.126 *"
+  - "struct.iovec *"
+  - "int"
+  "return_type": "int"
+  "signature": "int wolfSSL_writev(struct WOLFSSL * ssl, struct iovec * iov, int iovcnt)"
+"project": "wolfmqtt"
+"target_name": "wolfmqtt-fuzzer"
+"target_path": "/src/wolfmqtt-fuzzers/fuzzer.cpp"

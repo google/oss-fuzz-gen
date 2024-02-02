@@ -1,0 +1,53 @@
+"functions":
+- "name": "FLAC::Decoder::File::init_ogg(charconst*)"
+  "param_names":
+  - "this"
+  - "filename"
+  "param_types":
+  - "class.FLAC::Decoder::File *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int FLAC::Decoder::File::init_ogg(FLAC::Decoder::File * this, char * filename)"
+- "name": "FLAC::Decoder::File::init(charconst*)"
+  "param_names":
+  - "this"
+  - "filename"
+  "param_types":
+  - "class.FLAC::Decoder::File *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int FLAC::Decoder::File::init(FLAC::Decoder::File * this, char * filename)"
+- "name": "FLAC::Decoder::File::init_ogg(_IO_FILE*)"
+  "param_names":
+  - "this"
+  - "file"
+  "param_types":
+  - "class.FLAC::Decoder::File *"
+  - "struct._IO_FILE *"
+  "return_type": "int"
+  "signature": "int FLAC::Decoder::File::init_ogg(FLAC::Decoder::File * this, struct _IO_FILE * file)"
+- "name": "FLAC::Decoder::File::init(_IO_FILE*)"
+  "param_names":
+  - "this"
+  - "file"
+  "param_types":
+  - "class.FLAC::Decoder::File *"
+  - "struct._IO_FILE *"
+  "return_type": "int"
+  "signature": "int FLAC::Decoder::File::init(FLAC::Decoder::File * this, struct _IO_FILE * file)"
+- "name": "FLAC::Metadata::Chain::read(void*,FLAC__IOCallbacks,bool)"
+  "param_names":
+  - "this"
+  - "handle"
+  - "callbacks"
+  - "is_ogg"
+  "param_types":
+  - "class.FLAC::Metadata::Chain *"
+  - "char *"
+  - "struct.FLAC__IOCallbacks *"
+  - "bool"
+  "return_type": "bool"
+  "signature": "bool FLAC::Metadata::Chain::read(FLAC::Metadata::Chain * this, char * handle, struct FLAC__IOCallbacks * callbacks, bool is_ogg)"
+"project": "flac"
+"target_name": "fuzzer_seek"
+"target_path": "/src/flac/oss-fuzz/seek.cc"

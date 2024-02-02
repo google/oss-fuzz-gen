@@ -1,0 +1,53 @@
+"functions":
+- "name": "xercesc_3_2::IGXMLScanner::scanNext(xercesc_3_2::XMLPScanToken&)"
+  "param_names":
+  - "this"
+  - "token"
+  "param_types":
+  - "class.xercesc_3_2::IGXMLScanner.8784 *"
+  - "struct.xercesc_3_2::PrefMapElem *"
+  "return_type": "bool"
+  "signature": "bool xercesc_3_2::IGXMLScanner::scanNext(xercesc_3_2::IGXMLScanner * this, struct xercesc_3_2::PrefMapElem * token)"
+- "name": "xercesc_3_2::IGXMLScanner::scanStartTagNS(bool&)"
+  "param_names":
+  - "this"
+  - "gotData"
+  "param_types":
+  - "class.xercesc_3_2::IGXMLScanner.8784 *"
+  - "char *"
+  "return_type": "bool"
+  "signature": "bool xercesc_3_2::IGXMLScanner::scanStartTagNS(xercesc_3_2::IGXMLScanner * this, char * gotData)"
+- "name": "xercesc_3_2::SGXMLScanner::scanStartTag(bool&)"
+  "param_names":
+  - "this"
+  - "gotData"
+  "param_types":
+  - "class.xercesc_3_2::SGXMLScanner.9197 *"
+  - "char *"
+  "return_type": "bool"
+  "signature": "bool xercesc_3_2::SGXMLScanner::scanStartTag(xercesc_3_2::SGXMLScanner * this, char * gotData)"
+- "name": "xercesc_3_2::IGXMLScanner::loadGrammar(xercesc_3_2::InputSourceconst&,short,bool)"
+  "param_names":
+  - "this"
+  - "src"
+  - "grammarType"
+  - "toCache"
+  "param_types":
+  - "class.xercesc_3_2::IGXMLScanner.8784 *"
+  - "class.xercesc_3_2::InputSource *"
+  - "short"
+  - "bool"
+  "return_type": "class.xercesc_3_2::MemoryManagerImpl *"
+  "signature": "xercesc_3_2::MemoryManagerImpl * xercesc_3_2::IGXMLScanner::loadGrammar(xercesc_3_2::IGXMLScanner * this, xercesc_3_2::InputSource * src, short grammarType, bool toCache)"
+- "name": "xercesc_3_2::IGXMLScanner::scanRawAttrListforNameSpaces(unsignedlong)"
+  "param_names":
+  - "this"
+  - "attCount"
+  "param_types":
+  - "class.xercesc_3_2::IGXMLScanner.8976 *"
+  - "size_t"
+  "return_type": "void"
+  "signature": "void xercesc_3_2::IGXMLScanner::scanRawAttrListforNameSpaces(xercesc_3_2::IGXMLScanner * this, size_t attCount)"
+"project": "xerces-c"
+"target_name": "parse_target"
+"target_path": "/src/parse_target.cpp"

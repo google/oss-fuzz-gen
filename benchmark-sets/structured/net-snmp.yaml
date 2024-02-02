@@ -1,0 +1,63 @@
+"functions":
+- "name": "register_string_index"
+  "param_names":
+  - "name"
+  - "name_len"
+  - "cp"
+  "param_types":
+  - "size_t *"
+  - "size_t"
+  - "char *"
+  "return_type": "char *"
+  "signature": "char * register_string_index(size_t * name, size_t name_len, char * cp)"
+- "name": "register_int_index"
+  "param_names":
+  - "name"
+  - "name_len"
+  - "val"
+  "param_types":
+  - "size_t *"
+  - "size_t"
+  - "int"
+  "return_type": "int"
+  "signature": "int register_int_index(size_t * name, size_t name_len, int val)"
+- "name": "register_oid_index"
+  "param_names":
+  - "name"
+  - "name_len"
+  - "value"
+  - "value_len"
+  "param_types":
+  - "size_t *"
+  - "size_t"
+  - "size_t *"
+  - "size_t"
+  "return_type": "struct.variable_list *"
+  "signature": "struct variable_list * register_oid_index(size_t * name, size_t name_len, size_t * value, size_t value_len)"
+- "name": "unregister_oid_index"
+  "param_names":
+  - "name"
+  - "name_len"
+  - "value"
+  - "value_len"
+  "param_types":
+  - "size_t *"
+  - "size_t"
+  - "size_t *"
+  - "size_t"
+  "return_type": "int"
+  "signature": "int unregister_oid_index(size_t * name, size_t name_len, size_t * value, size_t value_len)"
+- "name": "unregister_int_index"
+  "param_names":
+  - "name"
+  - "name_len"
+  - "val"
+  "param_types":
+  - "size_t *"
+  - "size_t"
+  - "int"
+  "return_type": "int"
+  "signature": "int unregister_int_index(size_t * name, size_t name_len, int val)"
+"project": "net-snmp"
+"target_name": "snmp_pdu_parse_fuzzer"
+"target_path": "/src/net-snmp/testing/fuzzing/snmp_pdu_parse_fuzzer.c"

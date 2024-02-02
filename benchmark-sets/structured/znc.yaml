@@ -1,0 +1,51 @@
+"functions":
+- "name": "CClient::ReadLine(CStringconst&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.CClient *"
+  - "class.CString *"
+  "return_type": "void"
+  "signature": "void CClient::ReadLine(CClient * , CString * )"
+- "name": "CClient::OnTextMessage(CTextMessage&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.CClient *"
+  - "class.CTopicMessage *"
+  "return_type": "bool"
+  "signature": "bool CClient::OnTextMessage(CClient * , CTopicMessage * )"
+- "name": "CClient::OnOtherMessage(CMessage&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.CClient *"
+  - "class.CMessage *"
+  "return_type": "bool"
+  "signature": "bool CClient::OnOtherMessage(CClient * , CMessage * )"
+- "name": "CClient::UserCommand(CString&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.CClient *"
+  - "class.CString *"
+  "return_type": "void"
+  "signature": "void CClient::UserCommand(CClient * , CString * )"
+- "name": "CZNC::ParseConfig(CStringconst&,CString&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.CZNC *"
+  - "class.CString *"
+  - "class.CString *"
+  "return_type": "bool"
+  "signature": "bool CZNC::ParseConfig(CZNC * , CString * , CString * )"
+"project": "znc"
+"target_name": "msg_parse_fuzzer"
+"target_path": "/src/msg_parse_fuzzer.cpp"

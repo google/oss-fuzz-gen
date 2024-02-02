@@ -1,0 +1,45 @@
+"functions":
+- "name": "netif_input"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "struct.pbuf *"
+  - "struct.netif.7 *"
+  "return_type": "char"
+  "signature": "char netif_input(struct pbuf * , struct netif * )"
+- "name": "ethernet_input"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "struct.pbuf *"
+  - "struct.netif.7 *"
+  "return_type": "char"
+  "signature": "char ethernet_input(struct pbuf * , struct netif * )"
+- "name": "ip4_input"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "struct.pbuf *"
+  - "struct.netif *"
+  "return_type": "char"
+  "signature": "char ip4_input(struct pbuf * , struct netif * )"
+- "name": "tcp_input"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "struct.pbuf *"
+  - "struct.netif *"
+  "return_type": "void"
+  "signature": "void tcp_input(struct pbuf * , struct netif * )"
+- "name": "httpd_init"
+  "param_names": []
+  "param_types": []
+  "return_type": "void"
+  "signature": "void httpd_init()"
+"project": "tinyusb"
+"target_name": "/src/tinyusb/test/fuzz/device/msc/src/fuzz.cc"
+"target_path": "/src/tinyusb/test/fuzz/device/msc/src/fuzz.cc"

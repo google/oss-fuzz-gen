@@ -1,0 +1,61 @@
+"functions":
+- "name": "xmlCopyNodeList"
+  "param_names":
+  - "node"
+  "param_types":
+  - "struct._xmlNode *"
+  "return_type": "struct._xmlNode *"
+  "signature": "struct _xmlNode * xmlCopyNodeList(struct _xmlNode * node)"
+- "name": "xmlDocCopyNodeList"
+  "param_names":
+  - "doc"
+  - "node"
+  "param_types":
+  - "struct._xmlDoc *"
+  - "struct._xmlNode *"
+  "return_type": "struct._xmlNode *"
+  "signature": "struct _xmlNode * xmlDocCopyNodeList(struct _xmlDoc * doc, struct _xmlNode * node)"
+- "name": "igraph_sparsemat_arpack_rnsolve"
+  "param_names":
+  - "A"
+  - "options"
+  - "storage"
+  - "values"
+  - "vectors"
+  "param_types":
+  - "struct.igraph_sparsemat_t *"
+  - "struct.igraph_arpack_options_t *"
+  - "struct.igraph_arpack_storage_t *"
+  - "struct.igraph_matrix_t *"
+  - "struct.igraph_matrix_t *"
+  "return_type": "int"
+  "signature": "int igraph_sparsemat_arpack_rnsolve(struct igraph_sparsemat_t * A, struct igraph_arpack_options_t * options, struct igraph_arpack_storage_t * storage, struct igraph_matrix_t * values, struct igraph_matrix_t * vectors)"
+- "name": "igraph_arpack_rnsolve"
+  "param_names":
+  - "fun"
+  - "extra"
+  - "options"
+  - "storage"
+  - "values"
+  - "vectors"
+  "param_types":
+  - "func_type *"
+  - "char *"
+  - "struct.igraph_arpack_options_t *"
+  - "struct.igraph_arpack_storage_t *"
+  - "struct.igraph_matrix_t *"
+  - "struct.igraph_matrix_t *"
+  "return_type": "int"
+  "signature": "int igraph_arpack_rnsolve(func_type * fun, char * extra, struct igraph_arpack_options_t * options, struct igraph_arpack_storage_t * storage, struct igraph_matrix_t * values, struct igraph_matrix_t * vectors)"
+- "name": "xmlNodeSetBase"
+  "param_names":
+  - "cur"
+  - "uri"
+  "param_types":
+  - "struct._xmlNode *"
+  - "char *"
+  "return_type": "void"
+  "signature": "void xmlNodeSetBase(struct _xmlNode * cur, char * uri)"
+"project": "igraph"
+"target_name": "bliss"
+"target_path": "/src/igraph/fuzzing/bliss.cpp"

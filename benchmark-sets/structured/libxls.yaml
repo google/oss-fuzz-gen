@@ -1,0 +1,45 @@
+"functions":
+- "name": "xls_open"
+  "param_names":
+  - "file"
+  - "charset"
+  "param_types":
+  - "char *"
+  - "char *"
+  "return_type": "struct.xlsWorkBook *"
+  "signature": "struct xlsWorkBook * xls_open(char * file, char * charset)"
+- "name": "xls_open_file"
+  "param_names":
+  - "file"
+  - "charset"
+  - "outError"
+  "param_types":
+  - "char *"
+  - "char *"
+  - "int *"
+  "return_type": "struct.xlsWorkBook *"
+  "signature": "struct xlsWorkBook * xls_open_file(char * file, char * charset, int * outError)"
+- "name": "ole2_open_file"
+  "param_names":
+  - "file"
+  "param_types":
+  - "char *"
+  "return_type": "struct.OLE2 *"
+  "signature": "struct OLE2 * ole2_open_file(char * file)"
+- "name": "xls_getCSS"
+  "param_names":
+  - "pWB"
+  "param_types":
+  - "struct.xlsWorkBook *"
+  "return_type": "char *"
+  "signature": "char * xls_getCSS(struct xlsWorkBook * pWB)"
+- "name": "xls_showBookInfo"
+  "param_names":
+  - "pWB"
+  "param_types":
+  - "struct.xlsWorkBook *"
+  "return_type": "void"
+  "signature": "void xls_showBookInfo(struct xlsWorkBook * pWB)"
+"project": "libxls"
+"target_name": "fuzz_xls"
+"target_path": "/src/libxls/fuzz/fuzz_xls.c"

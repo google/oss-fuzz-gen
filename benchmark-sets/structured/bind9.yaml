@@ -1,0 +1,59 @@
+"functions":
+- "name": "dns_view_freezezones"
+  "param_names":
+  - "view"
+  - "value"
+  "param_types":
+  - "struct.dns_view *"
+  - "bool"
+  "return_type": "int"
+  "signature": "int dns_view_freezezones(struct dns_view * view, bool value)"
+- "name": "dns_zt_freezezones"
+  "param_names":
+  - "zt"
+  - "view"
+  - "freeze"
+  "param_types":
+  - "struct.dns_zt *"
+  - "struct.dns_view *"
+  - "bool"
+  "return_type": "int"
+  "signature": "int dns_zt_freezezones(struct dns_zt * zt, struct dns_view * view, bool freeze)"
+- "name": "freezezones"
+  "param_names":
+  - "zone"
+  - "uap"
+  "param_types":
+  - "struct.dns_zone *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int freezezones(struct dns_zone * zone, char * uap)"
+- "name": "dns_view_asyncload"
+  "param_names":
+  - "view"
+  - "newonly"
+  - "callback"
+  - "arg"
+  "param_types":
+  - "struct.dns_view *"
+  - "bool"
+  - "func_type *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int dns_view_asyncload(struct dns_view * view, bool newonly, func_type * callback, char * arg)"
+- "name": "dns_zt_asyncload"
+  "param_names":
+  - "zt"
+  - "newonly"
+  - "loaddone"
+  - "arg"
+  "param_types":
+  - "struct.dns_zt *"
+  - "bool"
+  - "func_type *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int dns_zt_asyncload(struct dns_zt * zt, bool newonly, func_type * loaddone, char * arg)"
+"project": "bind9"
+"target_name": "isc_lex_gettoken_fuzzer"
+"target_path": "/src/bind9/fuzz/isc_lex_gettoken.c"

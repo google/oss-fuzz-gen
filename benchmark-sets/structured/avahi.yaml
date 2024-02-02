@@ -1,0 +1,51 @@
+"functions":
+- "name": "avahi_dns_packet_new_reply"
+  "param_names":
+  - "p"
+  - "mtu"
+  - "copy_queries"
+  - "aa"
+  "param_types":
+  - "struct.AvahiDnsPacket *"
+  - "int"
+  - "int"
+  - "int"
+  "return_type": "struct.AvahiDnsPacket *"
+  "signature": "struct AvahiDnsPacket * avahi_dns_packet_new_reply(struct AvahiDnsPacket * p, int mtu, int copy_queries, int aa)"
+- "name": "avahi_get_host_name_strdup"
+  "param_names": []
+  "param_types": []
+  "return_type": "char *"
+  "signature": "char * avahi_get_host_name_strdup()"
+- "name": "avahi_get_host_name"
+  "param_names":
+  - "ret_s"
+  - "size"
+  "param_types":
+  - "char *"
+  - "size_t"
+  "return_type": "char *"
+  "signature": "char * avahi_get_host_name(char * ret_s, size_t size)"
+- "name": "avahi_string_list_add_pair"
+  "param_names":
+  - "l"
+  - "key"
+  - "value"
+  "param_types":
+  - "struct.AvahiStringList *"
+  - "char *"
+  - "char *"
+  "return_type": "struct.AvahiStringList *"
+  "signature": "struct AvahiStringList * avahi_string_list_add_pair(struct AvahiStringList * l, char * key, char * value)"
+- "name": "avahi_string_list_add_printf"
+  "param_names":
+  - "l"
+  - "format"
+  "param_types":
+  - "struct.AvahiStringList *"
+  - "char *"
+  "return_type": "struct.AvahiStringList *"
+  "signature": "struct AvahiStringList * avahi_string_list_add_printf(struct AvahiStringList * l, char * format)"
+"project": "avahi"
+"target_name": "fuzz-consume-record"
+"target_path": "/src/avahi/fuzz/fuzz-consume-record.c"

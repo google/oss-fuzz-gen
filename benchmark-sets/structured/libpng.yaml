@@ -1,0 +1,57 @@
+"functions":
+- "name": "OSS_FUZZ_png_read_png"
+  "param_names":
+  - "png_ptr"
+  - "info_ptr"
+  - "transforms"
+  - "params"
+  "param_types":
+  - "struct.png_struct_def *"
+  - "struct.png_info_def *"
+  - "int"
+  - "char *"
+  "return_type": "void"
+  "signature": "void OSS_FUZZ_png_read_png(struct png_struct_def * png_ptr, struct png_info_def * info_ptr, int transforms, char * params)"
+- "name": "OSS_FUZZ_png_image_finish_read"
+  "param_names":
+  - "image"
+  - "background"
+  - "buffer"
+  - "row_stride"
+  - "colormap"
+  "param_types":
+  - "struct.png_image *"
+  - "struct.png_color_struct *"
+  - "char *"
+  - "int"
+  - "char *"
+  "return_type": "int"
+  "signature": "int OSS_FUZZ_png_image_finish_read(struct png_image * image, struct png_color_struct * background, char * buffer, int row_stride, char * colormap)"
+- "name": "png_image_read_direct"
+  "param_names":
+  - "argument"
+  "param_types":
+  - "char *"
+  "return_type": "int"
+  "signature": "int png_image_read_direct(char * argument)"
+- "name": "OSS_FUZZ_png_image_begin_read_from_memory"
+  "param_names":
+  - "image"
+  - "memory"
+  - "size"
+  "param_types":
+  - "struct.png_image *"
+  - "char *"
+  - "size_t"
+  "return_type": "int"
+  "signature": "int OSS_FUZZ_png_image_begin_read_from_memory(struct png_image * image, char * memory, size_t size)"
+- "name": "png_image_read_colormapped"
+  "param_names":
+  - "argument"
+  "param_types":
+  - "char *"
+  "return_type": "int"
+  "signature": "int png_image_read_colormapped(char * argument)"
+"project": "libpng"
+"target_name": "libpng_read_fuzzer"
+"target_path": "/src/libpng/contrib/oss-fuzz/libpng_read_fuzzer.cc"

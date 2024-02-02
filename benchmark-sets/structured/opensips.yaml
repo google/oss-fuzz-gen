@@ -1,0 +1,47 @@
+"functions":
+- "name": "reload_routing_script"
+  "param_names": []
+  "param_types": []
+  "return_type": "int"
+  "signature": "int reload_routing_script()"
+- "name": "proto_tcp_init"
+  "param_names":
+  - "pi"
+  "param_types":
+  - "struct.proto_info *"
+  "return_type": "int"
+  "signature": "int proto_tcp_init(struct proto_info * pi)"
+- "name": "tcp_read_req"
+  "param_names":
+  - "con"
+  - "bytes_read"
+  "param_types":
+  - "struct.tcp_connection *"
+  - "int *"
+  "return_type": "int"
+  "signature": "int tcp_read_req(struct tcp_connection * con, int * bytes_read)"
+- "name": "tcp_handle_req"
+  "param_names":
+  - "req"
+  - "con"
+  - "_max_msg_chunks"
+  - "_parallel_handling"
+  "param_types":
+  - "struct.tcp_req *"
+  - "struct.tcp_connection *"
+  - "int"
+  - "int"
+  "return_type": "int"
+  "signature": "int tcp_handle_req(struct tcp_req * req, struct tcp_connection * con, int _max_msg_chunks, int _parallel_handling)"
+- "name": "w_forward"
+  "param_names":
+  - "msg"
+  - "dest"
+  "param_types":
+  - "struct.sip_msg *"
+  - "struct.proxy_l *"
+  "return_type": "int"
+  "signature": "int w_forward(struct sip_msg * msg, struct proxy_l * dest)"
+"project": "opensips"
+"target_name": "fuzz_core_funcs"
+"target_path": "/src/opensips/test/fuzz/fuzz_core_funcs.c"

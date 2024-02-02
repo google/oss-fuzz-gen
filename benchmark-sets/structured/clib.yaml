@@ -1,0 +1,59 @@
+"functions":
+- "name": "clib_package_install"
+  "param_names":
+  - "pkg"
+  - "dir"
+  - "verbose"
+  "param_types":
+  - "struct.clib_package_t *"
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int clib_package_install(struct clib_package_t * pkg, char * dir, int verbose)"
+- "name": "clib_package_install_executable"
+  "param_names":
+  - "pkg"
+  - "dir"
+  - "verbose"
+  "param_types":
+  - "struct.clib_package_t *"
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int clib_package_install_executable(struct clib_package_t * pkg, char * dir, int verbose)"
+- "name": "install_packages"
+  "param_names":
+  - "list"
+  - "dir"
+  - "verbose"
+  "param_types":
+  - "struct.list_t *"
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int install_packages(struct list_t * list, char * dir, int verbose)"
+- "name": "clib_package_install_development"
+  "param_names":
+  - "pkg"
+  - "dir"
+  - "verbose"
+  "param_types":
+  - "struct.clib_package_t *"
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int clib_package_install_development(struct clib_package_t * pkg, char * dir, int verbose)"
+- "name": "clib_package_install_dependencies"
+  "param_names":
+  - "pkg"
+  - "dir"
+  - "verbose"
+  "param_types":
+  - "struct.clib_package_t *"
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int clib_package_install_dependencies(struct clib_package_t * pkg, char * dir, int verbose)"
+"project": "clib"
+"target_name": "fuzz_manifest"
+"target_path": "/src/clib/test/fuzzing/fuzz_manifest.c"

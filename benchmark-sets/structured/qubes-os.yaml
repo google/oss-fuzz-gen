@@ -1,0 +1,63 @@
+"functions":
+- "name": "fuzz_main"
+  "param_names":
+  - "argc"
+  - "argv"
+  "param_types":
+  - "int"
+  - "char **"
+  "return_type": "int"
+  "signature": "int fuzz_main(int argc, char ** argv)"
+- "name": "mainloop"
+  "param_names":
+  - "d"
+  "param_types":
+  - "struct.db_daemon_data *"
+  "return_type": "int"
+  "signature": "int mainloop(struct db_daemon_data * d)"
+- "name": "handle_client_data"
+  "param_names":
+  - "d"
+  - "client"
+  - "data"
+  - "data_len"
+  "param_types":
+  - "struct.db_daemon_data *"
+  - "struct.client *"
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int handle_client_data(struct db_daemon_data * d, struct client * client, char * data, int data_len)"
+- "name": "execute_qubes_rpc_command"
+  "param_names":
+  - "cmdline"
+  - "pid"
+  - "stdin_fd"
+  - "stdout_fd"
+  - "stderr_fd"
+  - "strip_username"
+  - "stdin_buffer"
+  "param_types":
+  - "char *"
+  - "int *"
+  - "int *"
+  - "int *"
+  - "int *"
+  - "bool"
+  - "struct.buffer *"
+  "return_type": "int"
+  "signature": "int execute_qubes_rpc_command(char * cmdline, int * pid, int * stdin_fd, int * stdout_fd, int * stderr_fd, bool strip_username, struct buffer * stdin_buffer)"
+- "name": "load_service_config"
+  "param_names":
+  - "cmd"
+  - "wait_for_session"
+  - "user"
+  "param_types":
+  - "struct.qrexec_parsed_command *"
+  - "int *"
+  - "char **"
+  "return_type": "int"
+  "signature": "int load_service_config(struct qrexec_parsed_command * cmd, int * wait_for_session, char ** user)"
+"project": "qubes-os"
+"target_name": "db-daemon_fuzzer"
+"target_path": "/src/qubes-os/qubes-core-qubesdb/fuzz/db-daemon_fuzzer.c"

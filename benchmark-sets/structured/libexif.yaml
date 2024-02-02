@@ -1,0 +1,45 @@
+"functions":
+- "name": "exif_data_new_from_file"
+  "param_names":
+  - "path"
+  "param_types":
+  - "char *"
+  "return_type": "struct._ExifData *"
+  "signature": "struct _ExifData * exif_data_new_from_file(char * path)"
+- "name": "exif_data_dump"
+  "param_names":
+  - "data"
+  "param_types":
+  - "struct._ExifData *"
+  "return_type": "void"
+  "signature": "void exif_data_dump(struct _ExifData * data)"
+- "name": "exif_content_dump"
+  "param_names":
+  - "content"
+  - "indent"
+  "param_types":
+  - "struct._ExifContent *"
+  - "int"
+  "return_type": "void"
+  "signature": "void exif_content_dump(struct _ExifContent * content, int indent)"
+- "name": "exif_entry_dump"
+  "param_names":
+  - "e"
+  - "indent"
+  "param_types":
+  - "struct._ExifEntry *"
+  - "int"
+  "return_type": "void"
+  "signature": "void exif_entry_dump(struct _ExifEntry * e, int indent)"
+- "name": "exif_data_set_byte_order"
+  "param_names":
+  - "data"
+  - "order"
+  "param_types":
+  - "struct._ExifData *"
+  - "int"
+  "return_type": "void"
+  "signature": "void exif_data_set_byte_order(struct _ExifData * data, int order)"
+"project": "libexif"
+"target_name": "exif_loader_fuzzer"
+"target_path": "/src/exif_loader_fuzzer.cc"

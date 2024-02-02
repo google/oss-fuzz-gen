@@ -1,0 +1,53 @@
+"functions":
+- "name": "Terminal::Complete::init_diff[abi:cxx11]()const"
+  "param_names":
+  - "this"
+  - ""
+  "param_types":
+  - "class.std::__cxx11::basic_string *"
+  - "class.Terminal::Complete *"
+  "return_type": "void"
+  "signature": "void Terminal::Complete::init_diff[abi:cxx11](std::__cxx11::basic_string * this, Terminal::Complete * ) const"
+- "name": "Terminal::Complete::diff_from[abi:cxx11](Terminal::Completeconst&)const"
+  "param_names":
+  - "this"
+  - "existing"
+  - ""
+  "param_types":
+  - "class.std::__cxx11::basic_string *"
+  - "class.Terminal::Complete *"
+  - "class.Terminal::Complete *"
+  "return_type": "void"
+  "signature": "void Terminal::Complete::diff_from[abi:cxx11](std::__cxx11::basic_string * this, Terminal::Complete * existing, Terminal::Complete * ) const"
+- "name": "Terminal::Complete::apply_string(std::__cxx11::basic_string<char,std::char_traits<char>,std::allocator<char>>const&)"
+  "param_names":
+  - "this"
+  - "diff"
+  "param_types":
+  - "class.Terminal::Complete *"
+  - "class.std::__cxx11::basic_string *"
+  "return_type": "void"
+  "signature": "void Terminal::Complete::apply_string(Terminal::Complete * this, std::__cxx11::basic_string * diff)"
+- "name": "Parser::Resize::act_on_terminal(Terminal::Emulator*)const"
+  "param_names":
+  - "this"
+  - "emu"
+  "param_types":
+  - "class.Parser::Resize *"
+  - "class.Terminal::Emulator *"
+  "return_type": "void"
+  "signature": "void Parser::Resize::act_on_terminal(Parser::Resize * this, Terminal::Emulator * emu) const"
+- "name": "Terminal::Emulator::resize(unsignedlong,unsignedlong)"
+  "param_names":
+  - "this"
+  - "s_width"
+  - "s_height"
+  "param_types":
+  - "class.Terminal::Emulator *"
+  - "size_t"
+  - "size_t"
+  "return_type": "void"
+  "signature": "void Terminal::Emulator::resize(Terminal::Emulator * this, size_t s_width, size_t s_height)"
+"project": "mosh"
+"target_name": "terminal_parser_fuzzer"
+"target_path": "/src/mosh/src/fuzz/terminal_parser_fuzzer.cc"

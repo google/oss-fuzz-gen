@@ -1,0 +1,55 @@
+"functions":
+- "name": "xvid_encore"
+  "param_names":
+  - "handle"
+  - "opt"
+  - "param1"
+  - "param2"
+  "param_types":
+  - "char *"
+  - "int"
+  - "char *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int xvid_encore(char * handle, int opt, char * param1, char * param2)"
+- "name": "enc_encode"
+  "param_names":
+  - "pEnc"
+  - "xFrame"
+  - "stats"
+  "param_types":
+  - "struct.Encoder *"
+  - "struct.xvid_enc_frame_t *"
+  - "struct.xvid_enc_stats_t *"
+  "return_type": "int"
+  "signature": "int enc_encode(struct Encoder * pEnc, struct xvid_enc_frame_t * xFrame, struct xvid_enc_stats_t * stats)"
+- "name": "FrameCodeP"
+  "param_names":
+  - "pEnc"
+  - "bs"
+  "param_types":
+  - "struct.Encoder *"
+  - "struct.Bitstream *"
+  "return_type": "int"
+  "signature": "int FrameCodeP(struct Encoder * pEnc, struct Bitstream * bs)"
+- "name": "FrameCodeB"
+  "param_names":
+  - "pEnc"
+  - "frame"
+  - "bs"
+  "param_types":
+  - "struct.Encoder *"
+  - "struct.FRAMEINFO *"
+  - "struct.Bitstream *"
+  "return_type": "void"
+  "signature": "void FrameCodeB(struct Encoder * pEnc, struct FRAMEINFO * frame, struct Bitstream * bs)"
+- "name": "MotionEstimateSMP"
+  "param_names":
+  - "h"
+  "param_types":
+  - "struct.SMPData *"
+  "return_type": "void"
+  "signature": "void MotionEstimateSMP(struct SMPData * h)"
+"project": "xvid"
+"target_name": "fuzzer-decoder"
+"target_path": "/src/oss-fuzz-fuzzers/xvid/fuzzer.cpp"

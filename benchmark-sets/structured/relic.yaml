@@ -1,0 +1,59 @@
+"functions":
+- "name": "LLVMFuzzerCustomMutator"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "char *"
+  - "size_t"
+  - "size_t"
+  - "int"
+  "return_type": "size_t"
+  "signature": "size_t LLVMFuzzerCustomMutator(char * , size_t , size_t , int )"
+- "name": "cryptofuzz::module::Botan::OpECDSA_Sign(cryptofuzz::operation::ECDSA_Sign&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.std::__1::optional.891 *"
+  - "class.cryptofuzz::module::relic *"
+  - "class.cryptofuzz::operation::ECDSA_Sign *"
+  "return_type": "void"
+  "signature": "void cryptofuzz::module::Botan::OpECDSA_Sign(std::optional * , cryptofuzz::module::relic * , cryptofuzz::operation::ECDSA_Sign * )"
+- "name": "cryptofuzz::module::Botan::OpECGDSA_Sign(cryptofuzz::operation::ECGDSA_Sign&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.std::__1::optional.891 *"
+  - "class.cryptofuzz::module::relic *"
+  - "class.cryptofuzz::operation::ECDSA_Sign *"
+  "return_type": "void"
+  "signature": "void cryptofuzz::module::Botan::OpECGDSA_Sign(std::optional * , cryptofuzz::module::relic * , cryptofuzz::operation::ECDSA_Sign * )"
+- "name": "std::__1::optional<cryptofuzz::component::ECDSA_Signature>cryptofuzz::module::Botan_detail::ECxDSA_Sign<Botan::ECGDSA_PrivateKey,cryptofuzz::operation::ECGDSA_Sign,false>(cryptofuzz::operation::ECGDSA_Sign&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.std::__1::optional.891 *"
+  - "class.cryptofuzz::operation::ECDSA_Sign *"
+  "return_type": "void"
+  "signature": "void std::__1::optional<cryptofuzz::component::ECDSA_Signature> cryptofuzz::module::Botan_detail::ECxDSA_Sign<Botan::ECGDSA_PrivateKey, cryptofuzz::operation::ECGDSA_Sign, false>(std::optional * , cryptofuzz::operation::ECDSA_Sign * )"
+- "name": "cryptofuzz::module::Botan::OpECC_GenerateKeyPair(cryptofuzz::operation::ECC_GenerateKeyPair&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.std::__1::optional.1159 *"
+  - "class.cryptofuzz::module::relic *"
+  - "class.cryptofuzz::operation::Misc *"
+  "return_type": "void"
+  "signature": "void cryptofuzz::module::Botan::OpECC_GenerateKeyPair(std::optional * , cryptofuzz::module::relic * , cryptofuzz::operation::Misc * )"
+"project": "relic"
+"target_name": "cryptofuzz-relic"
+"target_path": "/src/cryptofuzz/entry.cpp"

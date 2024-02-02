@@ -1,0 +1,61 @@
+"functions":
+- "name": "CppCheck::check(FileSettingsconst&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.CppCheck.10835 *"
+  - "struct.FileSettings *"
+  "return_type": "int"
+  "signature": "int CppCheck::check(CppCheck * , struct FileSettings * )"
+- "name": "CppCheck::check(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&)"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "class.CppCheck.10835 *"
+  - "class.std::__1::basic_string *"
+  "return_type": "int"
+  "signature": "int CppCheck::check(CppCheck * , std::string * )"
+- "name": "ImportProject::import(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,Settings*)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.ImportProject *"
+  - "class.std::__1::basic_string *"
+  - "class.Settings.368 *"
+  "return_type": "int"
+  "signature": "int ImportProject::import(ImportProject * , std::string * , Settings * )"
+- "name": "ImportProject::importSln(std::__1::basic_istream<char,std::__1::char_traits<char>>&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,std::__1::vector<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>,std::__1::allocator<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>>>const&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.ImportProject *"
+  - "class.std::__1::basic_istream *"
+  - "class.std::__1::basic_string *"
+  - "class.std::__1::vector.28 *"
+  "return_type": "bool"
+  "signature": "bool ImportProject::importSln(ImportProject * , std::istream * , std::string * , std::vector * )"
+- "name": "ImportProject::importVcxproj(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,std::__1::map<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>,cppcheck::stricmp,std::__1::allocator<std::__1::pair<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>>>>&,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,std::__1::vector<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>,std::__1::allocator<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>>>const&)"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "class.ImportProject *"
+  - "class.std::__1::basic_string *"
+  - "class.std::__1::set *"
+  - "class.std::__1::basic_string *"
+  - "class.std::__1::vector.28 *"
+  "return_type": "bool"
+  "signature": "bool ImportProject::importVcxproj(ImportProject * , std::string * , std::set * , std::string * , std::vector * )"
+"project": "cppcheck"
+"target_name": "oss-fuzz-client"
+"target_path": "/src/cppcheck/oss-fuzz/main.cpp"

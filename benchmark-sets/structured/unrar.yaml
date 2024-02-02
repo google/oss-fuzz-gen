@@ -1,0 +1,45 @@
+"functions":
+- "name": "CommandData::ProcessCommand()"
+  "param_names":
+  - "this"
+  "param_types":
+  - "class.CommandData *"
+  "return_type": "void"
+  "signature": "void CommandData::ProcessCommand(CommandData * this)"
+- "name": "Archive::CheckOpen(wchar_tconst*)"
+  "param_names":
+  - "this"
+  - "Name"
+  "param_types":
+  - "class.Archive *"
+  - "int *"
+  "return_type": "void"
+  "signature": "void Archive::CheckOpen(Archive * this, int * Name)"
+- "name": "Archive::WCheckOpen(wchar_tconst*)"
+  "param_names":
+  - "this"
+  - "Name"
+  "param_types":
+  - "class.Archive *"
+  - "int *"
+  "return_type": "bool"
+  "signature": "bool Archive::WCheckOpen(Archive * this, int * Name)"
+- "name": "Archive::CheckArc(bool)"
+  "param_names":
+  - "this"
+  - "EnableBroken"
+  "param_types":
+  - "class.Archive *"
+  - "bool"
+  "return_type": "void"
+  "signature": "void Archive::CheckArc(Archive * this, bool EnableBroken)"
+- "name": "Archive::SearchRR()"
+  "param_names":
+  - "this"
+  "param_types":
+  - "class.Archive *"
+  "return_type": "size_t"
+  "signature": "size_t Archive::SearchRR(Archive * this)"
+"project": "unrar"
+"target_name": "unrar_fuzzer"
+"target_path": "/src/unrar/unrar_fuzzer.cc"

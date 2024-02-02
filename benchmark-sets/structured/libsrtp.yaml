@@ -1,0 +1,63 @@
+"functions":
+- "name": "srtp_update"
+  "param_names":
+  - "session"
+  - "policy"
+  "param_types":
+  - "struct.srtp_ctx_t_ *"
+  - "struct.srtp_policy_t *"
+  "return_type": "int"
+  "signature": "int srtp_update(struct srtp_ctx_t_ * session, struct srtp_policy_t * policy)"
+- "name": "srtp_stream_update"
+  "param_names":
+  - "session"
+  - "policy"
+  "param_types":
+  - "struct.srtp_ctx_t_ *"
+  - "struct.srtp_policy_t *"
+  "return_type": "int"
+  "signature": "int srtp_stream_update(struct srtp_ctx_t_ * session, struct srtp_policy_t * policy)"
+- "name": "update_template_streams"
+  "param_names":
+  - "session"
+  - "policy"
+  "param_types":
+  - "struct.srtp_ctx_t_ *"
+  - "struct.srtp_policy_t *"
+  "return_type": "int"
+  "signature": "int update_template_streams(struct srtp_ctx_t_ * session, struct srtp_policy_t * policy)"
+- "name": "stream_update"
+  "param_names":
+  - "session"
+  - "policy"
+  "param_types":
+  - "struct.srtp_ctx_t_ *"
+  - "struct.srtp_policy_t *"
+  "return_type": "int"
+  "signature": "int stream_update(struct srtp_ctx_t_ * session, struct srtp_policy_t * policy)"
+- "name": "srtp_unprotect_aead"
+  "param_names":
+  - "ctx"
+  - "stream"
+  - "delta"
+  - "est"
+  - "srtp_hdr"
+  - "pkt_octet_len"
+  - "session_keys"
+  - "mki_size"
+  - "advance_packet_index"
+  "param_types":
+  - "struct.srtp_ctx_t_ *"
+  - "struct.srtp_stream_ctx_t_ *"
+  - "size_t"
+  - "size_t"
+  - "char *"
+  - "size_t *"
+  - "struct.srtp_session_keys_t *"
+  - "size_t"
+  - "bool"
+  "return_type": "int"
+  "signature": "int srtp_unprotect_aead(struct srtp_ctx_t_ * ctx, struct srtp_stream_ctx_t_ * stream, size_t delta, size_t est, char * srtp_hdr, size_t * pkt_octet_len, struct srtp_session_keys_t * session_keys, size_t mki_size, bool advance_packet_index)"
+"project": "libsrtp"
+"target_name": "srtp-fuzzer"
+"target_path": "/src/libsrtp/fuzzer/fuzzer.c"

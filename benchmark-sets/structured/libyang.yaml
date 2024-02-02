@@ -1,0 +1,57 @@
+"functions":
+- "name": "structure_aug_parse"
+  "param_names":
+  - "pctx"
+  - "ext"
+  "param_types":
+  - "struct.lysp_ctx *"
+  - "struct.lysp_ext_instance.2905 *"
+  "return_type": "int"
+  "signature": "int structure_aug_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
+- "name": "yangdata_parse"
+  "param_names":
+  - "pctx"
+  - "ext"
+  "param_types":
+  - "struct.lysp_ctx *"
+  - "struct.lysp_ext_instance.2905 *"
+  "return_type": "int"
+  "signature": "int yangdata_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
+- "name": "structure_parse"
+  "param_names":
+  - "pctx"
+  - "ext"
+  "param_types":
+  - "struct.lysp_ctx *"
+  - "struct.lysp_ext_instance.2905 *"
+  "return_type": "int"
+  "signature": "int structure_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
+- "name": "lysp_stmt_parse"
+  "param_names":
+  - "pctx"
+  - "stmt"
+  - "result"
+  - "exts"
+  "param_types":
+  - "struct.lysp_ctx *"
+  - "struct.lysp_stmt *"
+  - "char **"
+  - "struct.lysp_ext_instance **"
+  "return_type": "int"
+  "signature": "int lysp_stmt_parse(struct lysp_ctx * pctx, struct lysp_stmt * stmt, char ** result, struct lysp_ext_instance ** exts)"
+- "name": "lysp_stmt_list"
+  "param_names":
+  - "ctx"
+  - "stmt"
+  - "parent"
+  - "siblings"
+  "param_types":
+  - "struct.lysp_ctx *"
+  - "struct.lysp_stmt *"
+  - "struct.lysp_node *"
+  - "struct.lysp_node **"
+  "return_type": "int"
+  "signature": "int lysp_stmt_list(struct lysp_ctx * ctx, struct lysp_stmt * stmt, struct lysp_node * parent, struct lysp_node ** siblings)"
+"project": "libyang"
+"target_name": "lyd_parse_mem_xml"
+"target_path": "/src/libyang/tests/fuzz/lyd_parse_mem_xml.c"

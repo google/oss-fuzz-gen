@@ -1,0 +1,57 @@
+"functions":
+- "name": "WelsDec::CWelsDecoder::ThreadDecodeFrameInternal(unsignedcharconst*,int,unsignedchar**,TagBufferInfo*)"
+  "param_names":
+  - "this"
+  - "kpSrc"
+  - "kiSrcLen"
+  - "ppDst"
+  - "pDstInfo"
+  "param_types":
+  - "class.WelsDec::CWelsDecoder *"
+  - "char *"
+  - "int"
+  - "char **"
+  - "struct.TagBufferInfo *"
+  "return_type": "int"
+  "signature": "int WelsDec::CWelsDecoder::ThreadDecodeFrameInternal(WelsDec::CWelsDecoder * this, char * kpSrc, int kiSrcLen, char ** ppDst, struct TagBufferInfo * pDstInfo)"
+- "name": "WelsDec::CWelsDecoder::DecodeParser(unsignedcharconst*,int,TagParserBsInfo*)"
+  "param_names":
+  - "this"
+  - "kpSrc"
+  - "kiSrcLen"
+  - "pDstInfo"
+  "param_types":
+  - "class.WelsDec::CWelsDecoder *"
+  - "char *"
+  - "int"
+  - "struct.TagParserBsInfo *"
+  "return_type": "int"
+  "signature": "int WelsDec::CWelsDecoder::DecodeParser(WelsDec::CWelsDecoder * this, char * kpSrc, int kiSrcLen, struct TagParserBsInfo * pDstInfo)"
+- "name": "WelsDec::CWelsDecoder::ParseAccessUnit(WelsDec::tagSWelsDecThreadCtx&)"
+  "param_names":
+  - "this"
+  - "sThreadCtx"
+  "param_types":
+  - "class.WelsDec::CWelsDecoder *"
+  - "struct.WelsDec::tagSWelsDecThreadCtx *"
+  "return_type": "int"
+  "signature": "int WelsDec::CWelsDecoder::ParseAccessUnit(WelsDec::CWelsDecoder * this, struct WelsDec::tagSWelsDecThreadCtx * sThreadCtx)"
+- "name": "WelsDec::CWelsDecoder::ThreadResetDecoder(WelsDec::TagWelsDecoderContext*&)"
+  "param_names":
+  - "this"
+  - "pCtx"
+  "param_types":
+  - "class.WelsDec::CWelsDecoder *"
+  - "struct.WelsDec::TagWelsDecoderContext **"
+  "return_type": "int"
+  "signature": "int WelsDec::CWelsDecoder::ThreadResetDecoder(WelsDec::CWelsDecoder * this, struct WelsDec::TagWelsDecoderContext ** pCtx)"
+- "name": "WelsDec::CWelsDecoder::OpenDecoderThreads()"
+  "param_names":
+  - "this"
+  "param_types":
+  - "class.WelsDec::CWelsDecoder *"
+  "return_type": "void"
+  "signature": "void WelsDec::CWelsDecoder::OpenDecoderThreads(WelsDec::CWelsDecoder * this)"
+"project": "openh264"
+"target_name": "decoder_fuzzer"
+"target_path": "/src/decoder_fuzzer.cpp"

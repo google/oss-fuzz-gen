@@ -1,0 +1,39 @@
+"functions":
+- "name": "main2"
+  "param_names":
+  - "argc"
+  - "argv"
+  "param_types":
+  - "int"
+  - "char **"
+  "return_type": "int"
+  "signature": "int main2(int argc, char ** argv)"
+- "name": "init"
+  "param_names":
+  - "argc"
+  - "argv"
+  "param_types":
+  - "int"
+  - "char **"
+  "return_type": "void"
+  "signature": "void init(int argc, char ** argv)"
+- "name": "mworker_loop"
+  "param_names": []
+  "param_types": []
+  "return_type": "void"
+  "signature": "void mworker_loop()"
+- "name": "run_thread_poll_loop"
+  "param_names":
+  - "data"
+  "param_types":
+  - "char *"
+  "return_type": "char *"
+  "signature": "char * run_thread_poll_loop(char * data)"
+- "name": "run_poll_loop"
+  "param_names": []
+  "param_types": []
+  "return_type": "void"
+  "signature": "void run_poll_loop()"
+"project": "haproxy"
+"target_name": "fuzz_cfg_parser"
+"target_path": "/src/fuzz_cfg_parser.c"

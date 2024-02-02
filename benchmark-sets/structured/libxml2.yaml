@@ -1,0 +1,63 @@
+"functions":
+- "name": "xmlTextReaderSchemaValidate"
+  "param_names":
+  - "reader"
+  - "xsd"
+  "param_types":
+  - "struct._xmlTextReader *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int xmlTextReaderSchemaValidate(struct _xmlTextReader * reader, char * xsd)"
+- "name": "xmlTextReaderSchemaValidateCtxt"
+  "param_names":
+  - "reader"
+  - "ctxt"
+  - "options"
+  "param_types":
+  - "struct._xmlTextReader *"
+  - "struct._xmlSchemaValidCtxt *"
+  - "int"
+  "return_type": "int"
+  "signature": "int xmlTextReaderSchemaValidateCtxt(struct _xmlTextReader * reader, struct _xmlSchemaValidCtxt * ctxt, int options)"
+- "name": "xmlSchemaValidateStream"
+  "param_names":
+  - "ctxt"
+  - "input"
+  - "enc"
+  - "sax"
+  - "user_data"
+  "param_types":
+  - "struct._xmlSchemaValidCtxt *"
+  - "struct._xmlParserInputBuffer *"
+  - "int"
+  - "struct._xmlSAXHandler *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int xmlSchemaValidateStream(struct _xmlSchemaValidCtxt * ctxt, struct _xmlParserInputBuffer * input, int enc, struct _xmlSAXHandler * sax, char * user_data)"
+- "name": "xmlTextReaderSchemaValidateInternal"
+  "param_names":
+  - "reader"
+  - "xsd"
+  - "ctxt"
+  - "options"
+  "param_types":
+  - "struct._xmlTextReader *"
+  - "char *"
+  - "struct._xmlSchemaValidCtxt *"
+  - "int"
+  "return_type": "int"
+  "signature": "int xmlTextReaderSchemaValidateInternal(struct _xmlTextReader * reader, char * xsd, struct _xmlSchemaValidCtxt * ctxt, int options)"
+- "name": "xmlSchemaValidateFile"
+  "param_names":
+  - "ctxt"
+  - "filename"
+  - "options"
+  "param_types":
+  - "struct._xmlSchemaValidCtxt *"
+  - "char *"
+  - "int"
+  "return_type": "int"
+  "signature": "int xmlSchemaValidateFile(struct _xmlSchemaValidCtxt * ctxt, char * filename, int options)"
+"project": "libxml2"
+"target_name": "xinclude"
+"target_path": "/src/libxml2/fuzz/xinclude.c"

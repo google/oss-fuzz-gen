@@ -1,0 +1,55 @@
+"functions":
+- "name": "dwfl_getthread_frames"
+  "param_names":
+  - "dwfl"
+  - "tid"
+  - "callback"
+  - "arg"
+  "param_types":
+  - "struct.Dwfl *"
+  - "int"
+  - "func_type *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int dwfl_getthread_frames(struct Dwfl * dwfl, int tid, func_type * callback, char * arg)"
+- "name": "get_one_thread_frames_cb"
+  "param_names":
+  - "thread"
+  - "arg"
+  "param_types":
+  - "struct.Dwfl_Thread *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int get_one_thread_frames_cb(struct Dwfl_Thread * thread, char * arg)"
+- "name": "dwfl_thread_getframes"
+  "param_names":
+  - "thread"
+  - "callback"
+  - "arg"
+  "param_types":
+  - "struct.Dwfl_Thread *"
+  - "func_type *"
+  - "char *"
+  "return_type": "int"
+  "signature": "int dwfl_thread_getframes(struct Dwfl_Thread * thread, func_type * callback, char * arg)"
+- "name": "__libdwfl_frame_unwind"
+  "param_names":
+  - "state"
+  "param_types":
+  - "struct.Dwfl_Frame *"
+  "return_type": "void"
+  "signature": "void __libdwfl_frame_unwind(struct Dwfl_Frame * state)"
+- "name": "dwfl_frame_pc"
+  "param_names":
+  - "state"
+  - "pc"
+  - "isactivation"
+  "param_types":
+  - "struct.Dwfl_Frame *"
+  - "size_t *"
+  - "char *"
+  "return_type": "bool"
+  "signature": "bool dwfl_frame_pc(struct Dwfl_Frame * state, size_t * pc, char * isactivation)"
+"project": "elfutils"
+"target_name": "fuzz-libdwfl"
+"target_path": "/src/fuzz-libdwfl.c"

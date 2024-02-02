@@ -1,0 +1,61 @@
+"functions":
+- "name": "MmsValue_encodeMmsData"
+  "param_names":
+  - "self"
+  - "buffer"
+  - "bufPos"
+  - "encode"
+  "param_types":
+  - "struct.sMmsValue *"
+  - "char *"
+  - "int"
+  - "bool"
+  "return_type": "int"
+  "signature": "int MmsValue_encodeMmsData(struct sMmsValue * self, char * buffer, int bufPos, bool encode)"
+- "name": "MmsValue_printToBuffer"
+  "param_names":
+  - "self"
+  - "buffer"
+  - "bufferSize"
+  "param_types":
+  - "struct.sMmsValue *"
+  - "char *"
+  - "int"
+  "return_type": "char *"
+  "signature": "char * MmsValue_printToBuffer(struct sMmsValue * self, char * buffer, int bufferSize)"
+- "name": "encodeArrayAccessResult"
+  "param_names":
+  - "value"
+  - "buffer"
+  - "bufPos"
+  - "encode"
+  "param_types":
+  - "struct.sMmsValue *"
+  - "char *"
+  - "int"
+  - "bool"
+  "return_type": "int"
+  "signature": "int encodeArrayAccessResult(struct sMmsValue * value, char * buffer, int bufPos, bool encode)"
+- "name": "encodeStructuredAccessResult"
+  "param_names":
+  - "value"
+  - "buffer"
+  - "bufPos"
+  - "encode"
+  "param_types":
+  - "struct.sMmsValue *"
+  - "char *"
+  - "int"
+  - "bool"
+  "return_type": "int"
+  "signature": "int encodeStructuredAccessResult(struct sMmsValue * value, char * buffer, int bufPos, bool encode)"
+- "name": "MmsValue_newDefaultValue"
+  "param_names":
+  - "typeSpec"
+  "param_types":
+  - "struct.sMmsVariableSpecification *"
+  "return_type": "struct.sMmsValue *"
+  "signature": "struct sMmsValue * MmsValue_newDefaultValue(struct sMmsVariableSpecification * typeSpec)"
+"project": "libiec61850"
+"target_name": "fuzz_mms_decode"
+"target_path": "/src/libiec61850/fuzz/fuzz_mms_decode.c"
