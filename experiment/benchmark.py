@@ -32,19 +32,7 @@ class FileType(Enum):
   NONE = ''
 
 
-def parse_function_name(function_signature: str) -> str:
-  """Parses the function name from the function signature."""
-  # Invalid matches:
-  # 1. __attribute__((.*))
-  # 2. __attribute__((alloc_size(1)))
-  names = re.findall(r'.*?\s*([\w:<>+*~]+)\s*\([^\(]*\)', function_signature)
-  if names:
-    # Normalize names.
-    return re.sub(r'[^\w:]', '-', names[-1])
-
-  raise ValueError('Invalid function signature: ' + function_signature)
-
-
+# TODO(jim): Remove this function after replacing its usage in builder_runner.
 def function_name_regex(function_name, include_top_level=False) -> str:
   """The regex to capture function name"""
   # TODO: Temp workaround for issue #27, allows fuzzy match for special chars
