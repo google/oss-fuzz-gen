@@ -108,6 +108,12 @@ def get_generated_targets(benchmark: str) -> list[str]:
 def list_benchmarks() -> List[Benchmark]:
   benchmarks = []
   benchmark_names = sorted(os.listdir(RESULTS_DIR))
+  # Not sure why there is a `lost+found` dir in |RESULTS_DIR|, which caused
+  # failures in get_generated_targets().
+  # Maybe it is from mounting?
+  # TODO(erfan): Check if not mounting to the root dir can solve this.
+  benchmark_names = sorted(
+      [dir for dir in os.listdir(RESULTS_DIR) if dir != 'lost+found'])
   for benchmark in benchmark_names:
     results, targets = get_results(benchmark)
     status = 'Done' if all(r for r in results) and results else 'Running'
