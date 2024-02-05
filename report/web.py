@@ -241,7 +241,7 @@ def index_sort():
                          benchmarks=sort_benchmarks(list_benchmarks()))
 
 
-@app.route('/benchmark/<benchmark>')
+@app.route('/benchmark/<bnmk>')
 def benchmark(bnmk):
   return render_template('benchmark.html',
                          bnmk=bnmk,
