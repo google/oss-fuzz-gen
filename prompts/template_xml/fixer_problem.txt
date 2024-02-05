@@ -11,5 +11,10 @@ The code has the following build issues:
 Fix code:
 1. Consider the possible solution for the issues listed above.
 2. Apply the solutions to the original code.
+Check and make sure the fuzz harness calls <code>{FUNCTION_NAME}</code>.
+The function was declared with the following signature in the source code:
+<code>
+{FUNCTION_SIG}
+</code>
 It's important to show the complete code, not only the fixed line.
 <solution>
