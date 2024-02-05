@@ -249,7 +249,7 @@ def benchmark(bnmk):
                          prompt=get_prompt(bnmk))
 
 
-@app.route('/sample/<benchmark>/<sample>')
+@app.route('/sample/<bnmk>/<smp>')
 def sample(bnmk, smp):
   return render_template('sample.html',
                          bnmk=bnmk,
