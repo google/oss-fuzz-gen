@@ -44,7 +44,7 @@ RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
 
 class Result:
   benchmark: benchmarklib.Benchmark
-  result: run_one_experiment.AggregatedResult | str
+  result: run_one_experiment.AggregatedResult
 
   def __init__(self, benchmark, result):
     self.benchmark = benchmark
