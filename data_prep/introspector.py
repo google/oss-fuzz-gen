@@ -82,10 +82,14 @@ def clean_type(name: str) -> str:
   return name
 
 
-def _get_clean_return_type(function: dict):
+def _get_raw_return_type(function: dict) -> str:
   """Returns the cleaned function type."""
-  raw_return_type = (function.get('return-type') or
-                     function.get('return_type', '')).strip()
+  return function.get('return-type') or function.get('return_type', '')
+
+
+def _get_clean_return_type(function: dict) -> str:
+  """Returns the cleaned function type."""
+  raw_return_type = _get_raw_return_type(function).strip()
   if raw_return_type == 'N/A':
     # Bug in introspector: Unable to distinguish between bool and void right
     # now. More likely to be void for function return arguments.
@@ -93,38 +97,50 @@ def _get_clean_return_type(function: dict):
   return clean_type(raw_return_type)
 
 
-def _get_demangled_function_name(function: dict):
+def _get_demangled_function_name(function: dict) -> str:
   """Returns the demangled function name."""
   raw_function_name = (function.get('raw-function-name') or
                        function.get('raw_function_name', ''))
   return demangle(raw_function_name)
 
 
-def _get_clean_arg_types(function: dict):
+# TODO(dongge): Remove this function when FI fixes it.
+def _get_clean_function_name(function: dict) -> str:
+  """Returns the cleaned function name."""
+  function_name = _get_demangled_function_name(function)
+  raw_return_type = _get_raw_return_type(function)
+  cleaned_return_type = _get_clean_return_type(function)
+  # Sometimes FI prepends return_type to function_name.
+  # For example: "function_name":"boolabsl::str_format_internal::FormatArgImpl"
+  # "::Dispatch<longlong>(absl::str_format_internal::FormatArgImpl::Data,absl::"
+  # "str_format_internal::FormatConversionSpecImpl,void*)" from:
+  # https://introspector.oss-fuzz.com/api/far-reach-but-low-coverage?project=abseil-cpp
+  if function_name.startswith(raw_return_type):
+    function_name = function_name[len(raw_return_type):]
+  elif function_name.startswith(raw_return_type.strip()):
+    function_name = function_name[len(raw_return_type.strip()):]
+  elif function_name.startswith(cleaned_return_type):
+    function_name = function_name[len(cleaned_return_type):]
+  return function_name
+
+
+def _get_clean_arg_types(function: dict) -> list[str]:
   """Returns the cleaned function argument types."""
   raw_arg_types = (function.get('arg-types') or
                    function.get('function_arguments', ''))
   return [clean_type(arg_type) for arg_type in raw_arg_types]
 
 
-def _get_arg_names(function: dict):
+def _get_arg_names(function: dict) -> list[str]:
   """Returns the cleaned function argument types."""
   return (function.get('arg-names') or
           function.get('function_argument_names', ''))
 
 
-def formulate_function_signature(function: dict):
+def formulate_function_signature(function: dict) -> str:
   """Formulates a function signature based on its |function| dictionary."""
   return_type = _get_clean_return_type(function)
-  function_name = _get_demangled_function_name(function)
-  # Sometimes FI prepends return_type to function_name.
-  # For example: "function_name":"boolabsl::str_format_internal::FormatArgImpl"
-  # "::Dispatch<longlong>(absl::str_format_internal::FormatArgImpl::Data,absl::"
-  # "str_format_internal::FormatConversionSpecImpl,void*)" from:
-  # https://introspector.oss-fuzz.com/api/far-reach-but-low-coverage?project=abseil-cpp
-  if function_name.split()[0] == return_type:
-    function_name = ' '.join(function_name.split()[1:])
-
+  function_name = _get_clean_function_name(function)
   function_arg_types = _get_clean_arg_types(function)
   function_arg_names = _get_arg_names(function)
 
@@ -198,11 +214,11 @@ def populate_benchmarks_using_introspector(project: str, limit: int):
         benchmarklib.Benchmark('cli',
                                project,
                                function_signature,
-                               function.get('function_name'),
-                               function.get('return_type'),
+                               _get_clean_function_name(function),
+                               _get_clean_return_type(function),
                                _group_function_params(
-                                   function.get('function_arguments'),
-                                   function.get('function_argument_names')),
+                                   _get_clean_arg_types(function),
+                                   _get_arg_names(function)),
                                harness,
                                target_name,
                                function_dict=function))
@@ -270,7 +286,6 @@ def _contains_function(funcs: List[Dict], target_func: Dict):
 
 def _postprocess_function(target_func: Dict):
   """Post-processes target function."""
-  # target_func['return-type'] = clean_type(target_func['return-type'])
   target_func['return-type'] = _get_clean_return_type(target_func)
   target_func['function-name'] = demangle(target_func['function-name'])
 
