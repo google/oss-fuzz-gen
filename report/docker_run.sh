@@ -63,7 +63,7 @@ fi
 # The subdirectory for the generated report in GCS.
 if [[ $SUB_DIR = '' ]]
 then
-  SUB_DIR='others'
+  SUB_DIR='default'
   echo "Sub-directory was not specified as the fourth argument. Defaulting to ${SUB_DIR:?}. Please consider using sub-directory to classify your experiment."
 fi
 
