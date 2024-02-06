@@ -108,6 +108,20 @@ def get_generated_targets(bnmk: str) -> list[str]:
   return targets
 
 
+def _is_valid_benchmark_dir(cur_dir: str) -> bool:
+  """Checks if |cur_dir| is a valid benchmark directory (e.g., no lost+found)"""
+  # Check prefix.
+  if not cur_dir.startswith('output-'):
+    return False
+  # Check sub-directories.
+  expected_dirs = ['raw_targets', 'status', 'fixed_targets', 'logs', 'corpora']
+  if not all(
+      os.path.isdir(os.path.join(RESULTS_DIR, cur_dir, expected_dir))
+      for expected_dir in expected_dirs):
+    return False
+  return True
+
+
 def list_benchmarks() -> List[Benchmark]:
   """Lists benchmarks in the result directory."""
   benchmarks = []
@@ -116,9 +130,9 @@ def list_benchmarks() -> List[Benchmark]:
   # failures in get_generated_targets().
   # Maybe it is from mounting?
   # TODO(erfan): Check if not mounting to the root dir can solve this.
-  benchmark_names = sorted(
-      [dir for dir in os.listdir(RESULTS_DIR) if dir != 'lost+found'])
   for bnmk in benchmark_names:
+    if not _is_valid_benchmark_dir(bnmk):
+      continue
     results, targets = get_results(bnmk)
     status = 'Done' if all(r for r in results) and results else 'Running'
 
