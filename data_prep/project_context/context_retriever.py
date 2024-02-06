@@ -6,6 +6,7 @@ import subprocess
 import uuid
 from collections import defaultdict
 from typing import List, Tuple
+from experiment import benchmark as benchmarklib
 
 from google.cloud import storage
 
@@ -23,35 +24,24 @@ class ContextRetriever:
 
   OSS_FUZZ_EXP_BUCKET = 'oss-fuzz-llm-public'
 
-  def __init__(self, project_name: str, function_signature: str):
+  def __init__(self, benchmark: benchmarklib.Benchmark):
     self._record_decl_nodes = defaultdict(list)
     self._typedef_decl_nodes = defaultdict(list)
     self._enum_decl_nodes = defaultdict(list)
-    self._project_name = project_name
-    self._function_signature = function_signature
+
+    self._project_name = benchmark.project
+    self._function_signature = benchmark.function_signature
+    self._function_name = benchmark.function_name
+    self._param_types = benchmark.param_types
+    self._param_names = benchmark.param_names
+    self._return_type = benchmark.return_type
+
     self._download_from_path = f'{self.AST_BASE_PATH}/{self._project_name}/*'
     self._uuid = uuid.uuid4()
     self._ast_path = os.path.join(self.DOWNLOAD_TO_PATH,
                                   f'{self._project_name}-{self._uuid}')
 
-  def _get_function_name(self, target_function_signature: str) -> str:
-    """Retrieves the function name from the target function signature."""
-    # Grabs the function name by getting anything before '(' and then remove the type by grabbing any character after space.
-    target_function = target_function_signature.split('(')[0].split(' ')[-1]
-    # Removes possible pointer.
-    target_function = target_function.replace('*', '')
-
-    return target_function
-
-  def _get_return_type(self, target_function_signature: str) -> str:
-    """Retrieves the return type from the target function signature."""
-    return ' '.join(target_function_signature.split('(')[0].split(' ')[:-1])
-
-  def _get_function_params(self, target_function_signature: str) -> List[str]:
-    """Retrieves the function parameters from the target function signature."""
-    return target_function_signature.split('(')[1].split(')')[0].split(',')
-
-  def _dequalify_and_get_info(self, target_type: str) -> Tuple[str, List[str]]:
+  def _dequalify_and_get_info(self, target_type: str) -> Tuple[str, set[str]]:
     """Retrieves type information for each parameter."""
     dequal_type = self._get_dequal_type(target_type)
 
@@ -62,7 +52,7 @@ class ContextRetriever:
 
     return type_decl, complex_types
 
-  def _get_type_from_record_decl_node(self, ast_node) -> Tuple[str, list[str]]:
+  def _get_type_from_record_decl_node(self, ast_node) -> Tuple[str, set[str]]:
     """Gets a type from a specific RecordDecl node."""
     new_complex_types = set()
 
@@ -101,7 +91,7 @@ class ContextRetriever:
       # TODO(ggryan@): Handle recursive RecordDecls.
       # Check to see if the next FieldDecl has a name or not.
       # In the case of a named RecordDecl, the next FieldDecl can be skipped.
-    return f'{tag_used}{decl_name}{{\n{contents}}};', list(new_complex_types)
+    return f'{tag_used}{decl_name}{{\n{contents}}};', new_complex_types
 
   def _get_type_from_record_decl(self,
                                  target_type: str) -> Tuple[str, list[str]]:
@@ -171,19 +161,19 @@ class ContextRetriever:
       return f'typedef {qual_type} {target_type};'
 
   # TODO(ggyran@) - Add support for UsingDecls, Unions and CxxRecordDecls.
-  def _get_type(self, target_type: str) -> Tuple[str, list[str]]:
+  def _get_type(self, target_type: str) -> Tuple[str, set[str]]:
     """Retrieves target type information from nodes.
     Also, returns the list of complex types seen within target types."""
     if target_type in self._record_decl_nodes:
       return self._get_type_from_record_decl(target_type)
 
     if target_type in self._enum_decl_nodes:
-      return self._get_type_from_enum_decl(target_type), []
+      return self._get_type_from_enum_decl(target_type), set()
 
     if target_type in self._typedef_decl_nodes:
-      return self._get_type_from_typedef_decl(target_type), []
+      return self._get_type_from_typedef_decl(target_type), set()
 
-    return '', []
+    return '', set()
 
   def _get_dequal_type(self, fully_qualified_type: str) -> str:
     """For a given type, try and dequalify/strip it by removing cv-qualifiers, pointers etc.
@@ -235,7 +225,7 @@ class ContextRetriever:
     """Searches a single AST to determine if the function signature can be found.
     Returns the file for the signature if found.
     Retrieve that node's loc->file to get the file where the FunctionDecl exists."""
-    target_function = self._get_function_name(self._function_signature)
+    target_function = self._function_name
 
     with open(fully_qualified_path) as ast_file:
       ast_json = json.load(ast_file)
@@ -323,27 +313,19 @@ class ContextRetriever:
 
   def get_type_info(self) -> List[str]:
     """Gets detailed information for types encountered in the target function."""
-    types = []
+    types = set()
 
-    return_type = self._get_return_type(self._function_signature)
-    return_type_decl, seen_types = self._dequalify_and_get_info(return_type)
-
-    if return_type_decl != '':
-      types.append(return_type_decl)
-
-    # Retrieve types of params by removing the last token in a parameter (identifier).
-    # TODO(ggryan): Sometimes there are symbols/declarations which only have a type and no identifier for params.
-    params = self._get_function_params(self._function_signature)
-
-    seen_types += [' '.join(param.split(' ')[:-1]) for param in params]
+    seen_types = set()
+    seen_types.add(self._return_type)
+    seen_types |= set(self._param_types)
 
     # Recursively visit newly seen types.
     while seen_types:
       current_type = seen_types.pop()
       type_decl, new_types = self._dequalify_and_get_info(current_type)
-      if type_decl == '' or type_decl in types:
+      if not type_decl or type_decl in types:
         continue
-      seen_types += new_types
-      types.append(type_decl)
+      seen_types |= new_types
+      types.add(type_decl)
 
     return types
