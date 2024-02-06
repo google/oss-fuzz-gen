@@ -108,7 +108,7 @@ class Benchmark:
     functions = data.get('functions', [])
     for function in functions:
       benchmarks.append(
-          cls(f'{benchmark_name}-{function.get("function_name")}'.lower(),
+          cls(f'{benchmark_name}-{function.get("name")}'.lower(),
               data['project'],
               function.get('signature'),
               function.get('name'),
