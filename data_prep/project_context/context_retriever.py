@@ -6,9 +6,10 @@ import subprocess
 import uuid
 from collections import defaultdict
 from typing import List, Tuple
-from experiment import benchmark as benchmarklib
 
 from google.cloud import storage
+
+from experiment import benchmark as benchmarklib
 
 
 class ContextRetriever:
@@ -46,7 +47,7 @@ class ContextRetriever:
     dequal_type = self._get_dequal_type(target_type)
 
     if dequal_type in self.BUILTIN_TYPES:
-      return '', []
+      return '', set()
 
     type_decl, complex_types = self._get_type(dequal_type)
 
@@ -61,7 +62,7 @@ class ContextRetriever:
     decl_name = ' ' + ast_node.get('name', '') + ' '
 
     if inner_decls is None:
-      return '', []
+      return '', set()
 
     contents = ''
 
@@ -94,7 +95,7 @@ class ContextRetriever:
     return f'{tag_used}{decl_name}{{\n{contents}}};', new_complex_types
 
   def _get_type_from_record_decl(self,
-                                 target_type: str) -> Tuple[str, list[str]]:
+                                 target_type: str) -> Tuple[str, set[str]]:
     """Retrieves type information from RecordDecl nodes."""
     for ast_node in self._record_decl_nodes[target_type]:
       type_info, new_types = self._get_type_from_record_decl_node(ast_node)
@@ -104,7 +105,7 @@ class ContextRetriever:
 
       return type_info, new_types
 
-    return '', []
+    return '', set()
 
   def _get_type_from_enum_decl(self, target_type: str) -> str:
     """Retrieves type information from EnumDecl nodes."""
@@ -328,4 +329,4 @@ class ContextRetriever:
       seen_types |= new_types
       types.add(type_decl)
 
-    return types
+    return list(types)
