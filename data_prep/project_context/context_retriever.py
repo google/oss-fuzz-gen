@@ -320,6 +320,8 @@ class ContextRetriever:
     seen_types.add(self._return_type)
     seen_types |= set(self._param_types)
 
+    print("Types to find...{}".format(seen_types))
+
     # Recursively visit newly seen types.
     while seen_types:
       current_type = seen_types.pop()
