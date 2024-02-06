@@ -142,11 +142,18 @@ def formulate_function_signature(function: dict):
   return f'{return_type} {function_name}({args_signature})'
 
 
+# TODO(dongge): Remove this function when FI fixes it.
+def _parse_type_from_raw_tagged_type(tagged_type: str) -> str:
+  """Returns type name from |targged_type| such as struct.TypeA"""
+  # Assume: Types do not contain dot(.).
+  return tagged_type.split('.')[-1]
+
+
 def _group_function_params(param_types: list[str],
                            param_names: list[str]) -> list[dict[str, str]]:
   """Groups the type and name of each parameter."""
   return [{
-      'type': param_type,
+      'type': _parse_type_from_raw_tagged_type(param_type),
       'name': param_name
   } for param_type, param_name in zip(param_types, param_names)]
 
