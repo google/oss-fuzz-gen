@@ -83,7 +83,7 @@ def clean_type(name: str) -> str:
 
 
 def _get_raw_return_type(function: dict) -> str:
-  """Returns the cleaned function type."""
+  """Returns the raw function type."""
   return function.get('return-type') or function.get('return_type', '')
 
 
