@@ -142,6 +142,15 @@ def formulate_function_signature(function: dict):
   return f'{return_type} {function_name}({args_signature})'
 
 
+def _group_function_params(param_types: list[str],
+                           param_names: list[str]) -> list[dict[str, str]]:
+  """Groups the type and name of each parameter."""
+  return [{
+      'type': param_type,
+      'name': param_name
+  } for param_type, param_name in zip(param_types, param_names)]
+
+
 def populate_benchmarks_using_introspector(project: str, limit: int):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
   functions = get_unreached_functions(project)
@@ -184,8 +193,9 @@ def populate_benchmarks_using_introspector(project: str, limit: int):
                                function_signature,
                                function.get('function_name'),
                                function.get('return_type'),
-                               function.get('function_argument_names'),
-                               function.get('function_arguments'),
+                               _group_function_params(
+                                   function.get('function_arguments'),
+                                   function.get('function_argument_names')),
                                harness,
                                target_name,
                                function_dict=function))

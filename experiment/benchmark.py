@@ -85,8 +85,7 @@ class Benchmark:
             'signature': b.function_signature,
             'name': b.function_name,
             'return_type': b.return_type,
-            'param_names': b.param_names,
-            'param_types': b.param_types,
+            'params': b.params,
         } for b in benchmarks],
     }
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
@@ -114,8 +113,7 @@ class Benchmark:
               function.get('signature'),
               function.get('name'),
               function.get('return_type'),
-              function.get('param_names'),
-              function.get('param_types'),
+              function.get('params'),
               data['target_path'],
               data.get('target_name'),
               use_project_examples=use_project_examples,
@@ -131,8 +129,7 @@ class Benchmark:
                function_signature: str,
                function_name: str,
                return_type: str,
-               param_names: list[str],
-               param_types: list[str],
+               params: list[dict[str, str]],
                target_path: str,
                preferred_target_name: Optional[str] = None,
                use_project_examples=True,
@@ -145,8 +142,7 @@ class Benchmark:
     self.function_signature = function_signature
     self.function_name = function_name
     self.return_type = return_type
-    self.param_types = param_types
-    self.param_names = param_names
+    self.params = params
     self.function_dict = function_dict
 
     if not self.id:
@@ -166,8 +162,7 @@ class Benchmark:
             f'function_signature={self.function_signature}, '
             f'function_name={self.function_name}, '
             f'return_type={self.return_type}, '
-            f'param_types={self.param_types}, '
-            f'param_names={self.param_names}, '
+            f'params={self.params}, '
             f'target_name={self.target_name}, '
             f'use_context={self.use_context}>')
 
