@@ -101,14 +101,13 @@ class BuilderRunner:
     # No need to build the fuzz target if it does not contain the target
     # function.
     if not self._contains_target_function(target_path):
-      build_result.errors = [
-          (f'The target function `{self.benchmark.function_signature}`'
-           ' was not called by the fuzz target '
-           '`LLVMFuzzerTestOneInput`.'
-           'YOU MUST CALL FUNCTION '
-           f'`{self.benchmark.function_signature}` INSIDE FUNCTION '
-           '`LLVMFuzzerTestOneInput`.')
-      ]
+      build_result.errors = [(
+          f'The target function <code>{self.benchmark.function_signature}</code>'
+          ' was not called by the fuzz target '
+          '<code>LLVMFuzzerTestOneInput</code>.'
+          'YOU MUST CALL FUNCTION '
+          f'<code>{self.benchmark.function_signature}</code> INSIDE FUNCTION '
+          '<code>LLVMFuzzerTestOneInput</code>.')]
       print(f'Missing target function: {target_path} does not contain '
             f'{self.benchmark.function_name}')
       return False
