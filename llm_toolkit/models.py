@@ -331,8 +331,6 @@ class LLM:
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
     problem = problem.replace('{CODE_TO_BE_FIXED}', raw_code)
-    problem = problem.replace('{FUNCTION_NAME}', benchmark.function_name)
-    problem = problem.replace('{FUNCTION_SIG}', benchmark.function_signature)
 
     problem_prompt = self._create_prompt_piece(problem, 'user')
     template_piece = self._create_prompt_piece('{ERROR_MESSAGES}', 'user')
