@@ -33,8 +33,7 @@ class ContextRetriever:
     self._project_name = benchmark.project
     self._function_signature = benchmark.function_signature
     self._function_name = benchmark.function_name
-    self._param_types = benchmark.param_types
-    self._param_names = benchmark.param_names
+    self._params = benchmark.params
     self._return_type = benchmark.return_type
 
     self._download_from_path = f'{self.AST_BASE_PATH}/{self._project_name}/*'
@@ -316,11 +315,14 @@ class ContextRetriever:
     """Gets detailed information for types encountered in the target function."""
     types = set()
 
+    param_types = []
+
+    for param in self._params:
+      param_types.append(param['type'])
+       
     seen_types = set()
     seen_types.add(self._return_type)
-    seen_types |= set(self._param_types)
-
-    print("Types to find...{}".format(seen_types))
+    seen_types |= set(param_types)
 
     # Recursively visit newly seen types.
     while seen_types:
