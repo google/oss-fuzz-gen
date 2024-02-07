@@ -88,12 +88,9 @@ class BuilderRunner:
     """Validates if the LLM-generated code contains the target function."""
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
-    target_function_name = self.benchmark.function_name
-    return bool(
-        re.search(
-            benchmarklib.function_name_regex(target_function_name,
-                                             include_top_level=True),
-            generated_code))
+    # Get the top level function name without namespace
+    target_function_name = self.benchmark.function_name.rsplit('::', 1)[-1]
+    return bool(target_function_name in generated_code)
 
   def _pre_build_check(self, target_path: str,
                        build_result: BuildResult) -> bool:
