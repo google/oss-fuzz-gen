@@ -32,33 +32,6 @@ class FileType(Enum):
   NONE = ''
 
 
-# TODO(jim): Remove this function after replacing its usage in builder_runner.
-def function_name_regex(function_name, include_top_level=False) -> str:
-  """The regex to capture function name"""
-  # TODO: Temp workaround for issue #27, allows fuzzy match for special chars
-  #  to be removed when we have feature from FI to properly fix this.
-  # function<type~> -> function[^\w:]type[^\w:][^\w:]
-  function_name = re.sub(r'[^\w:]', '[^\\\\w:]', function_name)
-  parts = function_name.split('::')
-  if len(parts) < 2:
-    return function_name
-
-  options = []
-  # a::b::c ->
-  #  [b::c, a::b::c]
-  # We don't do just "c" by default,
-  # because it's too generic and results in false positives.
-  if include_top_level:
-    # Also include "c"
-    start = 1
-  else:
-    start = 2
-  for i in range(len(parts) - start, -1, -1):
-    options.append('::'.join(parts[i:]))
-
-  return '(' + '|'.join(options) + ')'
-
-
 # Define a custom representer for quoting strings
 def quoted_string_presenter(dumper, data):
   if '\n' in data:
@@ -107,8 +80,9 @@ class Benchmark:
     commit = data.get('commit')
     functions = data.get('functions', [])
     for function in functions:
+      cleaned_name = re.sub(r'::|[^\w-]', '-', function.get("name"))
       benchmarks.append(
-          cls(f'{benchmark_name}-{function.get("name")}'.lower(),
+          cls(f'{benchmark_name}-{cleaned_name}'.lower(),
               data['project'],
               function.get('signature'),
               function.get('name'),
