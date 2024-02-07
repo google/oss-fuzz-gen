@@ -88,12 +88,9 @@ class BuilderRunner:
     """Validates if the LLM-generated code contains the target function."""
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
-    target_function_name = self.benchmark.function_name
-    return bool(
-        re.search(
-            benchmarklib.function_name_regex(target_function_name,
-                                             include_top_level=True),
-            generated_code))
+    # Get the top level function name without namespace.
+    target_function_name = self.benchmark.function_name.rsplit('::', 1)[-1]
+    return bool(target_function_name in generated_code)
 
   def _pre_build_check(self, target_path: str,
                        build_result: BuildResult) -> bool:
@@ -116,7 +113,7 @@ class BuilderRunner:
 
   def build_and_run(self, generated_project: str, target_path: str,
                     iteration: int) -> tuple[BuildResult, Optional[RunResult]]:
-    """Builds and runs the fuzz target for for fuzzing."""
+    """Builds and runs the fuzz target for fuzzing."""
     build_result = BuildResult()
 
     if not self._pre_build_check(target_path, build_result):
@@ -178,8 +175,7 @@ class BuilderRunner:
     """Builds a target with OSS-Fuzz."""
     print(f'Building {generated_project} with {sanitizer}')
     command = [
-        'docker', 'build', '-t'
-        f'gcr.io/oss-fuzz/{generated_project}',
+        'docker', 'build', '-t', f'gcr.io/oss-fuzz/{generated_project}',
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
                      generated_project)
     ]

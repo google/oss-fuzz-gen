@@ -34,7 +34,7 @@ from vertexai.preview.generative_models import GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
 
 from data_prep import project_targets
-from experiment.benchmark import FileType
+from experiment.benchmark import Benchmark, FileType
 
 # Model hyper-parameters.
 MAX_TOKENS: int = 2000
@@ -325,8 +325,8 @@ class LLM:
     priming_prompt = self._create_prompt_piece(priming, 'system')
     return priming_prompt
 
-  def format_fixer_problem(self, raw_code: str, errors: list[str],
-                           priming_weight: int) -> str:
+  def format_fixer_problem(self, benchmark: Benchmark, raw_code: str,
+                           errors: list[str], priming_weight: int) -> str:
     """Formats a problem for code fixer based on the template."""
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
@@ -360,12 +360,13 @@ class LLM:
     error_message = '\n'.join(selected_errors)
     return problem.replace('{ERROR_MESSAGES}', error_message)
 
-  def prepare_fix_prompt(self, prompt_path: str, raw_code: str,
-                         errors: list[str]) -> str:
+  def prepare_fix_prompt(self, benchmark: Benchmark, prompt_path: str,
+                         raw_code: str, errors: list[str]) -> str:
     """Prepares the code-fixing prompt."""
     priming = self.format_fixer_priming()
     priming_weight = self._estimate_token_num(priming)
-    problem = self.format_fixer_problem(raw_code, errors, priming_weight)
+    problem = self.format_fixer_problem(benchmark, raw_code, errors,
+                                        priming_weight)
 
     return self.prepare_prompt(prompt_path, priming, problem)
 

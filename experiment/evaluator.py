@@ -225,7 +225,7 @@ class Evaluator:
       logger.log(f'Fixing {target_path} with '
                  f'{self.builder_runner.fixer_model_name}, '
                  f'attempt {llm_fix_count}.')
-      code_fixer.llm_fix(ai_binary, target_path, llm_fix_count,
+      code_fixer.llm_fix(ai_binary, target_path, self.benchmark, llm_fix_count,
                          build_result.errors,
                          self.builder_runner.fixer_model_name)
       shutil.copyfile(
