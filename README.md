@@ -40,14 +40,15 @@ Please feel free to create an issue or email us: oss-fuzz-team@google.com.
 
 <img src="images/Collaboration.png" width="200" height="200">
 
-## Vulnerabilities Discovered
+## Bugs Discovered
 
-So far, we have reported 2 new vulnerabilities found by automatically generated targets built
+So far, we have reported 3 new bugs/vulnerabilities found by automatically generated targets built
 by this framework:
 | Project |    LLM    | Prompt template |
 | ------- | --------- | --------------- |
 | [`cJSON` ](https://github.com/DaveGamble/cJSON/issues/800) | Vertex AI | [default](prompts/template_xml) |
 | [`libplist`](https://github.com/libimobiledevice/libplist/issues/244) | Vertex AI | [default](prompts/template_xml) |
+| [`hunspell`](https://github.com/hunspell/hunspell/issues/996) | Vertex AI | [default](prompts/template_xml) |
 
 ## Current top coverage improvements by project
 
