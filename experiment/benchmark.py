@@ -80,8 +80,9 @@ class Benchmark:
     commit = data.get('commit')
     functions = data.get('functions', [])
     for function in functions:
+      cleaned_name = re.sub(r'::|[^\w-]', '-', function.get("name"))
       benchmarks.append(
-          cls(f'{benchmark_name}-{function.get("name")}'.lower(),
+          cls(f'{benchmark_name}-{cleaned_name}'.lower(),
               data['project'],
               function.get('signature'),
               function.get('name'),
