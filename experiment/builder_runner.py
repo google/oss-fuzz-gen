@@ -88,7 +88,7 @@ class BuilderRunner:
     """Validates if the LLM-generated code contains the target function."""
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
-    # Get the top level function name without namespace
+    # Get the top level function name without namespace.
     target_function_name = self.benchmark.function_name.rsplit('::', 1)[-1]
     return bool(target_function_name in generated_code)
 
@@ -98,13 +98,14 @@ class BuilderRunner:
     # No need to build the fuzz target if it does not contain the target
     # function.
     if not self._contains_target_function(target_path):
-      build_result.errors = [(
-          f'The target function <code>{self.benchmark.function_signature}</code>'
-          ' was not called by the fuzz target '
-          '<code>LLVMFuzzerTestOneInput</code>.'
-          'YOU MUST CALL FUNCTION '
-          f'<code>{self.benchmark.function_signature}</code> INSIDE FUNCTION '
-          '<code>LLVMFuzzerTestOneInput</code>.')]
+      build_result.errors = [
+          (f'The target function `{self.benchmark.function_signature}`'
+           ' was not called by the fuzz target '
+           '`LLVMFuzzerTestOneInput`.'
+           'YOU MUST CALL FUNCTION '
+           f'`{self.benchmark.function_signature}` INSIDE FUNCTION '
+           '`LLVMFuzzerTestOneInput`.')
+      ]
       print(f'Missing target function: {target_path} does not contain '
             f'{self.benchmark.function_name}')
       return False
@@ -112,7 +113,7 @@ class BuilderRunner:
 
   def build_and_run(self, generated_project: str, target_path: str,
                     iteration: int) -> tuple[BuildResult, Optional[RunResult]]:
-    """Builds and runs the fuzz target for for fuzzing."""
+    """Builds and runs the fuzz target for fuzzing."""
     build_result = BuildResult()
 
     if not self._pre_build_check(target_path, build_result):
@@ -174,8 +175,7 @@ class BuilderRunner:
     """Builds a target with OSS-Fuzz."""
     print(f'Building {generated_project} with {sanitizer}')
     command = [
-        'docker', 'build', '-t'
-        f'gcr.io/oss-fuzz/{generated_project}',
+        'docker', 'build', '-t', f'gcr.io/oss-fuzz/{generated_project}',
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
                      generated_project)
     ]
