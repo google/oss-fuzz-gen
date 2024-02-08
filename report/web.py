@@ -22,7 +22,7 @@ import re
 import sys
 from typing import List, Optional
 
-from flask import Flask, render_template
+from flask import Flask, abort, render_template
 
 import run_one_experiment
 from experiment import evaluator
@@ -257,20 +257,27 @@ def index_sort():
 
 @app.route('/benchmark/<benchmark>')
 def benchmark_page(benchmark):
-  return render_template('benchmark.html',
-                         benchmark=benchmark,
-                         samples=get_samples(benchmark),
-                         prompt=get_prompt(benchmark))
+  if _is_valid_benchmark_dir(benchmark):
+    return render_template('benchmark.html',
+                           benchmark=benchmark,
+                           samples=get_samples(benchmark),
+                           prompt=get_prompt(benchmark))
+  # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
+  abort(404)
 
 
 @app.route('/sample/<benchmark>/<sample>')
 def sample_page(benchmark, sample):
-  return render_template('sample.html',
-                         benchmark=benchmark,
-                         sample=sample,
-                         logs=get_logs(benchmark, sample),
-                         run_logs=get_run_logs(benchmark, sample),
-                         targets=get_targets(benchmark, sample))
+  """Renders each fuzz target |sample| of the |benchmark|."""
+  if _is_valid_benchmark_dir(benchmark):
+    return render_template('sample.html',
+                           benchmark=benchmark,
+                           sample=sample,
+                           logs=get_logs(benchmark, sample),
+                           run_logs=get_run_logs(benchmark, sample),
+                           targets=get_targets(benchmark, sample))
+  # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
+  abort(404)
 
 
 @app.template_filter()
