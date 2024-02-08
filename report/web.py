@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""A local server to visualize experiment result."""
 
 import dataclasses
 import json
@@ -21,7 +22,7 @@ import re
 import sys
 from typing import List, Optional
 
-from flask import Flask, render_template
+from flask import Flask, abort, render_template
 
 import run_one_experiment
 from experiment import evaluator
@@ -62,7 +63,9 @@ def sample_ids(target_paths: list[str]):
 
 
 def get_results(benchmark) -> tuple[list[evaluator.Result], list[str]]:
-  """Return results of all samples. Items can be None if they're not complete."""
+  """
+  Returns results of all samples. Items can be None if they're not complete.
+  """
   targets = get_generated_targets(benchmark)
 
   results = []
@@ -105,10 +108,31 @@ def get_generated_targets(benchmark: str) -> list[str]:
   return targets
 
 
+def _is_valid_benchmark_dir(cur_dir: str) -> bool:
+  """Checks if |cur_dir| is a valid benchmark directory (e.g., no lost+found)"""
+  # Check prefix.
+  if not cur_dir.startswith('output-'):
+    return False
+  # Check sub-directories.
+  expected_dirs = ['raw_targets', 'status', 'fixed_targets', 'logs', 'corpora']
+  if not all(
+      os.path.isdir(os.path.join(RESULTS_DIR, cur_dir, expected_dir))
+      for expected_dir in expected_dirs):
+    return False
+  return True
+
+
 def list_benchmarks() -> List[Benchmark]:
+  """Lists benchmarks in the result directory."""
   benchmarks = []
   benchmark_names = sorted(os.listdir(RESULTS_DIR))
+  # Not sure why there is a `lost+found` dir in |RESULTS_DIR|, which caused
+  # failures in get_generated_targets().
+  # Maybe it is from mounting?
+  # TODO(erfan): Check if not mounting to the root dir can solve this.
   for benchmark in benchmark_names:
+    if not _is_valid_benchmark_dir(benchmark):
+      continue
     results, targets = get_results(benchmark)
     status = 'Done' if all(r for r in results) and results else 'Running'
 
@@ -136,6 +160,7 @@ def sort_benchmarks(benchmarks: List[Benchmark]) -> List[Benchmark]:
 
 
 def get_samples(benchmark: str) -> list[Sample]:
+  """Gets the samples and their status of the given benchmark |bnmk|."""
   samples = []
   results, _ = get_results(benchmark)
 
@@ -180,6 +205,7 @@ def get_run_logs(benchmark: str, sample: str) -> str:
 
 
 def get_fixed_target(path):
+  """Gets the fixed fuzz target from the benchmark's result |path|."""
   code = ''
   fixer_prompt = ''
   for name in os.listdir(path):
@@ -195,6 +221,7 @@ def get_fixed_target(path):
 
 
 def get_targets(benchmark: str, sample: str) -> list[Target]:
+  """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
   targets_dir = os.path.join(RESULTS_DIR, benchmark, 'fixed_targets')
   targets = []
 
@@ -229,21 +256,28 @@ def index_sort():
 
 
 @app.route('/benchmark/<benchmark>')
-def benchmark(benchmark):
-  return render_template('benchmark.html',
-                         benchmark=benchmark,
-                         samples=get_samples(benchmark),
-                         prompt=get_prompt(benchmark))
+def benchmark_page(benchmark):
+  if _is_valid_benchmark_dir(benchmark):
+    return render_template('benchmark.html',
+                           benchmark=benchmark,
+                           samples=get_samples(benchmark),
+                           prompt=get_prompt(benchmark))
+  # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
+  abort(404)
 
 
 @app.route('/sample/<benchmark>/<sample>')
-def sample(benchmark, sample):
-  return render_template('sample.html',
-                         benchmark=benchmark,
-                         sample=sample,
-                         logs=get_logs(benchmark, sample),
-                         run_logs=get_run_logs(benchmark, sample),
-                         targets=get_targets(benchmark, sample))
+def sample_page(benchmark, sample):
+  """Renders each fuzz target |sample| of the |benchmark|."""
+  if _is_valid_benchmark_dir(benchmark):
+    return render_template('sample.html',
+                           benchmark=benchmark,
+                           sample=sample,
+                           logs=get_logs(benchmark, sample),
+                           run_logs=get_run_logs(benchmark, sample),
+                           targets=get_targets(benchmark, sample))
+  # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
+  abort(404)
 
 
 @app.template_filter()
@@ -260,14 +294,14 @@ def cov_report_link(link: str):
   return f'https://llm-exp.oss-fuzz.com/{path}/report/linux/report.html'
 
 
-def serve(results_dir: str, port: int):
+def serve(directory: str, port: int):
   global RESULTS_DIR
-  RESULTS_DIR = results_dir
+  RESULTS_DIR = directory
   app.run(host='localhost', port=port)
 
 
 if __name__ == '__main__':
   results_dir = sys.argv[1]
-  port = int(sys.argv[2])
+  server_port = int(sys.argv[2])
 
-  serve(results_dir, port)
+  serve(results_dir, server_port)
