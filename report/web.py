@@ -115,11 +115,9 @@ def _is_valid_benchmark_dir(cur_dir: str) -> bool:
     return False
   # Check sub-directories.
   expected_dirs = ['raw_targets', 'status', 'fixed_targets', 'logs', 'corpora']
-  if not all(
+  return all(
       os.path.isdir(os.path.join(RESULTS_DIR, cur_dir, expected_dir))
-      for expected_dir in expected_dirs):
-    return False
-  return True
+      for expected_dir in expected_dirs)
 
 
 def list_benchmarks() -> List[Benchmark]:
