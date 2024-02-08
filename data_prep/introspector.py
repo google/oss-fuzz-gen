@@ -121,10 +121,14 @@ def _get_clean_function_name(function: dict) -> str:
     function_name = function_name[len(raw_return_type.strip()):]
   elif function_name.startswith(cleaned_return_type):
     function_name = function_name[len(cleaned_return_type):]
-  function_name = function_name.strip()
-  function_name = function_name.split('::')[-1]
-  function_name = function_name.split('(')[0]
   return function_name.strip()
+
+
+def _extract_minimum_function_name(function_name: str) -> str:
+  """Extracts function_name by removing namespace and types."""
+  pattern = r'(?:[a-zA-Z_]\w*::)*([a-zA-Z_]\w*)(?:\s*<[^>]*>)?\s*\('
+  match = re.search(pattern, function_name)
+  return match.group(1).strip() if match else function_name
 
 
 def _get_clean_arg_types(function: dict) -> list[str]:
@@ -214,17 +218,17 @@ def populate_benchmarks_using_introspector(project: str, limit: int):
       continue
     logging.info('Function signature to fuzz: %s', function_signature)
     potential_benchmarks.append(
-        benchmarklib.Benchmark('cli',
-                               project,
-                               function_signature,
-                               _get_clean_function_name(function),
-                               _get_clean_return_type(function),
-                               _group_function_params(
-                                   _get_clean_arg_types(function),
+        benchmarklib.Benchmark(
+            'cli',
+            project,
+            function_signature,
+            _extract_minimum_function_name(_get_clean_function_name(function)),
+            _get_clean_return_type(function),
+            _group_function_params(_get_clean_arg_types(function),
                                    _get_arg_names(function)),
-                               harness,
-                               target_name,
-                               function_dict=function))
+            harness,
+            target_name,
+            function_dict=function))
 
     if len(potential_benchmarks) >= limit:
       break
