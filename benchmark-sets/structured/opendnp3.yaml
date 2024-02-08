@@ -1,5 +1,5 @@
 "functions":
-- "name": "opendnp3::StateUnsolicitedConfirmWait::OnNewNonReadRequest(opendnp3::OContext&, opendnp3::ParsedRequest const&)"
+- "name": "OnNewNonReadRequest"
   "params":
   - "name": ""
     "type": "std::bad_array_new_length *"
@@ -9,7 +9,7 @@
     "type": "struct opendnp3::ParsedRequest *"
   "return_type": "std::bad_function_call *"
   "signature": "std::bad_function_call * opendnp3::StateUnsolicitedConfirmWait::OnNewNonReadRequest(std::bad_array_new_length * , opendnp3::OContext * , struct opendnp3::ParsedRequest * )"
-- "name": "opendnp3::StateSolicitedConfirmWait::OnNewNonReadRequest(opendnp3::OContext&, opendnp3::ParsedRequest const&)"
+- "name": "OnNewNonReadRequest"
   "params":
   - "name": ""
     "type": "std::bad_array_new_length *"
@@ -19,19 +19,19 @@
     "type": "struct opendnp3::ParsedRequest *"
   "return_type": "std::bad_function_call *"
   "signature": "std::bad_function_call * opendnp3::StateSolicitedConfirmWait::OnNewNonReadRequest(std::bad_array_new_length * , opendnp3::OContext * , struct opendnp3::ParsedRequest * )"
-- "name": "opendnp3::OContext::OnTxReady()"
+- "name": "OnTxReady"
   "params":
   - "name": ""
     "type": "opendnp3::OContext *"
   "return_type": "bool"
   "signature": "bool opendnp3::OContext::OnTxReady(opendnp3::OContext * )"
-- "name": "opendnp3::OContext::RestartUnsolConfirmTimer()::$_2::operator()() const"
+- "name": "RestartUnsolConfirmTimer"
   "params":
   - "name": ""
     "type": "anon *"
   "return_type": "void"
   "signature": "void opendnp3::OContext::RestartUnsolConfirmTimer(anon * ) const"
-- "name": "opendnp3::OContext::RestartSolConfirmTimer()::$_1::operator()() const"
+- "name": "RestartSolConfirmTimer"
   "params":
   - "name": ""
     "type": "anon *"

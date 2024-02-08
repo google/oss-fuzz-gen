@@ -3,11 +3,11 @@
   "params": []
   "return_type": "void"
   "signature": "void box_cfg()"
-- "name": "box_cfg_xc()"
+- "name": "box_cfg_xc"
   "params": []
   "return_type": "void"
   "signature": "void box_cfg_xc()"
-- "name": "box_storage_init()"
+- "name": "box_storage_init"
   "params": []
   "return_type": "void"
   "signature": "void box_storage_init()"
@@ -17,7 +17,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void iproto_init(int threads_count)"
-- "name": "iproto_thread_init(iproto_thread*)"
+- "name": "iproto_thread_init"
   "params":
   - "name": "iproto_thread"
     "type": "struct iproto_thread *"

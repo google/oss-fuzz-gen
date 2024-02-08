@@ -7,7 +7,7 @@
     "type": "char ***"
   "return_type": "int"
   "signature": "int LLVMFuzzerInitialize(int * argc, char *** argv)"
-- "name": "Environment::Environment(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >)"
+- "name": "Environment"
   "params":
   - "name": "this"
     "type": "struct Environment *"

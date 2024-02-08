@@ -1,5 +1,5 @@
 "functions":
-- "name": "jsoncons::json_decoder<jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >, std::__1::allocator<char> >::visit_end_object(jsoncons::ser_context const&, std::__1::error_code&)"
+- "name": "visit_end_object"
   "params":
   - "name": "this"
     "type": "jsoncons::json_decoder *"
@@ -9,7 +9,7 @@
     "type": "std::error_code *"
   "return_type": "bool"
   "signature": "bool jsoncons::json_decoder<jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >, std::__1::allocator<char> >::visit_end_object(jsoncons::json_decoder * this, std::exception * , std::error_code * )"
-- "name": "jsoncons::basic_json_cursor<char, jsoncons::stream_source<char>, std::__1::allocator<char> >::read_to(jsoncons::basic_json_visitor<char>&, std::__1::error_code&)"
+- "name": "read_to"
   "params":
   - "name": "this"
     "type": "jsoncons::basic_json_cursor *"
@@ -35,7 +35,7 @@
     "type": "jsoncons::basic_json *"
   "return_type": "jsoncons::basic_json *"
   "signature": "jsoncons::basic_json * jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >::operator=(jsoncons::basic_json * this, jsoncons::basic_json * other)"
-- "name": "jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >::move_assignment(jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >&&)"
+- "name": "move_assignment"
   "params":
   - "name": "this"
     "type": "jsoncons::basic_json *"

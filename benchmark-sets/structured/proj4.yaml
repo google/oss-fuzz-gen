@@ -21,7 +21,7 @@
     "type": "PJ_COORD *"
   "return_type": "int"
   "signature": "int proj_get_suggested_operation(struct pj_ctx * , struct PJ_OBJ_LIST * , int , union.PJ_COORD * coord)"
-- "name": "PJ_OPERATION_LIST::getPreparedOperations(pj_ctx*)"
+- "name": "getPreparedOperations"
   "params":
   - "name": ""
     "type": "struct PJ_OPERATION_LIST *"
@@ -29,7 +29,7 @@
     "type": "struct pj_ctx *"
   "return_type": "std::vector *"
   "signature": "std::vector * PJ_OPERATION_LIST::getPreparedOperations(struct PJ_OPERATION_LIST * , struct pj_ctx * )"
-- "name": "osgeo::proj::crs::BoundCRS::_identify(std::__1::shared_ptr<osgeo::proj::io::AuthorityFactory> const&) const"
+- "name": "_identify"
   "params":
   - "name": ""
     "type": "std::list *"
@@ -39,7 +39,7 @@
     "type": "std::shared_ptr *"
   "return_type": "void"
   "signature": "void osgeo::proj::crs::BoundCRS::_identify(std::list * , osgeo::proj::crs::BoundCRS * , std::shared_ptr * ) const"
-- "name": "osgeo::proj::crs::CRS::createBoundCRSToWGS84IfPossible(std::__1::shared_ptr<osgeo::proj::io::DatabaseContext> const&, osgeo::proj::operation::CoordinateOperationContext::IntermediateCRSUse) const"
+- "name": "createBoundCRSToWGS84IfPossible"
   "params":
   - "name": ""
     "type": "dropbox::oxygen::nn *"

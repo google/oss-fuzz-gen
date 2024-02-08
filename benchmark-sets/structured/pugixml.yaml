@@ -1,5 +1,5 @@
 "functions":
-- "name": "pugi::xpath_query::evaluate_string(char*, unsigned long, pugi::xpath_node const&) const"
+- "name": "evaluate_string"
   "params":
   - "name": "this"
     "type": "pugi::xpath_query *"
@@ -11,7 +11,7 @@
     "type": "pugi::xpath_node *"
   "return_type": "size_t"
   "signature": "size_t pugi::xpath_query::evaluate_string(pugi::xpath_query * this, char * buffer, size_t capacity, pugi::xpath_node * n) const"
-- "name": "pugi::xml_node::append_buffer(void const*, unsigned long, unsigned int, pugi::xml_encoding)"
+- "name": "append_buffer"
   "params":
   - "name": "this"
     "type": "struct pugi::xml_parse_result *"
@@ -27,7 +27,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void pugi::xml_node::append_buffer(struct pugi::xml_parse_result * this, pugi::xml_node * contents, char * size, size_t options, int encoding, int )"
-- "name": "pugi::xml_document::load_buffer_inplace_own(void*, unsigned long, unsigned int, pugi::xml_encoding)"
+- "name": "load_buffer_inplace_own"
   "params":
   - "name": "this"
     "type": "struct pugi::xml_parse_result *"
@@ -43,7 +43,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void pugi::xml_document::load_buffer_inplace_own(struct pugi::xml_parse_result * this, pugi::xml_document * contents, char * size, size_t options, int encoding, int )"
-- "name": "pugi::xml_document::load_buffer_inplace(void*, unsigned long, unsigned int, pugi::xml_encoding)"
+- "name": "load_buffer_inplace"
   "params":
   - "name": "this"
     "type": "struct pugi::xml_parse_result *"
@@ -59,7 +59,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void pugi::xml_document::load_buffer_inplace(struct pugi::xml_parse_result * this, pugi::xml_document * contents, char * size, size_t options, int encoding, int )"
-- "name": "pugi::xml_node::select_single_node(char const*, pugi::xpath_variable_set*) const"
+- "name": "select_single_node"
   "params":
   - "name": "this"
     "type": "pugi::xml_node *"

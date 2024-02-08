@@ -1,5 +1,5 @@
 "functions":
-- "name": "FLAC::Metadata::Chain::read(void*, FLAC__IOCallbacks, bool)"
+- "name": "read"
   "params":
   - "name": "this"
     "type": "FLAC::Metadata::Chain *"
@@ -43,7 +43,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int chain_read_with_callbacks_(struct FLAC__Metadata_Chain * chain, char * handle, struct FLAC__IOCallbacks * callbacks, int is_ogg)"
-- "name": "FLAC::Metadata::get_cuesheet(char const*, FLAC::Metadata::CueSheet*&)"
+- "name": "get_cuesheet"
   "params":
   - "name": "filename"
     "type": "char *"

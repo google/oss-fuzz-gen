@@ -1,5 +1,5 @@
 "functions":
-- "name": "tinyobj::ObjReader::ParseFromFile(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, tinyobj::ObjReaderConfig const&)"
+- "name": "ParseFromFile"
   "params":
   - "name": "this"
     "type": "tinyobj::ObjReader *"
@@ -9,7 +9,7 @@
     "type": "struct tinyobj::ObjReaderConfig *"
   "return_type": "bool"
   "signature": "bool tinyobj::ObjReader::ParseFromFile(tinyobj::ObjReader * this, std::string * filename, struct tinyobj::ObjReaderConfig * config)"
-- "name": "tinyobj::LoadObj(tinyobj::attrib_t*, std::__1::vector<tinyobj::shape_t, std::__1::allocator<tinyobj::shape_t> >*, std::__1::vector<tinyobj::material_t, std::__1::allocator<tinyobj::material_t> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, char const*, char const*, bool, bool)"
+- "name": "LoadObj"
   "params":
   - "name": "attrib"
     "type": "struct tinyobj::attrib_t *"
@@ -31,7 +31,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "bool tinyobj::LoadObj(struct tinyobj::attrib_t * attrib, std::vector * shapes, std::vector * materials, std::string * warn, std::string * err, char * filename, char * mtl_basedir, bool triangulate, bool default_vcols_fallback)"
-- "name": "tinyobj::MaterialFileReader::operator()(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<tinyobj::material_t, std::__1::allocator<tinyobj::material_t> >*, std::__1::map<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, int, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, int> > >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*)"
+- "name": "operator"
   "params":
   - "name": "this"
     "type": "tinyobj::MaterialFileReader *"
@@ -47,7 +47,7 @@
     "type": "std::string *"
   "return_type": "bool"
   "signature": "bool tinyobj::MaterialFileReader::operator(tinyobj::MaterialFileReader * this, std::string * matId, std::vector * materials, std::map * matMap, std::string * warn, std::string * err)"
-- "name": "tinyobj::LoadObjWithCallback(std::__1::basic_istream<char, std::__1::char_traits<char> >&, tinyobj::callback_t const&, void*, tinyobj::MaterialReader*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*)"
+- "name": "LoadObjWithCallback"
   "params":
   - "name": "inStream"
     "type": "std::istream *"
@@ -63,7 +63,7 @@
     "type": "std::string *"
   "return_type": "bool"
   "signature": "bool tinyobj::LoadObjWithCallback(std::istream * inStream, struct tinyobj::callback_t * callback, char * user_data, std::exception * readMatFn, std::string * warn, std::string * err)"
-- "name": "tinyobj::material_t::material_t(tinyobj::material_t const&)"
+- "name": "material_t"
   "params":
   - "name": "this"
     "type": "struct tinyobj::material_t *"

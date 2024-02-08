@@ -1,5 +1,5 @@
 "functions":
-- "name": "easywsclient::WebSocket::from_url_no_mask(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "from_url_no_mask"
   "params":
   - "name": "url"
     "type": "std::string *"
@@ -7,7 +7,7 @@
     "type": "std::string *"
   "return_type": "std::exception *"
   "signature": "std::exception * easywsclient::WebSocket::from_url_no_mask(std::string * url, std::string * origin)"
-- "name": "(anonymous namespace)::_RealWebSocket::poll(int)"
+- "name": "poll"
   "params":
   - "name": "this"
     "type": "(anonymous namespace)::_RealWebSocket *"
@@ -15,7 +15,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void ((anonymous namespace)::_RealWebSocket * this, int timeout)"
-- "name": "(anonymous namespace)::_RealWebSocket::_dispatchBinary(easywsclient::BytesCallback_Imp&)"
+- "name": "_dispatchBinary"
   "params":
   - "name": "this"
     "type": "(anonymous namespace)::_RealWebSocket *"
@@ -23,13 +23,13 @@
     "type": "std::exception *"
   "return_type": "void"
   "signature": "void ((anonymous namespace)::_RealWebSocket * this, std::exception * callable)"
-- "name": "(anonymous namespace)::_RealWebSocket::sendPing()"
+- "name": "sendPing"
   "params":
   - "name": "this"
     "type": "(anonymous namespace)::_RealWebSocket *"
   "return_type": "void"
   "signature": "void ((anonymous namespace)::_RealWebSocket * this)"
-- "name": "easywsclient::WebSocket::create_dummy()"
+- "name": "create_dummy"
   "params": []
   "return_type": "std::exception *"
   "signature": "std::exception * easywsclient::WebSocket::create_dummy()"

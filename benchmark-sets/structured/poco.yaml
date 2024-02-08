@@ -1,5 +1,5 @@
 "functions":
-- "name": "Poco::RegularExpression::match(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, int)"
+- "name": "match"
   "params":
   - "name": ""
     "type": "std::string *"
@@ -9,7 +9,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool Poco::RegularExpression::match(std::string * , std::string * , int )"
-- "name": "Poco::RegularExpression::split(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned long, std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >&, int) const"
+- "name": "split"
   "params":
   - "name": ""
     "type": "Poco::RegularExpression *"
@@ -23,7 +23,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int Poco::RegularExpression::split(Poco::RegularExpression * , std::string * , size_t , std::vector * , int ) const"
-- "name": "Poco::RegularExpression::subst(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&, unsigned long, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, int) const"
+- "name": "subst"
   "params":
   - "name": ""
     "type": "Poco::RegularExpression *"
@@ -37,7 +37,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int Poco::RegularExpression::subst(Poco::RegularExpression * , std::string * , size_t , std::string * , int ) const"
-- "name": "Poco::RegularExpression::substOne(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&, unsigned long, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, int) const"
+- "name": "substOne"
   "params":
   - "name": ""
     "type": "Poco::RegularExpression *"
@@ -51,7 +51,7 @@
     "type": "int"
   "return_type": "size_t"
   "signature": "size_t Poco::RegularExpression::substOne(Poco::RegularExpression * , std::string * , size_t , std::string * , int ) const"
-- "name": "Poco::RegularExpression::match(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned long, int) const"
+- "name": "match"
   "params":
   - "name": ""
     "type": "Poco::RegularExpression *"

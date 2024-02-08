@@ -29,7 +29,7 @@
     "type": "int *"
   "return_type": "char *"
   "signature": "char * jsonnet_evaluate_file(struct JsonnetVm * , char * , int * )"
-- "name": "jsonnet_evaluate_file_aux(JsonnetVm*, char const*, int*, (anonymous namespace)::EvalKind)"
+- "name": "jsonnet_evaluate_file_aux"
   "params":
   - "name": ""
     "type": "struct JsonnetVm *"
@@ -41,7 +41,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "char * jsonnet_evaluate_file_aux(struct JsonnetVm * , char * , int * , int )"
-- "name": "jsonnet::internal::(anonymous namespace)::Interpreter::builtinExtVar(jsonnet::internal::LocationRange const&, std::__1::vector<jsonnet::internal::(anonymous namespace)::Value, std::__1::allocator<jsonnet::internal::(anonymous namespace)::Value> > const&)"
+- "name": "builtinExtVar"
   "params":
   - "name": ""
     "type": "jsonnet::internal::(anonymous namespace)::Interpreter *"

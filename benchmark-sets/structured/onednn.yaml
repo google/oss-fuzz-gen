@@ -1,9 +1,8 @@
 "functions":
-- "name": "dnnl::impl::graph::utils::json::json_reader_t::~json_reader_t()"
-  "param_names":
-  - "this"
-  "param_types":
-  - "class.dnnl::impl::graph::utils::json::json_reader_t *"
+- "name": "json_reader_t"
+  "params":
+  - "name": "this"
+    "type": "dnnl::impl::graph::utils::json::json_reader_t *"
   "return_type": "void"
   "signature": "void dnnl::impl::graph::utils::json::json_reader_t::~json_reader_t(dnnl::impl::graph::utils::json::json_reader_t * this)"
 "project": "onednn"

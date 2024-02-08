@@ -1,11 +1,11 @@
 "functions":
-- "name": "QPluginLoader::load()"
+- "name": "load"
   "params":
   - "name": ""
     "type": "QLibrary *"
   "return_type": "bool"
   "signature": "bool QPluginLoader::load(QLibrary * )"
-- "name": "(anonymous namespace)::customConvert(QVariant::Private const*, int, void*, bool*)"
+- "name": "customConvert"
   "params":
   - "name": ""
     "type": "struct QVariant::Private *"
@@ -17,7 +17,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool (struct QVariant::Private * , int , char * , char * )"
-- "name": "(anonymous namespace)::convert(QVariant::Private const*, int, void*, bool*)"
+- "name": "convert"
   "params":
   - "name": ""
     "type": "struct QVariant::Private *"
@@ -29,13 +29,13 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool (struct QVariant::Private * , int , char * , char * )"
-- "name": "QLibraryPrivate::isPlugin()"
+- "name": "isPlugin"
   "params":
   - "name": ""
     "type": "QLibraryPrivate *"
   "return_type": "bool"
   "signature": "bool QLibraryPrivate::isPlugin(QLibraryPrivate * )"
-- "name": "QLibraryPrivate::updatePluginState()"
+- "name": "updatePluginState"
   "params":
   - "name": ""
     "type": "QLibraryPrivate *"

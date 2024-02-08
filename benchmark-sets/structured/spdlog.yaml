@@ -13,7 +13,7 @@
     "type": "fmt::v9::detail::value *"
   "return_type": "fmt::v9::basic_memory_buffer *"
   "signature": "fmt::v9::basic_memory_buffer * std::__1::back_insert_iterator<fmt::v9::basic_memory_buffer<char, 250ul, std::__1::allocator<char> > > fmt::v9::vformat_to<std::__1::back_insert_iterator<fmt::v9::basic_memory_buffer<char, 250ul, std::__1::allocator<char> > >, 0>(fmt::v9::basic_memory_buffer * , char * , size_t , size_t , fmt::v9::detail::value * )"
-- "name": "fmt::v9::detail::format_float<double>(double, int, fmt::v9::detail::float_specs, fmt::v9::detail::buffer<char>&)"
+- "name": "format_float"
   "params":
   - "name": ""
     "type": "double"
@@ -25,7 +25,7 @@
     "type": "fmt::v9::detail::buffer *"
   "return_type": "int"
   "signature": "int fmt::v9::detail::format_float<double>(double , int , size_t , fmt::v9::detail::buffer * )"
-- "name": "spdlog::sinks::base_sink<std::__1::mutex>::set_pattern_(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "set_pattern_"
   "params":
   - "name": ""
     "type": "spdlog::sinks::base_sink *"
@@ -33,7 +33,7 @@
     "type": "std::string *"
   "return_type": "void"
   "signature": "void spdlog::sinks::base_sink<std::__1::mutex>::set_pattern_(spdlog::sinks::base_sink * , std::string * )"
-- "name": "spdlog::sinks::ansicolor_sink<spdlog::details::console_mutex>::set_pattern(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "set_pattern"
   "params":
   - "name": ""
     "type": "spdlog::sinks::ansicolor_sink *"

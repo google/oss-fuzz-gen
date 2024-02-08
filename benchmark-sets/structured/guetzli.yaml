@@ -1,5 +1,5 @@
 "functions":
-- "name": "guetzli::Process(guetzli::Params const&, guetzli::ProcessStats*, std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&, int, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*)"
+- "name": "Process"
   "params":
   - "name": ""
     "type": "struct guetzli::Params *"
@@ -15,7 +15,7 @@
     "type": "std::string *"
   "return_type": "bool"
   "signature": "bool guetzli::Process(struct guetzli::Params * , struct guetzli::ProcessStats * , std::vector * , int , int , std::string * )"
-- "name": "butteraugli::ButteraugliDiffmap(std::__1::vector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > const&, std::__1::vector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > const&, butteraugli::Image<float>&)"
+- "name": "ButteraugliDiffmap"
   "params":
   - "name": ""
     "type": "std::vector *"
@@ -25,7 +25,7 @@
     "type": "butteraugli::Image *"
   "return_type": "void"
   "signature": "void butteraugli::ButteraugliDiffmap(std::vector * , std::vector * , butteraugli::Image * )"
-- "name": "butteraugli::ButteraugliInterface(std::__1::vector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > const&, std::__1::vector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > const&, butteraugli::Image<float>&, double&)"
+- "name": "ButteraugliInterface"
   "params":
   - "name": ""
     "type": "std::vector *"
@@ -37,7 +37,7 @@
     "type": "double *"
   "return_type": "bool"
   "signature": "bool butteraugli::ButteraugliInterface(std::vector * , std::vector * , butteraugli::Image * , double * )"
-- "name": "guetzli::BuildSequentialHuffmanCodes(guetzli::JPEGData const&, std::__1::vector<guetzli::HuffmanCodeTable, std::__1::allocator<guetzli::HuffmanCodeTable> >*, std::__1::vector<guetzli::HuffmanCodeTable, std::__1::allocator<guetzli::HuffmanCodeTable> >*)"
+- "name": "BuildSequentialHuffmanCodes"
   "params":
   - "name": ""
     "type": "struct guetzli::JPEGData *"
@@ -47,7 +47,7 @@
     "type": "std::vector *"
   "return_type": "void"
   "signature": "void guetzli::BuildSequentialHuffmanCodes(struct guetzli::JPEGData * , std::vector * , std::vector * )"
-- "name": "butteraugli::ButteraugliComparator::Mask(std::__1::vector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > >*, std::__1::vector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > >*) const"
+- "name": "Mask"
   "params":
   - "name": ""
     "type": "butteraugli::ButteraugliComparator *"

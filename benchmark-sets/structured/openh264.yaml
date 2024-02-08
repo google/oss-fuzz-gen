@@ -1,5 +1,5 @@
 "functions":
-- "name": "WelsDec::CWelsDecoder::ThreadDecodeFrameInternal(unsigned char const*, int, unsigned char**, TagBufferInfo*)"
+- "name": "ThreadDecodeFrameInternal"
   "params":
   - "name": "this"
     "type": "WelsDec::CWelsDecoder *"
@@ -13,7 +13,7 @@
     "type": "struct TagBufferInfo *"
   "return_type": "int"
   "signature": "int WelsDec::CWelsDecoder::ThreadDecodeFrameInternal(WelsDec::CWelsDecoder * this, char * kpSrc, int kiSrcLen, char ** ppDst, struct TagBufferInfo * pDstInfo)"
-- "name": "WelsDec::CWelsDecoder::DecodeParser(unsigned char const*, int, TagParserBsInfo*)"
+- "name": "DecodeParser"
   "params":
   - "name": "this"
     "type": "WelsDec::CWelsDecoder *"
@@ -25,7 +25,7 @@
     "type": "struct TagParserBsInfo *"
   "return_type": "int"
   "signature": "int WelsDec::CWelsDecoder::DecodeParser(WelsDec::CWelsDecoder * this, char * kpSrc, int kiSrcLen, struct TagParserBsInfo * pDstInfo)"
-- "name": "WelsDec::CWelsDecoder::ParseAccessUnit(WelsDec::tagSWelsDecThreadCtx&)"
+- "name": "ParseAccessUnit"
   "params":
   - "name": "this"
     "type": "WelsDec::CWelsDecoder *"
@@ -33,7 +33,7 @@
     "type": "struct WelsDec::tagSWelsDecThreadCtx *"
   "return_type": "int"
   "signature": "int WelsDec::CWelsDecoder::ParseAccessUnit(WelsDec::CWelsDecoder * this, struct WelsDec::tagSWelsDecThreadCtx * sThreadCtx)"
-- "name": "WelsDec::CWelsDecoder::ThreadResetDecoder(WelsDec::TagWelsDecoderContext*&)"
+- "name": "ThreadResetDecoder"
   "params":
   - "name": "this"
     "type": "WelsDec::CWelsDecoder *"
@@ -41,7 +41,7 @@
     "type": "struct WelsDec::TagWelsDecoderContext **"
   "return_type": "int"
   "signature": "int WelsDec::CWelsDecoder::ThreadResetDecoder(WelsDec::CWelsDecoder * this, struct WelsDec::TagWelsDecoderContext ** pCtx)"
-- "name": "WelsDec::CWelsDecoder::OpenDecoderThreads()"
+- "name": "OpenDecoderThreads"
   "params":
   - "name": "this"
     "type": "WelsDec::CWelsDecoder *"

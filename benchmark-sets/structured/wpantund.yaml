@@ -1,5 +1,5 @@
 "functions":
-- "name": "__XX_main(int, char**)"
+- "name": "__XX_main"
   "params":
   - "name": "argc"
     "type": "int"
@@ -13,7 +13,7 @@
     "type": "std::map *"
   "return_type": "nl::wpantund::NCPInstance *"
   "signature": "nl::wpantund::NCPInstance * wpantund_ncpinstance_spinel_alloc(std::map * settings)"
-- "name": "non-virtual thunk to nl::wpantund::SpinelNCPInstance::vprocess_event(int, __va_list_tag*)"
+- "name": "vprocess_event"
   "params":
   - "name": ""
     "type": "nl::wpantund::SpinelNCPInstance *"
@@ -23,7 +23,7 @@
     "type": "struct __va_list_tag *"
   "return_type": "int"
   "signature": "int non-virtual thunk to nl::wpantund::SpinelNCPInstance::vprocess_event(nl::wpantund::SpinelNCPInstance * , int , struct __va_list_tag * )"
-- "name": "nl::wpantund::SpinelNCPTaskScan::vprocess_event(int, __va_list_tag*)"
+- "name": "vprocess_event"
   "params":
   - "name": "this"
     "type": "nl::wpantund::SpinelNCPTaskScan *"
@@ -33,7 +33,7 @@
     "type": "struct __va_list_tag *"
   "return_type": "int"
   "signature": "int nl::wpantund::SpinelNCPTaskScan::vprocess_event(nl::wpantund::SpinelNCPTaskScan * this, int event, struct __va_list_tag * args)"
-- "name": "nl::wpantund::SpinelNCPTaskJoinerCommissioning::vprocess_event(int, __va_list_tag*)"
+- "name": "vprocess_event"
   "params":
   - "name": "this"
     "type": "nl::wpantund::SpinelNCPTaskJoinerCommissioning *"

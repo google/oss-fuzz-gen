@@ -1,5 +1,5 @@
 "functions":
-- "name": "uWS::HttpContext<false>::init()::{lambda(us_socket_t*, char*, int)#1}::__invoke(us_socket_t*, char*, int)"
+- "name": "init"
   "params":
   - "name": ""
     "type": "struct us_socket_t *"
@@ -9,7 +9,7 @@
     "type": "int"
   "return_type": "struct us_socket_t *"
   "signature": "struct us_socket_t * uWS::HttpContext<false>::init(struct us_socket_t * , char * , int )"
-- "name": "uWS::HttpContext<true>::init()::{lambda(us_socket_t*, char*, int)#1}::__invoke(us_socket_t*, char*, int)"
+- "name": "init"
   "params":
   - "name": ""
     "type": "struct us_socket_t *"
@@ -27,7 +27,7 @@
   "params": []
   "return_type": "void"
   "signature": "void __cxx_global_var_init()"
-- "name": "uWS::TopicTree<uWS::TopicTreeMessage, uWS::TopicTreeBigMessage>::publishBig<uWS::WebSocket<false, true, test()::PerSocketData>::publish(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::basic_string_view<char, std::__1::char_traits<char> >, uWS::OpCode, bool)::{lambda(uWS::Subscriber*, uWS::TopicTreeBigMessage&)#1}>(uWS::Subscriber*, std::__1::basic_string_view<char, std::__1::char_traits<char> >, uWS::TopicTreeBigMessage&&, uWS::WebSocket<false, true, test()::PerSocketData>::publish(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::basic_string_view<char, std::__1::char_traits<char> >, uWS::OpCode, bool)::{lambda(uWS::Subscriber*, uWS::TopicTreeBigMessage&)#1})"
+- "name": "test"
   "params":
   - "name": ""
     "type": "struct uWS::TopicTree *"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "PDFDoc::displayPages(OutputDev*, int, int, double, double, int, int, int, int, int (*)(void*), void*)"
+- "name": "displayPages"
   "params":
   - "name": "this"
     "type": "PDFDoc *"
@@ -27,7 +27,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void PDFDoc::displayPages(PDFDoc * this, OutputDev * out, int firstPage, int lastPage, double hDPI, double vDPI, int rotate, int useMediaBox, int crop, int printing, func_type * abortCheckCbk, char * abortCheckCbkData)"
-- "name": "PDFDoc::displayPageSlice(OutputDev*, int, double, double, int, int, int, int, int, int, int, int, int (*)(void*), void*)"
+- "name": "displayPageSlice"
   "params":
   - "name": "this"
     "type": "PDFDoc *"
@@ -61,7 +61,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void PDFDoc::displayPageSlice(PDFDoc * this, OutputDev * out, int page, double hDPI, double vDPI, int rotate, int useMediaBox, int crop, int printing, int sliceX, int sliceY, int sliceW, int sliceH, func_type * abortCheckCbk, char * abortCheckCbkData)"
-- "name": "Gfx::opXObject(Object*, int)"
+- "name": "opXObject"
   "params":
   - "name": "this"
     "type": "Gfx *"
@@ -71,7 +71,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void Gfx::opXObject(Gfx * this, Object * args, int numArgs)"
-- "name": "SplashOutputDev::tilingPatternFill(GfxState*, Gfx*, Object*, int, int, Dict*, double*, double*, int, int, int, int, double, double)"
+- "name": "tilingPatternFill"
   "params":
   - "name": "this"
     "type": "SplashOutputDev *"
@@ -105,7 +105,7 @@
     "type": "double"
   "return_type": "void"
   "signature": "void SplashOutputDev::tilingPatternFill(SplashOutputDev * this, GfxState * state, Gfx * gfx, Object * strRef, int paintType, int tilingType, Dict * resDict, double * mat, double * bbox, int x0, int y0, int x1, int y1, double xStep, double yStep)"
-- "name": "Gfx::opBeginImage(Object*, int)"
+- "name": "opBeginImage"
   "params":
   - "name": "this"
     "type": "Gfx *"

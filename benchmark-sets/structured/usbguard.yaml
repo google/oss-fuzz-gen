@@ -29,7 +29,7 @@
     "type": "struct tao::pegtl::tracer *"
   "return_type": "bool"
   "signature": "bool auto tao::pegtl::internal::match_control_unwind<tao::pegtl::list<usbguard::RuleParser::condition, tao::pegtl::plus<tao::pegtl::ascii::blank>, void>, (struct tao::pegtl::string_input * , usbguard::Rule * , struct tao::pegtl::tracer * )"
-- "name": "decltype ((tao::pegtl::list<usbguard::RuleParser::condition, tao::pegtl::plus<tao::pegtl::ascii::blank>, void>::match<(tao::pegtl::apply_mode)1, (tao::pegtl::rewind_mode)0, usbguard::RuleParser::condition_actions, tao::pegtl::state_control<tao::pegtl::normal>::type>)({parm#1}, {parm#2}...)) tao::pegtl::internal::match_no_control<tao::pegtl::list<usbguard::RuleParser::condition, tao::pegtl::plus<tao::pegtl::ascii::blank>, void>, (tao::pegtl::apply_mode)1, (tao::pegtl::rewind_mode)0, usbguard::RuleParser::condition_actions, tao::pegtl::state_control<tao::pegtl::normal>::type, tao::pegtl::string_input<(tao::pegtl::tracking_mode)0, tao::pegtl::ascii::eol::lf_crlf, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, usbguard::Rule&, tao::pegtl::tracer<tao::pegtl::tracer_traits<false, true, 2ul, 8ul> >&>(tao::pegtl::string_input<(tao::pegtl::tracking_mode)0, tao::pegtl::ascii::eol::lf_crlf, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >&, usbguard::Rule&, tao::pegtl::tracer<tao::pegtl::tracer_traits<false, true, 2ul, 8ul> >&)"
+- "name": "decltype"
   "params":
   - "name": ""
     "type": "struct tao::pegtl::string_input *"

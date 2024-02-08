@@ -11,13 +11,13 @@
   "params": []
   "return_type": "void"
   "signature": "void _GLOBAL__sub_I_ftfuzzer.cc()"
-- "name": "freetype::Bzip2FuzzTarget::Bzip2FuzzTarget()"
+- "name": "Bzip2FuzzTarget"
   "params":
   - "name": "this"
     "type": "freetype::Bzip2FuzzTarget *"
   "return_type": "void"
   "signature": "void freetype::Bzip2FuzzTarget::Bzip2FuzzTarget(freetype::Bzip2FuzzTarget * this)"
-- "name": "freetype::GzipFuzzTarget::GzipFuzzTarget()"
+- "name": "GzipFuzzTarget"
   "params":
   - "name": "this"
     "type": "freetype::GzipFuzzTarget *"

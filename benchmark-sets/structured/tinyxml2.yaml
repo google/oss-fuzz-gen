@@ -1,5 +1,5 @@
 "functions":
-- "name": "tinyxml2::XMLElement::ShallowClone(tinyxml2::XMLDocument*) const"
+- "name": "ShallowClone"
   "params":
   - "name": "this"
     "type": "tinyxml2::XMLElement *"
@@ -7,7 +7,7 @@
     "type": "tinyxml2::XMLDocument *"
   "return_type": "tinyxml2::XMLNode *"
   "signature": "tinyxml2::XMLNode * tinyxml2::XMLElement::ShallowClone(tinyxml2::XMLElement * this, tinyxml2::XMLDocument * doc) const"
-- "name": "tinyxml2::XMLDocument::LoadFile(char const*)"
+- "name": "LoadFile"
   "params":
   - "name": "this"
     "type": "tinyxml2::XMLDocument *"
@@ -15,7 +15,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int tinyxml2::XMLDocument::LoadFile(tinyxml2::XMLDocument * this, char * filename)"
-- "name": "tinyxml2::XMLElement::SetAttribute(char const*, char const*)"
+- "name": "SetAttribute"
   "params":
   - "name": "this"
     "type": "tinyxml2::XMLElement *"
@@ -25,7 +25,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void tinyxml2::XMLElement::SetAttribute(tinyxml2::XMLElement * this, char * name, char * value)"
-- "name": "tinyxml2::XMLPrinter::VisitEnter(tinyxml2::XMLElement const&, tinyxml2::XMLAttribute const*)"
+- "name": "VisitEnter"
   "params":
   - "name": "this"
     "type": "tinyxml2::XMLPrinter *"
@@ -35,7 +35,7 @@
     "type": "tinyxml2::XMLAttribute *"
   "return_type": "bool"
   "signature": "bool tinyxml2::XMLPrinter::VisitEnter(tinyxml2::XMLPrinter * this, tinyxml2::XMLElement * element, tinyxml2::XMLAttribute * attribute)"
-- "name": "tinyxml2::XMLElement::FindOrCreateAttribute(char const*)"
+- "name": "FindOrCreateAttribute"
   "params":
   - "name": "this"
     "type": "tinyxml2::XMLElement *"

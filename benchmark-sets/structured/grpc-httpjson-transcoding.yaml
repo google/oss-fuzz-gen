@@ -1,5 +1,5 @@
 "functions":
-- "name": "google::grpc::transcoding::testing::JsonArrayTester::TestElement(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "TestElement"
   "params":
   - "name": ""
     "type": "google::grpc::transcoding::testing::JsonArrayTester *"
@@ -9,7 +9,7 @@
     "type": "std::string *"
   "return_type": "bool"
   "signature": "bool google::grpc::transcoding::testing::JsonArrayTester::TestElement(google::grpc::transcoding::testing::JsonArrayTester * , std::string * , std::string * )"
-- "name": "google::grpc::transcoding::testing::JsonArrayTester::TestChunk(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, bool)"
+- "name": "TestChunk"
   "params":
   - "name": ""
     "type": "google::grpc::transcoding::testing::JsonArrayTester *"
@@ -21,7 +21,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "bool google::grpc::transcoding::testing::JsonArrayTester::TestChunk(google::grpc::transcoding::testing::JsonArrayTester * , std::string * , std::string * , bool )"
-- "name": "google::grpc::transcoding::testing::JsonArrayTester::TestClosed(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "TestClosed"
   "params":
   - "name": ""
     "type": "google::grpc::transcoding::testing::JsonArrayTester *"
@@ -29,7 +29,7 @@
     "type": "std::string *"
   "return_type": "bool"
   "signature": "bool google::grpc::transcoding::testing::JsonArrayTester::TestClosed(google::grpc::transcoding::testing::JsonArrayTester * , std::string * )"
-- "name": "google::grpc::transcoding::testing::ExpectJsonArrayEq(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "ExpectJsonArrayEq"
   "params":
   - "name": ""
     "type": "std::string *"
@@ -37,7 +37,7 @@
     "type": "std::string *"
   "return_type": "bool"
   "signature": "bool google::grpc::transcoding::testing::ExpectJsonArrayEq(std::string * , std::string * )"
-- "name": "google::grpc::transcoding::testing::ExpectJsonObjectEq(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "ExpectJsonObjectEq"
   "params":
   - "name": ""
     "type": "std::string *"

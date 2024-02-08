@@ -1,5 +1,5 @@
 "functions":
-- "name": "gifProtoFuzzer::BasicChunk* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&)"
+- "name": "CreateMaybeMessage"
   "params":
   - "name": "arena"
     "type": "google::protobuf::Arena *"
@@ -7,7 +7,7 @@
     "type": "gifProtoFuzzer::BasicChunk *"
   "return_type": "gifProtoFuzzer::BasicChunk *"
   "signature": "gifProtoFuzzer::BasicChunk * gifProtoFuzzer::BasicChunk* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(google::protobuf::Arena * arena, gifProtoFuzzer::BasicChunk * from)"
-- "name": "fuzz_dgif_ala_android(unsigned char const*, unsigned long)"
+- "name": "fuzz_dgif_ala_android"
   "params":
   - "name": "Data"
     "type": "char *"
@@ -15,7 +15,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int fuzz_dgif_ala_android(char * Data, size_t Size)"
-- "name": "gifProtoFuzzer::BasicChunk* google::protobuf::Arena::InternalHelper<gifProtoFuzzer::BasicChunk>::Construct<google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&>(void*, google::protobuf::Arena*&&, gifProtoFuzzer::BasicChunk const&)"
+- "name": "Construct"
   "params":
   - "name": "ptr"
     "type": "char *"
@@ -25,7 +25,7 @@
     "type": "gifProtoFuzzer::BasicChunk *"
   "return_type": "gifProtoFuzzer::BasicChunk *"
   "signature": "gifProtoFuzzer::BasicChunk * gifProtoFuzzer::BasicChunk* google::protobuf::Arena::InternalHelper<gifProtoFuzzer::BasicChunk>::Construct<google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&>(char * ptr, google::protobuf::Arena ** args, gifProtoFuzzer::BasicChunk * args)"
-- "name": "fuzz_dgif(unsigned char const*, unsigned long)"
+- "name": "fuzz_dgif"
   "params":
   - "name": "Data"
     "type": "char *"
@@ -33,7 +33,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int fuzz_dgif(char * Data, size_t Size)"
-- "name": "gifProtoFuzzer::PlainTextExtension* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::PlainTextExtension>(google::protobuf::Arena*, gifProtoFuzzer::PlainTextExtension const&)"
+- "name": "CreateMaybeMessage"
   "params":
   - "name": "arena"
     "type": "google::protobuf::Arena *"

@@ -1,55 +1,50 @@
 "functions":
 - "name": "BrotliDecoderDecompress"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "size_t"
-  - "char *"
-  - "size_t *"
-  - "char *"
+  "params":
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t *"
+  - "name": ""
+    "type": "char *"
   "return_type": "int"
   "signature": "int BrotliDecoderDecompress(size_t , char * , size_t * , char * )"
 - "name": "BrotliDecoderTakeOutput"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "struct.BrotliDecoderStateStruct *"
-  - "size_t *"
+  "params":
+  - "name": ""
+    "type": "struct BrotliDecoderStateStruct *"
+  - "name": ""
+    "type": "size_t *"
   "return_type": "char *"
   "signature": "char * BrotliDecoderTakeOutput(struct BrotliDecoderStateStruct * , size_t * )"
 - "name": "BrotliDecoderAttachDictionary"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "struct.BrotliDecoderStateStruct *"
-  - "int"
-  - "size_t"
-  - "char *"
+  "params":
+  - "name": ""
+    "type": "struct BrotliDecoderStateStruct *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "char *"
   "return_type": "int"
   "signature": "int BrotliDecoderAttachDictionary(struct BrotliDecoderStateStruct * , int , size_t , char * )"
 - "name": "BrotliDecoderIsFinished"
-  "param_names":
-  - ""
-  "param_types":
-  - "struct.BrotliDecoderStateStruct *"
+  "params":
+  - "name": ""
+    "type": "struct BrotliDecoderStateStruct *"
   "return_type": "int"
   "signature": "int BrotliDecoderIsFinished(struct BrotliDecoderStateStruct * )"
 - "name": "BrotliSafeReadBits32Slow"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "struct.BrotliBitReader *"
-  - "size_t"
-  - "size_t *"
+  "params":
+  - "name": ""
+    "type": "struct BrotliBitReader *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "size_t *"
   "return_type": "int"
   "signature": "int BrotliSafeReadBits32Slow(struct BrotliBitReader * , size_t , size_t * )"
 "project": "brotli"

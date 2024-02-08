@@ -1,5 +1,5 @@
 "functions":
-- "name": "icu_75::MessageFormat::applyPattern(icu_75::UnicodeString const&, UParseError&, UErrorCode&)"
+- "name": "applyPattern"
   "params":
   - "name": "this"
     "type": "icu_75::MessageFormat *"
@@ -11,7 +11,7 @@
     "type": "int *"
   "return_type": "void"
   "signature": "void icu_75::MessageFormat::applyPattern(icu_75::MessageFormat * this, icu_75::UnicodeString * pattern, struct UParseError * parseError, int * ec)"
-- "name": "icu_75::MessageFormat::cacheExplicitFormats(UErrorCode&)"
+- "name": "cacheExplicitFormats"
   "params":
   - "name": "this"
     "type": "icu_75::MessageFormat *"
@@ -19,7 +19,7 @@
     "type": "int *"
   "return_type": "void"
   "signature": "void icu_75::MessageFormat::cacheExplicitFormats(icu_75::MessageFormat * this, int * status)"
-- "name": "icu_75::MessageFormat::createAppropriateFormat(icu_75::UnicodeString&, icu_75::UnicodeString&, icu_75::Formattable::Type&, UParseError&, UErrorCode&)"
+- "name": "createAppropriateFormat"
   "params":
   - "name": "this"
     "type": "icu_75::MessageFormat *"
@@ -35,7 +35,7 @@
     "type": "int *"
   "return_type": "icu_75::Format *"
   "signature": "icu_75::Format * icu_75::MessageFormat::createAppropriateFormat(icu_75::MessageFormat * this, icu_75::UnicodeString * type, icu_75::UnicodeString * style, int * formattableType, struct UParseError * parseError, int * ec)"
-- "name": "icu_75::RuleBasedNumberFormat::format(long, icu_75::UnicodeString const&, icu_75::UnicodeString&, icu_75::FieldPosition&, UErrorCode&) const"
+- "name": "format"
   "params":
   - "name": "this"
     "type": "icu_75::RuleBasedNumberFormat *"
@@ -51,7 +51,7 @@
     "type": "int *"
   "return_type": "icu_75::UnicodeString *"
   "signature": "icu_75::UnicodeString * icu_75::RuleBasedNumberFormat::format(icu_75::RuleBasedNumberFormat * this, size_t number, icu_75::UnicodeString * ruleSetName, icu_75::UnicodeString * toAppendTo, icu_75::FieldPosition * , int * status) const"
-- "name": "icu_75::MessageFormat::format(int, void const*, icu_75::Formattable const*, icu_75::UnicodeString const*, int, icu_75::AppendableWrapper&, icu_75::FieldPosition*, UErrorCode&) const"
+- "name": "format"
   "params":
   - "name": "this"
     "type": "icu_75::MessageFormat *"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "Codec::setXAACDRCInfo(int, int, int, int, int)"
+- "name": "setXAACDRCInfo"
   "params":
   - "name": ""
     "type": "Codec *"
