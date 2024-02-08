@@ -1,18 +1,52 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-functions:
-  - int ssh_userauth_publickey_auto(struct ssh_session_struct *session, char *username, char *passphrase)
-project: libssh
-target_path: /src/libssh/tests/fuzz/ssh_server_fuzzer.c
+"functions":
+- "name": "ssh_userauth_publickey_auto"
+  "params":
+  - "name": "session"
+    "type": "struct ssh_session_struct 991 *"
+  - "name": "username"
+    "type": "char *"
+  - "name": "passphrase"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int ssh_userauth_publickey_auto(struct ssh_session_struct 991 * session, char * username, char * passphrase)"
+- "name": "ssh_userauth_agent"
+  "params":
+  - "name": "session"
+    "type": "struct ssh_session_struct 991 *"
+  - "name": "username"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int ssh_userauth_agent(struct ssh_session_struct 991 * session, char * username)"
+- "name": "ssh_userauth_agent_pubkey"
+  "params":
+  - "name": "session"
+    "type": "struct ssh_session_struct 991 *"
+  - "name": "username"
+    "type": "char *"
+  - "name": "publickey"
+    "type": "struct ssh_public_key_struct *"
+  "return_type": "int"
+  "signature": "int ssh_userauth_agent_pubkey(struct ssh_session_struct 991 * session, char * username, struct ssh_public_key_struct * publickey)"
+- "name": "ssh_userauth_agent_publickey"
+  "params":
+  - "name": "session"
+    "type": "struct ssh_session_struct 991 *"
+  - "name": "username"
+    "type": "char *"
+  - "name": "pubkey"
+    "type": "struct ssh_key_struct *"
+  "return_type": "int"
+  "signature": "int ssh_userauth_agent_publickey(struct ssh_session_struct 991 * session, char * username, struct ssh_key_struct * pubkey)"
+- "name": "ssh_userauth_publickey"
+  "params":
+  - "name": "session"
+    "type": "struct ssh_session_struct 991 *"
+  - "name": "username"
+    "type": "char *"
+  - "name": "privkey"
+    "type": "struct ssh_key_struct *"
+  "return_type": "int"
+  "signature": "int ssh_userauth_publickey(struct ssh_session_struct 991 * session, char * username, struct ssh_key_struct * privkey)"
+"project": "libssh"
+"target_name": "ssh_client_fuzzer"
+"target_path": "/src/libssh/tests/fuzz/ssh_client_fuzzer.c"

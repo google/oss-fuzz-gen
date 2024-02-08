@@ -1,19 +1,48 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-functions:
-  - tinyxml2::XMLNode * tinyxml2::XMLElement::ShallowClone(tinyxml2::XMLElement *this, tinyxml2::XMLDocument *doc) const
-  - void tinyxml2::XMLDocument::Print(tinyxml2::XMLPrinter*) const
-project: tinyxml2
-target_path: /src/xmltest.cpp
+"functions":
+- "name": "tinyxml2::XMLElement::ShallowClone(tinyxml2::XMLDocument*) const"
+  "params":
+  - "name": "this"
+    "type": "tinyxml2::XMLElement *"
+  - "name": "doc"
+    "type": "tinyxml2::XMLDocument *"
+  "return_type": "tinyxml2::XMLNode *"
+  "signature": "tinyxml2::XMLNode * tinyxml2::XMLElement::ShallowClone(tinyxml2::XMLElement * this, tinyxml2::XMLDocument * doc) const"
+- "name": "tinyxml2::XMLDocument::LoadFile(char const*)"
+  "params":
+  - "name": "this"
+    "type": "tinyxml2::XMLDocument *"
+  - "name": "filename"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int tinyxml2::XMLDocument::LoadFile(tinyxml2::XMLDocument * this, char * filename)"
+- "name": "tinyxml2::XMLElement::SetAttribute(char const*, char const*)"
+  "params":
+  - "name": "this"
+    "type": "tinyxml2::XMLElement *"
+  - "name": "name"
+    "type": "char *"
+  - "name": "value"
+    "type": "char *"
+  "return_type": "void"
+  "signature": "void tinyxml2::XMLElement::SetAttribute(tinyxml2::XMLElement * this, char * name, char * value)"
+- "name": "tinyxml2::XMLPrinter::VisitEnter(tinyxml2::XMLElement const&, tinyxml2::XMLAttribute const*)"
+  "params":
+  - "name": "this"
+    "type": "tinyxml2::XMLPrinter *"
+  - "name": "element"
+    "type": "tinyxml2::XMLElement *"
+  - "name": "attribute"
+    "type": "tinyxml2::XMLAttribute *"
+  "return_type": "bool"
+  "signature": "bool tinyxml2::XMLPrinter::VisitEnter(tinyxml2::XMLPrinter * this, tinyxml2::XMLElement * element, tinyxml2::XMLAttribute * attribute)"
+- "name": "tinyxml2::XMLElement::FindOrCreateAttribute(char const*)"
+  "params":
+  - "name": "this"
+    "type": "tinyxml2::XMLElement *"
+  - "name": "name"
+    "type": "char *"
+  "return_type": "tinyxml2::XMLAttribute *"
+  "signature": "tinyxml2::XMLAttribute * tinyxml2::XMLElement::FindOrCreateAttribute(tinyxml2::XMLElement * this, char * name)"
+"project": "tinyxml2"
+"target_name": "xmltest"
+"target_path": "/src/xmltest.cpp"

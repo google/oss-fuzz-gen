@@ -1,18 +1,66 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-functions:
-  - size_t libssh2_channel_read_ex(struct _LIBSSH2_CHANNEL *channel, int stream_id, char *buf, size_t buflen)
-project: libssh2
-target_path: /src/libssh2/tests/ossfuzz/ssh2_client_fuzzer.cc
+"functions":
+- "name": "curve25519_sha256"
+  "params":
+  - "name": "session"
+    "type": "struct _LIBSSH2_SESSION *"
+  - "name": "data"
+    "type": "char *"
+  - "name": "data_len"
+    "type": "size_t"
+  - "name": "public_key"
+    "type": "char *"
+  - "name": "private_key"
+    "type": "char *"
+  - "name": "exchange_state"
+    "type": "struct kmdhgGPshakex_state_t *"
+  "return_type": "int"
+  "signature": "int curve25519_sha256(struct _LIBSSH2_SESSION * session, char * data, size_t data_len, char * public_key, char * private_key, struct kmdhgGPshakex_state_t * exchange_state)"
+- "name": "libssh2_session_startup"
+  "params":
+  - "name": "session"
+    "type": "struct _LIBSSH2_SESSION *"
+  - "name": "sock"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int libssh2_session_startup(struct _LIBSSH2_SESSION * session, int sock)"
+- "name": "libssh2_channel_read_ex"
+  "params":
+  - "name": "channel"
+    "type": "struct _LIBSSH2_CHANNEL *"
+  - "name": "stream_id"
+    "type": "int"
+  - "name": "buf"
+    "type": "char *"
+  - "name": "buflen"
+    "type": "size_t"
+  "return_type": "size_t"
+  "signature": "size_t libssh2_channel_read_ex(struct _LIBSSH2_CHANNEL * channel, int stream_id, char * buf, size_t buflen)"
+- "name": "libssh2_channel_direct_streamlocal_ex"
+  "params":
+  - "name": "session"
+    "type": "struct _LIBSSH2_SESSION *"
+  - "name": "socket_path"
+    "type": "char *"
+  - "name": "shost"
+    "type": "char *"
+  - "name": "sport"
+    "type": "int"
+  "return_type": "struct _LIBSSH2_CHANNEL *"
+  "signature": "struct _LIBSSH2_CHANNEL * libssh2_channel_direct_streamlocal_ex(struct _LIBSSH2_SESSION * session, char * socket_path, char * shost, int sport)"
+- "name": "libssh2_channel_direct_tcpip_ex"
+  "params":
+  - "name": "session"
+    "type": "struct _LIBSSH2_SESSION *"
+  - "name": "host"
+    "type": "char *"
+  - "name": "port"
+    "type": "int"
+  - "name": "shost"
+    "type": "char *"
+  - "name": "sport"
+    "type": "int"
+  "return_type": "struct _LIBSSH2_CHANNEL *"
+  "signature": "struct _LIBSSH2_CHANNEL * libssh2_channel_direct_tcpip_ex(struct _LIBSSH2_SESSION * session, char * host, int port, char * shost, int sport)"
+"project": "libssh2"
+"target_name": "ssh2_client_fuzzer"
+"target_path": "/src/libssh2/tests/ossfuzz/ssh2_client_fuzzer.cc"

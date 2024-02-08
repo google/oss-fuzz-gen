@@ -1,18 +1,55 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-functions:
-  - void alias_dialog(struct Mailbox *, struct ConfigSubset *)
-project: neomutt
-target_path: /src/neomutt/fuzz/date.c
+"functions":
+- "name": "disabled_main"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "int"
+  - "char **"
+  - "char **"
+  "return_type": "int"
+  "signature": "int disabled_main(int , char ** , char ** )"
+- "name": "op_alias_dialog"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.IndexSharedData.1681 *"
+  - "struct.IndexPrivateData.1682 *"
+  - "int"
+  "return_type": "int"
+  "signature": "int op_alias_dialog(struct IndexSharedData * , struct IndexPrivateData * , int )"
+- "name": "alias_dialog"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "struct.Mailbox *"
+  - "struct.ConfigSubset *"
+  "return_type": "void"
+  "signature": "void alias_dialog(struct Mailbox * , struct ConfigSubset * )"
+- "name": "op_post"
+  "param_names":
+  - ""
+  - ""
+  - ""
+  "param_types":
+  - "struct.IndexSharedData.1681 *"
+  - "struct.IndexPrivateData.1682 *"
+  - "int"
+  "return_type": "int"
+  "signature": "int op_post(struct IndexSharedData * , struct IndexPrivateData * , int )"
+- "name": "op_followup"
+  "param_names":
+  - ""
+  - ""
+  "param_types":
+  - "struct.AttachPrivateData *"
+  - "int"
+  "return_type": "int"
+  "signature": "int op_followup(struct AttachPrivateData * , int )"
+"project": "neomutt"
+"target_name": "fuzz/date.c"
+"target_path": "/src/neomutt/fuzz/date.c"

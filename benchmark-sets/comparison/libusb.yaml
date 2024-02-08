@@ -1,19 +1,52 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-functions:
-  - int op_init(struct libusb_context *ctx)
-  - int libusb_get_string_descriptor_ascii(struct libusb_device_handle *dev_handle, char desc_index, char *data, int length)
-project: libusb
-target_path: /src/libusb_fuzzer.cc
+"functions":
+- "name": "op_init"
+  "params":
+  - "name": "ctx"
+    "type": "struct libusb_context *"
+  "return_type": "int"
+  "signature": "int op_init(struct libusb_context * ctx)"
+- "name": "libusb_get_bos_descriptor"
+  "params":
+  - "name": "dev_handle"
+    "type": "struct libusb_device_handle *"
+  - "name": "bos"
+    "type": "struct libusb_bos_descriptor **"
+  "return_type": "int"
+  "signature": "int libusb_get_bos_descriptor(struct libusb_device_handle * dev_handle, struct libusb_bos_descriptor ** bos)"
+- "name": "libusb_get_string_descriptor_ascii"
+  "params":
+  - "name": "dev_handle"
+    "type": "struct libusb_device_handle *"
+  - "name": "desc_index"
+    "type": "char"
+  - "name": "data"
+    "type": "char *"
+  - "name": "length"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int libusb_get_string_descriptor_ascii(struct libusb_device_handle * dev_handle, char desc_index, char * data, int length)"
+- "name": "libusb_get_configuration"
+  "params":
+  - "name": "dev_handle"
+    "type": "struct libusb_device_handle *"
+  - "name": "config"
+    "type": "int *"
+  "return_type": "int"
+  "signature": "int libusb_get_configuration(struct libusb_device_handle * dev_handle, int * config)"
+- "name": "libusb_get_string_descriptor"
+  "params":
+  - "name": "dev_handle"
+    "type": "struct libusb_device_handle *"
+  - "name": "desc_index"
+    "type": "char"
+  - "name": "langid"
+    "type": "short"
+  - "name": "data"
+    "type": "char *"
+  - "name": "length"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int libusb_get_string_descriptor(struct libusb_device_handle * dev_handle, char desc_index, short langid, char * data, int length)"
+"project": "libusb"
+"target_name": "libusb_fuzzer"
+"target_path": "/src/libusb_fuzzer.cc"

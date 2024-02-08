@@ -1,19 +1,76 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-functions:
-  - int lodepng::encode(std::string *filename, char *in, int w, int h, int colortype, int bitdepth)
-  - int lodepng_encode24_file(char *filename, char *image, int w, int h)
-project: lodepng
-target_path: /src/lodepng/lodepng_fuzzer.cpp
+"functions":
+- "name": "lodepng::encode(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
+  "params":
+  - "name": "filename"
+    "type": "std::string *"
+  - "name": "in"
+    "type": "std::vector *"
+  - "name": "w"
+    "type": "int"
+  - "name": "h"
+    "type": "int"
+  - "name": "colortype"
+    "type": "int"
+  - "name": "bitdepth"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int lodepng::encode(std::string * filename, std::vector * in, int w, int h, int colortype, int bitdepth)"
+- "name": "lodepng::encode(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned char const*, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
+  "params":
+  - "name": "filename"
+    "type": "std::string *"
+  - "name": "in"
+    "type": "char *"
+  - "name": "w"
+    "type": "int"
+  - "name": "h"
+    "type": "int"
+  - "name": "colortype"
+    "type": "int"
+  - "name": "bitdepth"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int lodepng::encode(std::string * filename, char * in, int w, int h, int colortype, int bitdepth)"
+- "name": "lodepng_encode24_file(char const*, unsigned char const*, unsigned int, unsigned int)"
+  "params":
+  - "name": "filename"
+    "type": "char *"
+  - "name": "image"
+    "type": "char *"
+  - "name": "w"
+    "type": "int"
+  - "name": "h"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int lodepng_encode24_file(char * filename, char * image, int w, int h)"
+- "name": "lodepng_encode32_file(char const*, unsigned char const*, unsigned int, unsigned int)"
+  "params":
+  - "name": "filename"
+    "type": "char *"
+  - "name": "image"
+    "type": "char *"
+  - "name": "w"
+    "type": "int"
+  - "name": "h"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int lodepng_encode32_file(char * filename, char * image, int w, int h)"
+- "name": "lodepng_encode_file(char const*, unsigned char const*, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
+  "params":
+  - "name": "filename"
+    "type": "char *"
+  - "name": "image"
+    "type": "char *"
+  - "name": "w"
+    "type": "int"
+  - "name": "h"
+    "type": "int"
+  - "name": "colortype"
+    "type": "int"
+  - "name": "bitdepth"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int lodepng_encode_file(char * filename, char * image, int w, int h, int colortype, int bitdepth)"
+"project": "lodepng"
+"target_name": "lodepng_fuzzer"
+"target_path": "/src/lodepng/lodepng_fuzzer.cpp"

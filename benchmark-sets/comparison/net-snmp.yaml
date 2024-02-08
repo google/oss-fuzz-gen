@@ -1,18 +1,58 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-functions:
-  - int register_int_index(size_t *name, size_t name_len, int val)
-project: net-snmp
-target_path: /src/net-snmp/testing/fuzzing/snmp_pdu_parse_fuzzer.c
+"functions":
+- "name": "register_string_index"
+  "params":
+  - "name": "name"
+    "type": "size_t *"
+  - "name": "name_len"
+    "type": "size_t"
+  - "name": "cp"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "char * register_string_index(size_t * name, size_t name_len, char * cp)"
+- "name": "register_int_index"
+  "params":
+  - "name": "name"
+    "type": "size_t *"
+  - "name": "name_len"
+    "type": "size_t"
+  - "name": "val"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int register_int_index(size_t * name, size_t name_len, int val)"
+- "name": "register_oid_index"
+  "params":
+  - "name": "name"
+    "type": "size_t *"
+  - "name": "name_len"
+    "type": "size_t"
+  - "name": "value"
+    "type": "size_t *"
+  - "name": "value_len"
+    "type": "size_t"
+  "return_type": "struct variable_list *"
+  "signature": "struct variable_list * register_oid_index(size_t * name, size_t name_len, size_t * value, size_t value_len)"
+- "name": "unregister_oid_index"
+  "params":
+  - "name": "name"
+    "type": "size_t *"
+  - "name": "name_len"
+    "type": "size_t"
+  - "name": "value"
+    "type": "size_t *"
+  - "name": "value_len"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int unregister_oid_index(size_t * name, size_t name_len, size_t * value, size_t value_len)"
+- "name": "unregister_int_index"
+  "params":
+  - "name": "name"
+    "type": "size_t *"
+  - "name": "name_len"
+    "type": "size_t"
+  - "name": "val"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int unregister_int_index(size_t * name, size_t name_len, int val)"
+"project": "net-snmp"
+"target_name": "snmp_pdu_parse_fuzzer"
+"target_path": "/src/net-snmp/testing/fuzzing/snmp_pdu_parse_fuzzer.c"

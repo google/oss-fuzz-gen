@@ -1,23 +1,46 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-functions:
-- struct AvahiDnsPacket * avahi_dns_packet_new_reply(struct AvahiDnsPacket *p, int mtu,
-  int copy_queries, int aa)
-- char * avahi_dns_packet_append_record(struct AvahiDnsPacket *p, struct AvahiRecord
-  *r, int cache_flush, int max_ttl)
-- size_t avahi_rdata_serialize(struct AvahiRecord *record, char *rdata, size_t max_size)
-project: avahi
-target_path: /src/avahi/fuzz/fuzz-consume-record.c
-
+"functions":
+- "name": "avahi_dns_packet_new_reply"
+  "params":
+  - "name": "p"
+    "type": "struct AvahiDnsPacket *"
+  - "name": "mtu"
+    "type": "int"
+  - "name": "copy_queries"
+    "type": "int"
+  - "name": "aa"
+    "type": "int"
+  "return_type": "struct AvahiDnsPacket *"
+  "signature": "struct AvahiDnsPacket * avahi_dns_packet_new_reply(struct AvahiDnsPacket * p, int mtu, int copy_queries, int aa)"
+- "name": "avahi_get_host_name_strdup"
+  "params": []
+  "return_type": "char *"
+  "signature": "char * avahi_get_host_name_strdup()"
+- "name": "avahi_get_host_name"
+  "params":
+  - "name": "ret_s"
+    "type": "char *"
+  - "name": "size"
+    "type": "size_t"
+  "return_type": "char *"
+  "signature": "char * avahi_get_host_name(char * ret_s, size_t size)"
+- "name": "avahi_string_list_add_pair"
+  "params":
+  - "name": "l"
+    "type": "struct AvahiStringList *"
+  - "name": "key"
+    "type": "char *"
+  - "name": "value"
+    "type": "char *"
+  "return_type": "struct AvahiStringList *"
+  "signature": "struct AvahiStringList * avahi_string_list_add_pair(struct AvahiStringList * l, char * key, char * value)"
+- "name": "avahi_string_list_add_printf"
+  "params":
+  - "name": "l"
+    "type": "struct AvahiStringList *"
+  - "name": "format"
+    "type": "char *"
+  "return_type": "struct AvahiStringList *"
+  "signature": "struct AvahiStringList * avahi_string_list_add_printf(struct AvahiStringList * l, char * format)"
+"project": "avahi"
+"target_name": "fuzz-consume-record"
+"target_path": "/src/avahi/fuzz/fuzz-consume-record.c"
