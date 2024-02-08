@@ -284,7 +284,7 @@ class ContextRetriever:
       with open(f'{self._ast_path}/{ast_file_path}') as ast_file:
         try:
           ast_json = json.load(ast_file)
-        # Files generated and uploaded are ocasionally empty.
+        # Files generated and uploaded are occasionally empty.
         except Exception as e:
           print(e)
           continue
@@ -313,7 +313,7 @@ class ContextRetriever:
         header = self._get_header_from_file(f'{self._ast_path}/{ast_file_path}')
         if header != '':
           return header
-      # ASTs from the bucket are ocasionally empty.
+      # ASTs from the bucket are occasionally empty.
       except Exception as e:
         print(e)
         continue
