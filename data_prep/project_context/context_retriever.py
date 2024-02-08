@@ -319,7 +319,7 @@ class ContextRetriever:
 
     for param in self._params:
       param_types.append(param['type'])
-       
+
     seen_types = set()
     seen_types.add(self._return_type)
     seen_types |= set(param_types)
