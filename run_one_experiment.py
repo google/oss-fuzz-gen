@@ -229,8 +229,7 @@ def run(benchmark: Benchmark,
     context_info = None
 
     if use_context:
-      retriever = ContextRetriever(benchmark.project,
-                                   benchmark.function_signature)
+      retriever = ContextRetriever(benchmark)
       try:
         retriever.retrieve_asts()
       # GSutil fails on the same project immediately after
