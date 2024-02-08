@@ -1,33 +1,28 @@
 "functions":
 - "name": "numa_get_run_node_mask_v1"
-  "param_names": []
-  "param_types": []
-  "return_type": "N/A"
+  "params": []
+  "return_type": "void"
   "signature": "void numa_get_run_node_mask_v1()"
 - "name": "numa_bind_v2"
-  "param_names":
-  - "bmp"
-  "param_types":
-  - "struct.bitmask *"
+  "params":
+  - "name": "bmp"
+    "type": "struct bitmask *"
   "return_type": "void"
   "signature": "void numa_bind_v2(struct bitmask * bmp)"
 - "name": "numa_bind_v1"
-  "param_names":
-  - "nodemask"
-  "param_types":
-  - "struct.nodemask_t *"
+  "params":
+  - "name": "nodemask"
+    "type": "struct nodemask_t *"
   "return_type": "void"
   "signature": "void numa_bind_v1(struct nodemask_t * nodemask)"
 - "name": "numa_get_run_node_mask_v2"
-  "param_names": []
-  "param_types": []
-  "return_type": "struct.bitmask *"
+  "params": []
+  "return_type": "struct bitmask *"
   "signature": "struct bitmask * numa_get_run_node_mask_v2()"
 - "name": "numa_run_on_node_mask_v2"
-  "param_names":
-  - "bmp"
-  "param_types":
-  - "struct.bitmask *"
+  "params":
+  - "name": "bmp"
+    "type": "struct bitmask *"
   "return_type": "int"
   "signature": "int numa_run_on_node_mask_v2(struct bitmask * bmp)"
 "project": "numactl"

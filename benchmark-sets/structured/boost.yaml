@@ -1,37 +1,32 @@
 "functions":
-- "name": "boost::re_detail_500::basic_regex_parser<char,boost::regex_traits<char,boost::cpp_regex_traits<char>>>::parse_basic()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.boost::re_detail_500::basic_regex_parser *"
+- "name": "boost::re_detail_500::basic_regex_parser<char, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::parse_basic()"
+  "params":
+  - "name": ""
+    "type": "boost::re_detail_500::basic_regex_parser *"
   "return_type": "bool"
   "signature": "bool boost::re_detail_500::basic_regex_parser<char, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::parse_basic(boost::re_detail_500::basic_regex_parser * )"
-- "name": "boost::re_detail_500::basic_regex_parser<char,boost::c_regex_traits<char>>::parse_basic()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.boost::re_detail_500::basic_regex_parser.68 *"
+- "name": "boost::re_detail_500::basic_regex_parser<char, boost::c_regex_traits<char> >::parse_basic()"
+  "params":
+  - "name": ""
+    "type": "boost::re_detail_500::basic_regex_parser *"
   "return_type": "bool"
   "signature": "bool boost::re_detail_500::basic_regex_parser<char, boost::c_regex_traits<char> >::parse_basic(boost::re_detail_500::basic_regex_parser * )"
-- "name": "boost::re_detail_500::basic_regex_parser<wchar_t,boost::c_regex_traits<wchar_t>>::parse_basic()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.boost::re_detail_500::basic_regex_parser.252 *"
+- "name": "boost::re_detail_500::basic_regex_parser<wchar_t, boost::c_regex_traits<wchar_t> >::parse_basic()"
+  "params":
+  - "name": ""
+    "type": "boost::re_detail_500::basic_regex_parser *"
   "return_type": "bool"
   "signature": "bool boost::re_detail_500::basic_regex_parser<wchar_t, boost::c_regex_traits<wchar_t> >::parse_basic(boost::re_detail_500::basic_regex_parser * )"
-- "name": "boost::re_detail_500::basic_regex_parser<char,boost::c_regex_traits<char>>::parse_extended()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.boost::re_detail_500::basic_regex_parser.68 *"
+- "name": "boost::re_detail_500::basic_regex_parser<char, boost::c_regex_traits<char> >::parse_extended()"
+  "params":
+  - "name": ""
+    "type": "boost::re_detail_500::basic_regex_parser *"
   "return_type": "bool"
   "signature": "bool boost::re_detail_500::basic_regex_parser<char, boost::c_regex_traits<char> >::parse_extended(boost::re_detail_500::basic_regex_parser * )"
-- "name": "boost::re_detail_500::basic_regex_parser<char,boost::regex_traits<char,boost::cpp_regex_traits<char>>>::parse_basic_escape()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.boost::re_detail_500::basic_regex_parser *"
+- "name": "boost::re_detail_500::basic_regex_parser<char, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::parse_basic_escape()"
+  "params":
+  - "name": ""
+    "type": "boost::re_detail_500::basic_regex_parser *"
   "return_type": "bool"
   "signature": "bool boost::re_detail_500::basic_regex_parser<char, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::parse_basic_escape(boost::re_detail_500::basic_regex_parser * )"
 "project": "boost"

@@ -1,51 +1,46 @@
 "functions":
 - "name": "dpif_dummy_register"
-  "param_names":
-  - "level"
-  "param_types":
-  - "int"
+  "params":
+  - "name": "level"
+    "type": "int"
   "return_type": "void"
   "signature": "void dpif_dummy_register(int level)"
 - "name": "dpif_netdev_run"
-  "param_names":
-  - "dpif"
-  "param_types":
-  - "struct.dpif.3192 *"
+  "params":
+  - "name": "dpif"
+    "type": "struct dpif *"
   "return_type": "bool"
   "signature": "bool dpif_netdev_run(struct dpif * dpif)"
 - "name": "dpif_netdev_open"
-  "param_names":
-  - "class"
-  - "name"
-  - "create"
-  - "dpifp"
-  "param_types":
-  - "struct.dpif_class.3278 *"
-  - "char *"
-  - "bool"
-  - "struct.dpif.3192 **"
+  "params":
+  - "name": "class"
+    "type": "struct dpif_3278 *"
+  - "name": "name"
+    "type": "char *"
+  - "name": "create"
+    "type": "bool"
+  - "name": "dpifp"
+    "type": "3192 **"
   "return_type": "int"
   "signature": "int dpif_netdev_open(struct dpif_3278 * class, char * name, bool create, struct dpif.3192 ** dpifp)"
 - "name": "create_dp_netdev"
-  "param_names":
-  - "name"
-  - "class"
-  - "dpp"
-  "param_types":
-  - "char *"
-  - "struct.dpif_class.3278 *"
-  - "struct.dp_netdev **"
+  "params":
+  - "name": "name"
+    "type": "char *"
+  - "name": "class"
+    "type": "struct dpif_3278 *"
+  - "name": "dpp"
+    "type": "struct dp_netdev **"
   "return_type": "int"
   "signature": "int create_dp_netdev(char * name, struct dpif_3278 * class, struct dp_netdev ** dpp)"
 - "name": "dpif_netdev_port_add"
-  "param_names":
-  - "dpif"
-  - "netdev"
-  - "port_nop"
-  "param_types":
-  - "struct.dpif.3192 *"
-  - "struct.netdev *"
-  - "int *"
+  "params":
+  - "name": "dpif"
+    "type": "struct dpif *"
+  - "name": "netdev"
+    "type": "struct netdev *"
+  - "name": "port_nop"
+    "type": "int *"
   "return_type": "int"
   "signature": "int dpif_netdev_port_add(struct dpif * dpif, struct netdev * netdev, int * port_nop)"
 "project": "openvswitch"

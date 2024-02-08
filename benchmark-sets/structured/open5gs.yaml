@@ -1,55 +1,50 @@
 "functions":
 - "name": "ogs_gtp_send_error_message"
-  "param_names":
-  - "xact"
-  - "teid"
-  - "type"
-  - "cause_value"
-  "param_types":
-  - "struct.ogs_gtp_xact_s *"
-  - "int"
-  - "char"
-  - "char"
+  "params":
+  - "name": "xact"
+    "type": "struct ogs_gtp_xact_s *"
+  - "name": "teid"
+    "type": "int"
+  - "name": "type"
+    "type": "char"
+  - "name": "cause_value"
+    "type": "char"
   "return_type": "void"
   "signature": "void ogs_gtp_send_error_message(struct ogs_gtp_xact_s * xact, int teid, char type, char cause_value)"
 - "name": "ogs_gtp1_send_echo_request"
-  "param_names":
-  - "gnode"
-  "param_types":
-  - "struct.ogs_gtp_node_s *"
+  "params":
+  - "name": "gnode"
+    "type": "struct ogs_gtp_node_s *"
   "return_type": "void"
   "signature": "void ogs_gtp1_send_echo_request(struct ogs_gtp_node_s * gnode)"
 - "name": "ogs_gtp1_send_echo_response"
-  "param_names":
-  - "xact"
-  - "recovery"
-  "param_types":
-  - "struct.ogs_gtp_xact_s *"
-  - "char"
+  "params":
+  - "name": "xact"
+    "type": "struct ogs_gtp_xact_s *"
+  - "name": "recovery"
+    "type": "char"
   "return_type": "void"
   "signature": "void ogs_gtp1_send_echo_response(struct ogs_gtp_xact_s * xact, char recovery)"
 - "name": "ogs_gtp2_send_echo_request"
-  "param_names":
-  - "gnode"
-  - "recovery"
-  - "features"
-  "param_types":
-  - "struct.ogs_gtp_node_s *"
-  - "char"
-  - "char"
+  "params":
+  - "name": "gnode"
+    "type": "struct ogs_gtp_node_s *"
+  - "name": "recovery"
+    "type": "char"
+  - "name": "features"
+    "type": "char"
   "return_type": "void"
   "signature": "void ogs_gtp2_send_echo_request(struct ogs_gtp_node_s * gnode, char recovery, char features)"
 - "name": "ogs_gtp1_send_error_message"
-  "param_names":
-  - "xact"
-  - "teid"
-  - "type"
-  - "cause_value"
-  "param_types":
-  - "struct.ogs_gtp_xact_s *"
-  - "int"
-  - "char"
-  - "char"
+  "params":
+  - "name": "xact"
+    "type": "struct ogs_gtp_xact_s *"
+  - "name": "teid"
+    "type": "int"
+  - "name": "type"
+    "type": "char"
+  - "name": "cause_value"
+    "type": "char"
   "return_type": "void"
   "signature": "void ogs_gtp1_send_error_message(struct ogs_gtp_xact_s * xact, int teid, char type, char cause_value)"
 "project": "open5gs"

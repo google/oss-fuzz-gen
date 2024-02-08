@@ -1,47 +1,42 @@
 "functions":
-- "name": "void(anonymousnamespace)::DumpVisitor::operator()<(anonymousnamespace)::itanium_demangle::NewExpr>((anonymousnamespace)::itanium_demangle::NewExprconst*)"
-  "param_names":
-  - "this"
-  - "Node"
-  "param_types":
-  - "struct.(anonymous namespace)::DumpVisitor *"
-  - "class.(anonymous namespace)::itanium_demangle::NewExpr *"
+- "name": "(anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NewExpr>((anonymous namespace)::itanium_demangle::NewExpr const*)"
+  "params":
+  - "name": "this"
+    "type": "struct (anonymous namespace)::DumpVisitor *"
+  - "name": "Node"
+    "type": "(anonymous namespace)::itanium_demangle::NewExpr *"
   "return_type": "void"
   "signature": "void (struct (anonymous namespace)::DumpVisitor * this, (anonymous namespace)::itanium_demangle::NewExpr * Node)"
-- "name": "void(anonymousnamespace)::DumpVisitor::operator()<(anonymousnamespace)::itanium_demangle::TemplateArgs>((anonymousnamespace)::itanium_demangle::TemplateArgsconst*)"
-  "param_names":
-  - "this"
-  - "Node"
-  "param_types":
-  - "struct.(anonymous namespace)::DumpVisitor *"
-  - "class.(anonymous namespace)::itanium_demangle::TemplateArgs *"
+- "name": "(anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::TemplateArgs>((anonymous namespace)::itanium_demangle::TemplateArgs const*)"
+  "params":
+  - "name": "this"
+    "type": "struct (anonymous namespace)::DumpVisitor *"
+  - "name": "Node"
+    "type": "(anonymous namespace)::itanium_demangle::TemplateArgs *"
   "return_type": "void"
   "signature": "void (struct (anonymous namespace)::DumpVisitor * this, (anonymous namespace)::itanium_demangle::TemplateArgs * Node)"
-- "name": "void(anonymousnamespace)::DumpVisitor::operator()<(anonymousnamespace)::itanium_demangle::TemplateTemplateParamDecl>((anonymousnamespace)::itanium_demangle::TemplateTemplateParamDeclconst*)"
-  "param_names":
-  - "this"
-  - "Node"
-  "param_types":
-  - "struct.(anonymous namespace)::DumpVisitor *"
-  - "class.(anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl *"
+- "name": "(anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl>((anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl const*)"
+  "params":
+  - "name": "this"
+    "type": "struct (anonymous namespace)::DumpVisitor *"
+  - "name": "Node"
+    "type": "(anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl *"
   "return_type": "void"
   "signature": "void (struct (anonymous namespace)::DumpVisitor * this, (anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl * Node)"
-- "name": "void(anonymousnamespace)::DumpVisitor::operator()<(anonymousnamespace)::itanium_demangle::ConversionExpr>((anonymousnamespace)::itanium_demangle::ConversionExprconst*)"
-  "param_names":
-  - "this"
-  - "Node"
-  "param_types":
-  - "struct.(anonymous namespace)::DumpVisitor *"
-  - "class.(anonymous namespace)::itanium_demangle::InitListExpr *"
+- "name": "(anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::ConversionExpr>((anonymous namespace)::itanium_demangle::ConversionExpr const*)"
+  "params":
+  - "name": "this"
+    "type": "struct (anonymous namespace)::DumpVisitor *"
+  - "name": "Node"
+    "type": "(anonymous namespace)::itanium_demangle::InitListExpr *"
   "return_type": "void"
   "signature": "void (struct (anonymous namespace)::DumpVisitor * this, (anonymous namespace)::itanium_demangle::InitListExpr * Node)"
-- "name": "void(anonymousnamespace)::DumpVisitor::operator()<(anonymousnamespace)::itanium_demangle::CallExpr>((anonymousnamespace)::itanium_demangle::CallExprconst*)"
-  "param_names":
-  - "this"
-  - "Node"
-  "param_types":
-  - "struct.(anonymous namespace)::DumpVisitor *"
-  - "class.(anonymous namespace)::itanium_demangle::InitListExpr *"
+- "name": "(anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::CallExpr>((anonymous namespace)::itanium_demangle::CallExpr const*)"
+  "params":
+  - "name": "this"
+    "type": "struct (anonymous namespace)::DumpVisitor *"
+  - "name": "Node"
+    "type": "(anonymous namespace)::itanium_demangle::InitListExpr *"
   "return_type": "void"
   "signature": "void (struct (anonymous namespace)::DumpVisitor * this, (anonymous namespace)::itanium_demangle::InitListExpr * Node)"
 "project": "llvm_libcxxabi"

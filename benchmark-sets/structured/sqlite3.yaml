@@ -1,9 +1,8 @@
 "functions":
 - "name": "ossfuzz_set_debug_flags"
-  "param_names":
-  - "x"
-  "param_types":
-  - "int"
+  "params":
+  - "name": "x"
+    "type": "int"
   "return_type": "void"
   "signature": "void ossfuzz_set_debug_flags(int x)"
 "project": "sqlite3"

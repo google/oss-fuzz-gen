@@ -1,51 +1,46 @@
 "functions":
 - "name": "mrb_load_detect_file_cxt"
-  "param_names":
-  - "mrb"
-  - "fp"
-  - "c"
-  "param_types":
-  - "struct.mrb_state.15 *"
-  - "struct._IO_FILE *"
-  - "struct.mrb_ccontext *"
+  "params":
+  - "name": "mrb"
+    "type": "struct mrb_state *"
+  - "name": "fp"
+    "type": "struct _IO_FILE *"
+  - "name": "c"
+    "type": "struct mrb_ccontext *"
   "return_type": "size_t"
   "signature": "size_t mrb_load_detect_file_cxt(struct mrb_state * mrb, struct _IO_FILE * fp, struct mrb_ccontext * c)"
 - "name": "mrb_binding_eval"
-  "param_names":
-  - "mrb"
-  - "binding"
-  "param_types":
-  - "struct.mrb_state.610 *"
-  - "size_t"
+  "params":
+  - "name": "mrb"
+    "type": "struct mrb_state *"
+  - "name": "binding"
+    "type": "size_t"
   "return_type": "size_t"
   "signature": "size_t mrb_binding_eval(struct mrb_state * mrb, size_t binding)"
 - "name": "f_eval"
-  "param_names":
-  - "mrb"
-  - "self"
-  "param_types":
-  - "struct.mrb_state.610 *"
-  - "size_t"
+  "params":
+  - "name": "mrb"
+    "type": "struct mrb_state *"
+  - "name": "self"
+    "type": "size_t"
   "return_type": "size_t"
   "signature": "size_t f_eval(struct mrb_state * mrb, size_t self)"
 - "name": "mrb_load_file"
-  "param_names":
-  - "mrb"
-  - "f"
-  "param_types":
-  - "struct.mrb_state.15 *"
-  - "struct._IO_FILE *"
+  "params":
+  - "name": "mrb"
+    "type": "struct mrb_state *"
+  - "name": "f"
+    "type": "struct _IO_FILE *"
   "return_type": "size_t"
   "signature": "size_t mrb_load_file(struct mrb_state * mrb, struct _IO_FILE * f)"
 - "name": "mrb_load_file_cxt"
-  "param_names":
-  - "mrb"
-  - "f"
-  - "c"
-  "param_types":
-  - "struct.mrb_state.15 *"
-  - "struct._IO_FILE *"
-  - "struct.mrb_ccontext *"
+  "params":
+  - "name": "mrb"
+    "type": "struct mrb_state *"
+  - "name": "f"
+    "type": "struct _IO_FILE *"
+  - "name": "c"
+    "type": "struct mrb_ccontext *"
   "return_type": "size_t"
   "signature": "size_t mrb_load_file_cxt(struct mrb_state * mrb, struct _IO_FILE * f, struct mrb_ccontext * c)"
 "project": "mruby"

@@ -1,47 +1,42 @@
 "functions":
 - "name": "ov_time_seek_lap"
-  "param_names":
-  - "vf"
-  - "pos"
-  "param_types":
-  - "struct.OggVorbis_File *"
-  - "double"
+  "params":
+  - "name": "vf"
+    "type": "struct OggVorbis_File *"
+  - "name": "pos"
+    "type": "double"
   "return_type": "int"
   "signature": "int ov_time_seek_lap(struct OggVorbis_File * vf, double pos)"
 - "name": "ov_pcm_seek_lap"
-  "param_names":
-  - "vf"
-  - "pos"
-  "param_types":
-  - "struct.OggVorbis_File *"
-  - "size_t"
+  "params":
+  - "name": "vf"
+    "type": "struct OggVorbis_File *"
+  - "name": "pos"
+    "type": "size_t"
   "return_type": "int"
   "signature": "int ov_pcm_seek_lap(struct OggVorbis_File * vf, size_t pos)"
 - "name": "ov_time_seek_page_lap"
-  "param_names":
-  - "vf"
-  - "pos"
-  "param_types":
-  - "struct.OggVorbis_File *"
-  - "double"
+  "params":
+  - "name": "vf"
+    "type": "struct OggVorbis_File *"
+  - "name": "pos"
+    "type": "double"
   "return_type": "int"
   "signature": "int ov_time_seek_page_lap(struct OggVorbis_File * vf, double pos)"
 - "name": "ov_pcm_seek_page_lap"
-  "param_names":
-  - "vf"
-  - "pos"
-  "param_types":
-  - "struct.OggVorbis_File *"
-  - "size_t"
+  "params":
+  - "name": "vf"
+    "type": "struct OggVorbis_File *"
+  - "name": "pos"
+    "type": "size_t"
   "return_type": "int"
   "signature": "int ov_pcm_seek_page_lap(struct OggVorbis_File * vf, size_t pos)"
 - "name": "ov_halfrate"
-  "param_names":
-  - "vf"
-  - "flag"
-  "param_types":
-  - "struct.OggVorbis_File *"
-  - "int"
+  "params":
+  - "name": "vf"
+    "type": "struct OggVorbis_File *"
+  - "name": "flag"
+    "type": "int"
   "return_type": "int"
   "signature": "int ov_halfrate(struct OggVorbis_File * vf, int flag)"
 "project": "vorbis"

@@ -1,43 +1,38 @@
 "functions":
-- "name": "valijson::adapters::BasicAdapter<valijson::adapters::GenericRapidJsonAdapter<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>,valijson::adapters::GenericRapidJsonArray<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>,valijson::adapters::GenericRapidJsonObjectMember<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>,valijson::adapters::GenericRapidJsonObject<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>,valijson::adapters::GenericRapidJsonValue<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>>::ObjectComparisonFunctor::operator()(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const&,valijson::adapters::Adapterconst&)"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "class.valijson::adapters::BasicAdapter<valijson::adapters::GenericRapidJsonAdapter<>, valijson::adapters::GenericRapidJsonArray<>, valijson::adapters::GenericRapidJsonObjectMember<>, valijson::adapters::GenericRapidJsonObject<>, valijson::adapters::GenericRapidJsonValue<>>::ObjectComparisonFunctor *"
-  - "class.std::__1::basic_string *"
-  - "class.std::__1::__function::__base.32 *"
+- "name": "valijson::adapters::BasicAdapter<valijson::adapters::GenericRapidJsonAdapter<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonArray<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObjectMember<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObject<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > > >::ObjectComparisonFunctor::operator()(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, valijson::adapters::Adapter const&)"
+  "params":
+  - "name": ""
+    "type": "valijson::adapters::BasicAdapter<valijson::adapters::GenericRapidJsonAdapter<>, valijson::adapters::GenericRapidJsonArray<>, valijson::adapters::GenericRapidJsonObjectMember<>, valijson::adapters::GenericRapidJsonObject<>, valijson::adapters::GenericRapidJsonValue<>>::ObjectComparisonFunctor *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "std::__function::__base *"
   "return_type": "bool"
   "signature": "bool valijson::adapters::BasicAdapter<valijson::adapters::GenericRapidJsonAdapter<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonArray<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObjectMember<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObject<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > > >::ObjectComparisonFunctor::operator(valijson::adapters::BasicAdapter<valijson::adapters::GenericRapidJsonAdapter<>, valijson::adapters::GenericRapidJsonArray<>, valijson::adapters::GenericRapidJsonObjectMember<>, valijson::adapters::GenericRapidJsonObject<>, valijson::adapters::GenericRapidJsonValue<>>::ObjectComparisonFunctor * , std::string * , std::__function::__base * )"
-- "name": "valijson::adapters::BasicAdapter<valijson::adapters::GenericRapidJsonAdapter<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>,valijson::adapters::GenericRapidJsonArray<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>,valijson::adapters::GenericRapidJsonObjectMember<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>,valijson::adapters::GenericRapidJsonObject<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>,valijson::adapters::GenericRapidJsonValue<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>>::freeze()const"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.valijson::adapters::BasicAdapter *"
-  "return_type": "class.std::__1::__function::__base.32 *"
+- "name": "valijson::adapters::BasicAdapter<valijson::adapters::GenericRapidJsonAdapter<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonArray<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObjectMember<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObject<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > > >::freeze() const"
+  "params":
+  - "name": ""
+    "type": "valijson::adapters::BasicAdapter *"
+  "return_type": "std::__function::__base *"
   "signature": "std::__function::__base * valijson::adapters::BasicAdapter<valijson::adapters::GenericRapidJsonAdapter<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonArray<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObjectMember<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObject<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > > >::freeze(valijson::adapters::BasicAdapter * ) const"
-- "name": "valijson::adapters::GenericRapidJsonValue<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>::freeze()const"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.valijson::adapters::GenericRapidJsonArrayValueIterator *"
-  "return_type": "class.std::__1::__function::__base.32 *"
+- "name": "valijson::adapters::GenericRapidJsonValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >::freeze() const"
+  "params":
+  - "name": ""
+    "type": "valijson::adapters::GenericRapidJsonArrayValueIterator *"
+  "return_type": "std::__function::__base *"
   "signature": "std::__function::__base * valijson::adapters::GenericRapidJsonValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >::freeze(valijson::adapters::GenericRapidJsonArrayValueIterator * ) const"
-- "name": "valijson::adapters::GenericRapidJsonFrozenValue<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>::clone()const"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.valijson::adapters::GenericRapidJsonFrozenValue *"
-  "return_type": "class.std::__1::__function::__base.32 *"
+- "name": "valijson::adapters::GenericRapidJsonFrozenValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >::clone() const"
+  "params":
+  - "name": ""
+    "type": "valijson::adapters::GenericRapidJsonFrozenValue *"
+  "return_type": "std::__function::__base *"
   "signature": "std::__function::__base * valijson::adapters::GenericRapidJsonFrozenValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >::clone(valijson::adapters::GenericRapidJsonFrozenValue * ) const"
-- "name": "valijson::adapters::GenericRapidJsonFrozenValue<rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>::GenericRapidJsonFrozenValue(rapidjson::GenericValue<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>const&)"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "class.valijson::adapters::GenericRapidJsonFrozenValue *"
-  - "class.rapidjson::GenericValue *"
+- "name": "valijson::adapters::GenericRapidJsonFrozenValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >::GenericRapidJsonFrozenValue(rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > const&)"
+  "params":
+  - "name": ""
+    "type": "valijson::adapters::GenericRapidJsonFrozenValue *"
+  - "name": ""
+    "type": "rapidjson::GenericValue *"
   "return_type": "void"
   "signature": "void valijson::adapters::GenericRapidJsonFrozenValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >::GenericRapidJsonFrozenValue(valijson::adapters::GenericRapidJsonFrozenValue * , rapidjson::GenericValue * )"
 "project": "valijson"

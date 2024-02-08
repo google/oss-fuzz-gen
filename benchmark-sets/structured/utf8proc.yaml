@@ -1,34 +1,30 @@
 "functions":
 - "name": "utf8proc_decompose"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "char *"
-  - "size_t"
-  - "int *"
-  - "size_t"
-  - "int"
+  "params":
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "int"
   "return_type": "size_t"
   "signature": "size_t utf8proc_decompose(char * , size_t , int * , size_t , int )"
 - "name": "utf8proc_errmsg"
-  "param_names":
-  - ""
-  "param_types":
-  - "size_t"
+  "params":
+  - "name": ""
+    "type": "size_t"
   "return_type": "char *"
   "signature": "char * utf8proc_errmsg(size_t )"
 - "name": "utf8proc_unicode_version"
-  "param_names": []
-  "param_types": []
+  "params": []
   "return_type": "char *"
   "signature": "char * utf8proc_unicode_version()"
 - "name": "utf8proc_version"
-  "param_names": []
-  "param_types": []
+  "params": []
   "return_type": "char *"
   "signature": "char * utf8proc_version()"
 "project": "utf8proc"

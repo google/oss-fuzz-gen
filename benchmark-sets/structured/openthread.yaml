@@ -1,45 +1,40 @@
 "functions":
 - "name": "ot::MeshCoP::Commissioner::HandleTimer()"
-  "param_names":
-  - "this"
-  "param_types":
-  - "class.ot::MeshCoP::Commissioner *"
+  "params":
+  - "name": "this"
+    "type": "ot::MeshCoP::Commissioner *"
   "return_type": "void"
   "signature": "void ot::MeshCoP::Commissioner::HandleTimer(ot::MeshCoP::Commissioner * this)"
 - "name": "otCoapSecureStart"
-  "param_names":
-  - "aInstance"
-  - "aPort"
-  "param_types":
-  - "struct.otInstance *"
-  - "short"
+  "params":
+  - "name": "aInstance"
+    "type": "struct otInstance *"
+  - "name": "aPort"
+    "type": "short"
   "return_type": "int"
   "signature": "int otCoapSecureStart(struct otInstance * aInstance, short aPort)"
-- "name": "ot::MeshCoP::Joiner::HandleDiscoverResult(otActiveScanResult*,void*)"
-  "param_names":
-  - "aResult"
-  - "aContext"
-  "param_types":
-  - "struct.otActiveScanResult *"
-  - "char *"
+- "name": "ot::MeshCoP::Joiner::HandleDiscoverResult(otActiveScanResult*, void*)"
+  "params":
+  - "name": "aResult"
+    "type": "struct otActiveScanResult *"
+  - "name": "aContext"
+    "type": "char *"
   "return_type": "void"
   "signature": "void ot::MeshCoP::Joiner::HandleDiscoverResult(struct otActiveScanResult * aResult, char * aContext)"
 - "name": "ot::MeshCoP::Joiner::HandleDiscoverResult(otActiveScanResult*)"
-  "param_names":
-  - "this"
-  - "aResult"
-  "param_types":
-  - "class.ot::MeshCoP::Joiner *"
-  - "struct.otActiveScanResult *"
+  "params":
+  - "name": "this"
+    "type": "ot::MeshCoP::Joiner *"
+  - "name": "aResult"
+    "type": "struct otActiveScanResult *"
   "return_type": "void"
   "signature": "void ot::MeshCoP::Joiner::HandleDiscoverResult(ot::MeshCoP::Joiner * this, struct otActiveScanResult * aResult)"
 - "name": "ot::MeshCoP::Joiner::TryNextJoinerRouter(otError)"
-  "param_names":
-  - "this"
-  - "aPrevError"
-  "param_types":
-  - "class.ot::MeshCoP::Joiner *"
-  - "int"
+  "params":
+  - "name": "this"
+    "type": "ot::MeshCoP::Joiner *"
+  - "name": "aPrevError"
+    "type": "int"
   "return_type": "void"
   "signature": "void ot::MeshCoP::Joiner::TryNextJoinerRouter(ot::MeshCoP::Joiner * this, int aPrevError)"
 "project": "openthread"

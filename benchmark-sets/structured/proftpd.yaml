@@ -1,44 +1,39 @@
 "functions":
 - "name": "ls_stat"
-  "param_names":
-  - "cmd"
-  "param_types":
-  - "struct.cmd_struc *"
-  "return_type": "struct.modret_struc *"
+  "params":
+  - "name": "cmd"
+    "type": "struct cmd_struc *"
+  "return_type": "struct modret_struc *"
   "signature": "struct modret_struc * ls_stat(struct cmd_struc * cmd)"
 - "name": "ls_list"
-  "param_names":
-  - "cmd"
-  "param_types":
-  - "struct.cmd_struc *"
-  "return_type": "struct.modret_struc *"
+  "params":
+  - "name": "cmd"
+    "type": "struct cmd_struc *"
+  "return_type": "struct modret_struc *"
   "signature": "struct modret_struc * ls_list(struct cmd_struc * cmd)"
 - "name": "genericlist"
-  "param_names":
-  - "cmd"
-  "param_types":
-  - "struct.cmd_struc *"
-  "return_type": "struct.modret_struc *"
+  "params":
+  - "name": "cmd"
+    "type": "struct cmd_struc *"
+  "return_type": "struct modret_struc *"
   "signature": "struct modret_struc * genericlist(struct cmd_struc * cmd)"
 - "name": "dolist"
-  "param_names":
-  - "cmd"
-  - "opt"
-  - "resp_code"
-  - "clear_flags"
-  "param_types":
-  - "struct.cmd_struc *"
-  - "char *"
-  - "char *"
-  - "int"
+  "params":
+  - "name": "cmd"
+    "type": "struct cmd_struc *"
+  - "name": "opt"
+    "type": "char *"
+  - "name": "resp_code"
+    "type": "char *"
+  - "name": "clear_flags"
+    "type": "int"
   "return_type": "int"
   "signature": "int dolist(struct cmd_struc * cmd, char * opt, char * resp_code, int clear_flags)"
 - "name": "ls_nlst"
-  "param_names":
-  - "cmd"
-  "param_types":
-  - "struct.cmd_struc *"
-  "return_type": "struct.modret_struc *"
+  "params":
+  - "name": "cmd"
+    "type": "struct cmd_struc *"
+  "return_type": "struct modret_struc *"
   "signature": "struct modret_struc * ls_nlst(struct cmd_struc * cmd)"
 "project": "proftpd"
 "target_name": "json_fuzzer"

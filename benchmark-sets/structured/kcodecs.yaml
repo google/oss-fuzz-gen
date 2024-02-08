@@ -1,49 +1,44 @@
 "functions":
 - "name": "QPluginLoader::load()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.QLibrary *"
+  "params":
+  - "name": ""
+    "type": "QLibrary *"
   "return_type": "bool"
   "signature": "bool QPluginLoader::load(QLibrary * )"
-- "name": "(anonymousnamespace)::customConvert(QVariant::Privateconst*,int,void*,bool*)"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "struct.QVariant::Private *"
-  - "int"
-  - "char *"
-  - "char *"
+- "name": "(anonymous namespace)::customConvert(QVariant::Private const*, int, void*, bool*)"
+  "params":
+  - "name": ""
+    "type": "struct QVariant::Private *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
   "return_type": "bool"
   "signature": "bool (struct QVariant::Private * , int , char * , char * )"
-- "name": "(anonymousnamespace)::convert(QVariant::Privateconst*,int,void*,bool*)"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "struct.QVariant::Private *"
-  - "int"
-  - "char *"
-  - "char *"
+- "name": "(anonymous namespace)::convert(QVariant::Private const*, int, void*, bool*)"
+  "params":
+  - "name": ""
+    "type": "struct QVariant::Private *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
   "return_type": "bool"
   "signature": "bool (struct QVariant::Private * , int , char * , char * )"
 - "name": "QLibraryPrivate::isPlugin()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.QLibraryPrivate.7033 *"
+  "params":
+  - "name": ""
+    "type": "QLibraryPrivate *"
   "return_type": "bool"
   "signature": "bool QLibraryPrivate::isPlugin(QLibraryPrivate * )"
 - "name": "QLibraryPrivate::updatePluginState()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.QLibraryPrivate.7033 *"
+  "params":
+  - "name": ""
+    "type": "QLibraryPrivate *"
   "return_type": "void"
   "signature": "void QLibraryPrivate::updatePluginState(QLibraryPrivate * )"
 "project": "kcodecs"

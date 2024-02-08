@@ -1,46 +1,41 @@
 "functions":
 - "name": "mail_conf_read"
-  "param_names": []
-  "param_types": []
+  "params": []
   "return_type": "void"
   "signature": "void mail_conf_read()"
 - "name": "mail_params_init"
-  "param_names": []
-  "param_types": []
+  "params": []
   "return_type": "void"
   "signature": "void mail_params_init()"
 - "name": "dict_regexp_open"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "char *"
-  - "int"
-  - "int"
-  "return_type": "struct.DICT *"
+  "params":
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "struct DICT *"
   "signature": "struct DICT * dict_regexp_open(char * , int , int )"
 - "name": "dict_tcp_open"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "char *"
-  - "int"
-  - "int"
-  "return_type": "struct.DICT *"
+  "params":
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "struct DICT *"
   "signature": "struct DICT * dict_tcp_open(char * , int , int )"
 - "name": "dict_cidr_open"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "char *"
-  - "int"
-  - "int"
-  "return_type": "struct.DICT *"
+  "params":
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "struct DICT *"
   "signature": "struct DICT * dict_cidr_open(char * , int , int )"
 "project": "postfix"
 "target_name": "fuzz_tok822"

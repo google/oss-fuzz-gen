@@ -1,12 +1,10 @@
 "functions":
 - "name": "validate_pffft_simd()"
-  "param_names": []
-  "param_types": []
+  "params": []
   "return_type": "void"
   "signature": "void validate_pffft_simd()"
 - "name": "pffft_simd_size"
-  "param_names": []
-  "param_types": []
+  "params": []
   "return_type": "int"
   "signature": "int pffft_simd_size()"
 "project": "pffft"

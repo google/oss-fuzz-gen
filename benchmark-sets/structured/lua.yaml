@@ -1,7 +1,6 @@
 "functions":
 - "name": "_GLOBAL__sub_I_serializer.cc"
-  "param_names": []
-  "param_types": []
+  "params": []
   "return_type": "void"
   "signature": "void _GLOBAL__sub_I_serializer.cc()"
 "project": "lua"

@@ -1,43 +1,38 @@
 "functions":
 - "name": "WavpackSeekSample"
-  "param_names":
-  - "wpc"
-  - "sample"
-  "param_types":
-  - "struct.WavpackContext *"
-  - "int"
+  "params":
+  - "name": "wpc"
+    "type": "struct WavpackContext *"
+  - "name": "sample"
+    "type": "int"
   "return_type": "int"
   "signature": "int WavpackSeekSample(struct WavpackContext * wpc, int sample)"
 - "name": "WavpackSeekTrailingWrapper"
-  "param_names":
-  - "wpc"
-  "param_types":
-  - "struct.WavpackContext *"
+  "params":
+  - "name": "wpc"
+    "type": "struct WavpackContext *"
   "return_type": "void"
   "signature": "void WavpackSeekTrailingWrapper(struct WavpackContext * wpc)"
 - "name": "wp_log2s"
-  "param_names":
-  - "value"
-  "param_types":
-  - "int"
+  "params":
+  - "name": "value"
+    "type": "int"
   "return_type": "int"
   "signature": "int wp_log2s(int value)"
 - "name": "WavpackNativeToBigEndian"
-  "param_names":
-  - "data"
-  - "format"
-  "param_types":
-  - "char *"
-  - "char *"
+  "params":
+  - "name": "data"
+    "type": "char *"
+  - "name": "format"
+    "type": "char *"
   "return_type": "void"
   "signature": "void WavpackNativeToBigEndian(char * data, char * format)"
 - "name": "WavpackBigEndianToNative"
-  "param_names":
-  - "data"
-  - "format"
-  "param_types":
-  - "char *"
-  - "char *"
+  "params":
+  - "name": "data"
+    "type": "char *"
+  - "name": "format"
+    "type": "char *"
   "return_type": "void"
   "signature": "void WavpackBigEndianToNative(char * data, char * format)"
 "project": "wavpack"
