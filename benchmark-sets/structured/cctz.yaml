@@ -1,43 +1,38 @@
 "functions":
 - "name": "cctz::local_time_zone()"
-  "param_names": []
-  "param_types": []
-  "return_type": "class.cctz::time_zone::Impl *"
+  "params": []
+  "return_type": "cctz::time_zone::Impl *"
   "signature": "cctz::time_zone::Impl * cctz::local_time_zone()"
-- "name": "cctz::fixed_time_zone(std::__1::chrono::duration<long,std::__1::ratio<1l,1l>>const&)"
-  "param_names":
-  - "offset"
-  "param_types":
-  - "class.std::__1::chrono::duration.4 *"
-  "return_type": "class.cctz::time_zone::Impl *"
+- "name": "cctz::fixed_time_zone(std::__1::chrono::duration<long, std::__1::ratio<1l, 1l> > const&)"
+  "params":
+  - "name": "offset"
+    "type": "std::chrono::duration *"
+  "return_type": "cctz::time_zone::Impl *"
   "signature": "cctz::time_zone::Impl * cctz::fixed_time_zone(std::chrono::duration * offset)"
-- "name": "cctz::time_zone::description()const"
-  "param_names":
-  - "this"
-  - ""
-  "param_types":
-  - "class.std::__1::basic_string *"
-  - "class.cctz::time_zone *"
+- "name": "cctz::time_zone::description() const"
+  "params":
+  - "name": "this"
+    "type": "std::string *"
+  - "name": ""
+    "type": "cctz::time_zone *"
   "return_type": "void"
   "signature": "void cctz::time_zone::description(std::string * this, cctz::time_zone * ) const"
-- "name": "cctz::time_zone::version()const"
-  "param_names":
-  - "this"
-  - ""
-  "param_types":
-  - "class.std::__1::basic_string *"
-  - "class.cctz::time_zone *"
+- "name": "cctz::time_zone::version() const"
+  "params":
+  - "name": "this"
+    "type": "std::string *"
+  - "name": ""
+    "type": "cctz::time_zone *"
   "return_type": "void"
   "signature": "void cctz::time_zone::version(std::string * this, cctz::time_zone * ) const"
-- "name": "cctz::time_zone::prev_transition(std::__1::chrono::time_point<std::__1::chrono::system_clock,std::__1::chrono::duration<long,std::__1::ratio<1l,1l>>>const&,cctz::time_zone::civil_transition*)const"
-  "param_names":
-  - "this"
-  - "tp"
-  - "trans"
-  "param_types":
-  - "class.cctz::time_zone *"
-  - "class.std::__1::chrono::time_point.2 *"
-  - "struct.cctz::time_zone::civil_transition *"
+- "name": "cctz::time_zone::prev_transition(std::__1::chrono::time_point<std::__1::chrono::system_clock, std::__1::chrono::duration<long, std::__1::ratio<1l, 1l> > > const&, cctz::time_zone::civil_transition*) const"
+  "params":
+  - "name": "this"
+    "type": "cctz::time_zone *"
+  - "name": "tp"
+    "type": "std::chrono::time_point *"
+  - "name": "trans"
+    "type": "struct cctz::time_zone::civil_transition *"
   "return_type": "bool"
   "signature": "bool cctz::time_zone::prev_transition(cctz::time_zone * this, std::chrono::time_point * tp, struct cctz::time_zone::civil_transition * trans) const"
 "project": "cctz"

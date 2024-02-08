@@ -1,43 +1,38 @@
 "functions":
 - "name": "muduo::Thread::start()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.muduo::Thread *"
+  "params":
+  - "name": ""
+    "type": "muduo::Thread *"
   "return_type": "void"
   "signature": "void muduo::Thread::start(muduo::Thread * )"
-- "name": "muduo::TimeZone::loadZoneFile(charconst*)"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "class.muduo::TimeZone *"
-  - "char *"
+- "name": "muduo::TimeZone::loadZoneFile(char const*)"
+  "params":
+  - "name": ""
+    "type": "muduo::TimeZone *"
+  - "name": ""
+    "type": "char *"
   "return_type": "void"
   "signature": "void muduo::TimeZone::loadZoneFile(muduo::TimeZone * , char * )"
-- "name": "muduo::detail::readTimeZoneFile(charconst*,muduo::TimeZone::Data*)"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "char *"
-  - "struct.muduo::TimeZone::Data *"
+- "name": "muduo::detail::readTimeZoneFile(char const*, muduo::TimeZone::Data*)"
+  "params":
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "struct muduo::TimeZone::Data *"
   "return_type": "bool"
   "signature": "bool muduo::detail::readTimeZoneFile(char * , struct muduo::TimeZone::Data * )"
 - "name": "muduo::net::sockets::isSelfConnect(int)"
-  "param_names":
-  - ""
-  "param_types":
-  - "int"
+  "params":
+  - "name": ""
+    "type": "int"
   "return_type": "bool"
   "signature": "bool muduo::net::sockets::isSelfConnect(int )"
-- "name": "muduo::net::sockets::accept(int,sockaddr_in6*)"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "int"
-  - "struct.sockaddr_in6 *"
+- "name": "muduo::net::sockets::accept(int, sockaddr_in6*)"
+  "params":
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "struct sockaddr_in6 *"
   "return_type": "int"
   "signature": "int muduo::net::sockets::accept(int , struct sockaddr_in6 * )"
 "project": "muduo"

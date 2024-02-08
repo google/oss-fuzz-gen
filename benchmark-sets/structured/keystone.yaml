@@ -1,51 +1,46 @@
 "functions":
 - "name": "p_simp_re"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "struct.parse *"
-  - "int"
+  "params":
+  - "name": ""
+    "type": "struct parse *"
+  - "name": ""
+    "type": "int"
   "return_type": "int"
   "signature": "int p_simp_re(struct parse * , int )"
 - "name": "p_bre"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "struct.parse *"
-  - "int"
-  - "int"
+  "params":
+  - "name": ""
+    "type": "struct parse *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
   "return_type": "void"
   "signature": "void p_bre(struct parse * , int , int )"
 - "name": "lmatcher"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "struct.re_guts *"
-  - "char *"
-  - "size_t"
-  - "struct.timespec *"
-  - "int"
+  "params":
+  - "name": ""
+    "type": "struct re_guts *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "struct timespec *"
+  - "name": ""
+    "type": "int"
   "return_type": "int"
   "signature": "int lmatcher(struct re_guts * , char * , size_t , struct timespec * , int )"
 - "name": "p_str"
-  "param_names":
-  - ""
-  "param_types":
-  - "struct.parse *"
+  "params":
+  - "name": ""
+    "type": "struct parse *"
   "return_type": "void"
   "signature": "void p_str(struct parse * )"
 - "name": "nonnewline"
-  "param_names":
-  - ""
-  "param_types":
-  - "struct.parse *"
+  "params":
+  - "name": ""
+    "type": "struct parse *"
   "return_type": "void"
   "signature": "void nonnewline(struct parse * )"
 "project": "keystone"

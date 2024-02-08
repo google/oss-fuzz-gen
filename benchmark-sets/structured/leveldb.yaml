@@ -1,40 +1,35 @@
 "functions":
-- "name": "leveldb::(anonymousnamespace)::DBIter::Prev()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.leveldb::(anonymous namespace)::DBIter *"
+- "name": "leveldb::(anonymous namespace)::DBIter::Prev()"
+  "params":
+  - "name": ""
+    "type": "leveldb::(anonymous namespace)::DBIter *"
   "return_type": "void"
   "signature": "void leveldb::(leveldb::(anonymous namespace)::DBIter * )"
-- "name": "leveldb::(anonymousnamespace)::DBIter::SeekToLast()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.leveldb::(anonymous namespace)::DBIter *"
+- "name": "leveldb::(anonymous namespace)::DBIter::SeekToLast()"
+  "params":
+  - "name": ""
+    "type": "leveldb::(anonymous namespace)::DBIter *"
   "return_type": "void"
   "signature": "void leveldb::(leveldb::(anonymous namespace)::DBIter * )"
-- "name": "leveldb::(anonymousnamespace)::DBIter::FindPrevUserEntry()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.leveldb::(anonymous namespace)::DBIter *"
+- "name": "leveldb::(anonymous namespace)::DBIter::FindPrevUserEntry()"
+  "params":
+  - "name": ""
+    "type": "leveldb::(anonymous namespace)::DBIter *"
   "return_type": "void"
   "signature": "void leveldb::(leveldb::(anonymous namespace)::DBIter * )"
-- "name": "leveldb::(anonymousnamespace)::DBIter::Seek(leveldb::Sliceconst&)"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "class.leveldb::(anonymous namespace)::DBIter *"
-  - "class.FuzzedDataProvider *"
+- "name": "leveldb::(anonymous namespace)::DBIter::Seek(leveldb::Slice const&)"
+  "params":
+  - "name": ""
+    "type": "leveldb::(anonymous namespace)::DBIter *"
+  - "name": ""
+    "type": "FuzzedDataProvider *"
   "return_type": "void"
   "signature": "void leveldb::(leveldb::(anonymous namespace)::DBIter * , FuzzedDataProvider * )"
 - "name": "leveldb::DBImpl::TEST_NewInternalIterator()"
-  "param_names":
-  - ""
-  "param_types":
-  - "class.leveldb::DBImpl *"
-  "return_type": "class.leveldb::Iterator *"
+  "params":
+  - "name": ""
+    "type": "leveldb::DBImpl *"
+  "return_type": "leveldb::Iterator *"
   "signature": "leveldb::Iterator * leveldb::DBImpl::TEST_NewInternalIterator(leveldb::DBImpl * )"
 "project": "leveldb"
 "target_name": "fuzz_db"

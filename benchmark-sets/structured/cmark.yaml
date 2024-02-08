@@ -1,47 +1,42 @@
 "functions":
 - "name": "cmark_markdown_to_html"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "char *"
-  - "size_t"
-  - "int"
+  "params":
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "int"
   "return_type": "char *"
   "signature": "char * cmark_markdown_to_html(char * , size_t , int )"
 - "name": "cmark_parse_file"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "struct._IO_FILE *"
-  - "int"
-  "return_type": "struct.cmark_node *"
+  "params":
+  - "name": ""
+    "type": "struct _IO_FILE *"
+  - "name": ""
+    "type": "int"
+  "return_type": "struct cmark_node *"
   "signature": "struct cmark_node * cmark_parse_file(struct _IO_FILE * , int )"
 - "name": "cmark_parser_feed"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "struct.cmark_parser *"
-  - "char *"
-  - "size_t"
+  "params":
+  - "name": ""
+    "type": "struct cmark_parser *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
   "return_type": "void"
   "signature": "void cmark_parser_feed(struct cmark_parser * , char * , size_t )"
 - "name": "_scan_entity"
-  "param_names":
-  - ""
-  "param_types":
-  - "char *"
+  "params":
+  - "name": ""
+    "type": "char *"
   "return_type": "int"
   "signature": "int _scan_entity(char * )"
 - "name": "cmark_utf8proc_is_punctuation"
-  "param_names":
-  - ""
-  "param_types":
-  - "int"
+  "params":
+  - "name": ""
+    "type": "int"
   "return_type": "int"
   "signature": "int cmark_utf8proc_is_punctuation(int )"
 "project": "cmark"

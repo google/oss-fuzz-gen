@@ -1,46 +1,41 @@
 "functions":
 - "name": "jbig2_global_ctx_free"
-  "param_names":
-  - "global_ctx"
-  "param_types":
-  - "struct._Jbig2GlobalCtx *"
-  "return_type": "struct._Jbig2Allocator *"
+  "params":
+  - "name": "global_ctx"
+    "type": "struct _Jbig2GlobalCtx *"
+  "return_type": "struct _Jbig2Allocator *"
   "signature": "struct _Jbig2Allocator * jbig2_global_ctx_free(struct _Jbig2GlobalCtx * global_ctx)"
 - "name": "jbig2_default_realloc"
-  "param_names":
-  - "allocator"
-  - "p"
-  - "size"
-  "param_types":
-  - "struct._Jbig2Allocator *"
-  - "char *"
-  - "size_t"
+  "params":
+  - "name": "allocator"
+    "type": "struct _Jbig2Allocator *"
+  - "name": "p"
+    "type": "char *"
+  - "name": "size"
+    "type": "size_t"
   "return_type": "char *"
   "signature": "char * jbig2_default_realloc(struct _Jbig2Allocator * allocator, char * p, size_t size)"
 - "name": "jbig2_default_free"
-  "param_names":
-  - "allocator"
-  - "p"
-  "param_types":
-  - "struct._Jbig2Allocator *"
-  - "char *"
+  "params":
+  - "name": "allocator"
+    "type": "struct _Jbig2Allocator *"
+  - "name": "p"
+    "type": "char *"
   "return_type": "void"
   "signature": "void jbig2_default_free(struct _Jbig2Allocator * allocator, char * p)"
 - "name": "jbig2_default_alloc"
-  "param_names":
-  - "allocator"
-  - "size"
-  "param_types":
-  - "struct._Jbig2Allocator *"
-  - "size_t"
+  "params":
+  - "name": "allocator"
+    "type": "struct _Jbig2Allocator *"
+  - "name": "size"
+    "type": "size_t"
   "return_type": "char *"
   "signature": "char * jbig2_default_alloc(struct _Jbig2Allocator * allocator, size_t size)"
 - "name": "jbig2_make_global_ctx"
-  "param_names":
-  - "ctx"
-  "param_types":
-  - "struct._Jbig2Ctx *"
-  "return_type": "struct._Jbig2GlobalCtx *"
+  "params":
+  - "name": "ctx"
+    "type": "struct _Jbig2Ctx *"
+  "return_type": "struct _Jbig2GlobalCtx *"
   "signature": "struct _Jbig2GlobalCtx * jbig2_make_global_ctx(struct _Jbig2Ctx * ctx)"
 "project": "jbig2dec"
 "target_name": "jbig2_fuzzer"

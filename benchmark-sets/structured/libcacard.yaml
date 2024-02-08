@@ -1,35 +1,30 @@
 "functions":
 - "name": "vcard_emul_new_event_thread"
-  "param_names":
-  - "module"
-  "param_types":
-  - "struct.SECMODModuleStr *"
+  "params":
+  - "name": "module"
+    "type": "struct SECMODModuleStr *"
   "return_type": "void"
   "signature": "void vcard_emul_new_event_thread(struct SECMODModuleStr * module)"
 - "name": "vcard_emul_event_thread"
-  "param_names":
-  - "arg"
-  "param_types":
-  - "char *"
+  "params":
+  - "name": "arg"
+    "type": "char *"
   "return_type": "void"
   "signature": "void vcard_emul_event_thread(char * arg)"
 - "name": "vcard_emul_force_card_insert"
-  "param_names":
-  - "vreader"
-  "param_types":
-  - "struct.VReaderStruct *"
+  "params":
+  - "name": "vreader"
+    "type": "struct VReaderStruct *"
   "return_type": "int"
   "signature": "int vcard_emul_force_card_insert(struct VReaderStruct * vreader)"
 - "name": "vcard_emul_mirror_card"
-  "param_names":
-  - "vreader"
-  "param_types":
-  - "struct.VReaderStruct *"
-  "return_type": "struct.VCardStruct *"
+  "params":
+  - "name": "vreader"
+    "type": "struct VReaderStruct *"
+  "return_type": "struct VCardStruct *"
   "signature": "struct VCardStruct * vcard_emul_mirror_card(struct VReaderStruct * vreader)"
 - "name": "vcard_emul_replay_insertion_events"
-  "param_names": []
-  "param_types": []
+  "params": []
   "return_type": "void"
   "signature": "void vcard_emul_replay_insertion_events()"
 "project": "libcacard"

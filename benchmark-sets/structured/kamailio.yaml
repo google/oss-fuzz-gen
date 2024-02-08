@@ -1,41 +1,36 @@
 "functions":
 - "name": "main2"
-  "param_names":
-  - "argc"
-  - "argv"
-  "param_types":
-  - "int"
-  - "char **"
+  "params":
+  - "name": "argc"
+    "type": "int"
+  - "name": "argv"
+    "type": "char **"
   "return_type": "int"
   "signature": "int main2(int argc, char ** argv)"
 - "name": "main_loop"
-  "param_names": []
-  "param_types": []
+  "params": []
   "return_type": "int"
   "signature": "int main_loop()"
 - "name": "tcp_init_children"
-  "param_names":
-  - "woneinit"
-  "param_types":
-  - "int *"
+  "params":
+  - "name": "woneinit"
+    "type": "int *"
   "return_type": "int"
   "signature": "int tcp_init_children(int * woneinit)"
 - "name": "handle_tcpconn_ev"
-  "param_names":
-  - "tcpconn"
-  - "ev"
-  - "fd_i"
-  "param_types":
-  - "struct.tcp_connection *"
-  - "short"
-  - "int"
+  "params":
+  - "name": "tcpconn"
+    "type": "struct tcp_connection *"
+  - "name": "ev"
+    "type": "short"
+  - "name": "fd_i"
+    "type": "int"
   "return_type": "int"
   "signature": "int handle_tcpconn_ev(struct tcp_connection * tcpconn, short ev, int fd_i)"
 - "name": "fix_actions"
-  "param_names":
-  - "a"
-  "param_types":
-  - "struct.action *"
+  "params":
+  - "name": "a"
+    "type": "struct action *"
   "return_type": "int"
   "signature": "int fix_actions(struct action * a)"
 "project": "kamailio"

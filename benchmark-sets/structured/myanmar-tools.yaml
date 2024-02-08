@@ -1,34 +1,30 @@
 "functions":
 - "name": "GMTOpenZawgyiDetector"
-  "param_names": []
-  "param_types": []
-  "return_type": "struct.GMTZawgyiDetector *"
+  "params": []
+  "return_type": "struct GMTZawgyiDetector *"
   "signature": "struct GMTZawgyiDetector * GMTOpenZawgyiDetector()"
 - "name": "GMTGetZawgyiProbability"
-  "param_names":
-  - "detector"
-  - "input_utf8"
-  "param_types":
-  - "struct.GMTZawgyiDetector *"
-  - "char *"
+  "params":
+  - "name": "detector"
+    "type": "struct GMTZawgyiDetector *"
+  - "name": "input_utf8"
+    "type": "char *"
   "return_type": "double"
   "signature": "double GMTGetZawgyiProbability(struct GMTZawgyiDetector * detector, char * input_utf8)"
 - "name": "GMTGetZawgyiProbabilityWithLength"
-  "param_names":
-  - "detector"
-  - "input_utf8"
-  - "length"
-  "param_types":
-  - "struct.GMTZawgyiDetector *"
-  - "char *"
-  - "int"
+  "params":
+  - "name": "detector"
+    "type": "struct GMTZawgyiDetector *"
+  - "name": "input_utf8"
+    "type": "char *"
+  - "name": "length"
+    "type": "int"
   "return_type": "double"
   "signature": "double GMTGetZawgyiProbabilityWithLength(struct GMTZawgyiDetector * detector, char * input_utf8, int length)"
 - "name": "GMTCloseZawgyiDetector"
-  "param_names":
-  - "detector"
-  "param_types":
-  - "struct.GMTZawgyiDetector *"
+  "params":
+  - "name": "detector"
+    "type": "struct GMTZawgyiDetector *"
   "return_type": "void"
   "signature": "void GMTCloseZawgyiDetector(struct GMTZawgyiDetector * detector)"
 "project": "myanmar-tools"

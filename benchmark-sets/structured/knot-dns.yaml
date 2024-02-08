@@ -1,41 +1,36 @@
 "functions":
 - "name": "handshake_client"
-  "param_names":
-  - "session"
-  "param_types":
-  - "struct.gnutls_session_int *"
+  "params":
+  - "name": "session"
+    "type": "struct gnutls_session_int *"
   "return_type": "int"
   "signature": "int handshake_client(struct gnutls_session_int * session)"
 - "name": "handshake_server"
-  "param_names":
-  - "session"
-  "param_types":
-  - "struct.gnutls_session_int *"
+  "params":
+  - "name": "session"
+    "type": "struct gnutls_session_int *"
   "return_type": "int"
   "signature": "int handshake_server(struct gnutls_session_int * session)"
 - "name": "check_session_status"
-  "param_names":
-  - "session"
-  - "ms"
-  "param_types":
-  - "struct.gnutls_session_int *"
-  - "int"
+  "params":
+  - "name": "session"
+    "type": "struct gnutls_session_int *"
+  - "name": "ms"
+    "type": "int"
   "return_type": "size_t"
   "signature": "size_t check_session_status(struct gnutls_session_int * session, int ms)"
 - "name": "recv_handshake_final"
-  "param_names":
-  - "session"
-  - "init"
-  "param_types":
-  - "struct.gnutls_session_int *"
-  - "int"
+  "params":
+  - "name": "session"
+    "type": "struct gnutls_session_int *"
+  - "name": "init"
+    "type": "int"
   "return_type": "int"
   "signature": "int recv_handshake_final(struct gnutls_session_int * session, int init)"
 - "name": "gnutls_handshake"
-  "param_names":
-  - "session"
-  "param_types":
-  - "struct.gnutls_session_int *"
+  "params":
+  - "name": "session"
+    "type": "struct gnutls_session_int *"
   "return_type": "int"
   "signature": "int gnutls_handshake(struct gnutls_session_int * session)"
 "project": "knot-dns"

@@ -1,51 +1,46 @@
 "functions":
 - "name": "save_seed"
-  "param_names":
-  - "opt"
-  "param_types":
-  - "char *"
+  "params":
+  - "name": "opt"
+    "type": "char *"
   "return_type": "int"
   "signature": "int save_seed(char * opt)"
 - "name": "LLVMFuzzerCustomMutator"
-  "param_names":
-  - "data"
-  - "size"
-  - "maxsize"
-  - "seed"
-  "param_types":
-  - "char *"
-  - "size_t"
-  - "size_t"
-  - "int"
+  "params":
+  - "name": "data"
+    "type": "char *"
+  - "name": "size"
+    "type": "size_t"
+  - "name": "maxsize"
+    "type": "size_t"
+  - "name": "seed"
+    "type": "int"
   "return_type": "size_t"
   "signature": "size_t LLVMFuzzerCustomMutator(char * data, size_t size, size_t maxsize, int seed)"
 - "name": "pack_dummy"
-  "param_names":
-  - "ptr"
-  - "len"
-  "param_types":
-  - "char *"
-  - "size_t"
+  "params":
+  - "name": "ptr"
+    "type": "char *"
+  - "name": "len"
+    "type": "size_t"
   "return_type": "size_t"
   "signature": "size_t pack_dummy(char * ptr, size_t len)"
 - "name": "parse_mutate_flags"
-  "param_names":
-  - "opt"
-  - "mutate_flags"
-  "param_types":
-  - "char *"
-  - "int *"
+  "params":
+  - "name": "opt"
+    "type": "char *"
+  - "name": "mutate_flags"
+    "type": "int *"
   "return_type": "void"
   "signature": "void parse_mutate_flags(char * opt, int * mutate_flags)"
 - "name": "mutate"
-  "param_names":
-  - "p"
-  - "seed"
-  - "flags"
-  "param_types":
-  - "struct.param *"
-  - "int"
-  - "int"
+  "params":
+  - "name": "p"
+    "type": "struct param *"
+  - "name": "seed"
+    "type": "int"
+  - "name": "flags"
+    "type": "int"
   "return_type": "void"
   "signature": "void mutate(struct param * p, int seed, int flags)"
 "project": "libfido2"

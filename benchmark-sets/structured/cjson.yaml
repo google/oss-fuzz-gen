@@ -1,53 +1,48 @@
 "functions":
 - "name": "cJSON_Parse"
-  "param_names":
-  - "value"
-  "param_types":
-  - "char *"
-  "return_type": "struct.cJSON *"
+  "params":
+  - "name": "value"
+    "type": "char *"
+  "return_type": "struct cJSON *"
   "signature": "struct cJSON * cJSON_Parse(char * value)"
 - "name": "cJSON_ParseWithLength"
-  "param_names":
-  - "value"
-  - "buffer_length"
-  "param_types":
-  - "char *"
-  - "size_t"
-  "return_type": "struct.cJSON *"
+  "params":
+  - "name": "value"
+    "type": "char *"
+  - "name": "buffer_length"
+    "type": "size_t"
+  "return_type": "struct cJSON *"
   "signature": "struct cJSON * cJSON_ParseWithLength(char * value, size_t buffer_length)"
 - "name": "cJSON_PrintPreallocated"
-  "param_names":
-  - "item"
-  - "buffer"
-  - "length"
-  - "format"
-  "param_types":
-  - "struct.cJSON *"
-  - "char *"
-  - "int"
-  - "int"
+  "params":
+  - "name": "item"
+    "type": "struct cJSON *"
+  - "name": "buffer"
+    "type": "char *"
+  - "name": "length"
+    "type": "int"
+  - "name": "format"
+    "type": "int"
   "return_type": "int"
   "signature": "int cJSON_PrintPreallocated(struct cJSON * item, char * buffer, int length, int format)"
 - "name": "cJSON_Compare"
-  "param_names":
-  - "a"
-  - "b"
-  - "case_sensitive"
-  "param_types":
-  - "struct.cJSON *"
-  - "struct.cJSON *"
-  - "int"
+  "params":
+  - "name": "a"
+    "type": "struct cJSON *"
+  - "name": "b"
+    "type": "struct cJSON *"
+  - "name": "case_sensitive"
+    "type": "int"
   "return_type": "int"
   "signature": "int cJSON_Compare(struct cJSON * a, struct cJSON * b, int case_sensitive)"
 - "name": "cJSON_ReplaceItemInObjectCaseSensitive"
-  "param_names":
-  - "object"
-  - "string"
-  - "newitem"
-  "param_types":
-  - "struct.cJSON *"
-  - "char *"
-  - "struct.cJSON *"
+  "params":
+  - "name": "object"
+    "type": "struct cJSON *"
+  - "name": "string"
+    "type": "char *"
+  - "name": "newitem"
+    "type": "struct cJSON *"
   "return_type": "int"
   "signature": "int cJSON_ReplaceItemInObjectCaseSensitive(struct cJSON * object, char * string, struct cJSON * newitem)"
 "project": "cjson"

@@ -1,49 +1,44 @@
 "functions":
-- "name": "LibRaw::open_file(charconst*)"
-  "param_names":
-  - "this"
-  - "fname"
-  "param_types":
-  - "class.LibRaw *"
-  - "char *"
+- "name": "LibRaw::open_file(char const*)"
+  "params":
+  - "name": "this"
+    "type": "LibRaw *"
+  - "name": "fname"
+    "type": "char *"
   "return_type": "int"
   "signature": "int LibRaw::open_file(LibRaw * this, char * fname)"
 - "name": "LibRaw::libraw_openfile_tail(LibRaw_abstract_datastream*)"
-  "param_names":
-  - "this"
-  - "stream"
-  "param_types":
-  - "class.LibRaw *"
-  - "class.std::exception *"
+  "params":
+  - "name": "this"
+    "type": "LibRaw *"
+  - "name": "stream"
+    "type": "std::exception *"
   "return_type": "int"
   "signature": "int LibRaw::libraw_openfile_tail(LibRaw * this, std::exception * stream)"
 - "name": "LibRaw::unpack_function_name()"
-  "param_names":
-  - "this"
-  "param_types":
-  - "class.LibRaw *"
+  "params":
+  - "name": "this"
+    "type": "LibRaw *"
   "return_type": "char *"
   "signature": "char * LibRaw::unpack_function_name(LibRaw * this)"
-- "name": "LibRaw::crxLoadDecodeLoop(void*,int)"
-  "param_names":
-  - "this"
-  - "img"
-  - "nPlanes"
-  "param_types":
-  - "class.LibRaw *"
-  - "char *"
-  - "int"
+- "name": "LibRaw::crxLoadDecodeLoop(void*, int)"
+  "params":
+  - "name": "this"
+    "type": "LibRaw *"
+  - "name": "img"
+    "type": "char *"
+  - "name": "nPlanes"
+    "type": "int"
   "return_type": "void"
   "signature": "void LibRaw::crxLoadDecodeLoop(LibRaw * this, char * img, int nPlanes)"
-- "name": "LibRaw::crxDecodePlane(void*,unsignedint)"
-  "param_names":
-  - "this"
-  - "p"
-  - "planeNumber"
-  "param_types":
-  - "class.LibRaw *"
-  - "char *"
-  - "int"
+- "name": "LibRaw::crxDecodePlane(void*, unsigned int)"
+  "params":
+  - "name": "this"
+    "type": "LibRaw *"
+  - "name": "p"
+    "type": "char *"
+  - "name": "planeNumber"
+    "type": "int"
   "return_type": "int"
   "signature": "int LibRaw::crxDecodePlane(LibRaw * this, char * p, int planeNumber)"
 "project": "libraw"

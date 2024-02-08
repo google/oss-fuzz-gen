@@ -1,41 +1,36 @@
 "functions":
 - "name": "cpuinfo_linux_get_processor_package_id"
-  "param_names":
-  - "processor"
-  - "package_id_ptr"
-  "param_types":
-  - "int"
-  - "int *"
+  "params":
+  - "name": "processor"
+    "type": "int"
+  - "name": "package_id_ptr"
+    "type": "int *"
   "return_type": "bool"
   "signature": "bool cpuinfo_linux_get_processor_package_id(int processor, int * package_id_ptr)"
 - "name": "cpuinfo_linux_get_processor_core_id"
-  "param_names":
-  - "processor"
-  - "core_id_ptr"
-  "param_types":
-  - "int"
-  - "int *"
+  "params":
+  - "name": "processor"
+    "type": "int"
+  - "name": "core_id_ptr"
+    "type": "int *"
   "return_type": "bool"
   "signature": "bool cpuinfo_linux_get_processor_core_id(int processor, int * core_id_ptr)"
 - "name": "cpuinfo_linux_get_processor_min_frequency"
-  "param_names":
-  - "processor"
-  "param_types":
-  - "int"
+  "params":
+  - "name": "processor"
+    "type": "int"
   "return_type": "int"
   "signature": "int cpuinfo_linux_get_processor_min_frequency(int processor)"
 - "name": "cpuinfo_linux_get_processor_max_frequency"
-  "param_names":
-  - "processor"
-  "param_types":
-  - "int"
+  "params":
+  - "name": "processor"
+    "type": "int"
   "return_type": "int"
   "signature": "int cpuinfo_linux_get_processor_max_frequency(int processor)"
 - "name": "cpuinfo_linux_get_processor_cur_frequency"
-  "param_names":
-  - "processor"
-  "param_types":
-  - "int"
+  "params":
+  - "name": "processor"
+    "type": "int"
   "return_type": "int"
   "signature": "int cpuinfo_linux_get_processor_cur_frequency(int processor)"
 "project": "cpuinfo"

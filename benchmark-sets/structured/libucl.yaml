@@ -1,53 +1,48 @@
 "functions":
 - "name": "ucl_parser_add_fd"
-  "param_names":
-  - "parser"
-  - "fd"
-  "param_types":
-  - "struct.ucl_parser *"
-  - "int"
+  "params":
+  - "name": "parser"
+    "type": "struct ucl_parser *"
+  - "name": "fd"
+    "type": "int"
   "return_type": "bool"
   "signature": "bool ucl_parser_add_fd(struct ucl_parser * parser, int fd)"
 - "name": "ucl_parser_add_fd_priority"
-  "param_names":
-  - "parser"
-  - "fd"
-  - "priority"
-  "param_types":
-  - "struct.ucl_parser *"
-  - "int"
-  - "int"
+  "params":
+  - "name": "parser"
+    "type": "struct ucl_parser *"
+  - "name": "fd"
+    "type": "int"
+  - "name": "priority"
+    "type": "int"
   "return_type": "bool"
   "signature": "bool ucl_parser_add_fd_priority(struct ucl_parser * parser, int fd, int priority)"
 - "name": "ucl_parser_add_file"
-  "param_names":
-  - "parser"
-  - "filename"
-  "param_types":
-  - "struct.ucl_parser *"
-  - "char *"
+  "params":
+  - "name": "parser"
+    "type": "struct ucl_parser *"
+  - "name": "filename"
+    "type": "char *"
   "return_type": "bool"
   "signature": "bool ucl_parser_add_file(struct ucl_parser * parser, char * filename)"
 - "name": "ucl_parser_add_file_priority"
-  "param_names":
-  - "parser"
-  - "filename"
-  - "priority"
-  "param_types":
-  - "struct.ucl_parser *"
-  - "char *"
-  - "int"
+  "params":
+  - "name": "parser"
+    "type": "struct ucl_parser *"
+  - "name": "filename"
+    "type": "char *"
+  - "name": "priority"
+    "type": "int"
   "return_type": "bool"
   "signature": "bool ucl_parser_add_file_priority(struct ucl_parser * parser, char * filename, int priority)"
 - "name": "ucl_parser_insert_chunk"
-  "param_names":
-  - "parser"
-  - "data"
-  - "len"
-  "param_types":
-  - "struct.ucl_parser *"
-  - "char *"
-  - "size_t"
+  "params":
+  - "name": "parser"
+    "type": "struct ucl_parser *"
+  - "name": "data"
+    "type": "char *"
+  - "name": "len"
+    "type": "size_t"
   "return_type": "bool"
   "signature": "bool ucl_parser_insert_chunk(struct ucl_parser * parser, char * data, size_t len)"
 "project": "libucl"

@@ -1,47 +1,42 @@
 "functions":
-- "name": "brpc::policy::ConsulNamingService::RunNamingService(charconst*,brpc::NamingServiceActions*)"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "class.brpc::policy::ConsulNamingService.6318 *"
-  - "char *"
-  - "class.google::protobuf::DescriptorPool::ErrorCollector *"
+- "name": "brpc::policy::ConsulNamingService::RunNamingService(char const*, brpc::NamingServiceActions*)"
+  "params":
+  - "name": ""
+    "type": "brpc::policy::ConsulNamingService *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "brpc::Destroyable *"
   "return_type": "int"
-  "signature": "int brpc::policy::ConsulNamingService::RunNamingService(brpc::policy::ConsulNamingService * , char * , google::protobuf::DescriptorPool::ErrorCollector * )"
+  "signature": "int brpc::policy::ConsulNamingService::RunNamingService(brpc::policy::ConsulNamingService * , char * , brpc::Destroyable * )"
 - "name": "brpc::GlobalUpdate(void*)"
-  "param_names":
-  - ""
-  "param_types":
-  - "char *"
+  "params":
+  - "name": ""
+    "type": "char *"
   "return_type": "char *"
   "signature": "char * brpc::GlobalUpdate(char * )"
-- "name": "brpc::policy::ConsulNamingService::GetServers(charconst*,std::vector<brpc::ServerNode,std::allocator<brpc::ServerNode>>*)"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "class.brpc::policy::ConsulNamingService.6318 *"
-  - "char *"
-  - "class.std::vector.5176 *"
+- "name": "brpc::policy::ConsulNamingService::GetServers(char const*, std::vector<brpc::ServerNode, std::allocator<brpc::ServerNode> >*)"
+  "params":
+  - "name": ""
+    "type": "brpc::policy::ConsulNamingService *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "std::vector *"
   "return_type": "int"
   "signature": "int brpc::policy::ConsulNamingService::GetServers(brpc::policy::ConsulNamingService * , char * , std::vector * )"
-- "name": "brpc::policy::DiscoveryClient::Register(brpc::policy::DiscoveryRegisterParamconst&)"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "class.brpc::policy::DiscoveryClient *"
-  - "struct.brpc::policy::DiscoveryRegisterParam *"
+- "name": "brpc::policy::DiscoveryClient::Register(brpc::policy::DiscoveryRegisterParam const&)"
+  "params":
+  - "name": ""
+    "type": "brpc::policy::DiscoveryClient *"
+  - "name": ""
+    "type": "struct brpc::policy::DiscoveryRegisterParam *"
   "return_type": "int"
   "signature": "int brpc::policy::DiscoveryClient::Register(brpc::policy::DiscoveryClient * , struct brpc::policy::DiscoveryRegisterParam * )"
 - "name": "brpc::policy::DiscoveryClient::PeriodicRenew(void*)"
-  "param_names":
-  - ""
-  "param_types":
-  - "char *"
+  "params":
+  - "name": ""
+    "type": "char *"
   "return_type": "char *"
   "signature": "char * brpc::policy::DiscoveryClient::PeriodicRenew(char * )"
 "project": "brpc"

@@ -1,45 +1,40 @@
 "functions":
 - "name": "wpa_supplicant_add_iface"
-  "param_names":
-  - "global"
-  - "iface"
-  - "parent"
-  "param_types":
-  - "struct.wpa_global *"
-  - "struct.wpa_interface *"
-  - "struct.wpa_supplicant *"
-  "return_type": "struct.wpa_supplicant *"
+  "params":
+  - "name": "global"
+    "type": "struct wpa_global *"
+  - "name": "iface"
+    "type": "struct wpa_interface *"
+  - "name": "parent"
+    "type": "struct wpa_supplicant *"
+  "return_type": "struct wpa_supplicant *"
   "signature": "struct wpa_supplicant * wpa_supplicant_add_iface(struct wpa_global * global, struct wpa_interface * iface, struct wpa_supplicant * parent)"
 - "name": "wpa_supplicant_init_iface"
-  "param_names":
-  - "wpa_s"
-  - "iface"
-  "param_types":
-  - "struct.wpa_supplicant *"
-  - "struct.wpa_interface *"
+  "params":
+  - "name": "wpa_s"
+    "type": "struct wpa_supplicant *"
+  - "name": "iface"
+    "type": "struct wpa_interface *"
   "return_type": "int"
   "signature": "int wpa_supplicant_init_iface(struct wpa_supplicant * wpa_s, struct wpa_interface * iface)"
 - "name": "hostapd_reload_config"
-  "param_names":
-  - "iface"
-  "param_types":
-  - "struct.hostapd_iface.610 *"
+  "params":
+  - "name": "iface"
+    "type": "struct hostapd_iface *"
   "return_type": "int"
   "signature": "int hostapd_reload_config(struct hostapd_iface * iface)"
 - "name": "wpa_supplicant_run"
-  "param_names":
-  - "global"
-  "param_types":
-  - "struct.wpa_global *"
+  "params":
+  - "name": "global"
+    "type": "struct wpa_global *"
   "return_type": "int"
   "signature": "int wpa_supplicant_run(struct wpa_global * global)"
 - "name": "hostapd_add_iface"
-  "param_names":
-  - "interfaces"
-  - "buf"
-  "param_types":
-  - "struct.hapd_interfaces.606 *"
-  - "char *"
+  "params":
+  - "name": "interfaces"
+    "type": "struct hapd_interfaces *"
+  - "name": "buf"
+    "type": "char *"
   "return_type": "int"
   "signature": "int hostapd_add_iface(struct hapd_interfaces * interfaces, char * buf)"
 "project": "hostap"

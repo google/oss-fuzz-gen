@@ -1,39 +1,34 @@
 "functions":
-- "name": "iter::impl::Combinator<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>&>::Iterator<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>&>::zero_length_end(std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>&)"
-  "param_names":
-  - "container"
-  - ""
-  "param_types":
-  - "class.iter::impl::Combinator<std::__1::string &>::Iterator *"
-  - "class.std::__1::basic_string *"
+- "name": "iter::impl::Combinator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&>::Iterator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&>::zero_length_end(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&)"
+  "params":
+  - "name": "container"
+    "type": "iter::impl::Combinator<std::string &>::Iterator *"
+  - "name": ""
+    "type": "std::string *"
   "return_type": "void"
   "signature": "void iter::impl::Combinator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&>::Iterator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&>::zero_length_end(iter::impl::Combinator<std::string &>::Iterator * container, std::string * )"
-- "name": "iter::impl::Compressed<std::__1::vector<int,std::__1::allocator<int>>&,std::__1::vector<bool,std::__1::allocator<bool>>&>::Iterator<std::__1::vector<int,std::__1::allocator<int>>&,std::__1::vector<bool,std::__1::allocator<bool>>&>::operator++()"
-  "param_names":
-  - "this"
-  "param_types":
-  - "class.iter::impl::Compressed<std::__1::vector<int> &, std::__1::vector<bool> &>::Iterator *"
-  "return_type": "class.iter::impl::Compressed<std::__1::vector<int> &, std::__1::vector<bool> &>::Iterator *"
+- "name": "iter::impl::Compressed<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::operator++()"
+  "params":
+  - "name": "this"
+    "type": "iter::impl::Compressed<std::vector<int> &, std::vector<bool> &>::Iterator *"
+  "return_type": "iter::impl::Compressed<std::vector<int> &, std::vector<bool> &>::Iterator *"
   "signature": "iter::impl::Compressed<std::vector<int> &, std::vector<bool> &>::Iterator * iter::impl::Compressed<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::operator++(iter::impl::Compressed<std::vector<int> &, std::vector<bool> &>::Iterator * this)"
-- "name": "iter::impl::Combinator<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>&>::Iterator<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>&>::~Iterator()"
-  "param_names":
-  - "this"
-  "param_types":
-  - "class.iter::impl::Combinator<std::__1::string &>::Iterator *"
+- "name": "iter::impl::Combinator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&>::Iterator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&>::~Iterator()"
+  "params":
+  - "name": "this"
+    "type": "iter::impl::Combinator<std::string &>::Iterator *"
   "return_type": "void"
   "signature": "void iter::impl::Combinator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&>::Iterator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&>::~Iterator(iter::impl::Combinator<std::string &>::Iterator * this)"
-- "name": "iter::impl::Compressed<std::__1::vector<int,std::__1::allocator<int>>&,std::__1::vector<bool,std::__1::allocator<bool>>&>::Iterator<std::__1::vector<int,std::__1::allocator<int>>&,std::__1::vector<bool,std::__1::allocator<bool>>&>::increment_iterators()"
-  "param_names":
-  - "this"
-  "param_types":
-  - "class.iter::impl::Compressed<std::__1::vector<int> &, std::__1::vector<bool> &>::Iterator *"
+- "name": "iter::impl::Compressed<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::increment_iterators()"
+  "params":
+  - "name": "this"
+    "type": "iter::impl::Compressed<std::vector<int> &, std::vector<bool> &>::Iterator *"
   "return_type": "void"
   "signature": "void iter::impl::Compressed<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::increment_iterators(iter::impl::Compressed<std::vector<int> &, std::vector<bool> &>::Iterator * this)"
-- "name": "iter::impl::Compressed<std::__1::vector<int,std::__1::allocator<int>>&,std::__1::vector<bool,std::__1::allocator<bool>>&>::Iterator<std::__1::vector<int,std::__1::allocator<int>>&,std::__1::vector<bool,std::__1::allocator<bool>>&>::operator*()"
-  "param_names":
-  - "this"
-  "param_types":
-  - "class.iter::impl::Compressed<std::__1::vector<int> &, std::__1::vector<bool> &>::Iterator *"
+- "name": "iter::impl::Compressed<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::operator*()"
+  "params":
+  - "name": "this"
+    "type": "iter::impl::Compressed<std::vector<int> &, std::vector<bool> &>::Iterator *"
   "return_type": "int *"
   "signature": "int * iter::impl::Compressed<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::operator*(iter::impl::Compressed<std::vector<int> &, std::vector<bool> &>::Iterator * this)"
 "project": "cppitertools"
