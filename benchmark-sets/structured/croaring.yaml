@@ -1,50 +1,45 @@
 "functions":
 - "name": "roaring_bitmap_add_offset"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "struct.roaring_bitmap_s *"
-  - "size_t"
-  "return_type": "struct.roaring_bitmap_s *"
+  "params":
+  - "name": ""
+    "type": "struct roaring_bitmap_s *"
+  - "name": ""
+    "type": "size_t"
+  "return_type": "struct roaring_bitmap_s *"
   "signature": "struct roaring_bitmap_s * roaring_bitmap_add_offset(struct roaring_bitmap_s * , size_t )"
 - "name": "roaring_bitmap_xor_many"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "size_t"
-  - "struct.roaring_bitmap_s **"
-  "return_type": "struct.roaring_bitmap_s *"
+  "params":
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "struct roaring_bitmap_s **"
+  "return_type": "struct roaring_bitmap_s *"
   "signature": "struct roaring_bitmap_s * roaring_bitmap_xor_many(size_t , struct roaring_bitmap_s ** )"
 - "name": "roaring_bitmap_or_many"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "size_t"
-  - "struct.roaring_bitmap_s **"
-  "return_type": "struct.roaring_bitmap_s *"
+  "params":
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "struct roaring_bitmap_s **"
+  "return_type": "struct roaring_bitmap_s *"
   "signature": "struct roaring_bitmap_s * roaring_bitmap_or_many(size_t , struct roaring_bitmap_s ** )"
 - "name": "roaring_bitmap_lazy_xor_inplace"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "struct.roaring_bitmap_s *"
-  - "struct.roaring_bitmap_s *"
+  "params":
+  - "name": ""
+    "type": "struct roaring_bitmap_s *"
+  - "name": ""
+    "type": "struct roaring_bitmap_s *"
   "return_type": "void"
   "signature": "void roaring_bitmap_lazy_xor_inplace(struct roaring_bitmap_s * , struct roaring_bitmap_s * )"
 - "name": "roaring_bitmap_lazy_or"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "struct.roaring_bitmap_s *"
-  - "struct.roaring_bitmap_s *"
-  - "bool"
-  "return_type": "struct.roaring_bitmap_s *"
+  "params":
+  - "name": ""
+    "type": "struct roaring_bitmap_s *"
+  - "name": ""
+    "type": "struct roaring_bitmap_s *"
+  - "name": ""
+    "type": "bool"
+  "return_type": "struct roaring_bitmap_s *"
   "signature": "struct roaring_bitmap_s * roaring_bitmap_lazy_or(struct roaring_bitmap_s * , struct roaring_bitmap_s * , bool )"
 "project": "croaring"
 "target_name": "croaring_fuzzer_cc"
