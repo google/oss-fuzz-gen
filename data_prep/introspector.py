@@ -121,7 +121,7 @@ def _get_clean_function_name(function: dict) -> str:
     function_name = function_name[len(raw_return_type.strip()):]
   elif function_name.startswith(cleaned_return_type):
     function_name = function_name[len(cleaned_return_type):]
-  return function_name
+  return function_name.strip()
 
 
 def _get_clean_arg_types(function: dict) -> list[str]:
