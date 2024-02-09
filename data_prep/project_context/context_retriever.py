@@ -35,6 +35,12 @@ class ContextRetriever:
     self._function_name = benchmark.function_name
     self._params = benchmark.params
     self._return_type = benchmark.return_type
+    self._is_cpp = benchmarklib.is_cpp_file(benchmark.target_path)
+    self._namespace_tokens = []
+
+    if self._is_cpp:
+      fully_qual_namespace = self._function_signature.split('(')[0].split(' ')[-1]
+      self._namespace_tokens = fully_qual_namespace.split('::')[:-1]
 
     self._download_from_path = f'{self.AST_BASE_PATH}/{self._project_name}/*'
     self._uuid = uuid.uuid4()
@@ -221,29 +227,75 @@ class ContextRetriever:
 
     return dequal_type
 
-  def _get_header_from_file(self, fully_qualified_path: str) -> str:
-    """Searches a single AST to determine if the function signature can be found.
-    Returns the file for the signature if found.
-    Retrieve that node's loc->file to get the file where the FunctionDecl exists."""
+  def _get_namespace_node(self, namespace_node, current_depth: int) -> bool:
+    if namespace_node.get('name') != self._namespace_tokens[current_depth]:
+      return False
+
+    current_depth += 1
+
+    for node in namespace_node.get('inner'):
+      if current_depth == len(self._namespace_tokens):
+        if node.get('name') == self._function_name:
+          return True
+      
+      if node.get('kind') == 'NamespaceDecl' and current_depth < len(self._namespace_tokens):
+        if not self._get_namespace_node(node, current_depth):
+          continue
+        else:
+          return True
+
+    return False
+
+  def _search_backwards_for_header(self, search_index: int, ast_nodes) -> str:
+    """Iterates backwards over a node to get the file location.
+    This is required because the AST stores the file location only on the 
+    top most node of the file which can contain a loc object (?)."""
+    current_index = search_index
+
+    while current_index > 0:
+      search_node = ast_nodes[current_index]
+      current_index -= 1
+      if 'file' in search_node.get('loc', ''):
+        return search_node.get('loc').get('file')
+    
+    return ''
+
+  def _get_header_cpp_from_file(self, fully_qualified_path: str) -> str:
+    """ Retrieves the header for a cpp project.
+    Looks through NamespaceDecls, so for a cpp project where functions to fuzz are not under a namespace
+    treat them as C projects."""
     target_function = self._function_name
 
     with open(fully_qualified_path) as ast_file:
       ast_json = json.load(ast_file)
-      # AST nodes are all wrapped in an inner node.
-      ast_nodes = ast_json.get('inner', [])
 
-      for num, ast_node in enumerate(ast_nodes):
-        if ast_node.get('kind') != 'FunctionDecl' or ast_node.get(
-            'name') != target_function:
-          continue
-        # If file is not there, search backwards for a node where file is defined.
-        current_index = num
-        while current_index > 0:
-          search_node = ast_nodes[current_index]
-          current_index -= 1
-          if 'file' in search_node.get('loc'):
-            return search_node.get('loc').get('file')
+    ast_nodes = ast_json.get('inner', [])
+    
+    for num, ast_node in enumerate(ast_nodes):
+      if ast_node.get('kind') == 'NamespaceDecl':
+        found = self._get_namespace_node(ast_node, 0)
+        
+        if found:
+          return self._search_backwards_for_header(num, ast_nodes)
+    
+    return ''
 
+  def _get_header_from_file(self, fully_qualified_path: str) -> str:
+    """Searches a single AST to determine if the function signature can be found.
+    Returns the file for the signature if found.
+    Retrieve that node's loc->file to get the file where the FunctionDecl exists."""
+    with open(fully_qualified_path) as ast_file:
+      ast_json = json.load(ast_file)
+
+    ast_nodes = ast_json.get('inner', [])
+
+    for num, ast_node in enumerate(ast_nodes):
+      if ast_node.get('kind') != 'FunctionDecl' or ast_node.get(
+          'name') != self._function_name:
+        continue
+     
+      return self._search_backwards_for_header(num, ast_nodes) 
+        
     return ''
 
   def retrieve_asts(self):
@@ -300,13 +352,17 @@ class ContextRetriever:
     """Goes through all AST files looking for a file where a FunctionDecl exists for the target function."""
     for ast_file_path in os.listdir(self._ast_path):
       try:
-        header = self._get_header_from_file(f'{self._ast_path}/{ast_file_path}')
-        if header != '':
-          return header
-      # ASTs from the bucket are occasionally empty.
+        if self._is_cpp and len(self._namespace_tokens) > 0:
+          header = self._get_header_cpp_from_file(f'{self._ast_path}/{ast_file_path}')
+        else:
+          header = self._get_header_from_file(f'{self._ast_path}/{ast_file_path}')
       except Exception as e:
+        # ASTs from the bucket are occasionally empty.
         print(e)
         continue
+      
+      if header:
+        return os.path.abspath(header)
 
     print(f'Header location could not be found for {self._function_signature}')
     return ''
