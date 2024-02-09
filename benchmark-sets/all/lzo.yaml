@@ -1,4 +1,3 @@
-Retrieving human-written fuzz targets of lzo from local Docker build.
 functions:
 - int lzo1z_999_compress_dict(char * in, size_t in_len, char * out, size_t * out_len,
   char * wrkmem, char * dict, size_t dict_len)
@@ -9,6 +8,10 @@ functions:
 - void swd_insertdict(struct lzo2a_999_swd_t * s, size_t node, size_t len)
 - size_t lzo1_info(int * rbits, int * clevel)
 project: lzo
+target_name: all_lzo_compress
+target_path: /src/all_lzo_compress.cc
+
+
 target_name: all_lzo_compress
 target_path: /src/all_lzo_compress.cc
 

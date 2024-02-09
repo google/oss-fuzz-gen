@@ -1,4 +1,3 @@
-Retrieving human-written fuzz targets of libavif from local Docker build.
 functions:
 - int aom_decode_frame_from_obus(struct AV1Decoder * , char * , char * , char ** )
 - int read_and_decode_one_tile_list(struct AV1Decoder * , struct aom_read_bit_buffer
@@ -10,5 +9,8 @@ functions:
   )
 project: libavif
 target_name: repro_fuzz
+target_path: /src/libavif/tests/oss-fuzz/repro_fuzz.cc
+
+_name: repro_fuzz
 target_path: /src/libavif/tests/oss-fuzz/repro_fuzz.cc
 

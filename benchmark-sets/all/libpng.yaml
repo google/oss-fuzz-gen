@@ -1,4 +1,3 @@
-Retrieving human-written fuzz targets of libpng from local Docker build.
 functions:
 - void OSS_FUZZ_png_read_png(struct png_struct_def * png_ptr, struct png_info_def
   * info_ptr, int transforms, char * params)
@@ -10,5 +9,8 @@ functions:
 - int png_image_read_colormapped(char * argument)
 project: libpng
 target_name: libpng_read_fuzzer
+target_path: /src/libpng/contrib/oss-fuzz/libpng_read_fuzzer.cc
+
+_fuzzer
 target_path: /src/libpng/contrib/oss-fuzz/libpng_read_fuzzer.cc
 

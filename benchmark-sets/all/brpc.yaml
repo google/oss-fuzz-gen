@@ -1,4 +1,3 @@
-Retrieving human-written fuzz targets of brpc from local Docker build.
 functions:
 - int brpc::policy::ConsulNamingService::RunNamingService(brpc::policy::ConsulNamingService
   * , char * , brpc::ProgressiveReader * )
@@ -10,5 +9,8 @@ functions:
 - char * brpc::policy::DiscoveryClient::PeriodicRenew(char * )
 project: brpc
 target_name: fuzz_butil
+target_path: /src/brpc/test/fuzzing/fuzz_butil.cpp
+
+t_name: fuzz_butil
 target_path: /src/brpc/test/fuzzing/fuzz_butil.cpp
 

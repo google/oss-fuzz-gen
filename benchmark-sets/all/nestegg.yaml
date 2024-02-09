@@ -1,4 +1,3 @@
-Retrieving human-written fuzz targets of nestegg from local Docker build.
 functions:
 - int nestegg_track_seek(struct nestegg * ctx, int track, size_t tstamp)
 - int nestegg_get_cue_point(struct nestegg * ctx, int cluster_num, size_t max_offset,
@@ -7,6 +6,10 @@ functions:
 - int ne_init_cue_points(struct nestegg * ctx, size_t max_offset)
 - int ne_match_webm(struct nestegg_io * io, size_t max_offset)
 project: nestegg
+target_name: fuzz
+target_path: /src/nestegg/test/fuzz.cc
+
+roject: nestegg
 target_name: fuzz
 target_path: /src/nestegg/test/fuzz.cc
 

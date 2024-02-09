@@ -1,4 +1,3 @@
-Retrieving human-written fuzz targets of libyal from local Docker build.
 functions:
 - int libewf_handle_open(size_t * handle, char ** filenames, int number_of_filenames,
   int access_flags, size_t ** error)
@@ -12,5 +11,8 @@ functions:
   ** error)
 project: libyal
 target_name: libmdmp_file_fuzzer
+target_path: /src/libmdmp/ossfuzz/file_fuzzer.cc
+
+e: libmdmp_file_fuzzer
 target_path: /src/libmdmp/ossfuzz/file_fuzzer.cc
 

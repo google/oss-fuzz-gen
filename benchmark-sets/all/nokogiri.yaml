@@ -1,4 +1,3 @@
-Retrieving human-written fuzz targets of nokogiri from local Docker build.
 functions:
 - struct GumboInternalOutput * gumbo_parse(char * buffer)
 - void gumbo_print_caret_diagnostic(struct GumboInternalError * error, char * source_text,
@@ -10,5 +9,8 @@ functions:
 - char * gumbo_error_code(struct GumboInternalError * error)
 project: nokogiri
 target_name: parse_fuzzer
+target_path: /src/nokogiri/gumbo-parser/fuzzer/parse_fuzzer.cc
+
+rse_fuzzer
 target_path: /src/nokogiri/gumbo-parser/fuzzer/parse_fuzzer.cc
 

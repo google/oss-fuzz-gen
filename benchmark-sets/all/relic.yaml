@@ -1,4 +1,3 @@
-Retrieving human-written fuzz targets of relic from local Docker build.
 functions:
 - size_t LLVMFuzzerCustomMutator(char * , size_t , size_t , int )
 - void cryptofuzz::module::Botan::OpECDSA_Sign(std::optional * , cryptofuzz::module::relic
@@ -11,6 +10,10 @@ functions:
 - void cryptofuzz::module::Botan::OpECC_GenerateKeyPair(std::optional * , cryptofuzz::module::relic
   * , cryptofuzz::operation::Misc * )
 project: relic
+target_name: cryptofuzz-relic
+target_path: /src/cryptofuzz/entry.cpp
+
+c
 target_name: cryptofuzz-relic
 target_path: /src/cryptofuzz/entry.cpp
 
