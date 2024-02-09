@@ -229,6 +229,7 @@ class ContextRetriever:
     return dequal_type
 
   def _get_namespace_node(self, namespace_node, current_depth: int) -> bool:
+    """Determines whether a namespace node has the target function contained within it."""
     if namespace_node.get('name') != self._namespace_tokens[current_depth]:
       return False
 
