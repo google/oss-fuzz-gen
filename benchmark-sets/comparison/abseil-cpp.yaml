@@ -1,0 +1,16 @@
+"functions":
+- "name": "absl::str_format_internal::FormatArgImpl::Dispatch<long long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
+  "params":
+  - "name": "arg"
+    "type": "char *"
+  - "name": "spec"
+    "type": "size_t"
+  - "name": "out"
+    "type": "int"
+  - "name": ""
+    "type": "char *"
+  "return_type": "bool"
+  "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long long>(char * arg, size_t spec, int out, char * )"
+"project": "abseil-cpp"
+"target_name": "string_escape_fuzzer"
+"target_path": "/src/string_escape_fuzzer.cc"

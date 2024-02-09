@@ -1,53 +1,30 @@
 "functions":
-- "name": "disabled_main"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "int"
-  - "char **"
-  - "char **"
-  "return_type": "int"
-  "signature": "int disabled_main(int , char ** , char ** )"
 - "name": "op_alias_dialog"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "struct.IndexSharedData.1681 *"
-  - "struct.IndexPrivateData.1682 *"
-  - "int"
+  "params":
+  - "name": ""
+    "type": "struct IndexSharedData *"
+  - "name": ""
+    "type": "struct IndexPrivateData *"
+  - "name": ""
+    "type": "int"
   "return_type": "int"
   "signature": "int op_alias_dialog(struct IndexSharedData * , struct IndexPrivateData * , int )"
-- "name": "alias_dialog"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "struct.Mailbox *"
-  - "struct.ConfigSubset *"
-  "return_type": "void"
-  "signature": "void alias_dialog(struct Mailbox * , struct ConfigSubset * )"
 - "name": "op_post"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "struct.IndexSharedData.1681 *"
-  - "struct.IndexPrivateData.1682 *"
-  - "int"
+  "params":
+  - "name": ""
+    "type": "struct IndexSharedData *"
+  - "name": ""
+    "type": "struct IndexPrivateData *"
+  - "name": ""
+    "type": "int"
   "return_type": "int"
   "signature": "int op_post(struct IndexSharedData * , struct IndexPrivateData * , int )"
 - "name": "op_followup"
-  "param_names":
-  - ""
-  - ""
-  "param_types":
-  - "struct.AttachPrivateData *"
-  - "int"
+  "params":
+  - "name": ""
+    "type": "struct AttachPrivateData *"
+  - "name": ""
+    "type": "int"
   "return_type": "int"
   "signature": "int op_followup(struct AttachPrivateData * , int )"
 "project": "neomutt"
