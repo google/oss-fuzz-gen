@@ -28,5 +28,5 @@
   "return_type": "int"
   "signature": "int options_act_reversible__real(struct or_options_t * old_options, char ** msg)"
 "project": "tor"
-"target_name": "oss-fuzz-addressPTR"
+"target_name": "oss-fuzz-strops"
 "target_path": "/src/tor/src/test/fuzz/fuzzing_common.c"

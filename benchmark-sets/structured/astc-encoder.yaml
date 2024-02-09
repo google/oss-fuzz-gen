@@ -1,5 +1,5 @@
 "functions":
-- "name": "symbolic_to_physical"
+- "name": "symbolic_to_physical(block_size_descriptor const&, symbolic_compressed_block const&, unsigned char*)"
   "params":
   - "name": "bsd"
     "type": "struct block_size_descriptor *"
@@ -9,13 +9,13 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void symbolic_to_physical(struct block_size_descriptor * bsd, struct symbolic_compressed_block * scb, char * pcb)"
-- "name": "get_quant_level"
+- "name": "get_quant_level(quant_method)"
   "params":
   - "name": "method"
     "type": "int"
   "return_type": "int"
   "signature": "int get_quant_level(int method)"
-- "name": "encode_ise"
+- "name": "encode_ise(quant_method, unsigned int, unsigned char const*, unsigned char*, unsigned int)"
   "params":
   - "name": "quant_level"
     "type": "int"
@@ -29,7 +29,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void encode_ise(int quant_level, int character_count, char * input_data, char * output_data, int bit_offset)"
-- "name": "is_legal_2d_block_size"
+- "name": "is_legal_2d_block_size(unsigned int, unsigned int)"
   "params":
   - "name": "xdim"
     "type": "int"
@@ -37,7 +37,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool is_legal_2d_block_size(int xdim, int ydim)"
-- "name": "is_legal_3d_block_size"
+- "name": "is_legal_3d_block_size(unsigned int, unsigned int, unsigned int)"
   "params":
   - "name": "xdim"
     "type": "int"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "stbi__jpeg_load"
+- "name": "stbi__jpeg_load(stbi__context*, int*, int*, int*, int, stbi__result_info*)"
   "params":
   - "name": "s"
     "type": "struct stbi__context *"
@@ -15,7 +15,7 @@
     "type": "struct stbi__result_info *"
   "return_type": "char *"
   "signature": "char * stbi__jpeg_load(struct stbi__context * s, int * x, int * y, int * comp, int req_comp, struct stbi__result_info * ri)"
-- "name": "load_jpeg_image"
+- "name": "load_jpeg_image(stbi__jpeg*, int*, int*, int*, int)"
   "params":
   - "name": "z"
     "type": "struct stbi__jpeg *"

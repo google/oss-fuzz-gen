@@ -1,5 +1,5 @@
 "functions":
-- "name": "Realloc"
+- "name": "rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>::Realloc(void*, unsigned long, unsigned long)"
   "params":
   - "name": "this"
     "type": "rapidjson::MemoryPoolAllocator *"
@@ -11,7 +11,7 @@
     "type": "size_t"
   "return_type": "char *"
   "signature": "char * rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>::Realloc(rapidjson::MemoryPoolAllocator * this, char * originalPtr, size_t originalSize, size_t newSize)"
-- "name": "SetStringRaw"
+- "name": "rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> >::SetStringRaw(rapidjson::GenericStringRef<char>)"
   "params":
   - "name": "this"
     "type": "rapidjson::GenericValue *"
@@ -19,7 +19,7 @@
     "type": "struct rapidjson::GenericStringRef *"
   "return_type": "void"
   "signature": "void rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> >::SetStringRaw(rapidjson::GenericValue * this, struct rapidjson::GenericStringRef * s)"
-- "name": "GetAllocator"
+- "name": "rapidjson::internal::Stack<rapidjson::CrtAllocator>::GetAllocator()"
   "params":
   - "name": "this"
     "type": "rapidjson::internal::Stack *"

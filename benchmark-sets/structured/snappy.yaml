@@ -1,5 +1,5 @@
 "functions":
-- "name": "Uncompress"
+- "name": "snappy::Uncompress(snappy::Source*, snappy::Sink*)"
   "params":
   - "name": "compressed"
     "type": "snappy::Sink *"
@@ -7,7 +7,7 @@
     "type": "snappy::Sink *"
   "return_type": "bool"
   "signature": "bool snappy::Uncompress(snappy::Sink * compressed, snappy::Sink * uncompressed)"
-- "name": "UncompressAsMuchAsPossible"
+- "name": "snappy::UncompressAsMuchAsPossible(snappy::Source*, snappy::Sink*)"
   "params":
   - "name": "compressed"
     "type": "snappy::Sink *"
@@ -35,7 +35,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool snappy::InternalUncompressAllTags<snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator> >(snappy::SnappyDecompressor * decompressor, snappy::SnappyScatteredWriter * writer, int compressed_len, int uncompressed_len)"
-- "name": "RawUncompressToIOVec"
+- "name": "snappy::RawUncompressToIOVec(char const*, unsigned long, iovec const*, unsigned long)"
   "params":
   - "name": "compressed"
     "type": "char *"

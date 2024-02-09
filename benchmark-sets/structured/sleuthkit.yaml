@@ -17,7 +17,7 @@
     "type": "char *"
   "return_type": "struct TSK_FS_INFO *"
   "signature": "struct TSK_FS_INFO * tsk_fs_open_vol_decrypt(struct TSK_VS_PART_INFO * a_part_info, int a_ftype, char * a_pass)"
-- "name": "load_attrs"
+- "name": "APFSFSCompat::load_attrs(TSK_FS_FILE*) const"
   "params":
   - "name": "this"
     "type": "APFSFSCompat *"
@@ -25,7 +25,7 @@
     "type": "struct TSK_FS_FILE *"
   "return_type": "char"
   "signature": "char APFSFSCompat::load_attrs(APFSFSCompat * this, struct TSK_FS_FILE * file) const"
-- "name": "istat"
+- "name": "APFSFSCompat::istat(TSK_FS_ISTAT_FLAG_ENUM, _IO_FILE*, unsigned long, unsigned long, int) const"
   "params":
   - "name": "this"
     "type": "APFSFSCompat *"
@@ -41,7 +41,7 @@
     "type": "int"
   "return_type": "char"
   "signature": "char APFSFSCompat::istat(APFSFSCompat * this, int istat_flags, struct _IO_FILE * hFile, size_t inode_num, size_t numblock, int sec_skew) const"
-- "name": "poolstat"
+- "name": "APFSPoolCompat::poolstat(_IO_FILE*) const"
   "params":
   - "name": "this"
     "type": "APFSPoolCompat *"
@@ -50,5 +50,5 @@
   "return_type": "char"
   "signature": "char APFSPoolCompat::poolstat(APFSPoolCompat * this, struct _IO_FILE * hFile) const"
 "project": "sleuthkit"
-"target_name": "sleuthkit_mmls_mac_fuzzer"
+"target_name": "sleuthkit_mmls_sun_fuzzer"
 "target_path": "/src/sleuthkit_mmls_fuzzer.cc"

@@ -1,17 +1,17 @@
 "functions":
-- "name": "initDynamicTestMessage"
+- "name": "capnp::_::initDynamicTestMessage(capnp::DynamicStruct::Builder)"
   "params":
   - "name": "builder"
     "type": "capnp::DynamicStruct::Builder *"
   "return_type": "void"
   "signature": "void capnp::_::initDynamicTestMessage(capnp::DynamicStruct::Builder * builder)"
-- "name": "dynamicInitTestMessage"
+- "name": "capnp::_::(anonymous namespace)::dynamicInitTestMessage(capnp::DynamicStruct::Builder)"
   "params":
   - "name": "builder"
     "type": "capnp::DynamicStruct::Builder *"
   "return_type": "void"
   "signature": "void capnp::_::(capnp::DynamicStruct::Builder * builder)"
-- "name": "adopt"
+- "name": "capnp::DynamicStruct::Builder::adopt(kj::StringPtr, capnp::Orphan<capnp::DynamicValue>&&)"
   "params":
   - "name": "this"
     "type": "capnp::DynamicStruct::Builder *"
@@ -23,7 +23,7 @@
     "type": "capnp::Orphan *"
   "return_type": "void"
   "signature": "void capnp::DynamicStruct::Builder::adopt(capnp::DynamicStruct::Builder * this, char * name, size_t orphan, capnp::Orphan * )"
-- "name": "adopt"
+- "name": "capnp::DynamicStruct::Builder::adopt(capnp::StructSchema::Field, capnp::Orphan<capnp::DynamicValue>&&)"
   "params":
   - "name": "this"
     "type": "capnp::DynamicStruct::Builder *"
@@ -33,7 +33,7 @@
     "type": "capnp::Orphan *"
   "return_type": "void"
   "signature": "void capnp::DynamicStruct::Builder::adopt(capnp::DynamicStruct::Builder * this, capnp::StructSchema::Field * field, capnp::Orphan * orphan)"
-- "name": "checkDynamicTestMessage"
+- "name": "capnp::_::checkDynamicTestMessage(capnp::DynamicStruct::Builder)"
   "params":
   - "name": "builder"
     "type": "capnp::DynamicStruct::Builder *"

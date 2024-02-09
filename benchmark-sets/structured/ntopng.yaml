@@ -1,29 +1,29 @@
 "functions":
-- "name": "startPacketPolling"
+- "name": "PcapInterface::startPacketPolling()"
   "params":
   - "name": "this"
     "type": "PcapInterface *"
   "return_type": "void"
   "signature": "void PcapInterface::startPacketPolling(PcapInterface * this)"
-- "name": "startPacketPolling"
+- "name": "DummyInterface::startPacketPolling()"
   "params":
   - "name": "this"
     "type": "DummyInterface *"
   "return_type": "void"
   "signature": "void DummyInterface::startPacketPolling(DummyInterface * this)"
-- "name": "startPacketPolling"
+- "name": "ZMQCollectorInterface::startPacketPolling()"
   "params":
   - "name": "this"
     "type": "ZMQCollectorInterface *"
   "return_type": "void"
   "signature": "void ZMQCollectorInterface::startPacketPolling(ZMQCollectorInterface * this)"
-- "name": "packetPollLoop"
+- "name": "packetPollLoop(void*)"
   "params":
   - "name": "ptr"
     "type": "char *"
   "return_type": "char *"
   "signature": "char * packetPollLoop(char * ptr)"
-- "name": "collect_flows"
+- "name": "ZMQCollectorInterface::collect_flows()"
   "params":
   - "name": "this"
     "type": "ZMQCollectorInterface *"

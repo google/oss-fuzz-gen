@@ -1,5 +1,5 @@
 "functions":
-- "name": "parse"
+- "name": "simdjson::icelake::dom_parser_implementation::parse(unsigned char const*, unsigned long, simdjson::dom::document&)"
   "params":
   - "name": ""
     "type": "simdjson::fallback::dom_parser_implementation *"
@@ -11,7 +11,7 @@
     "type": "simdjson::dom::document *"
   "return_type": "int"
   "signature": "int simdjson::icelake::dom_parser_implementation::parse(simdjson::fallback::dom_parser_implementation * , char * , size_t , simdjson::dom::document * )"
-- "name": "stage2"
+- "name": "simdjson::icelake::dom_parser_implementation::stage2(simdjson::dom::document&)"
   "params":
   - "name": ""
     "type": "simdjson::fallback::dom_parser_implementation *"
@@ -19,7 +19,7 @@
     "type": "simdjson::dom::document *"
   "return_type": "int"
   "signature": "int simdjson::icelake::dom_parser_implementation::stage2(simdjson::fallback::dom_parser_implementation * , simdjson::dom::document * )"
-- "name": "stage2_next"
+- "name": "simdjson::fallback::dom_parser_implementation::stage2_next(simdjson::dom::document&)"
   "params":
   - "name": ""
     "type": "simdjson::fallback::dom_parser_implementation *"
@@ -27,7 +27,7 @@
     "type": "simdjson::dom::document *"
   "return_type": "int"
   "signature": "int simdjson::fallback::dom_parser_implementation::stage2_next(simdjson::fallback::dom_parser_implementation * , simdjson::dom::document * )"
-- "name": "stage2_next"
+- "name": "simdjson::westmere::dom_parser_implementation::stage2_next(simdjson::dom::document&)"
   "params":
   - "name": ""
     "type": "simdjson::fallback::dom_parser_implementation *"
@@ -35,7 +35,7 @@
     "type": "simdjson::dom::document *"
   "return_type": "int"
   "signature": "int simdjson::westmere::dom_parser_implementation::stage2_next(simdjson::fallback::dom_parser_implementation * , simdjson::dom::document * )"
-- "name": "stage2_next"
+- "name": "simdjson::icelake::dom_parser_implementation::stage2_next(simdjson::dom::document&)"
   "params":
   - "name": ""
     "type": "simdjson::fallback::dom_parser_implementation *"

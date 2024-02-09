@@ -1,5 +1,5 @@
 "functions":
-- "name": "json_reader_t"
+- "name": "dnnl::impl::graph::utils::json::json_reader_t::~json_reader_t()"
   "params":
   - "name": "this"
     "type": "dnnl::impl::graph::utils::json::json_reader_t *"

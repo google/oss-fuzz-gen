@@ -1,23 +1,23 @@
 "functions":
-- "name": "MsgPackDeserializer"
+- "name": "ArduinoJson::V703HB4::detail::MsgPackDeserializer<ArduinoJson::V703HB4::detail::BoundedReader<unsigned char const*, void> >::~MsgPackDeserializer()"
   "params":
   - "name": "this"
     "type": "ArduinoJson::V703HB4::detail::MsgPackDeserializer *"
   "return_type": "void"
   "signature": "void ArduinoJson::V703HB4::detail::MsgPackDeserializer<ArduinoJson::V703HB4::detail::BoundedReader<unsigned char const*, void> >::~MsgPackDeserializer(ArduinoJson::V703HB4::detail::MsgPackDeserializer * this)"
-- "name": "JsonDeserializer"
+- "name": "ArduinoJson::V703HB4::detail::JsonDeserializer<ArduinoJson::V703HB4::detail::BoundedReader<unsigned char const*, void> >::~JsonDeserializer()"
   "params":
   - "name": "this"
     "type": "ArduinoJson::V703HB4::detail::JsonDeserializer *"
   "return_type": "void"
   "signature": "void ArduinoJson::V703HB4::detail::JsonDeserializer<ArduinoJson::V703HB4::detail::BoundedReader<unsigned char const*, void> >::~JsonDeserializer(ArduinoJson::V703HB4::detail::JsonDeserializer * this)"
-- "name": "size"
+- "name": "ArduinoJson::V703HB4::SerializedValue<char const*>::size() const"
   "params":
   - "name": "this"
     "type": "ArduinoJson::V703HB4::SerializedValue *"
   "return_type": "size_t"
   "signature": "size_t ArduinoJson::V703HB4::SerializedValue<char const*>::size(ArduinoJson::V703HB4::SerializedValue * this) const"
-- "name": "delete"
+- "name": "ArduinoJson::V703HB4::detail::VariantSlot::operator delete(void*, void*)"
   "params":
   - "name": ""
     "type": "char *"

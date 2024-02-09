@@ -1,11 +1,11 @@
 "functions":
-- "name": "ProcessCommand"
+- "name": "CommandData::ProcessCommand()"
   "params":
   - "name": "this"
     "type": "CommandData *"
   "return_type": "void"
   "signature": "void CommandData::ProcessCommand(CommandData * this)"
-- "name": "CheckOpen"
+- "name": "Archive::CheckOpen(wchar_t const*)"
   "params":
   - "name": "this"
     "type": "Archive *"
@@ -13,7 +13,7 @@
     "type": "int *"
   "return_type": "void"
   "signature": "void Archive::CheckOpen(Archive * this, int * Name)"
-- "name": "WCheckOpen"
+- "name": "Archive::WCheckOpen(wchar_t const*)"
   "params":
   - "name": "this"
     "type": "Archive *"
@@ -21,7 +21,7 @@
     "type": "int *"
   "return_type": "bool"
   "signature": "bool Archive::WCheckOpen(Archive * this, int * Name)"
-- "name": "CheckArc"
+- "name": "Archive::CheckArc(bool)"
   "params":
   - "name": "this"
     "type": "Archive *"
@@ -29,7 +29,7 @@
     "type": "bool"
   "return_type": "void"
   "signature": "void Archive::CheckArc(Archive * this, bool EnableBroken)"
-- "name": "SearchRR"
+- "name": "Archive::SearchRR()"
   "params":
   - "name": "this"
     "type": "Archive *"

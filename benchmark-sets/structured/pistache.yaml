@@ -1,5 +1,5 @@
 "functions":
-- "name": "writeCookies"
+- "name": "Pistache::Http::(anonymous namespace)::writeCookies(Pistache::Http::CookieJar const&, Pistache::DynamicStreamBuf&)"
   "params":
   - "name": ""
     "type": "Pistache::Http::Uri::Query *"
@@ -15,7 +15,7 @@
     "type": "struct Pistache::Http::Cookie *"
   "return_type": "std::ostream *"
   "signature": "std::ostream * Pistache::Http::operator<<(std::ostream * , struct Pistache::Http::Cookie * )"
-- "name": "write"
+- "name": "Pistache::Http::Cookie::write(std::__1::basic_ostream<char, std::__1::char_traits<char> >&) const"
   "params":
   - "name": ""
     "type": "struct Pistache::Http::Cookie *"
@@ -23,7 +23,7 @@
     "type": "std::ostream *"
   "return_type": "void"
   "signature": "void Pistache::Http::Cookie::write(struct Pistache::Http::Cookie * , std::ostream * ) const"
-- "name": "write"
+- "name": "Pistache::Http::Header::Date::write(std::__1::basic_ostream<char, std::__1::char_traits<char> >&) const"
   "params":
   - "name": ""
     "type": "Pistache::Http::Header::Date *"
@@ -31,7 +31,7 @@
     "type": "std::ostream *"
   "return_type": "void"
   "signature": "void Pistache::Http::Header::Date::write(Pistache::Http::Header::Date * , std::ostream * ) const"
-- "name": "write"
+- "name": "Pistache::Http::FullDate::write(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, Pistache::Http::FullDate::Type) const"
   "params":
   - "name": ""
     "type": "std::__bucket_list_deallocator *"

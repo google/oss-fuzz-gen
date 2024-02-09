@@ -1,5 +1,5 @@
 "functions":
-- "name": "parseSQLString"
+- "name": "hsql::SQLParser::parseSQLString(char const*, hsql::SQLParserResult*)"
   "params":
   - "name": "sql"
     "type": "char *"
@@ -7,7 +7,7 @@
     "type": "hsql::SQLParserResult *"
   "return_type": "bool"
   "signature": "bool hsql::SQLParser::parseSQLString(char * sql, hsql::SQLParserResult * result)"
-- "name": "parseSQLString"
+- "name": "hsql::SQLParser::parseSQLString(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, hsql::SQLParserResult*)"
   "params":
   - "name": "sql"
     "type": "std::string *"
@@ -15,7 +15,7 @@
     "type": "hsql::SQLParserResult *"
   "return_type": "bool"
   "signature": "bool hsql::SQLParser::parseSQLString(std::string * sql, hsql::SQLParserResult * result)"
-- "name": "tokenize"
+- "name": "hsql::SQLParser::tokenize(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<short, std::__1::allocator<short> >*)"
   "params":
   - "name": "sql"
     "type": "std::string *"
@@ -23,7 +23,7 @@
     "type": "std::vector *"
   "return_type": "bool"
   "signature": "bool hsql::SQLParser::tokenize(std::string * sql, std::vector * tokens)"
-- "name": "hsql_push_buffer_state"
+- "name": "hsql_push_buffer_state(yy_buffer_state*, void*)"
   "params":
   - "name": "new_buffer"
     "type": "struct yy_buffer_state *"

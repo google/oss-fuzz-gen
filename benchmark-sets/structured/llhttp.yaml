@@ -1,43 +1,38 @@
 "functions":
 - "name": "llhttp_status_name"
-  "param_names":
-  - ""
-  "param_types":
-  - "int"
+  "params":
+  - "name": ""
+    "type": "int"
   "return_type": "char *"
   "signature": "char * llhttp_status_name(int )"
 - "name": "llhttp_finish"
-  "param_names":
-  - ""
-  "param_types":
-  - "struct.llhttp__internal_s *"
+  "params":
+  - "name": ""
+    "type": "struct llhttp__internal_s *"
   "return_type": "int"
   "signature": "int llhttp_finish(struct llhttp__internal_s * )"
 - "name": "llhttp__debug"
-  "param_names":
-  - ""
-  - ""
-  - ""
-  - ""
-  "param_types":
-  - "struct.llhttp__internal_s *"
-  - "char *"
-  - "char *"
-  - "char *"
+  "params":
+  - "name": ""
+    "type": "struct llhttp__internal_s *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
   "return_type": "void"
   "signature": "void llhttp__debug(struct llhttp__internal_s * , char * , char * , char * )"
 - "name": "llhttp_method_name"
-  "param_names":
-  - ""
-  "param_types":
-  - "int"
+  "params":
+  - "name": ""
+    "type": "int"
   "return_type": "char *"
   "signature": "char * llhttp_method_name(int )"
 - "name": "llhttp_errno_name"
-  "param_names":
-  - ""
-  "param_types":
-  - "int"
+  "params":
+  - "name": ""
+    "type": "int"
   "return_type": "char *"
   "signature": "char * llhttp_errno_name(int )"
 "project": "llhttp"

@@ -50,5 +50,5 @@
   "return_type": "int"
   "signature": "int exercise_key_agreement_key(int key, int usage, int alg)"
 "project": "mbedtls"
-"target_name": "usepsa-fuzz_server"
+"target_name": "fuzz_server"
 "target_path": "/src/mbedtls/programs/fuzz/fuzz_server.c"

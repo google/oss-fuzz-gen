@@ -1,5 +1,5 @@
 "functions":
-- "name": "zone"
+- "name": "msgpack::v1::zone::~zone()"
   "params":
   - "name": "this"
     "type": "msgpack::v1::zone *"
@@ -13,13 +13,13 @@
   "params": []
   "return_type": "void"
   "signature": "void __cxx_global_var_init()"
-- "name": "type_error"
+- "name": "msgpack::v1::type_error::~type_error()"
   "params":
   - "name": "this"
     "type": "msgpack::v1::type_error *"
   "return_type": "void"
   "signature": "void msgpack::v1::type_error::~type_error(msgpack::v1::type_error * this)"
-- "name": "container_size_overflow"
+- "name": "msgpack::v1::container_size_overflow::~container_size_overflow()"
   "params":
   - "name": "this"
     "type": "std::length_error *"

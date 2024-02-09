@@ -1,5 +1,5 @@
 "functions":
-- "name": "validate_pffft_simd"
+- "name": "validate_pffft_simd()"
   "params": []
   "return_type": "void"
   "signature": "void validate_pffft_simd()"

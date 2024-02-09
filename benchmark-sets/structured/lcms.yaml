@@ -15,8 +15,8 @@
     "type": "double *"
   - "name": "dwFlags"
     "type": "int"
-  "return_type": "struct _cmsPipeline_struct 73 *"
-  "signature": "struct _cmsPipeline_struct 73 * _cmsDefaultICCintents(struct _cmsContext_struct * ContextID, int nProfiles, int * TheIntents, char ** hProfiles, int * BPC, double * AdaptationStates, int dwFlags)"
+  "return_type": "struct _cmsPipeline_struct *"
+  "signature": "struct _cmsPipeline_struct * _cmsDefaultICCintents(struct _cmsContext_struct * ContextID, int nProfiles, int * TheIntents, char ** hProfiles, int * BPC, double * AdaptationStates, int dwFlags)"
 - "name": "cmsCreateProofingTransform"
   "params":
   - "name": "InputProfile"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "vprint"
+- "name": "fmt::v10::vprint(fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
   "params":
   - "name": "fmt"
     "type": "char *"
@@ -11,7 +11,7 @@
     "type": "fmt::v10::detail::value *"
   "return_type": "void"
   "signature": "void fmt::v10::vprint(char * fmt, size_t args, size_t , fmt::v10::detail::value * )"
-- "name": "vprint"
+- "name": "fmt::v10::vprint(_IO_FILE*, fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
   "params":
   - "name": "f"
     "type": "struct _IO_FILE *"
@@ -25,7 +25,7 @@
     "type": "fmt::v10::detail::value *"
   "return_type": "void"
   "signature": "void fmt::v10::vprint(struct _IO_FILE * f, char * fmt, size_t args, size_t , fmt::v10::detail::value * )"
-- "name": "vprintln"
+- "name": "fmt::v10::vprintln(_IO_FILE*, fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
   "params":
   - "name": "f"
     "type": "struct _IO_FILE *"
@@ -39,7 +39,7 @@
     "type": "fmt::v10::detail::value *"
   "return_type": "void"
   "signature": "void fmt::v10::vprintln(struct _IO_FILE * f, char * fmt, size_t args, size_t , fmt::v10::detail::value * )"
-- "name": "print"
+- "name": "fmt::v10::detail::print(_IO_FILE*, fmt::v10::basic_string_view<char>)"
   "params":
   - "name": "f"
     "type": "struct _IO_FILE *"
@@ -49,7 +49,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void fmt::v10::detail::print(struct _IO_FILE * f, char * text, size_t )"
-- "name": "fwrite_fully"
+- "name": "fmt::v10::detail::fwrite_fully(void const*, unsigned long, _IO_FILE*)"
   "params":
   - "name": "ptr"
     "type": "char *"

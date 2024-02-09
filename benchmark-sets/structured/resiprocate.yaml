@@ -1,5 +1,5 @@
 "functions":
-- "name": "parse"
+- "name": "resip::DialogInfoContents::parse(resip::ParseBuffer&)"
   "params":
   - "name": ""
     "type": "resip::DialogInfoContents *"
@@ -7,7 +7,7 @@
     "type": "resip::ParseBuffer *"
   "return_type": "void"
   "signature": "void resip::DialogInfoContents::parse(resip::DialogInfoContents * , resip::ParseBuffer * )"
-- "name": "basicCheck"
+- "name": "resip::Transport::basicCheck(resip::SipMessage const&)"
   "params":
   - "name": ""
     "type": "resip::Transport *"
@@ -15,7 +15,7 @@
     "type": "resip::SipMessage *"
   "return_type": "bool"
   "signature": "bool resip::Transport::basicCheck(resip::Transport * , resip::SipMessage * )"
-- "name": "parseDialog"
+- "name": "resip::DialogInfoContents::parseDialog(resip::XMLCursor&)"
   "params":
   - "name": ""
     "type": "resip::DialogInfoContents *"
@@ -23,7 +23,7 @@
     "type": "resip::XMLCursor *"
   "return_type": "void"
   "signature": "void resip::DialogInfoContents::parseDialog(resip::DialogInfoContents * , resip::XMLCursor * )"
-- "name": "makeFailedResponse"
+- "name": "resip::Transport::makeFailedResponse(resip::SipMessage const&, int, char const*)"
   "params":
   - "name": ""
     "type": "resip::Transport *"
@@ -35,7 +35,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void resip::Transport::makeFailedResponse(resip::Transport * , resip::SipMessage * , int , char * )"
-- "name": "makeWWWChallenge"
+- "name": "resip::Helper::makeWWWChallenge(resip::SipMessage const&, resip::Data const&, bool, bool)"
   "params":
   - "name": ""
     "type": "resip::SipMessage *"

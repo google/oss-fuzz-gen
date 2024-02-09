@@ -66,5 +66,5 @@
   "return_type": "struct gdImageStruct *"
   "signature": "struct gdImageStruct * gdImageCreateFromGif(struct _IO_FILE * fdFile)"
 "project": "libgd"
-"target_name": "webp_target"
+"target_name": "jpeg_target"
 "target_path": "/src/parser_target.cc"

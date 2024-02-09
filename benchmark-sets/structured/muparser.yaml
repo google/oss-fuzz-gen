@@ -1,5 +1,5 @@
 "functions":
-- "name": "Eval"
+- "name": "mu::ParserBase::Eval(int&) const"
   "params":
   - "name": ""
     "type": "mu::ParserBase *"
@@ -7,7 +7,7 @@
     "type": "int *"
   "return_type": "double *"
   "signature": "double * mu::ParserBase::Eval(mu::ParserBase * , int * ) const"
-- "name": "Eval"
+- "name": "mu::ParserBase::Eval(double*, int)"
   "params":
   - "name": ""
     "type": "mu::ParserBase *"
@@ -17,13 +17,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "void mu::ParserBase::Eval(mu::ParserBase * , double * , int )"
-- "name": "GetUsedVar"
+- "name": "mu::ParserBase::GetUsedVar() const"
   "params":
   - "name": ""
     "type": "mu::ParserBase *"
   "return_type": "std::map *"
   "signature": "std::map * mu::ParserBase::GetUsedVar(mu::ParserBase * ) const"
-- "name": "ApplyStrFunc"
+- "name": "mu::ParserBase::ApplyStrFunc(mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > const&, std::__1::vector<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > > const&) const"
   "params":
   - "name": ""
     "type": "mu::ParserToken *"
@@ -35,7 +35,7 @@
     "type": "std::vector *"
   "return_type": "void"
   "signature": "void mu::ParserBase::ApplyStrFunc(mu::ParserToken * , mu::ParserBase * , mu::ParserToken * , std::vector * ) const"
-- "name": "StackDump"
+- "name": "mu::ParserBase::StackDump(std::__1::stack<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::deque<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > > > const&, std::__1::stack<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::deque<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > > > const&) const"
   "params":
   - "name": ""
     "type": "mu::ParserBase *"

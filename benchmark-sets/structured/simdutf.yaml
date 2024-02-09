@@ -1,23 +1,23 @@
 "functions":
-- "name": "name"
+- "name": "simdutf::internal::detect_best_supported_implementation_on_first_use::name() const"
   "params":
   - "name": "this"
     "type": "simdutf::internal::unsupported_implementation *"
   "return_type": "std::string *"
   "signature": "std::string * simdutf::internal::detect_best_supported_implementation_on_first_use::name(simdutf::internal::unsupported_implementation * this) const"
-- "name": "description"
+- "name": "simdutf::internal::detect_best_supported_implementation_on_first_use::description() const"
   "params":
   - "name": "this"
     "type": "simdutf::internal::unsupported_implementation *"
   "return_type": "std::string *"
   "signature": "std::string * simdutf::internal::detect_best_supported_implementation_on_first_use::description(simdutf::internal::unsupported_implementation * this) const"
-- "name": "required_instruction_sets"
+- "name": "simdutf::internal::detect_best_supported_implementation_on_first_use::required_instruction_sets() const"
   "params":
   - "name": "this"
     "type": "simdutf::internal::unsupported_implementation *"
   "return_type": "int"
   "signature": "int simdutf::internal::detect_best_supported_implementation_on_first_use::required_instruction_sets(simdutf::internal::unsupported_implementation * this) const"
-- "name": "count_utf8"
+- "name": "simdutf::internal::detect_best_supported_implementation_on_first_use::count_utf8(char const*, unsigned long) const"
   "params":
   - "name": "this"
     "type": "simdutf::internal::unsupported_implementation *"
@@ -27,7 +27,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "size_t simdutf::internal::detect_best_supported_implementation_on_first_use::count_utf8(simdutf::internal::unsupported_implementation * this, char * buf, size_t len) const"
-- "name": "detect_encodings"
+- "name": "simdutf::internal::detect_best_supported_implementation_on_first_use::detect_encodings(char const*, unsigned long) const"
   "params":
   - "name": "this"
     "type": "simdutf::internal::unsupported_implementation *"

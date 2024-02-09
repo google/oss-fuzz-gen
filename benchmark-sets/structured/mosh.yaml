@@ -17,7 +17,7 @@
     "type": "Terminal::Complete *"
   "return_type": "void"
   "signature": "void Terminal::Complete::diff_from[abi:cxx11](std::__cxx11::basic_string * this, Terminal::Complete * existing, Terminal::Complete * ) const"
-- "name": "apply_string"
+- "name": "Terminal::Complete::apply_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)"
   "params":
   - "name": "this"
     "type": "Terminal::Complete *"
@@ -25,7 +25,7 @@
     "type": "std::__cxx11::basic_string *"
   "return_type": "void"
   "signature": "void Terminal::Complete::apply_string(Terminal::Complete * this, std::__cxx11::basic_string * diff)"
-- "name": "act_on_terminal"
+- "name": "Parser::Resize::act_on_terminal(Terminal::Emulator*) const"
   "params":
   - "name": "this"
     "type": "Parser::Resize *"
@@ -33,7 +33,7 @@
     "type": "Terminal::Emulator *"
   "return_type": "void"
   "signature": "void Parser::Resize::act_on_terminal(Parser::Resize * this, Terminal::Emulator * emu) const"
-- "name": "resize"
+- "name": "Terminal::Emulator::resize(unsigned long, unsigned long)"
   "params":
   - "name": "this"
     "type": "Terminal::Emulator *"

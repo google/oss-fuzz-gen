@@ -48,5 +48,5 @@
   "return_type": "int"
   "signature": "int initScanContentNS(struct encoding * enc, char * ptr, char * end, char ** nextTokPtr)"
 "project": "expat"
-"target_name": "xml_parsebuffer_fuzzer_UTF-16"
+"target_name": "xml_parsebuffer_fuzzer_US-ASCII"
 "target_path": "/src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c"

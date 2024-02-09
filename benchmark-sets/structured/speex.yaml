@@ -122,5 +122,5 @@
   "return_type": "void"
   "signature": "void split_cb_search_shape_sign_N1(float * target, float * ak, float * awk1, float * awk2, char * par, int p, int nsf, float * exc, float * r, struct SpeexBits * bits, char * stack, int update_target)"
 "project": "speex"
-"target_name": "speex_decode_fuzzer_float"
+"target_name": "speex_decode_fuzzer_fixed"
 "target_path": "/src/speex/contrib/oss-fuzz/speexdec_fuzzer.cc"
