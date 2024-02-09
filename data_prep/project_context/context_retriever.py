@@ -39,7 +39,8 @@ class ContextRetriever:
     self._namespace_tokens = []
 
     if self._is_cpp:
-      fully_qual_namespace = self._function_signature.split('(')[0].split(' ')[-1]
+      fully_qual_namespace = self._function_signature.split('(')[0].split(
+          ' ')[-1]
       self._namespace_tokens = fully_qual_namespace.split('::')[:-1]
 
     self._download_from_path = f'{self.AST_BASE_PATH}/{self._project_name}/*'
@@ -237,8 +238,9 @@ class ContextRetriever:
       if current_depth == len(self._namespace_tokens):
         if node.get('name') == self._function_name:
           return True
-      
-      if node.get('kind') == 'NamespaceDecl' and current_depth < len(self._namespace_tokens):
+
+      if node.get('kind') == 'NamespaceDecl' and current_depth < len(
+          self._namespace_tokens):
         if not self._get_namespace_node(node, current_depth):
           continue
         else:
@@ -248,7 +250,7 @@ class ContextRetriever:
 
   def _search_backwards_for_header(self, search_index: int, ast_nodes) -> str:
     """Iterates backwards over a node to get the file location.
-    This is required because the AST stores the file location only on the 
+    This is required because the AST stores the file location only on the
     top most node of the file which can contain a loc object (?)."""
     current_index = search_index
 
@@ -257,7 +259,7 @@ class ContextRetriever:
       current_index -= 1
       if 'file' in search_node.get('loc', ''):
         return search_node.get('loc').get('file')
-    
+
     return ''
 
   def _get_header_cpp_from_file(self, fully_qualified_path: str) -> str:
@@ -270,14 +272,14 @@ class ContextRetriever:
       ast_json = json.load(ast_file)
 
     ast_nodes = ast_json.get('inner', [])
-    
+
     for num, ast_node in enumerate(ast_nodes):
       if ast_node.get('kind') == 'NamespaceDecl':
         found = self._get_namespace_node(ast_node, 0)
-        
+
         if found:
           return self._search_backwards_for_header(num, ast_nodes)
-    
+
     return ''
 
   def _get_header_from_file(self, fully_qualified_path: str) -> str:
@@ -293,9 +295,9 @@ class ContextRetriever:
       if ast_node.get('kind') != 'FunctionDecl' or ast_node.get(
           'name') != self._function_name:
         continue
-     
-      return self._search_backwards_for_header(num, ast_nodes) 
-        
+
+      return self._search_backwards_for_header(num, ast_nodes)
+
     return ''
 
   def retrieve_asts(self):
@@ -353,14 +355,16 @@ class ContextRetriever:
     for ast_file_path in os.listdir(self._ast_path):
       try:
         if self._is_cpp and len(self._namespace_tokens) > 0:
-          header = self._get_header_cpp_from_file(f'{self._ast_path}/{ast_file_path}')
+          header = self._get_header_cpp_from_file(
+              f'{self._ast_path}/{ast_file_path}')
         else:
-          header = self._get_header_from_file(f'{self._ast_path}/{ast_file_path}')
+          header = self._get_header_from_file(
+              f'{self._ast_path}/{ast_file_path}')
       except Exception as e:
         # ASTs from the bucket are occasionally empty.
         print(e)
         continue
-      
+
       if header:
         return os.path.abspath(header)
 
