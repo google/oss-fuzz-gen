@@ -1,4 +1,14 @@
 "functions":
+- "name": "XML_ExternalEntityParserCreate"
+  "params":
+  - "name": ""
+    "type": "struct XML_ParserStruct *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  "return_type": "struct XML_ParserStruct *"
+  "signature": "struct XML_ParserStruct * XML_ExternalEntityParserCreate(struct XML_ParserStruct * , char * , char * )"
 - "name": "XML_ParserCreateNS"
   "params":
   - "name": ""
@@ -15,6 +25,18 @@
     "type": "char *"
   "return_type": "char"
   "signature": "char XML_ParserReset(struct XML_ParserStruct * , char * )"
+- "name": "externalEntityInitProcessor"
+  "params":
+  - "name": ""
+    "type": "struct XML_ParserStruct *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char **"
+  "return_type": "int"
+  "signature": "int externalEntityInitProcessor(struct XML_ParserStruct * , char * , char * , char ** )"
 - "name": "externalEntityInitProcessor2"
   "params":
   - "name": ""
@@ -27,6 +49,7 @@
     "type": "char **"
   "return_type": "int"
   "signature": "int externalEntityInitProcessor2(struct XML_ParserStruct * , char * , char * , char ** )"
+"language": "c"
 "project": "cmake"
 "target_name": "xml_parser_fuzzer"
 "target_path": "/src/CMake/Tests/Fuzzing/xml_parser_fuzzer.cc"
