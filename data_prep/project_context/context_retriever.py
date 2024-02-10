@@ -240,8 +240,10 @@ class ContextRetriever:
         if node.get('name') == self._function_name:
           return True
 
-      if node.get('kind') == 'NamespaceDecl' and current_depth < len(self._namespace_tokens) and self._get_namespace_node(node, current_depth):
-          return True
+      if node.get('kind') == 'NamespaceDecl' and current_depth < len(
+          self._namespace_tokens) and self._get_namespace_node(
+              node, current_depth):
+        return True
 
     return False
 
