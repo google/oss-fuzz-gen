@@ -17,7 +17,6 @@ Benchmark class that contains the project-under-test information.
 from __future__ import annotations
 
 import os
-import re
 import sys
 from enum import Enum
 from typing import List, Optional
@@ -50,6 +49,8 @@ class Benchmark:
     result = {
         'project':
             benchmarks[0].project,
+        'language':
+            benchmarks[0].language,
         'target_path':
             benchmarks[0].target_path,
         'target_name':
@@ -80,10 +81,10 @@ class Benchmark:
     commit = data.get('commit')
     functions = data.get('functions', [])
     for function in functions:
-      cleaned_name = re.sub(r'::|[^\w-]', '-', function.get("name"))
       benchmarks.append(
-          cls(f'{benchmark_name}-{cleaned_name}'.lower(),
+          cls(f'{benchmark_name}-{function.get("name")}'.lower(),
               data['project'],
+              data['language'],
               function.get('signature'),
               function.get('name'),
               function.get('return_type'),
@@ -98,8 +99,9 @@ class Benchmark:
     return benchmarks
 
   def __init__(self,
-               benchmark_id: Optional[str],
+               benchmark_id: str,
                project: str,
+               language: str,
                function_signature: str,
                function_name: str,
                return_type: str,
@@ -113,6 +115,7 @@ class Benchmark:
                function_dict: Optional[dict] = None):
     self.id = benchmark_id
     self.project = project
+    self.language = language
     self.function_signature = function_signature
     self.function_name = function_name
     self.return_type = return_type
@@ -133,6 +136,7 @@ class Benchmark:
 
   def __str__(self):
     return (f'Benchmark<id={self.id}, project={self.project}, '
+            f'language={self.language}, '
             f'function_signature={self.function_signature}, '
             f'function_name={self.function_name}, '
             f'return_type={self.return_type}, '

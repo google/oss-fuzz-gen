@@ -21,6 +21,8 @@ import shutil
 import subprocess as sp
 import tempfile
 
+import yaml
+
 BUILD_DIR: str = 'build'
 # Assume OSS-Fuzz is at repo root dir by default.
 # This will change if temp_dir is used.
@@ -126,3 +128,14 @@ def list_c_cpp_projects() -> list[str]:
       if 'language: c' in config:
         projects.append(project)
   return sorted(projects)
+
+
+def get_project_language(project: str) -> str:
+  """Returns the |project| language read from its project.yaml."""
+  project_yaml_path = os.path.join(OSS_FUZZ_DIR, project, 'project.yaml')
+  if not os.path.exists(project_yaml_path):
+    return 'C++'
+
+  with open(project_yaml_path, 'r') as benchmark_file:
+    data = yaml.safe_load(benchmark_file)
+    return data.get('language', 'C++')

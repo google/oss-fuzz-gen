@@ -202,7 +202,8 @@ class Evaluator:
     """Builds and runs a target."""
     generated_target_name = os.path.basename(target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
-    generated_oss_fuzz_project = f'{self.benchmark.id}-{sample_id}'
+    valid_docker_tag_name = re.sub(r'[^\w-_.]', '-', self.benchmark.id)
+    generated_oss_fuzz_project = f'{valid_docker_tag_name}-{sample_id}'
     self.create_ossfuzz_project(generated_oss_fuzz_project, target_path)
 
     status_path = os.path.join(self.work_dirs.status, sample_id)

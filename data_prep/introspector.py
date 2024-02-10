@@ -97,31 +97,29 @@ def _get_clean_return_type(function: dict) -> str:
   return clean_type(raw_return_type)
 
 
+def _get_raw_function_name(function: dict) -> str:
+  """Returns the raw function name."""
+  return (function.get('raw-function-name') or
+          function.get('raw_function_name', ''))
+
+
 def _get_demangled_function_name(function: dict) -> str:
   """Returns the demangled function name."""
-  raw_function_name = (function.get('raw-function-name') or
-                       function.get('raw_function_name', ''))
-  return demangle(raw_function_name)
+  return demangle(_get_raw_function_name(function))
 
 
-# TODO(dongge): Remove this function when FI fixes it.
-def _get_clean_function_name(function: dict) -> str:
-  """Returns the cleaned function name."""
+def _get_minimized_function_name(function: dict) -> str:
+  """Minimizes C++ function name by removing parameters."""
+  # Assumption: <return_type><function_name><templare specialization> is unique.
   function_name = _get_demangled_function_name(function)
-  raw_return_type = _get_raw_return_type(function)
-  cleaned_return_type = _get_clean_return_type(function)
-  # Sometimes FI prepends return_type to function_name.
-  # For example: "function_name":"boolabsl::str_format_internal::FormatArgImpl"
-  # "::Dispatch<longlong>(absl::str_format_internal::FormatArgImpl::Data,absl::"
-  # "str_format_internal::FormatConversionSpecImpl,void*)" from:
-  # https://introspector.oss-fuzz.com/api/far-reach-but-low-coverage?project=abseil-cpp
-  if function_name.startswith(raw_return_type):
-    function_name = function_name[len(raw_return_type):]
-  elif function_name.startswith(raw_return_type.strip()):
-    function_name = function_name[len(raw_return_type.strip()):]
-  elif function_name.startswith(cleaned_return_type):
-    function_name = function_name[len(cleaned_return_type):]
-  return function_name.strip()
+  depth = 0
+  for i, char in enumerate(function_name):
+    depth += char == '<'
+    depth -= char == '>'
+    if char == '(' and depth == 0:
+      # Split at the first '(' that's not within template specialization.
+      function_name = function_name[:i]
+  return function_name.replace(' ', '')
 
 
 def _get_clean_arg_types(function: dict) -> list[str]:
@@ -137,10 +135,14 @@ def _get_arg_names(function: dict) -> list[str]:
           function.get('function_argument_names', ''))
 
 
-def formulate_function_signature(function: dict) -> str:
+def formulate_function_signature(function: dict, language: str) -> str:
   """Formulates a function signature based on its |function| dictionary."""
+  # C++ functions, get signature from c++filt.
+  if language == benchmarklib.FileType.CPP.value:
+    return _get_demangled_function_name(function)
+
+  # Plain C function.
   return_type = _get_clean_return_type(function)
-  function_name = _get_clean_function_name(function)
   function_arg_types = _get_clean_arg_types(function)
   function_arg_names = _get_arg_names(function)
 
@@ -148,14 +150,7 @@ def formulate_function_signature(function: dict) -> str:
       f'{arg_type} {arg_name}'
       for arg_type, arg_name in zip(function_arg_types, function_arg_names)
   ])
-
-  if '(' in function_name:
-    # C++ function names have the types in them due to function overloading.
-    return return_type + ' ' + re.sub(r'\(.*\)', f'({args_signature})',
-                                      function_name)
-
-  # Plain C function.
-  return f'{return_type} {function_name}({args_signature})'
+  return f'{return_type} {_get_raw_function_name(function)}({args_signature})'
 
 
 # TODO(dongge): Remove this function when FI fixes it.
@@ -174,7 +169,8 @@ def _group_function_params(param_types: list[str],
   } for param_type, param_name in zip(param_types, param_names)]
 
 
-def populate_benchmarks_using_introspector(project: str, limit: int):
+def populate_benchmarks_using_introspector(project: str, language: str,
+                                           limit: int):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
   functions = get_unreached_functions(project)
   if not functions:
@@ -206,15 +202,16 @@ def populate_benchmarks_using_introspector(project: str, limit: int):
       logging.error('error: %s %s', filename, interesting.keys())
       continue
     # TODO(dongge): Remove this line when FI provides function_signature.
-    function_signature = formulate_function_signature(function)
+    function_signature = formulate_function_signature(function, language)
     if not function_signature:
       continue
     logging.info('Function signature to fuzz: %s', function_signature)
     potential_benchmarks.append(
         benchmarklib.Benchmark('cli',
                                project,
+                               language,
                                function_signature,
-                               _get_clean_function_name(function),
+                               _get_minimized_function_name(function),
                                _get_clean_return_type(function),
                                _group_function_params(
                                    _get_clean_arg_types(function),
@@ -339,6 +336,7 @@ if __name__ == '__main__':
   logging.basicConfig(level=logging.INFO)
 
   #TODO(Dongge): Use argparser.
+  cur_project = sys.argv[1]
   max_num_function = 3
   if len(sys.argv) > 2:
     max_num_function = int(sys.argv[2])
@@ -350,7 +348,9 @@ if __name__ == '__main__':
 
   oss_fuzz_checkout.clone_oss_fuzz()
   oss_fuzz_checkout.postprocess_oss_fuzz()
-  benchmarks = populate_benchmarks_using_introspector(sys.argv[1],
+  cur_project_language = oss_fuzz_checkout.get_project_language(cur_project)
+  benchmarks = populate_benchmarks_using_introspector(cur_project,
+                                                      cur_project_language,
                                                       max_num_function)
   if benchmarks:
     benchmarklib.Benchmark.to_yaml(benchmarks, outdir)
