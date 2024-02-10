@@ -35,6 +35,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int gf_sc_scene_update(struct __tag_compositor * compositor, char * type, char * com)"
+"language": "c"
 "project": "gpac"
 "target_name": "fuzz_parse"
 "target_path": "/src/testsuite/oss-fuzzers/fuzz_parse.c"

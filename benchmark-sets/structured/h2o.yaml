@@ -6,7 +6,7 @@
   - "name": ""
     "type": "struct st_h2o_socket_t *"
   "return_type": "void"
-  "signature": "void h2o_accept(struct st_h2o_accept_ctx_t * , struct st_h2o_socket_t * )"
+  "signature": "h2o_accept"
 - "name": "on_read_proxy_line"
   "params":
   - "name": ""
@@ -14,7 +14,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "void"
-  "signature": "void on_read_proxy_line(struct st_h2o_socket_t * , char * )"
+  "signature": "on_read_proxy_line"
 - "name": "ptls_init_compressed_certificate"
   "params":
   - "name": ""
@@ -28,7 +28,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "int"
-  "signature": "int ptls_init_compressed_certificate(struct st_ptls_emit_compressed_certificate_t * , struct st_h2o_iovec_t * , size_t , char * , size_t )"
+  "signature": "ptls_init_compressed_certificate"
 - "name": "build_compressed"
   "params":
   - "name": ""
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "int"
-  "signature": "int build_compressed(struct st_ptls_compressed_certificate_entry_t * , struct st_h2o_iovec_t * , size_t , char * ocsp_status, size_t )"
+  "signature": "build_compressed"
 - "name": "BrotliEncoderCompress"
   "params":
   - "name": ""
@@ -60,7 +60,8 @@
   - "name": ""
     "type": "char *"
   "return_type": "int"
-  "signature": "int BrotliEncoderCompress(int , int , int , size_t , char * , size_t * , char * )"
+  "signature": "BrotliEncoderCompress"
+"language": "c++"
 "project": "h2o"
 "target_name": "h2o-fuzzer-http3"
 "target_path": "/src/h2o/fuzz/driver_h3.cc"

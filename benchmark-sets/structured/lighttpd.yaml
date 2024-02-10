@@ -53,6 +53,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "char * buffer_append_base64_decode(struct buffer * out, char * in, size_t in_length, int charset)"
+"language": "c"
 "project": "lighttpd"
 "target_name": "fuzz_burl"
 "target_path": "/src/fuzz_burl.c"

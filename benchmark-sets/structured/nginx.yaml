@@ -45,6 +45,7 @@
     "type": "char *"
   "return_type": "char *"
   "signature": "char * ngx_http_scgi_pass(struct ngx_conf_s * cf, struct ngx_command_s * cmd, char * conf)"
+"language": "c"
 "project": "nginx"
 "target_name": "target"
 "target_path": "/src/fuzzer-test-suite/re2-2014-12-09/target.cc"

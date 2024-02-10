@@ -1,5 +1,5 @@
 "functions":
-- "name": "Codec::setXAACDRCInfo(int, int, int, int, int)"
+- "name": "Codec::setXAACDRCInfo"
   "params":
   - "name": ""
     "type": "Codec *"
@@ -14,7 +14,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "int Codec::setXAACDRCInfo(Codec * , int , int , int , int , int )"
+  "signature": "Codec::setXAACDRCInfo(int, int, int, int, int)"
 - "name": "ixheaacd_hbe_apply_ifft_336"
   "params":
   - "name": ""
@@ -26,7 +26,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void ixheaacd_hbe_apply_ifft_336(float * , float * , int , int )"
+  "signature": "ixheaacd_hbe_apply_ifft_336"
 - "name": "ixheaacd_hbe_apply_fft_288"
   "params":
   - "name": ""
@@ -38,7 +38,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void ixheaacd_hbe_apply_fft_288(float * , float * , int , int )"
+  "signature": "ixheaacd_hbe_apply_fft_288"
 - "name": "ixheaacd_hbe_apply_ifft_224"
   "params":
   - "name": ""
@@ -50,7 +50,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void ixheaacd_hbe_apply_ifft_224(float * , float * , int , int )"
+  "signature": "ixheaacd_hbe_apply_ifft_224"
 - "name": "ixheaacd_apply_rot_dec"
   "params":
   - "name": ""
@@ -68,7 +68,8 @@
   - "name": ""
     "type": "short *"
   "return_type": "void"
-  "signature": "void ixheaacd_apply_rot_dec(struct ia_ps_dec_struct * , int * , int * , int * , int * , struct ia_sbr_tables_struct * , short * )"
+  "signature": "ixheaacd_apply_rot_dec"
+"language": "c++"
 "project": "libxaac"
 "target_name": "xaac_enc_fuzzer"
 "target_path": "/src/libxaac/fuzzer/xaac_enc_fuzzer.cpp"

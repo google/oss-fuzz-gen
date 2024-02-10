@@ -25,6 +25,7 @@
     "type": "struct ssl_st *"
   "return_type": "bool"
   "signature": "bool nts_ke_request(struct ssl_st * ssl)"
+"language": "c"
 "project": "ntpsec"
 "target_name": "FuzzClient"
 "target_path": "/src/ntpsec/fuzz/FuzzClient.c"

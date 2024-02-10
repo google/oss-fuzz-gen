@@ -57,6 +57,7 @@
     "type": "int"
   "return_type": "struct _ipp_s *"
   "signature": "struct _ipp_s * cupsDoIORequest(struct _http_s * http, struct _ipp_s * request, char * resource, int infile, int outfile)"
+"language": "c"
 "project": "cups"
 "target_name": "FuzzIPP"
 "target_path": "/src/cups/fuzzer/FuzzIPP.c"

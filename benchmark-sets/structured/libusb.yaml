@@ -4,7 +4,7 @@
   - "name": "ctx"
     "type": "struct libusb_context *"
   "return_type": "int"
-  "signature": "int op_init(struct libusb_context * ctx)"
+  "signature": "op_init"
 - "name": "libusb_get_bos_descriptor"
   "params":
   - "name": "dev_handle"
@@ -12,7 +12,7 @@
   - "name": "bos"
     "type": "struct libusb_bos_descriptor **"
   "return_type": "int"
-  "signature": "int libusb_get_bos_descriptor(struct libusb_device_handle * dev_handle, struct libusb_bos_descriptor ** bos)"
+  "signature": "libusb_get_bos_descriptor"
 - "name": "libusb_get_string_descriptor_ascii"
   "params":
   - "name": "dev_handle"
@@ -24,7 +24,7 @@
   - "name": "length"
     "type": "int"
   "return_type": "int"
-  "signature": "int libusb_get_string_descriptor_ascii(struct libusb_device_handle * dev_handle, char desc_index, char * data, int length)"
+  "signature": "libusb_get_string_descriptor_ascii"
 - "name": "libusb_get_configuration"
   "params":
   - "name": "dev_handle"
@@ -32,7 +32,7 @@
   - "name": "config"
     "type": "int *"
   "return_type": "int"
-  "signature": "int libusb_get_configuration(struct libusb_device_handle * dev_handle, int * config)"
+  "signature": "libusb_get_configuration"
 - "name": "libusb_get_string_descriptor"
   "params":
   - "name": "dev_handle"
@@ -46,7 +46,8 @@
   - "name": "length"
     "type": "int"
   "return_type": "int"
-  "signature": "int libusb_get_string_descriptor(struct libusb_device_handle * dev_handle, char desc_index, short langid, char * data, int length)"
+  "signature": "libusb_get_string_descriptor"
+"language": "c++"
 "project": "libusb"
 "target_name": "libusb_fuzzer"
 "target_path": "/src/libusb_fuzzer.cc"

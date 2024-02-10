@@ -1,5 +1,5 @@
 "functions":
-- "name": "PDFDoc::displayPages(OutputDev*, int, int, double, double, int, int, int, int, int (*)(void*), void*)"
+- "name": "PDFDoc::displayPages"
   "params":
   - "name": "this"
     "type": "PDFDoc *"
@@ -26,8 +26,8 @@
   - "name": "abortCheckCbkData"
     "type": "char *"
   "return_type": "void"
-  "signature": "void PDFDoc::displayPages(PDFDoc * this, OutputDev * out, int firstPage, int lastPage, double hDPI, double vDPI, int rotate, int useMediaBox, int crop, int printing, func_type * abortCheckCbk, char * abortCheckCbkData)"
-- "name": "PDFDoc::displayPageSlice(OutputDev*, int, double, double, int, int, int, int, int, int, int, int, int (*)(void*), void*)"
+  "signature": "PDFDoc::displayPages(OutputDev*, int, int, double, double, int, int, int, int, int (*)(void*), void*)"
+- "name": "PDFDoc::displayPageSlice"
   "params":
   - "name": "this"
     "type": "PDFDoc *"
@@ -60,8 +60,8 @@
   - "name": "abortCheckCbkData"
     "type": "char *"
   "return_type": "void"
-  "signature": "void PDFDoc::displayPageSlice(PDFDoc * this, OutputDev * out, int page, double hDPI, double vDPI, int rotate, int useMediaBox, int crop, int printing, int sliceX, int sliceY, int sliceW, int sliceH, func_type * abortCheckCbk, char * abortCheckCbkData)"
-- "name": "Gfx::opXObject(Object*, int)"
+  "signature": "PDFDoc::displayPageSlice(OutputDev*, int, double, double, int, int, int, int, int, int, int, int, int (*)(void*), void*)"
+- "name": "Gfx::opXObject"
   "params":
   - "name": "this"
     "type": "Gfx *"
@@ -70,8 +70,8 @@
   - "name": "numArgs"
     "type": "int"
   "return_type": "void"
-  "signature": "void Gfx::opXObject(Gfx * this, Object * args, int numArgs)"
-- "name": "SplashOutputDev::tilingPatternFill(GfxState*, Gfx*, Object*, int, int, Dict*, double*, double*, int, int, int, int, double, double)"
+  "signature": "Gfx::opXObject(Object*, int)"
+- "name": "SplashOutputDev::tilingPatternFill"
   "params":
   - "name": "this"
     "type": "SplashOutputDev *"
@@ -104,8 +104,8 @@
   - "name": "yStep"
     "type": "double"
   "return_type": "void"
-  "signature": "void SplashOutputDev::tilingPatternFill(SplashOutputDev * this, GfxState * state, Gfx * gfx, Object * strRef, int paintType, int tilingType, Dict * resDict, double * mat, double * bbox, int x0, int y0, int x1, int y1, double xStep, double yStep)"
-- "name": "Gfx::opBeginImage(Object*, int)"
+  "signature": "SplashOutputDev::tilingPatternFill(GfxState*, Gfx*, Object*, int, int, Dict*, double*, double*, int, int, int, int, double, double)"
+- "name": "Gfx::opBeginImage"
   "params":
   - "name": "this"
     "type": "Gfx *"
@@ -114,7 +114,8 @@
   - "name": "numArgs"
     "type": "int"
   "return_type": "void"
-  "signature": "void Gfx::opBeginImage(Gfx * this, Object * args, int numArgs)"
+  "signature": "Gfx::opBeginImage(Object*, int)"
+"language": "c++"
 "project": "xpdf"
 "target_name": "fuzz_pdfload"
 "target_path": "/src/fuzz_pdfload.cc"

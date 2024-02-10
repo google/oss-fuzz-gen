@@ -14,7 +14,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "void"
-  "signature": "void ares_getaddrinfo(struct ares_channeldata * , char * , char * , struct ares_addrinfo_hints * , func_type * , char * )"
+  "signature": "ares_getaddrinfo"
 - "name": "ares_getaddrinfo_int"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "void"
-  "signature": "void ares_getaddrinfo_int(struct ares_channeldata * , char * , char * , struct ares_addrinfo_hints * , func_type * , char * )"
+  "signature": "ares_getaddrinfo_int"
 - "name": "ares_getnameinfo"
   "params":
   - "name": ""
@@ -46,7 +46,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "void"
-  "signature": "void ares_getnameinfo(struct ares_channeldata * , struct sockaddr * , int , int , func_type * , char * )"
+  "signature": "ares_getnameinfo"
 - "name": "ares_getnameinfo_int"
   "params":
   - "name": ""
@@ -62,7 +62,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "void"
-  "signature": "void ares_getnameinfo_int(struct ares_channeldata * , struct sockaddr * , int , int , func_type * , char * )"
+  "signature": "ares_getnameinfo_int"
 - "name": "addr_callback"
   "params":
   - "name": ""
@@ -76,7 +76,8 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void addr_callback(char * , int , int , char * , int )"
+  "signature": "addr_callback"
+"language": "c++"
 "project": "c-ares"
 "target_name": "ares_create_query_fuzzer"
 "target_path": "/src/c-ares/test/ares-test-fuzz-name.c"

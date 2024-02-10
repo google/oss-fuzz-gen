@@ -10,7 +10,7 @@
   - "name": "src_name"
     "type": "char *"
   "return_type": "int"
-  "signature": "int asn1_copy_node(struct asn1_node_st * dst, char * dst_name, struct asn1_node_st * src, char * src_name)"
+  "signature": "asn1_copy_node"
 - "name": "asn1_expand_any_defined_by"
   "params":
   - "name": "definitions"
@@ -18,7 +18,7 @@
   - "name": "element"
     "type": "struct asn1_node_st **"
   "return_type": "int"
-  "signature": "int asn1_expand_any_defined_by(struct asn1_node_st * definitions, struct asn1_node_st ** element)"
+  "signature": "asn1_expand_any_defined_by"
 - "name": "asn1_expand_octet_string"
   "params":
   - "name": "definitions"
@@ -30,7 +30,7 @@
   - "name": "objectName"
     "type": "char *"
   "return_type": "int"
-  "signature": "int asn1_expand_octet_string(struct asn1_node_st * definitions, struct asn1_node_st ** element, char * octetName, char * objectName)"
+  "signature": "asn1_expand_octet_string"
 - "name": "asn1_der_decoding_element"
   "params":
   - "name": "structure"
@@ -44,7 +44,7 @@
   - "name": "errorDescription"
     "type": "char *"
   "return_type": "int"
-  "signature": "int asn1_der_decoding_element(struct asn1_node_st ** structure, char * elementName, char * ider, int len, char * errorDescription)"
+  "signature": "asn1_der_decoding_element"
 - "name": "asn1_parser2array"
   "params":
   - "name": "inputFileName"
@@ -56,7 +56,8 @@
   - "name": "error_desc"
     "type": "char *"
   "return_type": "int"
-  "signature": "int asn1_parser2array(char * inputFileName, char * outputFileName, char * vectorName, char * error_desc)"
+  "signature": "asn1_parser2array"
+"language": "c++"
 "project": "libtasn1"
 "target_name": "libtasn1_pkix_der_fuzzer"
 "target_path": "/src/libtasn1/fuzz/libtasn1_pkix_der_fuzzer.c"

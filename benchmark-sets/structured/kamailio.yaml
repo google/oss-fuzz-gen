@@ -33,6 +33,7 @@
     "type": "struct action *"
   "return_type": "int"
   "signature": "int fix_actions(struct action * a)"
+"language": "c"
 "project": "kamailio"
 "target_name": "fuzz_parse_msg"
 "target_path": "/src/kamailio/misc/fuzz/fuzz_parse_msg.c"

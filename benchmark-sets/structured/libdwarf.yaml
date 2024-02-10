@@ -75,6 +75,7 @@
     "type": "struct Dwarf_Error_s **"
   "return_type": "int"
   "signature": "int dwarf_init_path_a(char * path, char * true_path_out_buffer, int true_path_bufferlen, int groupnumber, int universalnumber, func_type * errhand, char * errarg, struct Dwarf_Debug_s ** ret_dbg, struct Dwarf_Error_s ** error)"
+"language": "c"
 "project": "libdwarf"
 "target_name": "fuzz_init_path"
 "target_path": "/src/libdwarf/fuzz/fuzz_init_path.c"

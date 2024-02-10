@@ -55,6 +55,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void log_append_common(struct Log * log, int level, int error, char * id, char * file, int line, char * func)"
+"language": "c"
 "project": "dbus-broker"
 "target_name": "fuzz-message"
 "target_path": "/src/fuzz-message.c"

@@ -119,6 +119,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "int gss_inquire_cred_by_mech(int * minor_status, struct gss_cred_id_struct * cred_handle, struct gss_OID_desc_struct * mech_type, struct gss_name_struct ** name, int * initiator_lifetime, int * acceptor_lifetime, int * cred_usage)"
+"language": "c"
 "project": "gss-ntlmssp"
 "target_name": "fuzz-accept-sec-context"
 "target_path": "/src/gss-ntlmssp/fuzzing/fuzz-accept-sec-context.c"

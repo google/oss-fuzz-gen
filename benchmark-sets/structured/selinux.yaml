@@ -47,6 +47,7 @@
     "type": "size_t *"
   "return_type": "int"
   "signature": "int policydb_to_image(struct sepol_handle * handle, struct policydb * policydb, char ** newdata, size_t * newlen)"
+"language": "c"
 "project": "selinux"
 "target_name": "binpolicy-fuzzer"
 "target_path": "/src/selinux/libsepol/fuzz/binpolicy-fuzzer.c"

@@ -49,6 +49,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int clib_package_install_dependencies(struct clib_package_t * pkg, char * dir, int verbose)"
+"language": "c"
 "project": "clib"
 "target_name": "fuzz_manifest"
 "target_path": "/src/clib/test/fuzzing/fuzz_manifest.c"

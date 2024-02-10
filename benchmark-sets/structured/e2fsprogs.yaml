@@ -75,6 +75,7 @@
     "type": "char *"
   "return_type": "size_t"
   "signature": "size_t ext2fs_dir_iterate2(struct struct_ext2_filsys * fs, int dir, int flags, char * block_buf, func_type * func, char * priv_data)"
+"language": "c"
 "project": "e2fsprogs"
 "target_name": "ext2fs_image_read_write_fuzzer"
 "target_path": "/src/e2fsprogs/tests/fuzz/ext2fs_image_read_write_fuzzer.cc"

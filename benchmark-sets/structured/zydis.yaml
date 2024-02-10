@@ -49,6 +49,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "size_t ZydisStdinRead(char * ctx, char * buf, size_t max_len)"
+"language": "c"
 "project": "zydis"
 "target_name": "ZydisFuzzReEncoding"
 "target_path": "/src/zydis/tools/ZydisFuzzShared.c"

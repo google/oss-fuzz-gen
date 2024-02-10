@@ -49,6 +49,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void iterInitRes(struct IterCellsResolution * res, int )"
+"language": "c"
 "project": "h3"
 "target_name": "fuzzerResolutions"
 "target_path": "/src/h3/src/apps/fuzzers/fuzzerResolutions.c"

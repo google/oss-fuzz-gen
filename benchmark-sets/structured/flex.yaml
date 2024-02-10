@@ -45,6 +45,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "char * yy_flex_xmalloc(int size)"
+"language": "c"
 "project": "flex"
 "target_name": "fuzz-main"
 "target_path": "/src/fuzz-main.c"

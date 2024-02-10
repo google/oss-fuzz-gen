@@ -39,6 +39,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int wolfSSL_writev(struct WOLFSSL * ssl, struct iovec * iov, int iovcnt)"
+"language": "c"
 "project": "wolfmqtt"
 "target_name": "wolfmqtt-fuzzer"
 "target_path": "/src/wolfmqtt-fuzzers/fuzzer.cpp"

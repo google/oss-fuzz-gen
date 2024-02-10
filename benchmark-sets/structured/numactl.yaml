@@ -25,6 +25,7 @@
     "type": "struct bitmask *"
   "return_type": "int"
   "signature": "int numa_run_on_node_mask_v2(struct bitmask * bmp)"
+"language": "c"
 "project": "numactl"
 "target_name": "fuzz_parse_str"
 "target_path": "/src/numactl/fuzz/fuzz_parse_str.c"

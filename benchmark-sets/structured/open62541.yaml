@@ -6,11 +6,11 @@
   - "name": ""
     "type": "char *"
   "return_type": "struct UA_Server *"
-  "signature": "struct UA_Server * UA_Server_newFromFile(size_t json_config, char * )"
+  "signature": "UA_Server_newFromFile"
 - "name": "UA_Server_new"
   "params": []
   "return_type": "struct UA_Server *"
-  "signature": "struct UA_Server * UA_Server_new()"
+  "signature": "UA_Server_new"
 - "name": "Service_CreateSession"
   "params":
   - "name": "server"
@@ -22,7 +22,7 @@
   - "name": "response"
     "type": "struct UA_CreateSessionResponse *"
   "return_type": "void"
-  "signature": "void Service_CreateSession(struct UA_Server * server, struct UA_SecureChannel * channel, struct UA_CreateSessionRequest * request, struct UA_CreateSessionResponse * response)"
+  "signature": "Service_CreateSession"
 - "name": "UA_ServerConfig_setDefaultWithSecureSecurityPolicies"
   "params":
   - "name": "conf"
@@ -46,7 +46,7 @@
   - "name": "revocationListSize"
     "type": "size_t"
   "return_type": "int"
-  "signature": "int UA_ServerConfig_setDefaultWithSecureSecurityPolicies(struct UA_ServerConfig * conf, short portNumber, struct UA_String * certificate, struct UA_String * privateKey, struct UA_String * trustList, size_t trustListSize, struct UA_String * issuerList, size_t issuerListSize, struct UA_String * revocationList, size_t revocationListSize)"
+  "signature": "UA_ServerConfig_setDefaultWithSecureSecurityPolicies"
 - "name": "UA_ServerConfig_setDefaultWithSecurityPolicies"
   "params":
   - "name": "conf"
@@ -70,7 +70,8 @@
   - "name": "revocationListSize"
     "type": "size_t"
   "return_type": "int"
-  "signature": "int UA_ServerConfig_setDefaultWithSecurityPolicies(struct UA_ServerConfig * conf, short portNumber, struct UA_String * certificate, struct UA_String * privateKey, struct UA_String * trustList, size_t trustListSize, struct UA_String * issuerList, size_t issuerListSize, struct UA_String * revocationList, size_t revocationListSize)"
+  "signature": "UA_ServerConfig_setDefaultWithSecurityPolicies"
+"language": "c++"
 "project": "open62541"
 "target_name": "fuzz_mdns_message"
 "target_path": "/src/open62541/deps/mdnsd/tests/fuzz/fuzz_mdns_message.cc"

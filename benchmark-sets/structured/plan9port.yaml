@@ -51,6 +51,7 @@
     "type": "struct Elem **"
   "return_type": "char *"
   "signature": "char * verify_signature(struct Bytes * signature, struct RSApub * pk, char * edigest, struct Elem ** psigalg)"
+"language": "c"
 "project": "plan9port"
 "target_name": "fuzz_libsec"
 "target_path": "/src/fuzz_libsec.c"

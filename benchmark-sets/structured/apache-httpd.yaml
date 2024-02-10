@@ -29,6 +29,7 @@
     "type": "struct conn_rec *"
   "return_type": "int"
   "signature": "int ap_process_http_async_connection(struct conn_rec * c)"
+"language": "c"
 "project": "apache-httpd"
 "target_name": "fuzz_utils"
 "target_path": "/src/fuzz_utils.c"

@@ -48,7 +48,7 @@
   - "name": ""
     "type": "struct xnn_operator **"
   "return_type": "int"
-  "signature": "int xnn_create_convolution2d_nhwc_f32(int , int , int , int , int , int , int , int , int , int , int , size_t , size_t , size_t , size_t , float * , float * , float , float , int , struct xnn_code_cache * , struct xnn_weights_cache_provider * , struct xnn_operator ** )"
+  "signature": "xnn_create_convolution2d_nhwc_f32"
 - "name": "xnn_create_fused_convolution2d_nhwc_f32"
   "params":
   - "name": ""
@@ -98,7 +98,7 @@
   - "name": ""
     "type": "struct xnn_operator **"
   "return_type": "int"
-  "signature": "int xnn_create_fused_convolution2d_nhwc_f32(int , int , int , int , int , int , int , int , int , int , int , size_t , size_t , size_t , size_t , float * , float * , size_t , struct xnn_post_operation * , int , struct xnn_code_cache * , struct xnn_weights_cache_provider * , struct xnn_operator ** )"
+  "signature": "xnn_create_fused_convolution2d_nhwc_f32"
 - "name": "xnn_create_convolution2d_nhwc_qu8"
   "params":
   - "name": ""
@@ -160,7 +160,7 @@
   - "name": ""
     "type": "struct xnn_operator **"
   "return_type": "int"
-  "signature": "int xnn_create_convolution2d_nhwc_qu8(int , int , int , int , int , int , int , int , int , int , int , size_t , size_t , size_t , size_t , char , float , char , float , char * , int * , char , float , char , char , int , struct xnn_code_cache * , struct xnn_weights_cache_provider * , struct xnn_operator ** )"
+  "signature": "xnn_create_convolution2d_nhwc_qu8"
 - "name": "xnn_create_convolution2d_nhwc_qs8_qc8w"
   "params":
   - "name": ""
@@ -220,11 +220,12 @@
   - "name": ""
     "type": "struct xnn_operator **"
   "return_type": "int"
-  "signature": "int xnn_create_convolution2d_nhwc_qs8_qc8w(int , int , int , int , int , int , int , int , int , int , int , size_t , size_t , size_t , size_t , char , float , float * , char * , int * , char , float , char , char , int , struct xnn_code_cache * , struct xnn_weights_cache_provider * , struct xnn_operator ** )"
+  "signature": "xnn_create_convolution2d_nhwc_qs8_qc8w"
 - "name": "xnn_init_f32_gemm_config"
   "params": []
   "return_type": "struct xnn_gemm_config *"
-  "signature": "struct xnn_gemm_config * xnn_init_f32_gemm_config()"
+  "signature": "xnn_init_f32_gemm_config"
+"language": "c++"
 "project": "xnnpack"
 "target_name": "fuzz_model"
 "target_path": "/src/fuzz_model.cc"

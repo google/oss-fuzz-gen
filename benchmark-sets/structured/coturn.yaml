@@ -99,6 +99,7 @@
     "type": "short"
   "return_type": "short"
   "signature": "short stun_set_channel_bind_request(struct _stun_buffer * buf, union.ioa_addr * peer_addr, short channel_number)"
+"language": "c"
 "project": "coturn"
 "target_name": "FuzzStun"
 "target_path": "/src/coturn/fuzzing/FuzzStun.c"

@@ -47,6 +47,7 @@
     "type": "struct ucl_chunk *"
   "return_type": "struct ucl_object_s *"
   "signature": "struct ucl_object_s * ucl_parse_macro_arguments(struct ucl_parser * parser, struct ucl_chunk * chunk)"
+"language": "c"
 "project": "rtpproxy"
 "target_name": "fuzz_command_parser"
 "target_path": "/src/rtpproxy/scripts/fuzz/fuzz_command_parser.c"

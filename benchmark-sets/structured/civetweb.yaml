@@ -53,6 +53,7 @@
     "type": "char *"
   "return_type": "struct mg_connection *"
   "signature": "struct mg_connection * mg_download(char * host, int port, int use_ssl, char * ebuf, size_t ebuf_len, char * fmt)"
+"language": "c"
 "project": "civetweb"
 "target_name": "civetweb_fuzz3"
 "target_path": "/src/civetweb/fuzztest/fuzzmain.c"

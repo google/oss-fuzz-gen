@@ -37,6 +37,7 @@
     "type": "char *"
   "return_type": "struct libmnt_table *"
   "signature": "struct libmnt_table * mnt_new_table_from_file(char * filename)"
+"language": "c"
 "project": "util-linux"
 "target_name": "test_blkid_fuzz"
 "target_path": "/src/util-linux/libblkid/src/fuzz.c"

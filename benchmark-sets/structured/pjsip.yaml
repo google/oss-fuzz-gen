@@ -63,6 +63,7 @@
     "type": "struct pjsip_event *"
   "return_type": "int"
   "signature": "int tsx_on_state_calling(struct pjsip_transaction * tsx, struct pjsip_event * event)"
+"language": "c"
 "project": "pjsip"
 "target_name": "fuzz-http"
 "target_path": "/src/pjsip/tests/fuzz/fuzz-http.c"

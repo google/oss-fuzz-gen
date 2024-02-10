@@ -10,7 +10,7 @@
   - "name": "secret"
     "type": "TPM2B_PUBLIC_KEY_RSA *"
   "return_type": "int"
-  "signature": "int CryptSecretEncrypt(int keyHandle, char * label, union.TPM2B_DATA * data, union.TPM2B_PUBLIC_KEY_RSA * secret)"
+  "signature": "CryptSecretEncrypt"
 - "name": "SensitiveToDuplicate"
   "params":
   - "name": "sensitive"
@@ -30,7 +30,7 @@
   - "name": "outPrivate"
     "type": "TPM2B_PRIVATE *"
   "return_type": "void"
-  "signature": "void SensitiveToDuplicate(struct TPMT_SENSITIVE * sensitive, union.TPM2B_NAME * name, int parentHandle, short nameAlg, union.TPM2B_SEED * seed, struct TPMT_SYM_DEF_OBJECT * symDef, union.TPM2B_DATA * innerSymKey, union.TPM2B_PRIVATE * outPrivate)"
+  "signature": "SensitiveToDuplicate"
 - "name": "TPMS_CAPABILITY_DATA_Unmarshal"
   "params":
   - "name": "target"
@@ -40,7 +40,7 @@
   - "name": "size"
     "type": "int *"
   "return_type": "int"
-  "signature": "int TPMS_CAPABILITY_DATA_Unmarshal(struct TPMS_CAPABILITY_DATA * target, char ** buffer, int * size)"
+  "signature": "TPMS_CAPABILITY_DATA_Unmarshal"
 - "name": "TPMU_CAPABILITIES_Unmarshal"
   "params":
   - "name": "target"
@@ -52,7 +52,7 @@
   - "name": "selector"
     "type": "int"
   "return_type": "int"
-  "signature": "int TPMU_CAPABILITIES_Unmarshal(union.TPMU_CAPABILITIES * target, char ** buffer, int * size, int selector)"
+  "signature": "TPMU_CAPABILITIES_Unmarshal"
 - "name": "SecretToCredential"
   "params":
   - "name": "secret"
@@ -66,7 +66,8 @@
   - "name": "outIDObject"
     "type": "TPM2B_ID_OBJECT *"
   "return_type": "void"
-  "signature": "void SecretToCredential(union.TPM2B_DIGEST * secret, union.TPM2B_NAME * name, union.TPM2B_SEED * seed, int protector, union.TPM2B_ID_OBJECT * outIDObject)"
+  "signature": "SecretToCredential"
+"language": "c++"
 "project": "tpm2"
 "target_name": "tpm2_execute_command_fuzzer"
 "target_path": "/src/tpm2/fuzz/execute-command.cc"

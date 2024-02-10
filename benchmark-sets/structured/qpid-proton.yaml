@@ -8,7 +8,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "int"
-  "signature": "int pni_process_tpwork_sender(struct pn_transport_t * , struct pn_delivery_t * , char * )"
+  "signature": "pni_process_tpwork_sender"
 - "name": "pn_output_write_sasl"
   "params":
   - "name": ""
@@ -20,13 +20,13 @@
   - "name": ""
     "type": "size_t"
   "return_type": "size_t"
-  "signature": "size_t pn_output_write_sasl(struct pn_transport_t * , int , char * , size_t )"
+  "signature": "pn_output_write_sasl"
 - "name": "pni_post_sasl_frame"
   "params":
   - "name": ""
     "type": "struct pn_transport_t *"
   "return_type": "void"
-  "signature": "void pni_post_sasl_frame(struct pn_transport_t * )"
+  "signature": "pni_post_sasl_frame"
 - "name": "pni_post_amqp_transfer_frame"
   "params":
   - "name": ""
@@ -56,7 +56,7 @@
   - "name": ""
     "type": "bool"
   "return_type": "int"
-  "signature": "int pni_post_amqp_transfer_frame(struct pn_transport_t * , short , int , int , struct pn_bytes_t * , size_t , char * , bool , bool , int , size_t , struct pn_data_t * , bool )"
+  "signature": "pni_post_amqp_transfer_frame"
 - "name": "pn_data_vfill"
   "params":
   - "name": ""
@@ -66,7 +66,8 @@
   - "name": ""
     "type": "struct __va_list_tag *"
   "return_type": "int"
-  "signature": "int pn_data_vfill(struct pn_data_t * , char * , struct __va_list_tag * )"
+  "signature": "pn_data_vfill"
+"language": "c++"
 "project": "qpid-proton"
 "target_name": "c/tests/fuzz/fuzz-sniff-header.c"
 "target_path": "/src/qpid-proton/c/tests/fuzz/fuzz-sniff-header.c"

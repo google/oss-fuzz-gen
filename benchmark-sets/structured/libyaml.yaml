@@ -6,7 +6,7 @@
   - "name": "file"
     "type": "struct _IO_FILE *"
   "return_type": "void"
-  "signature": "void yaml_parser_set_input_file(struct yaml_parser_s * parser, struct _IO_FILE * file)"
+  "signature": "yaml_parser_set_input_file"
 - "name": "yaml_emitter_set_output_file"
   "params":
   - "name": "emitter"
@@ -14,7 +14,7 @@
   - "name": "file"
     "type": "struct _IO_FILE *"
   "return_type": "void"
-  "signature": "void yaml_emitter_set_output_file(struct yaml_emitter_s * emitter, struct _IO_FILE * file)"
+  "signature": "yaml_emitter_set_output_file"
 - "name": "yaml_emitter_set_indent"
   "params":
   - "name": "emitter"
@@ -22,7 +22,7 @@
   - "name": "indent"
     "type": "int"
   "return_type": "void"
-  "signature": "void yaml_emitter_set_indent(struct yaml_emitter_s * emitter, int indent)"
+  "signature": "yaml_emitter_set_indent"
 - "name": "yaml_emitter_set_output_string"
   "params":
   - "name": "emitter"
@@ -34,7 +34,7 @@
   - "name": "size_written"
     "type": "size_t *"
   "return_type": "void"
-  "signature": "void yaml_emitter_set_output_string(struct yaml_emitter_s * emitter, char * output, size_t size, size_t * size_written)"
+  "signature": "yaml_emitter_set_output_string"
 - "name": "yaml_file_read_handler"
   "params":
   - "name": "data"
@@ -46,7 +46,8 @@
   - "name": "size_read"
     "type": "size_t *"
   "return_type": "int"
-  "signature": "int yaml_file_read_handler(char * data, char * buffer, size_t size, size_t * size_read)"
+  "signature": "yaml_file_read_handler"
+"language": "c++"
 "project": "libyaml"
 "target_name": "libyaml_parser_fuzzer"
 "target_path": "/src/libyaml_parser_fuzzer.c"

@@ -10,7 +10,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "int"
-  "signature": "int BrotliDecoderDecompress(size_t , char * , size_t * , char * )"
+  "signature": "BrotliDecoderDecompress"
 - "name": "BrotliDecoderTakeOutput"
   "params":
   - "name": ""
@@ -18,7 +18,7 @@
   - "name": ""
     "type": "size_t *"
   "return_type": "char *"
-  "signature": "char * BrotliDecoderTakeOutput(struct BrotliDecoderStateStruct * , size_t * )"
+  "signature": "BrotliDecoderTakeOutput"
 - "name": "BrotliDecoderAttachDictionary"
   "params":
   - "name": ""
@@ -30,13 +30,13 @@
   - "name": ""
     "type": "char *"
   "return_type": "int"
-  "signature": "int BrotliDecoderAttachDictionary(struct BrotliDecoderStateStruct * , int , size_t , char * )"
+  "signature": "BrotliDecoderAttachDictionary"
 - "name": "BrotliDecoderIsFinished"
   "params":
   - "name": ""
     "type": "struct BrotliDecoderStateStruct *"
   "return_type": "int"
-  "signature": "int BrotliDecoderIsFinished(struct BrotliDecoderStateStruct * )"
+  "signature": "BrotliDecoderIsFinished"
 - "name": "BrotliSafeReadBits32Slow"
   "params":
   - "name": ""
@@ -46,7 +46,8 @@
   - "name": ""
     "type": "size_t *"
   "return_type": "int"
-  "signature": "int BrotliSafeReadBits32Slow(struct BrotliBitReader * , size_t , size_t * )"
+  "signature": "BrotliSafeReadBits32Slow"
+"language": "c++"
 "project": "brotli"
 "target_name": "decode_fuzzer"
 "target_path": "/src/brotli/c/fuzz/decode_fuzzer.c"

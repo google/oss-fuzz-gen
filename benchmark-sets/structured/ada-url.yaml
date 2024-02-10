@@ -10,7 +10,7 @@
   - "name": "base_length"
     "type": "size_t"
   "return_type": "bool"
-  "signature": "bool ada_can_parse_with_base(char * input, size_t input_length, char * base, size_t base_length)"
+  "signature": "ada_can_parse_with_base"
 - "name": "ada_can_parse"
   "params":
   - "name": "input"
@@ -18,7 +18,7 @@
   - "name": "length"
     "type": "size_t"
   "return_type": "bool"
-  "signature": "bool ada_can_parse(char * input, size_t length)"
+  "signature": "ada_can_parse"
 - "name": "ada_parse_with_base"
   "params":
   - "name": "input"
@@ -30,7 +30,7 @@
   - "name": "base_length"
     "type": "size_t"
   "return_type": "char *"
-  "signature": "char * ada_parse_with_base(char * input, size_t input_length, char * base, size_t base_length)"
+  "signature": "ada_parse_with_base"
 - "name": "ada_set_href"
   "params":
   - "name": "result"
@@ -40,8 +40,8 @@
   - "name": "length"
     "type": "size_t"
   "return_type": "bool"
-  "signature": "bool ada_set_href(char * result, char * input, size_t length)"
-- "name": "ada::url_aggregator::set_href(std::__1::basic_string_view<char, std::__1::char_traits<char> >)"
+  "signature": "ada_set_href"
+- "name": "ada::url_aggregator::set_href"
   "params":
   - "name": "this"
     "type": "struct ada::url_aggregator *"
@@ -50,7 +50,8 @@
   - "name": ""
     "type": "size_t"
   "return_type": "bool"
-  "signature": "bool ada::url_aggregator::set_href(struct ada::url_aggregator * this, char * input, size_t )"
+  "signature": "ada::url_aggregator::set_href(std::__1::basic_string_view<char, std::__1::char_traits<char> >)"
+"language": "c++"
 "project": "ada-url"
 "target_name": "parse"
 "target_path": "/src/ada-url/fuzz/parse.cc"

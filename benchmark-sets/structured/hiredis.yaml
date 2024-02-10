@@ -41,6 +41,7 @@
     "type": "size_t *"
   "return_type": "char *"
   "signature": "char * redisCommandArgv(struct redisContext * c, int argc, char ** argv, size_t * argvlen)"
+"language": "c"
 "project": "hiredis"
 "target_name": "format_command_fuzzer"
 "target_path": "/src/hiredis/fuzzing/format_command_fuzzer.c"

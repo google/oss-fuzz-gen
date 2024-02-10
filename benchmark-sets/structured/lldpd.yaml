@@ -33,6 +33,7 @@
     "type": "struct lldpd *"
   "return_type": "int"
   "signature": "int netlink_initialize(struct lldpd * cfg)"
+"language": "c"
 "project": "lldpd"
 "target_name": "fuzz_lldp"
 "target_path": "/src/lldpd/tests/fuzz_lldp.c"

@@ -57,6 +57,7 @@
     "type": "short"
   "return_type": "struct amqp_confirm_select_ok_t_ *"
   "signature": "struct amqp_confirm_select_ok_t_ * amqp_tx_rollback(struct amqp_connection_state_t_ * state, short channel)"
+"language": "c"
 "project": "rabbitmq-c"
 "target_name": "fuzz_server"
 "target_path": "/src/librabbitmq/fuzz/fuzz_server.c"

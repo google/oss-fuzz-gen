@@ -49,6 +49,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int dns_zt_asyncload(struct dns_zt * zt, bool newonly, func_type * loaddone, char * arg)"
+"language": "c"
 "project": "bind9"
 "target_name": "isc_lex_gettoken_fuzzer"
 "target_path": "/src/bind9/fuzz/isc_lex_gettoken.c"

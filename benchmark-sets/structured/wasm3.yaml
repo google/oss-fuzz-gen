@@ -55,6 +55,7 @@
     "type": "char *"
   "return_type": "char *"
   "signature": "char * CompileRawFunction(struct M3Module * , struct M3Function * , char * , char * )"
+"language": "c"
 "project": "wasm3"
 "target_name": "fuzzer"
 "target_path": "/src/wasm3/platforms/app_fuzz/fuzzer.c"

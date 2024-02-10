@@ -1,5 +1,5 @@
 "functions":
-- "name": "resize"
+- "name": "Eigen::Transpose<Eigen::Block<Eigen::Matrix<longdouble,-1,-1,0,-1,-1>,-1,1,true>>::resize"
   "params":
   - "name": "this"
     "type": "Eigen::Transpose *"
@@ -8,8 +8,8 @@
   - "name": "ncols"
     "type": "size_t"
   "return_type": "void"
-  "signature": "void Eigen::Transpose<Eigen::Block<Eigen::Matrix<long double, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(Eigen::Transpose * this, size_t nrows, size_t ncols)"
-- "name": "resize"
+  "signature": "Eigen::Transpose<Eigen::Block<Eigen::Matrix<long double, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(long, long)"
+- "name": "Eigen::Transpose<Eigen::Block<Eigen::Matrix<std::__1::complex<double>,-1,-1,0,-1,-1>,-1,1,true>>::resize"
   "params":
   - "name": "this"
     "type": "Eigen::Transpose *"
@@ -18,8 +18,8 @@
   - "name": "ncols"
     "type": "size_t"
   "return_type": "void"
-  "signature": "void Eigen::Transpose<Eigen::Block<Eigen::Matrix<std::__1::complex<double>, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(Eigen::Transpose * this, size_t nrows, size_t ncols)"
-- "name": "resize"
+  "signature": "Eigen::Transpose<Eigen::Block<Eigen::Matrix<std::__1::complex<double>, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(long, long)"
+- "name": "Eigen::Transpose<Eigen::Block<Eigen::Matrix<int,-1,-1,0,-1,-1>,-1,1,true>>::resize"
   "params":
   - "name": "this"
     "type": "Eigen::Transpose *"
@@ -28,8 +28,8 @@
   - "name": "ncols"
     "type": "size_t"
   "return_type": "void"
-  "signature": "void Eigen::Transpose<Eigen::Block<Eigen::Matrix<int, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(Eigen::Transpose * this, size_t nrows, size_t ncols)"
-- "name": "resize"
+  "signature": "Eigen::Transpose<Eigen::Block<Eigen::Matrix<int, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(long, long)"
+- "name": "Eigen::Transpose<Eigen::Block<Eigen::Matrix<std::__1::complex<float>,-1,-1,0,-1,-1>,-1,1,true>>::resize"
   "params":
   - "name": "this"
     "type": "Eigen::Transpose *"
@@ -38,13 +38,14 @@
   - "name": "ncols"
     "type": "size_t"
   "return_type": "void"
-  "signature": "void Eigen::Transpose<Eigen::Block<Eigen::Matrix<std::__1::complex<float>, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(Eigen::Transpose * this, size_t nrows, size_t ncols)"
-- "name": "Matrix"
+  "signature": "Eigen::Transpose<Eigen::Block<Eigen::Matrix<std::__1::complex<float>, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(long, long)"
+- "name": "Eigen::Matrix<double,-1,-1,0,-1,-1>::~Matrix"
   "params":
   - "name": "this"
     "type": "Eigen::Matrix *"
   "return_type": "void"
-  "signature": "void Eigen::Matrix<double, -1, -1, 0, -1, -1>::~Matrix(Eigen::Matrix * this)"
+  "signature": "Eigen::Matrix<double, -1, -1, 0, -1, -1>::~Matrix()"
+"language": "c++"
 "project": "eigen"
 "target_name": "solver_fuzzer"
 "target_path": "/src/solver_fuzzer.cc"

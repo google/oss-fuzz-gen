@@ -99,6 +99,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "int regset_search_body_regex_lead(struct OnigRegSetStruct * set, char * str, char * end, char * start, char * orig_range, int lead, int option, struct OnigMatchParamStruct ** mps, int * rmatch_pos)"
+"language": "c"
 "project": "oniguruma"
 "target_name": "fuzzer"
 "target_path": "/src/oniguruma/harnesses/base.c"

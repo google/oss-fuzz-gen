@@ -63,6 +63,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int modbus_report_slave_id(struct _modbus * ctx, int max_dest, char * dest)"
+"language": "c"
 "project": "libmodbus"
 "target_name": "FuzzClient"
 "target_path": "/src/libmodbus/fuzz/FuzzClient.c"

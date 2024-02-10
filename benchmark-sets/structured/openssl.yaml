@@ -20,7 +20,7 @@
   - "name": "propq"
     "type": "char *"
   "return_type": "struct bio_st *"
-  "signature": "struct bio_st * CMS_SignedData_verify(struct CMS_SignedData_st * sd, struct bio_st * detached_data, struct stack_st_X509 * scerts, struct x509_store_st * store, struct stack_st_X509 * extra, struct stack_st_X509_CRL * crls, int flags, struct ossl_lib_ctx_st * libctx, char * propq)"
+  "signature": "CMS_SignedData_verify"
 - "name": "CMS_verify_receipt"
   "params":
   - "name": "rcms"
@@ -34,7 +34,7 @@
   - "name": "flags"
     "type": "int"
   "return_type": "int"
-  "signature": "int CMS_verify_receipt(struct CMS_ContentInfo_st * rcms, struct CMS_ContentInfo_st * ocms, struct stack_st_X509 * certs, struct x509_store_st * store, int flags)"
+  "signature": "CMS_verify_receipt"
 - "name": "CMS_verify"
   "params":
   - "name": "cms"
@@ -50,7 +50,7 @@
   - "name": "flags"
     "type": "int"
   "return_type": "int"
-  "signature": "int CMS_verify(struct CMS_ContentInfo_st * cms, struct stack_st_X509 * certs, struct x509_store_st * store, struct bio_st * dcont, struct bio_st * out, int flags)"
+  "signature": "CMS_verify"
 - "name": "OSSL_CMP_CTX_server_perform"
   "params":
   - "name": "client_ctx"
@@ -58,7 +58,7 @@
   - "name": "req"
     "type": "struct ossl_cmp_msg_st *"
   "return_type": "struct ossl_cmp_msg_st *"
-  "signature": "struct ossl_cmp_msg_st * OSSL_CMP_CTX_server_perform(struct ossl_cmp_ctx_st * client_ctx, struct ossl_cmp_msg_st * req)"
+  "signature": "OSSL_CMP_CTX_server_perform"
 - "name": "dtls1_ctrl"
   "params":
   - "name": "ssl"
@@ -70,7 +70,8 @@
   - "name": "parg"
     "type": "char *"
   "return_type": "size_t"
-  "signature": "size_t dtls1_ctrl(struct ssl_st * ssl, int cmd, size_t larg, char * parg)"
+  "signature": "dtls1_ctrl"
+"language": "c++"
 "project": "openssl"
 "target_name": "driver"
 "target_path": "/src/openssl32/fuzz/driver.c"

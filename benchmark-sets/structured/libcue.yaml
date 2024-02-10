@@ -33,6 +33,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "char * cdtext_get_key(int , int )"
+"language": "c"
 "project": "libcue"
 "target_name": "fuzz"
 "target_path": "/src/libcue/oss-fuzz/fuzz.cpp"

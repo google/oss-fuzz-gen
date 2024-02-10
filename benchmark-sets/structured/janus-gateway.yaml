@@ -22,7 +22,7 @@
   - "name": "rid_mutex"
     "type": "_GMutex *"
   "return_type": "int"
-  "signature": "int janus_rtp_simulcasting_context_process_rtp(struct janus_rtp_simulcasting_context * context, char * buf, int len, char * dd_content, int dd_len, int * ssrcs, char ** rids, int vcodec, struct janus_rtp_switching_context * sc, union._GMutex * rid_mutex)"
+  "signature": "janus_rtp_simulcasting_context_process_rtp"
 - "name": "janus_sdp_generate_offer"
   "params":
   - "name": "name"
@@ -30,7 +30,7 @@
   - "name": "address"
     "type": "char *"
   "return_type": "struct janus_sdp *"
-  "signature": "struct janus_sdp * janus_sdp_generate_offer(char * name, char * address)"
+  "signature": "janus_sdp_generate_offer"
 - "name": "janus_sdp_generate_answer_mline"
   "params":
   - "name": "offer"
@@ -40,7 +40,7 @@
   - "name": "offered"
     "type": "struct janus_sdp_mline *"
   "return_type": "int"
-  "signature": "int janus_sdp_generate_answer_mline(struct janus_sdp * offer, struct janus_sdp * answer, struct janus_sdp_mline * offered)"
+  "signature": "janus_sdp_generate_answer_mline"
 - "name": "janus_rtp_svc_context_process_rtp"
   "params":
   - "name": "context"
@@ -60,13 +60,14 @@
   - "name": "sc"
     "type": "struct janus_rtp_switching_context *"
   "return_type": "int"
-  "signature": "int janus_rtp_svc_context_process_rtp(struct janus_rtp_svc_context * context, char * buf, int len, char * dd_content, int dd_len, int vcodec, struct janus_vp9_svc_info * info, struct janus_rtp_switching_context * sc)"
+  "signature": "janus_rtp_svc_context_process_rtp"
 - "name": "janus_sdp_generate_offer_mline"
   "params":
   - "name": "offer"
     "type": "struct janus_sdp *"
   "return_type": "int"
-  "signature": "int janus_sdp_generate_offer_mline(struct janus_sdp * offer)"
+  "signature": "janus_sdp_generate_offer_mline"
+"language": "c++"
 "project": "janus-gateway"
 "target_name": "rtcp_fuzzer"
 "target_path": "/src/janus-gateway/fuzzers/rtcp_fuzzer.c"

@@ -49,6 +49,7 @@
     "type": "char **"
   "return_type": "int"
   "signature": "int sudo_set_grlist(struct passwd * pw, char ** groups)"
+"language": "c"
 "project": "sudoers"
 "target_name": "fuzz_sudoers_ldif"
 "target_path": "/src/sudo/plugins/sudoers/regress/fuzz/fuzz_sudoers_ldif.c"

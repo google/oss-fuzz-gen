@@ -10,7 +10,7 @@
   - "name": "userData"
     "type": "char *"
   "return_type": "struct encoding *"
-  "signature": "struct encoding * XmlInitUnknownEncodingNS(char * mem, int * table, func_type * convert, char * userData)"
+  "signature": "XmlInitUnknownEncodingNS"
 - "name": "XmlInitUnknownEncoding"
   "params":
   - "name": "mem"
@@ -22,11 +22,11 @@
   - "name": "userData"
     "type": "char *"
   "return_type": "struct encoding *"
-  "signature": "struct encoding * XmlInitUnknownEncoding(char * mem, int * table, func_type * convert, char * userData)"
+  "signature": "XmlInitUnknownEncoding"
 - "name": "sip24_valid"
   "params": []
   "return_type": "int"
-  "signature": "int sip24_valid()"
+  "signature": "sip24_valid"
 - "name": "XML_SetBase"
   "params":
   - "name": "parser"
@@ -34,7 +34,7 @@
   - "name": "p"
     "type": "char *"
   "return_type": "int"
-  "signature": "int XML_SetBase(struct XML_ParserStruct * parser, char * p)"
+  "signature": "XML_SetBase"
 - "name": "initScanContentNS"
   "params":
   - "name": "enc"
@@ -46,7 +46,8 @@
   - "name": "nextTokPtr"
     "type": "char **"
   "return_type": "int"
-  "signature": "int initScanContentNS(struct encoding * enc, char * ptr, char * end, char ** nextTokPtr)"
+  "signature": "initScanContentNS"
+"language": "c++"
 "project": "expat"
-"target_name": "xml_parsebuffer_fuzzer_US-ASCII"
+"target_name": "xml_parsebuffer_fuzzer_UTF-8"
 "target_path": "/src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c"

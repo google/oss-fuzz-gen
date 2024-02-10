@@ -12,7 +12,7 @@
   - "name": "handler"
     "type": "int"
   "return_type": "char *"
-  "signature": "char * str_iconveha(char * src, char * from_codeset, char * to_codeset, bool transliterate, int handler)"
+  "signature": "str_iconveha"
 - "name": "str_iconveha_notranslit"
   "params":
   - "name": "src"
@@ -24,7 +24,7 @@
   - "name": "handler"
     "type": "int"
   "return_type": "char *"
-  "signature": "char * str_iconveha_notranslit(char * src, char * from_codeset, char * to_codeset, int handler)"
+  "signature": "str_iconveha_notranslit"
 - "name": "str_iconveh"
   "params":
   - "name": "src"
@@ -36,7 +36,7 @@
   - "name": "handler"
     "type": "int"
   "return_type": "char *"
-  "signature": "char * str_iconveh(char * src, char * from_codeset, char * to_codeset, int handler)"
+  "signature": "str_iconveh"
 - "name": "str_cd_iconveh"
   "params":
   - "name": "src"
@@ -46,13 +46,14 @@
   - "name": "handler"
     "type": "int"
   "return_type": "char *"
-  "signature": "char * str_cd_iconveh(char * src, struct iconveh_t * cd, int handler)"
+  "signature": "str_cd_iconveh"
 - "name": "c_isascii"
   "params":
   - "name": "c"
     "type": "int"
   "return_type": "bool"
-  "signature": "bool c_isascii(int c)"
+  "signature": "c_isascii"
+"language": "c++"
 "project": "libidn2"
 "target_name": "libidn2_to_unicode_8z8z_fuzzer"
 "target_path": "/src/libidn2/fuzz/libidn2_to_unicode_8z8z_fuzzer.c"

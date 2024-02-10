@@ -45,6 +45,7 @@
     "type": "struct GumboInternalError *"
   "return_type": "char *"
   "signature": "char * gumbo_error_code(struct GumboInternalError * error)"
+"language": "c"
 "project": "nokogiri"
 "target_name": "parse_fuzzer"
 "target_path": "/src/nokogiri/gumbo-parser/fuzzer/parse_fuzzer.cc"

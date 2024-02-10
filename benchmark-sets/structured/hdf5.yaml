@@ -47,6 +47,7 @@
     "type": "struct H5D_t *"
   "return_type": "size_t"
   "signature": "size_t H5D__get_space(struct H5D_t * )"
+"language": "c"
 "project": "hdf5"
 "target_name": "h5_read_fuzzer"
 "target_path": "/src/h5_read_fuzzer.c"

@@ -37,6 +37,7 @@
     "type": "int"
   "return_type": "struct DICT *"
   "signature": "struct DICT * dict_cidr_open(char * , int , int )"
+"language": "c"
 "project": "postfix"
 "target_name": "fuzz_tok822"
 "target_path": "/src/fuzz_tok822.c"

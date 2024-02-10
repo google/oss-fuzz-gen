@@ -47,6 +47,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "int op_read_float(struct OggOpusFile * _of, float * _pcm, int _buf_size, int * _li)"
+"language": "c"
 "project": "opusfile"
 "target_name": "opusfile_fuzzer"
 "target_path": "/src/opusfile_fuzzer.c"

@@ -51,6 +51,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int WS_ReqPipeline(struct ws * ws, char * b, char * e)"
+"language": "c"
 "project": "varnish"
 "target_name": "esi_parse_fuzzer"
 "target_path": "/src/varnish-cache/bin/varnishd/fuzzers/esi_parse_fuzzer.c"

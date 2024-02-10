@@ -1,5 +1,5 @@
 "functions":
-- "name": "EncoderCore<float, true>::Run(unsigned char*, unsigned long, bool)"
+- "name": "EncoderCore<float,true>::Run"
   "params":
   - "name": ""
     "type": "EncoderCore *"
@@ -10,8 +10,8 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool EncoderCore<float, true>::Run(EncoderCore * , char * , size_t , bool )"
-- "name": "EncoderCore<double, true>::Run(unsigned char*, unsigned long, bool)"
+  "signature": "EncoderCore<float, true>::Run(unsigned char*, unsigned long, bool)"
+- "name": "EncoderCore<double,true>::Run"
   "params":
   - "name": ""
     "type": "EncoderCore *"
@@ -22,8 +22,8 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool EncoderCore<double, true>::Run(EncoderCore * , char * , size_t , bool )"
-- "name": "EncoderCore<long, true>::Run(unsigned char*, unsigned long, bool)"
+  "signature": "EncoderCore<double, true>::Run(unsigned char*, unsigned long, bool)"
+- "name": "EncoderCore<long,true>::Run"
   "params":
   - "name": ""
     "type": "EncoderCore *"
@@ -34,8 +34,8 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool EncoderCore<long, true>::Run(EncoderCore * , char * , size_t , bool )"
-- "name": "EncoderCore<int, true>::Run(unsigned char*, unsigned long, bool)"
+  "signature": "EncoderCore<long, true>::Run(unsigned char*, unsigned long, bool)"
+- "name": "EncoderCore<int,true>::Run"
   "params":
   - "name": ""
     "type": "EncoderCore *"
@@ -46,8 +46,8 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool EncoderCore<int, true>::Run(EncoderCore * , char * , size_t , bool )"
-- "name": "EncoderCore<short, true>::Run(unsigned char*, unsigned long, bool)"
+  "signature": "EncoderCore<int, true>::Run(unsigned char*, unsigned long, bool)"
+- "name": "EncoderCore<short,true>::Run"
   "params":
   - "name": ""
     "type": "EncoderCore *"
@@ -58,7 +58,8 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool EncoderCore<short, true>::Run(EncoderCore * , char * , size_t , bool )"
+  "signature": "EncoderCore<short, true>::Run(unsigned char*, unsigned long, bool)"
+"language": "c++"
 "project": "lame"
 "target_name": "fuzzer-encoder"
 "target_path": "/src/LAME-fuzzers/fuzzer-encoder.cpp"

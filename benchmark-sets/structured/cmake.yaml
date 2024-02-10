@@ -49,6 +49,7 @@
     "type": "char **"
   "return_type": "int"
   "signature": "int externalEntityInitProcessor2(struct XML_ParserStruct * , char * , char * , char ** )"
+"language": "c"
 "project": "cmake"
 "target_name": "xml_parser_fuzzer"
 "target_path": "/src/CMake/Tests/Fuzzing/xml_parser_fuzzer.cc"

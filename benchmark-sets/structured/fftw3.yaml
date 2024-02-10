@@ -51,6 +51,7 @@
     "type": "int"
   "return_type": "struct problem_s *"
   "signature": "struct problem_s * fftw_mkproblem_rdft_1_d(struct tensor * sz, struct tensor * vecsz, double * I, double * O, int kind)"
+"language": "c++"
 "project": "fftw3"
 "target_name": "fftw3_fuzzer"
 "target_path": "/src/fftw3_fuzzer.cc"

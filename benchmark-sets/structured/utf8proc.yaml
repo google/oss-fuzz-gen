@@ -27,6 +27,7 @@
   "params": []
   "return_type": "char *"
   "signature": "char * utf8proc_version()"
+"language": "c"
 "project": "utf8proc"
 "target_name": "utf8proc_fuzzer"
 "target_path": "/src/utf8proc/test/fuzzer.c"

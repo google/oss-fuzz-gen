@@ -27,6 +27,7 @@
   "params": []
   "return_type": "void"
   "signature": "void vcard_emul_replay_insertion_events()"
+"language": "c"
 "project": "libcacard"
 "target_name": "fuzz_xfer"
 "target_path": "/src/libcacard/fuzz/fuzz_xfer.c"

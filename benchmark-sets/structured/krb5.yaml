@@ -145,6 +145,7 @@
     "type": "struct _krb5_gss_ctx_ext_rec *"
   "return_type": "int"
   "signature": "int krb5_gss_init_sec_context_ext(int * minor_status, struct gss_cred_id_struct * claimant_cred_handle, struct gss_ctx_id_struct ** context_handle, struct gss_name_struct * target_name, struct gss_OID_desc_struct * mech_type, int req_flags, int time_req, struct gss_channel_bindings_struct * input_chan_bindings, struct gss_buffer_desc_struct * input_token, struct gss_OID_desc_struct ** actual_mech_type, struct gss_buffer_desc_struct * output_token, int * ret_flags, int * time_rec, struct _krb5_gss_ctx_ext_rec * exts)"
+"language": "c"
 "project": "krb5"
 "target_name": "Fuzz_profile"
 "target_path": "/src/krb5/fuzzing/Fuzz_profile.c"

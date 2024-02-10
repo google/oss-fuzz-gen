@@ -39,6 +39,7 @@
     "type": "struct gps_device_t *"
   "return_type": "bool"
   "signature": "bool tsip_detect(struct gps_device_t * )"
+"language": "c"
 "project": "gpsd"
 "target_name": "FuzzJson"
 "target_path": "/src/gpsd/fuzzer/FuzzJson.c"

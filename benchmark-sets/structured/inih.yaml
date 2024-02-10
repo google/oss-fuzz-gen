@@ -25,6 +25,7 @@
     "type": "char *"
   "return_type": "char *"
   "signature": "char * ini_reader_string(char * str, int num, char * stream)"
+"language": "c"
 "project": "inih"
 "target_name": "inihfuzz"
 "target_path": "/src/inih/fuzzing/inihfuzz.c"

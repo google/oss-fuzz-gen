@@ -43,6 +43,7 @@
     "type": "struct nxt_port_recv_msg_s *"
   "return_type": "void"
   "signature": "void nxt_main_port_modules_handler(struct nxt_task_s * task, struct nxt_port_recv_msg_s * msg)"
+"language": "c"
 "project": "unit"
 "target_name": "Fuzz_json"
 "target_path": "/src/unit/fuzzer/Fuzz_json.c"

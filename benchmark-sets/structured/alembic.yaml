@@ -1,5 +1,5 @@
 "functions":
-- "name": "Alembic::AbcCoreOgawa::v12::AprImpl::getSample(long, std::__1::shared_ptr<Alembic::AbcCoreAbstract::v12::ArraySample>&)"
+- "name": "Alembic::AbcCoreOgawa::v12::AprImpl::getSample"
   "params":
   - "name": ""
     "type": "Alembic::AbcCoreOgawa::v12::AprImpl *"
@@ -8,8 +8,8 @@
   - "name": ""
     "type": "std::shared_ptr *"
   "return_type": "void"
-  "signature": "void Alembic::AbcCoreOgawa::v12::AprImpl::getSample(Alembic::AbcCoreOgawa::v12::AprImpl * , size_t , std::shared_ptr * )"
-- "name": "Alembic::AbcCoreOgawa::v12::ReadArraySample(std::__1::shared_ptr<Alembic::Ogawa::v12::IData>, std::__1::shared_ptr<Alembic::Ogawa::v12::IData>, unsigned long, Alembic::AbcCoreAbstract::v12::DataType const&, std::__1::shared_ptr<Alembic::AbcCoreAbstract::v12::ArraySample>&)"
+  "signature": "Alembic::AbcCoreOgawa::v12::AprImpl::getSample(long, std::__1::shared_ptr<Alembic::AbcCoreAbstract::v12::ArraySample>&)"
+- "name": "Alembic::AbcCoreOgawa::v12::ReadArraySample"
   "params":
   - "name": "iDims"
     "type": "std::shared_ptr *"
@@ -22,8 +22,8 @@
   - "name": ""
     "type": "std::shared_ptr *"
   "return_type": "void"
-  "signature": "void Alembic::AbcCoreOgawa::v12::ReadArraySample(std::shared_ptr * iDims, std::shared_ptr * iData, size_t , Alembic::AbcCoreAbstract::v12::DataType * , std::shared_ptr * )"
-- "name": "Alembic::AbcCoreFactory::v12::IFactory::getArchive(std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&)"
+  "signature": "Alembic::AbcCoreOgawa::v12::ReadArraySample(std::__1::shared_ptr<Alembic::Ogawa::v12::IData>, std::__1::shared_ptr<Alembic::Ogawa::v12::IData>, unsigned long, Alembic::AbcCoreAbstract::v12::DataType const&, std::__1::shared_ptr<Alembic::AbcCoreAbstract::v12::ArraySample>&)"
+- "name": "Alembic::AbcCoreFactory::v12::IFactory::getArchive"
   "params":
   - "name": ""
     "type": "Alembic::Abc::v12::IArchive *"
@@ -32,8 +32,8 @@
   - "name": ""
     "type": "std::vector *"
   "return_type": "void"
-  "signature": "void Alembic::AbcCoreFactory::v12::IFactory::getArchive(Alembic::Abc::v12::IArchive * , Alembic::AbcCoreFactory::v12::IFactory * , std::vector * )"
-- "name": "Alembic::AbcCoreFactory::v12::IFactory::getArchive(std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&, Alembic::AbcCoreFactory::v12::IFactory::CoreType&)"
+  "signature": "Alembic::AbcCoreFactory::v12::IFactory::getArchive(std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&)"
+- "name": "Alembic::AbcCoreFactory::v12::IFactory::getArchive"
   "params":
   - "name": ""
     "type": "Alembic::Abc::v12::IArchive *"
@@ -44,8 +44,8 @@
   - "name": ""
     "type": "int *"
   "return_type": "void"
-  "signature": "void Alembic::AbcCoreFactory::v12::IFactory::getArchive(Alembic::Abc::v12::IArchive * , Alembic::AbcCoreFactory::v12::IFactory * , std::vector * , int * )"
-- "name": "Alembic::AbcCoreOgawa::v12::SprImpl::getSample(long, void*)"
+  "signature": "Alembic::AbcCoreFactory::v12::IFactory::getArchive(std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&, Alembic::AbcCoreFactory::v12::IFactory::CoreType&)"
+- "name": "Alembic::AbcCoreOgawa::v12::SprImpl::getSample"
   "params":
   - "name": ""
     "type": "Alembic::AbcCoreOgawa::v12::SprImpl *"
@@ -54,7 +54,8 @@
   - "name": ""
     "type": "char *"
   "return_type": "void"
-  "signature": "void Alembic::AbcCoreOgawa::v12::SprImpl::getSample(Alembic::AbcCoreOgawa::v12::SprImpl * , size_t , char * )"
+  "signature": "Alembic::AbcCoreOgawa::v12::SprImpl::getSample(long, void*)"
+"language": "c++"
 "project": "alembic"
 "target_name": "alembic_dump_info_fuzzer"
 "target_path": "/src/alembic_dump_info_fuzzer.cc"

@@ -6,7 +6,7 @@
   - "name": "policy"
     "type": "struct srtp_policy_t *"
   "return_type": "int"
-  "signature": "int srtp_update(struct srtp_ctx_t_ * session, struct srtp_policy_t * policy)"
+  "signature": "srtp_update"
 - "name": "srtp_stream_update"
   "params":
   - "name": "session"
@@ -14,7 +14,7 @@
   - "name": "policy"
     "type": "struct srtp_policy_t *"
   "return_type": "int"
-  "signature": "int srtp_stream_update(struct srtp_ctx_t_ * session, struct srtp_policy_t * policy)"
+  "signature": "srtp_stream_update"
 - "name": "update_template_streams"
   "params":
   - "name": "session"
@@ -22,7 +22,7 @@
   - "name": "policy"
     "type": "struct srtp_policy_t *"
   "return_type": "int"
-  "signature": "int update_template_streams(struct srtp_ctx_t_ * session, struct srtp_policy_t * policy)"
+  "signature": "update_template_streams"
 - "name": "stream_update"
   "params":
   - "name": "session"
@@ -30,7 +30,7 @@
   - "name": "policy"
     "type": "struct srtp_policy_t *"
   "return_type": "int"
-  "signature": "int stream_update(struct srtp_ctx_t_ * session, struct srtp_policy_t * policy)"
+  "signature": "stream_update"
 - "name": "srtp_unprotect_aead"
   "params":
   - "name": "ctx"
@@ -52,7 +52,8 @@
   - "name": "advance_packet_index"
     "type": "bool"
   "return_type": "int"
-  "signature": "int srtp_unprotect_aead(struct srtp_ctx_t_ * ctx, struct srtp_stream_ctx_t_ * stream, size_t delta, size_t est, char * srtp_hdr, size_t * pkt_octet_len, struct srtp_session_keys_t * session_keys, size_t mki_size, bool advance_packet_index)"
+  "signature": "srtp_unprotect_aead"
+"language": "c++"
 "project": "libsrtp"
 "target_name": "srtp-fuzzer"
 "target_path": "/src/libsrtp/fuzzer/fuzzer.c"

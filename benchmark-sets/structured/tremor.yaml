@@ -6,7 +6,7 @@
   - "name": "milliseconds"
     "type": "size_t"
   "return_type": "int"
-  "signature": "int ov_time_seek(struct OggVorbis_File * vf, size_t milliseconds)"
+  "signature": "ov_time_seek"
 - "name": "ov_pcm_seek"
   "params":
   - "name": "vf"
@@ -14,7 +14,7 @@
   - "name": "pos"
     "type": "size_t"
   "return_type": "int"
-  "signature": "int ov_pcm_seek(struct OggVorbis_File * vf, size_t pos)"
+  "signature": "ov_pcm_seek"
 - "name": "ov_fopen"
   "params":
   - "name": "path"
@@ -22,7 +22,7 @@
   - "name": "vf"
     "type": "struct OggVorbis_File *"
   "return_type": "int"
-  "signature": "int ov_fopen(char * path, struct OggVorbis_File * vf)"
+  "signature": "ov_fopen"
 - "name": "ov_open"
   "params":
   - "name": "f"
@@ -34,13 +34,14 @@
   - "name": "ibytes"
     "type": "size_t"
   "return_type": "int"
-  "signature": "int ov_open(struct _IO_FILE * f, struct OggVorbis_File * vf, char * initial, size_t ibytes)"
+  "signature": "ov_open"
 - "name": "ov_test_open"
   "params":
   - "name": "vf"
     "type": "struct OggVorbis_File *"
   "return_type": "int"
-  "signature": "int ov_test_open(struct OggVorbis_File * vf)"
+  "signature": "ov_test_open"
+"language": "c++"
 "project": "tremor"
 "target_name": "decode_fuzzer"
 "target_path": "/src/tremor/decode_fuzzer.cc"

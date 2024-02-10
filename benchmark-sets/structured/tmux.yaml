@@ -53,6 +53,7 @@
     "type": "struct cmdq_item *"
   "return_type": "int"
   "signature": "int cmd_attach_session_exec(struct cmd * self, struct cmdq_item * item)"
+"language": "c"
 "project": "tmux"
 "target_name": "input-fuzzer"
 "target_path": "/src/tmux/fuzz/input-fuzzer.c"

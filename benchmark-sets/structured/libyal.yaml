@@ -61,6 +61,7 @@
     "type": "size_t **"
   "return_type": "int"
   "signature": "int libevtx_record_get_data(size_t * record, char * data, size_t data_size, size_t ** error)"
+"language": "c"
 "project": "libyal"
 "target_name": "libmdmp_file_fuzzer"
 "target_path": "/src/libmdmp/ossfuzz/file_fuzzer.cc"

@@ -45,6 +45,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int fxRunTestCase(struct sxPool * pool, struct sxContext * context, char * path, int flags, int async, char * message)"
+"language": "c"
 "project": "xs"
 "target_name": "xst_jsonparse"
 "target_path": "/src/moddable/xs/tools/xst.c"

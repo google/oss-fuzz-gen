@@ -45,6 +45,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int k8s_events_init(struct flb_input_instance * ins, struct flb_config * config, char * data)"
+"language": "c++"
 "project": "fluent-bit"
 "target_name": "ares-test-fuzz-name"
 "target_path": "/src/fluent-bit/lib/c-ares-1.24.0/test/ares-test-fuzz-name.c"

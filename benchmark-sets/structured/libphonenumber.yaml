@@ -1,5 +1,5 @@
 "functions":
-- "name": "icu_66::RegexPattern::matches(icu_66::UnicodeString const&, icu_66::UnicodeString const&, UParseError&, UErrorCode&)"
+- "name": "icu_66::RegexPattern::matches"
   "params":
   - "name": "regex"
     "type": "icu_66::UnicodeString *"
@@ -10,8 +10,8 @@
   - "name": "status"
     "type": "int *"
   "return_type": "char"
-  "signature": "char icu_66::RegexPattern::matches(icu_66::UnicodeString * regex, icu_66::UnicodeString * input, struct UParseError * pe, int * status)"
-- "name": "icu_66::RegexPattern::matches(UText*, UText*, UParseError&, UErrorCode&)"
+  "signature": "icu_66::RegexPattern::matches(icu_66::UnicodeString const&, icu_66::UnicodeString const&, UParseError&, UErrorCode&)"
+- "name": "icu_66::RegexPattern::matches"
   "params":
   - "name": "regex"
     "type": "struct UText *"
@@ -22,8 +22,8 @@
   - "name": "status"
     "type": "int *"
   "return_type": "char"
-  "signature": "char icu_66::RegexPattern::matches(struct UText * regex, struct UText * input, struct UParseError * pe, int * status)"
-- "name": "icu_66::RegexMatcher::RegexMatcher(icu_66::UnicodeString const&, unsigned int, UErrorCode&)"
+  "signature": "icu_66::RegexPattern::matches(UText*, UText*, UParseError&, UErrorCode&)"
+- "name": "icu_66::RegexMatcher::RegexMatcher"
   "params":
   - "name": "this"
     "type": "icu_66::RegexMatcher *"
@@ -34,8 +34,8 @@
   - "name": "status"
     "type": "int *"
   "return_type": "void"
-  "signature": "void icu_66::RegexMatcher::RegexMatcher(icu_66::RegexMatcher * this, icu_66::UnicodeString * regexp, int flags, int * status)"
-- "name": "icu_66::RegexMatcher::RegexMatcher(icu_66::UnicodeString const&, icu_66::UnicodeString const&, unsigned int, UErrorCode&)"
+  "signature": "icu_66::RegexMatcher::RegexMatcher(icu_66::UnicodeString const&, unsigned int, UErrorCode&)"
+- "name": "icu_66::RegexMatcher::RegexMatcher"
   "params":
   - "name": "this"
     "type": "icu_66::RegexMatcher *"
@@ -48,8 +48,8 @@
   - "name": "status"
     "type": "int *"
   "return_type": "void"
-  "signature": "void icu_66::RegexMatcher::RegexMatcher(icu_66::RegexMatcher * this, icu_66::UnicodeString * regexp, icu_66::UnicodeString * input, int flags, int * status)"
-- "name": "icu_66::RegexMatcher::RegexMatcher(UText*, unsigned int, UErrorCode&)"
+  "signature": "icu_66::RegexMatcher::RegexMatcher(icu_66::UnicodeString const&, icu_66::UnicodeString const&, unsigned int, UErrorCode&)"
+- "name": "icu_66::RegexMatcher::RegexMatcher"
   "params":
   - "name": "this"
     "type": "icu_66::RegexMatcher *"
@@ -60,7 +60,8 @@
   - "name": "status"
     "type": "int *"
   "return_type": "void"
-  "signature": "void icu_66::RegexMatcher::RegexMatcher(icu_66::RegexMatcher * this, struct UText * regexp, int flags, int * status)"
+  "signature": "icu_66::RegexMatcher::RegexMatcher(UText*, unsigned int, UErrorCode&)"
+"language": "c++"
 "project": "libphonenumber"
 "target_name": "phonefuzz"
 "target_path": "/src/libphonenumber/cpp/test/phonenumbers/fuzz_phone.cc"

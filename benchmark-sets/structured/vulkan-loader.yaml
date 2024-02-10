@@ -41,6 +41,7 @@
     "type": "char *"
   "return_type": "char *"
   "signature": "char * loader_lookup_device_dispatch_table(struct VkLayerDispatchTable_ * , char * , char * )"
+"language": "c"
 "project": "vulkan-loader"
 "target_name": "instance_enumerate_fuzzer"
 "target_path": "/src/instance_enumerate_fuzzer.c"

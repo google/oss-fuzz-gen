@@ -51,6 +51,7 @@
     "type": "int"
   "return_type": "double"
   "signature": "double psf_calc_signal_max(struct sf_private_tag * psf, int normalize)"
+"language": "c"
 "project": "libsndfile"
 "target_name": "sndfile_fuzzer"
 "target_path": "/src/libsndfile/ossfuzz/sndfile_fuzzer.cc"

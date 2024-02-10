@@ -2,7 +2,7 @@
 - "name": "svr_ensure_hostkey"
   "params": []
   "return_type": "void"
-  "signature": "void svr_ensure_hostkey()"
+  "signature": "svr_ensure_hostkey"
 - "name": "signkey_generate"
   "params":
   - "name": "keytype"
@@ -14,23 +14,24 @@
   - "name": "skip_exist"
     "type": "int"
   "return_type": "int"
-  "signature": "int signkey_generate(int keytype, int bits, char * filename, int skip_exist)"
+  "signature": "signkey_generate"
 - "name": "recv_msg_userauth_pk_ok"
   "params": []
   "return_type": "void"
-  "signature": "void recv_msg_userauth_pk_ok()"
+  "signature": "recv_msg_userauth_pk_ok"
 - "name": "gen_rsa_priv_key"
   "params":
   - "name": "size"
     "type": "int"
   "return_type": "struct dropbear_DSS_Key *"
-  "signature": "struct dropbear_DSS_Key * gen_rsa_priv_key(int size)"
+  "signature": "gen_rsa_priv_key"
 - "name": "gen_dss_priv_key"
   "params":
   - "name": "size"
     "type": "int"
   "return_type": "struct dropbear_DSS_Key *"
-  "signature": "struct dropbear_DSS_Key * gen_dss_priv_key(int size)"
+  "signature": "gen_dss_priv_key"
+"language": "c++"
 "project": "dropbear"
 "target_name": "fuzzer-verify"
 "target_path": "/src/dropbear/fuzz/fuzzer-verify.c"

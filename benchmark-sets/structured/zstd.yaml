@@ -14,7 +14,7 @@
   - "name": "params"
     "type": "struct ZDICT_legacy_params_t *"
   "return_type": "size_t"
-  "signature": "size_t ZDICT_trainFromBuffer_legacy(char * , size_t , char * , size_t * , int , struct ZDICT_legacy_params_t * params)"
+  "signature": "ZDICT_trainFromBuffer_legacy"
 - "name": "ZDICT_trainFromBuffer_unsafe_legacy"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": "params"
     "type": "struct ZDICT_legacy_params_t *"
   "return_type": "size_t"
-  "signature": "size_t ZDICT_trainFromBuffer_unsafe_legacy(char * , size_t , char * , size_t * , int , struct ZDICT_legacy_params_t * params)"
+  "signature": "ZDICT_trainFromBuffer_unsafe_legacy"
 - "name": "ZSTD_generateSequences"
   "params":
   - "name": ""
@@ -44,7 +44,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "size_t"
-  "signature": "size_t ZSTD_generateSequences(struct ZSTD_CCtx_s * , struct ZSTD_Sequence * , size_t , char * , size_t )"
+  "signature": "ZSTD_generateSequences"
 - "name": "ZSTD_flushStream"
   "params":
   - "name": ""
@@ -52,7 +52,7 @@
   - "name": ""
     "type": "struct ZSTD_inBuffer_s *"
   "return_type": "size_t"
-  "signature": "size_t ZSTD_flushStream(struct ZSTD_CCtx_s * , struct ZSTD_inBuffer_s * )"
+  "signature": "ZSTD_flushStream"
 - "name": "ZDICT_optimizeTrainFromBuffer_cover"
   "params":
   - "name": ""
@@ -68,7 +68,8 @@
   - "name": ""
     "type": "struct ZDICT_cover_params_t *"
   "return_type": "size_t"
-  "signature": "size_t ZDICT_optimizeTrainFromBuffer_cover(char * , size_t , char * , size_t * , int , struct ZDICT_cover_params_t * )"
+  "signature": "ZDICT_optimizeTrainFromBuffer_cover"
+"language": "c++"
 "project": "zstd"
 "target_name": "simple_compress"
 "target_path": "/src/zstd/tests/fuzz/simple_compress.c"

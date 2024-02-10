@@ -47,6 +47,7 @@
     "type": "struct S_MdbTableDef *"
   "return_type": "void"
   "signature": "void mdb_data_dump(struct S_MdbTableDef * table)"
+"language": "c"
 "project": "mdbtools"
 "target_name": "fuzz_mdb"
 "target_path": "/src/mdbtools/src/fuzz/fuzz_mdb.c"

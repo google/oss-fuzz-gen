@@ -10,7 +10,7 @@
   - "name": "progress"
     "type": "struct ICompressProgress *"
   "return_type": "int"
-  "signature": "int Xz_Encode(struct ISeqOutStream * outStream, struct ISeqInStream * inStream, struct CXzProps * props, struct ICompressProgress * progress)"
+  "signature": "Xz_Encode"
 - "name": "XzUnpacker_CodeFull"
   "params":
   - "name": "p"
@@ -28,7 +28,7 @@
   - "name": "status"
     "type": "int *"
   "return_type": "int"
-  "signature": "int XzUnpacker_CodeFull(struct CXzUnpacker * p, char * dest, size_t * destLen, char * src, size_t * srcLen, int finishMode, int * status)"
+  "signature": "XzUnpacker_CodeFull"
 - "name": "LzmaEncode"
   "params":
   - "name": "dest"
@@ -54,7 +54,7 @@
   - "name": "allocBig"
     "type": "struct ISzAlloc *"
   "return_type": "int"
-  "signature": "int LzmaEncode(char * dest, size_t * destLen, char * src, size_t srcLen, struct _CLzmaEncProps * props, char * propsEncoded, size_t * propsSize, int writeEndMark, struct ICompressProgress * progress, struct ISzAlloc * alloc, struct ISzAlloc * allocBig)"
+  "signature": "LzmaEncode"
 - "name": "LzmaEnc_MemEncode"
   "params":
   - "name": "pp"
@@ -76,7 +76,7 @@
   - "name": "allocBig"
     "type": "struct ISzAlloc *"
   "return_type": "int"
-  "signature": "int LzmaEnc_MemEncode(char * pp, char * dest, size_t * destLen, char * src, size_t srcLen, int writeEndMark, struct ICompressProgress * progress, struct ISzAlloc * alloc, struct ISzAlloc * allocBig)"
+  "signature": "LzmaEnc_MemEncode"
 - "name": "Bt3Zip_MatchFinder_GetMatches"
   "params":
   - "name": "p"
@@ -84,7 +84,8 @@
   - "name": "distances"
     "type": "int *"
   "return_type": "int"
-  "signature": "int Bt3Zip_MatchFinder_GetMatches(struct _CMatchFinder * p, int * distances)"
+  "signature": "Bt3Zip_MatchFinder_GetMatches"
+"language": "c++"
 "project": "lzma"
 "target_name": "7z_fuzzer"
 "target_path": "/src/lzma-fuzz/7z_fuzzer.cc"

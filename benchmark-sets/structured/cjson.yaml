@@ -4,7 +4,7 @@
   - "name": "value"
     "type": "char *"
   "return_type": "struct cJSON *"
-  "signature": "struct cJSON * cJSON_Parse(char * value)"
+  "signature": "cJSON_Parse"
 - "name": "cJSON_ParseWithLength"
   "params":
   - "name": "value"
@@ -12,7 +12,7 @@
   - "name": "buffer_length"
     "type": "size_t"
   "return_type": "struct cJSON *"
-  "signature": "struct cJSON * cJSON_ParseWithLength(char * value, size_t buffer_length)"
+  "signature": "cJSON_ParseWithLength"
 - "name": "cJSON_PrintPreallocated"
   "params":
   - "name": "item"
@@ -24,7 +24,7 @@
   - "name": "format"
     "type": "int"
   "return_type": "int"
-  "signature": "int cJSON_PrintPreallocated(struct cJSON * item, char * buffer, int length, int format)"
+  "signature": "cJSON_PrintPreallocated"
 - "name": "cJSON_Compare"
   "params":
   - "name": "a"
@@ -34,7 +34,7 @@
   - "name": "case_sensitive"
     "type": "int"
   "return_type": "int"
-  "signature": "int cJSON_Compare(struct cJSON * a, struct cJSON * b, int case_sensitive)"
+  "signature": "cJSON_Compare"
 - "name": "cJSON_ReplaceItemInObjectCaseSensitive"
   "params":
   - "name": "object"
@@ -44,7 +44,8 @@
   - "name": "newitem"
     "type": "struct cJSON *"
   "return_type": "int"
-  "signature": "int cJSON_ReplaceItemInObjectCaseSensitive(struct cJSON * object, char * string, struct cJSON * newitem)"
+  "signature": "cJSON_ReplaceItemInObjectCaseSensitive"
+"language": "c++"
 "project": "cjson"
 "target_name": "cjson_read_fuzzer"
 "target_path": "/src/cjson/fuzzing/cjson_read_fuzzer.c"

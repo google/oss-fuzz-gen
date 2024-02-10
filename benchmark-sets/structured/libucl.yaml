@@ -45,6 +45,7 @@
     "type": "size_t"
   "return_type": "bool"
   "signature": "bool ucl_parser_insert_chunk(struct ucl_parser * parser, char * data, size_t len)"
+"language": "c"
 "project": "libucl"
 "target_name": "ucl_add_string_fuzzer"
 "target_path": "/src/libucl/tests/fuzzers/ucl_add_string_fuzzer.c"

@@ -87,6 +87,7 @@
     "type": "short"
   "return_type": "int"
   "signature": "int auth_zones_startprobesequence(struct auth_zones * az, struct module_env * env, char * nm, size_t nmlen, short dclass)"
+"language": "c"
 "project": "unbound"
 "target_name": "fuzz_2_fuzzer"
 "target_path": "/src/unbound/fuzz_2.c"

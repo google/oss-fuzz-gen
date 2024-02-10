@@ -53,6 +53,7 @@
     "type": "struct ProtobufCBuffer *"
   "return_type": "size_t"
   "signature": "size_t unlabeled_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, char * member, struct ProtobufCBuffer * buffer)"
+"language": "c"
 "project": "protobuf-c"
 "target_name": "fuzzer"
 "target_path": "/src/protobuf-c-fuzzers/fuzzer.cpp"

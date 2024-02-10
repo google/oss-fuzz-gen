@@ -12,7 +12,7 @@
   - "name": "max_data_bytes"
     "type": "int"
   "return_type": "int"
-  "signature": "int opus_projection_encode_float(struct OpusProjectionEncoder * st, float * pcm, int frame_size, char * data, int max_data_bytes)"
+  "signature": "opus_projection_encode_float"
 - "name": "opus_multistream_encode_float"
   "params":
   - "name": "st"
@@ -26,7 +26,7 @@
   - "name": "max_data_bytes"
     "type": "int"
   "return_type": "int"
-  "signature": "int opus_multistream_encode_float(struct OpusMSEncoder * st, float * pcm, int frame_size, char * data, int max_data_bytes)"
+  "signature": "opus_multistream_encode_float"
 - "name": "opus_encode_float"
   "params":
   - "name": "st"
@@ -40,7 +40,7 @@
   - "name": "out_data_bytes"
     "type": "int"
   "return_type": "int"
-  "signature": "int opus_encode_float(struct OpusEncoder * st, float * pcm, int analysis_frame_size, char * data, int out_data_bytes)"
+  "signature": "opus_encode_float"
 - "name": "opus_decode"
   "params":
   - "name": "st"
@@ -56,7 +56,7 @@
   - "name": "decode_fec"
     "type": "int"
   "return_type": "int"
-  "signature": "int opus_decode(struct OpusDecoder * st, char * data, int len, short * pcm, int frame_size, int decode_fec)"
+  "signature": "opus_decode"
 - "name": "opus_decode_float"
   "params":
   - "name": "st"
@@ -72,7 +72,8 @@
   - "name": "decode_fec"
     "type": "int"
   "return_type": "int"
-  "signature": "int opus_decode_float(struct OpusDecoder * st, char * data, int len, float * pcm, int frame_size, int decode_fec)"
+  "signature": "opus_decode_float"
+"language": "c++"
 "project": "opus"
 "target_name": "opus_multistream_encode_fuzzer_floating"
 "target_path": "/src/opus/tests/opus_multistream_encode_fuzzer.cc"

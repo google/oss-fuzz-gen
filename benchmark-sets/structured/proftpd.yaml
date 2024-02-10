@@ -35,6 +35,7 @@
     "type": "struct cmd_struc *"
   "return_type": "struct modret_struc *"
   "signature": "struct modret_struc * ls_nlst(struct cmd_struc * cmd)"
+"language": "c"
 "project": "proftpd"
 "target_name": "json_fuzzer"
 "target_path": "/src/proftpd/tests/fuzzing/json_fuzzer.c"

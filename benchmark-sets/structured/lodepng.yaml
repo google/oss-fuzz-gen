@@ -1,5 +1,5 @@
 "functions":
-- "name": "lodepng::encode(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
+- "name": "lodepng::encode"
   "params":
   - "name": "filename"
     "type": "std::string *"
@@ -14,8 +14,8 @@
   - "name": "bitdepth"
     "type": "int"
   "return_type": "int"
-  "signature": "int lodepng::encode(std::string * filename, std::vector * in, int w, int h, int colortype, int bitdepth)"
-- "name": "lodepng::encode(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned char const*, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
+  "signature": "lodepng::encode(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
+- "name": "lodepng::encode"
   "params":
   - "name": "filename"
     "type": "std::string *"
@@ -30,8 +30,8 @@
   - "name": "bitdepth"
     "type": "int"
   "return_type": "int"
-  "signature": "int lodepng::encode(std::string * filename, char * in, int w, int h, int colortype, int bitdepth)"
-- "name": "lodepng_encode24_file(char const*, unsigned char const*, unsigned int, unsigned int)"
+  "signature": "lodepng::encode(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned char const*, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
+- "name": "lodepng_encode24_file"
   "params":
   - "name": "filename"
     "type": "char *"
@@ -42,8 +42,8 @@
   - "name": "h"
     "type": "int"
   "return_type": "int"
-  "signature": "int lodepng_encode24_file(char * filename, char * image, int w, int h)"
-- "name": "lodepng_encode32_file(char const*, unsigned char const*, unsigned int, unsigned int)"
+  "signature": "lodepng_encode24_file(char const*, unsigned char const*, unsigned int, unsigned int)"
+- "name": "lodepng_encode32_file"
   "params":
   - "name": "filename"
     "type": "char *"
@@ -54,8 +54,8 @@
   - "name": "h"
     "type": "int"
   "return_type": "int"
-  "signature": "int lodepng_encode32_file(char * filename, char * image, int w, int h)"
-- "name": "lodepng_encode_file(char const*, unsigned char const*, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
+  "signature": "lodepng_encode32_file(char const*, unsigned char const*, unsigned int, unsigned int)"
+- "name": "lodepng_encode_file"
   "params":
   - "name": "filename"
     "type": "char *"
@@ -70,7 +70,8 @@
   - "name": "bitdepth"
     "type": "int"
   "return_type": "int"
-  "signature": "int lodepng_encode_file(char * filename, char * image, int w, int h, int colortype, int bitdepth)"
+  "signature": "lodepng_encode_file(char const*, unsigned char const*, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
+"language": "c++"
 "project": "lodepng"
 "target_name": "lodepng_fuzzer"
 "target_path": "/src/lodepng/lodepng_fuzzer.cpp"

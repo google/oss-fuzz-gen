@@ -37,6 +37,7 @@
     "type": "struct proxy_l *"
   "return_type": "int"
   "signature": "int w_forward(struct sip_msg * msg, struct proxy_l * dest)"
+"language": "c"
 "project": "opensips"
 "target_name": "fuzz_core_funcs"
 "target_path": "/src/opensips/test/fuzz/fuzz_core_funcs.c"

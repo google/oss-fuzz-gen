@@ -1,5 +1,5 @@
 "functions":
-- "name": "highwayhash::HighwayHashCat<4u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [4]) const"
+- "name": "highwayhash::HighwayHashCat<4u>::operator"
   "params":
   - "name": "this"
     "type": "struct std::integral_constant *"
@@ -12,8 +12,8 @@
   - "name": "hash"
     "type": "bool "
   "return_type": "void"
-  "signature": "void highwayhash::HighwayHashCat<4u>::operator(struct std::integral_constant * this, bool  key, struct highwayhash::StringView * fragments, size_t num_fragments, bool  hash) const"
-- "name": "highwayhash::HighwayHashCat<4u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [2]) const"
+  "signature": "highwayhash::HighwayHashCat<4u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [4]) const"
+- "name": "highwayhash::HighwayHashCat<4u>::operator"
   "params":
   - "name": "this"
     "type": "struct std::integral_constant *"
@@ -26,8 +26,8 @@
   - "name": "hash"
     "type": "bool "
   "return_type": "void"
-  "signature": "void highwayhash::HighwayHashCat<4u>::operator(struct std::integral_constant * this, bool  key, struct highwayhash::StringView * fragments, size_t num_fragments, bool  hash) const"
-- "name": "highwayhash::HighwayHashCat<4u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long*) const"
+  "signature": "highwayhash::HighwayHashCat<4u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [2]) const"
+- "name": "highwayhash::HighwayHashCat<4u>::operator"
   "params":
   - "name": "this"
     "type": "struct std::integral_constant *"
@@ -40,8 +40,8 @@
   - "name": "hash"
     "type": "size_t *"
   "return_type": "void"
-  "signature": "void highwayhash::HighwayHashCat<4u>::operator(struct std::integral_constant * this, bool  key, struct highwayhash::StringView * fragments, size_t num_fragments, size_t * hash) const"
-- "name": "highwayhash::HighwayHashCat<2u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [4]) const"
+  "signature": "highwayhash::HighwayHashCat<4u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long*) const"
+- "name": "highwayhash::HighwayHashCat<2u>::operator"
   "params":
   - "name": "this"
     "type": "struct std::integral_constant *"
@@ -54,8 +54,8 @@
   - "name": "hash"
     "type": "bool "
   "return_type": "void"
-  "signature": "void highwayhash::HighwayHashCat<2u>::operator(struct std::integral_constant * this, bool  key, struct highwayhash::StringView * fragments, size_t num_fragments, bool  hash) const"
-- "name": "highwayhash::HighwayHashCat<2u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [2]) const"
+  "signature": "highwayhash::HighwayHashCat<2u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [4]) const"
+- "name": "highwayhash::HighwayHashCat<2u>::operator"
   "params":
   - "name": "this"
     "type": "struct std::integral_constant *"
@@ -68,7 +68,8 @@
   - "name": "hash"
     "type": "bool "
   "return_type": "void"
-  "signature": "void highwayhash::HighwayHashCat<2u>::operator(struct std::integral_constant * this, bool  key, struct highwayhash::StringView * fragments, size_t num_fragments, bool  hash) const"
+  "signature": "highwayhash::HighwayHashCat<2u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [2]) const"
+"language": "c++"
 "project": "highwayhash"
 "target_name": "sip_hash_fuzzer"
 "target_path": "/src/highwayhash/highwayhash/sip_hash_fuzzer.cc"

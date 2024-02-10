@@ -57,6 +57,7 @@
     "type": "struct command_environ *"
   "return_type": "int"
   "signature": "int recover_handler(struct command_param * param, struct command_environ * cenv)"
+"language": "c"
 "project": "gdbm"
 "target_name": "gdbm_fuzzer"
 "target_path": "/src/gdbm/fuzz/gdbm_fuzzer.c"

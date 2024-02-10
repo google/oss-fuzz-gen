@@ -91,6 +91,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int mz_zip_writer_add_cfile(struct mz_zip_archive * , char * , struct _IO_FILE * , size_t , size_t * , char * , short , int , char * , int , char * , int )"
+"language": "c"
 "project": "miniz"
 "target_name": "compress_fuzzer"
 "target_path": "/src/miniz/tests/compress_fuzzer.c"

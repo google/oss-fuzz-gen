@@ -51,6 +51,7 @@
     "type": "struct sMmsVariableSpecification *"
   "return_type": "struct sMmsValue *"
   "signature": "struct sMmsValue * MmsValue_newDefaultValue(struct sMmsVariableSpecification * typeSpec)"
+"language": "c"
 "project": "libiec61850"
 "target_name": "fuzz_mms_decode"
 "target_path": "/src/libiec61850/fuzz/fuzz_mms_decode.c"

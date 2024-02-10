@@ -33,6 +33,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int cpuinfo_linux_get_processor_cur_frequency(int processor)"
+"language": "c"
 "project": "cpuinfo"
 "target_name": "fuzz_cpuinfo"
 "target_path": "/src/fuzz_cpuinfo.c"

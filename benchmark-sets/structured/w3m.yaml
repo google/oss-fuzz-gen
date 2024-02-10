@@ -39,6 +39,7 @@
     "type": "struct wc_status *"
   "return_type": "struct _Str *"
   "signature": "struct _Str * wc_char_conv_from_gb18030(char c, struct wc_status * st)"
+"language": "c"
 "project": "w3m"
 "target_name": "fuzz_conv"
 "target_path": "/src/w3m/fuzz/fuzz-conv.c"

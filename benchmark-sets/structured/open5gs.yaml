@@ -47,6 +47,7 @@
     "type": "char"
   "return_type": "void"
   "signature": "void ogs_gtp1_send_error_message(struct ogs_gtp_xact_s * xact, int teid, char type, char cause_value)"
+"language": "c"
 "project": "open5gs"
 "target_name": "gtp_message_fuzz"
 "target_path": "/src/open5gs/tests/fuzzing/gtp-message-fuzz.c"

@@ -12,7 +12,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "int"
-  "signature": "int encoder_encode(struct aom_codec_alg_priv * , struct aom_image * , size_t , size_t , size_t )"
+  "signature": "encoder_encode"
 - "name": "av1_compress_parallel_frames"
   "params":
   - "name": ""
@@ -20,7 +20,7 @@
   - "name": ""
     "type": "struct AV1_COMP_DATA *"
   "return_type": "int"
-  "signature": "int av1_compress_parallel_frames(struct AV1_PRIMARY * , struct AV1_COMP_DATA * )"
+  "signature": "av1_compress_parallel_frames"
 - "name": "prepare_fpmt_workers"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void prepare_fpmt_workers(struct AV1_PRIMARY * , struct AV1_COMP_DATA * , int )"
+  "signature": "prepare_fpmt_workers"
 - "name": "get_compressed_data_hook"
   "params":
   - "name": ""
@@ -38,7 +38,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "int"
-  "signature": "int get_compressed_data_hook(char * , char * )"
+  "signature": "get_compressed_data_hook"
 - "name": "av1_get_compressed_data"
   "params":
   - "name": ""
@@ -46,7 +46,8 @@
   - "name": ""
     "type": "struct AV1_COMP_DATA *"
   "return_type": "int"
-  "signature": "int av1_get_compressed_data(struct AV1_COMP * , struct AV1_COMP_DATA * )"
+  "signature": "av1_get_compressed_data"
+"language": "c++"
 "project": "libavif"
-"target_name": "av1_dec_fuzzer"
-"target_path": "/src/libavif/ext/aom/examples/av1_dec_fuzzer.cc"
+"target_name": "repro_fuzz"
+"target_path": "/src/libavif/tests/oss-fuzz/repro_fuzz.cc"

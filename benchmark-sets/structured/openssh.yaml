@@ -6,7 +6,7 @@
   - "name": "av"
     "type": "char **"
   "return_type": "int"
-  "signature": "int xxxmain(int ac, char ** av)"
+  "signature": "xxxmain"
 - "name": "after_poll"
   "params":
   - "name": "pfd"
@@ -16,13 +16,13 @@
   - "name": "maxfds"
     "type": "int"
   "return_type": "void"
-  "signature": "void after_poll(struct pollfd * pfd, size_t npfd, int maxfds)"
+  "signature": "after_poll"
 - "name": "handle_conn_read"
   "params":
   - "name": "socknum"
     "type": "int"
   "return_type": "int"
-  "signature": "int handle_conn_read(int socknum)"
+  "signature": "handle_conn_read"
 - "name": "kex_setup"
   "params":
   - "name": "ssh"
@@ -30,7 +30,7 @@
   - "name": "proposal"
     "type": "char **"
   "return_type": "int"
-  "signature": "int kex_setup(struct ssh * ssh, char ** proposal)"
+  "signature": "kex_setup"
 - "name": "sshkey_check_revoked"
   "params":
   - "name": "key"
@@ -38,7 +38,8 @@
   - "name": "revoked_keys_file"
     "type": "char *"
   "return_type": "int"
-  "signature": "int sshkey_check_revoked(struct sshkey * key, char * revoked_keys_file)"
+  "signature": "sshkey_check_revoked"
+"language": "c++"
 "project": "openssh"
 "target_name": "agent_fuzz"
 "target_path": "/src/openssh/regress/misc/fuzz-harness/agent_fuzz.cc"

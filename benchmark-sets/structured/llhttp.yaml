@@ -35,6 +35,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "char * llhttp_errno_name(int )"
+"language": "c"
 "project": "llhttp"
 "target_name": "fuzz_parser"
 "target_path": "/src/llhttp/test/fuzzers/fuzz_parser.c"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "stbi__jpeg_load(stbi__context*, int*, int*, int*, int, stbi__result_info*)"
+- "name": "stbi__jpeg_load"
   "params":
   - "name": "s"
     "type": "struct stbi__context *"
@@ -14,8 +14,8 @@
   - "name": "ri"
     "type": "struct stbi__result_info *"
   "return_type": "char *"
-  "signature": "char * stbi__jpeg_load(struct stbi__context * s, int * x, int * y, int * comp, int req_comp, struct stbi__result_info * ri)"
-- "name": "load_jpeg_image(stbi__jpeg*, int*, int*, int*, int)"
+  "signature": "stbi__jpeg_load(stbi__context*, int*, int*, int*, int, stbi__result_info*)"
+- "name": "load_jpeg_image"
   "params":
   - "name": "z"
     "type": "struct stbi__jpeg *"
@@ -28,13 +28,13 @@
   - "name": "req_comp"
     "type": "int"
   "return_type": "char *"
-  "signature": "char * load_jpeg_image(struct stbi__jpeg * z, int * out_x, int * out_y, int * comp, int req_comp)"
+  "signature": "load_jpeg_image(stbi__jpeg*, int*, int*, int*, int)"
 - "name": "stbi_is_16_bit"
   "params":
   - "name": "filename"
     "type": "char *"
   "return_type": "int"
-  "signature": "int stbi_is_16_bit(char * filename)"
+  "signature": "stbi_is_16_bit"
 - "name": "stbi_info"
   "params":
   - "name": "filename"
@@ -46,13 +46,14 @@
   - "name": "comp"
     "type": "int *"
   "return_type": "int"
-  "signature": "int stbi_info(char * filename, int * x, int * y, int * comp)"
+  "signature": "stbi_info"
 - "name": "stbi_is_16_bit_from_file"
   "params":
   - "name": "f"
     "type": "struct _IO_FILE *"
   "return_type": "int"
-  "signature": "int stbi_is_16_bit_from_file(struct _IO_FILE * f)"
+  "signature": "stbi_is_16_bit_from_file"
+"language": "c++"
 "project": "stb"
 "target_name": "stb_c_lexer_fuzzer"
 "target_path": "/src/stb/tests/stb_c_lexer_fuzzer.cpp"

@@ -6,13 +6,13 @@
   - "name": "B"
     "type": "struct skcms_ICCProfile *"
   "return_type": "bool"
-  "signature": "bool skcms_ApproximatelyEqualProfiles(struct skcms_ICCProfile * A, struct skcms_ICCProfile * B)"
+  "signature": "skcms_ApproximatelyEqualProfiles"
 - "name": "skcms_MakeUsableAsDestinationWithSingleCurve"
   "params":
   - "name": "profile"
     "type": "struct skcms_ICCProfile *"
   "return_type": "bool"
-  "signature": "bool skcms_MakeUsableAsDestinationWithSingleCurve(struct skcms_ICCProfile * profile)"
+  "signature": "skcms_MakeUsableAsDestinationWithSingleCurve"
 - "name": "skcms_TRCs_AreApproximateInverse"
   "params":
   - "name": "profile"
@@ -20,7 +20,7 @@
   - "name": "inv_tf"
     "type": "struct skcms_TransferFunction *"
   "return_type": "bool"
-  "signature": "bool skcms_TRCs_AreApproximateInverse(struct skcms_ICCProfile * profile, struct skcms_TransferFunction * inv_tf)"
+  "signature": "skcms_TRCs_AreApproximateInverse"
 - "name": "skcms_AreApproximateInverses"
   "params":
   - "name": "curve"
@@ -28,7 +28,7 @@
   - "name": "inv_tf"
     "type": "struct skcms_TransferFunction *"
   "return_type": "bool"
-  "signature": "bool skcms_AreApproximateInverses(union.skcms_Curve * curve, struct skcms_TransferFunction * inv_tf)"
+  "signature": "skcms_AreApproximateInverses"
 - "name": "skcms_PrimariesToXYZD50"
   "params":
   - "name": "rx"
@@ -50,7 +50,8 @@
   - "name": "toXYZD50"
     "type": "struct skcms_Matrix3x3 *"
   "return_type": "bool"
-  "signature": "bool skcms_PrimariesToXYZD50(float rx, float ry, float gx, float gy, float bx, float by, float wx, float wy, struct skcms_Matrix3x3 * toXYZD50)"
+  "signature": "skcms_PrimariesToXYZD50"
+"language": "c++"
 "project": "skcms"
 "target_name": "iccprofile_info"
 "target_path": "/src/skcms/fuzz/fuzz_iccprofile_info.c"

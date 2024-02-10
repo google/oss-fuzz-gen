@@ -14,7 +14,7 @@
   - "name": "exchange_state"
     "type": "struct kmdhgGPshakex_state_t *"
   "return_type": "int"
-  "signature": "int curve25519_sha256(struct _LIBSSH2_SESSION * session, char * data, size_t data_len, char * public_key, char * private_key, struct kmdhgGPshakex_state_t * exchange_state)"
+  "signature": "curve25519_sha256"
 - "name": "libssh2_session_startup"
   "params":
   - "name": "session"
@@ -22,7 +22,7 @@
   - "name": "sock"
     "type": "int"
   "return_type": "int"
-  "signature": "int libssh2_session_startup(struct _LIBSSH2_SESSION * session, int sock)"
+  "signature": "libssh2_session_startup"
 - "name": "libssh2_channel_read_ex"
   "params":
   - "name": "channel"
@@ -34,7 +34,7 @@
   - "name": "buflen"
     "type": "size_t"
   "return_type": "size_t"
-  "signature": "size_t libssh2_channel_read_ex(struct _LIBSSH2_CHANNEL * channel, int stream_id, char * buf, size_t buflen)"
+  "signature": "libssh2_channel_read_ex"
 - "name": "libssh2_channel_direct_streamlocal_ex"
   "params":
   - "name": "session"
@@ -46,7 +46,7 @@
   - "name": "sport"
     "type": "int"
   "return_type": "struct _LIBSSH2_CHANNEL *"
-  "signature": "struct _LIBSSH2_CHANNEL * libssh2_channel_direct_streamlocal_ex(struct _LIBSSH2_SESSION * session, char * socket_path, char * shost, int sport)"
+  "signature": "libssh2_channel_direct_streamlocal_ex"
 - "name": "libssh2_channel_direct_tcpip_ex"
   "params":
   - "name": "session"
@@ -60,7 +60,8 @@
   - "name": "sport"
     "type": "int"
   "return_type": "struct _LIBSSH2_CHANNEL *"
-  "signature": "struct _LIBSSH2_CHANNEL * libssh2_channel_direct_tcpip_ex(struct _LIBSSH2_SESSION * session, char * host, int port, char * shost, int sport)"
+  "signature": "libssh2_channel_direct_tcpip_ex"
+"language": "c++"
 "project": "libssh2"
 "target_name": "ssh2_client_fuzzer"
 "target_path": "/src/libssh2/tests/ossfuzz/ssh2_client_fuzzer.cc"
