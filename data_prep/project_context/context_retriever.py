@@ -240,11 +240,7 @@ class ContextRetriever:
         if node.get('name') == self._function_name:
           return True
 
-      if node.get('kind') == 'NamespaceDecl' and current_depth < len(
-          self._namespace_tokens):
-        if not self._get_namespace_node(node, current_depth):
-          continue
-        else:
+      if node.get('kind') == 'NamespaceDecl' and current_depth < len(self._namespace_tokens) and self._get_namespace_node(node, current_depth):
           return True
 
     return False
@@ -253,11 +249,9 @@ class ContextRetriever:
     """Iterates backwards over a node to get the file location.
     This is required because the AST stores the file location only on the
     top most node of the file which can contain a loc object (?)."""
-    current_index = search_index
-
-    while current_index > 0:
-      search_node = ast_nodes[current_index]
-      current_index -= 1
+    while search_index > 0:
+      search_node = ast_nodes[search_index]
+      search_index -= 1
       if 'file' in search_node.get('loc', ''):
         return search_node.get('loc').get('file')
 
@@ -367,7 +361,7 @@ class ContextRetriever:
         continue
 
       if header:
-        return os.path.abspath(header)
+        return os.path.normpath(header)
 
     print(f'Header location could not be found for {self._function_signature}')
     return ''
