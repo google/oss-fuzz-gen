@@ -1,5 +1,5 @@
 "functions":
-- "name": "gpsd_multipoll"
+- "name": "int gpsd_multipoll(bool , struct gps_device_t * , func_type * , float )"
   "params":
   - "name": ""
     "type": "bool"
@@ -11,19 +11,19 @@
     "type": "float"
   "return_type": "int"
   "signature": "int gpsd_multipoll(bool , struct gps_device_t * , func_type * , float )"
-- "name": "gpsd_poll"
+- "name": "size_t gpsd_poll(struct gps_device_t * )"
   "params":
   - "name": ""
     "type": "struct gps_device_t *"
   "return_type": "size_t"
   "signature": "size_t gpsd_poll(struct gps_device_t * )"
-- "name": "parse_input"
+- "name": "size_t parse_input(struct gps_device_t * )"
   "params":
   - "name": ""
     "type": "struct gps_device_t *"
   "return_type": "size_t"
   "signature": "size_t parse_input(struct gps_device_t * )"
-- "name": "ubx_parse"
+- "name": "size_t ubx_parse(struct gps_device_t * , char * , size_t )"
   "params":
   - "name": ""
     "type": "struct gps_device_t *"
@@ -33,7 +33,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "size_t ubx_parse(struct gps_device_t * , char * , size_t )"
-- "name": "tsip_detect"
+- "name": "bool tsip_detect(struct gps_device_t * )"
   "params":
   - "name": ""
     "type": "struct gps_device_t *"

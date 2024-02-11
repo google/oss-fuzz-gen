@@ -1,25 +1,25 @@
 "functions":
-- "name": "numa_get_run_node_mask_v1"
+- "name": "void numa_get_run_node_mask_v1()"
   "params": []
   "return_type": "void"
   "signature": "void numa_get_run_node_mask_v1()"
-- "name": "numa_bind_v2"
+- "name": "void numa_bind_v2(struct bitmask * bmp)"
   "params":
   - "name": "bmp"
     "type": "struct bitmask *"
   "return_type": "void"
   "signature": "void numa_bind_v2(struct bitmask * bmp)"
-- "name": "numa_bind_v1"
+- "name": "void numa_bind_v1(struct nodemask_t * nodemask)"
   "params":
   - "name": "nodemask"
     "type": "struct nodemask_t *"
   "return_type": "void"
   "signature": "void numa_bind_v1(struct nodemask_t * nodemask)"
-- "name": "numa_get_run_node_mask_v2"
+- "name": "struct bitmask * numa_get_run_node_mask_v2()"
   "params": []
   "return_type": "struct bitmask *"
   "signature": "struct bitmask * numa_get_run_node_mask_v2()"
-- "name": "numa_run_on_node_mask_v2"
+- "name": "int numa_run_on_node_mask_v2(struct bitmask * bmp)"
   "params":
   - "name": "bmp"
     "type": "struct bitmask *"

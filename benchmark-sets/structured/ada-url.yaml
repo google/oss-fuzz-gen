@@ -41,7 +41,7 @@
     "type": "size_t"
   "return_type": "bool"
   "signature": "ada_set_href"
-- "name": "ada::url_aggregator::set_href"
+- "name": "ada::url_aggregator::set_href(std::__1::basic_string_view<char, std::__1::char_traits<char> >)"
   "params":
   - "name": "this"
     "type": "struct ada::url_aggregator *"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "ot::MeshCoP::Commissioner::HandleTimer"
+- "name": "ot::MeshCoP::Commissioner::HandleTimer()"
   "params":
   - "name": "this"
     "type": "ot::MeshCoP::Commissioner *"
@@ -13,7 +13,7 @@
     "type": "short"
   "return_type": "int"
   "signature": "otCoapSecureStart"
-- "name": "ot::MeshCoP::Joiner::HandleDiscoverResult"
+- "name": "ot::MeshCoP::Joiner::HandleDiscoverResult(otActiveScanResult*, void*)"
   "params":
   - "name": "aResult"
     "type": "struct otActiveScanResult *"
@@ -21,7 +21,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "ot::MeshCoP::Joiner::HandleDiscoverResult(otActiveScanResult*, void*)"
-- "name": "ot::MeshCoP::Joiner::HandleDiscoverResult"
+- "name": "ot::MeshCoP::Joiner::HandleDiscoverResult(otActiveScanResult*)"
   "params":
   - "name": "this"
     "type": "ot::MeshCoP::Joiner *"
@@ -29,7 +29,7 @@
     "type": "struct otActiveScanResult *"
   "return_type": "void"
   "signature": "ot::MeshCoP::Joiner::HandleDiscoverResult(otActiveScanResult*)"
-- "name": "ot::MeshCoP::Joiner::TryNextJoinerRouter"
+- "name": "ot::MeshCoP::Joiner::TryNextJoinerRouter(otError)"
   "params":
   - "name": "this"
     "type": "ot::MeshCoP::Joiner *"

@@ -55,5 +55,5 @@
   "signature": "Tss2_Sys_Create"
 "language": "c++"
 "project": "tpm2-tss"
-"target_name": "Tss2_Sys_NV_GlobalWriteLock_Complete"
+"target_name": "Tss2_Sys_NV_UndefineSpaceSpecial_Complete"
 "target_path": "/src/tpm2-tss/test/fuzz/main-sys.c"

@@ -1,25 +1,25 @@
 "functions":
-- "name": "nts_init2"
+- "name": "void nts_init2()"
   "params": []
   "return_type": "void"
   "signature": "void nts_init2()"
-- "name": "nts_probe"
+- "name": "bool nts_probe(struct peer * peer)"
   "params":
   - "name": "peer"
     "type": "struct peer *"
   "return_type": "bool"
   "signature": "bool nts_probe(struct peer * peer)"
-- "name": "nts_server_init2"
+- "name": "bool nts_server_init2()"
   "params": []
   "return_type": "bool"
   "signature": "bool nts_server_init2()"
-- "name": "nts_ke_listener"
+- "name": "char * nts_ke_listener(char * arg)"
   "params":
   - "name": "arg"
     "type": "char *"
   "return_type": "char *"
   "signature": "char * nts_ke_listener(char * arg)"
-- "name": "nts_ke_request"
+- "name": "bool nts_ke_request(struct ssl_st * ssl)"
   "params":
   - "name": "ssl"
     "type": "struct ssl_st *"

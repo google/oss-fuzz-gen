@@ -1,5 +1,5 @@
 "functions":
-- "name": "hsql::SQLParser::parseSQLString"
+- "name": "hsql::SQLParser::parseSQLString(char const*, hsql::SQLParserResult*)"
   "params":
   - "name": "sql"
     "type": "char *"
@@ -7,7 +7,7 @@
     "type": "hsql::SQLParserResult *"
   "return_type": "bool"
   "signature": "hsql::SQLParser::parseSQLString(char const*, hsql::SQLParserResult*)"
-- "name": "hsql::SQLParser::parseSQLString"
+- "name": "hsql::SQLParser::parseSQLString(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, hsql::SQLParserResult*)"
   "params":
   - "name": "sql"
     "type": "std::string *"
@@ -15,7 +15,7 @@
     "type": "hsql::SQLParserResult *"
   "return_type": "bool"
   "signature": "hsql::SQLParser::parseSQLString(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, hsql::SQLParserResult*)"
-- "name": "hsql::SQLParser::tokenize"
+- "name": "hsql::SQLParser::tokenize(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<short, std::__1::allocator<short> >*)"
   "params":
   - "name": "sql"
     "type": "std::string *"
@@ -23,7 +23,7 @@
     "type": "std::vector *"
   "return_type": "bool"
   "signature": "hsql::SQLParser::tokenize(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<short, std::__1::allocator<short> >*)"
-- "name": "hsql_push_buffer_state"
+- "name": "hsql_push_buffer_state(yy_buffer_state*, void*)"
   "params":
   - "name": "new_buffer"
     "type": "struct yy_buffer_state *"
@@ -31,7 +31,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "hsql_push_buffer_state(yy_buffer_state*, void*)"
-- "name": "hsql::operator<<(std::__1::basic_ostream<char,std::__1::char_traits<char>>&,hsql::ColumnTypeconst&)"
+- "name": "hsql::operator<<(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, hsql::ColumnType const&)"
   "params":
   - "name": "stream"
     "type": "std::ostream *"

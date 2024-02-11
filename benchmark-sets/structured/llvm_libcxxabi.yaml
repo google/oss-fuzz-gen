@@ -1,5 +1,5 @@
 "functions":
-- "name": "void"
+- "name": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NewExpr>((anonymous namespace)::itanium_demangle::NewExpr const*)"
   "params":
   - "name": "this"
     "type": "struct (anonymous namespace)::DumpVisitor *"
@@ -7,7 +7,7 @@
     "type": "(anonymous namespace)::itanium_demangle::NewExpr *"
   "return_type": "void"
   "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NewExpr>((anonymous namespace)::itanium_demangle::NewExpr const*)"
-- "name": "void"
+- "name": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::TemplateArgs>((anonymous namespace)::itanium_demangle::TemplateArgs const*)"
   "params":
   - "name": "this"
     "type": "struct (anonymous namespace)::DumpVisitor *"
@@ -15,7 +15,7 @@
     "type": "(anonymous namespace)::itanium_demangle::TemplateArgs *"
   "return_type": "void"
   "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::TemplateArgs>((anonymous namespace)::itanium_demangle::TemplateArgs const*)"
-- "name": "void"
+- "name": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl>((anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl const*)"
   "params":
   - "name": "this"
     "type": "struct (anonymous namespace)::DumpVisitor *"
@@ -23,7 +23,7 @@
     "type": "(anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl *"
   "return_type": "void"
   "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl>((anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl const*)"
-- "name": "void"
+- "name": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::ConversionExpr>((anonymous namespace)::itanium_demangle::ConversionExpr const*)"
   "params":
   - "name": "this"
     "type": "struct (anonymous namespace)::DumpVisitor *"
@@ -31,7 +31,7 @@
     "type": "(anonymous namespace)::itanium_demangle::InitListExpr *"
   "return_type": "void"
   "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::ConversionExpr>((anonymous namespace)::itanium_demangle::ConversionExpr const*)"
-- "name": "void"
+- "name": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::CallExpr>((anonymous namespace)::itanium_demangle::CallExpr const*)"
   "params":
   - "name": "this"
     "type": "struct (anonymous namespace)::DumpVisitor *"

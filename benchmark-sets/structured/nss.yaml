@@ -83,5 +83,5 @@
   "signature": "s_open"
 "language": "c++"
 "project": "nss"
-"target_name": "mpi-sqr"
+"target_name": "/src/nss/out/Debug/../../fuzz/mpi_sqr_target.cc"
 "target_path": "/src/nss/fuzz/mpi_sqr_target.cc"

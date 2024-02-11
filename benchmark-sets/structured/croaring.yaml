@@ -1,5 +1,5 @@
 "functions":
-- "name": "roaring_bitmap_add_offset"
+- "name": "struct roaring_bitmap_s * roaring_bitmap_add_offset(struct roaring_bitmap_s * , size_t )"
   "params":
   - "name": ""
     "type": "struct roaring_bitmap_s *"
@@ -7,7 +7,7 @@
     "type": "size_t"
   "return_type": "struct roaring_bitmap_s *"
   "signature": "struct roaring_bitmap_s * roaring_bitmap_add_offset(struct roaring_bitmap_s * , size_t )"
-- "name": "roaring_bitmap_xor_many"
+- "name": "struct roaring_bitmap_s * roaring_bitmap_xor_many(size_t , struct roaring_bitmap_s ** )"
   "params":
   - "name": ""
     "type": "size_t"
@@ -15,7 +15,7 @@
     "type": "struct roaring_bitmap_s **"
   "return_type": "struct roaring_bitmap_s *"
   "signature": "struct roaring_bitmap_s * roaring_bitmap_xor_many(size_t , struct roaring_bitmap_s ** )"
-- "name": "roaring_bitmap_or_many"
+- "name": "struct roaring_bitmap_s * roaring_bitmap_or_many(size_t , struct roaring_bitmap_s ** )"
   "params":
   - "name": ""
     "type": "size_t"
@@ -23,7 +23,7 @@
     "type": "struct roaring_bitmap_s **"
   "return_type": "struct roaring_bitmap_s *"
   "signature": "struct roaring_bitmap_s * roaring_bitmap_or_many(size_t , struct roaring_bitmap_s ** )"
-- "name": "roaring_bitmap_lazy_xor_inplace"
+- "name": "void roaring_bitmap_lazy_xor_inplace(struct roaring_bitmap_s * , struct roaring_bitmap_s * )"
   "params":
   - "name": ""
     "type": "struct roaring_bitmap_s *"
@@ -31,7 +31,7 @@
     "type": "struct roaring_bitmap_s *"
   "return_type": "void"
   "signature": "void roaring_bitmap_lazy_xor_inplace(struct roaring_bitmap_s * , struct roaring_bitmap_s * )"
-- "name": "roaring_bitmap_lazy_or"
+- "name": "struct roaring_bitmap_s * roaring_bitmap_lazy_or(struct roaring_bitmap_s * , struct roaring_bitmap_s * , bool )"
   "params":
   - "name": ""
     "type": "struct roaring_bitmap_s *"

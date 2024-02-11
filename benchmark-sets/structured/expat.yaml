@@ -49,5 +49,5 @@
   "signature": "initScanContentNS"
 "language": "c++"
 "project": "expat"
-"target_name": "xml_parsebuffer_fuzzer_UTF-8"
+"target_name": "xml_parsebuffer_fuzzer_ISO-8859-1"
 "target_path": "/src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c"

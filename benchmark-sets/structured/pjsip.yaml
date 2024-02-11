@@ -1,5 +1,5 @@
 "functions":
-- "name": "pjsip_endpt_respond"
+- "name": "int pjsip_endpt_respond(struct pjsip_endpoint * endpt, struct pjsip_module * tsx_user, struct pjsip_rx_data * rdata, int st_code, struct pj_str_t * st_text, struct pjsip_hdr * hdr_list, struct pjsip_msg_body * body, struct pjsip_transaction ** p_tsx)"
   "params":
   - "name": "endpt"
     "type": "struct pjsip_endpoint *"
@@ -19,7 +19,7 @@
     "type": "struct pjsip_transaction **"
   "return_type": "int"
   "signature": "int pjsip_endpt_respond(struct pjsip_endpoint * endpt, struct pjsip_module * tsx_user, struct pjsip_rx_data * rdata, int st_code, struct pj_str_t * st_text, struct pjsip_hdr * hdr_list, struct pjsip_msg_body * body, struct pjsip_transaction ** p_tsx)"
-- "name": "pjsip_tsx_create_uas"
+- "name": "int pjsip_tsx_create_uas(struct pjsip_module * tsx_user, struct pjsip_rx_data * rdata, struct pjsip_transaction ** p_tsx)"
   "params":
   - "name": "tsx_user"
     "type": "struct pjsip_module *"
@@ -29,7 +29,7 @@
     "type": "struct pjsip_transaction **"
   "return_type": "int"
   "signature": "int pjsip_tsx_create_uas(struct pjsip_module * tsx_user, struct pjsip_rx_data * rdata, struct pjsip_transaction ** p_tsx)"
-- "name": "pjsip_tsx_create_uas2"
+- "name": "int pjsip_tsx_create_uas2(struct pjsip_module * tsx_user, struct pjsip_rx_data * rdata, struct pj_grp_lock_t * grp_lock, struct pjsip_transaction ** p_tsx)"
   "params":
   - "name": "tsx_user"
     "type": "struct pjsip_module *"
@@ -41,7 +41,7 @@
     "type": "struct pjsip_transaction **"
   "return_type": "int"
   "signature": "int pjsip_tsx_create_uas2(struct pjsip_module * tsx_user, struct pjsip_rx_data * rdata, struct pj_grp_lock_t * grp_lock, struct pjsip_transaction ** p_tsx)"
-- "name": "pjsip_endpt_send_request"
+- "name": "int pjsip_endpt_send_request(struct pjsip_endpoint * endpt, struct pjsip_tx_data * tdata, int timeout, char * token, func_type * cb)"
   "params":
   - "name": "endpt"
     "type": "struct pjsip_endpoint *"
@@ -55,7 +55,7 @@
     "type": "func_type *"
   "return_type": "int"
   "signature": "int pjsip_endpt_send_request(struct pjsip_endpoint * endpt, struct pjsip_tx_data * tdata, int timeout, char * token, func_type * cb)"
-- "name": "tsx_on_state_calling"
+- "name": "int tsx_on_state_calling(struct pjsip_transaction * tsx, struct pjsip_event * event)"
   "params":
   - "name": "tsx"
     "type": "struct pjsip_transaction *"

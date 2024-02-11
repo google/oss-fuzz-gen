@@ -1,17 +1,17 @@
 "functions":
-- "name": "rtpp_cfile_process"
+- "name": "int rtpp_cfile_process(struct rtpp_cfg * csp)"
   "params":
   - "name": "csp"
     "type": "struct rtpp_cfg *"
   "return_type": "int"
   "signature": "int rtpp_cfile_process(struct rtpp_cfg * csp)"
-- "name": "ucl_state_machine"
+- "name": "bool ucl_state_machine(struct ucl_parser * parser)"
   "params":
   - "name": "parser"
     "type": "struct ucl_parser *"
   "return_type": "bool"
   "signature": "bool ucl_state_machine(struct ucl_parser * parser)"
-- "name": "ucl_include_file_single"
+- "name": "bool ucl_include_file_single(char * data, size_t len, struct ucl_parser * parser, struct ucl_include_params * params)"
   "params":
   - "name": "data"
     "type": "char *"
@@ -23,7 +23,7 @@
     "type": "struct ucl_include_params *"
   "return_type": "bool"
   "signature": "bool ucl_include_file_single(char * data, size_t len, struct ucl_parser * parser, struct ucl_include_params * params)"
-- "name": "ucl_include_common"
+- "name": "bool ucl_include_common(char * data, size_t len, struct ucl_object_s * args, struct ucl_parser * parser, bool default_try, bool default_sign)"
   "params":
   - "name": "data"
     "type": "char *"
@@ -39,7 +39,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "bool ucl_include_common(char * data, size_t len, struct ucl_object_s * args, struct ucl_parser * parser, bool default_try, bool default_sign)"
-- "name": "ucl_parse_macro_arguments"
+- "name": "struct ucl_object_s * ucl_parse_macro_arguments(struct ucl_parser * parser, struct ucl_chunk * chunk)"
   "params":
   - "name": "parser"
     "type": "struct ucl_parser *"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "_ULx86_64_dwarf_apply_reg_state"
+- "name": "int _ULx86_64_dwarf_apply_reg_state(struct dwarf_cursor * c, struct dwarf_reg_state * rs)"
   "params":
   - "name": "c"
     "type": "struct dwarf_cursor *"
@@ -7,7 +7,7 @@
     "type": "struct dwarf_reg_state *"
   "return_type": "int"
   "signature": "int _ULx86_64_dwarf_apply_reg_state(struct dwarf_cursor * c, struct dwarf_reg_state * rs)"
-- "name": "_ULx86_64_local_resume"
+- "name": "int _ULx86_64_local_resume(struct unw_addr_space * as, struct unw_cursor * cursor, char * arg)"
   "params":
   - "name": "as"
     "type": "struct unw_addr_space *"
@@ -17,7 +17,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int _ULx86_64_local_resume(struct unw_addr_space * as, struct unw_cursor * cursor, char * arg)"
-- "name": "_ULx86_64_dwarf_reg_states_iterate"
+- "name": "int _ULx86_64_dwarf_reg_states_iterate(struct dwarf_cursor * c, func_type * cb, char * token)"
   "params":
   - "name": "c"
     "type": "struct dwarf_cursor *"
@@ -27,13 +27,13 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int _ULx86_64_dwarf_reg_states_iterate(struct dwarf_cursor * c, func_type * cb, char * token)"
-- "name": "_ULx86_64_dwarf_make_proc_info"
+- "name": "int _ULx86_64_dwarf_make_proc_info(struct dwarf_cursor * c)"
   "params":
   - "name": "c"
     "type": "struct dwarf_cursor *"
   "return_type": "int"
   "signature": "int _ULx86_64_dwarf_make_proc_info(struct dwarf_cursor * c)"
-- "name": "dwarf_reg_states_table_iterate"
+- "name": "int dwarf_reg_states_table_iterate(struct dwarf_cursor * c, func_type * cb, char * token)"
   "params":
   - "name": "c"
     "type": "struct dwarf_cursor *"

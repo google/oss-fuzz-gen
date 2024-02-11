@@ -1,5 +1,5 @@
 "functions":
-- "name": "LibRaw::open_file"
+- "name": "LibRaw::open_file(char const*)"
   "params":
   - "name": "this"
     "type": "LibRaw *"
@@ -7,7 +7,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "LibRaw::open_file(char const*)"
-- "name": "LibRaw::libraw_openfile_tail"
+- "name": "LibRaw::libraw_openfile_tail(LibRaw_abstract_datastream*)"
   "params":
   - "name": "this"
     "type": "LibRaw *"
@@ -15,13 +15,13 @@
     "type": "std::exception *"
   "return_type": "int"
   "signature": "LibRaw::libraw_openfile_tail(LibRaw_abstract_datastream*)"
-- "name": "LibRaw::unpack_function_name"
+- "name": "LibRaw::unpack_function_name()"
   "params":
   - "name": "this"
     "type": "LibRaw *"
   "return_type": "char *"
   "signature": "LibRaw::unpack_function_name()"
-- "name": "LibRaw::crxLoadDecodeLoop"
+- "name": "LibRaw::crxLoadDecodeLoop(void*, int)"
   "params":
   - "name": "this"
     "type": "LibRaw *"
@@ -31,7 +31,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "LibRaw::crxLoadDecodeLoop(void*, int)"
-- "name": "LibRaw::crxDecodePlane"
+- "name": "LibRaw::crxDecodePlane(void*, unsigned int)"
   "params":
   - "name": "this"
     "type": "LibRaw *"

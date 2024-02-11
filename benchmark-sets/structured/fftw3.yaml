@@ -8,7 +8,7 @@
   - "name": "ego"
     "type": "struct P_s *"
   "return_type": "int"
-  "signature": "int mkcldrn_cut(struct problem_rdft * p, struct planner_s * plnr, struct P_s * ego)"
+  "signature": "mkcldrn_cut"
 - "name": "mkcldrn_gcd"
   "params":
   - "name": "p"
@@ -18,7 +18,7 @@
   - "name": "ego"
     "type": "struct P_s *"
   "return_type": "int"
-  "signature": "int mkcldrn_gcd(struct problem_rdft * p, struct planner_s * plnr, struct P_s * ego)"
+  "signature": "mkcldrn_gcd"
 - "name": "imprt"
   "params":
   - "name": "ego"
@@ -26,7 +26,7 @@
   - "name": "sc"
     "type": "struct scanner_s *"
   "return_type": "int"
-  "signature": "int imprt(struct planner_s * ego, struct scanner_s * sc)"
+  "signature": "imprt"
 - "name": "fftw_mkproblem_rdft_0_d"
   "params":
   - "name": "vecsz"
@@ -36,7 +36,7 @@
   - "name": "O"
     "type": "double *"
   "return_type": "struct problem_s *"
-  "signature": "struct problem_s * fftw_mkproblem_rdft_0_d(struct tensor * vecsz, double * I, double * O)"
+  "signature": "fftw_mkproblem_rdft_0_d"
 - "name": "fftw_mkproblem_rdft_1_d"
   "params":
   - "name": "sz"
@@ -50,7 +50,7 @@
   - "name": "kind"
     "type": "int"
   "return_type": "struct problem_s *"
-  "signature": "struct problem_s * fftw_mkproblem_rdft_1_d(struct tensor * sz, struct tensor * vecsz, double * I, double * O, int kind)"
+  "signature": "fftw_mkproblem_rdft_1_d"
 "language": "c++"
 "project": "fftw3"
 "target_name": "fftw3_fuzzer"

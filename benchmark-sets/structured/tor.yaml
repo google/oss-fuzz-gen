@@ -29,5 +29,5 @@
   "signature": "options_act_reversible__real"
 "language": "c++"
 "project": "tor"
-"target_name": "oss-fuzz-diff"
+"target_name": "oss-fuzz-http-connect"
 "target_path": "/src/tor/src/test/fuzz/fuzzing_common.c"

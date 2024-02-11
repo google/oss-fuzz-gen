@@ -1,5 +1,5 @@
 "functions":
-- "name": "cv::dnn::dnn4_v20231225::readNetFromTensorflow"
+- "name": "cv::dnn::dnn4_v20231225::readNetFromTensorflow(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
   "params":
   - "name": ""
     "type": "cv::dnn::dnn4_v20231225::Net *"
@@ -9,7 +9,7 @@
     "type": "std::string *"
   "return_type": "void"
   "signature": "cv::dnn::dnn4_v20231225::readNetFromTensorflow(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-- "name": "cv::dnn::dnn4_v20231225::Netcv::dnn::dnn4_v20231225::detail::readNetDiagnostic<cv::dnn::dnn4_v20231225::(anonymousnamespace)::TFImporter,charconst*,charconst*>"
+- "name": "cv::dnn::dnn4_v20231225::Net cv::dnn::dnn4_v20231225::detail::readNetDiagnostic<cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter, char const*, char const*>(char const*&&, char const*&&)"
   "params":
   - "name": ""
     "type": "cv::dnn::dnn4_v20231225::Net *"
@@ -19,7 +19,7 @@
     "type": "char **"
   "return_type": "void"
   "signature": "cv::dnn::dnn4_v20231225::Net cv::dnn::dnn4_v20231225::detail::readNetDiagnostic<cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter, char const*, char const*>(char const*&&, char const*&&)"
-- "name": "cv::dnn::dnn4_v20231225::readNetFromTensorflow"
+- "name": "cv::dnn::dnn4_v20231225::readNetFromTensorflow(std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&, std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&)"
   "params":
   - "name": ""
     "type": "cv::dnn::dnn4_v20231225::Net *"
@@ -29,7 +29,7 @@
     "type": "std::vector *"
   "return_type": "void"
   "signature": "cv::dnn::dnn4_v20231225::readNetFromTensorflow(std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&, std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&)"
-- "name": "cv::dnn::dnn4_v20231225::Netcv::dnn::dnn4_v20231225::detail::readNet<cv::dnn::dnn4_v20231225::(anonymousnamespace)::TFImporter,charconst*,charconst*>"
+- "name": "cv::dnn::dnn4_v20231225::Net cv::dnn::dnn4_v20231225::detail::readNet<cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter, char const*, char const*>(char const*&&, char const*&&)"
   "params":
   - "name": ""
     "type": "cv::dnn::dnn4_v20231225::Net *"
@@ -39,7 +39,7 @@
     "type": "char **"
   "return_type": "void"
   "signature": "cv::dnn::dnn4_v20231225::Net cv::dnn::dnn4_v20231225::detail::readNet<cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter, char const*, char const*>(char const*&&, char const*&&)"
-- "name": "cv::dnn::dnn4_v20231225::"
+- "name": "cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter::TFImporter(cv::dnn::dnn4_v20231225::Net&, char const*, char const*)"
   "params":
   - "name": ""
     "type": "cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter *"

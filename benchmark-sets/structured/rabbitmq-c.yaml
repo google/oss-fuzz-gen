@@ -1,5 +1,5 @@
 "functions":
-- "name": "amqp_login_with_properties"
+- "name": "void amqp_login_with_properties(struct amqp_rpc_reply_t_ * state, struct amqp_connection_state_t_ * vhost, char * channel_max, int frame_max, int heartbeat, int client_properties, struct amqp_table_t_ * sasl_method, int )"
   "params":
   - "name": "state"
     "type": "struct amqp_rpc_reply_t_ *"
@@ -19,7 +19,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void amqp_login_with_properties(struct amqp_rpc_reply_t_ * state, struct amqp_connection_state_t_ * vhost, char * channel_max, int frame_max, int heartbeat, int client_properties, struct amqp_table_t_ * sasl_method, int )"
-- "name": "amqp_connection_close"
+- "name": "void amqp_connection_close(struct amqp_rpc_reply_t_ * state, struct amqp_connection_state_t_ * code, int )"
   "params":
   - "name": "state"
     "type": "struct amqp_rpc_reply_t_ *"
@@ -29,7 +29,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void amqp_connection_close(struct amqp_rpc_reply_t_ * state, struct amqp_connection_state_t_ * code, int )"
-- "name": "amqp_channel_close"
+- "name": "void amqp_channel_close(struct amqp_rpc_reply_t_ * state, struct amqp_connection_state_t_ * channel, short code, int )"
   "params":
   - "name": "state"
     "type": "struct amqp_rpc_reply_t_ *"
@@ -41,7 +41,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void amqp_channel_close(struct amqp_rpc_reply_t_ * state, struct amqp_connection_state_t_ * channel, short code, int )"
-- "name": "amqp_confirm_select"
+- "name": "struct amqp_confirm_select_ok_t_ * amqp_confirm_select(struct amqp_connection_state_t_ * state, short channel)"
   "params":
   - "name": "state"
     "type": "struct amqp_connection_state_t_ *"
@@ -49,7 +49,7 @@
     "type": "short"
   "return_type": "struct amqp_confirm_select_ok_t_ *"
   "signature": "struct amqp_confirm_select_ok_t_ * amqp_confirm_select(struct amqp_connection_state_t_ * state, short channel)"
-- "name": "amqp_tx_rollback"
+- "name": "struct amqp_confirm_select_ok_t_ * amqp_tx_rollback(struct amqp_connection_state_t_ * state, short channel)"
   "params":
   - "name": "state"
     "type": "struct amqp_connection_state_t_ *"

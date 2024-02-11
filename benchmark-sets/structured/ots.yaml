@@ -1,5 +1,5 @@
 "functions":
-- "name": "ots::OpenTypeFEAT::FeatureSettingDefn::ParsePart"
+- "name": "ots::OpenTypeFEAT::FeatureSettingDefn::ParsePart(ots::Buffer&)"
   "params":
   - "name": "this"
     "type": "struct ots::OpenTypeFEAT::FeatureSettingDefn *"
@@ -7,7 +7,7 @@
     "type": "ots::Buffer *"
   "return_type": "bool"
   "signature": "ots::OpenTypeFEAT::FeatureSettingDefn::ParsePart(ots::Buffer&)"
-- "name": "ots::OpenTypeSILF::SILSub::SILPass::SILPass"
+- "name": "ots::OpenTypeSILF::SILSub::SILPass::SILPass(ots::OpenTypeSILF::SILSub::SILPass const&)"
   "params":
   - "name": "this"
     "type": "struct ots::OpenTypeSILF::SILSub::SILPass *"
@@ -15,7 +15,7 @@
     "type": "struct ots::OpenTypeSILF::SILSub::SILPass *"
   "return_type": "void"
   "signature": "ots::OpenTypeSILF::SILSub::SILPass::SILPass(ots::OpenTypeSILF::SILSub::SILPass const&)"
-- "name": "ots::OpenTypeSILF::SILSub::SILSub"
+- "name": "ots::OpenTypeSILF::SILSub::SILSub(ots::OpenTypeSILF::SILSub const&)"
   "params":
   - "name": "this"
     "type": "struct ots::OpenTypeSILF::SILSub *"
@@ -23,7 +23,7 @@
     "type": "struct ots::OpenTypeSILF::SILSub *"
   "return_type": "void"
   "signature": "ots::OpenTypeSILF::SILSub::SILSub(ots::OpenTypeSILF::SILSub const&)"
-- "name": "ots::OpenTypeGLAT_v2::GlatEntry::SerializePart"
+- "name": "ots::OpenTypeGLAT_v2::GlatEntry::SerializePart(ots::OTSStream*) const"
   "params":
   - "name": "this"
     "type": "struct ots::OpenTypeGLAT_v2::GlatEntry *"
@@ -31,7 +31,7 @@
     "type": "ots::OTSStream *"
   "return_type": "bool"
   "signature": "ots::OpenTypeGLAT_v2::GlatEntry::SerializePart(ots::OTSStream*) const"
-- "name": "ots::OpenTypeGLAT_v2::GlatEntry::ParsePart"
+- "name": "ots::OpenTypeGLAT_v2::GlatEntry::ParsePart(ots::Buffer&)"
   "params":
   - "name": "this"
     "type": "struct ots::OpenTypeGLAT_v2::GlatEntry *"

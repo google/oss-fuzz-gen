@@ -1,17 +1,17 @@
 "functions":
-- "name": "ixmlParseBuffer"
+- "name": "struct _IXML_Document * ixmlParseBuffer(char * buffer)"
   "params":
   - "name": "buffer"
     "type": "char *"
   "return_type": "struct _IXML_Document *"
   "signature": "struct _IXML_Document * ixmlParseBuffer(char * buffer)"
-- "name": "ixmlLoadDocument"
+- "name": "struct _IXML_Document * ixmlLoadDocument(char * xmlFile)"
   "params":
   - "name": "xmlFile"
     "type": "char *"
   "return_type": "struct _IXML_Document *"
   "signature": "struct _IXML_Document * ixmlLoadDocument(char * xmlFile)"
-- "name": "ixmlParseBufferEx"
+- "name": "int ixmlParseBufferEx(char * buffer, struct _IXML_Document.1 ** retDoc)"
   "params":
   - "name": "buffer"
     "type": "char *"
@@ -19,7 +19,7 @@
     "type": "1 **"
   "return_type": "int"
   "signature": "int ixmlParseBufferEx(char * buffer, struct _IXML_Document.1 ** retDoc)"
-- "name": "ixmlDocument_importNode"
+- "name": "int ixmlDocument_importNode(struct _IXML_Document * doc, struct _IXML_Node * importNode, int deep, struct _IXML_Node.0 ** rtNode)"
   "params":
   - "name": "doc"
     "type": "struct _IXML_Document *"
@@ -31,7 +31,7 @@
     "type": "0 **"
   "return_type": "int"
   "signature": "int ixmlDocument_importNode(struct _IXML_Document * doc, struct _IXML_Node * importNode, int deep, struct _IXML_Node.0 ** rtNode)"
-- "name": "ixmlNode_cloneNodeTreeRecursive"
+- "name": "struct _IXML_Node * ixmlNode_cloneNodeTreeRecursive(struct _IXML_Node * nodeptr, int deep)"
   "params":
   - "name": "nodeptr"
     "type": "struct _IXML_Node *"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "main2"
+- "name": "int main2(int argc, char ** argv)"
   "params":
   - "name": "argc"
     "type": "int"
@@ -7,17 +7,17 @@
     "type": "char **"
   "return_type": "int"
   "signature": "int main2(int argc, char ** argv)"
-- "name": "main_loop"
+- "name": "int main_loop()"
   "params": []
   "return_type": "int"
   "signature": "int main_loop()"
-- "name": "tcp_init_children"
+- "name": "int tcp_init_children(int * woneinit)"
   "params":
   - "name": "woneinit"
     "type": "int *"
   "return_type": "int"
   "signature": "int tcp_init_children(int * woneinit)"
-- "name": "handle_tcpconn_ev"
+- "name": "int handle_tcpconn_ev(struct tcp_connection * tcpconn, short ev, int fd_i)"
   "params":
   - "name": "tcpconn"
     "type": "struct tcp_connection *"
@@ -27,7 +27,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int handle_tcpconn_ev(struct tcp_connection * tcpconn, short ev, int fd_i)"
-- "name": "fix_actions"
+- "name": "int fix_actions(struct action * a)"
   "params":
   - "name": "a"
     "type": "struct action *"
