@@ -17,8 +17,7 @@ Benchmark class that contains the project-under-test information.
 from __future__ import annotations
 
 import os
-import re
-import traceback
+import sys
 from enum import Enum
 from typing import List, Optional
 
@@ -32,58 +31,40 @@ class FileType(Enum):
   NONE = ''
 
 
-def parse_function_name(function_signature: str) -> str:
-  """Parses the function name from the function signature."""
-  # Invalid matches:
-  # 1. __attribute__((.*))
-  # 2. __attribute__((alloc_size(1)))
-  names = re.findall(r'.*?\s*([\w:<>+*~]+)\s*\([^\(]*\)', function_signature)
-  if names:
-    # Normalize names.
-    return re.sub(r'[^\w:]', '-', names[-1])
-
-  raise ValueError('Invalid function signature: ' + function_signature)
-
-
-def function_name_regex(function_name, include_top_level=False) -> str:
-  """The regex to capture function name"""
-  # TODO: Temp workaround for issue #27, allows fuzzy match for special chars
-  #  to be removed when we have feature from FI to properly fix this.
-  # function<type~> -> function[^\w:]type[^\w:][^\w:]
-  function_name = re.sub(r'[^\w:]', '[^\\\\w:]', function_name)
-  parts = function_name.split('::')
-  if len(parts) < 2:
-    return function_name
-
-  options = []
-  # a::b::c ->
-  #  [b::c, a::b::c]
-  # We don't do just "c" by default,
-  # because it's too generic and results in false positives.
-  if include_top_level:
-    # Also include "c"
-    start = 1
-  else:
-    start = 2
-  for i in range(len(parts) - start, -1, -1):
-    options.append('::'.join(parts[i:]))
-
-  return '(' + '|'.join(options) + ')'
+# Define a custom representer for quoting strings
+def quoted_string_presenter(dumper, data):
+  if '\n' in data:
+    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+  return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='"')
 
 
 class Benchmark:
   """Represents a benchmark."""
 
   @classmethod
-  def to_yaml(cls, benchmarks: list[Benchmark]) -> str:
+  def to_yaml(cls, benchmarks: list[Benchmark], outdir: str = './'):
+    """Converts and saves selected fields of a benchmark to a YAML file."""
+    # Register the custom representer
+    yaml.add_representer(str, quoted_string_presenter)
     result = {
-        'project': benchmarks[0].project,
-        'target_path': benchmarks[0].target_path,
-        'target_name': benchmarks[0].target_name,
-        'functions': [b.function_signature for b in benchmarks],
+        'project':
+            benchmarks[0].project,
+        'language':
+            benchmarks[0].language,
+        'target_path':
+            benchmarks[0].target_path,
+        'target_name':
+            benchmarks[0].target_name,
+        'functions': [{
+            'signature': b.function_signature,
+            'name': b.function_name,
+            'return_type': b.return_type,
+            'params': b.params,
+        } for b in benchmarks],
     }
-
-    return yaml.dump(result)
+    with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
+              'w') as file:
+      yaml.dump(result, file, default_flow_style=False, width=sys.maxsize)
 
   @classmethod
   def from_yaml(cls, benchmark_path: str) -> List:
@@ -99,20 +80,15 @@ class Benchmark:
     cppify_headers = data.get('cppify_headers', False)
     commit = data.get('commit')
     functions = data.get('functions', [])
-    for function_signature in functions:
-      try:
-        function_name = parse_function_name(function_signature)
-      except ValueError:
-        print(f'WARNING: Invalid benchmark config: {benchmark_path}')
-        traceback.print_exc()
-        continue
-
-      # Prevent ':' from causing issues as it propagates to other places.
-      function_name = function_name.replace('::', '-')
+    for function in functions:
       benchmarks.append(
-          cls(f'{benchmark_name}-{function_name}'.lower(),
+          cls(f'{benchmark_name}-{function.get("name")}'.lower(),
               data['project'],
-              function_signature,
+              data['language'],
+              function.get('signature'),
+              function.get('name'),
+              function.get('return_type'),
+              function.get('params'),
               data['target_path'],
               data.get('target_name'),
               use_project_examples=use_project_examples,
@@ -123,9 +99,13 @@ class Benchmark:
     return benchmarks
 
   def __init__(self,
-               benchmark_id: Optional[str],
+               benchmark_id: str,
                project: str,
+               language: str,
                function_signature: str,
+               function_name: str,
+               return_type: str,
+               params: list[dict[str, str]],
                target_path: str,
                preferred_target_name: Optional[str] = None,
                use_project_examples=True,
@@ -135,14 +115,12 @@ class Benchmark:
                function_dict: Optional[dict] = None):
     self.id = benchmark_id
     self.project = project
+    self.language = language
     self.function_signature = function_signature
-    # TODO(dongge): Refactor Benchmark YAML so that it stores functions as
-    # dictionaries instead of strings.
-    # Added this a temporary mitigation for parsing failure.
-    if function_dict:
-      self.function_name = function_dict.get('function_name', '')
-    else:
-      self.function_name = parse_function_name(function_signature)
+    self.function_name = function_name
+    self.return_type = return_type
+    self.params = params
+    self.function_dict = function_dict
 
     if not self.id:
       # Prevent ':' from causing issues as it propagates to other places.
@@ -158,8 +136,11 @@ class Benchmark:
 
   def __str__(self):
     return (f'Benchmark<id={self.id}, project={self.project}, '
+            f'language={self.language}, '
             f'function_signature={self.function_signature}, '
-            f'target_path={self.target_path}, '
+            f'function_name={self.function_name}, '
+            f'return_type={self.return_type}, '
+            f'params={self.params}, '
             f'target_name={self.target_name}, '
             f'use_context={self.use_context}>')
 

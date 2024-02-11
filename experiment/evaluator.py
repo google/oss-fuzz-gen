@@ -202,7 +202,10 @@ class Evaluator:
     """Builds and runs a target."""
     generated_target_name = os.path.basename(target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
-    generated_oss_fuzz_project = f'{self.benchmark.id}-{sample_id}'
+    # Replace "::" and any character not \w, -, _, or . with "-".
+    valid_docker_tag_name = re.sub(r'::', '-', self.benchmark.id)
+    valid_docker_tag_name = re.sub(r'[^\w\-_.]', '-', valid_docker_tag_name)
+    generated_oss_fuzz_project = f'{valid_docker_tag_name}-{sample_id}'
     self.create_ossfuzz_project(generated_oss_fuzz_project, target_path)
 
     status_path = os.path.join(self.work_dirs.status, sample_id)
@@ -225,7 +228,7 @@ class Evaluator:
       logger.log(f'Fixing {target_path} with '
                  f'{self.builder_runner.fixer_model_name}, '
                  f'attempt {llm_fix_count}.')
-      code_fixer.llm_fix(ai_binary, target_path, llm_fix_count,
+      code_fixer.llm_fix(ai_binary, target_path, self.benchmark, llm_fix_count,
                          build_result.errors,
                          self.builder_runner.fixer_model_name)
       shutil.copyfile(

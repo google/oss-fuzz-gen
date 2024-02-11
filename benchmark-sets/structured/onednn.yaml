@@ -1,0 +1,11 @@
+"functions":
+- "name": "dnnl::impl::graph::utils::json::json_reader_t::~json_reader_t()"
+  "params":
+  - "name": "this"
+    "type": "dnnl::impl::graph::utils::json::json_reader_t *"
+  "return_type": "void"
+  "signature": "dnnl::impl::graph::utils::json::json_reader_t::~json_reader_t()"
+"language": "c++"
+"project": "onednn"
+"target_name": "fuzz_json"
+"target_path": "/src/fuzz_json.cpp"

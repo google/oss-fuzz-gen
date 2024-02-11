@@ -40,7 +40,12 @@ def query_introspector(project):
                       params={'project': project},
                       timeout=TIMEOUT)
   data = resp.json()
-  return data.get('functions', [])
+  functions = data.get('functions')
+  if functions:
+    return functions
+  logging.error('No functions found from FI for project %s:\n  %s', project,
+                '\n  '.join(data.get('extended_msgs')))
+  sys.exit(1)
 
 
 def query_introspector_cfg(project):
@@ -55,11 +60,6 @@ def get_unreached_functions(project):
   functions = query_introspector(project)
   functions = [f for f in functions if not f['reached_by_fuzzers']]
   return functions
-
-
-def clean_signature(signature: str) -> str:
-  # Delete any { and also function definitions on the same line.
-  return re.sub('{.*', '', signature).strip()
 
 
 def demangle(name: str) -> str:
@@ -87,10 +87,14 @@ def clean_type(name: str) -> str:
   return name
 
 
-def _get_clean_return_type(function: dict):
+def _get_raw_return_type(function: dict) -> str:
+  """Returns the raw function type."""
+  return function.get('return-type') or function.get('return_type', '')
+
+
+def _get_clean_return_type(function: dict) -> str:
   """Returns the cleaned function type."""
-  raw_return_type = (function.get('return-type') or
-                     function.get('return_type', '')).strip()
+  raw_return_type = _get_raw_return_type(function).strip()
   if raw_return_type == 'N/A':
     # Bug in introspector: Unable to distinguish between bool and void right
     # now. More likely to be void for function return arguments.
@@ -98,38 +102,52 @@ def _get_clean_return_type(function: dict):
   return clean_type(raw_return_type)
 
 
-def _get_demangled_function_name(function: dict):
+def _get_raw_function_name(function: dict) -> str:
+  """Returns the raw function name."""
+  return (function.get('raw-function-name') or
+          function.get('raw_function_name', ''))
+
+
+def _get_demangled_function_name(function: dict) -> str:
   """Returns the demangled function name."""
-  raw_function_name = (function.get('raw-function-name') or
-                       function.get('raw_function_name', ''))
-  return demangle(raw_function_name)
+  return demangle(_get_raw_function_name(function))
 
 
-def _get_clean_arg_types(function: dict):
+def _get_minimized_function_name(function: dict) -> str:
+  """Minimizes C++ function name by removing parameters."""
+  # Assumption: <return_type><function_name><templare specialization> is unique.
+  function_name = _get_demangled_function_name(function)
+  depth = 0
+  for i, char in enumerate(function_name):
+    depth += char == '<'
+    depth -= char == '>'
+    if char == '(' and depth == 0:
+      # Split at the first '(' that's not within template specialization.
+      function_name = function_name[:i]
+  return function_name.replace(' ', '')
+
+
+def _get_clean_arg_types(function: dict) -> list[str]:
   """Returns the cleaned function argument types."""
   raw_arg_types = (function.get('arg-types') or
                    function.get('function_arguments', ''))
   return [clean_type(arg_type) for arg_type in raw_arg_types]
 
 
-def _get_arg_names(function: dict):
+def _get_arg_names(function: dict) -> list[str]:
   """Returns the cleaned function argument types."""
   return (function.get('arg-names') or
           function.get('function_argument_names', ''))
 
 
-def formulate_function_signature(function: dict):
+def formulate_function_signature(function: dict, language: str) -> str:
   """Formulates a function signature based on its |function| dictionary."""
-  return_type = _get_clean_return_type(function)
-  function_name = _get_demangled_function_name(function)
-  # Sometimes FI prepends return_type to function_name.
-  # For example: "function_name":"boolabsl::str_format_internal::FormatArgImpl"
-  # "::Dispatch<longlong>(absl::str_format_internal::FormatArgImpl::Data,absl::"
-  # "str_format_internal::FormatConversionSpecImpl,void*)" from:
-  # https://introspector.oss-fuzz.com/api/far-reach-but-low-coverage?project=abseil-cpp
-  if function_name.split()[0] == return_type:
-    function_name = ' '.join(function_name.split()[1:])
+  # C++ functions, get signature from c++filt.
+  if language == benchmarklib.FileType.CPP.value.lower():
+    return _get_demangled_function_name(function)
 
+  # Plain C function.
+  return_type = _get_clean_return_type(function)
   function_arg_types = _get_clean_arg_types(function)
   function_arg_names = _get_arg_names(function)
 
@@ -137,17 +155,27 @@ def formulate_function_signature(function: dict):
       f'{arg_type} {arg_name}'
       for arg_type, arg_name in zip(function_arg_types, function_arg_names)
   ])
-
-  if '(' in function_name:
-    # C++ function names have the types in them due to function overloading.
-    return return_type + ' ' + re.sub(r'\(.*\)', f'({args_signature})',
-                                      function_name)
-
-  # Plain C function.
-  return f'{return_type} {function_name}({args_signature})'
+  return f'{return_type} {_get_raw_function_name(function)}({args_signature})'
 
 
-def populate_benchmarks_using_introspector(project: str, limit: int):
+# TODO(dongge): Remove this function when FI fixes it.
+def _parse_type_from_raw_tagged_type(tagged_type: str) -> str:
+  """Returns type name from |targged_type| such as struct.TypeA"""
+  # Assume: Types do not contain dot(.).
+  return tagged_type.split('.')[-1]
+
+
+def _group_function_params(param_types: list[str],
+                           param_names: list[str]) -> list[dict[str, str]]:
+  """Groups the type and name of each parameter."""
+  return [{
+      'type': _parse_type_from_raw_tagged_type(param_type),
+      'name': param_name
+  } for param_type, param_name in zip(param_types, param_names)]
+
+
+def populate_benchmarks_using_introspector(project: str, language: str,
+                                           limit: int):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
   functions = get_unreached_functions(project)
   if not functions:
@@ -178,15 +206,21 @@ def populate_benchmarks_using_introspector(project: str, limit: int):
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
       logging.error('error: %s %s', filename, interesting.keys())
       continue
-
-    function_signature = formulate_function_signature(function)
+    # TODO(dongge): Remove this line when FI provides function_signature.
+    function_signature = formulate_function_signature(function, language)
     if not function_signature:
       continue
     logging.info('Function signature to fuzz: %s', function_signature)
     potential_benchmarks.append(
         benchmarklib.Benchmark('cli',
                                project,
+                               language,
                                function_signature,
+                               function_signature,
+                               _get_clean_return_type(function),
+                               _group_function_params(
+                                   _get_clean_arg_types(function),
+                                   _get_arg_names(function)),
                                harness,
                                target_name,
                                function_dict=function))
@@ -254,7 +288,6 @@ def _contains_function(funcs: List[Dict], target_func: Dict):
 
 def _postprocess_function(target_func: Dict):
   """Post-processes target function."""
-  # target_func['return-type'] = clean_type(target_func['return-type'])
   target_func['return-type'] = _get_clean_return_type(target_func)
   target_func['function-name'] = demangle(target_func['function-name'])
 
@@ -308,16 +341,24 @@ if __name__ == '__main__':
   logging.basicConfig(level=logging.INFO)
 
   #TODO(Dongge): Use argparser.
+  cur_project = sys.argv[1]
   max_num_function = 3
   if len(sys.argv) > 2:
     max_num_function = int(sys.argv[2])
+  if len(sys.argv) > 3:
+    outdir = sys.argv[3]
+    os.makedirs(outdir, exist_ok=True)
+  else:
+    outdir = ''
 
   oss_fuzz_checkout.clone_oss_fuzz()
   oss_fuzz_checkout.postprocess_oss_fuzz()
-  benchmarks = populate_benchmarks_using_introspector(sys.argv[1],
+  cur_project_language = oss_fuzz_checkout.get_project_language(cur_project)
+  benchmarks = populate_benchmarks_using_introspector(cur_project,
+                                                      cur_project_language,
                                                       max_num_function)
   if benchmarks:
-    print(benchmarklib.Benchmark.to_yaml(benchmarks))
+    benchmarklib.Benchmark.to_yaml(benchmarks, outdir)
   else:
-    logging.error(f'Nothing found for {sys.argv[1]}')
+    logging.error('Nothing found for %s', sys.argv[1])
     sys.exit(1)

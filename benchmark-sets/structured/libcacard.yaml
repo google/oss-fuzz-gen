@@ -1,0 +1,33 @@
+"functions":
+- "name": "void vcard_emul_new_event_thread(struct SECMODModuleStr * module)"
+  "params":
+  - "name": "module"
+    "type": "struct SECMODModuleStr *"
+  "return_type": "void"
+  "signature": "void vcard_emul_new_event_thread(struct SECMODModuleStr * module)"
+- "name": "void vcard_emul_event_thread(char * arg)"
+  "params":
+  - "name": "arg"
+    "type": "char *"
+  "return_type": "void"
+  "signature": "void vcard_emul_event_thread(char * arg)"
+- "name": "int vcard_emul_force_card_insert(struct VReaderStruct * vreader)"
+  "params":
+  - "name": "vreader"
+    "type": "struct VReaderStruct *"
+  "return_type": "int"
+  "signature": "int vcard_emul_force_card_insert(struct VReaderStruct * vreader)"
+- "name": "struct VCardStruct * vcard_emul_mirror_card(struct VReaderStruct * vreader)"
+  "params":
+  - "name": "vreader"
+    "type": "struct VReaderStruct *"
+  "return_type": "struct VCardStruct *"
+  "signature": "struct VCardStruct * vcard_emul_mirror_card(struct VReaderStruct * vreader)"
+- "name": "void vcard_emul_replay_insertion_events()"
+  "params": []
+  "return_type": "void"
+  "signature": "void vcard_emul_replay_insertion_events()"
+"language": "c"
+"project": "libcacard"
+"target_name": "fuzz_xfer"
+"target_path": "/src/libcacard/fuzz/fuzz_xfer.c"
