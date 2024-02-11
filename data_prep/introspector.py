@@ -216,7 +216,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                project,
                                language,
                                function_signature,
-                               _get_minimized_function_name(function),
+                               function_signature,
                                _get_clean_return_type(function),
                                _group_function_params(
                                    _get_clean_arg_types(function),
