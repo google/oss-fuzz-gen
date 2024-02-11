@@ -273,8 +273,8 @@ def extract_error_message(log_path: str) -> list[str]:
   return errors
 
 
-def llm_fix(ai_binary: str, target_path: str, llm_fix_id: int,
-            errors: list[str], fixer_model_name: str) -> None:
+def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
+            llm_fix_id: int, errors: list[str], fixer_model_name: str) -> None:
   """Reads and fixes |target_path| in place with LLM based on |error_log|."""
   with open(target_path) as target_file:
     raw_code = target_file.read()
@@ -285,6 +285,7 @@ def llm_fix(ai_binary: str, target_path: str, llm_fix_id: int,
   prompt_path = os.path.join(response_dir, 'prompt.txt')
 
   apply_llm_fix(ai_binary,
+                benchmark,
                 raw_code,
                 errors,
                 prompt_path,
@@ -323,6 +324,7 @@ def llm_fix(ai_binary: str, target_path: str, llm_fix_id: int,
 
 
 def apply_llm_fix(ai_binary: str,
+                  benchmark: benchmarklib.Benchmark,
                   raw_code: str,
                   errors: list[str],
                   prompt_path: str,
@@ -339,7 +341,7 @@ def apply_llm_fix(ai_binary: str,
   )
 
   fixer_model.prompt_path = fixer_model.prepare_fix_prompt(
-      prompt_path, raw_code, errors)
+      benchmark, prompt_path, raw_code, errors)
   fixer_model.generate_code(response_dir)
 
 

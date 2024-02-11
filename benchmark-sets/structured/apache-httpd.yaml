@@ -1,0 +1,35 @@
+"functions":
+- "name": "void register_hooks(struct apr_pool_t * p)"
+  "params":
+  - "name": "p"
+    "type": "struct apr_pool_t *"
+  "return_type": "void"
+  "signature": "void register_hooks(struct apr_pool_t * p)"
+- "name": "void event_hooks(struct apr_pool_t * p)"
+  "params":
+  - "name": "p"
+    "type": "struct apr_pool_t *"
+  "return_type": "void"
+  "signature": "void event_hooks(struct apr_pool_t * p)"
+- "name": "int ap_process_http_connection(struct conn_rec * c)"
+  "params":
+  - "name": "c"
+    "type": "struct conn_rec *"
+  "return_type": "int"
+  "signature": "int ap_process_http_connection(struct conn_rec * c)"
+- "name": "int ap_process_http_sync_connection(struct conn_rec * c)"
+  "params":
+  - "name": "c"
+    "type": "struct conn_rec *"
+  "return_type": "int"
+  "signature": "int ap_process_http_sync_connection(struct conn_rec * c)"
+- "name": "int ap_process_http_async_connection(struct conn_rec * c)"
+  "params":
+  - "name": "c"
+    "type": "struct conn_rec *"
+  "return_type": "int"
+  "signature": "int ap_process_http_async_connection(struct conn_rec * c)"
+"language": "c"
+"project": "apache-httpd"
+"target_name": "fuzz_utils"
+"target_path": "/src/fuzz_utils.c"

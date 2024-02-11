@@ -1,0 +1,35 @@
+"functions":
+- "name": "PcapInterface::startPacketPolling()"
+  "params":
+  - "name": "this"
+    "type": "PcapInterface *"
+  "return_type": "void"
+  "signature": "PcapInterface::startPacketPolling()"
+- "name": "DummyInterface::startPacketPolling()"
+  "params":
+  - "name": "this"
+    "type": "DummyInterface *"
+  "return_type": "void"
+  "signature": "DummyInterface::startPacketPolling()"
+- "name": "ZMQCollectorInterface::startPacketPolling()"
+  "params":
+  - "name": "this"
+    "type": "ZMQCollectorInterface *"
+  "return_type": "void"
+  "signature": "ZMQCollectorInterface::startPacketPolling()"
+- "name": "packetPollLoop(void*)"
+  "params":
+  - "name": "ptr"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "packetPollLoop(void*)"
+- "name": "ZMQCollectorInterface::collect_flows()"
+  "params":
+  - "name": "this"
+    "type": "ZMQCollectorInterface *"
+  "return_type": "void"
+  "signature": "ZMQCollectorInterface::collect_flows()"
+"language": "c++"
+"project": "ntopng"
+"target_name": "onefile"
+"target_path": "/src/ntopng/fuzz/onefile.cpp"

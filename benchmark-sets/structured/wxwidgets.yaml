@@ -1,0 +1,35 @@
+"functions":
+- "name": "wxGetFreeMemory()"
+  "params": []
+  "return_type": "size_t"
+  "signature": "wxGetFreeMemory()"
+- "name": "wxPlatformInfo::wxPlatformInfo()"
+  "params":
+  - "name": "this"
+    "type": "wxPlatformInfo *"
+  "return_type": "void"
+  "signature": "wxPlatformInfo::wxPlatformInfo()"
+- "name": "wxPlatformInfo::Get()"
+  "params": []
+  "return_type": "wxPlatformInfo *"
+  "signature": "wxPlatformInfo::Get()"
+- "name": "wxPlatformInfo::InitForCurrentPlatform()"
+  "params":
+  - "name": "this"
+    "type": "wxPlatformInfo *"
+  "return_type": "void"
+  "signature": "wxPlatformInfo::InitForCurrentPlatform()"
+- "name": "wxFileTranslationsLoader::LoadCatalog(wxString const&, wxString const&)"
+  "params":
+  - "name": "this"
+    "type": "wxAppTraits *"
+  - "name": "domain"
+    "type": "wxString *"
+  - "name": "lang"
+    "type": "wxString *"
+  "return_type": "wxMsgCatalog *"
+  "signature": "wxFileTranslationsLoader::LoadCatalog(wxString const&, wxString const&)"
+"language": "c++"
+"project": "wxwidgets"
+"target_name": "runner"
+"target_path": "/src/wxwidgets/tests/fuzz/runner.cpp"
