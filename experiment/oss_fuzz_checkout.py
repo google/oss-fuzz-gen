@@ -16,6 +16,7 @@ Tools used for experiments.
 """
 
 import atexit
+import logging
 import os
 import shutil
 import subprocess as sp
@@ -38,8 +39,10 @@ def _remove_temp_oss_fuzz_repo():
   assert not OSS_FUZZ_DIR.endswith('oss-fuzz')
   try:
     shutil.rmtree(OSS_FUZZ_DIR)
-  except PermissionError:
-    pass
+  except PermissionError as e:
+    logging.warning(f'No permission to remove {OSS_FUZZ_DIR}: {e}')
+  except FileNotFoundError as e:
+    logging.warning(f'No OSS-Fuzz directory {OSS_FUZZ_DIR}: {e}')
 
 
 def _set_temp_oss_fuzz_repo():
@@ -132,8 +135,10 @@ def list_c_cpp_projects() -> list[str]:
 
 def get_project_language(project: str) -> str:
   """Returns the |project| language read from its project.yaml."""
-  project_yaml_path = os.path.join(OSS_FUZZ_DIR, project, 'project.yaml')
-  if not os.path.exists(project_yaml_path):
+  project_yaml_path = os.path.join(OSS_FUZZ_DIR, 'projects', project, 'project.yaml')
+  if not os.path.isfile(project_yaml_path):
+    logging.warning(f'Failed to find the project yaml of {project}, assuming it'
+                    ' is C++')
     return 'C++'
 
   with open(project_yaml_path, 'r') as benchmark_file:

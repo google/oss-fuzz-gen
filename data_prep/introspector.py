@@ -40,7 +40,12 @@ def query_introspector(project):
                       params={'project': project},
                       timeout=TIMEOUT)
   data = resp.json()
-  return data.get('functions', [])
+  functions = data.get('functions')
+  if functions:
+    return functions
+  logging.error('No functions found from FI for project %s:\n  %s', project,
+                '\n  '.join(data.get('extended_msgs')))
+  sys.exit(1)
 
 
 def query_introspector_cfg(project):
@@ -138,7 +143,7 @@ def _get_arg_names(function: dict) -> list[str]:
 def formulate_function_signature(function: dict, language: str) -> str:
   """Formulates a function signature based on its |function| dictionary."""
   # C++ functions, get signature from c++filt.
-  if language == benchmarklib.FileType.CPP.value:
+  if language == benchmarklib.FileType.CPP.value.lower():
     return _get_demangled_function_name(function)
 
   # Plain C function.
