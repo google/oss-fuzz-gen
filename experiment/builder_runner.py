@@ -89,8 +89,9 @@ class BuilderRunner:
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
     # Get the top level function name without namespace.
-    target_function_name = self.benchmark.function_name.rsplit('::', 1)[-1]
-    return bool(target_function_name in generated_code)
+    target_function_signature = self.benchmark.function_signature.rsplit(
+        '::', 1)[-1]
+    return bool(target_function_signature in generated_code)
 
   def _pre_build_check(self, target_path: str,
                        build_result: BuildResult) -> bool:
@@ -107,7 +108,7 @@ class BuilderRunner:
            '`LLVMFuzzerTestOneInput`.')
       ]
       print(f'Missing target function: {target_path} does not contain '
-            f'{self.benchmark.function_name}')
+            f'{self.benchmark.function_signature}')
       return False
     return True
 

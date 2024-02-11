@@ -36,6 +36,10 @@ INTROSPECTOR_FUNCTION = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
 
 
 def query_introspector(project):
+  """
+  Quries FuzzIntrospector's far-reach-but-low-coverage API for functions to
+  generate fuzz target.
+  """
   resp = requests.get(INTROSPECTOR_FUNCTION,
                       params={'project': project},
                       timeout=TIMEOUT)
@@ -111,20 +115,6 @@ def _get_raw_function_name(function: dict) -> str:
 def _get_demangled_function_name(function: dict) -> str:
   """Returns the demangled function name."""
   return demangle(_get_raw_function_name(function))
-
-
-def _get_minimized_function_name(function: dict) -> str:
-  """Minimizes C++ function name by removing parameters."""
-  # Assumption: <return_type><function_name><templare specialization> is unique.
-  function_name = _get_demangled_function_name(function)
-  depth = 0
-  for i, char in enumerate(function_name):
-    depth += char == '<'
-    depth -= char == '>'
-    if char == '(' and depth == 0:
-      # Split at the first '(' that's not within template specialization.
-      function_name = function_name[:i]
-  return function_name.replace(' ', '')
 
 
 def _get_clean_arg_types(function: dict) -> list[str]:
@@ -215,7 +205,6 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         benchmarklib.Benchmark('cli',
                                project,
                                language,
-                               function_signature,
                                function_signature,
                                _get_clean_return_type(function),
                                _group_function_params(

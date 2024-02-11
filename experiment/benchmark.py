@@ -57,7 +57,6 @@ class Benchmark:
             benchmarks[0].target_name,
         'functions': [{
             'signature': b.function_signature,
-            'name': b.function_name,
             'return_type': b.return_type,
             'params': b.params,
         } for b in benchmarks],
@@ -73,7 +72,7 @@ class Benchmark:
     with open(benchmark_path, 'r') as benchmark_file:
       data = yaml.safe_load(benchmark_file)
 
-    benchmark_name = os.path.splitext(os.path.basename(benchmark_path))[0]
+    project_name = os.path.splitext(os.path.basename(benchmark_path))[0]
 
     use_context = data.get('use_context', False)
     use_project_examples = data.get('use_project_examples', True)
@@ -82,11 +81,10 @@ class Benchmark:
     functions = data.get('functions', [])
     for function in functions:
       benchmarks.append(
-          cls(f'{benchmark_name}-{function.get("name")}'.lower(),
+          cls(f'{project_name}-{function.get("signature")}'.lower(),
               data['project'],
               data['language'],
               function.get('signature'),
-              function.get('name'),
               function.get('return_type'),
               function.get('params'),
               data['target_path'],
@@ -103,7 +101,6 @@ class Benchmark:
                project: str,
                language: str,
                function_signature: str,
-               function_name: str,
                return_type: str,
                params: list[dict[str, str]],
                target_path: str,
@@ -117,16 +114,9 @@ class Benchmark:
     self.project = project
     self.language = language
     self.function_signature = function_signature
-    self.function_name = function_name
     self.return_type = return_type
     self.params = params
     self.function_dict = function_dict
-
-    if not self.id:
-      # Prevent ':' from causing issues as it propagates to other places.
-      function_name = self.function_name.replace('::', '-')
-      self.id = f'{self.project}-{function_name}'.lower()
-
     self.target_path = target_path
     self._preferred_target_name = preferred_target_name
     self.use_project_examples = use_project_examples
@@ -138,7 +128,6 @@ class Benchmark:
     return (f'Benchmark<id={self.id}, project={self.project}, '
             f'language={self.language}, '
             f'function_signature={self.function_signature}, '
-            f'function_name={self.function_name}, '
             f'return_type={self.return_type}, '
             f'params={self.params}, '
             f'target_name={self.target_name}, '

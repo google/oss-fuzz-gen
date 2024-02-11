@@ -32,7 +32,6 @@ class ContextRetriever:
 
     self._project_name = benchmark.project
     self._function_signature = benchmark.function_signature
-    self._function_name = benchmark.function_name
     self._params = benchmark.params
     self._return_type = benchmark.return_type
 
@@ -225,7 +224,7 @@ class ContextRetriever:
     """Searches a single AST to determine if the function signature can be found.
     Returns the file for the signature if found.
     Retrieve that node's loc->file to get the file where the FunctionDecl exists."""
-    target_function = self._function_name
+    target_function = self._function_signature
 
     with open(fully_qualified_path) as ast_file:
       ast_json = json.load(ast_file)
