@@ -20,6 +20,7 @@ import logging
 import os
 import re
 import sys
+import urllib.parse
 from typing import List, Optional
 
 from flask import Flask, abort, render_template
@@ -277,6 +278,10 @@ def sample_page(benchmark, sample):
   # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
   abort(404)
 
+# Define a custom filter for Jinja2
+@app.template_filter('urlencode')
+def urlencode_filter(s):
+  return urllib.parse.quote(s, safe='')
 
 @app.template_filter()
 def percent(num: float):

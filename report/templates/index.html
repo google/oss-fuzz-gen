@@ -28,7 +28,7 @@
     </tr>
 {% for benchmark in benchmarks %}
     <tr>
-        <td><a href="benchmark/{{ benchmark.id }}">{{ benchmark.id }}</a></li></td>
+        <td><a href="benchmark/{{ benchmark.id|urlencode }}">{{ benchmark.id }}</a></li></td>
         <td>{{ benchmark.status }}</td>
         <td>{{ benchmark.result.build_success_rate|percent}}</td>
         <td>{{ benchmark.result.crash_rate|percent }} </td>
