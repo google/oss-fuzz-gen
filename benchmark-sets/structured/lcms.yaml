@@ -1,6 +1,5 @@
 "functions":
-- "name": "_cmsDefaultICCintents"
-  "params":
+- "params":
   - "name": "ContextID"
     "type": "struct _cmsContext_struct *"
   - "name": "nProfiles"
@@ -15,10 +14,9 @@
     "type": "double *"
   - "name": "dwFlags"
     "type": "int"
-  "return_type": "struct _cmsPipeline_struct 73 *"
+  "return_type": "struct _cmsPipeline_struct *"
   "signature": "_cmsDefaultICCintents"
-- "name": "cmsCreateProofingTransform"
-  "params":
+- "params":
   - "name": "InputProfile"
     "type": "char *"
   - "name": "InputFormat"
@@ -37,8 +35,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "cmsCreateProofingTransform"
-- "name": "cmsCreateProofingTransformTHR"
-  "params":
+- "params":
   - "name": "ContextID"
     "type": "struct _cmsContext_struct *"
   - "name": "InputProfile"
@@ -59,14 +56,12 @@
     "type": "int"
   "return_type": "char *"
   "signature": "cmsCreateProofingTransformTHR"
-- "name": "cmsCreateDeviceLinkFromCubeFile"
-  "params":
+- "params":
   - "name": "cFileName"
     "type": "char *"
   "return_type": "char *"
   "signature": "cmsCreateDeviceLinkFromCubeFile"
-- "name": "cmsCreateDeviceLinkFromCubeFileTHR"
-  "params":
+- "params":
   - "name": "ContextID"
     "type": "struct _cmsContext_struct *"
   - "name": "cFileName"

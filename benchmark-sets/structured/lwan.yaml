@@ -1,34 +1,29 @@
 "functions":
-- "name": "lwan_init"
-  "params":
+- "params":
   - "name": "l"
     "type": "struct lwan *"
   "return_type": "void"
   "signature": "lwan_init"
-- "name": "lwan_init_with_config"
-  "params":
+- "params":
   - "name": "l"
     "type": "struct lwan *"
   - "name": "config"
     "type": "struct lwan_config *"
   "return_type": "void"
   "signature": "lwan_init_with_config"
-- "name": "lwan_thread_init"
-  "params":
+- "params":
   - "name": "l"
     "type": "struct lwan *"
   "return_type": "void"
   "signature": "lwan_thread_init"
-- "name": "create_thread"
-  "params":
+- "params":
   - "name": "l"
     "type": "struct lwan *"
   - "name": "thread"
     "type": "struct lwan_thread *"
   "return_type": "void"
   "signature": "create_thread"
-- "name": "thread_io_loop"
-  "params":
+- "params":
   - "name": "data"
     "type": "char *"
   "return_type": "char *"

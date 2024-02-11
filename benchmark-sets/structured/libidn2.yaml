@@ -1,6 +1,5 @@
 "functions":
-- "name": "str_iconveha"
-  "params":
+- "params":
   - "name": "src"
     "type": "char *"
   - "name": "from_codeset"
@@ -13,8 +12,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "str_iconveha"
-- "name": "str_iconveha_notranslit"
-  "params":
+- "params":
   - "name": "src"
     "type": "char *"
   - "name": "from_codeset"
@@ -25,8 +23,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "str_iconveha_notranslit"
-- "name": "str_iconveh"
-  "params":
+- "params":
   - "name": "src"
     "type": "char *"
   - "name": "from_codeset"
@@ -37,8 +34,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "str_iconveh"
-- "name": "str_cd_iconveh"
-  "params":
+- "params":
   - "name": "src"
     "type": "char *"
   - "name": "cd"
@@ -47,8 +43,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "str_cd_iconveh"
-- "name": "c_isascii"
-  "params":
+- "params":
   - "name": "c"
     "type": "int"
   "return_type": "bool"

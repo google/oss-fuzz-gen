@@ -1,6 +1,5 @@
 "functions":
-- "name": "tsm_vte_handle_keyboard"
-  "params":
+- "params":
   - "name": "vte"
     "type": "struct tsm_vte *"
   - "name": "keysym"
@@ -13,8 +12,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "tsm_vte_handle_keyboard"
-- "name": "tsm_symbol_append"
-  "params":
+- "params":
   - "name": "tbl"
     "type": "struct tsm_symbol_table *"
   - "name": "sym"
@@ -23,8 +21,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "tsm_symbol_append"
-- "name": "shl_htable_insert"
-  "params":
+- "params":
   - "name": "htable"
     "type": "struct shl_htable *"
   - "name": "obj"
@@ -33,8 +30,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "shl_htable_insert"
-- "name": "htable_add"
-  "params":
+- "params":
   - "name": "ht"
     "type": "struct shl_htable_int *"
   - "name": "hash"
@@ -43,8 +39,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "htable_add"
-- "name": "mk_wcswidth_cjk"
-  "params":
+- "params":
   - "name": "pwcs"
     "type": "int *"
   - "name": "n"

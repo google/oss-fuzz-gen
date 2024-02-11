@@ -1,6 +1,5 @@
 "functions":
-- "name": "EncoderCore<float, true>::Run(unsigned char*, unsigned long, bool)"
-  "params":
+- "params":
   - "name": ""
     "type": "EncoderCore *"
   - "name": ""
@@ -11,8 +10,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "EncoderCore<float, true>::Run(unsigned char*, unsigned long, bool)"
-- "name": "EncoderCore<double, true>::Run(unsigned char*, unsigned long, bool)"
-  "params":
+- "params":
   - "name": ""
     "type": "EncoderCore *"
   - "name": ""
@@ -23,8 +21,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "EncoderCore<double, true>::Run(unsigned char*, unsigned long, bool)"
-- "name": "EncoderCore<long, true>::Run(unsigned char*, unsigned long, bool)"
-  "params":
+- "params":
   - "name": ""
     "type": "EncoderCore *"
   - "name": ""
@@ -35,8 +32,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "EncoderCore<long, true>::Run(unsigned char*, unsigned long, bool)"
-- "name": "EncoderCore<int, true>::Run(unsigned char*, unsigned long, bool)"
-  "params":
+- "params":
   - "name": ""
     "type": "EncoderCore *"
   - "name": ""
@@ -47,8 +43,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "EncoderCore<int, true>::Run(unsigned char*, unsigned long, bool)"
-- "name": "EncoderCore<short, true>::Run(unsigned char*, unsigned long, bool)"
-  "params":
+- "params":
   - "name": ""
     "type": "EncoderCore *"
   - "name": ""

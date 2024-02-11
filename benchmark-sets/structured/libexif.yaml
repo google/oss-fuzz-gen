@@ -1,34 +1,29 @@
 "functions":
-- "name": "exif_data_new_from_file"
-  "params":
+- "params":
   - "name": "path"
     "type": "char *"
   "return_type": "struct _ExifData *"
   "signature": "exif_data_new_from_file"
-- "name": "exif_data_dump"
-  "params":
+- "params":
   - "name": "data"
     "type": "struct _ExifData *"
   "return_type": "void"
   "signature": "exif_data_dump"
-- "name": "exif_content_dump"
-  "params":
+- "params":
   - "name": "content"
     "type": "struct _ExifContent *"
   - "name": "indent"
     "type": "int"
   "return_type": "void"
   "signature": "exif_content_dump"
-- "name": "exif_entry_dump"
-  "params":
+- "params":
   - "name": "e"
     "type": "struct _ExifEntry *"
   - "name": "indent"
     "type": "int"
   "return_type": "void"
   "signature": "exif_entry_dump"
-- "name": "exif_data_set_byte_order"
-  "params":
+- "params":
   - "name": "data"
     "type": "struct _ExifData *"
   - "name": "order"

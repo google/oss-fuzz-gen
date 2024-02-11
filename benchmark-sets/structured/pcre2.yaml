@@ -1,34 +1,29 @@
 "functions":
-- "name": "pcre2_match_data_create_from_pattern_8"
-  "params":
+- "params":
   - "name": "code"
     "type": "struct pcre2_real_code_8 *"
   - "name": "gcontext"
     "type": "struct pcre2_real_general_context_8 *"
   "return_type": "struct pcre2_real_match_data_8 *"
   "signature": "pcre2_match_data_create_from_pattern_8"
-- "name": "pcre2_convert_context_create_8"
-  "params":
+- "params":
   - "name": "gcontext"
     "type": "struct pcre2_real_general_context_8 *"
   "return_type": "struct pcre2_real_convert_context_8 *"
   "signature": "pcre2_convert_context_create_8"
-- "name": "pcre2_compile_context_create_8"
-  "params":
+- "params":
   - "name": "gcontext"
     "type": "struct pcre2_real_general_context_8 *"
   "return_type": "struct pcre2_real_compile_context_8 *"
   "signature": "pcre2_compile_context_create_8"
-- "name": "pcre2_set_newline_8"
-  "params":
+- "params":
   - "name": "ccontext"
     "type": "struct pcre2_real_compile_context_8 *"
   - "name": "newline"
     "type": "int"
   "return_type": "int"
   "signature": "pcre2_set_newline_8"
-- "name": "pcre2_general_context_create_8"
-  "params":
+- "params":
   - "name": "private_malloc"
     "type": "func_type *"
   - "name": "private_free"

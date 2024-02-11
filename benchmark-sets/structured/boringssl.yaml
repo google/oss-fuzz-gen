@@ -1,6 +1,5 @@
 "functions":
-- "name": "PEM_read_ECPrivateKey"
-  "params":
+- "params":
   - "name": ""
     "type": "struct _IO_FILE *"
   - "name": ""
@@ -11,8 +10,7 @@
     "type": "char *"
   "return_type": "struct ec_key_st *"
   "signature": "PEM_read_ECPrivateKey"
-- "name": "PEM_read_DSAPrivateKey"
-  "params":
+- "params":
   - "name": ""
     "type": "struct _IO_FILE *"
   - "name": ""
@@ -23,8 +21,7 @@
     "type": "char *"
   "return_type": "struct dsa_st *"
   "signature": "PEM_read_DSAPrivateKey"
-- "name": "PEM_read_RSAPrivateKey"
-  "params":
+- "params":
   - "name": ""
     "type": "struct _IO_FILE *"
   - "name": ""
@@ -35,8 +32,7 @@
     "type": "char *"
   "return_type": "struct rsa_st *"
   "signature": "PEM_read_RSAPrivateKey"
-- "name": "PEM_read_PrivateKey"
-  "params":
+- "params":
   - "name": ""
     "type": "struct _IO_FILE *"
   - "name": ""
@@ -47,8 +43,7 @@
     "type": "char *"
   "return_type": "struct evp_pkey_st *"
   "signature": "PEM_read_PrivateKey"
-- "name": "PEM_read_bio_ECPrivateKey"
-  "params":
+- "params":
   - "name": ""
     "type": "struct bio_st *"
   - "name": ""

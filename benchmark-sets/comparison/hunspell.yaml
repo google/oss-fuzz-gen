@@ -1,6 +1,5 @@
 "functions":
-- "name": "Hunspell_suggest"
-  "params":
+- "params":
   - "name": "pHunspell"
     "type": "struct Hunhandle *"
   - "name": "slst"
@@ -9,8 +8,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "Hunspell_suggest"
-- "name": "Hunspell::suggest(char***, char const*)"
-  "params":
+- "params":
   - "name": "this"
     "type": "Hunspell *"
   - "name": "slst"
@@ -19,8 +17,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "Hunspell::suggest(char***, char const*)"
-- "name": "HunspellImpl::suggest(char***, char const*)"
-  "params":
+- "params":
   - "name": "this"
     "type": "HunspellImpl *"
   - "name": "slst"
@@ -29,8 +26,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "HunspellImpl::suggest(char***, char const*)"
-- "name": "Hunspell_generate"
-  "params":
+- "params":
   - "name": "pHunspell"
     "type": "struct Hunhandle *"
   - "name": "slst"
@@ -41,8 +37,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "Hunspell_generate"
-- "name": "Hunspell::generate(char***, char const*, char const*)"
-  "params":
+- "params":
   - "name": "this"
     "type": "Hunspell *"
   - "name": "slst"

@@ -1,26 +1,21 @@
 "functions":
-- "name": "wxGetFreeMemory()"
-  "params": []
+- "params": []
   "return_type": "size_t"
   "signature": "wxGetFreeMemory()"
-- "name": "wxPlatformInfo::wxPlatformInfo()"
-  "params":
+- "params":
   - "name": "this"
     "type": "wxPlatformInfo *"
   "return_type": "void"
   "signature": "wxPlatformInfo::wxPlatformInfo()"
-- "name": "wxPlatformInfo::Get()"
-  "params": []
+- "params": []
   "return_type": "wxPlatformInfo *"
   "signature": "wxPlatformInfo::Get()"
-- "name": "wxPlatformInfo::InitForCurrentPlatform()"
-  "params":
+- "params":
   - "name": "this"
     "type": "wxPlatformInfo *"
   "return_type": "void"
   "signature": "wxPlatformInfo::InitForCurrentPlatform()"
-- "name": "wxFileTranslationsLoader::LoadCatalog(wxString const&, wxString const&)"
-  "params":
+- "params":
   - "name": "this"
     "type": "wxAppTraits *"
   - "name": "domain"

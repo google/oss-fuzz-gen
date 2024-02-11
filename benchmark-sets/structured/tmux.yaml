@@ -1,14 +1,12 @@
 "functions":
-- "name": "int cmd_new_session_exec(struct cmd * self, struct cmdq_item * item)"
-  "params":
+- "params":
   - "name": "self"
     "type": "struct cmd *"
   - "name": "item"
     "type": "struct cmdq_item *"
   "return_type": "int"
   "signature": "int cmd_new_session_exec(struct cmd * self, struct cmdq_item * item)"
-- "name": "int client_main(struct event_base * base, int argc, char ** argv, size_t flags, int feat)"
-  "params":
+- "params":
   - "name": "base"
     "type": "struct event_base *"
   - "name": "argc"
@@ -21,8 +19,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int client_main(struct event_base * base, int argc, char ** argv, size_t flags, int feat)"
-- "name": "int client_connect(struct event_base * base, char * path, size_t flags)"
-  "params":
+- "params":
   - "name": "base"
     "type": "struct event_base *"
   - "name": "path"
@@ -31,8 +28,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int client_connect(struct event_base * base, char * path, size_t flags)"
-- "name": "int server_start(struct tmuxproc * client, int flags, struct event_base * base, int lockfd, char * lockfile)"
-  "params":
+- "params":
   - "name": "client"
     "type": "struct tmuxproc *"
   - "name": "flags"
@@ -45,8 +41,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int server_start(struct tmuxproc * client, int flags, struct event_base * base, int lockfd, char * lockfile)"
-- "name": "int cmd_attach_session_exec(struct cmd * self, struct cmdq_item * item)"
-  "params":
+- "params":
   - "name": "self"
     "type": "struct cmd *"
   - "name": "item"

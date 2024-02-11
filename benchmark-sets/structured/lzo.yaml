@@ -1,6 +1,5 @@
 "functions":
-- "name": "lzo1z_999_compress_dict"
-  "params":
+- "params":
   - "name": "in"
     "type": "char *"
   - "name": "in_len"
@@ -17,8 +16,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "lzo1z_999_compress_dict"
-- "name": "lzo1x_999_compress_dict"
-  "params":
+- "params":
   - "name": "in"
     "type": "char *"
   - "name": "in_len"
@@ -35,8 +33,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "lzo1x_999_compress_dict"
-- "name": "lzo1y_999_compress_dict"
-  "params":
+- "params":
   - "name": "in"
     "type": "char *"
   - "name": "in_len"
@@ -53,8 +50,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "lzo1y_999_compress_dict"
-- "name": "swd_insertdict"
-  "params":
+- "params":
   - "name": "s"
     "type": "struct lzo2a_999_swd_t *"
   - "name": "node"
@@ -63,8 +59,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "swd_insertdict"
-- "name": "lzo1_info"
-  "params":
+- "params":
   - "name": "rbits"
     "type": "int *"
   - "name": "clevel"

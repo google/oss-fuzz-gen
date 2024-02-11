@@ -1,14 +1,12 @@
 "functions":
-- "name": "facebook::jsi::detail::ThreadSafeRuntimeImpl<facebook::hermes::HermesRuntimeImpl, facebook::hermes::(anonymous namespace)::HermesMutex>::ThreadSafeRuntimeImpl<hermes::vm::RuntimeConfig const&>(hermes::vm::RuntimeConfig const&)"
-  "params":
+- "params":
   - "name": ""
     "type": "facebook::jsi::detail::ThreadSafeRuntimeImpl *"
   - "name": ""
     "type": "hermes::vm::RuntimeConfig *"
   "return_type": "void"
   "signature": "facebook::jsi::detail::ThreadSafeRuntimeImpl<facebook::hermes::HermesRuntimeImpl, facebook::hermes::(anonymous namespace)::HermesMutex>::ThreadSafeRuntimeImpl<hermes::vm::RuntimeConfig const&>(hermes::vm::RuntimeConfig const&)"
-- "name": "hermes::vm::asyncFunctionConstructor(void*, hermes::vm::Runtime&, hermes::vm::NativeArgs)"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""
@@ -17,8 +15,7 @@
     "type": "hermes::vm::NativeArgs *"
   "return_type": "void"
   "signature": "hermes::vm::asyncFunctionConstructor(void*, hermes::vm::Runtime&, hermes::vm::NativeArgs)"
-- "name": "hermes::vm::generatorFunctionConstructor(void*, hermes::vm::Runtime&, hermes::vm::NativeArgs)"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""
@@ -27,8 +24,7 @@
     "type": "hermes::vm::NativeArgs *"
   "return_type": "void"
   "signature": "hermes::vm::generatorFunctionConstructor(void*, hermes::vm::Runtime&, hermes::vm::NativeArgs)"
-- "name": "facebook::jsi::WithRuntimeDecorator<facebook::jsi::detail::WithLock<facebook::hermes::HermesRuntimeImpl, facebook::hermes::(anonymous namespace)::HermesMutex>, facebook::hermes::HermesRuntimeImpl, facebook::jsi::ThreadSafeRuntime>::evaluatePreparedJavaScript(std::__1::shared_ptr<facebook::jsi::PreparedJavaScript const> const&)"
-  "params":
+- "params":
   - "name": ""
     "type": "facebook::jsi::Value *"
   - "name": ""
@@ -37,8 +33,7 @@
     "type": "std::shared_ptr *"
   "return_type": "void"
   "signature": "facebook::jsi::WithRuntimeDecorator<facebook::jsi::detail::WithLock<facebook::hermes::HermesRuntimeImpl, facebook::hermes::(anonymous namespace)::HermesMutex>, facebook::hermes::HermesRuntimeImpl, facebook::jsi::ThreadSafeRuntime>::evaluatePreparedJavaScript(std::__1::shared_ptr<facebook::jsi::PreparedJavaScript const> const&)"
-- "name": "hermes::vm::CallResult<hermes::vm::HermesValue, (hermes::vm::detail::CallResultSpecialize)2> hermes::vm::Interpreter::interpretFunction<true, false>(hermes::vm::Runtime&, hermes::vm::InterpreterState&)"
-  "params":
+- "params":
   - "name": ""
     "type": "hermes::vm::Runtime *"
   - "name": ""

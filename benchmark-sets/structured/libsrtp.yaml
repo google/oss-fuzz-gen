@@ -1,38 +1,33 @@
 "functions":
-- "name": "srtp_update"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct srtp_ctx_t_ *"
   - "name": "policy"
     "type": "struct srtp_policy_t *"
   "return_type": "int"
   "signature": "srtp_update"
-- "name": "srtp_stream_update"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct srtp_ctx_t_ *"
   - "name": "policy"
     "type": "struct srtp_policy_t *"
   "return_type": "int"
   "signature": "srtp_stream_update"
-- "name": "update_template_streams"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct srtp_ctx_t_ *"
   - "name": "policy"
     "type": "struct srtp_policy_t *"
   "return_type": "int"
   "signature": "update_template_streams"
-- "name": "stream_update"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct srtp_ctx_t_ *"
   - "name": "policy"
     "type": "struct srtp_policy_t *"
   "return_type": "int"
   "signature": "stream_update"
-- "name": "srtp_unprotect_aead"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct srtp_ctx_t_ *"
   - "name": "stream"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "opj_jp2_get_tile"
-  "params":
+- "params":
   - "name": ""
     "type": "struct opj_jp2 *"
   - "name": ""
@@ -13,8 +12,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "opj_jp2_get_tile"
-- "name": "opj_j2k_get_tile"
-  "params":
+- "params":
   - "name": ""
     "type": "struct opj_j2k *"
   - "name": ""
@@ -27,16 +25,14 @@
     "type": "int"
   "return_type": "int"
   "signature": "opj_j2k_get_tile"
-- "name": "opj_j2k_setup_decoding_tile"
-  "params":
+- "params":
   - "name": ""
     "type": "struct opj_procedure_list *"
   - "name": ""
     "type": "struct opj_event_mgr *"
   "return_type": "int"
   "signature": "opj_j2k_setup_decoding_tile"
-- "name": "opj_j2k_decode_one_tile"
-  "params":
+- "params":
   - "name": ""
     "type": "struct opj_j2k *"
   - "name": ""
@@ -45,8 +41,7 @@
     "type": "struct opj_event_mgr *"
   "return_type": "int"
   "signature": "opj_j2k_decode_one_tile"
-- "name": "opj_jp2_decode_tile"
-  "params":
+- "params":
   - "name": ""
     "type": "struct opj_jp2 *"
   - "name": ""

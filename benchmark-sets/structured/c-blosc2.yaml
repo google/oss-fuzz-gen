@@ -1,14 +1,12 @@
 "functions":
-- "name": "b2nd_save"
-  "params":
+- "params":
   - "name": ""
     "type": "struct b2nd_array_t *"
   - "name": ""
     "type": "char *"
   "return_type": "int"
   "signature": "b2nd_save"
-- "name": "b2nd_copy"
-  "params":
+- "params":
   - "name": ""
     "type": "struct b2nd_context_s *"
   - "name": ""
@@ -17,8 +15,7 @@
     "type": "161 **"
   "return_type": "int"
   "signature": "b2nd_copy"
-- "name": "b2nd_get_slice"
-  "params":
+- "params":
   - "name": ""
     "type": "struct b2nd_context_s *"
   - "name": ""
@@ -31,8 +28,7 @@
     "type": "size_t *"
   "return_type": "int"
   "signature": "b2nd_get_slice"
-- "name": "b2nd_append"
-  "params":
+- "params":
   - "name": ""
     "type": "struct b2nd_array_t *"
   - "name": ""
@@ -43,8 +39,7 @@
     "type": "char"
   "return_type": "int"
   "signature": "b2nd_append"
-- "name": "b2nd_insert"
-  "params":
+- "params":
   - "name": ""
     "type": "struct b2nd_array_t *"
   - "name": ""

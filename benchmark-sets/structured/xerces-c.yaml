@@ -1,30 +1,26 @@
 "functions":
-- "name": "xercesc_3_2::IGXMLScanner::scanNext(xercesc_3_2::XMLPScanToken&)"
-  "params":
+- "params":
   - "name": "this"
     "type": "xercesc_3_2::IGXMLScanner *"
   - "name": "token"
     "type": "struct xercesc_3_2::PrefMapElem *"
   "return_type": "bool"
   "signature": "xercesc_3_2::IGXMLScanner::scanNext(xercesc_3_2::XMLPScanToken&)"
-- "name": "xercesc_3_2::IGXMLScanner::scanStartTagNS(bool&)"
-  "params":
+- "params":
   - "name": "this"
     "type": "xercesc_3_2::IGXMLScanner *"
   - "name": "gotData"
     "type": "char *"
   "return_type": "bool"
   "signature": "xercesc_3_2::IGXMLScanner::scanStartTagNS(bool&)"
-- "name": "xercesc_3_2::SGXMLScanner::scanStartTag(bool&)"
-  "params":
+- "params":
   - "name": "this"
     "type": "xercesc_3_2::SGXMLScanner *"
   - "name": "gotData"
     "type": "char *"
   "return_type": "bool"
   "signature": "xercesc_3_2::SGXMLScanner::scanStartTag(bool&)"
-- "name": "xercesc_3_2::IGXMLScanner::loadGrammar(xercesc_3_2::InputSource const&, short, bool)"
-  "params":
+- "params":
   - "name": "this"
     "type": "xercesc_3_2::IGXMLScanner *"
   - "name": "src"
@@ -35,8 +31,7 @@
     "type": "bool"
   "return_type": "xercesc_3_2::MemoryManagerImpl *"
   "signature": "xercesc_3_2::IGXMLScanner::loadGrammar(xercesc_3_2::InputSource const&, short, bool)"
-- "name": "xercesc_3_2::IGXMLScanner::scanRawAttrListforNameSpaces(unsigned long)"
-  "params":
+- "params":
   - "name": "this"
     "type": "xercesc_3_2::IGXMLScanner *"
   - "name": "attCount"

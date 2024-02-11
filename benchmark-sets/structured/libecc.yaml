@@ -1,6 +1,5 @@
 "functions":
-- "name": "wolfSSL_writev"
-  "params":
+- "params":
   - "name": ""
     "type": "struct WOLFSSL *"
   - "name": ""
@@ -9,8 +8,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "wolfSSL_writev"
-- "name": "wolfSSL_send"
-  "params":
+- "params":
   - "name": ""
     "type": "struct WOLFSSL *"
   - "name": ""
@@ -21,8 +19,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "wolfSSL_send"
-- "name": "wolfSSL_write"
-  "params":
+- "params":
   - "name": ""
     "type": "struct WOLFSSL *"
   - "name": ""
@@ -31,8 +28,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "wolfSSL_write"
-- "name": "SendData"
-  "params":
+- "params":
   - "name": ""
     "type": "struct WOLFSSL *"
   - "name": ""
@@ -41,8 +37,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "SendData"
-- "name": "wolfSSL_recv"
-  "params":
+- "params":
   - "name": ""
     "type": "struct WOLFSSL *"
   - "name": ""

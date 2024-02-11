@@ -1,6 +1,5 @@
 "functions":
-- "name": "ossfuzz_set_debug_flags"
-  "params":
+- "params":
   - "name": "x"
     "type": "int"
   "return_type": "void"

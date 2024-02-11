@@ -1,6 +1,5 @@
 "functions":
-- "name": "janet_dostring"
-  "params":
+- "params":
   - "name": ""
     "type": "struct JanetTable *"
   - "name": ""
@@ -11,8 +10,7 @@
     "type": "Janet *"
   "return_type": "int"
   "signature": "janet_dostring"
-- "name": "janet_dobytes"
-  "params":
+- "params":
   - "name": ""
     "type": "struct JanetTable *"
   - "name": ""
@@ -25,24 +23,21 @@
     "type": "Janet *"
   "return_type": "int"
   "signature": "janet_dobytes"
-- "name": "cfun_ev_thread"
-  "params":
+- "params":
   - "name": ""
     "type": "int"
   - "name": ""
     "type": "Janet *"
   "return_type": "size_t"
   "signature": "cfun_ev_thread"
-- "name": "janet_go_thread_subr"
-  "params":
+- "params":
   - "name": "args"
     "type": "struct JanetEVGenericMessage *"
   - "name": ""
     "type": "struct JanetEVGenericMessage *"
   "return_type": "void"
   "signature": "janet_go_thread_subr"
-- "name": "janetc_fn"
-  "params":
+- "params":
   - "name": "opts"
     "type": "struct JanetSlot *"
   - "name": ""

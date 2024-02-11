@@ -1,6 +1,5 @@
 "functions":
-- "name": "ptls_handle_message"
-  "params":
+- "params":
   - "name": "tls"
     "type": "struct st_ptls_t *"
   - "name": "sendbuf"
@@ -17,8 +16,7 @@
     "type": "struct st_ptls_handshake_properties_t *"
   "return_type": "int"
   "signature": "ptls_handle_message"
-- "name": "ptls_server_handle_message"
-  "params":
+- "params":
   - "name": "tls"
     "type": "struct st_ptls_t *"
   - "name": "sendbuf"
@@ -35,8 +33,7 @@
     "type": "struct st_ptls_handshake_properties_t *"
   "return_type": "int"
   "signature": "ptls_server_handle_message"
-- "name": "ptls_client_handle_message"
-  "params":
+- "params":
   - "name": "tls"
     "type": "struct st_ptls_t *"
   - "name": "sendbuf"
@@ -53,8 +50,7 @@
     "type": "struct st_ptls_handshake_properties_t *"
   "return_type": "int"
   "signature": "ptls_client_handle_message"
-- "name": "client_handle_finished"
-  "params":
+- "params":
   - "name": "tls"
     "type": "struct st_ptls_t *"
   - "name": "emitter"
@@ -65,8 +61,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "client_handle_finished"
-- "name": "ptls_send"
-  "params":
+- "params":
   - "name": "tls"
     "type": "struct st_ptls_t *"
   - "name": "sendbuf"

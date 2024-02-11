@@ -1,32 +1,27 @@
 "functions":
-- "name": "json_object_from_file"
-  "params":
+- "params":
   - "name": "filename"
     "type": "char *"
   "return_type": "struct json_object *"
   "signature": "json_object_from_file"
-- "name": "json_object_from_fd"
-  "params":
+- "params":
   - "name": "fd"
     "type": "int"
   "return_type": "struct json_object *"
   "signature": "json_object_from_fd"
-- "name": "json_object_from_fd_ex"
-  "params":
+- "params":
   - "name": "fd"
     "type": "int"
   - "name": "in_depth"
     "type": "int"
   "return_type": "struct json_object *"
   "signature": "json_object_from_fd_ex"
-- "name": "json_tokener_parse"
-  "params":
+- "params":
   - "name": "str"
     "type": "char *"
   "return_type": "struct json_object *"
   "signature": "json_tokener_parse"
-- "name": "json_tokener_parse_verbose"
-  "params":
+- "params":
   - "name": "str"
     "type": "char *"
   - "name": "error"

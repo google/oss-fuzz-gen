@@ -1,12 +1,10 @@
 "functions":
-- "name": "yajl_parse_complete"
-  "params":
+- "params":
   - "name": "hand"
     "type": "struct yajl_handle_t *"
   "return_type": "int"
   "signature": "yajl_parse_complete"
-- "name": "yajl_lex_peek"
-  "params":
+- "params":
   - "name": "lexer"
     "type": "struct yajl_lexer_t *"
   - "name": "jsonText"
@@ -17,8 +15,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "yajl_lex_peek"
-- "name": "yajl_get_error"
-  "params":
+- "params":
   - "name": "hand"
     "type": "struct yajl_handle_t *"
   - "name": "verbose"
@@ -29,8 +26,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "yajl_get_error"
-- "name": "yajl_string_encode"
-  "params":
+- "params":
   - "name": "buf"
     "type": "struct yajl_buf_t *"
   - "name": "str"
@@ -41,8 +37,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "yajl_string_encode"
-- "name": "yajl_render_error_string"
-  "params":
+- "params":
   - "name": "hand"
     "type": "struct yajl_handle_t *"
   - "name": "jsonText"

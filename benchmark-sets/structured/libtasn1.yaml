@@ -1,6 +1,5 @@
 "functions":
-- "name": "asn1_copy_node"
-  "params":
+- "params":
   - "name": "dst"
     "type": "struct asn1_node_st *"
   - "name": "dst_name"
@@ -11,16 +10,14 @@
     "type": "char *"
   "return_type": "int"
   "signature": "asn1_copy_node"
-- "name": "asn1_expand_any_defined_by"
-  "params":
+- "params":
   - "name": "definitions"
     "type": "struct asn1_node_st *"
   - "name": "element"
     "type": "struct asn1_node_st **"
   "return_type": "int"
   "signature": "asn1_expand_any_defined_by"
-- "name": "asn1_expand_octet_string"
-  "params":
+- "params":
   - "name": "definitions"
     "type": "struct asn1_node_st *"
   - "name": "element"
@@ -31,8 +28,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "asn1_expand_octet_string"
-- "name": "asn1_der_decoding_element"
-  "params":
+- "params":
   - "name": "structure"
     "type": "struct asn1_node_st **"
   - "name": "elementName"
@@ -45,8 +41,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "asn1_der_decoding_element"
-- "name": "asn1_parser2array"
-  "params":
+- "params":
   - "name": "inputFileName"
     "type": "char *"
   - "name": "outputFileName"

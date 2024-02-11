@@ -1,6 +1,5 @@
 "functions":
-- "name": "meshopt_encodeIndexBuffer"
-  "params":
+- "params":
   - "name": "buffer"
     "type": "char *"
   - "name": "buffer_size"
@@ -11,8 +10,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "meshopt_encodeIndexBuffer"
-- "name": "meshopt_encodeVertexBuffer"
-  "params":
+- "params":
   - "name": "buffer"
     "type": "char *"
   - "name": "buffer_size"
@@ -25,8 +23,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "meshopt_encodeVertexBuffer"
-- "name": "meshopt::decodeVertexBlock(unsigned char const*, unsigned char const*, unsigned char*, unsigned long, unsigned long, unsigned char*)"
-  "params":
+- "params":
   - "name": "data"
     "type": "char *"
   - "name": "data_end"
@@ -41,8 +38,7 @@
     "type": "char *"
   "return_type": "char *"
   "signature": "meshopt::decodeVertexBlock(unsigned char const*, unsigned char const*, unsigned char*, unsigned long, unsigned long, unsigned char*)"
-- "name": "meshopt::decodeBytes(unsigned char const*, unsigned char const*, unsigned char*, unsigned long)"
-  "params":
+- "params":
   - "name": "data"
     "type": "char *"
   - "name": "data_end"
@@ -53,8 +49,7 @@
     "type": "size_t"
   "return_type": "char *"
   "signature": "meshopt::decodeBytes(unsigned char const*, unsigned char const*, unsigned char*, unsigned long)"
-- "name": "meshopt::encodeVertexBlock(unsigned char*, unsigned char*, unsigned char const*, unsigned long, unsigned long, unsigned char*)"
-  "params":
+- "params":
   - "name": "data"
     "type": "char *"
   - "name": "data_end"

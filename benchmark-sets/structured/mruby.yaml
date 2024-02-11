@@ -1,6 +1,5 @@
 "functions":
-- "name": "mrb_load_detect_file_cxt"
-  "params":
+- "params":
   - "name": "mrb"
     "type": "struct mrb_state *"
   - "name": "fp"
@@ -9,32 +8,28 @@
     "type": "struct mrb_ccontext *"
   "return_type": "size_t"
   "signature": "mrb_load_detect_file_cxt"
-- "name": "mrb_binding_eval"
-  "params":
+- "params":
   - "name": "mrb"
     "type": "struct mrb_state *"
   - "name": "binding"
     "type": "size_t"
   "return_type": "size_t"
   "signature": "mrb_binding_eval"
-- "name": "f_eval"
-  "params":
+- "params":
   - "name": "mrb"
     "type": "struct mrb_state *"
   - "name": "self"
     "type": "size_t"
   "return_type": "size_t"
   "signature": "f_eval"
-- "name": "mrb_load_file"
-  "params":
+- "params":
   - "name": "mrb"
     "type": "struct mrb_state *"
   - "name": "f"
     "type": "struct _IO_FILE *"
   "return_type": "size_t"
   "signature": "mrb_load_file"
-- "name": "mrb_load_file_cxt"
-  "params":
+- "params":
   - "name": "mrb"
     "type": "struct mrb_state *"
   - "name": "f"

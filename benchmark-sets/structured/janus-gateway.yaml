@@ -1,6 +1,5 @@
 "functions":
-- "name": "janus_rtp_simulcasting_context_process_rtp"
-  "params":
+- "params":
   - "name": "context"
     "type": "struct janus_rtp_simulcasting_context *"
   - "name": "buf"
@@ -23,16 +22,14 @@
     "type": "_GMutex *"
   "return_type": "int"
   "signature": "janus_rtp_simulcasting_context_process_rtp"
-- "name": "janus_sdp_generate_offer"
-  "params":
+- "params":
   - "name": "name"
     "type": "char *"
   - "name": "address"
     "type": "char *"
   "return_type": "struct janus_sdp *"
   "signature": "janus_sdp_generate_offer"
-- "name": "janus_sdp_generate_answer_mline"
-  "params":
+- "params":
   - "name": "offer"
     "type": "struct janus_sdp *"
   - "name": "answer"
@@ -41,8 +38,7 @@
     "type": "struct janus_sdp_mline *"
   "return_type": "int"
   "signature": "janus_sdp_generate_answer_mline"
-- "name": "janus_rtp_svc_context_process_rtp"
-  "params":
+- "params":
   - "name": "context"
     "type": "struct janus_rtp_svc_context *"
   - "name": "buf"
@@ -61,8 +57,7 @@
     "type": "struct janus_rtp_switching_context *"
   "return_type": "int"
   "signature": "janus_rtp_svc_context_process_rtp"
-- "name": "janus_sdp_generate_offer_mline"
-  "params":
+- "params":
   - "name": "offer"
     "type": "struct janus_sdp *"
   "return_type": "int"

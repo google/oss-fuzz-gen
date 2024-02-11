@@ -1,6 +1,5 @@
 "functions":
-- "name": "isvce_evaluate_intra_4x4_modes"
-  "params":
+- "params":
   - "name": "pu1_src"
     "type": "char *"
   - "name": "pu1_ngbr_pels"
@@ -25,14 +24,12 @@
     "type": "int"
   "return_type": "void"
   "signature": "isvce_evaluate_intra_4x4_modes"
-- "name": "ih264d_parse_end_of_sequence"
-  "params":
+- "params":
   - "name": "ps_dec"
     "type": "struct _DecStruct *"
   "return_type": "int"
   "signature": "ih264d_parse_end_of_sequence"
-- "name": "ih264d_free_node_from_dpb"
-  "params":
+- "params":
   - "name": "ps_dpb_mgr"
     "type": "struct dpb_manager_t *"
   - "name": "u4_cur_pic_num"
@@ -41,8 +38,7 @@
     "type": "char"
   "return_type": "int"
   "signature": "ih264d_free_node_from_dpb"
-- "name": "isvcd_compute_bs_non_mbaff_medial_lyr"
-  "params":
+- "params":
   - "name": "ps_svc_lyr_dec"
     "type": "struct _SvcDecLyrStruct *"
   - "name": "ps_cur_mb_info"
@@ -51,8 +47,7 @@
     "type": "short"
   "return_type": "void"
   "signature": "isvcd_compute_bs_non_mbaff_medial_lyr"
-- "name": "ih264d_fill_bs_for_mb"
-  "params":
+- "params":
   - "name": "ps_cur_mb_params"
     "type": "struct deblk_mb_t *"
   - "name": "ps_top_mb_params"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "ZopfliBlockSplitSimple"
-  "params":
+- "params":
   - "name": "in"
     "type": "char *"
   - "name": "instart"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "load_string_section"
-  "params":
+- "params":
   - "name": "this"
     "type": "struct private_settings_t *"
   - "name": "settings"
@@ -11,8 +10,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "load_string_section"
-- "name": "load_files_section"
-  "params":
+- "params":
   - "name": "this"
     "type": "struct private_settings_t *"
   - "name": "pattern"
@@ -23,14 +21,12 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "load_files_section"
-- "name": "settings_create_string"
-  "params":
+- "params":
   - "name": "settings"
     "type": "char *"
   "return_type": "struct settings_t *"
   "signature": "settings_create_string"
-- "name": "load_string"
-  "params":
+- "params":
   - "name": "this"
     "type": "struct private_settings_t *"
   - "name": "settings"
@@ -39,8 +35,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "load_string"
-- "name": "x509_ac_load"
-  "params":
+- "params":
   - "name": "type"
     "type": "int"
   - "name": "args"

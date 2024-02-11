@@ -1,14 +1,12 @@
 "functions":
-- "name": "wget_tcp_printf"
-  "params":
+- "params":
   - "name": "tcp"
     "type": "struct wget_tcp_st *"
   - "name": "fmt"
     "type": "char *"
   "return_type": "size_t"
   "signature": "wget_tcp_printf"
-- "name": "wget_tcp_vprintf"
-  "params":
+- "params":
   - "name": "tcp"
     "type": "struct wget_tcp_st *"
   - "name": "fmt"
@@ -17,16 +15,14 @@
     "type": "struct __va_list_tag *"
   "return_type": "size_t"
   "signature": "wget_tcp_vprintf"
-- "name": "gnutls_record_recv_packet"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct gnutls_session_int *"
   - "name": "packet"
     "type": "struct mbuffer_st **"
   "return_type": "size_t"
   "signature": "gnutls_record_recv_packet"
-- "name": "gnutls_record_recv_seq"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct gnutls_session_int *"
   - "name": "data"
@@ -37,8 +33,7 @@
     "type": "char *"
   "return_type": "size_t"
   "signature": "gnutls_record_recv_seq"
-- "name": "gnutls_session_get_data"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct gnutls_session_int *"
   - "name": "session_data"

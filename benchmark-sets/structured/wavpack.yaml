@@ -1,34 +1,29 @@
 "functions":
-- "name": "WavpackSeekSample"
-  "params":
+- "params":
   - "name": "wpc"
     "type": "struct WavpackContext *"
   - "name": "sample"
     "type": "int"
   "return_type": "int"
   "signature": "WavpackSeekSample"
-- "name": "WavpackSeekTrailingWrapper"
-  "params":
+- "params":
   - "name": "wpc"
     "type": "struct WavpackContext *"
   "return_type": "void"
   "signature": "WavpackSeekTrailingWrapper"
-- "name": "wp_log2s"
-  "params":
+- "params":
   - "name": "value"
     "type": "int"
   "return_type": "int"
   "signature": "wp_log2s"
-- "name": "WavpackNativeToBigEndian"
-  "params":
+- "params":
   - "name": "data"
     "type": "char *"
   - "name": "format"
     "type": "char *"
   "return_type": "void"
   "signature": "WavpackNativeToBigEndian"
-- "name": "WavpackBigEndianToNative"
-  "params":
+- "params":
   - "name": "data"
     "type": "char *"
   - "name": "format"

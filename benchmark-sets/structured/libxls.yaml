@@ -1,14 +1,12 @@
 "functions":
-- "name": "xls_open"
-  "params":
+- "params":
   - "name": "file"
     "type": "char *"
   - "name": "charset"
     "type": "char *"
   "return_type": "struct xlsWorkBook *"
   "signature": "xls_open"
-- "name": "xls_open_file"
-  "params":
+- "params":
   - "name": "file"
     "type": "char *"
   - "name": "charset"
@@ -17,20 +15,17 @@
     "type": "int *"
   "return_type": "struct xlsWorkBook *"
   "signature": "xls_open_file"
-- "name": "ole2_open_file"
-  "params":
+- "params":
   - "name": "file"
     "type": "char *"
   "return_type": "struct OLE2 *"
   "signature": "ole2_open_file"
-- "name": "xls_getCSS"
-  "params":
+- "params":
   - "name": "pWB"
     "type": "struct xlsWorkBook *"
   "return_type": "char *"
   "signature": "xls_getCSS"
-- "name": "xls_showBookInfo"
-  "params":
+- "params":
   - "name": "pWB"
     "type": "struct xlsWorkBook *"
   "return_type": "void"

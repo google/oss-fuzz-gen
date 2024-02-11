@@ -1,6 +1,5 @@
 "functions":
-- "name": "usbredirparser_send_filter_filter"
-  "params":
+- "params":
   - "name": ""
     "type": "struct usbredirparser *"
   - "name": ""
@@ -9,14 +8,12 @@
     "type": "int"
   "return_type": "void"
   "signature": "usbredirparser_send_filter_filter"
-- "name": "usbredirparser_send_filter_reject"
-  "params":
+- "params":
   - "name": ""
     "type": "struct usbredirparser *"
   "return_type": "void"
   "signature": "usbredirparser_send_filter_reject"
-- "name": "usbredirparser_send_buffered_bulk_packet"
-  "params":
+- "params":
   - "name": ""
     "type": "struct usbredirparser *"
   - "name": ""
@@ -29,8 +26,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "usbredirparser_send_buffered_bulk_packet"
-- "name": "usbredirparser_send_interrupt_packet"
-  "params":
+- "params":
   - "name": ""
     "type": "struct usbredirparser *"
   - "name": ""
@@ -43,8 +39,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "usbredirparser_send_interrupt_packet"
-- "name": "usbredirparser_send_iso_packet"
-  "params":
+- "params":
   - "name": ""
     "type": "struct usbredirparser *"
   - "name": ""

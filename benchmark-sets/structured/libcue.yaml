@@ -1,32 +1,27 @@
 "functions":
-- "name": "struct Cd * cue_parse_file(struct _IO_FILE * )"
-  "params":
+- "params":
   - "name": ""
     "type": "struct _IO_FILE *"
   "return_type": "struct Cd *"
   "signature": "struct Cd * cue_parse_file(struct _IO_FILE * )"
-- "name": "void cd_dump(struct Cd * )"
-  "params":
+- "params":
   - "name": ""
     "type": "struct Cd *"
   "return_type": "void"
   "signature": "void cd_dump(struct Cd * )"
-- "name": "void cd_track_dump(struct Track * )"
-  "params":
+- "params":
   - "name": ""
     "type": "struct Track *"
   "return_type": "void"
   "signature": "void cd_track_dump(struct Track * )"
-- "name": "void cdtext_dump(struct Cdtext * , int )"
-  "params":
+- "params":
   - "name": ""
     "type": "struct Cdtext *"
   - "name": ""
     "type": "int"
   "return_type": "void"
   "signature": "void cdtext_dump(struct Cdtext * , int )"
-- "name": "char * cdtext_get_key(int , int )"
-  "params":
+- "params":
   - "name": ""
     "type": "int"
   - "name": ""

@@ -1,6 +1,5 @@
 "functions":
-- "name": "int libewf_handle_open(size_t * handle, char ** filenames, int number_of_filenames, int access_flags, size_t ** error)"
-  "params":
+- "params":
   - "name": "handle"
     "type": "size_t *"
   - "name": "filenames"
@@ -13,8 +12,7 @@
     "type": "size_t **"
   "return_type": "int"
   "signature": "int libewf_handle_open(size_t * handle, char ** filenames, int number_of_filenames, int access_flags, size_t ** error)"
-- "name": "int libevtx_file_open(size_t * file, char * filename, int access_flags, size_t ** error)"
-  "params":
+- "params":
   - "name": "file"
     "type": "size_t *"
   - "name": "filename"
@@ -25,8 +23,7 @@
     "type": "size_t **"
   "return_type": "int"
   "signature": "int libevtx_file_open(size_t * file, char * filename, int access_flags, size_t ** error)"
-- "name": "int libscca_file_open(size_t * file, char * filename, int access_flags, size_t ** error)"
-  "params":
+- "params":
   - "name": "file"
     "type": "size_t *"
   - "name": "filename"
@@ -37,8 +34,7 @@
     "type": "size_t **"
   "return_type": "int"
   "signature": "int libscca_file_open(size_t * file, char * filename, int access_flags, size_t ** error)"
-- "name": "int libesedb_index_get_record(size_t * index, int record_entry, size_t ** record, size_t ** error)"
-  "params":
+- "params":
   - "name": "index"
     "type": "size_t *"
   - "name": "record_entry"
@@ -49,8 +45,7 @@
     "type": "size_t **"
   "return_type": "int"
   "signature": "int libesedb_index_get_record(size_t * index, int record_entry, size_t ** record, size_t ** error)"
-- "name": "int libevtx_record_get_data(size_t * record, char * data, size_t data_size, size_t ** error)"
-  "params":
+- "params":
   - "name": "record"
     "type": "size_t *"
   - "name": "data"

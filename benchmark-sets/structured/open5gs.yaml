@@ -1,6 +1,5 @@
 "functions":
-- "name": "void ogs_gtp_send_error_message(struct ogs_gtp_xact_s * xact, int teid, char type, char cause_value)"
-  "params":
+- "params":
   - "name": "xact"
     "type": "struct ogs_gtp_xact_s *"
   - "name": "teid"
@@ -11,22 +10,19 @@
     "type": "char"
   "return_type": "void"
   "signature": "void ogs_gtp_send_error_message(struct ogs_gtp_xact_s * xact, int teid, char type, char cause_value)"
-- "name": "void ogs_gtp1_send_echo_request(struct ogs_gtp_node_s * gnode)"
-  "params":
+- "params":
   - "name": "gnode"
     "type": "struct ogs_gtp_node_s *"
   "return_type": "void"
   "signature": "void ogs_gtp1_send_echo_request(struct ogs_gtp_node_s * gnode)"
-- "name": "void ogs_gtp1_send_echo_response(struct ogs_gtp_xact_s * xact, char recovery)"
-  "params":
+- "params":
   - "name": "xact"
     "type": "struct ogs_gtp_xact_s *"
   - "name": "recovery"
     "type": "char"
   "return_type": "void"
   "signature": "void ogs_gtp1_send_echo_response(struct ogs_gtp_xact_s * xact, char recovery)"
-- "name": "void ogs_gtp2_send_echo_request(struct ogs_gtp_node_s * gnode, char recovery, char features)"
-  "params":
+- "params":
   - "name": "gnode"
     "type": "struct ogs_gtp_node_s *"
   - "name": "recovery"
@@ -35,8 +31,7 @@
     "type": "char"
   "return_type": "void"
   "signature": "void ogs_gtp2_send_echo_request(struct ogs_gtp_node_s * gnode, char recovery, char features)"
-- "name": "void ogs_gtp1_send_error_message(struct ogs_gtp_xact_s * xact, int teid, char type, char cause_value)"
-  "params":
+- "params":
   - "name": "xact"
     "type": "struct ogs_gtp_xact_s *"
   - "name": "teid"

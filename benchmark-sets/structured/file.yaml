@@ -1,30 +1,26 @@
 "functions":
-- "name": "LLVMFuzzerInitialize"
-  "params":
+- "params":
   - "name": "argc"
     "type": "int *"
   - "name": "argv"
     "type": "char ***"
   "return_type": "int"
   "signature": "LLVMFuzzerInitialize"
-- "name": "Environment::Environment(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >)"
-  "params":
+- "params":
   - "name": "this"
     "type": "struct Environment *"
   - "name": "data_dir"
     "type": "std::string *"
   "return_type": "void"
   "signature": "Environment::Environment(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >)"
-- "name": "magic_list"
-  "params":
+- "params":
   - "name": "ms"
     "type": "struct magic_set *"
   - "name": "magicfile"
     "type": "char *"
   "return_type": "int"
   "signature": "magic_list"
-- "name": "magic_load_buffers"
-  "params":
+- "params":
   - "name": "ms"
     "type": "struct magic_set *"
   - "name": "bufs"
@@ -35,8 +31,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "magic_load_buffers"
-- "name": "buffer_apprentice"
-  "params":
+- "params":
   - "name": "ms"
     "type": "struct magic_set *"
   - "name": "bufs"

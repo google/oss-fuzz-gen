@@ -1,6 +1,5 @@
 "functions":
-- "name": "curve25519_sha256"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct _LIBSSH2_SESSION *"
   - "name": "data"
@@ -15,16 +14,14 @@
     "type": "struct kmdhgGPshakex_state_t *"
   "return_type": "int"
   "signature": "curve25519_sha256"
-- "name": "libssh2_session_startup"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct _LIBSSH2_SESSION *"
   - "name": "sock"
     "type": "int"
   "return_type": "int"
   "signature": "libssh2_session_startup"
-- "name": "libssh2_channel_read_ex"
-  "params":
+- "params":
   - "name": "channel"
     "type": "struct _LIBSSH2_CHANNEL *"
   - "name": "stream_id"
@@ -35,8 +32,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "libssh2_channel_read_ex"
-- "name": "libssh2_channel_direct_streamlocal_ex"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct _LIBSSH2_SESSION *"
   - "name": "socket_path"
@@ -47,8 +43,7 @@
     "type": "int"
   "return_type": "struct _LIBSSH2_CHANNEL *"
   "signature": "libssh2_channel_direct_streamlocal_ex"
-- "name": "libssh2_channel_direct_tcpip_ex"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct _LIBSSH2_SESSION *"
   - "name": "host"

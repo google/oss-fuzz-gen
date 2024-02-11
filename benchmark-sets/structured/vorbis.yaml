@@ -1,38 +1,33 @@
 "functions":
-- "name": "ov_time_seek_lap"
-  "params":
+- "params":
   - "name": "vf"
     "type": "struct OggVorbis_File *"
   - "name": "pos"
     "type": "double"
   "return_type": "int"
   "signature": "ov_time_seek_lap"
-- "name": "ov_pcm_seek_lap"
-  "params":
+- "params":
   - "name": "vf"
     "type": "struct OggVorbis_File *"
   - "name": "pos"
     "type": "size_t"
   "return_type": "int"
   "signature": "ov_pcm_seek_lap"
-- "name": "ov_time_seek_page_lap"
-  "params":
+- "params":
   - "name": "vf"
     "type": "struct OggVorbis_File *"
   - "name": "pos"
     "type": "double"
   "return_type": "int"
   "signature": "ov_time_seek_page_lap"
-- "name": "ov_pcm_seek_page_lap"
-  "params":
+- "params":
   - "name": "vf"
     "type": "struct OggVorbis_File *"
   - "name": "pos"
     "type": "size_t"
   "return_type": "int"
   "signature": "ov_pcm_seek_page_lap"
-- "name": "ov_halfrate"
-  "params":
+- "params":
   - "name": "vf"
     "type": "struct OggVorbis_File *"
   - "name": "flag"

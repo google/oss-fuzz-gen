@@ -1,6 +1,5 @@
 "functions":
-- "name": "cbor_array_set"
-  "params":
+- "params":
   - "name": "item"
     "type": "struct cbor_item_t *"
   - "name": "index"
@@ -9,8 +8,7 @@
     "type": "struct cbor_item_t *"
   "return_type": "bool"
   "signature": "cbor_array_set"
-- "name": "cbor_array_replace"
-  "params":
+- "params":
   - "name": "item"
     "type": "struct cbor_item_t *"
   - "name": "index"
@@ -19,20 +17,17 @@
     "type": "struct cbor_item_t *"
   "return_type": "bool"
   "signature": "cbor_array_replace"
-- "name": "cbor_intermediate_decref"
-  "params":
+- "params":
   - "name": "item"
     "type": "struct cbor_item_t *"
   "return_type": "void"
   "signature": "cbor_intermediate_decref"
-- "name": "cbor_build_string"
-  "params":
+- "params":
   - "name": "val"
     "type": "char *"
   "return_type": "struct cbor_item_t *"
   "signature": "cbor_build_string"
-- "name": "cbor_build_negint64"
-  "params":
+- "params":
   - "name": "value"
     "type": "size_t"
   "return_type": "struct cbor_item_t *"

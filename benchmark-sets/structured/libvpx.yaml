@@ -1,6 +1,5 @@
 "functions":
-- "name": "decode_tiles_row_wise_mt"
-  "params":
+- "params":
   - "name": ""
     "type": "struct VP9Decoder *"
   - "name": ""
@@ -9,16 +8,14 @@
     "type": "char *"
   "return_type": "char *"
   "signature": "decode_tiles_row_wise_mt"
-- "name": "row_decode_worker_hook"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""
     "type": "char *"
   "return_type": "int"
   "signature": "row_decode_worker_hook"
-- "name": "parse_tile_row"
-  "params":
+- "params":
   - "name": ""
     "type": "struct TileWorkerData *"
   - "name": ""
@@ -31,8 +28,7 @@
     "type": "char **"
   "return_type": "void"
   "signature": "parse_tile_row"
-- "name": "recon_tile_row"
-  "params":
+- "params":
   - "name": ""
     "type": "struct TileWorkerData *"
   - "name": ""
@@ -47,8 +43,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "recon_tile_row"
-- "name": "parse_block"
-  "params":
+- "params":
   - "name": ""
     "type": "struct TileWorkerData *"
   - "name": ""

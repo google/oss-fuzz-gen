@@ -1,6 +1,5 @@
 "functions":
-- "name": "mpg123_open_fixed_64"
-  "params":
+- "params":
   - "name": "mh"
     "type": "struct mpg123_handle_struct *"
   - "name": "path"
@@ -11,8 +10,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "mpg123_open_fixed_64"
-- "name": "mpg123_open_fixed"
-  "params":
+- "params":
   - "name": "mh"
     "type": "struct mpg123_handle_struct *"
   - "name": "path"
@@ -23,8 +21,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "mpg123_open_fixed"
-- "name": "INT123_open_fixed_post"
-  "params":
+- "params":
   - "name": "mh"
     "type": "struct mpg123_handle_struct *"
   - "name": "channels"
@@ -33,8 +30,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "INT123_open_fixed_post"
-- "name": "mpg123_decode_frame"
-  "params":
+- "params":
   - "name": "mh"
     "type": "struct mpg123_handle_struct *"
   - "name": "num"
@@ -45,8 +41,7 @@
     "type": "size_t *"
   "return_type": "int"
   "signature": "mpg123_decode_frame"
-- "name": "mpg123_decode_frame_64"
-  "params":
+- "params":
   - "name": "mh"
     "type": "struct mpg123_handle_struct *"
   - "name": "num"

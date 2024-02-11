@@ -1,6 +1,5 @@
 "functions":
-- "name": "Alembic::AbcCoreOgawa::v12::AprImpl::getSample(long, std::__1::shared_ptr<Alembic::AbcCoreAbstract::v12::ArraySample>&)"
-  "params":
+- "params":
   - "name": ""
     "type": "Alembic::AbcCoreOgawa::v12::AprImpl *"
   - "name": ""
@@ -9,8 +8,7 @@
     "type": "std::shared_ptr *"
   "return_type": "void"
   "signature": "Alembic::AbcCoreOgawa::v12::AprImpl::getSample(long, std::__1::shared_ptr<Alembic::AbcCoreAbstract::v12::ArraySample>&)"
-- "name": "Alembic::AbcCoreOgawa::v12::ReadArraySample(std::__1::shared_ptr<Alembic::Ogawa::v12::IData>, std::__1::shared_ptr<Alembic::Ogawa::v12::IData>, unsigned long, Alembic::AbcCoreAbstract::v12::DataType const&, std::__1::shared_ptr<Alembic::AbcCoreAbstract::v12::ArraySample>&)"
-  "params":
+- "params":
   - "name": "iDims"
     "type": "std::shared_ptr *"
   - "name": "iData"
@@ -23,8 +21,7 @@
     "type": "std::shared_ptr *"
   "return_type": "void"
   "signature": "Alembic::AbcCoreOgawa::v12::ReadArraySample(std::__1::shared_ptr<Alembic::Ogawa::v12::IData>, std::__1::shared_ptr<Alembic::Ogawa::v12::IData>, unsigned long, Alembic::AbcCoreAbstract::v12::DataType const&, std::__1::shared_ptr<Alembic::AbcCoreAbstract::v12::ArraySample>&)"
-- "name": "Alembic::AbcCoreFactory::v12::IFactory::getArchive(std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&)"
-  "params":
+- "params":
   - "name": ""
     "type": "Alembic::Abc::v12::IArchive *"
   - "name": ""
@@ -33,8 +30,7 @@
     "type": "std::vector *"
   "return_type": "void"
   "signature": "Alembic::AbcCoreFactory::v12::IFactory::getArchive(std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&)"
-- "name": "Alembic::AbcCoreFactory::v12::IFactory::getArchive(std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&, Alembic::AbcCoreFactory::v12::IFactory::CoreType&)"
-  "params":
+- "params":
   - "name": ""
     "type": "Alembic::Abc::v12::IArchive *"
   - "name": ""
@@ -45,8 +41,7 @@
     "type": "int *"
   "return_type": "void"
   "signature": "Alembic::AbcCoreFactory::v12::IFactory::getArchive(std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&, Alembic::AbcCoreFactory::v12::IFactory::CoreType&)"
-- "name": "Alembic::AbcCoreOgawa::v12::SprImpl::getSample(long, void*)"
-  "params":
+- "params":
   - "name": ""
     "type": "Alembic::AbcCoreOgawa::v12::SprImpl *"
   - "name": ""

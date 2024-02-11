@@ -1,6 +1,5 @@
 "functions":
-- "name": "pb_encode_ex"
-  "params":
+- "params":
   - "name": "stream"
     "type": "struct pb_ostream_s *"
   - "name": "fields"
@@ -11,8 +10,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "pb_encode_ex"
-- "name": "pb_get_encoded_size"
-  "params":
+- "params":
   - "name": "size"
     "type": "size_t *"
   - "name": "fields"

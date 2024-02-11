@@ -1,22 +1,19 @@
 "functions":
-- "name": "h2o_accept"
-  "params":
+- "params":
   - "name": ""
     "type": "struct st_h2o_accept_ctx_t *"
   - "name": ""
     "type": "struct st_h2o_socket_t *"
   "return_type": "void"
   "signature": "h2o_accept"
-- "name": "on_read_proxy_line"
-  "params":
+- "params":
   - "name": ""
     "type": "struct st_h2o_socket_t *"
   - "name": ""
     "type": "char *"
   "return_type": "void"
   "signature": "on_read_proxy_line"
-- "name": "ptls_init_compressed_certificate"
-  "params":
+- "params":
   - "name": ""
     "type": "struct st_ptls_emit_compressed_certificate_t *"
   - "name": ""
@@ -29,8 +26,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "ptls_init_compressed_certificate"
-- "name": "build_compressed"
-  "params":
+- "params":
   - "name": ""
     "type": "struct st_ptls_compressed_certificate_entry_t *"
   - "name": ""
@@ -43,8 +39,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "build_compressed"
-- "name": "BrotliEncoderCompress"
-  "params":
+- "params":
   - "name": ""
     "type": "int"
   - "name": ""

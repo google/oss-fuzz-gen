@@ -1,14 +1,12 @@
 "functions":
-- "name": "int dns_view_freezezones(struct dns_view * view, bool value)"
-  "params":
+- "params":
   - "name": "view"
     "type": "struct dns_view *"
   - "name": "value"
     "type": "bool"
   "return_type": "int"
   "signature": "int dns_view_freezezones(struct dns_view * view, bool value)"
-- "name": "int dns_zt_freezezones(struct dns_zt * zt, struct dns_view * view, bool freeze)"
-  "params":
+- "params":
   - "name": "zt"
     "type": "struct dns_zt *"
   - "name": "view"
@@ -17,16 +15,14 @@
     "type": "bool"
   "return_type": "int"
   "signature": "int dns_zt_freezezones(struct dns_zt * zt, struct dns_view * view, bool freeze)"
-- "name": "int freezezones(struct dns_zone * zone, char * uap)"
-  "params":
+- "params":
   - "name": "zone"
     "type": "struct dns_zone *"
   - "name": "uap"
     "type": "char *"
   "return_type": "int"
   "signature": "int freezezones(struct dns_zone * zone, char * uap)"
-- "name": "int dns_view_asyncload(struct dns_view * view, bool newonly, func_type * callback, char * arg)"
-  "params":
+- "params":
   - "name": "view"
     "type": "struct dns_view *"
   - "name": "newonly"
@@ -37,8 +33,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int dns_view_asyncload(struct dns_view * view, bool newonly, func_type * callback, char * arg)"
-- "name": "int dns_zt_asyncload(struct dns_zt * zt, bool newonly, func_type * loaddone, char * arg)"
-  "params":
+- "params":
   - "name": "zt"
     "type": "struct dns_zt *"
   - "name": "newonly"

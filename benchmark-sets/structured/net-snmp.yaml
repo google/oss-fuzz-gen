@@ -1,6 +1,5 @@
 "functions":
-- "name": "register_string_index"
-  "params":
+- "params":
   - "name": "name"
     "type": "size_t *"
   - "name": "name_len"
@@ -9,8 +8,7 @@
     "type": "char *"
   "return_type": "char *"
   "signature": "register_string_index"
-- "name": "register_int_index"
-  "params":
+- "params":
   - "name": "name"
     "type": "size_t *"
   - "name": "name_len"
@@ -19,8 +17,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "register_int_index"
-- "name": "register_oid_index"
-  "params":
+- "params":
   - "name": "name"
     "type": "size_t *"
   - "name": "name_len"
@@ -31,8 +28,7 @@
     "type": "size_t"
   "return_type": "struct variable_list *"
   "signature": "register_oid_index"
-- "name": "unregister_oid_index"
-  "params":
+- "params":
   - "name": "name"
     "type": "size_t *"
   - "name": "name_len"
@@ -43,8 +39,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "unregister_oid_index"
-- "name": "unregister_int_index"
-  "params":
+- "params":
   - "name": "name"
     "type": "size_t *"
   - "name": "name_len"

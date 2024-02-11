@@ -1,6 +1,5 @@
 "functions":
-- "name": "tinygltf::TinyGLTF::LoadBinaryFromFile(tinygltf::Model*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int)"
-  "params":
+- "params":
   - "name": ""
     "type": "tinygltf::TinyGLTF *"
   - "name": ""
@@ -15,8 +14,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "tinygltf::TinyGLTF::LoadBinaryFromFile(tinygltf::Model*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int)"
-- "name": "tinygltf::TinyGLTF::LoadASCIIFromFile(tinygltf::Model*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int)"
-  "params":
+- "params":
   - "name": ""
     "type": "tinygltf::TinyGLTF *"
   - "name": ""
@@ -31,8 +29,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "tinygltf::TinyGLTF::LoadASCIIFromFile(tinygltf::Model*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int)"
-- "name": "tinygltf::TinyGLTF::LoadBinaryFromMemory(tinygltf::Model*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, unsigned char const*, unsigned int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int)"
-  "params":
+- "params":
   - "name": ""
     "type": "tinygltf::TinyGLTF *"
   - "name": ""
@@ -51,8 +48,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "tinygltf::TinyGLTF::LoadBinaryFromMemory(tinygltf::Model*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, unsigned char const*, unsigned int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int)"
-- "name": "tinygltf::TinyGLTF::WriteGltfSceneToFile(tinygltf::Model const*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, bool, bool, bool, bool)"
-  "params":
+- "params":
   - "name": ""
     "type": "tinygltf::TinyGLTF *"
   - "name": ""
@@ -69,8 +65,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "tinygltf::TinyGLTF::WriteGltfSceneToFile(tinygltf::Model const*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, bool, bool, bool, bool)"
-- "name": "tinygltf::TinyGLTF::WriteGltfSceneToStream(tinygltf::Model const*, std::__1::basic_ostream<char, std::__1::char_traits<char> >&, bool, bool)"
-  "params":
+- "params":
   - "name": ""
     "type": "tinygltf::TinyGLTF *"
   - "name": ""

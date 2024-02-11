@@ -1,6 +1,5 @@
 "functions":
-- "name": "ZSTD_generateSequences"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ZSTD_CCtx_s *"
   - "name": ""
@@ -13,16 +12,14 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "ZSTD_generateSequences"
-- "name": "ZSTD_endStream"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ZSTD_CCtx_s *"
   - "name": ""
     "type": "struct ZSTD_inBuffer_s *"
   "return_type": "size_t"
   "signature": "ZSTD_endStream"
-- "name": "ZSTD_compress2"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ZSTD_CCtx_s *"
   - "name": ""
@@ -35,8 +32,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "ZSTD_compress2"
-- "name": "ZSTD_compressStream"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ZSTD_CCtx_s *"
   - "name": ""
@@ -45,8 +41,7 @@
     "type": "struct ZSTD_inBuffer_s *"
   "return_type": "size_t"
   "signature": "ZSTD_compressStream"
-- "name": "ZSTD_flushStream"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ZSTD_CCtx_s *"
   - "name": ""

@@ -1,6 +1,5 @@
 "functions":
-- "name": "XmlInitUnknownEncodingNS"
-  "params":
+- "params":
   - "name": "mem"
     "type": "char *"
   - "name": "table"
@@ -11,8 +10,7 @@
     "type": "char *"
   "return_type": "struct encoding *"
   "signature": "XmlInitUnknownEncodingNS"
-- "name": "XmlInitUnknownEncoding"
-  "params":
+- "params":
   - "name": "mem"
     "type": "char *"
   - "name": "table"
@@ -23,20 +21,17 @@
     "type": "char *"
   "return_type": "struct encoding *"
   "signature": "XmlInitUnknownEncoding"
-- "name": "sip24_valid"
-  "params": []
+- "params": []
   "return_type": "int"
   "signature": "sip24_valid"
-- "name": "XML_SetBase"
-  "params":
+- "params":
   - "name": "parser"
     "type": "struct XML_ParserStruct *"
   - "name": "p"
     "type": "char *"
   "return_type": "int"
   "signature": "XML_SetBase"
-- "name": "initScanContentNS"
-  "params":
+- "params":
   - "name": "enc"
     "type": "struct encoding *"
   - "name": "ptr"

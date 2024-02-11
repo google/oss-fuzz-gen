@@ -1,6 +1,5 @@
 "functions":
-- "name": "disabled_main"
-  "params":
+- "params":
   - "name": ""
     "type": "int"
   - "name": ""
@@ -9,8 +8,7 @@
     "type": "char **"
   "return_type": "int"
   "signature": "disabled_main"
-- "name": "op_alias_dialog"
-  "params":
+- "params":
   - "name": ""
     "type": "struct IndexSharedData *"
   - "name": ""
@@ -19,16 +17,14 @@
     "type": "int"
   "return_type": "int"
   "signature": "op_alias_dialog"
-- "name": "alias_dialog"
-  "params":
+- "params":
   - "name": ""
     "type": "struct Mailbox *"
   - "name": ""
     "type": "struct ConfigSubset *"
   "return_type": "void"
   "signature": "alias_dialog"
-- "name": "op_post"
-  "params":
+- "params":
   - "name": ""
     "type": "struct IndexSharedData *"
   - "name": ""
@@ -37,8 +33,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "op_post"
-- "name": "op_followup"
-  "params":
+- "params":
   - "name": ""
     "type": "struct AttachPrivateData *"
   - "name": ""

@@ -1,6 +1,5 @@
 "functions":
-- "name": "void VSB_quote(struct vsb * s, char * v, int len, int how)"
-  "params":
+- "params":
   - "name": "s"
     "type": "struct vsb *"
   - "name": "v"
@@ -11,8 +10,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void VSB_quote(struct vsb * s, char * v, int len, int how)"
-- "name": "void VSB_quote_pfx(struct vsb * s, char * pfx, char * v, int len, int how)"
-  "params":
+- "params":
   - "name": "s"
     "type": "struct vsb *"
   - "name": "pfx"
@@ -25,24 +23,21 @@
     "type": "int"
   "return_type": "void"
   "signature": "void VSB_quote_pfx(struct vsb * s, char * pfx, char * v, int len, int how)"
-- "name": "void WS_Panic(struct vsb * vsb, struct ws * ws)"
-  "params":
+- "params":
   - "name": "vsb"
     "type": "struct vsb *"
   - "name": "ws"
     "type": "struct ws *"
   "return_type": "void"
   "signature": "void WS_Panic(struct vsb * vsb, struct ws * ws)"
-- "name": "void ws_emu_panic(struct vsb * vsb, struct ws * ws)"
-  "params":
+- "params":
   - "name": "vsb"
     "type": "struct vsb *"
   - "name": "ws"
     "type": "struct ws *"
   "return_type": "void"
   "signature": "void ws_emu_panic(struct vsb * vsb, struct ws * ws)"
-- "name": "int WS_ReqPipeline(struct ws * ws, char * b, char * e)"
-  "params":
+- "params":
   - "name": "ws"
     "type": "struct ws *"
   - "name": "b"

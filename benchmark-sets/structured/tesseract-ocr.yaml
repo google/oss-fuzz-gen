@@ -1,22 +1,19 @@
 "functions":
-- "name": "tesseract::TessTsvRenderer::AddImageHandler(tesseract::TessBaseAPI*)"
-  "params":
+- "params":
   - "name": "this"
     "type": "tesseract::TessTsvRenderer *"
   - "name": "api"
     "type": "tesseract::TessBaseAPI *"
   "return_type": "bool"
   "signature": "tesseract::TessTsvRenderer::AddImageHandler(tesseract::TessBaseAPI*)"
-- "name": "tesseract::TessBaseAPI::GetTSVText(int)"
-  "params":
+- "params":
   - "name": "this"
     "type": "tesseract::TessBaseAPI *"
   - "name": "page_number"
     "type": "int"
   "return_type": "char *"
   "signature": "tesseract::TessBaseAPI::GetTSVText(int)"
-- "name": "tesseract::TessBaseAPI::ProcessPages(char const*, char const*, int, tesseract::TessResultRenderer*)"
-  "params":
+- "params":
   - "name": "this"
     "type": "tesseract::TessBaseAPI *"
   - "name": "filename"
@@ -29,16 +26,14 @@
     "type": "tesseract::TessResultRenderer *"
   "return_type": "bool"
   "signature": "tesseract::TessBaseAPI::ProcessPages(char const*, char const*, int, tesseract::TessResultRenderer*)"
-- "name": "tesseract::TessBoxTextRenderer::AddImageHandler(tesseract::TessBaseAPI*)"
-  "params":
+- "params":
   - "name": "this"
     "type": "tesseract::TessOsdRenderer *"
   - "name": "api"
     "type": "tesseract::TessBaseAPI *"
   "return_type": "bool"
   "signature": "tesseract::TessBoxTextRenderer::AddImageHandler(tesseract::TessBaseAPI*)"
-- "name": "tesseract::TessBaseAPI::ProcessPagesInternal(char const*, char const*, int, tesseract::TessResultRenderer*)"
-  "params":
+- "params":
   - "name": "this"
     "type": "tesseract::TessBaseAPI *"
   - "name": "filename"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "impeg2d_dec_ac_coeff_one"
-  "params":
+- "params":
   - "name": "ps_stream"
     "type": "struct _stream_t *"
   - "name": "pu2_sym_len"
@@ -9,8 +8,7 @@
     "type": "short *"
   "return_type": "short"
   "signature": "impeg2d_dec_ac_coeff_one"
-- "name": "impeg2d_dec_ac_coeff_zero"
-  "params":
+- "params":
   - "name": "ps_stream"
     "type": "struct _stream_t *"
   - "name": "pu2_sym_len"
@@ -19,8 +17,7 @@
     "type": "short *"
   "return_type": "short"
   "signature": "impeg2d_dec_ac_coeff_zero"
-- "name": "impeg2d_fast_dec_vld_symbol"
-  "params":
+- "params":
   - "name": "ps_stream"
     "type": "struct _stream_t *"
   - "name": "ai2_code_table"
@@ -31,14 +28,12 @@
     "type": "short"
   "return_type": "short"
   "signature": "impeg2d_fast_dec_vld_symbol"
-- "name": "impeg2_jobq_free"
-  "params":
+- "params":
   - "name": "ps_jobq"
     "type": "struct jobq_t *"
   "return_type": "int"
   "signature": "impeg2_jobq_free"
-- "name": "ithread_sem_destroy"
-  "params":
+- "params":
   - "name": "sem"
     "type": "char *"
   "return_type": "int"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "pcap_compile_nopcap"
-  "params":
+- "params":
   - "name": "snaplen_arg"
     "type": "int"
   - "name": "linktype_arg"
@@ -15,8 +14,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "pcap_compile_nopcap"
-- "name": "pcap_open"
-  "params":
+- "params":
   - "name": "source"
     "type": "char *"
   - "name": "snaplen"
@@ -31,8 +29,7 @@
     "type": "char *"
   "return_type": "struct pcap *"
   "signature": "pcap_open"
-- "name": "pcap_open_live"
-  "params":
+- "params":
   - "name": "device"
     "type": "char *"
   - "name": "snaplen"
@@ -45,16 +42,14 @@
     "type": "char *"
   "return_type": "struct pcap *"
   "signature": "pcap_open_live"
-- "name": "pcap_create"
-  "params":
+- "params":
   - "name": "device"
     "type": "char *"
   - "name": "errbuf"
     "type": "char *"
   "return_type": "struct pcap *"
   "signature": "pcap_create"
-- "name": "pcapint_create_interface"
-  "params":
+- "params":
   - "name": "device"
     "type": "char *"
   - "name": "ebuf"

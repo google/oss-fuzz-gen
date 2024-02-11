@@ -1,14 +1,12 @@
 "functions":
-- "name": "int mnt_table_parse_mtab(struct libmnt_table * tb, char * filename)"
-  "params":
+- "params":
   - "name": "tb"
     "type": "struct libmnt_table *"
   - "name": "filename"
     "type": "char *"
   "return_type": "int"
   "signature": "int mnt_table_parse_mtab(struct libmnt_table * tb, char * filename)"
-- "name": "int __mnt_table_parse_mountinfo(struct libmnt_table * tb, char * filename, struct libmnt_table * u_tb)"
-  "params":
+- "params":
   - "name": "tb"
     "type": "struct libmnt_table *"
   - "name": "filename"
@@ -17,22 +15,19 @@
     "type": "struct libmnt_table *"
   "return_type": "int"
   "signature": "int __mnt_table_parse_mountinfo(struct libmnt_table * tb, char * filename, struct libmnt_table * u_tb)"
-- "name": "struct libmnt_table * mnt_new_table_from_dir(char * dirname)"
-  "params":
+- "params":
   - "name": "dirname"
     "type": "char *"
   "return_type": "struct libmnt_table *"
   "signature": "struct libmnt_table * mnt_new_table_from_dir(char * dirname)"
-- "name": "int mnt_table_parse_fstab(struct libmnt_table * tb, char * filename)"
-  "params":
+- "params":
   - "name": "tb"
     "type": "struct libmnt_table *"
   - "name": "filename"
     "type": "char *"
   "return_type": "int"
   "signature": "int mnt_table_parse_fstab(struct libmnt_table * tb, char * filename)"
-- "name": "struct libmnt_table * mnt_new_table_from_file(char * filename)"
-  "params":
+- "params":
   - "name": "filename"
     "type": "char *"
   "return_type": "struct libmnt_table *"

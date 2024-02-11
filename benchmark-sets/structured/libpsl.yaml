@@ -1,6 +1,5 @@
 "functions":
-- "name": "u_strToUpper_59"
-  "params":
+- "params":
   - "name": "dest"
     "type": "short *"
   - "name": "destCapacity"
@@ -15,8 +14,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "u_strToUpper_59"
-- "name": "uloc_toLanguageTag_59"
-  "params":
+- "params":
   - "name": "localeID"
     "type": "char *"
   - "name": "langtag"
@@ -29,8 +27,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "uloc_toLanguageTag_59"
-- "name": "icu_59::CaseMap::toUpper(char const*, unsigned int, char16_t const*, int, char16_t*, int, icu_59::Edits*, UErrorCode&)"
-  "params":
+- "params":
   - "name": "locale"
     "type": "char *"
   - "name": "options"
@@ -49,8 +46,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "icu_59::CaseMap::toUpper(char const*, unsigned int, char16_t const*, int, char16_t*, int, icu_59::Edits*, UErrorCode&)"
-- "name": "icu_59::CaseMap::toLower(char const*, unsigned int, char16_t const*, int, char16_t*, int, icu_59::Edits*, UErrorCode&)"
-  "params":
+- "params":
   - "name": "locale"
     "type": "char *"
   - "name": "options"
@@ -69,8 +65,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "icu_59::CaseMap::toLower(char const*, unsigned int, char16_t const*, int, char16_t*, int, icu_59::Edits*, UErrorCode&)"
-- "name": "_appendKeywordsToLanguageTag(char const*, char*, int, signed char, signed char, UErrorCode*)"
-  "params":
+- "params":
   - "name": "localeID"
     "type": "char *"
   - "name": "appendAt"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "CMS_SignedData_verify"
-  "params":
+- "params":
   - "name": "sd"
     "type": "struct CMS_SignedData_st *"
   - "name": "detached_data"
@@ -21,8 +20,7 @@
     "type": "char *"
   "return_type": "struct bio_st *"
   "signature": "CMS_SignedData_verify"
-- "name": "CMS_verify_receipt"
-  "params":
+- "params":
   - "name": "rcms"
     "type": "struct CMS_ContentInfo_st *"
   - "name": "ocms"
@@ -35,8 +33,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "CMS_verify_receipt"
-- "name": "CMS_verify"
-  "params":
+- "params":
   - "name": "cms"
     "type": "struct CMS_ContentInfo_st *"
   - "name": "certs"
@@ -51,16 +48,14 @@
     "type": "int"
   "return_type": "int"
   "signature": "CMS_verify"
-- "name": "OSSL_CMP_CTX_server_perform"
-  "params":
+- "params":
   - "name": "client_ctx"
     "type": "struct ossl_cmp_ctx_st *"
   - "name": "req"
     "type": "struct ossl_cmp_msg_st *"
   "return_type": "struct ossl_cmp_msg_st *"
   "signature": "OSSL_CMP_CTX_server_perform"
-- "name": "dtls1_ctrl"
-  "params":
+- "params":
   - "name": "ssl"
     "type": "struct ssl_st *"
   - "name": "cmd"

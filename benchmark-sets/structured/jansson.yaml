@@ -1,6 +1,5 @@
 "functions":
-- "name": "json_load_file"
-  "params":
+- "params":
   - "name": "path"
     "type": "char *"
   - "name": "flags"
@@ -9,8 +8,7 @@
     "type": "struct json_error_t *"
   "return_type": "struct json_t *"
   "signature": "json_load_file"
-- "name": "json_load_callback"
-  "params":
+- "params":
   - "name": "callback"
     "type": "func_type *"
   - "name": "arg"
@@ -21,8 +19,7 @@
     "type": "struct json_error_t *"
   "return_type": "struct json_t *"
   "signature": "json_load_callback"
-- "name": "json_loadfd"
-  "params":
+- "params":
   - "name": "input"
     "type": "int"
   - "name": "flags"
@@ -31,8 +28,7 @@
     "type": "struct json_error_t *"
   "return_type": "struct json_t *"
   "signature": "json_loadfd"
-- "name": "json_loadf"
-  "params":
+- "params":
   - "name": "input"
     "type": "struct _IO_FILE *"
   - "name": "flags"
@@ -41,8 +37,7 @@
     "type": "struct json_error_t *"
   "return_type": "struct json_t *"
   "signature": "json_loadf"
-- "name": "json_loads"
-  "params":
+- "params":
   - "name": "string"
     "type": "char *"
   - "name": "flags"

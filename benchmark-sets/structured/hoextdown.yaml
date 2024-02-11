@@ -1,6 +1,5 @@
 "functions":
-- "name": "toc_header"
-  "params":
+- "params":
   - "name": "ob"
     "type": "struct hoedown_buffer *"
   - "name": "content"
@@ -13,8 +12,7 @@
     "type": "struct hoedown_renderer_data *"
   "return_type": "void"
   "signature": "toc_header"
-- "name": "hoedown_document_render_inline"
-  "params":
+- "params":
   - "name": "doc"
     "type": "struct hoedown_document *"
   - "name": "ob"
@@ -25,8 +23,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "hoedown_document_render_inline"
-- "name": "toc_finalize"
-  "params":
+- "params":
   - "name": "ob"
     "type": "struct hoedown_buffer *"
   - "name": "inline_render"
@@ -35,8 +32,7 @@
     "type": "struct hoedown_renderer_data *"
   "return_type": "void"
   "signature": "toc_finalize"
-- "name": "rndr_raw_block"
-  "params":
+- "params":
   - "name": "ob"
     "type": "struct hoedown_buffer *"
   - "name": "text"
@@ -45,8 +41,7 @@
     "type": "struct hoedown_renderer_data *"
   "return_type": "void"
   "signature": "rndr_raw_block"
-- "name": "hoedown_buffer_put_utf8"
-  "params":
+- "params":
   - "name": "buf"
     "type": "struct hoedown_buffer *"
   - "name": "c"

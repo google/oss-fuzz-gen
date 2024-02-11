@@ -1,14 +1,12 @@
 "functions":
-- "name": "p_simp_re"
-  "params":
+- "params":
   - "name": ""
     "type": "struct parse *"
   - "name": ""
     "type": "int"
   "return_type": "int"
   "signature": "p_simp_re"
-- "name": "p_bre"
-  "params":
+- "params":
   - "name": ""
     "type": "struct parse *"
   - "name": ""
@@ -17,8 +15,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "p_bre"
-- "name": "lmatcher"
-  "params":
+- "params":
   - "name": ""
     "type": "struct re_guts *"
   - "name": ""
@@ -31,14 +28,12 @@
     "type": "int"
   "return_type": "int"
   "signature": "lmatcher"
-- "name": "p_str"
-  "params":
+- "params":
   - "name": ""
     "type": "struct parse *"
   "return_type": "void"
   "signature": "p_str"
-- "name": "nonnewline"
-  "params":
+- "params":
   - "name": ""
     "type": "struct parse *"
   "return_type": "void"

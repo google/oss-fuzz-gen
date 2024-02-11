@@ -1,6 +1,5 @@
 "functions":
-- "name": "parse_file"
-  "params":
+- "params":
   - "name": "a"
     "type": "struct archive_read *"
   - "name": "entry"
@@ -13,8 +12,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "parse_file"
-- "name": "archive_entry_linkify"
-  "params":
+- "params":
   - "name": "res"
     "type": "struct archive_entry_linkresolver *"
   - "name": "e"
@@ -23,16 +21,14 @@
     "type": "struct archive_entry **"
   "return_type": "void"
   "signature": "archive_entry_linkify"
-- "name": "archive_entry_acl_text_w"
-  "params":
+- "params":
   - "name": "entry"
     "type": "struct archive_entry *"
   - "name": "flags"
     "type": "int"
   "return_type": "int *"
   "signature": "archive_entry_acl_text_w"
-- "name": "_archive_entry_acl_text_l"
-  "params":
+- "params":
   - "name": "entry"
     "type": "struct archive_entry *"
   - "name": "flags"
@@ -45,8 +41,7 @@
     "type": "struct archive_string_conv *"
   "return_type": "int"
   "signature": "_archive_entry_acl_text_l"
-- "name": "archive_entry_acl_text"
-  "params":
+- "params":
   - "name": "entry"
     "type": "struct archive_entry *"
   - "name": "flags"

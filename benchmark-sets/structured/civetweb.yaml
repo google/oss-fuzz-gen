@@ -1,6 +1,5 @@
 "functions":
-- "name": "void mg_send_mime_file(struct mg_connection * conn, char * path, char * mime_type)"
-  "params":
+- "params":
   - "name": "conn"
     "type": "struct mg_connection *"
   - "name": "path"
@@ -9,16 +8,14 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void mg_send_mime_file(struct mg_connection * conn, char * path, char * mime_type)"
-- "name": "void mg_send_file(struct mg_connection * conn, char * path)"
-  "params":
+- "params":
   - "name": "conn"
     "type": "struct mg_connection *"
   - "name": "path"
     "type": "char *"
   "return_type": "void"
   "signature": "void mg_send_file(struct mg_connection * conn, char * path)"
-- "name": "void mg_send_mime_file2(struct mg_connection * conn, char * path, char * mime_type, char * additional_headers)"
-  "params":
+- "params":
   - "name": "conn"
     "type": "struct mg_connection *"
   - "name": "path"
@@ -29,16 +26,14 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void mg_send_mime_file2(struct mg_connection * conn, char * path, char * mime_type, char * additional_headers)"
-- "name": "int mg_send_file_body(struct mg_connection * conn, char * path)"
-  "params":
+- "params":
   - "name": "conn"
     "type": "struct mg_connection *"
   - "name": "path"
     "type": "char *"
   "return_type": "int"
   "signature": "int mg_send_file_body(struct mg_connection * conn, char * path)"
-- "name": "struct mg_connection * mg_download(char * host, int port, int use_ssl, char * ebuf, size_t ebuf_len, char * fmt)"
-  "params":
+- "params":
   - "name": "host"
     "type": "char *"
   - "name": "port"

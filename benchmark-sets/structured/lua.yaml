@@ -1,14 +1,11 @@
 "functions":
-- "name": "void _GLOBAL__sub_I_serializer.cc()"
-  "params": []
+- "params": []
   "return_type": "void"
   "signature": "void _GLOBAL__sub_I_serializer.cc()"
-- "name": "void _ZL8teardownv()"
-  "params": []
+- "params": []
   "return_type": "void"
   "signature": "void _ZL8teardownv()"
-- "name": "void _Z11sig_handleriP9siginfo_tPv(int signo, struct siginfo_t * info, char * context)"
-  "params":
+- "params":
   - "name": "signo"
     "type": "int"
   - "name": "info"
@@ -17,8 +14,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void _Z11sig_handleriP9siginfo_tPv(int signo, struct siginfo_t * info, char * context)"
-- "name": "size_t LLVMFuzzerCustomMutator(char * data, size_t size, size_t max_size, int seed)"
-  "params":
+- "params":
   - "name": "data"
     "type": "char *"
   - "name": "size"
@@ -29,8 +25,7 @@
     "type": "int"
   "return_type": "size_t"
   "signature": "size_t LLVMFuzzerCustomMutator(char * data, size_t size, size_t max_size, int seed)"
-- "name": "size_t LLVMFuzzerCustomCrossOver(char * data1, size_t size1, char * data2, size_t size2, char * out, size_t max_out_size, int seed)"
-  "params":
+- "params":
   - "name": "data1"
     "type": "char *"
   - "name": "size1"

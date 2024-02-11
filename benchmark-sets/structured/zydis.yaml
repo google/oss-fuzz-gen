@@ -1,6 +1,5 @@
 "functions":
-- "name": "int ZydisCalcAbsoluteAddressEx(struct ZydisDecodedInstruction_ * , struct ZydisDecodedOperand_ * , size_t , struct ZydisRegisterContext_ * , size_t * )"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ZydisDecodedInstruction_ *"
   - "name": ""
@@ -13,16 +12,14 @@
     "type": "size_t *"
   "return_type": "int"
   "signature": "int ZydisCalcAbsoluteAddressEx(struct ZydisDecodedInstruction_ * , struct ZydisDecodedOperand_ * , size_t , struct ZydisRegisterContext_ * , size_t * )"
-- "name": "int ZydisFormatterBufferGetString(struct ZydisFormatterBuffer_ * , struct ZyanString_ ** )"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ZydisFormatterBuffer_ *"
   - "name": ""
     "type": "struct ZyanString_ **"
   "return_type": "int"
   "signature": "int ZydisFormatterBufferGetString(struct ZydisFormatterBuffer_ * , struct ZyanString_ ** )"
-- "name": "int ZydisFormatterSetHook(struct ZydisFormatter_ * , int , char ** )"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ZydisFormatter_ *"
   - "name": ""
@@ -31,16 +28,14 @@
     "type": "char **"
   "return_type": "int"
   "signature": "int ZydisFormatterSetHook(struct ZydisFormatter_ * , int , char ** )"
-- "name": "int ZydisEncoderNopFill(char * , size_t )"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""
     "type": "size_t"
   "return_type": "int"
   "signature": "int ZydisEncoderNopFill(char * , size_t )"
-- "name": "size_t ZydisStdinRead(char * ctx, char * buf, size_t max_len)"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "char *"
   - "name": "buf"

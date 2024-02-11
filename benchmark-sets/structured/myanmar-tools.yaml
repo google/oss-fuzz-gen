@@ -1,18 +1,15 @@
 "functions":
-- "name": "GMTOpenZawgyiDetector"
-  "params": []
+- "params": []
   "return_type": "struct GMTZawgyiDetector *"
   "signature": "GMTOpenZawgyiDetector"
-- "name": "GMTGetZawgyiProbability"
-  "params":
+- "params":
   - "name": "detector"
     "type": "struct GMTZawgyiDetector *"
   - "name": "input_utf8"
     "type": "char *"
   "return_type": "double"
   "signature": "GMTGetZawgyiProbability"
-- "name": "GMTGetZawgyiProbabilityWithLength"
-  "params":
+- "params":
   - "name": "detector"
     "type": "struct GMTZawgyiDetector *"
   - "name": "input_utf8"
@@ -21,8 +18,7 @@
     "type": "int"
   "return_type": "double"
   "signature": "GMTGetZawgyiProbabilityWithLength"
-- "name": "GMTCloseZawgyiDetector"
-  "params":
+- "params":
   - "name": "detector"
     "type": "struct GMTZawgyiDetector *"
   "return_type": "void"

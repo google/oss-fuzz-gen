@@ -1,14 +1,12 @@
 "functions":
-- "name": "boost::json::operator>>(std::__1::basic_istream<char, std::__1::char_traits<char> >&, boost::json::value&)"
-  "params":
+- "params":
   - "name": "is"
     "type": "std::istream *"
   - "name": "jv"
     "type": "boost::json::value *"
   "return_type": "std::istream *"
   "signature": "boost::json::operator>>(std::__1::basic_istream<char, std::__1::char_traits<char> >&, boost::json::value&)"
-- "name": "boost::json::parse(std::__1::basic_istream<char, std::__1::char_traits<char> >&, std::__1::error_code&, boost::json::storage_ptr, boost::json::parse_options const&)"
-  "params":
+- "params":
   - "name": "is"
     "type": "boost::json::value *"
   - "name": "ec"
@@ -21,8 +19,7 @@
     "type": "struct boost::json::parse_options *"
   "return_type": "void"
   "signature": "boost::json::parse(std::__1::basic_istream<char, std::__1::char_traits<char> >&, std::__1::error_code&, boost::json::storage_ptr, boost::json::parse_options const&)"
-- "name": "boost::json::parse(boost::core::basic_string_view<char>, std::__1::error_code&, boost::json::storage_ptr, boost::json::parse_options const&)"
-  "params":
+- "params":
   - "name": "s"
     "type": "boost::json::value *"
   - "name": "ec"
@@ -37,8 +34,7 @@
     "type": "struct boost::json::parse_options *"
   "return_type": "void"
   "signature": "boost::json::parse(boost::core::basic_string_view<char>, std::__1::error_code&, boost::json::storage_ptr, boost::json::parse_options const&)"
-- "name": "boost::json::parse(std::__1::basic_istream<char, std::__1::char_traits<char> >&, boost::json::storage_ptr, boost::json::parse_options const&)"
-  "params":
+- "params":
   - "name": "is"
     "type": "boost::json::value *"
   - "name": "sp"
@@ -49,8 +45,7 @@
     "type": "struct boost::json::parse_options *"
   "return_type": "void"
   "signature": "boost::json::parse(std::__1::basic_istream<char, std::__1::char_traits<char> >&, boost::json::storage_ptr, boost::json::parse_options const&)"
-- "name": "boost::json::parse(boost::core::basic_string_view<char>, boost::json::storage_ptr, boost::json::parse_options const&)"
-  "params":
+- "params":
   - "name": "s"
     "type": "boost::json::value *"
   - "name": "sp"

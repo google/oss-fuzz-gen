@@ -1,6 +1,5 @@
 "functions":
-- "name": "BrotliDecoderDecompress"
-  "params":
+- "params":
   - "name": ""
     "type": "size_t"
   - "name": ""
@@ -11,16 +10,14 @@
     "type": "char *"
   "return_type": "int"
   "signature": "BrotliDecoderDecompress"
-- "name": "BrotliDecoderTakeOutput"
-  "params":
+- "params":
   - "name": ""
     "type": "struct BrotliDecoderStateStruct *"
   - "name": ""
     "type": "size_t *"
   "return_type": "char *"
   "signature": "BrotliDecoderTakeOutput"
-- "name": "BrotliDecoderAttachDictionary"
-  "params":
+- "params":
   - "name": ""
     "type": "struct BrotliDecoderStateStruct *"
   - "name": ""
@@ -31,14 +28,12 @@
     "type": "char *"
   "return_type": "int"
   "signature": "BrotliDecoderAttachDictionary"
-- "name": "BrotliDecoderIsFinished"
-  "params":
+- "params":
   - "name": ""
     "type": "struct BrotliDecoderStateStruct *"
   "return_type": "int"
   "signature": "BrotliDecoderIsFinished"
-- "name": "BrotliSafeReadBits32Slow"
-  "params":
+- "params":
   - "name": ""
     "type": "struct BrotliBitReader *"
   - "name": ""

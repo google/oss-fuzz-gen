@@ -1,6 +1,5 @@
 "functions":
-- "name": "njs_generate_try_finally"
-  "params":
+- "params":
   - "name": "vm"
     "type": "struct njs_vm_s *"
   - "name": "generator"
@@ -9,8 +8,7 @@
     "type": "struct njs_parser_node_s *"
   "return_type": "int"
   "signature": "njs_generate_try_finally"
-- "name": "njs_parser_call_expression"
-  "params":
+- "params":
   - "name": "parser"
     "type": "struct njs_parser_s *"
   - "name": "token"
@@ -19,8 +17,7 @@
     "type": "struct njs_queue_link_s *"
   "return_type": "int"
   "signature": "njs_parser_call_expression"
-- "name": "njs_parser_new_expression"
-  "params":
+- "params":
   - "name": "parser"
     "type": "struct njs_parser_s *"
   - "name": "token"
@@ -29,8 +26,7 @@
     "type": "struct njs_queue_link_s *"
   "return_type": "int"
   "signature": "njs_parser_new_expression"
-- "name": "njs_ext_import_key"
-  "params":
+- "params":
   - "name": "vm"
     "type": "struct njs_vm_s *"
   - "name": "args"
@@ -43,8 +39,7 @@
     "type": "njs_value_s *"
   "return_type": "int"
   "signature": "njs_ext_import_key"
-- "name": "njs_fs_realpath"
-  "params":
+- "params":
   - "name": "vm"
     "type": "struct njs_vm_s *"
   - "name": "args"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "ZDICT_trainFromBuffer_legacy"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""
@@ -15,8 +14,7 @@
     "type": "struct ZDICT_legacy_params_t *"
   "return_type": "size_t"
   "signature": "ZDICT_trainFromBuffer_legacy"
-- "name": "ZDICT_trainFromBuffer_unsafe_legacy"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""
@@ -31,8 +29,7 @@
     "type": "struct ZDICT_legacy_params_t *"
   "return_type": "size_t"
   "signature": "ZDICT_trainFromBuffer_unsafe_legacy"
-- "name": "ZSTD_generateSequences"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ZSTD_CCtx_s *"
   - "name": ""
@@ -45,16 +42,14 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "ZSTD_generateSequences"
-- "name": "ZSTD_flushStream"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ZSTD_CCtx_s *"
   - "name": ""
     "type": "struct ZSTD_inBuffer_s *"
   "return_type": "size_t"
   "signature": "ZSTD_flushStream"
-- "name": "ZDICT_optimizeTrainFromBuffer_cover"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""

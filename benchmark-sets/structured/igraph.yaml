@@ -1,20 +1,17 @@
 "functions":
-- "name": "struct _xmlNode * xmlCopyNodeList(struct _xmlNode * node)"
-  "params":
+- "params":
   - "name": "node"
     "type": "struct _xmlNode *"
   "return_type": "struct _xmlNode *"
   "signature": "struct _xmlNode * xmlCopyNodeList(struct _xmlNode * node)"
-- "name": "struct _xmlNode * xmlDocCopyNodeList(struct _xmlDoc * doc, struct _xmlNode * node)"
-  "params":
+- "params":
   - "name": "doc"
     "type": "struct _xmlDoc *"
   - "name": "node"
     "type": "struct _xmlNode *"
   "return_type": "struct _xmlNode *"
   "signature": "struct _xmlNode * xmlDocCopyNodeList(struct _xmlDoc * doc, struct _xmlNode * node)"
-- "name": "int igraph_sparsemat_arpack_rnsolve(struct igraph_sparsemat_t * A, struct igraph_arpack_options_t * options, struct igraph_arpack_storage_t * storage, struct igraph_matrix_t * values, struct igraph_matrix_t * vectors)"
-  "params":
+- "params":
   - "name": "A"
     "type": "struct igraph_sparsemat_t *"
   - "name": "options"
@@ -27,8 +24,7 @@
     "type": "struct igraph_matrix_t *"
   "return_type": "int"
   "signature": "int igraph_sparsemat_arpack_rnsolve(struct igraph_sparsemat_t * A, struct igraph_arpack_options_t * options, struct igraph_arpack_storage_t * storage, struct igraph_matrix_t * values, struct igraph_matrix_t * vectors)"
-- "name": "int igraph_arpack_rnsolve(func_type * fun, char * extra, struct igraph_arpack_options_t * options, struct igraph_arpack_storage_t * storage, struct igraph_matrix_t * values, struct igraph_matrix_t * vectors)"
-  "params":
+- "params":
   - "name": "fun"
     "type": "func_type *"
   - "name": "extra"
@@ -43,8 +39,7 @@
     "type": "struct igraph_matrix_t *"
   "return_type": "int"
   "signature": "int igraph_arpack_rnsolve(func_type * fun, char * extra, struct igraph_arpack_options_t * options, struct igraph_arpack_storage_t * storage, struct igraph_matrix_t * values, struct igraph_matrix_t * vectors)"
-- "name": "void xmlNodeSetBase(struct _xmlNode * cur, char * uri)"
-  "params":
+- "params":
   - "name": "cur"
     "type": "struct _xmlNode *"
   - "name": "uri"

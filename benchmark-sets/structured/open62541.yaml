@@ -1,18 +1,15 @@
 "functions":
-- "name": "UA_Server_newFromFile"
-  "params":
+- "params":
   - "name": "json_config"
     "type": "size_t"
   - "name": ""
     "type": "char *"
   "return_type": "struct UA_Server *"
   "signature": "UA_Server_newFromFile"
-- "name": "UA_Server_new"
-  "params": []
+- "params": []
   "return_type": "struct UA_Server *"
   "signature": "UA_Server_new"
-- "name": "Service_CreateSession"
-  "params":
+- "params":
   - "name": "server"
     "type": "struct UA_Server *"
   - "name": "channel"
@@ -23,8 +20,7 @@
     "type": "struct UA_CreateSessionResponse *"
   "return_type": "void"
   "signature": "Service_CreateSession"
-- "name": "UA_ServerConfig_setDefaultWithSecureSecurityPolicies"
-  "params":
+- "params":
   - "name": "conf"
     "type": "struct UA_ServerConfig *"
   - "name": "portNumber"
@@ -47,8 +43,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "UA_ServerConfig_setDefaultWithSecureSecurityPolicies"
-- "name": "UA_ServerConfig_setDefaultWithSecurityPolicies"
-  "params":
+- "params":
   - "name": "conf"
     "type": "struct UA_ServerConfig *"
   - "name": "portNumber"

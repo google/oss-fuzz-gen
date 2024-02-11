@@ -1,32 +1,27 @@
 "functions":
-- "name": "main2"
-  "params":
+- "params":
   - "name": "argc"
     "type": "int"
   - "name": "argv"
     "type": "char **"
   "return_type": "int"
   "signature": "main2"
-- "name": "init"
-  "params":
+- "params":
   - "name": "argc"
     "type": "int"
   - "name": "argv"
     "type": "char **"
   "return_type": "void"
   "signature": "init"
-- "name": "mworker_loop"
-  "params": []
+- "params": []
   "return_type": "void"
   "signature": "mworker_loop"
-- "name": "run_thread_poll_loop"
-  "params":
+- "params":
   - "name": "data"
     "type": "char *"
   "return_type": "char *"
   "signature": "run_thread_poll_loop"
-- "name": "run_poll_loop"
-  "params": []
+- "params": []
   "return_type": "void"
   "signature": "run_poll_loop"
 "language": "c++"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "Xz_Encode"
-  "params":
+- "params":
   - "name": "outStream"
     "type": "struct ISeqOutStream *"
   - "name": "inStream"
@@ -11,8 +10,7 @@
     "type": "struct ICompressProgress *"
   "return_type": "int"
   "signature": "Xz_Encode"
-- "name": "XzUnpacker_CodeFull"
-  "params":
+- "params":
   - "name": "p"
     "type": "struct CXzUnpacker *"
   - "name": "dest"
@@ -29,8 +27,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "XzUnpacker_CodeFull"
-- "name": "LzmaEncode"
-  "params":
+- "params":
   - "name": "dest"
     "type": "char *"
   - "name": "destLen"
@@ -55,8 +52,7 @@
     "type": "struct ISzAlloc *"
   "return_type": "int"
   "signature": "LzmaEncode"
-- "name": "LzmaEnc_MemEncode"
-  "params":
+- "params":
   - "name": "pp"
     "type": "char *"
   - "name": "dest"
@@ -77,8 +73,7 @@
     "type": "struct ISzAlloc *"
   "return_type": "int"
   "signature": "LzmaEnc_MemEncode"
-- "name": "Bt3Zip_MatchFinder_GetMatches"
-  "params":
+- "params":
   - "name": "p"
     "type": "struct _CMatchFinder *"
   - "name": "distances"

@@ -1,12 +1,10 @@
 "functions":
-- "name": "save_seed"
-  "params":
+- "params":
   - "name": "opt"
     "type": "char *"
   "return_type": "int"
   "signature": "save_seed"
-- "name": "LLVMFuzzerCustomMutator"
-  "params":
+- "params":
   - "name": "data"
     "type": "char *"
   - "name": "size"
@@ -17,24 +15,21 @@
     "type": "int"
   "return_type": "size_t"
   "signature": "LLVMFuzzerCustomMutator"
-- "name": "pack_dummy"
-  "params":
+- "params":
   - "name": "ptr"
     "type": "char *"
   - "name": "len"
     "type": "size_t"
   "return_type": "size_t"
   "signature": "pack_dummy"
-- "name": "parse_mutate_flags"
-  "params":
+- "params":
   - "name": "opt"
     "type": "char *"
   - "name": "mutate_flags"
     "type": "int *"
   "return_type": "void"
   "signature": "parse_mutate_flags"
-- "name": "mutate"
-  "params":
+- "params":
   - "name": "p"
     "type": "struct param *"
   - "name": "seed"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "FC_CreateObject"
-  "params":
+- "params":
   - "name": ""
     "type": "size_t"
   - "name": ""
@@ -11,14 +10,12 @@
     "type": "size_t *"
   "return_type": "size_t"
   "signature": "FC_CreateObject"
-- "name": "FC_Initialize"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   "return_type": "size_t"
   "signature": "FC_Initialize"
-- "name": "sftk_CreateNewSlot"
-  "params":
+- "params":
   - "name": ""
     "type": "struct SFTKSlotStr *"
   - "name": ""
@@ -27,8 +24,7 @@
     "type": "struct SFTKObjectStr *"
   "return_type": "size_t"
   "signature": "sftk_CreateNewSlot"
-- "name": "sftk_DBInit"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""
@@ -59,8 +55,7 @@
     "type": "struct SFTKDBHandleStr **"
   "return_type": "size_t"
   "signature": "sftk_DBInit"
-- "name": "s_open"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""
@@ -74,14 +69,14 @@
   - "name": ""
     "type": "int"
   - "name": ""
-    "type": "2224 **"
+    "type": "4107 **"
   - "name": ""
-    "type": "2224 **"
+    "type": "4107 **"
   - "name": ""
     "type": "int *"
   "return_type": "size_t"
   "signature": "s_open"
 "language": "c++"
 "project": "nss"
-"target_name": "/src/nss/out/Debug/../../fuzz/mpi_sqr_target.cc"
+"target_name": "mpi-sqr"
 "target_path": "/src/nss/fuzz/mpi_sqr_target.cc"

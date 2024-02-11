@@ -1,6 +1,5 @@
 "functions":
-- "name": "int _Z25SHA384_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhmm(struct t_hash_state * inner, struct t_hash_state * outer, char * first_hmac, char * result, size_t iterations, size_t digest_size)"
-  "params":
+- "params":
   - "name": "inner"
     "type": "struct t_hash_state *"
   - "name": "outer"
@@ -15,24 +14,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int _Z25SHA384_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhmm(struct t_hash_state * inner, struct t_hash_state * outer, char * first_hmac, char * result, size_t iterations, size_t digest_size)"
-- "name": "int _Z25SHA224_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhmm(struct t_hash_state * inner, struct t_hash_state * outer, char * first_hmac, char * result, size_t iterations, size_t digest_size)"
-  "params":
-  - "name": "inner"
-    "type": "struct t_hash_state *"
-  - "name": "outer"
-    "type": "struct t_hash_state *"
-  - "name": "first_hmac"
-    "type": "char *"
-  - "name": "result"
-    "type": "char *"
-  - "name": "iterations"
-    "type": "size_t"
-  - "name": "digest_size"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int _Z25SHA224_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhmm(struct t_hash_state * inner, struct t_hash_state * outer, char * first_hmac, char * result, size_t iterations, size_t digest_size)"
-- "name": "int _Z25SHA256_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhmm(struct t_hash_state * inner, struct t_hash_state * outer, char * first_hmac, char * result, size_t iterations, size_t digest_size)"
-  "params":
+- "params":
   - "name": "inner"
     "type": "struct t_hash_state *"
   - "name": "outer"
@@ -47,8 +29,22 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int _Z25SHA256_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhmm(struct t_hash_state * inner, struct t_hash_state * outer, char * first_hmac, char * result, size_t iterations, size_t digest_size)"
-- "name": "int _Z22MD5_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhm(struct t_hash_state * inner, struct t_hash_state * outer, char * first_hmac, char * result, size_t iterations)"
-  "params":
+- "params":
+  - "name": "inner"
+    "type": "struct t_hash_state *"
+  - "name": "outer"
+    "type": "struct t_hash_state *"
+  - "name": "first_hmac"
+    "type": "char *"
+  - "name": "result"
+    "type": "char *"
+  - "name": "iterations"
+    "type": "size_t"
+  - "name": "digest_size"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int _Z25SHA224_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhmm(struct t_hash_state * inner, struct t_hash_state * outer, char * first_hmac, char * result, size_t iterations, size_t digest_size)"
+- "params":
   - "name": "inner"
     "type": "struct t_hash_state *"
   - "name": "outer"
@@ -61,15 +57,14 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int _Z22MD5_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhm(struct t_hash_state * inner, struct t_hash_state * outer, char * first_hmac, char * result, size_t iterations)"
-- "name": "int _Z8md2_copyPK10hash_statePS_(struct hash_state * src, struct hash_state * dst)"
-  "params":
+- "params":
   - "name": "src"
     "type": "struct hash_state *"
   - "name": "dst"
     "type": "struct hash_state *"
   "return_type": "int"
-  "signature": "int _Z8md2_copyPK10hash_statePS_(struct hash_state * src, struct hash_state * dst)"
+  "signature": "int _Z14ripemd160_copyPK10hash_statePS_(struct hash_state * src, struct hash_state * dst)"
 "language": "c"
 "project": "pycryptodome"
-"target_name": "md2_fuzzer"
+"target_name": "ripemd160_fuzzer"
 "target_path": "/src/pcd_hash_fuzzer.cc"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "int onig_new_without_alloc(struct re_pattern_buffer * reg, char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax, struct OnigErrorInfo * einfo)"
-  "params":
+- "params":
   - "name": "reg"
     "type": "struct re_pattern_buffer *"
   - "name": "pattern"
@@ -17,8 +16,7 @@
     "type": "struct OnigErrorInfo *"
   "return_type": "int"
   "signature": "int onig_new_without_alloc(struct re_pattern_buffer * reg, char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax, struct OnigErrorInfo * einfo)"
-- "name": "int onig_detect_can_be_slow_pattern(char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax)"
-  "params":
+- "params":
   - "name": "pattern"
     "type": "char *"
   - "name": "pattern_end"
@@ -31,8 +29,7 @@
     "type": "struct OnigSyntaxType *"
   "return_type": "int"
   "signature": "int onig_detect_can_be_slow_pattern(char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax)"
-- "name": "int prs_bag(struct _Node ** np, struct PToken * tok, int term, char ** src, char * end, struct ParseEnv * env)"
-  "params":
+- "params":
   - "name": "np"
     "type": "struct _Node **"
   - "name": "tok"
@@ -47,16 +44,14 @@
     "type": "struct ParseEnv *"
   "return_type": "int"
   "signature": "int prs_bag(struct _Node ** np, struct PToken * tok, int term, char ** src, char * end, struct ParseEnv * env)"
-- "name": "void jq_util_input_next_input_cb(struct jq_state * jq, char * data)"
-  "params":
+- "params":
   - "name": "jq"
     "type": "struct jq_state *"
   - "name": "data"
     "type": "char *"
   "return_type": "void"
   "signature": "void jq_util_input_next_input_cb(struct jq_state * jq, char * data)"
-- "name": "void jq_util_input_next_input(struct jq_util_input_state * state)"
-  "params":
+- "params":
   - "name": "state"
     "type": "struct jq_util_input_state *"
   "return_type": "void"

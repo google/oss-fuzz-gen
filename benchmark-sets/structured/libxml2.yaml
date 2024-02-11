@@ -1,14 +1,12 @@
 "functions":
-- "name": "xmlTextReaderSchemaValidate"
-  "params":
+- "params":
   - "name": "reader"
     "type": "struct _xmlTextReader *"
   - "name": "xsd"
     "type": "char *"
   "return_type": "int"
   "signature": "xmlTextReaderSchemaValidate"
-- "name": "xmlTextReaderSchemaValidateCtxt"
-  "params":
+- "params":
   - "name": "reader"
     "type": "struct _xmlTextReader *"
   - "name": "ctxt"
@@ -17,8 +15,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "xmlTextReaderSchemaValidateCtxt"
-- "name": "xmlSchemaValidateStream"
-  "params":
+- "params":
   - "name": "ctxt"
     "type": "struct _xmlSchemaValidCtxt *"
   - "name": "input"
@@ -31,8 +28,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "xmlSchemaValidateStream"
-- "name": "xmlTextReaderSchemaValidateInternal"
-  "params":
+- "params":
   - "name": "reader"
     "type": "struct _xmlTextReader *"
   - "name": "xsd"
@@ -43,8 +39,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "xmlTextReaderSchemaValidateInternal"
-- "name": "xmlSchemaValidateFile"
-  "params":
+- "params":
   - "name": "ctxt"
     "type": "struct _xmlSchemaValidCtxt *"
   - "name": "filename"

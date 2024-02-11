@@ -1,12 +1,10 @@
 "functions":
-- "name": "flatbuffers::Parser::Serialize()"
-  "params":
+- "params":
   - "name": ""
     "type": "flatbuffers::Parser *"
   "return_type": "void"
   "signature": "flatbuffers::Parser::Serialize()"
-- "name": "flatbuffers::(anonymous namespace)::TextCodeGenerator::GenerateCode(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-  "params":
+- "params":
   - "name": ""
     "type": "flatbuffers::(anonymous namespace)::TextCodeGenerator *"
   - "name": ""
@@ -17,8 +15,7 @@
     "type": "std::string *"
   "return_type": "int"
   "signature": "flatbuffers::(anonymous namespace)::TextCodeGenerator::GenerateCode(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-- "name": "flatbuffers::GenerateTextFile(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-  "params":
+- "params":
   - "name": ""
     "type": "flatbuffers::Parser *"
   - "name": ""
@@ -27,8 +24,7 @@
     "type": "std::string *"
   "return_type": "char *"
   "signature": "flatbuffers::GenerateTextFile(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-- "name": "flatbuffers::GenTextFile(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-  "params":
+- "params":
   - "name": ""
     "type": "flatbuffers::Parser *"
   - "name": ""
@@ -37,8 +33,7 @@
     "type": "std::string *"
   "return_type": "char *"
   "signature": "flatbuffers::GenTextFile(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-- "name": "char const* flatbuffers::JsonPrinter::PrintVector<flatbuffers::Offset64<void>, unsigned int>(void const*, flatbuffers::Type const&, int, unsigned char const*)"
-  "params":
+- "params":
   - "name": ""
     "type": "struct flatbuffers::JsonPrinter *"
   - "name": ""

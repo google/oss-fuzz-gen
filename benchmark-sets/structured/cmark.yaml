@@ -1,6 +1,5 @@
 "functions":
-- "name": "cmark_markdown_to_html"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""
@@ -9,16 +8,14 @@
     "type": "int"
   "return_type": "char *"
   "signature": "cmark_markdown_to_html"
-- "name": "cmark_parse_file"
-  "params":
+- "params":
   - "name": ""
     "type": "struct _IO_FILE *"
   - "name": ""
     "type": "int"
   "return_type": "struct cmark_node *"
   "signature": "cmark_parse_file"
-- "name": "cmark_parser_feed"
-  "params":
+- "params":
   - "name": ""
     "type": "struct cmark_parser *"
   - "name": ""
@@ -27,14 +24,12 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "cmark_parser_feed"
-- "name": "_scan_entity"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   "return_type": "int"
   "signature": "_scan_entity"
-- "name": "cmark_utf8proc_is_punctuation"
-  "params":
+- "params":
   - "name": ""
     "type": "int"
   "return_type": "int"

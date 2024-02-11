@@ -1,6 +1,5 @@
 "functions":
-- "name": "uriParseSingleUriW"
-  "params":
+- "params":
   - "name": ""
     "type": "struct UriUriStructW *"
   - "name": ""
@@ -9,8 +8,7 @@
     "type": "int **"
   "return_type": "int"
   "signature": "uriParseSingleUriW"
-- "name": "uriParseSingleUriA"
-  "params":
+- "params":
   - "name": ""
     "type": "struct UriUriStructA *"
   - "name": ""
@@ -19,8 +17,7 @@
     "type": "char **"
   "return_type": "int"
   "signature": "uriParseSingleUriA"
-- "name": "uriParseSingleUriExW"
-  "params":
+- "params":
   - "name": ""
     "type": "struct UriUriStructW *"
   - "name": ""
@@ -31,8 +28,7 @@
     "type": "int **"
   "return_type": "int"
   "signature": "uriParseSingleUriExW"
-- "name": "uriParseSingleUriExA"
-  "params":
+- "params":
   - "name": ""
     "type": "struct UriUriStructA *"
   - "name": ""
@@ -43,8 +39,7 @@
     "type": "char **"
   "return_type": "int"
   "signature": "uriParseSingleUriExA"
-- "name": "uriParseSingleUriExMmW"
-  "params":
+- "params":
   - "name": ""
     "type": "struct UriUriStructW *"
   - "name": ""

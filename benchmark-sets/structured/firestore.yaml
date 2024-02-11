@@ -1,36 +1,31 @@
 "functions":
-- "name": "firebase::firestore::core::Query::Comparator() const"
-  "params":
+- "params":
   - "name": ""
     "type": "firebase::firestore::model::DocumentComparator *"
   - "name": ""
     "type": "firebase::firestore::core::Query *"
   "return_type": "void"
   "signature": "firebase::firestore::core::Query::Comparator() const"
-- "name": "firebase::firestore::core::Query::MatchesBounds(firebase::firestore::model::Document const&) const"
-  "params":
+- "params":
   - "name": ""
     "type": "firebase::firestore::core::Query *"
   - "name": ""
     "type": "anon *"
   "return_type": "bool"
   "signature": "firebase::firestore::core::Query::MatchesBounds(firebase::firestore::model::Document const&) const"
-- "name": "firebase::firestore::model::PatchMutation::Rep::ToString() const"
-  "params":
+- "params":
   - "name": ""
     "type": "std::string *"
   - "name": ""
     "type": "firebase::firestore::model::PatchMutation::Rep *"
   "return_type": "void"
   "signature": "firebase::firestore::model::PatchMutation::Rep::ToString() const"
-- "name": "firebase::firestore::core::Query::Hash() const"
-  "params":
+- "params":
   - "name": ""
     "type": "firebase::firestore::core::Query *"
   "return_type": "size_t"
   "signature": "firebase::firestore::core::Query::Hash() const"
-- "name": "firebase::firestore::core::Bound::SortsAfterDocument(std::__1::vector<firebase::firestore::core::OrderBy, std::__1::allocator<firebase::firestore::core::OrderBy> > const&, firebase::firestore::model::Document const&) const"
-  "params":
+- "params":
   - "name": ""
     "type": "firebase::firestore::core::Bound *"
   - "name": ""
@@ -41,5 +36,5 @@
   "signature": "firebase::firestore::core::Bound::SortsAfterDocument(std::__1::vector<firebase::firestore::core::OrderBy, std::__1::allocator<firebase::firestore::core::OrderBy> > const&, firebase::firestore::model::Document const&) const"
 "language": "c++"
 "project": "firestore"
-"target_name": "snappy_compress_fuzzer"
-"target_path": "/src/firebase-ios-sdk/build/external/src/snappy/snappy_compress_fuzzer.cc"
+"target_name": "firestore_leveldb_fuzzer"
+"target_path": "/src/firebase-ios-sdk/Firestore/fuzzing/leveldb_fuzzer.cc"

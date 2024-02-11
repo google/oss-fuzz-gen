@@ -1,6 +1,5 @@
 "functions":
-- "name": "LLVMFuzzerCustomMutator"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""
@@ -11,8 +10,7 @@
     "type": "int"
   "return_type": "size_t"
   "signature": "LLVMFuzzerCustomMutator"
-- "name": "cryptofuzz::module::Botan::OpECDSA_Sign(cryptofuzz::operation::ECDSA_Sign&)"
-  "params":
+- "params":
   - "name": ""
     "type": "std::optional *"
   - "name": ""
@@ -21,8 +19,7 @@
     "type": "cryptofuzz::operation::ECDSA_Sign *"
   "return_type": "void"
   "signature": "cryptofuzz::module::Botan::OpECDSA_Sign(cryptofuzz::operation::ECDSA_Sign&)"
-- "name": "cryptofuzz::module::Botan::OpECGDSA_Sign(cryptofuzz::operation::ECGDSA_Sign&)"
-  "params":
+- "params":
   - "name": ""
     "type": "std::optional *"
   - "name": ""
@@ -31,16 +28,14 @@
     "type": "cryptofuzz::operation::ECDSA_Sign *"
   "return_type": "void"
   "signature": "cryptofuzz::module::Botan::OpECGDSA_Sign(cryptofuzz::operation::ECGDSA_Sign&)"
-- "name": "std::__1::optional<cryptofuzz::component::ECDSA_Signature> cryptofuzz::module::Botan_detail::ECxDSA_Sign<Botan::ECGDSA_PrivateKey, cryptofuzz::operation::ECGDSA_Sign, false>(cryptofuzz::operation::ECGDSA_Sign&)"
-  "params":
+- "params":
   - "name": ""
     "type": "std::optional *"
   - "name": ""
     "type": "cryptofuzz::operation::ECDSA_Sign *"
   "return_type": "void"
   "signature": "std::__1::optional<cryptofuzz::component::ECDSA_Signature> cryptofuzz::module::Botan_detail::ECxDSA_Sign<Botan::ECGDSA_PrivateKey, cryptofuzz::operation::ECGDSA_Sign, false>(cryptofuzz::operation::ECGDSA_Sign&)"
-- "name": "cryptofuzz::module::Botan::OpECC_GenerateKeyPair(cryptofuzz::operation::ECC_GenerateKeyPair&)"
-  "params":
+- "params":
   - "name": ""
     "type": "std::optional *"
   - "name": ""

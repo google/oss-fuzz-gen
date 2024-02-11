@@ -1,36 +1,31 @@
 "functions":
-- "name": "tpm_server_main"
-  "params":
+- "params":
   - "name": "argc"
     "type": "int"
   - "name": "argv"
     "type": "char **"
   "return_type": "int"
   "signature": "tpm_server_main"
-- "name": "StartTcpServer"
-  "params":
+- "params":
   - "name": "PortNumber"
     "type": "int *"
   - "name": "PortNumberPlatform"
     "type": "int *"
   "return_type": "int"
   "signature": "StartTcpServer"
-- "name": "RegularCommandService"
-  "params":
+- "params":
   - "name": "PortNumber"
     "type": "int *"
   "return_type": "int"
   "signature": "RegularCommandService"
-- "name": "TPM2_CreateLoaded"
-  "params":
+- "params":
   - "name": "in"
     "type": "struct CreateLoaded_In *"
   - "name": "out"
     "type": "struct CreateLoaded_Out *"
   "return_type": "int"
   "signature": "TPM2_CreateLoaded"
-- "name": "TPM2_CreatePrimary"
-  "params":
+- "params":
   - "name": "in"
     "type": "struct CreatePrimary_In *"
   - "name": "out"

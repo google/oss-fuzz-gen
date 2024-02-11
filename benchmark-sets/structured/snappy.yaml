@@ -1,30 +1,26 @@
 "functions":
-- "name": "snappy::Uncompress(snappy::Source*, snappy::Sink*)"
-  "params":
+- "params":
   - "name": "compressed"
     "type": "snappy::Sink *"
   - "name": "uncompressed"
     "type": "snappy::Sink *"
   "return_type": "bool"
   "signature": "snappy::Uncompress(snappy::Source*, snappy::Sink*)"
-- "name": "snappy::UncompressAsMuchAsPossible(snappy::Source*, snappy::Sink*)"
-  "params":
+- "params":
   - "name": "compressed"
     "type": "snappy::Sink *"
   - "name": "uncompressed"
     "type": "snappy::Sink *"
   "return_type": "size_t"
   "signature": "snappy::UncompressAsMuchAsPossible(snappy::Source*, snappy::Sink*)"
-- "name": "bool snappy::InternalUncompress<snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator> >(snappy::Source*, snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator>*)"
-  "params":
+- "params":
   - "name": "r"
     "type": "snappy::Sink *"
   - "name": "writer"
     "type": "snappy::SnappyScatteredWriter *"
   "return_type": "bool"
   "signature": "bool snappy::InternalUncompress<snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator> >(snappy::Source*, snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator>*)"
-- "name": "bool snappy::InternalUncompressAllTags<snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator> >(snappy::SnappyDecompressor*, snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator>*, unsigned int, unsigned int)"
-  "params":
+- "params":
   - "name": "decompressor"
     "type": "snappy::SnappyDecompressor *"
   - "name": "writer"
@@ -35,8 +31,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool snappy::InternalUncompressAllTags<snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator> >(snappy::SnappyDecompressor*, snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator>*, unsigned int, unsigned int)"
-- "name": "snappy::RawUncompressToIOVec(char const*, unsigned long, iovec const*, unsigned long)"
-  "params":
+- "params":
   - "name": "compressed"
     "type": "char *"
   - "name": "compressed_length"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "aacEncEncode"
-  "params":
+- "params":
   - "name": "hAacEncoder"
     "type": "struct AACENCODER *"
   - "name": "inBufDesc"
@@ -13,8 +12,7 @@
     "type": "struct QMF_SCALE_FACTOR *"
   "return_type": "int"
   "signature": "aacEncEncode"
-- "name": "aacEncInit(AACENCODER*, unsigned int, USER_PARAM*)"
-  "params":
+- "params":
   - "name": "hAacEncoder"
     "type": "struct AACENCODER *"
   - "name": "InitFlags"
@@ -23,8 +21,7 @@
     "type": "struct USER_PARAM *"
   "return_type": "int"
   "signature": "aacEncInit(AACENCODER*, unsigned int, USER_PARAM*)"
-- "name": "FDKaacEnc_EncodeFrame"
-  "params":
+- "params":
   - "name": "hAacEnc"
     "type": "struct AAC_ENC *"
   - "name": "hTpEnc"
@@ -39,8 +36,7 @@
     "type": "struct AACENC_EXT_PAYLOAD *"
   "return_type": "int"
   "signature": "FDKaacEnc_EncodeFrame"
-- "name": "sbrEncoder_Init"
-  "params":
+- "params":
   - "name": "hSbrEncoder"
     "type": "struct SBR_ENCODER *"
   - "name": "elInfo"
@@ -77,8 +73,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "sbrEncoder_Init"
-- "name": "sbrEncoder_EncodeFrame"
-  "params":
+- "params":
   - "name": "hSbrEncoder"
     "type": "struct SBR_ENCODER *"
   - "name": "samples"

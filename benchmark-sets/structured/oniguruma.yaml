@@ -1,6 +1,5 @@
 "functions":
-- "name": "int onig_new_without_alloc(struct re_pattern_buffer * reg, char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax, struct OnigErrorInfo * einfo)"
-  "params":
+- "params":
   - "name": "reg"
     "type": "struct re_pattern_buffer *"
   - "name": "pattern"
@@ -17,8 +16,7 @@
     "type": "struct OnigErrorInfo *"
   "return_type": "int"
   "signature": "int onig_new_without_alloc(struct re_pattern_buffer * reg, char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax, struct OnigErrorInfo * einfo)"
-- "name": "int onig_regset_search(struct OnigRegSetStruct * set, char * str, char * end, char * start, char * range, int lead, int option, int * rmatch_pos)"
-  "params":
+- "params":
   - "name": "set"
     "type": "struct OnigRegSetStruct *"
   - "name": "str"
@@ -37,8 +35,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "int onig_regset_search(struct OnigRegSetStruct * set, char * str, char * end, char * start, char * range, int lead, int option, int * rmatch_pos)"
-- "name": "int onig_regset_search_with_param(struct OnigRegSetStruct * set, char * str, char * end, char * start, char * range, int lead, int option, struct OnigMatchParamStruct ** mps, int * rmatch_pos)"
-  "params":
+- "params":
   - "name": "set"
     "type": "struct OnigRegSetStruct *"
   - "name": "str"
@@ -59,8 +56,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "int onig_regset_search_with_param(struct OnigRegSetStruct * set, char * str, char * end, char * start, char * range, int lead, int option, struct OnigMatchParamStruct ** mps, int * rmatch_pos)"
-- "name": "int onig_scan(struct re_pattern_buffer * reg, char * str, char * end, struct re_registers * region, int option, func_type * scan_callback, char * callback_arg)"
-  "params":
+- "params":
   - "name": "reg"
     "type": "struct re_pattern_buffer *"
   - "name": "str"
@@ -77,8 +73,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int onig_scan(struct re_pattern_buffer * reg, char * str, char * end, struct re_registers * region, int option, func_type * scan_callback, char * callback_arg)"
-- "name": "int regset_search_body_regex_lead(struct OnigRegSetStruct * set, char * str, char * end, char * start, char * orig_range, int lead, int option, struct OnigMatchParamStruct ** mps, int * rmatch_pos)"
-  "params":
+- "params":
   - "name": "set"
     "type": "struct OnigRegSetStruct *"
   - "name": "str"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "ares_getaddrinfo"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ares_channeldata *"
   - "name": ""
@@ -15,8 +14,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "ares_getaddrinfo"
-- "name": "ares_getaddrinfo_int"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ares_channeldata *"
   - "name": ""
@@ -31,8 +29,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "ares_getaddrinfo_int"
-- "name": "ares_getnameinfo"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ares_channeldata *"
   - "name": ""
@@ -47,8 +44,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "ares_getnameinfo"
-- "name": "ares_getnameinfo_int"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ares_channeldata *"
   - "name": ""
@@ -63,8 +59,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "ares_getnameinfo_int"
-- "name": "addr_callback"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""

@@ -1,6 +1,5 @@
 "functions":
-- "name": "aspeller::create_default_readonly_dict(acommon::StringEnumeration*, acommon::Config&)"
-  "params":
+- "params":
   - "name": "els"
     "type": "acommon::PosibErr *"
   - "name": "config"
@@ -9,8 +8,7 @@
     "type": "acommon::Config *"
   "return_type": "void"
   "signature": "aspeller::create_default_readonly_dict(acommon::StringEnumeration*, acommon::Config&)"
-- "name": "(anonymous namespace)::WritableReplDict::merge(acommon::FStream&, acommon::ParmString, acommon::Config*)"
-  "params":
+- "params":
   - "name": "this"
     "type": "acommon::PosibErr *"
   - "name": "in"
@@ -25,8 +23,7 @@
     "type": "acommon::Config *"
   "return_type": "void"
   "signature": "(anonymous namespace)::WritableReplDict::merge(acommon::FStream&, acommon::ParmString, acommon::Config*)"
-- "name": "(anonymous namespace)::WritableDict::merge(acommon::FStream&, acommon::ParmString, acommon::Config*)"
-  "params":
+- "params":
   - "name": "this"
     "type": "acommon::PosibErr *"
   - "name": "in"
@@ -41,8 +38,7 @@
     "type": "acommon::Config *"
   "return_type": "void"
   "signature": "(anonymous namespace)::WritableDict::merge(acommon::FStream&, acommon::ParmString, acommon::Config*)"
-- "name": "(anonymous namespace)::create(acommon::StringEnumeration*, aspeller::Language const&, acommon::Config&)"
-  "params":
+- "params":
   - "name": "els"
     "type": "acommon::PosibErr *"
   - "name": "lang"
@@ -53,8 +49,7 @@
     "type": "acommon::Config *"
   "return_type": "void"
   "signature": "(anonymous namespace)::create(acommon::StringEnumeration*, aspeller::Language const&, acommon::Config&)"
-- "name": "acommon::set_mode_from_extension(acommon::Config*, acommon::ParmString, _IO_FILE*)"
-  "params":
+- "params":
   - "name": "config"
     "type": "acommon::PosibErr *"
   - "name": "filename"

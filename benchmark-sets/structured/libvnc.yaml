@@ -1,6 +1,5 @@
 "functions":
-- "name": "rfbRunEventLoop"
-  "params":
+- "params":
   - "name": "screen"
     "type": "struct _rfbScreenInfo *"
   - "name": "usec"
@@ -9,16 +8,14 @@
     "type": "char"
   "return_type": "void"
   "signature": "rfbRunEventLoop"
-- "name": "rfbProcessEvents"
-  "params":
+- "params":
   - "name": "screen"
     "type": "struct _rfbScreenInfo *"
   - "name": "usec"
     "type": "size_t"
   "return_type": "char"
   "signature": "rfbProcessEvents"
-- "name": "rfbReverseConnection"
-  "params":
+- "params":
   - "name": "rfbScreen"
     "type": "struct _rfbScreenInfo *"
   - "name": "host"
@@ -27,14 +24,12 @@
     "type": "int"
   "return_type": "struct _rfbClientRec *"
   "signature": "rfbReverseConnection"
-- "name": "listenerRun"
-  "params":
+- "params":
   - "name": "data"
     "type": "char *"
   "return_type": "char *"
   "signature": "listenerRun"
-- "name": "rfbStartOnHoldClient"
-  "params":
+- "params":
   - "name": "cl"
     "type": "struct _rfbClientRec *"
   "return_type": "void"

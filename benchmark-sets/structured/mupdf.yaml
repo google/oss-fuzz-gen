@@ -1,6 +1,5 @@
 "functions":
-- "name": "fz_new_document_writer"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct fz_context *"
   - "name": "path"
@@ -11,8 +10,7 @@
     "type": "char *"
   "return_type": "struct fz_document_writer *"
   "signature": "fz_new_document_writer"
-- "name": "fz_new_buffer_from_page_with_format"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct fz_context *"
   - "name": "page"
@@ -27,8 +25,7 @@
     "type": "struct fz_cookie *"
   "return_type": "struct fz_buffer *"
   "signature": "fz_new_buffer_from_page_with_format"
-- "name": "fz_new_document_writer_with_buffer"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct fz_context *"
   - "name": "buffer"
@@ -39,8 +36,7 @@
     "type": "char *"
   "return_type": "struct fz_document_writer *"
   "signature": "fz_new_document_writer_with_buffer"
-- "name": "fz_new_document_writer_with_output"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct fz_context *"
   - "name": "out"
@@ -51,8 +47,7 @@
     "type": "char *"
   "return_type": "struct fz_document_writer *"
   "signature": "fz_new_document_writer_with_output"
-- "name": "fz_new_pdf_writer"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct fz_context *"
   - "name": "path"

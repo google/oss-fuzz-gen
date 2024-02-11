@@ -1,6 +1,5 @@
 "functions":
-- "name": "dwfl_getthread_frames"
-  "params":
+- "params":
   - "name": "dwfl"
     "type": "struct Dwfl *"
   - "name": "tid"
@@ -11,16 +10,14 @@
     "type": "char *"
   "return_type": "int"
   "signature": "dwfl_getthread_frames"
-- "name": "get_one_thread_frames_cb"
-  "params":
+- "params":
   - "name": "thread"
     "type": "struct Dwfl_Thread *"
   - "name": "arg"
     "type": "char *"
   "return_type": "int"
   "signature": "get_one_thread_frames_cb"
-- "name": "dwfl_thread_getframes"
-  "params":
+- "params":
   - "name": "thread"
     "type": "struct Dwfl_Thread *"
   - "name": "callback"
@@ -29,14 +26,12 @@
     "type": "char *"
   "return_type": "int"
   "signature": "dwfl_thread_getframes"
-- "name": "__libdwfl_frame_unwind"
-  "params":
+- "params":
   - "name": "state"
     "type": "struct Dwfl_Frame *"
   "return_type": "void"
   "signature": "__libdwfl_frame_unwind"
-- "name": "dwfl_frame_pc"
-  "params":
+- "params":
   - "name": "state"
     "type": "struct Dwfl_Frame *"
   - "name": "pc"

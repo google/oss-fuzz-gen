@@ -1,6 +1,5 @@
 "functions":
-- "name": "int ub_resolve_async(struct ub_ctx * ctx, char * name, int rrtype, int rrclass, char * mydata, func_type * callback, int * async_id)"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct ub_ctx *"
   - "name": "name"
@@ -17,8 +16,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "int ub_resolve_async(struct ub_ctx * ctx, char * name, int rrtype, int rrclass, char * mydata, func_type * callback, int * async_id)"
-- "name": "int ub_resolve(struct ub_ctx * ctx, char * name, int rrtype, int rrclass, struct ub_result ** result)"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct ub_ctx *"
   - "name": "name"
@@ -31,8 +29,7 @@
     "type": "struct ub_result **"
   "return_type": "int"
   "signature": "int ub_resolve(struct ub_ctx * ctx, char * name, int rrtype, int rrclass, struct ub_result ** result)"
-- "name": "int ub_resolve_event(struct ub_ctx * ctx, char * name, int rrtype, int rrclass, char * mydata, func_type * callback, int * async_id)"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct ub_ctx *"
   - "name": "name"
@@ -49,8 +46,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "int ub_resolve_event(struct ub_ctx * ctx, char * name, int rrtype, int rrclass, char * mydata, func_type * callback, int * async_id)"
-- "name": "int auth_zones_notify(struct auth_zones * az, struct module_env * env, char * nm, size_t nmlen, short dclass, struct sockaddr_storage * addr, int addrlen, int has_serial, int serial, int * refused)"
-  "params":
+- "params":
   - "name": "az"
     "type": "struct auth_zones *"
   - "name": "env"
@@ -73,8 +69,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "int auth_zones_notify(struct auth_zones * az, struct module_env * env, char * nm, size_t nmlen, short dclass, struct sockaddr_storage * addr, int addrlen, int has_serial, int serial, int * refused)"
-- "name": "int auth_zones_startprobesequence(struct auth_zones * az, struct module_env * env, char * nm, size_t nmlen, short dclass)"
-  "params":
+- "params":
   - "name": "az"
     "type": "struct auth_zones *"
   - "name": "env"

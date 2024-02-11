@@ -1,30 +1,26 @@
 "functions":
-- "name": "argon2_initialize"
-  "params":
+- "params":
   - "name": "instance"
     "type": "struct Argon2_instance_t *"
   - "name": "context"
     "type": "struct Argon2_Context *"
   "return_type": "int"
   "signature": "argon2_initialize"
-- "name": "argon2_finalize"
-  "params":
+- "params":
   - "name": "context"
     "type": "struct Argon2_Context *"
   - "name": "instance"
     "type": "struct Argon2_instance_t *"
   "return_type": "void"
   "signature": "argon2_finalize"
-- "name": "argon2_fill_first_blocks"
-  "params":
+- "params":
   - "name": "blockhash"
     "type": "char *"
   - "name": "instance"
     "type": "struct Argon2_instance_t *"
   "return_type": "void"
   "signature": "argon2_fill_first_blocks"
-- "name": "blake2b_long"
-  "params":
+- "params":
   - "name": "pout"
     "type": "char *"
   - "name": "outlen"
@@ -35,8 +31,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "blake2b_long"
-- "name": "ge25519_from_hash"
-  "params":
+- "params":
   - "name": "s"
     "type": "char *"
   - "name": "h"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "OSS_FUZZ_png_read_png"
-  "params":
+- "params":
   - "name": "png_ptr"
     "type": "struct png_struct_def *"
   - "name": "info_ptr"
@@ -11,8 +10,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "OSS_FUZZ_png_read_png"
-- "name": "OSS_FUZZ_png_image_finish_read"
-  "params":
+- "params":
   - "name": "image"
     "type": "struct png_image *"
   - "name": "background"
@@ -25,14 +23,12 @@
     "type": "char *"
   "return_type": "int"
   "signature": "OSS_FUZZ_png_image_finish_read"
-- "name": "png_image_read_direct"
-  "params":
+- "params":
   - "name": "argument"
     "type": "char *"
   "return_type": "int"
   "signature": "png_image_read_direct"
-- "name": "OSS_FUZZ_png_image_begin_read_from_memory"
-  "params":
+- "params":
   - "name": "image"
     "type": "struct png_image *"
   - "name": "memory"
@@ -41,8 +37,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "OSS_FUZZ_png_image_begin_read_from_memory"
-- "name": "png_image_read_colormapped"
-  "params":
+- "params":
   - "name": "argument"
     "type": "char *"
   "return_type": "int"

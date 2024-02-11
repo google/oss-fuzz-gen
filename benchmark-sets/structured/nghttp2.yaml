@@ -1,18 +1,15 @@
 "functions":
-- "name": "nghttp2_session_recv"
-  "params":
+- "params":
   - "name": ""
     "type": "struct nghttp2_session *"
   "return_type": "int"
   "signature": "nghttp2_session_recv"
-- "name": "nghttp2_session_send"
-  "params":
+- "params":
   - "name": ""
     "type": "struct nghttp2_session *"
   "return_type": "int"
   "signature": "nghttp2_session_send"
-- "name": "nghttp2_session_upgrade2"
-  "params":
+- "params":
   - "name": ""
     "type": "struct nghttp2_session *"
   - "name": ""
@@ -25,8 +22,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "nghttp2_session_upgrade2"
-- "name": "nghttp2_session_upgrade"
-  "params":
+- "params":
   - "name": ""
     "type": "struct nghttp2_session *"
   - "name": ""
@@ -37,8 +33,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "nghttp2_session_upgrade"
-- "name": "nghttp2_session_upgrade_internal"
-  "params":
+- "params":
   - "name": ""
     "type": "struct nghttp2_session *"
   - "name": ""

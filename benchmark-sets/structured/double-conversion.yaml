@@ -1,6 +1,5 @@
 "functions":
-- "name": "float double_conversion::StringToDoubleConverter::StringTo<float>(unsigned short const*, int, int*) const"
-  "params":
+- "params":
   - "name": "this"
     "type": "double_conversion::StringToDoubleConverter *"
   - "name": "buffer"
@@ -11,8 +10,7 @@
     "type": "int *"
   "return_type": "float"
   "signature": "float double_conversion::StringToDoubleConverter::StringTo<float>(unsigned short const*, int, int*) const"
-- "name": "double double_conversion::StringToDoubleConverter::StringTo<double>(unsigned short const*, int, int*) const"
-  "params":
+- "params":
   - "name": "this"
     "type": "double_conversion::StringToDoubleConverter *"
   - "name": "buffer"
@@ -23,8 +21,7 @@
     "type": "int *"
   "return_type": "double"
   "signature": "double double_conversion::StringToDoubleConverter::StringTo<double>(unsigned short const*, int, int*) const"
-- "name": "float double_conversion::StringToDoubleConverter::StringTo<float>(char const*, int, int*) const"
-  "params":
+- "params":
   - "name": "this"
     "type": "double_conversion::StringToDoubleConverter *"
   - "name": "buffer"
@@ -35,8 +32,7 @@
     "type": "int *"
   "return_type": "float"
   "signature": "float double_conversion::StringToDoubleConverter::StringTo<float>(char const*, int, int*) const"
-- "name": "double double_conversion::StringToDoubleConverter::StringTo<double>(char const*, int, int*) const"
-  "params":
+- "params":
   - "name": "this"
     "type": "double_conversion::StringToDoubleConverter *"
   - "name": "buffer"
@@ -47,8 +43,7 @@
     "type": "int *"
   "return_type": "double"
   "signature": "double double_conversion::StringToDoubleConverter::StringTo<double>(char const*, int, int*) const"
-- "name": "double_conversion::StringToDoubleConverter::StringToFloat(unsigned short const*, int, int*) const"
-  "params":
+- "params":
   - "name": "this"
     "type": "double_conversion::StringToDoubleConverter *"
   - "name": "buffer"

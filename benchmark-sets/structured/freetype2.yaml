@@ -1,24 +1,19 @@
 "functions":
-- "name": "_GLOBAL__sub_I_ftfuzzer.cc"
-  "params": []
+- "params": []
   "return_type": "void"
   "signature": "_GLOBAL__sub_I_ftfuzzer.cc"
-- "name": "_GLOBAL__sub_I_template.cpp"
-  "params": []
+- "params": []
   "return_type": "void"
   "signature": "_GLOBAL__sub_I_template.cpp"
-- "name": "__cxx_global_var_init"
-  "params": []
+- "params": []
   "return_type": "void"
   "signature": "__cxx_global_var_init"
-- "name": "freetype::LzwFuzzTarget::LzwFuzzTarget()"
-  "params":
+- "params":
   - "name": "this"
-    "type": "freetype::LzwFuzzTarget *"
+    "type": "freetype::GzipFuzzTarget *"
   "return_type": "void"
-  "signature": "freetype::LzwFuzzTarget::LzwFuzzTarget()"
-- "name": "freetype::Bzip2FuzzTarget::Bzip2FuzzTarget()"
-  "params":
+  "signature": "freetype::GzipFuzzTarget::GzipFuzzTarget()"
+- "params":
   - "name": "this"
     "type": "freetype::Bzip2FuzzTarget *"
   "return_type": "void"

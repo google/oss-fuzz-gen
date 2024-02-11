@@ -1,6 +1,5 @@
 "functions":
-- "name": "int vlc_demux_process_memory(struct vlc_run_args * args, char * buf, size_t length)"
-  "params":
+- "params":
   - "name": "args"
     "type": "struct vlc_run_args *"
   - "name": "buf"
@@ -9,32 +8,28 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int vlc_demux_process_memory(struct vlc_run_args * args, char * buf, size_t length)"
-- "name": "int vlc_demux_process_path(struct vlc_run_args * args, char * path)"
-  "params":
+- "params":
   - "name": "args"
     "type": "struct vlc_run_args *"
   - "name": "path"
     "type": "char *"
   "return_type": "int"
   "signature": "int vlc_demux_process_path(struct vlc_run_args * args, char * path)"
-- "name": "int vlc_demux_process_url(struct vlc_run_args * args, char * url)"
-  "params":
+- "params":
   - "name": "args"
     "type": "struct vlc_run_args *"
   - "name": "url"
     "type": "char *"
   "return_type": "int"
   "signature": "int vlc_demux_process_url(struct vlc_run_args * args, char * url)"
-- "name": "struct vlm_t * vlm_New(struct libvlc_int_t * libvlc, char * psz_vlmconf)"
-  "params":
+- "params":
   - "name": "libvlc"
     "type": "struct libvlc_int_t *"
   - "name": "psz_vlmconf"
     "type": "char *"
   "return_type": "struct vlm_t *"
   "signature": "struct vlm_t * vlm_New(struct libvlc_int_t * libvlc, char * psz_vlmconf)"
-- "name": "char * Manage(char * p_object)"
-  "params":
+- "params":
   - "name": "p_object"
     "type": "char *"
   "return_type": "char *"

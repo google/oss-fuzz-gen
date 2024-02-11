@@ -1,6 +1,5 @@
 "functions":
-- "name": "cb_vivo_init"
-  "params":
+- "params":
   - "name": "ins"
     "type": "struct flb_output_instance *"
   - "name": "config"
@@ -9,8 +8,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "cb_vivo_init"
-- "name": "vivo_http_server_create"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct vivo_exporter *"
   - "name": "listen"
@@ -21,22 +19,19 @@
     "type": "struct flb_config *"
   "return_type": "struct prom_http *"
   "signature": "vivo_http_server_create"
-- "name": "flb_start_trace"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct flb_lib_ctx *"
   "return_type": "int"
   "signature": "flb_start_trace"
-- "name": "flb_config_load_config_format"
-  "params":
+- "params":
   - "name": "config"
     "type": "struct flb_config *"
   - "name": "cf"
     "type": "struct flb_cf *"
   "return_type": "int"
   "signature": "flb_config_load_config_format"
-- "name": "k8s_events_init"
-  "params":
+- "params":
   - "name": "ins"
     "type": "struct flb_input_instance *"
   - "name": "config"

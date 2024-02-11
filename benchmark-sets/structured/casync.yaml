@@ -1,6 +1,5 @@
 "functions":
-- "name": "xopendirat"
-  "params":
+- "params":
   - "name": "fd"
     "type": "int"
   - "name": "name"
@@ -11,8 +10,7 @@
     "type": "struct __dirstream **"
   "return_type": "int"
   "signature": "xopendirat"
-- "name": "compressor_encode"
-  "params":
+- "params":
   - "name": "c"
     "type": "struct CompressorContext *"
   - "name": "finalize"
@@ -25,22 +23,19 @@
     "type": "size_t *"
   "return_type": "int"
   "signature": "compressor_encode"
-- "name": "compressor_start_encode"
-  "params":
+- "params":
   - "name": "c"
     "type": "struct CompressorContext *"
   - "name": "compressor"
     "type": "int"
   "return_type": "int"
   "signature": "compressor_start_encode"
-- "name": "tmp_dir"
-  "params":
+- "params":
   - "name": "ret"
     "type": "char **"
   "return_type": "int"
   "signature": "tmp_dir"
-- "name": "var_tmp_dir"
-  "params":
+- "params":
   - "name": "ret"
     "type": "char **"
   "return_type": "int"

@@ -1,14 +1,12 @@
 "functions":
-- "name": "evhttp_start"
-  "params":
+- "params":
   - "name": ""
     "type": "char *"
   - "name": ""
     "type": "short"
   "return_type": "struct evhttp *"
   "signature": "evhttp_start"
-- "name": "evhttp_bind_socket"
-  "params":
+- "params":
   - "name": ""
     "type": "struct evhttp *"
   - "name": ""
@@ -17,8 +15,7 @@
     "type": "short"
   "return_type": "int"
   "signature": "evhttp_bind_socket"
-- "name": "evhttp_bind_socket_with_handle"
-  "params":
+- "params":
   - "name": ""
     "type": "struct evhttp *"
   - "name": ""
@@ -27,16 +24,14 @@
     "type": "short"
   "return_type": "struct evhttp_bound_socket *"
   "signature": "evhttp_bind_socket_with_handle"
-- "name": "evhttp_accept_socket"
-  "params":
+- "params":
   - "name": ""
     "type": "struct evhttp *"
   - "name": ""
     "type": "int"
   "return_type": "int"
   "signature": "evhttp_accept_socket"
-- "name": "evhttp_accept_socket_with_handle"
-  "params":
+- "params":
   - "name": ""
     "type": "struct evhttp *"
   - "name": ""

@@ -1,22 +1,19 @@
 "functions":
-- "name": "gifProtoFuzzer::BasicChunk* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&)"
-  "params":
+- "params":
   - "name": "arena"
     "type": "google::protobuf::Arena *"
   - "name": "from"
     "type": "gifProtoFuzzer::BasicChunk *"
   "return_type": "gifProtoFuzzer::BasicChunk *"
   "signature": "gifProtoFuzzer::BasicChunk* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&)"
-- "name": "fuzz_dgif_ala_android(unsigned char const*, unsigned long)"
-  "params":
+- "params":
   - "name": "Data"
     "type": "char *"
   - "name": "Size"
     "type": "size_t"
   "return_type": "int"
   "signature": "fuzz_dgif_ala_android(unsigned char const*, unsigned long)"
-- "name": "gifProtoFuzzer::BasicChunk* google::protobuf::Arena::InternalHelper<gifProtoFuzzer::BasicChunk>::Construct<google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&>(void*, google::protobuf::Arena*&&, gifProtoFuzzer::BasicChunk const&)"
-  "params":
+- "params":
   - "name": "ptr"
     "type": "char *"
   - "name": "args"
@@ -25,16 +22,14 @@
     "type": "gifProtoFuzzer::BasicChunk *"
   "return_type": "gifProtoFuzzer::BasicChunk *"
   "signature": "gifProtoFuzzer::BasicChunk* google::protobuf::Arena::InternalHelper<gifProtoFuzzer::BasicChunk>::Construct<google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&>(void*, google::protobuf::Arena*&&, gifProtoFuzzer::BasicChunk const&)"
-- "name": "fuzz_dgif(unsigned char const*, unsigned long)"
-  "params":
+- "params":
   - "name": "Data"
     "type": "char *"
   - "name": "Size"
     "type": "size_t"
   "return_type": "int"
   "signature": "fuzz_dgif(unsigned char const*, unsigned long)"
-- "name": "gifProtoFuzzer::PlainTextExtension* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::PlainTextExtension>(google::protobuf::Arena*, gifProtoFuzzer::PlainTextExtension const&)"
-  "params":
+- "params":
   - "name": "arena"
     "type": "google::protobuf::Arena *"
   - "name": "from"

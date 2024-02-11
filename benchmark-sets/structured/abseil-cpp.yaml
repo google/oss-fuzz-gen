@@ -1,6 +1,5 @@
 "functions":
-- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-  "params":
+- "params":
   - "name": "arg"
     "type": "char *"
   - "name": "spec"
@@ -11,8 +10,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-  "params":
+- "params":
   - "name": "arg"
     "type": "char *"
   - "name": "spec"
@@ -23,8 +21,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<short>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-  "params":
+- "params":
   - "name": "arg"
     "type": "char *"
   - "name": "spec"
@@ -35,8 +32,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<short>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<signed char>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-  "params":
+- "params":
   - "name": "arg"
     "type": "char *"
   - "name": "spec"
@@ -47,8 +43,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<signed char>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<char>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-  "params":
+- "params":
   - "name": "arg"
     "type": "char *"
   - "name": "spec"

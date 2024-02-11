@@ -1,6 +1,5 @@
 "functions":
-- "name": "Codec::setXAACDRCInfo(int, int, int, int, int)"
-  "params":
+- "params":
   - "name": ""
     "type": "Codec *"
   - "name": ""
@@ -15,8 +14,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "Codec::setXAACDRCInfo(int, int, int, int, int)"
-- "name": "ixheaacd_hbe_apply_ifft_336"
-  "params":
+- "params":
   - "name": ""
     "type": "float *"
   - "name": ""
@@ -27,8 +25,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "ixheaacd_hbe_apply_ifft_336"
-- "name": "ixheaacd_hbe_apply_fft_288"
-  "params":
+- "params":
   - "name": ""
     "type": "float *"
   - "name": ""
@@ -39,8 +36,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "ixheaacd_hbe_apply_fft_288"
-- "name": "ixheaacd_hbe_apply_ifft_224"
-  "params":
+- "params":
   - "name": ""
     "type": "float *"
   - "name": ""
@@ -51,8 +47,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "ixheaacd_hbe_apply_ifft_224"
-- "name": "ixheaacd_apply_rot_dec"
-  "params":
+- "params":
   - "name": ""
     "type": "struct ia_ps_dec_struct *"
   - "name": ""

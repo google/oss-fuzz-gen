@@ -1,28 +1,24 @@
 "functions":
-- "name": "Json::Reader::readObject(Json::Reader::Token&)"
-  "params":
+- "params":
   - "name": ""
     "type": "Json::Reader *"
   - "name": ""
     "type": "Json::OurReader::Token *"
   "return_type": "bool"
   "signature": "Json::Reader::readObject(Json::Reader::Token&)"
-- "name": "Json::Reader::readArray(Json::Reader::Token&)"
-  "params":
+- "params":
   - "name": ""
     "type": "Json::Reader *"
   - "name": ""
     "type": "Json::OurReader::Token *"
   "return_type": "bool"
   "signature": "Json::Reader::readArray(Json::Reader::Token&)"
-- "name": "Json::Reader::readValue()"
-  "params":
+- "params":
   - "name": ""
     "type": "Json::Reader *"
   "return_type": "bool"
   "signature": "Json::Reader::readValue()"
-- "name": "Json::Reader::parse(std::__1::basic_istream<char, std::__1::char_traits<char> >&, Json::Value&, bool)"
-  "params":
+- "params":
   - "name": ""
     "type": "Json::Reader *"
   - "name": ""
@@ -33,8 +29,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "Json::Reader::parse(std::__1::basic_istream<char, std::__1::char_traits<char> >&, Json::Value&, bool)"
-- "name": "Json::Reader::parse(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, Json::Value&, bool)"
-  "params":
+- "params":
   - "name": ""
     "type": "Json::Reader *"
   - "name": ""

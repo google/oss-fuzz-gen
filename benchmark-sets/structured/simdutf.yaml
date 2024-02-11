@@ -1,24 +1,20 @@
 "functions":
-- "name": "simdutf::internal::detect_best_supported_implementation_on_first_use::name() const"
-  "params":
+- "params":
   - "name": "this"
     "type": "simdutf::internal::unsupported_implementation *"
   "return_type": "std::string *"
   "signature": "simdutf::internal::detect_best_supported_implementation_on_first_use::name() const"
-- "name": "simdutf::internal::detect_best_supported_implementation_on_first_use::description() const"
-  "params":
+- "params":
   - "name": "this"
     "type": "simdutf::internal::unsupported_implementation *"
   "return_type": "std::string *"
   "signature": "simdutf::internal::detect_best_supported_implementation_on_first_use::description() const"
-- "name": "simdutf::internal::detect_best_supported_implementation_on_first_use::required_instruction_sets() const"
-  "params":
+- "params":
   - "name": "this"
     "type": "simdutf::internal::unsupported_implementation *"
   "return_type": "int"
   "signature": "simdutf::internal::detect_best_supported_implementation_on_first_use::required_instruction_sets() const"
-- "name": "simdutf::internal::detect_best_supported_implementation_on_first_use::count_utf8(char const*, unsigned long) const"
-  "params":
+- "params":
   - "name": "this"
     "type": "simdutf::internal::unsupported_implementation *"
   - "name": "buf"
@@ -27,8 +23,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "simdutf::internal::detect_best_supported_implementation_on_first_use::count_utf8(char const*, unsigned long) const"
-- "name": "simdutf::internal::detect_best_supported_implementation_on_first_use::detect_encodings(char const*, unsigned long) const"
-  "params":
+- "params":
   - "name": "this"
     "type": "simdutf::internal::unsupported_implementation *"
   - "name": "input"

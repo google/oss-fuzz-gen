@@ -1,36 +1,31 @@
 "functions":
-- "name": "int omain(int argc, char ** argv)"
-  "params":
+- "params":
   - "name": "argc"
     "type": "int"
   - "name": "argv"
     "type": "char **"
   "return_type": "int"
   "signature": "int omain(int argc, char ** argv)"
-- "name": "int main262(int argc, char ** argv)"
-  "params":
+- "params":
   - "name": "argc"
     "type": "int"
   - "name": "argv"
     "type": "char **"
   "return_type": "int"
   "signature": "int main262(int argc, char ** argv)"
-- "name": "char * fxRunFileThread(char * it)"
-  "params":
+- "params":
   - "name": "it"
     "type": "char *"
   "return_type": "char *"
   "signature": "char * fxRunFileThread(char * it)"
-- "name": "void fxRunContext(struct sxPool * pool, struct sxContext * context)"
-  "params":
+- "params":
   - "name": "pool"
     "type": "struct sxPool *"
   - "name": "context"
     "type": "struct sxContext *"
   "return_type": "void"
   "signature": "void fxRunContext(struct sxPool * pool, struct sxContext * context)"
-- "name": "int fxRunTestCase(struct sxPool * pool, struct sxContext * context, char * path, int flags, int async, char * message)"
-  "params":
+- "params":
   - "name": "pool"
     "type": "struct sxPool *"
   - "name": "context"

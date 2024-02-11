@@ -1,6 +1,5 @@
 "functions":
-- "name": "mbedtls_ssl_write"
-  "params":
+- "params":
   - "name": "ssl"
     "type": "struct mbedtls_ssl_context *"
   - "name": "buf"
@@ -9,8 +8,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "mbedtls_ssl_write"
-- "name": "mbedtls_test_psa_exercise_key"
-  "params":
+- "params":
   - "name": "key"
     "type": "int"
   - "name": "usage"
@@ -19,8 +17,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "mbedtls_test_psa_exercise_key"
-- "name": "mbedtls_ssl_context_load"
-  "params":
+- "params":
   - "name": "context"
     "type": "struct mbedtls_ssl_context *"
   - "name": "buf"
@@ -29,8 +26,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "mbedtls_ssl_context_load"
-- "name": "ssl_context_load"
-  "params":
+- "params":
   - "name": "ssl"
     "type": "struct mbedtls_ssl_context *"
   - "name": "buf"
@@ -39,8 +35,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "ssl_context_load"
-- "name": "mbedtls_ssl_check_record"
-  "params":
+- "params":
   - "name": "ssl"
     "type": "struct mbedtls_ssl_context *"
   - "name": "buf"

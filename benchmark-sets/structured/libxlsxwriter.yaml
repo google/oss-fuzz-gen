@@ -1,36 +1,31 @@
 "functions":
-- "name": "struct lxw_chart * workbook_add_chart(struct lxw_workbook * self, char type)"
-  "params":
+- "params":
   - "name": "self"
     "type": "struct lxw_workbook *"
   - "name": "type"
     "type": "char"
   "return_type": "struct lxw_chart *"
   "signature": "struct lxw_chart * workbook_add_chart(struct lxw_workbook * self, char type)"
-- "name": "struct lxw_chart * lxw_chart_new(char type)"
-  "params":
+- "params":
   - "name": "type"
     "type": "char"
   "return_type": "struct lxw_chart *"
   "signature": "struct lxw_chart * lxw_chart_new(char type)"
-- "name": "void _chart_initialize(struct lxw_chart * self, char type)"
-  "params":
+- "params":
   - "name": "self"
     "type": "struct lxw_chart *"
   - "name": "type"
     "type": "char"
   "return_type": "void"
   "signature": "void _chart_initialize(struct lxw_chart * self, char type)"
-- "name": "struct lxw_workbook * new_workbook_opt(char * filename, struct lxw_workbook_options * options)"
-  "params":
+- "params":
   - "name": "filename"
     "type": "char *"
   - "name": "options"
     "type": "struct lxw_workbook_options *"
   "return_type": "struct lxw_workbook *"
   "signature": "struct lxw_workbook * new_workbook_opt(char * filename, struct lxw_workbook_options * options)"
-- "name": "struct lxw_workbook * new_workbook(char * filename)"
-  "params":
+- "params":
   - "name": "filename"
     "type": "char *"
   "return_type": "struct lxw_workbook *"

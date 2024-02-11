@@ -1,6 +1,5 @@
 "functions":
-- "name": "int stun_set_binding_response(struct _stun_buffer * buf, struct stun_tid * tid, union.ioa_addr * reflexive_addr, int error_code, char * reason)"
-  "params":
+- "params":
   - "name": "buf"
     "type": "struct _stun_buffer *"
   - "name": "tid"
@@ -13,8 +12,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int stun_set_binding_response(struct _stun_buffer * buf, struct stun_tid * tid, union.ioa_addr * reflexive_addr, int error_code, char * reason)"
-- "name": "int stun_set_allocate_response(struct _stun_buffer * buf, struct stun_tid * tid, union.ioa_addr * relayed_addr1, union.ioa_addr * relayed_addr2, union.ioa_addr * reflexive_addr, int lifetime, int max_lifetime, int error_code, char * reason, size_t reservation_token, char * mobile_id)"
-  "params":
+- "params":
   - "name": "buf"
     "type": "struct _stun_buffer *"
   - "name": "tid"
@@ -39,8 +37,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int stun_set_allocate_response(struct _stun_buffer * buf, struct stun_tid * tid, union.ioa_addr * relayed_addr1, union.ioa_addr * relayed_addr2, union.ioa_addr * reflexive_addr, int lifetime, int max_lifetime, int error_code, char * reason, size_t reservation_token, char * mobile_id)"
-- "name": "int stun_set_binding_response_str(char * buf, size_t * len, struct stun_tid * tid, union.ioa_addr * reflexive_addr, int error_code, char * reason, int cookie, int old_stun, int no_stun_backward_compatibility)"
-  "params":
+- "params":
   - "name": "buf"
     "type": "char *"
   - "name": "len"
@@ -61,8 +58,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int stun_set_binding_response_str(char * buf, size_t * len, struct stun_tid * tid, union.ioa_addr * reflexive_addr, int error_code, char * reason, int cookie, int old_stun, int no_stun_backward_compatibility)"
-- "name": "int stun_set_allocate_response_str(char * buf, size_t * len, struct stun_tid * tid, union.ioa_addr * relayed_addr1, union.ioa_addr * relayed_addr2, union.ioa_addr * reflexive_addr, int lifetime, int max_lifetime, int error_code, char * reason, size_t reservation_token, char * mobile_id)"
-  "params":
+- "params":
   - "name": "buf"
     "type": "char *"
   - "name": "len"
@@ -89,8 +85,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int stun_set_allocate_response_str(char * buf, size_t * len, struct stun_tid * tid, union.ioa_addr * relayed_addr1, union.ioa_addr * relayed_addr2, union.ioa_addr * reflexive_addr, int lifetime, int max_lifetime, int error_code, char * reason, size_t reservation_token, char * mobile_id)"
-- "name": "short stun_set_channel_bind_request(struct _stun_buffer * buf, union.ioa_addr * peer_addr, short channel_number)"
-  "params":
+- "params":
   - "name": "buf"
     "type": "struct _stun_buffer *"
   - "name": "peer_addr"

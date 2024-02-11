@@ -1,6 +1,5 @@
 "functions":
-- "name": "lzma_lzma_encoder_init"
-  "params":
+- "params":
   - "name": "next"
     "type": "struct lzma_next_coder_s *"
   - "name": "allocator"
@@ -9,8 +8,7 @@
     "type": "struct lzma_filter_info_s *"
   "return_type": "int"
   "signature": "lzma_lzma_encoder_init"
-- "name": "lzma_encoder_init"
-  "params":
+- "params":
   - "name": "lz"
     "type": "struct lzma_lz_encoder *"
   - "name": "allocator"
@@ -23,8 +21,7 @@
     "type": "struct lzma_lz_options *"
   "return_type": "int"
   "signature": "lzma_encoder_init"
-- "name": "lzma_encode"
-  "params":
+- "params":
   - "name": "coder"
     "type": "char *"
   - "name": "mf"
@@ -37,14 +34,12 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "lzma_encode"
-- "name": "lzma_lzma2_encoder_memusage"
-  "params":
+- "params":
   - "name": "options"
     "type": "char *"
   "return_type": "size_t"
   "signature": "lzma_lzma2_encoder_memusage"
-- "name": "lzma_lzma_encoder_memusage"
-  "params":
+- "params":
   - "name": "options"
     "type": "char *"
   "return_type": "size_t"

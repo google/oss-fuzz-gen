@@ -1,38 +1,33 @@
 "functions":
-- "name": "struct _Str * wc_conv_from_utf7(struct _Str * is, int ces)"
-  "params":
+- "params":
   - "name": "is"
     "type": "struct _Str *"
   - "name": "ces"
     "type": "int"
   "return_type": "struct _Str *"
   "signature": "struct _Str * wc_conv_from_utf7(struct _Str * is, int ces)"
-- "name": "struct _Str * wc_char_conv_from_utf8(char c, struct wc_status * st)"
-  "params":
+- "params":
   - "name": "c"
     "type": "char"
   - "name": "st"
     "type": "struct wc_status *"
   "return_type": "struct _Str *"
   "signature": "struct _Str * wc_char_conv_from_utf8(char c, struct wc_status * st)"
-- "name": "char * wtf_conv_fit(char * s, int ces)"
-  "params":
+- "params":
   - "name": "s"
     "type": "char *"
   - "name": "ces"
     "type": "int"
   "return_type": "char *"
   "signature": "char * wtf_conv_fit(char * s, int ces)"
-- "name": "struct _Str * wc_char_conv_from_utf7(char c, struct wc_status * st)"
-  "params":
+- "params":
   - "name": "c"
     "type": "char"
   - "name": "st"
     "type": "struct wc_status *"
   "return_type": "struct _Str *"
   "signature": "struct _Str * wc_char_conv_from_utf7(char c, struct wc_status * st)"
-- "name": "struct _Str * wc_char_conv_from_iso2022(char c, struct wc_status * st)"
-  "params":
+- "params":
   - "name": "c"
     "type": "char"
   - "name": "st"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "int clib_package_install(struct clib_package_t * pkg, char * dir, int verbose)"
-  "params":
+- "params":
   - "name": "pkg"
     "type": "struct clib_package_t *"
   - "name": "dir"
@@ -9,8 +8,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int clib_package_install(struct clib_package_t * pkg, char * dir, int verbose)"
-- "name": "int clib_package_install_executable(struct clib_package_t * pkg, char * dir, int verbose)"
-  "params":
+- "params":
   - "name": "pkg"
     "type": "struct clib_package_t *"
   - "name": "dir"
@@ -19,8 +17,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int clib_package_install_executable(struct clib_package_t * pkg, char * dir, int verbose)"
-- "name": "int install_packages(struct list_t * list, char * dir, int verbose)"
-  "params":
+- "params":
   - "name": "list"
     "type": "struct list_t *"
   - "name": "dir"
@@ -29,8 +26,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int install_packages(struct list_t * list, char * dir, int verbose)"
-- "name": "int clib_package_install_development(struct clib_package_t * pkg, char * dir, int verbose)"
-  "params":
+- "params":
   - "name": "pkg"
     "type": "struct clib_package_t *"
   - "name": "dir"
@@ -39,8 +35,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int clib_package_install_development(struct clib_package_t * pkg, char * dir, int verbose)"
-- "name": "int clib_package_install_dependencies(struct clib_package_t * pkg, char * dir, int verbose)"
-  "params":
+- "params":
   - "name": "pkg"
     "type": "struct clib_package_t *"
   - "name": "dir"

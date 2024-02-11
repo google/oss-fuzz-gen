@@ -1,6 +1,5 @@
 "functions":
-- "name": "hb_ot_shape_glyphs_closure"
-  "params":
+- "params":
   - "name": "font"
     "type": "struct hb_font_t *"
   - "name": "buffer"
@@ -13,8 +12,7 @@
     "type": "struct hb_set_t *"
   "return_type": "void"
   "signature": "hb_ot_shape_glyphs_closure"
-- "name": "hb_shape_plan_create_cached"
-  "params":
+- "params":
   - "name": "face"
     "type": "struct hb_face_t *"
   - "name": "props"
@@ -27,8 +25,7 @@
     "type": "char **"
   "return_type": "struct hb_shape_plan_t *"
   "signature": "hb_shape_plan_create_cached"
-- "name": "hb_shape_plan_create"
-  "params":
+- "params":
   - "name": "face"
     "type": "struct hb_face_t *"
   - "name": "props"
@@ -41,8 +38,7 @@
     "type": "char **"
   "return_type": "struct hb_shape_plan_t *"
   "signature": "hb_shape_plan_create"
-- "name": "hb_ot_layout_lookups_substitute_closure"
-  "params":
+- "params":
   - "name": "face"
     "type": "struct hb_face_t *"
   - "name": "lookups"
@@ -51,8 +47,7 @@
     "type": "struct hb_set_t *"
   "return_type": "void"
   "signature": "hb_ot_layout_lookups_substitute_closure"
-- "name": "hb_ot_layout_lookup_substitute_closure"
-  "params":
+- "params":
   - "name": "face"
     "type": "struct hb_face_t *"
   - "name": "lookup_index"

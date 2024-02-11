@@ -1,34 +1,29 @@
 "functions":
-- "name": "tidyParseStdin"
-  "params":
+- "params":
   - "name": "tdoc"
     "type": "struct _TidyDoc *"
   "return_type": "int"
   "signature": "tidyParseStdin"
-- "name": "tidyDocParseStdin"
-  "params":
+- "params":
   - "name": "doc"
     "type": "struct _TidyDocImpl *"
   "return_type": "int"
   "signature": "tidyDocParseStdin"
-- "name": "tidyParseSource"
-  "params":
+- "params":
   - "name": "tdoc"
     "type": "struct _TidyDoc *"
   - "name": "source"
     "type": "struct _TidyInputSource *"
   "return_type": "int"
   "signature": "tidyParseSource"
-- "name": "tidyDocParseSource"
-  "params":
+- "params":
   - "name": "doc"
     "type": "struct _TidyDocImpl *"
   - "name": "source"
     "type": "struct _TidyInputSource *"
   "return_type": "int"
   "signature": "tidyDocParseSource"
-- "name": "prvTidyParseBody"
-  "params":
+- "params":
   - "name": "doc"
     "type": "struct _TidyDocImpl *"
   - "name": "body"

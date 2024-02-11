@@ -1,6 +1,5 @@
 "functions":
-- "name": "mkcldrn_cut"
-  "params":
+- "params":
   - "name": "p"
     "type": "struct problem_rdft *"
   - "name": "plnr"
@@ -9,8 +8,7 @@
     "type": "struct P_s *"
   "return_type": "int"
   "signature": "mkcldrn_cut"
-- "name": "mkcldrn_gcd"
-  "params":
+- "params":
   - "name": "p"
     "type": "struct problem_rdft *"
   - "name": "plnr"
@@ -19,16 +17,14 @@
     "type": "struct P_s *"
   "return_type": "int"
   "signature": "mkcldrn_gcd"
-- "name": "imprt"
-  "params":
+- "params":
   - "name": "ego"
     "type": "struct planner_s *"
   - "name": "sc"
     "type": "struct scanner_s *"
   "return_type": "int"
   "signature": "imprt"
-- "name": "fftw_mkproblem_rdft_0_d"
-  "params":
+- "params":
   - "name": "vecsz"
     "type": "struct tensor *"
   - "name": "I"
@@ -37,8 +33,7 @@
     "type": "double *"
   "return_type": "struct problem_s *"
   "signature": "fftw_mkproblem_rdft_0_d"
-- "name": "fftw_mkproblem_rdft_1_d"
-  "params":
+- "params":
   - "name": "sz"
     "type": "struct tensor *"
   - "name": "vecsz"

@@ -1,20 +1,17 @@
 "functions":
-- "name": "draco::PointCloud::DeduplicateAttributeValues()"
-  "params":
+- "params":
   - "name": ""
     "type": "draco::PointCloud *"
   "return_type": "bool"
   "signature": "draco::PointCloud::DeduplicateAttributeValues()"
-- "name": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&)"
-  "params":
+- "params":
   - "name": ""
     "type": "draco::PointAttribute *"
   - "name": ""
     "type": "draco::GeometryAttribute *"
   "return_type": "int"
   "signature": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&)"
-- "name": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
-  "params":
+- "params":
   - "name": ""
     "type": "draco::PointAttribute *"
   - "name": ""
@@ -23,8 +20,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
-- "name": "unsigned int draco::PointAttribute::DeduplicateTypedValues<int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
-  "params":
+- "params":
   - "name": ""
     "type": "draco::PointAttribute *"
   - "name": ""
@@ -33,8 +29,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "unsigned int draco::PointAttribute::DeduplicateTypedValues<int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
-- "name": "unsigned int draco::PointAttribute::DeduplicateTypedValues<unsigned int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
-  "params":
+- "params":
   - "name": ""
     "type": "draco::PointAttribute *"
   - "name": ""

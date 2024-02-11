@@ -1,6 +1,5 @@
 "functions":
-- "name": "zip_source_zip_file"
-  "params":
+- "params":
   - "name": "za"
     "type": "struct zip *"
   - "name": "srcza"
@@ -17,8 +16,7 @@
     "type": "char *"
   "return_type": "struct zip_source *"
   "signature": "zip_source_zip_file"
-- "name": "zip_file_replace"
-  "params":
+- "params":
   - "name": "za"
     "type": "struct zip *"
   - "name": "idx"
@@ -29,8 +27,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "zip_file_replace"
-- "name": "zip_source_window_create"
-  "params":
+- "params":
   - "name": "src"
     "type": "struct zip_source *"
   - "name": "start"
@@ -41,8 +38,7 @@
     "type": "struct zip_error *"
   "return_type": "struct zip_source *"
   "signature": "zip_source_window_create"
-- "name": "zip_source_buffer_with_attributes"
-  "params":
+- "params":
   - "name": "za"
     "type": "struct zip *"
   - "name": "data"
@@ -55,8 +51,7 @@
     "type": "struct zip_file_attributes *"
   "return_type": "struct zip_source *"
   "signature": "zip_source_buffer_with_attributes"
-- "name": "zip_source_buffer_fragment"
-  "params":
+- "params":
   - "name": "za"
     "type": "struct zip *"
   - "name": "fragments"

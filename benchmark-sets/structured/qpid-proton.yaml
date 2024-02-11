@@ -1,6 +1,5 @@
 "functions":
-- "name": "pni_process_tpwork_sender"
-  "params":
+- "params":
   - "name": ""
     "type": "struct pn_transport_t *"
   - "name": ""
@@ -9,8 +8,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "pni_process_tpwork_sender"
-- "name": "pn_output_write_sasl"
-  "params":
+- "params":
   - "name": ""
     "type": "struct pn_transport_t *"
   - "name": ""
@@ -21,14 +19,12 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "pn_output_write_sasl"
-- "name": "pni_post_sasl_frame"
-  "params":
+- "params":
   - "name": ""
     "type": "struct pn_transport_t *"
   "return_type": "void"
   "signature": "pni_post_sasl_frame"
-- "name": "pni_post_amqp_transfer_frame"
-  "params":
+- "params":
   - "name": ""
     "type": "struct pn_transport_t *"
   - "name": ""
@@ -57,8 +53,7 @@
     "type": "bool"
   "return_type": "int"
   "signature": "pni_post_amqp_transfer_frame"
-- "name": "pn_data_vfill"
-  "params":
+- "params":
   - "name": ""
     "type": "struct pn_data_t *"
   - "name": ""

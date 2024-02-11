@@ -1,6 +1,5 @@
 "functions":
-- "name": "fmt::v10::vprint(fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
-  "params":
+- "params":
   - "name": "fmt"
     "type": "char *"
   - "name": "args"
@@ -11,8 +10,7 @@
     "type": "fmt::v10::detail::value *"
   "return_type": "void"
   "signature": "fmt::v10::vprint(fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
-- "name": "fmt::v10::vprint(_IO_FILE*, fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
-  "params":
+- "params":
   - "name": "f"
     "type": "struct _IO_FILE *"
   - "name": "fmt"
@@ -25,8 +23,7 @@
     "type": "fmt::v10::detail::value *"
   "return_type": "void"
   "signature": "fmt::v10::vprint(_IO_FILE*, fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
-- "name": "fmt::v10::vprintln(_IO_FILE*, fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
-  "params":
+- "params":
   - "name": "f"
     "type": "struct _IO_FILE *"
   - "name": "fmt"
@@ -39,8 +36,7 @@
     "type": "fmt::v10::detail::value *"
   "return_type": "void"
   "signature": "fmt::v10::vprintln(_IO_FILE*, fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
-- "name": "fmt::v10::detail::print(_IO_FILE*, fmt::v10::basic_string_view<char>)"
-  "params":
+- "params":
   - "name": "f"
     "type": "struct _IO_FILE *"
   - "name": "text"
@@ -49,8 +45,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "fmt::v10::detail::print(_IO_FILE*, fmt::v10::basic_string_view<char>)"
-- "name": "fmt::v10::detail::fwrite_fully(void const*, unsigned long, _IO_FILE*)"
-  "params":
+- "params":
   - "name": "ptr"
     "type": "char *"
   - "name": "count"

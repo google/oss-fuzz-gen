@@ -1,6 +1,5 @@
 "functions":
-- "name": "gzsetparams"
-  "params":
+- "params":
   - "name": "file"
     "type": "struct gzFile_s *"
   - "name": "level"
@@ -9,24 +8,21 @@
     "type": "int"
   "return_type": "int"
   "signature": "gzsetparams"
-- "name": "gzputc"
-  "params":
+- "params":
   - "name": "file"
     "type": "struct gzFile_s *"
   - "name": "c"
     "type": "int"
   "return_type": "int"
   "signature": "gzputc"
-- "name": "gzputs"
-  "params":
+- "params":
   - "name": "file"
     "type": "struct gzFile_s *"
   - "name": "s"
     "type": "char *"
   "return_type": "int"
   "signature": "gzputs"
-- "name": "gzfwrite"
-  "params":
+- "params":
   - "name": "buf"
     "type": "char *"
   - "name": "size"
@@ -37,8 +33,7 @@
     "type": "struct gzFile_s *"
   "return_type": "size_t"
   "signature": "gzfwrite"
-- "name": "gzprintf"
-  "params":
+- "params":
   - "name": "file"
     "type": "struct gzFile_s *"
   - "name": "format"

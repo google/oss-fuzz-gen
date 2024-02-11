@@ -1,6 +1,5 @@
 "functions":
-- "name": "xsltRunStylesheet"
-  "params":
+- "params":
   - "name": "style"
     "type": "struct _xsltStylesheet *"
   - "name": "doc"
@@ -15,8 +14,7 @@
     "type": "struct _xmlOutputBuffer *"
   "return_type": "int"
   "signature": "xsltRunStylesheet"
-- "name": "xsltRunStylesheetUser"
-  "params":
+- "params":
   - "name": "style"
     "type": "struct _xsltStylesheet *"
   - "name": "doc"
@@ -35,8 +33,7 @@
     "type": "struct _xsltTransformContext *"
   "return_type": "int"
   "signature": "xsltRunStylesheetUser"
-- "name": "xsltProfileStylesheet"
-  "params":
+- "params":
   - "name": "style"
     "type": "struct _xsltStylesheet *"
   - "name": "doc"
@@ -47,8 +44,7 @@
     "type": "struct _IO_FILE *"
   "return_type": "struct _xmlDoc *"
   "signature": "xsltProfileStylesheet"
-- "name": "xsltApplyStylesheet"
-  "params":
+- "params":
   - "name": "style"
     "type": "struct _xsltStylesheet *"
   - "name": "doc"
@@ -57,8 +53,7 @@
     "type": "char **"
   "return_type": "struct _xmlDoc *"
   "signature": "xsltApplyStylesheet"
-- "name": "xmlShell"
-  "params":
+- "params":
   - "name": "doc"
     "type": "struct _xmlDoc *"
   - "name": "filename"

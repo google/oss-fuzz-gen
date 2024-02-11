@@ -1,6 +1,5 @@
 "functions":
-- "name": "LZ4_compressHC_limitedOutput_continue"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "LZ4_streamHC_u *"
   - "name": "src"
@@ -13,8 +12,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "LZ4_compressHC_limitedOutput_continue"
-- "name": "LZ4_compressHC_continue"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "LZ4_streamHC_u *"
   - "name": "src"
@@ -25,8 +23,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "LZ4_compressHC_continue"
-- "name": "LZ4_compress_HC_continue_destSize"
-  "params":
+- "params":
   - "name": "LZ4_streamHCPtr"
     "type": "LZ4_streamHC_u *"
   - "name": "src"
@@ -39,8 +36,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "LZ4_compress_HC_continue_destSize"
-- "name": "LZ4_compressHC2_limitedOutput"
-  "params":
+- "params":
   - "name": "src"
     "type": "char *"
   - "name": "dst"
@@ -53,8 +49,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "LZ4_compressHC2_limitedOutput"
-- "name": "LZ4_compressHC2"
-  "params":
+- "params":
   - "name": "src"
     "type": "char *"
   - "name": "dst"

@@ -1,6 +1,5 @@
 "functions":
-- "name": "ck_double_hash_insert"
-  "params":
+- "params":
   - "name": "key"
     "type": "double"
   - "name": "value"
@@ -9,8 +8,7 @@
     "type": "struct ck_hash_table_s *"
   "return_type": "int"
   "signature": "ck_double_hash_insert"
-- "name": "ck_float_hash_insert"
-  "params":
+- "params":
   - "name": "key"
     "type": "float"
   - "name": "value"
@@ -19,8 +17,7 @@
     "type": "struct ck_hash_table_s *"
   "return_type": "int"
   "signature": "ck_float_hash_insert"
-- "name": "readstat_value_is_missing"
-  "params":
+- "params":
   - "name": "value"
     "type": "size_t"
   - "name": "variable"
@@ -29,8 +26,7 @@
     "type": "struct readstat_variable_s *"
   "return_type": "int"
   "signature": "readstat_value_is_missing"
-- "name": "readstat_value_is_defined_missing"
-  "params":
+- "params":
   - "name": "value"
     "type": "size_t"
   - "name": "variable"
@@ -39,8 +35,7 @@
     "type": "struct readstat_variable_s *"
   "return_type": "int"
   "signature": "readstat_value_is_defined_missing"
-- "name": "ck_double_hash_lookup"
-  "params":
+- "params":
   - "name": "key"
     "type": "double"
   - "name": "table"

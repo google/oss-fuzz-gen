@@ -1,22 +1,19 @@
 "functions":
-- "name": "gnutls_record_recv_packet"
-  "params":
+- "params":
   - "name": ""
     "type": "struct gnutls_session_int *"
   - "name": ""
     "type": "struct mbuffer_st **"
   "return_type": "size_t"
   "signature": "gnutls_record_recv_packet"
-- "name": "gnutls_bye"
-  "params":
+- "params":
   - "name": ""
     "type": "struct gnutls_session_int *"
   - "name": ""
     "type": "int"
   "return_type": "int"
   "signature": "gnutls_bye"
-- "name": "gnutls_record_recv_seq"
-  "params":
+- "params":
   - "name": ""
     "type": "struct gnutls_session_int *"
   - "name": ""
@@ -27,8 +24,7 @@
     "type": "char *"
   "return_type": "size_t"
   "signature": "gnutls_record_recv_seq"
-- "name": "gnutls_session_ticket_send"
-  "params":
+- "params":
   - "name": ""
     "type": "struct gnutls_session_int *"
   - "name": ""
@@ -37,8 +33,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "gnutls_session_ticket_send"
-- "name": "gnutls_session_get_data"
-  "params":
+- "params":
   - "name": ""
     "type": "struct gnutls_session_int *"
   - "name": ""

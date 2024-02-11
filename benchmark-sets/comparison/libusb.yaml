@@ -1,20 +1,17 @@
 "functions":
-- "name": "op_init"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct libusb_context *"
   "return_type": "int"
   "signature": "op_init"
-- "name": "libusb_get_bos_descriptor"
-  "params":
+- "params":
   - "name": "dev_handle"
     "type": "struct libusb_device_handle *"
   - "name": "bos"
     "type": "struct libusb_bos_descriptor **"
   "return_type": "int"
   "signature": "libusb_get_bos_descriptor"
-- "name": "libusb_get_string_descriptor_ascii"
-  "params":
+- "params":
   - "name": "dev_handle"
     "type": "struct libusb_device_handle *"
   - "name": "desc_index"
@@ -25,16 +22,14 @@
     "type": "int"
   "return_type": "int"
   "signature": "libusb_get_string_descriptor_ascii"
-- "name": "libusb_get_configuration"
-  "params":
+- "params":
   - "name": "dev_handle"
     "type": "struct libusb_device_handle *"
   - "name": "config"
     "type": "int *"
   "return_type": "int"
   "signature": "libusb_get_configuration"
-- "name": "libusb_get_string_descriptor"
-  "params":
+- "params":
   - "name": "dev_handle"
     "type": "struct libusb_device_handle *"
   - "name": "desc_index"

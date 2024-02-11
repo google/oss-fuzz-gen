@@ -1,6 +1,5 @@
 "functions":
-- "name": "CryptSecretEncrypt"
-  "params":
+- "params":
   - "name": "keyHandle"
     "type": "int"
   - "name": "label"
@@ -11,8 +10,7 @@
     "type": "TPM2B_PUBLIC_KEY_RSA *"
   "return_type": "int"
   "signature": "CryptSecretEncrypt"
-- "name": "SensitiveToDuplicate"
-  "params":
+- "params":
   - "name": "sensitive"
     "type": "struct TPMT_SENSITIVE *"
   - "name": "name"
@@ -31,8 +29,7 @@
     "type": "TPM2B_PRIVATE *"
   "return_type": "void"
   "signature": "SensitiveToDuplicate"
-- "name": "TPMS_CAPABILITY_DATA_Unmarshal"
-  "params":
+- "params":
   - "name": "target"
     "type": "struct TPMS_CAPABILITY_DATA *"
   - "name": "buffer"
@@ -41,8 +38,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "TPMS_CAPABILITY_DATA_Unmarshal"
-- "name": "TPMU_CAPABILITIES_Unmarshal"
-  "params":
+- "params":
   - "name": "target"
     "type": "TPMU_CAPABILITIES *"
   - "name": "buffer"
@@ -53,8 +49,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "TPMU_CAPABILITIES_Unmarshal"
-- "name": "SecretToCredential"
-  "params":
+- "params":
   - "name": "secret"
     "type": "TPM2B_DIGEST *"
   - "name": "name"

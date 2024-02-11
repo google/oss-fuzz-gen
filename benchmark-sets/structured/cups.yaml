@@ -1,6 +1,5 @@
 "functions":
-- "name": "char * _ppdCreateFromIPP(char * buffer, size_t bufsize, struct _ipp_s * supported)"
-  "params":
+- "params":
   - "name": "buffer"
     "type": "char *"
   - "name": "bufsize"
@@ -9,8 +8,7 @@
     "type": "struct _ipp_s *"
   "return_type": "char *"
   "signature": "char * _ppdCreateFromIPP(char * buffer, size_t bufsize, struct _ipp_s * supported)"
-- "name": "char * _ppdCreateFromIPP2(char * buffer, size_t bufsize, struct _ipp_s * supported, struct cups_lang_s * lang)"
-  "params":
+- "params":
   - "name": "buffer"
     "type": "char *"
   - "name": "bufsize"
@@ -21,8 +19,7 @@
     "type": "struct cups_lang_s *"
   "return_type": "char *"
   "signature": "char * _ppdCreateFromIPP2(char * buffer, size_t bufsize, struct _ipp_s * supported, struct cups_lang_s * lang)"
-- "name": "struct _ipp_s * cupsDoFileRequest(struct _http_s * http, struct _ipp_s * request, char * resource, char * filename)"
-  "params":
+- "params":
   - "name": "http"
     "type": "struct _http_s *"
   - "name": "request"
@@ -33,8 +30,7 @@
     "type": "char *"
   "return_type": "struct _ipp_s *"
   "signature": "struct _ipp_s * cupsDoFileRequest(struct _http_s * http, struct _ipp_s * request, char * resource, char * filename)"
-- "name": "struct _ipp_s * cupsDoRequest(struct _http_s * http, struct _ipp_s * request, char * resource)"
-  "params":
+- "params":
   - "name": "http"
     "type": "struct _http_s *"
   - "name": "request"
@@ -43,8 +39,7 @@
     "type": "char *"
   "return_type": "struct _ipp_s *"
   "signature": "struct _ipp_s * cupsDoRequest(struct _http_s * http, struct _ipp_s * request, char * resource)"
-- "name": "struct _ipp_s * cupsDoIORequest(struct _http_s * http, struct _ipp_s * request, char * resource, int infile, int outfile)"
-  "params":
+- "params":
   - "name": "http"
     "type": "struct _http_s *"
   - "name": "request"

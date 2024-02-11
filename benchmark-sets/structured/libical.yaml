@@ -1,14 +1,12 @@
 "functions":
-- "name": "icalcomponent_merge_component"
-  "params":
+- "params":
   - "name": "comp"
     "type": "struct icalcomponent_impl *"
   - "name": "comp_to_merge"
     "type": "struct icalcomponent_impl *"
   "return_type": "void"
   "signature": "icalcomponent_merge_component"
-- "name": "icalcomponent_merge_vtimezone"
-  "params":
+- "params":
   - "name": "comp"
     "type": "struct icalcomponent_impl *"
   - "name": "vtimezone"
@@ -17,8 +15,7 @@
     "type": "struct _icalarray *"
   "return_type": "void"
   "signature": "icalcomponent_merge_vtimezone"
-- "name": "icalcomponent_handle_conflicting_vtimezones"
-  "params":
+- "params":
   - "name": "comp"
     "type": "struct icalcomponent_impl *"
   - "name": "vtimezone"
@@ -31,8 +28,7 @@
     "type": "struct _icalarray *"
   "return_type": "void"
   "signature": "icalcomponent_handle_conflicting_vtimezones"
-- "name": "icalcomponent_foreach_recurrence"
-  "params":
+- "params":
   - "name": "comp"
     "type": "struct icalcomponent_impl *"
   - "name": "start"
@@ -45,8 +41,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "icalcomponent_foreach_recurrence"
-- "name": "icaltimezone_truncate_vtimezone"
-  "params":
+- "params":
   - "name": "vtz"
     "type": "struct icalcomponent_impl *"
   - "name": "start"

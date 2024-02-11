@@ -1,10 +1,8 @@
 "functions":
-- "name": "validate_pffft_simd()"
-  "params": []
+- "params": []
   "return_type": "void"
   "signature": "validate_pffft_simd()"
-- "name": "pffft_simd_size"
-  "params": []
+- "params": []
   "return_type": "int"
   "signature": "pffft_simd_size"
 "language": "c++"

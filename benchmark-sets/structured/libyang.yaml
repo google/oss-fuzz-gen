@@ -1,30 +1,26 @@
 "functions":
-- "name": "int structure_aug_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
-  "params":
+- "params":
   - "name": "pctx"
     "type": "struct lysp_ctx *"
   - "name": "ext"
     "type": "struct lysp_ext_instance *"
   "return_type": "int"
   "signature": "int structure_aug_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
-- "name": "int yangdata_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
-  "params":
+- "params":
   - "name": "pctx"
     "type": "struct lysp_ctx *"
   - "name": "ext"
     "type": "struct lysp_ext_instance *"
   "return_type": "int"
   "signature": "int yangdata_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
-- "name": "int structure_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
-  "params":
+- "params":
   - "name": "pctx"
     "type": "struct lysp_ctx *"
   - "name": "ext"
     "type": "struct lysp_ext_instance *"
   "return_type": "int"
   "signature": "int structure_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
-- "name": "int lysp_stmt_parse(struct lysp_ctx * pctx, struct lysp_stmt * stmt, char ** result, struct lysp_ext_instance ** exts)"
-  "params":
+- "params":
   - "name": "pctx"
     "type": "struct lysp_ctx *"
   - "name": "stmt"
@@ -35,8 +31,7 @@
     "type": "struct lysp_ext_instance **"
   "return_type": "int"
   "signature": "int lysp_stmt_parse(struct lysp_ctx * pctx, struct lysp_stmt * stmt, char ** result, struct lysp_ext_instance ** exts)"
-- "name": "int lysp_stmt_list(struct lysp_ctx * ctx, struct lysp_stmt * stmt, struct lysp_node * parent, struct lysp_node ** siblings)"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct lysp_ctx *"
   - "name": "stmt"

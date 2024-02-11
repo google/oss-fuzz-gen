@@ -1,36 +1,31 @@
 "functions":
-- "name": "CommandData::ProcessCommand()"
-  "params":
+- "params":
   - "name": "this"
     "type": "CommandData *"
   "return_type": "void"
   "signature": "CommandData::ProcessCommand()"
-- "name": "Archive::CheckOpen(wchar_t const*)"
-  "params":
+- "params":
   - "name": "this"
     "type": "Archive *"
   - "name": "Name"
     "type": "int *"
   "return_type": "void"
   "signature": "Archive::CheckOpen(wchar_t const*)"
-- "name": "Archive::WCheckOpen(wchar_t const*)"
-  "params":
+- "params":
   - "name": "this"
     "type": "Archive *"
   - "name": "Name"
     "type": "int *"
   "return_type": "bool"
   "signature": "Archive::WCheckOpen(wchar_t const*)"
-- "name": "Archive::CheckArc(bool)"
-  "params":
+- "params":
   - "name": "this"
     "type": "Archive *"
   - "name": "EnableBroken"
     "type": "bool"
   "return_type": "void"
   "signature": "Archive::CheckArc(bool)"
-- "name": "Archive::SearchRR()"
-  "params":
+- "params":
   - "name": "this"
     "type": "Archive *"
   "return_type": "size_t"

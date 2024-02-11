@@ -1,14 +1,12 @@
 "functions":
-- "name": "LLVMFuzzerInitialize"
-  "params":
+- "params":
   - "name": "argc"
     "type": "int *"
   - "name": "argv"
     "type": "char ***"
   "return_type": "int"
   "signature": "LLVMFuzzerInitialize"
-- "name": "yr_compiler_add_fd"
-  "params":
+- "params":
   - "name": "compiler"
     "type": "struct _YR_COMPILER *"
   - "name": "rules_fd"
@@ -19,8 +17,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "yr_compiler_add_fd"
-- "name": "yr_compiler_add_file"
-  "params":
+- "params":
   - "name": "compiler"
     "type": "struct _YR_COMPILER *"
   - "name": "rules_file"
@@ -31,8 +28,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "yr_compiler_add_file"
-- "name": "yr_compiler_add_bytes"
-  "params":
+- "params":
   - "name": "compiler"
     "type": "struct _YR_COMPILER *"
   - "name": "rules_data"
@@ -43,8 +39,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "yr_compiler_add_bytes"
-- "name": "yr_lex_parse_rules_fd"
-  "params":
+- "params":
   - "name": "rules_fd"
     "type": "int"
   - "name": "compiler"

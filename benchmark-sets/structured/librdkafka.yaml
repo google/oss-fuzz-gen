@@ -1,6 +1,5 @@
 "functions":
-- "name": "match"
-  "params":
+- "params":
   - "name": "pc"
     "type": "struct Reinst *"
   - "name": "sp"
@@ -13,8 +12,7 @@
     "type": "struct Resub *"
   "return_type": "int"
   "signature": "match"
-- "name": "re_regexec"
-  "params":
+- "params":
   - "name": "prog"
     "type": "struct Reprog *"
   - "name": "sp"
@@ -25,8 +23,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "re_regexec"
-- "name": "strncmpcanon"
-  "params":
+- "params":
   - "name": "a"
     "type": "char *"
   - "name": "b"
@@ -35,16 +32,14 @@
     "type": "int"
   "return_type": "int"
   "signature": "strncmpcanon"
-- "name": "incclasscanon"
-  "params":
+- "params":
   - "name": "cc"
     "type": "struct Reclass *"
   - "name": "c"
     "type": "int"
   "return_type": "int"
   "signature": "incclasscanon"
-- "name": "iswordchar"
-  "params":
+- "params":
   - "name": "c"
     "type": "int"
   "return_type": "int"

@@ -1,18 +1,15 @@
 "functions":
-- "name": "ihevce_enc_frm_proc_slave_thrd"
-  "params":
+- "params":
   - "name": "pv_frm_proc_thrd_ctxt"
     "type": "char *"
   "return_type": "int"
   "signature": "ihevce_enc_frm_proc_slave_thrd"
-- "name": "ihevce_pre_enc_process_frame_thrd"
-  "params":
+- "params":
   - "name": "pv_frm_proc_thrd_ctxt"
     "type": "char *"
   "return_type": "int"
   "signature": "ihevce_pre_enc_process_frame_thrd"
-- "name": "ihevce_me_process"
-  "params":
+- "params":
   - "name": "pv_me_ctxt"
     "type": "char *"
   - "name": "ps_enc_lap_inp"
@@ -39,8 +36,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "ihevce_me_process"
-- "name": "hme_process_frm"
-  "params":
+- "params":
   - "name": "pv_me_ctxt"
     "type": "char *"
   - "name": "ps_l0_ipe_input"
@@ -65,8 +61,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "hme_process_frm"
-- "name": "ihevce_enc_loop_process"
-  "params":
+- "params":
   - "name": "pv_ctxt"
     "type": "char *"
   - "name": "ps_curr_inp"

@@ -1,36 +1,31 @@
 "functions":
-- "name": "skcms_ApproximatelyEqualProfiles"
-  "params":
+- "params":
   - "name": "A"
     "type": "struct skcms_ICCProfile *"
   - "name": "B"
     "type": "struct skcms_ICCProfile *"
   "return_type": "bool"
   "signature": "skcms_ApproximatelyEqualProfiles"
-- "name": "skcms_MakeUsableAsDestinationWithSingleCurve"
-  "params":
+- "params":
   - "name": "profile"
     "type": "struct skcms_ICCProfile *"
   "return_type": "bool"
   "signature": "skcms_MakeUsableAsDestinationWithSingleCurve"
-- "name": "skcms_TRCs_AreApproximateInverse"
-  "params":
+- "params":
   - "name": "profile"
     "type": "struct skcms_ICCProfile *"
   - "name": "inv_tf"
     "type": "struct skcms_TransferFunction *"
   "return_type": "bool"
   "signature": "skcms_TRCs_AreApproximateInverse"
-- "name": "skcms_AreApproximateInverses"
-  "params":
+- "params":
   - "name": "curve"
     "type": "skcms_Curve *"
   - "name": "inv_tf"
     "type": "struct skcms_TransferFunction *"
   "return_type": "bool"
   "signature": "skcms_AreApproximateInverses"
-- "name": "skcms_PrimariesToXYZD50"
-  "params":
+- "params":
   - "name": "rx"
     "type": "float"
   - "name": "ry"

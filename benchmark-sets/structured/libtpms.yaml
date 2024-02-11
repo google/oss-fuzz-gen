@@ -1,6 +1,5 @@
 "functions":
-- "name": "TPM_Process_DAAJoin"
-  "params":
+- "params":
   - "name": "tpm_state"
     "type": "struct tdTPM_STATE *"
   - "name": "response"
@@ -17,16 +16,14 @@
     "type": "struct tdTPM_TRANSPORT_INTERNAL *"
   "return_type": "int"
   "signature": "TPM_Process_DAAJoin"
-- "name": "TPM2_ValidateState"
-  "params":
+- "params":
   - "name": "st"
     "type": "int"
   - "name": "flags"
     "type": "int"
   "return_type": "int"
   "signature": "TPM2_ValidateState"
-- "name": "TPM_Process_DAASign"
-  "params":
+- "params":
   - "name": "tpm_state"
     "type": "struct tdTPM_STATE *"
   - "name": "response"
@@ -43,8 +40,7 @@
     "type": "struct tdTPM_TRANSPORT_INTERNAL *"
   "return_type": "int"
   "signature": "TPM_Process_DAASign"
-- "name": "TPM_Process_GetCapabilitySigned"
-  "params":
+- "params":
   - "name": "tpm_state"
     "type": "struct tdTPM_STATE *"
   - "name": "response"
@@ -61,8 +57,7 @@
     "type": "struct tdTPM_TRANSPORT_INTERNAL *"
   "return_type": "int"
   "signature": "TPM_Process_GetCapabilitySigned"
-- "name": "TPM12_MainInit"
-  "params": []
+- "params": []
   "return_type": "int"
   "signature": "TPM12_MainInit"
 "language": "c++"

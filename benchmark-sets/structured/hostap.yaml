@@ -1,6 +1,5 @@
 "functions":
-- "name": "wpa_supplicant_add_iface"
-  "params":
+- "params":
   - "name": "global"
     "type": "struct wpa_global *"
   - "name": "iface"
@@ -9,28 +8,24 @@
     "type": "struct wpa_supplicant *"
   "return_type": "struct wpa_supplicant *"
   "signature": "wpa_supplicant_add_iface"
-- "name": "wpa_supplicant_init_iface"
-  "params":
+- "params":
   - "name": "wpa_s"
     "type": "struct wpa_supplicant *"
   - "name": "iface"
     "type": "struct wpa_interface *"
   "return_type": "int"
   "signature": "wpa_supplicant_init_iface"
-- "name": "hostapd_reload_config"
-  "params":
+- "params":
   - "name": "iface"
     "type": "struct hostapd_iface *"
   "return_type": "int"
   "signature": "hostapd_reload_config"
-- "name": "wpa_supplicant_run"
-  "params":
+- "params":
   - "name": "global"
     "type": "struct wpa_global *"
   "return_type": "int"
   "signature": "wpa_supplicant_run"
-- "name": "hostapd_add_iface"
-  "params":
+- "params":
   - "name": "interfaces"
     "type": "struct hapd_interfaces *"
   - "name": "buf"

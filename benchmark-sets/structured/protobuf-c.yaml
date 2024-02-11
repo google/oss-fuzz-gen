@@ -1,14 +1,12 @@
 "functions":
-- "name": "size_t protobuf_c_message_pack_to_buffer(struct ProtobufCMessage * message, struct ProtobufCBuffer * buffer)"
-  "params":
+- "params":
   - "name": "message"
     "type": "struct ProtobufCMessage *"
   - "name": "buffer"
     "type": "struct ProtobufCBuffer *"
   "return_type": "size_t"
   "signature": "size_t protobuf_c_message_pack_to_buffer(struct ProtobufCMessage * message, struct ProtobufCBuffer * buffer)"
-- "name": "size_t oneof_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, int oneof_case, char * member, struct ProtobufCBuffer * buffer)"
-  "params":
+- "params":
   - "name": "field"
     "type": "struct ProtobufCFieldDescriptor *"
   - "name": "oneof_case"
@@ -19,8 +17,7 @@
     "type": "struct ProtobufCBuffer *"
   "return_type": "size_t"
   "signature": "size_t oneof_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, int oneof_case, char * member, struct ProtobufCBuffer * buffer)"
-- "name": "size_t optional_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, int has, char * member, struct ProtobufCBuffer * buffer)"
-  "params":
+- "params":
   - "name": "field"
     "type": "struct ProtobufCFieldDescriptor *"
   - "name": "has"
@@ -31,8 +28,7 @@
     "type": "struct ProtobufCBuffer *"
   "return_type": "size_t"
   "signature": "size_t optional_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, int has, char * member, struct ProtobufCBuffer * buffer)"
-- "name": "size_t repeated_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, int count, char * member, struct ProtobufCBuffer * buffer)"
-  "params":
+- "params":
   - "name": "field"
     "type": "struct ProtobufCFieldDescriptor *"
   - "name": "count"
@@ -43,8 +39,7 @@
     "type": "struct ProtobufCBuffer *"
   "return_type": "size_t"
   "signature": "size_t repeated_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, int count, char * member, struct ProtobufCBuffer * buffer)"
-- "name": "size_t unlabeled_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, char * member, struct ProtobufCBuffer * buffer)"
-  "params":
+- "params":
   - "name": "field"
     "type": "struct ProtobufCFieldDescriptor *"
   - "name": "member"

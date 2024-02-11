@@ -1,34 +1,29 @@
 "functions":
-- "name": "handshake_client"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct gnutls_session_int *"
   "return_type": "int"
   "signature": "handshake_client"
-- "name": "handshake_server"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct gnutls_session_int *"
   "return_type": "int"
   "signature": "handshake_server"
-- "name": "check_session_status"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct gnutls_session_int *"
   - "name": "ms"
     "type": "int"
   "return_type": "size_t"
   "signature": "check_session_status"
-- "name": "recv_handshake_final"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct gnutls_session_int *"
   - "name": "init"
     "type": "int"
   "return_type": "int"
   "signature": "recv_handshake_final"
-- "name": "gnutls_handshake"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct gnutls_session_int *"
   "return_type": "int"

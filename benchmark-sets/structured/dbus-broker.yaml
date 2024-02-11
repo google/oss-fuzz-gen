@@ -1,6 +1,5 @@
 "functions":
-- "name": "int log_vcommitf(struct Log * log, char * format, struct __va_list_tag * args)"
-  "params":
+- "params":
   - "name": "log"
     "type": "struct Log *"
   - "name": "format"
@@ -9,8 +8,7 @@
     "type": "struct __va_list_tag *"
   "return_type": "int"
   "signature": "int log_vcommitf(struct Log * log, char * format, struct __va_list_tag * args)"
-- "name": "int log_commit_stderr(struct Log * log, char * format, struct __va_list_tag * args)"
-  "params":
+- "params":
   - "name": "log"
     "type": "struct Log *"
   - "name": "format"
@@ -19,8 +17,7 @@
     "type": "struct __va_list_tag *"
   "return_type": "int"
   "signature": "int log_commit_stderr(struct Log * log, char * format, struct __va_list_tag * args)"
-- "name": "int log_commit_journal(struct Log * log, char * format, struct __va_list_tag * args)"
-  "params":
+- "params":
   - "name": "log"
     "type": "struct Log *"
   - "name": "format"
@@ -29,16 +26,14 @@
     "type": "struct __va_list_tag *"
   "return_type": "int"
   "signature": "int log_commit_journal(struct Log * log, char * format, struct __va_list_tag * args)"
-- "name": "void message_log_append(struct Message * message, struct Log * log)"
-  "params":
+- "params":
   - "name": "message"
     "type": "struct Message *"
   - "name": "log"
     "type": "struct Log *"
   "return_type": "void"
   "signature": "void message_log_append(struct Message * message, struct Log * log)"
-- "name": "void log_append_common(struct Log * log, int level, int error, char * id, char * file, int line, char * func)"
-  "params":
+- "params":
   - "name": "log"
     "type": "struct Log *"
   - "name": "level"

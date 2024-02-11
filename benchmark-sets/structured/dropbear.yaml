@@ -1,10 +1,8 @@
 "functions":
-- "name": "svr_ensure_hostkey"
-  "params": []
+- "params": []
   "return_type": "void"
   "signature": "svr_ensure_hostkey"
-- "name": "signkey_generate"
-  "params":
+- "params":
   - "name": "keytype"
     "type": "int"
   - "name": "bits"
@@ -15,18 +13,15 @@
     "type": "int"
   "return_type": "int"
   "signature": "signkey_generate"
-- "name": "recv_msg_userauth_pk_ok"
-  "params": []
+- "params": []
   "return_type": "void"
   "signature": "recv_msg_userauth_pk_ok"
-- "name": "gen_rsa_priv_key"
-  "params":
+- "params":
   - "name": "size"
     "type": "int"
   "return_type": "struct dropbear_DSS_Key *"
   "signature": "gen_rsa_priv_key"
-- "name": "gen_dss_priv_key"
-  "params":
+- "params":
   - "name": "size"
     "type": "int"
   "return_type": "struct dropbear_DSS_Key *"

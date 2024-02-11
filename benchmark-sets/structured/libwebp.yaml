@@ -1,6 +1,5 @@
 "functions":
-- "name": "WebPEncodeLosslessBGRA"
-  "params":
+- "params":
   - "name": "in"
     "type": "char *"
   - "name": "w"
@@ -13,8 +12,7 @@
     "type": "char **"
   "return_type": "size_t"
   "signature": "WebPEncodeLosslessBGRA"
-- "name": "WebPEncodeLosslessBGR"
-  "params":
+- "params":
   - "name": "in"
     "type": "char *"
   - "name": "w"
@@ -27,8 +25,7 @@
     "type": "char **"
   "return_type": "size_t"
   "signature": "WebPEncodeLosslessBGR"
-- "name": "WebPEncodeLosslessRGBA"
-  "params":
+- "params":
   - "name": "in"
     "type": "char *"
   - "name": "w"
@@ -41,8 +38,7 @@
     "type": "char **"
   "return_type": "size_t"
   "signature": "WebPEncodeLosslessRGBA"
-- "name": "WebPEncodeLosslessRGB"
-  "params":
+- "params":
   - "name": "in"
     "type": "char *"
   - "name": "w"
@@ -55,8 +51,7 @@
     "type": "char **"
   "return_type": "size_t"
   "signature": "WebPEncodeLosslessRGB"
-- "name": "WebPEncodeBGRA"
-  "params":
+- "params":
   - "name": "in"
     "type": "char *"
   - "name": "w"

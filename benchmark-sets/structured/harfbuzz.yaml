@@ -1,12 +1,10 @@
 "functions":
-- "name": "hb_subset_preprocess"
-  "params":
+- "params":
   - "name": "source"
     "type": "struct hb_face_t *"
   "return_type": "struct hb_face_t *"
   "signature": "hb_subset_preprocess"
-- "name": "hb_ot_shape_glyphs_closure"
-  "params":
+- "params":
   - "name": "font"
     "type": "struct hb_font_t *"
   - "name": "buffer"
@@ -19,8 +17,7 @@
     "type": "struct hb_set_t *"
   "return_type": "void"
   "signature": "hb_ot_shape_glyphs_closure"
-- "name": "hb_shape_justify"
-  "params":
+- "params":
   - "name": "font"
     "type": "struct hb_font_t *"
   - "name": "buffer"
@@ -43,8 +40,7 @@
     "type": "float *"
   "return_type": "int"
   "signature": "hb_shape_justify"
-- "name": "double solve_itp<hb_shape_justify::$_3>(hb_shape_justify::$_3, double, double, double, double, double, double&, double&, double&)"
-  "params":
+- "params":
   - "name": "f"
     "type": "anon *"
   - "name": "a"
@@ -65,8 +61,7 @@
     "type": "double *"
   "return_type": "double"
   "signature": "double solve_itp<hb_shape_justify::$_3>(hb_shape_justify::$_3, double, double, double, double, double, double&, double&, double&)"
-- "name": "hb_shape_justify::$_3::operator()(double) const"
-  "params":
+- "params":
   - "name": "this"
     "type": "anon *"
   - "name": "x"

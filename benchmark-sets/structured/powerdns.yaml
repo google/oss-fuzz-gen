@@ -1,6 +1,5 @@
 "functions":
-- "name": "handleEDNSClientSubnet(DNSQuestion&, bool&, bool&)"
-  "params":
+- "params":
   - "name": ""
     "type": "struct DNSQuestion *"
   - "name": ""
@@ -9,14 +8,12 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "handleEDNSClientSubnet(DNSQuestion&, bool&, bool&)"
-- "name": "checkHostnameCorrectness(DNSResourceRecord const&)"
-  "params":
+- "params":
   - "name": ""
     "type": "DNSResourceRecord *"
   "return_type": "void"
   "signature": "checkHostnameCorrectness(DNSResourceRecord const&)"
-- "name": "handleEDNSClientSubnet(std::__1::vector<unsigned char, noinit_adaptor<std::__1::allocator<unsigned char> > >&, unsigned long, unsigned long, bool&, bool&, bool, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-  "params":
+- "params":
   - "name": ""
     "type": "std::vector *"
   - "name": ""
@@ -33,8 +30,7 @@
     "type": "std::string *"
   "return_type": "bool"
   "signature": "handleEDNSClientSubnet(std::__1::vector<unsigned char, noinit_adaptor<std::__1::allocator<unsigned char> > >&, unsigned long, unsigned long, bool&, bool&, bool, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-- "name": "setEDNSOption(DNSQuestion&, unsigned short, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-  "params":
+- "params":
   - "name": ""
     "type": "struct DNSQuestion *"
   - "name": ""
@@ -43,8 +39,7 @@
     "type": "std::string *"
   "return_type": "bool"
   "signature": "setEDNSOption(DNSQuestion&, unsigned short, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-- "name": "RecordTextReader::xfrSvcParamKeyVals(std::__1::set<SvcParam, std::__1::less<SvcParam>, std::__1::allocator<SvcParam> >&)"
-  "params":
+- "params":
   - "name": ""
     "type": "RecordTextReader *"
   - "name": ""

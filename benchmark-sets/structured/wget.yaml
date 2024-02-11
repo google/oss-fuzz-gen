@@ -1,6 +1,5 @@
 "functions":
-- "name": "wgnutls_peek"
-  "params":
+- "params":
   - "name": "fd"
     "type": "int"
   - "name": "buf"
@@ -13,8 +12,7 @@
     "type": "double"
   "return_type": "int"
   "signature": "wgnutls_peek"
-- "name": "wgnutls_read"
-  "params":
+- "params":
   - "name": "fd"
     "type": "int"
   - "name": "buf"
@@ -27,8 +25,7 @@
     "type": "double"
   "return_type": "int"
   "signature": "wgnutls_read"
-- "name": "wgnutls_read_timeout"
-  "params":
+- "params":
   - "name": "fd"
     "type": "int"
   - "name": "buf"
@@ -41,8 +38,7 @@
     "type": "double"
   "return_type": "int"
   "signature": "wgnutls_read_timeout"
-- "name": "wgnutls_write"
-  "params":
+- "params":
   - "name": "fd"
     "type": "int"
   - "name": "buf"
@@ -53,8 +49,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "wgnutls_write"
-- "name": "gnutls_record_recv_packet"
-  "params":
+- "params":
   - "name": "session"
     "type": "struct gnutls_session_int *"
   - "name": "packet"

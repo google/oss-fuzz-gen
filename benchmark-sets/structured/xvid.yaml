@@ -1,6 +1,5 @@
 "functions":
-- "name": "xvid_encore"
-  "params":
+- "params":
   - "name": "handle"
     "type": "char *"
   - "name": "opt"
@@ -11,8 +10,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "xvid_encore"
-- "name": "enc_encode"
-  "params":
+- "params":
   - "name": "pEnc"
     "type": "struct Encoder *"
   - "name": "xFrame"
@@ -21,16 +19,14 @@
     "type": "struct xvid_enc_stats_t *"
   "return_type": "int"
   "signature": "enc_encode"
-- "name": "FrameCodeP"
-  "params":
+- "params":
   - "name": "pEnc"
     "type": "struct Encoder *"
   - "name": "bs"
     "type": "struct Bitstream *"
   "return_type": "int"
   "signature": "FrameCodeP"
-- "name": "FrameCodeB"
-  "params":
+- "params":
   - "name": "pEnc"
     "type": "struct Encoder *"
   - "name": "frame"
@@ -39,8 +35,7 @@
     "type": "struct Bitstream *"
   "return_type": "void"
   "signature": "FrameCodeB"
-- "name": "MotionEstimateSMP"
-  "params":
+- "params":
   - "name": "h"
     "type": "struct SMPData *"
   "return_type": "void"

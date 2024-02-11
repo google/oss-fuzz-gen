@@ -1,6 +1,5 @@
 "functions":
-- "name": "gcm_aes_setkey_wrap"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "char *"
   - "name": "key"
@@ -9,8 +8,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "gcm_aes_setkey_wrap"
-- "name": "libinjection_sqli_callback"
-  "params":
+- "params":
   - "name": "sf"
     "type": "struct libinjection_sqli_state *"
   - "name": "fn"
@@ -19,16 +17,14 @@
     "type": "char *"
   "return_type": "void"
   "signature": "libinjection_sqli_callback"
-- "name": "ndpi_deserialize_value_double"
-  "params":
+- "params":
   - "name": "_deserializer"
     "type": "struct ndpi_serializer *"
   - "name": "value"
     "type": "double *"
   "return_type": "int"
   "signature": "ndpi_deserialize_value_double"
-- "name": "mbedtls_cipher_check_tag"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct mbedtls_cipher_context_t *"
   - "name": "tag"
@@ -37,8 +33,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "mbedtls_cipher_check_tag"
-- "name": "mbedtls_cipher_write_tag"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct mbedtls_cipher_context_t *"
   - "name": "tag"

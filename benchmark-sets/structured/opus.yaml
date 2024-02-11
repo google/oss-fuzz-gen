@@ -1,6 +1,5 @@
 "functions":
-- "name": "opus_projection_encode_float"
-  "params":
+- "params":
   - "name": "st"
     "type": "struct OpusProjectionEncoder *"
   - "name": "pcm"
@@ -13,8 +12,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "opus_projection_encode_float"
-- "name": "opus_multistream_encode_float"
-  "params":
+- "params":
   - "name": "st"
     "type": "struct OpusMSEncoder *"
   - "name": "pcm"
@@ -27,8 +25,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "opus_multistream_encode_float"
-- "name": "opus_encode_float"
-  "params":
+- "params":
   - "name": "st"
     "type": "struct OpusEncoder *"
   - "name": "pcm"
@@ -41,8 +38,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "opus_encode_float"
-- "name": "opus_decode"
-  "params":
+- "params":
   - "name": "st"
     "type": "struct OpusDecoder *"
   - "name": "data"
@@ -57,8 +53,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "opus_decode"
-- "name": "opus_decode_float"
-  "params":
+- "params":
   - "name": "st"
     "type": "struct OpusDecoder *"
   - "name": "data"

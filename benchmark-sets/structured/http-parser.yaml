@@ -1,32 +1,27 @@
 "functions":
-- "name": "http_status_str"
-  "params":
+- "params":
   - "name": ""
     "type": "int"
   "return_type": "char *"
   "signature": "http_status_str"
-- "name": "http_should_keep_alive"
-  "params":
+- "params":
   - "name": ""
     "type": "struct http_parser *"
   "return_type": "int"
   "signature": "http_should_keep_alive"
-- "name": "http_parser_pause"
-  "params":
+- "params":
   - "name": ""
     "type": "struct http_parser *"
   - "name": ""
     "type": "int"
   "return_type": "void"
   "signature": "http_parser_pause"
-- "name": "http_errno_description"
-  "params":
+- "params":
   - "name": ""
     "type": "int"
   "return_type": "char *"
   "signature": "http_errno_description"
-- "name": "http_errno_name"
-  "params":
+- "params":
   - "name": ""
     "type": "int"
   "return_type": "char *"

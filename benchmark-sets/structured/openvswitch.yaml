@@ -1,40 +1,35 @@
 "functions":
-- "name": "dpif_dummy_register"
-  "params":
+- "params":
   - "name": "level"
     "type": "int"
   "return_type": "void"
   "signature": "dpif_dummy_register"
-- "name": "dpif_netdev_run"
-  "params":
+- "params":
   - "name": "dpif"
     "type": "struct dpif *"
   "return_type": "bool"
   "signature": "dpif_netdev_run"
-- "name": "dpif_netdev_open"
-  "params":
+- "params":
   - "name": "class"
-    "type": "struct dpif_3278 *"
+    "type": "struct dpif_3273 *"
   - "name": "name"
     "type": "char *"
   - "name": "create"
     "type": "bool"
   - "name": "dpifp"
-    "type": "3192 **"
+    "type": "3187 **"
   "return_type": "int"
   "signature": "dpif_netdev_open"
-- "name": "create_dp_netdev"
-  "params":
+- "params":
   - "name": "name"
     "type": "char *"
   - "name": "class"
-    "type": "struct dpif_3278 *"
+    "type": "struct dpif_3273 *"
   - "name": "dpp"
     "type": "struct dp_netdev **"
   "return_type": "int"
   "signature": "create_dp_netdev"
-- "name": "dpif_netdev_port_add"
-  "params":
+- "params":
   - "name": "dpif"
     "type": "struct dpif *"
   - "name": "netdev"

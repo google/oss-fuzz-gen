@@ -1,6 +1,5 @@
 "functions":
-- "name": "nestegg_track_seek"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct nestegg *"
   - "name": "track"
@@ -9,8 +8,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "nestegg_track_seek"
-- "name": "nestegg_get_cue_point"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct nestegg *"
   - "name": "cluster_num"
@@ -25,24 +23,21 @@
     "type": "size_t *"
   "return_type": "int"
   "signature": "nestegg_get_cue_point"
-- "name": "nestegg_sniff"
-  "params":
+- "params":
   - "name": "buffer"
     "type": "char *"
   - "name": "length"
     "type": "size_t"
   "return_type": "int"
   "signature": "nestegg_sniff"
-- "name": "ne_init_cue_points"
-  "params":
+- "params":
   - "name": "ctx"
     "type": "struct nestegg *"
   - "name": "max_offset"
     "type": "size_t"
   "return_type": "int"
   "signature": "ne_init_cue_points"
-- "name": "ne_match_webm"
-  "params":
+- "params":
   - "name": "io"
     "type": "struct nestegg_io *"
   - "name": "max_offset"

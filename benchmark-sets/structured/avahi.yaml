@@ -1,6 +1,5 @@
 "functions":
-- "name": "avahi_dns_packet_new_reply"
-  "params":
+- "params":
   - "name": "p"
     "type": "struct AvahiDnsPacket *"
   - "name": "mtu"
@@ -11,20 +10,17 @@
     "type": "int"
   "return_type": "struct AvahiDnsPacket *"
   "signature": "avahi_dns_packet_new_reply"
-- "name": "avahi_get_host_name_strdup"
-  "params": []
+- "params": []
   "return_type": "char *"
   "signature": "avahi_get_host_name_strdup"
-- "name": "avahi_get_host_name"
-  "params":
+- "params":
   - "name": "ret_s"
     "type": "char *"
   - "name": "size"
     "type": "size_t"
   "return_type": "char *"
   "signature": "avahi_get_host_name"
-- "name": "avahi_string_list_add_pair"
-  "params":
+- "params":
   - "name": "l"
     "type": "struct AvahiStringList *"
   - "name": "key"
@@ -33,8 +29,7 @@
     "type": "char *"
   "return_type": "struct AvahiStringList *"
   "signature": "avahi_string_list_add_pair"
-- "name": "avahi_string_list_add_printf"
-  "params":
+- "params":
   - "name": "l"
     "type": "struct AvahiStringList *"
   - "name": "format"

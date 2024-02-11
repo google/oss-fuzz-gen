@@ -1,6 +1,5 @@
 "functions":
-- "name": "fuzzing::types::Container<unsigned char, false, false> fuzzing::datasource::Base::Get<fuzzing::types::Container<unsigned char, false, false> >(unsigned long)"
-  "params":
+- "params":
   - "name": "this"
     "type": "fuzzing::types::Container *"
   - "name": "id"
@@ -9,8 +8,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "fuzzing::types::Container<unsigned char, false, false> fuzzing::datasource::Base::Get<fuzzing::types::Container<unsigned char, false, false> >(unsigned long)"
-- "name": "fuzzing::types::Container<char, true, false> fuzzing::datasource::Base::Get<fuzzing::types::Container<char, true, false> >(unsigned long)"
-  "params":
+- "params":
   - "name": "this"
     "type": "fuzzing::types::Container *"
   - "name": "id"
@@ -19,8 +17,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "fuzzing::types::Container<char, true, false> fuzzing::datasource::Base::Get<fuzzing::types::Container<char, true, false> >(unsigned long)"
-- "name": "oc_state_frag_recon_c"
-  "params":
+- "params":
   - "name": "_state"
     "type": "struct oc_theora_state *"
   - "name": "_fragi"
@@ -35,8 +32,7 @@
     "type": "short"
   "return_type": "void"
   "signature": "oc_state_frag_recon_c"
-- "name": "std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > fuzzing::datasource::Base::Get<std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >(unsigned long)"
-  "params":
+- "params":
   - "name": "this"
     "type": "std::vector *"
   - "name": "id"
@@ -45,8 +41,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > fuzzing::datasource::Base::Get<std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >(unsigned long)"
-- "name": "fuzzing::datasource::Datasource::get(unsigned long, unsigned long, unsigned long)"
-  "params":
+- "params":
   - "name": "this"
     "type": "std::vector *"
   - "name": "min"
