@@ -1,11 +1,11 @@
 "functions":
-- "name": "parse"
+- "name": "void parse(char * fname)"
   "params":
   - "name": "fname"
     "type": "char *"
   "return_type": "void"
   "signature": "void parse(char * fname)"
-- "name": "ini_parse_string"
+- "name": "int ini_parse_string(char * string, func_type * handler, char * user)"
   "params":
   - "name": "string"
     "type": "char *"
@@ -15,7 +15,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int ini_parse_string(char * string, func_type * handler, char * user)"
-- "name": "ini_reader_string"
+- "name": "char * ini_reader_string(char * str, int num, char * stream)"
   "params":
   - "name": "str"
     "type": "char *"

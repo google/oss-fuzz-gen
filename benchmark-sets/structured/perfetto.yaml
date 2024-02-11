@@ -1,5 +1,5 @@
 "functions":
-- "name": "perfetto::trace_processor::QueryExecutor::FilterLegacy"
+- "name": "perfetto::trace_processor::QueryExecutor::FilterLegacy(perfetto::trace_processor::Table const*, std::__1::vector<perfetto::trace_processor::Constraint, std::__1::allocator<perfetto::trace_processor::Constraint> > const&)"
   "params":
   - "name": ""
     "type": "perfetto::trace_processor::RowMap *"
@@ -9,7 +9,7 @@
     "type": "std::vector *"
   "return_type": "void"
   "signature": "perfetto::trace_processor::QueryExecutor::FilterLegacy(perfetto::trace_processor::Table const*, std::__1::vector<perfetto::trace_processor::Constraint, std::__1::allocator<perfetto::trace_processor::Constraint> > const&)"
-- "name": "perfetto::trace_processor::ColumnLegacy::FilterInto"
+- "name": "perfetto::trace_processor::ColumnLegacy::FilterInto(perfetto::trace_processor::FilterOp, perfetto::trace_processor::SqlValue, perfetto::trace_processor::RowMap*) const"
   "params":
   - "name": ""
     "type": "perfetto::trace_processor::ColumnLegacy *"
@@ -21,7 +21,7 @@
     "type": "perfetto::trace_processor::RowMap *"
   "return_type": "void"
   "signature": "perfetto::trace_processor::ColumnLegacy::FilterInto(perfetto::trace_processor::FilterOp, perfetto::trace_processor::SqlValue, perfetto::trace_processor::RowMap*) const"
-- "name": "perfetto::trace_processor::ColumnLegacy::FilterIntoSlow"
+- "name": "perfetto::trace_processor::ColumnLegacy::FilterIntoSlow(perfetto::trace_processor::FilterOp, perfetto::trace_processor::SqlValue, perfetto::trace_processor::RowMap*) const"
   "params":
   - "name": ""
     "type": "perfetto::trace_processor::ColumnLegacy *"
@@ -33,7 +33,7 @@
     "type": "perfetto::trace_processor::RowMap *"
   "return_type": "void"
   "signature": "perfetto::trace_processor::ColumnLegacy::FilterIntoSlow(perfetto::trace_processor::FilterOp, perfetto::trace_processor::SqlValue, perfetto::trace_processor::RowMap*) const"
-- "name": "perfetto::base::Statusperfetto::trace_processor::ProtoTraceTokenizer::Tokenize<perfetto::trace_processor::ProtoTraceReader::Parse(perfetto::trace_processor::TraceBlobView)::$_0>"
+- "name": "perfetto::base::Status perfetto::trace_processor::ProtoTraceTokenizer::Tokenize<perfetto::trace_processor::ProtoTraceReader::Parse(perfetto::trace_processor::TraceBlobView)::$_0>(perfetto::trace_processor::TraceBlobView, perfetto::trace_processor::ProtoTraceReader::Parse(perfetto::trace_processor::TraceBlobView)::$_0)"
   "params":
   - "name": ""
     "type": "perfetto::base::Status *"
@@ -45,7 +45,7 @@
     "type": "perfetto::trace_processor::ProtoTraceReader *"
   "return_type": "void"
   "signature": "perfetto::base::Status perfetto::trace_processor::ProtoTraceTokenizer::Tokenize<perfetto::trace_processor::ProtoTraceReader::Parse(perfetto::trace_processor::TraceBlobView)::$_0>(perfetto::trace_processor::TraceBlobView, perfetto::trace_processor::ProtoTraceReader::Parse(perfetto::trace_processor::TraceBlobView)::$_0)"
-- "name": "perfetto::TracingServiceImpl::FlushAndDisableTracing"
+- "name": "perfetto::TracingServiceImpl::FlushAndDisableTracing(unsigned long)::$_13::operator()(bool) const"
   "params":
   - "name": ""
     "type": "anon *"

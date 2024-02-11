@@ -1,5 +1,5 @@
 "functions":
-- "name": "icu_66::RegexPattern::matches"
+- "name": "icu_66::RegexPattern::matches(icu_66::UnicodeString const&, icu_66::UnicodeString const&, UParseError&, UErrorCode&)"
   "params":
   - "name": "regex"
     "type": "icu_66::UnicodeString *"
@@ -11,7 +11,7 @@
     "type": "int *"
   "return_type": "char"
   "signature": "icu_66::RegexPattern::matches(icu_66::UnicodeString const&, icu_66::UnicodeString const&, UParseError&, UErrorCode&)"
-- "name": "icu_66::RegexPattern::matches"
+- "name": "icu_66::RegexPattern::matches(UText*, UText*, UParseError&, UErrorCode&)"
   "params":
   - "name": "regex"
     "type": "struct UText *"
@@ -23,7 +23,7 @@
     "type": "int *"
   "return_type": "char"
   "signature": "icu_66::RegexPattern::matches(UText*, UText*, UParseError&, UErrorCode&)"
-- "name": "icu_66::RegexMatcher::RegexMatcher"
+- "name": "icu_66::RegexMatcher::RegexMatcher(icu_66::UnicodeString const&, unsigned int, UErrorCode&)"
   "params":
   - "name": "this"
     "type": "icu_66::RegexMatcher *"
@@ -35,7 +35,7 @@
     "type": "int *"
   "return_type": "void"
   "signature": "icu_66::RegexMatcher::RegexMatcher(icu_66::UnicodeString const&, unsigned int, UErrorCode&)"
-- "name": "icu_66::RegexMatcher::RegexMatcher"
+- "name": "icu_66::RegexMatcher::RegexMatcher(icu_66::UnicodeString const&, icu_66::UnicodeString const&, unsigned int, UErrorCode&)"
   "params":
   - "name": "this"
     "type": "icu_66::RegexMatcher *"
@@ -49,7 +49,7 @@
     "type": "int *"
   "return_type": "void"
   "signature": "icu_66::RegexMatcher::RegexMatcher(icu_66::UnicodeString const&, icu_66::UnicodeString const&, unsigned int, UErrorCode&)"
-- "name": "icu_66::RegexMatcher::RegexMatcher"
+- "name": "icu_66::RegexMatcher::RegexMatcher(UText*, unsigned int, UErrorCode&)"
   "params":
   - "name": "this"
     "type": "icu_66::RegexMatcher *"

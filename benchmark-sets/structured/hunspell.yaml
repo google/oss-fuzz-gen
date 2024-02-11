@@ -9,7 +9,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "Hunspell_suggest"
-- "name": "Hunspell::suggest"
+- "name": "Hunspell::suggest(char***, char const*)"
   "params":
   - "name": "this"
     "type": "Hunspell *"
@@ -19,7 +19,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "Hunspell::suggest(char***, char const*)"
-- "name": "HunspellImpl::suggest"
+- "name": "HunspellImpl::suggest(char***, char const*)"
   "params":
   - "name": "this"
     "type": "HunspellImpl *"
@@ -41,7 +41,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "Hunspell_generate"
-- "name": "Hunspell::generate"
+- "name": "Hunspell::generate(char***, char const*, char const*)"
   "params":
   - "name": "this"
     "type": "Hunspell *"

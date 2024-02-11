@@ -1,5 +1,5 @@
 "functions":
-- "name": "mz_zip_add_mem_to_archive_file_in_place"
+- "name": "int mz_zip_add_mem_to_archive_file_in_place(char * , char * , char * , size_t , char * , short , int )"
   "params":
   - "name": ""
     "type": "char *"
@@ -17,7 +17,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int mz_zip_add_mem_to_archive_file_in_place(char * , char * , char * , size_t , char * , short , int )"
-- "name": "mz_zip_add_mem_to_archive_file_in_place_v2"
+- "name": "int mz_zip_add_mem_to_archive_file_in_place_v2(char * , char * , char * , size_t , char * , short , int , int * )"
   "params":
   - "name": ""
     "type": "char *"
@@ -37,7 +37,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "int mz_zip_add_mem_to_archive_file_in_place_v2(char * , char * , char * , size_t , char * , short , int , int * )"
-- "name": "mz_zip_writer_add_file"
+- "name": "int mz_zip_writer_add_file(struct mz_zip_archive * , char * , char * , char * , short , int )"
   "params":
   - "name": ""
     "type": "struct mz_zip_archive *"
@@ -53,7 +53,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int mz_zip_writer_add_file(struct mz_zip_archive * , char * , char * , char * , short , int )"
-- "name": "mz_zip_validate_file_archive"
+- "name": "int mz_zip_validate_file_archive(char * , int , int * )"
   "params":
   - "name": ""
     "type": "char *"
@@ -63,7 +63,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "int mz_zip_validate_file_archive(char * , int , int * )"
-- "name": "mz_zip_writer_add_cfile"
+- "name": "int mz_zip_writer_add_cfile(struct mz_zip_archive * , char * , struct _IO_FILE * , size_t , size_t * , char * , short , int , char * , int , char * , int )"
   "params":
   - "name": ""
     "type": "struct mz_zip_archive *"

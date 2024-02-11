@@ -43,7 +43,7 @@
     "type": "float *"
   "return_type": "int"
   "signature": "hb_shape_justify"
-- "name": "doublesolve_itp<hb_shape_justify::$_3>"
+- "name": "double solve_itp<hb_shape_justify::$_3>(hb_shape_justify::$_3, double, double, double, double, double, double&, double&, double&)"
   "params":
   - "name": "f"
     "type": "anon *"
@@ -65,7 +65,7 @@
     "type": "double *"
   "return_type": "double"
   "signature": "double solve_itp<hb_shape_justify::$_3>(hb_shape_justify::$_3, double, double, double, double, double, double&, double&, double&)"
-- "name": "hb_shape_justify::$_3::operator"
+- "name": "hb_shape_justify::$_3::operator()(double) const"
   "params":
   - "name": "this"
     "type": "anon *"

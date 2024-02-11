@@ -1,5 +1,5 @@
 "functions":
-- "name": "Terminal::Complete::init_diff[abi:cxx11]"
+- "name": "Terminal::Complete::init_diff[abi:cxx11]() const"
   "params":
   - "name": "this"
     "type": "std::__cxx11::basic_string *"
@@ -7,7 +7,7 @@
     "type": "Terminal::Complete *"
   "return_type": "void"
   "signature": "Terminal::Complete::init_diff[abi:cxx11]() const"
-- "name": "Terminal::Complete::diff_from[abi:cxx11]"
+- "name": "Terminal::Complete::diff_from[abi:cxx11](Terminal::Complete const&) const"
   "params":
   - "name": "this"
     "type": "std::__cxx11::basic_string *"
@@ -17,7 +17,7 @@
     "type": "Terminal::Complete *"
   "return_type": "void"
   "signature": "Terminal::Complete::diff_from[abi:cxx11](Terminal::Complete const&) const"
-- "name": "Terminal::Complete::apply_string"
+- "name": "Terminal::Complete::apply_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)"
   "params":
   - "name": "this"
     "type": "Terminal::Complete *"
@@ -25,7 +25,7 @@
     "type": "std::__cxx11::basic_string *"
   "return_type": "void"
   "signature": "Terminal::Complete::apply_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)"
-- "name": "Parser::Resize::act_on_terminal"
+- "name": "Parser::Resize::act_on_terminal(Terminal::Emulator*) const"
   "params":
   - "name": "this"
     "type": "Parser::Resize *"
@@ -33,7 +33,7 @@
     "type": "Terminal::Emulator *"
   "return_type": "void"
   "signature": "Parser::Resize::act_on_terminal(Terminal::Emulator*) const"
-- "name": "Terminal::Emulator::resize"
+- "name": "Terminal::Emulator::resize(unsigned long, unsigned long)"
   "params":
   - "name": "this"
     "type": "Terminal::Emulator *"

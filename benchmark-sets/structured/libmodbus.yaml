@@ -1,5 +1,5 @@
 "functions":
-- "name": "modbus_read_input_bits"
+- "name": "int modbus_read_input_bits(struct _modbus * ctx, int addr, int nb, char * dest)"
   "params":
   - "name": "ctx"
     "type": "struct _modbus *"
@@ -11,7 +11,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int modbus_read_input_bits(struct _modbus * ctx, int addr, int nb, char * dest)"
-- "name": "modbus_write_and_read_registers"
+- "name": "int modbus_write_and_read_registers(struct _modbus * ctx, int write_addr, int write_nb, short * src, int read_addr, int read_nb, short * dest)"
   "params":
   - "name": "ctx"
     "type": "struct _modbus *"
@@ -29,7 +29,7 @@
     "type": "short *"
   "return_type": "int"
   "signature": "int modbus_write_and_read_registers(struct _modbus * ctx, int write_addr, int write_nb, short * src, int read_addr, int read_nb, short * dest)"
-- "name": "modbus_read_input_registers"
+- "name": "int modbus_read_input_registers(struct _modbus * ctx, int addr, int nb, short * dest)"
   "params":
   - "name": "ctx"
     "type": "struct _modbus *"
@@ -41,7 +41,7 @@
     "type": "short *"
   "return_type": "int"
   "signature": "int modbus_read_input_registers(struct _modbus * ctx, int addr, int nb, short * dest)"
-- "name": "modbus_write_bits"
+- "name": "int modbus_write_bits(struct _modbus * ctx, int addr, int nb, char * src)"
   "params":
   - "name": "ctx"
     "type": "struct _modbus *"
@@ -53,7 +53,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int modbus_write_bits(struct _modbus * ctx, int addr, int nb, char * src)"
-- "name": "modbus_report_slave_id"
+- "name": "int modbus_report_slave_id(struct _modbus * ctx, int max_dest, char * dest)"
   "params":
   - "name": "ctx"
     "type": "struct _modbus *"

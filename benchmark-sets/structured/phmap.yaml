@@ -1,11 +1,11 @@
 "functions":
-- "name": "phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<unsignedint,int>,phmap::Hash<unsignedint>,phmap::EqualTo<unsignedint>,std::__1::allocator<std::__1::pair<unsignedintconst,int>>>::drop_deletes_without_resize"
+- "name": "phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<unsigned int, int>, phmap::Hash<unsigned int>, phmap::EqualTo<unsigned int>, std::__1::allocator<std::__1::pair<unsigned int const, int> > >::drop_deletes_without_resize()"
   "params":
   - "name": "this"
     "type": "phmap::priv::raw_hash_set *"
   "return_type": "void"
   "signature": "phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<unsigned int, int>, phmap::Hash<unsigned int>, phmap::EqualTo<unsigned int>, std::__1::allocator<std::__1::pair<unsigned int const, int> > >::drop_deletes_without_resize()"
-- "name": "phmap::priv::ConvertDeletedToEmptyAndFullToDeleted"
+- "name": "phmap::priv::ConvertDeletedToEmptyAndFullToDeleted(signed char*, unsigned long)"
   "params":
   - "name": "ctrl"
     "type": "char *"
@@ -13,13 +13,13 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "phmap::priv::ConvertDeletedToEmptyAndFullToDeleted(signed char*, unsigned long)"
-- "name": "phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>>,phmap::Hash<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>>,phmap::EqualTo<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>>,std::__1::allocator<std::__1::pair<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>>>>::iterator::operator++"
+- "name": "phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, phmap::Hash<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, phmap::EqualTo<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >::iterator::operator++()"
   "params":
   - "name": "this"
     "type": "phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<std::string, std::string>, phmap::Hash<std::string>, phmap::EqualTo<std::string>, std::allocator<std::pair<const std::string, std::string>>>::iterator *"
   "return_type": "phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<std::string, std::string>, phmap::Hash<std::string>, phmap::EqualTo<std::string>, std::allocator<std::pair<const std::string, std::string>>>::iterator *"
   "signature": "phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, phmap::Hash<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, phmap::EqualTo<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >::iterator::operator++()"
-- "name": "voidphmap::priv::Deallocate<8ul,std::__1::allocator<std::__1::pair<std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>const,std::__1::basic_string<char,std::__1::char_traits<char>,std::__1::allocator<char>>>>>"
+- "name": "void phmap::priv::Deallocate<8ul, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >(std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >*, void*, unsigned long)"
   "params":
   - "name": "alloc"
     "type": "phmap::priv::HashtablezInfoHandle *"
@@ -29,7 +29,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void phmap::priv::Deallocate<8ul, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >(std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >*, void*, unsigned long)"
-- "name": "phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<unsignedint,int>,phmap::Hash<unsignedint>,phmap::EqualTo<unsignedint>,std::__1::allocator<std::__1::pair<unsignedintconst,int>>>::drop_deletes_without_resize"
+- "name": "phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<unsigned int, int>, phmap::Hash<unsigned int>, phmap::EqualTo<unsigned int>, std::__1::allocator<std::__1::pair<unsigned int const, int> > >::drop_deletes_without_resize()::{lambda(unsigned long)#1}::operator()(unsigned long) const"
   "params":
   - "name": "this"
     "type": "anon *"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "op_CallIndirect"
+- "name": "char * op_CallIndirect(char ** , int * , struct M3MemoryHeader * , size_t , double )"
   "params":
   - "name": ""
     "type": "char **"
@@ -13,13 +13,13 @@
     "type": "double"
   "return_type": "char *"
   "signature": "char * op_CallIndirect(char ** , int * , struct M3MemoryHeader * , size_t , double )"
-- "name": "m3_CompileModule"
+- "name": "char * m3_CompileModule(struct M3Module * )"
   "params":
   - "name": ""
     "type": "struct M3Module *"
   "return_type": "char *"
   "signature": "char * m3_CompileModule(struct M3Module * )"
-- "name": "m3_GetTableFunction"
+- "name": "char * m3_GetTableFunction(struct M3Function ** , struct M3Module * , int )"
   "params":
   - "name": ""
     "type": "struct M3Function **"
@@ -29,7 +29,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "char * m3_GetTableFunction(struct M3Function ** , struct M3Module * , int )"
-- "name": "op_Compile"
+- "name": "char * op_Compile(char ** , int * , struct M3MemoryHeader * , size_t , double )"
   "params":
   - "name": ""
     "type": "char **"
@@ -43,7 +43,7 @@
     "type": "double"
   "return_type": "char *"
   "signature": "char * op_Compile(char ** , int * , struct M3MemoryHeader * , size_t , double )"
-- "name": "CompileRawFunction"
+- "name": "char * CompileRawFunction(struct M3Module * , struct M3Function * , char * , char * )"
   "params":
   - "name": ""
     "type": "struct M3Module *"

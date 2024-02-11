@@ -1,11 +1,11 @@
 "functions":
-- "name": "flatbuffers::Parser::Serialize"
+- "name": "flatbuffers::Parser::Serialize()"
   "params":
   - "name": ""
     "type": "flatbuffers::Parser *"
   "return_type": "void"
-  "signature": "void _ZN11flatbuffers6Parser9SerializeEv(flatbuffers::Parser * )"
-- "name": "flatbuffers::"
+  "signature": "flatbuffers::Parser::Serialize()"
+- "name": "flatbuffers::(anonymous namespace)::TextCodeGenerator::GenerateCode(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
   "params":
   - "name": ""
     "type": "flatbuffers::(anonymous namespace)::TextCodeGenerator *"
@@ -16,8 +16,8 @@
   - "name": ""
     "type": "std::string *"
   "return_type": "int"
-  "signature": "int _ZN11flatbuffers12_GLOBAL__N_117TextCodeGenerator12GenerateCodeERKNS_6ParserERKNSt3__112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEESD_(flatbuffers::(anonymous namespace)::TextCodeGenerator * , flatbuffers::Parser * , std::string * , std::string * )"
-- "name": "flatbuffers::GenerateTextFile"
+  "signature": "flatbuffers::(anonymous namespace)::TextCodeGenerator::GenerateCode(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "flatbuffers::GenerateTextFile(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
   "params":
   - "name": ""
     "type": "flatbuffers::Parser *"
@@ -26,8 +26,8 @@
   - "name": ""
     "type": "std::string *"
   "return_type": "char *"
-  "signature": "char * _ZN11flatbuffers16GenerateTextFileERKNS_6ParserERKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESB_(flatbuffers::Parser * , std::string * , std::string * )"
-- "name": "flatbuffers::GenTextFile"
+  "signature": "flatbuffers::GenerateTextFile(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "flatbuffers::GenTextFile(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
   "params":
   - "name": ""
     "type": "flatbuffers::Parser *"
@@ -36,8 +36,8 @@
   - "name": ""
     "type": "std::string *"
   "return_type": "char *"
-  "signature": "char * _ZN11flatbuffers11GenTextFileERKNS_6ParserERKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESB_(flatbuffers::Parser * , std::string * , std::string * )"
-- "name": "charconst*flatbuffers::JsonPrinter::PrintVector<flatbuffers::Offset64<void>,unsignedint>"
+  "signature": "flatbuffers::GenTextFile(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "char const* flatbuffers::JsonPrinter::PrintVector<flatbuffers::Offset64<void>, unsigned int>(void const*, flatbuffers::Type const&, int, unsigned char const*)"
   "params":
   - "name": ""
     "type": "struct flatbuffers::JsonPrinter *"
@@ -50,7 +50,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "char *"
-  "signature": "char * _ZN11flatbuffers11JsonPrinter11PrintVectorINS_8Offset64IvEEjEEPKcPKvRKNS_4TypeEiPKh(struct flatbuffers::JsonPrinter * , char * , struct flatbuffers::Type * , int , char * )"
+  "signature": "char const* flatbuffers::JsonPrinter::PrintVector<flatbuffers::Offset64<void>, unsigned int>(void const*, flatbuffers::Type const&, int, unsigned char const*)"
 "language": "c++"
 "project": "flatbuffers"
 "target_name": "64bit_fuzzer"

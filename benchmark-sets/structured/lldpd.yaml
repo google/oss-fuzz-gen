@@ -1,17 +1,17 @@
 "functions":
-- "name": "levent_loop"
+- "name": "void levent_loop(struct lldpd * cfg)"
   "params":
   - "name": "cfg"
     "type": "struct lldpd *"
   "return_type": "void"
   "signature": "void levent_loop(struct lldpd * cfg)"
-- "name": "levent_init"
+- "name": "void levent_init(struct lldpd * cfg)"
   "params":
   - "name": "cfg"
     "type": "struct lldpd *"
   "return_type": "void"
   "signature": "void levent_init(struct lldpd * cfg)"
-- "name": "levent_update_and_send"
+- "name": "void levent_update_and_send(int fd, short what, char * arg)"
   "params":
   - "name": "fd"
     "type": "int"
@@ -21,13 +21,13 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void levent_update_and_send(int fd, short what, char * arg)"
-- "name": "lldpd_loop"
+- "name": "void lldpd_loop(struct lldpd * cfg)"
   "params":
   - "name": "cfg"
     "type": "struct lldpd *"
   "return_type": "void"
   "signature": "void lldpd_loop(struct lldpd * cfg)"
-- "name": "netlink_initialize"
+- "name": "int netlink_initialize(struct lldpd * cfg)"
   "params":
   - "name": "cfg"
     "type": "struct lldpd *"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "ucl_parser_add_fd"
+- "name": "bool ucl_parser_add_fd(struct ucl_parser * parser, int fd)"
   "params":
   - "name": "parser"
     "type": "struct ucl_parser *"
@@ -7,7 +7,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool ucl_parser_add_fd(struct ucl_parser * parser, int fd)"
-- "name": "ucl_parser_add_fd_priority"
+- "name": "bool ucl_parser_add_fd_priority(struct ucl_parser * parser, int fd, int priority)"
   "params":
   - "name": "parser"
     "type": "struct ucl_parser *"
@@ -17,7 +17,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool ucl_parser_add_fd_priority(struct ucl_parser * parser, int fd, int priority)"
-- "name": "ucl_parser_add_file"
+- "name": "bool ucl_parser_add_file(struct ucl_parser * parser, char * filename)"
   "params":
   - "name": "parser"
     "type": "struct ucl_parser *"
@@ -25,7 +25,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool ucl_parser_add_file(struct ucl_parser * parser, char * filename)"
-- "name": "ucl_parser_add_file_priority"
+- "name": "bool ucl_parser_add_file_priority(struct ucl_parser * parser, char * filename, int priority)"
   "params":
   - "name": "parser"
     "type": "struct ucl_parser *"
@@ -35,7 +35,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool ucl_parser_add_file_priority(struct ucl_parser * parser, char * filename, int priority)"
-- "name": "ucl_parser_insert_chunk"
+- "name": "bool ucl_parser_insert_chunk(struct ucl_parser * parser, char * data, size_t len)"
   "params":
   - "name": "parser"
     "type": "struct ucl_parser *"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "burl_append"
+- "name": "void burl_append(struct buffer * b, char * str, size_t len, int flags)"
   "params":
   - "name": "b"
     "type": "struct buffer *"
@@ -11,7 +11,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void burl_append(struct buffer * b, char * str, size_t len, int flags)"
-- "name": "burl_append_encode_psnde"
+- "name": "void burl_append_encode_psnde(struct buffer * b, char * str, size_t len)"
   "params":
   - "name": "b"
     "type": "struct buffer *"
@@ -21,7 +21,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void burl_append_encode_psnde(struct buffer * b, char * str, size_t len)"
-- "name": "burl_append_encode_nde"
+- "name": "void burl_append_encode_nde(struct buffer * b, char * str, size_t len)"
   "params":
   - "name": "b"
     "type": "struct buffer *"
@@ -31,7 +31,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void burl_append_encode_nde(struct buffer * b, char * str, size_t len)"
-- "name": "burl_append_encode_all"
+- "name": "void burl_append_encode_all(struct buffer * b, char * str, size_t len)"
   "params":
   - "name": "b"
     "type": "struct buffer *"
@@ -41,7 +41,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void burl_append_encode_all(struct buffer * b, char * str, size_t len)"
-- "name": "buffer_append_base64_decode"
+- "name": "char * buffer_append_base64_decode(struct buffer * out, char * in, size_t in_length, int charset)"
   "params":
   - "name": "out"
     "type": "struct buffer *"

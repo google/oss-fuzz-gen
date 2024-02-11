@@ -1,5 +1,5 @@
 "functions":
-- "name": "omain"
+- "name": "int omain(int argc, char ** argv)"
   "params":
   - "name": "argc"
     "type": "int"
@@ -7,7 +7,7 @@
     "type": "char **"
   "return_type": "int"
   "signature": "int omain(int argc, char ** argv)"
-- "name": "main262"
+- "name": "int main262(int argc, char ** argv)"
   "params":
   - "name": "argc"
     "type": "int"
@@ -15,13 +15,13 @@
     "type": "char **"
   "return_type": "int"
   "signature": "int main262(int argc, char ** argv)"
-- "name": "fxRunFileThread"
+- "name": "char * fxRunFileThread(char * it)"
   "params":
   - "name": "it"
     "type": "char *"
   "return_type": "char *"
   "signature": "char * fxRunFileThread(char * it)"
-- "name": "fxRunContext"
+- "name": "void fxRunContext(struct sxPool * pool, struct sxContext * context)"
   "params":
   - "name": "pool"
     "type": "struct sxPool *"
@@ -29,7 +29,7 @@
     "type": "struct sxContext *"
   "return_type": "void"
   "signature": "void fxRunContext(struct sxPool * pool, struct sxContext * context)"
-- "name": "fxRunTestCase"
+- "name": "int fxRunTestCase(struct sxPool * pool, struct sxContext * context, char * path, int flags, int async, char * message)"
   "params":
   - "name": "pool"
     "type": "struct sxPool *"

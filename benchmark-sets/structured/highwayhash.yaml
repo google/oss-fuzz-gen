@@ -1,5 +1,5 @@
 "functions":
-- "name": "highwayhash::HighwayHashCat<4u>::operator"
+- "name": "highwayhash::HighwayHashCat<4u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [4]) const"
   "params":
   - "name": "this"
     "type": "struct std::integral_constant *"
@@ -13,7 +13,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "highwayhash::HighwayHashCat<4u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [4]) const"
-- "name": "highwayhash::HighwayHashCat<4u>::operator"
+- "name": "highwayhash::HighwayHashCat<4u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [2]) const"
   "params":
   - "name": "this"
     "type": "struct std::integral_constant *"
@@ -27,7 +27,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "highwayhash::HighwayHashCat<4u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [2]) const"
-- "name": "highwayhash::HighwayHashCat<4u>::operator"
+- "name": "highwayhash::HighwayHashCat<4u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long*) const"
   "params":
   - "name": "this"
     "type": "struct std::integral_constant *"
@@ -41,7 +41,7 @@
     "type": "size_t *"
   "return_type": "void"
   "signature": "highwayhash::HighwayHashCat<4u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long*) const"
-- "name": "highwayhash::HighwayHashCat<2u>::operator"
+- "name": "highwayhash::HighwayHashCat<2u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [4]) const"
   "params":
   - "name": "this"
     "type": "struct std::integral_constant *"
@@ -55,7 +55,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "highwayhash::HighwayHashCat<2u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [4]) const"
-- "name": "highwayhash::HighwayHashCat<2u>::operator"
+- "name": "highwayhash::HighwayHashCat<2u>::operator()(unsigned long const (&) [4], highwayhash::StringView const*, unsigned long, unsigned long (*) [2]) const"
   "params":
   - "name": "this"
     "type": "struct std::integral_constant *"

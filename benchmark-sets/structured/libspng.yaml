@@ -29,7 +29,7 @@
     "type": "int"
   "return_type": "size_t"
   "signature": "LLVMFuzzerCustomMutator"
-- "name": "PngMutator::PngMutator"
+- "name": "PngMutator::PngMutator(std::__1::basic_istream<char, std::__1::char_traits<char> >&)"
   "params":
   - "name": "this"
     "type": "PngMutator *"

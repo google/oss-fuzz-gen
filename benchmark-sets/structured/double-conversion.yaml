@@ -1,5 +1,5 @@
 "functions":
-- "name": "floatdouble_conversion::StringToDoubleConverter::StringTo<float>"
+- "name": "float double_conversion::StringToDoubleConverter::StringTo<float>(unsigned short const*, int, int*) const"
   "params":
   - "name": "this"
     "type": "double_conversion::StringToDoubleConverter *"
@@ -10,8 +10,8 @@
   - "name": "processed_characters_count"
     "type": "int *"
   "return_type": "float"
-  "signature": "float _ZNK17double_conversion23StringToDoubleConverter8StringToIfEET_PKtiPi(double_conversion::StringToDoubleConverter * this, short * buffer, int length, int * processed_characters_count)"
-- "name": "doubledouble_conversion::StringToDoubleConverter::StringTo<double>"
+  "signature": "float double_conversion::StringToDoubleConverter::StringTo<float>(unsigned short const*, int, int*) const"
+- "name": "double double_conversion::StringToDoubleConverter::StringTo<double>(unsigned short const*, int, int*) const"
   "params":
   - "name": "this"
     "type": "double_conversion::StringToDoubleConverter *"
@@ -22,8 +22,8 @@
   - "name": "processed_characters_count"
     "type": "int *"
   "return_type": "double"
-  "signature": "double _ZNK17double_conversion23StringToDoubleConverter8StringToIdEET_PKtiPi(double_conversion::StringToDoubleConverter * this, short * buffer, int length, int * processed_characters_count)"
-- "name": "floatdouble_conversion::StringToDoubleConverter::StringTo<float>"
+  "signature": "double double_conversion::StringToDoubleConverter::StringTo<double>(unsigned short const*, int, int*) const"
+- "name": "float double_conversion::StringToDoubleConverter::StringTo<float>(char const*, int, int*) const"
   "params":
   - "name": "this"
     "type": "double_conversion::StringToDoubleConverter *"
@@ -34,8 +34,8 @@
   - "name": "processed_characters_count"
     "type": "int *"
   "return_type": "float"
-  "signature": "float _ZNK17double_conversion23StringToDoubleConverter8StringToIfEET_PKciPi(double_conversion::StringToDoubleConverter * this, char * buffer, int length, int * processed_characters_count)"
-- "name": "doubledouble_conversion::StringToDoubleConverter::StringTo<double>"
+  "signature": "float double_conversion::StringToDoubleConverter::StringTo<float>(char const*, int, int*) const"
+- "name": "double double_conversion::StringToDoubleConverter::StringTo<double>(char const*, int, int*) const"
   "params":
   - "name": "this"
     "type": "double_conversion::StringToDoubleConverter *"
@@ -46,8 +46,8 @@
   - "name": "processed_characters_count"
     "type": "int *"
   "return_type": "double"
-  "signature": "double _ZNK17double_conversion23StringToDoubleConverter8StringToIdEET_PKciPi(double_conversion::StringToDoubleConverter * this, char * buffer, int length, int * processed_characters_count)"
-- "name": "double_conversion::StringToDoubleConverter::StringToFloat"
+  "signature": "double double_conversion::StringToDoubleConverter::StringTo<double>(char const*, int, int*) const"
+- "name": "double_conversion::StringToDoubleConverter::StringToFloat(unsigned short const*, int, int*) const"
   "params":
   - "name": "this"
     "type": "double_conversion::StringToDoubleConverter *"
@@ -58,7 +58,7 @@
   - "name": "processed_characters_count"
     "type": "int *"
   "return_type": "float"
-  "signature": "float _ZNK17double_conversion23StringToDoubleConverter13StringToFloatEPKtiPi(double_conversion::StringToDoubleConverter * this, short * buffer, int length, int * processed_characters_count)"
+  "signature": "double_conversion::StringToDoubleConverter::StringToFloat(unsigned short const*, int, int*) const"
 "language": "c++"
 "project": "double-conversion"
 "target_name": "string_to_double_fuzzer"

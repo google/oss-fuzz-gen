@@ -1,5 +1,5 @@
 "functions":
-- "name": "H5D__virtual_write"
+- "name": "int H5D__virtual_write(struct H5D_io_info_t * , struct H5D_dset_io_info_t * )"
   "params":
   - "name": ""
     "type": "struct H5D_io_info_t *"
@@ -7,7 +7,7 @@
     "type": "struct H5D_dset_io_info_t *"
   "return_type": "int"
   "signature": "int H5D__virtual_write(struct H5D_io_info_t * , struct H5D_dset_io_info_t * )"
-- "name": "H5D__virtual_read"
+- "name": "int H5D__virtual_read(struct H5D_io_info_t * , struct H5D_dset_io_info_t * )"
   "params":
   - "name": ""
     "type": "struct H5D_io_info_t *"
@@ -15,7 +15,7 @@
     "type": "struct H5D_dset_io_info_t *"
   "return_type": "int"
   "signature": "int H5D__virtual_read(struct H5D_io_info_t * , struct H5D_dset_io_info_t * )"
-- "name": "H5D__virtual_pre_io"
+- "name": "int H5D__virtual_pre_io(struct H5D_t * , struct H5O_storage_virtual_t * , struct H5S_t * , struct H5S_t * , size_t * )"
   "params":
   - "name": ""
     "type": "struct H5D_t *"
@@ -29,7 +29,7 @@
     "type": "size_t *"
   "return_type": "int"
   "signature": "int H5D__virtual_pre_io(struct H5D_t * , struct H5O_storage_virtual_t * , struct H5S_t * , struct H5S_t * , size_t * )"
-- "name": "H5VL__native_dataset_get"
+- "name": "int H5VL__native_dataset_get(char * , struct H5VL_dataset_get_args_t * , size_t , char ** )"
   "params":
   - "name": ""
     "type": "char *"
@@ -41,7 +41,7 @@
     "type": "char **"
   "return_type": "int"
   "signature": "int H5VL__native_dataset_get(char * , struct H5VL_dataset_get_args_t * , size_t , char ** )"
-- "name": "H5D__get_space"
+- "name": "size_t H5D__get_space(struct H5D_t * )"
   "params":
   - "name": ""
     "type": "struct H5D_t *"

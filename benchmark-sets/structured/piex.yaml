@@ -1,5 +1,5 @@
 "functions":
-- "name": "piex::GetDngInformation"
+- "name": "piex::GetDngInformation(piex::StreamInterface*, unsigned int*, unsigned int*, std::__1::vector<unsigned int, std::__1::allocator<unsigned int> >*)"
   "params":
   - "name": ""
     "type": "std::exception *"
@@ -11,7 +11,7 @@
     "type": "std::vector *"
   "return_type": "bool"
   "signature": "piex::GetDngInformation(piex::StreamInterface*, unsigned int*, unsigned int*, std::__1::vector<unsigned int, std::__1::allocator<unsigned int> >*)"
-- "name": "piex::"
+- "name": "piex::(anonymous namespace)::GetDngInformation(std::__1::set<unsigned int, std::__1::less<unsigned int>, std::__1::allocator<unsigned int> > const&, piex::StreamInterface*, unsigned int*, unsigned int*, std::__1::vector<unsigned int, std::__1::allocator<unsigned int> >*)"
   "params":
   - "name": ""
     "type": "std::map *"
@@ -25,7 +25,7 @@
     "type": "std::vector *"
   "return_type": "bool"
   "signature": "piex::(anonymous namespace)::GetDngInformation(std::__1::set<unsigned int, std::__1::less<unsigned int>, std::__1::allocator<unsigned int> > const&, piex::StreamInterface*, unsigned int*, unsigned int*, std::__1::vector<unsigned int, std::__1::allocator<unsigned int> >*)"
-- "name": "piex::GetOrientation"
+- "name": "piex::GetOrientation(piex::StreamInterface*, unsigned int*)"
   "params":
   - "name": ""
     "type": "std::exception *"
@@ -33,7 +33,7 @@
     "type": "int *"
   "return_type": "bool"
   "signature": "piex::GetOrientation(piex::StreamInterface*, unsigned int*)"
-- "name": "piex::"
+- "name": "piex::(anonymous namespace)::RafGetOrientation(piex::StreamInterface*, unsigned int*)"
   "params":
   - "name": ""
     "type": "std::exception *"
@@ -41,7 +41,7 @@
     "type": "int *"
   "return_type": "bool"
   "signature": "piex::(anonymous namespace)::RafGetOrientation(piex::StreamInterface*, unsigned int*)"
-- "name": "piex::GetExifOrientation"
+- "name": "piex::GetExifOrientation(piex::StreamInterface*, unsigned int, unsigned int*)"
   "params":
   - "name": ""
     "type": "std::exception *"

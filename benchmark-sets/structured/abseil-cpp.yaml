@@ -1,5 +1,5 @@
 "functions":
-- "name": "boolabsl::str_format_internal::FormatArgImpl::Dispatch<longlong>"
+- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
   "params":
   - "name": "arg"
     "type": "char *"
@@ -11,7 +11,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-- "name": "boolabsl::str_format_internal::FormatArgImpl::Dispatch<long>"
+- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
   "params":
   - "name": "arg"
     "type": "char *"
@@ -23,7 +23,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-- "name": "boolabsl::str_format_internal::FormatArgImpl::Dispatch<short>"
+- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<short>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
   "params":
   - "name": "arg"
     "type": "char *"
@@ -35,7 +35,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<short>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-- "name": "boolabsl::str_format_internal::FormatArgImpl::Dispatch<signedchar>"
+- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<signed char>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
   "params":
   - "name": "arg"
     "type": "char *"
@@ -47,7 +47,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<signed char>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-- "name": "boolabsl::str_format_internal::FormatArgImpl::Dispatch<char>"
+- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<char>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
   "params":
   - "name": "arg"
     "type": "char *"

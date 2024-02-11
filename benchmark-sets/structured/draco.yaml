@@ -1,11 +1,11 @@
 "functions":
-- "name": "draco::PointCloud::DeduplicateAttributeValues"
+- "name": "draco::PointCloud::DeduplicateAttributeValues()"
   "params":
   - "name": ""
     "type": "draco::PointCloud *"
   "return_type": "bool"
   "signature": "draco::PointCloud::DeduplicateAttributeValues()"
-- "name": "draco::PointAttribute::DeduplicateValues"
+- "name": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&)"
   "params":
   - "name": ""
     "type": "draco::PointAttribute *"
@@ -13,7 +13,7 @@
     "type": "draco::GeometryAttribute *"
   "return_type": "int"
   "signature": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&)"
-- "name": "draco::PointAttribute::DeduplicateValues"
+- "name": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
   "params":
   - "name": ""
     "type": "draco::PointAttribute *"
@@ -23,7 +23,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
-- "name": "unsignedintdraco::PointAttribute::DeduplicateTypedValues<int>"
+- "name": "unsigned int draco::PointAttribute::DeduplicateTypedValues<int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
   "params":
   - "name": ""
     "type": "draco::PointAttribute *"
@@ -33,7 +33,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "unsigned int draco::PointAttribute::DeduplicateTypedValues<int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
-- "name": "unsignedintdraco::PointAttribute::DeduplicateTypedValues<unsignedint>"
+- "name": "unsigned int draco::PointAttribute::DeduplicateTypedValues<unsigned int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
   "params":
   - "name": ""
     "type": "draco::PointAttribute *"

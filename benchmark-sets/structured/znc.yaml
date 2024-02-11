@@ -1,5 +1,5 @@
 "functions":
-- "name": "CClient::ReadLine"
+- "name": "CClient::ReadLine(CString const&)"
   "params":
   - "name": ""
     "type": "CClient *"
@@ -7,7 +7,7 @@
     "type": "CString *"
   "return_type": "void"
   "signature": "CClient::ReadLine(CString const&)"
-- "name": "CClient::OnTextMessage"
+- "name": "CClient::OnTextMessage(CTextMessage&)"
   "params":
   - "name": ""
     "type": "CClient *"
@@ -15,7 +15,7 @@
     "type": "CTopicMessage *"
   "return_type": "bool"
   "signature": "CClient::OnTextMessage(CTextMessage&)"
-- "name": "CClient::OnOtherMessage"
+- "name": "CClient::OnOtherMessage(CMessage&)"
   "params":
   - "name": ""
     "type": "CClient *"
@@ -23,7 +23,7 @@
     "type": "CMessage *"
   "return_type": "bool"
   "signature": "CClient::OnOtherMessage(CMessage&)"
-- "name": "CClient::UserCommand"
+- "name": "CClient::UserCommand(CString&)"
   "params":
   - "name": ""
     "type": "CClient *"
@@ -31,7 +31,7 @@
     "type": "CString *"
   "return_type": "void"
   "signature": "CClient::UserCommand(CString&)"
-- "name": "CZNC::ParseConfig"
+- "name": "CZNC::ParseConfig(CString const&, CString&)"
   "params":
   - "name": ""
     "type": "CZNC *"

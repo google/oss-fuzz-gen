@@ -1,17 +1,17 @@
 "functions":
-- "name": "redisAsyncRead"
+- "name": "void redisAsyncRead(struct redisAsyncContext * ac)"
   "params":
   - "name": "ac"
     "type": "struct redisAsyncContext *"
   "return_type": "void"
   "signature": "void redisAsyncRead(struct redisAsyncContext * ac)"
-- "name": "redisProcessCallbacks"
+- "name": "void redisProcessCallbacks(struct redisAsyncContext * ac)"
   "params":
   - "name": "ac"
     "type": "struct redisAsyncContext *"
   "return_type": "void"
   "signature": "void redisProcessCallbacks(struct redisAsyncContext * ac)"
-- "name": "redisCommand"
+- "name": "char * redisCommand(struct redisContext * c, char * format)"
   "params":
   - "name": "c"
     "type": "struct redisContext *"
@@ -19,7 +19,7 @@
     "type": "char *"
   "return_type": "char *"
   "signature": "char * redisCommand(struct redisContext * c, char * format)"
-- "name": "redisvCommand"
+- "name": "char * redisvCommand(struct redisContext * c, char * format, struct __va_list_tag * ap)"
   "params":
   - "name": "c"
     "type": "struct redisContext *"
@@ -29,7 +29,7 @@
     "type": "struct __va_list_tag *"
   "return_type": "char *"
   "signature": "char * redisvCommand(struct redisContext * c, char * format, struct __va_list_tag * ap)"
-- "name": "redisCommandArgv"
+- "name": "char * redisCommandArgv(struct redisContext * c, int argc, char ** argv, size_t * argvlen)"
   "params":
   - "name": "c"
     "type": "struct redisContext *"

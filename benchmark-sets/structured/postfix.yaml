@@ -1,13 +1,13 @@
 "functions":
-- "name": "mail_conf_read"
+- "name": "void mail_conf_read()"
   "params": []
   "return_type": "void"
   "signature": "void mail_conf_read()"
-- "name": "mail_params_init"
+- "name": "void mail_params_init()"
   "params": []
   "return_type": "void"
   "signature": "void mail_params_init()"
-- "name": "dict_regexp_open"
+- "name": "struct DICT * dict_regexp_open(char * , int , int )"
   "params":
   - "name": ""
     "type": "char *"
@@ -17,7 +17,7 @@
     "type": "int"
   "return_type": "struct DICT *"
   "signature": "struct DICT * dict_regexp_open(char * , int , int )"
-- "name": "dict_tcp_open"
+- "name": "struct DICT * dict_tcp_open(char * , int , int )"
   "params":
   - "name": ""
     "type": "char *"
@@ -27,7 +27,7 @@
     "type": "int"
   "return_type": "struct DICT *"
   "signature": "struct DICT * dict_tcp_open(char * , int , int )"
-- "name": "dict_cidr_open"
+- "name": "struct DICT * dict_cidr_open(char * , int , int )"
   "params":
   - "name": ""
     "type": "char *"

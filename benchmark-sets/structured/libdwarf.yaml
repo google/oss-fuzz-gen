@@ -1,5 +1,5 @@
 "functions":
-- "name": "dwarf_rnglists_get_rle_head"
+- "name": "int dwarf_rnglists_get_rle_head(struct Dwarf_Attribute_s * attr, short theform, size_t attr_val, struct Dwarf_Rnglists_Head_s ** head_out, size_t * entries_count_out, size_t * global_offset_of_rle_set, struct Dwarf_Error_s ** error)"
   "params":
   - "name": "attr"
     "type": "struct Dwarf_Attribute_s *"
@@ -17,7 +17,7 @@
     "type": "struct Dwarf_Error_s **"
   "return_type": "int"
   "signature": "int dwarf_rnglists_get_rle_head(struct Dwarf_Attribute_s * attr, short theform, size_t attr_val, struct Dwarf_Rnglists_Head_s ** head_out, size_t * entries_count_out, size_t * global_offset_of_rle_set, struct Dwarf_Error_s ** error)"
-- "name": "build_array_of_rle"
+- "name": "int build_array_of_rle(struct Dwarf_Debug_s * dbg, struct Dwarf_Rnglists_Head_s * rctx, struct Dwarf_Error_s ** error)"
   "params":
   - "name": "dbg"
     "type": "struct Dwarf_Debug_s *"
@@ -27,7 +27,7 @@
     "type": "struct Dwarf_Error_s **"
   "return_type": "int"
   "signature": "int build_array_of_rle(struct Dwarf_Debug_s * dbg, struct Dwarf_Rnglists_Head_s * rctx, struct Dwarf_Error_s ** error)"
-- "name": "dwarf_debug_addr_index_to_addr"
+- "name": "int dwarf_debug_addr_index_to_addr(struct Dwarf_Die_s * die, size_t index, size_t * return_addr, struct Dwarf_Error_s ** error)"
   "params":
   - "name": "die"
     "type": "struct Dwarf_Die_s *"
@@ -39,7 +39,7 @@
     "type": "struct Dwarf_Error_s **"
   "return_type": "int"
   "signature": "int dwarf_debug_addr_index_to_addr(struct Dwarf_Die_s * die, size_t index, size_t * return_addr, struct Dwarf_Error_s ** error)"
-- "name": "dwarf_find_die_given_sig8"
+- "name": "int dwarf_find_die_given_sig8(struct Dwarf_Debug_s * dbg, struct Dwarf_Sig8_s * ref, struct Dwarf_Die_s ** die_out, int * is_info, struct Dwarf_Error_s ** error)"
   "params":
   - "name": "dbg"
     "type": "struct Dwarf_Debug_s *"
@@ -53,7 +53,7 @@
     "type": "struct Dwarf_Error_s **"
   "return_type": "int"
   "signature": "int dwarf_find_die_given_sig8(struct Dwarf_Debug_s * dbg, struct Dwarf_Sig8_s * ref, struct Dwarf_Die_s ** die_out, int * is_info, struct Dwarf_Error_s ** error)"
-- "name": "dwarf_init_path_a"
+- "name": "int dwarf_init_path_a(char * path, char * true_path_out_buffer, int true_path_bufferlen, int groupnumber, int universalnumber, func_type * errhand, char * errarg, struct Dwarf_Debug_s ** ret_dbg, struct Dwarf_Error_s ** error)"
   "params":
   - "name": "path"
     "type": "char *"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "XML_ExternalEntityParserCreate"
+- "name": "struct XML_ParserStruct * XML_ExternalEntityParserCreate(struct XML_ParserStruct * , char * , char * )"
   "params":
   - "name": ""
     "type": "struct XML_ParserStruct *"
@@ -9,7 +9,7 @@
     "type": "char *"
   "return_type": "struct XML_ParserStruct *"
   "signature": "struct XML_ParserStruct * XML_ExternalEntityParserCreate(struct XML_ParserStruct * , char * , char * )"
-- "name": "XML_ParserCreateNS"
+- "name": "struct XML_ParserStruct * XML_ParserCreateNS(char * , char )"
   "params":
   - "name": ""
     "type": "char *"
@@ -17,7 +17,7 @@
     "type": "char"
   "return_type": "struct XML_ParserStruct *"
   "signature": "struct XML_ParserStruct * XML_ParserCreateNS(char * , char )"
-- "name": "XML_ParserReset"
+- "name": "char XML_ParserReset(struct XML_ParserStruct * , char * )"
   "params":
   - "name": ""
     "type": "struct XML_ParserStruct *"
@@ -25,7 +25,7 @@
     "type": "char *"
   "return_type": "char"
   "signature": "char XML_ParserReset(struct XML_ParserStruct * , char * )"
-- "name": "externalEntityInitProcessor"
+- "name": "int externalEntityInitProcessor(struct XML_ParserStruct * , char * , char * , char ** )"
   "params":
   - "name": ""
     "type": "struct XML_ParserStruct *"
@@ -37,7 +37,7 @@
     "type": "char **"
   "return_type": "int"
   "signature": "int externalEntityInitProcessor(struct XML_ParserStruct * , char * , char * , char ** )"
-- "name": "externalEntityInitProcessor2"
+- "name": "int externalEntityInitProcessor2(struct XML_ParserStruct * , char * , char * , char ** )"
   "params":
   - "name": ""
     "type": "struct XML_ParserStruct *"

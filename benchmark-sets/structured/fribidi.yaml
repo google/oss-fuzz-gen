@@ -1,5 +1,5 @@
 "functions":
-- "name": "fribidi_log2vis"
+- "name": "char fribidi_log2vis(int * str, int len, int * pbase_dir, int * visual_str, int * positions_L_to_V, int * positions_V_to_L, char * embedding_levels)"
   "params":
   - "name": "str"
     "type": "int *"
@@ -17,7 +17,7 @@
     "type": "char *"
   "return_type": "char"
   "signature": "char fribidi_log2vis(int * str, int len, int * pbase_dir, int * visual_str, int * positions_L_to_V, int * positions_V_to_L, char * embedding_levels)"
-- "name": "fribidi_shape"
+- "name": "void fribidi_shape(int flags, char * embedding_levels, int len, char * ar_props, int * str)"
   "params":
   - "name": "flags"
     "type": "int"
@@ -31,7 +31,7 @@
     "type": "int *"
   "return_type": "void"
   "signature": "void fribidi_shape(int flags, char * embedding_levels, int len, char * ar_props, int * str)"
-- "name": "fribidi_join_arabic"
+- "name": "void fribidi_join_arabic(int * bidi_types, int len, char * embedding_levels, char * ar_props)"
   "params":
   - "name": "bidi_types"
     "type": "int *"
@@ -43,7 +43,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void fribidi_join_arabic(int * bidi_types, int len, char * embedding_levels, char * ar_props)"
-- "name": "fribidi_reorder_line"
+- "name": "char fribidi_reorder_line(int flags, int * bidi_types, int len, int False, int base_dir, char * embedding_levels, int * visual_str, int * map)"
   "params":
   - "name": "flags"
     "type": "int"
@@ -63,7 +63,7 @@
     "type": "int *"
   "return_type": "char"
   "signature": "char fribidi_reorder_line(int flags, int * bidi_types, int len, int False, int base_dir, char * embedding_levels, int * visual_str, int * map)"
-- "name": "fribidi_shape_arabic"
+- "name": "void fribidi_shape_arabic(int flags, char * embedding_levels, int len, char * ar_props, int * str)"
   "params":
   - "name": "flags"
     "type": "int"

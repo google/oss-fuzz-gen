@@ -1,11 +1,11 @@
 "functions":
-- "name": "dashdmx_process"
+- "name": "int dashdmx_process(struct __gf_filter * filter)"
   "params":
   - "name": "filter"
     "type": "struct __gf_filter *"
   "return_type": "int"
   "signature": "int dashdmx_process(struct __gf_filter * filter)"
-- "name": "dashdmx_switch_segment"
+- "name": "void dashdmx_switch_segment(struct GF_DASHDmxCtx * ctx, struct GF_DASHGroup * group)"
   "params":
   - "name": "ctx"
     "type": "struct GF_DASHDmxCtx *"
@@ -13,19 +13,19 @@
     "type": "struct GF_DASHGroup *"
   "return_type": "void"
   "signature": "void dashdmx_switch_segment(struct GF_DASHDmxCtx * ctx, struct GF_DASHGroup * group)"
-- "name": "gf_dash_update_manifest"
+- "name": "int gf_dash_update_manifest(struct __dash_client * dash)"
   "params":
   - "name": "dash"
     "type": "struct __dash_client *"
   "return_type": "int"
   "signature": "int gf_dash_update_manifest(struct __dash_client * dash)"
-- "name": "ctxload_process"
+- "name": "int ctxload_process(struct __gf_filter * filter)"
   "params":
   - "name": "filter"
     "type": "struct __gf_filter *"
   "return_type": "int"
   "signature": "int ctxload_process(struct __gf_filter * filter)"
-- "name": "gf_sc_scene_update"
+- "name": "int gf_sc_scene_update(struct __tag_compositor * compositor, char * type, char * com)"
   "params":
   - "name": "compositor"
     "type": "struct __tag_compositor *"

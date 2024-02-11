@@ -1,5 +1,5 @@
 "functions":
-- "name": "pg_query_parse_protobuf"
+- "name": "void pg_query_parse_protobuf(struct PgQueryProtobufParseResult * , char * )"
   "params":
   - "name": ""
     "type": "struct PgQueryProtobufParseResult *"
@@ -7,7 +7,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void pg_query_parse_protobuf(struct PgQueryProtobufParseResult * , char * )"
-- "name": "pg_query_parse_protobuf_opts"
+- "name": "void pg_query_parse_protobuf_opts(struct PgQueryProtobufParseResult * , char * , int )"
   "params":
   - "name": ""
     "type": "struct PgQueryProtobufParseResult *"
@@ -17,19 +17,19 @@
     "type": "int"
   "return_type": "void"
   "signature": "void pg_query_parse_protobuf_opts(struct PgQueryProtobufParseResult * , char * , int )"
-- "name": "pg_query_nodes_to_protobuf"
+- "name": "void pg_query_nodes_to_protobuf(char * )"
   "params":
   - "name": ""
     "type": "char *"
   "return_type": "void"
   "signature": "void pg_query_nodes_to_protobuf(char * )"
-- "name": "pg_query_node_to_json"
+- "name": "char * pg_query_node_to_json(char * )"
   "params":
   - "name": ""
     "type": "char *"
   "return_type": "char *"
   "signature": "char * pg_query_node_to_json(char * )"
-- "name": "raw_expression_tree_walker_impl"
+- "name": "bool raw_expression_tree_walker_impl(struct Node * , func_type * , char * )"
   "params":
   - "name": ""
     "type": "struct Node *"

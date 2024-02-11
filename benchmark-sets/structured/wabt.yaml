@@ -1,5 +1,5 @@
 "functions":
-- "name": "wabt::ParseWastScript"
+- "name": "wabt::ParseWastScript(wabt::WastLexer*, std::__1::unique_ptr<wabt::Script, std::__1::default_delete<wabt::Script> >*, std::__1::vector<wabt::Error, std::__1::allocator<wabt::Error> >*, wabt::WastParseOptions*)"
   "params":
   - "name": ""
     "type": "wabt::WastLexer *"
@@ -11,7 +11,7 @@
     "type": "struct wabt::WastParseOptions *"
   "return_type": "int"
   "signature": "wabt::ParseWastScript(wabt::WastLexer*, std::__1::unique_ptr<wabt::Script, std::__1::default_delete<wabt::Script> >*, std::__1::vector<wabt::Error, std::__1::allocator<wabt::Error> >*, wabt::WastParseOptions*)"
-- "name": "wabt::WastParser::ParseScript"
+- "name": "wabt::WastParser::ParseScript(std::__1::unique_ptr<wabt::Script, std::__1::default_delete<wabt::Script> >*)"
   "params":
   - "name": ""
     "type": "wabt::WastParser *"
@@ -19,7 +19,7 @@
     "type": "std::unique_ptr *"
   "return_type": "int"
   "signature": "wabt::WastParser::ParseScript(std::__1::unique_ptr<wabt::Script, std::__1::default_delete<wabt::Script> >*)"
-- "name": "wabt::WastParser::ParseCommandList"
+- "name": "wabt::WastParser::ParseCommandList(wabt::Script*, std::__1::vector<std::__1::unique_ptr<wabt::Command, std::__1::default_delete<wabt::Command> >, std::__1::allocator<std::__1::unique_ptr<wabt::Command, std::__1::default_delete<wabt::Command> > > >*)"
   "params":
   - "name": ""
     "type": "wabt::WastParser *"
@@ -29,7 +29,7 @@
     "type": "std::vector *"
   "return_type": "int"
   "signature": "wabt::WastParser::ParseCommandList(wabt::Script*, std::__1::vector<std::__1::unique_ptr<wabt::Command, std::__1::default_delete<wabt::Command> >, std::__1::allocator<std::__1::unique_ptr<wabt::Command, std::__1::default_delete<wabt::Command> > > >*)"
-- "name": "wabt::WastParser::ParseCommand"
+- "name": "wabt::WastParser::ParseCommand(wabt::Script*, std::__1::unique_ptr<wabt::Command, std::__1::default_delete<wabt::Command> >*)"
   "params":
   - "name": ""
     "type": "wabt::WastParser *"
@@ -39,7 +39,7 @@
     "type": "std::unique_ptr *"
   "return_type": "int"
   "signature": "wabt::WastParser::ParseCommand(wabt::Script*, std::__1::unique_ptr<wabt::Command, std::__1::default_delete<wabt::Command> >*)"
-- "name": "wabt::WastParser::ParseAssertTrapCommand"
+- "name": "wabt::WastParser::ParseAssertTrapCommand(std::__1::unique_ptr<wabt::Command, std::__1::default_delete<wabt::Command> >*)"
   "params":
   - "name": ""
     "type": "wabt::WastParser *"

@@ -13,7 +13,7 @@
     "type": "struct QMF_SCALE_FACTOR *"
   "return_type": "int"
   "signature": "aacEncEncode"
-- "name": "aacEncInit"
+- "name": "aacEncInit(AACENCODER*, unsigned int, USER_PARAM*)"
   "params":
   - "name": "hAacEncoder"
     "type": "struct AACENCODER *"

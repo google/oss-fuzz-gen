@@ -1,5 +1,5 @@
 "functions":
-- "name": "lodepng::encode"
+- "name": "lodepng::encode(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
   "params":
   - "name": "filename"
     "type": "std::string *"
@@ -15,7 +15,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "lodepng::encode(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
-- "name": "lodepng::encode"
+- "name": "lodepng::encode(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned char const*, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
   "params":
   - "name": "filename"
     "type": "std::string *"
@@ -31,7 +31,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "lodepng::encode(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned char const*, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
-- "name": "lodepng_encode24_file"
+- "name": "lodepng_encode24_file(char const*, unsigned char const*, unsigned int, unsigned int)"
   "params":
   - "name": "filename"
     "type": "char *"
@@ -43,7 +43,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "lodepng_encode24_file(char const*, unsigned char const*, unsigned int, unsigned int)"
-- "name": "lodepng_encode32_file"
+- "name": "lodepng_encode32_file(char const*, unsigned char const*, unsigned int, unsigned int)"
   "params":
   - "name": "filename"
     "type": "char *"
@@ -55,7 +55,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "lodepng_encode32_file(char const*, unsigned char const*, unsigned int, unsigned int)"
-- "name": "lodepng_encode_file"
+- "name": "lodepng_encode_file(char const*, unsigned char const*, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
   "params":
   - "name": "filename"
     "type": "char *"
