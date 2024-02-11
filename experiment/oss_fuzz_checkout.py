@@ -48,9 +48,12 @@ def _remove_temp_oss_fuzz_repo():
 def _set_temp_oss_fuzz_repo():
   """Creates a temporary directory for OSS-Fuzz repo and update |OSS_FUZZ_DIR|.
   """
-  temp_dir = tempfile.TemporaryDirectory()
+  # Holding the temp directory in a global object to ensure it won't be deleted
+  # before program ends.
+  global global_temp_dir
+  global_temp_dir = tempfile.TemporaryDirectory()
   global OSS_FUZZ_DIR
-  OSS_FUZZ_DIR = temp_dir.name
+  OSS_FUZZ_DIR = global_temp_dir.name
   atexit.register(_remove_temp_oss_fuzz_repo)
   _clone_oss_fuzz_repo()
 
