@@ -25,6 +25,7 @@ import tempfile
 import yaml
 
 BUILD_DIR: str = 'build'
+GLOBAL_TEMP_DIR: tempfile.TemporaryDirectory
 # Assume OSS-Fuzz is at repo root dir by default.
 # This will change if temp_dir is used.
 OSS_FUZZ_DIR: str = os.path.join(
@@ -40,9 +41,9 @@ def _remove_temp_oss_fuzz_repo():
   try:
     shutil.rmtree(OSS_FUZZ_DIR)
   except PermissionError as e:
-    logging.warning(f'No permission to remove {OSS_FUZZ_DIR}: {e}')
+    logging.warning('No permission to remove %s: %s', OSS_FUZZ_DIR, e)
   except FileNotFoundError as e:
-    logging.warning(f'No OSS-Fuzz directory {OSS_FUZZ_DIR}: {e}')
+    logging.warning('No OSS-Fuzz directory %s: %s', OSS_FUZZ_DIR, e)
 
 
 def _set_temp_oss_fuzz_repo():
@@ -50,10 +51,10 @@ def _set_temp_oss_fuzz_repo():
   """
   # Holding the temp directory in a global object to ensure it won't be deleted
   # before program ends.
-  global global_temp_dir
-  global_temp_dir = tempfile.TemporaryDirectory()
+  global GLOBAL_TEMP_DIR
+  GLOBAL_TEMP_DIR = tempfile.TemporaryDirectory()
   global OSS_FUZZ_DIR
-  OSS_FUZZ_DIR = global_temp_dir.name
+  OSS_FUZZ_DIR = GLOBAL_TEMP_DIR.name
   atexit.register(_remove_temp_oss_fuzz_repo)
   _clone_oss_fuzz_repo()
 
@@ -138,10 +139,11 @@ def list_c_cpp_projects() -> list[str]:
 
 def get_project_language(project: str) -> str:
   """Returns the |project| language read from its project.yaml."""
-  project_yaml_path = os.path.join(OSS_FUZZ_DIR, 'projects', project, 'project.yaml')
+  project_yaml_path = os.path.join(OSS_FUZZ_DIR, 'projects', project,
+                                   'project.yaml')
   if not os.path.isfile(project_yaml_path):
-    logging.warning(f'Failed to find the project yaml of {project}, assuming it'
-                    ' is C++')
+    logging.warning('Failed to find the project yaml of %s, assuming it is C++',
+                    project)
     return 'C++'
 
   with open(project_yaml_path, 'r') as benchmark_file:
