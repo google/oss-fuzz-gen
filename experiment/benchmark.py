@@ -73,7 +73,7 @@ class Benchmark:
     with open(benchmark_path, 'r') as benchmark_file:
       data = yaml.safe_load(benchmark_file)
 
-    benchmark_name = os.path.splitext(os.path.basename(benchmark_path))[0]
+    project_name = os.path.splitext(os.path.basename(benchmark_path))[0]
 
     use_context = data.get('use_context', False)
     use_project_examples = data.get('use_project_examples', True)
@@ -81,8 +81,11 @@ class Benchmark:
     commit = data.get('commit')
     functions = data.get('functions', [])
     for function in functions:
+      # Function signatures (particularly for c++ projects) can be very long and exceed filesystem limits
+      max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
+      truncated_id = f'{project_name}-{function.get("signature")}'[:max_len]
       benchmarks.append(
-          cls(f'{benchmark_name}-{function.get("name")}'.lower(),
+          cls(truncated_id.lower(),
               data['project'],
               data['language'],
               function.get('signature'),
@@ -121,12 +124,6 @@ class Benchmark:
     self.return_type = return_type
     self.params = params
     self.function_dict = function_dict
-
-    if not self.id:
-      # Prevent ':' from causing issues as it propagates to other places.
-      function_name = self.function_name.replace('::', '-')
-      self.id = f'{self.project}-{function_name}'.lower()
-
     self.target_path = target_path
     self._preferred_target_name = preferred_target_name
     self.use_project_examples = use_project_examples
