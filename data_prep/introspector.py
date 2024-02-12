@@ -150,8 +150,8 @@ def _get_arg_names(function: dict) -> list[str]:
           function.get('function_argument_names', ''))
 
 
-def _get_function_signature(project_name: str, function: dict,
-                            language: str) -> str:
+def get_function_signature(project_name: str, function: dict,
+                           language: str) -> str:
   """
   Returns function signature of |function| from |project_name|.
   """
@@ -228,7 +228,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
       logging.error('error: %s %s', filename, interesting.keys())
       continue
     # TODO(dongge): Remove this line when FI provides function_signature.
-    function_signature = _get_function_signature(project, function, language)
+    function_signature = get_function_signature(project, function, language)
     if not function_signature:
       continue
     logging.info('Function signature to fuzz: %s', function_signature)
