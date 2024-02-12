@@ -85,7 +85,7 @@ class BuilderRunner:
     ]
 
   def _get_minimum_func_name(self, func_sig: str) -> str:
-    """Extract the minimum function name from function signature,
+    """Extracts the minimum function name from function signature,
     without name space, return type, params, templates"""
     pattern = r'(?:[a-zA-Z_]\w*::)*([a-zA-Z_]\w*)(?:\s*<.*>)?\s*\('
     match = re.search(pattern, func_sig)
