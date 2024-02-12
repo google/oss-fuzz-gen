@@ -6,7 +6,7 @@
   - "name": ""
     "type": "struct WOLFSSL_X509 *"
   "return_type": "int"
-  "signature": "wolfSSL_X509_print_fp"
+  "signature": "int wolfSSL_X509_print_fp(struct _IO_FILE * , struct WOLFSSL_X509 * )"
 - "name": "wolfSSL_X509_LOOKUP_add_dir"
   "params":
   - "name": ""
@@ -16,7 +16,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "int"
-  "signature": "wolfSSL_X509_LOOKUP_add_dir"
+  "signature": "int wolfSSL_X509_LOOKUP_add_dir(struct WOLFSSL_X509_LOOKUP * , char * , size_t )"
 - "name": "wolfSSL_X509_LOOKUP_ctrl"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "char **"
   "return_type": "int"
-  "signature": "wolfSSL_X509_LOOKUP_ctrl"
+  "signature": "int wolfSSL_X509_LOOKUP_ctrl(struct WOLFSSL_X509_LOOKUP * , int , char * , size_t , char ** )"
 - "name": "wolfSSL_X509_load_cert_crl_file"
   "params":
   - "name": ""
@@ -40,7 +40,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "wolfSSL_X509_load_cert_crl_file"
+  "signature": "int wolfSSL_X509_load_cert_crl_file(struct WOLFSSL_X509_LOOKUP * , char * , int )"
 - "name": "wolfSSL_PKCS7_verify"
   "params":
   - "name": ""
@@ -56,7 +56,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "wolfSSL_PKCS7_verify"
+  "signature": "int wolfSSL_PKCS7_verify(struct PKCS7 * , struct WOLFSSL_STACK * , struct WOLFSSL_X509_STORE * , struct WOLFSSL_BIO * , struct WOLFSSL_BIO * , int )"
 "language": "c++"
 "project": "wolfssl"
 "target_name": "srp"

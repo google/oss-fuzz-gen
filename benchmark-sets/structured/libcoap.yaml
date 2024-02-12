@@ -4,7 +4,7 @@
   - "name": ""
     "type": "struct coap_address_t *"
   "return_type": "struct coap_context_t *"
-  "signature": "coap_new_context"
+  "signature": "struct coap_context_t * coap_new_context(struct coap_address_t * )"
 - "name": "coap_ws_read"
   "params":
   - "name": ""
@@ -14,13 +14,13 @@
   - "name": ""
     "type": "size_t"
   "return_type": "size_t"
-  "signature": "coap_ws_read"
+  "signature": "size_t coap_ws_read(struct coap_session_t * , char * , size_t )"
 - "name": "coap_ws_close"
   "params":
   - "name": ""
     "type": "struct coap_session_t *"
   "return_type": "void"
-  "signature": "coap_ws_close"
+  "signature": "void coap_ws_close(struct coap_session_t * )"
 - "name": "coap_persist_startup"
   "params":
   - "name": ""
@@ -34,7 +34,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "coap_persist_startup"
+  "signature": "int coap_persist_startup(struct coap_context_t * , char * , char * , char * , int )"
 - "name": "coap_persist_startup_locked"
   "params":
   - "name": ""
@@ -48,7 +48,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "coap_persist_startup_locked"
+  "signature": "int coap_persist_startup_locked(struct coap_context_t * , char * , char * , char * , int )"
 "language": "c++"
 "project": "libcoap"
 "target_name": "pdu_parse_tcp_fuzzer"

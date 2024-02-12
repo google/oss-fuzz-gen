@@ -6,7 +6,7 @@
   - "name": "pos"
     "type": "double"
   "return_type": "int"
-  "signature": "ov_time_seek_lap"
+  "signature": "int ov_time_seek_lap(struct OggVorbis_File * vf, double pos)"
 - "name": "ov_pcm_seek_lap"
   "params":
   - "name": "vf"
@@ -14,7 +14,7 @@
   - "name": "pos"
     "type": "size_t"
   "return_type": "int"
-  "signature": "ov_pcm_seek_lap"
+  "signature": "int ov_pcm_seek_lap(struct OggVorbis_File * vf, size_t pos)"
 - "name": "ov_time_seek_page_lap"
   "params":
   - "name": "vf"
@@ -22,7 +22,7 @@
   - "name": "pos"
     "type": "double"
   "return_type": "int"
-  "signature": "ov_time_seek_page_lap"
+  "signature": "int ov_time_seek_page_lap(struct OggVorbis_File * vf, double pos)"
 - "name": "ov_pcm_seek_page_lap"
   "params":
   - "name": "vf"
@@ -30,7 +30,7 @@
   - "name": "pos"
     "type": "size_t"
   "return_type": "int"
-  "signature": "ov_pcm_seek_page_lap"
+  "signature": "int ov_pcm_seek_page_lap(struct OggVorbis_File * vf, size_t pos)"
 - "name": "ov_halfrate"
   "params":
   - "name": "vf"
@@ -38,7 +38,7 @@
   - "name": "flag"
     "type": "int"
   "return_type": "int"
-  "signature": "ov_halfrate"
+  "signature": "int ov_halfrate(struct OggVorbis_File * vf, int flag)"
 "language": "c++"
 "project": "vorbis"
 "target_name": "decode_fuzzer"

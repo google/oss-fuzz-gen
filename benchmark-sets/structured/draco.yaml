@@ -1,11 +1,11 @@
 "functions":
-- "name": "draco::PointCloud::DeduplicateAttributeValues()"
+- "name": "_ZN5draco10PointCloud26DeduplicateAttributeValuesEv"
   "params":
   - "name": ""
     "type": "draco::PointCloud *"
   "return_type": "bool"
   "signature": "draco::PointCloud::DeduplicateAttributeValues()"
-- "name": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&)"
+- "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeE"
   "params":
   - "name": ""
     "type": "draco::PointAttribute *"
@@ -13,7 +13,7 @@
     "type": "draco::GeometryAttribute *"
   "return_type": "int"
   "signature": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&)"
-- "name": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
+- "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
   "params":
   - "name": ""
     "type": "draco::PointAttribute *"
@@ -23,7 +23,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
-- "name": "unsigned int draco::PointAttribute::DeduplicateTypedValues<int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
+- "name": "_ZN5draco14PointAttribute22DeduplicateTypedValuesIiEEjRKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
   "params":
   - "name": ""
     "type": "draco::PointAttribute *"
@@ -33,7 +33,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "unsigned int draco::PointAttribute::DeduplicateTypedValues<int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
-- "name": "unsigned int draco::PointAttribute::DeduplicateTypedValues<unsigned int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
+- "name": "_ZN5draco14PointAttribute22DeduplicateTypedValuesIjEEjRKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
   "params":
   - "name": ""
     "type": "draco::PointAttribute *"

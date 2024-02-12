@@ -6,7 +6,7 @@
   - "name": "argv"
     "type": "char ***"
   "return_type": "int"
-  "signature": "LLVMFuzzerInitialize"
+  "signature": "int LLVMFuzzerInitialize(int * argc, char *** argv)"
 - "name": "yr_compiler_add_fd"
   "params":
   - "name": "compiler"
@@ -18,7 +18,7 @@
   - "name": "file_name"
     "type": "char *"
   "return_type": "int"
-  "signature": "yr_compiler_add_fd"
+  "signature": "int yr_compiler_add_fd(struct _YR_COMPILER * compiler, int rules_fd, char * namespace_, char * file_name)"
 - "name": "yr_compiler_add_file"
   "params":
   - "name": "compiler"
@@ -30,7 +30,7 @@
   - "name": "file_name"
     "type": "char *"
   "return_type": "int"
-  "signature": "yr_compiler_add_file"
+  "signature": "int yr_compiler_add_file(struct _YR_COMPILER * compiler, struct _IO_FILE * rules_file, char * namespace_, char * file_name)"
 - "name": "yr_compiler_add_bytes"
   "params":
   - "name": "compiler"
@@ -42,7 +42,7 @@
   - "name": "namespace_"
     "type": "char *"
   "return_type": "int"
-  "signature": "yr_compiler_add_bytes"
+  "signature": "int yr_compiler_add_bytes(struct _YR_COMPILER * compiler, char * rules_data, size_t rules_size, char * namespace_)"
 - "name": "yr_lex_parse_rules_fd"
   "params":
   - "name": "rules_fd"
@@ -50,7 +50,7 @@
   - "name": "compiler"
     "type": "struct _YR_COMPILER *"
   "return_type": "int"
-  "signature": "yr_lex_parse_rules_fd"
+  "signature": "int yr_lex_parse_rules_fd(int rules_fd, struct _YR_COMPILER * compiler)"
 "language": "c++"
 "project": "yara"
 "target_name": "dotnet_fuzzer"

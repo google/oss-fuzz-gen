@@ -86,7 +86,7 @@ def _match_target_path_content(target_paths: List[str],
 
 def _bucket_match_target_content_signatures(
     target_funcs: Dict[str, List[Dict]], fuzz_target_dir: str,
-    project_language: str) -> Dict[str, List[str]]:
+    project_language: str, project_name: str) -> Dict[str, List[str]]:
   """Returns a list of dictionary with function signatures as keys and
     its fuzz target content as values."""
   if not target_funcs:
@@ -120,7 +120,8 @@ def _bucket_match_target_content_signatures(
       target_content_signature_dict[content] = []
 
     signatures = [
-        introspector.formulate_function_signature(func_info, project_language)
+        introspector.get_function_signature(project_name, func_info,
+                                            project_language)
         for func_info in functions
     ]
     target_content_signature_dict[content].extend(signatures)
@@ -137,7 +138,7 @@ def generate_data(project_name: str,
   project_fuzz_target_dir = _get_fuzz_target_dir(project_name)
   project_language = oss_fuzz_checkout.get_project_language(project_name)
   target_content_signature_dict = _bucket_match_target_content_signatures(
-      target_funcs, project_fuzz_target_dir, project_language)
+      target_funcs, project_fuzz_target_dir, project_language, project_name)
 
   if target_content_signature_dict:
     print(f'Downloaded human-written fuzz targets of {project_name} from Google'
@@ -238,7 +239,8 @@ def _match_target_content_signatures(
       target_content_signature_dict[content] = []
 
     signatures = [
-        introspector.formulate_function_signature(func_info, project_language)
+        introspector.get_function_signature(project_name, func_info,
+                                            project_language)
         for func_info in functions
     ]
     target_content_signature_dict[content].extend(signatures)

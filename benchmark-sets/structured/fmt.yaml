@@ -1,5 +1,5 @@
 "functions":
-- "name": "fmt::v10::vprint(fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
+- "name": "_ZN3fmt3v106vprintENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
   "params":
   - "name": "fmt"
     "type": "char *"
@@ -11,7 +11,7 @@
     "type": "fmt::v10::detail::value *"
   "return_type": "void"
   "signature": "fmt::v10::vprint(fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
-- "name": "fmt::v10::vprint(_IO_FILE*, fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
+- "name": "_ZN3fmt3v106vprintEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
   "params":
   - "name": "f"
     "type": "struct _IO_FILE *"
@@ -25,7 +25,7 @@
     "type": "fmt::v10::detail::value *"
   "return_type": "void"
   "signature": "fmt::v10::vprint(_IO_FILE*, fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
-- "name": "fmt::v10::vprintln(_IO_FILE*, fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
+- "name": "_ZN3fmt3v108vprintlnEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
   "params":
   - "name": "f"
     "type": "struct _IO_FILE *"
@@ -39,7 +39,7 @@
     "type": "fmt::v10::detail::value *"
   "return_type": "void"
   "signature": "fmt::v10::vprintln(_IO_FILE*, fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
-- "name": "fmt::v10::detail::print(_IO_FILE*, fmt::v10::basic_string_view<char>)"
+- "name": "_ZN3fmt3v106detail5printEP8_IO_FILENS0_17basic_string_viewIcEE"
   "params":
   - "name": "f"
     "type": "struct _IO_FILE *"
@@ -49,7 +49,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "fmt::v10::detail::print(_IO_FILE*, fmt::v10::basic_string_view<char>)"
-- "name": "fmt::v10::detail::fwrite_fully(void const*, unsigned long, _IO_FILE*)"
+- "name": "_ZN3fmt3v106detail12fwrite_fullyEPKvmP8_IO_FILE"
   "params":
   - "name": "ptr"
     "type": "char *"
