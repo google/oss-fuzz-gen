@@ -81,7 +81,7 @@ class Benchmark:
     commit = data.get('commit')
     functions = data.get('functions', [])
     for function in functions:
-      # Function signatures (particularly for c++ projects) can be very long and exceed filesystem limits
+      # Function signatures (particularly for c++ projects) can be very long and exceed filesystem limits.
       max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
       truncated_id = f'{project_name}-{function.get("signature")}'[:max_len]
       benchmarks.append(
