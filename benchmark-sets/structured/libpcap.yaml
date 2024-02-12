@@ -14,7 +14,7 @@
   - "name": "mask"
     "type": "int"
   "return_type": "int"
-  "signature": "pcap_compile_nopcap"
+  "signature": "int pcap_compile_nopcap(int snaplen_arg, int linktype_arg, struct bpf_program * program, char * buf, int optimize, int mask)"
 - "name": "pcap_open"
   "params":
   - "name": "source"
@@ -30,7 +30,7 @@
   - "name": "errbuf"
     "type": "char *"
   "return_type": "struct pcap *"
-  "signature": "pcap_open"
+  "signature": "struct pcap * pcap_open(char * source, int snaplen, int flags, int read_timeout, struct pcap_rmtauth * auth, char * errbuf)"
 - "name": "pcap_open_live"
   "params":
   - "name": "device"
@@ -44,7 +44,7 @@
   - "name": "errbuf"
     "type": "char *"
   "return_type": "struct pcap *"
-  "signature": "pcap_open_live"
+  "signature": "struct pcap * pcap_open_live(char * device, int snaplen, int promisc, int to_ms, char * errbuf)"
 - "name": "pcap_create"
   "params":
   - "name": "device"
@@ -52,7 +52,7 @@
   - "name": "errbuf"
     "type": "char *"
   "return_type": "struct pcap *"
-  "signature": "pcap_create"
+  "signature": "struct pcap * pcap_create(char * device, char * errbuf)"
 - "name": "pcapint_create_interface"
   "params":
   - "name": "device"
@@ -60,7 +60,7 @@
   - "name": "ebuf"
     "type": "char *"
   "return_type": "struct pcap *"
-  "signature": "pcapint_create_interface"
+  "signature": "struct pcap * pcapint_create_interface(char * device, char * ebuf)"
 "language": "c++"
 "project": "libpcap"
 "target_name": "onefile"

@@ -16,7 +16,7 @@
   - "name": "password"
     "type": "char *"
   "return_type": "struct zip_source *"
-  "signature": "zip_source_zip_file"
+  "signature": "struct zip_source * zip_source_zip_file(struct zip * za, struct zip * srcza, size_t srcidx, int flags, size_t start, size_t len, char * password)"
 - "name": "zip_file_replace"
   "params":
   - "name": "za"
@@ -28,7 +28,7 @@
   - "name": "flags"
     "type": "int"
   "return_type": "int"
-  "signature": "zip_file_replace"
+  "signature": "int zip_file_replace(struct zip * za, size_t idx, struct zip_source * source, int flags)"
 - "name": "zip_source_window_create"
   "params":
   - "name": "src"
@@ -40,7 +40,7 @@
   - "name": "error"
     "type": "struct zip_error *"
   "return_type": "struct zip_source *"
-  "signature": "zip_source_window_create"
+  "signature": "struct zip_source * zip_source_window_create(struct zip_source * src, size_t start, size_t len, struct zip_error * error)"
 - "name": "zip_source_buffer_with_attributes"
   "params":
   - "name": "za"
@@ -54,7 +54,7 @@
   - "name": "attributes"
     "type": "struct zip_file_attributes *"
   "return_type": "struct zip_source *"
-  "signature": "zip_source_buffer_with_attributes"
+  "signature": "struct zip_source * zip_source_buffer_with_attributes(struct zip * za, char * data, size_t len, int freep, struct zip_file_attributes * attributes)"
 - "name": "zip_source_buffer_fragment"
   "params":
   - "name": "za"
@@ -66,7 +66,7 @@
   - "name": "freep"
     "type": "int"
   "return_type": "struct zip_source *"
-  "signature": "zip_source_buffer_fragment"
+  "signature": "struct zip_source * zip_source_buffer_fragment(struct zip * za, struct zip_buffer_fragment * fragments, size_t nfragments, int freep)"
 "language": "c++"
 "project": "libzip"
 "target_name": "fuzz_main"

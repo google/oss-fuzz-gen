@@ -1,5 +1,5 @@
 "functions":
-- "name": "opendnp3::StateUnsolicitedConfirmWait::OnNewNonReadRequest(opendnp3::OContext&, opendnp3::ParsedRequest const&)"
+- "name": "_ZN8opendnp327StateUnsolicitedConfirmWait19OnNewNonReadRequestERNS_8OContextERKNS_13ParsedRequestE"
   "params":
   - "name": ""
     "type": "std::bad_array_new_length *"
@@ -9,7 +9,7 @@
     "type": "struct opendnp3::ParsedRequest *"
   "return_type": "std::bad_function_call *"
   "signature": "opendnp3::StateUnsolicitedConfirmWait::OnNewNonReadRequest(opendnp3::OContext&, opendnp3::ParsedRequest const&)"
-- "name": "opendnp3::StateSolicitedConfirmWait::OnNewNonReadRequest(opendnp3::OContext&, opendnp3::ParsedRequest const&)"
+- "name": "_ZN8opendnp325StateSolicitedConfirmWait19OnNewNonReadRequestERNS_8OContextERKNS_13ParsedRequestE"
   "params":
   - "name": ""
     "type": "std::bad_array_new_length *"
@@ -19,19 +19,19 @@
     "type": "struct opendnp3::ParsedRequest *"
   "return_type": "std::bad_function_call *"
   "signature": "opendnp3::StateSolicitedConfirmWait::OnNewNonReadRequest(opendnp3::OContext&, opendnp3::ParsedRequest const&)"
-- "name": "opendnp3::OContext::OnTxReady()"
+- "name": "_ZN8opendnp38OContext9OnTxReadyEv"
   "params":
   - "name": ""
     "type": "opendnp3::OContext *"
   "return_type": "bool"
   "signature": "opendnp3::OContext::OnTxReady()"
-- "name": "opendnp3::OContext::RestartUnsolConfirmTimer()::$_2::operator()() const"
+- "name": "_ZZN8opendnp38OContext24RestartUnsolConfirmTimerEvENK3$_2clEv"
   "params":
   - "name": ""
     "type": "anon *"
   "return_type": "void"
   "signature": "opendnp3::OContext::RestartUnsolConfirmTimer()::$_2::operator()() const"
-- "name": "opendnp3::OContext::RestartSolConfirmTimer()::$_1::operator()() const"
+- "name": "_ZZN8opendnp38OContext22RestartSolConfirmTimerEvENK3$_1clEv"
   "params":
   - "name": ""
     "type": "anon *"

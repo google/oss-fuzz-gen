@@ -1,5 +1,5 @@
 "functions":
-- "name": "void X509dump(char * cert, int ncert)"
+- "name": "X509dump"
   "params":
   - "name": "cert"
     "type": "char *"
@@ -7,7 +7,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void X509dump(char * cert, int ncert)"
-- "name": "char * X509verify(char * cert, int ncert, struct RSApub * pk)"
+- "name": "X509verify"
   "params":
   - "name": "cert"
     "type": "char *"
@@ -17,7 +17,7 @@
     "type": "struct RSApub *"
   "return_type": "char *"
   "signature": "char * X509verify(char * cert, int ncert, struct RSApub * pk)"
-- "name": "char * X509gen(struct RSApriv * priv, char * subj, size_t * valid, int * certlen)"
+- "name": "X509gen"
   "params":
   - "name": "priv"
     "type": "struct RSApriv *"
@@ -29,7 +29,7 @@
     "type": "int *"
   "return_type": "char *"
   "signature": "char * X509gen(struct RSApriv * priv, char * subj, size_t * valid, int * certlen)"
-- "name": "char * X509req(struct RSApriv * priv, char * subj, int * certlen)"
+- "name": "X509req"
   "params":
   - "name": "priv"
     "type": "struct RSApriv *"
@@ -39,7 +39,7 @@
     "type": "int *"
   "return_type": "char *"
   "signature": "char * X509req(struct RSApriv * priv, char * subj, int * certlen)"
-- "name": "char * verify_signature(struct Bytes * signature, struct RSApub * pk, char * edigest, struct Elem ** psigalg)"
+- "name": "verify_signature"
   "params":
   - "name": "signature"
     "type": "struct Bytes *"

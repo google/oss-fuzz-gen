@@ -1,5 +1,5 @@
 "functions":
-- "name": "icu_75::MessageFormat::applyPattern(icu_75::UnicodeString const&, UParseError&, UErrorCode&)"
+- "name": "_ZN6icu_7513MessageFormat12applyPatternERKNS_13UnicodeStringER11UParseErrorR10UErrorCode"
   "params":
   - "name": "this"
     "type": "icu_75::MessageFormat *"
@@ -11,7 +11,7 @@
     "type": "int *"
   "return_type": "void"
   "signature": "icu_75::MessageFormat::applyPattern(icu_75::UnicodeString const&, UParseError&, UErrorCode&)"
-- "name": "icu_75::MessageFormat::cacheExplicitFormats(UErrorCode&)"
+- "name": "_ZN6icu_7513MessageFormat20cacheExplicitFormatsER10UErrorCode"
   "params":
   - "name": "this"
     "type": "icu_75::MessageFormat *"
@@ -19,7 +19,7 @@
     "type": "int *"
   "return_type": "void"
   "signature": "icu_75::MessageFormat::cacheExplicitFormats(UErrorCode&)"
-- "name": "icu_75::MessageFormat::createAppropriateFormat(icu_75::UnicodeString&, icu_75::UnicodeString&, icu_75::Formattable::Type&, UParseError&, UErrorCode&)"
+- "name": "_ZN6icu_7513MessageFormat23createAppropriateFormatERNS_13UnicodeStringES2_RNS_11Formattable4TypeER11UParseErrorR10UErrorCode"
   "params":
   - "name": "this"
     "type": "icu_75::MessageFormat *"
@@ -35,7 +35,7 @@
     "type": "int *"
   "return_type": "icu_75::Format *"
   "signature": "icu_75::MessageFormat::createAppropriateFormat(icu_75::UnicodeString&, icu_75::UnicodeString&, icu_75::Formattable::Type&, UParseError&, UErrorCode&)"
-- "name": "icu_75::RuleBasedNumberFormat::format(long, icu_75::UnicodeString const&, icu_75::UnicodeString&, icu_75::FieldPosition&, UErrorCode&) const"
+- "name": "_ZNK6icu_7521RuleBasedNumberFormat6formatElRKNS_13UnicodeStringERS1_RNS_13FieldPositionER10UErrorCode"
   "params":
   - "name": "this"
     "type": "icu_75::RuleBasedNumberFormat *"
@@ -51,7 +51,7 @@
     "type": "int *"
   "return_type": "icu_75::UnicodeString *"
   "signature": "icu_75::RuleBasedNumberFormat::format(long, icu_75::UnicodeString const&, icu_75::UnicodeString&, icu_75::FieldPosition&, UErrorCode&) const"
-- "name": "icu_75::MessageFormat::format(int, void const*, icu_75::Formattable const*, icu_75::UnicodeString const*, int, icu_75::AppendableWrapper&, icu_75::FieldPosition*, UErrorCode&) const"
+- "name": "_ZNK6icu_7513MessageFormat6formatEiPKvPKNS_11FormattableEPKNS_13UnicodeStringEiRNS_17AppendableWrapperEPNS_13FieldPositionER10UErrorCode"
   "params":
   - "name": "this"
     "type": "icu_75::MessageFormat *"

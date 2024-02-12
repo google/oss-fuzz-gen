@@ -1,11 +1,11 @@
 "functions":
-- "name": "QPluginLoader::load()"
+- "name": "_ZN13QPluginLoader4loadEv"
   "params":
   - "name": ""
     "type": "QLibrary *"
   "return_type": "bool"
   "signature": "QPluginLoader::load()"
-- "name": "(anonymous namespace)::customConvert(QVariant::Private const*, int, void*, bool*)"
+- "name": "_ZN12_GLOBAL__N_113customConvertEPKN8QVariant7PrivateEiPvPb"
   "params":
   - "name": ""
     "type": "struct QVariant::Private *"
@@ -17,7 +17,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "(anonymous namespace)::customConvert(QVariant::Private const*, int, void*, bool*)"
-- "name": "(anonymous namespace)::convert(QVariant::Private const*, int, void*, bool*)"
+- "name": "_ZN12_GLOBAL__N_17convertEPKN8QVariant7PrivateEiPvPb"
   "params":
   - "name": ""
     "type": "struct QVariant::Private *"
@@ -29,13 +29,13 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "(anonymous namespace)::convert(QVariant::Private const*, int, void*, bool*)"
-- "name": "QLibraryPrivate::isPlugin()"
+- "name": "_ZN15QLibraryPrivate8isPluginEv"
   "params":
   - "name": ""
     "type": "QLibraryPrivate *"
   "return_type": "bool"
   "signature": "QLibraryPrivate::isPlugin()"
-- "name": "QLibraryPrivate::updatePluginState()"
+- "name": "_ZN15QLibraryPrivate17updatePluginStateEv"
   "params":
   - "name": ""
     "type": "QLibraryPrivate *"

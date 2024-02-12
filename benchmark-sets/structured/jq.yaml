@@ -1,5 +1,5 @@
 "functions":
-- "name": "int onig_new_without_alloc(struct re_pattern_buffer * reg, char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax, struct OnigErrorInfo * einfo)"
+- "name": "onig_new_without_alloc"
   "params":
   - "name": "reg"
     "type": "struct re_pattern_buffer *"
@@ -17,7 +17,7 @@
     "type": "struct OnigErrorInfo *"
   "return_type": "int"
   "signature": "int onig_new_without_alloc(struct re_pattern_buffer * reg, char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax, struct OnigErrorInfo * einfo)"
-- "name": "int onig_detect_can_be_slow_pattern(char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax)"
+- "name": "onig_detect_can_be_slow_pattern"
   "params":
   - "name": "pattern"
     "type": "char *"
@@ -31,7 +31,7 @@
     "type": "struct OnigSyntaxType *"
   "return_type": "int"
   "signature": "int onig_detect_can_be_slow_pattern(char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax)"
-- "name": "int prs_bag(struct _Node ** np, struct PToken * tok, int term, char ** src, char * end, struct ParseEnv * env)"
+- "name": "prs_bag"
   "params":
   - "name": "np"
     "type": "struct _Node **"
@@ -47,7 +47,7 @@
     "type": "struct ParseEnv *"
   "return_type": "int"
   "signature": "int prs_bag(struct _Node ** np, struct PToken * tok, int term, char ** src, char * end, struct ParseEnv * env)"
-- "name": "void jq_util_input_next_input_cb(struct jq_state * jq, char * data)"
+- "name": "jq_util_input_next_input_cb"
   "params":
   - "name": "jq"
     "type": "struct jq_state *"
@@ -55,7 +55,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "void jq_util_input_next_input_cb(struct jq_state * jq, char * data)"
-- "name": "void jq_util_input_next_input(struct jq_util_input_state * state)"
+- "name": "jq_util_input_next_input"
   "params":
   - "name": "state"
     "type": "struct jq_util_input_state *"

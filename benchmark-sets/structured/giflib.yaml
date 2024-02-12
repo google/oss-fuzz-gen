@@ -1,5 +1,5 @@
 "functions":
-- "name": "gifProtoFuzzer::BasicChunk* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&)"
+- "name": "_ZN6google8protobuf11MessageLite18CreateMaybeMessageIN14gifProtoFuzzer10BasicChunkEEEPT_PNS0_5ArenaERKS5_"
   "params":
   - "name": "arena"
     "type": "google::protobuf::Arena *"
@@ -7,7 +7,7 @@
     "type": "gifProtoFuzzer::BasicChunk *"
   "return_type": "gifProtoFuzzer::BasicChunk *"
   "signature": "gifProtoFuzzer::BasicChunk* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&)"
-- "name": "fuzz_dgif_ala_android(unsigned char const*, unsigned long)"
+- "name": "_Z21fuzz_dgif_ala_androidPKhm"
   "params":
   - "name": "Data"
     "type": "char *"
@@ -15,7 +15,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "fuzz_dgif_ala_android(unsigned char const*, unsigned long)"
-- "name": "gifProtoFuzzer::BasicChunk* google::protobuf::Arena::InternalHelper<gifProtoFuzzer::BasicChunk>::Construct<google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&>(void*, google::protobuf::Arena*&&, gifProtoFuzzer::BasicChunk const&)"
+- "name": "_ZN6google8protobuf5Arena14InternalHelperIN14gifProtoFuzzer10BasicChunkEE9ConstructIJPS1_RKS4_EEEPS4_PvDpOT_"
   "params":
   - "name": "ptr"
     "type": "char *"
@@ -25,7 +25,7 @@
     "type": "gifProtoFuzzer::BasicChunk *"
   "return_type": "gifProtoFuzzer::BasicChunk *"
   "signature": "gifProtoFuzzer::BasicChunk* google::protobuf::Arena::InternalHelper<gifProtoFuzzer::BasicChunk>::Construct<google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&>(void*, google::protobuf::Arena*&&, gifProtoFuzzer::BasicChunk const&)"
-- "name": "fuzz_dgif(unsigned char const*, unsigned long)"
+- "name": "_Z9fuzz_dgifPKhm"
   "params":
   - "name": "Data"
     "type": "char *"
@@ -33,7 +33,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "fuzz_dgif(unsigned char const*, unsigned long)"
-- "name": "gifProtoFuzzer::PlainTextExtension* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::PlainTextExtension>(google::protobuf::Arena*, gifProtoFuzzer::PlainTextExtension const&)"
+- "name": "_ZN6google8protobuf11MessageLite18CreateMaybeMessageIN14gifProtoFuzzer18PlainTextExtensionEEEPT_PNS0_5ArenaERKS5_"
   "params":
   - "name": "arena"
     "type": "google::protobuf::Arena *"

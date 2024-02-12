@@ -8,7 +8,7 @@
   - "name": "cp"
     "type": "char *"
   "return_type": "char *"
-  "signature": "register_string_index"
+  "signature": "char * register_string_index(size_t * name, size_t name_len, char * cp)"
 - "name": "register_int_index"
   "params":
   - "name": "name"
@@ -18,7 +18,7 @@
   - "name": "val"
     "type": "int"
   "return_type": "int"
-  "signature": "register_int_index"
+  "signature": "int register_int_index(size_t * name, size_t name_len, int val)"
 - "name": "register_oid_index"
   "params":
   - "name": "name"
@@ -30,7 +30,7 @@
   - "name": "value_len"
     "type": "size_t"
   "return_type": "struct variable_list *"
-  "signature": "register_oid_index"
+  "signature": "struct variable_list * register_oid_index(size_t * name, size_t name_len, size_t * value, size_t value_len)"
 - "name": "unregister_oid_index"
   "params":
   - "name": "name"
@@ -42,7 +42,7 @@
   - "name": "value_len"
     "type": "size_t"
   "return_type": "int"
-  "signature": "unregister_oid_index"
+  "signature": "int unregister_oid_index(size_t * name, size_t name_len, size_t * value, size_t value_len)"
 - "name": "unregister_int_index"
   "params":
   - "name": "name"
@@ -52,7 +52,7 @@
   - "name": "val"
     "type": "int"
   "return_type": "int"
-  "signature": "unregister_int_index"
+  "signature": "int unregister_int_index(size_t * name, size_t name_len, int val)"
 "language": "c++"
 "project": "net-snmp"
 "target_name": "snmp_pdu_parse_fuzzer"

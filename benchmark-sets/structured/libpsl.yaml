@@ -14,7 +14,7 @@
   - "name": "pErrorCode"
     "type": "int *"
   "return_type": "int"
-  "signature": "u_strToUpper_59"
+  "signature": "int u_strToUpper_59(short * dest, int destCapacity, short * src, int srcLength, char * locale, int * pErrorCode)"
 - "name": "uloc_toLanguageTag_59"
   "params":
   - "name": "localeID"
@@ -28,8 +28,8 @@
   - "name": "status"
     "type": "int *"
   "return_type": "int"
-  "signature": "uloc_toLanguageTag_59"
-- "name": "icu_59::CaseMap::toUpper(char const*, unsigned int, char16_t const*, int, char16_t*, int, icu_59::Edits*, UErrorCode&)"
+  "signature": "int uloc_toLanguageTag_59(char * localeID, char * langtag, int langtagCapacity, char strict, int * status)"
+- "name": "_ZN6icu_597CaseMap7toUpperEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode"
   "params":
   - "name": "locale"
     "type": "char *"
@@ -49,7 +49,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "icu_59::CaseMap::toUpper(char const*, unsigned int, char16_t const*, int, char16_t*, int, icu_59::Edits*, UErrorCode&)"
-- "name": "icu_59::CaseMap::toLower(char const*, unsigned int, char16_t const*, int, char16_t*, int, icu_59::Edits*, UErrorCode&)"
+- "name": "_ZN6icu_597CaseMap7toLowerEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode"
   "params":
   - "name": "locale"
     "type": "char *"
@@ -69,7 +69,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "icu_59::CaseMap::toLower(char const*, unsigned int, char16_t const*, int, char16_t*, int, icu_59::Edits*, UErrorCode&)"
-- "name": "_appendKeywordsToLanguageTag(char const*, char*, int, signed char, signed char, UErrorCode*)"
+- "name": "_ZL28_appendKeywordsToLanguageTagPKcPciaaP10UErrorCode"
   "params":
   - "name": "localeID"
     "type": "char *"
