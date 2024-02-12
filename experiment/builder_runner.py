@@ -84,14 +84,20 @@ class BuilderRunner:
         '-len_control=0'
     ]
 
+  def _get_minimum_func_name(self, func_sig: str) -> str:
+    """Extracts the minimum function name from function signature,
+    without name space, return type, params, templates."""
+    pattern = r'(?:[a-zA-Z_]\w*::)*([a-zA-Z_]\w*)(?:\s*<.*>)?\s*\('
+    match = re.search(pattern, func_sig)
+    return match.group(1).strip() if match else func_sig
+
   def _contains_target_function(self, target_path: str) -> bool:
     """Validates if the LLM-generated code contains the target function."""
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
-    # Get the top level function name without namespace.
-    target_function_signature = self.benchmark.function_signature.rsplit(
-        '::', 1)[-1]
-    return bool(target_function_signature in generated_code)
+    min_func_name = self._get_minimum_func_name(
+        self.benchmark.function_signature)
+    return min_func_name in generated_code
 
   def _pre_build_check(self, target_path: str,
                        build_result: BuildResult) -> bool:
