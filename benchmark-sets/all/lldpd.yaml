@@ -1,10 +1,34 @@
-functions:
-- void levent_loop(struct lldpd * cfg)
-- void levent_init(struct lldpd * cfg)
-- void levent_update_and_send(int fd, short what, char * arg)
-- void lldpd_loop(struct lldpd * cfg)
-- int netlink_initialize(struct lldpd * cfg)
-project: lldpd
-target_name: fuzz_lldp
-target_path: /src/lldpd/tests/fuzz_lldp.c
-
+"functions":
+- "params":
+  - "name": "cfg"
+    "type": "struct lldpd *"
+  "return_type": "void"
+  "signature": "void levent_loop(struct lldpd * cfg)"
+- "params":
+  - "name": "cfg"
+    "type": "struct lldpd *"
+  "return_type": "void"
+  "signature": "void levent_init(struct lldpd * cfg)"
+- "params":
+  - "name": "fd"
+    "type": "int"
+  - "name": "what"
+    "type": "short"
+  - "name": "arg"
+    "type": "char *"
+  "return_type": "void"
+  "signature": "void levent_update_and_send(int fd, short what, char * arg)"
+- "params":
+  - "name": "cfg"
+    "type": "struct lldpd *"
+  "return_type": "void"
+  "signature": "void lldpd_loop(struct lldpd * cfg)"
+- "params":
+  - "name": "cfg"
+    "type": "struct lldpd *"
+  "return_type": "int"
+  "signature": "int netlink_initialize(struct lldpd * cfg)"
+"language": "c"
+"project": "lldpd"
+"target_name": "fuzz_lldp"
+"target_path": "/src/lldpd/tests/fuzz_lldp.c"

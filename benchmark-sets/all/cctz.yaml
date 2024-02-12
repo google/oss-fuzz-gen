@@ -1,11 +1,36 @@
-functions:
-- cctz::time_zone::Impl * cctz::local_time_zone()
-- cctz::time_zone::Impl * cctz::fixed_time_zone(std::chrono::duration * offset)
-- void cctz::time_zone::description(std::string * this, cctz::time_zone * ) const
-- void cctz::time_zone::version(std::string * this, cctz::time_zone * ) const
-- bool cctz::time_zone::prev_transition(cctz::time_zone * this, std::chrono::time_point
-  * tp, struct cctz::time_zone::civil_transition * trans) const
-project: cctz
-target_name: fuzz_cctz
-target_path: /src/fuzz_cctz.cc
-
+"functions":
+- "params": []
+  "return_type": "cctz::time_zone::Impl *"
+  "signature": "cctz::local_time_zone()"
+- "params":
+  - "name": "offset"
+    "type": "std::chrono::duration *"
+  "return_type": "cctz::time_zone::Impl *"
+  "signature": "cctz::fixed_time_zone(std::__1::chrono::duration<long, std::__1::ratio<1l, 1l> > const&)"
+- "params":
+  - "name": "this"
+    "type": "std::string *"
+  - "name": ""
+    "type": "cctz::time_zone *"
+  "return_type": "void"
+  "signature": "cctz::time_zone::description() const"
+- "params":
+  - "name": "this"
+    "type": "std::string *"
+  - "name": ""
+    "type": "cctz::time_zone *"
+  "return_type": "void"
+  "signature": "cctz::time_zone::version() const"
+- "params":
+  - "name": "this"
+    "type": "cctz::time_zone *"
+  - "name": "tp"
+    "type": "std::chrono::time_point *"
+  - "name": "trans"
+    "type": "struct cctz::time_zone::civil_transition *"
+  "return_type": "bool"
+  "signature": "cctz::time_zone::prev_transition(std::__1::chrono::time_point<std::__1::chrono::system_clock, std::__1::chrono::duration<long, std::__1::ratio<1l, 1l> > > const&, cctz::time_zone::civil_transition*) const"
+"language": "c++"
+"project": "cctz"
+"target_name": "fuzz_cctz"
+"target_path": "/src/fuzz_cctz.cc"

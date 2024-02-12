@@ -1,10 +1,48 @@
-functions:
-- struct OggOpusFile * op_open_file(char * _path, int * _error)
-- int op_read(struct OggOpusFile * _of, short * _pcm, int _buf_size, int * _li)
-- int op_test_open(struct OggOpusFile * _of)
-- int op_read_float_stereo(struct OggOpusFile * _of, float * _pcm, int _buf_size)
-- int op_read_float(struct OggOpusFile * _of, float * _pcm, int _buf_size, int * _li)
-project: opusfile
-target_name: opusfile_fuzzer
-target_path: /src/opusfile_fuzzer.c
-
+"functions":
+- "params":
+  - "name": "_path"
+    "type": "char *"
+  - "name": "_error"
+    "type": "int *"
+  "return_type": "struct OggOpusFile *"
+  "signature": "struct OggOpusFile * op_open_file(char * _path, int * _error)"
+- "params":
+  - "name": "_of"
+    "type": "struct OggOpusFile *"
+  - "name": "_pcm"
+    "type": "short *"
+  - "name": "_buf_size"
+    "type": "int"
+  - "name": "_li"
+    "type": "int *"
+  "return_type": "int"
+  "signature": "int op_read(struct OggOpusFile * _of, short * _pcm, int _buf_size, int * _li)"
+- "params":
+  - "name": "_of"
+    "type": "struct OggOpusFile *"
+  "return_type": "int"
+  "signature": "int op_test_open(struct OggOpusFile * _of)"
+- "params":
+  - "name": "_of"
+    "type": "struct OggOpusFile *"
+  - "name": "_pcm"
+    "type": "float *"
+  - "name": "_buf_size"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int op_read_float_stereo(struct OggOpusFile * _of, float * _pcm, int _buf_size)"
+- "params":
+  - "name": "_of"
+    "type": "struct OggOpusFile *"
+  - "name": "_pcm"
+    "type": "float *"
+  - "name": "_buf_size"
+    "type": "int"
+  - "name": "_li"
+    "type": "int *"
+  "return_type": "int"
+  "signature": "int op_read_float(struct OggOpusFile * _of, float * _pcm, int _buf_size, int * _li)"
+"language": "c"
+"project": "opusfile"
+"target_name": "opusfile_fuzzer"
+"target_path": "/src/opusfile_fuzzer.c"

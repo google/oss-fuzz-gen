@@ -1,11 +1,40 @@
-functions:
-- void pg_query_parse_protobuf(struct PgQueryProtobufParseResult * , char * )
-- void pg_query_parse_protobuf_opts(struct PgQueryProtobufParseResult * , char * ,
-  int )
-- void pg_query_nodes_to_protobuf(char * )
-- char * pg_query_node_to_json(char * )
-- bool raw_expression_tree_walker_impl(struct Node * , func_type * , char * )
-project: libpg_query
-target_name: fuzz_parser
-target_path: /src/libpg_query/test/fuzz/fuzz_parser.c
-
+"functions":
+- "params":
+  - "name": ""
+    "type": "struct PgQueryProtobufParseResult *"
+  - "name": ""
+    "type": "char *"
+  "return_type": "void"
+  "signature": "void pg_query_parse_protobuf(struct PgQueryProtobufParseResult * , char * )"
+- "params":
+  - "name": ""
+    "type": "struct PgQueryProtobufParseResult *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "void pg_query_parse_protobuf_opts(struct PgQueryProtobufParseResult * , char * , int )"
+- "params":
+  - "name": ""
+    "type": "char *"
+  "return_type": "void"
+  "signature": "void pg_query_nodes_to_protobuf(char * )"
+- "params":
+  - "name": ""
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "char * pg_query_node_to_json(char * )"
+- "params":
+  - "name": ""
+    "type": "struct Node *"
+  - "name": ""
+    "type": "func_type *"
+  - "name": ""
+    "type": "char *"
+  "return_type": "bool"
+  "signature": "bool raw_expression_tree_walker_impl(struct Node * , func_type * , char * )"
+"language": "c"
+"project": "libpg_query"
+"target_name": "fuzz_parser"
+"target_path": "/src/libpg_query/test/fuzz/fuzz_parser.c"

@@ -1,12 +1,40 @@
-functions:
-- void capnp::_::initDynamicTestMessage(capnp::DynamicStruct::Builder * builder)
-- void capnp::_::(capnp::DynamicStruct::Builder * builder)
-- void capnp::DynamicStruct::Builder::adopt(capnp::DynamicStruct::Builder * this,
-  char * name, size_t orphan, capnp::Orphan * )
-- void capnp::DynamicStruct::Builder::adopt(capnp::DynamicStruct::Builder * this,
-  capnp::StructSchema::Field * field, capnp::Orphan * orphan)
-- void capnp::_::checkDynamicTestMessage(capnp::DynamicStruct::Builder * builder)
-project: capnproto
-target_name: capnp-llvm-fuzzer-testcase
-target_path: /src/capnproto/c++/src/capnp/llvm-fuzzer-testcase.c++
-
+"functions":
+- "params":
+  - "name": "builder"
+    "type": "capnp::DynamicStruct::Builder *"
+  "return_type": "void"
+  "signature": "capnp::_::initDynamicTestMessage(capnp::DynamicStruct::Builder)"
+- "params":
+  - "name": "builder"
+    "type": "capnp::DynamicStruct::Builder *"
+  "return_type": "void"
+  "signature": "capnp::_::(anonymous namespace)::dynamicInitTestMessage(capnp::DynamicStruct::Builder)"
+- "params":
+  - "name": "this"
+    "type": "capnp::DynamicStruct::Builder *"
+  - "name": "name"
+    "type": "char *"
+  - "name": "orphan"
+    "type": "size_t"
+  - "name": ""
+    "type": "capnp::Orphan *"
+  "return_type": "void"
+  "signature": "capnp::DynamicStruct::Builder::adopt(kj::StringPtr, capnp::Orphan<capnp::DynamicValue>&&)"
+- "params":
+  - "name": "this"
+    "type": "capnp::DynamicStruct::Builder *"
+  - "name": "field"
+    "type": "capnp::StructSchema::Field *"
+  - "name": "orphan"
+    "type": "capnp::Orphan *"
+  "return_type": "void"
+  "signature": "capnp::DynamicStruct::Builder::adopt(capnp::StructSchema::Field, capnp::Orphan<capnp::DynamicValue>&&)"
+- "params":
+  - "name": "builder"
+    "type": "capnp::DynamicStruct::Builder *"
+  "return_type": "void"
+  "signature": "capnp::_::checkDynamicTestMessage(capnp::DynamicStruct::Builder)"
+"language": "c++"
+"project": "capnproto"
+"target_name": "capnp-llvm-fuzzer-testcase"
+"target_path": "/src/capnproto/c++/src/capnp/llvm-fuzzer-testcase.c++"

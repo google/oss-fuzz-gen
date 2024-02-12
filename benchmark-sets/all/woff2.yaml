@@ -1,12 +1,46 @@
-functions:
-- bool woff2::ConvertWOFF2ToTTF(char * result, size_t result_length, char * data,
-  size_t length)
-- char * BrotliDecoderTakeOutput(struct BrotliDecoderStateStruct * , size_t * )
-- struct BrotliDecoderStateStruct * BrotliDecoderCreateInstance(func_type * , func_type
-  * , char * )
-- void woff2::Store255UShort(int val, size_t * offset, char * dst)
-- int BrotliDecoderIsFinished(struct BrotliDecoderStateStruct * )
-project: woff2
-target_name: decode_fuzzer
-target_path: /src/woff2/brotli/c/fuzz/decode_fuzzer.cc
-
+"functions":
+- "params":
+  - "name": "result"
+    "type": "char *"
+  - "name": "result_length"
+    "type": "size_t"
+  - "name": "data"
+    "type": "char *"
+  - "name": "length"
+    "type": "size_t"
+  "return_type": "bool"
+  "signature": "woff2::ConvertWOFF2ToTTF(unsigned char*, unsigned long, unsigned char const*, unsigned long)"
+- "params":
+  - "name": ""
+    "type": "struct BrotliDecoderStateStruct *"
+  - "name": ""
+    "type": "size_t *"
+  "return_type": "char *"
+  "signature": "BrotliDecoderTakeOutput"
+- "params":
+  - "name": ""
+    "type": "func_type *"
+  - "name": ""
+    "type": "func_type *"
+  - "name": ""
+    "type": "char *"
+  "return_type": "struct BrotliDecoderStateStruct *"
+  "signature": "BrotliDecoderCreateInstance"
+- "params":
+  - "name": "val"
+    "type": "int"
+  - "name": "offset"
+    "type": "size_t *"
+  - "name": "dst"
+    "type": "char *"
+  "return_type": "void"
+  "signature": "woff2::Store255UShort(int, unsigned long*, unsigned char*)"
+- "params":
+  - "name": ""
+    "type": "struct BrotliDecoderStateStruct *"
+  "return_type": "int"
+  "signature": "BrotliDecoderIsFinished"
+"language": "c++"
+"project": "woff2"
+"target_name": "decode_fuzzer"
+"target_path": "/src/woff2/brotli/c/fuzz/decode_fuzzer.cc"

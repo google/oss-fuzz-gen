@@ -1,14 +1,44 @@
-functions:
-- void nxt_router_conf_data_handler(struct nxt_task_s * task, struct nxt_port_recv_msg_s
-  * msg)
-- int nxt_router_conf_create(struct nxt_task_s * task, struct nxt_router_temp_conf_t
-  * tmcf, char * start, char * end)
-- int nxt_runtime_create(struct nxt_task_s * task)
-- struct nxt_http_action_s * nxt_http_action_create(struct nxt_task_s * task, struct
-  nxt_router_temp_conf_t * tmcf, struct nxt_str_t * pass)
-- void nxt_main_port_modules_handler(struct nxt_task_s * task, struct nxt_port_recv_msg_s
-  * msg)
-project: unit
-target_name: Fuzz_json
-target_path: /src/unit/fuzzer/Fuzz_json.c
-
+"functions":
+- "params":
+  - "name": "task"
+    "type": "struct nxt_task_s *"
+  - "name": "msg"
+    "type": "struct nxt_port_recv_msg_s *"
+  "return_type": "void"
+  "signature": "void nxt_router_conf_data_handler(struct nxt_task_s * task, struct nxt_port_recv_msg_s * msg)"
+- "params":
+  - "name": "task"
+    "type": "struct nxt_task_s *"
+  - "name": "tmcf"
+    "type": "struct nxt_router_temp_conf_t *"
+  - "name": "start"
+    "type": "char *"
+  - "name": "end"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int nxt_router_conf_create(struct nxt_task_s * task, struct nxt_router_temp_conf_t * tmcf, char * start, char * end)"
+- "params":
+  - "name": "task"
+    "type": "struct nxt_task_s *"
+  "return_type": "int"
+  "signature": "int nxt_runtime_create(struct nxt_task_s * task)"
+- "params":
+  - "name": "task"
+    "type": "struct nxt_task_s *"
+  - "name": "tmcf"
+    "type": "struct nxt_router_temp_conf_t *"
+  - "name": "pass"
+    "type": "struct nxt_str_t *"
+  "return_type": "struct nxt_http_action_s *"
+  "signature": "struct nxt_http_action_s * nxt_http_action_create(struct nxt_task_s * task, struct nxt_router_temp_conf_t * tmcf, struct nxt_str_t * pass)"
+- "params":
+  - "name": "task"
+    "type": "struct nxt_task_s *"
+  - "name": "msg"
+    "type": "struct nxt_port_recv_msg_s *"
+  "return_type": "void"
+  "signature": "void nxt_main_port_modules_handler(struct nxt_task_s * task, struct nxt_port_recv_msg_s * msg)"
+"language": "c"
+"project": "unit"
+"target_name": "Fuzz_json"
+"target_path": "/src/unit/fuzzer/Fuzz_json.c"

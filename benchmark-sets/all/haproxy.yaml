@@ -1,10 +1,30 @@
-functions:
-- int main2(int argc, char ** argv)
-- void init(int argc, char ** argv)
-- void mworker_loop()
-- char * run_thread_poll_loop(char * data)
-- void run_poll_loop()
-project: haproxy
-target_name: fuzz_cfg_parser
-target_path: /src/fuzz_cfg_parser.c
-
+"functions":
+- "params":
+  - "name": "argc"
+    "type": "int"
+  - "name": "argv"
+    "type": "char **"
+  "return_type": "int"
+  "signature": "main2"
+- "params":
+  - "name": "argc"
+    "type": "int"
+  - "name": "argv"
+    "type": "char **"
+  "return_type": "void"
+  "signature": "init"
+- "params": []
+  "return_type": "void"
+  "signature": "mworker_loop"
+- "params":
+  - "name": "data"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "run_thread_poll_loop"
+- "params": []
+  "return_type": "void"
+  "signature": "run_poll_loop"
+"language": "c++"
+"project": "haproxy"
+"target_name": "fuzz_cfg_parser"
+"target_path": "/src/fuzz_cfg_parser.c"

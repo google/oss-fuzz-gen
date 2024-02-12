@@ -1,15 +1,38 @@
-functions:
-- std::string * simdutf::internal::detect_best_supported_implementation_on_first_use::name(simdutf::internal::unsupported_implementation
-  * this) const
-- std::string * simdutf::internal::detect_best_supported_implementation_on_first_use::description(simdutf::internal::unsupported_implementation
-  * this) const
-- int simdutf::internal::detect_best_supported_implementation_on_first_use::required_instruction_sets(simdutf::internal::unsupported_implementation
-  * this) const
-- size_t simdutf::internal::detect_best_supported_implementation_on_first_use::count_utf8(simdutf::internal::unsupported_implementation
-  * this, char * buf, size_t len) const
-- int simdutf::internal::detect_best_supported_implementation_on_first_use::detect_encodings(simdutf::internal::unsupported_implementation
-  * this, char * input, size_t length) const
-project: simdutf
-target_name: roundtrip
-target_path: /src/simdutf/fuzz/roundtrip.cc
-
+"functions":
+- "params":
+  - "name": "this"
+    "type": "simdutf::internal::unsupported_implementation *"
+  "return_type": "std::string *"
+  "signature": "simdutf::internal::detect_best_supported_implementation_on_first_use::name() const"
+- "params":
+  - "name": "this"
+    "type": "simdutf::internal::unsupported_implementation *"
+  "return_type": "std::string *"
+  "signature": "simdutf::internal::detect_best_supported_implementation_on_first_use::description() const"
+- "params":
+  - "name": "this"
+    "type": "simdutf::internal::unsupported_implementation *"
+  "return_type": "int"
+  "signature": "simdutf::internal::detect_best_supported_implementation_on_first_use::required_instruction_sets() const"
+- "params":
+  - "name": "this"
+    "type": "simdutf::internal::unsupported_implementation *"
+  - "name": "buf"
+    "type": "char *"
+  - "name": "len"
+    "type": "size_t"
+  "return_type": "size_t"
+  "signature": "simdutf::internal::detect_best_supported_implementation_on_first_use::count_utf8(char const*, unsigned long) const"
+- "params":
+  - "name": "this"
+    "type": "simdutf::internal::unsupported_implementation *"
+  - "name": "input"
+    "type": "char *"
+  - "name": "length"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "simdutf::internal::detect_best_supported_implementation_on_first_use::detect_encodings(char const*, unsigned long) const"
+"language": "c++"
+"project": "simdutf"
+"target_name": "roundtrip"
+"target_path": "/src/simdutf/fuzz/roundtrip.cc"

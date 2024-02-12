@@ -1,14 +1,58 @@
-functions:
-- void usbredirparser_send_filter_filter(struct usbredirparser * , struct usbredirfilter_rule
-  * , int )
-- void usbredirparser_send_filter_reject(struct usbredirparser * )
-- void usbredirparser_send_buffered_bulk_packet(struct usbredirparser * , size_t ,
-  struct usb_redir_start_bulk_receiving_header * , char * , int )
-- void usbredirparser_send_interrupt_packet(struct usbredirparser * , size_t , struct
-  usb_redir_iso_packet_header * , char * , int )
-- void usbredirparser_send_iso_packet(struct usbredirparser * , size_t , struct usb_redir_iso_packet_header
-  * , char * , int )
-project: spice-usbredir
-target_name: usbredirparserfuzz
-target_path: /src/spice-usbredir/fuzzing/usbredirparserfuzz.cc
-
+"functions":
+- "params":
+  - "name": ""
+    "type": "struct usbredirparser *"
+  - "name": ""
+    "type": "struct usbredirfilter_rule *"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "usbredirparser_send_filter_filter"
+- "params":
+  - "name": ""
+    "type": "struct usbredirparser *"
+  "return_type": "void"
+  "signature": "usbredirparser_send_filter_reject"
+- "params":
+  - "name": ""
+    "type": "struct usbredirparser *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "struct usb_redir_start_bulk_receiving_header *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "usbredirparser_send_buffered_bulk_packet"
+- "params":
+  - "name": ""
+    "type": "struct usbredirparser *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "struct usb_redir_iso_packet_header *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "usbredirparser_send_interrupt_packet"
+- "params":
+  - "name": ""
+    "type": "struct usbredirparser *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "struct usb_redir_iso_packet_header *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "usbredirparser_send_iso_packet"
+"language": "c++"
+"project": "spice-usbredir"
+"target_name": "usbredirparserfuzz"
+"target_path": "/src/spice-usbredir/fuzzing/usbredirparserfuzz.cc"

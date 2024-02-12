@@ -1,12 +1,42 @@
-functions:
-- int vkEnumerateInstanceVersion(int * )
-- int vkEnumerateInstanceLayerProperties(int * , struct VkLayerProperties * )
-- int terminator_EnumerateInstanceLayerProperties(struct VkEnumerateInstanceLayerPropertiesChain
-  * , int * , struct VkLayerProperties * )
-- func_type * vkGetDeviceProcAddr(struct VkDevice_T * , char * )
-- char * loader_lookup_device_dispatch_table(struct VkLayerDispatchTable_ * , char
-  * , char * )
-project: vulkan-loader
-target_name: instance_enumerate_fuzzer
-target_path: /src/instance_enumerate_fuzzer.c
-
+"functions":
+- "params":
+  - "name": ""
+    "type": "int *"
+  "return_type": "int"
+  "signature": "int vkEnumerateInstanceVersion(int * )"
+- "params":
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "struct VkLayerProperties *"
+  "return_type": "int"
+  "signature": "int vkEnumerateInstanceLayerProperties(int * , struct VkLayerProperties * )"
+- "params":
+  - "name": ""
+    "type": "struct VkEnumerateInstanceLayerPropertiesChain *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "struct VkLayerProperties *"
+  "return_type": "int"
+  "signature": "int terminator_EnumerateInstanceLayerProperties(struct VkEnumerateInstanceLayerPropertiesChain * , int * , struct VkLayerProperties * )"
+- "params":
+  - "name": ""
+    "type": "struct VkDevice_T *"
+  - "name": ""
+    "type": "char *"
+  "return_type": "func_type *"
+  "signature": "func_type * vkGetDeviceProcAddr(struct VkDevice_T * , char * )"
+- "params":
+  - "name": ""
+    "type": "struct VkLayerDispatchTable_ *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "char * loader_lookup_device_dispatch_table(struct VkLayerDispatchTable_ * , char * , char * )"
+"language": "c"
+"project": "vulkan-loader"
+"target_name": "instance_enumerate_fuzzer"
+"target_path": "/src/instance_enumerate_fuzzer.c"

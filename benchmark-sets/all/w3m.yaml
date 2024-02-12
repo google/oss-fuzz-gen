@@ -1,10 +1,40 @@
-functions:
-- struct _Str * wc_conv_from_utf7(struct _Str * is, int ces)
-- struct _Str * wc_char_conv_from_utf8(char c, struct wc_status * st)
-- char * wtf_conv_fit(char * s, int ces)
-- struct _Str * wc_char_conv_from_utf7(char c, struct wc_status * st)
-- struct _Str * wc_char_conv_from_iso2022(char c, struct wc_status * st)
-project: w3m
-target_name: fuzz_conv
-target_path: /src/w3m/fuzz/fuzz-conv.c
-
+"functions":
+- "params":
+  - "name": "is"
+    "type": "struct _Str *"
+  - "name": "ces"
+    "type": "int"
+  "return_type": "struct _Str *"
+  "signature": "struct _Str * wc_conv_from_utf7(struct _Str * is, int ces)"
+- "params":
+  - "name": "c"
+    "type": "char"
+  - "name": "st"
+    "type": "struct wc_status *"
+  "return_type": "struct _Str *"
+  "signature": "struct _Str * wc_char_conv_from_utf8(char c, struct wc_status * st)"
+- "params":
+  - "name": "s"
+    "type": "char *"
+  - "name": "ces"
+    "type": "int"
+  "return_type": "char *"
+  "signature": "char * wtf_conv_fit(char * s, int ces)"
+- "params":
+  - "name": "c"
+    "type": "char"
+  - "name": "st"
+    "type": "struct wc_status *"
+  "return_type": "struct _Str *"
+  "signature": "struct _Str * wc_char_conv_from_utf7(char c, struct wc_status * st)"
+- "params":
+  - "name": "c"
+    "type": "char"
+  - "name": "st"
+    "type": "struct wc_status *"
+  "return_type": "struct _Str *"
+  "signature": "struct _Str * wc_char_conv_from_iso2022(char c, struct wc_status * st)"
+"language": "c"
+"project": "w3m"
+"target_name": "fuzz_conv"
+"target_path": "/src/w3m/fuzz/fuzz-conv.c"

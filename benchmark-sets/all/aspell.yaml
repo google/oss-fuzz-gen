@@ -1,9 +1,68 @@
-functions:
-- void aspeller::create_default_readonly_dict(acommon::PosibErr * els, struct AspellStringEnumeration
-  * config, acommon::Config * )
-- void acommon::set_mode_from_extension(acommon::PosibErr * config, acommon::Config
-  * filename, char * in, int , struct _IO_FILE * )
-project: aspell
-target_name: aspell_fuzzer
-target_path: /src/aspell-fuzz/aspell_fuzzer.cpp
-
+"functions":
+- "params":
+  - "name": "els"
+    "type": "acommon::PosibErr *"
+  - "name": "config"
+    "type": "struct AspellStringEnumeration *"
+  - "name": ""
+    "type": "acommon::Config *"
+  "return_type": "void"
+  "signature": "aspeller::create_default_readonly_dict(acommon::StringEnumeration*, acommon::Config&)"
+- "params":
+  - "name": "this"
+    "type": "acommon::PosibErr *"
+  - "name": "in"
+    "type": "(anonymous namespace)::WritableReplDict *"
+  - "name": "file_name"
+    "type": "acommon::FStream *"
+  - "name": "config"
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "acommon::Config *"
+  "return_type": "void"
+  "signature": "(anonymous namespace)::WritableReplDict::merge(acommon::FStream&, acommon::ParmString, acommon::Config*)"
+- "params":
+  - "name": "this"
+    "type": "acommon::PosibErr *"
+  - "name": "in"
+    "type": "(anonymous namespace)::WritableReplDict *"
+  - "name": "file_name"
+    "type": "acommon::FStream *"
+  - "name": "config"
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "acommon::Config *"
+  "return_type": "void"
+  "signature": "(anonymous namespace)::WritableDict::merge(acommon::FStream&, acommon::ParmString, acommon::Config*)"
+- "params":
+  - "name": "els"
+    "type": "acommon::PosibErr *"
+  - "name": "lang"
+    "type": "struct AspellStringEnumeration *"
+  - "name": "config"
+    "type": "aspeller::Language *"
+  - "name": ""
+    "type": "acommon::Config *"
+  "return_type": "void"
+  "signature": "(anonymous namespace)::create(acommon::StringEnumeration*, aspeller::Language const&, acommon::Config&)"
+- "params":
+  - "name": "config"
+    "type": "acommon::PosibErr *"
+  - "name": "filename"
+    "type": "acommon::Config *"
+  - "name": "in"
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "struct _IO_FILE *"
+  "return_type": "void"
+  "signature": "acommon::set_mode_from_extension(acommon::Config*, acommon::ParmString, _IO_FILE*)"
+"language": "c++"
+"project": "aspell"
+"target_name": "aspell_fuzzer"
+"target_path": "/src/aspell-fuzz/aspell_fuzzer.cpp"

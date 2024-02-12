@@ -1,11 +1,38 @@
-functions:
-- int mnt_table_parse_mtab(struct libmnt_table * tb, char * filename)
-- int __mnt_table_parse_mountinfo(struct libmnt_table * tb, char * filename, struct
-  libmnt_table * u_tb)
-- struct libmnt_table * mnt_new_table_from_dir(char * dirname)
-- int mnt_table_parse_fstab(struct libmnt_table * tb, char * filename)
-- struct libmnt_table * mnt_new_table_from_file(char * filename)
-project: util-linux
-target_name: test_blkid_fuzz
-target_path: /src/util-linux/libblkid/src/fuzz.c
-
+"functions":
+- "params":
+  - "name": "tb"
+    "type": "struct libmnt_table *"
+  - "name": "filename"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int mnt_table_parse_mtab(struct libmnt_table * tb, char * filename)"
+- "params":
+  - "name": "tb"
+    "type": "struct libmnt_table *"
+  - "name": "filename"
+    "type": "char *"
+  - "name": "u_tb"
+    "type": "struct libmnt_table *"
+  "return_type": "int"
+  "signature": "int __mnt_table_parse_mountinfo(struct libmnt_table * tb, char * filename, struct libmnt_table * u_tb)"
+- "params":
+  - "name": "dirname"
+    "type": "char *"
+  "return_type": "struct libmnt_table *"
+  "signature": "struct libmnt_table * mnt_new_table_from_dir(char * dirname)"
+- "params":
+  - "name": "tb"
+    "type": "struct libmnt_table *"
+  - "name": "filename"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int mnt_table_parse_fstab(struct libmnt_table * tb, char * filename)"
+- "params":
+  - "name": "filename"
+    "type": "char *"
+  "return_type": "struct libmnt_table *"
+  "signature": "struct libmnt_table * mnt_new_table_from_file(char * filename)"
+"language": "c"
+"project": "util-linux"
+"target_name": "test_blkid_fuzz"
+"target_path": "/src/util-linux/libblkid/src/fuzz.c"

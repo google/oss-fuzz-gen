@@ -1,13 +1,62 @@
-functions:
-- int pcap_compile_nopcap(int snaplen_arg, int linktype_arg, struct bpf_program *
-  program, char * buf, int optimize, int mask)
-- struct pcap * pcap_open(char * source, int snaplen, int flags, int read_timeout,
-  struct pcap_rmtauth * auth, char * errbuf)
-- struct pcap * pcap_open_live(char * device, int snaplen, int promisc, int to_ms,
-  char * errbuf)
-- struct pcap * pcap_create(char * device, char * errbuf)
-- struct pcap * pcapint_create_interface(char * device, char * ebuf)
-project: libpcap
-target_name: onefile
-target_path: /src/libpcap/testprogs/fuzz/onefile.c
-
+"functions":
+- "params":
+  - "name": "snaplen_arg"
+    "type": "int"
+  - "name": "linktype_arg"
+    "type": "int"
+  - "name": "program"
+    "type": "struct bpf_program *"
+  - "name": "buf"
+    "type": "char *"
+  - "name": "optimize"
+    "type": "int"
+  - "name": "mask"
+    "type": "int"
+  "return_type": "int"
+  "signature": "pcap_compile_nopcap"
+- "params":
+  - "name": "source"
+    "type": "char *"
+  - "name": "snaplen"
+    "type": "int"
+  - "name": "flags"
+    "type": "int"
+  - "name": "read_timeout"
+    "type": "int"
+  - "name": "auth"
+    "type": "struct pcap_rmtauth *"
+  - "name": "errbuf"
+    "type": "char *"
+  "return_type": "struct pcap *"
+  "signature": "pcap_open"
+- "params":
+  - "name": "device"
+    "type": "char *"
+  - "name": "snaplen"
+    "type": "int"
+  - "name": "promisc"
+    "type": "int"
+  - "name": "to_ms"
+    "type": "int"
+  - "name": "errbuf"
+    "type": "char *"
+  "return_type": "struct pcap *"
+  "signature": "pcap_open_live"
+- "params":
+  - "name": "device"
+    "type": "char *"
+  - "name": "errbuf"
+    "type": "char *"
+  "return_type": "struct pcap *"
+  "signature": "pcap_create"
+- "params":
+  - "name": "device"
+    "type": "char *"
+  - "name": "ebuf"
+    "type": "char *"
+  "return_type": "struct pcap *"
+  "signature": "pcapint_create_interface"
+"language": "c++"
+"project": "libpcap"
+"target_name": "onefile"
+"target_path": "/src/libpcap/testprogs/fuzz/onefile.c"

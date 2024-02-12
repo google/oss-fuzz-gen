@@ -1,14 +1,52 @@
-functions:
-- size_t LLVMFuzzerCustomMutator(char * , size_t , size_t , int )
-- void cryptofuzz::module::Botan::OpECGDSA_Sign(std::optional * , cryptofuzz::module::BearSSL
-  * , cryptofuzz::operation::ECDSA_Sign * )
-- void std::__1::optional<cryptofuzz::component::ECDSA_Signature> cryptofuzz::module::Botan_detail::ECxDSA_Sign<Botan::ECGDSA_PrivateKey,
-  cryptofuzz::operation::ECGDSA_Sign, false>(std::optional * , cryptofuzz::operation::ECDSA_Sign
-  * )
-- void cryptofuzz::Builtin_tests_importer::Run(union.anon * )
-- void Botan::EC_PrivateKey::EC_PrivateKey(Botan::EC_PrivateKey * , char ** , Botan::AlgorithmIdentifier
-  * , char * , size_t , bool )
-project: bearssl
-target_name: cryptofuzz-bearssl
-target_path: /src/cryptofuzz/entry.cpp
-
+"functions":
+- "params":
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "int"
+  "return_type": "size_t"
+  "signature": "LLVMFuzzerCustomMutator"
+- "params":
+  - "name": ""
+    "type": "std::optional *"
+  - "name": ""
+    "type": "cryptofuzz::module::BearSSL *"
+  - "name": ""
+    "type": "cryptofuzz::operation::ECDSA_Sign *"
+  "return_type": "void"
+  "signature": "cryptofuzz::module::Botan::OpECGDSA_Sign(cryptofuzz::operation::ECGDSA_Sign&)"
+- "params":
+  - "name": ""
+    "type": "std::optional *"
+  - "name": ""
+    "type": "cryptofuzz::operation::ECDSA_Sign *"
+  "return_type": "void"
+  "signature": "std::__1::optional<cryptofuzz::component::ECDSA_Signature> cryptofuzz::module::Botan_detail::ECxDSA_Sign<Botan::ECGDSA_PrivateKey, cryptofuzz::operation::ECGDSA_Sign, false>(cryptofuzz::operation::ECGDSA_Sign&)"
+- "params":
+  - "name": ""
+    "type": "anon *"
+  "return_type": "void"
+  "signature": "cryptofuzz::Builtin_tests_importer::Run()"
+- "params":
+  - "name": ""
+    "type": "Botan::EC_PrivateKey *"
+  - "name": ""
+    "type": "char **"
+  - "name": ""
+    "type": "Botan::AlgorithmIdentifier *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "bool"
+  "return_type": "void"
+  "signature": "Botan::EC_PrivateKey::EC_PrivateKey(Botan::AlgorithmIdentifier const&, std::__1::span<unsigned char const, 18446744073709551615ul>, bool)"
+"language": "c++"
+"project": "bearssl"
+"target_name": "cryptofuzz-bearssl"
+"target_path": "/src/cryptofuzz/entry.cpp"

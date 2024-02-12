@@ -1,6 +1,0 @@
-functions:
-- void debug_log_callback(char * , char * )
-project: md4c
-target_name: fuzz-mdhtml
-target_path: /src/md4c/test/fuzzers/fuzz-mdhtml.c
-

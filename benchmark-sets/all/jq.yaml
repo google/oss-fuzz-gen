@@ -1,12 +1,62 @@
-functions:
-- void f_modulemeta(struct jq_state * jq, size_t a, struct jv_refcnt * )
-- void load_module_meta(struct jq_state * jq, size_t mod_relpath, struct jv_refcnt
-  * )
-- void jq_util_input_next_input_cb(struct jq_state * jq, char * data)
-- void jq_util_input_next_input(struct jq_util_input_state * state)
-- void f_min_by_impl(struct jq_state * jq, size_t x, struct jv_refcnt * y, size_t
-  , struct jv_refcnt * )
-project: jq
-target_name: jq_fuzz_execute
-target_path: /src/jq/tests/jq_fuzz_execute.cpp
-
+"functions":
+- "params":
+  - "name": "reg"
+    "type": "struct re_pattern_buffer *"
+  - "name": "pattern"
+    "type": "char *"
+  - "name": "pattern_end"
+    "type": "char *"
+  - "name": "option"
+    "type": "int"
+  - "name": "enc"
+    "type": "struct OnigEncodingTypeST *"
+  - "name": "syntax"
+    "type": "struct OnigSyntaxType *"
+  - "name": "einfo"
+    "type": "struct OnigErrorInfo *"
+  "return_type": "int"
+  "signature": "int onig_new_without_alloc(struct re_pattern_buffer * reg, char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax, struct OnigErrorInfo * einfo)"
+- "params":
+  - "name": "pattern"
+    "type": "char *"
+  - "name": "pattern_end"
+    "type": "char *"
+  - "name": "option"
+    "type": "int"
+  - "name": "enc"
+    "type": "struct OnigEncodingTypeST *"
+  - "name": "syntax"
+    "type": "struct OnigSyntaxType *"
+  "return_type": "int"
+  "signature": "int onig_detect_can_be_slow_pattern(char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax)"
+- "params":
+  - "name": "np"
+    "type": "struct _Node **"
+  - "name": "tok"
+    "type": "struct PToken *"
+  - "name": "term"
+    "type": "int"
+  - "name": "src"
+    "type": "char **"
+  - "name": "end"
+    "type": "char *"
+  - "name": "env"
+    "type": "struct ParseEnv *"
+  "return_type": "int"
+  "signature": "int prs_bag(struct _Node ** np, struct PToken * tok, int term, char ** src, char * end, struct ParseEnv * env)"
+- "params":
+  - "name": "jq"
+    "type": "struct jq_state *"
+  - "name": "data"
+    "type": "char *"
+  "return_type": "void"
+  "signature": "void jq_util_input_next_input_cb(struct jq_state * jq, char * data)"
+- "params":
+  - "name": "state"
+    "type": "struct jq_util_input_state *"
+  "return_type": "void"
+  "signature": "void jq_util_input_next_input(struct jq_util_input_state * state)"
+"language": "c"
+"project": "jq"
+"target_name": "jq_fuzz_execute"
+"target_path": "/src/jq/tests/jq_fuzz_execute.cpp"

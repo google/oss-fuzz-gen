@@ -1,12 +1,44 @@
-functions:
-- struct evhttp * evhttp_start(char * , short )
-- int evhttp_bind_socket(struct evhttp * , char * , short )
-- struct evhttp_bound_socket * evhttp_bind_socket_with_handle(struct evhttp * , char
-  * , short )
-- int evhttp_accept_socket(struct evhttp * , int )
-- struct evhttp_bound_socket * evhttp_accept_socket_with_handle(struct evhttp * ,
-  int )
-project: libevent
-target_name: dns_config_fuzzer
-target_path: /src/dns_config_fuzzer.cc
-
+"functions":
+- "params":
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "short"
+  "return_type": "struct evhttp *"
+  "signature": "evhttp_start"
+- "params":
+  - "name": ""
+    "type": "struct evhttp *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "short"
+  "return_type": "int"
+  "signature": "evhttp_bind_socket"
+- "params":
+  - "name": ""
+    "type": "struct evhttp *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "short"
+  "return_type": "struct evhttp_bound_socket *"
+  "signature": "evhttp_bind_socket_with_handle"
+- "params":
+  - "name": ""
+    "type": "struct evhttp *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "evhttp_accept_socket"
+- "params":
+  - "name": ""
+    "type": "struct evhttp *"
+  - "name": ""
+    "type": "int"
+  "return_type": "struct evhttp_bound_socket *"
+  "signature": "evhttp_accept_socket_with_handle"
+"language": "c++"
+"project": "libevent"
+"target_name": "dns_config_fuzzer"
+"target_path": "/src/dns_config_fuzzer.cc"

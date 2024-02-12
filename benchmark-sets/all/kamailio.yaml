@@ -1,10 +1,34 @@
-functions:
-- int main2(int argc, char ** argv)
-- int main_loop()
-- int tcp_init_children(int * woneinit)
-- int handle_tcpconn_ev(struct tcp_connection * tcpconn, short ev, int fd_i)
-- int fix_actions(struct action * a)
-project: kamailio
-target_name: fuzz_parse_msg
-target_path: /src/kamailio/misc/fuzz/fuzz_parse_msg.c
-
+"functions":
+- "params":
+  - "name": "argc"
+    "type": "int"
+  - "name": "argv"
+    "type": "char **"
+  "return_type": "int"
+  "signature": "int main2(int argc, char ** argv)"
+- "params": []
+  "return_type": "int"
+  "signature": "int main_loop()"
+- "params":
+  - "name": "woneinit"
+    "type": "int *"
+  "return_type": "int"
+  "signature": "int tcp_init_children(int * woneinit)"
+- "params":
+  - "name": "tcpconn"
+    "type": "struct tcp_connection *"
+  - "name": "ev"
+    "type": "short"
+  - "name": "fd_i"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int handle_tcpconn_ev(struct tcp_connection * tcpconn, short ev, int fd_i)"
+- "params":
+  - "name": "a"
+    "type": "struct action *"
+  "return_type": "int"
+  "signature": "int fix_actions(struct action * a)"
+"language": "c"
+"project": "kamailio"
+"target_name": "fuzz_parse_msg"
+"target_path": "/src/kamailio/misc/fuzz/fuzz_parse_msg.c"

@@ -1,20 +1,92 @@
-functions:
-- int aacEncEncode(struct AACENCODER * hAacEncoder, struct AACENC_BufDesc * inBufDesc,
-  struct AACENC_BufDesc * outBufDesc, struct AACENC_InArgs * inargs, struct QMF_SCALE_FACTOR
-  * outargs)
-- int aacEncInit(struct AACENCODER * hAacEncoder, int InitFlags, struct USER_PARAM
-  * config)
-- int FDKaacEnc_EncodeFrame(struct AAC_ENC * hAacEnc, struct TRANSPORTENC * hTpEnc,
-  short * inputBuffer, int inputBufferBufSize, int * nOutBytes, struct AACENC_EXT_PAYLOAD
-  * extPayload)
-- int sbrEncoder_Init(struct SBR_ENCODER * hSbrEncoder, struct SBR_ELEMENT_INFO *
-  elInfo, int noElements, short * inputBuffer, int inputBufferBufSize, int * coreBandwidth,
-  int * inputBufferOffset, int * numChannels, int syntaxFlags, int * coreSampleRate,
-  int * downSampleFactor, int * frameLength, int aot, int * delay, int transformFactor,
-  int headerPeriod, int statesInitFlag)
-- int sbrEncoder_EncodeFrame(struct SBR_ENCODER * hSbrEncoder, short * samples, int
-  samplesBufSize, int * sbrDataBits, bool  sbrData)
-project: libfdk-aac
-target_name: aacDecoder_DecodeFrame
-target_path: /src/aacDecoder_DecodeFrame.cpp
-
+"functions":
+- "params":
+  - "name": "hAacEncoder"
+    "type": "struct AACENCODER *"
+  - "name": "inBufDesc"
+    "type": "struct AACENC_BufDesc *"
+  - "name": "outBufDesc"
+    "type": "struct AACENC_BufDesc *"
+  - "name": "inargs"
+    "type": "struct AACENC_InArgs *"
+  - "name": "outargs"
+    "type": "struct QMF_SCALE_FACTOR *"
+  "return_type": "int"
+  "signature": "aacEncEncode"
+- "params":
+  - "name": "hAacEncoder"
+    "type": "struct AACENCODER *"
+  - "name": "InitFlags"
+    "type": "int"
+  - "name": "config"
+    "type": "struct USER_PARAM *"
+  "return_type": "int"
+  "signature": "aacEncInit(AACENCODER*, unsigned int, USER_PARAM*)"
+- "params":
+  - "name": "hAacEnc"
+    "type": "struct AAC_ENC *"
+  - "name": "hTpEnc"
+    "type": "struct TRANSPORTENC *"
+  - "name": "inputBuffer"
+    "type": "short *"
+  - "name": "inputBufferBufSize"
+    "type": "int"
+  - "name": "nOutBytes"
+    "type": "int *"
+  - "name": "extPayload"
+    "type": "struct AACENC_EXT_PAYLOAD *"
+  "return_type": "int"
+  "signature": "FDKaacEnc_EncodeFrame"
+- "params":
+  - "name": "hSbrEncoder"
+    "type": "struct SBR_ENCODER *"
+  - "name": "elInfo"
+    "type": "struct SBR_ELEMENT_INFO *"
+  - "name": "noElements"
+    "type": "int"
+  - "name": "inputBuffer"
+    "type": "short *"
+  - "name": "inputBufferBufSize"
+    "type": "int"
+  - "name": "coreBandwidth"
+    "type": "int *"
+  - "name": "inputBufferOffset"
+    "type": "int *"
+  - "name": "numChannels"
+    "type": "int *"
+  - "name": "syntaxFlags"
+    "type": "int"
+  - "name": "coreSampleRate"
+    "type": "int *"
+  - "name": "downSampleFactor"
+    "type": "int *"
+  - "name": "frameLength"
+    "type": "int *"
+  - "name": "aot"
+    "type": "int"
+  - "name": "delay"
+    "type": "int *"
+  - "name": "transformFactor"
+    "type": "int"
+  - "name": "headerPeriod"
+    "type": "int"
+  - "name": "statesInitFlag"
+    "type": "int"
+  "return_type": "int"
+  "signature": "sbrEncoder_Init"
+- "params":
+  - "name": "hSbrEncoder"
+    "type": "struct SBR_ENCODER *"
+  - "name": "samples"
+    "type": "short *"
+  - "name": "samplesBufSize"
+    "type": "int"
+  - "name": "sbrDataBits"
+    "type": "int *"
+  - "name": "sbrData"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "sbrEncoder_EncodeFrame"
+"language": "c++"
+"project": "libfdk-aac"
+"target_name": "aacDecoder_DecodeFrame"
+"target_path": "/src/aacDecoder_DecodeFrame.cpp"

@@ -1,14 +1,42 @@
-functions:
-- gifProtoFuzzer::BasicChunk * gifProtoFuzzer::BasicChunk* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(google::protobuf::Arena
-  * arena, gifProtoFuzzer::BasicChunk * from)
-- int fuzz_dgif_ala_android(char * Data, size_t Size)
-- gifProtoFuzzer::BasicChunk * gifProtoFuzzer::BasicChunk* google::protobuf::Arena::InternalHelper<gifProtoFuzzer::BasicChunk>::Construct<google::protobuf::Arena*,
-  gifProtoFuzzer::BasicChunk const&>(char * ptr, google::protobuf::Arena ** args,
-  gifProtoFuzzer::BasicChunk * args)
-- int fuzz_dgif(char * Data, size_t Size)
-- gifProtoFuzzer::PlainTextExtension * gifProtoFuzzer::PlainTextExtension* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::PlainTextExtension>(google::protobuf::Arena
-  * arena, gifProtoFuzzer::PlainTextExtension * from)
-project: giflib
-target_name: egif_target
-target_path: /src/egif_target.cc
-
+"functions":
+- "params":
+  - "name": "arena"
+    "type": "google::protobuf::Arena *"
+  - "name": "from"
+    "type": "gifProtoFuzzer::BasicChunk *"
+  "return_type": "gifProtoFuzzer::BasicChunk *"
+  "signature": "gifProtoFuzzer::BasicChunk* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&)"
+- "params":
+  - "name": "Data"
+    "type": "char *"
+  - "name": "Size"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "fuzz_dgif_ala_android(unsigned char const*, unsigned long)"
+- "params":
+  - "name": "ptr"
+    "type": "char *"
+  - "name": "args"
+    "type": "google::protobuf::Arena **"
+  - "name": "args"
+    "type": "gifProtoFuzzer::BasicChunk *"
+  "return_type": "gifProtoFuzzer::BasicChunk *"
+  "signature": "gifProtoFuzzer::BasicChunk* google::protobuf::Arena::InternalHelper<gifProtoFuzzer::BasicChunk>::Construct<google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&>(void*, google::protobuf::Arena*&&, gifProtoFuzzer::BasicChunk const&)"
+- "params":
+  - "name": "Data"
+    "type": "char *"
+  - "name": "Size"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "fuzz_dgif(unsigned char const*, unsigned long)"
+- "params":
+  - "name": "arena"
+    "type": "google::protobuf::Arena *"
+  - "name": "from"
+    "type": "gifProtoFuzzer::PlainTextExtension *"
+  "return_type": "gifProtoFuzzer::PlainTextExtension *"
+  "signature": "gifProtoFuzzer::PlainTextExtension* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::PlainTextExtension>(google::protobuf::Arena*, gifProtoFuzzer::PlainTextExtension const&)"
+"language": "c++"
+"project": "giflib"
+"target_name": "egif_target"
+"target_path": "/src/egif_target.cc"

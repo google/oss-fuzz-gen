@@ -1,20 +1,60 @@
-functions:
-- void fuzzing::types::Container<unsigned char, false, false> fuzzing::datasource::Base::Get<fuzzing::types::Container<unsigned
-  char, false, false> >(fuzzing::types::Container * this, std::exception * id, size_t
-  )
-- void fuzzing::types::Container<char, true, false> fuzzing::datasource::Base::Get<fuzzing::types::Container<char,
-  true, false> >(fuzzing::types::Container * this, std::exception * id, size_t )
-- void oc_state_frag_recon_c(struct oc_theora_state * _state, size_t _fragi, int _pli,
-  short * _dct_coeffs, int _last_zzi, short _dc_quant)
-- void std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>,
-  std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>,
-  std::__1::allocator<char> > > > fuzzing::datasource::Base::Get<std::__1::vector<std::__1::basic_string<char,
-  std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char,
-  std::__1::char_traits<char>, std::__1::allocator<char> > > > >(std::vector * this,
-  std::exception * id, size_t )
-- void fuzzing::datasource::Datasource::get(std::vector * this, fuzzing::datasource::Datasource
-  * min, size_t max, size_t id, size_t )
-project: libtheora
-target_name: fuzzer-decoder
-target_path: /src/oss-fuzz-fuzzers/libtheora/fuzzer.cpp
-
+"functions":
+- "params":
+  - "name": "this"
+    "type": "fuzzing::types::Container *"
+  - "name": "id"
+    "type": "std::exception *"
+  - "name": ""
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "fuzzing::types::Container<unsigned char, false, false> fuzzing::datasource::Base::Get<fuzzing::types::Container<unsigned char, false, false> >(unsigned long)"
+- "params":
+  - "name": "this"
+    "type": "fuzzing::types::Container *"
+  - "name": "id"
+    "type": "std::exception *"
+  - "name": ""
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "fuzzing::types::Container<char, true, false> fuzzing::datasource::Base::Get<fuzzing::types::Container<char, true, false> >(unsigned long)"
+- "params":
+  - "name": "_state"
+    "type": "struct oc_theora_state *"
+  - "name": "_fragi"
+    "type": "size_t"
+  - "name": "_pli"
+    "type": "int"
+  - "name": "_dct_coeffs"
+    "type": "short *"
+  - "name": "_last_zzi"
+    "type": "int"
+  - "name": "_dc_quant"
+    "type": "short"
+  "return_type": "void"
+  "signature": "oc_state_frag_recon_c"
+- "params":
+  - "name": "this"
+    "type": "std::vector *"
+  - "name": "id"
+    "type": "std::exception *"
+  - "name": ""
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > fuzzing::datasource::Base::Get<std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >(unsigned long)"
+- "params":
+  - "name": "this"
+    "type": "std::vector *"
+  - "name": "min"
+    "type": "fuzzing::datasource::Datasource *"
+  - "name": "max"
+    "type": "size_t"
+  - "name": "id"
+    "type": "size_t"
+  - "name": ""
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "fuzzing::datasource::Datasource::get(unsigned long, unsigned long, unsigned long)"
+"language": "c++"
+"project": "libtheora"
+"target_name": "fuzzer-decoder"
+"target_path": "/src/oss-fuzz-fuzzers/libtheora/fuzzer.cpp"

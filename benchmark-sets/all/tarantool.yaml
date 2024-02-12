@@ -1,10 +1,24 @@
-functions:
-- void box_cfg()
-- void box_cfg_xc()
-- void box_storage_init()
-- void iproto_init(int threads_count)
-- void iproto_thread_init(struct iproto_thread * iproto_thread)
-project: tarantool
-target_name: csv_fuzzer
-target_path: /src/tarantool/test/fuzz/csv_fuzzer.c
-
+"functions":
+- "params": []
+  "return_type": "void"
+  "signature": "void box_cfg()"
+- "params": []
+  "return_type": "void"
+  "signature": "void _ZL10box_cfg_xcv()"
+- "params": []
+  "return_type": "void"
+  "signature": "void _ZL16box_storage_initv()"
+- "params":
+  - "name": "threads_count"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void iproto_init(int threads_count)"
+- "params":
+  - "name": "iproto_thread"
+    "type": "struct iproto_thread *"
+  "return_type": "void"
+  "signature": "void _ZL18iproto_thread_initP13iproto_thread(struct iproto_thread * iproto_thread)"
+"language": "c"
+"project": "tarantool"
+"target_name": "xrow_decode_call_fuzzer"
+"target_path": "/src/tarantool/test/fuzz/xrow_decode_call_fuzzer.c"

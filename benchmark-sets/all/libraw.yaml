@@ -1,10 +1,42 @@
-functions:
-- int LibRaw::open_file(LibRaw * this, char * fname)
-- int LibRaw::libraw_openfile_tail(LibRaw * this, std::exception * stream)
-- char * LibRaw::unpack_function_name(LibRaw * this)
-- void LibRaw::crxLoadDecodeLoop(LibRaw * this, char * img, int nPlanes)
-- int LibRaw::crxDecodePlane(LibRaw * this, char * p, int planeNumber)
-project: libraw
-target_name: libraw_cr2_fuzzer
-target_path: /src/libraw_fuzzer.cc
-
+"functions":
+- "params":
+  - "name": "this"
+    "type": "LibRaw *"
+  - "name": "fname"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "LibRaw::open_file(char const*)"
+- "params":
+  - "name": "this"
+    "type": "LibRaw *"
+  - "name": "stream"
+    "type": "std::exception *"
+  "return_type": "int"
+  "signature": "LibRaw::libraw_openfile_tail(LibRaw_abstract_datastream*)"
+- "params":
+  - "name": "this"
+    "type": "LibRaw *"
+  "return_type": "char *"
+  "signature": "LibRaw::unpack_function_name()"
+- "params":
+  - "name": "this"
+    "type": "LibRaw *"
+  - "name": "img"
+    "type": "char *"
+  - "name": "nPlanes"
+    "type": "int"
+  "return_type": "void"
+  "signature": "LibRaw::crxLoadDecodeLoop(void*, int)"
+- "params":
+  - "name": "this"
+    "type": "LibRaw *"
+  - "name": "p"
+    "type": "char *"
+  - "name": "planeNumber"
+    "type": "int"
+  "return_type": "int"
+  "signature": "LibRaw::crxDecodePlane(void*, unsigned int)"
+"language": "c++"
+"project": "libraw"
+"target_name": "libraw_cr2_fuzzer"
+"target_path": "/src/libraw_fuzzer.cc"

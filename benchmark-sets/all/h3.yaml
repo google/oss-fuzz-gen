@@ -1,13 +1,50 @@
-functions:
-- bool cellBoundaryInsidePolygon(struct GeoPolygon * geoPolygon, struct BBox * bboxes,
-  struct CellBoundary * boundary, struct BBox * boundaryBBox)
-- void iterStepRes(struct IterCellsResolution * itR)
-- bool cellBoundaryCrossesPolygon(struct GeoPolygon * geoPolygon, struct BBox * bboxes,
-  struct CellBoundary * boundary, struct BBox * boundaryBBox)
-- bool cellBoundaryCrossesGeoLoop(struct GeoLoop * geoloop, struct BBox * loopBBox,
-  struct CellBoundary * boundary, struct BBox * boundaryBBox)
-- void iterInitRes(struct IterCellsResolution * res, int )
-project: h3
-target_name: fuzzerResolutions
-target_path: /src/h3/src/apps/fuzzers/fuzzerResolutions.c
-
+"functions":
+- "params":
+  - "name": "geoPolygon"
+    "type": "struct GeoPolygon *"
+  - "name": "bboxes"
+    "type": "struct BBox *"
+  - "name": "boundary"
+    "type": "struct CellBoundary *"
+  - "name": "boundaryBBox"
+    "type": "struct BBox *"
+  "return_type": "bool"
+  "signature": "bool cellBoundaryInsidePolygon(struct GeoPolygon * geoPolygon, struct BBox * bboxes, struct CellBoundary * boundary, struct BBox * boundaryBBox)"
+- "params":
+  - "name": "itR"
+    "type": "struct IterCellsResolution *"
+  "return_type": "void"
+  "signature": "void iterStepRes(struct IterCellsResolution * itR)"
+- "params":
+  - "name": "geoPolygon"
+    "type": "struct GeoPolygon *"
+  - "name": "bboxes"
+    "type": "struct BBox *"
+  - "name": "boundary"
+    "type": "struct CellBoundary *"
+  - "name": "boundaryBBox"
+    "type": "struct BBox *"
+  "return_type": "bool"
+  "signature": "bool cellBoundaryCrossesPolygon(struct GeoPolygon * geoPolygon, struct BBox * bboxes, struct CellBoundary * boundary, struct BBox * boundaryBBox)"
+- "params":
+  - "name": "geoloop"
+    "type": "struct GeoLoop *"
+  - "name": "loopBBox"
+    "type": "struct BBox *"
+  - "name": "boundary"
+    "type": "struct CellBoundary *"
+  - "name": "boundaryBBox"
+    "type": "struct BBox *"
+  "return_type": "bool"
+  "signature": "bool cellBoundaryCrossesGeoLoop(struct GeoLoop * geoloop, struct BBox * loopBBox, struct CellBoundary * boundary, struct BBox * boundaryBBox)"
+- "params":
+  - "name": "res"
+    "type": "struct IterCellsResolution *"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "void iterInitRes(struct IterCellsResolution * res, int )"
+"language": "c"
+"project": "h3"
+"target_name": "fuzzerResolutions"
+"target_path": "/src/h3/src/apps/fuzzers/fuzzerResolutions.c"

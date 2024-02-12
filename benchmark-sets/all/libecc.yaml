@@ -1,13 +1,54 @@
-functions:
-- size_t LLVMFuzzerCustomMutator(char * , size_t , size_t , int )
-- void cryptofuzz::module::Botan::OpECDSA_Sign(std::optional * , cryptofuzz::module::libecc
-  * , cryptofuzz::operation::ECDSA_Sign * )
-- int wolfSSL_CertManagerLoadCA(struct WOLFSSL_CERT_MANAGER * , char * , char * )
-- int wolfSSL_CertManagerLoadCABuffer(struct WOLFSSL_CERT_MANAGER * , char * , size_t
-  , int )
-- int wolfSSL_CertManagerLoadCABuffer_ex(struct WOLFSSL_CERT_MANAGER * , char * ,
-  size_t , int , int , int )
-project: libecc
-target_name: cryptofuzz-libecc
-target_path: /src/cryptofuzz/entry.cpp
-
+"functions":
+- "params":
+  - "name": ""
+    "type": "struct WOLFSSL *"
+  - "name": ""
+    "type": "std::string_view *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "wolfSSL_writev"
+- "params":
+  - "name": ""
+    "type": "struct WOLFSSL *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "wolfSSL_send"
+- "params":
+  - "name": ""
+    "type": "struct WOLFSSL *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "wolfSSL_write"
+- "params":
+  - "name": ""
+    "type": "struct WOLFSSL *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "SendData"
+- "params":
+  - "name": ""
+    "type": "struct WOLFSSL *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "wolfSSL_recv"
+"language": "c++"
+"project": "libecc"
+"target_name": "cryptofuzz-libecc"
+"target_path": "/src/cryptofuzz/entry.cpp"

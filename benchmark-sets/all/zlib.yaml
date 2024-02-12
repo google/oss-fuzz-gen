@@ -1,10 +1,46 @@
-functions:
-- int gzsetparams(struct gzFile_s * file, int level, int strategy)
-- int gzputc(struct gzFile_s * file, int c)
-- int gzputs(struct gzFile_s * file, char * s)
-- size_t gzfwrite(char * buf, size_t size, size_t nitems, struct gzFile_s * file)
-- int gzprintf(struct gzFile_s * file, char * format)
-project: zlib
-target_name: zlib_uncompress_fuzzer
-target_path: /src/zlib_uncompress_fuzzer.cc
-
+"functions":
+- "params":
+  - "name": "file"
+    "type": "struct gzFile_s *"
+  - "name": "level"
+    "type": "int"
+  - "name": "strategy"
+    "type": "int"
+  "return_type": "int"
+  "signature": "gzsetparams"
+- "params":
+  - "name": "file"
+    "type": "struct gzFile_s *"
+  - "name": "c"
+    "type": "int"
+  "return_type": "int"
+  "signature": "gzputc"
+- "params":
+  - "name": "file"
+    "type": "struct gzFile_s *"
+  - "name": "s"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "gzputs"
+- "params":
+  - "name": "buf"
+    "type": "char *"
+  - "name": "size"
+    "type": "size_t"
+  - "name": "nitems"
+    "type": "size_t"
+  - "name": "file"
+    "type": "struct gzFile_s *"
+  "return_type": "size_t"
+  "signature": "gzfwrite"
+- "params":
+  - "name": "file"
+    "type": "struct gzFile_s *"
+  - "name": "format"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "gzprintf"
+"language": "c++"
+"project": "zlib"
+"target_name": "zlib_uncompress_fuzzer"
+"target_path": "/src/zlib_uncompress_fuzzer.cc"

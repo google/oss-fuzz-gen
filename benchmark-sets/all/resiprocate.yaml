@@ -1,14 +1,48 @@
-functions:
-- void resip::DialogInfoContents::parse(resip::DialogInfoContents * , resip::ParseBuffer
-  * )
-- bool resip::Transport::basicCheck(resip::Transport * , resip::SipMessage * )
-- void resip::DialogInfoContents::parseDialog(resip::DialogInfoContents * , resip::XMLCursor
-  * )
-- void resip::Transport::makeFailedResponse(resip::Transport * , resip::SipMessage
-  * , int , char * )
-- resip::SipMessage * resip::Helper::makeWWWChallenge(resip::SipMessage * , resip::Data
-  * , bool , bool )
-project: resiprocate
-target_name: fuzzUtil
-target_path: /src/resiprocate/rutil/test/fuzzUtil.cxx
-
+"functions":
+- "params":
+  - "name": ""
+    "type": "resip::DialogInfoContents *"
+  - "name": ""
+    "type": "resip::ParseBuffer *"
+  "return_type": "void"
+  "signature": "resip::DialogInfoContents::parse(resip::ParseBuffer&)"
+- "params":
+  - "name": ""
+    "type": "resip::Transport *"
+  - "name": ""
+    "type": "resip::SipMessage *"
+  "return_type": "bool"
+  "signature": "resip::Transport::basicCheck(resip::SipMessage const&)"
+- "params":
+  - "name": ""
+    "type": "resip::DialogInfoContents *"
+  - "name": ""
+    "type": "resip::XMLCursor *"
+  "return_type": "void"
+  "signature": "resip::DialogInfoContents::parseDialog(resip::XMLCursor&)"
+- "params":
+  - "name": ""
+    "type": "resip::Transport *"
+  - "name": ""
+    "type": "resip::SipMessage *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "char *"
+  "return_type": "void"
+  "signature": "resip::Transport::makeFailedResponse(resip::SipMessage const&, int, char const*)"
+- "params":
+  - "name": ""
+    "type": "resip::SipMessage *"
+  - "name": ""
+    "type": "resip::Data *"
+  - "name": ""
+    "type": "bool"
+  - "name": ""
+    "type": "bool"
+  "return_type": "resip::SipMessage *"
+  "signature": "resip::Helper::makeWWWChallenge(resip::SipMessage const&, resip::Data const&, bool, bool)"
+"language": "c++"
+"project": "resiprocate"
+"target_name": "fuzzer"
+"target_path": "/src/resiprocate/contrib/srtp/fuzzer/fuzzer.c"

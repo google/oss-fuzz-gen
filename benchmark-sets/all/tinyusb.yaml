@@ -1,11 +1,36 @@
-functions:
-- char dhserv_init(struct dhcp_config * )
-- char dnserv_init(struct ip4_addr * , short , func_type * )
-- void udp_recv_proc(char * , struct udp_pcb * , struct pbuf * , struct ip4_addr *
-  , short )
-- bool mscd_xfer_cb(char , char , int , int )
-- bool netd_control_xfer_cb(char , char , struct tusb_control_request_t * )
-project: tinyusb
-target_name: net
-target_path: /src/tinyusb/test/fuzz/device/net/src/fuzz.cc
-
+"functions":
+- "params":
+  - "name": ""
+    "type": "struct pbuf *"
+  - "name": ""
+    "type": "struct netif *"
+  "return_type": "char"
+  "signature": "netif_input"
+- "params":
+  - "name": ""
+    "type": "struct pbuf *"
+  - "name": ""
+    "type": "struct netif *"
+  "return_type": "char"
+  "signature": "ethernet_input"
+- "params":
+  - "name": ""
+    "type": "struct pbuf *"
+  - "name": ""
+    "type": "struct netif *"
+  "return_type": "char"
+  "signature": "ip4_input"
+- "params":
+  - "name": ""
+    "type": "struct pbuf *"
+  - "name": ""
+    "type": "struct netif *"
+  "return_type": "void"
+  "signature": "tcp_input"
+- "params": []
+  "return_type": "void"
+  "signature": "httpd_init"
+"language": "c++"
+"project": "tinyusb"
+"target_name": "/src/tinyusb/test/fuzz/device/msc/src/fuzz.cc"
+"target_path": "/src/tinyusb/test/fuzz/device/msc/src/fuzz.cc"

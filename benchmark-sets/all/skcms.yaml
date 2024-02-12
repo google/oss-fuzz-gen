@@ -1,14 +1,52 @@
-functions:
-- bool skcms_ApproximatelyEqualProfiles(struct skcms_ICCProfile * A, struct skcms_ICCProfile
-  * B)
-- bool skcms_MakeUsableAsDestinationWithSingleCurve(struct skcms_ICCProfile * profile)
-- bool skcms_TRCs_AreApproximateInverse(struct skcms_ICCProfile * profile, struct
-  skcms_TransferFunction * inv_tf)
-- bool skcms_AreApproximateInverses(union.skcms_Curve * curve, struct skcms_TransferFunction
-  * inv_tf)
-- bool skcms_PrimariesToXYZD50(float rx, float ry, float gx, float gy, float bx, float
-  by, float wx, float wy, struct skcms_Matrix3x3 * toXYZD50)
-project: skcms
-target_name: iccprofile_info
-target_path: /src/skcms/fuzz/fuzz_iccprofile_info.c
-
+"functions":
+- "params":
+  - "name": "A"
+    "type": "struct skcms_ICCProfile *"
+  - "name": "B"
+    "type": "struct skcms_ICCProfile *"
+  "return_type": "bool"
+  "signature": "skcms_ApproximatelyEqualProfiles"
+- "params":
+  - "name": "profile"
+    "type": "struct skcms_ICCProfile *"
+  "return_type": "bool"
+  "signature": "skcms_MakeUsableAsDestinationWithSingleCurve"
+- "params":
+  - "name": "profile"
+    "type": "struct skcms_ICCProfile *"
+  - "name": "inv_tf"
+    "type": "struct skcms_TransferFunction *"
+  "return_type": "bool"
+  "signature": "skcms_TRCs_AreApproximateInverse"
+- "params":
+  - "name": "curve"
+    "type": "skcms_Curve *"
+  - "name": "inv_tf"
+    "type": "struct skcms_TransferFunction *"
+  "return_type": "bool"
+  "signature": "skcms_AreApproximateInverses"
+- "params":
+  - "name": "rx"
+    "type": "float"
+  - "name": "ry"
+    "type": "float"
+  - "name": "gx"
+    "type": "float"
+  - "name": "gy"
+    "type": "float"
+  - "name": "bx"
+    "type": "float"
+  - "name": "by"
+    "type": "float"
+  - "name": "wx"
+    "type": "float"
+  - "name": "wy"
+    "type": "float"
+  - "name": "toXYZD50"
+    "type": "struct skcms_Matrix3x3 *"
+  "return_type": "bool"
+  "signature": "skcms_PrimariesToXYZD50"
+"language": "c++"
+"project": "skcms"
+"target_name": "iccprofile_info"
+"target_path": "/src/skcms/fuzz/fuzz_iccprofile_info.c"

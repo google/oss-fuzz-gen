@@ -1,13 +1,48 @@
-Retrieving human-written fuzz targets of expat from local Docker build.
-functions:
-- struct encoding * XmlInitUnknownEncodingNS(char * mem, int * table, func_type *
-  convert, char * userData)
-- struct encoding * XmlInitUnknownEncoding(char * mem, int * table, func_type * convert,
-  char * userData)
-- int sip24_valid()
-- int XML_SetBase(struct XML_ParserStruct * parser, char * p)
-- int initScanContentNS(struct encoding * enc, char * ptr, char * end, char ** nextTokPtr)
-project: expat
-target_name: xml_parsebuffer_fuzzer_UTF-16LE
-target_path: /src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c
-
+"functions":
+- "params":
+  - "name": "mem"
+    "type": "char *"
+  - "name": "table"
+    "type": "int *"
+  - "name": "convert"
+    "type": "func_type *"
+  - "name": "userData"
+    "type": "char *"
+  "return_type": "struct encoding *"
+  "signature": "XmlInitUnknownEncodingNS"
+- "params":
+  - "name": "mem"
+    "type": "char *"
+  - "name": "table"
+    "type": "int *"
+  - "name": "convert"
+    "type": "func_type *"
+  - "name": "userData"
+    "type": "char *"
+  "return_type": "struct encoding *"
+  "signature": "XmlInitUnknownEncoding"
+- "params": []
+  "return_type": "int"
+  "signature": "sip24_valid"
+- "params":
+  - "name": "parser"
+    "type": "struct XML_ParserStruct *"
+  - "name": "p"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "XML_SetBase"
+- "params":
+  - "name": "enc"
+    "type": "struct encoding *"
+  - "name": "ptr"
+    "type": "char *"
+  - "name": "end"
+    "type": "char *"
+  - "name": "nextTokPtr"
+    "type": "char **"
+  "return_type": "int"
+  "signature": "initScanContentNS"
+"language": "c++"
+"project": "expat"
+"target_name": "xml_parsebuffer_fuzzer_ISO-8859-1"
+"target_path": "/src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c"

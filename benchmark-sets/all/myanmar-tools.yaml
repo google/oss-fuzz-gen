@@ -1,10 +1,29 @@
-functions:
-- struct GMTZawgyiDetector * GMTOpenZawgyiDetector()
-- double GMTGetZawgyiProbability(struct GMTZawgyiDetector * detector, char * input_utf8)
-- double GMTGetZawgyiProbabilityWithLength(struct GMTZawgyiDetector * detector, char
-  * input_utf8, int length)
-- void GMTCloseZawgyiDetector(struct GMTZawgyiDetector * detector)
-project: myanmar-tools
-target_name: zawgyi_detector_fuzz_target
-target_path: /src/myanmar-tools/clients/cpp/zawgyi_detector_fuzz_target.cpp
-
+"functions":
+- "params": []
+  "return_type": "struct GMTZawgyiDetector *"
+  "signature": "GMTOpenZawgyiDetector"
+- "params":
+  - "name": "detector"
+    "type": "struct GMTZawgyiDetector *"
+  - "name": "input_utf8"
+    "type": "char *"
+  "return_type": "double"
+  "signature": "GMTGetZawgyiProbability"
+- "params":
+  - "name": "detector"
+    "type": "struct GMTZawgyiDetector *"
+  - "name": "input_utf8"
+    "type": "char *"
+  - "name": "length"
+    "type": "int"
+  "return_type": "double"
+  "signature": "GMTGetZawgyiProbabilityWithLength"
+- "params":
+  - "name": "detector"
+    "type": "struct GMTZawgyiDetector *"
+  "return_type": "void"
+  "signature": "GMTCloseZawgyiDetector"
+"language": "c++"
+"project": "myanmar-tools"
+"target_name": "zawgyi_detector_fuzz_target"
+"target_path": "/src/myanmar-tools/clients/cpp/zawgyi_detector_fuzz_target.cpp"

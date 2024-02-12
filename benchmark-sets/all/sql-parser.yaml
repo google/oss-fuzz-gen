@@ -1,12 +1,40 @@
-functions:
-- bool hsql::SQLParser::parseSQLString(char * sql, hsql::SQLParserResult * result)
-- bool hsql::SQLParser::parseSQLString(std::string * sql, hsql::SQLParserResult *
-  result)
-- bool hsql::SQLParser::tokenize(std::string * sql, std::vector * tokens)
-- void hsql_push_buffer_state(struct yy_buffer_state * new_buffer, char * yyscanner)
-- std::ostream * hsql::operator<<(std::ostream * stream, struct hsql::ColumnType *
-  column_type)
-project: sql-parser
-target_name: fuzz_sql_parse
-target_path: /src/sql-parser/fuzz_sql_parse.cpp
-
+"functions":
+- "params":
+  - "name": "sql"
+    "type": "char *"
+  - "name": "result"
+    "type": "hsql::SQLParserResult *"
+  "return_type": "bool"
+  "signature": "hsql::SQLParser::parseSQLString(char const*, hsql::SQLParserResult*)"
+- "params":
+  - "name": "sql"
+    "type": "std::string *"
+  - "name": "result"
+    "type": "hsql::SQLParserResult *"
+  "return_type": "bool"
+  "signature": "hsql::SQLParser::parseSQLString(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, hsql::SQLParserResult*)"
+- "params":
+  - "name": "sql"
+    "type": "std::string *"
+  - "name": "tokens"
+    "type": "std::vector *"
+  "return_type": "bool"
+  "signature": "hsql::SQLParser::tokenize(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<short, std::__1::allocator<short> >*)"
+- "params":
+  - "name": "new_buffer"
+    "type": "struct yy_buffer_state *"
+  - "name": "yyscanner"
+    "type": "char *"
+  "return_type": "void"
+  "signature": "hsql_push_buffer_state(yy_buffer_state*, void*)"
+- "params":
+  - "name": "stream"
+    "type": "std::ostream *"
+  - "name": "column_type"
+    "type": "struct hsql::ColumnType *"
+  "return_type": "std::ostream *"
+  "signature": "hsql::operator<<(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, hsql::ColumnType const&)"
+"language": "c++"
+"project": "sql-parser"
+"target_name": "fuzz_sql_parse"
+"target_path": "/src/sql-parser/fuzz_sql_parse.cpp"

@@ -1,13 +1,66 @@
-functions:
-- struct gdImageStruct * gdImageCreateFromBmp(struct _IO_FILE * inFile)
-- void gdImageArc(struct gdImageStruct * im, int cx, int cy, int w, int h, int s,
-  int e, int color)
-- void gdImageFilledArc(struct gdImageStruct * im, int cx, int cy, int w, int h, int
-  s, int e, int color, int style)
-- void gdImageFilledPolygon(struct gdImageStruct * im, struct gdPoint * p, int n,
-  int c)
-- struct gdImageStruct * gdImageCreateFromGif(struct _IO_FILE * fdFile)
-project: libgd
-target_name: webp_target
-target_path: /src/parser_target.cc
-
+"functions":
+- "params":
+  - "name": "inFile"
+    "type": "struct _IO_FILE *"
+  "return_type": "struct gdImageStruct *"
+  "signature": "gdImageCreateFromBmp"
+- "params":
+  - "name": "im"
+    "type": "struct gdImageStruct *"
+  - "name": "cx"
+    "type": "int"
+  - "name": "cy"
+    "type": "int"
+  - "name": "w"
+    "type": "int"
+  - "name": "h"
+    "type": "int"
+  - "name": "s"
+    "type": "int"
+  - "name": "e"
+    "type": "int"
+  - "name": "color"
+    "type": "int"
+  "return_type": "void"
+  "signature": "gdImageArc"
+- "params":
+  - "name": "im"
+    "type": "struct gdImageStruct *"
+  - "name": "cx"
+    "type": "int"
+  - "name": "cy"
+    "type": "int"
+  - "name": "w"
+    "type": "int"
+  - "name": "h"
+    "type": "int"
+  - "name": "s"
+    "type": "int"
+  - "name": "e"
+    "type": "int"
+  - "name": "color"
+    "type": "int"
+  - "name": "style"
+    "type": "int"
+  "return_type": "void"
+  "signature": "gdImageFilledArc"
+- "params":
+  - "name": "im"
+    "type": "struct gdImageStruct *"
+  - "name": "p"
+    "type": "struct gdPoint *"
+  - "name": "n"
+    "type": "int"
+  - "name": "c"
+    "type": "int"
+  "return_type": "void"
+  "signature": "gdImageFilledPolygon"
+- "params":
+  - "name": "fdFile"
+    "type": "struct _IO_FILE *"
+  "return_type": "struct gdImageStruct *"
+  "signature": "gdImageCreateFromGif"
+"language": "c++"
+"project": "libgd"
+"target_name": "png_target"
+"target_path": "/src/parser_target.cc"

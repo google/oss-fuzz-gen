@@ -1,11 +1,30 @@
-functions:
-- void ZMQCollectorInterface::startPacketPolling(ZMQCollectorInterface * this)
-- void DummyInterface::startPacketPolling(DummyInterface * this)
-- void PcapInterface::startPacketPolling(PcapInterface * this)
-- char * packetPollLoop(char * ptr)
-- bool PcapInterface::processNextPacket(PcapInterface * this, struct pcap * pd, int
-  if_index, int pcap_datalink_type)
-project: ntopng
-target_name: fuzz_dissect_packet
-target_path: /src/ntopng/fuzz/fuzz_dissect_packet.cpp
-
+"functions":
+- "params":
+  - "name": "this"
+    "type": "PcapInterface *"
+  "return_type": "void"
+  "signature": "PcapInterface::startPacketPolling()"
+- "params":
+  - "name": "this"
+    "type": "DummyInterface *"
+  "return_type": "void"
+  "signature": "DummyInterface::startPacketPolling()"
+- "params":
+  - "name": "this"
+    "type": "ZMQCollectorInterface *"
+  "return_type": "void"
+  "signature": "ZMQCollectorInterface::startPacketPolling()"
+- "params":
+  - "name": "ptr"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "packetPollLoop(void*)"
+- "params":
+  - "name": "this"
+    "type": "ZMQCollectorInterface *"
+  "return_type": "void"
+  "signature": "ZMQCollectorInterface::collect_flows()"
+"language": "c++"
+"project": "ntopng"
+"target_name": "onefile"
+"target_path": "/src/ntopng/fuzz/onefile.cpp"

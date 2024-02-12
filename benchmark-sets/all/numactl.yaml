@@ -1,10 +1,26 @@
-functions:
-- void numa_get_run_node_mask_v1()
-- void numa_bind_v2(struct bitmask * bmp)
-- void numa_bind_v1(struct nodemask_t * nodemask)
-- struct bitmask * numa_get_run_node_mask_v2()
-- int numa_run_on_node_mask_v2(struct bitmask * bmp)
-project: numactl
-target_name: fuzz_parse_str
-target_path: /src/numactl/fuzz/fuzz_parse_str.c
-
+"functions":
+- "params": []
+  "return_type": "void"
+  "signature": "void numa_get_run_node_mask_v1()"
+- "params":
+  - "name": "bmp"
+    "type": "struct bitmask *"
+  "return_type": "void"
+  "signature": "void numa_bind_v2(struct bitmask * bmp)"
+- "params":
+  - "name": "nodemask"
+    "type": "struct nodemask_t *"
+  "return_type": "void"
+  "signature": "void numa_bind_v1(struct nodemask_t * nodemask)"
+- "params": []
+  "return_type": "struct bitmask *"
+  "signature": "struct bitmask * numa_get_run_node_mask_v2()"
+- "params":
+  - "name": "bmp"
+    "type": "struct bitmask *"
+  "return_type": "int"
+  "signature": "int numa_run_on_node_mask_v2(struct bitmask * bmp)"
+"language": "c"
+"project": "numactl"
+"target_name": "fuzz_parse_str"
+"target_path": "/src/numactl/fuzz/fuzz_parse_str.c"

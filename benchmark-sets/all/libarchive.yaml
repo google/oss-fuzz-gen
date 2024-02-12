@@ -1,13 +1,54 @@
-functions:
-- int parse_file(struct archive_read * a, struct archive_entry * entry, struct mtree
-  * mtree, struct mtree_entry * mentry, int * use_next)
-- void archive_entry_linkify(struct archive_entry_linkresolver * res, struct archive_entry
-  ** e, struct archive_entry ** f)
-- int * archive_entry_acl_text_w(struct archive_entry * entry, int flags)
-- int _archive_entry_acl_text_l(struct archive_entry * entry, int flags, char ** acl_text,
-  size_t * len, struct archive_string_conv * sc)
-- char * archive_entry_acl_text(struct archive_entry * entry, int flags)
-project: libarchive
-target_name: libarchive_fuzzer
-target_path: /src/libarchive_fuzzer.cc
-
+"functions":
+- "params":
+  - "name": "a"
+    "type": "struct archive_read *"
+  - "name": "entry"
+    "type": "struct archive_entry *"
+  - "name": "mtree"
+    "type": "struct mtree *"
+  - "name": "mentry"
+    "type": "struct mtree_entry *"
+  - "name": "use_next"
+    "type": "int *"
+  "return_type": "int"
+  "signature": "parse_file"
+- "params":
+  - "name": "res"
+    "type": "struct archive_entry_linkresolver *"
+  - "name": "e"
+    "type": "struct archive_entry **"
+  - "name": "f"
+    "type": "struct archive_entry **"
+  "return_type": "void"
+  "signature": "archive_entry_linkify"
+- "params":
+  - "name": "entry"
+    "type": "struct archive_entry *"
+  - "name": "flags"
+    "type": "int"
+  "return_type": "int *"
+  "signature": "archive_entry_acl_text_w"
+- "params":
+  - "name": "entry"
+    "type": "struct archive_entry *"
+  - "name": "flags"
+    "type": "int"
+  - "name": "acl_text"
+    "type": "char **"
+  - "name": "len"
+    "type": "size_t *"
+  - "name": "sc"
+    "type": "struct archive_string_conv *"
+  "return_type": "int"
+  "signature": "_archive_entry_acl_text_l"
+- "params":
+  - "name": "entry"
+    "type": "struct archive_entry *"
+  - "name": "flags"
+    "type": "int"
+  "return_type": "char *"
+  "signature": "archive_entry_acl_text"
+"language": "c++"
+"project": "libarchive"
+"target_name": "libarchive_fuzzer"
+"target_path": "/src/libarchive_fuzzer.cc"

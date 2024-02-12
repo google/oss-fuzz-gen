@@ -1,15 +1,84 @@
-functions:
-- bool tinygltf::TinyGLTF::LoadBinaryFromFile(tinygltf::TinyGLTF * , tinygltf::Model
-  * , std::string * , std::string * , std::string * , int )
-- bool tinygltf::TinyGLTF::LoadASCIIFromFile(tinygltf::TinyGLTF * , tinygltf::Model
-  * , std::string * , std::string * , std::string * , int )
-- bool tinygltf::TinyGLTF::LoadBinaryFromMemory(tinygltf::TinyGLTF * , tinygltf::Model
-  * , std::string * , std::string * , char * , int , std::string * , int )
-- bool tinygltf::TinyGLTF::WriteGltfSceneToFile(tinygltf::TinyGLTF * , tinygltf::Model
-  * , std::string * , bool , bool , bool , bool )
-- bool tinygltf::TinyGLTF::WriteGltfSceneToStream(tinygltf::TinyGLTF * , tinygltf::Model
-  * , std::ostream * , bool , bool )
-project: tinygltf
-target_name: fuzz_gltf
-target_path: /src/tinygltf/tests/fuzzer/fuzz_gltf.cc
-
+"functions":
+- "params":
+  - "name": ""
+    "type": "tinygltf::TinyGLTF *"
+  - "name": ""
+    "type": "tinygltf::Model *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "int"
+  "return_type": "bool"
+  "signature": "tinygltf::TinyGLTF::LoadBinaryFromFile(tinygltf::Model*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int)"
+- "params":
+  - "name": ""
+    "type": "tinygltf::TinyGLTF *"
+  - "name": ""
+    "type": "tinygltf::Model *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "int"
+  "return_type": "bool"
+  "signature": "tinygltf::TinyGLTF::LoadASCIIFromFile(tinygltf::Model*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int)"
+- "params":
+  - "name": ""
+    "type": "tinygltf::TinyGLTF *"
+  - "name": ""
+    "type": "tinygltf::Model *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "int"
+  "return_type": "bool"
+  "signature": "tinygltf::TinyGLTF::LoadBinaryFromMemory(tinygltf::Model*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, unsigned char const*, unsigned int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int)"
+- "params":
+  - "name": ""
+    "type": "tinygltf::TinyGLTF *"
+  - "name": ""
+    "type": "tinygltf::Model *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "bool"
+  - "name": ""
+    "type": "bool"
+  - "name": ""
+    "type": "bool"
+  - "name": ""
+    "type": "bool"
+  "return_type": "bool"
+  "signature": "tinygltf::TinyGLTF::WriteGltfSceneToFile(tinygltf::Model const*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, bool, bool, bool, bool)"
+- "params":
+  - "name": ""
+    "type": "tinygltf::TinyGLTF *"
+  - "name": ""
+    "type": "tinygltf::Model *"
+  - "name": ""
+    "type": "std::ostream *"
+  - "name": ""
+    "type": "bool"
+  - "name": ""
+    "type": "bool"
+  "return_type": "bool"
+  "signature": "tinygltf::TinyGLTF::WriteGltfSceneToStream(tinygltf::Model const*, std::__1::basic_ostream<char, std::__1::char_traits<char> >&, bool, bool)"
+"language": "c++"
+"project": "tinygltf"
+"target_name": "fuzz_gltf"
+"target_path": "/src/tinygltf/tests/fuzzer/fuzz_gltf.cc"

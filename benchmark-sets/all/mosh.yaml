@@ -1,15 +1,44 @@
-functions:
-- void Terminal::Complete::init_diff(std::__cxx11::basic_string * this,
-  Terminal::Complete * ) const
-- void Terminal::Complete::diff_from(std::__cxx11::basic_string * this,
-  Terminal::Complete * existing, Terminal::Complete * ) const
-- void Terminal::Complete::apply_string(Terminal::Complete * this, std::__cxx11::basic_string
-  * diff)
-- void Parser::Resize::act_on_terminal(Parser::Resize * this, Terminal::Emulator *
-  emu) const
-- void Terminal::Emulator::resize(Terminal::Emulator * this, size_t s_width, size_t
-  s_height)
-project: mosh
-target_name: terminal_parser_fuzzer
-target_path: /src/mosh/src/fuzz/terminal_parser_fuzzer.cc
-
+"functions":
+- "params":
+  - "name": "this"
+    "type": "std::__cxx11::basic_string *"
+  - "name": ""
+    "type": "Terminal::Complete *"
+  "return_type": "void"
+  "signature": "Terminal::Complete::init_diff[abi:cxx11]() const"
+- "params":
+  - "name": "this"
+    "type": "std::__cxx11::basic_string *"
+  - "name": "existing"
+    "type": "Terminal::Complete *"
+  - "name": ""
+    "type": "Terminal::Complete *"
+  "return_type": "void"
+  "signature": "Terminal::Complete::diff_from[abi:cxx11](Terminal::Complete const&) const"
+- "params":
+  - "name": "this"
+    "type": "Terminal::Complete *"
+  - "name": "diff"
+    "type": "std::__cxx11::basic_string *"
+  "return_type": "void"
+  "signature": "Terminal::Complete::apply_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)"
+- "params":
+  - "name": "this"
+    "type": "Parser::Resize *"
+  - "name": "emu"
+    "type": "Terminal::Emulator *"
+  "return_type": "void"
+  "signature": "Parser::Resize::act_on_terminal(Terminal::Emulator*) const"
+- "params":
+  - "name": "this"
+    "type": "Terminal::Emulator *"
+  - "name": "s_width"
+    "type": "size_t"
+  - "name": "s_height"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "Terminal::Emulator::resize(unsigned long, unsigned long)"
+"language": "c++"
+"project": "mosh"
+"target_name": "terminal_parser_fuzzer"
+"target_path": "/src/mosh/src/fuzz/terminal_parser_fuzzer.cc"

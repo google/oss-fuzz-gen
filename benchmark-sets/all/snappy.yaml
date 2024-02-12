@@ -1,15 +1,48 @@
-functions:
-- bool snappy::Uncompress(snappy::Sink * compressed, snappy::Sink * uncompressed)
-- size_t snappy::UncompressAsMuchAsPossible(snappy::Sink * compressed, snappy::Sink
-  * uncompressed)
-- bool snappy::InternalUncompress<snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator>
-  >(snappy::Sink * r, snappy::SnappyScatteredWriter * writer)
-- bool snappy::InternalUncompressAllTags<snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator>
-  >(snappy::SnappyDecompressor * decompressor, snappy::SnappyScatteredWriter * writer,
-  int compressed_len, int uncompressed_len)
-- bool snappy::RawUncompressToIOVec(char * compressed, size_t compressed_length, struct
-  snappy::SnappySinkAllocator::Datablock * iov, size_t iov_cnt)
-project: snappy
-target_name: snappy_compress_fuzzer
-target_path: /src/snappy/snappy_compress_fuzzer.cc
-
+"functions":
+- "params":
+  - "name": "compressed"
+    "type": "snappy::Sink *"
+  - "name": "uncompressed"
+    "type": "snappy::Sink *"
+  "return_type": "bool"
+  "signature": "snappy::Uncompress(snappy::Source*, snappy::Sink*)"
+- "params":
+  - "name": "compressed"
+    "type": "snappy::Sink *"
+  - "name": "uncompressed"
+    "type": "snappy::Sink *"
+  "return_type": "size_t"
+  "signature": "snappy::UncompressAsMuchAsPossible(snappy::Source*, snappy::Sink*)"
+- "params":
+  - "name": "r"
+    "type": "snappy::Sink *"
+  - "name": "writer"
+    "type": "snappy::SnappyScatteredWriter *"
+  "return_type": "bool"
+  "signature": "bool snappy::InternalUncompress<snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator> >(snappy::Source*, snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator>*)"
+- "params":
+  - "name": "decompressor"
+    "type": "snappy::SnappyDecompressor *"
+  - "name": "writer"
+    "type": "snappy::SnappyScatteredWriter *"
+  - "name": "compressed_len"
+    "type": "int"
+  - "name": "uncompressed_len"
+    "type": "int"
+  "return_type": "bool"
+  "signature": "bool snappy::InternalUncompressAllTags<snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator> >(snappy::SnappyDecompressor*, snappy::SnappyScatteredWriter<snappy::SnappySinkAllocator>*, unsigned int, unsigned int)"
+- "params":
+  - "name": "compressed"
+    "type": "char *"
+  - "name": "compressed_length"
+    "type": "size_t"
+  - "name": "iov"
+    "type": "struct snappy::SnappySinkAllocator::Datablock *"
+  - "name": "iov_cnt"
+    "type": "size_t"
+  "return_type": "bool"
+  "signature": "snappy::RawUncompressToIOVec(char const*, unsigned long, iovec const*, unsigned long)"
+"language": "c++"
+"project": "snappy"
+"target_name": "snappy_compress_fuzzer"
+"target_path": "/src/snappy/snappy_compress_fuzzer.cc"
