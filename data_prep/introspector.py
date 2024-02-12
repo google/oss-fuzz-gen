@@ -351,8 +351,12 @@ if __name__ == '__main__':
   else:
     outdir = ''
 
-  oss_fuzz_checkout.clone_oss_fuzz()
-  oss_fuzz_checkout.postprocess_oss_fuzz()
+  try:
+    oss_fuzz_checkout.clone_oss_fuzz()
+    oss_fuzz_checkout.postprocess_oss_fuzz()
+  except subprocess.CalledProcessError as e:
+    logging.error('Failed to prepare OSS-Fuzz directory for project %s: %s',
+                  sys.argv[1], e)
   cur_project_language = oss_fuzz_checkout.get_project_language(cur_project)
   benchmarks = populate_benchmarks_using_introspector(cur_project,
                                                       cur_project_language,
