@@ -89,9 +89,10 @@ class BuilderRunner:
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
     # Get the top level function name without namespace or params.
-    pattern = r'(?:[a-zA-Z_]\w*::)*([a-zA-Z_]\w*)(?:\s*<[^>]*>)?\s*\('
+    pattern = r'(?:[a-zA-Z_]\w*::)*([a-zA-Z_]\w*)(?:\s*<.*>)?\s*\('
     match = re.search(pattern, self.benchmark.function_signature)
-    min_func_name = match.group(1).strip() if match else self.benchmark.function_signature
+    min_func_name = (match.group(1).strip()
+                     if match else self.benchmark.function_signature)
     return bool(min_func_name in generated_code)
 
   def _pre_build_check(self, target_path: str,
