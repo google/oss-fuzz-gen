@@ -1,5 +1,5 @@
 "functions":
-- "name": "int cil_write_post_ast(struct _IO_FILE * out, struct cil_db * db)"
+- "name": "cil_write_post_ast"
   "params":
   - "name": "out"
     "type": "struct _IO_FILE *"
@@ -7,7 +7,7 @@
     "type": "struct cil_db *"
   "return_type": "int"
   "signature": "int cil_write_post_ast(struct _IO_FILE * out, struct cil_db * db)"
-- "name": "int cil_write_resolve_ast(struct _IO_FILE * out, struct cil_db * db)"
+- "name": "cil_write_resolve_ast"
   "params":
   - "name": "out"
     "type": "struct _IO_FILE *"
@@ -15,7 +15,7 @@
     "type": "struct cil_db *"
   "return_type": "int"
   "signature": "int cil_write_resolve_ast(struct _IO_FILE * out, struct cil_db * db)"
-- "name": "int cil_write_build_ast(struct _IO_FILE * out, struct cil_db * db)"
+- "name": "cil_write_build_ast"
   "params":
   - "name": "out"
     "type": "struct _IO_FILE *"
@@ -23,7 +23,7 @@
     "type": "struct cil_db *"
   "return_type": "int"
   "signature": "int cil_write_build_ast(struct _IO_FILE * out, struct cil_db * db)"
-- "name": "int sepol_policydb_to_image(struct sepol_handle * handle, struct sepol_policydb * p, char ** newdata, size_t * newlen)"
+- "name": "sepol_policydb_to_image"
   "params":
   - "name": "handle"
     "type": "struct sepol_handle *"
@@ -35,7 +35,7 @@
     "type": "size_t *"
   "return_type": "int"
   "signature": "int sepol_policydb_to_image(struct sepol_handle * handle, struct sepol_policydb * p, char ** newdata, size_t * newlen)"
-- "name": "int policydb_to_image(struct sepol_handle * handle, struct policydb * policydb, char ** newdata, size_t * newlen)"
+- "name": "policydb_to_image"
   "params":
   - "name": "handle"
     "type": "struct sepol_handle *"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "int ssh_userauth_publickey_auto(struct ssh_session_struct 521 * session, char * username, char * passphrase)"
+- "name": "ssh_userauth_publickey_auto"
   "params":
   - "name": "session"
     "type": "struct ssh_session_struct 521 *"
@@ -9,7 +9,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int ssh_userauth_publickey_auto(struct ssh_session_struct 521 * session, char * username, char * passphrase)"
-- "name": "int ssh_userauth_agent(struct ssh_session_struct 521 * session, char * username)"
+- "name": "ssh_userauth_agent"
   "params":
   - "name": "session"
     "type": "struct ssh_session_struct 521 *"
@@ -17,7 +17,7 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int ssh_userauth_agent(struct ssh_session_struct 521 * session, char * username)"
-- "name": "int ssh_userauth_agent_pubkey(struct ssh_session_struct 521 * session, char * username, struct ssh_public_key_struct * publickey)"
+- "name": "ssh_userauth_agent_pubkey"
   "params":
   - "name": "session"
     "type": "struct ssh_session_struct 521 *"
@@ -27,7 +27,7 @@
     "type": "struct ssh_public_key_struct *"
   "return_type": "int"
   "signature": "int ssh_userauth_agent_pubkey(struct ssh_session_struct 521 * session, char * username, struct ssh_public_key_struct * publickey)"
-- "name": "int ssh_userauth_agent_publickey(struct ssh_session_struct 521 * session, char * username, struct ssh_key_struct * pubkey)"
+- "name": "ssh_userauth_agent_publickey"
   "params":
   - "name": "session"
     "type": "struct ssh_session_struct 521 *"
@@ -37,7 +37,7 @@
     "type": "struct ssh_key_struct *"
   "return_type": "int"
   "signature": "int ssh_userauth_agent_publickey(struct ssh_session_struct 521 * session, char * username, struct ssh_key_struct * pubkey)"
-- "name": "int ssh_userauth_publickey(struct ssh_session_struct 521 * session, char * username, struct ssh_key_struct * privkey)"
+- "name": "ssh_userauth_publickey"
   "params":
   - "name": "session"
     "type": "struct ssh_session_struct 521 *"

@@ -12,7 +12,7 @@
   - "name": "unicode"
     "type": "int"
   "return_type": "bool"
-  "signature": "tsm_vte_handle_keyboard"
+  "signature": "bool tsm_vte_handle_keyboard(struct tsm_vte * vte, int keysym, int ascii, int mods, int unicode)"
 - "name": "tsm_symbol_append"
   "params":
   - "name": "tbl"
@@ -22,7 +22,7 @@
   - "name": "ucs4"
     "type": "int"
   "return_type": "int"
-  "signature": "tsm_symbol_append"
+  "signature": "int tsm_symbol_append(struct tsm_symbol_table * tbl, int sym, int ucs4)"
 - "name": "shl_htable_insert"
   "params":
   - "name": "htable"
@@ -32,7 +32,7 @@
   - "name": "hash"
     "type": "size_t"
   "return_type": "int"
-  "signature": "shl_htable_insert"
+  "signature": "int shl_htable_insert(struct shl_htable * htable, char * obj, size_t hash)"
 - "name": "htable_add"
   "params":
   - "name": "ht"
@@ -42,7 +42,7 @@
   - "name": "p"
     "type": "char *"
   "return_type": "bool"
-  "signature": "htable_add"
+  "signature": "bool htable_add(struct shl_htable_int * ht, size_t hash, char * p)"
 - "name": "mk_wcswidth_cjk"
   "params":
   - "name": "pwcs"
@@ -50,7 +50,7 @@
   - "name": "n"
     "type": "size_t"
   "return_type": "int"
-  "signature": "mk_wcswidth_cjk"
+  "signature": "int mk_wcswidth_cjk(int * pwcs, size_t n)"
 "language": "c++"
 "project": "libtsm"
 "target_name": "libtsm_fuzzer"

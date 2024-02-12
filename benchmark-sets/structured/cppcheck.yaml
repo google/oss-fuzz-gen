@@ -1,5 +1,5 @@
 "functions":
-- "name": "CppCheck::check(FileSettings const&)"
+- "name": "_ZN8CppCheck5checkERK12FileSettings"
   "params":
   - "name": ""
     "type": "CppCheck *"
@@ -7,7 +7,7 @@
     "type": "struct FileSettings *"
   "return_type": "int"
   "signature": "CppCheck::check(FileSettings const&)"
-- "name": "CppCheck::check(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "_ZN8CppCheck5checkERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"
   "params":
   - "name": ""
     "type": "CppCheck *"
@@ -15,7 +15,7 @@
     "type": "std::string *"
   "return_type": "int"
   "signature": "CppCheck::check(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-- "name": "ImportProject::import(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, Settings*)"
+- "name": "_ZN13ImportProject6importERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEP8Settings"
   "params":
   - "name": ""
     "type": "ImportProject *"
@@ -25,7 +25,7 @@
     "type": "Settings *"
   "return_type": "int"
   "signature": "ImportProject::import(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, Settings*)"
-- "name": "ImportProject::importSln(std::__1::basic_istream<char, std::__1::char_traits<char> >&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&)"
+- "name": "_ZN13ImportProject9importSlnERNSt3__113basic_istreamIcNS0_11char_traitsIcEEEERKNS0_12basic_stringIcS3_NS0_9allocatorIcEEEERKNS0_6vectorIS9_NS7_IS9_EEEE"
   "params":
   - "name": ""
     "type": "ImportProject *"
@@ -37,7 +37,7 @@
     "type": "std::vector *"
   "return_type": "bool"
   "signature": "ImportProject::importSln(std::__1::basic_istream<char, std::__1::char_traits<char> >&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&)"
-- "name": "ImportProject::importVcxproj(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::map<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, cppcheck::stricmp, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&)"
+- "name": "_ZN13ImportProject13importVcxprojERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERNS0_3mapIS6_S6_N8cppcheck7stricmpENS4_INS0_4pairIS7_S6_EEEEEES8_RKNS0_6vectorIS6_NS4_IS6_EEEE"
   "params":
   - "name": ""
     "type": "ImportProject *"

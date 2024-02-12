@@ -8,7 +8,7 @@
   - "name": ""
     "type": "char **"
   "return_type": "int"
-  "signature": "disabled_main"
+  "signature": "int disabled_main(int , char ** , char ** )"
 - "name": "op_alias_dialog"
   "params":
   - "name": ""
@@ -18,7 +18,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "op_alias_dialog"
+  "signature": "int op_alias_dialog(struct IndexSharedData * , struct IndexPrivateData * , int )"
 - "name": "alias_dialog"
   "params":
   - "name": ""
@@ -26,7 +26,7 @@
   - "name": ""
     "type": "struct ConfigSubset *"
   "return_type": "void"
-  "signature": "alias_dialog"
+  "signature": "void alias_dialog(struct Mailbox * , struct ConfigSubset * )"
 - "name": "op_post"
   "params":
   - "name": ""
@@ -36,7 +36,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "op_post"
+  "signature": "int op_post(struct IndexSharedData * , struct IndexPrivateData * , int )"
 - "name": "op_followup"
   "params":
   - "name": ""
@@ -44,7 +44,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "op_followup"
+  "signature": "int op_followup(struct AttachPrivateData * , int )"
 "language": "c++"
 "project": "neomutt"
 "target_name": "fuzz/date.c"

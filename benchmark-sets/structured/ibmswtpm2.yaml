@@ -6,7 +6,7 @@
   - "name": "argv"
     "type": "char **"
   "return_type": "int"
-  "signature": "tpm_server_main"
+  "signature": "int tpm_server_main(int argc, char ** argv)"
 - "name": "StartTcpServer"
   "params":
   - "name": "PortNumber"
@@ -14,13 +14,13 @@
   - "name": "PortNumberPlatform"
     "type": "int *"
   "return_type": "int"
-  "signature": "StartTcpServer"
+  "signature": "int StartTcpServer(int * PortNumber, int * PortNumberPlatform)"
 - "name": "RegularCommandService"
   "params":
   - "name": "PortNumber"
     "type": "int *"
   "return_type": "int"
-  "signature": "RegularCommandService"
+  "signature": "int RegularCommandService(int * PortNumber)"
 - "name": "TPM2_CreateLoaded"
   "params":
   - "name": "in"
@@ -28,7 +28,7 @@
   - "name": "out"
     "type": "struct CreateLoaded_Out *"
   "return_type": "int"
-  "signature": "TPM2_CreateLoaded"
+  "signature": "int TPM2_CreateLoaded(struct CreateLoaded_In * in, struct CreateLoaded_Out * out)"
 - "name": "TPM2_CreatePrimary"
   "params":
   - "name": "in"
@@ -36,7 +36,7 @@
   - "name": "out"
     "type": "struct CreatePrimary_Out *"
   "return_type": "int"
-  "signature": "TPM2_CreatePrimary"
+  "signature": "int TPM2_CreatePrimary(struct CreatePrimary_In * in, struct CreatePrimary_Out * out)"
 "language": "c++"
 "project": "ibmswtpm2"
 "target_name": "fuzz_tpm_server"

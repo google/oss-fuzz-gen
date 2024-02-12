@@ -1,23 +1,23 @@
 "functions":
-- "name": "leveldb::(anonymous namespace)::DBIter::Prev()"
+- "name": "_ZN7leveldb12_GLOBAL__N_16DBIter4PrevEv"
   "params":
   - "name": ""
     "type": "leveldb::(anonymous namespace)::DBIter *"
   "return_type": "void"
   "signature": "leveldb::(anonymous namespace)::DBIter::Prev()"
-- "name": "leveldb::(anonymous namespace)::DBIter::SeekToLast()"
+- "name": "_ZN7leveldb12_GLOBAL__N_16DBIter10SeekToLastEv"
   "params":
   - "name": ""
     "type": "leveldb::(anonymous namespace)::DBIter *"
   "return_type": "void"
   "signature": "leveldb::(anonymous namespace)::DBIter::SeekToLast()"
-- "name": "leveldb::(anonymous namespace)::DBIter::FindPrevUserEntry()"
+- "name": "_ZN7leveldb12_GLOBAL__N_16DBIter17FindPrevUserEntryEv"
   "params":
   - "name": ""
     "type": "leveldb::(anonymous namespace)::DBIter *"
   "return_type": "void"
   "signature": "leveldb::(anonymous namespace)::DBIter::FindPrevUserEntry()"
-- "name": "leveldb::(anonymous namespace)::DBIter::Seek(leveldb::Slice const&)"
+- "name": "_ZN7leveldb12_GLOBAL__N_16DBIter4SeekERKNS_5SliceE"
   "params":
   - "name": ""
     "type": "leveldb::(anonymous namespace)::DBIter *"
@@ -25,7 +25,7 @@
     "type": "FuzzedDataProvider *"
   "return_type": "void"
   "signature": "leveldb::(anonymous namespace)::DBIter::Seek(leveldb::Slice const&)"
-- "name": "leveldb::DBImpl::TEST_NewInternalIterator()"
+- "name": "_ZN7leveldb6DBImpl24TEST_NewInternalIteratorEv"
   "params":
   - "name": ""
     "type": "leveldb::DBImpl *"

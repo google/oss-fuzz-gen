@@ -1,5 +1,5 @@
 "functions":
-- "name": "struct _Str * wc_conv_from_utf7(struct _Str * is, int ces)"
+- "name": "wc_conv_from_utf7"
   "params":
   - "name": "is"
     "type": "struct _Str *"
@@ -7,7 +7,7 @@
     "type": "int"
   "return_type": "struct _Str *"
   "signature": "struct _Str * wc_conv_from_utf7(struct _Str * is, int ces)"
-- "name": "struct _Str * wc_char_conv_from_utf8(char c, struct wc_status * st)"
+- "name": "wc_char_conv_from_utf8"
   "params":
   - "name": "c"
     "type": "char"
@@ -15,7 +15,7 @@
     "type": "struct wc_status *"
   "return_type": "struct _Str *"
   "signature": "struct _Str * wc_char_conv_from_utf8(char c, struct wc_status * st)"
-- "name": "char * wtf_conv_fit(char * s, int ces)"
+- "name": "wtf_conv_fit"
   "params":
   - "name": "s"
     "type": "char *"
@@ -23,7 +23,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "char * wtf_conv_fit(char * s, int ces)"
-- "name": "struct _Str * wc_char_conv_from_utf7(char c, struct wc_status * st)"
+- "name": "wc_char_conv_from_utf7"
   "params":
   - "name": "c"
     "type": "char"
@@ -31,7 +31,7 @@
     "type": "struct wc_status *"
   "return_type": "struct _Str *"
   "signature": "struct _Str * wc_char_conv_from_utf7(char c, struct wc_status * st)"
-- "name": "struct _Str * wc_char_conv_from_iso2022(char c, struct wc_status * st)"
+- "name": "wc_char_conv_from_iso2022"
   "params":
   - "name": "c"
     "type": "char"

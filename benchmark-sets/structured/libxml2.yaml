@@ -6,7 +6,7 @@
   - "name": "xsd"
     "type": "char *"
   "return_type": "int"
-  "signature": "xmlTextReaderSchemaValidate"
+  "signature": "int xmlTextReaderSchemaValidate(struct _xmlTextReader * reader, char * xsd)"
 - "name": "xmlTextReaderSchemaValidateCtxt"
   "params":
   - "name": "reader"
@@ -16,7 +16,7 @@
   - "name": "options"
     "type": "int"
   "return_type": "int"
-  "signature": "xmlTextReaderSchemaValidateCtxt"
+  "signature": "int xmlTextReaderSchemaValidateCtxt(struct _xmlTextReader * reader, struct _xmlSchemaValidCtxt * ctxt, int options)"
 - "name": "xmlSchemaValidateStream"
   "params":
   - "name": "ctxt"
@@ -30,7 +30,7 @@
   - "name": "user_data"
     "type": "char *"
   "return_type": "int"
-  "signature": "xmlSchemaValidateStream"
+  "signature": "int xmlSchemaValidateStream(struct _xmlSchemaValidCtxt * ctxt, struct _xmlParserInputBuffer * input, int enc, struct _xmlSAXHandler * sax, char * user_data)"
 - "name": "xmlTextReaderSchemaValidateInternal"
   "params":
   - "name": "reader"
@@ -42,7 +42,7 @@
   - "name": "options"
     "type": "int"
   "return_type": "int"
-  "signature": "xmlTextReaderSchemaValidateInternal"
+  "signature": "int xmlTextReaderSchemaValidateInternal(struct _xmlTextReader * reader, char * xsd, struct _xmlSchemaValidCtxt * ctxt, int options)"
 - "name": "xmlSchemaValidateFile"
   "params":
   - "name": "ctxt"
@@ -52,7 +52,7 @@
   - "name": "options"
     "type": "int"
   "return_type": "int"
-  "signature": "xmlSchemaValidateFile"
+  "signature": "int xmlSchemaValidateFile(struct _xmlSchemaValidCtxt * ctxt, char * filename, int options)"
 "language": "c++"
 "project": "libxml2"
 "target_name": "xinclude"

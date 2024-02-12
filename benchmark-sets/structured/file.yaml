@@ -6,8 +6,8 @@
   - "name": "argv"
     "type": "char ***"
   "return_type": "int"
-  "signature": "LLVMFuzzerInitialize"
-- "name": "Environment::Environment(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >)"
+  "signature": "int LLVMFuzzerInitialize(int * argc, char *** argv)"
+- "name": "_ZN11EnvironmentC2ENSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"
   "params":
   - "name": "this"
     "type": "struct Environment *"
@@ -22,7 +22,7 @@
   - "name": "magicfile"
     "type": "char *"
   "return_type": "int"
-  "signature": "magic_list"
+  "signature": "int magic_list(struct magic_set * ms, char * magicfile)"
 - "name": "magic_load_buffers"
   "params":
   - "name": "ms"
@@ -34,7 +34,7 @@
   - "name": "nbufs"
     "type": "size_t"
   "return_type": "int"
-  "signature": "magic_load_buffers"
+  "signature": "int magic_load_buffers(struct magic_set * ms, char ** bufs, size_t * sizes, size_t nbufs)"
 - "name": "buffer_apprentice"
   "params":
   - "name": "ms"
@@ -46,7 +46,7 @@
   - "name": "nbufs"
     "type": "size_t"
   "return_type": "int"
-  "signature": "buffer_apprentice"
+  "signature": "int buffer_apprentice(struct magic_set * ms, struct magic ** bufs, size_t * sizes, size_t nbufs)"
 "language": "c++"
 "project": "file"
 "target_name": "magic_fuzzer"
