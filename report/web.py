@@ -35,6 +35,7 @@ log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
 RESULTS_DIR = ''
+BENCHMARK_SET_DIR = 'benchmark-sets'
 BENCHMARK_DIR = ''
 
 MAX_RUN_LOGS_LEN = 16 * 1024
@@ -323,7 +324,7 @@ def cov_report_link(link: str):
 def serve(directory: str, port: int, benchmark_set: str):
   global RESULTS_DIR, BENCHMARK_DIR
   RESULTS_DIR = directory
-  BENCHMARK_DIR = benchmark_set
+  BENCHMARK_DIR = os.path.join(BENCHMARK_SET_DIR, benchmark_set)
   app.run(host='localhost', port=port)
 
 
