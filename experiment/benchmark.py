@@ -81,8 +81,12 @@ class Benchmark:
     commit = data.get('commit')
     functions = data.get('functions', [])
     for function in functions:
+      # Long raw_function_names (particularly for c++ projects) may exceed
+      # filesystem limits on file path/name length when creating WorkDir.
+      max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
+      truncated_id = f'{project_name}-{function.get("name")}'[:max_len]
       benchmarks.append(
-          cls(f'{project_name}-{function.get("name")}'.lower(),
+          cls(truncated_id.lower(),
               data['project'],
               data['language'],
               function.get('signature'),
