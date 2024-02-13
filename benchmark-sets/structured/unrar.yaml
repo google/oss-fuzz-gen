@@ -1,11 +1,11 @@
 "functions":
-- "name": "CommandData::ProcessCommand()"
+- "name": "_ZN11CommandData14ProcessCommandEv"
   "params":
   - "name": "this"
     "type": "CommandData *"
   "return_type": "void"
   "signature": "CommandData::ProcessCommand()"
-- "name": "Archive::CheckOpen(wchar_t const*)"
+- "name": "_ZN7Archive9CheckOpenEPKw"
   "params":
   - "name": "this"
     "type": "Archive *"
@@ -13,7 +13,7 @@
     "type": "int *"
   "return_type": "void"
   "signature": "Archive::CheckOpen(wchar_t const*)"
-- "name": "Archive::WCheckOpen(wchar_t const*)"
+- "name": "_ZN7Archive10WCheckOpenEPKw"
   "params":
   - "name": "this"
     "type": "Archive *"
@@ -21,7 +21,7 @@
     "type": "int *"
   "return_type": "bool"
   "signature": "Archive::WCheckOpen(wchar_t const*)"
-- "name": "Archive::CheckArc(bool)"
+- "name": "_ZN7Archive8CheckArcEb"
   "params":
   - "name": "this"
     "type": "Archive *"
@@ -29,7 +29,7 @@
     "type": "bool"
   "return_type": "void"
   "signature": "Archive::CheckArc(bool)"
-- "name": "Archive::SearchRR()"
+- "name": "_ZN7Archive8SearchRREv"
   "params":
   - "name": "this"
     "type": "Archive *"

@@ -8,7 +8,7 @@
   - "name": "node"
     "type": "struct njs_parser_node_s *"
   "return_type": "int"
-  "signature": "njs_generate_try_finally"
+  "signature": "int njs_generate_try_finally(struct njs_vm_s * vm, struct njs_generator_s * generator, struct njs_parser_node_s * node)"
 - "name": "njs_parser_call_expression"
   "params":
   - "name": "parser"
@@ -18,7 +18,7 @@
   - "name": "current"
     "type": "struct njs_queue_link_s *"
   "return_type": "int"
-  "signature": "njs_parser_call_expression"
+  "signature": "int njs_parser_call_expression(struct njs_parser_s * parser, struct njs_lexer_token_t * token, struct njs_queue_link_s * current)"
 - "name": "njs_parser_new_expression"
   "params":
   - "name": "parser"
@@ -28,7 +28,7 @@
   - "name": "current"
     "type": "struct njs_queue_link_s *"
   "return_type": "int"
-  "signature": "njs_parser_new_expression"
+  "signature": "int njs_parser_new_expression(struct njs_parser_s * parser, struct njs_lexer_token_t * token, struct njs_queue_link_s * current)"
 - "name": "njs_ext_import_key"
   "params":
   - "name": "vm"
@@ -42,7 +42,7 @@
   - "name": "retval"
     "type": "njs_value_s *"
   "return_type": "int"
-  "signature": "njs_ext_import_key"
+  "signature": "int njs_ext_import_key(struct njs_vm_s * vm, union.njs_value_s * args, int nargs, size_t unused, union.njs_value_s * retval)"
 - "name": "njs_fs_realpath"
   "params":
   - "name": "vm"
@@ -56,7 +56,7 @@
   - "name": "retval"
     "type": "njs_value_s *"
   "return_type": "int"
-  "signature": "njs_fs_realpath"
+  "signature": "int njs_fs_realpath(struct njs_vm_s * vm, union.njs_value_s * args, int nargs, size_t calltype, union.njs_value_s * retval)"
 "language": "c++"
 "project": "njs"
 "target_name": "njs_process_script_fuzzer"

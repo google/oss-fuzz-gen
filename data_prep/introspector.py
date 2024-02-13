@@ -33,9 +33,11 @@ TIMEOUT = 10
 INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
 INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
 INTROSPECTOR_FUNCTION = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
+INTROSPECTOR_SIGNATURE = f'{INTROSPECTOR_ENDPOINT}/function-signature'
 
 
-def query_introspector(project):
+def query_introspector_for_unreached_functions(project: str) -> list[dict]:
+  """Quries FuzzIntrospector API for unreached functions in |project|."""
   resp = requests.get(INTROSPECTOR_FUNCTION,
                       params={'project': project},
                       timeout=TIMEOUT)
@@ -48,6 +50,28 @@ def query_introspector(project):
   sys.exit(1)
 
 
+def _query_introspector_for_funtion_signature(project_name: str,
+                                              raw_function_name: str) -> str:
+  """
+  Queries function_signature from FuzzIntrospector |project_name| and
+  |raw_function_name|.
+  """
+  resp = requests.get(INTROSPECTOR_SIGNATURE,
+                      params={
+                          'project': project_name,
+                          'function': raw_function_name
+                      },
+                      timeout=TIMEOUT)
+  data = resp.json()
+  function_signature = data.get('signature')
+  if function_signature:
+    return function_signature
+  logging.error(
+      'No function signature found from FuzzIntrospector for project '
+      '(%s) function (%s).', project_name, raw_function_name)
+  return ''
+
+
 def query_introspector_cfg(project):
   resp = requests.get(INTROSPECTOR_CFG,
                       params={'project': project},
@@ -57,7 +81,7 @@ def query_introspector_cfg(project):
 
 
 def get_unreached_functions(project):
-  functions = query_introspector(project)
+  functions = query_introspector_for_unreached_functions(project)
   functions = [f for f in functions if not f['reached_by_fuzzers']]
   return functions
 
@@ -113,20 +137,6 @@ def _get_demangled_function_name(function: dict) -> str:
   return demangle(_get_raw_function_name(function))
 
 
-def _get_minimized_function_name(function: dict) -> str:
-  """Minimizes C++ function name by removing parameters."""
-  # Assumption: <return_type><function_name><templare specialization> is unique.
-  function_name = _get_demangled_function_name(function)
-  depth = 0
-  for i, char in enumerate(function_name):
-    depth += char == '<'
-    depth -= char == '>'
-    if char == '(' and depth == 0:
-      # Split at the first '(' that's not within template specialization.
-      function_name = function_name[:i]
-  return function_name.replace(' ', '')
-
-
 def _get_clean_arg_types(function: dict) -> list[str]:
   """Returns the cleaned function argument types."""
   raw_arg_types = (function.get('arg-types') or
@@ -140,13 +150,24 @@ def _get_arg_names(function: dict) -> list[str]:
           function.get('function_argument_names', ''))
 
 
-def formulate_function_signature(function: dict, language: str) -> str:
-  """Formulates a function signature based on its |function| dictionary."""
+def get_function_signature(project_name: str, function: dict,
+                           language: str) -> str:
+  """
+  Returns function signature of |function| from |project_name|.
+  """
+  # TODO(Dongge): Use FuzzIntrospector by default, when it is ready.
+  # function_signature = _query_introspector_for_funtion_signature(
+  #     project_name, _get_raw_function_name(function))
+  # if function_signature:
+  #   return function_signature
+
   # C++ functions, get signature from c++filt.
   if language == benchmarklib.FileType.CPP.value.lower():
-    return _get_demangled_function_name(function)
+    function_signature = _get_demangled_function_name(function)
+    if function_signature != _get_raw_function_name(function):
+      return function_signature
 
-  # Plain C function.
+  # Plain C function or C++ unmangled function.
   return_type = _get_clean_return_type(function)
   function_arg_types = _get_clean_arg_types(function)
   function_arg_names = _get_arg_names(function)
@@ -207,7 +228,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
       logging.error('error: %s %s', filename, interesting.keys())
       continue
     # TODO(dongge): Remove this line when FI provides function_signature.
-    function_signature = formulate_function_signature(function, language)
+    function_signature = get_function_signature(project, function, language)
     if not function_signature:
       continue
     logging.info('Function signature to fuzz: %s', function_signature)
@@ -216,7 +237,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                project,
                                language,
                                function_signature,
-                               function_signature,
+                               _get_raw_function_name(function),
                                _get_clean_return_type(function),
                                _group_function_params(
                                    _get_clean_arg_types(function),

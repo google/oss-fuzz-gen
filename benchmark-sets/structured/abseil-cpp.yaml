@@ -1,5 +1,5 @@
 "functions":
-- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
+- "name": "_ZN4absl19str_format_internal13FormatArgImpl8DispatchIxEEbNS1_4DataENS0_24FormatConversionSpecImplEPv"
   "params":
   - "name": "arg"
     "type": "char *"
@@ -11,7 +11,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
+- "name": "_ZN4absl19str_format_internal13FormatArgImpl8DispatchIlEEbNS1_4DataENS0_24FormatConversionSpecImplEPv"
   "params":
   - "name": "arg"
     "type": "char *"
@@ -23,7 +23,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<long>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<short>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
+- "name": "_ZN4absl19str_format_internal13FormatArgImpl8DispatchIsEEbNS1_4DataENS0_24FormatConversionSpecImplEPv"
   "params":
   - "name": "arg"
     "type": "char *"
@@ -35,7 +35,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<short>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<signed char>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
+- "name": "_ZN4absl19str_format_internal13FormatArgImpl8DispatchIaEEbNS1_4DataENS0_24FormatConversionSpecImplEPv"
   "params":
   - "name": "arg"
     "type": "char *"
@@ -47,7 +47,7 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<signed char>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
-- "name": "bool absl::str_format_internal::FormatArgImpl::Dispatch<char>(absl::str_format_internal::FormatArgImpl::Data, absl::str_format_internal::FormatConversionSpecImpl, void*)"
+- "name": "_ZN4absl19str_format_internal13FormatArgImpl8DispatchIcEEbNS1_4DataENS0_24FormatConversionSpecImplEPv"
   "params":
   - "name": "arg"
     "type": "char *"

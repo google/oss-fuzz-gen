@@ -12,7 +12,7 @@
   - "name": "out"
     "type": "char **"
   "return_type": "size_t"
-  "signature": "WebPEncodeLosslessBGRA"
+  "signature": "size_t WebPEncodeLosslessBGRA(char * in, int w, int h, int bps, char ** out)"
 - "name": "WebPEncodeLosslessBGR"
   "params":
   - "name": "in"
@@ -26,7 +26,7 @@
   - "name": "out"
     "type": "char **"
   "return_type": "size_t"
-  "signature": "WebPEncodeLosslessBGR"
+  "signature": "size_t WebPEncodeLosslessBGR(char * in, int w, int h, int bps, char ** out)"
 - "name": "WebPEncodeLosslessRGBA"
   "params":
   - "name": "in"
@@ -40,7 +40,7 @@
   - "name": "out"
     "type": "char **"
   "return_type": "size_t"
-  "signature": "WebPEncodeLosslessRGBA"
+  "signature": "size_t WebPEncodeLosslessRGBA(char * in, int w, int h, int bps, char ** out)"
 - "name": "WebPEncodeLosslessRGB"
   "params":
   - "name": "in"
@@ -54,7 +54,7 @@
   - "name": "out"
     "type": "char **"
   "return_type": "size_t"
-  "signature": "WebPEncodeLosslessRGB"
+  "signature": "size_t WebPEncodeLosslessRGB(char * in, int w, int h, int bps, char ** out)"
 - "name": "WebPEncodeBGRA"
   "params":
   - "name": "in"
@@ -70,7 +70,7 @@
   - "name": "out"
     "type": "char **"
   "return_type": "size_t"
-  "signature": "WebPEncodeBGRA"
+  "signature": "size_t WebPEncodeBGRA(char * in, int w, int h, int bps, float q, char ** out)"
 "language": "c++"
 "project": "libwebp"
 "target_name": "enc_dec_fuzzer"

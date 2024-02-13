@@ -202,9 +202,9 @@ class Evaluator:
     """Builds and runs a target."""
     generated_target_name = os.path.basename(target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
-    # Replace "::" and any character not \w, -, _, or . with "-".
+    # Replace "::" and any character not \w, _, or . with "-".
     valid_docker_tag_name = re.sub(r'::', '-', self.benchmark.id)
-    valid_docker_tag_name = re.sub(r'[^\w\-_.]', '-', valid_docker_tag_name)
+    valid_docker_tag_name = re.sub(r'[^\w_.]', '-', valid_docker_tag_name)
     generated_oss_fuzz_project = f'{valid_docker_tag_name}-{sample_id}'
     self.create_ossfuzz_project(generated_oss_fuzz_project, target_path)
 

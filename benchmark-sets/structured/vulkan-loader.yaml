@@ -1,11 +1,11 @@
 "functions":
-- "name": "int vkEnumerateInstanceVersion(int * )"
+- "name": "vkEnumerateInstanceVersion"
   "params":
   - "name": ""
     "type": "int *"
   "return_type": "int"
   "signature": "int vkEnumerateInstanceVersion(int * )"
-- "name": "int vkEnumerateInstanceLayerProperties(int * , struct VkLayerProperties * )"
+- "name": "vkEnumerateInstanceLayerProperties"
   "params":
   - "name": ""
     "type": "int *"
@@ -13,7 +13,7 @@
     "type": "struct VkLayerProperties *"
   "return_type": "int"
   "signature": "int vkEnumerateInstanceLayerProperties(int * , struct VkLayerProperties * )"
-- "name": "int terminator_EnumerateInstanceLayerProperties(struct VkEnumerateInstanceLayerPropertiesChain * , int * , struct VkLayerProperties * )"
+- "name": "terminator_EnumerateInstanceLayerProperties"
   "params":
   - "name": ""
     "type": "struct VkEnumerateInstanceLayerPropertiesChain *"
@@ -23,7 +23,7 @@
     "type": "struct VkLayerProperties *"
   "return_type": "int"
   "signature": "int terminator_EnumerateInstanceLayerProperties(struct VkEnumerateInstanceLayerPropertiesChain * , int * , struct VkLayerProperties * )"
-- "name": "func_type * vkGetDeviceProcAddr(struct VkDevice_T * , char * )"
+- "name": "vkGetDeviceProcAddr"
   "params":
   - "name": ""
     "type": "struct VkDevice_T *"
@@ -31,7 +31,7 @@
     "type": "char *"
   "return_type": "func_type *"
   "signature": "func_type * vkGetDeviceProcAddr(struct VkDevice_T * , char * )"
-- "name": "char * loader_lookup_device_dispatch_table(struct VkLayerDispatchTable_ * , char * , char * )"
+- "name": "loader_lookup_device_dispatch_table"
   "params":
   - "name": ""
     "type": "struct VkLayerDispatchTable_ *"

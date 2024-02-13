@@ -1,5 +1,5 @@
 "functions":
-- "name": "int lou_translatePrehyphenated(char * tableList, short * inbufx, int * inlen, short * outbuf, int * outlen, short * typeform, char * spacing, int * outputPos, int * inputPos, int * cursorPos, char * inputHyphens, char * outputHyphens, int mode)"
+- "name": "lou_translatePrehyphenated"
   "params":
   - "name": "tableList"
     "type": "char *"
@@ -29,7 +29,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int lou_translatePrehyphenated(char * tableList, short * inbufx, int * inlen, short * outbuf, int * outlen, short * typeform, char * spacing, int * outputPos, int * inputPos, int * cursorPos, char * inputHyphens, char * outputHyphens, int mode)"
-- "name": "int lou_hyphenate(char * tableList, short * inbuf, int inlen, char * hyphens, int mode)"
+- "name": "lou_hyphenate"
   "params":
   - "name": "tableList"
     "type": "char *"
@@ -43,7 +43,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int lou_hyphenate(char * tableList, short * inbuf, int inlen, char * hyphens, int mode)"
-- "name": "short lou_getTypeformForEmphClass(char * tableList, char * emphClass)"
+- "name": "lou_getTypeformForEmphClass"
   "params":
   - "name": "tableList"
     "type": "char *"
@@ -51,13 +51,13 @@
     "type": "char *"
   "return_type": "short"
   "signature": "short lou_getTypeformForEmphClass(char * tableList, char * emphClass)"
-- "name": "char ** lou_getEmphClasses(char * tableList)"
+- "name": "lou_getEmphClasses"
   "params":
   - "name": "tableList"
     "type": "char *"
   "return_type": "char **"
   "signature": "char ** lou_getEmphClasses(char * tableList)"
-- "name": "struct TranslationTableHeader * _lou_getTranslationTable(char * tableList)"
+- "name": "_lou_getTranslationTable"
   "params":
   - "name": "tableList"
     "type": "char *"

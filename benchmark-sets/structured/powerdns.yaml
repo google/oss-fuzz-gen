@@ -1,5 +1,5 @@
 "functions":
-- "name": "handleEDNSClientSubnet(DNSQuestion&, bool&, bool&)"
+- "name": "_Z22handleEDNSClientSubnetR11DNSQuestionRbS1_"
   "params":
   - "name": ""
     "type": "struct DNSQuestion *"
@@ -9,13 +9,13 @@
     "type": "char *"
   "return_type": "bool"
   "signature": "handleEDNSClientSubnet(DNSQuestion&, bool&, bool&)"
-- "name": "checkHostnameCorrectness(DNSResourceRecord const&)"
+- "name": "_Z24checkHostnameCorrectnessRK17DNSResourceRecord"
   "params":
   - "name": ""
     "type": "DNSResourceRecord *"
   "return_type": "void"
   "signature": "checkHostnameCorrectness(DNSResourceRecord const&)"
-- "name": "handleEDNSClientSubnet(std::__1::vector<unsigned char, noinit_adaptor<std::__1::allocator<unsigned char> > >&, unsigned long, unsigned long, bool&, bool&, bool, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "_Z22handleEDNSClientSubnetRNSt3__16vectorIh14noinit_adaptorINS_9allocatorIhEEEEEmmRbS7_bRKNS_12basic_stringIcNS_11char_traitsIcEENS2_IcEEEE"
   "params":
   - "name": ""
     "type": "std::vector *"
@@ -33,7 +33,7 @@
     "type": "std::string *"
   "return_type": "bool"
   "signature": "handleEDNSClientSubnet(std::__1::vector<unsigned char, noinit_adaptor<std::__1::allocator<unsigned char> > >&, unsigned long, unsigned long, bool&, bool&, bool, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-- "name": "setEDNSOption(DNSQuestion&, unsigned short, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "_Z13setEDNSOptionR11DNSQuestiontRKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE"
   "params":
   - "name": ""
     "type": "struct DNSQuestion *"
@@ -43,7 +43,7 @@
     "type": "std::string *"
   "return_type": "bool"
   "signature": "setEDNSOption(DNSQuestion&, unsigned short, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-- "name": "RecordTextReader::xfrSvcParamKeyVals(std::__1::set<SvcParam, std::__1::less<SvcParam>, std::__1::allocator<SvcParam> >&)"
+- "name": "_ZN16RecordTextReader18xfrSvcParamKeyValsERNSt3__13setI8SvcParamNS0_4lessIS2_EENS0_9allocatorIS2_EEEE"
   "params":
   - "name": ""
     "type": "RecordTextReader *"

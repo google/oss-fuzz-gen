@@ -1,15 +1,15 @@
 "functions":
-- "name": "int reload_routing_script()"
+- "name": "reload_routing_script"
   "params": []
   "return_type": "int"
   "signature": "int reload_routing_script()"
-- "name": "int proto_tcp_init(struct proto_info * pi)"
+- "name": "proto_tcp_init"
   "params":
   - "name": "pi"
     "type": "struct proto_info *"
   "return_type": "int"
   "signature": "int proto_tcp_init(struct proto_info * pi)"
-- "name": "int tcp_read_req(struct tcp_connection * con, int * bytes_read)"
+- "name": "tcp_read_req"
   "params":
   - "name": "con"
     "type": "struct tcp_connection *"
@@ -17,7 +17,7 @@
     "type": "int *"
   "return_type": "int"
   "signature": "int tcp_read_req(struct tcp_connection * con, int * bytes_read)"
-- "name": "int tcp_handle_req(struct tcp_req * req, struct tcp_connection * con, int _max_msg_chunks, int _parallel_handling)"
+- "name": "tcp_handle_req"
   "params":
   - "name": "req"
     "type": "struct tcp_req *"
@@ -29,7 +29,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int tcp_handle_req(struct tcp_req * req, struct tcp_connection * con, int _max_msg_chunks, int _parallel_handling)"
-- "name": "int w_forward(struct sip_msg * msg, struct proxy_l * dest)"
+- "name": "w_forward"
   "params":
   - "name": "msg"
     "type": "struct sip_msg *"

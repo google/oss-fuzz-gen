@@ -1,5 +1,5 @@
 "functions":
-- "name": "int mdb_print_schema(struct MdbHandle * mdb, struct _IO_FILE * outfile, char * tabname, char * dbnamespace, int export_options)"
+- "name": "mdb_print_schema"
   "params":
   - "name": "mdb"
     "type": "struct MdbHandle *"
@@ -13,7 +13,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int mdb_print_schema(struct MdbHandle * mdb, struct _IO_FILE * outfile, char * tabname, char * dbnamespace, int export_options)"
-- "name": "char * mdb_get_relationships(struct MdbHandle * mdb, char * dbnamespace, char * tablename)"
+- "name": "mdb_get_relationships"
   "params":
   - "name": "mdb"
     "type": "struct MdbHandle *"
@@ -23,7 +23,7 @@
     "type": "char *"
   "return_type": "char *"
   "signature": "char * mdb_get_relationships(struct MdbHandle * mdb, char * dbnamespace, char * tablename)"
-- "name": "void mdb_dump_catalog(struct MdbHandle * mdb, int obj_type)"
+- "name": "mdb_dump_catalog"
   "params":
   - "name": "mdb"
     "type": "struct MdbHandle *"
@@ -31,7 +31,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void mdb_dump_catalog(struct MdbHandle * mdb, int obj_type)"
-- "name": "struct S_MdbTableDef * mdb_read_table_by_name(struct MdbHandle * mdb, char * table_name, int obj_type)"
+- "name": "mdb_read_table_by_name"
   "params":
   - "name": "mdb"
     "type": "struct MdbHandle *"
@@ -41,7 +41,7 @@
     "type": "int"
   "return_type": "struct S_MdbTableDef *"
   "signature": "struct S_MdbTableDef * mdb_read_table_by_name(struct MdbHandle * mdb, char * table_name, int obj_type)"
-- "name": "void mdb_data_dump(struct S_MdbTableDef * table)"
+- "name": "mdb_data_dump"
   "params":
   - "name": "table"
     "type": "struct S_MdbTableDef *"

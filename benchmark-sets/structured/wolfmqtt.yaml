@@ -1,5 +1,5 @@
 "functions":
-- "name": "int MqttClient_Publish_ex(struct _MqttClient * client, struct _MqttMessage * publish, func_type * pubCb)"
+- "name": "MqttClient_Publish_ex"
   "params":
   - "name": "client"
     "type": "struct _MqttClient *"
@@ -9,19 +9,19 @@
     "type": "func_type *"
   "return_type": "int"
   "signature": "int MqttClient_Publish_ex(struct _MqttClient * client, struct _MqttMessage * publish, func_type * pubCb)"
-- "name": "int MqttClient_Ping(struct _MqttClient * client)"
+- "name": "MqttClient_Ping"
   "params":
   - "name": "client"
     "type": "struct _MqttClient *"
   "return_type": "int"
   "signature": "int MqttClient_Ping(struct _MqttClient * client)"
-- "name": "int MqttClient_Disconnect(struct _MqttClient * client)"
+- "name": "MqttClient_Disconnect"
   "params":
   - "name": "client"
     "type": "struct _MqttClient *"
   "return_type": "int"
   "signature": "int MqttClient_Disconnect(struct _MqttClient * client)"
-- "name": "int MqttClient_Disconnect_ex(struct _MqttClient * client, struct _MqttDisconnect * p_disconnect)"
+- "name": "MqttClient_Disconnect_ex"
   "params":
   - "name": "client"
     "type": "struct _MqttClient *"
@@ -29,7 +29,7 @@
     "type": "struct _MqttDisconnect *"
   "return_type": "int"
   "signature": "int MqttClient_Disconnect_ex(struct _MqttClient * client, struct _MqttDisconnect * p_disconnect)"
-- "name": "int wolfSSL_writev(struct WOLFSSL * ssl, struct iovec * iov, int iovcnt)"
+- "name": "wolfSSL_writev"
   "params":
   - "name": "ssl"
     "type": "struct WOLFSSL *"

@@ -192,7 +192,7 @@ def parse_args() -> argparse.Namespace:
 def _print_experiment_result(result: Result):
   """Prints the |result| of a single experiment."""
   print(f'\n**** Finished benchmark {result.benchmark.project}, '
-        f'{result.benchmark.function_name} ****\n'
+        f'{result.benchmark.function_signature} ****\n'
         f'{result.result}')
 
 
@@ -201,8 +201,8 @@ def _print_experiment_results(results: list[Result]):
   print('\n\n**** FINAL RESULTS: ****\n\n')
   for result in results:
     print('=' * 80)
-    print(f'*{result.benchmark.project}, {result.benchmark.function_name}*\n'
-          f'{result.result}\n')
+    print(f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
+          f'\n{result.result}\n')
 
 
 def main():

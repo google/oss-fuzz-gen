@@ -1,5 +1,5 @@
 "functions":
-- "name": "tesseract::TessTsvRenderer::AddImageHandler(tesseract::TessBaseAPI*)"
+- "name": "_ZN9tesseract15TessTsvRenderer15AddImageHandlerEPNS_11TessBaseAPIE"
   "params":
   - "name": "this"
     "type": "tesseract::TessTsvRenderer *"
@@ -7,7 +7,7 @@
     "type": "tesseract::TessBaseAPI *"
   "return_type": "bool"
   "signature": "tesseract::TessTsvRenderer::AddImageHandler(tesseract::TessBaseAPI*)"
-- "name": "tesseract::TessBaseAPI::GetTSVText(int)"
+- "name": "_ZN9tesseract11TessBaseAPI10GetTSVTextEi"
   "params":
   - "name": "this"
     "type": "tesseract::TessBaseAPI *"
@@ -15,7 +15,7 @@
     "type": "int"
   "return_type": "char *"
   "signature": "tesseract::TessBaseAPI::GetTSVText(int)"
-- "name": "tesseract::TessBaseAPI::ProcessPages(char const*, char const*, int, tesseract::TessResultRenderer*)"
+- "name": "_ZN9tesseract11TessBaseAPI12ProcessPagesEPKcS2_iPNS_18TessResultRendererE"
   "params":
   - "name": "this"
     "type": "tesseract::TessBaseAPI *"
@@ -29,7 +29,7 @@
     "type": "tesseract::TessResultRenderer *"
   "return_type": "bool"
   "signature": "tesseract::TessBaseAPI::ProcessPages(char const*, char const*, int, tesseract::TessResultRenderer*)"
-- "name": "tesseract::TessBoxTextRenderer::AddImageHandler(tesseract::TessBaseAPI*)"
+- "name": "_ZN9tesseract19TessBoxTextRenderer15AddImageHandlerEPNS_11TessBaseAPIE"
   "params":
   - "name": "this"
     "type": "tesseract::TessOsdRenderer *"
@@ -37,7 +37,7 @@
     "type": "tesseract::TessBaseAPI *"
   "return_type": "bool"
   "signature": "tesseract::TessBoxTextRenderer::AddImageHandler(tesseract::TessBaseAPI*)"
-- "name": "tesseract::TessBaseAPI::ProcessPagesInternal(char const*, char const*, int, tesseract::TessResultRenderer*)"
+- "name": "_ZN9tesseract11TessBaseAPI20ProcessPagesInternalEPKcS2_iPNS_18TessResultRendererE"
   "params":
   - "name": "this"
     "type": "tesseract::TessBaseAPI *"

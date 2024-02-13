@@ -6,7 +6,7 @@
   - "name": ""
     "type": "struct netif *"
   "return_type": "char"
-  "signature": "netif_input"
+  "signature": "char netif_input(struct pbuf * , struct netif * )"
 - "name": "ethernet_input"
   "params":
   - "name": ""
@@ -14,7 +14,7 @@
   - "name": ""
     "type": "struct netif *"
   "return_type": "char"
-  "signature": "ethernet_input"
+  "signature": "char ethernet_input(struct pbuf * , struct netif * )"
 - "name": "ip4_input"
   "params":
   - "name": ""
@@ -22,7 +22,7 @@
   - "name": ""
     "type": "struct netif *"
   "return_type": "char"
-  "signature": "ip4_input"
+  "signature": "char ip4_input(struct pbuf * , struct netif * )"
 - "name": "tcp_input"
   "params":
   - "name": ""
@@ -30,11 +30,11 @@
   - "name": ""
     "type": "struct netif *"
   "return_type": "void"
-  "signature": "tcp_input"
+  "signature": "void tcp_input(struct pbuf * , struct netif * )"
 - "name": "httpd_init"
   "params": []
   "return_type": "void"
-  "signature": "httpd_init"
+  "signature": "void httpd_init()"
 "language": "c++"
 "project": "tinyusb"
 "target_name": "/src/tinyusb/test/fuzz/device/msc/src/fuzz.cc"

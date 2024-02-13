@@ -8,7 +8,7 @@
   - "name": ""
     "type": "PJ_COORD *"
   "return_type": "void"
-  "signature": "proj_factors"
+  "signature": "void proj_factors(struct P5_FACTORS * , struct PJconsts * lp, union.PJ_COORD * )"
 - "name": "proj_get_suggested_operation"
   "params":
   - "name": ""
@@ -20,8 +20,8 @@
   - "name": "coord"
     "type": "PJ_COORD *"
   "return_type": "int"
-  "signature": "proj_get_suggested_operation"
-- "name": "PJ_OPERATION_LIST::getPreparedOperations(pj_ctx*)"
+  "signature": "int proj_get_suggested_operation(struct pj_ctx * , struct PJ_OBJ_LIST * , int , union.PJ_COORD * coord)"
+- "name": "_ZN17PJ_OPERATION_LIST21getPreparedOperationsEP6pj_ctx"
   "params":
   - "name": ""
     "type": "struct PJ_OPERATION_LIST *"
@@ -29,7 +29,7 @@
     "type": "struct pj_ctx *"
   "return_type": "std::vector *"
   "signature": "PJ_OPERATION_LIST::getPreparedOperations(pj_ctx*)"
-- "name": "osgeo::proj::crs::BoundCRS::_identify(std::__1::shared_ptr<osgeo::proj::io::AuthorityFactory> const&) const"
+- "name": "_ZNK5osgeo4proj3crs8BoundCRS9_identifyERKNSt3__110shared_ptrINS0_2io16AuthorityFactoryEEE"
   "params":
   - "name": ""
     "type": "std::list *"
@@ -39,7 +39,7 @@
     "type": "std::shared_ptr *"
   "return_type": "void"
   "signature": "osgeo::proj::crs::BoundCRS::_identify(std::__1::shared_ptr<osgeo::proj::io::AuthorityFactory> const&) const"
-- "name": "osgeo::proj::crs::CRS::createBoundCRSToWGS84IfPossible(std::__1::shared_ptr<osgeo::proj::io::DatabaseContext> const&, osgeo::proj::operation::CoordinateOperationContext::IntermediateCRSUse) const"
+- "name": "_ZNK5osgeo4proj3crs3CRS31createBoundCRSToWGS84IfPossibleERKNSt3__110shared_ptrINS0_2io15DatabaseContextEEENS0_9operation26CoordinateOperationContext18IntermediateCRSUseE"
   "params":
   - "name": ""
     "type": "dropbox::oxygen::nn *"

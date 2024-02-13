@@ -1,5 +1,5 @@
 "functions":
-- "name": "struct sf_private_tag * sf_open(char * path, int mode, struct SF_INFO * sfinfo)"
+- "name": "sf_open"
   "params":
   - "name": "path"
     "type": "char *"
@@ -9,7 +9,7 @@
     "type": "struct SF_INFO *"
   "return_type": "struct sf_private_tag *"
   "signature": "struct sf_private_tag * sf_open(char * path, int mode, struct SF_INFO * sfinfo)"
-- "name": "struct sf_private_tag * sf_open_fd(int fd, int mode, struct SF_INFO * sfinfo, int close_desc)"
+- "name": "sf_open_fd"
   "params":
   - "name": "fd"
     "type": "int"
@@ -21,7 +21,7 @@
     "type": "int"
   "return_type": "struct sf_private_tag *"
   "signature": "struct sf_private_tag * sf_open_fd(int fd, int mode, struct SF_INFO * sfinfo, int close_desc)"
-- "name": "int sf_command(struct sf_private_tag * sndfile, int command, char * data, int datasize)"
+- "name": "sf_command"
   "params":
   - "name": "sndfile"
     "type": "struct sf_private_tag *"
@@ -33,7 +33,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int sf_command(struct sf_private_tag * sndfile, int command, char * data, int datasize)"
-- "name": "int psf_calc_max_all_channels(struct sf_private_tag * psf, double * peaks, int normalize)"
+- "name": "psf_calc_max_all_channels"
   "params":
   - "name": "psf"
     "type": "struct sf_private_tag *"
@@ -43,7 +43,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int psf_calc_max_all_channels(struct sf_private_tag * psf, double * peaks, int normalize)"
-- "name": "double psf_calc_signal_max(struct sf_private_tag * psf, int normalize)"
+- "name": "psf_calc_signal_max"
   "params":
   - "name": "psf"
     "type": "struct sf_private_tag *"

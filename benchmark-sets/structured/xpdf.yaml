@@ -1,5 +1,5 @@
 "functions":
-- "name": "PDFDoc::displayPages(OutputDev*, int, int, double, double, int, int, int, int, int (*)(void*), void*)"
+- "name": "_ZN6PDFDoc12displayPagesEP9OutputDeviiddiiiiPFiPvES2_"
   "params":
   - "name": "this"
     "type": "PDFDoc *"
@@ -27,7 +27,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "PDFDoc::displayPages(OutputDev*, int, int, double, double, int, int, int, int, int (*)(void*), void*)"
-- "name": "PDFDoc::displayPageSlice(OutputDev*, int, double, double, int, int, int, int, int, int, int, int, int (*)(void*), void*)"
+- "name": "_ZN6PDFDoc16displayPageSliceEP9OutputDeviddiiiiiiiiPFiPvES2_"
   "params":
   - "name": "this"
     "type": "PDFDoc *"
@@ -61,7 +61,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "PDFDoc::displayPageSlice(OutputDev*, int, double, double, int, int, int, int, int, int, int, int, int (*)(void*), void*)"
-- "name": "SplashOutputDev::drawChar(GfxState*, double, double, double, double, double, double, unsigned int, int, unsigned int*, int, int, int, int)"
+- "name": "_ZN15SplashOutputDev8drawCharEP8GfxStateddddddjiPjiiii"
   "params":
   - "name": "this"
     "type": "SplashOutputDev *"
@@ -95,7 +95,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "SplashOutputDev::drawChar(GfxState*, double, double, double, double, double, double, unsigned int, int, unsigned int*, int, int, int, int)"
-- "name": "Gfx::opSetExtGState(Object*, int)"
+- "name": "_ZN3Gfx14opSetExtGStateEP6Objecti"
   "params":
   - "name": "this"
     "type": "Gfx *"
@@ -105,7 +105,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "Gfx::opSetExtGState(Object*, int)"
-- "name": "SplashOutputDev::doUpdateFont(GfxState*)"
+- "name": "_ZN15SplashOutputDev12doUpdateFontEP8GfxState"
   "params":
   - "name": "this"
     "type": "SplashOutputDev *"

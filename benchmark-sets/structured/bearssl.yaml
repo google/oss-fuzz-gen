@@ -10,8 +10,8 @@
   - "name": ""
     "type": "int"
   "return_type": "size_t"
-  "signature": "LLVMFuzzerCustomMutator"
-- "name": "cryptofuzz::module::Botan::OpECGDSA_Sign(cryptofuzz::operation::ECGDSA_Sign&)"
+  "signature": "size_t LLVMFuzzerCustomMutator(char * , size_t , size_t , int )"
+- "name": "_ZN10cryptofuzz6module5Botan13OpECGDSA_SignERNS_9operation11ECGDSA_SignE"
   "params":
   - "name": ""
     "type": "std::optional *"
@@ -21,7 +21,7 @@
     "type": "cryptofuzz::operation::ECDSA_Sign *"
   "return_type": "void"
   "signature": "cryptofuzz::module::Botan::OpECGDSA_Sign(cryptofuzz::operation::ECGDSA_Sign&)"
-- "name": "std::__1::optional<cryptofuzz::component::ECDSA_Signature> cryptofuzz::module::Botan_detail::ECxDSA_Sign<Botan::ECGDSA_PrivateKey, cryptofuzz::operation::ECGDSA_Sign, false>(cryptofuzz::operation::ECGDSA_Sign&)"
+- "name": "_ZN10cryptofuzz6module12Botan_detail11ECxDSA_SignIN5Botan17ECGDSA_PrivateKeyENS_9operation11ECGDSA_SignELb0EEENSt3__18optionalINS_9component15ECDSA_SignatureEEERT0_"
   "params":
   - "name": ""
     "type": "std::optional *"
@@ -29,13 +29,13 @@
     "type": "cryptofuzz::operation::ECDSA_Sign *"
   "return_type": "void"
   "signature": "std::__1::optional<cryptofuzz::component::ECDSA_Signature> cryptofuzz::module::Botan_detail::ECxDSA_Sign<Botan::ECGDSA_PrivateKey, cryptofuzz::operation::ECGDSA_Sign, false>(cryptofuzz::operation::ECGDSA_Sign&)"
-- "name": "cryptofuzz::Builtin_tests_importer::Run()"
+- "name": "_ZN10cryptofuzz22Builtin_tests_importer3RunEv"
   "params":
   - "name": ""
     "type": "anon *"
   "return_type": "void"
   "signature": "cryptofuzz::Builtin_tests_importer::Run()"
-- "name": "Botan::EC_PrivateKey::EC_PrivateKey(Botan::AlgorithmIdentifier const&, std::__1::span<unsigned char const, 18446744073709551615ul>, bool)"
+- "name": "_ZN5Botan13EC_PrivateKeyC2ERKNS_19AlgorithmIdentifierENSt3__14spanIKhLm18446744073709551615EEEb"
   "params":
   - "name": ""
     "type": "Botan::EC_PrivateKey *"
