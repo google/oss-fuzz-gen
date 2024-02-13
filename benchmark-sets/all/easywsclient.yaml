@@ -1,7 +1,0 @@
-functions:
-- std::exception * easywsclient::WebSocket::from_url_no_mask(std::string * url, std::string
-  * origin)
-project: easywsclient
-target_name: easyws_fuzzer
-target_path: /src/easyws_fuzzer.cpp
-

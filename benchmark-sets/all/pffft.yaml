@@ -1,7 +1,0 @@
-functions:
-- void validate_pffft_simd()
-- int pffft_simd_size()
-project: pffft
-target_name: pffft_complex_fuzzer
-target_path: /src/pffft/pffft_fuzzer.cc
-

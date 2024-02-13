@@ -1,8 +1,0 @@
-functions:
-- void parse(char * fname)
-- int ini_parse_string(char * string, func_type * handler, char * user)
-- char * ini_reader_string(char * str, int num, char * stream)
-project: inih
-target_name: inihfuzz
-target_path: /src/inih/fuzzing/inihfuzz.c
-

@@ -1,8 +1,0 @@
-functions:
-- bool pb_encode_ex(struct pb_ostream_s * stream, struct pb_msgdesc_s * fields, char
-  * src_struct, int flags)
-- bool pb_get_encoded_size(size_t * size, struct pb_msgdesc_s * fields, char * src_struct)
-project: nanopb
-target_name: fuzztest
-target_path: /src/nanopb/tests/fuzztest/fuzztest.c
-

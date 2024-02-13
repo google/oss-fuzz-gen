@@ -1,7 +1,0 @@
-Retrieving human-written fuzz targets of lua from local Docker build.
-functions:
-- void _GLOBAL__sub_I_serializer.cc()
-project: lua
-target_name: fuzz_lua
-target_path: /src/fuzz_lua.c
-

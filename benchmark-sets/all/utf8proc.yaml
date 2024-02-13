@@ -1,9 +1,0 @@
-functions:
-- size_t utf8proc_decompose(char * , size_t , int * , size_t , int )
-- char * utf8proc_errmsg(size_t )
-- char * utf8proc_unicode_version()
-- char * utf8proc_version()
-project: utf8proc
-target_name: utf8proc_fuzzer
-target_path: /src/utf8proc/test/fuzzer.c
-
