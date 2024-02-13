@@ -141,7 +141,7 @@ def _is_valid_benchmark_dir(cur_dir: str) -> bool:
   if not cur_dir.startswith('output-'):
     return False
   # Check sub-directories.
-  expected_dirs = ['raw_targets', 'status', 'fixed_targets', 'logs', 'corpora']
+  expected_dirs = ['raw_targets', 'status', 'fixed_targets']
   return all(
       os.path.isdir(os.path.join(RESULTS_DIR, cur_dir, expected_dir))
       for expected_dir in expected_dirs)
