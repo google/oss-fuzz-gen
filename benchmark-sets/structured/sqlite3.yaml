@@ -4,7 +4,7 @@
   - "name": "x"
     "type": "int"
   "return_type": "void"
-  "signature": "ossfuzz_set_debug_flags"
+  "signature": "void ossfuzz_set_debug_flags(int x)"
 "language": "c++"
 "project": "sqlite3"
 "target_name": "fuzzcheck"

@@ -1,5 +1,5 @@
 "functions":
-- "name": "int parse_complex_format_second(char * input)"
+- "name": "parse_complex_format_second"
   "params":
   - "name": "input"
     "type": "char *"

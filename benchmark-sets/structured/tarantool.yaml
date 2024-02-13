@@ -1,23 +1,23 @@
 "functions":
-- "name": "void box_cfg()"
+- "name": "box_cfg"
   "params": []
   "return_type": "void"
   "signature": "void box_cfg()"
-- "name": "void _ZL10box_cfg_xcv()"
+- "name": "_ZL10box_cfg_xcv"
   "params": []
   "return_type": "void"
   "signature": "void _ZL10box_cfg_xcv()"
-- "name": "void _ZL16box_storage_initv()"
+- "name": "_ZL16box_storage_initv"
   "params": []
   "return_type": "void"
   "signature": "void _ZL16box_storage_initv()"
-- "name": "void iproto_init(int threads_count)"
+- "name": "iproto_init"
   "params":
   - "name": "threads_count"
     "type": "int"
   "return_type": "void"
   "signature": "void iproto_init(int threads_count)"
-- "name": "void _ZL18iproto_thread_initP13iproto_thread(struct iproto_thread * iproto_thread)"
+- "name": "_ZL18iproto_thread_initP13iproto_thread"
   "params":
   - "name": "iproto_thread"
     "type": "struct iproto_thread *"

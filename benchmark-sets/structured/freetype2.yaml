@@ -2,22 +2,22 @@
 - "name": "_GLOBAL__sub_I_ftfuzzer.cc"
   "params": []
   "return_type": "void"
-  "signature": "_GLOBAL__sub_I_ftfuzzer.cc"
+  "signature": "void _GLOBAL__sub_I_ftfuzzer.cc()"
 - "name": "_GLOBAL__sub_I_template.cpp"
   "params": []
   "return_type": "void"
-  "signature": "_GLOBAL__sub_I_template.cpp"
+  "signature": "void _GLOBAL__sub_I_template.cpp()"
 - "name": "__cxx_global_var_init"
   "params": []
   "return_type": "void"
-  "signature": "__cxx_global_var_init"
-- "name": "freetype::LzwFuzzTarget::LzwFuzzTarget()"
+  "signature": "void __cxx_global_var_init()"
+- "name": "_ZN8freetype14GzipFuzzTargetC2Ev"
   "params":
   - "name": "this"
-    "type": "freetype::LzwFuzzTarget *"
+    "type": "freetype::GzipFuzzTarget *"
   "return_type": "void"
-  "signature": "freetype::LzwFuzzTarget::LzwFuzzTarget()"
-- "name": "freetype::Bzip2FuzzTarget::Bzip2FuzzTarget()"
+  "signature": "freetype::GzipFuzzTarget::GzipFuzzTarget()"
+- "name": "_ZN8freetype15Bzip2FuzzTargetC2Ev"
   "params":
   - "name": "this"
     "type": "freetype::Bzip2FuzzTarget *"

@@ -6,7 +6,7 @@
   - "name": "min_shift"
     "type": "int"
   "return_type": "int"
-  "signature": "bam_index_build"
+  "signature": "int bam_index_build(char * fn, int min_shift)"
 - "name": "sam_index_build2"
   "params":
   - "name": "fn"
@@ -16,7 +16,7 @@
   - "name": "min_shift"
     "type": "int"
   "return_type": "int"
-  "signature": "sam_index_build2"
+  "signature": "int sam_index_build2(char * fn, char * fnidx, int min_shift)"
 - "name": "sam_index_build"
   "params":
   - "name": "fn"
@@ -24,7 +24,7 @@
   - "name": "min_shift"
     "type": "int"
   "return_type": "int"
-  "signature": "sam_index_build"
+  "signature": "int sam_index_build(char * fn, int min_shift)"
 - "name": "sam_index_build3"
   "params":
   - "name": "fn"
@@ -36,7 +36,7 @@
   - "name": "nthreads"
     "type": "int"
   "return_type": "int"
-  "signature": "sam_index_build3"
+  "signature": "int sam_index_build3(char * fn, char * fnidx, int min_shift, int nthreads)"
 - "name": "bcf_index_build"
   "params":
   - "name": "fn"
@@ -44,7 +44,7 @@
   - "name": "min_shift"
     "type": "int"
   "return_type": "int"
-  "signature": "bcf_index_build"
+  "signature": "int bcf_index_build(char * fn, int min_shift)"
 "language": "c++"
 "project": "htslib"
 "target_name": "hts_open_fuzzer"

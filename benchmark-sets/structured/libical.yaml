@@ -6,7 +6,7 @@
   - "name": "comp_to_merge"
     "type": "struct icalcomponent_impl *"
   "return_type": "void"
-  "signature": "icalcomponent_merge_component"
+  "signature": "void icalcomponent_merge_component(struct icalcomponent_impl * comp, struct icalcomponent_impl * comp_to_merge)"
 - "name": "icalcomponent_merge_vtimezone"
   "params":
   - "name": "comp"
@@ -16,7 +16,7 @@
   - "name": "tzids_to_rename"
     "type": "struct _icalarray *"
   "return_type": "void"
-  "signature": "icalcomponent_merge_vtimezone"
+  "signature": "void icalcomponent_merge_vtimezone(struct icalcomponent_impl * comp, struct icalcomponent_impl * vtimezone, struct _icalarray * tzids_to_rename)"
 - "name": "icalcomponent_handle_conflicting_vtimezones"
   "params":
   - "name": "comp"
@@ -30,7 +30,7 @@
   - "name": "tzids_to_rename"
     "type": "struct _icalarray *"
   "return_type": "void"
-  "signature": "icalcomponent_handle_conflicting_vtimezones"
+  "signature": "void icalcomponent_handle_conflicting_vtimezones(struct icalcomponent_impl * comp, struct icalcomponent_impl * vtimezone, struct icalproperty_impl * tzid_prop, char * tzid, struct _icalarray * tzids_to_rename)"
 - "name": "icalcomponent_foreach_recurrence"
   "params":
   - "name": "comp"
@@ -44,7 +44,7 @@
   - "name": "callback_data"
     "type": "char *"
   "return_type": "void"
-  "signature": "icalcomponent_foreach_recurrence"
+  "signature": "void icalcomponent_foreach_recurrence(struct icalcomponent_impl * comp, struct icaltimetype * start, struct icaltimetype * end, func_type * callback, char * callback_data)"
 - "name": "icaltimezone_truncate_vtimezone"
   "params":
   - "name": "vtz"
@@ -56,7 +56,7 @@
   - "name": "ms_compatible"
     "type": "int"
   "return_type": "void"
-  "signature": "icaltimezone_truncate_vtimezone"
+  "signature": "void icaltimezone_truncate_vtimezone(struct icalcomponent_impl * vtz, struct icaltimetype * start, struct icaltimetype * end, int ms_compatible)"
 "language": "c++"
 "project": "libical"
 "target_name": "libical_extended_fuzzer"

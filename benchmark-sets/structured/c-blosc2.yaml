@@ -6,7 +6,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "int"
-  "signature": "b2nd_save"
+  "signature": "int b2nd_save(struct b2nd_array_t * , char * )"
 - "name": "b2nd_copy"
   "params":
   - "name": ""
@@ -16,7 +16,7 @@
   - "name": ""
     "type": "161 **"
   "return_type": "int"
-  "signature": "b2nd_copy"
+  "signature": "int b2nd_copy(struct b2nd_context_s * , struct b2nd_array_t * , struct b2nd_array_t.161 ** )"
 - "name": "b2nd_get_slice"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "size_t *"
   "return_type": "int"
-  "signature": "b2nd_get_slice"
+  "signature": "int b2nd_get_slice(struct b2nd_context_s * , struct b2nd_array_t.161 ** , struct b2nd_array_t * , size_t * , size_t * )"
 - "name": "b2nd_append"
   "params":
   - "name": ""
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "char"
   "return_type": "int"
-  "signature": "b2nd_append"
+  "signature": "int b2nd_append(struct b2nd_array_t * , char * , size_t , char )"
 - "name": "b2nd_insert"
   "params":
   - "name": ""
@@ -56,7 +56,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "int"
-  "signature": "b2nd_insert"
+  "signature": "int b2nd_insert(struct b2nd_array_t * , char * , size_t , char , size_t )"
 "language": "c++"
 "project": "c-blosc2"
 "target_name": "compress_fuzzer"

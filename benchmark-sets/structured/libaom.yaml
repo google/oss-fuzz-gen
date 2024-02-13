@@ -10,7 +10,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "int"
-  "signature": "decoder_inspect"
+  "signature": "int decoder_inspect(struct aom_codec_alg_priv * , char * , size_t , char * )"
 - "name": "read_and_decode_one_tile_list"
   "params":
   - "name": ""
@@ -26,7 +26,7 @@
   - "name": ""
     "type": "int *"
   "return_type": "int"
-  "signature": "read_and_decode_one_tile_list"
+  "signature": "int read_and_decode_one_tile_list(struct AV1Decoder * , struct aom_read_bit_buffer * , char * , char * , char ** , int * )"
 - "name": "decode_tiles_mt"
   "params":
   - "name": ""
@@ -40,7 +40,7 @@
   - "name": ""
     "type": "int"
   "return_type": "char *"
-  "signature": "decode_tiles_mt"
+  "signature": "char * decode_tiles_mt(struct AV1Decoder * , char * , char * , int , int )"
 - "name": "tile_worker_hook"
   "params":
   - "name": ""
@@ -48,7 +48,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "int"
-  "signature": "tile_worker_hook"
+  "signature": "int tile_worker_hook(char * , char * )"
 - "name": "av1_realloc_and_scale_if_required"
   "params":
   - "name": ""
@@ -70,7 +70,7 @@
   - "name": ""
     "type": "int"
   "return_type": "struct yv12_buffer_config *"
-  "signature": "av1_realloc_and_scale_if_required"
+  "signature": "struct yv12_buffer_config * av1_realloc_and_scale_if_required(struct AV1Common * , struct yv12_buffer_config * , struct yv12_buffer_config * , char , int , bool , bool , int , int )"
 "language": "c++"
 "project": "libaom"
 "target_name": "av1_dec_fuzzer"

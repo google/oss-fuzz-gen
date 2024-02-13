@@ -1,5 +1,5 @@
 "functions":
-- "name": "int import_handler(struct command_param * param, struct command_environ * cenv)"
+- "name": "import_handler"
   "params":
   - "name": "param"
     "type": "struct command_param *"
@@ -7,7 +7,7 @@
     "type": "struct command_environ *"
   "return_type": "int"
   "signature": "int import_handler(struct command_param * param, struct command_environ * cenv)"
-- "name": "int gdbm_load(struct gdbm_file_info ** pdbf, char * filename, int replace, int meta_mask, size_t * line)"
+- "name": "gdbm_load"
   "params":
   - "name": "pdbf"
     "type": "struct gdbm_file_info **"
@@ -21,7 +21,7 @@
     "type": "size_t *"
   "return_type": "int"
   "signature": "int gdbm_load(struct gdbm_file_info ** pdbf, char * filename, int replace, int meta_mask, size_t * line)"
-- "name": "int gdbm_load_from_file(struct gdbm_file_info ** pdbf, struct _IO_FILE * fp, int replace, int meta_mask, size_t * line)"
+- "name": "gdbm_load_from_file"
   "params":
   - "name": "pdbf"
     "type": "struct gdbm_file_info **"
@@ -35,7 +35,7 @@
     "type": "size_t *"
   "return_type": "int"
   "signature": "int gdbm_load_from_file(struct gdbm_file_info ** pdbf, struct _IO_FILE * fp, int replace, int meta_mask, size_t * line)"
-- "name": "int _gdbm_load_file(struct dump_file * file, struct gdbm_file_info * dbf, struct gdbm_file_info ** ofp, int replace, int meta_mask)"
+- "name": "_gdbm_load_file"
   "params":
   - "name": "file"
     "type": "struct dump_file *"
@@ -49,7 +49,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int _gdbm_load_file(struct dump_file * file, struct gdbm_file_info * dbf, struct gdbm_file_info ** ofp, int replace, int meta_mask)"
-- "name": "int recover_handler(struct command_param * param, struct command_environ * cenv)"
+- "name": "recover_handler"
   "params":
   - "name": "param"
     "type": "struct command_param *"

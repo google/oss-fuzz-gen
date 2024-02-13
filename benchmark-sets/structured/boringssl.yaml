@@ -10,7 +10,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "struct ec_key_st *"
-  "signature": "PEM_read_ECPrivateKey"
+  "signature": "struct ec_key_st * PEM_read_ECPrivateKey(struct _IO_FILE * , struct ec_key_st.4901 ** , func_type * , char * )"
 - "name": "PEM_read_DSAPrivateKey"
   "params":
   - "name": ""
@@ -22,7 +22,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "struct dsa_st *"
-  "signature": "PEM_read_DSAPrivateKey"
+  "signature": "struct dsa_st * PEM_read_DSAPrivateKey(struct _IO_FILE * , struct dsa_st ** , func_type * , char * )"
 - "name": "PEM_read_RSAPrivateKey"
   "params":
   - "name": ""
@@ -34,7 +34,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "struct rsa_st *"
-  "signature": "PEM_read_RSAPrivateKey"
+  "signature": "struct rsa_st * PEM_read_RSAPrivateKey(struct _IO_FILE * , struct rsa_st ** , func_type * , char * )"
 - "name": "PEM_read_PrivateKey"
   "params":
   - "name": ""
@@ -46,7 +46,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "struct evp_pkey_st *"
-  "signature": "PEM_read_PrivateKey"
+  "signature": "struct evp_pkey_st * PEM_read_PrivateKey(struct _IO_FILE * , struct evp_pkey_st ** , func_type * , char * )"
 - "name": "PEM_read_bio_ECPrivateKey"
   "params":
   - "name": ""
@@ -58,7 +58,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "struct ec_key_st *"
-  "signature": "PEM_read_bio_ECPrivateKey"
+  "signature": "struct ec_key_st * PEM_read_bio_ECPrivateKey(struct bio_st * , struct ec_key_st.4901 ** , func_type * , char * )"
 "language": "c++"
 "project": "boringssl"
 "target_name": "ssl_ctx_api"

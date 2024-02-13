@@ -73,7 +73,7 @@ class Benchmark:
     with open(benchmark_path, 'r') as benchmark_file:
       data = yaml.safe_load(benchmark_file)
 
-    benchmark_name = os.path.splitext(os.path.basename(benchmark_path))[0]
+    project_name = os.path.splitext(os.path.basename(benchmark_path))[0]
 
     use_context = data.get('use_context', False)
     use_project_examples = data.get('use_project_examples', True)
@@ -81,8 +81,16 @@ class Benchmark:
     commit = data.get('commit')
     functions = data.get('functions', [])
     for function in functions:
+      # Long raw_function_names (particularly for c++ projects) may exceed
+      # filesystem limits on file path/name length when creating WorkDir.
+      max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
+      # Docker tag name cannot exceed 127 characters, and will be suffixed by
+      # '<sample-id>-experiment'.
+      docker_name_len = 127 - len('-03-experiment')
+      max_len = min(max_len, docker_name_len)
+      truncated_id = f'{project_name}-{function.get("name")}'[:max_len]
       benchmarks.append(
-          cls(f'{benchmark_name}-{function.get("name")}'.lower(),
+          cls(truncated_id.lower(),
               data['project'],
               data['language'],
               function.get('signature'),
@@ -121,12 +129,6 @@ class Benchmark:
     self.return_type = return_type
     self.params = params
     self.function_dict = function_dict
-
-    if not self.id:
-      # Prevent ':' from causing issues as it propagates to other places.
-      function_name = self.function_name.replace('::', '-')
-      self.id = f'{self.project}-{function_name}'.lower()
-
     self.target_path = target_path
     self._preferred_target_name = preferred_target_name
     self.use_project_examples = use_project_examples

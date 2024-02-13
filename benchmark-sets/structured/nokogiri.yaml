@@ -1,11 +1,11 @@
 "functions":
-- "name": "struct GumboInternalOutput * gumbo_parse(char * buffer)"
+- "name": "gumbo_parse"
   "params":
   - "name": "buffer"
     "type": "char *"
   "return_type": "struct GumboInternalOutput *"
   "signature": "struct GumboInternalOutput * gumbo_parse(char * buffer)"
-- "name": "void gumbo_print_caret_diagnostic(struct GumboInternalError * error, char * source_text, size_t source_length)"
+- "name": "gumbo_print_caret_diagnostic"
   "params":
   - "name": "error"
     "type": "struct GumboInternalError *"
@@ -15,7 +15,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void gumbo_print_caret_diagnostic(struct GumboInternalError * error, char * source_text, size_t source_length)"
-- "name": "size_t gumbo_caret_diagnostic_to_string(struct GumboInternalError * error, char * source_text, size_t source_length, char ** output)"
+- "name": "gumbo_caret_diagnostic_to_string"
   "params":
   - "name": "error"
     "type": "struct GumboInternalError *"
@@ -27,7 +27,7 @@
     "type": "char **"
   "return_type": "size_t"
   "signature": "size_t gumbo_caret_diagnostic_to_string(struct GumboInternalError * error, char * source_text, size_t source_length, char ** output)"
-- "name": "void caret_diagnostic_to_string(struct GumboInternalError * error, char * source_text, size_t source_length, struct GumboStringBuffer * output)"
+- "name": "caret_diagnostic_to_string"
   "params":
   - "name": "error"
     "type": "struct GumboInternalError *"
@@ -39,7 +39,7 @@
     "type": "struct GumboStringBuffer *"
   "return_type": "void"
   "signature": "void caret_diagnostic_to_string(struct GumboInternalError * error, char * source_text, size_t source_length, struct GumboStringBuffer * output)"
-- "name": "char * gumbo_error_code(struct GumboInternalError * error)"
+- "name": "gumbo_error_code"
   "params":
   - "name": "error"
     "type": "struct GumboInternalError *"

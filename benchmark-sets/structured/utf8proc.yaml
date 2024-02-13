@@ -1,5 +1,5 @@
 "functions":
-- "name": "size_t utf8proc_decompose(char * , size_t , int * , size_t , int )"
+- "name": "utf8proc_decompose"
   "params":
   - "name": ""
     "type": "char *"
@@ -13,17 +13,17 @@
     "type": "int"
   "return_type": "size_t"
   "signature": "size_t utf8proc_decompose(char * , size_t , int * , size_t , int )"
-- "name": "char * utf8proc_errmsg(size_t )"
+- "name": "utf8proc_errmsg"
   "params":
   - "name": ""
     "type": "size_t"
   "return_type": "char *"
   "signature": "char * utf8proc_errmsg(size_t )"
-- "name": "char * utf8proc_unicode_version()"
+- "name": "utf8proc_unicode_version"
   "params": []
   "return_type": "char *"
   "signature": "char * utf8proc_unicode_version()"
-- "name": "char * utf8proc_version()"
+- "name": "utf8proc_version"
   "params": []
   "return_type": "char *"
   "signature": "char * utf8proc_version()"

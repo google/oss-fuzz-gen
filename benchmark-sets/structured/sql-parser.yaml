@@ -1,5 +1,5 @@
 "functions":
-- "name": "hsql::SQLParser::parseSQLString(char const*, hsql::SQLParserResult*)"
+- "name": "_ZN4hsql9SQLParser14parseSQLStringEPKcPNS_15SQLParserResultE"
   "params":
   - "name": "sql"
     "type": "char *"
@@ -7,7 +7,7 @@
     "type": "hsql::SQLParserResult *"
   "return_type": "bool"
   "signature": "hsql::SQLParser::parseSQLString(char const*, hsql::SQLParserResult*)"
-- "name": "hsql::SQLParser::parseSQLString(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, hsql::SQLParserResult*)"
+- "name": "_ZN4hsql9SQLParser14parseSQLStringERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEPNS_15SQLParserResultE"
   "params":
   - "name": "sql"
     "type": "std::string *"
@@ -15,7 +15,7 @@
     "type": "hsql::SQLParserResult *"
   "return_type": "bool"
   "signature": "hsql::SQLParser::parseSQLString(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, hsql::SQLParserResult*)"
-- "name": "hsql::SQLParser::tokenize(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<short, std::__1::allocator<short> >*)"
+- "name": "_ZN4hsql9SQLParser8tokenizeERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEPNS1_6vectorIsNS5_IsEEEE"
   "params":
   - "name": "sql"
     "type": "std::string *"
@@ -23,7 +23,7 @@
     "type": "std::vector *"
   "return_type": "bool"
   "signature": "hsql::SQLParser::tokenize(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<short, std::__1::allocator<short> >*)"
-- "name": "hsql_push_buffer_state(yy_buffer_state*, void*)"
+- "name": "_Z22hsql_push_buffer_stateP15yy_buffer_statePv"
   "params":
   - "name": "new_buffer"
     "type": "struct yy_buffer_state *"
@@ -31,7 +31,7 @@
     "type": "char *"
   "return_type": "void"
   "signature": "hsql_push_buffer_state(yy_buffer_state*, void*)"
-- "name": "hsql::operator<<(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, hsql::ColumnType const&)"
+- "name": "_ZN4hsqllsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_10ColumnTypeE"
   "params":
   - "name": "stream"
     "type": "std::ostream *"

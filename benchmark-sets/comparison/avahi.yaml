@@ -10,11 +10,11 @@
   - "name": "aa"
     "type": "int"
   "return_type": "struct AvahiDnsPacket *"
-  "signature": "avahi_dns_packet_new_reply"
+  "signature": "struct AvahiDnsPacket * avahi_dns_packet_new_reply(struct AvahiDnsPacket * p, int mtu, int copy_queries, int aa)"
 - "name": "avahi_get_host_name_strdup"
   "params": []
   "return_type": "char *"
-  "signature": "avahi_get_host_name_strdup"
+  "signature": "char * avahi_get_host_name_strdup()"
 - "name": "avahi_get_host_name"
   "params":
   - "name": "ret_s"
@@ -22,7 +22,7 @@
   - "name": "size"
     "type": "size_t"
   "return_type": "char *"
-  "signature": "avahi_get_host_name"
+  "signature": "char * avahi_get_host_name(char * ret_s, size_t size)"
 - "name": "avahi_string_list_add_pair"
   "params":
   - "name": "l"
@@ -32,7 +32,7 @@
   - "name": "value"
     "type": "char *"
   "return_type": "struct AvahiStringList *"
-  "signature": "avahi_string_list_add_pair"
+  "signature": "struct AvahiStringList * avahi_string_list_add_pair(struct AvahiStringList * l, char * key, char * value)"
 - "name": "avahi_string_list_add_printf"
   "params":
   - "name": "l"
@@ -40,7 +40,7 @@
   - "name": "format"
     "type": "char *"
   "return_type": "struct AvahiStringList *"
-  "signature": "avahi_string_list_add_printf"
+  "signature": "struct AvahiStringList * avahi_string_list_add_printf(struct AvahiStringList * l, char * format)"
 "language": "c++"
 "project": "avahi"
 "target_name": "fuzz-consume-record"

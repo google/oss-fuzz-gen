@@ -1,5 +1,5 @@
 "functions":
-- "name": "void nxt_router_conf_data_handler(struct nxt_task_s * task, struct nxt_port_recv_msg_s * msg)"
+- "name": "nxt_router_conf_data_handler"
   "params":
   - "name": "task"
     "type": "struct nxt_task_s *"
@@ -7,7 +7,7 @@
     "type": "struct nxt_port_recv_msg_s *"
   "return_type": "void"
   "signature": "void nxt_router_conf_data_handler(struct nxt_task_s * task, struct nxt_port_recv_msg_s * msg)"
-- "name": "int nxt_router_conf_create(struct nxt_task_s * task, struct nxt_router_temp_conf_t * tmcf, char * start, char * end)"
+- "name": "nxt_router_conf_create"
   "params":
   - "name": "task"
     "type": "struct nxt_task_s *"
@@ -19,13 +19,13 @@
     "type": "char *"
   "return_type": "int"
   "signature": "int nxt_router_conf_create(struct nxt_task_s * task, struct nxt_router_temp_conf_t * tmcf, char * start, char * end)"
-- "name": "int nxt_runtime_create(struct nxt_task_s * task)"
+- "name": "nxt_runtime_create"
   "params":
   - "name": "task"
     "type": "struct nxt_task_s *"
   "return_type": "int"
   "signature": "int nxt_runtime_create(struct nxt_task_s * task)"
-- "name": "struct nxt_http_action_s * nxt_http_action_create(struct nxt_task_s * task, struct nxt_router_temp_conf_t * tmcf, struct nxt_str_t * pass)"
+- "name": "nxt_http_action_create"
   "params":
   - "name": "task"
     "type": "struct nxt_task_s *"
@@ -35,7 +35,7 @@
     "type": "struct nxt_str_t *"
   "return_type": "struct nxt_http_action_s *"
   "signature": "struct nxt_http_action_s * nxt_http_action_create(struct nxt_task_s * task, struct nxt_router_temp_conf_t * tmcf, struct nxt_str_t * pass)"
-- "name": "void nxt_main_port_modules_handler(struct nxt_task_s * task, struct nxt_port_recv_msg_s * msg)"
+- "name": "nxt_main_port_modules_handler"
   "params":
   - "name": "task"
     "type": "struct nxt_task_s *"
