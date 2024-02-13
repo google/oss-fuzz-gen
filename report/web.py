@@ -58,11 +58,15 @@ class Benchmark:
       return ''
 
     for project_yaml in os.listdir(BENCHMARK_DIR):
+      yaml_project_name = project_yaml.removesuffix(".yaml")
       with open(os.path.join(BENCHMARK_DIR, project_yaml)) as project_yaml_file:
+        if yaml_project_name not in self.id:
+          continue
         functions = yaml.safe_load(project_yaml_file).get('functions', [])
         for function in functions:
-          if function.get('name', '').startswith(self.id):
-            return function.get('signature', '')
+          function_name = self.id.removeprefix(f'output-{yaml_project_name}-')
+          if function.get('name', '').lower().startswith(function_name):
+            return f'{yaml_project_name}-{function.get("signature", "")}'
 
     return ''
 
