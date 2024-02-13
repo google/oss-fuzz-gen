@@ -324,6 +324,10 @@ class BuilderRunner:
 
 class CloudBuilderRunner(BuilderRunner):
   """Cloud BuilderRunner."""
+  _RETRYABLE_ERRORS = [
+      'You do not currently have an active account selected',
+      'gcloud crashed (OSError): unexpected end of data'
+  ]
 
   def __init__(self, *args, experiment_name: str, experiment_bucket: str,
                **kwargs):
@@ -370,11 +374,12 @@ class CloudBuilderRunner(BuilderRunner):
                cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
         break
       except sp.CalledProcessError as e:
-        stdout = e.stdout.decode("utf-8")
-        stderr = e.stderr.decode("utf-8")
+        # Remove \n for better logging on cloud.
+        stdout = e.stdout.decode('utf-8').replace('\n', '\t')
+        stderr = e.stderr.decode('utf-8').replace('\n', '\t')
         # Temp workaround for issue #12.
-        if ('You do not currently have an active account selected'
-            in stdout + stderr and attempt_id < CLOUD_EXP_MAX_ATTEMPT):
+        if (any(error in stdout + stderr for error in self._RETRYABLE_ERRORS)
+            and attempt_id < CLOUD_EXP_MAX_ATTEMPT):
           delay = 5 * 2**attempt_id
           logging.warning(f'Failed to evaluate {os.path.realpath(target_path)} '
                           f'on cloud, attempt {attempt_id}:\n'
