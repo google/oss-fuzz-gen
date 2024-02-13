@@ -43,7 +43,7 @@ def _remove_temp_oss_fuzz_repo():
   except PermissionError as e:
     logging.warning('No permission to remove %s', OSS_FUZZ_DIR)
   except FileNotFoundError as e:
-    logging.warning('No OSS-Fuzz directory %s: %s', OSS_FUZZ_DIR, e)
+    logging.warning('No OSS-Fuzz directory %s', OSS_FUZZ_DIR)
 
 
 def _set_temp_oss_fuzz_repo():
