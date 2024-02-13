@@ -23,6 +23,7 @@ import sys
 import urllib.parse
 from typing import List, Optional
 
+import yaml
 from flask import Flask, abort, render_template
 
 import run_one_experiment
@@ -34,15 +35,35 @@ log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
 RESULTS_DIR = ''
+BENCHMARK_DIR = ''
 
 MAX_RUN_LOGS_LEN = 16 * 1024
 
 
 @dataclasses.dataclass
 class Benchmark:
+  """The class of a benchmark function and its experiment results."""
   id: str
   status: str
   result: run_one_experiment.AggregatedResult
+  signature: str = ''
+
+  def __post_init__(self):
+    self.signature = self._find_signature() or self.id
+
+  def _find_signature(self) -> str:
+    """Finds the function signature by searching for its id in BENCHMARK_DIR."""
+    if not BENCHMARK_DIR:
+      return ''
+
+    for project_yaml in os.listdir(BENCHMARK_DIR):
+      with open(os.path.join(BENCHMARK_DIR, project_yaml)) as project_yaml_file:
+        functions = yaml.safe_load(project_yaml_file).get('functions', [])
+        for function in functions:
+          if function.get('name', '').startswith(self.id):
+            return function.get('signature', '')
+
+    return ''
 
 
 @dataclasses.dataclass
@@ -299,14 +320,16 @@ def cov_report_link(link: str):
   return f'https://llm-exp.oss-fuzz.com/{path}/report/linux/report.html'
 
 
-def serve(directory: str, port: int):
-  global RESULTS_DIR
+def serve(directory: str, port: int, benchmark_set: str):
+  global RESULTS_DIR, BENCHMARK_DIR
   RESULTS_DIR = directory
+  BENCHMARK_DIR = benchmark_set
   app.run(host='localhost', port=port)
 
 
 if __name__ == '__main__':
   results_dir = sys.argv[1]
   server_port = int(sys.argv[2])
+  benchmark_dir = sys.argv[3] if len(sys.argv) > 2 else ''
 
-  serve(results_dir, server_port)
+  serve(results_dir, server_port, benchmark_dir)
