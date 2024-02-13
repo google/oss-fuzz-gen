@@ -84,6 +84,10 @@ class Benchmark:
       # Long raw_function_names (particularly for c++ projects) may exceed
       # filesystem limits on file path/name length when creating WorkDir.
       max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
+      # Docker tag name cannot exceed 127 characters, and will be suffixed by
+      # '<sample-id>-experiment'.
+      docker_name_len = 127 - len('-03-experiment')
+      max_len = min(max_len, docker_name_len)
       truncated_id = f'{project_name}-{function.get("name")}'[:max_len]
       benchmarks.append(
           cls(truncated_id.lower(),
