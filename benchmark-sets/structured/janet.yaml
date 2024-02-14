@@ -10,7 +10,7 @@
   - "name": ""
     "type": "Janet *"
   "return_type": "int"
-  "signature": "int janet_dostring(struct JanetTable * , char * , char * , union.Janet * )"
+  "signature": "int janet_dostring(JanetTable *, const char *, const char *, Janet *)"
 - "name": "janet_dobytes"
   "params":
   - "name": ""
@@ -24,7 +24,7 @@
   - "name": ""
     "type": "Janet *"
   "return_type": "int"
-  "signature": "int janet_dobytes(struct JanetTable * , char * , int , char * , union.Janet * )"
+  "signature": "int janet_dobytes(JanetTable *, const uint8_t *, int32_t, const char *, Janet *)"
 - "name": "cfun_ev_thread"
   "params":
   - "name": ""
@@ -32,7 +32,7 @@
   - "name": ""
     "type": "Janet *"
   "return_type": "size_t"
-  "signature": "size_t cfun_ev_thread(int , union.Janet * )"
+  "signature": "Janet cfun_ev_thread(int32_t, Janet *)"
 - "name": "janet_go_thread_subr"
   "params":
   - "name": "args"
@@ -40,7 +40,7 @@
   - "name": ""
     "type": "struct JanetEVGenericMessage *"
   "return_type": "void"
-  "signature": "void janet_go_thread_subr(struct JanetEVGenericMessage * args, struct JanetEVGenericMessage * )"
+  "signature": "JanetEVGenericMessage janet_go_thread_subr(JanetEVGenericMessage)"
 - "name": "janetc_fn"
   "params":
   - "name": "opts"
@@ -52,7 +52,7 @@
   - "name": ""
     "type": "Janet *"
   "return_type": "void"
-  "signature": "void janetc_fn(struct JanetSlot * opts, struct JanetFopts * , int , union.Janet * )"
+  "signature": "JanetSlot janetc_fn(JanetFopts, int32_t, const Janet *)"
 "language": "c++"
 "project": "janet"
 "target_name": "fuzz_dostring"

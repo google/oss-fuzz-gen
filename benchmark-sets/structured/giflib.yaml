@@ -6,7 +6,7 @@
   - "name": "from"
     "type": "gifProtoFuzzer::BasicChunk *"
   "return_type": "gifProtoFuzzer::BasicChunk *"
-  "signature": "gifProtoFuzzer::BasicChunk* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&)"
+  "signature": "BasicChunk * CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(Arena *, const BasicChunk)"
 - "name": "_Z21fuzz_dgif_ala_androidPKhm"
   "params":
   - "name": "Data"
@@ -14,7 +14,7 @@
   - "name": "Size"
     "type": "size_t"
   "return_type": "int"
-  "signature": "fuzz_dgif_ala_android(unsigned char const*, unsigned long)"
+  "signature": "int fuzz_dgif_ala_android(const uint8_t *, size_t)"
 - "name": "_ZN6google8protobuf5Arena14InternalHelperIN14gifProtoFuzzer10BasicChunkEE9ConstructIJPS1_RKS4_EEEPS4_PvDpOT_"
   "params":
   - "name": "ptr"
@@ -24,7 +24,7 @@
   - "name": "args"
     "type": "gifProtoFuzzer::BasicChunk *"
   "return_type": "gifProtoFuzzer::BasicChunk *"
-  "signature": "gifProtoFuzzer::BasicChunk* google::protobuf::Arena::InternalHelper<gifProtoFuzzer::BasicChunk>::Construct<google::protobuf::Arena*, gifProtoFuzzer::BasicChunk const&>(void*, google::protobuf::Arena*&&, gifProtoFuzzer::BasicChunk const&)"
+  "signature": "ImageDescriptor * &>(void *, Arena *, const ImageDescriptor)"
 - "name": "_Z9fuzz_dgifPKhm"
   "params":
   - "name": "Data"
@@ -32,7 +32,7 @@
   - "name": "Size"
     "type": "size_t"
   "return_type": "int"
-  "signature": "fuzz_dgif(unsigned char const*, unsigned long)"
+  "signature": "int fuzz_dgif(const uint8_t *, size_t)"
 - "name": "_ZN6google8protobuf11MessageLite18CreateMaybeMessageIN14gifProtoFuzzer18PlainTextExtensionEEEPT_PNS0_5ArenaERKS5_"
   "params":
   - "name": "arena"
@@ -40,7 +40,7 @@
   - "name": "from"
     "type": "gifProtoFuzzer::PlainTextExtension *"
   "return_type": "gifProtoFuzzer::PlainTextExtension *"
-  "signature": "gifProtoFuzzer::PlainTextExtension* google::protobuf::MessageLite::CreateMaybeMessage<gifProtoFuzzer::PlainTextExtension>(google::protobuf::Arena*, gifProtoFuzzer::PlainTextExtension const&)"
+  "signature": "BasicChunk * CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(Arena *, const BasicChunk)"
 "language": "c++"
 "project": "giflib"
 "target_name": "egif_target"

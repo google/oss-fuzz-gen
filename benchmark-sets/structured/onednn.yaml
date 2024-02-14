@@ -4,7 +4,7 @@
   - "name": "this"
     "type": "dnnl::impl::graph::utils::json::json_reader_t *"
   "return_type": "void"
-  "signature": "dnnl::impl::graph::utils::json::json_reader_t::~json_reader_t()"
+  "signature": "void json_reader_t::~json_reader_t()"
 "language": "c++"
 "project": "onednn"
 "target_name": "fuzz_json"

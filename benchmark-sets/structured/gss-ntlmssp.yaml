@@ -24,7 +24,7 @@
   - "name": "delegated_cred_handle"
     "type": "struct gss_cred_id_struct **"
   "return_type": "int"
-  "signature": "int gss_accept_sec_context(int * minor_status, struct gss_ctx_id_struct ** context_handle, struct gss_cred_id_struct * acceptor_cred_handle, struct gss_buffer_desc_struct * input_token_buffer, struct gss_channel_bindings_struct * input_chan_bindings, struct gss_name_struct ** src_name, struct gss_OID_desc_struct ** mech_type, struct gss_buffer_desc_struct * output_token, int * ret_flags, int * time_rec, struct gss_cred_id_struct ** delegated_cred_handle)"
+  "signature": "OM_uint32 gss_accept_sec_context(OM_uint32 *, gss_ctx_id_t *, gss_cred_id_t, gss_buffer_t, gss_channel_bindings_t, gss_name_t *, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *, gss_cred_id_t *)"
 - "name": "gss_init_sec_context"
   "params":
   - "name": "minor_status"
@@ -54,7 +54,7 @@
   - "name": "time_rec"
     "type": "int *"
   "return_type": "int"
-  "signature": "int gss_init_sec_context(int * minor_status, struct gss_cred_id_struct * claimant_cred_handle, struct gss_ctx_id_struct ** context_handle, struct gss_name_struct * target_name, struct gss_OID_desc_struct * mech_type, int req_flags, int time_req, struct gss_channel_bindings_struct * input_chan_bindings, struct gss_buffer_desc_struct * input_token, struct gss_OID_desc_struct ** actual_mech_type, struct gss_buffer_desc_struct * output_token, int * ret_flags, int * time_rec)"
+  "signature": "OM_uint32 gss_init_sec_context(OM_uint32 *, gss_cred_id_t, gss_ctx_id_t *, gss_name_t, gss_OID, OM_uint32, OM_uint32, gss_channel_bindings_t, gss_buffer_t, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *)"
 - "name": "gssntlm_init_sec_context"
   "params":
   - "name": "minor_status"
@@ -84,7 +84,7 @@
   - "name": "time_rec"
     "type": "int *"
   "return_type": "int"
-  "signature": "int gssntlm_init_sec_context(int * minor_status, struct gss_cred_id_struct * claimant_cred_handle, struct gss_ctx_id_struct ** context_handle, struct gss_name_struct * target_name, struct gss_OID_desc_struct * mech_type, int req_flags, int time_req, struct gss_channel_bindings_struct * input_chan_bindings, struct gss_buffer_desc_struct * input_token, struct gss_OID_desc_struct ** actual_mech_type, struct gss_buffer_desc_struct * output_token, int * ret_flags, int * time_rec)"
+  "signature": "uint32_t gssntlm_init_sec_context(uint32_t *, gss_cred_id_t, gss_ctx_id_t *, gss_name_t, gss_OID, uint32_t, uint32_t, gss_channel_bindings_t, gss_buffer_t, gss_OID *, gss_buffer_t, uint32_t *, uint32_t *)"
 - "name": "gssntlm_cli_auth"
   "params":
   - "name": "minor_status"
@@ -100,7 +100,7 @@
   - "name": "input_chan_bindings"
     "type": "struct gss_channel_bindings_struct *"
   "return_type": "int"
-  "signature": "int gssntlm_cli_auth(int * minor_status, struct gssntlm_ctx * ctx, struct gssntlm_cred * cred, struct ntlm_buffer * target_info, int in_flags, struct gss_channel_bindings_struct * input_chan_bindings)"
+  "signature": "uint32_t gssntlm_cli_auth(uint32_t *, gssntlm_ctx *, gssntlm_cred *, ntlm_buffer *, uint32_t, gss_channel_bindings_t)"
 - "name": "gss_inquire_cred_by_mech"
   "params":
   - "name": "minor_status"
@@ -118,7 +118,7 @@
   - "name": "cred_usage"
     "type": "int *"
   "return_type": "int"
-  "signature": "int gss_inquire_cred_by_mech(int * minor_status, struct gss_cred_id_struct * cred_handle, struct gss_OID_desc_struct * mech_type, struct gss_name_struct ** name, int * initiator_lifetime, int * acceptor_lifetime, int * cred_usage)"
+  "signature": "OM_uint32 gss_inquire_cred_by_mech(OM_uint32 *, gss_cred_id_t, gss_OID, gss_name_t *, OM_uint32 *, OM_uint32 *, gss_cred_usage_t *)"
 "language": "c"
 "project": "gss-ntlmssp"
 "target_name": "fuzz-accept-sec-context"

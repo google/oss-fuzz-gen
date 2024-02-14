@@ -10,7 +10,7 @@
   - "name": "io_tx_mtu"
     "type": "size_t"
   "return_type": "struct _GObex *"
-  "signature": "struct _GObex * g_obex_new(struct _GIOChannel * io, int transport_type, size_t io_rx_mtu, size_t io_tx_mtu)"
+  "signature": "GObex * g_obex_new(GIOChannel *, GObexTransportType, gssize, gssize)"
 - "name": "incoming_data"
   "params":
   - "name": "io"
@@ -20,7 +20,7 @@
   - "name": "user_data"
     "type": "char *"
   "return_type": "int"
-  "signature": "int incoming_data(struct _GIOChannel * io, int cond, char * user_data)"
+  "signature": "gboolean incoming_data(GIOChannel *, GIOCondition, gpointer)"
 - "name": "transfer_response"
   "params":
   - "name": "obex"
@@ -32,7 +32,7 @@
   - "name": "user_data"
     "type": "char *"
   "return_type": "void"
-  "signature": "void transfer_response(struct _GObex * obex, struct _GError * err, struct _GObexPacket * rsp, char * user_data)"
+  "signature": "void transfer_response(GObex *, GError *, GObexPacket *, gpointer)"
 - "name": "g_obex_put_req"
   "params":
   - "name": "obex"
@@ -48,7 +48,7 @@
   - "name": "first_hdr_id"
     "type": "int"
   "return_type": "int"
-  "signature": "int g_obex_put_req(struct _GObex * obex, func_type * data_func, func_type * complete_func, char * user_data, struct _GError ** err, int first_hdr_id)"
+  "signature": "guint g_obex_put_req(GObex *, GObexDataProducer, GObexFunc, gpointer, GError **, guint, void)"
 - "name": "g_obex_get_req_pkt"
   "params":
   - "name": "obex"
@@ -64,7 +64,7 @@
   - "name": "err"
     "type": "struct _GError **"
   "return_type": "int"
-  "signature": "int g_obex_get_req_pkt(struct _GObex * obex, struct _GObexPacket * req, func_type * data_func, func_type * complete_func, char * user_data, struct _GError ** err)"
+  "signature": "guint g_obex_get_req_pkt(GObex *, GObexPacket *, GObexDataConsumer, GObexFunc, gpointer, GError **)"
 "language": "c"
 "project": "bluez"
 "target_name": "fuzz_xml"

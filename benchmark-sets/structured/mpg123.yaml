@@ -10,7 +10,7 @@
   - "name": "encoding"
     "type": "int"
   "return_type": "int"
-  "signature": "int mpg123_open_fixed_64(struct mpg123_handle_struct * mh, char * path, int channels, int encoding)"
+  "signature": "int mpg123_open_fixed_64(mpg123_handle *, const char *, int, int)"
 - "name": "mpg123_open_fixed"
   "params":
   - "name": "mh"
@@ -22,7 +22,7 @@
   - "name": "encoding"
     "type": "int"
   "return_type": "int"
-  "signature": "int mpg123_open_fixed(struct mpg123_handle_struct * mh, char * path, int channels, int encoding)"
+  "signature": "int mpg123_open_fixed(mpg123_handle *, const char *, int, int)"
 - "name": "INT123_open_fixed_post"
   "params":
   - "name": "mh"
@@ -32,7 +32,7 @@
   - "name": "encoding"
     "type": "int"
   "return_type": "int"
-  "signature": "int INT123_open_fixed_post(struct mpg123_handle_struct * mh, int channels, int encoding)"
+  "signature": "int INT123_open_fixed_post(mpg123_handle *, int, int)"
 - "name": "mpg123_decode_frame"
   "params":
   - "name": "mh"
@@ -44,7 +44,7 @@
   - "name": "bytes"
     "type": "size_t *"
   "return_type": "int"
-  "signature": "int mpg123_decode_frame(struct mpg123_handle_struct * mh, size_t * num, char ** audio, size_t * bytes)"
+  "signature": "int mpg123_decode_frame(mpg123_handle *, off_t *, unsigned char **, size_t *)"
 - "name": "mpg123_decode_frame_64"
   "params":
   - "name": "mh"
@@ -56,7 +56,7 @@
   - "name": "bytes"
     "type": "size_t *"
   "return_type": "int"
-  "signature": "int mpg123_decode_frame_64(struct mpg123_handle_struct * mh, size_t * num, char ** audio, size_t * bytes)"
+  "signature": "int mpg123_decode_frame_64(mpg123_handle *, off_t *, unsigned char **, size_t *)"
 "language": "c++"
 "project": "mpg123"
 "target_name": "read_fuzzer"

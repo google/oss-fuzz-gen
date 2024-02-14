@@ -14,7 +14,11 @@
   - "name": "skip_exist"
     "type": "int"
   "return_type": "int"
-  "signature": "int signkey_generate(int keytype, int bits, char * filename, int skip_exist)"
+  "signature": "int signkey_generate(signkey_type, int, const char *, int)"
+- "name": "setup"
+  "params": []
+  "return_type": "void"
+  "signature": "void setup()"
 - "name": "recv_msg_userauth_pk_ok"
   "params": []
   "return_type": "void"
@@ -24,13 +28,7 @@
   - "name": "size"
     "type": "int"
   "return_type": "struct dropbear_DSS_Key *"
-  "signature": "struct dropbear_DSS_Key * gen_rsa_priv_key(int size)"
-- "name": "gen_dss_priv_key"
-  "params":
-  - "name": "size"
-    "type": "int"
-  "return_type": "struct dropbear_DSS_Key *"
-  "signature": "struct dropbear_DSS_Key * gen_dss_priv_key(int size)"
+  "signature": "dropbear_rsa_key * gen_rsa_priv_key(unsigned int)"
 "language": "c++"
 "project": "dropbear"
 "target_name": "fuzzer-verify"

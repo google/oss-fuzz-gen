@@ -6,7 +6,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "struct roaring_bitmap_s *"
-  "signature": "struct roaring_bitmap_s * roaring_bitmap_add_offset(struct roaring_bitmap_s * , size_t )"
+  "signature": "roaring_bitmap_t * roaring_bitmap_add_offset(const roaring_bitmap_t *, int64_t)"
 - "name": "roaring_bitmap_xor_many"
   "params":
   - "name": ""
@@ -14,7 +14,7 @@
   - "name": ""
     "type": "struct roaring_bitmap_s **"
   "return_type": "struct roaring_bitmap_s *"
-  "signature": "struct roaring_bitmap_s * roaring_bitmap_xor_many(size_t , struct roaring_bitmap_s ** )"
+  "signature": "roaring_bitmap_t * roaring_bitmap_xor_many(size_t, const roaring_bitmap_t **)"
 - "name": "roaring_bitmap_or_many"
   "params":
   - "name": ""
@@ -22,7 +22,7 @@
   - "name": ""
     "type": "struct roaring_bitmap_s **"
   "return_type": "struct roaring_bitmap_s *"
-  "signature": "struct roaring_bitmap_s * roaring_bitmap_or_many(size_t , struct roaring_bitmap_s ** )"
+  "signature": "roaring_bitmap_t * roaring_bitmap_or_many(size_t, const roaring_bitmap_t **)"
 - "name": "roaring_bitmap_lazy_xor_inplace"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "struct roaring_bitmap_s *"
   "return_type": "void"
-  "signature": "void roaring_bitmap_lazy_xor_inplace(struct roaring_bitmap_s * , struct roaring_bitmap_s * )"
+  "signature": "void roaring_bitmap_lazy_xor_inplace(roaring_bitmap_t *, const roaring_bitmap_t *)"
 - "name": "roaring_bitmap_lazy_or"
   "params":
   - "name": ""
@@ -40,7 +40,7 @@
   - "name": ""
     "type": "bool"
   "return_type": "struct roaring_bitmap_s *"
-  "signature": "struct roaring_bitmap_s * roaring_bitmap_lazy_or(struct roaring_bitmap_s * , struct roaring_bitmap_s * , bool )"
+  "signature": "roaring_bitmap_t * roaring_bitmap_lazy_or(const roaring_bitmap_t *, const roaring_bitmap_t *, const _Bool)"
 "language": "c"
 "project": "croaring"
 "target_name": "croaring_fuzzer_cc"

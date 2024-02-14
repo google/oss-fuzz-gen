@@ -8,13 +8,13 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void usbredirparser_send_filter_filter(struct usbredirparser * , struct usbredirfilter_rule * , int )"
+  "signature": "void usbredirparser_send_filter_filter(usbredirparser *, const usbredirfilter_rule *, int)"
 - "name": "usbredirparser_send_filter_reject"
   "params":
   - "name": ""
     "type": "struct usbredirparser *"
   "return_type": "void"
-  "signature": "void usbredirparser_send_filter_reject(struct usbredirparser * )"
+  "signature": "void usbredirparser_send_filter_reject(usbredirparser *)"
 - "name": "usbredirparser_send_buffered_bulk_packet"
   "params":
   - "name": ""
@@ -28,7 +28,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void usbredirparser_send_buffered_bulk_packet(struct usbredirparser * , size_t , struct usb_redir_start_bulk_receiving_header * , char * , int )"
+  "signature": "void usbredirparser_send_buffered_bulk_packet(usbredirparser *, uint64_t, usb_redir_buffered_bulk_packet_header *, uint8_t *, int)"
 - "name": "usbredirparser_send_interrupt_packet"
   "params":
   - "name": ""
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void usbredirparser_send_interrupt_packet(struct usbredirparser * , size_t , struct usb_redir_iso_packet_header * , char * , int )"
+  "signature": "void usbredirparser_send_interrupt_packet(usbredirparser *, uint64_t, usb_redir_interrupt_packet_header *, uint8_t *, int)"
 - "name": "usbredirparser_send_iso_packet"
   "params":
   - "name": ""
@@ -56,7 +56,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void usbredirparser_send_iso_packet(struct usbredirparser * , size_t , struct usb_redir_iso_packet_header * , char * , int )"
+  "signature": "void usbredirparser_send_iso_packet(usbredirparser *, uint64_t, usb_redir_iso_packet_header *, uint8_t *, int)"
 "language": "c++"
 "project": "spice-usbredir"
 "target_name": "usbredirparserfuzz"

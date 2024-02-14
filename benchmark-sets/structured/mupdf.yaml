@@ -10,7 +10,7 @@
   - "name": "options"
     "type": "char *"
   "return_type": "struct fz_document_writer *"
-  "signature": "struct fz_document_writer * fz_new_document_writer(struct fz_context * ctx, char * path, char * explicit_format, char * options)"
+  "signature": "fz_document_writer * fz_new_document_writer(fz_context *, const char *, const char *, const char *)"
 - "name": "fz_new_buffer_from_page_with_format"
   "params":
   - "name": "ctx"
@@ -26,7 +26,7 @@
   - "name": "cookie"
     "type": "struct fz_cookie *"
   "return_type": "struct fz_buffer *"
-  "signature": "struct fz_buffer * fz_new_buffer_from_page_with_format(struct fz_context * ctx, struct fz_page * page, char * format, char * options, struct fz_matrix * transform, struct fz_cookie * cookie)"
+  "signature": "fz_buffer * fz_new_buffer_from_page_with_format(fz_context *, fz_page *, const char *, const char *, fz_matrix, fz_cookie *)"
 - "name": "fz_new_document_writer_with_buffer"
   "params":
   - "name": "ctx"
@@ -38,7 +38,7 @@
   - "name": "options"
     "type": "char *"
   "return_type": "struct fz_document_writer *"
-  "signature": "struct fz_document_writer * fz_new_document_writer_with_buffer(struct fz_context * ctx, struct fz_buffer * buffer, char * format, char * options)"
+  "signature": "fz_document_writer * fz_new_document_writer_with_buffer(fz_context *, fz_buffer *, const char *, const char *)"
 - "name": "fz_new_document_writer_with_output"
   "params":
   - "name": "ctx"
@@ -50,7 +50,7 @@
   - "name": "options"
     "type": "char *"
   "return_type": "struct fz_document_writer *"
-  "signature": "struct fz_document_writer * fz_new_document_writer_with_output(struct fz_context * ctx, struct fz_output * out, char * format, char * options)"
+  "signature": "fz_document_writer * fz_new_document_writer_with_output(fz_context *, fz_output *, const char *, const char *)"
 - "name": "fz_new_pdf_writer"
   "params":
   - "name": "ctx"
@@ -60,7 +60,7 @@
   - "name": "options"
     "type": "char *"
   "return_type": "struct fz_document_writer *"
-  "signature": "struct fz_document_writer * fz_new_pdf_writer(struct fz_context * ctx, char * path, char * options)"
+  "signature": "fz_document_writer * fz_new_pdf_writer(fz_context *, const char *, const char *)"
 "language": "c++"
 "project": "mupdf"
 "target_name": "fuzzer-api"

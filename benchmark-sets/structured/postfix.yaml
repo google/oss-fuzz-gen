@@ -16,7 +16,7 @@
   - "name": ""
     "type": "int"
   "return_type": "struct DICT *"
-  "signature": "struct DICT * dict_regexp_open(char * , int , int )"
+  "signature": "DICT * dict_regexp_open(const char *, int, int)"
 - "name": "dict_tcp_open"
   "params":
   - "name": ""
@@ -26,7 +26,7 @@
   - "name": ""
     "type": "int"
   "return_type": "struct DICT *"
-  "signature": "struct DICT * dict_tcp_open(char * , int , int )"
+  "signature": "DICT * dict_tcp_open(const char *, int, int)"
 - "name": "dict_cidr_open"
   "params":
   - "name": ""
@@ -36,7 +36,7 @@
   - "name": ""
     "type": "int"
   "return_type": "struct DICT *"
-  "signature": "struct DICT * dict_cidr_open(char * , int , int )"
+  "signature": "DICT * dict_cidr_open(const char *, int, int)"
 "language": "c"
 "project": "postfix"
 "target_name": "fuzz_tok822"

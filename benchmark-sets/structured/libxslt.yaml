@@ -14,7 +14,7 @@
   - "name": "IObuf"
     "type": "struct _xmlOutputBuffer *"
   "return_type": "int"
-  "signature": "int xsltRunStylesheet(struct _xsltStylesheet * style, struct _xmlDoc * doc, char ** params, char * output, struct _xmlSAXHandler * SAX, struct _xmlOutputBuffer * IObuf)"
+  "signature": "int xsltRunStylesheet(xsltStylesheetPtr, xmlDocPtr, const char **, const char *, xmlSAXHandlerPtr, xmlOutputBufferPtr)"
 - "name": "xsltRunStylesheetUser"
   "params":
   - "name": "style"
@@ -34,7 +34,7 @@
   - "name": "userCtxt"
     "type": "struct _xsltTransformContext *"
   "return_type": "int"
-  "signature": "int xsltRunStylesheetUser(struct _xsltStylesheet * style, struct _xmlDoc * doc, char ** params, char * output, struct _xmlSAXHandler * SAX, struct _xmlOutputBuffer * IObuf, struct _IO_FILE * profile, struct _xsltTransformContext * userCtxt)"
+  "signature": "int xsltRunStylesheetUser(xsltStylesheetPtr, xmlDocPtr, const char **, const char *, xmlSAXHandlerPtr, xmlOutputBufferPtr, FILE *, xsltTransformContextPtr)"
 - "name": "xsltProfileStylesheet"
   "params":
   - "name": "style"
@@ -46,7 +46,7 @@
   - "name": "output"
     "type": "struct _IO_FILE *"
   "return_type": "struct _xmlDoc *"
-  "signature": "struct _xmlDoc * xsltProfileStylesheet(struct _xsltStylesheet * style, struct _xmlDoc * doc, char ** params, struct _IO_FILE * output)"
+  "signature": "xmlDocPtr xsltProfileStylesheet(xsltStylesheetPtr, xmlDocPtr, const char **, FILE *)"
 - "name": "xsltApplyStylesheet"
   "params":
   - "name": "style"
@@ -56,7 +56,7 @@
   - "name": "params"
     "type": "char **"
   "return_type": "struct _xmlDoc *"
-  "signature": "struct _xmlDoc * xsltApplyStylesheet(struct _xsltStylesheet * style, struct _xmlDoc * doc, char ** params)"
+  "signature": "xmlDocPtr xsltApplyStylesheet(xsltStylesheetPtr, xmlDocPtr, const char **)"
 - "name": "xmlShell"
   "params":
   - "name": "doc"
@@ -68,7 +68,7 @@
   - "name": "output"
     "type": "struct _IO_FILE *"
   "return_type": "void"
-  "signature": "void xmlShell(struct _xmlDoc * doc, char * filename, func_type * input, struct _IO_FILE * output)"
+  "signature": "void xmlShell(xmlDocPtr, char *, xmlShellReadlineFunc, FILE *)"
 "language": "c++"
 "project": "libxslt"
 "target_name": "xslt"

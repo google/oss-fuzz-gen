@@ -8,7 +8,7 @@
   - "name": "ncols"
     "type": "size_t"
   "return_type": "void"
-  "signature": "Eigen::Transpose<Eigen::Block<Eigen::Matrix<long double, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(long, long)"
+  "signature": "void true> >::resize(Index, Index)"
 - "name": "_ZN5Eigen9TransposeINS_5BlockINS_6MatrixINSt3__17complexIdEELin1ELin1ELi0ELin1ELin1EEELin1ELi1ELb1EEEE6resizeEll"
   "params":
   - "name": "this"
@@ -18,7 +18,7 @@
   - "name": "ncols"
     "type": "size_t"
   "return_type": "void"
-  "signature": "Eigen::Transpose<Eigen::Block<Eigen::Matrix<std::__1::complex<double>, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(long, long)"
+  "signature": "void true> >::resize(Index, Index)"
 - "name": "_ZN5Eigen9TransposeINS_5BlockINS_6MatrixIiLin1ELin1ELi0ELin1ELin1EEELin1ELi1ELb1EEEE6resizeEll"
   "params":
   - "name": "this"
@@ -28,7 +28,7 @@
   - "name": "ncols"
     "type": "size_t"
   "return_type": "void"
-  "signature": "Eigen::Transpose<Eigen::Block<Eigen::Matrix<int, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(long, long)"
+  "signature": "void true> >::resize(Index, Index)"
 - "name": "_ZN5Eigen9TransposeINS_5BlockINS_6MatrixINSt3__17complexIfEELin1ELin1ELi0ELin1ELin1EEELin1ELi1ELb1EEEE6resizeEll"
   "params":
   - "name": "this"
@@ -38,13 +38,13 @@
   - "name": "ncols"
     "type": "size_t"
   "return_type": "void"
-  "signature": "Eigen::Transpose<Eigen::Block<Eigen::Matrix<std::__1::complex<float>, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(long, long)"
+  "signature": "void true> >::resize(Index, Index)"
 - "name": "_ZN5Eigen6MatrixIdLin1ELin1ELi0ELin1ELin1EED2Ev"
   "params":
   - "name": "this"
     "type": "Eigen::Matrix *"
   "return_type": "void"
-  "signature": "Eigen::Matrix<double, -1, -1, 0, -1, -1>::~Matrix()"
+  "signature": "void 1>::~Matrix()"
 "language": "c++"
 "project": "eigen"
 "target_name": "solver_fuzzer"

@@ -10,7 +10,7 @@
   - "name": "secret"
     "type": "TPM2B_PUBLIC_KEY_RSA *"
   "return_type": "int"
-  "signature": "int CryptSecretEncrypt(int keyHandle, char * label, union.TPM2B_DATA * data, union.TPM2B_PUBLIC_KEY_RSA * secret)"
+  "signature": "TPM_RC CryptSecretEncrypt(TPMI_DH_OBJECT, const char *, TPM2B_DATA *, TPM2B_ENCRYPTED_SECRET *)"
 - "name": "SensitiveToDuplicate"
   "params":
   - "name": "sensitive"
@@ -30,7 +30,7 @@
   - "name": "outPrivate"
     "type": "TPM2B_PRIVATE *"
   "return_type": "void"
-  "signature": "void SensitiveToDuplicate(struct TPMT_SENSITIVE * sensitive, union.TPM2B_NAME * name, int parentHandle, short nameAlg, union.TPM2B_SEED * seed, struct TPMT_SYM_DEF_OBJECT * symDef, union.TPM2B_DATA * innerSymKey, union.TPM2B_PRIVATE * outPrivate)"
+  "signature": "void SensitiveToDuplicate(TPMT_SENSITIVE *, TPM2B_NAME *, TPM_HANDLE, TPM_ALG_ID, TPM2B_SEED *, TPMT_SYM_DEF_OBJECT *, TPM2B_DATA *, TPM2B_PRIVATE *)"
 - "name": "TPMS_CAPABILITY_DATA_Unmarshal"
   "params":
   - "name": "target"
@@ -40,7 +40,7 @@
   - "name": "size"
     "type": "int *"
   "return_type": "int"
-  "signature": "int TPMS_CAPABILITY_DATA_Unmarshal(struct TPMS_CAPABILITY_DATA * target, char ** buffer, int * size)"
+  "signature": "TPM_RC TPMS_CAPABILITY_DATA_Unmarshal(TPMS_CAPABILITY_DATA *, BYTE **, INT32 *)"
 - "name": "TPMU_CAPABILITIES_Unmarshal"
   "params":
   - "name": "target"
@@ -52,7 +52,7 @@
   - "name": "selector"
     "type": "int"
   "return_type": "int"
-  "signature": "int TPMU_CAPABILITIES_Unmarshal(union.TPMU_CAPABILITIES * target, char ** buffer, int * size, int selector)"
+  "signature": "TPM_RC TPMU_CAPABILITIES_Unmarshal(TPMU_CAPABILITIES *, BYTE **, INT32 *, UINT32)"
 - "name": "SecretToCredential"
   "params":
   - "name": "secret"
@@ -66,7 +66,7 @@
   - "name": "outIDObject"
     "type": "TPM2B_ID_OBJECT *"
   "return_type": "void"
-  "signature": "void SecretToCredential(union.TPM2B_DIGEST * secret, union.TPM2B_NAME * name, union.TPM2B_SEED * seed, int protector, union.TPM2B_ID_OBJECT * outIDObject)"
+  "signature": "void SecretToCredential(TPM2B_DIGEST *, TPM2B_NAME *, TPM2B_SEED *, TPM_HANDLE, TPM2B_ID_OBJECT *)"
 "language": "c++"
 "project": "tpm2"
 "target_name": "tpm2_execute_command_fuzzer"

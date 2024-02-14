@@ -6,7 +6,7 @@
   - "name": "argv"
     "type": "char **"
   "return_type": "int"
-  "signature": "int omain(int argc, char ** argv)"
+  "signature": "int omain(int, char **)"
 - "name": "main262"
   "params":
   - "name": "argc"
@@ -14,13 +14,13 @@
   - "name": "argv"
     "type": "char **"
   "return_type": "int"
-  "signature": "int main262(int argc, char ** argv)"
+  "signature": "int main262(int, char **)"
 - "name": "fxRunFileThread"
   "params":
   - "name": "it"
     "type": "char *"
   "return_type": "char *"
-  "signature": "char * fxRunFileThread(char * it)"
+  "signature": "void * fxRunFileThread(void *)"
 - "name": "fxRunContext"
   "params":
   - "name": "pool"
@@ -28,7 +28,7 @@
   - "name": "context"
     "type": "struct sxContext *"
   "return_type": "void"
-  "signature": "void fxRunContext(struct sxPool * pool, struct sxContext * context)"
+  "signature": "void fxRunContext(txPool *, txContext *)"
 - "name": "fxRunTestCase"
   "params":
   - "name": "pool"
@@ -44,7 +44,7 @@
   - "name": "message"
     "type": "char *"
   "return_type": "int"
-  "signature": "int fxRunTestCase(struct sxPool * pool, struct sxContext * context, char * path, int flags, int async, char * message)"
+  "signature": "int fxRunTestCase(txPool *, txContext *, char *, txUnsigned, int, char *)"
 "language": "c"
 "project": "xs"
 "target_name": "xst_jsonparse"

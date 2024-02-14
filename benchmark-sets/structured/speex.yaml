@@ -8,7 +8,7 @@
   - "name": "bits"
     "type": "struct SpeexBits *"
   "return_type": "int"
-  "signature": "int nb_encode(char * state, char * vin, struct SpeexBits * bits)"
+  "signature": "int nb_encode(void *, void *, SpeexBits *)"
 - "name": "sb_encode"
   "params":
   - "name": "state"
@@ -18,7 +18,7 @@
   - "name": "bits"
     "type": "struct SpeexBits *"
   "return_type": "int"
-  "signature": "int sb_encode(char * state, char * vin, struct SpeexBits * bits)"
+  "signature": "int sb_encode(void *, void *, SpeexBits *)"
 - "name": "split_cb_search_shape_sign"
   "params":
   - "name": "target"
@@ -48,7 +48,7 @@
   - "name": "update_target"
     "type": "int"
   "return_type": "void"
-  "signature": "void split_cb_search_shape_sign(float * target, float * ak, float * awk1, float * awk2, char * par, int p, int nsf, float * exc, float * r, struct SpeexBits * bits, char * stack, int complexity, int update_target)"
+  "signature": "void split_cb_search_shape_sign(spx_word16_t *, spx_coef_t *, spx_coef_t *, spx_coef_t *, const void *, int, int, spx_sig_t *, spx_word16_t *, SpeexBits *, char *, int, int)"
 - "name": "pitch_search_3tap"
   "params":
   - "name": "target"
@@ -92,7 +92,7 @@
   - "name": "cumul_gain"
     "type": "float *"
   "return_type": "int"
-  "signature": "int pitch_search_3tap(float * target, float * sw, float * ak, float * awk1, float * awk2, float * exc, char * par, int start, int end, float pitch_coef, int p, int nsf, struct SpeexBits * bits, char * stack, float * exc2, float * r, int complexity, int cdbk_offset, int plc_tuning, float * cumul_gain)"
+  "signature": "int pitch_search_3tap(spx_word16_t *, spx_word16_t *, spx_coef_t *, spx_coef_t *, spx_coef_t *, spx_sig_t *, const void *, int, int, spx_word16_t, int, int, SpeexBits *, char *, spx_word16_t *, spx_word16_t *, int, int, int, spx_word32_t *)"
 - "name": "split_cb_search_shape_sign_N1"
   "params":
   - "name": "target"
@@ -120,7 +120,7 @@
   - "name": "update_target"
     "type": "int"
   "return_type": "void"
-  "signature": "void split_cb_search_shape_sign_N1(float * target, float * ak, float * awk1, float * awk2, char * par, int p, int nsf, float * exc, float * r, struct SpeexBits * bits, char * stack, int update_target)"
+  "signature": "void split_cb_search_shape_sign_N1(spx_word16_t *, spx_coef_t *, spx_coef_t *, spx_coef_t *, const void *, int, int, spx_sig_t *, spx_word16_t *, SpeexBits *, char *, int)"
 "language": "c++"
 "project": "speex"
 "target_name": "speex_decode_fuzzer_float"

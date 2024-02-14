@@ -8,7 +8,7 @@
   - "name": "c"
     "type": "struct mrb_ccontext *"
   "return_type": "size_t"
-  "signature": "size_t mrb_load_detect_file_cxt(struct mrb_state * mrb, struct _IO_FILE * fp, struct mrb_ccontext * c)"
+  "signature": "mrb_value mrb_load_detect_file_cxt(mrb_state *, FILE *, mrb_ccontext *)"
 - "name": "mrb_binding_eval"
   "params":
   - "name": "mrb"
@@ -16,7 +16,7 @@
   - "name": "binding"
     "type": "size_t"
   "return_type": "size_t"
-  "signature": "size_t mrb_binding_eval(struct mrb_state * mrb, size_t binding)"
+  "signature": "mrb_value mrb_binding_eval(mrb_state *, mrb_value)"
 - "name": "f_eval"
   "params":
   - "name": "mrb"
@@ -24,7 +24,7 @@
   - "name": "self"
     "type": "size_t"
   "return_type": "size_t"
-  "signature": "size_t f_eval(struct mrb_state * mrb, size_t self)"
+  "signature": "mrb_value f_eval(mrb_state *, mrb_value)"
 - "name": "mrb_load_file"
   "params":
   - "name": "mrb"
@@ -32,7 +32,7 @@
   - "name": "f"
     "type": "struct _IO_FILE *"
   "return_type": "size_t"
-  "signature": "size_t mrb_load_file(struct mrb_state * mrb, struct _IO_FILE * f)"
+  "signature": "mrb_value mrb_load_file(mrb_state *, FILE *)"
 - "name": "mrb_load_file_cxt"
   "params":
   - "name": "mrb"
@@ -42,7 +42,7 @@
   - "name": "c"
     "type": "struct mrb_ccontext *"
   "return_type": "size_t"
-  "signature": "size_t mrb_load_file_cxt(struct mrb_state * mrb, struct _IO_FILE * f, struct mrb_ccontext * c)"
+  "signature": "mrb_value mrb_load_file_cxt(mrb_state *, FILE *, mrb_ccontext *)"
 "language": "c++"
 "project": "mruby"
 "target_name": "mruby_fuzzer"

@@ -4,13 +4,13 @@
   - "name": "path"
     "type": "char *"
   "return_type": "struct _ExifData *"
-  "signature": "struct _ExifData * exif_data_new_from_file(char * path)"
+  "signature": "ExifData * exif_data_new_from_file(const char *)"
 - "name": "exif_data_dump"
   "params":
   - "name": "data"
     "type": "struct _ExifData *"
   "return_type": "void"
-  "signature": "void exif_data_dump(struct _ExifData * data)"
+  "signature": "void exif_data_dump(ExifData *)"
 - "name": "exif_content_dump"
   "params":
   - "name": "content"
@@ -18,7 +18,7 @@
   - "name": "indent"
     "type": "int"
   "return_type": "void"
-  "signature": "void exif_content_dump(struct _ExifContent * content, int indent)"
+  "signature": "void exif_content_dump(ExifContent *, unsigned int)"
 - "name": "exif_entry_dump"
   "params":
   - "name": "e"
@@ -26,7 +26,7 @@
   - "name": "indent"
     "type": "int"
   "return_type": "void"
-  "signature": "void exif_entry_dump(struct _ExifEntry * e, int indent)"
+  "signature": "void exif_entry_dump(ExifEntry *, unsigned int)"
 - "name": "exif_data_set_byte_order"
   "params":
   - "name": "data"
@@ -34,7 +34,7 @@
   - "name": "order"
     "type": "int"
   "return_type": "void"
-  "signature": "void exif_data_set_byte_order(struct _ExifData * data, int order)"
+  "signature": "void exif_data_set_byte_order(ExifData *, ExifByteOrder)"
 "language": "c++"
 "project": "libexif"
 "target_name": "exif_loader_fuzzer"

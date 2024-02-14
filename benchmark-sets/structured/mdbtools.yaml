@@ -12,7 +12,7 @@
   - "name": "export_options"
     "type": "int"
   "return_type": "int"
-  "signature": "int mdb_print_schema(struct MdbHandle * mdb, struct _IO_FILE * outfile, char * tabname, char * dbnamespace, int export_options)"
+  "signature": "int mdb_print_schema(MdbHandle *, FILE *, char *, char *, guint32)"
 - "name": "mdb_get_relationships"
   "params":
   - "name": "mdb"
@@ -22,7 +22,7 @@
   - "name": "tablename"
     "type": "char *"
   "return_type": "char *"
-  "signature": "char * mdb_get_relationships(struct MdbHandle * mdb, char * dbnamespace, char * tablename)"
+  "signature": "char * mdb_get_relationships(MdbHandle *, const gchar *, const char *)"
 - "name": "mdb_dump_catalog"
   "params":
   - "name": "mdb"
@@ -30,7 +30,7 @@
   - "name": "obj_type"
     "type": "int"
   "return_type": "void"
-  "signature": "void mdb_dump_catalog(struct MdbHandle * mdb, int obj_type)"
+  "signature": "void mdb_dump_catalog(MdbHandle *, int)"
 - "name": "mdb_read_table_by_name"
   "params":
   - "name": "mdb"
@@ -40,13 +40,13 @@
   - "name": "obj_type"
     "type": "int"
   "return_type": "struct S_MdbTableDef *"
-  "signature": "struct S_MdbTableDef * mdb_read_table_by_name(struct MdbHandle * mdb, char * table_name, int obj_type)"
+  "signature": "MdbTableDef * mdb_read_table_by_name(MdbHandle *, gchar *, int)"
 - "name": "mdb_data_dump"
   "params":
   - "name": "table"
     "type": "struct S_MdbTableDef *"
   "return_type": "void"
-  "signature": "void mdb_data_dump(struct S_MdbTableDef * table)"
+  "signature": "void mdb_data_dump(MdbTableDef *)"
 "language": "c"
 "project": "mdbtools"
 "target_name": "fuzz_mdb"

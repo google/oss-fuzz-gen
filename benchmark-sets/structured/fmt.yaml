@@ -10,7 +10,7 @@
   - "name": ""
     "type": "fmt::v10::detail::value *"
   "return_type": "void"
-  "signature": "fmt::v10::vprint(fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
+  "signature": "void vprint(string_view, format_args)"
 - "name": "_ZN3fmt3v106vprintEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
   "params":
   - "name": "f"
@@ -24,7 +24,7 @@
   - "name": ""
     "type": "fmt::v10::detail::value *"
   "return_type": "void"
-  "signature": "fmt::v10::vprint(_IO_FILE*, fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
+  "signature": "void vprint(FILE *, string_view, format_args)"
 - "name": "_ZN3fmt3v108vprintlnEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
   "params":
   - "name": "f"
@@ -38,7 +38,7 @@
   - "name": ""
     "type": "fmt::v10::detail::value *"
   "return_type": "void"
-  "signature": "fmt::v10::vprintln(_IO_FILE*, fmt::v10::basic_string_view<char>, fmt::v10::basic_format_args<fmt::v10::context>)"
+  "signature": "void vprintln(FILE *, string_view, format_args)"
 - "name": "_ZN3fmt3v106detail5printEP8_IO_FILENS0_17basic_string_viewIcEE"
   "params":
   - "name": "f"
@@ -48,7 +48,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "void"
-  "signature": "fmt::v10::detail::print(_IO_FILE*, fmt::v10::basic_string_view<char>)"
+  "signature": "void print(FILE *, string_view)"
 - "name": "_ZN3fmt3v106detail12fwrite_fullyEPKvmP8_IO_FILE"
   "params":
   - "name": "ptr"
@@ -58,7 +58,7 @@
   - "name": "stream"
     "type": "struct _IO_FILE *"
   "return_type": "void"
-  "signature": "fmt::v10::detail::fwrite_fully(void const*, unsigned long, _IO_FILE*)"
+  "signature": "void fwrite_fully(const void *, size_t, FILE *)"
 "language": "c++"
 "project": "fmt"
 "target_name": "chrono-timepoint-fuzzer"

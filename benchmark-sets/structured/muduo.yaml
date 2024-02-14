@@ -4,7 +4,7 @@
   - "name": ""
     "type": "muduo::Thread *"
   "return_type": "void"
-  "signature": "muduo::Thread::start()"
+  "signature": "void start(Thread *)"
 - "name": "_ZN5muduo8TimeZone12loadZoneFileEPKc"
   "params":
   - "name": ""
@@ -12,7 +12,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "void"
-  "signature": "muduo::TimeZone::loadZoneFile(char const*)"
+  "signature": "const LocalTime * findLocalTime(const Data *, const DateTime, bool)"
 - "name": "_ZN5muduo6detail16readTimeZoneFileEPKcPNS_8TimeZone4DataE"
   "params":
   - "name": ""
@@ -20,13 +20,13 @@
   - "name": ""
     "type": "struct muduo::TimeZone::Data *"
   "return_type": "bool"
-  "signature": "muduo::detail::readTimeZoneFile(char const*, muduo::TimeZone::Data*)"
+  "signature": "bool readTimeZoneFile(const char *, Data *)"
 - "name": "_ZN5muduo3net7sockets13isSelfConnectEi"
   "params":
   - "name": ""
     "type": "int"
   "return_type": "bool"
-  "signature": "muduo::net::sockets::isSelfConnect(int)"
+  "signature": "bool isSelfConnect(int)"
 - "name": "_ZN5muduo3net7sockets6acceptEiP12sockaddr_in6"
   "params":
   - "name": ""
@@ -34,7 +34,7 @@
   - "name": ""
     "type": "struct sockaddr_in6 *"
   "return_type": "int"
-  "signature": "muduo::net::sockets::accept(int, sockaddr_in6*)"
+  "signature": "int accept(int, sockaddr_in6 *)"
 "language": "c++"
 "project": "muduo"
 "target_name": "muduo_http_fuzzer"

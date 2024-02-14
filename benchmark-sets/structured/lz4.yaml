@@ -12,7 +12,7 @@
   - "name": "maxDstSize"
     "type": "int"
   "return_type": "int"
-  "signature": "int LZ4_compressHC_limitedOutput_continue(union.LZ4_streamHC_u * ctx, char * src, char * dst, int srcSize, int maxDstSize)"
+  "signature": "int LZ4_compressHC_limitedOutput_continue(LZ4_streamHC_t *, const char *, char *, int, int)"
 - "name": "LZ4_compressHC_continue"
   "params":
   - "name": "ctx"
@@ -24,7 +24,7 @@
   - "name": "srcSize"
     "type": "int"
   "return_type": "int"
-  "signature": "int LZ4_compressHC_continue(union.LZ4_streamHC_u * ctx, char * src, char * dst, int srcSize)"
+  "signature": "int LZ4_compressHC_continue(LZ4_streamHC_t *, const char *, char *, int)"
 - "name": "LZ4_compress_HC_continue_destSize"
   "params":
   - "name": "LZ4_streamHCPtr"
@@ -38,7 +38,7 @@
   - "name": "targetDestSize"
     "type": "int"
   "return_type": "int"
-  "signature": "int LZ4_compress_HC_continue_destSize(union.LZ4_streamHC_u * LZ4_streamHCPtr, char * src, char * dst, int * srcSizePtr, int targetDestSize)"
+  "signature": "int LZ4_compress_HC_continue_destSize(LZ4_streamHC_t *, const char *, char *, int *, int)"
 - "name": "LZ4_compressHC2_limitedOutput"
   "params":
   - "name": "src"
@@ -52,7 +52,7 @@
   - "name": "cLevel"
     "type": "int"
   "return_type": "int"
-  "signature": "int LZ4_compressHC2_limitedOutput(char * src, char * dst, int srcSize, int maxDstSize, int cLevel)"
+  "signature": "int LZ4_compressHC2_limitedOutput(const char *, char *, int, int, int)"
 - "name": "LZ4_compressHC2"
   "params":
   - "name": "src"
@@ -64,7 +64,7 @@
   - "name": "cLevel"
     "type": "int"
   "return_type": "int"
-  "signature": "int LZ4_compressHC2(char * src, char * dst, int srcSize, int cLevel)"
+  "signature": "int LZ4_compressHC2(const char *, char *, int, int)"
 "language": "c++"
 "project": "lz4"
 "target_name": "compress_fuzzer"

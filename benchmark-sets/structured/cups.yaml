@@ -8,7 +8,7 @@
   - "name": "supported"
     "type": "struct _ipp_s *"
   "return_type": "char *"
-  "signature": "char * _ppdCreateFromIPP(char * buffer, size_t bufsize, struct _ipp_s * supported)"
+  "signature": "char * _ppdCreateFromIPP(char *, size_t, ipp_t *)"
 - "name": "_ppdCreateFromIPP2"
   "params":
   - "name": "buffer"
@@ -20,7 +20,7 @@
   - "name": "lang"
     "type": "struct cups_lang_s *"
   "return_type": "char *"
-  "signature": "char * _ppdCreateFromIPP2(char * buffer, size_t bufsize, struct _ipp_s * supported, struct cups_lang_s * lang)"
+  "signature": "char * _ppdCreateFromIPP2(char *, size_t, ipp_t *, cups_lang_t *)"
 - "name": "cupsDoFileRequest"
   "params":
   - "name": "http"
@@ -32,7 +32,7 @@
   - "name": "filename"
     "type": "char *"
   "return_type": "struct _ipp_s *"
-  "signature": "struct _ipp_s * cupsDoFileRequest(struct _http_s * http, struct _ipp_s * request, char * resource, char * filename)"
+  "signature": "ipp_t * cupsDoFileRequest(http_t *, ipp_t *, const char *, const char *)"
 - "name": "cupsDoRequest"
   "params":
   - "name": "http"
@@ -42,7 +42,7 @@
   - "name": "resource"
     "type": "char *"
   "return_type": "struct _ipp_s *"
-  "signature": "struct _ipp_s * cupsDoRequest(struct _http_s * http, struct _ipp_s * request, char * resource)"
+  "signature": "ipp_t * cupsDoRequest(http_t *, ipp_t *, const char *)"
 - "name": "cupsDoIORequest"
   "params":
   - "name": "http"
@@ -56,7 +56,7 @@
   - "name": "outfile"
     "type": "int"
   "return_type": "struct _ipp_s *"
-  "signature": "struct _ipp_s * cupsDoIORequest(struct _http_s * http, struct _ipp_s * request, char * resource, int infile, int outfile)"
+  "signature": "ipp_t * cupsDoIORequest(http_t *, ipp_t *, const char *, int, int)"
 "language": "c"
 "project": "cups"
 "target_name": "FuzzIPP"

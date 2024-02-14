@@ -6,7 +6,7 @@
   - "name": "doc"
     "type": "tinyxml2::XMLDocument *"
   "return_type": "tinyxml2::XMLNode *"
-  "signature": "tinyxml2::XMLElement::ShallowClone(tinyxml2::XMLDocument*) const"
+  "signature": "XMLNode * const XMLElement::ShallowClone(XMLDocument *)"
 - "name": "_ZN8tinyxml211XMLDocument8LoadFileEPKc"
   "params":
   - "name": "this"
@@ -14,7 +14,7 @@
   - "name": "filename"
     "type": "char *"
   "return_type": "int"
-  "signature": "tinyxml2::XMLDocument::LoadFile(char const*)"
+  "signature": "XMLError XMLDocument::LoadFile(const char *)"
 - "name": "_ZN8tinyxml210XMLElement12SetAttributeEPKcS2_"
   "params":
   - "name": "this"
@@ -24,7 +24,7 @@
   - "name": "value"
     "type": "char *"
   "return_type": "void"
-  "signature": "tinyxml2::XMLElement::SetAttribute(char const*, char const*)"
+  "signature": "void XMLElement::SetAttribute(const char *, const char *)"
 - "name": "_ZN8tinyxml210XMLPrinter10VisitEnterERKNS_10XMLElementEPKNS_12XMLAttributeE"
   "params":
   - "name": "this"
@@ -34,7 +34,7 @@
   - "name": "attribute"
     "type": "tinyxml2::XMLAttribute *"
   "return_type": "bool"
-  "signature": "tinyxml2::XMLPrinter::VisitEnter(tinyxml2::XMLElement const&, tinyxml2::XMLAttribute const*)"
+  "signature": "bool XMLPrinter::VisitEnter(const XMLElement, const XMLAttribute *)"
 - "name": "_ZN8tinyxml210XMLElement21FindOrCreateAttributeEPKc"
   "params":
   - "name": "this"
@@ -42,7 +42,7 @@
   - "name": "name"
     "type": "char *"
   "return_type": "tinyxml2::XMLAttribute *"
-  "signature": "tinyxml2::XMLElement::FindOrCreateAttribute(char const*)"
+  "signature": "XMLAttribute * XMLElement::FindOrCreateAttribute(const char *)"
 "language": "c++"
 "project": "tinyxml2"
 "target_name": "xmltest"
