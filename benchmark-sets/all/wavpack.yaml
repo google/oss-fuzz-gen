@@ -1,10 +1,41 @@
-functions:
-- int WavpackSeekSample(struct WavpackContext * wpc, int sample)
-- void WavpackSeekTrailingWrapper(struct WavpackContext * wpc)
-- int wp_log2s(int value)
-- void WavpackNativeToBigEndian(char * data, char * format)
-- void WavpackBigEndianToNative(char * data, char * format)
-project: wavpack
-target_name: fuzzer
-target_path: /src/wavpack/fuzzing/fuzzer.cc
-
+"functions":
+- "name": "WavpackSeekSample"
+  "params":
+  - "name": "wpc"
+    "type": "struct WavpackContext *"
+  - "name": "sample"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int WavpackSeekSample(WavpackContext *, uint32_t)"
+- "name": "WavpackSeekTrailingWrapper"
+  "params":
+  - "name": "wpc"
+    "type": "struct WavpackContext *"
+  "return_type": "void"
+  "signature": "void WavpackSeekTrailingWrapper(WavpackContext *)"
+- "name": "wp_log2s"
+  "params":
+  - "name": "value"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int wp_log2s(int32_t)"
+- "name": "WavpackNativeToBigEndian"
+  "params":
+  - "name": "data"
+    "type": "char *"
+  - "name": "format"
+    "type": "char *"
+  "return_type": "void"
+  "signature": "void WavpackNativeToBigEndian(void *, char *)"
+- "name": "WavpackBigEndianToNative"
+  "params":
+  - "name": "data"
+    "type": "char *"
+  - "name": "format"
+    "type": "char *"
+  "return_type": "void"
+  "signature": "void WavpackBigEndianToNative(void *, char *)"
+"language": "c++"
+"project": "wavpack"
+"target_name": "fuzzer"
+"target_path": "/src/wavpack/fuzzing/fuzzer.cc"

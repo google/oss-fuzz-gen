@@ -1,13 +1,49 @@
-functions:
-- short impeg2d_dec_ac_coeff_one(struct _stream_t * ps_stream, short * pu2_sym_len,
-  short * pu2_sym_val)
-- short impeg2d_dec_ac_coeff_zero(struct _stream_t * ps_stream, short * pu2_sym_len,
-  short * pu2_sym_val)
-- short impeg2d_fast_dec_vld_symbol(struct _stream_t * ps_stream, bool  ai2_code_table,
-  bool  au2_indexTable, short u2_max_len)
-- int impeg2_jobq_free(struct jobq_t * ps_jobq)
-- int ithread_sem_destroy(char * sem)
-project: libmpeg2
-target_name: mpeg2_dec_fuzzer
-target_path: /src/libmpeg2/fuzzer/mpeg2_dec_fuzzer.cpp
-
+"functions":
+- "name": "impeg2d_dec_ac_coeff_one"
+  "params":
+  - "name": "ps_stream"
+    "type": "struct _stream_t *"
+  - "name": "pu2_sym_len"
+    "type": "short *"
+  - "name": "pu2_sym_val"
+    "type": "short *"
+  "return_type": "short"
+  "signature": "UWORD16 impeg2d_dec_ac_coeff_one(stream_t *, UWORD16 *, UWORD16 *)"
+- "name": "impeg2d_dec_ac_coeff_zero"
+  "params":
+  - "name": "ps_stream"
+    "type": "struct _stream_t *"
+  - "name": "pu2_sym_len"
+    "type": "short *"
+  - "name": "pu2_sym_val"
+    "type": "short *"
+  "return_type": "short"
+  "signature": "UWORD16 impeg2d_dec_ac_coeff_zero(stream_t *, UWORD16 *, UWORD16 *)"
+- "name": "impeg2d_fast_dec_vld_symbol"
+  "params":
+  - "name": "ps_stream"
+    "type": "struct _stream_t *"
+  - "name": "ai2_code_table"
+    "type": "bool "
+  - "name": "au2_indexTable"
+    "type": "bool "
+  - "name": "u2_max_len"
+    "type": "short"
+  "return_type": "short"
+  "signature": "WORD16 impeg2d_fast_dec_vld_symbol(stream_t *,  *,  *, UWORD16)"
+- "name": "impeg2_jobq_free"
+  "params":
+  - "name": "ps_jobq"
+    "type": "struct jobq_t *"
+  "return_type": "int"
+  "signature": "IV_API_CALL_STATUS_T impeg2_jobq_free(jobq_t *)"
+- "name": "ithread_sem_destroy"
+  "params":
+  - "name": "sem"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "WORD32 ithread_sem_destroy(void *)"
+"language": "c++"
+"project": "libmpeg2"
+"target_name": "mpeg2_dec_fuzzer"
+"target_path": "/src/libmpeg2/fuzzer/mpeg2_dec_fuzzer.cpp"

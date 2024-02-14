@@ -1,10 +1,45 @@
-functions:
-- int gpsd_multipoll(bool , struct gps_device_t * , func_type * , float )
-- size_t gpsd_poll(struct gps_device_t * )
-- size_t parse_input(struct gps_device_t * )
-- size_t ubx_parse(struct gps_device_t * , char * , size_t )
-- bool tsip_detect(struct gps_device_t * )
-project: gpsd
-target_name: FuzzJson
-target_path: /src/gpsd/fuzzer/FuzzJson.c
-
+"functions":
+- "name": "gpsd_multipoll"
+  "params":
+  - "name": ""
+    "type": "bool"
+  - "name": ""
+    "type": "struct gps_device_t *"
+  - "name": ""
+    "type": "func_type *"
+  - "name": ""
+    "type": "float"
+  "return_type": "int"
+  "signature": "int gpsd_multipoll(const _Bool, gps_device_t *,  *, float)"
+- "name": "gpsd_poll"
+  "params":
+  - "name": ""
+    "type": "struct gps_device_t *"
+  "return_type": "size_t"
+  "signature": "gps_mask_t gpsd_poll(gps_device_t *)"
+- "name": "parse_input"
+  "params":
+  - "name": ""
+    "type": "struct gps_device_t *"
+  "return_type": "size_t"
+  "signature": "gps_mask_t parse_input(gps_device_t *)"
+- "name": "ubx_parse"
+  "params":
+  - "name": ""
+    "type": "struct gps_device_t *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  "return_type": "size_t"
+  "signature": "gps_mask_t ubx_parse(gps_device_t *, unsigned char *, size_t)"
+- "name": "tsip_detect"
+  "params":
+  - "name": ""
+    "type": "struct gps_device_t *"
+  "return_type": "bool"
+  "signature": "_Bool tsip_detect(gps_device_t *)"
+"language": "c"
+"project": "gpsd"
+"target_name": "FuzzJson"
+"target_path": "/src/gpsd/fuzzer/FuzzJson.c"

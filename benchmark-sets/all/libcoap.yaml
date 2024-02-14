@@ -1,12 +1,55 @@
-functions:
-- struct coap_context_t * coap_new_context(struct coap_address_t * )
-- size_t coap_ws_read(struct coap_session_t * , char * , size_t )
-- void coap_ws_close(struct coap_session_t * )
-- int coap_persist_startup(struct coap_context_t * , char * , char * , char * , int
-  )
-- int coap_persist_startup_locked(struct coap_context_t * , char * , char * , char
-  * , int )
-project: libcoap
-target_name: pdu_parse_tcp_fuzzer
-target_path: /src/libcoap/tests/oss-fuzz/pdu_parse_tcp_target.c
-
+"functions":
+- "name": "coap_new_context"
+  "params":
+  - "name": ""
+    "type": "struct coap_address_t *"
+  "return_type": "struct coap_context_t *"
+  "signature": "coap_context_t * coap_new_context(const coap_address_t *)"
+- "name": "coap_ws_read"
+  "params":
+  - "name": ""
+    "type": "struct coap_session_t *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  "return_type": "size_t"
+  "signature": "ssize_t coap_ws_read(coap_session_t *, uint8_t *, size_t)"
+- "name": "coap_ws_close"
+  "params":
+  - "name": ""
+    "type": "struct coap_session_t *"
+  "return_type": "void"
+  "signature": "void coap_ws_close(coap_session_t *)"
+- "name": "coap_persist_startup"
+  "params":
+  - "name": ""
+    "type": "struct coap_context_t *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int coap_persist_startup(coap_context_t *, const char *, const char *, const char *, uint32_t)"
+- "name": "coap_persist_startup_locked"
+  "params":
+  - "name": ""
+    "type": "struct coap_context_t *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int coap_persist_startup_locked(coap_context_t *, const char *, const char *, const char *, uint32_t)"
+"language": "c++"
+"project": "libcoap"
+"target_name": "pdu_parse_tcp_fuzzer"
+"target_path": "/src/libcoap/tests/oss-fuzz/pdu_parse_tcp_target.c"

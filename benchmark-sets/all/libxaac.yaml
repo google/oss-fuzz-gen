@@ -1,11 +1,75 @@
-functions:
-- int Codec::setXAACDRCInfo(Codec * , int , int , int , int , int )
-- void ixheaacd_hbe_apply_ifft_336(float * , float * , int , int )
-- void ixheaacd_hbe_apply_fft_288(float * , float * , int , int )
-- void ixheaacd_hbe_apply_ifft_224(float * , float * , int , int )
-- void ixheaacd_apply_rot_dec(struct ia_ps_dec_struct * , int * , int * , int * ,
-  int * , struct ia_sbr_tables_struct * , short * )
-project: libxaac
-target_name: xaac_enc_fuzzer
-target_path: /src/libxaac/fuzzer/xaac_enc_fuzzer.cpp
-
+"functions":
+- "name": "_ZN5Codec14setXAACDRCInfoEiiiii"
+  "params":
+  - "name": ""
+    "type": "Codec *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "IA_ERRORCODE setXAACDRCInfo(Codec *, int32_t, int32_t, int32_t, int32_t, int32_t)"
+- "name": "ixheaacd_hbe_apply_ifft_336"
+  "params":
+  - "name": ""
+    "type": "float *"
+  - "name": ""
+    "type": "float *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "VOID ixheaacd_hbe_apply_ifft_336(FLOAT32 *, FLOAT32 *, WORD32, WORD32)"
+- "name": "ixheaacd_hbe_apply_fft_288"
+  "params":
+  - "name": ""
+    "type": "float *"
+  - "name": ""
+    "type": "float *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "VOID ixheaacd_hbe_apply_fft_288(FLOAT32 *, FLOAT32 *, WORD32, WORD32)"
+- "name": "ixheaacd_hbe_apply_ifft_224"
+  "params":
+  - "name": ""
+    "type": "float *"
+  - "name": ""
+    "type": "float *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "VOID ixheaacd_hbe_apply_ifft_224(FLOAT32 *, FLOAT32 *, WORD32, WORD32)"
+- "name": "ixheaacd_apply_rot_dec"
+  "params":
+  - "name": ""
+    "type": "struct ia_ps_dec_struct *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "struct ia_sbr_tables_struct *"
+  - "name": ""
+    "type": "short *"
+  "return_type": "void"
+  "signature": "VOID ixheaacd_apply_rot_dec(ia_ps_dec_struct *, WORD32 *, WORD32 *, WORD32 *, WORD32 *, ia_sbr_tables_struct *, const WORD16 *)"
+"language": "c++"
+"project": "libxaac"
+"target_name": "xaac_enc_fuzzer"
+"target_path": "/src/libxaac/fuzzer/xaac_enc_fuzzer.cpp"

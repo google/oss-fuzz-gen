@@ -1,12 +1,55 @@
-functions:
-- int dns_view_freezezones(struct dns_view * view, bool value)
-- int dns_zt_freezezones(struct dns_zt * zt, struct dns_view * view, bool freeze)
-- int freezezones(struct dns_zone * zone, char * uap)
-- int dns_view_asyncload(struct dns_view * view, bool newonly, func_type * callback,
-  char * arg)
-- int dns_zt_asyncload(struct dns_zt * zt, bool newonly, func_type * loaddone, char
-  * arg)
-project: bind9
-target_name: isc_lex_gettoken_fuzzer
-target_path: /src/bind9/fuzz/isc_lex_gettoken.c
-
+"functions":
+- "name": "dns_view_freezezones"
+  "params":
+  - "name": "view"
+    "type": "struct dns_view *"
+  - "name": "value"
+    "type": "bool"
+  "return_type": "int"
+  "signature": "isc_result_t dns_view_freezezones(dns_view_t *, _Bool)"
+- "name": "dns_zt_freezezones"
+  "params":
+  - "name": "zt"
+    "type": "struct dns_zt *"
+  - "name": "view"
+    "type": "struct dns_view *"
+  - "name": "freeze"
+    "type": "bool"
+  "return_type": "int"
+  "signature": "isc_result_t dns_zt_freezezones(dns_zt_t *, dns_view_t *, _Bool)"
+- "name": "freezezones"
+  "params":
+  - "name": "zone"
+    "type": "struct dns_zone *"
+  - "name": "uap"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "isc_result_t freezezones(dns_zone_t *, void *)"
+- "name": "dns_view_asyncload"
+  "params":
+  - "name": "view"
+    "type": "struct dns_view *"
+  - "name": "newonly"
+    "type": "bool"
+  - "name": "callback"
+    "type": "func_type *"
+  - "name": "arg"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "isc_result_t dns_view_asyncload(dns_view_t *, _Bool, dns_zt_callback_t *, void *)"
+- "name": "dns_zt_asyncload"
+  "params":
+  - "name": "zt"
+    "type": "struct dns_zt *"
+  - "name": "newonly"
+    "type": "bool"
+  - "name": "loaddone"
+    "type": "func_type *"
+  - "name": "arg"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "isc_result_t dns_zt_asyncload(dns_zt_t *, _Bool, dns_zt_callback_t *, void *)"
+"language": "c"
+"project": "bind9"
+"target_name": "isc_lex_gettoken_fuzzer"
+"target_path": "/src/bind9/fuzz/isc_lex_gettoken.c"

@@ -1,10 +1,31 @@
-functions:
-- void nts_init2()
-- bool nts_probe(struct peer * peer)
-- bool nts_server_init2()
-- char * nts_ke_listener(char * arg)
-- bool nts_ke_request(struct ssl_st * ssl)
-project: ntpsec
-target_name: FuzzClient
-target_path: /src/ntpsec/fuzz/FuzzClient.c
-
+"functions":
+- "name": "nts_init2"
+  "params": []
+  "return_type": "void"
+  "signature": "void nts_init2()"
+- "name": "nts_probe"
+  "params":
+  - "name": "peer"
+    "type": "struct peer *"
+  "return_type": "bool"
+  "signature": "_Bool nts_probe(peer *)"
+- "name": "nts_server_init2"
+  "params": []
+  "return_type": "bool"
+  "signature": "_Bool nts_server_init2()"
+- "name": "nts_ke_listener"
+  "params":
+  - "name": "arg"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "void * nts_ke_listener(void *)"
+- "name": "nts_ke_request"
+  "params":
+  - "name": "ssl"
+    "type": "struct ssl_st *"
+  "return_type": "bool"
+  "signature": "_Bool nts_ke_request(SSL *)"
+"language": "c"
+"project": "ntpsec"
+"target_name": "FuzzClient"
+"target_path": "/src/ntpsec/fuzz/FuzzClient.c"

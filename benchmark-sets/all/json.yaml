@@ -1,38 +1,43 @@
-functions:
-- bool nlohmann::json_abi_v3_11_3::detail::parser<nlohmann::json_abi_v3_11_3::basic_json<std::__1::map,
-  std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
-  >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::json_abi_v3_11_3::adl_serializer,
-  std::__1::vector<unsigned char, std::__1::allocator<unsigned char> >, void>, nlohmann::json_abi_v3_11_3::detail::iterator_input_adapter<unsigned
-  char const*> >::sax_parse_internal<nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser<nlohmann::json_abi_v3_11_3::basic_json<std::__1::map,
-  std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
-  >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::json_abi_v3_11_3::adl_serializer,
-  std::__1::vector<unsigned char, std::__1::allocator<unsigned char> >, void> > >(nlohmann::json_abi_v3_11_3::detail::parser
-  * , nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser * )
-- bool nlohmann::json_abi_v3_11_3::detail::parser<nlohmann::json_abi_v3_11_3::basic_json<std::__1::map,
-  std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
-  >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::json_abi_v3_11_3::adl_serializer,
-  std::__1::vector<unsigned char, std::__1::allocator<unsigned char> >, void>, nlohmann::json_abi_v3_11_3::detail::iterator_input_adapter<std::__1::__wrap_iter<char
-  const*> > >::sax_parse_internal<nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser<nlohmann::json_abi_v3_11_3::basic_json<std::__1::map,
-  std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
-  >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::json_abi_v3_11_3::adl_serializer,
-  std::__1::vector<unsigned char, std::__1::allocator<unsigned char> >, void> > >(nlohmann::json_abi_v3_11_3::detail::parser
-  * , nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser * )
-- bool nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser<nlohmann::json_abi_v3_11_3::basic_json<std::__1::map,
-  std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
-  >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::json_abi_v3_11_3::adl_serializer,
-  std::__1::vector<unsigned char, std::__1::allocator<unsigned char> >, void> >::end_object(nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser
-  * )
-- bool nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser<nlohmann::json_abi_v3_11_3::basic_json<std::__1::map,
-  std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
-  >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::json_abi_v3_11_3::adl_serializer,
-  std::__1::vector<unsigned char, std::__1::allocator<unsigned char> >, void> >::start_object(nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser
-  * , size_t )
-- bool nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser<nlohmann::json_abi_v3_11_3::basic_json<std::__1::map,
-  std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
-  >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::json_abi_v3_11_3::adl_serializer,
-  std::__1::vector<unsigned char, std::__1::allocator<unsigned char> >, void> >::start_array(nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser
-  * , size_t )
-project: json
-target_name: FuzzerMain
-target_path: /src/json/tests/thirdparty/Fuzzer/FuzzerMain.cpp
-
+"functions":
+- "name": "_ZN8nlohmann16json_abi_v3_11_36detail6parserINS0_10basic_jsonINSt3__13mapENS4_6vectorENS4_12basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEblmdSA_NS0_14adl_serializerENS6_IhNSA_IhEEEEvEENS1_22iterator_input_adapterIPKhEEE18sax_parse_internalINS1_28json_sax_dom_callback_parserISG_EEEEbPT_"
+  "params":
+  - "name": ""
+    "type": "nlohmann::json_abi_v3_11_3::detail::parser *"
+  - "name": ""
+    "type": "nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser *"
+  "return_type": "bool"
+  "signature": "bool >(nlohmann::json_abi_v3_11_3::detail::iterator_input_adapter<const unsigned char *> > *, void> > *)"
+- "name": "_ZN8nlohmann16json_abi_v3_11_36detail6parserINS0_10basic_jsonINSt3__13mapENS4_6vectorENS4_12basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEblmdSA_NS0_14adl_serializerENS6_IhNSA_IhEEEEvEENS1_22iterator_input_adapterINS4_11__wrap_iterIPKcEEEEE18sax_parse_internalINS1_28json_sax_dom_callback_parserISG_EEEEbPT_"
+  "params":
+  - "name": ""
+    "type": "nlohmann::json_abi_v3_11_3::detail::parser *"
+  - "name": ""
+    "type": "nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser *"
+  "return_type": "bool"
+  "signature": "bool >(nlohmann::json_abi_v3_11_3::detail::iterator_input_adapter<const unsigned char *> > *, void> > *)"
+- "name": "_ZN8nlohmann16json_abi_v3_11_36detail28json_sax_dom_callback_parserINS0_10basic_jsonINSt3__13mapENS4_6vectorENS4_12basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEblmdSA_NS0_14adl_serializerENS6_IhNSA_IhEEEEvEEE10end_objectEv"
+  "params":
+  - "name": ""
+    "type": "nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser *"
+  "return_type": "bool"
+  "signature": "bool end_object(void> > *)"
+- "name": "_ZN8nlohmann16json_abi_v3_11_36detail28json_sax_dom_callback_parserINS0_10basic_jsonINSt3__13mapENS4_6vectorENS4_12basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEblmdSA_NS0_14adl_serializerENS6_IhNSA_IhEEEEvEEE12start_objectEm"
+  "params":
+  - "name": ""
+    "type": "nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser *"
+  - "name": ""
+    "type": "size_t"
+  "return_type": "bool"
+  "signature": "bool start_object(void> > *, size_t)"
+- "name": "_ZN8nlohmann16json_abi_v3_11_36detail28json_sax_dom_callback_parserINS0_10basic_jsonINSt3__13mapENS4_6vectorENS4_12basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEblmdSA_NS0_14adl_serializerENS6_IhNSA_IhEEEEvEEE11start_arrayEm"
+  "params":
+  - "name": ""
+    "type": "nlohmann::json_abi_v3_11_3::detail::json_sax_dom_callback_parser *"
+  - "name": ""
+    "type": "size_t"
+  "return_type": "bool"
+  "signature": "bool start_array(void> > *, size_t)"
+"language": "c++"
+"project": "json"
+"target_name": "FuzzerMain"
+"target_path": "/src/json/tests/thirdparty/Fuzzer/FuzzerMain.cpp"

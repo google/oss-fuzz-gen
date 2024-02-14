@@ -1,10 +1,41 @@
-functions:
-- char * llhttp_status_name(int )
-- int llhttp_finish(struct llhttp__internal_s * )
-- void llhttp__debug(struct llhttp__internal_s * , char * , char * , char * )
-- char * llhttp_method_name(int )
-- char * llhttp_errno_name(int )
-project: llhttp
-target_name: fuzz_parser
-target_path: /src/llhttp/test/fuzzers/fuzz_parser.c
-
+"functions":
+- "name": "llhttp_status_name"
+  "params":
+  - "name": ""
+    "type": "int"
+  "return_type": "char *"
+  "signature": "const char * llhttp_status_name(llhttp_status_t)"
+- "name": "llhttp_finish"
+  "params":
+  - "name": ""
+    "type": "struct llhttp__internal_s *"
+  "return_type": "int"
+  "signature": "llhttp_errno_t llhttp_finish(llhttp_t *)"
+- "name": "llhttp__debug"
+  "params":
+  - "name": ""
+    "type": "struct llhttp__internal_s *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  "return_type": "void"
+  "signature": "void llhttp__debug(llhttp_t *, const char *, const char *, const char *)"
+- "name": "llhttp_method_name"
+  "params":
+  - "name": ""
+    "type": "int"
+  "return_type": "char *"
+  "signature": "const char * llhttp_method_name(llhttp_method_t)"
+- "name": "llhttp_errno_name"
+  "params":
+  - "name": ""
+    "type": "int"
+  "return_type": "char *"
+  "signature": "const char * llhttp_errno_name(llhttp_errno_t)"
+"language": "c"
+"project": "llhttp"
+"target_name": "fuzz_parser"
+"target_path": "/src/llhttp/test/fuzzers/fuzz_parser.c"

@@ -1,13 +1,53 @@
-functions:
-- size_t gnutls_record_recv_packet(struct gnutls_session_int * , struct mbuffer_st
-  ** )
-- int gnutls_bye(struct gnutls_session_int * , int )
-- size_t gnutls_record_recv_seq(struct gnutls_session_int * , char * , size_t , char
-  * )
-- int gnutls_session_get_data(struct gnutls_session_int * , char * , size_t * )
-- int gnutls_session_get_data2(struct gnutls_session_int * , struct gnutls_datum_t
-  * )
-project: gnutls
-target_name: libtasn1_gnutls_der_fuzzer
-target_path: /src/libtasn1/fuzz/libtasn1_gnutls_der_fuzzer.c
-
+"functions":
+- "name": "gnutls_record_recv_packet"
+  "params":
+  - "name": ""
+    "type": "struct gnutls_session_int *"
+  - "name": ""
+    "type": "struct mbuffer_st **"
+  "return_type": "size_t"
+  "signature": "ssize_t gnutls_record_recv_packet(gnutls_session_t, gnutls_packet_t *)"
+- "name": "gnutls_bye"
+  "params":
+  - "name": ""
+    "type": "struct gnutls_session_int *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int gnutls_bye(gnutls_session_t, gnutls_close_request_t)"
+- "name": "gnutls_record_recv_seq"
+  "params":
+  - "name": ""
+    "type": "struct gnutls_session_int *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "char *"
+  "return_type": "size_t"
+  "signature": "ssize_t gnutls_record_recv_seq(gnutls_session_t, void *, size_t, unsigned char *)"
+- "name": "gnutls_session_ticket_send"
+  "params":
+  - "name": ""
+    "type": "struct gnutls_session_int *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int gnutls_session_ticket_send(gnutls_session_t, unsigned int, unsigned int)"
+- "name": "gnutls_session_get_data"
+  "params":
+  - "name": ""
+    "type": "struct gnutls_session_int *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t *"
+  "return_type": "int"
+  "signature": "int gnutls_session_get_data(gnutls_session_t, void *, size_t *)"
+"language": "c++"
+"project": "gnutls"
+"target_name": "libtasn1_gnutls_der_fuzzer"
+"target_path": "/src/libtasn1/fuzz/libtasn1_gnutls_der_fuzzer.c"

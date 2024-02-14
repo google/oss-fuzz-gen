@@ -1,10 +1,45 @@
-functions:
-- int ov_time_seek_lap(struct OggVorbis_File * vf, double pos)
-- int ov_pcm_seek_lap(struct OggVorbis_File * vf, size_t pos)
-- int ov_time_seek_page_lap(struct OggVorbis_File * vf, double pos)
-- int ov_pcm_seek_page_lap(struct OggVorbis_File * vf, size_t pos)
-- int ov_halfrate(struct OggVorbis_File * vf, int flag)
-project: vorbis
-target_name: decode_fuzzer
-target_path: /src/vorbis/contrib/oss-fuzz/decode_fuzzer.cc
-
+"functions":
+- "name": "ov_time_seek_lap"
+  "params":
+  - "name": "vf"
+    "type": "struct OggVorbis_File *"
+  - "name": "pos"
+    "type": "double"
+  "return_type": "int"
+  "signature": "int ov_time_seek_lap(OggVorbis_File *, double)"
+- "name": "ov_pcm_seek_lap"
+  "params":
+  - "name": "vf"
+    "type": "struct OggVorbis_File *"
+  - "name": "pos"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int ov_pcm_seek_lap(OggVorbis_File *, ogg_int64_t)"
+- "name": "ov_time_seek_page_lap"
+  "params":
+  - "name": "vf"
+    "type": "struct OggVorbis_File *"
+  - "name": "pos"
+    "type": "double"
+  "return_type": "int"
+  "signature": "int ov_time_seek_page_lap(OggVorbis_File *, double)"
+- "name": "ov_pcm_seek_page_lap"
+  "params":
+  - "name": "vf"
+    "type": "struct OggVorbis_File *"
+  - "name": "pos"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int ov_pcm_seek_page_lap(OggVorbis_File *, ogg_int64_t)"
+- "name": "ov_halfrate"
+  "params":
+  - "name": "vf"
+    "type": "struct OggVorbis_File *"
+  - "name": "flag"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int ov_halfrate(OggVorbis_File *, int)"
+"language": "c++"
+"project": "vorbis"
+"target_name": "decode_fuzzer"
+"target_path": "/src/vorbis/contrib/oss-fuzz/decode_fuzzer.cc"

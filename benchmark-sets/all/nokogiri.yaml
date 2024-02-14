@@ -1,14 +1,51 @@
-Retrieving human-written fuzz targets of nokogiri from local Docker build.
-functions:
-- struct GumboInternalOutput * gumbo_parse(char * buffer)
-- void gumbo_print_caret_diagnostic(struct GumboInternalError * error, char * source_text,
-  size_t source_length)
-- size_t gumbo_caret_diagnostic_to_string(struct GumboInternalError * error, char
-  * source_text, size_t source_length, char ** output)
-- void caret_diagnostic_to_string(struct GumboInternalError * error, char * source_text,
-  size_t source_length, struct GumboStringBuffer * output)
-- char * gumbo_error_code(struct GumboInternalError * error)
-project: nokogiri
-target_name: parse_fuzzer
-target_path: /src/nokogiri/gumbo-parser/fuzzer/parse_fuzzer.cc
-
+"functions":
+- "name": "gumbo_parse"
+  "params":
+  - "name": "buffer"
+    "type": "char *"
+  "return_type": "struct GumboInternalOutput *"
+  "signature": "GumboOutput * gumbo_parse(const char *)"
+- "name": "gumbo_print_caret_diagnostic"
+  "params":
+  - "name": "error"
+    "type": "struct GumboInternalError *"
+  - "name": "source_text"
+    "type": "char *"
+  - "name": "source_length"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "void gumbo_print_caret_diagnostic(const GumboError *, const char *, size_t)"
+- "name": "gumbo_caret_diagnostic_to_string"
+  "params":
+  - "name": "error"
+    "type": "struct GumboInternalError *"
+  - "name": "source_text"
+    "type": "char *"
+  - "name": "source_length"
+    "type": "size_t"
+  - "name": "output"
+    "type": "char **"
+  "return_type": "size_t"
+  "signature": "size_t gumbo_caret_diagnostic_to_string(const GumboError *, const char *, size_t, char **)"
+- "name": "caret_diagnostic_to_string"
+  "params":
+  - "name": "error"
+    "type": "struct GumboInternalError *"
+  - "name": "source_text"
+    "type": "char *"
+  - "name": "source_length"
+    "type": "size_t"
+  - "name": "output"
+    "type": "struct GumboStringBuffer *"
+  "return_type": "void"
+  "signature": "void caret_diagnostic_to_string(const GumboError *, const char *, size_t, GumboStringBuffer *)"
+- "name": "gumbo_error_code"
+  "params":
+  - "name": "error"
+    "type": "struct GumboInternalError *"
+  "return_type": "char *"
+  "signature": "const char * gumbo_error_code(const GumboError *)"
+"language": "c"
+"project": "nokogiri"
+"target_name": "parse_fuzzer"
+"target_path": "/src/nokogiri/gumbo-parser/fuzzer/parse_fuzzer.cc"

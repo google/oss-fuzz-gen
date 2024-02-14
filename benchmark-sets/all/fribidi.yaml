@@ -1,15 +1,83 @@
-functions:
-- char fribidi_log2vis(int * str, int len, int * pbase_dir, int * visual_str, int
-  * positions_L_to_V, int * positions_V_to_L, char * embedding_levels)
-- void fribidi_shape(int flags, char * embedding_levels, int len, char * ar_props,
-  int * str)
-- void fribidi_join_arabic(int * bidi_types, int len, char * embedding_levels, char
-  * ar_props)
-- char fribidi_reorder_line(int flags, int * bidi_types, int len, int False, int base_dir,
-  char * embedding_levels, int * visual_str, int * map)
-- void fribidi_shape_arabic(int flags, char * embedding_levels, int len, char * ar_props,
-  int * str)
-project: fribidi
-target_name: fribidi-fuzzer
-target_path: /src/fribidi/bin/fribidi-fuzzer.c
-
+"functions":
+- "name": "fribidi_log2vis"
+  "params":
+  - "name": "str"
+    "type": "int *"
+  - "name": "len"
+    "type": "int"
+  - "name": "pbase_dir"
+    "type": "int *"
+  - "name": "visual_str"
+    "type": "int *"
+  - "name": "positions_L_to_V"
+    "type": "int *"
+  - "name": "positions_V_to_L"
+    "type": "int *"
+  - "name": "embedding_levels"
+    "type": "char *"
+  "return_type": "char"
+  "signature": "FriBidiLevel fribidi_log2vis(const FriBidiChar *, const FriBidiStrIndex, FriBidiParType *, FriBidiChar *, FriBidiStrIndex *, FriBidiStrIndex *, FriBidiLevel *)"
+- "name": "fribidi_shape"
+  "params":
+  - "name": "flags"
+    "type": "int"
+  - "name": "embedding_levels"
+    "type": "char *"
+  - "name": "len"
+    "type": "int"
+  - "name": "ar_props"
+    "type": "char *"
+  - "name": "str"
+    "type": "int *"
+  "return_type": "void"
+  "signature": "void fribidi_shape(FriBidiFlags, const FriBidiLevel *, const FriBidiStrIndex, FriBidiArabicProp *, FriBidiChar *)"
+- "name": "fribidi_join_arabic"
+  "params":
+  - "name": "bidi_types"
+    "type": "int *"
+  - "name": "len"
+    "type": "int"
+  - "name": "embedding_levels"
+    "type": "char *"
+  - "name": "ar_props"
+    "type": "char *"
+  "return_type": "void"
+  "signature": "void fribidi_join_arabic(const FriBidiCharType *, const FriBidiStrIndex, const FriBidiLevel *, FriBidiArabicProp *)"
+- "name": "fribidi_reorder_line"
+  "params":
+  - "name": "flags"
+    "type": "int"
+  - "name": "bidi_types"
+    "type": "int *"
+  - "name": "len"
+    "type": "int"
+  - "name": false
+    "type": "int"
+  - "name": "base_dir"
+    "type": "int"
+  - "name": "embedding_levels"
+    "type": "char *"
+  - "name": "visual_str"
+    "type": "int *"
+  - "name": "map"
+    "type": "int *"
+  "return_type": "char"
+  "signature": "FriBidiLevel fribidi_reorder_line(FriBidiFlags, const FriBidiCharType *, const FriBidiStrIndex, const FriBidiStrIndex, const FriBidiParType, FriBidiLevel *, FriBidiChar *, FriBidiStrIndex *)"
+- "name": "fribidi_shape_arabic"
+  "params":
+  - "name": "flags"
+    "type": "int"
+  - "name": "embedding_levels"
+    "type": "char *"
+  - "name": "len"
+    "type": "int"
+  - "name": "ar_props"
+    "type": "char *"
+  - "name": "str"
+    "type": "int *"
+  "return_type": "void"
+  "signature": "void fribidi_shape_arabic(FriBidiFlags, const FriBidiLevel *, const FriBidiStrIndex, FriBidiArabicProp *, FriBidiChar *)"
+"language": "c"
+"project": "fribidi"
+"target_name": "fribidi-fuzzer"
+"target_path": "/src/fribidi/bin/fribidi-fuzzer.c"

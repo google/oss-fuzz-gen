@@ -1,11 +1,41 @@
-functions:
-- int dashdmx_process(struct __gf_filter * filter)
-- void dashdmx_switch_segment(struct GF_DASHDmxCtx * ctx, struct GF_DASHGroup * group)
-- int gf_dash_update_manifest(struct __dash_client * dash)
-- int ctxload_process(struct __gf_filter * filter)
-- int gf_sc_scene_update(struct __tag_compositor * compositor, char * type, char *
-  com)
-project: gpac
-target_name: fuzz_parse
-target_path: /src/testsuite/oss-fuzzers/fuzz_parse.c
-
+"functions":
+- "name": "dashdmx_process"
+  "params":
+  - "name": "filter"
+    "type": "struct __gf_filter *"
+  "return_type": "int"
+  "signature": "GF_Err dashdmx_process(GF_Filter *)"
+- "name": "dashdmx_switch_segment"
+  "params":
+  - "name": "ctx"
+    "type": "struct GF_DASHDmxCtx *"
+  - "name": "group"
+    "type": "struct GF_DASHGroup *"
+  "return_type": "void"
+  "signature": "void dashdmx_switch_segment(GF_DASHDmxCtx *, GF_DASHGroup *)"
+- "name": "gf_dash_update_manifest"
+  "params":
+  - "name": "dash"
+    "type": "struct __dash_client *"
+  "return_type": "int"
+  "signature": "GF_Err gf_dash_update_manifest(GF_DashClient *)"
+- "name": "ctxload_process"
+  "params":
+  - "name": "filter"
+    "type": "struct __gf_filter *"
+  "return_type": "int"
+  "signature": "GF_Err ctxload_process(GF_Filter *)"
+- "name": "gf_sc_scene_update"
+  "params":
+  - "name": "compositor"
+    "type": "struct __tag_compositor *"
+  - "name": "type"
+    "type": "char *"
+  - "name": "com"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "GF_Err gf_sc_scene_update(GF_Compositor *, char *, char *)"
+"language": "c"
+"project": "gpac"
+"target_name": "fuzz_parse"
+"target_path": "/src/testsuite/oss-fuzzers/fuzz_parse.c"

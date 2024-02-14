@@ -1,16 +1,57 @@
-functions:
-- bool tesseract::TessTsvRenderer::AddImageHandler(tesseract::TessTsvRenderer * this,
-  tesseract::TessBaseAPI * api)
-- char * tesseract::TessBaseAPI::GetTSVText(tesseract::TessBaseAPI * this, int page_number)
-- bool tesseract::TessBaseAPI::ProcessPages(tesseract::TessBaseAPI * this, char *
-  filename, char * retry_config, int timeout_millisec, tesseract::TessResultRenderer
-  * renderer)
-- bool tesseract::TessBoxTextRenderer::AddImageHandler(tesseract::TessOsdRenderer
-  * this, tesseract::TessBaseAPI * api)
-- bool tesseract::TessBaseAPI::ProcessPagesInternal(tesseract::TessBaseAPI * this,
-  char * filename, char * retry_config, int timeout_millisec, tesseract::TessResultRenderer
-  * renderer)
-project: tesseract-ocr
-target_name: fuzzer-api-512x256
-target_path: /src/tesseract/unittest/fuzzers/fuzzer-api.cpp
-
+"functions":
+- "name": "_ZN9tesseract15TessTsvRenderer15AddImageHandlerEPNS_11TessBaseAPIE"
+  "params":
+  - "name": "this"
+    "type": "tesseract::TessTsvRenderer *"
+  - "name": "api"
+    "type": "tesseract::TessBaseAPI *"
+  "return_type": "bool"
+  "signature": "bool TessTsvRenderer::AddImageHandler(TessBaseAPI *)"
+- "name": "_ZN9tesseract11TessBaseAPI10GetTSVTextEi"
+  "params":
+  - "name": "this"
+    "type": "tesseract::TessBaseAPI *"
+  - "name": "page_number"
+    "type": "int"
+  "return_type": "char *"
+  "signature": "char * TessBaseAPI::GetTSVText(int)"
+- "name": "_ZN9tesseract11TessBaseAPI12ProcessPagesEPKcS2_iPNS_18TessResultRendererE"
+  "params":
+  - "name": "this"
+    "type": "tesseract::TessBaseAPI *"
+  - "name": "filename"
+    "type": "char *"
+  - "name": "retry_config"
+    "type": "char *"
+  - "name": "timeout_millisec"
+    "type": "int"
+  - "name": "renderer"
+    "type": "tesseract::TessResultRenderer *"
+  "return_type": "bool"
+  "signature": "bool TessBaseAPI::ProcessPages(const char *, const char *, int, TessResultRenderer *)"
+- "name": "_ZN9tesseract19TessBoxTextRenderer15AddImageHandlerEPNS_11TessBaseAPIE"
+  "params":
+  - "name": "this"
+    "type": "tesseract::TessOsdRenderer *"
+  - "name": "api"
+    "type": "tesseract::TessBaseAPI *"
+  "return_type": "bool"
+  "signature": "bool TessBoxTextRenderer::AddImageHandler(TessBaseAPI *)"
+- "name": "_ZN9tesseract11TessBaseAPI20ProcessPagesInternalEPKcS2_iPNS_18TessResultRendererE"
+  "params":
+  - "name": "this"
+    "type": "tesseract::TessBaseAPI *"
+  - "name": "filename"
+    "type": "char *"
+  - "name": "retry_config"
+    "type": "char *"
+  - "name": "timeout_millisec"
+    "type": "int"
+  - "name": "renderer"
+    "type": "tesseract::TessResultRenderer *"
+  "return_type": "bool"
+  "signature": "bool TessBaseAPI::ProcessPagesInternal(const char *, const char *, int, TessResultRenderer *)"
+"language": "c++"
+"project": "tesseract-ocr"
+"target_name": "fuzzer-api-512x256"
+"target_path": "/src/tesseract/unittest/fuzzers/fuzzer-api.cpp"

@@ -1,20 +1,105 @@
-functions:
-- int stun_set_binding_response(struct _stun_buffer * buf, struct stun_tid * tid,
-  union.ioa_addr * reflexive_addr, int error_code, char * reason)
-- int stun_set_allocate_response(struct _stun_buffer * buf, struct stun_tid * tid,
-  union.ioa_addr * relayed_addr1, union.ioa_addr * relayed_addr2, union.ioa_addr *
-  reflexive_addr, int lifetime, int max_lifetime, int error_code, char * reason, size_t
-  reservation_token, char * mobile_id)
-- int stun_set_binding_response_str(char * buf, size_t * len, struct stun_tid * tid,
-  union.ioa_addr * reflexive_addr, int error_code, char * reason, int cookie, int
-  old_stun, int no_stun_backward_compatibility)
-- int stun_set_allocate_response_str(char * buf, size_t * len, struct stun_tid * tid,
-  union.ioa_addr * relayed_addr1, union.ioa_addr * relayed_addr2, union.ioa_addr *
-  reflexive_addr, int lifetime, int max_lifetime, int error_code, char * reason, size_t
-  reservation_token, char * mobile_id)
-- short stun_set_channel_bind_request(struct _stun_buffer * buf, union.ioa_addr *
-  peer_addr, short channel_number)
-project: coturn
-target_name: FuzzStun
-target_path: /src/coturn/fuzzing/FuzzStun.c
-
+"functions":
+- "name": "stun_set_binding_response"
+  "params":
+  - "name": "buf"
+    "type": "struct _stun_buffer *"
+  - "name": "tid"
+    "type": "struct stun_tid *"
+  - "name": "reflexive_addr"
+    "type": "ioa_addr *"
+  - "name": "error_code"
+    "type": "int"
+  - "name": "reason"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int stun_set_binding_response(stun_buffer *, stun_tid *, const ioa_addr *, int, const uint8_t *)"
+- "name": "stun_set_allocate_response"
+  "params":
+  - "name": "buf"
+    "type": "struct _stun_buffer *"
+  - "name": "tid"
+    "type": "struct stun_tid *"
+  - "name": "relayed_addr1"
+    "type": "ioa_addr *"
+  - "name": "relayed_addr2"
+    "type": "ioa_addr *"
+  - "name": "reflexive_addr"
+    "type": "ioa_addr *"
+  - "name": "lifetime"
+    "type": "int"
+  - "name": "max_lifetime"
+    "type": "int"
+  - "name": "error_code"
+    "type": "int"
+  - "name": "reason"
+    "type": "char *"
+  - "name": "reservation_token"
+    "type": "size_t"
+  - "name": "mobile_id"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int stun_set_allocate_response(stun_buffer *, stun_tid *, const ioa_addr *, const ioa_addr *, const ioa_addr *, uint32_t, uint32_t, int, const uint8_t *, uint64_t, char *)"
+- "name": "stun_set_binding_response_str"
+  "params":
+  - "name": "buf"
+    "type": "char *"
+  - "name": "len"
+    "type": "size_t *"
+  - "name": "tid"
+    "type": "struct stun_tid *"
+  - "name": "reflexive_addr"
+    "type": "ioa_addr *"
+  - "name": "error_code"
+    "type": "int"
+  - "name": "reason"
+    "type": "char *"
+  - "name": "cookie"
+    "type": "int"
+  - "name": "old_stun"
+    "type": "int"
+  - "name": "no_stun_backward_compatibility"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int stun_set_binding_response_str(uint8_t *, size_t *, stun_tid *, const ioa_addr *, int, const uint8_t *, uint32_t, int, int)"
+- "name": "stun_set_allocate_response_str"
+  "params":
+  - "name": "buf"
+    "type": "char *"
+  - "name": "len"
+    "type": "size_t *"
+  - "name": "tid"
+    "type": "struct stun_tid *"
+  - "name": "relayed_addr1"
+    "type": "ioa_addr *"
+  - "name": "relayed_addr2"
+    "type": "ioa_addr *"
+  - "name": "reflexive_addr"
+    "type": "ioa_addr *"
+  - "name": "lifetime"
+    "type": "int"
+  - "name": "max_lifetime"
+    "type": "int"
+  - "name": "error_code"
+    "type": "int"
+  - "name": "reason"
+    "type": "char *"
+  - "name": "reservation_token"
+    "type": "size_t"
+  - "name": "mobile_id"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int stun_set_allocate_response_str(uint8_t *, size_t *, stun_tid *, const ioa_addr *, const ioa_addr *, const ioa_addr *, uint32_t, uint32_t, int, const uint8_t *, uint64_t, char *)"
+- "name": "stun_set_channel_bind_request"
+  "params":
+  - "name": "buf"
+    "type": "struct _stun_buffer *"
+  - "name": "peer_addr"
+    "type": "ioa_addr *"
+  - "name": "channel_number"
+    "type": "short"
+  "return_type": "short"
+  "signature": "uint16_t stun_set_channel_bind_request(stun_buffer *, const ioa_addr *, uint16_t)"
+"language": "c"
+"project": "coturn"
+"target_name": "FuzzStun"
+"target_path": "/src/coturn/fuzzing/FuzzStun.c"

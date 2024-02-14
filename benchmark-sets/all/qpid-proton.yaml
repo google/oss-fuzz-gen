@@ -1,13 +1,73 @@
-functions:
-- int pni_process_tpwork_sender(struct pn_transport_t * , struct pn_delivery_t * ,
-  char * )
-- size_t pn_output_write_sasl(struct pn_transport_t * , int , char * , size_t )
-- void pni_post_sasl_frame(struct pn_transport_t * )
-- int pni_post_amqp_transfer_frame(struct pn_transport_t * , short , int , int , struct
-  pn_bytes_t * , size_t , char * , bool , bool , int , size_t , struct pn_data_t *
-  , bool )
-- int pn_data_vfill(struct pn_data_t * , char * , struct __va_list_tag * )
-project: qpid-proton
-target_name: c/tests/fuzz/fuzz-sniff-header.c
-target_path: /src/qpid-proton/c/tests/fuzz/fuzz-sniff-header.c
-
+"functions":
+- "name": "pni_process_tpwork_sender"
+  "params":
+  - "name": ""
+    "type": "struct pn_transport_t *"
+  - "name": ""
+    "type": "struct pn_delivery_t *"
+  - "name": ""
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int pni_process_tpwork_sender(pn_transport_t *, pn_delivery_t *, _Bool *)"
+- "name": "pn_output_write_sasl"
+  "params":
+  - "name": ""
+    "type": "struct pn_transport_t *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  "return_type": "size_t"
+  "signature": "ssize_t pn_output_write_sasl(pn_transport_t *, unsigned int, char *, size_t)"
+- "name": "pni_post_sasl_frame"
+  "params":
+  - "name": ""
+    "type": "struct pn_transport_t *"
+  "return_type": "void"
+  "signature": "void pni_post_sasl_frame(pn_transport_t *)"
+- "name": "pni_post_amqp_transfer_frame"
+  "params":
+  - "name": ""
+    "type": "struct pn_transport_t *"
+  - "name": ""
+    "type": "short"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "struct pn_bytes_t *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "bool"
+  - "name": ""
+    "type": "bool"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "struct pn_data_t *"
+  - "name": ""
+    "type": "bool"
+  "return_type": "int"
+  "signature": "int pni_post_amqp_transfer_frame(pn_transport_t *, uint16_t, uint32_t, pn_sequence_t, pn_bytes_t *, const pn_bytes_t, uint32_t, _Bool, _Bool, pn_sequence_t, uint64_t, pn_data_t *, _Bool, _Bool, _Bool)"
+- "name": "pn_data_vfill"
+  "params":
+  - "name": ""
+    "type": "struct pn_data_t *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "struct __va_list_tag *"
+  "return_type": "int"
+  "signature": "int pn_data_vfill(pn_data_t *, const char *, __va_list_tag *)"
+"language": "c++"
+"project": "qpid-proton"
+"target_name": "c/tests/fuzz/fuzz-sniff-header.c"
+"target_path": "/src/qpid-proton/c/tests/fuzz/fuzz-sniff-header.c"

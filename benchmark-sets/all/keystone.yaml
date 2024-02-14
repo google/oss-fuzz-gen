@@ -1,10 +1,49 @@
-functions:
-- int p_simp_re(struct parse * , int )
-- void p_bre(struct parse * , int , int )
-- int lmatcher(struct re_guts * , char * , size_t , struct timespec * , int )
-- void p_str(struct parse * )
-- void nonnewline(struct parse * )
-project: keystone
-target_name: fuzz_asm_arm_thumbbe
-target_path: /src/keystone/suite/fuzz/fuzz_asm_arm_thumbbe.c
-
+"functions":
+- "name": "p_simp_re"
+  "params":
+  - "name": ""
+    "type": "struct parse *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int p_simp_re(parse *, int)"
+- "name": "p_bre"
+  "params":
+  - "name": ""
+    "type": "struct parse *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "void p_bre(parse *, int, int)"
+- "name": "lmatcher"
+  "params":
+  - "name": ""
+    "type": "struct re_guts *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "struct timespec *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int smatcher(re_guts *, const char *, size_t, llvm_regmatch_t *, int)"
+- "name": "p_str"
+  "params":
+  - "name": ""
+    "type": "struct parse *"
+  "return_type": "void"
+  "signature": "void p_str(parse *)"
+- "name": "nonnewline"
+  "params":
+  - "name": ""
+    "type": "struct parse *"
+  "return_type": "void"
+  "signature": "void nonnewline(parse *)"
+"language": "c++"
+"project": "keystone"
+"target_name": "fuzz_asm_arm_thumbbe"
+"target_path": "/src/keystone/suite/fuzz/fuzz_asm_arm_thumbbe.c"

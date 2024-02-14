@@ -1,14 +1,87 @@
-functions:
-- size_t FC_CreateObject(size_t , struct CK_ATTRIBUTE * , size_t , size_t * )
-- size_t FC_Initialize(char * )
-- size_t sftk_CreateNewSlot(struct SFTKSlotStr * , size_t , struct SFTKObjectStr *
-  )
-- size_t sftk_DBInit(char * , char * , char * , char * , char * , char * , char *
-  , int , int , int , int , int , struct SFTKDBHandleStr ** , struct SFTKDBHandleStr
-  ** )
-- size_t s_open(char * , char * , char * , int , int , int , struct SDBStr.2311 **
-  , struct SDBStr.2311 ** , int * )
-project: nss
-target_name: mpi-sqr
-target_path: /src/nss/fuzz/mpi_sqr_target.cc
-
+"functions":
+- "name": "FC_CreateObject"
+  "params":
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "struct CK_ATTRIBUTE *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "size_t *"
+  "return_type": "size_t"
+  "signature": "CK_RV FC_CreateObject(CK_SESSION_HANDLE, CK_ATTRIBUTE_PTR, CK_ULONG, CK_OBJECT_HANDLE_PTR)"
+- "name": "FC_Initialize"
+  "params":
+  - "name": ""
+    "type": "char *"
+  "return_type": "size_t"
+  "signature": "CK_RV FC_Initialize(CK_VOID_PTR)"
+- "name": "sftk_CreateNewSlot"
+  "params":
+  - "name": ""
+    "type": "struct SFTKSlotStr *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "struct SFTKObjectStr *"
+  "return_type": "size_t"
+  "signature": "CK_RV sftk_CreateNewSlot(SFTKSlot *, CK_OBJECT_CLASS, SFTKObject *)"
+- "name": "sftk_DBInit"
+  "params":
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "struct SFTKDBHandleStr **"
+  - "name": ""
+    "type": "struct SFTKDBHandleStr **"
+  "return_type": "size_t"
+  "signature": "CK_RV sftk_DBInit(const char *, const char *, const char *, const char *, const char *, const char *, const char *, PRBool, PRBool, PRBool, PRBool, PRBool, SFTKDBHandle **, SFTKDBHandle **)"
+- "name": "s_open"
+  "params":
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "2224 **"
+  - "name": ""
+    "type": "2224 **"
+  - "name": ""
+    "type": "int *"
+  "return_type": "size_t"
+  "signature": "CK_RV s_open(const char *, const char *, const char *, int, int, int, SDB **, SDB **, int *)"
+"language": "c++"
+"project": "nss"
+"target_name": "mpi-sqr"
+"target_path": "/src/nss/fuzz/mpi_sqr_target.cc"

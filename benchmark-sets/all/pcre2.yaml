@@ -1,14 +1,43 @@
-functions:
-- struct pcre2_real_match_data_8 * pcre2_match_data_create_from_pattern_8(struct pcre2_real_code_8
-  * code, struct pcre2_real_general_context_8 * gcontext)
-- struct pcre2_real_convert_context_8 * pcre2_convert_context_create_8(struct pcre2_real_general_context_8
-  * gcontext)
-- struct pcre2_real_compile_context_8 * pcre2_compile_context_create_8(struct pcre2_real_general_context_8
-  * gcontext)
-- int pcre2_set_newline_8(struct pcre2_real_compile_context_8 * ccontext, int newline)
-- struct pcre2_real_general_context_8 * pcre2_general_context_create_8(func_type *
-  private_malloc, func_type * private_free, char * memory_data)
-project: pcre2
-target_name: pcre2_fuzzer
-target_path: /src/pcre2/src/pcre2_fuzzsupport.c
-
+"functions":
+- "name": "pcre2_match_data_create_from_pattern_8"
+  "params":
+  - "name": "code"
+    "type": "struct pcre2_real_code_8 *"
+  - "name": "gcontext"
+    "type": "struct pcre2_real_general_context_8 *"
+  "return_type": "struct pcre2_real_match_data_8 *"
+  "signature": "pcre2_match_data_8 * pcre2_match_data_create_from_pattern_8(const pcre2_code_8 *, pcre2_general_context_8 *)"
+- "name": "pcre2_convert_context_create_8"
+  "params":
+  - "name": "gcontext"
+    "type": "struct pcre2_real_general_context_8 *"
+  "return_type": "struct pcre2_real_convert_context_8 *"
+  "signature": "pcre2_convert_context_8 * pcre2_convert_context_create_8(pcre2_general_context_8 *)"
+- "name": "pcre2_compile_context_create_8"
+  "params":
+  - "name": "gcontext"
+    "type": "struct pcre2_real_general_context_8 *"
+  "return_type": "struct pcre2_real_compile_context_8 *"
+  "signature": "pcre2_compile_context_8 * pcre2_compile_context_create_8(pcre2_general_context_8 *)"
+- "name": "pcre2_set_newline_8"
+  "params":
+  - "name": "ccontext"
+    "type": "struct pcre2_real_compile_context_8 *"
+  - "name": "newline"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int pcre2_set_newline_8(pcre2_compile_context_8 *, uint32_t)"
+- "name": "pcre2_general_context_create_8"
+  "params":
+  - "name": "private_malloc"
+    "type": "func_type *"
+  - "name": "private_free"
+    "type": "func_type *"
+  - "name": "memory_data"
+    "type": "char *"
+  "return_type": "struct pcre2_real_general_context_8 *"
+  "signature": "pcre2_general_context_8 * pcre2_general_context_create_8( *,  *, void *)"
+"language": "c++"
+"project": "pcre2"
+"target_name": "pcre2_fuzzer"
+"target_path": "/src/pcre2/src/pcre2_fuzzsupport.c"

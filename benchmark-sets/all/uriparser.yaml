@@ -1,11 +1,63 @@
-functions:
-- int uriParseSingleUriW(struct UriUriStructW * , int * , int ** )
-- int uriParseSingleUriA(struct UriUriStructA * , char * , char ** )
-- int uriParseSingleUriExW(struct UriUriStructW * , int * , int * , int ** )
-- int uriParseSingleUriExA(struct UriUriStructA * , char * , char * , char ** )
-- int uriParseSingleUriExMmW(struct UriUriStructW * , int * , int * , int ** , struct
-  UriMemoryManagerStruct * )
-project: uriparser
-target_name: uri_parse_fuzzer
-target_path: /src/uri_parse_fuzzer.cc
-
+"functions":
+- "name": "uriParseSingleUriW"
+  "params":
+  - "name": ""
+    "type": "struct UriUriStructW *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "int **"
+  "return_type": "int"
+  "signature": "int uriParseSingleUriA(UriUriA *, const char *, const char **)"
+- "name": "uriParseSingleUriA"
+  "params":
+  - "name": ""
+    "type": "struct UriUriStructA *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char **"
+  "return_type": "int"
+  "signature": "int uriParseSingleUriA(UriUriA *, const char *, const char **)"
+- "name": "uriParseSingleUriExW"
+  "params":
+  - "name": ""
+    "type": "struct UriUriStructW *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "int **"
+  "return_type": "int"
+  "signature": "int uriParseSingleUriExA(UriUriA *, const char *, const char *, const char **)"
+- "name": "uriParseSingleUriExA"
+  "params":
+  - "name": ""
+    "type": "struct UriUriStructA *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char **"
+  "return_type": "int"
+  "signature": "int uriParseSingleUriExA(UriUriA *, const char *, const char *, const char **)"
+- "name": "uriParseSingleUriExMmW"
+  "params":
+  - "name": ""
+    "type": "struct UriUriStructW *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "int **"
+  - "name": ""
+    "type": "struct UriMemoryManagerStruct *"
+  "return_type": "int"
+  "signature": "int uriParseSingleUriExMmA(UriUriA *, const char *, const char *, const char **, UriMemoryManager *)"
+"language": "c++"
+"project": "uriparser"
+"target_name": "uri_parse_fuzzer"
+"target_path": "/src/uri_parse_fuzzer.cc"

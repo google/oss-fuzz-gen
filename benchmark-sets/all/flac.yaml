@@ -1,14 +1,57 @@
-functions:
-- bool FLAC::Metadata::Chain::read(FLAC::Metadata::Chain * this, char * handle, struct
-  FLAC__IOCallbacks * callbacks, bool is_ogg)
-- int FLAC__metadata_chain_read_ogg_with_callbacks(struct FLAC__Metadata_Chain * chain,
-  char * handle, struct FLAC__IOCallbacks * callbacks)
-- int FLAC__metadata_chain_read_with_callbacks(struct FLAC__Metadata_Chain * chain,
-  char * handle, struct FLAC__IOCallbacks * callbacks)
-- int chain_read_with_callbacks_(struct FLAC__Metadata_Chain * chain, char * handle,
-  struct FLAC__IOCallbacks * callbacks, int is_ogg)
-- bool FLAC::Metadata::get_cuesheet(char * filename, FLAC::Metadata::Picture ** cuesheet)
-project: flac
-target_name: fuzzer_seek
-target_path: /src/flac/oss-fuzz/seek.cc
-
+"functions":
+- "name": "_ZN4FLAC8Metadata5Chain4readEPv17FLAC__IOCallbacksb"
+  "params":
+  - "name": "this"
+    "type": "FLAC::Metadata::Chain *"
+  - "name": "handle"
+    "type": "char *"
+  - "name": "callbacks"
+    "type": "struct FLAC__IOCallbacks *"
+  - "name": "is_ogg"
+    "type": "bool"
+  "return_type": "bool"
+  "signature": "bool Chain::read(FLAC__IOHandle, FLAC__IOCallbacks, bool)"
+- "name": "FLAC__metadata_chain_read_ogg_with_callbacks"
+  "params":
+  - "name": "chain"
+    "type": "struct FLAC__Metadata_Chain *"
+  - "name": "handle"
+    "type": "char *"
+  - "name": "callbacks"
+    "type": "struct FLAC__IOCallbacks *"
+  "return_type": "int"
+  "signature": "FLAC__bool FLAC__metadata_chain_read_ogg_with_callbacks(FLAC__Metadata_Chain *, FLAC__IOHandle, FLAC__IOCallbacks)"
+- "name": "FLAC__metadata_chain_read_with_callbacks"
+  "params":
+  - "name": "chain"
+    "type": "struct FLAC__Metadata_Chain *"
+  - "name": "handle"
+    "type": "char *"
+  - "name": "callbacks"
+    "type": "struct FLAC__IOCallbacks *"
+  "return_type": "int"
+  "signature": "FLAC__bool FLAC__metadata_chain_read_with_callbacks(FLAC__Metadata_Chain *, FLAC__IOHandle, FLAC__IOCallbacks)"
+- "name": "chain_read_with_callbacks_"
+  "params":
+  - "name": "chain"
+    "type": "struct FLAC__Metadata_Chain *"
+  - "name": "handle"
+    "type": "char *"
+  - "name": "callbacks"
+    "type": "struct FLAC__IOCallbacks *"
+  - "name": "is_ogg"
+    "type": "int"
+  "return_type": "int"
+  "signature": "FLAC__bool chain_read_with_callbacks_(FLAC__Metadata_Chain *, FLAC__IOHandle, FLAC__IOCallbacks, FLAC__bool)"
+- "name": "_ZN4FLAC8Metadata12get_cuesheetEPKcRPNS0_8CueSheetE"
+  "params":
+  - "name": "filename"
+    "type": "char *"
+  - "name": "cuesheet"
+    "type": "FLAC::Metadata::Picture **"
+  "return_type": "bool"
+  "signature": "bool get_cuesheet(const char *, CueSheet *)"
+"language": "c++"
+"project": "flac"
+"target_name": "fuzzer_seek"
+"target_path": "/src/flac/oss-fuzz/seek.cc"

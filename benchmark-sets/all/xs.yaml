@@ -1,11 +1,51 @@
-functions:
-- int omain(int argc, char ** argv)
-- int main262(int argc, char ** argv)
-- char * fxRunFileThread(char * it)
-- void fxRunContext(struct sxPool * pool, struct sxContext * context)
-- int fxRunTestCase(struct sxPool * pool, struct sxContext * context, char * path,
-  int flags, int async, char * message)
-project: xs
-target_name: xst_jsonparse
-target_path: /src/moddable/xs/tools/xst.c
-
+"functions":
+- "name": "omain"
+  "params":
+  - "name": "argc"
+    "type": "int"
+  - "name": "argv"
+    "type": "char **"
+  "return_type": "int"
+  "signature": "int omain(int, char **)"
+- "name": "main262"
+  "params":
+  - "name": "argc"
+    "type": "int"
+  - "name": "argv"
+    "type": "char **"
+  "return_type": "int"
+  "signature": "int main262(int, char **)"
+- "name": "fxRunFileThread"
+  "params":
+  - "name": "it"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "void * fxRunFileThread(void *)"
+- "name": "fxRunContext"
+  "params":
+  - "name": "pool"
+    "type": "struct sxPool *"
+  - "name": "context"
+    "type": "struct sxContext *"
+  "return_type": "void"
+  "signature": "void fxRunContext(txPool *, txContext *)"
+- "name": "fxRunTestCase"
+  "params":
+  - "name": "pool"
+    "type": "struct sxPool *"
+  - "name": "context"
+    "type": "struct sxContext *"
+  - "name": "path"
+    "type": "char *"
+  - "name": "flags"
+    "type": "int"
+  - "name": "async"
+    "type": "int"
+  - "name": "message"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int fxRunTestCase(txPool *, txContext *, char *, txUnsigned, int, char *)"
+"language": "c"
+"project": "xs"
+"target_name": "xst_jsonparse"
+"target_path": "/src/moddable/xs/tools/xst.c"

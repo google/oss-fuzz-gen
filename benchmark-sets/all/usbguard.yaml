@@ -1,19 +1,55 @@
-functions:
-- bool tao::pegtl::normal<tao::pegtl::list<usbguard::RuleParser::condition, tao::pegtl::plus<tao::pegtl::ascii::blank>,
-  void> >::match<(struct tao::pegtl::string_input * , usbguard::Rule * , struct tao::pegtl::tracer
-  * )
-- bool auto tao::pegtl::match<tao::pegtl::list<usbguard::RuleParser::condition, tao::pegtl::plus<tao::pegtl::ascii::blank>,
-  void>, (struct tao::pegtl::string_input * , usbguard::Rule * , struct tao::pegtl::tracer
-  * )
-- bool auto tao::pegtl::internal::match_control_unwind<tao::pegtl::list<usbguard::RuleParser::condition,
-  tao::pegtl::plus<tao::pegtl::ascii::blank>, void>, (struct tao::pegtl::string_input
-  * , usbguard::Rule * , struct tao::pegtl::tracer * )
-- bool decltype (struct tao::pegtl::string_input * , usbguard::Rule * , struct tao::pegtl::tracer
-  * )
-- bool tao::pegtl::internal::seq<usbguard::RuleParser::condition, tao::pegtl::internal::star<tao::pegtl::plus<tao::pegtl::ascii::blank>,
-  usbguard::RuleParser::condition> >::match<(struct tao::pegtl::string_input * , usbguard::Rule
-  * , struct tao::pegtl::tracer * )
-project: usbguard
-target_name: fuzzer-uevent
-target_path: /src/usbguard/src/Tests/Fuzzers/fuzzer-uevent.cpp
-
+"functions":
+- "name": "_ZN3tao5pegtl6normalINS0_4listIN8usbguard10RuleParser9conditionENS0_4plusINS0_5ascii5blankEJEEEvEEE5matchILNS0_10apply_modeE1ELNS0_11rewind_modeE0ENS4_17condition_actionsENS0_13state_controlIS1_E4typeENS0_12string_inputILNS0_13tracking_modeE0ENS7_3eol7lf_crlfENSt3__112basic_stringIcNSN_11char_traitsIcEENSN_9allocatorIcEEEEEEJRNS3_4RuleERNS0_6tracerINS0_13tracer_traitsILb0ELb1ELm2ELm8EEEEEEEEbRT3_DpOT4_"
+  "params":
+  - "name": ""
+    "type": "struct tao::pegtl::string_input *"
+  - "name": ""
+    "type": "usbguard::Rule *"
+  - "name": ""
+    "type": "struct tao::pegtl::tracer *"
+  "return_type": "bool"
+  "signature": "bool &>(std::__1::allocator<char> > >, Rule)"
+- "name": "_ZN3tao5pegtl5matchINS0_4listIN8usbguard10RuleParser9conditionENS0_4plusINS0_5ascii5blankEJEEEvEELNS0_10apply_modeE1ELNS0_11rewind_modeE0ENS4_17condition_actionsENS0_13state_controlINS0_6normalEE4typeENS0_12string_inputILNS0_13tracking_modeE0ENS7_3eol7lf_crlfENSt3__112basic_stringIcNSM_11char_traitsIcEENSM_9allocatorIcEEEEEEJRNS3_4RuleERNS0_6tracerINS0_13tracer_traitsILb0ELb1ELm2ELm8EEEEEEEEDaRT4_DpOT5_"
+  "params":
+  - "name": ""
+    "type": "struct tao::pegtl::string_input *"
+  - "name": ""
+    "type": "usbguard::Rule *"
+  - "name": ""
+    "type": "struct tao::pegtl::tracer *"
+  "return_type": "bool"
+  "signature": "bool &>(std::__1::allocator<char> > >, Rule)"
+- "name": "_ZN3tao5pegtl8internal20match_control_unwindINS0_4listIN8usbguard10RuleParser9conditionENS0_4plusINS0_5ascii5blankEJEEEvEELNS0_10apply_modeE1ELNS0_11rewind_modeE0ENS5_17condition_actionsENS0_13state_controlINS0_6normalEE4typeENS0_12string_inputILNS0_13tracking_modeE0ENS8_3eol7lf_crlfENSt3__112basic_stringIcNSN_11char_traitsIcEENSN_9allocatorIcEEEEEEJRNS4_4RuleERNS0_6tracerINS0_13tracer_traitsILb0ELb1ELm2ELm8EEEEEEEEDaRT4_DpOT5_"
+  "params":
+  - "name": ""
+    "type": "struct tao::pegtl::string_input *"
+  - "name": ""
+    "type": "usbguard::Rule *"
+  - "name": ""
+    "type": "struct tao::pegtl::tracer *"
+  "return_type": "bool"
+  "signature": "bool &>(std::__1::allocator<char> > >, Rule)"
+- "name": "_ZN3tao5pegtl8internalL16match_no_controlINS0_4listIN8usbguard10RuleParser9conditionENS0_4plusINS0_5ascii5blankEJEEEvEELNS0_10apply_modeE1ELNS0_11rewind_modeE0ENS5_17condition_actionsENS0_13state_controlINS0_6normalEE4typeENS0_12string_inputILNS0_13tracking_modeE0ENS8_3eol7lf_crlfENSt3__112basic_stringIcNSN_11char_traitsIcEENSN_9allocatorIcEEEEEEJRNS4_4RuleERNS0_6tracerINS0_13tracer_traitsILb0ELb1ELm2ELm8EEEEEEEEDTclsrT_5matchIXT0_EXT1_ET2_T3_Efp_spfp0_EERT4_DpOT5_"
+  "params":
+  - "name": ""
+    "type": "struct tao::pegtl::string_input *"
+  - "name": ""
+    "type": "usbguard::Rule *"
+  - "name": ""
+    "type": "struct tao::pegtl::tracer *"
+  "return_type": "bool"
+  "signature": "bool &>(std::__1::allocator<char> > >, Rule)"
+- "name": "_ZN3tao5pegtl8internal3seqIJN8usbguard10RuleParser9conditionENS1_4starINS0_4plusINS0_5ascii5blankEJEEEJS5_EEEEE5matchILNS0_10apply_modeE1ELNS0_11rewind_modeE0ENS4_17condition_actionsENS0_13state_controlINS0_6normalEE4typeENS0_12string_inputILNS0_13tracking_modeE0ENS8_3eol7lf_crlfENSt3__112basic_stringIcNSP_11char_traitsIcEENSP_9allocatorIcEEEEEEJRNS3_4RuleERNS0_6tracerINS0_13tracer_traitsILb0ELb1ELm2ELm8EEEEEEEEbRT3_DpOT4_"
+  "params":
+  - "name": ""
+    "type": "struct tao::pegtl::string_input *"
+  - "name": ""
+    "type": "usbguard::Rule *"
+  - "name": ""
+    "type": "struct tao::pegtl::tracer *"
+  "return_type": "bool"
+  "signature": "bool &>(std::__1::allocator<char> > >, Rule)"
+"language": "c++"
+"project": "usbguard"
+"target_name": "fuzzer-uevent"
+"target_path": "/src/usbguard/src/Tests/Fuzzers/fuzzer-uevent.cpp"

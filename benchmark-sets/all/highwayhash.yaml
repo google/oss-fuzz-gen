@@ -1,20 +1,75 @@
-functions:
-- void highwayhash::HighwayHashCat<4u>::operator(struct std::integral_constant * this,
-  bool  key, struct highwayhash::StringView * fragments, size_t num_fragments, bool  hash)
-  const
-- void highwayhash::HighwayHashCat<4u>::operator(struct std::integral_constant * this,
-  bool  key, struct highwayhash::StringView * fragments, size_t num_fragments, bool  hash)
-  const
-- void highwayhash::HighwayHashCat<4u>::operator(struct std::integral_constant * this,
-  bool  key, struct highwayhash::StringView * fragments, size_t num_fragments, size_t
-  * hash) const
-- void highwayhash::HighwayHashCat<2u>::operator(struct std::integral_constant * this,
-  bool  key, struct highwayhash::StringView * fragments, size_t num_fragments, bool  hash)
-  const
-- void highwayhash::HighwayHashCat<2u>::operator(struct std::integral_constant * this,
-  bool  key, struct highwayhash::StringView * fragments, size_t num_fragments, bool  hash)
-  const
-project: highwayhash
-target_name: sip_hash_fuzzer
-target_path: /src/highwayhash/highwayhash/sip_hash_fuzzer.cc
-
+"functions":
+- "name": "_ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPA4_m"
+  "params":
+  - "name": "this"
+    "type": "struct std::integral_constant *"
+  - "name": "key"
+    "type": "bool "
+  - "name": "fragments"
+    "type": "struct highwayhash::StringView *"
+  - "name": "num_fragments"
+    "type": "size_t"
+  - "name": "hash"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void const HighwayHashCat<2U>::operator()(const HHKey, const StringView *, const size_t, HHResult256 *)"
+- "name": "_ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPA2_m"
+  "params":
+  - "name": "this"
+    "type": "struct std::integral_constant *"
+  - "name": "key"
+    "type": "bool "
+  - "name": "fragments"
+    "type": "struct highwayhash::StringView *"
+  - "name": "num_fragments"
+    "type": "size_t"
+  - "name": "hash"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void const HighwayHashCat<2U>::operator()(const HHKey, const StringView *, const size_t, HHResult128 *)"
+- "name": "_ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPm"
+  "params":
+  - "name": "this"
+    "type": "struct std::integral_constant *"
+  - "name": "key"
+    "type": "bool "
+  - "name": "fragments"
+    "type": "struct highwayhash::StringView *"
+  - "name": "num_fragments"
+    "type": "size_t"
+  - "name": "hash"
+    "type": "size_t *"
+  "return_type": "void"
+  "signature": "void const HighwayHashCat<2U>::operator()(const HHKey, const StringView *, const size_t, HHResult64 *)"
+- "name": "_ZNK11highwayhash14HighwayHashCatILj2EEclERA4_KmPKNS_10StringViewEmPA4_m"
+  "params":
+  - "name": "this"
+    "type": "struct std::integral_constant *"
+  - "name": "key"
+    "type": "bool "
+  - "name": "fragments"
+    "type": "struct highwayhash::StringView *"
+  - "name": "num_fragments"
+    "type": "size_t"
+  - "name": "hash"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void const HighwayHashCat<2U>::operator()(const HHKey, const StringView *, const size_t, HHResult256 *)"
+- "name": "_ZNK11highwayhash14HighwayHashCatILj2EEclERA4_KmPKNS_10StringViewEmPA2_m"
+  "params":
+  - "name": "this"
+    "type": "struct std::integral_constant *"
+  - "name": "key"
+    "type": "bool "
+  - "name": "fragments"
+    "type": "struct highwayhash::StringView *"
+  - "name": "num_fragments"
+    "type": "size_t"
+  - "name": "hash"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void const HighwayHashCat<2U>::operator()(const HHKey, const StringView *, const size_t, HHResult128 *)"
+"language": "c++"
+"project": "highwayhash"
+"target_name": "sip_hash_fuzzer"
+"target_path": "/src/highwayhash/highwayhash/sip_hash_fuzzer.cc"

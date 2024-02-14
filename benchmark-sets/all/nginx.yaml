@@ -1,14 +1,51 @@
-functions:
-- char * ngx_http_grpc_pass(struct ngx_conf_s * cf, struct ngx_command_s * cmd, char
-  * conf)
-- size_t ngx_http_grpc_handler(struct ngx_http_request_s * r)
-- char * ngx_http_fastcgi_pass(struct ngx_conf_s * cf, struct ngx_command_s * cmd,
-  char * conf)
-- char * ngx_http_uwsgi_pass(struct ngx_conf_s * cf, struct ngx_command_s * cmd, char
-  * conf)
-- char * ngx_http_scgi_pass(struct ngx_conf_s * cf, struct ngx_command_s * cmd, char
-  * conf)
-project: nginx
-target_name: target
-target_path: /src/fuzzer-test-suite/re2-2014-12-09/target.cc
-
+"functions":
+- "name": "ngx_http_grpc_pass"
+  "params":
+  - "name": "cf"
+    "type": "struct ngx_conf_s *"
+  - "name": "cmd"
+    "type": "struct ngx_command_s *"
+  - "name": "conf"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "char * ngx_http_grpc_pass(ngx_conf_t *, ngx_command_t *, void *)"
+- "name": "ngx_http_grpc_handler"
+  "params":
+  - "name": "r"
+    "type": "struct ngx_http_request_s *"
+  "return_type": "size_t"
+  "signature": "ngx_int_t ngx_http_grpc_handler(ngx_http_request_t *)"
+- "name": "ngx_http_fastcgi_pass"
+  "params":
+  - "name": "cf"
+    "type": "struct ngx_conf_s *"
+  - "name": "cmd"
+    "type": "struct ngx_command_s *"
+  - "name": "conf"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "char * ngx_http_fastcgi_pass(ngx_conf_t *, ngx_command_t *, void *)"
+- "name": "ngx_http_uwsgi_pass"
+  "params":
+  - "name": "cf"
+    "type": "struct ngx_conf_s *"
+  - "name": "cmd"
+    "type": "struct ngx_command_s *"
+  - "name": "conf"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "char * ngx_http_uwsgi_pass(ngx_conf_t *, ngx_command_t *, void *)"
+- "name": "ngx_http_scgi_pass"
+  "params":
+  - "name": "cf"
+    "type": "struct ngx_conf_s *"
+  - "name": "cmd"
+    "type": "struct ngx_command_s *"
+  - "name": "conf"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "char * ngx_http_scgi_pass(ngx_conf_t *, ngx_command_t *, void *)"
+"language": "c"
+"project": "nginx"
+"target_name": "target"
+"target_path": "/src/fuzzer-test-suite/re2-2014-12-09/target.cc"

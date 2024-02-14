@@ -1,16 +1,63 @@
-functions:
-- void perfetto::trace_processor::View::Query(perfetto::trace_processor::Table * ,
-  perfetto::trace_processor::View * , std::vector * , std::vector * , perfetto::trace_processor::BitVector
-  * ) const
-- void perfetto::trace_processor::View::QueryHelper::FilterAndJoinRecursive(perfetto::trace_processor::View::QueryHelper
-  * , struct perfetto::trace_processor::View::TableNode * )
-- void perfetto::trace_processor::Table::Filter(perfetto::trace_processor::Table *
-  , perfetto::trace_processor::Table * , std::vector * , int ) const
-- void perfetto::trace_processor::Table::FilterToRowMap(perfetto::trace_processor::RowMap
-  * , perfetto::trace_processor::Table * , std::vector * , int ) const
-- void perfetto::trace_processor::QueryExecutor::FilterLegacy(perfetto::trace_processor::RowMap
-  * , perfetto::trace_processor::Table * , std::vector * )
-project: perfetto
-target_name: /work/build/../../src/perfetto/src/protozero/proto_decoder_fuzzer.cc
-target_path: /src/perfetto/src/protozero/proto_decoder_fuzzer.cc
-
+"functions":
+- "name": "_ZNK8perfetto15trace_processor5Table4SortERKNSt3__16vectorINS0_5OrderENS2_9allocatorIS4_EEEE"
+  "params":
+  - "name": ""
+    "type": "perfetto::trace_processor::Table *"
+  - "name": ""
+    "type": "perfetto::trace_processor::Table *"
+  - "name": ""
+    "type": "std::vector *"
+  "return_type": "void"
+  "signature": "Table operator=(Table *, Table)"
+- "name": "_ZNK8perfetto15trace_processor5Table13QueryToRowMapERKNSt3__16vectorINS0_10ConstraintENS2_9allocatorIS4_EEEERKNS3_INS0_5OrderENS5_ISA_EEEENS0_6RowMap11OptimizeForE"
+  "params":
+  - "name": ""
+    "type": "perfetto::trace_processor::RowMap *"
+  - "name": ""
+    "type": "perfetto::trace_processor::Table *"
+  - "name": ""
+    "type": "std::vector *"
+  - "name": ""
+    "type": "std::vector *"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "Table operator=(Table *, Table)"
+- "name": "_ZNK8perfetto15trace_processor5Table14FilterToRowMapERKNSt3__16vectorINS0_10ConstraintENS2_9allocatorIS4_EEEENS0_6RowMap11OptimizeForE"
+  "params":
+  - "name": ""
+    "type": "perfetto::trace_processor::RowMap *"
+  - "name": ""
+    "type": "perfetto::trace_processor::Table *"
+  - "name": ""
+    "type": "std::vector *"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "const std::__1::allocator<perfetto::trace_processor::ColumnStorageOverlay> > overlays(const Table *)"
+- "name": "_ZN8perfetto15trace_processor13QueryExecutor12FilterLegacyEPKNS0_5TableERKNSt3__16vectorINS0_10ConstraintENS5_9allocatorIS7_EEEE"
+  "params":
+  - "name": ""
+    "type": "perfetto::trace_processor::RowMap *"
+  - "name": ""
+    "type": "perfetto::trace_processor::Table *"
+  - "name": ""
+    "type": "std::vector *"
+  "return_type": "void"
+  "signature": "from /work/build/../../src/perfetto/src/trace_processor/db/query_executor.cc:143 DW_TAG_class_type Composite type }()"
+- "name": "_ZNK8perfetto15trace_processor12ColumnLegacy10FilterIntoENS0_8FilterOpENS0_8SqlValueEPNS0_6RowMapE"
+  "params":
+  - "name": ""
+    "type": "perfetto::trace_processor::ColumnLegacy *"
+  - "name": ""
+    "type": "int"
+  - "name": "value"
+    "type": "struct perfetto::trace_processor::SqlValue *"
+  - "name": ""
+    "type": "perfetto::trace_processor::RowMap *"
+  "return_type": "void"
+  "signature": "void StableSort(const ColumnLegacy *, bool, std::__1::allocator<unsigned int> > *)"
+"language": "c++"
+"project": "perfetto"
+"target_name": "/work/build/../../src/perfetto/src/protozero/proto_decoder_fuzzer.cc"
+"target_path": "/src/perfetto/src/protozero/proto_decoder_fuzzer.cc"

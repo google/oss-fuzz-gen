@@ -1,14 +1,75 @@
-functions:
-- int SHA384_pbkdf2_hmac_assist(struct t_hash_state * inner, struct t_hash_state *
-  outer, char * first_hmac, char * result, size_t iterations, size_t digest_size)
-- int SHA256_pbkdf2_hmac_assist(struct t_hash_state * inner, struct t_hash_state *
-  outer, char * first_hmac, char * result, size_t iterations, size_t digest_size)
-- int SHA224_pbkdf2_hmac_assist(struct t_hash_state * inner, struct t_hash_state *
-  outer, char * first_hmac, char * result, size_t iterations, size_t digest_size)
-- int MD5_pbkdf2_hmac_assist(struct t_hash_state * inner, struct t_hash_state * outer,
-  char * first_hmac, char * result, size_t iterations)
-- int md2_copy(struct hash_state * src, struct hash_state * dst)
-project: pycryptodome
-target_name: md2_fuzzer
-target_path: /src/pcd_hash_fuzzer.cc
-
+"functions":
+- "name": "_Z25SHA384_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhmm"
+  "params":
+  - "name": "inner"
+    "type": "struct t_hash_state *"
+  - "name": "outer"
+    "type": "struct t_hash_state *"
+  - "name": "first_hmac"
+    "type": "char *"
+  - "name": "result"
+    "type": "char *"
+  - "name": "iterations"
+    "type": "size_t"
+  - "name": "digest_size"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int SHA224_pbkdf2_hmac_assist(const hash_state *, const hash_state *, const uint8_t *, uint8_t *, size_t, size_t)"
+- "name": "_Z25SHA224_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhmm"
+  "params":
+  - "name": "inner"
+    "type": "struct t_hash_state *"
+  - "name": "outer"
+    "type": "struct t_hash_state *"
+  - "name": "first_hmac"
+    "type": "char *"
+  - "name": "result"
+    "type": "char *"
+  - "name": "iterations"
+    "type": "size_t"
+  - "name": "digest_size"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int SHA224_pbkdf2_hmac_assist(const hash_state *, const hash_state *, const uint8_t *, uint8_t *, size_t, size_t)"
+- "name": "_Z25SHA256_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhmm"
+  "params":
+  - "name": "inner"
+    "type": "struct t_hash_state *"
+  - "name": "outer"
+    "type": "struct t_hash_state *"
+  - "name": "first_hmac"
+    "type": "char *"
+  - "name": "result"
+    "type": "char *"
+  - "name": "iterations"
+    "type": "size_t"
+  - "name": "digest_size"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int SHA224_pbkdf2_hmac_assist(const hash_state *, const hash_state *, const uint8_t *, uint8_t *, size_t, size_t)"
+- "name": "_Z22MD5_pbkdf2_hmac_assistPK12t_hash_stateS1_PKhPhm"
+  "params":
+  - "name": "inner"
+    "type": "struct t_hash_state *"
+  - "name": "outer"
+    "type": "struct t_hash_state *"
+  - "name": "first_hmac"
+    "type": "char *"
+  - "name": "result"
+    "type": "char *"
+  - "name": "iterations"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int MD5_pbkdf2_hmac_assist(const hash_state *, const hash_state *, const uint8_t *, uint8_t *, size_t)"
+- "name": "_Z8md2_copyPK10hash_statePS_"
+  "params":
+  - "name": "src"
+    "type": "struct hash_state *"
+  - "name": "dst"
+    "type": "struct hash_state *"
+  "return_type": "int"
+  "signature": "const hash_state * md2_copy(hash_state *)"
+"language": "c"
+"project": "pycryptodome"
+"target_name": "md2_fuzzer"
+"target_path": "/src/pcd_hash_fuzzer.cc"

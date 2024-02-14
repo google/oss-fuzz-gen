@@ -1,12 +1,49 @@
-functions:
-- void dpif_dummy_register(int level)
-- bool dpif_netdev_run(struct dpif * dpif)
-- int dpif_netdev_open(struct dpif_3273 * class, char * name, bool create, struct
-  dpif.3187 ** dpifp)
-- int create_dp_netdev(char * name, struct dpif_3273 * class, struct dp_netdev **
-  dpp)
-- int dpif_netdev_port_add(struct dpif * dpif, struct netdev * netdev, int * port_nop)
-project: openvswitch
-target_name: ofp_print_target
-target_path: /src/openvswitch/tests/oss-fuzz/ofp_print_target.c
-
+"functions":
+- "name": "dpif_dummy_register"
+  "params":
+  - "name": "level"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void dpif_dummy_register(dummy_level)"
+- "name": "dpif_netdev_run"
+  "params":
+  - "name": "dpif"
+    "type": "struct dpif *"
+  "return_type": "bool"
+  "signature": "_Bool dpif_netdev_run(dpif *)"
+- "name": "dpif_netdev_open"
+  "params":
+  - "name": "class"
+    "type": "struct dpif_3273 *"
+  - "name": "name"
+    "type": "char *"
+  - "name": "create"
+    "type": "bool"
+  - "name": "dpifp"
+    "type": "3187 **"
+  "return_type": "int"
+  "signature": "int dpif_netdev_open(const dpif_class *, const char *, _Bool, dpif **)"
+- "name": "create_dp_netdev"
+  "params":
+  - "name": "name"
+    "type": "char *"
+  - "name": "class"
+    "type": "struct dpif_3273 *"
+  - "name": "dpp"
+    "type": "struct dp_netdev **"
+  "return_type": "int"
+  "signature": "int create_dp_netdev(const char *, const dpif_class *, dp_netdev **)"
+- "name": "dpif_netdev_port_add"
+  "params":
+  - "name": "dpif"
+    "type": "struct dpif *"
+  - "name": "netdev"
+    "type": "struct netdev *"
+  - "name": "port_nop"
+    "type": "int *"
+  "return_type": "int"
+  "signature": "int dpif_netdev_port_add(dpif *, netdev *, odp_port_t *)"
+"language": "c++"
+"project": "openvswitch"
+"target_name": "ofp_print_target"
+"target_path": "/src/openvswitch/tests/oss-fuzz/ofp_print_target.c"

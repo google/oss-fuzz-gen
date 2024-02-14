@@ -1,15 +1,63 @@
-functions:
-- int pw::protobuf::StreamDecoder::Read(pw::protobuf::StreamDecoder * this, size_t
-  message, char * table, size_t , pw::protobuf::internal::MessageField * )
-- int pw::protobuf::StreamEncoder::Write(pw::protobuf::StreamEncoder * this, size_t
-  message, char * table, size_t , pw::protobuf::internal::MessageField * )
-- void pw::tokenizer::Detokenizer::DetokenizeBase64(std::string * this, pw::tokenizer::Detokenizer
-  * text, char * , size_t ) const
-- void pw::tokenizer::(pw::tokenizer::(anonymous namespace)::NestedMessageDetokenizer
-  * this, char * chunk, size_t )
-- void pw::tokenizer::(pw::tokenizer::(anonymous namespace)::NestedMessageDetokenizer
-  * this, char next_char)
-project: pigweed
-target_name: encoder_fuzzer
-target_path: /src/pigweed/pw_protobuf/encoder_fuzzer.cc
-
+"functions":
+- "name": "_ZN2pw8protobuf13StreamDecoder4ReadENS_4spanISt4byteLm18446744073709551615EEENS2_IKNS0_8internal12MessageFieldELm18446744073709551615EEE"
+  "params":
+  - "name": "this"
+    "type": "pw::protobuf::StreamDecoder *"
+  - "name": "message"
+    "type": "size_t"
+  - "name": "table"
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "pw::protobuf::internal::MessageField *"
+  "return_type": "int"
+  "signature": "Result<pw::protobuf::StreamDecoder::Bounds> GetLengthDelimitedPayloadBounds()"
+- "name": "_ZN2pw8protobuf13StreamEncoder5WriteENS_4spanIKSt4byteLm18446744073709551615EEENS2_IKNS0_8internal12MessageFieldELm18446744073709551615EEE"
+  "params":
+  - "name": "this"
+    "type": "pw::protobuf::StreamEncoder *"
+  - "name": "message"
+    "type": "size_t"
+  - "name": "table"
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "pw::protobuf::internal::MessageField *"
+  "return_type": "int"
+  "signature": "void StreamEncoder::CloseNestedMessage(StreamEncoder)"
+- "name": "_ZNK2pw9tokenizer11Detokenizer16DetokenizeBase64ENSt3__117basic_string_viewIcNS2_11char_traitsIcEEEE"
+  "params":
+  - "name": "this"
+    "type": "std::string *"
+  - "name": "text"
+    "type": "pw::tokenizer::Detokenizer *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "string const Detokenizer::DetokenizeBase64(string_view)"
+- "name": "_ZN2pw9tokenizer12_GLOBAL__N_124NestedMessageDetokenizer10DetokenizeENSt3__117basic_string_viewIcNS3_11char_traitsIcEEEE"
+  "params":
+  - "name": "this"
+    "type": "pw::tokenizer::(anonymous namespace)::NestedMessageDetokenizer *"
+  - "name": "chunk"
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "void NestedMessageDetokenizer::Detokenize(string_view)"
+- "name": "_ZN2pw9tokenizer12_GLOBAL__N_124NestedMessageDetokenizer10DetokenizeEc"
+  "params":
+  - "name": "this"
+    "type": "pw::tokenizer::(anonymous namespace)::NestedMessageDetokenizer *"
+  - "name": "next_char"
+    "type": "char"
+  "return_type": "void"
+  "signature": "void NestedMessageDetokenizer::Detokenize(char)"
+"language": "c++"
+"project": "pigweed"
+"target_name": "encoder_fuzzer"
+"target_path": "/src/pigweed/pw_protobuf/encoder_fuzzer.cc"

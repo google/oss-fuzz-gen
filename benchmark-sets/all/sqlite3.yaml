@@ -1,5 +1,0 @@
-functions:
-- void ossfuzz_set_debug_flags(int x)
-project: sqlite3
-target_name: ossfuzz
-target_path: /src/sqlite3/test/ossfuzz.c
