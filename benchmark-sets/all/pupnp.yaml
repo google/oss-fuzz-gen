@@ -1,12 +1,45 @@
-functions:
-- struct _IXML_Document * ixmlParseBuffer(char * buffer)
-- struct _IXML_Document * ixmlLoadDocument(char * xmlFile)
-- int ixmlParseBufferEx(char * buffer, struct _IXML_Document.1 ** retDoc)
-- int ixmlDocument_importNode(struct _IXML_Document * doc, struct _IXML_Node * importNode,
-  int deep, struct _IXML_Node.0 ** rtNode)
-- struct _IXML_Node * ixmlNode_cloneNodeTreeRecursive(struct _IXML_Node * nodeptr,
-  int deep)
-project: pupnp
-target_name: FuzzIxml
-target_path: /src/pupnp/fuzzer/FuzzIxml.c
-
+"functions":
+- "name": "ixmlParseBuffer"
+  "params":
+  - "name": "buffer"
+    "type": "char *"
+  "return_type": "struct _IXML_Document *"
+  "signature": "struct _IXML_Document * ixmlParseBuffer(char * buffer)"
+- "name": "ixmlLoadDocument"
+  "params":
+  - "name": "xmlFile"
+    "type": "char *"
+  "return_type": "struct _IXML_Document *"
+  "signature": "struct _IXML_Document * ixmlLoadDocument(char * xmlFile)"
+- "name": "ixmlParseBufferEx"
+  "params":
+  - "name": "buffer"
+    "type": "char *"
+  - "name": "retDoc"
+    "type": "1 **"
+  "return_type": "int"
+  "signature": "int ixmlParseBufferEx(char * buffer, struct _IXML_Document.1 ** retDoc)"
+- "name": "ixmlDocument_importNode"
+  "params":
+  - "name": "doc"
+    "type": "struct _IXML_Document *"
+  - "name": "importNode"
+    "type": "struct _IXML_Node *"
+  - "name": "deep"
+    "type": "int"
+  - "name": "rtNode"
+    "type": "0 **"
+  "return_type": "int"
+  "signature": "int ixmlDocument_importNode(struct _IXML_Document * doc, struct _IXML_Node * importNode, int deep, struct _IXML_Node.0 ** rtNode)"
+- "name": "ixmlNode_cloneNodeTreeRecursive"
+  "params":
+  - "name": "nodeptr"
+    "type": "struct _IXML_Node *"
+  - "name": "deep"
+    "type": "int"
+  "return_type": "struct _IXML_Node *"
+  "signature": "struct _IXML_Node * ixmlNode_cloneNodeTreeRecursive(struct _IXML_Node * nodeptr, int deep)"
+"language": "c"
+"project": "pupnp"
+"target_name": "FuzzIxml"
+"target_path": "/src/pupnp/fuzzer/FuzzIxml.c"

@@ -1,15 +1,59 @@
-functions:
-- size_t protobuf_c_message_pack_to_buffer(struct ProtobufCMessage * message, struct
-  ProtobufCBuffer * buffer)
-- size_t oneof_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, int oneof_case,
-  char * member, struct ProtobufCBuffer * buffer)
-- size_t optional_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, int
-  has, char * member, struct ProtobufCBuffer * buffer)
-- size_t repeated_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, int
-  count, char * member, struct ProtobufCBuffer * buffer)
-- size_t unlabeled_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, char
-  * member, struct ProtobufCBuffer * buffer)
-project: protobuf-c
-target_name: fuzzer
-target_path: /src/protobuf-c-fuzzers/fuzzer.cpp
-
+"functions":
+- "name": "protobuf_c_message_pack_to_buffer"
+  "params":
+  - "name": "message"
+    "type": "struct ProtobufCMessage *"
+  - "name": "buffer"
+    "type": "struct ProtobufCBuffer *"
+  "return_type": "size_t"
+  "signature": "size_t protobuf_c_message_pack_to_buffer(struct ProtobufCMessage * message, struct ProtobufCBuffer * buffer)"
+- "name": "oneof_field_pack_to_buffer"
+  "params":
+  - "name": "field"
+    "type": "struct ProtobufCFieldDescriptor *"
+  - "name": "oneof_case"
+    "type": "int"
+  - "name": "member"
+    "type": "char *"
+  - "name": "buffer"
+    "type": "struct ProtobufCBuffer *"
+  "return_type": "size_t"
+  "signature": "size_t oneof_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, int oneof_case, char * member, struct ProtobufCBuffer * buffer)"
+- "name": "optional_field_pack_to_buffer"
+  "params":
+  - "name": "field"
+    "type": "struct ProtobufCFieldDescriptor *"
+  - "name": "has"
+    "type": "int"
+  - "name": "member"
+    "type": "char *"
+  - "name": "buffer"
+    "type": "struct ProtobufCBuffer *"
+  "return_type": "size_t"
+  "signature": "size_t optional_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, int has, char * member, struct ProtobufCBuffer * buffer)"
+- "name": "repeated_field_pack_to_buffer"
+  "params":
+  - "name": "field"
+    "type": "struct ProtobufCFieldDescriptor *"
+  - "name": "count"
+    "type": "int"
+  - "name": "member"
+    "type": "char *"
+  - "name": "buffer"
+    "type": "struct ProtobufCBuffer *"
+  "return_type": "size_t"
+  "signature": "size_t repeated_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, int count, char * member, struct ProtobufCBuffer * buffer)"
+- "name": "unlabeled_field_pack_to_buffer"
+  "params":
+  - "name": "field"
+    "type": "struct ProtobufCFieldDescriptor *"
+  - "name": "member"
+    "type": "char *"
+  - "name": "buffer"
+    "type": "struct ProtobufCBuffer *"
+  "return_type": "size_t"
+  "signature": "size_t unlabeled_field_pack_to_buffer(struct ProtobufCFieldDescriptor * field, char * member, struct ProtobufCBuffer * buffer)"
+"language": "c"
+"project": "protobuf-c"
+"target_name": "fuzzer"
+"target_path": "/src/protobuf-c-fuzzers/fuzzer.cpp"

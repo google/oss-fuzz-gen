@@ -1,14 +1,79 @@
-functions:
-- struct hb_face_t * hb_subset_preprocess(struct hb_face_t * source)
-- void hb_ot_shape_glyphs_closure(struct hb_font_t * font, struct hb_buffer_t * buffer,
-  struct hb_feature_t * features, int num_features, struct hb_set_t * glyphs)
-- int hb_shape_justify(struct hb_font_t * font, struct hb_buffer_t * buffer, struct
-  hb_glyph_extents_t * features, int num_features, char ** shaper_list, float min_target_advance,
-  float max_target_advance, float * advance, int * var_tag, float * var_value)
-- double solve_itp<hb_shape_justify::$_3>(anon * f, double a, double b, double epsilon,
-  double min_y, double max_y, double * ya, double * yb, double * y)
-- double hb_shape_justify::$_3::operator(anon * this, double x) const
-project: harfbuzz
-target_name: hb-repacker-fuzzer
-target_path: /src/harfbuzz/test/fuzzing/hb-repacker-fuzzer.cc
-
+"functions":
+- "name": "hb_subset_preprocess"
+  "params":
+  - "name": "source"
+    "type": "struct hb_face_t *"
+  "return_type": "struct hb_face_t *"
+  "signature": "struct hb_face_t * hb_subset_preprocess(struct hb_face_t * source)"
+- "name": "hb_ot_shape_glyphs_closure"
+  "params":
+  - "name": "font"
+    "type": "struct hb_font_t *"
+  - "name": "buffer"
+    "type": "struct hb_buffer_t *"
+  - "name": "features"
+    "type": "struct hb_feature_t *"
+  - "name": "num_features"
+    "type": "int"
+  - "name": "glyphs"
+    "type": "struct hb_set_t *"
+  "return_type": "void"
+  "signature": "void hb_ot_shape_glyphs_closure(struct hb_font_t * font, struct hb_buffer_t * buffer, struct hb_feature_t * features, int num_features, struct hb_set_t * glyphs)"
+- "name": "hb_shape_justify"
+  "params":
+  - "name": "font"
+    "type": "struct hb_font_t *"
+  - "name": "buffer"
+    "type": "struct hb_buffer_t *"
+  - "name": "features"
+    "type": "struct hb_glyph_extents_t *"
+  - "name": "num_features"
+    "type": "int"
+  - "name": "shaper_list"
+    "type": "char **"
+  - "name": "min_target_advance"
+    "type": "float"
+  - "name": "max_target_advance"
+    "type": "float"
+  - "name": "advance"
+    "type": "float *"
+  - "name": "var_tag"
+    "type": "int *"
+  - "name": "var_value"
+    "type": "float *"
+  "return_type": "int"
+  "signature": "int hb_shape_justify(struct hb_font_t * font, struct hb_buffer_t * buffer, struct hb_glyph_extents_t * features, int num_features, char ** shaper_list, float min_target_advance, float max_target_advance, float * advance, int * var_tag, float * var_value)"
+- "name": "_Z9solve_itpIZ16hb_shape_justifyE3$_3EdT_dddddRdS2_S2_"
+  "params":
+  - "name": "f"
+    "type": "anon *"
+  - "name": "a"
+    "type": "double"
+  - "name": "b"
+    "type": "double"
+  - "name": "epsilon"
+    "type": "double"
+  - "name": "min_y"
+    "type": "double"
+  - "name": "max_y"
+    "type": "double"
+  - "name": "ya"
+    "type": "double *"
+  - "name": "yb"
+    "type": "double *"
+  - "name": "y"
+    "type": "double *"
+  "return_type": "double"
+  "signature": "double solve_itp<hb_shape_justify::$_3>(hb_shape_justify::$_3, double, double, double, double, double, double&, double&, double&)"
+- "name": "_ZZ16hb_shape_justifyENK3$_3clEd"
+  "params":
+  - "name": "this"
+    "type": "anon *"
+  - "name": "x"
+    "type": "double"
+  "return_type": "double"
+  "signature": "hb_shape_justify::$_3::operator()(double) const"
+"language": "c++"
+"project": "harfbuzz"
+"target_name": "hb-repacker-fuzzer"
+"target_path": "/src/harfbuzz/test/fuzzing/hb-repacker-fuzzer.cc"

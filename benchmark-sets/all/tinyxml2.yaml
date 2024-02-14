@@ -1,44 +1,49 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-functions:
-  - tinyxml2::XMLNode * tinyxml2::XMLElement::ShallowClone(tinyxml2::XMLElement *this, tinyxml2::XMLDocument *doc) const
-  - int tinyxml2::XMLDocument::LoadFile(tinyxml2::XMLDocument *this, char *filename)
-  - void tinyxml2::XMLElement::SetAttribute(tinyxml2::XMLElement *this, char *name, char *value)
-  - void tinyxml2::XMLElement::DeleteAttribute(const char* name)
-  - tinyxml2::XMLAttribute *tinyxml2::XMLElement::FindOrCreateAttribute(const char *name)
-  - int tinyxml2::XMLElement::IntText(int defaultValue) const
-  - unsigned tinyxml2::XMLElement::UnsignedText(unsigned defaultValue) const
-  - int64_t tinyxml2::XMLElement::Int64Text(int64_t defaultValue) const
-  - uint64_t tinyxml2::XMLElement::Unsigned64Text(uint64_t defaultValue) const
-  - bool tinyxml2::XMLElement::BoolText(bool defaultValue) const
-  - double tinyxml2::XMLElement::DoubleText(double defaultValue) const
-  - float tinyxml2::XMLElement::FloatText(float defaultValue) const
-  - bool tinyxml2::XMLElement::ShallowEqual(const XMLNode *compare) const
-  - void tinyxml2::XMLDocument::DeepCopy(tinyxml2::XMLDocument *target) const
-  - void tinyxml2::XMLDocument::Print(tinyxml2::XMLPrinter*) const
-  - tinyxml2::XMLElement* tinyxml2::XMLElement::InsertNewChildElement(const char* name)
-  - tinyxml2::XMLComment* tinyxml2::XMLElement::InsertNewComment(const char* comment)
-  - tinyxml2::XMLText* tinyxml2::XMLElement::InsertNewText(const char* text)
-  - tinyxml2::XMLDeclaration* tinyxml2::XMLElement::InsertNewDeclaration(const char* text)
-  - tinyxml2::XMLUnknown* tinyxml2::XMLElement::InsertNewUnknown(const char* text)
-  - tinyxml2::XMLError tinyxml2::XMLDocument::LoadFile(const char* filename)
-  - tinyxml2::XMLError tinyxml2::XMLDocument::SaveFile(const char* filename, bool compact)
-  - void tinyxml2::XMLElement::SetText(const char* inText)
-  - const char* tinyxml2::XMLElement::GetText() const
-  - tinyxml2::XMLNode* tinyxml2::XMLNode::InsertAfterChild(XMLNode* afterThis, XMLNode* addThis)
-  - const tinyxml2::XMLElement* tinyxml2::XMLNode::LastChildElement(const char* name) const
-  - const tinyxml2::XMLElement* tinyxml2::XMLNode::PreviousSiblingElement(const char* name) const
-project: tinyxml2
-target_path: /src/xmltest.cpp
+"functions":
+- "name": "_ZNK8tinyxml210XMLElement12ShallowCloneEPNS_11XMLDocumentE"
+  "params":
+  - "name": "this"
+    "type": "tinyxml2::XMLElement *"
+  - "name": "doc"
+    "type": "tinyxml2::XMLDocument *"
+  "return_type": "tinyxml2::XMLNode *"
+  "signature": "tinyxml2::XMLElement::ShallowClone(tinyxml2::XMLDocument*) const"
+- "name": "_ZN8tinyxml211XMLDocument8LoadFileEPKc"
+  "params":
+  - "name": "this"
+    "type": "tinyxml2::XMLDocument *"
+  - "name": "filename"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "tinyxml2::XMLDocument::LoadFile(char const*)"
+- "name": "_ZN8tinyxml210XMLElement12SetAttributeEPKcS2_"
+  "params":
+  - "name": "this"
+    "type": "tinyxml2::XMLElement *"
+  - "name": "name"
+    "type": "char *"
+  - "name": "value"
+    "type": "char *"
+  "return_type": "void"
+  "signature": "tinyxml2::XMLElement::SetAttribute(char const*, char const*)"
+- "name": "_ZN8tinyxml210XMLPrinter10VisitEnterERKNS_10XMLElementEPKNS_12XMLAttributeE"
+  "params":
+  - "name": "this"
+    "type": "tinyxml2::XMLPrinter *"
+  - "name": "element"
+    "type": "tinyxml2::XMLElement *"
+  - "name": "attribute"
+    "type": "tinyxml2::XMLAttribute *"
+  "return_type": "bool"
+  "signature": "tinyxml2::XMLPrinter::VisitEnter(tinyxml2::XMLElement const&, tinyxml2::XMLAttribute const*)"
+- "name": "_ZN8tinyxml210XMLElement21FindOrCreateAttributeEPKc"
+  "params":
+  - "name": "this"
+    "type": "tinyxml2::XMLElement *"
+  - "name": "name"
+    "type": "char *"
+  "return_type": "tinyxml2::XMLAttribute *"
+  "signature": "tinyxml2::XMLElement::FindOrCreateAttribute(char const*)"
+"language": "c++"
+"project": "tinyxml2"
+"target_name": "xmltest"
+"target_path": "/src/xmltest.cpp"

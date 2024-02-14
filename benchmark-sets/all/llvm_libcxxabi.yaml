@@ -1,15 +1,45 @@
-functions:
-- void (struct (anonymous namespace)::DumpVisitor * this, (anonymous namespace)::itanium_demangle::NewExpr
-  * Node)
-- void (struct (anonymous namespace)::DumpVisitor * this, (anonymous namespace)::itanium_demangle::TemplateArgs
-  * Node)
-- void (struct (anonymous namespace)::DumpVisitor * this, (anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl
-  * Node)
-- void (struct (anonymous namespace)::DumpVisitor * this, (anonymous namespace)::itanium_demangle::InitListExpr
-  * Node)
-- void (struct (anonymous namespace)::DumpVisitor * this, (anonymous namespace)::itanium_demangle::InitListExpr
-  * Node)
-project: llvm_libcxxabi
-target_name: DummyParserFuzzer
-target_path: /src/llvm-project/mlir/tools/mlir-parser-fuzzer/text/DummyParserFuzzer.cpp
-
+"functions":
+- "name": "_ZN12_GLOBAL__N_111DumpVisitorclINS_16itanium_demangle7NewExprEEEvPKT_"
+  "params":
+  - "name": "this"
+    "type": "struct (anonymous namespace)::DumpVisitor *"
+  - "name": "Node"
+    "type": "(anonymous namespace)::itanium_demangle::NewExpr *"
+  "return_type": "void"
+  "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NewExpr>((anonymous namespace)::itanium_demangle::NewExpr const*)"
+- "name": "_ZN12_GLOBAL__N_111DumpVisitorclINS_16itanium_demangle12TemplateArgsEEEvPKT_"
+  "params":
+  - "name": "this"
+    "type": "struct (anonymous namespace)::DumpVisitor *"
+  - "name": "Node"
+    "type": "(anonymous namespace)::itanium_demangle::TemplateArgs *"
+  "return_type": "void"
+  "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::TemplateArgs>((anonymous namespace)::itanium_demangle::TemplateArgs const*)"
+- "name": "_ZN12_GLOBAL__N_111DumpVisitorclINS_16itanium_demangle25TemplateTemplateParamDeclEEEvPKT_"
+  "params":
+  - "name": "this"
+    "type": "struct (anonymous namespace)::DumpVisitor *"
+  - "name": "Node"
+    "type": "(anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl *"
+  "return_type": "void"
+  "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl>((anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl const*)"
+- "name": "_ZN12_GLOBAL__N_111DumpVisitorclINS_16itanium_demangle14ConversionExprEEEvPKT_"
+  "params":
+  - "name": "this"
+    "type": "struct (anonymous namespace)::DumpVisitor *"
+  - "name": "Node"
+    "type": "(anonymous namespace)::itanium_demangle::InitListExpr *"
+  "return_type": "void"
+  "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::ConversionExpr>((anonymous namespace)::itanium_demangle::ConversionExpr const*)"
+- "name": "_ZN12_GLOBAL__N_111DumpVisitorclINS_16itanium_demangle8CallExprEEEvPKT_"
+  "params":
+  - "name": "this"
+    "type": "struct (anonymous namespace)::DumpVisitor *"
+  - "name": "Node"
+    "type": "(anonymous namespace)::itanium_demangle::InitListExpr *"
+  "return_type": "void"
+  "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::CallExpr>((anonymous namespace)::itanium_demangle::CallExpr const*)"
+"language": "c++"
+"project": "llvm_libcxxabi"
+"target_name": "DummyParserFuzzer"
+"target_path": "/src/llvm-project/mlir/tools/mlir-parser-fuzzer/text/DummyParserFuzzer.cpp"

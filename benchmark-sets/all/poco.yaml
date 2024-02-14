@@ -1,14 +1,69 @@
-functions:
-- bool Poco::RegularExpression::match(std::string * , std::string * , int )
-- int Poco::RegularExpression::split(Poco::RegularExpression * , std::string * , size_t
-  , std::vector * , int ) const
-- int Poco::RegularExpression::subst(Poco::RegularExpression * , std::string * , size_t
-  , std::string * , int ) const
-- size_t Poco::RegularExpression::substOne(Poco::RegularExpression * , std::string
-  * , size_t , std::string * , int ) const
-- bool Poco::RegularExpression::match(Poco::RegularExpression * , std::string * ,
-  size_t , int ) const
-project: poco
-target_name: json_parser_fuzzer
-target_path: /src/json_parse_fuzzer.cc
-
+"functions":
+- "name": "_ZN4Poco17RegularExpression5matchERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_i"
+  "params":
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "int"
+  "return_type": "bool"
+  "signature": "Poco::RegularExpression::match(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, int)"
+- "name": "_ZNK4Poco17RegularExpression5splitERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEmRNS1_6vectorIS7_NS5_IS7_EEEEi"
+  "params":
+  - "name": ""
+    "type": "Poco::RegularExpression *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "std::vector *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "Poco::RegularExpression::split(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned long, std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >&, int) const"
+- "name": "_ZNK4Poco17RegularExpression5substERNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEmRKS7_i"
+  "params":
+  - "name": ""
+    "type": "Poco::RegularExpression *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "Poco::RegularExpression::subst(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&, unsigned long, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, int) const"
+- "name": "_ZNK4Poco17RegularExpression8substOneERNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEmRKS7_i"
+  "params":
+  - "name": ""
+    "type": "Poco::RegularExpression *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "int"
+  "return_type": "size_t"
+  "signature": "Poco::RegularExpression::substOne(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&, unsigned long, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, int) const"
+- "name": "_ZNK4Poco17RegularExpression5matchERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEmi"
+  "params":
+  - "name": ""
+    "type": "Poco::RegularExpression *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "int"
+  "return_type": "bool"
+  "signature": "Poco::RegularExpression::match(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned long, int) const"
+"language": "c++"
+"project": "poco"
+"target_name": "json_parser_fuzzer"
+"target_path": "/src/json_parse_fuzzer.cc"

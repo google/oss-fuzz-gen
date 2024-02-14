@@ -1,15 +1,57 @@
-functions:
-- void flatbuffers::Parser::Serialize(flatbuffers::Parser * )
-- int flatbuffers::(flatbuffers::(anonymous namespace)::TextCodeGenerator * , flatbuffers::Parser
-  * , std::string * , std::string * )
-- char * flatbuffers::GenerateTextFile(flatbuffers::Parser * , std::string * , std::string
-  * )
-- char * flatbuffers::GenTextFile(flatbuffers::Parser * , std::string * , std::string
-  * )
-- char * char const* flatbuffers::JsonPrinter::PrintVector<flatbuffers::Offset64<void>,
-  unsigned int>(struct flatbuffers::JsonPrinter * , char * , struct flatbuffers::Type
-  * , int , char * )
-project: flatbuffers
-target_name: 64bit_fuzzer
-target_path: /src/flatbuffers/tests/fuzzer/flatbuffers_64bit_fuzzer.cc
-
+"functions":
+- "name": "_ZN11flatbuffers6Parser9SerializeEv"
+  "params":
+  - "name": ""
+    "type": "flatbuffers::Parser *"
+  "return_type": "void"
+  "signature": "flatbuffers::Parser::Serialize()"
+- "name": "_ZN11flatbuffers12_GLOBAL__N_117TextCodeGenerator12GenerateCodeERKNS_6ParserERKNSt3__112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEESD_"
+  "params":
+  - "name": ""
+    "type": "flatbuffers::(anonymous namespace)::TextCodeGenerator *"
+  - "name": ""
+    "type": "flatbuffers::Parser *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "std::string *"
+  "return_type": "int"
+  "signature": "flatbuffers::(anonymous namespace)::TextCodeGenerator::GenerateCode(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "_ZN11flatbuffers16GenerateTextFileERKNS_6ParserERKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESB_"
+  "params":
+  - "name": ""
+    "type": "flatbuffers::Parser *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "std::string *"
+  "return_type": "char *"
+  "signature": "flatbuffers::GenerateTextFile(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "_ZN11flatbuffers11GenTextFileERKNS_6ParserERKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESB_"
+  "params":
+  - "name": ""
+    "type": "flatbuffers::Parser *"
+  - "name": ""
+    "type": "std::string *"
+  - "name": ""
+    "type": "std::string *"
+  "return_type": "char *"
+  "signature": "flatbuffers::GenTextFile(flatbuffers::Parser const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "_ZN11flatbuffers11JsonPrinter11PrintVectorINS_8Offset64IvEEjEEPKcPKvRKNS_4TypeEiPKh"
+  "params":
+  - "name": ""
+    "type": "struct flatbuffers::JsonPrinter *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "struct flatbuffers::Type *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "char const* flatbuffers::JsonPrinter::PrintVector<flatbuffers::Offset64<void>, unsigned int>(void const*, flatbuffers::Type const&, int, unsigned char const*)"
+"language": "c++"
+"project": "flatbuffers"
+"target_name": "64bit_fuzzer"
+"target_path": "/src/flatbuffers/tests/fuzzer/flatbuffers_64bit_fuzzer.cc"

@@ -1,11 +1,51 @@
-functions:
-- bool ucl_parser_add_fd(struct ucl_parser * parser, int fd)
-- bool ucl_parser_add_fd_priority(struct ucl_parser * parser, int fd, int priority)
-- bool ucl_parser_add_file(struct ucl_parser * parser, char * filename)
-- bool ucl_parser_add_file_priority(struct ucl_parser * parser, char * filename, int
-  priority)
-- bool ucl_parser_insert_chunk(struct ucl_parser * parser, char * data, size_t len)
-project: libucl
-target_name: ucl_add_string_fuzzer
-target_path: /src/libucl/tests/fuzzers/ucl_add_string_fuzzer.c
-
+"functions":
+- "name": "ucl_parser_add_fd"
+  "params":
+  - "name": "parser"
+    "type": "struct ucl_parser *"
+  - "name": "fd"
+    "type": "int"
+  "return_type": "bool"
+  "signature": "bool ucl_parser_add_fd(struct ucl_parser * parser, int fd)"
+- "name": "ucl_parser_add_fd_priority"
+  "params":
+  - "name": "parser"
+    "type": "struct ucl_parser *"
+  - "name": "fd"
+    "type": "int"
+  - "name": "priority"
+    "type": "int"
+  "return_type": "bool"
+  "signature": "bool ucl_parser_add_fd_priority(struct ucl_parser * parser, int fd, int priority)"
+- "name": "ucl_parser_add_file"
+  "params":
+  - "name": "parser"
+    "type": "struct ucl_parser *"
+  - "name": "filename"
+    "type": "char *"
+  "return_type": "bool"
+  "signature": "bool ucl_parser_add_file(struct ucl_parser * parser, char * filename)"
+- "name": "ucl_parser_add_file_priority"
+  "params":
+  - "name": "parser"
+    "type": "struct ucl_parser *"
+  - "name": "filename"
+    "type": "char *"
+  - "name": "priority"
+    "type": "int"
+  "return_type": "bool"
+  "signature": "bool ucl_parser_add_file_priority(struct ucl_parser * parser, char * filename, int priority)"
+- "name": "ucl_parser_insert_chunk"
+  "params":
+  - "name": "parser"
+    "type": "struct ucl_parser *"
+  - "name": "data"
+    "type": "char *"
+  - "name": "len"
+    "type": "size_t"
+  "return_type": "bool"
+  "signature": "bool ucl_parser_insert_chunk(struct ucl_parser * parser, char * data, size_t len)"
+"language": "c"
+"project": "libucl"
+"target_name": "ucl_add_string_fuzzer"
+"target_path": "/src/libucl/tests/fuzzers/ucl_add_string_fuzzer.c"

@@ -1,12 +1,49 @@
-functions:
-- char * stbi__jpeg_load(struct stbi__context * s, int * x, int * y, int * comp, int
-  req_comp, struct stbi__result_info * ri)
-- char * load_jpeg_image(struct stbi__jpeg * z, int * out_x, int * out_y, int * comp,
-  int req_comp)
-- int stbi_is_16_bit(char * filename)
-- int stbi_info(char * filename, int * x, int * y, int * comp)
-- int stbi_is_16_bit_from_file(struct _IO_FILE * f)
-project: stb
-target_name: stbi_read_fuzzer
-target_path: /src/stb/tests/stbi_read_fuzzer.c
-
+"functions":
+- "name": "stbi_is_16_bit"
+  "params":
+  - "name": "filename"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int stbi_is_16_bit(char * filename)"
+- "name": "stbi_info"
+  "params":
+  - "name": "filename"
+    "type": "char *"
+  - "name": "x"
+    "type": "int *"
+  - "name": "y"
+    "type": "int *"
+  - "name": "comp"
+    "type": "int *"
+  "return_type": "int"
+  "signature": "int stbi_info(char * filename, int * x, int * y, int * comp)"
+- "name": "stbi_is_16_bit_from_file"
+  "params":
+  - "name": "f"
+    "type": "struct _IO_FILE *"
+  "return_type": "int"
+  "signature": "int stbi_is_16_bit_from_file(struct _IO_FILE * f)"
+- "name": "stbi_info_from_file"
+  "params":
+  - "name": "f"
+    "type": "struct _IO_FILE *"
+  - "name": "x"
+    "type": "int *"
+  - "name": "y"
+    "type": "int *"
+  - "name": "comp"
+    "type": "int *"
+  "return_type": "int"
+  "signature": "int stbi_info_from_file(struct _IO_FILE * f, int * x, int * y, int * comp)"
+- "name": "stbi_is_16_bit_from_callbacks"
+  "params":
+  - "name": "c"
+    "type": "struct stbi_io_callbacks *"
+  - "name": "user"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int stbi_is_16_bit_from_callbacks(struct stbi_io_callbacks * c, char * user)"
+"language": "c++"
+"project": "stb"
+"target_name": "stb_c_lexer_fuzzer"
+"target_path": "/src/stb/tests/stb_c_lexer_fuzzer.cpp"

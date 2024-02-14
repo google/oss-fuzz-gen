@@ -1,10 +1,41 @@
-functions:
-- struct xlsWorkBook * xls_open(char * file, char * charset)
-- struct xlsWorkBook * xls_open_file(char * file, char * charset, int * outError)
-- struct OLE2 * ole2_open_file(char * file)
-- char * xls_getCSS(struct xlsWorkBook * pWB)
-- void xls_showBookInfo(struct xlsWorkBook * pWB)
-project: libxls
-target_name: fuzz_xls
-target_path: /src/libxls/fuzz/fuzz_xls.c
-
+"functions":
+- "name": "xls_open"
+  "params":
+  - "name": "file"
+    "type": "char *"
+  - "name": "charset"
+    "type": "char *"
+  "return_type": "struct xlsWorkBook *"
+  "signature": "struct xlsWorkBook * xls_open(char * file, char * charset)"
+- "name": "xls_open_file"
+  "params":
+  - "name": "file"
+    "type": "char *"
+  - "name": "charset"
+    "type": "char *"
+  - "name": "outError"
+    "type": "int *"
+  "return_type": "struct xlsWorkBook *"
+  "signature": "struct xlsWorkBook * xls_open_file(char * file, char * charset, int * outError)"
+- "name": "ole2_open_file"
+  "params":
+  - "name": "file"
+    "type": "char *"
+  "return_type": "struct OLE2 *"
+  "signature": "struct OLE2 * ole2_open_file(char * file)"
+- "name": "xls_getCSS"
+  "params":
+  - "name": "pWB"
+    "type": "struct xlsWorkBook *"
+  "return_type": "char *"
+  "signature": "char * xls_getCSS(struct xlsWorkBook * pWB)"
+- "name": "xls_showBookInfo"
+  "params":
+  - "name": "pWB"
+    "type": "struct xlsWorkBook *"
+  "return_type": "void"
+  "signature": "void xls_showBookInfo(struct xlsWorkBook * pWB)"
+"language": "c++"
+"project": "libxls"
+"target_name": "fuzz_xls"
+"target_path": "/src/libxls/fuzz/fuzz_xls.c"

@@ -1,12 +1,69 @@
-functions:
-- int modbus_read_input_bits(struct _modbus * ctx, int addr, int nb, char * dest)
-- int modbus_write_and_read_registers(struct _modbus * ctx, int write_addr, int write_nb,
-  short * src, int read_addr, int read_nb, short * dest)
-- int modbus_read_input_registers(struct _modbus * ctx, int addr, int nb, short *
-  dest)
-- int modbus_write_bits(struct _modbus * ctx, int addr, int nb, char * src)
-- int modbus_report_slave_id(struct _modbus * ctx, int max_dest, char * dest)
-project: libmodbus
-target_name: FuzzClient
-target_path: /src/libmodbus/fuzz/FuzzClient.c
-
+"functions":
+- "name": "modbus_read_input_bits"
+  "params":
+  - "name": "ctx"
+    "type": "struct _modbus *"
+  - "name": "addr"
+    "type": "int"
+  - "name": "nb"
+    "type": "int"
+  - "name": "dest"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int modbus_read_input_bits(struct _modbus * ctx, int addr, int nb, char * dest)"
+- "name": "modbus_write_and_read_registers"
+  "params":
+  - "name": "ctx"
+    "type": "struct _modbus *"
+  - "name": "write_addr"
+    "type": "int"
+  - "name": "write_nb"
+    "type": "int"
+  - "name": "src"
+    "type": "short *"
+  - "name": "read_addr"
+    "type": "int"
+  - "name": "read_nb"
+    "type": "int"
+  - "name": "dest"
+    "type": "short *"
+  "return_type": "int"
+  "signature": "int modbus_write_and_read_registers(struct _modbus * ctx, int write_addr, int write_nb, short * src, int read_addr, int read_nb, short * dest)"
+- "name": "modbus_read_input_registers"
+  "params":
+  - "name": "ctx"
+    "type": "struct _modbus *"
+  - "name": "addr"
+    "type": "int"
+  - "name": "nb"
+    "type": "int"
+  - "name": "dest"
+    "type": "short *"
+  "return_type": "int"
+  "signature": "int modbus_read_input_registers(struct _modbus * ctx, int addr, int nb, short * dest)"
+- "name": "modbus_write_bits"
+  "params":
+  - "name": "ctx"
+    "type": "struct _modbus *"
+  - "name": "addr"
+    "type": "int"
+  - "name": "nb"
+    "type": "int"
+  - "name": "src"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int modbus_write_bits(struct _modbus * ctx, int addr, int nb, char * src)"
+- "name": "modbus_report_slave_id"
+  "params":
+  - "name": "ctx"
+    "type": "struct _modbus *"
+  - "name": "max_dest"
+    "type": "int"
+  - "name": "dest"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int modbus_report_slave_id(struct _modbus * ctx, int max_dest, char * dest)"
+"language": "c"
+"project": "libmodbus"
+"target_name": "FuzzClient"
+"target_path": "/src/libmodbus/fuzz/FuzzClient.c"
