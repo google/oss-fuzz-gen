@@ -86,7 +86,7 @@ def _match_target_path_content(target_paths: List[str],
 
 def _bucket_match_target_content_signatures(
     target_funcs: Dict[str, List[Dict]], fuzz_target_dir: str,
-    project_language: str, project_name: str) -> Dict[str, List[str]]:
+    project_name: str) -> Dict[str, List[str]]:
   """Returns a list of dictionary with function signatures as keys and
     its fuzz target content as values."""
   if not target_funcs:
@@ -120,8 +120,7 @@ def _bucket_match_target_content_signatures(
       target_content_signature_dict[content] = []
 
     signatures = [
-        introspector.get_function_signature(project_name, func_info,
-                                            project_language)
+        introspector.get_function_signature(func_info, project_name)
         for func_info in functions
     ]
     target_content_signature_dict[content].extend(signatures)
@@ -136,9 +135,8 @@ def generate_data(project_name: str,
   """Generates project-specific fuzz targets examples."""
   target_funcs = introspector.get_project_funcs(project_name)
   project_fuzz_target_dir = _get_fuzz_target_dir(project_name)
-  project_language = oss_fuzz_checkout.get_project_language(project_name)
   target_content_signature_dict = _bucket_match_target_content_signatures(
-      target_funcs, project_fuzz_target_dir, project_language, project_name)
+      target_funcs, project_fuzz_target_dir, project_name)
 
   if target_content_signature_dict:
     print(f'Downloaded human-written fuzz targets of {project_name} from Google'
@@ -148,7 +146,7 @@ def generate_data(project_name: str,
           f'from Google Cloud Bucket: {OSS_FUZZ_EXP_BUCKET}.')
     print('Will try to build from Google Cloud or local docker image.')
     target_content_signature_dict = _match_target_content_signatures(
-        target_funcs, project_name, project_language, cloud_experiment_bucket)
+        target_funcs, project_name, cloud_experiment_bucket)
   if not target_content_signature_dict:
     return []
 
@@ -200,7 +198,6 @@ def filter_target_lines(target_content: str) -> str:
 def _match_target_content_signatures(
     target_funcs: Dict[str, List[Dict]],
     project_name: str,
-    project_language: str,
     cloud_experiment_bucket: str = '') -> Dict[str, List[str]]:
   """Returns a list of dictionary with function signatures as keys and
     its fuzz target content as values."""
@@ -239,8 +236,7 @@ def _match_target_content_signatures(
       target_content_signature_dict[content] = []
 
     signatures = [
-        introspector.get_function_signature(project_name, func_info,
-                                            project_language)
+        introspector.get_function_signature(func_info, project_name)
         for func_info in functions
     ]
     target_content_signature_dict[content].extend(signatures)
