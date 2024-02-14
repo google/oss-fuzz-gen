@@ -1,0 +1,12 @@
+functions:
+- int GetStructFromStdINCHI(struct tagINCHI_InputINCHI * inpInChI, struct tagINCHI_OutputStruct
+  * outStruct)
+- int GetINCHI(struct tagINCHI_Input * inp, struct tagINCHI_Output * out)
+- int GetStdINCHI(struct tagINCHI_Input * inp, struct tagINCHI_Output * out)
+- int GetINCHIEx(struct inchi_InputEx * inp, struct tagINCHI_Output * out)
+- int GetINCHI1(struct inchi_InputEx * extended_input, struct tagINCHI_Output * out,
+  int enforce_std_format)
+project: inchi
+target_name: inchi_input_fuzzer
+target_path: /src/inchi_input_fuzzer.c
+

@@ -1,0 +1,11 @@
+"functions":
+- "name": "ossfuzz_set_debug_flags"
+  "params":
+  - "name": "x"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void ossfuzz_set_debug_flags(int x)"
+"language": "c++"
+"project": "sqlite3"
+"target_name": "fuzzcheck"
+"target_path": "/src/sqlite3/test/fuzzcheck.c"

@@ -1,49 +1,14 @@
-"functions":
-- "name": "_ZN5draco10PointCloud26DeduplicateAttributeValuesEv"
-  "params":
-  - "name": ""
-    "type": "draco::PointCloud *"
-  "return_type": "bool"
-  "signature": "draco::PointCloud::DeduplicateAttributeValues()"
-- "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeE"
-  "params":
-  - "name": ""
-    "type": "draco::PointAttribute *"
-  - "name": ""
-    "type": "draco::GeometryAttribute *"
-  "return_type": "int"
-  "signature": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&)"
-- "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
-  "params":
-  - "name": ""
-    "type": "draco::PointAttribute *"
-  - "name": ""
-    "type": "draco::GeometryAttribute *"
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
-- "name": "_ZN5draco14PointAttribute22DeduplicateTypedValuesIiEEjRKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
-  "params":
-  - "name": ""
-    "type": "draco::PointAttribute *"
-  - "name": ""
-    "type": "draco::GeometryAttribute *"
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int draco::PointAttribute::DeduplicateTypedValues<int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
-- "name": "_ZN5draco14PointAttribute22DeduplicateTypedValuesIjEEjRKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
-  "params":
-  - "name": ""
-    "type": "draco::PointAttribute *"
-  - "name": ""
-    "type": "draco::GeometryAttribute *"
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int draco::PointAttribute::DeduplicateTypedValues<unsigned int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
-"language": "c++"
-"project": "draco"
-"target_name": "draco_pc_decoder_fuzzer"
-"target_path": "/src/draco/src/draco/tools/fuzz/draco_pc_decoder_fuzzer.cc"
+functions:
+- bool draco::PointCloud::DeduplicateAttributeValues(draco::PointCloud * )
+- int draco::PointAttribute::DeduplicateValues(draco::PointAttribute * , draco::GeometryAttribute
+  * )
+- int draco::PointAttribute::DeduplicateValues(draco::PointAttribute * , draco::GeometryAttribute
+  * , int )
+- int unsigned int draco::PointAttribute::DeduplicateTypedValues<int>(draco::PointAttribute
+  * , draco::GeometryAttribute * , int )
+- int unsigned int draco::PointAttribute::DeduplicateTypedValues<unsigned int>(draco::PointAttribute
+  * , draco::GeometryAttribute * , int )
+project: draco
+target_name: draco_pc_decoder_fuzzer
+target_path: /src/draco/src/draco/tools/fuzz/draco_pc_decoder_fuzzer.cc
+

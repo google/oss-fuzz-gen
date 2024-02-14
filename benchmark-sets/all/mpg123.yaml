@@ -1,63 +1,14 @@
-"functions":
-- "name": "mpg123_open_fixed_64"
-  "params":
-  - "name": "mh"
-    "type": "struct mpg123_handle_struct *"
-  - "name": "path"
-    "type": "char *"
-  - "name": "channels"
-    "type": "int"
-  - "name": "encoding"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int mpg123_open_fixed_64(struct mpg123_handle_struct * mh, char * path, int channels, int encoding)"
-- "name": "mpg123_open_fixed"
-  "params":
-  - "name": "mh"
-    "type": "struct mpg123_handle_struct *"
-  - "name": "path"
-    "type": "char *"
-  - "name": "channels"
-    "type": "int"
-  - "name": "encoding"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int mpg123_open_fixed(struct mpg123_handle_struct * mh, char * path, int channels, int encoding)"
-- "name": "INT123_open_fixed_post"
-  "params":
-  - "name": "mh"
-    "type": "struct mpg123_handle_struct *"
-  - "name": "channels"
-    "type": "int"
-  - "name": "encoding"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int INT123_open_fixed_post(struct mpg123_handle_struct * mh, int channels, int encoding)"
-- "name": "mpg123_decode_frame"
-  "params":
-  - "name": "mh"
-    "type": "struct mpg123_handle_struct *"
-  - "name": "num"
-    "type": "size_t *"
-  - "name": "audio"
-    "type": "char **"
-  - "name": "bytes"
-    "type": "size_t *"
-  "return_type": "int"
-  "signature": "int mpg123_decode_frame(struct mpg123_handle_struct * mh, size_t * num, char ** audio, size_t * bytes)"
-- "name": "mpg123_decode_frame_64"
-  "params":
-  - "name": "mh"
-    "type": "struct mpg123_handle_struct *"
-  - "name": "num"
-    "type": "size_t *"
-  - "name": "audio"
-    "type": "char **"
-  - "name": "bytes"
-    "type": "size_t *"
-  "return_type": "int"
-  "signature": "int mpg123_decode_frame_64(struct mpg123_handle_struct * mh, size_t * num, char ** audio, size_t * bytes)"
-"language": "c++"
-"project": "mpg123"
-"target_name": "read_fuzzer"
-"target_path": "/src/read_fuzzer.c"
+functions:
+- int mpg123_open_fixed_64(struct mpg123_handle_struct * mh, char * path, int channels,
+  int encoding)
+- int mpg123_open_fixed(struct mpg123_handle_struct * mh, char * path, int channels,
+  int encoding)
+- int INT123_open_fixed_post(struct mpg123_handle_struct * mh, int channels, int encoding)
+- int mpg123_decode_frame(struct mpg123_handle_struct * mh, size_t * num, char **
+  audio, size_t * bytes)
+- int mpg123_decode_frame_64(struct mpg123_handle_struct * mh, size_t * num, char
+  ** audio, size_t * bytes)
+project: mpg123
+target_name: read_fuzzer
+target_path: /src/read_fuzzer.c
+

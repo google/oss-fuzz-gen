@@ -1,31 +1,12 @@
-"functions":
-- "name": "_ZN9rapidjson19MemoryPoolAllocatorINS_12CrtAllocatorEE7ReallocEPvmm"
-  "params":
-  - "name": "this"
-    "type": "rapidjson::MemoryPoolAllocator *"
-  - "name": "originalPtr"
-    "type": "char *"
-  - "name": "originalSize"
-    "type": "size_t"
-  - "name": "newSize"
-    "type": "size_t"
-  "return_type": "char *"
-  "signature": "rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>::Realloc(void*, unsigned long, unsigned long)"
-- "name": "_ZN9rapidjson12GenericValueINS_4UTF8IcEENS_19MemoryPoolAllocatorINS_12CrtAllocatorEEEE12SetStringRawENS_16GenericStringRefIcEE"
-  "params":
-  - "name": "this"
-    "type": "rapidjson::GenericValue *"
-  - "name": "s"
-    "type": "struct rapidjson::GenericStringRef *"
-  "return_type": "void"
-  "signature": "rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> >::SetStringRaw(rapidjson::GenericStringRef<char>)"
-- "name": "_ZN9rapidjson8internal5StackINS_12CrtAllocatorEE12GetAllocatorEv"
-  "params":
-  - "name": "this"
-    "type": "rapidjson::internal::Stack *"
-  "return_type": "rapidjson::CrtAllocator *"
-  "signature": "rapidjson::internal::Stack<rapidjson::CrtAllocator>::GetAllocator()"
-"language": "c++"
-"project": "rapidjson"
-"target_name": "fuzzer"
-"target_path": "/src/rapidjson-fuzzers/fuzzer.cpp"
+functions:
+- char * rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>::Realloc(rapidjson::MemoryPoolAllocator
+  * this, char * originalPtr, size_t originalSize, size_t newSize)
+- void rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>
+  >::SetStringRaw(rapidjson::GenericValue * this, struct rapidjson::GenericStringRef
+  * s)
+- rapidjson::CrtAllocator * rapidjson::internal::Stack<rapidjson::CrtAllocator>::GetAllocator(rapidjson::internal::Stack
+  * this)
+project: rapidjson
+target_name: fuzzer
+target_path: /src/rapidjson-fuzzers/fuzzer.cpp
+

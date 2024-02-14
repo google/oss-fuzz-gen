@@ -1,63 +1,12 @@
-"functions":
-- "name": "wolfSSL_X509_print_fp"
-  "params":
-  - "name": ""
-    "type": "struct _IO_FILE *"
-  - "name": ""
-    "type": "struct WOLFSSL_X509 *"
-  "return_type": "int"
-  "signature": "int wolfSSL_X509_print_fp(struct _IO_FILE * , struct WOLFSSL_X509 * )"
-- "name": "wolfSSL_X509_LOOKUP_add_dir"
-  "params":
-  - "name": ""
-    "type": "struct WOLFSSL_X509_LOOKUP *"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int wolfSSL_X509_LOOKUP_add_dir(struct WOLFSSL_X509_LOOKUP * , char * , size_t )"
-- "name": "wolfSSL_X509_LOOKUP_ctrl"
-  "params":
-  - "name": ""
-    "type": "struct WOLFSSL_X509_LOOKUP *"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "char **"
-  "return_type": "int"
-  "signature": "int wolfSSL_X509_LOOKUP_ctrl(struct WOLFSSL_X509_LOOKUP * , int , char * , size_t , char ** )"
-- "name": "wolfSSL_X509_load_cert_crl_file"
-  "params":
-  - "name": ""
-    "type": "struct WOLFSSL_X509_LOOKUP *"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int wolfSSL_X509_load_cert_crl_file(struct WOLFSSL_X509_LOOKUP * , char * , int )"
-- "name": "wolfSSL_PKCS7_verify"
-  "params":
-  - "name": ""
-    "type": "struct PKCS7 *"
-  - "name": ""
-    "type": "struct WOLFSSL_STACK *"
-  - "name": ""
-    "type": "struct WOLFSSL_X509_STORE *"
-  - "name": ""
-    "type": "struct WOLFSSL_BIO *"
-  - "name": ""
-    "type": "struct WOLFSSL_BIO *"
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int wolfSSL_PKCS7_verify(struct PKCS7 * , struct WOLFSSL_STACK * , struct WOLFSSL_X509_STORE * , struct WOLFSSL_BIO * , struct WOLFSSL_BIO * , int )"
-"language": "c++"
-"project": "wolfssl"
-"target_name": "srp"
-"target_path": "/src/wolf-ssl-ssh-fuzzers/oss-fuzz/projects/wolf-ssl-ssh/fuzzers/wolfssl-fuzzers/srp.cpp"
+functions:
+- int wolfSSL_X509_print_fp(struct _IO_FILE * , struct WOLFSSL_X509 * )
+- int wolfSSL_X509_LOOKUP_add_dir(struct WOLFSSL_X509_LOOKUP * , char * , size_t )
+- int wolfSSL_X509_LOOKUP_ctrl(struct WOLFSSL_X509_LOOKUP * , int , char * , size_t
+  , char ** )
+- int wolfSSL_X509_load_cert_crl_file(struct WOLFSSL_X509_LOOKUP * , char * , int
+  )
+- int wolfSSL_X509_print(struct WOLFSSL_BIO * , struct WOLFSSL_X509 * )
+project: wolfssl
+target_name: fuzzer-wolfssl-srp
+target_path: /src/wolf-ssl-ssh-fuzzers/oss-fuzz/projects/wolf-ssl-ssh/fuzzers/wolfssl-fuzzers/srp.cpp
+

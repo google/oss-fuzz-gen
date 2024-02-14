@@ -1,53 +1,13 @@
-"functions":
-- "name": "rtpp_cfile_process"
-  "params":
-  - "name": "csp"
-    "type": "struct rtpp_cfg *"
-  "return_type": "int"
-  "signature": "int rtpp_cfile_process(struct rtpp_cfg * csp)"
-- "name": "ucl_state_machine"
-  "params":
-  - "name": "parser"
-    "type": "struct ucl_parser *"
-  "return_type": "bool"
-  "signature": "bool ucl_state_machine(struct ucl_parser * parser)"
-- "name": "ucl_include_file_single"
-  "params":
-  - "name": "data"
-    "type": "char *"
-  - "name": "len"
-    "type": "size_t"
-  - "name": "parser"
-    "type": "struct ucl_parser *"
-  - "name": "params"
-    "type": "struct ucl_include_params *"
-  "return_type": "bool"
-  "signature": "bool ucl_include_file_single(char * data, size_t len, struct ucl_parser * parser, struct ucl_include_params * params)"
-- "name": "ucl_include_common"
-  "params":
-  - "name": "data"
-    "type": "char *"
-  - "name": "len"
-    "type": "size_t"
-  - "name": "args"
-    "type": "struct ucl_object_s *"
-  - "name": "parser"
-    "type": "struct ucl_parser *"
-  - "name": "default_try"
-    "type": "bool"
-  - "name": "default_sign"
-    "type": "bool"
-  "return_type": "bool"
-  "signature": "bool ucl_include_common(char * data, size_t len, struct ucl_object_s * args, struct ucl_parser * parser, bool default_try, bool default_sign)"
-- "name": "ucl_parse_macro_arguments"
-  "params":
-  - "name": "parser"
-    "type": "struct ucl_parser *"
-  - "name": "chunk"
-    "type": "struct ucl_chunk *"
-  "return_type": "struct ucl_object_s *"
-  "signature": "struct ucl_object_s * ucl_parse_macro_arguments(struct ucl_parser * parser, struct ucl_chunk * chunk)"
-"language": "c"
-"project": "rtpproxy"
-"target_name": "fuzz_command_parser"
-"target_path": "/src/rtpproxy/scripts/fuzz/fuzz_command_parser.c"
+functions:
+- int rtpp_cfile_process(struct rtpp_cfg * csp)
+- bool ucl_state_machine(struct ucl_parser * parser)
+- bool ucl_include_file_single(char * data, size_t len, struct ucl_parser * parser,
+  struct ucl_include_params * params)
+- bool ucl_include_common(char * data, size_t len, struct ucl_object_s * args, struct
+  ucl_parser * parser, bool default_try, bool default_sign)
+- struct ucl_object_s * ucl_parse_macro_arguments(struct ucl_parser * parser, struct
+  ucl_chunk * chunk)
+project: rtpproxy
+target_name: fuzz_command_parser
+target_path: /src/rtpproxy/scripts/fuzz/fuzz_command_parser.c
+

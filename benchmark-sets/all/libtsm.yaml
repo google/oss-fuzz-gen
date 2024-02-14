@@ -1,57 +1,11 @@
-"functions":
-- "name": "tsm_vte_handle_keyboard"
-  "params":
-  - "name": "vte"
-    "type": "struct tsm_vte *"
-  - "name": "keysym"
-    "type": "int"
-  - "name": "ascii"
-    "type": "int"
-  - "name": "mods"
-    "type": "int"
-  - "name": "unicode"
-    "type": "int"
-  "return_type": "bool"
-  "signature": "bool tsm_vte_handle_keyboard(struct tsm_vte * vte, int keysym, int ascii, int mods, int unicode)"
-- "name": "tsm_symbol_append"
-  "params":
-  - "name": "tbl"
-    "type": "struct tsm_symbol_table *"
-  - "name": "sym"
-    "type": "int"
-  - "name": "ucs4"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int tsm_symbol_append(struct tsm_symbol_table * tbl, int sym, int ucs4)"
-- "name": "shl_htable_insert"
-  "params":
-  - "name": "htable"
-    "type": "struct shl_htable *"
-  - "name": "obj"
-    "type": "char *"
-  - "name": "hash"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int shl_htable_insert(struct shl_htable * htable, char * obj, size_t hash)"
-- "name": "htable_add"
-  "params":
-  - "name": "ht"
-    "type": "struct shl_htable_int *"
-  - "name": "hash"
-    "type": "size_t"
-  - "name": "p"
-    "type": "char *"
-  "return_type": "bool"
-  "signature": "bool htable_add(struct shl_htable_int * ht, size_t hash, char * p)"
-- "name": "mk_wcswidth_cjk"
-  "params":
-  - "name": "pwcs"
-    "type": "int *"
-  - "name": "n"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int mk_wcswidth_cjk(int * pwcs, size_t n)"
-"language": "c++"
-"project": "libtsm"
-"target_name": "libtsm_fuzzer"
-"target_path": "/src/libtsm_fuzzer.c"
+functions:
+- bool tsm_vte_handle_keyboard(struct tsm_vte * vte, int keysym, int ascii, int mods,
+  int unicode)
+- int tsm_symbol_append(struct tsm_symbol_table * tbl, int sym, int ucs4)
+- int shl_htable_insert(struct shl_htable * htable, char * obj, size_t hash)
+- bool htable_add(struct shl_htable_int * ht, size_t hash, char * p)
+- int mk_wcswidth_cjk(int * pwcs, size_t n)
+project: libtsm
+target_name: libtsm_fuzzer
+target_path: /src/libtsm_fuzzer.c
+

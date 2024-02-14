@@ -1,35 +1,11 @@
-"functions":
-- "name": "_Z15wxGetFreeMemoryv"
-  "params": []
-  "return_type": "size_t"
-  "signature": "wxGetFreeMemory()"
-- "name": "_ZN14wxPlatformInfoC2Ev"
-  "params":
-  - "name": "this"
-    "type": "wxPlatformInfo *"
-  "return_type": "void"
-  "signature": "wxPlatformInfo::wxPlatformInfo()"
-- "name": "_ZN14wxPlatformInfo3GetEv"
-  "params": []
-  "return_type": "wxPlatformInfo *"
-  "signature": "wxPlatformInfo::Get()"
-- "name": "_ZN14wxPlatformInfo22InitForCurrentPlatformEv"
-  "params":
-  - "name": "this"
-    "type": "wxPlatformInfo *"
-  "return_type": "void"
-  "signature": "wxPlatformInfo::InitForCurrentPlatform()"
-- "name": "_ZN24wxFileTranslationsLoader11LoadCatalogERK8wxStringS2_"
-  "params":
-  - "name": "this"
-    "type": "wxAppTraits *"
-  - "name": "domain"
-    "type": "wxString *"
-  - "name": "lang"
-    "type": "wxString *"
-  "return_type": "wxMsgCatalog *"
-  "signature": "wxFileTranslationsLoader::LoadCatalog(wxString const&, wxString const&)"
-"language": "c++"
-"project": "wxwidgets"
-"target_name": "runner"
-"target_path": "/src/wxwidgets/tests/fuzz/runner.cpp"
+functions:
+- size_t wxGetFreeMemory()
+- void wxPlatformInfo::wxPlatformInfo(wxPlatformInfo * this)
+- wxPlatformInfo * wxPlatformInfo::Get()
+- void wxPlatformInfo::InitForCurrentPlatform(wxPlatformInfo * this)
+- wxMsgCatalog * wxFileTranslationsLoader::LoadCatalog(wxAppTraits * this, wxString
+  * domain, wxString * lang)
+project: wxwidgets
+target_name: zip
+target_path: /src/wxwidgets/src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c
+

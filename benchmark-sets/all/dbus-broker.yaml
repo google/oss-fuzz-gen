@@ -1,61 +1,11 @@
-"functions":
-- "name": "log_vcommitf"
-  "params":
-  - "name": "log"
-    "type": "struct Log *"
-  - "name": "format"
-    "type": "char *"
-  - "name": "args"
-    "type": "struct __va_list_tag *"
-  "return_type": "int"
-  "signature": "int log_vcommitf(struct Log * log, char * format, struct __va_list_tag * args)"
-- "name": "log_commit_stderr"
-  "params":
-  - "name": "log"
-    "type": "struct Log *"
-  - "name": "format"
-    "type": "char *"
-  - "name": "args"
-    "type": "struct __va_list_tag *"
-  "return_type": "int"
-  "signature": "int log_commit_stderr(struct Log * log, char * format, struct __va_list_tag * args)"
-- "name": "log_commit_journal"
-  "params":
-  - "name": "log"
-    "type": "struct Log *"
-  - "name": "format"
-    "type": "char *"
-  - "name": "args"
-    "type": "struct __va_list_tag *"
-  "return_type": "int"
-  "signature": "int log_commit_journal(struct Log * log, char * format, struct __va_list_tag * args)"
-- "name": "message_log_append"
-  "params":
-  - "name": "message"
-    "type": "struct Message *"
-  - "name": "log"
-    "type": "struct Log *"
-  "return_type": "void"
-  "signature": "void message_log_append(struct Message * message, struct Log * log)"
-- "name": "log_append_common"
-  "params":
-  - "name": "log"
-    "type": "struct Log *"
-  - "name": "level"
-    "type": "int"
-  - "name": "error"
-    "type": "int"
-  - "name": "id"
-    "type": "char *"
-  - "name": "file"
-    "type": "char *"
-  - "name": "line"
-    "type": "int"
-  - "name": "func"
-    "type": "char *"
-  "return_type": "void"
-  "signature": "void log_append_common(struct Log * log, int level, int error, char * id, char * file, int line, char * func)"
-"language": "c"
-"project": "dbus-broker"
-"target_name": "fuzz-message"
-"target_path": "/src/fuzz-message.c"
+functions:
+- int log_vcommitf(struct Log * log, char * format, struct __va_list_tag * args)
+- int log_commit_stderr(struct Log * log, char * format, struct __va_list_tag * args)
+- int log_commit_journal(struct Log * log, char * format, struct __va_list_tag * args)
+- void message_log_append(struct Message * message, struct Log * log)
+- void log_append_common(struct Log * log, int level, int error, char * id, char *
+  file, int line, char * func)
+project: dbus-broker
+target_name: fuzz-message
+target_path: /src/fuzz-message.c
+

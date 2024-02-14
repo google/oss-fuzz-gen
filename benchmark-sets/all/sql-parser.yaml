@@ -1,45 +1,12 @@
-"functions":
-- "name": "_ZN4hsql9SQLParser14parseSQLStringEPKcPNS_15SQLParserResultE"
-  "params":
-  - "name": "sql"
-    "type": "char *"
-  - "name": "result"
-    "type": "hsql::SQLParserResult *"
-  "return_type": "bool"
-  "signature": "hsql::SQLParser::parseSQLString(char const*, hsql::SQLParserResult*)"
-- "name": "_ZN4hsql9SQLParser14parseSQLStringERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEPNS_15SQLParserResultE"
-  "params":
-  - "name": "sql"
-    "type": "std::string *"
-  - "name": "result"
-    "type": "hsql::SQLParserResult *"
-  "return_type": "bool"
-  "signature": "hsql::SQLParser::parseSQLString(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, hsql::SQLParserResult*)"
-- "name": "_ZN4hsql9SQLParser8tokenizeERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEPNS1_6vectorIsNS5_IsEEEE"
-  "params":
-  - "name": "sql"
-    "type": "std::string *"
-  - "name": "tokens"
-    "type": "std::vector *"
-  "return_type": "bool"
-  "signature": "hsql::SQLParser::tokenize(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<short, std::__1::allocator<short> >*)"
-- "name": "_Z22hsql_push_buffer_stateP15yy_buffer_statePv"
-  "params":
-  - "name": "new_buffer"
-    "type": "struct yy_buffer_state *"
-  - "name": "yyscanner"
-    "type": "char *"
-  "return_type": "void"
-  "signature": "hsql_push_buffer_state(yy_buffer_state*, void*)"
-- "name": "_ZN4hsqllsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_10ColumnTypeE"
-  "params":
-  - "name": "stream"
-    "type": "std::ostream *"
-  - "name": "column_type"
-    "type": "struct hsql::ColumnType *"
-  "return_type": "std::ostream *"
-  "signature": "hsql::operator<<(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, hsql::ColumnType const&)"
-"language": "c++"
-"project": "sql-parser"
-"target_name": "fuzz_sql_parse"
-"target_path": "/src/sql-parser/fuzz_sql_parse.cpp"
+functions:
+- bool hsql::SQLParser::parseSQLString(char * sql, hsql::SQLParserResult * result)
+- bool hsql::SQLParser::parseSQLString(std::string * sql, hsql::SQLParserResult *
+  result)
+- bool hsql::SQLParser::tokenize(std::string * sql, std::vector * tokens)
+- void hsql_push_buffer_state(struct yy_buffer_state * new_buffer, char * yyscanner)
+- std::ostream * hsql::operator<<(std::ostream * stream, struct hsql::ColumnType *
+  column_type)
+project: sql-parser
+target_name: fuzz_sql_parse
+target_path: /src/sql-parser/fuzz_sql_parse.cpp
+

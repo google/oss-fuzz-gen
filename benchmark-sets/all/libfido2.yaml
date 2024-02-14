@@ -1,49 +1,10 @@
-"functions":
-- "name": "save_seed"
-  "params":
-  - "name": "opt"
-    "type": "char *"
-  "return_type": "int"
-  "signature": "int save_seed(char * opt)"
-- "name": "LLVMFuzzerCustomMutator"
-  "params":
-  - "name": "data"
-    "type": "char *"
-  - "name": "size"
-    "type": "size_t"
-  - "name": "maxsize"
-    "type": "size_t"
-  - "name": "seed"
-    "type": "int"
-  "return_type": "size_t"
-  "signature": "size_t LLVMFuzzerCustomMutator(char * data, size_t size, size_t maxsize, int seed)"
-- "name": "pack_dummy"
-  "params":
-  - "name": "ptr"
-    "type": "char *"
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "size_t"
-  "signature": "size_t pack_dummy(char * ptr, size_t len)"
-- "name": "parse_mutate_flags"
-  "params":
-  - "name": "opt"
-    "type": "char *"
-  - "name": "mutate_flags"
-    "type": "int *"
-  "return_type": "void"
-  "signature": "void parse_mutate_flags(char * opt, int * mutate_flags)"
-- "name": "mutate"
-  "params":
-  - "name": "p"
-    "type": "struct param *"
-  - "name": "seed"
-    "type": "int"
-  - "name": "flags"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void mutate(struct param * p, int seed, int flags)"
-"language": "c++"
-"project": "libfido2"
-"target_name": "fuzz_netlink"
-"target_path": "/src/libfido2/fuzz/libfuzzer.c"
+functions:
+- int save_seed(char * opt)
+- size_t LLVMFuzzerCustomMutator(char * data, size_t size, size_t maxsize, int seed)
+- size_t pack_dummy(char * ptr, size_t len)
+- void parse_mutate_flags(char * opt, int * mutate_flags)
+- void mutate(struct param * p, int seed, int flags)
+project: libfido2
+target_name: fuzz_netlink
+target_path: /src/libfido2/fuzz/libfuzzer.c
+

@@ -1,49 +1,15 @@
-"functions":
-- "name": "_ZN8simdjson7icelake25dom_parser_implementation5parseEPKhmRNS_3dom8documentE"
-  "params":
-  - "name": ""
-    "type": "simdjson::fallback::dom_parser_implementation *"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "simdjson::dom::document *"
-  "return_type": "int"
-  "signature": "simdjson::icelake::dom_parser_implementation::parse(unsigned char const*, unsigned long, simdjson::dom::document&)"
-- "name": "_ZN8simdjson7icelake25dom_parser_implementation6stage2ERNS_3dom8documentE"
-  "params":
-  - "name": ""
-    "type": "simdjson::fallback::dom_parser_implementation *"
-  - "name": ""
-    "type": "simdjson::dom::document *"
-  "return_type": "int"
-  "signature": "simdjson::icelake::dom_parser_implementation::stage2(simdjson::dom::document&)"
-- "name": "_ZN8simdjson8fallback25dom_parser_implementation11stage2_nextERNS_3dom8documentE"
-  "params":
-  - "name": ""
-    "type": "simdjson::fallback::dom_parser_implementation *"
-  - "name": ""
-    "type": "simdjson::dom::document *"
-  "return_type": "int"
-  "signature": "simdjson::fallback::dom_parser_implementation::stage2_next(simdjson::dom::document&)"
-- "name": "_ZN8simdjson8westmere25dom_parser_implementation11stage2_nextERNS_3dom8documentE"
-  "params":
-  - "name": ""
-    "type": "simdjson::fallback::dom_parser_implementation *"
-  - "name": ""
-    "type": "simdjson::dom::document *"
-  "return_type": "int"
-  "signature": "simdjson::westmere::dom_parser_implementation::stage2_next(simdjson::dom::document&)"
-- "name": "_ZN8simdjson7icelake25dom_parser_implementation11stage2_nextERNS_3dom8documentE"
-  "params":
-  - "name": ""
-    "type": "simdjson::fallback::dom_parser_implementation *"
-  - "name": ""
-    "type": "simdjson::dom::document *"
-  "return_type": "int"
-  "signature": "simdjson::icelake::dom_parser_implementation::stage2_next(simdjson::dom::document&)"
-"language": "c++"
-"project": "simdjson"
-"target_name": "fuzz_dump"
-"target_path": "/src/simdjson/fuzz/fuzz_dump.cpp"
+functions:
+- int simdjson::icelake::dom_parser_implementation::parse(simdjson::fallback::dom_parser_implementation
+  * , char * , size_t , simdjson::dom::document * )
+- int simdjson::icelake::dom_parser_implementation::stage2(simdjson::fallback::dom_parser_implementation
+  * , simdjson::dom::document * )
+- int simdjson::fallback::dom_parser_implementation::stage2_next(simdjson::fallback::dom_parser_implementation
+  * , simdjson::dom::document * )
+- int simdjson::westmere::dom_parser_implementation::stage2_next(simdjson::fallback::dom_parser_implementation
+  * , simdjson::dom::document * )
+- int simdjson::icelake::dom_parser_implementation::stage2_next(simdjson::fallback::dom_parser_implementation
+  * , simdjson::dom::document * )
+project: simdjson
+target_name: fuzz_dump
+target_path: /src/simdjson/fuzz/fuzz_dump.cpp
+

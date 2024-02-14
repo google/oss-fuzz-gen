@@ -1,53 +1,13 @@
-"functions":
-- "name": "op_init"
-  "params":
-  - "name": "ctx"
-    "type": "struct libusb_context *"
-  "return_type": "int"
-  "signature": "int op_init(struct libusb_context * ctx)"
-- "name": "libusb_get_bos_descriptor"
-  "params":
-  - "name": "dev_handle"
-    "type": "struct libusb_device_handle *"
-  - "name": "bos"
-    "type": "struct libusb_bos_descriptor **"
-  "return_type": "int"
-  "signature": "int libusb_get_bos_descriptor(struct libusb_device_handle * dev_handle, struct libusb_bos_descriptor ** bos)"
-- "name": "libusb_get_string_descriptor_ascii"
-  "params":
-  - "name": "dev_handle"
-    "type": "struct libusb_device_handle *"
-  - "name": "desc_index"
-    "type": "char"
-  - "name": "data"
-    "type": "char *"
-  - "name": "length"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int libusb_get_string_descriptor_ascii(struct libusb_device_handle * dev_handle, char desc_index, char * data, int length)"
-- "name": "libusb_get_configuration"
-  "params":
-  - "name": "dev_handle"
-    "type": "struct libusb_device_handle *"
-  - "name": "config"
-    "type": "int *"
-  "return_type": "int"
-  "signature": "int libusb_get_configuration(struct libusb_device_handle * dev_handle, int * config)"
-- "name": "libusb_get_string_descriptor"
-  "params":
-  - "name": "dev_handle"
-    "type": "struct libusb_device_handle *"
-  - "name": "desc_index"
-    "type": "char"
-  - "name": "langid"
-    "type": "short"
-  - "name": "data"
-    "type": "char *"
-  - "name": "length"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int libusb_get_string_descriptor(struct libusb_device_handle * dev_handle, char desc_index, short langid, char * data, int length)"
-"language": "c++"
-"project": "libusb"
-"target_name": "libusb_fuzzer"
-"target_path": "/src/libusb_fuzzer.cc"
+functions:
+- int op_init(struct libusb_context * ctx)
+- int libusb_get_bos_descriptor(struct libusb_device_handle * dev_handle, struct libusb_bos_descriptor
+  ** bos)
+- int libusb_get_string_descriptor_ascii(struct libusb_device_handle * dev_handle,
+  char desc_index, char * data, int length)
+- int libusb_get_configuration(struct libusb_device_handle * dev_handle, int * config)
+- int libusb_get_string_descriptor(struct libusb_device_handle * dev_handle, char
+  desc_index, short langid, char * data, int length)
+project: libusb
+target_name: libusb_fuzzer
+target_path: /src/libusb_fuzzer.cc
+

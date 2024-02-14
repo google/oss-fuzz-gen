@@ -1,77 +1,10 @@
-"functions":
-- "name": "WebPEncodeLosslessBGRA"
-  "params":
-  - "name": "in"
-    "type": "char *"
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "bps"
-    "type": "int"
-  - "name": "out"
-    "type": "char **"
-  "return_type": "size_t"
-  "signature": "size_t WebPEncodeLosslessBGRA(char * in, int w, int h, int bps, char ** out)"
-- "name": "WebPEncodeLosslessBGR"
-  "params":
-  - "name": "in"
-    "type": "char *"
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "bps"
-    "type": "int"
-  - "name": "out"
-    "type": "char **"
-  "return_type": "size_t"
-  "signature": "size_t WebPEncodeLosslessBGR(char * in, int w, int h, int bps, char ** out)"
-- "name": "WebPEncodeLosslessRGBA"
-  "params":
-  - "name": "in"
-    "type": "char *"
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "bps"
-    "type": "int"
-  - "name": "out"
-    "type": "char **"
-  "return_type": "size_t"
-  "signature": "size_t WebPEncodeLosslessRGBA(char * in, int w, int h, int bps, char ** out)"
-- "name": "WebPEncodeLosslessRGB"
-  "params":
-  - "name": "in"
-    "type": "char *"
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "bps"
-    "type": "int"
-  - "name": "out"
-    "type": "char **"
-  "return_type": "size_t"
-  "signature": "size_t WebPEncodeLosslessRGB(char * in, int w, int h, int bps, char ** out)"
-- "name": "WebPEncodeBGRA"
-  "params":
-  - "name": "in"
-    "type": "char *"
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "bps"
-    "type": "int"
-  - "name": "q"
-    "type": "float"
-  - "name": "out"
-    "type": "char **"
-  "return_type": "size_t"
-  "signature": "size_t WebPEncodeBGRA(char * in, int w, int h, int bps, float q, char ** out)"
-"language": "c++"
-"project": "libwebp"
-"target_name": "enc_dec_fuzzer"
-"target_path": "/src/libwebp/tests/fuzzer/enc_dec_fuzzer.cc"
+functions:
+- size_t WebPEncodeLosslessBGRA(char * in, int w, int h, int bps, char ** out)
+- size_t WebPEncodeLosslessBGR(char * in, int w, int h, int bps, char ** out)
+- size_t WebPEncodeLosslessRGBA(char * in, int w, int h, int bps, char ** out)
+- size_t WebPEncodeLosslessRGB(char * in, int w, int h, int bps, char ** out)
+- size_t WebPEncodeBGRA(char * in, int w, int h, int bps, float q, char ** out)
+project: libwebp
+target_name: enc_dec_fuzzer
+target_path: /src/libwebp/tests/fuzzer/enc_dec_fuzzer.cc
+

@@ -1,83 +1,14 @@
-"functions":
-- "name": "ares_getaddrinfo"
-  "params":
-  - "name": ""
-    "type": "struct ares_channeldata *"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "struct ares_addrinfo_hints *"
-  - "name": ""
-    "type": "func_type *"
-  - "name": ""
-    "type": "char *"
-  "return_type": "void"
-  "signature": "void ares_getaddrinfo(struct ares_channeldata * , char * , char * , struct ares_addrinfo_hints * , func_type * , char * )"
-- "name": "ares_getaddrinfo_int"
-  "params":
-  - "name": ""
-    "type": "struct ares_channeldata *"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "struct ares_addrinfo_hints *"
-  - "name": ""
-    "type": "func_type *"
-  - "name": ""
-    "type": "char *"
-  "return_type": "void"
-  "signature": "void ares_getaddrinfo_int(struct ares_channeldata * , char * , char * , struct ares_addrinfo_hints * , func_type * , char * )"
-- "name": "ares_getnameinfo"
-  "params":
-  - "name": ""
-    "type": "struct ares_channeldata *"
-  - "name": ""
-    "type": "struct sockaddr *"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "func_type *"
-  - "name": ""
-    "type": "char *"
-  "return_type": "void"
-  "signature": "void ares_getnameinfo(struct ares_channeldata * , struct sockaddr * , int , int , func_type * , char * )"
-- "name": "ares_getnameinfo_int"
-  "params":
-  - "name": ""
-    "type": "struct ares_channeldata *"
-  - "name": ""
-    "type": "struct sockaddr *"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "func_type *"
-  - "name": ""
-    "type": "char *"
-  "return_type": "void"
-  "signature": "void ares_getnameinfo_int(struct ares_channeldata * , struct sockaddr * , int , int , func_type * , char * )"
-- "name": "addr_callback"
-  "params":
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void addr_callback(char * , int , int , char * , int )"
-"language": "c++"
-"project": "c-ares"
-"target_name": "ares_create_query_fuzzer"
-"target_path": "/src/c-ares/test/ares-test-fuzz-name.c"
+functions:
+- void ares_getaddrinfo(struct ares_channeldata * , char * , char * , struct ares_addrinfo_hints
+  * , func_type * , char * )
+- void ares_getaddrinfo_int(struct ares_channeldata * , char * , char * , struct ares_addrinfo_hints
+  * , func_type * , char * )
+- void ares_getnameinfo(struct ares_channeldata * , struct sockaddr * , int , int
+  , func_type * , char * )
+- void ares_getnameinfo_int(struct ares_channeldata * , struct sockaddr * , int ,
+  int , func_type * , char * )
+- void addr_callback(char * , int , int , char * , int )
+project: c-ares
+target_name: ares_create_query_fuzzer
+target_path: /src/c-ares/test/ares-test-fuzz-name.c
+

@@ -1,75 +1,27 @@
-"functions":
-- "name": "_ZN5immer6detail4rbts23slice_right_mut_visitorINS1_4nodeIiNS_13memory_policyINS_11heap_policyINS_8cpp_heapEEENS_22unsafe_refcount_policyENS_14no_lock_policyENS_20no_transience_policyELb0ELb1EEELj2ELj2EEELb1ELb1EE13visit_regularIRNS1_11regular_posISC_EEEENSt3__15tupleIJjPSC_jSK_EEEOT_mNSA_5applyIS7_E4type4editE"
-  "params":
-  - "name": "pos"
-    "type": "std::tuple *"
-  - "name": "last"
-    "type": "struct immer::detail::rbts::regular_sub_pos *"
-  - "name": "e"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "std::__1::tuple<unsigned int, immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>*, unsigned int, immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>*> immer::detail::rbts::slice_right_mut_visitor<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>, true, true>::visit_regular<immer::detail::rbts::regular_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u> >&>(immer::detail::rbts::regular_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u> >&, unsigned long, immer::no_transience_policy::apply<immer::heap_policy<immer::cpp_heap> >::type::edit)"
-- "name": "_ZN5immer6detail4rbts21towards_oh_ch_regularIRNS1_11regular_posINS1_4nodeIiNS_13memory_policyINS_11heap_policyINS_8cpp_heapEEENS_22unsafe_refcount_policyENS_14no_lock_policyENS_20no_transience_policyELb0ELb1EEELj2ELj2EEEEENS1_23slice_right_mut_visitorISD_Lb1ELb1EEEJRNSB_5applyIS8_E4type4editEEEEDcOT_T0_mjjDpOT1_"
-  "params":
-  - "name": "p"
-    "type": "std::tuple *"
-  - "name": "v"
-    "type": "struct immer::detail::rbts::regular_sub_pos *"
-  - "name": "idx"
-    "type": "size_t"
-  - "name": "offset_hint"
-    "type": "int"
-  - "name": "count_hint"
-    "type": "int"
-  - "name": "args"
-    "type": "struct immer::detail::rbts::dec_visitor *"
-  "return_type": "void"
-  "signature": "decltype(auto) immer::detail::rbts::towards_oh_ch_regular<immer::detail::rbts::regular_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u> >&, immer::detail::rbts::slice_right_mut_visitor<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>, true, true>, immer::no_transience_policy::apply<immer::heap_policy<immer::cpp_heap> >::type::edit&>(immer::detail::rbts::regular_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u> >&, immer::detail::rbts::slice_right_mut_visitor<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>, true, true>, unsigned long, unsigned int, unsigned int, immer::no_transience_policy::apply<immer::heap_policy<immer::cpp_heap> >::type::edit&)"
-- "name": "_ZN5immer6detail4rbts11regular_posINS1_4nodeIiNS_13memory_policyINS_11heap_policyINS_8cpp_heapEEENS_22unsafe_refcount_policyENS_14no_lock_policyENS_20no_transience_policyELb0ELb1EEELj2ELj2EEEE5visitINS1_23slice_right_mut_visitorISC_Lb1ELb1EEEJRmRNSA_5applyIS7_E4type4editEEEEDcT_DpOT0_"
-  "params":
-  - "name": "this"
-    "type": "std::tuple *"
-  - "name": "v"
-    "type": "struct immer::detail::rbts::regular_sub_pos *"
-  - "name": "args"
-    "type": "size_t *"
-  - "name": "args"
-    "type": "struct immer::detail::rbts::dec_visitor *"
-  "return_type": "void"
-  "signature": "decltype(auto) immer::detail::rbts::regular_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u> >::visit<immer::detail::rbts::slice_right_mut_visitor<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>, true, true>, unsigned long&, immer::no_transience_policy::apply<immer::heap_policy<immer::cpp_heap> >::type::edit&>(immer::detail::rbts::slice_right_mut_visitor<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>, true, true>, unsigned long&, immer::no_transience_policy::apply<immer::heap_policy<immer::cpp_heap> >::type::edit&)"
-- "name": "_ZN5immer6detail4rbts11regular_posINS1_4nodeIiNS_13memory_policyINS_11heap_policyINS_8cpp_heapEEENS_22unsafe_refcount_policyENS_14no_lock_policyENS_20no_transience_policyELb0ELb1EEELj2ELj2EEEE10towards_ohINS1_23slice_right_mut_visitorISC_Lb1ELb1EEEJRNSA_5applyIS7_E4type4editEEEEDcT_mjDpOT0_"
-  "params":
-  - "name": "this"
-    "type": "std::tuple *"
-  - "name": "v"
-    "type": "struct immer::detail::rbts::regular_sub_pos *"
-  - "name": "idx"
-    "type": "size_t"
-  - "name": "offset_hint"
-    "type": "int"
-  - "name": "args"
-    "type": "struct immer::detail::rbts::dec_visitor *"
-  "return_type": "void"
-  "signature": "decltype(auto) immer::detail::rbts::regular_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u> >::towards_oh<immer::detail::rbts::slice_right_mut_visitor<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>, true, true>, immer::no_transience_policy::apply<immer::heap_policy<immer::cpp_heap> >::type::edit&>(immer::detail::rbts::slice_right_mut_visitor<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>, true, true>, unsigned long, unsigned int, immer::no_transience_policy::apply<immer::heap_policy<immer::cpp_heap> >::type::edit&)"
-- "name": "_ZN5immer6detail4rbts11relaxed_posINS1_4nodeIiNS_13memory_policyINS_11heap_policyINS_7gc_heapEEENS_18no_refcount_policyENS_15spinlock_policyENS_20gc_transience_policyELb0ELb0EEELj2ELj2EEEE8last_subINS1_23concat_left_mut_visitorISC_EEJRNSA_5applyIS7_E4type4editESL_RNS1_8leaf_posISC_EESL_RNS1_8full_posISC_EEEEEDcT_DpOT0_"
-  "params":
-  - "name": "this"
-    "type": "struct immer::detail::rbts::concat_center_pos *"
-  - "name": "v"
-    "type": "struct immer::detail::rbts::relaxed_pos *"
-  - "name": "args"
-    "type": "struct std::__cxx_atomic_base_impl *"
-  - "name": "args"
-    "type": "struct std::__cxx_atomic_base_impl *"
-  - "name": "args"
-    "type": "struct immer::detail::rbts::leaf_pos *"
-  - "name": "args"
-    "type": "struct std::__cxx_atomic_base_impl *"
-  - "name": "args"
-    "type": "struct immer::detail::rbts::leaf_sub_pos *"
-  "return_type": "void"
-  "signature": "decltype(auto) immer::detail::rbts::relaxed_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::gc_heap>, immer::no_refcount_policy, immer::spinlock_policy, immer::gc_transience_policy, false, false>, 2u, 2u> >::last_sub<immer::detail::rbts::concat_left_mut_visitor<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::gc_heap>, immer::no_refcount_policy, immer::spinlock_policy, immer::gc_transience_policy, false, false>, 2u, 2u> >, immer::gc_transience_policy::apply<immer::heap_policy<immer::gc_heap> >::type::edit&, immer::gc_transience_policy::apply<immer::heap_policy<immer::gc_heap> >::type::edit&, immer::detail::rbts::leaf_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::gc_heap>, immer::no_refcount_policy, immer::spinlock_policy, immer::gc_transience_policy, false, false>, 2u, 2u> >&, immer::gc_transience_policy::apply<immer::heap_policy<immer::gc_heap> >::type::edit&, immer::detail::rbts::full_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::gc_heap>, immer::no_refcount_policy, immer::spinlock_policy, immer::gc_transience_policy, false, false>, 2u, 2u> >&>(immer::detail::rbts::concat_left_mut_visitor<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::gc_heap>, immer::no_refcount_policy, immer::spinlock_policy, immer::gc_transience_policy, false, false>, 2u, 2u> >, immer::gc_transience_policy::apply<immer::heap_policy<immer::gc_heap> >::type::edit&, immer::gc_transience_policy::apply<immer::heap_policy<immer::gc_heap> >::type::edit&, immer::detail::rbts::leaf_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::gc_heap>, immer::no_refcount_policy, immer::spinlock_policy, immer::gc_transience_policy, false, false>, 2u, 2u> >&, immer::gc_transience_policy::apply<immer::heap_policy<immer::gc_heap> >::type::edit&, immer::detail::rbts::full_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::gc_heap>, immer::no_refcount_policy, immer::spinlock_policy, immer::gc_transience_policy, false, false>, 2u, 2u> >&)"
-"language": "c++"
-"project": "immer"
-"target_name": "vector"
-"target_path": "/src/immer/extra/fuzzer/vector.cpp"
+functions:
+- void std::__1::tuple<unsigned int, immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>,
+  immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy,
+  false, true>, 2u, 2u>*, unsigned int, immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>,
+  immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy,
+  false, true>, 2u, 2u>*> immer::detail::rbts::slice_right_mut_visitor<immer::detail::rbts::node<int,
+  immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy,
+  immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>, true,
+  true>::visit_regular<immer::detail::rbts::regular_pos<immer::detail::rbts::node<int,
+  immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy,
+  immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u> >&>(std::tuple
+  * pos, struct immer::detail::rbts::regular_sub_pos * last, size_t e)
+- void decltype(std::tuple * p, struct immer::detail::rbts::regular_sub_pos * v, size_t
+  idx, int offset_hint, int count_hint, struct immer::detail::rbts::dec_visitor *
+  args)
+- void decltype(std::tuple * this, struct immer::detail::rbts::regular_sub_pos * v,
+  size_t * args, struct immer::detail::rbts::dec_visitor * args)
+- void decltype(std::tuple * this, struct immer::detail::rbts::regular_sub_pos * v,
+  size_t idx, int offset_hint, struct immer::detail::rbts::dec_visitor * args)
+- void decltype(struct immer::detail::rbts::concat_center_pos * this, struct immer::detail::rbts::relaxed_pos
+  * v, struct std::__cxx_atomic_base_impl * args, struct std::__cxx_atomic_base_impl
+  * args, struct immer::detail::rbts::leaf_pos * args, struct std::__cxx_atomic_base_impl
+  * args, struct immer::detail::rbts::leaf_sub_pos * args)
+project: immer
+target_name: vector
+target_path: /src/immer/extra/fuzzer/vector.cpp
+

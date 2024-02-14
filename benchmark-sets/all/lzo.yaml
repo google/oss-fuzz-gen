@@ -1,77 +1,14 @@
-"functions":
-- "name": "lzo1z_999_compress_dict"
-  "params":
-  - "name": "in"
-    "type": "char *"
-  - "name": "in_len"
-    "type": "size_t"
-  - "name": "out"
-    "type": "char *"
-  - "name": "out_len"
-    "type": "size_t *"
-  - "name": "wrkmem"
-    "type": "char *"
-  - "name": "dict"
-    "type": "char *"
-  - "name": "dict_len"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int lzo1z_999_compress_dict(char * in, size_t in_len, char * out, size_t * out_len, char * wrkmem, char * dict, size_t dict_len)"
-- "name": "lzo1x_999_compress_dict"
-  "params":
-  - "name": "in"
-    "type": "char *"
-  - "name": "in_len"
-    "type": "size_t"
-  - "name": "out"
-    "type": "char *"
-  - "name": "out_len"
-    "type": "size_t *"
-  - "name": "wrkmem"
-    "type": "char *"
-  - "name": "dict"
-    "type": "char *"
-  - "name": "dict_len"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int lzo1x_999_compress_dict(char * in, size_t in_len, char * out, size_t * out_len, char * wrkmem, char * dict, size_t dict_len)"
-- "name": "lzo1y_999_compress_dict"
-  "params":
-  - "name": "in"
-    "type": "char *"
-  - "name": "in_len"
-    "type": "size_t"
-  - "name": "out"
-    "type": "char *"
-  - "name": "out_len"
-    "type": "size_t *"
-  - "name": "wrkmem"
-    "type": "char *"
-  - "name": "dict"
-    "type": "char *"
-  - "name": "dict_len"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int lzo1y_999_compress_dict(char * in, size_t in_len, char * out, size_t * out_len, char * wrkmem, char * dict, size_t dict_len)"
-- "name": "swd_insertdict"
-  "params":
-  - "name": "s"
-    "type": "struct lzo2a_999_swd_t *"
-  - "name": "node"
-    "type": "size_t"
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void swd_insertdict(struct lzo2a_999_swd_t * s, size_t node, size_t len)"
-- "name": "lzo1_info"
-  "params":
-  - "name": "rbits"
-    "type": "int *"
-  - "name": "clevel"
-    "type": "int *"
-  "return_type": "size_t"
-  "signature": "size_t lzo1_info(int * rbits, int * clevel)"
-"language": "c++"
-"project": "lzo"
-"target_name": "all_lzo_compress"
-"target_path": "/src/all_lzo_compress.cc"
+Retrieving human-written fuzz targets of lzo from local Docker build.
+functions:
+- int lzo1z_999_compress_dict(char * in, size_t in_len, char * out, size_t * out_len,
+  char * wrkmem, char * dict, size_t dict_len)
+- int lzo1x_999_compress_dict(char * in, size_t in_len, char * out, size_t * out_len,
+  char * wrkmem, char * dict, size_t dict_len)
+- int lzo1y_999_compress_dict(char * in, size_t in_len, char * out, size_t * out_len,
+  char * wrkmem, char * dict, size_t dict_len)
+- void swd_insertdict(struct lzo2a_999_swd_t * s, size_t node, size_t len)
+- size_t lzo1_info(int * rbits, int * clevel)
+project: lzo
+target_name: all_lzo_compress
+target_path: /src/all_lzo_compress.cc
+

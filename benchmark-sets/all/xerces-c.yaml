@@ -1,49 +1,15 @@
-"functions":
-- "name": "_ZN11xercesc_3_212IGXMLScanner8scanNextERNS_13XMLPScanTokenE"
-  "params":
-  - "name": "this"
-    "type": "xercesc_3_2::IGXMLScanner *"
-  - "name": "token"
-    "type": "struct xercesc_3_2::PrefMapElem *"
-  "return_type": "bool"
-  "signature": "xercesc_3_2::IGXMLScanner::scanNext(xercesc_3_2::XMLPScanToken&)"
-- "name": "_ZN11xercesc_3_212IGXMLScanner14scanStartTagNSERb"
-  "params":
-  - "name": "this"
-    "type": "xercesc_3_2::IGXMLScanner *"
-  - "name": "gotData"
-    "type": "char *"
-  "return_type": "bool"
-  "signature": "xercesc_3_2::IGXMLScanner::scanStartTagNS(bool&)"
-- "name": "_ZN11xercesc_3_212SGXMLScanner12scanStartTagERb"
-  "params":
-  - "name": "this"
-    "type": "xercesc_3_2::SGXMLScanner *"
-  - "name": "gotData"
-    "type": "char *"
-  "return_type": "bool"
-  "signature": "xercesc_3_2::SGXMLScanner::scanStartTag(bool&)"
-- "name": "_ZN11xercesc_3_212IGXMLScanner11loadGrammarERKNS_11InputSourceEsb"
-  "params":
-  - "name": "this"
-    "type": "xercesc_3_2::IGXMLScanner *"
-  - "name": "src"
-    "type": "xercesc_3_2::InputSource *"
-  - "name": "grammarType"
-    "type": "short"
-  - "name": "toCache"
-    "type": "bool"
-  "return_type": "xercesc_3_2::MemoryManagerImpl *"
-  "signature": "xercesc_3_2::IGXMLScanner::loadGrammar(xercesc_3_2::InputSource const&, short, bool)"
-- "name": "_ZN11xercesc_3_212IGXMLScanner28scanRawAttrListforNameSpacesEm"
-  "params":
-  - "name": "this"
-    "type": "xercesc_3_2::IGXMLScanner *"
-  - "name": "attCount"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "xercesc_3_2::IGXMLScanner::scanRawAttrListforNameSpaces(unsigned long)"
-"language": "c++"
-"project": "xerces-c"
-"target_name": "parse_target"
-"target_path": "/src/parse_target.cpp"
+functions:
+- bool xercesc_3_2::IGXMLScanner::scanNext(xercesc_3_2::IGXMLScanner * this, struct
+  xercesc_3_2::PrefMapElem * token)
+- bool xercesc_3_2::IGXMLScanner::scanStartTagNS(xercesc_3_2::IGXMLScanner * this,
+  char * gotData)
+- bool xercesc_3_2::SGXMLScanner::scanStartTag(xercesc_3_2::SGXMLScanner * this, char
+  * gotData)
+- xercesc_3_2::MemoryManagerImpl * xercesc_3_2::IGXMLScanner::loadGrammar(xercesc_3_2::IGXMLScanner
+  * this, xercesc_3_2::InputSource * src, short grammarType, bool toCache)
+- void xercesc_3_2::IGXMLScanner::scanRawAttrListforNameSpaces(xercesc_3_2::IGXMLScanner
+  * this, size_t attCount)
+project: xerces-c
+target_name: parse_target
+target_path: /src/parse_target.cpp
+

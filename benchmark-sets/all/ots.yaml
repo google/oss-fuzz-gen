@@ -1,45 +1,15 @@
-"functions":
-- "name": "_ZN3ots12OpenTypeFEAT18FeatureSettingDefn9ParsePartERNS_6BufferE"
-  "params":
-  - "name": "this"
-    "type": "struct ots::OpenTypeFEAT::FeatureSettingDefn *"
-  - "name": "table"
-    "type": "ots::Buffer *"
-  "return_type": "bool"
-  "signature": "ots::OpenTypeFEAT::FeatureSettingDefn::ParsePart(ots::Buffer&)"
-- "name": "_ZN3ots12OpenTypeSILF6SILSub7SILPassC2ERKS2_"
-  "params":
-  - "name": "this"
-    "type": "struct ots::OpenTypeSILF::SILSub::SILPass *"
-  - "name": ""
-    "type": "struct ots::OpenTypeSILF::SILSub::SILPass *"
-  "return_type": "void"
-  "signature": "ots::OpenTypeSILF::SILSub::SILPass::SILPass(ots::OpenTypeSILF::SILSub::SILPass const&)"
-- "name": "_ZN3ots12OpenTypeSILF6SILSubC2ERKS1_"
-  "params":
-  - "name": "this"
-    "type": "struct ots::OpenTypeSILF::SILSub *"
-  - "name": ""
-    "type": "struct ots::OpenTypeSILF::SILSub *"
-  "return_type": "void"
-  "signature": "ots::OpenTypeSILF::SILSub::SILSub(ots::OpenTypeSILF::SILSub const&)"
-- "name": "_ZNK3ots15OpenTypeGLAT_v29GlatEntry13SerializePartEPNS_9OTSStreamE"
-  "params":
-  - "name": "this"
-    "type": "struct ots::OpenTypeGLAT_v2::GlatEntry *"
-  - "name": "out"
-    "type": "ots::OTSStream *"
-  "return_type": "bool"
-  "signature": "ots::OpenTypeGLAT_v2::GlatEntry::SerializePart(ots::OTSStream*) const"
-- "name": "_ZN3ots15OpenTypeGLAT_v29GlatEntry9ParsePartERNS_6BufferE"
-  "params":
-  - "name": "this"
-    "type": "struct ots::OpenTypeGLAT_v2::GlatEntry *"
-  - "name": "table"
-    "type": "ots::Buffer *"
-  "return_type": "bool"
-  "signature": "ots::OpenTypeGLAT_v2::GlatEntry::ParsePart(ots::Buffer&)"
-"language": "c++"
-"project": "ots"
-"target_name": "ots-fuzzer"
-"target_path": "/src/ots/util/ots-fuzzer.cc"
+functions:
+- bool ots::OpenTypeFEAT::FeatureSettingDefn::ParsePart(struct ots::OpenTypeFEAT::FeatureSettingDefn
+  * this, ots::Buffer * table)
+- void ots::OpenTypeSILF::SILSub::SILPass::SILPass(struct ots::OpenTypeSILF::SILSub::SILPass
+  * this, struct ots::OpenTypeSILF::SILSub::SILPass * )
+- void ots::OpenTypeSILF::SILSub::SILSub(struct ots::OpenTypeSILF::SILSub * this,
+  struct ots::OpenTypeSILF::SILSub * )
+- bool ots::OpenTypeGLAT_v2::GlatEntry::SerializePart(struct ots::OpenTypeGLAT_v2::GlatEntry
+  * this, ots::OTSStream * out) const
+- bool ots::OpenTypeGLAT_v2::GlatEntry::ParsePart(struct ots::OpenTypeGLAT_v2::GlatEntry
+  * this, ots::Buffer * table)
+project: ots
+target_name: ots-fuzzer
+target_path: /src/ots/util/ots-fuzzer.cc
+

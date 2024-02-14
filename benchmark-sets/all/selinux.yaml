@@ -1,53 +1,12 @@
-"functions":
-- "name": "cil_write_post_ast"
-  "params":
-  - "name": "out"
-    "type": "struct _IO_FILE *"
-  - "name": "db"
-    "type": "struct cil_db *"
-  "return_type": "int"
-  "signature": "int cil_write_post_ast(struct _IO_FILE * out, struct cil_db * db)"
-- "name": "cil_write_resolve_ast"
-  "params":
-  - "name": "out"
-    "type": "struct _IO_FILE *"
-  - "name": "db"
-    "type": "struct cil_db *"
-  "return_type": "int"
-  "signature": "int cil_write_resolve_ast(struct _IO_FILE * out, struct cil_db * db)"
-- "name": "cil_write_build_ast"
-  "params":
-  - "name": "out"
-    "type": "struct _IO_FILE *"
-  - "name": "db"
-    "type": "struct cil_db *"
-  "return_type": "int"
-  "signature": "int cil_write_build_ast(struct _IO_FILE * out, struct cil_db * db)"
-- "name": "sepol_policydb_to_image"
-  "params":
-  - "name": "handle"
-    "type": "struct sepol_handle *"
-  - "name": "p"
-    "type": "struct sepol_policydb *"
-  - "name": "newdata"
-    "type": "char **"
-  - "name": "newlen"
-    "type": "size_t *"
-  "return_type": "int"
-  "signature": "int sepol_policydb_to_image(struct sepol_handle * handle, struct sepol_policydb * p, char ** newdata, size_t * newlen)"
-- "name": "policydb_to_image"
-  "params":
-  - "name": "handle"
-    "type": "struct sepol_handle *"
-  - "name": "policydb"
-    "type": "struct policydb *"
-  - "name": "newdata"
-    "type": "char **"
-  - "name": "newlen"
-    "type": "size_t *"
-  "return_type": "int"
-  "signature": "int policydb_to_image(struct sepol_handle * handle, struct policydb * policydb, char ** newdata, size_t * newlen)"
-"language": "c"
-"project": "selinux"
-"target_name": "binpolicy-fuzzer"
-"target_path": "/src/selinux/libsepol/fuzz/binpolicy-fuzzer.c"
+functions:
+- int cil_write_post_ast(struct _IO_FILE * out, struct cil_db * db)
+- int cil_write_resolve_ast(struct _IO_FILE * out, struct cil_db * db)
+- int cil_write_build_ast(struct _IO_FILE * out, struct cil_db * db)
+- int sepol_policydb_to_image(struct sepol_handle * handle, struct sepol_policydb
+  * p, char ** newdata, size_t * newlen)
+- int policydb_to_image(struct sepol_handle * handle, struct policydb * policydb,
+  char ** newdata, size_t * newlen)
+project: selinux
+target_name: binpolicy-fuzzer
+target_path: /src/selinux/libsepol/fuzz/binpolicy-fuzzer.c
+

@@ -1,59 +1,13 @@
-"functions":
-- "name": "yajl_parse_complete"
-  "params":
-  - "name": "hand"
-    "type": "struct yajl_handle_t *"
-  "return_type": "int"
-  "signature": "int yajl_parse_complete(struct yajl_handle_t * hand)"
-- "name": "yajl_lex_peek"
-  "params":
-  - "name": "lexer"
-    "type": "struct yajl_lexer_t *"
-  - "name": "jsonText"
-    "type": "char *"
-  - "name": "jsonTextLen"
-    "type": "int"
-  - "name": "offset"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int yajl_lex_peek(struct yajl_lexer_t * lexer, char * jsonText, int jsonTextLen, int offset)"
-- "name": "yajl_get_error"
-  "params":
-  - "name": "hand"
-    "type": "struct yajl_handle_t *"
-  - "name": "verbose"
-    "type": "int"
-  - "name": "jsonText"
-    "type": "char *"
-  - "name": "jsonTextLen"
-    "type": "int"
-  "return_type": "char *"
-  "signature": "char * yajl_get_error(struct yajl_handle_t * hand, int verbose, char * jsonText, int jsonTextLen)"
-- "name": "yajl_string_encode"
-  "params":
-  - "name": "buf"
-    "type": "struct yajl_buf_t *"
-  - "name": "str"
-    "type": "char *"
-  - "name": "len"
-    "type": "int"
-  - "name": "htmlSafe"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void yajl_string_encode(struct yajl_buf_t * buf, char * str, int len, int htmlSafe)"
-- "name": "yajl_render_error_string"
-  "params":
-  - "name": "hand"
-    "type": "struct yajl_handle_t *"
-  - "name": "jsonText"
-    "type": "char *"
-  - "name": "jsonTextLen"
-    "type": "int"
-  - "name": "verbose"
-    "type": "int"
-  "return_type": "char *"
-  "signature": "char * yajl_render_error_string(struct yajl_handle_t * hand, char * jsonText, int jsonTextLen, int verbose)"
-"language": "c++"
-"project": "yajl-ruby"
-"target_name": "json_fuzzer"
-"target_path": "/src/yajl-ruby/fuzz/json_fuzzer.c"
+functions:
+- int yajl_parse_complete(struct yajl_handle_t * hand)
+- int yajl_lex_peek(struct yajl_lexer_t * lexer, char * jsonText, int jsonTextLen,
+  int offset)
+- char * yajl_get_error(struct yajl_handle_t * hand, int verbose, char * jsonText,
+  int jsonTextLen)
+- void yajl_string_encode(struct yajl_buf_t * buf, char * str, int len, int htmlSafe)
+- char * yajl_render_error_string(struct yajl_handle_t * hand, char * jsonText, int
+  jsonTextLen, int verbose)
+project: yajl-ruby
+target_name: json_fuzzer
+target_path: /src/yajl-ruby/fuzz/json_fuzzer.c
+

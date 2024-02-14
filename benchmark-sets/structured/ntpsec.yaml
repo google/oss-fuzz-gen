@@ -1,0 +1,31 @@
+"functions":
+- "name": "nts_init2"
+  "params": []
+  "return_type": "void"
+  "signature": "void nts_init2()"
+- "name": "nts_probe"
+  "params":
+  - "name": "peer"
+    "type": "struct peer *"
+  "return_type": "bool"
+  "signature": "bool nts_probe(struct peer * peer)"
+- "name": "nts_server_init2"
+  "params": []
+  "return_type": "bool"
+  "signature": "bool nts_server_init2()"
+- "name": "nts_ke_listener"
+  "params":
+  - "name": "arg"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "char * nts_ke_listener(char * arg)"
+- "name": "nts_ke_request"
+  "params":
+  - "name": "ssl"
+    "type": "struct ssl_st *"
+  "return_type": "bool"
+  "signature": "bool nts_ke_request(struct ssl_st * ssl)"
+"language": "c"
+"project": "ntpsec"
+"target_name": "FuzzClient"
+"target_path": "/src/ntpsec/fuzz/FuzzClient.c"

@@ -1,43 +1,12 @@
-"functions":
-- "name": "wpa_supplicant_add_iface"
-  "params":
-  - "name": "global"
-    "type": "struct wpa_global *"
-  - "name": "iface"
-    "type": "struct wpa_interface *"
-  - "name": "parent"
-    "type": "struct wpa_supplicant *"
-  "return_type": "struct wpa_supplicant *"
-  "signature": "struct wpa_supplicant * wpa_supplicant_add_iface(struct wpa_global * global, struct wpa_interface * iface, struct wpa_supplicant * parent)"
-- "name": "wpa_supplicant_init_iface"
-  "params":
-  - "name": "wpa_s"
-    "type": "struct wpa_supplicant *"
-  - "name": "iface"
-    "type": "struct wpa_interface *"
-  "return_type": "int"
-  "signature": "int wpa_supplicant_init_iface(struct wpa_supplicant * wpa_s, struct wpa_interface * iface)"
-- "name": "hostapd_reload_config"
-  "params":
-  - "name": "iface"
-    "type": "struct hostapd_iface *"
-  "return_type": "int"
-  "signature": "int hostapd_reload_config(struct hostapd_iface * iface)"
-- "name": "wpa_supplicant_run"
-  "params":
-  - "name": "global"
-    "type": "struct wpa_global *"
-  "return_type": "int"
-  "signature": "int wpa_supplicant_run(struct wpa_global * global)"
-- "name": "hostapd_add_iface"
-  "params":
-  - "name": "interfaces"
-    "type": "struct hapd_interfaces *"
-  - "name": "buf"
-    "type": "char *"
-  "return_type": "int"
-  "signature": "int hostapd_add_iface(struct hapd_interfaces * interfaces, char * buf)"
-"language": "c++"
-"project": "hostap"
-"target_name": "fuzzer-common"
-"target_path": "/src/hostap/tests/fuzzing/fuzzer-common.c"
+functions:
+- struct wpa_supplicant * wpa_supplicant_add_iface(struct wpa_global * global, struct
+  wpa_interface * iface, struct wpa_supplicant * parent)
+- int wpa_supplicant_init_iface(struct wpa_supplicant * wpa_s, struct wpa_interface
+  * iface)
+- int wpa_supplicant_run(struct wpa_global * global)
+- int hostapd_reload_config(struct hostapd_iface * iface)
+- void wpa_supplicant_reconfig(int sig, char * signal_ctx)
+project: hostap
+target_name: fuzzer-common
+target_path: /src/hostap/tests/fuzzing/fuzzer-common.c
+

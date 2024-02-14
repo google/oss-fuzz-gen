@@ -1,55 +1,13 @@
-"functions":
-- "name": "nghttp2_session_recv"
-  "params":
-  - "name": ""
-    "type": "struct nghttp2_session *"
-  "return_type": "int"
-  "signature": "int nghttp2_session_recv(struct nghttp2_session * )"
-- "name": "nghttp2_session_send"
-  "params":
-  - "name": ""
-    "type": "struct nghttp2_session *"
-  "return_type": "int"
-  "signature": "int nghttp2_session_send(struct nghttp2_session * )"
-- "name": "nghttp2_session_upgrade2"
-  "params":
-  - "name": ""
-    "type": "struct nghttp2_session *"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "char *"
-  "return_type": "int"
-  "signature": "int nghttp2_session_upgrade2(struct nghttp2_session * , char * , size_t , int , char * )"
-- "name": "nghttp2_session_upgrade"
-  "params":
-  - "name": ""
-    "type": "struct nghttp2_session *"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "char *"
-  "return_type": "int"
-  "signature": "int nghttp2_session_upgrade(struct nghttp2_session * , char * , size_t , char * )"
-- "name": "nghttp2_session_upgrade_internal"
-  "params":
-  - "name": ""
-    "type": "struct nghttp2_session *"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "char *"
-  "return_type": "int"
-  "signature": "int nghttp2_session_upgrade_internal(struct nghttp2_session * , char * , size_t , char * )"
-"language": "c++"
-"project": "nghttp2"
-"target_name": "nghttp2_fuzzer"
-"target_path": "/src/nghttp2/fuzz/fuzz_target.cc"
+functions:
+- int nghttp2_session_recv(struct nghttp2_session * )
+- int nghttp2_session_send(struct nghttp2_session * )
+- int nghttp2_session_upgrade2(struct nghttp2_session * , char * , size_t , int ,
+  char * )
+- int nghttp2_session_upgrade(struct nghttp2_session * , char * , size_t , char *
+  )
+- int nghttp2_session_upgrade_internal(struct nghttp2_session * , char * , size_t
+  , char * )
+project: nghttp2
+target_name: nghttp2_fuzzer_fdp
+target_path: /src/nghttp2/fuzz/fuzz_target_fdp.cc
+

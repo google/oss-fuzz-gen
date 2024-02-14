@@ -1,57 +1,11 @@
-"functions":
-- "name": "sf_open"
-  "params":
-  - "name": "path"
-    "type": "char *"
-  - "name": "mode"
-    "type": "int"
-  - "name": "sfinfo"
-    "type": "struct SF_INFO *"
-  "return_type": "struct sf_private_tag *"
-  "signature": "struct sf_private_tag * sf_open(char * path, int mode, struct SF_INFO * sfinfo)"
-- "name": "sf_open_fd"
-  "params":
-  - "name": "fd"
-    "type": "int"
-  - "name": "mode"
-    "type": "int"
-  - "name": "sfinfo"
-    "type": "struct SF_INFO *"
-  - "name": "close_desc"
-    "type": "int"
-  "return_type": "struct sf_private_tag *"
-  "signature": "struct sf_private_tag * sf_open_fd(int fd, int mode, struct SF_INFO * sfinfo, int close_desc)"
-- "name": "sf_command"
-  "params":
-  - "name": "sndfile"
-    "type": "struct sf_private_tag *"
-  - "name": "command"
-    "type": "int"
-  - "name": "data"
-    "type": "char *"
-  - "name": "datasize"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int sf_command(struct sf_private_tag * sndfile, int command, char * data, int datasize)"
-- "name": "psf_calc_max_all_channels"
-  "params":
-  - "name": "psf"
-    "type": "struct sf_private_tag *"
-  - "name": "peaks"
-    "type": "double *"
-  - "name": "normalize"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int psf_calc_max_all_channels(struct sf_private_tag * psf, double * peaks, int normalize)"
-- "name": "psf_calc_signal_max"
-  "params":
-  - "name": "psf"
-    "type": "struct sf_private_tag *"
-  - "name": "normalize"
-    "type": "int"
-  "return_type": "double"
-  "signature": "double psf_calc_signal_max(struct sf_private_tag * psf, int normalize)"
-"language": "c"
-"project": "libsndfile"
-"target_name": "sndfile_fuzzer"
-"target_path": "/src/libsndfile/ossfuzz/sndfile_fuzzer.cc"
+functions:
+- struct sf_private_tag * sf_open(char * path, int mode, struct SF_INFO * sfinfo)
+- struct sf_private_tag * sf_open_fd(int fd, int mode, struct SF_INFO * sfinfo, int
+  close_desc)
+- int sf_command(struct sf_private_tag * sndfile, int command, char * data, int datasize)
+- int psf_calc_max_all_channels(struct sf_private_tag * psf, double * peaks, int normalize)
+- double psf_calc_signal_max(struct sf_private_tag * psf, int normalize)
+project: libsndfile
+target_name: sndfile_fuzzer
+target_path: /src/libsndfile/ossfuzz/sndfile_fuzzer.cc
+

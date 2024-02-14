@@ -1,55 +1,19 @@
-"functions":
-- "name": "_ZN3fmt2v910vformat_toINSt3__120back_insert_iteratorINS0_19basic_memory_bufferIcLm250ENS2_9allocatorIcEEEEEELi0EEET_S9_NS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_20basic_format_contextINS0_8appenderEcEEEE"
-  "params":
-  - "name": ""
-    "type": "fmt::v9::basic_memory_buffer *"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "fmt::v9::detail::value *"
-  "return_type": "fmt::v9::basic_memory_buffer *"
-  "signature": "std::__1::back_insert_iterator<fmt::v9::basic_memory_buffer<char, 250ul, std::__1::allocator<char> > > fmt::v9::vformat_to<std::__1::back_insert_iterator<fmt::v9::basic_memory_buffer<char, 250ul, std::__1::allocator<char> > >, 0>(std::__1::back_insert_iterator<fmt::v9::basic_memory_buffer<char, 250ul, std::__1::allocator<char> > >, fmt::v9::basic_string_view<char>, fmt::v9::basic_format_args<fmt::v9::basic_format_context<fmt::v9::appender, char> >)"
-- "name": "_ZN3fmt2v96detail12format_floatIdEEiT_iNS1_11float_specsERNS1_6bufferIcEE"
-  "params":
-  - "name": ""
-    "type": "double"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "fmt::v9::detail::buffer *"
-  "return_type": "int"
-  "signature": "int fmt::v9::detail::format_float<double>(double, int, fmt::v9::detail::float_specs, fmt::v9::detail::buffer<char>&)"
-- "name": "_ZN6spdlog5sinks9base_sinkINSt3__15mutexEE12set_pattern_ERKNS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE"
-  "params":
-  - "name": ""
-    "type": "spdlog::sinks::base_sink *"
-  - "name": ""
-    "type": "std::string *"
-  "return_type": "void"
-  "signature": "spdlog::sinks::base_sink<std::__1::mutex>::set_pattern_(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-- "name": "_ZN6spdlog5sinks14ansicolor_sinkINS_7details13console_mutexEE11set_patternERKNSt3__112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEE"
-  "params":
-  - "name": ""
-    "type": "spdlog::sinks::ansicolor_sink *"
-  - "name": ""
-    "type": "std::string *"
-  "return_type": "void"
-  "signature": "spdlog::sinks::ansicolor_sink<spdlog::details::console_mutex>::set_pattern(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-- "name": "_ZN6spdlog7details11make_uniqueINS_17pattern_formatterEJRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEEEENS3_10unique_ptrIT_NS3_14default_deleteISD_EEEEDpOT0_"
-  "params":
-  - "name": ""
-    "type": "std::unique_ptr *"
-  - "name": ""
-    "type": "std::string *"
-  "return_type": "void"
-  "signature": "std::__1::unique_ptr<spdlog::pattern_formatter, std::__1::default_delete<spdlog::pattern_formatter> > spdlog::details::make_unique<spdlog::pattern_formatter, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&>(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-"language": "c++"
-"project": "spdlog"
-"target_name": "log_fuzzer"
-"target_path": "/src/log_fuzzer.cc"
+functions:
+- fmt::v9::basic_memory_buffer * std::__1::back_insert_iterator<fmt::v9::basic_memory_buffer<char,
+  250ul, std::__1::allocator<char> > > fmt::v9::vformat_to<std::__1::back_insert_iterator<fmt::v9::basic_memory_buffer<char,
+  250ul, std::__1::allocator<char> > >, 0>(fmt::v9::basic_memory_buffer * , char *
+  , size_t , size_t , fmt::v9::detail::value * )
+- int fmt::v9::detail::format_float<double>(double , int , size_t , fmt::v9::detail::buffer
+  * )
+- void spdlog::sinks::base_sink<std::__1::mutex>::set_pattern_(spdlog::sinks::base_sink
+  * , std::string * )
+- void spdlog::sinks::ansicolor_sink<spdlog::details::console_mutex>::set_pattern(spdlog::sinks::ansicolor_sink
+  * , std::string * )
+- void std::__1::unique_ptr<spdlog::pattern_formatter, std::__1::default_delete<spdlog::pattern_formatter>
+  > spdlog::details::make_unique<spdlog::pattern_formatter, std::__1::basic_string<char,
+  std::__1::char_traits<char>, std::__1::allocator<char> > const&>(std::unique_ptr
+  * , std::string * )
+project: spdlog
+target_name: log_fuzzer
+target_path: /src/log_fuzzer.cc
+

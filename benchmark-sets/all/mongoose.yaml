@@ -1,0 +1,14 @@
+functions:
+- void mg_hello(char * url)
+- struct mg_connection * mg_ws_connect(struct mg_mgr * mgr, char * url, func_type
+  * fn, char * fn_data, char * fmt)
+- struct mg_connection * mg_mqtt_connect(struct mg_mgr * mgr, char * url, struct mg_mqtt_opts
+  * opts, func_type * fn, char * fn_data)
+- void mg_ws_upgrade(struct mg_connection * c, struct mg_http_message * hm, char *
+  fmt)
+- struct mg_connection * mg_sntp_connect(struct mg_mgr * mgr, char * url, func_type
+  * fn, char * fnd)
+project: mongoose
+target_name: fuzz
+target_path: /src/mongoose/test/fuzz.c
+

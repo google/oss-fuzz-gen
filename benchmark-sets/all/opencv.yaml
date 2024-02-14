@@ -1,57 +1,15 @@
-"functions":
-- "name": "_ZN2cv3dnn14dnn4_v2023122521readNetFromTensorflowERKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_"
-  "params":
-  - "name": ""
-    "type": "cv::dnn::dnn4_v20231225::Net *"
-  - "name": ""
-    "type": "std::string *"
-  - "name": ""
-    "type": "std::string *"
-  "return_type": "void"
-  "signature": "cv::dnn::dnn4_v20231225::readNetFromTensorflow(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
-- "name": "_ZN2cv3dnn14dnn4_v202312256detail17readNetDiagnosticINS1_12_GLOBAL__N_110TFImporterEJPKcS7_EEENS1_3NetEDpOT0_"
-  "params":
-  - "name": ""
-    "type": "cv::dnn::dnn4_v20231225::Net *"
-  - "name": ""
-    "type": "char **"
-  - "name": ""
-    "type": "char **"
-  "return_type": "void"
-  "signature": "cv::dnn::dnn4_v20231225::Net cv::dnn::dnn4_v20231225::detail::readNetDiagnostic<cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter, char const*, char const*>(char const*&&, char const*&&)"
-- "name": "_ZN2cv3dnn14dnn4_v2023122521readNetFromTensorflowERKNSt3__16vectorIhNS2_9allocatorIhEEEES8_"
-  "params":
-  - "name": ""
-    "type": "cv::dnn::dnn4_v20231225::Net *"
-  - "name": ""
-    "type": "std::vector *"
-  - "name": ""
-    "type": "std::vector *"
-  "return_type": "void"
-  "signature": "cv::dnn::dnn4_v20231225::readNetFromTensorflow(std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&, std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&)"
-- "name": "_ZN2cv3dnn14dnn4_v202312256detail7readNetINS1_12_GLOBAL__N_110TFImporterEJPKcS7_EEENS1_3NetEDpOT0_"
-  "params":
-  - "name": ""
-    "type": "cv::dnn::dnn4_v20231225::Net *"
-  - "name": ""
-    "type": "char **"
-  - "name": ""
-    "type": "char **"
-  "return_type": "void"
-  "signature": "cv::dnn::dnn4_v20231225::Net cv::dnn::dnn4_v20231225::detail::readNet<cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter, char const*, char const*>(char const*&&, char const*&&)"
-- "name": "_ZN2cv3dnn14dnn4_v2023122512_GLOBAL__N_110TFImporterC2ERNS1_3NetEPKcS7_"
-  "params":
-  - "name": ""
-    "type": "cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter *"
-  - "name": ""
-    "type": "cv::dnn::dnn4_v20231225::Net *"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "char *"
-  "return_type": "void"
-  "signature": "cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter::TFImporter(cv::dnn::dnn4_v20231225::Net&, char const*, char const*)"
-"language": "c++"
-"project": "opencv"
-"target_name": "imencode_fuzzer"
-"target_path": "/src/imencode_fuzzer.cc"
+functions:
+- void cv::dnn::dnn4_v20231225::readNetFromTensorflow(cv::dnn::dnn4_v20231225::Net
+  * , std::string * , std::string * )
+- void cv::dnn::dnn4_v20231225::Net cv::dnn::dnn4_v20231225::detail::readNetDiagnostic<cv::dnn::dnn4_v20231225::(cv::dnn::dnn4_v20231225::Net
+  * , char ** , char ** )
+- void cv::dnn::dnn4_v20231225::readNetFromTensorflow(cv::dnn::dnn4_v20231225::Net
+  * , std::vector * , std::vector * )
+- void cv::dnn::dnn4_v20231225::Net cv::dnn::dnn4_v20231225::detail::readNet<cv::dnn::dnn4_v20231225::(cv::dnn::dnn4_v20231225::Net
+  * , char ** , char ** )
+- void cv::dnn::dnn4_v20231225::(cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter
+  * , cv::dnn::dnn4_v20231225::Net * , char * , char * )
+project: opencv
+target_name: imencode_fuzzer
+target_path: /src/imencode_fuzzer.cc
+

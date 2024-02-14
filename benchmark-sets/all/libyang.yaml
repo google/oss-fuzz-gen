@@ -1,53 +1,12 @@
-"functions":
-- "name": "structure_aug_parse"
-  "params":
-  - "name": "pctx"
-    "type": "struct lysp_ctx *"
-  - "name": "ext"
-    "type": "struct lysp_ext_instance *"
-  "return_type": "int"
-  "signature": "int structure_aug_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
-- "name": "yangdata_parse"
-  "params":
-  - "name": "pctx"
-    "type": "struct lysp_ctx *"
-  - "name": "ext"
-    "type": "struct lysp_ext_instance *"
-  "return_type": "int"
-  "signature": "int yangdata_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
-- "name": "structure_parse"
-  "params":
-  - "name": "pctx"
-    "type": "struct lysp_ctx *"
-  - "name": "ext"
-    "type": "struct lysp_ext_instance *"
-  "return_type": "int"
-  "signature": "int structure_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
-- "name": "lysp_stmt_parse"
-  "params":
-  - "name": "pctx"
-    "type": "struct lysp_ctx *"
-  - "name": "stmt"
-    "type": "struct lysp_stmt *"
-  - "name": "result"
-    "type": "char **"
-  - "name": "exts"
-    "type": "struct lysp_ext_instance **"
-  "return_type": "int"
-  "signature": "int lysp_stmt_parse(struct lysp_ctx * pctx, struct lysp_stmt * stmt, char ** result, struct lysp_ext_instance ** exts)"
-- "name": "lysp_stmt_list"
-  "params":
-  - "name": "ctx"
-    "type": "struct lysp_ctx *"
-  - "name": "stmt"
-    "type": "struct lysp_stmt *"
-  - "name": "parent"
-    "type": "struct lysp_node *"
-  - "name": "siblings"
-    "type": "struct lysp_node **"
-  "return_type": "int"
-  "signature": "int lysp_stmt_list(struct lysp_ctx * ctx, struct lysp_stmt * stmt, struct lysp_node * parent, struct lysp_node ** siblings)"
-"language": "c"
-"project": "libyang"
-"target_name": "lyd_parse_mem_xml"
-"target_path": "/src/libyang/tests/fuzz/lyd_parse_mem_xml.c"
+functions:
+- int structure_aug_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)
+- int yangdata_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)
+- int structure_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)
+- int lysp_stmt_parse(struct lysp_ctx * pctx, struct lysp_stmt * stmt, char ** result,
+  struct lysp_ext_instance ** exts)
+- int lysp_stmt_list(struct lysp_ctx * ctx, struct lysp_stmt * stmt, struct lysp_node
+  * parent, struct lysp_node ** siblings)
+project: libyang
+target_name: lyd_parse_mem_xml
+target_path: /src/libyang/tests/fuzz/lyd_parse_mem_xml.c
+

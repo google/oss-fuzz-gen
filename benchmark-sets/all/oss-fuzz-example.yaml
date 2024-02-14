@@ -1,11 +1,6 @@
-"functions":
-- "name": "parse_complex_format_second"
-  "params":
-  - "name": "input"
-    "type": "char *"
-  "return_type": "int"
-  "signature": "int parse_complex_format_second(char * input)"
-"language": "c"
-"project": "oss-fuzz-example"
-"target_name": "fuzz_complex_parser"
-"target_path": "/src/oss-fuzz-example/fuzz_complex_parser.c"
+functions:
+- int parse_complex_format_second(char * input)
+project: oss-fuzz-example
+target_name: fuzz_complex_parser
+target_path: /src/oss-fuzz-example/fuzz_complex_parser.c
+

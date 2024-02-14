@@ -1,109 +1,25 @@
-"functions":
-- "name": "ihevce_enc_frm_proc_slave_thrd"
-  "params":
-  - "name": "pv_frm_proc_thrd_ctxt"
-    "type": "char *"
-  "return_type": "int"
-  "signature": "int ihevce_enc_frm_proc_slave_thrd(char * pv_frm_proc_thrd_ctxt)"
-- "name": "ihevce_pre_enc_process_frame_thrd"
-  "params":
-  - "name": "pv_frm_proc_thrd_ctxt"
-    "type": "char *"
-  "return_type": "int"
-  "signature": "int ihevce_pre_enc_process_frame_thrd(char * pv_frm_proc_thrd_ctxt)"
-- "name": "ihevce_me_process"
-  "params":
-  - "name": "pv_me_ctxt"
-    "type": "char *"
-  - "name": "ps_enc_lap_inp"
-    "type": "struct ihevce_lap_enc_buf_t *"
-  - "name": "ps_ctb_out"
-    "type": "struct ctb_analyse_t *"
-  - "name": "ps_cur_out_me_prms"
-    "type": "struct me_enc_rdopt_ctxt_t *"
-  - "name": "pd_intra_costs"
-    "type": "double *"
-  - "name": "ps_ipe_analyse_ctb"
-    "type": "struct ipe_l0_ctb_analyse_for_me_t *"
-  - "name": "ps_l0_ipe_input"
-    "type": "struct pre_enc_L0_ipe_encloop_ctxt_t *"
-  - "name": "pv_coarse_layer"
-    "type": "char *"
-  - "name": "ps_multi_thrd_ctxt"
-    "type": "struct multi_thrd_ctxt_t *"
-  - "name": "i4_frame_parallelism_level"
-    "type": "int"
-  - "name": "thrd_id"
-    "type": "int"
-  - "name": "i4_me_frm_id"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void ihevce_me_process(char * pv_me_ctxt, struct ihevce_lap_enc_buf_t * ps_enc_lap_inp, struct ctb_analyse_t * ps_ctb_out, struct me_enc_rdopt_ctxt_t * ps_cur_out_me_prms, double * pd_intra_costs, struct ipe_l0_ctb_analyse_for_me_t * ps_ipe_analyse_ctb, struct pre_enc_L0_ipe_encloop_ctxt_t * ps_l0_ipe_input, char * pv_coarse_layer, struct multi_thrd_ctxt_t * ps_multi_thrd_ctxt, int i4_frame_parallelism_level, int thrd_id, int i4_me_frm_id)"
-- "name": "hme_process_frm"
-  "params":
-  - "name": "pv_me_ctxt"
-    "type": "char *"
-  - "name": "ps_l0_ipe_input"
-    "type": "struct pre_enc_L0_ipe_encloop_ctxt_t *"
-  - "name": "ps_ref_map"
-    "type": "struct hme_ref_map_t *"
-  - "name": "ppd_intra_costs"
-    "type": "double **"
-  - "name": "ps_frm_prms"
-    "type": "struct hme_frm_prms_t *"
-  - "name": "pf_ext_update_fxn"
-    "type": "func_type *"
-  - "name": "pv_coarse_layer"
-    "type": "char *"
-  - "name": "pv_multi_thrd_ctxt"
-    "type": "char *"
-  - "name": "i4_frame_parallelism_level"
-    "type": "int"
-  - "name": "thrd_id"
-    "type": "int"
-  - "name": "i4_me_frm_id"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void hme_process_frm(char * pv_me_ctxt, struct pre_enc_L0_ipe_encloop_ctxt_t * ps_l0_ipe_input, struct hme_ref_map_t * ps_ref_map, double ** ppd_intra_costs, struct hme_frm_prms_t * ps_frm_prms, func_type * pf_ext_update_fxn, char * pv_coarse_layer, char * pv_multi_thrd_ctxt, int i4_frame_parallelism_level, int thrd_id, int i4_me_frm_id)"
-- "name": "ihevce_enc_loop_process"
-  "params":
-  - "name": "pv_ctxt"
-    "type": "char *"
-  - "name": "ps_curr_inp"
-    "type": "struct ihevce_lap_enc_buf_t *"
-  - "name": "ps_ctb_in"
-    "type": "struct ctb_analyse_t *"
-  - "name": "ps_ipe_analyse"
-    "type": "struct ipe_l0_ctb_analyse_for_me_t *"
-  - "name": "ps_frm_recon"
-    "type": "struct recon_pic_buf_t *"
-  - "name": "ps_cu_tree_out"
-    "type": "struct cur_ctb_cu_tree_t *"
-  - "name": "ps_ctb_out"
-    "type": "struct ctb_enc_loop_out_t *"
-  - "name": "ps_cu_out"
-    "type": "struct cu_enc_loop_out_t *"
-  - "name": "ps_tu_out"
-    "type": "struct tu_enc_loop_out_t *"
-  - "name": "ps_pu_out"
-    "type": "struct pu_t *"
-  - "name": "pu1_frm_ecd_data"
-    "type": "char *"
-  - "name": "ps_frm_ctb_prms"
-    "type": "struct frm_ctb_ctxt_t *"
-  - "name": "ps_frm_lamda"
-    "type": "struct frm_lambda_ctxt_t *"
-  - "name": "ps_multi_thrd_ctxt"
-    "type": "struct multi_thrd_ctxt_t *"
-  - "name": "thrd_id"
-    "type": "int"
-  - "name": "i4_enc_frm_id"
-    "type": "int"
-  - "name": "i4_pass"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void ihevce_enc_loop_process(char * pv_ctxt, struct ihevce_lap_enc_buf_t * ps_curr_inp, struct ctb_analyse_t * ps_ctb_in, struct ipe_l0_ctb_analyse_for_me_t * ps_ipe_analyse, struct recon_pic_buf_t * ps_frm_recon, struct cur_ctb_cu_tree_t * ps_cu_tree_out, struct ctb_enc_loop_out_t * ps_ctb_out, struct cu_enc_loop_out_t * ps_cu_out, struct tu_enc_loop_out_t * ps_tu_out, struct pu_t * ps_pu_out, char * pu1_frm_ecd_data, struct frm_ctb_ctxt_t * ps_frm_ctb_prms, struct frm_lambda_ctxt_t * ps_frm_lamda, struct multi_thrd_ctxt_t * ps_multi_thrd_ctxt, int thrd_id, int i4_enc_frm_id, int i4_pass)"
-"language": "c++"
-"project": "libhevc"
-"target_name": "hevc_dec_fuzzer"
-"target_path": "/src/libhevc/fuzzer/hevc_dec_fuzzer.cpp"
+functions:
+- int ihevce_enc_frm_proc_slave_thrd(char * pv_frm_proc_thrd_ctxt)
+- int ihevce_pre_enc_process_frame_thrd(char * pv_frm_proc_thrd_ctxt)
+- void ihevce_me_process(char * pv_me_ctxt, struct ihevce_lap_enc_buf_t * ps_enc_lap_inp,
+  struct ctb_analyse_t * ps_ctb_out, struct me_enc_rdopt_ctxt_t * ps_cur_out_me_prms,
+  double * pd_intra_costs, struct ipe_l0_ctb_analyse_for_me_t * ps_ipe_analyse_ctb,
+  struct pre_enc_L0_ipe_encloop_ctxt_t * ps_l0_ipe_input, char * pv_coarse_layer,
+  struct multi_thrd_ctxt_t * ps_multi_thrd_ctxt, int i4_frame_parallelism_level, int
+  thrd_id, int i4_me_frm_id)
+- void hme_process_frm(char * pv_me_ctxt, struct pre_enc_L0_ipe_encloop_ctxt_t * ps_l0_ipe_input,
+  struct hme_ref_map_t * ps_ref_map, double ** ppd_intra_costs, struct hme_frm_prms_t
+  * ps_frm_prms, func_type * pf_ext_update_fxn, char * pv_coarse_layer, char * pv_multi_thrd_ctxt,
+  int i4_frame_parallelism_level, int thrd_id, int i4_me_frm_id)
+- void ihevce_enc_loop_process(char * pv_ctxt, struct ihevce_lap_enc_buf_t * ps_curr_inp,
+  struct ctb_analyse_t * ps_ctb_in, struct ipe_l0_ctb_analyse_for_me_t * ps_ipe_analyse,
+  struct recon_pic_buf_t * ps_frm_recon, struct cur_ctb_cu_tree_t * ps_cu_tree_out,
+  struct ctb_enc_loop_out_t * ps_ctb_out, struct cu_enc_loop_out_t * ps_cu_out, struct
+  tu_enc_loop_out_t * ps_tu_out, struct pu_t * ps_pu_out, char * pu1_frm_ecd_data,
+  struct frm_ctb_ctxt_t * ps_frm_ctb_prms, struct frm_lambda_ctxt_t * ps_frm_lamda,
+  struct multi_thrd_ctxt_t * ps_multi_thrd_ctxt, int thrd_id, int i4_enc_frm_id, int
+  i4_pass)
+project: libhevc
+target_name: hevc_dec_fuzzer
+target_path: /src/libhevc/fuzzer/hevc_dec_fuzzer.cpp
+

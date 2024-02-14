@@ -1,57 +1,11 @@
-"functions":
-- "name": "plist_read_from_file"
-  "params":
-  - "name": "filename"
-    "type": "char *"
-  - "name": "plist"
-    "type": "char **"
-  - "name": "format"
-    "type": "int *"
-  "return_type": "int"
-  "signature": "int plist_read_from_file(char * filename, char ** plist, int * format)"
-- "name": "plist_from_memory"
-  "params":
-  - "name": "plist_data"
-    "type": "char *"
-  - "name": "length"
-    "type": "int"
-  - "name": "plist"
-    "type": "char **"
-  - "name": "format"
-    "type": "int *"
-  "return_type": "int"
-  "signature": "int plist_from_memory(char * plist_data, int length, char ** plist, int * format)"
-- "name": "plist_write_to_file"
-  "params":
-  - "name": "plist"
-    "type": "char *"
-  - "name": "filename"
-    "type": "char *"
-  - "name": "format"
-    "type": "int"
-  - "name": "options"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int plist_write_to_file(char * plist, char * filename, int format, int options)"
-- "name": "plist_print"
-  "params":
-  - "name": "plist"
-    "type": "char *"
-  "return_type": "void"
-  "signature": "void plist_print(char * plist)"
-- "name": "plist_write_to_stream"
-  "params":
-  - "name": "plist"
-    "type": "char *"
-  - "name": "stream"
-    "type": "struct _IO_FILE *"
-  - "name": "format"
-    "type": "int"
-  - "name": "options"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int plist_write_to_stream(char * plist, struct _IO_FILE * stream, int format, int options)"
-"language": "c++"
-"project": "libplist"
-"target_name": "oplist_fuzzer"
-"target_path": "/src/libplist/fuzz/oplist_fuzzer.cc"
+functions:
+- int plist_read_from_file(char * filename, char ** plist, int * format)
+- int plist_from_memory(char * plist_data, int length, char ** plist, int * format)
+- int plist_write_to_file(char * plist, char * filename, int format, int options)
+- void plist_print(char * plist)
+- int plist_write_to_stream(char * plist, struct _IO_FILE * stream, int format, int
+  options)
+project: libplist
+target_name: oplist_fuzzer
+target_path: /src/libplist/fuzz/oplist_fuzzer.cc
+

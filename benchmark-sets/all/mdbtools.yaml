@@ -1,53 +1,13 @@
-"functions":
-- "name": "mdb_print_schema"
-  "params":
-  - "name": "mdb"
-    "type": "struct MdbHandle *"
-  - "name": "outfile"
-    "type": "struct _IO_FILE *"
-  - "name": "tabname"
-    "type": "char *"
-  - "name": "dbnamespace"
-    "type": "char *"
-  - "name": "export_options"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int mdb_print_schema(struct MdbHandle * mdb, struct _IO_FILE * outfile, char * tabname, char * dbnamespace, int export_options)"
-- "name": "mdb_get_relationships"
-  "params":
-  - "name": "mdb"
-    "type": "struct MdbHandle *"
-  - "name": "dbnamespace"
-    "type": "char *"
-  - "name": "tablename"
-    "type": "char *"
-  "return_type": "char *"
-  "signature": "char * mdb_get_relationships(struct MdbHandle * mdb, char * dbnamespace, char * tablename)"
-- "name": "mdb_dump_catalog"
-  "params":
-  - "name": "mdb"
-    "type": "struct MdbHandle *"
-  - "name": "obj_type"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void mdb_dump_catalog(struct MdbHandle * mdb, int obj_type)"
-- "name": "mdb_read_table_by_name"
-  "params":
-  - "name": "mdb"
-    "type": "struct MdbHandle *"
-  - "name": "table_name"
-    "type": "char *"
-  - "name": "obj_type"
-    "type": "int"
-  "return_type": "struct S_MdbTableDef *"
-  "signature": "struct S_MdbTableDef * mdb_read_table_by_name(struct MdbHandle * mdb, char * table_name, int obj_type)"
-- "name": "mdb_data_dump"
-  "params":
-  - "name": "table"
-    "type": "struct S_MdbTableDef *"
-  "return_type": "void"
-  "signature": "void mdb_data_dump(struct S_MdbTableDef * table)"
-"language": "c"
-"project": "mdbtools"
-"target_name": "fuzz_mdb"
-"target_path": "/src/mdbtools/src/fuzz/fuzz_mdb.c"
+functions:
+- int mdb_print_schema(struct MdbHandle * mdb, struct _IO_FILE * outfile, char * tabname,
+  char * dbnamespace, int export_options)
+- char * mdb_get_relationships(struct MdbHandle * mdb, char * dbnamespace, char *
+  tablename)
+- void mdb_dump_catalog(struct MdbHandle * mdb, int obj_type)
+- struct S_MdbTableDef * mdb_read_table_by_name(struct MdbHandle * mdb, char * table_name,
+  int obj_type)
+- void mdb_data_dump(struct S_MdbTableDef * table)
+project: mdbtools
+target_name: fuzz_mdb
+target_path: /src/mdbtools/src/fuzz/fuzz_mdb.c
+

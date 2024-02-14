@@ -1,57 +1,13 @@
-"functions":
-- "name": "json_load_file"
-  "params":
-  - "name": "path"
-    "type": "char *"
-  - "name": "flags"
-    "type": "size_t"
-  - "name": "error"
-    "type": "struct json_error_t *"
-  "return_type": "struct json_t *"
-  "signature": "struct json_t * json_load_file(char * path, size_t flags, struct json_error_t * error)"
-- "name": "json_load_callback"
-  "params":
-  - "name": "callback"
-    "type": "func_type *"
-  - "name": "arg"
-    "type": "char *"
-  - "name": "flags"
-    "type": "size_t"
-  - "name": "error"
-    "type": "struct json_error_t *"
-  "return_type": "struct json_t *"
-  "signature": "struct json_t * json_load_callback(func_type * callback, char * arg, size_t flags, struct json_error_t * error)"
-- "name": "json_loadfd"
-  "params":
-  - "name": "input"
-    "type": "int"
-  - "name": "flags"
-    "type": "size_t"
-  - "name": "error"
-    "type": "struct json_error_t *"
-  "return_type": "struct json_t *"
-  "signature": "struct json_t * json_loadfd(int input, size_t flags, struct json_error_t * error)"
-- "name": "json_loadf"
-  "params":
-  - "name": "input"
-    "type": "struct _IO_FILE *"
-  - "name": "flags"
-    "type": "size_t"
-  - "name": "error"
-    "type": "struct json_error_t *"
-  "return_type": "struct json_t *"
-  "signature": "struct json_t * json_loadf(struct _IO_FILE * input, size_t flags, struct json_error_t * error)"
-- "name": "json_loads"
-  "params":
-  - "name": "string"
-    "type": "char *"
-  - "name": "flags"
-    "type": "size_t"
-  - "name": "error"
-    "type": "struct json_error_t *"
-  "return_type": "struct json_t *"
-  "signature": "struct json_t * json_loads(char * string, size_t flags, struct json_error_t * error)"
-"language": "c++"
-"project": "jansson"
-"target_name": "json_load_dump_fuzzer"
-"target_path": "/src/jansson/test/ossfuzz/json_load_dump_fuzzer.cc"
+functions:
+- struct json_t * json_load_file(char * path, size_t flags, struct json_error_t *
+  error)
+- struct json_t * json_load_callback(func_type * callback, char * arg, size_t flags,
+  struct json_error_t * error)
+- struct json_t * json_loadfd(int input, size_t flags, struct json_error_t * error)
+- struct json_t * json_loadf(struct _IO_FILE * input, size_t flags, struct json_error_t
+  * error)
+- struct json_t * json_loads(char * string, size_t flags, struct json_error_t * error)
+project: jansson
+target_name: json_load_dump_fuzzer
+target_path: /src/jansson/test/ossfuzz/json_load_dump_fuzzer.cc
+

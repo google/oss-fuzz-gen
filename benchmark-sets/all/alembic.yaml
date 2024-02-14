@@ -1,61 +1,16 @@
-"functions":
-- "name": "_ZN7Alembic12AbcCoreOgawa3v127AprImpl9getSampleElRNSt3__110shared_ptrINS_15AbcCoreAbstract3v1211ArraySampleEEE"
-  "params":
-  - "name": ""
-    "type": "Alembic::AbcCoreOgawa::v12::AprImpl *"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "std::shared_ptr *"
-  "return_type": "void"
-  "signature": "Alembic::AbcCoreOgawa::v12::AprImpl::getSample(long, std::__1::shared_ptr<Alembic::AbcCoreAbstract::v12::ArraySample>&)"
-- "name": "_ZN7Alembic12AbcCoreOgawa3v1215ReadArraySampleENSt3__110shared_ptrINS_5Ogawa3v125IDataEEES7_mRKNS_15AbcCoreAbstract3v128DataTypeERNS3_INS9_11ArraySampleEEE"
-  "params":
-  - "name": "iDims"
-    "type": "std::shared_ptr *"
-  - "name": "iData"
-    "type": "std::shared_ptr *"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "Alembic::AbcCoreAbstract::v12::DataType *"
-  - "name": ""
-    "type": "std::shared_ptr *"
-  "return_type": "void"
-  "signature": "Alembic::AbcCoreOgawa::v12::ReadArraySample(std::__1::shared_ptr<Alembic::Ogawa::v12::IData>, std::__1::shared_ptr<Alembic::Ogawa::v12::IData>, unsigned long, Alembic::AbcCoreAbstract::v12::DataType const&, std::__1::shared_ptr<Alembic::AbcCoreAbstract::v12::ArraySample>&)"
-- "name": "_ZN7Alembic14AbcCoreFactory3v128IFactory10getArchiveERKNSt3__16vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEE"
-  "params":
-  - "name": ""
-    "type": "Alembic::Abc::v12::IArchive *"
-  - "name": ""
-    "type": "Alembic::AbcCoreFactory::v12::IFactory *"
-  - "name": ""
-    "type": "std::vector *"
-  "return_type": "void"
-  "signature": "Alembic::AbcCoreFactory::v12::IFactory::getArchive(std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&)"
-- "name": "_ZN7Alembic14AbcCoreFactory3v128IFactory10getArchiveERKNSt3__16vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEERNS2_8CoreTypeE"
-  "params":
-  - "name": ""
-    "type": "Alembic::Abc::v12::IArchive *"
-  - "name": ""
-    "type": "Alembic::AbcCoreFactory::v12::IFactory *"
-  - "name": ""
-    "type": "std::vector *"
-  - "name": ""
-    "type": "int *"
-  "return_type": "void"
-  "signature": "Alembic::AbcCoreFactory::v12::IFactory::getArchive(std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > const&, Alembic::AbcCoreFactory::v12::IFactory::CoreType&)"
-- "name": "_ZN7Alembic12AbcCoreOgawa3v127SprImpl9getSampleElPv"
-  "params":
-  - "name": ""
-    "type": "Alembic::AbcCoreOgawa::v12::SprImpl *"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "char *"
-  "return_type": "void"
-  "signature": "Alembic::AbcCoreOgawa::v12::SprImpl::getSample(long, void*)"
-"language": "c++"
-"project": "alembic"
-"target_name": "alembic_dump_info_fuzzer"
-"target_path": "/src/alembic_dump_info_fuzzer.cc"
+functions:
+- void Alembic::AbcCoreOgawa::v12::AprImpl::getSample(Alembic::AbcCoreOgawa::v12::AprImpl
+  * , size_t , std::shared_ptr * )
+- void Alembic::AbcCoreOgawa::v12::ReadArraySample(std::shared_ptr * iDims, std::shared_ptr
+  * iData, size_t , Alembic::AbcCoreAbstract::v12::DataType * , std::shared_ptr *
+  )
+- void Alembic::AbcCoreFactory::v12::IFactory::getArchive(Alembic::Abc::v12::IArchive
+  * , Alembic::AbcCoreFactory::v12::IFactory * , std::vector * )
+- void Alembic::AbcCoreFactory::v12::IFactory::getArchive(Alembic::Abc::v12::IArchive
+  * , Alembic::AbcCoreFactory::v12::IFactory * , std::vector * , int * )
+- void Alembic::AbcCoreOgawa::v12::SprImpl::getSample(Alembic::AbcCoreOgawa::v12::SprImpl
+  * , size_t , char * )
+project: alembic
+target_name: alembic_dump_info_fuzzer
+target_path: /src/alembic_dump_info_fuzzer.cc
+

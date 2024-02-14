@@ -1,75 +1,16 @@
-"functions":
-- "name": "_ZNK4pugi11xpath_query15evaluate_stringEPcmRKNS_10xpath_nodeE"
-  "params":
-  - "name": "this"
-    "type": "pugi::xpath_query *"
-  - "name": "buffer"
-    "type": "char *"
-  - "name": "capacity"
-    "type": "size_t"
-  - "name": "n"
-    "type": "pugi::xpath_node *"
-  "return_type": "size_t"
-  "signature": "pugi::xpath_query::evaluate_string(char*, unsigned long, pugi::xpath_node const&) const"
-- "name": "_ZN4pugi8xml_node13append_bufferEPKvmjNS_12xml_encodingE"
-  "params":
-  - "name": "this"
-    "type": "struct pugi::xml_parse_result *"
-  - "name": "contents"
-    "type": "pugi::xml_node *"
-  - "name": "size"
-    "type": "char *"
-  - "name": "options"
-    "type": "size_t"
-  - "name": "encoding"
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "pugi::xml_node::append_buffer(void const*, unsigned long, unsigned int, pugi::xml_encoding)"
-- "name": "_ZN4pugi12xml_document23load_buffer_inplace_ownEPvmjNS_12xml_encodingE"
-  "params":
-  - "name": "this"
-    "type": "struct pugi::xml_parse_result *"
-  - "name": "contents"
-    "type": "pugi::xml_document *"
-  - "name": "size"
-    "type": "char *"
-  - "name": "options"
-    "type": "size_t"
-  - "name": "encoding"
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "pugi::xml_document::load_buffer_inplace_own(void*, unsigned long, unsigned int, pugi::xml_encoding)"
-- "name": "_ZN4pugi12xml_document19load_buffer_inplaceEPvmjNS_12xml_encodingE"
-  "params":
-  - "name": "this"
-    "type": "struct pugi::xml_parse_result *"
-  - "name": "contents"
-    "type": "pugi::xml_document *"
-  - "name": "size"
-    "type": "char *"
-  - "name": "options"
-    "type": "size_t"
-  - "name": "encoding"
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "pugi::xml_document::load_buffer_inplace(void*, unsigned long, unsigned int, pugi::xml_encoding)"
-- "name": "_ZNK4pugi8xml_node18select_single_nodeEPKcPNS_18xpath_variable_setE"
-  "params":
-  - "name": "this"
-    "type": "pugi::xml_node *"
-  - "name": "query"
-    "type": "char *"
-  - "name": "variables"
-    "type": "pugi::xpath_variable_set *"
-  "return_type": "void"
-  "signature": "pugi::xml_node::select_single_node(char const*, pugi::xpath_variable_set*) const"
-"language": "c++"
-"project": "pugixml"
-"target_name": "fuzz_parse"
-"target_path": "/src/pugixml/tests/fuzz_parse.cpp"
+functions:
+- size_t pugi::xpath_query::evaluate_string(pugi::xpath_query * this, char * buffer,
+  size_t capacity, pugi::xpath_node * n) const
+- void pugi::xml_node::append_buffer(struct pugi::xml_parse_result * this, pugi::xml_node
+  * contents, char * size, size_t options, int encoding, int )
+- void pugi::xml_document::load_buffer_inplace_own(struct pugi::xml_parse_result *
+  this, pugi::xml_document * contents, char * size, size_t options, int encoding,
+  int )
+- void pugi::xml_document::load_buffer_inplace(struct pugi::xml_parse_result * this,
+  pugi::xml_document * contents, char * size, size_t options, int encoding, int )
+- void pugi::xml_node::select_single_node(pugi::xml_node * this, char * query, pugi::xpath_variable_set
+  * variables) const
+project: pugixml
+target_name: fuzz_parse
+target_path: /src/pugixml/tests/fuzz_parse.cpp
+

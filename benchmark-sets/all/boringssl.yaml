@@ -1,65 +1,15 @@
-"functions":
-- "name": "PEM_read_ECPrivateKey"
-  "params":
-  - "name": ""
-    "type": "struct _IO_FILE *"
-  - "name": ""
-    "type": "4901 **"
-  - "name": ""
-    "type": "func_type *"
-  - "name": ""
-    "type": "char *"
-  "return_type": "struct ec_key_st *"
-  "signature": "struct ec_key_st * PEM_read_ECPrivateKey(struct _IO_FILE * , struct ec_key_st.4901 ** , func_type * , char * )"
-- "name": "PEM_read_DSAPrivateKey"
-  "params":
-  - "name": ""
-    "type": "struct _IO_FILE *"
-  - "name": ""
-    "type": "struct dsa_st **"
-  - "name": ""
-    "type": "func_type *"
-  - "name": ""
-    "type": "char *"
-  "return_type": "struct dsa_st *"
-  "signature": "struct dsa_st * PEM_read_DSAPrivateKey(struct _IO_FILE * , struct dsa_st ** , func_type * , char * )"
-- "name": "PEM_read_RSAPrivateKey"
-  "params":
-  - "name": ""
-    "type": "struct _IO_FILE *"
-  - "name": ""
-    "type": "struct rsa_st **"
-  - "name": ""
-    "type": "func_type *"
-  - "name": ""
-    "type": "char *"
-  "return_type": "struct rsa_st *"
-  "signature": "struct rsa_st * PEM_read_RSAPrivateKey(struct _IO_FILE * , struct rsa_st ** , func_type * , char * )"
-- "name": "PEM_read_PrivateKey"
-  "params":
-  - "name": ""
-    "type": "struct _IO_FILE *"
-  - "name": ""
-    "type": "struct evp_pkey_st **"
-  - "name": ""
-    "type": "func_type *"
-  - "name": ""
-    "type": "char *"
-  "return_type": "struct evp_pkey_st *"
-  "signature": "struct evp_pkey_st * PEM_read_PrivateKey(struct _IO_FILE * , struct evp_pkey_st ** , func_type * , char * )"
-- "name": "PEM_read_bio_ECPrivateKey"
-  "params":
-  - "name": ""
-    "type": "struct bio_st *"
-  - "name": ""
-    "type": "4901 **"
-  - "name": ""
-    "type": "func_type *"
-  - "name": ""
-    "type": "char *"
-  "return_type": "struct ec_key_st *"
-  "signature": "struct ec_key_st * PEM_read_bio_ECPrivateKey(struct bio_st * , struct ec_key_st.4901 ** , func_type * , char * )"
-"language": "c++"
-"project": "boringssl"
-"target_name": "ssl_ctx_api"
-"target_path": "/src/boringssl/fuzz/ssl_ctx_api.cc"
+functions:
+- struct ec_key_st * PEM_read_ECPrivateKey(struct _IO_FILE * , struct ec_key_st.4884
+  ** , func_type * , char * )
+- struct dsa_st * PEM_read_DSAPrivateKey(struct _IO_FILE * , struct dsa_st ** , func_type
+  * , char * )
+- struct rsa_st * PEM_read_RSAPrivateKey(struct _IO_FILE * , struct rsa_st ** , func_type
+  * , char * )
+- struct evp_pkey_st * PEM_read_PrivateKey(struct _IO_FILE * , struct evp_pkey_st
+  ** , func_type * , char * )
+- struct ec_key_st * PEM_read_bio_ECPrivateKey(struct bio_st * , struct ec_key_st.4884
+  ** , func_type * , char * )
+project: boringssl
+target_name: ssl_ctx_api
+target_path: /src/boringssl/fuzz/ssl_ctx_api.cc
+

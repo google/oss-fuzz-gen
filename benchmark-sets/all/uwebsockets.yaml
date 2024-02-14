@@ -1,0 +1,13 @@
+functions:
+- struct us_socket_t * uWS::HttpContext<false>::init(struct us_socket_t * , char *
+  , int )
+- struct us_socket_t * uWS::HttpContext<true>::init(struct us_socket_t * , char *
+  , int )
+- void _GLOBAL__sub_I_Http.cpp()
+- void __cxx_global_var_init()
+- bool uWS::TopicTree<uWS::TopicTreeMessage, uWS::TopicTreeBigMessage>::publishBig<uWS::WebSocket<false,
+  true, test(struct uWS::TopicTree * , struct uWS::Subscriber * , char * topic, size_t
+  , struct uWS::TopicTreeBigMessage * cb)
+project: uwebsockets
+target_name: Http
+target_path: /src/uWebSockets/uSockets/fuzzing/Http.cpp

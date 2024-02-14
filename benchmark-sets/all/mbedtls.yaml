@@ -1,55 +1,11 @@
-"functions":
-- "name": "mbedtls_ssl_write"
-  "params":
-  - "name": "ssl"
-    "type": "struct mbedtls_ssl_context *"
-  - "name": "buf"
-    "type": "char *"
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int mbedtls_ssl_write(struct mbedtls_ssl_context * ssl, char * buf, size_t len)"
-- "name": "mbedtls_test_psa_exercise_key"
-  "params":
-  - "name": "key"
-    "type": "int"
-  - "name": "usage"
-    "type": "int"
-  - "name": "alg"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int mbedtls_test_psa_exercise_key(int key, int usage, int alg)"
-- "name": "mbedtls_ssl_context_load"
-  "params":
-  - "name": "context"
-    "type": "struct mbedtls_ssl_context *"
-  - "name": "buf"
-    "type": "char *"
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int mbedtls_ssl_context_load(struct mbedtls_ssl_context * context, char * buf, size_t len)"
-- "name": "ssl_context_load"
-  "params":
-  - "name": "ssl"
-    "type": "struct mbedtls_ssl_context *"
-  - "name": "buf"
-    "type": "char *"
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int ssl_context_load(struct mbedtls_ssl_context * ssl, char * buf, size_t len)"
-- "name": "mbedtls_ssl_check_record"
-  "params":
-  - "name": "ssl"
-    "type": "struct mbedtls_ssl_context *"
-  - "name": "buf"
-    "type": "char *"
-  - "name": "buflen"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int mbedtls_ssl_check_record(struct mbedtls_ssl_context * ssl, char * buf, size_t buflen)"
-"language": "c++"
-"project": "mbedtls"
-"target_name": "usepsa-fuzz_server"
-"target_path": "/src/mbedtls/programs/fuzz/fuzz_server.c"
+functions:
+- int mbedtls_ssl_write(struct mbedtls_ssl_context * ssl, char * buf, size_t len)
+- int mbedtls_test_psa_exercise_key(int key, int usage, int alg)
+- int exercise_key_agreement_key(int key, int usage, int alg)
+- int exercise_signature_key(int key, int usage, int alg)
+- int mbedtls_test_psa_key_agreement_with_self(struct psa_key_derivation_s * operation,
+  int key)
+project: mbedtls
+target_name: fuzz_server
+target_path: /src/mbedtls/programs/fuzz/fuzz_server.c
+
