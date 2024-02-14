@@ -1,13 +1,57 @@
-functions:
-- int MmsValue_encodeMmsData(struct sMmsValue * self, char * buffer, int bufPos, bool
-  encode)
-- char * MmsValue_printToBuffer(struct sMmsValue * self, char * buffer, int bufferSize)
-- int encodeArrayAccessResult(struct sMmsValue * value, char * buffer, int bufPos,
-  bool encode)
-- int encodeStructuredAccessResult(struct sMmsValue * value, char * buffer, int bufPos,
-  bool encode)
-- struct sMmsValue * MmsValue_newDefaultValue(struct sMmsVariableSpecification * typeSpec)
-project: libiec61850
-target_name: fuzz_mms_decode
-target_path: /src/libiec61850/fuzz/fuzz_mms_decode.c
-
+"functions":
+- "name": "MmsValue_encodeMmsData"
+  "params":
+  - "name": "self"
+    "type": "struct sMmsValue *"
+  - "name": "buffer"
+    "type": "char *"
+  - "name": "bufPos"
+    "type": "int"
+  - "name": "encode"
+    "type": "bool"
+  "return_type": "int"
+  "signature": "int MmsValue_encodeMmsData(struct sMmsValue * self, char * buffer, int bufPos, bool encode)"
+- "name": "MmsValue_printToBuffer"
+  "params":
+  - "name": "self"
+    "type": "struct sMmsValue *"
+  - "name": "buffer"
+    "type": "char *"
+  - "name": "bufferSize"
+    "type": "int"
+  "return_type": "char *"
+  "signature": "char * MmsValue_printToBuffer(struct sMmsValue * self, char * buffer, int bufferSize)"
+- "name": "encodeArrayAccessResult"
+  "params":
+  - "name": "value"
+    "type": "struct sMmsValue *"
+  - "name": "buffer"
+    "type": "char *"
+  - "name": "bufPos"
+    "type": "int"
+  - "name": "encode"
+    "type": "bool"
+  "return_type": "int"
+  "signature": "int encodeArrayAccessResult(struct sMmsValue * value, char * buffer, int bufPos, bool encode)"
+- "name": "encodeStructuredAccessResult"
+  "params":
+  - "name": "value"
+    "type": "struct sMmsValue *"
+  - "name": "buffer"
+    "type": "char *"
+  - "name": "bufPos"
+    "type": "int"
+  - "name": "encode"
+    "type": "bool"
+  "return_type": "int"
+  "signature": "int encodeStructuredAccessResult(struct sMmsValue * value, char * buffer, int bufPos, bool encode)"
+- "name": "MmsValue_newDefaultValue"
+  "params":
+  - "name": "typeSpec"
+    "type": "struct sMmsVariableSpecification *"
+  "return_type": "struct sMmsValue *"
+  "signature": "struct sMmsValue * MmsValue_newDefaultValue(struct sMmsVariableSpecification * typeSpec)"
+"language": "c"
+"project": "libiec61850"
+"target_name": "fuzz_mms_decode"
+"target_path": "/src/libiec61850/fuzz/fuzz_mms_decode.c"

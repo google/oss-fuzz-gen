@@ -1,11 +1,41 @@
-functions:
-- int bpf_object__load_skeleton(struct bpf_object_skeleton * s)
-- int bpf_object__load(struct bpf_object * obj)
-- int bpf_object_load(struct bpf_object * obj, int extra_log_level, char * target_btf_path)
-- int bpf_object__open_skeleton(struct bpf_object_skeleton * s, struct bpf_object_open_opts
-  * opts)
-- struct bpf_object * bpf_object__open(char * path)
-project: libbpf
-target_name: bpf-object-fuzzer
-target_path: /src/libbpf/fuzz/bpf-object-fuzzer.c
-
+"functions":
+- "name": "bpf_object__load_skeleton"
+  "params":
+  - "name": "s"
+    "type": "struct bpf_object_skeleton *"
+  "return_type": "int"
+  "signature": "int bpf_object__load_skeleton(struct bpf_object_skeleton * s)"
+- "name": "bpf_object__load"
+  "params":
+  - "name": "obj"
+    "type": "struct bpf_object *"
+  "return_type": "int"
+  "signature": "int bpf_object__load(struct bpf_object * obj)"
+- "name": "bpf_object_load"
+  "params":
+  - "name": "obj"
+    "type": "struct bpf_object *"
+  - "name": "extra_log_level"
+    "type": "int"
+  - "name": "target_btf_path"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int bpf_object_load(struct bpf_object * obj, int extra_log_level, char * target_btf_path)"
+- "name": "bpf_object__open_skeleton"
+  "params":
+  - "name": "s"
+    "type": "struct bpf_object_skeleton *"
+  - "name": "opts"
+    "type": "struct bpf_object_open_opts *"
+  "return_type": "int"
+  "signature": "int bpf_object__open_skeleton(struct bpf_object_skeleton * s, struct bpf_object_open_opts * opts)"
+- "name": "bpf_object__open"
+  "params":
+  - "name": "path"
+    "type": "char *"
+  "return_type": "struct bpf_object *"
+  "signature": "struct bpf_object * bpf_object__open(char * path)"
+"language": "c"
+"project": "libbpf"
+"target_name": "bpf-object-fuzzer"
+"target_path": "/src/libbpf/fuzz/bpf-object-fuzzer.c"

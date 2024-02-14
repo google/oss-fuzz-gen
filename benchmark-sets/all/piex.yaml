@@ -1,11 +1,57 @@
-Retrieving human-written fuzz targets of piex from local Docker build.
-functions:
-- bool piex::GetDngInformation(std::exception * , int * , int * , std::vector * )
-- bool piex::(std::map * , std::exception * , int * , int * , std::vector * )
-- bool piex::GetOrientation(std::exception * , int * )
-- bool piex::(std::exception * , int * )
-- bool piex::GetExifOrientation(std::exception * , int , int * )
-project: piex
-target_name: fuzzer-tiff_parser
-target_path: /src/piex/fuzzers/tiff_parser.cpp
-
+"functions":
+- "name": "_ZN4piex17GetDngInformationEPNS_15StreamInterfaceEPjS2_PNSt3__16vectorIjNS3_9allocatorIjEEEE"
+  "params":
+  - "name": ""
+    "type": "std::exception *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "std::vector *"
+  "return_type": "bool"
+  "signature": "piex::GetDngInformation(piex::StreamInterface*, unsigned int*, unsigned int*, std::__1::vector<unsigned int, std::__1::allocator<unsigned int> >*)"
+- "name": "_ZN4piex12_GLOBAL__N_117GetDngInformationERKNSt3__13setIjNS1_4lessIjEENS1_9allocatorIjEEEEPNS_15StreamInterfaceEPjSC_PNS1_6vectorIjS6_EE"
+  "params":
+  - "name": ""
+    "type": "std::map *"
+  - "name": ""
+    "type": "std::exception *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "std::vector *"
+  "return_type": "bool"
+  "signature": "piex::(anonymous namespace)::GetDngInformation(std::__1::set<unsigned int, std::__1::less<unsigned int>, std::__1::allocator<unsigned int> > const&, piex::StreamInterface*, unsigned int*, unsigned int*, std::__1::vector<unsigned int, std::__1::allocator<unsigned int> >*)"
+- "name": "_ZN4piex14GetOrientationEPNS_15StreamInterfaceEPj"
+  "params":
+  - "name": ""
+    "type": "std::exception *"
+  - "name": ""
+    "type": "int *"
+  "return_type": "bool"
+  "signature": "piex::GetOrientation(piex::StreamInterface*, unsigned int*)"
+- "name": "_ZN4piex12_GLOBAL__N_117RafGetOrientationEPNS_15StreamInterfaceEPj"
+  "params":
+  - "name": ""
+    "type": "std::exception *"
+  - "name": ""
+    "type": "int *"
+  "return_type": "bool"
+  "signature": "piex::(anonymous namespace)::RafGetOrientation(piex::StreamInterface*, unsigned int*)"
+- "name": "_ZN4piex18GetExifOrientationEPNS_15StreamInterfaceEjPj"
+  "params":
+  - "name": ""
+    "type": "std::exception *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int *"
+  "return_type": "bool"
+  "signature": "piex::GetExifOrientation(piex::StreamInterface*, unsigned int, unsigned int*)"
+"language": "c++"
+"project": "piex"
+"target_name": "fuzzer-tiff_parser"
+"target_path": "/src/piex/fuzzers/tiff_parser.cpp"

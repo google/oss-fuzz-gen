@@ -1,11 +1,57 @@
-functions:
-- bool handleEDNSClientSubnet(struct DNSQuestion * , char * , char * )
-- void checkHostnameCorrectness(DNSResourceRecord * )
-- bool handleEDNSClientSubnet(std::vector * , size_t , size_t , char * , char * ,
-  bool , std::string * )
-- bool setEDNSOption(struct DNSQuestion * , short , std::string * )
-- void clearDNSPacketRecordTypes(std::vector * , std::unordered_map * )
-project: powerdns
-target_name: standalone_fuzz_target_runner
-target_path: /src/pdns/pdns/standalone_fuzz_target_runner.cc
-
+"functions":
+- "name": "_Z22handleEDNSClientSubnetR11DNSQuestionRbS1_"
+  "params":
+  - "name": ""
+    "type": "struct DNSQuestion *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  "return_type": "bool"
+  "signature": "handleEDNSClientSubnet(DNSQuestion&, bool&, bool&)"
+- "name": "_Z24checkHostnameCorrectnessRK17DNSResourceRecord"
+  "params":
+  - "name": ""
+    "type": "DNSResourceRecord *"
+  "return_type": "void"
+  "signature": "checkHostnameCorrectness(DNSResourceRecord const&)"
+- "name": "_Z22handleEDNSClientSubnetRNSt3__16vectorIh14noinit_adaptorINS_9allocatorIhEEEEEmmRbS7_bRKNS_12basic_stringIcNS_11char_traitsIcEENS2_IcEEEE"
+  "params":
+  - "name": ""
+    "type": "std::vector *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "bool"
+  - "name": ""
+    "type": "std::string *"
+  "return_type": "bool"
+  "signature": "handleEDNSClientSubnet(std::__1::vector<unsigned char, noinit_adaptor<std::__1::allocator<unsigned char> > >&, unsigned long, unsigned long, bool&, bool&, bool, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "_Z13setEDNSOptionR11DNSQuestiontRKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE"
+  "params":
+  - "name": ""
+    "type": "struct DNSQuestion *"
+  - "name": ""
+    "type": "short"
+  - "name": ""
+    "type": "std::string *"
+  "return_type": "bool"
+  "signature": "setEDNSOption(DNSQuestion&, unsigned short, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+- "name": "_ZN16RecordTextReader18xfrSvcParamKeyValsERNSt3__13setI8SvcParamNS0_4lessIS2_EENS0_9allocatorIS2_EEEE"
+  "params":
+  - "name": ""
+    "type": "RecordTextReader *"
+  - "name": ""
+    "type": "std::set *"
+  "return_type": "void"
+  "signature": "RecordTextReader::xfrSvcParamKeyVals(std::__1::set<SvcParam, std::__1::less<SvcParam>, std::__1::allocator<SvcParam> >&)"
+"language": "c++"
+"project": "powerdns"
+"target_name": "standalone_fuzz_target_runner"
+"target_path": "/src/pdns/pdns/standalone_fuzz_target_runner.cc"

@@ -1,11 +1,41 @@
-functions:
-- cctz::time_zone::Impl * cctz::local_time_zone()
-- cctz::time_zone::Impl * cctz::fixed_time_zone(std::chrono::duration * offset)
-- void cctz::time_zone::description(std::string * this, cctz::time_zone * ) const
-- void cctz::time_zone::version(std::string * this, cctz::time_zone * ) const
-- bool cctz::time_zone::prev_transition(cctz::time_zone * this, std::chrono::time_point
-  * tp, struct cctz::time_zone::civil_transition * trans) const
-project: cctz
-target_name: fuzz_cctz
-target_path: /src/fuzz_cctz.cc
-
+"functions":
+- "name": "_ZN4cctz15local_time_zoneEv"
+  "params": []
+  "return_type": "cctz::time_zone::Impl *"
+  "signature": "cctz::local_time_zone()"
+- "name": "_ZN4cctz15fixed_time_zoneERKNSt3__16chrono8durationIlNS0_5ratioILl1ELl1EEEEE"
+  "params":
+  - "name": "offset"
+    "type": "std::chrono::duration *"
+  "return_type": "cctz::time_zone::Impl *"
+  "signature": "cctz::fixed_time_zone(std::__1::chrono::duration<long, std::__1::ratio<1l, 1l> > const&)"
+- "name": "_ZNK4cctz9time_zone11descriptionEv"
+  "params":
+  - "name": "this"
+    "type": "std::string *"
+  - "name": ""
+    "type": "cctz::time_zone *"
+  "return_type": "void"
+  "signature": "cctz::time_zone::description() const"
+- "name": "_ZNK4cctz9time_zone7versionEv"
+  "params":
+  - "name": "this"
+    "type": "std::string *"
+  - "name": ""
+    "type": "cctz::time_zone *"
+  "return_type": "void"
+  "signature": "cctz::time_zone::version() const"
+- "name": "_ZNK4cctz9time_zone15prev_transitionERKNSt3__16chrono10time_pointINS2_12system_clockENS2_8durationIlNS1_5ratioILl1ELl1EEEEEEEPNS0_16civil_transitionE"
+  "params":
+  - "name": "this"
+    "type": "cctz::time_zone *"
+  - "name": "tp"
+    "type": "std::chrono::time_point *"
+  - "name": "trans"
+    "type": "struct cctz::time_zone::civil_transition *"
+  "return_type": "bool"
+  "signature": "cctz::time_zone::prev_transition(std::__1::chrono::time_point<std::__1::chrono::system_clock, std::__1::chrono::duration<long, std::__1::ratio<1l, 1l> > > const&, cctz::time_zone::civil_transition*) const"
+"language": "c++"
+"project": "cctz"
+"target_name": "fuzz_cctz"
+"target_path": "/src/fuzz_cctz.cc"

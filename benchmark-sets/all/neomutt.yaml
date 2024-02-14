@@ -1,10 +1,51 @@
-functions:
-- int disabled_main(int , char ** , char ** )
-- int op_alias_dialog(struct IndexSharedData * , struct IndexPrivateData * , int )
-- void alias_dialog(struct Mailbox * , struct ConfigSubset * )
-- int op_post(struct IndexSharedData * , struct IndexPrivateData * , int )
-- int op_followup(struct AttachPrivateData * , int )
-project: neomutt
-target_name: fuzz/date.c
-target_path: /src/neomutt/fuzz/date.c
-
+"functions":
+- "name": "disabled_main"
+  "params":
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "char **"
+  - "name": ""
+    "type": "char **"
+  "return_type": "int"
+  "signature": "int disabled_main(int , char ** , char ** )"
+- "name": "op_alias_dialog"
+  "params":
+  - "name": ""
+    "type": "struct IndexSharedData *"
+  - "name": ""
+    "type": "struct IndexPrivateData *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int op_alias_dialog(struct IndexSharedData * , struct IndexPrivateData * , int )"
+- "name": "alias_dialog"
+  "params":
+  - "name": ""
+    "type": "struct Mailbox *"
+  - "name": ""
+    "type": "struct ConfigSubset *"
+  "return_type": "void"
+  "signature": "void alias_dialog(struct Mailbox * , struct ConfigSubset * )"
+- "name": "op_post"
+  "params":
+  - "name": ""
+    "type": "struct IndexSharedData *"
+  - "name": ""
+    "type": "struct IndexPrivateData *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int op_post(struct IndexSharedData * , struct IndexPrivateData * , int )"
+- "name": "op_followup"
+  "params":
+  - "name": ""
+    "type": "struct AttachPrivateData *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int op_followup(struct AttachPrivateData * , int )"
+"language": "c++"
+"project": "neomutt"
+"target_name": "fuzz/date.c"
+"target_path": "/src/neomutt/fuzz/date.c"

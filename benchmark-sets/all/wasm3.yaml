@@ -1,12 +1,61 @@
-functions:
-- char * op_CallIndirect(char ** , int * , struct M3MemoryHeader * , size_t , double
-  )
-- char * m3_CompileModule(struct M3Module * )
-- char * m3_GetTableFunction(struct M3Function ** , struct M3Module * , int )
-- char * op_Compile(char ** , int * , struct M3MemoryHeader * , size_t , double )
-- char * CompileRawFunction(struct M3Module * , struct M3Function * , char * , char
-  * )
-project: wasm3
-target_name: fuzzer
-target_path: /src/wasm3/platforms/app_fuzz/fuzzer.c
-
+"functions":
+- "name": "op_CallIndirect"
+  "params":
+  - "name": ""
+    "type": "char **"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "struct M3MemoryHeader *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "double"
+  "return_type": "char *"
+  "signature": "char * op_CallIndirect(char ** , int * , struct M3MemoryHeader * , size_t , double )"
+- "name": "m3_CompileModule"
+  "params":
+  - "name": ""
+    "type": "struct M3Module *"
+  "return_type": "char *"
+  "signature": "char * m3_CompileModule(struct M3Module * )"
+- "name": "m3_GetTableFunction"
+  "params":
+  - "name": ""
+    "type": "struct M3Function **"
+  - "name": ""
+    "type": "struct M3Module *"
+  - "name": ""
+    "type": "int"
+  "return_type": "char *"
+  "signature": "char * m3_GetTableFunction(struct M3Function ** , struct M3Module * , int )"
+- "name": "op_Compile"
+  "params":
+  - "name": ""
+    "type": "char **"
+  - "name": ""
+    "type": "int *"
+  - "name": ""
+    "type": "struct M3MemoryHeader *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "double"
+  "return_type": "char *"
+  "signature": "char * op_Compile(char ** , int * , struct M3MemoryHeader * , size_t , double )"
+- "name": "CompileRawFunction"
+  "params":
+  - "name": ""
+    "type": "struct M3Module *"
+  - "name": ""
+    "type": "struct M3Function *"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "char * CompileRawFunction(struct M3Module * , struct M3Function * , char * , char * )"
+"language": "c"
+"project": "wasm3"
+"target_name": "fuzzer"
+"target_path": "/src/wasm3/platforms/app_fuzz/fuzzer.c"

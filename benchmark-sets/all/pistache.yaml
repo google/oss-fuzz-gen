@@ -1,15 +1,47 @@
-functions:
-- bool Pistache::Http::(Pistache::Http::Uri::Query * , Pistache::ArrayStreamBuf *
-  )
-- std::ostream * Pistache::Http::operator<<(std::ostream * , struct Pistache::Http::Cookie
-  * )
-- void Pistache::Http::Cookie::write(struct Pistache::Http::Cookie * , std::ostream
-  * ) const
-- void Pistache::Http::Header::Date::write(Pistache::Http::Header::Date * , std::ostream
-  * ) const
-- void Pistache::Http::FullDate::write(std::__bucket_list_deallocator * , std::ostream
-  * , int ) const
-project: pistache
-target_name: fuzz_parsers
-target_path: /src/pistache/tests/fuzzers/fuzz_parser.cpp
-
+"functions":
+- "name": "_ZN8Pistache4Http12_GLOBAL__N_112writeCookiesERKNS0_9CookieJarERNS_16DynamicStreamBufE"
+  "params":
+  - "name": ""
+    "type": "Pistache::Http::Uri::Query *"
+  - "name": ""
+    "type": "Pistache::ArrayStreamBuf *"
+  "return_type": "bool"
+  "signature": "Pistache::Http::(anonymous namespace)::writeCookies(Pistache::Http::CookieJar const&, Pistache::DynamicStreamBuf&)"
+- "name": "_ZN8Pistache4HttplsERNSt3__113basic_ostreamIcNS1_11char_traitsIcEEEERKNS0_6CookieE"
+  "params":
+  - "name": ""
+    "type": "std::ostream *"
+  - "name": ""
+    "type": "struct Pistache::Http::Cookie *"
+  "return_type": "std::ostream *"
+  "signature": "Pistache::Http::operator<<(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, Pistache::Http::Cookie const&)"
+- "name": "_ZNK8Pistache4Http6Cookie5writeERNSt3__113basic_ostreamIcNS2_11char_traitsIcEEEE"
+  "params":
+  - "name": ""
+    "type": "struct Pistache::Http::Cookie *"
+  - "name": ""
+    "type": "std::ostream *"
+  "return_type": "void"
+  "signature": "Pistache::Http::Cookie::write(std::__1::basic_ostream<char, std::__1::char_traits<char> >&) const"
+- "name": "_ZNK8Pistache4Http6Header4Date5writeERNSt3__113basic_ostreamIcNS3_11char_traitsIcEEEE"
+  "params":
+  - "name": ""
+    "type": "Pistache::Http::Header::Date *"
+  - "name": ""
+    "type": "std::ostream *"
+  "return_type": "void"
+  "signature": "Pistache::Http::Header::Date::write(std::__1::basic_ostream<char, std::__1::char_traits<char> >&) const"
+- "name": "_ZNK8Pistache4Http8FullDate5writeERNSt3__113basic_ostreamIcNS2_11char_traitsIcEEEENS1_4TypeE"
+  "params":
+  - "name": ""
+    "type": "std::__bucket_list_deallocator *"
+  - "name": ""
+    "type": "std::ostream *"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "Pistache::Http::FullDate::write(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, Pistache::Http::FullDate::Type) const"
+"language": "c++"
+"project": "pistache"
+"target_name": "fuzz_parsers"
+"target_path": "/src/pistache/tests/fuzzers/fuzz_parser.cpp"

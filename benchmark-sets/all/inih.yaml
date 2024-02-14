@@ -1,8 +1,31 @@
-functions:
-- void parse(char * fname)
-- int ini_parse_string(char * string, func_type * handler, char * user)
-- char * ini_reader_string(char * str, int num, char * stream)
-project: inih
-target_name: inihfuzz
-target_path: /src/inih/fuzzing/inihfuzz.c
-
+"functions":
+- "name": "parse"
+  "params":
+  - "name": "fname"
+    "type": "char *"
+  "return_type": "void"
+  "signature": "void parse(char * fname)"
+- "name": "ini_parse_string"
+  "params":
+  - "name": "string"
+    "type": "char *"
+  - "name": "handler"
+    "type": "func_type *"
+  - "name": "user"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int ini_parse_string(char * string, func_type * handler, char * user)"
+- "name": "ini_reader_string"
+  "params":
+  - "name": "str"
+    "type": "char *"
+  - "name": "num"
+    "type": "int"
+  - "name": "stream"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "char * ini_reader_string(char * str, int num, char * stream)"
+"language": "c"
+"project": "inih"
+"target_name": "inihfuzz"
+"target_path": "/src/inih/fuzzing/inihfuzz.c"

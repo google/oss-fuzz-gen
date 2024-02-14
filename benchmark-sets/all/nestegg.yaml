@@ -1,12 +1,55 @@
-Retrieving human-written fuzz targets of nestegg from local Docker build.
-functions:
-- int nestegg_track_seek(struct nestegg * ctx, int track, size_t tstamp)
-- int nestegg_get_cue_point(struct nestegg * ctx, int cluster_num, size_t max_offset,
-  size_t * start_pos, size_t * end_pos, size_t * tstamp)
-- int nestegg_sniff(char * buffer, size_t length)
-- int ne_init_cue_points(struct nestegg * ctx, size_t max_offset)
-- int ne_match_webm(struct nestegg_io * io, size_t max_offset)
-project: nestegg
-target_name: fuzz
-target_path: /src/nestegg/test/fuzz.cc
-
+"functions":
+- "name": "nestegg_track_seek"
+  "params":
+  - "name": "ctx"
+    "type": "struct nestegg *"
+  - "name": "track"
+    "type": "int"
+  - "name": "tstamp"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int nestegg_track_seek(struct nestegg * ctx, int track, size_t tstamp)"
+- "name": "nestegg_get_cue_point"
+  "params":
+  - "name": "ctx"
+    "type": "struct nestegg *"
+  - "name": "cluster_num"
+    "type": "int"
+  - "name": "max_offset"
+    "type": "size_t"
+  - "name": "start_pos"
+    "type": "size_t *"
+  - "name": "end_pos"
+    "type": "size_t *"
+  - "name": "tstamp"
+    "type": "size_t *"
+  "return_type": "int"
+  "signature": "int nestegg_get_cue_point(struct nestegg * ctx, int cluster_num, size_t max_offset, size_t * start_pos, size_t * end_pos, size_t * tstamp)"
+- "name": "nestegg_sniff"
+  "params":
+  - "name": "buffer"
+    "type": "char *"
+  - "name": "length"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int nestegg_sniff(char * buffer, size_t length)"
+- "name": "ne_init_cue_points"
+  "params":
+  - "name": "ctx"
+    "type": "struct nestegg *"
+  - "name": "max_offset"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int ne_init_cue_points(struct nestegg * ctx, size_t max_offset)"
+- "name": "ne_match_webm"
+  "params":
+  - "name": "io"
+    "type": "struct nestegg_io *"
+  - "name": "max_offset"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int ne_match_webm(struct nestegg_io * io, size_t max_offset)"
+"language": "c++"
+"project": "nestegg"
+"target_name": "fuzz"
+"target_path": "/src/nestegg/test/fuzz.cc"

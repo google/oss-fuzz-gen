@@ -1,16 +1,67 @@
-functions:
-- struct fz_document_writer * fz_new_document_writer(struct fz_context * ctx, char
-  * path, char * explicit_format, char * options)
-- struct fz_buffer * fz_new_buffer_from_page_with_format(struct fz_context * ctx,
-  struct fz_page * page, char * format, char * options, struct fz_matrix * transform,
-  struct fz_cookie * cookie)
-- struct fz_document_writer * fz_new_document_writer_with_buffer(struct fz_context
-  * ctx, struct fz_buffer * buffer, char * format, char * options)
-- struct fz_document_writer * fz_new_document_writer_with_output(struct fz_context
-  * ctx, struct fz_output * out, char * format, char * options)
-- struct fz_document_writer * fz_new_pdf_writer(struct fz_context * ctx, char * path,
-  char * options)
-project: mupdf
-target_name: pdf_fuzzer
-target_path: /src/pdf_fuzzer.cc
-
+"functions":
+- "name": "fz_new_document_writer"
+  "params":
+  - "name": "ctx"
+    "type": "struct fz_context *"
+  - "name": "path"
+    "type": "char *"
+  - "name": "explicit_format"
+    "type": "char *"
+  - "name": "options"
+    "type": "char *"
+  "return_type": "struct fz_document_writer *"
+  "signature": "struct fz_document_writer * fz_new_document_writer(struct fz_context * ctx, char * path, char * explicit_format, char * options)"
+- "name": "fz_new_buffer_from_page_with_format"
+  "params":
+  - "name": "ctx"
+    "type": "struct fz_context *"
+  - "name": "page"
+    "type": "struct fz_page *"
+  - "name": "format"
+    "type": "char *"
+  - "name": "options"
+    "type": "char *"
+  - "name": "transform"
+    "type": "struct fz_matrix *"
+  - "name": "cookie"
+    "type": "struct fz_cookie *"
+  "return_type": "struct fz_buffer *"
+  "signature": "struct fz_buffer * fz_new_buffer_from_page_with_format(struct fz_context * ctx, struct fz_page * page, char * format, char * options, struct fz_matrix * transform, struct fz_cookie * cookie)"
+- "name": "fz_new_document_writer_with_buffer"
+  "params":
+  - "name": "ctx"
+    "type": "struct fz_context *"
+  - "name": "buffer"
+    "type": "struct fz_buffer *"
+  - "name": "format"
+    "type": "char *"
+  - "name": "options"
+    "type": "char *"
+  "return_type": "struct fz_document_writer *"
+  "signature": "struct fz_document_writer * fz_new_document_writer_with_buffer(struct fz_context * ctx, struct fz_buffer * buffer, char * format, char * options)"
+- "name": "fz_new_document_writer_with_output"
+  "params":
+  - "name": "ctx"
+    "type": "struct fz_context *"
+  - "name": "out"
+    "type": "struct fz_output *"
+  - "name": "format"
+    "type": "char *"
+  - "name": "options"
+    "type": "char *"
+  "return_type": "struct fz_document_writer *"
+  "signature": "struct fz_document_writer * fz_new_document_writer_with_output(struct fz_context * ctx, struct fz_output * out, char * format, char * options)"
+- "name": "fz_new_pdf_writer"
+  "params":
+  - "name": "ctx"
+    "type": "struct fz_context *"
+  - "name": "path"
+    "type": "char *"
+  - "name": "options"
+    "type": "char *"
+  "return_type": "struct fz_document_writer *"
+  "signature": "struct fz_document_writer * fz_new_pdf_writer(struct fz_context * ctx, char * path, char * options)"
+"language": "c++"
+"project": "mupdf"
+"target_name": "fuzzer-api"
+"target_path": "/src/mupdf/thirdparty/tesseract/unittest/fuzzers/fuzzer-api.cpp"

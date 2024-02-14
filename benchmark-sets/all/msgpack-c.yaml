@@ -1,11 +1,31 @@
-functions:
-- void msgpack::v1::zone::~zone(msgpack::v1::zone * this)
-- void _GLOBAL__sub_I_unpack_pack_fuzzer.cpp()
-- void __cxx_global_var_init()
-- void msgpack::v1::type_error::~type_error(msgpack::v1::type_error * this)
-- void msgpack::v1::container_size_overflow::~container_size_overflow(std::length_error
-  * this)
-project: msgpack-c
-target_name: unpack_pack_fuzzer
-target_path: /src/msgpack-c/fuzz/unpack_pack_fuzzer.cpp
-
+"functions":
+- "name": "_ZN7msgpack2v14zoneD2Ev"
+  "params":
+  - "name": "this"
+    "type": "msgpack::v1::zone *"
+  "return_type": "void"
+  "signature": "msgpack::v1::zone::~zone()"
+- "name": "_GLOBAL__sub_I_unpack_pack_fuzzer.cpp"
+  "params": []
+  "return_type": "void"
+  "signature": "void _GLOBAL__sub_I_unpack_pack_fuzzer.cpp()"
+- "name": "__cxx_global_var_init"
+  "params": []
+  "return_type": "void"
+  "signature": "void __cxx_global_var_init()"
+- "name": "_ZN7msgpack2v110type_errorD2Ev"
+  "params":
+  - "name": "this"
+    "type": "msgpack::v1::type_error *"
+  "return_type": "void"
+  "signature": "msgpack::v1::type_error::~type_error()"
+- "name": "_ZN7msgpack2v123container_size_overflowD2Ev"
+  "params":
+  - "name": "this"
+    "type": "std::length_error *"
+  "return_type": "void"
+  "signature": "msgpack::v1::container_size_overflow::~container_size_overflow()"
+"language": "c++"
+"project": "msgpack-c"
+"target_name": "unpack_pack_fuzzer"
+"target_path": "/src/msgpack-c/fuzz/unpack_pack_fuzzer.cpp"

@@ -1,11 +1,43 @@
-functions:
-- int tidyParseStdin(struct _TidyDoc * tdoc)
-- int tidyDocParseStdin(struct _TidyDocImpl * doc)
-- int tidyParseSource(struct _TidyDoc * tdoc, struct _TidyInputSource * source)
-- int tidyDocParseSource(struct _TidyDocImpl * doc, struct _TidyInputSource * source)
-- struct _Node * prvTidyParseBody(struct _TidyDocImpl * doc, struct _Node * body,
-  int mode)
-project: tidy-html5
-target_name: tidy_fuzzer
-target_path: /src/tidy_fuzzer.c
-
+"functions":
+- "name": "tidyParseStdin"
+  "params":
+  - "name": "tdoc"
+    "type": "struct _TidyDoc *"
+  "return_type": "int"
+  "signature": "int tidyParseStdin(struct _TidyDoc * tdoc)"
+- "name": "tidyDocParseStdin"
+  "params":
+  - "name": "doc"
+    "type": "struct _TidyDocImpl *"
+  "return_type": "int"
+  "signature": "int tidyDocParseStdin(struct _TidyDocImpl * doc)"
+- "name": "tidyParseSource"
+  "params":
+  - "name": "tdoc"
+    "type": "struct _TidyDoc *"
+  - "name": "source"
+    "type": "struct _TidyInputSource *"
+  "return_type": "int"
+  "signature": "int tidyParseSource(struct _TidyDoc * tdoc, struct _TidyInputSource * source)"
+- "name": "tidyDocParseSource"
+  "params":
+  - "name": "doc"
+    "type": "struct _TidyDocImpl *"
+  - "name": "source"
+    "type": "struct _TidyInputSource *"
+  "return_type": "int"
+  "signature": "int tidyDocParseSource(struct _TidyDocImpl * doc, struct _TidyInputSource * source)"
+- "name": "prvTidyParseBody"
+  "params":
+  - "name": "doc"
+    "type": "struct _TidyDocImpl *"
+  - "name": "body"
+    "type": "struct _Node *"
+  - "name": "mode"
+    "type": "int"
+  "return_type": "struct _Node *"
+  "signature": "struct _Node * prvTidyParseBody(struct _TidyDocImpl * doc, struct _Node * body, int mode)"
+"language": "c++"
+"project": "tidy-html5"
+"target_name": "tidy_fuzzer"
+"target_path": "/src/tidy_fuzzer.c"

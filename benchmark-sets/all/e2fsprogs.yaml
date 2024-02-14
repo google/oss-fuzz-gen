@@ -1,15 +1,81 @@
-functions:
-- size_t ext2fs_symlink(struct struct_ext2_filsys * fs, int parent, int ino, char
-  * name, char * target)
-- size_t ext2fs_link(struct struct_ext2_filsys * fs, int dir, char * name, int ino,
-  int flags)
-- size_t ext2fs_lookup(struct struct_ext2_filsys * fs, int dir, char * name, int namelen,
-  char * buf, int * inode)
-- size_t ext2fs_dir_iterate(struct struct_ext2_filsys * fs, int dir, int flags, char
-  * block_buf, func_type * func, char * priv_data)
-- size_t ext2fs_dir_iterate2(struct struct_ext2_filsys * fs, int dir, int flags, char
-  * block_buf, func_type * func, char * priv_data)
-project: e2fsprogs
-target_name: ext2fs_image_read_write_fuzzer
-target_path: /src/e2fsprogs/tests/fuzz/ext2fs_image_read_write_fuzzer.cc
-
+"functions":
+- "name": "ext2fs_symlink"
+  "params":
+  - "name": "fs"
+    "type": "struct struct_ext2_filsys *"
+  - "name": "parent"
+    "type": "int"
+  - "name": "ino"
+    "type": "int"
+  - "name": "name"
+    "type": "char *"
+  - "name": "target"
+    "type": "char *"
+  "return_type": "size_t"
+  "signature": "size_t ext2fs_symlink(struct struct_ext2_filsys * fs, int parent, int ino, char * name, char * target)"
+- "name": "ext2fs_link"
+  "params":
+  - "name": "fs"
+    "type": "struct struct_ext2_filsys *"
+  - "name": "dir"
+    "type": "int"
+  - "name": "name"
+    "type": "char *"
+  - "name": "ino"
+    "type": "int"
+  - "name": "flags"
+    "type": "int"
+  "return_type": "size_t"
+  "signature": "size_t ext2fs_link(struct struct_ext2_filsys * fs, int dir, char * name, int ino, int flags)"
+- "name": "ext2fs_lookup"
+  "params":
+  - "name": "fs"
+    "type": "struct struct_ext2_filsys *"
+  - "name": "dir"
+    "type": "int"
+  - "name": "name"
+    "type": "char *"
+  - "name": "namelen"
+    "type": "int"
+  - "name": "buf"
+    "type": "char *"
+  - "name": "inode"
+    "type": "int *"
+  "return_type": "size_t"
+  "signature": "size_t ext2fs_lookup(struct struct_ext2_filsys * fs, int dir, char * name, int namelen, char * buf, int * inode)"
+- "name": "ext2fs_dir_iterate"
+  "params":
+  - "name": "fs"
+    "type": "struct struct_ext2_filsys *"
+  - "name": "dir"
+    "type": "int"
+  - "name": "flags"
+    "type": "int"
+  - "name": "block_buf"
+    "type": "char *"
+  - "name": "func"
+    "type": "func_type *"
+  - "name": "priv_data"
+    "type": "char *"
+  "return_type": "size_t"
+  "signature": "size_t ext2fs_dir_iterate(struct struct_ext2_filsys * fs, int dir, int flags, char * block_buf, func_type * func, char * priv_data)"
+- "name": "ext2fs_dir_iterate2"
+  "params":
+  - "name": "fs"
+    "type": "struct struct_ext2_filsys *"
+  - "name": "dir"
+    "type": "int"
+  - "name": "flags"
+    "type": "int"
+  - "name": "block_buf"
+    "type": "char *"
+  - "name": "func"
+    "type": "func_type *"
+  - "name": "priv_data"
+    "type": "char *"
+  "return_type": "size_t"
+  "signature": "size_t ext2fs_dir_iterate2(struct struct_ext2_filsys * fs, int dir, int flags, char * block_buf, func_type * func, char * priv_data)"
+"language": "c"
+"project": "e2fsprogs"
+"target_name": "ext2fs_image_read_write_fuzzer"
+"target_path": "/src/e2fsprogs/tests/fuzz/ext2fs_image_read_write_fuzzer.cc"

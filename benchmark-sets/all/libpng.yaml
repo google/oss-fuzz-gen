@@ -1,14 +1,53 @@
-Retrieving human-written fuzz targets of libpng from local Docker build.
-functions:
-- void OSS_FUZZ_png_read_png(struct png_struct_def * png_ptr, struct png_info_def
-  * info_ptr, int transforms, char * params)
-- int OSS_FUZZ_png_image_finish_read(struct png_image * image, struct png_color_struct
-  * background, char * buffer, int row_stride, char * colormap)
-- int png_image_read_direct(char * argument)
-- int OSS_FUZZ_png_image_begin_read_from_memory(struct png_image * image, char * memory,
-  size_t size)
-- int png_image_read_colormapped(char * argument)
-project: libpng
-target_name: libpng_read_fuzzer
-target_path: /src/libpng/contrib/oss-fuzz/libpng_read_fuzzer.cc
-
+"functions":
+- "name": "OSS_FUZZ_png_read_png"
+  "params":
+  - "name": "png_ptr"
+    "type": "struct png_struct_def *"
+  - "name": "info_ptr"
+    "type": "struct png_info_def *"
+  - "name": "transforms"
+    "type": "int"
+  - "name": "params"
+    "type": "char *"
+  "return_type": "void"
+  "signature": "void OSS_FUZZ_png_read_png(struct png_struct_def * png_ptr, struct png_info_def * info_ptr, int transforms, char * params)"
+- "name": "OSS_FUZZ_png_image_finish_read"
+  "params":
+  - "name": "image"
+    "type": "struct png_image *"
+  - "name": "background"
+    "type": "struct png_color_struct *"
+  - "name": "buffer"
+    "type": "char *"
+  - "name": "row_stride"
+    "type": "int"
+  - "name": "colormap"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int OSS_FUZZ_png_image_finish_read(struct png_image * image, struct png_color_struct * background, char * buffer, int row_stride, char * colormap)"
+- "name": "png_image_read_direct"
+  "params":
+  - "name": "argument"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int png_image_read_direct(char * argument)"
+- "name": "OSS_FUZZ_png_image_begin_read_from_memory"
+  "params":
+  - "name": "image"
+    "type": "struct png_image *"
+  - "name": "memory"
+    "type": "char *"
+  - "name": "size"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int OSS_FUZZ_png_image_begin_read_from_memory(struct png_image * image, char * memory, size_t size)"
+- "name": "png_image_read_colormapped"
+  "params":
+  - "name": "argument"
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int png_image_read_colormapped(char * argument)"
+"language": "c++"
+"project": "libpng"
+"target_name": "libpng_read_fuzzer"
+"target_path": "/src/libpng/contrib/oss-fuzz/libpng_read_fuzzer.cc"

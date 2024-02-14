@@ -1,18 +1,77 @@
-functions:
-- bool tinyobj::ObjReader::ParseFromFile(tinyobj::ObjReader * this, std::string *
-  filename, struct tinyobj::ObjReaderConfig * config)
-- bool tinyobj::LoadObj(struct tinyobj::attrib_t * attrib, std::vector * shapes, std::vector
-  * materials, std::string * warn, std::string * err, char * filename, char * mtl_basedir,
-  bool triangulate, bool default_vcols_fallback)
-- bool tinyobj::MaterialFileReader::operator(tinyobj::MaterialFileReader * this, std::string
-  * matId, std::vector * materials, std::map * matMap, std::string * warn, std::string
-  * err)
-- bool tinyobj::LoadObjWithCallback(std::istream * inStream, struct tinyobj::callback_t
-  * callback, char * user_data, std::exception * readMatFn, std::string * warn, std::string
-  * err)
-- void tinyobj::material_t::material_t(struct tinyobj::material_t * this, struct tinyobj::material_t
-  * )
-project: tinyobjloader
-target_name: fuzz_ParseFromString
-target_path: /src/tinyobjloader/fuzzer/fuzz_ParseFromString.cc
-
+"functions":
+- "name": "_ZN7tinyobj9ObjReader13ParseFromFileERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS_15ObjReaderConfigE"
+  "params":
+  - "name": "this"
+    "type": "tinyobj::ObjReader *"
+  - "name": "filename"
+    "type": "std::string *"
+  - "name": "config"
+    "type": "struct tinyobj::ObjReaderConfig *"
+  "return_type": "bool"
+  "signature": "tinyobj::ObjReader::ParseFromFile(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, tinyobj::ObjReaderConfig const&)"
+- "name": "_ZN7tinyobj7LoadObjEPNS_8attrib_tEPNSt3__16vectorINS_7shape_tENS2_9allocatorIS4_EEEEPNS3_INS_10material_tENS5_IS9_EEEEPNS2_12basic_stringIcNS2_11char_traitsIcEENS5_IcEEEESI_PKcSK_bb"
+  "params":
+  - "name": "attrib"
+    "type": "struct tinyobj::attrib_t *"
+  - "name": "shapes"
+    "type": "std::vector *"
+  - "name": "materials"
+    "type": "std::vector *"
+  - "name": "warn"
+    "type": "std::string *"
+  - "name": "err"
+    "type": "std::string *"
+  - "name": "filename"
+    "type": "char *"
+  - "name": "mtl_basedir"
+    "type": "char *"
+  - "name": "triangulate"
+    "type": "bool"
+  - "name": "default_vcols_fallback"
+    "type": "bool"
+  "return_type": "bool"
+  "signature": "tinyobj::LoadObj(tinyobj::attrib_t*, std::__1::vector<tinyobj::shape_t, std::__1::allocator<tinyobj::shape_t> >*, std::__1::vector<tinyobj::material_t, std::__1::allocator<tinyobj::material_t> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, char const*, char const*, bool, bool)"
+- "name": "_ZN7tinyobj18MaterialFileReaderclERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEPNS1_6vectorINS_10material_tENS5_ISB_EEEEPNS1_3mapIS7_iNS1_4lessIS7_EENS5_INS1_4pairIS8_iEEEEEEPS7_SN_"
+  "params":
+  - "name": "this"
+    "type": "tinyobj::MaterialFileReader *"
+  - "name": "matId"
+    "type": "std::string *"
+  - "name": "materials"
+    "type": "std::vector *"
+  - "name": "matMap"
+    "type": "std::map *"
+  - "name": "warn"
+    "type": "std::string *"
+  - "name": "err"
+    "type": "std::string *"
+  "return_type": "bool"
+  "signature": "tinyobj::MaterialFileReader::operator()(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::vector<tinyobj::material_t, std::__1::allocator<tinyobj::material_t> >*, std::__1::map<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, int, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, int> > >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*)"
+- "name": "_ZN7tinyobj19LoadObjWithCallbackERNSt3__113basic_istreamIcNS0_11char_traitsIcEEEERKNS_10callback_tEPvPNS_14MaterialReaderEPNS0_12basic_stringIcS3_NS0_9allocatorIcEEEESG_"
+  "params":
+  - "name": "inStream"
+    "type": "std::istream *"
+  - "name": "callback"
+    "type": "struct tinyobj::callback_t *"
+  - "name": "user_data"
+    "type": "char *"
+  - "name": "readMatFn"
+    "type": "std::exception *"
+  - "name": "warn"
+    "type": "std::string *"
+  - "name": "err"
+    "type": "std::string *"
+  "return_type": "bool"
+  "signature": "tinyobj::LoadObjWithCallback(std::__1::basic_istream<char, std::__1::char_traits<char> >&, tinyobj::callback_t const&, void*, tinyobj::MaterialReader*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*)"
+- "name": "_ZN7tinyobj10material_tC2ERKS0_"
+  "params":
+  - "name": "this"
+    "type": "struct tinyobj::material_t *"
+  - "name": ""
+    "type": "struct tinyobj::material_t *"
+  "return_type": "void"
+  "signature": "tinyobj::material_t::material_t(tinyobj::material_t const&)"
+"language": "c++"
+"project": "tinyobjloader"
+"target_name": "fuzz_ParseFromString"
+"target_path": "/src/tinyobjloader/fuzzer/fuzz_ParseFromString.cc"

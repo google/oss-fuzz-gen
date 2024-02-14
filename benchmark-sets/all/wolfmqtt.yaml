@@ -1,13 +1,45 @@
-functions:
-- int MqttClient_Publish_ex(struct _MqttClient * client, struct _MqttMessage * publish,
-  func_type * pubCb)
-- int MqttClient_Ping(struct _MqttClient * client)
-- int MqttClient_Disconnect(struct _MqttClient * client)
-- int MqttClient_Disconnect_ex(struct _MqttClient * client, struct _MqttDisconnect
-  * p_disconnect)
-- int wolfSSL_CertManagerLoadCA(struct WOLFSSL_CERT_MANAGER * cm, char * file, char
-  * path)
-project: wolfmqtt
-target_name: wolfmqtt-fuzzer
-target_path: /src/wolfmqtt-fuzzers/fuzzer.cpp
-
+"functions":
+- "name": "MqttClient_Publish_ex"
+  "params":
+  - "name": "client"
+    "type": "struct _MqttClient *"
+  - "name": "publish"
+    "type": "struct _MqttMessage *"
+  - "name": "pubCb"
+    "type": "func_type *"
+  "return_type": "int"
+  "signature": "int MqttClient_Publish_ex(struct _MqttClient * client, struct _MqttMessage * publish, func_type * pubCb)"
+- "name": "MqttClient_Ping"
+  "params":
+  - "name": "client"
+    "type": "struct _MqttClient *"
+  "return_type": "int"
+  "signature": "int MqttClient_Ping(struct _MqttClient * client)"
+- "name": "MqttClient_Disconnect"
+  "params":
+  - "name": "client"
+    "type": "struct _MqttClient *"
+  "return_type": "int"
+  "signature": "int MqttClient_Disconnect(struct _MqttClient * client)"
+- "name": "MqttClient_Disconnect_ex"
+  "params":
+  - "name": "client"
+    "type": "struct _MqttClient *"
+  - "name": "p_disconnect"
+    "type": "struct _MqttDisconnect *"
+  "return_type": "int"
+  "signature": "int MqttClient_Disconnect_ex(struct _MqttClient * client, struct _MqttDisconnect * p_disconnect)"
+- "name": "wolfSSL_writev"
+  "params":
+  - "name": "ssl"
+    "type": "struct WOLFSSL *"
+  - "name": "iov"
+    "type": "struct iovec *"
+  - "name": "iovcnt"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int wolfSSL_writev(struct WOLFSSL * ssl, struct iovec * iov, int iovcnt)"
+"language": "c"
+"project": "wolfmqtt"
+"target_name": "wolfmqtt-fuzzer"
+"target_path": "/src/wolfmqtt-fuzzers/fuzzer.cpp"

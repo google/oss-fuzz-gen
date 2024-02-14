@@ -1,10 +1,39 @@
-functions:
-- void lwan_init(struct lwan * l)
-- void lwan_init_with_config(struct lwan * l, struct lwan_config * config)
-- void lwan_thread_init(struct lwan * l)
-- void create_thread(struct lwan * l, struct lwan_thread * thread)
-- char * thread_io_loop(char * data)
-project: lwan
-target_name: config_fuzzer
-target_path: /src/lwan/src/bin/fuzz/config_fuzzer.cc
-
+"functions":
+- "name": "lwan_init"
+  "params":
+  - "name": "l"
+    "type": "struct lwan *"
+  "return_type": "void"
+  "signature": "void lwan_init(struct lwan * l)"
+- "name": "lwan_init_with_config"
+  "params":
+  - "name": "l"
+    "type": "struct lwan *"
+  - "name": "config"
+    "type": "struct lwan_config *"
+  "return_type": "void"
+  "signature": "void lwan_init_with_config(struct lwan * l, struct lwan_config * config)"
+- "name": "lwan_thread_init"
+  "params":
+  - "name": "l"
+    "type": "struct lwan *"
+  "return_type": "void"
+  "signature": "void lwan_thread_init(struct lwan * l)"
+- "name": "create_thread"
+  "params":
+  - "name": "l"
+    "type": "struct lwan *"
+  - "name": "thread"
+    "type": "struct lwan_thread *"
+  "return_type": "void"
+  "signature": "void create_thread(struct lwan * l, struct lwan_thread * thread)"
+- "name": "thread_io_loop"
+  "params":
+  - "name": "data"
+    "type": "char *"
+  "return_type": "char *"
+  "signature": "char * thread_io_loop(char * data)"
+"language": "c++"
+"project": "lwan"
+"target_name": "config_fuzzer"
+"target_path": "/src/lwan/src/bin/fuzz/config_fuzzer.cc"

@@ -1,19 +1,79 @@
-functions:
-- void icu_75::MessageFormat::applyPattern(icu_75::MessageFormat * this, icu_75::UnicodeString
-  * pattern, struct UParseError * parseError, int * ec)
-- void icu_75::MessageFormat::cacheExplicitFormats(icu_75::MessageFormat * this, int
-  * status)
-- icu_75::Format * icu_75::MessageFormat::createAppropriateFormat(icu_75::MessageFormat
-  * this, icu_75::UnicodeString * type, icu_75::UnicodeString * style, int * formattableType,
-  struct UParseError * parseError, int * ec)
-- icu_75::UnicodeString * icu_75::RuleBasedNumberFormat::format(icu_75::RuleBasedNumberFormat
-  * this, size_t number, icu_75::UnicodeString * ruleSetName, icu_75::UnicodeString
-  * toAppendTo, icu_75::FieldPosition * , int * status) const
-- void icu_75::MessageFormat::format(icu_75::MessageFormat * this, int msgStart, char
-  * plNumber, icu_75::Formattable * arguments, icu_75::UnicodeString * argumentNames,
-  int cnt, icu_75::AppendableWrapper * appendTo, icu_75::FieldPosition * ignore, int
-  * success) const
-project: icu
-target_name: relative_date_time_formatter_fuzzer
-target_path: /src/icu/icu4c/source/test/fuzzer/relative_date_time_formatter_fuzzer.cpp
-
+"functions":
+- "name": "_ZN6icu_7513MessageFormat12applyPatternERKNS_13UnicodeStringER11UParseErrorR10UErrorCode"
+  "params":
+  - "name": "this"
+    "type": "icu_75::MessageFormat *"
+  - "name": "pattern"
+    "type": "icu_75::UnicodeString *"
+  - "name": "parseError"
+    "type": "struct UParseError *"
+  - "name": "ec"
+    "type": "int *"
+  "return_type": "void"
+  "signature": "icu_75::MessageFormat::applyPattern(icu_75::UnicodeString const&, UParseError&, UErrorCode&)"
+- "name": "_ZN6icu_7513MessageFormat20cacheExplicitFormatsER10UErrorCode"
+  "params":
+  - "name": "this"
+    "type": "icu_75::MessageFormat *"
+  - "name": "status"
+    "type": "int *"
+  "return_type": "void"
+  "signature": "icu_75::MessageFormat::cacheExplicitFormats(UErrorCode&)"
+- "name": "_ZN6icu_7513MessageFormat23createAppropriateFormatERNS_13UnicodeStringES2_RNS_11Formattable4TypeER11UParseErrorR10UErrorCode"
+  "params":
+  - "name": "this"
+    "type": "icu_75::MessageFormat *"
+  - "name": "type"
+    "type": "icu_75::UnicodeString *"
+  - "name": "style"
+    "type": "icu_75::UnicodeString *"
+  - "name": "formattableType"
+    "type": "int *"
+  - "name": "parseError"
+    "type": "struct UParseError *"
+  - "name": "ec"
+    "type": "int *"
+  "return_type": "icu_75::Format *"
+  "signature": "icu_75::MessageFormat::createAppropriateFormat(icu_75::UnicodeString&, icu_75::UnicodeString&, icu_75::Formattable::Type&, UParseError&, UErrorCode&)"
+- "name": "_ZNK6icu_7521RuleBasedNumberFormat6formatElRKNS_13UnicodeStringERS1_RNS_13FieldPositionER10UErrorCode"
+  "params":
+  - "name": "this"
+    "type": "icu_75::RuleBasedNumberFormat *"
+  - "name": "number"
+    "type": "size_t"
+  - "name": "ruleSetName"
+    "type": "icu_75::UnicodeString *"
+  - "name": "toAppendTo"
+    "type": "icu_75::UnicodeString *"
+  - "name": ""
+    "type": "icu_75::FieldPosition *"
+  - "name": "status"
+    "type": "int *"
+  "return_type": "icu_75::UnicodeString *"
+  "signature": "icu_75::RuleBasedNumberFormat::format(long, icu_75::UnicodeString const&, icu_75::UnicodeString&, icu_75::FieldPosition&, UErrorCode&) const"
+- "name": "_ZNK6icu_7513MessageFormat6formatEiPKvPKNS_11FormattableEPKNS_13UnicodeStringEiRNS_17AppendableWrapperEPNS_13FieldPositionER10UErrorCode"
+  "params":
+  - "name": "this"
+    "type": "icu_75::MessageFormat *"
+  - "name": "msgStart"
+    "type": "int"
+  - "name": "plNumber"
+    "type": "char *"
+  - "name": "arguments"
+    "type": "icu_75::Formattable *"
+  - "name": "argumentNames"
+    "type": "icu_75::UnicodeString *"
+  - "name": "cnt"
+    "type": "int"
+  - "name": "appendTo"
+    "type": "icu_75::AppendableWrapper *"
+  - "name": "ignore"
+    "type": "icu_75::FieldPosition *"
+  - "name": "success"
+    "type": "int *"
+  "return_type": "void"
+  "signature": "icu_75::MessageFormat::format(int, void const*, icu_75::Formattable const*, icu_75::UnicodeString const*, int, icu_75::AppendableWrapper&, icu_75::FieldPosition*, UErrorCode&) const"
+"language": "c++"
+"project": "icu"
+"target_name": "relative_date_time_formatter_fuzzer"
+"target_path": "/src/icu/icu4c/source/test/fuzzer/relative_date_time_formatter_fuzzer.cpp"

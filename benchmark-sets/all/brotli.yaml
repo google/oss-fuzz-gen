@@ -1,11 +1,53 @@
-functions:
-- int BrotliDecoderDecompress(size_t , char * , size_t * , char * )
-- char * BrotliDecoderTakeOutput(struct BrotliDecoderStateStruct * , size_t * )
-- int BrotliDecoderAttachDictionary(struct BrotliDecoderStateStruct * , int , size_t
-  , char * )
-- int BrotliDecoderIsFinished(struct BrotliDecoderStateStruct * )
-- int BrotliSafeReadBits32Slow(struct BrotliBitReader * , size_t , size_t * )
-project: brotli
-target_name: decode_fuzzer
-target_path: /src/brotli/c/fuzz/decode_fuzzer.c
-
+"functions":
+- "name": "BrotliDecoderDecompress"
+  "params":
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t *"
+  - "name": ""
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int BrotliDecoderDecompress(size_t , char * , size_t * , char * )"
+- "name": "BrotliDecoderTakeOutput"
+  "params":
+  - "name": ""
+    "type": "struct BrotliDecoderStateStruct *"
+  - "name": ""
+    "type": "size_t *"
+  "return_type": "char *"
+  "signature": "char * BrotliDecoderTakeOutput(struct BrotliDecoderStateStruct * , size_t * )"
+- "name": "BrotliDecoderAttachDictionary"
+  "params":
+  - "name": ""
+    "type": "struct BrotliDecoderStateStruct *"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "char *"
+  "return_type": "int"
+  "signature": "int BrotliDecoderAttachDictionary(struct BrotliDecoderStateStruct * , int , size_t , char * )"
+- "name": "BrotliDecoderIsFinished"
+  "params":
+  - "name": ""
+    "type": "struct BrotliDecoderStateStruct *"
+  "return_type": "int"
+  "signature": "int BrotliDecoderIsFinished(struct BrotliDecoderStateStruct * )"
+- "name": "BrotliSafeReadBits32Slow"
+  "params":
+  - "name": ""
+    "type": "struct BrotliBitReader *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "size_t *"
+  "return_type": "int"
+  "signature": "int BrotliSafeReadBits32Slow(struct BrotliBitReader * , size_t , size_t * )"
+"language": "c++"
+"project": "brotli"
+"target_name": "decode_fuzzer"
+"target_path": "/src/brotli/c/fuzz/decode_fuzzer.c"
