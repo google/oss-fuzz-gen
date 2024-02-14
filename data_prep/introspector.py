@@ -160,7 +160,6 @@ def populate_benchmarks_using_introspector(project: str, language: str,
   filenames = [
       os.path.basename(function['function_filename']) for function in functions
   ]
-  #  logging.info([f['function-name'] for f in functions])
   result = project_src.search_source(project, filenames)
   if not result:
     return []
@@ -170,9 +169,10 @@ def populate_benchmarks_using_introspector(project: str, language: str,
   if not harness:
     logging.error('No fuzz target found in project %s.', project)
     return []
-  logging.info('Fuzz target found for project %s: %s', project, harness)
+  logging.info('Fuzz target file found for project %s: %s', project, harness)
   target_name = get_target_name(project, harness)
-  logging.info('Fuzz target found for project %s: %s', project, target_name)
+  logging.info('Fuzz target binary found for project %s: %s', project,
+               target_name)
 
   potential_benchmarks = []
   for function in functions:
@@ -311,7 +311,6 @@ def get_project_funcs(project_name: str) -> Dict[str, List[Dict]]:
 
 
 if __name__ == '__main__':
-  # Usage: python3 introspector.py <oss-fuzz-project-name>
   logging.basicConfig(level=logging.INFO)
 
   #TODO(Dongge): Use argparser.

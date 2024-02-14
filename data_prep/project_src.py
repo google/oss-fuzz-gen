@@ -92,13 +92,13 @@ def _format_source(src_file: str) -> str:
                     stdin=sp.DEVNULL,
                     timeout=timeout_seconds)
   except sp.TimeoutExpired:
-    logging.warning(
+    logging.debug(
         'Could not format in %d seconds: %s',
         timeout_seconds,
         src_file,
     )
   except Exception as e:
-    logging.warning('Failed to format %s: %s', src_file, e)
+    logging.debug('Failed to format %s: %s', src_file, e)
   else:
     if result.returncode:
       logging.warning('Failed to format %s:', src_file)
@@ -274,7 +274,7 @@ def _identify_fuzz_targets(
   """
   Identifies fuzz target file contents and |interesting_filenames| in |out|.
   """
-  logging.info('len(interesting_filenames): %d', len(interesting_filenames))
+  logging.debug('len(interesting_filenames): %d', len(interesting_filenames))
 
   interesting_filepaths = []
   potential_harnesses = []
