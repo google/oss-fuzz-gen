@@ -2,23 +2,23 @@
 - "name": "_Z15wxGetFreeMemoryv"
   "params": []
   "return_type": "size_t"
-  "signature": "wxGetFreeMemory()"
+  "signature": "wxMemorySize wxGetFreeMemory()"
 - "name": "_ZN14wxPlatformInfoC2Ev"
   "params":
   - "name": "this"
     "type": "wxPlatformInfo *"
   "return_type": "void"
-  "signature": "wxPlatformInfo::wxPlatformInfo()"
+  "signature": "void wxPlatformInfo::wxPlatformInfo()"
 - "name": "_ZN14wxPlatformInfo3GetEv"
   "params": []
   "return_type": "wxPlatformInfo *"
-  "signature": "wxPlatformInfo::Get()"
+  "signature": "const wxPlatformInfo Get()"
 - "name": "_ZN14wxPlatformInfo22InitForCurrentPlatformEv"
   "params":
   - "name": "this"
     "type": "wxPlatformInfo *"
   "return_type": "void"
-  "signature": "wxPlatformInfo::InitForCurrentPlatform()"
+  "signature": "void wxPlatformInfo::InitForCurrentPlatform()"
 - "name": "_ZN24wxFileTranslationsLoader11LoadCatalogERK8wxStringS2_"
   "params":
   - "name": "this"
@@ -28,7 +28,7 @@
   - "name": "lang"
     "type": "wxString *"
   "return_type": "wxMsgCatalog *"
-  "signature": "wxFileTranslationsLoader::LoadCatalog(wxString const&, wxString const&)"
+  "signature": "wxMsgCatalog * wxFileTranslationsLoader::LoadCatalog(const wxString, const wxString)"
 "language": "c++"
 "project": "wxwidgets"
 "target_name": "runner"

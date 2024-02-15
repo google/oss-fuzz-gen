@@ -4,7 +4,7 @@
   - "name": "opt"
     "type": "char *"
   "return_type": "int"
-  "signature": "int save_seed(char * opt)"
+  "signature": "int save_seed(const char *)"
 - "name": "LLVMFuzzerCustomMutator"
   "params":
   - "name": "data"
@@ -16,7 +16,7 @@
   - "name": "seed"
     "type": "int"
   "return_type": "size_t"
-  "signature": "size_t LLVMFuzzerCustomMutator(char * data, size_t size, size_t maxsize, int seed)"
+  "signature": "size_t LLVMFuzzerCustomMutator(uint8_t *, size_t, size_t, unsigned int)"
 - "name": "pack_dummy"
   "params":
   - "name": "ptr"
@@ -24,7 +24,7 @@
   - "name": "len"
     "type": "size_t"
   "return_type": "size_t"
-  "signature": "size_t pack_dummy(char * ptr, size_t len)"
+  "signature": "size_t pack_dummy(uint8_t *, size_t)"
 - "name": "parse_mutate_flags"
   "params":
   - "name": "opt"
@@ -32,7 +32,7 @@
   - "name": "mutate_flags"
     "type": "int *"
   "return_type": "void"
-  "signature": "void parse_mutate_flags(char * opt, int * mutate_flags)"
+  "signature": "void parse_mutate_flags(const char *, unsigned int *)"
 - "name": "mutate"
   "params":
   - "name": "p"
@@ -42,7 +42,7 @@
   - "name": "flags"
     "type": "int"
   "return_type": "void"
-  "signature": "void mutate(struct param * p, int seed, int flags)"
+  "signature": "void mutate(param *, unsigned int, unsigned int)"
 "language": "c++"
 "project": "libfido2"
 "target_name": "fuzz_netlink"

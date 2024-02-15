@@ -6,7 +6,7 @@
   - "name": "ext"
     "type": "struct lysp_ext_instance *"
   "return_type": "int"
-  "signature": "int structure_aug_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
+  "signature": "LY_ERR structure_aug_parse(lysp_ctx *, lysp_ext_instance *)"
 - "name": "yangdata_parse"
   "params":
   - "name": "pctx"
@@ -14,7 +14,7 @@
   - "name": "ext"
     "type": "struct lysp_ext_instance *"
   "return_type": "int"
-  "signature": "int yangdata_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
+  "signature": "LY_ERR yangdata_parse(lysp_ctx *, lysp_ext_instance *)"
 - "name": "structure_parse"
   "params":
   - "name": "pctx"
@@ -22,7 +22,7 @@
   - "name": "ext"
     "type": "struct lysp_ext_instance *"
   "return_type": "int"
-  "signature": "int structure_parse(struct lysp_ctx * pctx, struct lysp_ext_instance * ext)"
+  "signature": "LY_ERR structure_parse(lysp_ctx *, lysp_ext_instance *)"
 - "name": "lysp_stmt_parse"
   "params":
   - "name": "pctx"
@@ -34,7 +34,7 @@
   - "name": "exts"
     "type": "struct lysp_ext_instance **"
   "return_type": "int"
-  "signature": "int lysp_stmt_parse(struct lysp_ctx * pctx, struct lysp_stmt * stmt, char ** result, struct lysp_ext_instance ** exts)"
+  "signature": "LY_ERR lysp_stmt_parse(lysp_ctx *, const lysp_stmt *, void **, lysp_ext_instance **)"
 - "name": "lysp_stmt_list"
   "params":
   - "name": "ctx"
@@ -46,7 +46,7 @@
   - "name": "siblings"
     "type": "struct lysp_node **"
   "return_type": "int"
-  "signature": "int lysp_stmt_list(struct lysp_ctx * ctx, struct lysp_stmt * stmt, struct lysp_node * parent, struct lysp_node ** siblings)"
+  "signature": "LY_ERR lysp_stmt_list(lysp_ctx *, const lysp_stmt *, lysp_node *, lysp_node **)"
 "language": "c"
 "project": "libyang"
 "target_name": "lyd_parse_mem_xml"

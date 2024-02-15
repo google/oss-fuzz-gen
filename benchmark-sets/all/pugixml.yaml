@@ -10,7 +10,7 @@
   - "name": "n"
     "type": "pugi::xpath_node *"
   "return_type": "size_t"
-  "signature": "pugi::xpath_query::evaluate_string(char*, unsigned long, pugi::xpath_node const&) const"
+  "signature": "size_t const xpath_query::evaluate_string(char_t *, size_t, const xpath_node)"
 - "name": "_ZN4pugi8xml_node13append_bufferEPKvmjNS_12xml_encodingE"
   "params":
   - "name": "this"
@@ -26,7 +26,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "pugi::xml_node::append_buffer(void const*, unsigned long, unsigned int, pugi::xml_encoding)"
+  "signature": "bool xml_node::remove_children()"
 - "name": "_ZN4pugi12xml_document23load_buffer_inplace_ownEPvmjNS_12xml_encodingE"
   "params":
   - "name": "this"
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "pugi::xml_document::load_buffer_inplace_own(void*, unsigned long, unsigned int, pugi::xml_encoding)"
+  "signature": "void xml_document::_move(xml_document)"
 - "name": "_ZN4pugi12xml_document19load_buffer_inplaceEPvmjNS_12xml_encodingE"
   "params":
   - "name": "this"
@@ -58,7 +58,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "pugi::xml_document::load_buffer_inplace(void*, unsigned long, unsigned int, pugi::xml_encoding)"
+  "signature": "void xml_document::_move(xml_document)"
 - "name": "_ZNK4pugi8xml_node18select_single_nodeEPKcPNS_18xpath_variable_setE"
   "params":
   - "name": "this"
@@ -68,7 +68,7 @@
   - "name": "variables"
     "type": "pugi::xpath_variable_set *"
   "return_type": "void"
-  "signature": "pugi::xml_node::select_single_node(char const*, pugi::xpath_variable_set*) const"
+  "signature": "bool const xpath_query::operator!()"
 "language": "c++"
 "project": "pugixml"
 "target_name": "fuzz_parse"

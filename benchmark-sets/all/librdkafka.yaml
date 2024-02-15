@@ -12,7 +12,7 @@
   - "name": "out"
     "type": "struct Resub *"
   "return_type": "int"
-  "signature": "int match(struct Reinst * pc, char * sp, char * bol, int flags, struct Resub * out)"
+  "signature": "int match(Reinst *, const char *, const char *, int, Resub *)"
 - "name": "re_regexec"
   "params":
   - "name": "prog"
@@ -24,7 +24,7 @@
   - "name": "eflags"
     "type": "int"
   "return_type": "int"
-  "signature": "int re_regexec(struct Reprog * prog, char * sp, struct Resub * sub, int eflags)"
+  "signature": "int re_regexec(Reprog *, const char *, Resub *, int)"
 - "name": "strncmpcanon"
   "params":
   - "name": "a"
@@ -34,7 +34,7 @@
   - "name": "n"
     "type": "int"
   "return_type": "int"
-  "signature": "int strncmpcanon(char * a, char * b, int n)"
+  "signature": "int strncmpcanon(const char *, const char *, unsigned int)"
 - "name": "incclasscanon"
   "params":
   - "name": "cc"
@@ -42,13 +42,13 @@
   - "name": "c"
     "type": "int"
   "return_type": "int"
-  "signature": "int incclasscanon(struct Reclass * cc, int c)"
+  "signature": "int incclasscanon(Reclass *, Rune)"
 - "name": "iswordchar"
   "params":
   - "name": "c"
     "type": "int"
   "return_type": "int"
-  "signature": "int iswordchar(int c)"
+  "signature": "int iswordchar(int)"
 "language": "c++"
 "project": "librdkafka"
 "target_name": "fuzz_regex"

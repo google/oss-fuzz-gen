@@ -26,7 +26,7 @@
   - "name": "abortCheckCbkData"
     "type": "char *"
   "return_type": "void"
-  "signature": "PDFDoc::displayPages(OutputDev*, int, int, double, double, int, int, int, int, int (*)(void*), void*)"
+  "signature": "void PDFDoc::displayPages(OutputDev *, int, int, double, double, int, GBool, GBool, GBool,  *, void *)"
 - "name": "_ZN6PDFDoc16displayPageSliceEP9OutputDeviddiiiiiiiiPFiPvES2_"
   "params":
   - "name": "this"
@@ -60,7 +60,7 @@
   - "name": "abortCheckCbkData"
     "type": "char *"
   "return_type": "void"
-  "signature": "PDFDoc::displayPageSlice(OutputDev*, int, double, double, int, int, int, int, int, int, int, int, int (*)(void*), void*)"
+  "signature": "void PDFDoc::displayPageSlice(OutputDev *, int, double, double, int, GBool, GBool, GBool, int, int, int, int,  *, void *)"
 - "name": "_ZN15SplashOutputDev8drawCharEP8GfxStateddddddjiPjiiii"
   "params":
   - "name": "this"
@@ -94,7 +94,7 @@
   - "name": "makePath"
     "type": "int"
   "return_type": "void"
-  "signature": "SplashOutputDev::drawChar(GfxState*, double, double, double, double, double, double, unsigned int, int, unsigned int*, int, int, int, int)"
+  "signature": "void SplashOutputDev::drawChar(GfxState *, double, double, double, double, double, double, CharCode, int, Unicode *, int, GBool, GBool, GBool)"
 - "name": "_ZN3Gfx14opSetExtGStateEP6Objecti"
   "params":
   - "name": "this"
@@ -104,7 +104,7 @@
   - "name": "numArgs"
     "type": "int"
   "return_type": "void"
-  "signature": "Gfx::opSetExtGState(Object*, int)"
+  "signature": "void Gfx::opSetExtGState(Object *, int)"
 - "name": "_ZN15SplashOutputDev12doUpdateFontEP8GfxState"
   "params":
   - "name": "this"
@@ -112,7 +112,7 @@
   - "name": "state"
     "type": "GfxState *"
   "return_type": "void"
-  "signature": "SplashOutputDev::doUpdateFont(GfxState*)"
+  "signature": "void SplashOutputDev::doUpdateFont(GfxState *)"
 "language": "c++"
 "project": "xpdf"
 "target_name": "fuzz_pdfload"

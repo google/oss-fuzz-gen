@@ -4,13 +4,13 @@
   - "name": "csp"
     "type": "struct rtpp_cfg *"
   "return_type": "int"
-  "signature": "int rtpp_cfile_process(struct rtpp_cfg * csp)"
+  "signature": "int rtpp_cfile_process(const rtpp_cfg *)"
 - "name": "ucl_state_machine"
   "params":
   - "name": "parser"
     "type": "struct ucl_parser *"
   "return_type": "bool"
-  "signature": "bool ucl_state_machine(struct ucl_parser * parser)"
+  "signature": "_Bool ucl_state_machine(ucl_parser *)"
 - "name": "ucl_include_file_single"
   "params":
   - "name": "data"
@@ -22,7 +22,7 @@
   - "name": "params"
     "type": "struct ucl_include_params *"
   "return_type": "bool"
-  "signature": "bool ucl_include_file_single(char * data, size_t len, struct ucl_parser * parser, struct ucl_include_params * params)"
+  "signature": "_Bool ucl_include_file_single(const unsigned char *, size_t, ucl_parser *, ucl_include_params *)"
 - "name": "ucl_include_common"
   "params":
   - "name": "data"
@@ -38,7 +38,7 @@
   - "name": "default_sign"
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool ucl_include_common(char * data, size_t len, struct ucl_object_s * args, struct ucl_parser * parser, bool default_try, bool default_sign)"
+  "signature": "_Bool ucl_include_common(const unsigned char *, size_t, const ucl_object_t *, ucl_parser *, _Bool, _Bool)"
 - "name": "ucl_parse_macro_arguments"
   "params":
   - "name": "parser"
@@ -46,7 +46,7 @@
   - "name": "chunk"
     "type": "struct ucl_chunk *"
   "return_type": "struct ucl_object_s *"
-  "signature": "struct ucl_object_s * ucl_parse_macro_arguments(struct ucl_parser * parser, struct ucl_chunk * chunk)"
+  "signature": "ucl_object_t * ucl_parse_macro_arguments(ucl_parser *, ucl_chunk *)"
 "language": "c"
 "project": "rtpproxy"
 "target_name": "fuzz_command_parser"

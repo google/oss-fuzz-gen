@@ -12,7 +12,7 @@
   - "name": "data"
     "type": "struct hoedown_renderer_data *"
   "return_type": "void"
-  "signature": "void toc_header(struct hoedown_buffer * ob, struct hoedown_buffer * content, struct hoedown_buffer * attr, int level, struct hoedown_renderer_data * data)"
+  "signature": "void toc_header(hoedown_buffer *, const hoedown_buffer *, const hoedown_buffer *, int, const hoedown_renderer_data *)"
 - "name": "hoedown_document_render_inline"
   "params":
   - "name": "doc"
@@ -24,7 +24,7 @@
   - "name": "size"
     "type": "size_t"
   "return_type": "void"
-  "signature": "void hoedown_document_render_inline(struct hoedown_document * doc, struct hoedown_buffer * ob, char * data, size_t size)"
+  "signature": "void hoedown_document_render_inline(hoedown_document *, hoedown_buffer *, const uint8_t *, size_t)"
 - "name": "toc_finalize"
   "params":
   - "name": "ob"
@@ -34,7 +34,7 @@
   - "name": "data"
     "type": "struct hoedown_renderer_data *"
   "return_type": "void"
-  "signature": "void toc_finalize(struct hoedown_buffer * ob, int inline_render, struct hoedown_renderer_data * data)"
+  "signature": "void toc_finalize(hoedown_buffer *, int, const hoedown_renderer_data *)"
 - "name": "rndr_raw_block"
   "params":
   - "name": "ob"
@@ -44,7 +44,7 @@
   - "name": "data"
     "type": "struct hoedown_renderer_data *"
   "return_type": "void"
-  "signature": "void rndr_raw_block(struct hoedown_buffer * ob, struct hoedown_buffer * text, struct hoedown_renderer_data * data)"
+  "signature": "void rndr_raw_block(hoedown_buffer *, const hoedown_buffer *, const hoedown_renderer_data *)"
 - "name": "hoedown_buffer_put_utf8"
   "params":
   - "name": "buf"
@@ -52,7 +52,7 @@
   - "name": "c"
     "type": "int"
   "return_type": "void"
-  "signature": "void hoedown_buffer_put_utf8(struct hoedown_buffer * buf, int c)"
+  "signature": "void hoedown_buffer_put_utf8(hoedown_buffer *, unsigned int)"
 "language": "c++"
 "project": "hoextdown"
 "target_name": "hoedown_fuzzer"

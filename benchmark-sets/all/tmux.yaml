@@ -6,7 +6,7 @@
   - "name": "item"
     "type": "struct cmdq_item *"
   "return_type": "int"
-  "signature": "int cmd_new_session_exec(struct cmd * self, struct cmdq_item * item)"
+  "signature": "cmd_retval cmd_new_session_exec(cmd *, cmdq_item *)"
 - "name": "client_main"
   "params":
   - "name": "base"
@@ -20,7 +20,7 @@
   - "name": "feat"
     "type": "int"
   "return_type": "int"
-  "signature": "int client_main(struct event_base * base, int argc, char ** argv, size_t flags, int feat)"
+  "signature": "int client_main(event_base *, int, char **, uint64_t, int)"
 - "name": "client_connect"
   "params":
   - "name": "base"
@@ -30,7 +30,7 @@
   - "name": "flags"
     "type": "size_t"
   "return_type": "int"
-  "signature": "int client_connect(struct event_base * base, char * path, size_t flags)"
+  "signature": "int client_connect(event_base *, const char *, uint64_t)"
 - "name": "server_start"
   "params":
   - "name": "client"
@@ -44,7 +44,7 @@
   - "name": "lockfile"
     "type": "char *"
   "return_type": "int"
-  "signature": "int server_start(struct tmuxproc * client, int flags, struct event_base * base, int lockfd, char * lockfile)"
+  "signature": "int server_start(tmuxproc *, int, event_base *, int, char *)"
 - "name": "cmd_attach_session_exec"
   "params":
   - "name": "self"
@@ -52,7 +52,7 @@
   - "name": "item"
     "type": "struct cmdq_item *"
   "return_type": "int"
-  "signature": "int cmd_attach_session_exec(struct cmd * self, struct cmdq_item * item)"
+  "signature": "cmd_retval cmd_attach_session_exec(cmd *, cmdq_item *)"
 "language": "c"
 "project": "tmux"
 "target_name": "input-fuzzer"

@@ -12,7 +12,7 @@
   - "name": "glyphs"
     "type": "struct hb_set_t *"
   "return_type": "void"
-  "signature": "void hb_ot_shape_glyphs_closure(struct hb_font_t * font, struct hb_buffer_t * buffer, struct ASS_Rect * features, int num_features, struct hb_set_t * glyphs)"
+  "signature": "void hb_ot_shape_glyphs_closure(hb_font_t *, hb_buffer_t *, const hb_feature_t *, unsigned int, hb_set_t *)"
 - "name": "hb_shape_plan_create_cached"
   "params":
   - "name": "face"
@@ -26,7 +26,7 @@
   - "name": "shaper_list"
     "type": "char **"
   "return_type": "struct hb_shape_plan_t *"
-  "signature": "struct hb_shape_plan_t * hb_shape_plan_create_cached(struct hb_face_t * face, struct hb_segment_properties_t * props, struct ASS_Rect * user_features, int num_user_features, char ** shaper_list)"
+  "signature": "hb_shape_plan_t * hb_shape_plan_create_cached(hb_face_t *, const hb_segment_properties_t *, const hb_feature_t *, unsigned int, const char **)"
 - "name": "hb_shape_plan_create"
   "params":
   - "name": "face"
@@ -40,7 +40,7 @@
   - "name": "shaper_list"
     "type": "char **"
   "return_type": "struct hb_shape_plan_t *"
-  "signature": "struct hb_shape_plan_t * hb_shape_plan_create(struct hb_face_t * face, struct hb_segment_properties_t * props, struct ASS_Rect * user_features, int num_user_features, char ** shaper_list)"
+  "signature": "hb_shape_plan_t * hb_shape_plan_create(hb_face_t *, const hb_segment_properties_t *, const hb_feature_t *, unsigned int, const char **)"
 - "name": "hb_ot_layout_lookups_substitute_closure"
   "params":
   - "name": "face"
@@ -50,7 +50,7 @@
   - "name": "glyphs"
     "type": "struct hb_set_t *"
   "return_type": "void"
-  "signature": "void hb_ot_layout_lookups_substitute_closure(struct hb_face_t * face, struct hb_set_t * lookups, struct hb_set_t * glyphs)"
+  "signature": "void hb_ot_layout_lookups_substitute_closure(hb_face_t *, const hb_set_t *, hb_set_t *)"
 - "name": "hb_ot_layout_lookup_substitute_closure"
   "params":
   - "name": "face"
@@ -60,7 +60,7 @@
   - "name": "glyphs"
     "type": "struct hb_set_t *"
   "return_type": "void"
-  "signature": "void hb_ot_layout_lookup_substitute_closure(struct hb_face_t * face, int lookup_index, struct hb_set_t * glyphs)"
+  "signature": "void hb_ot_layout_lookup_substitute_closure(hb_face_t *, unsigned int, hb_set_t *)"
 "language": "c++"
 "project": "libass"
 "target_name": "libass_fuzzer"

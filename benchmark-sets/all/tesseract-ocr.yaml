@@ -6,7 +6,7 @@
   - "name": "api"
     "type": "tesseract::TessBaseAPI *"
   "return_type": "bool"
-  "signature": "tesseract::TessTsvRenderer::AddImageHandler(tesseract::TessBaseAPI*)"
+  "signature": "bool TessTsvRenderer::AddImageHandler(TessBaseAPI *)"
 - "name": "_ZN9tesseract11TessBaseAPI10GetTSVTextEi"
   "params":
   - "name": "this"
@@ -14,7 +14,7 @@
   - "name": "page_number"
     "type": "int"
   "return_type": "char *"
-  "signature": "tesseract::TessBaseAPI::GetTSVText(int)"
+  "signature": "char * TessBaseAPI::GetTSVText(int)"
 - "name": "_ZN9tesseract11TessBaseAPI12ProcessPagesEPKcS2_iPNS_18TessResultRendererE"
   "params":
   - "name": "this"
@@ -28,7 +28,7 @@
   - "name": "renderer"
     "type": "tesseract::TessResultRenderer *"
   "return_type": "bool"
-  "signature": "tesseract::TessBaseAPI::ProcessPages(char const*, char const*, int, tesseract::TessResultRenderer*)"
+  "signature": "bool TessBaseAPI::ProcessPages(const char *, const char *, int, TessResultRenderer *)"
 - "name": "_ZN9tesseract19TessBoxTextRenderer15AddImageHandlerEPNS_11TessBaseAPIE"
   "params":
   - "name": "this"
@@ -36,7 +36,7 @@
   - "name": "api"
     "type": "tesseract::TessBaseAPI *"
   "return_type": "bool"
-  "signature": "tesseract::TessBoxTextRenderer::AddImageHandler(tesseract::TessBaseAPI*)"
+  "signature": "bool TessBoxTextRenderer::AddImageHandler(TessBaseAPI *)"
 - "name": "_ZN9tesseract11TessBaseAPI20ProcessPagesInternalEPKcS2_iPNS_18TessResultRendererE"
   "params":
   - "name": "this"
@@ -50,7 +50,7 @@
   - "name": "renderer"
     "type": "tesseract::TessResultRenderer *"
   "return_type": "bool"
-  "signature": "tesseract::TessBaseAPI::ProcessPagesInternal(char const*, char const*, int, tesseract::TessResultRenderer*)"
+  "signature": "bool TessBaseAPI::ProcessPagesInternal(const char *, const char *, int, TessResultRenderer *)"
 "language": "c++"
 "project": "tesseract-ocr"
 "target_name": "fuzzer-api-512x256"

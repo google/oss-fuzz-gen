@@ -6,7 +6,7 @@
   - "name": "argv"
     "type": "char **"
   "return_type": "int"
-  "signature": "int main2(int argc, char ** argv)"
+  "signature": "int main2(int, char **)"
 - "name": "main_loop"
   "params": []
   "return_type": "int"
@@ -16,7 +16,7 @@
   - "name": "woneinit"
     "type": "int *"
   "return_type": "int"
-  "signature": "int tcp_init_children(int * woneinit)"
+  "signature": "int tcp_init_children(int *)"
 - "name": "handle_tcpconn_ev"
   "params":
   - "name": "tcpconn"
@@ -26,13 +26,13 @@
   - "name": "fd_i"
     "type": "int"
   "return_type": "int"
-  "signature": "int handle_tcpconn_ev(struct tcp_connection * tcpconn, short ev, int fd_i)"
+  "signature": "int handle_tcpconn_ev(tcp_connection *, short, int)"
 - "name": "fix_actions"
   "params":
   - "name": "a"
     "type": "struct action *"
   "return_type": "int"
-  "signature": "int fix_actions(struct action * a)"
+  "signature": "int fix_actions(action *)"
 "language": "c"
 "project": "kamailio"
 "target_name": "fuzz_parse_msg"

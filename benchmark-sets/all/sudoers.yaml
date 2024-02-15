@@ -12,7 +12,7 @@
   - "name": "match_info"
     "type": "struct sudoers_match_info *"
   "return_type": "int"
-  "signature": "int display_cmnd_check(struct sudoers_context * ctx, struct sudoers_parse_tree * parse_tree, struct passwd * pw, size_t now, struct sudoers_match_info * match_info)"
+  "signature": "int display_cmnd_check(sudoers_context *, const sudoers_parse_tree *, const passwd *, time_t, sudoers_match_info *)"
 - "name": "sudo_make_grlist_item"
   "params":
   - "name": "pw"
@@ -20,7 +20,7 @@
   - "name": "unused1"
     "type": "char **"
   "return_type": "struct cache_item *"
-  "signature": "struct cache_item * sudo_make_grlist_item(struct passwd * pw, char ** unused1)"
+  "signature": "cache_item * sudo_make_grlist_item(const passwd *, const char **)"
 - "name": "fill_runas_group"
   "params":
   - "name": "str"
@@ -30,7 +30,7 @@
   - "name": "v"
     "type": "char *"
   "return_type": "size_t"
-  "signature": "size_t fill_runas_group(char * str, size_t strsize, char * v)"
+  "signature": "size_t fill_runas_group(char *, size_t, void *)"
 - "name": "fill_group"
   "params":
   - "name": "str"
@@ -40,7 +40,7 @@
   - "name": "v"
     "type": "char *"
   "return_type": "size_t"
-  "signature": "size_t fill_group(char * str, size_t strsize, char * v)"
+  "signature": "size_t fill_group(char *, size_t, void *)"
 - "name": "sudo_set_grlist"
   "params":
   - "name": "pw"
@@ -48,7 +48,7 @@
   - "name": "groups"
     "type": "char **"
   "return_type": "int"
-  "signature": "int sudo_set_grlist(struct passwd * pw, char ** groups)"
+  "signature": "int sudo_set_grlist(passwd *, const char **)"
 "language": "c"
 "project": "sudoers"
 "target_name": "fuzz_sudoers_ldif"

@@ -6,7 +6,7 @@
   - "name": "msg"
     "type": "struct nxt_port_recv_msg_s *"
   "return_type": "void"
-  "signature": "void nxt_router_conf_data_handler(struct nxt_task_s * task, struct nxt_port_recv_msg_s * msg)"
+  "signature": "void nxt_router_conf_data_handler(nxt_task_t *, nxt_port_recv_msg_t *)"
 - "name": "nxt_router_conf_create"
   "params":
   - "name": "task"
@@ -18,13 +18,13 @@
   - "name": "end"
     "type": "char *"
   "return_type": "int"
-  "signature": "int nxt_router_conf_create(struct nxt_task_s * task, struct nxt_router_temp_conf_t * tmcf, char * start, char * end)"
+  "signature": "nxt_int_t nxt_router_conf_create(nxt_task_t *, nxt_router_temp_conf_t *, u_char *, u_char *)"
 - "name": "nxt_runtime_create"
   "params":
   - "name": "task"
     "type": "struct nxt_task_s *"
   "return_type": "int"
-  "signature": "int nxt_runtime_create(struct nxt_task_s * task)"
+  "signature": "nxt_int_t nxt_runtime_create(nxt_task_t *)"
 - "name": "nxt_http_action_create"
   "params":
   - "name": "task"
@@ -34,7 +34,7 @@
   - "name": "pass"
     "type": "struct nxt_str_t *"
   "return_type": "struct nxt_http_action_s *"
-  "signature": "struct nxt_http_action_s * nxt_http_action_create(struct nxt_task_s * task, struct nxt_router_temp_conf_t * tmcf, struct nxt_str_t * pass)"
+  "signature": "nxt_http_action_t * nxt_http_action_create(nxt_task_t *, nxt_router_temp_conf_t *, nxt_str_t *)"
 - "name": "nxt_main_port_modules_handler"
   "params":
   - "name": "task"
@@ -42,7 +42,7 @@
   - "name": "msg"
     "type": "struct nxt_port_recv_msg_s *"
   "return_type": "void"
-  "signature": "void nxt_main_port_modules_handler(struct nxt_task_s * task, struct nxt_port_recv_msg_s * msg)"
+  "signature": "void nxt_main_port_modules_handler(nxt_task_t *, nxt_port_recv_msg_t *)"
 "language": "c"
 "project": "unit"
 "target_name": "Fuzz_json"

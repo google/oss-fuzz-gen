@@ -4,7 +4,7 @@
   - "name": "this"
     "type": "CommandData *"
   "return_type": "void"
-  "signature": "CommandData::ProcessCommand()"
+  "signature": "void CommandData::ProcessCommand()"
 - "name": "_ZN7Archive9CheckOpenEPKw"
   "params":
   - "name": "this"
@@ -12,7 +12,7 @@
   - "name": "Name"
     "type": "int *"
   "return_type": "void"
-  "signature": "Archive::CheckOpen(wchar_t const*)"
+  "signature": "void Archive::CheckOpen(const wchar *)"
 - "name": "_ZN7Archive10WCheckOpenEPKw"
   "params":
   - "name": "this"
@@ -20,7 +20,7 @@
   - "name": "Name"
     "type": "int *"
   "return_type": "bool"
-  "signature": "Archive::WCheckOpen(wchar_t const*)"
+  "signature": "bool Archive::WCheckOpen(const wchar *)"
 - "name": "_ZN7Archive8CheckArcEb"
   "params":
   - "name": "this"
@@ -28,13 +28,13 @@
   - "name": "EnableBroken"
     "type": "bool"
   "return_type": "void"
-  "signature": "Archive::CheckArc(bool)"
+  "signature": "void Archive::CheckArc(bool)"
 - "name": "_ZN7Archive8SearchRREv"
   "params":
   - "name": "this"
     "type": "Archive *"
   "return_type": "size_t"
-  "signature": "Archive::SearchRR()"
+  "signature": "size_t Archive::SearchRR()"
 "language": "c++"
 "project": "unrar"
 "target_name": "unrar_fuzzer"

@@ -6,7 +6,7 @@
   - "name": ""
     "type": "hermes::vm::RuntimeConfig *"
   "return_type": "void"
-  "signature": "facebook::jsi::detail::ThreadSafeRuntimeImpl<facebook::hermes::HermesRuntimeImpl, facebook::hermes::(anonymous namespace)::HermesMutex>::ThreadSafeRuntimeImpl<hermes::vm::RuntimeConfig const&>(hermes::vm::RuntimeConfig const&)"
+  "signature": "void &>(facebook::hermes::(anonymous namespace)::HermesMutex> *, const RuntimeConfig)"
 - "name": "_ZN6hermes2vm24asyncFunctionConstructorEPvRNS0_7RuntimeENS0_10NativeArgsE"
   "params":
   - "name": ""
@@ -16,7 +16,7 @@
   - "name": "args"
     "type": "hermes::vm::NativeArgs *"
   "return_type": "void"
-  "signature": "hermes::vm::asyncFunctionConstructor(void*, hermes::vm::Runtime&, hermes::vm::NativeArgs)"
+  "signature": "N/A"
 - "name": "_ZN6hermes2vm28generatorFunctionConstructorEPvRNS0_7RuntimeENS0_10NativeArgsE"
   "params":
   - "name": ""
@@ -26,7 +26,7 @@
   - "name": "args"
     "type": "hermes::vm::NativeArgs *"
   "return_type": "void"
-  "signature": "hermes::vm::generatorFunctionConstructor(void*, hermes::vm::Runtime&, hermes::vm::NativeArgs)"
+  "signature": "Handle<hermes::vm::JSObject> createGeneratorFunctionConstructor()"
 - "name": "_ZN8facebook3jsi20WithRuntimeDecoratorINS0_6detail8WithLockINS_6hermes17HermesRuntimeImplENS4_12_GLOBAL__N_111HermesMutexEEES5_NS0_17ThreadSafeRuntimeEE26evaluatePreparedJavaScriptERKNSt3__110shared_ptrIKNS0_18PreparedJavaScriptEEE"
   "params":
   - "name": ""
@@ -36,7 +36,7 @@
   - "name": ""
     "type": "std::shared_ptr *"
   "return_type": "void"
-  "signature": "facebook::jsi::WithRuntimeDecorator<facebook::jsi::detail::WithLock<facebook::hermes::HermesRuntimeImpl, facebook::hermes::(anonymous namespace)::HermesMutex>, facebook::hermes::HermesRuntimeImpl, facebook::jsi::ThreadSafeRuntime>::evaluatePreparedJavaScript(std::__1::shared_ptr<facebook::jsi::PreparedJavaScript const> const&)"
+  "signature": "void WithRuntimeDecorator(facebook::jsi::ThreadSafeRuntime> *, HermesRuntimeImpl, facebook::hermes::(anonymous namespace)::HermesMutex>)"
 - "name": "_ZN6hermes2vm11Interpreter17interpretFunctionILb1ELb0EEENS0_10CallResultINS0_11HermesValueELNS0_6detail20CallResultSpecializeE2EEERNS0_7RuntimeERNS0_16InterpreterStateE"
   "params":
   - "name": ""
@@ -44,7 +44,7 @@
   - "name": ""
     "type": "struct hermes::vm::InterpreterState *"
   "return_type": "void"
-  "signature": "hermes::vm::CallResult<hermes::vm::HermesValue, (hermes::vm::detail::CallResultSpecialize)2> hermes::vm::Interpreter::interpretFunction<true, false>(hermes::vm::Runtime&, hermes::vm::InterpreterState&)"
+  "signature": "ExecutionStatus stepFunction(Runtime *, InterpreterState)"
 "language": "c++"
 "project": "hermes"
 "target_name": "/src/hermes/tools/fuzzers/libfuzzer/fuzzer-jsi-entry.cpp"

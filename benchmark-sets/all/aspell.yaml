@@ -8,7 +8,7 @@
   - "name": ""
     "type": "acommon::Config *"
   "return_type": "void"
-  "signature": "aspeller::create_default_readonly_dict(acommon::StringEnumeration*, acommon::Config&)"
+  "signature": "PosibErr<void> create_default_readonly_dict()"
 - "name": "_ZN12_GLOBAL__N_116WritableReplDict5mergeERN7acommon7FStreamENS1_10ParmStringEPNS1_6ConfigE"
   "params":
   - "name": "this"
@@ -24,7 +24,7 @@
   - "name": ""
     "type": "acommon::Config *"
   "return_type": "void"
-  "signature": "(anonymous namespace)::WritableReplDict::merge(acommon::FStream&, acommon::ParmString, acommon::Config*)"
+  "signature": "PosibErr<void> merge()"
 - "name": "_ZN12_GLOBAL__N_112WritableDict5mergeERN7acommon7FStreamENS1_10ParmStringEPNS1_6ConfigE"
   "params":
   - "name": "this"
@@ -40,7 +40,7 @@
   - "name": ""
     "type": "acommon::Config *"
   "return_type": "void"
-  "signature": "(anonymous namespace)::WritableDict::merge(acommon::FStream&, acommon::ParmString, acommon::Config*)"
+  "signature": "PosibErr<void> merge()"
 - "name": "_ZN12_GLOBAL__N_16createEPN7acommon17StringEnumerationERKN8aspeller8LanguageERNS0_6ConfigE"
   "params":
   - "name": "els"
@@ -52,7 +52,7 @@
   - "name": ""
     "type": "acommon::Config *"
   "return_type": "void"
-  "signature": "(anonymous namespace)::create(acommon::StringEnumeration*, aspeller::Language const&, acommon::Config&)"
+  "signature": "PosibErr<void> create()"
 - "name": "_ZN7acommon23set_mode_from_extensionEPNS_6ConfigENS_10ParmStringEP8_IO_FILE"
   "params":
   - "name": "config"
@@ -66,7 +66,7 @@
   - "name": ""
     "type": "struct _IO_FILE *"
   "return_type": "void"
-  "signature": "acommon::set_mode_from_extension(acommon::Config*, acommon::ParmString, _IO_FILE*)"
+  "signature": "PosibErr<void> set_mode_from_extension()"
 "language": "c++"
 "project": "aspell"
 "target_name": "aspell_fuzzer"

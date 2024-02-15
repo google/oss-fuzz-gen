@@ -8,7 +8,7 @@
   - "name": ""
     "type": "int **"
   "return_type": "int"
-  "signature": "int uriParseSingleUriW(struct UriUriStructW * , int * , int ** )"
+  "signature": "int uriParseSingleUriA(UriUriA *, const char *, const char **)"
 - "name": "uriParseSingleUriA"
   "params":
   - "name": ""
@@ -18,7 +18,7 @@
   - "name": ""
     "type": "char **"
   "return_type": "int"
-  "signature": "int uriParseSingleUriA(struct UriUriStructA * , char * , char ** )"
+  "signature": "int uriParseSingleUriA(UriUriA *, const char *, const char **)"
 - "name": "uriParseSingleUriExW"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "int **"
   "return_type": "int"
-  "signature": "int uriParseSingleUriExW(struct UriUriStructW * , int * , int * , int ** )"
+  "signature": "int uriParseSingleUriExA(UriUriA *, const char *, const char *, const char **)"
 - "name": "uriParseSingleUriExA"
   "params":
   - "name": ""
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "char **"
   "return_type": "int"
-  "signature": "int uriParseSingleUriExA(struct UriUriStructA * , char * , char * , char ** )"
+  "signature": "int uriParseSingleUriExA(UriUriA *, const char *, const char *, const char **)"
 - "name": "uriParseSingleUriExMmW"
   "params":
   - "name": ""
@@ -56,7 +56,7 @@
   - "name": ""
     "type": "struct UriMemoryManagerStruct *"
   "return_type": "int"
-  "signature": "int uriParseSingleUriExMmW(struct UriUriStructW * , int * , int * , int ** , struct UriMemoryManagerStruct * )"
+  "signature": "int uriParseSingleUriExMmA(UriUriA *, const char *, const char *, const char **, UriMemoryManager *)"
 "language": "c++"
 "project": "uriparser"
 "target_name": "uri_parse_fuzzer"

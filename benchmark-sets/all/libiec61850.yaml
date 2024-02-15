@@ -10,7 +10,7 @@
   - "name": "encode"
     "type": "bool"
   "return_type": "int"
-  "signature": "int MmsValue_encodeMmsData(struct sMmsValue * self, char * buffer, int bufPos, bool encode)"
+  "signature": "int MmsValue_encodeMmsData(MmsValue *, uint8_t *, int, _Bool)"
 - "name": "MmsValue_printToBuffer"
   "params":
   - "name": "self"
@@ -20,7 +20,7 @@
   - "name": "bufferSize"
     "type": "int"
   "return_type": "char *"
-  "signature": "char * MmsValue_printToBuffer(struct sMmsValue * self, char * buffer, int bufferSize)"
+  "signature": "const char * MmsValue_printToBuffer(const MmsValue *, char *, int)"
 - "name": "encodeArrayAccessResult"
   "params":
   - "name": "value"
@@ -32,7 +32,7 @@
   - "name": "encode"
     "type": "bool"
   "return_type": "int"
-  "signature": "int encodeArrayAccessResult(struct sMmsValue * value, char * buffer, int bufPos, bool encode)"
+  "signature": "int encodeArrayAccessResult(MmsValue *, uint8_t *, int, _Bool)"
 - "name": "encodeStructuredAccessResult"
   "params":
   - "name": "value"
@@ -44,13 +44,13 @@
   - "name": "encode"
     "type": "bool"
   "return_type": "int"
-  "signature": "int encodeStructuredAccessResult(struct sMmsValue * value, char * buffer, int bufPos, bool encode)"
+  "signature": "int encodeStructuredAccessResult(MmsValue *, uint8_t *, int, _Bool)"
 - "name": "MmsValue_newDefaultValue"
   "params":
   - "name": "typeSpec"
     "type": "struct sMmsVariableSpecification *"
   "return_type": "struct sMmsValue *"
-  "signature": "struct sMmsValue * MmsValue_newDefaultValue(struct sMmsVariableSpecification * typeSpec)"
+  "signature": "MmsValue * MmsValue_newDefaultValue(const MmsVariableSpecification *)"
 "language": "c"
 "project": "libiec61850"
 "target_name": "fuzz_mms_decode"

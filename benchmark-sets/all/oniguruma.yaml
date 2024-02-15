@@ -16,7 +16,7 @@
   - "name": "einfo"
     "type": "struct OnigErrorInfo *"
   "return_type": "int"
-  "signature": "int onig_new_without_alloc(struct re_pattern_buffer * reg, char * pattern, char * pattern_end, int option, struct OnigEncodingTypeST * enc, struct OnigSyntaxType * syntax, struct OnigErrorInfo * einfo)"
+  "signature": "int onig_new_without_alloc(regex_t *, const OnigUChar *, const OnigUChar *, OnigOptionType, OnigEncoding, OnigSyntaxType *, OnigErrorInfo *)"
 - "name": "onig_regset_search"
   "params":
   - "name": "set"
@@ -36,7 +36,7 @@
   - "name": "rmatch_pos"
     "type": "int *"
   "return_type": "int"
-  "signature": "int onig_regset_search(struct OnigRegSetStruct * set, char * str, char * end, char * start, char * range, int lead, int option, int * rmatch_pos)"
+  "signature": "int onig_regset_search(OnigRegSet *, const OnigUChar *, const OnigUChar *, const OnigUChar *, const OnigUChar *, OnigRegSetLead, OnigOptionType, int *)"
 - "name": "onig_regset_search_with_param"
   "params":
   - "name": "set"
@@ -58,7 +58,7 @@
   - "name": "rmatch_pos"
     "type": "int *"
   "return_type": "int"
-  "signature": "int onig_regset_search_with_param(struct OnigRegSetStruct * set, char * str, char * end, char * start, char * range, int lead, int option, struct OnigMatchParamStruct ** mps, int * rmatch_pos)"
+  "signature": "int onig_regset_search_with_param(OnigRegSet *, const OnigUChar *, const OnigUChar *, const OnigUChar *, const OnigUChar *, OnigRegSetLead, OnigOptionType, OnigMatchParam **, int *)"
 - "name": "onig_scan"
   "params":
   - "name": "reg"
@@ -76,7 +76,7 @@
   - "name": "callback_arg"
     "type": "char *"
   "return_type": "int"
-  "signature": "int onig_scan(struct re_pattern_buffer * reg, char * str, char * end, struct re_registers * region, int option, func_type * scan_callback, char * callback_arg)"
+  "signature": "int onig_scan(regex_t *, const OnigUChar *, const OnigUChar *, OnigRegion *, OnigOptionType,  *, void *)"
 - "name": "regset_search_body_regex_lead"
   "params":
   - "name": "set"
@@ -98,7 +98,7 @@
   - "name": "rmatch_pos"
     "type": "int *"
   "return_type": "int"
-  "signature": "int regset_search_body_regex_lead(struct OnigRegSetStruct * set, char * str, char * end, char * start, char * orig_range, int lead, int option, struct OnigMatchParamStruct ** mps, int * rmatch_pos)"
+  "signature": "int regset_search_body_regex_lead(OnigRegSet *, const OnigUChar *, const OnigUChar *, const OnigUChar *, const OnigUChar *, OnigRegSetLead, OnigOptionType, OnigMatchParam **, int *)"
 "language": "c"
 "project": "oniguruma"
 "target_name": "fuzzer"

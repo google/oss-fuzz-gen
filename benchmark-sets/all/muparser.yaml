@@ -6,7 +6,7 @@
   - "name": ""
     "type": "int *"
   "return_type": "double *"
-  "signature": "mu::ParserBase::Eval(int&) const"
+  "signature": "value_type * Eval(const ParserBase *, int)"
 - "name": "_ZN2mu10ParserBase4EvalEPdi"
   "params":
   - "name": ""
@@ -16,13 +16,13 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "mu::ParserBase::Eval(double*, int)"
+  "signature": "void Eval(ParserBase *, value_type *, int)"
 - "name": "_ZNK2mu10ParserBase10GetUsedVarEv"
   "params":
   - "name": ""
     "type": "mu::ParserBase *"
   "return_type": "std::map *"
-  "signature": "mu::ParserBase::GetUsedVar() const"
+  "signature": "const varmap_type GetUsedVar(const ParserBase *)"
 - "name": "_ZNK2mu10ParserBase12ApplyStrFuncERKNS_11ParserTokenIdNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEEERKNS2_6vectorIS9_NS6_IS9_EEEE"
   "params":
   - "name": ""
@@ -34,7 +34,7 @@
   - "name": ""
     "type": "std::vector *"
   "return_type": "void"
-  "signature": "mu::ParserBase::ApplyStrFunc(mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > const&, std::__1::vector<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > > const&) const"
+  "signature": "token_type ApplyStrFunc(const ParserBase *, const token_type, const std::__1::allocator<char> > > > >)"
 - "name": "_ZNK2mu10ParserBase9StackDumpERKNSt3__15stackINS_11ParserTokenIdNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEENS1_5dequeISA_NS7_ISA_EEEEEESG_"
   "params":
   - "name": ""
@@ -44,7 +44,7 @@
   - "name": ""
     "type": "std::stack *"
   "return_type": "void"
-  "signature": "mu::ParserBase::StackDump(std::__1::stack<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::deque<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > > > const&, std::__1::stack<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::deque<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > > > const&) const"
+  "signature": "void StackDump(const ParserBase *, const std::__1::allocator<char> > > > > >, const std::__1::allocator<char> > > > > >)"
 "language": "c++"
 "project": "muparser"
 "target_name": "set_eval_fuzzer"

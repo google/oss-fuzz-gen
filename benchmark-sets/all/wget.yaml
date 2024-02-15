@@ -12,7 +12,7 @@
   - "name": "timeout"
     "type": "double"
   "return_type": "int"
-  "signature": "int wgnutls_peek(int fd, char * buf, int bufsize, char * arg, double timeout)"
+  "signature": "int wgnutls_peek(int, char *, int, void *, double)"
 - "name": "wgnutls_read"
   "params":
   - "name": "fd"
@@ -26,7 +26,7 @@
   - "name": "timeout"
     "type": "double"
   "return_type": "int"
-  "signature": "int wgnutls_read(int fd, char * buf, int bufsize, char * arg, double timeout)"
+  "signature": "int wgnutls_read(int, char *, int, void *, double)"
 - "name": "wgnutls_read_timeout"
   "params":
   - "name": "fd"
@@ -40,7 +40,7 @@
   - "name": "timeout"
     "type": "double"
   "return_type": "int"
-  "signature": "int wgnutls_read_timeout(int fd, char * buf, int bufsize, char * arg, double timeout)"
+  "signature": "int wgnutls_read_timeout(int, char *, int, void *, double)"
 - "name": "wgnutls_write"
   "params":
   - "name": "fd"
@@ -52,7 +52,7 @@
   - "name": "arg"
     "type": "char *"
   "return_type": "int"
-  "signature": "int wgnutls_write(int fd, char * buf, int bufsize, char * arg)"
+  "signature": "int wgnutls_write(int, char *, int, void *)"
 - "name": "gnutls_record_recv_packet"
   "params":
   - "name": "session"
@@ -60,7 +60,7 @@
   - "name": "packet"
     "type": "struct mbuffer_st **"
   "return_type": "size_t"
-  "signature": "size_t gnutls_record_recv_packet(struct gnutls_session_int * session, struct mbuffer_st ** packet)"
+  "signature": "ssize_t gnutls_record_recv_packet(gnutls_session_t, gnutls_packet_t *)"
 "language": "c++"
 "project": "wget"
 "target_name": "wget_ntlm_fuzzer"
