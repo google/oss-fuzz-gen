@@ -10,7 +10,7 @@
   - "name": "base_length"
     "type": "size_t"
   "return_type": "bool"
-  "signature": "bool ada_can_parse_with_base(char * input, size_t input_length, char * base, size_t base_length)"
+  "signature": "bool ada_can_parse_with_base(const char *, size_t, const char *, size_t)"
 - "name": "ada_can_parse"
   "params":
   - "name": "input"
@@ -18,7 +18,7 @@
   - "name": "length"
     "type": "size_t"
   "return_type": "bool"
-  "signature": "bool ada_can_parse(char * input, size_t length)"
+  "signature": "bool ada_can_parse(const char *, size_t)"
 - "name": "ada_parse_with_base"
   "params":
   - "name": "input"
@@ -30,7 +30,7 @@
   - "name": "base_length"
     "type": "size_t"
   "return_type": "char *"
-  "signature": "char * ada_parse_with_base(char * input, size_t input_length, char * base, size_t base_length)"
+  "signature": "ada_url ada_parse_with_base(const char *, size_t, const char *, size_t)"
 - "name": "ada_set_href"
   "params":
   - "name": "result"
@@ -40,7 +40,7 @@
   - "name": "length"
     "type": "size_t"
   "return_type": "bool"
-  "signature": "bool ada_set_href(char * result, char * input, size_t length)"
+  "signature": "bool ada_set_href(ada_url, const char *, size_t)"
 - "name": "_ZN3ada14url_aggregator8set_hrefENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEE"
   "params":
   - "name": "this"
@@ -50,7 +50,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "bool"
-  "signature": "ada::url_aggregator::set_href(std::__1::basic_string_view<char, std::__1::char_traits<char> >)"
+  "signature": "bool url_aggregator::set_href(const string_view)"
 "language": "c++"
 "project": "ada-url"
 "target_name": "parse"

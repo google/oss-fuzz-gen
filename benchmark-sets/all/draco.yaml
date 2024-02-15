@@ -4,7 +4,7 @@
   - "name": ""
     "type": "draco::PointCloud *"
   "return_type": "bool"
-  "signature": "draco::PointCloud::DeduplicateAttributeValues()"
+  "signature": "bool DeduplicateAttributeValues(PointCloud *)"
 - "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeE"
   "params":
   - "name": ""
@@ -12,7 +12,7 @@
   - "name": ""
     "type": "draco::GeometryAttribute *"
   "return_type": "int"
-  "signature": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&)"
+  "signature": "ValueType DeduplicateValues(PointAttribute *, const GeometryAttribute)"
 - "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
   "params":
   - "name": ""
@@ -22,7 +22,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "draco::PointAttribute::DeduplicateValues(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
+  "signature": "ValueType DeduplicateValues(PointAttribute *, const GeometryAttribute, AttributeValueIndex)"
 - "name": "_ZN5draco14PointAttribute22DeduplicateTypedValuesIiEEjRKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
   "params":
   - "name": ""
@@ -32,7 +32,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "unsigned int draco::PointAttribute::DeduplicateTypedValues<int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
+  "signature": "ValueType DeduplicateTypedValues<float>(PointAttribute *, const GeometryAttribute, AttributeValueIndex)"
 - "name": "_ZN5draco14PointAttribute22DeduplicateTypedValuesIjEEjRKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
   "params":
   - "name": ""
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "unsigned int draco::PointAttribute::DeduplicateTypedValues<unsigned int>(draco::GeometryAttribute const&, draco::IndexType<unsigned int, draco::AttributeValueIndex_tag_type_>)"
+  "signature": "ValueType DeduplicateTypedValues<float>(PointAttribute *, const GeometryAttribute, AttributeValueIndex)"
 "language": "c++"
 "project": "draco"
 "target_name": "draco_pc_decoder_fuzzer"

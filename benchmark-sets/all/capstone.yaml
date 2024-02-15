@@ -4,7 +4,7 @@
   - "name": "ud"
     "type": "struct cs_struct *"
   "return_type": "int"
-  "signature": "int ALPHA_global_init(struct cs_struct * ud)"
+  "signature": "cs_err ALPHA_global_init(cs_struct *)"
 - "name": "AArch64AppleInstPrinter_printInst"
   "params":
   - "name": "MI"
@@ -16,7 +16,7 @@
   - "name": "O"
     "type": "struct SStream *"
   "return_type": "void"
-  "signature": "void AArch64AppleInstPrinter_printInst(struct MCInst * MI, size_t Address, char * Annot, struct SStream * O)"
+  "signature": "void AArch64AppleInstPrinter_printInst(MCInst *, uint64_t, const char *, SStream *)"
 - "name": "Alpha_printInst"
   "params":
   - "name": "MI"
@@ -26,7 +26,7 @@
   - "name": "Info"
     "type": "char *"
   "return_type": "void"
-  "signature": "void Alpha_printInst(struct MCInst * MI, struct SStream * O, char * Info)"
+  "signature": "void Alpha_printInst(MCInst *, SStream *, void *)"
 - "name": "Alpha_LLVM_printInstruction"
   "params":
   - "name": "MI"
@@ -36,7 +36,7 @@
   - "name": "Info"
     "type": "char *"
   "return_type": "void"
-  "signature": "void Alpha_LLVM_printInstruction(struct MCInst * MI, struct SStream * O, char * Info)"
+  "signature": "void Alpha_LLVM_printInstruction(MCInst *, SStream *, void *)"
 - "name": "X86_ATT_printInst"
   "params":
   - "name": "MI"
@@ -46,7 +46,7 @@
   - "name": "info"
     "type": "char *"
   "return_type": "void"
-  "signature": "void X86_ATT_printInst(struct MCInst * MI, struct SStream * OS, char * info)"
+  "signature": "void X86_ATT_printInst(MCInst *, SStream *, void *)"
 "language": "c++"
 "project": "capstone"
 "target_name": "fuzz_diff"

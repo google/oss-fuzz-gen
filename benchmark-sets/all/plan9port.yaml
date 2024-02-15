@@ -6,7 +6,7 @@
   - "name": "ncert"
     "type": "int"
   "return_type": "void"
-  "signature": "void X509dump(char * cert, int ncert)"
+  "signature": "void X509dump(uchar *, int)"
 - "name": "X509verify"
   "params":
   - "name": "cert"
@@ -16,7 +16,7 @@
   - "name": "pk"
     "type": "struct RSApub *"
   "return_type": "char *"
-  "signature": "char * X509verify(char * cert, int ncert, struct RSApub * pk)"
+  "signature": "char * X509verify(uchar *, int, RSApub *)"
 - "name": "X509gen"
   "params":
   - "name": "priv"
@@ -28,7 +28,7 @@
   - "name": "certlen"
     "type": "int *"
   "return_type": "char *"
-  "signature": "char * X509gen(struct RSApriv * priv, char * subj, size_t * valid, int * certlen)"
+  "signature": "uchar * X509gen(RSApriv *, char *, ulong *, int *)"
 - "name": "X509req"
   "params":
   - "name": "priv"
@@ -38,7 +38,7 @@
   - "name": "certlen"
     "type": "int *"
   "return_type": "char *"
-  "signature": "char * X509req(struct RSApriv * priv, char * subj, int * certlen)"
+  "signature": "uchar * X509req(RSApriv *, char *, int *)"
 - "name": "verify_signature"
   "params":
   - "name": "signature"
@@ -50,7 +50,7 @@
   - "name": "psigalg"
     "type": "struct Elem **"
   "return_type": "char *"
-  "signature": "char * verify_signature(struct Bytes * signature, struct RSApub * pk, char * edigest, struct Elem ** psigalg)"
+  "signature": "char * verify_signature(Bytes *, RSApub *, uchar *, Elem **)"
 "language": "c"
 "project": "plan9port"
 "target_name": "fuzz_libsec"

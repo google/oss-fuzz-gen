@@ -12,13 +12,13 @@
   - "name": ""
     "type": "double"
   "return_type": "char *"
-  "signature": "char * op_CallIndirect(char ** , int * , struct M3MemoryHeader * , size_t , double )"
+  "signature": "m3ret_t op_CallIndirect(pc_t, m3stack_t, M3MemoryHeader *, m3reg_t, f64)"
 - "name": "m3_CompileModule"
   "params":
   - "name": ""
     "type": "struct M3Module *"
   "return_type": "char *"
-  "signature": "char * m3_CompileModule(struct M3Module * )"
+  "signature": "M3Result m3_CompileModule(IM3Module)"
 - "name": "m3_GetTableFunction"
   "params":
   - "name": ""
@@ -28,7 +28,7 @@
   - "name": ""
     "type": "int"
   "return_type": "char *"
-  "signature": "char * m3_GetTableFunction(struct M3Function ** , struct M3Module * , int )"
+  "signature": "M3Result m3_GetTableFunction(IM3Function *, IM3Module, uint32_t)"
 - "name": "op_Compile"
   "params":
   - "name": ""
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "double"
   "return_type": "char *"
-  "signature": "char * op_Compile(char ** , int * , struct M3MemoryHeader * , size_t , double )"
+  "signature": "m3ret_t op_Compile(pc_t, m3stack_t, M3MemoryHeader *, m3reg_t, f64)"
 - "name": "CompileRawFunction"
   "params":
   - "name": ""
@@ -54,7 +54,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "char *"
-  "signature": "char * CompileRawFunction(struct M3Module * , struct M3Function * , char * , char * )"
+  "signature": "M3Result CompileRawFunction(IM3Module, IM3Function, const void *, const void *)"
 "language": "c"
 "project": "wasm3"
 "target_name": "fuzzer"

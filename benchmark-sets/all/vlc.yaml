@@ -8,7 +8,7 @@
   - "name": "length"
     "type": "size_t"
   "return_type": "int"
-  "signature": "int vlc_demux_process_memory(struct vlc_run_args * args, char * buf, size_t length)"
+  "signature": "int vlc_demux_process_memory(const vlc_run_args *, const unsigned char *, size_t)"
 - "name": "vlc_demux_process_path"
   "params":
   - "name": "args"
@@ -16,7 +16,7 @@
   - "name": "path"
     "type": "char *"
   "return_type": "int"
-  "signature": "int vlc_demux_process_path(struct vlc_run_args * args, char * path)"
+  "signature": "int vlc_demux_process_path(const vlc_run_args *, const char *)"
 - "name": "vlc_demux_process_url"
   "params":
   - "name": "args"
@@ -24,7 +24,7 @@
   - "name": "url"
     "type": "char *"
   "return_type": "int"
-  "signature": "int vlc_demux_process_url(struct vlc_run_args * args, char * url)"
+  "signature": "int vlc_demux_process_url(const vlc_run_args *, const char *)"
 - "name": "vlm_New"
   "params":
   - "name": "libvlc"
@@ -32,13 +32,13 @@
   - "name": "psz_vlmconf"
     "type": "char *"
   "return_type": "struct vlm_t *"
-  "signature": "struct vlm_t * vlm_New(struct libvlc_int_t * libvlc, char * psz_vlmconf)"
+  "signature": "vlm_t * vlm_New(libvlc_int_t *, const char *)"
 - "name": "Manage"
   "params":
   - "name": "p_object"
     "type": "char *"
   "return_type": "char *"
-  "signature": "char * Manage(char * p_object)"
+  "signature": "void * Manage(void *)"
 "language": "c"
 "project": "vlc"
 "target_name": "vlc-demux-libfuzzer"

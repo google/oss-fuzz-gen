@@ -6,7 +6,7 @@
   - "name": "argv"
     "type": "char **"
   "return_type": "int"
-  "signature": "int main2(int argc, char ** argv)"
+  "signature": "int main2(int, char **)"
 - "name": "init"
   "params":
   - "name": "argc"
@@ -14,7 +14,7 @@
   - "name": "argv"
     "type": "char **"
   "return_type": "void"
-  "signature": "void init(int argc, char ** argv)"
+  "signature": "void init(int, char **)"
 - "name": "mworker_loop"
   "params": []
   "return_type": "void"
@@ -24,7 +24,7 @@
   - "name": "data"
     "type": "char *"
   "return_type": "char *"
-  "signature": "char * run_thread_poll_loop(char * data)"
+  "signature": "void * run_thread_poll_loop(void *)"
 - "name": "run_poll_loop"
   "params": []
   "return_type": "void"

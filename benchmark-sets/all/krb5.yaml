@@ -24,7 +24,7 @@
   - "name": "delegated_cred_handle"
     "type": "struct gss_cred_id_struct **"
   "return_type": "int"
-  "signature": "int iakerb_gss_accept_sec_context(int * minor_status, struct gss_ctx_id_struct ** context_handle, struct gss_cred_id_struct * verifier_cred_handle, struct gss_buffer_desc_struct * input_token, struct gss_channel_bindings_struct * input_chan_bindings, struct gss_name_struct ** src_name, struct gss_OID_desc_struct ** mech_type, struct gss_buffer_desc_struct * output_token, int * ret_flags, int * time_rec, struct gss_cred_id_struct ** delegated_cred_handle)"
+  "signature": "OM_uint32 iakerb_gss_accept_sec_context(OM_uint32 *, gss_ctx_id_t *, gss_cred_id_t, gss_buffer_t, gss_channel_bindings_t, gss_name_t *, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *, gss_cred_id_t *)"
 - "name": "iakerb_gss_init_sec_context"
   "params":
   - "name": "minor_status"
@@ -54,7 +54,7 @@
   - "name": "time_rec"
     "type": "int *"
   "return_type": "int"
-  "signature": "int iakerb_gss_init_sec_context(int * minor_status, struct gss_cred_id_struct * claimant_cred_handle, struct gss_ctx_id_struct ** context_handle, struct gss_name_struct * target_name, struct gss_OID_desc_struct * mech_type, int req_flags, int time_req, struct gss_channel_bindings_struct * input_chan_bindings, struct gss_buffer_desc_struct * input_token, struct gss_OID_desc_struct ** actual_mech_type, struct gss_buffer_desc_struct * output_token, int * ret_flags, int * time_rec)"
+  "signature": "OM_uint32 iakerb_gss_init_sec_context(OM_uint32 *, gss_cred_id_t, gss_ctx_id_t *, gss_name_t, gss_OID, OM_uint32, OM_uint32, gss_channel_bindings_t, gss_buffer_t, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *)"
 - "name": "kg_accept_krb5"
   "params":
   - "name": "minor_status"
@@ -82,7 +82,7 @@
   - "name": "exts"
     "type": "struct _krb5_gss_ctx_ext_rec *"
   "return_type": "int"
-  "signature": "int kg_accept_krb5(int * minor_status, struct gss_ctx_id_struct ** context_handle, struct gss_cred_id_struct * verifier_cred_handle, struct gss_buffer_desc_struct * input_token, struct gss_channel_bindings_struct * input_chan_bindings, struct gss_name_struct ** src_name, struct gss_OID_desc_struct ** mech_type, struct gss_buffer_desc_struct * output_token, int * ret_flags, int * time_rec, struct gss_cred_id_struct ** delegated_cred_handle, struct _krb5_gss_ctx_ext_rec * exts)"
+  "signature": "OM_uint32 kg_accept_krb5(OM_uint32 *, gss_ctx_id_t *, gss_cred_id_t, gss_buffer_t, gss_channel_bindings_t, gss_name_t *, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *, gss_cred_id_t *, krb5_gss_ctx_ext_t)"
 - "name": "krb5_gss_init_sec_context"
   "params":
   - "name": "minor_status"
@@ -112,7 +112,7 @@
   - "name": "time_rec"
     "type": "int *"
   "return_type": "int"
-  "signature": "int krb5_gss_init_sec_context(int * minor_status, struct gss_cred_id_struct * claimant_cred_handle, struct gss_ctx_id_struct ** context_handle, struct gss_name_struct * target_name, struct gss_OID_desc_struct * mech_type, int req_flags, int time_req, struct gss_channel_bindings_struct * input_chan_bindings, struct gss_buffer_desc_struct * input_token, struct gss_OID_desc_struct ** actual_mech_type, struct gss_buffer_desc_struct * output_token, int * ret_flags, int * time_rec)"
+  "signature": "OM_uint32 krb5_gss_init_sec_context(OM_uint32 *, gss_cred_id_t, gss_ctx_id_t *, gss_name_t, gss_OID, OM_uint32, OM_uint32, gss_channel_bindings_t, gss_buffer_t, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *)"
 - "name": "krb5_gss_init_sec_context_ext"
   "params":
   - "name": "minor_status"
@@ -144,7 +144,7 @@
   - "name": "exts"
     "type": "struct _krb5_gss_ctx_ext_rec *"
   "return_type": "int"
-  "signature": "int krb5_gss_init_sec_context_ext(int * minor_status, struct gss_cred_id_struct * claimant_cred_handle, struct gss_ctx_id_struct ** context_handle, struct gss_name_struct * target_name, struct gss_OID_desc_struct * mech_type, int req_flags, int time_req, struct gss_channel_bindings_struct * input_chan_bindings, struct gss_buffer_desc_struct * input_token, struct gss_OID_desc_struct ** actual_mech_type, struct gss_buffer_desc_struct * output_token, int * ret_flags, int * time_rec, struct _krb5_gss_ctx_ext_rec * exts)"
+  "signature": "OM_uint32 krb5_gss_init_sec_context_ext(OM_uint32 *, gss_cred_id_t, gss_ctx_id_t *, gss_name_t, gss_OID, OM_uint32, OM_uint32, gss_channel_bindings_t, gss_buffer_t, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *, krb5_gss_ctx_ext_t)"
 "language": "c"
 "project": "krb5"
 "target_name": "Fuzz_profile"

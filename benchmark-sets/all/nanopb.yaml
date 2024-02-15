@@ -10,7 +10,7 @@
   - "name": "flags"
     "type": "int"
   "return_type": "bool"
-  "signature": "bool pb_encode_ex(struct pb_ostream_s * stream, struct pb_msgdesc_s * fields, char * src_struct, int flags)"
+  "signature": "_Bool pb_encode_ex(pb_ostream_t *, const pb_msgdesc_t *, const void *, unsigned int)"
 - "name": "pb_get_encoded_size"
   "params":
   - "name": "size"
@@ -20,7 +20,7 @@
   - "name": "src_struct"
     "type": "char *"
   "return_type": "bool"
-  "signature": "bool pb_get_encoded_size(size_t * size, struct pb_msgdesc_s * fields, char * src_struct)"
+  "signature": "_Bool pb_get_encoded_size(size_t *, const pb_msgdesc_t *, const void *)"
 "language": "c++"
 "project": "nanopb"
 "target_name": "fuzztest"

@@ -6,7 +6,7 @@
   - "name": "ctx"
     "type": "struct DisasContext *"
   "return_type": "int"
-  "signature": "int decode_nanomips_opc(struct CPUMIPSState * env, struct DisasContext * ctx)"
+  "signature": "int decode_nanomips_opc(CPUMIPSState *, DisasContext *)"
 - "name": "decode_nanomips_32_48_opc"
   "params":
   - "name": "env"
@@ -14,7 +14,7 @@
   - "name": "ctx"
     "type": "struct DisasContext *"
   "return_type": "int"
-  "signature": "int decode_nanomips_32_48_opc(struct CPUMIPSState * env, struct DisasContext * ctx)"
+  "signature": "int decode_nanomips_32_48_opc(CPUMIPSState *, DisasContext *)"
 - "name": "decode_micromips_opc"
   "params":
   - "name": "env"
@@ -22,7 +22,7 @@
   - "name": "ctx"
     "type": "struct DisasContext *"
   "return_type": "int"
-  "signature": "int decode_micromips_opc(struct CPUMIPSState * env, struct DisasContext * ctx)"
+  "signature": "int decode_micromips_opc(CPUMIPSState *, DisasContext *)"
 - "name": "decode_micromips32_opc"
   "params":
   - "name": "env"
@@ -30,7 +30,7 @@
   - "name": "ctx"
     "type": "struct DisasContext *"
   "return_type": "void"
-  "signature": "void decode_micromips32_opc(struct CPUMIPSState * env, struct DisasContext * ctx)"
+  "signature": "void decode_micromips32_opc(CPUMIPSState *, DisasContext *)"
 - "name": "tricore_tr_translate_insn"
   "params":
   - "name": "dcbase"
@@ -38,7 +38,7 @@
   - "name": "cpu"
     "type": "struct CPUState *"
   "return_type": "void"
-  "signature": "void tricore_tr_translate_insn(struct DisasContextBase * dcbase, struct CPUState * cpu)"
+  "signature": "void tricore_tr_translate_insn(DisasContextBase *, CPUState *)"
 "language": "c++"
 "project": "unicorn"
 "target_name": "fuzz_emu_m68k_be"

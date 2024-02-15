@@ -10,13 +10,13 @@
   - "name": "boundaryBBox"
     "type": "struct BBox *"
   "return_type": "bool"
-  "signature": "bool cellBoundaryInsidePolygon(struct GeoPolygon * geoPolygon, struct BBox * bboxes, struct CellBoundary * boundary, struct BBox * boundaryBBox)"
+  "signature": "_Bool cellBoundaryInsidePolygon(const GeoPolygon *, const BBox *, const CellBoundary *, const BBox *)"
 - "name": "iterStepRes"
   "params":
   - "name": "itR"
     "type": "struct IterCellsResolution *"
   "return_type": "void"
-  "signature": "void iterStepRes(struct IterCellsResolution * itR)"
+  "signature": "void iterStepRes(IterCellsResolution *)"
 - "name": "cellBoundaryCrossesPolygon"
   "params":
   - "name": "geoPolygon"
@@ -28,7 +28,7 @@
   - "name": "boundaryBBox"
     "type": "struct BBox *"
   "return_type": "bool"
-  "signature": "bool cellBoundaryCrossesPolygon(struct GeoPolygon * geoPolygon, struct BBox * bboxes, struct CellBoundary * boundary, struct BBox * boundaryBBox)"
+  "signature": "_Bool cellBoundaryCrossesPolygon(const GeoPolygon *, const BBox *, const CellBoundary *, const BBox *)"
 - "name": "cellBoundaryCrossesGeoLoop"
   "params":
   - "name": "geoloop"
@@ -40,7 +40,7 @@
   - "name": "boundaryBBox"
     "type": "struct BBox *"
   "return_type": "bool"
-  "signature": "bool cellBoundaryCrossesGeoLoop(struct GeoLoop * geoloop, struct BBox * loopBBox, struct CellBoundary * boundary, struct BBox * boundaryBBox)"
+  "signature": "_Bool cellBoundaryCrossesGeoLoop(const GeoLoop *, const BBox *, const CellBoundary *, const BBox *)"
 - "name": "iterInitRes"
   "params":
   - "name": "res"
@@ -48,7 +48,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void iterInitRes(struct IterCellsResolution * res, int )"
+  "signature": "IterCellsResolution iterInitRes(int)"
 "language": "c"
 "project": "h3"
 "target_name": "fuzzerResolutions"

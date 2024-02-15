@@ -8,7 +8,7 @@
   - "name": "table"
     "type": "struct ck_hash_table_s *"
   "return_type": "int"
-  "signature": "int ck_double_hash_insert(double key, char * value, struct ck_hash_table_s * table)"
+  "signature": "int ck_double_hash_insert(double, const void *, ck_hash_table_t *)"
 - "name": "ck_float_hash_insert"
   "params":
   - "name": "key"
@@ -18,7 +18,7 @@
   - "name": "table"
     "type": "struct ck_hash_table_s *"
   "return_type": "int"
-  "signature": "int ck_float_hash_insert(float key, char * value, struct ck_hash_table_s * table)"
+  "signature": "int ck_float_hash_insert(float, const void *, ck_hash_table_t *)"
 - "name": "readstat_value_is_missing"
   "params":
   - "name": "value"
@@ -28,7 +28,7 @@
   - "name": ""
     "type": "struct readstat_variable_s *"
   "return_type": "int"
-  "signature": "int readstat_value_is_missing(size_t value, size_t variable, struct readstat_variable_s * )"
+  "signature": "int readstat_value_is_missing(readstat_value_t, readstat_variable_t *)"
 - "name": "readstat_value_is_defined_missing"
   "params":
   - "name": "value"
@@ -38,7 +38,7 @@
   - "name": ""
     "type": "struct readstat_variable_s *"
   "return_type": "int"
-  "signature": "int readstat_value_is_defined_missing(size_t value, size_t variable, struct readstat_variable_s * )"
+  "signature": "int readstat_value_is_defined_missing(readstat_value_t, readstat_variable_t *)"
 - "name": "ck_double_hash_lookup"
   "params":
   - "name": "key"
@@ -46,7 +46,7 @@
   - "name": "table"
     "type": "struct ck_hash_table_s *"
   "return_type": "char *"
-  "signature": "char * ck_double_hash_lookup(double key, struct ck_hash_table_s * table)"
+  "signature": "const void * ck_double_hash_lookup(double, ck_hash_table_t *)"
 "language": "c++"
 "project": "readstat"
 "target_name": "fuzz_grammar_sav_date"

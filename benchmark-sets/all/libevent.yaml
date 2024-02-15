@@ -6,7 +6,7 @@
   - "name": ""
     "type": "short"
   "return_type": "struct evhttp *"
-  "signature": "struct evhttp * evhttp_start(char * , short )"
+  "signature": "evhttp * evhttp_start(const char *, uint16_t)"
 - "name": "evhttp_bind_socket"
   "params":
   - "name": ""
@@ -16,7 +16,7 @@
   - "name": ""
     "type": "short"
   "return_type": "int"
-  "signature": "int evhttp_bind_socket(struct evhttp * , char * , short )"
+  "signature": "int evhttp_bind_socket(evhttp *, const char *, uint16_t)"
 - "name": "evhttp_bind_socket_with_handle"
   "params":
   - "name": ""
@@ -26,7 +26,7 @@
   - "name": ""
     "type": "short"
   "return_type": "struct evhttp_bound_socket *"
-  "signature": "struct evhttp_bound_socket * evhttp_bind_socket_with_handle(struct evhttp * , char * , short )"
+  "signature": "evhttp_bound_socket * evhttp_bind_socket_with_handle(evhttp *, const char *, uint16_t)"
 - "name": "evhttp_accept_socket"
   "params":
   - "name": ""
@@ -34,7 +34,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "int evhttp_accept_socket(struct evhttp * , int )"
+  "signature": "int evhttp_accept_socket(evhttp *, int)"
 - "name": "evhttp_accept_socket_with_handle"
   "params":
   - "name": ""
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "int"
   "return_type": "struct evhttp_bound_socket *"
-  "signature": "struct evhttp_bound_socket * evhttp_accept_socket_with_handle(struct evhttp * , int )"
+  "signature": "evhttp_bound_socket * evhttp_accept_socket_with_handle(evhttp *, int)"
 "language": "c++"
 "project": "libevent"
 "target_name": "dns_config_fuzzer"

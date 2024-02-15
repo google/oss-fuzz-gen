@@ -10,7 +10,7 @@
   - "name": ""
     "type": "struct wabt::WastParseOptions *"
   "return_type": "int"
-  "signature": "wabt::ParseWastScript(wabt::WastLexer*, std::__1::unique_ptr<wabt::Script, std::__1::default_delete<wabt::Script> >*, std::__1::vector<wabt::Error, std::__1::allocator<wabt::Error> >*, wabt::WastParseOptions*)"
+  "signature": "size_t size(const TokenQueue *)"
 - "name": "_ZN4wabt10WastParser11ParseScriptEPNSt3__110unique_ptrINS_6ScriptENS1_14default_deleteIS3_EEEE"
   "params":
   - "name": ""
@@ -18,7 +18,7 @@
   - "name": ""
     "type": "std::unique_ptr *"
   "return_type": "int"
-  "signature": "wabt::WastParser::ParseScript(std::__1::unique_ptr<wabt::Script, std::__1::default_delete<wabt::Script> >*)"
+  "signature": "bool ParseAlignOpt(WastParser *, Address *)"
 - "name": "_ZN4wabt10WastParser16ParseCommandListEPNS_6ScriptEPNSt3__16vectorINS3_10unique_ptrINS_7CommandENS3_14default_deleteIS6_EEEENS3_9allocatorIS9_EEEE"
   "params":
   - "name": ""
@@ -28,7 +28,7 @@
   - "name": ""
     "type": "std::vector *"
   "return_type": "int"
-  "signature": "wabt::WastParser::ParseCommandList(wabt::Script*, std::__1::vector<std::__1::unique_ptr<wabt::Command, std::__1::default_delete<wabt::Command> >, std::__1::allocator<std::__1::unique_ptr<wabt::Command, std::__1::default_delete<wabt::Command> > > >*)"
+  "signature": "bool PeekIsCustom(WastParser *)"
 - "name": "_ZN4wabt10WastParser12ParseCommandEPNS_6ScriptEPNSt3__110unique_ptrINS_7CommandENS3_14default_deleteIS5_EEEE"
   "params":
   - "name": ""
@@ -38,7 +38,7 @@
   - "name": ""
     "type": "std::unique_ptr *"
   "return_type": "int"
-  "signature": "wabt::WastParser::ParseCommand(wabt::Script*, std::__1::unique_ptr<wabt::Command, std::__1::default_delete<wabt::Command> >*)"
+  "signature": "bool PeekIsCustom(WastParser *)"
 - "name": "_ZN4wabt10WastParser22ParseAssertTrapCommandEPNSt3__110unique_ptrINS_7CommandENS1_14default_deleteIS3_EEEE"
   "params":
   - "name": ""
@@ -46,7 +46,7 @@
   - "name": ""
     "type": "std::unique_ptr *"
   "return_type": "int"
-  "signature": "wabt::WastParser::ParseAssertTrapCommand(std::__1::unique_ptr<wabt::Command, std::__1::default_delete<wabt::Command> >*)"
+  "signature": "bool PeekIsCustom(WastParser *)"
 "language": "c++"
 "project": "wabt"
 "target_name": "wasm2wat-fuzz"

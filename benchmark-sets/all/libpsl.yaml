@@ -14,7 +14,7 @@
   - "name": "pErrorCode"
     "type": "int *"
   "return_type": "int"
-  "signature": "int u_strToUpper_59(short * dest, int destCapacity, short * src, int srcLength, char * locale, int * pErrorCode)"
+  "signature": "int32_t u_strToUpper_59(UChar *, int32_t, const UChar *, int32_t, const char *, UErrorCode *)"
 - "name": "uloc_toLanguageTag_59"
   "params":
   - "name": "localeID"
@@ -28,7 +28,7 @@
   - "name": "status"
     "type": "int *"
   "return_type": "int"
-  "signature": "int uloc_toLanguageTag_59(char * localeID, char * langtag, int langtagCapacity, char strict, int * status)"
+  "signature": "int32_t uloc_toLanguageTag_59(const char *, char *, int32_t, UBool, UErrorCode *)"
 - "name": "_ZN6icu_597CaseMap7toUpperEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode"
   "params":
   - "name": "locale"
@@ -48,7 +48,7 @@
   - "name": "errorCode"
     "type": "int *"
   "return_type": "int"
-  "signature": "icu_59::CaseMap::toUpper(char const*, unsigned int, char16_t const*, int, char16_t*, int, icu_59::Edits*, UErrorCode&)"
+  "signature": "int32_t toUpper(const char *, uint32_t, const UChar *, int32_t, UChar *, int32_t, Edits *, UErrorCode)"
 - "name": "_ZN6icu_597CaseMap7toLowerEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode"
   "params":
   - "name": "locale"
@@ -68,7 +68,7 @@
   - "name": "errorCode"
     "type": "int *"
   "return_type": "int"
-  "signature": "icu_59::CaseMap::toLower(char const*, unsigned int, char16_t const*, int, char16_t*, int, icu_59::Edits*, UErrorCode&)"
+  "signature": "int32_t toLower(const char *, uint32_t, const UChar *, int32_t, UChar *, int32_t, Edits *, UErrorCode)"
 - "name": "_ZL28_appendKeywordsToLanguageTagPKcPciaaP10UErrorCode"
   "params":
   - "name": "localeID"
@@ -84,8 +84,8 @@
   - "name": "status"
     "type": "int *"
   "return_type": "int"
-  "signature": "_appendKeywordsToLanguageTag(char const*, char*, int, signed char, signed char, UErrorCode*)"
+  "signature": "int32_t _appendKeywordsToLanguageTag(const char *, char *, int32_t, UBool, UBool, UErrorCode *)"
 "language": "c++"
 "project": "libpsl"
-"target_name": "libpsl_fuzzer"
+"target_name": "libpsl_idn_fuzzer"
 "target_path": "/src/libpsl/fuzz/libpsl_fuzzer.c"

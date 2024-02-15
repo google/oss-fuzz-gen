@@ -8,7 +8,7 @@
   - "name": "word"
     "type": "char *"
   "return_type": "int"
-  "signature": "int Hunspell_suggest(struct Hunhandle * pHunspell, char *** slst, char * word)"
+  "signature": "int Hunspell_suggest(Hunhandle *, char ***, const char *)"
 - "name": "_ZN8Hunspell7suggestEPPPcPKc"
   "params":
   - "name": "this"
@@ -18,7 +18,7 @@
   - "name": "word"
     "type": "char *"
   "return_type": "int"
-  "signature": "Hunspell::suggest(char***, char const*)"
+  "signature": "int Hunspell::suggest(char ***, const char *)"
 - "name": "_ZN12HunspellImpl7suggestEPPPcPKc"
   "params":
   - "name": "this"
@@ -28,7 +28,7 @@
   - "name": "word"
     "type": "char *"
   "return_type": "int"
-  "signature": "HunspellImpl::suggest(char***, char const*)"
+  "signature": "int HunspellImpl::suggest(char ***, const char *)"
 - "name": "Hunspell_generate"
   "params":
   - "name": "pHunspell"
@@ -40,7 +40,7 @@
   - "name": "pattern"
     "type": "char *"
   "return_type": "int"
-  "signature": "int Hunspell_generate(struct Hunhandle * pHunspell, char *** slst, char * word, char * pattern)"
+  "signature": "int Hunspell_generate(Hunhandle *, char ***, const char *, const char *)"
 - "name": "_ZN8Hunspell8generateEPPPcPKcS4_"
   "params":
   - "name": "this"
@@ -52,7 +52,7 @@
   - "name": "pattern"
     "type": "char *"
   "return_type": "int"
-  "signature": "Hunspell::generate(char***, char const*, char const*)"
+  "signature": "int Hunspell::generate(char ***, const char *, const char *)"
 "language": "c++"
 "project": "hunspell"
 "target_name": "fuzzer"

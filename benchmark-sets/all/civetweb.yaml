@@ -8,7 +8,7 @@
   - "name": "mime_type"
     "type": "char *"
   "return_type": "void"
-  "signature": "void mg_send_mime_file(struct mg_connection * conn, char * path, char * mime_type)"
+  "signature": "void mg_send_mime_file(mg_connection *, const char *, const char *)"
 - "name": "mg_send_file"
   "params":
   - "name": "conn"
@@ -16,7 +16,7 @@
   - "name": "path"
     "type": "char *"
   "return_type": "void"
-  "signature": "void mg_send_file(struct mg_connection * conn, char * path)"
+  "signature": "void mg_send_file(mg_connection *, const char *)"
 - "name": "mg_send_mime_file2"
   "params":
   - "name": "conn"
@@ -28,7 +28,7 @@
   - "name": "additional_headers"
     "type": "char *"
   "return_type": "void"
-  "signature": "void mg_send_mime_file2(struct mg_connection * conn, char * path, char * mime_type, char * additional_headers)"
+  "signature": "void mg_send_mime_file2(mg_connection *, const char *, const char *, const char *)"
 - "name": "mg_send_file_body"
   "params":
   - "name": "conn"
@@ -36,7 +36,7 @@
   - "name": "path"
     "type": "char *"
   "return_type": "int"
-  "signature": "int mg_send_file_body(struct mg_connection * conn, char * path)"
+  "signature": "int mg_send_file_body(mg_connection *, const char *)"
 - "name": "mg_download"
   "params":
   - "name": "host"
@@ -52,8 +52,8 @@
   - "name": "fmt"
     "type": "char *"
   "return_type": "struct mg_connection *"
-  "signature": "struct mg_connection * mg_download(char * host, int port, int use_ssl, char * ebuf, size_t ebuf_len, char * fmt)"
+  "signature": "mg_connection * mg_download(const char *, int, int, char *, size_t, const char *, void)"
 "language": "c"
 "project": "civetweb"
-"target_name": "civetweb_fuzz3"
+"target_name": "civetweb_fuzz1"
 "target_path": "/src/civetweb/fuzztest/fuzzmain.c"

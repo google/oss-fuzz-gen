@@ -10,7 +10,7 @@
   - "name": "how"
     "type": "int"
   "return_type": "void"
-  "signature": "void VSB_quote(struct vsb * s, char * v, int len, int how)"
+  "signature": "void VSB_quote(vsb *, const void *, int, int)"
 - "name": "VSB_quote_pfx"
   "params":
   - "name": "s"
@@ -24,7 +24,7 @@
   - "name": "how"
     "type": "int"
   "return_type": "void"
-  "signature": "void VSB_quote_pfx(struct vsb * s, char * pfx, char * v, int len, int how)"
+  "signature": "void VSB_quote_pfx(vsb *, const char *, const void *, int, int)"
 - "name": "WS_Panic"
   "params":
   - "name": "vsb"
@@ -32,7 +32,7 @@
   - "name": "ws"
     "type": "struct ws *"
   "return_type": "void"
-  "signature": "void WS_Panic(struct vsb * vsb, struct ws * ws)"
+  "signature": "void WS_Panic(vsb *, const ws *)"
 - "name": "ws_emu_panic"
   "params":
   - "name": "vsb"
@@ -40,7 +40,7 @@
   - "name": "ws"
     "type": "struct ws *"
   "return_type": "void"
-  "signature": "void ws_emu_panic(struct vsb * vsb, struct ws * ws)"
+  "signature": "void ws_emu_panic(vsb *, const ws *)"
 - "name": "WS_ReqPipeline"
   "params":
   - "name": "ws"
@@ -50,7 +50,7 @@
   - "name": "e"
     "type": "char *"
   "return_type": "int"
-  "signature": "int WS_ReqPipeline(struct ws * ws, char * b, char * e)"
+  "signature": "unsigned int WS_ReqPipeline(ws *, const void *, const void *)"
 "language": "c"
 "project": "varnish"
 "target_name": "esi_parse_fuzzer"

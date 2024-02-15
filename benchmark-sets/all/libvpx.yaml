@@ -8,7 +8,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "char *"
-  "signature": "char * decode_tiles_row_wise_mt(struct VP9Decoder * , char * , char * )"
+  "signature": "const uint8_t * decode_tiles_row_wise_mt(VP9Decoder *, const uint8_t *, const uint8_t *)"
 - "name": "row_decode_worker_hook"
   "params":
   - "name": ""
@@ -16,7 +16,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "int"
-  "signature": "int row_decode_worker_hook(char * , char * )"
+  "signature": "int row_decode_worker_hook(void *, void *)"
 - "name": "parse_tile_row"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "char **"
   "return_type": "void"
-  "signature": "void parse_tile_row(struct TileWorkerData * , struct VP9Decoder * , int , int , char ** )"
+  "signature": "void parse_tile_row(TileWorkerData *, VP9Decoder *, int, int, uint8_t **)"
 - "name": "recon_tile_row"
   "params":
   - "name": ""
@@ -46,7 +46,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void recon_tile_row(struct TileWorkerData * , struct VP9Decoder * , int , int , struct VP9LfSyncData * , int )"
+  "signature": "void recon_tile_row(TileWorkerData *, VP9Decoder *, int, int, VP9LfSync *, int)"
 - "name": "parse_block"
   "params":
   - "name": ""
@@ -64,7 +64,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void parse_block(struct TileWorkerData * , struct VP9Decoder * , int , int , char , int , int )"
+  "signature": "void parse_block(TileWorkerData *, const VP9Decoder *, int, int, BLOCK_SIZE, int, int)"
 "language": "c++"
 "project": "libvpx"
 "target_name": "vpx_dec_fuzzer_vp8"

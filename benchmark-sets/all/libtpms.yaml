@@ -16,7 +16,7 @@
   - "name": "transportInternal"
     "type": "struct tdTPM_TRANSPORT_INTERNAL *"
   "return_type": "int"
-  "signature": "int TPM_Process_DAAJoin(struct tdTPM_STATE * tpm_state, struct tdTPM_STORE_BUFFER * response, short tag, int paramSize, int ordinal, char * command, struct tdTPM_TRANSPORT_INTERNAL * transportInternal)"
+  "signature": "TPM_RESULT TPM_Process_DAAJoin(tpm_state_t *, TPM_STORE_BUFFER *, TPM_TAG, uint32_t, TPM_COMMAND_CODE, unsigned char *, TPM_TRANSPORT_INTERNAL *)"
 - "name": "TPM2_ValidateState"
   "params":
   - "name": "st"
@@ -24,7 +24,7 @@
   - "name": "flags"
     "type": "int"
   "return_type": "int"
-  "signature": "int TPM2_ValidateState(int st, int flags)"
+  "signature": "TPM_RESULT TPM2_ValidateState(TPMLIB_StateType, unsigned int)"
 - "name": "TPM_Process_DAASign"
   "params":
   - "name": "tpm_state"
@@ -42,7 +42,7 @@
   - "name": "transportInternal"
     "type": "struct tdTPM_TRANSPORT_INTERNAL *"
   "return_type": "int"
-  "signature": "int TPM_Process_DAASign(struct tdTPM_STATE * tpm_state, struct tdTPM_STORE_BUFFER * response, short tag, int paramSize, int ordinal, char * command, struct tdTPM_TRANSPORT_INTERNAL * transportInternal)"
+  "signature": "TPM_RESULT TPM_Process_DAASign(tpm_state_t *, TPM_STORE_BUFFER *, TPM_TAG, uint32_t, TPM_COMMAND_CODE, unsigned char *, TPM_TRANSPORT_INTERNAL *)"
 - "name": "TPM_Process_GetCapabilitySigned"
   "params":
   - "name": "tpm_state"
@@ -60,11 +60,11 @@
   - "name": "transportInternal"
     "type": "struct tdTPM_TRANSPORT_INTERNAL *"
   "return_type": "int"
-  "signature": "int TPM_Process_GetCapabilitySigned(struct tdTPM_STATE * tpm_state, struct tdTPM_STORE_BUFFER * response, short tag, int paramSize, int ordinal, char * command, struct tdTPM_TRANSPORT_INTERNAL * transportInternal)"
+  "signature": "TPM_RESULT TPM_Process_GetCapabilitySigned(tpm_state_t *, TPM_STORE_BUFFER *, TPM_TAG, uint32_t, TPM_COMMAND_CODE, unsigned char *, TPM_TRANSPORT_INTERNAL *)"
 - "name": "TPM12_MainInit"
   "params": []
   "return_type": "int"
-  "signature": "int TPM12_MainInit()"
+  "signature": "TPM_RESULT TPM12_MainInit()"
 "language": "c++"
 "project": "libtpms"
 "target_name": "fuzz-main"

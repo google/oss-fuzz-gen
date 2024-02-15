@@ -16,7 +16,7 @@
   - "name": "async_id"
     "type": "int *"
   "return_type": "int"
-  "signature": "int ub_resolve_async(struct ub_ctx * ctx, char * name, int rrtype, int rrclass, char * mydata, func_type * callback, int * async_id)"
+  "signature": "int ub_resolve_async(ub_ctx *, const char *, int, int, void *, ub_callback_type, int *)"
 - "name": "ub_resolve"
   "params":
   - "name": "ctx"
@@ -30,7 +30,7 @@
   - "name": "result"
     "type": "struct ub_result **"
   "return_type": "int"
-  "signature": "int ub_resolve(struct ub_ctx * ctx, char * name, int rrtype, int rrclass, struct ub_result ** result)"
+  "signature": "int ub_resolve(ub_ctx *, const char *, int, int, ub_result **)"
 - "name": "ub_resolve_event"
   "params":
   - "name": "ctx"
@@ -48,7 +48,7 @@
   - "name": "async_id"
     "type": "int *"
   "return_type": "int"
-  "signature": "int ub_resolve_event(struct ub_ctx * ctx, char * name, int rrtype, int rrclass, char * mydata, func_type * callback, int * async_id)"
+  "signature": "int ub_resolve_event(ub_ctx *, const char *, int, int, void *, ub_event_callback_type, int *)"
 - "name": "auth_zones_notify"
   "params":
   - "name": "az"
@@ -72,7 +72,7 @@
   - "name": "refused"
     "type": "int *"
   "return_type": "int"
-  "signature": "int auth_zones_notify(struct auth_zones * az, struct module_env * env, char * nm, size_t nmlen, short dclass, struct sockaddr_storage * addr, int addrlen, int has_serial, int serial, int * refused)"
+  "signature": "int auth_zones_notify(auth_zones *, module_env *, uint8_t *, size_t, uint16_t, sockaddr_storage *, socklen_t, int, uint32_t, int *)"
 - "name": "auth_zones_startprobesequence"
   "params":
   - "name": "az"
@@ -86,7 +86,7 @@
   - "name": "dclass"
     "type": "short"
   "return_type": "int"
-  "signature": "int auth_zones_startprobesequence(struct auth_zones * az, struct module_env * env, char * nm, size_t nmlen, short dclass)"
+  "signature": "int auth_zones_startprobesequence(auth_zones *, module_env *, uint8_t *, size_t, uint16_t)"
 "language": "c"
 "project": "unbound"
 "target_name": "fuzz_2_fuzzer"

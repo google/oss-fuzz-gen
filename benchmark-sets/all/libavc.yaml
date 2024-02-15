@@ -24,13 +24,13 @@
   - "name": "u4_predictd_mode"
     "type": "int"
   "return_type": "void"
-  "signature": "void isvce_evaluate_intra_4x4_modes(char * pu1_src, char * pu1_ngbr_pels, char * pu1_dst, int src_strd, int dst_strd, int u4_n_avblty, int * u4_intra_mode, int * pu4_sadmin, int u4_valid_intra_modes, int u4_lambda, int u4_predictd_mode)"
+  "signature": "void isvce_evaluate_intra_4x4_modes(UWORD8 *, UWORD8 *, UWORD8 *, UWORD32, UWORD32, WORD32, UWORD32 *, WORD32 *, UWORD32, UWORD32, UWORD32)"
 - "name": "ih264d_parse_end_of_sequence"
   "params":
   - "name": "ps_dec"
     "type": "struct _DecStruct *"
   "return_type": "int"
-  "signature": "int ih264d_parse_end_of_sequence(struct _DecStruct * ps_dec)"
+  "signature": "WORD32 ih264d_parse_end_of_sequence(dec_struct_t *)"
 - "name": "ih264d_free_node_from_dpb"
   "params":
   - "name": "ps_dpb_mgr"
@@ -40,7 +40,7 @@
   - "name": "u1_numRef_frames_for_seq"
     "type": "char"
   "return_type": "int"
-  "signature": "int ih264d_free_node_from_dpb(struct dpb_manager_t * ps_dpb_mgr, int u4_cur_pic_num, char u1_numRef_frames_for_seq)"
+  "signature": "WORD32 ih264d_free_node_from_dpb(dpb_manager_t *, UWORD32, UWORD8)"
 - "name": "isvcd_compute_bs_non_mbaff_medial_lyr"
   "params":
   - "name": "ps_svc_lyr_dec"
@@ -50,7 +50,7 @@
   - "name": "u2_mbxn_mb"
     "type": "short"
   "return_type": "void"
-  "signature": "void isvcd_compute_bs_non_mbaff_medial_lyr(struct _SvcDecLyrStruct * ps_svc_lyr_dec, struct _DecMbInfo * ps_cur_mb_info, short u2_mbxn_mb)"
+  "signature": "void isvcd_compute_bs_non_mbaff_medial_lyr(svc_dec_lyr_struct_t *, dec_mb_info_t *, const UWORD16)"
 - "name": "ih264d_fill_bs_for_mb"
   "params":
   - "name": "ps_cur_mb_params"
@@ -80,7 +80,7 @@
   - "name": "ps_top_add"
     "type": "struct neighbouradd_t *"
   "return_type": "void"
-  "signature": "void ih264d_fill_bs_for_mb(struct deblk_mb_t * ps_cur_mb_params, struct deblk_mb_t * ps_top_mb_params, struct deblk_mb_t * ps_left_mb_params, struct _mv_pred_t * ps_cur_mv_pred, struct _mv_pred_t * ps_top_mv_pred, char * puc_cur_nnz, char * puc_top_nnz, char ** ppv_map_ref_idx_to_poc, int ui_mbAff, int * ui_bs_table, struct _mv_pred_t * ps_leftmost_mv_pred, struct neighbouradd_t * ps_left_addr, struct neighbouradd_t * ps_top_add)"
+  "signature": "void ih264d_fill_bs_for_mb(deblk_mb_t *, deblk_mb_t *, deblk_mb_t *, mv_pred_t *, mv_pred_t *, UWORD8 *, UWORD8 *, void **, UWORD32, UWORD32 *, mv_pred_t *, neighbouradd_t *, neighbouradd_t *)"
 "language": "c++"
 "project": "libavc"
 "target_name": "svc_enc_fuzzer"

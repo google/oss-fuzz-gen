@@ -6,7 +6,7 @@
   - "name": ""
     "type": "struct netif *"
   "return_type": "char"
-  "signature": "char netif_input(struct pbuf * , struct netif * )"
+  "signature": "err_t netif_input(pbuf *, netif *)"
 - "name": "ethernet_input"
   "params":
   - "name": ""
@@ -14,7 +14,7 @@
   - "name": ""
     "type": "struct netif *"
   "return_type": "char"
-  "signature": "char ethernet_input(struct pbuf * , struct netif * )"
+  "signature": "err_t ethernet_input(pbuf *, netif *)"
 - "name": "ip4_input"
   "params":
   - "name": ""
@@ -22,7 +22,7 @@
   - "name": ""
     "type": "struct netif *"
   "return_type": "char"
-  "signature": "char ip4_input(struct pbuf * , struct netif * )"
+  "signature": "err_t ip4_input(pbuf *, netif *)"
 - "name": "tcp_input"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "struct netif *"
   "return_type": "void"
-  "signature": "void tcp_input(struct pbuf * , struct netif * )"
+  "signature": "void tcp_input(pbuf *, netif *)"
 - "name": "httpd_init"
   "params": []
   "return_type": "void"

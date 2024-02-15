@@ -8,13 +8,13 @@
   - "name": ""
     "type": "char *"
   "return_type": "bool"
-  "signature": "handleEDNSClientSubnet(DNSQuestion&, bool&, bool&)"
+  "signature": "bool handleEDNSClientSubnet(DNSQuestion, bool, bool)"
 - "name": "_Z24checkHostnameCorrectnessRK17DNSResourceRecord"
   "params":
   - "name": ""
     "type": "DNSResourceRecord *"
   "return_type": "void"
-  "signature": "checkHostnameCorrectness(DNSResourceRecord const&)"
+  "signature": "void checkHostnameCorrectness(const DNSResourceRecord)"
 - "name": "_Z22handleEDNSClientSubnetRNSt3__16vectorIh14noinit_adaptorINS_9allocatorIhEEEEEmmRbS7_bRKNS_12basic_stringIcNS_11char_traitsIcEENS2_IcEEEE"
   "params":
   - "name": ""
@@ -32,7 +32,7 @@
   - "name": ""
     "type": "std::string *"
   "return_type": "bool"
-  "signature": "handleEDNSClientSubnet(std::__1::vector<unsigned char, noinit_adaptor<std::__1::allocator<unsigned char> > >&, unsigned long, unsigned long, bool&, bool&, bool, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+  "signature": "bool handleEDNSClientSubnet(PacketBuffer, const size_t, const size_t, bool, bool, bool, const string)"
 - "name": "_Z13setEDNSOptionR11DNSQuestiontRKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE"
   "params":
   - "name": ""
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "std::string *"
   "return_type": "bool"
-  "signature": "setEDNSOption(DNSQuestion&, unsigned short, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)"
+  "signature": "bool setEDNSOption(DNSQuestion, uint16_t, const string)"
 - "name": "_ZN16RecordTextReader18xfrSvcParamKeyValsERNSt3__13setI8SvcParamNS0_4lessIS2_EENS0_9allocatorIS2_EEEE"
   "params":
   - "name": ""
@@ -50,7 +50,7 @@
   - "name": ""
     "type": "std::set *"
   "return_type": "void"
-  "signature": "RecordTextReader::xfrSvcParamKeyVals(std::__1::set<SvcParam, std::__1::less<SvcParam>, std::__1::allocator<SvcParam> >&)"
+  "signature": "void xfrSvcParamKeyVals(RecordTextReader *, std::__1::allocator<SvcParam> >)"
 "language": "c++"
 "project": "powerdns"
 "target_name": "standalone_fuzz_target_runner"

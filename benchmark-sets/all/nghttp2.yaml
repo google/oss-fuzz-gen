@@ -4,13 +4,13 @@
   - "name": ""
     "type": "struct nghttp2_session *"
   "return_type": "int"
-  "signature": "int nghttp2_session_recv(struct nghttp2_session * )"
+  "signature": "int nghttp2_session_recv(nghttp2_session *)"
 - "name": "nghttp2_session_send"
   "params":
   - "name": ""
     "type": "struct nghttp2_session *"
   "return_type": "int"
-  "signature": "int nghttp2_session_send(struct nghttp2_session * )"
+  "signature": "int nghttp2_session_send(nghttp2_session *)"
 - "name": "nghttp2_session_upgrade2"
   "params":
   - "name": ""
@@ -24,7 +24,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "int"
-  "signature": "int nghttp2_session_upgrade2(struct nghttp2_session * , char * , size_t , int , char * )"
+  "signature": "int nghttp2_session_upgrade2(nghttp2_session *, const uint8_t *, size_t, int, void *)"
 - "name": "nghttp2_session_upgrade"
   "params":
   - "name": ""
@@ -36,7 +36,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "int"
-  "signature": "int nghttp2_session_upgrade(struct nghttp2_session * , char * , size_t , char * )"
+  "signature": "int nghttp2_session_upgrade(nghttp2_session *, const uint8_t *, size_t, void *)"
 - "name": "nghttp2_session_upgrade_internal"
   "params":
   - "name": ""
@@ -48,7 +48,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "int"
-  "signature": "int nghttp2_session_upgrade_internal(struct nghttp2_session * , char * , size_t , char * )"
+  "signature": "int nghttp2_session_upgrade_internal(nghttp2_session *, const uint8_t *, size_t, void *)"
 "language": "c++"
 "project": "nghttp2"
 "target_name": "nghttp2_fuzzer"

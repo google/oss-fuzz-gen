@@ -6,7 +6,7 @@
   - "name": "av"
     "type": "char **"
   "return_type": "int"
-  "signature": "int xxxmain(int ac, char ** av)"
+  "signature": "int xxxmain(int, char **)"
 - "name": "after_poll"
   "params":
   - "name": "pfd"
@@ -16,13 +16,13 @@
   - "name": "maxfds"
     "type": "int"
   "return_type": "void"
-  "signature": "void after_poll(struct pollfd * pfd, size_t npfd, int maxfds)"
+  "signature": "void after_poll(pollfd *, size_t, u_int)"
 - "name": "handle_conn_read"
   "params":
   - "name": "socknum"
     "type": "int"
   "return_type": "int"
-  "signature": "int handle_conn_read(int socknum)"
+  "signature": "int handle_conn_read(u_int)"
 - "name": "kex_setup"
   "params":
   - "name": "ssh"
@@ -30,7 +30,7 @@
   - "name": "proposal"
     "type": "char **"
   "return_type": "int"
-  "signature": "int kex_setup(struct ssh * ssh, char ** proposal)"
+  "signature": "int kex_setup(ssh *, char **)"
 - "name": "sshkey_check_revoked"
   "params":
   - "name": "key"
@@ -38,7 +38,7 @@
   - "name": "revoked_keys_file"
     "type": "char *"
   "return_type": "int"
-  "signature": "int sshkey_check_revoked(struct sshkey * key, char * revoked_keys_file)"
+  "signature": "int sshkey_check_revoked(sshkey *, const char *)"
 "language": "c++"
 "project": "openssh"
 "target_name": "agent_fuzz"

@@ -8,7 +8,7 @@
   - "name": "pi"
     "type": "struct proto_info *"
   "return_type": "int"
-  "signature": "int proto_tcp_init(struct proto_info * pi)"
+  "signature": "int proto_tcp_init(proto_info *)"
 - "name": "tcp_read_req"
   "params":
   - "name": "con"
@@ -16,7 +16,7 @@
   - "name": "bytes_read"
     "type": "int *"
   "return_type": "int"
-  "signature": "int tcp_read_req(struct tcp_connection * con, int * bytes_read)"
+  "signature": "int tcp_read_req(tcp_connection *, int *)"
 - "name": "tcp_handle_req"
   "params":
   - "name": "req"
@@ -28,7 +28,7 @@
   - "name": "_parallel_handling"
     "type": "int"
   "return_type": "int"
-  "signature": "int tcp_handle_req(struct tcp_req * req, struct tcp_connection * con, int _max_msg_chunks, int _parallel_handling)"
+  "signature": "int tcp_handle_req(tcp_req *, tcp_connection *, int, int)"
 - "name": "w_forward"
   "params":
   - "name": "msg"
@@ -36,7 +36,7 @@
   - "name": "dest"
     "type": "struct proxy_l *"
   "return_type": "int"
-  "signature": "int w_forward(struct sip_msg * msg, struct proxy_l * dest)"
+  "signature": "int w_forward(sip_msg *, proxy_l *)"
 "language": "c"
 "project": "opensips"
 "target_name": "fuzz_core_funcs"

@@ -8,7 +8,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "int wolfSSL_writev(struct WOLFSSL * , std::string_view * , int )"
+  "signature": "int wolfSSL_writev(WOLFSSL *, const iovec *, int)"
 - "name": "wolfSSL_send"
   "params":
   - "name": ""
@@ -20,7 +20,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "int wolfSSL_send(struct WOLFSSL * , char * , int , int )"
+  "signature": "int wolfSSL_send(WOLFSSL *, const void *, int, int)"
 - "name": "wolfSSL_write"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "int wolfSSL_write(struct WOLFSSL * , char * , int )"
+  "signature": "int wolfSSL_write(WOLFSSL *, const void *, int)"
 - "name": "SendData"
   "params":
   - "name": ""
@@ -40,7 +40,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "int SendData(struct WOLFSSL * , char * , int )"
+  "signature": "int SendData(WOLFSSL *, const void *, int)"
 - "name": "wolfSSL_recv"
   "params":
   - "name": ""
@@ -52,7 +52,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "int wolfSSL_recv(struct WOLFSSL * , char * , int , int )"
+  "signature": "int wolfSSL_recv(WOLFSSL *, void *, int, int)"
 "language": "c++"
 "project": "libecc"
 "target_name": "cryptofuzz-libecc"

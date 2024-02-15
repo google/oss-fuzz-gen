@@ -8,7 +8,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "void"
-  "signature": "fuzzing::types::Container<unsigned char, false, false> fuzzing::datasource::Base::Get<fuzzing::types::Container<unsigned char, false, false> >(unsigned long)"
+  "signature": "Data<> Base::>(const uint64_t)"
 - "name": "_ZN7fuzzing10datasource4Base3GetINS_5types9ContainerIcLb1ELb0EEEEET_m"
   "params":
   - "name": "this"
@@ -18,7 +18,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "void"
-  "signature": "fuzzing::types::Container<char, true, false> fuzzing::datasource::Base::Get<fuzzing::types::Container<char, true, false> >(unsigned long)"
+  "signature": "String<> Base::>(const uint64_t)"
 - "name": "oc_state_frag_recon_c"
   "params":
   - "name": "_state"
@@ -34,7 +34,7 @@
   - "name": "_dc_quant"
     "type": "short"
   "return_type": "void"
-  "signature": "void oc_state_frag_recon_c(struct oc_theora_state * _state, size_t _fragi, int _pli, short * _dct_coeffs, int _last_zzi, short _dc_quant)"
+  "signature": "void oc_state_frag_recon_c(const oc_theora_state *, ptrdiff_t, int, ogg_int16_t *, int, ogg_uint16_t)"
 - "name": "_ZN7fuzzing10datasource4Base3GetINSt3__16vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEEEET_m"
   "params":
   - "name": "this"
@@ -44,7 +44,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "void"
-  "signature": "std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > fuzzing::datasource::Base::Get<std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >(unsigned long)"
+  "signature": "string Base::>(const uint64_t)"
 - "name": "_ZN7fuzzing10datasource10Datasource3getEmmm"
   "params":
   - "name": "this"
@@ -58,7 +58,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "void"
-  "signature": "fuzzing::datasource::Datasource::get(unsigned long, unsigned long, unsigned long)"
+  "signature": "void Datasource::Datasource(const uint8_t *, const size_t)"
 "language": "c++"
 "project": "libtheora"
 "target_name": "fuzzer-decoder"

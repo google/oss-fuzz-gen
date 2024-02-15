@@ -10,7 +10,7 @@
   - "name": "dest"
     "type": "char *"
   "return_type": "int"
-  "signature": "int modbus_read_input_bits(struct _modbus * ctx, int addr, int nb, char * dest)"
+  "signature": "int modbus_read_input_bits(modbus_t *, int, int, uint8_t *)"
 - "name": "modbus_write_and_read_registers"
   "params":
   - "name": "ctx"
@@ -28,7 +28,7 @@
   - "name": "dest"
     "type": "short *"
   "return_type": "int"
-  "signature": "int modbus_write_and_read_registers(struct _modbus * ctx, int write_addr, int write_nb, short * src, int read_addr, int read_nb, short * dest)"
+  "signature": "int modbus_write_and_read_registers(modbus_t *, int, int, const uint16_t *, int, int, uint16_t *)"
 - "name": "modbus_read_input_registers"
   "params":
   - "name": "ctx"
@@ -40,7 +40,7 @@
   - "name": "dest"
     "type": "short *"
   "return_type": "int"
-  "signature": "int modbus_read_input_registers(struct _modbus * ctx, int addr, int nb, short * dest)"
+  "signature": "int modbus_read_input_registers(modbus_t *, int, int, uint16_t *)"
 - "name": "modbus_write_bits"
   "params":
   - "name": "ctx"
@@ -52,7 +52,7 @@
   - "name": "src"
     "type": "char *"
   "return_type": "int"
-  "signature": "int modbus_write_bits(struct _modbus * ctx, int addr, int nb, char * src)"
+  "signature": "int modbus_write_bits(modbus_t *, int, int, const uint8_t *)"
 - "name": "modbus_report_slave_id"
   "params":
   - "name": "ctx"
@@ -62,7 +62,7 @@
   - "name": "dest"
     "type": "char *"
   "return_type": "int"
-  "signature": "int modbus_report_slave_id(struct _modbus * ctx, int max_dest, char * dest)"
+  "signature": "int modbus_report_slave_id(modbus_t *, int, uint8_t *)"
 "language": "c"
 "project": "libmodbus"
 "target_name": "FuzzClient"
