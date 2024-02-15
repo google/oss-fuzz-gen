@@ -95,7 +95,7 @@ def _get_raw_function_name(function: dict) -> str:
   raw_name = (function.get('raw-function-name') or
               function.get('raw_function_name', ''))
   if not raw_name:
-    logging.warning('No raw function name in function: %s', function)
+    logging.error('No raw function name in function: %s', function)
   return raw_name
 
 
