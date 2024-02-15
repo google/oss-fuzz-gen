@@ -105,7 +105,7 @@ def _get_function_signature_from_api(func_info: dict, project_name: str):
   raw_function_name = _get_raw_function_name(func_info)
 
   function_signature_api = (
-      f'{introspector.INTROSPECTOR_ENDPOINT}/function-signature?')
+      f'{introspector.INTROSPECTOR_ENDPOINT}/function-signature')
   resp = requests.get(function_signature_api,
                       params={
                           'project': project_name,
