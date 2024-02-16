@@ -1,0 +1,25 @@
+name: Build Docker image from main
+
+on:
+  schedule:
+    - cron: '0 1 * * 6'  # Saturday 1 AM.
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag us-central1-docker.pkg.dev/oss-fuzz-base/testing/oss-fuzz-gen:weekly
+    - name: Authenticate to gcloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: '${{ secrets.GCLOUD_CREDENTIAL }}'
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+    - name: Auth to Artifact Registry
+      run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+    - name: Push to Artifact Registry
+      run: docker push us-central1-docker.pkg.dev/oss-fuzz-base/testing/oss-fuzz-gen:weekly
