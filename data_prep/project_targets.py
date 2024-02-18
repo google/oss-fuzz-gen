@@ -19,14 +19,12 @@ for training.
 
 import argparse
 import json
-import logging
 import os
 import re
 import sys
 from multiprocessing.pool import ThreadPool
 from typing import Dict, List
 
-import requests
 from google.cloud import storage
 
 from data_prep import introspector, project_src
@@ -86,40 +84,6 @@ def _match_target_path_content(target_paths: List[str],
   return path_contents
 
 
-# TODO(Jim): Replace the same function in introspector.py with this.
-# TODO(Jim): Pass project name to this function and log it if raw_name is not
-# found. Do the same for similar functions, e.g.,:
-# _get_raw_return_type, _get_arg_names/types, etc.
-def _get_raw_function_name(function: dict) -> str:
-  """Returns the raw function name."""
-  raw_name = (function.get('raw-function-name') or
-              function.get('raw_function_name', ''))
-  if not raw_name:
-    logging.error('No raw function name in function: %s', function)
-  return raw_name
-
-
-# Merge this function into introspector.py, like other APIs.
-def _get_function_signature_from_api(func_info: dict, project_name: str):
-  """Requests function signature from FuzzIntrospector API."""
-  raw_function_name = _get_raw_function_name(func_info)
-
-  function_signature_api = (
-      f'{introspector.INTROSPECTOR_ENDPOINT}/function-signature')
-  resp = requests.get(function_signature_api,
-                      params={
-                          'project': project_name,
-                          'function': raw_function_name
-                      },
-                      timeout=introspector.TIMEOUT)
-  data = resp.json()
-  function = data.get('signature', '')
-  if not function:
-    logging.error('No function signature found from FI for project %s: %s',
-                  project_name, data)
-  return function
-
-
 def _bucket_match_target_content_signatures(
     target_funcs: Dict[str, List[Dict]], fuzz_target_dir: str,
     project_name: str) -> Dict[str, List[str]]:
@@ -156,7 +120,9 @@ def _bucket_match_target_content_signatures(
       target_content_signature_dict[content] = []
 
     signatures = [
-        _get_function_signature_from_api(func_info, project_name)
+        introspector.query_introspector_function_signature(
+            project_name,
+            introspector.get_raw_function_name(func_info, project_name))
         for func_info in functions
     ]
     target_content_signature_dict[content].extend(signatures)
@@ -272,7 +238,9 @@ def _match_target_content_signatures(
       target_content_signature_dict[content] = []
 
     signatures = [
-        _get_function_signature_from_api(func_info, project_name)
+        introspector.query_introspector_function_signature(
+            project_name,
+            introspector.get_raw_function_name(func_info, project_name))
         for func_info in functions
     ]
     target_content_signature_dict[content].extend(signatures)
