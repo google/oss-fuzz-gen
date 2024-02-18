@@ -138,7 +138,7 @@ def query_introspector_function_signature(project: str,
     logging.error(
         f'No signature found from FI for {function_name} in {project}: {data}')
 
-  return data.get('signature', '')
+  return func_sig
 
 
 def get_unreached_functions(project):
@@ -176,7 +176,7 @@ def _get_raw_return_type(function: dict, project: str) -> str:
   """Returns the raw function type."""
   return_type = function.get('return-type') or function.get('return_type', '')
   if not return_type:
-    logging.warning(
+    logging.error(
         f'Missing return type in project: {project}\n'
         f'  raw_function_name: {get_raw_function_name(function, project)}')
   return return_type
@@ -207,7 +207,7 @@ def _get_clean_arg_types(function: dict, project: str) -> list[str]:
   raw_arg_types = (function.get('arg-types') or
                    function.get('function_arguments', []))
   if not raw_arg_types:
-    logging.warning(
+    logging.error(
         f'Missing argument types in project: {project}\n'
         f'  raw_function_name: {get_raw_function_name(function, project)}')
   return [clean_type(arg_type) for arg_type in raw_arg_types]
@@ -218,7 +218,7 @@ def _get_arg_names(function: dict, project: str) -> list[str]:
   arg_names = (function.get('arg-names') or
                function.get('function_argument_names', []))
   if not arg_names:
-    logging.warning(
+    logging.error(
         f'Missing argument names in project: {project}\n'
         f'  raw_function_name: {get_raw_function_name(function, project)}')
   return arg_names
@@ -228,7 +228,7 @@ def get_function_signature(function: dict, project: str) -> str:
   """Returns the function signature."""
   function_signature = function.get('function_signature', '')
   if not function_signature:
-    logging.warning(
+    logging.error(
         f'Missing function signature in project: {project}\n'
         f'  raw_function_name: {get_raw_function_name(function, project)}')
   return function_signature
