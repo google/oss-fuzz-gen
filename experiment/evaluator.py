@@ -205,6 +205,8 @@ class Evaluator:
     # Replace "::" and any character not \w, _, or . with "-".
     valid_docker_tag_name = re.sub(r'::', '-', self.benchmark.id)
     valid_docker_tag_name = re.sub(r'[^\w_.]', '-', valid_docker_tag_name)
+    # Docker fails with tags containing -_ or _-.
+    valid_docker_tag_name = re.sub(r'[-_]{2,}', '-', valid_docker_tag_name)
     generated_oss_fuzz_project = f'{valid_docker_tag_name}-{sample_id}'
     self.create_ossfuzz_project(generated_oss_fuzz_project, target_path)
 
