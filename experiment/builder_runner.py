@@ -274,9 +274,17 @@ class BuilderRunner:
 
     corpus_dir = self.work_dirs.corpus(benchmark_target_name)
     command = [
-        'python3', 'infra/helper.py', 'coverage', '--corpus-dir', corpus_dir,
-        '--fuzz-target', self.benchmark.target_name, '--no-serve', '--port',
-        '0', generated_project
+        'python3',
+        'infra/helper.py',
+        'coverage',
+        '--corpus-dir',
+        corpus_dir,
+        '--fuzz-target',
+        self.benchmark.target_name,
+        '--no-serve',
+        '--port',
+        '',
+        generated_project,
     ]
 
     try:
