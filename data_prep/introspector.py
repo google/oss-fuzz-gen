@@ -40,20 +40,23 @@ INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
 
 
 def _query_introspector(api: str, params: dict, key: str) -> Any:
-  """Queries FuzzIntrospector API and return data specified by |key|, returns None if unable to get the value."""
+  """Queries FuzzIntrospector API and return data specified by |key|,
+  returns None if unable to get the value."""
   resp = requests.get(api, params, timeout=TIMEOUT)
   if not resp.ok:
-    logging.error('Failed to get data from FI\n'
-                  '-----------Response received------------\n'
-                  '%s\n'
-                  '------------End of response-------------',
-                  resp.content.decode("utf-8").strip())
-    return {}
+    logging.error(
+        'Failed to get data from FI\n'
+        '-----------Response received------------\n'
+        '%s\n'
+        '------------End of response-------------',
+        resp.content.decode("utf-8").strip())
+    return None
   data = resp.json()
   value = data.get(key)
   if value:
     return value
   logging.error('No `%s` found from FI for:\n%s\n%s', key, resp.url, data)
+  return None
 
 
 def query_introspector_for_unreached_functions(project: str) -> list[dict]:
@@ -72,7 +75,7 @@ def query_introspector_cfg(project: str) -> dict:
 
 
 def query_introspector_function_source(project: str, func_sig: str) -> str:
-  """Queries FuzzIntrospector API for source code of |func_sig| in |project|."""
+  """Queries FuzzIntrospector API for source code of |func_sig|."""
   return _query_introspector(INTROSPECTOR_SOURCE, {
       'project': project,
       'function_signature': func_sig
@@ -81,7 +84,8 @@ def query_introspector_function_source(project: str, func_sig: str) -> str:
 
 def query_introspector_cross_references(project: str,
                                         func_sig: str) -> list[str]:
-  """Queries FuzzIntrospector API for source code of functions cross-referenced |func_sig| in |project|."""
+  """Queries FuzzIntrospector API for source code of functions
+  cross-referenced |func_sig|."""
   call_sites = _query_introspector(INTROSPECTOR_XREF, {
       'project': project,
       'function_signature': func_sig
@@ -97,7 +101,7 @@ def query_introspector_cross_references(project: str,
 
 
 def query_introspector_type_info(project: str, type_name: str) -> dict:
-  """Queries FuzzIntrospector API for information of |type_name| in |project|."""
+  """Queries FuzzIntrospector API for information of |type_name|."""
   return _query_introspector(INTROSPECTOR_TYPE, {
       'project': project,
       'name': type_name
@@ -106,7 +110,7 @@ def query_introspector_type_info(project: str, type_name: str) -> dict:
 
 def query_introspector_function_signature(project: str,
                                           function_name: str) -> str:
-  """Queries FuzzIntrospector API for signature of |function_name| in |project|."""
+  """Queries FuzzIntrospector API for signature of |function_name|."""
   return _query_introspector(INTROSPECTOR_FUNC_SIG, {
       'project': project,
       'function': function_name
@@ -371,7 +375,7 @@ def get_project_funcs(project_name: str) -> Dict[str, List[Dict]]:
         fuzz_target_funcs[fuzz_target_file] = []
       if _contains_function(fuzz_target_funcs[fuzz_target_file], target_func):
         continue
-      target_func = _postprocess_function(target_func, project_name)
+      _postprocess_function(target_func, project_name)
       fuzz_target_funcs[fuzz_target_file].append(target_func)
 
   # Sort functions in each target file by their complexity.
