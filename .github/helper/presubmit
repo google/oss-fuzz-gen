@@ -9,8 +9,8 @@ export PYRIGHT_PYTHON_FORCE_VERSION=latest
 # Ensure we have the latest code from the repository.
 git fetch origin > /dev/null
 
-# Reformat changed Python code.
-CHANGED_PY=$(git diff origin/main --name-only | grep "\.py$" || echo "")
+# Reformat changed Python code. No need to check uncommitted files.
+CHANGED_PY=$(git diff HEAD origin/main --name-only | grep "\.py$" || echo "")
 for file in $CHANGED_PY; do
     if [ -f "$file" ]; then
         # Ensure the script continues after yapf --diff
