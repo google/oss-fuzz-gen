@@ -361,11 +361,10 @@ def _contains_function(funcs: List[Dict], target_func: Dict):
   return False
 
 
-def _postprocess_function(target_func: dict, project_name: str) -> dict:
+def _postprocess_function(target_func: dict, project_name: str):
   """Post-processes target function."""
   target_func['return-type'] = _get_clean_return_type(target_func, project_name)
   target_func['function-name'] = demangle(target_func['function-name'])
-  return target_func
 
 
 def get_project_funcs(project_name: str) -> Dict[str, List[Dict]]:
