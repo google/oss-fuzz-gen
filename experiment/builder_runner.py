@@ -252,10 +252,10 @@ class BuilderRunner:
                stderr=sp.STDOUT,
                check=True)
       except sp.CalledProcessError:
-        print(f'Failed to build {generated_project} with {sanitizer}')
+        print(f'Failed to run {generated_project} with {sanitizer}')
         return False
 
-    print(f'Successfully built {generated_project} with {sanitizer}')
+    print(f'Successfully run {generated_project} with {sanitizer}')
     return True
 
   def get_coverage_local(
@@ -274,9 +274,17 @@ class BuilderRunner:
 
     corpus_dir = self.work_dirs.corpus(benchmark_target_name)
     command = [
-        'python3', 'infra/helper.py', 'coverage', '--corpus-dir', corpus_dir,
-        '--fuzz-target', self.benchmark.target_name, '--no-serve', '--port',
-        '0', generated_project
+        'python3',
+        'infra/helper.py',
+        'coverage',
+        '--corpus-dir',
+        corpus_dir,
+        '--fuzz-target',
+        self.benchmark.target_name,
+        '--no-serve',
+        '--port',
+        '',
+        generated_project,
     ]
 
     try:
