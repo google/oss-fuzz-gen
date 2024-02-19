@@ -17,6 +17,15 @@ for file in $CHANGED_PY; do
         yapf --diff "$file" || true
         yapf --parallel --in-place --print-modified "$file"
         isort "$file"
+
+        # Ensure Pylint continues after linting errors.
+        # Ignore long lines with URLs.
+        pylint "$file" \
+            --rcfile="$GIT_ROOT/.pylintrc" \
+            --ignore-long-lines='^\s*(# .*)?<?https?://\S+>?$' \
+            --score=no \
+            --jobs=0 \
+        || true
     fi
 done
 
