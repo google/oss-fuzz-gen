@@ -1,6 +1,9 @@
 #! /bin/bash -eu
 
 GIT_ROOT=$(git rev-parse --show-toplevel)
+
+# Disable shellcheck false warning as it assumes incorrect path of `activate`.
+# shellcheck disable=SC1091
 source "$GIT_ROOT/.venv/bin/activate"
 
 # Always use the latest Pyright.
