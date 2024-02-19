@@ -170,8 +170,9 @@ def _get_raw_return_type(function: dict, project: str) -> str:
   return_type = function.get('return-type') or function.get('return_type', '')
   if not return_type:
     logging.error(
-        f'Missing return type in project: {project}\n'
-        f'  raw_function_name: {get_raw_function_name(function, project)}')
+        'Missing return type in project: %s\n'
+        '  raw_function_name: %s', project,
+        get_raw_function_name(function, project))
   return return_type
 
 
@@ -190,8 +191,8 @@ def get_raw_function_name(function: dict, project: str) -> str:
   raw_name = (function.get('raw-function-name') or
               function.get('raw_function_name', ''))
   if not raw_name:
-    logging.error(
-        f'No raw function name in project: {project} for function: {function}')
+    logging.error('No raw function name in project: %s for function: %s',
+                  project, function)
   return raw_name
 
 
@@ -201,8 +202,9 @@ def _get_clean_arg_types(function: dict, project: str) -> list[str]:
                    function.get('function_arguments', []))
   if not raw_arg_types:
     logging.error(
-        f'Missing argument types in project: {project}\n'
-        f'  raw_function_name: {get_raw_function_name(function, project)}')
+        'Missing argument types in project: %s\n'
+        '  raw_function_name: %s', project,
+        get_raw_function_name(function, project))
   return [clean_type(arg_type) for arg_type in raw_arg_types]
 
 
@@ -212,8 +214,9 @@ def _get_arg_names(function: dict, project: str) -> list[str]:
                function.get('function_argument_names', []))
   if not arg_names:
     logging.error(
-        f'Missing argument names in project: {project}\n'
-        f'  raw_function_name: {get_raw_function_name(function, project)}')
+        'Missing argument names in project: %s\n'
+        '  raw_function_name: %s', project,
+        get_raw_function_name(function, project))
   return arg_names
 
 
@@ -222,8 +225,9 @@ def get_function_signature(function: dict, project: str) -> str:
   function_signature = function.get('function_signature', '')
   if not function_signature:
     logging.error(
-        f'Missing function signature in project: {project}\n'
-        f'  raw_function_name: {get_raw_function_name(function, project)}')
+        'Missing function signature in project: %s\n'
+        '  raw_function_name: ', project,
+        get_raw_function_name(function, project))
   return function_signature
 
 
