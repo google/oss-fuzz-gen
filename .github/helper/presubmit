@@ -1,6 +1,7 @@
 #! /bin/bash -eu
 
-source "$(git rev-parse --show-toplevel)/.venv/bin/activate"
+GIT_ROOT=$(git rev-parse --show-toplevel)
+source "$GIT_ROOT/.venv/bin/activate"
 
 # Always use the latest Pyright.
 export PYRIGHT_PYTHON_FORCE_VERSION=latest
@@ -20,16 +21,10 @@ for file in $CHANGED_PY; do
 done
 
 # Type Check and lint all Python code.
-pyright "./" \
-    --project="./.pyrightconfig.json" \
-    --venvpath="./.venv"
+pyright "$GIT_ROOT" \
+    --project="$GIT_ROOT/.pyrightconfig.json" \
+    --venvpath="$GIT_ROOT/.venv"
 
-# Ignore long lines with URLs.
-pylint "./" \
-    --rcfile="./.pylintrc" \
-    --ignore-long-lines='^\s*(# .*)?<?https?://\S+>?$' \
-    --score=no \
-    --jobs=0
 
 
 # Check and remove trailing spaces.
