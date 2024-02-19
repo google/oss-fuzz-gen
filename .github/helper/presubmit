@@ -1,6 +1,10 @@
 #! /bin/bash -eu
 
-source "$(git rev-parse --show-toplevel)/.venv/bin/activate"
+GIT_ROOT=$(git rev-parse --show-toplevel)
+
+# Disable shellcheck false warning as it assumes incorrect path of `activate`.
+# shellcheck disable=SC1091
+source "$GIT_ROOT/.venv/bin/activate"
 
 # Always use the latest Pyright.
 export PYRIGHT_PYTHON_FORCE_VERSION=latest
@@ -8,28 +12,31 @@ export PYRIGHT_PYTHON_FORCE_VERSION=latest
 # Ensure we have the latest code from the repository.
 git fetch origin > /dev/null
 
-# Reformat changed Python code.
-CHANGED_PY=$(git diff origin/main --name-only | grep "\.py$" || echo "")
+# Reformat changed Python code. No need to check uncommitted files.
+CHANGED_PY=$(git diff HEAD origin/main --name-only | grep "\.py$" || echo "")
 for file in $CHANGED_PY; do
     if [ -f "$file" ]; then
         # Ensure the script continues after yapf --diff
         yapf --diff "$file" || true
         yapf --parallel --in-place --print-modified "$file"
         isort "$file"
+
+        # Ensure Pylint continues after linting errors.
+        # Ignore long lines with URLs.
+        pylint "$file" \
+            --rcfile="$GIT_ROOT/.pylintrc" \
+            --ignore-long-lines='^\s*(# .*)?<?https?://\S+>?$' \
+            --score=no \
+            --jobs=0 \
+        || true
     fi
 done
 
 # Type Check and lint all Python code.
-pyright "./" \
-    --project="./.pyrightconfig.json" \
-    --venvpath="./.venv"
+pyright "$GIT_ROOT" \
+    --project="$GIT_ROOT/.pyrightconfig.json" \
+    --venvpath="$GIT_ROOT/.venv"
 
-# Ignore long lines with URLs.
-pylint "./" \
-    --rcfile="./.pylintrc" \
-    --ignore-long-lines='^\s*(# .*)?<?https?://\S+>?$' \
-    --score=no \
-    --jobs=0
 
 
 # Check and remove trailing spaces.
