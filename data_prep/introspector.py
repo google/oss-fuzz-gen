@@ -43,18 +43,17 @@ def _query_introspector(api: str, params: dict, key: str) -> Any:
   """Queries FuzzIntrospector API and return data specified by |key|, returns None if unable to get the value."""
   resp = requests.get(api, params, timeout=TIMEOUT)
   if not resp.ok:
-    logging.error(f'Failed to get data from FI\n'
-                  f'-----------Response received------------\n'
-                  f'{resp.content.decode("utf-8").strip()}\n'
-                  f'------------End of response-------------')
+    logging.error('Failed to get data from FI\n'
+                  '-----------Response received------------\n'
+                  '%s\n'
+                  '------------End of response-------------',
+                  resp.content.decode("utf-8").strip())
     return {}
   data = resp.json()
   value = data.get(key)
   if value:
     return value
-  logging.error(f'No `{key}` found from FI for:\n'
-                f'{resp.url}\n'
-                f'{data}')
+  logging.error('No `%s` found from FI for:\n%s\n%s', key, resp.url, data)
 
 
 def query_introspector_for_unreached_functions(project: str) -> list[dict]:
