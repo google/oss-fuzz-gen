@@ -328,13 +328,14 @@ def cov_report_link(link: str):
 def serve(directory: str, port: int, benchmark_set: str):
   global RESULTS_DIR, BENCHMARK_DIR
   RESULTS_DIR = directory
-  BENCHMARK_DIR = os.path.join(BENCHMARK_SET_DIR, benchmark_set)
+  if benchmark_set:
+    BENCHMARK_DIR = os.path.join(BENCHMARK_SET_DIR, benchmark_set)
   app.run(host='localhost', port=port)
 
 
 if __name__ == '__main__':
   results_dir = sys.argv[1]
   server_port = int(sys.argv[2])
-  benchmark_dir = sys.argv[3] if len(sys.argv) > 2 else ''
+  benchmark_dir = sys.argv[3] if len(sys.argv) > 3 else ''
 
   serve(results_dir, server_port, benchmark_dir)
