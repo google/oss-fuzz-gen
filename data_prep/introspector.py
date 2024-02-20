@@ -33,28 +33,105 @@ TIMEOUT = 10
 INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
 INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
 INTROSPECTOR_FUNCTION = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
+INTROSPECTOR_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
+INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
+INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
+INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
+
+
+def _query_introspector(api: str, params: dict) -> dict:
+  """Queries FuzzIntrospector API and return data specified by |key|,
+  returns None if unable to get the value."""
+  resp = requests.get(api, params, timeout=TIMEOUT)
+  if not resp.ok:
+    logging.error(
+        'Failed to get data from FI\n'
+        '-----------Response received------------\n'
+        '%s\n'
+        '------------End of response-------------',
+        resp.content.decode("utf-8").strip())
+    return {}
+  return resp.json()
 
 
 def query_introspector_for_unreached_functions(project: str) -> list[dict]:
-  """Quries FuzzIntrospector API for unreached functions in |project|."""
-  resp = requests.get(INTROSPECTOR_FUNCTION,
-                      params={'project': project},
-                      timeout=TIMEOUT)
-  data = resp.json()
+  """Queries FuzzIntrospector API for unreached functions in |project|."""
+  data = _query_introspector(INTROSPECTOR_FUNCTION, {'project': project})
   functions = data.get('functions')
   if functions:
     return functions
   logging.error('No functions found from FI for project %s:\n  %s', project,
-                '\n  '.join(data.get('extended_msgs')))
+                '\n  '.join(data.get('extended_msgs', [])))
   sys.exit(1)
 
 
-def query_introspector_cfg(project):
-  resp = requests.get(INTROSPECTOR_CFG,
-                      params={'project': project},
-                      timeout=TIMEOUT)
-  data = resp.json()
-  return data.get('project', {})
+def query_introspector_cfg(project: str) -> dict:
+  """Queries FuzzIntrospector API for CFG."""
+  return _query_introspector(INTROSPECTOR_CFG, {
+      'project': project
+  }).get('project', {})
+
+
+def query_introspector_function_source(project: str, func_sig: str) -> str:
+  """Queries FuzzIntrospector API for source code of |func_sig|."""
+  data = _query_introspector(INTROSPECTOR_SOURCE, {
+      'project': project,
+      'function_signature': func_sig
+  })
+  source = data.get('source', '')
+  if not source:
+    logging.error('No function source found for %s in %s: %s', func_sig,
+                  project, data)
+
+  return source
+
+
+def query_introspector_cross_references(project: str,
+                                        func_sig: str) -> list[str]:
+  """Queries FuzzIntrospector API for source code of functions
+  cross-referenced |func_sig|."""
+  data = _query_introspector(INTROSPECTOR_XREF, {
+      'project': project,
+      'function_signature': func_sig
+  })
+  call_sites = data.get('callsites', [])
+
+  xref_source = []
+  for cs in call_sites:
+    name = cs.get('dst_func')
+    sig = query_introspector_function_signature(project, name)
+    source = query_introspector_function_source(project, sig)
+    xref_source.append(source)
+  return xref_source
+
+
+def query_introspector_type_info(project: str, type_name: str) -> dict:
+  """Queries FuzzIntrospector API for information of |type_name|."""
+  data = _query_introspector(INTROSPECTOR_TYPE, {
+      'project': project,
+      'name': type_name
+  })
+  type_info = data.get('type_data', {})
+  if not type_info:
+    logging.error('No type info found from FI for %s in %s: %s', type_name,
+                  project, data)
+
+  return type_info
+
+
+def query_introspector_function_signature(project: str,
+                                          function_name: str) -> str:
+  """Queries FuzzIntrospector API for signature of |function_name|."""
+  data = _query_introspector(INTROSPECTOR_FUNC_SIG, {
+      'project': project,
+      'function': function_name
+  })
+  func_sig = data.get('signature', '')
+  if not func_sig:
+    logging.error('No signature found from FI for %s in %s: %s', function_name,
+                  project, data)
+
+  return func_sig
 
 
 def get_unreached_functions(project):
@@ -88,14 +165,20 @@ def clean_type(name: str) -> str:
   return name
 
 
-def _get_raw_return_type(function: dict) -> str:
+def _get_raw_return_type(function: dict, project: str) -> str:
   """Returns the raw function type."""
-  return function.get('return-type') or function.get('return_type', '')
+  return_type = function.get('return-type') or function.get('return_type', '')
+  if not return_type:
+    logging.error(
+        'Missing return type in project: %s\n'
+        '  raw_function_name: %s', project,
+        get_raw_function_name(function, project))
+  return return_type
 
 
-def _get_clean_return_type(function: dict) -> str:
+def _get_clean_return_type(function: dict, project: str) -> str:
   """Returns the cleaned function type."""
-  raw_return_type = _get_raw_return_type(function).strip()
+  raw_return_type = _get_raw_return_type(function, project).strip()
   if raw_return_type == 'N/A':
     # Bug in introspector: Unable to distinguish between bool and void right
     # now. More likely to be void for function return arguments.
@@ -103,39 +186,54 @@ def _get_clean_return_type(function: dict) -> str:
   return clean_type(raw_return_type)
 
 
-def _get_raw_function_name(function: dict) -> str:
+def get_raw_function_name(function: dict, project: str) -> str:
   """Returns the raw function name."""
-  return (function.get('raw-function-name') or
-          function.get('raw_function_name', ''))
+  raw_name = (function.get('raw-function-name') or
+              function.get('raw_function_name', ''))
+  if not raw_name:
+    logging.error('No raw function name in project: %s for function: %s',
+                  project, function)
+  return raw_name
 
 
-def _get_clean_arg_types(function: dict) -> list[str]:
+def _get_clean_arg_types(function: dict, project: str) -> list[str]:
   """Returns the cleaned function argument types."""
   raw_arg_types = (function.get('arg-types') or
-                   function.get('function_arguments', ''))
+                   function.get('function_arguments', []))
+  if not raw_arg_types:
+    logging.error(
+        'Missing argument types in project: %s\n'
+        '  raw_function_name: %s', project,
+        get_raw_function_name(function, project))
   return [clean_type(arg_type) for arg_type in raw_arg_types]
 
 
-def _get_arg_names(function: dict) -> list[str]:
-  """Returns the cleaned function argument types."""
-  return (function.get('arg-names') or
-          function.get('function_argument_names', ''))
+def _get_arg_names(function: dict, project: str) -> list[str]:
+  """Returns the function argument names."""
+  arg_names = (function.get('arg-names') or
+               function.get('function_argument_names', []))
+  if not arg_names:
+    logging.error(
+        'Missing argument names in project: %s\n'
+        '  raw_function_name: %s', project,
+        get_raw_function_name(function, project))
+  return arg_names
 
 
 def get_function_signature(function: dict, project: str) -> str:
   """Returns the function signature."""
-  function_signature = function.get('function_signature')
-  if function_signature:
-    return function_signature
-  logging.warning(
-      'Missing function signature in project: %s\n  raw_function_name: %s',
-      project, _get_raw_function_name(function))
-  return ''
+  function_signature = function.get('function_signature', '')
+  if not function_signature:
+    logging.error(
+        'Missing function signature in project: %s\n'
+        '  raw_function_name: ', project,
+        get_raw_function_name(function, project))
+  return function_signature
 
 
 # TODO(dongge): Remove this function when FI fixes it.
 def _parse_type_from_raw_tagged_type(tagged_type: str) -> str:
-  """Returns type name from |targged_type| such as struct.TypeA"""
+  """Returns type name from |tagged_type| such as struct.TypeA"""
   # Assume: Types do not contain dot(.).
   return tagged_type.split('.')[-1]
 
@@ -190,11 +288,11 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                project,
                                language,
                                function_signature,
-                               _get_raw_function_name(function),
-                               _get_clean_return_type(function),
+                               get_raw_function_name(function, project),
+                               _get_clean_return_type(function, project),
                                _group_function_params(
-                                   _get_clean_arg_types(function),
-                                   _get_arg_names(function)),
+                                   _get_clean_arg_types(function, project),
+                                   _get_arg_names(function, project)),
                                harness,
                                target_name,
                                function_dict=function))
@@ -260,9 +358,9 @@ def _contains_function(funcs: List[Dict], target_func: Dict):
   return False
 
 
-def _postprocess_function(target_func: Dict):
+def _postprocess_function(target_func: dict, project_name: str):
   """Post-processes target function."""
-  target_func['return-type'] = _get_clean_return_type(target_func)
+  target_func['return-type'] = _get_clean_return_type(target_func, project_name)
   target_func['function-name'] = demangle(target_func['function-name'])
 
 
@@ -298,7 +396,7 @@ def get_project_funcs(project_name: str) -> Dict[str, List[Dict]]:
         fuzz_target_funcs[fuzz_target_file] = []
       if _contains_function(fuzz_target_funcs[fuzz_target_file], target_func):
         continue
-      _postprocess_function(target_func)
+      _postprocess_function(target_func, project_name)
       fuzz_target_funcs[fuzz_target_file].append(target_func)
 
   # Sort functions in each target file by their complexity.
@@ -313,7 +411,7 @@ def get_project_funcs(project_name: str) -> Dict[str, List[Dict]]:
 if __name__ == '__main__':
   logging.basicConfig(level=logging.INFO)
 
-  #TODO(Dongge): Use argparser.
+  # TODO(Dongge): Use argparser.
   cur_project = sys.argv[1]
   max_num_function = 3
   if len(sys.argv) > 2:
