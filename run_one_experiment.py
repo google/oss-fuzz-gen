@@ -18,12 +18,11 @@ import dataclasses
 import logging
 import os
 import shutil
-import subprocess
 from multiprocessing import pool
 from typing import List, Optional
 
 from data_prep import project_targets
-from data_prep.project_context.context_retriever import ContextRetriever
+from data_prep.project_context.introspector_context import ContextRetriever
 from experiment import benchmark as benchmarklib
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
@@ -230,18 +229,7 @@ def run(benchmark: Benchmark,
 
     if use_context:
       retriever = ContextRetriever(benchmark)
-      try:
-        retriever.retrieve_asts()
-      # GSutil fails on the same project immediately after
-      # it succeeds a batch copy.
-      except subprocess.CalledProcessError:
-        pass
-      retriever.generate_lookups()
-      context_header = retriever.get_header()
-      print(context_header)
-      context_types = '\n'.join(retriever.get_type_info())
-      context_info = (context_header, context_types)
-      retriever.cleanup_asts()
+      retriever.get_embeddable_blob()
 
     model.prompt_path = model.prepare_generate_prompt(
         work_dirs.prompt,
