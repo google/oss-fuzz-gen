@@ -4,7 +4,7 @@
   - "name": "ac"
     "type": "struct redisAsyncContext *"
   "return_type": "void"
-  "signature": "void redisAsyncRead(struct redisAsyncContext * ac)"
+  "signature": "void redisAsyncRead(redisAsyncContext *)"
 - "name": "redisCommand"
   "params":
   - "name": "c"
@@ -12,7 +12,7 @@
   - "name": "format"
     "type": "char *"
   "return_type": "char *"
-  "signature": "char * redisCommand(struct redisContext * c, char * format)"
+  "signature": "void * redisCommand(redisContext *, const char *, void)"
 "language": "c"
 "project": "hiredis"
 "target_name": "format_command_fuzzer"

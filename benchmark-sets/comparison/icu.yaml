@@ -10,7 +10,7 @@
   - "name": "ec"
     "type": "int *"
   "return_type": "void"
-  "signature": "icu_75::MessageFormat::applyPattern(icu_75::UnicodeString const&, UParseError&, UErrorCode&)"
+  "signature": "void MessageFormat::applyPattern(const UnicodeString, UParseError, UErrorCode)"
 - "name": "_ZNK6icu_7521RuleBasedNumberFormat6formatElRKNS_13UnicodeStringERS1_RNS_13FieldPositionER10UErrorCode"
   "params":
   - "name": "this"
@@ -26,7 +26,7 @@
   - "name": "status"
     "type": "int *"
   "return_type": "icu_75::UnicodeString *"
-  "signature": "icu_75::RuleBasedNumberFormat::format(long, icu_75::UnicodeString const&, icu_75::UnicodeString&, icu_75::FieldPosition&, UErrorCode&) const"
+  "signature": "UnicodeString const RuleBasedNumberFormat::format(int64_t, const UnicodeString, UnicodeString, FieldPosition, UErrorCode)"
 "language": "c++"
 "project": "icu"
 "target_name": "relative_date_time_formatter_fuzzer"

@@ -8,7 +8,7 @@
   - "name": ""
     "type": "int *"
   "return_type": "char *"
-  "signature": "char * jsonnet_evaluate_file(struct JsonnetVm * , char * , int * )"
+  "signature": "char * jsonnet_evaluate_file(JsonnetVm *, const char *, int *)"
 - "name": "_ZN7jsonnet8internal12_GLOBAL__N_111Interpreter13builtinExtVarERKNS0_13LocationRangeERKNSt3__16vectorINS1_5ValueENS6_9allocatorIS8_EEEE"
   "params":
   - "name": ""
@@ -18,7 +18,7 @@
   - "name": ""
     "type": "std::vector *"
   "return_type": "struct jsonnet::internal::AST *"
-  "signature": "jsonnet::internal::(anonymous namespace)::Interpreter::builtinExtVar(jsonnet::internal::LocationRange const&, std::__1::vector<jsonnet::internal::(anonymous namespace)::Value, std::__1::allocator<jsonnet::internal::(anonymous namespace)::Value> > const&)"
+  "signature": "const AST * builtinExtVar(Interpreter *, const LocationRange, const std::__1::allocator<jsonnet::internal::(anonymous namespace)::Value> >)"
 "language": "c++"
 "project": "jsonnet"
 "target_name": "convert_jsonnet_fuzzer_regular"

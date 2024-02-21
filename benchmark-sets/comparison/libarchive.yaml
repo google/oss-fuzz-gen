@@ -8,7 +8,7 @@
   - "name": "f"
     "type": "struct archive_entry **"
   "return_type": "void"
-  "signature": "void archive_entry_linkify(struct archive_entry_linkresolver * res, struct archive_entry ** e, struct archive_entry ** f)"
+  "signature": "void archive_entry_linkify(archive_entry_linkresolver *, archive_entry **, archive_entry **)"
 - "name": "archive_entry_acl_text_w"
   "params":
   - "name": "entry"
@@ -16,7 +16,7 @@
   - "name": "flags"
     "type": "int"
   "return_type": "int *"
-  "signature": "int * archive_entry_acl_text_w(struct archive_entry * entry, int flags)"
+  "signature": "const wchar_t * archive_entry_acl_text_w(archive_entry *, int)"
 "language": "c++"
 "project": "libarchive"
 "target_name": "libarchive_fuzzer"

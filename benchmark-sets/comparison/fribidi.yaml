@@ -16,7 +16,7 @@
   - "name": "embedding_levels"
     "type": "char *"
   "return_type": "char"
-  "signature": "char fribidi_log2vis(int * str, int len, int * pbase_dir, int * visual_str, int * positions_L_to_V, int * positions_V_to_L, char * embedding_levels)"
+  "signature": "FriBidiLevel fribidi_log2vis(const FriBidiChar *, const FriBidiStrIndex, FriBidiParType *, FriBidiChar *, FriBidiStrIndex *, FriBidiStrIndex *, FriBidiLevel *)"
 - "name": "fribidi_reorder_line"
   "params":
   - "name": "flags"
@@ -36,7 +36,7 @@
   - "name": "map"
     "type": "int *"
   "return_type": "char"
-  "signature": "char fribidi_reorder_line(int flags, int * bidi_types, int len, int False, int base_dir, char * embedding_levels, int * visual_str, int * map)"
+  "signature": "FriBidiLevel fribidi_reorder_line(FriBidiFlags, const FriBidiCharType *, const FriBidiStrIndex, const FriBidiStrIndex, const FriBidiParType, FriBidiLevel *, FriBidiChar *, FriBidiStrIndex *)"
 "language": "c"
 "project": "fribidi"
 "target_name": "fribidi-fuzzer"

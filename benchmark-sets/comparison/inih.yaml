@@ -8,7 +8,7 @@
   - "name": "user"
     "type": "char *"
   "return_type": "int"
-  "signature": "int ini_parse_string(char * string, func_type * handler, char * user)"
+  "signature": "int ini_parse_string(const char *, ini_handler, void *)"
 "language": "c"
 "project": "inih"
 "target_name": "inihfuzz"

@@ -6,7 +6,7 @@
   - "name": "bos"
     "type": "struct libusb_bos_descriptor **"
   "return_type": "int"
-  "signature": "int libusb_get_bos_descriptor(struct libusb_device_handle * dev_handle, struct libusb_bos_descriptor ** bos)"
+  "signature": "int libusb_get_bos_descriptor(libusb_device_handle *, libusb_bos_descriptor **)"
 - "name": "libusb_get_string_descriptor_ascii"
   "params":
   - "name": "dev_handle"
@@ -18,7 +18,7 @@
   - "name": "length"
     "type": "int"
   "return_type": "int"
-  "signature": "int libusb_get_string_descriptor_ascii(struct libusb_device_handle * dev_handle, char desc_index, char * data, int length)"
+  "signature": "int libusb_get_string_descriptor_ascii(libusb_device_handle *, uint8_t, unsigned char *, int)"
 "language": "c++"
 "project": "libusb"
 "target_name": "libusb_fuzzer"

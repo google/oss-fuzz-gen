@@ -8,7 +8,7 @@
   - "name": "value"
     "type": "char *"
   "return_type": "void"
-  "signature": "tinyxml2::XMLElement::SetAttribute(char const*, char const*)"
+  "signature": "void XMLElement::SetAttribute(const char *, const char *)"
 "language": "c++"
 "project": "tinyxml2"
 "target_name": "xmltest"

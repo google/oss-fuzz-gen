@@ -10,7 +10,7 @@
   - "name": "aa"
     "type": "int"
   "return_type": "struct AvahiDnsPacket *"
-  "signature": "struct AvahiDnsPacket * avahi_dns_packet_new_reply(struct AvahiDnsPacket * p, int mtu, int copy_queries, int aa)"
+  "signature": "AvahiDnsPacket * avahi_dns_packet_new_reply(AvahiDnsPacket *, unsigned int, int, int)"
 - "name": "avahi_string_list_add_pair"
   "params":
   - "name": "l"
@@ -20,7 +20,7 @@
   - "name": "value"
     "type": "char *"
   "return_type": "struct AvahiStringList *"
-  "signature": "struct AvahiStringList * avahi_string_list_add_pair(struct AvahiStringList * l, char * key, char * value)"
+  "signature": "AvahiStringList * avahi_string_list_add_pair(AvahiStringList *, const char *, const char *)"
 "language": "c++"
 "project": "avahi"
 "target_name": "fuzz-consume-record"

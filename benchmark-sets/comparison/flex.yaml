@@ -6,7 +6,7 @@
   - "name": "argv"
     "type": "char **"
   "return_type": "int"
-  "signature": "int main2(int argc, char ** argv)"
+  "signature": "int main2(int, char **)"
 "language": "c"
 "project": "flex"
 "target_name": "fuzz-main"
