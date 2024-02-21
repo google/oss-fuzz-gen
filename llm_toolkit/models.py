@@ -355,7 +355,7 @@ class GoogleModel(LLM):
       print(f'Error: This model requires a local AI binary: {self.ai_binary}')
       sys.exit(1)
 
-    with tempfile.NamedTemporaryFile(delete=False) as f:
+    with tempfile.NamedTemporaryFile(delete=False, mode='w') as f:
       f.write(prompt.get())
       prompt_path = f.name
 
