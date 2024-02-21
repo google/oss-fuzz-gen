@@ -24,7 +24,7 @@ from multiprocessing import Pool
 import run_one_experiment
 from experiment import benchmark as benchmarklib
 from experiment.workdir import WorkDirs
-from llm_toolkit import models
+from llm_toolkit import models, prompt_builder
 
 # WARN: Avoid large NUM_EXP for local experiments.
 # NUM_EXP controls the number of experiments in parallel, while each experiment
@@ -81,9 +81,7 @@ def run_experiments(benchmark: benchmarklib.Benchmark,
     work_dirs = WorkDirs(os.path.join(args.work_dir, f'output-{benchmark.id}'))
     model = models.LLM.setup(
         ai_binary=args.ai_binary,
-        prompt_path=work_dirs.prompt,
         name=args.model,
-        template_dir=args.template_directory,
         max_tokens=MAX_TOKENS,
         num_samples=args.num_samples,
         temperature=args.temperature,
@@ -92,6 +90,7 @@ def run_experiments(benchmark: benchmarklib.Benchmark,
     result = run_one_experiment.run(
         benchmark=benchmark,
         model=model,
+        template_dir=args.template_directory,
         work_dirs=work_dirs,
         cloud_experiment_name=args.cloud_experiment_name,
         cloud_experiment_bucket=args.cloud_experiment_bucket,
@@ -151,7 +150,7 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument('-td',
                       '--template-directory',
                       type=str,
-                      default=models.DEFAULT_TEMPLATE_DIR)
+                      default=prompt_builder.DEFAULT_TEMPLATE_DIR)
   parser.add_argument('-w', '--work-dir', default=RESULTS_DIR)
   parser.add_argument('--context',
                       action='store_true',

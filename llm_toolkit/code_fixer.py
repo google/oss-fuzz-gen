@@ -23,6 +23,7 @@ from typing import Callable, Optional
 from experiment import benchmark as benchmarklib
 from llm_toolkit import models
 from llm_toolkit import output_parser as parser
+from llm_toolkit import prompt_builder
 
 ERROR_LINES = 20
 
@@ -334,15 +335,16 @@ def apply_llm_fix(ai_binary: str,
   """Queries LLM to fix the code."""
   fixer_model = models.LLM.setup(
       ai_binary=ai_binary,
-      prompt_path=prompt_path,
       name=fixer_model_name,
       num_samples=1,
       temperature=temperature,
   )
 
-  fixer_model.prompt_path = fixer_model.prepare_fix_prompt(
-      benchmark, prompt_path, raw_code, errors)
-  fixer_model.generate_code(response_dir)
+  builder = prompt_builder.DefaultTemplateBuilder(fixer_model)
+  prompt = builder.build_fixer_prompt(benchmark, raw_code, errors)
+  prompt.save(prompt_path)
+
+  fixer_model.generate_code(prompt, response_dir)
 
 
 def main():
