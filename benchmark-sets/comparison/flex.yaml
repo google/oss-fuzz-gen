@@ -7,12 +7,6 @@
     "type": "char **"
   "return_type": "int"
   "signature": "int main2(int argc, char ** argv)"
-- "name": "yy_flex_xmalloc"
-  "params":
-  - "name": "size"
-    "type": "int"
-  "return_type": "char *"
-  "signature": "char * yy_flex_xmalloc(int size)"
 "language": "c"
 "project": "flex"
 "target_name": "fuzz-main"
