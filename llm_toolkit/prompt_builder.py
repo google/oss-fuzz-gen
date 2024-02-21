@@ -170,7 +170,7 @@ class DefaultTemplateBuilder(PromptBuilder):
                     example_content: Optional[list[list[str]]] = None):
     """Constructs the |example_files| to be used in the prompt."""
     # Estimate prompt size so far.
-    prompt_size = self._model.estimate_token_num(self._prompt)
+    prompt_size = self._model.estimate_token_num(self._prompt.get())
     # Estimate space needed for the final problem.
     final_problem_prompt = self._prompt.create_prompt_piece(
         final_problem, 'user')

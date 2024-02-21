@@ -66,6 +66,7 @@ class Prompt:
   def add_solution(self, solution_content: str) -> None:
     """Adds |solution_content| to prompt."""
 
+  @abstractmethod
   def save(self, location: str):
     """Save the prompt to a filelocation."""
 
