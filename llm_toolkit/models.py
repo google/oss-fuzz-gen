@@ -15,7 +15,6 @@
 LLM models and their functions.
 """
 
-import json
 import logging
 import os
 import random
@@ -34,123 +33,12 @@ from google.api_core.exceptions import GoogleAPICallError
 from vertexai.preview.generative_models import GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
 
+from llm_toolkit import prompts
+
 # Model hyper-parameters.
 MAX_TOKENS: int = 2000
 NUM_SAMPLES: int = 1
 TEMPERATURE: float = 0.4
-
-
-class Prompt:
-  """Base prompt."""
-
-  def __init__(self, initial=None):
-    """Constructor."""
-
-  @abstractmethod
-  def get(self) -> Any:
-    """Get the final formatted prompt."""
-
-  @abstractmethod
-  def create_prompt_piece(self, content: str, role: str) -> Any:
-    """Creates prompt based on the |content| and |role|."""
-
-  @abstractmethod
-  def add_priming(self, priming_content: str) -> None:
-    """Adds |priming_content| to prompt."""
-
-  @abstractmethod
-  def add_problem(self, problem_content: str) -> None:
-    """Adds |problem_content| to prompt."""
-
-  @abstractmethod
-  def add_solution(self, solution_content: str) -> None:
-    """Adds |solution_content| to prompt."""
-
-  @abstractmethod
-  def save(self, location: str):
-    """Save the prompt to a filelocation."""
-
-
-class TextPrompt(Prompt):
-  """Text-style prompts."""
-
-  def __init__(self, initial=None):
-    if not initial:
-      initial = ''
-
-    self._text = initial
-
-  def get(self) -> Any:
-    return self._text
-
-  def add_priming(self, priming_content: str) -> None:
-    """Constructs the prompt priming in the required format."""
-    self._text += f'{priming_content}\n'
-
-  def add_problem(self, problem_content: str) -> None:
-    """Constructs the prompt problem in the required format."""
-    self._text += f'{problem_content}\n'
-
-  def add_solution(self, solution_content: str) -> None:
-    """Constructs the prompt problem in the required format."""
-    self._text += f'{solution_content}\n'
-
-  def create_prompt_piece(self, content: str, role: str):
-    """Returns a prompt piece in the format wanted by Google."""
-    # Ignore role, just return content
-    del role
-    # TODO(Dongge): Use role as XML tags.
-    return content
-
-  def save(self, location: str):
-    """Save the prompt to a filelocation."""
-    with open(location, 'w+') as prompt_file:
-      prompt_file.write(self.get())
-
-
-class OpenAIPrompt(Prompt):
-  """OpenAI style structured prompt."""
-
-  def __init__(self, initial=None):
-    if not initial:
-      initial = []
-
-    self._prompt = initial
-
-  def get(self) -> Any:
-    return self._prompt
-
-  def add_priming(self, priming_content: str) -> None:
-    """Constructs the prompt priming in the required format."""
-    self._prompt.append({
-        'role': 'system',
-        'content': priming_content,
-    })
-
-  def add_problem(self, problem_content: str) -> None:
-    """Constructs the prompt problem in the required format."""
-    self._prompt.append({
-        'role': 'user',
-        'content': problem_content,
-    })
-
-  def add_solution(self, solution_content: str) -> None:
-    """Constructs the prompt problem in the required format."""
-    self._prompt.append({
-        'role': 'assistant',
-        'content': solution_content,
-    })
-
-  def create_prompt_piece(self, content: str, role: str):
-    """Returns a prompt piece in the format wanted by OpenAI."""
-    # TODO(mihaimaruseac): We might want to consider stripping the XML tags
-    # here? The roles kind of simulate them.
-    return [{'role': role, 'content': content}]
-
-  def save(self, location: str):
-    """Save the prompt to a filelocation."""
-    with open(location, 'w+') as prompt_file:
-      json.dump(self._prompt, prompt_file)
 
 
 class LLM:
@@ -236,13 +124,13 @@ class LLM:
   # ============================== Generation ============================== #
   @abstractmethod
   def generate_code(self,
-                    prompt: Prompt,
+                    prompt: prompts.Prompt,
                     response_dir: str,
                     log_output: bool = False) -> None:
     """Generates fuzz targets to the |response_dir|."""
 
   @abstractmethod
-  def prompt_type(self) -> type[Prompt]:
+  def prompt_type(self) -> type[prompts.Prompt]:
     """Returns the expected prompt type."""
 
   def with_retry_on_error(self, func: Callable,
@@ -300,13 +188,13 @@ class GPT(LLM):
     num_tokens += 3
     return num_tokens
 
-  def prompt_type(self) -> type[Prompt]:
+  def prompt_type(self) -> type[prompts.Prompt]:
     """Returns the expected prompt type."""
-    return OpenAIPrompt
+    return prompts.OpenAIPrompt
 
   # ============================== Generation ============================== #
   def generate_code(self,
-                    prompt: Prompt,
+                    prompt: prompts.Prompt,
                     response_dir: str,
                     log_output: bool = False) -> None:
     """Generates code with OpenAI's API."""
@@ -336,9 +224,9 @@ class GPT4(GPT):
 class GoogleModel(LLM):
   """Generic Google model."""
 
-  def prompt_type(self) -> type[Prompt]:
+  def prompt_type(self) -> type[prompts.Prompt]:
     """Returns the expected prompt type."""
-    return TextPrompt
+    return prompts.TextPrompt
 
   def estimate_token_num(self, text) -> int:
     """Estimates the number of tokens in |text|."""
@@ -347,7 +235,7 @@ class GoogleModel(LLM):
 
   # ============================== Generation ============================== #
   def generate_code(self,
-                    prompt: Prompt,
+                    prompt: prompts.Prompt,
                     response_dir: str,
                     log_output: bool = False) -> None:
     """Generates code with internal LLM."""
@@ -400,7 +288,7 @@ class VertexAIModel(GoogleModel):
     return model.predict(prefix=prompt, **config).text
 
   def generate_code(self,
-                    prompt: Prompt,
+                    prompt: prompts.Prompt,
                     response_dir: str,
                     log_output: bool = False) -> None:
     del log_output

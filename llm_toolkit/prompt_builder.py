@@ -21,7 +21,7 @@ from typing import Optional, Tuple
 
 from data_prep import project_targets
 from experiment.benchmark import Benchmark, FileType
-from llm_toolkit import models
+from llm_toolkit import models, prompts
 
 DEFAULT_TEMPLATE_DIR: str = 'prompts/template_xml/'
 
@@ -55,12 +55,12 @@ class PromptBuilder:
       example_pair: list[list[str]],
       project_example_content: Optional[list[list[str]]] = None,
       project_context_content: Optional[Tuple[str,
-                                              str]] = None) -> models.Prompt:
+                                              str]] = None) -> prompts.Prompt:
     """Build a prompt."""
 
   @abstractmethod
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
-                         errors: list[str]) -> models.Prompt:
+                         errors: list[str]) -> prompts.Prompt:
     """Build a fixer prompt."""
 
 
@@ -218,7 +218,7 @@ class DefaultTemplateBuilder(PromptBuilder):
       example_pair: list[list[str]],
       project_example_content: Optional[list[list[str]]] = None,
       project_context_content: Optional[Tuple[str,
-                                              str]] = None) -> models.Prompt:
+                                              str]] = None) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     priming = self._format_priming(target_file_type)
     final_problem = self.format_problem(function_signature)
@@ -237,7 +237,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     return self._prompt
 
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
-                         errors: list[str]) -> models.Prompt:
+                         errors: list[str]) -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming = self._format_fixer_priming()
     priming_weight = self._model.estimate_token_num(priming)

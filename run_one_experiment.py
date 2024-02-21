@@ -30,7 +30,7 @@ from experiment import evaluator as exp_evaluator
 from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
-from llm_toolkit import models, output_parser, prompt_builder
+from llm_toolkit import models, output_parser, prompt_builder, prompts
 
 # WARN: Avoid NUM_EVA for local experiments.
 # NUM_EVA controls the number of fuzz targets to evaluate in parallel by each
@@ -75,7 +75,7 @@ class AggregatedResult:
 
 def generate_targets(benchmark: Benchmark,
                      model: models.LLM,
-                     prompt: models.Prompt,
+                     prompt: prompts.Prompt,
                      work_dirs: WorkDirs,
                      debug: bool = DEBUG) -> list[str]:
   """Generates fuzz target with LLM."""
