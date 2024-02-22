@@ -239,19 +239,21 @@ class DefaultTemplateBuilder(PromptBuilder):
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
                          errors: list[str]) -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
-    priming = self._format_fixer_priming()
-    priming_weight = self._model.estimate_token_num(priming)
+    priming, priming_weight = self._format_fixer_priming()
     problem = self._format_fixer_problem(raw_code, errors, priming_weight)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
 
-  def _format_fixer_priming(self) -> str:
+  def _format_fixer_priming(self) -> Tuple[str, int]:
     """Formats a priming for code fixer based on the template."""
     with open(self.fixer_priming_template_file) as f:
       priming = f.read().strip() + '\n'
     priming_prompt = self._prompt.create_prompt_piece(priming, 'system')
-    return priming_prompt
+    priming_weight = self._model.estimate_token_num(priming_prompt)
+    # NOTE: We need to return the priming _as text_ and the weight. Otherwise,
+    # in the case of structured prompts, we will create nested structures.
+    return priming, priming_weight
 
   def _format_fixer_problem(self, raw_code: str, errors: list[str],
                             priming_weight: int) -> str:
