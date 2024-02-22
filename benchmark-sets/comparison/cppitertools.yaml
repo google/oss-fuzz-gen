@@ -1,0 +1,19 @@
+"functions":
+- "name": "_ZN4iter4impl10CombinatorIRNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEE8IteratorIS9_E15zero_length_endES9_"
+  "params":
+  - "name": "container"
+    "type": "iter::impl::Combinator<std::string &>::Iterator *"
+  - "name": ""
+    "type": "std::string *"
+  "return_type": "void"
+  "signature": "void Iterator(std::__1::allocator<char> > &> *, std::__1::allocator<char> >, size_t)"
+- "name": "_ZN4iter4impl10CompressedIRNSt3__16vectorIiNS2_9allocatorIiEEEERNS3_IbNS4_IbEEEEE8IteratorIS7_SA_EppEv"
+  "params":
+  - "name": "this"
+    "type": "iter::impl::Compressed<std::vector<int> &, std::vector<bool> &>::Iterator *"
+  "return_type": "iter::impl::Compressed<std::vector<int> &, std::vector<bool> &>::Iterator *"
+  "signature": "std::__1::allocator<bool> > &> std::__1::allocator<bool> > &>::operator++()"
+"language": "c++"
+"project": "cppitertools"
+"target_name": "fuzz_cppitertools"
+"target_path": "/src/fuzz_cppitertools.cpp"
