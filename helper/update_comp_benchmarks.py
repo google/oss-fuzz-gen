@@ -50,7 +50,7 @@ def parse_args() -> argparse.Namespace:
   assert os.path.isdir(args.target), '--target must be an existing directory.'
   assert os.path.isdir(args.source), '--source must be an existing directory.'
 
-  return parser.parse_args()
+  return args
 
 
 def main():
