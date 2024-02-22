@@ -28,7 +28,7 @@ class Prompt:
 
   @abstractmethod
   def get(self) -> Any:
-    """Get the final formatted prompt."""
+    """Gets the final formatted prompt."""
 
   @abstractmethod
   def create_prompt_piece(self, content: str, role: str) -> Any:
@@ -61,6 +61,7 @@ class TextPrompt(Prompt):
     self._text = initial
 
   def get(self) -> Any:
+    """Gets the final formatted prompt."""
     return self._text
 
   def add_priming(self, priming_content: str) -> None:
@@ -98,6 +99,7 @@ class OpenAIPrompt(Prompt):
     self._prompt = initial
 
   def get(self) -> Any:
+    """Gets the final formatted prompt."""
     return self._prompt
 
   def add_priming(self, priming_content: str) -> None:
