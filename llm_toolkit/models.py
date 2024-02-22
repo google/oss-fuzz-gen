@@ -15,16 +15,16 @@
 LLM models and their functions.
 """
 
-import json
 import logging
 import os
 import random
 import re
 import subprocess
 import sys
+import tempfile
 import time
 from abc import abstractmethod
-from typing import Any, Callable, Optional, Tuple, Type
+from typing import Any, Callable, Type
 
 import openai
 import tiktoken
@@ -33,29 +33,12 @@ from google.api_core.exceptions import GoogleAPICallError
 from vertexai.preview.generative_models import GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
 
-from data_prep import project_targets
-from experiment.benchmark import Benchmark, FileType
+from llm_toolkit import prompts
 
 # Model hyper-parameters.
 MAX_TOKENS: int = 2000
 NUM_SAMPLES: int = 1
 TEMPERATURE: float = 0.4
-
-DEFAULT_TEMPLATE_DIR: str = 'prompts/template_xml/'
-
-# TODO(Dongge): Refactor this tot avoid hard-coding.
-# Example files.
-EXAMPLE_PATH = os.path.join('prompts', 'example')
-# Example with FuzzeDataProvider.
-FDP_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'gdImageString-problem.txt')
-FDP_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH, 'gdImageString-solution.cc')
-FDP_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH, 'mpg123_decode-problem.txt')
-FDP_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH, 'mpg123_decode-solution.cc')
-
-EXAMPLES = [
-    [FDP_EXAMPLE_1_PROBLEM, FDP_EXAMPLE_1_SOLUTION],
-    [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
-]
 
 
 class LLM:
@@ -71,48 +54,16 @@ class LLM:
   def __init__(
       self,
       ai_binary: str,
-      prompt_path: str,
-      template_dir: str = DEFAULT_TEMPLATE_DIR,
       max_tokens: int = MAX_TOKENS,
       num_samples: int = NUM_SAMPLES,
       temperature: float = TEMPERATURE,
   ):
     self.ai_binary = ai_binary
-    self.prompt_path = prompt_path
-
-    # Load templates.
-    self.priming_template_file = self._find_template(template_dir,
-                                                     'priming.txt')
-    self.cpp_priming_filler_file = self._find_template(
-        template_dir, 'cpp-specific-priming-filler.txt')
-    self.problem_template_file = self._find_template(template_dir,
-                                                     'problem.txt')
-    self.solution_template_file = self._find_template(template_dir,
-                                                      'solution.txt')
-    self.context_template_file = self._find_template(template_dir,
-                                                     'context.txt')
-    self.fixer_priming_template_file = self._find_template(
-        template_dir, 'fixer_priming.txt')
-    self.fixer_problem_template_file = self._find_template(
-        template_dir, 'fixer_problem.txt')
 
     # Model parameters.
     self.max_tokens = max_tokens
     self.num_samples = num_samples
     self.temperature = temperature
-
-    # Prompt message content.
-    self._prompt = None  # Must call self._reset_prompt first
-
-  def _find_template(self, template_dir: str, template_name: str) -> str:
-    """Find template file based on |template_dir|."""
-    preferred_template = os.path.join(template_dir, template_name)
-    # Use the preferred template if it exists.
-    if os.path.isfile(preferred_template):
-      return preferred_template
-    # Fall back to the default template.
-    default_template = os.path.join(DEFAULT_TEMPLATE_DIR, template_name)
-    return default_template
 
   @classmethod
   def cloud_setup(cls):
@@ -128,24 +79,20 @@ class LLM:
   def setup(
       cls,
       ai_binary: str,
-      prompt_path: str,
       name: str,
-      template_dir: str = DEFAULT_TEMPLATE_DIR,
       max_tokens: int = MAX_TOKENS,
       num_samples: int = NUM_SAMPLES,
       temperature: float = TEMPERATURE,
   ):
     """Prepares the LLM for fuzz target generation."""
     if ai_binary:
-      return AIBinaryModel(name, ai_binary, prompt_path, template_dir,
-                           max_tokens, num_samples, temperature)
+      return AIBinaryModel(name, ai_binary, max_tokens, num_samples,
+                           temperature)
 
     for subcls in cls.all_llm_subclasses():
       if getattr(subcls, 'name', None) == name:
         return subcls(
             ai_binary,
-            prompt_path,
-            template_dir,
             max_tokens,
             num_samples,
             temperature,
@@ -170,252 +117,21 @@ class LLM:
         names.append(subcls.name)
     return names
 
-  # ================================ Prompt ================================ #
-  def _get_template(self, template_file: str) -> str:
-    """Reads the template for prompts."""
-    with open(template_file) as file:
-      return file.read()
-
-  def _format_priming(self, target_file_type: FileType) -> str:
-    """Formats a priming based on the prompt template."""
-    priming = self._get_template(self.priming_template_file)
-    if target_file_type in [FileType.C, FileType.CPP]:
-      type_specific_priming = self._get_template(self.cpp_priming_filler_file)
-    else:
-      type_specific_priming = ''
-    priming = priming.replace('{TYPE_SPECIFIC_PRIMING}', type_specific_priming)
-    return priming
-
-  def format_problem(self, problem_content: str) -> str:
-    """Formats a problem based on the prompt template."""
-    problem = self._get_template(self.problem_template_file)
-    problem = problem.replace('{PROBLEM_CONTENT}', problem_content)
-    return problem
-
-  def format_solution(self, solution_content: str) -> str:
-    """Formats a solution based on the prompt template."""
-    solution = self._get_template(self.solution_template_file)
-    solution = solution.replace('{SOLUTION_CONTENT}', solution_content)
-    return solution
-
-  def format_context(self, header_content: str, type_content: str) -> str:
-    context = self._get_template(self.context_template_file)
-    context = context.replace('{CONTEXT_HEADER}', header_content)
-    context = context.replace('{CONTEXT_TYPES}', type_content)
-    return context
-
-  def _select_examples(self, examples: list[list],
-                       prompt_size: int) -> list[list[str]]:
-    """Selects |examples| based on |prompt_size|."""
-    # First remove repeated examples to avoid over fitting.
-    targets = set()
-    unique_examples = []
-    for example in examples:
-      if example[2] in targets:
-        continue
-      targets.add(example[2])
-      unique_examples.append(example)
-
-    if (sum(example[0] for example in unique_examples) + prompt_size
-        < self.context_window):
-      return [[example[1], example[2]] for example in examples]
-
-    # Then prioritize complex (i.e., long) examples.
-    unique_examples.sort(key=lambda x: x[0], reverse=True)
-    selected_examples = []
-    for example in unique_examples:
-      if example[0] + prompt_size >= self.context_window:
-        # The estimation is inaccurate, if an example's size equals to
-        # the limit, it's safer to not include the example.
-        continue
-      selected_examples.append([example[1], example[2]])
-      prompt_size += example[0]
-
-    # Write the most complex examples at the end so that LLM gives them
-    # a higher weight.
-    selected_examples.sort(key=len, reverse=True)
-    return selected_examples
-
-  def _add_examples(self,
-                    example_files: list[list[str]],
-                    final_problem: str,
-                    example_content: Optional[list[list[str]]] = None):
-    """Constructs the |example_files| to be used in the prompt."""
-    # Estimate prompt size so far.
-    prompt_size = self._estimate_token_num(self._prompt)
-    # Estimate space needed for the final problem.
-    final_problem_prompt = self._create_prompt_piece(final_problem, 'user')
-    query_size = prompt_size + self._estimate_token_num(final_problem_prompt)
-
-    # Collect all examples in a single list
-    examples = []
-    for problem, solution in example_files:
-      with open(problem) as problem_file:
-        problem = problem_file.read()[:-1]
-      with open(solution) as solution_file:
-        solution = solution_file.read()[:-1]
-        solution = project_targets.filter_target_lines(solution)
-      examples.append((problem, solution))
-    # TODO(mihaimaruseac): Should we start from these first?
-    if example_content:
-      for problem, solution in example_content:
-        solution = project_targets.filter_target_lines(solution)
-        examples.append((problem, solution))
-
-    # Next, we need to expand all templates and determine how much the size
-    # of the prompt would increase when adding each one of them:
-    weights = []
-    for problem, solution in examples:
-      problem = self.format_problem(problem)
-      solution = self.format_solution(solution)
-      problem_prompt = self._create_prompt_piece(problem, 'user')
-      solution_prompt = self._create_prompt_piece(solution, 'assistant')
-      problem_weight = self._estimate_token_num(problem_prompt)
-      solution_weight = self._estimate_token_num(solution_prompt)
-      total_weight = problem_weight + solution_weight + 1  # one \n
-      weights.append((total_weight, problem, solution))
-
-    # Select examples up to context window and add them to prompt.
-    selected_examples = self._select_examples(weights, query_size)
-    for problem, solution in selected_examples:
-      self._add_problem(problem)
-      self._add_solution(solution)
-
-  def save_prompt(self, prompt_path: str) -> str:
-    """Saves the prompt to the |prompt_path|."""
-    prompt_name, prompt_ext = os.path.splitext(prompt_path)
-    prompt_path = f'{prompt_name}{prompt_ext}'
-    with open(prompt_path, 'w+') as prompt_file:
-      if isinstance(self._prompt, str):
-        prompt_file.write(self._prompt)
-      elif isinstance(self._prompt, list):
-        json.dump(self._prompt, prompt_file)
-      else:
-        print(f'Error: Invalid prompt type: {type(self._prompt)}.')
-    return prompt_path
-
-  def prepare_generate_prompt(
-      self,
-      prompt_path: str,
-      function_signature: str,
-      target_file_type: FileType,
-      example_pair: list[list[str]],
-      project_example_content: Optional[list[list[str]]] = None,
-      project_context_content: Optional[Tuple[str, str]] = None) -> str:
-    """Constructs a prompt using the templates in |self| and saves it."""
-    priming = self._format_priming(target_file_type)
-    final_problem = self.format_problem(function_signature)
-    final_problem += (f'You MUST call <code>\n'
-                      f'{function_signature}\n'
-                      f'</code> in your solution!\n')
-    # TODO(ggryan@): Add a function to ensure the header is consistent
-    # with others (e.g., use "" or <>, use the same path prefix
-    # with other non-builtin include statements or the original fuzz target.)
-    if project_context_content:
-      final_problem += self.format_context(project_context_content[0],
-                                           project_context_content[1])
-    final_problem += '\n<solution>'
-    return self.prepare_prompt(prompt_path, priming, final_problem,
-                               example_pair, project_example_content)
-
-  def format_fixer_priming(self) -> str:
-    """Formats a priming for code fixer based on the template."""
-    with open(self.fixer_priming_template_file) as f:
-      priming = f.read().strip() + '\n'
-    priming_prompt = self._create_prompt_piece(priming, 'system')
-    return priming_prompt
-
-  def format_fixer_problem(self, benchmark: Benchmark, raw_code: str,
-                           errors: list[str], priming_weight: int) -> str:
-    """Formats a problem for code fixer based on the template."""
-    with open(self.fixer_problem_template_file) as f:
-      problem = f.read().strip()
-    problem = problem.replace('{CODE_TO_BE_FIXED}', raw_code)
-
-    problem_prompt = self._create_prompt_piece(problem, 'user')
-    template_piece = self._create_prompt_piece('{ERROR_MESSAGES}', 'user')
-
-    problem_weight = self._estimate_token_num(problem_prompt)
-    template_weight = self._estimate_token_num(template_piece)
-
-    # the template will be replaced later and should not be counted
-    prompt_size = priming_weight + problem_weight - template_weight
-    # Add extra 20-tokens redundancy
-    # TODO(mihaimaruseac): Is this needed?
-    prompt_size += 20
-
-    # We are adding errors one by one until we reach the maximum prompt size
-    selected_errors = []
-    for error in errors:
-      error_prompt = self._create_prompt_piece(error, 'user')
-      error_token_num = self._estimate_token_num(error_prompt)
-      if prompt_size + error_token_num >= self.context_window:
-        # The estimation is inaccurate, if an example's size equals to
-        # the limit, it's safer to not include the example.
-        break
-      prompt_size += error_token_num
-      selected_errors.append(error)
-
-    # Now, compose the problem part of the prompt
-    error_message = '\n'.join(selected_errors)
-    return problem.replace('{ERROR_MESSAGES}', error_message)
-
-  def prepare_fix_prompt(self, benchmark: Benchmark, prompt_path: str,
-                         raw_code: str, errors: list[str]) -> str:
-    """Prepares the code-fixing prompt."""
-    priming = self.format_fixer_priming()
-    priming_weight = self._estimate_token_num(priming)
-    problem = self.format_fixer_problem(benchmark, raw_code, errors,
-                                        priming_weight)
-
-    return self.prepare_prompt(prompt_path, priming, problem)
-
-  def prepare_prompt(
-      self,
-      prompt_path: str,
-      priming: str,
-      final_problem: str,
-      example_pair: Optional[list[list[str]]] = None,
-      project_example_content: Optional[list[list[str]]] = None) -> str:
-    """Constructs a prompt using the parameters and saves it."""
-    self._reset_prompt()
-    self._add_priming(priming)
-
-    if example_pair is None:
-      example_pair = []
-
-    self._add_examples(example_pair, final_problem, project_example_content)
-    self._add_problem(final_problem)
-    return self.save_prompt(prompt_path)
-
   @abstractmethod
-  def _estimate_token_num(self, text) -> int:
+  def estimate_token_num(self, text) -> int:
     """Estimates the number of tokens in |text|."""
-
-  @abstractmethod
-  def _reset_prompt(self) -> None:
-    """Resets prompt to empty."""
-
-  @abstractmethod
-  def _create_prompt_piece(self, content: str, role: str) -> Any:
-    """Creates prompt based on the |content| and |role|."""
-
-  @abstractmethod
-  def _add_priming(self, priming_content: str) -> None:
-    """Adds |priming_content| to prompt."""
-
-  @abstractmethod
-  def _add_problem(self, problem_content: str) -> None:
-    """Adds |problem_content| to prompt."""
-
-  @abstractmethod
-  def _add_solution(self, solution_content: str) -> None:
-    """Adds |solution_content| to prompt."""
 
   # ============================== Generation ============================== #
   @abstractmethod
-  def generate_code(self, response_dir: str, log_output: bool = False) -> None:
+  def generate_code(self,
+                    prompt: prompts.Prompt,
+                    response_dir: str,
+                    log_output: bool = False) -> None:
     """Generates fuzz targets to the |response_dir|."""
+
+  @abstractmethod
+  def prompt_type(self) -> type[prompts.Prompt]:
+    """Returns the expected prompt type."""
 
   def with_retry_on_error(self, func: Callable,
                           err_type: Type[Exception]) -> Any:
@@ -453,7 +169,7 @@ class GPT(LLM):
   name = 'gpt-3.5-turbo'
 
   # ================================ Prompt ================================ #
-  def _estimate_token_num(self, text) -> int:
+  def estimate_token_num(self, text) -> int:
     """Estimates the number of tokens in |text|."""
     # https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
     try:
@@ -472,46 +188,22 @@ class GPT(LLM):
     num_tokens += 3
     return num_tokens
 
-  def _reset_prompt(self) -> None:
-    """Prepares the prompt for GPT based models."""
-    self._prompt = []
-
-  def _create_prompt_piece(self, content: str, role: str):
-    """Returns a prompt piece in the format wanted by OpenAI."""
-    # TODO(mihaimaruseac): We might want to consider stripping the XML tags
-    # here? The roles kind of simulate them.
-    return [{'role': role, 'content': content}]
-
-  def _add_priming(self, priming_content: str) -> None:
-    """Constructs the prompt priming in the required format."""
-    self._prompt.append({
-        'role': 'system',
-        'content': priming_content,
-    })
-
-  def _add_problem(self, problem_content: str) -> None:
-    """Constructs the prompt problem in the required format."""
-    self._prompt.append({
-        'role': 'user',
-        'content': problem_content,
-    })
-
-  def _add_solution(self, solution_content: str) -> None:
-    """Constructs the prompt problem in the required format."""
-    self._prompt.append({
-        'role': 'assistant',
-        'content': solution_content,
-    })
+  def prompt_type(self) -> type[prompts.Prompt]:
+    """Returns the expected prompt type."""
+    return prompts.OpenAIPrompt
 
   # ============================== Generation ============================== #
-  def generate_code(self, response_dir: str, log_output: bool = False) -> None:
+  def generate_code(self,
+                    prompt: prompts.Prompt,
+                    response_dir: str,
+                    log_output: bool = False) -> None:
     """Generates code with OpenAI's API."""
     if self.ai_binary:
       print(f'OpenAI does not use local AI binary: {self.ai_binary}')
     openai.api_key = os.getenv('OPENAI_API_KEY')
 
     completion = self.with_retry_on_error(
-        lambda: openai.ChatCompletion.create(messages=self._prompt,
+        lambda: openai.ChatCompletion.create(messages=prompt.get(),
                                              model=self.name,
                                              n=self.num_samples,
                                              temperature=self.temperature),
@@ -532,61 +224,55 @@ class GPT4(GPT):
 class GoogleModel(LLM):
   """Generic Google model."""
 
-  def _estimate_token_num(self, text) -> int:
+  def prompt_type(self) -> type[prompts.Prompt]:
+    """Returns the expected prompt type."""
+    return prompts.TextPrompt
+
+  def estimate_token_num(self, text) -> int:
     """Estimates the number of tokens in |text|."""
     # Roughly 1.5 tokens per word:
     return int(len(re.split('[^a-zA-Z0-9]+', text)) * 1.5 + 0.5)
 
-  def _reset_prompt(self) -> None:
-    """Prepares the prompt for Google models."""
-    self._prompt = ""
-
-  def _create_prompt_piece(self, content: str, role: str):
-    """Returns a prompt piece in the format wanted by Google."""
-    # Ignore role, just return content
-    del role
-    # TODO(Dongge): Use role as XML tags.
-    return content
-
-  def _add_priming(self, priming_content: str) -> None:
-    """Constructs the prompt priming in the required format."""
-    self._prompt += f'{priming_content}\n'
-
-  def _add_problem(self, problem_content: str) -> None:
-    """Constructs the prompt problem in the required format."""
-    self._prompt += f'{problem_content}\n'
-
-  def _add_solution(self, solution_content: str) -> None:
-    """Constructs the prompt problem in the required format."""
-    self._prompt += f'{solution_content}\n'
-
   # ============================== Generation ============================== #
-  def generate_code(self, response_dir: str, log_output: bool = False) -> None:
+  def generate_code(self,
+                    prompt: prompts.Prompt,
+                    response_dir: str,
+                    log_output: bool = False) -> None:
     """Generates code with internal LLM."""
     if not self.ai_binary:
       print(f'Error: This model requires a local AI binary: {self.ai_binary}')
       sys.exit(1)
-    command = [
-        self.ai_binary,
-        f'-model={self.name}',
-        f'-prompt={self.prompt_path}',
-        f'-response={response_dir}',
-        f'-max-tokens={self.max_tokens}',
-        f'-expected-samples={self.num_samples}',
-        f'-temperature={self.temperature}',
-        f'-log-output={log_output}',
-    ]
-    proc = subprocess.Popen(
-        command,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        stdin=subprocess.DEVNULL,
-    )
-    stdout, stderr = proc.communicate()
-    if proc.returncode != 0:
-      print(f'Failed to generate targets with prompt {self._prompt}')
-      print(f'stdout: {stdout}')
-      print(f'stderr: {stderr}')
+
+    with tempfile.NamedTemporaryFile(delete=False, mode='w') as f:
+      f.write(prompt.get())
+      prompt_path = f.name
+
+    try:
+      command = [
+          self.ai_binary,
+          f'-model={self.name}',
+          f'-prompt={prompt_path}',
+          f'-response={response_dir}',
+          f'-max-tokens={self.max_tokens}',
+          f'-expected-samples={self.num_samples}',
+          f'-temperature={self.temperature}',
+          f'-log-output={log_output}',
+      ]
+
+      proc = subprocess.Popen(
+          command,
+          stdout=subprocess.PIPE,
+          stderr=subprocess.PIPE,
+          stdin=subprocess.DEVNULL,
+      )
+      stdout, stderr = proc.communicate()
+
+      if proc.returncode != 0:
+        print(f'Failed to generate targets with prompt {prompt.get()}')
+        print(f'stdout: {stdout}')
+        print(f'stderr: {stderr}')
+    finally:
+      os.unlink(prompt_path)
 
 
 class VertexAIModel(GoogleModel):
@@ -601,7 +287,10 @@ class VertexAIModel(GoogleModel):
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
     return model.predict(prefix=prompt, **config).text
 
-  def generate_code(self, response_dir: str, log_output: bool = False) -> None:
+  def generate_code(self,
+                    prompt: prompts.Prompt,
+                    response_dir: str,
+                    log_output: bool = False) -> None:
     del log_output
     if self.ai_binary:
       print(f'VertexAI does not use local AI binary: {self.ai_binary}')
@@ -612,12 +301,9 @@ class VertexAIModel(GoogleModel):
         'max_output_tokens': self._max_output_tokens,
     }
 
-    with open(self.prompt_path) as f:
-      prompt = f.read()
-
     for index in range(self.num_samples):
       response = self.with_retry_on_error(
-          lambda: self.do_generate(model, prompt, parameters),
+          lambda: self.do_generate(model, prompt.get(), parameters),
           GoogleAPICallError)
       self._save_output(index, response, response_dir)
 
