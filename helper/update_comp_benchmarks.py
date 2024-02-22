@@ -12,8 +12,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Updates all yamls in target benchmark set to match with source."""
+"""Updates all yamls in target benchmark set to match with source.
+Usage: python3 -m helper.update_comp_benchmarks.
+Optional args:  [--source src_dir] [--target target_dir]
+e.g.
+python3 -m helper.update_comp_benchmarks \
+--source benchmark-sets/all --target benchmark-sets/comparison"""
 import argparse
+import logging
 import os
 
 from experiment.benchmark import Benchmark
@@ -32,27 +38,36 @@ def parse_args() -> argparse.Namespace:
       '-s',
       '--source',
       type=str,
-      default=SOURCE_SET,
+      default=os.path.join(BENCHMARK_DIR, SOURCE_SET),
       help='The source benchmark set used to update target set.')
   parser.add_argument('-t',
                       '--target',
                       type=str,
-                      default=TARGET_SET,
+                      default=os.path.join(BENCHMARK_DIR, TARGET_SET),
                       help='The target benchmark set to update.')
+
+  args = parser.parse_args()
+  assert os.path.isdir(args.target), '--target must be an existing directory.'
+  assert os.path.isdir(args.source), '--source must be an existing directory.'
 
   return parser.parse_args()
 
 
 def main():
-  """Usage: python3 -m helper.update_comp_benchmarks.
-  Optional args:  [--source src_dir] [--target target_dir]"""
   args = parse_args()
-  target_path = os.path.join(BENCHMARK_DIR, args.target)
-  src_path = os.path.join(BENCHMARK_DIR, args.source)
+  target_path = args.target
+  src_path = args.source
 
   for file_name in os.listdir(target_path):
-    source_bms = Benchmark.from_yaml(os.path.join(src_path, file_name))
+    if not file_name.endswith('.yaml'):
+      continue
+
     target_bms = Benchmark.from_yaml(os.path.join(target_path, file_name))
+    try:
+      source_bms = Benchmark.from_yaml(os.path.join(src_path, file_name))
+    except FileNotFoundError:
+      logging.error('%s is not found in %s', file_name, src_path)
+      continue
 
     # Get raw name of the functions selected in target.
     functions = [b.function_name for b in target_bms]
@@ -63,8 +78,10 @@ def main():
         selected_bms.append(b)
 
     Benchmark.to_yaml(selected_bms, target_path)
-    print('Updated', file_name)
+    logging.info('Updated %s', file_name)
 
 
 if __name__ == '__main__':
+  logging.basicConfig(level=logging.INFO)
+
   main()
