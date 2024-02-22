@@ -1,0 +1,17 @@
+"functions":
+- "name": "plist_from_memory"
+  "params":
+  - "name": "plist_data"
+    "type": "char *"
+  - "name": "length"
+    "type": "int"
+  - "name": "plist"
+    "type": "char **"
+  - "name": "format"
+    "type": "int *"
+  "return_type": "int"
+  "signature": "plist_err_t plist_from_memory(const char *, uint32_t, plist_t *, plist_format_t *)"
+"language": "c++"
+"project": "libplist"
+"target_name": "oplist_fuzzer"
+"target_path": "/src/libplist/fuzz/oplist_fuzzer.cc"
