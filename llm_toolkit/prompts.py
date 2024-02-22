@@ -48,7 +48,7 @@ class Prompt:
 
   @abstractmethod
   def save(self, location: str) -> None:
-    """Save the prompt to a filelocation."""
+    """Saves the prompt to a filelocation."""
 
 
 class TextPrompt(Prompt):
@@ -83,7 +83,7 @@ class TextPrompt(Prompt):
     return content
 
   def save(self, location: str) -> None:
-    """Save the prompt to a filelocation."""
+    """Saves the prompt to a filelocation."""
     with open(location, 'w+') as prompt_file:
       prompt_file.write(self.get())
 
@@ -128,6 +128,6 @@ class OpenAIPrompt(Prompt):
     return [{'role': role, 'content': content}]
 
   def save(self, location: str) -> None:
-    """Save the prompt to a filelocation."""
+    """Saves the prompt to a filelocation."""
     with open(location, 'w+') as prompt_file:
       json.dump(self._prompt, prompt_file)

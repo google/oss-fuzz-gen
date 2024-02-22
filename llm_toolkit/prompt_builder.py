@@ -56,12 +56,12 @@ class PromptBuilder:
       project_example_content: Optional[list[list[str]]] = None,
       project_context_content: Optional[Tuple[str,
                                               str]] = None) -> prompts.Prompt:
-    """Build a prompt."""
+    """Builds a prompt."""
 
   @abstractmethod
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
                          errors: list[str]) -> prompts.Prompt:
-    """Build a fixer prompt."""
+    """Builds a fixer prompt."""
 
 
 class DefaultTemplateBuilder(PromptBuilder):
@@ -100,7 +100,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     return priming
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
-    """Find template file based on |template_dir|."""
+    """Finds template file based on |template_dir|."""
     preferred_template = os.path.join(template_dir, template_name)
     # Use the preferred template if it exists.
     if os.path.isfile(preferred_template):
