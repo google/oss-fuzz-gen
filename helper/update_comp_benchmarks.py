@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Updates all yamls in target benchmark set to match with source."""
-
 import argparse
 import os
 
@@ -25,6 +24,7 @@ TARGET_SET = 'comparison'
 
 
 def parse_args() -> argparse.Namespace:
+  """parse arguments"""
   parser = argparse.ArgumentParser(
       description=
       'Updates all benchmark yamls in <target> to match with <source>.')
@@ -43,8 +43,9 @@ def parse_args() -> argparse.Namespace:
   return parser.parse_args()
 
 
-if __name__ == '__main__':
-  # Usage: python3 -m helper.update_comp_benchmarks [--source src_dir] [--target target_dir].
+def main():
+  """Usage: python3 -m helper.update_comp_benchmarks.
+  Optional args:  [--source src_dir] [--target target_dir]"""
   args = parse_args()
   target_path = os.path.join(BENCHMARK_DIR, args.target)
   src_path = os.path.join(BENCHMARK_DIR, args.source)
@@ -56,8 +57,14 @@ if __name__ == '__main__':
     # Get raw name of the functions selected in target.
     functions = [b.function_name for b in target_bms]
     # Get the selected benchmarks from source.
-    selected_bms = list(
-        filter(lambda b: b.function_name in functions, source_bms))
+    selected_bms = []
+    for b in source_bms:
+      if b.function_name in functions:
+        selected_bms.append(b)
 
     Benchmark.to_yaml(selected_bms, target_path)
     print('Updated', file_name)
+
+
+if __name__ == '__main__':
+  main()
