@@ -30,7 +30,7 @@ from experiment import evaluator as exp_evaluator
 from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
-from llm_toolkit import models, output_parser
+from llm_toolkit import models, output_parser, prompt_builder, prompts
 
 # WARN: Avoid NUM_EVA for local experiments.
 # NUM_EVA controls the number of fuzz targets to evaluate in parallel by each
@@ -75,12 +75,15 @@ class AggregatedResult:
 
 def generate_targets(benchmark: Benchmark,
                      model: models.LLM,
+                     prompt: prompts.Prompt,
                      work_dirs: WorkDirs,
                      debug: bool = DEBUG) -> list[str]:
   """Generates fuzz target with LLM."""
   print(f'Generating targets for {benchmark.project} '
         f'{benchmark.function_signature} using {model.name}..')
-  model.generate_code(response_dir=work_dirs.raw_targets, log_output=debug)
+  model.generate_code(prompt,
+                      response_dir=work_dirs.raw_targets,
+                      log_output=debug)
 
   _, target_ext = os.path.splitext(benchmark.target_path)
   generated_targets = []
@@ -198,6 +201,7 @@ def prepare() -> None:
 
 def run(benchmark: Benchmark,
         model: models.LLM,
+        template_dir: str,
         work_dirs: WorkDirs,
         example_pair: Optional[list[list[str]]] = None,
         debug: bool = DEBUG,
@@ -211,7 +215,7 @@ def run(benchmark: Benchmark,
   logging.basicConfig(level=logging.INFO)
 
   if example_pair is None:
-    example_pair = models.EXAMPLES
+    example_pair = prompt_builder.EXAMPLES
 
   if manual_fix:
     generated_targets = [
@@ -243,15 +247,16 @@ def run(benchmark: Benchmark,
       context_info = (context_header, context_types)
       retriever.cleanup_asts()
 
-    model.prompt_path = model.prepare_generate_prompt(
-        work_dirs.prompt,
-        benchmark.function_signature,
-        benchmark.file_type,
-        example_pair,
-        project_examples,
-        project_context_content=context_info)
+    builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
+    prompt = builder.build(benchmark.function_signature,
+                           benchmark.file_type,
+                           example_pair,
+                           project_examples,
+                           project_context_content=context_info)
+    prompt.save(work_dirs.prompt)
     generated_targets = generate_targets(benchmark,
                                          model,
+                                         prompt,
                                          work_dirs,
                                          debug=debug)
     generated_targets = fix_code(work_dirs, generated_targets)
