@@ -652,8 +652,11 @@ class VertexAICodeBison32KModel(VertexAIModel):
 class GeminiPro(GeminiModel):
   """Gemini Pro."""
 
+  _max_output_tokens = 8192
+  context_window = 32760
+
   name = 'vertex_ai_gemini-pro'
-  _vertex_ai_model = 'gemini-pro'
+  _vertex_ai_model = 'gemini-1.0-pro'
 
 
 class AIBinaryModel(GoogleModel):
