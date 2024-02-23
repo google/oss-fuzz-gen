@@ -2,13 +2,13 @@
 - "name": "_ZN4cctz15local_time_zoneEv"
   "params": []
   "return_type": "cctz::time_zone::Impl *"
-  "signature": "bool load_time_zone(const string, time_zone *)"
+  "signature": "time_zone local_time_zone()"
 - "name": "_ZN4cctz15fixed_time_zoneERKNSt3__16chrono8durationIlNS0_5ratioILl1ELl1EEEEE"
   "params":
   - "name": "offset"
     "type": "std::chrono::duration *"
   "return_type": "cctz::time_zone::Impl *"
-  "signature": "bool load_time_zone(const string, time_zone *)"
+  "signature": "time_zone fixed_time_zone(const seconds)"
 - "name": "_ZNK4cctz9time_zone11descriptionEv"
   "params":
   - "name": "this"

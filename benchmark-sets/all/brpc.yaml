@@ -6,7 +6,7 @@
   - "name": ""
     "type": "char *"
   - "name": ""
-    "type": "google::protobuf::DescriptorPool::ErrorCollector *"
+    "type": "brpc::ProgressiveReader *"
   "return_type": "int"
   "signature": "int RunNamingService(ConsulNamingService *, const char *, NamingServiceActions *)"
 - "name": "_ZN4brpcL12GlobalUpdateEPv"

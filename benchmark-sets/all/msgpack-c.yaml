@@ -18,7 +18,7 @@
   - "name": "this"
     "type": "msgpack::v1::type_error *"
   "return_type": "void"
-  "signature": "void type_error::type_error()"
+  "signature": "void type_error::~type_error()"
 - "name": "_ZN7msgpack2v123container_size_overflowD2Ev"
   "params":
   - "name": "this"

@@ -44,7 +44,7 @@
   - "name": "callback_data"
     "type": "char *"
   "return_type": "void"
-  "signature": "int icalcomponent_is_busy(icalcomponent *)"
+  "signature": "void icalcomponent_foreach_recurrence(icalcomponent *, icaltimetype, icaltimetype,  *, void *)"
 - "name": "icaltimezone_truncate_vtimezone"
   "params":
   - "name": "vtz"

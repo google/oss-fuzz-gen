@@ -8,7 +8,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "void"
-  "signature": "Data<> Base::>(const uint64_t)"
+  "signature": "Data<> Base::Get<fuzzing::types::Container<unsigned char, false, false> >(const uint64_t)"
 - "name": "_ZN7fuzzing10datasource4Base3GetINS_5types9ContainerIcLb1ELb0EEEEET_m"
   "params":
   - "name": "this"
@@ -18,7 +18,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "void"
-  "signature": "String<> Base::>(const uint64_t)"
+  "signature": "String<> Base::Get<fuzzing::types::Container<char, true, false> >(const uint64_t)"
 - "name": "oc_state_frag_recon_c"
   "params":
   - "name": "_state"
@@ -44,7 +44,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "void"
-  "signature": "string Base::>(const uint64_t)"
+  "signature": "vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > Base::Get<std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >(const uint64_t)"
 - "name": "_ZN7fuzzing10datasource10Datasource3getEmmm"
   "params":
   - "name": "this"
@@ -58,7 +58,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "void"
-  "signature": "void Datasource::Datasource(const uint8_t *, const size_t)"
+  "signature": "vector<unsigned char, std::__1::allocator<unsigned char> > Datasource::get(const size_t, const size_t, const uint64_t)"
 "language": "c++"
 "project": "libtheora"
 "target_name": "fuzzer-decoder"

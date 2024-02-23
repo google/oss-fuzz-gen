@@ -50,7 +50,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "char *"
-  "signature": "const char * int>(JsonPrinter *, const void *, const Type, int, const uint8_t *)"
+  "signature": "const char * PrintVector<flatbuffers::Offset64<void>, unsigned int>(JsonPrinter *, const void *, const Type, int, const uint8_t *)"
 "language": "c++"
 "project": "flatbuffers"
 "target_name": "64bit_fuzzer"

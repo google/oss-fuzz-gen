@@ -36,7 +36,7 @@
   - "name": "boundary_tolerance"
     "type": "double"
   "return_type": "void"
-  "signature": "uint8 const S2Cell::GetCellEdgeIncidenceMask(const S2Point, double)"
+  "signature": "void S2Polygon::InitToSimplifiedInCell(const S2Polygon, const S2Cell, S1Angle, S1Angle)"
 - "name": "_ZN9S2Polygon16InitToSimplifiedERKS_RKN9S2Builder12SnapFunctionE"
   "params":
   - "name": "this"
