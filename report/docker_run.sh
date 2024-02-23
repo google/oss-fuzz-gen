@@ -100,7 +100,7 @@ $PYTHON run_all_experiments.py \
   --template-directory 'prompts/template_xml' \
   --work-dir ${LOCAL_RESULTS_DIR:?} \
   --num-samples 10 \
-  --mode "$MODEL"
+  --model "$MODEL"
 
 export ret_val=$?
 
