@@ -21,9 +21,12 @@
 ##   gcs_dir is the name of the directory for the report in gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/.
 ##     Defaults to '$(whoami)-%YY-%MM-%DD'.
 
+# TODO(dongge): Re-write this script in Python as it gets more complex.
+
 RESULTS_DIR=$1
 GCS_DIR=$2
 BENCHMARK_SET=$3
+MODEL=$4
 WEB_PORT=8080
 DATE=$(date '+%Y-%m-%d')
 
@@ -38,15 +41,22 @@ fi
 
 if [[ $GCS_DIR = '' ]]
 then
-  GCS_DIR="$(whoami)-${DATE:?}"
-  echo "GCS directory was not specified as the second argument. Defaulting to ${GCS_DIR:?}."
+  echo "This script needs to take gcloud Bucket directory as the second argument. Consider using $(whoami)-${DATE:?}."
+  exit 1
+fi
+
+# The LLM used to generate and fix fuzz targets.
+if [[ $MODEL = '' ]]
+then
+  echo "This script needs to take LLM as the third argument."
+  exit 1
 fi
 
 mkdir results-report
 
 while true; do
   # Spin up the web server generating the report (and bg the process).
-  $PYTHON -m report.web "${RESULTS_DIR:?}" "${WEB_PORT:?}" "${BENCHMARK_SET:?}" &
+  $PYTHON -m report.web "${RESULTS_DIR:?}" "${WEB_PORT:?}" "${BENCHMARK_SET:?}" "$MODEL" &
   pid_web=$!
 
   cd results-report || exit 1
