@@ -12,7 +12,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "void"
-  "signature": "const LocalTime * findLocalTime(const Data *, const DateTime, bool)"
+  "signature": "TimeZone loadZoneFile(const char *)"
 - "name": "_ZN5muduo6detail16readTimeZoneFileEPKcPNS_8TimeZone4DataE"
   "params":
   - "name": ""

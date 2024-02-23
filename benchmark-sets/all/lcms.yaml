@@ -15,7 +15,7 @@
     "type": "double *"
   - "name": "dwFlags"
     "type": "int"
-  "return_type": "struct _cmsPipeline_struct 73 *"
+  "return_type": "struct _cmsPipeline_struct *"
   "signature": "cmsPipeline * _cmsDefaultICCintents(cmsContext, cmsUInt32Number, cmsUInt32Number *, cmsHPROFILE *, cmsBool *, cmsFloat64Number *, cmsUInt32Number)"
 - "name": "cmsCreateProofingTransform"
   "params":

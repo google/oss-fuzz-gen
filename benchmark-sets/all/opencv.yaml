@@ -8,7 +8,7 @@
   - "name": ""
     "type": "std::string *"
   "return_type": "void"
-  "signature": "void handleFailed(TFLayerHandler *, const NodeDef)"
+  "signature": "Net readNetFromTensorflow(const String, const String)"
 - "name": "_ZN2cv3dnn14dnn4_v202312256detail17readNetDiagnosticINS1_12_GLOBAL__N_110TFImporterEJPKcS7_EEENS1_3NetEDpOT0_"
   "params":
   - "name": ""
@@ -18,7 +18,7 @@
   - "name": ""
     "type": "char **"
   "return_type": "void"
-  "signature": "N/A"
+  "signature": "Net readNetDiagnostic<cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter, const char *, const char *>(const char *, const char *)"
 - "name": "_ZN2cv3dnn14dnn4_v2023122521readNetFromTensorflowERKNSt3__16vectorIhNS2_9allocatorIhEEEES8_"
   "params":
   - "name": ""
@@ -28,7 +28,7 @@
   - "name": ""
     "type": "std::vector *"
   "return_type": "void"
-  "signature": "void handleFailed(TFLayerHandler *, const NodeDef)"
+  "signature": "Net readNetFromTensorflow(const std::__1::allocator<unsigned char> >, const std::__1::allocator<unsigned char> >)"
 - "name": "_ZN2cv3dnn14dnn4_v202312256detail7readNetINS1_12_GLOBAL__N_110TFImporterEJPKcS7_EEENS1_3NetEDpOT0_"
   "params":
   - "name": ""
@@ -38,7 +38,7 @@
   - "name": ""
     "type": "char **"
   "return_type": "void"
-  "signature": "N/A"
+  "signature": "Net readNet<cv::dnn::dnn4_v20231225::(anonymous namespace)::TFImporter, const char *, const char *>(const char *, const char *)"
 - "name": "_ZN2cv3dnn14dnn4_v2023122512_GLOBAL__N_110TFImporterC2ERNS1_3NetEPKcS7_"
   "params":
   - "name": ""

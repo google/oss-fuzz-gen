@@ -6,7 +6,7 @@
   - "name": ""
     "type": "std::string *"
   "return_type": "void"
-  "signature": "void Iterator(std::__1::allocator<char> > &> *, std::__1::allocator<char> >, size_t)"
+  "signature": "Iterator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &> zero_length_end(std::__1::allocator<char> >)"
 - "name": "_ZN4iter4impl10CompressedIRNSt3__16vectorIiNS2_9allocatorIiEEEERNS3_IbNS4_IbEEEEE8IteratorIS7_SA_EppEv"
   "params":
   - "name": "this"

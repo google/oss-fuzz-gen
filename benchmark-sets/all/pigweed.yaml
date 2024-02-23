@@ -12,7 +12,7 @@
   - "name": ""
     "type": "pw::protobuf::internal::MessageField *"
   "return_type": "int"
-  "signature": "Result<pw::protobuf::StreamDecoder::Bounds> GetLengthDelimitedPayloadBounds()"
+  "signature": "Status StreamDecoder::Read(span<std::byte, 18446744073709551615UL>, span<const pw::protobuf::internal::MessageField, 18446744073709551615UL>)"
 - "name": "_ZN2pw8protobuf13StreamEncoder5WriteENS_4spanIKSt4byteLm18446744073709551615EEENS2_IKNS0_8internal12MessageFieldELm18446744073709551615EEE"
   "params":
   - "name": "this"
@@ -26,7 +26,7 @@
   - "name": ""
     "type": "pw::protobuf::internal::MessageField *"
   "return_type": "int"
-  "signature": "void StreamEncoder::CloseNestedMessage(StreamEncoder)"
+  "signature": "Status StreamEncoder::Write(span<const std::byte, 18446744073709551615UL>, span<const pw::protobuf::internal::MessageField, 18446744073709551615UL>)"
 - "name": "_ZNK2pw9tokenizer11Detokenizer16DetokenizeBase64ENSt3__117basic_string_viewIcNS2_11char_traitsIcEEEE"
   "params":
   - "name": "this"

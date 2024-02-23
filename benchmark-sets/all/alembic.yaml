@@ -32,7 +32,7 @@
   - "name": ""
     "type": "std::vector *"
   "return_type": "void"
-  "signature": "void ~IFactory(IFactory *)"
+  "signature": "IArchive getArchive(IFactory *, const std::__1::allocator<char> > > >)"
 - "name": "_ZN7Alembic14AbcCoreFactory3v128IFactory10getArchiveERKNSt3__16vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEERNS2_8CoreTypeE"
   "params":
   - "name": ""
@@ -44,7 +44,7 @@
   - "name": ""
     "type": "int *"
   "return_type": "void"
-  "signature": "void ~IFactory(IFactory *)"
+  "signature": "IArchive getArchive(IFactory *, const std::__1::allocator<char> > > >, CoreType)"
 - "name": "_ZN7Alembic12AbcCoreOgawa3v127SprImpl9getSampleElPv"
   "params":
   - "name": ""

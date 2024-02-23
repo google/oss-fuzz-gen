@@ -55,5 +55,5 @@
   "signature": "mg_connection * mg_download(const char *, int, int, char *, size_t, const char *, void)"
 "language": "c"
 "project": "civetweb"
-"target_name": "civetweb_fuzz1"
+"target_name": "civetweb_fuzz3"
 "target_path": "/src/civetweb/fuzztest/fuzzmain.c"

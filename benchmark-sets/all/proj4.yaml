@@ -38,7 +38,7 @@
   - "name": ""
     "type": "std::shared_ptr *"
   "return_type": "void"
-  "signature": "list<std::__1::pair<dropbox::oxygen::nn<std::__1::shared_ptr<osgeo::proj::crs::CRS> >, int>, std::__1::allocator<std::__1::pair<dropbox::oxygen::nn<std::__1::shared_ptr<osgeo::proj::crs::CRS> >, int> > > _identify()"
+  "signature": "list<std::__1::pair<dropbox::oxygen::nn<std::__1::shared_ptr<osgeo::proj::crs::CRS> >, int>, std::__1::allocator<std::__1::pair<dropbox::oxygen::nn<std::__1::shared_ptr<osgeo::proj::crs::CRS> >, int> > > _identify(const BoundCRS *, const AuthorityFactoryPtr)"
 - "name": "_ZNK5osgeo4proj3crs3CRS31createBoundCRSToWGS84IfPossibleERKNSt3__110shared_ptrINS0_2io15DatabaseContextEEENS0_9operation26CoordinateOperationContext18IntermediateCRSUseE"
   "params":
   - "name": ""

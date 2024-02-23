@@ -20,7 +20,7 @@
   - "name": ""
     "type": "struct boost::json::parse_options *"
   "return_type": "void"
-  "signature": "N/A"
+  "signature": "value parse(istream, error_code, storage_ptr, const parse_options)"
 - "name": "_ZN5boost4json5parseENS_4core17basic_string_viewIcEERNSt3__110error_codeENS0_11storage_ptrERKNS0_13parse_optionsE"
   "params":
   - "name": "s"
@@ -36,7 +36,7 @@
   - "name": ""
     "type": "struct boost::json::parse_options *"
   "return_type": "void"
-  "signature": "N/A"
+  "signature": "value parse(string_view, error_code, storage_ptr, const parse_options)"
 - "name": "_ZN5boost4json5parseERNSt3__113basic_istreamIcNS1_11char_traitsIcEEEENS0_11storage_ptrERKNS0_13parse_optionsE"
   "params":
   - "name": "is"
@@ -48,7 +48,7 @@
   - "name": ""
     "type": "struct boost::json::parse_options *"
   "return_type": "void"
-  "signature": "N/A"
+  "signature": "value parse(istream, storage_ptr, const parse_options)"
 - "name": "_ZN5boost4json5parseENS_4core17basic_string_viewIcEENS0_11storage_ptrERKNS0_13parse_optionsE"
   "params":
   - "name": "s"
@@ -62,7 +62,7 @@
   - "name": ""
     "type": "struct boost::json::parse_options *"
   "return_type": "void"
-  "signature": "N/A"
+  "signature": "value parse(string_view, storage_ptr, const parse_options)"
 "language": "c++"
 "project": "boost-json"
 "target_name": "fuzz_parser"

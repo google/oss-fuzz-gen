@@ -24,7 +24,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "void"
-  "signature": "void delete(void *, void *)"
+  "signature": "void operator delete(void *, void *)"
 "language": "c++"
 "project": "arduinojson"
 "target_name": "msgpack_fuzzer"

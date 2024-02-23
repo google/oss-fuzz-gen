@@ -1,12 +1,4 @@
 "functions":
-- "name": "_ZN6google8protobuf11MessageLite18CreateMaybeMessageIN14gifProtoFuzzer10BasicChunkEEEPT_PNS0_5ArenaERKS5_"
-  "params":
-  - "name": "arena"
-    "type": "google::protobuf::Arena *"
-  - "name": "from"
-    "type": "gifProtoFuzzer::BasicChunk *"
-  "return_type": "gifProtoFuzzer::BasicChunk *"
-  "signature": "BasicChunk * CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(Arena *, const BasicChunk)"
 - "name": "_Z21fuzz_dgif_ala_androidPKhm"
   "params":
   - "name": "Data"
@@ -15,6 +7,14 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int fuzz_dgif_ala_android(const uint8_t *, size_t)"
+- "name": "_ZN6google8protobuf11MessageLite18CreateMaybeMessageIN14gifProtoFuzzer10BasicChunkEEEPT_PNS0_5ArenaERKS5_"
+  "params":
+  - "name": "arena"
+    "type": "google::protobuf::Arena *"
+  - "name": "from"
+    "type": "gifProtoFuzzer::BasicChunk *"
+  "return_type": "gifProtoFuzzer::BasicChunk *"
+  "signature": "BasicChunk * CreateMaybeMessage<gifProtoFuzzer::BasicChunk>(Arena *, const BasicChunk)"
 - "name": "_ZN6google8protobuf5Arena14InternalHelperIN14gifProtoFuzzer10BasicChunkEE9ConstructIJPS1_RKS4_EEEPS4_PvDpOT_"
   "params":
   - "name": "ptr"
@@ -24,7 +24,7 @@
   - "name": "args"
     "type": "gifProtoFuzzer::BasicChunk *"
   "return_type": "gifProtoFuzzer::BasicChunk *"
-  "signature": "ImageDescriptor * &>(void *, Arena *, const ImageDescriptor)"
+  "signature": "ImageDescriptor * Construct<google::protobuf::Arena *, const gifProtoFuzzer::ImageDescriptor &>(void *, Arena *, const ImageDescriptor)"
 - "name": "_Z9fuzz_dgifPKhm"
   "params":
   - "name": "Data"

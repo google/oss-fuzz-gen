@@ -24,7 +24,7 @@
   - "name": ""
     "type": "struct ots::OpenTypeSILF::SILSub::SILPass *"
   "return_type": "void"
-  "signature": "void SILPass::SILPass(const SILPass)"
+  "signature": "void SILPass::~SILPass(const SILPass)"
 - "name": "_ZN3ots12OpenTypeSILF6SILSubC2ERKS1_"
   "params":
   - "name": "this"
@@ -32,7 +32,7 @@
   - "name": ""
     "type": "struct ots::OpenTypeSILF::SILSub *"
   "return_type": "void"
-  "signature": "void SILSub::SILSub(const SILSub)"
+  "signature": "void SILSub::~SILSub(const SILSub)"
 - "name": "inflateSync"
   "params":
   - "name": "strm"

@@ -55,5 +55,5 @@
   "signature": "TSS2_RC Tss2_Sys_Create(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_SENSITIVE_CREATE *, const TPM2B_PUBLIC *, const TPM2B_DATA *, const TPML_PCR_SELECTION *, TPM2B_PRIVATE *, TPM2B_PUBLIC *, TPM2B_CREATION_DATA *, TPM2B_DIGEST *, TPMT_TK_CREATION *, TSS2L_SYS_AUTH_RESPONSE *)"
 "language": "c++"
 "project": "tpm2-tss"
-"target_name": "Tss2_Sys_PolicyNvWritten_Prepare"
+"target_name": "Tss2_Sys_Startup_Prepare"
 "target_path": "/src/tpm2-tss/test/fuzz/main-sys.c"
