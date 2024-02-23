@@ -26,10 +26,13 @@
 ##   run_timeout: Timeout in seconds for each fuzzing target.
 ##     Default: 300
 
+# TODO(dongge): Re-write this script in Python as it gets more complex.
+
 BENCHMARK_SET=$1
 FREQUENCY_LABEL=$2
 RUN_TIMEOUT=$3
 SUB_DIR=$4
+MODEL=$5
 # Uses python3 by default and /venv/bin/python3 for Docker containers.
 PYTHON="$( [[ -x "/venv/bin/python3" ]] && echo "/venv/bin/python3" || echo "python3" )"
 export PYTHON
@@ -67,6 +70,12 @@ then
   echo "Sub-directory was not specified as the fourth argument. Defaulting to ${SUB_DIR:?}. Please consider using sub-directory to classify your experiment."
 fi
 
+# The LLM used to generate and fix fuzz targets.
+if [[ $MODEL = '' ]]
+then
+  MODEL='vertex_ai_code-bison-32k'
+  echo "LLM was not specified as the fifth argument. Defaulting to ${MODEL:?}."
+fi
 DATE=$(date '+%Y-%m-%d')
 LOCAL_RESULTS_DIR='results'
 # Experiment name is used to label the Cloud Builds and as part of the
@@ -79,7 +88,7 @@ EXPERIMENT_NAME="${DATE:?}-${FREQUENCY_LABEL:?}-${BENCHMARK_SET:?}"
 GCS_REPORT_DIR="${SUB_DIR:?}/${EXPERIMENT_NAME:?}"
 
 # Generate a report and upload it to GCS
-bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" "${BENCHMARK_SET:?}" &
+bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" "${BENCHMARK_SET:?}" "${MODEL:?}" &
 pid_report=$!
 
 # Run the experiment
@@ -91,7 +100,7 @@ $PYTHON run_all_experiments.py \
   --template-directory 'prompts/template_xml' \
   --work-dir ${LOCAL_RESULTS_DIR:?} \
   --num-samples 10 \
-  --mode 'vertex_ai_code-bison-32k'
+  --mode "$MODEL"
 
 export ret_val=$?
 

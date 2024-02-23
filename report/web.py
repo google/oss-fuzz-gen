@@ -266,18 +266,23 @@ def get_targets(benchmark: str, sample: str) -> list[Target]:
 
 @app.route('/')
 def index():
-  return render_template('index.html', benchmarks=list_benchmarks())
+  return render_template('index.html',
+                         benchmarks=list_benchmarks(),
+                         model=model)
 
 
 @app.route('/json')
 def index_json():
-  return render_template('index.json', benchmarks=list_benchmarks())
+  return render_template('index.json',
+                         benchmarks=list_benchmarks(),
+                         model=model)
 
 
 @app.route('/sort')
 def index_sort():
   return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks()))
+                         benchmarks=sort_benchmarks(list_benchmarks()),
+                         model=model)
 
 
 @app.route('/benchmark/<benchmark>')
@@ -334,8 +339,10 @@ def serve(directory: str, port: int, benchmark_set: str):
 
 
 if __name__ == '__main__':
+  # TODO(Dongge): Use argparser as this script gets more complex.
   results_dir = sys.argv[1]
   server_port = int(sys.argv[2])
   benchmark_dir = sys.argv[3] if len(sys.argv) > 3 else ''
+  model = sys.argv[4] if len(sys.argv) > 4 else ''
 
   serve(results_dir, server_port, benchmark_dir)
