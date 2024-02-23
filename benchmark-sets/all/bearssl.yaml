@@ -20,7 +20,7 @@
   - "name": ""
     "type": "cryptofuzz::operation::ECDSA_Sign *"
   "return_type": "void"
-  "signature": "optional<cryptofuzz::component::ECDSA_Signature> OpECGDSA_Sign()"
+  "signature": "optional<cryptofuzz::component::ECDSA_Signature> OpECGDSA_Sign(Botan *, ECGDSA_Sign)"
 - "name": "_ZN10cryptofuzz6module12Botan_detail11ECxDSA_SignIN5Botan17ECGDSA_PrivateKeyENS_9operation11ECGDSA_SignELb0EEENSt3__18optionalINS_9component15ECDSA_SignatureEEERT0_"
   "params":
   - "name": ""
@@ -28,7 +28,7 @@
   - "name": ""
     "type": "cryptofuzz::operation::ECDSA_Sign *"
   "return_type": "void"
-  "signature": "optional<cryptofuzz::component::ECDSA_Signature> true>()"
+  "signature": "optional<cryptofuzz::component::ECDSA_Signature> ECxDSA_Sign<Botan::ECDSA_PrivateKey, cryptofuzz::operation::ECDSA_Sign, true>(ECDSA_Sign)"
 - "name": "_ZN10cryptofuzz22Builtin_tests_importer3RunEv"
   "params":
   - "name": ""
@@ -50,7 +50,7 @@
   - "name": ""
     "type": "bool"
   "return_type": "void"
-  "signature": "secure_vector<unsigned char> private_key_bits(const EC_PrivateKey *)"
+  "signature": "void EC_PrivateKey(EC_PrivateKey *, const AlgorithmIdentifier, span<const unsigned char, 18446744073709551615UL>, bool)"
 "language": "c++"
 "project": "bearssl"
 "target_name": "cryptofuzz-bearssl"

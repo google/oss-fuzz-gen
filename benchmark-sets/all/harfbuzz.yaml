@@ -64,7 +64,7 @@
   - "name": "y"
     "type": "double *"
   "return_type": "double"
-  "signature": "const Rule<OT::Layout::SmallTypes> *>(const  *, const true>, const RuleSet<OT::Layout::SmallTypes> *)"
+  "signature": "double solve_itp<(lambda at ../../src/harfbuzz/src/hb-shape.cc:405:12)>(from /work/build/../../src/harfbuzz/src/hbshape.cc:405 DW_TAG_class_type Composite type, double, double, double, double, double, double, double, double)"
 - "name": "_ZZ16hb_shape_justifyENK3$_3clEd"
   "params":
   - "name": "this"

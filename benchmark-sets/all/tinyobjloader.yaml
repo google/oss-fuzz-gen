@@ -70,7 +70,7 @@
   - "name": ""
     "type": "struct tinyobj::material_t *"
   "return_type": "void"
-  "signature": "void material_t::material_t()"
+  "signature": "void material_t::~material_t()"
 "language": "c++"
 "project": "tinyobjloader"
 "target_name": "fuzz_ParseFromString"

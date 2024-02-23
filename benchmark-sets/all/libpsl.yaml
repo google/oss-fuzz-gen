@@ -87,5 +87,5 @@
   "signature": "int32_t _appendKeywordsToLanguageTag(const char *, char *, int32_t, UBool, UBool, UErrorCode *)"
 "language": "c++"
 "project": "libpsl"
-"target_name": "libpsl_idn_fuzzer"
+"target_name": "libpsl_fuzzer"
 "target_path": "/src/libpsl/fuzz/libpsl_fuzzer.c"

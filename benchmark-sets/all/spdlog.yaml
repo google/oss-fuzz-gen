@@ -12,7 +12,7 @@
   - "name": ""
     "type": "fmt::v9::detail::value *"
   "return_type": "fmt::v9::basic_memory_buffer *"
-  "signature": "appender 0>()"
+  "signature": "back_insert_iterator<fmt::v9::basic_memory_buffer<char, 250UL, std::__1::allocator<char> > > vformat_to<std::__1::back_insert_iterator<fmt::v9::basic_memory_buffer<char, 250UL, std::__1::allocator<char> > >, 0>(back_insert_iterator<fmt::v9::basic_memory_buffer<char, 250UL, std::__1::allocator<char> > >, string_view, format_args)"
 - "name": "_ZN3fmt2v96detail12format_floatIdEEiT_iNS1_11float_specsERNS1_6bufferIcEE"
   "params":
   - "name": ""
@@ -24,7 +24,7 @@
   - "name": ""
     "type": "fmt::v9::detail::buffer *"
   "return_type": "int"
-  "signature": "int divmod_assign(bigint *, const bigint)"
+  "signature": "int format_float<double>(double, int, float_specs, buffer<char>)"
 - "name": "_ZN6spdlog5sinks9base_sinkINSt3__15mutexEE12set_pattern_ERKNS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE"
   "params":
   - "name": ""
@@ -48,7 +48,7 @@
   - "name": ""
     "type": "std::string *"
   "return_type": "void"
-  "signature": "void file_event_handlers(file_event_handlers *)"
+  "signature": "unique_ptr<spdlog::details::full_formatter, std::__1::default_delete<spdlog::details::full_formatter> > make_unique<spdlog::details::full_formatter, spdlog::details::padding_info>(padding_info)"
 "language": "c++"
 "project": "spdlog"
 "target_name": "log_fuzzer"

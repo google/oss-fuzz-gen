@@ -28,7 +28,7 @@
   - "name": "n"
     "type": "size_t"
   "return_type": "void"
-  "signature": "void >(std::__1::allocator<char> > > > *, void *, size_t)"
+  "signature": "void Deallocate<8UL, std::__1::allocator<std::__1::pair<const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >(std::__1::allocator<char> > > > *, void *, size_t)"
 - "name": "_ZZN5phmap4priv12raw_hash_setINS0_17FlatHashMapPolicyIjiEENS_4HashIjEENS_7EqualToIjEENSt3__19allocatorINS8_4pairIKjiEEEEE27drop_deletes_without_resizeEvENKUlmE_clEm"
   "params":
   - "name": "this"
