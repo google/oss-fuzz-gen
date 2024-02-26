@@ -19,6 +19,7 @@ import logging
 import os
 import shutil
 import subprocess
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from multiprocessing import pool
 from typing import List, Optional
 
@@ -177,14 +178,31 @@ def check_targets(
   evaluator = exp_evaluator.Evaluator(builder_runner, benchmark, work_dirs)
 
   ai_target_pairs = [(ai_binary, target) for target in generated_targets]
-  with pool.ThreadPool(NUM_EVA) as p:
-    for i, target_stat in enumerate(
-        p.starmap(evaluator.check_target, ai_target_pairs)):
-      if target_stat is None:
-        print(f'Error evaluating target {generated_targets[i]}')
-        continue
+  if cloud_experiment_name:
+    # Use multi-threads for cloud experiments, because each thread only needs to
+    # wait for cloud build results or conduct simple I/O tasks.
+    with ThreadPoolExecutor(max_workers=NUM_EVA) as executor:
+      future_to_index = {
+          executor.submit(evaluator.check_target, *pair): i
+          for i, pair in enumerate(ai_target_pairs)
+      }
+      for future in as_completed(future_to_index):
+        i = future_to_index[future]
+        target_stat = future.result()
+        if target_stat is None:
+          print(f'Error evaluating target {generated_targets[i]}')
+          continue
 
-      target_stats.append((i, target_stat))
+        target_stats.append((i, target_stat))
+  else:
+    # Use multi-process for local experiments, because each process needs to
+    # built fuzz targets in local docker containers.
+    with pool.ThreadPool(NUM_EVA) as p:
+      for i, target_stat in enumerate(
+          p.starmap(evaluator.check_target, ai_target_pairs)):
+        if target_stat is None:
+          print(f'Error evaluating target {generated_targets[i]}')
+          continue
 
   if len(target_stats) > 0:
     return aggregate_results(target_stats, generated_targets)

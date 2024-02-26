@@ -18,7 +18,9 @@ import argparse
 import logging
 import os
 import sys
+import time
 import traceback
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from multiprocessing import Pool
 
 import run_one_experiment
@@ -51,7 +53,7 @@ class Result:
     self.result = result
 
 
-def get_experiment_configs(
+def _get_experiment_configs(
     args: argparse.Namespace
 ) -> list[tuple[benchmarklib.Benchmark, argparse.Namespace]]:
   """Constructs a list of experiment configs based on the |BENCHMARK_DIR| and
@@ -204,25 +206,67 @@ def _print_experiment_results(results: list[Result]):
           f'\n{result.result}\n')
 
 
+def _execute_benchmark_experiment(
+    config: tuple[benchmarklib.Benchmark, argparse.Namespace]) -> Result:
+  """
+  Executes one experiment with one benchmark |config| and returns the result.
+  """
+  result = run_experiments(*config)
+  _print_experiment_result(result)
+  return result
+
+
+def parallelize_experiments_in_threads(configs):
+  """Executes experiments in a multi-threaded manner."""
+  futures = []
+  with ThreadPoolExecutor(max_workers=NUM_EXP) as executor:
+    for config in configs:
+      futures.append(executor.submit(_execute_benchmark_experiment, config))
+      # Stagger the thread creation.
+      # Avoid having a peak CPU usage at the beginning because of creating
+      # too many threads.
+      # Approx. 30s is sufficient because these threads will soon become idle
+      # when waiting for cloud build results.
+      time.sleep(30)
+  return [future.result() for future in as_completed(futures)]
+
+
+def parallelize_experiments_in_processes(configs):
+  """Executes experiments in a multi-process manner."""
+  results = []
+  with Pool(NUM_EXP) as pool:
+    for config in configs:
+      results.append(pool.apply_async(_execute_benchmark_experiment, config))
+      # Stagger the process creation.
+      # Avoid having a peak CPU usage at the beginning because of creating
+      # too many processes.
+      # Approx. 30s is sufficient because these threads will soon become idle
+      # when waiting for cloud build results.
+      time.sleep(30)
+  return [result.get() for result in results]
+
+
 def main():
   logging.basicConfig(level=logging.INFO)
   args = parse_args()
   run_one_experiment.prepare()
 
-  experiment_configs = get_experiment_configs(args)
+  experiment_configs = _get_experiment_configs(args)
   experiment_results = []
 
   print(f'Running {NUM_EXP} experiment(s) in parallel.')
   if NUM_EXP == 1:
-    for config in experiment_configs:
-      result = run_experiments(*config)
-      experiment_results.append(result)
-      _print_experiment_result(result)
+    experiment_results = [
+        _execute_benchmark_experiment(config) for config in experiment_configs
+    ]
+  elif args.cloud_experiment_name:
+    # Use multi-threads for cloud experiments, because each thread only needs to
+    # wait for cloud build results or conduct simple I/O tasks.
+    parallelize_experiments_in_threads(experiment_configs)
   else:
-    with Pool(NUM_EXP) as p:
-      for result in p.starmap(run_experiments, experiment_configs):
-        experiment_results.append(result)
-        _print_experiment_result(result)
+    # Use multi-process for local experiments, because each process needs to
+    # built fuzz targets in local docker containers.
+    parallelize_experiments_in_processes(experiment_configs)
 
   _print_experiment_results(experiment_results)
 
