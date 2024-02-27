@@ -18,6 +18,7 @@ import dataclasses
 import json
 import logging
 import os
+import random
 import re
 import subprocess as sp
 import time
@@ -26,7 +27,6 @@ from typing import Any, Optional
 
 from google.cloud import storage
 
-from experiment import benchmark as benchmarklib
 from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
@@ -328,7 +328,9 @@ class CloudBuilderRunner(BuilderRunner):
       # Temp workaround for issue #12.
       'You do not currently have an active account selected',
       # Workaround for issue #85.
-      'gcloud crashed (OSError): unexpected end of data'
+      'gcloud crashed (OSError): unexpected end of data',
+      # As mentioned in pr #100.
+      'RESOURCE_EXHAUSTED'
   ]
 
   def __init__(self, *args, experiment_name: str, experiment_bucket: str,
@@ -376,12 +378,19 @@ class CloudBuilderRunner(BuilderRunner):
                cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
         break
       except sp.CalledProcessError as e:
-        # Remove \n for single log entry on cloud.
+        # Replace \n for single log entry on cloud.
         stdout = e.stdout.decode('utf-8').replace('\n', '\t')
         stderr = e.stderr.decode('utf-8').replace('\n', '\t')
-        if (any(error in stdout + stderr for error in self._RETRYABLE_ERRORS)
-            and attempt_id < CLOUD_EXP_MAX_ATTEMPT):
+
+        captured_error = next(
+            (err for err in self._RETRYABLE_ERRORS if err in stdout + stderr),
+            '')
+        if captured_error and attempt_id < CLOUD_EXP_MAX_ATTEMPT:
           delay = 5 * 2**attempt_id
+          if captured_error == 'RESOURCE_EXHAUSTED':
+            # Add random jitter in case of exceeding request per minute quota.
+            delay += random.randint(1, 10)
+
           logging.warning(f'Failed to evaluate {os.path.realpath(target_path)} '
                           f'on cloud, attempt {attempt_id}:\n'
                           f'{stdout}\n'
