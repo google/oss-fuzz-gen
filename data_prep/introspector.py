@@ -17,9 +17,11 @@
 import json
 import logging
 import os
+import random
 import re
 import subprocess
 import sys
+import time
 from typing import Dict, List, Optional
 
 import requests
@@ -30,6 +32,7 @@ from experiment import benchmark as benchmarklib
 from experiment import oss_fuzz_checkout
 
 TIMEOUT = 10
+MAX_RETRY = 5
 INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
 INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
 INTROSPECTOR_FUNCTION = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
@@ -40,22 +43,34 @@ INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
 
 
 def _query_introspector(api: str, params: dict) -> dict:
-  """Queries FuzzIntrospector API and return data specified by |key|,
-  returns None if unable to get the value."""
-  try:
-    resp = requests.get(api, params, timeout=TIMEOUT)
-  except requests.exceptions.Timeout as err:
-    logging.error('Failed to get data from FI due to timeout\n%s', err)
-    return {}
-  if not resp.ok:
-    logging.error(
-        'Failed to get data from FI\n'
-        '-----------Response received------------\n'
-        '%s\n'
-        '------------End of response-------------',
-        resp.content.decode("utf-8").strip())
-    return {}
-  return resp.json()
+  """Queries FuzzIntrospector API and returns the json payload,
+  returns an empty dict if unable to get data."""
+  for attempt_num in range(1, MAX_RETRY + 1):
+    try:
+      resp = requests.get(api, params, timeout=TIMEOUT)
+      if not resp.ok:
+        logging.error(
+            'Failed to get data from FI:\n'
+            '%s\n'
+            '-----------Response received------------\n'
+            '%s\n'
+            '------------End of response-------------', resp.url,
+            resp.content.decode('utf-8').strip())
+        break
+      return resp.json()
+    except requests.exceptions.Timeout as err:
+      if attempt_num == MAX_RETRY:
+        logging.error(
+            'Failed to get data from FI due to timeout, max retry exceeded:\n'
+            'API: %s, params: %s\n'
+            'Error: %s', api, params, err)
+        break
+      delay = 5 * 2**attempt_num + random.randint(1, 10)
+      logging.warning(
+          'Failed to get data from FI due to timeout on attempt %d, '
+          'retry in %ds...', attempt_num, delay)
+      time.sleep(delay)
+  return {}
 
 
 def query_introspector_for_unreached_functions(project: str) -> list[dict]:
