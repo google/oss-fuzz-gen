@@ -70,6 +70,10 @@ def _query_introspector(api: str, params: dict) -> dict:
           'Failed to get data from FI due to timeout on attempt %d, '
           'retry in %ds...', attempt_num, delay)
       time.sleep(delay)
+    except requests.exceptions.RequestException as err:
+      logging.error('Failed to get data from FI, unexpected error: %s', err)
+      break
+
   return {}
 
 
