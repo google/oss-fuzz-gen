@@ -291,7 +291,8 @@ def benchmark_page(benchmark):
     return render_template('benchmark.html',
                            benchmark=benchmark,
                            samples=get_samples(benchmark),
-                           prompt=get_prompt(benchmark))
+                           prompt=get_prompt(benchmark),
+                           model=model)
   # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
   abort(404)
 
@@ -305,7 +306,8 @@ def sample_page(benchmark, sample):
                            sample=sample,
                            logs=get_logs(benchmark, sample),
                            run_logs=get_run_logs(benchmark, sample),
-                           targets=get_targets(benchmark, sample))
+                           targets=get_targets(benchmark, sample),
+                           model=model)
   # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
   abort(404)
 
