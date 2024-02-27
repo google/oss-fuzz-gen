@@ -330,7 +330,7 @@ class CloudBuilderRunner(BuilderRunner):
       # Workaround for issue #85.
       'gcloud crashed (OSError): unexpected end of data',
       # As mentioned in pr #100.
-      'RESOURCE_EXHAUSTED'
+      'RESOURCE_EXHAUSTED',
   ]
 
   def __init__(self, *args, experiment_name: str, experiment_bucket: str,
@@ -389,7 +389,7 @@ class CloudBuilderRunner(BuilderRunner):
           delay = 5 * 2**attempt_id
           if captured_error == 'RESOURCE_EXHAUSTED':
             # Add random jitter in case of exceeding request per minute quota.
-            delay += random.randint(1, 10)
+            delay += random.randint(50, 90)
 
           logging.warning(f'Failed to evaluate {os.path.realpath(target_path)} '
                           f'on cloud, attempt {attempt_id}:\n'
