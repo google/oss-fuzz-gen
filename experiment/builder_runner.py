@@ -325,12 +325,12 @@ class BuilderRunner:
 class CloudBuilderRunner(BuilderRunner):
   """Cloud BuilderRunner."""
   _RETRYABLE_ERRORS = [
+      # As mentioned in pr #100.
+      'RESOURCE_EXHAUSTED',
       # Temp workaround for issue #12.
       'You do not currently have an active account selected',
       # Workaround for issue #85.
       'gcloud crashed (OSError): unexpected end of data',
-      # As mentioned in pr #100.
-      'RESOURCE_EXHAUSTED',
   ]
 
   def __init__(self, *args, experiment_name: str, experiment_bucket: str,
