@@ -42,7 +42,11 @@ INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
 def _query_introspector(api: str, params: dict) -> dict:
   """Queries FuzzIntrospector API and return data specified by |key|,
   returns None if unable to get the value."""
-  resp = requests.get(api, params, timeout=TIMEOUT)
+  try:
+    resp = requests.get(api, params, timeout=TIMEOUT)
+  except requests.exceptions.Timeout as err:
+    logging.error('Failed to get data from FI due to timeout\n%s', err)
+    return {}
   if not resp.ok:
     logging.error(
         'Failed to get data from FI\n'
@@ -226,7 +230,7 @@ def get_function_signature(function: dict, project: str) -> str:
   if not function_signature:
     logging.error(
         'Missing function signature in project: %s\n'
-        '  raw_function_name: ', project,
+        '  raw_function_name: %s', project,
         get_raw_function_name(function, project))
   return function_signature
 
