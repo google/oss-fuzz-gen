@@ -107,6 +107,15 @@ def load_existing_coverage_summary(project: str) -> dict:
     return json.load(f)
 
 
+def _rectify_docker_tag(docker_tag: str) -> str:
+  # Replace "::" and any character not \w, _, or . with "-".
+  valid_docker_tag = re.sub(r'::', '-', docker_tag)
+  valid_docker_tag = re.sub(r'[^\w_.]', '-', valid_docker_tag)
+  # Docker fails with tags containing -_ or _-.
+  valid_docker_tag = re.sub(r'[-_]{2,}', '-', valid_docker_tag)
+  return valid_docker_tag
+
+
 # TODO(Dongge): Make this universally available.
 class _Logger:
   """Log evaluation progress."""
@@ -202,12 +211,8 @@ class Evaluator:
     """Builds and runs a target."""
     generated_target_name = os.path.basename(target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
-    # Replace "::" and any character not \w, _, or . with "-".
-    valid_docker_tag_name = re.sub(r'::', '-', self.benchmark.id)
-    valid_docker_tag_name = re.sub(r'[^\w_.]', '-', valid_docker_tag_name)
-    # Docker fails with tags containing -_ or _-.
-    valid_docker_tag_name = re.sub(r'[-_]{2,}', '-', valid_docker_tag_name)
-    generated_oss_fuzz_project = f'{valid_docker_tag_name}-{sample_id}'
+    generated_oss_fuzz_project = f'{self.benchmark.id}-{sample_id}'
+    generated_oss_fuzz_project = _rectify_docker_tag(generated_oss_fuzz_project)
     self.create_ossfuzz_project(generated_oss_fuzz_project, target_path)
 
     status_path = os.path.join(self.work_dirs.status, sample_id)
