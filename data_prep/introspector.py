@@ -23,6 +23,7 @@ import subprocess
 import sys
 import time
 from typing import Dict, List, Optional
+from urllib.parse import urlencode
 
 import requests
 from google.cloud import storage
@@ -40,6 +41,11 @@ INTROSPECTOR_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
 INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
 INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
 INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
+
+
+def _construct_url(api: str, params: dict) -> str:
+  """Constructs an encoded url for the |api| with |params|."""
+  return api + '?' + urlencode(params)
 
 
 def _query_introspector(api: str, params: dict) -> dict:
@@ -62,8 +68,8 @@ def _query_introspector(api: str, params: dict) -> dict:
       if attempt_num == MAX_RETRY:
         logging.error(
             'Failed to get data from FI due to timeout, max retry exceeded:\n'
-            'API: %s, params: %s\n'
-            'Error: %s', api, params, err)
+            '%s\n'
+            'Error: %s', _construct_url(api, params), err)
         break
       delay = 5 * 2**attempt_num + random.randint(1, 10)
       logging.warning(
@@ -71,7 +77,10 @@ def _query_introspector(api: str, params: dict) -> dict:
           'retry in %ds...', attempt_num, delay)
       time.sleep(delay)
     except requests.exceptions.RequestException as err:
-      logging.error('Failed to get data from FI, unexpected error: %s', err)
+      logging.error(
+          'Failed to get data from FI due to unexpected error:\n'
+          '%s\n'
+          'Error: %s', _construct_url(api, params), err)
       break
 
   return {}
