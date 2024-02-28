@@ -94,13 +94,25 @@ def _get_data(resp: Optional[requests.Response], key: str,
   if not resp:
     return default_value
 
-  data = resp.json()
+  try:
+    data = resp.json()
+  except requests.exceptions.InvalidJSONError:
+    logging.error(
+        'Unable to parse response from FI:\n'
+        '%s\n'
+        '-----------Response received------------\n'
+        '%s\n'
+        '------------End of response-------------', resp.url,
+        resp.content.decode('utf-8').strip())
+    return default_value
+
   content = data.get(key)
   if not content:
     logging.error('Failed to get %s from FI:\n'
                   '%s\n'
                   '%s', key, resp.url, data)
     return default_value
+
   return content
 
 
