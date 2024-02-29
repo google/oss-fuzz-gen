@@ -33,6 +33,7 @@ FREQUENCY_LABEL=$2
 RUN_TIMEOUT=$3
 SUB_DIR=$4
 MODEL=$5
+DELAY=$6
 # Uses python3 by default and /venv/bin/python3 for Docker containers.
 PYTHON="$( [[ -x "/venv/bin/python3" ]] && echo "/venv/bin/python3" || echo "python3" )"
 export PYTHON
@@ -76,6 +77,14 @@ then
   MODEL='vertex_ai_code-bison-32k'
   echo "LLM was not specified as the fifth argument. Defaulting to ${MODEL:?}."
 fi
+
+# The delay used to amortize quota usage.
+if [[ $DELAY = '' ]]
+then
+  DELAY='0'
+  echo "DELAY was not specified as the sixth argument. Defaulting to ${DELAY:?}."
+fi
+
 DATE=$(date '+%Y-%m-%d')
 LOCAL_RESULTS_DIR='results'
 # Experiment name is used to label the Cloud Builds and as part of the
@@ -100,6 +109,7 @@ $PYTHON run_all_experiments.py \
   --template-directory 'prompts/template_xml' \
   --work-dir ${LOCAL_RESULTS_DIR:?} \
   --num-samples 10 \
+  --delay "${DELAY:?}" \
   --model "$MODEL"
 
 export ret_val=$?
