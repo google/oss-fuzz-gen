@@ -18,6 +18,7 @@ import argparse
 import logging
 import os
 import sys
+import time
 import traceback
 from multiprocessing import Pool
 
@@ -156,6 +157,12 @@ def parse_args() -> argparse.Namespace:
                       action='store_true',
                       default=False,
                       help='Add context to function under test.')
+  parser.add_argument(
+      '--delay',
+      type=int,
+      default=0,
+      help=('Delay each experiment by certain seconds (e.g., 10s) to avoid '
+            'exceeding quota limit in large scale experiments.'))
 
   args = parser.parse_args()
   if args.num_samples:
@@ -219,10 +226,15 @@ def main():
       experiment_results.append(result)
       _print_experiment_result(result)
   else:
+    experiment_tasks = []
     with Pool(NUM_EXP) as p:
-      for result in p.starmap(run_experiments, experiment_configs):
-        experiment_results.append(result)
-        _print_experiment_result(result)
+      for config in experiment_configs:
+        experiment_task = p.apply_async(run_experiments,
+                                        config,
+                                        callback=_print_experiment_result)
+        experiment_tasks.append(experiment_task)
+        time.sleep(args.delay)
+      experiment_results = [task.get() for task in experiment_tasks]
 
   _print_experiment_results(experiment_results)
 
