@@ -22,7 +22,8 @@ import re
 import subprocess
 import sys
 import time
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, TypeVar
+from urllib.parse import urlencode
 
 import requests
 from google.cloud import storage
@@ -30,6 +31,8 @@ from google.cloud import storage
 from data_prep import project_src
 from experiment import benchmark as benchmarklib
 from experiment import oss_fuzz_checkout
+
+T = TypeVar('T', str, list, dict)  # Generic type.
 
 TIMEOUT = 10
 MAX_RETRY = 5
@@ -42,7 +45,12 @@ INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
 INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
 
 
-def _query_introspector(api: str, params: dict) -> dict:
+def _construct_url(api: str, params: dict) -> str:
+  """Constructs an encoded url for the |api| with |params|."""
+  return api + '?' + urlencode(params)
+
+
+def _query_introspector(api: str, params: dict) -> Optional[requests.Response]:
   """Queries FuzzIntrospector API and returns the json payload,
   returns an empty dict if unable to get data."""
   for attempt_num in range(1, MAX_RETRY + 1):
@@ -57,13 +65,13 @@ def _query_introspector(api: str, params: dict) -> dict:
             '------------End of response-------------', resp.url,
             resp.content.decode('utf-8').strip())
         break
-      return resp.json()
+      return resp
     except requests.exceptions.Timeout as err:
       if attempt_num == MAX_RETRY:
         logging.error(
             'Failed to get data from FI due to timeout, max retry exceeded:\n'
-            'API: %s, params: %s\n'
-            'Error: %s', api, params, err)
+            '%s\n'
+            'Error: %s', _construct_url(api, params), err)
         break
       delay = 5 * 2**attempt_num + random.randint(1, 10)
       logging.warning(
@@ -71,53 +79,76 @@ def _query_introspector(api: str, params: dict) -> dict:
           'retry in %ds...', attempt_num, delay)
       time.sleep(delay)
     except requests.exceptions.RequestException as err:
-      logging.error('Failed to get data from FI, unexpected error: %s', err)
+      logging.error(
+          'Failed to get data from FI due to unexpected error:\n'
+          '%s\n'
+          'Error: %s', _construct_url(api, params), err)
       break
 
-  return {}
+  return None
+
+
+def _get_data(resp: Optional[requests.Response], key: str,
+              default_value: T) -> T:
+  """Gets the value specified by |key| from a Request |resp|."""
+  if not resp:
+    return default_value
+
+  try:
+    data = resp.json()
+  except requests.exceptions.InvalidJSONError:
+    logging.error(
+        'Unable to parse response from FI:\n'
+        '%s\n'
+        '-----------Response received------------\n'
+        '%s\n'
+        '------------End of response-------------', resp.url,
+        resp.content.decode('utf-8').strip())
+    return default_value
+
+  content = data.get(key)
+  if content:
+    return content
+
+  logging.error('Failed to get %s from FI:\n'
+                '%s\n'
+                '%s', key, resp.url, data)
+  return default_value
 
 
 def query_introspector_for_unreached_functions(project: str) -> list[dict]:
   """Queries FuzzIntrospector API for unreached functions in |project|."""
-  data = _query_introspector(INTROSPECTOR_FUNCTION, {'project': project})
-  functions = data.get('functions')
+  resp = _query_introspector(INTROSPECTOR_FUNCTION, {'project': project})
+  functions = _get_data(resp, 'functions', [])
   if functions:
     return functions
-  logging.error('No functions found from FI for project %s:\n  %s', project,
-                '\n  '.join(data.get('extended_msgs', [])))
   sys.exit(1)
 
 
 def query_introspector_cfg(project: str) -> dict:
   """Queries FuzzIntrospector API for CFG."""
-  return _query_introspector(INTROSPECTOR_CFG, {
-      'project': project
-  }).get('project', {})
+  resp = _query_introspector(INTROSPECTOR_CFG, {'project': project})
+  return _get_data(resp, 'project', {})
 
 
 def query_introspector_function_source(project: str, func_sig: str) -> str:
   """Queries FuzzIntrospector API for source code of |func_sig|."""
-  data = _query_introspector(INTROSPECTOR_SOURCE, {
+  resp = _query_introspector(INTROSPECTOR_SOURCE, {
       'project': project,
       'function_signature': func_sig
   })
-  source = data.get('source', '')
-  if not source:
-    logging.error('No function source found for %s in %s: %s', func_sig,
-                  project, data)
-
-  return source
+  return _get_data(resp, 'source', '')
 
 
 def query_introspector_cross_references(project: str,
                                         func_sig: str) -> list[str]:
   """Queries FuzzIntrospector API for source code of functions
   cross-referenced |func_sig|."""
-  data = _query_introspector(INTROSPECTOR_XREF, {
+  resp = _query_introspector(INTROSPECTOR_XREF, {
       'project': project,
       'function_signature': func_sig
   })
-  call_sites = data.get('callsites', [])
+  call_sites = _get_data(resp, 'callsites', [])
 
   xref_source = []
   for cs in call_sites:
@@ -130,31 +161,21 @@ def query_introspector_cross_references(project: str,
 
 def query_introspector_type_info(project: str, type_name: str) -> dict:
   """Queries FuzzIntrospector API for information of |type_name|."""
-  data = _query_introspector(INTROSPECTOR_TYPE, {
+  resp = _query_introspector(INTROSPECTOR_TYPE, {
       'project': project,
       'name': type_name
   })
-  type_info = data.get('type_data', {})
-  if not type_info:
-    logging.error('No type info found from FI for %s in %s: %s', type_name,
-                  project, data)
-
-  return type_info
+  return _get_data(resp, 'type_data', {})
 
 
 def query_introspector_function_signature(project: str,
                                           function_name: str) -> str:
   """Queries FuzzIntrospector API for signature of |function_name|."""
-  data = _query_introspector(INTROSPECTOR_FUNC_SIG, {
+  resp = _query_introspector(INTROSPECTOR_FUNC_SIG, {
       'project': project,
       'function': function_name
   })
-  func_sig = data.get('signature', '')
-  if not func_sig:
-    logging.error('No signature found from FI for %s in %s: %s', function_name,
-                  project, data)
-
-  return func_sig
+  return _get_data(resp, 'signature', '')
 
 
 def get_unreached_functions(project):
