@@ -107,13 +107,13 @@ def _get_data(resp: Optional[requests.Response], key: str,
     return default_value
 
   content = data.get(key)
-  if not content:
-    logging.error('Failed to get %s from FI:\n'
-                  '%s\n'
-                  '%s', key, resp.url, data)
-    return default_value
+  if content:
+    return content
 
-  return content
+  logging.error('Failed to get %s from FI:\n'
+                '%s\n'
+                '%s', key, resp.url, data)
+  return default_value
 
 
 def query_introspector_for_unreached_functions(project: str) -> list[dict]:
