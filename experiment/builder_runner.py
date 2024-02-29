@@ -391,17 +391,15 @@ class CloudBuilderRunner(BuilderRunner):
             # Add random jitter in case of exceeding request per minute quota.
             delay += random.randint(50, 90)
 
-          logging.warning(f'Failed to evaluate {os.path.realpath(target_path)} '
-                          f'on cloud, attempt {attempt_id}:\n'
-                          f'{stdout}\n'
-                          f'{stderr}\n'
-                          f'Retry in {delay}s...')
+          logging.warning(
+              'Failed to evaluate %s on cloud, attempt %d:\n%s\n%s\n'
+              'Retry in %ds...', os.path.realpath(target_path), attempt_id,
+              stdout, stderr, delay)
           time.sleep(delay)
         else:
-          logging.error(f'Failed to evaluate {os.path.realpath(target_path)} '
-                        f'on cloud, attempt {attempt_id}:\n'
-                        f'{stdout}\n'
-                        f'{stderr}')
+          logging.error('Failed to evaluate %s on cloud, attempt %d:\n%s\n%s',
+                        os.path.realpath(target_path), attempt_id, stdout,
+                        stderr)
           return build_result, None
 
     print(f'Evaluated {os.path.realpath(target_path)} on cloud.')
