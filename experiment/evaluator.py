@@ -107,6 +107,17 @@ def load_existing_coverage_summary(project: str) -> dict:
     return json.load(f)
 
 
+def _compute_total_lines_without_fuzz_targets(
+    coverage_summary: dict, fuzz_target_base_name: str) -> int:
+  """Counts the total number of lines excluding the fuzz target."""
+  # TODO(dongge): Exclude all fuzz targets if there are multiple.
+  return sum([
+      f['summary']['lines']['count']
+      for f in coverage_summary['data'][0]['files']
+      if fuzz_target_base_name not in f['filename']
+  ])
+
+
 def _rectify_docker_tag(docker_tag: str) -> str:
   # Replace "::" and any character not \w, _, or . with "-".
   valid_docker_tag = re.sub(r'::', '-', docker_tag)
@@ -268,7 +279,8 @@ class Evaluator:
 
     # Get line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
-    total_lines = coverage_summary['data'][0]['totals']['lines']['count']
+    total_lines = _compute_total_lines_without_fuzz_targets(
+        coverage_summary, generated_target_name)
     if total_pcs:
       coverage_percent = cov_pcs / total_pcs
     else:

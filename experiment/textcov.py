@@ -30,6 +30,20 @@ def demangle(data: str) -> str:
   return subprocess.check_output(['c++filt'], input=data, encoding='utf-8')
 
 
+def _discard_fuzz_target_lines(covreport_content: str) -> str:
+  """Removes fuzz target lines from the coverage report."""
+  # When comparing project code coverage contributed by fuzz targets, it's
+  # fairer to only consider lines in the project and not the code of targets.
+  # Assumption 1: llvm-cov separates lines from different files with an empty
+  # line by default in the coverage report.
+  # Assumption 2: All and only fuzz targets contain 'LLVMFuzzerTestOneInput'.
+  project_file_contents = [
+      sec for sec in covreport_content.split('\n\n')
+      if 'LLVMFuzzerTestOneInput' not in sec
+  ]
+  return '\n\n'.join(project_file_contents)
+
+
 def normalize_template_args(name: str) -> str:
   """Normalizes template arguments."""
   return re.sub(r'<.*>', '<>', name)
@@ -117,6 +131,8 @@ class Textcov:
     current_function_name: str = ''
     current_function: Function = Function()
     demangled = demangle(file_handle.read())
+    demangled = _discard_fuzz_target_lines(demangled)
+
     for line in demangled.split('\n'):
       match = FUNCTION_PATTERN.match(line)
       if match:
