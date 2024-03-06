@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Search for the benchmarks that contains a specific string in result.
+Search for benchmark results that contain a specific string.
 
 Example usage:
 To search for benchmarks that failed to parse error:
@@ -30,8 +30,8 @@ import logging
 import os
 
 
-def parse_args() -> argparse.Namespace:
-  """parse arguments"""
+def _parse_args() -> argparse.Namespace:
+  """Parses arguments."""
   parser = argparse.ArgumentParser(
       description=
       'Search for all benchmark that contains the <string> in <result>')
@@ -62,15 +62,16 @@ def parse_args() -> argparse.Namespace:
   args = parser.parse_args()
   assert os.path.isdir(args.result), '--result must be an existing directory.'
 
-  output_dir = next(os.walk(args.result))[1][0]
-  assert os.path.isdir(os.path.join(args.result, output_dir, args.sub)), (
-      '--sub must be a directory in output-* directories under <result>:\n'
-      'e.g. fixed_targets, logs, raw_targets, status.')
+  output_dirs = os.listdir(args.result)
+  assert any(
+      os.path.isdir(os.path.join(args.result, d, args.sub)) for d in output_dirs
+  ), ('--sub must be a directory in output-* directories under <result>\n'
+      'E.g. fixed_targets, logs, raw_targets, status.')
 
   if args.url:
     assert '[benchmark]' in args.url, (
-        "--url must contain '[benchmark]'\n"
-        "e.g. http://localhost:8080/benchmark/[benchmark]")
+        '--url must contain "[benchmark]"\n'
+        'E.g. http://localhost:8080/benchmark/[benchmark]')
 
   return args
 
@@ -80,8 +81,8 @@ def find_in_dir(search_lines: list[str], file_paths: list[str]) -> bool:
   # Caveat: With support for multiline search in potentially large files
   # (e.g. log files), this function does not search for the exact substring
   # in the file containing the new line char. Instead, it returns True when:
-  # something <search line 1> something
-  # some <search line 2> some
+  # other_text <search line 1> other_text
+  # other_text <search line 2> other_text
   # can be found in the file.
   for file_path in file_paths:
     with open(file_path) as f:
@@ -99,7 +100,7 @@ def find_in_dir(search_lines: list[str], file_paths: list[str]) -> bool:
 
 
 def main():
-  args = parse_args()
+  args = _parse_args()
   result_dir = args.result
   search_string = args.string
   sub = args.sub
@@ -107,7 +108,7 @@ def main():
   search_lines = search_string.split('\n')
 
   # Iterates through all output-*/
-  for output_dir in next(os.walk(result_dir))[1]:
+  for output_dir in os.listdir(result_dir):
 
     # Iterates through all subdirectories.
     for path, sub_dir, files in os.walk(
