@@ -14,6 +14,7 @@
 # limitations under the License.
 """Interacts with FuzzIntrospector APIs"""
 
+import argparse
 import json
 import logging
 import os
@@ -452,32 +453,46 @@ def get_project_funcs(project_name: str) -> Dict[str, List[Dict]]:
   return fuzz_target_funcs
 
 
+def _parse_arguments() -> argparse.Namespace:
+  """Parses command line args."""
+  parser = argparse.ArgumentParser(
+      description='Parse arguments to generate benchmarks')
+
+  parser.add_argument('project', help='Name of the project', type=str)
+  parser.add_argument('-m',
+                      '--max-functions',
+                      type=int,
+                      default=3,
+                      help='Number of benchmarks to generate')
+  parser.add_argument('-o',
+                      '--out',
+                      type=str,
+                      default='',
+                      help='Output directory')
+
+  args = parser.parse_args()
+  return args
+
+
 if __name__ == '__main__':
   logging.basicConfig(level=logging.INFO)
 
-  # TODO(Dongge): Use argparser.
-  cur_project = sys.argv[1]
-  max_num_function = 3
-  if len(sys.argv) > 2:
-    max_num_function = int(sys.argv[2])
-  if len(sys.argv) > 3:
-    outdir = sys.argv[3]
-    os.makedirs(outdir, exist_ok=True)
-  else:
-    outdir = ''
+  args = _parse_arguments()
+  if args.out != '':
+    os.makedirs(args.out, exist_ok=True)
 
   try:
     oss_fuzz_checkout.clone_oss_fuzz()
     oss_fuzz_checkout.postprocess_oss_fuzz()
   except subprocess.CalledProcessError as e:
     logging.error('Failed to prepare OSS-Fuzz directory for project %s: %s',
-                  sys.argv[1], e)
-  cur_project_language = oss_fuzz_checkout.get_project_language(cur_project)
-  benchmarks = populate_benchmarks_using_introspector(cur_project,
+                  args.project, e)
+  cur_project_language = oss_fuzz_checkout.get_project_language(args.project)
+  benchmarks = populate_benchmarks_using_introspector(args.project,
                                                       cur_project_language,
-                                                      max_num_function)
+                                                      args.max_functions)
   if benchmarks:
-    benchmarklib.Benchmark.to_yaml(benchmarks, outdir)
+    benchmarklib.Benchmark.to_yaml(benchmarks, args.out)
   else:
-    logging.error('Nothing found for %s', sys.argv[1])
+    logging.error('Nothing found for %s', args.project)
     sys.exit(1)
