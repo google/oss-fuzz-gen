@@ -175,10 +175,8 @@ class Textcov:
   def to_file(self, filename: str) -> None:
     """Writes covered functions and lines to |filename|."""
     file_content = ''
-    for func_name, func_obj in sorted(self.functions.items()):
-      # file_content += f'{func_name}\n'
+    for func_obj in self.functions.values():
       for line_content, line_obj in func_obj.lines.items():
-        # file_content += f'{line_obj.hit_count} | {line_content}\n'
         file_content += f'{line_content}\n' if line_obj.hit_count else ''
 
     with open(filename, 'w') as file:
