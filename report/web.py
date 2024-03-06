@@ -253,7 +253,7 @@ def get_targets(benchmark: str, sample: str) -> list[Target]:
   for name in sorted(os.listdir(targets_dir)):
     path = os.path.join(targets_dir, name)
     if os.path.isfile(path) and name.startswith(sample + '.'):
-      print(path)
+      logging.debug(path)
       with open(path) as f:
         code = f.read()
       targets.insert(0, Target(code=code))
