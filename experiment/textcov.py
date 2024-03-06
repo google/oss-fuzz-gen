@@ -105,9 +105,9 @@ class Function:
     """Subtract covered lines."""
 
     # For our analysis purposes, we completely delete any lines that are
-    # seen/covered by the other, rather than subtracting hitcounts.
+    # hit by the other, rather than subtracting hitcounts.
     for line in other.lines.values():
-      if line.contents in self.lines:
+      if line.hit_count and line.contents in self.lines:
         del self.lines[line.contents]
 
 
