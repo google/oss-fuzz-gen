@@ -21,7 +21,7 @@ import subprocess
 from typing import List, Optional
 
 # No spaces at the beginning, and ends with a ":".
-FUNCTION_PATTERN = re.compile(r'^[^\s](.+):$')
+FUNCTION_PATTERN = re.compile(r'^([^\s].*):$')
 LINE_PATTERN = re.compile(r'^\s*\d+\|\s*([\d\.a-zA-Z]+)\|(.*)')
 
 
@@ -105,9 +105,9 @@ class Function:
     """Subtract covered lines."""
 
     # For our analysis purposes, we completely delete any lines that are
-    # seen/covered by the other, rather than subtracting hitcounts.
+    # hit by the other, rather than subtracting hitcounts.
     for line in other.lines.values():
-      if line.contents in self.lines:
+      if line.hit_count and line.contents in self.lines:
         del self.lines[line.contents]
 
 
@@ -171,6 +171,16 @@ class Textcov:
 
         continue
     return textcov
+
+  def to_file(self, filename: str) -> None:
+    """Writes covered functions and lines to |filename|."""
+    file_content = ''
+    for func_obj in self.functions.values():
+      for line_content, line_obj in func_obj.lines.items():
+        file_content += f'{line_content}\n' if line_obj.hit_count else ''
+
+    with open(filename, 'w') as file:
+      file.write(file_content)
 
   def merge(self, other: Textcov):
     """Merge another textcov"""
