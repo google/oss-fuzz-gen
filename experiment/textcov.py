@@ -21,7 +21,7 @@ import subprocess
 from typing import List, Optional
 
 # No spaces at the beginning, and ends with a ":".
-FUNCTION_PATTERN = re.compile(r'^([^\s].+):$')
+FUNCTION_PATTERN = re.compile(r'^([^\s].*):$')
 LINE_PATTERN = re.compile(r'^\s*\d+\|\s*([\d\.a-zA-Z]+)\|(.*)')
 
 
