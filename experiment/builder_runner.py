@@ -464,8 +464,6 @@ class CloudBuilderRunner(BuilderRunner):
         run_result.coverage = textcov.Textcov.from_file(
             f,
             ignore_function_patterns=[
-                # Don't count LLVMFuzzer fuzzer defined functions.
-                re.compile(r'^LLVMFuzzer'),
                 # Don't include other functions defined in the target code.
                 re.compile(r'^' + re.escape(target_basename) + ':')
             ])

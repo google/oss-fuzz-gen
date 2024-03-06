@@ -50,15 +50,8 @@ def compute_coverage_diff(project: str, coverage_links: list[str]):
     for blob in blobs:
       logging.info('Loading %s', blob.name)
       with blob.open() as f:
-        new_textcov.merge(
-            textcov.Textcov.from_file(
-                f,
-                ignore_function_patterns=[
-                    re.compile(
-                        r'^LLVMFuzzer'
-                    ),  # Don't count LLVMFuzzer fuzzer defined functions.
-                    # TODO: skip other functions defined the target.
-                ]))
+        # TODO: skip other functions defined the target.
+        new_textcov.merge(textcov.Textcov.from_file(f))
 
   new_textcov.subtract_covered_lines(existing_textcov)
   total_lines = coverage_summary['data'][0]['totals']['lines']['count']
