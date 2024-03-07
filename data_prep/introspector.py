@@ -41,6 +41,7 @@ INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
 INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
 INTROSPECTOR_FUNCTION = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
 INTROSPECTOR_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
+INTROSPECTOR_SOURCE_CODE = f'{INTROSPECTOR_ENDPOINT}/project-source-code'
 INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
 INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
 INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
@@ -140,6 +141,18 @@ def query_introspector_function_source(project: str, func_sig: str) -> str:
   })
   return _get_data(resp, 'source', '')
 
+def query_introspector_source_code(project: str, filepath: str, begin_line: int, end_line: int) -> str:
+    """Queries FuzzIntrospector API for source code of a 
+    file |filepath| between |begin_line| and |end_line|."""
+
+    resp = _query_introspector(INTROSPECTOR_SOURCE_CODE, {
+        'project' : project,
+        'filepath' : filepath,
+        'begin_line' : begin_line,
+        'end_line' : end_line,
+        })
+
+    return _get_data(resp, 'source_code', '')
 
 def query_introspector_cross_references(project: str,
                                         func_sig: str) -> list[str]:
