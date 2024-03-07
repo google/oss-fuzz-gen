@@ -50,13 +50,14 @@ class ContextRetriever:
 
   def _get_struct_type(self, info: dict, seen_types: set,
                        types_to_get: set) -> str:
+    print("INFO: {}".format(info))
     """Reconstructs type definition from a struct element.
     Also adds newly seen types to recursively collect definitions."""
     # Attempt to recursively retrieve type information for elements
     elements = info['elements']
     file_name = os.path.normpath(info['source']['source_file'])
     begin_line = info['source']['source_line']
-    end_line = elements[:-1]['source']['source_line']
+    end_line = elements[-1]['source']['source_line']
     curr_line = begin_line
 
     reconstructed_type = ''
@@ -67,7 +68,8 @@ class ContextRetriever:
     while curr_line <= end_line:
       source_line = introspector.query_introspector_source_code(
           self._benchmark.project, file_name, curr_line, curr_line)
-      print("Source line: {}".format(source_line))
+
+      curr_line += 1
 
       if not source_line:
         continue
@@ -87,7 +89,6 @@ class ContextRetriever:
       print("Newly seen type: {}".format(newly_seen_type))
       seen_types.add(newly_seen_type)
       types_to_get.add(newly_seen_type)
-      curr_line += 1
 
     return reconstructed_type
 
@@ -163,6 +164,9 @@ class ContextRetriever:
 
     if 'struct' in type_tokens:
       type_tokens.remove('struct')
+
+    if 'enum' in type_tokens:
+      type_tokens.remove('enum')
 
     if 'const' in type_tokens:
       type_tokens.remove('const')
