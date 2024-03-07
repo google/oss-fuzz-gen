@@ -120,6 +120,7 @@ class ContextRetriever:
       if not info:
         continue
 
+      reconstructed_type = ''
       # For now, info is a single element and not a list.
       # Requested it be changed to a list, so that type
       # elements with the same name will be returned.
