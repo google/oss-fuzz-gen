@@ -37,13 +37,31 @@ T = TypeVar('T', str, list, dict)  # Generic type.
 
 TIMEOUT = 10
 MAX_RETRY = 5
-INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
-INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
-INTROSPECTOR_FUNCTION = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
-INTROSPECTOR_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
-INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
-INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
-INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
+INTROSPECTOR_ENDPOINT = ''
+INTROSPECTOR_CFG = ''
+INTROSPECTOR_FUNCTION = ''
+INTROSPECTOR_SOURCE = ''
+INTROSPECTOR_XREF = ''
+INTROSPECTOR_TYPE = ''
+INTROSPECTOR_FUNC_SIG = ''
+
+
+def _set_introspector_endpoints(is_local):
+  global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNCTION, INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_FUNC_SIG
+
+  if is_local:
+    logging.info('Setting Fuzz Introspector endpoint to local')
+    INTROSPECTOR_ENDPOINT = 'http://127.0.0.1:8080/api'
+  else:
+    logging.info('Setting Fuzz Introspector endpoint to remote')
+    INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
+
+  INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
+  INTROSPECTOR_FUNCTION = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
+  INTROSPECTOR_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
+  INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
+  INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
+  INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -469,6 +487,10 @@ def _parse_arguments() -> argparse.Namespace:
                       type=str,
                       default='',
                       help='Output directory.')
+  parser.add_argument('-l',
+                      '--local',
+                      action="store_true",
+                      help='Set Fuzz Introspecor endpoint to local.')
 
   args = parser.parse_args()
   return args
@@ -480,6 +502,8 @@ if __name__ == '__main__':
   args = _parse_arguments()
   if args.out:
     os.makedirs(args.out, exist_ok=True)
+
+  _set_introspector_endpoints(args.local)
 
   try:
     oss_fuzz_checkout.clone_oss_fuzz()
