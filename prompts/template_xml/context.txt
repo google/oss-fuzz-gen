@@ -1,8 +1,3 @@
-The function is defined in
-<include_file>
-{CONTEXT_HEADER}
-</include_file>
-
+You must insert this before the function being tested:
 <code>
-{CONTEXT_TYPES}
 </code>
