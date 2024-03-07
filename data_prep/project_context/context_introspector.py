@@ -60,10 +60,31 @@ class ContextRetriever:
     curr_line = int(begin_line)
 
     reconstructed_type = ''
+
+    # We need a separate variable for the element index
+    # and can not just use some calculation such as
+    # element_index = curr_line - begin_line - 1
+    # Because there can be an arbitrary amount of lines
+    # between the begin_line (where `struct X`) is parsed
+    # and when the first element actually begins.
+    # Comments, extraneous spaces etc.
+    element_counter = 0  
+
     # The reason we need to iteratively query FI is because
     # we have to parse each individual source line and
     # extract a possible type which we will recursively
     # query the definition for.
+
+    reached_first_element = False
+
+    while not reached_first_element:
+      source_line = introspector.query_introspector_source_code(
+          self._benchmark.project, file_name, curr_line, curr_line)
+      index = source_line.find(elements[0]['name'])
+      if index != -1:
+        break
+      curr_line += 1
+
     while curr_line <= end_line:
       source_line = introspector.query_introspector_source_code(
           self._benchmark.project, file_name, curr_line, curr_line)
@@ -75,13 +96,16 @@ class ContextRetriever:
 
       reconstructed_type += source_line
 
-      # The first line looks like struct X {
+      # The first line looks like struct X [{] <- optional
       if curr_line == begin_line:
         continue
 
       newly_seen_type = self._clean_type(
           self._extract_type_from_source_line(
-              source_line, elements[curr_line - begin_line - 1]))
+              source_line, elements[element_counter]))
+
+      element_counter += 1
+
       if not newly_seen_type or newly_seen_type in seen_types:
         continue
 
