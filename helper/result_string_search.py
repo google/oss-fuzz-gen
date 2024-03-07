@@ -109,6 +109,8 @@ def main():
 
   # Iterates through all output-*/
   for output_dir in os.listdir(result_dir):
+    if not os.path.isdir(os.path.join(result_dir, output_dir)):
+      continue
 
     # Iterates through all subdirectories.
     for path, sub_dir, files in os.walk(
