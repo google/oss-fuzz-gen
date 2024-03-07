@@ -53,13 +53,12 @@ class PromptBuilder:
     self._prompt = model.prompt_type()()
 
   @abstractmethod
-  def build(
-      self,
-      function_signature: str,
-      target_file_type: FileType,
-      example_pair: list[list[str]],
-      project_example_content: Optional[list[list[str]]] = None,
-      project_context_content: Optional[str] = None) -> prompts.Prompt:
+  def build(self,
+            function_signature: str,
+            target_file_type: FileType,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[str] = None) -> prompts.Prompt:
     """Builds a prompt."""
 
   @abstractmethod
@@ -215,13 +214,12 @@ class DefaultTemplateBuilder(PromptBuilder):
       self._prompt.add_problem(problem)
       self._prompt.add_solution(solution)
 
-  def build(
-      self,
-      function_signature: str,
-      target_file_type: FileType,
-      example_pair: list[list[str]],
-      project_example_content: Optional[list[list[str]]] = None,
-      project_context_content: Optional[str] = None) -> prompts.Prompt:
+  def build(self,
+            function_signature: str,
+            target_file_type: FileType,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[str] = None) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     priming = self._format_priming(target_file_type)
     final_problem = self.format_problem(function_signature)
@@ -230,6 +228,9 @@ class DefaultTemplateBuilder(PromptBuilder):
                       f'</code> in your solution!\n')
     if project_context_content:
       final_problem += self.format_context(project_context_content)
+    final_problem += '\n<solution>'
+    self._prepare_prompt(priming, final_problem, example_pair,
+                         project_example_content)
     return self._prompt
 
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
