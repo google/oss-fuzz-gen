@@ -229,7 +229,7 @@ class DefaultTemplateBuilder(PromptBuilder):
                       f'{function_signature}\n'
                       f'</code> in your solution!\n')
     if project_context_content:
-                         project_example_content)
+      final_problem += self.format_context(project_context_content)
     return self._prompt
 
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
