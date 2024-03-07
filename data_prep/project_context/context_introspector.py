@@ -68,7 +68,7 @@ class ContextRetriever:
     # between the begin_line (where `struct X`) is parsed
     # and when the first element actually begins.
     # Comments, extraneous spaces etc.
-    element_counter = 0  
+    element_counter = 0
 
     # The reason we need to iteratively query FI is because
     # we have to parse each individual source line and
@@ -101,8 +101,8 @@ class ContextRetriever:
         continue
 
       newly_seen_type = self._clean_type(
-          self._extract_type_from_source_line(
-              source_line, elements[element_counter]))
+          self._extract_type_from_source_line(source_line,
+                                              elements[element_counter]))
 
       element_counter += 1
 
