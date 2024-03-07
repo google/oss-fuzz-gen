@@ -86,7 +86,7 @@ class ContextRetriever:
       # Then we can add it ourselves. This would cause problems
       # when typedef and struct definitions are combined.
       # The alternative is to query for source code lines until a '}' is found.
-      if curr_line == end_line:
+      if curr_line == end_line_elem:
         if '}' not in source_line:
           reconstructed_type += '};\n'
 
