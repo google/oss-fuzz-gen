@@ -15,12 +15,17 @@
 """Run an experiment with all function-under-tests."""
 
 import argparse
+import datetime
 import logging
 import os
+import socket
 import sys
 import time
 import traceback
+import uuid
 from multiprocessing import Pool
+
+from google.cloud import storage
 
 import run_one_experiment
 from experiment import benchmark as benchmarklib
@@ -130,6 +135,12 @@ def parse_args() -> argparse.Namespace:
                       type=str,
                       default='',
                       help='A gcloud bucket to store experiment files.')
+  parser.add_argument('-cs',
+                      '--cloud-save-bucket',
+                      type=str,
+                      default='',
+                      help=('A gcloud bucket to save generated target '
+                            'with the highest coverage.'))
   parser.add_argument('-b', '--benchmarks-directory', type=str)
   parser.add_argument('-y',
                       '--benchmark-yaml',
@@ -211,6 +222,37 @@ def _print_experiment_results(results: list[Result]):
           f'\n{result.result}\n')
 
 
+def _save_best_target(results: list[Result], save_bucket: str, exp_name: str):
+  """Saves generated targets with the best coverage diff to |save_bucket|."""
+  storage_client = storage.Client()
+  bucket = storage_client.bucket(save_bucket)
+
+  # Append a random id to avoid overwriting.
+  rand_id = str(uuid.uuid4()).split('-', maxsplit=1)[0]
+
+  # Generate a meaningful name for local experiment.
+  if not exp_name:
+    exp_name = (f'{datetime.datetime.now().strftime("%Y-%m-%d")}'
+                f'-{socket.gethostname()}')
+
+  for result in results:
+    if not isinstance(result.result, run_one_experiment.AggregatedResult):
+      continue
+    project = result.benchmark.project
+    best_cov = result.result.max_line_coverage_diff
+    best_target = result.result.max_coverage_diff_sample
+    ext = os.path.splitext(best_target)[1]
+    save_name = (
+        f'llm_generated_targets/{project}/'
+        f'{result.benchmark.function_name}-{best_cov}-{exp_name}-{rand_id}{ext}'
+    )
+    if best_cov > 0:
+      blob = bucket.blob(save_name)
+      blob.upload_from_filename(best_target)
+      logging.info('Uploaded %s to gs://%s/%s.', best_target, save_bucket,
+                   save_name)
+
+
 def main():
   logging.basicConfig(level=logging.INFO)
   args = parse_args()
@@ -237,6 +279,9 @@ def main():
       experiment_results = [task.get() for task in experiment_tasks]
 
   _print_experiment_results(experiment_results)
+  if args.cloud_save_bucket:
+    _save_best_target(experiment_results, args.cloud_save_bucket,
+                      args.cloud_experiment_name)
 
 
 if __name__ == '__main__':
