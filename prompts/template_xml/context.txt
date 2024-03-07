@@ -1,3 +1,4 @@
-You must insert this before the function being tested:
+You must insert this code before the function being tested:
 <code>
+{CONTEXT_BLOB}
 </code>
