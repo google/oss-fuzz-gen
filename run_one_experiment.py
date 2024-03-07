@@ -240,11 +240,11 @@ def run(benchmark: Benchmark,
     else:
       project_examples = []
 
-    context_info = None
-
     if use_context:
       retriever = ContextRetriever(benchmark)
       context_blob = retriever.get_embeddable_blob()
+    else:
+      context_blob = ''
 
     builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
     prompt = builder.build(benchmark.function_signature,
