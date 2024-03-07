@@ -56,62 +56,46 @@ class ContextRetriever:
     elements = info['elements']
     file_name = os.path.normpath(info['source']['source_file'])
     begin_line = int(info['source']['source_line'])
-    end_line = int(elements[-1]['source']['source_line'])
+    begin_line_elem = int(elements[0]['source']['source_line'])
+    end_line_elem = int(elements[-1]['source']['source_line'])
     curr_line = int(begin_line)
 
     reconstructed_type = ''
-
-    # We need a separate variable for the element index
-    # and can not just use some calculation such as
-    # element_index = curr_line - begin_line - 1
-    # Because there can be an arbitrary amount of lines
-    # between the begin_line (where `struct X`) is parsed
-    # and when the first element actually begins.
-    # Comments, extraneous spaces etc.
-    element_counter = 0
 
     # The reason we need to iteratively query FI is because
     # we have to parse each individual source line and
     # extract a possible type which we will recursively
     # query the definition for.
-
-    reached_first_element = False
-
-    while not reached_first_element:
+    while curr_line < begin_line_elem:
       source_line = introspector.query_introspector_source_code(
           self._benchmark.project, file_name, curr_line, curr_line)
-      index = source_line.find(elements[0]['name'])
-      if index != -1:
-        break
       curr_line += 1
+      reconstructed_type += source_line
 
-    while curr_line <= end_line:
+    while curr_line <= end_line_elem:
       source_line = introspector.query_introspector_source_code(
           self._benchmark.project, file_name, curr_line, curr_line)
-
-      curr_line += 1
-
-      if not source_line:
-        continue
 
       reconstructed_type += source_line
 
-      # The first line looks like struct X [{] <- optional
-      if curr_line == begin_line:
-        continue
-
       newly_seen_type = self._clean_type(
           self._extract_type_from_source_line(source_line,
-                                              elements[element_counter]))
+                                              elements[curr_line - begin_line_elem]))
 
-      element_counter += 1
+      curr_line += 1
 
       if not newly_seen_type or newly_seen_type in seen_types:
         continue
 
-      print("Newly seen type: {}".format(newly_seen_type))
       seen_types.add(newly_seen_type)
       types_to_get.add(newly_seen_type)
+
+    # If we do not see a '}' in the final element's source line
+    # Then we can add it ourselves. This would cause problems
+    # when typedef and struct definitions are combined. 
+    # The alternative is to query for source code lines until a '}' is found.
+    if '}' not in source_line:
+      reconstructed_type += '};\n'
 
     return reconstructed_type
 
@@ -132,8 +116,6 @@ class ContextRetriever:
       types_to_get.add(cleaned_type)
 
     seen_types = types_to_get
-
-    print("Querying for types: {}".format(types_to_get))
 
     # Add support for recursively querying for types
     while types_to_get:
@@ -161,9 +143,11 @@ class ContextRetriever:
 
   def _extract_type_from_source_line(self, source_line: str,
                                      type_element: dict) -> str:
-    """Attempts to extract a type from a source line."""
-    # Do so by attempting to match for name and extracting everything before it
+    """Attempts to extract a type from a source line.
+    Do so by attempting to match for name and extracting everything before it."""
 
+    # TODO: Clean out tabs, spaces, etc...
+    # Otherwise querying fails
     index = source_line.find(type_element['name'])
 
     if index == -1:
