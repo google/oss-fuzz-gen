@@ -145,7 +145,7 @@ class ContextRetriever:
   def _extract_type_from_source_line(self, source_line: str,
                                      type_element: dict) -> str:
     """Attempts to extract a type from a source line.
-    Do so by attempting to match for name and extracting 
+    Do so by attempting to match for name and extracting
     everything before it."""
 
     # TODO: Clean out tabs, spaces, etc...
