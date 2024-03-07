@@ -79,8 +79,16 @@ class ContextRetriever:
       reconstructed_type += source_line
 
       newly_seen_type = self._clean_type(
-          self._extract_type_from_source_line(source_line,
-                                              elements[curr_line - begin_line_elem]))
+          self._extract_type_from_source_line(
+              source_line, elements[curr_line - begin_line_elem]))
+
+      # If we do not see a '}' in the final element's source line
+      # Then we can add it ourselves. This would cause problems
+      # when typedef and struct definitions are combined.
+      # The alternative is to query for source code lines until a '}' is found.
+      if curr_line == end_line:
+        if '}' not in source_line:
+          reconstructed_type += '};\n'
 
       curr_line += 1
 
@@ -89,13 +97,6 @@ class ContextRetriever:
 
       seen_types.add(newly_seen_type)
       types_to_get.add(newly_seen_type)
-
-    # If we do not see a '}' in the final element's source line
-    # Then we can add it ourselves. This would cause problems
-    # when typedef and struct definitions are combined. 
-    # The alternative is to query for source code lines until a '}' is found.
-    if '}' not in source_line:
-      reconstructed_type += '};\n'
 
     return reconstructed_type
 
@@ -144,7 +145,8 @@ class ContextRetriever:
   def _extract_type_from_source_line(self, source_line: str,
                                      type_element: dict) -> str:
     """Attempts to extract a type from a source line.
-    Do so by attempting to match for name and extracting everything before it."""
+    Do so by attempting to match for name and extracting 
+    everything before it."""
 
     # TODO: Clean out tabs, spaces, etc...
     # Otherwise querying fails
