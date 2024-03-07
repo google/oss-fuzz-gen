@@ -456,19 +456,19 @@ def get_project_funcs(project_name: str) -> Dict[str, List[Dict]]:
 def _parse_arguments() -> argparse.Namespace:
   """Parses command line args."""
   parser = argparse.ArgumentParser(
-      description='Parse arguments to generate benchmarks')
+      description='Parse arguments to generate benchmarks.')
 
-  parser.add_argument('project', help='Name of the project', type=str)
+  parser.add_argument('project', help='Name of the project.', type=str)
   parser.add_argument('-m',
                       '--max-functions',
                       type=int,
                       default=3,
-                      help='Number of benchmarks to generate')
+                      help='Number of benchmarks to generate.')
   parser.add_argument('-o',
                       '--out',
                       type=str,
                       default='',
-                      help='Output directory')
+                      help='Output directory.')
 
   args = parser.parse_args()
   return args
@@ -478,7 +478,7 @@ if __name__ == '__main__':
   logging.basicConfig(level=logging.INFO)
 
   args = _parse_arguments()
-  if args.out != '':
+  if args.out:
     os.makedirs(args.out, exist_ok=True)
 
   try:
