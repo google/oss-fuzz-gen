@@ -50,15 +50,14 @@ class ContextRetriever:
 
   def _get_struct_type(self, info: dict, seen_types: set,
                        types_to_get: set) -> str:
-    print("INFO: {}".format(info))
     """Reconstructs type definition from a struct element.
     Also adds newly seen types to recursively collect definitions."""
     # Attempt to recursively retrieve type information for elements
     elements = info['elements']
     file_name = os.path.normpath(info['source']['source_file'])
-    begin_line = info['source']['source_line']
-    end_line = elements[-1]['source']['source_line']
-    curr_line = begin_line
+    begin_line = int(info['source']['source_line'])
+    end_line = int(elements[-1]['source']['source_line'])
+    curr_line = int(begin_line)
 
     reconstructed_type = ''
     # The reason we need to iteratively query FI is because
@@ -67,7 +66,7 @@ class ContextRetriever:
     # query the definition for.
     while curr_line <= end_line:
       source_line = introspector.query_introspector_source_code(
-          self._benchmark.project, file_name, curr_line, curr_line)
+          self._benchmark.project, file_name, str(curr_line), str(curr_line))
 
       curr_line += 1
 
