@@ -89,6 +89,8 @@ class ContextRetriever:
       types_to_get.add(newly_seen_type)
       curr_line += 1
 
+    return reconstructed_type
+
   def get_embeddable_types(self) -> list[str]:
     """Retrieve types from FI."""
     seen_types = set()
@@ -119,7 +121,7 @@ class ContextRetriever:
         continue
 
       # For now, info is a single element and not a list.
-      # Requested it be changed to a list, so that type 
+      # Requested it be changed to a list, so that type
       # elements with the same name will be returned.
       if info['type'] == 'struct':
         reconstructed_type = self._get_struct_type(info, seen_types,
