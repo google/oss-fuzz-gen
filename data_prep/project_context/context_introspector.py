@@ -66,7 +66,7 @@ class ContextRetriever:
     # query the definition for.
     while curr_line <= end_line:
       source_line = introspector.query_introspector_source_code(
-          self._benchmark.project, file_name, str(curr_line), str(curr_line))
+          self._benchmark.project, file_name, curr_line, curr_line)
 
       curr_line += 1
 
