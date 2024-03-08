@@ -58,7 +58,7 @@ class PromptBuilder:
             target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[str] = None) -> prompts.Prompt:
+            project_context_content: str = '') -> prompts.Prompt:
     """Builds a prompt."""
 
   @abstractmethod
