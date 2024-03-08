@@ -25,9 +25,9 @@ class ContextRetriever:
       return 'extern "C" ' + sig
 
     if lang != 'c++':
+      project = self._benchmark.project_name
       logging.warning(
-          f'Unsupported declaration requested - 
-          Language: {lang} Project: {self._benchmark.project_name}'
+          f'Unsupported decl - Lang: {lang} Project: {project}'
       )
 
     return sig
