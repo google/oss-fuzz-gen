@@ -280,8 +280,11 @@ def main():
 
   _print_experiment_results(experiment_results)
   if args.cloud_save_bucket:
-    _save_best_target(experiment_results, args.cloud_save_bucket,
-                      args.cloud_experiment_name)
+    try:
+      _save_best_target(experiment_results, args.cloud_save_bucket,
+                        args.cloud_experiment_name)
+    except Exception as e:
+      logging.error("Failed to upload best targets: %s", e)
 
 
 if __name__ == '__main__':
