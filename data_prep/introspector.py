@@ -46,14 +46,15 @@ INTROSPECTOR_TYPE = ''
 INTROSPECTOR_FUNC_SIG = ''
 
 
-def _set_introspector_endpoints(is_local):
+def _set_introspector_endpoints(is_local: bool):
+  """Sets URLs for Fuzz Introspector endpoints to local or remote endpoints."""
   global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNCTION, INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_FUNC_SIG
 
   if is_local:
-    logging.info('Setting Fuzz Introspector endpoint to local')
+    logging.info('Setting Fuzz Introspector endpoint to local.')
     INTROSPECTOR_ENDPOINT = 'http://127.0.0.1:8080/api'
   else:
-    logging.info('Setting Fuzz Introspector endpoint to remote')
+    logging.info('Setting Fuzz Introspector endpoint to remote.')
     INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
 
   INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
