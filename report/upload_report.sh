@@ -79,12 +79,28 @@ while true; do
 
   cd ..
 
-  # Upload the raw results into the same GCS directory
+  # Upload the raw results into the same GCS directory.
   echo "Uploading the raw results."
   gsutil -q -m cp -r "${RESULTS_DIR:?}" \
          "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
 
   echo "See the published report at https://llm-exp.oss-fuzz.com/Result-reports/${GCS_DIR:?}/"
+
+  # Upload training data.
+  echo "Uploading training data."
+  rm -rf 'training_data'
+  gsutil -q rm -r "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}/training_data" || true
+
+  $PYTHON -m data_prep.parse_training_data \
+    --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
+  $PYTHON -m data_prep.parse_training_data --group \
+    --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
+  $PYTHON -m data_prep.parse_training_data --coverage \
+    --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
+  $PYTHON -m data_prep.parse_training_data --coverage --group \
+    --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
+  gsutil -q cp -r 'training_data' \
+    "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
 
   if [[ -f /experiment_ended ]]; then
     echo "Experiment finished."
