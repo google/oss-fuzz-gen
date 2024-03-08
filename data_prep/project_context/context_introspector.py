@@ -63,42 +63,36 @@ class ContextRetriever:
     curr_line = int(begin_line)
 
     reconstructed_type = ''
+    source_line = ''
 
     # The reason we need to iteratively query FI is because
     # we have to parse each individual source line and
     # extract a possible type which we will recursively
     # query the definition for.
-    while curr_line < begin_line_elem:
+    for curr_line in range(begin_line, begin_line_elem):
       source_line = introspector.query_introspector_source_code(
           self._benchmark.project, file_name, curr_line, curr_line)
-      curr_line += 1
       reconstructed_type += source_line
 
-    while curr_line <= end_line_elem:
+    for curr_line in range(begin_line_elem, end_line_elem + 1):
       source_line = introspector.query_introspector_source_code(
           self._benchmark.project, file_name, curr_line, curr_line)
-
       reconstructed_type += source_line
 
       newly_seen_type = self._clean_type(
           self._extract_type_from_source_line(
               source_line, elements[curr_line - begin_line_elem]))
 
-      # If we do not see a '}' in the final element's source line
-      # Then we can add it ourselves. This would cause problems
-      # when typedef and struct definitions are combined.
-      # The alternative is to query for source code lines until a '}' is found.
-      if curr_line == end_line_elem:
-        if '}' not in source_line:
-          reconstructed_type += '};\n'
+      if newly_seen_type and newly_seen_type not in seen_types:
+        seen_types.add(newly_seen_type)
+        types_to_get.add(newly_seen_type)
 
-      curr_line += 1
-
-      if not newly_seen_type or newly_seen_type in seen_types:
-        continue
-
-      seen_types.add(newly_seen_type)
-      types_to_get.add(newly_seen_type)
+    # If we do not see a '}' in the final element's source line
+    # Then we can add it ourselves. This would cause problems
+    # when typedef and struct definitions are combined.
+    # The alternative is to query for source code lines until a '}' is found.
+    if '}' not in source_line:
+      reconstructed_type += '};\n'
 
     return reconstructed_type
 
