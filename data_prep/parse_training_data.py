@@ -165,6 +165,9 @@ class Experiment:
     self.experiment = experiment_dir
     self.benchmarks = []
     for benchmark_dir in os.listdir(experiment_dir):
+      # Assumes all valid benchmark dir name starts with 'output-'.
+      if not benchmark_dir.startswith('output-'):
+        continue
       benchmark_dir_path = os.path.join(experiment_dir, benchmark_dir)
       self.benchmarks.append(Benchmark(benchmark_dir_path))
 
