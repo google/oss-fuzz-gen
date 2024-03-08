@@ -116,10 +116,13 @@ class ContextRetriever:
         continue
       types_to_get.add(cleaned_type)
 
-    seen_types = types_to_get
+    seen_types = types_to_get.copy()
 
     # Add support for recursively querying for types
+    iteration = 0
     while types_to_get:
+      print("Iteration: {} Seen types: {}".format(iteration, seen_types))
+      iteration += 1
       current_type = types_to_get.pop()
       print(f'Querying for type: {current_type}')
       info = introspector.query_introspector_type_info(self._benchmark.project,
