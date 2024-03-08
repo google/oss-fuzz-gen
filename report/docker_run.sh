@@ -116,6 +116,18 @@ export ret_val=$?
 
 touch /experiment_ended
 
+# Generate and upload training data
+$PYTHON -m data_prep.parse_training_data \
+  --experiment-dir ${LOCAL_RESULTS_DIR:?} --save-dir 'training_data'
+$PYTHON -m data_prep.parse_training_data --group \
+  --experiment-dir ${LOCAL_RESULTS_DIR:?} --save-dir 'training_data'
+$PYTHON -m data_prep.parse_training_data --coverage \
+  --experiment-dir ${LOCAL_RESULTS_DIR:?} --save-dir 'training_data'
+$PYTHON -m data_prep.parse_training_data --coverage --group \
+  --experiment-dir ${LOCAL_RESULTS_DIR:?} --save-dir 'training_data'
+gsutil -q cp -r 'training_data' \
+  "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_REPORT_DIR:?}"
+
 # Wait for the report process to finish uploading.
 wait $pid_report
 

@@ -145,16 +145,17 @@ class Benchmark:
       return self.organize_group_pointwise(coverage)
     return self.organize_ungroup_pointwise(coverage)
 
-  def save_json(self, coverage: bool, group: bool):
+  def save_json(self, coverage: bool, group: bool, save_dir: str):
     """Saves the training data into a JSON file."""
     data = self.organize_data(coverage, group)
     coverage_str = 'cov' if coverage else 'build'
     group_str = 'group' if group else 'ungroup'
     data_filename = (f'{self.benchmark}.{len(data)}.{coverage_str}.{group_str}'
                      f'.json')
-    with open(data_filename, 'w') as file:
+    data_filapath = os.path.join(save_dir, data_filename)
+    with open(data_filapath, 'w') as file:
       json.dump(data, file, indent=4)
-    print(f'Saved to {data_filename}.')
+    print(f'Saved to {data_filapath}.')
 
 
 class Experiment:
@@ -174,16 +175,17 @@ class Experiment:
       data.extend(benchmark.organize_data(coverage, group))
     return data
 
-  def save_json(self, coverage: bool, group: bool) -> None:
+  def save_json(self, coverage: bool, group: bool, save_dir: str) -> None:
     """Saves the training data into a JSON file."""
     data = self.organize_data(coverage, group)
     group_str = 'group' if group else 'ungroup'
     coverage_str = 'cov' if coverage else 'build'
     data_filename = (f'{self.experiment}.{len(data)}.{coverage_str}.{group_str}'
                      f'.json')
-    with open(data_filename, 'w') as file:
+    data_filapath = os.path.join(save_dir, data_filename)
+    with open(data_filapath, 'w') as file:
       json.dump(data, file, indent=4)
-    print(f'Saved to {data_filename}.')
+    print(f'Saved to {data_filapath}.')
 
 
 def parse_args() -> argparse.Namespace:
@@ -202,10 +204,19 @@ def parse_args() -> argparse.Namespace:
                       help='Group targets by their prompt.')
   parser.add_argument('--benchmark-dir',
                       '-b',
+                      type=str,
+                      default='',
                       help="Path to the benchmark result directory.")
   parser.add_argument('--experiment-dir',
                       '-e',
+                      type=str,
+                      default='',
                       help="Path to the experiment result directory.")
+  parser.add_argument('--save-dir',
+                      '-s',
+                      type=str,
+                      default='',
+                      help="Path to the directory for saving json result.")
   args = parser.parse_args()
 
   if args.benchmark_dir:
@@ -213,12 +224,15 @@ def parse_args() -> argparse.Namespace:
   if args.experiment_dir:
     args.experiment_dir = args.experiment_dir.rstrip('/')
 
-  if args.benchmark_dir is None and args.experiment_dir is None:
-    print('Need at least one directory of a benchmark or an experiment.')
-    sys.exit(1)
-  if args.benchmark_dir is not None and args.experiment_dir is not None:
-    print('Need only one directory of a benchmark or an experiment, not both.')
-    sys.exit(1)
+  assert bool(args.benchmark_dir) != bool(args.experiment_dir), (
+      'Need exactly one directory of a benchmark or an experiment.')
+
+  result_dir = args.benchmark_dir or args.experiment_dir
+  assert os.path.isdir(result_dir), (
+      f'{result_dir} needs to be an existing directory.')
+
+  if args.save_dir:
+    os.makedirs(args.save_dir, exist_ok=True)
   return args
 
 
@@ -231,7 +245,7 @@ def main() -> int:
     result = Experiment(args.experiment_dir)
   else:
     return 1
-  result.save_json(args.coverage, args.group)
+  result.save_json(args.coverage, args.group, args.save_dir)
   return 0
 
 
