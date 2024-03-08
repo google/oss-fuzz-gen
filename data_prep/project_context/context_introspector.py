@@ -147,7 +147,7 @@ class ContextRetriever:
     """Attempts to extract a type from a source line.
     Do so by attempting to match for name and extracting
     everything before it."""
-    start = source_line.find(next(filter(str.isalpha, s)))
+    start = source_line.find(next(filter(str.isalpha, source_line)))
     end = source_line.find(type_element['name'])
 
     if end == -1:
