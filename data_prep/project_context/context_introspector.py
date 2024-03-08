@@ -147,15 +147,13 @@ class ContextRetriever:
     """Attempts to extract a type from a source line.
     Do so by attempting to match for name and extracting
     everything before it."""
+    start = source_line.find(next(filter(str.isalpha, s)))
+    end = source_line.find(type_element['name'])
 
-    # TODO: Clean out tabs, spaces, etc...
-    # Otherwise querying fails
-    index = source_line.find(type_element['name'])
-
-    if index == -1:
+    if end == -1:
       return ''
 
-    return source_line[:index]
+    return source_line[start:end]
 
   def _clean_type(self, type_name: str) -> str:
     """Cleans a type so that it can be fetched from FI."""
