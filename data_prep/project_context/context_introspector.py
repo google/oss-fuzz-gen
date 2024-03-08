@@ -5,6 +5,7 @@ import os
 
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
+import logging
 
 
 class ContextRetriever:
@@ -16,17 +17,17 @@ class ContextRetriever:
     self._benchmark = benchmark
 
   def get_embeddable_declaration(self) -> str:
-    """Retrieve declaration by language. Attach extern C to C projects."""
+    """Retrieves declaration by language. Attach extern C to C projects."""
     lang = self._benchmark.language.lower()
-    sig = self._benchmark.function_signature
+    sig = self._benchmark.function_signature + ';'
 
-    if lang == 'c++':
-      return sig + ';'
     if lang == 'c':
-      return 'extern "C" ' + sig + ';'
+      return 'extern "C" ' + sig
 
-    print('Unsupported declaration requested')
-    return ''
+    if lang != 'c++':
+      logging.warning(f'Unsupported declaration requested - Language: {lang} Project: {self._benchmark.project_name}')
+
+    return sig
 
   def _get_typedef_type(self, info: dict) -> str:
     """Reconstructs type definition for a typedef element.
@@ -101,7 +102,7 @@ class ContextRetriever:
     return reconstructed_type
 
   def get_embeddable_types(self) -> list[str]:
-    """Retrieve types from FI."""
+    """Retrieves types from FI."""
     seen_types = set()
     types_to_get = set()
     types = set()
@@ -112,9 +113,8 @@ class ContextRetriever:
 
     for param in params:
       cleaned_type = self._clean_type(param['type'])
-      if not cleaned_type:
-        continue
-      types_to_get.add(cleaned_type)
+      if cleaned_type:
+        types_to_get.add(cleaned_type)
 
     seen_types = types_to_get.copy()
 
@@ -193,7 +193,7 @@ class ContextRetriever:
     return type_tokens[0]
 
   def get_embeddable_blob(self) -> str:
-    """Retrieve both the types and declaration, to be embedded
+    """Retrieves both the types and declaration, to be embedded
     into the prompt."""
     types = self.get_embeddable_types()
     decl = self.get_embeddable_declaration()
