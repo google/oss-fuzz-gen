@@ -92,6 +92,17 @@ class Benchmark:
         all_status[instance] = status
     return all_status
 
+  @property
+  def is_valid_benchmark(self) -> bool:
+    """Checks if this has a valid benchmark directory."""
+    path = self.benchmark_dir
+    expected_components = [
+        'raw_targets', 'status', 'fixed_targets', 'prompt.txt'
+    ]
+    return all(
+        os.path.exists(os.path.join(path, component))
+        for component in expected_components)
+
   @staticmethod
   def final_score(stat: Dict[str, Any], coverage: bool) -> float:
     """Evaluates the final score of a benchmark instance."""
@@ -165,11 +176,10 @@ class Experiment:
     self.experiment = experiment_dir
     self.benchmarks = []
     for benchmark_dir in os.listdir(experiment_dir):
-      # Assumes all valid benchmark dir name starts with 'output-'.
-      if not benchmark_dir.startswith('output-'):
-        continue
       benchmark_dir_path = os.path.join(experiment_dir, benchmark_dir)
-      self.benchmarks.append(Benchmark(benchmark_dir_path))
+      benchmark = Benchmark(benchmark_dir_path)
+      if benchmark.is_valid_benchmark:
+        self.benchmarks.append(benchmark)
 
   def organize_data(self, coverage: bool, group: bool) -> List[Dict[str, Any]]:
     """Organizes experiment result into training data in the required format."""
@@ -244,6 +254,8 @@ def main() -> int:
   args = parse_args()
   if args.benchmark_dir:
     result = Benchmark(args.benchmark_dir)
+    if not result.is_valid_benchmark:
+      print('Invalid benchmark directory provided, missing necessary file.')
   elif args.experiment_dir:
     result = Experiment(args.experiment_dir)
   else:
