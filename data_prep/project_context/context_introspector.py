@@ -1,11 +1,11 @@
 """Class to retrieve context from introspector for
 better prompt generation."""
 
+import logging
 import os
 
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
-import logging
 
 
 class ContextRetriever:
@@ -25,7 +25,10 @@ class ContextRetriever:
       return 'extern "C" ' + sig
 
     if lang != 'c++':
-      logging.warning(f'Unsupported declaration requested - Language: {lang} Project: {self._benchmark.project_name}')
+      logging.warning(
+          f'Unsupported declaration requested - 
+          Language: {lang} Project: {self._benchmark.project_name}'
+      )
 
     return sig
 
