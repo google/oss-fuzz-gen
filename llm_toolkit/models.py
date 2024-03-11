@@ -284,7 +284,7 @@ class VertexAIModel(GoogleModel):
                                     'us-central1').split(',')
     location = random.sample(vertex_ai_locations, 1)[0]
 
-    logging.info('Using location %s for vertex AI', location)
+    logging.info('Using location %s for Vertex AI', location)
     vertexai.init(location=location,)
 
 
