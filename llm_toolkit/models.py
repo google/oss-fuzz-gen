@@ -287,7 +287,6 @@ class VertexAIModel(GoogleModel):
     logging.info('Using location %s for Vertex AI', location)
     vertexai.init(location=location,)
 
-
   def get_model(self) -> Any:
     return CodeGenerationModel.from_pretrained(self._vertex_ai_model)
 
