@@ -70,7 +70,6 @@ class LLM:
     # Only a subset of models need a cloud specific set up, so
     # we can pass for the remainder of the models as they don't
     # need to implement specific handling of this.
-    pass
 
   @classmethod
   def setup(
