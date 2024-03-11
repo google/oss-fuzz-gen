@@ -65,15 +65,12 @@ class LLM:
     self.num_samples = num_samples
     self.temperature = temperature
 
-  @classmethod
-  def cloud_setup(cls):
+  def cloud_setup(self):
     """Run Cloud specific-setup."""
-    vertex_ai_locations = os.getenv('VERTEX_AI_LOCATIONS',
-                                    'us-central1').split(',')
-    location = random.sample(vertex_ai_locations, 1)[0]
-
-    logging.info('Using location %s for vertex AI', location)
-    vertexai.init(location=location,)
+    # Only a subset of models need a cloud specific set up, so
+    # we can pass for the remainder of the models as they don't
+    # need to implement specific handling of this.
+    pass
 
   @classmethod
   def setup(
@@ -280,6 +277,16 @@ class VertexAIModel(GoogleModel):
 
   _vertex_ai_model = ''
   _max_output_tokens = 2048
+
+  def cloud_setup(self):
+    """Set Vertex AI cloud location."""
+    vertex_ai_locations = os.getenv('VERTEX_AI_LOCATIONS',
+                                    'us-central1').split(',')
+    location = random.sample(vertex_ai_locations, 1)[0]
+
+    logging.info('Using location %s for vertex AI', location)
+    vertexai.init(location=location,)
+
 
   def get_model(self) -> Any:
     return CodeGenerationModel.from_pretrained(self._vertex_ai_model)
