@@ -229,13 +229,13 @@ def query_introspector_cross_references(project: str,
   return xref_source
 
 
-def query_introspector_type_info(project: str, type_name: str) -> dict:
+def query_introspector_type_info(project: str, type_name: str) -> list[dict]:
   """Queries FuzzIntrospector API for information of |type_name|."""
   resp = _query_introspector(INTROSPECTOR_TYPE, {
       'project': project,
       'name': type_name
   })
-  return _get_data(resp, 'type_data', {})
+  return _get_data(resp, 'type_data', [])
 
 
 def query_introspector_function_signature(project: str,
