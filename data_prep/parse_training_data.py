@@ -111,8 +111,13 @@ class Benchmark:
                         self.benchmark, instance)
         continue
       with open(status_json_path) as file:
-        status = json.load(file)
-        all_status[instance] = status
+        try:
+          status = json.load(file)
+          all_status[instance] = status
+        except Exception as e:
+          logging.warning(e)
+          logging.warning(status_json_path)
+
     return all_status
 
   @property
