@@ -1,5 +1,5 @@
-Given the following C++ program and its build error message, fix the code to achieve the original functionality.
+Given the following C++ fuzz harness and its build error message, fix the code to make it build for fuzzing.
 
-If a function is missing, fix it by including the related libraries.
+If there is undeclared identifier or unknown type name error, fix it by finding and including the related libraries.
 
-If the error contains "undefined reference to", this means one or more of the header <code>#include</code> directives need to be wrapped with <code>extern "C" {}</code> for the object linking to succeed. You must fix this by rewriting the relevant <code>#include</code> and wrapping it with <code>extern "C" {}</code>.
+Note that some codes may need to be wrapped with <code>extern "C"</code> as their source is C program.
