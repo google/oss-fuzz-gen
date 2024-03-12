@@ -195,9 +195,13 @@ class Benchmark:
 class Experiment:
   """The directory of an experiment, containing benchmark result directories."""
 
-  def __init__(self, experiment_dir: str) -> None:
+  def __init__(self, experiment_dir: str, bucket_url: str = '') -> None:
     self.experiment = experiment_dir
+    self.bucket_url = bucket_url
     self.benchmarks = []
+
+    if bucket_url:
+      _download_files(experiment_dir, bucket_url)
     for benchmark_dir in os.listdir(experiment_dir):
       benchmark_dir_path = os.path.join(experiment_dir, benchmark_dir)
       benchmark = Benchmark(benchmark_dir_path)
@@ -224,7 +228,46 @@ class Experiment:
     logging.info('Saved to: %s', data_filapath)
 
 
-def parse_args() -> argparse.Namespace:
+def _download_files(experiment_dir: str, bucket_url: str) -> None:
+  """
+  Downloads files in |bucket_url| to |experiment_dir| and preserve their paths.
+  """
+  bucket_name = bucket_url.removeprefix('gs://').split('/')[0]
+  directory_prefix = bucket_url.removeprefix(f'gs://{bucket_name}/')
+  bucket = STORAGE_CLIENT.bucket(bucket_name)
+  blobs = bucket.list_blobs(prefix=directory_prefix)
+  blobs_num = len(list(blobs))
+  # Download blobs in parallel
+  blobs = bucket.list_blobs(prefix=directory_prefix)
+  with ThreadPoolExecutor(max_workers=40) as executor:
+    for i, blob in enumerate(blobs):
+      print(f'{i} / {blobs_num}')
+      executor.submit(_download_file, blob, experiment_dir)
+
+
+def _download_file(file_blob: storage.Blob, local_dir: str) -> None:
+  """
+  Downloads a file from |file_blob| and preserve its path after |bucket_dir|.
+  """
+  if not file_blob.name:
+    logging.warning('Blob has no name: %s', file_blob)
+    return
+  if any(
+      file_blob.name.endswith(suffix)
+      for suffix in ['.rawoutput', '.log', 'log.txt']):
+    return
+  local_path = os.path.join(local_dir, file_blob.name)
+  os.makedirs(os.path.dirname(local_path), exist_ok=True)
+  file_blob.download_to_filename(local_path)
+
+
+def _validate_bucket(directory_url: str) -> bool:
+  """Checks if the |directory_url| is local or from a bucket."""
+  # Assume we will only use gs:// links for simplicity in directory operations.
+  return directory_url.startswith('gs://')
+
+
+def _parse_args() -> argparse.Namespace:
   """Handles command-line arguments."""
   parser = argparse.ArgumentParser(
       description="Parse benchmark data from an HTML file.")
@@ -248,6 +291,9 @@ def parse_args() -> argparse.Namespace:
                       type=str,
                       default='',
                       help="Path to the experiment result directory.")
+  parser.add_argument('--experiment-bucket-dir-url',
+                      '-u',
+                      help="Path to the experiment result bucket directory.")
   parser.add_argument('--save-dir',
                       '-s',
                       type=str,
@@ -267,6 +313,9 @@ def parse_args() -> argparse.Namespace:
   assert os.path.isdir(result_dir), (
       f'{result_dir} needs to be an existing directory.')
 
+  if args.experiment_bucket_dir_url:
+    assert _validate_bucket(args.experiment_bucket_dir_url), (
+        f'{args.experiment_bucket_dir_url} is an invalid bucket directory URL.')
   if args.save_dir:
     os.makedirs(args.save_dir, exist_ok=True)
   return args
@@ -274,14 +323,14 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
   """Main function to and initiate the parsing process."""
-  args = parse_args()
+  args = _parse_args()
   if args.benchmark_dir:
     result = Benchmark(args.benchmark_dir)
     if not result.is_valid_benchmark:
       logging.info(
           'Invalid benchmark directory provided, missing necessary file.')
   elif args.experiment_dir:
-    result = Experiment(args.experiment_dir)
+    result = Experiment(args.experiment_dir, args.experiment_bucket_dir_url)
   else:
     return 1
   result.save_json(args.coverage, args.group, args.save_dir)
