@@ -25,9 +25,15 @@ Usage:
 
 import argparse
 import json
+import logging
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Dict, List
+
+from google.cloud import storage
+
+STORAGE_CLIENT = storage.Client()
 
 
 class Benchmark:
@@ -41,6 +47,9 @@ class Benchmark:
   def prompt(self) -> str:
     """Returns the prompt used by the benchmark."""
     prompt_path = os.path.join(self.benchmark_dir, 'prompt.txt')
+    if not os.path.isfile(prompt_path):
+      logging.warning('Prompt does not exist: %s', prompt_path)
+      return ''
     with open(prompt_path) as prompt_file:
       return prompt_file.read()
 
@@ -50,6 +59,9 @@ class Benchmark:
     the instance ID to a list of targets generated and fixed by LLM."""
     all_targets = {}
     raw_target_dir = os.path.join(self.benchmark_dir, 'raw_targets')
+    if not os.path.isdir(raw_target_dir):
+      logging.warning('Raw target dir does not exist: %s', raw_target_dir)
+      return {}
     raw_targets = [
         instance for instance in os.listdir(raw_target_dir)
         if not instance.endswith('rawoutput')
@@ -60,6 +72,9 @@ class Benchmark:
         all_targets[os.path.splitext(instance)[0]] = [target_file.read()]
 
     fixed_target_dir = os.path.join(self.benchmark_dir, 'fixed_targets')
+    if not os.path.isdir(fixed_target_dir):
+      logging.warning('Fixed target dir does not exist: %s', fixed_target_dir)
+      return {}
     fix_dirs = [
         instance for instance in os.listdir(fixed_target_dir)
         if os.path.isdir(os.path.join(fixed_target_dir, instance))
@@ -73,6 +88,10 @@ class Benchmark:
       ][0]
       with open(code_path) as code_file:
         fixed_code = code_file.read()
+      if not all_targets.get(instance):
+        logging.warning('Benchmark instance does not exist: %s - %s',
+                        self.benchmark_dir, instance)
+        continue
       all_targets[instance].append(fixed_code)
     return all_targets
 
@@ -82,10 +101,14 @@ class Benchmark:
     instance ID to its status JSON."""
     all_status = {}
     status_dir = os.path.join(self.benchmark_dir, 'status')
+    if not os.path.isdir(status_dir):
+      logging.warning('Status dir does not exist: %s', status_dir)
+      return {}
     for instance in os.listdir(status_dir):
       status_json_path = os.path.join(status_dir, instance, 'result.json')
       if not os.path.isfile(status_json_path):
-        print(f'Missing result JSON of {self.benchmark}')
+        logging.warning('Missing result JSON of benchmark instance: %s - %s',
+                        self.benchmark, instance)
         continue
       with open(status_json_path) as file:
         status = json.load(file)
@@ -166,7 +189,7 @@ class Benchmark:
     data_filapath = os.path.join(save_dir, data_filename)
     with open(data_filapath, 'w') as file:
       json.dump(data, file, indent=4)
-    print(f'Saved to {data_filapath}.')
+    logging.info('Saved to: %s', data_filapath)
 
 
 class Experiment:
@@ -198,7 +221,7 @@ class Experiment:
     data_filapath = os.path.join(save_dir, data_filename)
     with open(data_filapath, 'w') as file:
       json.dump(data, file, indent=4)
-    print(f'Saved to {data_filapath}.')
+    logging.info('Saved to: %s', data_filapath)
 
 
 def parse_args() -> argparse.Namespace:
@@ -255,7 +278,8 @@ def main() -> int:
   if args.benchmark_dir:
     result = Benchmark(args.benchmark_dir)
     if not result.is_valid_benchmark:
-      print('Invalid benchmark directory provided, missing necessary file.')
+      logging.info(
+          'Invalid benchmark directory provided, missing necessary file.')
   elif args.experiment_dir:
     result = Experiment(args.experiment_dir)
   else:
