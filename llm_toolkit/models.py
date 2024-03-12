@@ -66,7 +66,7 @@ class LLM:
     self.temperature = temperature
 
   def cloud_setup(self):
-    """Run Cloud specific-setup."""
+    """Runs Cloud specific-setup."""
     # Only a subset of models need a cloud specific set up, so
     # we can pass for the remainder of the models as they don't
     # need to implement specific handling of this.
@@ -278,7 +278,7 @@ class VertexAIModel(GoogleModel):
   _max_output_tokens = 2048
 
   def cloud_setup(self):
-    """Set Vertex AI cloud location."""
+    """Sets Vertex AI cloud location."""
     vertex_ai_locations = os.getenv('VERTEX_AI_LOCATIONS',
                                     'us-central1').split(',')
     location = random.sample(vertex_ai_locations, 1)[0]
