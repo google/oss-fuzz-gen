@@ -112,8 +112,7 @@ class Benchmark:
         continue
       with open(status_json_path) as file:
         try:
-          status = json.load(file)
-          all_status[instance] = status
+          all_status[instance] = json.load(file)
         except Exception as e:
           logging.warning(e)
           logging.warning(status_json_path)
