@@ -199,9 +199,13 @@ class Benchmark:
 class Experiment:
   """The directory of an experiment, containing benchmark result directories."""
 
-  def __init__(self, experiment_dir: str, bucket_url: str = '') -> None:
+  def __init__(self, experiment_dir: str, bucket_uri: str = '') -> None:
+    # The local result directory. The directory from bucket_uri will be
+    # downloaded here if this directory does not contain experiment results.
     self.experiment = experiment_dir
-    self.bucket_url = bucket_url
+    # The gcloud bucket result directory uri. It can be an empty string if
+    # experiment_dir already contains experiment results.
+    self.bucket_uri = bucket_uri
     self.benchmarks = []
 
     if bucket_url:
