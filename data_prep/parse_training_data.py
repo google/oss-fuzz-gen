@@ -208,8 +208,8 @@ class Experiment:
     self.bucket_uri = bucket_uri
     self.benchmarks = []
 
-    if bucket_url:
-      _download_files(experiment_dir, bucket_url)
+    if bucket_uri:
+      _download_files(experiment_dir, bucket_uri)
     for benchmark_dir in os.listdir(experiment_dir):
       benchmark_dir_path = os.path.join(experiment_dir, benchmark_dir)
       benchmark = Benchmark(benchmark_dir_path)
@@ -275,10 +275,10 @@ def _download_file(file_blob: storage.Blob, local_dir: str) -> None:
   file_blob.download_to_filename(local_path)
 
 
-def _validate_bucket(directory_url: str) -> bool:
-  """Checks if the |directory_url| is local or from a bucket."""
+def _validate_bucket(bucket_uri: str) -> bool:
+  """Checks if the |directory_uri| is local or from a bucket."""
   # Assume we will only use gs:// links for simplicity in directory operations.
-  return directory_url.startswith('gs://')
+  return bucket_uri.startswith('gs://')
 
 
 def _parse_args() -> argparse.Namespace:
@@ -299,20 +299,25 @@ def _parse_args() -> argparse.Namespace:
                       '-b',
                       type=str,
                       default='',
-                      help="Path to the benchmark result directory.")
-  parser.add_argument('--experiment-dir',
-                      '-e',
-                      type=str,
-                      default='',
-                      help="Path to the experiment result directory.")
-  parser.add_argument('--experiment-bucket-dir-url',
-                      '-u',
-                      help="Path to the experiment result bucket directory.")
+                      help='Path to the benchmark result directory.')
+  parser.add_argument(
+      '--experiment-dir',
+      '-e',
+      type=str,
+      default='',
+      help=('Path to the experiment result directory. When --bucket-uri is '
+            'provided, the bucket directory will be downloaded to this '
+            'directory.'))
+  parser.add_argument(
+      '--bucket-uri',
+      '-u',
+      help=('URI to the experiment result bucket directory. The bucket '
+            'directory will be downloaded to local --experiment-dir.'))
   parser.add_argument('--save-dir',
                       '-s',
                       type=str,
                       default='',
-                      help="Path to the directory for saving json result.")
+                      help='Path to the directory for saving json result.')
   args = parser.parse_args()
 
   if args.benchmark_dir:
@@ -327,9 +332,13 @@ def _parse_args() -> argparse.Namespace:
   assert os.path.isdir(result_dir), (
       f'{result_dir} needs to be an existing directory.')
 
-  if args.experiment_bucket_dir_url:
-    assert _validate_bucket(args.experiment_bucket_dir_url), (
-        f'{args.experiment_bucket_dir_url} is an invalid bucket directory URL.')
+  if args.bucket_uri:
+    assert _validate_bucket(args.bucket_uri), (
+        f'{args.bucket_uri} is an invalid bucket directory URL.')
+    assert not os.path.isdir(args.benchmark_dir), (
+        'Downloading bucket directory will overwrite existing local dir '
+        f'{args.benchmark_dir}')
+
   if args.save_dir:
     os.makedirs(args.save_dir, exist_ok=True)
   return args
@@ -344,7 +353,7 @@ def main() -> int:
       logging.info(
           'Invalid benchmark directory provided, missing necessary file.')
   elif args.experiment_dir:
-    result = Experiment(args.experiment_dir, args.experiment_bucket_dir_url)
+    result = Experiment(args.experiment_dir, args.bucket_uri)
   else:
     return 1
   result.save_json(args.coverage, args.group, args.save_dir)
