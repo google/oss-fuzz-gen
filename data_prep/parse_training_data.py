@@ -236,12 +236,18 @@ class Experiment:
     logging.info('Saved to: %s', data_filapath)
 
 
-def _download_files(experiment_dir: str, bucket_url: str) -> None:
+def _parse_gcs_uri(bucket_uri: str) -> tuple[str, str]:
+  """Parses the bucket name and directory prefix from |bucket_uri|."""
+  bucket_name = bucket_uri.removeprefix('gs://').split('/')[0]
+  directory_prefix = bucket_uri.removeprefix(f'gs://{bucket_name}/')
+  return bucket_name, directory_prefix
+
+
+def _download_files(experiment_dir: str, bucket_uri: str) -> None:
   """
-  Downloads files in |bucket_url| to |experiment_dir| and preserve their paths.
+  Downloads files in |bucket_uri| to |experiment_dir| and preserve their paths.
   """
-  bucket_name = bucket_url.removeprefix('gs://').split('/')[0]
-  directory_prefix = bucket_url.removeprefix(f'gs://{bucket_name}/')
+  bucket_name, directory_prefix = _parse_gcs_uri(bucket_uri)
   bucket = STORAGE_CLIENT.bucket(bucket_name)
   blobs = bucket.list_blobs(prefix=directory_prefix)
   blobs_num = len(list(blobs))
