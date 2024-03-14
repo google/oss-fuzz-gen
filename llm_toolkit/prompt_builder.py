@@ -58,7 +58,7 @@ class PromptBuilder:
             target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: str = '') -> prompts.Prompt:
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
     """Builds a prompt."""
 
   @abstractmethod
@@ -130,9 +130,15 @@ class DefaultTemplateBuilder(PromptBuilder):
     solution = solution.replace('{SOLUTION_CONTENT}', solution_content)
     return solution
 
-  def format_context(self, context_blob: str) -> str:
+  def format_context(self, context_info: dict) -> str:
     context = self._get_template(self.context_template_file)
-    context = context.replace('{CONTEXT_BLOB}', context_blob)
+    context = context.replace('{CONTEXT_HEADERS}',
+                              '\n'.join(context_info['files']))
+    context = context.replace('{CONTEXT_MUST_INSERT}', context_info['decl'])
+    context = context.replace('{CONTEXT_FUNC_SOURCE}',
+                              context_info['func_source'])
+    context = context.replace('{CONTEXT_XREFS_SOURCE}',
+                              '\n'.join(context_info['xrefs']))
     return context
 
   def _select_examples(self, examples: list[list],
@@ -219,7 +225,7 @@ class DefaultTemplateBuilder(PromptBuilder):
             target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: str = '') -> prompts.Prompt:
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     priming = self._format_priming(target_file_type)
     final_problem = self.format_problem(function_signature)

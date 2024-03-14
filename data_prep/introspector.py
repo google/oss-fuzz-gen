@@ -213,7 +213,7 @@ def query_introspector_source_code(project: str, filepath: str, begin_line: int,
 def query_introspector_cross_references(project: str,
                                         func_sig: str) -> list[str]:
   """Queries FuzzIntrospector API for source code of functions
-  cross-referenced |func_sig|."""
+  which reference |func_sig|."""
   resp = _query_introspector(INTROSPECTOR_XREF, {
       'project': project,
       'function_signature': func_sig
@@ -222,7 +222,7 @@ def query_introspector_cross_references(project: str,
 
   xref_source = []
   for cs in call_sites:
-    name = cs.get('dst_func')
+    name = cs.get('src_func')
     sig = query_introspector_function_signature(project, name)
     source = query_introspector_function_source(project, sig)
     xref_source.append(source)
