@@ -330,7 +330,7 @@ class CloudBuilderRunner(BuilderRunner):
     super().__init__(*args, **kwargs)
 
   @staticmethod
-  def _run_with_retry_control(target_path: str, *args, **kwargs):
+  def _run_with_retry_control(target_path: str, *args, **kwargs) -> bool:
     """sp.run() with controllable retry and customized exponential backoff."""
     # List of (error_str, exp_backoff_func).
     retryable_errors = [
@@ -350,7 +350,7 @@ class CloudBuilderRunner(BuilderRunner):
     for attempt_id in range(1, CLOUD_EXP_MAX_ATTEMPT + 1):
       try:
         sp.run(*args, capture_output=True, check=True, **kwargs)
-        return
+        return True
       except sp.CalledProcessError as e:
         # Replace \n for single log entry on cloud.
         stdout = e.stdout.decode('utf-8').replace('\n', '\t')
@@ -374,7 +374,7 @@ class CloudBuilderRunner(BuilderRunner):
           continue
         logging.error('Failed to evaluate %s on cloud, attempt %d:\n%s\n%s',
                       os.path.realpath(target_path), attempt_id, stdout, stderr)
-        raise e
+    return False
 
   def build_and_run(self, generated_project: str, target_path: str,
                     iteration: int) -> tuple[BuildResult, Optional[RunResult]]:
@@ -397,22 +397,20 @@ class CloudBuilderRunner(BuilderRunner):
     coverage_name = f'{uid}.coverage'
     coverage_path = f'gs://{self.experiment_bucket}/{coverage_name}'
 
-    try:
-      self._run_with_retry_control(
-          os.path.realpath(target_path),
-          [
-              f'./{oss_fuzz_checkout.VENV_DIR}/bin/python3',
-              'infra/build/functions/target_experiment.py',
-              f'--project={generated_project}',
-              f'--target={self.benchmark.target_name}',
-              f'--upload_build_log={build_log_path}',
-              f'--upload_output_log={run_log_path}',
-              f'--upload_corpus={corpus_path}',
-              f'--upload_coverage={coverage_path}',
-              f'--experiment_name={self.experiment_name}', '--'
-          ] + self._libfuzzer_args(),
-          cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
-    except sp.CalledProcessError:
+    if not self._run_with_retry_control(
+        os.path.realpath(target_path),
+        [
+            f'./{oss_fuzz_checkout.VENV_DIR}/bin/python3',
+            'infra/build/functions/target_experiment.py',
+            f'--project={generated_project}',
+            f'--target={self.benchmark.target_name}',
+            f'--upload_build_log={build_log_path}',
+            f'--upload_output_log={run_log_path}',
+            f'--upload_corpus={corpus_path}',
+            f'--upload_coverage={coverage_path}',
+            f'--experiment_name={self.experiment_name}', '--'
+        ] + self._libfuzzer_args(),
+        cwd=oss_fuzz_checkout.OSS_FUZZ_DIR):
       return build_result, None
 
     print(f'Evaluated {os.path.realpath(target_path)} on cloud.')
