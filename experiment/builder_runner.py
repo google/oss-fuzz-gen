@@ -356,22 +356,22 @@ class CloudBuilderRunner(BuilderRunner):
         stdout = e.stdout.decode('utf-8').replace('\n', '\t')
         stderr = e.stderr.decode('utf-8').replace('\n', '\t')
 
-        delay = 0
-        for err, delay_f in retryable_errors:
-          if attempt_id < CLOUD_EXP_MAX_ATTEMPT and err in stdout + stderr:
-            delay = delay_f(attempt_id)
-            break
+        delay = next((delay_f(attempt_id)
+                      for err, delay_f in retryable_errors
+                      if err in stdout + stderr), 0)
 
-        if delay:
-          logging.warning(
-              'Failed to evaluate %s on cloud, attempt %d, retry in %ds:\n'
-              '%s\n%s', os.path.realpath(target_path), attempt_id, delay,
-              stdout, stderr)
-          time.sleep(delay)
-          continue
-        logging.error('Failed to evaluate %s on cloud, attempt %d:\n%s\n%s',
-                      os.path.realpath(target_path), attempt_id, stdout, stderr)
-        break
+        if not delay or attempt_id == CLOUD_EXP_MAX_ATTEMPT:
+          logging.error('Failed to evaluate %s on cloud, attempt %d:\n%s\n%s',
+                        os.path.realpath(target_path), attempt_id, stdout,
+                        stderr)
+          break
+
+        logging.warning(
+            'Failed to evaluate %s on cloud, attempt %d, retry in %ds:\n'
+            '%s\n%s', os.path.realpath(target_path), attempt_id, delay, stdout,
+            stderr)
+        time.sleep(delay)
+
     return False
 
   def build_and_run(self, generated_project: str, target_path: str,
