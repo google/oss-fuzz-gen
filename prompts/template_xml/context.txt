@@ -1,4 +1,19 @@
+You must include these header files. The function requires them.
+<code>
+{CONTEXT_HEADERS}
+</code>
+
 You must insert this code before the function being tested:
 <code>
-{CONTEXT_BLOB}
+{CONTEXT_MUST_INSERT}
+</code>
+
+Here is the source code of the function being tested:
+<code>
+{CONTEXT_FUNC_SOURCE}
+</code>
+
+Here is the source code for functions which reference the function being tested:
+<code>
+{CONTEXT_XREFS_SOURCE}
 </code>
