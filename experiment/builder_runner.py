@@ -336,7 +336,7 @@ class CloudBuilderRunner(BuilderRunner):
     retryable_errors = [
         # As mentioned in pr #100.
         ('RESOURCE_EXHAUSTED', lambda x: 5 * 2**x + random.randint(50, 90)),
-        # As mentioned in pr $151.
+        # As mentioned in pr #151.
         ('BrokenPipeError: [Errno 32] Broken pipe',
          lambda x: 5 * 2**x + random.randint(1, 5)),
         # Temp workaround for issue #12.
