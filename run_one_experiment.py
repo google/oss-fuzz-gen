@@ -238,16 +238,16 @@ def run(benchmark: Benchmark,
 
     if use_context:
       retriever = ContextRetriever(benchmark)
-      context_blob = retriever.get_embeddable_blob()
+      context_info = retriever.get_context_info()
     else:
-      context_blob = ''
+      context_info = {}
 
     builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
     prompt = builder.build(benchmark.function_signature,
                            benchmark.file_type,
                            example_pair,
                            project_examples,
-                           project_context_content=context_blob)
+                           project_context_content=context_info)
     prompt.save(work_dirs.prompt)
     generated_targets = generate_targets(benchmark,
                                          model,

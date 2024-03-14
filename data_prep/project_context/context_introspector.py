@@ -68,6 +68,9 @@ class ContextRetriever:
   def _get_source_line(self, item: dict) -> int:
     return int(self._get_nested_item(item, 'source', 'source_line'))
 
+  def _get_source_file(self, item: dict) -> str:
+    return self._get_nested_item(item, 'source', 'source_file')
+
   def _get_struct_type(self,
                        info: dict,
                        seen_types: set,
@@ -262,6 +265,35 @@ class ContextRetriever:
 
     return list(types)
 
+  def _get_files_to_include(self) -> list[str]:
+    """Retrieves files to include.
+    These files are found from the source files for complex types seen
+    in the function declaration."""
+    types = []
+    files = set()
+    types.append(self._clean_type(self._benchmark.return_type))
+
+    params = self._benchmark.params
+
+    for param in params:
+      cleaned_type = self._clean_type(param['type'])
+      if cleaned_type:
+        types.append(cleaned_type)
+
+    for current_type in types:
+      info_list = introspector.query_introspector_type_info(
+          self._benchmark.project, current_type)
+      if not info_list:
+        continue
+      info_list = self._clean_info_list(info_list)
+
+      for info in info_list:
+        source_file = self._get_source_file(info)
+        source_file = os.path.normpath(source_file)
+        files.add(source_file)
+
+    return list(files)
+
   def _extract_type_from_source_line(self, source_line: str,
                                      type_element: dict) -> str:
     """Attempts to extract a type from a source line.
@@ -346,20 +378,29 @@ class ContextRetriever:
     blob = '\n'.join(types) + decl
     return blob
 
-  def get_other_context(self,
-                        get_xrefs: bool = True,
-                        get_func_source: bool = True) -> str:
-    """Retrieves other context exposed by FI. These currently
-    include cross-references and the source of the function being tested."""
-    blob = ''
+  def get_embeddable_blob2(self) -> str:
+    """Retrieves the source paths of the types. Additionally
+    retrieves the function declaration, to be embedded into the prompt."""
+    files = self._get_files_to_include()
+    decl = self._get_embeddable_declaration()
 
-    xrefs = []
-    if get_xrefs:
-      xrefs = self._get_xrefs_to_function()
-
-    func_source = ''
-    if get_func_source:
-      func_source = self._get_function_implementation()
-
-    blob = '\n'.join(xrefs) + '\n' + func_source
+    blob = '\n'.join(files) + decl
     return blob
+
+  def get_context_info(self) -> dict:
+    """Retrieves contextual information and stores them in a dictionary."""
+    xrefs = self._get_xrefs_to_function()
+    func_source = self._get_function_implementation()
+    files = self._get_files_to_include()
+    decl = self._get_embeddable_declaration()
+
+    context_info = {
+        'xrefs': xrefs,
+        'func_source': func_source,
+        'files': files,
+        'decl': decl
+    }
+
+    logging.warning("Context: %s", context_info)
+
+    return context_info
