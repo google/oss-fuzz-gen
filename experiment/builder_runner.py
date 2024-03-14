@@ -374,6 +374,7 @@ class CloudBuilderRunner(BuilderRunner):
           continue
         logging.error('Failed to evaluate %s on cloud, attempt %d:\n%s\n%s',
                       os.path.realpath(target_path), attempt_id, stdout, stderr)
+        break
     return False
 
   def build_and_run(self, generated_project: str, target_path: str,
