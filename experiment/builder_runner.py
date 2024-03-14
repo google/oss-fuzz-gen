@@ -358,12 +358,9 @@ class CloudBuilderRunner(BuilderRunner):
 
         delay = 0
         for err, delay_f in retryable_errors:
-          if err in stdout + stderr:
+          if attempt_id < CLOUD_EXP_MAX_ATTEMPT and err in stdout + stderr:
             delay = delay_f(attempt_id)
             break
-
-        if attempt_id == CLOUD_EXP_MAX_ATTEMPT:
-          delay = 0
 
         if delay:
           logging.warning(
