@@ -1,9 +1,11 @@
-You must include these header files. The function requires them.
+The code block below contains the header files which you must include. The function requires these header files to successfully compile.
+If the headers are private, do not include them.
+Header files:
 <code>
 {CONTEXT_HEADERS}
 </code>
 
-You must insert this code before the function being tested:
+You must insert code in the below code block before the function being tested:
 <code>
 {CONTEXT_MUST_INSERT}
 </code>
