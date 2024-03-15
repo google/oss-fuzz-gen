@@ -1,0 +1,35 @@
+"functions":
+- "name": "register_hooks"
+  "params":
+  - "name": "p"
+    "type": "struct apr_pool_t *"
+  "return_type": "void"
+  "signature": "void register_hooks(apr_pool_t *)"
+- "name": "event_hooks"
+  "params":
+  - "name": "p"
+    "type": "struct apr_pool_t *"
+  "return_type": "void"
+  "signature": "void event_hooks(apr_pool_t *)"
+- "name": "ap_process_http_connection"
+  "params":
+  - "name": "c"
+    "type": "struct conn_rec *"
+  "return_type": "int"
+  "signature": "int ap_process_http_connection(conn_rec *)"
+- "name": "ap_process_http_sync_connection"
+  "params":
+  - "name": "c"
+    "type": "struct conn_rec *"
+  "return_type": "int"
+  "signature": "int ap_process_http_sync_connection(conn_rec *)"
+- "name": "ap_process_http_async_connection"
+  "params":
+  - "name": "c"
+    "type": "struct conn_rec *"
+  "return_type": "int"
+  "signature": "int ap_process_http_async_connection(conn_rec *)"
+"language": "c"
+"project": "apache-httpd"
+"target_name": "fuzz_utils"
+"target_path": "/src/fuzz_utils.c"
