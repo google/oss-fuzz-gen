@@ -43,5 +43,5 @@
   "signature": "bool uWS::TopicTree<uWS::TopicTreeMessage, uWS::TopicTreeBigMessage>::publishBig<uWS::publishBig<(lambda at ../src/WebSocket.h:368:127)>(TopicTree<uWS::TopicTreeMessage, uWS::TopicTreeBigMessage> *, Subscriber *, string_view, DW_TAG_rvalue_reference_typeTopicTreeBigMessage, const __hash_const_iterator<std::__1::__hash_node<uWS::Subscriber *, void *> *>)"
 "language": "c++"
 "project": "uwebsockets"
-"target_name": "ssl_ctx_api"
-"target_path": "/src/uWebSockets/uSockets/boringssl/fuzz/ssl_ctx_api.cc"
+"target_name": "Http"
+"target_path": "/src/uWebSockets/fuzzing/Http.cpp"

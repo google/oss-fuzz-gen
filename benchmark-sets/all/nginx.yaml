@@ -47,5 +47,5 @@
   "signature": "char * ngx_http_scgi_pass(ngx_conf_t *, ngx_command_t *, void *)"
 "language": "c"
 "project": "nginx"
-"target_name": "target"
-"target_path": "/src/fuzzer-test-suite/re2-2014-12-09/target.cc"
+"target_name": "http_request_fuzzer"
+"target_path": "/src/fuzz/http_request_fuzzer.cc"

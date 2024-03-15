@@ -71,5 +71,5 @@
   "signature": "unsigned char * meshopt::encodeVertexBlock(unsigned char *, unsigned char *, const unsigned char *, size_t, size_t, unsigned char *)"
 "language": "c++"
 "project": "meshoptimizer"
-"target_name": "gltfpack"
-"target_path": "/src/meshoptimizer/gltf/gltfpack.cpp"
+"target_name": "codecfuzzer"
+"target_path": "/src/meshoptimizer/tools/codecfuzz.cpp"

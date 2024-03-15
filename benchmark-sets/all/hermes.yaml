@@ -47,5 +47,5 @@
   "signature": "CallResult<hermes::vm::HermesValue, hermes::vm::detail::CallResultSpecialize::Trivial> hermes::vm::CallResult<hermes::vm::interpretFunction<true, false>(Runtime &, InterpreterState &)"
 "language": "c++"
 "project": "hermes"
-"target_name": "/src/hermes/tools/fuzzers/libfuzzer/fuzzer-jsi-entry.cpp"
+"target_name": fuzzer-jsi-entry
 "target_path": "/src/hermes/tools/fuzzers/libfuzzer/fuzzer-jsi-entry.cpp"

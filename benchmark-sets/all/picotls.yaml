@@ -79,5 +79,5 @@
   "signature": "int client_handle_finished(ptls_t *, ptls_message_emitter_t *, ptls_iovec_t)"
 "language": "c++"
 "project": "picotls"
-"target_name": "fuzz/fuzz-asn1.c"
-"target_path": "/src/picotls/fuzz/fuzz-asn1.c"
+"target_name": "fuzz-client-hello"
+"target_path": "/src/picotls/fuzz/fuzz-client-hello.c"
