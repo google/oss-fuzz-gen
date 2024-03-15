@@ -49,5 +49,5 @@
   "signature": "SipMessage * makeWWWChallenge(const SipMessage, const Data, bool, bool)"
 "language": "c++"
 "project": "resiprocate"
-"target_name": "fuzzer"
-"target_path": "/src/resiprocate/contrib/srtp/fuzzer/fuzzer.c"
+"target_name": "fuzzUtil"
+"target_path": "/src/resiprocate/rutil/test/fuzzUtil.cxx"

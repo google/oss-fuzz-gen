@@ -79,5 +79,5 @@
   "signature": "int ptls_send(ptls_t *, ptls_buffer_t *, const void *, size_t)"
 "language": "c++"
 "project": "picotls"
-"target_name": "fuzz/fuzz-asn1.c"
-"target_path": "/src/picotls/fuzz/fuzz-asn1.c"
+"target_name": "fuzz-client-hello"
+"target_path": "/src/picotls/fuzz/fuzz-client-hello.c"

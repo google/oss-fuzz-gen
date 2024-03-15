@@ -68,4 +68,4 @@
 "language": "c++"
 "project": "libtpms"
 "target_name": "fuzz-main"
-"target_path": "/src/libtpms/tests/fuzz-main.c"
+"target_path": "/src/libtpms/tests/fuzz.cc"

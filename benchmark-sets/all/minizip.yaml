@@ -53,5 +53,5 @@
   "signature": "int32_t mz_stream_wzaes_write(void *, const void *, int32_t)"
 "language": "c++"
 "project": "minizip"
-"target_name": "standalone"
-"target_path": "/src/minizip-ng/test/fuzz/standalone.c"
+"target_name": "zip_fuzzer"
+"target_path": "/src/minizip-ng/test/fuzz/zip_fuzzer.c"
