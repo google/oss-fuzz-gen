@@ -18,7 +18,7 @@
   - "name": ""
     "type": "std::vector *"
   "return_type": "struct jsonnet::internal::AST *"
-  "signature": "const AST * builtinExtVar(Interpreter *, const LocationRange, const std::__1::allocator<jsonnet::internal::(anonymous namespace)::Value> >)"
+  "signature": "const AST * jsonnet::internal::(anonymous namespace)::Interpreter::builtinExtVar(const LocationRange &, const vector<jsonnet::internal::(anonymous namespace)::Value, std::__1::allocator<jsonnet::internal::(anonymous namespace)::Value> > &)"
 "language": "c++"
 "project": "jsonnet"
 "target_name": "convert_jsonnet_fuzzer_regular"
