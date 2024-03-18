@@ -50,6 +50,7 @@ by this framework:
 | [`libplist`](https://github.com/libimobiledevice/libplist/issues/244) | Vertex AI | [default](prompts/template_xml) |
 | [`hunspell`](https://github.com/hunspell/hunspell/issues/996) | Vertex AI | [default](prompts/template_xml) |
 | [Undisclosed stack buffer underflow](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=67483) | Vertex AI|  [default](prompts/template_xml) |
+
 ## Current top coverage improvements by project
 
 | Project  | Coverage increase % * |
