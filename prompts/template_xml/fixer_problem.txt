@@ -10,7 +10,9 @@ The code has the following build issues:
 
 Fix code:
 1. Consider possible solutions for the issues listed above.
-2. Choose a solution that can maximize fuzzing result, which is utilizing the function under test and feeding it not null input.
+2. Choose a solution that can maximize fuzzing result, which is fully utilizing the function under test and feeding it non-null input.
 3. Apply the solutions to the original code.
+Make sure you include {FUNC_SIG} in your solution.
+The function can be included with {LINKING_HINT}
 It's important to show the complete code, not only the fixed line.
 <solution>

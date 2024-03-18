@@ -240,7 +240,9 @@ class DefaultTemplateBuilder(PromptBuilder):
                          errors: list[str]) -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming()
-    problem = self._format_fixer_problem(raw_code, errors, priming_weight)
+    problem = self._format_fixer_problem(raw_code, errors,
+                                         benchmark.function_signature,
+                                         priming_weight)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -256,11 +258,13 @@ class DefaultTemplateBuilder(PromptBuilder):
     return priming, priming_weight
 
   def _format_fixer_problem(self, raw_code: str, errors: list[str],
-                            priming_weight: int) -> str:
+                            func_sig: str, priming_weight: int) -> str:
     """Formats a problem for code fixer based on the template."""
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
     problem = problem.replace('{CODE_TO_BE_FIXED}', raw_code)
+    problem = problem.replace('{FUNC_SIG}', func_sig)
+    problem = problem.replace('{LINKING_HINT}', f'extern {func_sig}')
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{ERROR_MESSAGES}',
