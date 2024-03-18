@@ -120,10 +120,12 @@ class Benchmark:
                cppify_headers=False,
                use_context=False,
                commit=None,
+               function_header: str = '',
                function_dict: Optional[dict] = None):
     self.id = benchmark_id
     self.project = project
     self.language = language
+    self.function_header = function_header
     self.function_signature = function_signature
     self.function_name = function_name
     self.return_type = return_type
@@ -139,6 +141,7 @@ class Benchmark:
   def __str__(self):
     return (f'Benchmark<id={self.id}, project={self.project}, '
             f'language={self.language}, '
+            f'function_header={self.function_header}, '
             f'function_signature={self.function_signature}, '
             f'function_name={self.function_name}, '
             f'return_type={self.return_type}, '

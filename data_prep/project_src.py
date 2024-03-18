@@ -16,6 +16,7 @@
 import argparse
 import logging
 import os
+import re
 import subprocess as sp
 import tempfile
 import uuid
@@ -371,6 +372,36 @@ def search_source(
     for short_path in fuzz_targets.keys():
       _copy_fuzz_targets(os.path.join(out, short_path[1:]), result_dir, project)
   return fuzz_targets, interesting_files
+
+
+def search_includes(project: str, cloud_experiment_bucket: str = '') -> dict:
+  """Searches source code of the project for all headers used with #include,
+  along with the source file paths that used them."""
+  with tempfile.TemporaryDirectory() as temp_dir:
+    src_dir = os.path.join(temp_dir, project)
+    os.makedirs(src_dir)
+    _copy_project_src(project, src_dir, cloud_experiment_bucket)
+
+    headers_usage = {}
+    header_pattern = r'(?:#include\s+)(?:<|")([^>"]+)(?:>|")'
+    pattern = re.compile(header_pattern)
+
+    for path, _, files in os.walk(src_dir):
+      for file_name in files:
+        _, ext = os.path.splitext(file_name)
+        if ext not in SEARCH_EXTS:
+          continue
+
+        with open(os.path.join(path, file_name)) as f:
+          for _, line in enumerate(f):
+            match = re.search(pattern, line)
+            if match:
+              header = match.group(1).strip()
+              if not headers_usage.get(header):
+                headers_usage[header] = []
+              headers_usage[header].append(
+                  os.path.join(path, file_name).replace(f'{src_dir}/', '', 1))
+  return headers_usage
 
 
 def main():

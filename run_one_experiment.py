@@ -22,7 +22,7 @@ import subprocess
 from multiprocessing import pool
 from typing import List, Optional
 
-from data_prep import project_targets
+from data_prep import introspector, project_src, project_targets
 from data_prep.project_context.context_retriever import ContextRetriever
 from experiment import benchmark as benchmarklib
 from experiment import builder_runner as builder_runner_lib
@@ -246,6 +246,25 @@ def run(benchmark: Benchmark,
       context_types = '\n'.join(retriever.get_type_info())
       context_info = (context_header, context_types)
       retriever.cleanup_asts()
+
+    # Retrieve header path for the function under fuzz.
+    src_path = introspector.get_func_src_path(benchmark.project,
+                                              benchmark.function_name)
+    header_usage = project_src.search_includes(benchmark.project, '')
+    used_headers = list(header_usage.keys())
+    src_name, _ = os.path.splitext(src_path)
+    header_info = ''
+    for header in used_headers:
+      header, _ = os.path.splitext(header)
+      header_parts = header.split('/')
+      for i in range(len(header_parts)):
+        part = '/'.join(header_parts[i:])
+        if src_name.endswith(part):
+          header_info = header
+          break
+      if header_info:
+        break
+    benchmark.function_header = header_info
 
     builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
     prompt = builder.build(benchmark.function_signature,

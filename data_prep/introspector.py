@@ -42,6 +42,7 @@ INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
 INTROSPECTOR_FUNCTION = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
 INTROSPECTOR_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
 INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
+INTROSPECTOR_ALL_FUNC = f'{INTROSPECTOR_ENDPOINT}/all-functions'
 INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
 INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
 
@@ -130,6 +131,12 @@ def query_introspector_cfg(project: str) -> dict:
   """Queries FuzzIntrospector API for CFG."""
   resp = _query_introspector(INTROSPECTOR_CFG, {'project': project})
   return _get_data(resp, 'project', {})
+
+
+def query_introspector_all_functions(project: str) -> list[dict]:
+  """Queries FuzzIntrospector API for all functions info in the project."""
+  resp = _query_introspector(INTROSPECTOR_ALL_FUNC, {'project': project})
+  return _get_data(resp, 'functions', [])
 
 
 def query_introspector_function_source(project: str, func_sig: str) -> str:
@@ -239,6 +246,40 @@ def get_raw_function_name(function: dict, project: str) -> str:
     logging.error('No raw function name in project: %s for function: %s',
                   project, function)
   return raw_name
+
+
+def get_all_func_src_paths(project: str) -> dict:
+  """Get a dict of all functions in the project and their header file path."""
+  # For C functions FI gives the path to implementation (.c)
+  # rather than declaration in header (.h).
+  header_ext = ['.h', '.hpp', '.hh', '.hxx', '.c']
+  # Other discovered extensions:
+  # ['.cc', '.cpp', '.c++', '.cxx', '.gperf', '.rl', '.y', '.l', '.tcc', '.ipp',
+  # '.txt', '.i', '.inc', '.def', '.moc', '.ch', '.in', '.inc2', '.inl',
+  # '.leg', '.map', '.lex', '']
+
+  all_funcs = query_introspector_all_functions(project)
+  func_srcs = {}
+  for func_info in all_funcs:
+    func_name = func_info.get('raw_function_name', '')
+    func_src = func_info.get('function_filename', '')
+    func_src = os.path.abspath(func_src)
+
+    _, ext = os.path.splitext(func_src)
+    if ext in header_ext:
+      func_srcs[func_name] = func_src
+
+  return func_srcs
+
+
+def get_func_src_path(project: str, function_name: str) -> str:
+  """Get the path of the source file where the function is declared."""
+  resp = _query_introspector(INTROSPECTOR_FUNC_SIG, {
+      'project': project,
+      'function': function_name
+  })
+  return _get_data(resp, 'raw_data', {}).get('source',
+                                             {}).get('source_file', '')
 
 
 def _get_clean_arg_types(function: dict, project: str) -> list[str]:
@@ -470,8 +511,8 @@ def _parse_arguments() -> argparse.Namespace:
                       default='',
                       help='Output directory.')
 
-  args = parser.parse_args()
-  return args
+  arguments = parser.parse_args()
+  return arguments
 
 
 if __name__ == '__main__':
