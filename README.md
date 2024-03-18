@@ -51,7 +51,7 @@ by this framework:
 | [`hunspell`](https://github.com/hunspell/hunspell/issues/996) | Vertex AI | [default](prompts/template_xml) |
 | [Undisclosed stack buffer underflow](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=67483) | Vertex AI | [default](prompts/template_xml) |
 
-It would've been impossible for these bugs to be discovered with existing fuzz targets in OSS-Fuzz, as they were not previously reachable.
+These bugs could only have been discovered with newly generated targets. They were not reachable with existing OSS-Fuzz targets.
 
 ## Current top coverage improvements by project
 
