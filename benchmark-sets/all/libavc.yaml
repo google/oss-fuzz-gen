@@ -68,7 +68,7 @@
   - "name": "puc_top_nnz"
     "type": "char *"
   - "name": "ppv_map_ref_idx_to_poc"
-    "type": "char **"
+    "type": "bool "
   - "name": "ui_mbAff"
     "type": "int"
   - "name": "ui_bs_table"

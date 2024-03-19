@@ -10,7 +10,7 @@
   - "name": "status"
     "type": "int *"
   "return_type": "char"
-  "signature": "UBool matches(const UnicodeString, const UnicodeString, UParseError, UErrorCode)"
+  "signature": "UBool icu_66::RegexPattern::matches(const UnicodeString &, const UnicodeString &, UParseError &, UErrorCode &)"
 - "name": "_ZN6icu_6612RegexPattern7matchesEP5UTextS2_R11UParseErrorR10UErrorCode"
   "params":
   - "name": "regex"
@@ -22,7 +22,7 @@
   - "name": "status"
     "type": "int *"
   "return_type": "char"
-  "signature": "UBool matches(UText *, UText *, UParseError, UErrorCode)"
+  "signature": "UBool icu_66::RegexPattern::matches(UText *, UText *, UParseError &, UErrorCode &)"
 - "name": "_ZN6icu_6612RegexMatcherC2ERKNS_13UnicodeStringEjR10UErrorCode"
   "params":
   - "name": "this"
@@ -34,7 +34,7 @@
   - "name": "status"
     "type": "int *"
   "return_type": "void"
-  "signature": "void RegexMatcher::RegexMatcher(const UnicodeString, uint32_t, UErrorCode)"
+  "signature": "void icu_66::RegexMatcher::RegexMatcher(const UnicodeString &, uint32_t, UErrorCode &)"
 - "name": "_ZN6icu_6612RegexMatcherC2ERKNS_13UnicodeStringES3_jR10UErrorCode"
   "params":
   - "name": "this"
@@ -48,7 +48,7 @@
   - "name": "status"
     "type": "int *"
   "return_type": "void"
-  "signature": "void RegexMatcher::RegexMatcher(const UnicodeString, const UnicodeString, uint32_t, UErrorCode)"
+  "signature": "void icu_66::RegexMatcher::RegexMatcher(const UnicodeString &, const UnicodeString &, uint32_t, UErrorCode &)"
 - "name": "_ZN6icu_6612RegexMatcherC2EP5UTextjR10UErrorCode"
   "params":
   - "name": "this"
@@ -60,7 +60,7 @@
   - "name": "status"
     "type": "int *"
   "return_type": "void"
-  "signature": "void RegexMatcher::RegexMatcher(UText *, uint32_t, UErrorCode)"
+  "signature": "void icu_66::RegexMatcher::RegexMatcher(UText *, uint32_t, UErrorCode &)"
 "language": "c++"
 "project": "libphonenumber"
 "target_name": "phonefuzz"

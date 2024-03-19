@@ -6,7 +6,7 @@
   - "name": "length"
     "type": "int"
   - "name": "plist"
-    "type": "char **"
+    "type": "bool "
   - "name": "format"
     "type": "int *"
   "return_type": "int"

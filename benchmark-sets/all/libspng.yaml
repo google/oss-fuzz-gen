@@ -36,7 +36,7 @@
   - "name": "in"
     "type": "std::istream *"
   "return_type": "void"
-  "signature": "void PngMutator::PngMutator(istream)"
+  "signature": "void PngMutator::PngMutator(istream &)"
 - "name": "spng_set_text"
   "params":
   - "name": "ctx"

@@ -24,9 +24,9 @@
   - "name": "num_user_features"
     "type": "int"
   - "name": "shaper_list"
-    "type": "char **"
+    "type": "bool "
   "return_type": "struct hb_shape_plan_t *"
-  "signature": "hb_shape_plan_t * hb_shape_plan_create_cached(hb_face_t *, const hb_segment_properties_t *, const hb_feature_t *, unsigned int, const char **)"
+  "signature": "hb_shape_plan_t * hb_shape_plan_create_cached(hb_face_t *, const hb_segment_properties_t *, const hb_feature_t *, unsigned int, const const char **)"
 - "name": "hb_shape_plan_create"
   "params":
   - "name": "face"
@@ -38,9 +38,9 @@
   - "name": "num_user_features"
     "type": "int"
   - "name": "shaper_list"
-    "type": "char **"
+    "type": "bool "
   "return_type": "struct hb_shape_plan_t *"
-  "signature": "hb_shape_plan_t * hb_shape_plan_create(hb_face_t *, const hb_segment_properties_t *, const hb_feature_t *, unsigned int, const char **)"
+  "signature": "hb_shape_plan_t * hb_shape_plan_create(hb_face_t *, const hb_segment_properties_t *, const hb_feature_t *, unsigned int, const const char **)"
 - "name": "hb_ot_layout_lookups_substitute_closure"
   "params":
   - "name": "face"

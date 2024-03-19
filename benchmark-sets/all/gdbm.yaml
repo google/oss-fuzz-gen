@@ -10,7 +10,7 @@
 - "name": "gdbm_load"
   "params":
   - "name": "pdbf"
-    "type": "struct gdbm_file_info **"
+    "type": "bool "
   - "name": "filename"
     "type": "char *"
   - "name": "replace"
@@ -24,7 +24,7 @@
 - "name": "gdbm_load_from_file"
   "params":
   - "name": "pdbf"
-    "type": "struct gdbm_file_info **"
+    "type": "bool "
   - "name": "fp"
     "type": "struct _IO_FILE *"
   - "name": "replace"
@@ -42,7 +42,7 @@
   - "name": "dbf"
     "type": "struct gdbm_file_info *"
   - "name": "ofp"
-    "type": "struct gdbm_file_info **"
+    "type": "bool "
   - "name": "replace"
     "type": "int"
   - "name": "meta_mask"

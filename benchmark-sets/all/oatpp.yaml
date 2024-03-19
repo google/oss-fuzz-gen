@@ -8,7 +8,7 @@
   - "name": ""
     "type": "oatpp::data::mapping::type::Void *"
   "return_type": "void"
-  "signature": "void serializeObject(Serializer *, ConsistentOutputStream *, const Void)"
+  "signature": "void oatpp::parser::json::mapping::Serializer::serializeObject(ConsistentOutputStream *, const Void &)"
 - "name": "_ZN5oatpp6parser4json7mapping12Deserializer14deserializeMapEPS3_RNS0_5CaretEPKNS_4data7mapping4type4TypeE"
   "params":
   - "name": ""
@@ -20,7 +20,7 @@
   - "name": ""
     "type": "oatpp::data::mapping::type::Type *"
   "return_type": "void"
-  "signature": "Void deserializeMap(Deserializer *, Caret, const Type *)"
+  "signature": "Void oatpp::parser::json::mapping::Deserializer::deserializeMap(Caret &, const const Type *)"
 - "name": "_ZN5oatpp6parser4json7mapping10Serializer12serializeMapEPS3_PNS_4data6stream22ConsistentOutputStreamERKNS5_7mapping4type4VoidE"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "oatpp::data::mapping::type::Void *"
   "return_type": "void"
-  "signature": "void serializeMap(Serializer *, ConsistentOutputStream *, const Void)"
+  "signature": "void oatpp::parser::json::mapping::Serializer::serializeMap(ConsistentOutputStream *, const Void &)"
 - "name": "_ZN5oatpp6parser4json7mapping12Deserializer14deserializeAnyEPS3_RNS0_5CaretEPKNS_4data7mapping4type4TypeE"
   "params":
   - "name": ""
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "oatpp::data::mapping::type::Type *"
   "return_type": "void"
-  "signature": "Void deserializeAny(Deserializer *, Caret, const Type *)"
+  "signature": "Void oatpp::parser::json::mapping::Deserializer::deserializeAny(Caret &, const const Type *)"
 - "name": "_ZN5oatpp6parser4json7mapping12Deserializer21deserializeCollectionEPS3_RNS0_5CaretEPKNS_4data7mapping4type4TypeE"
   "params":
   - "name": ""
@@ -54,7 +54,7 @@
   - "name": ""
     "type": "oatpp::data::mapping::type::Type *"
   "return_type": "void"
-  "signature": "Void deserializeCollection(Deserializer *, Caret, const Type *)"
+  "signature": "Void oatpp::parser::json::mapping::Deserializer::deserializeCollection(Caret &, const Type *)"
 "language": "c++"
 "project": "oatpp"
 "target_name": "fuzz_mapper"

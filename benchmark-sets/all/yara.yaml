@@ -4,7 +4,7 @@
   - "name": "argc"
     "type": "int *"
   - "name": "argv"
-    "type": "char ***"
+    "type": "bool "
   "return_type": "int"
   "signature": "int LLVMFuzzerInitialize(int *, char ***)"
 - "name": "yr_compiler_add_fd"

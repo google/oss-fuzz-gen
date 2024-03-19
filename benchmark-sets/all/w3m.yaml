@@ -1,12 +1,4 @@
 "functions":
-- "name": "wc_conv_from_utf8"
-  "params":
-  - "name": "is"
-    "type": "struct _Str *"
-  - "name": "ces"
-    "type": "int"
-  "return_type": "struct _Str *"
-  "signature": "Str wc_conv_from_utf8(Str, wc_ces)"
 - "name": "wc_conv_from_utf7"
   "params":
   - "name": "is"
@@ -39,6 +31,14 @@
     "type": "struct wc_status *"
   "return_type": "struct _Str *"
   "signature": "Str wc_char_conv_from_utf7(wc_uchar, wc_status *)"
+- "name": "wc_char_conv_from_iso2022"
+  "params":
+  - "name": "c"
+    "type": "char"
+  - "name": "st"
+    "type": "struct wc_status *"
+  "return_type": "struct _Str *"
+  "signature": "Str wc_char_conv_from_iso2022(wc_uchar, wc_status *)"
 "language": "c"
 "project": "w3m"
 "target_name": "fuzz_conv"

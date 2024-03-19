@@ -6,7 +6,7 @@
   - "name": ""
     "type": "CString *"
   "return_type": "void"
-  "signature": "void ReadLine(CClient *, const CString)"
+  "signature": "void CClient::ReadLine(const CString &)"
 - "name": "_ZN7CClient13OnTextMessageER12CTextMessage"
   "params":
   - "name": ""
@@ -14,7 +14,7 @@
   - "name": ""
     "type": "CTopicMessage *"
   "return_type": "bool"
-  "signature": "bool OnTextMessage(CClient *, CTextMessage)"
+  "signature": "bool CClient::OnTextMessage(CTextMessage &)"
 - "name": "_ZN7CClient14OnOtherMessageER8CMessage"
   "params":
   - "name": ""
@@ -22,7 +22,7 @@
   - "name": ""
     "type": "CMessage *"
   "return_type": "bool"
-  "signature": "bool OnOtherMessage(CClient *, CMessage)"
+  "signature": "bool CClient::OnOtherMessage(CMessage &)"
 - "name": "_ZN7CClient11UserCommandER7CString"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "CString *"
   "return_type": "void"
-  "signature": "void UserCommand(CClient *, CString)"
+  "signature": "void CClient::UserCommand(CString &)"
 - "name": "_ZN4CZNC11ParseConfigERK7CStringRS0_"
   "params":
   - "name": ""
@@ -40,7 +40,7 @@
   - "name": ""
     "type": "CString *"
   "return_type": "bool"
-  "signature": "bool ParseConfig(CZNC *, const CString, CString)"
+  "signature": "bool CZNC::ParseConfig(const CString &, CString &)"
 "language": "c++"
 "project": "znc"
 "target_name": "msg_parse_fuzzer"

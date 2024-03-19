@@ -50,7 +50,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "bool"
-  "signature": "bool url_aggregator::set_href(const string_view)"
+  "signature": "bool ada::url_aggregator::set_href(const string_view)"
 "language": "c++"
 "project": "ada-url"
 "target_name": "parse"
