@@ -77,6 +77,34 @@ class Sample:
   status: str
   result: Optional[evaluator.Result] = None
 
+  @property
+  def stacktrace(self) -> str:
+    if not self.result:
+      return ''
+    reproducer_link = self.result.reproducer_path
+    return f'{reproducer_link}/stacktrace'
+
+  @property
+  def target_binary(self) -> str:
+    if not self.result:
+      return ''
+    reproducer_link = self.result.reproducer_path
+    return f'{reproducer_link}'
+
+  @property
+  def reproducer(self) -> str:
+    if not self.result:
+      return ''
+    reproducer_link = self.result.reproducer_path
+    return f'{reproducer_link}/artifacts'
+
+  @property
+  def run_log(self) -> str:
+    if not self.result:
+      return ''
+    reproducer_link = self.result.reproducer_path
+    return reproducer_link.removesuffix('reproducer') + 'run.log'
+
 
 @dataclasses.dataclass
 class Target:
@@ -282,6 +310,18 @@ def index_json():
 def index_sort():
   return render_template('index.html',
                          benchmarks=sort_benchmarks(list_benchmarks()),
+                         model=model)
+
+
+@app.route('/benchmark/<benchmark>/json')
+def benchmark_json(benchmark):
+  if not _is_valid_benchmark_dir(benchmark):
+    # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
+    abort(404)
+
+  return render_template('benchmark.json',
+                         benchmark=benchmark,
+                         samples=get_samples(benchmark),
                          model=model)
 
 

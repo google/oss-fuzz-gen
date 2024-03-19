@@ -5,14 +5,16 @@
         "benchmark": "{{ benchmark.signature }}",
         "sample": "{{ sample.id }}",
         "status": "{{ sample.status }}",
-        "compiles": "{{ sample.compiles }}",
-        "crashes": "{{ sample.crashes }}",
-        "coverage": "{{ sample.coverage | percent }}",
+        "compiles": "{{ sample.result.compiles }}",
+        "crashes": "{{ sample.result.crashes }}",
+        "coverage": "{{ sample.result.coverage | percent }}",
         "coverage_diff": "{{ sample.result.line_coverage_diff }}",
         "coverage_report": "{{ sample.result.coverage_report_path }}",
-        "output": "{{ sample.result.output_link }}",
-        "reproducer": "{{ sample.result.reproducer_link }}",
-        "source_code": "{{ sample.target.code_link }}",
+        "stacktrace": "{{ sample.stacktrace }}",
+        "target_binary": "{{ sample.target_binary }}",
+        "reproducer": "{{ sample.reproducer }}",
+        "run_log": "{{ sample.run_log }}",
+        "source_code": "{{ sample.target.code }}",
     }{% if not loop.last %},{% endif %}
 {% endfor %}
     ]
