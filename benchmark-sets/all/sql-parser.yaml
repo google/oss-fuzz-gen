@@ -6,7 +6,7 @@
   - "name": "result"
     "type": "hsql::SQLParserResult *"
   "return_type": "bool"
-  "signature": "bool parseSQLString(const char *, SQLParserResult *)"
+  "signature": "bool hsql::SQLParser::parseSQLString(const char *, SQLParserResult *)"
 - "name": "_ZN4hsql9SQLParser14parseSQLStringERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEPNS_15SQLParserResultE"
   "params":
   - "name": "sql"
@@ -14,7 +14,7 @@
   - "name": "result"
     "type": "hsql::SQLParserResult *"
   "return_type": "bool"
-  "signature": "bool parseSQLString(const string, SQLParserResult *)"
+  "signature": "bool hsql::SQLParser::parseSQLString(const string &, SQLParserResult *)"
 - "name": "_ZN4hsql9SQLParser8tokenizeERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEPNS1_6vectorIsNS5_IsEEEE"
   "params":
   - "name": "sql"
@@ -22,7 +22,7 @@
   - "name": "tokens"
     "type": "std::vector *"
   "return_type": "bool"
-  "signature": "bool tokenize(const string, std::__1::allocator<short> > *)"
+  "signature": "bool hsql::SQLParser::tokenize(const string &, vector<short, std::__1::allocator<short> > *)"
 - "name": "_Z22hsql_push_buffer_stateP15yy_buffer_statePv"
   "params":
   - "name": "new_buffer"
@@ -38,7 +38,7 @@
   - "name": "column_type"
     "type": "struct hsql::ColumnType *"
   "return_type": "std::ostream *"
-  "signature": "ostream operator<<(ostream, const ColumnType)"
+  "signature": "ostream & hsql::operator<<(ostream &, const ColumnType &)"
 "language": "c++"
 "project": "sql-parser"
 "target_name": "fuzz_sql_parse"

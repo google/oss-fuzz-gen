@@ -30,7 +30,7 @@
   - "name": "u2_max_len"
     "type": "short"
   "return_type": "short"
-  "signature": "WORD16 impeg2d_fast_dec_vld_symbol(stream_t *,  *,  *, UWORD16)"
+  "signature": "WORD16 impeg2d_fast_dec_vld_symbol(stream_t *, DW_TAG_array_typeInfinite loop *, DW_TAG_array_typeInfinite loop *, UWORD16)"
 - "name": "impeg2_jobq_free"
   "params":
   - "name": "ps_jobq"

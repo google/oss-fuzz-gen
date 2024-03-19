@@ -10,7 +10,7 @@
   - "name": "flags"
     "type": "int"
   "return_type": "void"
-  "signature": "void burl_append(const buffer *, const char *, const size_t, const int)"
+  "signature": "void burl_append(const buffer *, const const char *, const size_t, const int)"
 - "name": "burl_append_encode_psnde"
   "params":
   - "name": "b"
@@ -20,7 +20,7 @@
   - "name": "len"
     "type": "size_t"
   "return_type": "void"
-  "signature": "void burl_append_encode_psnde(const buffer *, const char *, const size_t)"
+  "signature": "void burl_append_encode_psnde(const buffer *, const const char *, const size_t)"
 - "name": "burl_append_encode_nde"
   "params":
   - "name": "b"
@@ -30,7 +30,7 @@
   - "name": "len"
     "type": "size_t"
   "return_type": "void"
-  "signature": "void burl_append_encode_nde(const buffer *, const char *, const size_t)"
+  "signature": "void burl_append_encode_nde(const buffer *, const const char *, const size_t)"
 - "name": "burl_append_encode_all"
   "params":
   - "name": "b"
@@ -40,7 +40,7 @@
   - "name": "len"
     "type": "size_t"
   "return_type": "void"
-  "signature": "void burl_append_encode_all(const buffer *, const char *, const size_t)"
+  "signature": "void burl_append_encode_all(const buffer *, const const char *, const size_t)"
 - "name": "buffer_append_base64_decode"
   "params":
   - "name": "out"

@@ -90,7 +90,7 @@
   - "name": "sbrData"
     "type": "bool "
   "return_type": "int"
-  "signature": "INT sbrEncoder_EncodeFrame(HANDLE_SBR_ENCODER, INT_PCM *, UINT, UINT *,  *)"
+  "signature": "INT sbrEncoder_EncodeFrame(HANDLE_SBR_ENCODER, INT_PCM *, UINT, UINT *, DW_TAG_array_typeInfinite loop *)"
 "language": "c++"
 "project": "libfdk-aac"
 "target_name": "aacDecoder_DecodeFrame"

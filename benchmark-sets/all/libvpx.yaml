@@ -28,7 +28,7 @@
   - "name": ""
     "type": "int"
   - "name": ""
-    "type": "char **"
+    "type": "bool "
   "return_type": "void"
   "signature": "void parse_tile_row(TileWorkerData *, VP9Decoder *, int, int, uint8_t **)"
 - "name": "recon_tile_row"

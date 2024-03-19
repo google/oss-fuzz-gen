@@ -55,7 +55,7 @@
   "params":
   - "name": "tableList"
     "type": "char *"
-  "return_type": "char **"
+  "return_type": "void"
   "signature": "const char ** lou_getEmphClasses(const char *)"
 - "name": "_lou_getTranslationTable"
   "params":

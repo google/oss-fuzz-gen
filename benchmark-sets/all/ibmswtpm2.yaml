@@ -4,7 +4,7 @@
   - "name": "argc"
     "type": "int"
   - "name": "argv"
-    "type": "char **"
+    "type": "bool "
   "return_type": "int"
   "signature": "int tpm_server_main(int, char **)"
 - "name": "StartTcpServer"

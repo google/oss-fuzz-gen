@@ -14,7 +14,7 @@
   - "name": "ssrcs"
     "type": "int *"
   - "name": "rids"
-    "type": "char **"
+    "type": "bool "
   - "name": "vcodec"
     "type": "int"
   - "name": "sc"
