@@ -250,7 +250,8 @@ def run(benchmark: Benchmark,
     # Retrieve header path for the function under fuzz.
     src_path = introspector.get_func_src_path(benchmark.project,
                                               benchmark.function_name)
-    header_usage = project_src.search_includes(benchmark.project, '')
+    header_usage = project_src.search_includes(benchmark.project,
+                                               cloud_experiment_bucket)
     used_headers = list(header_usage.keys())
     src_name, _ = os.path.splitext(src_path)
     header_info = ''
