@@ -1,0 +1,19 @@
+{
+    "sample": [
+{% for sample in samples %}
+    {
+        "benchmark": "{{ benchmark.signature }}",
+        "sample": "{{ sample.id }}",
+        "status": "{{ sample.status }}",
+        "Compiles": "{{ sample.compiles }}",
+        "crashes": "{{ sample.crashes }}",
+        "coverage": "{{ sample.coverage | percent }}",
+        "coverage_diff": "{{ sample.result.line_coverage_diff }}",
+        "coverage_report": "{{ sample.result.coverage_report_path }}",
+        "stacktrace": "{{ sample.result.stacktrace_link }}",
+        "reproducer": "{{ sample.result.reproducer_link }}",
+        "source_code": "{{ sample.target.code_link }}",
+    }{% if not loop.last %},{% endif %}
+{% endfor %}
+    ]
+}
