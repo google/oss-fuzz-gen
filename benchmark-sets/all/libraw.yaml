@@ -43,5 +43,5 @@
   "signature": "int LibRaw::crxDecodePlane(void *, uint32_t)"
 "language": "c++"
 "project": "libraw"
-"target_name": "libraw_raf_fuzzer"
+"target_name": "libraw_cr2_fuzzer"
 "target_path": "/src/libraw_fuzzer.cc"

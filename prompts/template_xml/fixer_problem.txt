@@ -9,7 +9,8 @@ The code has the following build issues:
 </error>
 
 Fix code:
-1. Consider the possible solution for the issues listed above.
-2. Apply the solutions to the original code.
+1. Consider possible solutions for the issues listed above.
+2. Choose a solution that can maximize fuzzing result, which is utilizing the function under test and feeding it not null input.
+3. Apply the solutions to the original code.
 It's important to show the complete code, not only the fixed line.
 <solution>

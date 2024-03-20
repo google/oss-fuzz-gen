@@ -1,4 +1,12 @@
 "functions":
+- "name": "TPM2_ValidateState"
+  "params":
+  - "name": "st"
+    "type": "int"
+  - "name": "flags"
+    "type": "int"
+  "return_type": "int"
+  "signature": "TPM_RESULT TPM2_ValidateState(DW_TAG_enumeration_typeTPMLIB_StateType, unsigned int)"
 - "name": "TPM_Process_DAAJoin"
   "params":
   - "name": "tpm_state"
@@ -17,14 +25,6 @@
     "type": "struct tdTPM_TRANSPORT_INTERNAL *"
   "return_type": "int"
   "signature": "TPM_RESULT TPM_Process_DAAJoin(tpm_state_t *, TPM_STORE_BUFFER *, TPM_TAG, uint32_t, TPM_COMMAND_CODE, unsigned char *, TPM_TRANSPORT_INTERNAL *)"
-- "name": "TPM2_ValidateState"
-  "params":
-  - "name": "st"
-    "type": "int"
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "TPM_RESULT TPM2_ValidateState(TPMLIB_StateType, unsigned int)"
 - "name": "TPM_Process_DAASign"
   "params":
   - "name": "tpm_state"
@@ -68,4 +68,4 @@
 "language": "c++"
 "project": "libtpms"
 "target_name": "fuzz-main"
-"target_path": "/src/libtpms/tests/fuzz-main.c"
+"target_path": "/src/libtpms/tests/fuzz.cc"

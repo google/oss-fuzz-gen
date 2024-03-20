@@ -42,13 +42,17 @@ Please feel free to create an issue or email us: oss-fuzz-team@google.com.
 
 ## Bugs Discovered
 
-So far, we have reported 3 new bugs/vulnerabilities found by automatically generated targets built
+So far, we have reported 5 new bugs/vulnerabilities found by automatically generated targets built
 by this framework:
 | Project |    LLM    | Prompt template |
 | ------- | --------- | --------------- |
 | [`cJSON` ](https://github.com/DaveGamble/cJSON/issues/800) | Vertex AI | [default](prompts/template_xml) |
 | [`libplist`](https://github.com/libimobiledevice/libplist/issues/244) | Vertex AI | [default](prompts/template_xml) |
 | [`hunspell`](https://github.com/hunspell/hunspell/issues/996) | Vertex AI | [default](prompts/template_xml) |
+| [Undisclosed stack buffer underflow](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=67483) | Vertex AI | [default](prompts/template_xml) |
+| [Undisclosed heap buffer overflow](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=67497) | Vertex AI | [default](prompts/template_xml) |
+
+These bugs could only have been discovered with newly generated targets. They were not reachable with existing OSS-Fuzz targets.
 
 ## Current top coverage improvements by project
 

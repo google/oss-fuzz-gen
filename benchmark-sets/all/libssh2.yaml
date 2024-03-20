@@ -1,20 +1,4 @@
 "functions":
-- "name": "curve25519_sha256"
-  "params":
-  - "name": "session"
-    "type": "struct _LIBSSH2_SESSION *"
-  - "name": "data"
-    "type": "char *"
-  - "name": "data_len"
-    "type": "size_t"
-  - "name": "public_key"
-    "type": "char *"
-  - "name": "private_key"
-    "type": "char *"
-  - "name": "exchange_state"
-    "type": "struct kmdhgGPshakex_state_t *"
-  "return_type": "int"
-  "signature": "int curve25519_sha256(LIBSSH2_SESSION *, unsigned char *, size_t, unsigned char *, unsigned char *, kmdhgGPshakex_state_t *)"
 - "name": "libssh2_session_startup"
   "params":
   - "name": "session"
@@ -61,6 +45,12 @@
     "type": "int"
   "return_type": "struct _LIBSSH2_CHANNEL *"
   "signature": "LIBSSH2_CHANNEL * libssh2_channel_direct_tcpip_ex(LIBSSH2_SESSION *, const char *, int, const char *, int)"
+- "name": "libssh2_channel_forward_cancel"
+  "params":
+  - "name": "listener"
+    "type": "struct _LIBSSH2_LISTENER *"
+  "return_type": "int"
+  "signature": "int libssh2_channel_forward_cancel(LIBSSH2_LISTENER *)"
 "language": "c++"
 "project": "libssh2"
 "target_name": "ssh2_client_fuzzer"

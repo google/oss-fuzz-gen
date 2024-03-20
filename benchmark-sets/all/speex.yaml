@@ -123,5 +123,5 @@
   "signature": "void split_cb_search_shape_sign_N1(spx_word16_t *, spx_coef_t *, spx_coef_t *, spx_coef_t *, const void *, int, int, spx_sig_t *, spx_word16_t *, SpeexBits *, char *, int)"
 "language": "c++"
 "project": "speex"
-"target_name": "speex_decode_fuzzer_float"
+"target_name": "speex_decode_fuzzer_fixed"
 "target_path": "/src/speex/contrib/oss-fuzz/speexdec_fuzzer.cc"

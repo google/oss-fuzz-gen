@@ -17,8 +17,7 @@ that contains `functions`.
 * `target_path` is the path to an existing fuzz target in [the `project`'s `OSS-Fuzz` container](https://google.github.io/oss-fuzz/getting-started/new-project-guide/#dockerfile). It will be replaced with the LLM-generated target and built for fuzzing evaluation.
 * `target_name` is an *optional* field to specify the fuzz target binary name.
   It is required when the binary name is different from the basename of
-  `target_path`, e.g., in
-  [`libpng-proto`](../benchmark-sets/origin_benchmarks/libpng-proto.yaml#18).
+  `target_path`, e.g., in [`capnproto.yaml`](../benchmark-sets/all/capnproto.yaml#L44).
 
 ### Generation
 Use [`introspector.py`](introspector.py) to generate a YAML file of a `C`/`C++` project in `OSS-Fuzz`:

@@ -210,7 +210,7 @@ def run(benchmark: Benchmark,
         use_context: bool = False,
         run_timeout: int = RUN_TIMEOUT) -> Optional[AggregatedResult]:
   """Generates code via LLM, and evaluates them."""
-  models.LLM.cloud_setup()
+  model.cloud_setup()
   logging.basicConfig(level=logging.INFO)
 
   if example_pair is None:

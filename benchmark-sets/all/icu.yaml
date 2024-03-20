@@ -10,7 +10,7 @@
   - "name": "ec"
     "type": "int *"
   "return_type": "void"
-  "signature": "void MessageFormat::applyPattern(const UnicodeString, UParseError, UErrorCode)"
+  "signature": "void icu_75::MessageFormat::applyPattern(const UnicodeString &, UParseError &, UErrorCode &)"
 - "name": "_ZN6icu_7513MessageFormat20cacheExplicitFormatsER10UErrorCode"
   "params":
   - "name": "this"
@@ -18,7 +18,7 @@
   - "name": "status"
     "type": "int *"
   "return_type": "void"
-  "signature": "void MessageFormat::cacheExplicitFormats(UErrorCode)"
+  "signature": "void icu_75::MessageFormat::cacheExplicitFormats(UErrorCode &)"
 - "name": "_ZN6icu_7513MessageFormat23createAppropriateFormatERNS_13UnicodeStringES2_RNS_11Formattable4TypeER11UParseErrorR10UErrorCode"
   "params":
   - "name": "this"
@@ -34,7 +34,7 @@
   - "name": "ec"
     "type": "int *"
   "return_type": "icu_75::Format *"
-  "signature": "Format * MessageFormat::createAppropriateFormat(UnicodeString, UnicodeString, Type, UParseError, UErrorCode)"
+  "signature": "Format * icu_75::MessageFormat::createAppropriateFormat(UnicodeString &, UnicodeString &, DW_TAG_enumeration_typeType &, UParseError &, UErrorCode &)"
 - "name": "_ZNK6icu_7521RuleBasedNumberFormat6formatElRKNS_13UnicodeStringERS1_RNS_13FieldPositionER10UErrorCode"
   "params":
   - "name": "this"
@@ -50,7 +50,7 @@
   - "name": "status"
     "type": "int *"
   "return_type": "icu_75::UnicodeString *"
-  "signature": "UnicodeString const RuleBasedNumberFormat::format(int64_t, const UnicodeString, UnicodeString, FieldPosition, UErrorCode)"
+  "signature": "UnicodeString & icu_75::RuleBasedNumberFormat::format(int64_t, const UnicodeString &, UnicodeString &, FieldPosition &, UErrorCode &)"
 - "name": "_ZNK6icu_7513MessageFormat6formatEiPKvPKNS_11FormattableEPKNS_13UnicodeStringEiRNS_17AppendableWrapperEPNS_13FieldPositionER10UErrorCode"
   "params":
   - "name": "this"
@@ -72,7 +72,7 @@
   - "name": "success"
     "type": "int *"
   "return_type": "void"
-  "signature": "void const MessageFormat::format(int32_t, const void *, const Formattable *, const UnicodeString *, int32_t, AppendableWrapper, FieldPosition *, UErrorCode)"
+  "signature": "void icu_75::MessageFormat::format(int32_t, const void *, const Formattable *, const UnicodeString *, int32_t, AppendableWrapper &, FieldPosition *, UErrorCode &)"
 "language": "c++"
 "project": "icu"
 "target_name": "relative_date_time_formatter_fuzzer"
