@@ -51,7 +51,7 @@ class Benchmark:
   signature: str = ''
 
   def __post_init__(self):
-    self.signature = self._find_signature(self.id) or self.id
+    self.signature = self.find_signature(self.id) or self.id
 
   @staticmethod
   def find_signature(benchmark_id: str) -> str:
