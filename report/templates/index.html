@@ -31,7 +31,7 @@
         <td><a href="benchmark/{{ benchmark.id|urlencode }}">{{ benchmark.signature }}</a></li></td>
         <td>{{ benchmark.status }}</td>
         <td>{{ benchmark.result.build_success_rate|percent}}</td>
-        <td>{{ benchmark.result.crash_rate|percent }} </td>
+        <td><a href="benchmark/{{ benchmark.id|urlencode }}/json"> {{ benchmark.result.crash_rate|percent }} </a></td>
         <td>{{ benchmark.result.max_coverage |percent }}</td>
         <td><a href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{ benchmark.result.max_line_coverage_diff|percent }}</a></td>
     </tr>

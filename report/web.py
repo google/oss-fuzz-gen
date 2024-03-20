@@ -73,6 +73,7 @@ class Benchmark:
 
 @dataclasses.dataclass
 class Sample:
+  """Result of a fuzz target sample of a benchmark."""
   id: str
   status: str
   result: Optional[evaluator.Result] = None
@@ -89,7 +90,7 @@ class Sample:
     if not self.result:
       return ''
     reproducer_link = self.result.reproducer_path
-    return f'{reproducer_link}'
+    return f'{reproducer_link}/target_binary'
 
   @property
   def reproducer(self) -> str:
@@ -315,14 +316,18 @@ def index_sort():
 
 @app.route('/benchmark/<benchmark>/json')
 def benchmark_json(benchmark):
+  """Generates a JSON containing crash reproducing info."""
   if not _is_valid_benchmark_dir(benchmark):
     # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
     abort(404)
 
-  return render_template('benchmark.json',
-                         benchmark=benchmark,
-                         samples=get_samples(benchmark),
-                         model=model)
+  try:
+    return render_template('benchmark.json',
+                           benchmark=benchmark,
+                           samples=get_samples(benchmark),
+                           model=model)
+  except Exception:
+    return ''
 
 
 @app.route('/benchmark/<benchmark>')

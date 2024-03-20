@@ -15,6 +15,7 @@
         "reproducer": "{{ sample.reproducer }}",
         "run_log": "{{ sample.run_log }}",
         "source_code": "{{ sample.target.code }}",
+        "model": "{{ model }}",
     }{% if not loop.last %},{% endif %}
 {% endfor %}
     ]
