@@ -21,6 +21,7 @@ import os
 import re
 import sys
 import urllib.parse
+from functools import partial
 from typing import List, Optional
 
 import yaml
@@ -50,21 +51,23 @@ class Benchmark:
   signature: str = ''
 
   def __post_init__(self):
-    self.signature = self._find_signature() or self.id
+    self.signature = self._find_signature(self.id) or self.id
 
-  def _find_signature(self) -> str:
-    """Finds the function signature by searching for its id in BENCHMARK_DIR."""
+  @staticmethod
+  def find_signature(benchmark_id: str) -> str:
+    """Finds the function signature by searching for its benchmark_id in BENCHMARK_DIR."""
     if not BENCHMARK_DIR:
       return ''
 
     for project_yaml in os.listdir(BENCHMARK_DIR):
       yaml_project_name = project_yaml.removesuffix(".yaml")
       with open(os.path.join(BENCHMARK_DIR, project_yaml)) as project_yaml_file:
-        if yaml_project_name not in self.id:
+        if yaml_project_name not in benchmark_id:
           continue
         functions = yaml.safe_load(project_yaml_file).get('functions', [])
         for function in functions:
-          function_name = self.id.removeprefix(f'output-{yaml_project_name}-')
+          function_name = benchmark_id.removeprefix(
+              f'output-{yaml_project_name}-')
           if function.get('name', '').lower().startswith(function_name):
             return f'{yaml_project_name}-{function.get("signature", "")}'
 
@@ -293,6 +296,20 @@ def get_targets(benchmark: str, sample: str) -> list[Target]:
   return targets
 
 
+def get_final_target_code(benchmark: str, sample: str) -> str:
+  """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
+  targets_dir = os.path.join(RESULTS_DIR, benchmark, 'fixed_targets')
+
+  for name in sorted(os.listdir(targets_dir)):
+    path = os.path.join(targets_dir, name)
+    if os.path.isfile(path) and name.startswith(sample + '.'):
+      with open(path) as f:
+        code = f.read()
+        code = json.dumps(code)
+      return code
+  return ''
+
+
 @app.route('/')
 def index():
   return render_template('index.html',
@@ -314,7 +331,7 @@ def index_sort():
                          model=model)
 
 
-@app.route('/benchmark/<benchmark>/json')
+@app.route('/benchmark/<benchmark>/crash.json')
 def benchmark_json(benchmark):
   """Generates a JSON containing crash reproducing info."""
   if not _is_valid_benchmark_dir(benchmark):
@@ -323,10 +340,14 @@ def benchmark_json(benchmark):
 
   try:
     return render_template('benchmark.json',
-                           benchmark=benchmark,
+                           benchmark=Benchmark.find_signature(benchmark),
                            samples=get_samples(benchmark),
+                           get_benchmark_final_target_code=partial(
+                               get_final_target_code, benchmark),
                            model=model)
-  except Exception:
+  except Exception as e:
+    logging.warning('Failed to render benchmark crash JSON: %s\n  %s',
+                    benchmark, e)
     return ''
 
 
