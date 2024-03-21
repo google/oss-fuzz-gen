@@ -45,7 +45,7 @@ Please feel free to create an issue or email us: oss-fuzz-team@google.com.
 So far, we have reported 6 new bugs/vulnerabilities found by automatically generated targets built
 by this framework:
 | Project |    Bug    |    LLM    | Prompt template |
-| ------- | --------- | --------------- |
+| ------- | --------- | --------- | --------------- |
 | [`cJSON`](https://github.com/google/oss-fuzz/tree/master/projects/cjson) | [OOB read](https://github.com/DaveGamble/cJSON/issues/800) | Vertex AI | [default](prompts/template_xml) |
 | [`libplist`](https://github.com/google/oss-fuzz/tree/master/projects/libplist) | [OBB read](https://github.com/libimobiledevice/libplist/issues/244) | Vertex AI | [default](prompts/template_xml) |
 | [`hunspell`](https://github.com/google/oss-fuzz/tree/master/projects/hunspell) | [OBB read](https://github.com/hunspell/hunspell/issues/996) | Vertex AI | [default](prompts/template_xml) |
