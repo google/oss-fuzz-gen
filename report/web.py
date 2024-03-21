@@ -55,7 +55,10 @@ class Benchmark:
 
   @staticmethod
   def find_signature(benchmark_id: str) -> str:
-    """Finds the function signature by searching for its benchmark_id in BENCHMARK_DIR."""
+    """
+    Finds the function signature by searching for its |benchmark_id| in
+    BENCHMARK_DIR.
+    """
     if not BENCHMARK_DIR:
       return ''
 
