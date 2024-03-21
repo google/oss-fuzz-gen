@@ -351,7 +351,7 @@ def benchmark_json(benchmark):
     return ''
 
 
-@app.route('/benchmark/<benchmark>')
+@app.route('/benchmark/<benchmark>/index.html')
 def benchmark_page(benchmark):
   if _is_valid_benchmark_dir(benchmark):
     return render_template('benchmark.html',
