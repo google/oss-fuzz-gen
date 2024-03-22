@@ -65,4 +65,7 @@ RUN apt-get update && \
 COPY . /experiment
 WORKDIR /experiment
 RUN /venv/bin/pip install --disable-pip-version-check -r requirements.txt
+
+# TODO(dongge): Prepare fuzz introspector.
+
 ENTRYPOINT ["./report/docker_run.sh"]
