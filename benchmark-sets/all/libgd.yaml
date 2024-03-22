@@ -67,5 +67,5 @@
   "signature": "gdImagePtr gdImageCreateFromGif(FILE *)"
 "language": "c++"
 "project": "libgd"
-"target_name": "png_target"
+"target_name": "gd2_target"
 "target_path": "/src/parser_target.cc"

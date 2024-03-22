@@ -36,7 +36,7 @@
   - "name": "out_size"
     "type": "size_t"
   "return_type": "int"
-  "signature": "lzma_ret lzma_encode(void *, lzma_mf *, uint8_t *, size_t *, size_t)"
+  "signature": "lzma_ret lzma_encode(void *, DW_TAG_restrict_typelzma_mf *, DW_TAG_restrict_typeuint8_t *, DW_TAG_restrict_typesize_t *, size_t)"
 - "name": "lzma_lzma2_encoder_memusage"
   "params":
   - "name": "options"

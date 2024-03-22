@@ -48,7 +48,7 @@
   - "name": "ps_ref_map"
     "type": "struct hme_ref_map_t *"
   - "name": "ppd_intra_costs"
-    "type": "double **"
+    "type": "bool "
   - "name": "ps_frm_prms"
     "type": "struct hme_frm_prms_t *"
   - "name": "pf_ext_update_fxn"

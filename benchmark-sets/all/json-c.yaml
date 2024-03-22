@@ -32,7 +32,7 @@
   - "name": "error"
     "type": "int *"
   "return_type": "struct json_object *"
-  "signature": "json_object * json_tokener_parse_verbose(const char *, json_tokener_error *)"
+  "signature": "json_object * json_tokener_parse_verbose(const char *, DW_TAG_enumeration_typejson_tokener_error *)"
 "language": "c++"
 "project": "json-c"
 "target_name": "tokener_parse_ex_fuzzer"

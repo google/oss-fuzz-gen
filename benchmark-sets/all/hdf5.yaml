@@ -38,7 +38,7 @@
   - "name": ""
     "type": "size_t"
   - "name": ""
-    "type": "char **"
+    "type": "bool "
   "return_type": "int"
   "signature": "herr_t H5VL__native_dataset_get(void *, H5VL_dataset_get_args_t *, hid_t, void **)"
 - "name": "H5D__get_space"

@@ -26,7 +26,7 @@
   - "name": "abortCheckCbkData"
     "type": "char *"
   "return_type": "void"
-  "signature": "void PDFDoc::displayPages(OutputDev *, int, int, double, double, int, GBool, GBool, GBool,  *, void *)"
+  "signature": "void PDFDoc::displayPages(OutputDev *, int, int, double, double, int, GBool, GBool, GBool, DW_TAG_subroutine_typeInfinite loop *, void *)"
 - "name": "_ZN6PDFDoc16displayPageSliceEP9OutputDeviddiiiiiiiiPFiPvES2_"
   "params":
   - "name": "this"
@@ -60,7 +60,7 @@
   - "name": "abortCheckCbkData"
     "type": "char *"
   "return_type": "void"
-  "signature": "void PDFDoc::displayPageSlice(OutputDev *, int, double, double, int, GBool, GBool, GBool, int, int, int, int,  *, void *)"
+  "signature": "void PDFDoc::displayPageSlice(OutputDev *, int, double, double, int, GBool, GBool, GBool, int, int, int, int, DW_TAG_subroutine_typeInfinite loop *, void *)"
 - "name": "_ZN15SplashOutputDev8drawCharEP8GfxStateddddddjiPjiiii"
   "params":
   - "name": "this"

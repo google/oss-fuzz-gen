@@ -65,8 +65,12 @@ while true; do
   echo "Download results from localhost."
   wget2 --quiet --inet4-only --no-host-directories --http2-request-window 10 --recursive localhost:${WEB_PORT:?}/ 2>&1
 
-  # Also fetch the sorted line cov diff report.
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort -O sort.html 2>&1
+  # Also fetch the sorted reports.
+  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort/build -O sort/build 2>&1
+  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort/cov -O sort/cov 2>&1
+  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort/cov_diff -O sort/cov_diff 2>&1
+  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort/crash -O sort/crash 2>&1
+  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort/status -O sort/status 2>&1
 
   # Stop the server.
   kill -9 "$pid_web"
@@ -79,12 +83,28 @@ while true; do
 
   cd ..
 
-  # Upload the raw results into the same GCS directory
+  # Upload the raw results into the same GCS directory.
   echo "Uploading the raw results."
   gsutil -q -m cp -r "${RESULTS_DIR:?}" \
          "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
 
   echo "See the published report at https://llm-exp.oss-fuzz.com/Result-reports/${GCS_DIR:?}/"
+
+  # Upload training data.
+  echo "Uploading training data."
+  rm -rf 'training_data'
+  gsutil -q rm -r "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}/training_data" || true
+
+  $PYTHON -m data_prep.parse_training_data \
+    --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
+  $PYTHON -m data_prep.parse_training_data --group \
+    --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
+  $PYTHON -m data_prep.parse_training_data --coverage \
+    --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
+  $PYTHON -m data_prep.parse_training_data --coverage --group \
+    --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
+  gsutil -q cp -r 'training_data' \
+    "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
 
   if [[ -f /experiment_ended ]]; then
     echo "Experiment finished."

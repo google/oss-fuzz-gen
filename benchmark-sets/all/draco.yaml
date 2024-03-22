@@ -4,7 +4,7 @@
   - "name": ""
     "type": "draco::PointCloud *"
   "return_type": "bool"
-  "signature": "bool DeduplicateAttributeValues(PointCloud *)"
+  "signature": "bool draco::PointCloud::DeduplicateAttributeValues()"
 - "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeE"
   "params":
   - "name": ""
@@ -12,7 +12,7 @@
   - "name": ""
     "type": "draco::GeometryAttribute *"
   "return_type": "int"
-  "signature": "ValueType DeduplicateValues(PointAttribute *, const GeometryAttribute)"
+  "signature": "ValueType draco::PointAttribute::DeduplicateValues(const GeometryAttribute &)"
 - "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
   "params":
   - "name": ""
@@ -22,7 +22,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "ValueType DeduplicateValues(PointAttribute *, const GeometryAttribute, AttributeValueIndex)"
+  "signature": "ValueType draco::PointAttribute::DeduplicateValues(const GeometryAttribute &, AttributeValueIndex)"
 - "name": "_ZN5draco14PointAttribute22DeduplicateTypedValuesIiEEjRKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
   "params":
   - "name": ""
@@ -32,7 +32,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "ValueType DeduplicateTypedValues<float>(PointAttribute *, const GeometryAttribute, AttributeValueIndex)"
+  "signature": "ValueType unsigned int draco::PointAttribute::DeduplicateTypedValues<float>(const GeometryAttribute &, AttributeValueIndex)"
 - "name": "_ZN5draco14PointAttribute22DeduplicateTypedValuesIjEEjRKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
   "params":
   - "name": ""
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "ValueType DeduplicateTypedValues<float>(PointAttribute *, const GeometryAttribute, AttributeValueIndex)"
+  "signature": "ValueType unsigned int draco::PointAttribute::DeduplicateTypedValues<float>(const GeometryAttribute &, AttributeValueIndex)"
 "language": "c++"
 "project": "draco"
 "target_name": "draco_pc_decoder_fuzzer"

@@ -28,7 +28,7 @@
   - "name": "rrclass"
     "type": "int"
   - "name": "result"
-    "type": "struct ub_result **"
+    "type": "bool "
   "return_type": "int"
   "signature": "int ub_resolve(ub_ctx *, const char *, int, int, ub_result **)"
 - "name": "ub_resolve_event"

@@ -25,9 +25,15 @@ Usage:
 
 import argparse
 import json
+import logging
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Dict, List
+
+from google.cloud import storage
+
+STORAGE_CLIENT = storage.Client()
 
 
 class Benchmark:
@@ -41,6 +47,9 @@ class Benchmark:
   def prompt(self) -> str:
     """Returns the prompt used by the benchmark."""
     prompt_path = os.path.join(self.benchmark_dir, 'prompt.txt')
+    if not os.path.isfile(prompt_path):
+      logging.warning('Prompt does not exist: %s', prompt_path)
+      return ''
     with open(prompt_path) as prompt_file:
       return prompt_file.read()
 
@@ -50,6 +59,9 @@ class Benchmark:
     the instance ID to a list of targets generated and fixed by LLM."""
     all_targets = {}
     raw_target_dir = os.path.join(self.benchmark_dir, 'raw_targets')
+    if not os.path.isdir(raw_target_dir):
+      logging.warning('Raw target dir does not exist: %s', raw_target_dir)
+      return {}
     raw_targets = [
         instance for instance in os.listdir(raw_target_dir)
         if not instance.endswith('rawoutput')
@@ -60,6 +72,9 @@ class Benchmark:
         all_targets[os.path.splitext(instance)[0]] = [target_file.read()]
 
     fixed_target_dir = os.path.join(self.benchmark_dir, 'fixed_targets')
+    if not os.path.isdir(fixed_target_dir):
+      logging.warning('Fixed target dir does not exist: %s', fixed_target_dir)
+      return {}
     fix_dirs = [
         instance for instance in os.listdir(fixed_target_dir)
         if os.path.isdir(os.path.join(fixed_target_dir, instance))
@@ -73,6 +88,10 @@ class Benchmark:
       ][0]
       with open(code_path) as code_file:
         fixed_code = code_file.read()
+      if not all_targets.get(instance):
+        logging.warning('Benchmark instance does not exist: %s - %s',
+                        self.benchmark_dir, instance)
+        continue
       all_targets[instance].append(fixed_code)
     return all_targets
 
@@ -82,15 +101,34 @@ class Benchmark:
     instance ID to its status JSON."""
     all_status = {}
     status_dir = os.path.join(self.benchmark_dir, 'status')
+    if not os.path.isdir(status_dir):
+      logging.warning('Status dir does not exist: %s', status_dir)
+      return {}
     for instance in os.listdir(status_dir):
       status_json_path = os.path.join(status_dir, instance, 'result.json')
       if not os.path.isfile(status_json_path):
-        print(f'Missing result JSON of {self.benchmark}')
+        logging.warning('Missing result JSON of benchmark instance: %s - %s',
+                        self.benchmark, instance)
         continue
       with open(status_json_path) as file:
-        status = json.load(file)
-        all_status[instance] = status
+        try:
+          all_status[instance] = json.load(file)
+        except Exception as e:
+          logging.warning(e)
+          logging.warning(status_json_path)
+
     return all_status
+
+  @property
+  def is_valid_benchmark(self) -> bool:
+    """Checks if this has a valid benchmark directory."""
+    path = self.benchmark_dir
+    expected_components = [
+        'raw_targets', 'status', 'fixed_targets', 'prompt.txt'
+    ]
+    return all(
+        os.path.exists(os.path.join(path, component))
+        for component in expected_components)
 
   @staticmethod
   def final_score(stat: Dict[str, Any], coverage: bool) -> float:
@@ -145,27 +183,38 @@ class Benchmark:
       return self.organize_group_pointwise(coverage)
     return self.organize_ungroup_pointwise(coverage)
 
-  def save_json(self, coverage: bool, group: bool):
+  def save_json(self, coverage: bool, group: bool, save_dir: str):
     """Saves the training data into a JSON file."""
     data = self.organize_data(coverage, group)
     coverage_str = 'cov' if coverage else 'build'
     group_str = 'group' if group else 'ungroup'
     data_filename = (f'{self.benchmark}.{len(data)}.{coverage_str}.{group_str}'
                      f'.json')
-    with open(data_filename, 'w') as file:
+    data_filapath = os.path.join(save_dir, data_filename)
+    with open(data_filapath, 'w') as file:
       json.dump(data, file, indent=4)
-    print(f'Saved to {data_filename}.')
+    logging.info('Saved to: %s', data_filapath)
 
 
 class Experiment:
   """The directory of an experiment, containing benchmark result directories."""
 
-  def __init__(self, experiment_dir: str) -> None:
+  def __init__(self, experiment_dir: str, bucket_uri: str = '') -> None:
+    # The local result directory. The directory from bucket_uri will be
+    # downloaded here if this directory does not contain experiment results.
     self.experiment = experiment_dir
+    # The gcloud bucket result directory uri. It can be an empty string if
+    # experiment_dir already contains experiment results.
+    self.bucket_uri = bucket_uri
     self.benchmarks = []
+
+    if bucket_uri:
+      _download_files(experiment_dir, bucket_uri)
     for benchmark_dir in os.listdir(experiment_dir):
       benchmark_dir_path = os.path.join(experiment_dir, benchmark_dir)
-      self.benchmarks.append(Benchmark(benchmark_dir_path))
+      benchmark = Benchmark(benchmark_dir_path)
+      if benchmark.is_valid_benchmark:
+        self.benchmarks.append(benchmark)
 
   def organize_data(self, coverage: bool, group: bool) -> List[Dict[str, Any]]:
     """Organizes experiment result into training data in the required format."""
@@ -174,19 +223,65 @@ class Experiment:
       data.extend(benchmark.organize_data(coverage, group))
     return data
 
-  def save_json(self, coverage: bool, group: bool) -> None:
+  def save_json(self, coverage: bool, group: bool, save_dir: str) -> None:
     """Saves the training data into a JSON file."""
     data = self.organize_data(coverage, group)
     group_str = 'group' if group else 'ungroup'
     coverage_str = 'cov' if coverage else 'build'
     data_filename = (f'{self.experiment}.{len(data)}.{coverage_str}.{group_str}'
                      f'.json')
-    with open(data_filename, 'w') as file:
+    data_filapath = os.path.join(save_dir, data_filename)
+    with open(data_filapath, 'w') as file:
       json.dump(data, file, indent=4)
-    print(f'Saved to {data_filename}.')
+    logging.info('Saved to: %s', data_filapath)
 
 
-def parse_args() -> argparse.Namespace:
+def _parse_gcs_uri(bucket_uri: str) -> tuple[str, str]:
+  """Parses the bucket name and directory prefix from |bucket_uri|."""
+  bucket_name = bucket_uri.removeprefix('gs://').split('/')[0]
+  directory_prefix = bucket_uri.removeprefix(f'gs://{bucket_name}/')
+  return bucket_name, directory_prefix
+
+
+def _download_files(experiment_dir: str, bucket_uri: str) -> None:
+  """
+  Downloads files in |bucket_uri| to |experiment_dir| and preserve their paths.
+  """
+  bucket_name, directory_prefix = _parse_gcs_uri(bucket_uri)
+  bucket = STORAGE_CLIENT.bucket(bucket_name)
+  blobs = bucket.list_blobs(prefix=directory_prefix)
+  blobs_num = len(list(blobs))
+  # Download blobs in parallel
+  blobs = bucket.list_blobs(prefix=directory_prefix)
+  with ThreadPoolExecutor(max_workers=40) as executor:
+    for i, blob in enumerate(blobs):
+      print(f'{i} / {blobs_num}')
+      executor.submit(_download_file, blob, experiment_dir)
+
+
+def _download_file(file_blob: storage.Blob, local_dir: str) -> None:
+  """
+  Downloads a file from |file_blob| and preserve its path after |bucket_dir|.
+  """
+  if not file_blob.name:
+    logging.warning('Blob has no name: %s', file_blob)
+    return
+  if any(
+      file_blob.name.endswith(suffix)
+      for suffix in ['.rawoutput', '.log', 'log.txt']):
+    return
+  local_path = os.path.join(local_dir, file_blob.name)
+  os.makedirs(os.path.dirname(local_path), exist_ok=True)
+  file_blob.download_to_filename(local_path)
+
+
+def _validate_bucket(bucket_uri: str) -> bool:
+  """Checks if the |directory_uri| is local or from a bucket."""
+  # Assume we will only use gs:// links for simplicity in directory operations.
+  return bucket_uri.startswith('gs://')
+
+
+def _parse_args() -> argparse.Namespace:
   """Handles command-line arguments."""
   parser = argparse.ArgumentParser(
       description="Parse benchmark data from an HTML file.")
@@ -202,10 +297,27 @@ def parse_args() -> argparse.Namespace:
                       help='Group targets by their prompt.')
   parser.add_argument('--benchmark-dir',
                       '-b',
-                      help="Path to the benchmark result directory.")
-  parser.add_argument('--experiment-dir',
-                      '-e',
-                      help="Path to the experiment result directory.")
+                      type=str,
+                      default='',
+                      help='Path to the benchmark result directory.')
+  parser.add_argument(
+      '--experiment-dir',
+      '-e',
+      type=str,
+      default='',
+      help=('Path to the experiment result directory. When --bucket-uri is '
+            'provided, the bucket directory will be downloaded to this '
+            'directory.'))
+  parser.add_argument(
+      '--bucket-uri',
+      '-u',
+      help=('URI to the experiment result bucket directory. The bucket '
+            'directory will be downloaded to local --experiment-dir.'))
+  parser.add_argument('--save-dir',
+                      '-s',
+                      type=str,
+                      default='',
+                      help='Path to the directory for saving json result.')
   args = parser.parse_args()
 
   if args.benchmark_dir:
@@ -213,25 +325,38 @@ def parse_args() -> argparse.Namespace:
   if args.experiment_dir:
     args.experiment_dir = args.experiment_dir.rstrip('/')
 
-  if args.benchmark_dir is None and args.experiment_dir is None:
-    print('Need at least one directory of a benchmark or an experiment.')
-    sys.exit(1)
-  if args.benchmark_dir is not None and args.experiment_dir is not None:
-    print('Need only one directory of a benchmark or an experiment, not both.')
-    sys.exit(1)
+  assert bool(args.benchmark_dir) != bool(args.experiment_dir), (
+      'Need exactly one directory of a benchmark or an experiment.')
+
+  result_dir = args.benchmark_dir or args.experiment_dir
+  assert os.path.isdir(result_dir), (
+      f'{result_dir} needs to be an existing directory.')
+
+  if args.bucket_uri:
+    assert _validate_bucket(args.bucket_uri), (
+        f'{args.bucket_uri} is an invalid bucket directory URL.')
+    assert not os.path.isdir(args.benchmark_dir), (
+        'Downloading bucket directory will overwrite existing local dir '
+        f'{args.benchmark_dir}')
+
+  if args.save_dir:
+    os.makedirs(args.save_dir, exist_ok=True)
   return args
 
 
 def main() -> int:
   """Main function to and initiate the parsing process."""
-  args = parse_args()
+  args = _parse_args()
   if args.benchmark_dir:
     result = Benchmark(args.benchmark_dir)
+    if not result.is_valid_benchmark:
+      logging.info(
+          'Invalid benchmark directory provided, missing necessary file.')
   elif args.experiment_dir:
-    result = Experiment(args.experiment_dir)
+    result = Experiment(args.experiment_dir, args.bucket_uri)
   else:
     return 1
-  result.save_json(args.coverage, args.group)
+  result.save_json(args.coverage, args.group, args.save_dir)
   return 0
 
 

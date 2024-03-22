@@ -29,7 +29,7 @@
     </tr>
 {% for sample in samples %}
     <tr>
-        <td><a href="../sample/{{ benchmark|urlencode }}/{{ sample.id }}">{{ sample.id }}</a></li></td>
+        <td><a href="../../sample/{{ benchmark|urlencode }}/{{ sample.id }}">{{ sample.id }}</a></li></td>
         <td>{{ sample.status }}</td>
         {% if sample.result %}
         <td>{{ sample.result.compiles}}</td>

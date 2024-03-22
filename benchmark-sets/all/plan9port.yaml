@@ -48,7 +48,7 @@
   - "name": "edigest"
     "type": "char *"
   - "name": "psigalg"
-    "type": "struct Elem **"
+    "type": "bool "
   "return_type": "char *"
   "signature": "char * verify_signature(Bytes *, RSApub *, uchar *, Elem **)"
 "language": "c"
