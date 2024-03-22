@@ -48,7 +48,9 @@ INTROSPECTOR_FUNC_SIG = ''
 
 def _set_introspector_endpoints(is_local: bool):
   """Sets URLs for Fuzz Introspector endpoints to local or remote endpoints."""
-  global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNCTION, INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_FUNC_SIG
+  global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNCTION, \
+      INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE, \
+      INTROSPECTOR_FUNC_SIG
 
   if is_local:
     logging.info('Setting Fuzz Introspector endpoint to local.')
@@ -493,8 +495,7 @@ def _parse_arguments() -> argparse.Namespace:
                       action="store_true",
                       help='Set Fuzz Introspecor endpoint to local.')
 
-  args = parser.parse_args()
-  return args
+  return parser.parse_args()
 
 
 if __name__ == '__main__':
