@@ -10,7 +10,7 @@
   - "name": ""
     "type": "float"
   "return_type": "int"
-  "signature": "int gpsd_multipoll(const _Bool, gps_device_t *, DW_TAG_subroutine_typeInfinite loop *, float)"
+  "signature": "int gpsd_multipoll(const _Bool, gps_device_t *,  *, float)"
 - "name": "gpsd_poll"
   "params":
   - "name": ""

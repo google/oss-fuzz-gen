@@ -2,7 +2,7 @@
 - "name": "op_CallIndirect"
   "params":
   - "name": ""
-    "type": "bool "
+    "type": "char **"
   - "name": ""
     "type": "int *"
   - "name": ""
@@ -22,7 +22,7 @@
 - "name": "m3_GetTableFunction"
   "params":
   - "name": ""
-    "type": "bool "
+    "type": "struct M3Function **"
   - "name": ""
     "type": "struct M3Module *"
   - "name": ""
@@ -32,7 +32,7 @@
 - "name": "op_Compile"
   "params":
   - "name": ""
-    "type": "bool "
+    "type": "char **"
   - "name": ""
     "type": "int *"
   - "name": ""

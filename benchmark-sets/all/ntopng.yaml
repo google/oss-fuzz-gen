@@ -1,4 +1,10 @@
 "functions":
+- "name": "_ZN13PcapInterface18startPacketPollingEv"
+  "params":
+  - "name": "this"
+    "type": "PcapInterface *"
+  "return_type": "void"
+  "signature": "void PcapInterface::startPacketPolling()"
 - "name": "_ZN14DummyInterface18startPacketPollingEv"
   "params":
   - "name": "this"
@@ -11,12 +17,6 @@
     "type": "ZMQCollectorInterface *"
   "return_type": "void"
   "signature": "void ZMQCollectorInterface::startPacketPolling()"
-- "name": "_ZN13PcapInterface18startPacketPollingEv"
-  "params":
-  - "name": "this"
-    "type": "PcapInterface *"
-  "return_type": "void"
-  "signature": "void PcapInterface::startPacketPolling()"
 - "name": "_ZL14packetPollLoopPv"
   "params":
   - "name": "ptr"

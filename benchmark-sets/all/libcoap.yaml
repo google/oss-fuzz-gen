@@ -15,6 +15,12 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "ssize_t coap_ws_read(coap_session_t *, uint8_t *, size_t)"
+- "name": "coap_ws_close"
+  "params":
+  - "name": ""
+    "type": "struct coap_session_t *"
+  "return_type": "void"
+  "signature": "void coap_ws_close(coap_session_t *)"
 - "name": "coap_persist_startup"
   "params":
   - "name": ""
@@ -29,12 +35,6 @@
     "type": "int"
   "return_type": "int"
   "signature": "int coap_persist_startup(coap_context_t *, const char *, const char *, const char *, uint32_t)"
-- "name": "coap_ws_close"
-  "params":
-  - "name": ""
-    "type": "struct coap_session_t *"
-  "return_type": "void"
-  "signature": "void coap_ws_close(coap_session_t *)"
 - "name": "coap_persist_startup_locked"
   "params":
   - "name": ""

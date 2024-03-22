@@ -6,7 +6,7 @@
   - "name": "doc"
     "type": "tinyxml2::XMLDocument *"
   "return_type": "tinyxml2::XMLNode *"
-  "signature": "XMLNode * tinyxml2::XMLElement::ShallowClone(XMLDocument *)"
+  "signature": "XMLNode * const XMLElement::ShallowClone(XMLDocument *)"
 "language": "c++"
 "project": "tinyxml2"
 "target_name": "xmltest"

@@ -6,7 +6,7 @@
   - "name": "origin"
     "type": "std::string *"
   "return_type": "std::exception *"
-  "signature": "pointer easywsclient::WebSocket::from_url_no_mask(const string &, const string &)"
+  "signature": "pointer from_url_no_mask(const string, const string)"
 - "name": "_ZN12_GLOBAL__N_114_RealWebSocket4pollEi"
   "params":
   - "name": "this"
@@ -14,7 +14,7 @@
   - "name": "timeout"
     "type": "int"
   "return_type": "void"
-  "signature": "void (anonymous namespace)::_RealWebSocket::poll(int)"
+  "signature": "void _RealWebSocket::poll(int)"
 - "name": "_ZN12_GLOBAL__N_114_RealWebSocket15_dispatchBinaryERN12easywsclient17BytesCallback_ImpE"
   "params":
   - "name": "this"
@@ -22,13 +22,13 @@
   - "name": "callable"
     "type": "std::exception *"
   "return_type": "void"
-  "signature": "void (anonymous namespace)::_RealWebSocket::_dispatchBinary(BytesCallback_Imp &)"
+  "signature": "void _RealWebSocket::_dispatchBinary(BytesCallback_Imp)"
 - "name": "_ZN12_GLOBAL__N_114_RealWebSocket8sendPingEv"
   "params":
   - "name": "this"
     "type": "(anonymous namespace)::_RealWebSocket *"
   "return_type": "void"
-  "signature": "void (anonymous namespace)::_RealWebSocket::sendPing()"
+  "signature": "void _RealWebSocket::sendPing()"
 - "name": "_ZN12easywsclient9WebSocket12create_dummyEv"
   "params": []
   "return_type": "std::exception *"

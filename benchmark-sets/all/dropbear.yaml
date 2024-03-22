@@ -14,7 +14,7 @@
   - "name": "skip_exist"
     "type": "int"
   "return_type": "int"
-  "signature": "int signkey_generate(DW_TAG_enumeration_typesignkey_type, int, const char *, int)"
+  "signature": "int signkey_generate(signkey_type, int, const char *, int)"
 - "name": "recv_msg_userauth_pk_ok"
   "params": []
   "return_type": "void"

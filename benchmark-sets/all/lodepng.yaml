@@ -14,7 +14,7 @@
   - "name": "bitdepth"
     "type": "int"
   "return_type": "int"
-  "signature": "unsigned int lodepng::encode(const string &, const vector<unsigned char, std::__1::allocator<unsigned char> > &, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
+  "signature": "unsigned int encode(const string, const std::__1::allocator<unsigned char> >, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
 - "name": "_ZN7lodepng6encodeERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEPKhjj16LodePNGColorTypej"
   "params":
   - "name": "filename"
@@ -30,7 +30,7 @@
   - "name": "bitdepth"
     "type": "int"
   "return_type": "int"
-  "signature": "unsigned int lodepng::encode(const string &, const unsigned char *, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
+  "signature": "unsigned int encode(const string, const unsigned char *, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
 - "name": "_Z21lodepng_encode24_filePKcPKhjj"
   "params":
   - "name": "filename"

@@ -10,7 +10,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "bool"
-  "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<absl::str_format_internal::VoidPtr>(DW_TAG_union_typeData, FormatConversionSpecImpl, void *)"
+  "signature": "bool Dispatch<absl::str_format_internal::VoidPtr>(Data, FormatConversionSpecImpl, void *)"
 - "name": "_ZN4absl19str_format_internal13FormatArgImpl8DispatchIlEEbNS1_4DataENS0_24FormatConversionSpecImplEPv"
   "params":
   - "name": "arg"
@@ -22,7 +22,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "bool"
-  "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<absl::str_format_internal::VoidPtr>(DW_TAG_union_typeData, FormatConversionSpecImpl, void *)"
+  "signature": "bool Dispatch<absl::str_format_internal::VoidPtr>(Data, FormatConversionSpecImpl, void *)"
 - "name": "_ZN4absl19str_format_internal13FormatArgImpl8DispatchIsEEbNS1_4DataENS0_24FormatConversionSpecImplEPv"
   "params":
   - "name": "arg"
@@ -34,7 +34,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "bool"
-  "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<absl::str_format_internal::VoidPtr>(DW_TAG_union_typeData, FormatConversionSpecImpl, void *)"
+  "signature": "bool Dispatch<absl::str_format_internal::VoidPtr>(Data, FormatConversionSpecImpl, void *)"
 - "name": "_ZN4absl19str_format_internal13FormatArgImpl8DispatchIaEEbNS1_4DataENS0_24FormatConversionSpecImplEPv"
   "params":
   - "name": "arg"
@@ -46,7 +46,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "bool"
-  "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<absl::str_format_internal::VoidPtr>(DW_TAG_union_typeData, FormatConversionSpecImpl, void *)"
+  "signature": "bool Dispatch<absl::str_format_internal::VoidPtr>(Data, FormatConversionSpecImpl, void *)"
 - "name": "_ZN4absl19str_format_internal13FormatArgImpl8DispatchIcEEbNS1_4DataENS0_24FormatConversionSpecImplEPv"
   "params":
   - "name": "arg"
@@ -58,7 +58,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "bool"
-  "signature": "bool absl::str_format_internal::FormatArgImpl::Dispatch<absl::str_format_internal::VoidPtr>(DW_TAG_union_typeData, FormatConversionSpecImpl, void *)"
+  "signature": "bool Dispatch<absl::str_format_internal::VoidPtr>(Data, FormatConversionSpecImpl, void *)"
 "language": "c++"
 "project": "abseil-cpp"
 "target_name": "string_escape_fuzzer"

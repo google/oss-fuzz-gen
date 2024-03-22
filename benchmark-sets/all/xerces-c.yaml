@@ -6,7 +6,7 @@
   - "name": "token"
     "type": "struct xercesc_3_2::PrefMapElem *"
   "return_type": "bool"
-  "signature": "bool xercesc_3_2::IGXMLScanner::scanNext(XMLPScanToken &)"
+  "signature": "bool IGXMLScanner::scanNext(XMLPScanToken)"
 - "name": "_ZN11xercesc_3_212IGXMLScanner14scanStartTagNSERb"
   "params":
   - "name": "this"
@@ -14,7 +14,7 @@
   - "name": "gotData"
     "type": "char *"
   "return_type": "bool"
-  "signature": "bool xercesc_3_2::IGXMLScanner::scanStartTagNS(bool &)"
+  "signature": "bool IGXMLScanner::scanStartTagNS(bool)"
 - "name": "_ZN11xercesc_3_212SGXMLScanner12scanStartTagERb"
   "params":
   - "name": "this"
@@ -22,7 +22,7 @@
   - "name": "gotData"
     "type": "char *"
   "return_type": "bool"
-  "signature": "bool xercesc_3_2::SGXMLScanner::scanStartTag(bool &)"
+  "signature": "bool SGXMLScanner::scanStartTag(bool)"
 - "name": "_ZN11xercesc_3_212IGXMLScanner11loadGrammarERKNS_11InputSourceEsb"
   "params":
   - "name": "this"
@@ -34,7 +34,7 @@
   - "name": "toCache"
     "type": "bool"
   "return_type": "xercesc_3_2::MemoryManagerImpl *"
-  "signature": "Grammar * xercesc_3_2::IGXMLScanner::loadGrammar(const InputSource &, const short, const bool)"
+  "signature": "Grammar * IGXMLScanner::loadGrammar(const InputSource, const short, const bool)"
 - "name": "_ZN11xercesc_3_212IGXMLScanner28scanRawAttrListforNameSpacesEm"
   "params":
   - "name": "this"
@@ -42,7 +42,7 @@
   - "name": "attCount"
     "type": "size_t"
   "return_type": "void"
-  "signature": "void xercesc_3_2::IGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t)"
+  "signature": "void IGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t)"
 "language": "c++"
 "project": "xerces-c"
 "target_name": "parse_target"

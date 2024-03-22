@@ -10,7 +10,7 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool EncoderCore<float, true>::Run(EncoderCore<short, false> *, uint8_t *, const size_t, const bool)"
+  "signature": "bool Run(false> *, uint8_t *, const size_t, const bool)"
 - "name": "_ZN11EncoderCoreIdLb1EE3RunEPhmb"
   "params":
   - "name": ""
@@ -22,7 +22,7 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool EncoderCore<double, true>::Run(EncoderCore<short, false> *, uint8_t *, const size_t, const bool)"
+  "signature": "bool Run(false> *, uint8_t *, const size_t, const bool)"
 - "name": "_ZN11EncoderCoreIlLb1EE3RunEPhmb"
   "params":
   - "name": ""
@@ -34,7 +34,7 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool EncoderCore<long, true>::Run(EncoderCore<short, false> *, uint8_t *, const size_t, const bool)"
+  "signature": "bool Run(false> *, uint8_t *, const size_t, const bool)"
 - "name": "_ZN11EncoderCoreIiLb1EE3RunEPhmb"
   "params":
   - "name": ""
@@ -46,7 +46,7 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool EncoderCore<int, true>::Run(EncoderCore<short, false> *, uint8_t *, const size_t, const bool)"
+  "signature": "bool Run(false> *, uint8_t *, const size_t, const bool)"
 - "name": "_ZN11EncoderCoreIsLb1EE3RunEPhmb"
   "params":
   - "name": ""
@@ -58,7 +58,7 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool EncoderCore<short, true>::Run(EncoderCore<short, false> *, uint8_t *, const size_t, const bool)"
+  "signature": "bool Run(false> *, uint8_t *, const size_t, const bool)"
 "language": "c++"
 "project": "lame"
 "target_name": "fuzzer-encoder"

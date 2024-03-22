@@ -10,7 +10,7 @@
   - "name": "dev_handle"
     "type": "struct libusb_device_handle *"
   - "name": "bos"
-    "type": "bool "
+    "type": "struct libusb_bos_descriptor **"
   "return_type": "int"
   "signature": "int libusb_get_bos_descriptor(libusb_device_handle *, libusb_bos_descriptor **)"
 - "name": "libusb_get_string_descriptor_ascii"

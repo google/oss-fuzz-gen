@@ -10,7 +10,7 @@
   - "name": ""
     "type": "std::vector *"
   "return_type": "bool"
-  "signature": "bool piex::GetDngInformation(StreamInterface *, uint32_t *, uint32_t *, vector<unsigned int, std::__1::allocator<unsigned int> > *)"
+  "signature": "bool GetDngInformation(StreamInterface *, uint32_t *, uint32_t *, std::__1::allocator<unsigned int> > *)"
 - "name": "_ZN4piex12_GLOBAL__N_117GetDngInformationERKNSt3__13setIjNS1_4lessIjEENS1_9allocatorIjEEEEPNS_15StreamInterfaceEPjSC_PNS1_6vectorIjS6_EE"
   "params":
   - "name": ""
@@ -24,7 +24,7 @@
   - "name": ""
     "type": "std::vector *"
   "return_type": "bool"
-  "signature": "bool piex::(anonymous namespace)::GetDngInformation(const TagSet &, StreamInterface *, uint32_t *, uint32_t *, vector<unsigned int, std::__1::allocator<unsigned int> > *)"
+  "signature": "bool GetDngInformation(const TagSet, StreamInterface *, uint32_t *, uint32_t *, std::__1::allocator<unsigned int> > *)"
 - "name": "_ZN4piex14GetOrientationEPNS_15StreamInterfaceEPj"
   "params":
   - "name": ""
@@ -32,7 +32,7 @@
   - "name": ""
     "type": "int *"
   "return_type": "bool"
-  "signature": "bool piex::GetOrientation(StreamInterface *, uint32_t *)"
+  "signature": "bool GetOrientation(StreamInterface *, uint32_t *)"
 - "name": "_ZN4piex12_GLOBAL__N_117RafGetOrientationEPNS_15StreamInterfaceEPj"
   "params":
   - "name": ""
@@ -40,7 +40,7 @@
   - "name": ""
     "type": "int *"
   "return_type": "bool"
-  "signature": "bool piex::(anonymous namespace)::RafGetOrientation(StreamInterface *, uint32_t *)"
+  "signature": "bool RafGetOrientation(StreamInterface *, uint32_t *)"
 - "name": "_ZN4piex18GetExifOrientationEPNS_15StreamInterfaceEjPj"
   "params":
   - "name": ""
@@ -50,7 +50,7 @@
   - "name": ""
     "type": "int *"
   "return_type": "bool"
-  "signature": "bool piex::GetExifOrientation(StreamInterface *, const uint32_t, uint32_t *)"
+  "signature": "bool GetExifOrientation(StreamInterface *, const uint32_t, uint32_t *)"
 "language": "c++"
 "project": "piex"
 "target_name": "fuzzer-tiff_parser"

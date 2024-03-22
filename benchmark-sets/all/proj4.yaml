@@ -28,7 +28,7 @@
   - "name": ""
     "type": "struct pj_ctx *"
   "return_type": "std::vector *"
-  "signature": "const vector<PJCoordOperation, std::__1::allocator<PJCoordOperation> > & PJ_OPERATION_LIST::getPreparedOperations(PJ_CONTEXT *)"
+  "signature": "const std::__1::allocator<PJCoordOperation> > getPreparedOperations(PJ_OPERATION_LIST *, PJ_CONTEXT *)"
 - "name": "_ZNK5osgeo4proj3crs8BoundCRS9_identifyERKNSt3__110shared_ptrINS0_2io16AuthorityFactoryEEE"
   "params":
   - "name": ""
@@ -38,7 +38,7 @@
   - "name": ""
     "type": "std::shared_ptr *"
   "return_type": "void"
-  "signature": "list<std::__1::pair<dropbox::oxygen::nn<std::__1::shared_ptr<osgeo::proj::crs::CRS> >, int>, std::__1::allocator<std::__1::pair<dropbox::oxygen::nn<std::__1::shared_ptr<osgeo::proj::crs::CRS> >, int> > > osgeo::proj::crs::BoundCRS::_identify(const AuthorityFactoryPtr &)"
+  "signature": "list<std::__1::pair<dropbox::oxygen::nn<std::__1::shared_ptr<osgeo::proj::crs::CRS> >, int>, std::__1::allocator<std::__1::pair<dropbox::oxygen::nn<std::__1::shared_ptr<osgeo::proj::crs::CRS> >, int> > > _identify(const BoundCRS *, const AuthorityFactoryPtr)"
 - "name": "_ZNK5osgeo4proj3crs3CRS31createBoundCRSToWGS84IfPossibleERKNSt3__110shared_ptrINS0_2io15DatabaseContextEEENS0_9operation26CoordinateOperationContext18IntermediateCRSUseE"
   "params":
   - "name": ""
@@ -50,7 +50,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "CRSNNPtr osgeo::proj::crs::CRS::createBoundCRSToWGS84IfPossible(const DatabaseContextPtr &, DW_TAG_enumeration_typeIntermediateCRSUse)"
+  "signature": "CRSNNPtr createBoundCRSToWGS84IfPossible(const CRS *, const DatabaseContextPtr, IntermediateCRSUse)"
 "language": "c++"
 "project": "proj4"
 "target_name": "proj_crs_to_crs_fuzzer"

@@ -10,7 +10,7 @@
   - "name": "arg"
     "type": "char *"
   "return_type": "int"
-  "signature": "int dwfl_getthread_frames(Dwfl *, pid_t, DW_TAG_subroutine_typeInfinite loop *, void *)"
+  "signature": "int dwfl_getthread_frames(Dwfl *, pid_t,  *, void *)"
 - "name": "get_one_thread_frames_cb"
   "params":
   - "name": "thread"
@@ -28,7 +28,7 @@
   - "name": "arg"
     "type": "char *"
   "return_type": "int"
-  "signature": "int dwfl_thread_getframes(Dwfl_Thread *, DW_TAG_subroutine_typeInfinite loop *, void *)"
+  "signature": "int dwfl_thread_getframes(Dwfl_Thread *,  *, void *)"
 - "name": "__libdwfl_frame_unwind"
   "params":
   - "name": "state"

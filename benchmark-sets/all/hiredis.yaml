@@ -36,7 +36,7 @@
   - "name": "argc"
     "type": "int"
   - "name": "argv"
-    "type": "bool "
+    "type": "char **"
   - "name": "argvlen"
     "type": "size_t *"
   "return_type": "char *"

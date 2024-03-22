@@ -3,7 +3,7 @@ name: Build Docker image from main
 on:
   schedule:
     - cron: '0 15 * * 5'  # Sydney Saturday ~1 AM.
-  workflow_dispatch:
+
 jobs:
 
   build:

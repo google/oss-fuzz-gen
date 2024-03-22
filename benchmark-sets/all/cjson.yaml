@@ -34,7 +34,7 @@
   - "name": "case_sensitive"
     "type": "int"
   "return_type": "int"
-  "signature": "cJSON_bool cJSON_Compare(const const cJSON *, const const cJSON *, const cJSON_bool)"
+  "signature": "cJSON_bool cJSON_Compare(const cJSON *, const cJSON *, const cJSON_bool)"
 - "name": "cJSON_ReplaceItemInObjectCaseSensitive"
   "params":
   - "name": "object"

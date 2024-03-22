@@ -12,7 +12,7 @@
   - "name": ""
     "type": "pw::protobuf::internal::MessageField *"
   "return_type": "int"
-  "signature": "Status pw::protobuf::StreamDecoder::Read(span<std::byte, 18446744073709551615UL>, span<const pw::protobuf::internal::MessageField, 18446744073709551615UL>)"
+  "signature": "Status StreamDecoder::Read(span<std::byte, 18446744073709551615UL>, span<const pw::protobuf::internal::MessageField, 18446744073709551615UL>)"
 - "name": "_ZN2pw8protobuf13StreamEncoder5WriteENS_4spanIKSt4byteLm18446744073709551615EEENS2_IKNS0_8internal12MessageFieldELm18446744073709551615EEE"
   "params":
   - "name": "this"
@@ -26,7 +26,7 @@
   - "name": ""
     "type": "pw::protobuf::internal::MessageField *"
   "return_type": "int"
-  "signature": "Status pw::protobuf::StreamEncoder::Write(span<const std::byte, 18446744073709551615UL>, span<const pw::protobuf::internal::MessageField, 18446744073709551615UL>)"
+  "signature": "Status StreamEncoder::Write(span<const std::byte, 18446744073709551615UL>, span<const pw::protobuf::internal::MessageField, 18446744073709551615UL>)"
 - "name": "_ZNK2pw9tokenizer11Detokenizer16DetokenizeBase64ENSt3__117basic_string_viewIcNS2_11char_traitsIcEEEE"
   "params":
   - "name": "this"
@@ -38,7 +38,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "void"
-  "signature": "string pw::tokenizer::Detokenizer::DetokenizeBase64(string_view)"
+  "signature": "string const Detokenizer::DetokenizeBase64(string_view)"
 - "name": "_ZN2pw9tokenizer12_GLOBAL__N_124NestedMessageDetokenizer10DetokenizeENSt3__117basic_string_viewIcNS3_11char_traitsIcEEEE"
   "params":
   - "name": "this"
@@ -48,7 +48,7 @@
   - "name": ""
     "type": "size_t"
   "return_type": "void"
-  "signature": "void pw::tokenizer::(anonymous namespace)::NestedMessageDetokenizer::Detokenize(string_view)"
+  "signature": "void NestedMessageDetokenizer::Detokenize(string_view)"
 - "name": "_ZN2pw9tokenizer12_GLOBAL__N_124NestedMessageDetokenizer10DetokenizeEc"
   "params":
   - "name": "this"
@@ -56,7 +56,7 @@
   - "name": "next_char"
     "type": "char"
   "return_type": "void"
-  "signature": "void pw::tokenizer::(anonymous namespace)::NestedMessageDetokenizer::Detokenize(char)"
+  "signature": "void NestedMessageDetokenizer::Detokenize(char)"
 "language": "c++"
 "project": "pigweed"
 "target_name": "encoder_fuzzer"

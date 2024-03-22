@@ -4,7 +4,7 @@
   - "name": "this"
     "type": "ot::MeshCoP::Commissioner *"
   "return_type": "void"
-  "signature": "void ot::MeshCoP::Commissioner::HandleTimer()"
+  "signature": "void Commissioner::HandleTimer()"
 - "name": "otCoapSecureStart"
   "params":
   - "name": "aInstance"
@@ -20,7 +20,7 @@
   - "name": "aContext"
     "type": "char *"
   "return_type": "void"
-  "signature": "void ot::MeshCoP::Joiner::HandleDiscoverResult(ScanResult *, void *)"
+  "signature": "void HandleDiscoverResult(ScanResult *, void *)"
 - "name": "_ZN2ot7MeshCoP6Joiner20HandleDiscoverResultEP18otActiveScanResult"
   "params":
   - "name": "this"
@@ -28,7 +28,7 @@
   - "name": "aResult"
     "type": "struct otActiveScanResult *"
   "return_type": "void"
-  "signature": "void ot::MeshCoP::Joiner::HandleDiscoverResult(ScanResult *)"
+  "signature": "void Joiner::HandleDiscoverResult(ScanResult *)"
 - "name": "_ZN2ot7MeshCoP6Joiner19TryNextJoinerRouterE7otError"
   "params":
   - "name": "this"
@@ -36,7 +36,7 @@
   - "name": "aPrevError"
     "type": "int"
   "return_type": "void"
-  "signature": "void ot::MeshCoP::Joiner::TryNextJoinerRouter(Error)"
+  "signature": "void Joiner::TryNextJoinerRouter(Error)"
 "language": "c++"
 "project": "openthread"
 "target_name": "ot-ip6-send-fuzzer"

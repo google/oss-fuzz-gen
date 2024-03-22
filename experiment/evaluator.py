@@ -48,7 +48,6 @@ class Result:
   coverage: float = 0.0
   line_coverage_diff: float = 0.0
   coverage_report_path: str = ''
-  reproducer_path: str = ''
 
   def dict(self):
     return dataclasses.asdict(self)
@@ -303,7 +302,7 @@ class Evaluator:
                f'({run_result.coverage.covered_lines}/{total_lines})')
     return logger.return_result(
         Result(True, crashes, coverage_percent, coverage_diff,
-               run_result.coverage_report_path, run_result.reproducer_path))
+               run_result.coverage_report_path))
 
   def _load_existing_coverage_summary(self) -> dict:
     """Load existing summary.json."""

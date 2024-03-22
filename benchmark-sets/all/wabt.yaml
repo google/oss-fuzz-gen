@@ -10,7 +10,7 @@
   - "name": ""
     "type": "struct wabt::WastParseOptions *"
   "return_type": "int"
-  "signature": "Result wabt::ParseWastScript(WastLexer *, unique_ptr<wabt::Script, std::__1::default_delete<wabt::Script> > *, Errors *, WastParseOptions *)"
+  "signature": "Result ParseWastScript(WastLexer *, std::__1::default_delete<wabt::Script> > *, Errors *, WastParseOptions *)"
 - "name": "_ZN4wabt10WastParser11ParseScriptEPNSt3__110unique_ptrINS_6ScriptENS1_14default_deleteIS3_EEEE"
   "params":
   - "name": ""
@@ -18,7 +18,7 @@
   - "name": ""
     "type": "std::unique_ptr *"
   "return_type": "int"
-  "signature": "Result wabt::WastParser::ParseScript(unique_ptr<wabt::Script, std::__1::default_delete<wabt::Script> > *)"
+  "signature": "Result ParseScript(WastParser *, std::__1::default_delete<wabt::Script> > *)"
 - "name": "_ZN4wabt10WastParser16ParseCommandListEPNS_6ScriptEPNSt3__16vectorINS3_10unique_ptrINS_7CommandENS3_14default_deleteIS6_EEEENS3_9allocatorIS9_EEEE"
   "params":
   - "name": ""
@@ -28,7 +28,7 @@
   - "name": ""
     "type": "std::vector *"
   "return_type": "int"
-  "signature": "Result wabt::WastParser::ParseCommandList(Script *, CommandPtrVector *)"
+  "signature": "Result ParseCommandList(WastParser *, Script *, CommandPtrVector *)"
 - "name": "_ZN4wabt10WastParser12ParseCommandEPNS_6ScriptEPNSt3__110unique_ptrINS_7CommandENS3_14default_deleteIS5_EEEE"
   "params":
   - "name": ""
@@ -38,7 +38,7 @@
   - "name": ""
     "type": "std::unique_ptr *"
   "return_type": "int"
-  "signature": "Result wabt::WastParser::ParseCommand(Script *, CommandPtr *)"
+  "signature": "Result ParseCommand(WastParser *, Script *, CommandPtr *)"
 - "name": "_ZN4wabt10WastParser22ParseAssertTrapCommandEPNSt3__110unique_ptrINS_7CommandENS1_14default_deleteIS3_EEEE"
   "params":
   - "name": ""
@@ -46,7 +46,7 @@
   - "name": ""
     "type": "std::unique_ptr *"
   "return_type": "int"
-  "signature": "Result wabt::WastParser::ParseAssertTrapCommand(CommandPtr *)"
+  "signature": "Result ParseAssertTrapCommand(WastParser *, CommandPtr *)"
 "language": "c++"
 "project": "wabt"
 "target_name": "wasm2wat-fuzz"

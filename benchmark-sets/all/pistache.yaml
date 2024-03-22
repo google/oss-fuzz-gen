@@ -6,7 +6,7 @@
   - "name": ""
     "type": "Pistache::ArrayStreamBuf *"
   "return_type": "bool"
-  "signature": "bool Pistache::Http::(anonymous namespace)::writeCookies(const CookieJar &, DynamicStreamBuf &)"
+  "signature": "bool writeCookies(const CookieJar, DynamicStreamBuf)"
 - "name": "_ZN8Pistache4HttplsERNSt3__113basic_ostreamIcNS1_11char_traitsIcEEEERKNS0_6CookieE"
   "params":
   - "name": ""
@@ -14,7 +14,7 @@
   - "name": ""
     "type": "struct Pistache::Http::Cookie *"
   "return_type": "std::ostream *"
-  "signature": "ostream & Pistache::Http::operator<<(ostream &, const Cookie &)"
+  "signature": "ostream operator<<(ostream, const Cookie)"
 - "name": "_ZNK8Pistache4Http6Cookie5writeERNSt3__113basic_ostreamIcNS2_11char_traitsIcEEEE"
   "params":
   - "name": ""
@@ -22,7 +22,7 @@
   - "name": ""
     "type": "std::ostream *"
   "return_type": "void"
-  "signature": "void Pistache::Http::Cookie::write(ostream &)"
+  "signature": "void write(const Cookie *, ostream)"
 - "name": "_ZNK8Pistache4Http6Header4Date5writeERNSt3__113basic_ostreamIcNS3_11char_traitsIcEEEE"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "std::ostream *"
   "return_type": "void"
-  "signature": "void Pistache::Http::Header::Date::write(ostream &)"
+  "signature": "void write(const Date *, ostream)"
 - "name": "_ZNK8Pistache4Http8FullDate5writeERNSt3__113basic_ostreamIcNS2_11char_traitsIcEEEENS1_4TypeE"
   "params":
   - "name": ""
@@ -40,7 +40,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "void Pistache::Http::FullDate::write(ostream &, DW_TAG_enumeration_typeType)"
+  "signature": "void write(const FullDate *, ostream, Type)"
 "language": "c++"
 "project": "pistache"
 "target_name": "fuzz_parsers"

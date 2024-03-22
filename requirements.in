@@ -2,7 +2,7 @@ google-cloud-aiplatform==1.39.0
 google-cloud-storage==2.9.0
 PyYAML==6.0
 openai==0.27.8
-requests==2.31.0
+requests==2.28.1
 #pytype==2023.7.28
 Flask==2.3.2
 yapf==0.40.1

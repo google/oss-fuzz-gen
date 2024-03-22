@@ -10,7 +10,7 @@
   - "name": "key"
     "type": "char *"
   "return_type": "bool"
-  "signature": "_Bool load_string_section(private_settings_t *, char *, _Bool, char *, void)"
+  "signature": "_Bool private_settings_t::load_string_section(char *, _Bool, char *, void)"
 - "name": "load_files_section"
   "params":
   - "name": "this"
@@ -22,7 +22,7 @@
   - "name": "key"
     "type": "char *"
   "return_type": "bool"
-  "signature": "_Bool load_files_section(private_settings_t *, char *, _Bool, char *, void)"
+  "signature": "_Bool private_settings_t::load_files_section(char *, _Bool, char *, void)"
 - "name": "settings_create_string"
   "params":
   - "name": "settings"
@@ -38,7 +38,7 @@
   - "name": "merge"
     "type": "bool"
   "return_type": "bool"
-  "signature": "_Bool load_string(private_settings_t *, char *, _Bool)"
+  "signature": "_Bool private_settings_t::load_string(char *, _Bool)"
 - "name": "x509_ac_load"
   "params":
   - "name": "type"

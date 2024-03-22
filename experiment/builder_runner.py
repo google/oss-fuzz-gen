@@ -57,7 +57,6 @@ class RunResult:
   log_path: str = ''
   corpus_path: str = ''
   coverage_report_path: str = ''
-  reproducer_path: str = ''
 
   def dict(self):
     return dataclasses.asdict(self)
@@ -396,9 +395,6 @@ class CloudBuilderRunner(BuilderRunner):
     coverage_name = f'{uid}.coverage'
     coverage_path = f'gs://{self.experiment_bucket}/{coverage_name}'
 
-    reproducer_name = f'{uid}.reproducer'
-    reproducer_path = f'gs://{self.experiment_bucket}/{reproducer_name}'
-
     if not self._run_with_retry_control(
         os.path.realpath(target_path),
         [
@@ -410,7 +406,6 @@ class CloudBuilderRunner(BuilderRunner):
             f'--upload_output_log={run_log_path}',
             f'--upload_corpus={corpus_path}',
             f'--upload_coverage={coverage_path}',
-            f'--upload_reproducer={reproducer_path}',
             f'--experiment_name={self.experiment_name}', '--'
         ] + self._libfuzzer_args(),
         cwd=oss_fuzz_checkout.OSS_FUZZ_DIR):
@@ -465,7 +460,6 @@ class CloudBuilderRunner(BuilderRunner):
 
     run_result = RunResult(corpus_path=corpus_path,
                            coverage_report_path=coverage_path,
-                           reproducer_path=reproducer_path,
                            log_path=run_log_path)
     blob = bucket.blob(f'{coverage_name}/report/linux/summary.json')
     if blob.exists():

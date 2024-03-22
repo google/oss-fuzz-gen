@@ -8,7 +8,7 @@
   - "name": ""
     "type": "std::shared_ptr *"
   "return_type": "void"
-  "signature": "void Alembic::AbcCoreOgawa::v12::AprImpl::getSample(index_t, ArraySamplePtr &)"
+  "signature": "void getSample(AprImpl *, index_t, ArraySamplePtr)"
 - "name": "_ZN7Alembic12AbcCoreOgawa3v1215ReadArraySampleENSt3__110shared_ptrINS_5Ogawa3v125IDataEEES7_mRKNS_15AbcCoreAbstract3v128DataTypeERNS3_INS9_11ArraySampleEEE"
   "params":
   - "name": "iDims"
@@ -22,7 +22,7 @@
   - "name": ""
     "type": "std::shared_ptr *"
   "return_type": "void"
-  "signature": "void Alembic::AbcCoreOgawa::v12::ReadArraySample(IDataPtr, IDataPtr, size_t, const DataType &, ArraySamplePtr &)"
+  "signature": "void ReadArraySample(IDataPtr, IDataPtr, size_t, const DataType, ArraySamplePtr)"
 - "name": "_ZN7Alembic14AbcCoreFactory3v128IFactory10getArchiveERKNSt3__16vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEE"
   "params":
   - "name": ""
@@ -32,7 +32,7 @@
   - "name": ""
     "type": "std::vector *"
   "return_type": "void"
-  "signature": "IArchive Alembic::AbcCoreFactory::v12::IFactory::getArchive(const vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > &)"
+  "signature": "IArchive getArchive(IFactory *, const std::__1::allocator<char> > > >)"
 - "name": "_ZN7Alembic14AbcCoreFactory3v128IFactory10getArchiveERKNSt3__16vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEERNS2_8CoreTypeE"
   "params":
   - "name": ""
@@ -44,7 +44,7 @@
   - "name": ""
     "type": "int *"
   "return_type": "void"
-  "signature": "IArchive Alembic::AbcCoreFactory::v12::IFactory::getArchive(const vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > &, DW_TAG_enumeration_typeCoreType &)"
+  "signature": "IArchive getArchive(IFactory *, const std::__1::allocator<char> > > >, CoreType)"
 - "name": "_ZN7Alembic12AbcCoreOgawa3v127SprImpl9getSampleElPv"
   "params":
   - "name": ""
@@ -54,7 +54,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "void"
-  "signature": "void Alembic::AbcCoreOgawa::v12::SprImpl::getSample(index_t, void *)"
+  "signature": "void getSample(SprImpl *, index_t, void *)"
 "language": "c++"
 "project": "alembic"
 "target_name": "alembic_dump_info_fuzzer"

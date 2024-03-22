@@ -10,7 +10,7 @@
   - "name": "blocksize"
     "type": "size_t"
   - "name": "splitpoints"
-    "type": "bool "
+    "type": "size_t **"
   - "name": "npoints"
     "type": "size_t *"
   "return_type": "void"

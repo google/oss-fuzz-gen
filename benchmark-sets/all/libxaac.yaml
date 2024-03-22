@@ -14,7 +14,7 @@
   - "name": ""
     "type": "int"
   "return_type": "int"
-  "signature": "IA_ERRORCODE Codec::setXAACDRCInfo(int32_t, int32_t, int32_t, int32_t, int32_t)"
+  "signature": "IA_ERRORCODE setXAACDRCInfo(Codec *, int32_t, int32_t, int32_t, int32_t, int32_t)"
 - "name": "ixheaacd_hbe_apply_ifft_336"
   "params":
   - "name": ""

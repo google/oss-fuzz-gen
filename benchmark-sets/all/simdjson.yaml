@@ -10,7 +10,7 @@
   - "name": ""
     "type": "simdjson::dom::document *"
   "return_type": "int"
-  "signature": "DW_TAG_enumeration_typeerror_code simdjson::icelake::dom_parser_implementation::parse(const uint8_t *, size_t, document &)"
+  "signature": "error_code parse(dom_parser_implementation *, const uint8_t *, size_t, document)"
 - "name": "_ZN8simdjson7icelake25dom_parser_implementation6stage2ERNS_3dom8documentE"
   "params":
   - "name": ""
@@ -18,7 +18,7 @@
   - "name": ""
     "type": "simdjson::dom::document *"
   "return_type": "int"
-  "signature": "DW_TAG_enumeration_typeerror_code simdjson::icelake::dom_parser_implementation::stage2(document &)"
+  "signature": "error_code stage2(dom_parser_implementation *, document)"
 - "name": "_ZN8simdjson8fallback25dom_parser_implementation11stage2_nextERNS_3dom8documentE"
   "params":
   - "name": ""
@@ -26,7 +26,7 @@
   - "name": ""
     "type": "simdjson::dom::document *"
   "return_type": "int"
-  "signature": "DW_TAG_enumeration_typeerror_code simdjson::fallback::dom_parser_implementation::stage2_next(document &)"
+  "signature": "error_code stage2_next(dom_parser_implementation *, document)"
 - "name": "_ZN8simdjson8westmere25dom_parser_implementation11stage2_nextERNS_3dom8documentE"
   "params":
   - "name": ""
@@ -34,7 +34,7 @@
   - "name": ""
     "type": "simdjson::dom::document *"
   "return_type": "int"
-  "signature": "DW_TAG_enumeration_typeerror_code simdjson::westmere::dom_parser_implementation::stage2_next(document &)"
+  "signature": "error_code stage2_next(dom_parser_implementation *, document)"
 - "name": "_ZN8simdjson7icelake25dom_parser_implementation11stage2_nextERNS_3dom8documentE"
   "params":
   - "name": ""
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "simdjson::dom::document *"
   "return_type": "int"
-  "signature": "DW_TAG_enumeration_typeerror_code simdjson::icelake::dom_parser_implementation::stage2_next(document &)"
+  "signature": "error_code stage2_next(dom_parser_implementation *, document)"
 "language": "c++"
 "project": "simdjson"
 "target_name": "fuzz_dump"

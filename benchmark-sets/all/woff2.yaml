@@ -10,7 +10,7 @@
   - "name": "length"
     "type": "size_t"
   "return_type": "bool"
-  "signature": "bool woff2::ConvertWOFF2ToTTF(uint8_t *, size_t, const uint8_t *, size_t)"
+  "signature": "bool ConvertWOFF2ToTTF(uint8_t *, size_t, const uint8_t *, size_t)"
 - "name": "BrotliDecoderTakeOutput"
   "params":
   - "name": ""
@@ -38,7 +38,7 @@
   - "name": "dst"
     "type": "char *"
   "return_type": "void"
-  "signature": "void woff2::Store255UShort(int, size_t *, uint8_t *)"
+  "signature": "void Store255UShort(int, size_t *, uint8_t *)"
 - "name": "BrotliDecoderIsFinished"
   "params":
   - "name": ""

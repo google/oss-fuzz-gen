@@ -6,7 +6,7 @@
   - "name": ""
     "type": "resip::ParseBuffer *"
   "return_type": "void"
-  "signature": "void resip::DialogInfoContents::parse(ParseBuffer &)"
+  "signature": "void parse(DialogInfoContents *, ParseBuffer)"
 - "name": "_ZN5resip9Transport10basicCheckERKNS_10SipMessageE"
   "params":
   - "name": ""
@@ -14,7 +14,7 @@
   - "name": ""
     "type": "resip::SipMessage *"
   "return_type": "bool"
-  "signature": "bool resip::Transport::basicCheck(const SipMessage &)"
+  "signature": "bool basicCheck(Transport *, const SipMessage)"
 - "name": "_ZN5resip18DialogInfoContents11parseDialogERNS_9XMLCursorE"
   "params":
   - "name": ""
@@ -22,7 +22,7 @@
   - "name": ""
     "type": "resip::XMLCursor *"
   "return_type": "void"
-  "signature": "void resip::DialogInfoContents::parseDialog(XMLCursor &)"
+  "signature": "void parseDialog(DialogInfoContents *, XMLCursor)"
 - "name": "_ZN5resip9Transport18makeFailedResponseERKNS_10SipMessageEiPKc"
   "params":
   - "name": ""
@@ -34,7 +34,7 @@
   - "name": ""
     "type": "char *"
   "return_type": "void"
-  "signature": "void resip::Transport::makeFailedResponse(const SipMessage &, int, const char *)"
+  "signature": "void makeFailedResponse(Transport *, const SipMessage, int, const char *)"
 - "name": "_ZN5resip6Helper16makeWWWChallengeERKNS_10SipMessageERKNS_4DataEbb"
   "params":
   - "name": ""
@@ -46,8 +46,8 @@
   - "name": ""
     "type": "bool"
   "return_type": "resip::SipMessage *"
-  "signature": "SipMessage * resip::Helper::makeWWWChallenge(const SipMessage &, const Data &, bool, bool)"
+  "signature": "SipMessage * makeWWWChallenge(const SipMessage, const Data, bool, bool)"
 "language": "c++"
 "project": "resiprocate"
-"target_name": "fuzzUtil"
-"target_path": "/src/resiprocate/rutil/test/fuzzUtil.cxx"
+"target_name": "fuzzer"
+"target_path": "/src/resiprocate/contrib/srtp/fuzzer/fuzzer.c"

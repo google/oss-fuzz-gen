@@ -24,7 +24,7 @@
   - "name": "source_length"
     "type": "size_t"
   - "name": "output"
-    "type": "bool "
+    "type": "char **"
   "return_type": "size_t"
   "signature": "size_t gumbo_caret_diagnostic_to_string(const GumboError *, const char *, size_t, char **)"
 - "name": "caret_diagnostic_to_string"

@@ -6,7 +6,7 @@
   - "name": "uncompressed"
     "type": "snappy::Sink *"
   "return_type": "bool"
-  "signature": "bool snappy::Uncompress(Source *, Sink *)"
+  "signature": "bool Uncompress(Source *, Sink *)"
 - "name": "_ZN6snappy26UncompressAsMuchAsPossibleEPNS_6SourceEPNS_4SinkE"
   "params":
   - "name": "compressed"
@@ -14,7 +14,7 @@
   - "name": "uncompressed"
     "type": "snappy::Sink *"
   "return_type": "size_t"
-  "signature": "size_t snappy::UncompressAsMuchAsPossible(Source *, Sink *)"
+  "signature": "size_t UncompressAsMuchAsPossible(Source *, Sink *)"
 - "name": "_ZN6snappyL18InternalUncompressINS_21SnappyScatteredWriterINS_19SnappySinkAllocatorEEEEEbPNS_6SourceEPT_"
   "params":
   - "name": "r"
@@ -22,7 +22,7 @@
   - "name": "writer"
     "type": "snappy::SnappyScatteredWriter *"
   "return_type": "bool"
-  "signature": "bool snappy::InternalUncompress<snappy::SnappyScatteredWriter<snappy::InternalUncompress<snappy::SnappyIOVecWriter>(Source *, SnappyIOVecWriter *)"
+  "signature": "bool InternalUncompress<snappy::SnappyIOVecWriter>(Source *, SnappyIOVecWriter *)"
 - "name": "_ZN6snappyL25InternalUncompressAllTagsINS_21SnappyScatteredWriterINS_19SnappySinkAllocatorEEEEEbPNS_18SnappyDecompressorEPT_jj"
   "params":
   - "name": "decompressor"
@@ -34,7 +34,7 @@
   - "name": "uncompressed_len"
     "type": "int"
   "return_type": "bool"
-  "signature": "bool snappy::InternalUncompressAllTags<snappy::SnappyScatteredWriter<snappy::InternalUncompressAllTags<snappy::SnappyArrayWriter>(SnappyDecompressor *, SnappyArrayWriter *, uint32_t, uint32_t)"
+  "signature": "bool InternalUncompressAllTags<snappy::SnappyArrayWriter>(SnappyDecompressor *, SnappyArrayWriter *, uint32_t, uint32_t)"
 - "name": "_ZN6snappy20RawUncompressToIOVecEPKcmPK5iovecm"
   "params":
   - "name": "compressed"
@@ -46,7 +46,7 @@
   - "name": "iov_cnt"
     "type": "size_t"
   "return_type": "bool"
-  "signature": "bool snappy::RawUncompressToIOVec(const char *, size_t, const iovec *, size_t)"
+  "signature": "bool RawUncompressToIOVec(const char *, size_t, const iovec *, size_t)"
 "language": "c++"
 "project": "snappy"
 "target_name": "snappy_compress_fuzzer"

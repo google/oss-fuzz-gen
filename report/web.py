@@ -21,7 +21,6 @@ import os
 import re
 import sys
 import urllib.parse
-from functools import partial
 from typing import List, Optional
 
 import yaml
@@ -51,26 +50,21 @@ class Benchmark:
   signature: str = ''
 
   def __post_init__(self):
-    self.signature = self.find_signature(self.id) or self.id
+    self.signature = self._find_signature() or self.id
 
-  @staticmethod
-  def find_signature(benchmark_id: str) -> str:
-    """
-    Finds the function signature by searching for its |benchmark_id| in
-    BENCHMARK_DIR.
-    """
+  def _find_signature(self) -> str:
+    """Finds the function signature by searching for its id in BENCHMARK_DIR."""
     if not BENCHMARK_DIR:
       return ''
 
     for project_yaml in os.listdir(BENCHMARK_DIR):
       yaml_project_name = project_yaml.removesuffix(".yaml")
       with open(os.path.join(BENCHMARK_DIR, project_yaml)) as project_yaml_file:
-        if yaml_project_name not in benchmark_id:
+        if yaml_project_name not in self.id:
           continue
         functions = yaml.safe_load(project_yaml_file).get('functions', [])
         for function in functions:
-          function_name = benchmark_id.removeprefix(
-              f'output-{yaml_project_name}-')
+          function_name = self.id.removeprefix(f'output-{yaml_project_name}-')
           if function.get('name', '').lower().startswith(function_name):
             return f'{yaml_project_name}-{function.get("signature", "")}'
 
@@ -79,38 +73,9 @@ class Benchmark:
 
 @dataclasses.dataclass
 class Sample:
-  """Result of a fuzz target sample of a benchmark."""
   id: str
   status: str
   result: Optional[evaluator.Result] = None
-
-  @property
-  def stacktrace(self) -> str:
-    if not self.result:
-      return ''
-    reproducer_link = self.result.reproducer_path
-    return f'{reproducer_link}/stacktrace'
-
-  @property
-  def target_binary(self) -> str:
-    if not self.result:
-      return ''
-    reproducer_link = self.result.reproducer_path
-    return f'{reproducer_link}/target_binary'
-
-  @property
-  def reproducer(self) -> str:
-    if not self.result:
-      return ''
-    reproducer_link = self.result.reproducer_path
-    return f'{reproducer_link}/artifacts'
-
-  @property
-  def run_log(self) -> str:
-    if not self.result:
-      return ''
-    reproducer_link = self.result.reproducer_path
-    return reproducer_link.removesuffix('reproducer') + 'run.log'
 
 
 @dataclasses.dataclass
@@ -211,17 +176,11 @@ def list_benchmarks() -> List[Benchmark]:
   return benchmarks
 
 
-def sort_benchmarks(benchmarks: List[Benchmark],
-                    sort_by: str = 'cov_diff') -> List[Benchmark]:
+def sort_benchmarks(benchmarks: List[Benchmark]) -> List[Benchmark]:
   """Keeps benchmarks with the highest line coverage diff on the top."""
-  sort_dict = {
-      'build': lambda b: b.result.build_success_rate,
-      'crash': lambda b: b.result.crash_rate,
-      'cov': lambda b: b.result.max_coverage,
-      'status': lambda b: b.status,
-      'cov_diff': lambda b: b.result.max_line_coverage_diff,
-  }
-  sorted_benchmarks = sorted(benchmarks, key=sort_dict[sort_by], reverse=True)
+  sorted_benchmarks = sorted(benchmarks,
+                             key=lambda b: b.result.max_line_coverage_diff,
+                             reverse=True)
   return sorted_benchmarks
 
 
@@ -305,20 +264,6 @@ def get_targets(benchmark: str, sample: str) -> list[Target]:
   return targets
 
 
-def get_final_target_code(benchmark: str, sample: str) -> str:
-  """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
-  targets_dir = os.path.join(RESULTS_DIR, benchmark, 'fixed_targets')
-
-  for name in sorted(os.listdir(targets_dir)):
-    path = os.path.join(targets_dir, name)
-    if os.path.isfile(path) and name.startswith(sample + '.'):
-      with open(path) as f:
-        code = f.read()
-        code = json.dumps(code)
-      return code
-  return ''
-
-
 @app.route('/')
 def index():
   return render_template('index.html',
@@ -333,67 +278,14 @@ def index_json():
                          model=model)
 
 
-@app.route('/sort/build')
-def index_sort_build():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='build'),
-                         model=model)
-
-
-@app.route('/sort/cov')
-def index_sort_cov():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='cov'),
-                         model=model)
-
-
-@app.route('/sort/cov_diff')
+@app.route('/sort')
 def index_sort():
   return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='cov_diff'),
+                         benchmarks=sort_benchmarks(list_benchmarks()),
                          model=model)
 
 
-@app.route('/sort/crash')
-def index_sort_crash():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='crash'),
-                         model=model)
-
-
-@app.route('/sort/status')
-def index_sort_stauts():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='status'),
-                         model=model)
-
-
-@app.route('/benchmark/<benchmark>/crash.json')
-def benchmark_json(benchmark):
-  """Generates a JSON containing crash reproducing info."""
-  if not _is_valid_benchmark_dir(benchmark):
-    # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
-    abort(404)
-
-  try:
-    return render_template('benchmark.json',
-                           benchmark=Benchmark.find_signature(benchmark),
-                           samples=get_samples(benchmark),
-                           get_benchmark_final_target_code=partial(
-                               get_final_target_code, benchmark),
-                           model=model)
-  except Exception as e:
-    logging.warning('Failed to render benchmark crash JSON: %s\n  %s',
-                    benchmark, e)
-    return ''
-
-
-@app.route('/benchmark/<benchmark>/index.html')
+@app.route('/benchmark/<benchmark>')
 def benchmark_page(benchmark):
   if _is_valid_benchmark_dir(benchmark):
     return render_template('benchmark.html',

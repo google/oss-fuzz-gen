@@ -48,7 +48,7 @@
   - "name": "errorCode"
     "type": "int *"
   "return_type": "int"
-  "signature": "int32_t icu_59::CaseMap::toUpper(const char *, uint32_t, const UChar *, int32_t, UChar *, int32_t, Edits *, UErrorCode &)"
+  "signature": "int32_t toUpper(const char *, uint32_t, const UChar *, int32_t, UChar *, int32_t, Edits *, UErrorCode)"
 - "name": "_ZN6icu_597CaseMap7toLowerEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode"
   "params":
   - "name": "locale"
@@ -68,7 +68,7 @@
   - "name": "errorCode"
     "type": "int *"
   "return_type": "int"
-  "signature": "int32_t icu_59::CaseMap::toLower(const char *, uint32_t, const UChar *, int32_t, UChar *, int32_t, Edits *, UErrorCode &)"
+  "signature": "int32_t toLower(const char *, uint32_t, const UChar *, int32_t, UChar *, int32_t, Edits *, UErrorCode)"
 - "name": "_ZL28_appendKeywordsToLanguageTagPKcPciaaP10UErrorCode"
   "params":
   - "name": "localeID"
@@ -87,5 +87,5 @@
   "signature": "int32_t _appendKeywordsToLanguageTag(const char *, char *, int32_t, UBool, UBool, UErrorCode *)"
 "language": "c++"
 "project": "libpsl"
-"target_name": "libpsl_idn_fuzzer"
+"target_name": "libpsl_fuzzer"
 "target_path": "/src/libpsl/fuzz/libpsl_fuzzer.c"
