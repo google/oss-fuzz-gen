@@ -23,4 +23,4 @@ BENCHMARK_SET=$1
 
 # Start the web app.
 (cd /fi/tools/web-fuzzing-introspection/app/ && \
-    python3 ./main.py)
+    /fi/tools/web-fuzzing-introspection/.venv/bin/python3 ./main.py)
