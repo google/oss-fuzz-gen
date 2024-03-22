@@ -68,7 +68,7 @@ RUN /venv/bin/pip install --disable-pip-version-check -r requirements.txt
 
 # Prepare local fuzz introspector.
 RUN apt install -y python3-virtualenv && \
-    clone https://github.com/ossf/fuzz-introspector /fi && \
+    git clone https://github.com/ossf/fuzz-introspector /fi && \
     cd /fi/tools/web-fuzzing-introspection && \
     python3 -m virtualenv .venv && \
     .venv/bin/pip install -r ./requirements.txt
