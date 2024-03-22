@@ -15,11 +15,17 @@
 
 BENCHMARK_SET=$1
 
+. /fi/tools/web-fuzzing-introspection/.venv/bin/activate
+
 # Create (small) DB.
 (cd /fi/tools/web-fuzzing-introspection/app/static/assets/db/ && \
     find "/experiment/benchmark-sets/$BENCHMARK_SET" -type f -name "*.yaml" \
     -exec basename {} .yaml \; | sort > must_include_small.config && \
     ./launch_minor_oss_fuzz.sh)
+
+/fi/tools/web-fuzzing-introspection/.venv/bin/deactivate
+
+touch /FI_DB_READY
 
 # Start the web app.
 (cd /fi/tools/web-fuzzing-introspection/app/ && \
