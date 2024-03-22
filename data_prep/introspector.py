@@ -488,7 +488,7 @@ def _parse_arguments() -> argparse.Namespace:
                       '--endpoint',
                       type=str,
                       default='https://introspector.oss-fuzz.com/api',
-                      help='Set Fuzz Introspecor endpoint to local.')
+                      help='Fuzz Introspecor API endpoint.')
 
   args = parser.parse_args()
   return args
