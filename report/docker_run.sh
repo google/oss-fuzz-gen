@@ -96,7 +96,8 @@ EXPERIMENT_NAME="${DATE:?}-${FREQUENCY_LABEL:?}-${BENCHMARK_SET:?}"
 # See upload_report.sh on how this is used.
 GCS_REPORT_DIR="${SUB_DIR:?}/${EXPERIMENT_NAME:?}"
 
-# TODO(Dongge): Run local FI.
+# Run local FI.
+bash report/launch_local_fi.sh "$BENCHMARK_SET"
 
 # Generate a report and upload it to GCS
 bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" "${BENCHMARK_SET:?}" "${MODEL:?}" &

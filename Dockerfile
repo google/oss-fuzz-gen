@@ -66,6 +66,12 @@ COPY . /experiment
 WORKDIR /experiment
 RUN /venv/bin/pip install --disable-pip-version-check -r requirements.txt
 
-# TODO(dongge): Prepare fuzz introspector.
+# Prepare local fuzz introspector.
+RUN apt install python3-virtualenv && \
+    clone https://github.com/ossf/fuzz-introspector /fi && \
+    cd /fi/tools/web-fuzzing-introspection && \
+    python3 -m virtualenv .venv && \
+    .venv/bin/pip install -r ./requirements.txt
+
 
 ENTRYPOINT ["./report/docker_run.sh"]
