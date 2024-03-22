@@ -96,6 +96,18 @@ EXPERIMENT_NAME="${DATE:?}-${FREQUENCY_LABEL:?}-${BENCHMARK_SET:?}"
 # See upload_report.sh on how this is used.
 GCS_REPORT_DIR="${SUB_DIR:?}/${EXPERIMENT_NAME:?}"
 
+if [ "$BENCHMARK_SET" = "all" ]; then
+    # Run local FI.
+    echo "Setting local Fuzz Introspector at 127.0.0.1"
+    bash report/launch_local_fi.sh "$BENCHMARK_SET" &
+    until [ -f /FI_DB_READY ]; do
+        sleep 60
+    done
+    echo "Local Fuzz Introspector is ready at 127.0.0.1"
+else
+    echo "Using public Fuzz Introspector at introspector.oss-fuzz.com"
+fi
+
 # Generate a report and upload it to GCS
 bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" "${BENCHMARK_SET:?}" "${MODEL:?}" &
 pid_report=$!
