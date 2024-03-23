@@ -145,7 +145,6 @@ def query_introspector_for_unreached_functions(project: str) -> list[dict]:
 
 def query_introspector_for_oracle_1(project: str) -> list[dict]:
   """Queries FuzzIntrospector for targets with interesting fuzz keywords."""
-  print("TESTING: %s" % (INTROSPECTOR_ORACLE_1))
   resp = _query_introspector(INTROSPECTOR_ORACLE_1, {'project': project})
   functions = _get_data(resp, 'functions', [])
   if functions:
