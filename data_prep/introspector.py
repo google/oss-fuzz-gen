@@ -40,6 +40,7 @@ MAX_RETRY = 5
 INTROSPECTOR_ENDPOINT = ''
 INTROSPECTOR_CFG = ''
 INTROSPECTOR_FUNCTION = ''
+INTROSPECTOR_ORACLE_1 = ''
 INTROSPECTOR_SOURCE = ''
 INTROSPECTOR_XREF = ''
 INTROSPECTOR_TYPE = ''
@@ -48,13 +49,14 @@ INTROSPECTOR_FUNC_SIG = ''
 
 def _set_introspector_endpoints(endpoint):
   """Sets URLs for Fuzz Introspector endpoints to local or remote endpoints."""
-  global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNCTION, INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_FUNC_SIG
+  global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNCTION, INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_FUNC_SIG, INTROSPECTOR_ORACLE_1
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info(f'Fuzz Introspector endpoint set to {INTROSPECTOR_ENDPOINT}')
 
   INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
   INTROSPECTOR_FUNCTION = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
+  INTROSPECTOR_ORACLE_1 = f'{INTROSPECTOR_ENDPOINT}/far-reach-low-cov-fuzz-keyword'
   INTROSPECTOR_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
   INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
   INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
@@ -135,6 +137,34 @@ def _get_data(resp: Optional[requests.Response], key: str,
 def query_introspector_for_unreached_functions(project: str) -> list[dict]:
   """Queries FuzzIntrospector API for unreached functions in |project|."""
   resp = _query_introspector(INTROSPECTOR_FUNCTION, {'project': project})
+  functions = _get_data(resp, 'functions', [])
+  if functions:
+    return functions
+  sys.exit(1)
+
+
+def query_introspector_for_oracle_1(project: str) -> list[dict]:
+  """Queries FuzzIntrospector for targets with interesting fuzz keywords."""
+  print("TESTING: %s" % (INTROSPECTOR_ORACLE_1))
+  resp = _query_introspector(INTROSPECTOR_ORACLE_1, {'project': project})
+  functions = _get_data(resp, 'functions', [])
+  if functions:
+    return functions
+  sys.exit(1)
+
+
+def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
+  """Queries introspector for target functions."""
+  oracle_dict = {
+      'far-reach-low-coverage': INTROSPECTOR_FUNCTION,
+      'low-cov-with-fuzz-keyword': INTROSPECTOR_ORACLE_1
+  }
+  target_api = oracle_dict.get(target_oracle, None)
+  if not target_api:
+    logging.error('No such oracle "%s"' % (target_oracle))
+    sys.exit(1)
+
+  resp = _query_introspector(target_api, {'project': project})
   functions = _get_data(resp, 'functions', [])
   if functions:
     return functions
@@ -308,9 +338,9 @@ def _group_function_params(param_types: list[str],
 
 
 def populate_benchmarks_using_introspector(project: str, language: str,
-                                           limit: int):
+                                           limit: int, target_oracle: str):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
-  functions = get_unreached_functions(project)
+  functions = query_introspector_for_targets(project, target_oracle)
   if not functions:
     logging.error('No unreached functions found')
     return []
@@ -489,6 +519,11 @@ def _parse_arguments() -> argparse.Namespace:
                       type=str,
                       default='https://introspector.oss-fuzz.com/api',
                       help='Fuzz Introspecor API endpoint.')
+  parser.add_argument('-t',
+                      '--target-oracle',
+                      type=str,
+                      default='far-reach-low-coverage',
+                      help='Oracle used to determine interesting targets.')
 
   args = parser.parse_args()
   return args
@@ -512,7 +547,8 @@ if __name__ == '__main__':
   cur_project_language = oss_fuzz_checkout.get_project_language(args.project)
   benchmarks = populate_benchmarks_using_introspector(args.project,
                                                       cur_project_language,
-                                                      args.max_functions)
+                                                      args.max_functions,
+                                                      args.target_oracle)
   if benchmarks:
     benchmarklib.Benchmark.to_yaml(benchmarks, args.out)
   else:
