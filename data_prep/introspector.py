@@ -429,7 +429,7 @@ def get_project_funcs(project_name: str) -> Dict[str, List[Dict]]:
     from FuzzIntrospector."""
   introspector_json_report = _extract_introspector_report(project_name)
   if introspector_json_report is None:
-    print('Error: No fuzz introspector report is found.')
+    logging.error('No fuzz introspector report is found.')
     return {}
 
   if introspector_json_report.get('analyses') is None:
