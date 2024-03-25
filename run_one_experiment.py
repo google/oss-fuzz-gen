@@ -79,8 +79,8 @@ def generate_targets(benchmark: Benchmark,
                      work_dirs: WorkDirs,
                      debug: bool = DEBUG) -> list[str]:
   """Generates fuzz target with LLM."""
-  print(f'Generating targets for {benchmark.project} '
-        f'{benchmark.function_signature} using {model.name}..')
+  logging.info('Generating targets using %s for %s: %s ...', model.name,
+               benchmark.project, benchmark.function_signature)
   model.generate_code(prompt,
                       response_dir=work_dirs.raw_targets,
                       log_output=debug)
@@ -100,9 +100,9 @@ def generate_targets(benchmark: Benchmark,
 
   if generated_targets:
     targets_relpath = map(os.path.relpath, generated_targets)
-    print('Generated:\n', '\n '.join(targets_relpath))
+    logging.info('Generated:\n  %s', '\n '.join(targets_relpath))
   else:
-    print(f'Failed to generate targets: {generated_targets}')
+    logging.info('Failed to generate targets: %s', generated_targets)
   return generated_targets
 
 
@@ -217,6 +217,8 @@ def run(benchmark: Benchmark,
   if example_pair is None:
     example_pair = prompt_builder.EXAMPLES
 
+  logging.info('Staring experiment for %s: %s', benchmark.project,
+               benchmark.function_signature)
   if manual_fix:
     generated_targets = [
         os.path.join(work_dirs.fixed_targets, f)
@@ -225,21 +227,30 @@ def run(benchmark: Benchmark,
     ]
   else:
     if benchmark.use_project_examples:
+      logging.info('Retrieving fuzz target examples for %s: %s',
+                   benchmark.project, benchmark.function_signature)
       project_examples = project_targets.generate_data(
           benchmark.project, cloud_experiment_bucket=cloud_experiment_bucket)
     else:
+      logging.info('Not using fuzz target examples for %s: %s',
+                   benchmark.project, benchmark.function_signature)
       project_examples = []
 
     context_info = None
 
     if use_context:
+      logging.info('Retrieving context for %s: %s', benchmark.project,
+                   benchmark.function_signature)
       retriever = ContextRetriever(benchmark)
       try:
         retriever.retrieve_asts()
       # GSutil fails on the same project immediately after
       # it succeeds a batch copy.
       except subprocess.CalledProcessError:
-        pass
+        logging.info('Failed to retrieve context for %s: %s', benchmark.project,
+                     benchmark.function_signature)
+      logging.info('Retrieved context for %s: %s', benchmark.project,
+                   benchmark.function_signature)
       retriever.generate_lookups()
       context_header = retriever.get_header()
       print(context_header)
@@ -247,6 +258,8 @@ def run(benchmark: Benchmark,
       context_info = (context_header, context_types)
       retriever.cleanup_asts()
 
+    logging.info('Generating prompt for %s: %s', benchmark.project,
+                 benchmark.function_signature)
     builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
     prompt = builder.build(benchmark.function_signature,
                            benchmark.file_type,
@@ -254,6 +267,8 @@ def run(benchmark: Benchmark,
                            project_examples,
                            project_context_content=context_info)
     prompt.save(work_dirs.prompt)
+    logging.info('Generated prompt for %s: %s', benchmark.project,
+                 benchmark.function_signature)
     generated_targets = generate_targets(benchmark,
                                          model,
                                          prompt,

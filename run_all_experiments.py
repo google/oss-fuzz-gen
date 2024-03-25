@@ -20,6 +20,7 @@ import os
 import sys
 import time
 import traceback
+from datetime import datetime
 from multiprocessing import Pool
 
 import run_one_experiment
@@ -219,7 +220,7 @@ def main():
   experiment_configs = get_experiment_configs(args)
   experiment_results = []
 
-  print(f'Running {NUM_EXP} experiment(s) in parallel.')
+  logging.info('Running %d experiment(s) in parallel.', NUM_EXP)
   if NUM_EXP == 1:
     for config in experiment_configs:
       result = run_experiments(*config)
@@ -228,13 +229,22 @@ def main():
   else:
     experiment_tasks = []
     with Pool(NUM_EXP) as p:
-      for config in experiment_configs:
+      for i, config in enumerate(experiment_configs):
+        logging.info('Creating experiment instance %d at %s with config: %s', i,
+                     datetime.now().strftime('%Y-%m-%d %H:%M:%S'), config)
         experiment_task = p.apply_async(run_experiments,
                                         config,
                                         callback=_print_experiment_result)
+        logging.info('Created experiment instance %d at %s: %s', i,
+                     datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                     experiment_task)
         experiment_tasks.append(experiment_task)
         time.sleep(args.delay)
-      experiment_results = [task.get() for task in experiment_tasks]
+      for experiment_task in experiment_tasks:
+        result = experiment_task.get()
+        experiment_results.append(result)
+        logging.info('Finished experiment instance at %s: %s',
+                     datetime.now().strftime('%Y-%m-%d %H:%M:%S'), result)
 
   _print_experiment_results(experiment_results)
 
