@@ -39,8 +39,8 @@ TIMEOUT = 10
 MAX_RETRY = 5
 INTROSPECTOR_ENDPOINT = ''
 INTROSPECTOR_CFG = ''
-INTROSPECTOR_FUNCTION = ''
-INTROSPECTOR_ORACLE_1 = ''
+INTROSPECTOR_ORACLE_FAR_REACH = ''
+INTROSPECTOR_ORACLE_KEYWORD = ''
 INTROSPECTOR_SOURCE = ''
 INTROSPECTOR_XREF = ''
 INTROSPECTOR_TYPE = ''
@@ -49,14 +49,16 @@ INTROSPECTOR_FUNC_SIG = ''
 
 def _set_introspector_endpoints(endpoint):
   """Sets URLs for Fuzz Introspector endpoints to local or remote endpoints."""
-  global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNCTION, INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_FUNC_SIG, INTROSPECTOR_ORACLE_1
+  global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNC_SIG, \
+         INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE,      \
+         INTROSPECTOR_ORACLE_FAR_REACH, INTROSPECTOR_ORACLE_KEYWORD
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info(f'Fuzz Introspector endpoint set to {INTROSPECTOR_ENDPOINT}')
 
   INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
-  INTROSPECTOR_FUNCTION = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
-  INTROSPECTOR_ORACLE_1 = f'{INTROSPECTOR_ENDPOINT}/far-reach-low-cov-fuzz-keyword'
+  INTROSPECTOR_ORACLE_FAR_REACH = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
+  INTROSPECTOR_ORACLE_KEYWORD = f'{INTROSPECTOR_ENDPOINT}/far-reach-low-cov-fuzz-keyword'
   INTROSPECTOR_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
   INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
   INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
@@ -134,37 +136,31 @@ def _get_data(resp: Optional[requests.Response], key: str,
   return default_value
 
 
-def query_introspector_for_unreached_functions(project: str) -> list[dict]:
-  """Queries FuzzIntrospector API for unreached functions in |project|."""
-  resp = _query_introspector(INTROSPECTOR_FUNCTION, {'project': project})
+def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
+  """Queries an fuzz target oracle API from Fuzz Introspector."""
+  resp = _query_introspector(oracle_api, {'project': project})
   functions = _get_data(resp, 'functions', [])
   if functions:
     return functions
   sys.exit(1)
 
 
-def query_introspector_for_oracle_1(project: str) -> list[dict]:
+def query_introspector_for_keyword_targets(project: str) -> list[dict]:
   """Queries FuzzIntrospector for targets with interesting fuzz keywords."""
-  resp = _query_introspector(INTROSPECTOR_ORACLE_1, {'project': project})
-  functions = _get_data(resp, 'functions', [])
-  if functions:
-    return functions
-  sys.exit(1)
+  return query_introspector_oracle(project, INTROSPECTOR_ORACLE_KEYWORD)
 
 
 def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
   """Queries introspector for target functions."""
   oracle_dict = {
-      'far-reach-low-coverage': INTROSPECTOR_FUNCTION,
-      'low-cov-with-fuzz-keyword': INTROSPECTOR_ORACLE_1
+      'far-reach-low-coverage': get_unreached_functions,
+      'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets
   }
-  target_api = oracle_dict.get(target_oracle, None)
-  if not target_api:
+  query_func = oracle_dict.get(target_oracle, None)
+  if not query_func:
     logging.error('No such oracle "%s"' % (target_oracle))
     sys.exit(1)
-
-  resp = _query_introspector(target_api, {'project': project})
-  functions = _get_data(resp, 'functions', [])
+  functions = query_func(project)
   if functions:
     return functions
   sys.exit(1)
@@ -224,7 +220,7 @@ def query_introspector_function_signature(project: str,
 
 
 def get_unreached_functions(project):
-  functions = query_introspector_for_unreached_functions(project)
+  functions = query_introspector_oracle(project, INTROSPECTOR_ORACLE_FAR_REACH)
   functions = [f for f in functions if not f['reached_by_fuzzers']]
   return functions
 
