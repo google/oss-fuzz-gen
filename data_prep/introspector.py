@@ -137,7 +137,7 @@ def _get_data(resp: Optional[requests.Response], key: str,
 
 
 def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
-  """Queries an fuzz target oracle API from Fuzz Introspector."""
+  """Queries a fuzz target oracle API from Fuzz Introspector."""
   resp = _query_introspector(oracle_api, {'project': project})
   functions = _get_data(resp, 'functions', [])
   if functions:
