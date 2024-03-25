@@ -37,6 +37,7 @@ T = TypeVar('T', str, list, dict)  # Generic type.
 
 TIMEOUT = 10
 MAX_RETRY = 5
+DEFAULT_INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
 INTROSPECTOR_ENDPOINT = ''
 INTROSPECTOR_CFG = ''
 INTROSPECTOR_FUNCTION = ''
@@ -46,12 +47,14 @@ INTROSPECTOR_TYPE = ''
 INTROSPECTOR_FUNC_SIG = ''
 
 
-def _set_introspector_endpoints(endpoint):
+def set_introspector_endpoints(endpoint):
   """Sets URLs for Fuzz Introspector endpoints to local or remote endpoints."""
-  global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNCTION, INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_FUNC_SIG
+  global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNCTION, \
+      INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE, \
+      INTROSPECTOR_FUNC_SIG
 
   INTROSPECTOR_ENDPOINT = endpoint
-  logging.info(f'Fuzz Introspector endpoint set to {INTROSPECTOR_ENDPOINT}')
+  logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
 
   INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
   INTROSPECTOR_FUNCTION = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
@@ -487,12 +490,14 @@ def _parse_arguments() -> argparse.Namespace:
   parser.add_argument('-e',
                       '--endpoint',
                       type=str,
-                      default='https://introspector.oss-fuzz.com/api',
+                      default=DEFAULT_INTROSPECTOR_ENDPOINT,
                       help='Fuzz Introspecor API endpoint.')
 
-  args = parser.parse_args()
-  return args
+  return parser.parse_args()
 
+
+# Set default endpoint.
+set_introspector_endpoints(DEFAULT_INTROSPECTOR_ENDPOINT)
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.INFO)
@@ -501,7 +506,7 @@ if __name__ == '__main__':
   if args.out:
     os.makedirs(args.out, exist_ok=True)
 
-  _set_introspector_endpoints(args.endpoint)
+  set_introspector_endpoints(args.endpoint)
 
   try:
     oss_fuzz_checkout.clone_oss_fuzz()
