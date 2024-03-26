@@ -37,6 +37,7 @@ from llm_toolkit import prompts
 
 # Model hyper-parameters.
 MAX_TOKENS: int = 2000
+NUM_REPEATS: int = 1
 NUM_SAMPLES: int = 1
 TEMPERATURE: float = 0.4
 
@@ -55,6 +56,7 @@ class LLM:
       self,
       ai_binary: str,
       max_tokens: int = MAX_TOKENS,
+      num_repeats: int = NUM_REPEATS,
       num_samples: int = NUM_SAMPLES,
       temperature: float = TEMPERATURE,
   ):
@@ -62,6 +64,7 @@ class LLM:
 
     # Model parameters.
     self.max_tokens = max_tokens
+    self.num_repeats = num_repeats
     self.num_samples = num_samples
     self.temperature = temperature
 
@@ -77,12 +80,13 @@ class LLM:
       ai_binary: str,
       name: str,
       max_tokens: int = MAX_TOKENS,
+      num_repeats: int = NUM_REPEATS,
       num_samples: int = NUM_SAMPLES,
       temperature: float = TEMPERATURE,
   ):
     """Prepares the LLM for fuzz target generation."""
     if ai_binary:
-      return AIBinaryModel(name, ai_binary, max_tokens, num_samples,
+      return AIBinaryModel(name, ai_binary, max_tokens, num_repeats, num_samples,
                            temperature)
 
     for subcls in cls.all_llm_subclasses():
@@ -90,6 +94,7 @@ class LLM:
         return subcls(
             ai_binary,
             max_tokens,
+            num_repeats,
             num_samples,
             temperature,
         )
@@ -198,17 +203,20 @@ class GPT(LLM):
       print(f'OpenAI does not use local AI binary: {self.ai_binary}')
     openai.api_key = os.getenv('OPENAI_API_KEY')
 
-    completion = self.with_retry_on_error(
-        lambda: openai.ChatCompletion.create(messages=prompt.get(),
+    for repeat_index in range(self.num_repeats):
+      completion = self.with_retry_on_error(
+          lambda: openai.ChatCompletion.create(messages=prompt.get(),
                                              model=self.name,
                                              n=self.num_samples,
                                              temperature=self.temperature),
-        openai.OpenAIError)
-    if log_output:
-      print(completion)
-    for index, choice in enumerate(completion.choices):  # type: ignore
-      content = choice.message['content']
-      self._save_output(index, content, response_dir)
+          openai.OpenAIError)
+      if log_output:
+        print(completion)
+      for n_index, choice in enumerate(completion.choices):  # type: ignore
+        # calculate the index considering the repeat
+        index = repeat_index * self.num_samples + n_index
+        content = choice.message['content']
+        self._save_output(index, content, response_dir)
 
 
 class GPT4(GPT):
@@ -243,32 +251,35 @@ class GoogleModel(LLM):
       f.write(prompt.get())
       prompt_path = f.name
 
-    try:
-      command = [
-          self.ai_binary,
-          f'-model={self.name}',
-          f'-prompt={prompt_path}',
-          f'-response={response_dir}',
-          f'-max-tokens={self.max_tokens}',
-          f'-expected-samples={self.num_samples}',
-          f'-temperature={self.temperature}',
-          f'-log-output={log_output}',
-      ]
-
-      proc = subprocess.Popen(
-          command,
-          stdout=subprocess.PIPE,
-          stderr=subprocess.PIPE,
-          stdin=subprocess.DEVNULL,
-      )
-      stdout, stderr = proc.communicate()
-
-      if proc.returncode != 0:
-        print(f'Failed to generate targets with prompt {prompt.get()}')
-        print(f'stdout: {stdout}')
-        print(f'stderr: {stderr}')
-    finally:
-      os.unlink(prompt_path)
+    # WARN: Not sure if the output files will be overwritten during the repeat
+    # Fix this if needed.
+    for _ in range(self.num_repeats):
+      try:
+        command = [
+            self.ai_binary,
+            f'-model={self.name}',
+            f'-prompt={prompt_path}',
+            f'-response={response_dir}',
+            f'-max-tokens={self.max_tokens}',
+            f'-expected-samples={self.num_samples}',
+            f'-temperature={self.temperature}',
+            f'-log-output={log_output}',
+        ]
+  
+        proc = subprocess.Popen(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            stdin=subprocess.DEVNULL,
+        )
+        stdout, stderr = proc.communicate()
+  
+        if proc.returncode != 0:
+          print(f'Failed to generate targets with prompt {prompt.get()}')
+          print(f'stdout: {stdout}')
+          print(f'stderr: {stderr}')
+      finally:
+        os.unlink(prompt_path)
 
 
 class VertexAIModel(GoogleModel):
@@ -306,11 +317,13 @@ class VertexAIModel(GoogleModel):
         'max_output_tokens': self._max_output_tokens,
     }
 
-    for index in range(self.num_samples):
-      response = self.with_retry_on_error(
-          lambda: self.do_generate(model, prompt.get(), parameters),
-          GoogleAPICallError)
-      self._save_output(index, response, response_dir)
+    for repeat_index in range(self.num_repeats):
+      for sample_index in range(self.num_samples):
+        index = repeat_index * self.num_samples + sample_index
+        response = self.with_retry_on_error(
+            lambda: self.do_generate(model, prompt.get(), parameters),
+            GoogleAPICallError)
+        self._save_output(index, response, response_dir)
 
 
 class GeminiModel(VertexAIModel):
