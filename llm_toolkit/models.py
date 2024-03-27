@@ -86,8 +86,8 @@ class LLM:
   ):
     """Prepares the LLM for fuzz target generation."""
     if ai_binary:
-      return AIBinaryModel(name, ai_binary, max_tokens, num_repeats, num_samples,
-                           temperature)
+      return AIBinaryModel(name, ai_binary, max_tokens, num_repeats,
+                           num_samples, temperature)
 
     for subcls in cls.all_llm_subclasses():
       if getattr(subcls, 'name', None) == name:
@@ -206,9 +206,9 @@ class GPT(LLM):
     for repeat_index in range(self.num_repeats):
       completion = self.with_retry_on_error(
           lambda: openai.ChatCompletion.create(messages=prompt.get(),
-                                             model=self.name,
-                                             n=self.num_samples,
-                                             temperature=self.temperature),
+                                               model=self.name,
+                                               n=self.num_samples,
+                                               temperature=self.temperature),
           openai.OpenAIError)
       if log_output:
         print(completion)
