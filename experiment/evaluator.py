@@ -295,7 +295,7 @@ class Evaluator:
     initcov, donecov, lastround = self._parse_fuzz_cov_info_from_libfuzzer_logs(
         lines)
 
-    # NOTE: False positive crash will not be counted as crash.
+    # NOTE: Crashes from incorrect drivers will not be counted.
 
     if crashes:
       # FP case 1: driver crashes at init or first few rounds.
