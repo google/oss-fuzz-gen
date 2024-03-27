@@ -42,6 +42,7 @@ OSS_FUZZ_COVERAGE_BUCKET = 'oss-fuzz-coverage'
 
 LLVM_SOURCE_PATH_PREFIX = '/src/llvm-project/compiler-rt'
 
+
 @dataclasses.dataclass
 class Result:
   """Evaluation result."""
@@ -201,12 +202,12 @@ class Evaluator:
       return None
 
   def _parse_stacks_from_libfuzzer_logs(self, lines) -> list[str]:
+    """Parse stack traces from libFuzzer logs."""
     # there may have more than 1 thread stack in a log
     stacks = []
 
     stack = []
-    for i in range(len(lines)):
-      raw_line = lines[i]
+    for raw_line in lines:
       line = raw_line.strip()
 
       # stacks are continuous lines starting with '    #'
@@ -224,27 +225,27 @@ class Evaluator:
 
     return stacks
 
-  def _parse_fuzz_cov_info_from_libfuzzer_logs(self, lines) -> tuple[Optional[int], Optional[int], Optional[int]]:
-    initline, doneline, lastround = None, None, None
+  def _parse_fuzz_cov_info_from_libfuzzer_logs(
+      self, lines) -> tuple[Optional[int], Optional[int], Optional[int]]:
+    """Parse cov of INITED & DONE, and round number from libFuzzer logs."""
+    initcov, donecov, lastround = None, None, None
 
     for line in lines:
       if line.startswith('#'):
         # parse line starting with #int to get the round number
-        roundstr = None
-        for idx in range(len(line)):
-          if line[idx].isspace():
-            roundstr = line[1:idx]
+        roundno = None
+        for ch in line:
+          if ch.isspace():
+            roundstr = line[1:line.index(ch)]
+            roundno = int(roundstr) if roundstr.isdigit() else None
             break
 
-        if roundstr is not None and roundstr.isdigit():
-          lastround = int(roundstr)
+        if roundno is not None:
+          lastround = roundno
           if 'INITED' in line:
-            initline = line
+            initcov = int(line.split('cov: ')[1].split(' ft:')[0])
           elif 'DONE' in line:
-            doneline = line
-
-    initcov = int(initline.split('cov: ')[1].split(' ft:')[0]) if initline != None else None
-    donecov = int(doneline.split('cov: ')[1].split(' ft:')[0]) if doneline != None else None
+            donecov = int(line.split('cov: ')[1].split(' ft:')[0])
 
     return initcov, donecov, lastround
 
@@ -257,15 +258,16 @@ class Evaluator:
       return False
     return True
 
-  def _parse_libfuzzer_logs(self, log_handle) -> tuple[int, int, bool, bool, str]:
+  def _parse_libfuzzer_logs(self,
+                            log_handle) -> tuple[int, int, bool, bool, str]:
     """Parse libFuzzer logs."""
     lines = None
     try:
       fuzzlog = log_handle.read(-1)
-      # some driver crashes can mess up the libfuzzer output and cause UnicodeDecodeError
+      # some driver crashes can mess up the libfuzzer output and raise exp
       fuzzlog = fuzzlog.decode('utf-8', errors='ignore')
       lines = fuzzlog.split('\n')
-    except MemoryError as e:
+    except MemoryError as _:
       # some logs from abnormal drivers are too large to be parsed
       return 0, 0, False, True, 'LOG_MESS_UP'
 
@@ -289,13 +291,14 @@ class Evaluator:
         crashes = True
         continue
 
-    initcov, donecov, lastround = self._parse_fuzz_cov_info_from_libfuzzer_logs(lines)
+    initcov, donecov, lastround = self._parse_fuzz_cov_info_from_libfuzzer_logs(
+        lines)
 
     # NOTE: false positive crash will not be counted as crash
 
     if crashes:
       # FP case 1: driver crashes at init or first few rounds
-      if lastround == None or lastround <= 3:
+      if lastround is None or lastround <= 3:
         # no cov line has been identified or only INITED round has been passed
         # this is very likely the false positive cases
         return cov_pcs, total_pcs, False, True, 'FP_CRASH_NEAR_INIT'
@@ -310,7 +313,7 @@ class Evaluator:
 
     else:
       # Another error driver case: no cov increasement
-      if initcov != None and donecov != None:
+      if initcov is not None and donecov is not None:
         if initcov == donecov:
           # no coverage increase for this driver
           return cov_pcs, total_pcs, False, True, 'NO_COV_INCREASE'
@@ -369,19 +372,22 @@ class Evaluator:
 
     # Parse logs to get raw pc coverage and whether the target crashed.
     with open(self.work_dirs.run_logs_target(generated_target_name), 'rb') as f:
-      cov_pcs, total_pcs, crashes, is_driver_fuzz_err, driver_fuzz_err = self._parse_libfuzzer_logs(f)
+      cov_pcs, total_pcs, crashes, is_driver_fuzz_err,\
+                  driver_fuzz_err = self._parse_libfuzzer_logs(f)
 
     if (not run_result or run_result.coverage_summary is None or
         run_result.coverage is None):
       logger.log(f'Warning: No run_result in {generated_oss_fuzz_project}.')
-      return logger.return_result(Result(True, crashes, 0.0, 0.0,
-              '', '', is_driver_fuzz_err, driver_fuzz_err))
+      return logger.return_result(
+          Result(True, crashes, 0.0, 0.0, '', '', is_driver_fuzz_err,
+                 driver_fuzz_err))
 
     if is_driver_fuzz_err:
       logger.log(f'Warning: {driver_fuzz_err} in {generated_oss_fuzz_project}.')
-      return logger.return_result(Result(True, crashes, 0.0, 0.0,
-              run_result.coverage_report_path, run_result.reproducer_path,
-              is_driver_fuzz_err, driver_fuzz_err))
+      return logger.return_result(
+          Result(True, crashes, 0.0, 0.0, run_result.coverage_report_path,
+                 run_result.reproducer_path, is_driver_fuzz_err,
+                 driver_fuzz_err))
 
     # Get line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
