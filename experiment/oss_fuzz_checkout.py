@@ -25,7 +25,7 @@ import tempfile
 import yaml
 
 BUILD_DIR: str = 'build'
-GLOBAL_TEMP_DIR: tempfile.mkdtemp
+GLOBAL_TEMP_DIR: str = ''
 # Assume OSS-Fuzz is at repo root dir by default.
 # This will change if temp_dir is used.
 OSS_FUZZ_DIR: str = os.path.join(
