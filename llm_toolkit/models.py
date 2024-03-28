@@ -37,7 +37,6 @@ from llm_toolkit import prompts
 
 # Model hyper-parameters.
 MAX_TOKENS: int = 2000
-NUM_REPEATS: int = 1
 NUM_SAMPLES: int = 1
 TEMPERATURE: float = 0.4
 
@@ -55,16 +54,16 @@ class LLM:
   def __init__(
       self,
       ai_binary: str,
+      num_repeats: int,
       max_tokens: int = MAX_TOKENS,
-      num_repeats: int = NUM_REPEATS,
       num_samples: int = NUM_SAMPLES,
       temperature: float = TEMPERATURE,
   ):
     self.ai_binary = ai_binary
 
     # Model parameters.
-    self.max_tokens = max_tokens
     self.num_repeats = num_repeats
+    self.max_tokens = max_tokens
     self.num_samples = num_samples
     self.temperature = temperature
 
@@ -79,22 +78,22 @@ class LLM:
       cls,
       ai_binary: str,
       name: str,
+      num_repeats: int,
       max_tokens: int = MAX_TOKENS,
-      num_repeats: int = NUM_REPEATS,
       num_samples: int = NUM_SAMPLES,
       temperature: float = TEMPERATURE,
   ):
     """Prepares the LLM for fuzz target generation."""
     if ai_binary:
-      return AIBinaryModel(name, ai_binary, max_tokens, num_repeats,
+      return AIBinaryModel(name, ai_binary, num_repeats, max_tokens,
                            num_samples, temperature)
 
     for subcls in cls.all_llm_subclasses():
       if getattr(subcls, 'name', None) == name:
         return subcls(
             ai_binary,
-            max_tokens,
             num_repeats,
+            max_tokens,
             num_samples,
             temperature,
         )

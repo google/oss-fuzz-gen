@@ -50,12 +50,14 @@ TEMPERATURE: float = 0.4
 
 # Query Strategy Parameters: Number of repeated queries for one prompt.
 # - [1]* found repeat is an effective strategy to improve the performance of
-#   LLM since LLM-based generation is a search process with randomness.
+#     LLM since LLM-based generation is a search process with randomness.
 # - Requery ensures repeat-k results instead of top-k results for all LLMs.
 # - A suggested usage is only set NUM_REPEATS while keep NUM_SAMPLES as 1.
-#
-# Link of [1]* will be updated later
-NUM_REPEATS = 6
+# - The default value is 3, but it is recommended to a larger value such as
+#     6 or 10 for higher effectiveness if you have sufficient token quota
+#     since the LLM-based generation is a search process with randomness.
+# - Link of [1]* will be updated later
+NUM_REPEATS = 3
 
 RESULTS_DIR = './results'
 

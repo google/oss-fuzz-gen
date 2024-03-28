@@ -84,8 +84,8 @@ def run_experiments(benchmark: benchmarklib.Benchmark,
     model = models.LLM.setup(
         ai_binary=args.ai_binary,
         name=args.model,
-        max_tokens=MAX_TOKENS,
         num_repeats=args.num_repeats,
+        max_tokens=MAX_TOKENS,
         num_samples=args.num_samples,
         temperature=args.temperature,
     )
