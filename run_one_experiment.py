@@ -54,8 +54,7 @@ TEMPERATURE: float = 0.4
 # - Requery ensures repeat-k results instead of top-k results for all LLMs.
 # - A suggested usage is only set NUM_REPEATS while keep NUM_SAMPLES as 1.
 # - The default value is 3, but it is recommended to a larger value such as
-#     6 or 10 for higher effectiveness if you have sufficient token quota
-#     since the LLM-based generation is a search process with randomness.
+#     6 or 10 for higher effectiveness if you have sufficient token quota.
 # - Link of [1]* will be updated later
 NUM_REPEATS = 3
 
