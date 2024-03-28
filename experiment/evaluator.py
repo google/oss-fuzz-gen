@@ -32,12 +32,19 @@ from llm_toolkit import code_fixer
 LLM_FIX_LIMIT = 5
 
 LIBFUZZER_MODULES_LOADED_REGEX = re.compile(
-    br'^INFO:\s+Loaded\s+\d+\s+(modules|PC tables)\s+\((\d+)\s+.*\).*')
-LIBFUZZER_COV_REGEX = re.compile(br'.*cov: (\d+) ft:')
-LIBFUZZER_CRASH_TYPE_REGEX = re.compile(br'.*Test unit written to.*')
-CRASH_EXCLUSIONS = re.compile(br'.*(slow-unit-|timeout-|leak-|oom-).*')
+    r'^INFO:\s+Loaded\s+\d+\s+(modules|PC tables)\s+\((\d+)\s+.*\).*')
+LIBFUZZER_COV_REGEX = re.compile(r'.*cov: (\d+) ft:')
+LIBFUZZER_CRASH_TYPE_REGEX = re.compile(r'.*Test unit written to.*')
+LIBFUZZER_COV_LINE_PREFIX = re.compile(r'^#(\d+)')
+LIBFUZZER_STACK_FRAME_LINE_PREFIX = re.compile(r'^\s+#\d+')
+CRASH_EXCLUSIONS = re.compile(r'.*(slow-unit-|timeout-|leak-|oom-).*')
+CRASH_STACK_WITH_SOURCE_INFO = re.compile(r'in.*:\d+:\d+$')
 
 OSS_FUZZ_COVERAGE_BUCKET = 'oss-fuzz-coverage'
+
+LLVM_SOURCE_PATH_PREFIX = '/src/llvm-project/compiler-rt'
+
+EARLY_FUZZING_ROUND_THRESHOLD = 3
 
 
 @dataclasses.dataclass
@@ -49,6 +56,9 @@ class Result:
   line_coverage_diff: float = 0.0
   coverage_report_path: str = ''
   reproducer_path: str = ''
+  # produces false positive or no cov increase at all
+  is_driver_fuzz_err: bool = False
+  driver_fuzz_err: str = ''
 
   def dict(self):
     return dataclasses.asdict(self)
@@ -195,13 +205,78 @@ class Evaluator:
       traceback.print_exc()
       return None
 
-  def _parse_libfuzzer_logs(self, log_handle) -> tuple[int, int, bool]:
-    """Parse libFuzzer logs."""
+  def _parse_stacks_from_libfuzzer_logs(self, lines: list[str]) -> list[str]:
+    """Parse stack traces from libFuzzer logs."""
+    # There can have over one thread stack in a log.
+    stacks = []
+
+    # A stack -> a sequence of stack frame lines.
+    stack, stack_parsing = [], False
+    for line in lines:
+      is_stack_frame_line = LIBFUZZER_STACK_FRAME_LINE_PREFIX.match(
+          line) is not None
+      if (not stack_parsing) and is_stack_frame_line:
+        # First line.
+        stack_parsing = True
+        stack = [line.strip()]
+      elif stack_parsing and is_stack_frame_line:
+        # Middle line(s).
+        stack.append(line.strip())
+      elif stack_parsing and (not is_stack_frame_line):
+        # Last line.
+        stack_parsing = False
+        stacks.append(stack)
+
+    # Last stack.
+    if stack_parsing:
+      stacks.append(stack)
+
+    return stacks
+
+  def _parse_fuzz_cov_info_from_libfuzzer_logs(
+      self,
+      lines: list[str]) -> tuple[Optional[int], Optional[int], Optional[int]]:
+    """Parses cov of INITED & DONE, and round number from libFuzzer logs."""
+    initcov, donecov, lastround = None, None, None
+
+    for line in lines:
+      if line.startswith('#'):
+        # Parses cov line to get the round number.
+        match = LIBFUZZER_COV_LINE_PREFIX.match(line)
+        roundno = int(match.group(1)) if match else None
+
+        if roundno is not None:
+          lastround = roundno
+          if 'INITED' in line:
+            initcov = int(line.split('cov: ')[1].split(' ft:')[0])
+          elif 'DONE' in line:
+            donecov = int(line.split('cov: ')[1].split(' ft:')[0])
+
+    return initcov, donecov, lastround
+
+  def _stack_func_is_of_testing_project(self, stack_frame: str) -> bool:
+    return bool(CRASH_STACK_WITH_SOURCE_INFO.match(stack_frame)) and (
+        LLVM_SOURCE_PATH_PREFIX not in stack_frame)
+
+  def _parse_libfuzzer_logs(
+      self, log_handle, logger: _Logger) -> tuple[int, int, bool, bool, str]:
+    """Parses libFuzzer logs."""
+    lines = None
+    try:
+      fuzzlog = log_handle.read(-1)
+      # Some crashes can mess up the libfuzzer output and raise decode error.
+      fuzzlog = fuzzlog.decode('utf-8', errors='ignore')
+      lines = fuzzlog.split('\n')
+    except MemoryError as e:
+      # Some logs from abnormal drivers are too large to be parsed.
+      logger.log('%s is too large to parse: %s', log_handle.name, e)
+      return 0, 0, False, True, 'LOG_MESS_UP'
+
     cov_pcs = 0
     total_pcs = 0
     crashes = False
 
-    for line in log_handle:
+    for line in lines:
       m = LIBFUZZER_MODULES_LOADED_REGEX.match(line)
       if m:
         total_pcs = int(m.group(2))
@@ -217,7 +292,33 @@ class Evaluator:
         crashes = True
         continue
 
-    return cov_pcs, total_pcs, crashes
+    initcov, donecov, lastround = self._parse_fuzz_cov_info_from_libfuzzer_logs(
+        lines)
+
+    # NOTE: Crashes from incorrect drivers will not be counted.
+
+    if crashes:
+      # FP case 1: driver crashes at init or first few rounds.
+      if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
+        # No cov line has been identified or only INITED round has been passed.
+        # This is very likely the false positive cases.
+        return cov_pcs, total_pcs, True, True, 'FP_CRASH_NEAR_INIT'
+
+      # FP case 2: 1st func of the 1st thread stack is in driver.
+      crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
+      for stack_frame in crash_stacks[:1]:
+        if self._stack_func_is_of_testing_project(stack_frame):
+          if 'LLVMFuzzerTestOneInput' in stack_frame:
+            return cov_pcs, total_pcs, True, True, 'FP_CRASH_IN_DRIVER'
+          break
+
+    else:
+      # Another error driver case: no cov increase.
+      if initcov is not None and donecov is not None:
+        if initcov == donecov:
+          return cov_pcs, total_pcs, True, True, 'NO_COV_INCREASE'
+
+    return cov_pcs, total_pcs, crashes, False, ''
 
   def do_check_target(self, ai_binary: str, target_path: str) -> Result:
     """Builds and runs a target."""
@@ -271,12 +372,22 @@ class Evaluator:
 
     # Parse logs to get raw pc coverage and whether the target crashed.
     with open(self.work_dirs.run_logs_target(generated_target_name), 'rb') as f:
-      cov_pcs, total_pcs, crashes = self._parse_libfuzzer_logs(f)
+      cov_pcs, total_pcs, crashes, is_driver_fuzz_err,\
+                  driver_fuzz_err = self._parse_libfuzzer_logs(f, logger)
 
     if (not run_result or run_result.coverage_summary is None or
         run_result.coverage is None):
       logger.log(f'Warning: No run_result in {generated_oss_fuzz_project}.')
-      return logger.return_result(Result(True, crashes, 0.0, 0.0))
+      return logger.return_result(
+          Result(True, crashes, 0.0, 0.0, '', '', is_driver_fuzz_err,
+                 driver_fuzz_err))
+
+    if is_driver_fuzz_err:
+      logger.log(f'Warning: {driver_fuzz_err} in {generated_oss_fuzz_project}.')
+      return logger.return_result(
+          Result(True, crashes, 0.0, 0.0, run_result.coverage_report_path,
+                 run_result.reproducer_path, is_driver_fuzz_err,
+                 driver_fuzz_err))
 
     # Get line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
@@ -303,7 +414,8 @@ class Evaluator:
                f'({run_result.coverage.covered_lines}/{total_lines})')
     return logger.return_result(
         Result(True, crashes, coverage_percent, coverage_diff,
-               run_result.coverage_report_path, run_result.reproducer_path))
+               run_result.coverage_report_path, run_result.reproducer_path,
+               is_driver_fuzz_err, driver_fuzz_err))
 
   def _load_existing_coverage_summary(self) -> dict:
     """Load existing summary.json."""

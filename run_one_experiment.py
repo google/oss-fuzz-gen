@@ -56,6 +56,7 @@ class AggregatedResult:
   """Aggregated evaluation result."""
   build_success_rate: float = 0.0
   crash_rate: float = 0.0
+  found_bug: int = 0
   max_coverage: float = 0.0
   max_line_coverage_diff: float = 0.0
   max_coverage_sample: str = ''
@@ -66,6 +67,7 @@ class AggregatedResult:
     return (
         f'build success rate: {self.build_success_rate}, '
         f'crash rate: {self.crash_rate}, '
+        f'found bug: {self.found_bug}, '
         f'max coverage: {self.max_coverage}, '
         f'max line coverage diff: {self.max_line_coverage_diff}\n'
         f'max coverage sample: {self.max_coverage_sample}\n'
@@ -126,6 +128,10 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
                            ]) / len(target_stats)
   crash_rate = sum([int(stat.crashes) for _, stat in target_stats
                    ]) / len(target_stats)
+  found_bug = sum([
+      int(stat.crashes and not stat.is_driver_fuzz_err)
+      for _, stat in target_stats
+  ])
   max_coverage = max([stat.coverage for _, stat in target_stats])
   max_line_coverage_diff = max(
       [stat.line_coverage_diff for _, stat in target_stats])
@@ -142,9 +148,10 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
       max_coverage_diff_sample = generated_targets[i]
       max_coverage_diff_report = stat.coverage_report_path
 
-  return AggregatedResult(build_success_rate, crash_rate, max_coverage,
-                          max_line_coverage_diff, max_coverage_sample,
-                          max_coverage_diff_sample, max_coverage_diff_report)
+  return AggregatedResult(build_success_rate, crash_rate, found_bug,
+                          max_coverage, max_line_coverage_diff,
+                          max_coverage_sample, max_coverage_diff_sample,
+                          max_coverage_diff_report)
 
 
 def check_targets(
