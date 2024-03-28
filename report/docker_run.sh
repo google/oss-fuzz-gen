@@ -109,6 +109,7 @@ $PYTHON run_all_experiments.py \
   --template-directory 'prompts/template_xml' \
   --work-dir ${LOCAL_RESULTS_DIR:?} \
   --num-samples 10 \
+  --num-repeats 1 \
   --delay "${DELAY:?}" \
   --model "$MODEL"
 

@@ -336,6 +336,7 @@ def apply_llm_fix(ai_binary: str,
   fixer_model = models.LLM.setup(
       ai_binary=ai_binary,
       name=fixer_model_name,
+      num_repeats=1,
       num_samples=1,
       temperature=temperature,
   )
