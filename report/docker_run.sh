@@ -108,7 +108,8 @@ $PYTHON run_all_experiments.py \
   --cloud-experiment-bucket 'oss-fuzz-gcb-experiment-run-logs' \
   --template-directory 'prompts/template_xml' \
   --work-dir ${LOCAL_RESULTS_DIR:?} \
-  --num-samples 10 \
+  --num-samples 1 \
+  --num-repeats 10 \
   --delay "${DELAY:?}" \
   --model "$MODEL"
 
