@@ -1,4 +1,18 @@
 <task>
+EXTREMELY IMPORTANT: If the function to fuzz accepts a <code>const char *</code> or <code>char *</code> argument with no accompanying size or length argument, the pointer passed MUST MUST be null determined!!! For example, consider the function signature:
+<code>
+void function(char *arg); // no size or length argument.
+</code>
+
+In these cases the solution MUST ensure the pointer passed to the argument is null terminated by either adding '\0' to the array, or by using FuzzedDataProvider (ConsumeRandomLengthString or ConsumeBytesAsString). For example:
+<code>
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  // null terminate the data before passing it to the function to fuzz.
+  data[size-1] = '\0';
+  function((char *)data);
+}
+</code>
+
 Your goal is to write a fuzzing harness for the provided function header using <code>LLVMFuzzerTestOneInput</code>. It is important that the provided solution compiles and actually calls the function specified by the function header:
 <function header>
 {PROBLEM_CONTENT}

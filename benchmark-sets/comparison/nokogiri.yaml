@@ -1,0 +1,11 @@
+"functions":
+- "name": "gumbo_parse"
+  "params":
+  - "name": "buffer"
+    "type": "char *"
+  "return_type": "struct GumboInternalOutput *"
+  "signature": "GumboOutput * gumbo_parse(const char *)"
+"language": "c"
+"project": "nokogiri"
+"target_name": "parse_fuzzer"
+"target_path": "/src/nokogiri/gumbo-parser/fuzzer/parse_fuzzer.cc"
