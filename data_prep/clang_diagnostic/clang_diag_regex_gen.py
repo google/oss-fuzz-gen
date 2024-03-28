@@ -28,7 +28,8 @@ import re
 import sys
 
 import yaml
-from clang_diag import DiagGroup, Diagnostic, TextSubstitution
+
+from data_prep.clang_diagnostic.clang_diag import DiagGroup, Diagnostic, TextSubstitution
 
 
 class _DiagRegexBuilder:
