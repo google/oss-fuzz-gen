@@ -51,15 +51,17 @@ INTROSPECTOR_FUNC_SIG = ''
 def set_introspector_endpoints(endpoint):
   """Sets URLs for Fuzz Introspector endpoints to local or remote endpoints."""
   global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNC_SIG, \
-      INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE,         \
+      INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE, \
       INTROSPECTOR_ORACLE_FAR_REACH, INTROSPECTOR_ORACLE_KEYWORD
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
 
   INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
-  INTROSPECTOR_ORACLE_FAR_REACH = f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage'
-  INTROSPECTOR_ORACLE_KEYWORD = f'{INTROSPECTOR_ENDPOINT}/far-reach-low-cov-fuzz-keyword'
+  INTROSPECTOR_ORACLE_FAR_REACH = (
+      f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage')
+  INTROSPECTOR_ORACLE_KEYWORD = (
+      f'{INTROSPECTOR_ENDPOINT}/far-reach-low-cov-fuzz-keyword')
   INTROSPECTOR_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
   INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
   INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
@@ -159,7 +161,7 @@ def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
   }
   query_func = oracle_dict.get(target_oracle, None)
   if not query_func:
-    logging.error('No such oracle "%s"' % (target_oracle))
+    logging.error('No such oracle "%s"', target_oracle)
     sys.exit(1)
   functions = query_func(project)
   if functions:
