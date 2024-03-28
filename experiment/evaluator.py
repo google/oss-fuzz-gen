@@ -302,21 +302,21 @@ class Evaluator:
       if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
         # No cov line has been identified or only INITED round has been passed.
         # This is very likely the false positive cases.
-        return cov_pcs, total_pcs, False, True, 'FP_CRASH_NEAR_INIT'
+        return cov_pcs, total_pcs, True, True, 'FP_CRASH_NEAR_INIT'
 
       # FP case 2: 1st func of the 1st thread stack is in driver.
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
       for stack_frame in crash_stacks[:1]:
         if self._stack_func_is_of_testing_project(stack_frame):
           if 'LLVMFuzzerTestOneInput' in stack_frame:
-            return cov_pcs, total_pcs, False, True, 'FP_CRASH_IN_DRIVER'
+            return cov_pcs, total_pcs, True, True, 'FP_CRASH_IN_DRIVER'
           break
 
     else:
       # Another error driver case: no cov increase.
       if initcov is not None and donecov is not None:
         if initcov == donecov:
-          return cov_pcs, total_pcs, False, True, 'NO_COV_INCREASE'
+          return cov_pcs, total_pcs, True, True, 'NO_COV_INCREASE'
 
     return cov_pcs, total_pcs, crashes, False, ''
 
