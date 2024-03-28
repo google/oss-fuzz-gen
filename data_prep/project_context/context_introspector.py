@@ -290,6 +290,15 @@ class ContextRetriever:
       for info in info_list:
         source_file = self._get_source_file(info)
         source_file = os.path.normpath(source_file)
+        source_base = os.path.basename(source_file)
+        # Ensure source_base is a file
+        if len(source_base) == 0 or '.' not in source_base:
+          logging.debug('File %s found as a source path', source_file)
+          continue
+        # Get the character after the '.', ensure it is a h
+        if source_base.split('.')[1][0] != 'h':
+          logging.debug('Non .hxx file found as a header file %s', source_file)
+          continue
         files.add(source_file)
 
     return list(files)
