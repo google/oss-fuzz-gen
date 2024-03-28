@@ -29,7 +29,8 @@ import sys
 
 import yaml
 
-from data_prep.clang_diagnostic.clang_diag import DiagGroup, Diagnostic, TextSubstitution
+from data_prep.clang_diagnostic.clang_diag import (DiagGroup, Diagnostic,
+                                                   TextSubstitution)
 
 
 class _DiagRegexBuilder:
@@ -179,16 +180,15 @@ class _DiagRegexBuilder:
             f'2 arguments not found at the end of "%{specifier}{{...}}'
             f'{diag[end_of_bracket:end_of_bracket + 3]}" format in {diag}')
       sep_ptr = ptr + self._find_first_bar(diag[ptr:end_of_bracket - 1])
-      first_half = diag[ptr:sep_ptr]
-      self._replace_dollar_in_current_diff(first_half)
+      first_half = self._replace_dollar_in_current_diff(diag[ptr:sep_ptr])
       self._walkthrough_diag(first_half)
       ptr = sep_ptr
 
       self._char_list.extend('|')
       ptr += 1
 
-      second_half = diag[ptr:end_of_bracket - 1]
-      self._replace_dollar_in_current_diff(second_half)
+      second_half = self._replace_dollar_in_current_diff(
+          diag[ptr:end_of_bracket - 1])
       self._walkthrough_diag(second_half)
       self._char_list.extend(')')
       return end_of_bracket + 2
