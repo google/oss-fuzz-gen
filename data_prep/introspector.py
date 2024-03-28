@@ -243,10 +243,6 @@ def clean_type(name: str) -> str:
     # https://github.com/ossf/fuzz-introspector/issues/1188
     return 'bool '
 
-  name = name.replace('struct.', 'struct ')
-  name = name.replace('class.', '')
-  name = name.replace('__1::basic_', '')
-  name = name.replace('__1::', '')
   # Introspector sometimes includes numeric suffixes to struct names.
   name = re.sub(r'(\.\d+)+(\s*\*)$', r'\2', name)
   name.strip()

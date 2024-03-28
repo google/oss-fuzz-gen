@@ -410,7 +410,6 @@ class Evaluator:
 
     logger.log(f'Result for {generated_oss_fuzz_project}: crashes={crashes}, '
                f'coverage={coverage_percent} ({cov_pcs}/{total_pcs}), '
-               f'coverage diff={coverage_diff} '
                f'({run_result.coverage.covered_lines}/{total_lines})')
     return logger.return_result(
         Result(True, crashes, coverage_percent, coverage_diff,
