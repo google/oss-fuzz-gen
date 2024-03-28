@@ -63,8 +63,8 @@ def get_oracle_dict() -> Dict[str, Any]:
 def set_introspector_endpoints(endpoint):
   """Sets URLs for Fuzz Introspector endpoints to local or remote endpoints."""
   global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNC_SIG, \
-      INTROSPECTOR_FUNCTION_SOURCE, INTROSPECTOR_PROJECT_SOURCE, INTROSPECTOR_XREF, \
-      INTROSPECTOR_TYPE, INTROSPECTOR_ORACLE_FAR_REACH, \
+      INTROSPECTOR_FUNCTION_SOURCE, INTROSPECTOR_PROJECT_SOURCE, \
+      INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_ORACLE_FAR_REACH, \
       INTROSPECTOR_ORACLE_KEYWORD
 
   INTROSPECTOR_ENDPOINT = endpoint
@@ -196,7 +196,7 @@ def query_introspector_function_source(project: str, func_sig: str) -> str:
 
 def query_introspector_source_code(project: str, filepath: str, begin_line: int,
                                    end_line: int) -> str:
-  """Queries FuzzIntrospector API for source code of a 
+  """Queries FuzzIntrospector API for source code of a
     file |filepath| between |begin_line| and |end_line|."""
 
   resp = _query_introspector(
