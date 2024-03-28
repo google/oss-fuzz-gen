@@ -43,10 +43,21 @@ DEBUG: bool = False
 # WARN: Avoid large NUM_SAMPLES in highly parallelized local experiment.
 # NUM_SAMPLES controls the number of LLM responses per query, which may exceed
 # your LLM's limit on query-per-second.
-NUM_SAMPLES = 2
+NUM_SAMPLES = 1
 MAX_TOKENS: int = 4096
 RUN_TIMEOUT: int = 30
 TEMPERATURE: float = 0.4
+
+# Query Strategy Parameters: Number of repeated queries for one prompt.
+# - [1]* found repeat is an effective strategy to improve the performance of
+#     LLM since LLM-based generation is a search process with randomness.
+# - Requery ensures repeat-k results instead of top-k results for all LLMs.
+# - A suggested usage is only set NUM_REPEATS while keep NUM_SAMPLES as 1.
+# - The default value is 3, but it is recommended to a larger value such as
+#     6 or 10 for higher effectiveness if you have sufficient token quota
+#     since the LLM-based generation is a search process with randomness.
+# - Link of [1]* will be updated later
+NUM_REPEATS = 3
 
 RESULTS_DIR = './results'
 
