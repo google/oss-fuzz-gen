@@ -1,3 +1,27 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""
+Main driver of converting Diagnostics format into regexes and store in yaml.
+The structured json file of the original Diagnostic.td
+is generated using the following command:
+
+llvm-tblgen -dump-json -o Diagnostic.json -I llvm/clang/include/clang/Basic \
+llvm/clang/include/clang/Basic/Diagnostic.td
+
+*-tblgen binary and clang source code is required to regenerate the json parsed
+in this module.
+"""
 import json
 import os
 import re
@@ -9,17 +33,24 @@ from clang_diag import DiagGroup, Diagnostic, TextSubstitution
 
 
 class _DiagRegexBuilder:
+  """Helper class for building regex from raw diag text."""
 
   def __init__(self, diag: str):
     # Raw diag text.
     self.diag = diag
+
     # Temp storage for concatenating regex string when finished.
-    self._char_list = list()
+    self._char_list = []
+
     # args_count stores the number of capturing group in the regex,
-    # which is the number of %[0-9] in diag.
+    # which is the number of %[0-9] in raw diag text.
     self.args_count = 0
 
   def get_regex(self) -> tuple[str, int]:
+    """
+    Generates regex from the beginning of the diag,
+    also counts the number of free form arguments (%0).
+    """
     substituted_diag = self._do_substitution()
     try:
       self._walkthrough_diag(substituted_diag)
@@ -35,6 +66,7 @@ class _DiagRegexBuilder:
     return regex, self.args_count
 
   def _do_substitution(self) -> str:
+    """Substitutes all %sub in the original diag for further processing."""
     diag = self.diag
     sub_search = re.compile(r'%sub\{(.+?)\}\d(?:,\d)*')  # %sub{...}0,...
     substitution = sub_search.search(diag)
@@ -50,10 +82,12 @@ class _DiagRegexBuilder:
     return diag
 
   def _walkthrough_diag(self, diag: str):
+    """Walks through a piece of diag."""
+    # Always points to the last char in diag that has been parsed to regex.
     ptr = 0
     while ptr < len(diag):
       ch = diag[ptr]
-      if ch in r'\^$.|?*+()[]{}':  # regex special chars
+      if ch in r'\^$.|?*+()[]{}':  # Regex special chars.
         self._char_list.extend('\\' + ch)
       elif ch == '%':
         ptr += self._parse_formatter(diag[ptr:])
@@ -62,6 +96,7 @@ class _DiagRegexBuilder:
       ptr += 1
 
   def _parse_formatter(self, diag: str) -> int:
+    """Parse the first format specifier segment and returns the length of it."""
     ptr = 1
     ch = diag[ptr]
     if ch in '%:$|[]}':  # escaped format char
@@ -87,7 +122,7 @@ class _DiagRegexBuilder:
       self._char_list.extend('s?')
       return ptr
     # %objcclass0, %objcinstance0, %q0
-    if specifier == 'objcclass' or specifier == 'objcinstance' or specifier == 'q':
+    if specifier in ['objcclass', 'objcinstance', 'q']:
       if not diag[ptr].isdigit():
         raise ValueError(
             f'Unexpected char "{ch}" after "%{specifier}" format in {diag}')
@@ -110,9 +145,8 @@ class _DiagRegexBuilder:
 
     if specifier == 'select':  # %select{...|...}0
       if not diag[end_of_bracket].isdigit():
-        raise ValueError(
-            f'Unexpected char "{diag[end_of_bracket]}" at the end of "%{specifier}" format in {diag}'
-        )
+        raise ValueError(f'Unexpected char "{diag[end_of_bracket]}" '
+                         f'at the end of "%{specifier}" format in {diag}')
       while ptr < end_of_bracket - 1:
         sep_ptr = ptr + self._find_first_bar(diag[ptr:end_of_bracket - 1])
         self._walkthrough_diag(diag[ptr:sep_ptr])
@@ -125,9 +159,8 @@ class _DiagRegexBuilder:
 
     if specifier == 'plural':  # %plural{(%100=)0:...|[1,2]:...|:...}0
       if not diag[end_of_bracket].isdigit():
-        raise ValueError(
-            f'Unexpected char "{diag[end_of_bracket]}" at the end of "%{specifier}" format in {diag}'
-        )
+        raise ValueError(f'Unexpected char "{diag[end_of_bracket]}" '
+                         f'at the end of "%{specifier}" format in {diag}')
       while ptr < end_of_bracket - 1:
         sep_ptr = ptr + self._find_first_bar(diag[ptr:end_of_bracket - 1])
         piece = diag[ptr:sep_ptr]
@@ -143,8 +176,8 @@ class _DiagRegexBuilder:
     if specifier == 'diff':  # %diff{...$...$...|...}0,1
       if not re.match(r'\d,\d', diag[end_of_bracket:end_of_bracket + 3]):
         raise ValueError(
-            f'2 arguments not found at the end of "%{specifier}{{...}}{diag[end_of_bracket:end_of_bracket + 3]}" format in {diag}'
-        )
+            f'2 arguments not found at the end of "%{specifier}{{...}}'
+            f'{diag[end_of_bracket:end_of_bracket + 3]}" format in {diag}')
       sep_ptr = ptr + self._find_first_bar(diag[ptr:end_of_bracket - 1])
       first_half = diag[ptr:sep_ptr]
       self._replace_dollar_in_current_diff(first_half)
@@ -164,10 +197,10 @@ class _DiagRegexBuilder:
 
   @staticmethod
   def _find_end_of_bracket(sub: str) -> int:
+    """Returns the position of the closing bracket."""
     if sub[0] != '{':
-      raise ValueError(
-          '_find_end_of_bracket() should be used on sub strings starting with "{"'
-      )
+      raise ValueError('_find_end_of_bracket() should be used on substrings '
+                       'starting with "{"')
     count = 1
     ptr = 1
     while count > 0:
@@ -180,6 +213,7 @@ class _DiagRegexBuilder:
 
   @staticmethod
   def _find_first_bar(sub: str) -> int:
+    """Returns the position of the first '|', or the length of the substring."""
     ptr = 0
     bracket_level = 0
     while ptr < len(sub):
@@ -197,7 +231,11 @@ class _DiagRegexBuilder:
 
   @staticmethod
   def _replace_dollar_in_current_diff(sub: str) -> str:
-    char_list = list()
+    """
+    Replaces '$' with '%0' in %diff{...},
+    but keep content in sub brackets as is.
+    """
+    char_list = []
     ptr = 0
     bracket_level = 0
     while ptr < len(sub):
@@ -220,7 +258,8 @@ class _DiagRegexBuilder:
 
 
 def _to_yaml(diagnostics: dict[str, Diagnostic], outdir: str = './'):
-  result = dict()
+  """Saves all diagnostics to a yaml file."""
+  result = {}
   for raw_name in diagnostics.keys():
     diag = diagnostics[raw_name]
     result[raw_name] = {
@@ -234,12 +273,13 @@ def _to_yaml(diagnostics: dict[str, Diagnostic], outdir: str = './'):
         'Regex': diag.regex,
         'ArgsCount': diag.args_count,
     }
-  with open(os.path.join(outdir, f'diag_regexes.yaml'), 'w') as file:
+  with open(os.path.join(outdir, 'diag_regexes.yaml'), 'w') as file:
     yaml.dump(result, file, default_flow_style=False, width=sys.maxsize)
 
 
 def from_yaml(yaml_path: str) -> dict[str, Diagnostic]:
-  diagnostics = dict()
+  """Loads diagnostics from the yaml file."""
+  diagnostics = {}
   with open(yaml_path, 'r') as yaml_file:
     data = yaml.safe_load(yaml_file)
 
@@ -261,10 +301,6 @@ def from_yaml(yaml_path: str) -> dict[str, Diagnostic]:
 
 
 def main():
-  # Generated with:
-  # llvm-tblgen -dump-json -o Diagnostic.json \
-  # -I llvm/clang/include/clang/Basic \
-  # llvm/clang/include/clang/Basic/Diagnostic.td
   # TODO: Use argparse to specify json file path.
   with open('Diagnostic.json', 'r') as json_f:
     raw_diag_obj = json.load(json_f)
@@ -306,7 +342,8 @@ def main():
     default_severity_name = default_severity.get('def',
                                                  '') if default_severity else ''
     group = diagnostic.get('Group', {})
-    diag_group = diag_groups.get(group.get('def', '')) if group else None
+    group_name = group.get('def', '') if group else ''
+    diag_group = diag_groups.get(group_name)
     sfinae = diagnostic.get('SFINAE', {})
     sfinae_name = sfinae.get('def', '') if sfinae else ''
     text = diagnostic.get('Text', '')
