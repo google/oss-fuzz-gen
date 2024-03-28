@@ -28,7 +28,6 @@ import re
 import sys
 
 import yaml
-
 from clang_diag import DiagGroup, Diagnostic, TextSubstitution
 
 
