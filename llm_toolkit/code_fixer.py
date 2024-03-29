@@ -337,8 +337,8 @@ def apply_llm_fix(ai_binary: str,
                   temperature: float = 0.4):
   """Queries LLM to fix the code."""
   fixer_model = models.LLM.setup(
-      ai_binary=ai_binary,
-      name=fixer_model_name,
+      ai_binary='',
+      name=models.DefaultModel.name,
       num_samples=1,
       temperature=temperature,
   )
