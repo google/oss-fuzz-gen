@@ -241,9 +241,9 @@ def get_samples(benchmark: str) -> list[Sample]:
 
   return samples
 
-def match_sample(benchmark: str, target_sample_id: str) -> Sample:
+
+def match_sample(benchmark: str, target_sample_id: str) -> Optional[Sample]:
   """Identifies the samples object and its status of the given sample id."""
-  samples = []
   results, _ = get_results(benchmark)
 
   for i, sample_id in enumerate(sample_ids(get_generated_targets(benchmark))):
@@ -256,6 +256,9 @@ def match_sample(benchmark: str, target_sample_id: str) -> Sample:
       result = results[i]
 
     return Sample(sample_id, status, result)
+  logging.warning('Failed to identify benchmark sample: %s\n  %s', benchmark,
+                  target_sample_id)
+  return None
 
 
 def truncate_logs(logs: str, max_len: int) -> str:
