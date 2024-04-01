@@ -242,6 +242,25 @@ def get_samples(benchmark: str) -> list[Sample]:
   return samples
 
 
+def match_sample(benchmark: str, target_sample_id: str) -> Optional[Sample]:
+  """Identifies the samples object and its status of the given sample id."""
+  results, _ = get_results(benchmark)
+
+  for i, sample_id in enumerate(sample_ids(get_generated_targets(benchmark))):
+    if sample_id != target_sample_id:
+      continue
+    status = 'Running'
+    result = None
+    if results[i]:
+      status = 'Done'
+      result = results[i]
+
+    return Sample(sample_id, status, result)
+  logging.warning('Failed to identify benchmark sample: %s\n  %s', benchmark,
+                  target_sample_id)
+  return None
+
+
 def truncate_logs(logs: str, max_len: int) -> str:
   if len(logs) <= max_len:
     return logs
@@ -411,7 +430,7 @@ def sample_page(benchmark, sample):
   if _is_valid_benchmark_dir(benchmark):
     return render_template('sample.html',
                            benchmark=benchmark,
-                           sample=sample,
+                           sample=match_sample(benchmark, sample),
                            logs=get_logs(benchmark, sample),
                            run_logs=get_run_logs(benchmark, sample),
                            targets=get_targets(benchmark, sample),

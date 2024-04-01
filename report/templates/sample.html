@@ -17,9 +17,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{{ benchmark }} / {{ sample }}</h1>
+<h1>{{ benchmark }} / {{ sample.id }}</h1>
 Bug: {{ sample.result.crashes and not sample.result.is_driver_fuzz_err }}
+<br>
 Crash reason: {{ sample.result.driver_fuzz_err }}
+<br>
+<br>
 {% for target in targets %}
 {% if target.fixer_prompt %}
 <h3>Fixer prompt #{{ loop.index - 1 }}</h3>
