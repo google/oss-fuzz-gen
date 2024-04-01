@@ -1529,13 +1529,13 @@ err_array_incomplete_or_sizeless_type:
   SFINAE: SFINAE_SubstitutionFailure
   Text: array has %select{incomplete|sizeless}0 element type %1
 err_array_init_different_type:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: cannot initialize array (?:of type \$ with array of type \$|with different type of array)
+  Regex: cannot initialize array (?:of type (.*) with array of type (.*)|with different type of array)
   SFINAE: SFINAE_SubstitutionFailure
   Text: cannot initialize array %diff{of type $ with array of type $|with different type of array}0,1
 err_array_init_incompat_wide_string_into_wchar:
@@ -1559,13 +1559,13 @@ err_array_init_narrow_string_into_wchar:
   SFINAE: SFINAE_SubstitutionFailure
   Text: initializing wide char array with non-wide string literal
 err_array_init_non_constant_array:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: cannot initialize array (?:of type \$ with non-constant array of type \$|with different type of array)
+  Regex: cannot initialize array (?:of type (.*) with non-constant array of type (.*)|with different type of array)
   SFINAE: SFINAE_SubstitutionFailure
   Text: cannot initialize array %diff{of type $ with non-constant array of type $|with different type of array}0,1
 err_array_init_not_init_list:
@@ -1989,13 +1989,13 @@ err_asm_register_size_mismatch:
   SFINAE: SFINAE_SubstitutionFailure
   Text: size of register '%0' does not match variable size
 err_asm_tying_incompatible_types:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Inline Assembly Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'unsupported inline asm: input with type (?:\$ matching output with type \$|)'
+  Regex: 'unsupported inline asm: input with type (?:(.*) matching output with type (.*)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: 'unsupported inline asm: input with type %diff{$ matching output with type $|}0,1'
 err_asm_unexpected_constraint_alternatives:
@@ -2619,13 +2619,13 @@ err_attribute_cleanup_arg_not_function:
   SFINAE: SFINAE_SubstitutionFailure
   Text: '''cleanup'' argument %select{|%1 |%1 }0is not a %select{||single }0function'
 err_attribute_cleanup_func_arg_incompatible_type:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: '''cleanup'' function (.*) parameter has (?:type \$ which is incompatible with type \$|incompatible type)'
+  Regex: '''cleanup'' function (.*) parameter has (?:type (.*) which is incompatible with type (.*)|incompatible type)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: '''cleanup'' function %0 parameter has %diff{type $ which is incompatible with type $|incompatible type}1,2'
 err_attribute_cleanup_func_must_take_one_arg:
@@ -3399,13 +3399,13 @@ err_auto_fn_virtual:
   SFINAE: SFINAE_SubstitutionFailure
   Text: function with deduced return type cannot be virtual
 err_auto_inconsistent_deduction:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: deduced conflicting types (?:\(\$ vs \$\) |)for initializer list element type
+  Regex: deduced conflicting types (?:\((.*) vs (.*)\) |)for initializer list element type
   SFINAE: SFINAE_SubstitutionFailure
   Text: deduced conflicting types %diff{($ vs $) |}0,1for initializer list element type
 err_auto_init_list_from_c:
@@ -5339,33 +5339,33 @@ err_concept_no_parameters:
   SFINAE: SFINAE_SubstitutionFailure
   Text: concept template parameter list must have at least one parameter; explicit specialization of concepts is not allowed
 err_cond_voidptr_arc:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'operands to conditional of types(?: \$ and \$|) are incompatible in ARC mode'
+  Regex: 'operands to conditional of types(?: (.*) and (.*)|) are incompatible in ARC mode'
   SFINAE: SFINAE_SubstitutionFailure
   Text: operands to conditional of types%diff{ $ and $|}0,1 are incompatible in ARC mode
 err_conditional_ambiguous:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: conditional expression is ambiguous; (?:\$ can be converted to \$ and vice versa|types can be convert to each other)
+  Regex: conditional expression is ambiguous; (?:(.*) can be converted to (.*) and vice versa|types can be convert to each other)
   SFINAE: SFINAE_SubstitutionFailure
   Text: conditional expression is ambiguous; %diff{$ can be converted to $ and vice versa|types can be convert to each other}0,1
 err_conditional_ambiguous_ovl:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: conditional expression is ambiguous; (?:\$ and \$|types) can be converted to several common types
+  Regex: conditional expression is ambiguous; (?:(.*) and (.*)|types) can be converted to several common types
   SFINAE: SFINAE_SubstitutionFailure
   Text: conditional expression is ambiguous; %diff{$ and $|types}0,1 can be converted to several common types
 err_conditional_vector_cond_result_mismatch:
@@ -5399,13 +5399,13 @@ err_conditional_vector_has_void:
   SFINAE: SFINAE_SubstitutionFailure
   Text: GNU vector conditional operand cannot be %select{void|a throw expression}0
 err_conditional_vector_mismatched:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: vector operands to the vector conditional must be the same type (?:\(\$ and \$\)|)\}
+  Regex: vector operands to the vector conditional must be the same type (?:\((.*) and (.*)\)|)\}
   SFINAE: SFINAE_SubstitutionFailure
   Text: vector operands to the vector conditional must be the same type %diff{($ and $)|}0,1}
 err_conditional_vector_operand_type:
@@ -5499,23 +5499,23 @@ err_conflicting_ivar_name:
   SFINAE: SFINAE_SubstitutionFailure
   Text: 'conflicting instance variable names: %0 vs %1'
 err_conflicting_ivar_type:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'instance variable (.*) has conflicting type(?:: \$ vs \$|)'
+  Regex: 'instance variable (.*) has conflicting type(?:: (.*) vs (.*)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: 'instance variable %0 has conflicting type%diff{: $ vs $|}1,2'
 err_conflicting_overriding_cc_attributes:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: virtual function (.*) has different calling convention attributes (?:\(\$\) than the function it overrides \(which has calling convention \$\)|than the function it overrides)
+  Regex: virtual function (.*) has different calling convention attributes (?:\((.*)\) than the function it overrides \(which has calling convention (.*)\)|than the function it overrides)
   SFINAE: SFINAE_SubstitutionFailure
   Text: virtual function %0 has different calling convention attributes %diff{($) than the function it overrides (which has calling convention $)|than the function it overrides}1,2
 err_conflicting_super_class:
@@ -6799,13 +6799,13 @@ err_deduced_non_class_template_specialization_type:
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{<error>|function template|variable template|alias template|template template parameter|concept|template}0 %1 requires template arguments; argument deduction only allowed for class templates'
 err_deduced_non_type_template_arg_type_mismatch:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'deduced non-type template argument does not have the same type as the corresponding template parameter(?: \(\$ vs \$\)|)'
+  Regex: 'deduced non-type template argument does not have the same type as the corresponding template parameter(?: \((.*) vs (.*)\)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: deduced non-type template argument does not have the same type as the corresponding template parameter%diff{ ($ vs $)|}0,1
 err_deduced_return_type:
@@ -7109,13 +7109,13 @@ err_defaulted_comparison_param:
   SFINAE: SFINAE_SubstitutionFailure
   Text: invalid parameter type for defaulted %sub{select_defaulted_comparison_kind}0; found %1, expected %2%select{| or %4}3
 err_defaulted_comparison_param_mismatch:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'parameters for defaulted (?:<ERROR>|equality|three-way|equality|relational) comparison operator must have the same type(?: \(found \$ vs \$\)|)'
+  Regex: 'parameters for defaulted (?:<ERROR>|equality|three-way|equality|relational) comparison operator must have the same type(?: \(found (.*) vs (.*)\)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: parameters for defaulted %sub{select_defaulted_comparison_kind}0 must have the same type%diff{ (found $ vs $)|}1,2
 err_defaulted_comparison_param_unknown:
@@ -7729,13 +7729,13 @@ err_different_pass_object_size_params:
   SFINAE: SFINAE_SubstitutionFailure
   Text: conflicting pass_object_size attributes on parameters
 err_different_return_type_for_overriding_virtual_function:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: virtual function (.*) has a different return type (?:\(\$\) than the function it overrides \(which has return type \$\)|than the function it overrides)
+  Regex: virtual function (.*) has a different return type (?:\((.*)\) than the function it overrides \(which has return type (.*)\)|than the function it overrides)
   SFINAE: SFINAE_SubstitutionFailure
   Text: virtual function %0 has a different return type %diff{($) than the function it overrides (which has return type $)|than the function it overrides}1,2
 err_digit_separator_not_between_digits:
@@ -12639,23 +12639,23 @@ err_incompatible_exception_specs:
   SFINAE: SFINAE_SubstitutionFailure
   Text: target exception specification is not superset of source
 err_incompatible_qualified_id:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: (?:(?:assigning to \$ from incompatible type \$|assigning to type from incompatible type)|(?:passing \$ to parameter of incompatible type \$|passing type to parameter of incompatible type)|(?:returning \$ from a function with incompatible result type \$|returning type from a function with incompatible result type)|(?:converting \$ to incompatible type \$|converting type to incompatible type)|(?:initializing \$ with an expression of incompatible type \$|initializing type with an expression of incompatible type)|(?:sending \$ to parameter of incompatible type \$|sending type to parameter of incompatible type)|(?:casting \$ to incompatible type \$|casting type to incompatible type))
+  Regex: (?:(?:assigning to (.*) from incompatible type (.*)|assigning to type from incompatible type)|(?:passing (.*) to parameter of incompatible type (.*)|passing type to parameter of incompatible type)|(?:returning (.*) from a function with incompatible result type (.*)|returning type from a function with incompatible result type)|(?:converting (.*) to incompatible type (.*)|converting type to incompatible type)|(?:initializing (.*) with an expression of incompatible type (.*)|initializing type with an expression of incompatible type)|(?:sending (.*) to parameter of incompatible type (.*)|sending type to parameter of incompatible type)|(?:casting (.*) to incompatible type (.*)|casting type to incompatible type))
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{%diff{assigning to $ from incompatible type $|assigning to type from incompatible type}0,1|%diff{passing $ to parameter of incompatible type $|passing type to parameter of incompatible type}0,1|%diff{returning $ from a function with incompatible result type $|returning type from a function with incompatible result type}0,1|%diff{converting $ to incompatible type $|converting type to incompatible type}0,1|%diff{initializing $ with an expression of incompatible type $|initializing type with an expression of incompatible type}0,1|%diff{sending $ to parameter of incompatible type $|sending type to parameter of incompatible type}0,1|%diff{casting $ to incompatible type $|casting type to incompatible type}0,1}2'
 err_incompatible_vectors:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: incompatible vector types (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types))
+  Regex: incompatible vector types (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types))
   SFINAE: SFINAE_SubstitutionFailure
   Text: incompatible vector types %select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2
 err_incomplete_array_member_init:
@@ -12919,13 +12919,13 @@ err_init_capture_paren_braces:
   SFINAE: SFINAE_SubstitutionFailure
   Text: cannot deduce type for lambda capture %1 from %select{parenthesized|nested}0 initializer list
 err_init_conversion_failed:
-  ArgsCount: 4
+  ArgsCount: 12
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'cannot initialize (?:a variable|a parameter|template parameter|return object|statement expression result|an exception object|a member subobject|an array element|a new value|a value|a base class|a constructor delegation|a vector element|a block element|a block element|a complex element|a lambda capture|a compound literal initializer|a related result|a parameter of CF audited function) (?:of type \$ with an (?:rvalue|lvalue) of type \$|with an (?:rvalue|lvalue) of incompatible type)(?:|: different classes(?: \(\$ vs \$\)|)|: different number of parameters \((.*) vs (.*)\)|: type mismatch at \d+(?:st|nd|rd|th) parameter(?: \(\$ vs \$\)|)|: different return type(?: \(\$ vs \$\)|)|: different qualifiers \((.*) vs (.*)\)|: different exception specifications)'
+  Regex: 'cannot initialize (?:a variable|a parameter|template parameter|return object|statement expression result|an exception object|a member subobject|an array element|a new value|a value|a base class|a constructor delegation|a vector element|a block element|a block element|a complex element|a lambda capture|a compound literal initializer|a related result|a parameter of CF audited function) (?:of type (.*) with an (?:rvalue|lvalue) of type (.*)|with an (?:rvalue|lvalue) of incompatible type)(?:|: different classes(?: \((.*) vs (.*)\)|)|: different number of parameters \((.*) vs (.*)\)|: type mismatch at \d+(?:st|nd|rd|th) parameter(?: \((.*) vs (.*)\)|)|: different return type(?: \((.*) vs (.*)\)|)|: different qualifiers \((.*) vs (.*)\)|: different exception specifications)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: 'cannot initialize %select{a variable|a parameter|template parameter|return object|statement expression result|an exception object|a member subobject|an array element|a new value|a value|a base class|a constructor delegation|a vector element|a block element|a block element|a complex element|a lambda capture|a compound literal initializer|a related result|a parameter of CF audited function}0 %diff{of type $ with an %select{rvalue|lvalue}2 of type $|with an %select{rvalue|lvalue}2 of incompatible type}1,3%select{|: different classes%diff{ ($ vs $)|}5,6|: different number of parameters (%5 vs %6)|: type mismatch at %ordinal5 parameter%diff{ ($ vs $)|}6,7|: different return type%diff{ ($ vs $)|}5,6|: different qualifiers (%5 vs %6)|: different exception specifications}4'
 err_init_element_not_constant:
@@ -13119,13 +13119,13 @@ err_inline_non_function:
   SFINAE: SFINAE_SubstitutionFailure
   Text: '''inline'' can only appear on functions%select{| and non-local variables}0'
 err_int_to_block_pointer:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: invalid block pointer conversion (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types))
+  Regex: invalid block pointer conversion (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types))
   SFINAE: SFINAE_SubstitutionFailure
   Text: invalid block pointer conversion %select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2
 err_integer_literal_too_large:
@@ -13369,13 +13369,13 @@ err_invalid_conversion_between_matrix_and_type:
   SFINAE: SFINAE_SubstitutionFailure
   Text: conversion between matrix type %0 and incompatible type %1 is not allowed
 err_invalid_conversion_between_matrixes:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'conversion between matrix types(?: \$ and \$|) of different size is not allowed'
+  Regex: 'conversion between matrix types(?: (.*) and (.*)|) of different size is not allowed'
   SFINAE: SFINAE_SubstitutionFailure
   Text: conversion between matrix types%diff{ $ and $|}0,1 of different size is not allowed
 err_invalid_conversion_between_vector_and_integer:
@@ -13399,13 +13399,13 @@ err_invalid_conversion_between_vector_and_scalar:
   SFINAE: SFINAE_SubstitutionFailure
   Text: invalid conversion between vector type %0 and scalar type %1
 err_invalid_conversion_between_vectors:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'invalid conversion between vector type(?: \$ and \$|) of different size'
+  Regex: 'invalid conversion between vector type(?: (.*) and (.*)|) of different size'
   SFINAE: SFINAE_SubstitutionFailure
   Text: invalid conversion between vector type%diff{ $ and $|}0,1 of different size
 err_invalid_cpu_is:
@@ -14529,33 +14529,33 @@ err_lvalue_reference_bind_to_initlist:
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{non-const|volatile}0 lvalue reference to type %1 cannot bind to an initializer list temporary'
 err_lvalue_reference_bind_to_temporary:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: (?:non-const|volatile) lvalue reference (?:to type \$ cannot bind to a temporary of type \$|cannot bind to incompatible temporary)
+  Regex: (?:non-const|volatile) lvalue reference (?:to type (.*) cannot bind to a temporary of type (.*)|cannot bind to incompatible temporary)
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{non-const|volatile}0 lvalue reference %diff{to type $ cannot bind to a temporary of type $|cannot bind to incompatible temporary}1,2'
 err_lvalue_reference_bind_to_unrelated:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: (?:non-const|volatile) lvalue reference (?:to type \$ cannot bind to a value of unrelated type \$|cannot bind to a value of unrelated type)
+  Regex: (?:non-const|volatile) lvalue reference (?:to type (.*) cannot bind to a value of unrelated type (.*)|cannot bind to a value of unrelated type)
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{non-const|volatile}0 lvalue reference %diff{to type $ cannot bind to a value of unrelated type $|cannot bind to a value of unrelated type}1,2'
 err_lvalue_to_rvalue_ref:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: rvalue reference (?:to type \$ cannot bind to lvalue of type \$|cannot bind to incompatible lvalue)
+  Regex: rvalue reference (?:to type (.*) cannot bind to lvalue of type (.*)|cannot bind to incompatible lvalue)
   SFINAE: SFINAE_SubstitutionFailure
   Text: rvalue reference %diff{to type $ cannot bind to lvalue of type $|cannot bind to incompatible lvalue}0,1
 err_machine_mode:
@@ -16909,13 +16909,13 @@ err_nested_non_static_member_use:
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{call to non-static member function|use of non-static data member}0 %2 of %1 from nested type %3'
 err_nested_pointer_qualifier_mismatch:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types)) discards qualifiers in nested pointer types
+  Regex: (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types)) discards qualifiers in nested pointer types
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2 discards qualifiers in nested pointer types'
 err_nested_redefinition:
@@ -24979,13 +24979,13 @@ err_pseudo_dtor_destructor_non_type:
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%0 does not refer to a type name in pseudo-destructor expression; expected the name of type %1'
 err_pseudo_dtor_type_mismatch:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: the type of object expression (?:\(\$\) does not match the type being destroyed \(\$\)|does not match the type being destroyed) in pseudo-destructor expression
+  Regex: the type of object expression (?:\((.*)\) does not match the type being destroyed \((.*)\)|does not match the type being destroyed) in pseudo-destructor expression
   SFINAE: SFINAE_SubstitutionFailure
   Text: the type of object expression %diff{($) does not match the type being destroyed ($)|does not match the type being destroyed}0,1 in pseudo-destructor expression
 err_pure_friend:
@@ -25169,13 +25169,13 @@ err_recursive_superclass:
   SFINAE: SFINAE_SubstitutionFailure
   Text: trying to recursively use %0 as superclass of %1
 err_redeclaration_different_type:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'redeclaration of (.*) with a different type(?:: \$ vs \$|)'
+  Regex: 'redeclaration of (.*) with a different type(?:: (.*) vs (.*)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: 'redeclaration of %0 with a different type%diff{: $ vs $|}1,2'
 err_redeclaration_non_exported:
@@ -25219,23 +25219,23 @@ err_redefinition_different_namespace_alias:
   SFINAE: SFINAE_SubstitutionFailure
   Text: redefinition of %0 as an alias for a different namespace
 err_redefinition_different_type:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'redefinition of (.*) with a different type(?:: \$ vs \$|)'
+  Regex: 'redefinition of (.*) with a different type(?:: (.*) vs (.*)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: 'redefinition of %0 with a different type%diff{: $ vs $|}1,2'
 err_redefinition_different_typedef:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: '(?:typedef|type alias|type alias template) redefinition with different types(?: \(\$ vs \$\)|)'
+  Regex: '(?:typedef|type alias|type alias template) redefinition with different types(?: \((.*) vs (.*)\)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{typedef|type alias|type alias template}0 redefinition with different types%diff{ ($ vs $)|}1,2'
 err_redefinition_extern_inline:
@@ -25439,23 +25439,23 @@ err_refactor_selection_no_symbol:
   SFINAE: SFINAE_SubstitutionFailure
   Text: there is no symbol at the given location
 err_reference_bind_drops_quals:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: binding reference (?:of type \$ to value of type \$|to value) (?:drops (.*) qualifier(?:|||s)|changes address space|not permitted due to incompatible qualifiers)
+  Regex: binding reference (?:of type (.*) to value of type (.*)|to value) (?:drops (.*) qualifier(?:|||s)|changes address space|not permitted due to incompatible qualifiers)
   SFINAE: SFINAE_SubstitutionFailure
   Text: binding reference %diff{of type $ to value of type $|to value}0,1 %select{drops %3 qualifier%plural{1:|2:|4:|:s}4|changes address space|not permitted due to incompatible qualifiers}2
 err_reference_bind_failed:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: reference (?:to (?:type|incomplete type) \$ could not bind to an (?:rvalue|lvalue) of type \$|could not bind to (?:rvalue|lvalue) of incompatible type)
+  Regex: reference (?:to (?:type|incomplete type) (.*) could not bind to an (?:rvalue|lvalue) of type (.*)|could not bind to (?:rvalue|lvalue) of incompatible type)
   SFINAE: SFINAE_SubstitutionFailure
   Text: reference %diff{to %select{type|incomplete type}1 $ could not bind to an %select{rvalue|lvalue}2 of type $|could not bind to %select{rvalue|lvalue}2 of incompatible type}0,3
 err_reference_bind_init_list:
@@ -27189,13 +27189,13 @@ err_template_arg_must_be_type_suggest:
   SFINAE: SFINAE_SubstitutionFailure
   Text: template argument for template type parameter must be a type; did you forget 'typename'?
 err_template_arg_no_ref_bind:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: non-type template parameter of reference type (?:\$ cannot bind to template argument of type \$|cannot bind to template of incompatible argument type)
+  Regex: non-type template parameter of reference type (?:(.*) cannot bind to template argument of type (.*)|cannot bind to template of incompatible argument type)
   SFINAE: SFINAE_SubstitutionFailure
   Text: non-type template parameter of reference type %diff{$ cannot bind to template argument of type $|cannot bind to template of incompatible argument type}0,1
 err_template_arg_nontype_ambig:
@@ -27319,13 +27319,13 @@ err_template_arg_overload_type:
   SFINAE: SFINAE_SubstitutionFailure
   Text: template argument is the type of an unresolved overloaded function
 err_template_arg_ref_bind_ignores_quals:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: reference binding of non-type template parameter (?:of type \$ to template argument of type \$|to template argument) ignores qualifiers
+  Regex: reference binding of non-type template parameter (?:of type (.*) to template argument of type (.*)|to template argument) ignores qualifiers
   SFINAE: SFINAE_SubstitutionFailure
   Text: reference binding of non-type template parameter %diff{of type $ to template argument of type $|to template argument}0,1 ignores qualifiers
 err_template_arg_reference_var:
@@ -28399,13 +28399,13 @@ err_typecheck_addrof_temporary:
   SFINAE: SFINAE_SubstitutionFailure
   Text: taking the address of a temporary object of type %0
 err_typecheck_ambiguous_condition:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: conversion (?:from \$ to \$|between types) is ambiguous
+  Regex: conversion (?:from (.*) to (.*)|between types) is ambiguous
   SFINAE: SFINAE_SubstitutionFailure
   Text: conversion %diff{from $ to $|between types}0,1 is ambiguous
 err_typecheck_arc_assign_externally_retained:
@@ -28489,23 +28489,23 @@ err_typecheck_bool_condition:
   SFINAE: SFINAE_SubstitutionFailure
   Text: value of type %0 is not contextually convertible to 'bool'
 err_typecheck_call_different_arg_types:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'arguments are of different types(?: \(\$ vs \$\)|)'
+  Regex: 'arguments are of different types(?: \((.*) vs (.*)\)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: arguments are of different types%diff{ ($ vs $)|}0,1
 err_typecheck_call_invalid_ordered_compare:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'ordered compare requires two args of floating point type(?: \(\$ and \$\)|)'
+  Regex: 'ordered compare requires two args of floating point type(?: \((.*) and (.*)\)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: ordered compare requires two args of floating point type%diff{ ($ and $)|}0,1
 err_typecheck_call_invalid_unary_fp:
@@ -28689,23 +28689,23 @@ err_typecheck_choose_expr_requires_constant:
   SFINAE: SFINAE_SubstitutionFailure
   Text: '''__builtin_choose_expr'' requires a constant expression'
 err_typecheck_comparison_of_distinct_blocks:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'comparison of distinct block types(?: \(\$ and \$\)|)'
+  Regex: 'comparison of distinct block types(?: \((.*) and (.*)\)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: comparison of distinct block types%diff{ ($ and $)|}0,1
 err_typecheck_comparison_of_distinct_pointers:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'comparison of distinct pointer types(?: \(\$ and \$\)|)'
+  Regex: 'comparison of distinct pointer types(?: \((.*) and (.*)\)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: comparison of distinct pointer types%diff{ ($ and $)|}0,1
 err_typecheck_comparison_of_fptr_to_void:
@@ -28759,13 +28759,13 @@ err_typecheck_cond_expect_scalar:
   SFINAE: SFINAE_SubstitutionFailure
   Text: used type %0 where arithmetic or pointer type is required
 err_typecheck_cond_incompatible_operands:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'incompatible operand types(?: \(\$ and \$\)|)'
+  Regex: 'incompatible operand types(?: \((.*) and (.*)\)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: incompatible operand types%diff{ ($ and $)|}0,1
 err_typecheck_cond_incompatible_operands_null:
@@ -28779,93 +28779,93 @@ err_typecheck_cond_incompatible_operands_null:
   SFINAE: SFINAE_SubstitutionFailure
   Text: non-pointer operand type %0 incompatible with %select{NULL|nullptr}1
 err_typecheck_convert_discards_qualifiers:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types)) discards qualifiers
+  Regex: (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types)) discards qualifiers
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2 discards qualifiers'
 err_typecheck_convert_incompatible:
-  ArgsCount: 4
+  ArgsCount: 24
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: '(?:(?:assigning to \$ from incompatible type \$|assigning to type from incompatible type)|(?:passing \$ to parameter of incompatible type \$|passing type to parameter of incompatible type)|(?:returning \$ from a function with incompatible result type \$|returning type from a function with incompatible result type)|(?:converting \$ to incompatible type \$|converting type to incompatible type)|(?:initializing \$ with an expression of incompatible type \$|initializing type with an expression of incompatible type)|(?:sending \$ to parameter of incompatible type \$|sending type to parameter of incompatible type)|(?:casting \$ to incompatible type \$|casting type to incompatible type))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)(?:|: different classes(?: \(\$ vs \$\)|)|: different number of parameters \((.*) vs (.*)\)|: type mismatch at \d+(?:st|nd|rd|th) parameter(?: \(\$ vs \$\)|)|: different return type(?: \(\$ vs \$\)|)|: different qualifiers \((.*) vs (.*)\)|: different exception specifications)'
+  Regex: '(?:(?:assigning to (.*) from incompatible type (.*)|assigning to type from incompatible type)|(?:passing (.*) to parameter of incompatible type (.*)|passing type to parameter of incompatible type)|(?:returning (.*) from a function with incompatible result type (.*)|returning type from a function with incompatible result type)|(?:converting (.*) to incompatible type (.*)|converting type to incompatible type)|(?:initializing (.*) with an expression of incompatible type (.*)|initializing type with an expression of incompatible type)|(?:sending (.*) to parameter of incompatible type (.*)|sending type to parameter of incompatible type)|(?:casting (.*) to incompatible type (.*)|casting type to incompatible type))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)(?:|: different classes(?: \((.*) vs (.*)\)|)|: different number of parameters \((.*) vs (.*)\)|: type mismatch at \d+(?:st|nd|rd|th) parameter(?: \((.*) vs (.*)\)|)|: different return type(?: \((.*) vs (.*)\)|)|: different qualifiers \((.*) vs (.*)\)|: different exception specifications)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{%diff{assigning to $ from incompatible type $|assigning to type from incompatible type}0,1|%diff{passing $ to parameter of incompatible type $|passing type to parameter of incompatible type}0,1|%diff{returning $ from a function with incompatible result type $|returning type from a function with incompatible result type}0,1|%diff{converting $ to incompatible type $|converting type to incompatible type}0,1|%diff{initializing $ with an expression of incompatible type $|initializing type with an expression of incompatible type}0,1|%diff{sending $ to parameter of incompatible type $|sending type to parameter of incompatible type}0,1|%diff{casting $ to incompatible type $|casting type to incompatible type}0,1}2%select{|; dereference with *|; take the address with &|; remove *|; remove &}3%select{|: different classes%diff{ ($ vs $)|}5,6|: different number of parameters (%5 vs %6)|: type mismatch at %ordinal5 parameter%diff{ ($ vs $)|}6,7|: different return type%diff{ ($ vs $)|}5,6|: different qualifiers (%5 vs %6)|: different exception specifications}4'
 err_typecheck_convert_incompatible_block_pointer:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: incompatible block pointer types (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types))
+  Regex: incompatible block pointer types (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types))
   SFINAE: SFINAE_SubstitutionFailure
   Text: incompatible block pointer types %select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2
 err_typecheck_convert_incompatible_function_pointer:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: incompatible function pointer types (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
+  Regex: incompatible function pointer types (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
   SFINAE: SFINAE_SubstitutionFailure
   Text: incompatible function pointer types %select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2%select{|; dereference with *|; take the address with &|; remove *|; remove &}3
 err_typecheck_convert_incompatible_pointer:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: incompatible pointer types (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
+  Regex: incompatible pointer types (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
   SFINAE: SFINAE_SubstitutionFailure
   Text: incompatible pointer types %select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2%select{|; dereference with *|; take the address with &|; remove *|; remove &}3
 err_typecheck_convert_incompatible_pointer_sign:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types)) converts between pointers to integer types (?:with different sign|where one is of the unique plain 'char' type and the other is not)
+  Regex: (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types)) converts between pointers to integer types (?:with different sign|where one is of the unique plain 'char' type and the other is not)
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2 converts between pointers to integer types %select{with different sign|where one is of the unique plain ''char'' type and the other is not}3'
 err_typecheck_convert_int_pointer:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: incompatible integer to pointer conversion (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
+  Regex: incompatible integer to pointer conversion (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
   SFINAE: SFINAE_SubstitutionFailure
   Text: incompatible integer to pointer conversion %select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2%select{|; dereference with *|; take the address with &|; remove *|; remove &}3
 err_typecheck_convert_pointer_int:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: incompatible pointer to integer conversion (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
+  Regex: incompatible pointer to integer conversion (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
   SFINAE: SFINAE_SubstitutionFailure
   Text: incompatible pointer to integer conversion %select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2%select{|; dereference with *|; take the address with &|; remove *|; remove &}3
 err_typecheck_convert_pointer_void_func:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types)) converts between void pointer and function pointer
+  Regex: (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types)) converts between void pointer and function pointer
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2 converts between void pointer and function pointer'
 err_typecheck_converted_constant_expression:
@@ -28909,13 +28909,13 @@ err_typecheck_decl_incomplete_type:
   SFINAE: SFINAE_SubstitutionFailure
   Text: variable has incomplete type %0
 err_typecheck_deleted_function:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: conversion function (?:from \$ to \$|between types) invokes a deleted function
+  Regex: conversion function (?:from (.*) to (.*)|between types) invokes a deleted function
   SFINAE: SFINAE_SubstitutionFailure
   Text: conversion function %diff{from $ to $|between types}0,1 invokes a deleted function
 err_typecheck_duplicate_vector_components_not_mlvalue:
@@ -28989,33 +28989,33 @@ err_typecheck_illegal_increment_decrement:
   SFINAE: SFINAE_SubstitutionFailure
   Text: cannot %select{decrement|increment}1 value of type %0
 err_typecheck_incompatible_address_space:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: (?:(?:assigning \$ to \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types)) changes address space of pointer
+  Regex: (?:(?:assigning (.*) to (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types)) changes address space of pointer
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{%diff{assigning $ to $|assigning to different types}1,0|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2 changes address space of pointer'
 err_typecheck_incompatible_nested_address_space:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: (?:(?:assigning \$ to \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types)) changes address space of nested pointer
+  Regex: (?:(?:assigning (.*) to (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types)) changes address space of nested pointer
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{%diff{assigning $ to $|assigning to different types}1,0|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2 changes address space of nested pointer'
 err_typecheck_incompatible_ownership:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: (?:(?:assigning \$ to \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types)) changes retain/release properties of pointer
+  Regex: (?:(?:assigning (.*) to (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types)) changes retain/release properties of pointer
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{%diff{assigning $ to $|assigning to different types}1,0|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2 changes retain/release properties of pointer'
 err_typecheck_incomplete_array_needs_initializer:
@@ -29219,13 +29219,13 @@ err_typecheck_member_reference_unknown:
   SFINAE: SFINAE_SubstitutionFailure
   Text: cannot refer to member %0 in %1 with '%select{.|->}2'
 err_typecheck_missing_return_type_incompatible:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: (?:return type \$ must match previous return type \$|return type must match previous return type) when (?:block literal|lambda expression) has unspecified explicit return type
+  Regex: (?:return type (.*) must match previous return type (.*)|return type must match previous return type) when (?:block literal|lambda expression) has unspecified explicit return type
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%diff{return type $ must match previous return type $|return type must match previous return type}0,1 when %select{block literal|lambda expression}2 has unspecified explicit return type'
 err_typecheck_negative_array_size:
@@ -29249,33 +29249,33 @@ err_typecheck_non_object_not_modifiable_lvalue:
   SFINAE: SFINAE_SubstitutionFailure
   Text: non-object type %0 is not assignable
 err_typecheck_nonviable_condition:
-  ArgsCount: 0
+  ArgsCount: 4
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'no viable conversion(?:(?: from \$ to \$|)|(?: from returned value of type \$ to function return type \$|))'
+  Regex: 'no viable conversion(?:(?: from (.*) to (.*)|)|(?: from returned value of type (.*) to function return type (.*)|))'
   SFINAE: SFINAE_SubstitutionFailure
   Text: no viable conversion%select{%diff{ from $ to $|}1,2|%diff{ from returned value of type $ to function return type $|}1,2}0
 err_typecheck_nonviable_condition_incomplete:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: 'no viable conversion(?: from \$ to incomplete type \$|)'
+  Regex: 'no viable conversion(?: from (.*) to incomplete type (.*)|)'
   SFINAE: SFINAE_SubstitutionFailure
   Text: no viable conversion%diff{ from $ to incomplete type $|}0,1
 err_typecheck_op_on_nonoverlapping_address_space_pointers:
-  ArgsCount: 0
+  ArgsCount: 6
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: '(?:comparison between (?: \(\$ and \$\)|)|arithmetic operation with operands of type (?: \(\$ and \$\)|)|conditional operator with the second and third operands of type (?: \(\$ and \$\)|)) which are pointers to non-overlapping address spaces'
+  Regex: '(?:comparison between (?: \((.*) and (.*)\)|)|arithmetic operation with operands of type (?: \((.*) and (.*)\)|)|conditional operator with the second and third operands of type (?: \((.*) and (.*)\)|)) which are pointers to non-overlapping address spaces'
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%select{comparison between %diff{ ($ and $)|}0,1|arithmetic operation with operands of type %diff{ ($ and $)|}0,1|conditional operator with the second and third operands of type %diff{ ($ and $)|}0,1}2 which are pointers to non-overlapping address spaces'
 err_typecheck_ordered_comparison_of_function_pointers:
@@ -29359,13 +29359,13 @@ err_typecheck_statement_requires_scalar:
   SFINAE: SFINAE_SubstitutionFailure
   Text: statement requires expression of scalar type (%0 invalid)
 err_typecheck_sub_ptr_compatible:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_ERROR
   Component: Sema
   DefaultSeverity: SEV_Error
   Group: None
-  Regex: (?:\$ and \$ are not pointers to compatible types|pointers to incompatible types)
+  Regex: (?:(.*) and (.*) are not pointers to compatible types|pointers to incompatible types)
   SFINAE: SFINAE_SubstitutionFailure
   Text: '%diff{$ and $ are not pointers to compatible types|pointers to incompatible types}0,1'
 err_typecheck_subscript_not_integer:
@@ -31549,13 +31549,13 @@ ext_anonymous_union:
   SFINAE: SFINAE_Suppress
   Text: anonymous unions are a C11 extension
 ext_array_init_copy:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Ignored
   Group: gnu-compound-literal-initializer
-  Regex: initialization of an array (?:of type \$ from a compound literal of type \$|from a compound literal) is a GNU extension
+  Regex: initialization of an array (?:of type (.*) from a compound literal of type (.*)|from a compound literal) is a GNU extension
   SFINAE: SFINAE_Suppress
   Text: initialization of an array %diff{of type $ from a compound literal of type $|from a compound literal}0,1 is a GNU extension
 ext_array_init_parens:
@@ -33699,13 +33699,13 @@ ext_nested_namespace_definition:
   SFINAE: SFINAE_Suppress
   Text: nested namespace definition is a C++17 extension; define each namespace separately
 ext_nested_pointer_qualifier_mismatch:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: incompatible-pointer-types-discards-qualifiers
-  Regex: (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types)) discards qualifiers in nested pointer types
+  Regex: (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types)) discards qualifiers in nested pointer types
   SFINAE: SFINAE_Suppress
   Text: '%select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2 discards qualifiers in nested pointer types'
 ext_new_paren_array_nonconst:
@@ -33989,13 +33989,13 @@ ext_param_not_declared:
   SFINAE: SFINAE_Suppress
   Text: parameter %0 was not declared, defaulting to type 'int'
 ext_param_promoted_not_compatible_with_prototype:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: knr-promoted-parameter
-  Regex: (?:promoted type \$ of K&R function parameter is not compatible with the parameter type \$|promoted type of K&R function parameter is not compatible with parameter type) declared in a previous prototype
+  Regex: (?:promoted type (.*) of K&R function parameter is not compatible with the parameter type (.*)|promoted type of K&R function parameter is not compatible with parameter type) declared in a previous prototype
   SFINAE: SFINAE_Suppress
   Text: '%diff{promoted type $ of K&R function parameter is not compatible with the parameter type $|promoted type of K&R function parameter is not compatible with parameter type}0,1 declared in a previous prototype'
 ext_parameter_name_omitted_c2x:
@@ -34639,13 +34639,13 @@ ext_typecheck_addrof_void:
   SFINAE: SFINAE_Suppress
   Text: ISO C forbids taking the address of an expression of type 'void'
 ext_typecheck_base_super:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Ignored
   Group: super-class-method-mismatch
-  Regex: method parameter type (?:\$ does not match super class method parameter type \$|does not match super class method parameter type)
+  Regex: method parameter type (?:(.*) does not match super class method parameter type (.*)|does not match super class method parameter type)
   SFINAE: SFINAE_Suppress
   Text: method parameter type %diff{$ does not match super class method parameter type $|does not match super class method parameter type}0,1
 ext_typecheck_cast_nonscalar:
@@ -34679,13 +34679,13 @@ ext_typecheck_compare_complete_incomplete_pointers:
   SFINAE: SFINAE_Suppress
   Text: pointer comparisons before C11 need to be between two complete or two incomplete types; %0 is %select{|in}2complete and %1 is %select{|in}3complete
 ext_typecheck_comparison_of_distinct_pointers:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: compare-distinct-pointer-types
-  Regex: 'comparison of distinct pointer types(?: \(\$ and \$\)|)'
+  Regex: 'comparison of distinct pointer types(?: \((.*) and (.*)\)|)'
   SFINAE: SFINAE_Suppress
   Text: comparison of distinct pointer types%diff{ ($ and $)|}0,1
 ext_typecheck_comparison_of_fptr_to_void:
@@ -34719,13 +34719,13 @@ ext_typecheck_cond_incompatible_operands:
   SFINAE: SFINAE_Suppress
   Text: incompatible operand types (%0 and %1)
 ext_typecheck_cond_incompatible_pointers:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: pointer-type-mismatch
-  Regex: 'pointer type mismatch(?: \(\$ and \$\)|)'
+  Regex: 'pointer type mismatch(?: \((.*) and (.*)\)|)'
   SFINAE: SFINAE_Suppress
   Text: pointer type mismatch%diff{ ($ and $)|}0,1
 ext_typecheck_cond_one_void:
@@ -34739,83 +34739,83 @@ ext_typecheck_cond_one_void:
   SFINAE: SFINAE_Suppress
   Text: C99 forbids conditional expressions with only one void side
 ext_typecheck_cond_pointer_integer_mismatch:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: conditional-type-mismatch
-  Regex: 'pointer/integer type mismatch in conditional expression(?: \(\$ and \$\)|)'
+  Regex: 'pointer/integer type mismatch in conditional expression(?: \((.*) and (.*)\)|)'
   SFINAE: SFINAE_Suppress
   Text: pointer/integer type mismatch in conditional expression%diff{ ($ and $)|}0,1
 ext_typecheck_convert_discards_qualifiers:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: incompatible-pointer-types-discards-qualifiers
-  Regex: (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types)) discards qualifiers
+  Regex: (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types)) discards qualifiers
   SFINAE: SFINAE_Suppress
   Text: '%select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2 discards qualifiers'
 ext_typecheck_convert_incompatible_function_pointer:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: incompatible-function-pointer-types
-  Regex: incompatible function pointer types (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
+  Regex: incompatible function pointer types (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
   SFINAE: SFINAE_Suppress
   Text: incompatible function pointer types %select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2%select{|; dereference with *|; take the address with &|; remove *|; remove &}3
 ext_typecheck_convert_incompatible_pointer:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: incompatible-pointer-types
-  Regex: incompatible pointer types (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
+  Regex: incompatible pointer types (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
   SFINAE: SFINAE_Suppress
   Text: incompatible pointer types %select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2%select{|; dereference with *|; take the address with &|; remove *|; remove &}3
 ext_typecheck_convert_incompatible_pointer_sign:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: pointer-sign
-  Regex: (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types)) converts between pointers to integer types (?:with different sign|where one is of the unique plain 'char' type and the other is not)
+  Regex: (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types)) converts between pointers to integer types (?:with different sign|where one is of the unique plain 'char' type and the other is not)
   SFINAE: SFINAE_Suppress
   Text: '%select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2 converts between pointers to integer types %select{with different sign|where one is of the unique plain ''char'' type and the other is not}3'
 ext_typecheck_convert_int_pointer:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: int-conversion
-  Regex: incompatible integer to pointer conversion (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
+  Regex: incompatible integer to pointer conversion (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
   SFINAE: SFINAE_SubstitutionFailure
   Text: incompatible integer to pointer conversion %select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2%select{|; dereference with *|; take the address with &|; remove *|; remove &}3
 ext_typecheck_convert_pointer_int:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: int-conversion
-  Regex: incompatible pointer to integer conversion (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
+  Regex: incompatible pointer to integer conversion (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types))(?:|; dereference with \*|; take the address with &|; remove \*|; remove &)
   SFINAE: SFINAE_Suppress
   Text: incompatible pointer to integer conversion %select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2%select{|; dereference with *|; take the address with &|; remove *|; remove &}3
 ext_typecheck_convert_pointer_void_func:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_EXTENSION
   Component: Sema
   DefaultSeverity: SEV_Ignored
   Group: None
-  Regex: (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types)) converts between void pointer and function pointer
+  Regex: (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types)) converts between void pointer and function pointer
   SFINAE: SFINAE_Suppress
   Text: '%select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2 converts between void pointer and function pointer'
 ext_typecheck_decl_incomplete_type:
@@ -35359,13 +35359,13 @@ note_ambiguous_member_type_found:
   SFINAE: SFINAE_Suppress
   Text: member type %0 found by ambiguous name lookup
 note_ambiguous_type_conversion:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: because of ambiguity in conversion (?:of \$ to \$|between types)
+  Regex: because of ambiguity in conversion (?:of (.*) to (.*)|between types)
   SFINAE: SFINAE_Suppress
   Text: because of ambiguity in conversion %diff{of $ to $|between types}0,1
 note_anonymous_namespace:
@@ -39139,13 +39139,13 @@ note_header_guard:
   SFINAE: SFINAE_Suppress
   Text: '%0 is defined here; did you mean %1?'
 note_hidden_overloaded_virtual_declared_here:
-  ArgsCount: 5
+  ArgsCount: 11
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: 'hidden overloaded virtual function (.*) declared here(?:|: different classes(?: \(\$ vs \$\)|)|: different number of parameters \((.*) vs (.*)\)|: type mismatch at \d+(?:st|nd|rd|th) parameter(?: \(\$ vs \$\)|)|: different return type(?: \(\$ vs \$\)|)|: different qualifiers \((.*) vs (.*)\)|: different exception specifications)'
+  Regex: 'hidden overloaded virtual function (.*) declared here(?:|: different classes(?: \((.*) vs (.*)\)|)|: different number of parameters \((.*) vs (.*)\)|: type mismatch at \d+(?:st|nd|rd|th) parameter(?: \((.*) vs (.*)\)|)|: different return type(?: \((.*) vs (.*)\)|)|: different qualifiers \((.*) vs (.*)\)|: different exception specifications)'
   SFINAE: SFINAE_Suppress
   Text: 'hidden overloaded virtual function %q0 declared here%select{|: different classes%diff{ ($ vs $)|}2,3|: different number of parameters (%2 vs %3)|: type mismatch at %ordinal2 parameter%diff{ ($ vs $)|}3,4|: different return type%diff{ ($ vs $)|}2,3|: different qualifiers (%2 vs %3)|: different exception specifications}1'
 note_hidden_tag:
@@ -39599,13 +39599,13 @@ note_local_decl_close_match:
   SFINAE: SFINAE_Suppress
   Text: local declaration nearly matches
 note_local_decl_close_param_match:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: 'type of \d+(?:st|nd|rd|th) parameter of local declaration does not match definition(?: \(\$ vs \$\)|)'
+  Regex: 'type of \d+(?:st|nd|rd|th) parameter of local declaration does not match definition(?: \((.*) vs (.*)\)|)'
   SFINAE: SFINAE_Suppress
   Text: type of %ordinal0 parameter of local declaration does not match definition%diff{ ($ vs $)|}1,2
 note_local_var_initializer:
@@ -39799,13 +39799,13 @@ note_member_def_close_match:
   SFINAE: SFINAE_Suppress
   Text: member declaration nearly matches
 note_member_def_close_param_match:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: 'type of \d+(?:st|nd|rd|th) parameter of member declaration does not match definition(?: \(\$ vs \$\)|)'
+  Regex: 'type of \d+(?:st|nd|rd|th) parameter of member declaration does not match definition(?: \((.*) vs (.*)\)|)'
   SFINAE: SFINAE_Suppress
   Text: type of %ordinal0 parameter of member declaration does not match definition%diff{ ($ vs $)|}1,2
 note_member_first_declared_here:
@@ -40199,13 +40199,13 @@ note_musttail_fix_non_prototype:
   SFINAE: SFINAE_Suppress
   Text: add 'void' to the parameter list to turn an old-style K&R function declaration into a prototype
 note_musttail_mismatch:
-  ArgsCount: 2
+  ArgsCount: 8
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: 'target function (?:is a member of different class(?: \(expected \$ but has \$\)|)|has different number of parameters \(expected (.*) but has (.*)\)|has type mismatch at \d+(?:st|nd|rd|th) parameter(?: \(expected \$ but has \$\)|)|has different return type(?: \(\$ expected but has \$\)|))'
+  Regex: 'target function (?:is a member of different class(?: \(expected (.*) but has (.*)\)|)|has different number of parameters \(expected (.*) but has (.*)\)|has type mismatch at \d+(?:st|nd|rd|th) parameter(?: \(expected (.*) but has (.*)\)|)|has different return type(?: \((.*) expected but has (.*)\)|))'
   SFINAE: SFINAE_Suppress
   Text: target function %select{is a member of different class%diff{ (expected $ but has $)|}1,2|has different number of parameters (expected %1 but has %2)|has type mismatch at %ordinal3 parameter%diff{ (expected $ but has $)|}1,2|has different return type%diff{ ($ expected but has $)|}1,2}0
 note_musttail_structors_forbidden:
@@ -40539,13 +40539,13 @@ note_nontrivial_objc_ownership:
   SFINAE: SFINAE_Suppress
   Text: because type %0 has a member with %select{no|no|__strong|__weak|__autoreleasing}1 ownership
 note_nontrivial_param_type:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: because its parameter is (?:of type \$, not \$|of the wrong type)
+  Regex: because its parameter is (?:of type (.*), not (.*)|of the wrong type)
   SFINAE: SFINAE_Suppress
   Text: because its parameter is %diff{of type $, not $|of the wrong type}2,3
 note_nontrivial_subobject:
@@ -41599,13 +41599,13 @@ note_ovl_builtin_candidate:
   SFINAE: SFINAE_Suppress
   Text: built-in candidate %0
 note_ovl_candidate:
-  ArgsCount: 5
+  ArgsCount: 11
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: 'candidate (?:function|function|function \(with reversed parameter order\)|constructor|constructor \(the implicit default constructor\)|constructor \(the implicit copy constructor\)|constructor \(the implicit move constructor\)|function \(the implicit copy assignment operator\)|function \(the implicit move assignment operator\)|function \(the implicit ''operator=='' for this ''operator<=>\)''|inherited constructor)(?:| template| (.*))(?:| has different class(?: \(expected \$ but has \$\)|)| has different number of parameters \(expected (.*) but has (.*)\)| has type mismatch at \d+(?:st|nd|rd|th) parameter(?: \(expected \$ but has \$\)|)| has different return type(?: \(\$ expected but has \$\)|)| has different qualifiers \(expected (.*) but found (.*)\)| has different exception specification)'
+  Regex: 'candidate (?:function|function|function \(with reversed parameter order\)|constructor|constructor \(the implicit default constructor\)|constructor \(the implicit copy constructor\)|constructor \(the implicit move constructor\)|function \(the implicit copy assignment operator\)|function \(the implicit move assignment operator\)|function \(the implicit ''operator=='' for this ''operator<=>\)''|inherited constructor)(?:| template| (.*))(?:| has different class(?: \(expected (.*) but has (.*)\)|)| has different number of parameters \(expected (.*) but has (.*)\)| has type mismatch at \d+(?:st|nd|rd|th) parameter(?: \(expected (.*) but has (.*)\)|)| has different return type(?: \((.*) expected but has (.*)\)|)| has different qualifiers \(expected (.*) but found (.*)\)| has different exception specification)'
   SFINAE: SFINAE_Suppress
   Text: candidate %sub{select_ovl_candidate_kind}0,1,3%select{| has different class%diff{ (expected $ but has $)|}5,6| has different number of parameters (expected %5 but has %6)| has type mismatch at %ordinal5 parameter%diff{ (expected $ but has $)|}6,7| has different return type%diff{ ($ expected but has $)|}5,6| has different qualifiers (expected %5 but found %6)| has different exception specification}4
 note_ovl_candidate_arity:
@@ -41649,13 +41649,13 @@ note_ovl_candidate_bad_addrspace_this:
   SFINAE: SFINAE_Suppress
   Text: 'candidate %sub{select_ovl_candidate_kind}0,1,2 not viable: ''this'' object is in %3, but method expects object in %4'
 note_ovl_candidate_bad_arc_conv:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: 'candidate (?:function|function|function \(with reversed parameter order\)|constructor|constructor \(the implicit default constructor\)|constructor \(the implicit copy constructor\)|constructor \(the implicit move constructor\)|function \(the implicit copy assignment operator\)|function \(the implicit move assignment operator\)|function \(the implicit ''operator=='' for this ''operator<=>\)''|inherited constructor)(?:| template| (.*)) not viable: cannot implicitly convert argument (?:of type \$ to \$|type to parameter type) for (?:\d+(?:st|nd|rd|th) argument|object argument) under ARC'
+  Regex: 'candidate (?:function|function|function \(with reversed parameter order\)|constructor|constructor \(the implicit default constructor\)|constructor \(the implicit copy constructor\)|constructor \(the implicit move constructor\)|function \(the implicit copy assignment operator\)|function \(the implicit move assignment operator\)|function \(the implicit ''operator=='' for this ''operator<=>\)''|inherited constructor)(?:| template| (.*)) not viable: cannot implicitly convert argument (?:of type (.*) to (.*)|type to parameter type) for (?:\d+(?:st|nd|rd|th) argument|object argument) under ARC'
   SFINAE: SFINAE_Suppress
   Text: 'candidate %sub{select_ovl_candidate_kind}0,1,2 not viable: cannot implicitly convert argument %diff{of type $ to $|type to parameter type}3,4 for %select{%ordinal6 argument|object argument}5 under ARC'
 note_ovl_candidate_bad_base_to_derived_conv:
@@ -41669,23 +41669,23 @@ note_ovl_candidate_bad_base_to_derived_conv:
   SFINAE: SFINAE_Suppress
   Text: 'candidate %sub{select_ovl_candidate_kind}0,1,2 not viable: cannot %select{convert from|convert from|bind}3 %select{base class pointer|superclass|base class object of type}3 %4 to %select{derived class pointer|subclass|derived class reference}3 %5 for %ordinal6 argument'
 note_ovl_candidate_bad_conv:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: 'candidate (?:function|function|function \(with reversed parameter order\)|constructor|constructor \(the implicit default constructor\)|constructor \(the implicit copy constructor\)|constructor \(the implicit move constructor\)|function \(the implicit copy assignment operator\)|function \(the implicit move assignment operator\)|function \(the implicit ''operator=='' for this ''operator<=>\)''|inherited constructor)(?:| template| (.*)) not viable: no known conversion (?:from \$ to \$|from argument type to parameter type) for (?:\d+(?:st|nd|rd|th) argument|object argument)(?:|; dereference the argument with \*|; take the address of the argument with &|; remove \*|; remove &)'
+  Regex: 'candidate (?:function|function|function \(with reversed parameter order\)|constructor|constructor \(the implicit default constructor\)|constructor \(the implicit copy constructor\)|constructor \(the implicit move constructor\)|function \(the implicit copy assignment operator\)|function \(the implicit move assignment operator\)|function \(the implicit ''operator=='' for this ''operator<=>\)''|inherited constructor)(?:| template| (.*)) not viable: no known conversion (?:from (.*) to (.*)|from argument type to parameter type) for (?:\d+(?:st|nd|rd|th) argument|object argument)(?:|; dereference the argument with \*|; take the address of the argument with &|; remove \*|; remove &)'
   SFINAE: SFINAE_Suppress
   Text: 'candidate %sub{select_ovl_candidate_kind}0,1,2 not viable: no known conversion %diff{from $ to $|from argument type to parameter type}3,4 for %select{%ordinal6 argument|object argument}5%select{|; dereference the argument with *|; take the address of the argument with &|; remove *|; remove &}7'
 note_ovl_candidate_bad_conv_incomplete:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: 'candidate (?:function|function|function \(with reversed parameter order\)|constructor|constructor \(the implicit default constructor\)|constructor \(the implicit copy constructor\)|constructor \(the implicit move constructor\)|function \(the implicit copy assignment operator\)|function \(the implicit move assignment operator\)|function \(the implicit ''operator=='' for this ''operator<=>\)''|inherited constructor)(?:| template| (.*)) not viable: cannot convert argument of incomplete type (?:\$ to \$|to parameter type) for (?:\d+(?:st|nd|rd|th) argument|object argument)(?:|; dereference the argument with \*|; take the address of the argument with &|; remove \*|; remove &)'
+  Regex: 'candidate (?:function|function|function \(with reversed parameter order\)|constructor|constructor \(the implicit default constructor\)|constructor \(the implicit copy constructor\)|constructor \(the implicit move constructor\)|function \(the implicit copy assignment operator\)|function \(the implicit move assignment operator\)|function \(the implicit ''operator=='' for this ''operator<=>\)''|inherited constructor)(?:| template| (.*)) not viable: cannot convert argument of incomplete type (?:(.*) to (.*)|to parameter type) for (?:\d+(?:st|nd|rd|th) argument|object argument)(?:|; dereference the argument with \*|; take the address of the argument with &|; remove \*|; remove &)'
   SFINAE: SFINAE_Suppress
   Text: 'candidate %sub{select_ovl_candidate_kind}0,1,2 not viable: cannot convert argument of incomplete type %diff{$ to $|to parameter type}3,4 for %select{%ordinal6 argument|object argument}5%select{|; dereference the argument with *|; take the address of the argument with &|; remove *|; remove &}7'
 note_ovl_candidate_bad_cvr:
@@ -41799,13 +41799,13 @@ note_ovl_candidate_constraints_not_satisfied:
   SFINAE: SFINAE_Suppress
   Text: 'candidate %sub{select_ovl_candidate_kind}0,1,2 not viable: constraints not satisfied'
 note_ovl_candidate_deduced_mismatch:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: 'candidate template ignored: deduced type (?:\$ of (?:|element of )\d+(?:st|nd|rd|th) parameter does not match adjusted type \$ of (?:|element of )argument|of (?:|element of )\d+(?:st|nd|rd|th) parameter does not match adjusted type of (?:|element of )argument)(.*)'
+  Regex: 'candidate template ignored: deduced type (?:(.*) of (?:|element of )\d+(?:st|nd|rd|th) parameter does not match adjusted type (.*) of (?:|element of )argument|of (?:|element of )\d+(?:st|nd|rd|th) parameter does not match adjusted type of (?:|element of )argument)(.*)'
   SFINAE: SFINAE_Suppress
   Text: 'candidate template ignored: deduced type %diff{$ of %select{|element of }4%ordinal0 parameter does not match adjusted type $ of %select{|element of }4argument|of %select{|element of }4%ordinal0 parameter does not match adjusted type of %select{|element of }4argument}1,2%3'
 note_ovl_candidate_deleted:
@@ -41929,23 +41929,23 @@ note_ovl_candidate_incomplete_deduction_pack:
   SFINAE: SFINAE_Suppress
   Text: 'candidate template ignored: deduced too few arguments for expanded pack %0; no argument for %ordinal1 expanded parameter in deduced argument pack %2'
 note_ovl_candidate_inconsistent_deduction:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: 'candidate template ignored: deduced (?:conflicting types|conflicting values|conflicting templates|packs of different lengths) for parameter (.*)(?: \(\$ vs\. \$\)|)'
+  Regex: 'candidate template ignored: deduced (?:conflicting types|conflicting values|conflicting templates|packs of different lengths) for parameter (.*)(?: \((.*) vs\. (.*)\)|)'
   SFINAE: SFINAE_Suppress
   Text: 'candidate template ignored: deduced %select{conflicting types|conflicting values|conflicting templates|packs of different lengths}0 for parameter %1%diff{ ($ vs. $)|}2,3'
 note_ovl_candidate_inconsistent_deduction_types:
-  ArgsCount: 6
+  ArgsCount: 8
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: 'candidate template ignored: deduced values (?:of conflicting types for parameter (.*) \((.*) of type \$ vs\. (.*) of type \$\)|(.*) and (.*) of conflicting types for parameter (.*))'
+  Regex: 'candidate template ignored: deduced values (?:of conflicting types for parameter (.*) \((.*) of type (.*) vs\. (.*) of type (.*)\)|(.*) and (.*) of conflicting types for parameter (.*))'
   SFINAE: SFINAE_Suppress
   Text: 'candidate template ignored: deduced values %diff{of conflicting types for parameter %0 (%1 of type $ vs. %3 of type $)|%1 and %3 of conflicting types for parameter %0}2,4'
 note_ovl_candidate_inherited_constructor:
@@ -41979,13 +41979,13 @@ note_ovl_candidate_instantiation_depth:
   SFINAE: SFINAE_Suppress
   Text: 'candidate template ignored: substitution exceeded maximum template instantiation depth'
 note_ovl_candidate_non_deduced_mismatch:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_NOTE
   Component: Sema
   DefaultSeverity: SEV_Fatal
   Group: None
-  Regex: 'candidate template ignored: could not match (?:\$ against \$|types)'
+  Regex: 'candidate template ignored: could not match (?:(.*) against (.*)|types)'
   SFINAE: SFINAE_Suppress
   Text: 'candidate template ignored: could not match %diff{$ against $|types}0,1'
 note_ovl_candidate_non_deduced_mismatch_qualified:
@@ -45029,43 +45029,43 @@ warn_arith_conv_enum_float_cxx20:
   SFINAE: SFINAE_Suppress
   Text: '%sub{select_arith_conv_kind}0 %select{floating-point|enumeration}1 type %2 %plural{2:with|4:from|:and}0 %select{enumeration|floating-point}1 type %3 is deprecated'
 warn_arith_conv_mixed_anon_enum_types:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Ignored
   Group: anon-enum-enum-conversion
-  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \(\$ and \$\)|)'
+  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \((.*) and (.*)\)|)'
   SFINAE: SFINAE_Suppress
   Text: '%sub{select_arith_conv_kind}0 different enumeration types%diff{ ($ and $)|}1,2'
 warn_arith_conv_mixed_anon_enum_types_cxx20:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: deprecated-anon-enum-enum-conversion
-  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \(\$ and \$\)|) is deprecated'
+  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \((.*) and (.*)\)|) is deprecated'
   SFINAE: SFINAE_Suppress
   Text: '%sub{select_arith_conv_kind}0 different enumeration types%diff{ ($ and $)|}1,2 is deprecated'
 warn_arith_conv_mixed_enum_types:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Ignored
   Group: enum-enum-conversion
-  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \(\$ and \$\)|)'
+  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \((.*) and (.*)\)|)'
   SFINAE: SFINAE_Suppress
   Text: '%sub{select_arith_conv_kind}0 different enumeration types%diff{ ($ and $)|}1,2'
 warn_arith_conv_mixed_enum_types_cxx20:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: deprecated-enum-enum-conversion
-  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \(\$ and \$\)|) is deprecated'
+  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \((.*) and (.*)\)|) is deprecated'
   SFINAE: SFINAE_Suppress
   Text: '%sub{select_arith_conv_kind}0 different enumeration types%diff{ ($ and $)|}1,2 is deprecated'
 warn_arm_interrupt_calling_convention:
@@ -46349,13 +46349,13 @@ warn_cast_calling_conv:
   SFINAE: SFINAE_Suppress
   Text: cast between incompatible calling conventions '%0' and '%1'; calls through this pointer may abort at runtime
 warn_cast_function_type:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Ignored
   Group: cast-function-type
-  Regex: cast (?:from \$ to \$ |)converts to incompatible function type
+  Regex: cast (?:from (.*) to (.*) |)converts to incompatible function type
   SFINAE: SFINAE_Suppress
   Text: cast %diff{from $ to $ |}0,1converts to incompatible function type
 warn_cast_nonnull_to_bool:
@@ -46559,33 +46559,33 @@ warn_comparison_bitwise_or:
   SFINAE: SFINAE_Suppress
   Text: bitwise or with non-zero value always evaluates to true
 warn_comparison_mixed_enum_types:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: enum-compare
-  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \(\$ and \$\)|)'
+  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \((.*) and (.*)\)|)'
   SFINAE: SFINAE_Suppress
   Text: '%sub{select_arith_conv_kind}0 different enumeration types%diff{ ($ and $)|}1,2'
 warn_comparison_mixed_enum_types_cxx20:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: deprecated-enum-compare
-  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \(\$ and \$\)|) is deprecated'
+  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \((.*) and (.*)\)|) is deprecated'
   SFINAE: SFINAE_Suppress
   Text: '%sub{select_arith_conv_kind}0 different enumeration types%diff{ ($ and $)|}1,2 is deprecated'
 warn_comparison_of_mixed_enum_types_switch:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: enum-compare-switch
-  Regex: 'comparison of different enumeration types in switch statement(?: \(\$ and \$\)|)'
+  Regex: 'comparison of different enumeration types in switch statement(?: \((.*) and (.*)\)|)'
   SFINAE: SFINAE_Suppress
   Text: comparison of different enumeration types in switch statement%diff{ ($ and $)|}0,1
 warn_completion_handler_called_twice:
@@ -46679,23 +46679,23 @@ warn_condition_is_idiomatic_assignment:
   SFINAE: SFINAE_Suppress
   Text: using the result of an assignment as a condition without parentheses
 warn_conditional_mixed_enum_types:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Ignored
   Group: enum-compare-conditional
-  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \(\$ and \$\)|)'
+  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \((.*) and (.*)\)|)'
   SFINAE: SFINAE_Suppress
   Text: '%sub{select_arith_conv_kind}0 different enumeration types%diff{ ($ and $)|}1,2'
 warn_conditional_mixed_enum_types_cxx20:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: deprecated-enum-compare-conditional
-  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \(\$ and \$\)|) is deprecated'
+  Regex: '(?:arithmetic between|bitwise operation between|comparison of|conditional expression between|compound assignment of) different enumeration types(?: \((.*) and (.*)\)|) is deprecated'
   SFINAE: SFINAE_Suppress
   Text: '%sub{select_arith_conv_kind}0 different enumeration types%diff{ ($ and $)|}1,2 is deprecated'
 warn_conflicting_nullability_attr_overriding_param_types:
@@ -46729,13 +46729,13 @@ warn_conflicting_overriding_param_modifiers:
   SFINAE: SFINAE_Suppress
   Text: conflicting distributed object modifiers on parameter type in declaration of %0
 warn_conflicting_overriding_param_types:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Ignored
   Group: overriding-method-mismatch
-  Regex: 'conflicting parameter types in declaration of (.*)(?:: \$ vs \$|)'
+  Regex: 'conflicting parameter types in declaration of (.*)(?:: (.*) vs (.*)|)'
   SFINAE: SFINAE_Suppress
   Text: 'conflicting parameter types in declaration of %0%diff{: $ vs $|}1,2'
 warn_conflicting_overriding_ret_type_modifiers:
@@ -46749,13 +46749,13 @@ warn_conflicting_overriding_ret_type_modifiers:
   SFINAE: SFINAE_Suppress
   Text: conflicting distributed object modifiers on return type in declaration of %0
 warn_conflicting_overriding_ret_types:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Ignored
   Group: overriding-method-mismatch
-  Regex: 'conflicting return type in declaration of (.*)(?:: \$ vs \$|)'
+  Regex: 'conflicting return type in declaration of (.*)(?:: (.*) vs (.*)|)'
   SFINAE: SFINAE_Suppress
   Text: 'conflicting return type in declaration of %0%diff{: $ vs $|}1,2'
 warn_conflicting_overriding_variadic:
@@ -46779,13 +46779,13 @@ warn_conflicting_param_modifiers:
   SFINAE: SFINAE_Suppress
   Text: conflicting distributed object modifiers on parameter type in implementation of %0
 warn_conflicting_param_types:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: mismatched-parameter-types
-  Regex: 'conflicting parameter types in implementation of (.*)(?:: \$ vs \$|)'
+  Regex: 'conflicting parameter types in implementation of (.*)(?:: (.*) vs (.*)|)'
   SFINAE: SFINAE_Suppress
   Text: 'conflicting parameter types in implementation of %0%diff{: $ vs $|}1,2'
 warn_conflicting_ret_type_modifiers:
@@ -46799,13 +46799,13 @@ warn_conflicting_ret_type_modifiers:
   SFINAE: SFINAE_Suppress
   Text: conflicting distributed object modifiers on return type in implementation of %0
 warn_conflicting_ret_types:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: mismatched-return-types
-  Regex: 'conflicting return type in implementation of (.*)(?:: \$ vs \$|)'
+  Regex: 'conflicting return type in implementation of (.*)(?:: (.*) vs (.*)|)'
   SFINAE: SFINAE_Suppress
   Text: 'conflicting return type in implementation of %0%diff{: $ vs $|}1,2'
 warn_conflicting_variadic:
@@ -50499,13 +50499,13 @@ warn_for_range_begin_end_types_differ:
   SFINAE: SFINAE_Suppress
   Text: '''begin'' and ''end'' returning different types (%0 and %1) is incompatible with C++ standards before C++17'
 warn_for_range_const_ref_binds_temp_built_from_ref:
-  ArgsCount: 1
+  ArgsCount: 3
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Ignored
   Group: range-loop-construct
-  Regex: loop variable (.*) (?:of type \$ binds to a temporary constructed from type \$|binds to a temporary constructed from a different type)
+  Regex: loop variable (.*) (?:of type (.*) binds to a temporary constructed from type (.*)|binds to a temporary constructed from a different type)
   SFINAE: SFINAE_Suppress
   Text: loop variable %0 %diff{of type $ binds to a temporary constructed from type $|binds to a temporary constructed from a different type}1,2
 warn_for_range_copy:
@@ -51559,13 +51559,13 @@ warn_incompatible_exception_specs:
   SFINAE: SFINAE_Suppress
   Text: target exception specification is not superset of source
 warn_incompatible_qualified_id:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: None
-  Regex: (?:(?:assigning to \$ from incompatible type \$|assigning to type from incompatible type)|(?:passing \$ to parameter of incompatible type \$|passing type to parameter of incompatible type)|(?:returning \$ from a function with incompatible result type \$|returning type from a function with incompatible result type)|(?:converting \$ to incompatible type \$|converting type to incompatible type)|(?:initializing \$ with an expression of incompatible type \$|initializing type with an expression of incompatible type)|(?:sending \$ to parameter of incompatible type \$|sending type to parameter of incompatible type)|(?:casting \$ to incompatible type \$|casting type to incompatible type))
+  Regex: (?:(?:assigning to (.*) from incompatible type (.*)|assigning to type from incompatible type)|(?:passing (.*) to parameter of incompatible type (.*)|passing type to parameter of incompatible type)|(?:returning (.*) from a function with incompatible result type (.*)|returning type from a function with incompatible result type)|(?:converting (.*) to incompatible type (.*)|converting type to incompatible type)|(?:initializing (.*) with an expression of incompatible type (.*)|initializing type with an expression of incompatible type)|(?:sending (.*) to parameter of incompatible type (.*)|sending type to parameter of incompatible type)|(?:casting (.*) to incompatible type (.*)|casting type to incompatible type))
   SFINAE: SFINAE_Suppress
   Text: '%select{%diff{assigning to $ from incompatible type $|assigning to type from incompatible type}0,1|%diff{passing $ to parameter of incompatible type $|passing type to parameter of incompatible type}0,1|%diff{returning $ from a function with incompatible result type $|returning type from a function with incompatible result type}0,1|%diff{converting $ to incompatible type $|converting type to incompatible type}0,1|%diff{initializing $ with an expression of incompatible type $|initializing type with an expression of incompatible type}0,1|%diff{sending $ to parameter of incompatible type $|sending type to parameter of incompatible type}0,1|%diff{casting $ to incompatible type $|casting type to incompatible type}0,1}2'
 warn_incompatible_sysroot:
@@ -51579,13 +51579,13 @@ warn_incompatible_sysroot:
   SFINAE: SFINAE_Suppress
   Text: using sysroot for '%0' but targeting '%1'
 warn_incompatible_vectors:
-  ArgsCount: 0
+  ArgsCount: 14
   CategoryName: Semantic Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Ignored
   Group: vector-conversion
-  Regex: incompatible vector types (?:(?:assigning to \$ from \$|assigning to different types)|(?:passing \$ to parameter of type \$|passing to parameter of different type)|(?:returning \$ from a function with result type \$|returning from function with different return type)|(?:converting \$ to type \$|converting between types)|(?:initializing \$ with an expression of type \$|initializing with expression of different type)|(?:sending \$ to parameter of type \$|sending to parameter of different type)|(?:casting \$ to type \$|casting between types))
+  Regex: incompatible vector types (?:(?:assigning to (.*) from (.*)|assigning to different types)|(?:passing (.*) to parameter of type (.*)|passing to parameter of different type)|(?:returning (.*) from a function with result type (.*)|returning from function with different return type)|(?:converting (.*) to type (.*)|converting between types)|(?:initializing (.*) with an expression of type (.*)|initializing with expression of different type)|(?:sending (.*) to parameter of type (.*)|sending to parameter of different type)|(?:casting (.*) to type (.*)|casting between types))
   SFINAE: SFINAE_Suppress
   Text: incompatible vector types %select{%diff{assigning to $ from $|assigning to different types}0,1|%diff{passing $ to parameter of type $|passing to parameter of different type}0,1|%diff{returning $ from a function with result type $|returning from function with different return type}0,1|%diff{converting $ to type $|converting between types}0,1|%diff{initializing $ with an expression of type $|initializing with expression of different type}0,1|%diff{sending $ to parameter of type $|sending to parameter of different type}0,1|%diff{casting $ to type $|casting between types}0,1}2
 warn_incomplete_encoded_type:
@@ -55789,13 +55789,13 @@ warn_reinterpret_different_from_static:
   SFINAE: SFINAE_Suppress
   Text: '''reinterpret_cast'' %select{from|to}3 class %0 %select{to|from}3 its %select{virtual base|base at non-zero offset}2 %1 behaves differently from ''static_cast'''
 warn_related_result_type_compatibility_class:
-  ArgsCount: 0
+  ArgsCount: 2
   CategoryName: Related Result Type Issue
   Class: CLASS_WARNING
   Component: Sema
   DefaultSeverity: SEV_Warning
   Group: None
-  Regex: method is expected to return an instance of its class type (?:\$, but is declared to return \$|, but is declared to return different type)
+  Regex: method is expected to return an instance of its class type (?:(.*), but is declared to return (.*)|, but is declared to return different type)
   SFINAE: SFINAE_Suppress
   Text: method is expected to return an instance of its class type %diff{$, but is declared to return $|, but is declared to return different type}0,1
 warn_related_result_type_compatibility_protocol:
