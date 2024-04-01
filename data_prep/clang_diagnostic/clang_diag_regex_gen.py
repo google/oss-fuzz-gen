@@ -21,6 +21,10 @@ llvm/clang/include/clang/Basic/Diagnostic.td
 
 *-tblgen binary and clang source code is required to regenerate the json parsed
 in this module.
+
+Example usage:
+python3 -m data_prep.clang_diagnostic.clang_diag_regex_gen.py \
+--input path/to/Diagnostic.json --output path/to/diag_regexes.yaml
 """
 import argparse
 import json
@@ -258,7 +262,7 @@ class _DiagRegexBuilder:
     return ''.join(char_list)
 
 
-def _to_yaml(diagnostics: dict[str, Diagnostic], outdir: str = './'):
+def _to_yaml(diagnostics: dict[str, Diagnostic], outpath: str):
   """Saves all diagnostics to a yaml file."""
   result = {}
   for raw_name in diagnostics.keys():
@@ -274,7 +278,7 @@ def _to_yaml(diagnostics: dict[str, Diagnostic], outdir: str = './'):
         'Regex': diag.regex,
         'ArgsCount': diag.args_count,
     }
-  with open(os.path.join(outdir, 'diag_regexes.yaml'), 'w') as file:
+  with open(outpath, 'w') as file:
     yaml.dump(result, file, default_flow_style=False, width=sys.maxsize)
 
 
@@ -301,9 +305,29 @@ def from_yaml(yaml_path: str) -> dict[str, Diagnostic]:
   return diagnostics
 
 
+def _parse_args() -> argparse.Namespace:
+  """Parses command line arguments."""
+  parser = argparse.ArgumentParser(
+      description='Generate regex for all clang Diagnostic.')
+  parser.add_argument('-i',
+                      '--input',
+                      type=str,
+                      default='data_prep/clang_diagnostic/Diagnostic.json',
+                      help='JSON dumped from clang Diagnostic.td.')
+  parser.add_argument('-o',
+                      '--output',
+                      type=str,
+                      default='data_prep/clang_diagnostic/diag_regexes.yaml',
+                      help='The file path to save generated output.')
+  args = parser.parse_args()
+  assert os.path.exists(args.input), '--input must be an existing json file.'
+  assert os.path.isfile(args.output), '--output must be a file path.'
+  return args
+
+
 def main():
-  # TODO: Use argparse to specify json file path.
-  with open('Diagnostic.json', 'r') as json_f:
+  args = _parse_args()
+  with open(args.input, 'r') as json_f:
     raw_diag_obj = json.load(json_f)
 
   class_def = raw_diag_obj.get('!instanceof')
@@ -359,7 +383,7 @@ def main():
     diagnostics[raw_name] = diagnostic
     print(f'Parsed {raw_name}')
 
-  _to_yaml(diagnostics)
+  _to_yaml(diagnostics, args.output)
 
 
 if __name__ == '__main__':
