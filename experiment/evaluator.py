@@ -56,7 +56,7 @@ class Result:
   line_coverage_diff: float = 0.0
   coverage_report_path: str = ''
   reproducer_path: str = ''
-  # produces false positive or no cov increase at all
+  # Produces false positive or no cov increase at all.
   is_driver_fuzz_err: bool = False
   driver_fuzz_err: str = ''
 
@@ -205,7 +205,7 @@ class Evaluator:
       traceback.print_exc()
       return None
 
-  def _parse_stacks_from_libfuzzer_logs(self, lines: list[str]) -> list[str]:
+  def _parse_stacks_from_libfuzzer_logs(self, lines: list[str]) -> list[list[str]]:
     """Parse stack traces from libFuzzer logs."""
     # There can have over one thread stack in a log.
     stacks = []
@@ -306,11 +306,14 @@ class Evaluator:
 
       # FP case 2: 1st func of the 1st thread stack is in driver.
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
-      for stack_frame in crash_stacks[:1]:
-        if self._stack_func_is_of_testing_project(stack_frame):
-          if 'LLVMFuzzerTestOneInput' in stack_frame:
-            return cov_pcs, total_pcs, True, True, 'FP_CRASH_IN_DRIVER'
-          break
+      if len(crash_stacks) > 0:
+        first_stack = crash_stacks[0]
+        # Check the first stack frame of the first stack only.
+        for stack_frame in first_stack[:1]:
+          if self._stack_func_is_of_testing_project(stack_frame):
+            if 'LLVMFuzzerTestOneInput' in stack_frame:
+              return cov_pcs, total_pcs, True, True, 'FP_CRASH_IN_DRIVER'
+            break
 
     else:
       # Another error driver case: no cov increase.
