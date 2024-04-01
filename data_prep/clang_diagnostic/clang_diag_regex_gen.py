@@ -22,6 +22,7 @@ llvm/clang/include/clang/Basic/Diagnostic.td
 *-tblgen binary and clang source code is required to regenerate the json parsed
 in this module.
 """
+import argparse
 import json
 import os
 import re
@@ -358,7 +359,7 @@ def main():
     diagnostics[raw_name] = diagnostic
     print(f'Parsed {raw_name}')
 
-    _to_yaml(diagnostics)
+  _to_yaml(diagnostics)
 
 
 if __name__ == '__main__':
