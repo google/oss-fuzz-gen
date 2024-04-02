@@ -35,7 +35,6 @@ NUM_EXP = int(os.getenv('LLM_NUM_EXP', '2'))
 
 # Default LLM hyper-parameters.
 MAX_TOKENS: int = run_one_experiment.MAX_TOKENS
-NUM_REPEATS: int = run_one_experiment.NUM_REPEATS
 NUM_SAMPLES: int = run_one_experiment.NUM_SAMPLES
 RUN_TIMEOUT: int = run_one_experiment.RUN_TIMEOUT
 TEMPERATURE: float = run_one_experiment.TEMPERATURE
@@ -84,7 +83,6 @@ def run_experiments(benchmark: benchmarklib.Benchmark,
     model = models.LLM.setup(
         ai_binary=args.ai_binary,
         name=args.model,
-        num_repeats=args.num_repeats,
         max_tokens=MAX_TOKENS,
         num_samples=args.num_samples,
         temperature=args.temperature,
@@ -110,11 +108,6 @@ def parse_args() -> argparse.Namespace:
   """Parses command line arguments."""
   parser = argparse.ArgumentParser(
       description='Run all experiments that evaluates all target functions.')
-  parser.add_argument('-r',
-                      '--num-repeats',
-                      type=int,
-                      default=NUM_REPEATS,
-                      help='The number of repeated queries to LLM.')
   parser.add_argument('-n',
                       '--num-samples',
                       type=int,
@@ -172,9 +165,6 @@ def parse_args() -> argparse.Namespace:
             'exceeding quota limit in large scale experiments.'))
 
   args = parser.parse_args()
-  if args.num_repeats:
-    assert args.num_repeats > 0, '--num-repeats must take a positive integer.'
-
   if args.num_samples:
     assert args.num_samples > 0, '--num-samples must take a positive integer.'
 
