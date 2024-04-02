@@ -20,6 +20,7 @@ import os
 import re
 import shutil
 import traceback
+from enum import Enum
 from typing import Optional
 
 from google.cloud import storage
@@ -46,6 +47,13 @@ LLVM_SOURCE_PATH_PREFIX = '/src/llvm-project/compiler-rt'
 
 EARLY_FUZZING_ROUND_THRESHOLD = 3
 
+class DriverFuzzError(Enum):
+  """Driver Fuzz Error Enum."""
+  NO_DRIVER_ERR = 'NO_DRIVER_ERR'
+  LOG_MESS_UP = 'LOG_MESS_UP'
+  FP_CRASH_NEAR_INIT = 'FP_CRASH_NEAR_INIT'
+  FP_CRASH_IN_DRIVER = 'FP_CRASH_IN_DRIVER'
+  NO_COV_INCREASE = 'NO_COV_INCREASE'
 
 @dataclasses.dataclass
 class Result:
@@ -260,7 +268,7 @@ class Evaluator:
         LLVM_SOURCE_PATH_PREFIX not in stack_frame)
 
   def _parse_libfuzzer_logs(
-      self, log_handle, logger: _Logger) -> tuple[int, int, bool, bool, str]:
+      self, log_handle, logger: _Logger) -> tuple[int, int, bool, bool, DriverFuzzError]:
     """Parses libFuzzer logs."""
     lines = None
     try:
@@ -271,7 +279,7 @@ class Evaluator:
     except MemoryError as e:
       # Some logs from abnormal drivers are too large to be parsed.
       logger.log('%s is too large to parse: %s', log_handle.name, e)
-      return 0, 0, False, True, 'LOG_MESS_UP'
+      return 0, 0, False, True, DriverFuzzError.LOG_MESS_UP
 
     cov_pcs = 0
     total_pcs = 0
@@ -303,7 +311,7 @@ class Evaluator:
       if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
         # No cov line has been identified or only INITED round has been passed.
         # This is very likely the false positive cases.
-        return cov_pcs, total_pcs, True, True, 'FP_CRASH_NEAR_INIT'
+        return cov_pcs, total_pcs, True, True, DriverFuzzError.FP_CRASH_NEAR_INIT
 
       # FP case 2: 1st func of the 1st thread stack is in driver.
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
@@ -313,16 +321,16 @@ class Evaluator:
         for stack_frame in first_stack[:1]:
           if self._stack_func_is_of_testing_project(stack_frame):
             if 'LLVMFuzzerTestOneInput' in stack_frame:
-              return cov_pcs, total_pcs, True, True, 'FP_CRASH_IN_DRIVER'
+              return cov_pcs, total_pcs, True, True, DriverFuzzError.FP_CRASH_IN_DRIVER
             break
 
     else:
       # Another error driver case: no cov increase.
       if initcov is not None and donecov is not None:
         if initcov == donecov:
-          return cov_pcs, total_pcs, True, True, 'NO_COV_INCREASE'
+          return cov_pcs, total_pcs, True, True, DriverFuzzError.NO_COV_INCREASE
 
-    return cov_pcs, total_pcs, crashes, False, ''
+    return cov_pcs, total_pcs, crashes, False, DriverFuzzError.NO_DRIVER_ERR
 
   def do_check_target(self, ai_binary: str, target_path: str) -> Result:
     """Builds and runs a target."""
@@ -372,7 +380,7 @@ class Evaluator:
       logger.log(f'Failed to fix {target_path} with '
                  f'{self.builder_runner.fixer_model_name} in '
                  f'{llm_fix_count} iterations.')
-      return logger.return_result(Result(False, False, 0.0, 0.0))
+      return logger.return_result(Result(False, False, 0.0, 0.0, DriverFuzzError.NO_DRIVER_ERR.value))
 
     # Parse logs to get raw pc coverage and whether the target crashed.
     with open(self.work_dirs.run_logs_target(generated_target_name), 'rb') as f:
@@ -384,14 +392,14 @@ class Evaluator:
       logger.log(f'Warning: No run_result in {generated_oss_fuzz_project}.')
       return logger.return_result(
           Result(True, crashes, 0.0, 0.0, '', '', is_driver_fuzz_err,
-                 driver_fuzz_err))
+                 driver_fuzz_err.value))
 
     if is_driver_fuzz_err:
       logger.log(f'Warning: {driver_fuzz_err} in {generated_oss_fuzz_project}.')
       return logger.return_result(
           Result(True, crashes, 0.0, 0.0, run_result.coverage_report_path,
                  run_result.reproducer_path, is_driver_fuzz_err,
-                 driver_fuzz_err))
+                 driver_fuzz_err.value))
 
     # Get line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
@@ -419,7 +427,7 @@ class Evaluator:
     return logger.return_result(
         Result(True, crashes, coverage_percent, coverage_diff,
                run_result.coverage_report_path, run_result.reproducer_path,
-               is_driver_fuzz_err, driver_fuzz_err))
+               is_driver_fuzz_err, driver_fuzz_err.value))
 
   def _load_existing_coverage_summary(self) -> dict:
     """Load existing summary.json."""
