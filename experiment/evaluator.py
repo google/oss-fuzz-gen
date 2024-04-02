@@ -47,6 +47,7 @@ LLVM_SOURCE_PATH_PREFIX = '/src/llvm-project/compiler-rt'
 
 EARLY_FUZZING_ROUND_THRESHOLD = 3
 
+
 class DriverFuzzError(Enum):
   """Driver Fuzz Error Enum."""
   NO_DRIVER_ERR = 'NO_DRIVER_ERR'
@@ -54,6 +55,7 @@ class DriverFuzzError(Enum):
   FP_CRASH_NEAR_INIT = 'FP_CRASH_NEAR_INIT'
   FP_CRASH_IN_DRIVER = 'FP_CRASH_IN_DRIVER'
   NO_COV_INCREASE = 'NO_COV_INCREASE'
+
 
 @dataclasses.dataclass
 class Result:
@@ -213,7 +215,8 @@ class Evaluator:
       traceback.print_exc()
       return None
 
-  def _parse_stacks_from_libfuzzer_logs(self, lines: list[str]) -> list[list[str]]:
+  def _parse_stacks_from_libfuzzer_logs(self,
+                                        lines: list[str]) -> list[list[str]]:
     """Parse stack traces from libFuzzer logs."""
     # TODO (dongge): Use stack parsing from ClusterFuzz.
     # There can have over one thread stack in a log.
@@ -268,7 +271,8 @@ class Evaluator:
         LLVM_SOURCE_PATH_PREFIX not in stack_frame)
 
   def _parse_libfuzzer_logs(
-      self, log_handle, logger: _Logger) -> tuple[int, int, bool, bool, DriverFuzzError]:
+      self, log_handle,
+      logger: _Logger) -> tuple[int, int, bool, bool, DriverFuzzError]:
     """Parses libFuzzer logs."""
     lines = None
     try:
@@ -311,7 +315,8 @@ class Evaluator:
       if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
         # No cov line has been identified or only INITED round has been passed.
         # This is very likely the false positive cases.
-        return cov_pcs, total_pcs, True, True, DriverFuzzError.FP_CRASH_NEAR_INIT
+        return cov_pcs, total_pcs, True, \
+               True, DriverFuzzError.FP_CRASH_NEAR_INIT
 
       # FP case 2: 1st func of the 1st thread stack is in driver.
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
@@ -321,7 +326,8 @@ class Evaluator:
         for stack_frame in first_stack[:1]:
           if self._stack_func_is_of_testing_project(stack_frame):
             if 'LLVMFuzzerTestOneInput' in stack_frame:
-              return cov_pcs, total_pcs, True, True, DriverFuzzError.FP_CRASH_IN_DRIVER
+              return cov_pcs, total_pcs, True, \
+                     True, DriverFuzzError.FP_CRASH_IN_DRIVER
             break
 
     else:
@@ -380,7 +386,8 @@ class Evaluator:
       logger.log(f'Failed to fix {target_path} with '
                  f'{self.builder_runner.fixer_model_name} in '
                  f'{llm_fix_count} iterations.')
-      return logger.return_result(Result(False, False, 0.0, 0.0, DriverFuzzError.NO_DRIVER_ERR.value))
+      return logger.return_result(
+          Result(False, False, 0.0, 0.0, DriverFuzzError.NO_DRIVER_ERR.value))
 
     # Parse logs to get raw pc coverage and whether the target crashed.
     with open(self.work_dirs.run_logs_target(generated_target_name), 'rb') as f:
