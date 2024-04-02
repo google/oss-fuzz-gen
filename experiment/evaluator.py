@@ -207,6 +207,7 @@ class Evaluator:
 
   def _parse_stacks_from_libfuzzer_logs(self, lines: list[str]) -> list[list[str]]:
     """Parse stack traces from libFuzzer logs."""
+    # TODO (dongge): Use stack parsing from ClusterFuzz.
     # There can have over one thread stack in a log.
     stacks = []
 
