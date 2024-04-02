@@ -40,9 +40,16 @@ NUM_EVA = int(os.getenv('LLM_NUM_EVA', '3'))
 DEBUG: bool = False
 
 # Default LLM hyper-parameters.
-# WARN: Avoid large NUM_SAMPLES in highly parallelized local experiment.
-# NUM_SAMPLES controls the number of LLM responses per query, which may exceed
-# your LLM's limit on query-per-second.
+# - In our experiment[1], this parameter means the number of independently
+#     repeated queries, i.e., the results of repeat-k rather than top-k.
+# - According to a study[2], LLM-based generation is by nature a search
+#     process with randomness, repeat is a powerful strategy to improve
+#     its overall performance, the value is suggested to be set as a value
+#     larger than 6 (10 is used in oss-fuzz-gen experiments).
+# - WARN: please set the value according to your own LLM's query-per-second
+#     limit, especially in highly parallelized local experiment.
+# - [1] https://github.com/google/oss-fuzz-gen/pull/182
+# - [2] this link will be updated later (@happy-qop)
 NUM_SAMPLES = 2
 MAX_TOKENS: int = 4096
 RUN_TIMEOUT: int = 30
