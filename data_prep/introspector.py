@@ -286,8 +286,7 @@ def get_raw_function_name(function: dict, project: str) -> str:
 
 def _get_clean_arg_types(function: dict, project: str) -> list[str]:
   """Returns the cleaned function argument types."""
-  raw_arg_types = (function.get('arg-types') or
-                   function.get('function_arguments', []))
+  raw_arg_types = function.get('debug_summary').get('args')
   if not raw_arg_types:
     logging.error(
         'Missing argument types in project: %s\n'
