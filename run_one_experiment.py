@@ -40,16 +40,12 @@ NUM_EVA = int(os.getenv('LLM_NUM_EVA', '3'))
 DEBUG: bool = False
 
 # Default LLM hyper-parameters.
-# - In our experiment[1], this parameter means the number of independently
-#     repeated queries, i.e., the results of repeat-k rather than top-k.
-# - According to a study[2], LLM-based generation is by nature a search
-#     process with randomness, repeat is a powerful strategy to improve
-#     its overall performance, the value is suggested to be set as a value
-#     larger than 6 (10 is used in oss-fuzz-gen experiments).
-# - WARN: please set the value according to your own LLM's query-per-second
+# - #182 shows Gemini returns NUM_SAMPLES independent responses via repeated
+#  queries, which generally performs better than top-k responses from one
+#  query [1].
+# WARN: please set the value according to your own LLM's query-per-second
 #     limit, especially in highly parallelized local experiment.
-# - [1] https://github.com/google/oss-fuzz-gen/pull/182
-# - [2] this link will be updated later (@happy-qop)
+# [1] TODO(@happy-qop): Update the link.
 NUM_SAMPLES = 2
 MAX_TOKENS: int = 4096
 RUN_TIMEOUT: int = 30
