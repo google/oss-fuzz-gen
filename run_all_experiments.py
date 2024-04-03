@@ -23,6 +23,7 @@ import traceback
 from multiprocessing import Pool
 
 import run_one_experiment
+from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
@@ -157,6 +158,10 @@ def parse_args() -> argparse.Namespace:
                       action='store_true',
                       default=False,
                       help='Add context to function under test.')
+  parser.add_argument('-e',
+                      '--introspector-endpoint',
+                      type=str,
+                      default=introspector.DEFAULT_INTROSPECTOR_ENDPOINT)
   parser.add_argument(
       '--delay',
       type=int,
@@ -218,6 +223,8 @@ def main():
 
   experiment_configs = get_experiment_configs(args)
   experiment_results = []
+
+  introspector.set_introspector_endpoints(args.introspector_endpoint)
 
   print(f'Running {NUM_EXP} experiment(s) in parallel.')
   if NUM_EXP == 1:
