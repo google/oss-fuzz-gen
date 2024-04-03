@@ -40,12 +40,13 @@ NUM_EVA = int(os.getenv('LLM_NUM_EVA', '3'))
 DEBUG: bool = False
 
 # Default LLM hyper-parameters.
-# - #182 shows Gemini returns NUM_SAMPLES independent responses via repeated
+# #182 shows Gemini returns NUM_SAMPLES independent responses via repeated
 #  queries, which generally performs better than top-k responses from one
 #  query [1].
-# WARN: please set the value according to your own LLM's query-per-second
-#     limit, especially in highly parallelized local experiment.
 # [1] TODO(@happy-qop): Update the link.
+# WARN: Avoid large NUM_SAMPLES in highly parallelized local experiments.
+# It controls the number of LLM responses per prompt, which may exceed your
+# LLM's limit on query-per-second.
 NUM_SAMPLES = 2
 MAX_TOKENS: int = 4096
 RUN_TIMEOUT: int = 30
