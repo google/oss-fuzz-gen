@@ -91,6 +91,8 @@ class DriverFuzzErr:
 
   def _get_error_desc(self) -> Optional[str]:
     '''Return one sentence error description used in fix prompt.'''
+    if self.type == self.LOG_MESS_UP:
+      return 'it produces extremely large fuzzing logs which is abnormal'
     if self.type == self.FP_CRASH_NEAR_INIT:
       return f'it crashes at first few fuzzing rounds ({self.crash_symptom})'
     if self.type == self.FP_CRASH_IN_DRIVER:

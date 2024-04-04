@@ -42,6 +42,7 @@ EXAMPLES = [
 BUILD_ERROR_SUMMARY = 'The code has the following build issues:'
 FUZZ_ERROR_SUMMARY = 'The code can be built successfully but %s.'
 
+
 class PromptBuilder:
   """Prompt builder."""
 
@@ -62,7 +63,8 @@ class PromptBuilder:
 
   @abstractmethod
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
-                         error_desc: Optional[str], errors: list[str]) -> prompts.Prompt:
+                         error_desc: Optional[str],
+                         errors: list[str]) -> prompts.Prompt:
     """Builds a fixer prompt."""
 
 
@@ -239,10 +241,12 @@ class DefaultTemplateBuilder(PromptBuilder):
     return self._prompt
 
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
-                         error_desc: Optional[str], errors: list[str]) -> prompts.Prompt:
+                         error_desc: Optional[str],
+                         errors: list[str]) -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming()
-    problem = self._format_fixer_problem(raw_code, error_desc, errors, priming_weight)
+    problem = self._format_fixer_problem(raw_code, error_desc, errors,
+                                         priming_weight)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -299,8 +303,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     error_message = '\n'.join(selected_errors)
     if error_message.strip() == '':
       return problem.replace('<error>\n{ERROR_MESSAGES}\n</error>\n', '')
-    else:
-      return problem.replace('{ERROR_MESSAGES}', error_message)
+    return problem.replace('{ERROR_MESSAGES}', error_message)
 
   def _prepare_prompt(
       self,
