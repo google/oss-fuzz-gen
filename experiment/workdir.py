@@ -77,5 +77,5 @@ class WorkDirs:
     return os.path.join(self.build_logs,
                         f'{generated_target_name}-F{iteration}.log')
 
-  def run_logs_target(self, generated_target_name: str):
-    return os.path.join(self.run_logs, f'{generated_target_name}.log')
+  def run_logs_target(self, generated_target_name: str, iteration: int):
+    return os.path.join(self.run_logs, f'{generated_target_name}-F{iteration}.log')

@@ -39,6 +39,8 @@ EXAMPLES = [
     [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
 ]
 
+BUILD_ERROR_SUMMARY = 'The code has the following build issues:'
+FUZZ_ERROR_SUMMARY = 'The code can be built successfully but %s.'
 
 class PromptBuilder:
   """Prompt builder."""
@@ -60,7 +62,7 @@ class PromptBuilder:
 
   @abstractmethod
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
-                         errors: list[str]) -> prompts.Prompt:
+                         error_desc: Optional[str], errors: list[str]) -> prompts.Prompt:
     """Builds a fixer prompt."""
 
 
@@ -237,10 +239,10 @@ class DefaultTemplateBuilder(PromptBuilder):
     return self._prompt
 
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
-                         errors: list[str]) -> prompts.Prompt:
+                         error_desc: Optional[str], errors: list[str]) -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming()
-    problem = self._format_fixer_problem(raw_code, errors, priming_weight)
+    problem = self._format_fixer_problem(raw_code, error_desc, errors, priming_weight)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -255,12 +257,18 @@ class DefaultTemplateBuilder(PromptBuilder):
     # in the case of structured prompts, we will create nested structures.
     return priming, priming_weight
 
-  def _format_fixer_problem(self, raw_code: str, errors: list[str],
-                            priming_weight: int) -> str:
+  def _format_fixer_problem(self, raw_code: str, error_desc: Optional[str],
+                            errors: list[str], priming_weight: int) -> str:
     """Formats a problem for code fixer based on the template."""
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
     problem = problem.replace('{CODE_TO_BE_FIXED}', raw_code)
+    if error_desc is None:
+      # Build error does not pass error desc.
+      error_summary = BUILD_ERROR_SUMMARY
+    else:
+      error_summary = FUZZ_ERROR_SUMMARY % (error_desc)
+    problem = problem.replace('{ERROR_SUMMARY}', error_summary)
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{ERROR_MESSAGES}',
@@ -289,7 +297,10 @@ class DefaultTemplateBuilder(PromptBuilder):
 
     # Now, compose the problem part of the prompt
     error_message = '\n'.join(selected_errors)
-    return problem.replace('{ERROR_MESSAGES}', error_message)
+    if error_message.strip() == '':
+      return problem.replace('<error>\n{ERROR_MESSAGES}\n</error>\n', '')
+    else:
+      return problem.replace('{ERROR_MESSAGES}', error_message)
 
   def _prepare_prompt(
       self,

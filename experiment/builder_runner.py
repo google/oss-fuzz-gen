@@ -140,7 +140,7 @@ class BuilderRunner:
     run_result = RunResult()
 
     self.run_target_local(generated_project, benchmark_target_name,
-                          self.work_dirs.run_logs_target(benchmark_target_name))
+                          self.work_dirs.run_logs_target(benchmark_target_name, iteration))
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
         generated_project, benchmark_target_name))
     return build_result, run_result
@@ -436,7 +436,7 @@ class CloudBuilderRunner(BuilderRunner):
         print(f'Cannot find cloud build log of {os.path.realpath(target_path)} '
               f':{build_log_name}')
 
-    with open(self.work_dirs.run_logs_target(generated_target_name), 'wb') as f:
+    with open(self.work_dirs.run_logs_target(generated_target_name, iteration), 'wb') as f:
       blob = bucket.blob(run_log_name)
       if blob.exists():
         build_result.succeeded = True
