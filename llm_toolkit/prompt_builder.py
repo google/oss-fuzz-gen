@@ -40,7 +40,7 @@ EXAMPLES = [
 ]
 
 BUILD_ERROR_SUMMARY = 'The code has the following build issues:'
-FUZZ_ERROR_SUMMARY = 'The code can be built successfully but %s.'
+FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
 
 
 class PromptBuilder:
@@ -267,11 +267,11 @@ class DefaultTemplateBuilder(PromptBuilder):
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
     problem = problem.replace('{CODE_TO_BE_FIXED}', raw_code)
-    if error_desc is None:
+    if error_desc:
+      error_summary = FUZZ_ERROR_SUMMARY + error_desc
+    else:
       # Build error does not pass error desc.
       error_summary = BUILD_ERROR_SUMMARY
-    else:
-      error_summary = FUZZ_ERROR_SUMMARY % (error_desc)
     problem = problem.replace('{ERROR_SUMMARY}', error_summary)
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
