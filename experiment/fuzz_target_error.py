@@ -1,5 +1,22 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""
+Helper class for fuzz target semantic errors.
+"""
 import re
 from typing import Optional
+
 
 class SemanticError:
   """Fuzz target semantic errors."""
@@ -49,23 +66,34 @@ class SemanticError:
       # TODO(happy-qop): Add detailed description for this error type.
       return 'Overlong fuzzing log.'
     if self.type == self.FP_NEAR_INIT_CRASH:
-      return f'Fuzzing crashed immediately at runtime ({self.crash_symptom}), indicating fuzz target code for invoking the function under test is incorrect or unrobust.'
+      return (f'Fuzzing crashed immediately at runtime ({self.crash_symptom})'
+              ', indicating fuzz target code for invoking the function under'
+              ' test is incorrect or unrobust.')
     if self.type == self.FP_TARGET_CRASH:
-      return f'Fuzzing has crashes ({self.crash_symptom}) caused by fuzz target code, indicating its usage for the function under test is incorrect or unrobust.'
+      return (f'Fuzzing has crashes ({self.crash_symptom}) caused by fuzz '
+              'target code, indicating its usage for the function under '
+              'test is incorrect or unrobust.')
     if self.type == self.FP_MEMLEAK:
-      return 'Memory leak detected, indicating some memory was not freed by the fuzz target.'
+      return ('Memory leak detected, indicating some memory was not freed '
+              'by the fuzz target.')
     if self.type == self.FP_OOM:
-      return 'Out-of-memory error detected, suggesting memory leak in the fuzz target.'
+      return ('Out-of-memory error detected, suggesting memory leak in the'
+              ' fuzz target.')
     if self.type == self.FP_TIMEOUT:
-      return 'Fuzz target timed out at runtime, indicating its usage for the function under test is incorrect or unrobust.'
+      return ('Fuzz target timed out at runtime, indicating its usage for '
+              'the function under test is incorrect or unrobust.')
     if self.type == self.NO_COV_INCREASE:
       # TODO(dongge): Append the implementation of the function under test.
-      return 'Low code coverage, indicating the fuzz target ineffectively invokes the function under test.'
+      return ('Low code coverage, indicating the fuzz target ineffectively '
+              'invokes the function under test.')
+
     return ''
 
   def _get_error_detail(self) -> list[str]:
     """Returns detailed error description used in fix prompt."""
-    if self.type not in [ self.FP_NEAR_INIT_CRASH, self.FP_TARGET_CRASH, self.FP_TIMEOUT ]:
+    if self.type not in [
+        self.FP_NEAR_INIT_CRASH, self.FP_TARGET_CRASH, self.FP_TIMEOUT
+    ]:
       return []
 
     detail = ['Crash stacks:']
@@ -80,4 +108,3 @@ class SemanticError:
   @property
   def has_err(self) -> bool:
     return self.type != self.NO_SEMANTIC_ERR
-
