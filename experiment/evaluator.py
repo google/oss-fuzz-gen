@@ -26,6 +26,7 @@ from google.cloud import storage
 
 from experiment import builder_runner, oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
+from experiment.builder_runner import BuildResult, RunResult
 from experiment.fuzz_target_error import SemanticError
 from experiment.workdir import WorkDirs
 from llm_toolkit import code_fixer
@@ -333,6 +334,44 @@ class Evaluator:
     return cov_pcs, total_pcs, crashes, SemanticError(
         SemanticError.NO_SEMANTIC_ERR)
 
+  def _evaluate_generated_fuzz_target(
+      self, generated_oss_fuzz_project: str, target_path: str,
+      generated_target_name: str, iteration: int, logger: _Logger
+  ) -> tuple[BuildResult, Optional[RunResult], int, int, bool, SemanticError]:
+    """Evaluates the generated fuzz target."""
+    build_result, run_result = self.builder_runner.build_and_run(
+        generated_oss_fuzz_project, target_path, iteration)
+
+    if build_result.succeeded:
+      # Parse libfuzzer logs to get fuzz target runtime details.
+      with open(self.work_dirs.run_logs_target(\
+                     generated_target_name, iteration), 'rb') as f:
+        cov_pcs, total_pcs, crashes, \
+            semantic_error = self._parse_libfuzzer_logs(f, logger)
+
+    else:
+      # Clear the variables for case that fuzz/build err <=> before/after fix.
+      cov_pcs, total_pcs, crashes, semantic_error = \
+          0, 0, False, SemanticError(SemanticError.NO_SEMANTIC_ERR)
+
+    return build_result, run_result, cov_pcs, total_pcs, crashes, semantic_error
+
+  def _fix_generated_fuzz_target(self, ai_binary: str,
+                                 generated_oss_fuzz_project: str,
+                                 target_path: str, iteration: int,
+                                 build_result: BuildResult,
+                                 semantic_error: SemanticError):
+    """Fixes the generated fuzz target."""
+    error_desc, errors = semantic_error.get_error_info() \
+                           if build_result.succeeded \
+                           else (None, build_result.errors)
+    code_fixer.llm_fix(ai_binary, target_path, self.benchmark, iteration,
+                       error_desc, errors, self.builder_runner.fixer_model_name)
+    shutil.copyfile(
+        target_path,
+        os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
+                     generated_oss_fuzz_project, os.path.basename(target_path)))
+
   def do_check_target(self, ai_binary: str, target_path: str) -> Result:
     """Builds and runs a target."""
     generated_target_name = os.path.basename(target_path)
@@ -351,54 +390,32 @@ class Evaluator:
     # TODO: Log build failure.
     # TODO: Log run success/failure.
 
-    # Result variables of generation.
+    # Loop of evaluating and fixing fuzz target.
     llm_fix_count = 0
-
     while True:
-      # 1. Evaluating generated fuzz target.
-      build_result, run_result = self.builder_runner.build_and_run(
-          generated_oss_fuzz_project, target_path, llm_fix_count)
+      (build_result, run_result, cov_pcs, total_pcs, crashes,
+       semantic_error) = self._evaluate_generated_fuzz_target(
+           generated_oss_fuzz_project, target_path, generated_target_name,
+           llm_fix_count, logger)
 
-      if build_result.succeeded:
-        # Parse libfuzzer logs to get fuzz target runtime details.
-        with open(self.work_dirs.run_logs_target(\
-                       generated_target_name, llm_fix_count), 'rb') as f:
-          cov_pcs, total_pcs, crashes, \
-              semantic_error = self._parse_libfuzzer_logs(f, logger)
-
-        if not semantic_error.has_err:
-          # Successfully generate the fuzz target.
-          gen_succ = True
-          break
-
-      else:
-        # Clear the variables for case that fuzz/build err <=> before/after fix.
-        cov_pcs, total_pcs, crashes, semantic_error = \
-            0, 0, False, SemanticError(SemanticError.NO_SEMANTIC_ERR)
-
-      if llm_fix_count >= LLM_FIX_LIMIT:
-        # Failed to fix and reach the fix limit.
-        gen_succ = False
+      gen_succ = build_result.succeeded and (not semantic_error.has_err)
+      if gen_succ:
+        # Successfully generate the fuzz target.
         break
 
-      # 2. Fixing generated fuzz target.
+      if llm_fix_count >= LLM_FIX_LIMIT:
+        # Not fix since the fix limit is reached.
+        break
+
       llm_fix_count += 1
       logger.log(f'Fixing {target_path} with '
                  f'{self.builder_runner.fixer_model_name}, '
                  f'attempt {llm_fix_count}.')
+      self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
+                                      target_path, llm_fix_count, build_result,
+                                      semantic_error)
 
-      error_desc, errors = semantic_error.get_error_info() \
-                             if build_result.succeeded \
-                             else (None, build_result.errors)
-      code_fixer.llm_fix(ai_binary, target_path, self.benchmark, llm_fix_count,
-                         error_desc, errors,
-                         self.builder_runner.fixer_model_name)
-      shutil.copyfile(
-          target_path,
-          os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                       'projects', generated_oss_fuzz_project,
-                       os.path.basename(target_path)))
-
+    # Logs and returns the result.
     if gen_succ:
       logger.log(f'Successfully built {target_path} with '
                  f'{self.builder_runner.fixer_model_name} in '
@@ -422,7 +439,7 @@ class Evaluator:
                  run_result.reproducer_path, semantic_error.has_err,
                  semantic_error.type))
 
-    # Get line coverage (diff) details.
+    # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
     total_lines = _compute_total_lines_without_fuzz_targets(
         coverage_summary, generated_target_name)
