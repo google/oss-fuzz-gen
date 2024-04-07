@@ -39,6 +39,8 @@ class SemanticError:
   # Matches 'ERROR: libFuzzer: timeout after xxx'
   SYMPTOM_LIBFUZZER = re.compile(r'ERROR: libFuzzer: (.*)\n')
 
+  NO_COV_INCREASE_MSG_PREFIX = 'No code coverage increasement'
+
   @classmethod
   def extract_symptom(cls, fuzzlog: str) -> str:
     """Extracts crash symptom from fuzzing logs."""
@@ -51,6 +53,11 @@ class SemanticError:
       return f'libFuzzer-{match.group(0)}'
 
     return ''
+
+  @classmethod
+  def is_no_cov_increase_err(cls, error_desc: Optional[str]) -> bool:
+    return (error_desc is not None) and error_desc.startswith(
+        cls.NO_COV_INCREASE_MSG_PREFIX)
 
   def __init__(self,
                err_type: str,
@@ -84,8 +91,8 @@ class SemanticError:
               'the function under test is incorrect or unrobust.')
     if self.type == self.NO_COV_INCREASE:
       # TODO(dongge): Append the implementation of the function under test.
-      return ('Low code coverage, indicating the fuzz target ineffectively '
-              'invokes the function under test.')
+      return (self.NO_COV_INCREASE_MSG_PREFIX + ', indicating the fuzz target'
+              ' ineffectively invokes the function under test.')
 
     return ''
 

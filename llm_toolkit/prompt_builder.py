@@ -15,12 +15,14 @@
 Prompt building tools.
 """
 
+import logging
 import os
 from abc import abstractmethod
 from typing import Optional, Tuple
 
 from data_prep import project_targets
 from experiment.benchmark import Benchmark, FileType
+from experiment.fuzz_target_error import SemanticError
 from llm_toolkit import models, prompts
 
 DEFAULT_TEMPLATE_DIR: str = 'prompts/template_xml/'
@@ -302,7 +304,17 @@ class DefaultTemplateBuilder(PromptBuilder):
     # Now, compose the problem part of the prompt
     error_message = '\n'.join(selected_errors)
     if error_message.strip() == '':
-      return problem.replace('<error>\n{ERROR_MESSAGES}\n</error>\n', '')
+      if SemanticError.is_no_cov_increase_err(error_desc):
+        # NO_COV_INCREASE error has empty error message.
+        return problem.replace('<error>\n', '')\
+                      .replace('{ERROR_MESSAGES}\n', '')\
+                      .replace('</error>\n', '')
+
+      # Log error types that should have error message.
+      logging.info(
+          'Unexpected empty error message in fix prompt for error_desc: %s',
+          str(error_desc))
+
     return problem.replace('{ERROR_MESSAGES}', error_message)
 
   def _prepare_prompt(
