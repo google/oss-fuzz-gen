@@ -18,8 +18,8 @@ import re
 from typing import Optional
 
 
-class SemanticError:
-  """Fuzz target semantic errors."""
+class SemanticCheckResult:
+  """Fuzz target semantic check results."""
   NO_SEMANTIC_ERR = 'NO_SEMANTIC_ERR'
   LOG_MESS_UP = 'LOG_MESS_UP'
   FP_NEAR_INIT_CRASH = 'FP_NEAR_INIT_CRASH'

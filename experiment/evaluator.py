@@ -27,7 +27,7 @@ from google.cloud import storage
 from experiment import builder_runner, oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.builder_runner import BuildResult, RunResult
-from experiment.fuzz_target_error import SemanticError
+from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
 from llm_toolkit import code_fixer
 
@@ -264,7 +264,7 @@ class Evaluator:
 
   def _parse_libfuzzer_logs(
       self, log_handle,
-      logger: _Logger) -> tuple[int, int, bool, SemanticError]:
+      logger: _Logger) -> tuple[int, int, bool, SemanticCheckResult]:
     """Parses libFuzzer logs."""
     lines = None
     try:
@@ -275,7 +275,7 @@ class Evaluator:
     except MemoryError as e:
       # Some logs from abnormal fuzz targets are too large to be parsed.
       logger.log('%s is too large to parse: %s', log_handle.name, e)
-      return 0, 0, False, SemanticError(SemanticError.LOG_MESS_UP)
+      return 0, 0, False, SemanticCheckResult(SemanticCheckResult.LOG_MESS_UP)
 
     cov_pcs, total_pcs, crashes = 0, 0, False
 
@@ -301,7 +301,7 @@ class Evaluator:
     # NOTE: Crashes from incorrect fuzz targets will not be counted finally.
 
     if crashes:
-      symptom = SemanticError.extract_symptom(fuzzlog)
+      symptom = SemanticCheckResult.extract_symptom(fuzzlog)
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
 
       # FP case 1: fuzz target crashes at init or first few rounds.
@@ -309,7 +309,7 @@ class Evaluator:
         # No cov line has been identified or only INITED round has been passed.
         # This is very likely the false positive cases.
         return cov_pcs, total_pcs, True, \
-               SemanticError(SemanticError.FP_NEAR_INIT_CRASH,\
+               SemanticCheckResult(SemanticCheckResult.FP_NEAR_INIT_CRASH,\
                              symptom, crash_stacks)
 
       # FP case 2: 1st func of the 1st thread stack is in fuzz target.
@@ -320,7 +320,7 @@ class Evaluator:
           if self._stack_func_is_of_testing_project(stack_frame):
             if 'LLVMFuzzerTestOneInput' in stack_frame:
               return cov_pcs, total_pcs, True, \
-                     SemanticError(SemanticError.FP_TARGET_CRASH,\
+                     SemanticCheckResult(SemanticCheckResult.FP_TARGET_CRASH,\
                                    symptom, crash_stacks)
             break
 
@@ -328,31 +328,31 @@ class Evaluator:
       # Another error fuzz target case: no cov increase.
       if initcov is not None and donecov is not None:
         if initcov == donecov:
-          return cov_pcs, total_pcs, True, SemanticError(
-              SemanticError.NO_COV_INCREASE)
+          return cov_pcs, total_pcs, True, SemanticCheckResult(
+              SemanticCheckResult.NO_COV_INCREASE)
 
-    return cov_pcs, total_pcs, crashes, SemanticError(
-        SemanticError.NO_SEMANTIC_ERR)
+    return cov_pcs, total_pcs, crashes, SemanticCheckResult(
+        SemanticCheckResult.NO_SEMANTIC_ERR)
 
   def _evaluate_generated_fuzz_target(
       self, generated_oss_fuzz_project: str, target_path: str,
       generated_target_name: str, iteration: int, logger: _Logger
-  ) -> tuple[BuildResult, Optional[RunResult], int, int, bool, SemanticError]:
+  ) -> tuple[BuildResult, Optional[RunResult], int, int, bool,
+             SemanticCheckResult]:
     """Evaluates the generated fuzz target."""
     build_result, run_result = self.builder_runner.build_and_run(
         generated_oss_fuzz_project, target_path, iteration)
 
-    if build_result.succeeded:
-      # Parse libfuzzer logs to get fuzz target runtime details.
-      with open(self.work_dirs.run_logs_target(\
-                     generated_target_name, iteration), 'rb') as f:
-        cov_pcs, total_pcs, crashes, \
-            semantic_error = self._parse_libfuzzer_logs(f, logger)
-
-    else:
+    if not build_result.succeeded:
       # Clear the variables for case that fuzz/build err <=> before/after fix.
-      cov_pcs, total_pcs, crashes, semantic_error = \
-          0, 0, False, SemanticError(SemanticError.NO_SEMANTIC_ERR)
+      return build_result, run_result, 0, 0, False, SemanticCheckResult(
+          SemanticCheckResult.NO_SEMANTIC_ERR)
+
+    # Parse libfuzzer logs to get fuzz target runtime details.
+    with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
+              'rb') as f:
+      cov_pcs, total_pcs, crashes, semantic_error = self._parse_libfuzzer_logs(
+          f, logger)
 
     return build_result, run_result, cov_pcs, total_pcs, crashes, semantic_error
 
@@ -360,11 +360,12 @@ class Evaluator:
                                  generated_oss_fuzz_project: str,
                                  target_path: str, iteration: int,
                                  build_result: BuildResult,
-                                 semantic_error: SemanticError):
+                                 semantic_error: SemanticCheckResult):
     """Fixes the generated fuzz target."""
-    error_desc, errors = semantic_error.get_error_info() \
-                           if build_result.succeeded \
-                           else (None, build_result.errors)
+    if build_result.succeeded:
+      error_desc, errors = semantic_error.get_error_info()
+    else:
+      error_desc, errors = None, build_result.errors
     code_fixer.llm_fix(ai_binary, target_path, self.benchmark, iteration,
                        error_desc, errors, self.builder_runner.fixer_model_name)
     shutil.copyfile(
@@ -393,12 +394,13 @@ class Evaluator:
     # Loop of evaluating and fixing fuzz target.
     llm_fix_count = 0
     while True:
+      # 1. Evaluating generated driver.
       (build_result, run_result, cov_pcs, total_pcs, crashes,
        semantic_error) = self._evaluate_generated_fuzz_target(
            generated_oss_fuzz_project, target_path, generated_target_name,
            llm_fix_count, logger)
 
-      gen_succ = build_result.succeeded and (not semantic_error.has_err)
+      gen_succ = build_result.succeeded and not semantic_error.has_err
       if gen_succ:
         # Successfully generate the fuzz target.
         break
@@ -407,6 +409,7 @@ class Evaluator:
         # Not fix since the fix limit is reached.
         break
 
+      # 2. Fixing generated driver.
       llm_fix_count += 1
       logger.log(f'Fixing {target_path} with '
                  f'{self.builder_runner.fixer_model_name}, '
