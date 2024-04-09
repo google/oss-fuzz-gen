@@ -133,7 +133,7 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
   crash_rate = sum([int(stat.crashes) for _, stat in target_stats
                    ]) / len(target_stats)
   found_bug = sum([
-      int(stat.crashes and not stat.is_driver_fuzz_err)
+      int(stat.crashes and not stat.is_semantic_error)
       for _, stat in target_stats
   ])
   max_coverage = max([stat.coverage for _, stat in target_stats])
