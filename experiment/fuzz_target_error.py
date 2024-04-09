@@ -20,6 +20,7 @@ from typing import Optional
 
 class SemanticCheckResult:
   """Fuzz target semantic check results."""
+  NOT_APPLICABLE = 'N/A'
   NO_SEMANTIC_ERR = 'NO_SEMANTIC_ERR'
   LOG_MESS_UP = 'LOG_MESS_UP'
   FP_NEAR_INIT_CRASH = 'FP_NEAR_INIT_CRASH'
@@ -114,4 +115,4 @@ class SemanticCheckResult:
 
   @property
   def has_err(self) -> bool:
-    return self.type != self.NO_SEMANTIC_ERR
+    return self.type != self.NOT_APPLICABLE and self.type != self.NO_SEMANTIC_ERR
