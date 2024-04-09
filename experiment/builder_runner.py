@@ -680,7 +680,8 @@ class CloudBuilderRunner(BuilderRunner):
 
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(
-          self.work_dirs.build_logs_target(generated_target_name, iteration))
+          self.work_dirs.build_logs_target(generated_target_name, iteration),
+          os.path.basename(self.benchmark.target_path))
       build_result.errors = errors
       logging.info('Cloud evaluation of %s indicates a failure: %s',
                    os.path.realpath(target_path), errors)
