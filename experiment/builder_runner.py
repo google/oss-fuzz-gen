@@ -391,6 +391,9 @@ class CloudBuilderRunner(BuilderRunner):
     build_log_name = f'{uid}.build.log'
     build_log_path = f'gs://{self.experiment_bucket}/{build_log_name}'
 
+    err_log_name = f'{uid}.err.log'
+    err_log_path = f'gs://{self.experiment_bucket}/{err_log_name}'
+
     corpus_name = f'{uid}.corpus.zip'
     corpus_path = f'gs://{self.experiment_bucket}/{corpus_name}'
 
@@ -408,6 +411,7 @@ class CloudBuilderRunner(BuilderRunner):
             f'--project={generated_project}',
             f'--target={self.benchmark.target_name}',
             f'--upload_build_log={build_log_path}',
+            f'--upload_err_log={err_log_path}',
             f'--upload_output_log={run_log_path}',
             f'--upload_corpus={corpus_path}',
             f'--upload_coverage={coverage_path}',
@@ -436,6 +440,17 @@ class CloudBuilderRunner(BuilderRunner):
       else:
         print(f'Cannot find cloud build log of {os.path.realpath(target_path)} '
               f':{build_log_name}')
+
+    with open(self.work_dirs.err_logs_target(generated_target_name, iteration),
+              'wb') as f:
+      blob = bucket.blob(err_log_name)
+      if blob.exists():
+        print(f'Downloading cloud build log of {os.path.realpath(target_path)}:'
+              f' {err_log_name} to {f}')
+        blob.download_to_file(f)
+      else:
+        print(f'Cannot find jcc error log of {os.path.realpath(target_path)} '
+              f':{err_log_name}')
 
     with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
               'wb') as f:
