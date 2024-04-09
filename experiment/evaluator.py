@@ -427,6 +427,8 @@ class Evaluator:
       logger.log(f'Failed to fix {target_path} with '
                  f'{self.builder_runner.fixer_model_name} in '
                  f'{llm_fix_count} iterations.')
+      return logger.return_result(
+          Result(False, False, 0.0, 0.0, '', '', False, semantic_error.type))
 
     if (not run_result or run_result.coverage_summary is None or
         run_result.coverage is None):
