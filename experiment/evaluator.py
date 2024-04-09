@@ -260,7 +260,9 @@ class Evaluator:
     return initcov, donecov, lastround
 
   def _stack_func_is_of_testing_project(self, stack_frame: str) -> bool:
-    return bool(CRASH_STACK_WITH_SOURCE_INFO.match(stack_frame)) and (LLVM_SOURCE_PATH_PREFIX not in stack_frame) and (CPP_SOURCE_PATH_PREFIX not in stack_frame)
+    return bool(CRASH_STACK_WITH_SOURCE_INFO.match(stack_frame)) and (
+        LLVM_SOURCE_PATH_PREFIX not in stack_frame) and (CPP_SOURCE_PATH_PREFIX
+                                                         not in stack_frame)
 
   def _parse_libfuzzer_logs(
       self, log_handle,

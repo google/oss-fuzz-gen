@@ -115,4 +115,4 @@ class SemanticCheckResult:
 
   @property
   def has_err(self) -> bool:
-    return self.type != self.NOT_APPLICABLE and self.type != self.NO_SEMANTIC_ERR
+    return self.type not in (self.NOT_APPLICABLE, self.NO_SEMANTIC_ERR)
