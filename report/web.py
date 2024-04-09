@@ -352,7 +352,7 @@ def index_json():
                          model=model)
 
 
-@app.route('/sort/build')
+@app.route('/sort_build')
 def index_sort_build():
   return render_template('index.html',
                          benchmarks=sort_benchmarks(list_benchmarks(),
@@ -360,7 +360,7 @@ def index_sort_build():
                          model=model)
 
 
-@app.route('/sort/cov')
+@app.route('/sort_cov')
 def index_sort_cov():
   return render_template('index.html',
                          benchmarks=sort_benchmarks(list_benchmarks(),
@@ -368,7 +368,7 @@ def index_sort_cov():
                          model=model)
 
 
-@app.route('/sort/cov_diff')
+@app.route('/sort_cov_diff')
 def index_sort():
   return render_template('index.html',
                          benchmarks=sort_benchmarks(list_benchmarks(),
@@ -376,7 +376,7 @@ def index_sort():
                          model=model)
 
 
-@app.route('/sort/crash')
+@app.route('/sort_crash')
 def index_sort_crash():
   return render_template('index.html',
                          benchmarks=sort_benchmarks(list_benchmarks(),
@@ -384,7 +384,7 @@ def index_sort_crash():
                          model=model)
 
 
-@app.route('/sort/status')
+@app.route('/sort_status')
 def index_sort_stauts():
   return render_template('index.html',
                          benchmarks=sort_benchmarks(list_benchmarks(),
