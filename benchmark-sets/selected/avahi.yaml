@@ -1,0 +1,15 @@
+"functions":
+- "name": "avahi_string_list_add_pair"
+  "params":
+  - "name": "l"
+    "type": "struct AvahiStringList *"
+  - "name": "key"
+    "type": "char *"
+  - "name": "value"
+    "type": "char *"
+  "return_type": "struct AvahiStringList *"
+  "signature": "AvahiStringList * avahi_string_list_add_pair(AvahiStringList *, const char *, const char *)"
+"language": "c++"
+"project": "avahi"
+"target_name": "fuzz-consume-record"
+"target_path": "/src/avahi/fuzz/fuzz-consume-record.c"

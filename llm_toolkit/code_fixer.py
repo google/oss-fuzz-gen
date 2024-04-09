@@ -266,9 +266,9 @@ def extract_error_message(log_path: str,
       temp_range[0] = i
     if temp_range[0] is not None and re.fullmatch(error_end_pattern, line):
       temp_range[1] = i - 1  # Exclude current line.
-      # In case of the original fuzz target was written in C and building with
-      # clang was failed, and building with clang++ also failed, we take the
-      # error from clang++ which comes after.
+      # In case the original fuzz target was written in C and building with
+      # clang failed, and building with clang++ also failed, we take the
+      # error from clang++, which comes after.
       error_lines_range = temp_range
       temp_range = [None, None]
 
