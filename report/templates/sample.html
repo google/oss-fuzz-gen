@@ -18,9 +18,9 @@
 
 {% block content %}
 <h1>{{ benchmark }} / {{ sample.id }}</h1>
-Bug: {{ sample.result.crashes and not sample.result.is_driver_fuzz_err }}
+Bug: {{ sample.result.crashes and not sample.result.is_semantic_error }}
 <br>
-Crash reason: {{ sample.result.driver_fuzz_err }}
+Crash reason: {{ sample.result.semantic_error }}
 <br>
 <br>
 {% for target in targets %}

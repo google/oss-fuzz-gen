@@ -36,8 +36,8 @@
         {% if sample.result %}
         <td>{{ sample.result.compiles}}</td>
         <td>{{ sample.result.crashes}} </td>
-        <td>{{ sample.result.crashes and not sample.result.is_driver_fuzz_err }} </td>
-        <td>{{ sample.result.driver_fuzz_err }} </td>
+        <td>{{ sample.result.crashes and not sample.result.is_semantic_error }} </td>
+        <td>{{ sample.result.semantic_error }} </td>
         <td>{{ sample.result.coverage |percent }}</td>
         <td><a href="{{ sample.result.coverage_report_path | cov_report_link }}">{{ sample.result.line_coverage_diff|percent }}</a></td>
         {% else %}
