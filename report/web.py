@@ -29,6 +29,7 @@ from flask import Flask, abort, render_template
 
 import run_one_experiment
 from experiment import evaluator
+from experiment.workdir import WorkDirs
 
 app = Flask(__name__)
 # Disable Flask request logs
@@ -280,11 +281,25 @@ def get_logs(benchmark: str, sample: str) -> str:
 
 
 def get_run_logs(benchmark: str, sample: str) -> str:
+  """Returns the content of the last run log."""
   run_logs_dir = os.path.join(RESULTS_DIR, benchmark, 'logs', 'run')
+  largest_iteration, last_log_file = -1, None
   for name in os.listdir(run_logs_dir):
     if name.startswith(sample + '.'):
-      with open(os.path.join(run_logs_dir, name), errors='replace') as f:
-        return truncate_logs(f.read(), MAX_RUN_LOGS_LEN)
+      iteration = WorkDirs.get_run_log_iteration(name)
+      if not iteration:
+        # Be compatible with older results where no '-Fxx' in run log file name
+        last_log_file = name
+        break
+
+      if largest_iteration < iteration:
+        largest_iteration, last_log_file = iteration, name
+
+  if not last_log_file:
+    return ''
+
+  with open(os.path.join(run_logs_dir, last_log_file), errors='replace') as f:
+    return truncate_logs(f.read(), MAX_RUN_LOGS_LEN)
 
   return ''
 
