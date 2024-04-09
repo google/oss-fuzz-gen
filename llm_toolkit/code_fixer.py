@@ -216,15 +216,19 @@ def remove_const_from_png_symbols(content: str) -> str:
 # ========================= LLM Fixes ========================= #
 
 
-def extract_error_message(log_path: str) -> list[str]:
+def extract_error_message(log_path: str,
+                          project_target_basename: str) -> list[str]:
   """Extracts error message and its context from the file in |log_path|."""
 
   with open(log_path) as log_file:
     # A more accurate way to extract the error message.
     log_lines = log_file.readlines()
 
+  target_name, _ = os.path.splitext(project_target_basename)
+
   # TODO: Use a dataclass here.
   error_lines_range: list[Optional[int]] = [None, None]
+  temp_range = [None, None]
 
   error_start_pattern = (
       r'(\x1b\[0m)?(\x1b\[1m)?[^\s]*'
@@ -232,37 +236,41 @@ def extract_error_message(log_path: str) -> list[str]:
       r'\s*(\x1b\[0m\x1b\[0;1;31m)?(fatal )?error:.*(\x1b\[0m)?\n?')
   error_end_pattern = r'(\x1b\[0m)?.*\d+ error(s)? generated.\n'
 
-  error_keywords = [
-      'multiple definition of',
-      'undefined reference to',
-  ]
+  # error_keywords = [
+  #     'multiple definition of',
+  #     'undefined reference to',
+  # ]
+  # unique_symbol = set()
   errors = []
-  unique_symbol = set()
   for i, line in enumerate(log_lines):
     # Capture two kinds of errors patterns to fix:
     #   1. Contains error keywords.
-    found_keyword = False
-    for keyword in error_keywords:
-      if keyword not in line:
-        continue
-      found_keyword = True
-      symbol = line.split(keyword)[-1]
-      if symbol not in unique_symbol:
-        unique_symbol.add(symbol)
-        errors.append(line)
-      break
-    if found_keyword:
-      continue
+    # found_keyword = False
+    # for keyword in error_keywords:
+    #   if keyword not in line:
+    #     continue
+    #   found_keyword = True
+    #   symbol = line.split(keyword)[-1]
+    #   if symbol not in unique_symbol:
+    #     unique_symbol.add(symbol)
+    #     errors.append(line)
+    #   break
+    # if found_keyword:
+    #   continue
 
-    #   2. Uses ANSI colors.
-    if (error_lines_range[0] is None and
-        re.fullmatch(error_start_pattern, line)):
-      # The error to fix starts from the line matches the pattern.
-      error_lines_range[0] = i
-    if (error_lines_range[0] is not None and
-        re.fullmatch(error_end_pattern, line)):
-      # The error to fix ends at the last line that uses ANSI color.
-      error_lines_range[1] = i
+    # The full error may start with 'In file included from <fuzz_target>',
+    # we cannot fix those files, so discarded.
+    # Instead, we start from the first diagnostic from the fuzz target.
+    if (temp_range[0] is None and re.fullmatch(error_start_pattern, line) and
+        target_name in line):
+      temp_range[0] = i
+    if temp_range[0] is not None and re.fullmatch(error_end_pattern, line):
+      temp_range[1] = i - 1  # Exclude current line.
+      # In case of the original fuzz target was written in C and building with
+      # clang was failed, and building with clang++ also failed, we take the
+      # error from clang++ which comes after.
+      error_lines_range = temp_range
+      temp_range = [None, None]
 
   if error_lines_range[0] is not None and error_lines_range[1] is not None:
     errors.extend(log_lines[error_lines_range[0]:error_lines_range[1] + 1])
