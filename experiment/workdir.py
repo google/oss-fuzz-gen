@@ -16,11 +16,15 @@ A class to represent the experiment working directory.
 """
 
 import os
+import re
 from shutil import rmtree
+from typing import Optional
 
 
 class WorkDirs:
   """Working directories."""
+
+  RUN_LOG_NAME_PATTERN = re.compile(r'.*-F(\d+).log')
 
   def __init__(self, base_dir, keep: bool = False):
     self._base_dir = os.path.realpath(base_dir)
@@ -77,5 +81,13 @@ class WorkDirs:
     return os.path.join(self.build_logs,
                         f'{generated_target_name}-F{iteration}.log')
 
-  def run_logs_target(self, generated_target_name: str):
-    return os.path.join(self.run_logs, f'{generated_target_name}.log')
+  def run_logs_target(self, generated_target_name: str, iteration: int):
+    return os.path.join(self.run_logs,
+                        f'{generated_target_name}-F{iteration}.log')
+
+  @classmethod
+  def get_run_log_iteration(cls, filename: str) -> Optional[int]:
+    match = cls.RUN_LOG_NAME_PATTERN.match(filename)
+    if match:
+      return int(match.group(1))
+    return None
