@@ -200,9 +200,9 @@ class GPT(LLM):
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(messages=prompt.get(),
-                                             model=self.name,
-                                             n=self.num_samples,
-                                             temperature=self.temperature),
+                                               model=self.name,
+                                               n=self.num_samples,
+                                               temperature=self.temperature),
         openai.OpenAIError)
     if log_output:
       print(completion)
