@@ -287,7 +287,7 @@ def get_run_logs(benchmark: str, sample: str) -> str:
   for name in os.listdir(run_logs_dir):
     if name.startswith(sample + '.'):
       iteration = WorkDirs.get_run_log_iteration(name)
-      if iteration is not None:
+      if iteration is None:
         # Be compatible with older results where no '-Fxx' in run log file name
         last_log_file = name
         break
