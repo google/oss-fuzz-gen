@@ -20,7 +20,7 @@ from typing import Optional
 
 class SemanticCheckResult:
   """Fuzz target semantic check results."""
-  NOT_APPLICABLE = 'N/A'
+  NOT_APPLICABLE = '-'
   NO_SEMANTIC_ERR = 'NO_SEMANTIC_ERR'
   LOG_MESS_UP = 'LOG_MESS_UP'
   FP_NEAR_INIT_CRASH = 'FP_NEAR_INIT_CRASH'
