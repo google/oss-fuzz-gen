@@ -1,0 +1,13 @@
+"functions":
+- "name": "OSSL_CMP_CTX_server_perform"
+  "params":
+  - "name": "client_ctx"
+    "type": "struct ossl_cmp_ctx_st *"
+  - "name": "req"
+    "type": "struct ossl_cmp_msg_st *"
+  "return_type": "struct ossl_cmp_msg_st *"
+  "signature": "OSSL_CMP_MSG * OSSL_CMP_CTX_server_perform(OSSL_CMP_CTX *, const OSSL_CMP_MSG *)"
+"language": "c++"
+"project": "openssl"
+"target_name": "ct"
+"target_path": "/src/openssl32/fuzz/driver.c"
