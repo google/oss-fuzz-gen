@@ -119,6 +119,13 @@ class BuilderRunner:
       return False
     return True
 
+  def build_and_run_python(self, generated_project: str, target_path: str):
+    build_result = BuildResult()
+
+    self.build_target_local(generated_project,
+                            "/tmp/log.txt",
+                            language='python')
+
   def build_and_run(self, generated_project: str, target_path: str,
                     iteration: int) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target for fuzzing."""
@@ -144,6 +151,36 @@ class BuilderRunner:
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
         generated_project, benchmark_target_name))
     return build_result, run_result
+
+  def run_target_local_python(self, generated_project: str, target_name: str,
+                              log_path: str):
+    """Runs a target in the fixed target directory."""
+    # If target name is not overridden, use the basename of the target path
+    # in the Dockerfile.
+    print(f'Running {target_name}')
+    command = [
+        'python3', 'infra/helper.py', 'run_fuzzer', generated_project,
+        target_name, '--'
+    ] + self._libfuzzer_args()
+
+    with open(log_path, 'w') as f:
+      proc = sp.Popen(command,
+                      stdin=sp.DEVNULL,
+                      stdout=f,
+                      stderr=sp.STDOUT,
+                      cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
+
+      # TODO(ochang): Handle the timeout exception.
+      try:
+        proc.wait(timeout=self.run_timeout + 5)
+      except sp.TimeoutExpired:
+        print(f'{generated_project} timed out during fuzzing.')
+        # Try continuing and parsing the logs even in case of timeout.
+
+    if proc.returncode != 0:
+      print(f'********** Failed to run {generated_project}. **********')
+    else:
+      print(f'Successfully run {generated_project}.')
 
   def run_target_local(self, generated_project: str, benchmark_target_name: str,
                        log_path: str):
@@ -179,7 +216,8 @@ class BuilderRunner:
   def build_target_local(self,
                          generated_project: str,
                          log_path: str,
-                         sanitizer: str = 'address') -> bool:
+                         sanitizer: str = 'address',
+                         language: str = 'cpp') -> bool:
     """Builds a target with OSS-Fuzz."""
     print(f'Building {generated_project} with {sanitizer}')
     command = [
@@ -198,6 +236,14 @@ class BuilderRunner:
       except sp.CalledProcessError:
         print(f'Failed to build image for {generated_project}')
         return False
+
+    if language == 'python':
+      command = 'python3 infra/helper.py build_fuzzers %s' % (generated_project)
+      try:
+        sp.check_call(command, shell=True, cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
+      except sp.CalledProcessError:
+        return False
+      return True
 
     outdir = get_outdir(generated_project)
     command = [

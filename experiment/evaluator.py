@@ -269,7 +269,8 @@ class Evaluator:
       lines = fuzzlog.split('\n')
     except MemoryError as e:
       # Some logs from abnormal drivers are too large to be parsed.
-      logger.log('%s is too large to parse: %s', log_handle.name, e)
+      if logger:
+        logger.log('%s is too large to parse: %s', log_handle.name, e)
       return 0, 0, False, True, 'LOG_MESS_UP'
 
     cov_pcs = 0

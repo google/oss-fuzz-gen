@@ -46,7 +46,7 @@ def _remove_temp_oss_fuzz_repo():
     logging.warning('No OSS-Fuzz directory %s', OSS_FUZZ_DIR)
 
 
-def _set_temp_oss_fuzz_repo():
+def _set_temp_oss_fuzz_repo(delete_at_exit: bool):
   """Creates a temporary directory for OSS-Fuzz repo and update |OSS_FUZZ_DIR|.
   """
   # Holding the temp directory in a global object to ensure it won't be deleted
@@ -55,7 +55,8 @@ def _set_temp_oss_fuzz_repo():
   GLOBAL_TEMP_DIR = tempfile.mkdtemp()
   global OSS_FUZZ_DIR
   OSS_FUZZ_DIR = GLOBAL_TEMP_DIR
-  atexit.register(_remove_temp_oss_fuzz_repo)
+  if delete_at_exit:
+    atexit.register(_remove_temp_oss_fuzz_repo)
   _clone_oss_fuzz_repo()
 
 
@@ -75,10 +76,10 @@ def _clone_oss_fuzz_repo():
     print(stderr)
 
 
-def clone_oss_fuzz(temp_repo: bool = True):
+def clone_oss_fuzz(temp_repo: bool = True, delete_at_exit: bool = True):
   """Clones the OSS-Fuzz repository."""
   if temp_repo:
-    _set_temp_oss_fuzz_repo()
+    _set_temp_oss_fuzz_repo(delete_at_exit)
   if not os.path.exists(OSS_FUZZ_DIR):
     _clone_oss_fuzz_repo()
   # Remove existing targets.
