@@ -59,15 +59,19 @@ class Result:
   line_coverage_diff: float = 0.0
   coverage_report_path: str = ''
   reproducer_path: str = ''
-  # Gramatically correct but has false positive or no cov increase at all.
+  # Grammatically correct but has false positive or no cov increase at all.
   is_semantic_error: bool = False
   semantic_error: str = ''
+  # Deprecated renamed fields. Keeping them for backward compatibility.
+  # TODO https://github.com/google/oss-fuzz-gen/issues/215
+  is_driver_fuzz_err: bool = dataclasses.field(kw_only=True, default=False)
+  driver_fuzz_err: str = dataclasses.field(kw_only=True, default='')
 
-  def __init__(super, *args, **kwargs):
-    if 'is_driver_fuzz_err' in kwargs:
-      kwargs['is_semantic_error'] = kwargs['is_driver_fuzz_err']
-      del kwargs['is_driver_fuzz_err']
-      super.__init__(*args, **kwargs)
+  def __post_init__(self, *args, **kwargs):
+    if self.is_driver_fuzz_err:
+      self.is_semantic_error = self.is_driver_fuzz_err
+    if self.driver_fuzz_err:
+      self.semantic_error = self.driver_fuzz_err
 
   def dict(self):
     return dataclasses.asdict(self)
