@@ -83,7 +83,9 @@ class Benchmark:
           return function_signature
         if function_name.lower().startswith(self.function.lower()):
           if matched_prefix_signature:
-            logging.warning(f'Multiple substring matches found when looking for function name {function_name}')
+            logging.warning(
+                'Multiple substring matches found when looking for function '
+                'name %s', function_name)
           matched_prefix_signature = function_signature
 
     return matched_prefix_signature
