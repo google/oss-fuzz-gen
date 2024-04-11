@@ -63,6 +63,12 @@ class Result:
   is_semantic_error: bool = False
   semantic_error: str = ''
 
+  def __init__(super, *args, **kwargs):
+    if 'is_driver_fuzz_err' in kwargs:
+      kwargs['is_semantic_error'] = kwargs['is_driver_fuzz_err']
+      del kwargs['is_driver_fuzz_err']
+      super.__init__(*args, **kwargs)
+
   def dict(self):
     return dataclasses.asdict(self)
 
