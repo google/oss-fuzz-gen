@@ -37,6 +37,13 @@ td .signature {
     text-decoration: none;
 }
 
+.table-index {
+    color: #555;
+    font-size: 12px;
+    text-align: center;
+}
+
+
 .sortable-table th {
     cursor: pointer;
 }
@@ -60,6 +67,7 @@ td .signature {
 <table class="sortable-table">
     <thead>
         <tr>
+            <th></th>
             <th data-sorted="asc">Benchmark</th>
             <th>Status</th>
             <th data-sort-number>Build Rate</th>
@@ -72,6 +80,7 @@ td .signature {
     <tbody>
         {% for benchmark in benchmarks %}
         <tr>
+            <td class="table-index">{{ loop.index }}</td>
             <td data-sort-value="{{ benchmark.id }}">
                 <div class="project">{{ benchmark.project }}</div>
                 <pre class="signature">
@@ -96,6 +105,10 @@ td .signature {
         const sortAsc = th.dataset.sorted != "asc";
         const sortNumber = th.dataset.sortNumber != undefined;
 
+        // Move sorted data attribute to the right column
+        headers.map(innerTH => delete innerTH.dataset.sorted);
+        th.dataset.sorted = sortAsc ? "asc" : "desc";
+
         const tbody = document.querySelector('table.sortable-table tbody');
         const rows = Array.from(tbody.children);
         rows.sort((a, b) => {
@@ -111,9 +124,8 @@ td .signature {
             return valueA.localeCompare(valueB);
         });
         tbody.replaceChildren(...rows);
-        // Move sorted data attribute to the right column
-        headers.map(innerTH => delete innerTH.dataset.sorted);
-        th.dataset.sorted = sortAsc ? "asc" : "desc";
+        // Rewrite the index column
+        rows.map((r, i) => r.children[0].innerText = i+1);
     }));
 })();
 </script>
