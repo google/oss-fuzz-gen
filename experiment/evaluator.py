@@ -438,7 +438,7 @@ class Evaluator:
       return logger.return_result(
           Result(False, False, 0.0, 0.0, '', '', False,
                  semantic_check_result.type))
-        
+
     logger.log(f'Successfully built {target_path} with '
                f'{self.builder_runner.fixer_model_name} in '
                f'{llm_fix_count} iterations of syntax fixing.')
