@@ -90,7 +90,8 @@ class ContextRetriever:
         if include_file[:5] == '/usr/':
           logging.debug('Header file removed: %s', include_file)
           continue
-        # TODO: Dynamically adjust path prefixes (e.g. based on existing fuzz targets).
+        # TODO: Dynamically adjust path prefixes
+        # (e.g. based on existing fuzz targets).
 
         files.add(include_file)
 
