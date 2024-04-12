@@ -3,7 +3,7 @@ better prompt generation."""
 
 import logging
 import os
-from typing import Any, Optional
+from typing import Any
 
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
