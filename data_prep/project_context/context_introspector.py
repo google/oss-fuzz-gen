@@ -283,22 +283,29 @@ class ContextRetriever:
     for current_type in types:
       info_list = introspector.query_introspector_type_info(
           self._benchmark.project, current_type)
+      print("INFO LIST: {}".format(info_list))
       if not info_list:
         continue
-      info_list = self._clean_info_list(info_list)
 
       for info in info_list:
         source_file = self._get_source_file(info)
         source_file = os.path.normpath(source_file)
         source_base = os.path.basename(source_file)
-        # Ensure source_base is a file
-        if len(source_base) == 0 or '.' not in source_base:
+
+        # Ensure source_base is a file.
+        if not source_base or '.' not in source_base:
           logging.debug('File %s found as a source path', source_file)
           continue
-        # Get the character after the '.', ensure it is a h
-        if source_base.split('.')[1][0] != 'h':
+        # Get the character after the '.', ensure it is a h.
+        if source_base.split('.')[-1][0] != 'h':
           logging.debug('Non .hxx file found as a header file %s', source_file)
           continue
+        # Remove "system" header files.
+        # Just do this by seeing if the source_file begins with a /usr/
+        if source_file[:5] == '/usr/':
+          logging.debug('Header file removed: %s', source_file)
+          continue
+
         files.add(source_file)
 
     return list(files)
