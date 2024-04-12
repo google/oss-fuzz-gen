@@ -436,7 +436,8 @@ class Evaluator:
                  f'{self.builder_runner.fixer_model_name} in '
                  f'{llm_fix_count} iterations of syntax fixing.')
       return logger.return_result(
-          Result(False, False, 0.0, 0.0, '', '', False, semantic_check_result.type))
+          Result(False, False, 0.0, 0.0, '', '', False,
+                 semantic_check_result.type))
         
     logger.log(f'Successfully built {target_path} with '
                f'{self.builder_runner.fixer_model_name} in '
@@ -446,10 +447,12 @@ class Evaluator:
         run_result.coverage is None):
       logger.log(f'Warning: No run_result in {generated_oss_fuzz_project}.')
       return logger.return_result(
-          Result(True, crashes, 0.0, 0.0, '', '', False, semantic_check_result.type))
+          Result(True, crashes, 0.0, 0.0, '', '', False,
+                 semantic_check_result.type))
 
     if semantic_check_result.has_err:
-      logger.log(f'Warning: Failed to fix sematic error {semantic_check_result.type}'
+      logger.log(
+          f'Warning: Failed to fix sematic error {semantic_check_result.type}'
           f' in {generated_oss_fuzz_project}.')
       return logger.return_result(
           Result(True, crashes, 0.0, 0.0, run_result.coverage_report_path,
