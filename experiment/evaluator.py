@@ -67,7 +67,7 @@ class Result:
   is_driver_fuzz_err: bool = dataclasses.field(kw_only=True, default=False)
   driver_fuzz_err: str = dataclasses.field(kw_only=True, default='')
 
-  def __post_init__(self, *args, **kwargs):
+  def __post_init__(self, *args, **kwargs):  # pylint: disable=unused-argument
     if self.is_driver_fuzz_err:
       self.is_semantic_error = self.is_driver_fuzz_err
     if self.driver_fuzz_err:
@@ -485,7 +485,7 @@ class Evaluator:
     return logger.return_result(
         Result(True, crashes, coverage_percent, coverage_diff,
                run_result.coverage_report_path, run_result.reproducer_path,
-               semantic_error.has_err, semantic_error.type))
+               semantic_check_result.has_err, semantic_check_result.type))
 
   def _load_existing_coverage_summary(self) -> dict:
     """Load existing summary.json."""
