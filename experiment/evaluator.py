@@ -408,11 +408,11 @@ class Evaluator:
     while True:
       # 1. Evaluating generated driver.
       (build_result, run_result, cov_pcs, total_pcs, crashes,
-       semantic_error) = self._evaluate_generated_fuzz_target(
+       semantic_check_result) = self._evaluate_generated_fuzz_target(
            generated_oss_fuzz_project, target_path, generated_target_name,
            llm_fix_count, logger)
 
-      gen_succ = build_result.succeeded and not semantic_error.has_err
+      gen_succ = build_result.succeeded and not semantic_check_result.has_err
       if gen_succ:
         # Successfully generate the fuzz target.
         break
@@ -428,33 +428,33 @@ class Evaluator:
                  f'attempt {llm_fix_count}.')
       self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
                                       target_path, llm_fix_count, build_result,
-                                      semantic_error)
+                                      semantic_check_result)
 
     # Logs and returns the result.
-    if build_result.succeeded:
-      logger.log(f'Successfully built {target_path} with '
+    if not build_result.succeeded:
+      logger.log(f'Failed to build {target_path} with '
                  f'{self.builder_runner.fixer_model_name} in '
-                 f'{llm_fix_count} iterations.')
-    else:
-      logger.log(f'Failed to fix {target_path} with '
-                 f'{self.builder_runner.fixer_model_name} in '
-                 f'{llm_fix_count} iterations.')
+                 f'{llm_fix_count} iterations of syntax fixing.')
       return logger.return_result(
-          Result(False, False, 0.0, 0.0, '', '', False, semantic_error.type))
+          Result(False, False, 0.0, 0.0, '', '', False, semantic_check_result.type))
+        
+    logger.log(f'Successfully built {target_path} with '
+               f'{self.builder_runner.fixer_model_name} in '
+               f'{llm_fix_count} iterations of syntax fixing.')
 
     if (not run_result or run_result.coverage_summary is None or
         run_result.coverage is None):
       logger.log(f'Warning: No run_result in {generated_oss_fuzz_project}.')
       return logger.return_result(
-          Result(True, crashes, 0.0, 0.0, '', '', False, semantic_error.type))
+          Result(True, crashes, 0.0, 0.0, '', '', False, semantic_check_result.type))
 
-    if semantic_error.has_err:
-      logger.log(
-          f'Warning: {semantic_error.type} in {generated_oss_fuzz_project}.')
+    if semantic_check_result.has_err:
+      logger.log(f'Warning: Failed to fix sematic error {semantic_check_result.type}'
+          f' in {generated_oss_fuzz_project}.')
       return logger.return_result(
           Result(True, crashes, 0.0, 0.0, run_result.coverage_report_path,
-                 run_result.reproducer_path, semantic_error.has_err,
-                 semantic_error.type))
+                 run_result.reproducer_path, semantic_check_result.has_err,
+                 semantic_check_result.type))
 
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
