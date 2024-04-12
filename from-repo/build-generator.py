@@ -24,6 +24,8 @@ import argparse
 
 import openai
 
+MAX_FUZZ_PER_HEURISTIC = 5
+
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 CPP_BASE_TEMPLATE = """#include <stdint.h>
@@ -390,14 +392,14 @@ def get_all_functions_in_project(introspection_files_found):
   return all_functions_in_project
 
 
-class FuzzerGenHeuristic3:
+class FuzzerGenHeuristic4:
   """Simple LLM fuzz heuristic."""
 
   def __init__(self, all_functions_in_project, all_header_files, test_dir):
     self.all_functions_in_project = all_functions_in_project
     self.all_header_files = all_header_files
     self.test_dir = test_dir
-    self.name = 'FuzzerGenHeuristic3'
+    self.name = 'FuzzerGenHeuristic4'
     self.github_url = ""
 
   def get_fuzzing_targets(self):
@@ -412,7 +414,225 @@ class FuzzerGenHeuristic3:
     uniq_targets = list()
     for func in all_funcs:
       #idx += 1
-      if len(uniqes) > 10:
+      if len(uniqes) > MAX_FUZZ_PER_HEURISTIC:
+        continue
+      if func['demangled-name'] in uniqes:
+        continue
+      if func['demangled-name'] == 'main':
+        continue
+      uniqes.add(func['demangled-name'])
+      uniq_targets.append(func)
+      print("Target: %s" % (func['demangled-name']))
+      print(" - Cyclomatic: %d" % (func['CyclomaticComplexity']))
+      #print(json.dumps(func, indent=2))
+
+    return uniq_targets
+
+  def get_fuzzer_intrinsics(self, func):
+    # Identify which headers to include based on the files
+    # in the source code folder.
+    headers_to_include = set()
+    header_paths_to_include = set()
+    for header_file in self.all_header_files:
+      #print("- %s"%(header_file))
+      if "/test/" in header_file:
+        continue
+      if "googletest" in header_file:
+        continue
+      headers_to_include.add(os.path.basename(header_file))
+      header_paths_to_include.add("/".join(header_file.split("/")[1:-1]))
+
+    print("Sample targets:")
+    prompt = """Hi, please write a fuzz harness for me.
+
+The target project is %s which is a open source project written in C. The harness you write should be in pure C as well.
+
+I would like for you to write the harness targeting the function %s.`
+
+The harness should be in libFuzzer style, with the code wrapped in LLVMFuzzerTestOneInput.
+
+Please wrap all code in <code> tags and you should include nothing else but the code in your reply. Do not include any other text.
+
+Make sure the ensure strings passed to the target are null-terminated.
+
+There is one rule that your harness must satisfy: all of the header files in this library is %s. Make sure to not include any header files not in this list.
+
+Finally, the most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code as simple as possible in order to secure it can be build.
+""" % (self.github_url, func['demangled-name'], str(headers_to_include))
+    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo",
+                                              messages=[
+                                                  {
+                                                      "role": "system",
+                                                      "content": prompt
+                                                  },
+                                              ])
+
+    fuzzer_source = completion.choices[0].message.content.replace(
+        "<code>", "").replace("</code>", "").replace("```", "")
+    print(">" * 45 + " Source:")
+    print(fuzzer_source)
+    print("-" * 65)
+
+    # Identify which headers to include based on the files
+    # in the source code folder.
+    headers_to_include = set()
+    header_paths_to_include = set()
+    for header_file in self.all_header_files:
+      #print("- %s"%(header_file))
+      if "/test/" in header_file:
+        continue
+      if "googletest" in header_file:
+        continue
+      headers_to_include.add(os.path.basename(header_file))
+      header_paths_to_include.add("/".join(header_file.split("/")[1:-1]))
+
+    # Generate -I strings to be used in the build command.
+    build_command_includes = ""
+    for header_path_to_include in header_paths_to_include:
+      build_command_includes += "-I" + os.path.join(
+          self.test_dir, header_path_to_include) + " "
+
+    fuzzerTargetCall = func['demangled-name']
+    fuzzer_intrinsics = {
+        'full-source-code': fuzzer_source,
+        'build-command-includes': build_command_includes,
+        'autogen-id': '%s-%s' % (self.name, fuzzerTargetCall),
+    }
+
+    return fuzzer_intrinsics
+
+
+class FuzzerGenHeuristic1:
+  """Simple LLM fuzz heuristic."""
+
+  def __init__(self, all_functions_in_project, all_header_files, test_dir):
+    self.all_functions_in_project = all_functions_in_project
+    self.all_header_files = all_header_files
+    self.test_dir = test_dir
+    self.name = 'FuzzerGenHeuristic1'
+    self.github_url = ""
+
+  def get_fuzzing_targets(self):
+
+    all_funcs = sorted(self.all_functions_in_project,
+                       key=lambda x: x['CyclomaticComplexity'],
+                       reverse=True)
+
+    #for tdi in range(min(20, len(first_refined_functions_in_project))):
+    uniqes = set()
+    #idx = 0
+    uniq_targets = list()
+    for func in all_funcs:
+      #idx += 1
+      if len(uniqes) > MAX_FUZZ_PER_HEURISTIC:
+        continue
+      if func['demangled-name'] in uniqes:
+        continue
+      if func['demangled-name'] == 'main':
+        continue
+      uniqes.add(func['demangled-name'])
+      uniq_targets.append(func)
+      print("Target: %s" % (func['demangled-name']))
+      print(" - Cyclomatic: %d" % (func['CyclomaticComplexity']))
+      #print(json.dumps(func, indent=2))
+
+    return uniq_targets
+
+  def get_fuzzer_intrinsics(self, func):
+    # Identify which headers to include based on the files
+    # in the source code folder.
+    headers_to_include = set()
+    header_paths_to_include = set()
+    for header_file in self.all_header_files:
+      #print("- %s"%(header_file))
+      if "/test/" in header_file:
+        continue
+      if "googletest" in header_file:
+        continue
+      headers_to_include.add(os.path.basename(header_file))
+      header_paths_to_include.add("/".join(header_file.split("/")[1:-1]))
+
+    print("Sample targets:")
+    prompt = """Hi, please write a fuzz harness for me.
+
+The target project is %s which is a open source project written in C. The harness you write should be in pure C as well.
+
+I would like for you to write the harness targeting the function %s.`
+
+The harness should be in libFuzzer style, with the code wrapped in LLVMFuzzerTestOneInput.
+
+Please wrap all code in <code> tags and you should include nothing else but the code in your reply. Do not include any other text.
+
+Make sure the ensure strings passed to the target are null-terminated.
+
+There is one rule that your harness must satisfy: all of the header files in this library is %s. Make sure to not include any header files not in this list.
+""" % (self.github_url, func['demangled-name'], str(headers_to_include))
+    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo",
+                                              messages=[
+                                                  {
+                                                      "role": "system",
+                                                      "content": prompt
+                                                  },
+                                              ])
+
+    fuzzer_source = completion.choices[0].message.content.replace(
+        "<code>", "").replace("</code>", "").replace("```", "")
+    print(">" * 45 + " Source:")
+    print(fuzzer_source)
+    print("-" * 65)
+
+    # Identify which headers to include based on the files
+    # in the source code folder.
+    headers_to_include = set()
+    header_paths_to_include = set()
+    for header_file in self.all_header_files:
+      #print("- %s"%(header_file))
+      if "/test/" in header_file:
+        continue
+      if "googletest" in header_file:
+        continue
+      headers_to_include.add(os.path.basename(header_file))
+      header_paths_to_include.add("/".join(header_file.split("/")[1:-1]))
+
+    # Generate -I strings to be used in the build command.
+    build_command_includes = ""
+    for header_path_to_include in header_paths_to_include:
+      build_command_includes += "-I" + os.path.join(
+          self.test_dir, header_path_to_include) + " "
+
+    fuzzerTargetCall = func['demangled-name']
+    fuzzer_intrinsics = {
+        'full-source-code': fuzzer_source,
+        'build-command-includes': build_command_includes,
+        'autogen-id': '%s-%s' % (self.name, fuzzerTargetCall),
+    }
+
+    return fuzzer_intrinsics
+
+
+class FuzzerGenHeuristic2:
+  """Simple LLM fuzz heuristic."""
+
+  def __init__(self, all_functions_in_project, all_header_files, test_dir):
+    self.all_functions_in_project = all_functions_in_project
+    self.all_header_files = all_header_files
+    self.test_dir = test_dir
+    self.name = 'FuzzerGenHeuristic2'
+    self.github_url = ""
+
+  def get_fuzzing_targets(self):
+
+    all_funcs = sorted(self.all_functions_in_project,
+                       key=lambda x: x['CyclomaticComplexity'],
+                       reverse=True)
+
+    #for tdi in range(min(20, len(first_refined_functions_in_project))):
+    uniqes = set()
+    #idx = 0
+    uniq_targets = list()
+    for func in all_funcs:
+      #idx += 1
+      if len(uniqes) > MAX_FUZZ_PER_HEURISTIC:
         continue
       if func['demangled-name'] in uniqes:
         continue
@@ -447,11 +667,121 @@ The target project is %s which is a open source project written in CPP.
 
 I would like for you to write the harness targeting the function %s.
 
+The harness should be in libFuzzer style, with the code wrapped in LLVMFuzzerTestOneInput.
+
 Please wrap all code in <code> tags and you should include nothing else but the code in your reply. Do not include any other text.
 
 Make sure the ensure strings passed to the target are null-terminated.
 
 There are two rules that your harness must satisfy: First, all of the header files in this library is %s. Make sure to not include any header files not in this list. Second, you must wrap the harness such that it catches all exceptions (use "...") thrown by the target code.
+""" % (self.github_url, func['demangled-name'], str(headers_to_include))
+    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo",
+                                              messages=[
+                                                  {
+                                                      "role": "system",
+                                                      "content": prompt
+                                                  },
+                                              ])
+
+    fuzzer_source = completion.choices[0].message.content.replace(
+        "<code>", "").replace("</code>", "").replace("```", "")
+    print(">" * 45 + " Source:")
+    print(fuzzer_source)
+    print("-" * 65)
+
+    # Identify which headers to include based on the files
+    # in the source code folder.
+    headers_to_include = set()
+    header_paths_to_include = set()
+    for header_file in self.all_header_files:
+      #print("- %s"%(header_file))
+      if "/test/" in header_file:
+        continue
+      if "googletest" in header_file:
+        continue
+      headers_to_include.add(os.path.basename(header_file))
+      header_paths_to_include.add("/".join(header_file.split("/")[1:-1]))
+
+    # Generate -I strings to be used in the build command.
+    build_command_includes = ""
+    for header_path_to_include in header_paths_to_include:
+      build_command_includes += "-I" + os.path.join(
+          self.test_dir, header_path_to_include) + " "
+
+    fuzzerTargetCall = func['demangled-name']
+    fuzzer_intrinsics = {
+        'full-source-code': fuzzer_source,
+        'build-command-includes': build_command_includes,
+        'autogen-id': '%s-%s' % (self.name, fuzzerTargetCall),
+    }
+
+    return fuzzer_intrinsics
+
+
+class FuzzerGenHeuristic3:
+  """Simple LLM fuzz heuristic."""
+
+  def __init__(self, all_functions_in_project, all_header_files, test_dir):
+    self.all_functions_in_project = all_functions_in_project
+    self.all_header_files = all_header_files
+    self.test_dir = test_dir
+    self.name = 'FuzzerGenHeuristic3'
+    self.github_url = ""
+
+  def get_fuzzing_targets(self):
+
+    all_funcs = sorted(self.all_functions_in_project,
+                       key=lambda x: x['CyclomaticComplexity'],
+                       reverse=True)
+
+    #for tdi in range(min(20, len(first_refined_functions_in_project))):
+    uniqes = set()
+    #idx = 0
+    uniq_targets = list()
+    for func in all_funcs:
+      #idx += 1
+      if len(uniqes) > MAX_FUZZ_PER_HEURISTIC:
+        continue
+      if func['demangled-name'] in uniqes:
+        continue
+      if func['demangled-name'] == 'main':
+        continue
+      uniqes.add(func['demangled-name'])
+      uniq_targets.append(func)
+      print("Target: %s" % (func['demangled-name']))
+      print(" - Cyclomatic: %d" % (func['CyclomaticComplexity']))
+      #print(json.dumps(func, indent=2))
+
+    return uniq_targets
+
+  def get_fuzzer_intrinsics(self, func):
+    # Identify which headers to include based on the files
+    # in the source code folder.
+    headers_to_include = set()
+    header_paths_to_include = set()
+    for header_file in self.all_header_files:
+      #print("- %s"%(header_file))
+      if "/test/" in header_file:
+        continue
+      if "googletest" in header_file:
+        continue
+      headers_to_include.add(os.path.basename(header_file))
+      header_paths_to_include.add("/".join(header_file.split("/")[1:-1]))
+
+    print("Sample targets:")
+    prompt = """Hi, please write a fuzz harness for me.
+
+The target project is %s which is a open source project written in CPP.
+
+I would like for you to write the harness targeting the function %s.
+
+The harness should be in libFuzzer style, with the code wrapped in LLVMFuzzerTestOneInput.
+
+Please wrap all code in <code> tags and you should include nothing else but the code in your reply. Do not include any other text.
+
+Make sure the ensure strings passed to the target are null-terminated.
+
+There are two rules that your harness must satisfy: First, all of the header files in this library is %s. Make sure to not include any header files not in this list and only include the ones relevant for the target function. Second, if the target is CPP then you must wrap the harness such that it catches all exceptions (use "...") thrown by the target code.
 """ % (self.github_url, func['demangled-name'], str(headers_to_include))
     completion = openai.ChatCompletion.create(model="gpt-3.5-turbo",
                                               messages=[
@@ -887,7 +1217,10 @@ def auto_generate(github_url,
     # fuzzing harnesses and build scripts for these harnesses.
 
     # At the moment, we just keep a single heuristic.
-    heuristics_to_apply = [FuzzerGenHeuristic3]
+    heuristics_to_apply = [
+        FuzzerGenHeuristic4, FuzzerGenHeuristic3, FuzzerGenHeuristic2,
+        FuzzerGenHeuristic1
+    ]
     idx = 0
     for heuristic_class in heuristics_to_apply:
 
@@ -921,7 +1254,9 @@ def auto_generate(github_url,
     for folder in folders_with_results:
       src_folder = "/".join(folder.split("/")[:-1])
       src_folder_base = os.path.basename(src_folder)
+
       dst_folder = os.path.join(outdir, src_folder_base)
+      print("Copying: %s to %s" % (src_folder, dst_folder))
       shutil.copytree(src_folder, dst_folder)
 
       exec_command = os.path.join(dst_folder, folder.split("/")[-1])

@@ -125,15 +125,40 @@ def run_autogen(github_url, outdir, openai_api_key, oss_fuzz_base):
     pass
 
 
+def read_targets_file(filename):
+  res_targets = []
+  with open(filename, 'r') as f:
+    targets = f.read().split("\n")
+    for e in targets:
+      if len(e) < 6:
+        continue
+      if e:
+        res_targets.append(e)
+  return res_targets
+
+
 def main():
   oss_fuzz_base = sys.argv[1]
   target = sys.argv[2]
 
+  if os.path.isfile(target):
+    targets = read_targets_file(sys.argv[2])
+  else:
+    targets = [target]
+
+  print(targets)
+
   setup(oss_fuzz_base)
-  outdir = 'autogen-results'
   openai_api_key = os.getenv("OPENAI_API_KEY")
 
-  run_autogen(target, outdir, openai_api_key, oss_fuzz_base)
+  for idx in range(len(targets)):
+    #if idx < 10:
+    #    continue
+    target = targets[idx]
+    outdir = '/out/autogen-results-%d' % (idx)
+    with open('status-log.txt', 'a') as f:
+      f.write("Targeting: %s :: %d\n" % (target, idx))
+    run_autogen(target, outdir, openai_api_key, oss_fuzz_base)
 
 
 if __name__ == "__main__":
