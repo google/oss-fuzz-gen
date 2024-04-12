@@ -196,18 +196,18 @@ class GPT(LLM):
     """Generates code with OpenAI's API."""
     if self.ai_binary:
       print(f'OpenAI does not use local AI binary: {self.ai_binary}')
-    openai.api_key = os.getenv('OPENAI_API_KEY')
+    client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
     completion = self.with_retry_on_error(
-        lambda: openai.ChatCompletion.create(messages=prompt.get(),
-                                             model=self.name,
-                                             n=self.num_samples,
-                                             temperature=self.temperature),
+        lambda: client.chat.completions.create(messages=prompt.get(),
+                                               model=self.name,
+                                               n=self.num_samples,
+                                               temperature=self.temperature),
         openai.OpenAIError)
     if log_output:
       print(completion)
     for index, choice in enumerate(completion.choices):  # type: ignore
-      content = choice.message['content']
+      content = choice.message.content
       self._save_output(index, content, response_dir)
 
 

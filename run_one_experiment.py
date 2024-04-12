@@ -39,9 +39,13 @@ NUM_EVA = int(os.getenv('LLM_NUM_EVA', '3'))
 DEBUG: bool = False
 
 # Default LLM hyper-parameters.
-# WARN: Avoid large NUM_SAMPLES in highly parallelized local experiment.
-# NUM_SAMPLES controls the number of LLM responses per query, which may exceed
-# your LLM's limit on query-per-second.
+# #182 shows Gemini returns NUM_SAMPLES independent responses via repeated
+#  queries, which generally performs better than top-k responses from one
+#  query [1].
+# [1] TODO(@happy-qop): Update the link.
+# WARN: Avoid large NUM_SAMPLES in highly parallelized local experiments.
+# It controls the number of LLM responses per prompt, which may exceed your
+# LLM's limit on query-per-second.
 NUM_SAMPLES = 2
 MAX_TOKENS: int = 4096
 RUN_TIMEOUT: int = 30
@@ -128,7 +132,7 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
   crash_rate = sum([int(stat.crashes) for _, stat in target_stats
                    ]) / len(target_stats)
   found_bug = sum([
-      int(stat.crashes and not stat.is_driver_fuzz_err)
+      int(stat.crashes and not stat.is_semantic_error)
       for _, stat in target_stats
   ])
   max_coverage = max([stat.coverage for _, stat in target_stats])

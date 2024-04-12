@@ -29,6 +29,7 @@ from flask import Flask, abort, render_template
 
 import run_one_experiment
 from experiment import evaluator
+from experiment.workdir import WorkDirs
 
 app = Flask(__name__)
 # Disable Flask request logs
@@ -49,32 +50,45 @@ class Benchmark:
   status: str
   result: run_one_experiment.AggregatedResult
   signature: str = ''
+  project: str = ''
+  function: str = ''
 
   def __post_init__(self):
-    self.signature = self.find_signature(self.id) or self.id
+    self.project = '-'.join(self.id.split('-')[1:-1])
+    self.function = self.id.split('-')[-1]
+    self.signature = self.find_signature() or self.id
 
-  @staticmethod
-  def find_signature(benchmark_id: str) -> str:
+  def find_signature(self) -> str:
     """
     Finds the function signature by searching for its |benchmark_id| in
     BENCHMARK_DIR.
     """
-    if not BENCHMARK_DIR:
+    project_path = os.path.join(BENCHMARK_DIR, f'{self.project}.yaml')
+    if not BENCHMARK_DIR or not os.path.isfile(project_path):
       return ''
 
-    for project_yaml in os.listdir(BENCHMARK_DIR):
-      yaml_project_name = project_yaml.removesuffix(".yaml")
-      with open(os.path.join(BENCHMARK_DIR, project_yaml)) as project_yaml_file:
-        if yaml_project_name not in benchmark_id:
-          continue
-        functions = yaml.safe_load(project_yaml_file).get('functions', [])
-        for function in functions:
-          function_name = benchmark_id.removeprefix(
-              f'output-{yaml_project_name}-')
-          if function.get('name', '').lower().startswith(function_name):
-            return f'{yaml_project_name}-{function.get("signature", "")}'
+    matched_prefix_signature = ''
+    with open(project_path) as project_yaml_file:
+      functions = yaml.safe_load(project_yaml_file).get('functions', [])
+      for function in functions:
+        function_name = function.get('name', '')
+        function_signature = function.get('signature', '')
 
-    return ''
+        # Best match is a full match, but sometimes the result directory only
+        # has the first n characters of a long function name so a full match is
+        # not possible.
+        # To avoid returning early on a prefix match when there is a full match
+        # farther down the list, we only return the prefix match at the end.
+        if function_name.lower() == self.function.lower():
+          return function_signature
+        if function_name.lower().startswith(self.function.lower()):
+          if matched_prefix_signature:
+            logging.warning(
+                'Multiple substring matches found when looking for function '
+                'name %s', function_name)
+          matched_prefix_signature = function_signature
+
+    return matched_prefix_signature
 
 
 @dataclasses.dataclass
@@ -242,6 +256,25 @@ def get_samples(benchmark: str) -> list[Sample]:
   return samples
 
 
+def match_sample(benchmark: str, target_sample_id: str) -> Optional[Sample]:
+  """Identifies the samples object and its status of the given sample id."""
+  results, _ = get_results(benchmark)
+
+  for i, sample_id in enumerate(sample_ids(get_generated_targets(benchmark))):
+    if sample_id != target_sample_id:
+      continue
+    status = 'Running'
+    result = None
+    if results[i]:
+      status = 'Done'
+      result = results[i]
+
+    return Sample(sample_id, status, result)
+  logging.warning('Failed to identify benchmark sample: %s\n  %s', benchmark,
+                  target_sample_id)
+  return None
+
+
 def truncate_logs(logs: str, max_len: int) -> str:
   if len(logs) <= max_len:
     return logs
@@ -261,11 +294,25 @@ def get_logs(benchmark: str, sample: str) -> str:
 
 
 def get_run_logs(benchmark: str, sample: str) -> str:
+  """Returns the content of the last run log."""
   run_logs_dir = os.path.join(RESULTS_DIR, benchmark, 'logs', 'run')
+  largest_iteration, last_log_file = -1, None
   for name in os.listdir(run_logs_dir):
     if name.startswith(sample + '.'):
-      with open(os.path.join(run_logs_dir, name), errors='replace') as f:
-        return truncate_logs(f.read(), MAX_RUN_LOGS_LEN)
+      iteration = WorkDirs.get_run_log_iteration(name)
+      if iteration is None:
+        # Be compatible with older results where no '-Fxx' in run log file name
+        last_log_file = name
+        break
+
+      if largest_iteration < iteration:
+        largest_iteration, last_log_file = iteration, name
+
+  if not last_log_file:
+    return ''
+
+  with open(os.path.join(run_logs_dir, last_log_file), errors='replace') as f:
+    return truncate_logs(f.read(), MAX_RUN_LOGS_LEN)
 
   return ''
 
@@ -333,7 +380,7 @@ def index_json():
                          model=model)
 
 
-@app.route('/sort/build')
+@app.route('/sort_build')
 def index_sort_build():
   return render_template('index.html',
                          benchmarks=sort_benchmarks(list_benchmarks(),
@@ -341,7 +388,7 @@ def index_sort_build():
                          model=model)
 
 
-@app.route('/sort/cov')
+@app.route('/sort_cov')
 def index_sort_cov():
   return render_template('index.html',
                          benchmarks=sort_benchmarks(list_benchmarks(),
@@ -349,7 +396,7 @@ def index_sort_cov():
                          model=model)
 
 
-@app.route('/sort/cov_diff')
+@app.route('/sort_cov_diff')
 def index_sort():
   return render_template('index.html',
                          benchmarks=sort_benchmarks(list_benchmarks(),
@@ -357,7 +404,7 @@ def index_sort():
                          model=model)
 
 
-@app.route('/sort/crash')
+@app.route('/sort_crash')
 def index_sort_crash():
   return render_template('index.html',
                          benchmarks=sort_benchmarks(list_benchmarks(),
@@ -365,7 +412,7 @@ def index_sort_crash():
                          model=model)
 
 
-@app.route('/sort/status')
+@app.route('/sort_status')
 def index_sort_stauts():
   return render_template('index.html',
                          benchmarks=sort_benchmarks(list_benchmarks(),
@@ -411,7 +458,7 @@ def sample_page(benchmark, sample):
   if _is_valid_benchmark_dir(benchmark):
     return render_template('sample.html',
                            benchmark=benchmark,
-                           sample=sample,
+                           sample=match_sample(benchmark, sample),
                            logs=get_logs(benchmark, sample),
                            run_logs=get_run_logs(benchmark, sample),
                            targets=get_targets(benchmark, sample),
