@@ -431,7 +431,7 @@ class Evaluator:
                                       semantic_error)
 
     # Logs and returns the result.
-    if gen_succ:
+    if build_result.succeeded:
       logger.log(f'Successfully built {target_path} with '
                  f'{self.builder_runner.fixer_model_name} in '
                  f'{llm_fix_count} iterations.')
