@@ -24,7 +24,7 @@ import argparse
 
 import openai
 
-MAX_FUZZ_PER_HEURISTIC = 5
+MAX_FUZZ_PER_HEURISTIC = 20
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
