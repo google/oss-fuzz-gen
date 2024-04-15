@@ -16,7 +16,7 @@
 import os
 import sys
 import shutil
-import multiprocessing
+import threading
 import subprocess
 
 empty_oss_fuzz_build = """#!/bin/bash -eu
@@ -164,18 +164,18 @@ def run_on_targets(target,
 def run_parallels(oss_fuzz_base, target_repositories):
   """Run auto-gen on a list of projects in parallel.
 
-  Parallelisation is done by way of multiprocess. Practically
+  Parallelisation is done by way of threads. Practically
   all of the computation will happen inside an OSS-Fuzz
   Docker container and not within this Python script as such."""
-  semaphore_count = 4
-  semaphore = multiprocessing.Semaphore(semaphore_count)
+  semaphore_count = 6
+  semaphore = threading.Semaphore(semaphore_count)
   jobs = []
   for idx in range(len(target_repositories)):
     target = target_repositories[idx]
     worker_project_name = "temp-project-%d" % (idx)
-    proc = multiprocessing.Process(target=run_on_targets,
-                                   args=(target, oss_fuzz_base,
-                                         worker_project_name, idx, semaphore))
+    proc = threading.Thread(target=run_on_targets,
+                            args=(target, oss_fuzz_base, worker_project_name,
+                                  idx, semaphore))
     jobs.append(proc)
     proc.start()
 
