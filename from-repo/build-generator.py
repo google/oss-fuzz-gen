@@ -28,7 +28,7 @@ from typing import (Any, Dict, List, Optional, Tuple)
 
 import openai
 
-MAX_FUZZ_PER_HEURISTIC = 5
+MAX_FUZZ_PER_HEURISTIC = 15
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
@@ -674,6 +674,8 @@ def get_all_introspector_files(target_dir):
     if "allFunctionsWithMain" in yaml_file:
       #print(yaml_file)
       introspection_files_found.append(yaml_file)
+    elif 'fuzzerLogFile-' in yaml_file and yaml_file.endswith('.yaml'):
+      introspection_files_found.append(yaml_file)
   return introspection_files_found
 
 
@@ -821,8 +823,10 @@ def run_introspector_on_dir(build_results, test_dir) -> [bool, List[str]]:
       "$CXX", "$CXXFLAGS", "$LIB_FUZZING_ENGINE", empty_fuzzer_file
   ]
   for refined_static_lib in build_results[test_dir]['refined-static-libs']:
+    fuzzer_build_cmd.append('-Wl,--whole-archive')
     fuzzer_build_cmd.append(os.path.join(test_dir, refined_static_lib))
 
+  fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
   introspector_vanilla_build_script += "\n%s" % (" ".join(fuzzer_build_cmd))
 
   with open("/src/build.sh", "w") as bs:
