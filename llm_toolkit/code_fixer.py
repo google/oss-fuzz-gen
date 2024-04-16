@@ -248,7 +248,9 @@ def extract_error_message(log_path: str,
       temp_range = [-1, -1]
 
   if error_lines_range[0] != -1 and error_lines_range[1] != -1:
-    errors.extend(line.rstrip() for line in log_lines[error_lines_range[0]:error_lines_range[1] + 1])
+    errors.extend(
+        line.rstrip()
+        for line in log_lines[error_lines_range[0]:error_lines_range[1] + 1])
 
   if not errors:
     print(f'Failed to parse error message from {log_path}.')
@@ -256,6 +258,7 @@ def extract_error_message(log_path: str,
 
 
 def group_error_messages(error_lines: list[str]) -> list[str]:
+  """Groups multi-line error block into one string"""
   diag_error_pattern = re.compile(r'\S*:(\d+):(\d+): (.+): (.+)\n?')
   include_error_pattern = re.compile(r'In file included from \S*:\d+:\n?')
   error_blocks = []
