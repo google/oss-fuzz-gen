@@ -234,8 +234,28 @@ def extract_error_message(log_path: str,
                            r'(\.\S*)?:\d+:\n?')
   error_end_pattern = r'.*\d+ errors? generated.\n?'
 
+  error_keywords = [
+      'multiple definition of',
+      'undefined reference to',
+  ]
   errors = []
+  unique_symbol = set()
   for i, line in enumerate(log_lines):
+    # Add GNU ld errors in interest.
+    found_keyword = False
+    for keyword in error_keywords:
+      if keyword not in line:
+        continue
+      found_keyword = True
+      symbol = line.split(keyword)[-1]
+      if symbol not in unique_symbol:
+        unique_symbol.add(symbol)
+        errors.append(line.rstrip())
+      break
+    if found_keyword:
+      continue
+
+    # Add clang diagnostics.
     if (temp_range[0] == -1 and (re.fullmatch(error_include_pattern, line) or
                                  re.fullmatch(error_start_pattern, line))):
       temp_range[0] = i
@@ -263,15 +283,24 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
   include_error_pattern = re.compile(r'In file included from \S*:\d+:\n?')
   error_blocks = []
   curr_block = []
+  unknown_error_line = True
   for line in error_lines:
     if not line:  # Trim empty lines.
       continue
+
     diag_match = diag_error_pattern.fullmatch(line)
     include_match = include_error_pattern.fullmatch(line)
     if diag_match or include_match:
-      error_blocks.append('\n'.join(curr_block))
-      curr_block = []
-    curr_block.append(line)
+      unknown_error_line = False
+      if curr_block:
+        error_blocks.append('\n'.join(curr_block))
+        curr_block = []
+
+    # Groups known format only.
+    if unknown_error_line:
+      error_blocks.append(line)
+    else:
+      curr_block.append(line)
   return error_blocks
 
 
