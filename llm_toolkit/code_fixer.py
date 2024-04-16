@@ -229,9 +229,9 @@ def extract_error_message(log_path: str,
   error_lines_range = [-1, -1]
   temp_range = [-1, -1]
 
-  error_start_pattern = r'\S*' + target_name + r'(\.\S*)?:\d+:\d+: .+:.+\n?'
-  error_include_pattern = (r'In file included from [^\s]*' + target_name +
-                           r'(\.[^\s]*)?:\d+:\n?')
+  error_start_pattern = r'\S*' + target_name + r'(\.\S*)?:\d+:\d+: .+: .+\n?'
+  error_include_pattern = (r'In file included from \S*' + target_name +
+                           r'(\.\S*)?:\d+:\n?')
   error_end_pattern = r'.*\d+ errors? generated.\n?'
 
   errors = []
@@ -248,13 +248,28 @@ def extract_error_message(log_path: str,
       temp_range = [-1, -1]
 
   if error_lines_range[0] != -1 and error_lines_range[1] != -1:
-    errors.extend(log_lines[error_lines_range[0]:error_lines_range[1] + 1])
+    errors.extend(line.rstrip() for line in log_lines[error_lines_range[0]:error_lines_range[1] + 1])
 
   if not errors:
     print(f'Failed to parse error message from {log_path}.')
-  errors = [re.sub(r'\n\n+', '\n', error) for error in errors]
-  errors = [error[:-1] if error[-1] == '\n' else error for error in errors]
-  return errors
+  return group_error_messages(errors)
+
+
+def group_error_messages(error_lines: list[str]) -> list[str]:
+  diag_error_pattern = re.compile(r'\S*:(\d+):(\d+): (.+): (.+)\n?')
+  include_error_pattern = re.compile(r'In file included from \S*:\d+:\n?')
+  error_blocks = []
+  curr_block = []
+  for line in error_lines:
+    if not line:  # Trim empty lines.
+      continue
+    diag_match = diag_error_pattern.fullmatch(line)
+    include_match = include_error_pattern.fullmatch(line)
+    if diag_match or include_match:
+      error_blocks.append('\n'.join(curr_block))
+      curr_block = []
+    curr_block.append(line)
+  return error_blocks
 
 
 def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
