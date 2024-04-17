@@ -174,7 +174,7 @@ cp -r $JAVA_HOME $OUT/
 BUILD_CLASSPATH=$JAZZER_API_PATH:$OUT/jar_temp:$OUT/commons-lang3-3.12.0.jar
 RUNTIME_CLASSPATH=\$this_dir/jar_temp:\$this_dir/commons-lang3-3.12.0.jar:\$this_dir
 
-for fuzzer in $(find $SRC -name 'Fuzz.java')
+for fuzzer in $(find $SRC -name 'Fuzz*.java')
 do
   fuzzer_basename=$(basename -s .java $fuzzer)
   $JAVA_HOME/bin/javac -cp $BUILD_CLASSPATH $fuzzer

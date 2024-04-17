@@ -20,14 +20,14 @@ import yaml
 import openai
 import argparse
 
-from experiment import oss_fuzz_checkout
+from experiment import oss_fuzz_checkout, builder_runner, evaluator
 from java_fuzzgen import oss_fuzz_templates, utils
 from java_fuzzgen.objects import java_method
 
 from typing import Any, List, Dict
 
 
-def get_next_autofuzz_dir():
+def get_next_autofuzz_dir() -> str:
   print("OSS-Fuzz dir: %s" % (oss_fuzz_checkout.OSS_FUZZ_DIR))
   auto_gen = 'java-autofuzz-dir-'
   max_idx = -1
@@ -43,8 +43,7 @@ def prepare_oss_fuzz_pre_analysis_project(github_repo: str,
                                           autogen_project: str) -> str:
   """Create OSS-Fuzz project with build.sh template for running Introspector statically."""
   # Find the next auto-fuzz dir
-  project_dir = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "projects",
-                             autogen_project)
+  project_dir = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "projects", autogen_project)
   print("Creating project: %s" % (project_dir))
   if not os.path.isdir(project_dir):
     os.mkdir(project_dir)
@@ -57,20 +56,11 @@ def prepare_oss_fuzz_pre_analysis_project(github_repo: str,
 
   # Determine java build type
   project_name = utils.get_project_name(github_repo)
-  build_type = utils.find_project_build_type(os.path.join(project_dir, "proj"), project_name)
+  build_file = utils.get_build_file(project_dir, project_name, True)
 
-  # Write template files
-  if build_type == "ant":
-    build_file = oss_fuzz_templates.BUILD_JAVA_ANT
-  elif build_type == "gradle":
-    build_file = oss_fuzz_templates.BUILD_JAVA_GRADLE
-  elif build_type == "maven":
-    build_file = oss_fuzz_templates.BUILD_JAVA_MAVEN
-  else:
+  if not build_file:
     print("Build type of this java project is not supported.")
     return None
-
-  build_file = build_file + oss_fuzz_templates.BUILD_JAVA_BASE + oss_fuzz_templates.BUILD_JAVA_INTROSPECTOR
 
   with open(os.path.join(project_dir, 'build.sh'), 'w') as f:
     f.write(build_file)
@@ -130,7 +120,6 @@ def create_harness_from_openai(github_repo: str, func_elem: Dict) -> str:
     return None
 
   # Querying openai for a sample fuzzing harness
-  print(question)
   completion = openai.chat.completions.create(model="gpt-3.5-turbo",
                                             messages=[
                                                 {
@@ -138,9 +127,9 @@ def create_harness_from_openai(github_repo: str, func_elem: Dict) -> str:
                                                     "content": question
                                                 },
                                             ])
-  print(completion.choices[0].message.content)
+  source_code = completion.choices[0].message.content.split("<java_code>")[-1].split("</java_code>")[0]
 
-  return completion.choices[0].message.content
+  return source_code
 
 
 def generate_fuzzers(github_repo: str, introspector_funcs: List[Any], max_targets: int) -> List[str]:
@@ -157,6 +146,95 @@ def generate_fuzzers(github_repo: str, introspector_funcs: List[Any], max_target
       fuzzer_sources.append(harness_source)
   return fuzzer_sources
 
+
+def build_and_evalute_fuzzer_harnesses(fuzzer_sources: List[str], autogen_project: str,
+                                       log_file: str, github_repo: str) -> bool:
+  """Builds a Java project, runs each of the fuzzers built and logs stats."""
+  idx = 0
+  print("------")
+  print(oss_fuzz_checkout.OSS_FUZZ_DIR)
+
+  # Refined build file
+  project_dir = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "projects", autogen_project)
+  project_name = utils.get_project_name(github_repo)
+  with open(os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "projects", autogen_project, "build.sh"), "w") as f:
+    f.write(utils.get_build_file(project_dir, project_name, False))
+
+  success = list()
+
+  # Check and retrieve success fuzzers
+  for idx in range(len(fuzzer_sources)):
+    fuzzer_name = "Fuzz%d" % (idx)
+    fuzzer_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "projects",
+                               autogen_project, "%s.java" % (fuzzer_name))
+    with open(fuzzer_path, "w") as f:
+      f.write(fuzzer_sources[idx].replace("class Fuzz", "class %s" % (fuzzer_name)))
+    if not utils.run_oss_fuzz_build(autogen_project):
+      print("Fuzzer %s failed." % (fuzzer_name))
+      os.remove(fuzzer_path)
+      continue
+    success.append(idx)
+
+  if len(success) == 0:
+    print("No value fuzzing targets.")
+    return False
+
+  # Build fuzzers
+  fuzzer_runner = builder_runner.BuilderRunner(None, "ww", 60)
+  if not utils.run_oss_fuzz_build(autogen_project):
+    return False
+
+  # Run each fuzzers
+  stat_list = list()
+  for idx in success:
+    print("------")
+    print(oss_fuzz_checkout.OSS_FUZZ_DIR)
+
+    fuzz_logs = "/tmp/fuzz-%d-log.txt" % (idx)
+    fuzzer_runner.run_target_local(autogen_project, "Fuzz%d" % (idx), fuzz_logs, is_benchmark = False)
+
+    valuator = evaluator.Evaluator(None, None, None)
+
+    with open(fuzz_logs, 'rb') as f:
+      cov_pcs, total_pcs, crashes, is_driver_fuzz_err = valuator._parse_libfuzzer_logs(f, None)
+
+    stats = {
+        'cov_pcs': cov_pcs,
+        'total_pcs': total_pcs,
+        'crashes': crashes,
+        'is_driver_fuzz_err': is_driver_fuzz_err
+    }
+
+    result_status = {
+        'stats': stats,
+        'idx': idx,
+        'fuzzer-source': fuzzer_sources[idx]
+    }
+    stat_list.append(result_status)
+
+  if log_file:
+    with open(log_file, "w") as f:
+      f.write("Target: %s\n" % (github_repo))
+      f.write("# High level stats\n")
+      for stat in sorted(stat_list, key=lambda x: x['stats']['cov_pcs']):
+        f.write("idx: %d -- cov_pcs: %d\n" %
+                (stat['idx'], stat['stats']['cov_pcs']))
+      f.write("\n")
+      f.write("-" * 45 + "\n")
+      f.write("# Fuzzer sources\n")
+      for stat in sorted(stat_list, key=lambda x: x['stats']['cov_pcs']):
+        f.write("idx: %d -- cov_pcs: %d\n" %
+                (stat['idx'], stat['stats']['cov_pcs']))
+        f.write("-" * 45 + "\n")
+        f.write(stat['fuzzer-source'])
+        f.write("\n")
+        f.write("-" * 45 + "\n")
+
+  print("Total stats:")
+  for stat in sorted(stat_list, key=lambda x: x['stats']['cov_pcs']):
+    print("idx: %d -- cov_pcs: %d" % (stat['idx'], stat['stats']['cov_pcs']))
+
+  return True
 
 def auto_fuzz_from_scratch(github_repo: str, log_file: str, max_targets: int) -> bool:
   """Auto-generates an OSS-Fuzz project with |max_targets| fuzzers and evalutes the fuzzers."""
@@ -178,8 +256,9 @@ def auto_fuzz_from_scratch(github_repo: str, log_file: str, max_targets: int) ->
     return
 
   # Build all the fuzzers and evaluate each of them
-#  build_and_evalute_fuzzer_harnesses(fuzzer_sources, autogen_project, log_file,
-#                                     github_repo)
+  if not build_and_evalute_fuzzer_harnesses(fuzzer_sources, autogen_project, log_file, github_repo):
+    print("Could not generate any valid fuzzers")
+    return
 
   # Show output
   print("------")

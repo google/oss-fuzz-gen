@@ -16,6 +16,7 @@
 import os
 import subprocess
 
+from java_fuzzgen import oss_fuzz_templates
 from experiment import oss_fuzz_checkout
 
 # Project preparation utils
@@ -51,6 +52,25 @@ def get_project_name(github_url: str) -> str:
     return github_url.replace("http://", "").split("/")[2]
   else:
     return github_url.split("/")[1]
+
+
+def get_build_file(project_dir: str, project_name: str, is_introspector: bool) -> str:
+  """Retrieve build.sh content for this project."""
+  build_type = find_project_build_type(os.path.join(project_dir, "proj"), project_name)
+
+  if build_type == "ant":
+    build_file = oss_fuzz_templates.BUILD_JAVA_ANT
+  elif build_type == "gradle":
+    build_file = oss_fuzz_templates.BUILD_JAVA_GRADLE
+  elif build_type == "maven":
+    build_file = oss_fuzz_templates.BUILD_JAVA_MAVEN
+  else:
+    return None
+
+  if is_introspector:
+    return build_file + oss_fuzz_templates.BUILD_JAVA_BASE + oss_fuzz_templates.BUILD_JAVA_INTROSPECTOR
+  else:
+    return build_file + oss_fuzz_templates.BUILD_JAVA_BASE
 
 
 # Java Project discovery utils
