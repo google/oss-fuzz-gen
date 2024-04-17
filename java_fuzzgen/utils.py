@@ -20,7 +20,7 @@ from experiment import oss_fuzz_checkout
 
 # Project preparation utils
 ###########################
-def git_clone_project(github_url, destination):
+def git_clone_project(github_url: str, destination: str) -> bool:
   """Clone project from github url to destination"""
   cmd = ["git clone", github_url, destination]
   try:
@@ -36,7 +36,7 @@ def git_clone_project(github_url, destination):
   return True
 
 
-def get_project_name(github_url):
+def get_project_name(github_url: str) -> str:
   """Get project name by simplify github url"""
   # Simplify url by cutting https out, then assume what we have left is:
   # HTTP Type
@@ -55,7 +55,7 @@ def get_project_name(github_url):
 
 # Java Project discovery utils
 ##############################
-def _find_dir_build_type(dir):
+def _find_dir_build_type(dir: str) -> str:
   """Determine the java build project type of the directory"""
 
   if os.path.exists(os.path.join(dir, "pom.xml")):
@@ -68,7 +68,7 @@ def _find_dir_build_type(dir):
     return None
 
 
-def find_project_build_type(dir, proj_name):
+def find_project_build_type(dir: str, proj_name: str) -> str:
     """Search for base project directory to detect project build type"""
     # Search for current directory first
     project_build_type = _find_dir_build_type(dir)
@@ -89,11 +89,11 @@ def find_project_build_type(dir, proj_name):
         if project_build_type:
             return project_build_type
 
-    return None, None
+    return None
 
 # OSS-Fuzz project utils
 ########################
-def run_oss_fuzz_build(project_dir):
+def run_oss_fuzz_build(project_dir: str) -> bool:
   """Build the project with OSS-Fuzz commands"""
   cmd = "python3 infra/helper.py build_fuzzers %s" % (project_dir)
   try:
@@ -109,9 +109,9 @@ def run_oss_fuzz_build(project_dir):
 
 # OPENAI utils
 ##############
-def get_openai_question(github_repo):
+def get_openai_question(github_repo: str, func_name: str) -> str:
   """Retrieve and return openai question from template"""
-  with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "openai_question"), "r") as file:
-    return file.read() % (get_project_name(github_repo), github_repo)
+  with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "openai_question"), "r") as file:
+    return file.read() % (get_project_name(github_repo), github_repo, func_name)
 
   return None

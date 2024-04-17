@@ -16,16 +16,15 @@
 
 import os
 import sys
-import json
 import yaml
 import openai
 import argparse
-import subprocess as sp
 
 from experiment import oss_fuzz_checkout
 from java_fuzzgen import oss_fuzz_templates, utils
+from java_fuzzgen.objects import java_method
 
-from typing import Any, List
+from typing import Any, List, Dict
 
 
 def get_next_autofuzz_dir():
@@ -41,7 +40,7 @@ def get_next_autofuzz_dir():
 
 
 def prepare_oss_fuzz_pre_analysis_project(github_repo: str,
-                                          autogen_project: str):
+                                          autogen_project: str) -> str:
   """Create OSS-Fuzz project with build.sh template for running Introspector statically."""
   # Find the next auto-fuzz dir
   project_dir = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "projects",
@@ -88,7 +87,7 @@ def prepare_oss_fuzz_pre_analysis_project(github_repo: str,
   return autogen_project
 
 
-def perform_pre_analysis(github_repo, autogen_project):
+def perform_pre_analysis(github_repo, autogen_project) -> List[Any]:
   """Creates an OSS-Fuzz project for a project and runs introspector
     statically on it within the OSS-Fuzz environment."""
   autogen_project = prepare_oss_fuzz_pre_analysis_project(
@@ -115,13 +114,23 @@ def perform_pre_analysis(github_repo, autogen_project):
   return all_introspector_funcs
 
 
-def create_harness_from_openai(github_repo: str):
-  question = utils.get_openai_question(github_repo)
+def create_harness_from_openai(github_repo: str, func_elem: Dict) -> str:
+  # Generate objects for this speific function element dict
+  java_method_object = java_method.JAVA_METHOD(func_elem)
 
+  # Skip some uninterested methods
+  if java_method_object.is_skip:
+    print("Skipping %s" % (java_method_object.full_qualified_name))
+    return None
+
+  # Generate the openai question for this specific method
+  question = utils.get_openai_question(github_repo, java_method_object.full_qualified_name)
   if not question:
     print("Failed to locate default openai question template.")
     return None
 
+  # Querying openai for a sample fuzzing harness
+  print(question)
   completion = openai.chat.completions.create(model="gpt-3.5-turbo",
                                             messages=[
                                                 {
@@ -139,16 +148,17 @@ def generate_fuzzers(github_repo: str, introspector_funcs: List[Any], max_target
   idx = 0
   fuzzer_sources = []
   for func in introspector_funcs:
-    idx += 1
     if idx >= max_targets:
       break
-    harness_source = create_harness_from_openai(github_repo)
+    harness_source = create_harness_from_openai(github_repo, func)
+
     if harness_source:
+      idx += 1
       fuzzer_sources.append(harness_source)
   return fuzzer_sources
 
 
-def auto_fuzz_from_scratch(github_repo: str, log_file: str, max_targets: int):
+def auto_fuzz_from_scratch(github_repo: str, log_file: str, max_targets: int) -> bool:
   """Auto-generates an OSS-Fuzz project with |max_targets| fuzzers and evalutes the fuzzers."""
   # Clone and retrieve OSS-Fuzz
   oss_fuzz_checkout.clone_oss_fuzz()

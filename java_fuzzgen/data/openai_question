@@ -1,4 +1,5 @@
 Hi, I'm looking for your help to write a Java fuzzing harness for the %s Java project.
 The project is located in a github repository at %s and I would like you to write a harness targeting this module.
 You should use the Java Jazzer framework from Code Intelligence for writing the fuzzer.
-Could you please show me the source code for this harness, wrapped in <code> tag?
+The specific function you should target is %s and please use Fuzz as the Java class name.
+Could you please show me the source code for this harness?
