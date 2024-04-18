@@ -27,7 +27,15 @@ class JAVA_METHOD:
 
   @property
   def name(self) -> str:
-    return self.data_dict['functionName'].split('].')[-1].split('(')[0]
+    return self.full_qualified_name.split('].')[-1].split('(')[0]
+
+  @property
+  def full_qualified_class_name(self) -> str:
+    return self.full_qualified_name.split('[')[-1].split('].')[0]
+
+  @property
+  def class_name(self) -> str:
+    return self.full_qualified_class_name.split(".")[-1]
 
   @property
   def arg_count(self) -> int:
@@ -54,5 +62,23 @@ class JAVA_METHOD:
     return "test" in self.full_qualified_name or "demo" in self.full_qualified_name or "jazzer" in self.full_qualified_name
 
   @property
-  def is_skip(self) -> bool:
-    return self.is_constructor or not self.is_public or not self.is_concrete or self.is_getter_setter or self.arg_count == 0 or self.is_test
+  def is_simple_arg_only(self) -> bool:
+    simple_args = [
+        "boolean", "byte", "char", "short", "int", "long", "float", "double",
+        "boolean[]", "byte[]", "char[]", "short[]", "int[]", "long[]",
+        "float[]", "double[]", "java.lang.string"
+    ]
+    for arg_type in self.data_dict['argTypes']:
+      if arg_type.lower() not in simple_args:
+        return False
+
+    return True
+
+  def is_skip(self, max_arg_count: int = 20, simple_arg_only: bool = False) -> bool:
+    if not self.is_public or not self.is_concrete or self.is_getter_setter or self.arg_count == 0 or self.arg_count > max_arg_count or self.is_test:
+      return True
+    if simple_arg_only:
+      return not self.is_simple_arg_only
+    else:
+      return False
+

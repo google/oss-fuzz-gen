@@ -30,14 +30,13 @@ COPY *.sh *.java $SRC/
 WORKDIR $SRC/proj
 """
 
-
-BUILD_JAVA_ANT="""BASEDIR=$(pwd)
+BUILD_JAVA_ANT = """BASEDIR=$(pwd)
 for dir in $(ls -R)
 do
   cd $BASEDIR
   if [[ $dir == *: ]]
   then
-    dir=${dir%%*:}
+    dir=${dir%*:}
     cd $dir
     if test -f "build.xml"
     then
@@ -49,15 +48,14 @@ do
 done
 """
 
-
-BUILD_JAVA_GRADLE="""
+BUILD_JAVA_GRADLE = """
 BASEDIR=$(pwd)
 for dir in $(ls -R)
 do
   cd $BASEDIR
   if [[ $dir == *: ]]
   then
-    dir=${dir%%*:}
+    dir=${dir%*:}
     cd $dir
     if test -f "build.gradle" || test -f "build.gradle.kts"
     then
@@ -85,15 +83,14 @@ do
 done
 """
 
-
-BUILD_JAVA_MAVEN="""
+BUILD_JAVA_MAVEN = """
 BASEDIR=$(pwd)
 for dir in $(ls -R)
 do
   cd $BASEDIR
   if [[ $dir == *: ]]
   then
-    dir=${dir%%*:}
+    dir=${dir%*:}
     cd $dir
     if test -f "pom.xml"
     then
@@ -134,29 +131,17 @@ do
 done
 """
 
-
-BUILD_JAVA_BASE="""
+BUILD_JAVA_BASE = """
 cd $BASEDIR
 
 JARFILE_LIST=
 for JARFILE in $(find ./  -name "*.jar")
 do
-  if [[ "$JARFILE" == *"target/"* ]] || [[ "$JARFILE" == *"build/"* ]] || [[ "$JARFILE" == *"dist/"* ]]
+  if [[ "$JARFILE" != *sources.jar ]] && [[ "$JARFILE" != *javadoc.jar ]] && [[ "$JARFILE" != *tests.jar ]]
   then
-    if [[ "$JARFILE" != *sources.jar ]] && [[ "$JARFILE" != *javadoc.jar ]] && [[ "$JARFILE" != *tests.jar ]]
-    then
-      cp $JARFILE $OUT/
-      JARFILE_LIST="$JARFILE_LIST$(basename $JARFILE) "
-    fi
+    cp $JARFILE $OUT/
+    JARFILE_LIST="$JARFILE_LIST$(basename $JARFILE) "
   fi
-done
-
-JARFILE_LIST=
-rm -f $SRC/build_jar/Fuzz.jar
-for JARFILE in `ls $SRC/build_jar/*.jar`
-do
-  cp $JARFILE $OUT/
-  JARFILE_LIST="$JARFILE_LIST$(basename $JARFILE) "
 done
 
 curr_dir=$(pwd)
@@ -207,16 +192,14 @@ do
 done
 """
 
-
-BUILD_JAVA_INTROSPECTOR="""
+BUILD_JAVA_INTROSPECTOR = """
 cd /fuzz-introspector/frontends/java
 ./run.sh --jarfile $OUT/*.jar: --entryclass Fuzz --src $SRC/proj --autofuzz
 cp ./fuzzerLogFile-Fuzz.data $OUT/
 cp ./fuzzerLogFile-Fuzz.data.yaml $OUT/
 """
 
-
-YAML_JAVA="""homepage: https://google.com
+YAML_JAVA = """homepage: https://google.com
 main_repo: TARGET_REPO
 language: jvm
 fuzzing_engines:
@@ -226,8 +209,7 @@ sanitizers:
 primary_contacts: oss-fuzz-gen@google.com
 """
 
-
-FUZZER_JAVA="""import com.code_intelligence.jazzer.api.FuzzedDataProvider;
+FUZZER_JAVA = """import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 
 public class Fuzz {
   public static void fuzzerInitialize() {

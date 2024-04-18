@@ -1,0 +1,20 @@
+Hi, I'm looking for your help to write a Java fuzzing harness for the %s Java project.
+The project is located in a github repository at %s and I would like you to write a harness targeting this module.
+Here is a list of requirement:
+1) You should use the Java Jazzer framework from Code Intelligence for writing the fuzzer.
+2) The specific method you should target is the constructors of the class %s in the project.
+3) Please use Fuzz as the Java class name.
+4) Please use the name public static void fuzzerTestOneInput(FuzzedDataProvider) as the signature for the static fuzzing method.
+5) Please use the name fuzzerInitialize for the static method to initialize before fuzzing the target method.
+6) Please use the name fuzzerTearDown for the static method to tear down the settings after the target method is called.
+7) Please add import statements for necessary classes, except for classes in the java.lang package.
+8) Please avoid using the @FuzzTest annotation for specifying the fuzzing method.
+9) Please ensure the random fuzzing data is provided by the FuzzedDataProvider class and are initialized before the target method is invoked.
+10) Please ensure the methods for getting random data are valid and accessible methods from the FuzzedDataProvider class described in the 
+    Javadoc API found in https://codeintelligencetesting.github.io/jazzer-docs/jazzer-api/com/code_intelligence/jazzer/api/FuzzedDataProvider.html and
+    correct arguments has been given when invoking those methods.
+11) If FuzzedDataProvider::consumeString is used, please provides a random integer as argument with FuzzedDataProvider::consumeInt
+12) Please ensure the newest version found from the Jazzer's github repository of the FuzzedDataProvider is used.
+13) The Jazzer's github repository can be found in https://github.com/CodeIntelligenceTesting/jazzer.
+14) Please adds try catch block to catch possible RuntimeException.
+Could you please show me the source code for this harness and wrap the source code with the <java_code> tag?

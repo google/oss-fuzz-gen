@@ -89,27 +89,38 @@ def _find_dir_build_type(dir: str) -> str:
 
 
 def find_project_build_type(dir: str, proj_name: str) -> str:
-    """Search for base project directory to detect project build type"""
-    # Search for current directory first
-    project_build_type = _find_dir_build_type(dir)
+  """Search for base project directory to detect project build type"""
+  # Search for current directory first
+  project_build_type = _find_dir_build_type(dir)
+  if project_build_type:
+    return project_build_type
+
+  # Search for sub directory with name same as project name
+  for subdir in os.listdir(dir):
+    if os.path.isdir(os.path.join(dir, subdir)) and subdir == proj_name:
+      project_build_type = _find_dir_build_type(os.path.join(
+        dir, subdir))
     if project_build_type:
-        return project_build_type
+      return project_build_type
 
-    # Search for sub directory with name same as project name
-    for subdir in os.listdir(dir):
-        if os.path.isdir(os.path.join(dir, subdir)) and subdir == proj_name:
-            project_build_type = _find_dir_build_type(os.path.join(
-                dir, subdir))
-            if project_build_type:
-                return project_build_type
+  # Recursively look for subdirectory that contains build property file
+  for root, _, files in os.walk(dir):
+    project_build_type = _find_dir_build_type(root)
+    if project_build_type:
+      return project_build_type
 
-    # Recursively look for subdirectory that contains build property file
-    for root, _, files in os.walk(dir):
-        project_build_type = _find_dir_build_type(root)
-        if project_build_type:
-            return project_build_type
+  return None
 
-    return None
+
+def is_class_in_project(dir: str, class_name: str) -> bool:
+  """Find if the given class name is in the project"""
+  command = 'grep -ir "class %s\|interface %s" --include "*.java" %s/proj' % (class_name, class_name, dir)
+  try:
+    subprocess.check_output(command, shell = True)
+  except subprocess.CalledProcessError:
+    return False
+  return True
+
 
 # OSS-Fuzz project utils
 ########################
@@ -129,9 +140,16 @@ def run_oss_fuzz_build(project_dir: str) -> bool:
 
 # OPENAI utils
 ##############
-def get_openai_question(github_repo: str, func_name: str) -> str:
-  """Retrieve and return openai question from template"""
-  with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "openai_question"), "r") as file:
+def get_method_prompt(github_repo: str, func_name: str) -> str:
+  """Retrieve and return prompt question for basic methods"""
+  with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "prompts", "prompt_methods"), "r") as file:
     return file.read() % (get_project_name(github_repo), github_repo, func_name)
+
+  return None
+
+def get_constructor_prompt(github_repo: str, class_name: str) -> str:
+  """Retrieve and return prompt question for constructors"""
+  with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "prompts", "prompt_constructors"), "r") as file:
+    return file.read() % (get_project_name(github_repo), github_repo, class_name)
 
   return None
