@@ -13,20 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import sys
-import json
-import yaml
-import shutil
-import cxxfilt
-import subprocess
 import argparse
-
+import json
+import os
+import shutil
+import subprocess
+import sys
 from abc import abstractmethod
+from typing import Any, Dict, List, Optional, Tuple
 
-from typing import (Any, Dict, List, Optional, Tuple)
-
+import cxxfilt
 import openai
+import yaml
 
 MAX_FUZZ_PER_HEURISTIC = 15
 
@@ -967,6 +965,14 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
     shutil.copy(result_to_validate['fuzzer-out'], destination_folder)
 
 
+def append_to_report(outdir, msg):
+  if not os.path.isdir(outdir):
+    os.mkdir(outdir)
+  report_path = os.path.join(outdir, 'report.txt')
+  with open(report_path, 'a+') as f:
+    f.write(msg + '\n')
+
+
 def auto_generate(github_url,
                   disable_testing_build_scripts=False,
                   disable_fuzzgen=False,
@@ -999,13 +1005,17 @@ def auto_generate(github_url,
   build_results = raw_build_evaluation(all_build_scripts,
                                        initial_executable_files)
   for test_dir in build_results:
+    build_heuristic = build_results[test_dir]['auto-build-setup'][
+        2].heuristic_id
+    static_libs = build_results[test_dir]['executables-build']['static-libs']
+
+    append_to_report(
+        outdir,
+        f'build sucess: {build_heuristic} :: {test_dir} :: {static_libs}')
     print(
         "%s : %s : %s" %
         (build_results[test_dir]['auto-build-setup'][2].heuristic_id, test_dir,
          build_results[test_dir]['executables-build']['static-libs']))
-
-  if disable_fuzzgen == True:
-    return
 
   # For each of the auto generated build scripts identify the
   # static libraries resulting from the build.
@@ -1016,7 +1026,6 @@ def auto_generate(github_url,
   build_empty_fuzzers(build_results)
 
   # Stage 3: Harness generation and harness testing.
-
   # We now know for which versions we can generate a base fuzzer.
   # Continue by runnig an introspector build using the auto-generated
   # build scripts but fuzz introspector as the sanitier. The introspector
@@ -1044,6 +1053,13 @@ def auto_generate(github_url,
 
     print("Test dir: %s" % (str(test_dir)))
     all_header_files = get_all_header_files(get_all_files_in_path(test_dir))
+
+    append_to_report(
+        outdir,
+        f'Total functions in {test_dir} : {len(functions_from_introspector)}')
+
+    if disable_fuzzgen == True:
+      continue
 
     # At this point we have:
     # - A list of functions from the introspector analyses
@@ -1075,6 +1091,9 @@ def auto_generate(github_url,
                            heuristics_passed, idx, disable_fuzz_build_and_test,
                            folders_with_results)
         idx += 1
+
+  if disable_fuzzgen == True:
+    return
 
   # Show those that succeeded.
   for hp in heuristics_passed:

@@ -13,11 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 import os
-import sys
 import shutil
-import threading
 import subprocess
+import sys
+import threading
 
 empty_oss_fuzz_build = """#!/bin/bash -eu
 # Copyright 2018 Google Inc.
@@ -95,7 +96,12 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str):
 
 
 def run_autogen(github_url, outdir, openai_api_key, oss_fuzz_base,
-                worker_project):
+                worker_project, disable_autofuzz):
+
+  initiator_cmd = 'python3 /src/build-generator.py %s -o %s' % (github_url,
+                                                                outdir)
+  if disable_autofuzz:
+    initiator_cmd += ' --disable-fuzzgen'
   cmd = [
       "docker",
       "run",
@@ -118,7 +124,7 @@ def run_autogen(github_url, outdir, openai_api_key, oss_fuzz_base,
       '-t',
       'gcr.io/oss-fuzz/%s' % (worker_project),
       # Command to run inside the container
-      'python3 /src/build-generator.py %s -o %s' % (github_url, outdir)
+      initiator_cmd
   ]
 
   cmd_to_run = ' '.join(cmd)
@@ -144,7 +150,8 @@ def run_on_targets(target,
                    oss_fuzz_base,
                    worker_project_name,
                    idx,
-                   semaphore=None):
+                   semaphore=None,
+                   disable_autofuzz=False):
   if semaphore is not None:
     semaphore.acquire()
 
@@ -155,13 +162,26 @@ def run_on_targets(target,
   with open('status-log.txt', 'a') as f:
     f.write("Targeting: %s :: %d\n" % (target, idx))
   run_autogen(target, outdir, openai_api_key, oss_fuzz_base,
-              worker_project_name)
+              worker_project_name, disable_autofuzz)
 
   if semaphore is not None:
     semaphore.release()
 
 
-def run_parallels(oss_fuzz_base, target_repositories):
+def get_next_worker_project(oss_fuzz_base):
+  max_idx = -1
+  for project_dir in os.listdir(os.path.join(oss_fuzz_base, 'projects')):
+    if not 'temp-project-' in project_dir:
+      continue
+    try:
+      tmp_idx = int(project_dir.replace('temp-project-', ''))
+      max_idx = max(tmp_idx, max_idx)
+    except:
+      continue
+  return f'temp-project-{max_idx+1}'
+
+
+def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz):
   """Run auto-gen on a list of projects in parallel.
 
   Parallelisation is done by way of threads. Practically
@@ -172,10 +192,11 @@ def run_parallels(oss_fuzz_base, target_repositories):
   jobs = []
   for idx in range(len(target_repositories)):
     target = target_repositories[idx]
-    worker_project_name = "temp-project-%d" % (idx)
+    worker_project_name = get_next_worker_project(oss_fuzz_base)
+    print(f'Worker project name {worker_project_name}')
     proc = threading.Thread(target=run_on_targets,
                             args=(target, oss_fuzz_base, worker_project_name,
-                                  idx, semaphore))
+                                  idx, semaphore, disable_autofuzz))
     jobs.append(proc)
     proc.start()
 
@@ -183,29 +204,45 @@ def run_parallels(oss_fuzz_base, target_repositories):
     proc.join()
 
 
-def run_sequential(oss_fuzz_base, target_repositories):
+def run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz):
   """Run auto-gen on a list of projects sequentially."""
   for idx in range(len(target_repositories)):
     target = target_repositories[idx]
-    worker_project_name = "temp-project-%d" % (idx)
-    run_on_targets(target, oss_fuzz_base, worker_project_name, idx)
+    worker_project_name = get_next_worker_project(oss_fuzz_base)
+    run_on_targets(target, oss_fuzz_base, worker_project_name, idx,
+                   disable_autofuzz)
+
+
+def parse_commandline():
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--oss-fuzz', '-o', help='OSS-Fuzz base')
+  parser.add_argument('--input', '-i', help='Input to analyze')
+  parser.add_argument('--disable-fuzzgen',
+                      action='store_true',
+                      help='Disable fuzz generation')
+  return parser.parse_args()
 
 
 def main():
   oss_fuzz_base = sys.argv[1]
   target = sys.argv[2]
 
+  args = parse_commandline()
+  oss_fuzz_base = args.oss_fuzz
+  target = args.input
+  disable_autofuzz = args.disable_fuzzgen
+
   if os.path.isfile(target):
-    target_repositories = read_targets_file(sys.argv[2])
+    target_repositories = read_targets_file(target)
   else:
     target_repositories = [target]
   print(target_repositories)
 
   use_multithreading = True
   if use_multithreading:
-    run_parallels(oss_fuzz_base, target_repositories)
+    run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz)
   else:
-    run_sequential(oss_fuzz_base, target_repositories)
+    run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz)
 
 
 if __name__ == "__main__":
