@@ -279,28 +279,60 @@ def extract_error_message(log_path: str,
 
 def group_error_messages(error_lines: list[str]) -> list[str]:
   """Groups multi-line error block into one string"""
-  diag_error_pattern = re.compile(r'\S*:(\d+):(\d+): (.+): (.+)\n?')
-  include_error_pattern = re.compile(r'In file included from \S*:\d+:\n?')
+  state_unknown = 'UNKNOWN'
+  state_include = 'INCLUDE'
+  state_diag = 'DIAG'
+
+  diag_error_pattern = re.compile(r'(\S*):\d+:\d+: (.+): (.+)')
+  include_error_pattern = re.compile(r'In file included from (\S*):\d+:')
   error_blocks = []
   curr_block = []
-  unknown_error_line = True
+  src_file = ''
+  curr_state = state_unknown
   for line in error_lines:
     if not line:  # Trim empty lines.
       continue
 
     diag_match = diag_error_pattern.fullmatch(line)
     include_match = include_error_pattern.fullmatch(line)
-    if diag_match or include_match:
-      unknown_error_line = False
+
+    if diag_match:
+      err_src = diag_match.group(1)
+      severity = diag_match.group(2)
+
+      # Matched a note diag line under another diag,
+      # giving help info to fix the previous error.
+      if severity == 'note':
+        curr_block.append(line)
+        continue
+
+      # Matched a diag line but under an included file line,
+      # indicating the specific error in the included file,
+      if curr_state == state_include and err_src != src_file:
+        curr_block.append(line)
+        continue
+
+      curr_state = state_diag
       if curr_block:
         error_blocks.append('\n'.join(curr_block))
         curr_block = []
 
-    # Groups known format only.
-    if unknown_error_line:
-      error_blocks.append(line)
-    else:
-      curr_block.append(line)
+    if include_match:
+      src_file = include_match.group(1)
+      curr_state = state_include
+      if curr_block:
+        error_blocks.append('\n'.join(curr_block))
+        curr_block = []
+
+    # Keep unknown error lines separated.
+    if curr_state == state_unknown and curr_block:
+      error_blocks.append('\n'.join(curr_block))
+      curr_block = []
+
+    curr_block.append(line)
+
+  if curr_block:
+    error_blocks.append('\n'.join(curr_block))
   return error_blocks
 
 
