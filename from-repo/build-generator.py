@@ -69,7 +69,7 @@ class AutoBuildBase:
     """Yields AutoBuildContainer objects."""
 
   def match_files(self, file_list):
-    """Match files needed for the build heuristic against a given list of files."""
+    """Matches files needed for the build heuristic."""
     for fi in file_list:
       base_file = os.path.basename(fi)
       for key in self.matches_found:
@@ -221,10 +221,15 @@ class CMakeScanner(AutoBuildBase):
     build_container.heuristic_id = self.name + "1"
     yield build_container
 
+    cmake_opts = [
+        '-DCMAKE_VERBOSE_MAKEFILE=ON', '-DCMAKE_CXX_COMPILER=$CXX',
+        '-DCMAKE_CXX_FLAGS=\"$CXXFLAGS\"'
+    ]
+
     opt1 = [
         "mkdir fuzz-build",
         "cd fuzz-build",
-        "cmake -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_CXX_FLAGS=\"$CXXFLAGS\" ../",
+        "cmake %s ../" % (' '.join(cmake_opts)),
         "make V=1 || true",
     ]
     build_container2 = AutoBuildContainer()
@@ -681,9 +686,7 @@ def convert_build_heuristics_to_scripts(
     all_build_suggestions: List[AutoBuildContainer], testing_base_dir: str,
     abspath_of_target: str) -> List[Tuple[str, str, AutoBuildContainer]]:
   all_build_scripts = []
-  for idx in range(len(all_build_suggestions)):
-    build_suggestion = all_build_suggestions[idx]
-
+  for idx, build_suggestion in enumerate(all_build_suggestions):
     test_dir = os.path.abspath(
         os.path.join(os.getcwd(), testing_base_dir + str(idx)))
     build_script = wrap_build_script(test_dir, build_suggestion,
