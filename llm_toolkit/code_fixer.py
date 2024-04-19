@@ -15,6 +15,7 @@
 """Fixing fuzz target with LLM."""
 
 import argparse
+import logging
 import os
 import re
 import sys
@@ -273,7 +274,7 @@ def extract_error_message(log_path: str,
         for line in log_lines[error_lines_range[0]:error_lines_range[1] + 1])
 
   if not errors:
-    print(f'Failed to parse error message from {log_path}.')
+    logging.warning('Failed to parse error message from %s.', log_path)
   return group_error_messages(errors)
 
 
