@@ -226,8 +226,8 @@ def extract_error_message(log_path: str,
 
   target_name, _ = os.path.splitext(project_target_basename)
 
-  error_lines_range = [-1, -1]
-  temp_range = [-1, -1]
+  error_lines_range: list[Optional[int]] = [None, None]
+  temp_range: list[Optional[int]] = [None, None]
 
   error_start_pattern = r'\S*' + target_name + r'(\.\S*)?:\d+:\d+: .+: .+\n?'
   error_include_pattern = (r'In file included from \S*' + target_name +
@@ -256,18 +256,18 @@ def extract_error_message(log_path: str,
       continue
 
     # Add clang diagnostics.
-    if (temp_range[0] == -1 and (re.fullmatch(error_include_pattern, line) or
-                                 re.fullmatch(error_start_pattern, line))):
+    if (temp_range[0] is None and (re.fullmatch(error_include_pattern, line) or
+                                   re.fullmatch(error_start_pattern, line))):
       temp_range[0] = i
-    if temp_range[0] != -1 and re.fullmatch(error_end_pattern, line):
+    if temp_range[0] is not None and re.fullmatch(error_end_pattern, line):
       temp_range[1] = i - 1  # Exclude current line.
       # In case the original fuzz target was written in C and building with
       # clang failed, and building with clang++ also failed, we take the
       # error from clang++, which comes after.
       error_lines_range = temp_range
-      temp_range = [-1, -1]
+      temp_range = [None, None]
 
-  if error_lines_range[0] != -1 and error_lines_range[1] != -1:
+  if error_lines_range[0] is not None and error_lines_range[1] is not None:
     errors.extend(
         line.rstrip()
         for line in log_lines[error_lines_range[0]:error_lines_range[1] + 1])
