@@ -69,7 +69,7 @@ main_repo: 'https://github.com/samtools/htslib.git'
 """
 
 
-def setup_worker_project(oss_fuzz_base: str, project_name: str):
+def setup_worker_project(oss_fuzz_base: str, project_name: str, silent:bool = True):
   temp_project_dir = os.path.join(oss_fuzz_base, "projects", project_name)
   if os.path.isdir(temp_project_dir):
     shutil.rmtree(temp_project_dir)
@@ -89,14 +89,27 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str):
       os.path.join(temp_project_dir, "build-generator.py"))
 
   # Build a version of the project
-  subprocess.check_call("python3 infra/helper.py build_fuzzers %s" %
+  if silent:
+    subprocess.check_call("python3 infra/helper.py build_fuzzers %s" %
+                        (project_name),
+                        shell=True,
+                        cwd=oss_fuzz_base,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL)
+  else:
+    subprocess.check_call("python3 infra/helper.py build_fuzzers %s" %
                         (project_name),
                         shell=True,
                         cwd=oss_fuzz_base)
 
 
-def run_autogen(github_url, outdir, openai_api_key, oss_fuzz_base,
-                worker_project, disable_autofuzz):
+def run_autogen(github_url,
+                outdir,
+                openai_api_key,
+                oss_fuzz_base,
+                worker_project,
+                disable_autofuzz,
+                silent=True):
 
   initiator_cmd = 'python3 /src/build-generator.py %s -o %s' % (github_url,
                                                                 outdir)
@@ -129,7 +142,14 @@ def run_autogen(github_url, outdir, openai_api_key, oss_fuzz_base,
 
   cmd_to_run = ' '.join(cmd)
   try:
-    subprocess.check_call(cmd_to_run, cwd=oss_fuzz_base, shell=True)
+    if silent:
+      subprocess.check_call(cmd_to_run,
+                            cwd=oss_fuzz_base,
+                            shell=True,
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.STDOUT)
+    else:
+      subprocess.check_call(cmd_to_run, cwd=oss_fuzz_base, shell=True)
   except subprocess.CalledProcessError:
     pass
 
@@ -152,10 +172,10 @@ def run_on_targets(target,
                    idx,
                    semaphore=None,
                    disable_autofuzz=False):
+
   if semaphore is not None:
     semaphore.acquire()
 
-  setup_worker_project(oss_fuzz_base, worker_project_name)
   openai_api_key = os.getenv("OPENAI_API_KEY")
 
   outdir = '/out/autogen-results-%d' % (idx)
@@ -194,6 +214,8 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz):
     target = target_repositories[idx]
     worker_project_name = get_next_worker_project(oss_fuzz_base)
     print(f'Worker project name {worker_project_name}')
+
+    setup_worker_project(oss_fuzz_base, worker_project_name)
     proc = threading.Thread(target=run_on_targets,
                             args=(target, oss_fuzz_base, worker_project_name,
                                   idx, semaphore, disable_autofuzz))
@@ -224,8 +246,8 @@ def parse_commandline():
 
 
 def main():
-  oss_fuzz_base = sys.argv[1]
-  target = sys.argv[2]
+  #oss_fuzz_base = sys.argv[1]
+  #target = sys.argv[2]
 
   args = parse_commandline()
   oss_fuzz_base = args.oss_fuzz
