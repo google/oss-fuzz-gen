@@ -54,7 +54,8 @@ empty_oss_fuzz_docker = """# Copyright 2018 Google Inc.
 ################################################################################
 
 FROM gcr.io/oss-fuzz-base/base-builder
-RUN apt-get update && apt-get install -y make autoconf automake cmake
+RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \
+                      pkg-config check
 RUN python3 -m pip install pyyaml cxxfilt openai==0.27.8
 COPY *.py $SRC/
 WORKDIR $SRC
