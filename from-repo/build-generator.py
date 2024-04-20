@@ -30,6 +30,11 @@ MAX_FUZZ_PER_HEURISTIC = 15
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
+FUZZER_PRE_HEADERS = """#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+"""
+
 CPP_BASE_TEMPLATE = """#include <stdint.h>
 #include <iostream>
 
@@ -46,11 +51,10 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     return 0;
 }"""
 
+
 ############################################################
 #### Logic for auto building a given source code folder ####
 ############################################################
-
-
 class AutoBuildContainer:
 
   def __init__(self):
@@ -365,7 +369,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
     if scanner.is_matched():
       print("Matched: %s" % (scanner.name))
       for auto_build_gen in scanner.steps_to_build():
-        print("Build script: ")
+        # print("Build script: ")
         yield auto_build_gen
 
 
@@ -395,6 +399,30 @@ def get_all_functions_in_project(introspection_files_found):
 ##################################################
 #### Heuristics for auto generating harnesses ####
 ##################################################
+
+GLOBAL_FUZZER_SOURCE_CACHE = dict()
+
+
+def get_source_from_cache(heuristic_name, target_func):
+  print(f"Checking cache 1 {heuristic_name}")
+  funcs_in_cache = GLOBAL_FUZZER_SOURCE_CACHE.get(heuristic_name, [])
+  if len(funcs_in_cache) == 0:
+    return None
+  for func, target_source in funcs_in_cache:
+    print(
+        f"Comparing cached fuzzers: Src: {func['demangled-name']} :: Comp2 {target_func['demangled-name']}"
+    )
+    if func['demangled-name'] == target_func['demangled-name']:
+      return target_source
+  return None
+
+
+def add_to_source_cache(heuristic_name, target_func, fuzzer_source):
+  global GLOBAL_FUZZER_SOURCE_CACHE
+  print(f"Adding to cache1 {heuristic_name}")
+  funcs_in_cache = GLOBAL_FUZZER_SOURCE_CACHE.get(heuristic_name, [])
+  funcs_in_cache.append((target_func, fuzzer_source))
+  GLOBAL_FUZZER_SOURCE_CACHE[heuristic_name] = funcs_in_cache
 
 
 class FuzzHeuristicGeneratorBase:
@@ -494,7 +522,13 @@ There is one rule that your harness must satisfy: all of the header files in thi
 Finally, the most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code as simple as possible in order to secure it can be build.
 """ % (self.github_url, func['demangled-name'], str(headers_to_include))
 
-    fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
+    fuzzer_source = get_source_from_cache(self.name, func)
+    if not fuzzer_source:
+      fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
+      fuzzer_source = FUZZER_PRE_HEADERS + fuzzer_source
+      add_to_source_cache(self.name, func, fuzzer_source)
+    else:
+      print(f"Using cached fuzzer source\n{fuzzer_source}")
 
     fuzzer_target_call = func['demangled-name']
     fuzzer_intrinsics = {
@@ -540,7 +574,13 @@ Make sure the ensure strings passed to the target are null-terminated.
 There is one rule that your harness must satisfy: all of the header files in this library is %s. Make sure to not include any header files not in this list.
 """ % (self.github_url, func['demangled-name'], str(headers_to_include))
 
-    fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
+    fuzzer_source = get_source_from_cache(self.name, func)
+    if not fuzzer_source:
+      fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
+      fuzzer_source = FUZZER_PRE_HEADERS + fuzzer_source
+      add_to_source_cache(self.name, func, fuzzer_source)
+    else:
+      print(f"Using cached fuzzer source\n{fuzzer_source}")
 
     fuzzer_target_call = func['demangled-name']
     fuzzer_intrinsics = {
@@ -586,7 +626,13 @@ Make sure the ensure strings passed to the target are null-terminated.
 There are two rules that your harness must satisfy: First, all of the header files in this library is %s. Make sure to not include any header files not in this list. Second, you must wrap the harness such that it catches all exceptions (use "...") thrown by the target code.
 """ % (self.github_url, func['demangled-name'], str(headers_to_include))
 
-    fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
+    fuzzer_source = get_source_from_cache(self.name, func)
+    if not fuzzer_source:
+      fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
+      fuzzer_source = FUZZER_PRE_HEADERS + fuzzer_source
+      add_to_source_cache(self.name, func, fuzzer_source)
+    else:
+      print(f"Using cached fuzzer source\n{fuzzer_source}")
 
     fuzzer_target_call = func['demangled-name']
     fuzzer_intrinsics = {
@@ -630,7 +676,13 @@ Make sure the ensure strings passed to the target are null-terminated.
 There are two rules that your harness must satisfy: First, all of the header files in this library is %s. Make sure to not include any header files not in this list and only include the ones relevant for the target function. Second, if the target is CPP then you must wrap the harness such that it catches all exceptions (use "...") thrown by the target code.
 """ % (self.github_url, func['demangled-name'], str(headers_to_include))
 
-    fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
+    fuzzer_source = get_source_from_cache(self.name, func)
+    if not fuzzer_source:
+      fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
+      fuzzer_source = FUZZER_PRE_HEADERS + fuzzer_source
+      add_to_source_cache(self.name, func, fuzzer_source)
+    else:
+      print(f"Using cached fuzzer source\n{fuzzer_source}")
 
     fuzzer_target_call = func['demangled-name']
     fuzzer_intrinsics = {
@@ -719,6 +771,8 @@ def extract_build_suggestions(
   all_build_suggestions: List[AutoBuildContainer] = list(
       match_build_heuristics_on_folder(target_dir))
   print("Found %d possible build suggestions" % (len(all_build_suggestions)))
+  for build_suggestion in all_build_suggestions:
+    print(f'- {build_suggestion.heuristic_id}')
 
   # Convert the build heuristics into build scripts
   all_build_scripts = convert_build_heuristics_to_scripts(
@@ -789,10 +843,14 @@ def raw_build_evaluation(
   """Run each of the build scripts and extract any artifacts build by them."""
   build_results = dict()
   for build_script, test_dir, build_suggestion in all_build_scripts:
+    print(f'Evaluating build heuristic {build_suggestion.heuristic_id}')
     with open("/src/build.sh", "w") as bf:
       bf.write(build_script)
     try:
-      subprocess.check_call("compile", shell=True)
+      subprocess.check_call("compile",
+                            shell=True,
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL)
       build_returned_error = False
     except subprocess.CalledProcessError:
       build_returned_error = True
@@ -811,7 +869,8 @@ def raw_build_evaluation(
         if bfile not in initial_executable_files[key]:
           new_binary_files[key].append(bfile)
 
-    print(binary_files_build['static-libs'])
+    print(f'Static libs found {new_binary_files}')
+    # binary_files_build['static-libs'])
     build_results[test_dir] = {
         'build-script': build_script,
         'executables-build': binary_files_build,
@@ -857,7 +916,11 @@ def run_introspector_on_dir(build_results, test_dir) -> Tuple[bool, List[str]]:
   modified_env['PROJECT_NAME'] = 'auto-fuzz-proj'
   modified_env['FUZZINTRO_OUTDIR'] = test_dir
   try:
-    subprocess.check_call("compile", shell=True, env=modified_env)
+    subprocess.check_call("compile",
+                          shell=True,
+                          env=modified_env,
+                          stdout=subprocess.DEVNULL,
+                          stderr=subprocess.DEVNULL)
     build_returned_error = False
   except subprocess.CalledProcessError:
     build_returned_error = True
@@ -916,9 +979,13 @@ def generate_harness_intrinsics(
       continue
 
     if verbose_logging:
+      print('[+] Fuzzer generated:')
+      print(f'- Fuzz generator id: {fuzzer_intrinsics["autogen-id"]}')
+      print(
+          f'- Build command includes: {fuzzer_intrinsics["build-command-includes"]}'
+      )
+      print('- Source code:')
       log_fuzzer_source(fuzzer_intrinsics['full-source-code'])
-      print("Build command includes: %s" %
-            (fuzzer_intrinsics['build-command-includes']))
 
     # Generate a build script for compiling the fuzzer with ASAN.
     final_asan_build_script = results[test_dir]['build-script']
@@ -971,7 +1038,11 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
   modified_env = os.environ
   modified_env['SANITIZER'] = 'address'
   try:
-    subprocess.check_call("compile", shell=True, env=modified_env)
+    subprocess.check_call("compile",
+                          shell=True,
+                          env=modified_env,
+                          stdout=subprocess.DEVNULL,
+                          stderr=subprocess.DEVNULL)
     build_returned_error = False
   except subprocess.CalledProcessError:
     build_returned_error = True
@@ -1015,6 +1086,7 @@ def auto_generate(github_url,
 
   # record the path
   abspath_of_target = os.path.join(os.getcwd(), dst_folder)
+  print("[+] Extracting build scripts statically")
   all_build_scripts: List[Tuple[
       str, str,
       AutoBuildContainer]] = extract_build_suggestions(abspath_of_target,
@@ -1025,8 +1097,10 @@ def auto_generate(github_url,
     return
 
   # Check each of the build scripts.
+  print('[+] Testing build suggestions')
   build_results = raw_build_evaluation(all_build_scripts,
                                        initial_executable_files)
+  print(f'Checking results of {len(build_results)} build generators')
   for test_dir in build_results:
     build_heuristic = build_results[test_dir]['auto-build-setup'][
         2].heuristic_id
@@ -1063,16 +1137,24 @@ def auto_generate(github_url,
   # this to check if there are differences in build output.
   heuristics_passed = dict()
   folders_with_results = set()
+  print(f'Going through {len(build_results)} build results to generate fuzzers')
   for test_dir in build_results:
     # Skip if build suggestion did not work with an empty fuzzer.
+    build_heuristic_id = build_results[test_dir]['auto-build-setup'][
+        2].heuristic_id
+
+    print(f'Checking build heuristic: {build_heuristic_id}')
     if build_results[test_dir].get('base-fuzz-build', False) == False:
+      print('Build failed, skipping')
       continue
 
     # Run Fuzz Introspector on the target
+    print('Running introspector build')
     _, fuzzer_build_cmd = run_introspector_on_dir(build_results, test_dir)
 
     # Identify the relevant functions
     functions_from_introspector = extract_functions_via_introspector(test_dir)
+    print(f'Found a total of {len(functions_from_introspector)} functions.')
     append_to_report(outdir, 'Introspector analysis done')
 
     print("Test dir: %s" % (str(test_dir)))
@@ -1096,19 +1178,25 @@ def auto_generate(github_url,
         FuzzerGenHeuristic1
     ]
     idx = 0
+    print(
+        f'Running target functions through {len(heuristics_to_apply)} fuzzer harness generation heuristics'
+    )
     for heuristic_class in heuristics_to_apply:
 
       # Initialize heuristic with the fuzz introspector data
       heuristic = heuristic_class(functions_from_introspector, all_header_files,
                                   test_dir)
+      print(f'Applying {heuristic.name}')
 
       heuristic.github_url = github_url
       harness_builds_to_validate = generate_harness_intrinsics(
           heuristic, build_results, test_dir, fuzzer_build_cmd)
 
       # Build the fuzzer for each project
-      print("Results to analyse: %d" % (len(harness_builds_to_validate)))
+      print("Fuzzer harnesses to evaluate: %d" %
+            (len(harness_builds_to_validate)))
       for result_to_validate in harness_builds_to_validate:
+        print('Evaluating harness')
         fuzzer_intrinsics = result_to_validate['fuzzer-intrinsics']
         # Make a directory and store artifacts there
         evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
@@ -1154,14 +1242,22 @@ def parse_commandline():
                       action='store_true',
                       help='disables building and testing of fuzzers')
   parser.add_argument("--out", "-o", help="Directory to store successful runs")
+  parser.add_argument('--targets-per-heuristic',
+                      '-t',
+                      help='Targets per heuristic.',
+                      type=int,
+                      default=5)
   return parser
 
 
 def main():
+  global MAX_FUZZ_PER_HEURISTIC
+
   parser = parse_commandline()
   args = parser.parse_args()
 
   append_to_report(args.out, f'Analysing: {args.repo}')
+  MAX_FUZZ_PER_HEURISTIC = args.targets_per_heuristic
 
   auto_generate(args.repo, args.disable_build_test, args.disable_fuzzgen,
                 args.disable_fuzz_build_and_test, args.out)

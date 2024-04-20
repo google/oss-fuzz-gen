@@ -20,6 +20,8 @@ import subprocess
 import sys
 import threading
 
+silent_global = False
+
 empty_oss_fuzz_build = """#!/bin/bash -eu
 # Copyright 2018 Google Inc.
 #
@@ -70,7 +72,7 @@ main_repo: 'https://github.com/samtools/htslib.git'
 """
 
 
-def setup_worker_project(oss_fuzz_base: str, project_name: str, silent:bool = True):
+def setup_worker_project(oss_fuzz_base: str, project_name: str):
   temp_project_dir = os.path.join(oss_fuzz_base, "projects", project_name)
   if os.path.isdir(temp_project_dir):
     shutil.rmtree(temp_project_dir)
@@ -90,18 +92,18 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, silent:bool = Tr
       os.path.join(temp_project_dir, "build-generator.py"))
 
   # Build a version of the project
-  if silent:
+  if silent_global:
     subprocess.check_call("python3 infra/helper.py build_fuzzers %s" %
-                        (project_name),
-                        shell=True,
-                        cwd=oss_fuzz_base,
-                        stdout=subprocess.DEVNULL,
-                        stderr=subprocess.DEVNULL)
+                          (project_name),
+                          shell=True,
+                          cwd=oss_fuzz_base,
+                          stdout=subprocess.DEVNULL,
+                          stderr=subprocess.DEVNULL)
   else:
     subprocess.check_call("python3 infra/helper.py build_fuzzers %s" %
-                        (project_name),
-                        shell=True,
-                        cwd=oss_fuzz_base)
+                          (project_name),
+                          shell=True,
+                          cwd=oss_fuzz_base)
 
 
 def run_autogen(github_url,
@@ -110,12 +112,14 @@ def run_autogen(github_url,
                 oss_fuzz_base,
                 worker_project,
                 disable_autofuzz,
-                silent=True):
+                targets_per_heuristic=5):
 
   initiator_cmd = 'python3 /src/build-generator.py %s -o %s' % (github_url,
                                                                 outdir)
   if disable_autofuzz:
     initiator_cmd += ' --disable-fuzzgen'
+  initiator_cmd += ' --targets-per-heuristic=%d' % (targets_per_heuristic)
+
   cmd = [
       "docker",
       "run",
@@ -143,7 +147,7 @@ def run_autogen(github_url,
 
   cmd_to_run = ' '.join(cmd)
   try:
-    if silent:
+    if silent_global:
       subprocess.check_call(cmd_to_run,
                             cwd=oss_fuzz_base,
                             shell=True,
@@ -172,7 +176,8 @@ def run_on_targets(target,
                    worker_project_name,
                    idx,
                    semaphore=None,
-                   disable_autofuzz=False):
+                   disable_autofuzz=False,
+                   targets_per_heuristic=5):
 
   if semaphore is not None:
     semaphore.acquire()
@@ -183,7 +188,7 @@ def run_on_targets(target,
   with open('status-log.txt', 'a') as f:
     f.write("Targeting: %s :: %d\n" % (target, idx))
   run_autogen(target, outdir, openai_api_key, oss_fuzz_base,
-              worker_project_name, disable_autofuzz)
+              worker_project_name, disable_autofuzz, targets_per_heuristic)
 
   if semaphore is not None:
     semaphore.release()
@@ -202,7 +207,8 @@ def get_next_worker_project(oss_fuzz_base):
   return f'temp-project-{max_idx+1}'
 
 
-def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz):
+def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
+                  targets_per_heuristic):
   """Run auto-gen on a list of projects in parallel.
 
   Parallelisation is done by way of threads. Practically
@@ -219,7 +225,8 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz):
     setup_worker_project(oss_fuzz_base, worker_project_name)
     proc = threading.Thread(target=run_on_targets,
                             args=(target, oss_fuzz_base, worker_project_name,
-                                  idx, semaphore, disable_autofuzz))
+                                  idx, semaphore, disable_autofuzz,
+                                  targets_per_heuristic))
     jobs.append(proc)
     proc.start()
 
@@ -227,13 +234,14 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz):
     proc.join()
 
 
-def run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz):
+def run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz,
+                   targets_per_heuristic):
   """Run auto-gen on a list of projects sequentially."""
   for idx in range(len(target_repositories)):
     target = target_repositories[idx]
     worker_project_name = get_next_worker_project(oss_fuzz_base)
     run_on_targets(target, oss_fuzz_base, worker_project_name, idx,
-                   disable_autofuzz)
+                   disable_autofuzz, targets_per_heuristic)
 
 
 def parse_commandline():
@@ -243,10 +251,20 @@ def parse_commandline():
   parser.add_argument('--disable-fuzzgen',
                       action='store_true',
                       help='Disable fuzz generation')
+  parser.add_argument("--targets-per-heuristic",
+                      "-t",
+                      help='Number of harness to generate per heuristic.',
+                      type=int,
+                      default=15)
+  parser.add_argument("--silent",
+                      "-s",
+                      help='Disable logging in subprocess.',
+                      action='store_true')
   return parser.parse_args()
 
 
 def main():
+  global silent_global
   #oss_fuzz_base = sys.argv[1]
   #target = sys.argv[2]
 
@@ -261,11 +279,15 @@ def main():
     target_repositories = [target]
   print(target_repositories)
 
+  silent_global = args.silent
+
   use_multithreading = True
   if use_multithreading:
-    run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz)
+    run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
+                  args.targets_per_heuristic)
   else:
-    run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz)
+    run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz,
+                   args.targets_per_heuristic)
 
 
 if __name__ == "__main__":
