@@ -242,6 +242,19 @@ class CMakeScanner(AutoBuildBase):
     build_container2.heuristic_id = self.name + "2"
     yield build_container2
 
+    # Force static libraryes
+    opt_static = [
+        "mkdir fuzz-build",
+        "cd fuzz-build",
+        "cmake %s ../" % (' '.join(cmake_opts)),
+        'sed -i \'s/SHARED/STATIC/g\' ../CMakeLists.txt',
+        "make V=1 || true",
+    ]
+    build_container_static = AutoBuildContainer()
+    build_container_static.list_of_commands = opt_static
+    build_container_static.heuristic_id = self.name + "static"
+    yield build_container_static
+
     # Look for options often used for disabling dynamic shared libraries.
     option_values = []
     for option in self.cmake_options:
