@@ -771,6 +771,7 @@ def extract_build_suggestions(
   all_build_suggestions: List[AutoBuildContainer] = list(
       match_build_heuristics_on_folder(target_dir))
   print("Found %d possible build suggestions" % (len(all_build_suggestions)))
+  #all_build_suggestions = all_build_suggestions[:2]
   for build_suggestion in all_build_suggestions:
     print(f'- {build_suggestion.heuristic_id}')
 
@@ -1007,13 +1008,19 @@ def generate_harness_intrinsics(
 
 def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
                        heuristics_passed, idx_to_use,
-                       disable_fuzz_build_and_test, folders_with_results):
+                       disable_fuzz_build_and_test, folders_with_results,
+                       outdir):
   """For a given result, will write the harness and build to the file system
   and run the OSS-Fuzz `compile` command to verify that the build script +
   harness builds."""
+
+  print("Fuzzer gen dir:")
+  print(os.path.basename(test_dir) + "-fuzzgen-%d" % (idx_to_use))
+
   fuzzer_gen_dir = os.path.join(
-      '/src/',
+      '/src',
       os.path.basename(test_dir) + "-fuzzgen-%d" % (idx_to_use))
+  print("- %s" % (fuzzer_gen_dir))
   if os.path.isdir(fuzzer_gen_dir):
     shutil.rmtree(fuzzer_gen_dir)
   os.mkdir(fuzzer_gen_dir)
@@ -1035,27 +1042,70 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
   if disable_fuzz_build_and_test:
     return
 
+  # Cleanup any existing fuzzers
+  if os.path.isfile(result_to_validate['fuzzer-out']):
+    os.remove(result_to_validate['fuzzer-out'])
+
   modified_env = os.environ
   modified_env['SANITIZER'] = 'address'
+  build_out = open(os.path.join(fuzzer_gen_dir, 'fuzz-build.out'), 'w')
+  build_err = open(os.path.join(fuzzer_gen_dir, 'fuzz-build.err'), 'w')
   try:
     subprocess.check_call("compile",
                           shell=True,
                           env=modified_env,
-                          stdout=subprocess.DEVNULL,
-                          stderr=subprocess.DEVNULL)
+                          stdout=build_out,
+                          stderr=build_err)
     build_returned_error = False
+    print("[+] Harness build succeeded")
   except subprocess.CalledProcessError:
+    print("[+] Harness build failed")
     build_returned_error = True
+
+  destination_folder = os.path.join(
+      fuzzer_gen_dir,
+      os.path.basename(test_dir) + '-fuzzer-generated-%d' % (idx_to_use))
+
+  folders_with_results.add(fuzzer_gen_dir)
+  if os.path.isfile(result_to_validate['fuzzer-out']):
+    shutil.copy(result_to_validate['fuzzer-out'], destination_folder)
 
   # Copy artifacts to fuzzer_gen_dir if build was successful.
   if build_returned_error == False:
     heuristics_passed[fuzzer_intrinsics['autogen-id']] = True
-    destination_folder = os.path.join(
-        fuzzer_gen_dir,
-        os.path.basename(test_dir) + '-fuzzer-generated-%d' % (idx_to_use))
 
-    folders_with_results.add(destination_folder)
-    shutil.copy(result_to_validate['fuzzer-out'], destination_folder)
+  # Run the fuzzer and observer error
+  if not os.path.isfile(
+      '/src/generated-fuzzer'):  #result_to_validate['fuzzer-out']):
+    print("No fuzzing harness executable")
+    print("Copying [%s] to [%s]" %
+          (fuzzer_gen_dir, os.path.join(outdir,
+                                        os.path.basename(fuzzer_gen_dir))))
+    shutil.copytree(fuzzer_gen_dir,
+                    os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
+    return
+
+  print("Running fuzzer")
+  run_out = open(os.path.join(fuzzer_gen_dir, 'fuzz-run.out'), 'w')
+  run_err = open(os.path.join(fuzzer_gen_dir, 'fuzz-run.err'), 'w')
+  try:
+    subprocess.check_call("%s -max_total_time=10" %
+                          (result_to_validate['fuzzer-out']),
+                          shell=True,
+                          env=modified_env,
+                          stdout=run_out,
+                          stderr=run_err)
+    build_returned_error = False
+    print("[+] Harness build succeeded")
+  except subprocess.CalledProcessError:
+    print("[+] Harness build failed")
+    build_returned_error = True
+
+  print(
+      "Copying 2 [%s] to [%s]" %
+      (fuzzer_gen_dir, os.path.join(outdir, os.path.basename(fuzzer_gen_dir))))
+  shutil.copytree(fuzzer_gen_dir,
+                  os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
 
 
 def append_to_report(outdir, msg):
@@ -1201,7 +1251,7 @@ def auto_generate(github_url,
         # Make a directory and store artifacts there
         evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
                            heuristics_passed, idx, disable_fuzz_build_and_test,
-                           folders_with_results)
+                           folders_with_results, outdir)
         idx += 1
 
   if disable_fuzzgen:
@@ -1215,12 +1265,20 @@ def auto_generate(github_url,
   if outdir:
     bash_script = "#!/bin/bash\n"
     for folder in folders_with_results:
-      src_folder = "/".join(folder.split("/")[:-1])
+      src_folder = folder  #"/".join(folder.split("/")[:-1])
       src_folder_base = os.path.basename(src_folder)
 
       dst_folder = os.path.join(outdir, src_folder_base)
-      print("Copying: %s to %s" % (src_folder, dst_folder))
-      shutil.copytree(src_folder, dst_folder)
+      print("Copying: %s to %s" % (folder, dst_folder))
+      if folder == '/src':
+        print("Skipping")
+        continue
+      if folder.count('/') < 2:
+        print("Skipping 2")
+        continue
+      if not os.path.isdir(outdir):
+        os.mkdir(outdir)
+      #shutil.copytree(folder, dst_folder)#os.path.join(dst_folder, src_folder_base))
 
       exec_command = os.path.join(dst_folder, folder.split("/")[-1])
       bash_script += exec_command + " -max_total_time=10\n"
