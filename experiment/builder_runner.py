@@ -57,6 +57,8 @@ EARLY_FUZZING_ROUND_THRESHOLD = 3
 
 @dataclasses.dataclass
 class BuildResult:
+  """Results of compilation & link."""
+
   succeeded: bool = False
   errors: list[str] = dataclasses.field(default_factory=list)
   log_path: str = ''
@@ -67,6 +69,8 @@ class BuildResult:
 
 @dataclasses.dataclass
 class RunResult:
+  """Checked results of conducting short-term fuzzing."""
+
   succeeded: bool = False
   coverage_summary: dict = dataclasses.field(default_factory=dict)
   coverage: Optional[textcov.Textcov] = None
@@ -77,7 +81,8 @@ class RunResult:
   cov_pcs: int = 0
   total_pcs: int = 0
   crashes: bool = False
-  semantic_check: SemanticCheckResult = SemanticCheckResult(SemanticCheckResult.NOT_APPLICABLE)
+  semantic_check: SemanticCheckResult = SemanticCheckResult(
+      SemanticCheckResult.NOT_APPLICABLE)
 
   def dict(self):
     return dataclasses.asdict(self)
@@ -195,7 +200,8 @@ class BuilderRunner:
             LIBFUZZER_LOG_STACK_FRAME_LLVM not in stack_frame and
             LIBFUZZER_LOG_STACK_FRAME_CPP not in stack_frame)
 
-  def _parse_libfuzzer_logs(self, log_handle) -> tuple[int, int, bool, SemanticCheckResult]:
+  def _parse_libfuzzer_logs(
+      self, log_handle) -> tuple[int, int, bool, SemanticCheckResult]:
     """Parses libFuzzer logs."""
     lines = None
     try:
@@ -292,8 +298,10 @@ class BuilderRunner:
         generated_project, benchmark_target_name))
 
     # Parse libfuzzer logs to get fuzz target runtime details.
-    with open(self.work_dirs.run_logs_target(benchmark_target_name, iteration), 'rb') as f:
-      run_result.cov_pcs, run_result.total_pcs, run_result.crashes, run_result.semantic_check = self._parse_libfuzzer_logs(f)
+    with open(self.work_dirs.run_logs_target(benchmark_target_name, iteration),
+              'rb') as f:
+      run_result.cov_pcs, run_result.total_pcs, run_result.crashes, \
+                run_result.semantic_check = self._parse_libfuzzer_logs(f)
       run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result
@@ -640,8 +648,10 @@ class CloudBuilderRunner(BuilderRunner):
             ])
 
     # Parse libfuzzer logs to get fuzz target runtime details.
-    with open(self.work_dirs.run_logs_target(generated_target_name, iteration), 'rb') as f:
-      run_result.cov_pcs, run_result.total_pcs, run_result.crashes, run_result.semantic_check = self._parse_libfuzzer_logs(f)
+    with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
+              'rb') as f:
+      run_result.cov_pcs, run_result.total_pcs, run_result.crashes, \
+                  run_result.semantic_check = self._parse_libfuzzer_logs(f)
       run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result

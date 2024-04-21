@@ -35,6 +35,7 @@ LLM_FIX_LIMIT = 5
 
 OSS_FUZZ_COVERAGE_BUCKET = 'oss-fuzz-coverage'
 
+
 @dataclasses.dataclass
 class Result:
   """Evaluation result."""
@@ -214,7 +215,8 @@ class Evaluator:
       if run_result:
         error_desc, errors = run_result.semantic_check.get_error_info()
       else:
-        logger.log(f'Warning: Build succeed but no run_result in {generated_oss_fuzz_project}.')
+        logger.log(f'Warning: Build succeed but no run_result in '
+                   f'{generated_oss_fuzz_project}.')
         error_desc, errors = '', []
     else:
       error_desc, errors = None, build_result.errors
@@ -247,7 +249,8 @@ class Evaluator:
     llm_fix_count = 0
     while True:
       # 1. Evaluating generated driver.
-      build_result, run_result = self.builder_runner.build_and_run(generated_oss_fuzz_project, target_path, llm_fix_count)
+      build_result, run_result = self.builder_runner.build_and_run(
+          generated_oss_fuzz_project, target_path, llm_fix_count)
 
       gen_succ = build_result.succeeded and run_result and run_result.succeeded
       if gen_succ or llm_fix_count >= LLM_FIX_LIMIT:
@@ -269,7 +272,9 @@ class Evaluator:
       logger.log(f'Failed to build {target_path} with '
                  f'{self.builder_runner.fixer_model_name} in '
                  f'{llm_fix_count} iterations of syntax fixing.')
-      return logger.return_result(Result(False, False, 0.0, 0.0, '', '', False, SemanticCheckResult.NOT_APPLICABLE))
+      return logger.return_result(
+          Result(False, False, 0.0, 0.0, '', '', False,
+                 SemanticCheckResult.NOT_APPLICABLE))
 
     logger.log(f'Successfully built {target_path} with '
                f'{self.builder_runner.fixer_model_name} in '
@@ -277,20 +282,24 @@ class Evaluator:
 
     if not run_result:
       logger.log(f'Warning: No run_result in {generated_oss_fuzz_project}.')
-      return logger.return_result(Result(True, False, 0.0, 0.0, '', '', False, SemanticCheckResult.NOT_APPLICABLE))
+      return logger.return_result(
+          Result(True, False, 0.0, 0.0, '', '', False,
+                 SemanticCheckResult.NOT_APPLICABLE))
 
     if run_result.coverage_summary is None or run_result.coverage is None:
       logger.log(f'Warning: No run_result in {generated_oss_fuzz_project}.')
-      return logger.return_result(Result(True, run_result.crashes, 0.0, 0.0, '', '', False, run_result.semantic_check.type))
+      return logger.return_result(
+          Result(True, run_result.crashes, 0.0, 0.0, '', '', False,
+                 run_result.semantic_check.type))
 
     if not run_result.succeeded:
-      logger.log(
-          f'Warning: Failed to fix semantic error {run_result.semantic_check.type}'
-          f' in {generated_oss_fuzz_project}.')
+      logger.log(f'Warning: Failed to fix semantic error '
+                 f'{run_result.semantic_check.type}'
+                 f' in {generated_oss_fuzz_project}.')
       return logger.return_result(
-          Result(True, run_result.crashes, 0.0, 0.0, run_result.coverage_report_path,
-                 run_result.reproducer_path, True,
-                 run_result.semantic_check.type))
+          Result(True, run_result.crashes, 0.0, 0.0,
+                 run_result.coverage_report_path, run_result.reproducer_path,
+                 True, run_result.semantic_check.type))
 
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
@@ -311,8 +320,9 @@ class Evaluator:
       logger.log(f'Warning: total_lines == 0 in {generated_oss_fuzz_project}.')
       coverage_diff = 0.0
 
-    logger.log(f'Result for {generated_oss_fuzz_project}: crashes={run_result.crashes}, '
-               f'coverage={coverage_percent} ({run_result.cov_pcs}/{run_result.total_pcs}), '
+    logger.log(f'Result for {generated_oss_fuzz_project}: '
+               f'crashes={run_result.crashes}, coverage={coverage_percent} '
+               f'({run_result.cov_pcs}/{run_result.total_pcs}), '
                f'coverage diff={coverage_diff} '
                f'({run_result.coverage.covered_lines}/{total_lines})')
     return logger.return_result(
