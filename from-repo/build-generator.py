@@ -37,12 +37,12 @@ FUZZER_PRE_HEADERS = """#include <stdlib.h>
 CPP_BASE_TEMPLATE = """#include <stdint.h>
 #include <iostream>
 
-extern "C" int 
+extern "C" int
 LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     std::string input(reinterpret_cast<const char*>(data), size);
 
-    // Insert fuzzer contents here 
+    // Insert fuzzer contents here
     // input string contains fuzz input.
 
     // end of fuzzer contents
@@ -465,14 +465,18 @@ class FuzzHeuristicGeneratorBase:
   def run_prompt_and_get_fuzzer_source(self, prompt):
     """Communicate to OpenAI prompt and extract harness source code."""
     completion = client.chat.completions.create(model="gpt-3.5-turbo",
-                                              messages=[
-                                                  {
-                                                      "role": "system",
-                                                      "content": prompt
-                                                  },
-                                              ])
-    fuzzer_source = completion.choices[0].message.content.replace(
-        "<code>", "").replace("</code>", "").replace("```", "")
+                                                messages=[
+                                                    {
+                                                        "role": "system",
+                                                        "content": prompt
+                                                    },
+                                                ])
+    fuzzer_source = completion.choices[0].message.content
+    if fuzzer_source is None:
+      return ""
+    fuzzer_source = fuzzer_source.replace("<code>",
+                                          "").replace("</code>",
+                                                      "").replace("```", "")
     print(">" * 45 + " Source:")
     print(fuzzer_source)
     print("-" * 65)
