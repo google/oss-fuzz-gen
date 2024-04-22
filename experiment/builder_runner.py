@@ -441,8 +441,9 @@ class CloudBuilderRunner(BuilderRunner):
         logging.warning('Cannot find cloud build log of %s: %s',
                         os.path.realpath(target_path), build_log_name)
 
-    with open(self.work_dirs.err_logs_target(generated_target_name, iteration),
-              'wb') as f:
+    with open(
+        self.work_dirs.error_logs_target(generated_target_name, iteration),
+        'wb') as f:
       blob = bucket.blob(err_log_name)
       if blob.exists():
         logging.info('Downloading jcc error log of %s: %s to %s',

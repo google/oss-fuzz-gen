@@ -81,7 +81,8 @@ class WorkDirs:
     return os.path.join(self.build_logs,
                         f'{generated_target_name}-F{iteration}.log')
 
-  def err_logs_target(self, generated_target_name: str, iteration: int) -> str:
+  def error_logs_target(self, generated_target_name: str,
+                        iteration: int) -> str:
     return os.path.join(self.build_logs,
                         f'{generated_target_name}-F{iteration}.err.log')
 
