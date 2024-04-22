@@ -152,7 +152,7 @@ def _rectify_docker_tag(docker_tag: str) -> str:
 
 
 # TODO(Dongge): Make this universally available.
-class _Logger:
+class Logger:
   """Log evaluation progress."""
 
   def __init__(
@@ -274,9 +274,9 @@ class Evaluator:
             LIBFUZZER_LOG_STACK_FRAME_LLVM not in stack_frame and
             LIBFUZZER_LOG_STACK_FRAME_CPP not in stack_frame)
 
-  def _parse_libfuzzer_logs(
+  def parse_libfuzzer_logs(
       self, log_handle,
-      logger: _Logger) -> tuple[int, int, bool, SemanticCheckResult]:
+      logger: Logger) -> tuple[int, int, bool, SemanticCheckResult]:
     """Parses libFuzzer logs."""
     lines = None
     try:
@@ -348,7 +348,7 @@ class Evaluator:
 
   def _evaluate_generated_fuzz_target(
       self, generated_oss_fuzz_project: str, target_path: str,
-      generated_target_name: str, iteration: int, logger: _Logger
+      generated_target_name: str, iteration: int, logger: Logger
   ) -> tuple[BuildResult, Optional[RunResult], int, int, bool,
              SemanticCheckResult]:
     """Evaluates the generated fuzz target."""
@@ -363,7 +363,7 @@ class Evaluator:
     # Parse libfuzzer logs to get fuzz target runtime details.
     with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
               'rb') as f:
-      cov_pcs, total_pcs, crashes, semantic_error = self._parse_libfuzzer_logs(
+      cov_pcs, total_pcs, crashes, semantic_error = self.parse_libfuzzer_logs(
           f, logger)
 
     return build_result, run_result, cov_pcs, total_pcs, crashes, semantic_error
@@ -396,7 +396,7 @@ class Evaluator:
     status_path = os.path.join(self.work_dirs.status, sample_id)
     os.makedirs(status_path, exist_ok=True)
 
-    logger = _Logger(status_path)
+    logger = Logger(status_path)
 
     # Try building and running the new target.
 

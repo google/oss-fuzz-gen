@@ -10,7 +10,7 @@ Here is a list of requirement:
 7) Please add import statements for necessary classes, except for classes in the java.lang package.
 8) Please avoid using the @FuzzTest annotation for specifying the fuzzing method.
 9) Please ensure the random fuzzing data is provided by the FuzzedDataProvider class and are initialized before the target method is invoked.
-10) Please ensure the methods for getting random data are valid and accessible methods from the FuzzedDataProvider class described in the 
+10) Please ensure the methods for getting random data are valid and accessible methods from the FuzzedDataProvider class described in the
     Javadoc API found in https://codeintelligencetesting.github.io/jazzer-docs/jazzer-api/com/code_intelligence/jazzer/api/FuzzedDataProvider.html and
     correct arguments has been given when invoking those methods.
 11) If FuzzedDataProvider::consumeString is used, please provides a random integer as argument with FuzzedDataProvider::consumeInt

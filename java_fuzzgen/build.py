@@ -16,20 +16,32 @@
 
 import argparse
 import os
-import sys
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 import openai
 import yaml
 
-from experiment import builder_runner, evaluator, oss_fuzz_checkout
+from experiment import (benchmark, builder_runner, evaluator,
+                        oss_fuzz_checkout, workdir)
 from java_fuzzgen import oss_fuzz_templates, utils
 from java_fuzzgen.objects import java_method
 
 
+def get_next_autofuzz_dir() -> str:
+  print("OSS-Fuzz dir: %s" % (oss_fuzz_checkout.OSS_FUZZ_DIR))
+  auto_gen = 'java-autofuzz-dir-'
+  max_idx = -1
+  for l in os.listdir(os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "projects")):
+    if l.startswith(auto_gen):
+      tmp_dir_idx = int(l.replace(auto_gen, ""))
+      if tmp_dir_idx > max_idx:
+        max_idx = tmp_dir_idx
+  return '%s%d' % (auto_gen, max_idx + 1)
+
+
 def prepare_oss_fuzz_pre_analysis_project(github_repo: str,
                                           autogen_project: str) -> str:
-  """Create OSS-Fuzz project with build.sh template for running Introspector statically."""
+  """Create OSS-Fuzz project for running Introspector statically."""
   # Find the next auto-fuzz dir
   project_dir = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "projects",
                              autogen_project)
@@ -42,7 +54,7 @@ def prepare_oss_fuzz_pre_analysis_project(github_repo: str,
                                    os.path.join(project_dir, "proj"))
   if not result:
     print("Failed to clone project")
-    return None
+    return ""
 
   # Determine java build type
   project_name = utils.get_project_name(github_repo)
@@ -50,7 +62,7 @@ def prepare_oss_fuzz_pre_analysis_project(github_repo: str,
 
   if not build_file:
     print("Build type of this java project is not supported.")
-    return None
+    return ""
 
   with open(os.path.join(project_dir, 'build.sh'), 'w') as f:
     f.write(build_file)
@@ -68,23 +80,24 @@ def prepare_oss_fuzz_pre_analysis_project(github_repo: str,
   return autogen_project
 
 
-def perform_pre_analysis(github_repo, autogen_project) -> List[Any]:
+def perform_pre_analysis(github_repo, autogen_project) -> Tuple[Any, List[Any]]:
   """Creates an OSS-Fuzz project for a project and runs introspector
     statically on it within the OSS-Fuzz environment."""
   autogen_project = prepare_oss_fuzz_pre_analysis_project(
       github_repo, autogen_project)
 
   if not autogen_project:
-    return None
+    return None, []
 
   # Run the build
   if not utils.run_oss_fuzz_build(autogen_project):
-    return None
+    return None, []
 
   # Extract the harnesses logic
   introspector_output = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build',
                                      'out', autogen_project,
                                      'fuzzerLogFile-Fuzz.data.yaml')
+  bench = benchmark.Benchmark.from_yaml(introspector_output)
 
   # Extract fuzz introspector output
   with open(introspector_output, 'r') as f:
@@ -92,19 +105,20 @@ def perform_pre_analysis(github_repo, autogen_project) -> List[Any]:
 
   all_introspector_funcs = introspector_analysis['All functions']['Elements']
 
-  return all_introspector_funcs
+  return bench, all_introspector_funcs
 
 
 def create_harness_from_openai(github_repo: str, func_elem: Dict,
                                proj_path: str) -> str:
+  """Create fuzzing harness with openai prompts"""
   # Generate objects for this speific function element dict
-  java_method_object = java_method.JAVA_METHOD(func_elem)
+  java_method_object = java_method.JAVAMETHOD(func_elem)
 
   # Skip non-project method and uninterested method
   if not utils.is_class_in_project(
       proj_path,
       java_method_object.class_name) or java_method_object.is_skip(20):
-    return None
+    return ""
 
   # Generate the prompt for this specific method or constructor
   if java_method_object.is_constructor:
@@ -116,7 +130,7 @@ def create_harness_from_openai(github_repo: str, func_elem: Dict,
 
   if not prompt:
     print("Failed to locate default prompt template.")
-    return None
+    return ""
 
   # Querying openai for a sample fuzzing harness
   completion = openai.chat.completions.create(model="gpt-3.5-turbo",
@@ -128,16 +142,18 @@ def create_harness_from_openai(github_repo: str, func_elem: Dict,
                                               ])
 
   # Extract fuzzer code and remove unwanted tags
-  source_code = completion.choices[0].message.content.split(
-      "<java_code>")[-1].split("</java_code>")[0]
-  source_code = source_code.split("```java")[-1].split("```")[0]
+  if completion.choices[0].message.content:
+    source_code = completion.choices[0].message.content.split(
+        "<java_code>")[-1].split("</java_code>")[0]
+    source_code = source_code.split("```java")[-1].split("```")[0]
+    return source_code
 
-  return source_code
+  return ""
 
 
 def generate_fuzzers(github_repo: str, introspector_funcs: List[Any],
                      max_targets: int, autogen_project: str) -> List[str]:
-  """Runs java fuzzer harness generation on a list of function from fuzz introspector result"""
+  """Generate java fuzzers on a list of methods from fuzz introspector result"""
   idx = 0
   fuzzer_sources = []
   proj_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "projects",
@@ -160,29 +176,30 @@ def generate_fuzzers(github_repo: str, introspector_funcs: List[Any],
 
 def build_and_evalute_fuzzer_harnesses(fuzzer_sources: List[str],
                                        autogen_project: str, log_file: str,
-                                       github_repo: str) -> bool:
+                                       github_repo: str,
+                                       bench: benchmark.Benchmark) -> bool:
   """Builds a Java project, runs each of the fuzzers built and logs stats."""
   idx = 0
   print("------")
   print(oss_fuzz_checkout.OSS_FUZZ_DIR)
 
   # Retrieve fuzzers
-  for idx in range(len(fuzzer_sources)):
+  for idx, fuzzer_source in enumerate(fuzzer_sources):
     fuzzer_name = "Fuzz%d" % (idx)
     fuzzer_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "projects",
                                autogen_project, "%s.java" % (fuzzer_name))
     with open(fuzzer_path, "w") as f:
-      f.write(fuzzer_sources[idx].replace("class Fuzz",
-                                          "class %s" % (fuzzer_name)))
+      f.write(fuzzer_source.replace("class Fuzz", "class %s" % (fuzzer_name)))
 
   # Build fuzzers
-  fuzzer_runner = builder_runner.BuilderRunner(None, "ww", 120)
+  work_dir = workdir.WorkDirs("ww")
+  fuzzer_runner = builder_runner.BuilderRunner(bench, work_dir, 120)
   if not utils.run_oss_fuzz_build(autogen_project):
     return False
 
   # Run each fuzzers
-  stat_list = list()
-  for idx in range(len(fuzzer_sources)):
+  stat_list = []
+  for idx, fuzzer_source in enumerate(fuzzer_sources):
     print("------")
     print(oss_fuzz_checkout.OSS_FUZZ_DIR)
 
@@ -194,24 +211,22 @@ def build_and_evalute_fuzzer_harnesses(fuzzer_sources: List[str],
                                    is_benchmark=False,
                                    end_wait=60)
 
-    valuator = evaluator.Evaluator(None, None, None)
+    valuator = evaluator.Evaluator(fuzzer_runner, bench, work_dir)
 
+    proj_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "projects",
+                             autogen_project)
     with open(fuzz_logs, 'rb') as f:
-      cov_pcs, total_pcs, crashes, is_driver_fuzz_err = valuator._parse_libfuzzer_logs(
-          f, None)
+      cov_pcs, total_pcs, crashes, is_err = valuator.parse_libfuzzer_logs(
+          f, evaluator.Logger(proj_path))
 
     stats = {
         'cov_pcs': cov_pcs,
         'total_pcs': total_pcs,
         'crashes': crashes,
-        'is_driver_fuzz_err': is_driver_fuzz_err
+        'is_driver_fuzz_err': is_err
     }
 
-    result_status = {
-        'stats': stats,
-        'idx': idx,
-        'fuzzer-source': fuzzer_sources[idx]
-    }
+    result_status = {'stats': stats, 'idx': idx, 'fuzzer-source': fuzzer_source}
     stat_list.append(result_status)
 
   if log_file:
@@ -239,18 +254,15 @@ def build_and_evalute_fuzzer_harnesses(fuzzer_sources: List[str],
   return True
 
 
-def auto_fuzz_from_scratch(github_repo: str, log_file: str, max_targets: int,
-                           proj_id: int) -> bool:
-  """Auto-generates an OSS-Fuzz project with |max_targets| fuzzers and evalutes the fuzzers."""
-  # Clone and retrieve OSS-Fuzz
-  oss_fuzz_checkout.clone_oss_fuzz()
-
+def auto_fuzz_from_scratch(github_repo: str, log_file: str,
+                           max_targets: int) -> bool:
+  """Auto-generates an OSS-Fuzz project and evalutes the fuzzers."""
   # Generate new project directory in OSS-Fuzz/projects
-  autogen_project = "java-autofuzz-dir-%d" % (proj_id)
+  autogen_project = get_next_autofuzz_dir()
 
   # Peform static analysis by fuzz-introspector
-  introspector_funcs = perform_pre_analysis(github_repo, autogen_project)
-  if not introspector_funcs:
+  bench, introspector_funcs = perform_pre_analysis(github_repo, autogen_project)
+  if len(introspector_funcs) == 0:
     return False
 
   # Refined build file
@@ -267,13 +279,13 @@ def auto_fuzz_from_scratch(github_repo: str, log_file: str, max_targets: int,
                                     max_targets, autogen_project)
   if len(fuzzer_sources) == 0:
     print("Could not generate any fuzzers")
-    return
+    return False
 
   # Build all the fuzzers and evaluate each of them
   if not build_and_evalute_fuzzer_harnesses(fuzzer_sources, autogen_project,
-                                            log_file, github_repo):
+                                            log_file, github_repo, bench):
     print("Could not generate any valid fuzzers")
-    return
+    return False
 
   # Show output
   print("------")
@@ -281,8 +293,11 @@ def auto_fuzz_from_scratch(github_repo: str, log_file: str, max_targets: int,
   print("Auto-generated project: %s" % (os.path.join(
       oss_fuzz_checkout.OSS_FUZZ_DIR, "projects", autogen_project)))
 
+  return True
+
 
 def parse_args():
+  """Parse command line arguments"""
   parser = argparse.ArgumentParser()
   parser.add_argument(
       "-r",
@@ -318,13 +333,15 @@ def main():
     print("No repository specified.")
     return
 
-  proj_id = -1
+  oss_fuzz_checkout.clone_oss_fuzz()
+
   for repo in repos:
     if not repo:
       continue
+    print("####################################################")
     print("Processing %s" % (repo))
-    proj_id = proj_id + 1
-    auto_fuzz_from_scratch(repo, args.log_file, args.max_targets, proj_id)
+    auto_fuzz_from_scratch(repo, args.log_file, args.max_targets)
+    print("####################################################")
 
 
 if __name__ == "__main__":

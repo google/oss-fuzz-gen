@@ -12,12 +12,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Provides a set of utils for oss-fuzz-gen on Java projects"""
 
 import os
 import subprocess
 
-from java_fuzzgen import oss_fuzz_templates
 from experiment import oss_fuzz_checkout
+from java_fuzzgen import oss_fuzz_templates
+
 
 # Project preparation utils
 ###########################
@@ -48,15 +50,18 @@ def get_project_name(github_url: str) -> str:
   github_url = github_url.replace(".git", "")
   if github_url.startswith("https://"):
     return github_url.replace("https://", "").split("/")[2]
-  elif github_url.startswith("http://"):
+
+  if github_url.startswith("http://"):
     return github_url.replace("http://", "").split("/")[2]
-  else:
-    return github_url.split("/")[1]
+
+  return github_url.split("/")[1]
 
 
-def get_build_file(project_dir: str, project_name: str, is_introspector: bool) -> str:
+def get_build_file(project_dir: str, project_name: str,
+                   is_introspector: bool) -> str:
   """Retrieve build.sh content for this project."""
-  build_type = find_project_build_type(os.path.join(project_dir, "proj"), project_name)
+  build_type = find_project_build_type(os.path.join(project_dir, "proj"),
+                                       project_name)
 
   if build_type == "ant":
     build_file = oss_fuzz_templates.BUILD_JAVA_ANT
@@ -65,58 +70,65 @@ def get_build_file(project_dir: str, project_name: str, is_introspector: bool) -
   elif build_type == "maven":
     build_file = oss_fuzz_templates.BUILD_JAVA_MAVEN
   else:
-    return None
+    return ""
+
+  build_file = build_file + oss_fuzz_templates.BUILD_JAVA_BASE
 
   if is_introspector:
-    return build_file + oss_fuzz_templates.BUILD_JAVA_BASE + oss_fuzz_templates.BUILD_JAVA_INTROSPECTOR
-  else:
-    return build_file + oss_fuzz_templates.BUILD_JAVA_BASE
+    return build_file + oss_fuzz_templates.BUILD_JAVA_INTROSPECTOR
+
+  return build_file
 
 
 # Java Project discovery utils
 ##############################
-def _find_dir_build_type(dir: str) -> str:
+def _find_dir_build_type(project_dir: str) -> str:
   """Determine the java build project type of the directory"""
 
-  if os.path.exists(os.path.join(dir, "pom.xml")):
+  if os.path.exists(os.path.join(project_dir, "pom.xml")):
     return "maven"
-  elif os.path.exists(os.path.join(dir, "build.gradle")) or os.path.exists(os.path.join(dir, "build.gradle.kts")):
+
+  if os.path.exists(os.path.join(
+      project_dir, "build.gradle")) or os.path.exists(
+          os.path.join(project_dir, "build.gradle.kts")):
     return "gradle"
-  elif os.path.exists(os.path.join(dir, "build.xml")):
+
+  if os.path.exists(os.path.join(project_dir, "build.xml")):
     return "ant"
-  else:
-    return None
+
+  return ""
 
 
-def find_project_build_type(dir: str, proj_name: str) -> str:
+def find_project_build_type(project_dir: str, proj_name: str) -> str:
   """Search for base project directory to detect project build type"""
   # Search for current directory first
-  project_build_type = _find_dir_build_type(dir)
+  project_build_type = _find_dir_build_type(project_dir)
   if project_build_type:
     return project_build_type
 
   # Search for sub directory with name same as project name
-  for subdir in os.listdir(dir):
-    if os.path.isdir(os.path.join(dir, subdir)) and subdir == proj_name:
-      project_build_type = _find_dir_build_type(os.path.join(
-        dir, subdir))
+  for subdir in os.listdir(project_dir):
+    if os.path.isdir(os.path.join(project_dir, subdir)) and subdir == proj_name:
+      project_build_type = _find_dir_build_type(
+          os.path.join(project_dir, subdir))
     if project_build_type:
       return project_build_type
 
   # Recursively look for subdirectory that contains build property file
-  for root, _, files in os.walk(dir):
+  for root, _, _ in os.walk(project_dir):
     project_build_type = _find_dir_build_type(root)
     if project_build_type:
       return project_build_type
 
-  return None
+  return ""
 
 
-def is_class_in_project(dir: str, class_name: str) -> bool:
+def is_class_in_project(project_dir: str, class_name: str) -> bool:
   """Find if the given class name is in the project"""
-  command = 'grep -ir "class %s\|interface %s" --include "*.java" %s/proj' % (class_name, class_name, dir)
+  command = 'grep -ir "class %s\\|interface %s" --include "*.java" %s/proj' % (
+      class_name, class_name, project_dir)
   try:
-    subprocess.check_output(command, shell = True)
+    subprocess.check_output(command, shell=True)
   except subprocess.CalledProcessError:
     return False
   return True
@@ -129,10 +141,10 @@ def run_oss_fuzz_build(project_dir: str) -> bool:
   cmd = "python3 infra/helper.py build_fuzzers %s" % (project_dir)
   try:
     subprocess.check_call(cmd,
-                  shell=True,
-                  cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
-                  stdout=subprocess.DEVNULL,
-                  stderr=subprocess.DEVNULL)
+                          shell=True,
+                          cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
+                          stdout=subprocess.DEVNULL,
+                          stderr=subprocess.DEVNULL)
   except subprocess.CalledProcessError:
     return False
   return True
@@ -142,14 +154,20 @@ def run_oss_fuzz_build(project_dir: str) -> bool:
 ##############
 def get_method_prompt(github_repo: str, func_name: str) -> str:
   """Retrieve and return prompt question for basic methods"""
-  with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "prompts", "prompt_methods"), "r") as file:
+  with open(
+      os.path.join(os.path.dirname(os.path.realpath(__file__)), "prompts",
+                   "prompt_methods"), "r") as file:
     return file.read() % (get_project_name(github_repo), github_repo, func_name)
 
   return None
 
+
 def get_constructor_prompt(github_repo: str, class_name: str) -> str:
   """Retrieve and return prompt question for constructors"""
-  with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "prompts", "prompt_constructors"), "r") as file:
-    return file.read() % (get_project_name(github_repo), github_repo, class_name)
+  with open(
+      os.path.join(os.path.dirname(os.path.realpath(__file__)), "prompts",
+                   "prompt_constructors"), "r") as file:
+    return file.read() % (get_project_name(github_repo), github_repo,
+                          class_name)
 
   return None
