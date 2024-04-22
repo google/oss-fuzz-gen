@@ -12,13 +12,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Manager for running auto-gen from scratch."""
 
 import argparse
 import os
 import shutil
 import subprocess
-import sys
 import threading
+from typing import List
 
 silent_global = False
 
@@ -37,7 +38,8 @@ empty_oss_fuzz_build = """#!/bin/bash -eu
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-################################################################################"""
+################################################################################
+"""
 
 empty_oss_fuzz_docker = """# Copyright 2018 Google Inc.
 #
@@ -73,6 +75,7 @@ main_repo: 'https://github.com/samtools/htslib.git'
 
 
 def setup_worker_project(oss_fuzz_base: str, project_name: str):
+  """Setup empty OSS-Fuzz project used for analysis."""
   temp_project_dir = os.path.join(oss_fuzz_base, "projects", project_name)
   if os.path.isdir(temp_project_dir):
     shutil.rmtree(temp_project_dir)
@@ -113,6 +116,7 @@ def run_autogen(github_url,
                 worker_project,
                 disable_autofuzz,
                 targets_per_heuristic=5):
+  """Launch auto-gen analysis within OSS-Fuzz container."""
 
   initiator_cmd = 'python3 /src/build-generator.py %s -o %s' % (github_url,
                                                                 outdir)
@@ -159,7 +163,8 @@ def run_autogen(github_url,
     pass
 
 
-def read_targets_file(filename):
+def read_targets_file(filename: str) -> List[str]:
+  """Parse input file."""
   res_targets = []
   with open(filename, 'r') as f:
     targets = f.read().split("\n")
@@ -178,6 +183,7 @@ def run_on_targets(target,
                    semaphore=None,
                    disable_autofuzz=False,
                    targets_per_heuristic=5):
+  """Thread entry point for single project auto-gen."""
 
   if semaphore is not None:
     semaphore.acquire()
@@ -194,7 +200,8 @@ def run_on_targets(target,
     semaphore.release()
 
 
-def get_next_worker_project(oss_fuzz_base):
+def get_next_worker_project(oss_fuzz_base: str) -> str:
+  """Gets next OSS-Fuzz worker projecet."""
   max_idx = -1
   for project_dir in os.listdir(os.path.join(oss_fuzz_base, 'projects')):
     if not 'temp-project-' in project_dir:
@@ -217,8 +224,7 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
   semaphore_count = 6
   semaphore = threading.Semaphore(semaphore_count)
   jobs = []
-  for idx in range(len(target_repositories)):
-    target = target_repositories[idx]
+  for idx, target in enumerate(target_repositories):
     worker_project_name = get_next_worker_project(oss_fuzz_base)
     print(f'Worker project name {worker_project_name}')
 
@@ -237,14 +243,14 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
 def run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz,
                    targets_per_heuristic):
   """Run auto-gen on a list of projects sequentially."""
-  for idx in range(len(target_repositories)):
-    target = target_repositories[idx]
+  for idx, target in enumerate(target_repositories):
     worker_project_name = get_next_worker_project(oss_fuzz_base)
     run_on_targets(target, oss_fuzz_base, worker_project_name, idx,
                    disable_autofuzz, targets_per_heuristic)
 
 
 def parse_commandline():
+  """Parse the commandline."""
   parser = argparse.ArgumentParser()
   parser.add_argument('--oss-fuzz', '-o', help='OSS-Fuzz base')
   parser.add_argument('--input', '-i', help='Input to analyze')
@@ -265,8 +271,6 @@ def parse_commandline():
 
 def main():
   global silent_global
-  #oss_fuzz_base = sys.argv[1]
-  #target = sys.argv[2]
 
   args = parse_commandline()
   oss_fuzz_base = args.oss_fuzz
