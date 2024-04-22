@@ -445,7 +445,7 @@ class CloudBuilderRunner(BuilderRunner):
               'wb') as f:
       blob = bucket.blob(err_log_name)
       if blob.exists():
-        logging.info('Downloading cloud build log of %s: %s to %s',
+        logging.info('Downloading jcc error log of %s: %s to %s',
                      os.path.realpath(target_path), err_log_name, f)
         blob.download_to_file(f)
       else:
