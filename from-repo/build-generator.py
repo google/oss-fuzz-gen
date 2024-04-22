@@ -27,7 +27,7 @@ import yaml
 
 MAX_FUZZ_PER_HEURISTIC = 15
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
+client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 FUZZER_PRE_HEADERS = """#include <stdlib.h>
 #include <stdio.h>
@@ -464,7 +464,7 @@ class FuzzHeuristicGeneratorBase:
 
   def run_prompt_and_get_fuzzer_source(self, prompt):
     """Communicate to OpenAI prompt and extract harness source code."""
-    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo",
+    completion = client.chat.completions.create(model="gpt-3.5-turbo",
                                               messages=[
                                                   {
                                                       "role": "system",

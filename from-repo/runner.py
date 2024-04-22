@@ -59,8 +59,12 @@ empty_oss_fuzz_docker = """# Copyright 2018 Google Inc.
 
 FROM gcr.io/oss-fuzz-base/base-builder
 RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \
-                      pkg-config check
-RUN python3 -m pip install pyyaml cxxfilt openai==0.27.8
+                      pkg-config curl check
+RUN rm /usr/local/bin/cargo && \
+ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \
+ apt-get install -y cargo
+RUN python3 -m pip install --upgrade pip && \
+    python3 -m pip install pydantic-core pyyaml cxxfilt openai==1.16.2
 COPY *.py $SRC/
 WORKDIR $SRC
 COPY build.sh $SRC/"""
