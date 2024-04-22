@@ -281,13 +281,15 @@ class Evaluator:
                f'{llm_fix_count} iterations of syntax fixing.')
 
     if not run_result:
-      logger.log(f'Warning: No run_result in {generated_oss_fuzz_project}.')
+      logger.log(f'Warning: no run result in {generated_oss_fuzz_project}.')
       return logger.return_result(
           Result(True, False, 0.0, 0.0, '', '', False,
                  SemanticCheckResult.NOT_APPLICABLE))
 
     if run_result.coverage_summary is None or run_result.coverage is None:
-      logger.log(f'Warning: No run_result in {generated_oss_fuzz_project}.')
+      logger.log(
+          f'Warning: No cov info in run result of {generated_oss_fuzz_project}.'
+      )
       return logger.return_result(
           Result(True, run_result.crashes, 0.0, 0.0, '', '', False,
                  run_result.semantic_check.type))
