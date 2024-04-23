@@ -96,7 +96,7 @@ class Sample:
   """Result of a fuzz target sample of a benchmark."""
   id: str
   status: str
-  result: Optional[evaluator.Result] = None
+  result: evaluator.Result
 
   @property
   def stacktrace(self) -> str:
@@ -260,7 +260,7 @@ def get_samples(benchmark: str) -> list[Sample]:
 
   for i, sample_id in enumerate(sample_ids(get_generated_targets(benchmark))):
     status = 'Running'
-    result = None
+    result = evaluator.Result()
     if results[i]:
       status = 'Done'
       result = results[i]
@@ -278,7 +278,7 @@ def match_sample(benchmark: str, target_sample_id: str) -> Optional[Sample]:
     if sample_id != target_sample_id:
       continue
     status = 'Running'
-    result = None
+    result = evaluator.Result()
     if results[i]:
       status = 'Done'
       result = results[i]
