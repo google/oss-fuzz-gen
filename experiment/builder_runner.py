@@ -382,7 +382,7 @@ class CloudBuilderRunner(BuilderRunner):
     if not self._pre_build_check(target_path, build_result):
       return build_result, None
 
-    print(f'Evaluating {os.path.realpath(target_path)} on cloud.')
+    logging.info('Evaluating %s on cloud.', os.path.realpath(target_path))
 
     uid = self.experiment_name + str(uuid.uuid4())
     run_log_name = f'{uid}.run.log'
@@ -390,6 +390,9 @@ class CloudBuilderRunner(BuilderRunner):
 
     build_log_name = f'{uid}.build.log'
     build_log_path = f'gs://{self.experiment_bucket}/{build_log_name}'
+
+    err_log_name = f'{uid}.err.log'
+    err_log_path = f'gs://{self.experiment_bucket}/{err_log_name}'
 
     corpus_name = f'{uid}.corpus.zip'
     corpus_path = f'gs://{self.experiment_bucket}/{corpus_name}'
@@ -408,6 +411,7 @@ class CloudBuilderRunner(BuilderRunner):
             f'--project={generated_project}',
             f'--target={self.benchmark.target_name}',
             f'--upload_build_log={build_log_path}',
+            f'--upload_err_log={err_log_path}',
             f'--upload_output_log={run_log_path}',
             f'--upload_corpus={corpus_path}',
             f'--upload_coverage={coverage_path}',
@@ -417,7 +421,7 @@ class CloudBuilderRunner(BuilderRunner):
         cwd=oss_fuzz_checkout.OSS_FUZZ_DIR):
       return build_result, None
 
-    print(f'Evaluated {os.path.realpath(target_path)} on cloud.')
+    logging.info('Evaluated %s on cloud.', os.path.realpath(target_path))
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(self.experiment_bucket)
@@ -430,34 +434,46 @@ class CloudBuilderRunner(BuilderRunner):
         'wb') as f:
       blob = bucket.blob(build_log_name)
       if blob.exists():
-        print(f'Downloading cloud build log of {os.path.realpath(target_path)}:'
-              f' {build_log_name} to {f}')
+        logging.info('Downloading cloud build log of %s: %s to %s',
+                     os.path.realpath(target_path), build_log_name, f)
         blob.download_to_file(f)
       else:
-        print(f'Cannot find cloud build log of {os.path.realpath(target_path)} '
-              f':{build_log_name}')
+        logging.warning('Cannot find cloud build log of %s: %s',
+                        os.path.realpath(target_path), build_log_name)
+
+    with open(
+        self.work_dirs.error_logs_target(generated_target_name, iteration),
+        'wb') as f:
+      blob = bucket.blob(err_log_name)
+      if blob.exists():
+        logging.info('Downloading jcc error log of %s: %s to %s',
+                     os.path.realpath(target_path), err_log_name, f)
+        blob.download_to_file(f)
+      else:
+        logging.warning('Cannot find jcc error log of %s: %s',
+                        os.path.realpath(target_path), err_log_name)
 
     with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
               'wb') as f:
       blob = bucket.blob(run_log_name)
       if blob.exists():
         build_result.succeeded = True
-        print(f'Downloading cloud run log of {os.path.realpath(target_path)}:'
-              f' {run_log_name} to {f}')
+        logging.info('Downloading cloud run log of %s: %s to %s',
+                     os.path.realpath(target_path), run_log_name, f)
         blob.download_to_file(f)
       else:
-        print(f'Cannot find cloud run log of {os.path.realpath(target_path)} '
-              f':{run_log_name}')
+        logging.warning('Cannot find cloud run log of %s: %s',
+                        os.path.realpath(target_path), run_log_name)
 
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(
           self.work_dirs.build_logs_target(generated_target_name, iteration))
       build_result.errors = errors
-      print(f'Cloud evaluation of {os.path.realpath(target_path)} indicates a '
-            f'failure: {errors}')
+      logging.info('Cloud evaluation of %s indicates a failure: %s',
+                   os.path.realpath(target_path), errors)
       return build_result, None
-    print(f'Cloud evaluation of {os.path.realpath(target_path)} indicates a '
-          'success.')
+    logging.info('Cloud evaluation of %s indicates a success.',
+                 os.path.realpath(target_path))
 
     corpus_dir = self.work_dirs.corpus(generated_target_name)
     with open(os.path.join(corpus_dir, 'corpus.zip'), 'wb') as f:
