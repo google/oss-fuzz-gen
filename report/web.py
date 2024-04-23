@@ -391,7 +391,9 @@ def index():
 def index_json():
   return render_template('index.json',
                          benchmarks=list_benchmarks(),
-                         model=model)
+                         model=model), 200, {
+                             'Content-Type': 'application/json'
+                         }
 
 
 @app.route('/sort_build')
@@ -447,7 +449,9 @@ def benchmark_json(benchmark: str):
                            samples=get_samples(benchmark),
                            get_benchmark_final_target_code=partial(
                                get_final_target_code, benchmark),
-                           model=model)
+                           model=model), 200, {
+                               'Content-Type': 'application/json'
+                           }
   except Exception as e:
     logging.warning('Failed to render benchmark crash JSON: %s\n  %s',
                     benchmark, e)
