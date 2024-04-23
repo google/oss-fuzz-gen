@@ -25,7 +25,7 @@ the Docker container:
   `compile` is used, this means that `ASAN` is used during the build. If the
   build succeeds, then scan of the build folder is made to identify the list of
   static archives produced by the build.
-  Additionally, the each folder with a `.h` file is saved, as this
+  Additionally, each folder with a `.h` file is saved, as this
   will later be used when linking in a fuzzer.
 7) An empty fuzzer is created and a `build.sh` is prepared to link the empty
   fuzzer to the static libraries. This is then run using `compile` to verify
