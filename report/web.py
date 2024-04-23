@@ -56,9 +56,9 @@ class Benchmark:
   def __post_init__(self):
     self.project = '-'.join(self.id.split('-')[1:-1])
     self.function = self.id.split('-')[-1]
-    self.signature = self.find_signature() or self.id
+    self.signature = self._find_signature() or self.id
 
-  def find_signature(self) -> str:
+  def _find_signature(self) -> str:
     """
     Finds the function signature by searching for its |benchmark_id| in
     BENCHMARK_DIR.
@@ -223,6 +223,20 @@ def list_benchmarks() -> List[Benchmark]:
     benchmarks.append(Benchmark(benchmark, status, result))
 
   return benchmarks
+
+
+def match_benchmark(benchmark_id: str) -> Benchmark:
+  """Returns a benchmark class based on |benchmark_id|."""
+  results, targets = get_results(benchmark_id)
+  status = 'Done' if results and all(results) else 'Running'
+  filtered_results = [(i, stat) for i, stat in enumerate(results) if stat]
+
+  if filtered_results:
+    result = run_one_experiment.aggregate_results(filtered_results, targets)
+  else:
+    result = run_one_experiment.AggregatedResult()
+
+  return Benchmark(benchmark_id, status, result)
 
 
 def sort_benchmarks(benchmarks: List[Benchmark],
@@ -421,7 +435,7 @@ def index_sort_stauts():
 
 
 @app.route('/benchmark/<benchmark>/crash.json')
-def benchmark_json(benchmark):
+def benchmark_json(benchmark: str):
   """Generates a JSON containing crash reproducing info."""
   if not _is_valid_benchmark_dir(benchmark):
     # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
@@ -429,7 +443,7 @@ def benchmark_json(benchmark):
 
   try:
     return render_template('benchmark.json',
-                           benchmark=Benchmark.find_signature(benchmark),
+                           benchmark=match_benchmark(benchmark).signature,
                            samples=get_samples(benchmark),
                            get_benchmark_final_target_code=partial(
                                get_final_target_code, benchmark),
