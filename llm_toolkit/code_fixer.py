@@ -256,7 +256,7 @@ def extract_error_message(log_path: str,
     if found_keyword:
       continue
 
-    # Add clang diagnostics.
+    # Add clang/clang++ diagnostics.
     if (temp_range[0] is None and (re.fullmatch(error_include_pattern, line) or
                                    re.fullmatch(error_start_pattern, line))):
       temp_range[0] = i

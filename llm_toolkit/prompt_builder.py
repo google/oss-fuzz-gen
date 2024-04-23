@@ -298,6 +298,8 @@ class DefaultTemplateBuilder(PromptBuilder):
     selected_errors = []
     for error in errors:
       # Skip C only errors.
+      # TODO(Dongge): Fix JCC to address this.
+      # https://github.com/google/oss-fuzz-gen/pull/208/files/a0c0db2fd5860e6e4d434467c5ec9f949ee2cff1#r1571651507
       if (FALSE_EXTERN_KEYWORD_ERROR in error or
           FALSE_FUZZED_DATA_PROVIDER_ERROR in error):
         continue
