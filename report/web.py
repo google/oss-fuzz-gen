@@ -442,7 +442,7 @@ def benchmark_json(benchmark: str):
     abort(404)
 
   try:
-    return render_template('benchmark.json',
+    return render_template('crash.json',
                            benchmark=match_benchmark(benchmark).signature,
                            samples=get_samples(benchmark),
                            get_benchmark_final_target_code=partial(
