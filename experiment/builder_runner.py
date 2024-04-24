@@ -135,7 +135,8 @@ class BuilderRunner:
     # Copy err.log into work dir.
     try:
       shutil.copyfile(
-          f'{get_build_artifact_dir(generated_project, "workspace")}/err.log',
+          os.path.join(get_build_artifact_dir(generated_project, "workspace"),
+                       'err.log'),
           self.work_dirs.error_logs_target(benchmark_target_name, iteration))
     except FileNotFoundError as e:
       logging.error('Cannot get err.log for %s: %s', generated_project, e)
