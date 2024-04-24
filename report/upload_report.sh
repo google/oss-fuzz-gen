@@ -77,12 +77,14 @@ while true; do
 
   # Upload the report to GCS.
   echo "Uploading the report."
+  BUCKET_PATH="gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
+  # Upload HTMLs.
   gsutil -q -m -h "Content-Type:text/html" \
          -h "Cache-Control:public, max-age=3600" \
-         cp -r . "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
-  gsutil -q -m -h "Content-Type:application/json" \
-         -h "Cache-Control:public, max-age=3600" \
-         cp -r "./**/*.json" "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
+         cp -r . "$BUCKET_PATH"
+  # Upload JSONs.
+  find . -name '*.json' -exec gsutil -q -m -h "Content-Type:application/json" \
+    -h "Cache-Control:public, max-age=3600" cp "{}" "${BUCKET_PATH}/{}" \;
 
   cd ..
 
