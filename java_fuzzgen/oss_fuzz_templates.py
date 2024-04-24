@@ -31,6 +31,13 @@ COPY *.sh *.java $SRC/
 WORKDIR $SRC/proj
 """
 
+DOCKERFILE_JAVA_TEST = """FROM gcr.io/oss-fuzz-base/base-builder-jvm
+RUN curl -L https://download.java.net/java/GA/jdk15.0.2/0d1cfde4252546c6931946de8db48ee2/7/GPL/openjdk-15.0.2_linux-x64_bin.tar.gz -o jdk.tar.gz && tar zxf jdk.tar.gz && rm -rf jdk.tar.gz
+ENV JAVA_HOME="$SRC/jdk-15.0.2"
+COPY built_jar FuzzTest.java build.sh $SRC/
+WORKDIR $SRC/
+"""
+
 BUILD_JAVA_ANT = """BASEDIR=$(pwd)
 chmod +x $SRC/protoc/bin/protoc
 $ANT
@@ -93,15 +100,16 @@ $MVN clean package -Dmaven.javadoc.skip=true -DskipTests=true -Dpmd.skip=true -D
 """
 
 BUILD_JAVA_BASE = r"""
+wget -P $OUT/ https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar
+
 cd $BASEDIR
 
-JARFILE_LIST=
+mkdir -p $OUT/built_jar
 for JARFILE in $(find ./  -name "*.jar")
 do
   if [[ "$JARFILE" != *sources.jar ]] && [[ "$JARFILE" != *javadoc.jar ]] && [[ "$JARFILE" != *tests.jar ]]
   then
-    cp $JARFILE $OUT/
-    JARFILE_LIST="$JARFILE_LIST$(basename $JARFILE) "
+    cp $JARFILE $OUT/built_jar
   fi
 done
 
@@ -109,18 +117,18 @@ curr_dir=$(pwd)
 rm -rf $OUT/jar_temp
 mkdir $OUT/jar_temp
 cd $OUT/jar_temp
-for JARFILE in $JARFILE_LIST
+for JARFILE in `ls $OUT/built_jar/*.jar`
 do
-  jar -xf $OUT/$JARFILE
+  jar -xf $JARFILE
 done
-cd $curr_dir
 
+cd $curr_dir
 cp -r $JAVA_HOME $OUT/
 
 BUILD_CLASSPATH=$JAZZER_API_PATH:$OUT/jar_temp:$OUT/commons-lang3-3.12.0.jar
 RUNTIME_CLASSPATH=\$this_dir/jar_temp:\$this_dir/commons-lang3-3.12.0.jar:\$this_dir
 
-for fuzzer in $(find $SRC -name 'Fuzz*.java')
+for fuzzer in $(ls $SRC/Fuzz*.java)
 do
   fuzzer_basename=$(basename -s .java $fuzzer)
   $JAVA_HOME/bin/javac -cp $BUILD_CLASSPATH $fuzzer
@@ -158,6 +166,19 @@ cd /fuzz-introspector/frontends/java
 ./run.sh --jarfile $OUT/*.jar: --entryclass Fuzz --src $SRC/proj --autofuzz
 cp ./fuzzerLogFile-Fuzz.data $OUT/
 cp ./fuzzerLogFile-Fuzz.data.yaml $OUT/
+"""
+
+BUILD_JAVA_TEST = """
+mkdir $SRC/jar_temp
+cd $SRC/jar_temp
+for JARFILE in `ls $SRC/*.jar`
+do
+  jar -xf $JARFILE
+done
+cd $SRC
+wget https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar
+BUILD_CLASSPATH=$JAZZER_API_PATH:$SRC/jar_temp:$SRC/commons-lang3-3.12.0.jar
+$JAVA_HOME/bin/javac -cp $BUILD_CLASSPATH FuzzTest.java
 """
 
 YAML_JAVA = """homepage: https://google.com
