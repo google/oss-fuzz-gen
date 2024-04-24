@@ -80,6 +80,9 @@ while true; do
   gsutil -q -m -h "Content-Type:text/html" \
          -h "Cache-Control:public, max-age=3600" \
          cp -r . "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
+  gsutil -q -m -h "Content-Type:application/json" \
+         -h "Cache-Control:public, max-age=3600" \
+         cp -r "./**/*.json" "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
 
   cd ..
 
