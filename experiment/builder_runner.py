@@ -50,6 +50,7 @@ CRASH_EXCLUSIONS = re.compile(r'.*(slow-unit-|timeout-|leak-|oom-).*')
 CRASH_STACK_WITH_SOURCE_INFO = re.compile(r'in.*:\d+:\d+$')
 
 LIBFUZZER_LOG_STACK_FRAME_LLVM = '/src/llvm-project/compiler-rt'
+LIBFUZZER_LOG_STACK_FRAME_LLVM2 = '/work/llvm-stage2/projects/compiler-rt'
 LIBFUZZER_LOG_STACK_FRAME_CPP = '/usr/local/bin/../include/c++'
 
 EARLY_FUZZING_ROUND_THRESHOLD = 3
@@ -198,6 +199,7 @@ class BuilderRunner:
   def _stack_func_is_of_testing_project(self, stack_frame: str) -> bool:
     return (bool(CRASH_STACK_WITH_SOURCE_INFO.match(stack_frame)) and
             LIBFUZZER_LOG_STACK_FRAME_LLVM not in stack_frame and
+            LIBFUZZER_LOG_STACK_FRAME_LLVM2 not in stack_frame and
             LIBFUZZER_LOG_STACK_FRAME_CPP not in stack_frame)
 
   def _parse_libfuzzer_logs(
@@ -229,6 +231,7 @@ class BuilderRunner:
 
       m = LIBFUZZER_CRASH_TYPE_REGEX.match(line)
       if m and not CRASH_EXCLUSIONS.match(line):
+        # TODO(@happy-qop): Handling oom, slow cases in semantic checks & fix.
         crashes = True
         continue
 
@@ -265,7 +268,7 @@ class BuilderRunner:
       # Another error fuzz target case: no cov increase.
       if initcov is not None and donecov is not None:
         if initcov == donecov:
-          return cov_pcs, total_pcs, True, SemanticCheckResult(
+          return cov_pcs, total_pcs, False, SemanticCheckResult(
               SemanticCheckResult.NO_COV_INCREASE)
 
     return cov_pcs, total_pcs, crashes, SemanticCheckResult(
