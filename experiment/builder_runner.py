@@ -252,17 +252,26 @@ class BuilderRunner:
       command.extend(['-e', 'JCC_CPPIFY_PROJECT_HEADERS=1'])
     command.append(f'gcr.io/oss-fuzz/{generated_project}')
 
+    pre_build_command = []
+    post_build_command = []
+
+    # Cleanup mounted dirs.
+    pre_build_command.extend(
+        ['rm', '-rf', '/out/*', '/work/*', '/workspace/*', '&&'])
+
     if self.benchmark.commit:
       # TODO(metzman): Try to use build_specified_commit here.
-      build_command = []
       for repo, commit in self.benchmark.commit.items():
-        build_command += [
+        pre_build_command.extend([
             'git', '-C', repo, 'fetch', '--unshallow', '-f', '||', 'true', '&&'
-        ]
-        build_command += ['git', '-C', repo, 'checkout', commit, '-f', '&&']
-      build_command.extend(['compile', '&&', 'chmod', '777', '-R', '/out/*'])
-      build_bash_command = ['/bin/bash', '-c', ' '.join(build_command)]
-      command.extend(build_bash_command)
+        ])
+        pre_build_command.extend(
+            ['git', '-C', repo, 'checkout', commit, '-f', '&&'])
+      post_build_command.extend(['&&', 'chmod', '777', '-R', '/out/*'])
+
+    build_command = pre_build_command + ['compile'] + post_build_command
+    build_bash_command = ['/bin/bash', '-c', ' '.join(build_command)]
+    command.extend(build_bash_command)
     with open(log_path, 'w+') as log_file:
       try:
         sp.run(command,
