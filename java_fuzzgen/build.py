@@ -345,9 +345,8 @@ def main():
   print("OSS-Fuzz dir: %s" % (oss_fuzz_checkout.OSS_FUZZ_DIR))
 
   if args.summary_file:
-    with open(args.summary_file, "a") as f:
-      f.write(r"""Project,Project Build Success?,
- \# success fuzzers, Max Cov, Min Cov\n""")
+    with open(args.summary_file, "w") as f:
+      f.write(r"""Project,Project Build Success?, \# success fuzzers, Max Cov, Min Cov\\n""")
 
   for repo in repos:
     if not repo:

@@ -207,9 +207,9 @@ def get_method_prompt(github_repo: str, func_name: str) -> str:
   with open(
       os.path.join(os.path.dirname(os.path.realpath(__file__)), "prompts",
                    "prompt_methods"), "r") as file:
-    return file.read() % (get_project_name(github_repo), github_repo, func_name)
+    return _get_base_prompt(github_repo) % (file.read() % (func_name))
 
-  return None
+  return ""
 
 
 def get_constructor_prompt(github_repo: str, class_name: str) -> str:
@@ -217,7 +217,15 @@ def get_constructor_prompt(github_repo: str, class_name: str) -> str:
   with open(
       os.path.join(os.path.dirname(os.path.realpath(__file__)), "prompts",
                    "prompt_constructors"), "r") as file:
-    return file.read() % (get_project_name(github_repo), github_repo,
-                          class_name)
+    return _get_base_prompt(github_repo) % (file.read() % (class_name))
 
-  return None
+  return ""
+
+def _get_base_prompt(github_repo: str) -> str:
+  """Retrieve abd return the base prompt template"""
+  with open(
+      os.path.join(os.path.dirname(os.path.realpath(__file__)), "prompts",
+                   "prompt_base"), "r") as file:
+    return file.read() % (get_project_name(github_repo), github_repo, "%s")
+
+  return ""
