@@ -15,6 +15,7 @@
 """Auto OSS-Fuzz generator from inside OSS-Fuzz containers."""
 
 import argparse
+import json
 import os
 import shutil
 import subprocess
@@ -26,6 +27,7 @@ import openai
 import yaml
 
 MAX_FUZZ_PER_HEURISTIC = 15
+INTROSPECTOR_OSS_FUZZ_DIR = '/src/inspector'
 
 client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
@@ -101,21 +103,25 @@ class PureCFileCompiler(AutoBuildBase):
     """Matches files needed for the build heuristic."""
     for fi in file_list:
       for key, val in self.matches_found.items():
-        if fi.endswith(key):
-          val.append(fi)
+        if fi.endswith(key) and "test" not in fi:
+          print("Adding %s" % (fi))
+          # Remove the first folder as that is "this" dir.
+          path_to_add = '/'.join(fi.split('/')[1:])
+          val.append(path_to_add)
 
   def steps_to_build(self) -> Iterator[AutoBuildContainer]:
     build_container = AutoBuildContainer()
     build_container.list_of_commands = [
-        """for file in *.c; do
+        """for file in "%s"; do
   $CC $CFLAGS -c ${file}
 done
 
 rm -f ./test*.o
 llvm-ar rcs libfuzz.a *.o
-"""
+""" % (" ".join(self.matches_found['.c']))
     ]
     build_container.heuristic_id = self.name + "1"
+    print(build_container.list_of_commands[0])
     yield build_container
 
   @property
@@ -434,12 +440,12 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
   all_files = get_all_files_in_path(abspath_of_target)
   all_checks = [
       PureCFileCompiler(),
-      PureCFileCompilerFind(),
-      PureMakefileScanner(),
-      AutogenScanner(),
-      AutoRefConfScanner(),
-      CMakeScanner(),
-      RawMake(),
+      #PureCFileCompilerFind(),
+      #PureMakefileScanner(),
+      #AutogenScanner(),
+      #AutoRefConfScanner(),
+      #CMakeScanner(),
+      #RawMake(),
   ]
 
   for scanner in all_checks:
@@ -486,7 +492,7 @@ def get_source_from_cache(heuristic_name, target_func):
   if len(funcs_in_cache) == 0:
     return None
   for func, target_source in funcs_in_cache:
-    if func['demangled-name'] == target_func['demangled-name']:
+    if func['Func name'] == target_func['Func name']:
       return target_source
   return None
 
@@ -504,6 +510,7 @@ class FuzzHeuristicGeneratorBase:
     self.test_dir = test_dir
     self.all_header_files = []
     self.all_functions_in_project = []
+    self.introspector_report = {}
 
   @abstractmethod
   def get_fuzzer_intrinsics(self, func) -> Dict[str, Any]:
@@ -556,23 +563,25 @@ class FuzzHeuristicGeneratorBase:
 
   def get_all_functions_sorted_by_cyclomatic_complexity(self) -> List[Any]:
     """Get functions from Fuzz Introspector sorted by cyclomatic complexity."""
-    all_funcs = sorted(self.all_functions_in_project,
-                       key=lambda x: x['CyclomaticComplexity'],
-                       reverse=True)
+
+    all_funcs = sorted(
+        self.introspector_report['MergedProjectProfile']['all-functions'],
+        key=lambda x: x['Accumulated cyclomatic complexity'],
+        reverse=True)
 
     #for tdi in range(min(20, len(first_refined_functions_in_project))):
     uniqes = set()
     #idx = 0
     uniq_targets = []
     for func in all_funcs:
-      if func['demangled-name'] in uniqes:
+      if func['Func name'] in uniqes:
         continue
-      if func['demangled-name'] == 'main':
+      if func['Func name'] == 'main':
         continue
-      uniqes.add(func['demangled-name'])
+      uniqes.add(func['Func name'])
       uniq_targets.append(func)
-      print("Target: %s" % (func['demangled-name']))
-      print(" - Cyclomatic: %d" % (func['CyclomaticComplexity']))
+      print("Target: %s" % (func['Func name']))
+      print(" - Cyclomatic: %d" % (func['Accumulated cyclomatic complexity']))
 
     return uniq_targets
 
@@ -580,9 +589,9 @@ class FuzzHeuristicGeneratorBase:
 class FuzzerGenHeuristic4(FuzzHeuristicGeneratorBase):
   """Simple LLM fuzz heuristic."""
 
-  def __init__(self, all_functions_in_project, all_header_files, test_dir):
+  def __init__(self, introspector_report, all_header_files, test_dir):
     super().__init__(test_dir)
-    self.all_functions_in_project = all_functions_in_project
+    self.introspector_report = introspector_report
     self.all_header_files = all_header_files
     self.name = 'FuzzerGenHeuristic4'
     self.github_url = ""
@@ -594,6 +603,12 @@ class FuzzerGenHeuristic4(FuzzHeuristicGeneratorBase):
   def get_fuzzer_intrinsics(self, func) -> Dict[str, Any]:
     (headers_to_include, _,
      build_command_includes) = self.get_header_intrinsics()
+
+    type_constraints = "the types of types function are:\n"
+    for idx, arg in enumerate(func['debug_function_info']['args']):
+      type_constraints += "- Argument %d is of type \"%s\"\n" % (idx + 1, arg)
+    type_constraints += ("You must make sure the arguments passed to the " +
+                         "function matches the types of the function")
 
     print("Sample targets:")
     prompt = """Hi, please write a fuzz harness for me.
@@ -610,18 +625,27 @@ Make sure the ensure strings passed to the target are null-terminated.
 
 There is one rule that your harness must satisfy: all of the header files in this library is %s. Make sure to not include any header files not in this list.
 
-Finally, the most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code as simple as possible in order to secure it can be build.
-""" % (self.github_url, func['demangled-name'], str(headers_to_include))
+Finally, %s
+
+The most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code as simple as possible in order to secure it can be build.
+""" % (self.github_url, func['Func name'], str(headers_to_include),
+       type_constraints)
+
+    print("-" * 45)
+    print(prompt)
+    print("-" * 45)
 
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
       fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
-      fuzzer_source = FUZZER_PRE_HEADERS + fuzzer_source
+      comment_on_target = f'// Target: {func["Func name"]}\n'
+      fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
+
       add_to_source_cache(self.name, func, fuzzer_source)
     else:
       print(f"Using cached fuzzer source\n{fuzzer_source}")
 
-    fuzzer_target_call = func['demangled-name']
+    fuzzer_target_call = func['Func name']
     fuzzer_intrinsics = {
         'full-source-code': fuzzer_source,
         'build-command-includes': build_command_includes,
@@ -634,9 +658,9 @@ Finally, the most important part of the harness is that it will build and compil
 class FuzzerGenHeuristic1(FuzzHeuristicGeneratorBase):
   """Simple LLM fuzz heuristic."""
 
-  def __init__(self, all_functions_in_project, all_header_files, test_dir):
+  def __init__(self, introspector_report, all_header_files, test_dir):
     super().__init__(test_dir)
-    self.all_functions_in_project = all_functions_in_project
+    self.introspector_report = introspector_report
     self.all_header_files = all_header_files
     self.name = 'FuzzerGenHeuristic1'
     self.github_url = ""
@@ -662,7 +686,7 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 Make sure the ensure strings passed to the target are null-terminated.
 
 There is one rule that your harness must satisfy: all of the header files in this library is %s. Make sure to not include any header files not in this list.
-""" % (self.github_url, func['demangled-name'], str(headers_to_include))
+""" % (self.github_url, func['Func name'], str(headers_to_include))
 
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
@@ -672,7 +696,7 @@ There is one rule that your harness must satisfy: all of the header files in thi
     else:
       print(f"Using cached fuzzer source\n{fuzzer_source}")
 
-    fuzzer_target_call = func['demangled-name']
+    fuzzer_target_call = func['Func name']
     fuzzer_intrinsics = {
         'full-source-code': fuzzer_source,
         'build-command-includes': build_command_includes,
@@ -685,9 +709,9 @@ There is one rule that your harness must satisfy: all of the header files in thi
 class FuzzerGenHeuristic2(FuzzHeuristicGeneratorBase):
   """Simple LLM fuzz heuristic."""
 
-  def __init__(self, all_functions_in_project, all_header_files, test_dir):
+  def __init__(self, introspector_report, all_header_files, test_dir):
     super().__init__(test_dir)
-    self.all_functions_in_project = all_functions_in_project
+    self.introspector_report = introspector_report
     self.all_header_files = all_header_files
     self.name = 'FuzzerGenHeuristic2'
     self.github_url = ""
@@ -713,7 +737,7 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 Make sure the ensure strings passed to the target are null-terminated.
 
 There are two rules that your harness must satisfy: First, all of the header files in this library is %s. Make sure to not include any header files not in this list. Second, you must wrap the harness such that it catches all exceptions (use "...") thrown by the target code.
-""" % (self.github_url, func['demangled-name'], str(headers_to_include))
+""" % (self.github_url, func['Func name'], str(headers_to_include))
 
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
@@ -723,7 +747,7 @@ There are two rules that your harness must satisfy: First, all of the header fil
     else:
       print(f"Using cached fuzzer source\n{fuzzer_source}")
 
-    fuzzer_target_call = func['demangled-name']
+    fuzzer_target_call = func['Func name']
     fuzzer_intrinsics = {
         'full-source-code': fuzzer_source,
         'build-command-includes': build_command_includes,
@@ -736,9 +760,9 @@ There are two rules that your harness must satisfy: First, all of the header fil
 class FuzzerGenHeuristic3(FuzzHeuristicGeneratorBase):
   """Simple LLM fuzz heuristic."""
 
-  def __init__(self, all_functions_in_project, all_header_files, test_dir):
+  def __init__(self, introspector_report, all_header_files, test_dir):
     super().__init__(test_dir)
-    self.all_functions_in_project = all_functions_in_project
+    self.introspector_report = introspector_report
     self.all_header_files = all_header_files
     self.name = 'FuzzerGenHeuristic3'
     self.github_url = ""
@@ -765,7 +789,7 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 Make sure the ensure strings passed to the target are null-terminated.
 
 There are two rules that your harness must satisfy: First, all of the header files in this library is %s. Make sure to not include any header files not in this list and only include the ones relevant for the target function. Second, if the target is CPP then you must wrap the harness such that it catches all exceptions (use "...") thrown by the target code.
-""" % (self.github_url, func['demangled-name'], str(headers_to_include))
+""" % (self.github_url, func['Func name'], str(headers_to_include))
 
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
@@ -775,7 +799,7 @@ There are two rules that your harness must satisfy: First, all of the header fil
     else:
       print(f"Using cached fuzzer source\n{fuzzer_source}")
 
-    fuzzer_target_call = func['demangled-name']
+    fuzzer_target_call = func['Func name']
     fuzzer_intrinsics = {
         'full-source-code': fuzzer_source,
         'build-command-includes': build_command_includes,
@@ -818,7 +842,7 @@ def refine_and_filter_introspector_functions(all_functions_in_project):
     if not to_cont:
       continue
 
-    func['demangled-name'] = demangled
+    func['Func name'] = demangled
     first_refined_functions_in_project.append(func)
   return first_refined_functions_in_project
 
@@ -1022,24 +1046,6 @@ def run_introspector_on_dir(build_results, test_dir) -> Tuple[bool, List[str]]:
   return build_returned_error, fuzzer_build_cmd
 
 
-def extract_functions_via_introspector(target_dir: str):
-  """Reads all the Fuzz Introspector LLVM frontend analysis files form a dir
-  and returns them as a list."""
-  # Get all introspector files in target directory.
-  introspection_files_found = get_all_introspector_files(target_dir)
-
-  # Parse introspector files and extract functions.
-  all_functions_in_project = get_all_functions_in_project(
-      introspection_files_found)
-  print("Found a total of %d functions" % (len(all_functions_in_project)))
-
-  # Get all functions from the generated yaml files and demangle
-  # the names. Also discard functions from paths that do not
-  # look to be part of the project, e.g. from well-known testing
-  # libraries and system directories.
-  return refine_and_filter_introspector_functions(all_functions_in_project)
-
-
 def log_fuzzer_source(full_fuzzer_source: str):
   print(">>>>")
   print(full_fuzzer_source)
@@ -1208,6 +1214,11 @@ def append_to_report(outdir, msg):
     f.write(msg + '\n')
 
 
+def load_introspector_report():
+  with open(os.path.join(INTROSPECTOR_OSS_FUZZ_DIR, 'summary.json'), 'r') as f:
+    return json.loads(f.read())
+
+
 def auto_generate(github_url,
                   disable_testing_build_scripts=False,
                   disable_fuzzgen=False,
@@ -1289,19 +1300,29 @@ def auto_generate(github_url,
 
     # Run Fuzz Introspector on the target
     print('Running introspector build')
+    if os.path.isdir(INTROSPECTOR_OSS_FUZZ_DIR):
+      shutil.rmtree(INTROSPECTOR_OSS_FUZZ_DIR)
+
     _, fuzzer_build_cmd = run_introspector_on_dir(build_results, test_dir)
 
+    if os.path.isdir(INTROSPECTOR_OSS_FUZZ_DIR):
+      print("Introspector build success")
+    else:
+      print("Failed to get introspector results")
+
     # Identify the relevant functions
-    functions_from_introspector = extract_functions_via_introspector(test_dir)
-    print(f'Found a total of {len(functions_from_introspector)} functions.')
+    introspector_report = load_introspector_report()
+
+    #sys.exit(0)
+    func_count = len(
+        introspector_report["MergedProjectProfile"]["all-functions"])
+    print(f'Found a total of {func_count} functions.')
     append_to_report(outdir, 'Introspector analysis done')
 
     print("Test dir: %s" % (str(test_dir)))
     all_header_files = get_all_header_files(get_all_files_in_path(test_dir))
 
-    append_to_report(
-        outdir,
-        f'Total functions in {test_dir} : {len(functions_from_introspector)}')
+    append_to_report(outdir, f'Total functions in {test_dir} : {func_count}')
 
     if disable_fuzzgen:
       continue
@@ -1322,7 +1343,7 @@ def auto_generate(github_url,
     for heuristic_class in heuristics_to_apply:
 
       # Initialize heuristic with the fuzz introspector data
-      heuristic = heuristic_class(functions_from_introspector, all_header_files,
+      heuristic = heuristic_class(introspector_report, all_header_files,
                                   test_dir)
       print(f'Applying {heuristic.name}')
 
