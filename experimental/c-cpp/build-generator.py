@@ -103,7 +103,7 @@ class PureCFileCompiler(AutoBuildBase):
     """Matches files needed for the build heuristic."""
     for fi in file_list:
       for key, val in self.matches_found.items():
-        if fi.endswith(key) and "test" not in fi:
+        if fi.endswith(key) and "test" not in fi and "example" not in fi:
           print("Adding %s" % (fi))
           # Remove the first folder as that is "this" dir.
           path_to_add = '/'.join(fi.split('/')[1:])
@@ -175,6 +175,28 @@ class PureMakefileScanner(AutoBuildBase):
   def steps_to_build(self) -> Iterator[AutoBuildContainer]:
     build_container = AutoBuildContainer()
     build_container.list_of_commands = ['make']
+    build_container.heuristic_id = self.name + "1"
+    yield build_container
+
+  @property
+  def name(self):
+    return "make"
+
+
+class PureMakefileScannerWithPThread(AutoBuildBase):
+  """Auto builder for pure Makefile projects, only relying on "make"."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        'Makefile': [],
+    }
+
+  def steps_to_build(self) -> Iterator[AutoBuildContainer]:
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = [
+        'export CXXFLAGS="${CXXFLAGS} -lpthread"', 'make'
+    ]
     build_container.heuristic_id = self.name + "1"
     yield build_container
 
@@ -466,6 +488,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
       PureCFileCompiler(),
       PureCFileCompilerFind(),
       PureMakefileScanner(),
+      PureMakefileScannerWithPThread(),
       AutogenScanner(),
       AutoRefConfScanner(),
       CMakeScanner(),
@@ -1239,7 +1262,8 @@ def append_to_report(outdir, msg):
 
 
 def load_introspector_report():
-  if not os.path.isfile(os.path.join(INTROSPECTOR_OSS_FUZZ_DIR, 'summary.json')):
+  if not os.path.isfile(os.path.join(INTROSPECTOR_OSS_FUZZ_DIR,
+                                     'summary.json')):
     return None
   with open(os.path.join(INTROSPECTOR_OSS_FUZZ_DIR, 'summary.json'), 'r') as f:
     return json.loads(f.read())
