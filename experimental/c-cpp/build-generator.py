@@ -256,6 +256,29 @@ class AutogenScanner(AutoBuildBase):
     return "autogen"
 
 
+class AutogenConfScanner(AutoBuildBase):
+  """Auto builder for projects relying on "autoconf; autoheader."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        'configure.ac': [],
+        'Makefile': [],
+    }
+
+  def steps_to_build(self):
+    cmds_to_exec_from_root = ["./configure", "make"]
+    #yield cmds_to_exec_from_root
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = cmds_to_exec_from_root
+    build_container.heuristic_id = self.name + "1"
+    yield build_container
+
+  @property
+  def name(self):
+    return "autogen-ConfMake"
+
+
 class CMakeScanner(AutoBuildBase):
   """Auto builder for CMake projects."""
 
@@ -439,13 +462,14 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
   build steps that are deemed matching."""
   all_files = get_all_files_in_path(abspath_of_target)
   all_checks = [
+      AutogenConfScanner(),
       PureCFileCompiler(),
-      #PureCFileCompilerFind(),
-      #PureMakefileScanner(),
-      #AutogenScanner(),
-      #AutoRefConfScanner(),
-      #CMakeScanner(),
-      #RawMake(),
+      PureCFileCompilerFind(),
+      PureMakefileScanner(),
+      AutogenScanner(),
+      AutoRefConfScanner(),
+      CMakeScanner(),
+      RawMake(),
   ]
 
   for scanner in all_checks:
@@ -1215,6 +1239,8 @@ def append_to_report(outdir, msg):
 
 
 def load_introspector_report():
+  if not os.path.isfile(os.path.join(INTROSPECTOR_OSS_FUZZ_DIR, 'summary.json')):
+    return None
   with open(os.path.join(INTROSPECTOR_OSS_FUZZ_DIR, 'summary.json'), 'r') as f:
     return json.loads(f.read())
 
@@ -1312,6 +1338,8 @@ def auto_generate(github_url,
 
     # Identify the relevant functions
     introspector_report = load_introspector_report()
+    if introspector_report is None:
+      continue
 
     #sys.exit(0)
     func_count = len(
