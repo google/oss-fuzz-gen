@@ -146,17 +146,28 @@ class BuilderRunner:
         generated_project, benchmark_target_name))
     return build_result, run_result
 
-  def run_target_local(self, generated_project: str, benchmark_target_name: str,
-                       log_path: str):
+  def run_target_local(self,
+                       generated_project: str,
+                       benchmark_target_name: str,
+                       log_path: str,
+                       is_benchmark: bool = True,
+                       end_wait: int = 5):
     """Runs a target in the fixed target directory."""
     # If target name is not overridden, use the basename of the target path
     # in the Dockerfile.
-    print(f'Running {generated_project}')
-    corpus_dir = self.work_dirs.corpus(benchmark_target_name)
-    command = [
-        'python3', 'infra/helper.py', 'run_fuzzer', '--corpus-dir', corpus_dir,
-        generated_project, self.benchmark.target_name, '--'
-    ] + self._libfuzzer_args()
+    if is_benchmark:
+      print(f'Running {generated_project}')
+      corpus_dir = self.work_dirs.corpus(benchmark_target_name)
+      command = [
+          'python3', 'infra/helper.py', 'run_fuzzer', '--corpus-dir',
+          corpus_dir, generated_project, self.benchmark.target_name, '--'
+      ] + self._libfuzzer_args()
+    else:
+      print(f'Running {benchmark_target_name}')
+      command = [
+          'python3', 'infra/helper.py', 'run_fuzzer', generated_project,
+          benchmark_target_name, '--'
+      ] + self._libfuzzer_args()
 
     with open(log_path, 'w') as f:
       proc = sp.Popen(command,
@@ -167,7 +178,7 @@ class BuilderRunner:
 
       # TODO(ochang): Handle the timeout exception.
       try:
-        proc.wait(timeout=self.run_timeout + 5)
+        proc.wait(timeout=self.run_timeout + end_wait)
       except sp.TimeoutExpired:
         print(f'{generated_project} timed out during fuzzing.')
         # Try continuing and parsing the logs even in case of timeout.

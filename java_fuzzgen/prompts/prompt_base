@@ -1,0 +1,73 @@
+Hi, I'm looking for your help to write a Java fuzzing harness for the %s Java project.
+The project is located in a github repository at %s and I would like you to write a harness targeting this module.
+
+Here is a sample template for the possible fuzzer
+```java
+import com.code_intelligence.jazzer.api.FuzzedDataProvider;
+// Other imports
+
+public class Fuzz {
+  public static void fuzzerInitialize() {
+    // Initializing objects for fuzzing
+  }
+
+  public static void fuzzerTearDown() {
+    // Tear down objects after fuzzing
+  }
+
+  public static void fuzzerTestOneInput(FuzzedDataProvider data) {
+    // Use the FuzzedDataProvider object to generate random data for fuzzing
+
+    // Fuzz by invoking the target method with random parameters / objects generated above.
+  }
+}
+```
+
+Here is a general list of requirements:
+1) You should use the Java Jazzer framework from Code Intelligence for writing the fuzzer.
+2) The Jazzer's github repository can be found in https://github.com/CodeIntelligenceTesting/jazzer.
+3) Please ensure the newest version found from the Jazzer's github repository is used.
+4) Please use Fuzz as the Java class name.
+5) Please use the name public static void fuzzerTestOneInput(FuzzedDataProvider) as the signature for the static fuzzing method.
+6) Please use the name fuzzerInitialize for the static method to initialize before fuzzing the target method.
+7) Please use the name fuzzerTearDown for the static method to tear down the settings after the target method is called.
+8) Please add import statements for necessary classes, except for classes in the java.lang package.
+9) Please avoid using the @FuzzTest annotation for specifying the fuzzing method.
+10) Please adds try catch block to catch possible RuntimeException.
+11) Please avoid catching the general Exception, Throwable or Error object. Instead, they should be thrown from the fuzzerTestOneInput method.
+12) If the target method is a static method, please avoid create the object before invocation.
+13) Please create the necessary objects only if the target method is an instance method.
+14) When it is necessary to create an instance of a class, try use the public accessible constructors of that class first. If no public accessible constructors are existed, try to search for
+    public accessible constructors from any classes that extends or implements that needed class. If no public accessible constructors are found from the target classes or all its subclasses,
+    then try to search for static methods in the project that returns an object matching the class of the needed instance and invoke them to get the needed isntance.
+15) Please make sure correct types or arguments are given to the constructors with any methods shown in the table of point 17.
+15) Always try to generate random data for arguments used to create fuzzing objects or used during target method invocation. 
+16) Please ensure the random fuzzing data is provided by the FuzzedDataProvider class and are initialized before the target method is invoked.
+17) Here is a markdown table showing methods should be used for generate random data of some argument types:
+  | Argument types | Methods for generating random data |
+  | int or java.lang.Integer | FuzzedDataProvider::consumeInt() or FuzzedDataProvider::consumeInt(int, int) |
+  | int[] | FuzzedDataProvider::consumeInts(int) |
+  | java.lang.Integer[] | org.apache.commons.lang3.ArrayUtils::toObject(int[]) |
+  | boolean or java.lang.Boolean | FuzzedDataProvider::consumeBoolean() |
+  | boolean[] | FuzzedDataProvider::consumeBooleans(int) |
+  | java.lang.Boolean[] | org.apache.commons.lang3.ArrayUtils::toObject(boolean[]) |
+  | byte or java.lang.Byte | FuzzedDataProvider::consumeByte() or FuzzedDataProvider::consumeByte(byte,byte) |
+  | byte[] | FuzzedDataProvider::consumeBytes(int) or FuzzedDataProvider::consumeRemainingAsBytes() |
+  | java.lang.Byte[] | org.apache.commons.lang3.ArrayUtils::toObject(byte[]) |
+  | short or java.lang.Short | FuzzedDataProvider::consumeShort() or FuzzedDataProvider::consumeShort(short, short) |
+  | short[] | FuzzedDataProvider::consumeShorts(int) |
+  | java.lang.Short[] | org.apache.commons.lang3.ArrayUtils::toObject(short[]) |
+  | long or java.lang.Long | FuzzedDataProvider::consumeLong() or FuzzedDataProvider::consumeLong(long, long) |
+  | long[] | FuzzedDataProvider::consumeLongs(int) |
+  | java.lang.Long[] | org.apache.commons.lang3.ArrayUtils::toObject(long[]) |
+  | float or java.lang.Float | FuzzedDataProvider::consumeFloat() or FuzzedDataProvider::consumeRegularFloat() or FuzzedDataProvider::consumeRegularFloat(float, float) or FuzzedDataProvider::consumeProbabilityFloat() |
+  | double or java.lang.Double | FuzzedDataProvider::consumeDouble() or FuzzedDataProvider::consumeRegularDouble() or FuzzedDataProvider::consumeRegularDouble(double, double) or FuzzedDataProvider::consumeProbabilityDouble() |
+  | char or java.lang.Character | FuzzedDataProvider::consumeChar() or FuzzedDataProvider::consumeCharNoSurrogates() or FuzzedDataProvider::consumeChar(char, char) |
+  | java.lang.String or java.lang.CharSequence | FuzzedDataProvider::consumeString(int) or FuzzedDataProvider::consumeAsciiString(int) or FuzzedDataProvider::consumeRemainingAsString() or FuzzedDataProvider::consumeRemainingAsAsciiString() |
+18) If the arugment types are found in the first column of the above table, please use one of the methods in the same row for creating random data of that argument type.
+19) Try using static methods or constructors to create other types of arguments required for necessary object creations or invoking the target method.
+
+Here is an additional list of requirements:
+%s
+
+Could you please show me the source code for this harness and wrap the source code with the <java_code> tag?
