@@ -29,6 +29,8 @@ class SemanticCheckResult:
   FP_OOM = 'FP_OOM'
   FP_TIMEOUT = 'FP_TIMEOUT'
   NO_COV_INCREASE = 'NO_COV_INCREASE'
+  NULL_DEREF = 'NULL_DEREF'
+  SIGNAL = 'SIGNAL'
 
   # Regex for extract crash symptoms.
   # Matches over 18 types of ASAN errors symptoms
@@ -39,17 +41,24 @@ class SemanticCheckResult:
   SYMPTOM_ASAN = re.compile(r'ERROR: AddressSanitizer: (.*)\n')
   # Matches 'ERROR: libFuzzer: timeout after xxx'
   SYMPTOM_LIBFUZZER = re.compile(r'ERROR: libFuzzer: (.*)\n')
+  # E.g., matches 'SCARINESS: 10 (null-deref)'
+  SYMPTOM_SCARINESS = re.compile(r'SCARINESS:\s*\d+\s*\((.*)\)\n')
 
   NO_COV_INCREASE_MSG_PREFIX = 'No code coverage increasement'
 
   @classmethod
   def extract_symptom(cls, fuzzlog: str) -> str:
     """Extracts crash symptom from fuzzing logs."""
-    match = cls.SYMPTOM_ASAN.match(fuzzlog)
+    # Need to catch this before ASAN.
+    match = cls.SYMPTOM_SCARINESS.search(fuzzlog)
+    if match:
+      return match.group(1)
+
+    match = cls.SYMPTOM_ASAN.search(fuzzlog)
     if match:
       return f'ASAN-{match.group(0)}'
 
-    match = cls.SYMPTOM_LIBFUZZER.match(fuzzlog)
+    match = cls.SYMPTOM_LIBFUZZER.search(fuzzlog)
     if match:
       return f'libFuzzer-{match.group(0)}'
 
@@ -85,8 +94,8 @@ class SemanticCheckResult:
       return ('Memory leak detected, indicating some memory was not freed '
               'by the fuzz target.')
     if self.type == self.FP_OOM:
-      return ('Out-of-memory error detected, suggesting memory leak in the'
-              ' fuzz target.')
+      return ('Out-of-memory error detected, suggesting the fuzz target '
+              'incorrectly allocates too much memory or has a memory leak.')
     if self.type == self.FP_TIMEOUT:
       return ('Fuzz target timed out at runtime, indicating its usage for '
               'the function under test is incorrect or unrobust.')
@@ -94,6 +103,13 @@ class SemanticCheckResult:
       # TODO(dongge): Append the implementation of the function under test.
       return (self.NO_COV_INCREASE_MSG_PREFIX + ', indicating the fuzz target'
               ' ineffectively invokes the function under test.')
+    if self.type == self.NULL_DEREF:
+      return ('Accessing a null pointer, indicating improper parameter '
+              'initialization or incorrect function usages in the fuzz target.')
+    if self.type == self.SIGNAL:
+      return ('Abort with signal, indicating the fuzz target has violated some '
+              'assertion in the project, likely due to improper parameter '
+              'initialization or incorrect function usages.')
 
     return ''
 
