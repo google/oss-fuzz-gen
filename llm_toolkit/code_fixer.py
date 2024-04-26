@@ -254,9 +254,10 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
     error_lines_range = temp_range
     error_lines_range[1] = len(log_lines)
 
-  errors.extend(
-      line.rsplit()
-      for line in log_lines[error_lines_range[0]:error_lines_range[1]])
+  for line in log_lines[error_lines_range[0]:error_lines_range[1]]:
+    # Skip DWARF error from GNU ld.
+    if 'DWARF error: invalid or unhandled FORM value: ' not in line:
+      errors.append(line.rstrip())
   return group_error_messages(errors)
 
 
