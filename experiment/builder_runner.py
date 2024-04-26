@@ -20,6 +20,7 @@ import logging
 import os
 import random
 import re
+import shutil
 import subprocess as sp
 import time
 import uuid
@@ -286,6 +287,14 @@ class BuilderRunner:
     build_result.succeeded = self.build_target_local(
         generated_project,
         self.work_dirs.build_logs_target(benchmark_target_name, iteration))
+    # Copy err.log into work dir.
+    try:
+      shutil.copyfile(
+          os.path.join(get_build_artifact_dir(generated_project, "workspace"),
+                       'err.log'),
+          self.work_dirs.error_logs_target(benchmark_target_name, iteration))
+    except FileNotFoundError as e:
+      logging.error('Cannot get err.log for %s: %s', generated_project, e)
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(
           self.work_dirs.build_logs_target(benchmark_target_name, iteration))
@@ -363,7 +372,9 @@ class BuilderRunner:
         print(f'Failed to build image for {generated_project}')
         return False
 
-    outdir = get_outdir(generated_project)
+    outdir = get_build_artifact_dir(generated_project, 'out')
+    workdir = get_build_artifact_dir(generated_project, 'work')
+    workspacedir = get_build_artifact_dir(generated_project, 'workspace')
     command = [
         'docker',
         'run',
@@ -390,24 +401,40 @@ class BuilderRunner:
         '-v',
         f'{outdir}:/out',
         '-v',
-        f'{get_workdir(generated_project)}:/work',
+        f'{workdir}:/work',
+        # Allows jcc to write err.log.
+        # From https://github.com/google/oss-fuzz/blob/090e0d6/infra/base-images/base-builder/jcc/jcc.go#L360
+        '-v',
+        f'{workspacedir}:/workspace',
     ]
-    os.makedirs(outdir, exist_ok=True)  # Avoid permissions errors.
+    # Avoid permissions errors.
+    os.makedirs(outdir, exist_ok=True)
+    os.makedirs(workdir, exist_ok=True)
+    os.makedirs(workspacedir, exist_ok=True)
     if self.benchmark.cppify_headers:
       command.extend(['-e', 'JCC_CPPIFY_PROJECT_HEADERS=1'])
     command.append(f'gcr.io/oss-fuzz/{generated_project}')
 
+    pre_build_command = []
+    post_build_command = []
+
+    # Cleanup mounted dirs.
+    pre_build_command.extend(
+        ['rm', '-rf', '/out/*', '/work/*', '/workspace/*', '&&'])
+
     if self.benchmark.commit:
       # TODO(metzman): Try to use build_specified_commit here.
-      build_command = []
       for repo, commit in self.benchmark.commit.items():
-        build_command += [
+        pre_build_command.extend([
             'git', '-C', repo, 'fetch', '--unshallow', '-f', '||', 'true', '&&'
-        ]
-        build_command += ['git', '-C', repo, 'checkout', commit, '-f', '&&']
-      build_command.extend(['compile', '&&', 'chmod', '777', '-R', '/out/*'])
-      build_bash_command = ['/bin/bash', '-c', ' '.join(build_command)]
-      command.extend(build_bash_command)
+        ])
+        pre_build_command.extend(
+            ['git', '-C', repo, 'checkout', commit, '-f', '&&'])
+      post_build_command.extend(['&&', 'chmod', '777', '-R', '/out/*'])
+
+    build_command = pre_build_command + ['compile'] + post_build_command
+    build_bash_command = ['/bin/bash', '-c', ' '.join(build_command)]
+    command.extend(build_bash_command)
     with open(log_path, 'w+') as log_file:
       try:
         sp.run(command,
@@ -691,11 +718,9 @@ def find_generated_fuzz_target(directory):
   return None
 
 
-def get_outdir(generated_project):
-  return os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'out',
-                      generated_project)
-
-
-def get_workdir(generated_project):
-  return os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'work',
+def get_build_artifact_dir(generated_project: str, build_artifact: str) -> str:
+  """
+  Returns the |build_artifact| absolute directory path for |generated_project|.
+  """
+  return os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', build_artifact,
                       generated_project)
