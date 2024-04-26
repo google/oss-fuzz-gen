@@ -48,6 +48,11 @@ class SemanticCheckResult:
   @classmethod
   def extract_symptom(cls, fuzzlog: str) -> str:
     """Extracts crash symptom from fuzzing logs."""
+    # Need to catch this before ASAN.
+    match = cls.SYMPTOM_SCARINESS.match(fuzzlog)
+    if match:
+      return match.group(1)
+
     match = cls.SYMPTOM_ASAN.match(fuzzlog)
     if match:
       return f'ASAN-{match.group(0)}'
@@ -55,10 +60,6 @@ class SemanticCheckResult:
     match = cls.SYMPTOM_LIBFUZZER.match(fuzzlog)
     if match:
       return f'libFuzzer-{match.group(0)}'
-
-    match = cls.SYMPTOM_SCARINESS.match(fuzzlog)
-    if match:
-      return match.group(1)
 
     return ''
 
