@@ -257,8 +257,7 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
   errors.extend(
       line.rsplit()
       for line in log_lines[error_lines_range[0]:error_lines_range[1]])
-  # TODO(jimchoi): Return grouped error messages with pr#208
-  return errors
+  return group_error_messages(errors)
 
 
 def extract_error_message(log_path: str,

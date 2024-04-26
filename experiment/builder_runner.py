@@ -332,6 +332,19 @@ class BuilderRunner:
     return cov_pcs, total_pcs, crashes, SemanticCheckResult(
         SemanticCheckResult.NO_SEMANTIC_ERR)
 
+  def _compare_extracted_errors(self, build_log_errors: list[str],
+                                err_log_errors: list[str]) -> bool:
+    """
+    Compares errors extracted from build.log and err.log.
+    Returns True if the two are identical.
+    """
+    if len(build_log_errors) != len(err_log_errors):
+      return False
+    for i in range(len(build_log_errors)):
+      if build_log_errors[i] != err_log_errors[i]:
+        return False
+    return True
+
   def build_and_run(self, generated_project: str, target_path: str,
                     iteration: int) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target for fuzzing."""
@@ -358,20 +371,33 @@ class BuilderRunner:
     project_target_name = os.path.basename(self.benchmark.target_path)
     benchmark_log_path = self.work_dirs.build_logs_target(
         benchmark_target_name, iteration)
+    benchmark_errlog_path = self.work_dirs.error_logs_target(
+        benchmark_target_name, iteration)
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
     # Copy err.log into work dir.
     try:
       shutil.copyfile(
           os.path.join(get_build_artifact_dir(generated_project, "workspace"),
-                       'err.log'),
-          self.work_dirs.error_logs_target(benchmark_target_name, iteration))
+                       'err.log'), benchmark_errlog_path)
     except FileNotFoundError as e:
       logging.error('Cannot get err.log for %s: %s', generated_project, e)
     if not build_result.succeeded:
-      errors = code_fixer.extract_error_message(benchmark_log_path,
-                                                project_target_name)
-      build_result.errors = errors
+      build_log_errors = code_fixer.extract_error_message(
+          benchmark_log_path, project_target_name)
+      err_log_errors = code_fixer.get_jcc_errstr(benchmark_errlog_path,
+                                                 project_target_name)
+
+      # Temp: Checker to make sure jcc error does not lose anything than error
+      # extracted from build log, and improve extract_error_message for projects
+      # don't use jcc as well.
+      if not self._compare_extracted_errors(build_log_errors, err_log_errors):
+        logging.warning(
+            'Inconsistent error messages extracted from build.log'
+            ' and err.log for %s, default to use build.log', generated_project)
+      # TODO: Default to use build log for now,
+      #  change it to err log once parsing is stable.
+      build_result.errors = build_log_errors
       return build_result, None
 
     run_result = RunResult()
@@ -757,12 +783,25 @@ class CloudBuilderRunner(BuilderRunner):
                         os.path.realpath(target_path), run_log_name)
 
     if not build_result.succeeded:
-      errors = code_fixer.extract_error_message(
+      build_log_errors = code_fixer.extract_error_message(
           self.work_dirs.build_logs_target(generated_target_name, iteration),
           os.path.basename(self.benchmark.target_path))
-      build_result.errors = errors
+      err_log_errors = code_fixer.get_jcc_errstr(
+          self.work_dirs.build_logs_target(generated_target_name, iteration),
+          os.path.basename(self.benchmark.target_path))
+
+      # Temp: Checker to make sure jcc error does not lose anything than error
+      # extracted from build log, and improve extract_error_message for projects
+      # don't use jcc as well.
+      if not self._compare_extracted_errors(build_log_errors, err_log_errors):
+        logging.warning(
+            'Inconsistent error messages extracted from build.log'
+            ' and err.log for %s, default to use build.log', generated_project)
+      # TODO: Default to use build log for now,
+      #  change it to err log once parsing is stable.
+      build_result.errors = build_log_errors
       logging.info('Cloud evaluation of %s indicates a failure: %s',
-                   os.path.realpath(target_path), errors)
+                   os.path.realpath(target_path), build_log_errors)
       return build_result, None
     logging.info('Cloud evaluation of %s indicates a success.',
                  os.path.realpath(target_path))
