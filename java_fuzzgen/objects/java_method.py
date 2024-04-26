@@ -33,7 +33,7 @@ class JAVAMETHOD:
 
   @property
   def full_qualified_class_name(self) -> str:
-    return self.full_qualified_name.split('[')[-1].split('].')[0]
+    return self.full_qualified_name.split('].')[0].split('[')[1]
 
   @property
   def class_name(self) -> str:

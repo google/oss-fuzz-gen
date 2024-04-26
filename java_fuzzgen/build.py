@@ -21,8 +21,8 @@ from typing import Any, Dict, List, Tuple
 import openai
 import yaml
 
-from experiment import benchmark, builder_runner, evaluator
-from experiment import oss_fuzz_checkout, workdir
+from experiment import (benchmark, builder_runner, evaluator,
+                        oss_fuzz_checkout, workdir)
 from java_fuzzgen import oss_fuzz_templates, utils
 from java_fuzzgen.objects import java_method
 
@@ -112,9 +112,9 @@ def create_harness_from_openai(github_repo: str, func_elem: Dict,
   java_method_object = java_method.JAVAMETHOD(func_elem)
 
   # Skip non-project method and uninterested method
-  if not utils.is_class_in_project(
-      proj_path,
-      java_method_object.class_name) or java_method_object.is_skip(20):
+  if not utils.is_class_in_project(proj_path,
+                                   java_method_object.full_qualified_class_name
+                                  ) or java_method_object.is_skip():
     return ""
 
   # Generate the prompt for this specific method or constructor
@@ -143,6 +143,9 @@ def create_harness_from_openai(github_repo: str, func_elem: Dict,
     source_code = completion.choices[0].message.content.split(
         "<java_code>")[-1].split("</java_code>")[0]
     source_code = source_code.split("```java")[-1].split("```")[0]
+    source_code = source_code.replace(
+        "public class", "//Target method: %s\npublic class" %
+        (java_method_object.full_qualified_name))
     return source_code
 
   return ""
@@ -152,7 +155,6 @@ def generate_fuzzers(github_repo: str, introspector_funcs: List[Any],
                      max_targets: int, autogen_project: str) -> List[str]:
   """Generate java fuzzers on a list of methods from fuzz introspector result"""
   print("Generating fuzzers...")
-
   idx = 0
   fuzzer_sources = []
   proj_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "projects",
@@ -200,7 +202,7 @@ def build_and_evalute_fuzzer_harnesses(
                                    "Fuzz%d" % (idx),
                                    fuzz_logs,
                                    is_benchmark=False,
-                                   end_wait=30)
+                                   end_wait=60)
 
     valuator = evaluator.Evaluator(fuzzer_runner, bench, work_dir)
 
@@ -346,7 +348,8 @@ def main():
 
   if args.summary_file:
     with open(args.summary_file, "w") as f:
-      f.write(r"""Project,Project Build Success?, \# success fuzzers, Max Cov, Min Cov\\n""")
+      f.write(
+          r"""Project,Build Success?,\# success fuzzers, Max Cov,Min Cov\\n""")
 
   for repo in repos:
     if not repo:

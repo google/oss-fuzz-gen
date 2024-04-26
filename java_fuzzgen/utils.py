@@ -137,12 +137,15 @@ def find_project_build_type(project_dir: str, proj_name: str) -> str:
 
 def is_class_in_project(project_dir: str, class_name: str) -> bool:
   """Find if the given class name is in the project"""
-  command = 'grep -ir "class %s\\|interface %s" --include "*.java" %s/proj' % (
-      class_name, class_name, project_dir)
+  class_path = class_name.replace(".", "/")
+  command = 'find %s/proj -wholename */%s.java' % (project_dir, class_path)
+
   try:
-    subprocess.check_output(command, shell=True)
+    if not subprocess.check_output(command, shell=True):
+      return False
   except subprocess.CalledProcessError:
     return False
+
   return True
 
 
@@ -220,6 +223,7 @@ def get_constructor_prompt(github_repo: str, class_name: str) -> str:
     return _get_base_prompt(github_repo) % (file.read() % (class_name))
 
   return ""
+
 
 def _get_base_prompt(github_repo: str) -> str:
   """Retrieve abd return the base prompt template"""

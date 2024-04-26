@@ -41,9 +41,9 @@ Here is a general list of requirements:
     public accessible constructors from any classes that extends or implements that needed class. If no public accessible constructors are found from the target classes or all its subclasses,
     then try to search for static methods in the project that returns an object matching the class of the needed instance and invoke them to get the needed isntance.
 15) Please make sure correct types or arguments are given to the constructors with any methods shown in the table of point 17.
-15) Always try to generate random data for arguments used to create fuzzing objects or used during target method invocation. 
-16) Please ensure the random fuzzing data is provided by the FuzzedDataProvider class and are initialized before the target method is invoked.
-17) Here is a markdown table showing methods should be used for generate random data of some argument types:
+16) Always try to generate random data for arguments used to create fuzzing objects or used during target method invocation.
+17) Please ensure the random fuzzing data is provided by the FuzzedDataProvider class and are initialized before the target method is invoked.
+18) Here is a markdown table showing methods should be used for generate random data of some argument types:
   | Argument types | Methods for generating random data |
   | int or java.lang.Integer | FuzzedDataProvider::consumeInt() or FuzzedDataProvider::consumeInt(int, int) |
   | int[] | FuzzedDataProvider::consumeInts(int) |
@@ -64,10 +64,19 @@ Here is a general list of requirements:
   | double or java.lang.Double | FuzzedDataProvider::consumeDouble() or FuzzedDataProvider::consumeRegularDouble() or FuzzedDataProvider::consumeRegularDouble(double, double) or FuzzedDataProvider::consumeProbabilityDouble() |
   | char or java.lang.Character | FuzzedDataProvider::consumeChar() or FuzzedDataProvider::consumeCharNoSurrogates() or FuzzedDataProvider::consumeChar(char, char) |
   | java.lang.String or java.lang.CharSequence | FuzzedDataProvider::consumeString(int) or FuzzedDataProvider::consumeAsciiString(int) or FuzzedDataProvider::consumeRemainingAsString() or FuzzedDataProvider::consumeRemainingAsAsciiString() |
-18) If the arugment types are found in the first column of the above table, please use one of the methods in the same row for creating random data of that argument type.
-19) Try using static methods or constructors to create other types of arguments required for necessary object creations or invoking the target method.
+19) If the arugment types are found in the first column of the above table, please use one of the methods in the second column of the same row for creating random data of that argument type.
+20) Try using static methods or constructors to create other types of arguments required for necessary object creations or invoking the target method.
+21) Please avoid using any methods or classes in the java.lang.reflect package.
 
 Here is an additional list of requirements:
 %s
+
+Please consult the follow list of references for invoking the target method.
+1) The javadoc of the target method.
+2) The examples and README files in the github repository.
+3) The junit test cases from the github repository.
+4) Try looking for test directories to locate junit test cases
+5) Try looking for doc / docs directories or mark down files for documentations and examples.
+6) Try to locate if any other methods in the projects does call the target method.
 
 Could you please show me the source code for this harness and wrap the source code with the <java_code> tag?

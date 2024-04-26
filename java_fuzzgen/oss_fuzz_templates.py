@@ -134,6 +134,7 @@ do
   $JAVA_HOME/bin/javac -cp $BUILD_CLASSPATH $fuzzer
   cp $SRC/$fuzzer_basename.class $OUT/
   jar cvf $OUT/$fuzzer_basename.jar -C $SRC $fuzzer_basename.class
+  cp $OUT/$fuzzer_basename.jar $OUT/built_jar/
 
   # Create an execution wrapper that executes Jazzer with the correct arguments.
   echo "#!/bin/bash
@@ -163,7 +164,7 @@ done
 
 BUILD_JAVA_INTROSPECTOR = """
 cd /fuzz-introspector/frontends/java
-./run.sh --jarfile $OUT/*.jar: --entryclass Fuzz --src $SRC/proj --autofuzz
+./run.sh --jarfile $OUT/built_jar/*.jar: --entryclass Fuzz --src $SRC/proj --autofuzz
 cp ./fuzzerLogFile-Fuzz.data $OUT/
 cp ./fuzzerLogFile-Fuzz.data.yaml $OUT/
 """
