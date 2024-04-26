@@ -291,7 +291,7 @@ class Evaluator:
           f'Warning: No cov info in run result of {generated_oss_fuzz_project}.'
       )
       return logger.return_result(
-          Result(True, run_result.crashes, 0.0, 0.0, '', '', 
+          Result(True, run_result.crashes, 0.0, 0.0, '', '',
                  not run_result.succeeded, run_result.semantic_check.type))
 
     if not run_result.succeeded:
