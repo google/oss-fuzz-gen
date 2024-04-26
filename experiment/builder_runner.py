@@ -245,7 +245,28 @@ class BuilderRunner:
       symptom = SemanticCheckResult.extract_symptom(fuzzlog)
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
 
-      # FP case 1: fuzz target crashes at init or first few rounds.
+      # FP case 1: Common fuzz target errors.
+      # Null-deref, normally indicating inadequate parameter initialization or
+      # wrong function usage.
+      if symptom == 'null-deref':
+        return cov_pcs, total_pcs, True, SemanticCheckResult(
+            SemanticCheckResult.NULL_DEREF, symptom, crash_stacks)
+
+      # Signal, normally indicating assertion failure due to inadequate
+      # parameter initialization or wrong function usage.
+      if symptom == 'signal':
+        return cov_pcs, total_pcs, True, SemanticCheckResult(
+            SemanticCheckResult.SIGNAL, symptom, crash_stacks)
+
+      # OOM, normally indicating malloc's parameter is too large, e.g., because
+      # of using parameter `size`.
+      # TODO(dongge): Refine this, 1) Merge this with the other oom case found
+      # from reproducer name; 2) Capture the actual number in (malloc(\d+)).
+      if 'out-of-memory' in symptom:
+        return cov_pcs, total_pcs, True, SemanticCheckResult(
+            SemanticCheckResult.FP_OOM, symptom, crash_stacks)
+
+      # FP case 2: fuzz target crashes at init or first few rounds.
       if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
         # No cov line has been identified or only INITED round has been passed.
         # This is very likely the false positive cases.
@@ -253,7 +274,7 @@ class BuilderRunner:
                SemanticCheckResult(SemanticCheckResult.FP_NEAR_INIT_CRASH,\
                              symptom, crash_stacks)
 
-      # FP case 2: 1st func of the 1st thread stack is in fuzz target.
+      # FP case 3: 1st func of the 1st thread stack is in fuzz target.
       if len(crash_stacks) > 0:
         first_stack = crash_stacks[0]
         # Check the first stack frame of the first stack only.
