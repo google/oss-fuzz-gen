@@ -65,12 +65,8 @@ while true; do
   echo "Download results from localhost."
   wget2 --quiet --inet4-only --no-host-directories --http2-request-window 10 --recursive localhost:${WEB_PORT:?}/ 2>&1
 
-  # Also fetch the sorted reports.
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort_build -O sort/build 2>&1
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort_cov -O sort/cov 2>&1
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort_cov_diff -O sort/cov_diff 2>&1
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort_crash -O sort/crash 2>&1
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort_status -O sort/status 2>&1
+  # Also fetch index JSON.
+  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/json -O json 2>&1
 
   # Stop the server.
   kill -9 "$pid_web"

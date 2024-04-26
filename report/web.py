@@ -239,20 +239,6 @@ def match_benchmark(benchmark_id: str) -> Benchmark:
   return Benchmark(benchmark_id, status, result)
 
 
-def sort_benchmarks(benchmarks: List[Benchmark],
-                    sort_by: str = 'cov_diff') -> List[Benchmark]:
-  """Keeps benchmarks with the highest line coverage diff on the top."""
-  sort_dict = {
-      'build': lambda b: b.result.build_success_rate,
-      'crash': lambda b: b.result.crash_rate,
-      'cov': lambda b: b.result.max_coverage,
-      'status': lambda b: b.status,
-      'cov_diff': lambda b: b.result.max_line_coverage_diff,
-  }
-  sorted_benchmarks = sorted(benchmarks, key=sort_dict[sort_by], reverse=True)
-  return sorted_benchmarks
-
-
 def get_samples(benchmark: str) -> list[Sample]:
   """Gets the samples and their status of the given benchmark |bnmk|."""
   samples = []
@@ -394,46 +380,6 @@ def index_json():
                          model=model), 200, {
                              'Content-Type': 'application/json'
                          }
-
-
-@app.route('/sort_build')
-def index_sort_build():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='build'),
-                         model=model)
-
-
-@app.route('/sort_cov')
-def index_sort_cov():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='cov'),
-                         model=model)
-
-
-@app.route('/sort_cov_diff')
-def index_sort():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='cov_diff'),
-                         model=model)
-
-
-@app.route('/sort_crash')
-def index_sort_crash():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='crash'),
-                         model=model)
-
-
-@app.route('/sort_status')
-def index_sort_stauts():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='status'),
-                         model=model)
 
 
 @app.route('/benchmark/<benchmark>/crash.json')
