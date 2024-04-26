@@ -16,7 +16,7 @@
         "target_binary": "{{ sample.target_binary }}",
         "reproducer": "{{ sample.reproducer }}",
         "run_log": "{{ sample.run_log }}",
-        "source_code": {{ get_benchmark_final_target_code(sample.id) }},
+        "source_code": {{ get_benchmark_final_target_code(sample.id) | replace('\\n', '\\\\n')}},
         "model": "{{ model }}"
     }{% if not loop.last %},{% endif %}
 {% endfor %}
