@@ -79,7 +79,7 @@ while true; do
          -h "Cache-Control:public, max-age=3600" \
          cp -r . "$BUCKET_PATH"
   # Find all JSON files and upload them, removing the leading './'
-  find . -name '*.json' | while read -r file; do
+  find . -name '*json' | while read -r file; do
     file_path="${file#./}"  # Remove the leading "./".
     gsutil -q -m -h "Content-Type:application/json" \
         -h "Cache-Control:public, max-age=3600" cp "$file" "$BUCKET_PATH/$file_path"
