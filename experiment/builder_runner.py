@@ -245,11 +245,18 @@ class BuilderRunner:
       symptom = SemanticCheckResult.extract_symptom(fuzzlog)
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
 
-      # FP case 1: Null-deref, normally indicating inadequate parameter
-      # initialization or wrong function usage.
+      # FP case 1: Common fuzz target errors.
+      # Null-deref, normally indicating inadequate parameter initialization or
+      # wrong function usage.
       if symptom == 'null-deref':
         return cov_pcs, total_pcs, True, SemanticCheckResult(
             SemanticCheckResult.NULL_DEREF, symptom, crash_stacks)
+
+      # Signal, normally indicating assertion failure due to inadequate
+      # parameter initialization or wrong function usage.
+      if symptom == 'signal':
+        return cov_pcs, total_pcs, True, SemanticCheckResult(
+            SemanticCheckResult.SIGNAL, symptom, crash_stacks)
 
       # FP case 2: fuzz target crashes at init or first few rounds.
       if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:

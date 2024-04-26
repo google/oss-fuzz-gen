@@ -30,6 +30,7 @@ class SemanticCheckResult:
   FP_TIMEOUT = 'FP_TIMEOUT'
   NO_COV_INCREASE = 'NO_COV_INCREASE'
   NULL_DEREF = 'NULL_DEREF'
+  SIGNAL = 'SIGNAL'
 
   # Regex for extract crash symptoms.
   # Matches over 18 types of ASAN errors symptoms
@@ -103,8 +104,12 @@ class SemanticCheckResult:
       return (self.NO_COV_INCREASE_MSG_PREFIX + ', indicating the fuzz target'
               ' ineffectively invokes the function under test.')
     if self.type == self.NULL_DEREF:
-      return ('Accessing a null pointer, indicating the fuzz target did not '
-              'properly initialize the parameters.')
+      return ('Accessing a null pointer, indicating improper parameter '
+              'initialization or incorrect function usages in the fuzz target.')
+    if self.type == self.SIGNAL:
+      return ('Abort with signal, indicating the fuzz target has violated some '
+              'assertion in the project, likely due to improper parameter '
+              'initialization or incorrect function usages.')
 
     return ''
 
