@@ -258,6 +258,14 @@ class BuilderRunner:
         return cov_pcs, total_pcs, True, SemanticCheckResult(
             SemanticCheckResult.SIGNAL, symptom, crash_stacks)
 
+      # OOM, normally indicating malloc's parameter is too large, e.g., because
+      # of using parameter `size`.
+      # TODO(dongge): Refine this, 1) Merge this with the other oom case found
+      # from reproducer name; 2) Capture the actual number in (malloc(\d+)).
+      if 'out-of-memory' in symptom:
+        return cov_pcs, total_pcs, True, SemanticCheckResult(
+            SemanticCheckResult.FP_OOM, symptom, crash_stacks)
+
       # FP case 2: fuzz target crashes at init or first few rounds.
       if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
         # No cov line has been identified or only INITED round has been passed.

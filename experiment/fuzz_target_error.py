@@ -94,8 +94,8 @@ class SemanticCheckResult:
       return ('Memory leak detected, indicating some memory was not freed '
               'by the fuzz target.')
     if self.type == self.FP_OOM:
-      return ('Out-of-memory error detected, suggesting memory leak in the'
-              ' fuzz target.')
+      return ('Out-of-memory error detected, suggesting the fuzz target '
+              'incorrectly allocates too much memory or has a memory leak.')
     if self.type == self.FP_TIMEOUT:
       return ('Fuzz target timed out at runtime, indicating its usage for '
               'the function under test is incorrect or unrobust.')
