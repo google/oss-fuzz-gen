@@ -340,8 +340,8 @@ class BuilderRunner:
     """
     if len(build_log_errors) != len(err_log_errors):
       return False
-    for i in range(len(build_log_errors)):
-      if build_log_errors[i] != err_log_errors[i]:
+    for i, build_log_error in enumerate(build_log_errors):
+      if err_log_errors[i] != build_log_error:
         return False
     return True
 
