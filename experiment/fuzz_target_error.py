@@ -29,6 +29,7 @@ class SemanticCheckResult:
   FP_OOM = 'FP_OOM'
   FP_TIMEOUT = 'FP_TIMEOUT'
   NO_COV_INCREASE = 'NO_COV_INCREASE'
+  NULL_DEREF = 'NULL_DEREF'
 
   # Regex for extract crash symptoms.
   # Matches over 18 types of ASAN errors symptoms
@@ -39,6 +40,8 @@ class SemanticCheckResult:
   SYMPTOM_ASAN = re.compile(r'ERROR: AddressSanitizer: (.*)\n')
   # Matches 'ERROR: libFuzzer: timeout after xxx'
   SYMPTOM_LIBFUZZER = re.compile(r'ERROR: libFuzzer: (.*)\n')
+  # E.g., matches 'SCARINESS: 10 (null-deref)'
+  SYMPTOM_SCARINESS = re.compile(r'SCARINESS:\s*\d+\s*\((.*)\)\n')
 
   NO_COV_INCREASE_MSG_PREFIX = 'No code coverage increasement'
 
@@ -52,6 +55,10 @@ class SemanticCheckResult:
     match = cls.SYMPTOM_LIBFUZZER.match(fuzzlog)
     if match:
       return f'libFuzzer-{match.group(0)}'
+
+    match = cls.SYMPTOM_SCARINESS.match(fuzzlog)
+    if match:
+      return match.group(1)
 
     return ''
 
@@ -94,6 +101,9 @@ class SemanticCheckResult:
       # TODO(dongge): Append the implementation of the function under test.
       return (self.NO_COV_INCREASE_MSG_PREFIX + ', indicating the fuzz target'
               ' ineffectively invokes the function under test.')
+    if self.type == self.NULL_DEREF:
+      return ('Accessing a null pointer, indicating the fuzz target did not '
+              'properly initialize the parameters.')
 
     return ''
 
