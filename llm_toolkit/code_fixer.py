@@ -217,6 +217,50 @@ def remove_const_from_png_symbols(content: str) -> str:
 # ========================= LLM Fixes ========================= #
 
 
+def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
+  """Extracts error message directly from jcc's err.log"""
+  with open(errlog_path) as errlog_file:
+    log_lines = errlog_file.readlines()
+
+  target_name, _ = os.path.splitext(project_target_basename)
+  # TODO(jimchoi): Change clang-jcc-jim back to clang-jcc.
+  command_pattern = r'\[.*clang-jcc(\+\+)?-jim .*\]\n?'
+  invalid_c_argument_pattern = (r"error: invalid argument '.*' "
+                                r"not allowed with 'C\+\+'\n?")
+
+  error_lines_range: list[Optional[int]] = [None, None]
+  temp_range: list[Optional[int]] = [None, None]
+  errors = []
+
+  for i, line in enumerate(log_lines):
+    if re.fullmatch(command_pattern, line):
+      # First match.
+      if temp_range[0] is None and target_name in line:
+        temp_range[0] = i + 1
+        continue
+      # End of error.
+      temp_range[1] = i
+      if (i + 1 < len(log_lines) and
+          not re.fullmatch(invalid_c_argument_pattern, line[i + 1])):
+        error_lines_range = temp_range
+      temp_range = [None, None]
+
+  # End of error not set. Either target error was the last error block or
+  # cannot find target error.
+  if error_lines_range[0] is None:
+    if temp_range[0] is None:
+      logging.error('Cannot find error message from err.log: %s', errlog_path)
+      return []
+    error_lines_range = temp_range
+    error_lines_range[1] = len(log_lines)
+
+  errors.extend(
+      line.rsplit()
+      for line in log_lines[error_lines_range[0]:error_lines_range[1]])
+  # TODO(jimchoi): Return grouped error messages with pr#208
+  return errors
+
+
 def extract_error_message(log_path: str,
                           project_target_basename: str) -> list[str]:
   """Extracts error message and its context from the file in |log_path|."""
