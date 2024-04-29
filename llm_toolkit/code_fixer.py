@@ -240,18 +240,21 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
       # End of error.
       temp_range[1] = i
       if (i + 1 < len(log_lines) and
-          not re.fullmatch(invalid_c_argument_pattern, line[i + 1])):
+          not re.fullmatch(invalid_c_argument_pattern, log_lines[i + 1])):
         error_lines_range = temp_range
       temp_range = [None, None]
 
-  # End of error not set. Either target error was the last error block or
-  # cannot find target error.
-  if error_lines_range[0] is None:
-    if temp_range[0] is None:
-      logging.error('Cannot find error message from err.log: %s', errlog_path)
-      return []
-    error_lines_range = temp_range
-    error_lines_range[1] = len(log_lines)
+  # Start of error was never set, cannot find target error message.
+  if error_lines_range[0] is None and temp_range[0] is None:
+    logging.error('Cannot find error message from err.log: %s', errlog_path)
+    return []
+
+  # The last error block was target error message.
+  if temp_range[0] is not None:
+    if (temp_range[0] + 1 < len(log_lines) and not re.fullmatch(
+        invalid_c_argument_pattern, log_lines[temp_range[0] + 1])):
+      error_lines_range = temp_range
+      error_lines_range[1] = len(log_lines)
 
   for line in log_lines[error_lines_range[0]:error_lines_range[1]]:
     errors.append(line.rstrip())
