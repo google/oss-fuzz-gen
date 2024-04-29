@@ -226,8 +226,6 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
   command_pattern = r'\[.*clang(\+\+)?-jcc .*\]\n?'
   invalid_c_argument_pattern = (r"error: invalid argument '.*' "
                                 r"not allowed with 'C\+\+'\n?")
-  clang_diag_end_pattern = r'.*\d+ errors? generated.\n?'
-  dwarf_error_string = 'DWARF error: invalid or unhandled FORM value: '
 
   error_lines_range: list[Optional[int]] = [None, None]
   temp_range: list[Optional[int]] = [None, None]
@@ -256,12 +254,6 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
     error_lines_range[1] = len(log_lines)
 
   for line in log_lines[error_lines_range[0]:error_lines_range[1]]:
-    # Skip DWARF error from GNU ld.
-    if dwarf_error_string in line:
-      continue
-    # Skip the last line of clang diag: * error(s) generated.
-    if re.fullmatch(clang_diag_end_pattern, line):
-      continue
     errors.append(line.rstrip())
   return group_error_messages(errors)
 
@@ -279,38 +271,37 @@ def extract_error_message(log_path: str,
   error_lines_range: list[Optional[int]] = [None, None]
   temp_range: list[Optional[int]] = [None, None]
 
-  error_start_pattern = r'\S*' + target_name + r'(\.\S*)?:\d+:\d+: .+: .+\n?'
-  error_include_pattern = (r'In file included from \S*' + target_name +
-                           r'(\.\S*)?:\d+:\n?')
-  error_end_pattern = r'.*\d+ errors? generated.\n?'
+  clang_error_start_pattern = (r'\S*' + target_name +
+                               r'(\.\S*)?:\d+:\d+: .+: .+\n?')
+  clang_include_error_pattern = (r'In file included from \S*' + target_name +
+                                 r'(\.\S*)?:\d+:\n?')
+  clang_error_end_pattern = r'.*\d+ errors? generated.\n?'
 
-  error_keywords = [
-      'multiple definition of',
-      'undefined reference to',
-  ]
+  linker_error_start_string = '/usr/bin/ld: '
+  linker_error_end_string = ('clang-15: error: linker command failed with exit '
+                             'code 1 (use -v to see invocation)')
+
   errors = []
-  unique_symbol = set()
   for i, line in enumerate(log_lines):
-    # Add GNU ld errors in interest.
-    found_keyword = False
-    for keyword in error_keywords:
-      if keyword not in line:
-        continue
-      found_keyword = True
-      symbol = line.split(keyword)[-1]
-      if symbol not in unique_symbol:
-        unique_symbol.add(symbol)
-        errors.append(line.rstrip())
-      break
-    if found_keyword:
+    # Add linker errors.
+    if temp_range[0] is None and line.startswith(linker_error_start_string):
+      temp_range[0] = i
+      continue
+    if temp_range[0] is not None and line.startswith(linker_error_end_string):
+      temp_range[1] = i
+      error_lines_range = temp_range
+      temp_range = [None, None]
       continue
 
     # Add clang/clang++ diagnostics.
-    if (temp_range[0] is None and (re.fullmatch(error_include_pattern, line) or
-                                   re.fullmatch(error_start_pattern, line))):
+    if (temp_range[0] is None and
+        (re.fullmatch(clang_include_error_pattern, line) or
+         re.fullmatch(clang_error_start_pattern, line))):
       temp_range[0] = i
-    if temp_range[0] is not None and re.fullmatch(error_end_pattern, line):
-      temp_range[1] = i - 1  # Exclude current line.
+      continue
+    if temp_range[0] is not None and re.fullmatch(clang_error_end_pattern,
+                                                  line):
+      temp_range[1] = i
       # In case the original fuzz target was written in C and building with
       # clang failed, and building with clang++ also failed, we take the
       # error from clang++, which comes after.
@@ -332,9 +323,17 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
   state_unknown = 'UNKNOWN'
   state_include = 'INCLUDE'
   state_diag = 'DIAG'
+  state_ld = 'LD'
 
   diag_error_pattern = re.compile(r'(\S*):\d+:\d+: (.+): (.+)')
   include_error_pattern = re.compile(r'In file included from (\S*):\d+:')
+  diag_error_end_pattern = r'.*\d+ errors? generated.'
+
+  linker_error_string = '/usr/bin/ld: '
+  linker_error_end_string = ('clang-15: error: linker command failed with exit '
+                             'code 1 (use -v to see invocation)')
+  dwarf_error_string = 'DWARF error: invalid or unhandled FORM value: '
+
   error_blocks = []
   curr_block = []
   src_file = ''
@@ -343,9 +342,8 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
     if not line:  # Trim empty lines.
       continue
 
+    # clang/clang++ diagnostic errors.
     diag_match = diag_error_pattern.fullmatch(line)
-    include_match = include_error_pattern.fullmatch(line)
-
     if diag_match:
       err_src = diag_match.group(1)
       severity = diag_match.group(2)
@@ -367,12 +365,36 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
         error_blocks.append('\n'.join(curr_block))
         curr_block = []
 
+    include_match = include_error_pattern.fullmatch(line)
     if include_match:
       src_file = include_match.group(1)
       curr_state = state_include
       if curr_block:
         error_blocks.append('\n'.join(curr_block))
         curr_block = []
+
+    if re.fullmatch(line, diag_error_end_pattern):
+      curr_state = state_unknown
+      error_blocks.append('\n'.join(curr_block))
+      curr_block = []
+      continue
+
+    # ld errors.
+    if line.startswith(linker_error_string):
+      curr_state = state_ld
+      if curr_block:
+        error_blocks.append('\n'.join(curr_block))
+        curr_block = []
+      # Skip DWARF error line
+      if dwarf_error_string in line:
+        continue
+      line = line.replace(linker_error_string, '', 1)
+
+    if line.startswith(linker_error_end_string):
+      curr_state = state_unknown
+      error_blocks.append('\n'.join(curr_block))
+      curr_block = []
+      continue
 
     # Keep unknown error lines separated.
     if curr_state == state_unknown and curr_block:

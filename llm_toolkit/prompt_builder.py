@@ -322,6 +322,7 @@ class DefaultTemplateBuilder(PromptBuilder):
           FALSE_FUZZED_DATA_PROVIDER_ERROR in error):
         continue
 
+      # TODO: Filter errors and add more source context.
       error_prompt = self._prompt.create_prompt_piece(error, 'user')
       error_token_num = self._model.estimate_token_num(error_prompt)
       if prompt_size + error_token_num >= self._model.context_window:
