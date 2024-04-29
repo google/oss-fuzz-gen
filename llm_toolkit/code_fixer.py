@@ -223,8 +223,7 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
     log_lines = errlog_file.readlines()
 
   target_name, _ = os.path.splitext(project_target_basename)
-  # TODO(jimchoi): Change clang-jcc-jim back to clang-jcc.
-  command_pattern = r'\[.*clang-jcc(\+\+)?-jim .*\]\n?'
+  command_pattern = r'\[.*clang(\+\+)?-jcc .*\]\n?'
   invalid_c_argument_pattern = (r"error: invalid argument '.*' "
                                 r"not allowed with 'C\+\+'\n?")
   clang_diag_end_pattern = r'.*\d+ errors? generated.\n?'
