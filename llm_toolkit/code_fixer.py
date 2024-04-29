@@ -227,6 +227,8 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
   command_pattern = r'\[.*clang-jcc(\+\+)?-jim .*\]\n?'
   invalid_c_argument_pattern = (r"error: invalid argument '.*' "
                                 r"not allowed with 'C\+\+'\n?")
+  clang_diag_end_pattern = r'.*\d+ errors? generated.\n?'
+  dwarf_error_string = 'DWARF error: invalid or unhandled FORM value: '
 
   error_lines_range: list[Optional[int]] = [None, None]
   temp_range: list[Optional[int]] = [None, None]
@@ -256,8 +258,12 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
 
   for line in log_lines[error_lines_range[0]:error_lines_range[1]]:
     # Skip DWARF error from GNU ld.
-    if 'DWARF error: invalid or unhandled FORM value: ' not in line:
-      errors.append(line.rstrip())
+    if dwarf_error_string in line:
+      continue
+    # Skip the last line of clang diag: * error(s) generated.
+    if re.fullmatch(clang_diag_end_pattern, line):
+      continue
+    errors.append(line.rstrip())
   return group_error_messages(errors)
 
 
