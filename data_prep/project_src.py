@@ -107,6 +107,7 @@ def _format_source(src_file: str) -> str:
   if os.path.isfile(src_file):
     return _read_harness(src_file) or _read_harness(src_file, 'ignore') or ''
   logging.warning('Failed to find file: %s', src_file)
+
   return ''
 
 
@@ -119,11 +120,16 @@ def _get_interesting_file(src_file: str, out: str) -> tuple[str, str]:
   return short_path, content
 
 
-def _get_harness(src_file: str, out: str) -> tuple[str, str]:
+def _get_harness(src_file: str, out: str, language: str) -> tuple[str, str]:
   """Returns the path name and content of harness."""
+
   content = _format_source(src_file)
-  if 'int LLVMFuzzerTestOneInput' not in content:
+
+  if language == 'c++' and 'int LLVMFuzzerTestOneInput' not in content:
     return '', ''
+  if language == 'jvm' and 'static void fuzzerTestOneInput' not in content:
+    return '', ''
+
   short_path = src_file[len(out):]
   return short_path, content
 
@@ -270,7 +276,7 @@ def _copy_project_src_from_local(project: str, out: str):
 
 
 def _identify_fuzz_targets(
-    out: str, interesting_filenames: list[str]) -> tuple[list[str], list[str]]:
+    out: str, interesting_filenames: list[str], language: str) -> tuple[list[str], list[str]]:
   """
   Identifies fuzz target file contents and |interesting_filenames| in |out|.
   """
@@ -278,6 +284,7 @@ def _identify_fuzz_targets(
 
   interesting_filepaths = []
   potential_harnesses = []
+
   for root, _, filenames in os.walk(out):
     is_bad = False
     for ignore_dir in SEARCH_IGNORE_DIRS:
@@ -291,22 +298,29 @@ def _identify_fuzz_targets(
       if not benchmark.get_file_type(filename):
         continue
       path = os.path.join(root, filename)
-      short_path = path[len(out):]
-      if short_path in interesting_filenames:
-        interesting_filepaths.append(path)
-      # TODO(dongge): Figure out why the path does not match for Bazel projects.
-      if os.path.basename(short_path) in interesting_filenames:
-        interesting_filepaths.append(path)
-      # This should also include .cpp and .cc but exclude headers which
-      # usually don't contain fuzzer definitions.
-      if '.c' in path:
-        potential_harnesses.append(path)
+      if language == 'jvm':
+        if path.endswith(tuple(interesting_filenames)):
+          interesting_filepaths.append(path)
+        if path.endswith('.java'):
+          potential_harnesses.append(path)
+      else:
+        short_path = path[len(out):]
+        if short_path in interesting_filenames:
+          interesting_filepaths.append(path)
+        # TODO(dongge): Figure out why the path does not match for Bazel projects.
+        if os.path.basename(short_path) in interesting_filenames:
+          interesting_filepaths.append(path)
+        # This should also include .cpp and .cc but exclude headers which
+        # usually don't contain fuzzer definitions.
+        if '.c' in path:
+          potential_harnesses.append(path)
+
   return potential_harnesses, interesting_filepaths
 
 
 def _parse_fuzz_targets(
     project: str, out: str, potential_harnesses: list[str],
-    interesting_filepaths: list[str]) -> tuple[dict[str, str], dict[str, str]]:
+    interesting_filepaths: list[str], language: str) -> tuple[dict[str, str], dict[str, str]]:
   """
   Parses fuzz target file contents and |interesting_filenames| in |out|.
   """
@@ -319,7 +333,7 @@ def _parse_fuzz_targets(
 
   fuzz_targets = {}
   for harness in potential_harnesses:
-    short_path, content = _get_harness(harness, out)
+    short_path, content = _get_harness(harness, out, language)
     if short_path == content == '':
       continue
     fuzz_targets[short_path] = content
@@ -352,6 +366,7 @@ def _copy_fuzz_targets(harness_path: str, dest_dir: str, project: str):
 def search_source(
     project: str,
     interesting_filenames: list,
+    language: str,
     result_dir: str = '',
     cloud_experiment_bucket: str = '',
 ) -> tuple[Dict[str, str], Dict[str, str]]:
@@ -363,10 +378,13 @@ def search_source(
     os.makedirs(out)
 
     _copy_project_src(project, out, cloud_experiment_bucket)
+
     potential_harnesses, interesting_filepaths = _identify_fuzz_targets(
-        out, interesting_filenames)
+        out, interesting_filenames, language)
+#    print(potential_harnesses)
+#    print(interesting_filepaths)
     fuzz_targets, interesting_files = _parse_fuzz_targets(
-        project, out, potential_harnesses, interesting_filepaths)
+        project, out, potential_harnesses, interesting_filepaths, language)
 
     for short_path in fuzz_targets.keys():
       _copy_fuzz_targets(os.path.join(out, short_path[1:]), result_dir, project)
