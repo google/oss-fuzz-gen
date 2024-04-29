@@ -787,7 +787,7 @@ class CloudBuilderRunner(BuilderRunner):
           self.work_dirs.build_logs_target(generated_target_name, iteration),
           os.path.basename(self.benchmark.target_path))
       err_log_errors = code_fixer.get_jcc_errstr(
-          self.work_dirs.build_logs_target(generated_target_name, iteration),
+          self.work_dirs.error_logs_target(generated_target_name, iteration),
           os.path.basename(self.benchmark.target_path))
 
       # Temp: Checker to make sure jcc error does not lose anything than error
