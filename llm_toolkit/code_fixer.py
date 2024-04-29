@@ -233,16 +233,16 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
 
   for i, line in enumerate(log_lines):
     if re.fullmatch(command_pattern, line):
-      # First match.
+      if temp_range[0] is not None:
+        temp_range[1] = i
+        if (i + 1 < len(log_lines) and
+            not re.fullmatch(invalid_c_argument_pattern, log_lines[i + 1])):
+          error_lines_range = temp_range
+        temp_range = [None, None]
+
       if temp_range[0] is None and target_name in line:
         temp_range[0] = i + 1
         continue
-      # End of error.
-      temp_range[1] = i
-      if (i + 1 < len(log_lines) and
-          not re.fullmatch(invalid_c_argument_pattern, log_lines[i + 1])):
-        error_lines_range = temp_range
-      temp_range = [None, None]
 
   # Start of error was never set, cannot find target error message.
   if error_lines_range[0] is None and temp_range[0] is None:
