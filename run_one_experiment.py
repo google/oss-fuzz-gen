@@ -226,7 +226,7 @@ def run(benchmark: Benchmark,
   logging.basicConfig(level=logging.INFO)
 
   if example_pair is None:
-    example_pair = prompt_builder.EXAMPLES
+    example_pair = prompt_builder.EXAMPLES[benchmark.language]
 
   if manual_fix:
     generated_targets = [

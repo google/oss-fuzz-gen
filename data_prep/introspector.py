@@ -299,7 +299,8 @@ def _get_clean_arg_types(function: dict, project: str) -> list[str]:
 def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
   if language == 'jvm':
-    arg_names = ['var_%s' % (name.split('.')[-1]) for name in _get_clean_arg_types(function, project)]
+    args = _get_clean_arg_types(function, project)
+    arg_names = ['var_%s' % (name.split('.')[-1].replace("[]", "")) for name in args]
   else:
     arg_names = (function.get('arg-names') or
                  function.get('function_argument_names', []))

@@ -381,8 +381,6 @@ def search_source(
 
     potential_harnesses, interesting_filepaths = _identify_fuzz_targets(
         out, interesting_filenames, language)
-#    print(potential_harnesses)
-#    print(interesting_filepaths)
     fuzz_targets, interesting_files = _parse_fuzz_targets(
         project, out, potential_harnesses, interesting_filepaths, language)
 

@@ -35,11 +35,21 @@ FDP_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'gdImageString-problem.txt')
 FDP_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH, 'gdImageString-solution.cc')
 FDP_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH, 'mpg123_decode-problem.txt')
 FDP_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH, 'mpg123_decode-solution.cc')
+FDP_JVM_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'joni_regex-problem.txt')
+FDP_JVM_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH, 'joni_regex-solution.java')
+FDP_JVM_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH, 'jansi_colors-problem.txt')
+FDP_JVM_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH, 'jansi_colors-solution.java')
 
-EXAMPLES = [
-    [FDP_EXAMPLE_1_PROBLEM, FDP_EXAMPLE_1_SOLUTION],
-    [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
-]
+EXAMPLES = {
+    'c++': [
+        [FDP_EXAMPLE_1_PROBLEM, FDP_EXAMPLE_1_SOLUTION],
+        [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
+    ],
+    'jvm': [
+        [FDP_JVM_EXAMPLE_1_PROBLEM, FDP_JVM_EXAMPLE_1_SOLUTION],
+        [FDP_JVM_EXAMPLE_2_PROBLEM, FDP_JVM_EXAMPLE_2_SOLUTION],
+    ],
+}
 
 BUILD_ERROR_SUMMARY = 'The code has the following build issues:'
 FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
@@ -332,3 +342,13 @@ class DefaultTemplateBuilder(PromptBuilder):
 
     self._add_examples(example_pair, final_problem, project_example_content)
     self._prompt.add_problem(final_problem)
+
+
+class DefaultJvmTemplateBuilder(PromptBuilder):
+  """Default builder for JVM projects."""
+
+  def __init__(self,
+               model: models.LLM,
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model)
+    self._template_dir = template_dir
