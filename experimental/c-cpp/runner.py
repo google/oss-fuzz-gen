@@ -93,10 +93,11 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str):
     f.write(empty_oss_fuzz_docker)
 
   # Copy over the generator
-  shutil.copyfile(
-      os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                   "build-generator.py"),
-      os.path.join(temp_project_dir, "build-generator.py"))
+  files_to_copy = {'build_generator.py', 'manager.py'}
+  for target_file in files_to_copy:
+    shutil.copyfile(
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), target_file),
+        os.path.join(temp_project_dir, target_file))
 
   # Build a version of the project
   if silent_global:
@@ -122,8 +123,7 @@ def run_autogen(github_url,
                 targets_per_heuristic=5):
   """Launch auto-gen analysis within OSS-Fuzz container."""
 
-  initiator_cmd = 'python3 /src/build-generator.py %s -o %s' % (github_url,
-                                                                outdir)
+  initiator_cmd = 'python3 /src/manager.py %s -o %s' % (github_url, outdir)
   if disable_autofuzz:
     initiator_cmd += ' --disable-fuzzgen'
   initiator_cmd += ' --targets-per-heuristic=%d' % (targets_per_heuristic)
