@@ -7,12 +7,13 @@ The core part of approach in this module takes the following steps:
 
 1) An input in the form of a GitHub repo is given to `runner.py`.
 2) `runner.py` creates a temporary OSS-Fuzz project that contains
-  `build-generator.py`
-3) `runner.py` launches the OSS-Fuzz image of said project with
-  `build-generator.py` as entrypoint.
+  `build-generator.py` and builds the project's respective OSS-Fuzz base
+  builder image.
+3) `runner.py` launches the Project's OSS-Fuzz base-builder image of the
+  temporary project with `build-generator.py` as entrypoint.
 
 `build-generator.py` will then proceed to carry out the following tasks within
-the Docker container:
+the project's OSS-Fuzz base-builder Docker container:
 
 4) clone the input repository
 5) Scan the files of the repository to create suggested builds. This involves
