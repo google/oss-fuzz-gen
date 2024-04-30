@@ -217,13 +217,49 @@ def remove_const_from_png_symbols(content: str) -> str:
 # ========================= LLM Fixes ========================= #
 
 
+def get_fuzz_target_compile_output(target_names: list[str],
+                                   compile_args: list[str]) -> str:
+  """
+  Given a list of |target_names|, returns the output file name specified by `-o`
+  if the |compile_args| contains one of the |target_names|, or empty string.
+  """
+  output_name = ''
+  target_found = ''
+  for i, arg in enumerate(compile_args):
+    if arg in ['-o'] or arg == '--output' and i < len(compile_args):
+      output_name = compile_args[i + 1]
+      continue
+    if arg.startswith('--output='):
+      output_name = arg.split('=', maxsplit=1)[1]
+      continue
+    if arg.startswith('-'):
+      continue
+    if arg == output_name:
+      continue
+    if os.path.basename(arg) in target_names:
+      target_found = os.path.basename(arg)
+
+  if target_found:
+    # In case output name was not specified by -o.
+    if not output_name:
+      if '-c' in compile_args:
+        target_name, _ = os.path.splitext(target_found)
+        return f'{target_name}.o'
+      logging.warning(
+          'Output file not specified in [%s], but fuzz target found',
+          ' '.join(compile_args))
+      return 'a.out'
+    return os.path.basename(output_name)
+  return ''
+
+
 def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
   """Extracts error message directly from jcc's err.log"""
   with open(errlog_path) as errlog_file:
     log_lines = errlog_file.readlines()
 
-  target_name, _ = os.path.splitext(project_target_basename)
-  command_pattern = r'\[.*clang(\+\+)?-jcc .*\]\n?'
+  target_names = [project_target_basename]
+  command_pattern = r'\[.*clang(?:\+\+)?-jcc (.*)\]\n?'
   invalid_c_argument_pattern = (r"error: invalid argument '.*' "
                                 r"not allowed with 'C\+\+'\n?")
 
@@ -232,17 +268,23 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
   errors = []
 
   for i, line in enumerate(log_lines):
-    if re.fullmatch(command_pattern, line):
+    command_match = re.fullmatch(command_pattern, line)
+    if command_match:
       if temp_range[0] is not None:
         temp_range[1] = i
-        if (i + 1 < len(log_lines) and
-            not re.fullmatch(invalid_c_argument_pattern, log_lines[i + 1])):
-          error_lines_range = temp_range
+        if temp_range[0] < temp_range[1]:
+          first_line = log_lines[temp_range[0]].rstrip()
+          if (first_line and
+              not re.fullmatch(invalid_c_argument_pattern, first_line)):
+            error_lines_range = temp_range
         temp_range = [None, None]
 
-      if temp_range[0] is None and target_name in line:
+      compile_target = get_fuzz_target_compile_output(
+          target_names,
+          command_match.group(1).split())
+      if temp_range[0] is None and compile_target:
+        target_names.append(compile_target)
         temp_range[0] = i + 1
-        continue
 
   # Start of error was never set, cannot find target error message.
   if error_lines_range[0] is None and temp_range[0] is None:
@@ -250,9 +292,9 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
     return []
 
   # The last error block was target error message.
-  if temp_range[0] is not None:
-    if (temp_range[0] + 1 < len(log_lines) and not re.fullmatch(
-        invalid_c_argument_pattern, log_lines[temp_range[0] + 1])):
+  if temp_range[0] is not None and temp_range[0] < len(log_lines):
+    first_line = log_lines[temp_range[0]].rstrip()
+    if first_line and not re.fullmatch(invalid_c_argument_pattern, first_line):
       error_lines_range = temp_range
       error_lines_range[1] = len(log_lines)
 
