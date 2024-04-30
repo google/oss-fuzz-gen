@@ -160,7 +160,6 @@ class FuzzHeuristicGeneratorBase:
 
   def run_prompt_and_get_fuzzer_source(self, prompt):
     """Communicate to OpenAI prompt and extract harness source code."""
-    # TODO (david): add oss-fuzz-gen ore prompt generation logic.
     completion = client.chat.completions.create(model="gpt-3.5-turbo",
                                                 messages=[
                                                     {
@@ -605,6 +604,7 @@ def generate_harness_intrinsics(
     fuzzer_build_cmd: List[str],
     verbose_logging: bool = True) -> List[Dict[str, Any]]:
   """Get fuzzer source code, build script and misc for each heuristic."""
+  # TODO (david): add oss-fuzz-gen ore prompt generation logic.
 
   # Get list of target functions for the heuristic.
   fuzzer_targets = heuristic.get_fuzzing_targets()
