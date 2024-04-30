@@ -257,7 +257,8 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
       error_lines_range[1] = len(log_lines)
 
   for line in log_lines[error_lines_range[0]:error_lines_range[1]]:
-    errors.append(line.rstrip())
+    uncolored_line = re.sub(r'\x1B([@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', line)
+    errors.append(uncolored_line.rstrip())
   return group_error_messages(errors)
 
 
@@ -311,13 +312,13 @@ def extract_error_message(log_path: str,
       error_lines_range = temp_range
       temp_range = [None, None]
 
-  if error_lines_range[0] is not None and error_lines_range[1] is not None:
-    errors.extend(
-        line.rstrip()
-        for line in log_lines[error_lines_range[0]:error_lines_range[1] + 1])
-
-  if not errors:
+  if error_lines_range[0] is None:
     logging.warning('Failed to parse error message from %s.', log_path)
+    return []
+
+  for line in log_lines[error_lines_range[0]:error_lines_range[1]]:
+    uncolored_line = re.sub(r'\x1B([@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', line)
+    errors.append(uncolored_line.rstrip())
   return group_error_messages(errors)
 
 
