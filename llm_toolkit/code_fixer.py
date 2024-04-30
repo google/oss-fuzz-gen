@@ -282,35 +282,29 @@ def extract_error_message(log_path: str,
   clang_error_end_pattern = r'.*\d+ errors? generated.\n?'
 
   linker_error_start_string = '/usr/bin/ld: '
+  llvm_linker_error_start_string = 'ld.lld: '
   linker_error_end_string = ('clang-15: error: linker command failed with exit '
                              'code 1 (use -v to see invocation)')
 
   errors = []
   for i, line in enumerate(log_lines):
-    # Add linker errors.
-    if temp_range[0] is None and line.startswith(linker_error_start_string):
-      temp_range[0] = i
-      continue
-    if temp_range[0] is not None and line.startswith(linker_error_end_string):
-      temp_range[1] = i
-      error_lines_range = temp_range
-      temp_range = [None, None]
-      continue
+    if temp_range[0] is None:
+      if (line.startswith(linker_error_start_string) or
+          line.startswith(llvm_linker_error_start_string) or
+          re.fullmatch(clang_include_error_pattern, line) or
+          re.fullmatch(clang_error_start_pattern, line)):
+        temp_range[0] = i
+        continue
 
-    # Add clang/clang++ diagnostics.
-    if (temp_range[0] is None and
-        (re.fullmatch(clang_include_error_pattern, line) or
-         re.fullmatch(clang_error_start_pattern, line))):
-      temp_range[0] = i
-      continue
-    if temp_range[0] is not None and re.fullmatch(clang_error_end_pattern,
-                                                  line):
-      temp_range[1] = i
-      # In case the original fuzz target was written in C and building with
-      # clang failed, and building with clang++ also failed, we take the
-      # error from clang++, which comes after.
-      error_lines_range = temp_range
-      temp_range = [None, None]
+    # In case the original fuzz target was written in C and building with
+    # clang failed, and building with clang++ also failed, we take the
+    # error from clang++, which comes after.
+    if temp_range[0] is not None:
+      if (line.startswith(linker_error_end_string) or
+          re.fullmatch(clang_error_end_pattern, line)):
+        temp_range[1] = i
+        error_lines_range = temp_range
+        temp_range = [None, None]
 
   if error_lines_range[0] is None:
     logging.warning('Failed to parse error message from %s.', log_path)
@@ -334,6 +328,7 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
   diag_error_end_pattern = r'.*\d+ errors? generated.'
 
   linker_error_string = '/usr/bin/ld: '
+  llvm_linker_error_string = 'ld.lld: '
   linker_error_end_string = ('clang-15: error: linker command failed with exit '
                              'code 1 (use -v to see invocation)')
   dwarf_error_string = 'DWARF error: invalid or unhandled FORM value: '
@@ -377,14 +372,15 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
         error_blocks.append('\n'.join(curr_block))
         curr_block = []
 
-    if re.fullmatch(line, diag_error_end_pattern):
+    if re.fullmatch(diag_error_end_pattern, line):
       curr_state = state_unknown
       error_blocks.append('\n'.join(curr_block))
       curr_block = []
       continue
 
-    # ld errors.
-    if line.startswith(linker_error_string):
+    # Linker errors.
+    if (line.startswith(linker_error_string) or
+        line.startswith(llvm_linker_error_string)):
       curr_state = state_ld
       if curr_block:
         error_blocks.append('\n'.join(curr_block))
@@ -392,7 +388,7 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
       # Skip DWARF error line
       if dwarf_error_string in line:
         continue
-      line = line.replace(linker_error_string, '', 1)
+      line = line.split(' ', maxsplit=1)[1]
 
     if line.startswith(linker_error_end_string):
       curr_state = state_unknown
