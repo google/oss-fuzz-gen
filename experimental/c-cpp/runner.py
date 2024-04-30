@@ -85,11 +85,11 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str):
     shutil.rmtree(temp_project_dir)
 
   os.makedirs(temp_project_dir)
-  with open(os.path.join(temp_project_dir, "project.yaml"), 'w') as f:
+  with open(os.path.join(temp_project_dir, 'project.yaml'), 'w') as f:
     f.write(empty_project_yaml)
-  with open(os.path.join(temp_project_dir, "build.sh"), 'w') as f:
+  with open(os.path.join(temp_project_dir, 'build.sh'), 'w') as f:
     f.write(empty_oss_fuzz_build)
-  with open(os.path.join(temp_project_dir, "Dockerfile"), 'w') as f:
+  with open(os.path.join(temp_project_dir, 'Dockerfile'), 'w') as f:
     f.write(empty_oss_fuzz_docker)
 
   # Copy over the generator
@@ -101,14 +101,14 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str):
 
   # Build a version of the project
   if silent_global:
-    subprocess.check_call("python3 infra/helper.py build_fuzzers %s" %
+    subprocess.check_call('python3 infra/helper.py build_fuzzers %s' %
                           (project_name),
                           shell=True,
                           cwd=oss_fuzz_base,
                           stdout=subprocess.DEVNULL,
                           stderr=subprocess.DEVNULL)
   else:
-    subprocess.check_call("python3 infra/helper.py build_fuzzers %s" %
+    subprocess.check_call('python3 infra/helper.py build_fuzzers %s' %
                           (project_name),
                           shell=True,
                           cwd=oss_fuzz_base)
@@ -129,9 +129,9 @@ def run_autogen(github_url,
   initiator_cmd += ' --targets-per-heuristic=%d' % (targets_per_heuristic)
 
   cmd = [
-      "docker",
-      "run",
-      "-e",
+      'docker',
+      'run',
+      '-e',
       'FUZZING_ENGINE=libfuzzer',
       '-e',
       'SANITIZER=address',
@@ -192,7 +192,7 @@ def run_on_targets(target,
   if semaphore is not None:
     semaphore.acquire()
 
-  openai_api_key = os.getenv("OPENAI_API_KEY")
+  openai_api_key = os.getenv('OPENAI_API_KEY')
 
   outdir = '/out/autogen-results-%d' % (idx)
   with open('status-log.txt', 'a') as f:
@@ -261,13 +261,13 @@ def parse_commandline():
   parser.add_argument('--disable-fuzzgen',
                       action='store_true',
                       help='Disable fuzz generation')
-  parser.add_argument("--targets-per-heuristic",
-                      "-t",
+  parser.add_argument('--targets-per-heuristic',
+                      '-t',
                       help='Number of harness to generate per heuristic.',
                       type=int,
                       default=15)
-  parser.add_argument("--silent",
-                      "-s",
+  parser.add_argument('--silent',
+                      '-s',
                       help='Disable logging in subprocess.',
                       action='store_true')
   return parser.parse_args()
@@ -298,5 +298,5 @@ def main():
                    args.targets_per_heuristic)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
   main()

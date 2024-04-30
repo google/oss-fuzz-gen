@@ -23,9 +23,9 @@ from abc import abstractmethod
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 import cxxfilt
+import manager
 import openai
 import yaml
-import manager
 
 client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
@@ -418,6 +418,7 @@ class CMakeScanner(AutoBuildBase):
   @property
   def name(self):
     return 'cmake'
+
 
 def match_build_heuristics_on_folder(abspath_of_target: str):
   """Yields AutoBuildContainer objects.

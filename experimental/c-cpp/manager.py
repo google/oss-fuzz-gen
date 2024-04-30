@@ -22,11 +22,10 @@ import subprocess
 from abc import abstractmethod
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
+import build_generator
 import cxxfilt
 import openai
 import yaml
-
-import build_generator
 
 MAX_FUZZ_PER_HEURISTIC = 15
 INTROSPECTOR_OSS_FUZZ_DIR = '/src/inspector'
@@ -789,10 +788,10 @@ def auto_generate(github_url,
   # record the path
   abspath_of_target = os.path.join(os.getcwd(), dst_folder)
   print('[+] Extracting build scripts statically')
-  all_build_scripts: List[Tuple[
-      str, str,
-      build_generator.AutoBuildContainer]] = build_generator.extract_build_suggestions(abspath_of_target,
-                                                       'test-fuzz-build-')
+  all_build_scripts: List[
+      Tuple[str, str, build_generator.
+            AutoBuildContainer]] = build_generator.extract_build_suggestions(
+                abspath_of_target, 'test-fuzz-build-')
 
   # return now if we don't need to test build scripts
   if disable_testing_build_scripts is True:
@@ -800,8 +799,8 @@ def auto_generate(github_url,
 
   # Check each of the build scripts.
   print('[+] Testing build suggestions')
-  build_results = build_generator.raw_build_evaluation(all_build_scripts,
-                                       initial_executable_files)
+  build_results = build_generator.raw_build_evaluation(
+      all_build_scripts, initial_executable_files)
   print(f'Checking results of {len(build_results)} build generators')
   for test_dir, test_build_result in build_results.items():
     build_heuristic = test_build_result['auto-build-setup'][2].heuristic_id
