@@ -160,6 +160,7 @@ class FuzzHeuristicGeneratorBase:
 
   def run_prompt_and_get_fuzzer_source(self, prompt):
     """Communicate to OpenAI prompt and extract harness source code."""
+    # TODO (david): add oss-fuzz-gen ore prompt generation logic.
     completion = client.chat.completions.create(model="gpt-3.5-turbo",
                                                 messages=[
                                                     {
