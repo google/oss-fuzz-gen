@@ -194,6 +194,13 @@ class Evaluator:
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(f'\nCOPY {os.path.basename(target_file)} '
               f'{self.benchmark.target_path}\n')
+      f.write(
+          'ADD https://commondatastorage.googleapis.com/clusterfuzz-builds/jcc/'
+          'clang-jcc-test /usr/local/bin/clang-jcc\n'
+          'ADD https://commondatastorage.googleapis.com/clusterfuzz-builds/jcc/'
+          'clang++-jcc-test /usr/local/bin/clang++-jcc\n'
+          'RUN chmod +x /usr/local/bin/clang-jcc && '
+          'chmod +x /usr/local/bin/clang++-jcc\n')
     return name
 
   def check_target(self, ai_binary, target_path: str) -> Optional[Result]:
