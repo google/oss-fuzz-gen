@@ -382,6 +382,8 @@ class BuilderRunner:
                        'err.log'), benchmark_errlog_path)
     except FileNotFoundError as e:
       logging.error('Cannot get err.log for %s: %s', generated_project, e)
+      # Touch err.log in results to avoid exception in parsing errors.
+      open(benchmark_errlog_path, 'x')
     if not build_result.succeeded:
       build_log_errors = code_fixer.extract_error_message(
           benchmark_log_path, project_target_name)
@@ -395,7 +397,8 @@ class BuilderRunner:
         logging.warning(
             'Inconsistent error messages extracted from build.log'
             ' and err.log for %s', benchmark_errlog_path)
-      build_result.errors = err_log_errors
+      build_result.errors = (err_log_errors
+                             if err_log_errors else build_log_errors)
       return build_result, None
 
     run_result = RunResult()
@@ -796,9 +799,10 @@ class CloudBuilderRunner(BuilderRunner):
             'Inconsistent error messages extracted from build.log'
             ' and err.log for %s',
             self.work_dirs.error_logs_target(generated_target_name, iteration))
-      build_result.errors = err_log_errors
+      build_result.errors = (err_log_errors
+                             if err_log_errors else build_log_errors)
       logging.info('Cloud evaluation of %s indicates a failure: %s',
-                   os.path.realpath(target_path), err_log_errors)
+                   os.path.realpath(target_path), build_result.errors)
       return build_result, None
     logging.info('Cloud evaluation of %s indicates a success.',
                  os.path.realpath(target_path))
