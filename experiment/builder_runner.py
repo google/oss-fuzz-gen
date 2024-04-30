@@ -394,7 +394,7 @@ class BuilderRunner:
       if not self._compare_extracted_errors(build_log_errors, err_log_errors):
         logging.warning(
             'Inconsistent error messages extracted from build.log'
-            ' and err.log for %s', generated_project)
+            ' and err.log for %s', benchmark_errlog_path)
       build_result.errors = err_log_errors
       return build_result, None
 
@@ -794,7 +794,8 @@ class CloudBuilderRunner(BuilderRunner):
       if not self._compare_extracted_errors(build_log_errors, err_log_errors):
         logging.warning(
             'Inconsistent error messages extracted from build.log'
-            ' and err.log for %s', generated_project)
+            ' and err.log for %s',
+            self.work_dirs.error_logs_target(generated_target_name, iteration))
       build_result.errors = err_log_errors
       logging.info('Cloud evaluation of %s indicates a failure: %s',
                    os.path.realpath(target_path), err_log_errors)
