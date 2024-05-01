@@ -70,6 +70,7 @@ class ContextRetriever:
       info_list = introspector.query_introspector_type_info(
           self._benchmark.project, current_type)
       if not info_list:
+        logging.debug('Could not retrieve info for type: %s', current_type)
         continue
 
       for info in info_list:
@@ -173,6 +174,6 @@ class ContextRetriever:
         'decl': decl
     }
 
-    logging.debug("Context: %s", context_info)
+    logging.debug('Context: %s', context_info)
 
     return context_info
