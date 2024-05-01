@@ -74,11 +74,18 @@ libraries, then we will end up trying to build/run 400 harnesses.
 ## Usage
 
 ```sh
-# prepare
+# Prepare
+# Vertex: Follow the steps at:
+# https://github.com/google/oss-fuzz-gen/blob/main/USAGE.md#vertex-ai
+export export GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_CREDS_FILE
+
+# chatgpt:
 export OPENAI_API_KEY=your-api-key
 git clone https://github.com/google/oss-fuzz /tmp/oss-fuzz-10
 
 git clone https://github.com/google/oss-fuzz-gen
 cd oss-fuzz-gen/from-repo/c-cpp
-python3 ./runner.py -o ~/tmp/oss-fuzz-10 -t 15 -i TARGET_REPO_URL
+python3 ./runner.py -o ~/tmp/oss-fuzz-10 -t 15 -i TARGET_REPO_URL -m vertex
+
+# Use "-m openai" for chatgpt above
 ```
