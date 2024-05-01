@@ -33,21 +33,7 @@ from llm_toolkit import code_fixer
 
 LLM_FIX_LIMIT = 5
 
-LIBFUZZER_MODULES_LOADED_REGEX = re.compile(
-    r'^INFO:\s+Loaded\s+\d+\s+(modules|PC tables)\s+\((\d+)\s+.*\).*')
-LIBFUZZER_COV_REGEX = re.compile(r'.*cov: (\d+) ft:')
-LIBFUZZER_CRASH_TYPE_REGEX = re.compile(r'.*Test unit written to.*')
-LIBFUZZER_COV_LINE_PREFIX = re.compile(r'^#(\d+)')
-LIBFUZZER_STACK_FRAME_LINE_PREFIX = re.compile(r'^\s+#\d+')
-CRASH_EXCLUSIONS = re.compile(r'.*(slow-unit-|timeout-|leak-|oom-).*')
-CRASH_STACK_WITH_SOURCE_INFO = re.compile(r'in.*:\d+:\d+$')
-
 OSS_FUZZ_COVERAGE_BUCKET = 'oss-fuzz-coverage'
-
-LIBFUZZER_LOG_STACK_FRAME_LLVM = '/src/llvm-project/compiler-rt'
-LIBFUZZER_LOG_STACK_FRAME_CPP = '/usr/local/bin/../include/c++'
-
-EARLY_FUZZING_ROUND_THRESHOLD = 3
 
 
 @dataclasses.dataclass
@@ -67,7 +53,7 @@ class Result:
   is_driver_fuzz_err: bool = dataclasses.field(kw_only=True, default=False)
   driver_fuzz_err: str = dataclasses.field(kw_only=True, default='')
 
-  def __post_init__(self, *args, **kwargs):
+  def __post_init__(self, *args, **kwargs):  # pylint: disable=unused-argument
     if self.is_driver_fuzz_err:
       self.is_semantic_error = self.is_driver_fuzz_err
     if self.driver_fuzz_err:
@@ -218,164 +204,20 @@ class Evaluator:
       traceback.print_exc()
       return None
 
-  def _parse_stacks_from_libfuzzer_logs(self,
-                                        lines: list[str]) -> list[list[str]]:
-    """Parse stack traces from libFuzzer logs."""
-    # TODO (dongge): Use stack parsing from ClusterFuzz.
-    # There can have over one thread stack in a log.
-    stacks = []
-
-    # A stack -> a sequence of stack frame lines.
-    stack, stack_parsing = [], False
-    for line in lines:
-      is_stack_frame_line = LIBFUZZER_STACK_FRAME_LINE_PREFIX.match(
-          line) is not None
-      if (not stack_parsing) and is_stack_frame_line:
-        # First line.
-        stack_parsing = True
-        stack = [line.strip()]
-      elif stack_parsing and is_stack_frame_line:
-        # Middle line(s).
-        stack.append(line.strip())
-      elif stack_parsing and (not is_stack_frame_line):
-        # Last line.
-        stack_parsing = False
-        stacks.append(stack)
-
-    # Last stack.
-    if stack_parsing:
-      stacks.append(stack)
-
-    return stacks
-
-  def _parse_fuzz_cov_info_from_libfuzzer_logs(
-      self,
-      lines: list[str]) -> tuple[Optional[int], Optional[int], Optional[int]]:
-    """Parses cov of INITED & DONE, and round number from libFuzzer logs."""
-    initcov, donecov, lastround = None, None, None
-
-    for line in lines:
-      if line.startswith('#'):
-        # Parses cov line to get the round number.
-        match = LIBFUZZER_COV_LINE_PREFIX.match(line)
-        roundno = int(match.group(1)) if match else None
-
-        if roundno is not None:
-          lastround = roundno
-          if 'INITED' in line:
-            initcov = int(line.split('cov: ')[1].split(' ft:')[0])
-          elif 'DONE' in line:
-            donecov = int(line.split('cov: ')[1].split(' ft:')[0])
-
-    return initcov, donecov, lastround
-
-  def _stack_func_is_of_testing_project(self, stack_frame: str) -> bool:
-    return (bool(CRASH_STACK_WITH_SOURCE_INFO.match(stack_frame)) and
-            LIBFUZZER_LOG_STACK_FRAME_LLVM not in stack_frame and
-            LIBFUZZER_LOG_STACK_FRAME_CPP not in stack_frame)
-
-  def _parse_libfuzzer_logs(
-      self, log_handle,
-      logger: _Logger) -> tuple[int, int, bool, SemanticCheckResult]:
-    """Parses libFuzzer logs."""
-    lines = None
-    try:
-      fuzzlog = log_handle.read(-1)
-      # Some crashes can mess up the libfuzzer output and raise decode error.
-      fuzzlog = fuzzlog.decode('utf-8', errors='ignore')
-      lines = fuzzlog.split('\n')
-    except MemoryError as e:
-      # Some logs from abnormal fuzz targets are too large to be parsed.
-      logger.log('%s is too large to parse: %s', log_handle.name, e)
-      return 0, 0, False, SemanticCheckResult(SemanticCheckResult.LOG_MESS_UP)
-
-    cov_pcs, total_pcs, crashes = 0, 0, False
-
-    for line in lines:
-      m = LIBFUZZER_MODULES_LOADED_REGEX.match(line)
-      if m:
-        total_pcs = int(m.group(2))
-        continue
-
-      m = LIBFUZZER_COV_REGEX.match(line)
-      if m:
-        cov_pcs = int(m.group(1))
-        continue
-
-      m = LIBFUZZER_CRASH_TYPE_REGEX.match(line)
-      if m and not CRASH_EXCLUSIONS.match(line):
-        crashes = True
-        continue
-
-    initcov, donecov, lastround = self._parse_fuzz_cov_info_from_libfuzzer_logs(
-        lines)
-
-    # NOTE: Crashes from incorrect fuzz targets will not be counted finally.
-
-    if crashes:
-      symptom = SemanticCheckResult.extract_symptom(fuzzlog)
-      crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
-
-      # FP case 1: fuzz target crashes at init or first few rounds.
-      if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
-        # No cov line has been identified or only INITED round has been passed.
-        # This is very likely the false positive cases.
-        return cov_pcs, total_pcs, True, \
-               SemanticCheckResult(SemanticCheckResult.FP_NEAR_INIT_CRASH,\
-                             symptom, crash_stacks)
-
-      # FP case 2: 1st func of the 1st thread stack is in fuzz target.
-      if len(crash_stacks) > 0:
-        first_stack = crash_stacks[0]
-        # Check the first stack frame of the first stack only.
-        for stack_frame in first_stack[:1]:
-          if self._stack_func_is_of_testing_project(stack_frame):
-            if 'LLVMFuzzerTestOneInput' in stack_frame:
-              return cov_pcs, total_pcs, True, \
-                     SemanticCheckResult(SemanticCheckResult.FP_TARGET_CRASH,\
-                                   symptom, crash_stacks)
-            break
-
-    else:
-      # Another error fuzz target case: no cov increase.
-      if initcov is not None and donecov is not None:
-        if initcov == donecov:
-          return cov_pcs, total_pcs, True, SemanticCheckResult(
-              SemanticCheckResult.NO_COV_INCREASE)
-
-    return cov_pcs, total_pcs, crashes, SemanticCheckResult(
-        SemanticCheckResult.NO_SEMANTIC_ERR)
-
-  def _evaluate_generated_fuzz_target(
-      self, generated_oss_fuzz_project: str, target_path: str,
-      generated_target_name: str, iteration: int, logger: _Logger
-  ) -> tuple[BuildResult, Optional[RunResult], int, int, bool,
-             SemanticCheckResult]:
-    """Evaluates the generated fuzz target."""
-    build_result, run_result = self.builder_runner.build_and_run(
-        generated_oss_fuzz_project, target_path, iteration)
-
-    if not build_result.succeeded:
-      # Clear the variables for case that fuzz/build err <=> before/after fix.
-      return build_result, run_result, 0, 0, False, SemanticCheckResult(
-          SemanticCheckResult.NOT_APPLICABLE)
-
-    # Parse libfuzzer logs to get fuzz target runtime details.
-    with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
-              'rb') as f:
-      cov_pcs, total_pcs, crashes, semantic_error = self._parse_libfuzzer_logs(
-          f, logger)
-
-    return build_result, run_result, cov_pcs, total_pcs, crashes, semantic_error
-
   def _fix_generated_fuzz_target(self, ai_binary: str,
                                  generated_oss_fuzz_project: str,
                                  target_path: str, iteration: int,
                                  build_result: BuildResult,
-                                 semantic_error: SemanticCheckResult):
+                                 run_result: Optional[RunResult],
+                                 logger: _Logger):
     """Fixes the generated fuzz target."""
     if build_result.succeeded:
-      error_desc, errors = semantic_error.get_error_info()
+      if run_result:
+        error_desc, errors = run_result.semantic_check.get_error_info()
+      else:
+        logger.log(f'Warning: Build succeed but no run_result in '
+                   f'{generated_oss_fuzz_project}.')
+        error_desc, errors = '', []
     else:
       error_desc, errors = None, build_result.errors
     code_fixer.llm_fix(ai_binary, target_path, self.benchmark, iteration,
@@ -407,18 +249,13 @@ class Evaluator:
     llm_fix_count = 0
     while True:
       # 1. Evaluating generated driver.
-      (build_result, run_result, cov_pcs, total_pcs, crashes,
-       semantic_error) = self._evaluate_generated_fuzz_target(
-           generated_oss_fuzz_project, target_path, generated_target_name,
-           llm_fix_count, logger)
+      build_result, run_result = self.builder_runner.build_and_run(
+          generated_oss_fuzz_project, target_path, llm_fix_count)
 
-      gen_succ = build_result.succeeded and not semantic_error.has_err
-      if gen_succ:
-        # Successfully generate the fuzz target.
-        break
-
-      if llm_fix_count >= LLM_FIX_LIMIT:
-        # Not fix since the fix limit is reached.
+      gen_succ = build_result.succeeded and run_result and run_result.succeeded
+      if gen_succ or llm_fix_count >= LLM_FIX_LIMIT:
+        # Exit cond 1: successfully generate the fuzz target.
+        # Exit cond 2: fix limit is reached.
         break
 
       # 2. Fixing generated driver.
@@ -428,40 +265,50 @@ class Evaluator:
                  f'attempt {llm_fix_count}.')
       self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
                                       target_path, llm_fix_count, build_result,
-                                      semantic_error)
+                                      run_result, logger)
 
     # Logs and returns the result.
-    if gen_succ:
-      logger.log(f'Successfully built {target_path} with '
+    if not build_result.succeeded:
+      logger.log(f'Failed to build {target_path} with '
                  f'{self.builder_runner.fixer_model_name} in '
-                 f'{llm_fix_count} iterations.')
-    else:
-      logger.log(f'Failed to fix {target_path} with '
-                 f'{self.builder_runner.fixer_model_name} in '
-                 f'{llm_fix_count} iterations.')
+                 f'{llm_fix_count} iterations of fixing.')
       return logger.return_result(
-          Result(False, False, 0.0, 0.0, '', '', False, semantic_error.type))
+          Result(False, False, 0.0, 0.0, '', '', False,
+                 SemanticCheckResult.NOT_APPLICABLE))
 
-    if (not run_result or run_result.coverage_summary is None or
-        run_result.coverage is None):
-      logger.log(f'Warning: No run_result in {generated_oss_fuzz_project}.')
+    logger.log(f'Successfully built {target_path} with '
+               f'{self.builder_runner.fixer_model_name} in '
+               f'{llm_fix_count} iterations of fixing.')
+
+    if not run_result:
+      logger.log(f'Warning: no run result in {generated_oss_fuzz_project}.')
       return logger.return_result(
-          Result(True, crashes, 0.0, 0.0, '', '', False, semantic_error.type))
+          Result(True, False, 0.0, 0.0, '', '', False,
+                 SemanticCheckResult.NOT_APPLICABLE))
 
-    if semantic_error.has_err:
+    if run_result.coverage_summary is None or run_result.coverage is None:
       logger.log(
-          f'Warning: {semantic_error.type} in {generated_oss_fuzz_project}.')
+          f'Warning: No cov info in run result of {generated_oss_fuzz_project}.'
+      )
       return logger.return_result(
-          Result(True, crashes, 0.0, 0.0, run_result.coverage_report_path,
-                 run_result.reproducer_path, semantic_error.has_err,
-                 semantic_error.type))
+          Result(True, run_result.crashes, 0.0, 0.0, '', '',
+                 not run_result.succeeded, run_result.semantic_check.type))
+
+    if not run_result.succeeded:
+      logger.log(f'Warning: Failed to fix semantic error '
+                 f'{run_result.semantic_check.type}'
+                 f' in {generated_oss_fuzz_project}.')
+      return logger.return_result(
+          Result(True, run_result.crashes, 0.0, 0.0,
+                 run_result.coverage_report_path, run_result.reproducer_path,
+                 True, run_result.semantic_check.type))
 
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
     total_lines = _compute_total_lines_without_fuzz_targets(
         coverage_summary, generated_target_name)
-    if total_pcs:
-      coverage_percent = cov_pcs / total_pcs
+    if run_result.total_pcs:
+      coverage_percent = run_result.cov_pcs / run_result.total_pcs
     else:
       logger.log(f'Warning: total_pcs == 0 in {generated_oss_fuzz_project}.')
       coverage_percent = 0.0
@@ -475,14 +322,15 @@ class Evaluator:
       logger.log(f'Warning: total_lines == 0 in {generated_oss_fuzz_project}.')
       coverage_diff = 0.0
 
-    logger.log(f'Result for {generated_oss_fuzz_project}: crashes={crashes}, '
-               f'coverage={coverage_percent} ({cov_pcs}/{total_pcs}), '
+    logger.log(f'Result for {generated_oss_fuzz_project}: '
+               f'crashes={run_result.crashes}, coverage={coverage_percent} '
+               f'({run_result.cov_pcs}/{run_result.total_pcs}), '
                f'coverage diff={coverage_diff} '
                f'({run_result.coverage.covered_lines}/{total_lines})')
     return logger.return_result(
-        Result(True, crashes, coverage_percent, coverage_diff,
+        Result(True, run_result.crashes, coverage_percent, coverage_diff,
                run_result.coverage_report_path, run_result.reproducer_path,
-               semantic_error.has_err, semantic_error.type))
+               not run_result.succeeded, run_result.semantic_check.type))
 
   def _load_existing_coverage_summary(self) -> dict:
     """Load existing summary.json."""

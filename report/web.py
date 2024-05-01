@@ -56,9 +56,9 @@ class Benchmark:
   def __post_init__(self):
     self.project = '-'.join(self.id.split('-')[1:-1])
     self.function = self.id.split('-')[-1]
-    self.signature = self.find_signature() or self.id
+    self.signature = self._find_signature() or self.id
 
-  def find_signature(self) -> str:
+  def _find_signature(self) -> str:
     """
     Finds the function signature by searching for its |benchmark_id| in
     BENCHMARK_DIR.
@@ -96,7 +96,7 @@ class Sample:
   """Result of a fuzz target sample of a benchmark."""
   id: str
   status: str
-  result: Optional[evaluator.Result] = None
+  result: evaluator.Result
 
   @property
   def stacktrace(self) -> str:
@@ -225,18 +225,18 @@ def list_benchmarks() -> List[Benchmark]:
   return benchmarks
 
 
-def sort_benchmarks(benchmarks: List[Benchmark],
-                    sort_by: str = 'cov_diff') -> List[Benchmark]:
-  """Keeps benchmarks with the highest line coverage diff on the top."""
-  sort_dict = {
-      'build': lambda b: b.result.build_success_rate,
-      'crash': lambda b: b.result.crash_rate,
-      'cov': lambda b: b.result.max_coverage,
-      'status': lambda b: b.status,
-      'cov_diff': lambda b: b.result.max_line_coverage_diff,
-  }
-  sorted_benchmarks = sorted(benchmarks, key=sort_dict[sort_by], reverse=True)
-  return sorted_benchmarks
+def match_benchmark(benchmark_id: str) -> Benchmark:
+  """Returns a benchmark class based on |benchmark_id|."""
+  results, targets = get_results(benchmark_id)
+  status = 'Done' if results and all(results) else 'Running'
+  filtered_results = [(i, stat) for i, stat in enumerate(results) if stat]
+
+  if filtered_results:
+    result = run_one_experiment.aggregate_results(filtered_results, targets)
+  else:
+    result = run_one_experiment.AggregatedResult()
+
+  return Benchmark(benchmark_id, status, result)
 
 
 def get_samples(benchmark: str) -> list[Sample]:
@@ -246,7 +246,7 @@ def get_samples(benchmark: str) -> list[Sample]:
 
   for i, sample_id in enumerate(sample_ids(get_generated_targets(benchmark))):
     status = 'Running'
-    result = None
+    result = evaluator.Result()
     if results[i]:
       status = 'Done'
       result = results[i]
@@ -264,7 +264,7 @@ def match_sample(benchmark: str, target_sample_id: str) -> Optional[Sample]:
     if sample_id != target_sample_id:
       continue
     status = 'Running'
-    result = None
+    result = evaluator.Result()
     if results[i]:
       status = 'Done'
       result = results[i]
@@ -377,63 +377,27 @@ def index():
 def index_json():
   return render_template('index.json',
                          benchmarks=list_benchmarks(),
-                         model=model)
-
-
-@app.route('/sort_build')
-def index_sort_build():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='build'),
-                         model=model)
-
-
-@app.route('/sort_cov')
-def index_sort_cov():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='cov'),
-                         model=model)
-
-
-@app.route('/sort_cov_diff')
-def index_sort():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='cov_diff'),
-                         model=model)
-
-
-@app.route('/sort_crash')
-def index_sort_crash():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='crash'),
-                         model=model)
-
-
-@app.route('/sort_status')
-def index_sort_stauts():
-  return render_template('index.html',
-                         benchmarks=sort_benchmarks(list_benchmarks(),
-                                                    sort_by='status'),
-                         model=model)
+                         model=model), 200, {
+                             'Content-Type': 'application/json'
+                         }
 
 
 @app.route('/benchmark/<benchmark>/crash.json')
-def benchmark_json(benchmark):
+def benchmark_json(benchmark: str):
   """Generates a JSON containing crash reproducing info."""
   if not _is_valid_benchmark_dir(benchmark):
     # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
     abort(404)
 
   try:
-    return render_template('benchmark.json',
-                           benchmark=Benchmark.find_signature(benchmark),
+    return render_template('crash.json',
+                           benchmark=match_benchmark(benchmark).signature,
                            samples=get_samples(benchmark),
                            get_benchmark_final_target_code=partial(
                                get_final_target_code, benchmark),
-                           model=model)
+                           model=model), 200, {
+                               'Content-Type': 'application/json'
+                           }
   except Exception as e:
     logging.warning('Failed to render benchmark crash JSON: %s\n  %s',
                     benchmark, e)
