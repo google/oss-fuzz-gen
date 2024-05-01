@@ -1,0 +1,1 @@
+[org.joni.Regex].<init>(byte[],int,int,int,org.jcodings.Encoding,org.joni.Syntax,org.joni.WarnCallback)

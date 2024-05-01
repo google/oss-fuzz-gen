@@ -76,6 +76,12 @@ class TextPrompt(Prompt):
     """Constructs the prompt problem in the required format."""
     self._text += f'{solution_content}\n'
 
+  def add_additional_data(self, content: str, role: str) -> None:
+    """Constructs the prompt problem with additional data."""
+    # Ignore role
+    del role
+    self._text += f'{content}'
+
   def create_prompt_piece(self, content: str, role: str) -> Any:
     """Returns a prompt piece in the format wanted by Google."""
     # Ignore role, just return content
@@ -121,6 +127,13 @@ class OpenAIPrompt(Prompt):
     self._prompt.append({
         'role': 'assistant',
         'content': solution_content,
+    })
+
+  def add_additional_data(self, content: str, role: str) -> None:
+    """Constructs the prompt problem in the required format."""
+    self._prompt.append({
+        'role': role,
+        'content': content,
     })
 
   def create_prompt_piece(self, content: str, role: str) -> Any:

@@ -1,0 +1,9 @@
+<task>
+Your goal is to write a fuzzing harness for the provided method signature using Jazzer framework from Code Intellengence. It is important that the provided solution compiles and actually calls the function specified by the method signature:
+<method_signature>
+{PROBLEM_CONTENT}
+</method_signature>
+The method signature follows the format of <code>[Full qualified name of the class].method_name(method_arguments)</code>.
+For example, for a method <code>test</code> in class <code>Test</code> of package <code>org.test</code> which takes in a single integer would have the following method signature:
+<code>[org.test.Test].test(int)</code>
+</task>

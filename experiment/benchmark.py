@@ -28,6 +28,7 @@ class FileType(Enum):
   """File types of target files."""
   C = 'C'
   CPP = 'C++'
+  JAVA = 'Java'
   NONE = ''
 
 
@@ -166,6 +167,8 @@ def get_file_type(file_path: str) -> FileType:
   cpp_extensions = ['.cc', '.cpp', '.cxx', '.c++', '.h', '.hpp']
   if any(file_path.endswith(ext) for ext in cpp_extensions):
     return FileType.CPP
+  if file_path.endswith('.java'):
+    return FileType.JAVA
   return FileType.NONE
 
 

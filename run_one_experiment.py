@@ -258,20 +258,28 @@ def run(benchmark: Benchmark,
       context_info = (context_header, context_types)
       retriever.cleanup_asts()
 
-    builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
+    if benchmark.language == 'jvm':
+      # For Java projects
+      builder = prompt_builder.DefaultJvmTemplateBuilder(model, benchmark.project, template_dir)
+    else:
+      return
+      # For C/C++ projects
+      builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
+
     prompt = builder.build(benchmark.function_signature,
                            benchmark.file_type,
                            example_pair,
                            project_examples,
                            project_context_content=context_info)
     prompt.save(work_dirs.prompt)
-    generated_targets = generate_targets(benchmark,
-                                         model,
-                                         prompt,
-                                         work_dirs,
-                                         debug=debug)
-    generated_targets = fix_code(work_dirs, generated_targets)
-
-  return check_targets(model.ai_binary, benchmark, work_dirs, generated_targets,
-                       cloud_experiment_name, cloud_experiment_bucket,
-                       run_timeout, model.name)
+#    generated_targets = generate_targets(benchmark,
+#                                         model,
+#                                         prompt,
+#                                         work_dirs,
+#                                         debug=debug)
+#    generated_targets = fix_code(work_dirs, generated_targets)
+  print(prompt.get())
+  return
+#  return check_targets(model.ai_binary, benchmark, work_dirs, generated_targets,
+#                       cloud_experiment_name, cloud_experiment_bucket,
+#                       run_timeout, model.name)

@@ -16,7 +16,9 @@ Prompt building tools.
 """
 
 import logging
+import requests
 import os
+import yaml
 from abc import abstractmethod
 from typing import Optional, Tuple
 
@@ -42,6 +44,10 @@ FDP_JVM_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH, 'jansi_colors-solution.j
 
 EXAMPLES = {
     'c++': [
+        [FDP_EXAMPLE_1_PROBLEM, FDP_EXAMPLE_1_SOLUTION],
+        [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
+    ],
+    'c': [
         [FDP_EXAMPLE_1_PROBLEM, FDP_EXAMPLE_1_SOLUTION],
         [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
     ],
@@ -349,6 +355,106 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def __init__(self,
                model: models.LLM,
+               project_name: str,
                template_dir: str = DEFAULT_TEMPLATE_DIR):
     super().__init__(model)
     self._template_dir = template_dir
+    self.project_name = project_name
+    self.project_url = self._find_project_url(project_name)
+
+    # Load templates.
+    self.base_template_file = self._find_template(template_dir,
+                                                  'jvm_base.txt')
+    self.data_filler_template_file = self._find_template(template_dir,
+                                                         'jvm_specific_data_filler.txt')
+    self.problem_template_file = self._find_template(template_dir,
+                                                     'jvm_problem.txt')
+    self.requirement_template_file = self._find_template(template_dir,
+                                                         'jvm_requirement.txt')
+
+  def _find_project_url(self, project_name: str) -> str:
+    """Discover project url from project's project.yaml in OSS-Fuzz"""
+    oss_fuzz_url = "https://raw.githubusercontent.com/google/oss-fuzz/master"
+    project_url = "%s/projects/%s/project.yaml" % (oss_fuzz_url, project_name)
+
+    try:
+      response = requests.get(project_url)
+      if response and response.status_code == 200:
+        project_yaml = yaml.load(response.content, Loader=yaml.SafeLoader)
+        if "main_repo" in project_yaml:
+          return project_yaml['main_repo']
+    except:
+      pass
+
+    print(f"Cannot retrieve project url of project {project_name}")
+    return ""
+
+  def _find_template(self, template_dir: str, template_name: str) -> str:
+    """Finds template file based on |template_dir|."""
+    preferred_template = os.path.join(template_dir, template_name)
+    # Use the preferred template if it exists.
+    if os.path.isfile(preferred_template):
+      return preferred_template
+    # Fall back to the default template.
+    default_template = os.path.join(DEFAULT_TEMPLATE_DIR, template_name)
+    return default_template
+
+  def _get_template(self, template_file: str) -> str:
+    """Reads the template for prompts."""
+    with open(template_file) as file:
+      return file.read()
+
+  def _format_base(self) -> str:
+    """Formats a priming based on the prompt template."""
+    base = self._get_template(self.base_template_file)
+    base = base.replace("{PROJECT_NAME}", self.project_name)
+    base = base.replace("{PROJECT_URL}", self.project_url)
+    return base
+
+  def _format_problem(self, problem_content: str) -> str:
+    """Formats a problem based on the prompt template."""
+    problem = self._get_template(self.problem_template_file)
+    problem = problem.replace('{PROBLEM_CONTENT}', problem_content)
+    return problem
+
+  def _format_requirement(self) -> str:
+    """Formats a requirement based on the prompt template."""
+    requirement = self._get_template(self.requirement_template_file)
+    return requirement
+
+  def _format_data_filler(self) -> str:
+    """Formats a data_filler based on the prompt template."""
+    data_filler = self._get_template(self.data_filler_template_file)
+    return data_filler
+
+  def _prepare_prompt(
+      self,
+      base: str,
+      final_problem: str,
+      requirement: str,
+      data_filler: str):
+    """Constructs a prompt using the parameters and saves it."""
+    self._prompt.add_priming(base)
+    self._prompt.add_problem(final_problem)
+    self._prompt.add_additional_data(requirement, "requirements")
+    self._prompt.add_additional_data(data_filler, "data_mapping")
+
+  def build(
+      self,
+      function_signature: str,
+      target_file_type: FileType,
+      example_pair: list[list[str]],
+      project_example_content: Optional[list[list[str]]] = None,
+      project_context_content: Optional[Tuple[str,
+                                              str]] = None) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it.
+       Ignore target_file_type, project_example_content
+       and project_context_content parameters.
+    """
+    base = self._format_base()
+    final_problem = self._format_problem(function_signature)
+    requirement = self._format_requirement()
+    data_filler = self._format_data_filler()
+    self._prepare_prompt(base, final_problem, requirement, data_filler)
+
+    return self._prompt
