@@ -1,0 +1,52 @@
+cff-version: 1.2.0
+title: 'https://github.com/google/oss-fuzz-gen'
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Dongge
+    family-names: Liu
+    email: donggeliu@google.com
+    affiliation: Google LLC
+    orcid: 'https://orcid.org/0000-0003-4821-7033'
+  - given-names: Oliver
+    family-names: Chang
+    email: ochang@google.com
+    affiliation: Google LLC
+    orcid: 'https://orcid.org/0009-0006-3181-4551'
+  - given-names: Jonathan
+    family-names: metzman
+    email: metzman@google.com
+    affiliation: Google LLC
+    orcid: 'https://orcid.org/0000-0002-7042-0444'
+  - given-names: Martin
+    family-names: Sablotny
+    email: msablotny@nvidia.com
+    affiliation: NVIDIA
+    orcid: 'https://orcid.org/0000-0002-9836-8254'
+  - given-names: Mihai
+    family-names: Maruseac
+    email: mihaimaruseac@google.com
+    affiliation: Google LLC
+    orcid: 'https://orcid.org/0000-0002-6225-1206'
+repository-code: 'https://github.com/google/oss-fuzz-gen'
+abstract: >-
+  OSS-Fuzz-Gen, an innovative open-source project developed
+  by Google, automates fuzz target generation to enhance
+  software security and reliability. Utilizing advanced
+  techniques, including large language models (LLM),
+  static code analysis, and runtime crash diagnosis,
+  this project efficiently creates and optimizes fuzz targets.
+  These efforts increase code coverage and identify
+  vulnerabilities within open-source projects. We actively
+  encourage and support collaborations with the research and
+  open-source communities, offering our services at no cost.
+keywords:
+  - Fuzzing
+  - Fuzz target generation
+  - Large Language Models
+  - Open-source
+  - Code analysis
+  - Software security
+license: Apache-2.0
