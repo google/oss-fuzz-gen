@@ -20,7 +20,7 @@ import os
 import shutil
 import subprocess
 from abc import abstractmethod
-from typing import Any, Dict, Iterator, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import build_generator
 import cxxfilt
@@ -30,7 +30,7 @@ import yaml
 MAX_FUZZ_PER_HEURISTIC = 15
 INTROSPECTOR_OSS_FUZZ_DIR = '/src/inspector'
 
-client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+LLM_MODEL = ''
 
 FUZZER_PRE_HEADERS = '''#include <stdlib.h>
 #include <stdint.h>
@@ -53,6 +53,11 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
     return 0;
 }'''
+
+
+def setup_model(model: str):
+  global LLM_MODEL
+  LLM_MODEL = model
 
 
 def get_all_files_in_path(base_path: str,
@@ -160,19 +165,35 @@ class FuzzHeuristicGeneratorBase:
 
   def run_prompt_and_get_fuzzer_source(self, prompt):
     """Communicate to OpenAI prompt and extract harness source code."""
-    completion = client.chat.completions.create(model="gpt-3.5-turbo",
-                                                messages=[
-                                                    {
-                                                        'role': 'system',
-                                                        'content': prompt
-                                                    },
-                                                ])
-    fuzzer_source = completion.choices[0].message.content
-    if fuzzer_source is None:
-      return ''
-    fuzzer_source = fuzzer_source.replace('<code>',
-                                          '').replace('</code>',
-                                                      '').replace('```', '')
+
+    if LLM_MODEL == 'openai':
+      client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+      completion = client.chat.completions.create(model="gpt-3.5-turbo",
+                                                  messages=[
+                                                      {
+                                                          'role': 'system',
+                                                          'content': prompt
+                                                      },
+                                                  ])
+      fuzzer_source = completion.choices[0].message.content
+      if fuzzer_source is None:
+        return ''
+      fuzzer_source = fuzzer_source.replace('<code>',
+                                            '').replace('</code>',
+                                                        '').replace('```', '')
+    elif LLM_MODEL == 'vertex':
+      print('Using vertex')
+      from vertexai.language_models import CodeGenerationModel
+      parameters = {'temperature': 0.5, 'max_output_tokens': 512}
+      code_generation_model = CodeGenerationModel.from_pretrained(
+          'code-bison@001')
+      response = code_generation_model.predict(prefix=prompt, **parameters)
+      fuzzer_source = response.text.replace('<code>',
+                                            '').replace('</code>',
+                                                        '').replace('```', '')
+    else:
+      raise Exception(f'Did not find a relevant LLM for "{LLM_MODEL}".')
+
     print('>' * 45 + ' Source:')
     print(fuzzer_source)
     print('-' * 65)
@@ -965,6 +986,10 @@ def parse_commandline():
                       help='Targets per heuristic.',
                       type=int,
                       default=5)
+  parser.add_argument('--model',
+                      '-m',
+                      help='Model to use for auto generation',
+                      type=str)
   return parser
 
 
@@ -973,6 +998,8 @@ def main():
 
   parser = parse_commandline()
   args = parser.parse_args()
+
+  setup_model(args.model)
 
   append_to_report(args.out, f'Analysing: {args.repo}')
   MAX_FUZZ_PER_HEURISTIC = args.targets_per_heuristic

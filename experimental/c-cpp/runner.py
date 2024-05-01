@@ -18,6 +18,7 @@ import argparse
 import os
 import shutil
 import subprocess
+import sys
 import threading
 from typing import List
 
@@ -65,7 +66,8 @@ RUN rm /usr/local/bin/cargo && \
  apt-get install -y cargo
 RUN python3 -m pip install --upgrade pip && \
     python3 -m pip install pydantic-core pyyaml cxxfilt openai==1.16.2
-COPY *.py $SRC/
+RUN python3 -m pip install --upgrade google-cloud-aiplatform
+COPY *.py *.json $SRC/
 WORKDIR $SRC
 COPY build.sh $SRC/"""
 
@@ -78,7 +80,7 @@ main_repo: 'https://github.com/samtools/htslib.git'
 """
 
 
-def setup_worker_project(oss_fuzz_base: str, project_name: str):
+def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
   """Setup empty OSS-Fuzz project used for analysis."""
   temp_project_dir = os.path.join(oss_fuzz_base, "projects", project_name)
   if os.path.isdir(temp_project_dir):
@@ -91,6 +93,14 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str):
     f.write(empty_oss_fuzz_build)
   with open(os.path.join(temp_project_dir, 'Dockerfile'), 'w') as f:
     f.write(empty_oss_fuzz_docker)
+
+  if llm_model == 'vertex':
+    json_config = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', None)
+    if json_config is None:
+      print('vertex model is set but could not find configuration file.')
+      print('Plese set GOOGLE_APPLICATION_CREDENTIALS env variable.')
+      sys.exit(1)
+    shutil.copyfile(json_config, os.path.join(temp_project_dir, 'creds.json'))
 
   # Copy over the generator
   files_to_copy = {'build_generator.py', 'manager.py'}
@@ -116,17 +126,27 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str):
 
 def run_autogen(github_url,
                 outdir,
-                openai_api_key,
                 oss_fuzz_base,
                 worker_project,
                 disable_autofuzz,
+                model,
+                openai_api_key=None,
                 targets_per_heuristic=5):
   """Launch auto-gen analysis within OSS-Fuzz container."""
 
   initiator_cmd = 'python3 /src/manager.py %s -o %s' % (github_url, outdir)
   if disable_autofuzz:
     initiator_cmd += ' --disable-fuzzgen'
+  initiator_cmd += ' --model=%s' % (model)
   initiator_cmd += ' --targets-per-heuristic=%d' % (targets_per_heuristic)
+
+  extra_environment = []
+  if model == 'vertex':
+    extra_environment.append('-e')
+    extra_environment.append('GOOGLE_APPLICATION_CREDENTIALS=/src/creds.json')
+  elif model == 'openai':
+    extra_environment.append('-e')
+    extra_environment.append('OPENAI_API_KEY=%s' % (openai_api_key))
 
   cmd = [
       'docker',
@@ -141,8 +161,9 @@ def run_autogen(github_url,
       'HELPER=True',
       '-e',
       'FUZZING_LANGUAGE=c++',
-      '-e',
-      'OPENAI_API_KEY=%s' % (openai_api_key),
+  ] + extra_environment
+
+  cmd += [
       '-v',
       '%s/build/out/%s:/out' % (oss_fuzz_base, worker_project),
       '-v',
@@ -184,6 +205,7 @@ def run_on_targets(target,
                    oss_fuzz_base,
                    worker_project_name,
                    idx,
+                   llm_model,
                    semaphore=None,
                    disable_autofuzz=False,
                    targets_per_heuristic=5):
@@ -192,13 +214,19 @@ def run_on_targets(target,
   if semaphore is not None:
     semaphore.acquire()
 
-  openai_api_key = os.getenv('OPENAI_API_KEY')
+  openai_api_key = os.getenv('OPENAI_API_KEY', None)
 
   outdir = '/out/autogen-results-%d' % (idx)
   with open('status-log.txt', 'a') as f:
     f.write("Targeting: %s :: %d\n" % (target, idx))
-  run_autogen(target, outdir, openai_api_key, oss_fuzz_base,
-              worker_project_name, disable_autofuzz, targets_per_heuristic)
+  run_autogen(target,
+              outdir,
+              oss_fuzz_base,
+              worker_project_name,
+              disable_autofuzz,
+              llm_model,
+              targets_per_heuristic=targets_per_heuristic,
+              openai_api_key=openai_api_key)
 
   if semaphore is not None:
     semaphore.release()
@@ -219,7 +247,7 @@ def get_next_worker_project(oss_fuzz_base: str) -> str:
 
 
 def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
-                  targets_per_heuristic):
+                  targets_per_heuristic, llm_model):
   """Run auto-gen on a list of projects in parallel.
 
   Parallelisation is done by way of threads. Practically
@@ -232,10 +260,10 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
     worker_project_name = get_next_worker_project(oss_fuzz_base)
     print(f'Worker project name {worker_project_name}')
 
-    setup_worker_project(oss_fuzz_base, worker_project_name)
+    setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
     proc = threading.Thread(target=run_on_targets,
                             args=(target, oss_fuzz_base, worker_project_name,
-                                  idx, semaphore, disable_autofuzz,
+                                  idx, llm_model, semaphore, disable_autofuzz,
                                   targets_per_heuristic))
     jobs.append(proc)
     proc.start()
@@ -245,12 +273,12 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
 
 
 def run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz,
-                   targets_per_heuristic):
+                   targets_per_heuristic, llm_model):
   """Run auto-gen on a list of projects sequentially."""
   for idx, target in enumerate(target_repositories):
     worker_project_name = get_next_worker_project(oss_fuzz_base)
-    run_on_targets(target, oss_fuzz_base, worker_project_name, idx,
-                   disable_autofuzz, targets_per_heuristic)
+    run_on_targets(target, oss_fuzz_base, worker_project_name, idx, llm_model,
+                   None, disable_autofuzz, targets_per_heuristic)
 
 
 def parse_commandline():
@@ -270,6 +298,7 @@ def parse_commandline():
                       '-s',
                       help='Disable logging in subprocess.',
                       action='store_true')
+  parser.add_argument('--model', '-m', help='LLM model to use', type=str)
   return parser.parse_args()
 
 
@@ -292,10 +321,10 @@ def main():
   use_multithreading = True
   if use_multithreading:
     run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
-                  args.targets_per_heuristic)
+                  args.targets_per_heuristic, args.model)
   else:
     run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz,
-                   args.targets_per_heuristic)
+                   args.targets_per_heuristic, args.model)
 
 
 if __name__ == '__main__':

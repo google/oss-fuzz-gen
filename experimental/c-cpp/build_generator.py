@@ -14,20 +14,12 @@
 # limitations under the License.
 """Utilities for generating builder scripts for a GitHub repository."""
 
-import argparse
-import json
 import os
-import shutil
 import subprocess
 from abc import abstractmethod
-from typing import Any, Dict, Iterator, List, Optional, Tuple
+from typing import Any, Dict, Iterator, List, Tuple
 
-import cxxfilt
 import manager
-import openai
-import yaml
-
-client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 
 ############################################################
