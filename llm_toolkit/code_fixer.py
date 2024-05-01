@@ -259,7 +259,13 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
     log_lines = errlog_file.readlines()
 
   target_names = [project_target_basename]
-  command_pattern = r'\[.*clang(?:\+\+)?-jcc (.*)\]\n?'
+
+  # Look for cppified target, from jcc.go:TryFixCCompilation().
+  target_name, target_ext = os.path.splitext(project_target_basename)
+  if target_ext == '.c':
+    target_names.append(f'{target_name}.cpp')
+
+  command_pattern = r'\[.*clang(?:\+\+)? (.*)\]\n?'
   invalid_c_argument_pattern = (r"error: invalid argument '.*' "
                                 r"not allowed with 'C\+\+'\n?")
 
