@@ -31,6 +31,8 @@ authors:
     affiliation: Google LLC
     orcid: 'https://orcid.org/0000-0002-6225-1206'
 repository-code: 'https://github.com/google/oss-fuzz-gen'
+url: >-
+  https://security.googleblog.com/2023/08/ai-powered-fuzzing-breaking-bug-hunting.html
 abstract: >-
   OSS-Fuzz-Gen, an innovative open-source project developed
   by Google, automates fuzz target generation to enhance
