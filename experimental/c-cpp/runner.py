@@ -287,6 +287,7 @@ def parse_commandline():
   parser.add_argument('--oss-fuzz', '-o', help='OSS-Fuzz base')
   parser.add_argument('--input', '-i', help='Input to analyze')
   parser.add_argument('--disable-fuzzgen',
+                      '-d',
                       action='store_true',
                       help='Disable fuzz generation')
   parser.add_argument('--targets-per-heuristic',
