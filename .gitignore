@@ -7,3 +7,4 @@ venv/
 .venv/
 __pycache__/
 *.swp
+generated-benchmark-*
