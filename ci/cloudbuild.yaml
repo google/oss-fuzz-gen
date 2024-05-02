@@ -1,0 +1,18 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - build
+  - '-t'
+  - gcr.io/oss-fuzz-base/oss-fuzz-gen-ci
+  - '-f'
+  - ci/Dockerfile
+  - .
+- name: 'gcr.io/oss-fuzz-base/oss-fuzz-gen-ci'
+  args: []
+  env:
+    - 'PULL_REQUEST_NUMBER=${_PR_NUMBER}'
+    - 'BRANCH=${_HEAD_BRANCH}'
+    - 'REPO=${_HEAD_REPO_URL}'
+options:
+  logging: CLOUD_LOGGING_ONLY
+serviceAccount: projects/oss-fuzz/serviceAccounts/LLM-EVAL@oss-fuzz.iam.gserviceaccount.com
