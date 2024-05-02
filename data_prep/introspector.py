@@ -336,12 +336,13 @@ def _group_function_params(param_types: list[str],
 
 
 def populate_benchmarks_using_introspector(project: str, language: str,
-                                           limit: int, target_oracles: List[str]):
+                                           limit: int,
+                                           target_oracles: List[str]):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
 
   functions = []
   for target_oracle in target_oracles:
-    logging.info(f'Extracting functions using oracle {target_oracle}')
+    logging.info('Extracting functions using oracle %s.', target_oracle)
     tmp_functions = query_introspector_for_targets(project, target_oracle)
 
     # Limit the amount of functions from each oracle.
@@ -350,7 +351,6 @@ def populate_benchmarks_using_introspector(project: str, language: str,
   if not functions:
     logging.error('No functions found using the oracles: {target_oracles}')
     return []
-
 
   filenames = [
       os.path.basename(function['function_filename']) for function in functions
@@ -396,7 +396,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
 
     if len(potential_benchmarks) >= (limit * len(target_oracles)):
       break
-  print("Length of potential targets: %d"%(len(potential_benchmarks)))
+  print("Length of potential targets: %d" % (len(potential_benchmarks)))
 
   return potential_benchmarks
 

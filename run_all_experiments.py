@@ -55,16 +55,16 @@ class Result:
 
 
 def get_next_generated_benchmarks_dir() -> str:
-    """Retuns the next folder to be used for generated benchmarks."""
-    max_idx = -1
-    for benchmark_folder in os.listdir():
-        try:
-            max_idx = max(max_idx, int(benchmark_folder.replace(GENERATED_BENCHMARK_DIR, '')))
-        except (ValueError, TypeError) as exc:
-            pass
-    max_idx += 1
-    return f'{GENERATED_BENCHMARK_DIR}{max_idx}'
-
+  """Retuns the next folder to be used for generated benchmarks."""
+  max_idx = -1
+  for benchmark_folder in os.listdir():
+    try:
+      max_idx = max(max_idx,
+                    int(benchmark_folder.replace(GENERATED_BENCHMARK_DIR, '')))
+    except (ValueError, TypeError) as _:
+      pass
+  max_idx += 1
+  return f'{GENERATED_BENCHMARK_DIR}{max_idx}'
 
 
 def get_experiment_configs(
@@ -80,13 +80,18 @@ def get_experiment_configs(
   elif args.generate_benchmarks:
     logging.info('Generating benchmarks.')
     outdir = get_next_generated_benchmarks_dir()
-    logging.info(f'Setting benchmark directory to {outdir}')
+    logging.info('Setting benchmark directory to %s.', outdir)
     os.makedirs(outdir, exist_ok=True)
     args.benchmarks_directory = outdir
-    benchmarks_to_generate = [heuristic.strip() for heuristic in args.generate_benchmarks.split(',')]
-    projects_to_target = [project.strip() for project in args.projects.split(',')]
+    benchmarks_to_generate = [
+        heuristic.strip() for heuristic in args.generate_benchmarks.split(',')
+    ]
+    projects_to_target = [
+        project.strip() for project in args.projects.split(',')
+    ]
     for project in projects_to_target:
-      benchmarks = introspector.populate_benchmarks_using_introspector(project, 'cpp', args.max_benchmark_targets, benchmarks_to_generate)
+      benchmarks = introspector.populate_benchmarks_using_introspector(
+          project, 'cpp', args.max_benchmark_targets, benchmarks_to_generate)
       if benchmarks:
         benchmarklib.Benchmark.to_yaml(benchmarks, outdir)
     benchmark_yamls = [
@@ -193,9 +198,19 @@ def parse_args() -> argparse.Namespace:
                       '--introspector-endpoint',
                       type=str,
                       default=introspector.DEFAULT_INTROSPECTOR_ENDPOINT)
-  parser.add_argument('-g', '--generate-benchmarks', help='Benchmarks to create', type=str)
-  parser.add_argument('-p', '--projects', help='Projects to target, comma separated string.', type=str)
-  parser.add_argument('-m', '--max-benchmark-targets', help='Max targets to generate per benchmark heuristic.', type=int, default=5)
+  parser.add_argument('-g',
+                      '--generate-benchmarks',
+                      help='Benchmarks to create',
+                      type=str)
+  parser.add_argument('-p',
+                      '--projects',
+                      help='Projects to target, comma separated string.',
+                      type=str)
+  parser.add_argument('-m',
+                      '--max-benchmark-targets',
+                      help='Max targets to generate per benchmark heuristic.',
+                      type=int,
+                      default=5)
   parser.add_argument(
       '--delay',
       type=int,
@@ -216,10 +231,12 @@ def parse_args() -> argparse.Namespace:
             benchmark_yaml.endswith('yml')), (
                 "--benchmark-yaml needs to take an YAML file.")
 
-  assert bool(benchmark_yaml) != bool(args.benchmarks_directory) or args.generate_benchmarks, (
-      'One and only one of --benchmark-yaml and --benchmarks-directory is '
-      'required. The former takes one benchmark YAML file, the latter '
-      'takes: a directory of them.')
+  assert bool(benchmark_yaml) != bool(
+      args.benchmarks_directory) or args.generate_benchmarks, (
+          'One and only one of --benchmark-yaml and --benchmarks-directory is '
+          'required, or --generate-benchmarks. --benchmark-yaml takes one '
+          'benchmark YAML file, --benchmarks-directory takes: a directory of '
+          'them and --generate-benchmarks generates them during analysis.')
 
   # Validate templates.
   assert os.path.isdir(args.template_directory), (
