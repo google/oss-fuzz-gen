@@ -331,8 +331,9 @@ def extract_error_message(log_path: str,
 
   linker_error_start_string = '/usr/bin/ld: '
   llvm_linker_error_start_string = 'ld.lld: '
-  linker_error_end_string = ('clang-15: error: linker command failed with exit '
-                             'code 1 (use -v to see invocation)')
+  linker_error_end_pattern = (
+      r'clang.*: error: linker command failed with exit code 1 \(use -v to see '
+      r'invocation\)\n?')
 
   errors = []
   for i, line in enumerate(log_lines):
@@ -348,7 +349,7 @@ def extract_error_message(log_path: str,
     # clang failed, and building with clang++ also failed, we take the
     # error from clang++, which comes after.
     if temp_range[0] is not None:
-      if (line.startswith(linker_error_end_string) or
+      if (re.fullmatch(linker_error_end_pattern, line) or
           re.fullmatch(clang_error_end_pattern, line)):
         temp_range[1] = i
         error_lines_range = temp_range
