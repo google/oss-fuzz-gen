@@ -299,8 +299,10 @@ def _get_clean_arg_types(function: dict, project: str) -> list[str]:
 def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
   if language == 'jvm':
-    args = _get_clean_arg_types(function, project)
-    arg_names = ['var_%s' % (name.split('.')[-1].replace("[]", "")) for name in args]
+    jvm_args = _get_clean_arg_types(function, project)
+    arg_names = [
+        'var_%s' % (name.split('.')[-1].replace("[]", "")) for name in jvm_args
+    ]
   else:
     arg_names = (function.get('arg-names') or
                  function.get('function_argument_names', []))
@@ -352,11 +354,14 @@ def populate_benchmarks_using_introspector(project: str, language: str,
 
   if language == 'jvm':
     filenames = [
-        "%s.java" % (function['function_filename'].split('$')[0].replace('.', '/')) for function in functions
+        "%s.java" %
+        (function['function_filename'].split('$')[0].replace('.', '/'))
+        for function in functions
     ]
   else:
     filenames = [
-        os.path.basename(function['function_filename']) for function in functions
+        os.path.basename(function['function_filename'])
+        for function in functions
     ]
 
   result = project_src.search_source(project, filenames, language)

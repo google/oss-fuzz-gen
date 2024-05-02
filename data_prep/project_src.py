@@ -275,8 +275,8 @@ def _copy_project_src_from_local(project: str, out: str):
   logging.info('Done copying %s /src to %s.', project, out)
 
 
-def _identify_fuzz_targets(
-    out: str, interesting_filenames: list[str], language: str) -> tuple[list[str], list[str]]:
+def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
+                           language: str) -> tuple[list[str], list[str]]:
   """
   Identifies fuzz target file contents and |interesting_filenames| in |out|.
   """
@@ -307,7 +307,7 @@ def _identify_fuzz_targets(
         short_path = path[len(out):]
         if short_path in interesting_filenames:
           interesting_filepaths.append(path)
-        # TODO(dongge): Figure out why the path does not match for Bazel projects.
+        # TODO(dongge): Figure out why the path does not match Bazel projects.
         if os.path.basename(short_path) in interesting_filenames:
           interesting_filepaths.append(path)
         # This should also include .cpp and .cc but exclude headers which
@@ -318,9 +318,9 @@ def _identify_fuzz_targets(
   return potential_harnesses, interesting_filepaths
 
 
-def _parse_fuzz_targets(
-    project: str, out: str, potential_harnesses: list[str],
-    interesting_filepaths: list[str], language: str) -> tuple[dict[str, str], dict[str, str]]:
+def _parse_fuzz_targets(project: str, out: str, potential_harnesses: list[str],
+                        interesting_filepaths: list[str],
+                        language: str) -> tuple[dict[str, str], dict[str, str]]:
   """
   Parses fuzz target file contents and |interesting_filenames| in |out|.
   """

@@ -131,6 +131,7 @@ def _bucket_match_target_content_signatures(
 
 
 def generate_data(project_name: str,
+                  language: str,
                   sig_per_target: int = 1,
                   max_samples: int = 1,
                   cloud_experiment_bucket: str = ''):
@@ -148,7 +149,7 @@ def generate_data(project_name: str,
           f'from Google Cloud Bucket: {OSS_FUZZ_EXP_BUCKET}.')
     print('Will try to build from Google Cloud or local docker image.')
     target_content_signature_dict = _match_target_content_signatures(
-        target_funcs, project_name, cloud_experiment_bucket)
+        target_funcs, project_name, language, cloud_experiment_bucket)
   if not target_content_signature_dict:
     return []
 
@@ -200,6 +201,7 @@ def filter_target_lines(target_content: str) -> str:
 def _match_target_content_signatures(
     target_funcs: Dict[str, List[Dict]],
     project_name: str,
+    language: str,
     cloud_experiment_bucket: str = '') -> Dict[str, List[str]]:
   """Returns a list of dictionary with function signatures as keys and
     its fuzz target content as values."""
@@ -208,7 +210,7 @@ def _match_target_content_signatures(
     return {}
 
   source_content = project_src.search_source(
-      project_name, [], cloud_experiment_bucket=cloud_experiment_bucket)
+      project_name, [], language, cloud_experiment_bucket=cloud_experiment_bucket)
 
   if not source_content[0]:
     print(f'Error: No fuzz target found for project {project_name}.')
@@ -296,6 +298,12 @@ def _parse_arguments():
                       default='',
                       help='A gcloud bucket to store experiment files.')
 
+  parser.add_argument('-l',
+                      '--language',
+                      type=str,
+                      default='c++',
+                      help='Language of projects.')
+
   parsed_args = parser.parse_args()
   if not parsed_args.result_path:
     parsed_args.result_path = f'{parsed_args.project_name}.json'
@@ -305,9 +313,10 @@ def _parse_arguments():
 def _generate_project_training_data(project_name: str,
                                     sig_per_target,
                                     max_samples,
+                                    language,
                                     cloud_experiment_bucket: str = ''):
   try:
-    return generate_data(project_name, sig_per_target, max_samples,
+    return generate_data(project_name, language, sig_per_target, max_samples,
                          cloud_experiment_bucket)
   except Exception as e:
     print(f'Project {project_name} failed:\n{e}')
@@ -333,6 +342,7 @@ def main():
       project,
       sig_per_target,
       max_samples,
+      args.language,
       args.cloud_experiment_bucket,
   ] for project in all_projects]
   with ThreadPool(num_threads) as p:

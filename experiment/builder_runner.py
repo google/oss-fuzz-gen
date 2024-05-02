@@ -129,10 +129,10 @@ class BuilderRunner:
     name = signature.split('].')[1].split('(')[0]
     arg_count = len(signature.split('(')[1].split(')')[0].split(','))
 
-    pattern = f'({name}\({",".join([base_arg_regex] * arg_count)}\))'
+    pattern = r'(%s\(%s\))' % (name, ','.join([base_arg_regex] * arg_count))
     match = re.search(pattern, code)
 
-    return True if match else False
+    return bool(match)
 
   def _contains_target_function(self, target_path: str) -> bool:
     """Validates if the LLM-generated code contains the target function."""

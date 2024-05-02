@@ -16,11 +16,12 @@ Prompt building tools.
 """
 
 import logging
-import requests
 import os
-import yaml
 from abc import abstractmethod
 from typing import Optional, Tuple
+
+import requests
+import yaml
 
 from data_prep import project_targets
 from experiment.benchmark import Benchmark, FileType
@@ -38,9 +39,12 @@ FDP_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH, 'gdImageString-solution.cc')
 FDP_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH, 'mpg123_decode-problem.txt')
 FDP_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH, 'mpg123_decode-solution.cc')
 FDP_JVM_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'joni_regex-problem.txt')
-FDP_JVM_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH, 'joni_regex-solution.java')
-FDP_JVM_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH, 'jansi_colors-problem.txt')
-FDP_JVM_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH, 'jansi_colors-solution.java')
+FDP_JVM_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH,
+                                          'joni_regex-solution.java')
+FDP_JVM_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH,
+                                         'jansi_colors-problem.txt')
+FDP_JVM_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH,
+                                          'jansi_colors-solution.java')
 
 EXAMPLES = {
     'c++': [
@@ -363,14 +367,13 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self.project_url = self._find_project_url(project_name)
 
     # Load templates.
-    self.base_template_file = self._find_template(template_dir,
-                                                  'jvm_base.txt')
-    self.data_filler_template_file = self._find_template(template_dir,
-                                                         'jvm_specific_data_filler.txt')
+    self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
+    self.data_filler_template_file = self._find_template(
+        template_dir, 'jvm_specific_data_filler.txt')
     self.problem_template_file = self._find_template(template_dir,
                                                      'jvm_problem.txt')
-    self.requirement_template_file = self._find_template(template_dir,
-                                                         'jvm_requirement.txt')
+    self.requirement_template_file = self._find_template(
+        template_dir, 'jvm_requirement.txt')
 
   def _find_project_url(self, project_name: str) -> str:
     """Discover project url from project's project.yaml in OSS-Fuzz"""
@@ -378,7 +381,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     project_url = "%s/projects/%s/project.yaml" % (oss_fuzz_url, project_name)
 
     try:
-      response = requests.get(project_url)
+      response = requests.get(project_url, timeout=20)
       if response and response.status_code == 200:
         project_yaml = yaml.load(response.content, Loader=yaml.SafeLoader)
         if "main_repo" in project_yaml:
@@ -429,10 +432,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     data_filler = self._get_template(self.data_filler_template_file)
     return data_filler
 
-  def _prepare_prompt(
-      self,
-      base: str,
-      final_problem: str):
+  def _prepare_prompt(self, base: str, final_problem: str):
     """Constructs a prompt using the parameters and saves it."""
     self._prompt.add_priming(base)
     self._prompt.add_problem(final_problem)
@@ -453,4 +453,11 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     final_problem = self._format_problem(function_signature)
     self._prepare_prompt(base, final_problem)
 
+    return self._prompt
+
+  def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
+                         error_desc: Optional[str],
+                         errors: list[str]) -> prompts.Prompt:
+    """Builds a fixer prompt."""
+    # Do nothing for jvm project now.
     return self._prompt

@@ -237,7 +237,9 @@ def run(benchmark: Benchmark,
   else:
     if benchmark.use_project_examples:
       project_examples = project_targets.generate_data(
-          benchmark.project, cloud_experiment_bucket=cloud_experiment_bucket)
+          benchmark.project,
+          benchmark.language,
+          cloud_experiment_bucket=cloud_experiment_bucket)
     else:
       project_examples = []
 
@@ -260,9 +262,9 @@ def run(benchmark: Benchmark,
 
     if benchmark.language == 'jvm':
       # For Java projects
-      builder = prompt_builder.DefaultJvmTemplateBuilder(model, benchmark.project, template_dir)
+      builder = prompt_builder.DefaultJvmTemplateBuilder(
+          model, benchmark.project, template_dir)
     else:
-      return
       # For C/C++ projects
       builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
 
