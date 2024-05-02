@@ -37,10 +37,10 @@ abstract: >-
   OSS-Fuzz-Gen, an innovative open-source project developed
   by Google, automates fuzz target generation to enhance
   software security and reliability. Utilizing advanced
-  techniques, including large language models (LLM),
-  static code analysis, and runtime crash diagnosis,
-  this project efficiently creates and optimizes fuzz targets.
-  These efforts increase code coverage and identify
+  techniques, including large language models (LLM), static
+  code analysis, and runtime crash diagnosis, this project
+  efficiently creates and optimizes fuzz targets. These
+  efforts increase code coverage and identify
   vulnerabilities within open-source projects. We actively
   encourage and support collaborations with the research and
   open-source communities, offering our services at no cost.
