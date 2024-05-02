@@ -210,7 +210,9 @@ def _match_target_content_signatures(
     return {}
 
   source_content = project_src.search_source(
-      project_name, [], language, cloud_experiment_bucket=cloud_experiment_bucket)
+      project_name, [],
+      language,
+      cloud_experiment_bucket=cloud_experiment_bucket)
 
   if not source_content[0]:
     print(f'Error: No fuzz target found for project {project_name}.')
@@ -315,6 +317,7 @@ def _generate_project_training_data(project_name: str,
                                     max_samples,
                                     language,
                                     cloud_experiment_bucket: str = ''):
+  """Generate project training data."""
   try:
     return generate_data(project_name, language, sig_per_target, max_samples,
                          cloud_experiment_bucket)
