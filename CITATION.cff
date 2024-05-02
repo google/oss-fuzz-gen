@@ -52,3 +52,5 @@ keywords:
   - Code analysis
   - Software security
 license: Apache-2.0
+version: 'https://github.com/google/oss-fuzz-gen/tree/v1.0'
+date-released: '2024-05-02'
