@@ -54,8 +54,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     return 0;
 }'''
 
-
-CLEAN_DOCKER='''# Copyright 2024 Google LLC
+CLEAN_DOCKER = '''# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -78,8 +77,7 @@ COPY *.sh *.cpp $SRC/
 RUN git clone %s %s
 WORKDIR %s'''
 
-
-CLEAN_DOCKER_CFLITE='''# Copyright 2024 Google LLC
+CLEAN_DOCKER_CFLITE = '''# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -104,7 +102,7 @@ COPY .clusterfuzzlite/fuzzer.cpp $SRC/fuzzer.cpp
 WORKDIR %s
 '''
 
-CFLITE_TEMPLATE="""name: ClusterFuzzLite PR fuzzing
+CFLITE_TEMPLATE = """name: ClusterFuzzLite PR fuzzing
 on:
   workflow_dispatch:
   pull_request:
@@ -855,8 +853,10 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
                   os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
 
   # Create an OSS-Fuzz integration and ClusterFuzzLite integration
-  create_clean_oss_fuzz_from_success(github_repo, os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
-  create_clean_clusterfuzz_lite_from_success(github_repo, os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
+  create_clean_oss_fuzz_from_success(
+      github_repo, os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
+  create_clean_clusterfuzz_lite_from_success(
+      github_repo, os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
 
 
 def create_clean_oss_fuzz_from_success(github_repo, success_dir):
@@ -866,20 +866,21 @@ def create_clean_oss_fuzz_from_success(github_repo, success_dir):
 
   # Project yaml
   project_yaml = {
-          'homepage': github_repo,
-          'language': 'c++',
-          'primary_contact': 'add_your_email@here.com',
-          'main_repo': github_repo
+      'homepage': github_repo,
+      'language': 'c++',
+      'primary_contact': 'add_your_email@here.com',
+      'main_repo': github_repo
   }
   with open(os.path.join(oss_fuzz_folder, 'project.yaml'), 'w') as project_out:
     yaml.dump(project_yaml, project_out)
 
   # Copy fuzzer
-  shutil.copy(os.path.join(success_dir, 'empty-fuzzer.cpp'), os.path.join(oss_fuzz_folder, 'fuzzer.cpp'))
+  shutil.copy(os.path.join(success_dir, 'empty-fuzzer.cpp'),
+              os.path.join(oss_fuzz_folder, 'fuzzer.cpp'))
 
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
-  dockerfile = CLEAN_DOCKER%(github_repo, project_repo_dir, project_repo_dir)
+  dockerfile = CLEAN_DOCKER % (github_repo, project_repo_dir, project_repo_dir)
   with open(os.path.join(oss_fuzz_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
@@ -892,12 +893,13 @@ def create_clean_oss_fuzz_from_success(github_repo, success_dir):
 
   clean_build_content_lines = split_build_content[:1] + split_build_content[4:]
   clean_build_content = '\n'.join(clean_build_content_lines).replace(
-    '/src/generated-fuzzer', '$OUT/fuzzer').replace(
-     'empty-fuzzer', 'fuzzer').replace(
-     '/src/', '$SRC/').replace(original_build_folder, project_repo_dir)
+      '/src/generated-fuzzer',
+      '$OUT/fuzzer').replace('empty-fuzzer', 'fuzzer').replace(
+          '/src/', '$SRC/').replace(original_build_folder, project_repo_dir)
 
   with open(os.path.join(oss_fuzz_folder, 'build.sh'), 'w') as f:
     f.write(clean_build_content)
+
 
 def create_clean_clusterfuzz_lite_from_success(github_repo, success_dir):
   """Converts a successful out dir into a working ClusterFuzzLite project."""
@@ -906,17 +908,18 @@ def create_clean_clusterfuzz_lite_from_success(github_repo, success_dir):
 
   # Project yaml
   project_yaml = {
-          'language': 'c++',
+      'language': 'c++',
   }
   with open(os.path.join(cflite_folder, 'project.yaml'), 'w') as project_out:
     yaml.dump(project_yaml, project_out)
 
   # Copy fuzzer
-  shutil.copy(os.path.join(success_dir, 'empty-fuzzer.cpp'), os.path.join(cflite_folder, 'fuzzer.cpp'))
+  shutil.copy(os.path.join(success_dir, 'empty-fuzzer.cpp'),
+              os.path.join(cflite_folder, 'fuzzer.cpp'))
 
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
-  dockerfile = CLEAN_DOCKER_CFLITE%(project_repo_dir, project_repo_dir)
+  dockerfile = CLEAN_DOCKER_CFLITE % (project_repo_dir, project_repo_dir)
   with open(os.path.join(cflite_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
@@ -929,9 +932,9 @@ def create_clean_clusterfuzz_lite_from_success(github_repo, success_dir):
 
   clean_build_content_lines = split_build_content[:1] + split_build_content[4:]
   clean_build_content = '\n'.join(clean_build_content_lines).replace(
-    '/src/generated-fuzzer', '$OUT/fuzzer').replace(
-    'empty-fuzzer', 'fuzzer').replace(
-    '/src/', '$SRC/').replace(original_build_folder, project_repo_dir)
+      '/src/generated-fuzzer',
+      '$OUT/fuzzer').replace('empty-fuzzer', 'fuzzer').replace(
+          '/src/', '$SRC/').replace(original_build_folder, project_repo_dir)
 
   with open(os.path.join(cflite_folder, 'build.sh'), 'w') as f:
     f.write(clean_build_content)
