@@ -119,12 +119,29 @@ class BuilderRunner:
     match = re.search(pattern, func_sig)
     return match.group(1).strip() if match else func_sig
 
+  def _contains_target_jvm_method(self, target_path: str) -> bool:
+    """Validates if the LLM-generated code contains the target jvm methods."""
+    with open(target_path) as generated_code_file:
+      code = generated_code_file.read()
+
+    base_arg_regex = r'[a-zA-Z_$][a-zA-Z_$0-9]*'
+    signature = self.benchmark.function_signature
+    name = signature.split('].')[1].split('(')[0]
+    arg_count = len(signature.split('(')[1].split(')')[0].split(','))
+
+    pattern = f'({name}\({",".join([base_arg_regex] * arg_count)}\))'
+    match = re.search(pattern, code)
+
+    return True if match else False
+
   def _contains_target_function(self, target_path: str) -> bool:
     """Validates if the LLM-generated code contains the target function."""
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
+
     min_func_name = self._get_minimum_func_name(
         self.benchmark.function_signature)
+
     return min_func_name in generated_code
 
   def _pre_build_check(self, target_path: str,
@@ -132,7 +149,12 @@ class BuilderRunner:
     """Checks the generated target before building and running it."""
     # No need to build the fuzz target if it does not contain the target
     # function.
-    if not self._contains_target_function(target_path):
+    if self.benchmark.language == 'jvm':
+      result = self._contains_target_jvm_method(target_path)
+    else:
+      result = self._contains_target_function(target_path)
+
+    if not result:
       build_result.errors = [
           (f'The target function `{self.benchmark.function_signature}`'
            ' was not called by the fuzz target '
@@ -143,8 +165,8 @@ class BuilderRunner:
       ]
       print(f'Missing target function: {target_path} does not contain '
             f'{self.benchmark.function_signature}')
-      return False
-    return True
+
+    return result
 
   def _parse_stacks_from_libfuzzer_logs(self,
                                         lines: list[str]) -> list[list[str]]:

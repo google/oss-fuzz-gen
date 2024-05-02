@@ -8,9 +8,4 @@ Carefully study the method signature and its parameters, then follow the example
 Try as many variations of these inputs as possible. Do not use random number generator classes or methods such as <code>java.lang.Random</code> class.
 
 The generated fuzzing harness should be wrapped with the <java_code> tag.
-
-Additional information is found in the following tags.
-1) <task> tag contains the details of the target methods.
-2) <requirements> tag contains additional requirements for the fuzzing harness generation.
-3) <data_mapping> tag contains details of how random data should be generated for some Java primitives or simple Java objects.
 </system>

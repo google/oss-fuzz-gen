@@ -137,6 +137,10 @@ class Benchmark:
     self.cppify_headers = cppify_headers
     self.commit = commit
 
+    if self.language == 'jvm':
+      self.id = self.id.replace("[", "").replace("]", "")
+      self.id = self.id.replace("(", "_").replace(")", "").replace(",", "_")
+
   def __str__(self):
     return (f'Benchmark<id={self.id}, project={self.project}, '
             f'language={self.language}, '

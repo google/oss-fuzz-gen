@@ -156,6 +156,12 @@ class LLM:
     sample_id = index + 1
     raw_output_path = os.path.join(response_dir, f'{sample_id:02}.rawoutput')
     with open(raw_output_path, 'w+') as output_file:
+      if "```java" in content:
+        content = content.replace("```java", "")
+        content = content.replace("```", "")
+      if "<java_code>" in content:
+        content = content.replace("<java_code>", "")
+        content = content.replace("</java_code>", "")
       output_file.write(content)
 
 

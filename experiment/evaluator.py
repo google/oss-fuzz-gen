@@ -191,6 +191,19 @@ class Evaluator:
     shutil.copyfile(
         target_file,
         os.path.join(generated_project_path, os.path.basename(target_file)))
+
+    # Fix public java class name in target_file
+    if self.benchmark.language == 'jvm':
+      with open(target_file, 'r') as file:
+        code = file.read()
+
+      new = os.path.basename(self.benchmark.target_path).replace('.java', '')
+      code = code.replace('public class Fuzz', f'public class {new}')
+      print(code)
+      with open(target_file, 'w') as file:
+        file.write(code)
+
+    # Copy and update fuzzers
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(f'\nCOPY {os.path.basename(target_file)} '
               f'{self.benchmark.target_path}\n')
@@ -258,7 +271,9 @@ class Evaluator:
         # Exit cond 2: fix limit is reached.
         break
 
-      # 2. Fixing generated driver.
+      # 2. Fixing generated driver. Skipped for jvm projects.
+      if self.benchmark.language == 'jvm':
+        break
       llm_fix_count += 1
       logger.log(f'Fixing {target_path} with '
                  f'{self.builder_runner.fixer_model_name}, '

@@ -272,14 +272,12 @@ def run(benchmark: Benchmark,
                            project_examples,
                            project_context_content=context_info)
     prompt.save(work_dirs.prompt)
-#    generated_targets = generate_targets(benchmark,
-#                                         model,
-#                                         prompt,
-#                                         work_dirs,
-#                                         debug=debug)
-#    generated_targets = fix_code(work_dirs, generated_targets)
-  print(prompt.get())
-  return
-#  return check_targets(model.ai_binary, benchmark, work_dirs, generated_targets,
-#                       cloud_experiment_name, cloud_experiment_bucket,
-#                       run_timeout, model.name)
+    generated_targets = generate_targets(benchmark,
+                                         model,
+                                         prompt,
+                                         work_dirs,
+                                         debug=debug)
+    generated_targets = fix_code(work_dirs, generated_targets)
+  return check_targets(model.ai_binary, benchmark, work_dirs, generated_targets,
+                       cloud_experiment_name, cloud_experiment_bucket,
+                       run_timeout, model.name)

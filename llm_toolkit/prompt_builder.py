@@ -415,6 +415,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats a problem based on the prompt template."""
     problem = self._get_template(self.problem_template_file)
     problem = problem.replace('{PROBLEM_CONTENT}', problem_content)
+    problem = problem.replace('{REQUIREMENTS}', self._format_requirement())
+    problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
     return problem
 
   def _format_requirement(self) -> str:
@@ -430,14 +432,10 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
   def _prepare_prompt(
       self,
       base: str,
-      final_problem: str,
-      requirement: str,
-      data_filler: str):
+      final_problem: str):
     """Constructs a prompt using the parameters and saves it."""
     self._prompt.add_priming(base)
     self._prompt.add_problem(final_problem)
-    self._prompt.add_additional_data(requirement, "requirements")
-    self._prompt.add_additional_data(data_filler, "data_mapping")
 
   def build(
       self,
@@ -453,8 +451,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """
     base = self._format_base()
     final_problem = self._format_problem(function_signature)
-    requirement = self._format_requirement()
-    data_filler = self._format_data_filler()
-    self._prepare_prompt(base, final_problem, requirement, data_filler)
+    self._prepare_prompt(base, final_problem)
 
     return self._prompt
