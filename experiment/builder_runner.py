@@ -387,16 +387,18 @@ class BuilderRunner:
     if not build_result.succeeded:
       build_log_errors = code_fixer.extract_error_message(
           benchmark_log_path, project_target_name)
-      err_log_errors = code_fixer.get_jcc_errstr(benchmark_errlog_path,
-                                                 project_target_name)
+      err_log_errors = code_fixer.extract_jcc_errstr(benchmark_errlog_path,
+                                                     project_target_name)
 
-      # Temp: Checker to make sure jcc error does not lose anything than error
-      # extracted from build log, and improve extract_error_message for projects
-      # don't use jcc as well.
+      # Temp: Compare errors extracted from build log and jcc err.log.
+      # Use this info to check we found expected errors from err.log
+      # and improve build log parsing.
       if not self._compare_extracted_errors(build_log_errors, err_log_errors):
         logging.warning(
-            'Inconsistent error messages extracted from build.log'
+            'Inconsistent error messages extracted between build.log'
             ' and err.log for %s', benchmark_errlog_path)
+      # Fallback to use errors parsed from build log when parsing from err.log
+      # failed.
       build_result.errors = (err_log_errors
                              if err_log_errors else build_log_errors)
       return build_result, None
@@ -787,18 +789,20 @@ class CloudBuilderRunner(BuilderRunner):
       build_log_errors = code_fixer.extract_error_message(
           self.work_dirs.build_logs_target(generated_target_name, iteration),
           os.path.basename(self.benchmark.target_path))
-      err_log_errors = code_fixer.get_jcc_errstr(
+      err_log_errors = code_fixer.extract_jcc_errstr(
           self.work_dirs.error_logs_target(generated_target_name, iteration),
           os.path.basename(self.benchmark.target_path))
 
-      # Temp: Checker to make sure jcc error does not lose anything than error
-      # extracted from build log, and improve extract_error_message for projects
-      # don't use jcc as well.
+      # Temp: Compare errors extracted from build log and jcc err.log.
+      # Use this info to check we found expected errors from err.log
+      # and improve build log parsing.
       if not self._compare_extracted_errors(build_log_errors, err_log_errors):
         logging.warning(
-            'Inconsistent error messages extracted from build.log'
+            'Inconsistent error messages extracted between build.log'
             ' and err.log for %s',
             self.work_dirs.error_logs_target(generated_target_name, iteration))
+      # Fallback to use errors parsed from build log when parsing from err.log
+      # failed.
       build_result.errors = (err_log_errors
                              if err_log_errors else build_log_errors)
       logging.info('Cloud evaluation of %s indicates a failure: %s',

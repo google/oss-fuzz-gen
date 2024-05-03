@@ -218,7 +218,7 @@ def remove_const_from_png_symbols(content: str) -> str:
 
 
 def _strip_color_code(line: str) -> str:
-  """Remove ANSI escape codes from |line|."""
+  """Remove ANSI color codes from |line|."""
   return re.sub(r'\x1B([@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', line)
 
 
@@ -256,13 +256,15 @@ def get_fuzz_target_compile_output(target_names: list[str],
       logging.warning(
           'Output file not specified in [%s], but fuzz target found',
           ' '.join(compile_args))
+      # Assume the default output name.
       return 'a.out'
     return os.path.basename(output_name)
   return ''
 
 
-def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
-  """Extracts error message directly from jcc's err.log"""
+def extract_jcc_errstr(errlog_path: str,
+                       project_target_basename: str) -> list[str]:
+  """Extracts error messages from jcc's err.log"""
   with open(errlog_path) as errlog_file:
     log_lines = errlog_file.readlines()
 
@@ -291,23 +293,32 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
     line = _strip_color_code(line)
     command_match = re.fullmatch(command_pattern, line)
     if command_match:
+      # Start line previously recorded, reaching another command,
+      # mark the end of previous one.
       if temp_range[0] is not None:
         temp_range[1] = i
+
+        # Check we are not dealing with 2 consecutive commands
+        # with no error output in between.
         if temp_range[0] < temp_range[1]:
           first_line = _strip_color_code(log_lines[temp_range[0]]).rstrip()
+
+          # Exclude error blocks that don't contain actual error from source.
           if first_line and not re.fullmatch(clang_error_pattern, first_line):
             error_lines_range = temp_range
         temp_range = [None, None]
 
+      # Potentially followed by the error block to return
+      # if fuzz target presents.
       if temp_range[0] is None:
         compile_target = get_fuzz_target_compile_output(
             target_names,
             command_match.group(1).split())
         if compile_target:
           target_names.append(compile_target)
-          temp_range[0] = i + 1
+          temp_range[0] = i + 1  # +1 to exclude the command args line.
 
-  # The last error block was target error message.
+  # The last command was building fuzz target.
   if temp_range[0] is not None and temp_range[0] < len(log_lines):
     first_line = _strip_color_code(log_lines[temp_range[0]]).rstrip()
     if first_line and not re.fullmatch(clang_error_pattern, first_line):
@@ -329,7 +340,6 @@ def extract_error_message(log_path: str,
   """Extracts error message and its context from the file in |log_path|."""
 
   with open(log_path) as log_file:
-    # A more accurate way to extract the error message.
     log_lines = log_file.readlines()
 
   target_name, _ = os.path.splitext(project_target_basename)
@@ -366,9 +376,8 @@ def extract_error_message(log_path: str,
         temp_range[0] = i
         continue
 
-    # In case the original fuzz target was written in C and building with
-    # clang failed, and building with clang++ also failed, we take the
-    # error from clang++, which comes after.
+    # Take the error block that comes later, usually it is the one related to
+    # fuzz target and/or after jcc attempts to fix compile error.
     if temp_range[0] is not None:
       if (re.fullmatch(linker_error_end_pattern, line) or
           re.fullmatch(clang_error_end_pattern, line)):
@@ -398,7 +407,7 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
 
   linker_error_string = '/usr/bin/ld: '
   llvm_linker_error_string = 'ld.lld: '
-  clang_error_end_pattern = r'clang.*: error: .*'
+  linker_error_end_pattern = r'clang.*: error: .*'
   dwarf_error_string = 'DWARF error: invalid or unhandled FORM value: '
 
   error_blocks = []
@@ -456,9 +465,9 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
       # Skip DWARF error line
       if dwarf_error_string in line:
         continue
-      line = line.split(' ', maxsplit=1)[1]
+      line = line.split(' ', maxsplit=1)[1]  # Remove linker name from line.
 
-    if re.fullmatch(clang_error_end_pattern, line):
+    if re.fullmatch(linker_error_end_pattern, line):
       curr_state = state_unknown
       error_blocks.append('\n'.join(curr_block))
       curr_block = []
