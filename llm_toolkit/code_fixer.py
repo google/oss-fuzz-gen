@@ -268,12 +268,13 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
 
   target_names = [
       project_target_basename,
-      # Look for headers corrected source,
-      # from jcc.go:GetHeaderCorrectedFilename().
+      # Look for headers corrected source, from jcc.go:TryFixCCompilation().
+      # https://github.com/google/oss-fuzz/blob/7c67544/infra/base-images/base-builder/jcc/jcc.go#L124
       f'jcc-corrected-{project_target_basename}'
   ]
 
-  # Look for cppified target, from jcc.go:TryFixCCompilation().
+  # Look for cppified target, from jcc.go:GetHeaderCorrectedFilename().
+  # https://github.com/google/oss-fuzz/blob/7c67544/infra/base-images/base-builder/jcc/jcc.go#L56
   target_name, target_ext = os.path.splitext(project_target_basename)
   if target_ext == '.c':
     target_names.append(f'{target_name}.cpp')
