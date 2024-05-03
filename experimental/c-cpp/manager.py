@@ -74,8 +74,9 @@ FROM gcr.io/oss-fuzz-base/base-builder
 RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \\
                       pkg-config curl check
 COPY *.sh *.cpp $SRC/
-RUN git clone %s %s
-WORKDIR %s'''
+RUN git clone {repo_url} {project_repo_dir}
+WORKDIR {project_repo_dir}
+'''
 
 CLEAN_DOCKER_CFLITE = '''# Copyright 2024 Google LLC
 #
@@ -96,10 +97,10 @@ CLEAN_DOCKER_CFLITE = '''# Copyright 2024 Google LLC
 FROM gcr.io/oss-fuzz-base/base-builder
 RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \\
                       pkg-config curl check
-COPY . $SRC/%s
+COPY . $SRC/{project_repo_dir}
 COPY .clusterfuzzlite/build.sh $SRC/build.sh
 COPY .clusterfuzzlite/fuzzer.cpp $SRC/fuzzer.cpp
-WORKDIR %s
+WORKDIR {project_repo_dir}
 '''
 
 CFLITE_TEMPLATE = """name: ClusterFuzzLite PR fuzzing
@@ -880,22 +881,17 @@ def create_clean_oss_fuzz_from_success(github_repo, success_dir):
 
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
-  dockerfile = CLEAN_DOCKER % (github_repo, project_repo_dir, project_repo_dir)
+  dockerfile = CLEAN_DOCKER.format(repo_url=github_repo,
+                                   project_repo_dir=project_repo_dir)
   with open(os.path.join(oss_fuzz_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
   # Build file
   with open(os.path.join(success_dir, 'build.sh'), 'r') as f:
     build_content = f.read()
-  split_build_content = build_content.split("\n")
 
-  original_build_folder = split_build_content[1].split('/')[-1]
-
-  clean_build_content_lines = split_build_content[:1] + split_build_content[4:]
-  clean_build_content = '\n'.join(clean_build_content_lines).replace(
-      '/src/generated-fuzzer',
-      '$OUT/fuzzer').replace('empty-fuzzer', 'fuzzer').replace(
-          '/src/', '$SRC/').replace(original_build_folder, project_repo_dir)
+  clean_build_content = convert_test_build_to_clean_build(
+      build_content, project_repo_dir)
 
   with open(os.path.join(oss_fuzz_folder, 'build.sh'), 'w') as f:
     f.write(clean_build_content)
@@ -919,28 +915,45 @@ def create_clean_clusterfuzz_lite_from_success(github_repo, success_dir):
 
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
-  dockerfile = CLEAN_DOCKER_CFLITE % (project_repo_dir, project_repo_dir)
+  dockerfile = CLEAN_DOCKER_CFLITE.format(project_repo_dir=project_repo_dir)
   with open(os.path.join(cflite_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
   # Build file
   with open(os.path.join(success_dir, 'build.sh'), 'r') as f:
     build_content = f.read()
-  split_build_content = build_content.split("\n")
 
-  original_build_folder = split_build_content[1].split('/')[-1]
-
-  clean_build_content_lines = split_build_content[:1] + split_build_content[4:]
-  clean_build_content = '\n'.join(clean_build_content_lines).replace(
-      '/src/generated-fuzzer',
-      '$OUT/fuzzer').replace('empty-fuzzer', 'fuzzer').replace(
-          '/src/', '$SRC/').replace(original_build_folder, project_repo_dir)
+  clean_build_content = convert_test_build_to_clean_build(
+      build_content, project_repo_dir)
 
   with open(os.path.join(cflite_folder, 'build.sh'), 'w') as f:
     f.write(clean_build_content)
 
   with open(os.path.join(cflite_folder, 'cflite_pr.yml'), 'w') as f:
     f.write(CFLITE_TEMPLATE)
+
+
+def convert_test_build_to_clean_build(test_build_script, project_repo_dir):
+  """Rewrites a build.sh used during testing to a proper OSS-Fuzz build.sh."""
+  split_build_content = test_build_script.split('\n')
+
+  # Extract the test folder name
+  original_build_folder = split_build_content[1].split('/')[-1]
+
+  # Remove the lines used in the testing build script to navigate test folders.
+  clean_build_content_lines = split_build_content[:1] + split_build_content[4:]
+
+  # Make adjustments in the build to convert a test script to a clean script:
+  # 1) Output fuzzer to $OUT/fuzzer instead of /src/generated-fuzzer
+  # 2) Call the fuzzer 'fuzzer' instead of 'empty-fuzzer'
+  # 3) Use '$SRC/' instead of '/src/'
+  # 4) Rewrite file paths from test build directory to cloned directory, to
+  # adjust e.g. library and include paths.
+  clean_build_content = '\n'.join(clean_build_content_lines).replace(
+      '/src/generated-fuzzer',
+      '$OUT/fuzzer').replace('empty-fuzzer', 'fuzzer').replace(
+          '/src/', '$SRC/').replace(original_build_folder, project_repo_dir)
+  return clean_build_content
 
 
 def append_to_report(outdir, msg):
