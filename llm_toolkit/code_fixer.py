@@ -275,8 +275,7 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
     target_names.append(f'jcc-corrected-{target_name}.cpp')
 
   command_pattern = r'\[.*clang(?:\+\+)? (.*)\]\n?'
-  invalid_c_argument_pattern = (r"error: invalid argument '.*' "
-                                r"not allowed with 'C\+\+'\n?")
+  clang_error_pattern = r'clang.*: error: .*n?'
 
   error_lines_range: list[Optional[int]] = [None, None]
   temp_range: list[Optional[int]] = [None, None]
@@ -289,8 +288,7 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
         temp_range[1] = i
         if temp_range[0] < temp_range[1]:
           first_line = log_lines[temp_range[0]].rstrip()
-          if (first_line and
-              not re.fullmatch(invalid_c_argument_pattern, first_line)):
+          if first_line and not re.fullmatch(clang_error_pattern, first_line):
             error_lines_range = temp_range
         temp_range = [None, None]
 
@@ -309,7 +307,7 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
   # The last error block was target error message.
   if temp_range[0] is not None and temp_range[0] < len(log_lines):
     first_line = log_lines[temp_range[0]].rstrip()
-    if first_line and not re.fullmatch(invalid_c_argument_pattern, first_line):
+    if first_line and not re.fullmatch(clang_error_pattern, first_line):
       error_lines_range = temp_range
       error_lines_range[1] = len(log_lines)
 
