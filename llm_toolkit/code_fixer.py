@@ -342,6 +342,12 @@ def extract_error_message(log_path: str,
                                  r'(\.\S*)?:\d+:\n?')
   clang_error_end_pattern = r'.*\d+ errors? generated.\n?'
 
+  # Checking on this start pattern is not enough to identify linker errors from
+  # fuzz target only, it may include error from project source as well.
+  # e.g. kamailio:
+  # /usr/bin/ld: /lib/x86_64-linux-gnu/crt1.o: in function `_start':
+  # (.text+0x24): undefined reference to `main'
+  # while fuzz target should be fuzz_parse_msg.c
   linker_error_start_string = '/usr/bin/ld: '
   llvm_linker_error_start_string = 'ld.lld: '
   linker_error_end_pattern = (
