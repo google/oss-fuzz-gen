@@ -20,7 +20,7 @@ RUN python3 -m venv /venv
 RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
     apt-get update -y && \
-    apt-get install google-cloud-cli kubectl gke-gcloud-auth-plugin -y
+    apt-get install google-cloud-cli kubectl google-cloud-sdk-gke-gcloud-auth-plugin -y
 
 COPY ci /opt/oss-fuzz-gen
 RUN /venv/bin/pip install -r /opt/oss-fuzz-gen/requirements.txt
