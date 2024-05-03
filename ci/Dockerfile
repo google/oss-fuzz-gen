@@ -22,7 +22,7 @@ RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /et
     apt-get update -y && \
     apt-get install google-cloud-cli kubectl -y
 
-COPY . /opt/oss-fuzz-gen
+COPY ci /opt/oss-fuzz-gen
 RUN /venv/bin/pip install -r /opt/oss-fuzz-gen/requirements.txt
 
 ENTRYPOINT ["/venv/bin/python3", "/opt/oss-fuzz-gen/ci_trial_build.py"]

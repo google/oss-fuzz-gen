@@ -13,15 +13,14 @@
 # limitations under the License.
 #
 ################################################################################
-"""Entrypoint for CI into request_pr_exp. This script will get the command from the
-last PR comment containing "/gcbrun" and pass it to request_pr_exp.py."""
+"""Entrypoint for CI into request_pr_exp. This script will get the command from
+the last PR comment containing "/gcbrun" and pass it to request_pr_exp.py."""
 
 import logging
 import os
 import sys
 
 import github
-
 import request_pr_exp
 
 TRIGGER_COMMAND = '/gcbrun'
@@ -61,6 +60,9 @@ def get_latest_gcbrun_command(comments):
 def exec_command_from_github(pull_request_number, repo, branch):
   """Executes the gcbrun command for trial_build.py in the most recent command
   on |pull_request_number|."""
+  del repo
+  del branch
+
   comments = get_comments(pull_request_number)
   command = get_latest_gcbrun_command(comments)
   if command is None:
