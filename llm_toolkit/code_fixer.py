@@ -230,7 +230,10 @@ def get_fuzz_target_compile_output(target_names: list[str],
       output_name = compile_args[i + 1]
       continue
     if arg.startswith('--output='):
-      output_name = arg.split('=', maxsplit=1)[1]
+      output_name = arg.replace('--output=', '', 1)
+      continue
+    if arg.startswith('-o'):
+      output_name = arg.replace('-o', '', 1)
       continue
     if arg.startswith('-'):
       continue
