@@ -18,4 +18,3 @@ steps:
 images:
 - us-central1-docker.pkg.dev/oss-fuzz-base/oss-fuzz-gen/ci
 logsBucket: gs://oss-fuzz-gen-ci-logs
-serviceAccount: projects/oss-fuzz/serviceAccounts/LLM-EVAL@oss-fuzz.iam.gserviceaccount.com
