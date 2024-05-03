@@ -231,7 +231,7 @@ def get_fuzz_target_compile_output(target_names: list[str],
   output_name = ''
   target_found = ''
   for i, arg in enumerate(compile_args):
-    if arg in ['-o'] or arg == '--output' and i < len(compile_args):
+    if arg in ['-o', '--output'] and i < len(compile_args):
       output_name = compile_args[i + 1]
       continue
     if arg.startswith('--output='):
@@ -280,7 +280,7 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
     target_names.append(f'jcc-corrected-{target_name}.cpp')
 
   command_pattern = r'\[.*clang(?:\+\+)? (.*)\]\n?'
-  clang_error_pattern = r'clang.*: error: .*n?'
+  clang_error_pattern = r'(clang.*: )?error: .*n?'
 
   error_lines_range: list[Optional[int]] = [None, None]
   temp_range: list[Optional[int]] = [None, None]
