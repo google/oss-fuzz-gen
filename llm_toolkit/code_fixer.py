@@ -300,17 +300,17 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
           target_names.append(compile_target)
           temp_range[0] = i + 1
 
-  # Start of error was never set, cannot find target error message.
-  if error_lines_range[0] is None and temp_range[0] is None:
-    logging.error('Cannot find error message from err.log: %s', errlog_path)
-    return []
-
   # The last error block was target error message.
   if temp_range[0] is not None and temp_range[0] < len(log_lines):
     first_line = log_lines[temp_range[0]].rstrip()
     if first_line and not re.fullmatch(clang_error_pattern, first_line):
       error_lines_range = temp_range
       error_lines_range[1] = len(log_lines)
+
+  # Start of error was never set, cannot find target error message.
+  if error_lines_range[0] is None:
+    logging.error('Cannot find error message from err.log: %s', errlog_path)
+    return []
 
   for line in log_lines[error_lines_range[0]:error_lines_range[1]]:
     uncolored_line = re.sub(r'\x1B([@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', line)
