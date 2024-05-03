@@ -1,0 +1,65 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ofg-pr-${GKE_EXP_NAME}
+  labels:
+    customLabel: "myCustomValue"
+spec:
+  template:
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: ofg-pr-exp
+      containers:
+      - name: experiment
+        image:  us-central1-docker.pkg.dev/oss-fuzz-base/testing/oss-fuzz-gen-pull-request:pr-${PR_ID}
+        imagePullPolicy: Always
+        # To guarantee uniqueness we use the node name in the experiment path.
+        # Modify the follow command to customize one-off experiments.
+        # For benchmark sets that need more disk, increase the results volume
+        # size too.
+        command: ["/bin/bash", "report/docker_run.sh", "${GKE_EXP_BENCHMARK}", "${GKE_EXP_NAME}", "${GKE_EXP_FUZZING_TIMEOUT}", "ofg-pr", "${GKE_EXP_LLM}", "${GKE_EXP_DELAY}"]
+        resources:
+          requests:
+            cpu: ${GKE_EXP_REQ_CPU}
+            ephemeral-storage: 10Gi
+            memory: ${GKE_EXP_REQ_MEM}
+        volumeMounts:
+        - mountPath: "/experiment/results"
+          name: results-volume
+        env:
+        - name: LLM_NUM_EXP
+          value: '30'
+        - name: LLM_NUM_EVA
+          value: '10'
+        - name: VERTEX_AI_LOCATIONS
+          value: 'us-central1,us-east4,us-west1,us-west4,northamerica-northeast1'
+      # imagePullSecrets:
+      # - name: oss-fuzz-base-artifect
+      volumes:
+      - name: results-volume
+        ephemeral:
+          volumeClaimTemplate:
+            metadata:
+              labels:
+                type: ephemeral
+            spec:
+              accessModes: ["ReadWriteOnce"]
+              storageClassName: "ephemeral-ssd"
+              resources:
+                requests:
+                  storage: 1000Gi
+      restartPolicy: OnFailure

@@ -78,3 +78,6 @@ These bugs could only have been discovered with newly generated targets. They we
 
 \* Percentage coverage is calculated using a denominator of the total lines of source code compiled during the
 OSS-Fuzz build process for the entire project.
+
+## Citing This Work
+Please refer to the `CITATION.cff` file in this repository for citation details.
