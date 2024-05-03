@@ -20,7 +20,7 @@ import logging
 import os
 import sys
 
-import github
+import github  # type: ignore
 import request_pr_exp
 
 TRIGGER_COMMAND = '/gcbrun'
@@ -71,7 +71,7 @@ def exec_command_from_github(pull_request_number, repo, branch):
 
   # Set the branch so that the trial_build builds the projects from the PR
   # branch.
-  command.extend(['-p', pull_request_number])
+  command.extend(['-p', str(pull_request_number)])
   logging.info('Command: %s.', command)
   return request_pr_exp.main(command)
 
