@@ -17,6 +17,5 @@ steps:
     - 'REPO=${_HEAD_REPO_URL}'
 images:
 - us-central1-docker.pkg.dev/oss-fuzz-base/oss-fuzz-gen/ci
-options:
-  logging: CLOUD_LOGGING_ONLY
+logsBucket: gs://oss-fuzz-gen-ci-logs
 serviceAccount: projects/oss-fuzz/serviceAccounts/LLM-EVAL@oss-fuzz.iam.gserviceaccount.com
