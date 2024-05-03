@@ -292,12 +292,13 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
             error_lines_range = temp_range
         temp_range = [None, None]
 
-      compile_target = get_fuzz_target_compile_output(
-          target_names,
-          command_match.group(1).split())
-      if temp_range[0] is None and compile_target:
-        target_names.append(compile_target)
-        temp_range[0] = i + 1
+      if temp_range[0] is None:
+        compile_target = get_fuzz_target_compile_output(
+            target_names,
+            command_match.group(1).split())
+        if compile_target:
+          target_names.append(compile_target)
+          temp_range[0] = i + 1
 
   # Start of error was never set, cannot find target error message.
   if error_lines_range[0] is None and temp_range[0] is None:
