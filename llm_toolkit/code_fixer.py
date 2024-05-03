@@ -359,7 +359,7 @@ def extract_error_message(log_path: str,
     if temp_range[0] is not None:
       if (re.fullmatch(linker_error_end_pattern, line) or
           re.fullmatch(clang_error_end_pattern, line)):
-        temp_range[1] = i
+        temp_range[1] = i + 1
         error_lines_range = temp_range
         temp_range = [None, None]
 
