@@ -217,6 +217,11 @@ def remove_const_from_png_symbols(content: str) -> str:
 # ========================= LLM Fixes ========================= #
 
 
+def _strip_color_code(line: str) -> str:
+  """Remove ANSI escape codes from |line|."""
+  return re.sub(r'\x1B([@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', line)
+
+
 def get_fuzz_target_compile_output(target_names: list[str],
                                    compile_args: list[str]) -> str:
   """
@@ -282,12 +287,13 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
   errors = []
 
   for i, line in enumerate(log_lines):
+    line = _strip_color_code(line)
     command_match = re.fullmatch(command_pattern, line)
     if command_match:
       if temp_range[0] is not None:
         temp_range[1] = i
         if temp_range[0] < temp_range[1]:
-          first_line = log_lines[temp_range[0]].rstrip()
+          first_line = _strip_color_code(log_lines[temp_range[0]]).rstrip()
           if first_line and not re.fullmatch(clang_error_pattern, first_line):
             error_lines_range = temp_range
         temp_range = [None, None]
@@ -302,7 +308,7 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
 
   # The last error block was target error message.
   if temp_range[0] is not None and temp_range[0] < len(log_lines):
-    first_line = log_lines[temp_range[0]].rstrip()
+    first_line = _strip_color_code(log_lines[temp_range[0]]).rstrip()
     if first_line and not re.fullmatch(clang_error_pattern, first_line):
       error_lines_range = temp_range
       error_lines_range[1] = len(log_lines)
@@ -313,8 +319,7 @@ def get_jcc_errstr(errlog_path: str, project_target_basename: str) -> list[str]:
     return []
 
   for line in log_lines[error_lines_range[0]:error_lines_range[1]]:
-    uncolored_line = re.sub(r'\x1B([@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', line)
-    errors.append(uncolored_line.rstrip())
+    errors.append(_strip_color_code(line).rstrip())
   return group_error_messages(errors)
 
 
@@ -345,6 +350,7 @@ def extract_error_message(log_path: str,
 
   errors = []
   for i, line in enumerate(log_lines):
+    line = _strip_color_code(line)
     if temp_range[0] is None:
       if (line.startswith(linker_error_start_string) or
           line.startswith(llvm_linker_error_start_string) or
@@ -368,8 +374,7 @@ def extract_error_message(log_path: str,
     return []
 
   for line in log_lines[error_lines_range[0]:error_lines_range[1]]:
-    uncolored_line = re.sub(r'\x1B([@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', line)
-    errors.append(uncolored_line.rstrip())
+    errors.append(_strip_color_code(line).rstrip())
   return group_error_messages(errors)
 
 
