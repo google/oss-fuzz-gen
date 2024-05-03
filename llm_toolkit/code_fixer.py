@@ -386,8 +386,7 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
 
   linker_error_string = '/usr/bin/ld: '
   llvm_linker_error_string = 'ld.lld: '
-  linker_error_end_string = ('clang-15: error: linker command failed with exit '
-                             'code 1 (use -v to see invocation)')
+  clang_error_end_pattern = r'clang.*: error: .*'
   dwarf_error_string = 'DWARF error: invalid or unhandled FORM value: '
 
   error_blocks = []
@@ -447,7 +446,7 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
         continue
       line = line.split(' ', maxsplit=1)[1]
 
-    if line.startswith(linker_error_end_string):
+    if re.fullmatch(clang_error_end_pattern, line):
       curr_state = state_unknown
       error_blocks.append('\n'.join(curr_block))
       curr_block = []
