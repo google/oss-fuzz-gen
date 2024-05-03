@@ -1,42 +1,132 @@
-<!--
- Copyright 2024 Google LLC
+{#
+Copyright 2024 Google LLC
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--->
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-{% extends 'base.html' %}
+#}{% extends 'base.html' %}
 
 {% block content %}
-<table>
-    <tr>
-        <th>Benchmark</th>
-        <th>Status</th>
-        <th>Build rate</th>
-        <th>Crash rate</th>
-        <th>Bug</th>
-        <th>Coverage</th>
-        <th>Line coverage diff</th>
-    </tr>
-{% for benchmark in benchmarks %}
-    <tr>
-        <td><a href="benchmark/{{ benchmark.id|urlencode }}/index.html">{{ benchmark.signature }}</a></li></td>
-        <td>{{ benchmark.status }}</td>
-        <td>{{ benchmark.result.build_success_rate|percent}}</td>
-        <td><a href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{ benchmark.result.crash_rate|percent }} </a></td>
-        <td>{{ benchmark.result.found_bug }}</td>
-        <td>{{ benchmark.result.max_coverage |percent }}</td>
-        <td><a href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{ benchmark.result.max_line_coverage_diff|percent }}</a></td>
-    </tr>
-{% endfor %}
+
+<style>
+td .benchmark .function,
+td .signature {
+    overflow-wrap: anywhere;
+}
+
+td .signature {
+    width: fit-content;
+    white-space: normal;
+    padding: 5px 2px;
+    margin: 5px 0 0;
+    background: #eee;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.signature a {
+    text-decoration: none;
+}
+
+.table-index {
+    color: #555;
+    font-size: 12px;
+    text-align: center;
+}
+
+
+.sortable-table th {
+    cursor: pointer;
+}
+
+.sortable-table th:after {
+    content: ' \25be';
+    color: #ccc;
+}
+
+.sortable-table th[data-sorted="asc"]:after {
+    color: #000;
+}
+
+.sortable-table th[data-sorted="desc"]:after {
+    content: ' \25b4';
+    color: #000;
+}
+
+</style>
+
+<table class="sortable-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th data-sorted="asc">Benchmark</th>
+            <th>Status</th>
+            <th data-sort-number>Build Rate</th>
+            <th data-sort-number>Crash Rate</th>
+            <th data-sort-number>Bugs</th>
+            <th data-sort-number>Program Counter Coverage</th>
+            <th data-sort-number>Line Coverage Diff</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for benchmark in benchmarks %}
+        <tr>
+            <td class="table-index">{{ loop.index }}</td>
+            <td data-sort-value="{{ benchmark.id }}">
+                <div class="project">{{ benchmark.project }}</div>
+                <pre class="signature">
+                    <a href="benchmark/{{ benchmark.id|urlencode }}/index.html">{{ benchmark.signature }}</a>
+                </pre>
+            </td>
+            <td data-sort-value="{{ benchmark.status }}">{{ benchmark.status }}</td>
+            <td data-sort-value={{ benchmark.result.build_success_rate|percent }}>{{ benchmark.result.build_success_rate|percent}}</td>
+            <td data-sort-value="{{ benchmark.result.crash_rate|percent }}"><a href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{ benchmark.result.crash_rate|percent }} </a></td>
+            <td data-sort-value="{{ benchmark.result.found_bug }}">{{ benchmark.result.found_bug }}</td>
+            <td data-sort-value="{{ benchmark.result.max_coverage |percent }}">{{ benchmark.result.max_coverage |percent }}</td>
+            <td data-sort-value="{{ benchmark.result.max_line_coverage_diff|percent }}"><a href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{ benchmark.result.max_line_coverage_diff|percent }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
+
+<script>
+(function() {
+    const headers = Array.from(document.querySelectorAll('table.sortable-table th'));
+    headers.map((th, colindex) => th.addEventListener('click', () => {
+        const sortAsc = th.dataset.sorted != "asc";
+        const sortNumber = th.dataset.sortNumber != undefined;
+
+        // Move sorted data attribute to the right column
+        headers.map(innerTH => delete innerTH.dataset.sorted);
+        th.dataset.sorted = sortAsc ? "asc" : "desc";
+
+        const tbody = document.querySelector('table.sortable-table tbody');
+        const rows = Array.from(tbody.children);
+        rows.sort((a, b) => {
+            let [valueA, valueB] = [a.children[colindex].dataset.sortValue, b.children[colindex].dataset.sortValue];
+            // Swap the values for descending.
+            if (!sortAsc) {
+                [valueB, valueA] = [valueA, valueB];
+            }
+
+            if (sortNumber) {
+                return Number(valueB) - Number(valueA);
+            }
+            return valueA.localeCompare(valueB);
+        });
+        tbody.replaceChildren(...rows);
+        // Rewrite the index column
+        rows.map((r, i) => r.children[0].innerText = i+1);
+    }));
+})();
+</script>
 {% endblock %}

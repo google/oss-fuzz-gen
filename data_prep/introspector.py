@@ -48,6 +48,7 @@ INTROSPECTOR_PROJECT_SOURCE = ''
 INTROSPECTOR_XREF = ''
 INTROSPECTOR_TYPE = ''
 INTROSPECTOR_FUNC_SIG = ''
+INTROSPECTOR_ADDR_TYPE = ''
 
 
 def set_introspector_endpoints(endpoint):
@@ -55,7 +56,7 @@ def set_introspector_endpoints(endpoint):
   global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNC_SIG, \
       INTROSPECTOR_FUNCTION_SOURCE, INTROSPECTOR_PROJECT_SOURCE, \
       INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_ORACLE_FAR_REACH, \
-      INTROSPECTOR_ORACLE_KEYWORD
+      INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
@@ -70,6 +71,8 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
   INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
   INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
+  INTROSPECTOR_ADDR_TYPE = (
+      f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -240,6 +243,17 @@ def query_introspector_function_signature(project: str,
       'function': function_name
   })
   return _get_data(resp, 'signature', '')
+
+
+def query_introspector_addr_type_info(project: str, addr: str) -> str:
+  """Queries FuzzIntrospector API for type information for a type
+  identified by its address used during compilation."""
+  resp = _query_introspector(INTROSPECTOR_ADDR_TYPE, {
+      'project': project,
+      'addr': addr
+  })
+
+  return _get_data(resp, 'dwarf-map', '')
 
 
 def get_unreached_functions(project):

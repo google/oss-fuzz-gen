@@ -65,21 +65,25 @@ while true; do
   echo "Download results from localhost."
   wget2 --quiet --inet4-only --no-host-directories --http2-request-window 10 --recursive localhost:${WEB_PORT:?}/ 2>&1
 
-  # Also fetch the sorted reports.
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort/build -O sort/build 2>&1
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort/cov -O sort/cov 2>&1
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort/cov_diff -O sort/cov_diff 2>&1
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort/crash -O sort/crash 2>&1
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort/status -O sort/status 2>&1
+  # Also fetch index JSON.
+  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/json -O json 2>&1
 
   # Stop the server.
   kill -9 "$pid_web"
 
   # Upload the report to GCS.
   echo "Uploading the report."
+  BUCKET_PATH="gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
+  # Upload HTMLs.
   gsutil -q -m -h "Content-Type:text/html" \
          -h "Cache-Control:public, max-age=3600" \
-         cp -r . "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
+         cp -r . "$BUCKET_PATH"
+  # Find all JSON files and upload them, removing the leading './'
+  find . -name '*json' | while read -r file; do
+    file_path="${file#./}"  # Remove the leading "./".
+    gsutil -q -m -h "Content-Type:application/json" \
+        -h "Cache-Control:public, max-age=3600" cp "$file" "$BUCKET_PATH/$file_path"
+  done
 
   cd ..
 
