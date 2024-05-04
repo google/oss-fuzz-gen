@@ -105,7 +105,7 @@ pid_report=$!
 # Run the experiment
 $PYTHON run_all_experiments.py \
   -g low-cov-with-fuzz-keyword,far-reach-low-coverage \
-  -gp htslib \
+  -gp avahi,cppitertools,eigen,flex,tinyxml2,htslib \
   -gm 6 \
   --run-timeout "${RUN_TIMEOUT:?}" \
   --cloud-experiment-name "${EXPERIMENT_NAME:?}" \
