@@ -40,9 +40,10 @@ NUM_SAMPLES: int = run_one_experiment.NUM_SAMPLES
 RUN_TIMEOUT: int = run_one_experiment.RUN_TIMEOUT
 TEMPERATURE: float = run_one_experiment.TEMPERATURE
 
-BENCHMARK_DIR: str = './benchmark-sets/comparison'
+BENCHMARK_ROOT: str = './benchmark-sets'
+BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
 RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
-GENERATED_BENCHMARK_DIR: str = 'generated-benchmark-'
+GENERATED_BENCHMARK: str = 'generated-benchmark-'
 
 
 class Result:
@@ -57,14 +58,35 @@ class Result:
 def get_next_generated_benchmarks_dir() -> str:
   """Retuns the next folder to be used for generated benchmarks."""
   max_idx = -1
-  for benchmark_folder in os.listdir():
+  for benchmark_folder in os.listdir(BENCHMARK_ROOT):
     try:
       max_idx = max(max_idx,
-                    int(benchmark_folder.replace(GENERATED_BENCHMARK_DIR, '')))
+                    int(benchmark_folder.replace(GENERATED_BENCHMARK, '')))
     except (ValueError, TypeError) as _:
       pass
   max_idx += 1
-  return f'{GENERATED_BENCHMARK_DIR}{max_idx}'
+  return os.path.join(BENCHMARK_ROOT, f'{GENERATED_BENCHMARK}{max_idx}')
+
+
+def generate_benchmarks(args: argparse.Namespace) -> None:
+  """Generate benchmarks, write to filesystem and set args benchmark dir."""
+  logging.info('Generating benchmarks.')
+  benchmark_dir = get_next_generated_benchmarks_dir()
+  logging.info('Setting benchmark directory to %s.', benchmark_dir)
+  os.makedirs(benchmark_dir)
+  args.benchmarks_directory = benchmark_dir
+  benchmark_oracles = [
+      heuristic.strip() for heuristic in args.generate_benchmarks.split(',')
+  ]
+  projects_to_target = [
+      project.strip()
+      for project in args.generate_benchmarks_projects.split(',')
+  ]
+  for project in projects_to_target:
+    benchmarks = introspector.populate_benchmarks_using_introspector(
+        project, 'cpp', args.generate_benchmarks_max, benchmark_oracles)
+    if benchmarks:
+      benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
 
 
 def get_experiment_configs(
@@ -77,29 +99,10 @@ def get_experiment_configs(
     print(f'A benchmark yaml file ({args.benchmark_yaml}) is provided. '
           f'Will use it and ignore the files in {args.benchmarks_directory}.')
     benchmark_yamls = [args.benchmark_yaml]
-  elif args.generate_benchmarks:
-    logging.info('Generating benchmarks.')
-    outdir = get_next_generated_benchmarks_dir()
-    logging.info('Setting benchmark directory to %s.', outdir)
-    os.makedirs(outdir, exist_ok=True)
-    args.benchmarks_directory = outdir
-    benchmarks_to_generate = [
-        heuristic.strip() for heuristic in args.generate_benchmarks.split(',')
-    ]
-    projects_to_target = [
-        project.strip() for project in args.projects.split(',')
-    ]
-    for project in projects_to_target:
-      benchmarks = introspector.populate_benchmarks_using_introspector(
-          project, 'cpp', args.max_benchmark_targets, benchmarks_to_generate)
-      if benchmarks:
-        benchmarklib.Benchmark.to_yaml(benchmarks, outdir)
-    benchmark_yamls = [
-        os.path.join(args.benchmarks_directory, file)
-        for file in os.listdir(args.benchmarks_directory)
-        if file.endswith('.yaml') or file.endswith('yml')
-    ]
   else:
+    if args.generate_benchmarks:
+      generate_benchmarks(args)
+
     benchmark_yamls = [
         os.path.join(args.benchmarks_directory, file)
         for file in os.listdir(args.benchmarks_directory)
@@ -200,14 +203,15 @@ def parse_args() -> argparse.Namespace:
                       default=introspector.DEFAULT_INTROSPECTOR_ENDPOINT)
   parser.add_argument('-g',
                       '--generate-benchmarks',
-                      help='Benchmarks to create',
+                      help='Generate benchmarks and use those for analysis.',
                       type=str)
-  parser.add_argument('-p',
-                      '--projects',
-                      help='Projects to target, comma separated string.',
-                      type=str)
-  parser.add_argument('-m',
-                      '--max-benchmark-targets',
+  parser.add_argument(
+      '-gp',
+      '--generate-benchmarks-projects',
+      help='Projects to generate benchmarks for in a comma separated string.',
+      type=str)
+  parser.add_argument('-gm',
+                      '--generate-benchmarks-max',
                       help='Max targets to generate per benchmark heuristic.',
                       type=int,
                       default=5)
@@ -231,12 +235,15 @@ def parse_args() -> argparse.Namespace:
             benchmark_yaml.endswith('yml')), (
                 "--benchmark-yaml needs to take an YAML file.")
 
-  assert bool(benchmark_yaml) != bool(
-      args.benchmarks_directory) or args.generate_benchmarks, (
-          'One and only one of --benchmark-yaml and --benchmarks-directory is '
-          'required, or --generate-benchmarks. --benchmark-yaml takes one '
-          'benchmark YAML file, --benchmarks-directory takes: a directory of '
-          'them and --generate-benchmarks generates them during analysis.')
+  bench_yml = bool(benchmark_yaml)
+  bench_dir = bool(args.benchmarks_directory)
+  bench_gen = bool(args.generate_benchmarks)
+  num_options = int(bench_yml) + int(bench_dir) + int(bench_gen)
+  assert num_options == 1, (
+      'One and only one of --benchmark-yaml, --benchmarks-directory and '
+      '--generate-benchmarks. --benchmark-yaml takes one benchmark YAML file, '
+      '--benchmarks-directory takes: a directory of them and '
+      '--generate-benchmarks generates them during analysis.')
 
   # Validate templates.
   assert os.path.isdir(args.template_directory), (

@@ -349,7 +349,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
     functions += tmp_functions[:limit]
 
   if not functions:
-    logging.error('No functions found using the oracles: {target_oracles}')
+    logging.error('No functions found using the oracles: %s', target_oracles)
     return []
 
   filenames = [
