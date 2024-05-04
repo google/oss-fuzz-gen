@@ -60,7 +60,7 @@ empty_oss_fuzz_docker = """# Copyright 2018 Google Inc.
 
 FROM gcr.io/oss-fuzz-base/base-builder
 RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \
-                      pkg-config curl check
+                      pkg-config curl check libcpputest-dev re2c
 RUN rm /usr/local/bin/cargo && \
  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \
  apt-get install -y cargo
