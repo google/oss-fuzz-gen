@@ -201,10 +201,14 @@ def parse_args() -> argparse.Namespace:
                       '--introspector-endpoint',
                       type=str,
                       default=introspector.DEFAULT_INTROSPECTOR_ENDPOINT)
-  parser.add_argument('-g',
-                      '--generate-benchmarks',
-                      help='Generate benchmarks and use those for analysis.',
-                      type=str)
+  parser.add_argument(
+      '-g',
+      '--generate-benchmarks',
+      help=('Generate benchmarks and use those for analysis. This is a string '
+            'of comma-separated heuristics to use when identifying benchmark '
+            'targets. Options available: '
+            f'{", ".join(introspector.get_oracle_dict().keys())}'),
+      type=str)
   parser.add_argument(
       '-gp',
       '--generate-benchmarks-projects',

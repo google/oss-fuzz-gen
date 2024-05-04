@@ -23,7 +23,7 @@ import re
 import subprocess
 import sys
 import time
-from typing import Dict, List, Optional, TypeVar
+from typing import Any, Dict, List, Optional, TypeVar
 from urllib.parse import urlencode
 
 import requests
@@ -46,6 +46,16 @@ INTROSPECTOR_SOURCE = ''
 INTROSPECTOR_XREF = ''
 INTROSPECTOR_TYPE = ''
 INTROSPECTOR_FUNC_SIG = ''
+
+
+def get_oracle_dict() -> Dict[str, Any]:
+  """Returns the oracles available to identify targets."""
+  # Do this in a function to allow for forward-declaration of functions below.
+  oracle_dict = {
+      'far-reach-low-coverage': get_unreached_functions,
+      'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets
+  }
+  return oracle_dict
 
 
 def set_introspector_endpoints(endpoint):
@@ -155,11 +165,7 @@ def query_introspector_for_keyword_targets(project: str) -> list[dict]:
 
 def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
   """Queries introspector for target functions."""
-  oracle_dict = {
-      'far-reach-low-coverage': get_unreached_functions,
-      'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets
-  }
-  query_func = oracle_dict.get(target_oracle, None)
+  query_func = get_oracle_dict().get(target_oracle, None)
   if not query_func:
     logging.error('No such oracle "%s"', target_oracle)
     sys.exit(1)
