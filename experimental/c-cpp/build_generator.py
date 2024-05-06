@@ -15,8 +15,6 @@
 """Utilities for generating builder scripts for a GitHub repository."""
 
 import os
-import sys
-import json
 import shutil
 import subprocess
 from abc import abstractmethod
@@ -300,6 +298,7 @@ class AutogenConfScanner(AutoBuildBase):
   def name(self):
     return 'autogen-ConfMake'
 
+
 class CMakeScannerOptsParser(AutoBuildBase):
   """Calls cmake to extract options from the CMakeLists.txt file of a project
   and creates a build string where all BOOL values are set to OFF except those
@@ -362,8 +361,8 @@ class CMakeScannerOptsParser(AutoBuildBase):
     option_elements = []
 
     try:
-      output = subprocess.check_output(
-              'cmake -LAH ../ || true', shell=True).decode()
+      output = subprocess.check_output('cmake -LAH ../ || true',
+                                       shell=True).decode()
     except subprocess.CalledProcessError:
       return option_elements
 
@@ -385,7 +384,6 @@ class CMakeScannerOptsParser(AutoBuildBase):
       })
 
     return option_elements
-
 
   def extract_options_in_file(self) -> List[Dict[str, str]]:
     """Extract CMake options from the CMakeLists.txt file one directory up."""
