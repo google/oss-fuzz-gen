@@ -350,6 +350,16 @@ class GeminiPro(GeminiModel):
   _vertex_ai_model = 'gemini-1.0-pro'
 
 
+class Gemini1_5(GeminiModel):
+  """Gemini 1.5."""
+
+  _max_output_tokens = 8192
+  context_window = 1000000
+
+  name = 'vertex_ai_gemini-1-5'
+  _vertex_ai_model = 'gemini-1.5-pro'
+
+
 class AIBinaryModel(GoogleModel):
   """A customized model hosted internally."""
 
