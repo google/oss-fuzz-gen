@@ -248,21 +248,20 @@ class BuilderRunner:
     if crashes:
       symptom = SemanticCheckResult.extract_symptom(fuzzlog)
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
-      _crash_info = SemanticCheckResult.extract_crash_info(fuzzlog)
-      print('_crash_info:', _crash_info)
-      crash_info = _crash_info
+      crash_info = SemanticCheckResult.extract_crash_info(fuzzlog)
+      print('crash_info:', crash_info)
 
       # FP case 1: Common fuzz target errors.
       # Null-deref, normally indicating inadequate parameter initialization or
       # wrong function usage.
       if symptom == 'null-deref':
-        return cov_pcs, total_pcs, True, _crash_info, SemanticCheckResult(
+        return cov_pcs, total_pcs, True, crash_info, SemanticCheckResult(
             SemanticCheckResult.NULL_DEREF, symptom, crash_stacks)
 
       # Signal, normally indicating assertion failure due to inadequate
       # parameter initialization or wrong function usage.
       if symptom == 'signal':
-        return cov_pcs, total_pcs, True, _crash_info, SemanticCheckResult(
+        return cov_pcs, total_pcs, True, crash_info, SemanticCheckResult(
             SemanticCheckResult.SIGNAL, symptom, crash_stacks)
 
       # OOM, normally indicating malloc's parameter is too large, e.g., because
@@ -270,14 +269,14 @@ class BuilderRunner:
       # TODO(dongge): Refine this, 1) Merge this with the other oom case found
       # from reproducer name; 2) Capture the actual number in (malloc(\d+)).
       if 'out-of-memory' in symptom:
-        return cov_pcs, total_pcs, True, _crash_info, SemanticCheckResult(
+        return cov_pcs, total_pcs, True, crash_info, SemanticCheckResult(
             SemanticCheckResult.FP_OOM, symptom, crash_stacks)
 
       # FP case 2: fuzz target crashes at init or first few rounds.
       if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
         # No cov line has been identified or only INITED round has been passed.
         # This is very likely the false positive cases.
-        return cov_pcs, total_pcs, True, _crash_info, \
+        return cov_pcs, total_pcs, True, crash_info, \
                SemanticCheckResult(SemanticCheckResult.FP_NEAR_INIT_CRASH,\
                              symptom, crash_stacks)
 
@@ -288,7 +287,7 @@ class BuilderRunner:
         for stack_frame in first_stack[:1]:
           if self._stack_func_is_of_testing_project(stack_frame):
             if 'LLVMFuzzerTestOneInput' in stack_frame:
-              return cov_pcs, total_pcs, True, _crash_info, \
+              return cov_pcs, total_pcs, True, crash_info, \
                      SemanticCheckResult(SemanticCheckResult.FP_TARGET_CRASH,\
                                    symptom, crash_stacks)
             break
