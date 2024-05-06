@@ -27,6 +27,10 @@ To retrieve crash information from fuzz log, we add function `extract_crash_info
 
 We require that the LLM: 1) definitively ascertain whether the crash is due to errors within the fuzz target or results from a vulnerability in the project under test; 2) deliver a thorough analysis of the findings. Two triage prompts, `triage_priming.txt` and `triage_problem.txt`, are appended to `prompts/template_xml` folder. Three functions, `build_triage_prompt`, `_format_triage_priming`, and `_format_triage_problem`, are added to `llm_toolkit/prompt_builder.py` file. The generated triage prompt would be saved in `result/output-ProjectName-FunctionName/fixed_targets` folder.
 
+### Prompt example
+
+TODO
+
 ## LLM triaging
 
 One function, `triage_crash`, is added to `experiment/evaluator.py` file. The core component of LLM triage, `crash_triage.py`, is appended to `llm_toolkit` folder. `crash_triage.py` mainly contains functions `llm_triage` and `apply_llm_triage`.
@@ -34,3 +38,7 @@ One function, `triage_crash`, is added to `experiment/evaluator.py` file. The co
 ## Response from LLM triaging
 
 One function, `parse_triage_response`, is appended to `llm_toolkit/output_parser.py` file. The generated triage response from LLM would be saved in `result/output-ProjectName-FunctionName/fixed_targets` folder.
+
+### Response example
+
+TODO
