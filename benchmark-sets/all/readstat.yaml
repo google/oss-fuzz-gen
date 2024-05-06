@@ -49,5 +49,5 @@
   "signature": "const void * ck_double_hash_lookup(double, ck_hash_table_t *)"
 "language": "c++"
 "project": "readstat"
-"target_name": "fuzz_grammar_sav_date"
-"target_path": "/src/readstat/src/fuzz/fuzz_grammar_sav_date.c"
+"target_name": "fuzz_format_sav"
+"target_path": "/src/readstat/src/fuzz/fuzz_format_sav.c"
