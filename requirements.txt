@@ -189,7 +189,7 @@ tomli==2.0.1
     # via yapf
 tomlkit==0.12.4
     # via pylint
-tqdm==4.66.2
+tqdm==4.66.3
     # via openai
 typing-extensions==4.11.0
     # via
