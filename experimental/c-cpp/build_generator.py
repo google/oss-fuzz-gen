@@ -53,10 +53,10 @@ class AutoBuildBase:
 
   def is_matched(self):
     """Returns True if the build heuristic found matching files."""
-    for matches in self.matches_found:
-      if len(matches) == 0:
-        return False
-    return True
+    for found_matches in self.matches_found.values():
+      if len(found_matches) > 1:
+        return True
+    return False
 
 
 class PureCFileCompiler(AutoBuildBase):
@@ -335,7 +335,6 @@ class CMakeScannerOptsParser(AutoBuildBase):
       base_file = os.path.basename(fi)
       for key, matches in self.matches_found.items():
         if base_file == key:
-
           # Move directory
           current_dir = os.getcwd()
           cmake_base_dir = '/'.join(fi.split('/')[:-1])
