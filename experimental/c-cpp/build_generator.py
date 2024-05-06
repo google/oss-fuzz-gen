@@ -173,6 +173,35 @@ class PureMakefileScannerWithPThread(AutoBuildBase):
     return 'make'
 
 
+class PureMakefileScannerWithSubstitutions(AutoBuildBase):
+  """Auto builder for pure Makefile projects with substitions."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        'Makefile': [],
+    }
+
+  def steps_to_build(self) -> Iterator[AutoBuildContainer]:
+    build_container = AutoBuildContainer()
+    # The following substitutes varioues patterns of overwriting of compilers
+    # which happens in some build files. Patterns of Werror are also suppressed
+    # by converting them to Wno-error.
+    build_container.list_of_commands = [
+        'sed -i \'s/-Werror/-Wno-error/g\' ./Makefile',
+        'sed -i \'s/CC=/#CC=/g\' ./Makefile',
+        'sed -i \'s/CXX=/#CXX=/g\' ./Makefile',
+        'sed -i \'s/CC =/#CC=/g\' ./Makefile',
+        'sed -i \'s/CXX =/#CXX=/g\' ./Makefile', 'make V=1 || true'
+    ]
+    build_container.heuristic_id = self.name + '1'
+    yield build_container
+
+  @property
+  def name(self):
+    return 'makeWithSubstitutions'
+
+
 class AutoRefConfScanner(AutoBuildBase):
   """Auto-builder for patterns of "autoreconf fi; ./configure' make"""
 
@@ -425,6 +454,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
       PureCFileCompilerFind(),
       PureMakefileScanner(),
       PureMakefileScannerWithPThread(),
+      PureMakefileScannerWithSubstitutions(),
       AutogenScanner(),
       AutoRefConfScanner(),
       CMakeScanner(),
