@@ -60,7 +60,7 @@ empty_oss_fuzz_docker = """# Copyright 2018 Google Inc.
 
 FROM gcr.io/oss-fuzz-base/base-builder
 RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \
-                      pkg-config curl check
+                      pkg-config curl check libcpputest-dev re2c
 RUN rm /usr/local/bin/cargo && \
  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \
  apt-get install -y cargo
@@ -287,6 +287,7 @@ def parse_commandline():
   parser.add_argument('--oss-fuzz', '-o', help='OSS-Fuzz base')
   parser.add_argument('--input', '-i', help='Input to analyze')
   parser.add_argument('--disable-fuzzgen',
+                      '-d',
                       action='store_true',
                       help='Disable fuzz generation')
   parser.add_argument('--targets-per-heuristic',

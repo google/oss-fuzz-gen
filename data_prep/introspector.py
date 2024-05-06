@@ -23,7 +23,7 @@ import re
 import subprocess
 import sys
 import time
-from typing import Dict, List, Optional, TypeVar
+from typing import Any, Dict, List, Optional, TypeVar
 from urllib.parse import urlencode
 
 import requests
@@ -35,7 +35,7 @@ from experiment import oss_fuzz_checkout
 
 T = TypeVar('T', str, list, dict)  # Generic type.
 
-TIMEOUT = 10
+TIMEOUT = 45
 MAX_RETRY = 5
 DEFAULT_INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
 INTROSPECTOR_ENDPOINT = ''
@@ -46,6 +46,16 @@ INTROSPECTOR_SOURCE = ''
 INTROSPECTOR_XREF = ''
 INTROSPECTOR_TYPE = ''
 INTROSPECTOR_FUNC_SIG = ''
+
+
+def get_oracle_dict() -> Dict[str, Any]:
+  """Returns the oracles available to identify targets."""
+  # Do this in a function to allow for forward-declaration of functions below.
+  oracle_dict = {
+      'far-reach-low-coverage': get_unreached_functions,
+      'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets
+  }
+  return oracle_dict
 
 
 def set_introspector_endpoints(endpoint):
@@ -155,11 +165,7 @@ def query_introspector_for_keyword_targets(project: str) -> list[dict]:
 
 def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
   """Queries introspector for target functions."""
-  oracle_dict = {
-      'far-reach-low-coverage': get_unreached_functions,
-      'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets
-  }
-  query_func = oracle_dict.get(target_oracle, None)
+  query_func = get_oracle_dict().get(target_oracle, None)
   if not query_func:
     logging.error('No such oracle "%s"', target_oracle)
     sys.exit(1)
@@ -336,11 +342,20 @@ def _group_function_params(param_types: list[str],
 
 
 def populate_benchmarks_using_introspector(project: str, language: str,
-                                           limit: int, target_oracle: str):
+                                           limit: int,
+                                           target_oracles: List[str]):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
-  functions = query_introspector_for_targets(project, target_oracle)
+
+  functions = []
+  for target_oracle in target_oracles:
+    logging.info('Extracting functions using oracle %s.', target_oracle)
+    tmp_functions = query_introspector_for_targets(project, target_oracle)
+
+    # Limit the amount of functions from each oracle.
+    functions += tmp_functions[:limit]
+
   if not functions:
-    logging.error('No unreached functions found')
+    logging.error('No functions found using the oracles: %s', target_oracles)
     return []
 
   filenames = [
@@ -385,8 +400,9 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                target_name,
                                function_dict=function))
 
-    if len(potential_benchmarks) >= limit:
+    if len(potential_benchmarks) >= (limit * len(target_oracles)):
       break
+  print("Length of potential targets: %d" % (len(potential_benchmarks)))
 
   return potential_benchmarks
 
@@ -548,7 +564,7 @@ if __name__ == '__main__':
   benchmarks = populate_benchmarks_using_introspector(args.project,
                                                       cur_project_language,
                                                       args.max_functions,
-                                                      args.target_oracle)
+                                                      [args.target_oracle])
   if benchmarks:
     benchmarklib.Benchmark.to_yaml(benchmarks, args.out)
   else:
