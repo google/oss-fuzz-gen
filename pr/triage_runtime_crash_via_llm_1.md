@@ -9,6 +9,7 @@
   - `FP_OOM`
   - `FP_NEAR_INIT_CRASH`
   - `FP_TARGET_CRASH`
+  - `NO_SEMANTIC_ERR`
 
 ## Detailed information
 - The input contains the crash information(stack trace and sanitizer output) and the fuzz target code.

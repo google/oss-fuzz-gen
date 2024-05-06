@@ -296,7 +296,7 @@ class BuilderRunner:
           return cov_pcs, total_pcs, False, '', SemanticCheckResult(
               SemanticCheckResult.NO_COV_INCREASE)
 
-    return cov_pcs, total_pcs, crashes, '', SemanticCheckResult(
+    return cov_pcs, total_pcs, crashes, crash_info, SemanticCheckResult(
         SemanticCheckResult.NO_SEMANTIC_ERR)
 
   def build_and_run(self, generated_project: str, target_path: str,
