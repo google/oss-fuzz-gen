@@ -97,7 +97,8 @@ def run_experiments(benchmark: benchmarklib.Benchmark,
         cloud_experiment_name=args.cloud_experiment_name,
         cloud_experiment_bucket=args.cloud_experiment_bucket,
         use_context=args.context,
-        run_timeout=args.run_timeout)
+        run_timeout=args.run_timeout,
+        dry_run=args.dry_run)
     return Result(benchmark, result)
   except Exception as e:
     print('Exception while running experiment:', e, file=sys.stderr)
@@ -109,6 +110,10 @@ def parse_args() -> argparse.Namespace:
   """Parses command line arguments."""
   parser = argparse.ArgumentParser(
       description='Run all experiments that evaluates all target functions.')
+  parser.add_argument('-d',
+                      '--dry-run',
+                      action='store_true',
+                      help='Perform a dry-run -- only generate prompts.')
   parser.add_argument('-n',
                       '--num-samples',
                       type=int,

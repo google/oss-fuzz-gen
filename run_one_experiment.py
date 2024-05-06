@@ -219,7 +219,8 @@ def run(benchmark: Benchmark,
         cloud_experiment_name: str = '',
         cloud_experiment_bucket: str = '',
         use_context: bool = False,
-        run_timeout: int = RUN_TIMEOUT) -> Optional[AggregatedResult]:
+        run_timeout: int = RUN_TIMEOUT,
+        dry_run: bool = False) -> Optional[AggregatedResult]:
   """Generates code via LLM, and evaluates them."""
   model.cloud_setup()
   logging.basicConfig(level=logging.INFO)
@@ -253,6 +254,10 @@ def run(benchmark: Benchmark,
                            project_examples,
                            project_context_content=context_info)
     prompt.save(work_dirs.prompt)
+
+    if dry_run:
+      return None
+
     generated_targets = generate_targets(benchmark,
                                          model,
                                          prompt,
