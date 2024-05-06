@@ -293,10 +293,10 @@ class BuilderRunner:
       # Another error fuzz target case: no cov increase.
       if initcov is not None and donecov is not None:
         if initcov == donecov:
-          return cov_pcs, total_pcs, False, crash_info, SemanticCheckResult(
+          return cov_pcs, total_pcs, False, '', SemanticCheckResult(
               SemanticCheckResult.NO_COV_INCREASE)
 
-    return cov_pcs, total_pcs, crashes, crash_info, SemanticCheckResult(
+    return cov_pcs, total_pcs, crashes, '', SemanticCheckResult(
         SemanticCheckResult.NO_SEMANTIC_ERR)
 
   def build_and_run(self, generated_project: str, target_path: str,

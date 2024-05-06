@@ -79,7 +79,7 @@ class SemanticCheckResult:
     if match:
       return match.group(0)
 
-    return ""
+    return ''
 
   def __init__(self,
                err_type: str,

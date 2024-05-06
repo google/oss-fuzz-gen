@@ -3,8 +3,12 @@
 ## Conditions to triage
 - Build and run successfully.
 - The crash is triggered.
-- The SemanticCheckResult is not FP_TIMEOUT(may need additional prompts).
-- The SemanticCheckResult is not NO_COV_INCRASE(may need additional prompts).
+- The SemanticCheckResult is one of the following:
+  - `NULL_DEREF`
+  - `SIGNAL`
+  - `FP_OOM`
+  - `FP_NEAR_INIT_CRASH`
+  - `FP_TARGET_CRASH`
 
 ## Detailed information
 - The input contains the crash information(stack trace and sanitizer output) and the fuzz target code.

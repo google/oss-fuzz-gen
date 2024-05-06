@@ -236,7 +236,7 @@ class Evaluator:
       logger: _Logger,
   ):
     """Triage the crash."""
-    if run_result.crash_info == "":
+    if run_result.crash_info == '':
       logger.log(f"Warning: no crash info in {generated_oss_fuzz_project}.")
     else:
       crash_info = run_result.crash_info
@@ -325,11 +325,7 @@ class Evaluator:
                  True, run_result.semantic_check.type))
 
     # Triage the crash with LLM
-    result_type = run_result.semantic_check.type
-    if (run_result.crashes and \
-          result_type != SemanticCheckResult.NOT_APPLICABLE and \
-            result_type != SemanticCheckResult.NO_COV_INCREASE and \
-              result_type != SemanticCheckResult.FP_TIMEOUT):
+    if run_result.crashes:
       logger.log(f'Triaging the crash related to {target_path} with '
                  f'{self.builder_runner.fixer_model_name}.')
       self.triage_crash(
