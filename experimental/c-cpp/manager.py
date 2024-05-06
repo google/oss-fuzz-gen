@@ -860,7 +860,8 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
       github_repo, os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
 
 
-def create_clean_oss_fuzz_from_success(github_repo, success_dir):
+def create_clean_oss_fuzz_from_success(github_repo: str,
+                                       success_dir: str) -> None:
   """Converts a successful out dir into a working OSS-Fuzz project."""
   oss_fuzz_folder = os.path.join(success_dir, 'oss-fuzz-project')
   os.makedirs(oss_fuzz_folder)
@@ -897,7 +898,8 @@ def create_clean_oss_fuzz_from_success(github_repo, success_dir):
     f.write(clean_build_content)
 
 
-def create_clean_clusterfuzz_lite_from_success(github_repo, success_dir):
+def create_clean_clusterfuzz_lite_from_success(github_repo: str,
+                                               success_dir: str) -> None:
   """Converts a successful out dir into a working ClusterFuzzLite project."""
   cflite_folder = os.path.join(success_dir, 'clusterfuzz-lite-project')
   os.makedirs(cflite_folder)
@@ -933,7 +935,8 @@ def create_clean_clusterfuzz_lite_from_success(github_repo, success_dir):
     f.write(CFLITE_TEMPLATE)
 
 
-def convert_test_build_to_clean_build(test_build_script, project_repo_dir):
+def convert_test_build_to_clean_build(test_build_script: str,
+                                      project_repo_dir: str) -> str:
   """Rewrites a build.sh used during testing to a proper OSS-Fuzz build.sh."""
   split_build_content = test_build_script.split('\n')
 
