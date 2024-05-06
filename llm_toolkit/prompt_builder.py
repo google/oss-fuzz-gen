@@ -20,6 +20,8 @@ import os
 from abc import abstractmethod
 from typing import Optional, Tuple
 
+import jinja2
+
 from data_prep import project_targets
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
@@ -131,15 +133,15 @@ class DefaultTemplateBuilder(PromptBuilder):
     return solution
 
   def format_context(self, context_info: dict) -> str:
-    context = self._get_template(self.context_template_file)
-    context = context.replace('{CONTEXT_HEADERS}',
-                              '\n'.join(context_info['files']))
-    context = context.replace('{CONTEXT_MUST_INSERT}', context_info['decl'])
-    context = context.replace('{CONTEXT_FUNC_SOURCE}',
-                              context_info['func_source'])
-    context = context.replace('{CONTEXT_XREFS_SOURCE}',
-                              '\n'.join(context_info['xrefs']))
-    return context
+    context = jinja2.Template(self._get_template(self.context_template_file),
+                              trim_blocks=True,
+                              lstrip_blocks=True)
+    return context.render(
+        headers='\n'.join(context_info['files']),
+        must_insert=context_info['decl'],
+        func_source=context_info['func_source'],
+        xrefs=context_info['xrefs'],
+    )
 
   def _select_examples(self, examples: list[list],
                        prompt_size: int) -> list[list[str]]:
