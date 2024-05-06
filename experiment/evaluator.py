@@ -29,7 +29,7 @@ from experiment.benchmark import Benchmark
 from experiment.builder_runner import BuildResult, RunResult
 from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
-from llm_toolkit import code_fixer
+from llm_toolkit import code_fixer, crash_triage
 
 LLM_FIX_LIMIT = 5
 
@@ -227,6 +227,27 @@ class Evaluator:
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
                      generated_oss_fuzz_project, os.path.basename(target_path)))
 
+  def triage_crash(
+      self,
+      ai_binary: str,
+      generated_oss_fuzz_project: str,
+      triaged_target_path: str,
+      run_result: RunResult,
+      logger: _Logger,
+  ):
+    """Triage the crash."""
+    if run_result.crash_info == "":
+      logger.log(f"Warning: no crash info in {generated_oss_fuzz_project}.")
+    else:
+      crash_info = run_result.crash_info
+      crash_triage.llm_triage(
+          ai_binary,
+          triaged_target_path,
+          self.benchmark,
+          crash_info,
+          self.builder_runner.fixer_model_name,
+      )
+
   def do_check_target(self, ai_binary: str, target_path: str) -> Result:
     """Builds and runs a target."""
     generated_target_name = os.path.basename(target_path)
@@ -302,6 +323,22 @@ class Evaluator:
           Result(True, run_result.crashes, 0.0, 0.0,
                  run_result.coverage_report_path, run_result.reproducer_path,
                  True, run_result.semantic_check.type))
+
+    # Triage the crash with LLM
+    result_type = run_result.semantic_check.type
+    if (run_result.crashes and \
+          result_type != SemanticCheckResult.NOT_APPLICABLE and \
+            result_type != SemanticCheckResult.NO_COV_INCREASE and \
+              result_type != SemanticCheckResult.FP_TIMEOUT):
+      logger.log(f'Triaging the crash related to {target_path} with '
+                 f'{self.builder_runner.fixer_model_name}.')
+      self.triage_crash(
+          ai_binary,
+          generated_oss_fuzz_project,
+          target_path,
+          run_result,
+          logger,
+      )
 
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()

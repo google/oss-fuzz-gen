@@ -67,6 +67,17 @@ def parse_code(response_path: str) -> str:
   return '\n'.join(lines)
 
 
+def parse_triage(triage_path: str) -> str:
+  """Parses the triage from the |triage_path|."""
+  with open(triage_path) as file:
+    triage = file.read()
+  solution = triage.split("</solution>")[0]
+
+  lines = solution.splitlines()
+
+  return "\n".join(lines)
+
+
 def save_output(content: str, output_path: str) -> None:
   """Saves the parsed |content| to |output_path|."""
   with open(output_path, 'w+') as output_file:

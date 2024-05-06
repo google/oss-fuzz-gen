@@ -1,0 +1,14 @@
+Below is the crash report:
+<log>
+{CRASH_REPORT}
+</log>
+
+Below is the fuzz target:
+<code>
+{FUZZ_TARGET_CODE}
+</code>
+
+Diagnose the crash:
+1. Show if the crash is caused by errors in the fuzz target (e.g., incorrect function usage, parameter initializations, or missing setup steps) or by vulnerability in the project under test.
+It's important to show your step-by-step analysis process in detail.
+<solution>
