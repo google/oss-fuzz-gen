@@ -54,6 +54,87 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     return 0;
 }'''
 
+CLEAN_DOCKER = '''# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+################################################################################
+
+FROM gcr.io/oss-fuzz-base/base-builder
+RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \\
+                      pkg-config curl check
+COPY *.sh *.cpp $SRC/
+RUN git clone {repo_url} {project_repo_dir}
+WORKDIR {project_repo_dir}
+'''
+
+CLEAN_DOCKER_CFLITE = '''# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+################################################################################
+
+FROM gcr.io/oss-fuzz-base/base-builder
+RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \\
+                      pkg-config curl check
+COPY . $SRC/{project_repo_dir}
+COPY .clusterfuzzlite/build.sh $SRC/build.sh
+COPY .clusterfuzzlite/fuzzer.cpp $SRC/fuzzer.cpp
+WORKDIR {project_repo_dir}
+'''
+
+CFLITE_TEMPLATE = """name: ClusterFuzzLite PR fuzzing
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ master ]
+permissions: read-all
+jobs:
+  PR:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer: [address]
+    steps:
+    - name: Build Fuzzers (${{ matrix.sanitizer }})
+      id: build
+      uses: google/clusterfuzzlite/actions/build_fuzzers@v1
+      with:
+        sanitizer: ${{ matrix.sanitizer }}
+        language: c++
+        bad-build-check: false
+    - name: Run Fuzzers (${{ matrix.sanitizer }})
+      id: run
+      uses: google/clusterfuzzlite/actions/run_fuzzers@v1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        fuzz-seconds: 100
+        mode: 'code-change'
+        report-unreproducible-crashes: false
+        sanitizer: ${{ matrix.sanitizer }}
+"""
+
 
 def setup_model(model: str):
   global LLM_MODEL
@@ -674,7 +755,7 @@ def generate_harness_intrinsics(
 def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
                        heuristics_passed, idx_to_use,
                        disable_fuzz_build_and_test, folders_with_results,
-                       outdir):
+                       outdir, github_repo):
   """For a given result, will write the harness and build to the file system
   and run the OSS-Fuzz `compile` command to verify that the build script +
   harness builds."""
@@ -771,6 +852,111 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
       (fuzzer_gen_dir, os.path.join(outdir, os.path.basename(fuzzer_gen_dir))))
   shutil.copytree(fuzzer_gen_dir,
                   os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
+
+  # Create an OSS-Fuzz integration and ClusterFuzzLite integration
+  create_clean_oss_fuzz_from_success(
+      github_repo, os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
+  create_clean_clusterfuzz_lite_from_success(
+      github_repo, os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
+
+
+def create_clean_oss_fuzz_from_success(github_repo: str,
+                                       success_dir: str) -> None:
+  """Converts a successful out dir into a working OSS-Fuzz project."""
+  oss_fuzz_folder = os.path.join(success_dir, 'oss-fuzz-project')
+  os.makedirs(oss_fuzz_folder)
+
+  # Project yaml
+  project_yaml = {
+      'homepage': github_repo,
+      'language': 'c++',
+      'primary_contact': 'add_your_email@here.com',
+      'main_repo': github_repo
+  }
+  with open(os.path.join(oss_fuzz_folder, 'project.yaml'), 'w') as project_out:
+    yaml.dump(project_yaml, project_out)
+
+  # Copy fuzzer
+  shutil.copy(os.path.join(success_dir, 'empty-fuzzer.cpp'),
+              os.path.join(oss_fuzz_folder, 'fuzzer.cpp'))
+
+  # Create Dockerfile
+  project_repo_dir = github_repo.split('/')[-1]
+  dockerfile = CLEAN_DOCKER.format(repo_url=github_repo,
+                                   project_repo_dir=project_repo_dir)
+  with open(os.path.join(oss_fuzz_folder, 'Dockerfile'), 'w') as docker_out:
+    docker_out.write(dockerfile)
+
+  # Build file
+  with open(os.path.join(success_dir, 'build.sh'), 'r') as f:
+    build_content = f.read()
+
+  clean_build_content = convert_test_build_to_clean_build(
+      build_content, project_repo_dir)
+
+  with open(os.path.join(oss_fuzz_folder, 'build.sh'), 'w') as f:
+    f.write(clean_build_content)
+
+
+def create_clean_clusterfuzz_lite_from_success(github_repo: str,
+                                               success_dir: str) -> None:
+  """Converts a successful out dir into a working ClusterFuzzLite project."""
+  cflite_folder = os.path.join(success_dir, 'clusterfuzz-lite-project')
+  os.makedirs(cflite_folder)
+
+  # Project yaml
+  project_yaml = {
+      'language': 'c++',
+  }
+  with open(os.path.join(cflite_folder, 'project.yaml'), 'w') as project_out:
+    yaml.dump(project_yaml, project_out)
+
+  # Copy fuzzer
+  shutil.copy(os.path.join(success_dir, 'empty-fuzzer.cpp'),
+              os.path.join(cflite_folder, 'fuzzer.cpp'))
+
+  # Create Dockerfile
+  project_repo_dir = github_repo.split('/')[-1]
+  dockerfile = CLEAN_DOCKER_CFLITE.format(project_repo_dir=project_repo_dir)
+  with open(os.path.join(cflite_folder, 'Dockerfile'), 'w') as docker_out:
+    docker_out.write(dockerfile)
+
+  # Build file
+  with open(os.path.join(success_dir, 'build.sh'), 'r') as f:
+    build_content = f.read()
+
+  clean_build_content = convert_test_build_to_clean_build(
+      build_content, project_repo_dir)
+
+  with open(os.path.join(cflite_folder, 'build.sh'), 'w') as f:
+    f.write(clean_build_content)
+
+  with open(os.path.join(cflite_folder, 'cflite_pr.yml'), 'w') as f:
+    f.write(CFLITE_TEMPLATE)
+
+
+def convert_test_build_to_clean_build(test_build_script: str,
+                                      project_repo_dir: str) -> str:
+  """Rewrites a build.sh used during testing to a proper OSS-Fuzz build.sh."""
+  split_build_content = test_build_script.split('\n')
+
+  # Extract the test folder name
+  original_build_folder = split_build_content[1].split('/')[-1]
+
+  # Remove the lines used in the testing build script to navigate test folders.
+  clean_build_content_lines = split_build_content[:1] + split_build_content[4:]
+
+  # Make adjustments in the build to convert a test script to a clean script:
+  # 1) Output fuzzer to $OUT/fuzzer instead of /src/generated-fuzzer
+  # 2) Call the fuzzer 'fuzzer' instead of 'empty-fuzzer'
+  # 3) Use '$SRC/' instead of '/src/'
+  # 4) Rewrite file paths from test build directory to cloned directory, to
+  # adjust e.g. library and include paths.
+  clean_build_content = '\n'.join(clean_build_content_lines).replace(
+      '/src/generated-fuzzer',
+      '$OUT/fuzzer').replace('empty-fuzzer', 'fuzzer').replace(
+          '/src/', '$SRC/').replace(original_build_folder, project_repo_dir)
+  return clean_build_content
 
 
 def append_to_report(outdir, msg):
@@ -932,7 +1118,7 @@ def auto_generate(github_url,
         # Make a directory and store artifacts there
         evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
                            heuristics_passed, idx, disable_fuzz_build_and_test,
-                           folders_with_results, outdir)
+                           folders_with_results, outdir, github_url)
         idx += 1
 
   if disable_fuzzgen:
