@@ -69,7 +69,7 @@ def get_next_generated_benchmarks_dir() -> str:
 
 
 def generate_benchmarks(args: argparse.Namespace) -> None:
-  """Generate benchmarks, write to filesystem and set args benchmark dir."""
+  """Generates benchmarks, write to filesystem and set args benchmark dir."""
   logging.info('Generating benchmarks.')
   benchmark_dir = get_next_generated_benchmarks_dir()
   logging.info('Setting benchmark directory to %s.', benchmark_dir)
