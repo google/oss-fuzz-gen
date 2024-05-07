@@ -8,15 +8,6 @@ Currently, triaging runtime crash with LLM would be activated only when all the 
 
 - Build successfully.
 - Trigger crash.
-- SemanticCheckResult is one of the following types:
-  - `NO_SEMANTIC_ERR`
-  - `FP_NEAR_INIT_CRASH`
-  - `FP_TARGET_CRASH`
-  - `FP_OOM`
-  - `NULL_DEREF`
-  - `SIGNAL`
-
-For the SemanticCheckResult type range mentioned above, we will include 'NO_COV_INCREASE' in the future, which requires additional prompt design.
 
 ## Input to LLM triaging
 

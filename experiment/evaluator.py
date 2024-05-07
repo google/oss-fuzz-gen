@@ -308,16 +308,15 @@ class Evaluator:
                  SemanticCheckResult.NOT_APPLICABLE))
 
     # Triage the crash with LLM
-    if run_result.crashes:
-      logger.log(f'Triaging the crash related to {target_path} with '
-                 f'{self.builder_runner.fixer_model_name}.')
-      self.triage_crash(
-          ai_binary,
-          generated_oss_fuzz_project,
-          target_path,
-          run_result,
-          logger,
-      )
+    logger.log(f'Triaging the crash related to {target_path} with '
+               f'{self.builder_runner.fixer_model_name}.')
+    self.triage_crash(
+        ai_binary,
+        generated_oss_fuzz_project,
+        target_path,
+        run_result,
+        logger,
+    )
 
     if run_result.coverage_summary is None or run_result.coverage is None:
       logger.log(
