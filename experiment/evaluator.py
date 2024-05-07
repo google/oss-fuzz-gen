@@ -307,6 +307,18 @@ class Evaluator:
           Result(True, False, 0.0, 0.0, '', '', False,
                  SemanticCheckResult.NOT_APPLICABLE))
 
+    # Triage the crash with LLM
+    if run_result.crashes:
+      logger.log(f'Triaging the crash related to {target_path} with '
+                 f'{self.builder_runner.fixer_model_name}.')
+      self.triage_crash(
+          ai_binary,
+          generated_oss_fuzz_project,
+          target_path,
+          run_result,
+          logger,
+      )
+
     if run_result.coverage_summary is None or run_result.coverage is None:
       logger.log(
           f'Warning: No cov info in run result of {generated_oss_fuzz_project}.'
@@ -323,18 +335,6 @@ class Evaluator:
           Result(True, run_result.crashes, 0.0, 0.0,
                  run_result.coverage_report_path, run_result.reproducer_path,
                  True, run_result.semantic_check.type))
-
-    # Triage the crash with LLM
-    if run_result.crashes:
-      logger.log(f'Triaging the crash related to {target_path} with '
-                 f'{self.builder_runner.fixer_model_name}.')
-      self.triage_crash(
-          ai_binary,
-          generated_oss_fuzz_project,
-          target_path,
-          run_result,
-          logger,
-      )
 
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
