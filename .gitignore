@@ -8,6 +8,4 @@ venv/
 .venv/
 __pycache__/
 *.swp
-DS_Store
-.python-version
-pr/
+.DS_Store
