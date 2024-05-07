@@ -73,3 +73,7 @@ Below is a reponse example:
    - The crash is most likely caused by an issue within the `_lou_getTranslationTable` function or its interaction with the provided input data.
    - Further investigation into the function's implementation and input handling is necessary to identify and fix the root cause of the crash.
 ```
+
+## Additions within `results` folder
+
+`result/output-ProjectName-FunctionName/fixed_targets/TargetName-triage` folder is created to store the generated prompt file and trirage rawoutput from LLM.
