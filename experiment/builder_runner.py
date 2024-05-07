@@ -249,7 +249,6 @@ class BuilderRunner:
       symptom = SemanticCheckResult.extract_symptom(fuzzlog)
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
       crash_info = SemanticCheckResult.extract_crash_info(fuzzlog)
-      print('crash_info:', crash_info)
 
       # FP case 1: Common fuzz target errors.
       # Null-deref, normally indicating inadequate parameter initialization or
