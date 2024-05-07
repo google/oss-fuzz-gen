@@ -116,6 +116,7 @@ def llm_triage(
     print(f'LLM did not generate rawoutput for {prompt_path}.')
     return
 
+  # TODO(fdt622): Use the common vote
   # Currently, we prefer the longest triage.
   preferred_triage_path, preferred_triage = max(triage_candidates,
                                                 key=lambda x: len(x[1]))
