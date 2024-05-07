@@ -296,6 +296,12 @@ def _get_clean_arg_types(function: dict, project: str) -> list[str]:
   return [clean_type(arg_type) for arg_type in raw_arg_types]
 
 
+def _get_arg_count(function: dict) -> int:
+  """Count the number of arguments for this function."""
+  raw_arg_types = (function.get('arg-types') or
+                   function.get('function_arguments', []))
+  return len(raw_arg_types)
+
 def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
   if language == 'jvm':
@@ -381,17 +387,18 @@ def populate_benchmarks_using_introspector(project: str, language: str,
 
   potential_benchmarks = []
   for function in functions:
-    if language == 'jvm':
-      if not _get_clean_arg_types(function, project):
-        # Some java methods from fuzz-introspector may have empty argument list.
-        continue
-    else:
-      filename = os.path.basename(function['function_filename'])
-      if filename not in [os.path.basename(i) for i in interesting.keys()]:
-        # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
-        # Ignore jvm project for this checking.
-        logging.error('error: %s %s', filename, interesting.keys())
-        continue
+    if _get_arg_count(function) == 0:
+      # Skipping functions / methods that does not take in any arguments.
+      # Those functions / methods are not fuzz-worthy.
+      continue
+
+    filename = os.path.basename(function['function_filename'])
+    if filename not in [os.path.basename(i) for i in interesting.keys()]:
+      # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
+      # Ignore jvm project for this checking.
+      logging.error('error: %s %s', filename, interesting.keys())
+      continue
+
     function_signature = get_function_signature(function, project)
     if not function_signature:
       continue
