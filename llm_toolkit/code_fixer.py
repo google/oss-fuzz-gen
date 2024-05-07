@@ -353,25 +353,11 @@ def extract_error_message(log_path: str,
                                  r'(\.\S*)?:\d+:\n?')
   clang_error_end_pattern = r'.*\d+ errors? generated.\n?'
 
-  # Checking on this start pattern is not enough to identify linker errors from
-  # fuzz target only, it may include error from project source as well.
-  # e.g. kamailio:
-  # /usr/bin/ld: /lib/x86_64-linux-gnu/crt1.o: in function `_start':
-  # (.text+0x24): undefined reference to `main'
-  # while fuzz target should be fuzz_parse_msg.c
-  linker_error_start_string = '/usr/bin/ld: '
-  llvm_linker_error_start_string = 'ld.lld: '
-  linker_error_end_pattern = (
-      r'clang.*: error: linker command failed with exit code 1 \(use -v to see '
-      r'invocation\)\n?')
-
   errors = []
   for i, line in enumerate(log_lines):
     line = _strip_color_code(line)
     if temp_range[0] is None:
-      if (line.startswith(linker_error_start_string) or
-          line.startswith(llvm_linker_error_start_string) or
-          re.fullmatch(clang_include_error_pattern, line) or
+      if (re.fullmatch(clang_include_error_pattern, line) or
           re.fullmatch(clang_error_start_pattern, line)):
         temp_range[0] = i
         continue
@@ -379,8 +365,7 @@ def extract_error_message(log_path: str,
     # Take the error block that comes later, usually it is the one related to
     # fuzz target and/or after jcc attempts to fix compile error.
     if temp_range[0] is not None:
-      if (re.fullmatch(linker_error_end_pattern, line) or
-          re.fullmatch(clang_error_end_pattern, line)):
+      if re.fullmatch(clang_error_end_pattern, line):
         temp_range[1] = i + 1
         error_lines_range = temp_range
         temp_range = [None, None]
@@ -399,16 +384,10 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
   state_unknown = 'UNKNOWN'
   state_include = 'INCLUDE'
   state_diag = 'DIAG'
-  state_ld = 'LD'
 
   diag_error_pattern = re.compile(r'(\S*):\d+:\d+: (.+): (.+)')
   include_error_pattern = re.compile(r'In file included from (\S*):\d+:')
   diag_error_end_pattern = r'.*\d+ errors? generated.'
-
-  linker_error_string = '/usr/bin/ld: '
-  llvm_linker_error_string = 'ld.lld: '
-  linker_error_end_pattern = r'clang.*: error: .*'
-  dwarf_error_string = 'DWARF error: invalid or unhandled FORM value: '
 
   error_blocks = []
   curr_block = []
@@ -450,24 +429,6 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
         curr_block = []
 
     if re.fullmatch(diag_error_end_pattern, line):
-      curr_state = state_unknown
-      error_blocks.append('\n'.join(curr_block))
-      curr_block = []
-      continue
-
-    # Linker errors.
-    if (line.startswith(linker_error_string) or
-        line.startswith(llvm_linker_error_string)):
-      curr_state = state_ld
-      if curr_block:
-        error_blocks.append('\n'.join(curr_block))
-        curr_block = []
-      # Skip DWARF error line
-      if dwarf_error_string in line:
-        continue
-      line = line.split(' ', maxsplit=1)[1]  # Remove linker name from line.
-
-    if re.fullmatch(linker_error_end_pattern, line):
       curr_state = state_unknown
       error_blocks.append('\n'.join(curr_block))
       curr_block = []
