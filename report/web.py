@@ -320,13 +320,17 @@ def get_run_logs(benchmark: str, sample: str) -> str:
 def get_triage(benchmark: str, sample: str) -> str:
   """Gets the triage of benchmark |benchmark| with sample ID |sample|."""
   fixed_dir = os.path.join(RESULTS_DIR, benchmark, 'fixed_targets')
-  triage_path = os.path.join(fixed_dir, f'{sample}-triage',
-                             f'{sample}.rawoutput')
-  if not os.path.exists(triage_path):
+  triage_dir = os.path.join(fixed_dir, f'{sample}-triage')
+  if not os.path.exists(triage_dir):
     return ''
 
-  with open(triage_path) as f:
-    return f.read()
+  for name in os.listdir(triage_dir):
+    if name.endswith('.txt') and name != 'prompt.txt':
+      triage_path = os.path.join(triage_dir, name)
+      with open(triage_path) as f:
+        return f.read()
+
+  return ''
 
 
 def get_fixed_target(path):
