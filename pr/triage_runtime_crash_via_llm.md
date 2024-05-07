@@ -77,3 +77,7 @@ Below is a reponse example:
 ## Additions within `results` folder
 
 `result/output-ProjectName-FunctionName/fixed_targets/TargetName-triage` folder is created to store the generated prompt file and trirage rawoutput from LLM.
+
+## Additions within results report
+
+Triage report is appended to results report web. We add a column `Triage` under `Run logs` to store triage reports. One function, `get_triage`, is added to `report/web.py` file.
