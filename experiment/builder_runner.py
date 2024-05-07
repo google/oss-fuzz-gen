@@ -124,12 +124,12 @@ class BuilderRunner:
     with open(target_path) as generated_code_file:
       code = generated_code_file.read()
 
-    base_arg_regex = r'[a-zA-Z_$][a-zA-Z_$0-9]*'
+    base_arg_regex = r'[a-zA-Z_$][a-zA-Z_$0-9(),.]*'
     signature = self.benchmark.function_signature
     name = signature.split('].')[1].split('(')[0]
     arg_count = len(signature.split('(')[1].split(')')[0].split(','))
 
-    pattern = r'(%s\(%s\))' % (name, ','.join([base_arg_regex] * arg_count))
+    pattern = r'(%s\(%s\))' % (name, ', '.join([base_arg_regex] * arg_count))
     match = re.search(pattern, code)
 
     return bool(match)
@@ -440,7 +440,7 @@ class BuilderRunner:
         '-e',
         f'CC={JCC_DIR}/clang-jcc',
         '-e',
-        'FUZZING_LANGUAGE=c++',
+        f'FUZZING_LANGUAGE={self.benchmark.language}',
         '-v',
         f'{outdir}:/out',
         '-v',
@@ -534,17 +534,24 @@ class BuilderRunner:
             f'{e.stderr}')
       return None, None
 
-    local_textcov_location = os.path.join(
-        oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'out', generated_project,
-        'textcov_reports', f'{self.benchmark.target_name}.covreport')
-    target_basename = os.path.basename(self.benchmark.target_path)
-    with open(local_textcov_location) as f:
-      new_textcov = textcov.Textcov.from_file(
-          f,
-          ignore_function_patterns=[
-              # Don't include other functions defined in the target code.
-              re.compile(r'^' + re.escape(target_basename) + ':')
-          ])
+    if self.benchmark.language == 'jvm':
+      local_textcov_location = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
+                                            'build', 'out', generated_project,
+                                            'textcov_reports', 'jacoco.xml')
+      new_textcov = textcov.Textcov.from_jvm_file(local_textcov_location)
+    else:
+      local_textcov_location = os.path.join(
+          oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'out', generated_project,
+          'textcov_reports', f'{self.benchmark.target_name}.covreport')
+      target_basename = os.path.basename(self.benchmark.target_path)
+
+      with open(local_textcov_location) as f:
+        new_textcov = textcov.Textcov.from_file(
+            f,
+            ignore_function_patterns=[
+                # Don't include other functions defined in the target code.
+                re.compile(r'^' + re.escape(target_basename) + ':')
+            ])
 
     coverage_summary = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build',
                                     'out', generated_project, 'report', 'linux',

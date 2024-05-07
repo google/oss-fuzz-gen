@@ -302,6 +302,7 @@ def _get_arg_count(function: dict) -> int:
                    function.get('function_arguments', []))
   return len(raw_arg_types)
 
+
 def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
   if language == 'jvm':

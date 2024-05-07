@@ -188,9 +188,6 @@ class Evaluator:
                                          'projects', self.benchmark.project)
 
     shutil.copytree(existing_project_path, generated_project_path)
-    shutil.copyfile(
-        target_file,
-        os.path.join(generated_project_path, os.path.basename(target_file)))
 
     # Fix public java class name in target_file
     if self.benchmark.language == 'jvm':
@@ -199,11 +196,16 @@ class Evaluator:
 
       new = os.path.basename(self.benchmark.target_path).replace('.java', '')
       code = code.replace('public class Fuzz', f'public class {new}')
-      print(code)
+
       with open(target_file, 'w') as file:
         file.write(code)
 
-    # Copy and update fuzzers
+    # Copy generated fuzzers to generated_project_path
+    shutil.copyfile(
+        target_file,
+        os.path.join(generated_project_path, os.path.basename(target_file)))
+
+    # Add additional statement in dockerfile to overwrite with generated fuzzer
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(f'\nCOPY {os.path.basename(target_file)} '
               f'{self.benchmark.target_path}\n')

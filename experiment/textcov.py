@@ -18,11 +18,23 @@ from __future__ import annotations
 import dataclasses
 import re
 import subprocess
+import xml.etree.ElementTree as ET
 from typing import List, Optional
 
 # No spaces at the beginning, and ends with a ":".
 FUNCTION_PATTERN = re.compile(r'^([^\s].*):$')
 LINE_PATTERN = re.compile(r'^\s*\d+\|\s*([\d\.a-zA-Z]+)\|(.*)')
+
+JVM_CLASS_MAPPING = {
+    'Z': 'boolean',
+    'B': 'byte',
+    'C': 'char',
+    'D': 'double',
+    'F': 'float',
+    'I': 'int',
+    'J': 'long',
+    'S': 'short'
+}
 
 
 def demangle(data: str) -> str:
@@ -172,6 +184,53 @@ class Textcov:
         continue
     return textcov
 
+  @classmethod
+  def from_jvm_file(cls, file_path) -> Textcov:
+    """Read a textcov from a jacoco.xml path."""
+    textcov = cls()
+    jacoco_report = ET.parse(file_path)
+
+    for item in jacoco_report.iter():
+      if item.tag == 'method':
+        method_dict = item.attrib
+
+        # Get method and class name
+        class_name = method_dict['desc'].split(')')[1].split(';')[0].replace(
+            '/', '.')
+        method_name = method_dict['name']
+        if method_name == '<init>' or method_name == '<cinit>':
+          continue
+        if not class_name.startswith('L'):
+          continue
+
+        class_name = class_name[1:]
+
+        # Process all arguments type from shortern Java Class naming
+        args = textcov.determine_jvm_arguments_type(method_dict['desc'])
+
+        # Save method
+        full_method_name = f'[{class_name}].{method_name}({",".join(args)})'
+        current_method = Function(name=full_method_name)
+
+        # Retrieve line coverage information
+        total_line = 0
+        covered_line = 0
+        for cov_data in item:
+          if cov_data.attrib['type'] == 'LINE':
+            covered_line = int(cov_data.attrib['covered'])
+            total_line = int(cov_data.attrib['covered']) + int(
+                cov_data.attrib['missed'])
+        for i in range(total_line):
+          line = f'Line{i}'
+          if i >= covered_line:
+            current_method.lines[line] = Line(contents=line, hit_count=0)
+          else:
+            current_method.lines[line] = Line(contents=line, hit_count=1)
+
+        textcov.functions[full_method_name] = current_method
+
+    return textcov
+
   def to_file(self, filename: str) -> None:
     """Writes covered functions and lines to |filename|."""
     file_content = ''
@@ -198,3 +257,30 @@ class Textcov:
   @property
   def covered_lines(self):
     return sum(f.covered_lines for f in self.functions.values())
+
+  def determine_jvm_arguments_type(self, desc: str) -> List[str]:
+    """Determine list of jvm arguments type"""
+    args = []
+    arg = ''
+    start = False
+    for c in desc:
+      if c == '(':
+        continue
+      if c == ')':
+        break
+
+      if start:
+        if c == ';':
+          start = False
+          args.append(arg.replace('/', '.'))
+        else:
+          arg = arg + c
+      else:
+        if c == 'L':
+          start = True
+          arg = ''
+        else:
+          if c in JVM_CLASS_MAPPING:
+            args.append(JVM_CLASS_MAPPING[c])
+
+    return args

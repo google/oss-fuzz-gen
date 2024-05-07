@@ -138,6 +138,7 @@ class Benchmark:
     self.commit = commit
 
     if self.language == 'jvm':
+      self.function_signature = self.function_name
       self.id = self.id.replace("[", "").replace("]", "")
       self.id = self.id.replace("(", "_").replace(")", "").replace(",", "_")
 
