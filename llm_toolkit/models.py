@@ -217,69 +217,6 @@ class GPT4(GPT):
   name = 'gpt-4'
 
 
-# by dft622
-class AzureGPT(GPT):
-  """Add support for azure-based GPT models."""
-
-  # Note: The openai-python library support for Azure OpenAI is in preview.
-  # Note: This requires OpenAI Python library version 1.0.0 or higher.
-
-  name = "gpt35-1106"
-
-  # ================================ Prompt ================================ #
-  def estimate_token_num(self, text) -> int:
-    """Estimates the number of tokens in |text|."""
-    # https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
-    try:
-      encoder = tiktoken.encoding_for_model("gpt-3.5-turbo")
-    except KeyError:
-      print(f"Could not get a tiktoken encoding for {self.name}.")
-      encoder = tiktoken.get_encoding("cl100k_base")
-
-    num_tokens = 0
-    for message in text:
-      num_tokens += 3
-      for key, value in message.items():
-        num_tokens += len(encoder.encode(value))
-        if key == "name":
-          num_tokens += 1
-    num_tokens += 3
-    return num_tokens
-
-  def prompt_type(self) -> type[prompts.Prompt]:
-    """Returns the expected prompt type."""
-    return prompts.OpenAIPrompt
-
-  # ============================== Generation ============================== #
-  def generate_code(self,
-                    prompt: prompts.Prompt,
-                    response_dir: str,
-                    log_output: bool = False) -> None:
-    """Generates code with OpenAI's API."""
-    if self.ai_binary:
-      print(f"OpenAI does not use local AI binary: {self.ai_binary}")
-    client = openai.AzureOpenAI(
-        azure_endpoint="https://gpt4-func-sweden.openai.azure.com/",
-        api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-        api_version="2024-02-15-preview",
-    )
-
-    completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(
-            messages=prompt.get(),
-            model=self.name,
-            n=self.num_samples,
-            temperature=self.temperature,
-        ),
-        openai.OpenAIError,
-    )
-    if log_output:
-      print(completion)
-    for index, choice in enumerate(completion.choices):  # type: ignore
-      content = choice.message.content
-      self._save_output(index, content, response_dir)
-
-
 class GoogleModel(LLM):
   """Generic Google model."""
 
