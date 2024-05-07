@@ -82,18 +82,18 @@ def triage_all_crashes():
 
 def llm_triage(
     ai_binary: str,
-    triaged_target_path: str,
+    target_path: str,
     benchmark: benchmarklib.Benchmark,
     crash_info: str,
     triage_model_name: str,
 ) -> None:
   """Triages crash with LLM based on crash information and relevant code."""
-  with open(triaged_target_path) as target_file:
+  with open(target_path) as target_file:
     target_code = target_file.read()
 
-  target_name, _ = os.path.splitext(os.path.basename(triaged_target_path))
-  response_dir = f'{os.path.dirname(triaged_target_path)}'
-  prompt_path = os.path.join(response_dir, f'{target_name}_triage_prompt.txt')
+  response_dir = f'{os.path.splitext(target_path)[0]}-triage'
+  os.makedirs(response_dir, exist_ok=True)
+  prompt_path = os.path.join(response_dir, 'prompt.txt')
 
   apply_llm_triage(ai_binary,
                    benchmark,
@@ -116,13 +116,12 @@ def llm_triage(
     print(f'LLM did not generate rawoutput for {prompt_path}.')
     return
 
+  # Currently, we prefer the longest triage.
   preferred_triage_path, preferred_triage = max(triage_candidates,
                                                 key=lambda x: len(x[1]))
   print(
       f'Will use the longest triage: {os.path.relpath(preferred_triage_path)}.')
-  preferred_triage_name, _ = os.path.splitext(preferred_triage_path)
-  triage_report_path = os.path.join(response_dir,
-                                    f'{preferred_triage_name}_triage.txt')
+  triage_report_path = os.path.join(response_dir, 'triage.txt')
   parser.save_output(preferred_triage, triage_report_path)
 
 
