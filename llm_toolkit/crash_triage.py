@@ -121,7 +121,9 @@ def llm_triage(
                                                 key=lambda x: len(x[1]))
   print(
       f'Will use the longest triage: {os.path.relpath(preferred_triage_path)}.')
-  triage_report_path = os.path.join(response_dir, 'triage.txt')
+  preferred_triage_name, _ = os.path.splitext(preferred_triage_path)
+  triage_report_path = os.path.join(response_dir,
+                                    f'{preferred_triage_name}.txt')
   parser.save_output(preferred_triage, triage_report_path)
 
 
