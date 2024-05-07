@@ -7,7 +7,6 @@ To reduce the workload of manually triaging runtime crash, we leverage LLM to id
 Currently, triaging runtime crash with LLM would be activated only when all the following conditions are met:
 
 - Build successfully.
-- Run successfully.
 - Trigger crash.
 - SemanticCheckResult is one of the following types:
   - `NO_SEMANTIC_ERR`
