@@ -70,7 +70,8 @@ class ContextRetriever:
       info_list = introspector.query_introspector_type_info(
           self._benchmark.project, current_type)
       if not info_list:
-        logging.debug('Could not retrieve info for type: %s', current_type)
+        logging.warning('Could not retrieve info for project: %s type: %s',
+                        self._benchmark.project, current_type)
         continue
 
       for info in info_list:
@@ -80,15 +81,18 @@ class ContextRetriever:
 
         # Ensure include_file is a file.
         if not include_base or '.' not in include_base:
-          logging.debug('File %s found as a source path', include_file)
+          logging.warning('File %s found as a source path for project: %s',
+                          include_file, self._benchmark.project)
           continue
         # Ensure it is a header file (suffix starting with .h).
-        if include_base.split('.')[-1][0] != 'h':
-          logging.debug('File found with unexpected suffix %s', include_file)
+        if include_base.endswith(('.h', '.hxx', '.hpp')):
+          logging.warning(
+              'File found with unexpected suffix %s for project: %s',
+              include_file, self._benchmark.project)
           continue
         # Remove "system" header files.
-        # Just do this by seeing if the full path begins with a /usr/.
-        if include_file[:5] == '/usr/':
+        # Assuming header files under /usr/ are irrelevant.
+        if include_file.startswith('/usr/'):
           logging.debug('Header file removed: %s', include_file)
           continue
         # TODO: Dynamically adjust path prefixes
