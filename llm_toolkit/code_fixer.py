@@ -347,25 +347,25 @@ def extract_error_message(log_path: str,
   error_lines_range: list[Optional[int]] = [None, None]
   temp_range: list[Optional[int]] = [None, None]
 
-  clang_error_start_pattern = (r'\S*' + target_name +
-                               r'(\.\S*)?:\d+:\d+: .+: .+\n?')
-  clang_include_error_pattern = (r'In file included from \S*' + target_name +
-                                 r'(\.\S*)?:\d+:\n?')
-  clang_error_end_pattern = r'.*\d+ errors? generated.\n?'
+  clang_diag_error_start_pattern = (r'\S*' + target_name +
+                                    r'(\.\S*)?:\d+:\d+: .+: .+\n?')
+  clang_diag_include_error_pattern = (r'In file included from \S*' +
+                                      target_name + r'(\.\S*)?:\d+:\n?')
+  clang_diag_error_end_pattern = r'.*\d+ errors? generated.\n?'
 
   errors = []
   for i, line in enumerate(log_lines):
     line = _strip_color_code(line)
     if temp_range[0] is None:
-      if (re.fullmatch(clang_include_error_pattern, line) or
-          re.fullmatch(clang_error_start_pattern, line)):
+      if (re.fullmatch(clang_diag_include_error_pattern, line) or
+          re.fullmatch(clang_diag_error_start_pattern, line)):
         temp_range[0] = i
         continue
 
     # Take the error block that comes later, usually it is the one related to
     # fuzz target and/or after jcc attempts to fix compile error.
     if temp_range[0] is not None:
-      if re.fullmatch(clang_error_end_pattern, line):
+      if re.fullmatch(clang_diag_error_end_pattern, line):
         temp_range[1] = i + 1
         error_lines_range = temp_range
         temp_range = [None, None]
@@ -385,9 +385,10 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
   state_include = 'INCLUDE'
   state_diag = 'DIAG'
 
-  diag_error_pattern = re.compile(r'(\S*):\d+:\d+: (.+): (.+)')
-  include_error_pattern = re.compile(r'In file included from (\S*):\d+:')
-  diag_error_end_pattern = r'.*\d+ errors? generated.'
+  clang_diag_error_pattern = re.compile(r'(\S*):\d+:\d+: (.+): (.+)')
+  clang_diag_include_error_pattern = re.compile(
+      r'In file included from (\S*):\d+:')
+  clang_diag_error_end_pattern = r'.*\d+ errors? generated.'
 
   error_blocks = []
   curr_block = []
@@ -398,7 +399,7 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
       continue
 
     # clang/clang++ diagnostic errors.
-    diag_match = diag_error_pattern.fullmatch(line)
+    diag_match = clang_diag_error_pattern.fullmatch(line)
     if diag_match:
       err_src = diag_match.group(1)
       severity = diag_match.group(2)
@@ -420,7 +421,7 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
         error_blocks.append('\n'.join(curr_block))
         curr_block = []
 
-    include_match = include_error_pattern.fullmatch(line)
+    include_match = clang_diag_include_error_pattern.fullmatch(line)
     if include_match:
       src_file = include_match.group(1)
       curr_state = state_include
@@ -428,7 +429,7 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
         error_blocks.append('\n'.join(curr_block))
         curr_block = []
 
-    if re.fullmatch(diag_error_end_pattern, line):
+    if re.fullmatch(clang_diag_error_end_pattern, line):
       curr_state = state_unknown
       error_blocks.append('\n'.join(curr_block))
       curr_block = []
