@@ -89,3 +89,13 @@ python3 ./runner.py -o ~/tmp/oss-fuzz-10 -t 15 -i TARGET_REPO_URL -m vertex
 
 # Use "-m openai" for chatgpt above
 ```
+
+# Trophies
+
+Here we list a set of trophies based of this approach. Since we generate both
+OSS-Fuzz and ClusterFuzzLite integrations we highlight for each trophy which
+type was submitted to the upstream repository.
+
+| GitHub repository | Type | PR | Issues |
+| ----------------- | ---- | -- | ------ |
+| https://github.com/gregjesl/simpleson | ClusterFuzzLite | [40](https://github.com/gregjesl/simpleson/pull/40) | [39](https://github.com/gregjesl/simpleson/pull/39) |
