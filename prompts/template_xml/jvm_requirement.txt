@@ -65,6 +65,9 @@ If any arguments of the target methods requires a return value from method calls
 Never make an inner method call during target method invocation. This includes getting random primitive variables from FuzzedDataProvider.
 </item>
 <item>Please avoid using <code>getObject()</code> from any classes.</item>
+<item>Please avoid using any multi-threading or multi-processing approach.</item>
+<item>Please avoid using more than 3 layer of inner loopings.</item>
+<item>Please manually call <code>System.gc()</code> in suitable locatations if too much resources are being created.</item>
 <item>The sample fuzzing harness should be wrapped with the <java_code> tag.</item>
 <item>Consult the following list for reference of the target method.
 <list>
