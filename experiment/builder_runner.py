@@ -226,7 +226,10 @@ class BuilderRunner:
             LIBFUZZER_LOG_STACK_FRAME_CPP not in stack_frame)
 
   def _parse_libfuzzer_logs(
-      self, log_handle) -> tuple[int, int, bool, SemanticCheckResult]:
+      self,
+      log_handle,
+      check_cov_increase: bool = True
+  ) -> tuple[int, int, bool, SemanticCheckResult]:
     """Parses libFuzzer logs."""
     lines = None
     try:
@@ -310,10 +313,12 @@ class BuilderRunner:
 
     else:
       # Another error fuzz target case: no cov increase.
-      if initcov is not None and donecov is not None:
-        if initcov == donecov:
-          return cov_pcs, total_pcs, False, SemanticCheckResult(
-              SemanticCheckResult.NO_COV_INCREASE)
+      # Only check this is check_cov_increase is True.
+      if check_cov_increase:
+        if initcov is not None and donecov is not None:
+          if initcov == donecov:
+            return cov_pcs, total_pcs, False, SemanticCheckResult(
+                SemanticCheckResult.NO_COV_INCREASE)
 
     return cov_pcs, total_pcs, crashes, SemanticCheckResult(
         SemanticCheckResult.NO_SEMANTIC_ERR)
@@ -355,8 +360,12 @@ class BuilderRunner:
     # Parse libfuzzer logs to get fuzz target runtime details.
     with open(self.work_dirs.run_logs_target(benchmark_target_name, iteration),
               'rb') as f:
+      # In many case JVM projects won't have much cov
+      # difference in short running. Adding the flag for JVM
+      # projects to temporary skip the checking of coverage change.
+      flag = not self.benchmark.language == 'jvm'
       run_result.cov_pcs, run_result.total_pcs, run_result.crashes, \
-                run_result.semantic_check = self._parse_libfuzzer_logs(f)
+                run_result.semantic_check = self._parse_libfuzzer_logs(f, flag)
       run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result
