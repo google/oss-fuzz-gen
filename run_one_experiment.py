@@ -18,12 +18,11 @@ import dataclasses
 import logging
 import os
 import shutil
-import subprocess
 from multiprocessing import pool
 from typing import List, Optional
 
 from data_prep import project_targets
-from data_prep.project_context.context_retriever import ContextRetriever
+from data_prep.project_context.context_introspector import ContextRetriever
 from experiment import benchmark as benchmarklib
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
@@ -220,7 +219,8 @@ def run(benchmark: Benchmark,
         cloud_experiment_name: str = '',
         cloud_experiment_bucket: str = '',
         use_context: bool = False,
-        run_timeout: int = RUN_TIMEOUT) -> Optional[AggregatedResult]:
+        run_timeout: int = RUN_TIMEOUT,
+        dry_run: bool = False) -> Optional[AggregatedResult]:
   """Generates code via LLM, and evaluates them."""
   model.cloud_setup()
   logging.basicConfig(level=logging.INFO)
@@ -241,22 +241,11 @@ def run(benchmark: Benchmark,
     else:
       project_examples = []
 
-    context_info = None
-
     if use_context:
       retriever = ContextRetriever(benchmark)
-      try:
-        retriever.retrieve_asts()
-      # GSutil fails on the same project immediately after
-      # it succeeds a batch copy.
-      except subprocess.CalledProcessError:
-        pass
-      retriever.generate_lookups()
-      context_header = retriever.get_header()
-      print(context_header)
-      context_types = '\n'.join(retriever.get_type_info())
-      context_info = (context_header, context_types)
-      retriever.cleanup_asts()
+      context_info = retriever.get_context_info()
+    else:
+      context_info = {}
 
     builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
     prompt = builder.build(benchmark.function_signature,
@@ -265,6 +254,10 @@ def run(benchmark: Benchmark,
                            project_examples,
                            project_context_content=context_info)
     prompt.save(work_dirs.prompt)
+
+    if dry_run:
+      return None
+
     generated_targets = generate_targets(benchmark,
                                          model,
                                          prompt,
