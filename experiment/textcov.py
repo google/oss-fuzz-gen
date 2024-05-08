@@ -36,6 +36,11 @@ JVM_CLASS_MAPPING = {
     'S': 'short'
 }
 
+JVM_SKIPPED_METHOD = [
+    '<init>', '<cinit>', 'fuzzerTestOneInput', 'fuzzerInitialize',
+    'fuzzerTearDown'
+]
+
 
 def demangle(data: str) -> str:
   """Demangles a string containing mangled C++ symbols."""
@@ -113,14 +118,25 @@ class Function:
   def covered_lines(self):
     return sum(1 for l in self.lines.values() if l.hit_count > 0)
 
-  def subtract_covered_lines(self, other: Function):
+  def subtract_covered_lines(self, other: Function, language: str = 'c++'):
     """Subtract covered lines."""
 
-    # For our analysis purposes, we completely delete any lines that are
-    # hit by the other, rather than subtracting hitcounts.
-    for line in other.lines.values():
-      if line.hit_count and line.contents in self.lines:
-        del self.lines[line.contents]
+    if language == 'jvm':
+      total_line = len(self.lines)
+      self.lines = {}
+      new_covered_lines = other.covered_lines - self.covered_lines
+      for i in range(total_line):
+        line = f'Line{i}'
+        if i >= new_covered_lines:
+          self.lines[line] = Line(contents=line, hit_count=0)
+        else:
+          self.lines[line] = Line(contents=line, hit_count=1)
+    else:
+      # For our analysis purposes, we completely delete any lines that are
+      # hit by the other, rather than subtracting hitcounts.
+      for line in other.lines.values():
+        if line.hit_count and line.contents in self.lines:
+          del self.lines[line.contents]
 
 
 @dataclasses.dataclass
@@ -128,6 +144,7 @@ class Textcov:
   """Textcov."""
   # Function name -> Function object.
   functions: dict[str, Function] = dataclasses.field(default_factory=dict)
+  language: str = 'c++'
 
   @classmethod
   def from_file(
@@ -139,6 +156,7 @@ class Textcov:
       ignore_function_patterns = []
 
     textcov = cls()
+    textcov.language = 'c++'
 
     current_function_name: str = ''
     current_function: Function = Function()
@@ -188,46 +206,49 @@ class Textcov:
   def from_jvm_file(cls, file_path) -> Textcov:
     """Read a textcov from a jacoco.xml path."""
     textcov = cls()
+    textcov.language = 'jvm'
     jacoco_report = ET.parse(file_path)
 
+    class_method_items = []
     for item in jacoco_report.iter():
-      if item.tag == 'method':
-        method_dict = item.attrib
-
-        # Get method and class name
-        class_name = method_dict['desc'].split(')')[1].split(';')[0].replace(
-            '/', '.')
-        method_name = method_dict['name']
-        if method_name == '<init>' or method_name == '<cinit>':
-          continue
-        if not class_name.startswith('L'):
+      if item.tag == 'class':
+        # Get class name and skip fuzzing and testing classes
+        class_name = item.attrib['name'].replace('/', '.')
+        if 'test' in class_name.lower() or 'fuzzer' in class_name.lower():
           continue
 
-        class_name = class_name[1:]
+        for method_item in item:
+          if method_item.tag == 'method':
+            if method_item.attrib['name'] not in JVM_SKIPPED_METHOD:
+              class_method_items.append((class_name, method_item))
 
-        # Process all arguments type from shortern Java Class naming
-        args = textcov.determine_jvm_arguments_type(method_dict['desc'])
+    for class_name, method_item in class_method_items:
+      method_dict = method_item.attrib
+      method_name = method_dict['name']
 
-        # Save method
-        full_method_name = f'[{class_name}].{method_name}({",".join(args)})'
-        current_method = Function(name=full_method_name)
+      # Process all arguments type from shortern Java Class naming
+      args = textcov.determine_jvm_arguments_type(method_dict['desc'])
 
-        # Retrieve line coverage information
-        total_line = 0
-        covered_line = 0
-        for cov_data in item:
-          if cov_data.attrib['type'] == 'LINE':
-            covered_line = int(cov_data.attrib['covered'])
-            total_line = int(cov_data.attrib['covered']) + int(
-                cov_data.attrib['missed'])
-        for i in range(total_line):
-          line = f'Line{i}'
-          if i >= covered_line:
-            current_method.lines[line] = Line(contents=line, hit_count=0)
-          else:
-            current_method.lines[line] = Line(contents=line, hit_count=1)
+      # Save method
+      full_method_name = f'[{class_name}].{method_name}({",".join(args)})'
+      current_method = Function(name=full_method_name)
 
-        textcov.functions[full_method_name] = current_method
+      # Retrieve line coverage information
+      total_line = 0
+      covered_line = 0
+      for cov_data in method_item:
+        if cov_data.attrib['type'] == 'LINE':
+          covered_line = int(cov_data.attrib['covered'])
+          total_line = int(cov_data.attrib['covered']) + int(
+              cov_data.attrib['missed'])
+      for i in range(total_line):
+        line = f'Line{i}'
+        if i >= covered_line:
+          current_method.lines[line] = Line(contents=line, hit_count=0)
+        else:
+          current_method.lines[line] = Line(contents=line, hit_count=1)
+
+      textcov.functions[full_method_name] = current_method
 
     return textcov
 
@@ -252,7 +273,8 @@ class Textcov:
     """Diff another textcov"""
     for function in other.functions.values():
       if function.name in self.functions:
-        self.functions[function.name].subtract_covered_lines(function)
+        self.functions[function.name].subtract_covered_lines(
+            function, self.language)
 
   @property
   def covered_lines(self):

@@ -63,7 +63,8 @@ class Result:
     return dataclasses.asdict(self)
 
 
-def load_existing_textcov(project: str) -> textcov.Textcov:
+def load_existing_textcov(project: str,
+                          language: str = 'c++') -> textcov.Textcov:
   """Loads existing textcovs."""
   storage_client = storage.Client.create_anonymous_client()
   bucket = storage_client.bucket(OSS_FUZZ_COVERAGE_BUCKET)
@@ -85,12 +86,18 @@ def load_existing_textcov(project: str) -> textcov.Textcov:
   # Download and merge them.
   existing_textcov = textcov.Textcov()
   for blob in blobs:
-    if not blob.name.endswith('.covreport'):
-      continue
+    if language == 'jvm':
+      if not blob.name == 'jacoco.xml':
+        continue
+      print(f'Loading existing textcov from {blob.name}')
+      existing_textcov.merge(textcov.Textcov.from_jvm_file(blob))
+    else:
+      if not blob.name.endswith('.covreport'):
+        continue
 
-    print(f'Loading existing textcov from {blob.name}')
-    with blob.open() as f:
-      existing_textcov.merge(textcov.Textcov.from_file(f))
+      print(f'Loading existing textcov from {blob.name}')
+      with blob.open() as f:
+        existing_textcov.merge(textcov.Textcov.from_file(f))
 
   return existing_textcov
 
@@ -355,4 +362,5 @@ class Evaluator:
 
   def _load_existing_textcov(self) -> textcov.Textcov:
     """Loads existing textcovs."""
-    return load_existing_textcov(self.benchmark.project)
+    return load_existing_textcov(self.benchmark.project,
+                                 self.benchmark.language)
