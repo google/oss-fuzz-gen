@@ -57,7 +57,7 @@ def _parse_code_block_by_marker(lines: list[str], start_marker: str,
       in_block = False
     elif in_block:
       block.append(line)
-  return block
+  return block if block else lines
 
 
 def parse_code(response_path: str) -> str:
