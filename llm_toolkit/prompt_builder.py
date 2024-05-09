@@ -17,6 +17,7 @@ Prompt building tools.
 
 import logging
 import os
+import re
 from abc import abstractmethod
 from typing import Optional, Tuple
 
@@ -300,20 +301,26 @@ class DefaultTemplateBuilder(PromptBuilder):
     problem = problem.replace('{ERROR_SUMMARY}', error_summary)
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
-    template_piece = self._prompt.create_prompt_piece('{ERROR_MESSAGES}',
-                                                      'user')
+    error_template_piece = self._prompt.create_prompt_piece(
+        '{ERROR_MESSAGES}', 'user')
+    info_template_piece = self._prompt.create_prompt_piece('{AUX_INFO}', 'user')
 
     problem_weight = self._model.estimate_token_num(problem_prompt)
-    template_weight = self._model.estimate_token_num(template_piece)
+    template_weight = (self._model.estimate_token_num(error_template_piece) +
+                       self._model.estimate_token_num(info_template_piece))
 
-    # the template will be replaced later and should not be counted
+    # The template will be replaced later and should not be counted.
     prompt_size = priming_weight + problem_weight - template_weight
-    # Add extra 20-tokens redundancy
+    # Add extra 20-tokens redundancy.
     # TODO(mihaimaruseac): Is this needed?
     prompt_size += 20
 
-    # We are adding errors one by one until we reach the maximum prompt size
+    # We are processing errors one by one until the maximum prompt size reached.
+    diag_error_pattern = re.compile(r'^(\S*):\d+:\d+: (.+): (.+)')
+    include_error_pattern = re.compile(r'^In file included from (\S*):(\d+):')
+    raw_code_lines = raw_code.splitlines()
     selected_errors = []
+    aux_info = []
     for error in errors:
       # Skip C only errors.
       # TODO(Dongge): Fix JCC to address this.
@@ -322,20 +329,50 @@ class DefaultTemplateBuilder(PromptBuilder):
           FALSE_FUZZED_DATA_PROVIDER_ERROR in error):
         continue
 
-      # TODO: Filter errors and add more source context.
-      error_prompt = self._prompt.create_prompt_piece(error, 'user')
-      error_token_num = self._model.estimate_token_num(error_prompt)
-      if prompt_size + error_token_num >= self._model.context_window:
+      error_str = error
+      aux_str = ''
+
+      include_match = include_error_pattern.match(error)
+      if include_match:
+        src_path = include_match.group(1)
+        line_num = include_match.group(2)
+
+        if not re.search(src_path + r':\d+:\d+: note: ', error):
+          src_line = raw_code_lines[line_num - 1].strip()
+          aux_str = (f'<code>{src_line}</code> caused error, remove this line '
+                     f'or include necessary headers to fix the error.')
+          error_str = ''
+
+      diag_match = diag_error_pattern.match(error)
+      if diag_match:
+        # diag_message = diag_match.group(3)
+        # TODO: Parse diag and add src context.
+        pass
+
+      error_token_num = 0
+      aux_token_num = 0
+      if error_str:
+        error_prompt = self._prompt.create_prompt_piece(error_str, 'user')
+        error_token_num = self._model.estimate_token_num(error_prompt)
+      if aux_str:
+        aux_prompt = self._prompt.create_prompt_piece(aux_str, 'user')
+        aux_token_num = self._model.estimate_token_num(aux_prompt)
+      if (prompt_size + error_token_num + aux_token_num
+          >= self._model.context_window):
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
         break
-      prompt_size += error_token_num
-      selected_errors.append(error)
+      prompt_size += error_token_num + aux_token_num
+      if error_str:
+        selected_errors.append(error_str)
+      if aux_str:
+        aux_info.append(aux_str)
 
     # Now, compose the problem part of the prompt
-    error_message = '\n'.join(selected_errors)
-    if error_message.strip():
-      return problem.replace('{ERROR_MESSAGES}', error_message)
+    problem = problem.replace('{AUX_INFO}', '\n'.join(aux_info))
+    problem = problem.replace('{ERROR_MESSAGES}', '\n'.join(selected_errors))
+    if aux_info or selected_errors:
+      return problem
 
     # Expecting empty error message for NO_COV_INCREASE.
     if SemanticCheckResult.is_no_cov_increase_err(error_desc):
@@ -343,11 +380,14 @@ class DefaultTemplateBuilder(PromptBuilder):
                     .replace('{ERROR_MESSAGES}\n', '')\
                     .replace('</error>\n', '')
 
-    # Log warning for an unexpected empty error message.
-    logging.warning(
-        'Unexpected empty error message in fix prompt for error_desc: %s',
-        str(error_desc))
-    return problem.replace('{ERROR_MESSAGES}', error_message)
+    # Logging for empty error messages block.
+    if not errors and not error_desc:
+      logging.warning('Unexpected empty errors and error_desc')
+    elif error_desc:
+      logging.info('Using error_desc: %s', str(error_desc))
+    elif errors:
+      logging.info('Empty error_desc, no error selected for prompt')
+    return problem
 
   def _prepare_prompt(
       self,

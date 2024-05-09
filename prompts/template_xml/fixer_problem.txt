@@ -7,7 +7,7 @@ Below is the code needs to be built:
 <error>
 {ERROR_MESSAGES}
 </error>
-
+{AUX_INFO}
 Fix code:
 1. Consider possible solutions for the issues listed above.
 2. Choose a solution that can maximize fuzzing result, which is utilizing the function under test and feeding it not null input.
