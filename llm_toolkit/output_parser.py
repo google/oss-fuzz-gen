@@ -47,7 +47,9 @@ def parse_args() -> argparse.Namespace:
 def _parse_code_block_by_marker(lines: list[str], start_marker: str,
                                 end_marker: str) -> list[str]:
   """Parses code block lines based on markers."""
-  block, in_block = [], False
+  block = []
+  in_block = False
+
   for line in lines:
     if not in_block and start_marker in line:
       in_block = True
