@@ -392,8 +392,8 @@ class FuzzerGenHeuristic6(FuzzHeuristicGeneratorBase):
       type_constraints += '- Argument %d is of type \"%s\"\n' % (idx + 1, arg)
     type_constraints += (
         'You must make sure the arguments passed to the ' +
-        'function match the types of the function. Do this by casting appropriately.'
-    )
+        'function match the types of the function. Do this by casting ' +
+        ' appropriately.')
 
     func_source_code = get_fuzzer_source_code(func)
 
@@ -408,11 +408,17 @@ class FuzzerGenHeuristic6(FuzzHeuristicGeneratorBase):
           break
         cross_reference_source = get_fuzzer_source_code(cross_reference_func)
         cross_reference_text += '\n'
-        cross_reference_text += f'Example cross reference from function {cross_reference_func["function_signature"]} and the source code of the function that calls into our target function is:\n'
+        cross_reference_text += (
+            'Example cross reference from function ' +
+            f'{cross_reference_func["function_signature"]} and the source code '
+            + 'of the function that calls into our target function is:\n')
         cross_reference_text += f'```c\n{cross_reference_source}\n```'
 
     if cross_reference_text:
-      cross_reference_text = 'The target function is used by several other functions in the module. Use these as reference on how to call the target function correctly:\n' + cross_reference_text
+      cross_reference_text = (
+          'The target function is used by several other ' +
+          'functions in the module. Use these as reference on how to call the '
+          + 'target function correctly:\n' + cross_reference_text)
 
     print('Sample targets:')
     prompt = '''Hi, please write a fuzz harness for me.
@@ -446,7 +452,8 @@ The most important part of the harness is that it will build and compile correct
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
       fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
-      comment_on_target = f'// Heuristic: {self.name} :: Target: {func["Func name"]}\n'
+      comment_on_target = (f'// Heuristic: {self.name} :: Target: ' +
+                           f'{func["Func name"]}\n')
       fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
       add_to_source_cache(self.name, func, fuzzer_source)
     else:
@@ -486,9 +493,8 @@ class FuzzerGenHeuristic5(FuzzHeuristicGeneratorBase):
     for idx, arg in enumerate(func['debug_function_info']['args']):
       type_constraints += '- Argument %d is of type \"%s\"\n' % (idx + 1, arg)
     type_constraints += (
-        'You must make sure the arguments passed to the ' +
-        'function match the types of the function. Do this by casting appropriately.'
-    )
+        'You must make sure the arguments passed to the function match the ' +
+        'types of the function. Do this by casting appropriately.')
 
     func_source_code = get_fuzzer_source_code(func)
 
@@ -522,7 +528,8 @@ The most important part of the harness is that it will build and compile correct
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
       fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
-      comment_on_target = f'// Heuristic: {self.name} :: Target: {func["Func name"]}\n'
+      comment_on_target = (f'// Heuristic: {self.name} :: Target: ' +
+                           f'{func["Func name"]}\n')
       fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
       add_to_source_cache(self.name, func, fuzzer_source)
     else:
@@ -562,9 +569,8 @@ class FuzzerGenHeuristic4(FuzzHeuristicGeneratorBase):
     for idx, arg in enumerate(func['debug_function_info']['args']):
       type_constraints += '- Argument %d is of type \"%s\"\n' % (idx + 1, arg)
     type_constraints += (
-        'You must make sure the arguments passed to the ' +
-        'function match the types of the function. Do this by casting appropriately.'
-    )
+        'You must make sure the arguments passed to the function match the ' +
+        'types of the function. Do this by casting appropriately.')
 
     print('Sample targets:')
     prompt = '''Hi, please write a fuzz harness for me.
@@ -594,7 +600,8 @@ The most important part of the harness is that it will build and compile correct
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
       fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
-      comment_on_target = f'// Heuristic: {self.name} :: Target: {func["Func name"]}\n'
+      comment_on_target = (f'// Heuristic: {self.name} :: Target: ' +
+                           f'{func["Func name"]}\n')
       fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
 
       add_to_source_cache(self.name, func, fuzzer_source)
@@ -634,9 +641,8 @@ class FuzzerGenHeuristic1(FuzzHeuristicGeneratorBase):
     for idx, arg in enumerate(func['debug_function_info']['args']):
       type_constraints += '- Argument %d is of type \"%s\"\n' % (idx + 1, arg)
     type_constraints += (
-        'You must make sure the arguments passed to the ' +
-        'function match the types of the function. Do this by casting appropriately.'
-    )
+        'You must make sure the arguments passed to the function match the ' +
+        'types of the function. Do this by casting appropriately.')
 
     print('Sample targets:')
     prompt = '''Hi, please write a fuzz harness for me.
@@ -660,7 +666,8 @@ Finally, %s
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
       fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
-      comment_on_target = f'// Heuristic: {self.name} :: Target: {func["Func name"]}\n'
+      comment_on_target = (f'// Heuristic: {self.name} :: Target: '
+                           f'{func["Func name"]}\n')
       fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
       add_to_source_cache(self.name, func, fuzzer_source)
     else:
@@ -698,9 +705,8 @@ class FuzzerGenHeuristic2(FuzzHeuristicGeneratorBase):
     for idx, arg in enumerate(func['debug_function_info']['args']):
       type_constraints += '- Argument %d is of type \"%s\"\n' % (idx + 1, arg)
     type_constraints += (
-        'You must make sure the arguments passed to the ' +
-        'function match the types of the function. Do this by casting appropriately.'
-    )
+        'You must make sure the arguments passed to the function match the ' +
+        'types of the function. Do this by casting appropriately.')
 
     print('Sample targets:')
     prompt = '''Hi, please write a fuzz harness for me.
@@ -724,7 +730,8 @@ Finally, %s
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
       fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
-      comment_on_target = f'// Heuristic: {self.name} :: Target: {func["Func name"]}\n'
+      comment_on_target = (f'// Heuristic: {self.name} :: Target: ' +
+                           f'{func["Func name"]}\n')
       fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
       add_to_source_cache(self.name, func, fuzzer_source)
     else:
@@ -765,9 +772,8 @@ class FuzzerGenHeuristic3(FuzzHeuristicGeneratorBase):
     for idx, arg in enumerate(func['debug_function_info']['args']):
       type_constraints += '- Argument %d is of type \"%s\"\n' % (idx + 1, arg)
     type_constraints += (
-        'You must make sure the arguments passed to the ' +
-        'function match the types of the function. Do this by casting appropriately.'
-    )
+        'You must make sure the arguments passed to the function match the ' +
+        'types of the function. Do this by casting appropriately.')
 
     prompt = '''Hi, please write a fuzz harness for me.
 
@@ -793,7 +799,8 @@ There are rules that your harness must satisfy:
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
       fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
-      comment_on_target = f'// Heuristic: {self.name} :: Target: {func["Func name"]}\n'
+      comment_on_target = (f'// Heuristic: {self.name} :: Target: ' +
+                           f'{func["Func name"]}\n')
       fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
       add_to_source_cache(self.name, func, fuzzer_source)
     else:
@@ -875,7 +882,7 @@ def build_empty_fuzzers(results, language):
 
   # For each of the auto generated build scripts try to link
   # the resulting static libraries against an empty fuzzer.
-  fuzz_compiler, fuzz_flags, empty_fuzzer_file, fuzz_template = get_language_defaults(
+  fuzz_compiler, _, empty_fuzzer_file, fuzz_template = get_language_defaults(
       language)
   for test_dir in results:
     print('Test dir: %s :: %s' %
@@ -949,8 +956,8 @@ def run_introspector_on_dir(build_results, test_dir,
     the environment appropriately before running this command.
     """
   introspector_vanilla_build_script = build_results[test_dir]['build-script']
-  fuzz_compiler, fuzz_flags, empty_fuzzer_file, fuzz_template = get_language_defaults(
-      language)
+  (fuzz_compiler, fuzz_flags, empty_fuzzer_file,
+   fuzz_template) = get_language_defaults(language)
 
   with open(empty_fuzzer_file, 'w') as f:
     f.write(fuzz_template)
