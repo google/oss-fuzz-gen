@@ -44,24 +44,33 @@ def parse_args() -> argparse.Namespace:
   return args
 
 
+def _parse_code_block_by_marker(lines: list[str], start_marker: str,
+                                end_marker: str) -> list[str]:
+  """Parses code block lines based on markers."""
+  block, in_block = [], False
+  for line in lines:
+    if not in_block and start_marker in line:
+      in_block = True
+    elif in_block and end_marker in line:
+      in_block = False
+    elif in_block:
+      block.append(line)
+  return block
+
+
 def parse_code(response_path: str) -> str:
   """Parses the expected output from the |response_path|."""
   with open(response_path) as file:
     response = file.read()
   solution = response.split('</solution>')[0]
-  solution = solution.replace('<code>', '').replace('</code>', '')
-
   lines = solution.splitlines()
+  lines = _parse_code_block_by_marker(lines, '```', '```')
+  lines = _parse_code_block_by_marker(lines, '<code>', '</code>')
 
-  def should_remove(line):
-    line = line.strip()
-    return not line or line.startswith('```')
-
-  # Remove leading empty lines or lines starting with ```.
-  while lines and should_remove(lines[0]):
+  # Remove leading and trailing empty lines.
+  while lines and not lines[0].strip():
     lines.pop(0)
-  # Remove trailing empty lines or lines starting with ```.
-  while lines and should_remove(lines[-1]):
+  while lines and not lines[-1].strip():
     lines.pop()
 
   return '\n'.join(lines)
