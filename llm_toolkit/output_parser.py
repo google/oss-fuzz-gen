@@ -49,14 +49,20 @@ def _parse_code_block_by_marker(lines: list[str], start_marker: str,
   """Parses code block lines based on markers."""
   block = []
   in_block = False
+  contains_api = False
 
   for line in lines:
-    if not in_block and start_marker in line:
-      in_block = True
+    if not in_block and start_marker in line.lower():
+      in_block = True  # Start a code block.
+      if not contains_api:
+        block = []  # Ignore previous block because it does not contain API.
     elif in_block and end_marker in line:
-      in_block = False
+      in_block = False  # Finish a code block.
+      if contains_api:
+        break  # Found fuzz target.
     elif in_block:
       block.append(line)
+      contains_api = contains_api or 'LLVMFuzzerTestOneInput' in line
   return block if block else lines
 
 
@@ -66,7 +72,7 @@ def parse_code(response_path: str) -> str:
     response = file.read()
   solution = response.split('</solution>')[0]
   lines = solution.splitlines()
-  lines = _parse_code_block_by_marker(lines, '```', '```')
+  lines = _parse_code_block_by_marker(lines, '```c', '```')
   lines = _parse_code_block_by_marker(lines, '<code>', '</code>')
 
   # Remove leading and trailing empty lines.
