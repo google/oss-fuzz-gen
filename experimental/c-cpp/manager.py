@@ -344,7 +344,8 @@ class FuzzHeuristicGeneratorBase:
     return uniq_targets
 
 
-def get_fuzzer_source_code(func) -> str:
+def get_fuzzer_source_code(func: Dict[str, Any]) -> str:
+  """Returns source code as string of a given introspector function."""
   source_file = func['Functions filename']
   src_begin_line = int(func['debug_function_info']['source']['source_line'])
   src_end_line = int(func['source_line_end'])
@@ -356,7 +357,10 @@ def get_fuzzer_source_code(func) -> str:
   return source_code
 
 
-def get_cross_reference_functions(dst_func, introspector_report):
+def get_cross_reference_functions(
+    dst_func: Dict[str, Any],
+    introspector_report: Dict[str, Any]) -> List[Dict[str, Any]]:
+  """Returns the introspector functions that reference `dst_func`."""
   src_funcs = []
   for func in introspector_report['MergedProjectProfile']['all-functions']:
     if func['Func name'] == dst_func['Func name']:
@@ -372,7 +376,8 @@ class FuzzerGenHeuristic6(FuzzHeuristicGeneratorBase):
   """Heuristic that provides context around target function."""
   language = 'c'
 
-  def __init__(self, introspector_report, all_header_files, test_dir):
+  def __init__(self, introspector_report: Dict[str, Any],
+               all_header_files: List[str], test_dir: str):
     super().__init__(test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
@@ -383,7 +388,8 @@ class FuzzerGenHeuristic6(FuzzHeuristicGeneratorBase):
     return self.get_all_functions_sorted_by_cyclomatic_complexity(
     )[:MAX_FUZZ_PER_HEURISTIC]
 
-  def get_fuzzer_intrinsics(self, func) -> Dict[str, Any]:
+  def get_fuzzer_intrinsics(self, func: Dict[str, Any]) -> Dict[str, Any]:
+    """Creates harness intrinsics, e.g. source code and build instructions."""
     (headers_to_include, _,
      build_command_includes) = self.get_header_intrinsics()
 
@@ -474,7 +480,8 @@ class FuzzerGenHeuristic5(FuzzHeuristicGeneratorBase):
   """Heuristic that provides context around target function."""
   language = 'c'
 
-  def __init__(self, introspector_report, all_header_files, test_dir):
+  def __init__(self, introspector_report: Dict[str, Any],
+               all_header_files: List[str], test_dir: str):
     super().__init__(test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
@@ -561,7 +568,7 @@ class FuzzerGenHeuristic4(FuzzHeuristicGeneratorBase):
     return self.get_all_functions_sorted_by_cyclomatic_complexity(
     )[:MAX_FUZZ_PER_HEURISTIC]
 
-  def get_fuzzer_intrinsics(self, func) -> Dict[str, Any]:
+  def get_fuzzer_intrinsics(self, func: Dict[str, Any]) -> Dict[str, Any]:
     (headers_to_include, _,
      build_command_includes) = self.get_header_intrinsics()
 
@@ -634,7 +641,7 @@ class FuzzerGenHeuristic1(FuzzHeuristicGeneratorBase):
     return self.get_all_functions_sorted_by_cyclomatic_complexity(
     )[:MAX_FUZZ_PER_HEURISTIC]
 
-  def get_fuzzer_intrinsics(self, func) -> Dict[str, Any]:
+  def get_fuzzer_intrinsics(self, func: Dict[str, Any]) -> Dict[str, Any]:
     headers_to_include, _, build_command_includes = self.get_header_intrinsics()
 
     type_constraints = 'the types of types function are:\n'
@@ -699,7 +706,7 @@ class FuzzerGenHeuristic2(FuzzHeuristicGeneratorBase):
     return self.get_all_functions_sorted_by_cyclomatic_complexity(
     )[:MAX_FUZZ_PER_HEURISTIC]
 
-  def get_fuzzer_intrinsics(self, func) -> Dict[str, Any]:
+  def get_fuzzer_intrinsics(self, func: Dict[str, Any]) -> Dict[str, Any]:
     headers_to_include, _, build_command_includes = self.get_header_intrinsics()
     type_constraints = 'the types of types function are:\n'
     for idx, arg in enumerate(func['debug_function_info']['args']):
@@ -764,7 +771,7 @@ class FuzzerGenHeuristic3(FuzzHeuristicGeneratorBase):
     return self.get_all_functions_sorted_by_cyclomatic_complexity(
     )[:MAX_FUZZ_PER_HEURISTIC]
 
-  def get_fuzzer_intrinsics(self, func) -> Dict[str, Any]:
+  def get_fuzzer_intrinsics(self, func: Dict[str, Any]) -> Dict[str, Any]:
     """Harness generator."""
     headers_to_include, _, build_command_includes = self.get_header_intrinsics()
 
