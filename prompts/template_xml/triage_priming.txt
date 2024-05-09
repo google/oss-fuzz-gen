@@ -1,1 +1,1 @@
-Given the following crash report and fuzz target, investigate the cause of the crash.
+Given the following crash report and fuzz driver, investigate the cause of the crash.

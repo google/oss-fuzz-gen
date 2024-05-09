@@ -3,12 +3,10 @@ Below is the crash report:
 {CRASH_REPORT}
 </log>
 
-Below is the fuzz target:
+Below is the fuzz driver:
 <code>
 {FUZZ_TARGET_CODE}
 </code>
 
-Triage the crash:
-Firstly, you must clearly determine whether the crash is caused by errors within the fuzz target, such as incorrect function usage, improper parameter initializations, missing setup steps, etc., or if it stems from a vulnerability in the project under test.
-Secondly, you are required to provide a comprehensive analysis of your findings.
+Based on the above information, analyze the cause of the crash. First, only answer “the crash is caused by the bug in the fuzz driver” or “the crash is caused by the bug in the project”. Second, give analysis.
 <solution>
