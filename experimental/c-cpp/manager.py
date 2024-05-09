@@ -114,7 +114,8 @@ RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \\
                       pkg-config curl check
 COPY . $SRC/{project_repo_dir}
 COPY .clusterfuzzlite/build.sh $SRC/build.sh
-COPY .clusterfuzzlite/fuzzer.cpp $SRC/fuzzer.cpp
+COPY .clusterfuzzlite/*.cpp $SRC/
+COPY .clusterfuzzlite/*.c $SRC/
 WORKDIR {project_repo_dir}
 '''
 
