@@ -54,7 +54,7 @@ class AutoBuildBase:
   def is_matched(self):
     """Returns True if the build heuristic found matching files."""
     for found_matches in self.matches_found.values():
-      if len(found_matches) > 1:
+      if len(found_matches) > 0:
         return True
     return False
 
@@ -328,6 +328,9 @@ class CMakeScannerOptsParser(AutoBuildBase):
     return 'autogen-ConfMakeOpt'
 
   def match_files(self, file_list: List[str]) -> None:
+    """Find CMakeLists.txt files and extract a string of the CMake options
+    that have all BOOL options set to OFF except for those with "STATIC" in the
+    name."""
     for fi in file_list:
       # Focus on top dir
       if fi.count('/') > 1:
