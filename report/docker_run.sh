@@ -81,7 +81,7 @@ fi
 # The delay used to amortize quota usage.
 if [[ $DELAY = '' ]]
 then
-  DELAY='0'
+  DELAY='660'
   echo "DELAY was not specified as the sixth argument. Defaulting to ${DELAY:?}."
 fi
 
