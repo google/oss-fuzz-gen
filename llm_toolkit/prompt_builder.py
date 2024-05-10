@@ -22,6 +22,7 @@ from typing import Optional, Tuple
 
 import requests
 import yaml
+import jinja2
 
 from data_prep import project_targets
 from experiment.benchmark import Benchmark, FileType
@@ -64,6 +65,11 @@ EXAMPLES = {
 BUILD_ERROR_SUMMARY = 'The code has the following build issues:'
 FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
 
+# The following strings identify errors when the fuzz target is built with clang
+# and cannot be built with clang++, which should be removed.
+FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
+FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
+
 
 class PromptBuilder:
   """Prompt builder."""
@@ -73,14 +79,12 @@ class PromptBuilder:
     self._prompt = model.prompt_type()()
 
   @abstractmethod
-  def build(
-      self,
-      function_signature: str,
-      target_file_type: FileType,
-      example_pair: list[list[str]],
-      project_example_content: Optional[list[list[str]]] = None,
-      project_context_content: Optional[Tuple[str,
-                                              str]] = None) -> prompts.Prompt:
+  def build(self,
+            function_signature: str,
+            target_file_type: FileType,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
     """Builds a prompt."""
 
   @abstractmethod
@@ -152,11 +156,16 @@ class DefaultTemplateBuilder(PromptBuilder):
     solution = solution.replace('{SOLUTION_CONTENT}', solution_content)
     return solution
 
-  def format_context(self, header_content: str, type_content: str) -> str:
-    context = self._get_template(self.context_template_file)
-    context = context.replace('{CONTEXT_HEADER}', header_content)
-    context = context.replace('{CONTEXT_TYPES}', type_content)
-    return context
+  def format_context(self, context_info: dict) -> str:
+    context = jinja2.Template(self._get_template(self.context_template_file),
+                              trim_blocks=True,
+                              lstrip_blocks=True)
+    return context.render(
+        headers='\n'.join(context_info['files']),
+        must_insert=context_info['decl'],
+        func_source=context_info['func_source'],
+        xrefs='\n'.join(context_info['xrefs']),
+    )
 
   def _select_examples(self, examples: list[list],
                        prompt_size: int) -> list[list[str]]:
@@ -237,26 +246,20 @@ class DefaultTemplateBuilder(PromptBuilder):
       self._prompt.add_problem(problem)
       self._prompt.add_solution(solution)
 
-  def build(
-      self,
-      function_signature: str,
-      target_file_type: FileType,
-      example_pair: list[list[str]],
-      project_example_content: Optional[list[list[str]]] = None,
-      project_context_content: Optional[Tuple[str,
-                                              str]] = None) -> prompts.Prompt:
+  def build(self,
+            function_signature: str,
+            target_file_type: FileType,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     priming = self._format_priming(target_file_type)
     final_problem = self.format_problem(function_signature)
     final_problem += (f'You MUST call <code>\n'
                       f'{function_signature}\n'
                       f'</code> in your solution!\n')
-    # TODO(ggryan@): Add a function to ensure the header is consistent
-    # with others (e.g., use "" or <>, use the same path prefix
-    # with other non-builtin include statements or the original fuzz target.)
     if project_context_content:
-      final_problem += self.format_context(project_context_content[0],
-                                           project_context_content[1])
+      final_problem += self.format_context(project_context_content)
     final_problem += '\n<solution>'
     self._prepare_prompt(priming, final_problem, example_pair,
                          project_example_content)
@@ -312,6 +315,13 @@ class DefaultTemplateBuilder(PromptBuilder):
     # We are adding errors one by one until we reach the maximum prompt size
     selected_errors = []
     for error in errors:
+      # Skip C only errors.
+      # TODO(Dongge): Fix JCC to address this.
+      # https://github.com/google/oss-fuzz-gen/pull/208/files/a0c0db2fd5860e6e4d434467c5ec9f949ee2cff1#r1571651507
+      if (FALSE_EXTERN_KEYWORD_ERROR in error or
+          FALSE_FUZZED_DATA_PROVIDER_ERROR in error):
+        continue
+
       error_prompt = self._prompt.create_prompt_piece(error, 'user')
       error_token_num = self._model.estimate_token_num(error_prompt)
       if prompt_size + error_token_num >= self._model.context_window:

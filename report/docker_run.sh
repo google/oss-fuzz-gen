@@ -100,6 +100,7 @@ GCS_REPORT_DIR="${SUB_DIR:?}/${EXPERIMENT_NAME:?}"
 bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" "${BENCHMARK_SET:?}" "${MODEL:?}" &
 pid_report=$!
 
+
 # Run the experiment
 $PYTHON run_all_experiments.py \
   --benchmarks-directory "benchmark-sets/${BENCHMARK_SET:?}" \
