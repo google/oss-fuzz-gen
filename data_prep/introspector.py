@@ -306,9 +306,14 @@ def _get_arg_count(function: dict) -> int:
 def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
   if language == 'jvm':
+    # The fuzz-introspector front end of JVM projects cannot get the original
+    # argument name. Thus the argument name here uses var_{argument_type} as
+    # argument name reference. Some argument types are full-qualified names of
+    # Java classes with [] and . and that is not allowed for Java variable names
+    # and they are removed and form the temporary argment name for reference.
     jvm_args = _get_clean_arg_types(function, project)
     arg_names = [
-        'var_%s' % (name.split('.')[-1].replace("[]", "")) for name in jvm_args
+        f'var_{name.split(".")[-1].replace("[]", "")}' for name in jvm_args
     ]
   else:
     arg_names = (function.get('arg-names') or
@@ -361,8 +366,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
 
   if language == 'jvm':
     filenames = [
-        "%s.java" %
-        (function['function_filename'].split('$')[0].replace('.', '/'))
+        f'{function["function_filename"].split("$")[0].replace(".", "/")}.java'
         for function in functions
     ]
   else:

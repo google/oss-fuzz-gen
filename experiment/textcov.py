@@ -281,10 +281,30 @@ class Textcov:
     return sum(f.covered_lines for f in self.functions.values())
 
   def determine_jvm_arguments_type(self, desc: str) -> List[str]:
-    """Determine list of jvm arguments type"""
+    """
+      Determine list of jvm arguments type for each method.
+
+      The desc tag for each jvm method in the jacoco.xml coverage
+      report is in basic Java class name specification following
+      the format of "({Arguments}){ReturnType}". The basic java
+      class name specification use single upper case letter for
+      primitive types (and void type) and L{full_class_name}; for
+      object arguments. The JVM_CLASS_MAPPING give the mapping of
+      the single upper case letter of each primitive types.
+
+      For example, for a method
+      "public void test(String,int,String[],boolean,int...)"
+
+      The desc value of the above method will be
+      "(Ljava.lang.String;ILjava.lang.String;[]ZI[])V".
+
+      This method is necessary to match the full method name with
+      the one given in the jacoco.xml report with full argument list.
+    """
     args = []
     arg = ''
     start = False
+    next_arg = ''
     for c in desc:
       if c == '(':
         continue
@@ -294,15 +314,22 @@ class Textcov:
       if start:
         if c == ';':
           start = False
-          args.append(arg.replace('/', '.'))
+          next_arg = arg.replace('/', '.')
         else:
           arg = arg + c
       else:
         if c == 'L':
           start = True
+          args.append(next_arg)
           arg = ''
+          next_arg = ''
+        elif c in ['[', ']']:
+          next_arg = next_arg + c
         else:
           if c in JVM_CLASS_MAPPING:
-            args.append(JVM_CLASS_MAPPING[c])
+            args.append(next_arg)
+            next_arg = JVM_CLASS_MAPPING[c]
 
+    if next_arg:
+      args.append(next_arg)
     return args

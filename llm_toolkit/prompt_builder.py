@@ -377,20 +377,20 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _find_project_url(self, project_name: str) -> str:
     """Discover project url from project's project.yaml in OSS-Fuzz"""
-    oss_fuzz_url = "https://raw.githubusercontent.com/google/oss-fuzz/master"
-    project_url = "%s/projects/%s/project.yaml" % (oss_fuzz_url, project_name)
+    oss_fuzz_url = 'https://raw.githubusercontent.com/google/oss-fuzz/master'
+    project_url = f'{oss_fuzz_url}/projects/{project_name}/project.yaml'
 
     try:
       response = requests.get(project_url, timeout=20)
       if response and response.status_code == 200:
         project_yaml = yaml.load(response.content, Loader=yaml.SafeLoader)
-        if "main_repo" in project_yaml:
+        if 'main_repo' in project_yaml:
           return project_yaml['main_repo']
     except:
       pass
 
-    print(f"Cannot retrieve project url of project {project_name}")
-    return ""
+    print(f'Cannot retrieve project url of project {project_name}')
+    return ''
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
     """Finds template file based on |template_dir|."""

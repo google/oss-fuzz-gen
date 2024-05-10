@@ -139,8 +139,8 @@ class Benchmark:
 
     if self.language == 'jvm':
       self.function_signature = self.function_name
-      self.id = self.id.replace("[", "").replace("]", "")
-      self.id = self.id.replace("(", "_").replace(")", "").replace(",", "_")
+      self.id = self.id.replace('[', '').replace(']', '')
+      self.id = self.id.replace('(', '_').replace(')', '').replace(',', '_')
 
   def __str__(self):
     return (f'Benchmark<id={self.id}, project={self.project}, '
