@@ -12,7 +12,7 @@ anyio==4.3.0
     #   openai
 astroid==2.15.8
     # via pylint
-blinker==1.7.0
+blinker==1.8.2
     # via flask
 cachetools==5.3.3
     # via google-auth
@@ -33,7 +33,7 @@ distro==1.9.0
     # via openai
 flask==2.3.2
     # via -r requirements.in
-google-api-core[grpc]==2.18.0
+google-api-core[grpc]==2.19.0
     # via
     #   google-cloud-aiplatform
     #   google-cloud-bigquery
@@ -49,7 +49,7 @@ google-auth==2.29.0
     #   google-cloud-storage
 google-cloud-aiplatform==1.39.0
     # via -r requirements.in
-google-cloud-bigquery==3.20.1
+google-cloud-bigquery==3.22.0
     # via google-cloud-aiplatform
 google-cloud-core==2.4.1
     # via
@@ -74,13 +74,13 @@ googleapis-common-protos[grpc]==1.63.0
     #   grpcio-status
 grpc-google-iam-v1==0.13.0
     # via google-cloud-resource-manager
-grpcio==1.62.1
+grpcio==1.63.0
     # via
     #   google-api-core
     #   googleapis-common-protos
     #   grpc-google-iam-v1
     #   grpcio-status
-grpcio-status==1.62.1
+grpcio-status==1.62.2
     # via google-api-core
 h11==0.14.0
     # via httpcore
@@ -97,7 +97,7 @@ importlib-metadata==7.1.0
     # via yapf
 isort==5.13.2
     # via pylint
-itsdangerous==2.1.2
+itsdangerous==2.2.0
     # via flask
 jinja2==3.1.4
     # via
@@ -125,7 +125,7 @@ packaging==24.0
     #   google-cloud-bigquery
 pandas==2.1.1
     # via -r requirements.in
-platformdirs==4.2.0
+platformdirs==4.2.1
     # via
     #   pylint
     #   yapf
@@ -149,9 +149,9 @@ pyasn1==0.6.0
     #   rsa
 pyasn1-modules==0.4.0
     # via google-auth
-pydantic==2.6.4
+pydantic==2.7.1
     # via openai
-pydantic-core==2.16.3
+pydantic-core==2.18.2
     # via pydantic
 pylint==2.17.5
     # via -r requirements.in
@@ -165,7 +165,7 @@ pytz==2024.1
     # via pandas
 pyyaml==6.0
     # via -r requirements.in
-regex==2023.12.25
+regex==2024.4.28
     # via tiktoken
 requests==2.31.0
     # via
@@ -176,7 +176,7 @@ requests==2.31.0
     #   tiktoken
 rsa==4.9
     # via google-auth
-shapely==2.0.3
+shapely==2.0.4
     # via google-cloud-aiplatform
 six==1.16.0
     # via python-dateutil
@@ -191,7 +191,7 @@ tomli==2.0.1
     # via yapf
 tomlkit==0.12.4
     # via pylint
-tqdm==4.66.3
+tqdm==4.66.4
     # via openai
 typing-extensions==4.11.0
     # via
@@ -202,7 +202,7 @@ tzdata==2024.1
     # via pandas
 urllib3==2.2.1
     # via requests
-werkzeug==3.0.2
+werkzeug==3.0.3
     # via flask
 wrapt==1.16.0
     # via astroid
