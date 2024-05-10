@@ -341,6 +341,7 @@ class VertexAIModel(GoogleModel):
           lambda: self.do_generate(model, prompt.get(), parameters),
           GoogleAPICallError) or ''
       self._save_output(index, response, response_dir)
+      time.sleep(60)  # Due to insufficient quota
 
 
 class GeminiModel(VertexAIModel):
