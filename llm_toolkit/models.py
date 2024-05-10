@@ -350,7 +350,6 @@ class GeminiPro(GeminiModel):
   _vertex_ai_model = 'gemini-1.0-pro'
 
 
-
 class GeminiExperimental(GeminiModel):
   """Gemini Experimental."""
 
