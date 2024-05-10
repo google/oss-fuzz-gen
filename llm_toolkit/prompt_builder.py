@@ -20,9 +20,9 @@ import os
 from abc import abstractmethod
 from typing import Optional, Tuple
 
+import jinja2
 import requests
 import yaml
-import jinja2
 
 from data_prep import project_targets
 from experiment.benchmark import Benchmark, FileType
@@ -447,14 +447,12 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self._prompt.add_priming(base)
     self._prompt.add_problem(final_problem)
 
-  def build(
-      self,
-      function_signature: str,
-      target_file_type: FileType,
-      example_pair: list[list[str]],
-      project_example_content: Optional[list[list[str]]] = None,
-      project_context_content: Optional[Tuple[str,
-                                              str]] = None) -> prompts.Prompt:
+  def build(self,
+            function_signature: str,
+            target_file_type: FileType,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it.
        Ignore target_file_type, project_example_content
        and project_context_content parameters.
