@@ -111,6 +111,7 @@ $PYTHON run_all_experiments.py \
   --work-dir ${LOCAL_RESULTS_DIR:?} \
   --num-samples 10 \
   --delay "${DELAY:?}" \
+  --temperature 1 \
   --model "$MODEL"
 
 export ret_val=$?
