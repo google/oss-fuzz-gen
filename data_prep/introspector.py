@@ -37,15 +37,18 @@ T = TypeVar('T', str, list, dict)  # Generic type.
 
 TIMEOUT = 45
 MAX_RETRY = 5
+
 DEFAULT_INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
 INTROSPECTOR_ENDPOINT = ''
 INTROSPECTOR_CFG = ''
 INTROSPECTOR_ORACLE_FAR_REACH = ''
 INTROSPECTOR_ORACLE_KEYWORD = ''
-INTROSPECTOR_SOURCE = ''
+INTROSPECTOR_FUNCTION_SOURCE = ''
+INTROSPECTOR_PROJECT_SOURCE = ''
 INTROSPECTOR_XREF = ''
 INTROSPECTOR_TYPE = ''
 INTROSPECTOR_FUNC_SIG = ''
+INTROSPECTOR_ADDR_TYPE = ''
 
 
 def get_oracle_dict() -> Dict[str, Any]:
@@ -61,8 +64,9 @@ def get_oracle_dict() -> Dict[str, Any]:
 def set_introspector_endpoints(endpoint):
   """Sets URLs for Fuzz Introspector endpoints to local or remote endpoints."""
   global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNC_SIG, \
-      INTROSPECTOR_SOURCE, INTROSPECTOR_XREF, INTROSPECTOR_TYPE, \
-      INTROSPECTOR_ORACLE_FAR_REACH, INTROSPECTOR_ORACLE_KEYWORD
+      INTROSPECTOR_FUNCTION_SOURCE, INTROSPECTOR_PROJECT_SOURCE, \
+      INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_ORACLE_FAR_REACH, \
+      INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
@@ -72,10 +76,13 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/far-reach-but-low-coverage')
   INTROSPECTOR_ORACLE_KEYWORD = (
       f'{INTROSPECTOR_ENDPOINT}/far-reach-low-cov-fuzz-keyword')
-  INTROSPECTOR_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
+  INTROSPECTOR_FUNCTION_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
+  INTROSPECTOR_PROJECT_SOURCE = f'{INTROSPECTOR_ENDPOINT}/project-source-code'
   INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
   INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
   INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
+  INTROSPECTOR_ADDR_TYPE = (
+      f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -183,17 +190,33 @@ def query_introspector_cfg(project: str) -> dict:
 
 def query_introspector_function_source(project: str, func_sig: str) -> str:
   """Queries FuzzIntrospector API for source code of |func_sig|."""
-  resp = _query_introspector(INTROSPECTOR_SOURCE, {
+  resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
       'project': project,
       'function_signature': func_sig
   })
   return _get_data(resp, 'source', '')
 
 
+def query_introspector_source_code(project: str, filepath: str, begin_line: int,
+                                   end_line: int) -> str:
+  """Queries FuzzIntrospector API for source code of a
+    file |filepath| between |begin_line| and |end_line|."""
+
+  resp = _query_introspector(
+      INTROSPECTOR_PROJECT_SOURCE, {
+          'project': project,
+          'filepath': filepath,
+          'begin_line': begin_line,
+          'end_line': end_line,
+      })
+
+  return _get_data(resp, 'source_code', '')
+
+
 def query_introspector_cross_references(project: str,
                                         func_sig: str) -> list[str]:
   """Queries FuzzIntrospector API for source code of functions
-  cross-referenced |func_sig|."""
+  which reference |func_sig|."""
   resp = _query_introspector(INTROSPECTOR_XREF, {
       'project': project,
       'function_signature': func_sig
@@ -202,20 +225,20 @@ def query_introspector_cross_references(project: str,
 
   xref_source = []
   for cs in call_sites:
-    name = cs.get('dst_func')
+    name = cs.get('src_func')
     sig = query_introspector_function_signature(project, name)
     source = query_introspector_function_source(project, sig)
     xref_source.append(source)
   return xref_source
 
 
-def query_introspector_type_info(project: str, type_name: str) -> dict:
+def query_introspector_type_info(project: str, type_name: str) -> list[dict]:
   """Queries FuzzIntrospector API for information of |type_name|."""
   resp = _query_introspector(INTROSPECTOR_TYPE, {
       'project': project,
       'name': type_name
   })
-  return _get_data(resp, 'type_data', {})
+  return _get_data(resp, 'type_data', [])
 
 
 def query_introspector_function_signature(project: str,
@@ -226,6 +249,17 @@ def query_introspector_function_signature(project: str,
       'function': function_name
   })
   return _get_data(resp, 'signature', '')
+
+
+def query_introspector_addr_type_info(project: str, addr: str) -> str:
+  """Queries FuzzIntrospector API for type information for a type
+  identified by its address used during compilation."""
+  resp = _query_introspector(INTROSPECTOR_ADDR_TYPE, {
+      'project': project,
+      'addr': addr
+  })
+
+  return _get_data(resp, 'dwarf-map', '')
 
 
 def get_unreached_functions(project):
