@@ -360,7 +360,7 @@ class GeminiExperimental(GeminiModel):
   _vertex_ai_model = 'gemini-experimental'
 
 
-class Gemini1_5(GeminiModel):
+class GeminiV1_5(GeminiModel):
   """Gemini 1.5."""
 
   _max_output_tokens = 8192
