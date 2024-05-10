@@ -1,0 +1,17 @@
+"functions":
+- "name": "[twitter4j.OAuth2Token].equals(java.lang.Object)"
+  "params":
+  - "name": "var_Object"
+    "type": "java.lang.Object"
+  "return_type": "void"
+  "signature": "[twitter4j.OAuth2Token].equals(java.lang.Object)"
+- "name": "[twitter4j.TimeSpanConverter].toTimeSpanString(long)"
+  "params":
+  - "name": "var_long"
+    "type": "long"
+  "return_type": "void"
+  "signature": "[twitter4j.TimeSpanConverter].toTimeSpanString(long)"
+"language": "jvm"
+"project": "twitter4j"
+"target_name": "TwitterObjectFactoryFuzzer"
+"target_path": "/src/TwitterObjectFactoryFuzzer.java"
