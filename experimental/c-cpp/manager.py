@@ -54,6 +54,21 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     return 0;
 }'''
 
+C_BASE_TEMPLATE = '''#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
+{
+    printf("Hello world\\n");
+    // Insert fuzzer contents here
+    // input string contains fuzz input.
+
+    // end of fuzzer contents
+
+    return 0;
+}'''
+
 CLEAN_DOCKER = '''# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -73,7 +88,7 @@ CLEAN_DOCKER = '''# Copyright 2024 Google LLC
 FROM gcr.io/oss-fuzz-base/base-builder
 RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \\
                       pkg-config curl check
-COPY *.sh *.cpp $SRC/
+COPY *.sh *.cpp *.c $SRC/
 RUN git clone {repo_url} {project_repo_dir}
 WORKDIR {project_repo_dir}
 '''
@@ -99,7 +114,8 @@ RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \\
                       pkg-config curl check
 COPY . $SRC/{project_repo_dir}
 COPY .clusterfuzzlite/build.sh $SRC/build.sh
-COPY .clusterfuzzlite/fuzzer.cpp $SRC/fuzzer.cpp
+COPY .clusterfuzzlite/*.cpp $SRC/
+COPY .clusterfuzzlite/*.c $SRC/
 WORKDIR {project_repo_dir}
 '''
 
@@ -156,6 +172,28 @@ def get_all_files_in_path(base_path: str,
         path = path[1:]
       all_files.append(path)
   return all_files
+
+
+def determine_project_language(path: str) -> str:
+  """Returns the likely language of a project by looking at file suffixes."""
+  all_files = get_all_files_in_path(path, path)
+
+  language_dict = {'c': 0, 'c++': 0}
+  for source_file in all_files:
+    if source_file.endswith('.c'):
+      language_dict['c'] = language_dict['c'] + 1
+    elif source_file.endswith('.cpp'):
+      language_dict['c++'] = language_dict['c++'] + 1
+    elif source_file.endswith('.cc'):
+      language_dict['c++'] = language_dict['c++'] + 1
+
+  target_language = 'c++'
+  max_count = 0
+  for language, count in language_dict.items():
+    if count > max_count:
+      target_language = language
+      max_count = count
+  return target_language
 
 
 def get_all_binary_files_from_folder(path: str) -> Dict[str, List[str]]:
@@ -259,9 +297,9 @@ class FuzzHeuristicGeneratorBase:
       fuzzer_source = completion.choices[0].message.content
       if fuzzer_source is None:
         return ''
-      fuzzer_source = fuzzer_source.replace('<code>',
-                                            '').replace('</code>',
-                                                        '').replace('```', '')
+      fuzzer_source = fuzzer_source.replace('<code>', '').replace(
+          '</code>', '').replace('```cpp', '').replace('```c',
+                                                       '').replace('```', '')
     elif LLM_MODEL == 'vertex':
       print('Using vertex')
       from vertexai.language_models import CodeGenerationModel
@@ -297,6 +335,8 @@ class FuzzHeuristicGeneratorBase:
         continue
       if func['Func name'] == 'main':
         continue
+      if len(func['Args']) == 0:
+        continue
       uniqes.add(func['Func name'])
       uniq_targets.append(func)
       print('Target: %s' % (func['Func name']))
@@ -305,14 +345,148 @@ class FuzzHeuristicGeneratorBase:
     return uniq_targets
 
 
-class FuzzerGenHeuristic4(FuzzHeuristicGeneratorBase):
-  """Simple LLM fuzz heuristic."""
+def get_fuzzer_source_code(func: Dict[str, Any]) -> str:
+  """Returns source code as string of a given introspector function."""
+  source_file = func['Functions filename']
+  src_begin_line = int(func['debug_function_info']['source']['source_line'])
+  src_end_line = int(func['source_line_end'])
 
-  def __init__(self, introspector_report, all_header_files, test_dir):
+  with open(source_file, 'r') as f:
+    file_content = f.read()
+    split_lines = file_content.split('\n')
+    source_code = '\n'.join(split_lines[src_begin_line - 1:src_end_line])
+  return source_code
+
+
+def get_cross_reference_functions(
+    dst_func: Dict[str, Any],
+    introspector_report: Dict[str, Any]) -> List[Dict[str, Any]]:
+  """Returns the introspector functions that reference `dst_func`."""
+  src_funcs = []
+  for func in introspector_report['MergedProjectProfile']['all-functions']:
+    if func['Func name'] == dst_func['Func name']:
+      continue
+    for callsite_dst in func['callsites']:
+      if callsite_dst == dst_func['Func name']:
+        src_funcs.append(func)
+        break
+  return src_funcs
+
+
+class FuzzerGenHeuristic6(FuzzHeuristicGeneratorBase):
+  """Heuristic that provides context around target function."""
+  language = 'c'
+
+  def __init__(self, introspector_report: Dict[str, Any],
+               all_header_files: List[str], test_dir: str):
     super().__init__(test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
-    self.name = 'FuzzerGenHeuristic4'
+    self.name = 'FuzzerGenHeuristic6'
+    self.github_url = ''
+
+  def get_fuzzing_targets(self) -> List[Any]:
+    return self.get_all_functions_sorted_by_cyclomatic_complexity(
+    )[:MAX_FUZZ_PER_HEURISTIC]
+
+  def get_fuzzer_intrinsics(self, func: Dict[str, Any]) -> Dict[str, Any]:
+    """Creates harness intrinsics, e.g. source code and build instructions."""
+    (headers_to_include, _,
+     build_command_includes) = self.get_header_intrinsics()
+
+    type_constraints = 'the types of types function are:\n'
+    for idx, arg in enumerate(func['debug_function_info']['args']):
+      type_constraints += '- Argument %d is of type \"%s\"\n' % (idx + 1, arg)
+    type_constraints += (
+        'You must make sure the arguments passed to the ' +
+        'function match the types of the function. Do this by casting ' +
+        ' appropriately.')
+
+    func_source_code = get_fuzzer_source_code(func)
+
+    cross_references = get_cross_reference_functions(func,
+                                                     self.introspector_report)
+    cross_reference_text = ''
+    if len(cross_references) > 0:
+      # Add some source code samples
+      max_crfs = 3
+      for idx, cross_reference_func in enumerate(cross_references):
+        if idx > max_crfs:
+          break
+        cross_reference_source = get_fuzzer_source_code(cross_reference_func)
+        cross_reference_text += '\n'
+        cross_reference_text += (
+            'Example cross reference from function ' +
+            f'{cross_reference_func["function_signature"]} and the source code '
+            + 'of the function that calls into our target function is:\n')
+        cross_reference_text += f'```c\n{cross_reference_source}\n```'
+
+    if cross_reference_text:
+      cross_reference_text = (
+          'The target function is used by several other ' +
+          'functions in the module. Use these as reference on how to call the '
+          + 'target function correctly:\n' + cross_reference_text)
+
+    print('Sample targets:')
+    prompt = '''Hi, please write a fuzz harness for me.
+
+The target project is %s which is a open source project written in C. The harness you write should be in pure C as well.
+
+I would like for you to write the harness targeting the function `%s.`
+
+The source code for the function is: ```%s```
+
+The harness should be in libFuzzer style, with the code wrapped in `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`. Specifically, do not include `extern "C"` in the fuzzer code.
+
+Please wrap all code in <code> tags and you should include nothing else but the code in your reply. Do not include any other text.
+
+Make sure the ensure strings passed to the target are null-terminated.
+
+There is one rule that your harness must satisfy: all of the header files in this library is %s. Make sure to not include any header files not in this list.
+
+Finally, %s
+
+The most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code as simple as possible in order to secure it can be build.
+
+%s
+''' % (self.github_url, func['function_signature'], func_source_code,
+       str(headers_to_include), type_constraints, cross_reference_text)
+
+    print('-' * 45)
+    print(prompt)
+    print('-' * 45)
+
+    fuzzer_source = get_source_from_cache(self.name, func)
+    if not fuzzer_source:
+      fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
+      comment_on_target = (f'// Heuristic: {self.name} :: Target: ' +
+                           f'{func["Func name"]}\n')
+      fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
+      add_to_source_cache(self.name, func, fuzzer_source)
+    else:
+      print(f'Using cached fuzzer source\n{fuzzer_source}')
+
+    fuzzer_target_call = func['Func name']
+    fuzzer_intrinsics = {
+        'full-source-code': fuzzer_source,
+        'build-command-includes': build_command_includes,
+        'autogen-id': '%s-%s' % (self.name, fuzzer_target_call),
+        'prompt': prompt
+    }
+
+    return fuzzer_intrinsics
+
+
+class FuzzerGenHeuristic5(FuzzHeuristicGeneratorBase):
+  """Heuristic that provides context around target function."""
+  language = 'c'
+
+  def __init__(self, introspector_report: Dict[str, Any],
+               all_header_files: List[str], test_dir: str):
+    super().__init__(test_dir)
+    self.introspector_report = introspector_report
+    self.all_header_files = all_header_files
+    self.name = 'FuzzerGenHeuristic5'
     self.github_url = ''
 
   def get_fuzzing_targets(self) -> List[Any]:
@@ -326,17 +500,22 @@ class FuzzerGenHeuristic4(FuzzHeuristicGeneratorBase):
     type_constraints = 'the types of types function are:\n'
     for idx, arg in enumerate(func['debug_function_info']['args']):
       type_constraints += '- Argument %d is of type \"%s\"\n' % (idx + 1, arg)
-    type_constraints += ('You must make sure the arguments passed to the ' +
-                         'function matches the types of the function')
+    type_constraints += (
+        'You must make sure the arguments passed to the function match the ' +
+        'types of the function. Do this by casting appropriately.')
+
+    func_source_code = get_fuzzer_source_code(func)
 
     print('Sample targets:')
     prompt = '''Hi, please write a fuzz harness for me.
 
 The target project is %s which is a open source project written in C. The harness you write should be in pure C as well.
 
-I would like for you to write the harness targeting the function %s.`
+I would like for you to write the harness targeting the function `%s.`
 
-The harness should be in libFuzzer style, with the code wrapped in LLVMFuzzerTestOneInput.
+The source code for the function is: ```%s```
+
+The harness should be in libFuzzer style, with the code wrapped in `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`. Specifically, do not include `extern "C"` in the fuzzer code.
 
 Please wrap all code in <code> tags and you should include nothing else but the code in your reply. Do not include any other text.
 
@@ -347,7 +526,79 @@ There is one rule that your harness must satisfy: all of the header files in thi
 Finally, %s
 
 The most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code as simple as possible in order to secure it can be build.
-''' % (self.github_url, func['Func name'], str(headers_to_include),
+''' % (self.github_url, func['function_signature'], func_source_code,
+       str(headers_to_include), type_constraints)
+
+    print('-' * 45)
+    print(prompt)
+    print('-' * 45)
+
+    fuzzer_source = get_source_from_cache(self.name, func)
+    if not fuzzer_source:
+      fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
+      comment_on_target = (f'// Heuristic: {self.name} :: Target: ' +
+                           f'{func["Func name"]}\n')
+      fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
+      add_to_source_cache(self.name, func, fuzzer_source)
+    else:
+      print(f'Using cached fuzzer source\n{fuzzer_source}')
+
+    fuzzer_target_call = func['Func name']
+    fuzzer_intrinsics = {
+        'full-source-code': fuzzer_source,
+        'build-command-includes': build_command_includes,
+        'autogen-id': '%s-%s' % (self.name, fuzzer_target_call),
+        'prompt': prompt
+    }
+
+    return fuzzer_intrinsics
+
+
+class FuzzerGenHeuristic4(FuzzHeuristicGeneratorBase):
+  """Simple LLM fuzz heuristic."""
+  language = 'c'
+
+  def __init__(self, introspector_report, all_header_files, test_dir):
+    super().__init__(test_dir)
+    self.introspector_report = introspector_report
+    self.all_header_files = all_header_files
+    self.name = 'FuzzerGenHeuristic4'
+    self.github_url = ''
+
+  def get_fuzzing_targets(self) -> List[Any]:
+    return self.get_all_functions_sorted_by_cyclomatic_complexity(
+    )[:MAX_FUZZ_PER_HEURISTIC]
+
+  def get_fuzzer_intrinsics(self, func: Dict[str, Any]) -> Dict[str, Any]:
+    (headers_to_include, _,
+     build_command_includes) = self.get_header_intrinsics()
+
+    type_constraints = 'the types of types function are:\n'
+    for idx, arg in enumerate(func['debug_function_info']['args']):
+      type_constraints += '- Argument %d is of type \"%s\"\n' % (idx + 1, arg)
+    type_constraints += (
+        'You must make sure the arguments passed to the function match the ' +
+        'types of the function. Do this by casting appropriately.')
+
+    print('Sample targets:')
+    prompt = '''Hi, please write a fuzz harness for me.
+
+The target project is %s which is a open source project written in C. The harness you write should be in pure C as well.
+
+I would like for you to write the harness targeting the function `%s.`
+
+The harness should be in libFuzzer style, with the code wrapped in `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`.
+
+Please wrap all code in <code> tags and you should include nothing else but the code in your reply. Do not include any other text.
+
+Make sure the ensure strings passed to the target are null-terminated.
+
+There is one rule that your harness must satisfy: all of the header files in this library is %s. Make sure to not include any header files not in this list.
+
+Finally, %s
+
+The most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code as simple as possible in order to secure it can be build.
+''' % (self.github_url, func['function_signature'], str(headers_to_include),
        type_constraints)
 
     print('-' * 45)
@@ -357,7 +608,8 @@ The most important part of the harness is that it will build and compile correct
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
       fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
-      comment_on_target = f'// Target: {func["Func name"]}\n'
+      comment_on_target = (f'// Heuristic: {self.name} :: Target: ' +
+                           f'{func["Func name"]}\n')
       fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
 
       add_to_source_cache(self.name, func, fuzzer_source)
@@ -369,6 +621,7 @@ The most important part of the harness is that it will build and compile correct
         'full-source-code': fuzzer_source,
         'build-command-includes': build_command_includes,
         'autogen-id': '%s-%s' % (self.name, fuzzer_target_call),
+        'prompt': prompt
     }
 
     return fuzzer_intrinsics
@@ -376,6 +629,7 @@ The most important part of the harness is that it will build and compile correct
 
 class FuzzerGenHeuristic1(FuzzHeuristicGeneratorBase):
   """Simple LLM fuzz heuristic."""
+  language = 'c'
 
   def __init__(self, introspector_report, all_header_files, test_dir):
     super().__init__(test_dir)
@@ -388,15 +642,22 @@ class FuzzerGenHeuristic1(FuzzHeuristicGeneratorBase):
     return self.get_all_functions_sorted_by_cyclomatic_complexity(
     )[:MAX_FUZZ_PER_HEURISTIC]
 
-  def get_fuzzer_intrinsics(self, func) -> Dict[str, Any]:
+  def get_fuzzer_intrinsics(self, func: Dict[str, Any]) -> Dict[str, Any]:
     headers_to_include, _, build_command_includes = self.get_header_intrinsics()
+
+    type_constraints = 'the types of types function are:\n'
+    for idx, arg in enumerate(func['debug_function_info']['args']):
+      type_constraints += '- Argument %d is of type \"%s\"\n' % (idx + 1, arg)
+    type_constraints += (
+        'You must make sure the arguments passed to the function match the ' +
+        'types of the function. Do this by casting appropriately.')
 
     print('Sample targets:')
     prompt = '''Hi, please write a fuzz harness for me.
 
 The target project is %s which is a open source project written in C. The harness you write should be in pure C as well.
 
-I would like for you to write the harness targeting the function %s.`
+I would like for you to write the harness targeting the function `%s.`
 
 The harness should be in libFuzzer style, with the code wrapped in LLVMFuzzerTestOneInput.
 
@@ -405,12 +666,17 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 Make sure the ensure strings passed to the target are null-terminated.
 
 There is one rule that your harness must satisfy: all of the header files in this library is %s. Make sure to not include any header files not in this list.
-''' % (self.github_url, func['Func name'], str(headers_to_include))
+
+Finally, %s
+''' % (self.github_url, func['function_signature'], str(headers_to_include),
+       type_constraints)
 
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
       fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
-      fuzzer_source = FUZZER_PRE_HEADERS + fuzzer_source
+      comment_on_target = (f'// Heuristic: {self.name} :: Target: '
+                           f'{func["Func name"]}\n')
+      fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
       add_to_source_cache(self.name, func, fuzzer_source)
     else:
       print(f'Using cached fuzzer source\n{fuzzer_source}')
@@ -420,6 +686,7 @@ There is one rule that your harness must satisfy: all of the header files in thi
         'full-source-code': fuzzer_source,
         'build-command-includes': build_command_includes,
         'autogen-id': '%s-%s' % (self.name, fuzzer_target_call),
+        'prompt': prompt
     }
 
     return fuzzer_intrinsics
@@ -427,6 +694,7 @@ There is one rule that your harness must satisfy: all of the header files in thi
 
 class FuzzerGenHeuristic2(FuzzHeuristicGeneratorBase):
   """Simple LLM fuzz heuristic."""
+  language = 'c++'
 
   def __init__(self, introspector_report, all_header_files, test_dir):
     super().__init__(test_dir)
@@ -439,15 +707,21 @@ class FuzzerGenHeuristic2(FuzzHeuristicGeneratorBase):
     return self.get_all_functions_sorted_by_cyclomatic_complexity(
     )[:MAX_FUZZ_PER_HEURISTIC]
 
-  def get_fuzzer_intrinsics(self, func) -> Dict[str, Any]:
+  def get_fuzzer_intrinsics(self, func: Dict[str, Any]) -> Dict[str, Any]:
     headers_to_include, _, build_command_includes = self.get_header_intrinsics()
+    type_constraints = 'the types of types function are:\n'
+    for idx, arg in enumerate(func['debug_function_info']['args']):
+      type_constraints += '- Argument %d is of type \"%s\"\n' % (idx + 1, arg)
+    type_constraints += (
+        'You must make sure the arguments passed to the function match the ' +
+        'types of the function. Do this by casting appropriately.')
 
     print('Sample targets:')
     prompt = '''Hi, please write a fuzz harness for me.
 
 The target project is %s which is a open source project written in CPP.
 
-I would like for you to write the harness targeting the function %s.
+I would like for you to write the harness targeting the function `%s`.
 
 The harness should be in libFuzzer style, with the code wrapped in LLVMFuzzerTestOneInput.
 
@@ -456,12 +730,17 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 Make sure the ensure strings passed to the target are null-terminated.
 
 There are two rules that your harness must satisfy: First, all of the header files in this library is %s. Make sure to not include any header files not in this list. Second, you must wrap the harness such that it catches all exceptions (use "...") thrown by the target code.
-''' % (self.github_url, func['Func name'], str(headers_to_include))
+
+Finally, %s
+''' % (self.github_url, func['function_signature'], str(headers_to_include),
+       type_constraints)
 
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
       fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
-      fuzzer_source = FUZZER_PRE_HEADERS + fuzzer_source
+      comment_on_target = (f'// Heuristic: {self.name} :: Target: ' +
+                           f'{func["Func name"]}\n')
+      fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
       add_to_source_cache(self.name, func, fuzzer_source)
     else:
       print(f'Using cached fuzzer source\n{fuzzer_source}')
@@ -471,6 +750,7 @@ There are two rules that your harness must satisfy: First, all of the header fil
         'full-source-code': fuzzer_source,
         'build-command-includes': build_command_includes,
         'autogen-id': '%s-%s' % (self.name, fuzzer_target_call),
+        'prompt': prompt
     }
 
     return fuzzer_intrinsics
@@ -478,6 +758,7 @@ There are two rules that your harness must satisfy: First, all of the header fil
 
 class FuzzerGenHeuristic3(FuzzHeuristicGeneratorBase):
   """Simple LLM fuzz heuristic."""
+  language = 'c++'
 
   def __init__(self, introspector_report, all_header_files, test_dir):
     super().__init__(test_dir)
@@ -491,15 +772,22 @@ class FuzzerGenHeuristic3(FuzzHeuristicGeneratorBase):
     return self.get_all_functions_sorted_by_cyclomatic_complexity(
     )[:MAX_FUZZ_PER_HEURISTIC]
 
-  def get_fuzzer_intrinsics(self, func) -> Dict[str, Any]:
+  def get_fuzzer_intrinsics(self, func: Dict[str, Any]) -> Dict[str, Any]:
     """Harness generator."""
     headers_to_include, _, build_command_includes = self.get_header_intrinsics()
+
+    type_constraints = 'the types of types function are:\n'
+    for idx, arg in enumerate(func['debug_function_info']['args']):
+      type_constraints += '- Argument %d is of type \"%s\"\n' % (idx + 1, arg)
+    type_constraints += (
+        'You must make sure the arguments passed to the function match the ' +
+        'types of the function. Do this by casting appropriately.')
 
     prompt = '''Hi, please write a fuzz harness for me.
 
 The target project is %s which is a open source project written in CPP.
 
-I would like for you to write the harness targeting the function %s.
+I would like for you to write the harness targeting the function `%s`.
 
 The harness should be in libFuzzer style, with the code wrapped in LLVMFuzzerTestOneInput.
 
@@ -507,13 +795,21 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 
 Make sure the ensure strings passed to the target are null-terminated.
 
-There are two rules that your harness must satisfy: First, all of the header files in this library is %s. Make sure to not include any header files not in this list and only include the ones relevant for the target function. Second, if the target is CPP then you must wrap the harness such that it catches all exceptions (use "...") thrown by the target code.
-''' % (self.github_url, func['Func name'], str(headers_to_include))
+In terms of types of the target function, %s
+
+There are rules that your harness must satisfy:
+1) All of the header files in this library is %s. Make sure to not include any header files not in this list and only include the ones relevant for the target function.
+2) You must wrap the harness such that it catches all exceptions (use "...") thrown by the target code.
+
+''' % (self.github_url, func['function_signature'], str(headers_to_include),
+       type_constraints)
 
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
       fuzzer_source = self.run_prompt_and_get_fuzzer_source(prompt)
-      fuzzer_source = FUZZER_PRE_HEADERS + fuzzer_source
+      comment_on_target = (f'// Heuristic: {self.name} :: Target: ' +
+                           f'{func["Func name"]}\n')
+      fuzzer_source = comment_on_target + FUZZER_PRE_HEADERS + fuzzer_source
       add_to_source_cache(self.name, func, fuzzer_source)
     else:
       print(f'Using cached fuzzer source\n{fuzzer_source}')
@@ -523,6 +819,7 @@ There are two rules that your harness must satisfy: First, all of the header fil
         'full-source-code': fuzzer_source,
         'build-command-includes': build_command_includes,
         'autogen-id': '%s-%s' % (self.name, fuzzer_target_call),
+        'prompt': prompt,
     }
 
     return fuzzer_intrinsics
@@ -586,13 +883,15 @@ def get_all_introspector_files(target_dir):
   return introspection_files_found
 
 
-def build_empty_fuzzers(results):
+def build_empty_fuzzers(results, language):
   """Run build scripts against an empty fuzzer harness."""
   # Stage 2: perform program analysis to extract data to be used for
   # harness generation.
 
   # For each of the auto generated build scripts try to link
   # the resulting static libraries against an empty fuzzer.
+  fuzz_compiler, _, empty_fuzzer_file, fuzz_template = get_language_defaults(
+      language)
   for test_dir in results:
     print('Test dir: %s :: %s' %
           (test_dir, str(results[test_dir]['refined-static-libs'])))
@@ -602,19 +901,19 @@ def build_empty_fuzzers(results):
 
     print('Trying to link in an empty fuzzer')
 
-    empty_fuzzer_file = '/src/empty-fuzzer.cpp'
+    #empty_fuzzer_file = '/src/empty-fuzzer.cpp'
     with open(empty_fuzzer_file, 'w') as f:
-      f.write(CPP_BASE_TEMPLATE)
+      f.write(fuzz_template)
 
     # Try to link the fuzzer to the static libs
     cmd = [
-        'clang++', '-fsanitize=fuzzer', '-fsanitize=address', empty_fuzzer_file
+        fuzz_compiler, '-fsanitize=fuzzer', '-fsanitize=address',
+        empty_fuzzer_file
     ]
     for refined_static_lib in results[test_dir]['refined-static-libs']:
       cmd.append(os.path.join(test_dir, refined_static_lib))
 
     print('Command [%s]' % (' '.join(cmd)))
-
     try:
       subprocess.check_call(' '.join(cmd), shell=True)
       base_fuzz_build = True
@@ -644,7 +943,16 @@ def refine_static_libs(results):
     results[test_dir]['refined-static-libs'] = refined_static_list
 
 
-def run_introspector_on_dir(build_results, test_dir) -> Tuple[bool, List[str]]:
+def get_language_defaults(language: str):
+  compilers_and_flags = {
+      'c': ('$CC', '$CFLAGS', '/src/empty-fuzzer.c', C_BASE_TEMPLATE),
+      'c++': ('$CXX', '$CXXFLAGS', '/src/empty-fuzzer.cpp', CPP_BASE_TEMPLATE),
+  }
+  return compilers_and_flags[language]
+
+
+def run_introspector_on_dir(build_results, test_dir,
+                            language) -> Tuple[bool, List[str]]:
   """Runs Fuzz Introspector on a target directory with the ability
     to analyse code without having fuzzers (FUZZ_INTROSPECTOR_AUTO_FUZZ=1).
 
@@ -656,14 +964,15 @@ def run_introspector_on_dir(build_results, test_dir) -> Tuple[bool, List[str]]:
     the environment appropriately before running this command.
     """
   introspector_vanilla_build_script = build_results[test_dir]['build-script']
+  (fuzz_compiler, fuzz_flags, empty_fuzzer_file,
+   fuzz_template) = get_language_defaults(language)
 
-  empty_fuzzer_file = '/src/empty-fuzzer.cpp'
   with open(empty_fuzzer_file, 'w') as f:
-    f.write(CPP_BASE_TEMPLATE)
+    f.write(fuzz_template)
 
   # Try to link the fuzzer to the static libs
   fuzzer_build_cmd = [
-      '$CXX', '$CXXFLAGS', '$LIB_FUZZING_ENGINE', empty_fuzzer_file
+      fuzz_compiler, fuzz_flags, '$LIB_FUZZING_ENGINE', empty_fuzzer_file
   ]
   for refined_static_lib in build_results[test_dir]['refined-static-libs']:
     fuzzer_build_cmd.append('-Wl,--whole-archive')
@@ -702,6 +1011,7 @@ def log_fuzzer_source(full_fuzzer_source: str):
 def generate_harness_intrinsics(
     heuristic: FuzzHeuristicGeneratorBase,
     results,
+    language: str,
     test_dir: str,
     fuzzer_build_cmd: List[str],
     verbose_logging: bool = True) -> List[Dict[str, Any]]:
@@ -719,6 +1029,7 @@ def generate_harness_intrinsics(
   # 2) Create the build command needed for the fuzzer, by extending
   #    `fuzzer_build_cmd`
   # 3) Wrap the above in a dictionary and append to results list.
+  _, _, fuzzer_target_file, _ = get_language_defaults(language)
   harness_builds_to_validate = []
   for fuzz_target in fuzzer_targets:
     # Get intrinsics for the target function.
@@ -745,7 +1056,7 @@ def generate_harness_intrinsics(
     harness_builds_to_validate.append({
         'build-script': final_asan_build_script,
         'source': fuzzer_intrinsics['full-source-code'],
-        'fuzzer-file': '/src/empty-fuzzer.cpp',
+        'fuzzer-file': fuzzer_target_file,
         'fuzzer-out': fuzzer_out,
         'fuzzer-intrinsics': fuzzer_intrinsics,
     })
@@ -755,7 +1066,7 @@ def generate_harness_intrinsics(
 def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
                        heuristics_passed, idx_to_use,
                        disable_fuzz_build_and_test, folders_with_results,
-                       outdir, github_repo):
+                       outdir, github_repo, language, introspector_report):
   """For a given result, will write the harness and build to the file system
   and run the OSS-Fuzz `compile` command to verify that the build script +
   harness builds."""
@@ -771,11 +1082,18 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
     shutil.rmtree(fuzzer_gen_dir)
   os.mkdir(fuzzer_gen_dir)
 
+  _, _, fuzzer_target_file, _ = get_language_defaults(language)
+
+  # Dump introspector report so we can debug it
+  with open(os.path.join(fuzzer_gen_dir, 'summary.json'), 'w') as f:
+    json.dump(introspector_report, f)
+
   # Write the fuzzer in the directory where we store the source code, just
   # for covenience so we can easily see later.
   with open(os.path.join(fuzzer_gen_dir, 'build.sh'), 'w') as f:
     f.write(result_to_validate['build-script'])
-  with open(os.path.join(fuzzer_gen_dir, 'empty-fuzzer.cpp'), 'w') as f:
+  with open(os.path.join(fuzzer_gen_dir, os.path.basename(fuzzer_target_file)),
+            'w') as f:
     f.write(result_to_validate['source'])
 
   # Write the build/fuzzer files as used by oss-fuzz and the build script.
@@ -820,6 +1138,10 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
   if build_returned_error is False:
     heuristics_passed[fuzzer_intrinsics['autogen-id']] = True
 
+  # Write the prompt to out
+  with open(os.path.join(fuzzer_gen_dir, 'prompt.txt'), 'w') as f:
+    f.write(fuzzer_intrinsics['prompt'])
+
   # Run the fuzzer and observer error
   if not os.path.isfile(
       '/src/generated-fuzzer'):  #result_to_validate['fuzzer-out']):
@@ -835,7 +1157,7 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
   run_out = open(os.path.join(fuzzer_gen_dir, 'fuzz-run.out'), 'w')
   run_err = open(os.path.join(fuzzer_gen_dir, 'fuzz-run.err'), 'w')
   try:
-    subprocess.check_call('%s -max_total_time=10' %
+    subprocess.check_call('%s -max_total_time=20' %
                           (result_to_validate['fuzzer-out']),
                           shell=True,
                           env=modified_env,
@@ -847,6 +1169,19 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
     print('[+] Harness build failed')
     build_returned_error = True
 
+  print('Running fuzzer without leak detection')
+  run_out = open(os.path.join(fuzzer_gen_dir, 'fuzz-no-leak-run.out'), 'w')
+  run_err = open(os.path.join(fuzzer_gen_dir, 'fuzz-no-leak-run.err'), 'w')
+  try:
+    subprocess.check_call('%s -max_total_time=20 -detect_leaks=0' %
+                          (result_to_validate['fuzzer-out']),
+                          shell=True,
+                          env=modified_env,
+                          stdout=run_out,
+                          stderr=run_err)
+  except subprocess.CalledProcessError:
+    print('[+] Running without leak detection failed')
+
   print(
       'Copying 2 [%s] to [%s]' %
       (fuzzer_gen_dir, os.path.join(outdir, os.path.basename(fuzzer_gen_dir))))
@@ -855,13 +1190,15 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
 
   # Create an OSS-Fuzz integration and ClusterFuzzLite integration
   create_clean_oss_fuzz_from_success(
-      github_repo, os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
+      github_repo, os.path.join(outdir, os.path.basename(fuzzer_gen_dir)),
+      language)
   create_clean_clusterfuzz_lite_from_success(
-      github_repo, os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
+      github_repo, os.path.join(outdir, os.path.basename(fuzzer_gen_dir)),
+      language)
 
 
-def create_clean_oss_fuzz_from_success(github_repo: str,
-                                       success_dir: str) -> None:
+def create_clean_oss_fuzz_from_success(github_repo: str, success_dir: str,
+                                       language: str) -> None:
   """Converts a successful out dir into a working OSS-Fuzz project."""
   oss_fuzz_folder = os.path.join(success_dir, 'oss-fuzz-project')
   os.makedirs(oss_fuzz_folder)
@@ -869,7 +1206,7 @@ def create_clean_oss_fuzz_from_success(github_repo: str,
   # Project yaml
   project_yaml = {
       'homepage': github_repo,
-      'language': 'c++',
+      'language': language,
       'primary_contact': 'add_your_email@here.com',
       'main_repo': github_repo
   }
@@ -877,8 +1214,11 @@ def create_clean_oss_fuzz_from_success(github_repo: str,
     yaml.dump(project_yaml, project_out)
 
   # Copy fuzzer
-  shutil.copy(os.path.join(success_dir, 'empty-fuzzer.cpp'),
-              os.path.join(oss_fuzz_folder, 'fuzzer.cpp'))
+  _, _, fuzzer_target_file, _ = get_language_defaults(language)
+  shutil.copy(
+      os.path.join(success_dir, os.path.basename(fuzzer_target_file)),
+      os.path.join(oss_fuzz_folder,
+                   os.path.basename(fuzzer_target_file).replace('empty-', '')))
 
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
@@ -899,21 +1239,25 @@ def create_clean_oss_fuzz_from_success(github_repo: str,
 
 
 def create_clean_clusterfuzz_lite_from_success(github_repo: str,
-                                               success_dir: str) -> None:
+                                               success_dir: str,
+                                               language: str) -> None:
   """Converts a successful out dir into a working ClusterFuzzLite project."""
   cflite_folder = os.path.join(success_dir, 'clusterfuzz-lite-project')
   os.makedirs(cflite_folder)
 
   # Project yaml
   project_yaml = {
-      'language': 'c++',
+      'language': language,
   }
   with open(os.path.join(cflite_folder, 'project.yaml'), 'w') as project_out:
     yaml.dump(project_yaml, project_out)
 
   # Copy fuzzer
-  shutil.copy(os.path.join(success_dir, 'empty-fuzzer.cpp'),
-              os.path.join(cflite_folder, 'fuzzer.cpp'))
+  _, _, fuzzer_target_file, _ = get_language_defaults(language)
+  shutil.copy(
+      os.path.join(success_dir, os.path.basename(fuzzer_target_file)),
+      os.path.join(cflite_folder,
+                   os.path.basename(fuzzer_target_file).replace('empty-', '')))
 
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
@@ -993,6 +1337,9 @@ def auto_generate(github_url,
   initial_executable_files = get_all_binary_files_from_folder(
       os.path.abspath(os.path.join(os.getcwd(), dst_folder)))
 
+  language = determine_project_language(os.path.join(os.getcwd(), dst_folder))
+  print('Target language: %s' % (language))
+
   # record the path
   abspath_of_target = os.path.join(os.getcwd(), dst_folder)
   print('[+] Extracting build scripts statically')
@@ -1027,7 +1374,7 @@ def auto_generate(github_url,
 
   # Stage 2: perform program analysis to extract data to be used for
   # harness generation.
-  build_empty_fuzzers(build_results)
+  build_empty_fuzzers(build_results, language)
 
   # Stage 3: Harness generation and harness testing.
   # We now know for which versions we can generate a base fuzzer.
@@ -1059,7 +1406,8 @@ def auto_generate(github_url,
     if os.path.isdir(INTROSPECTOR_OSS_FUZZ_DIR):
       shutil.rmtree(INTROSPECTOR_OSS_FUZZ_DIR)
 
-    _, fuzzer_build_cmd = run_introspector_on_dir(build_results, test_dir)
+    _, fuzzer_build_cmd = run_introspector_on_dir(build_results, test_dir,
+                                                  language)
 
     if os.path.isdir(INTROSPECTOR_OSS_FUZZ_DIR):
       print('Introspector build success')
@@ -1092,14 +1440,15 @@ def auto_generate(github_url,
     # We can now proceed to apply heuristics that use this data to generate
     # fuzzing harnesses and build scripts for these harnesses.
     heuristics_to_apply = [
-        FuzzerGenHeuristic4, FuzzerGenHeuristic3, FuzzerGenHeuristic2,
-        FuzzerGenHeuristic1
+        FuzzerGenHeuristic6, FuzzerGenHeuristic5, FuzzerGenHeuristic4,
+        FuzzerGenHeuristic3, FuzzerGenHeuristic2, FuzzerGenHeuristic1
     ]
     idx = 0
     print(f'Running target functions through {len(heuristics_to_apply)}' +
           ' fuzzer harness generation heuristics')
     for heuristic_class in heuristics_to_apply:
-
+      if heuristic_class.language != language:
+        continue
       # Initialize heuristic with the fuzz introspector data
       heuristic = heuristic_class(introspector_report, all_header_files,
                                   test_dir)
@@ -1107,7 +1456,7 @@ def auto_generate(github_url,
 
       heuristic.github_url = github_url
       harness_builds_to_validate = generate_harness_intrinsics(
-          heuristic, build_results, test_dir, fuzzer_build_cmd)
+          heuristic, build_results, language, test_dir, fuzzer_build_cmd)
 
       # Build the fuzzer for each project
       print('Fuzzer harnesses to evaluate: %d' %
@@ -1118,7 +1467,8 @@ def auto_generate(github_url,
         # Make a directory and store artifacts there
         evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
                            heuristics_passed, idx, disable_fuzz_build_and_test,
-                           folders_with_results, outdir, github_url)
+                           folders_with_results, outdir, github_url, language,
+                           introspector_report)
         idx += 1
 
   if disable_fuzzgen:
