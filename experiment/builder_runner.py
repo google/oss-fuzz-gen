@@ -310,9 +310,11 @@ class BuilderRunner:
       return build_result, None
 
     benchmark_target_name = os.path.basename(target_path)
-    build_result.succeeded = self.build_target_local(
-        generated_project,
-        self.work_dirs.build_logs_target(benchmark_target_name, iteration))
+    project_target_name = os.path.basename(self.benchmark.target_path)
+    benchmark_log_path = self.work_dirs.build_logs_target(
+        benchmark_target_name, iteration)
+    build_result.succeeded = self.build_target_local(generated_project,
+                                                     benchmark_log_path)
     # Copy err.log into work dir.
     try:
       shutil.copyfile(
@@ -322,8 +324,8 @@ class BuilderRunner:
     except FileNotFoundError as e:
       logging.error('Cannot get err.log for %s: %s', generated_project, e)
     if not build_result.succeeded:
-      errors = code_fixer.extract_error_message(
-          self.work_dirs.build_logs_target(benchmark_target_name, iteration))
+      errors = code_fixer.extract_error_message(benchmark_log_path,
+                                                project_target_name)
       build_result.errors = errors
       return build_result, None
 
@@ -684,7 +686,8 @@ class CloudBuilderRunner(BuilderRunner):
 
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(
-          self.work_dirs.build_logs_target(generated_target_name, iteration))
+          self.work_dirs.build_logs_target(generated_target_name, iteration),
+          os.path.basename(self.benchmark.target_path))
       build_result.errors = errors
       logging.info('Cloud evaluation of %s indicates a failure: %s',
                    os.path.realpath(target_path), errors)
