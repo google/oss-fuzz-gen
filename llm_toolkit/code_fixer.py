@@ -15,6 +15,7 @@
 """Fixing fuzz target with LLM."""
 
 import argparse
+import logging
 import os
 import re
 import sys
@@ -216,21 +217,23 @@ def remove_const_from_png_symbols(content: str) -> str:
 # ========================= LLM Fixes ========================= #
 
 
-def extract_error_message(log_path: str) -> list[str]:
+def extract_error_message(log_path: str,
+                          project_target_basename: str) -> list[str]:
   """Extracts error message and its context from the file in |log_path|."""
 
   with open(log_path) as log_file:
     # A more accurate way to extract the error message.
     log_lines = log_file.readlines()
 
-  # TODO: Use a dataclass here.
-  error_lines_range: list[Optional[int]] = [None, None]
+  target_name, _ = os.path.splitext(project_target_basename)
 
-  error_start_pattern = (
-      r'(\x1b\[0m)?(\x1b\[1m)?[^\s]*'
-      r'[^\s]*:\d+:\d+:'
-      r'\s*(\x1b\[0m\x1b\[0;1;31m)?(fatal )?error:.*(\x1b\[0m)?\n?')
-  error_end_pattern = r'(\x1b\[0m)?.*\d+ error(s)? generated.\n'
+  error_lines_range: list[Optional[int]] = [None, None]
+  temp_range: list[Optional[int]] = [None, None]
+
+  error_start_pattern = r'\S*' + target_name + r'(\.\S*)?:\d+:\d+: .+: .+\n?'
+  error_include_pattern = (r'In file included from \S*' + target_name +
+                           r'(\.\S*)?:\d+:\n?')
+  error_end_pattern = r'.*\d+ errors? generated.\n?'
 
   error_keywords = [
       'multiple definition of',
@@ -239,8 +242,7 @@ def extract_error_message(log_path: str) -> list[str]:
   errors = []
   unique_symbol = set()
   for i, line in enumerate(log_lines):
-    # Capture two kinds of errors patterns to fix:
-    #   1. Contains error keywords.
+    # Add GNU ld errors in interest.
     found_keyword = False
     for keyword in error_keywords:
       if keyword not in line:
@@ -249,29 +251,90 @@ def extract_error_message(log_path: str) -> list[str]:
       symbol = line.split(keyword)[-1]
       if symbol not in unique_symbol:
         unique_symbol.add(symbol)
-        errors.append(line)
+        errors.append(line.rstrip())
       break
     if found_keyword:
       continue
 
-    #   2. Uses ANSI colors.
-    if (error_lines_range[0] is None and
-        re.fullmatch(error_start_pattern, line)):
-      # The error to fix starts from the line matches the pattern.
-      error_lines_range[0] = i
-    if (error_lines_range[0] is not None and
-        re.fullmatch(error_end_pattern, line)):
-      # The error to fix ends at the last line that uses ANSI color.
-      error_lines_range[1] = i
+    # Add clang/clang++ diagnostics.
+    if (temp_range[0] is None and (re.fullmatch(error_include_pattern, line) or
+                                   re.fullmatch(error_start_pattern, line))):
+      temp_range[0] = i
+    if temp_range[0] is not None and re.fullmatch(error_end_pattern, line):
+      temp_range[1] = i - 1  # Exclude current line.
+      # In case the original fuzz target was written in C and building with
+      # clang failed, and building with clang++ also failed, we take the
+      # error from clang++, which comes after.
+      error_lines_range = temp_range
+      temp_range = [None, None]
 
   if error_lines_range[0] is not None and error_lines_range[1] is not None:
-    errors.extend(log_lines[error_lines_range[0]:error_lines_range[1] + 1])
+    errors.extend(
+        line.rstrip()
+        for line in log_lines[error_lines_range[0]:error_lines_range[1] + 1])
 
   if not errors:
-    print(f'Failed to parse error message from {log_path}.')
-  errors = [re.sub(r'\n\n+', '\n', error) for error in errors]
-  errors = [error[:-1] if error[-1] == '\n' else error for error in errors]
-  return errors
+    logging.warning('Failed to parse error message from %s.', log_path)
+  return group_error_messages(errors)
+
+
+def group_error_messages(error_lines: list[str]) -> list[str]:
+  """Groups multi-line error block into one string"""
+  state_unknown = 'UNKNOWN'
+  state_include = 'INCLUDE'
+  state_diag = 'DIAG'
+
+  diag_error_pattern = re.compile(r'(\S*):\d+:\d+: (.+): (.+)')
+  include_error_pattern = re.compile(r'In file included from (\S*):\d+:')
+  error_blocks = []
+  curr_block = []
+  src_file = ''
+  curr_state = state_unknown
+  for line in error_lines:
+    if not line:  # Trim empty lines.
+      continue
+
+    diag_match = diag_error_pattern.fullmatch(line)
+    include_match = include_error_pattern.fullmatch(line)
+
+    if diag_match:
+      err_src = diag_match.group(1)
+      severity = diag_match.group(2)
+
+      # Matched a note diag line under another diag,
+      # giving help info to fix the previous error.
+      if severity == 'note':
+        curr_block.append(line)
+        continue
+
+      # Matched a diag line but under an included file line,
+      # indicating the specific error in the included file,
+      if curr_state == state_include and err_src != src_file:
+        curr_block.append(line)
+        continue
+
+      curr_state = state_diag
+      if curr_block:
+        error_blocks.append('\n'.join(curr_block))
+        curr_block = []
+
+    if include_match:
+      src_file = include_match.group(1)
+      curr_state = state_include
+      if curr_block:
+        error_blocks.append('\n'.join(curr_block))
+        curr_block = []
+
+    # Keep unknown error lines separated.
+    if curr_state == state_unknown and curr_block:
+      error_blocks.append('\n'.join(curr_block))
+      curr_block = []
+
+    curr_block.append(line)
+
+  if curr_block:
+    error_blocks.append('\n'.join(curr_block))
+  return error_blocks
 
 
 def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
