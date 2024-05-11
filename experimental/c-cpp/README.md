@@ -99,3 +99,17 @@ type was submitted to the upstream repository.
 | GitHub repository | Type | PR | Issues |
 | ----------------- | ---- | -- | ------ |
 | https://github.com/gregjesl/simpleson | ClusterFuzzLite | [40](https://github.com/gregjesl/simpleson/pull/40) | [39](https://github.com/gregjesl/simpleson/pull/39) |
+| https://github.com/memononen/nanosvg | OSS-Fuzz | [11944](https://github.com/google/oss-fuzz/pull/11944) | |
+| https://github.com/skeeto/pdjson | ClusterFuzzLite | [33](https://github.com/skeeto/pdjson/pull/33)  | |
+| https://github.com/kgabis/parson | ClusterFuzzLite | [214](https://github.com/kgabis/parson/pull/214) | |
+| https://github.com/rafagafe/tiny-json | ClusterFuzzLite | [18](https://github.com/rafagafe/tiny-json/pull/18) | |
+| https://github.com/kosma/minmea | ClusterFuzzLite | [79](https://github.com/kosma/minmea/pull/79) | |
+| https://github.com/marcobambini/sqlite-createtable-parser | ClusterFuzzLite | [5](https://github.com/marcobambini/sqlite-createtable-parser/pull/5) | |
+| https://github.com/benoitc/http-parser | [102](https://github.com/benoitc/http-parser/pull/102) | |
+| https://github.com/orangeduck/mpc | [169](https://github.com/orangeduck/mpc/pull/169) | |
+| https://github.com/JiapengLi/lorawan-parser | [17](https://github.com/JiapengLi/lorawan-parser/pull/17) | |
+| https://github.com/argtable/argtable3 | [96](https://github.com/argtable/argtable3/pull/96) | |
+| https://github.com/h2o/picohttpparser | [83](https://github.com/h2o/picohttpparser/pull/83) | |
+| https://github.com/ndevilla/iniparser | [161](https://github.com/ndevilla/iniparser/pull/161) | |
+| https://github.com/codeplea/tinyexpr | [114](https://github.com/codeplea/tinyexpr/pull/114) | |
+| https://github.com/vincenthz/libjson | [28](https://github.com/vincenthz/libjson/pull/28) | |
