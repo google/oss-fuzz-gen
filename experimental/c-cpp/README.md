@@ -105,11 +105,11 @@ type was submitted to the upstream repository.
 | https://github.com/rafagafe/tiny-json | ClusterFuzzLite | [18](https://github.com/rafagafe/tiny-json/pull/18) | |
 | https://github.com/kosma/minmea | ClusterFuzzLite | [79](https://github.com/kosma/minmea/pull/79) | |
 | https://github.com/marcobambini/sqlite-createtable-parser | ClusterFuzzLite | [5](https://github.com/marcobambini/sqlite-createtable-parser/pull/5) | |
-| https://github.com/benoitc/http-parser | [102](https://github.com/benoitc/http-parser/pull/102) | |
-| https://github.com/orangeduck/mpc | [169](https://github.com/orangeduck/mpc/pull/169) | |
-| https://github.com/JiapengLi/lorawan-parser | [17](https://github.com/JiapengLi/lorawan-parser/pull/17) | |
-| https://github.com/argtable/argtable3 | [96](https://github.com/argtable/argtable3/pull/96) | |
-| https://github.com/h2o/picohttpparser | [83](https://github.com/h2o/picohttpparser/pull/83) | |
-| https://github.com/ndevilla/iniparser | [161](https://github.com/ndevilla/iniparser/pull/161) | |
-| https://github.com/codeplea/tinyexpr | [114](https://github.com/codeplea/tinyexpr/pull/114) | |
-| https://github.com/vincenthz/libjson | [28](https://github.com/vincenthz/libjson/pull/28) | |
+| https://github.com/benoitc/http-parser | ClusterFuzzLite | [102](https://github.com/benoitc/http-parser/pull/102) | |
+| https://github.com/orangeduck/mpc | ClusterFuzzLite | [169](https://github.com/orangeduck/mpc/pull/169) | |
+| https://github.com/JiapengLi/lorawan-parser | ClusterFuzzLite | [17](https://github.com/JiapengLi/lorawan-parser/pull/17) | |
+| https://github.com/argtable/argtable3 | ClusterFuzzLite | [96](https://github.com/argtable/argtable3/pull/96) | |
+| https://github.com/h2o/picohttpparser | ClusterFuzzLite | [83](https://github.com/h2o/picohttpparser/pull/83) | |
+| https://github.com/ndevilla/iniparser | ClusterFuzzLite | [161](https://github.com/ndevilla/iniparser/pull/161) | |
+| https://github.com/codeplea/tinyexpr | ClusterFuzzLite | [114](https://github.com/codeplea/tinyexpr/pull/114) | |
+| https://github.com/vincenthz/libjson | ClusterFuzzLite | [28](https://github.com/vincenthz/libjson/pull/28) | |
