@@ -1339,9 +1339,7 @@ def auto_generate(github_url,
 
   language = determine_project_language(os.path.join(os.getcwd(), dst_folder))
   print('Target language: %s' % (language))
-  append_to_report(
-      outdir,
-      f'Target language: {language}')
+  append_to_report(outdir, f'Target language: {language}')
 
   # record the path
   abspath_of_target = os.path.join(os.getcwd(), dst_folder)
