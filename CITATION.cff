@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: 'https://github.com/google/oss-fuzz-gen'
+title: 'OSS-Fuzz-Gen: Automated Fuzz Target Generation'
 message: >-
   If you use this software, please cite it using the
   metadata from this file.
