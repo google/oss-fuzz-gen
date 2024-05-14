@@ -169,7 +169,7 @@ class ContextRetriever:
     return xrefs
 
   def _truncate_xrefs(self, xrefs: list[str]) -> list[str]:
-    """Truncates xrefs to 10 lines before and after the 
+    """Truncates xrefs to 10 lines before and after the
     function name is referenced."""
     truncated = []
     for xref in xrefs:
