@@ -151,6 +151,7 @@ def run_autogen(github_url,
   cmd = [
       'docker',
       'run',
+      '--rm',
       '-e',
       'FUZZING_ENGINE=libfuzzer',
       '-e',
