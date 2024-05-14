@@ -358,17 +358,32 @@ def extract_error_message(log_path: str,
                                       target_name + r'(\.\S*)?:\d+:\n?')
   clang_diag_error_end_pattern = r'.*\d+ errors? generated.\n?'
 
+  # Checking on this start pattern is not enough to identify linker errors from
+  # fuzz target only, it may include error from project source as well.
+  # e.g. kamailio:
+  # /usr/bin/ld: /lib/x86_64-linux-gnu/crt1.o: in function `_start':
+  # (.text+0x24): undefined reference to `main'
+  # while fuzz target should be fuzz_parse_msg.c
+  linker_error_start_string = '/usr/bin/ld: '
+  llvm_linker_error_start_string = 'ld.lld: '
+  linker_error_end_pattern = (
+      r'clang.*: error: linker command failed with exit code 1 \(use -v to see '
+      r'invocation\)\n?')
+
   for i, line in enumerate(log_lines):
     line = _strip_color_code(line)
     if (temp_range[0] is None and
-        (re.fullmatch(clang_diag_include_error_pattern, line) or
+        (line.startswith(linker_error_start_string) or
+         line.startswith(llvm_linker_error_start_string) or
+         re.fullmatch(clang_diag_include_error_pattern, line) or
          re.fullmatch(clang_diag_error_start_pattern, line))):
       temp_range[0] = i
       continue
 
     # Take the error block that comes later, usually it is the one related to
     # fuzz target and/or after jcc attempts to fix compile error.
-    if re.fullmatch(clang_diag_error_end_pattern, line):
+    if (re.fullmatch(linker_error_end_pattern, line) or
+        re.fullmatch(clang_diag_error_end_pattern, line)):
       temp_range[1] = i + 1
       error_lines_range = temp_range
       temp_range = [None, None]
@@ -388,11 +403,18 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
   """Groups multi-line error block into one string."""
   clang_pattern = re.compile(r'(\S*:\d+:\d+: .+: .+)|'
                              r'(In file included from \S*:\d+:)')
+  gnu_ld_start_string = '/usr/bin/ld: '
+  llvm_lld_start_string = 'ld.lld: '
 
   first_line = error_lines[0]
   if clang_pattern.fullmatch(first_line):
     return group_clang_errors(error_lines)
+  if first_line.startswith(gnu_ld_start_string):
+    return group_gnu_ld_errors(error_lines)
+  if first_line.startswith(llvm_lld_start_string):
+    return group_llvm_lld_errors(error_lines)
   # Unknown error type, just return lines ungrouped.
+  logging.warning('Unknown error')  # debug
   return error_lines
 
 
@@ -445,6 +467,62 @@ def group_clang_errors(error_lines: list[str]) -> list[str]:
     curr_block.append(line)
   # The last clang diag line should always be the end pattern,
   # so the last valid curr_block has been handled.
+  return error_blocks
+
+
+def group_gnu_ld_errors(error_lines: list[str]) -> list[str]:
+  """Groups GNU linker error lines into blocks."""
+  reformatted_lines = []
+  # Strip linker name and separate multiple linker errors on the same line.
+  for line in error_lines:
+    reformatted_lines.extend(line.split('/usr/bin/ld: '))
+
+  start_pattern = re.compile(r'\S*(\(\S*\))?: .*:')
+  sub_line_pattern = re.compile(r'(\S*:)?(\S*:)?\(\S*(\[\S*\])?\+\S*\): .*')
+  dwarf_error = 'DWARF error: '
+  end_pattern = re.compile(
+      r'clang.*: error: linker command failed with exit code 1 \(use -v to see '
+      r'invocation\)')
+  error_blocks = []
+  curr_block = []
+  for line in reformatted_lines:
+    if not line or line.startswith(dwarf_error):
+      continue
+
+    if ((start_pattern.fullmatch(line) or end_pattern.fullmatch(line)) and
+        curr_block):
+      error_blocks.append('\n'.join(curr_block))
+      curr_block = []
+
+    curr_block.append(line)
+
+  return error_blocks
+
+
+def group_llvm_lld_errors(error_lines: list[str]) -> list[str]:
+  """Groups LLVM lld linker error lines into blocks."""
+  start_string = 'ld.lld: '
+  sub_line_marker = '>>> '
+  end_pattern = re.compile(
+      r'clang.*: error: linker command failed with exit code 1 \(use -v to see '
+      r'invocation\)')
+
+  error_blocks = []
+  curr_block = []
+  for line in error_lines:
+    if not line:
+      continue
+
+    if ((line.startswith(start_string) or end_pattern.fullmatch(line)) and
+        curr_block):
+      error_blocks.append('\n'.join(curr_block))
+      curr_block = []
+
+    # Remove start string and marker if presented.
+    line = line.removeprefix(start_string)
+    line = line.removeprefix(sub_line_marker)
+    curr_block.append(line)
+
   return error_blocks
 
 
