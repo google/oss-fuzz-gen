@@ -145,7 +145,7 @@ class DefaultTemplateBuilder(PromptBuilder):
         headers='\n'.join(context_info['files']),
         must_insert=context_info['decl'],
         func_source=context_info['func_source'],
-        xrefs='\n'.join(context_info['xrefs']),
+        xrefs=context_info['xrefs'],
     )
 
   def _select_examples(self, examples: list[list],

@@ -23,8 +23,11 @@ Here is the source code of the function being tested:
 {% endif %}
 {% if xrefs %}
 
-Here is the source code for functions which reference the function being tested:
+Here is the source code for locations which reference the function being tested:
+{% for xref in xrefs %}
+Reference location {{ loop.index }}:
 <code>
-{{ xrefs }}
+{{ xref }}
 </code>
+{% endfor %}
 {% endif %}
