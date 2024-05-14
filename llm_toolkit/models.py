@@ -130,14 +130,14 @@ class LLM:
     """Returns the expected prompt type."""
 
   def with_retry_on_error(self, func: Callable,
-                          err_type: Type[Exception]) -> Any:
+                          err_types: tuple[Type[Exception], ...]) -> Any:
     """
     Retry when the function returns an expected error with exponential backoff.
     """
     for attempt in range(self._max_attempts):
       try:
         return func()
-      except err_type as err:
+      except err_types as err:
         # Exponentially increase from 5 to 80 seconds
         # + some random to jitter.
         delay = 5 * 2**attempt + random.randint(1, 5)
@@ -203,7 +203,7 @@ class GPT(LLM):
                                                model=self.name,
                                                n=self.num_samples,
                                                temperature=self.temperature),
-        openai.OpenAIError)
+        (openai.OpenAIError,))
     if log_output:
       print(completion)
     for index, choice in enumerate(completion.choices):  # type: ignore
@@ -309,7 +309,7 @@ class VertexAIModel(GoogleModel):
     for index in range(self.num_samples):
       response = self.with_retry_on_error(
           lambda: self.do_generate(model, prompt.get(), parameters),
-          GoogleAPICallError)
+          (GoogleAPICallError, ValueError))
       self._save_output(index, response, response_dir)
 
 
