@@ -332,19 +332,6 @@ class BuilderRunner:
     return cov_pcs, total_pcs, crashes, SemanticCheckResult(
         SemanticCheckResult.NO_SEMANTIC_ERR)
 
-  def _compare_extracted_errors(self, build_log_errors: list[str],
-                                err_log_errors: list[str]) -> bool:
-    """
-    Compares errors extracted from build.log and err.log.
-    Returns True if the two are identical.
-    """
-    if len(build_log_errors) != len(err_log_errors):
-      return False
-    for i, build_log_error in enumerate(build_log_errors):
-      if err_log_errors[i] != build_log_error:
-        return False
-    return True
-
   def build_and_run(self, generated_project: str, target_path: str,
                     iteration: int) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target for fuzzing."""
@@ -371,36 +358,36 @@ class BuilderRunner:
     project_target_name = os.path.basename(self.benchmark.target_path)
     benchmark_log_path = self.work_dirs.build_logs_target(
         benchmark_target_name, iteration)
-    benchmark_errlog_path = self.work_dirs.error_logs_target(
-        benchmark_target_name, iteration)
+    jcc_errlog_path = self.work_dirs.jcc_errlog_target(benchmark_target_name,
+                                                       iteration)
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
     # Copy err.log into work dir.
     try:
       shutil.copyfile(
           os.path.join(get_build_artifact_dir(generated_project, "workspace"),
-                       'err.log'), benchmark_errlog_path)
+                       'err.log'), jcc_errlog_path)
     except FileNotFoundError as e:
       logging.error('Cannot get err.log for %s: %s', generated_project, e)
-      # Touch err.log in results to avoid exception in parsing errors.
-      open(benchmark_errlog_path, 'x')
+      # Touch err.log in results folder to avoid FileNotFoundError when
+      # extracting errors.
+      open(jcc_errlog_path, 'x')
     if not build_result.succeeded:
       build_log_errors = code_fixer.extract_error_message(
           benchmark_log_path, project_target_name)
-      err_log_errors = code_fixer.extract_jcc_errstr(benchmark_errlog_path,
-                                                     project_target_name)
+      jcc_errlog_errors = code_fixer.extract_jcc_errlog_message(
+          jcc_errlog_path, project_target_name)
 
       # Temp: Compare errors extracted from build log and jcc err.log.
       # Use this info to check we found expected errors from err.log
       # and improve build log parsing.
-      if not self._compare_extracted_errors(build_log_errors, err_log_errors):
+      if build_log_errors != jcc_errlog_errors:
         logging.warning(
             'Inconsistent error messages extracted between build.log'
-            ' and err.log for %s', benchmark_errlog_path)
+            ' and err.log for %s', jcc_errlog_path)
       # Fallback to use errors parsed from build log when parsing from err.log
       # failed.
-      build_result.errors = (err_log_errors
-                             if err_log_errors else build_log_errors)
+      build_result.errors = jcc_errlog_errors or build_log_errors
       return build_result, None
 
     run_result = RunResult()
@@ -762,7 +749,7 @@ class CloudBuilderRunner(BuilderRunner):
                         os.path.realpath(target_path), build_log_name)
 
     with open(
-        self.work_dirs.error_logs_target(generated_target_name, iteration),
+        self.work_dirs.jcc_errlog_target(generated_target_name, iteration),
         'wb') as f:
       blob = bucket.blob(err_log_name)
       if blob.exists():
@@ -789,22 +776,21 @@ class CloudBuilderRunner(BuilderRunner):
       build_log_errors = code_fixer.extract_error_message(
           self.work_dirs.build_logs_target(generated_target_name, iteration),
           os.path.basename(self.benchmark.target_path))
-      err_log_errors = code_fixer.extract_jcc_errstr(
-          self.work_dirs.error_logs_target(generated_target_name, iteration),
+      jcc_errlog_errors = code_fixer.extract_jcc_errlog_message(
+          self.work_dirs.jcc_errlog_target(generated_target_name, iteration),
           os.path.basename(self.benchmark.target_path))
 
       # Temp: Compare errors extracted from build log and jcc err.log.
       # Use this info to check we found expected errors from err.log
       # and improve build log parsing.
-      if not self._compare_extracted_errors(build_log_errors, err_log_errors):
+      if build_log_errors != jcc_errlog_errors:
         logging.warning(
             'Inconsistent error messages extracted between build.log'
             ' and err.log for %s',
-            self.work_dirs.error_logs_target(generated_target_name, iteration))
+            self.work_dirs.jcc_errlog_target(generated_target_name, iteration))
       # Fallback to use errors parsed from build log when parsing from err.log
       # failed.
-      build_result.errors = (err_log_errors
-                             if err_log_errors else build_log_errors)
+      build_result.errors = jcc_errlog_errors or build_log_errors
       logging.info('Cloud evaluation of %s indicates a failure: %s',
                    os.path.realpath(target_path), build_result.errors)
       return build_result, None

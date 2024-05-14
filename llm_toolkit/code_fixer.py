@@ -229,41 +229,34 @@ def get_fuzz_target_compile_output(target_names: list[str],
   if the |compile_args| contains one of the |target_names|, or empty string.
   """
   output_name = ''
-  target_found = ''
+  fuzz_target_found = ''
   for i, arg in enumerate(compile_args):
-    if arg in ['-o', '--output'] and i < len(compile_args):
+    if arg in ['-o', '--output'] and i + 1 < len(compile_args):
       output_name = compile_args[i + 1]
-      continue
-    if arg.startswith('--output='):
-      output_name = arg.replace('--output=', '', 1)
-      continue
-    if arg.startswith('-o'):
-      output_name = arg.replace('-o', '', 1)
-      continue
-    if arg.startswith('-'):
-      continue
-    if arg == output_name:
-      continue
-    if os.path.basename(arg) in target_names:
-      target_found = os.path.basename(arg)
+    elif arg.startswith('--output='):
+      output_name = arg.removeprefix('--output=')
+    elif arg.startswith('-o'):
+      output_name = arg.removeprefix('-o')
+    elif (not arg.startswith('-') and not arg == output_name and
+          os.path.basename(arg) in target_names):
+      fuzz_target_found = os.path.basename(arg)
 
-  if target_found:
-    # In case output name was not specified by -o.
-    if not output_name:
-      if '-c' in compile_args:
-        target_name, _ = os.path.splitext(target_found)
-        return f'{target_name}.o'
-      logging.warning(
-          'Output file not specified in [%s], but fuzz target found',
-          ' '.join(compile_args))
-      # Assume the default output name.
-      return 'a.out'
+  if not fuzz_target_found:
+    return ''
+  if output_name:
     return os.path.basename(output_name)
-  return ''
+  # In case output name was not specified by -o.
+  if '-c' in compile_args:
+    target_name, _ = os.path.splitext(fuzz_target_found)
+    return f'{target_name}.o'
+  # No hint for output name, returns the assumed default output name.
+  logging.warning('Output file not specified in [%s], but fuzz target found',
+                  ' '.join(compile_args))
+  return 'a.out'
 
 
-def extract_jcc_errstr(errlog_path: str,
-                       project_target_basename: str) -> list[str]:
+def extract_jcc_errlog_message(errlog_path: str,
+                               project_target_basename: str) -> list[str]:
   """Extracts error messages from jcc's err.log"""
   with open(errlog_path) as errlog_file:
     log_lines = errlog_file.readlines()
@@ -283,47 +276,46 @@ def extract_jcc_errstr(errlog_path: str,
     target_names.append(f'jcc-corrected-{target_name}.cpp')
 
   command_pattern = r'\[.*clang(?:\+\+)? (.*)\]\n?'
-  clang_error_pattern = r'(clang.*: )?error: .*n?'
+  non_source_error_pattern = r'(clang.*: )?error: .*\n?'
 
   error_lines_range: list[Optional[int]] = [None, None]
   temp_range: list[Optional[int]] = [None, None]
   errors = []
-
   for i, line in enumerate(log_lines):
     line = _strip_color_code(line)
     command_match = re.fullmatch(command_pattern, line)
-    if command_match:
-      # Start line previously recorded, reaching another command,
-      # mark the end of previous one.
-      if temp_range[0] is not None:
-        temp_range[1] = i
+    if not command_match:
+      continue
 
-        # Check we are not dealing with 2 consecutive commands
-        # with no error output in between.
-        if temp_range[0] < temp_range[1]:
-          first_line = _strip_color_code(log_lines[temp_range[0]]).rstrip()
+    # Start line previously recorded, reaching another command,
+    # marks the end of previous one.
+    if temp_range[0] is not None:
+      temp_range[1] = i
 
-          # Exclude error blocks that don't contain actual error from source.
-          if first_line and not re.fullmatch(clang_error_pattern, first_line):
-            error_lines_range = temp_range
-        temp_range = [None, None]
+      first_line = _strip_color_code(log_lines[temp_range[0]]).rstrip()
+      # Check that it's not empty between two compile commands,
+      # and the error lines are source related.
+      if (temp_range[0] < temp_range[1] and first_line and
+          not re.fullmatch(non_source_error_pattern, first_line)):
+        # Exclude error blocks that don't contain actual error from source.
+        error_lines_range = temp_range
+      temp_range = [None, None]
 
-      # Potentially followed by the error block to return
-      # if fuzz target presents.
-      if temp_range[0] is None:
-        compile_target = get_fuzz_target_compile_output(
-            target_names,
-            command_match.group(1).split())
-        if compile_target:
-          target_names.append(compile_target)
-          temp_range[0] = i + 1  # +1 to exclude the command args line.
+    # Potentially followed by the error block to return
+    # if fuzz target presents.
+    compile_target = get_fuzz_target_compile_output(
+        target_names,
+        command_match.group(1).split())
+    if compile_target:
+      target_names.append(compile_target)
+      temp_range[0] = i + 1  # +1 to exclude the command log line.
 
   # The last command was building fuzz target.
   if temp_range[0] is not None and temp_range[0] < len(log_lines):
     first_line = _strip_color_code(log_lines[temp_range[0]]).rstrip()
-    if first_line and not re.fullmatch(clang_error_pattern, first_line):
+    if first_line and not re.fullmatch(non_source_error_pattern, first_line):
+      temp_range[1] = len(log_lines)
       error_lines_range = temp_range
-      error_lines_range[1] = len(log_lines)
 
   # Start of error was never set, cannot find target error message.
   if error_lines_range[0] is None:
@@ -356,19 +348,18 @@ def extract_error_message(log_path: str,
   errors = []
   for i, line in enumerate(log_lines):
     line = _strip_color_code(line)
-    if temp_range[0] is None:
-      if (re.fullmatch(clang_diag_include_error_pattern, line) or
-          re.fullmatch(clang_diag_error_start_pattern, line)):
-        temp_range[0] = i
-        continue
+    if (temp_range[0] is None and
+        (re.fullmatch(clang_diag_include_error_pattern, line) or
+         re.fullmatch(clang_diag_error_start_pattern, line))):
+      temp_range[0] = i
+      continue
 
     # Take the error block that comes later, usually it is the one related to
     # fuzz target and/or after jcc attempts to fix compile error.
-    if temp_range[0] is not None:
-      if re.fullmatch(clang_diag_error_end_pattern, line):
-        temp_range[1] = i + 1
-        error_lines_range = temp_range
-        temp_range = [None, None]
+    if re.fullmatch(clang_diag_error_end_pattern, line):
+      temp_range[1] = i + 1
+      error_lines_range = temp_range
+      temp_range = [None, None]
 
   if error_lines_range[0] is None:
     logging.warning('Failed to parse error message from %s.', log_path)
@@ -380,70 +371,67 @@ def extract_error_message(log_path: str,
 
 
 def group_error_messages(error_lines: list[str]) -> list[str]:
-  """Groups multi-line error block into one string"""
-  state_unknown = 'UNKNOWN'
-  state_include = 'INCLUDE'
-  state_diag = 'DIAG'
+  """Groups multi-line error block into one string."""
+  clang_pattern = re.compile(r'(\S*:\d+:\d+: .+: .+)|'
+                             r'(In file included from \S*:\d+:)')
 
-  clang_diag_error_pattern = re.compile(r'(\S*):\d+:\d+: (.+): (.+)')
-  clang_diag_include_error_pattern = re.compile(
-      r'In file included from (\S*):\d+:')
-  clang_diag_error_end_pattern = r'.*\d+ errors? generated.'
+  first_line = error_lines[0]
+  if clang_pattern.fullmatch(first_line):
+    return group_clang_errors(error_lines)
+  # Unknown error type, just return lines ungrouped.
+  return error_lines
+
+
+def group_clang_errors(error_lines: list[str]) -> list[str]:
+  """Grouping logics for clang/++ diag errors."""
+  diag_pattern = re.compile(r'(\S*):\d+:\d+: (.+): .+')
+  include_pattern = re.compile(r'In file included from \S*:\d+:')
+  end_pattern = re.compile(r'.*\d+ errors? generated.')
 
   error_blocks = []
   curr_block = []
-  src_file = ''
-  curr_state = state_unknown
+  include_error_src_file = ''
+  handling_include = False
+  new_block = False
   for line in error_lines:
-    if not line:  # Trim empty lines.
+    if not line:
       continue
 
-    # clang/clang++ diagnostic errors.
-    diag_match = clang_diag_error_pattern.fullmatch(line)
+    diag_match = diag_pattern.match(line)
     if diag_match:
       err_src = diag_match.group(1)
       severity = diag_match.group(2)
 
-      # Matched a note diag line under another diag,
-      # giving help info to fix the previous error.
+      # New error block won't start with note error.
       if severity == 'note':
-        curr_block.append(line)
         continue
 
-      # Matched a diag line but under an included file line,
-      # indicating the specific error in the included file,
-      if curr_state == state_include and err_src != src_file:
-        curr_block.append(line)
+      # If we were handling an include error block, this is part of the block if
+      # error source has been found, and it's now changed.
+      if handling_include and (not include_error_src_file or
+                               include_error_src_file == err_src):
+        include_error_src_file = err_src
         continue
 
-      curr_state = state_diag
+      new_block = True
+      include_error_src_file = ''
+
+    # Start a new error block if previously not dealing with an include error
+    # or error source has been found for previous include error.
+    if (include_pattern.match(line) and
+        (not handling_include or include_error_src_file)):
+      include_error_src_file = ''
+      handling_include = True
+      new_block = True
+
+    if new_block or end_pattern.match(line):
+      new_block = False
       if curr_block:
         error_blocks.append('\n'.join(curr_block))
         curr_block = []
-
-    include_match = clang_diag_include_error_pattern.fullmatch(line)
-    if include_match:
-      src_file = include_match.group(1)
-      curr_state = state_include
-      if curr_block:
-        error_blocks.append('\n'.join(curr_block))
-        curr_block = []
-
-    if re.fullmatch(clang_diag_error_end_pattern, line):
-      curr_state = state_unknown
-      error_blocks.append('\n'.join(curr_block))
-      curr_block = []
-      continue
-
-    # Keep unknown error lines separated.
-    if curr_state == state_unknown and curr_block:
-      error_blocks.append('\n'.join(curr_block))
-      curr_block = []
-
     curr_block.append(line)
-
-  if curr_block:
-    error_blocks.append('\n'.join(curr_block))
+  # The last clang diag line should always be the end pattern,
+  # so the last valid curr_block has been handled.
   return error_blocks
 
 
