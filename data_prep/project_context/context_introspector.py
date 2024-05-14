@@ -169,12 +169,14 @@ class ContextRetriever:
     return xrefs
 
   def _truncate_xrefs(self, xrefs: list[str]) -> list[str]:
+    """Truncates xrefs to 10 lines before and after the 
+    function name is referenced."""
     truncated = []
     for xref in xrefs:
       lines = xref.split('\n')
       line_index = -1
-      start_index = 0
-      end_index = len(lines) - 1
+      start = 0
+      end = len(lines) - 1
       for index, line in enumerate(lines):
         if self._benchmark.function_name in line:
           line_index = index
@@ -182,9 +184,9 @@ class ContextRetriever:
       # If name was not found, then just return the entire function.
       # If it was, truncate it.
       if line_index != -1:
-        start_index = 0 if line_index <= 10 else line_index - 10
-        end_index = end_index if line_index >= end_index - 10 else line_index + 10
-      truncated.append('\n'.join(lines[start_index:end_index]))
+        start = start if line_index <= 10 else line_index - 10
+        end = end if line_index >= end - 10 else line_index + 10
+      truncated.append('\n'.join(lines[start:end]))
 
     return truncated
 
