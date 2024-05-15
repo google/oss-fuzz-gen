@@ -80,4 +80,4 @@ These bugs could only have been discovered with newly generated targets. They we
 OSS-Fuzz build process for the entire project.
 
 ## Citing This Work
-Please refer to the `CITATION.cff` file in this repository for citation details.
+Please click on the _'Cite this repository'_ button located on the right-hand side of this GitHub page for citation details.
