@@ -195,10 +195,6 @@ class Evaluator:
               f'{self.benchmark.target_path}\n')
     return name
 
-  def check_target(self, ai_binary, target_path: str) -> Optional[Result]:
-    # Print out exceptions from multiprocessing.Pool.
-    return self.do_check_target(ai_binary, target_path)
-
   def _fix_generated_fuzz_target(self, ai_binary: str,
                                  generated_oss_fuzz_project: str,
                                  target_path: str, iteration: int,
@@ -222,7 +218,7 @@ class Evaluator:
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
                      generated_oss_fuzz_project, os.path.basename(target_path)))
 
-  def do_check_target(self, ai_binary: str, target_path: str) -> Result:
+  def check_target(self, ai_binary, target_path: str) -> Result:
     """Builds and runs a target."""
     generated_target_name = os.path.basename(target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
