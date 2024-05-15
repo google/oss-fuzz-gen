@@ -184,8 +184,8 @@ class ContextRetriever:
       # If name was not found, then just return the entire function.
       # If it was, truncate it.
       if line_index != -1:
-        start = start if line_index <= 10 else line_index - 10
-        end = end if line_index >= end - 10 else line_index + 10
+        start = max(0, line_index - 10)
+        end = min(end, line_index + 10)
       truncated.append('\n'.join(lines[start:end]))
 
     return truncated
