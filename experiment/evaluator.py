@@ -259,9 +259,14 @@ class Evaluator:
       logger.log(f'Fixing {target_path} with '
                  f'{self.builder_runner.fixer_model_name}, '
                  f'attempt {llm_fix_count}.')
-      self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
-                                      target_path, llm_fix_count, build_result,
-                                      run_result, logger)
+      try:
+        self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
+                                        target_path, llm_fix_count,
+                                        build_result, run_result, logger)
+      except Exception as e:
+        logger.log('Exception occurred when fixing fuzz target in attempt '
+                   f'{llm_fix_count}: {e}')
+        break
 
     # Logs and returns the result.
     if not build_result.succeeded:
