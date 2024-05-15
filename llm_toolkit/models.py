@@ -165,6 +165,7 @@ class LLM:
         tb = traceback.extract_tb(err.__traceback__)
         if (not self._is_retryable_error(err, api_err, tb) or
             attempt == self._max_attempts):
+          traceback.print_exc()
           raise err
         self._delay_for_retry(attempt_count=attempt)
 

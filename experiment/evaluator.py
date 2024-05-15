@@ -198,11 +198,7 @@ class Evaluator:
 
   def check_target(self, ai_binary, target_path: str) -> Optional[Result]:
     # Print out exceptions from multiprocessing.Pool.
-    try:
-      return self.do_check_target(ai_binary, target_path)
-    except BaseException:
-      traceback.print_exc()
-      return None
+    return self.do_check_target(ai_binary, target_path)
 
   def _fix_generated_fuzz_target(self, ai_binary: str,
                                  generated_oss_fuzz_project: str,
