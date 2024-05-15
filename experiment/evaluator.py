@@ -19,7 +19,6 @@ import json
 import os
 import re
 import shutil
-import traceback
 from typing import Optional
 
 from google.cloud import storage
