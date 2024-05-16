@@ -23,6 +23,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import traceback
 from abc import abstractmethod
 from typing import Any, Callable, Type
 
@@ -129,27 +130,44 @@ class LLM:
   def prompt_type(self) -> type[prompts.Prompt]:
     """Returns the expected prompt type."""
 
-  def with_retry_on_error(self, func: Callable,
-                          err_type: Type[Exception]) -> Any:
+  def _delay_for_retry(self, attempt_count: int) -> None:
+    """Sleeps for a while based on the |attempt_count|."""
+    # Exponentially increase from 5 to 80 seconds + some random to jitter.
+    delay = 5 * 2**attempt_count + random.randint(1, 5)
+    logging.warning('Retry in %d seconds...', delay)
+    time.sleep(delay)
+
+  def _is_retryable_error(self, err: Exception, api_error: Type[Exception],
+                          tb: traceback.StackSummary) -> bool:
+    """Validates if |err| is worth retrying."""
+    if isinstance(err, api_error):
+      return True
+
+    # A known case from vertex package.
+    if (isinstance(err, ValueError) and
+        'Content roles do not match' in str(err) and tb[-1].filename.endswith(
+            'vertexai/generative_models/_generative_models.py')):
+      return True
+
+    return False
+
+  def with_retry_on_error(  # pylint: disable=inconsistent-return-statements
+      self, func: Callable, api_err: Type[Exception]) -> Any:
     """
     Retry when the function returns an expected error with exponential backoff.
     """
-    for attempt in range(self._max_attempts):
+    for attempt in range(1, self._max_attempts + 1):
       try:
         return func()
-      except err_type as err:
-        # Exponentially increase from 5 to 80 seconds
-        # + some random to jitter.
-        delay = 5 * 2**attempt + random.randint(1, 5)
-        print(f'Error generating LLM response\n'
-              f'{err}')
-
-        if attempt == self._max_attempts - 1:
+      except Exception as err:
+        logging.warning('LLM API Error when responding (attempt %d): %s',
+                        attempt, err)
+        tb = traceback.extract_tb(err.__traceback__)
+        if (not self._is_retryable_error(err, api_err, tb) or
+            attempt == self._max_attempts):
+          traceback.print_exc()
           raise err
-
-        print(f'Retry in {delay}s...')
-        time.sleep(delay)
-    return None
+        self._delay_for_retry(attempt_count=attempt)
 
   def _save_output(self, index: int, content: str, response_dir: str) -> None:
     """Saves the raw |content| from the model ouput."""
