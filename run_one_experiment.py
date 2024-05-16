@@ -191,8 +191,9 @@ def check_targets(
     for i, target_stat in enumerate(
         p.starmap(evaluator.check_target, ai_target_pairs)):
       if target_stat is None:
-        print(f'Error evaluating target {generated_targets[i]}')
-        continue
+        logging.error('This should never happen: Error evaluating target: %s',
+                      generated_targets[i])
+        target_stat = exp_evaluator.Result()
 
       target_stats.append((i, target_stat))
 
