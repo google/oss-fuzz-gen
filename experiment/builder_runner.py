@@ -312,8 +312,7 @@ class BuilderRunner:
     except Exception as err:
       logging.warning(
           'Error occurred when building and running fuzz target locally'
-          '(attempt %d): %s', iteration, err)
-      traceback.print_exc()
+          '(attempt %d) %s: %s', iteration, err, traceback.format_exc())
       raise err
 
   def build_and_run_local(
@@ -620,7 +619,7 @@ class CloudBuilderRunner(BuilderRunner):
     except Exception as err:
       logging.warning(
           'Error occurred when building and running fuzz target on cloud'
-          '(attempt %d): %s', iteration, err)
+          '(attempt %d) %s: %s', iteration, err, traceback.format_exc())
       traceback.print_exc()
       raise err
 
