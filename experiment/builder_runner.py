@@ -263,7 +263,7 @@ class BuilderRunner:
       # of using parameter `size`.
       # TODO(dongge): Refine this, 1) Merge this with the other oom case found
       # from reproducer name; 2) Capture the actual number in (malloc(\d+)).
-      if 'out-of-memory' in symptom:
+      if 'out-of-memory' in symptom or 'out of memory' in symptom:
         return cov_pcs, total_pcs, True, SemanticCheckResult(
             SemanticCheckResult.FP_OOM, symptom, crash_stacks)
 
