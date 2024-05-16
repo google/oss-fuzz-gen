@@ -74,7 +74,7 @@ fi
 # The LLM used to generate and fix fuzz targets.
 if [[ $MODEL = '' ]]
 then
-  MODEL='vertex_ai_gemini-1-5'
+  MODEL='vertex_ai_code-bison-32k'
   echo "LLM was not specified as the fifth argument. Defaulting to ${MODEL:?}."
 fi
 
