@@ -287,17 +287,13 @@ class BuilderRunner:
                                    symptom, crash_stacks)
             break
 
-    else:
+    elif initcov == donecov and lastround is not None:
       # Another error fuzz target case: no cov increase.
-      if initcov is not None and donecov is not None:
-        if initcov == donecov:
-          return cov_pcs, total_pcs, False, SemanticCheckResult(
-              SemanticCheckResult.NO_COV_INCREASE)
-      if initcov == donecov == None != lastround:
-        # No interesting inputs were found. This may also happen if the target
-        # rejected all inputs we tried.
-        return cov_pcs, total_pcs, False, SemanticCheckResult(
-            SemanticCheckResult.NO_COV_INCREASE)
+      # A special case is initcov == donecov == None, which indicates no
+      # interesting inputs were found. This may happen if the target rejected
+      # all inputs we tried.
+      return cov_pcs, total_pcs, False, SemanticCheckResult(
+          SemanticCheckResult.NO_COV_INCREASE)
 
     return cov_pcs, total_pcs, crashes, SemanticCheckResult(
         SemanticCheckResult.NO_SEMANTIC_ERR)
