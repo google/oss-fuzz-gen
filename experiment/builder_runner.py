@@ -23,6 +23,7 @@ import re
 import shutil
 import subprocess as sp
 import time
+import traceback
 import uuid
 from typing import Any, Optional
 
@@ -124,6 +125,13 @@ class BuilderRunner:
     with open(target_path) as generated_code_file:
       code = generated_code_file.read()
 
+    # This regex is used to identify legitimate Java variable names
+    # or instance method calls (which could return a needed variable).
+    # This is necessary because the method name of a Java method also
+    # includes its parameter list in order to distinguish between
+    # overloaded methods. Thus it need to use the regex to identify
+    # if there are method calls with unknown variable names that match
+    # the target method.
     base_arg_regex = r'[a-zA-Z_$][a-zA-Z_$0-9(),.]*'
     signature = self.benchmark.function_signature
     name = signature.split('].')[1].split('(')[0]
@@ -212,9 +220,9 @@ class BuilderRunner:
 
         if roundno is not None:
           lastround = roundno
-          if 'INITED' in line:
+          if 'INITED' in line and 'cov: ' in line:
             initcov = int(line.split('cov: ')[1].split(' ft:')[0])
-          elif 'DONE' in line:
+          elif 'DONE' in line and 'cov: ' in line:
             donecov = int(line.split('cov: ')[1].split(' ft:')[0])
 
     return initcov, donecov, lastround
@@ -287,7 +295,7 @@ class BuilderRunner:
       # of using parameter `size`.
       # TODO(dongge): Refine this, 1) Merge this with the other oom case found
       # from reproducer name; 2) Capture the actual number in (malloc(\d+)).
-      if 'out-of-memory' in symptom:
+      if 'out-of-memory' in symptom or 'out of memory' in symptom:
         return cov_pcs, total_pcs, True, SemanticCheckResult(
             SemanticCheckResult.FP_OOM, symptom, crash_stacks)
 
@@ -311,14 +319,13 @@ class BuilderRunner:
                                    symptom, crash_stacks)
             break
 
-    else:
+    elif initcov == donecov and lastround is not None:
       # Another error fuzz target case: no cov increase.
-      # Only check this is check_cov_increase is True.
-      if check_cov_increase:
-        if initcov is not None and donecov is not None:
-          if initcov == donecov:
-            return cov_pcs, total_pcs, False, SemanticCheckResult(
-                SemanticCheckResult.NO_COV_INCREASE)
+      # A special case is initcov == donecov == None, which indicates no
+      # interesting inputs were found. This may happen if the target rejected
+      # all inputs we tried.
+      return cov_pcs, total_pcs, False, SemanticCheckResult(
+          SemanticCheckResult.NO_COV_INCREASE)
 
     return cov_pcs, total_pcs, crashes, SemanticCheckResult(
         SemanticCheckResult.NO_SEMANTIC_ERR)
@@ -330,6 +337,20 @@ class BuilderRunner:
 
     if not self._pre_build_check(target_path, build_result):
       return build_result, None
+
+    try:
+      return self.build_and_run_local(generated_project, target_path, iteration,
+                                      build_result)
+    except Exception as err:
+      logging.warning(
+          'Error occurred when building and running fuzz target locally'
+          '(attempt %d) %s: %s', iteration, err, traceback.format_exc())
+      raise err
+
+  def build_and_run_local(
+      self, generated_project: str, target_path: str, iteration: int,
+      build_result: BuildResult) -> tuple[BuildResult, Optional[RunResult]]:
+    """Builds and runs the fuzz target locally for fuzzing."""
 
     benchmark_target_name = os.path.basename(target_path)
     project_target_name = os.path.basename(self.benchmark.target_path)
@@ -630,10 +651,26 @@ class CloudBuilderRunner(BuilderRunner):
 
   def build_and_run(self, generated_project: str, target_path: str,
                     iteration: int) -> tuple[BuildResult, Optional[RunResult]]:
+    """Builds and runs the fuzz target for fuzzing."""
     build_result = BuildResult()
+
     if not self._pre_build_check(target_path, build_result):
       return build_result, None
 
+    try:
+      return self.build_and_run_cloud(generated_project, target_path, iteration,
+                                      build_result)
+    except Exception as err:
+      logging.warning(
+          'Error occurred when building and running fuzz target on cloud'
+          '(attempt %d) %s: %s', iteration, err, traceback.format_exc())
+      traceback.print_exc()
+      raise err
+
+  def build_and_run_cloud(
+      self, generated_project: str, target_path: str, iteration: int,
+      build_result: BuildResult) -> tuple[BuildResult, Optional[RunResult]]:
+    """Builds and runs the fuzz target locally for fuzzing."""
     logging.info('Evaluating %s on cloud.', os.path.realpath(target_path))
 
     uid = self.experiment_name + str(uuid.uuid4())

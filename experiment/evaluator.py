@@ -19,7 +19,6 @@ import json
 import os
 import re
 import shutil
-import traceback
 from typing import Optional
 
 from google.cloud import storage
@@ -87,7 +86,7 @@ def load_existing_textcov(project: str,
   existing_textcov = textcov.Textcov()
   for blob in blobs:
     if language == 'jvm':
-      if not blob.name == 'jacoco.xml':
+      if blob.name != 'jacoco.xml':
         continue
       print(f'Loading existing textcov from {blob.name}')
       existing_textcov.merge(textcov.Textcov.from_jvm_file(blob))
@@ -218,14 +217,6 @@ class Evaluator:
               f'{self.benchmark.target_path}\n')
     return name
 
-  def check_target(self, ai_binary, target_path: str) -> Optional[Result]:
-    # Print out exceptions from multiprocessing.Pool.
-    try:
-      return self.do_check_target(ai_binary, target_path)
-    except BaseException:
-      traceback.print_exc()
-      return None
-
   def _fix_generated_fuzz_target(self, ai_binary: str,
                                  generated_oss_fuzz_project: str,
                                  target_path: str, iteration: int,
@@ -249,7 +240,7 @@ class Evaluator:
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
                      generated_oss_fuzz_project, os.path.basename(target_path)))
 
-  def do_check_target(self, ai_binary: str, target_path: str) -> Result:
+  def check_target(self, ai_binary, target_path: str) -> Result:
     """Builds and runs a target."""
     generated_target_name = os.path.basename(target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
@@ -271,8 +262,14 @@ class Evaluator:
     llm_fix_count = 0
     while True:
       # 1. Evaluating generated driver.
-      build_result, run_result = self.builder_runner.build_and_run(
-          generated_oss_fuzz_project, target_path, llm_fix_count)
+      try:
+        build_result, run_result = self.builder_runner.build_and_run(
+            generated_oss_fuzz_project, target_path, llm_fix_count)
+      except Exception as e:
+        logger.log('Exception occurred when building and running fuzz target '
+                   f'in attempt {llm_fix_count}: {e}')
+        build_result = BuildResult()
+        run_result = None
 
       gen_succ = build_result.succeeded and run_result and run_result.succeeded
       if gen_succ or llm_fix_count >= LLM_FIX_LIMIT:
@@ -287,9 +284,14 @@ class Evaluator:
       logger.log(f'Fixing {target_path} with '
                  f'{self.builder_runner.fixer_model_name}, '
                  f'attempt {llm_fix_count}.')
-      self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
-                                      target_path, llm_fix_count, build_result,
-                                      run_result, logger)
+      try:
+        self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
+                                        target_path, llm_fix_count,
+                                        build_result, run_result, logger)
+      except Exception as e:
+        logger.log('Exception occurred when fixing fuzz target in attempt '
+                   f'{llm_fix_count}: {e}')
+        break
 
     # Logs and returns the result.
     if not build_result.succeeded:
@@ -329,8 +331,17 @@ class Evaluator:
 
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
-    total_lines = _compute_total_lines_without_fuzz_targets(
-        coverage_summary, generated_target_name)
+
+    if self.benchmark.language == 'jvm':
+      # The summary.json generated from Jacoco.xml report
+      # of JVM project does not have total lines information.
+      # This fix Use the total lines calculation from the
+      # jacoco.xml report of the current run directly for
+      # JVM projects.
+      total_lines = run_result.coverage.total_lines
+    else:
+      total_lines = _compute_total_lines_without_fuzz_targets(
+          coverage_summary, generated_target_name)
     if run_result.total_pcs:
       coverage_percent = run_result.cov_pcs / run_result.total_pcs
     else:
