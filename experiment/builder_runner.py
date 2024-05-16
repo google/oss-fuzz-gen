@@ -190,9 +190,9 @@ class BuilderRunner:
 
         if roundno is not None:
           lastround = roundno
-          if 'INITED' in line:
+          if 'INITED' in line and 'cov: ' in line:
             initcov = int(line.split('cov: ')[1].split(' ft:')[0])
-          elif 'DONE' in line:
+          elif 'DONE' in line and 'cov: ' in line:
             donecov = int(line.split('cov: ')[1].split(' ft:')[0])
 
     return initcov, donecov, lastround
@@ -292,6 +292,11 @@ class BuilderRunner:
         if initcov == donecov:
           return cov_pcs, total_pcs, False, SemanticCheckResult(
               SemanticCheckResult.NO_COV_INCREASE)
+      if initcov == donecov == None != lastround:
+        # No interesting inputs were found. This may also happen if the target
+        # rejected all inputs we tried.
+        return cov_pcs, total_pcs, False, SemanticCheckResult(
+            SemanticCheckResult.NO_COV_INCREASE)
 
     return cov_pcs, total_pcs, crashes, SemanticCheckResult(
         SemanticCheckResult.NO_SEMANTIC_ERR)
