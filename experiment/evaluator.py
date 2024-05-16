@@ -19,7 +19,6 @@ import json
 import os
 import re
 import shutil
-import traceback
 from typing import Optional
 
 from google.cloud import storage
@@ -196,14 +195,6 @@ class Evaluator:
               f'{self.benchmark.target_path}\n')
     return name
 
-  def check_target(self, ai_binary, target_path: str) -> Optional[Result]:
-    # Print out exceptions from multiprocessing.Pool.
-    try:
-      return self.do_check_target(ai_binary, target_path)
-    except BaseException:
-      traceback.print_exc()
-      return None
-
   def _fix_generated_fuzz_target(self, ai_binary: str,
                                  generated_oss_fuzz_project: str,
                                  target_path: str, iteration: int,
@@ -248,7 +239,7 @@ class Evaluator:
           self.builder_runner.fixer_model_name,
       )
 
-  def do_check_target(self, ai_binary: str, target_path: str) -> Result:
+  def check_target(self, ai_binary, target_path: str) -> Result:
     """Builds and runs a target."""
     generated_target_name = os.path.basename(target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
@@ -284,9 +275,14 @@ class Evaluator:
       logger.log(f'Fixing {target_path} with '
                  f'{self.builder_runner.fixer_model_name}, '
                  f'attempt {llm_fix_count}.')
-      self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
-                                      target_path, llm_fix_count, build_result,
-                                      run_result, logger)
+      try:
+        self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
+                                        target_path, llm_fix_count,
+                                        build_result, run_result, logger)
+      except Exception as e:
+        logger.log('Exception occurred when fixing fuzz target in attempt '
+                   f'{llm_fix_count}: {e}')
+        break
 
     # Logs and returns the result.
     if not build_result.succeeded:

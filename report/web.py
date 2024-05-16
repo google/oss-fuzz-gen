@@ -42,6 +42,8 @@ BENCHMARK_DIR = ''
 
 MAX_RUN_LOGS_LEN = 16 * 1024
 
+TARGET_EXTS = ('.c', '.cc', '.cpp', '.cxx', '.java', '.py')
+
 
 @dataclasses.dataclass
 class Benchmark:
@@ -178,7 +180,7 @@ def get_generated_targets(benchmark: str) -> list[str]:
   targets = []
   raw_targets_dir = os.path.join(RESULTS_DIR, benchmark, 'raw_targets')
   for filename in sorted(os.listdir(raw_targets_dir)):
-    if os.path.splitext(filename)[1] in ('.c', '.cc', '.cpp', '.cxx'):
+    if os.path.splitext(filename)[1] in TARGET_EXTS:
       targets.append(os.path.join(raw_targets_dir, filename))
 
   return targets
