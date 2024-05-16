@@ -333,10 +333,11 @@ class Evaluator:
     coverage_summary = self._load_existing_coverage_summary()
 
     if self.benchmark.language == 'jvm':
-      # Temporary measure as the total line coverage information
-      # for JVM projects from fuzz-introspector is wrong.
-      # Use the total lines calculation from the jacoco.xml
-      # of the current run temporary.
+      # The summary.json generated from Jacoco.xml report
+      # of JVM project does not have total lines information.
+      # This fix Use the total lines calculation from the
+      # jacoco.xml report of the current run directly for
+      # JVM projects.
       total_lines = run_result.coverage.total_lines
     else:
       total_lines = _compute_total_lines_without_fuzz_targets(
