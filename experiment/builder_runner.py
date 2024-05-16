@@ -23,6 +23,7 @@ import re
 import shutil
 import subprocess as sp
 import time
+import traceback
 import uuid
 from typing import Any, Optional
 
@@ -308,6 +309,21 @@ class BuilderRunner:
 
     if not self._pre_build_check(target_path, build_result):
       return build_result, None
+
+    try:
+      return self.build_and_run_local(generated_project, target_path, iteration,
+                                      build_result)
+    except Exception as err:
+      logging.warning(
+          'Error occurred when building and running fuzz target locally'
+          '(attempt %d): %s', iteration, err)
+      traceback.print_exc()
+      raise err
+
+  def build_and_run_local(
+      self, generated_project: str, target_path: str, iteration: int,
+      build_result: BuildResult) -> tuple[BuildResult, Optional[RunResult]]:
+    """Builds and runs the fuzz target locally for fuzzing."""
 
     benchmark_target_name = os.path.basename(target_path)
     project_target_name = os.path.basename(self.benchmark.target_path)
@@ -596,10 +612,26 @@ class CloudBuilderRunner(BuilderRunner):
 
   def build_and_run(self, generated_project: str, target_path: str,
                     iteration: int) -> tuple[BuildResult, Optional[RunResult]]:
+    """Builds and runs the fuzz target for fuzzing."""
     build_result = BuildResult()
+
     if not self._pre_build_check(target_path, build_result):
       return build_result, None
 
+    try:
+      return self.build_and_run_cloud(generated_project, target_path, iteration,
+                                      build_result)
+    except Exception as err:
+      logging.warning(
+          'Error occurred when building and running fuzz target on cloud'
+          '(attempt %d): %s', iteration, err)
+      traceback.print_exc()
+      raise err
+
+  def build_and_run_cloud(
+      self, generated_project: str, target_path: str, iteration: int,
+      build_result: BuildResult) -> tuple[BuildResult, Optional[RunResult]]:
+    """Builds and runs the fuzz target locally for fuzzing."""
     logging.info('Evaluating %s on cloud.', os.path.realpath(target_path))
 
     uid = self.experiment_name + str(uuid.uuid4())
