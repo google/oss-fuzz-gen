@@ -549,7 +549,8 @@ class BuilderRunner:
       local_textcov_location = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                             'build', 'out', generated_project,
                                             'textcov_reports', 'jacoco.xml')
-      new_textcov = textcov.Textcov.from_jvm_file(local_textcov_location)
+      with open(local_textcov_location) as f:
+        new_textcov = textcov.Textcov.from_jvm_file(f)
     else:
       local_textcov_location = os.path.join(
           oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'out', generated_project,
@@ -743,17 +744,26 @@ class CloudBuilderRunner(BuilderRunner):
         run_result.coverage_summary = json.load(f)
 
     target_basename = os.path.basename(self.benchmark.target_path)
-    blob = bucket.blob(
-        f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
-        '.covreport')
-    if blob.exists():
-      with blob.open() as f:
-        run_result.coverage = textcov.Textcov.from_file(
-            f,
-            ignore_function_patterns=[
-                # Don't include other functions defined in the target code.
-                re.compile(r'^' + re.escape(target_basename) + ':')
-            ])
+
+    # Load coverage reports.
+    if self.benchmark.language == 'jvm':
+      blob = bucket.blob(f'{coverage_name}/textcov_reports/jacoco.xml')
+      if blob.exists():
+        with blob.open() as f:
+          run_result.coverage = textcov.Textcov.from_jvm_file(f)
+    else:
+      # C/C++
+      blob = bucket.blob(
+          f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
+          '.covreport')
+      if blob.exists():
+        with blob.open() as f:
+          run_result.coverage = textcov.Textcov.from_file(
+              f,
+              ignore_function_patterns=[
+                  # Don't include other functions defined in the target code.
+                  re.compile(r'^' + re.escape(target_basename) + ':')
+              ])
 
     # Parse libfuzzer logs to get fuzz target runtime details.
     with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
