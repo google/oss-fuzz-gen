@@ -87,7 +87,7 @@ def load_existing_textcov(project: str,
   existing_textcov = textcov.Textcov()
   for blob in blobs:
     if language == 'jvm':
-      if not blob.name == 'jacoco.xml':
+      if blob.name != 'jacoco.xml':
         continue
       print(f'Loading existing textcov from {blob.name}')
       existing_textcov.merge(textcov.Textcov.from_jvm_file(blob))
@@ -329,8 +329,16 @@ class Evaluator:
 
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
-    total_lines = _compute_total_lines_without_fuzz_targets(
-        coverage_summary, generated_target_name)
+
+    if self.benchmark.language == 'jvm':
+      # Temporary measure as the total line coverage information
+      # for JVM projects from fuzz-introspector is wrong.
+      # Use the total lines calculation from the jacoco.xml
+      # of the current run temporary.
+      total_lines = run_result.coverage.total_lines
+    else:
+      total_lines = _compute_total_lines_without_fuzz_targets(
+          coverage_summary, generated_target_name)
     if run_result.total_pcs:
       coverage_percent = run_result.cov_pcs / run_result.total_pcs
     else:

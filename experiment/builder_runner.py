@@ -124,6 +124,13 @@ class BuilderRunner:
     with open(target_path) as generated_code_file:
       code = generated_code_file.read()
 
+    # This regex is used to identify legitimate Java variable names
+    # or instance method calls (which could return a needed variable).
+    # This is necessary because the method name of a Java method also
+    # includes its parameter list in order to distinguish between
+    # overloaded methods. Thus it need to use the regex to identify
+    # if there are method calls with unknown variable names that match
+    # the target method.
     base_arg_regex = r'[a-zA-Z_$][a-zA-Z_$0-9(),.]*'
     signature = self.benchmark.function_signature
     name = signature.split('].')[1].split('(')[0]

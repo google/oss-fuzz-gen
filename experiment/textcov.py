@@ -280,6 +280,10 @@ class Textcov:
   def covered_lines(self):
     return sum(f.covered_lines for f in self.functions.values())
 
+  @property
+  def total_lines(self):
+    return sum(len(f.lines) for f in self.functions.values())
+
   def determine_jvm_arguments_type(self, desc: str) -> List[str]:
     """
       Determine list of jvm arguments type for each method.
