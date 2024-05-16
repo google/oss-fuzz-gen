@@ -203,11 +203,11 @@ class Textcov:
     return textcov
 
   @classmethod
-  def from_jvm_file(cls, file_path) -> Textcov:
-    """Read a textcov from a jacoco.xml path."""
+  def from_jvm_file(cls, file_handle) -> Textcov:
+    """Read a textcov from a jacoco.xml file."""
     textcov = cls()
     textcov.language = 'jvm'
-    jacoco_report = ET.parse(file_path)
+    jacoco_report = ET.parse(file_handle)
 
     class_method_items = []
     for item in jacoco_report.iter():
