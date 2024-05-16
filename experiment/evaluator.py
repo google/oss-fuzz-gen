@@ -240,8 +240,14 @@ class Evaluator:
     llm_fix_count = 0
     while True:
       # 1. Evaluating generated driver.
-      build_result, run_result = self.builder_runner.build_and_run(
-          generated_oss_fuzz_project, target_path, llm_fix_count)
+      try:
+        build_result, run_result = self.builder_runner.build_and_run(
+            generated_oss_fuzz_project, target_path, llm_fix_count)
+      except Exception as e:
+        logger.log('Exception occurred when building and running fuzz target '
+                   f'in attempt {llm_fix_count}: {e}')
+        build_result = BuildResult()
+        run_result = None
 
       gen_succ = build_result.succeeded and run_result and run_result.succeeded
       if gen_succ or llm_fix_count >= LLM_FIX_LIMIT:
