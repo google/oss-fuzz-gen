@@ -120,12 +120,36 @@ class BuilderRunner:
     match = re.search(pattern, func_sig)
     return match.group(1).strip() if match else func_sig
 
+  def _contains_target_jvm_method(self, target_path: str) -> bool:
+    """Validates if the LLM-generated code contains the target jvm methods."""
+    with open(target_path) as generated_code_file:
+      code = generated_code_file.read()
+
+    # This regex is used to identify legitimate Java variable names
+    # or instance method calls (which could return a needed variable).
+    # This is necessary because the method name of a Java method also
+    # includes its parameter list in order to distinguish between
+    # overloaded methods. Thus it need to use the regex to identify
+    # if there are method calls with unknown variable names that match
+    # the target method.
+    base_arg_regex = r'[a-zA-Z_$][a-zA-Z_$0-9(),.]*'
+    signature = self.benchmark.function_signature
+    name = signature.split('].')[1].split('(')[0]
+    arg_count = len(signature.split('(')[1].split(')')[0].split(','))
+
+    pattern = r'(%s\(%s\))' % (name, ', '.join([base_arg_regex] * arg_count))
+    match = re.search(pattern, code)
+
+    return bool(match)
+
   def _contains_target_function(self, target_path: str) -> bool:
     """Validates if the LLM-generated code contains the target function."""
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
+
     min_func_name = self._get_minimum_func_name(
         self.benchmark.function_signature)
+
     return min_func_name in generated_code
 
   def _pre_build_check(self, target_path: str,
@@ -133,7 +157,12 @@ class BuilderRunner:
     """Checks the generated target before building and running it."""
     # No need to build the fuzz target if it does not contain the target
     # function.
-    if not self._contains_target_function(target_path):
+    if self.benchmark.language == 'jvm':
+      result = self._contains_target_jvm_method(target_path)
+    else:
+      result = self._contains_target_function(target_path)
+
+    if not result:
       build_result.errors = [
           (f'The target function `{self.benchmark.function_signature}`'
            ' was not called by the fuzz target '
@@ -144,8 +173,8 @@ class BuilderRunner:
       ]
       print(f'Missing target function: {target_path} does not contain '
             f'{self.benchmark.function_signature}')
-      return False
-    return True
+
+    return result
 
   def _parse_stacks_from_libfuzzer_logs(self,
                                         lines: list[str]) -> list[list[str]]:
@@ -205,7 +234,10 @@ class BuilderRunner:
             LIBFUZZER_LOG_STACK_FRAME_CPP not in stack_frame)
 
   def _parse_libfuzzer_logs(
-      self, log_handle) -> tuple[int, int, bool, SemanticCheckResult]:
+      self,
+      log_handle,
+      check_cov_increase: bool = True
+  ) -> tuple[int, int, bool, SemanticCheckResult]:
     """Parses libFuzzer logs."""
     lines = None
     try:
@@ -351,8 +383,12 @@ class BuilderRunner:
     # Parse libfuzzer logs to get fuzz target runtime details.
     with open(self.work_dirs.run_logs_target(benchmark_target_name, iteration),
               'rb') as f:
+      # In many case JVM projects won't have much cov
+      # difference in short running. Adding the flag for JVM
+      # projects to temporary skip the checking of coverage change.
+      flag = not self.benchmark.language == 'jvm'
       run_result.cov_pcs, run_result.total_pcs, run_result.crashes, \
-                run_result.semantic_check = self._parse_libfuzzer_logs(f)
+                run_result.semantic_check = self._parse_libfuzzer_logs(f, flag)
       run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result
@@ -436,7 +472,7 @@ class BuilderRunner:
         '-e',
         f'CC={JCC_DIR}/clang-jcc',
         '-e',
-        'FUZZING_LANGUAGE=c++',
+        f'FUZZING_LANGUAGE={self.benchmark.language}',
         '-v',
         f'{outdir}:/out',
         '-v',
@@ -530,17 +566,25 @@ class BuilderRunner:
             f'{e.stderr}')
       return None, None
 
-    local_textcov_location = os.path.join(
-        oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'out', generated_project,
-        'textcov_reports', f'{self.benchmark.target_name}.covreport')
-    target_basename = os.path.basename(self.benchmark.target_path)
-    with open(local_textcov_location) as f:
-      new_textcov = textcov.Textcov.from_file(
-          f,
-          ignore_function_patterns=[
-              # Don't include other functions defined in the target code.
-              re.compile(r'^' + re.escape(target_basename) + ':')
-          ])
+    if self.benchmark.language == 'jvm':
+      local_textcov_location = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
+                                            'build', 'out', generated_project,
+                                            'textcov_reports', 'jacoco.xml')
+      with open(local_textcov_location) as f:
+        new_textcov = textcov.Textcov.from_jvm_file(f)
+    else:
+      local_textcov_location = os.path.join(
+          oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'out', generated_project,
+          'textcov_reports', f'{self.benchmark.target_name}.covreport')
+      target_basename = os.path.basename(self.benchmark.target_path)
+
+      with open(local_textcov_location) as f:
+        new_textcov = textcov.Textcov.from_file(
+            f,
+            ignore_function_patterns=[
+                # Don't include other functions defined in the target code.
+                re.compile(r'^' + re.escape(target_basename) + ':')
+            ])
 
     coverage_summary = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build',
                                     'out', generated_project, 'report', 'linux',
@@ -737,17 +781,26 @@ class CloudBuilderRunner(BuilderRunner):
         run_result.coverage_summary = json.load(f)
 
     target_basename = os.path.basename(self.benchmark.target_path)
-    blob = bucket.blob(
-        f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
-        '.covreport')
-    if blob.exists():
-      with blob.open() as f:
-        run_result.coverage = textcov.Textcov.from_file(
-            f,
-            ignore_function_patterns=[
-                # Don't include other functions defined in the target code.
-                re.compile(r'^' + re.escape(target_basename) + ':')
-            ])
+
+    # Load coverage reports.
+    if self.benchmark.language == 'jvm':
+      blob = bucket.blob(f'{coverage_name}/textcov_reports/jacoco.xml')
+      if blob.exists():
+        with blob.open() as f:
+          run_result.coverage = textcov.Textcov.from_jvm_file(f)
+    else:
+      # C/C++
+      blob = bucket.blob(
+          f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
+          '.covreport')
+      if blob.exists():
+        with blob.open() as f:
+          run_result.coverage = textcov.Textcov.from_file(
+              f,
+              ignore_function_patterns=[
+                  # Don't include other functions defined in the target code.
+                  re.compile(r'^' + re.escape(target_basename) + ':')
+              ])
 
     # Parse libfuzzer logs to get fuzz target runtime details.
     with open(self.work_dirs.run_logs_target(generated_target_name, iteration),

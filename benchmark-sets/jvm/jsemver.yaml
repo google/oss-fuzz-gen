@@ -1,0 +1,23 @@
+"functions":
+- "name": "[com.github.zafarkhaja.semver.Version].tryParse(java.lang.String,boolean)"
+  "params":
+  - "name": "var_String"
+    "type": "java.lang.String"
+  - "name": "var_boolean"
+    "type": "boolean"
+  "return_type": "void"
+  "signature": "[com.github.zafarkhaja.semver.Version].tryParse(java.lang.String,boolean)"
+- "name": "[com.github.zafarkhaja.semver.Version].of(long,long,long)"
+  "params":
+  - "name": "var_long"
+    "type": "long"
+  - "name": "var_long"
+    "type": "long"
+  - "name": "var_long"
+    "type": "long"
+  "return_type": "void"
+  "signature": "[com.github.zafarkhaja.semver.Version].of(long,long,long)"
+"language": "jvm"
+"project": "jsemver"
+"target_name": "VersionFuzzer"
+"target_path": "/src/VersionFuzzer.java"

@@ -1,0 +1,21 @@
+"functions":
+- "name": "[me.xdrop.fuzzywuzzy.algorithms.DefaultStringProcessor].process(java.lang.String)"
+  "params":
+  - "name": "var_String"
+    "type": "java.lang.String"
+  "return_type": "void"
+  "signature": "[me.xdrop.fuzzywuzzy.algorithms.DefaultStringProcessor].process(java.lang.String)"
+- "name": "[me.xdrop.diffutils.DiffUtils].levEditDistance(java.lang.String,java.lang.String,int)"
+  "params":
+  - "name": "var_String"
+    "type": "java.lang.String"
+  - "name": "var_String"
+    "type": "java.lang.String"
+  - "name": "var_int"
+    "type": "int"
+  "return_type": "void"
+  "signature": "[me.xdrop.diffutils.DiffUtils].levEditDistance(java.lang.String,java.lang.String,int)"
+"language": "jvm"
+"project": "fuzzywuzzy"
+"target_name": "DiffUtilsFuzzer"
+"target_path": "/src/DiffUtilsFuzzer.java"

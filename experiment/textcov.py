@@ -18,11 +18,28 @@ from __future__ import annotations
 import dataclasses
 import re
 import subprocess
+import xml.etree.ElementTree as ET
 from typing import List, Optional
 
 # No spaces at the beginning, and ends with a ":".
 FUNCTION_PATTERN = re.compile(r'^([^\s].*):$')
 LINE_PATTERN = re.compile(r'^\s*\d+\|\s*([\d\.a-zA-Z]+)\|(.*)')
+
+JVM_CLASS_MAPPING = {
+    'Z': 'boolean',
+    'B': 'byte',
+    'C': 'char',
+    'D': 'double',
+    'F': 'float',
+    'I': 'int',
+    'J': 'long',
+    'S': 'short'
+}
+
+JVM_SKIPPED_METHOD = [
+    '<init>', '<cinit>', 'fuzzerTestOneInput', 'fuzzerInitialize',
+    'fuzzerTearDown'
+]
 
 
 def demangle(data: str) -> str:
@@ -101,14 +118,25 @@ class Function:
   def covered_lines(self):
     return sum(1 for l in self.lines.values() if l.hit_count > 0)
 
-  def subtract_covered_lines(self, other: Function):
+  def subtract_covered_lines(self, other: Function, language: str = 'c++'):
     """Subtract covered lines."""
 
-    # For our analysis purposes, we completely delete any lines that are
-    # hit by the other, rather than subtracting hitcounts.
-    for line in other.lines.values():
-      if line.hit_count and line.contents in self.lines:
-        del self.lines[line.contents]
+    if language == 'jvm':
+      total_line = len(self.lines)
+      self.lines = {}
+      new_covered_lines = other.covered_lines - self.covered_lines
+      for i in range(total_line):
+        line = f'Line{i}'
+        if i >= new_covered_lines:
+          self.lines[line] = Line(contents=line, hit_count=0)
+        else:
+          self.lines[line] = Line(contents=line, hit_count=1)
+    else:
+      # For our analysis purposes, we completely delete any lines that are
+      # hit by the other, rather than subtracting hitcounts.
+      for line in other.lines.values():
+        if line.hit_count and line.contents in self.lines:
+          del self.lines[line.contents]
 
 
 @dataclasses.dataclass
@@ -116,6 +144,7 @@ class Textcov:
   """Textcov."""
   # Function name -> Function object.
   functions: dict[str, Function] = dataclasses.field(default_factory=dict)
+  language: str = 'c++'
 
   @classmethod
   def from_file(
@@ -127,6 +156,7 @@ class Textcov:
       ignore_function_patterns = []
 
     textcov = cls()
+    textcov.language = 'c++'
 
     current_function_name: str = ''
     current_function: Function = Function()
@@ -172,6 +202,56 @@ class Textcov:
         continue
     return textcov
 
+  @classmethod
+  def from_jvm_file(cls, file_handle) -> Textcov:
+    """Read a textcov from a jacoco.xml file."""
+    textcov = cls()
+    textcov.language = 'jvm'
+    jacoco_report = ET.parse(file_handle)
+
+    class_method_items = []
+    for item in jacoco_report.iter():
+      if item.tag == 'class':
+        # Get class name and skip fuzzing and testing classes
+        class_name = item.attrib['name'].replace('/', '.')
+        if 'test' in class_name.lower() or 'fuzzer' in class_name.lower():
+          continue
+
+        for method_item in item:
+          if method_item.tag == 'method':
+            if method_item.attrib['name'] not in JVM_SKIPPED_METHOD:
+              class_method_items.append((class_name, method_item))
+
+    for class_name, method_item in class_method_items:
+      method_dict = method_item.attrib
+      method_name = method_dict['name']
+
+      # Process all arguments type from shortern Java Class naming
+      args = textcov.determine_jvm_arguments_type(method_dict['desc'])
+
+      # Save method
+      full_method_name = f'[{class_name}].{method_name}({",".join(args)})'
+      current_method = Function(name=full_method_name)
+
+      # Retrieve line coverage information
+      total_line = 0
+      covered_line = 0
+      for cov_data in method_item:
+        if cov_data.attrib['type'] == 'LINE':
+          covered_line = int(cov_data.attrib['covered'])
+          total_line = int(cov_data.attrib['covered']) + int(
+              cov_data.attrib['missed'])
+      for i in range(total_line):
+        line = f'Line{i}'
+        if i >= covered_line:
+          current_method.lines[line] = Line(contents=line, hit_count=0)
+        else:
+          current_method.lines[line] = Line(contents=line, hit_count=1)
+
+      textcov.functions[full_method_name] = current_method
+
+    return textcov
+
   def to_file(self, filename: str) -> None:
     """Writes covered functions and lines to |filename|."""
     file_content = ''
@@ -193,8 +273,67 @@ class Textcov:
     """Diff another textcov"""
     for function in other.functions.values():
       if function.name in self.functions:
-        self.functions[function.name].subtract_covered_lines(function)
+        self.functions[function.name].subtract_covered_lines(
+            function, self.language)
 
   @property
   def covered_lines(self):
     return sum(f.covered_lines for f in self.functions.values())
+
+  @property
+  def total_lines(self):
+    return sum(len(f.lines) for f in self.functions.values())
+
+  def determine_jvm_arguments_type(self, desc: str) -> List[str]:
+    """
+      Determine list of jvm arguments type for each method.
+
+      The desc tag for each jvm method in the jacoco.xml coverage
+      report is in basic Java class name specification following
+      the format of "({Arguments}){ReturnType}". The basic java
+      class name specification use single upper case letter for
+      primitive types (and void type) and L{full_class_name}; for
+      object arguments. The JVM_CLASS_MAPPING give the mapping of
+      the single upper case letter of each primitive types.
+
+      For example, for a method
+      "public void test(String,int,String[],boolean,int...)"
+
+      The desc value of the above method will be
+      "(Ljava.lang.String;ILjava.lang.String;[]ZI[])V".
+
+      This method is necessary to match the full method name with
+      the one given in the jacoco.xml report with full argument list.
+    """
+    args = []
+    arg = ''
+    start = False
+    next_arg = ''
+    for c in desc:
+      if c == '(':
+        continue
+      if c == ')':
+        break
+
+      if start:
+        if c == ';':
+          start = False
+          next_arg = arg.replace('/', '.')
+        else:
+          arg = arg + c
+      else:
+        if c == 'L':
+          start = True
+          args.append(next_arg)
+          arg = ''
+          next_arg = ''
+        elif c in ['[', ']']:
+          next_arg = next_arg + c
+        else:
+          if c in JVM_CLASS_MAPPING:
+            args.append(next_arg)
+            next_arg = JVM_CLASS_MAPPING[c]
+
+    if next_arg:
+      args.append(next_arg)
+    return args
