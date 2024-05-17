@@ -1,0 +1,17 @@
+"functions":
+- "name": "[org.json.JSONArray].putAll(java.lang.String[])"
+  "params":
+  - "name": "var_Iterable"
+    "type": "java.lang.String[]"
+  "return_type": "void"
+  "signature": "[org.json.JSONArray].putAll(java.lang.String[])"
+- "name": "[org.json.JSONArray].putAll(int[])"
+  "params":
+  - "name": "var_Iterable"
+    "type": "int[]"
+  "return_type": "void"
+  "signature": "[org.json.JSONArray].putAll(int[])"
+"language": "jvm"
+"project": "json-java"
+"target_name": "JsonJavaFuzzer"
+"target_path": "/src/JsonJavaFuzzer.java"

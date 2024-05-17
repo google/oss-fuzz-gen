@@ -336,10 +336,28 @@ def _get_clean_arg_types(function: dict, project: str) -> list[str]:
   return [clean_type(arg_type) for arg_type in raw_arg_types]
 
 
-def _get_arg_names(function: dict, project: str) -> list[str]:
+def _get_arg_count(function: dict) -> int:
+  """Count the number of arguments for this function."""
+  raw_arg_types = (function.get('arg-types') or
+                   function.get('function_arguments', []))
+  return len(raw_arg_types)
+
+
+def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
-  arg_names = (function.get('arg-names') or
-               function.get('function_argument_names', []))
+  if language == 'jvm':
+    # The fuzz-introspector front end of JVM projects cannot get the original
+    # argument name. Thus the argument name here uses var_{argument_type} as
+    # argument name reference. Some argument types are full-qualified names of
+    # Java classes with [] and . and that is not allowed for Java variable names
+    # and they are removed and form the temporary argment name for reference.
+    jvm_args = _get_clean_arg_types(function, project)
+    arg_names = [
+        f'var_{name.split(".")[-1].replace("[]", "")}' for name in jvm_args
+    ]
+  else:
+    arg_names = (function.get('arg-names') or
+                 function.get('function_argument_names', []))
   if not arg_names:
     logging.error(
         'Missing argument names in project: %s\n'
@@ -351,6 +369,9 @@ def _get_arg_names(function: dict, project: str) -> list[str]:
 def get_function_signature(function: dict, project: str) -> str:
   """Returns the function signature."""
   function_signature = function.get('function_signature', '')
+  if function_signature == "N/A":
+    # For JVM projects, the full function signature are the raw function name
+    return get_raw_function_name(function, project)
   if not function_signature:
     logging.error(
         'Missing function signature in project: %s\n'
@@ -392,10 +413,18 @@ def populate_benchmarks_using_introspector(project: str, language: str,
     logging.error('No functions found using the oracles: %s', target_oracles)
     return []
 
-  filenames = [
-      os.path.basename(function['function_filename']) for function in functions
-  ]
-  result = project_src.search_source(project, filenames)
+  if language == 'jvm':
+    filenames = [
+        f'{function["function_filename"].split("$")[0].replace(".", "/")}.java'
+        for function in functions
+    ]
+  else:
+    filenames = [
+        os.path.basename(function['function_filename'])
+        for function in functions
+    ]
+
+  result = project_src.search_source(project, filenames, language)
   if not result:
     return []
 
@@ -405,17 +434,25 @@ def populate_benchmarks_using_introspector(project: str, language: str,
     logging.error('No fuzz target found in project %s.', project)
     return []
   logging.info('Fuzz target file found for project %s: %s', project, harness)
+
   target_name = get_target_name(project, harness)
   logging.info('Fuzz target binary found for project %s: %s', project,
                target_name)
 
   potential_benchmarks = []
   for function in functions:
+    if _get_arg_count(function) == 0:
+      # Skipping functions / methods that does not take in any arguments.
+      # Those functions / methods are not fuzz-worthy.
+      continue
+
     filename = os.path.basename(function['function_filename'])
-    if filename not in [os.path.basename(i) for i in interesting]:
+    if filename not in [os.path.basename(i) for i in interesting.keys()]:
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
+      # Ignore jvm project for this checking.
       logging.error('error: %s %s', filename, interesting.keys())
       continue
+
     function_signature = get_function_signature(function, project)
     if not function_signature:
       continue
@@ -429,7 +466,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                _get_clean_return_type(function, project),
                                _group_function_params(
                                    _get_clean_arg_types(function, project),
-                                   _get_arg_names(function, project)),
+                                   _get_arg_names(function, project, language)),
                                harness,
                                target_name,
                                function_dict=function))
