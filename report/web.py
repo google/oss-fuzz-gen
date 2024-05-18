@@ -42,7 +42,7 @@ BENCHMARK_DIR = ''
 
 MAX_RUN_LOGS_LEN = 16 * 1024
 
-TARGET_EXTS = ('.c', '.cc', '.cpp', '.cxx', '.java', '.py')
+TARGET_EXTS = ('.c', '.cc', '.cpp', '.cxx', '.c++', '.java', '.py')
 
 
 @dataclasses.dataclass
