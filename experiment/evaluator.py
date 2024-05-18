@@ -95,7 +95,7 @@ def load_existing_textcov(project: str,
         continue
 
       print(f'Loading existing textcov from {blob.name}')
-      with blob.open() as f:
+      with blob.open('rb') as f:
         existing_textcov.merge(textcov.Textcov.from_file(f))
 
   return existing_textcov
