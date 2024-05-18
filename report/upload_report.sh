@@ -54,7 +54,7 @@ fi
 
 mkdir results-report
 
-while true; do
+update_report() {
   # Spin up the web server generating the report (and bg the process).
   $PYTHON -m report.web "${RESULTS_DIR:?}" "${WEB_PORT:?}" "${BENCHMARK_SET:?}" "$MODEL" &
   pid_web=$!
@@ -109,9 +109,14 @@ while true; do
     --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
   gsutil -q cp -r 'training_data' \
     "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
+}
+
+while true; do
+  update_report
 
   if [[ -f /experiment_ended ]]; then
     echo "Experiment finished."
+    update_report  # Ensure the report is updated one last time before exiting.
     exit
   fi
 
