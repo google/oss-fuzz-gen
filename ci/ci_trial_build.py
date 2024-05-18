@@ -24,7 +24,7 @@ import github  # type: ignore
 import request_pr_exp
 
 TRIGGER_COMMAND = '/gcbrun'
-TRIAL_BUILD_COMMAND_STR = f'{TRIGGER_COMMAND} request_pr_exp.py '
+TRIAL_BUILD_COMMAND_STR = f'{TRIGGER_COMMAND} exp '
 SKIP_COMMAND_STR = f'{TRIGGER_COMMAND} skip'
 
 
@@ -57,12 +57,9 @@ def get_latest_gcbrun_command(comments):
   return None
 
 
-def exec_command_from_github(pull_request_number, repo, branch):
+def exec_command_from_github(pull_request_number):
   """Executes the gcbrun command for trial_build.py in the most recent command
   on |pull_request_number|."""
-  del repo
-  del branch
-
   comments = get_comments(pull_request_number)
   command = get_latest_gcbrun_command(comments)
   if command is None:
@@ -80,9 +77,7 @@ def main():
   """Entrypoint for GitHub CI into trial_build.py"""
   logging.basicConfig(level=logging.INFO)
   pull_request_number = int(os.environ['PULL_REQUEST_NUMBER'])
-  branch = os.environ['BRANCH']
-  repo = os.environ['REPO']
-  result = exec_command_from_github(pull_request_number, repo, branch)
+  result = exec_command_from_github(pull_request_number)
   if result or result is None:
     return 0
   return 1
