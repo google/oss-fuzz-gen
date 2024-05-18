@@ -111,15 +111,12 @@ update_report() {
     "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
 }
 
-while true; do
+while [[ ! -f /experiment_ended ]]; do
   update_report
-
-  if [[ -f /experiment_ended ]]; then
-    echo "Experiment finished."
-    update_report  # Ensure the report is updated one last time before exiting.
-    exit
-  fi
-
   echo "Experiment is running..."
   sleep 600
 done
+
+echo "Experiment finished."
+update_report
+echo "Final report uploaded."
