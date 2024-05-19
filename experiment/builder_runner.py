@@ -110,7 +110,11 @@ class BuilderRunner:
         f'-max_total_time={self.run_timeout}',
         # Without this flag, libFuzzer only consider short inputs in short
         # experiments, which lowers the coverage for quick performance tests.
-        '-len_control=0'
+        '-len_control=0',
+        # Timeout per testcase.
+        '-timeout=30',
+        # Truncate testcase.
+        '-max_len=4096',
     ]
 
   def _get_minimum_func_name(self, func_sig: str) -> str:
