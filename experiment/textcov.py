@@ -160,9 +160,16 @@ class Textcov:
     try:
       # Try decoding the file content with UTF-8 encoding
       return file_content.decode('utf-8')
-    except UnicodeDecodeError:
+    except UnicodeDecodeError as e:
       # If UTF-8 decoding fails, detect the file's encoding
-      raw_data = file_content[:sample_size]
+      error_start_index = e.start
+      raw_data = file_content[error_start_index -
+                              sample_size / 2:error_start_index +
+                              sample_size / 2]
+      if error_start_index < sample_size:
+        raw_data = file_content[:sample_size]
+      if error_start_index + sample_size >= len(file_content):
+        raw_data = file_content[-sample_size:]
       result = chardet.detect(raw_data)
       encoding = result['encoding']
       if encoding is None:
