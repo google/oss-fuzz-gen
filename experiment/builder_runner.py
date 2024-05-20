@@ -113,8 +113,6 @@ class BuilderRunner:
         '-len_control=0',
         # Timeout per testcase.
         '-timeout=30',
-        # Truncate testcase.
-        '-max_len=4096',
     ]
 
   def _get_minimum_func_name(self, func_sig: str) -> str:
