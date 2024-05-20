@@ -107,8 +107,8 @@ class Benchmark:
     for instance in os.listdir(status_dir):
       status_json_path = os.path.join(status_dir, instance, 'result.json')
       if not os.path.isfile(status_json_path):
-        logging.warning('Missing result JSON of benchmark instance: %s - %s',
-                        self.benchmark, instance)
+        logging.info('Missing result JSON of benchmark instance: %s - %s',
+                     self.benchmark, instance)
         continue
       with open(status_json_path) as file:
         try:
