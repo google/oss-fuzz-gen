@@ -89,7 +89,7 @@ FROM gcr.io/oss-fuzz-base/base-builder
 RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \\
                       pkg-config curl check
 COPY *.sh *.cpp *.c $SRC/
-RUN git clone {repo_url} {project_repo_dir}
+RUN git clone --recurse-submodules {repo_url} {project_repo_dir}
 WORKDIR {project_repo_dir}
 '''
 
