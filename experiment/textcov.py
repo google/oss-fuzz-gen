@@ -16,10 +16,13 @@
 from __future__ import annotations
 
 import dataclasses
+import logging
 import re
 import subprocess
 import xml.etree.ElementTree as ET
-from typing import List, Optional
+from typing import BinaryIO, List, Optional
+
+import chardet
 
 # No spaces at the beginning, and ends with a ":".
 FUNCTION_PATTERN = re.compile(r'^([^\s].*):$')
@@ -147,6 +150,30 @@ class Textcov:
   language: str = 'c++'
 
   @classmethod
+  def _read_file_with_fallback(cls,
+                               file_handle: BinaryIO,
+                               sample_size: int = 1000) -> str:
+    """Reads file_handle assuming its encoding is utf-8, detects the encoding
+    if otherwise."""
+    file_content = file_handle.read()
+
+    try:
+      # Try decoding the file content with UTF-8 encoding
+      return file_content.decode('utf-8')
+    except UnicodeDecodeError:
+      # If UTF-8 decoding fails, detect the file's encoding
+      raw_data = file_content[:sample_size]
+      result = chardet.detect(raw_data)
+      encoding = result['encoding']
+      if encoding is None:
+        logging.warning('Failed to decode.')
+        raise UnicodeDecodeError("chardet", raw_data, 0, len(raw_data),
+                                 "Cannot detect encoding")
+
+      # Decode the file content with the detected encoding
+      return file_content.decode(encoding)
+
+  @classmethod
   def from_file(
       cls,
       file_handle,
@@ -160,7 +187,11 @@ class Textcov:
 
     current_function_name: str = ''
     current_function: Function = Function()
-    demangled = demangle(file_handle.read())
+    try:
+      demangled = demangle(cls._read_file_with_fallback(file_handle))
+    except Exception as e:
+      logging.warning('Decoding failure: %s', e)
+      demangled = ''
     demangled = _discard_fuzz_target_lines(demangled)
 
     for line in demangled.split('\n'):

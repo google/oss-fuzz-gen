@@ -110,7 +110,9 @@ class BuilderRunner:
         f'-max_total_time={self.run_timeout}',
         # Without this flag, libFuzzer only consider short inputs in short
         # experiments, which lowers the coverage for quick performance tests.
-        '-len_control=0'
+        '-len_control=0',
+        # Timeout per testcase.
+        '-timeout=30',
     ]
 
   def _get_minimum_func_name(self, func_sig: str) -> str:
@@ -578,7 +580,7 @@ class BuilderRunner:
           'textcov_reports', f'{self.benchmark.target_name}.covreport')
       target_basename = os.path.basename(self.benchmark.target_path)
 
-      with open(local_textcov_location) as f:
+      with open(local_textcov_location, 'rb') as f:
         new_textcov = textcov.Textcov.from_file(
             f,
             ignore_function_patterns=[
@@ -794,7 +796,7 @@ class CloudBuilderRunner(BuilderRunner):
           f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
           '.covreport')
       if blob.exists():
-        with blob.open() as f:
+        with blob.open('rb') as f:
           run_result.coverage = textcov.Textcov.from_file(
               f,
               ignore_function_patterns=[
