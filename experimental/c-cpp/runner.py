@@ -124,15 +124,19 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
                           cwd=oss_fuzz_base)
 
 
-def run_coverage_runs(oss_fuzz_base, worker_name):
-
+def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
+  """Runs a code coverage report generation for each of the successfully
+  generated projects for the given worker. Will and log the line code coverage
+  as reported by the code coverage generation. This must be done outside of
+  the harness generation because we need the OSS-Fuzz base-runner image, where
+  the generation is based on the OSS-Fuzz base-builder image."""
   worker_out = os.path.join(
       oss_fuzz_base, 'build', 'out', worker_name,
       'autogen-results-%d' % (int(worker_name.split('-')[-1])))
 
   for auto_fuzz_dir in os.listdir(worker_out):
     print(auto_fuzz_dir)
-    # Is tehre a coverage dir?
+    # Only continue if there is a corpus collected.
     corpus_dir = os.path.join(worker_out, auto_fuzz_dir, 'corpus',
                               'generated-fuzzer-no-leak')
     if not os.path.isdir(corpus_dir):
@@ -140,7 +144,7 @@ def run_coverage_runs(oss_fuzz_base, worker_name):
     oss_fuzz_dir = os.path.join(
         os.path.join(worker_out, auto_fuzz_dir, 'oss-fuzz-project'))
 
-    # create a temp project
+    # Create an OSS-Fuzz project that will be used to generate the coverage.
     target_cov_name = worker_name + '-cov-' + auto_fuzz_dir
     target_cov_project = os.path.join(oss_fuzz_base, 'projects',
                                       target_cov_name)
@@ -157,7 +161,7 @@ def run_coverage_runs(oss_fuzz_base, worker_name):
     except subprocess.CalledProcessError:
       continue
 
-    # Run coverage and save report in the main folder
+    # Run coverage and save report in the main folder.
     dst_corpus_path = os.path.join(oss_fuzz_base, 'build', 'corpus',
                                    target_cov_name)
     if os.path.isdir(dst_corpus_path):
