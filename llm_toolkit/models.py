@@ -299,12 +299,22 @@ class VertexAIModel(GoogleModel):
 
   def cloud_setup(self):
     """Sets Vertex AI cloud location."""
-    vertex_ai_locations = os.getenv('VERTEX_AI_LOCATIONS',
-                                    'us-central1').split(',')
-    location = random.sample(vertex_ai_locations, 1)[0]
+    vertex_ai_locations = list(
+        set(os.getenv('VERTEX_AI_LOCATIONS', 'us-central1').split(',')))
+    while vertex_ai_locations:
+      location = random.choice(vertex_ai_locations)
+      try:
+        logging.info('Using location %s for Vertex AI', location)
+        vertexai.init(location=location)
+        return
+      except ValueError as e:
+        logging.warning('Initialization failed for location (%s): %s', location,
+                        e)
+        vertex_ai_locations.remove(location)
+        os.environ['VERTEX_AI_LOCATIONS'] = ','.join(vertex_ai_locations)
 
-    logging.info('Using location %s for Vertex AI', location)
-    vertexai.init(location=location,)
+    logging.critical(
+        'All locations have been exhausted. Cannot initialize Vertex AI.')
 
   def get_model(self) -> Any:
     return CodeGenerationModel.from_pretrained(self._vertex_ai_model)
