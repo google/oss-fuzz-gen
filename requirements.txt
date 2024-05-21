@@ -169,7 +169,7 @@ pyyaml==6.0
     # via -r requirements.in
 regex==2024.5.15
     # via tiktoken
-requests==2.31.0
+requests==2.32.0
     # via
     #   -r requirements.in
     #   google-api-core
