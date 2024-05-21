@@ -126,8 +126,9 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
 
 def run_coverage_runs(oss_fuzz_base, worker_name):
 
-  worker_out = os.path.join(oss_fuzz_base, 'build', 'out', worker_name,
-                            'autogen-results-%d'%(int(worker_name.split('-')[-1])))
+  worker_out = os.path.join(
+      oss_fuzz_base, 'build', 'out', worker_name,
+      'autogen-results-%d' % (int(worker_name.split('-')[-1])))
 
   for auto_fuzz_dir in os.listdir(worker_out):
     print(auto_fuzz_dir)
@@ -149,10 +150,10 @@ def run_coverage_runs(oss_fuzz_base, worker_name):
     shutil.copytree(oss_fuzz_dir, target_cov_project)
     try:
       subprocess.check_call(
-        'python3 infra/helper.py build_fuzzers --sanitizer=coverage %s' %
-        (target_cov_name),
-        shell=True,
-        cwd=oss_fuzz_base)
+          'python3 infra/helper.py build_fuzzers --sanitizer=coverage %s' %
+          (target_cov_name),
+          shell=True,
+          cwd=oss_fuzz_base)
     except subprocess.CalledProcessError:
       continue
 
@@ -166,10 +167,10 @@ def run_coverage_runs(oss_fuzz_base, worker_name):
 
     try:
       subprocess.check_call(
-        'python3 infra/helper.py coverage --port \'\' --no-corpus-download %s' %
-        (target_cov_name),
-        shell=True,
-        cwd=oss_fuzz_base)
+          'python3 infra/helper.py coverage --port \'\' --no-corpus-download %s'
+          % (target_cov_name),
+          shell=True,
+          cwd=oss_fuzz_base)
     except subprocess.CalledProcessError:
       continue
 
