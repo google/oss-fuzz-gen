@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements.in
 #
-annotated-types==0.6.0
+annotated-types==0.7.0
     # via pydantic
 anyio==4.3.0
     # via
@@ -33,6 +33,8 @@ dill==0.3.8
     # via pylint
 distro==1.9.0
     # via openai
+docstring-parser==0.16
+    # via google-cloud-aiplatform
 flask==2.3.2
     # via -r requirements.in
 google-api-core[grpc]==2.19.0
@@ -45,11 +47,12 @@ google-api-core[grpc]==2.19.0
 google-auth==2.29.0
     # via
     #   google-api-core
+    #   google-cloud-aiplatform
     #   google-cloud-bigquery
     #   google-cloud-core
     #   google-cloud-resource-manager
     #   google-cloud-storage
-google-cloud-aiplatform==1.39.0
+google-cloud-aiplatform==1.51.0
     # via -r requirements.in
 google-cloud-bigquery==3.23.0
     # via google-cloud-aiplatform
@@ -76,7 +79,7 @@ googleapis-common-protos[grpc]==1.63.0
     #   grpcio-status
 grpc-google-iam-v1==0.13.0
     # via google-cloud-resource-manager
-grpcio==1.63.0
+grpcio==1.64.0
     # via
     #   google-api-core
     #   googleapis-common-protos
@@ -152,7 +155,9 @@ pyasn1==0.6.0
 pyasn1-modules==0.4.0
     # via google-auth
 pydantic==2.7.1
-    # via openai
+    # via
+    #   google-cloud-aiplatform
+    #   openai
 pydantic-core==2.18.2
     # via pydantic
 pylint==2.17.5
