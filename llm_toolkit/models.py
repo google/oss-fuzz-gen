@@ -304,12 +304,13 @@ class VertexAIModel(GoogleModel):
     while vertex_ai_locations:
       location = random.choice(vertex_ai_locations)
       try:
-        logging.info('Using location %s for Vertex AI', location)
+        logging.info('Using location (%s) for Vertex AI (%s).', location,
+                     self.name)
         vertexai.init(location=location)
         return
       except ValueError as e:
-        logging.warning('Initialization failed for location (%s): %s', location,
-                        e)
+        logging.warning('Failed to use location (%s) for Vertex AI (%s): %s',
+                        self.name, location, e)
         vertex_ai_locations.remove(location)
         os.environ['VERTEX_AI_LOCATIONS'] = ','.join(vertex_ai_locations)
 
