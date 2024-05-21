@@ -299,10 +299,10 @@ class VertexAIModel(GoogleModel):
 
   def cloud_setup(self):
     """Sets Vertex AI cloud location."""
-    vertex_ai_locations = list(
-        set(os.getenv('VERTEX_AI_LOCATIONS', 'us-central1').split(',')))
+    vertex_ai_locations = set(
+        os.getenv('VERTEX_AI_LOCATIONS', 'us-central1').split(','))
     while vertex_ai_locations:
-      location = random.choice(vertex_ai_locations)
+      location = random.choice(list(vertex_ai_locations))
       try:
         logging.info('Using location (%s) for Vertex AI (%s).', location,
                      self.name)
@@ -311,6 +311,16 @@ class VertexAIModel(GoogleModel):
       except ValueError as e:
         logging.warning('Failed to use location (%s) for Vertex AI (%s): %s',
                         self.name, location, e)
+        # Option 1: Parse the supported locations from the ValueError message.
+        match = re.search(r'frozenset\(\{(.+?)\}\)', str(e))
+        if match:
+          supported_locations = set(match.group(1).replace("'", "").split(', '))
+          if supported_locations:
+            os.environ['VERTEX_AI_LOCATIONS'] = ','.join(supported_locations)
+            vertex_ai_locations = supported_locations
+            continue
+        logging.error('No supported locations parsed from ValueError.')
+        # Option 2: Failed to parse, use the ENV var.
         vertex_ai_locations.remove(location)
         os.environ['VERTEX_AI_LOCATIONS'] = ','.join(vertex_ai_locations)
 
