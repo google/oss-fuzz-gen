@@ -243,9 +243,7 @@ def run_autogen(github_url,
   except subprocess.CalledProcessError:
     pass
 
-  # At this point we need to run a coverage report generation for each
-  # successful project. We cannot do this in the base-builder image because
-  # OSS-Fuzz coverage utilities are in the base-runner.
+  # Generate coverage report for each successful project.
   run_coverage_runs(oss_fuzz_base, worker_project)
 
 
