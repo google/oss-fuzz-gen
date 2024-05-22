@@ -4,7 +4,7 @@ google-cloud-storage==2.9.0
 Jinja2==3.1.4
 PyYAML==6.0
 openai==1.16.2
-requests==2.31.0
+requests==2.32.0
 #pytype==2023.7.28
 Flask==2.3.2
 yapf==0.40.1
