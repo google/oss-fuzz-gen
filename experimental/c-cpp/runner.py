@@ -159,6 +159,7 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
       ]
       subprocess.check_call(' '.join(cmd_to_run), shell=True, cwd=oss_fuzz_base)
     except subprocess.CalledProcessError:
+      print(f'Failed coverage build: {target_cov_name}')
       continue
 
     # Run coverage and save report in the main folder.
@@ -176,6 +177,7 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
       ]
       subprocess.check_call(' '.join(cmd_to_run), shell=True, cwd=oss_fuzz_base)
     except subprocess.CalledProcessError:
+      print(f'Failed coverage run: {target_cov_name}')
       continue
 
 
