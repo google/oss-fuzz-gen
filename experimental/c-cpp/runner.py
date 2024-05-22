@@ -124,6 +124,63 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
                           cwd=oss_fuzz_base)
 
 
+def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
+  """Runs a code coverage report generation for each of the successfully
+  generated projects for the given worker. Will and log the line code coverage
+  as reported by the code coverage generation. This must be done outside of
+  the harness generation because we need the OSS-Fuzz base-runner image, where
+  the generation is based on the OSS-Fuzz base-builder image."""
+  worker_out = os.path.join(
+      oss_fuzz_base, 'build', 'out', worker_name,
+      'autogen-results-%d' % (int(worker_name.split('-')[-1])))
+
+  for auto_fuzz_dir in os.listdir(worker_out):
+    print(auto_fuzz_dir)
+    # Only continue if there is a corpus collected.
+    corpus_dir = os.path.join(worker_out, auto_fuzz_dir, 'corpus',
+                              'generated-fuzzer-no-leak')
+    if not os.path.isdir(corpus_dir):
+      continue
+    oss_fuzz_dir = os.path.join(
+        os.path.join(worker_out, auto_fuzz_dir, 'oss-fuzz-project'))
+
+    # Create an OSS-Fuzz project that will be used to generate the coverage.
+    target_cov_name = worker_name + '-cov-' + auto_fuzz_dir
+    target_cov_project = os.path.join(oss_fuzz_base, 'projects',
+                                      target_cov_name)
+
+    if os.path.isdir(target_cov_project):
+      shutil.rmtree(target_cov_project)
+    shutil.copytree(oss_fuzz_dir, target_cov_project)
+    try:
+      cmd_to_run = [
+          'python3', 'infra/helper.py', 'build_fuzzers', '--sanitizer=coverage',
+          target_cov_name
+      ]
+      subprocess.check_call(' '.join(cmd_to_run), shell=True, cwd=oss_fuzz_base)
+    except subprocess.CalledProcessError:
+      print(f'Failed coverage build: {target_cov_name}')
+      continue
+
+    # Run coverage and save report in the main folder.
+    dst_corpus_path = os.path.join(oss_fuzz_base, 'build', 'corpus',
+                                   target_cov_name)
+    if os.path.isdir(dst_corpus_path):
+      shutil.rmtree(dst_corpus_path)
+    os.makedirs(dst_corpus_path, exist_ok=True)
+    shutil.copytree(corpus_dir, os.path.join(dst_corpus_path, 'fuzzer'))
+
+    try:
+      cmd_to_run = [
+          'python3', 'infra/helper.py', 'coverage', '--port', '\'\'',
+          '--no-corpus-download', target_cov_name
+      ]
+      subprocess.check_call(' '.join(cmd_to_run), shell=True, cwd=oss_fuzz_base)
+    except subprocess.CalledProcessError:
+      print(f'Failed coverage run: {target_cov_name}')
+      continue
+
+
 def run_autogen(github_url,
                 outdir,
                 oss_fuzz_base,
@@ -187,6 +244,9 @@ def run_autogen(github_url,
       subprocess.check_call(cmd_to_run, cwd=oss_fuzz_base, shell=True)
   except subprocess.CalledProcessError:
     pass
+
+  # Generate coverage report for each successful project.
+  run_coverage_runs(oss_fuzz_base, worker_project)
 
 
 def read_targets_file(filename: str) -> List[str]:

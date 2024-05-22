@@ -89,7 +89,7 @@ FROM gcr.io/oss-fuzz-base/base-builder
 RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \\
                       pkg-config curl check
 COPY *.sh *.cpp *.c $SRC/
-RUN git clone {repo_url} {project_repo_dir}
+RUN git clone --recurse-submodules {repo_url} {project_repo_dir}
 WORKDIR {project_repo_dir}
 '''
 
@@ -1156,9 +1156,12 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
   print('Running fuzzer')
   run_out = open(os.path.join(fuzzer_gen_dir, 'fuzz-run.out'), 'w')
   run_err = open(os.path.join(fuzzer_gen_dir, 'fuzz-run.err'), 'w')
+  corpus_dir = os.path.join(fuzzer_gen_dir, 'corpus',
+                            os.path.basename(result_to_validate['fuzzer-out']))
+  os.makedirs(corpus_dir)
   try:
-    subprocess.check_call('%s -max_total_time=20' %
-                          (result_to_validate['fuzzer-out']),
+    subprocess.check_call('%s -max_total_time=20 %s' %
+                          (result_to_validate['fuzzer-out'], corpus_dir),
                           shell=True,
                           env=modified_env,
                           stdout=run_out,
@@ -1172,9 +1175,13 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
   print('Running fuzzer without leak detection')
   run_out = open(os.path.join(fuzzer_gen_dir, 'fuzz-no-leak-run.out'), 'w')
   run_err = open(os.path.join(fuzzer_gen_dir, 'fuzz-no-leak-run.err'), 'w')
+  corpus_no_leak = os.path.join(
+      fuzzer_gen_dir, 'corpus',
+      os.path.basename(result_to_validate['fuzzer-out']) + '-no-leak')
+  os.makedirs(corpus_no_leak, exist_ok=True)
   try:
-    subprocess.check_call('%s -max_total_time=20 -detect_leaks=0' %
-                          (result_to_validate['fuzzer-out']),
+    subprocess.check_call('%s -max_total_time=20 -detect_leaks=0 %s' %
+                          (result_to_validate['fuzzer-out'], corpus_no_leak),
                           shell=True,
                           env=modified_env,
                           stdout=run_out,
