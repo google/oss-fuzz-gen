@@ -153,9 +153,9 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
       shutil.rmtree(target_cov_project)
     shutil.copytree(oss_fuzz_dir, target_cov_project)
     try:
+      cmd_to_run = ['python3', 'infra/helper.py', 'build_fuzzers', '--sanitizer=coverage', target_cov_name]
       subprocess.check_call(
-          'python3 infra/helper.py build_fuzzers --sanitizer=coverage %s' %
-          (target_cov_name),
+          ' '.join(cmd_to_run),
           shell=True,
           cwd=oss_fuzz_base)
     except subprocess.CalledProcessError:
@@ -170,9 +170,9 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
     shutil.copytree(corpus_dir, os.path.join(dst_corpus_path, 'fuzzer'))
 
     try:
+      cmd_to_run = ['python3', 'infra/helper.py', 'coverage', '--port', '\'\'', '--no-corpus-download', target_cov_name]
       subprocess.check_call(
-          'python3 infra/helper.py coverage --port \'\' --no-corpus-download %s'
-          % (target_cov_name),
+          ' '.join(cmd_to_run),
           shell=True,
           cwd=oss_fuzz_base)
     except subprocess.CalledProcessError:
