@@ -1,0 +1,17 @@
+"functions":
+- "name": "LLVMFuzzerCustomMutator"
+  "params":
+  - "name": ""
+    "type": "char *"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "int"
+  "return_type": "size_t"
+  "signature": "size_t LLVMFuzzerCustomMutator(uint8_t *, size_t, size_t, unsigned int)"
+"language": "c++"
+"project": "relic"
+"target_name": "cryptofuzz-relic"
+"target_path": "/src/cryptofuzz/entry.cpp"

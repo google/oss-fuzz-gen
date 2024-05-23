@@ -1,0 +1,13 @@
+"functions":
+- "name": "fuzz_main"
+  "params":
+  - "name": "argc"
+    "type": "int"
+  - "name": "argv"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int fuzz_main(int, char **)"
+"language": "c++"
+"project": "qubes-os"
+"target_name": "db-daemon_fuzzer"
+"target_path": "/src/qubes-os/qubes-core-qubesdb/fuzz/db-daemon_fuzzer.c"
