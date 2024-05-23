@@ -23,9 +23,12 @@ from abc import abstractmethod
 from typing import Any, Dict, List, Optional, Tuple
 
 import build_generator
+import templates
+
 import cxxfilt
 import openai
 import yaml
+
 
 MAX_FUZZ_PER_HEURISTIC = 15
 INTROSPECTOR_OSS_FUZZ_DIR = '/src/inspector'
@@ -37,120 +40,6 @@ FUZZER_PRE_HEADERS = '''#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 '''
-
-CPP_BASE_TEMPLATE = '''#include <stdint.h>
-#include <iostream>
-
-extern "C" int
-LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
-{
-    std::string input(reinterpret_cast<const char*>(data), size);
-
-    // Insert fuzzer contents here
-    // input string contains fuzz input.
-
-    // end of fuzzer contents
-
-    return 0;
-}'''
-
-C_BASE_TEMPLATE = '''#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
-
-int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
-{
-    printf("Hello world\\n");
-    // Insert fuzzer contents here
-    // input string contains fuzz input.
-
-    // end of fuzzer contents
-
-    return 0;
-}'''
-
-CLEAN_DOCKER = '''# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-################################################################################
-
-FROM gcr.io/oss-fuzz-base/base-builder
-RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \\
-                      pkg-config curl check
-COPY *.sh *.cpp *.c $SRC/
-RUN git clone --recurse-submodules {repo_url} {project_repo_dir}
-WORKDIR {project_repo_dir}
-'''
-
-CLEAN_DOCKER_CFLITE = '''# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-################################################################################
-
-FROM gcr.io/oss-fuzz-base/base-builder
-RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \\
-                      pkg-config curl check
-COPY . $SRC/{project_repo_dir}
-COPY .clusterfuzzlite/build.sh $SRC/build.sh
-COPY .clusterfuzzlite/*.cpp $SRC/
-COPY .clusterfuzzlite/*.c $SRC/
-WORKDIR {project_repo_dir}
-'''
-
-CFLITE_TEMPLATE = """name: ClusterFuzzLite PR fuzzing
-on:
-  workflow_dispatch:
-  pull_request:
-    branches: [ master ]
-permissions: read-all
-jobs:
-  PR:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        sanitizer: [address]
-    steps:
-    - name: Build Fuzzers (${{ matrix.sanitizer }})
-      id: build
-      uses: google/clusterfuzzlite/actions/build_fuzzers@v1
-      with:
-        sanitizer: ${{ matrix.sanitizer }}
-        language: c++
-        bad-build-check: false
-    - name: Run Fuzzers (${{ matrix.sanitizer }})
-      id: run
-      uses: google/clusterfuzzlite/actions/run_fuzzers@v1
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        fuzz-seconds: 100
-        mode: 'code-change'
-        report-unreproducible-crashes: false
-        sanitizer: ${{ matrix.sanitizer }}
-"""
-
 
 def setup_model(model: str):
   global LLM_MODEL
@@ -945,8 +834,8 @@ def refine_static_libs(results):
 
 def get_language_defaults(language: str):
   compilers_and_flags = {
-      'c': ('$CC', '$CFLAGS', '/src/empty-fuzzer.c', C_BASE_TEMPLATE),
-      'c++': ('$CXX', '$CXXFLAGS', '/src/empty-fuzzer.cpp', CPP_BASE_TEMPLATE),
+      'c': ('$CC', '$CFLAGS', '/src/empty-fuzzer.c', templates.C_BASE_TEMPLATE),
+      'c++': ('$CXX', '$CXXFLAGS', '/src/empty-fuzzer.cpp', templates.CPP_BASE_TEMPLATE),
   }
   return compilers_and_flags[language]
 
@@ -1229,7 +1118,7 @@ def create_clean_oss_fuzz_from_success(github_repo: str, success_dir: str,
 
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
-  dockerfile = CLEAN_DOCKER.format(repo_url=github_repo,
+  dockerfile = templates.CLEAN_OSS_FUZZ_DOCKER.format(repo_url=github_repo,
                                    project_repo_dir=project_repo_dir)
   with open(os.path.join(oss_fuzz_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
@@ -1268,7 +1157,7 @@ def create_clean_clusterfuzz_lite_from_success(github_repo: str,
 
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
-  dockerfile = CLEAN_DOCKER_CFLITE.format(project_repo_dir=project_repo_dir)
+  dockerfile = templates.CLEAN_DOCKER_CFLITE.format(project_repo_dir=project_repo_dir)
   with open(os.path.join(cflite_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
@@ -1283,7 +1172,7 @@ def create_clean_clusterfuzz_lite_from_success(github_repo: str,
     f.write(clean_build_content)
 
   with open(os.path.join(cflite_folder, 'cflite_pr.yml'), 'w') as f:
-    f.write(CFLITE_TEMPLATE)
+    f.write(templates.CFLITE_TEMPLATE)
 
 
 def convert_test_build_to_clean_build(test_build_script: str,

@@ -283,8 +283,7 @@ class AutogenScannerSH(AutoBuildBase):
     super().__init__()
     self.matches_found = {
         'configure.ac': [],
-        'autogen.sh': [],
-        'Makefile': [],
+        'autogen.sh': []
     }
 
   def steps_to_build(self):
