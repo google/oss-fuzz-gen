@@ -21,6 +21,7 @@ import re
 import sys
 from typing import Callable, Optional
 
+from data_prep import analyze_error_msg as analyze_err
 from experiment import benchmark as benchmarklib
 from llm_toolkit import models
 from llm_toolkit import output_parser as parser
@@ -281,11 +282,12 @@ def get_fuzz_target_compile_output(target_names: list[str],
 
 
 def extract_jcc_errlog_message(errlog_path: str,
-                               project_target_basename: str) -> list[str]:
+                               benchmark: benchmarklib.Benchmark) -> list[str]:
   """Extracts error messages from jcc's err.log."""
   with open(errlog_path) as errlog_file:
     log_lines = errlog_file.readlines()
 
+  project_target_basename = os.path.basename(benchmark.target_path)
   target_names = get_fuzz_target_names(project_target_basename)
 
   command_pattern = re.compile(r'\[.*clang(?:\+\+)? (.*)\]\n?')
@@ -337,17 +339,17 @@ def extract_jcc_errlog_message(errlog_path: str,
       _strip_color_code(line).rstrip()
       for line in log_lines[error_lines_range[0]:error_lines_range[1]]
   ]
-  return group_error_messages(errors)
+  return errors
 
 
 def extract_error_message(log_path: str,
-                          project_target_basename: str) -> list[str]:
-  """Extracts error message and its context from the file in |log_path|."""
+                          benchmark: benchmarklib.Benchmark) -> list[str]:
+  """Extracts error message from the file in |log_path|."""
 
   with open(log_path) as log_file:
     log_lines = log_file.readlines()
 
-  target_name, _ = os.path.splitext(project_target_basename)
+  target_name, _ = os.path.splitext(os.path.basename(benchmark.target_path))
 
   error_lines_range: list[Optional[int]] = [None, None]
   temp_range: list[Optional[int]] = [None, None]
@@ -396,11 +398,15 @@ def extract_error_message(log_path: str,
       _strip_color_code(line).rstrip()
       for line in log_lines[error_lines_range[0]:error_lines_range[1]]
   ]
-  return group_error_messages(errors)
+  return errors
 
 
-def group_error_messages(error_lines: list[str]) -> list[str]:
-  """Groups multi-line error block into one string."""
+def group_error_messages(benchmark: benchmarklib.Benchmark,
+                         error_lines: list[str]) -> analyze_err.ErrorAnalyzer:
+  """
+  Groups multi-line error block into one string and return an ErrorAnalyzer
+  for prompt building.
+  """
   clang_pattern = re.compile(r'(\S*:\d+:\d+: .+: .+)|'
                              r'(In file included from \S*:\d+:)')
   gnu_ld_start_string = '/usr/bin/ld: '
@@ -408,14 +414,17 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
 
   first_line = error_lines[0]
   if clang_pattern.fullmatch(first_line):
-    return group_clang_errors(error_lines)
+    return analyze_err.ClangDiagErrorAnalyzer(benchmark,
+                                              group_clang_errors(error_lines))
   if first_line.startswith(gnu_ld_start_string):
-    return group_gnu_ld_errors(error_lines)
+    return analyze_err.GNULinkerErrorAnalyzer(benchmark,
+                                              group_gnu_ld_errors(error_lines))
   if first_line.startswith(llvm_lld_start_string):
-    return group_llvm_lld_errors(error_lines)
+    return analyze_err.LLVMLinkerErrorAnalyzer(
+        benchmark, group_llvm_lld_errors(error_lines))
   # Unknown error type, just return lines ungrouped.
-  logging.warning('Unknown error')  # debug
-  return error_lines
+  logging.warning('Unknown error: %s', '\n'.join(error_lines))  # debug
+  return analyze_err.UnknownErrorAnalyzer(benchmark, error_lines)
 
 
 def group_clang_errors(error_lines: list[str]) -> list[str]:
@@ -473,20 +482,21 @@ def group_clang_errors(error_lines: list[str]) -> list[str]:
 def group_gnu_ld_errors(error_lines: list[str]) -> list[str]:
   """Groups GNU linker error lines into blocks."""
   reformatted_lines = []
-  # Strip linker name and separate multiple linker errors on the same line.
+  dwarf_error = 'DWARF error: invalid or unhandled FORM value: 0x25'
+  # Strip linker name, dwarf error and separate multiple linker errors on the
+  # same line.
   for line in error_lines:
+    line.replace(dwarf_error, '')
     reformatted_lines.extend(line.split('/usr/bin/ld: '))
 
   start_pattern = re.compile(r'\S*(\(\S*\))?: .*:')
-  sub_line_pattern = re.compile(r'(\S*:)?(\S*:)?\(\S*(\[\S*\])?\+\S*\): .*')
-  dwarf_error = 'DWARF error: '
   end_pattern = re.compile(
       r'clang.*: error: linker command failed with exit code 1 \(use -v to see '
       r'invocation\)')
   error_blocks = []
   curr_block = []
   for line in reformatted_lines:
-    if not line or line.startswith(dwarf_error):
+    if not line:
       continue
 
     if ((start_pattern.fullmatch(line) or end_pattern.fullmatch(line)) and

@@ -17,7 +17,6 @@ Prompt building tools.
 
 import logging
 import os
-import re
 from abc import abstractmethod
 from typing import Optional, Tuple
 
@@ -29,6 +28,7 @@ from data_prep import project_targets
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
+from llm_toolkit.code_fixer import group_error_messages
 
 DEFAULT_TEMPLATE_DIR: str = 'prompts/template_xml/'
 
@@ -65,11 +65,6 @@ EXAMPLES = {
 
 BUILD_ERROR_SUMMARY = 'The code has the following build issues:'
 FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
-
-# The following strings identify errors when the fuzz target is built with clang
-# and cannot be built with clang++, which should be removed.
-FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
-FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
 
 
 class PromptBuilder:
@@ -271,8 +266,8 @@ class DefaultTemplateBuilder(PromptBuilder):
                          errors: list[str]) -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming()
-    problem = self._format_fixer_problem(raw_code, error_desc, errors,
-                                         priming_weight)
+    problem = self._format_fixer_problem(benchmark, raw_code, error_desc,
+                                         errors, priming_weight)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -287,8 +282,9 @@ class DefaultTemplateBuilder(PromptBuilder):
     # in the case of structured prompts, we will create nested structures.
     return priming, priming_weight
 
-  def _format_fixer_problem(self, raw_code: str, error_desc: Optional[str],
-                            errors: list[str], priming_weight: int) -> str:
+  def _format_fixer_problem(self, benchmark: Benchmark, raw_code: str,
+                            error_desc: Optional[str], errors: list[str],
+                            priming_weight: int) -> str:
     """Formats a problem for code fixer based on the template."""
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
@@ -316,38 +312,11 @@ class DefaultTemplateBuilder(PromptBuilder):
     prompt_size += 20
 
     # We are processing errors one by one until the maximum prompt size reached.
-    diag_error_pattern = re.compile(r'^(\S*):\d+:\d+: (.+): (.+)')
-    include_error_pattern = re.compile(r'^In file included from (\S*):(\d+):')
-    raw_code_lines = raw_code.splitlines()
     selected_errors = []
     aux_info = []
-    for error in errors:
-      # Skip C only errors.
-      # TODO(Dongge): Fix JCC to address this.
-      # https://github.com/google/oss-fuzz-gen/pull/208/files/a0c0db2fd5860e6e4d434467c5ec9f949ee2cff1#r1571651507
-      if (FALSE_EXTERN_KEYWORD_ERROR in error or
-          FALSE_FUZZED_DATA_PROVIDER_ERROR in error):
-        continue
-
-      error_str = error
-      aux_str = ''
-
-      include_match = include_error_pattern.match(error)
-      if include_match:
-        src_path = include_match.group(1)
-        line_num = include_match.group(2)
-
-        if not re.search(src_path + r':\d+:\d+: note: ', error):
-          src_line = raw_code_lines[line_num - 1].strip()
-          aux_str = (f'<code>{src_line}</code> caused error, remove this line '
-                     f'or include necessary headers to fix the error.')
-          error_str = ''
-
-      diag_match = diag_error_pattern.match(error)
-      if diag_match:
-        # diag_message = diag_match.group(3)
-        # TODO: Parse diag and add src context.
-        pass
+    error_analyzer = group_error_messages(benchmark, errors)
+    for error in error_analyzer.errors:
+      error_str, aux_str = error_analyzer.process_error(error)
 
       error_token_num = 0
       aux_token_num = 0
@@ -385,7 +354,7 @@ class DefaultTemplateBuilder(PromptBuilder):
       logging.warning('Unexpected empty errors and error_desc')
     elif error_desc:
       logging.info('Using error_desc: %s', str(error_desc))
-    elif errors:
+    else:
       logging.info('Empty error_desc, no error selected for prompt')
     return problem
 

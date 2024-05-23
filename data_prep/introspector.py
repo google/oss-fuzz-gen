@@ -197,6 +197,15 @@ def query_introspector_function_source(project: str, func_sig: str) -> str:
   return _get_data(resp, 'source', '')
 
 
+def query_introspector_function_source_path(project: str, func_sig: str) -> str:
+  """Queries FuzzIntrospector API for source code of |func_sig|."""
+  resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
+      'project': project,
+      'function_signature': func_sig
+  })
+  return _get_data(resp, 'filepath', '')
+
+
 def query_introspector_source_code(project: str, filepath: str, begin_line: int,
                                    end_line: int) -> str:
   """Queries FuzzIntrospector API for source code of a
