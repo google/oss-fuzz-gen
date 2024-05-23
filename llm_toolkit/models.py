@@ -158,8 +158,8 @@ class LLM:
 
     return False
 
-  def with_retry_on_error(  # pylint: disable=inconsistent-return-statements
-      self, func: Callable, api_err: Type[Exception]) -> Any:
+  def with_retry_on_error(self, func: Callable,
+                          api_err: Type[Exception]) -> Any:
     """
     Retry when the function returns an expected error with exponential backoff.
     """
@@ -177,6 +177,7 @@ class LLM:
               attempt, err, traceback.format_exc())
           raise err
         self._delay_for_retry(attempt_count=attempt)
+    return None
 
   def _save_output(self, index: int, content: str, response_dir: str) -> None:
     """Saves the raw |content| from the model ouput."""
@@ -231,6 +232,7 @@ class GPT(LLM):
                                                n=self.num_samples,
                                                temperature=self.temperature),
         openai.OpenAIError)
+    # TODO: Add a default value for completion.
     if log_output:
       print(completion)
     for index, choice in enumerate(completion.choices):  # type: ignore
@@ -336,7 +338,7 @@ class VertexAIModel(GoogleModel):
     for index in range(self.num_samples):
       response = self.with_retry_on_error(
           lambda: self.do_generate(model, prompt.get(), parameters),
-          GoogleAPICallError)
+          GoogleAPICallError) or ''
       self._save_output(index, response, response_dir)
 
 
