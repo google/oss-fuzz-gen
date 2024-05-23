@@ -143,9 +143,16 @@ class LLM:
     if isinstance(err, api_error):
       return True
 
-    # A known case from vertex package.
+    # A known case from vertex package, no content due to mismatch roles.
     if (isinstance(err, ValueError) and
         'Content roles do not match' in str(err) and tb[-1].filename.endswith(
+            'vertexai/generative_models/_generative_models.py')):
+      return True
+
+    # A known case from vertex package, content blocked by safety filters.
+    if (isinstance(err, ValueError) and
+        'blocked by the safety filters' in str(err) and
+        tb[-1].filename.endswith(
             'vertexai/generative_models/_generative_models.py')):
       return True
 
