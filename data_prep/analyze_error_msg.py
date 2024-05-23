@@ -34,15 +34,7 @@ class ErrorAnalyzer:
 
   def __init__(self, benchmark: Benchmark, errors: list[str]):
     self.benchmark = benchmark
-    self.errors = errors
-
-  def __eq__(self, other):
-    if not issubclass(type(other), ErrorAnalyzer):
-      return False
-    return self.errors == other.errors
-
-  def __bool__(self):
-    return bool(self.errors)
+    self.errors = self.group_errors(errors)
 
   @abstractmethod
   def process_error(self, error: str) -> tuple[str, str]:
@@ -50,6 +42,10 @@ class ErrorAnalyzer:
     Entry point of analyzing a single error entry. Returns the error message
     and auxiliary information that can help LLMs to fix the error.
     """
+
+  @abstractmethod
+  def group_errors(self, error_lines: list[str]) -> list[str]:
+    """Groups multi-line error block into one string."""
 
   def get_header_for_func(self, func_name: str) -> str:
     """Get the header file location where the function was declared."""
@@ -61,6 +57,10 @@ class ErrorAnalyzer:
 
 class UnknownErrorAnalyzer(ErrorAnalyzer):
   """Minimum error analyzer for unknown format."""
+
+  def group_errors(self, error_lines: list[str]) -> list[str]:
+    """Keep error lines separated for unknown errors."""
+    return error_lines
 
   def process_error(self, error: str) -> tuple[str, str]:
     """For unknown type of error, can't do anything just return."""
@@ -83,6 +83,34 @@ class GNULinkerErrorAnalyzer(ErrorAnalyzer):
   in_func_pattern = re.compile(r'in function `(\S+?)\'')
   undef_ref_pattern = re.compile(r'undefined reference to `(\S+?)\'')
   multi_def_pattern = re.compile(r'multiple definition of `(\S+?)\'')
+
+  def group_errors(self, error_lines: list[str]) -> list[str]:
+    reformatted_lines = []
+    dwarf_error = 'DWARF error: invalid or unhandled FORM value: 0x25'
+    # Strip linker name, dwarf error and separate multiple linker errors on the
+    # same line.
+    for line in error_lines:
+      line.replace(dwarf_error, '')
+      reformatted_lines.extend(line.split('/usr/bin/ld: '))
+
+    end_pattern = re.compile(
+        r'clang.*: error: linker command failed with exit code 1 '
+        r'\(use -v to see invocation\)')
+
+    error_blocks = []
+    curr_block = []
+    for line in reformatted_lines:
+      if not line:
+        continue
+
+      if ((self.start_pattern.fullmatch(line) or end_pattern.fullmatch(line))
+          and curr_block):
+        error_blocks.append('\n'.join(curr_block))
+        curr_block = []
+
+      curr_block.append(line)
+
+    return error_blocks
 
   def resolve_undefined_reference(self,
                                   error_lines: list[str]) -> tuple[str, str]:
@@ -132,6 +160,31 @@ class GNULinkerErrorAnalyzer(ErrorAnalyzer):
 class LLVMLinkerErrorAnalyzer(ErrorAnalyzer):
   """Analyzer for error messages produced by LLVM lld."""
 
+  def group_errors(self, error_lines: list[str]) -> list[str]:
+    start_string = 'ld.lld: '
+    sub_line_marker = '>>> '
+    end_pattern = re.compile(
+        r'clang.*: error: linker command failed with exit code 1 '
+        r'\(use -v to see invocation\)')
+
+    error_blocks = []
+    curr_block = []
+    for line in error_lines:
+      if not line:
+        continue
+
+      if ((line.startswith(start_string) or end_pattern.fullmatch(line)) and
+          curr_block):
+        error_blocks.append('\n'.join(curr_block))
+        curr_block = []
+
+      # Remove start string and marker if presented.
+      line = line.removeprefix(start_string)
+      line = line.removeprefix(sub_line_marker)
+      curr_block.append(line)
+
+    return error_blocks
+
   def process_error(self, error: str) -> tuple[str, str]:
     return error, ''
 
@@ -144,6 +197,56 @@ class ClangDiagErrorAnalyzer(ErrorAnalyzer):
                                       '16:10:')
   FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
 
+  def group_errors(self, error_lines: list[str]) -> list[str]:
+    diag_pattern = re.compile(r'(\S*):\d+:\d+: (?!note).+: .+')
+    include_pattern = re.compile(r'In file included from \S*:\d+:')
+    end_pattern = re.compile(r'.*\d+ errors? generated.')
+
+    error_blocks = []
+    curr_block = []
+    include_error_src_file = ''
+    handling_include = False
+    for line in error_lines:
+      if not line:
+        continue
+
+      # Check if we are starting a new error block on this line.
+      new_block = False
+      # Handle a non note level diag line.
+      diag_match = diag_pattern.match(line)
+      if diag_match:
+        err_src = diag_match.group(1)
+        # Check if we are handling a diag line under a include error line.
+        if handling_include:
+          # Case when this is the first diag line after the include line.
+          if not include_error_src_file:
+            include_error_src_file = err_src
+            continue
+          # Case when there's more than one error in the same included file.
+          if include_error_src_file == err_src:
+            continue
+          # Error source has changed, this is a new diag error block.
+          include_error_src_file = ''
+          handling_include = False
+        new_block = True
+      # Handle an include error line.
+      # Start a new block if previously wasn't dealing with an include error,
+      # or error source has been found for the previous include error.
+      if (include_pattern.match(line) and
+          (not handling_include or include_error_src_file)):
+        include_error_src_file = ''
+        handling_include = True
+        new_block = True
+
+      # Finished checking.
+      if (new_block or end_pattern.match(line)) and curr_block:
+        error_blocks.append('\n'.join(curr_block))
+        curr_block = []
+      curr_block.append(line)
+    # The last clang diag line should always be the end pattern,
+    # so the last valid curr_block has been handled.
+    return error_blocks
+
   def process_error(self, error: str) -> tuple[str, str]:
     # Skip C only errors.
     # TODO(Dongge): Fix JCC to address this.
@@ -152,3 +255,28 @@ class ClangDiagErrorAnalyzer(ErrorAnalyzer):
         self.FALSE_FUZZED_DATA_PROVIDER_ERROR in error):
       return '', ''
     return error, ''
+
+
+def preprocess_error_messages(benchmark: Benchmark,
+                              error_lines: list[str]) -> ErrorAnalyzer:
+  """
+  Groups multi-line error block into one string and return an ErrorAnalyzer
+  for prompt building.
+  """
+  clang_pattern = re.compile(r'(\S*:\d+:\d+: .+: .+)|'
+                             r'(In file included from \S*:\d+:)')
+  gnu_ld_start_string = '/usr/bin/ld: '
+  llvm_lld_start_string = 'ld.lld: '
+
+  if not error_lines:
+    return UnknownErrorAnalyzer(benchmark, error_lines)
+  first_line = error_lines[0]
+  if clang_pattern.fullmatch(first_line):
+    return ClangDiagErrorAnalyzer(benchmark, error_lines)
+  if first_line.startswith(gnu_ld_start_string):
+    return GNULinkerErrorAnalyzer(benchmark, error_lines)
+  if first_line.startswith(llvm_lld_start_string):
+    return LLVMLinkerErrorAnalyzer(benchmark, error_lines)
+  # Unknown error type, just return lines ungrouped.
+  logging.warning('Unknown error: %s', '\n'.join(error_lines))  # debug
+  return UnknownErrorAnalyzer(benchmark, error_lines)

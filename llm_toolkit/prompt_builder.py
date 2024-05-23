@@ -25,10 +25,10 @@ import requests
 import yaml
 
 from data_prep import project_targets
+from data_prep.analyze_error_msg import preprocess_error_messages
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
-from llm_toolkit.code_fixer import group_error_messages
 
 DEFAULT_TEMPLATE_DIR: str = 'prompts/template_xml/'
 
@@ -314,7 +314,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     # We are processing errors one by one until the maximum prompt size reached.
     selected_errors = []
     aux_info = []
-    error_analyzer = group_error_messages(benchmark, errors)
+    error_analyzer = preprocess_error_messages(benchmark, errors)
     for error in error_analyzer.errors:
       error_str, aux_str = error_analyzer.process_error(error)
 
