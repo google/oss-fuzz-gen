@@ -276,6 +276,51 @@ class AutogenScanner(AutoBuildBase):
     return 'autogen'
 
 
+class AutogenScannerSH(AutoBuildBase):
+  """Auto builder for projects relying on "autogen.sh; autoconf; autoheader."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        'configure.ac': [],
+        'autogen.sh': [],
+        'Makefile': [],
+    }
+
+  def steps_to_build(self):
+    cmds_to_exec_from_root = ['./autogen.sh', './configure', 'make']
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = cmds_to_exec_from_root
+    build_container.heuristic_id = self.name + '1'
+    yield build_container
+
+  @property
+  def name(self):
+    return 'autogen20'
+
+
+class BootstrapScanner(AutoBuildBase):
+  """Auto builder for projects that rely on bootstrap.sh; configure; make."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        'bootstrap.sh': [],
+        'Makefile.am': [],
+    }
+
+  def steps_to_build(self):
+    cmds_to_exec_from_root = ['./bootstrap.sh', './configure', 'make']
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = cmds_to_exec_from_root
+    build_container.heuristic_id = self.name + '1'
+    yield build_container
+
+  @property
+  def name(self):
+    return 'bootstrap-make'
+
+
 class AutogenConfScanner(AutoBuildBase):
   """Auto builder for projects relying on "autoconf; autoheader."""
 
@@ -578,6 +623,8 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
       CMakeScanner(),
       CMakeScannerOptsParser(),
       RawMake(),
+      BootstrapScanner(),
+      AutogenScannerSH(),
   ]
 
   for scanner in all_checks:
