@@ -23,12 +23,10 @@ from abc import abstractmethod
 from typing import Any, Dict, List, Optional, Tuple
 
 import build_generator
-import templates
-
 import cxxfilt
 import openai
+import templates
 import yaml
-
 
 MAX_FUZZ_PER_HEURISTIC = 15
 INTROSPECTOR_OSS_FUZZ_DIR = '/src/inspector'
@@ -40,6 +38,7 @@ FUZZER_PRE_HEADERS = '''#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 '''
+
 
 def setup_model(model: str):
   global LLM_MODEL
@@ -835,7 +834,8 @@ def refine_static_libs(results):
 def get_language_defaults(language: str):
   compilers_and_flags = {
       'c': ('$CC', '$CFLAGS', '/src/empty-fuzzer.c', templates.C_BASE_TEMPLATE),
-      'c++': ('$CXX', '$CXXFLAGS', '/src/empty-fuzzer.cpp', templates.CPP_BASE_TEMPLATE),
+      'c++': ('$CXX', '$CXXFLAGS', '/src/empty-fuzzer.cpp',
+              templates.CPP_BASE_TEMPLATE),
   }
   return compilers_and_flags[language]
 
@@ -1118,8 +1118,8 @@ def create_clean_oss_fuzz_from_success(github_repo: str, success_dir: str,
 
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
-  dockerfile = templates.CLEAN_OSS_FUZZ_DOCKER.format(repo_url=github_repo,
-                                   project_repo_dir=project_repo_dir)
+  dockerfile = templates.CLEAN_OSS_FUZZ_DOCKER.format(
+      repo_url=github_repo, project_repo_dir=project_repo_dir)
   with open(os.path.join(oss_fuzz_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
@@ -1157,7 +1157,8 @@ def create_clean_clusterfuzz_lite_from_success(github_repo: str,
 
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
-  dockerfile = templates.CLEAN_DOCKER_CFLITE.format(project_repo_dir=project_repo_dir)
+  dockerfile = templates.CLEAN_DOCKER_CFLITE.format(
+      project_repo_dir=project_repo_dir)
   with open(os.path.join(cflite_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 

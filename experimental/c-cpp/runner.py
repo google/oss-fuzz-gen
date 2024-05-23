@@ -26,8 +26,8 @@ import templates
 
 silent_global = False
 
+SHARED_MEMORY_RESULTS_DIR = 'autogen-results'
 
-SHARED_MEMORY_RESULTS_DIR='autogen-results'
 
 def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
   """Setup empty OSS-Fuzz project used for analysis."""
@@ -37,9 +37,9 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
 
   os.makedirs(temp_project_dir)
   with open(os.path.join(temp_project_dir, 'project.yaml'), 'w') as f:
-    f.write(templates.empty_project_yaml)
+    f.write(templates.EMPTY_PROJECT_YAML)
   with open(os.path.join(temp_project_dir, 'build.sh'), 'w') as f:
-    f.write(templates.empty_oss_fuzz_build)
+    f.write(templates.EMPTY_OSS_FUZZ_BUILD)
   with open(os.path.join(temp_project_dir, 'Dockerfile'), 'w') as f:
     f.write(templates.AUTOGEN_DOCKER_FILE)
 
@@ -79,9 +79,8 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
   as reported by the code coverage generation. This must be done outside of
   the harness generation because we need the OSS-Fuzz base-runner image, where
   the generation is based on the OSS-Fuzz base-builder image."""
-  worker_out = os.path.join(
-      oss_fuzz_base, 'build', 'out', worker_name,
-      SHARED_MEMORY_RESULTS_DIR)
+  worker_out = os.path.join(oss_fuzz_base, 'build', 'out', worker_name,
+                            SHARED_MEMORY_RESULTS_DIR)
 
   for auto_fuzz_dir in os.listdir(worker_out):
     print(auto_fuzz_dir)

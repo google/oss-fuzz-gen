@@ -12,8 +12,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Holds templates used by the auto-generator both inside and outside the
+OSS-Fuzz base builder."""
 
-empty_oss_fuzz_build = '''#!/bin/bash -eu
+EMPTY_OSS_FUZZ_BUILD = '''#!/bin/bash -eu
 # Copyright 2024 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +33,7 @@ empty_oss_fuzz_build = '''#!/bin/bash -eu
 ################################################################################
 '''
 
-base_docker_file = '''# Copyright 2018 Google Inc.
+BASE_DOCKER_HEAD = '''# Copyright 2018 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -120,10 +122,9 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     return 0;
 }'''
 
-
 # Docker file used for starting the auto-gen workflow within an OSS-Fuzz
 # base-builder image.
-AUTOGEN_DOCKER_FILE = base_docker_file + '''
+AUTOGEN_DOCKER_FILE = BASE_DOCKER_HEAD + '''
 RUN rm /usr/local/bin/cargo && \
  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \
  apt-get install -y cargo
@@ -134,7 +135,7 @@ COPY *.py *.json $SRC/
 WORKDIR $SRC
 COPY build.sh $SRC/'''
 
-empty_project_yaml = """homepage: "https://github.com/google/oss-fuzz"
+EMPTY_PROJECT_YAML = """homepage: "https://github.com/google/oss-fuzz"
 language: c++
 primary_contact: "info@oss-fuzz.com"
 auto_ccs:
@@ -143,13 +144,13 @@ main_repo: 'https://github.com/google/oss-fuzz'
 """
 
 # Docker file used for OSS-Fuzz integrations.
-CLEAN_OSS_FUZZ_DOCKER = base_docker_file + '''
+CLEAN_OSS_FUZZ_DOCKER = BASE_DOCKER_HEAD + '''
 COPY *.sh *.cpp *.c $SRC/
 RUN git clone --recurse-submodules {repo_url} {project_repo_dir}
 WORKDIR {project_repo_dir}
 '''
 
-CLEAN_DOCKER_CFLITE = base_docker_file + '''
+CLEAN_DOCKER_CFLITE = BASE_DOCKER_HEAD + '''
 COPY . $SRC/{project_repo_dir}
 COPY .clusterfuzzlite/build.sh $SRC/build.sh
 COPY .clusterfuzzlite/*.cpp $SRC/
