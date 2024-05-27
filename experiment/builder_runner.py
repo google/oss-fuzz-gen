@@ -245,8 +245,6 @@ class BuilderRunner:
     initcov, donecov, lastround = self._parse_fuzz_cov_info_from_libfuzzer_logs(
         lines)
 
-    crash_info = ''
-
     # NOTE: Crashes from incorrect fuzz targets will not be counted finally.
 
     if crashes:
@@ -296,6 +294,8 @@ class BuilderRunner:
             break
 
     else:
+      crash_info = ''
+
       # Another error fuzz target case: no cov increase.
       if initcov is not None and donecov is not None:
         if initcov == donecov:
