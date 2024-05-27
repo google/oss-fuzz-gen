@@ -25,8 +25,8 @@ from multiprocessing import Pool
 import run_one_experiment
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
-from experiment.workdir import WorkDirs
 from experiment import oss_fuzz_checkout
+from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
 
 # WARN: Avoid large NUM_EXP for local experiments.
