@@ -1,0 +1,13 @@
+"functions":
+- "name": "dns_view_freezezones"
+  "params":
+  - "name": "view"
+    "type": "struct dns_view *"
+  - "name": "value"
+    "type": "bool"
+  "return_type": "int"
+  "signature": "isc_result_t dns_view_freezezones(dns_view_t *, _Bool)"
+"language": "c"
+"project": "bind9"
+"target_name": "isc_lex_gettoken_fuzzer"
+"target_path": "/src/bind9/fuzz/isc_lex_gettoken.c"

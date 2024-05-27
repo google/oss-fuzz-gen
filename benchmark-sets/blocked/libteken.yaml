@@ -1,0 +1,13 @@
+"functions":
+- "name": "teken_set_winsize_noreset"
+  "params":
+  - "name": "t"
+    "type": "struct __teken *"
+  - "name": "p"
+    "type": "struct teken_pos_t *"
+  "return_type": "void"
+  "signature": "void teken_set_winsize_noreset(teken_t *, const teken_pos_t *)"
+"language": "c++"
+"project": "libteken"
+"target_name": "libteken_fuzzer"
+"target_path": "/src/libteken_fuzzer.c"

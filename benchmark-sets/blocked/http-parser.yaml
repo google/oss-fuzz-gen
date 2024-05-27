@@ -1,0 +1,11 @@
+"functions":
+- "name": "http_status_str"
+  "params":
+  - "name": ""
+    "type": "int"
+  "return_type": "char *"
+  "signature": "const char * http_status_str(DW_TAG_enumeration_typehttp_status)"
+"language": "c++"
+"project": "http-parser"
+"target_name": "fuzz_url"
+"target_path": "/src/http-parser/fuzzers/fuzz_url.c"

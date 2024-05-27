@@ -1,0 +1,13 @@
+"functions":
+- "name": "_ZN6hermes2vm11Interpreter17interpretFunctionILb1ELb0EEENS0_10CallResultINS0_11HermesValueELNS0_6detail20CallResultSpecializeE2EEERNS0_7RuntimeERNS0_16InterpreterStateE"
+  "params":
+  - "name": ""
+    "type": "hermes::vm::Runtime *"
+  - "name": ""
+    "type": "struct hermes::vm::InterpreterState *"
+  "return_type": "void"
+  "signature": "CallResult<hermes::vm::HermesValue, hermes::vm::detail::CallResultSpecialize::Trivial> hermes::vm::CallResult<hermes::vm::interpretFunction<true, false>(Runtime &, InterpreterState &)"
+"language": "c++"
+"project": "hermes"
+"target_name": fuzzer-jsi-entry
+"target_path": "/src/hermes/tools/fuzzers/libfuzzer/fuzzer-jsi-entry.cpp"

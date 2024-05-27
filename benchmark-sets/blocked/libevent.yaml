@@ -1,0 +1,13 @@
+"functions":
+- "name": "evhttp_accept_socket"
+  "params":
+  - "name": ""
+    "type": "struct evhttp *"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int evhttp_accept_socket(evhttp *, int)"
+"language": "c++"
+"project": "libevent"
+"target_name": "dns_config_fuzzer"
+"target_path": "/src/dns_config_fuzzer.cc"
