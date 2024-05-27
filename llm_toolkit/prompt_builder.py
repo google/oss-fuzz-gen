@@ -347,7 +347,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Formats a priming for crash triage based on the template."""
     with open(self.triage_priming_template_file) as f:
       priming = f.read().strip() + '\n'
-    priming_prompt = self._prompt.create_prompt_piece(priming, "system")
+    priming_prompt = self._prompt.create_prompt_piece(priming, 'system')
     priming_weight = self._model.estimate_token_num(priming_prompt)
     # NOTE: We need to return the priming _as text_ and the weight. Otherwise,
     # in the case of structured prompts, we will create nested structures.
