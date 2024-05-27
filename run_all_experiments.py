@@ -85,7 +85,6 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
   ]
   for project in projects_to_target:
     project_lang = oss_fuzz_checkout.get_project_language(project)
-    print(f'Using language: {project_lang}')
     benchmarks = introspector.populate_benchmarks_using_introspector(
         project, project_lang, args.generate_benchmarks_max, benchmark_oracles)
     if benchmarks:
