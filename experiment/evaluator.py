@@ -28,7 +28,7 @@ from experiment.benchmark import Benchmark
 from experiment.builder_runner import BuildResult, RunResult
 from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
-from llm_toolkit import code_fixer, crash_triage
+from llm_toolkit import code_fixer, crash_triager
 
 LLM_FIX_LIMIT = 5
 
@@ -229,7 +229,7 @@ class Evaluator:
     """Triages the crash."""
     if run_result.crash_info:
       crash_info = run_result.crash_info
-      crash_triage.llm_triage(
+      crash_triager.llm_triage(
           ai_binary,
           triaged_target_path,
           self.benchmark,

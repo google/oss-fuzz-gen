@@ -15,6 +15,7 @@
 Helper class for fuzz target semantic errors.
 """
 import re
+import logging
 from typing import Optional
 
 
@@ -76,7 +77,11 @@ class SemanticCheckResult:
   def extract_crash_info(cls, fuzzlog: str) -> str:
     """Extracts crash information from fuzzing logs."""
     match = cls.INFO_CRASH.search(fuzzlog)
-    return match.group(0) if match else ''
+    if match:
+      return match.group(0)
+    else:
+      logging.warning("Failed to match crash information.")
+      return ''
 
   def __init__(self,
                err_type: str,
