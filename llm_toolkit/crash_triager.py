@@ -17,6 +17,7 @@
 import argparse
 import os
 import sys
+import logging
 
 from experiment import benchmark as benchmarklib
 from llm_toolkit import models
@@ -105,15 +106,15 @@ def llm_triage(
     triage_candidates.append([triage_path, triage])
 
   if not triage_candidates:
-    print(f'LLM did not generate rawoutput for {prompt_path}.')
+    logging.warning('LLM did not generate rawoutput for %s', prompt_path)
     return
 
   # TODO(fdt622): Use the common vote
   # Currently, we prefer the longest triage.
   preferred_triage_path, preferred_triage = max(triage_candidates,
                                                 key=lambda x: len(x[1]))
-  print(
-      f'Will use the longest triage: {os.path.relpath(preferred_triage_path)}.')
+  logging.info('Will use the longest triage: %s',
+               os.path.relpath(preferred_triage_path))
   preferred_triage_name, _ = os.path.splitext(preferred_triage_path)
   triage_report_path = os.path.join(response_dir,
                                     f'{preferred_triage_name}.txt')
