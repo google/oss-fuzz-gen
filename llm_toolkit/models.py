@@ -31,6 +31,7 @@ import openai
 import tiktoken
 import vertexai
 from google.api_core.exceptions import GoogleAPICallError
+from vertexai import generative_models
 from vertexai.preview.generative_models import GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
 
@@ -349,7 +350,30 @@ class GeminiModel(VertexAIModel):
     return GenerativeModel(self._vertex_ai_model)
 
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
-    return model.generate_content(prompt, generation_config=config).text
+    # Loosen inapplicable restrictions just in case.
+    safety_config = [
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.
+            HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        ),
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        ),
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        ),
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.
+            HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        ),
+    ]
+    return model.generate_content(prompt,
+                                  generation_config=config,
+                                  safety_settings=safety_config).text
 
 
 class VertexAICodeBisonModel(VertexAIModel):
