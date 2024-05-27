@@ -88,11 +88,9 @@ def parse_triage(triage_path: str) -> str:
   """Parses the triage from the |triage_path|."""
   with open(triage_path) as file:
     triage = file.read()
-  solution = triage.split("</solution>")[0]
-
+  solution = triage.split('</solution>')[0]
   lines = solution.splitlines()
-
-  return "\n".join(lines)
+  return '\n'.join(lines)
 
 
 def save_output(content: str, output_path: str) -> None:
