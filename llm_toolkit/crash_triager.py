@@ -71,15 +71,7 @@ def parse_args():
   return args
 
 
-def triage_all_crashes():
-  """Reads crash information and relevant code, applies triage, \
-        and saves the result."""
-  # TODO(fdt622): Finish this.
-
-
 # ========================= LLM Triage ========================= #
-
-
 def llm_triage(
     ai_binary: str,
     target_path: str,
