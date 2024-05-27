@@ -25,6 +25,7 @@ import subprocess as sp
 import time
 import uuid
 from typing import Any, Optional
+from collections import namedtuple
 
 from google.cloud import storage
 
@@ -55,6 +56,10 @@ LIBFUZZER_LOG_STACK_FRAME_LLVM2 = '/work/llvm-stage2/projects/compiler-rt'
 LIBFUZZER_LOG_STACK_FRAME_CPP = '/usr/local/bin/../include/c++'
 
 EARLY_FUZZING_ROUND_THRESHOLD = 3
+
+ParseResult = namedtuple(
+    'ParseResult',
+    ['cov_pcs', 'total_pcs', 'crashes', 'crash_info', 'semantic_check_result'])
 
 
 @dataclasses.dataclass
@@ -204,8 +209,7 @@ class BuilderRunner:
             LIBFUZZER_LOG_STACK_FRAME_LLVM2 not in stack_frame and
             LIBFUZZER_LOG_STACK_FRAME_CPP not in stack_frame)
 
-  def _parse_libfuzzer_logs(
-      self, log_handle) -> tuple[int, int, bool, str, SemanticCheckResult]:
+  def _parse_libfuzzer_logs(self, log_handle) -> ParseResult:
     """Parses libFuzzer logs."""
     lines = None
     try:
