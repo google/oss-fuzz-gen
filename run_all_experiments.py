@@ -26,6 +26,7 @@ import run_one_experiment
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment.workdir import WorkDirs
+from experiment import oss_fuzz_checkout
 from llm_toolkit import models, prompt_builder
 
 # WARN: Avoid large NUM_EXP for local experiments.
@@ -83,8 +84,10 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
       for project in args.generate_benchmarks_projects.split(',')
   ]
   for project in projects_to_target:
+    project_lang = oss_fuzz_checkout.get_project_language(project)
+    print(f'Using language: {project_lang}')
     benchmarks = introspector.populate_benchmarks_using_introspector(
-        project, 'cpp', args.generate_benchmarks_max, benchmark_oracles)
+        project, project_lang, args.generate_benchmarks_max, benchmark_oracles)
     if benchmarks:
       benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
 
