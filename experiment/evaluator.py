@@ -227,9 +227,7 @@ class Evaluator:
       logger: _Logger,
   ):
     """Triage the crash."""
-    if run_result.crash_info == '':
-      logger.log(f"Warning: no crash info in {generated_oss_fuzz_project}.")
-    else:
+    if run_result.crash_info:
       crash_info = run_result.crash_info
       crash_triage.llm_triage(
           ai_binary,
@@ -238,6 +236,8 @@ class Evaluator:
           crash_info,
           self.builder_runner.fixer_model_name,
       )
+    else:
+      logger.log(f"Warning: no crash info in {generated_oss_fuzz_project}.")
 
   def check_target(self, ai_binary, target_path: str) -> Result:
     """Builds and runs a target."""
