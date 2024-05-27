@@ -76,10 +76,7 @@ class SemanticCheckResult:
   def extract_crash_info(cls, fuzzlog: str) -> str:
     """Extracts crash information from fuzzing logs."""
     match = cls.INFO_CRASH.search(fuzzlog)
-    if match:
-      return match.group(0)
-
-    return ''
+    return match.group(0) if match else ''
 
   def __init__(self,
                err_type: str,
