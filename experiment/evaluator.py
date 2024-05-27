@@ -226,7 +226,7 @@ class Evaluator:
       run_result: RunResult,
       logger: _Logger,
   ):
-    """Triage the crash."""
+    """Triages the crash."""
     if run_result.crash_info:
       crash_info = run_result.crash_info
       crash_triage.llm_triage(
