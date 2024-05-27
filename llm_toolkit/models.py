@@ -403,7 +403,7 @@ class GeminiPro(GeminiModel):
   _vertex_ai_model = 'gemini-1.0-pro'
 
 
-class Gemini1_5(GeminiModel):
+class Gemini1D5(GeminiModel):
   """Gemini 1.5."""
 
   _max_output_tokens = 8192
