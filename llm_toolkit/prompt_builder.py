@@ -100,9 +100,9 @@ class DefaultTemplateBuilder(PromptBuilder):
     self.fixer_problem_template_file = self._find_template(
         template_dir, 'fixer_problem.txt')
     self.triage_priming_template_file = self._find_template(
-        template_dir, 'triage_priming.txt')
+        template_dir, 'triager_priming.txt')
     self.triage_problem_template_file = self._find_template(
-        template_dir, 'triage_problem.txt')
+        template_dir, 'triager_problem.txt')
 
   def _format_priming(self, target_file_type: FileType) -> str:
     """Formats a priming based on the prompt template."""
