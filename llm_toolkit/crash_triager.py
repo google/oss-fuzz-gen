@@ -140,7 +140,6 @@ def apply_llm_triage(
   )
 
   builder = prompt_builder.DefaultTemplateBuilder(triage_model)
-  # TODO(fdt622): go through and modify build_triage_prompt
   prompt = builder.build_triage_prompt(benchmark, target_code, crash_info)
   prompt.save(prompt_path)
 
