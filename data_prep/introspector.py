@@ -172,7 +172,6 @@ def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
   query_func = get_oracle_dict().get(target_oracle, None)
   if not query_func:
     logging.error('No such oracle "%s"', target_oracle)
-    print("Exit 2")
     sys.exit(1)
   return query_func(project)
 
