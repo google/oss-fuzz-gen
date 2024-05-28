@@ -225,7 +225,7 @@ def run_on_targets(target,
 
   openai_api_key = os.getenv('OPENAI_API_KEY', None)
 
-  outdir = '/out/' + SHARED_MEMORY_RESULTS_DIR
+  outdir = os.path.join('/out/', SHARED_MEMORY_RESULTS_DIR)
   with open('status-log.txt', 'a') as f:
     f.write("Targeting: %s :: %d\n" % (target, idx))
   run_autogen(target,
