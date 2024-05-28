@@ -25,6 +25,7 @@ from multiprocessing import Pool
 import run_one_experiment
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
+from experiment import oss_fuzz_checkout
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
 
@@ -83,8 +84,9 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
       for project in args.generate_benchmarks_projects.split(',')
   ]
   for project in projects_to_target:
+    project_lang = oss_fuzz_checkout.get_project_language(project)
     benchmarks = introspector.populate_benchmarks_using_introspector(
-        project, 'cpp', args.generate_benchmarks_max, benchmark_oracles)
+        project, project_lang, args.generate_benchmarks_max, benchmark_oracles)
     if benchmarks:
       benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
 
