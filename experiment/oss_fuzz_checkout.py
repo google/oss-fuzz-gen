@@ -105,7 +105,7 @@ def postprocess_oss_fuzz() -> None:
     return
 
   # If already in a virtualenv environment assume all is set up
-  if os.environ['VIRTUAL_ENV']:
+  if os.environ.get('VIRTUAL_ENV', ''):
     return
 
   result = sp.run(['python3', '-m', 'venv', VENV_DIR],
