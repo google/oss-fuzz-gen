@@ -14,10 +14,9 @@
 # limitations under the License.
 """Triaging the crash with LLM."""
 
-import argparse
 import os
-import sys
 import logging
+from enum import Enum
 
 from experiment import benchmark as benchmarklib
 from llm_toolkit import models
@@ -25,51 +24,11 @@ from llm_toolkit import output_parser as parser
 from llm_toolkit import prompt_builder
 
 
-def parse_args():
-  """Parses command line arguments."""
-  argparser = argparse.ArgumentParser(description='Triage the crash with LLM.')
-  argparser.add_argument(
-      '-t',
-      '--target-dir',
-      type=str,
-      default='./targets',
-      help='The directory to store all fuzz targets to be triaged.')
-  argparser.add_argument(
-      '-o',
-      '--intermediate-output-dir',
-      type=str,
-      default='./output',
-      help=('The directory to store all intermediate output files (LLM prompt, '
-            'rawoutput).'))
-  argparser.add_argument('-p',
-                         '--project',
-                         type=str,
-                         required=True,
-                         help='The project name.')
-  argparser.add_argument('-i',
-                         '--crash-info',
-                         type=str,
-                         required=True,
-                         help='The directory to store all crash information.')
-  argparser.add_argument(
-      '-c',
-      '--code',
-      type=str,
-      required=True,
-      help='The directory to store all crash-related code (project code).')
-
-  args = argparser.parse_args()
-  if args.target_dir and os.listdir(args.target_dir):
-    assert os.path.isdir(
-        args.target_dir
-    ), f'--target-dir must take an existing directory: {args.target_dir}.'
-    assert os.listdir(
-        args.target_dir
-    ), f'--target-dir must take a non-empty directory: {args.target_dir}.'
-
-  os.makedirs(args.intermediate_output_dir, exist_ok=True)
-
-  return args
+class TriageResult(Enum):
+  """Crash triage results."""
+  NOT_APPLICABLE = '-'
+  DRIVER = 'DRIVER'
+  PROJECT = 'PROJECT'
 
 
 # ========================= LLM Triage ========================= #
@@ -79,7 +38,7 @@ def llm_triage(
     benchmark: benchmarklib.Benchmark,
     crash_info: str,
     triage_model_name: str,
-) -> None:
+) -> TriageResult:
   """Triages crash with LLM based on crash information and relevant code."""
   with open(target_path) as target_file:
     target_code = target_file.read()
@@ -102,12 +61,12 @@ def llm_triage(
     if not parser.is_raw_output(file):
       continue
     triage_path = os.path.join(response_dir, file)
-    triage = parser.parse_triage(triage_path)
+    triage_result, triage = parser.parse_triage(triage_path)
     triage_candidates.append([triage_path, triage])
 
   if not triage_candidates:
     logging.warning('LLM did not generate rawoutput for %s', prompt_path)
-    return
+    return TriageResult.NOT_APPLICABLE
 
   # TODO(fdt622): Use the common vote
   # Currently, we prefer the longest triage.
@@ -119,6 +78,7 @@ def llm_triage(
   triage_report_path = os.path.join(response_dir,
                                     f'{preferred_triage_name}.txt')
   parser.save_output(preferred_triage, triage_report_path)
+  return triage_result
 
 
 def apply_llm_triage(
@@ -144,12 +104,3 @@ def apply_llm_triage(
   prompt.save(prompt_path)
 
   triage_model.generate_code(prompt, response_dir)
-
-
-def main():
-  #TODO(fdt622): Finish this.
-  return 0
-
-
-if __name__ == "__main__":
-  sys.exit(main())

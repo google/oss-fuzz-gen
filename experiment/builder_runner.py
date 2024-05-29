@@ -35,6 +35,7 @@ from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
 from llm_toolkit import code_fixer
 from llm_toolkit.models import DefaultModel
+from llm_toolkit.crash_triager import TriageResult
 
 # The directory in the oss-fuzz image
 JCC_DIR = '/usr/local/bin'
@@ -89,6 +90,7 @@ class RunResult:
   total_pcs: int = 0
   crashes: bool = False
   crash_info: str = ''
+  triage: TriageResult = TriageResult(TriageResult.NOT_APPLICABLE)
   semantic_check: SemanticCheckResult = SemanticCheckResult(
       SemanticCheckResult.NOT_APPLICABLE)
 
