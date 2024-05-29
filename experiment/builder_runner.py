@@ -329,6 +329,9 @@ class BuilderRunner:
                                    symptom, crash_stacks)
             break
 
+      return cov_pcs, total_pcs, True, crash_info, SemanticCheckResult(
+          SemanticCheckResult.NO_SEMANTIC_ERR, symptom, crash_stacks)
+
     elif initcov == donecov and lastround is not None:
       # Another error fuzz target case: no cov increase.
       # A special case is initcov == donecov == None, which indicates no
