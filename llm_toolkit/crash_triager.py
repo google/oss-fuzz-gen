@@ -16,7 +16,6 @@
 
 import os
 import logging
-from enum import Enum
 
 from experiment import benchmark as benchmarklib
 from llm_toolkit import models
@@ -24,7 +23,7 @@ from llm_toolkit import output_parser as parser
 from llm_toolkit import prompt_builder
 
 
-class TriageResult(Enum):
+class TriageResult:
   """Crash triage results."""
   NOT_APPLICABLE = '-'
   DRIVER = 'DRIVER'
@@ -38,7 +37,7 @@ def llm_triage(
     benchmark: benchmarklib.Benchmark,
     crash_info: str,
     triage_model_name: str,
-) -> TriageResult:
+) -> str:
   """Triages crash with LLM based on crash information and relevant code."""
   with open(target_path) as target_file:
     target_code = target_file.read()

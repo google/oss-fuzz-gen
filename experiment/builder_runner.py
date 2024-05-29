@@ -91,7 +91,7 @@ class RunResult:
   total_pcs: int = 0
   crashes: bool = False
   crash_info: str = ''
-  triage: TriageResult = TriageResult(TriageResult.NOT_APPLICABLE)
+  triage: str = TriageResult.NOT_APPLICABLE
   semantic_check: SemanticCheckResult = SemanticCheckResult(
       SemanticCheckResult.NOT_APPLICABLE)
 

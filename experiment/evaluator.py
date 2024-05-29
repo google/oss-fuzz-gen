@@ -249,7 +249,7 @@ class Evaluator:
       triaged_target_path: str,
       run_result: RunResult,
       logger: _Logger,
-  ) -> TriageResult:
+  ) -> str:
     """Triages the crash."""
     if run_result.crash_info:
       crash_info = run_result.crash_info

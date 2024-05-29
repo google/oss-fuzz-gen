@@ -89,7 +89,7 @@ def parse_code(response_path: str) -> str:
   return '\n'.join(lines)
 
 
-def parse_triage(triage_path: str) -> tuple[TriageResult, str]:
+def parse_triage(triage_path: str) -> tuple[str, str]:
   """Parses the triage from the |triage_path|."""
   with open(triage_path) as file:
     triage = file.read()
