@@ -80,7 +80,7 @@ class SemanticCheckResult:
     if match:
       return match.group(0)
     else:
-      logging.warning("Failed to match crash information.")
+      logging.warning('Failed to match crash information.')
       return ''
 
   def __init__(self,
