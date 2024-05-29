@@ -1,0 +1,37 @@
+<data_mapping>
+Here is a markdown table showing methods should be used for generate random data of some argument types:
+
+  | Argument types | Methods for generating random data |
+  | int or java.lang.Integer | FuzzedDataProvider::consumeInt() or FuzzedDataProvider::consumeInt(int, int) or FuzzedDataProvider::pickValue(int[]) |
+  | int[] | FuzzedDataProvider::consumeInts(int) or FuzzedDataProvider::pickValues(T[], int) or FuzzedDataProvider::pickValues(Collection<T>, int) |
+  | java.lang.Integer[] | org.apache.commons.lang3.ArrayUtils::toObject(int[])|
+  | boolean or java.lang.Boolean | FuzzedDataProvider::consumeBoolean() or FuzzedDataProvider::pickValue(boolean[]) |
+  | boolean[] | FuzzedDataProvider::consumeBooleans(int) or FuzzedDataProvider::pickValues(T[], int) or FuzzedDataProvider::pickValues(Collection<T>, int) |
+  | java.lang.Boolean[] | org.apache.commons.lang3.ArrayUtils::toObject(boolean[]) |
+  | byte or java.lang.Byte | FuzzedDataProvider::consumeByte() or FuzzedDataProvider::consumeByte(byte,byte) or FuzzedDataProvider::pickValue(byte[]) |
+  | byte[] | FuzzedDataProvider::consumeBytes(int) or FuzzedDataProvider::consumeRemainingAsBytes() or FuzzedDataProvider::pickValues(T[], int) or FuzzedDataProvider::pickValues(Collection<T>, int) |
+  | java.lang.Byte[] | org.apache.commons.lang3.ArrayUtils::toObject(byte[]) |
+  | short or java.lang.Short | FuzzedDataProvider::consumeShort() or FuzzedDataProvider::consumeShort(short, short) or FuzzedDataProvider::pickValue(short[]) |
+  | short[] | FuzzedDataProvider::consumeShorts(int) or FuzzedDataProvider::pickValues(T[], int) or FuzzedDataProvider::pickValues(Collection<T>, int) |
+  | java.lang.Short[] | org.apache.commons.lang3.ArrayUtils::toObject(short[]) |
+  | long or java.lang.Long | FuzzedDataProvider::consumeLong() or FuzzedDataProvider::consumeLong(long, long) or FuzzedDataProvider::pickValue(long[]) |
+  | long[] | FuzzedDataProvider::consumeLongs(int) or FuzzedDataProvider::pickValues(T[], int) or FuzzedDataProvider::pickValues(Collection<T>, int) |
+  | java.lang.Long[] | org.apache.commons.lang3.ArrayUtils::toObject(long[]) |
+  | float or java.lang.Float | FuzzedDataProvider::consumeFloat() or FuzzedDataProvider::consumeRegularFloat() or FuzzedDataProvider::consumeRegularFloat(float, float) or FuzzedDataProvider::consumeProbabilityFloat() or or FuzzedDataProvider::pickValue(float[]) |
+  | double or java.lang.Double | FuzzedDataProvider::consumeDouble() or FuzzedDataProvider::consumeRegularDouble() or FuzzedDataProvider::consumeRegularDouble(double, double) or FuzzedDataProvider::consumeProbabilityDouble() or FuzzedDataProvider::pickValue(double[]) |
+  | char or java.lang.Character | FuzzedDataProvider::consumeChar() or FuzzedDataProvider::consumeCharNoSurrogates() or FuzzedDataProvider::consumeChar(char, char) or FuzzedDataProvider::pickValue(char[]) |
+  | java.lang.String or java.lang.CharSequence | FuzzedDataProvider::consumeString(int) or FuzzedDataProvider::consumeAsciiString(int) or FuzzedDataProvider::consumeRemainingAsString() or FuzzedDataProvider::consumeRemainingAsAsciiString() or FuzzedDataProvider::pickValue(String[]) |
+  | java.lang.String[] or java.lang.CharSequence[] | FuzzedDataProvider::pickValues(T[], int) or FuzzedDataProvider::pickValues(Collection<T>, int) or new String[]{java.lang.String} |
+
+<requirement>
+<item>If the arugment types are found in the first column of the above table, you must use one of the methods in the second column of the same row for creating random data of that argument type.</item>
+<item>Do not use any other methods to create the argument types that exist in the first column of this table.</item>
+<item>
+If the required arguments are instance of java.util.Collection<T> class or any of its subclass, try creating the needed class and fill it with random data with any of the methods in the above table if
+the generic type of that arguments is matched.
+</item>
+<item>
+If the required arguments is an array but it is not found in the first column of the above mapping table, please use array initiazation approach and filled it with random number of data of the required
+argument types.
+</item>
+</data_mapping>

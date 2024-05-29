@@ -64,7 +64,8 @@ class Result:
     return dataclasses.asdict(self)
 
 
-def load_existing_textcov(project: str) -> textcov.Textcov:
+def load_existing_textcov(project: str,
+                          language: str = 'c++') -> textcov.Textcov:
   """Loads existing textcovs."""
   storage_client = storage.Client.create_anonymous_client()
   bucket = storage_client.bucket(OSS_FUZZ_COVERAGE_BUCKET)
@@ -86,12 +87,18 @@ def load_existing_textcov(project: str) -> textcov.Textcov:
   # Download and merge them.
   existing_textcov = textcov.Textcov()
   for blob in blobs:
-    if not blob.name.endswith('.covreport'):
-      continue
+    if language == 'jvm':
+      if blob.name != 'jacoco.xml':
+        continue
+      print(f'Loading existing textcov from {blob.name}')
+      existing_textcov.merge(textcov.Textcov.from_jvm_file(blob))
+    else:
+      if not blob.name.endswith('.covreport'):
+        continue
 
-    print(f'Loading existing textcov from {blob.name}')
-    with blob.open() as f:
-      existing_textcov.merge(textcov.Textcov.from_file(f))
+      print(f'Loading existing textcov from {blob.name}')
+      with blob.open('rb') as f:
+        existing_textcov.merge(textcov.Textcov.from_file(f))
 
   return existing_textcov
 
@@ -189,9 +196,24 @@ class Evaluator:
                                          'projects', self.benchmark.project)
 
     shutil.copytree(existing_project_path, generated_project_path)
+
+    # Fix public java class name in target_file
+    if self.benchmark.language == 'jvm':
+      with open(target_file, 'r') as file:
+        code = file.read()
+
+      new = os.path.basename(self.benchmark.target_path).replace('.java', '')
+      code = code.replace('public class Fuzz', f'public class {new}')
+
+      with open(target_file, 'w') as file:
+        file.write(code)
+
+    # Copy generated fuzzers to generated_project_path
     shutil.copyfile(
         target_file,
         os.path.join(generated_project_path, os.path.basename(target_file)))
+
+    # Add additional statement in dockerfile to overwrite with generated fuzzer
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(f'\nCOPY {os.path.basename(target_file)} '
               f'{self.benchmark.target_path}\n')
@@ -264,8 +286,14 @@ class Evaluator:
     llm_fix_count = 0
     while True:
       # 1. Evaluating generated driver.
-      build_result, run_result = self.builder_runner.build_and_run(
-          generated_oss_fuzz_project, target_path, llm_fix_count)
+      try:
+        build_result, run_result = self.builder_runner.build_and_run(
+            generated_oss_fuzz_project, target_path, llm_fix_count)
+      except Exception as e:
+        logger.log('Exception occurred when building and running fuzz target '
+                   f'in attempt {llm_fix_count}: {e}')
+        build_result = BuildResult()
+        run_result = None
 
       gen_succ = build_result.succeeded and run_result and run_result.succeeded
       if gen_succ or llm_fix_count >= LLM_FIX_LIMIT:
@@ -273,7 +301,9 @@ class Evaluator:
         # Exit cond 2: fix limit is reached.
         break
 
-      # 2. Fixing generated driver.
+      # 2. Fixing generated driver. Skipped for jvm projects.
+      if self.benchmark.language == 'jvm':
+        break
       llm_fix_count += 1
       logger.log(f'Fixing {target_path} with '
                  f'{self.builder_runner.fixer_model_name}, '
@@ -339,8 +369,17 @@ class Evaluator:
 
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
-    total_lines = _compute_total_lines_without_fuzz_targets(
-        coverage_summary, generated_target_name)
+
+    if self.benchmark.language == 'jvm':
+      # The summary.json generated from Jacoco.xml report
+      # of JVM project does not have total lines information.
+      # This fix Use the total lines calculation from the
+      # jacoco.xml report of the current run directly for
+      # JVM projects.
+      total_lines = run_result.coverage.total_lines
+    else:
+      total_lines = _compute_total_lines_without_fuzz_targets(
+          coverage_summary, generated_target_name)
     if run_result.total_pcs:
       coverage_percent = run_result.cov_pcs / run_result.total_pcs
     else:
@@ -373,4 +412,5 @@ class Evaluator:
 
   def _load_existing_textcov(self) -> textcov.Textcov:
     """Loads existing textcovs."""
-    return load_existing_textcov(self.benchmark.project)
+    return load_existing_textcov(self.benchmark.project,
+                                 self.benchmark.language)

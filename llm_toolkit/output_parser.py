@@ -75,7 +75,10 @@ def parse_code(response_path: str) -> str:
   solution = response.split('</solution>')[0]
   lines = solution.splitlines()
   lines = _parse_code_block_by_marker(lines, '```c', '```')
+  lines = _parse_code_block_by_marker(lines, '```java', '```')
+  lines = _parse_code_block_by_marker(lines, '```java_code', '```')
   lines = _parse_code_block_by_marker(lines, '<code>', '</code>')
+  lines = _parse_code_block_by_marker(lines, '<java_code>', '</java_code>')
 
   # Remove leading and trailing empty lines.
   while lines and not lines[0].strip():

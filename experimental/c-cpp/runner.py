@@ -22,62 +22,11 @@ import sys
 import threading
 from typing import List
 
+import templates
+
 silent_global = False
 
-empty_oss_fuzz_build = """#!/bin/bash -eu
-# Copyright 2018 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-################################################################################
-"""
-
-empty_oss_fuzz_docker = """# Copyright 2018 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-################################################################################
-
-FROM gcr.io/oss-fuzz-base/base-builder
-RUN apt-get update && apt-get install -y make autoconf automake libtool cmake \
-                      pkg-config curl check libcpputest-dev re2c
-RUN rm /usr/local/bin/cargo && \
- curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \
- apt-get install -y cargo
-RUN python3 -m pip install --upgrade pip && \
-    python3 -m pip install pydantic-core pyyaml cxxfilt openai==1.16.2
-RUN python3 -m pip install --upgrade google-cloud-aiplatform
-COPY *.py *.json $SRC/
-WORKDIR $SRC
-COPY build.sh $SRC/"""
-
-empty_project_yaml = """homepage: "https://github.com/google/oss-fuzz"
-language: c++
-primary_contact: "info@oss-fuzz.com"
-auto_ccs:
--
-main_repo: 'https://github.com/samtools/htslib.git'
-"""
+SHARED_MEMORY_RESULTS_DIR = 'autogen-results'
 
 
 def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
@@ -88,11 +37,11 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
 
   os.makedirs(temp_project_dir)
   with open(os.path.join(temp_project_dir, 'project.yaml'), 'w') as f:
-    f.write(empty_project_yaml)
+    f.write(templates.EMPTY_PROJECT_YAML)
   with open(os.path.join(temp_project_dir, 'build.sh'), 'w') as f:
-    f.write(empty_oss_fuzz_build)
+    f.write(templates.EMPTY_OSS_FUZZ_BUILD)
   with open(os.path.join(temp_project_dir, 'Dockerfile'), 'w') as f:
-    f.write(empty_oss_fuzz_docker)
+    f.write(templates.AUTOGEN_DOCKER_FILE)
 
   if llm_model == 'vertex':
     json_config = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', None)
@@ -103,7 +52,7 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
     shutil.copyfile(json_config, os.path.join(temp_project_dir, 'creds.json'))
 
   # Copy over the generator
-  files_to_copy = {'build_generator.py', 'manager.py'}
+  files_to_copy = {'build_generator.py', 'manager.py', 'templates.py'}
   for target_file in files_to_copy:
     shutil.copyfile(
         os.path.join(os.path.dirname(os.path.abspath(__file__)), target_file),
@@ -122,6 +71,62 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
                           (project_name),
                           shell=True,
                           cwd=oss_fuzz_base)
+
+
+def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
+  """Runs a code coverage report generation for each of the successfully
+  generated projects for the given worker. Will and log the line code coverage
+  as reported by the code coverage generation. This must be done outside of
+  the harness generation because we need the OSS-Fuzz base-runner image, where
+  the generation is based on the OSS-Fuzz base-builder image."""
+  worker_out = os.path.join(oss_fuzz_base, 'build', 'out', worker_name,
+                            SHARED_MEMORY_RESULTS_DIR)
+
+  for auto_fuzz_dir in os.listdir(worker_out):
+    print(auto_fuzz_dir)
+    # Only continue if there is a corpus collected.
+    corpus_dir = os.path.join(worker_out, auto_fuzz_dir, 'corpus',
+                              'generated-fuzzer-no-leak')
+    if not os.path.isdir(corpus_dir):
+      continue
+    oss_fuzz_dir = os.path.join(
+        os.path.join(worker_out, auto_fuzz_dir, 'oss-fuzz-project'))
+
+    # Create an OSS-Fuzz project that will be used to generate the coverage.
+    target_cov_name = worker_name + '-cov-' + auto_fuzz_dir
+    target_cov_project = os.path.join(oss_fuzz_base, 'projects',
+                                      target_cov_name)
+
+    if os.path.isdir(target_cov_project):
+      shutil.rmtree(target_cov_project)
+    shutil.copytree(oss_fuzz_dir, target_cov_project)
+    try:
+      cmd_to_run = [
+          'python3', 'infra/helper.py', 'build_fuzzers', '--sanitizer=coverage',
+          target_cov_name
+      ]
+      subprocess.check_call(' '.join(cmd_to_run), shell=True, cwd=oss_fuzz_base)
+    except subprocess.CalledProcessError:
+      print(f'Failed coverage build: {target_cov_name}')
+      continue
+
+    # Run coverage and save report in the main folder.
+    dst_corpus_path = os.path.join(oss_fuzz_base, 'build', 'corpus',
+                                   target_cov_name)
+    if os.path.isdir(dst_corpus_path):
+      shutil.rmtree(dst_corpus_path)
+    os.makedirs(dst_corpus_path, exist_ok=True)
+    shutil.copytree(corpus_dir, os.path.join(dst_corpus_path, 'fuzzer'))
+
+    try:
+      cmd_to_run = [
+          'python3', 'infra/helper.py', 'coverage', '--port', '\'\'',
+          '--no-corpus-download', target_cov_name
+      ]
+      subprocess.check_call(' '.join(cmd_to_run), shell=True, cwd=oss_fuzz_base)
+    except subprocess.CalledProcessError:
+      print(f'Failed coverage run: {target_cov_name}')
+      continue
 
 
 def run_autogen(github_url,
@@ -188,6 +193,9 @@ def run_autogen(github_url,
   except subprocess.CalledProcessError:
     pass
 
+  # Generate coverage report for each successful project.
+  run_coverage_runs(oss_fuzz_base, worker_project)
+
 
 def read_targets_file(filename: str) -> List[str]:
   """Parse input file."""
@@ -217,7 +225,7 @@ def run_on_targets(target,
 
   openai_api_key = os.getenv('OPENAI_API_KEY', None)
 
-  outdir = '/out/autogen-results-%d' % (idx)
+  outdir = os.path.join('/out/', SHARED_MEMORY_RESULTS_DIR)
   with open('status-log.txt', 'a') as f:
     f.write("Targeting: %s :: %d\n" % (target, idx))
   run_autogen(target,

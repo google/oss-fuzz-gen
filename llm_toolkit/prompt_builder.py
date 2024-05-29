@@ -21,6 +21,8 @@ from abc import abstractmethod
 from typing import Optional, Tuple
 
 import jinja2
+import requests
+import yaml
 
 from data_prep import project_targets
 from experiment.benchmark import Benchmark, FileType
@@ -37,11 +39,28 @@ FDP_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'gdImageString-problem.txt')
 FDP_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH, 'gdImageString-solution.cc')
 FDP_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH, 'mpg123_decode-problem.txt')
 FDP_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH, 'mpg123_decode-solution.cc')
+FDP_JVM_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'joni_regex-problem.txt')
+FDP_JVM_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH,
+                                          'joni_regex-solution.java')
+FDP_JVM_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH,
+                                         'jansi_colors-problem.txt')
+FDP_JVM_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH,
+                                          'jansi_colors-solution.java')
 
-EXAMPLES = [
-    [FDP_EXAMPLE_1_PROBLEM, FDP_EXAMPLE_1_SOLUTION],
-    [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
-]
+EXAMPLES = {
+    'c++': [
+        [FDP_EXAMPLE_1_PROBLEM, FDP_EXAMPLE_1_SOLUTION],
+        [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
+    ],
+    'c': [
+        [FDP_EXAMPLE_1_PROBLEM, FDP_EXAMPLE_1_SOLUTION],
+        [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
+    ],
+    'jvm': [
+        [FDP_JVM_EXAMPLE_1_PROBLEM, FDP_JVM_EXAMPLE_1_SOLUTION],
+        [FDP_JVM_EXAMPLE_2_PROBLEM, FDP_JVM_EXAMPLE_2_SOLUTION],
+    ],
+}
 
 BUILD_ERROR_SUMMARY = 'The code has the following build issues:'
 FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
@@ -376,3 +395,110 @@ class DefaultTemplateBuilder(PromptBuilder):
 
     self._add_examples(example_pair, final_problem, project_example_content)
     self._prompt.add_problem(final_problem)
+
+
+class DefaultJvmTemplateBuilder(PromptBuilder):
+  """Default builder for JVM projects."""
+
+  def __init__(self,
+               model: models.LLM,
+               project_name: str,
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model)
+    self._template_dir = template_dir
+    self.project_name = project_name
+    self.project_url = self._find_project_url(project_name)
+
+    # Load templates.
+    self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
+    self.data_filler_template_file = self._find_template(
+        template_dir, 'jvm_specific_data_filler.txt')
+    self.problem_template_file = self._find_template(template_dir,
+                                                     'jvm_problem.txt')
+    self.requirement_template_file = self._find_template(
+        template_dir, 'jvm_requirement.txt')
+
+  def _find_project_url(self, project_name: str) -> str:
+    """Discover project url from project's project.yaml in OSS-Fuzz"""
+    oss_fuzz_url = 'https://raw.githubusercontent.com/google/oss-fuzz/master'
+    project_url = f'{oss_fuzz_url}/projects/{project_name}/project.yaml'
+
+    try:
+      response = requests.get(project_url, timeout=20)
+      if response and response.status_code == 200:
+        project_yaml = yaml.load(response.content, Loader=yaml.SafeLoader)
+        if 'main_repo' in project_yaml:
+          return project_yaml['main_repo']
+    except:
+      pass
+
+    print(f'Cannot retrieve project url of project {project_name}')
+    return ''
+
+  def _find_template(self, template_dir: str, template_name: str) -> str:
+    """Finds template file based on |template_dir|."""
+    preferred_template = os.path.join(template_dir, template_name)
+    # Use the preferred template if it exists.
+    if os.path.isfile(preferred_template):
+      return preferred_template
+    # Fall back to the default template.
+    default_template = os.path.join(DEFAULT_TEMPLATE_DIR, template_name)
+    return default_template
+
+  def _get_template(self, template_file: str) -> str:
+    """Reads the template for prompts."""
+    with open(template_file) as file:
+      return file.read()
+
+  def _format_base(self) -> str:
+    """Formats a priming based on the prompt template."""
+    base = self._get_template(self.base_template_file)
+    base = base.replace("{PROJECT_NAME}", self.project_name)
+    base = base.replace("{PROJECT_URL}", self.project_url)
+    return base
+
+  def _format_problem(self, problem_content: str) -> str:
+    """Formats a problem based on the prompt template."""
+    problem = self._get_template(self.problem_template_file)
+    problem = problem.replace('{PROBLEM_CONTENT}', problem_content)
+    problem = problem.replace('{REQUIREMENTS}', self._format_requirement())
+    problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
+    return problem
+
+  def _format_requirement(self) -> str:
+    """Formats a requirement based on the prompt template."""
+    requirement = self._get_template(self.requirement_template_file)
+    return requirement
+
+  def _format_data_filler(self) -> str:
+    """Formats a data_filler based on the prompt template."""
+    data_filler = self._get_template(self.data_filler_template_file)
+    return data_filler
+
+  def _prepare_prompt(self, base: str, final_problem: str):
+    """Constructs a prompt using the parameters and saves it."""
+    self._prompt.add_priming(base)
+    self._prompt.add_problem(final_problem)
+
+  def build(self,
+            function_signature: str,
+            target_file_type: FileType,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it.
+       Ignore target_file_type, project_example_content
+       and project_context_content parameters.
+    """
+    base = self._format_base()
+    final_problem = self._format_problem(function_signature)
+    self._prepare_prompt(base, final_problem)
+
+    return self._prompt
+
+  def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
+                         error_desc: Optional[str],
+                         errors: list[str]) -> prompts.Prompt:
+    """Builds a fixer prompt."""
+    # Do nothing for jvm project now.
+    return self._prompt
