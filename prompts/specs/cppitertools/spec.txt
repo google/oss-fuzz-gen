@@ -1,4 +1,4 @@
-You MUST follow the below logic to generate harness and mutate the exact parameters correctly. 
+You MUST follow the below logic to generate harness and mutate the exact parameters correctly.
 1. Review `Combinator` and `Iterator` class definitions from `combinations.hpp` below:
 <code>#ifndef ITER_COMBINATIONS_HPP_
 #define ITER_COMBINATIONS_HPP_
