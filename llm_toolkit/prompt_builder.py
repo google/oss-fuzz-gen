@@ -106,9 +106,10 @@ class DefaultTemplateBuilder(PromptBuilder):
     # Load templates.
     self.priming_template_file = self._find_template(template_dir,
                                                      'priming.txt')
-    self.spec_priming_template_file = self._find_template('/home/kaixuan/FDG_LLM/oss-fuzz-gen/prompts/specs/tmux',
-                                                          'spec_priming.txt')
-    
+    self.spec_priming_template_file = self._find_template(
+        '/home/kaixuan/FDG_LLM/oss-fuzz-gen/prompts/specs/tmux',
+        'spec_priming.txt')
+
     self.cpp_priming_filler_file = self._find_template(
         template_dir, 'cpp-specific-priming-filler.txt')
     self.problem_template_file = self._find_template(template_dir,
@@ -268,7 +269,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     #                      project_example_content)
     spec = open(self.spec_priming_template_file, 'r').read()
     self._prepare_prompt(spec, function_signature)
-    
+
     return self._prompt
 
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
