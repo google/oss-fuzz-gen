@@ -1,0 +1,184 @@
+You MUST follow the below logic to generate harness and mutate the exact parameters correctly. 
+1. Review `Combinator` and `Iterator` class definitions from `combinations.hpp` below:
+<code>#ifndef ITER_COMBINATIONS_HPP_
+#define ITER_COMBINATIONS_HPP_
+
+#include "internal/iteratoriterator.hpp"
+#include "internal/iterbase.hpp"
+
+#include <iterator>
+#include <type_traits>
+#include <vector>
+
+namespace iter {
+  namespace impl {
+    template <typename Container>
+    class Combinator;
+
+    using CombinationsFn = IterToolFnBindSizeTSecond<Combinator>;
+  }
+  constexpr impl::CombinationsFn combinations{};
+}
+
+template <typename Container>
+class iter::impl::Combinator {
+ private:
+  Container container_;
+  std::size_t length_;
+
+  friend CombinationsFn;
+
+  Combinator(Container&& container, std::size_t length)
+      : container_(std::forward<Container>(container)), length_{length} {}
+
+  template <typename T>
+  using IndexVector = std::vector<iterator_type<T>>;
+  template <typename T>
+  using CombIteratorDeref = IterIterWrapper<IndexVector<T>>;
+
+ public:
+  Combinator(Combinator&&) = default;
+  template <typename ContainerT>
+  class Iterator {
+   private:
+    template <typename>
+    friend class Iterator;
+    constexpr static const int COMPLETE = -1;
+    std::remove_reference_t<ContainerT>* container_p_;
+    CombIteratorDeref<ContainerT> indices_;
+    int steps_{};
+
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = CombIteratorDeref<ContainerT>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
+
+    Iterator(ContainerT& container, std::size_t n)
+        : container_p_{&container}, indices_{n} {
+      if (n == 0) {
+        steps_ = COMPLETE;
+        return;
+      }
+      size_t inc = 0;
+      for (auto& iter : indices_.get()) {
+        auto it = get_begin(*container_p_);
+        dumb_advance(it, get_end(*container_p_), inc);
+        if (it != get_end(*container_p_)) {
+          iter = it;
+          ++inc;
+        } else {
+          steps_ = COMPLETE;
+          break;
+        }
+      }
+    }
+
+    static Iterator zero_length_end(ContainerT& container) {
+      Iterator it{container, 0};
+      it.steps_ = 0;
+      return it;
+    }
+
+    CombIteratorDeref<ContainerT>& operator*() {
+      return indices_;
+    }
+
+    CombIteratorDeref<ContainerT>* operator->() {
+      return &indices_;
+    }
+
+    Iterator& operator++() {
+      if (indices_.get().empty()) {
+        // zero-length case.
+        ++steps_;
+        return *this;
+      }
+      for (auto iter = indices_.get().rbegin(); iter != indices_.get().rend();
+           ++iter) {
+        ++(*iter);
+
+        // what we have to check here is if the distance between
+        // the index and the end of indices_ is >= the distance
+        // between the item and end of item
+        auto dist = std::distance(indices_.get().rbegin(), iter);
+
+        if (!(dumb_next(*iter, dist) != get_end(*container_p_))) {
+          if ((iter + 1) != indices_.get().rend()) {
+            size_t inc = 1;
+            for (auto down = iter;; --down) {
+              (*down) = dumb_next(*(iter + 1), 1 + inc);
+              ++inc;
+              if (down == indices_.get().rbegin()) break;
+            }
+          } else {
+            steps_ = COMPLETE;
+            break;
+          }
+        } else {
+          break;
+        }
+        // we break because none of the rest of the items need
+        // to be incremented
+      }
+      if (steps_ != COMPLETE) {
+        ++steps_;
+      }
+      return *this;
+    }
+
+    Iterator operator++(int) {
+      auto ret = *this;
+      ++*this;
+      return ret;
+    }
+
+    template <typename T>
+    bool operator!=(const Iterator<T>& other) const {
+      return !(*this == other);
+    }
+
+    template <typename T>
+    bool operator==(const Iterator<T>& other) const {
+      return steps_ == other.steps_;
+    }
+  };
+
+  Iterator<Container> begin() {
+    return {container_, length_};
+  }
+
+  Iterator<Container> end() {
+    if (length_ == 0) {
+      return Iterator<Container>::zero_length_end(container_);
+    }
+    return {container_, 0};
+  }
+
+  Iterator<AsConst<Container>> begin() const {
+    return {std::as_const(container_), length_};
+  }
+
+  Iterator<AsConst<Container>> end() const {
+    if (length_ == 0) {
+      return Iterator<AsConst<Container>>::zero_length_end(container_);
+    }
+    return {std::as_const(container_), 0};
+  }
+};
+
+#endif
+</code>
+2. generate random containers of varying sizes, and review all related code I provided.
+3. Handle edge cases like empty and large containers.
+4. Call `zero_length_end` with generated containers, and ensure it returns an iterator.
+5. Increment the iterator using `operator++`.
+6. Dereference the iterator using `operator*`.
+7. Compare iterators using `operator==` and `operator!=`.
+8. Use try-catch blocks around the function call and iterator operations.
+9. Log exceptions to prevent crashes and understand issues.
+10. Validate iterator properties, especially for zero-length combinations.
+11. Ensure `steps_` is 0 for zero-length combinations.
+12. Define and include `get_begin`, `get_end`, `dumb_advance`, and `dumb_next`.
+13. Implement necessary types like `IterIterWrapper` and `iterator_type`.

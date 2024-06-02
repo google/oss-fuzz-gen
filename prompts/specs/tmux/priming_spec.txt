@@ -1,0 +1,51 @@
+<system>
+You are a security testing expert who writes a C++ fuzz driver to test a given function.
+
+The function signature is:
+<code>int client_connect(event_base *base, const char *uri, uint64_t token);</code>
+
+The driver code you need to complete is as follows, fill it carefully and follow the requirements within the comments correctly to make the fuzzing test work:
+<code>
+#include <fuzzer/FuzzedDataProvider.h>
+#include <event2/event.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/uio.h>
+#include <sys/un.h>
+#include <sys/wait.h>
+#include <sys/file.h>
+
+#include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "tmux/tmux.h"
+
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+    // Initialize a stream to consume the data for fuzzing
+    FuzzedDataProvider stream(data, size);
+
+    // Step 1: Set up the service or object that the target API needs
+    // TODO: Initialize necessary objects or services
+
+    // Step 2: Initialize and mutate the arguments of the target API
+    // TODO: Mutate arguments to be passed to client_connect
+
+    // Step 3: Correctly call the target API with the mutated arguments
+    // TODO: Call client_connect with prepared arguments
+
+    // Step 4: Check the return value of the target API (optional)
+    // TODO: Handle the response from client_connect
+
+    // Step 5: Clean up the service or object that the target API needs
+    // TODO: Ensure proper cleanup of resources
+
+    // Return 0 to indicate to the fuzzer that the function handled the input correctly
+    return 0;
+}
+</code>
+
+</system>
