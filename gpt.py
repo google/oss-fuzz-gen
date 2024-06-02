@@ -1,10 +1,11 @@
-import os
-
-from openai import OpenAI
-
 '''
 customed prompting for GPT-4 by using spec.
 '''
+
+import os
+from openai import OpenAI
+
+
 
 GPT_MODEL = "gpt-4-1106-preview"
 
