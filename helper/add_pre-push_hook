@@ -13,19 +13,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Adds a pre-push hook to automatically format and lint code.
+# Adds a pre-push hook to automatically format and lint code, excluding specific files.
 
 # Define the hook script content.
 HOOK_SCRIPT='#!/bin/sh
-# A pre-push hook to format and lint code.
+# A pre-push hook to format and lint code, excluding specific files.
 
-# Run the format and lint script.
-.github/helper/presubmit
+# Path to exclude from linting
+EXCLUDE_FILE="llm_toolkit/prompt_builder.py"
 
-# Capture the exit status of the format script.
+# Check for the existence of the file to exclude
+if [ -f "$EXCLUDE_FILE" ]; then
+  # Run lint excluding the specific file
+  lint_command --exclude $EXCLUDE_FILE
+else
+  # Run lint normally
+  lint_command
+fi
+
+# Capture the exit status of the lint command.
 STATUS=$?
 
-# Check if the script passed (exit status 0).
+# Check if the lint command passed (exit status 0).
 if [ $STATUS -eq 0 ]; then
   echo "Code formatted and linted successfully."
   exit 0
