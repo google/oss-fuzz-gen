@@ -104,6 +104,10 @@ def postprocess_oss_fuzz() -> None:
   if os.path.exists(os.path.join(OSS_FUZZ_DIR, VENV_DIR)):
     return
 
+  # If already in a virtualenv environment assume all is set up
+  if os.environ.get('VIRTUAL_ENV', ''):
+    return
+
   result = sp.run(['python3', '-m', 'venv', VENV_DIR],
                   check=True,
                   capture_output=True,

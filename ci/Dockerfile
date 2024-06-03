@@ -2,6 +2,9 @@ FROM debian:12
 
 ENV DEBIAN_FRONTEND interactive
 
+# Set the same timezone as the main Dockerfile
+ENV TZ='Australia/Sydney'
+
 # Install packages used by the Experiment. Python and Git are required for the experiment.
 # Curl, certs, and gnupg are required to install gcloud.
 RUN apt-get update && \
