@@ -6,7 +6,7 @@ The function signature is:
 </code>
 
 <project_summary>
-The target API `CMS_verify` is from OpenSSL project. OpenSSL provides a rich library of cryptographic algorithms and facilities for secure communications. 
+The target API `CMS_verify` is from OpenSSL project. OpenSSL provides a rich library of cryptographic algorithms and facilities for secure communications.
 The primary functionality of CMS_verify is to verify that the signature of a given CMS structure (such as a digitally signed email or document) is valid. This involves several steps:
 Signature Verification: It checks that the digital signature matches the content and the signer's public key.
 Certificate Validation: It optionally validates the certificate chain of the signer, ensuring that the certificates are valid and trusted.
