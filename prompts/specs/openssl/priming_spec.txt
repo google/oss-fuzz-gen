@@ -1,0 +1,77 @@
+<system>
+You are a security testing expert who writes a C++ fuzz driver to test a given function.
+
+The function signature is:
+<code>int CMS_verify(CMS_ContentInfo *cms, STACK_OF(X509) *certs, X509_STORE *store, BIO *dcont, BIO *out, unsigned int flags);
+</code>
+
+<project_summary>
+The target API `CMS_verify` is from OpenSSL project. OpenSSL provides a rich library of cryptographic algorithms and facilities for secure communications. 
+The primary functionality of CMS_verify is to verify that the signature of a given CMS structure (such as a digitally signed email or document) is valid. This involves several steps:
+Signature Verification: It checks that the digital signature matches the content and the signer's public key.
+Certificate Validation: It optionally validates the certificate chain of the signer, ensuring that the certificates are valid and trusted.
+Content Integrity: It ensures that the content has not been altered since it was signed.
+</project_summary>
+
+The driver code you need to complete is as follows, fill it carefully and follow the requirements within the comments correctly to make the fuzzing test work:
+<code>
+#include <fuzzer/FuzzedDataProvider.h>
+#include <openssl/asn1t.h>
+#include <openssl/x509.h>
+#include <openssl/x509v3.h>
+#include <openssl/err.h>
+#include <openssl/cms.h>
+#include <openssl/crypto.h>
+
+#include "internal/cryptlib.h"
+#include "crypto/asn1.h"
+
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+    FuzzedDataProvider provider(data, size);
+
+    // Create a memory BIO for input data
+    BIO *data_bio = BIO_new_mem_buf(provider.ConsumeBytesAsString().c_str(), provider.remaining_bytes());
+    if (data_bio == nullptr) {
+        return 0; // Fail gracefully if the BIO could not be initialized
+    }
+
+    // Create a memory BIO for output (not used in verification)
+    BIO *out_bio = BIO_new(BIO_s_mem());
+    if (out_bio == nullptr) {
+        BIO_free_all(data_bio);
+        return 0;
+    }
+
+    // Parse CMS_ContentInfo from the data
+    CMS_ContentInfo *cms = d2i_CMS_bio(data_bio, NULL);
+    if (cms == nullptr) {
+        BIO_free_all(data_bio);
+        BIO_free_all(out_bio);
+        return 0;
+    }
+
+    // Initialize the X509_STORE for certificate verification
+    X509_STORE *store = X509_STORE_new();
+    if (store == nullptr) {
+        CMS_ContentInfo_free(cms);
+        BIO_free_all(data_bio);
+        BIO_free_all(out_bio);
+        return 0;
+    }
+
+    // TODO: Configure the store with trusted certificates and settings
+
+    // Perform the CMS verification
+    int result = CMS_verify(cms, NULL, store, data_bio, out_bio, CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY);
+
+    // Cleanup operations
+    CMS_ContentInfo_free(cms);
+    BIO_free_all(data_bio);
+    BIO_free_all(out_bio);
+    X509_STORE_free(store);
+
+    return result; // Return the verification result
+}
+</code>
+You MUST use the variables after defining and initializing them. You should focus on the fuzzing driver code and ensure it is correctly implemented to test the `CMS_verify` function.
+</system>

@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "-y", "./benchmark-sets/kx/tmux.yaml",
+                "-y", "./benchmark-sets/kx/openssl.yaml",
                 "-l", "gpt-4",
                 "--context"
             ]

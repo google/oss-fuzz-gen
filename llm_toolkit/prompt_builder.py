@@ -106,9 +106,8 @@ class DefaultTemplateBuilder(PromptBuilder):
     # Load templates.
     self.priming_template_file = self._find_template(template_dir,
                                                      'priming.txt')
-    self.priming_spec_template_file = self._find_template(
-        '/home/kaixuan/FDG_LLM/oss-fuzz-gen/prompts/specs/avahi',
-        'priming_spec.txt')
+    self.priming_spec_template_file = self._find_template('/home/kaixuan/FDG_LLM/oss-fuzz-gen/prompts/specs/openssl',
+                                                     'priming_spec.txt')
     self.cpp_priming_filler_file = self._find_template(
         template_dir, 'cpp-specific-priming-filler.txt')
     self.problem_template_file = self._find_template(template_dir,
@@ -259,19 +258,19 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Constructs a prompt using the templates in |self| and saves it."""
     # priming = self._format_priming(target_file_type)
     spec = self._format_priming(target_file_type)
-
+    
     # final_problem = self.format_problem(function_signature)
     # final_problem += (f'You MUST call <code>\n'
     #                   f'{function_signature}\n'
     #                   f'</code> in your solution!\n')
     final_problem = ''
     # if project_context_content:
-    # final_problem += self.format_context(project_context_content)
+      # final_problem += self.format_context(project_context_content)
     # final_problem += '\n<solution>'
     # self._prepare_prompt(priming, final_problem, example_pair,
-    #  project_example_content)
+                        #  project_example_content)
     self._prepare_prompt(spec, final_problem)
-
+      
     return self._prompt
 
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
@@ -366,11 +365,11 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Constructs a prompt using the parameters and saves it."""
     self._prompt.add_priming(priming)
 
-    # if example_pair is None:
-    #   example_pair = []
+    if example_pair is None:
+      example_pair = []
 
-    # self._add_examples(example_pair, final_problem, project_example_content)
-    # self._prompt.add_problem(final_problem)
+    self._add_examples(example_pair, final_problem, project_example_content)
+    self._prompt.add_problem(final_problem)
 
 
 class DefaultJvmTemplateBuilder(PromptBuilder):

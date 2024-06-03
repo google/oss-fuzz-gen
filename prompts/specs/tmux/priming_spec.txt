@@ -5,10 +5,13 @@ The function signature is:
 <code>int client_connect(event_base *base, const char *uri, uint64_t token);</code>
 
 <project_summary>
-The `client_connect` function is integral to tmux's functionality, facilitating connections between tmux clients and the server. It handles scenarios where the server might not be running and handles the starting of the server if necessary, based on provided flags.</project_summary>
+The `client_connect` function is integral to tmux's functionality, facilitating connections between tmux clients and the server. It handles scenarios where the server might not be running and handles the starting of the server if necessary, based on provided flags.
+</project_summary>
 
 The driver code you need to complete is as follows, fill it carefully and follow the requirements within the comments correctly to make the fuzzing test work:
 <code>
+#include <fuzzer/FuzzedDataProvider.h>
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -19,31 +22,38 @@ The driver code you need to complete is as follows, fill it carefully and follow
 #include <cstring>
 #include <cerrno>
 #include <event2/event.h>
-#include "tmux.h"
+
+extern "C" {
+    #include "tmux.h"
+}
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     FuzzedDataProvider stream(data, size);
 
-    // TODO: Initialize event_base which is necessary for network event handling
+    // @arg base: Pointer to an initialized event_base structure (must not be nullptr)
     struct event_base *base = event_base_new();
     if (!base) return 0;  // Cannot proceed without a valid event_base
+    // TODO: Handle event_base initialization failure if applicable to your error handling strategy.
 
-    // TODO: Generate random values for path and flags
-    std::string path = stream.ConsumeRandomLengthString();
-    uint64_t flags = stream.ConsumeIntegral<uint64_t>();
+    // @arg path: Must be a valid UNIX socket path, typically under /tmp or similar directories
+    std::string path = "/tmp/" + stream.ConsumeRandomLengthString();
+    // TODO: Ensure path is sanitized and secured if necessary, avoid buffer overflow.
 
-    // TODO: Execute the client_connect call with the generated values
+    // @arg flags: Bitmask where only CLIENT_STARTSERVER and CLIENT_NOSTARTSERVER bits are valid
+    uint64_t flags = stream.ConsumeIntegral<uint64_t>() & (CLIENT_STARTSERVER | CLIENT_NOSTARTSERVER);
+    // TODO: Define behavior when neither CLIENT_STARTSERVER nor CLIENT_NOSTARTSERVER is set.
+
+    // Execute the client_connect call with the mutated values
     int result = client_connect(base, path.c_str(), flags);
+    // TODO: Evaluate the result, handle errors, and determine if further action is needed based on the result.
 
-    // TODO: Optionally handle and check the return value to determine outcome
-    // Example check: assert(result >= 0);
-
-    // TODO: Clean up resources to prevent memory leaks
+    // Clean up resources
     event_base_free(base);
+    // TODO: Verify all resources are freed and no memory leaks occur.
 
     return 0;  // Indicate successful handling
 }
 
 </code>
-
+You MUST use the variables after defining and initializing them, and you MUST handle the TODOs as indicated in the comments. The function `client_connect` is provided by the tmux project and is not part of the fuzzing test. You should focus on the fuzzing driver code and ensure it is correctly implemented to test the `client_connect` function.
 </system>
