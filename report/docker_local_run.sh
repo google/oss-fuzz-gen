@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-PROJECTS=htslib,tinyxml2
+# Comma separated project list
+PROJECTS=${TARGET_PROJECTS}
 BENCHMARK_HEURISTICS=far-reach-low-coverage
 ROOT_FI=/tmp/fuzz-introspector
 OSS_FUZZ_GEN_MODEL=${LLM_MODEL}
@@ -34,7 +35,7 @@ cd tools/web-fuzzing-introspection/app/static/assets/db/
 python3 ./web_db_creator_from_summary.py \
   --includes="${PROJECTS}"
 
-# Start webserver DB                                                            
+# Start webserver DB
 echo "Shutting down server in case it's running"
 curl --silent http://localhost:8080/api/shutdown || true
 
