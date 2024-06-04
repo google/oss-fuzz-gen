@@ -25,8 +25,8 @@ import subprocess as sp
 import time
 import traceback
 import uuid
-from typing import Any, Optional
 from collections import namedtuple
+from typing import Any, Optional
 
 from google.cloud import storage
 
@@ -35,8 +35,8 @@ from experiment.benchmark import Benchmark
 from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
 from llm_toolkit import code_fixer
-from llm_toolkit.models import DefaultModel
 from llm_toolkit.crash_triager import TriageResult
+from llm_toolkit.models import DefaultModel
 
 # The directory in the oss-fuzz image
 JCC_DIR = '/usr/local/bin'
@@ -256,8 +256,8 @@ class BuilderRunner:
     except MemoryError as e:
       # Some logs from abnormal fuzz targets are too large to be parsed.
       logging.error('%s is too large to parse: %s', log_handle.name, e)
-      return 0, 0, False, '', SemanticCheckResult(
-          SemanticCheckResult.LOG_MESS_UP)
+      return ParseResult(0, 0, False, '',
+                         SemanticCheckResult(SemanticCheckResult.LOG_MESS_UP))
 
     cov_pcs, total_pcs, crashes = 0, 0, False
 
@@ -292,30 +292,37 @@ class BuilderRunner:
       # Null-deref, normally indicating inadequate parameter initialization or
       # wrong function usage.
       if symptom == 'null-deref':
-        return cov_pcs, total_pcs, True, crash_info, SemanticCheckResult(
-            SemanticCheckResult.NULL_DEREF, symptom, crash_stacks)
+        return ParseResult(
+            cov_pcs, total_pcs, True, crash_info,
+            SemanticCheckResult(SemanticCheckResult.NULL_DEREF, symptom,
+                                crash_stacks))
 
       # Signal, normally indicating assertion failure due to inadequate
       # parameter initialization or wrong function usage.
       if symptom == 'signal':
-        return cov_pcs, total_pcs, True, crash_info, SemanticCheckResult(
-            SemanticCheckResult.SIGNAL, symptom, crash_stacks)
+        return ParseResult(
+            cov_pcs, total_pcs, True, crash_info,
+            SemanticCheckResult(SemanticCheckResult.SIGNAL, symptom,
+                                crash_stacks))
 
       # OOM, normally indicating malloc's parameter is too large, e.g., because
       # of using parameter `size`.
       # TODO(dongge): Refine this, 1) Merge this with the other oom case found
       # from reproducer name; 2) Capture the actual number in (malloc(\d+)).
       if 'out-of-memory' in symptom or 'out of memory' in symptom:
-        return cov_pcs, total_pcs, True, crash_info, SemanticCheckResult(
-            SemanticCheckResult.FP_OOM, symptom, crash_stacks)
+        return ParseResult(
+            cov_pcs, total_pcs, True, crash_info,
+            SemanticCheckResult(SemanticCheckResult.FP_OOM, symptom,
+                                crash_stacks))
 
       # FP case 2: fuzz target crashes at init or first few rounds.
       if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
         # No cov line has been identified or only INITED round has been passed.
         # This is very likely the false positive cases.
-        return cov_pcs, total_pcs, True, crash_info, \
-               SemanticCheckResult(SemanticCheckResult.FP_NEAR_INIT_CRASH,\
-                             symptom, crash_stacks)
+        return ParseResult(
+            cov_pcs, total_pcs, True, crash_info,
+            SemanticCheckResult(SemanticCheckResult.FP_NEAR_INIT_CRASH, symptom,
+                                crash_stacks))
 
       # FP case 3: 1st func of the 1st thread stack is in fuzz target.
       if len(crash_stacks) > 0:
@@ -324,24 +331,28 @@ class BuilderRunner:
         for stack_frame in first_stack[:1]:
           if self._stack_func_is_of_testing_project(stack_frame):
             if 'LLVMFuzzerTestOneInput' in stack_frame:
-              return cov_pcs, total_pcs, True, crash_info, \
-                     SemanticCheckResult(SemanticCheckResult.FP_TARGET_CRASH,\
-                                   symptom, crash_stacks)
+              return ParseResult(
+                  cov_pcs, total_pcs, True, crash_info,
+                  SemanticCheckResult(SemanticCheckResult.FP_TARGET_CRASH,
+                                      symptom, crash_stacks))
             break
 
-      return cov_pcs, total_pcs, True, crash_info, SemanticCheckResult(
-          SemanticCheckResult.NO_SEMANTIC_ERR, symptom, crash_stacks)
+      return ParseResult(
+          cov_pcs, total_pcs, True, crash_info,
+          SemanticCheckResult(SemanticCheckResult.NO_SEMANTIC_ERR, symptom,
+                              crash_stacks))
 
     elif initcov == donecov and lastround is not None:
       # Another error fuzz target case: no cov increase.
       # A special case is initcov == donecov == None, which indicates no
       # interesting inputs were found. This may happen if the target rejected
       # all inputs we tried.
-      return cov_pcs, total_pcs, False, '', SemanticCheckResult(
-          SemanticCheckResult.NO_COV_INCREASE)
+      return ParseResult(
+          cov_pcs, total_pcs, False, '',
+          SemanticCheckResult(SemanticCheckResult.NO_COV_INCREASE))
 
-    return cov_pcs, total_pcs, crashes, '', SemanticCheckResult(
-        SemanticCheckResult.NO_SEMANTIC_ERR)
+    return ParseResult(cov_pcs, total_pcs, crashes, '',
+                       SemanticCheckResult(SemanticCheckResult.NO_SEMANTIC_ERR))
 
   def build_and_run(self, generated_project: str, target_path: str,
                     iteration: int) -> tuple[BuildResult, Optional[RunResult]]:

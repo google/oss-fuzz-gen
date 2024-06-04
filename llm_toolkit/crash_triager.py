@@ -14,8 +14,8 @@
 # limitations under the License.
 """Triaging the crash with LLM."""
 
-import os
 import logging
+import os
 
 from experiment import benchmark as benchmarklib
 from llm_toolkit import models
@@ -56,6 +56,7 @@ def llm_triage(
                    temperature=0.5)
 
   triage_candidates = []
+  triage_result = TriageResult.NOT_APPLICABLE
   for file in os.listdir(response_dir):
     if not parser.is_raw_output(file):
       continue
