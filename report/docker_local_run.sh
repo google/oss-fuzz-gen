@@ -22,7 +22,7 @@ OSS_FUZZ_GEN_MODEL=${LLM_MODEL}
 BASE_DIR=$PWD
 
 # Clean and set up Fuzz Introspector
-ROOT_FI=`mktemp -d -p "$DIR"`
+ROOT_FI=$(mktemp -d)
 echo "Using Fuzz Introspector dir: ${ROOT_FI}"
 echo $WORK_DIR
 git clone https://github.com/ossf/fuzz-introspector $ROOT_FI
