@@ -16,7 +16,7 @@
 PROJECTS=htslib,tinyxml2
 BENCHMARK_HEURISTICS=far-reach-low-coverage
 ROOT_FI=/tmp/fuzz-introspector
-OSS_FUZZ_GEN_MODEL=gpt-3.5-turbo
+OSS_FUZZ_GEN_MODEL=${LLM_MODEL}
 
 BASE_DIR=$PWD
 
