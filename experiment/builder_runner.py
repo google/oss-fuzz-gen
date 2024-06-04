@@ -216,11 +216,21 @@ class BuilderRunner:
 
     return stacks
 
-  def _parse_func_from_stacks(self, stacks: list[list[str]]) -> list[str]:
+  def _parse_func_from_stacks(self, project_name: str,
+                              stacks: list[list[str]]) -> list[str]:
     """Parse project functions from stack traces."""
-    func = []
+    funcs = []
 
-    return func
+    for stack in stacks:
+      for line in stack:
+        func_and_file_path = line.split(' ', 3)[3]
+        func, file_path = func_and_file_path.split(' /', 1)
+        if func == 'LLVMFuzzerTestOneInput':
+          break
+        if project_name in file_path and func not in funcs:
+          funcs.append(func)
+
+    return funcs
 
   def _parse_fuzz_cov_info_from_libfuzzer_logs(
       self,
@@ -251,6 +261,7 @@ class BuilderRunner:
 
   def _parse_libfuzzer_logs(self,
                             log_handle,
+                            project_name: str,
                             check_cov_increase: bool = True) -> ParseResult:
     """Parses libFuzzer logs."""
     lines = None
@@ -292,8 +303,11 @@ class BuilderRunner:
     if crashes:
       symptom = SemanticCheckResult.extract_symptom(fuzzlog)
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
-      crash_funcs = self._parse_func_from_stacks(crash_stacks)
+      crash_funcs = self._parse_func_from_stacks(project_name, crash_stacks)
       crash_info = SemanticCheckResult.extract_crash_info(fuzzlog)
+
+      print('crash stack:\n', crash_stacks)
+      print('crash funcs:\n', crash_funcs)
 
       # FP case 1: Common fuzz target errors.
       # Null-deref, normally indicating inadequate parameter initialization or
@@ -383,6 +397,7 @@ class BuilderRunner:
       build_result: BuildResult) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target locally for fuzzing."""
 
+    project_name = generated_project.split('-', 1)[0]
     benchmark_target_name = os.path.basename(target_path)
     project_target_name = os.path.basename(self.benchmark.target_path)
     benchmark_log_path = self.work_dirs.build_logs_target(
@@ -390,6 +405,7 @@ class BuilderRunner:
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
 
+    print('project_name:', project_name)
     print('generated_project:', generated_project)
     print('target_path:', target_path)
     print('benchmark_target_name:', benchmark_target_name)
@@ -427,7 +443,7 @@ class BuilderRunner:
       flag = not self.benchmark.language == 'jvm'
       run_result.cov_pcs, run_result.total_pcs, \
         run_result.crashes, run_result.crash_info, \
-          run_result.semantic_check = self._parse_libfuzzer_logs(f, flag)
+          run_result.semantic_check = self._parse_libfuzzer_logs(f, project_name, flag)
       run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result
