@@ -159,10 +159,7 @@ def _get_data(resp: Optional[requests.Response], key: str,
 def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
   """Queries a fuzz target oracle API from Fuzz Introspector."""
   resp = _query_introspector(oracle_api, {'project': project})
-  functions = _get_data(resp, 'functions', [])
-  if functions:
-    return functions
-  sys.exit(1)
+  return _get_data(resp, 'functions', [])
 
 
 def query_introspector_for_keyword_targets(project: str) -> list[dict]:
@@ -176,10 +173,7 @@ def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
   if not query_func:
     logging.error('No such oracle "%s"', target_oracle)
     sys.exit(1)
-  functions = query_func(project)
-  if functions:
-    return functions
-  sys.exit(1)
+  return query_func(project)
 
 
 def query_introspector_cfg(project: str) -> dict:
