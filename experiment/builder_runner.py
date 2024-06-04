@@ -216,6 +216,12 @@ class BuilderRunner:
 
     return stacks
 
+  def _parse_func_from_stacks(self, stacks: list[list[str]]) -> list[str]:
+    """Parse project functions from stack traces."""
+    func = []
+
+    return func
+
   def _parse_fuzz_cov_info_from_libfuzzer_logs(
       self,
       lines: list[str]) -> tuple[Optional[int], Optional[int], Optional[int]]:
@@ -286,6 +292,7 @@ class BuilderRunner:
     if crashes:
       symptom = SemanticCheckResult.extract_symptom(fuzzlog)
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
+      crash_funcs = self._parse_func_from_stacks(crash_stacks)
       crash_info = SemanticCheckResult.extract_crash_info(fuzzlog)
 
       # FP case 1: Common fuzz target errors.
@@ -295,7 +302,7 @@ class BuilderRunner:
         return ParseResult(
             cov_pcs, total_pcs, True, crash_info,
             SemanticCheckResult(SemanticCheckResult.NULL_DEREF, symptom,
-                                crash_stacks))
+                                crash_stacks, crash_funcs))
 
       # Signal, normally indicating assertion failure due to inadequate
       # parameter initialization or wrong function usage.
@@ -303,7 +310,7 @@ class BuilderRunner:
         return ParseResult(
             cov_pcs, total_pcs, True, crash_info,
             SemanticCheckResult(SemanticCheckResult.SIGNAL, symptom,
-                                crash_stacks))
+                                crash_stacks, crash_funcs))
 
       # OOM, normally indicating malloc's parameter is too large, e.g., because
       # of using parameter `size`.
@@ -313,7 +320,7 @@ class BuilderRunner:
         return ParseResult(
             cov_pcs, total_pcs, True, crash_info,
             SemanticCheckResult(SemanticCheckResult.FP_OOM, symptom,
-                                crash_stacks))
+                                crash_stacks, crash_funcs))
 
       # FP case 2: fuzz target crashes at init or first few rounds.
       if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
@@ -322,7 +329,7 @@ class BuilderRunner:
         return ParseResult(
             cov_pcs, total_pcs, True, crash_info,
             SemanticCheckResult(SemanticCheckResult.FP_NEAR_INIT_CRASH, symptom,
-                                crash_stacks))
+                                crash_stacks, crash_funcs))
 
       # FP case 3: 1st func of the 1st thread stack is in fuzz target.
       if len(crash_stacks) > 0:
@@ -334,13 +341,13 @@ class BuilderRunner:
               return ParseResult(
                   cov_pcs, total_pcs, True, crash_info,
                   SemanticCheckResult(SemanticCheckResult.FP_TARGET_CRASH,
-                                      symptom, crash_stacks))
+                                      symptom, crash_stacks, crash_funcs))
             break
 
       return ParseResult(
           cov_pcs, total_pcs, True, crash_info,
           SemanticCheckResult(SemanticCheckResult.NO_SEMANTIC_ERR, symptom,
-                              crash_stacks))
+                              crash_stacks, crash_funcs))
 
     elif initcov == donecov and lastround is not None:
       # Another error fuzz target case: no cov increase.
@@ -382,6 +389,13 @@ class BuilderRunner:
         benchmark_target_name, iteration)
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
+
+    print('generated_project:', generated_project)
+    print('target_path:', target_path)
+    print('benchmark_target_name:', benchmark_target_name)
+    print('project_target_name:', project_target_name)
+    print('benchmark_log_path:', benchmark_log_path)
+
     # Copy err.log into work dir.
     try:
       shutil.copyfile(
