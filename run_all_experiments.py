@@ -288,12 +288,15 @@ def _print_experiment_results(results: list[Result]):
 def main():
   logging.basicConfig(level=logging.INFO)
   args = parse_args()
+
+  # Set introspector endpoint before performing any operations to ensure the
+  # right API endpoint is used throughout.
+  introspector.set_introspector_endpoints(args.introspector_endpoint)
+
   run_one_experiment.prepare()
 
   experiment_configs = get_experiment_configs(args)
   experiment_results = []
-
-  introspector.set_introspector_endpoints(args.introspector_endpoint)
 
   print(f'Running {NUM_EXP} experiment(s) in parallel.')
   if NUM_EXP == 1:
