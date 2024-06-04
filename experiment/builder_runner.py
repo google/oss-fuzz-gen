@@ -25,8 +25,8 @@ import subprocess as sp
 import time
 import traceback
 import uuid
-from typing import Any, Optional
 from collections import namedtuple
+from typing import Any, Optional
 
 from google.cloud import storage
 
@@ -35,8 +35,8 @@ from experiment.benchmark import Benchmark
 from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
 from llm_toolkit import code_fixer
-from llm_toolkit.models import DefaultModel
 from llm_toolkit.crash_triager import TriageResult
+from llm_toolkit.models import DefaultModel
 
 # The directory in the oss-fuzz image
 JCC_DIR = '/usr/local/bin'
