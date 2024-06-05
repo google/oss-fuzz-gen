@@ -251,6 +251,7 @@ class Evaluator:
       logger: _Logger,
   ) -> str:
     """Triages the crash."""
+    print('run_result.crash_info:', run_result.crash_info)
     if run_result.crash_info:
       crash_info = run_result.crash_info
       print('crash_info:', crash_info)
