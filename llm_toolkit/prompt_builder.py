@@ -363,6 +363,8 @@ class DefaultTemplateBuilder(PromptBuilder):
                            crash_func_names: list[str]) -> prompts.Prompt:
     """Prepares the crash-triaging prompt."""
     priming, priming_weight = self._format_triager_priming()
+    print('priming:', priming)
+    print('priming_weight:', priming_weight)
     problem = self._format_triager_problem(benchmark, target_code, crash_info,
                                            crash_func_names, priming_weight)
 
