@@ -93,6 +93,12 @@ class PromptBuilder:
                          errors: list[str]) -> prompts.Prompt:
     """Builds a fixer prompt."""
 
+  @abstractmethod
+  def build_triager_prompt(self, benchmark: Benchmark, target_code: str,
+                           crash_info: str,
+                           crash_func_names: list[str]) -> prompts.Prompt:
+    """Builds a triager prompt."""
+
 
 class DefaultTemplateBuilder(PromptBuilder):
   """Default builder for C/C++."""
@@ -118,9 +124,9 @@ class DefaultTemplateBuilder(PromptBuilder):
         template_dir, 'fixer_priming.txt')
     self.fixer_problem_template_file = self._find_template(
         template_dir, 'fixer_problem.txt')
-    self.triage_priming_template_file = self._find_template(
+    self.triager_priming_template_file = self._find_template(
         template_dir, 'triager_priming.txt')
-    self.triage_problem_template_file = self._find_template(
+    self.triager_problem_template_file = self._find_template(
         template_dir, 'triager_problem.txt')
 
   def _format_priming(self, target_file_type: FileType) -> str:
@@ -352,19 +358,20 @@ class DefaultTemplateBuilder(PromptBuilder):
         str(error_desc))
     return problem.replace('{ERROR_MESSAGES}', error_message)
 
-  def build_triage_prompt(self, benchmark: Benchmark, target_code: str,
-                          crash_info: str) -> prompts.Prompt:
+  def build_triager_prompt(self, benchmark: Benchmark, target_code: str,
+                           crash_info: str,
+                           crash_func_names: list[str]) -> prompts.Prompt:
     """Prepares the crash-triaging prompt."""
-    priming, priming_weight = self._format_triage_priming()
-    problem = self._format_triage_problem(target_code, crash_info,
-                                          priming_weight)
+    priming, priming_weight = self._format_triager_priming()
+    problem = self._format_triager_problem(benchmark, target_code, crash_info,
+                                           crash_func_names, priming_weight)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
 
-  def _format_triage_priming(self) -> Tuple[str, int]:
+  def _format_triager_priming(self) -> Tuple[str, int]:
     """Formats a priming for crash triage based on the template."""
-    with open(self.triage_priming_template_file) as f:
+    with open(self.triager_priming_template_file) as f:
       priming = f.read().strip() + '\n'
     priming_prompt = self._prompt.create_prompt_piece(priming, 'system')
     priming_weight = self._model.estimate_token_num(priming_prompt)
@@ -372,14 +379,56 @@ class DefaultTemplateBuilder(PromptBuilder):
     # in the case of structured prompts, we will create nested structures.
     return priming, priming_weight
 
-  def _format_triage_problem(self, target_code: str, crash_info: str,
-                             priming_weight: int) -> str:
+  def _format_triager_problem(self, benchmark: Benchmark, target_code: str,
+                              crash_info: str, crash_func_names: list[str],
+                              priming_weight: int) -> str:
     """Formats a problem for crash triage based on the template."""
-    with open(self.triage_problem_template_file) as f:
+    with open(self.triager_problem_template_file) as f:
       problem = f.read().strip()
-    # TODO(fdt622): append project code to the problem.
-    return problem.replace('{CRASH_REPORT}',crash_info)\
-                  .replace('{FUZZ_TARGET_CODE}',target_code)
+    problem.replace('{CRASH_REPORT}', crash_info)\
+           .replace('{FUZZ_TARGET_CODE}', target_code)
+
+    all_func_code = []
+    for func_name in crash_func_names:
+      func_sig = introspector.query_introspector_function_signature(
+          benchmark.project, func_name)
+      func_code = introspector.query_introspector_function_source(
+          benchmark.project, func_sig)
+      all_func_code.append(func_code)
+
+    problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
+    template_piece = self._prompt.create_prompt_piece('{PROJECT_FUNCTION_CODE}',
+                                                      'user')
+
+    problem_weight = self._model.estimate_token_num(problem_prompt)
+    template_weight = self._model.estimate_token_num(template_piece)
+
+    prompt_size = priming_weight + problem_weight - template_weight
+    # Add extra 20-tokens redundancy
+    prompt_size += 20
+
+    # Add function code one by one until we reach the maximum prompt size
+    selected_func_code = []
+    for func_code in all_func_code:
+      func_code_prompt = self._prompt.create_prompt_piece(func_code, 'user')
+      func_code_token_num = self._model.estimate_token_num(func_code_prompt)
+      if prompt_size + func_code_token_num >= self._model.context_window:
+        # The estimation is inaccurate, if an example's size equals to
+        # the limit, it's safer to not include the example.
+        break
+      prompt_size += func_code_token_num
+      selected_func_code.append(func_code)
+
+    # Compose the problem part of the prompt
+    project_function_code = '\n'.join(selected_func_code)
+    if project_function_code.strip():
+      return problem.replace('{PROJECT_FUNCTION_CODE}', project_function_code)
+
+    logging.warning(
+        'Empty project function code in triage prompt for project: %s, \
+          function name: %s', benchmark.project, benchmark.function_name)
+
+    return problem.replace('{PROJECT_FUNCTION_CODE}', '')
 
   def _prepare_prompt(
       self,
@@ -500,5 +549,12 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
                          error_desc: Optional[str],
                          errors: list[str]) -> prompts.Prompt:
     """Builds a fixer prompt."""
+    # Do nothing for jvm project now.
+    return self._prompt
+
+  def build_triager_prompt(self, benchmark: Benchmark, target_code: str,
+                           crash_info: str,
+                           crash_func_names: list[str]) -> prompts.Prompt:
+    """Builds a triager prompt."""
     # Do nothing for jvm project now.
     return self._prompt

@@ -103,7 +103,8 @@ def apply_llm_triage(
   )
 
   builder = prompt_builder.DefaultTemplateBuilder(triage_model)
-  prompt = builder.build_triage_prompt(benchmark, target_code, crash_info)
+  prompt = builder.build_triager_prompt(benchmark, target_code, crash_info,
+                                        crash_func_names)
   prompt.save(prompt_path)
 
   triage_model.generate_code(prompt, response_dir)
