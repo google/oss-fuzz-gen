@@ -470,7 +470,8 @@ class BuilderRunner:
       flag = not self.benchmark.language == 'jvm'
       run_result.cov_pcs, run_result.total_pcs, \
         run_result.crashes, run_result.crash_info, \
-          run_result.semantic_check = self._parse_libfuzzer_logs(f, flag)
+          run_result.semantic_check = \
+            self._parse_libfuzzer_logs(f, project_name, flag)
       run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result
@@ -758,6 +759,8 @@ class CloudBuilderRunner(BuilderRunner):
     """Builds and runs the fuzz target locally for fuzzing."""
     logging.info('Evaluating %s on cloud.', os.path.realpath(target_path))
 
+    project_name = generated_project.split('-', 1)[0]
+
     uid = self.experiment_name + str(uuid.uuid4())
     run_log_name = f'{uid}.run.log'
     run_log_path = f'gs://{self.experiment_bucket}/{run_log_name}'
@@ -894,7 +897,8 @@ class CloudBuilderRunner(BuilderRunner):
               'rb') as f:
       run_result.cov_pcs, run_result.total_pcs, \
         run_result.crashes, run_result.crash_info, \
-          run_result.semantic_check = self._parse_libfuzzer_logs(f)
+          run_result.semantic_check = \
+            self._parse_libfuzzer_logs(f, project_name)
       run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result
