@@ -1,0 +1,11 @@
+Below is the crash report:
+<log>
+{CRASH_REPORT}
+</log>
+
+Below is the fuzz driver:
+<code>
+{FUZZ_TARGET_CODE}
+</code>
+
+<solution>

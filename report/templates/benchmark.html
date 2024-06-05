@@ -31,6 +31,7 @@ td, th {
         <th>Crashes</th>
         <th>Bug</th>
         <th>Diagnosis</th>
+        <th>Triage</th>
         <th>Coverage</th>
         <th>Line coverage diff</th>
     </tr>
@@ -43,6 +44,7 @@ td, th {
         <td style="color: {{ 'red' if sample.result.crashes else 'black' }}">{{ sample.result.crashes }}</td>
         <td style="color: {{ 'red' if sample.result.crashes and not sample.result.is_semantic_error else 'black' }}">{{ sample.result.crashes and not sample.result.is_semantic_error }}</td>
         <td>{{ sample.result.semantic_error }} </td>
+        <td>{{ sample.result.triage }}</td>
         <td>{{ sample.result.coverage |percent }}</td>
         <td><a href="{{ sample.result.coverage_report_path | cov_report_link }}">{{ sample.result.line_coverage_diff|percent }}</a></td>
         {% else %}
