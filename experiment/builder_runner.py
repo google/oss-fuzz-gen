@@ -326,6 +326,7 @@ class BuilderRunner:
 
       print('crash_stack:\n', crash_stacks)
       print('crash_func_names:\n', crash_func_names)
+      print('crash_info:\n', crash_info)
 
       # FP case 1: Common fuzz target errors.
       # Null-deref, normally indicating inadequate parameter initialization or

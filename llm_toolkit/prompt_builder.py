@@ -367,6 +367,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     print('priming_weight:', priming_weight)
     problem = self._format_triager_problem(benchmark, target_code, crash_info,
                                            crash_func_names, priming_weight)
+    print('problem:', problem)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
