@@ -321,11 +321,7 @@ class Textcov:
 
   def is_fuzzer_class(self, class_item) -> bool:
     """Determine if the class_item is a fuzzer class."""
-    method_elements = class_item.find('./method[@name=\"fuzzerTestOneInput\"]')
-    if method_elements:
-      return True
-
-    return False
+    return bool(class_item.find('./method[@name=\"fuzzerTestOneInput\"]'))
 
   def determine_jvm_arguments_type(self, desc: str) -> List[str]:
     """
