@@ -409,20 +409,29 @@ class DefaultTemplateBuilder(PromptBuilder):
     problem_weight = self._model.estimate_token_num(problem_prompt)
     template_weight = self._model.estimate_token_num(template_piece)
 
+    print('problem_weight:', problem_weight)
+    print('template_weight:', template_weight)
+
     prompt_size = priming_weight + problem_weight - template_weight
     # Add extra 20-tokens redundancy
     prompt_size += 20
+    print('prompt_size_before:', prompt_size)
 
     # Add function code one by one until we reach the maximum prompt size
     selected_func_code = []
     for func_code in all_func_code:
       func_code_prompt = self._prompt.create_prompt_piece(func_code, 'user')
       func_code_token_num = self._model.estimate_token_num(func_code_prompt)
+      print('func_code_token_num:', func_code_token_num)
       if prompt_size + func_code_token_num >= self._model.context_window:
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
+        print(
+            'Breaking because adding this function code would exceed context window'
+        )
         break
       prompt_size += func_code_token_num
+      print('prompt_size_after:', prompt_size)
       selected_func_code.append(func_code)
 
     print('selected_func_code:\n', selected_func_code)
