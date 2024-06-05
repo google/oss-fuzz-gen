@@ -317,6 +317,7 @@ class BuilderRunner:
     # NOTE: Crashes from incorrect fuzz targets will not be counted finally.
 
     if crashes:
+      print('crashes:', crashes)
       symptom = SemanticCheckResult.extract_symptom(fuzzlog)
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
       crash_func_names = self._parse_func_name_from_stacks(
