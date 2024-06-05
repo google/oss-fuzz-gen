@@ -253,11 +253,13 @@ class Evaluator:
     """Triages the crash."""
     if run_result.crash_info:
       crash_info = run_result.crash_info
+      crash_funcs = run_result.semantic_check.crash_funcs
       return crash_triager.llm_triage(
           ai_binary,
           triaged_target_path,
           self.benchmark,
           crash_info,
+          crash_funcs,
           self.builder_runner.fixer_model_name,
       )
     else:
