@@ -260,9 +260,9 @@ class Evaluator:
           crash_info,
           self.builder_runner.fixer_model_name,
       )
-    else:
-      logger.log(f'Warning: no crash info in {generated_oss_fuzz_project}.')
-      return TriageResult.NOT_APPLICABLE
+
+    logger.log(f'Warning: no crash info in {generated_oss_fuzz_project}.')
+    return TriageResult.NOT_APPLICABLE
 
   def check_target(self, ai_binary, target_path: str) -> Result:
     """Builds and runs a target."""

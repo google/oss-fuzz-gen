@@ -98,7 +98,7 @@ def parse_triage(triage_path: str) -> tuple[str, str]:
   for line in lines:
     if "Crash is caused by bug in fuzz driver" in line:
       return (TriageResult.DRIVER, '\n'.join(lines))
-    elif "Crash is caused by bug in project" in line:
+    if "Crash is caused by bug in project" in line:
       return (TriageResult.PROJECT, '\n'.join(lines))
 
   return (TriageResult.NOT_APPLICABLE, '\n'.join(lines))

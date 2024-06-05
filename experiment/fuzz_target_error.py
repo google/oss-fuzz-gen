@@ -79,9 +79,9 @@ class SemanticCheckResult:
     match = cls.INFO_CRASH.search(fuzzlog)
     if match:
       return match.group(0)
-    else:
-      logging.warning('Failed to match crash information.')
-      return ''
+
+    logging.warning('Failed to match crash information.')
+    return ''
 
   def __init__(self,
                err_type: str,
