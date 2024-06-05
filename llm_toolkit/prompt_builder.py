@@ -126,6 +126,10 @@ class DefaultTemplateBuilder(PromptBuilder):
         template_dir, 'fixer_priming.txt')
     self.fixer_problem_template_file = self._find_template(
         template_dir, 'fixer_problem.txt')
+    self.triage_priming_template_file = self._find_template(
+        template_dir, 'triager_priming.txt')
+    self.triage_problem_template_file = self._find_template(
+        template_dir, 'triager_problem.txt')
 
   def _format_priming(self, target_file_type: FileType) -> str:
     """Formats a priming based on the prompt template."""
@@ -355,6 +359,35 @@ class DefaultTemplateBuilder(PromptBuilder):
         'Unexpected empty error message in fix prompt for error_desc: %s',
         str(error_desc))
     return problem.replace('{ERROR_MESSAGES}', error_message)
+
+  def build_triage_prompt(self, benchmark: Benchmark, target_code: str,
+                          crash_info: str) -> prompts.Prompt:
+    """Prepares the crash-triaging prompt."""
+    priming, priming_weight = self._format_triage_priming()
+    problem = self._format_triage_problem(target_code, crash_info,
+                                          priming_weight)
+
+    self._prepare_prompt(priming, problem)
+    return self._prompt
+
+  def _format_triage_priming(self) -> Tuple[str, int]:
+    """Formats a priming for crash triage based on the template."""
+    with open(self.triage_priming_template_file) as f:
+      priming = f.read().strip() + '\n'
+    priming_prompt = self._prompt.create_prompt_piece(priming, 'system')
+    priming_weight = self._model.estimate_token_num(priming_prompt)
+    # NOTE: We need to return the priming _as text_ and the weight. Otherwise,
+    # in the case of structured prompts, we will create nested structures.
+    return priming, priming_weight
+
+  def _format_triage_problem(self, target_code: str, crash_info: str,
+                             priming_weight: int) -> str:
+    """Formats a problem for crash triage based on the template."""
+    with open(self.triage_problem_template_file) as f:
+      problem = f.read().strip()
+    # TODO(fdt622): append project code to the problem.
+    return problem.replace('{CRASH_REPORT}',crash_info)\
+                  .replace('{FUZZ_TARGET_CODE}',target_code)
 
   def _prepare_prompt(
       self,
