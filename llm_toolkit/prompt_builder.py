@@ -338,6 +338,7 @@ class DefaultTemplateBuilder(PromptBuilder):
         continue
 
       error_prompt = self._prompt.create_prompt_piece(error, 'user')
+      print('error_prompt:', error_prompt)
       error_token_num = self._model.estimate_token_num(error_prompt)
       print('error_token_num:', error_token_num)
       if prompt_size + error_token_num >= self._model.context_window:
@@ -416,9 +417,9 @@ class DefaultTemplateBuilder(PromptBuilder):
     problem_weight = self._model.estimate_token_num(problem_prompt)
     template_weight = self._model.estimate_token_num(template_piece)
 
+    print('priming_weight:', priming_weight)
     print('problem_weight:', problem_weight)
     print('template_weight:', template_weight)
-    print('priming_weight:', priming_weight)
 
     prompt_size = priming_weight + problem_weight - template_weight
     # Add extra 20-tokens redundancy
@@ -429,6 +430,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     selected_func_code = []
     for func_code in all_func_code:
       func_code_prompt = self._prompt.create_prompt_piece(func_code, 'user')
+      print('func_code_prompt:', func_code_prompt)
       func_code_token_num = self._model.estimate_token_num(func_code_prompt)
       print('func_code_token_num:', func_code_token_num)
       if prompt_size + func_code_token_num >= self._model.context_window:
