@@ -15,6 +15,7 @@
 Helper class for fuzz target semantic errors.
 """
 import re
+import logging
 from typing import Optional
 
 
@@ -44,6 +45,9 @@ class SemanticCheckResult:
   # E.g., matches 'SCARINESS: 10 (null-deref)'
   SYMPTOM_SCARINESS = re.compile(r'SCARINESS:\s*\d+\s*\((.*)\)\n')
 
+  # Regex for extract crash information.
+  INFO_CRASH = re.compile(r'^={65}\r?\n([\s\S]*)', re.MULTILINE | re.DOTALL)
+
   NO_COV_INCREASE_MSG_PREFIX = 'No code coverage increasement'
 
   @classmethod
@@ -68,6 +72,16 @@ class SemanticCheckResult:
   def is_no_cov_increase_err(cls, error_desc: Optional[str]) -> bool:
     return (error_desc is not None) and error_desc.startswith(
         cls.NO_COV_INCREASE_MSG_PREFIX)
+
+  @classmethod
+  def extract_crash_info(cls, fuzzlog: str) -> str:
+    """Extracts crash information from fuzzing logs."""
+    match = cls.INFO_CRASH.search(fuzzlog)
+    if match:
+      return match.group(0)
+
+    logging.warning('Failed to match crash information.')
+    return ''
 
   def __init__(self,
                err_type: str,

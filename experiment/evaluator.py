@@ -28,7 +28,8 @@ from experiment.benchmark import Benchmark
 from experiment.builder_runner import BuildResult, RunResult
 from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
-from llm_toolkit import code_fixer
+from llm_toolkit import code_fixer, crash_triager
+from llm_toolkit.crash_triager import TriageResult
 
 LLM_FIX_LIMIT = 5
 
@@ -47,6 +48,7 @@ class Result:
   # Grammatically correct but has false positive or no cov increase at all.
   is_semantic_error: bool = False
   semantic_error: str = ''
+  triage: str = ''
   # Deprecated renamed fields. Keeping them for backward compatibility.
   # TODO https://github.com/google/oss-fuzz-gen/issues/215
   is_driver_fuzz_err: bool = dataclasses.field(kw_only=True, default=False)
@@ -240,6 +242,28 @@ class Evaluator:
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
                      generated_oss_fuzz_project, os.path.basename(target_path)))
 
+  def triage_crash(
+      self,
+      ai_binary: str,
+      generated_oss_fuzz_project: str,
+      triaged_target_path: str,
+      run_result: RunResult,
+      logger: _Logger,
+  ) -> str:
+    """Triages the crash."""
+    if run_result.crash_info:
+      crash_info = run_result.crash_info
+      return crash_triager.llm_triage(
+          ai_binary,
+          triaged_target_path,
+          self.benchmark,
+          crash_info,
+          self.builder_runner.fixer_model_name,
+      )
+
+    logger.log(f'Warning: no crash info in {generated_oss_fuzz_project}.')
+    return TriageResult.NOT_APPLICABLE
+
   def check_target(self, ai_binary, target_path: str) -> Result:
     """Builds and runs a target."""
     generated_target_name = os.path.basename(target_path)
@@ -300,7 +324,8 @@ class Evaluator:
                  f'{llm_fix_count} iterations of fixing.')
       return logger.return_result(
           Result(False, False, 0.0, 0.0, '', '', False,
-                 SemanticCheckResult.NOT_APPLICABLE))
+                 SemanticCheckResult.NOT_APPLICABLE,
+                 TriageResult.NOT_APPLICABLE))
 
     logger.log(f'Successfully built {target_path} with '
                f'{self.builder_runner.fixer_model_name} in '
@@ -310,7 +335,19 @@ class Evaluator:
       logger.log(f'Warning: no run result in {generated_oss_fuzz_project}.')
       return logger.return_result(
           Result(True, False, 0.0, 0.0, '', '', False,
-                 SemanticCheckResult.NOT_APPLICABLE))
+                 SemanticCheckResult.NOT_APPLICABLE,
+                 TriageResult.NOT_APPLICABLE))
+
+    # Triage the crash with LLM
+    logger.log(f'Triaging the crash related to {target_path} with '
+               f'{self.builder_runner.fixer_model_name}.')
+    run_result.triage = self.triage_crash(
+        ai_binary,
+        generated_oss_fuzz_project,
+        target_path,
+        run_result,
+        logger,
+    )
 
     if run_result.coverage_summary is None or run_result.coverage is None:
       logger.log(
@@ -318,7 +355,8 @@ class Evaluator:
       )
       return logger.return_result(
           Result(True, run_result.crashes, 0.0, 0.0, '', '',
-                 not run_result.succeeded, run_result.semantic_check.type))
+                 not run_result.succeeded, run_result.semantic_check.type,
+                 run_result.triage))
 
     if not run_result.succeeded:
       logger.log(f'Warning: Failed to fix semantic error '
@@ -327,7 +365,7 @@ class Evaluator:
       return logger.return_result(
           Result(True, run_result.crashes, 0.0, 0.0,
                  run_result.coverage_report_path, run_result.reproducer_path,
-                 True, run_result.semantic_check.type))
+                 True, run_result.semantic_check.type, run_result.triage))
 
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
@@ -365,7 +403,8 @@ class Evaluator:
     return logger.return_result(
         Result(True, run_result.crashes, coverage_percent, coverage_diff,
                run_result.coverage_report_path, run_result.reproducer_path,
-               not run_result.succeeded, run_result.semantic_check.type))
+               not run_result.succeeded, run_result.semantic_check.type,
+               run_result.triage))
 
   def _load_existing_coverage_summary(self) -> dict:
     """Load existing summary.json."""

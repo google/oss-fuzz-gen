@@ -319,6 +319,22 @@ def get_run_logs(benchmark: str, sample: str) -> str:
   return ''
 
 
+def get_triage(benchmark: str, sample: str) -> str:
+  """Gets the triage of benchmark |benchmark| with sample ID |sample|."""
+  fixed_dir = os.path.join(RESULTS_DIR, benchmark, 'fixed_targets')
+  triage_dir = os.path.join(fixed_dir, f'{sample}-triage')
+  if not os.path.exists(triage_dir):
+    return ''
+
+  for name in os.listdir(triage_dir):
+    if name.endswith('.txt') and name != 'prompt.txt':
+      triage_path = os.path.join(triage_dir, name)
+      with open(triage_path) as f:
+        return f.read()
+
+  return ''
+
+
 def get_fixed_target(path):
   """Gets the fixed fuzz target from the benchmark's result |path|."""
   code = ''
@@ -427,6 +443,7 @@ def sample_page(benchmark, sample):
                            sample=match_sample(benchmark, sample),
                            logs=get_logs(benchmark, sample),
                            run_logs=get_run_logs(benchmark, sample),
+                           triage=get_triage(benchmark, sample),
                            targets=get_targets(benchmark, sample),
                            model=model)
   # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
