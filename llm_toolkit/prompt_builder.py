@@ -425,9 +425,13 @@ class DefaultTemplateBuilder(PromptBuilder):
       prompt_size += func_code_token_num
       selected_func_code.append(func_code)
 
+    print('selected_func_code:\n', selected_func_code)
+
     # Compose the problem part of the prompt
     project_function_code = '\n'.join(selected_func_code)
+    print('project_function_code:\n', project_function_code)
     if project_function_code.strip():
+      print('project_function_code_strip:\n', project_function_code.strip())
       return problem.replace('{PROJECT_FUNCTION_CODE}', project_function_code)
 
     logging.warning(
