@@ -36,6 +36,7 @@ def llm_triage(
     target_path: str,
     benchmark: benchmarklib.Benchmark,
     crash_info: str,
+    crash_func_names: list[str],
     triage_model_name: str,
 ) -> str:
   """Triages crash with LLM based on crash information and relevant code."""
@@ -50,6 +51,7 @@ def llm_triage(
                    benchmark,
                    target_code,
                    crash_info,
+                   crash_func_names,
                    prompt_path,
                    response_dir,
                    triage_model_name,
@@ -86,6 +88,7 @@ def apply_llm_triage(
     benchmark: benchmarklib.Benchmark,
     target_code: str,
     crash_info: str,
+    crash_func_names: list[str],
     prompt_path: str,
     response_dir: str,
     triage_model_name: str = models.DefaultModel.name,

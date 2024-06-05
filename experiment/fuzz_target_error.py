@@ -88,10 +88,12 @@ class SemanticCheckResult:
   def __init__(self,
                err_type: str,
                crash_symptom: str = '',
-               crash_stacks: Optional[list[list[str]]] = None):
+               crash_stacks: Optional[list[list[str]]] = None,
+               crash_func_names: Optional[list[str]] = None):
     self.type = err_type
     self.crash_symptom = crash_symptom
     self.crash_stacks = crash_stacks if crash_stacks else []
+    self.crash_func_names = crash_func_names if crash_func_names else []
 
   def _get_error_desc(self) -> str:
     """Returns one sentence error description used in fix prompt."""
