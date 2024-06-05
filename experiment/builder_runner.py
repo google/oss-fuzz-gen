@@ -227,7 +227,7 @@ class BuilderRunner:
 
     for stack in stacks:
       for line in stack:
-        parts = line.split(' ')
+        parts = line.split(' ', 3)
         if len(parts) < 4:
           continue
         func_and_file_path = parts[3]
@@ -323,8 +323,8 @@ class BuilderRunner:
           project_name, crash_stacks)
       crash_info = SemanticCheckResult.extract_crash_info(fuzzlog)
 
-      print('crash stack:\n', crash_stacks)
-      print('crash func_names:\n', crash_func_names)
+      print('crash_stack:\n', crash_stacks)
+      print('crash_func_names:\n', crash_func_names)
 
       # FP case 1: Common fuzz target errors.
       # Null-deref, normally indicating inadequate parameter initialization or
