@@ -388,8 +388,8 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Formats a problem for crash triage based on the template."""
     with open(self.triager_problem_template_file) as f:
       problem = f.read().strip()
-    problem.replace('{CRASH_REPORT}', crash_info)\
-           .replace('{FUZZ_TARGET_CODE}', target_code)
+    problem = problem.replace('{CRASH_REPORT}', crash_info)\
+                     .replace('{FUZZ_TARGET_CODE}', target_code)
 
     all_func_code = []
     for func_name in crash_func_names:
@@ -434,7 +434,8 @@ class DefaultTemplateBuilder(PromptBuilder):
         'Empty project function code in triage prompt for project: %s, \
           function name: %s', benchmark.project, benchmark.function_name)
 
-    return problem.replace('{PROJECT_FUNCTION_CODE}', '')
+    return problem.replace('{PROJECT_FUNCTION_CODE}', \
+                           'No relevant project function code')
 
   def _prepare_prompt(
       self,
