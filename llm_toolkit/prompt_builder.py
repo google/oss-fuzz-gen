@@ -316,11 +316,16 @@ class DefaultTemplateBuilder(PromptBuilder):
     problem_weight = self._model.estimate_token_num(problem_prompt)
     template_weight = self._model.estimate_token_num(template_piece)
 
+    print('problem_weight_fix:', problem_weight)
+    print('template_weight_fix:', template_weight)
+    print('priming_weight_fix:', priming_weight)
+
     # the template will be replaced later and should not be counted
     prompt_size = priming_weight + problem_weight - template_weight
     # Add extra 20-tokens redundancy
     # TODO(mihaimaruseac): Is this needed?
     prompt_size += 20
+    print('prompt_size_fix_before:', prompt_size)
 
     # We are adding errors one by one until we reach the maximum prompt size
     selected_errors = []
@@ -334,11 +339,13 @@ class DefaultTemplateBuilder(PromptBuilder):
 
       error_prompt = self._prompt.create_prompt_piece(error, 'user')
       error_token_num = self._model.estimate_token_num(error_prompt)
+      print('error_token_num:', error_token_num)
       if prompt_size + error_token_num >= self._model.context_window:
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
         break
       prompt_size += error_token_num
+      print('prompt_size_fix_after:', prompt_size)
       selected_errors.append(error)
 
     # Now, compose the problem part of the prompt
@@ -411,6 +418,7 @@ class DefaultTemplateBuilder(PromptBuilder):
 
     print('problem_weight:', problem_weight)
     print('template_weight:', template_weight)
+    print('priming_weight:', priming_weight)
 
     prompt_size = priming_weight + problem_weight - template_weight
     # Add extra 20-tokens redundancy
