@@ -24,7 +24,7 @@ import jinja2
 import requests
 import yaml
 
-from data_prep import project_targets
+from data_prep import project_targets, introspector
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
