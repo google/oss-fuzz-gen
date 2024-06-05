@@ -103,7 +103,7 @@ def _bucket_match_target_content_signatures(
     content = target_path_contents.get(target_path)
     # Some projects' `target_path` is different from the actual
     # path in container, due to relocation in build process.
-    # For example, targe_path is /src/hiredis/format_command_fuzzer.c, different
+    # For example, target_path is /src/hiredis/format_command_fuzzer.c, different
     # from the actual path /src/hiredis/fuzzing/format_command_fuzzer.c in
     # https://storage.googleapis.com/oss-fuzz-introspector/hiredis/inspector-report/20240120/summary.json
     if not content:
@@ -225,7 +225,7 @@ def _match_target_content_signatures(
     content = target_path_contents.get(target_path)
     # Some projects' `target_path` is different from the actual
     # path in container, due to relocation in build process.
-    # For example, targe_path is /src/hiredis/format_command_fuzzer.c, different
+    # For example, target_path is /src/hiredis/format_command_fuzzer.c, different
     # from the actual path /src/hiredis/fuzzing/format_command_fuzzer.c in
     # https://storage.googleapis.com/oss-fuzz-introspector/hiredis/inspector-report/20240120/summary.json
     if not content:
