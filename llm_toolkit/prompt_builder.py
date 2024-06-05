@@ -392,9 +392,12 @@ class DefaultTemplateBuilder(PromptBuilder):
     for func_name in crash_func_names:
       func_sig = introspector.query_introspector_function_signature(
           benchmark.project, func_name)
+      print('func_sig:', func_sig)
       func_code = introspector.query_introspector_function_source(
           benchmark.project, func_sig)
+      print('func_code:\n', func_code)
       all_func_code.append(func_code)
+    print('all_func_code:\n', all_func_code)
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{PROJECT_FUNCTION_CODE}',
