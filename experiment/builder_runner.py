@@ -342,7 +342,7 @@ class BuilderRunner:
           SemanticCheckResult(SemanticCheckResult.NO_SEMANTIC_ERR, symptom,
                               crash_stacks))
 
-    elif initcov == donecov and lastround is not None:
+    if initcov == donecov and lastround is not None:
       # Another error fuzz target case: no cov increase.
       # A special case is initcov == donecov == None, which indicates no
       # interesting inputs were found. This may happen if the target rejected
