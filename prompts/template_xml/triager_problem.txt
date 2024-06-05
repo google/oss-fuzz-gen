@@ -3,9 +3,14 @@ Below is the crash report:
 {CRASH_REPORT}
 </log>
 
-Below is the fuzz driver:
+Below is the fuzz driver code:
 <code>
 {FUZZ_TARGET_CODE}
 </code>
+
+Below is relevant project function code:
+<code>
+{PROJECT_FUNCTION_CODE}
+</code> 
 
 <solution>
