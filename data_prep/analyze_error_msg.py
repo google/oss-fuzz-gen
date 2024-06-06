@@ -25,7 +25,7 @@ from experiment.benchmark import Benchmark
 
 
 def get_minimum_filename(path: str) -> str:
-  """Get the filename without parent directories and extension."""
+  """Gets the filename without parent directories and extension."""
   return os.path.splitext(os.path.basename(path))[0]
 
 
