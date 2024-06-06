@@ -355,7 +355,6 @@ class BuilderRunner:
     """Builds and runs the fuzz target locally for fuzzing."""
 
     benchmark_target_name = os.path.basename(target_path)
-    project_target_name = os.path.basename(self.benchmark.target_path)
     benchmark_log_path = self.work_dirs.build_logs_target(
         benchmark_target_name, iteration)
     jcc_errlog_path = self.work_dirs.jcc_errlog_target(benchmark_target_name,
@@ -374,9 +373,9 @@ class BuilderRunner:
       open(jcc_errlog_path, 'x')
     if not build_result.succeeded:
       build_log_errors = code_fixer.extract_error_message(
-          benchmark_log_path, project_target_name)
+          benchmark_log_path, self.benchmark)
       jcc_errlog_errors = code_fixer.extract_jcc_errlog_message(
-          jcc_errlog_path, project_target_name)
+          jcc_errlog_path, self.benchmark)
 
       # Temp: Compare errors extracted from build log and jcc err.log.
       # Use this info to check we found expected errors from err.log
@@ -775,10 +774,10 @@ class CloudBuilderRunner(BuilderRunner):
     if not build_result.succeeded:
       build_log_errors = code_fixer.extract_error_message(
           self.work_dirs.build_logs_target(generated_target_name, iteration),
-          os.path.basename(self.benchmark.target_path))
+          self.benchmark)
       jcc_errlog_errors = code_fixer.extract_jcc_errlog_message(
           self.work_dirs.jcc_errlog_target(generated_target_name, iteration),
-          os.path.basename(self.benchmark.target_path))
+          self.benchmark)
 
       # Temp: Compare errors extracted from build log and jcc err.log.
       # Use this info to check we found expected errors from err.log

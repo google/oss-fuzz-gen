@@ -25,6 +25,7 @@ import requests
 import yaml
 
 from data_prep import project_targets
+from data_prep.analyze_error_msg import preprocess_error_messages
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
@@ -64,11 +65,6 @@ EXAMPLES = {
 
 BUILD_ERROR_SUMMARY = 'The code has the following build issues:'
 FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
-
-# The following strings identify errors when the fuzz target is built with clang
-# and cannot be built with clang++, which should be removed.
-FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
-FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
 
 
 class PromptBuilder:
@@ -270,8 +266,8 @@ class DefaultTemplateBuilder(PromptBuilder):
                          errors: list[str]) -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming()
-    problem = self._format_fixer_problem(raw_code, error_desc, errors,
-                                         priming_weight)
+    problem = self._format_fixer_problem(benchmark, raw_code, error_desc,
+                                         errors, priming_weight)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -286,8 +282,9 @@ class DefaultTemplateBuilder(PromptBuilder):
     # in the case of structured prompts, we will create nested structures.
     return priming, priming_weight
 
-  def _format_fixer_problem(self, raw_code: str, error_desc: Optional[str],
-                            errors: list[str], priming_weight: int) -> str:
+  def _format_fixer_problem(self, benchmark: Benchmark, raw_code: str,
+                            error_desc: Optional[str], errors: list[str],
+                            priming_weight: int) -> str:
     """Formats a problem for code fixer based on the template."""
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
@@ -300,42 +297,51 @@ class DefaultTemplateBuilder(PromptBuilder):
     problem = problem.replace('{ERROR_SUMMARY}', error_summary)
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
-    template_piece = self._prompt.create_prompt_piece('{ERROR_MESSAGES}',
-                                                      'user')
+    error_template_piece = self._prompt.create_prompt_piece(
+        '{ERROR_MESSAGES}', 'user')
+    info_template_piece = self._prompt.create_prompt_piece('{AUX_INFO}', 'user')
 
     problem_weight = self._model.estimate_token_num(problem_prompt)
-    template_weight = self._model.estimate_token_num(template_piece)
+    template_weight = (self._model.estimate_token_num(error_template_piece) +
+                       self._model.estimate_token_num(info_template_piece))
 
-    # the template will be replaced later and should not be counted
+    # The template will be replaced later and should not be counted.
     prompt_size = priming_weight + problem_weight - template_weight
-    # Add extra 20-tokens redundancy
+    # Add extra 20-tokens redundancy.
     # TODO(mihaimaruseac): Is this needed?
     prompt_size += 20
 
-    # We are adding errors one by one until we reach the maximum prompt size
+    # We are processing errors one by one until the maximum prompt size reached.
     selected_errors = []
-    for error in errors:
-      # Skip C only errors.
-      # TODO(Dongge): Fix JCC to address this.
-      # https://github.com/google/oss-fuzz-gen/pull/208/files/a0c0db2fd5860e6e4d434467c5ec9f949ee2cff1#r1571651507
-      if (FALSE_EXTERN_KEYWORD_ERROR in error or
-          FALSE_FUZZED_DATA_PROVIDER_ERROR in error):
-        continue
+    aux_info = []
+    error_analyzer = preprocess_error_messages(benchmark, errors)
+    for error in error_analyzer.errors:
+      error_str, aux_str = error_analyzer.process_error(error)
 
-      # TODO: Filter errors and add more source context.
-      error_prompt = self._prompt.create_prompt_piece(error, 'user')
-      error_token_num = self._model.estimate_token_num(error_prompt)
-      if prompt_size + error_token_num >= self._model.context_window:
+      error_token_num = 0
+      aux_token_num = 0
+      if error_str:
+        error_prompt = self._prompt.create_prompt_piece(error_str, 'user')
+        error_token_num = self._model.estimate_token_num(error_prompt)
+      if aux_str:
+        aux_prompt = self._prompt.create_prompt_piece(aux_str, 'user')
+        aux_token_num = self._model.estimate_token_num(aux_prompt)
+      if (prompt_size + error_token_num + aux_token_num
+          >= self._model.context_window):
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
         break
-      prompt_size += error_token_num
-      selected_errors.append(error)
+      prompt_size += error_token_num + aux_token_num
+      if error_str:
+        selected_errors.append(error_str)
+      if aux_str:
+        aux_info.append(aux_str)
 
     # Now, compose the problem part of the prompt
-    error_message = '\n'.join(selected_errors)
-    if error_message.strip():
-      return problem.replace('{ERROR_MESSAGES}', error_message)
+    problem = problem.replace('{AUX_INFO}', '\n'.join(aux_info))
+    problem = problem.replace('{ERROR_MESSAGES}', '\n'.join(selected_errors))
+    if aux_info or selected_errors:
+      return problem
 
     # Expecting empty error message for NO_COV_INCREASE.
     if SemanticCheckResult.is_no_cov_increase_err(error_desc):
@@ -343,11 +349,14 @@ class DefaultTemplateBuilder(PromptBuilder):
                     .replace('{ERROR_MESSAGES}\n', '')\
                     .replace('</error>\n', '')
 
-    # Log warning for an unexpected empty error message.
-    logging.warning(
-        'Unexpected empty error message in fix prompt for error_desc: %s',
-        str(error_desc))
-    return problem.replace('{ERROR_MESSAGES}', error_message)
+    # Logging for empty error messages block.
+    if not errors and not error_desc:
+      logging.warning('Unexpected empty errors and error_desc')
+    elif error_desc:
+      logging.info('Using error_desc: %s', str(error_desc))
+    else:
+      logging.info('Empty error_desc, no error selected for prompt')
+    return problem
 
   def _prepare_prompt(
       self,

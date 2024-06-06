@@ -281,11 +281,12 @@ def get_fuzz_target_compile_output(target_names: list[str],
 
 
 def extract_jcc_errlog_message(errlog_path: str,
-                               project_target_basename: str) -> list[str]:
+                               benchmark: benchmarklib.Benchmark) -> list[str]:
   """Extracts error messages from jcc's err.log."""
   with open(errlog_path) as errlog_file:
     log_lines = errlog_file.readlines()
 
+  project_target_basename = os.path.basename(benchmark.target_path)
   target_names = get_fuzz_target_names(project_target_basename)
 
   command_pattern = re.compile(r'\[.*clang(?:\+\+)? (.*)\]\n?')
@@ -337,17 +338,17 @@ def extract_jcc_errlog_message(errlog_path: str,
       _strip_color_code(line).rstrip()
       for line in log_lines[error_lines_range[0]:error_lines_range[1]]
   ]
-  return group_error_messages(errors)
+  return errors
 
 
 def extract_error_message(log_path: str,
-                          project_target_basename: str) -> list[str]:
-  """Extracts error message and its context from the file in |log_path|."""
+                          benchmark: benchmarklib.Benchmark) -> list[str]:
+  """Extracts error message from the file in |log_path|."""
 
   with open(log_path) as log_file:
     log_lines = log_file.readlines()
 
-  target_name, _ = os.path.splitext(project_target_basename)
+  target_name, _ = os.path.splitext(os.path.basename(benchmark.target_path))
 
   error_lines_range: list[Optional[int]] = [None, None]
   temp_range: list[Optional[int]] = [None, None]
@@ -358,17 +359,32 @@ def extract_error_message(log_path: str,
                                       target_name + r'(\.\S*)?:\d+:\n?')
   clang_diag_error_end_pattern = r'.*\d+ errors? generated.\n?'
 
+  # Checking on this start pattern is not enough to identify linker errors from
+  # fuzz target only, it may include error from project source as well.
+  # e.g. kamailio:
+  # /usr/bin/ld: /lib/x86_64-linux-gnu/crt1.o: in function `_start':
+  # (.text+0x24): undefined reference to `main'
+  # while fuzz target should be fuzz_parse_msg.c
+  linker_error_start_string = '/usr/bin/ld: '
+  llvm_linker_error_start_string = 'ld.lld: '
+  linker_error_end_pattern = (
+      r'clang.*: error: linker command failed with exit code 1 \(use -v to see '
+      r'invocation\)\n?')
+
   for i, line in enumerate(log_lines):
     line = _strip_color_code(line)
     if (temp_range[0] is None and
-        (re.fullmatch(clang_diag_include_error_pattern, line) or
+        (line.startswith(linker_error_start_string) or
+         line.startswith(llvm_linker_error_start_string) or
+         re.fullmatch(clang_diag_include_error_pattern, line) or
          re.fullmatch(clang_diag_error_start_pattern, line))):
       temp_range[0] = i
       continue
 
     # Take the error block that comes later, usually it is the one related to
     # fuzz target and/or after jcc attempts to fix compile error.
-    if re.fullmatch(clang_diag_error_end_pattern, line):
+    if (re.fullmatch(linker_error_end_pattern, line) or
+        re.fullmatch(clang_diag_error_end_pattern, line)):
       temp_range[1] = i + 1
       error_lines_range = temp_range
       temp_range = [None, None]
@@ -381,71 +397,7 @@ def extract_error_message(log_path: str,
       _strip_color_code(line).rstrip()
       for line in log_lines[error_lines_range[0]:error_lines_range[1]]
   ]
-  return group_error_messages(errors)
-
-
-def group_error_messages(error_lines: list[str]) -> list[str]:
-  """Groups multi-line error block into one string."""
-  clang_pattern = re.compile(r'(\S*:\d+:\d+: .+: .+)|'
-                             r'(In file included from \S*:\d+:)')
-
-  first_line = error_lines[0]
-  if clang_pattern.fullmatch(first_line):
-    return group_clang_errors(error_lines)
-  # Unknown error type, just return lines ungrouped.
-  return error_lines
-
-
-def group_clang_errors(error_lines: list[str]) -> list[str]:
-  """Groups clang/++ diag log lines into error blocks."""
-  diag_pattern = re.compile(r'(\S*):\d+:\d+: (?!note).+: .+')
-  include_pattern = re.compile(r'In file included from \S*:\d+:')
-  end_pattern = re.compile(r'.*\d+ errors? generated.')
-
-  error_blocks = []
-  curr_block = []
-  include_error_src_file = ''
-  handling_include = False
-  for line in error_lines:
-    if not line:
-      continue
-
-    # Check if we are starting a new error block on this line.
-    new_block = False
-    # Handle a non note level diag line.
-    diag_match = diag_pattern.match(line)
-    if diag_match:
-      err_src = diag_match.group(1)
-      # Check if we are handling a diag line under a include error line.
-      if handling_include:
-        # Case when this is the first diag line after the include line.
-        if not include_error_src_file:
-          include_error_src_file = err_src
-          continue
-        # Case when there's more than one error in the same included file.
-        if include_error_src_file == err_src:
-          continue
-        # Error source has changed, this is a new diag error block.
-        include_error_src_file = ''
-        handling_include = False
-      new_block = True
-    # Handle an include error line.
-    # Start a new block if previously wasn't dealing with an include error,
-    # or error source has been found for the previous include error.
-    if (include_pattern.match(line) and
-        (not handling_include or include_error_src_file)):
-      include_error_src_file = ''
-      handling_include = True
-      new_block = True
-
-    # Finished checking.
-    if (new_block or end_pattern.match(line)) and curr_block:
-      error_blocks.append('\n'.join(curr_block))
-      curr_block = []
-    curr_block.append(line)
-  # The last clang diag line should always be the end pattern,
-  # so the last valid curr_block has been handled.
-  return error_blocks
+  return errors
 
 
 def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,

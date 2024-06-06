@@ -1,0 +1,15 @@
+"functions":
+- "name": "rfbReverseConnection"
+  "params":
+  - "name": "rfbScreen"
+    "type": "struct _rfbScreenInfo *"
+  - "name": "host"
+    "type": "char *"
+  - "name": "port"
+    "type": "int"
+  "return_type": "struct _rfbClientRec *"
+  "signature": "rfbClientPtr rfbReverseConnection(rfbScreenInfoPtr, char *, int)"
+"language": "c++"
+"project": "libvnc"
+"target_name": "fuzz_server"
+"target_path": "/src/libvncserver/test/fuzz_server.c"

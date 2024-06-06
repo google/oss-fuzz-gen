@@ -1,0 +1,19 @@
+"functions":
+- "name": "tidyParseStdin"
+  "params":
+  - "name": "tdoc"
+    "type": "struct _TidyDoc *"
+  "return_type": "int"
+  "signature": "int tidyParseStdin(TidyDoc)"
+- "name": "tidyParseSource"
+  "params":
+  - "name": "tdoc"
+    "type": "struct _TidyDoc *"
+  - "name": "source"
+    "type": "struct _TidyInputSource *"
+  "return_type": "int"
+  "signature": "int tidyParseSource(TidyDoc, TidyInputSource *)"
+"language": "c++"
+"project": "tidy-html5"
+"target_name": "tidy_fuzzer"
+"target_path": "/src/tidy_fuzzer.c"
