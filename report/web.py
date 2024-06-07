@@ -336,7 +336,7 @@ def get_fixed_target(path):
           fixer_prompt = ''
           for elem in prompt_dict:
             if isinstance(elem, dict) and 'content' in elem:
-              fixer_prompt += '\n%s'%(elem['content'])
+              fixer_prompt += '\n%s' % (elem['content'])
       except json.decoder.JSONDecodeError:
         pass
 
