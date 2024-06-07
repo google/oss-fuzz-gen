@@ -39,7 +39,7 @@ BENCHMARK_SET = 'comparison'
 LLM_NAME = 'vertex_ai_code-bison-32k'
 EXP_DELAY = 0
 FUZZING_TIMEOUT = 300
-REQUEST_CPU = 45
+REQUEST_CPU = 4
 REQUEST_MEM = 40
 
 PR_LINK_PREFIX = 'https://github.com/google/oss-fuzz-gen/pull'

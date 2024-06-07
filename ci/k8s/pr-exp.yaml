@@ -42,7 +42,7 @@ spec:
           name: results-volume
         env:
         - name: LLM_NUM_EXP
-          value: '30'
+          value: '40'
         - name: LLM_NUM_EVA
           value: '10'
         - name: VERTEX_AI_LOCATIONS
@@ -63,3 +63,15 @@ spec:
                 requests:
                   storage: 1000Gi
       restartPolicy: OnFailure
+      backoffLimit: 5
+      ttlSecondsAfterFinished: 432000  # 7 days.
+      podFailurePolicy:
+        rules:
+          - action: FailJob
+            onExitCodes:
+            containerName: experiment  # Optional
+            operator: NotIn            # One of: In, NotIn
+            values: [0]
+          - action: Ignore             # One of: Ignore, FailJob, Count
+            onPodConditions:
+            - type: DisruptionTarget   # Indicates Pod disruption
