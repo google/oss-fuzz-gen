@@ -69,9 +69,9 @@ spec:
     rules:
       - action: FailJob
         onExitCodes:
-        containerName: experiment  # Optional
-        operator: NotIn            # One of: In, NotIn
-        values: [0]
+          containerName: experiment  # Optional
+          operator: NotIn            # One of: In, NotIn
+          values: [0]
       - action: Ignore             # One of: Ignore, FailJob, Count
         onPodConditions:
         - type: DisruptionTarget   # Indicates Pod disruption
