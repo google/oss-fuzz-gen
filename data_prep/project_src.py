@@ -271,7 +271,15 @@ def _copy_project_src_from_local(project: str, out: str):
     logging.error('Failed to copy /src from OSS-Fuzz image of %s:', project)
     logging.error('STDOUT: %s', result.stdout)
     logging.error('STDERR: %s', result.stderr)
+
+    # Shut down the container that was just started before throwing exception.
+    sp.run(['docker', 'container', 'stop', f'{project}-container'])
+
     raise Exception(f'Failed to run docker command: {" ".join(copy_src)}')
+
+  # Shut down the container that was just started.
+  sp.run(['docker', 'container', 'stop', f'{project}-container'])
+
   logging.info('Done copying %s /src to %s.', project, out)
 
 
