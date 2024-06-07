@@ -62,7 +62,7 @@ spec:
               resources:
                 requests:
                   storage: 1000Gi
-      restartPolicy: OnFailure
+      restartPolicy: Never
   backoffLimit: 5
   ttlSecondsAfterFinished: 432000  # 7 days.
   podFailurePolicy:
