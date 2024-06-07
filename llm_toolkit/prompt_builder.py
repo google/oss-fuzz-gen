@@ -380,10 +380,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
     self.data_filler_template_file = self._find_template(
         template_dir, 'jvm_specific_data_filler.txt')
-    self.problem_template_file = self._find_template(template_dir,
-                                                     'jvm_problem.txt')
     self.requirement_template_file = self._find_template(
         template_dir, 'jvm_requirement.txt')
+    self.problem_template_file = self._find_template(template_dir,
+                                                     'jvm_problem.txt')
+    self.constructor_template_file = self._find_template(
+        template_dir, 'jvm_problem_constructor.txt')
+    self.method_template_file = self._find_template(template_dir,
+                                                    'jvm_problem_method.txt')
 
   def _find_project_url(self, project_name: str) -> str:
     """Discover project url from project's project.yaml in OSS-Fuzz"""
@@ -424,13 +428,30 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     base = base.replace("{PROJECT_URL}", self.project_url)
     return base
 
-  def _format_problem(self, problem_content: str) -> str:
+  def _format_problem(self, signature: str) -> str:
     """Formats a problem based on the prompt template."""
     problem = self._get_template(self.problem_template_file)
-    problem = problem.replace('{PROBLEM_CONTENT}', problem_content)
+    problem = problem.replace('{TARGET}', self._format_target(signature))
     problem = problem.replace('{REQUIREMENTS}', self._format_requirement())
     problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
     return problem
+
+  def _format_target_constructor(self, signature: str) -> str:
+    """Formats a constructor based on the prompt template."""
+    class_name = signature.split('].')[0][1:]
+
+    constructor = self._get_template(self.constructor_template_file)
+    constructor = constructor.replace('{CONSTRUCTOR_CLASS}', class_name)
+    constructor = constructor.replace('{CONSTRUCTOR_SIGNATURE}', signature)
+
+    return constructor
+
+  def _format_target_method(self, signature: str) -> str:
+    """Formats a method based on the prompt template."""
+    method = self._get_template(self.method_template_file)
+    method = method.replace('{METHOD_SIGNATURE}', signature)
+
+    return method
 
   def _format_requirement(self) -> str:
     """Formats a requirement based on the prompt template."""
@@ -441,6 +462,15 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats a data_filler based on the prompt template."""
     data_filler = self._get_template(self.data_filler_template_file)
     return data_filler
+
+  def _format_target(self, signature: str) -> str:
+    """Determine if the signature is a constructor or a general
+       method and format it for the prompts creation.
+    """
+    if '<init>' in signature:
+      return self._format_target_constructor(signature)
+
+    return self._format_target_method(signature)
 
   def _prepare_prompt(self, base: str, final_problem: str):
     """Constructs a prompt using the parameters and saves it."""
