@@ -343,6 +343,7 @@ def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
     # The fuzz-introspector front end of JVM projects cannot get the original
     # argument name. Thus the argument name here uses arg{Count} as arugment
     # name reference.
+    jvm_args = _get_clean_arg_types(function, project)
     arg_names = [f'arg{i}' for i in range(len(jvm_args))]
   else:
     arg_names = (function.get('arg-names') or
