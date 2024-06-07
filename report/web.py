@@ -328,6 +328,18 @@ def get_fixed_target(path):
       with open(os.path.join(path, name)) as f:
         fixer_prompt = f.read()
 
+      # We need to validate if the text is actually a dictionary, e.g. OpenAI
+      # prompt, as we need to beautify the string in that case.
+      try:
+        prompt_dict = json.loads(fixer_prompt)
+        if isinstance(prompt_dict, list) and len(prompt_dict) > 0:
+          fixer_prompt = ''
+          for elem in prompt_dict:
+            if isinstance(elem, dict) and 'content' in elem:
+              fixer_prompt += '\n%s'%(elem['content'])
+      except json.decoder.JSONDecodeError:
+        pass
+
     if name.endswith('.rawoutput'):
       with open(os.path.join(path, name)) as f:
         code = f.read()
