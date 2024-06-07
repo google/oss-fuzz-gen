@@ -394,6 +394,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         template_dir, 'jvm_arg_description.txt')
     self.generic_arg_description_template_file = self._find_template(
         template_dir, 'jvm_generic_arg_description.txt')
+    self.import_template_file = self._find_template(template_dir,
+                                                    'jvm_import_mapping.txt')
 
   def _find_project_url(self, project_name: str) -> str:
     """Discover project url from project's project.yaml in OSS-Fuzz"""
@@ -434,15 +436,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     base = base.replace("{PROJECT_URL}", self.project_url)
     return base
 
-  def _format_problem(self, signature: str) -> str:
-    """Formats a problem based on the prompt template."""
-    problem = self._get_template(self.problem_template_file)
-    problem = problem.replace('{TARGET}', self._format_target(signature))
-    problem = problem.replace('{REQUIREMENTS}', self._format_requirement())
-    problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
-    problem = problem.replace('{ARGUMENTS}', self._format_arguments())
-    return problem
-
   def _format_target_constructor(self, signature: str) -> str:
     """Formats a constructor based on the prompt template."""
     class_name = signature.split('].')[0][1:]
@@ -452,6 +445,23 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     constructor = constructor.replace('{CONSTRUCTOR_SIGNATURE}', signature)
 
     return constructor
+
+  def _format_target_method(self, signature: str) -> str:
+    """Formats a method based on the prompt template."""
+    method = self._get_template(self.method_template_file)
+    method = method.replace('{METHOD_SIGNATURE}', signature)
+
+    return method
+
+  def _format_import_mapping(self, full_class_name: str) -> str:
+    """Formats the import mapping row on the prompt template."""
+    class_name = full_class_name.rsplit(".")[-1]
+
+    mapping = self._get_template(self.import_template_file)
+    mapping = mapping.replace("{CLASS_NAME}", class_name)
+    mapping = mapping.replace("{FULL_CLASS_NAME}", full_class_name)
+
+    return mapping
 
   def _format_generic_argument(self, count: int, arg_type: str) -> str:
     """Formats generic argument description."""
@@ -464,45 +474,13 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     return argument
 
-  def _format_argument(self, count: int, arg_type: str) -> str:
+  def _format_general_argument(self, count: int, arg_type: str) -> str:
     """Formats general argument description."""
     argument = self._get_template(self.generic_arg_description_template_file)
     argument = argument.replace('{ARG_COUNT}', str(count))
     arugment = argument.replace('{ARG_TYPE}', arg_type)
 
     return argument
-
-  def _format_arguments(self) -> str:
-    """Formats a list of arugment descriptions."""
-    argument_descriptions = []
-
-    for count in range(len(self.function_args)):
-      arg_type = self.function_args[count]['type']
-      if self._has_generic(arg_type):
-        argument = self._format_generic_argument(count, arg_type)
-      else:
-        argument = self._format_argument(count, arg_type)
-
-      argument_descriptions.append(argument)
-
-    return '\n'.join(argument_descriptions)
-
-  def _format_target_method(self, signature: str) -> str:
-    """Formats a method based on the prompt template."""
-    method = self._get_template(self.method_template_file)
-    method = method.replace('{METHOD_SIGNATURE}', signature)
-
-    return method
-
-  def _format_requirement(self) -> str:
-    """Formats a requirement based on the prompt template."""
-    requirement = self._get_template(self.requirement_template_file)
-    return requirement
-
-  def _format_data_filler(self) -> str:
-    """Formats a data_filler based on the prompt template."""
-    data_filler = self._get_template(self.data_filler_template_file)
-    return data_filler
 
   def _format_target(self, signature: str) -> str:
     """Determine if the signature is a constructor or a general
@@ -513,6 +491,56 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     return self._format_target_method(signature)
 
+  def _format_requirement(self, signature: str) -> str:
+    """Formats a requirement based on the prompt template."""
+    classes = []
+
+    class_name = signature[1:].split(']')[0]
+    if self._need_import(class_name):
+      classes.append(class_name)
+
+    for arg_dict in self.function_args:
+      arg_type = arg_dict['type'].split('<')[0]
+      if self._need_import(arg_type):
+        classes.append(arg_type)
+
+    classes = list(set(classes))
+    mappings = [self._format_import_mapping(type) for type in classes]
+
+    requirement = self._get_template(self.requirement_template_file)
+    requirement = requirement.replace('{IMPORT_MAPPINGS}', '\n'.join(mappings))
+
+    return requirement
+
+  def _format_data_filler(self) -> str:
+    """Formats a data_filler based on the prompt template."""
+    data_filler = self._get_template(self.data_filler_template_file)
+    return data_filler
+
+  def _format_arguments(self) -> str:
+    """Formats a list of arugment descriptions."""
+    argument_descriptions = []
+
+    for count in range(len(self.function_args)):
+      arg_type = self.function_args[count]['type']
+      if self._has_generic(arg_type):
+        argument = self._format_generic_argument(count, arg_type)
+      else:
+        argument = self._format_general_argument(count, arg_type)
+
+      argument_descriptions.append(argument)
+
+    return '\n'.join(argument_descriptions)
+
+  def _format_problem(self, signature: str) -> str:
+    """Formats a problem based on the prompt template."""
+    problem = self._get_template(self.problem_template_file)
+    problem = problem.replace('{TARGET}', self._format_target(signature))
+    problem = problem.replace('{REQUIREMENTS}', self._format_requirement(signature))
+    problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
+    problem = problem.replace('{ARGUMENTS}', self._format_arguments())
+    return problem
+
   def _prepare_prompt(self, base: str, final_problem: str):
     """Constructs a prompt using the parameters and saves it."""
     self._prompt.add_priming(base)
@@ -521,6 +549,10 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
   def _has_generic(self, arg: str) -> bool:
     """Determine if the argument type contains generic type."""
     return '<' in arg and not arg.startswith('<') and arg.endswith('>')
+
+  def _need_import(self, class_name: str) -> bool:
+    """Determine if the class with class_name needed to be imported."""
+    return '.' in class_name and not class_name.startswith('java.lang.')
 
   def build(self,
             function_signature: str,
