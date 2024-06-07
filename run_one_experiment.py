@@ -226,6 +226,11 @@ def run(benchmark: Benchmark,
   model.cloud_setup()
   logging.basicConfig(level=logging.INFO)
 
+  # Ensure three is no parallel executions in local rus, as this causes Docker
+  # to reuse contianers which breaks the flow.
+  if not cloud_experiment_name:
+    NUM_EVA = 1
+
   if example_pair is None:
     example_pair = prompt_builder.EXAMPLES[benchmark.language]
 
