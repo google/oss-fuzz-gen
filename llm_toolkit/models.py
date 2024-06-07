@@ -31,6 +31,7 @@ import openai
 import tiktoken
 import vertexai
 from google.api_core.exceptions import GoogleAPICallError
+from vertexai import generative_models
 from vertexai.preview.generative_models import GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
 
@@ -143,16 +144,23 @@ class LLM:
     if isinstance(err, api_error):
       return True
 
-    # A known case from vertex package.
+    # A known case from vertex package, no content due to mismatch roles.
     if (isinstance(err, ValueError) and
         'Content roles do not match' in str(err) and tb[-1].filename.endswith(
             'vertexai/generative_models/_generative_models.py')):
       return True
 
+    # A known case from vertex package, content blocked by safety filters.
+    if (isinstance(err, ValueError) and
+        'blocked by the safety filters' in str(err) and
+        tb[-1].filename.endswith(
+            'vertexai/generative_models/_generative_models.py')):
+      return True
+
     return False
 
-  def with_retry_on_error(  # pylint: disable=inconsistent-return-statements
-      self, func: Callable, api_err: Type[Exception]) -> Any:
+  def with_retry_on_error(self, func: Callable,
+                          api_err: Type[Exception]) -> Any:
     """
     Retry when the function returns an expected error with exponential backoff.
     """
@@ -170,6 +178,7 @@ class LLM:
               attempt, err, traceback.format_exc())
           raise err
         self._delay_for_retry(attempt_count=attempt)
+    return None
 
   def _save_output(self, index: int, content: str, response_dir: str) -> None:
     """Saves the raw |content| from the model ouput."""
@@ -224,6 +233,7 @@ class GPT(LLM):
                                                n=self.num_samples,
                                                temperature=self.temperature),
         openai.OpenAIError)
+    # TODO: Add a default value for completion.
     if log_output:
       print(completion)
     for index, choice in enumerate(completion.choices):  # type: ignore
@@ -329,7 +339,7 @@ class VertexAIModel(GoogleModel):
     for index in range(self.num_samples):
       response = self.with_retry_on_error(
           lambda: self.do_generate(model, prompt.get(), parameters),
-          GoogleAPICallError)
+          GoogleAPICallError) or ''
       self._save_output(index, response, response_dir)
 
 
@@ -340,7 +350,30 @@ class GeminiModel(VertexAIModel):
     return GenerativeModel(self._vertex_ai_model)
 
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
-    return model.generate_content(prompt, generation_config=config).text
+    # Loosen inapplicable restrictions just in case.
+    safety_config = [
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.
+            HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        ),
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        ),
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        ),
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.
+            HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        ),
+    ]
+    return model.generate_content(prompt,
+                                  generation_config=config,
+                                  safety_settings=safety_config).text
 
 
 class VertexAICodeBisonModel(VertexAIModel):
@@ -370,7 +403,7 @@ class GeminiPro(GeminiModel):
   _vertex_ai_model = 'gemini-1.0-pro'
 
 
-class Gemini1_5(GeminiModel):
+class Gemini1D5(GeminiModel):
   """Gemini 1.5."""
 
   _max_output_tokens = 8192
