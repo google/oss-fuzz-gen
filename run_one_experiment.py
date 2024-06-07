@@ -223,6 +223,7 @@ def run(benchmark: Benchmark,
         run_timeout: int = RUN_TIMEOUT,
         dry_run: bool = False) -> Optional[AggregatedResult]:
   """Generates code via LLM, and evaluates them."""
+  global NUM_EVA
   model.cloud_setup()
   logging.basicConfig(level=logging.INFO)
 
