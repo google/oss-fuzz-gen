@@ -1,0 +1,28 @@
+<system>
+You are a security testing expert who writes a C++ fuzz driver to test a given function.
+
+The driver code you need to complete is as follows, fill it carefully by strictly following the specification within the comments correctly to make the fuzzing test work:
+<code>
+#include <stdint.h>
+#include <stdlib.h>
+#include "md4c-html.h"
+
+#include <stdint.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
+
+#include "fuzzer_temp_file.h"
+
+extern "C"{
+  int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+        // Goal: The fuzz driver should test the functionality of the function `gdk_pixbuf_animation_new_from_file` by passing mutated data to it.
+        // Precondition: 1. The function `gdk_pixbuf_animation_new_from_file` is provided by the library `gdk-pixbuf/gdk-pixbuf.h`. 
+        //               2. "fuzzer_temp_file.h" can provide the function `fuzzer_get_tmpfile` and `fuzzer_release_tmpfile` to create and delete temporary files.
+        //               3. The function `gdk_pixbuf_animation_new_from_file` takes two arguments: @filename (const gchar) and @error (GError**), and returns a pointer to `GdkPixbufAnimation`.
+        //               4. Arguments constraints:
+        //                  - @filename: A string representing the path to the file to load the animation from, MUST be valid, and MUST not be NULL. The key arg to mutate.
+        //                  - @error: A pointer to a pointer to a GError, MUST be valid, and MUST not be NULL. After the function call, the error object MUST be checked and freed (call `g_clear_error` to free).
+        // Postcondition: The function `gdk_pixbuf_animation_new_from_file` is called corectly with the diverse parameters, and the output is processed correctly. The used memory MUST be released properly.
+  }
+}
+</code>
+</system>

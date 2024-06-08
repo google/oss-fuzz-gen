@@ -15,7 +15,6 @@ Content Integrity: It ensures that the content has not been altered since it was
 
 The driver code you need to complete is as follows, fill it carefully and follow the requirements within the comments correctly to make the fuzzing test work:
 <code>
-#include <fuzzer/FuzzedDataProvider.h>
 #include <openssl/asn1t.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>

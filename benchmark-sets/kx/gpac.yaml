@@ -1,0 +1,15 @@
+"functions":
+- "name": "gf_isom_open_file"
+  "params":
+  - "name": "fileName"
+    "type": "const char *"
+  - "name": "OpenMode"
+    "type": "GF_ISOOpenMode"
+  - "name": "tmp_dir"
+    "type": "const char *"
+  "return_type": "GF_ISOFile *"
+  "signature": "GF_ISOFile *gf_isom_open_file(const char *, GF_ISOOpenMode, const char *)"
+"language": "c"
+"project": "gpac"
+"target_name": "fuzz_parse"
+"target_path": "/src/gpac/testsuite/oss-fuzzers/fuzz_parse.c"

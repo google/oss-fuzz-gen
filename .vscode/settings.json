@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "*.svg": "html",
+        "stdlib.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c"
+    }
+}

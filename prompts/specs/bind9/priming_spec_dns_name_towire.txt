@@ -1,0 +1,64 @@
+<system>
+You are a security testing expert who writes a C++ fuzz driver to test a given function.
+
+The driver code you need to complete is as follows, fill it carefully by strictly following the specification within the comments correctly to make the fuzzing test work, especially for the Precondition and Postcondition sections.
+<code>
+#include <stdbool.h>
+#include <stdlib.h>
+
+#include <isc/attributes.h>
+#include <isc/buffer.h>
+#include <isc/commandline.h>
+#include <isc/lex.h>
+#include <isc/mem.h>
+#include <isc/string.h>
+#include <isc/util.h>
+
+#include <dns/fixedname.h>
+#include <dns/name.h>
+#include <dns/rdata.h>
+#include <dns/rdataclass.h>
+#include <dns/rdatatype.h>
+#include <dns/result.h>
+
+#include "fuzz.h"
+extern "C"{
+  // Goal: The fuzz driver should test the functionality of the function `dns_rdata_fromwire` by passing mutated data to it. This function converts a text representation of a DNS name into the "uncompressed wire format" used in the DNS protocol. It is primarily used for parsing DNS names obtained from text configuration files or network input. We need to test all possible usage scenarios of the function.
+  // Precondition: 1. The function `dns_rdata_fromwire` is provided by `#include <dns/rdata.h>`.
+  //               2. The function `dns_rdata_fromwire` takes five arguments: @name, @source, @origin, @options, and @target.
+  //               3. You are supposed to prefer to use the specified API within this project when you need to perform any operation, such as memory allocation, string manipulation, resource release, etc. Within fuzz.h file, it declares the following functions:
+  //ISC_LANG_BEGINDECLS
+  //extern bool debug;
+  //int
+  //LLVMFuzzerInitialize(int *argc ISC_ATTR_UNUSED, char ***argv ISC_ATTR_UNUSED);
+  //int
+  //LLVMFuzzerTestOneInput(const uint8_t *data, size_t size);
+  //#define CHECK(x)                    \
+  //	if ((x) != ISC_R_SUCCESS) { \
+  //		return 0;           \
+  //	}
+  //ISC_LANG_ENDDECLS
+
+  //               4. Arguments constraints:
+  //                  - @name: dns_name_t structure type; it is the output parameter that will be filled with the DNS name in uncompressed wire format. It should be initialized before calling the function.
+                      - @source: isc_buffer_t structure type; it is the input parameter that contains the text representation of the DNS name. It should be initialized before calling the function. The core argument of the function needing to mutate.
+                      - @origin: const dns_name_t structure type; it is the input parameter that specifies the origin of the name. It can be NULL if the name is absolute.
+                      - @options: unsigned int type; it is the input parameter that specifies the options to control the parsing of the name. 
+                      - @target: isc_buffer_t structure type; it is the output parameter that will be filled with the DNS name in uncompressed wire format. It should be initialized before calling the function.
+
+  // Postcondition: 1. The function `dns_name_fromtext` should be fuzzed with mutated data to test its functionality. There are several usage scenarios of the function that need to be tested, such as:
+  //                  - It should be called with different types of input data, including valid and invalid data.
+  //                  - It should be called with different values of the @options parameter to test the different parsing options.
+  //                  - It should be called with different values of the @origin parameter to test the different origin options.
+  //                2. Resources should be released properly after the function call. Note that the specfied API is preferred to use for resource release if available.
+
+  // Utils functions implementation here if needed
+
+  // Fuzz driver implementation
+
+  int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+
+  }
+}
+</code>
+</system>

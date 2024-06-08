@@ -1,0 +1,220 @@
+<system>
+You are a security testing expert who writes a C++ fuzz driver to test a given function.
+
+The driver code you need to complete is as follows, fill it carefully by strictly following the specification within the comments correctly to make the fuzzing test work, especially for the Precondition and Postcondition sections.
+<code>
+  #include <stdbool.h>
+  #include <stdlib.h>
+
+  #include <isc/attributes.h>
+  #include <isc/buffer.h>
+  #include <isc/commandline.h>
+  #include <isc/lex.h>
+  #include <isc/mem.h>
+  #include <isc/string.h>
+  #include <isc/util.h>
+
+  #include <dns/fixedname.h>
+  #include <dns/name.h>
+  #include <dns/rdata.h>
+  #include <dns/rdataclass.h>
+  #include <dns/rdatatype.h>
+  #include <dns/result.h>
+
+  #include "fuzz.h"
+  // Goal: The fuzz driver should test the functionality of the function `dns_name_fromtext` by passing mutated data to it. This function converts a text representation of a DNS name into the "uncompressed wire format" used in the DNS protocol. It is primarily used for parsing DNS names obtained from text configuration files or network input. We need to test all possible usage scenarios of the function.
+  // Precondition: 1. The function `dns_name_fromtext` is provided by `#include <dns/name.h>`.
+  //               2. The function `dns_name_fromtext` takes five arguments: @name, @source, @origin, @options, and @target.
+  //               3. You are supposed to prefer to use the specified API within this project when you need to perform any operation, such as memory allocation, string manipulation, resource release, etc. Within fuzz.h file, it declares the following functions:
+  //ISC_LANG_BEGINDECLS
+  //extern bool debug;
+  //int
+  //LLVMFuzzerInitialize(int *argc ISC_ATTR_UNUSED, char ***argv ISC_ATTR_UNUSED);
+  //int
+  //LLVMFuzzerTestOneInput(const uint8_t *data, size_t size);
+  //#define CHECK(x)                    \
+  //	if ((x) != ISC_R_SUCCESS) { \
+  //		return 0;           \
+  //	}
+  //ISC_LANG_ENDDECLS
+
+  //               4. Arguments constraints:
+  //                  - @name: dns_name_t structure type; it is the output parameter that will be filled with the DNS name in uncompressed wire format. It should be initialized before calling the function.
+                      - @source: isc_buffer_t structure type; it is the input parameter that contains the text representation of the DNS name. It should be initialized before calling the function. The core argument of the function needing to mutate.
+                      - @origin: const dns_name_t structure type; it is the input parameter that specifies the origin of the name. It can be NULL if the name is absolute.
+                      - @options: unsigned int type; it is the input parameter that specifies the options to control the parsing of the name. 
+                      - @target: isc_buffer_t structure type; it is the output parameter that will be filled with the DNS name in uncompressed wire format. It should be initialized before calling the function.
+
+  // Postcondition: 1. The function `dns_name_fromtext` should be fuzzed with mutated data to test its functionality. There are several usage scenarios of the function that need to be tested, such as:
+  //                  - It should be called with different types of input data, including valid and invalid data.
+  //                  - It should be called with different values of the @options parameter to test the different parsing options.
+  //                  - It should be called with different values of the @origin parameter to test the different origin options.
+  //                2. Resources should be released properly after the function call. Note that the specfied API is preferred to use for resource release if available.
+
+  // ------ code implementation below this line ------
+  // Utils functions implementation here if needed
+
+  // Fuzz driver implementation
+
+  int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+
+  }
+
+</code>
+
+an existing fuzz driver is:
+<code>
+/*
+ * Copyright (C) Internet Systems Consortium, Inc. ("ISC")
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, you can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See the COPYRIGHT file distributed with this work for additional
+ * information regarding copyright ownership.
+ */
+
+#include <stdbool.h>
+#include <stdlib.h>
+
+#include <isc/attributes.h>
+#include <isc/buffer.h>
+#include <isc/commandline.h>
+#include <isc/lex.h>
+#include <isc/mem.h>
+#include <isc/string.h>
+#include <isc/util.h>
+
+#include <dns/fixedname.h>
+#include <dns/name.h>
+#include <dns/rdata.h>
+#include <dns/rdataclass.h>
+#include <dns/rdatatype.h>
+#include <dns/result.h>
+
+#include "fuzz.h"
+
+bool debug = false;
+
+int
+LLVMFuzzerInitialize(int *argc, char ***argv) {
+	UNUSED(argc);
+	UNUSED(argv);
+	return (0);
+}
+
+/* following code was copied from named-rrchecker */
+isc_lexspecials_t specials = { ['('] = 1, [')'] = 1, ['"'] = 1 };
+
+int
+LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+	isc_mem_t *mctx = NULL;
+	isc_mem_create(&mctx);
+
+	isc_lex_t *lex = NULL;
+	isc_token_t token;
+
+	isc_result_t result;
+	unsigned int options = 0;
+	dns_rdatatype_t rdtype;
+	dns_rdataclass_t rdclass;
+
+	char wiredata[64 * 1024];
+	isc_buffer_t wirebuf;
+	isc_buffer_init(&wirebuf, wiredata, sizeof(wiredata));
+
+	dns_rdata_t rdata = DNS_RDATA_INIT;
+	dns_name_t *name = NULL;
+
+	isc_buffer_t inbuf;
+	isc_buffer_constinit(&inbuf, data, size);
+	isc_buffer_add(&inbuf, size);
+	isc_buffer_setactive(&inbuf, size);
+
+	isc_lex_create(mctx, 256, &lex);
+
+	/*
+	 * Set up to lex DNS master file.
+	 */
+	isc_lex_setspecials(lex, specials);
+	options = ISC_LEXOPT_EOL;
+	isc_lex_setcomments(lex, ISC_LEXCOMMENT_DNSMASTERFILE);
+
+	RUNTIME_CHECK(isc_lex_openbuffer(lex, &inbuf) == ISC_R_SUCCESS);
+
+	result = isc_lex_gettoken(lex, options | ISC_LEXOPT_NUMBER, &token);
+	if (result != ISC_R_SUCCESS) {
+		goto cleanup;
+	}
+	if (token.type == isc_tokentype_eof) {
+		goto cleanup;
+	}
+	if (token.type == isc_tokentype_eol) {
+		goto cleanup;
+	}
+	/*
+	 * Get class.
+	 */
+	if (token.type == isc_tokentype_number) {
+		if (token.value.as_ulong > 0xffff) {
+			goto cleanup;
+		}
+		rdclass = (dns_rdataclass_t)token.value.as_ulong;
+	} else if (token.type == isc_tokentype_string) {
+		result = dns_rdataclass_fromtext(&rdclass,
+						 &token.value.as_textregion);
+		if (result != ISC_R_SUCCESS) {
+			goto cleanup;
+		}
+	} else {
+		goto cleanup;
+	}
+	result = isc_lex_gettoken(lex, options | ISC_LEXOPT_NUMBER, &token);
+	if (result != ISC_R_SUCCESS) {
+		goto cleanup;
+	}
+	if (token.type == isc_tokentype_eol) {
+		goto cleanup;
+	}
+	if (token.type == isc_tokentype_eof) {
+		goto cleanup;
+	}
+
+	/*
+	 * Get type.
+	 */
+	if (token.type == isc_tokentype_number) {
+		if (token.value.as_ulong > 0xffff) {
+			goto cleanup;
+		}
+		rdtype = (dns_rdatatype_t)token.value.as_ulong;
+	} else if (token.type == isc_tokentype_string) {
+		result = dns_rdatatype_fromtext(&rdtype,
+						&token.value.as_textregion);
+		if (result != ISC_R_SUCCESS) {
+			goto cleanup;
+		}
+	} else {
+		goto cleanup;
+	}
+
+	result = dns_rdata_fromtext(&rdata, rdclass, rdtype, lex, name, 0, mctx,
+				    &wirebuf, NULL);
+	if (debug) {
+		fprintf(stderr, "dns_rdata_fromtext: %s\n",
+			isc_result_totext(result));
+	}
+
+cleanup:
+	isc_lex_close(lex);
+	isc_lex_destroy(&lex);
+	isc_mem_destroy(&mctx);
+	return (0);
+}
+</code>
+
+
+</system>

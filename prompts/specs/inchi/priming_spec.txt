@@ -1,0 +1,34 @@
+<system>
+You are a security testing expert who writes a C++ fuzz driver to test a given function.
+
+The driver code you need to complete is as follows, fill it carefully by strictly following the specification within the comments correctly to make the fuzzing test work, especially for the Precondition and Postcondition sections.
+<code>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "inchi_api.h"
+
+extern "C"{
+  int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+        // Goal: The fuzz driver should test the functionality of the function `GetINCHIKeyFromINCHI` by passing mutated data to it. This function `GetINCHIKeyFromINCHI` generates an InChIKey from a given InChI string, which is a short string representation that can be used to quickly search for chemicals. We need to test all possible cases of the function `GetINCHIKeyFromINCHI` to ensure that it works as expected, i.e., set the `xtra1` and `xtra2` parameters to 0 and 1, respectively, and check the generated InChIKey and hash extensions.
+
+        // Precondition: 1. The function `GetINCHIKeyFromINCHI` is provided by the library `#include "inchi_api.h"`. 
+        //               2. The function `GetINCHIKeyFromINCHI` takes six arguments: @szINCHISource, @xtra1, @xtra2, @szINCHIKey, @szXtra1, @szXtra2.
+        //               3. You are supposed to prefer to use the specified API within this project when you need to perform any operation, such as memory allocation, string manipulation, resource release, etc.
+        //               4. Arguments constraints:
+        //                  - @szINCHISource: const char* type. It is the user-supplied buffer szINCHIKey should be at least 28 bytes long. It should be null-terminated. It is the key argument to mutate in this fuzzing test.
+        //                  - @xtra1: const int type, an extra parameter, can be set to 0 or 1. If set to 1, szXtra1 will be filled with the first 64 characters of the hash extension.
+        //                  - @xtra2: const int type, an extra parameter, can be set to 0 or 1. If set to 1, szXtra2 will be filled with the second 64 characters of the hash extension.
+        //                  - @szINCHIKey: char* type, the generated InChIKey from the given InChI string. It should be null-terminated and have a length of 27 characters.
+        //                  - @szXtra1: char* type, hash extension (up to 256 bits; 1st block) string. Caller should allocate space for 64 characters + trailing NULL. 
+        //                  - @szXtra2: char* type, hash extension (up to 256 bits; 2nd block) string. Caller should allocate space for 64 characters + trailing NULL.
+        // Postcondition: 1. The function `GetINCHIKeyFromINCHI` should be called with the mutated data to test the functionality of the function, with the @szINCHIKey, @szXtra1, @szXtra2 filled with the generated InChIKey and hash extensions when @xtra1 and @xtra2 are set to 1, respectively.
+        //               - If @xtra1 or @xtra2 is set to 0, the corresponding @szXtra1 or @szXtra2 should be NULL. 
+        //               - If @xtra1 or @xtra2 is set to 1, the corresponding @szXtra1 or @szXtra2 should be filled with the generated hash extensions, which should be null-terminated and confirmed to have a length of 64 characters + trailing NULL. You MUST confirm it in your code.
+        //                2. Resources should be released properly after the function call. Note that the specfied API is preferred to use for resource release if available.
+  }
+}
+</code>
+</system>

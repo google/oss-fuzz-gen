@@ -1,0 +1,13 @@
+"functions":
+- "name": "gdk_pixbuf_animation_new_from_file"
+  "params":
+  - "name": "filename"
+    "type": "const gchar"
+  - "name": "error"
+    "type": "GError**"
+  "return_type": "GdkPixbufAnimation*"
+  "signature": "GdkPixbufAnimation* gdk_pixbuf_animation_new_from_file (const char*, GError**)"
+"language": "c"
+"project": "gdk-pixbuf"
+"target_name": ""
+"target_path": ""

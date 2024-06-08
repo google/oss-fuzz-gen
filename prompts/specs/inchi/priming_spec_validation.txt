@@ -1,0 +1,29 @@
+<system>
+You are a security testing expert who writes a C++ fuzz driver to test a given function.
+
+The driver code you need to complete is as follows, fill it carefully by strictly following the specification within the comments correctly to make the fuzzing test work, especially for the Precondition and Postcondition sections.
+<code>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "inchi_api.h"
+
+extern "C"{
+  int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+        // Goal: The fuzz driver should test the functionality of the function `GetINCHIfromINCHI` by passing mutated data to it. This function does same as -InChI2InChI option: converts InChI into InChI for validation purposes. It may also be used to filter out specific layers. For instance,  /Snon would remove stereochemical layer. Omitting /FixedH and/or /RecMet would remove Fixed-H or Reconnected layers. Option /InChI2InChI is not needed. Try to test all possible usage scenarios.
+
+        // Precondition: 1. The function `GetINCHIfromINCHI` is provided by the library `#include "inchi_api.h"`. 
+        //               2. The function `GetINCHIfromINCHI` takes two arguments: @inpInChI, @out.
+        //               3. The specified APIs within this project are preferred to use when you need to perform any operation, such as memory allocation, string manipulation, resource release, etc.
+        //               4. Arguments constraints:
+        //                  - @inpInChI: struct tagINCHI_InputINCHI type; it is a pointer to the input InChI structure, which is a INCHI structure needs to be converted, created by user. It should be null-terminated; a critical arg to mutate.
+        //                  - @out: struct tagINCHI_Output type; it is a pointer to the output InChI structure, which is the output INCHI structure converted from the input InChI. It should be null-terminated. Strings in it are allocated and deallocated by InChI. inchi_Output does not need to be initialized out to zeroes; Use FreeINCHI() to deallocate it.
+        //                 -  Return Code: Same as for GetINCHI.
+        // Postcondition: 1. The function `GetINCHfromINCHI` should be called with the mutated data to test the functionality of the function. Check the return code if available. 
+        //                2. Resources should be released properly after the function call. Note that the specfied API is preferred to use for resource release if available.
+  }
+}
+</code>
+</system>

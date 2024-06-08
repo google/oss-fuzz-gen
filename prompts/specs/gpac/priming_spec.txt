@@ -1,0 +1,26 @@
+<system>
+You are a security testing expert who writes a C++ fuzz driver to test a given function.
+
+The driver code you need to complete is as follows, fill it carefully by strictly following the specification within the comments correctly to make the fuzzing test work:
+<code>
+#include <stdio.h>
+#include <unistd.h>
+#include <gpac/internal/isomedia_dev.h>
+#include <gpac/constants.h>
+
+extern "C"{
+  int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+        // Goal: The fuzz driver should test the functionality of the function `gf_isom_open_file` by passing mutated data to it. This function aims to open an ISO file from a given path, with three different modes: GF_ISOM_OPEN_READ, GF_ISOM_OPEN_READ_DUMP, GF_ISOM_OPEN_READ_EDIT. The driver should test all three modes.
+
+        // Precondition: 1. The function `gf_isom_open_file` is provided by the library `#include <gpac/internal/isomedia_dev.h>`. 
+        //               2. The function `gf_isom_open_file` takes two arguments: @filename, @mode, and returns a pointer to a GF_ISOFile.
+        //               3. The function `gf_isom_close` is provided by the library `#include <gpac/internal/isomedia_dev.h>`, which can be used to free the memory allocated for the GF_ISOFile.
+        //               4. Arguments constraints:
+        //                  - @filename: const char* type, the path to the file to open. This should be a valid path. The file content should be in the ISO format and should be mutated as much as possible.
+        //                  - @mode: GF_ISOOpenMode type, the mode to open the file. It should be tested for all three modes: GF_ISOM_OPEN_READ, GF_ISOM_OPEN_READ_DUMP, GF_ISOM_OPEN_READ_EDIT.
+        // Postcondition: 1. The function `gf_isom_open_file` should be called with the mutated data to test its functionality, returning a pointer to a GF_ISOFile. For GF_ISOM_OPEN_READ mode, the file should be opened in read-only mode. For GF_ISOM_OPEN_READ_DUMP mode, the file should be opened in read-only mode and the file should be dumped. For GF_ISOM_OPEN_READ_EDIT mode, the file should be opened in read-write mode. We need to test all three modes.
+        //                2. The function `gf_isom_close` should be called with the pointer to the GF_ISOFile to free the memory. All the resources should be released properly. 
+  }
+}
+</code>
+</system>
