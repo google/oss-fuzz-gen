@@ -46,7 +46,7 @@ FDP_JVM_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH,
                                          'jansi_colors-problem.txt')
 FDP_JVM_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH,
                                           'jansi_colors-solution.java')
-HEADER_FIXER_PROMPT=os.path.join(DEFAULT_TEMPLATE_DIR, 'header_fixer.txt')
+HEADER_FIXER_PROMPT = os.path.join(DEFAULT_TEMPLATE_DIR, 'header_fixer.txt')
 
 EXAMPLES = {
     'c++': [

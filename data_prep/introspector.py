@@ -84,8 +84,7 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
   INTROSPECTOR_ADDR_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
-  INTROSPECTOR_ALL_HEADER_FILES = (
-      f'{INTROSPECTOR_ENDPOINT}/all-header-files')
+  INTROSPECTOR_ALL_HEADER_FILES = (f'{INTROSPECTOR_ENDPOINT}/all-header-files')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -186,7 +185,8 @@ def query_introspector_cfg(project: str) -> dict:
 
 
 def query_introspector_header_files(project: str) -> List[str]:
-  resp = _query_introspector(INTROSPECTOR_ALL_HEADER_FILES, {'project': project})
+  resp = _query_introspector(INTROSPECTOR_ALL_HEADER_FILES,
+                             {'project': project})
   all_header_files = _get_data(resp, 'all-header-files', [])
   return all_header_files
 
