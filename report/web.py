@@ -22,19 +22,14 @@ import re
 import sys
 import urllib.parse
 from functools import partial
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
+import jinja2
 import yaml
-from flask import Flask, abort, render_template
 
 import run_one_experiment
 from experiment import evaluator
 from experiment.workdir import WorkDirs
-
-app = Flask(__name__)
-# Disable Flask request logs
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
 
 RESULTS_DIR = ''
 BENCHMARK_SET_DIR = 'benchmark-sets'
@@ -368,104 +363,122 @@ def get_final_target_code(benchmark: str, sample: str) -> str:
   return ''
 
 
-@app.route('/')
-def index():
-  return render_template('index.html',
-                         benchmarks=list_benchmarks(),
-                         model=model)
+class JinjaTemplate:
+
+  @staticmethod
+  def _urlencode_filter(s):
+    return urllib.parse.quote(s, safe='')
+
+  @staticmethod
+  def _percent(num: float):
+    return '%0.2f' % (num * 100)
+
+  @staticmethod
+  def _cov_report_link(link: str):
+    if not link:
+      return '#'
+
+    path = link.removeprefix('gs://oss-fuzz-gcb-experiment-run-logs/')
+    return f'https://llm-exp.oss-fuzz.com/{path}/report/linux/report.html'
+
+  def __init__(self, template_globals: Dict[str, Any] = {}):
+    self._env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader("report/templates"),
+        autoescape=jinja2.select_autoescape())
+
+    self._env.filters['urlencode_filter'] = self._urlencode_filter
+    self._env.filters['percent'] = self._percent
+    self._env.filters['cov_report_link'] = self._cov_report_link
+
+    for key, val in template_globals.items():
+      self._env.globals[key] = val
+
+  def render(self, template_name: str, **kwargs):
+    return self._env.get_template(template_name).render(**kwargs)
 
 
-@app.route('/json')
-def index_json():
-  return render_template('index.json',
-                         benchmarks=list_benchmarks(),
-                         model=model), 200, {
-                             'Content-Type': 'application/json'
-                         }
+class GenerateReport:
 
+  def __init__(self,
+               output_dir: str = 'results-report',
+               template_globals: Dict[str, Any] = {}):
+    self._output_dir = output_dir
+    self._jinja = JinjaTemplate(template_globals=template_globals)
 
-@app.route('/benchmark/<benchmark>/crash.json')
-def benchmark_json(benchmark: str):
-  """Generates a JSON containing crash reproducing info."""
-  if not _is_valid_benchmark_dir(benchmark):
-    # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
-    abort(404)
+  def generate(self):
+    self._write_index_html()
+    self._write_index_json()
+    for benchmark in list_benchmarks():
+      self._write_benchmark_index(benchmark.id)
+      self._write_benchmark_crash(benchmark.id)
+      for sample in get_samples(benchmark.id):
+        self._write_benchmark_sample(benchmark.id, sample.id)
 
-  try:
-    return render_template('crash.json',
-                           benchmark=match_benchmark(benchmark).signature,
-                           samples=get_samples(benchmark),
-                           get_benchmark_final_target_code=partial(
-                               get_final_target_code, benchmark),
-                           model=model), 200, {
-                               'Content-Type': 'application/json'
-                           }
-  except Exception as e:
-    logging.warning('Failed to render benchmark crash JSON: %s\n  %s',
-                    benchmark, e)
-    return ''
+  def _write(self, output_path: str, content: str):
+    full_path = os.path.join(self._output_dir, output_path)
 
+    parent_dir = os.path.dirname(full_path)
+    if not os.path.exists(parent_dir):
+      os.makedirs(parent_dir)
 
-@app.route('/benchmark/<benchmark>/index.html')
-def benchmark_page(benchmark):
-  if _is_valid_benchmark_dir(benchmark):
-    return render_template('benchmark.html',
-                           benchmark=benchmark,
-                           samples=get_samples(benchmark),
-                           prompt=get_prompt(benchmark),
-                           model=model)
-  # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
-  abort(404)
+    if not os.path.isdir(parent_dir):
+      raise Exception(
+          f'Writing to {full_path} but {parent_dir} is not a directory!')
 
+    with open(full_path, 'w', encoding='utf-8') as f:
+      f.write(content)
 
-@app.route('/sample/<benchmark>/<sample>')
-def sample_page(benchmark, sample):
-  """Renders each fuzz target |sample| of the |benchmark|."""
-  if _is_valid_benchmark_dir(benchmark):
-    return render_template('sample.html',
-                           benchmark=benchmark,
-                           sample=match_sample(benchmark, sample),
-                           logs=get_logs(benchmark, sample),
-                           run_logs=get_run_logs(benchmark, sample),
-                           targets=get_targets(benchmark, sample),
-                           model=model)
-  # TODO(dongge): This won't be needed after resolving the `lost+found` issue.
-  abort(404)
+  def _write_index_html(self):
+    rendered = self._jinja.render('index.html', benchmarks=list_benchmarks())
+    self._write('index.html', rendered)
 
+  def _write_index_json(self):
+    rendered = self._jinja.render('index.json', benchmarks=list_benchmarks())
+    self._write('index.json', rendered)
 
-# Define a custom filter for Jinja2
-@app.template_filter('urlencode')
-def urlencode_filter(s):
-  return urllib.parse.quote(s, safe='')
+  def _write_benchmark_index(self, benchmark_id: str):
+    rendered = self._jinja.render('benchmark.html',
+                                  benchmark=benchmark_id,
+                                  samples=get_samples(benchmark_id),
+                                  prompt=get_prompt(benchmark_id))
+    self._write(f'benchmark/{benchmark_id}/index.html', rendered)
 
+  def _write_benchmark_crash(self, benchmark_id: str):
+    try:
+      rendered = self._jinja.render(
+          'crash.json',
+          benchmark=match_benchmark(benchmark_id).signature,
+          samples=get_samples(benchmark_id),
+          get_benchmark_final_target_code=partial(get_final_target_code,
+                                                  benchmark_id))
+      self._write(f'benchmark/{benchmark_id}/crash.json', rendered)
+    except Exception as e:
+      print(f'Failed to write benchmark/{benchmark_id}/crash.json:\n{e}')
 
-@app.template_filter()
-def percent(num: float):
-  return '%0.2f' % (num * 100)
-
-
-@app.template_filter()
-def cov_report_link(link: str):
-  if not link:
-    return '#'
-
-  path = link.removeprefix('gs://oss-fuzz-gcb-experiment-run-logs/')
-  return f'https://llm-exp.oss-fuzz.com/{path}/report/linux/report.html'
-
-
-def serve(directory: str, port: int, benchmark_set: str):
-  global RESULTS_DIR, BENCHMARK_DIR
-  RESULTS_DIR = directory
-  if benchmark_set:
-    BENCHMARK_DIR = os.path.join(BENCHMARK_SET_DIR, benchmark_set)
-  app.run(host='localhost', port=port)
+  def _write_benchmark_sample(self, benchmark_id: str, sample_id: str):
+    try:
+      rendered = self._jinja.render(
+          'sample.html',
+          benchmark=benchmark_id,
+          sample=match_sample(benchmark_id, sample_id),
+          logs=get_logs(benchmark_id, sample_id),
+          run_logs=get_run_logs(benchmark_id, sample_id),
+          targets=get_targets(benchmark_id, sample_id))
+      self._write(f'sample/{benchmark_id}/{sample_id}', rendered)
+    except Exception as e:
+      print(f'Failed to write sample/{benchmark_id}/{sample_id}:\n{e}')
 
 
 if __name__ == '__main__':
   # TODO(Dongge): Use argparser as this script gets more complex.
   results_dir = sys.argv[1]
-  server_port = int(sys.argv[2])
-  benchmark_dir = sys.argv[3] if len(sys.argv) > 3 else ''
-  model = sys.argv[4] if len(sys.argv) > 4 else ''
+  benchmark_set = sys.argv[2] if len(sys.argv) > 2 else ''
+  model = sys.argv[3] if len(sys.argv) > 3 else ''
+  output_dir = sys.argv[4] if len(sys.argv) > 4 else 'results-report'
 
-  serve(results_dir, server_port, benchmark_dir)
+  RESULTS_DIR = results_dir
+  if benchmark_set:
+    BENCHMARK_DIR = os.path.join(BENCHMARK_SET_DIR, benchmark_set)
+
+  gr = GenerateReport(output_dir=output_dir, template_globals={'model': model})
+  gr.generate()
