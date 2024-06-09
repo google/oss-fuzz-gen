@@ -6,7 +6,6 @@ PyYAML==6.0
 openai==1.16.2
 requests==2.32.0
 #pytype==2023.7.28
-Flask==2.3.2
 yapf==0.40.1
 pylint==2.17.5
 pandas==2.1.1
