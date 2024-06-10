@@ -521,8 +521,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats a list of arugment descriptions."""
     argument_descriptions = []
 
-    for count in range(len(self.function_args)):
-      arg_type = self.function_args[count]['type']
+    for count, function_arg in enumerate(self.function_args):
+      arg_type = function_arg['type']
       if self._has_generic(arg_type):
         argument = self._format_generic_argument(count, arg_type)
       else:
@@ -536,7 +536,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats a problem based on the prompt template."""
     problem = self._get_template(self.problem_template_file)
     problem = problem.replace('{TARGET}', self._format_target(signature))
-    problem = problem.replace('{REQUIREMENTS}', self._format_requirement(signature))
+    problem = problem.replace('{REQUIREMENTS}',
+                              self._format_requirement(signature))
     problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
     problem = problem.replace('{ARGUMENTS}', self._format_arguments())
     return problem
