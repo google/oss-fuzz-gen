@@ -1,0 +1,4 @@
+<argument>
+Arugment #{ARG_COUNT} requires an object instance of {ARG_TYPE}.
+Please create the needed arguments with the correct type to be used for this argument.
+</argument>
