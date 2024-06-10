@@ -31,9 +31,6 @@ import run_one_experiment
 from experiment import evaluator
 from experiment.workdir import WorkDirs
 
-BENCHMARK_SET_DIR = 'benchmark-sets'
-BENCHMARK_DIR = ''
-
 MAX_RUN_LOGS_LEN = 16 * 1024
 
 TARGET_EXTS = ('.c', '.cc', '.cpp', '.cxx', '.c++', '.java', '.py')
@@ -48,43 +45,6 @@ class Benchmark:
   signature: str = ''
   project: str = ''
   function: str = ''
-
-  def __post_init__(self):
-    self.project = '-'.join(self.id.split('-')[1:-1])
-    self.function = self.id.split('-')[-1]
-    self.signature = self._find_signature() or self.id
-
-  def _find_signature(self) -> str:
-    """
-    Finds the function signature by searching for its |benchmark_id| in
-    BENCHMARK_DIR.
-    """
-    project_path = os.path.join(BENCHMARK_DIR, f'{self.project}.yaml')
-    if not BENCHMARK_DIR or not os.path.isfile(project_path):
-      return ''
-
-    matched_prefix_signature = ''
-    with open(project_path) as project_yaml_file:
-      functions = yaml.safe_load(project_yaml_file).get('functions', [])
-      for function in functions:
-        function_name = function.get('name', '')
-        function_signature = function.get('signature', '')
-
-        # Best match is a full match, but sometimes the result directory only
-        # has the first n characters of a long function name so a full match is
-        # not possible.
-        # To avoid returning early on a prefix match when there is a full match
-        # farther down the list, we only return the prefix match at the end.
-        if function_name.lower() == self.function.lower():
-          return function_signature
-        if function_name.lower().startswith(self.function.lower()):
-          if matched_prefix_signature:
-            logging.warning(
-                'Multiple substring matches found when looking for function '
-                'name %s', function_name)
-          matched_prefix_signature = function_signature
-
-    return matched_prefix_signature
 
 
 @dataclasses.dataclass
@@ -132,10 +92,11 @@ class Target:
 class Results:
   """Results provides functions to explore the experiment results in a particular directory."""
 
-  def __init__(self, results_dir='results'):
+  def __init__(self, results_dir='results', benchmark_set='all'):
     self._results_dir = results_dir
+    self._benchmark_dir = os.path.join('benchmark-sets', benchmark_set)
 
-  def list_benchmark_ids(self):
+  def list_benchmark_ids(self) -> List[str]:
     return sorted(
         filter(self._is_valid_benchmark_dir, os.listdir(self._results_dir)))
 
@@ -156,7 +117,7 @@ class Results:
       else:
         result = run_one_experiment.AggregatedResult()
 
-      benchmarks.append(Benchmark(benchmark, status, result))
+      benchmarks.append(self._create_benchmark(benchmark, status, result))
 
     return benchmarks
 
@@ -171,7 +132,7 @@ class Results:
     else:
       result = run_one_experiment.AggregatedResult()
 
-    return Benchmark(benchmark_id, status, result)
+    return self._create_benchmark(benchmark_id, status, result)
 
   def get_final_target_code(self, benchmark: str, sample: str) -> str:
     """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
@@ -331,7 +292,7 @@ class Results:
     return raw_prompt_content
 
   def _is_valid_benchmark_dir(self, cur_dir: str) -> bool:
-    """Checks if |cur_dir| is a valid benchmark directory (e.g., no lost+found)"""
+    """Checks if |cur_dir| is a valid benchmark directory (e.g., no lost+found)."""
     # Check prefix.
     if not cur_dir.startswith('output-'):
       return False
@@ -378,6 +339,45 @@ class Results:
 
     return logs[:max_len // 2] + '\n...truncated...\n' + logs[-(max_len // 2) +
                                                               1:]
+
+  def _create_benchmark(
+      self, benchmark_id: str, status: str,
+      result: run_one_experiment.AggregatedResult) -> Benchmark:
+    project = '-'.join(benchmark_id.split('-')[1:-1])
+    function = benchmark_id.split('-')[-1]
+    signature = self._find_benchmark_signature(project,
+                                               function) or benchmark_id
+    return Benchmark(benchmark_id, status, result, signature, project, function)
+
+  def _find_benchmark_signature(self, project: str,
+                                target_function: str) -> str:
+    """Finds the function signature by searching for its |benchmark_id|."""
+    project_path = os.path.join(self._benchmark_dir, f'{project}.yaml')
+    if not os.path.isfile(project_path):
+      return ''
+
+    matched_prefix_signature = ''
+    with open(project_path) as project_yaml_file:
+      functions = yaml.safe_load(project_yaml_file).get('functions', [])
+      for function in functions:
+        function_name = function.get('name', '')
+        function_signature = function.get('signature', '')
+
+        # Best match is a full match, but sometimes the result directory only
+        # has the first n characters of a long function name so a full match is
+        # not possible.
+        # To avoid returning early on a prefix match when there is a full match
+        # farther down the list, we only return the prefix match at the end.
+        if function_name.lower() == target_function.lower():
+          return function_signature
+        if function_name.lower().startswith(target_function.lower()):
+          if matched_prefix_signature:
+            logging.warning(
+                'Multiple substring matches found when looking for function '
+                'name %s', function_name)
+          matched_prefix_signature = function_signature
+
+    return matched_prefix_signature
 
 
 class JinjaEnv:
@@ -511,18 +511,13 @@ class GenerateReport:
 
 
 def main():
-  global BENCHMARK_DIR
-
   # TODO(Dongge): Use argparser as this script gets more complex.
   results_dir = sys.argv[1]
   benchmark_set = sys.argv[2] if len(sys.argv) > 2 else ''
   model = sys.argv[3] if len(sys.argv) > 3 else ''
   output_dir = sys.argv[4] if len(sys.argv) > 4 else 'results-report'
 
-  if benchmark_set:
-    BENCHMARK_DIR = os.path.join(BENCHMARK_SET_DIR, benchmark_set)
-
-  results = Results(results_dir=results_dir)
+  results = Results(results_dir=results_dir, benchmark_set=benchmark_set)
   jinja_env = JinjaEnv(template_globals={'model': model})
   gr = GenerateReport(results=results,
                       jinja_env=jinja_env,
