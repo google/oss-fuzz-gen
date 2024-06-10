@@ -56,7 +56,9 @@ def get_oracle_dict() -> Dict[str, Any]:
   # Do this in a function to allow for forward-declaration of functions below.
   oracle_dict = {
       'far-reach-low-coverage': get_unreached_functions,
-      'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets
+      'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets,
+      'all-functions': get_all_functions,
+      'all-jvm-constructors': get_all_jvm_constructors
   }
   return oracle_dict
 
@@ -66,7 +68,8 @@ def set_introspector_endpoints(endpoint):
   global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNC_SIG, \
       INTROSPECTOR_FUNCTION_SOURCE, INTROSPECTOR_PROJECT_SOURCE, \
       INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_ORACLE_FAR_REACH, \
-      INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE
+      INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
+      INTROSPECTOR_ALL_FUNCTIONS, INTROSPECTOR_ALL_JVM_CONSTRUCTORS
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
@@ -83,6 +86,9 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
   INTROSPECTOR_ADDR_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
+  INTROSPECTOR_ALL_FUNCTIONS = f'{INTROSPECTOR_ENDPOINT}/all-functions'
+  INTROSPECTOR_ALL_JVM_CONSTRUCTORS = (
+      f'{INTROSPECTOR_ENDPOINT}/all-jvm-constructors')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -125,7 +131,7 @@ def _query_introspector(api: str, params: dict) -> Optional[requests.Response]:
           'Error: %s', _construct_url(api, params), err)
       break
 
-  return None
+  return ""
 
 
 def _get_data(resp: Optional[requests.Response], key: str,
@@ -262,6 +268,18 @@ def get_unreached_functions(project):
   return functions
 
 
+def get_all_functions(project):
+  functions = query_introspector_oracle(project, INTROSPECTOR_ALL_FUNCTIONS)
+  functions = [f for f in functions if _get_arg_count(f) > 0]
+  return functions
+
+
+def get_all_jvm_constructors(project):
+  functions = query_introspector_oracle(project, INTROSPECTOR_ALL_JVM_CONSTRUCTORS)
+  functions = [f for f in functions if _get_arg_count(f) > 0]
+  return functions
+
+
 def demangle(name: str) -> str:
   return subprocess.run(['c++filt', name],
                         check=True,
@@ -341,10 +359,14 @@ def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
   if language == 'jvm':
     # The fuzz-introspector front end of JVM projects cannot get the original
-    # argument name. Thus the argument name here uses arg{Count} as arugment
-    # name reference.
+    # argument name. Thus the argument name here uses var_{argument_type} as
+    # argument name reference. Some argument types are full-qualified names of
+    # Java classes with [] and . and that is not allowed for Java variable names
+    # and they are removed and form the temporary argment name for reference.
     jvm_args = _get_clean_arg_types(function, project)
-    arg_names = [f'arg{i}' for i in range(len(jvm_args))]
+    arg_names = [
+        f'var_{name.split(".")[-1].replace("[]", "")}' for name in jvm_args
+    ]
   else:
     arg_names = (function.get('arg-names') or
                  function.get('function_argument_names', []))
@@ -359,8 +381,9 @@ def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
 def get_function_signature(function: dict, project: str) -> str:
   """Returns the function signature."""
   function_signature = function.get('function_signature', '')
-  if function_signature == "N/A":
-    # For JVM projects, the full function signature are the raw function name
+  if not function_signature or function_signature == "N/A":
+    # Fail safe for data without full function signature
+    # Use its raw function name
     return get_raw_function_name(function, project)
   if not function_signature:
     logging.error(
@@ -440,8 +463,9 @@ def populate_benchmarks_using_introspector(project: str, language: str,
     if filename not in [os.path.basename(i) for i in interesting.keys()]:
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
       # Ignore jvm project for this checking.
-      logging.error('error: %s %s', filename, interesting.keys())
-      continue
+      if language != 'jvm':
+        logging.error('error: %s %s', filename, interesting.keys())
+        continue
 
     function_signature = get_function_signature(function, project)
     if not function_signature:
@@ -629,5 +653,19 @@ if __name__ == '__main__':
   if benchmarks:
     benchmarklib.Benchmark.to_yaml(benchmarks, args.out)
   else:
-    logging.error('Nothing found for %s', args.project)
-    sys.exit(1)
+    # No eligible functions from introspector oracle, try finding from
+    # all functions and (for JVM project only) constructors
+    target_oracle = ['all-functions']
+    if cur_project_language == 'jvm':
+      target_oracle.append('all-jvm-constructors')
+
+    benchmarks = populate_benchmarks_using_introspector(args.project,
+                                                        cur_project_language,
+                                                        args.max_functions,
+                                                        target_oracle)
+
+    if benchmarks:
+      benchmarklib.Benchmark.to_yaml(benchmarks, args.out)
+    else:
+      logging.error('Nothing found for %s', args.project)
+      sys.exit(1)
