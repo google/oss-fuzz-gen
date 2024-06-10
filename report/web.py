@@ -130,6 +130,7 @@ class Target:
 
 
 class Results:
+  """Results provides functions to explore the experiment results in a particular directory."""
 
   def __init__(self, results_dir='results'):
     self._results_dir = results_dir
@@ -379,7 +380,8 @@ class Results:
                                                               1:]
 
 
-class JinjaTemplate:
+class JinjaEnv:
+  """JinjaEnv wraps the set up of a jinja2 environment."""
 
   @staticmethod
   def _urlencode_filter(s):
@@ -397,7 +399,7 @@ class JinjaTemplate:
     path = link.removeprefix('gs://oss-fuzz-gcb-experiment-run-logs/')
     return f'https://llm-exp.oss-fuzz.com/{path}/report/linux/report.html'
 
-  def __init__(self, template_globals: Dict[str, Any] = {}):
+  def __init__(self, template_globals: Optional[Dict[str, Any]] = None):
     self._env = jinja2.Environment(
         loader=jinja2.FileSystemLoader("report/templates"),
         autoescape=jinja2.select_autoescape())
@@ -406,24 +408,36 @@ class JinjaTemplate:
     self._env.filters['percent'] = self._percent
     self._env.filters['cov_report_link'] = self._cov_report_link
 
-    for key, val in template_globals.items():
-      self._env.globals[key] = val
+    if template_globals:
+      for key, val in template_globals.items():
+        self._env.globals[key] = val
 
   def render(self, template_name: str, **kwargs):
+    """Render a template with variables provides through kwargs."""
     return self._env.get_template(template_name).render(**kwargs)
 
 
 class GenerateReport:
+  """
+  GenerateReport helps generate an HTML report of experiment results.
+
+  Args:
+    results: A Results object which takes care of reading results files and
+      processing them for the HTML templates.
+    output_dir: The directory to for the HTML report files.
+    jinja_env: A JinjaEnv object which provides the template render function.
+  """
 
   def __init__(self,
                results: Results,
-               output_dir: str = 'results-report',
-               template_globals: Dict[str, Any] = {}):
+               jinja_env: JinjaEnv,
+               output_dir: str = 'results-report'):
     self._results = results
     self._output_dir = output_dir
-    self._jinja = JinjaTemplate(template_globals=template_globals)
+    self._jinja = jinja_env
 
   def generate(self):
+    """Generate and write every report file."""
     self._write_index_html()
     self._write_index_json()
     for benchmark in self._results.list_benchmark_ids():
@@ -433,6 +447,7 @@ class GenerateReport:
         self._write_benchmark_sample(benchmark, sample.id)
 
   def _write(self, output_path: str, content: str):
+    """Utility write to filesystem function."""
     full_path = os.path.join(self._output_dir, output_path)
 
     parent_dir = os.path.dirname(full_path)
@@ -447,16 +462,19 @@ class GenerateReport:
       f.write(content)
 
   def _write_index_html(self):
+    """Generate the report index.html and write to filesystem."""
     rendered = self._jinja.render('index.html',
                                   benchmarks=self._results.list_benchmarks())
     self._write('index.html', rendered)
 
   def _write_index_json(self):
+    """Generate the report index.json and write to filesystem."""
     rendered = self._jinja.render('index.json',
                                   benchmarks=self._results.list_benchmarks())
     self._write('index.json', rendered)
 
   def _write_benchmark_index(self, benchmark_id: str):
+    """Generate the benchmark index.html and write to filesystem."""
     rendered = self._jinja.render(
         'benchmark.html',
         benchmark=benchmark_id,
@@ -465,6 +483,7 @@ class GenerateReport:
     self._write(f'benchmark/{benchmark_id}/index.html', rendered)
 
   def _write_benchmark_crash(self, benchmark_id: str):
+    """Generate the benchmark crash.json and write to filesystem."""
     try:
       rendered = self._jinja.render(
           'crash.json',
@@ -477,6 +496,7 @@ class GenerateReport:
       print(f'Failed to write benchmark/{benchmark_id}/crash.json:\n{e}')
 
   def _write_benchmark_sample(self, benchmark_id: str, sample_id: str):
+    """Generate the sample page and write to filesystem."""
     try:
       rendered = self._jinja.render(
           'sample.html',
@@ -490,7 +510,9 @@ class GenerateReport:
       print(f'Failed to write sample/{benchmark_id}/{sample_id}:\n{e}')
 
 
-if __name__ == '__main__':
+def main():
+  global BENCHMARK_DIR
+
   # TODO(Dongge): Use argparser as this script gets more complex.
   results_dir = sys.argv[1]
   benchmark_set = sys.argv[2] if len(sys.argv) > 2 else ''
@@ -501,7 +523,12 @@ if __name__ == '__main__':
     BENCHMARK_DIR = os.path.join(BENCHMARK_SET_DIR, benchmark_set)
 
   results = Results(results_dir=results_dir)
+  jinja_env = JinjaEnv(template_globals={'model': model})
   gr = GenerateReport(results=results,
-                      output_dir=output_dir,
-                      template_globals={'model': model})
+                      jinja_env=jinja_env,
+                      output_dir=output_dir)
   gr.generate()
+
+
+if __name__ == '__main__':
+  main()
