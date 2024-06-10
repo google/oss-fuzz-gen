@@ -49,6 +49,8 @@ INTROSPECTOR_XREF = ''
 INTROSPECTOR_TYPE = ''
 INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
+INTROSPECTOR_ALL_FUNCTIONS = ''
+INTROSPECTOR_ALL_JVM_CONSTRUCTORS = ''
 
 
 def get_oracle_dict() -> Dict[str, Any]:
@@ -131,7 +133,7 @@ def _query_introspector(api: str, params: dict) -> Optional[requests.Response]:
           'Error: %s', _construct_url(api, params), err)
       break
 
-  return ""
+  return None
 
 
 def _get_data(resp: Optional[requests.Response], key: str,
@@ -275,7 +277,8 @@ def get_all_functions(project):
 
 
 def get_all_jvm_constructors(project):
-  functions = query_introspector_oracle(project, INTROSPECTOR_ALL_JVM_CONSTRUCTORS)
+  functions = query_introspector_oracle(project,
+                                        INTROSPECTOR_ALL_JVM_CONSTRUCTORS)
   functions = [f for f in functions if _get_arg_count(f) > 0]
   return functions
 
@@ -655,14 +658,14 @@ if __name__ == '__main__':
   else:
     # No eligible functions from introspector oracle, try finding from
     # all functions and (for JVM project only) constructors
-    target_oracle = ['all-functions']
+    additional_oracle = ['all-functions']
     if cur_project_language == 'jvm':
-      target_oracle.append('all-jvm-constructors')
+      additional_oracle.append('all-jvm-constructors')
 
     benchmarks = populate_benchmarks_using_introspector(args.project,
                                                         cur_project_language,
                                                         args.max_functions,
-                                                        target_oracle)
+                                                        additional_oracle)
 
     if benchmarks:
       benchmarklib.Benchmark.to_yaml(benchmarks, args.out)
