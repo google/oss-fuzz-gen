@@ -107,7 +107,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     self.priming_template_file = self._find_template(template_dir,
                                                      'priming.txt')
     self.priming_spec_template_file = self._find_template(
-        '/home/kaixuan/FDG_LLM/oss-fuzz-gen/prompts/specs/bind9',
+        '/home/kaixuan/FDG_LLM/oss-fuzz-gen/prompts/specs/kamailio',
         'priming_spec.txt')
     # self.priming_spec_template_file = self._find_template(
     #     '/home/kaixuan/FDG_LLM/oss-fuzz-gen/prompts/specs/inchi',
