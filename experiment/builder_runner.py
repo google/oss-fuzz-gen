@@ -333,7 +333,8 @@ class BuilderRunner:
         SemanticCheckResult.NO_SEMANTIC_ERR)
 
   def build_and_run(self, generated_project: str, target_path: str,
-                    iteration: int, language: str) -> tuple[BuildResult, Optional[RunResult]]:
+                    iteration: int,
+                    language: str) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target for fuzzing."""
     build_result = BuildResult()
 
@@ -351,7 +352,8 @@ class BuilderRunner:
 
   def build_and_run_local(
       self, generated_project: str, target_path: str, iteration: int,
-      build_result: BuildResult, language: str) -> tuple[BuildResult, Optional[RunResult]]:
+      build_result: BuildResult,
+      language: str) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target locally for fuzzing."""
 
     benchmark_target_name = os.path.basename(target_path)
@@ -654,7 +656,8 @@ class CloudBuilderRunner(BuilderRunner):
     return False
 
   def build_and_run(self, generated_project: str, target_path: str,
-                    iteration: int, language: str) -> tuple[BuildResult, Optional[RunResult]]:
+                    iteration: int,
+                    language: str) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target for fuzzing."""
     build_result = BuildResult()
 
@@ -673,7 +676,8 @@ class CloudBuilderRunner(BuilderRunner):
 
   def build_and_run_cloud(
       self, generated_project: str, target_path: str, iteration: int,
-      build_result: BuildResult, language: str) -> tuple[BuildResult, Optional[RunResult]]:
+      build_result: BuildResult,
+      language: str) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target locally for fuzzing."""
     logging.info('Evaluating %s on cloud.', os.path.realpath(target_path))
 
