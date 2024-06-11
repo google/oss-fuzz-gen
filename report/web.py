@@ -16,6 +16,7 @@
 
 import argparse
 import dataclasses
+import io
 import json
 import logging
 import os
@@ -27,6 +28,7 @@ from typing import Any, Dict, List, Optional
 
 import jinja2
 import yaml
+from google.cloud import storage
 
 import run_one_experiment
 from experiment import evaluator
@@ -90,6 +92,101 @@ class Target:
   fixer_prompt: Optional[str] = None
 
 
+class FileSystem:
+  """
+  FileSystem provides a wrapper over standard library and GCS client and
+  automatically chooses which to use based on the provided path.
+  """
+
+  _gcs_client = None
+
+  @classmethod
+  def _get_gcs_client(cls):
+    """
+    Returns a cached storage client (a new one is created on first call.
+
+    A new client does authentication on first call, so caching the client will
+    same multiple authentication round trips to GCP.
+    """
+    if cls._gcs_client is None:
+      cls._gcs_client = storage.Client()
+
+    return cls._gcs_client
+
+  def __init__(self, path: str):
+    logging.debug('file operation %s', path)
+    self._path = path
+    self._gcs_bucket: Optional[storage.Bucket] = None
+
+    if path.startswith('gs://'):
+      path = path.removeprefix('gs://')
+      self._gcs_bucket = FileSystem._get_gcs_client().bucket(path.split('/')[0])
+      self._path = '/'.join(path.split('/')[1:])
+
+  def listdir(self) -> List[str]:
+    """listdir returns a list of files and directories in path."""
+    if self._gcs_bucket is not None:
+      # Make sure the path ends with a /, otherwise GCS just returns the
+      # directory as a prefix and not list the contents.
+      prefix = self._path
+      if not self._path.endswith('/'):
+        prefix = f'{self._path}/'
+
+      # Unfortunately GCS doesn't work like a normal file system and the client
+      # library doesn't even pretend there is a directory hierarchy.
+      # The list API does return a list of prefixes that we can join with the
+      # list of objects to get something close to listdir(). But client library
+      # is pretty weird and it stores the prefixes on the iterator...
+      # https://github.com/googleapis/python-storage/blob/64edbd922a605247203790a90f9536d54e3a705a/google/cloud/storage/client.py#L1356
+      it = self._gcs_bucket.list_blobs(prefix=prefix, delimiter='/')
+      paths = [f.name for f in it] + [p.removesuffix('/') for p in it.prefixes]
+      r = [p.removeprefix(prefix) for p in paths]
+      return r
+
+    return os.listdir(self._path)
+
+  def exists(self) -> bool:
+    """exists returns true if the path is a file or directory."""
+    if self._gcs_bucket is not None:
+      return self.isfile() or self.isdir()
+
+    return os.path.exists(self._path)
+
+  def isfile(self) -> bool:
+    """isfile returns true if the path is a file."""
+    if self._gcs_bucket is not None:
+      return self._gcs_bucket.blob(self._path).exists()
+
+    return os.path.isfile(self._path)
+
+  def isdir(self) -> bool:
+    """isfile returns true if the path is a directory."""
+    if self._gcs_bucket is not None:
+      return len(self.listdir()) > 0
+
+    return os.path.isdir(self._path)
+
+  def makedirs(self):
+    """makedirs create parent(s) and directory in specified path."""
+    if self._gcs_bucket is not None:
+      # Do nothing. GCS doesn't have directories and files can be created with
+      # any path.
+      return
+
+    os.makedirs(self._path)
+
+  def open(self, *args, **kwargs) -> io.IOBase:
+    """
+    open returns a file handle to the file located at the specified path.
+
+    It has identical function signature to standard library open().
+    """
+    if self._gcs_bucket is not None:
+      return self._gcs_bucket.blob(self._path).open(*args, **kwargs)
+
+    return open(self._path, *args, **kwargs)
+
+
 class Results:
   """Results provides functions to explore the experiment results in a particular directory."""
 
@@ -99,7 +196,8 @@ class Results:
 
   def list_benchmark_ids(self) -> List[str]:
     return sorted(
-        filter(self._is_valid_benchmark_dir, os.listdir(self._results_dir)))
+        filter(self._is_valid_benchmark_dir,
+               FileSystem(self._results_dir).listdir()))
 
   def list_benchmarks(self) -> List[Benchmark]:
     """Lists benchmarks in the result directory."""
@@ -139,10 +237,10 @@ class Results:
     """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
     targets_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
 
-    for name in sorted(os.listdir(targets_dir)):
+    for name in sorted(FileSystem(targets_dir).listdir()):
       path = os.path.join(targets_dir, name)
-      if os.path.isfile(path) and name.startswith(sample + '.'):
-        with open(path) as f:
+      if FileSystem(path).isfile() and name.startswith(sample + '.'):
+        with FileSystem(path).open() as f:
           code = f.read()
           code = json.dumps(code)
         return code
@@ -171,17 +269,17 @@ class Results:
   def get_logs(self, benchmark: str, sample: str) -> str:
     status_dir = os.path.join(self._results_dir, benchmark, 'status')
     results_path = os.path.join(status_dir, sample, 'log.txt')
-    if not os.path.exists(results_path):
+    if not FileSystem(results_path).exists():
       return ''
 
-    with open(results_path) as f:
+    with FileSystem(results_path).open() as f:
       return f.read()
 
   def get_run_logs(self, benchmark: str, sample: str) -> str:
     """Returns the content of the last run log."""
     run_logs_dir = os.path.join(self._results_dir, benchmark, 'logs', 'run')
     largest_iteration, last_log_file = -1, None
-    for name in os.listdir(run_logs_dir):
+    for name in FileSystem(run_logs_dir).listdir():
       if name.startswith(sample + '.'):
         iteration = WorkDirs.get_run_log_iteration(name)
         if iteration is None:
@@ -195,7 +293,8 @@ class Results:
     if not last_log_file:
       return ''
 
-    with open(os.path.join(run_logs_dir, last_log_file), errors='replace') as f:
+    with FileSystem(os.path.join(run_logs_dir,
+                                 last_log_file)).open(errors='replace') as f:
       return self._truncate_logs(f.read(), MAX_RUN_LOGS_LEN)
 
     return ''
@@ -205,15 +304,15 @@ class Results:
     targets_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
     targets = []
 
-    for name in sorted(os.listdir(targets_dir)):
+    for name in sorted(FileSystem(targets_dir).listdir()):
       path = os.path.join(targets_dir, name)
-      if os.path.isfile(path) and name.startswith(sample + '.'):
+      if FileSystem(path).isfile() and name.startswith(sample + '.'):
         logging.debug(path)
-        with open(path) as f:
+        with FileSystem(path).open() as f:
           code = f.read()
         targets.insert(0, Target(code=code))
 
-      if os.path.isdir(path) and name.startswith(sample + '-F'):
+      if FileSystem(path).isdir() and name.startswith(sample + '-F'):
         targets.append(self._get_fixed_target(path))
 
     return targets
@@ -237,9 +336,9 @@ class Results:
 
   def get_prompt(self, benchmark: str) -> Optional[str]:
     root_dir = os.path.join(self._results_dir, benchmark)
-    for name in os.listdir(root_dir):
+    for name in FileSystem(root_dir).listdir():
       if re.match(r'^prompt.*txt$', name):
-        with open(os.path.join(root_dir, name)) as f:
+        with FileSystem(os.path.join(root_dir, name)).open() as f:
           content = f.read()
 
         # Prepare prompt text for HTML.
@@ -259,11 +358,11 @@ class Results:
 
     for sample_id in self._sample_ids(targets):
       results_path = os.path.join(status_dir, sample_id, 'result.json')
-      if not os.path.exists(results_path):
+      if not FileSystem(results_path).exists():
         results.append(None)
         continue
 
-      with open(results_path) as f:
+      with FileSystem(results_path).open() as f:
         try:
           data = json.load(f)
         except Exception:
@@ -297,16 +396,23 @@ class Results:
     # Check prefix.
     if not cur_dir.startswith('output-'):
       return False
+
+    # Skip checking sub-directories in GCS. It's a lot of filesystem operations
+    # to go over the network.
+    if cur_dir.startswith('gs://'):
+      return True
+
     # Check sub-directories.
     expected_dirs = ['raw_targets', 'status', 'fixed_targets']
     return all(
-        os.path.isdir(os.path.join(self._results_dir, cur_dir, expected_dir))
+        FileSystem(os.path.join(self._results_dir, cur_dir,
+                                expected_dir)).isdir()
         for expected_dir in expected_dirs)
 
   def _get_generated_targets(self, benchmark: str) -> list[str]:
     targets = []
     raw_targets_dir = os.path.join(self._results_dir, benchmark, 'raw_targets')
-    for filename in sorted(os.listdir(raw_targets_dir)):
+    for filename in sorted(FileSystem(raw_targets_dir).listdir()):
       if os.path.splitext(filename)[1] in TARGET_EXTS:
         targets.append(os.path.join(raw_targets_dir, filename))
 
@@ -316,16 +422,16 @@ class Results:
     """Gets the fixed fuzz target from the benchmark's result |path|."""
     code = ''
     fixer_prompt = ''
-    for name in os.listdir(path):
+    for name in FileSystem(path).listdir():
       if name.endswith('.txt'):
-        with open(os.path.join(path, name)) as f:
+        with FileSystem(os.path.join(path, name)).open() as f:
           fixer_prompt = f.read()
 
       # Prepare prompt for being used in HTML.
       fixer_prompt = self._prepare_prompt_for_html_text(fixer_prompt)
 
       if name.endswith('.rawoutput'):
-        with open(os.path.join(path, name)) as f:
+        with FileSystem(os.path.join(path, name)).open() as f:
           code = f.read()
 
     return Target(code, fixer_prompt)
@@ -354,11 +460,11 @@ class Results:
                                 target_function: str) -> str:
     """Finds the function signature by searching for its |benchmark_id|."""
     project_path = os.path.join(self._benchmark_dir, f'{project}.yaml')
-    if not os.path.isfile(project_path):
+    if not FileSystem(project_path).isfile():
       return ''
 
     matched_prefix_signature = ''
-    with open(project_path) as project_yaml_file:
+    with FileSystem(project_path).open() as project_yaml_file:
       functions = yaml.safe_load(project_yaml_file).get('functions', [])
       for function in functions:
         function_name = function.get('name', '')
@@ -452,14 +558,14 @@ class GenerateReport:
     full_path = os.path.join(self._output_dir, output_path)
 
     parent_dir = os.path.dirname(full_path)
-    if not os.path.exists(parent_dir):
-      os.makedirs(parent_dir)
+    if not FileSystem(parent_dir).exists():
+      FileSystem(parent_dir).makedirs()
 
-    if not os.path.isdir(parent_dir):
+    if not FileSystem(parent_dir).isdir():
       raise Exception(
           f'Writing to {full_path} but {parent_dir} is not a directory!')
 
-    with open(full_path, 'w', encoding='utf-8') as f:
+    with FileSystem(full_path).open('w', encoding='utf-8') as f:
       f.write(content)
 
   def _write_index_html(self):
