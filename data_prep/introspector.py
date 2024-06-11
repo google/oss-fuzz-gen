@@ -88,9 +88,9 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
   INTROSPECTOR_ADDR_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
-  INTROSPECTOR_ALL_FUNCTIONS = f'{INTROSPECTOR_ENDPOINT}/all-functions'
+  INTROSPECTOR_ALL_FUNCTIONS = f'{INTROSPECTOR_ENDPOINT}/all-public-functions'
   INTROSPECTOR_ALL_JVM_CONSTRUCTORS = (
-      f'{INTROSPECTOR_ENDPOINT}/all-jvm-constructors')
+      f'{INTROSPECTOR_ENDPOINT}/all-public-jvm-constructors')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -412,6 +412,17 @@ def _group_function_params(param_types: list[str],
   } for param_type, param_name in zip(param_types, param_names)]
 
 
+def _sort_functions(functions: List[Dict]) -> List[Dict]:
+  """Sort the list of functions according to serveral requirements"""
+
+  return sorted(
+      functions,
+      key=lambda item: (item['is_reached'], item['is_enum_class'], -item[
+          'accummulated_complexity'], item['runtime_coverage_percent'], -len(
+              item['function_arguments']), len(item['reached_by_fuzzers'])),
+      reverse=False)
+
+
 def populate_benchmarks_using_introspector(project: str, language: str,
                                            limit: int,
                                            target_oracles: List[str]):
@@ -428,6 +439,10 @@ def populate_benchmarks_using_introspector(project: str, language: str,
   if not functions:
     logging.error('No functions found using the oracles: %s', target_oracles)
     return []
+
+  # Sort the function list if the functions list if longer than limit
+  if len(functions) > limit:
+    functions = _sort_functions(functions)
 
   if language == 'jvm':
     filenames = [
