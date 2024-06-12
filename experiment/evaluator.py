@@ -30,7 +30,7 @@ from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
 from llm_toolkit import code_fixer
 
-LLM_FIX_LIMIT = 5
+LLM_FIX_LIMIT = int(os.getenv('LLM_FIX_LIMIT', '5'))
 
 OSS_FUZZ_COVERAGE_BUCKET = 'oss-fuzz-coverage'
 
