@@ -313,7 +313,7 @@ def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
         if os.path.basename(short_path) in interesting_filenames:
           interesting_filepaths.append(path)
 
-        if path.endswith('.c') or path.endswith('.cpp') or path.endswith('.cc'):
+        if any(path.endswith(suffix) for suffix in SEARCH_EXTS):
           potential_harnesses.append(path)
 
   return potential_harnesses, interesting_filepaths
