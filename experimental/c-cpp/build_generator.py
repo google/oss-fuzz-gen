@@ -15,6 +15,7 @@
 """Utilities for generating builder scripts for a GitHub repository."""
 
 import os
+import shutil
 import subprocess
 from abc import abstractmethod
 from typing import Any, Dict, Iterator, List, Tuple
@@ -52,10 +53,10 @@ class AutoBuildBase:
 
   def is_matched(self):
     """Returns True if the build heuristic found matching files."""
-    for matches in self.matches_found:
-      if len(matches) == 0:
-        return False
-    return True
+    for found_matches in self.matches_found.values():
+      if len(found_matches) > 0:
+        return True
+    return False
 
 
 class PureCFileCompiler(AutoBuildBase):
@@ -275,6 +276,47 @@ class AutogenScanner(AutoBuildBase):
     return 'autogen'
 
 
+class AutogenScannerSH(AutoBuildBase):
+  """Auto builder for projects relying on "autogen.sh; autoconf; autoheader."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {'configure.ac': [], 'autogen.sh': []}
+
+  def steps_to_build(self):
+    cmds_to_exec_from_root = ['./autogen.sh', './configure', 'make']
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = cmds_to_exec_from_root
+    build_container.heuristic_id = self.name + '1'
+    yield build_container
+
+  @property
+  def name(self):
+    return 'autogen20'
+
+
+class BootstrapScanner(AutoBuildBase):
+  """Auto builder for projects that rely on bootstrap.sh; configure; make."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        'bootstrap.sh': [],
+        'Makefile.am': [],
+    }
+
+  def steps_to_build(self):
+    cmds_to_exec_from_root = ['./bootstrap.sh', './configure', 'make']
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = cmds_to_exec_from_root
+    build_container.heuristic_id = self.name + '1'
+    yield build_container
+
+  @property
+  def name(self):
+    return 'bootstrap-make'
+
+
 class AutogenConfScanner(AutoBuildBase):
   """Auto builder for projects relying on "autoconf; autoheader."""
 
@@ -296,6 +338,123 @@ class AutogenConfScanner(AutoBuildBase):
   @property
   def name(self):
     return 'autogen-ConfMake'
+
+
+class CMakeScannerOptsParser(AutoBuildBase):
+  """Calls cmake to extract options from the CMakeLists.txt file of a project
+  and creates a build string where all BOOL values are set to OFF except those
+  with 'STATIC' in the name."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        'CMakeLists.txt': [],
+    }
+
+  def steps_to_build(self):
+    cmds_to_exec_from_root = [
+        'mkdir fuzz-build',
+        'cd fuzz-build',
+        (f'cmake -DCMAKE_VERBOSE_MAKEFILE=ON {self.cmake_string} '
+         '-DCMAKE_CXX_COMPILER=$CXX -DCMAKE_C_COMPILER=$CC ../'),
+        'make V=1 || true',
+    ]
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = cmds_to_exec_from_root
+    build_container.heuristic_id = self.name + '1'
+    yield build_container
+
+  @property
+  def name(self):
+    return 'autogen-ConfMakeOpt'
+
+  def match_files(self, file_list: List[str]) -> None:
+    """Find CMakeLists.txt files and extract a string of the CMake options
+    that have all BOOL options set to OFF except for those with "STATIC" in the
+    name."""
+    for fi in file_list:
+      # Focus on top dir
+      if fi.count('/') > 1:
+        continue
+      base_file = os.path.basename(fi)
+      for key, matches in self.matches_found.items():
+        if base_file == key:
+          # Move directory
+          current_dir = os.getcwd()
+          cmake_base_dir = '/'.join(fi.split('/')[:-1])
+          tmp_idx = 0
+          tmp_dir = os.path.join(cmake_base_dir, f'temp-build-{tmp_idx}')
+          while os.path.isdir(tmp_dir):
+            tmp_idx += 1
+            tmp_dir = os.path.join(cmake_base_dir, f'temp-build-{tmp_idx}')
+
+          os.mkdir(tmp_dir)
+          os.chdir(tmp_dir)
+          extracted_string = self.extract_defensive_options()
+          if extracted_string:
+            matches.append(fi)
+            self.cmake_string = extracted_string
+          os.chdir(current_dir)
+          shutil.rmtree(tmp_dir)
+
+  def extract_cmake_build_options(self) -> List[Dict[str, str]]:
+    """Extract options from CMakeLists.txt file one diretory up. Return as
+    list of dictionary items with the name, type and default value of the
+    CMake options."""
+    option_elements = []
+
+    try:
+      output = subprocess.check_output('cmake -LAH ../ || true',
+                                       shell=True).decode()
+    except subprocess.CalledProcessError:
+      return option_elements
+
+    # Parse the CMake options output to extract name, type and default value.
+    raw_options = []
+    for line in output.split('\n'):
+      if ':' in line and '=' in line:
+        raw_options.append(line)
+
+    for raw_option in raw_options:
+      option_default = raw_option.split('=')[-1]
+      option_type = raw_option.split('=')[0].split(':')[1]
+      option_name = raw_option.split('=')[0].split(':')[0]
+
+      option_elements.append({
+          'name': option_name,
+          'type': option_type,
+          'default': option_default
+      })
+
+    return option_elements
+
+  def extract_options_in_file(self) -> List[Dict[str, str]]:
+    """Extract CMake options from the CMakeLists.txt file one directory up."""
+    with open('../CMakeLists.txt', 'r') as f:
+      cmake_content = f.read()
+    cmake_options = self.extract_cmake_build_options()
+
+    # For each option in the cmake entire list of options identify which are
+    # defined inside of the CMakeLists.txt file of interest.
+    options_in_cmake_file = []
+    for option in cmake_options:
+      if option['name'] in cmake_content:
+        options_in_cmake_file.append(option)
+    return options_in_cmake_file
+
+  def extract_defensive_options(self) -> str:
+    """Extract options from CMakeLists.txt file as a string where all BOOL
+    options are set to False except for those with 'STATIC' in them."""
+    options_in_cmake = self.extract_options_in_file()
+    cmake_string = ''
+    for option in options_in_cmake:
+      if option['type'] != 'BOOL':
+        continue
+      if 'STATIC' in option['name'] and option['default'] != 'ON':
+        cmake_string += '-D%s=ON ' % (option['name'])
+      elif option['default'] != 'OFF':
+        cmake_string += '-D%s=OFF ' % (option['name'])
+    return cmake_string
 
 
 class CMakeScanner(AutoBuildBase):
@@ -458,7 +617,10 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
       AutogenScanner(),
       AutoRefConfScanner(),
       CMakeScanner(),
+      CMakeScannerOptsParser(),
       RawMake(),
+      BootstrapScanner(),
+      AutogenScannerSH(),
   ]
 
   for scanner in all_checks:

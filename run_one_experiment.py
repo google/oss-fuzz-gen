@@ -191,8 +191,9 @@ def check_targets(
     for i, target_stat in enumerate(
         p.starmap(evaluator.check_target, ai_target_pairs)):
       if target_stat is None:
-        print(f'Error evaluating target {generated_targets[i]}')
-        continue
+        logging.error('This should never happen: Error evaluating target: %s',
+                      generated_targets[i])
+        target_stat = exp_evaluator.Result()
 
       target_stats.append((i, target_stat))
 
@@ -226,7 +227,7 @@ def run(benchmark: Benchmark,
   logging.basicConfig(level=logging.INFO)
 
   if example_pair is None:
-    example_pair = prompt_builder.EXAMPLES
+    example_pair = prompt_builder.EXAMPLES[benchmark.language]
 
   if manual_fix:
     generated_targets = [
@@ -237,7 +238,9 @@ def run(benchmark: Benchmark,
   else:
     if benchmark.use_project_examples:
       project_examples = project_targets.generate_data(
-          benchmark.project, cloud_experiment_bucket=cloud_experiment_bucket)
+          benchmark.project,
+          benchmark.language,
+          cloud_experiment_bucket=cloud_experiment_bucket)
     else:
       project_examples = []
 
@@ -247,7 +250,14 @@ def run(benchmark: Benchmark,
     else:
       context_info = {}
 
-    builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
+    if benchmark.language == 'jvm':
+      # For Java projects
+      builder = prompt_builder.DefaultJvmTemplateBuilder(
+          model, benchmark.project, benchmark.params, template_dir)
+    else:
+      # For C/C++ projects
+      builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
+
     prompt = builder.build(benchmark.function_signature,
                            benchmark.file_type,
                            example_pair,
@@ -264,7 +274,6 @@ def run(benchmark: Benchmark,
                                          work_dirs,
                                          debug=debug)
     generated_targets = fix_code(work_dirs, generated_targets)
-
   return check_targets(model.ai_binary, benchmark, work_dirs, generated_targets,
                        cloud_experiment_name, cloud_experiment_bucket,
                        run_timeout, model.name)
