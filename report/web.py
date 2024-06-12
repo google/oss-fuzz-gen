@@ -166,12 +166,33 @@ def get_results(benchmark) -> tuple[list[evaluator.Result], list[str]]:
   return results, targets
 
 
+def prepare_prompt_for_html_text(raw_prompt_content: str) -> str:
+  """Converts a raw prompt file into presentable HTML text."""
+  try:
+    structured_prompt = json.loads(raw_prompt_content)
+    if isinstance(structured_prompt, list) and len(structured_prompt) > 0:
+      html_presentable_content = ''
+      for elem in structured_prompt:
+        if isinstance(elem, dict) and 'content' in elem:
+          html_presentable_content += '\n%s' % (elem['content'])
+      return html_presentable_content
+  except json.decoder.JSONDecodeError:
+    pass
+
+  # If execution goes here it the input was not a structured prompt but just
+  # raw text, which is then returned.
+  return raw_prompt_content
+
+
 def get_prompt(benchmark) -> Optional[str]:
   root_dir = os.path.join(RESULTS_DIR, benchmark)
   for name in os.listdir(root_dir):
     if re.match(r'^prompt.*txt$', name):
       with open(os.path.join(root_dir, name)) as f:
-        return f.read()
+        content = f.read()
+
+      # Prepare prompt text for HTML.
+      return prepare_prompt_for_html_text(content)
 
   return None
 
@@ -328,17 +349,8 @@ def get_fixed_target(path):
       with open(os.path.join(path, name)) as f:
         fixer_prompt = f.read()
 
-      # We need to validate if the text is actually a dictionary, e.g. OpenAI
-      # prompt, as we need to beautify the string in that case.
-      try:
-        prompt_dict = json.loads(fixer_prompt)
-        if isinstance(prompt_dict, list) and len(prompt_dict) > 0:
-          fixer_prompt = ''
-          for elem in prompt_dict:
-            if isinstance(elem, dict) and 'content' in elem:
-              fixer_prompt += '\n%s' % (elem['content'])
-      except json.decoder.JSONDecodeError:
-        pass
+      # Prepare prompt for being used in HTML.
+      fixer_prompt = prepare_prompt_for_html_text(fixer_prompt)
 
     if name.endswith('.rawoutput'):
       with open(os.path.join(path, name)) as f:
