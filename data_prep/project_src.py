@@ -279,7 +279,12 @@ def _copy_project_src_from_local(project: str, out: str):
     logging.info('Done copying %s /src to %s.', project, out)
   finally:
     # Shut down the container that was just started.
-    sp.run(['docker', 'container', 'stop', f'{project}-container'])
+    result = sp.run(['docker', 'container', 'stop', f'{project}-container'],
+                    capture_output=True, stdin=sp.DEVNULL, check=False)
+    if result.returncode:
+      logging.error('Failed to stop container image: %s-container', project)
+      logging.error('STDOUT: %s', result.stdout)
+      logging.error('STDERR: %s', result.stderr)
 
 
 def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
