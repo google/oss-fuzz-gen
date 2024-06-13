@@ -280,7 +280,9 @@ def _copy_project_src_from_local(project: str, out: str):
   finally:
     # Shut down the container that was just started.
     result = sp.run(['docker', 'container', 'stop', f'{project}-container'],
-                    capture_output=True, stdin=sp.DEVNULL, check=False)
+                    capture_output=True,
+                    stdin=sp.DEVNULL,
+                    check=False)
     if result.returncode:
       logging.error('Failed to stop container image: %s-container', project)
       logging.error('STDOUT: %s', result.stdout)
