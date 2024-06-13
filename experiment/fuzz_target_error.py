@@ -14,8 +14,8 @@
 """
 Helper class for fuzz target semantic errors.
 """
-import re
 import logging
+import re
 from typing import Optional
 
 
