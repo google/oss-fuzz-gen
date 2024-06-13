@@ -31,6 +31,7 @@ class SemanticCheckResult:
   NO_COV_INCREASE = 'NO_COV_INCREASE'
   NULL_DEREF = 'NULL_DEREF'
   SIGNAL = 'SIGNAL'
+  EXIT = 'EXIT'
 
   # Regex for extract crash symptoms.
   # Matches over 18 types of ASAN errors symptoms
@@ -110,6 +111,11 @@ class SemanticCheckResult:
       return ('Abort with signal, indicating the fuzz target has violated some '
               'assertion in the project, likely due to improper parameter '
               'initialization or incorrect function usages.')
+    if self.type == self.EXIT:
+      return ('Fuzz target exited in a controlled manner without showing any '
+              'sign of memory corruption, likely due to the fuzz target is not '
+              'well designed to effectively find memory corruption '
+              'vulnerability in the function-under-test.')
 
     return ''
 
