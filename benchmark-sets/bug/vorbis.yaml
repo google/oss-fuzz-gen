@@ -1,0 +1,13 @@
+"functions":
+- "name": "ov_time_seek_page_lap"
+  "params":
+  - "name": "vf"
+    "type": "struct OggVorbis_File *"
+  - "name": "pos"
+    "type": "double"
+  "return_type": "int"
+  "signature": "int ov_time_seek_page_lap(OggVorbis_File *, double)"
+"language": "c++"
+"project": "vorbis"
+"target_name": "decode_fuzzer"
+"target_path": "/src/vorbis/contrib/oss-fuzz/decode_fuzzer.cc"

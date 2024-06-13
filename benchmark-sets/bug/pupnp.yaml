@@ -1,0 +1,19 @@
+"functions":
+- "name": "ixmlParseBuffer"
+  "params":
+  - "name": "buffer"
+    "type": "char *"
+  "return_type": "struct _IXML_Document *"
+  "signature": "IXML_Document * ixmlParseBuffer(const char *)"
+- "name": "ixmlParseBufferEx"
+  "params":
+  - "name": "buffer"
+    "type": "char *"
+  - "name": "retDoc"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int ixmlParseBufferEx(const char *, IXML_Document **)"
+"language": "c"
+"project": "pupnp"
+"target_name": "FuzzIxml"
+"target_path": "/src/pupnp/fuzzer/FuzzIxml.c"
