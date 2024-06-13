@@ -90,7 +90,6 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
 
 
-
 def _construct_url(api: str, params: dict) -> str:
   """Constructs an encoded url for the |api| with |params|."""
   return api + '?' + urlencode(params)
