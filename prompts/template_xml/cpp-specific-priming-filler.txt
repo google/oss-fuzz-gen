@@ -3,7 +3,7 @@
 
 Use <code>FuzzedDataProvider</code> to generate these inputs, it is a single-header C++ library that is helpful for splitting a fuzz input into multiple parts of various types. It can be included via
 <code>
-#include <fuzzer/FuzzedDataProvider.h> 
+#include <fuzzer/FuzzedDataProvider.h>
 </code>
 
 An advantage and disadvantage of using this library is that the input splitting happens dynamically, i.e. you don't need to define any structure of the input. This might be very helpful in certain cases, but would also make the corpus to be no longer in a particular format. For example, if you fuzz an image parser and split the fuzz input into several parts, the corpus elements will no longer be valid image files, and you won't be able to simply add image files to your corpus.
