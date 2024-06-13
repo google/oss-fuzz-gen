@@ -170,13 +170,15 @@ def prepare_prompt_for_html_text(raw_prompt_content: str) -> str:
   """Converts a raw prompt file into presentable HTML text."""
   try:
     structured_prompt = json.loads(raw_prompt_content)
-    if isinstance(structured_prompt, list) and len(structured_prompt) > 0:
+    if isinstance(structured_prompt, list) and structured_prompt:
       html_presentable_content = ''
       for elem in structured_prompt:
         if isinstance(elem, dict) and 'content' in elem:
-          html_presentable_content += '\n%s' % (elem['content'])
+          html_presentable_content += f'\n{elem["content"]}'
+      logging.debug('Converted structured prompt to raw text.')
       return html_presentable_content
   except json.decoder.JSONDecodeError:
+    logging.debug('Using raw prompt text.')
     pass
 
   # If execution goes here it the input was not a structured prompt but just
