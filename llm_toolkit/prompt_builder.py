@@ -15,12 +15,18 @@
 Prompt building tools.
 """
 
+import logging
 import os
 from abc import abstractmethod
 from typing import Optional, Tuple
 
+import jinja2
+import requests
+import yaml
+
 from data_prep import project_targets
 from experiment.benchmark import Benchmark, FileType
+from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
 
 DEFAULT_TEMPLATE_DIR: str = 'prompts/template_xml/'
@@ -33,11 +39,36 @@ FDP_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'gdImageString-problem.txt')
 FDP_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH, 'gdImageString-solution.cc')
 FDP_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH, 'mpg123_decode-problem.txt')
 FDP_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH, 'mpg123_decode-solution.cc')
+FDP_JVM_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'joni_regex-problem.txt')
+FDP_JVM_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH,
+                                          'joni_regex-solution.java')
+FDP_JVM_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH,
+                                         'jansi_colors-problem.txt')
+FDP_JVM_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH,
+                                          'jansi_colors-solution.java')
 
-EXAMPLES = [
-    [FDP_EXAMPLE_1_PROBLEM, FDP_EXAMPLE_1_SOLUTION],
-    [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
-]
+EXAMPLES = {
+    'c++': [
+        [FDP_EXAMPLE_1_PROBLEM, FDP_EXAMPLE_1_SOLUTION],
+        [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
+    ],
+    'c': [
+        [FDP_EXAMPLE_1_PROBLEM, FDP_EXAMPLE_1_SOLUTION],
+        [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
+    ],
+    'jvm': [
+        [FDP_JVM_EXAMPLE_1_PROBLEM, FDP_JVM_EXAMPLE_1_SOLUTION],
+        [FDP_JVM_EXAMPLE_2_PROBLEM, FDP_JVM_EXAMPLE_2_SOLUTION],
+    ],
+}
+
+BUILD_ERROR_SUMMARY = 'The code has the following build issues:'
+FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
+
+# The following strings identify errors when the fuzz target is built with clang
+# and cannot be built with clang++, which should be removed.
+FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
+FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
 
 
 class PromptBuilder:
@@ -48,18 +79,17 @@ class PromptBuilder:
     self._prompt = model.prompt_type()()
 
   @abstractmethod
-  def build(
-      self,
-      function_signature: str,
-      target_file_type: FileType,
-      example_pair: list[list[str]],
-      project_example_content: Optional[list[list[str]]] = None,
-      project_context_content: Optional[Tuple[str,
-                                              str]] = None) -> prompts.Prompt:
+  def build(self,
+            function_signature: str,
+            target_file_type: FileType,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
     """Builds a prompt."""
 
   @abstractmethod
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
+                         error_desc: Optional[str],
                          errors: list[str]) -> prompts.Prompt:
     """Builds a fixer prompt."""
 
@@ -126,11 +156,16 @@ class DefaultTemplateBuilder(PromptBuilder):
     solution = solution.replace('{SOLUTION_CONTENT}', solution_content)
     return solution
 
-  def format_context(self, header_content: str, type_content: str) -> str:
-    context = self._get_template(self.context_template_file)
-    context = context.replace('{CONTEXT_HEADER}', header_content)
-    context = context.replace('{CONTEXT_TYPES}', type_content)
-    return context
+  def format_context(self, context_info: dict) -> str:
+    context = jinja2.Template(self._get_template(self.context_template_file),
+                              trim_blocks=True,
+                              lstrip_blocks=True)
+    return context.render(
+        headers='\n'.join(context_info['files']),
+        must_insert=context_info['decl'],
+        func_source=context_info['func_source'],
+        xrefs='\n'.join(context_info['xrefs']),
+    )
 
   def _select_examples(self, examples: list[list],
                        prompt_size: int) -> list[list[str]]:
@@ -211,36 +246,32 @@ class DefaultTemplateBuilder(PromptBuilder):
       self._prompt.add_problem(problem)
       self._prompt.add_solution(solution)
 
-  def build(
-      self,
-      function_signature: str,
-      target_file_type: FileType,
-      example_pair: list[list[str]],
-      project_example_content: Optional[list[list[str]]] = None,
-      project_context_content: Optional[Tuple[str,
-                                              str]] = None) -> prompts.Prompt:
+  def build(self,
+            function_signature: str,
+            target_file_type: FileType,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     priming = self._format_priming(target_file_type)
     final_problem = self.format_problem(function_signature)
     final_problem += (f'You MUST call <code>\n'
                       f'{function_signature}\n'
                       f'</code> in your solution!\n')
-    # TODO(ggryan@): Add a function to ensure the header is consistent
-    # with others (e.g., use "" or <>, use the same path prefix
-    # with other non-builtin include statements or the original fuzz target.)
     if project_context_content:
-      final_problem += self.format_context(project_context_content[0],
-                                           project_context_content[1])
+      final_problem += self.format_context(project_context_content)
     final_problem += '\n<solution>'
     self._prepare_prompt(priming, final_problem, example_pair,
                          project_example_content)
     return self._prompt
 
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
+                         error_desc: Optional[str],
                          errors: list[str]) -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming()
-    problem = self._format_fixer_problem(raw_code, errors, priming_weight)
+    problem = self._format_fixer_problem(raw_code, error_desc, errors,
+                                         priming_weight)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -255,12 +286,18 @@ class DefaultTemplateBuilder(PromptBuilder):
     # in the case of structured prompts, we will create nested structures.
     return priming, priming_weight
 
-  def _format_fixer_problem(self, raw_code: str, errors: list[str],
-                            priming_weight: int) -> str:
+  def _format_fixer_problem(self, raw_code: str, error_desc: Optional[str],
+                            errors: list[str], priming_weight: int) -> str:
     """Formats a problem for code fixer based on the template."""
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
     problem = problem.replace('{CODE_TO_BE_FIXED}', raw_code)
+    if error_desc:
+      error_summary = FUZZ_ERROR_SUMMARY + error_desc
+    else:
+      # Build error does not pass error desc.
+      error_summary = BUILD_ERROR_SUMMARY
+    problem = problem.replace('{ERROR_SUMMARY}', error_summary)
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{ERROR_MESSAGES}',
@@ -278,6 +315,13 @@ class DefaultTemplateBuilder(PromptBuilder):
     # We are adding errors one by one until we reach the maximum prompt size
     selected_errors = []
     for error in errors:
+      # Skip C only errors.
+      # TODO(Dongge): Fix JCC to address this.
+      # https://github.com/google/oss-fuzz-gen/pull/208/files/a0c0db2fd5860e6e4d434467c5ec9f949ee2cff1#r1571651507
+      if (FALSE_EXTERN_KEYWORD_ERROR in error or
+          FALSE_FUZZED_DATA_PROVIDER_ERROR in error):
+        continue
+
       error_prompt = self._prompt.create_prompt_piece(error, 'user')
       error_token_num = self._model.estimate_token_num(error_prompt)
       if prompt_size + error_token_num >= self._model.context_window:
@@ -289,6 +333,19 @@ class DefaultTemplateBuilder(PromptBuilder):
 
     # Now, compose the problem part of the prompt
     error_message = '\n'.join(selected_errors)
+    if error_message.strip():
+      return problem.replace('{ERROR_MESSAGES}', error_message)
+
+    # Expecting empty error message for NO_COV_INCREASE.
+    if SemanticCheckResult.is_no_cov_increase_err(error_desc):
+      return problem.replace('<error>\n', '')\
+                    .replace('{ERROR_MESSAGES}\n', '')\
+                    .replace('</error>\n', '')
+
+    # Log warning for an unexpected empty error message.
+    logging.warning(
+        'Unexpected empty error message in fix prompt for error_desc: %s',
+        str(error_desc))
     return problem.replace('{ERROR_MESSAGES}', error_message)
 
   def _prepare_prompt(
@@ -305,3 +362,184 @@ class DefaultTemplateBuilder(PromptBuilder):
 
     self._add_examples(example_pair, final_problem, project_example_content)
     self._prompt.add_problem(final_problem)
+
+
+class DefaultJvmTemplateBuilder(PromptBuilder):
+  """Default builder for JVM projects."""
+
+  def __init__(self,
+               model: models.LLM,
+               project_name: str,
+               function_args: list[dict[str, str]],
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model)
+    self._template_dir = template_dir
+    self.project_name = project_name
+    self.project_url = self._find_project_url(project_name)
+    self.function_args = function_args
+
+    # Load templates.
+    self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
+    self.data_filler_template_file = self._find_template(
+        template_dir, 'jvm_specific_data_filler.txt')
+    self.requirement_template_file = self._find_template(
+        template_dir, 'jvm_requirement.txt')
+    self.problem_template_file = self._find_template(template_dir,
+                                                     'jvm_problem.txt')
+    self.constructor_template_file = self._find_template(
+        template_dir, 'jvm_problem_constructor.txt')
+    self.method_template_file = self._find_template(template_dir,
+                                                    'jvm_problem_method.txt')
+    self.arg_description_template_file = self._find_template(
+        template_dir, 'jvm_arg_description.txt')
+    self.generic_arg_description_template_file = self._find_template(
+        template_dir, 'jvm_generic_arg_description.txt')
+
+  def _find_project_url(self, project_name: str) -> str:
+    """Discover project url from project's project.yaml in OSS-Fuzz"""
+    oss_fuzz_url = 'https://raw.githubusercontent.com/google/oss-fuzz/master'
+    project_url = f'{oss_fuzz_url}/projects/{project_name}/project.yaml'
+
+    try:
+      response = requests.get(project_url, timeout=20)
+      if response and response.status_code == 200:
+        project_yaml = yaml.load(response.content, Loader=yaml.SafeLoader)
+        if 'main_repo' in project_yaml:
+          return project_yaml['main_repo']
+    except:
+      pass
+
+    print(f'Cannot retrieve project url of project {project_name}')
+    return ''
+
+  def _find_template(self, template_dir: str, template_name: str) -> str:
+    """Finds template file based on |template_dir|."""
+    preferred_template = os.path.join(template_dir, template_name)
+    # Use the preferred template if it exists.
+    if os.path.isfile(preferred_template):
+      return preferred_template
+    # Fall back to the default template.
+    default_template = os.path.join(DEFAULT_TEMPLATE_DIR, template_name)
+    return default_template
+
+  def _get_template(self, template_file: str) -> str:
+    """Reads the template for prompts."""
+    with open(template_file) as file:
+      return file.read()
+
+  def _format_base(self) -> str:
+    """Formats a priming based on the prompt template."""
+    base = self._get_template(self.base_template_file)
+    base = base.replace("{PROJECT_NAME}", self.project_name)
+    base = base.replace("{PROJECT_URL}", self.project_url)
+    return base
+
+  def _format_problem(self, signature: str) -> str:
+    """Formats a problem based on the prompt template."""
+    problem = self._get_template(self.problem_template_file)
+    problem = problem.replace('{TARGET}', self._format_target(signature))
+    problem = problem.replace('{REQUIREMENTS}', self._format_requirement())
+    problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
+    problem = problem.replace('{ARGUMENTS}', self._format_arguments())
+    return problem
+
+  def _format_target_constructor(self, signature: str) -> str:
+    """Formats a constructor based on the prompt template."""
+    class_name = signature.split('].')[0][1:]
+
+    constructor = self._get_template(self.constructor_template_file)
+    constructor = constructor.replace('{CONSTRUCTOR_CLASS}', class_name)
+    constructor = constructor.replace('{CONSTRUCTOR_SIGNATURE}', signature)
+
+    return constructor
+
+  def _format_generic_argument(self, count: int, arg_type: str) -> str:
+    """Formats generic argument description."""
+    arg_split = arg_type.split('<', 1)
+
+    argument = self._get_template(self.generic_arg_description_template_file)
+    argument = argument.replace('{ARG_COUNT}', str(count))
+    arugment = argument.replace('{ARG_TYPE}', arg_split[0])
+    argument = argument.replace('{ARG_GENERIC}', arg_split[1][:-1])
+
+    return argument
+
+  def _format_argument(self, count: int, arg_type: str) -> str:
+    """Formats general argument description."""
+    argument = self._get_template(self.generic_arg_description_template_file)
+    argument = argument.replace('{ARG_COUNT}', str(count))
+    arugment = argument.replace('{ARG_TYPE}', arg_type)
+
+    return argument
+
+  def _format_arguments(self) -> str:
+    """Formats a list of arugment descriptions."""
+    argument_descriptions = []
+
+    for count in range(len(self.function_args)):
+      arg_type = self.function_args[count]['type']
+      if self._has_generic(arg_type):
+        argument = self._format_generic_argument(count, arg_type)
+      else:
+        argument = self._format_argument(count, arg_type)
+
+      argument_descriptions.append(argument)
+
+    return '\n'.join(argument_descriptions)
+
+  def _format_target_method(self, signature: str) -> str:
+    """Formats a method based on the prompt template."""
+    method = self._get_template(self.method_template_file)
+    method = method.replace('{METHOD_SIGNATURE}', signature)
+
+    return method
+
+  def _format_requirement(self) -> str:
+    """Formats a requirement based on the prompt template."""
+    requirement = self._get_template(self.requirement_template_file)
+    return requirement
+
+  def _format_data_filler(self) -> str:
+    """Formats a data_filler based on the prompt template."""
+    data_filler = self._get_template(self.data_filler_template_file)
+    return data_filler
+
+  def _format_target(self, signature: str) -> str:
+    """Determine if the signature is a constructor or a general
+       method and format it for the prompts creation.
+    """
+    if '<init>' in signature:
+      return self._format_target_constructor(signature)
+
+    return self._format_target_method(signature)
+
+  def _prepare_prompt(self, base: str, final_problem: str):
+    """Constructs a prompt using the parameters and saves it."""
+    self._prompt.add_priming(base)
+    self._prompt.add_problem(final_problem)
+
+  def _has_generic(self, arg: str) -> bool:
+    """Determine if the argument type contains generic type."""
+    return '<' in arg and not arg.startswith('<') and arg.endswith('>')
+
+  def build(self,
+            function_signature: str,
+            target_file_type: FileType,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it.
+       Ignore target_file_type, project_example_content
+       and project_context_content parameters.
+    """
+    base = self._format_base()
+    final_problem = self._format_problem(function_signature)
+    self._prepare_prompt(base, final_problem)
+    return self._prompt
+
+  def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
+                         error_desc: Optional[str],
+                         errors: list[str]) -> prompts.Prompt:
+    """Builds a fixer prompt."""
+    # Do nothing for jvm project now.
+    return self._prompt

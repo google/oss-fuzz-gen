@@ -23,7 +23,9 @@ import traceback
 from multiprocessing import Pool
 
 import run_one_experiment
+from data_prep import introspector
 from experiment import benchmark as benchmarklib
+from experiment import oss_fuzz_checkout
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
 
@@ -39,8 +41,10 @@ NUM_SAMPLES: int = run_one_experiment.NUM_SAMPLES
 RUN_TIMEOUT: int = run_one_experiment.RUN_TIMEOUT
 TEMPERATURE: float = run_one_experiment.TEMPERATURE
 
-BENCHMARK_DIR: str = './benchmark-sets/comparison'
+BENCHMARK_ROOT: str = './benchmark-sets'
+BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
 RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
+GENERATED_BENCHMARK: str = 'generated-benchmark-'
 
 
 class Result:
@@ -50,6 +54,41 @@ class Result:
   def __init__(self, benchmark, result):
     self.benchmark = benchmark
     self.result = result
+
+
+def get_next_generated_benchmarks_dir() -> str:
+  """Retuns the next folder to be used for generated benchmarks."""
+  max_idx = -1
+  for benchmark_folder in os.listdir(BENCHMARK_ROOT):
+    try:
+      max_idx = max(max_idx,
+                    int(benchmark_folder.replace(GENERATED_BENCHMARK, '')))
+    except (ValueError, TypeError) as _:
+      pass
+  max_idx += 1
+  return os.path.join(BENCHMARK_ROOT, f'{GENERATED_BENCHMARK}{max_idx}')
+
+
+def generate_benchmarks(args: argparse.Namespace) -> None:
+  """Generates benchmarks, write to filesystem and set args benchmark dir."""
+  logging.info('Generating benchmarks.')
+  benchmark_dir = get_next_generated_benchmarks_dir()
+  logging.info('Setting benchmark directory to %s.', benchmark_dir)
+  os.makedirs(benchmark_dir)
+  args.benchmarks_directory = benchmark_dir
+  benchmark_oracles = [
+      heuristic.strip() for heuristic in args.generate_benchmarks.split(',')
+  ]
+  projects_to_target = [
+      project.strip()
+      for project in args.generate_benchmarks_projects.split(',')
+  ]
+  for project in projects_to_target:
+    project_lang = oss_fuzz_checkout.get_project_language(project)
+    benchmarks = introspector.populate_benchmarks_using_introspector(
+        project, project_lang, args.generate_benchmarks_max, benchmark_oracles)
+    if benchmarks:
+      benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
 
 
 def get_experiment_configs(
@@ -63,6 +102,9 @@ def get_experiment_configs(
           f'Will use it and ignore the files in {args.benchmarks_directory}.')
     benchmark_yamls = [args.benchmark_yaml]
   else:
+    if args.generate_benchmarks:
+      generate_benchmarks(args)
+
     benchmark_yamls = [
         os.path.join(args.benchmarks_directory, file)
         for file in os.listdir(args.benchmarks_directory)
@@ -96,7 +138,8 @@ def run_experiments(benchmark: benchmarklib.Benchmark,
         cloud_experiment_name=args.cloud_experiment_name,
         cloud_experiment_bucket=args.cloud_experiment_bucket,
         use_context=args.context,
-        run_timeout=args.run_timeout)
+        run_timeout=args.run_timeout,
+        dry_run=args.dry_run)
     return Result(benchmark, result)
   except Exception as e:
     print('Exception while running experiment:', e, file=sys.stderr)
@@ -108,6 +151,10 @@ def parse_args() -> argparse.Namespace:
   """Parses command line arguments."""
   parser = argparse.ArgumentParser(
       description='Run all experiments that evaluates all target functions.')
+  parser.add_argument('-d',
+                      '--dry-run',
+                      action='store_true',
+                      help='Perform a dry-run -- only generate prompts.')
   parser.add_argument('-n',
                       '--num-samples',
                       type=int,
@@ -157,6 +204,28 @@ def parse_args() -> argparse.Namespace:
                       action='store_true',
                       default=False,
                       help='Add context to function under test.')
+  parser.add_argument('-e',
+                      '--introspector-endpoint',
+                      type=str,
+                      default=introspector.DEFAULT_INTROSPECTOR_ENDPOINT)
+  parser.add_argument(
+      '-g',
+      '--generate-benchmarks',
+      help=('Generate benchmarks and use those for analysis. This is a string '
+            'of comma-separated heuristics to use when identifying benchmark '
+            'targets. Options available: '
+            f'{", ".join(introspector.get_oracle_dict().keys())}'),
+      type=str)
+  parser.add_argument(
+      '-gp',
+      '--generate-benchmarks-projects',
+      help='Projects to generate benchmarks for in a comma separated string.',
+      type=str)
+  parser.add_argument('-gm',
+                      '--generate-benchmarks-max',
+                      help='Max targets to generate per benchmark heuristic.',
+                      type=int,
+                      default=5)
   parser.add_argument(
       '--delay',
       type=int,
@@ -177,10 +246,15 @@ def parse_args() -> argparse.Namespace:
             benchmark_yaml.endswith('yml')), (
                 "--benchmark-yaml needs to take an YAML file.")
 
-  assert bool(benchmark_yaml) != bool(args.benchmarks_directory), (
-      'One and only one of --benchmark-yaml and --benchmarks-directory is '
-      'required. The former takes one benchmark YAML file, the latter '
-      'takes: a directory of them.')
+  bench_yml = bool(benchmark_yaml)
+  bench_dir = bool(args.benchmarks_directory)
+  bench_gen = bool(args.generate_benchmarks)
+  num_options = int(bench_yml) + int(bench_dir) + int(bench_gen)
+  assert num_options == 1, (
+      'One and only one of --benchmark-yaml, --benchmarks-directory and '
+      '--generate-benchmarks. --benchmark-yaml takes one benchmark YAML file, '
+      '--benchmarks-directory takes: a directory of them and '
+      '--generate-benchmarks generates them during analysis.')
 
   # Validate templates.
   assert os.path.isdir(args.template_directory), (
@@ -214,6 +288,11 @@ def _print_experiment_results(results: list[Result]):
 def main():
   logging.basicConfig(level=logging.INFO)
   args = parse_args()
+
+  # Set introspector endpoint before performing any operations to ensure the
+  # right API endpoint is used throughout.
+  introspector.set_introspector_endpoints(args.introspector_endpoint)
+
   run_one_experiment.prepare()
 
   experiment_configs = get_experiment_configs(args)

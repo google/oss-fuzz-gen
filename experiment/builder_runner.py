@@ -20,8 +20,10 @@ import logging
 import os
 import random
 import re
+import shutil
 import subprocess as sp
 import time
+import traceback
 import uuid
 from typing import Any, Optional
 
@@ -29,6 +31,7 @@ from google.cloud import storage
 
 from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
+from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
 from llm_toolkit import code_fixer
 from llm_toolkit.models import DefaultModel
@@ -39,9 +42,26 @@ JCC_DIR = '/usr/local/bin'
 RUN_TIMEOUT: int = 30
 CLOUD_EXP_MAX_ATTEMPT = 5
 
+LIBFUZZER_MODULES_LOADED_REGEX = re.compile(
+    r'^INFO:\s+Loaded\s+\d+\s+(modules|PC tables)\s+\((\d+)\s+.*\).*')
+LIBFUZZER_COV_REGEX = re.compile(r'.*cov: (\d+) ft:')
+LIBFUZZER_CRASH_TYPE_REGEX = re.compile(r'.*Test unit written to.*')
+LIBFUZZER_COV_LINE_PREFIX = re.compile(r'^#(\d+)')
+LIBFUZZER_STACK_FRAME_LINE_PREFIX = re.compile(r'^\s+#\d+')
+CRASH_EXCLUSIONS = re.compile(r'.*(slow-unit-|timeout-|leak-|oom-).*')
+CRASH_STACK_WITH_SOURCE_INFO = re.compile(r'in.*:\d+:\d+$')
+
+LIBFUZZER_LOG_STACK_FRAME_LLVM = '/src/llvm-project/compiler-rt'
+LIBFUZZER_LOG_STACK_FRAME_LLVM2 = '/work/llvm-stage2/projects/compiler-rt'
+LIBFUZZER_LOG_STACK_FRAME_CPP = '/usr/local/bin/../include/c++'
+
+EARLY_FUZZING_ROUND_THRESHOLD = 3
+
 
 @dataclasses.dataclass
 class BuildResult:
+  """Results of compilation & link."""
+
   succeeded: bool = False
   errors: list[str] = dataclasses.field(default_factory=list)
   log_path: str = ''
@@ -52,11 +72,20 @@ class BuildResult:
 
 @dataclasses.dataclass
 class RunResult:
+  """Checked results of conducting short-term fuzzing."""
+
+  succeeded: bool = False
   coverage_summary: dict = dataclasses.field(default_factory=dict)
   coverage: Optional[textcov.Textcov] = None
   log_path: str = ''
   corpus_path: str = ''
   coverage_report_path: str = ''
+  reproducer_path: str = ''
+  cov_pcs: int = 0
+  total_pcs: int = 0
+  crashes: bool = False
+  semantic_check: SemanticCheckResult = SemanticCheckResult(
+      SemanticCheckResult.NOT_APPLICABLE)
 
   def dict(self):
     return dataclasses.asdict(self)
@@ -81,7 +110,9 @@ class BuilderRunner:
         f'-max_total_time={self.run_timeout}',
         # Without this flag, libFuzzer only consider short inputs in short
         # experiments, which lowers the coverage for quick performance tests.
-        '-len_control=0'
+        '-len_control=0',
+        # Timeout per testcase.
+        '-timeout=30',
     ]
 
   def _get_minimum_func_name(self, func_sig: str) -> str:
@@ -91,12 +122,36 @@ class BuilderRunner:
     match = re.search(pattern, func_sig)
     return match.group(1).strip() if match else func_sig
 
+  def _contains_target_jvm_method(self, target_path: str) -> bool:
+    """Validates if the LLM-generated code contains the target jvm methods."""
+    with open(target_path) as generated_code_file:
+      code = generated_code_file.read()
+
+    # This regex is used to identify legitimate Java variable names
+    # or instance method calls (which could return a needed variable).
+    # This is necessary because the method name of a Java method also
+    # includes its parameter list in order to distinguish between
+    # overloaded methods. Thus it need to use the regex to identify
+    # if there are method calls with unknown variable names that match
+    # the target method.
+    base_arg_regex = r'[a-zA-Z_$][a-zA-Z_$0-9(),.]*'
+    signature = self.benchmark.function_signature
+    name = signature.split('].')[1].split('(')[0]
+    arg_count = len(signature.split('(')[1].split(')')[0].split(','))
+
+    pattern = r'(%s\(%s\))' % (name, ', '.join([base_arg_regex] * arg_count))
+    match = re.search(pattern, code)
+
+    return bool(match)
+
   def _contains_target_function(self, target_path: str) -> bool:
     """Validates if the LLM-generated code contains the target function."""
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
+
     min_func_name = self._get_minimum_func_name(
         self.benchmark.function_signature)
+
     return min_func_name in generated_code
 
   def _pre_build_check(self, target_path: str,
@@ -104,7 +159,12 @@ class BuilderRunner:
     """Checks the generated target before building and running it."""
     # No need to build the fuzz target if it does not contain the target
     # function.
-    if not self._contains_target_function(target_path):
+    if self.benchmark.language == 'jvm':
+      result = self._contains_target_jvm_method(target_path)
+    else:
+      result = self._contains_target_function(target_path)
+
+    if not result:
       build_result.errors = [
           (f'The target function `{self.benchmark.function_signature}`'
            ' was not called by the fuzz target '
@@ -115,8 +175,162 @@ class BuilderRunner:
       ]
       print(f'Missing target function: {target_path} does not contain '
             f'{self.benchmark.function_signature}')
-      return False
-    return True
+
+    return result
+
+  def _parse_stacks_from_libfuzzer_logs(self,
+                                        lines: list[str]) -> list[list[str]]:
+    """Parse stack traces from libFuzzer logs."""
+    # TODO (dongge): Use stack parsing from ClusterFuzz.
+    # There can have over one thread stack in a log.
+    stacks = []
+
+    # A stack -> a sequence of stack frame lines.
+    stack, stack_parsing = [], False
+    for line in lines:
+      is_stack_frame_line = LIBFUZZER_STACK_FRAME_LINE_PREFIX.match(
+          line) is not None
+      if (not stack_parsing) and is_stack_frame_line:
+        # First line.
+        stack_parsing = True
+        stack = [line.strip()]
+      elif stack_parsing and is_stack_frame_line:
+        # Middle line(s).
+        stack.append(line.strip())
+      elif stack_parsing and (not is_stack_frame_line):
+        # Last line.
+        stack_parsing = False
+        stacks.append(stack)
+
+    # Last stack.
+    if stack_parsing:
+      stacks.append(stack)
+
+    return stacks
+
+  def _parse_fuzz_cov_info_from_libfuzzer_logs(
+      self,
+      lines: list[str]) -> tuple[Optional[int], Optional[int], Optional[int]]:
+    """Parses cov of INITED & DONE, and round number from libFuzzer logs."""
+    initcov, donecov, lastround = None, None, None
+
+    for line in lines:
+      if line.startswith('#'):
+        # Parses cov line to get the round number.
+        match = LIBFUZZER_COV_LINE_PREFIX.match(line)
+        roundno = int(match.group(1)) if match else None
+
+        if roundno is not None:
+          lastround = roundno
+          if 'INITED' in line and 'cov: ' in line:
+            initcov = int(line.split('cov: ')[1].split(' ft:')[0])
+          elif 'DONE' in line and 'cov: ' in line:
+            donecov = int(line.split('cov: ')[1].split(' ft:')[0])
+
+    return initcov, donecov, lastround
+
+  def _stack_func_is_of_testing_project(self, stack_frame: str) -> bool:
+    return (bool(CRASH_STACK_WITH_SOURCE_INFO.match(stack_frame)) and
+            LIBFUZZER_LOG_STACK_FRAME_LLVM not in stack_frame and
+            LIBFUZZER_LOG_STACK_FRAME_LLVM2 not in stack_frame and
+            LIBFUZZER_LOG_STACK_FRAME_CPP not in stack_frame)
+
+  def _parse_libfuzzer_logs(
+      self,
+      log_handle,
+      check_cov_increase: bool = True
+  ) -> tuple[int, int, bool, SemanticCheckResult]:
+    """Parses libFuzzer logs."""
+    lines = None
+    try:
+      fuzzlog = log_handle.read(-1)
+      # Some crashes can mess up the libfuzzer output and raise decode error.
+      fuzzlog = fuzzlog.decode('utf-8', errors='ignore')
+      lines = fuzzlog.split('\n')
+    except MemoryError as e:
+      # Some logs from abnormal fuzz targets are too large to be parsed.
+      logging.error('%s is too large to parse: %s', log_handle.name, e)
+      return 0, 0, False, SemanticCheckResult(SemanticCheckResult.LOG_MESS_UP)
+
+    cov_pcs, total_pcs, crashes = 0, 0, False
+
+    for line in lines:
+      m = LIBFUZZER_MODULES_LOADED_REGEX.match(line)
+      if m:
+        total_pcs = int(m.group(2))
+        continue
+
+      m = LIBFUZZER_COV_REGEX.match(line)
+      if m:
+        cov_pcs = int(m.group(1))
+        continue
+
+      m = LIBFUZZER_CRASH_TYPE_REGEX.match(line)
+      if m and not CRASH_EXCLUSIONS.match(line):
+        # TODO(@happy-qop): Handling oom, slow cases in semantic checks & fix.
+        crashes = True
+        continue
+
+    initcov, donecov, lastround = self._parse_fuzz_cov_info_from_libfuzzer_logs(
+        lines)
+
+    # NOTE: Crashes from incorrect fuzz targets will not be counted finally.
+
+    if crashes:
+      symptom = SemanticCheckResult.extract_symptom(fuzzlog)
+      crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
+
+      # FP case 1: Common fuzz target errors.
+      # Null-deref, normally indicating inadequate parameter initialization or
+      # wrong function usage.
+      if symptom == 'null-deref':
+        return cov_pcs, total_pcs, True, SemanticCheckResult(
+            SemanticCheckResult.NULL_DEREF, symptom, crash_stacks)
+
+      # Signal, normally indicating assertion failure due to inadequate
+      # parameter initialization or wrong function usage.
+      if symptom == 'signal':
+        return cov_pcs, total_pcs, True, SemanticCheckResult(
+            SemanticCheckResult.SIGNAL, symptom, crash_stacks)
+
+      # OOM, normally indicating malloc's parameter is too large, e.g., because
+      # of using parameter `size`.
+      # TODO(dongge): Refine this, 1) Merge this with the other oom case found
+      # from reproducer name; 2) Capture the actual number in (malloc(\d+)).
+      if 'out-of-memory' in symptom or 'out of memory' in symptom:
+        return cov_pcs, total_pcs, True, SemanticCheckResult(
+            SemanticCheckResult.FP_OOM, symptom, crash_stacks)
+
+      # FP case 2: fuzz target crashes at init or first few rounds.
+      if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
+        # No cov line has been identified or only INITED round has been passed.
+        # This is very likely the false positive cases.
+        return cov_pcs, total_pcs, True, \
+               SemanticCheckResult(SemanticCheckResult.FP_NEAR_INIT_CRASH,\
+                             symptom, crash_stacks)
+
+      # FP case 3: 1st func of the 1st thread stack is in fuzz target.
+      if len(crash_stacks) > 0:
+        first_stack = crash_stacks[0]
+        # Check the first stack frame of the first stack only.
+        for stack_frame in first_stack[:1]:
+          if self._stack_func_is_of_testing_project(stack_frame):
+            if 'LLVMFuzzerTestOneInput' in stack_frame:
+              return cov_pcs, total_pcs, True, \
+                     SemanticCheckResult(SemanticCheckResult.FP_TARGET_CRASH,\
+                                   symptom, crash_stacks)
+            break
+
+    elif initcov == donecov and lastround is not None:
+      # Another error fuzz target case: no cov increase.
+      # A special case is initcov == donecov == None, which indicates no
+      # interesting inputs were found. This may happen if the target rejected
+      # all inputs we tried.
+      return cov_pcs, total_pcs, False, SemanticCheckResult(
+          SemanticCheckResult.NO_COV_INCREASE)
+
+    return cov_pcs, total_pcs, crashes, SemanticCheckResult(
+        SemanticCheckResult.NO_SEMANTIC_ERR)
 
   def build_and_run(self, generated_project: str, target_path: str,
                     iteration: int) -> tuple[BuildResult, Optional[RunResult]]:
@@ -126,22 +340,59 @@ class BuilderRunner:
     if not self._pre_build_check(target_path, build_result):
       return build_result, None
 
+    try:
+      return self.build_and_run_local(generated_project, target_path, iteration,
+                                      build_result)
+    except Exception as err:
+      logging.warning(
+          'Error occurred when building and running fuzz target locally'
+          '(attempt %d) %s: %s', iteration, err, traceback.format_exc())
+      raise err
+
+  def build_and_run_local(
+      self, generated_project: str, target_path: str, iteration: int,
+      build_result: BuildResult) -> tuple[BuildResult, Optional[RunResult]]:
+    """Builds and runs the fuzz target locally for fuzzing."""
+
     benchmark_target_name = os.path.basename(target_path)
-    build_result.succeeded = self.build_target_local(
-        generated_project,
-        self.work_dirs.build_logs_target(benchmark_target_name, iteration))
+    project_target_name = os.path.basename(self.benchmark.target_path)
+    benchmark_log_path = self.work_dirs.build_logs_target(
+        benchmark_target_name, iteration)
+    build_result.succeeded = self.build_target_local(generated_project,
+                                                     benchmark_log_path)
+    # Copy err.log into work dir.
+    try:
+      shutil.copyfile(
+          os.path.join(get_build_artifact_dir(generated_project, "workspace"),
+                       'err.log'),
+          self.work_dirs.error_logs_target(benchmark_target_name, iteration))
+    except FileNotFoundError as e:
+      logging.error('Cannot get err.log for %s: %s', generated_project, e)
     if not build_result.succeeded:
-      errors = code_fixer.extract_error_message(
-          self.work_dirs.build_logs_target(benchmark_target_name, iteration))
+      errors = code_fixer.extract_error_message(benchmark_log_path,
+                                                project_target_name)
       build_result.errors = errors
       return build_result, None
 
     run_result = RunResult()
 
-    self.run_target_local(generated_project, benchmark_target_name,
-                          self.work_dirs.run_logs_target(benchmark_target_name))
+    self.run_target_local(
+        generated_project, benchmark_target_name,
+        self.work_dirs.run_logs_target(benchmark_target_name, iteration))
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
         generated_project, benchmark_target_name))
+
+    # Parse libfuzzer logs to get fuzz target runtime details.
+    with open(self.work_dirs.run_logs_target(benchmark_target_name, iteration),
+              'rb') as f:
+      # In many case JVM projects won't have much cov
+      # difference in short running. Adding the flag for JVM
+      # projects to temporary skip the checking of coverage change.
+      flag = not self.benchmark.language == 'jvm'
+      run_result.cov_pcs, run_result.total_pcs, run_result.crashes, \
+                run_result.semantic_check = self._parse_libfuzzer_logs(f, flag)
+      run_result.succeeded = not run_result.semantic_check.has_err
+
     return build_result, run_result
 
   def run_target_local(self, generated_project: str, benchmark_target_name: str,
@@ -198,7 +449,9 @@ class BuilderRunner:
         print(f'Failed to build image for {generated_project}')
         return False
 
-    outdir = get_outdir(generated_project)
+    outdir = get_build_artifact_dir(generated_project, 'out')
+    workdir = get_build_artifact_dir(generated_project, 'work')
+    workspacedir = get_build_artifact_dir(generated_project, 'workspace')
     command = [
         'docker',
         'run',
@@ -221,28 +474,44 @@ class BuilderRunner:
         '-e',
         f'CC={JCC_DIR}/clang-jcc',
         '-e',
-        'FUZZING_LANGUAGE=c++',
+        f'FUZZING_LANGUAGE={self.benchmark.language}',
         '-v',
         f'{outdir}:/out',
         '-v',
-        f'{get_workdir(generated_project)}:/work',
+        f'{workdir}:/work',
+        # Allows jcc to write err.log.
+        # From https://github.com/google/oss-fuzz/blob/090e0d6/infra/base-images/base-builder/jcc/jcc.go#L360
+        '-v',
+        f'{workspacedir}:/workspace',
     ]
-    os.makedirs(outdir, exist_ok=True)  # Avoid permissions errors.
+    # Avoid permissions errors.
+    os.makedirs(outdir, exist_ok=True)
+    os.makedirs(workdir, exist_ok=True)
+    os.makedirs(workspacedir, exist_ok=True)
     if self.benchmark.cppify_headers:
       command.extend(['-e', 'JCC_CPPIFY_PROJECT_HEADERS=1'])
     command.append(f'gcr.io/oss-fuzz/{generated_project}')
 
+    pre_build_command = []
+    post_build_command = []
+
+    # Cleanup mounted dirs.
+    pre_build_command.extend(
+        ['rm', '-rf', '/out/*', '/work/*', '/workspace/*', '&&'])
+
     if self.benchmark.commit:
       # TODO(metzman): Try to use build_specified_commit here.
-      build_command = []
       for repo, commit in self.benchmark.commit.items():
-        build_command += [
+        pre_build_command.extend([
             'git', '-C', repo, 'fetch', '--unshallow', '-f', '||', 'true', '&&'
-        ]
-        build_command += ['git', '-C', repo, 'checkout', commit, '-f', '&&']
-      build_command.extend(['compile', '&&', 'chmod', '777', '-R', '/out/*'])
-      build_bash_command = ['/bin/bash', '-c', ' '.join(build_command)]
-      command.extend(build_bash_command)
+        ])
+        pre_build_command.extend(
+            ['git', '-C', repo, 'checkout', commit, '-f', '&&'])
+      post_build_command.extend(['&&', 'chmod', '777', '-R', '/out/*'])
+
+    build_command = pre_build_command + ['compile'] + post_build_command
+    build_bash_command = ['/bin/bash', '-c', ' '.join(build_command)]
+    command.extend(build_bash_command)
     with open(log_path, 'w+') as log_file:
       try:
         sp.run(command,
@@ -299,17 +568,25 @@ class BuilderRunner:
             f'{e.stderr}')
       return None, None
 
-    local_textcov_location = os.path.join(
-        oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'out', generated_project,
-        'textcov_reports', f'{self.benchmark.target_name}.covreport')
-    target_basename = os.path.basename(self.benchmark.target_path)
-    with open(local_textcov_location) as f:
-      new_textcov = textcov.Textcov.from_file(
-          f,
-          ignore_function_patterns=[
-              # Don't include other functions defined in the target code.
-              re.compile(r'^' + re.escape(target_basename) + ':')
-          ])
+    if self.benchmark.language == 'jvm':
+      local_textcov_location = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
+                                            'build', 'out', generated_project,
+                                            'textcov_reports', 'jacoco.xml')
+      with open(local_textcov_location) as f:
+        new_textcov = textcov.Textcov.from_jvm_file(f)
+    else:
+      local_textcov_location = os.path.join(
+          oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'out', generated_project,
+          'textcov_reports', f'{self.benchmark.target_name}.covreport')
+      target_basename = os.path.basename(self.benchmark.target_path)
+
+      with open(local_textcov_location, 'rb') as f:
+        new_textcov = textcov.Textcov.from_file(
+            f,
+            ignore_function_patterns=[
+                # Don't include other functions defined in the target code.
+                re.compile(r'^' + re.escape(target_basename) + ':')
+            ])
 
     coverage_summary = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build',
                                     'out', generated_project, 'report', 'linux',
@@ -376,11 +653,27 @@ class CloudBuilderRunner(BuilderRunner):
 
   def build_and_run(self, generated_project: str, target_path: str,
                     iteration: int) -> tuple[BuildResult, Optional[RunResult]]:
+    """Builds and runs the fuzz target for fuzzing."""
     build_result = BuildResult()
+
     if not self._pre_build_check(target_path, build_result):
       return build_result, None
 
-    print(f'Evaluating {os.path.realpath(target_path)} on cloud.')
+    try:
+      return self.build_and_run_cloud(generated_project, target_path, iteration,
+                                      build_result)
+    except Exception as err:
+      logging.warning(
+          'Error occurred when building and running fuzz target on cloud'
+          '(attempt %d) %s: %s', iteration, err, traceback.format_exc())
+      traceback.print_exc()
+      raise err
+
+  def build_and_run_cloud(
+      self, generated_project: str, target_path: str, iteration: int,
+      build_result: BuildResult) -> tuple[BuildResult, Optional[RunResult]]:
+    """Builds and runs the fuzz target locally for fuzzing."""
+    logging.info('Evaluating %s on cloud.', os.path.realpath(target_path))
 
     uid = self.experiment_name + str(uuid.uuid4())
     run_log_name = f'{uid}.run.log'
@@ -389,11 +682,17 @@ class CloudBuilderRunner(BuilderRunner):
     build_log_name = f'{uid}.build.log'
     build_log_path = f'gs://{self.experiment_bucket}/{build_log_name}'
 
+    err_log_name = f'{uid}.err.log'
+    err_log_path = f'gs://{self.experiment_bucket}/{err_log_name}'
+
     corpus_name = f'{uid}.corpus.zip'
     corpus_path = f'gs://{self.experiment_bucket}/{corpus_name}'
 
     coverage_name = f'{uid}.coverage'
     coverage_path = f'gs://{self.experiment_bucket}/{coverage_name}'
+
+    reproducer_name = f'{uid}.reproducer'
+    reproducer_path = f'gs://{self.experiment_bucket}/{reproducer_name}'
 
     if not self._run_with_retry_control(
         os.path.realpath(target_path),
@@ -403,15 +702,17 @@ class CloudBuilderRunner(BuilderRunner):
             f'--project={generated_project}',
             f'--target={self.benchmark.target_name}',
             f'--upload_build_log={build_log_path}',
+            f'--upload_err_log={err_log_path}',
             f'--upload_output_log={run_log_path}',
             f'--upload_corpus={corpus_path}',
             f'--upload_coverage={coverage_path}',
+            f'--upload_reproducer={reproducer_path}',
             f'--experiment_name={self.experiment_name}', '--'
         ] + self._libfuzzer_args(),
         cwd=oss_fuzz_checkout.OSS_FUZZ_DIR):
       return build_result, None
 
-    print(f'Evaluated {os.path.realpath(target_path)} on cloud.')
+    logging.info('Evaluated %s on cloud.', os.path.realpath(target_path))
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(self.experiment_bucket)
@@ -424,33 +725,47 @@ class CloudBuilderRunner(BuilderRunner):
         'wb') as f:
       blob = bucket.blob(build_log_name)
       if blob.exists():
-        print(f'Downloading cloud build log of {os.path.realpath(target_path)}:'
-              f' {build_log_name} to {f}')
+        logging.info('Downloading cloud build log of %s: %s to %s',
+                     os.path.realpath(target_path), build_log_name, f)
         blob.download_to_file(f)
       else:
-        print(f'Cannot find cloud build log of {os.path.realpath(target_path)} '
-              f':{build_log_name}')
+        logging.warning('Cannot find cloud build log of %s: %s',
+                        os.path.realpath(target_path), build_log_name)
 
-    with open(self.work_dirs.run_logs_target(generated_target_name), 'wb') as f:
+    with open(
+        self.work_dirs.error_logs_target(generated_target_name, iteration),
+        'wb') as f:
+      blob = bucket.blob(err_log_name)
+      if blob.exists():
+        logging.info('Downloading jcc error log of %s: %s to %s',
+                     os.path.realpath(target_path), err_log_name, f)
+        blob.download_to_file(f)
+      else:
+        logging.warning('Cannot find jcc error log of %s: %s',
+                        os.path.realpath(target_path), err_log_name)
+
+    with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
+              'wb') as f:
       blob = bucket.blob(run_log_name)
       if blob.exists():
         build_result.succeeded = True
-        print(f'Downloading cloud run log of {os.path.realpath(target_path)}:'
-              f' {run_log_name} to {f}')
+        logging.info('Downloading cloud run log of %s: %s to %s',
+                     os.path.realpath(target_path), run_log_name, f)
         blob.download_to_file(f)
       else:
-        print(f'Cannot find cloud run log of {os.path.realpath(target_path)} '
-              f':{run_log_name}')
+        logging.warning('Cannot find cloud run log of %s: %s',
+                        os.path.realpath(target_path), run_log_name)
 
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(
-          self.work_dirs.build_logs_target(generated_target_name, iteration))
+          self.work_dirs.build_logs_target(generated_target_name, iteration),
+          os.path.basename(self.benchmark.target_path))
       build_result.errors = errors
-      print(f'Cloud evaluation of {os.path.realpath(target_path)} indicates a '
-            f'failure: {errors}')
+      logging.info('Cloud evaluation of %s indicates a failure: %s',
+                   os.path.realpath(target_path), errors)
       return build_result, None
-    print(f'Cloud evaluation of {os.path.realpath(target_path)} indicates a '
-          'success.')
+    logging.info('Cloud evaluation of %s indicates a success.',
+                 os.path.realpath(target_path))
 
     corpus_dir = self.work_dirs.corpus(generated_target_name)
     with open(os.path.join(corpus_dir, 'corpus.zip'), 'wb') as f:
@@ -460,6 +775,7 @@ class CloudBuilderRunner(BuilderRunner):
 
     run_result = RunResult(corpus_path=corpus_path,
                            coverage_report_path=coverage_path,
+                           reproducer_path=reproducer_path,
                            log_path=run_log_path)
     blob = bucket.blob(f'{coverage_name}/report/linux/summary.json')
     if blob.exists():
@@ -467,17 +783,33 @@ class CloudBuilderRunner(BuilderRunner):
         run_result.coverage_summary = json.load(f)
 
     target_basename = os.path.basename(self.benchmark.target_path)
-    blob = bucket.blob(
-        f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
-        '.covreport')
-    if blob.exists():
-      with blob.open() as f:
-        run_result.coverage = textcov.Textcov.from_file(
-            f,
-            ignore_function_patterns=[
-                # Don't include other functions defined in the target code.
-                re.compile(r'^' + re.escape(target_basename) + ':')
-            ])
+
+    # Load coverage reports.
+    if self.benchmark.language == 'jvm':
+      blob = bucket.blob(f'{coverage_name}/textcov_reports/jacoco.xml')
+      if blob.exists():
+        with blob.open() as f:
+          run_result.coverage = textcov.Textcov.from_jvm_file(f)
+    else:
+      # C/C++
+      blob = bucket.blob(
+          f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
+          '.covreport')
+      if blob.exists():
+        with blob.open('rb') as f:
+          run_result.coverage = textcov.Textcov.from_file(
+              f,
+              ignore_function_patterns=[
+                  # Don't include other functions defined in the target code.
+                  re.compile(r'^' + re.escape(target_basename) + ':')
+              ])
+
+    # Parse libfuzzer logs to get fuzz target runtime details.
+    with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
+              'rb') as f:
+      run_result.cov_pcs, run_result.total_pcs, run_result.crashes, \
+                  run_result.semantic_check = self._parse_libfuzzer_logs(f)
+      run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result
 
@@ -497,11 +829,9 @@ def find_generated_fuzz_target(directory):
   return None
 
 
-def get_outdir(generated_project):
-  return os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'out',
-                      generated_project)
-
-
-def get_workdir(generated_project):
-  return os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'work',
+def get_build_artifact_dir(generated_project: str, build_artifact: str) -> str:
+  """
+  Returns the |build_artifact| absolute directory path for |generated_project|.
+  """
+  return os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', build_artifact,
                       generated_project)

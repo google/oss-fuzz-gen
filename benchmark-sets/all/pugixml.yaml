@@ -10,7 +10,7 @@
   - "name": "n"
     "type": "pugi::xpath_node *"
   "return_type": "size_t"
-  "signature": "size_t const xpath_query::evaluate_string(char_t *, size_t, const xpath_node)"
+  "signature": "size_t pugi::xpath_query::evaluate_string(char_t *, size_t, const xpath_node &)"
 - "name": "_ZN4pugi8xml_node13append_bufferEPKvmjNS_12xml_encodingE"
   "params":
   - "name": "this"
@@ -26,7 +26,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "xml_parse_result xml_node::append_buffer(const void *, size_t, unsigned int, xml_encoding)"
+  "signature": "xml_parse_result pugi::xml_node::append_buffer(const void *, size_t, unsigned int, DW_TAG_enumeration_typexml_encoding)"
 - "name": "_ZN4pugi12xml_document23load_buffer_inplace_ownEPvmjNS_12xml_encodingE"
   "params":
   - "name": "this"
@@ -42,7 +42,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "xml_parse_result xml_document::load_buffer_inplace_own(void *, size_t, unsigned int, xml_encoding)"
+  "signature": "xml_parse_result pugi::xml_document::load_buffer_inplace_own(void *, size_t, unsigned int, DW_TAG_enumeration_typexml_encoding)"
 - "name": "_ZN4pugi12xml_document19load_buffer_inplaceEPvmjNS_12xml_encodingE"
   "params":
   - "name": "this"
@@ -58,7 +58,7 @@
   - "name": ""
     "type": "int"
   "return_type": "void"
-  "signature": "xml_parse_result xml_document::load_buffer_inplace(void *, size_t, unsigned int, xml_encoding)"
+  "signature": "xml_parse_result pugi::xml_document::load_buffer_inplace(void *, size_t, unsigned int, DW_TAG_enumeration_typexml_encoding)"
 - "name": "_ZNK4pugi8xml_node18select_single_nodeEPKcPNS_18xpath_variable_setE"
   "params":
   - "name": "this"
@@ -68,7 +68,7 @@
   - "name": "variables"
     "type": "pugi::xpath_variable_set *"
   "return_type": "void"
-  "signature": "xpath_node const xml_node::select_single_node(const char_t *, xpath_variable_set *)"
+  "signature": "xpath_node pugi::xml_node::select_single_node(const char_t *, xpath_variable_set *)"
 "language": "c++"
 "project": "pugixml"
 "target_name": "fuzz_parse"

@@ -14,7 +14,7 @@
   - "name": ""
     "type": "int"
   "return_type": "bool"
-  "signature": "bool LoadBinaryFromFile(TinyGLTF *, Model *, string *, string *, const string, unsigned int)"
+  "signature": "bool tinygltf::TinyGLTF::LoadBinaryFromFile(Model *, string *, string *, const string &, unsigned int)"
 - "name": "_ZN8tinygltf8TinyGLTF17LoadASCIIFromFileEPNS_5ModelEPNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESA_RKS9_j"
   "params":
   - "name": ""
@@ -30,7 +30,7 @@
   - "name": ""
     "type": "int"
   "return_type": "bool"
-  "signature": "bool LoadASCIIFromFile(TinyGLTF *, Model *, string *, string *, const string, unsigned int)"
+  "signature": "bool tinygltf::TinyGLTF::LoadASCIIFromFile(Model *, string *, string *, const string &, unsigned int)"
 - "name": "_ZN8tinygltf8TinyGLTF20LoadBinaryFromMemoryEPNS_5ModelEPNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESA_PKhjRKS9_j"
   "params":
   - "name": ""
@@ -50,7 +50,7 @@
   - "name": ""
     "type": "int"
   "return_type": "bool"
-  "signature": "bool LoadBinaryFromMemory(TinyGLTF *, Model *, string *, string *, const unsigned char *, unsigned int, const string, unsigned int)"
+  "signature": "bool tinygltf::TinyGLTF::LoadBinaryFromMemory(Model *, string *, string *, const unsigned char *, unsigned int, const string &, unsigned int)"
 - "name": "_ZN8tinygltf8TinyGLTF20WriteGltfSceneToFileEPKNS_5ModelERKNSt3__112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEbbbb"
   "params":
   - "name": ""
@@ -68,7 +68,7 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool WriteGltfSceneToFile(TinyGLTF *, const Model *, const string, bool, bool, bool, bool)"
+  "signature": "bool tinygltf::TinyGLTF::WriteGltfSceneToFile(const Model *, const string &, bool, bool, bool, bool)"
 - "name": "_ZN8tinygltf8TinyGLTF22WriteGltfSceneToStreamEPKNS_5ModelERNSt3__113basic_ostreamIcNS4_11char_traitsIcEEEEbb"
   "params":
   - "name": ""
@@ -82,7 +82,7 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool WriteGltfSceneToStream(TinyGLTF *, const Model *, ostream, bool, bool)"
+  "signature": "bool tinygltf::TinyGLTF::WriteGltfSceneToStream(const Model *, ostream &, bool, bool)"
 "language": "c++"
 "project": "tinygltf"
 "target_name": "fuzz_gltf"

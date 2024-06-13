@@ -12,7 +12,7 @@
 - "name": "_ZN14wxPlatformInfo3GetEv"
   "params": []
   "return_type": "wxPlatformInfo *"
-  "signature": "const wxPlatformInfo Get()"
+  "signature": "const wxPlatformInfo & Get()"
 - "name": "_ZN14wxPlatformInfo22InitForCurrentPlatformEv"
   "params":
   - "name": "this"
@@ -28,7 +28,7 @@
   - "name": "lang"
     "type": "wxString *"
   "return_type": "wxMsgCatalog *"
-  "signature": "wxMsgCatalog * wxFileTranslationsLoader::LoadCatalog(const wxString, const wxString)"
+  "signature": "wxMsgCatalog * wxFileTranslationsLoader::LoadCatalog(const wxString &, const wxString &)"
 "language": "c++"
 "project": "wxwidgets"
 "target_name": "runner"

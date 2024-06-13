@@ -8,7 +8,7 @@
   - "name": "offset"
     "type": "std::chrono::duration *"
   "return_type": "cctz::time_zone::Impl *"
-  "signature": "time_zone fixed_time_zone(const seconds)"
+  "signature": "time_zone cctz::fixed_time_zone(const seconds &)"
 - "name": "_ZNK4cctz9time_zone11descriptionEv"
   "params":
   - "name": "this"
@@ -16,7 +16,7 @@
   - "name": ""
     "type": "cctz::time_zone *"
   "return_type": "void"
-  "signature": "string const time_zone::description()"
+  "signature": "string cctz::time_zone::description()"
 - "name": "_ZNK4cctz9time_zone7versionEv"
   "params":
   - "name": "this"
@@ -24,7 +24,7 @@
   - "name": ""
     "type": "cctz::time_zone *"
   "return_type": "void"
-  "signature": "string const time_zone::version()"
+  "signature": "string cctz::time_zone::version()"
 - "name": "_ZNK4cctz9time_zone15prev_transitionERKNSt3__16chrono10time_pointINS2_12system_clockENS2_8durationIlNS1_5ratioILl1ELl1EEEEEEEPNS0_16civil_transitionE"
   "params":
   - "name": "this"
@@ -34,7 +34,7 @@
   - "name": "trans"
     "type": "struct cctz::time_zone::civil_transition *"
   "return_type": "bool"
-  "signature": "bool const time_zone::prev_transition(const 1L> > >, civil_transition *)"
+  "signature": "bool cctz::time_zone::prev_transition(const time_point<std::__1::chrono::duration<long, std::__1::ratio<1L, 1L> > > &, civil_transition *)"
 "language": "c++"
 "project": "cctz"
 "target_name": "fuzz_cctz"

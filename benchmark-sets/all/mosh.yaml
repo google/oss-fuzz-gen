@@ -6,7 +6,7 @@
   - "name": ""
     "type": "Terminal::Complete *"
   "return_type": "void"
-  "signature": "string const Complete::init_diff()"
+  "signature": "string Terminal::Complete::init_diff()"
 - "name": "_ZNK8Terminal8Complete9diff_fromB5cxx11ERKS0_"
   "params":
   - "name": "this"
@@ -16,7 +16,7 @@
   - "name": ""
     "type": "Terminal::Complete *"
   "return_type": "void"
-  "signature": "string const Complete::diff_from(const Complete)"
+  "signature": "string Terminal::Complete::diff_from(const Complete &)"
 - "name": "_ZN8Terminal8Complete12apply_stringERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE"
   "params":
   - "name": "this"
@@ -24,7 +24,7 @@
   - "name": "diff"
     "type": "std::__cxx11::basic_string *"
   "return_type": "void"
-  "signature": "void Complete::apply_string(const string)"
+  "signature": "void Terminal::Complete::apply_string(const string &)"
 - "name": "_ZNK6Parser6Resize15act_on_terminalEPN8Terminal8EmulatorE"
   "params":
   - "name": "this"
@@ -32,7 +32,7 @@
   - "name": "emu"
     "type": "Terminal::Emulator *"
   "return_type": "void"
-  "signature": "void const Resize::act_on_terminal(Emulator *)"
+  "signature": "void Parser::Resize::act_on_terminal(Emulator *)"
 - "name": "_ZN8Terminal8Emulator6resizeEmm"
   "params":
   - "name": "this"
@@ -42,7 +42,7 @@
   - "name": "s_height"
     "type": "size_t"
   "return_type": "void"
-  "signature": "void Emulator::resize(size_t, size_t)"
+  "signature": "void Terminal::Emulator::resize(size_t, size_t)"
 "language": "c++"
 "project": "mosh"
 "target_name": "terminal_parser_fuzzer"

@@ -1,0 +1,24 @@
+{
+    "samples": [
+{% for sample in samples %}
+    {
+        "benchmark": "{{ benchmark }}",
+        "sample": "{{ sample.id }}",
+        "status": "{{ sample.status }}",
+        "compiles": "{{ sample.result.compiles }}",
+        "crashes": "{{ sample.result.crashes }}",
+        "crash_reason": "{{ sample.result.semantic_error }}",
+        "bug": "{{ not sample.result.is_semantic_error }}",
+        "coverage": "{{ sample.result.coverage | percent }}",
+        "coverage_diff": "{{ sample.result.line_coverage_diff }}",
+        "coverage_report": "{{ sample.result.coverage_report_path | cov_report_link }}",
+        "stacktrace": "{{ sample.stacktrace }}",
+        "target_binary": "{{ sample.target_binary }}",
+        "reproducer": "{{ sample.reproducer }}",
+        "run_log": "{{ sample.run_log }}",
+        "source_code": {{ get_benchmark_final_target_code(sample.id) | replace('\\n', '\\\\n')}},
+        "model": "{{ model }}"
+    }{% if not loop.last %},{% endif %}
+{% endfor %}
+    ]
+}

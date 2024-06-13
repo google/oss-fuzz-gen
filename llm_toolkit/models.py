@@ -23,6 +23,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import traceback
 from abc import abstractmethod
 from typing import Any, Callable, Type
 
@@ -30,6 +31,7 @@ import openai
 import tiktoken
 import vertexai
 from google.api_core.exceptions import GoogleAPICallError
+from vertexai import generative_models
 from vertexai.preview.generative_models import GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
 
@@ -129,26 +131,53 @@ class LLM:
   def prompt_type(self) -> type[prompts.Prompt]:
     """Returns the expected prompt type."""
 
+  def _delay_for_retry(self, attempt_count: int) -> None:
+    """Sleeps for a while based on the |attempt_count|."""
+    # Exponentially increase from 5 to 80 seconds + some random to jitter.
+    delay = 5 * 2**attempt_count + random.randint(1, 5)
+    logging.warning('Retry in %d seconds...', delay)
+    time.sleep(delay)
+
+  def _is_retryable_error(self, err: Exception, api_error: Type[Exception],
+                          tb: traceback.StackSummary) -> bool:
+    """Validates if |err| is worth retrying."""
+    if isinstance(err, api_error):
+      return True
+
+    # A known case from vertex package, no content due to mismatch roles.
+    if (isinstance(err, ValueError) and
+        'Content roles do not match' in str(err) and tb[-1].filename.endswith(
+            'vertexai/generative_models/_generative_models.py')):
+      return True
+
+    # A known case from vertex package, content blocked by safety filters.
+    if (isinstance(err, ValueError) and
+        'blocked by the safety filters' in str(err) and
+        tb[-1].filename.endswith(
+            'vertexai/generative_models/_generative_models.py')):
+      return True
+
+    return False
+
   def with_retry_on_error(self, func: Callable,
-                          err_type: Type[Exception]) -> Any:
+                          api_err: Type[Exception]) -> Any:
     """
     Retry when the function returns an expected error with exponential backoff.
     """
-    for attempt in range(self._max_attempts):
+    for attempt in range(1, self._max_attempts + 1):
       try:
         return func()
-      except err_type as err:
-        # Exponentially increase from 5 to 80 seconds
-        # + some random to jitter.
-        delay = 5 * 2**attempt + random.randint(1, 5)
-        print(f'Error generating LLM response\n'
-              f'{err}')
-
-        if attempt == self._max_attempts - 1:
+      except Exception as err:
+        logging.warning('LLM API Error when responding (attempt %d): %s',
+                        attempt, err)
+        tb = traceback.extract_tb(err.__traceback__)
+        if (not self._is_retryable_error(err, api_err, tb) or
+            attempt == self._max_attempts):
+          logging.warning(
+              'LLM API cannot fix error when responding (attempt %d) %s: %s',
+              attempt, err, traceback.format_exc())
           raise err
-
-        print(f'Retry in {delay}s...')
-        time.sleep(delay)
+        self._delay_for_retry(attempt_count=attempt)
     return None
 
   def _save_output(self, index: int, content: str, response_dir: str) -> None:
@@ -196,18 +225,19 @@ class GPT(LLM):
     """Generates code with OpenAI's API."""
     if self.ai_binary:
       print(f'OpenAI does not use local AI binary: {self.ai_binary}')
-    openai.api_key = os.getenv('OPENAI_API_KEY')
+    client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
     completion = self.with_retry_on_error(
-        lambda: openai.ChatCompletion.create(messages=prompt.get(),
-                                             model=self.name,
-                                             n=self.num_samples,
-                                             temperature=self.temperature),
+        lambda: client.chat.completions.create(messages=prompt.get(),
+                                               model=self.name,
+                                               n=self.num_samples,
+                                               temperature=self.temperature),
         openai.OpenAIError)
+    # TODO: Add a default value for completion.
     if log_output:
       print(completion)
     for index, choice in enumerate(completion.choices):  # type: ignore
-      content = choice.message['content']
+      content = choice.message.content
       self._save_output(index, content, response_dir)
 
 
@@ -309,7 +339,7 @@ class VertexAIModel(GoogleModel):
     for index in range(self.num_samples):
       response = self.with_retry_on_error(
           lambda: self.do_generate(model, prompt.get(), parameters),
-          GoogleAPICallError)
+          GoogleAPICallError) or ''
       self._save_output(index, response, response_dir)
 
 
@@ -320,7 +350,30 @@ class GeminiModel(VertexAIModel):
     return GenerativeModel(self._vertex_ai_model)
 
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
-    return model.generate_content(prompt, generation_config=config).text
+    # Loosen inapplicable restrictions just in case.
+    safety_config = [
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.
+            HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        ),
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        ),
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        ),
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.
+            HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        ),
+    ]
+    return model.generate_content(prompt,
+                                  generation_config=config,
+                                  safety_settings=safety_config).text
 
 
 class VertexAICodeBisonModel(VertexAIModel):
@@ -348,6 +401,16 @@ class GeminiPro(GeminiModel):
 
   name = 'vertex_ai_gemini-pro'
   _vertex_ai_model = 'gemini-1.0-pro'
+
+
+class Gemini1D5(GeminiModel):
+  """Gemini 1.5."""
+
+  _max_output_tokens = 8192
+  context_window = 1000000
+
+  name = 'vertex_ai_gemini-1-5'
+  _vertex_ai_model = 'gemini-1.5-pro-preview-0409'
 
 
 class AIBinaryModel(GoogleModel):

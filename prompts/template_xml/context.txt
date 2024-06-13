@@ -1,8 +1,30 @@
-The function is defined in
-<include_file>
-{CONTEXT_HEADER}
-</include_file>
+{% if headers %}
 
+The code block below contains the header files which you must include. The function requires these header files to successfully compile.
+If the headers are private, do not include them.
+Header files:
 <code>
-{CONTEXT_TYPES}
+{{ headers }}
 </code>
+{% endif %}
+{% if must_insert %}
+
+You must insert code in the below code block before the function being tested:
+<code>
+{{ must_insert }}
+</code>
+{% endif %}
+{% if func_source %}
+
+Here is the source code of the function being tested:
+<code>
+{{ func_source }}
+</code>
+{% endif %}
+{% if xrefs %}
+
+Here is the source code for functions which reference the function being tested:
+<code>
+{{ xrefs }}
+</code>
+{% endif %}

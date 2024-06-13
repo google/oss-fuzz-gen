@@ -54,7 +54,7 @@ fi
 
 mkdir results-report
 
-while true; do
+update_report() {
   # Spin up the web server generating the report (and bg the process).
   $PYTHON -m report.web "${RESULTS_DIR:?}" "${WEB_PORT:?}" "${BENCHMARK_SET:?}" "$MODEL" &
   pid_web=$!
@@ -65,17 +65,25 @@ while true; do
   echo "Download results from localhost."
   wget2 --quiet --inet4-only --no-host-directories --http2-request-window 10 --recursive localhost:${WEB_PORT:?}/ 2>&1
 
-  # Also fetch the sorted line cov diff report.
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/sort -O sort.html 2>&1
+  # Also fetch index JSON.
+  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/json -O json 2>&1
 
   # Stop the server.
   kill -9 "$pid_web"
 
   # Upload the report to GCS.
   echo "Uploading the report."
+  BUCKET_PATH="gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
+  # Upload HTMLs.
   gsutil -q -m -h "Content-Type:text/html" \
          -h "Cache-Control:public, max-age=3600" \
-         cp -r . "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
+         cp -r . "$BUCKET_PATH"
+  # Find all JSON files and upload them, removing the leading './'
+  find . -name '*json' | while read -r file; do
+    file_path="${file#./}"  # Remove the leading "./".
+    gsutil -q -m -h "Content-Type:application/json" \
+        -h "Cache-Control:public, max-age=3600" cp "$file" "$BUCKET_PATH/$file_path"
+  done
 
   cd ..
 
@@ -101,12 +109,14 @@ while true; do
     --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
   gsutil -q cp -r 'training_data' \
     "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
+}
 
-  if [[ -f /experiment_ended ]]; then
-    echo "Experiment finished."
-    exit
-  fi
-
+while [[ ! -f /experiment_ended ]]; do
+  update_report
   echo "Experiment is running..."
   sleep 600
 done
+
+echo "Experiment finished."
+update_report
+echo "Final report uploaded."

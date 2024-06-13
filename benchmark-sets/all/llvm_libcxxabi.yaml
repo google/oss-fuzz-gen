@@ -6,7 +6,7 @@
   - "name": "Node"
     "type": "(anonymous namespace)::itanium_demangle::NewExpr *"
   "return_type": "void"
-  "signature": "void DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NodeArrayNode>(const NodeArrayNode *)"
+  "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NodeArrayNode>(const NodeArrayNode *)"
 - "name": "_ZN12_GLOBAL__N_111DumpVisitorclINS_16itanium_demangle12TemplateArgsEEEvPKT_"
   "params":
   - "name": "this"
@@ -14,7 +14,7 @@
   - "name": "Node"
     "type": "(anonymous namespace)::itanium_demangle::TemplateArgs *"
   "return_type": "void"
-  "signature": "void DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NodeArrayNode>(const NodeArrayNode *)"
+  "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NodeArrayNode>(const NodeArrayNode *)"
 - "name": "_ZN12_GLOBAL__N_111DumpVisitorclINS_16itanium_demangle25TemplateTemplateParamDeclEEEvPKT_"
   "params":
   - "name": "this"
@@ -22,7 +22,7 @@
   - "name": "Node"
     "type": "(anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl *"
   "return_type": "void"
-  "signature": "void DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NodeArrayNode>(const NodeArrayNode *)"
+  "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NodeArrayNode>(const NodeArrayNode *)"
 - "name": "_ZN12_GLOBAL__N_111DumpVisitorclINS_16itanium_demangle14ConversionExprEEEvPKT_"
   "params":
   - "name": "this"
@@ -30,7 +30,7 @@
   - "name": "Node"
     "type": "(anonymous namespace)::itanium_demangle::InitListExpr *"
   "return_type": "void"
-  "signature": "void DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NodeArrayNode>(const NodeArrayNode *)"
+  "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NodeArrayNode>(const NodeArrayNode *)"
 - "name": "_ZN12_GLOBAL__N_111DumpVisitorclINS_16itanium_demangle8CallExprEEEvPKT_"
   "params":
   - "name": "this"
@@ -38,7 +38,7 @@
   - "name": "Node"
     "type": "(anonymous namespace)::itanium_demangle::InitListExpr *"
   "return_type": "void"
-  "signature": "void DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NodeArrayNode>(const NodeArrayNode *)"
+  "signature": "void (anonymous namespace)::DumpVisitor::operator()<(anonymous namespace)::itanium_demangle::NodeArrayNode>(const NodeArrayNode *)"
 "language": "c++"
 "project": "llvm_libcxxabi"
 "target_name": "DummyParserFuzzer"

@@ -18,12 +18,11 @@ import dataclasses
 import logging
 import os
 import shutil
-import subprocess
 from multiprocessing import pool
 from typing import List, Optional
 
 from data_prep import project_targets
-from data_prep.project_context.context_retriever import ContextRetriever
+from data_prep.project_context.context_introspector import ContextRetriever
 from experiment import benchmark as benchmarklib
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
@@ -40,9 +39,13 @@ NUM_EVA = int(os.getenv('LLM_NUM_EVA', '3'))
 DEBUG: bool = False
 
 # Default LLM hyper-parameters.
-# WARN: Avoid large NUM_SAMPLES in highly parallelized local experiment.
-# NUM_SAMPLES controls the number of LLM responses per query, which may exceed
-# your LLM's limit on query-per-second.
+# #182 shows Gemini returns NUM_SAMPLES independent responses via repeated
+#  queries, which generally performs better than top-k responses from one
+#  query [1].
+# [1] TODO(@happy-qop): Update the link.
+# WARN: Avoid large NUM_SAMPLES in highly parallelized local experiments.
+# It controls the number of LLM responses per prompt, which may exceed your
+# LLM's limit on query-per-second.
 NUM_SAMPLES = 2
 MAX_TOKENS: int = 4096
 RUN_TIMEOUT: int = 30
@@ -56,6 +59,7 @@ class AggregatedResult:
   """Aggregated evaluation result."""
   build_success_rate: float = 0.0
   crash_rate: float = 0.0
+  found_bug: int = 0
   max_coverage: float = 0.0
   max_line_coverage_diff: float = 0.0
   max_coverage_sample: str = ''
@@ -66,6 +70,7 @@ class AggregatedResult:
     return (
         f'build success rate: {self.build_success_rate}, '
         f'crash rate: {self.crash_rate}, '
+        f'found bug: {self.found_bug}, '
         f'max coverage: {self.max_coverage}, '
         f'max line coverage diff: {self.max_line_coverage_diff}\n'
         f'max coverage sample: {self.max_coverage_sample}\n'
@@ -126,6 +131,10 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
                            ]) / len(target_stats)
   crash_rate = sum([int(stat.crashes) for _, stat in target_stats
                    ]) / len(target_stats)
+  found_bug = sum([
+      int(stat.crashes and not stat.is_semantic_error)
+      for _, stat in target_stats
+  ])
   max_coverage = max([stat.coverage for _, stat in target_stats])
   max_line_coverage_diff = max(
       [stat.line_coverage_diff for _, stat in target_stats])
@@ -142,9 +151,10 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
       max_coverage_diff_sample = generated_targets[i]
       max_coverage_diff_report = stat.coverage_report_path
 
-  return AggregatedResult(build_success_rate, crash_rate, max_coverage,
-                          max_line_coverage_diff, max_coverage_sample,
-                          max_coverage_diff_sample, max_coverage_diff_report)
+  return AggregatedResult(build_success_rate, crash_rate, found_bug,
+                          max_coverage, max_line_coverage_diff,
+                          max_coverage_sample, max_coverage_diff_sample,
+                          max_coverage_diff_report)
 
 
 def check_targets(
@@ -181,8 +191,9 @@ def check_targets(
     for i, target_stat in enumerate(
         p.starmap(evaluator.check_target, ai_target_pairs)):
       if target_stat is None:
-        print(f'Error evaluating target {generated_targets[i]}')
-        continue
+        logging.error('This should never happen: Error evaluating target: %s',
+                      generated_targets[i])
+        target_stat = exp_evaluator.Result()
 
       target_stats.append((i, target_stat))
 
@@ -209,13 +220,14 @@ def run(benchmark: Benchmark,
         cloud_experiment_name: str = '',
         cloud_experiment_bucket: str = '',
         use_context: bool = False,
-        run_timeout: int = RUN_TIMEOUT) -> Optional[AggregatedResult]:
+        run_timeout: int = RUN_TIMEOUT,
+        dry_run: bool = False) -> Optional[AggregatedResult]:
   """Generates code via LLM, and evaluates them."""
   model.cloud_setup()
   logging.basicConfig(level=logging.INFO)
 
   if example_pair is None:
-    example_pair = prompt_builder.EXAMPLES
+    example_pair = prompt_builder.EXAMPLES[benchmark.language]
 
   if manual_fix:
     generated_targets = [
@@ -226,41 +238,42 @@ def run(benchmark: Benchmark,
   else:
     if benchmark.use_project_examples:
       project_examples = project_targets.generate_data(
-          benchmark.project, cloud_experiment_bucket=cloud_experiment_bucket)
+          benchmark.project,
+          benchmark.language,
+          cloud_experiment_bucket=cloud_experiment_bucket)
     else:
       project_examples = []
 
-    context_info = None
-
     if use_context:
       retriever = ContextRetriever(benchmark)
-      try:
-        retriever.retrieve_asts()
-      # GSutil fails on the same project immediately after
-      # it succeeds a batch copy.
-      except subprocess.CalledProcessError:
-        pass
-      retriever.generate_lookups()
-      context_header = retriever.get_header()
-      print(context_header)
-      context_types = '\n'.join(retriever.get_type_info())
-      context_info = (context_header, context_types)
-      retriever.cleanup_asts()
+      context_info = retriever.get_context_info()
+    else:
+      context_info = {}
 
-    builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
+    if benchmark.language == 'jvm':
+      # For Java projects
+      builder = prompt_builder.DefaultJvmTemplateBuilder(
+          model, benchmark.project, benchmark.params, template_dir)
+    else:
+      # For C/C++ projects
+      builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
+
     prompt = builder.build(benchmark.function_signature,
                            benchmark.file_type,
                            example_pair,
                            project_examples,
                            project_context_content=context_info)
     prompt.save(work_dirs.prompt)
+
+    if dry_run:
+      return None
+
     generated_targets = generate_targets(benchmark,
                                          model,
                                          prompt,
                                          work_dirs,
                                          debug=debug)
     generated_targets = fix_code(work_dirs, generated_targets)
-
   return check_targets(model.ai_binary, benchmark, work_dirs, generated_targets,
                        cloud_experiment_name, cloud_experiment_bucket,
                        run_timeout, model.name)

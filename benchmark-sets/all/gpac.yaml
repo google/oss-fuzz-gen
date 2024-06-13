@@ -38,4 +38,4 @@
 "language": "c"
 "project": "gpac"
 "target_name": "fuzz_parse"
-"target_path": "/src/testsuite/oss-fuzzers/fuzz_parse.c"
+"target_path": "/src/gpac/testsuite/oss-fuzzers/fuzz_parse.c"

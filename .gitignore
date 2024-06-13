@@ -3,6 +3,7 @@ results-*/
 oss-fuzz/
 oss-fuzz-data/
 benchmark-sets/split_benchmarks/
+benchmark-sets/generated-benchmark-*
 venv/
 .venv/
 __pycache__/

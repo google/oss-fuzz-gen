@@ -25,7 +25,7 @@ import tempfile
 import yaml
 
 BUILD_DIR: str = 'build'
-GLOBAL_TEMP_DIR: tempfile.TemporaryDirectory
+GLOBAL_TEMP_DIR: str = ''
 # Assume OSS-Fuzz is at repo root dir by default.
 # This will change if temp_dir is used.
 OSS_FUZZ_DIR: str = os.path.join(
@@ -52,9 +52,9 @@ def _set_temp_oss_fuzz_repo():
   # Holding the temp directory in a global object to ensure it won't be deleted
   # before program ends.
   global GLOBAL_TEMP_DIR
-  GLOBAL_TEMP_DIR = tempfile.TemporaryDirectory()
+  GLOBAL_TEMP_DIR = tempfile.mkdtemp()
   global OSS_FUZZ_DIR
-  OSS_FUZZ_DIR = GLOBAL_TEMP_DIR.name
+  OSS_FUZZ_DIR = GLOBAL_TEMP_DIR
   atexit.register(_remove_temp_oss_fuzz_repo)
   _clone_oss_fuzz_repo()
 
@@ -102,6 +102,10 @@ def postprocess_oss_fuzz() -> None:
 
   # Set up dependencies to run OSS-Fuzz build scripts
   if os.path.exists(os.path.join(OSS_FUZZ_DIR, VENV_DIR)):
+    return
+
+  # If already in a virtualenv environment assume all is set up
+  if os.environ.get('VIRTUAL_ENV', ''):
     return
 
   result = sp.run(['python3', '-m', 'venv', VENV_DIR],

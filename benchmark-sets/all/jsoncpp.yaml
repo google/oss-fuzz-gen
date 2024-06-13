@@ -6,7 +6,7 @@
   - "name": ""
     "type": "Json::OurReader::Token *"
   "return_type": "bool"
-  "signature": "bool readObject(Reader *, Token)"
+  "signature": "bool Json::Reader::readObject(Token &)"
 - "name": "_ZN4Json6Reader9readArrayERNS0_5TokenE"
   "params":
   - "name": ""
@@ -14,13 +14,13 @@
   - "name": ""
     "type": "Json::OurReader::Token *"
   "return_type": "bool"
-  "signature": "bool readArray(Reader *, Token)"
+  "signature": "bool Json::Reader::readArray(Token &)"
 - "name": "_ZN4Json6Reader9readValueEv"
   "params":
   - "name": ""
     "type": "Json::Reader *"
   "return_type": "bool"
-  "signature": "bool readValue(Reader *)"
+  "signature": "bool Json::Reader::readValue()"
 - "name": "_ZN4Json6Reader5parseERNSt3__113basic_istreamIcNS1_11char_traitsIcEEEERNS_5ValueEb"
   "params":
   - "name": ""
@@ -32,7 +32,7 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool parse(Reader *, istream, Value, bool)"
+  "signature": "bool Json::Reader::parse(istream &, Value &, bool)"
 - "name": "_ZN4Json6Reader5parseERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERNS_5ValueEb"
   "params":
   - "name": ""
@@ -44,7 +44,7 @@
   - "name": ""
     "type": "bool"
   "return_type": "bool"
-  "signature": "bool parse(Reader *, const string, Value, bool)"
+  "signature": "bool Json::Reader::parse(const string &, Value &, bool)"
 "language": "c++"
 "project": "jsoncpp"
 "target_name": "utf8_validity_fuzzer"
