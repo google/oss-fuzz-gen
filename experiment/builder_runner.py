@@ -297,7 +297,7 @@ class BuilderRunner:
 
       # Exit, normally indicating the fuzz target exited in a controlled manner,
       # blocking its bug discovery.
-      if symptom == 'fuzz target exited':
+      if 'fuzz target exited' in symptom:
         return cov_pcs, total_pcs, True, SemanticCheckResult(
             SemanticCheckResult.EXIT, symptom, crash_stacks)
 
