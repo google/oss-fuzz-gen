@@ -39,8 +39,8 @@ BENCHMARK_SET = 'comparison'
 LLM_NAME = 'vertex_ai_code-bison-32k'
 EXP_DELAY = 0
 FUZZING_TIMEOUT = 300
-REQUEST_CPU = 45
-REQUEST_MEM = 40
+REQUEST_CPU = 6
+REQUEST_MEM = 30
 
 PR_LINK_PREFIX = 'https://github.com/google/oss-fuzz-gen/pull'
 JOB_LINK_PREFIX = ('https://console.cloud.google.com/kubernetes/job/'

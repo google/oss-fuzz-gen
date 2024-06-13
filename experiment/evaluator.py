@@ -31,7 +31,7 @@ from experiment.workdir import WorkDirs
 from llm_toolkit import code_fixer, crash_triager
 from llm_toolkit.crash_triager import TriageResult
 
-LLM_FIX_LIMIT = 5
+LLM_FIX_LIMIT = int(os.getenv('LLM_FIX_LIMIT', '5'))
 
 OSS_FUZZ_COVERAGE_BUCKET = 'oss-fuzz-coverage'
 
@@ -370,16 +370,21 @@ class Evaluator:
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
 
+    total_lines = _compute_total_lines_without_fuzz_targets(
+        coverage_summary, generated_target_name)
     if self.benchmark.language == 'jvm':
-      # The summary.json generated from Jacoco.xml report
-      # of JVM project does not have total lines information.
-      # This fix Use the total lines calculation from the
-      # jacoco.xml report of the current run directly for
-      # JVM projects.
-      total_lines = run_result.coverage.total_lines
-    else:
-      total_lines = _compute_total_lines_without_fuzz_targets(
-          coverage_summary, generated_target_name)
+      # The Jacoco.xml coverage report used to generate
+      # summary.json on OSS-Fuzz for JVM projects does
+      # not trace the source file location. Thus the convertion
+      # may miss some classes because they are not there
+      # during coverage report generation.
+      # This fix get the total lines calculation from the
+      # jacoco.xml report of the current run directly and
+      # compare with the total_lines retrieved from summary.json
+      # Then the larger total_lines is used which is assumed
+      # to be more accurate.
+      total_lines = max(total_lines, run_result.coverage.total_lines)
+
     if run_result.total_pcs:
       coverage_percent = run_result.cov_pcs / run_result.total_pcs
     else:

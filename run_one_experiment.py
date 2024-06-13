@@ -253,7 +253,7 @@ def run(benchmark: Benchmark,
     if benchmark.language == 'jvm':
       # For Java projects
       builder = prompt_builder.DefaultJvmTemplateBuilder(
-          model, benchmark.project, template_dir)
+          model, benchmark.project, benchmark.params, template_dir)
     else:
       # For C/C++ projects
       builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)

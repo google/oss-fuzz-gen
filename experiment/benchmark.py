@@ -145,8 +145,10 @@ class Benchmark:
       # The benchmark id uses the function_signature directly and used as the
       # name of the result directory. To avoid confusion in the directory name,
       # these special characters in the id (coming from the function signature)
-      # are removed.
+      # are removed. Additional special characters exist for constructors which
+      # will shown as <init> or <cinit> because constructors does not have names.
       self.function_signature = self.function_name
+      self.id = self.id.replace('<', '').replace('>', '')
       self.id = self.id.replace('[', '').replace(']', '')
       self.id = self.id.replace('(', '_').replace(')', '').replace(',', '_')
 
