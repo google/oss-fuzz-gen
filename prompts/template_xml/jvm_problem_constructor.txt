@@ -1,0 +1,11 @@
+The target method is the constructor of {CONSTRUCTOR_CLASS} with the following signature.
+<constructor_signature>
+{CONSTRUCTOR_SIGNATURE}
+</constructor_signature>
+The constructor signature follows the format of <code>[Full qualified name of the class].(method_arguments)</code>.
+For example, for the constructor of class <code>Test</code> of package <code>org.test</code> which takes in a single integer would have the following signature:
+<code>[org.test.Test].<init>(int)</code>
+Here is the list of arguments of the target constructor with descriptions.
+<arguments>
+{ARGUMENTS}
+</arguments>

@@ -243,6 +243,10 @@ class Textcov:
     class_method_items = []
     for item in jacoco_report.iter():
       if item.tag == 'class':
+        # Skip fuzzer classes
+        if textcov.is_fuzzer_class(item):
+          continue
+
         # Get class name and skip fuzzing and testing classes
         class_name = item.attrib['name'].replace('/', '.')
         if 'test' in class_name.lower() or 'fuzzer' in class_name.lower():
@@ -314,6 +318,10 @@ class Textcov:
   @property
   def total_lines(self):
     return sum(len(f.lines) for f in self.functions.values())
+
+  def is_fuzzer_class(self, class_item) -> bool:
+    """Determine if the class_item is a fuzzer class."""
+    return bool(class_item.find('./method[@name=\"fuzzerTestOneInput\"]'))
 
   def determine_jvm_arguments_type(self, desc: str) -> List[str]:
     """
