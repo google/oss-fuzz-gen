@@ -166,12 +166,35 @@ def get_results(benchmark) -> tuple[list[evaluator.Result], list[str]]:
   return results, targets
 
 
+def prepare_prompt_for_html_text(raw_prompt_content: str) -> str:
+  """Converts a raw prompt file into presentable HTML text."""
+  try:
+    structured_prompt = json.loads(raw_prompt_content)
+    if isinstance(structured_prompt, list) and structured_prompt:
+      html_presentable_content = ''
+      for elem in structured_prompt:
+        if isinstance(elem, dict) and 'content' in elem:
+          html_presentable_content += f'\n{elem["content"]}'
+      logging.debug('Converted structured prompt to raw text.')
+      return html_presentable_content
+  except json.decoder.JSONDecodeError:
+    logging.debug('Using raw prompt text.')
+    pass
+
+  # If execution goes here it the input was not a structured prompt but just
+  # raw text, which is then returned.
+  return raw_prompt_content
+
+
 def get_prompt(benchmark) -> Optional[str]:
   root_dir = os.path.join(RESULTS_DIR, benchmark)
   for name in os.listdir(root_dir):
     if re.match(r'^prompt.*txt$', name):
       with open(os.path.join(root_dir, name)) as f:
-        return f.read()
+        content = f.read()
+
+      # Prepare prompt text for HTML.
+      return prepare_prompt_for_html_text(content)
 
   return None
 
@@ -327,6 +350,9 @@ def get_fixed_target(path):
     if name.endswith('.txt'):
       with open(os.path.join(path, name)) as f:
         fixer_prompt = f.read()
+
+      # Prepare prompt for being used in HTML.
+      fixer_prompt = prepare_prompt_for_html_text(fixer_prompt)
 
     if name.endswith('.rawoutput'):
       with open(os.path.join(path, name)) as f:
