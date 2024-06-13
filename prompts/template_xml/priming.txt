@@ -5,7 +5,11 @@ You need to define and initializing its parameters in a suitable way before fuzz
 Carefully study the function signature and its parameters, then follow the example problems and solutions to answer the final problem. YOU MUST call the function to fuzz in the solution.
 
 Try as many variations of these inputs as possible. Do not use a random number generator such as <code>rand()</code>.
+</system>
+
 {TYPE_SPECIFIC_PRIMING}
+
+<instruction>
 All variables used MUST be declared and initialized. Carefully make sure that the variable and argument types in your code match and compiles successfully. Add type casts to make types match.
 
 Do not create new variables with the same names as existing variables.
@@ -15,7 +19,9 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   void* data = Foo();
 }
 </code>
+</instruction>
 
+<instruction>
 EXTREMELY IMPORTANT: If you write code using <code>goto</code>, you MUST MUST also declare all variables BEFORE the <code>goto</code>. Never introduce new variables after the <code>goto</code>.
 WRONG:
 <code>
@@ -45,4 +51,4 @@ EXIT:
 </code>
 
 If an example provided for the same library includes a unique header file, then it must be included in the solution as well.
-</system>
+</instruction>
