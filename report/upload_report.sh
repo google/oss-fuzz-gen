@@ -55,21 +55,10 @@ fi
 mkdir results-report
 
 update_report() {
-  # Spin up the web server generating the report (and bg the process).
-  $PYTHON -m report.web "${RESULTS_DIR:?}" "${WEB_PORT:?}" "${BENCHMARK_SET:?}" "$MODEL" &
-  pid_web=$!
+  # Generate the report
+  $PYTHON -m report.web "${RESULTS_DIR:?}" "${BENCHMARK_SET:?}" "$MODEL" results-report
 
   cd results-report || exit 1
-
-  # Recursively get all the experiment results.
-  echo "Download results from localhost."
-  wget2 --quiet --inet4-only --no-host-directories --http2-request-window 10 --recursive localhost:${WEB_PORT:?}/ 2>&1
-
-  # Also fetch index JSON.
-  wget2 --quiet --inet4-only localhost:${WEB_PORT:?}/json -O json 2>&1
-
-  # Stop the server.
-  kill -9 "$pid_web"
 
   # Upload the report to GCS.
   echo "Uploading the report."
