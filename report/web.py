@@ -201,30 +201,9 @@ class Results:
         filter(self._is_valid_benchmark_dir,
                FileSystem(self._results_dir).listdir()))
 
-  def list_benchmarks(self) -> List[Benchmark]:
-    """Lists benchmarks in the result directory."""
-    benchmarks = []
-    for benchmark in self.list_benchmark_ids():
-      results, targets = self._get_results(benchmark)
-      status = 'Done' if all(r for r in results) and results else 'Running'
-
-      filtered_results = []
-      for i, stat in enumerate(results):
-        if stat:
-          filtered_results.append((i, stat))
-
-      if filtered_results:
-        result = run_one_experiment.aggregate_results(filtered_results, targets)
-      else:
-        result = run_one_experiment.AggregatedResult()
-
-      benchmarks.append(self._create_benchmark(benchmark, status, result))
-
-    return benchmarks
-
-  def match_benchmark(self, benchmark_id: str) -> Benchmark:
+  def match_benchmark(self, benchmark_id: str, results: list[evaluator.Result],
+                      targets: list[str]) -> Benchmark:
     """Returns a benchmark class based on |benchmark_id|."""
-    results, targets = self._get_results(benchmark_id)
     status = 'Done' if results and all(results) else 'Running'
     filtered_results = [(i, stat) for i, stat in enumerate(results) if stat]
 
@@ -241,32 +220,12 @@ class Results:
 
     for name in sorted(FileSystem(targets_dir).listdir()):
       path = os.path.join(targets_dir, name)
-      if FileSystem(path).isfile() and name.startswith(sample + '.'):
+      if name.startswith(sample + '.') and FileSystem(path).isfile():
         with FileSystem(path).open() as f:
           code = f.read()
           code = json.dumps(code)
         return code
     return ''
-
-  def match_sample(self, benchmark: str,
-                   target_sample_id: str) -> Optional[Sample]:
-    """Identifies the samples object and its status of the given sample id."""
-    results, _ = self._get_results(benchmark)
-
-    for i, sample_id in enumerate(
-        self._sample_ids(self._get_generated_targets(benchmark))):
-      if sample_id != target_sample_id:
-        continue
-      status = 'Running'
-      result = evaluator.Result()
-      if results[i]:
-        status = 'Done'
-        result = results[i]
-
-      return Sample(sample_id, status, result)
-    logging.warning('Failed to identify benchmark sample: %s\n  %s', benchmark,
-                    target_sample_id)
-    return None
 
   def get_logs(self, benchmark: str, sample: str) -> str:
     status_dir = os.path.join(self._results_dir, benchmark, 'status')
@@ -308,24 +267,23 @@ class Results:
 
     for name in sorted(FileSystem(targets_dir).listdir()):
       path = os.path.join(targets_dir, name)
-      if FileSystem(path).isfile() and name.startswith(sample + '.'):
+      if name.startswith(sample + '.') and FileSystem(path).isfile():
         logging.debug(path)
         with FileSystem(path).open() as f:
           code = f.read()
         targets.insert(0, Target(code=code))
 
-      if FileSystem(path).isdir() and name.startswith(sample + '-F'):
+      if name.startswith(sample + '-F') and FileSystem(path).isdir():
         targets.append(self._get_fixed_target(path))
 
     return targets
 
-  def get_samples(self, benchmark: str) -> list[Sample]:
+  def get_samples(self, results: list[evaluator.Result],
+                  targets: list[str]) -> list[Sample]:
     """Gets the samples and their status of the given benchmark |bnmk|."""
     samples = []
-    results, _ = self._get_results(benchmark)
 
-    for i, sample_id in enumerate(
-        self._sample_ids(self._get_generated_targets(benchmark))):
+    for i, sample_id in enumerate(self._sample_ids(targets)):
       status = 'Running'
       result = evaluator.Result()
       if results[i]:
@@ -348,8 +306,8 @@ class Results:
 
     return None
 
-  def _get_results(self,
-                   benchmark: str) -> tuple[list[evaluator.Result], list[str]]:
+  def get_results(self,
+                  benchmark: str) -> tuple[list[evaluator.Result], list[str]]:
     """
     Returns results of all samples. Items can be None if they're not complete.
     """
@@ -547,13 +505,23 @@ class GenerateReport:
 
   def generate(self):
     """Generate and write every report file."""
-    self._write_index_html()
-    self._write_index_json()
-    for benchmark in self._results.list_benchmark_ids():
-      self._write_benchmark_index(benchmark)
-      self._write_benchmark_crash(benchmark)
-      for sample in self._results.get_samples(benchmark):
-        self._write_benchmark_sample(benchmark, sample.id)
+    benchmarks = []
+    for benchmark_id in self._results.list_benchmark_ids():
+      results, targets = self._results.get_results(benchmark_id)
+      benchmark = self._results.match_benchmark(benchmark_id, results, targets)
+      benchmarks.append(benchmark)
+      samples = self._results.get_samples(results, targets)
+      prompt = self._results.get_prompt(benchmark.id)
+
+      self._write_benchmark_index(benchmark, samples, prompt)
+      self._write_benchmark_crash(benchmark, samples)
+
+      for sample in samples:
+        sample_targets = self._results.get_targets(benchmark.id, sample.id)
+        self._write_benchmark_sample(benchmark, sample, sample_targets)
+
+    self._write_index_html(benchmarks)
+    self._write_index_json(benchmarks)
 
   def _write(self, output_path: str, content: str):
     """Utility write to filesystem function."""
@@ -570,55 +538,54 @@ class GenerateReport:
     with FileSystem(full_path).open('w', encoding='utf-8') as f:
       f.write(content)
 
-  def _write_index_html(self):
+  def _write_index_html(self, benchmarks: List[Benchmark]):
     """Generate the report index.html and write to filesystem."""
-    rendered = self._jinja.render('index.html',
-                                  benchmarks=self._results.list_benchmarks())
+    rendered = self._jinja.render('index.html', benchmarks=benchmarks)
     self._write('index.html', rendered)
 
-  def _write_index_json(self):
+  def _write_index_json(self, benchmarks: List[Benchmark]):
     """Generate the report index.json and write to filesystem."""
-    rendered = self._jinja.render('index.json',
-                                  benchmarks=self._results.list_benchmarks())
+    rendered = self._jinja.render('index.json', benchmarks=benchmarks)
     self._write('index.json', rendered)
 
-  def _write_benchmark_index(self, benchmark_id: str):
+  def _write_benchmark_index(self, benchmark: Benchmark, samples: List[Sample],
+                             prompt: Optional[str]):
     """Generate the benchmark index.html and write to filesystem."""
-    rendered = self._jinja.render(
-        'benchmark.html',
-        benchmark=benchmark_id,
-        samples=self._results.get_samples(benchmark_id),
-        prompt=self._results.get_prompt(benchmark_id))
-    self._write(f'benchmark/{benchmark_id}/index.html', rendered)
+    rendered = self._jinja.render('benchmark.html',
+                                  benchmark=benchmark.id,
+                                  samples=samples,
+                                  prompt=prompt)
+    self._write(f'benchmark/{benchmark.id}/index.html', rendered)
 
-  def _write_benchmark_crash(self, benchmark_id: str):
+  def _write_benchmark_crash(self, benchmark: Benchmark, samples: List[Sample]):
     """Generate the benchmark crash.json and write to filesystem."""
     try:
-      rendered = self._jinja.render(
-          'crash.json',
-          benchmark=self._results.match_benchmark(benchmark_id).signature,
-          samples=self._results.get_samples(benchmark_id),
-          get_benchmark_final_target_code=partial(
-              self._results.get_final_target_code, benchmark_id))
-      self._write(f'benchmark/{benchmark_id}/crash.json', rendered)
+      rendered = self._jinja.render('crash.json',
+                                    benchmark=benchmark.signature,
+                                    samples=samples,
+                                    get_benchmark_final_target_code=partial(
+                                        self._results.get_final_target_code,
+                                        benchmark.id))
+      self._write(f'benchmark/{benchmark.id}/crash.json', rendered)
     except Exception as e:
       logging.error('Failed to write benchmark/%s/crash.json:\n%s',
-                    benchmark_id, e)
+                    benchmark.id, e)
 
-  def _write_benchmark_sample(self, benchmark_id: str, sample_id: str):
+  def _write_benchmark_sample(self, benchmark: Benchmark, sample: Sample,
+                              sample_targets: List[Target]):
     """Generate the sample page and write to filesystem."""
     try:
       rendered = self._jinja.render(
           'sample.html',
-          benchmark=benchmark_id,
-          sample=self._results.match_sample(benchmark_id, sample_id),
-          logs=self._results.get_logs(benchmark_id, sample_id),
-          run_logs=self._results.get_run_logs(benchmark_id, sample_id),
-          targets=self._results.get_targets(benchmark_id, sample_id))
-      self._write(f'sample/{benchmark_id}/{sample_id}', rendered)
+          benchmark=benchmark.id,
+          sample=sample,
+          logs=self._results.get_logs(benchmark.id, sample.id),
+          run_logs=self._results.get_run_logs(benchmark.id, sample.id),
+          targets=sample_targets)
+      self._write(f'sample/{benchmark.id}/{sample.id}', rendered)
     except Exception as e:
-      logging.error('Failed to write sample/%s/%s:\n%s', benchmark_id,
-                    sample_id, e)
+      logging.error('Failed to write sample/%s/%s:\n%s', benchmark.id,
+                    sample.id, e)
 
 
 def _parse_arguments() -> argparse.Namespace:
