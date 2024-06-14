@@ -34,6 +34,8 @@ import run_one_experiment
 from experiment import evaluator
 from experiment.workdir import WorkDirs
 
+logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'WARN').upper())
+
 MAX_RUN_LOGS_LEN = 16 * 1024
 
 TARGET_EXTS = ('.c', '.cc', '.cpp', '.cxx', '.c++', '.java', '.py')
@@ -600,7 +602,8 @@ class GenerateReport:
               self._results.get_final_target_code, benchmark_id))
       self._write(f'benchmark/{benchmark_id}/crash.json', rendered)
     except Exception as e:
-      print(f'Failed to write benchmark/{benchmark_id}/crash.json:\n{e}')
+      logging.error('Failed to write benchmark/%s/crash.json:\n%s',
+                    benchmark_id, e)
 
   def _write_benchmark_sample(self, benchmark_id: str, sample_id: str):
     """Generate the sample page and write to filesystem."""
@@ -614,7 +617,8 @@ class GenerateReport:
           targets=self._results.get_targets(benchmark_id, sample_id))
       self._write(f'sample/{benchmark_id}/{sample_id}', rendered)
     except Exception as e:
-      print(f'Failed to write sample/{benchmark_id}/{sample_id}:\n{e}')
+      logging.error('Failed to write sample/%s/%s:\n%s', benchmark_id,
+                    sample_id, e)
 
 
 def _parse_arguments() -> argparse.Namespace:
