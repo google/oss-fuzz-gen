@@ -312,9 +312,8 @@ def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
         # TODO(dongge): Figure out why the path does not match Bazel projects.
         if os.path.basename(short_path) in interesting_filenames:
           interesting_filepaths.append(path)
-        # This should also include .cpp and .cc but exclude headers which
-        # usually don't contain fuzzer definitions.
-        if '.c' in path:
+
+        if any(path.endswith(suffix) for suffix in SEARCH_EXTS):
           potential_harnesses.append(path)
 
   return potential_harnesses, interesting_filepaths
