@@ -219,6 +219,7 @@ def query_introspector_source_code(project: str, filepath: str, begin_line: int,
 
 
 def query_introspector_header_files(project: str) -> List[str]:
+  """Queries for the header files used in a given project."""
   resp = _query_introspector(INTROSPECTOR_ALL_HEADER_FILES,
                              {'project': project})
   all_header_files = _get_data(resp, 'all-header-files', [])
@@ -226,7 +227,7 @@ def query_introspector_header_files(project: str) -> List[str]:
 
 
 def query_introspector_sample_xrefs(project: str, func_sig: str) -> List[str]:
-  """Queries FuzzIntrospector API for source code of |func_sig|."""
+  """Queries for sample references in the form of source code."""
   resp = _query_introspector(INTROSPECTOR_SAMPLE_XREFS, {
       'project': project,
       'function_signature': func_sig
@@ -235,14 +236,15 @@ def query_introspector_sample_xrefs(project: str, func_sig: str) -> List[str]:
 
 
 def query_introspector_project_repository(project: str) -> str:
-  """Queries a fuzz target oracle API from Fuzz Introspector."""
+  """Gets the OSS-Fuzz repository used for a Fuzz Introspector project."""
   resp = _query_introspector(INTROSPECTOR_REPOSITORY_API, {'project': project})
   return _get_data(resp, 'project-repository', '')
 
 
 def query_introspector_function_debug_arg_types(project: str,
                                                 func_sig: str) -> List[str]:
-  """Queries FuzzIntrospector API for source code of |func_sig|."""
+  """Queries FuzzIntrospector function arguments extracted by way of debug
+  info."""
   resp = _query_introspector(INTROSPECTOR_ALL_FUNC_TYPES, {
       'project': project,
       'function_signature': func_sig
