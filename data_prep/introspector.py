@@ -89,14 +89,11 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
   INTROSPECTOR_ADDR_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
-  INTROSPECTOR_ALL_HEADER_FILES = (
-      f'{INTROSPECTOR_ENDPOINT}/all-header-files')
-  INTROSPECTOR_ALL_FUNC_TYPES = (
-      f'{INTROSPECTOR_ENDPOINT}/func-debug-types')
-  INTROSPECTOR_REPOSITORY_API = (
-          f'{INTROSPECTOR_ENDPOINT}/project-repository')
+  INTROSPECTOR_ALL_HEADER_FILES = f'{INTROSPECTOR_ENDPOINT}/all-header-files'
+  INTROSPECTOR_ALL_FUNC_TYPES = f'{INTROSPECTOR_ENDPOINT}/func-debug-types'
+  INTROSPECTOR_REPOSITORY_API = f'{INTROSPECTOR_ENDPOINT}/project-repository'
   INTROSPECTOR_SAMPLE_XREFS = (
-          f'{INTROSPECTOR_ENDPOINT}/sample-cross-references')
+      f'{INTROSPECTOR_ENDPOINT}/sample-cross-references')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -222,9 +219,11 @@ def query_introspector_source_code(project: str, filepath: str, begin_line: int,
 
 
 def query_introspector_header_files(project: str) -> List[str]:
-  resp = _query_introspector(INTROSPECTOR_ALL_HEADER_FILES, {'project': project})
+  resp = _query_introspector(INTROSPECTOR_ALL_HEADER_FILES,
+                             {'project': project})
   all_header_files = _get_data(resp, 'all-header-files', [])
   return all_header_files
+
 
 def query_introspector_sample_xrefs(project: str, func_sig: str) -> List[str]:
   """Queries FuzzIntrospector API for source code of |func_sig|."""
@@ -234,12 +233,15 @@ def query_introspector_sample_xrefs(project: str, func_sig: str) -> List[str]:
   })
   return _get_data(resp, 'source-code-refs', [])
 
+
 def query_introspector_project_repository(project: str) -> str:
   """Queries a fuzz target oracle API from Fuzz Introspector."""
   resp = _query_introspector(INTROSPECTOR_REPOSITORY_API, {'project': project})
   return _get_data(resp, 'project-repository', '')
 
-def query_introspector_function_debug_arg_types(project: str, func_sig: str) -> List[str]:
+
+def query_introspector_function_debug_arg_types(project: str,
+                                                func_sig: str) -> List[str]:
   """Queries FuzzIntrospector API for source code of |func_sig|."""
   resp = _query_introspector(INTROSPECTOR_ALL_FUNC_TYPES, {
       'project': project,
@@ -247,6 +249,7 @@ def query_introspector_function_debug_arg_types(project: str, func_sig: str) -> 
   })
   arg_types = _get_data(resp, 'arg-types', [])
   return arg_types
+
 
 def query_introspector_cross_references(project: str,
                                         func_sig: str) -> list[str]:

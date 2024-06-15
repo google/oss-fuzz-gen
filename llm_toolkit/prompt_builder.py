@@ -24,7 +24,7 @@ import jinja2
 import requests
 import yaml
 
-from data_prep import project_targets
+from data_prep import introspector, project_targets
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
@@ -46,6 +46,7 @@ FDP_JVM_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH,
                                          'jansi_colors-problem.txt')
 FDP_JVM_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH,
                                           'jansi_colors-solution.java')
+HEADER_FIXER_PROMPT=os.path.join(DEFAULT_TEMPLATE_DIR, 'header_fixer.txt')
 
 EXAMPLES = {
     'c++': [
@@ -92,6 +93,11 @@ class PromptBuilder:
                          error_desc: Optional[str],
                          errors: list[str]) -> prompts.Prompt:
     """Builds a fixer prompt."""
+
+  def post_process_generated_code(self, generated_code: str) -> str:
+      """Allow prompt builder to adjust the generated code."""
+      # return the same by default
+      return generated_code
 
 
 class DefaultTemplateBuilder(PromptBuilder):
@@ -543,3 +549,235 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Builds a fixer prompt."""
     # Do nothing for jvm project now.
     return self._prompt
+
+class CSpecificBuilder(PromptBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model)
+    self._template_dir = template_dir
+    self.benchmark = benchmark
+
+    # Load templates.
+    self.priming_template_file = self._find_template(template_dir,
+                                                     'c-priming.txt')
+    self.solution_template_file = self._find_template(template_dir,
+                                                      'solution.txt')
+    self.context_template_file = self._find_template(template_dir,
+                                                     'context.txt')
+    self.fixer_problem_template_file = self._find_template(
+                    template_dir, 'c-fixer_problem.txt')
+    self.problem_template_file = self._find_template(template_dir,
+                                                     'problem.txt')
+
+  def _find_template(self, template_dir: str, template_name: str) -> str:
+    """Finds template file based on |template_dir|."""
+    preferred_template = os.path.join(template_dir, template_name)
+    # Use the preferred template if it exists.
+    if os.path.isfile(preferred_template):
+      return preferred_template
+    # Fall back to the default template.
+    default_template = os.path.join(DEFAULT_TEMPLATE_DIR, template_name)
+    return default_template
+
+  def _get_template(self, template_file: str) -> str:
+    """Reads the template for prompts."""
+    with open(template_file) as file:
+      return file.read()
+
+  def format_problem(self, problem_content: str) -> str:
+    """Formats a problem based on the prompt template."""
+    problem = self._get_template(self.problem_template_file)
+    problem = problem.replace('{PROBLEM_CONTENT}', problem_content)
+    return problem
+
+  def format_solution(self, solution_content: str) -> str:
+    """Formats a solution based on the prompt template."""
+    solution = self._get_template(self.solution_template_file)
+    solution = solution.replace('{SOLUTION_CONTENT}', solution_content)
+    return solution
+
+  def format_context(self, context_info: dict) -> str:
+    context = jinja2.Template(self._get_template(self.context_template_file),
+                              trim_blocks=True,
+                              lstrip_blocks=True)
+    return context.render(
+        headers='\n'.join(context_info['files']),
+        must_insert=context_info['decl'],
+        func_source=context_info['func_source'],
+        xrefs='\n'.join(context_info['xrefs']),
+    )
+
+  def _select_examples(self, examples: list[list],
+                       prompt_size: int) -> list[list[str]]:
+    """Selects |examples| based on |prompt_size|."""
+    # First remove repeated examples to avoid over fitting.
+    targets = set()
+    unique_examples = []
+    for example in examples:
+      if example[2] in targets:
+        continue
+      targets.add(example[2])
+      unique_examples.append(example)
+
+    if (sum(example[0] for example in unique_examples) + prompt_size
+        < self._model.context_window):
+      return [[example[1], example[2]] for example in examples]
+
+    # Then prioritize complex (i.e., long) examples.
+    unique_examples.sort(key=lambda x: x[0], reverse=True)
+    selected_examples = []
+    for example in unique_examples:
+      if example[0] + prompt_size >= self._model.context_window:
+        # The estimation is inaccurate, if an example's size equals to
+        # the limit, it's safer to not include the example.
+        continue
+      selected_examples.append([example[1], example[2]])
+      prompt_size += example[0]
+
+    # Write the most complex examples at the end so that LLM gives them
+    # a higher weight.
+    selected_examples.sort(key=len, reverse=True)
+    return selected_examples
+
+  def _add_examples(self,
+                    example_files: list[list[str]],
+                    final_problem: str,
+                    example_content: Optional[list[list[str]]] = None):
+    """Constructs the |example_files| to be used in the prompt."""
+    # Estimate prompt size so far.
+    prompt_size = self._model.estimate_token_num(self._prompt.get())
+    # Estimate space needed for the final problem.
+    final_problem_prompt = self._prompt.create_prompt_piece(
+        final_problem, 'user')
+    query_size = prompt_size + self._model.estimate_token_num(
+        final_problem_prompt)
+
+    # Collect all examples in a single list
+    examples = []
+    for problem, solution in example_files:
+      with open(problem) as problem_file:
+        problem = problem_file.read()[:-1]
+      with open(solution) as solution_file:
+        solution = solution_file.read()[:-1]
+        solution = project_targets.filter_target_lines(solution)
+      examples.append((problem, solution))
+    # TODO(mihaimaruseac): Should we start from these first?
+    if example_content:
+      for problem, solution in example_content:
+        solution = project_targets.filter_target_lines(solution)
+        examples.append((problem, solution))
+
+    # Next, we need to expand all templates and determine how much the size
+    # of the prompt would increase when adding each one of them:
+    weights = []
+    for problem, solution in examples:
+      problem = self.format_problem(problem)
+      solution = self.format_solution(solution)
+      problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
+      solution_prompt = self._prompt.create_prompt_piece(solution, 'assistant')
+      problem_weight = self._model.estimate_token_num(problem_prompt)
+      solution_weight = self._model.estimate_token_num(solution_prompt)
+      total_weight = problem_weight + solution_weight + 1  # one \n
+      weights.append((total_weight, problem, solution))
+
+    # Select examples up to context window and add them to prompt.
+    selected_examples = self._select_examples(weights, query_size)
+    for problem, solution in selected_examples:
+      self._prompt.add_problem(problem)
+      self._prompt.add_solution(solution)
+
+  def build(self,
+            function_signature: str,
+            target_file_type: FileType,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    with open(self.priming_template_file, 'r') as f:
+      prompt_text = f.read()
+
+    # Format the priming
+    target_repository = introspector.query_introspector_project_repository(self.benchmark.project)
+    prompt_text = prompt_text.replace('{TARGET_REPO}', target_repository)
+    prompt_text = prompt_text.replace('{TARGET_FUNCTION}', self.benchmark.function_signature)
+    function_source = introspector.query_introspector_function_source(self.benchmark.project, self.benchmark.function_signature)
+    prompt_text = prompt_text.replace('{TARGET_FUNCTION_SOURCE_CODE}', function_source)
+
+
+    headers_to_avoid = introspector.query_introspector_header_files(
+        self.benchmark.project)
+    if len(headers_to_avoid) > 0:
+      #with open(HEADER_FIXER_PROMPT, 'r') as f:
+      #  header_avoid_string = f.read()
+      header_avoid_string = ''
+      for header_file in headers_to_avoid:
+        header_avoid_string += '%s, ' % (header_file)
+    else:
+      header_avoid_string = ', '
+
+    header_avoid_string = header_avoid_string[:-2]
+    prompt_text = prompt_text.replace('{TARGET_HEADER_FILES}', header_avoid_string)
+
+    # Add function arg types
+    arg_types = introspector.query_introspector_function_debug_arg_types(self.benchmark.project, self.benchmark.function_signature)
+
+    arg_types_text = ''
+    if arg_types:
+      arg_types_text = 'The target function takes the following arguments:\n'
+      for elem in arg_types:
+        arg_types_text += '- %s\n'%(elem)
+      arg_types_text += ('You must make sure the arguments passed to the '
+      'function match the types of the function. Do this by casting '
+      'appropriately.\n')
+
+    prompt_text = prompt_text.replace('{FUNCTION_ARG_TYPES_MSG}', arg_types_text)
+
+    sample_cross_references = introspector.query_introspector_sample_xrefs(self.benchmark.project, self.benchmark.function_signature)
+    if sample_cross_references:
+        additional_text = ('The target function is used in various places of '
+        'the target project. Please see the following samples of code using '
+        'the target, which you should use as inspiration for the harness to '
+        'structure the code:\n')
+        for elem in sample_cross_references[:3]:
+            additional_text += 'Example usage:\n```c\n%s\n```\n'%(elem)
+    else:
+        additional_text = ''
+
+    prompt_text = prompt_text.replace('{ADDITIONAL_INFORMATION}', additional_text)
+
+    self._prompt.add_priming(prompt_text)
+    return self._prompt
+
+  def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
+                         error_desc: Optional[str],
+                         errors: list[str]) -> prompts.Prompt:
+    """Prepares the code-fixing prompt."""
+    return self._prompt
+
+  def _prepare_prompt(
+      self,
+      priming: str,
+      final_problem: str,
+      example_pair: Optional[list[list[str]]] = None,
+      project_example_content: Optional[list[list[str]]] = None):
+    """Constructs a prompt using the parameters and saves it."""
+    self._prompt.add_priming(priming)
+
+    if example_pair is None:
+      example_pair = []
+
+    self._add_examples(example_pair, final_problem, project_example_content)
+    self._prompt.add_problem(final_problem)
+
+  def post_proces_generated_code(self, generated_code: str) -> str:
+      """Adds specific C headers we always want in the harnesses."""
+      headers_to_always_include = ['stdio.h', 'stdlib.h', 'stdint.h']
+      for header in headers_to_always_include:
+          generated_code = f'#include <{header}>\n' + generated_code
+      return generated_code
+
