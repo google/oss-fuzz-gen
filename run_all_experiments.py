@@ -233,11 +233,10 @@ def parse_args() -> argparse.Namespace:
       default=0,
       help=('Delay each experiment by certain seconds (e.g., 10s) to avoid '
             'exceeding quota limit in large scale experiments.'))
-  parser.add_argument(
-      '-p',
-      '--prompt-builder',
-      helper='The prompt builder to use for harness generation.',
-      default='DEFAULT')
+  parser.add_argument('-p',
+                      '--prompt-builder',
+                      help='The prompt builder to use for harness generation.',
+                      default='DEFAULT')
 
   args = parser.parse_args()
   if args.num_samples:
