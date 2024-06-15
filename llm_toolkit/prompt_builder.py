@@ -713,18 +713,12 @@ class CSpecificBuilder(PromptBuilder):
     prompt_text = prompt_text.replace('{TARGET_FUNCTION_SOURCE_CODE}',
                                       function_source)
 
+    # Set header avoidance string if there are any headers.
     headers_to_avoid = introspector.query_introspector_header_files(
         self.benchmark.project)
-    if len(headers_to_avoid) > 0:
-      #with open(HEADER_FIXER_PROMPT, 'r') as f:
-      #  header_avoid_string = f.read()
-      header_avoid_string = ''
-      for header_file in headers_to_avoid:
-        header_avoid_string += '%s, ' % (header_file)
-    else:
-      header_avoid_string = ', '
-
-    header_avoid_string = header_avoid_string[:-2]
+    header_avoid_string = ''
+    if headers_to_avoid:
+      header_avoid_string = ', '.join(headers_to_avoid)
     prompt_text = prompt_text.replace('{TARGET_HEADER_FILES}',
                                       header_avoid_string)
 
@@ -735,8 +729,8 @@ class CSpecificBuilder(PromptBuilder):
     arg_types_text = ''
     if arg_types:
       arg_types_text = 'The target function takes the following arguments:\n'
-      for elem in arg_types:
-        arg_types_text += '- %s\n' % (elem)
+      arg_types_text += '- ' + '- '.join(f'{arg}\n' for arg in arg_types)
+
       arg_types_text += (
           'You must make sure the arguments passed to the '
           'function match the types of the function. Do this by casting '
@@ -749,12 +743,14 @@ class CSpecificBuilder(PromptBuilder):
         self.benchmark.project, self.benchmark.function_signature)
     if sample_cross_references:
       additional_text = (
-          'The target function is used in various places of '
-          'the target project. Please see the following samples of code using '
-          'the target, which you should use as inspiration for the harness to '
-          'structure the code:\n')
-      for elem in sample_cross_references[:3]:
-        additional_text += 'Example usage:\n```c\n%s\n```\n' % (elem)
+          'The target function is used in various places of the target project.'
+          'Please see the following samples of code using the target, which '
+          'you should use as inspiration for the harness to structure the code:'
+          '\n')
+
+      exp_usage = 'Example usage:\n'
+      additional_text += exp_usage + exp_usage.join(
+          f'```c{elem}\n```\n' for elem in sample_cross_references)
     else:
       additional_text = ''
 
