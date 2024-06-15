@@ -1,4 +1,0 @@
-Furthermore, the following list of header files are the only header files in
-the library. Please do not include any other header files in the source code,
-and only include a header file if it's relevant:
-
