@@ -259,10 +259,11 @@ def run(benchmark: Benchmark,
           model, benchmark.project, benchmark.params, template_dir)
     else:
       if prompt_builder_to_use == 'CSpecific':
-          builder = prompt_builder.CSpecificBuilder(model, benchmark, template_dir)
+        builder = prompt_builder.CSpecificBuilder(model, benchmark,
+                                                  template_dir)
       else:
-          # Use default
-          builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
+        # Use default
+        builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
 
     prompt = builder.build(benchmark.function_signature,
                            benchmark.file_type,

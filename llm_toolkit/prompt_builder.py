@@ -46,7 +46,7 @@ FDP_JVM_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH,
                                          'jansi_colors-problem.txt')
 FDP_JVM_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH,
                                           'jansi_colors-solution.java')
-HEADER_FIXER_PROMPT=os.path.join(DEFAULT_TEMPLATE_DIR, 'header_fixer.txt')
+HEADER_FIXER_PROMPT = os.path.join(DEFAULT_TEMPLATE_DIR, 'header_fixer.txt')
 
 EXAMPLES = {
     'c++': [
@@ -95,9 +95,9 @@ class PromptBuilder:
     """Builds a fixer prompt."""
 
   def post_process_generated_code(self, generated_code: str) -> str:
-      """Allow prompt builder to adjust the generated code."""
-      # return the same by default
-      return generated_code
+    """Allow prompt builder to adjust the generated code."""
+    # return the same by default
+    return generated_code
 
 
 class DefaultTemplateBuilder(PromptBuilder):
@@ -550,6 +550,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     # Do nothing for jvm project now.
     return self._prompt
 
+
 class CSpecificBuilder(PromptBuilder):
   """Builder specifically targeted C (and excluding C++)."""
 
@@ -569,7 +570,7 @@ class CSpecificBuilder(PromptBuilder):
     self.context_template_file = self._find_template(template_dir,
                                                      'context.txt')
     self.fixer_problem_template_file = self._find_template(
-                    template_dir, 'c-fixer_problem.txt')
+        template_dir, 'c-fixer_problem.txt')
     self.problem_template_file = self._find_template(template_dir,
                                                      'problem.txt')
 
@@ -702,12 +703,15 @@ class CSpecificBuilder(PromptBuilder):
       prompt_text = f.read()
 
     # Format the priming
-    target_repository = introspector.query_introspector_project_repository(self.benchmark.project)
+    target_repository = introspector.query_introspector_project_repository(
+        self.benchmark.project)
     prompt_text = prompt_text.replace('{TARGET_REPO}', target_repository)
-    prompt_text = prompt_text.replace('{TARGET_FUNCTION}', self.benchmark.function_signature)
-    function_source = introspector.query_introspector_function_source(self.benchmark.project, self.benchmark.function_signature)
-    prompt_text = prompt_text.replace('{TARGET_FUNCTION_SOURCE_CODE}', function_source)
-
+    prompt_text = prompt_text.replace('{TARGET_FUNCTION}',
+                                      self.benchmark.function_signature)
+    function_source = introspector.query_introspector_function_source(
+        self.benchmark.project, self.benchmark.function_signature)
+    prompt_text = prompt_text.replace('{TARGET_FUNCTION_SOURCE_CODE}',
+                                      function_source)
 
     headers_to_avoid = introspector.query_introspector_header_files(
         self.benchmark.project)
@@ -721,34 +725,41 @@ class CSpecificBuilder(PromptBuilder):
       header_avoid_string = ', '
 
     header_avoid_string = header_avoid_string[:-2]
-    prompt_text = prompt_text.replace('{TARGET_HEADER_FILES}', header_avoid_string)
+    prompt_text = prompt_text.replace('{TARGET_HEADER_FILES}',
+                                      header_avoid_string)
 
     # Add function arg types
-    arg_types = introspector.query_introspector_function_debug_arg_types(self.benchmark.project, self.benchmark.function_signature)
+    arg_types = introspector.query_introspector_function_debug_arg_types(
+        self.benchmark.project, self.benchmark.function_signature)
 
     arg_types_text = ''
     if arg_types:
       arg_types_text = 'The target function takes the following arguments:\n'
       for elem in arg_types:
-        arg_types_text += '- %s\n'%(elem)
-      arg_types_text += ('You must make sure the arguments passed to the '
-      'function match the types of the function. Do this by casting '
-      'appropriately.\n')
+        arg_types_text += '- %s\n' % (elem)
+      arg_types_text += (
+          'You must make sure the arguments passed to the '
+          'function match the types of the function. Do this by casting '
+          'appropriately.\n')
 
-    prompt_text = prompt_text.replace('{FUNCTION_ARG_TYPES_MSG}', arg_types_text)
+    prompt_text = prompt_text.replace('{FUNCTION_ARG_TYPES_MSG}',
+                                      arg_types_text)
 
-    sample_cross_references = introspector.query_introspector_sample_xrefs(self.benchmark.project, self.benchmark.function_signature)
+    sample_cross_references = introspector.query_introspector_sample_xrefs(
+        self.benchmark.project, self.benchmark.function_signature)
     if sample_cross_references:
-        additional_text = ('The target function is used in various places of '
-        'the target project. Please see the following samples of code using '
-        'the target, which you should use as inspiration for the harness to '
-        'structure the code:\n')
-        for elem in sample_cross_references[:3]:
-            additional_text += 'Example usage:\n```c\n%s\n```\n'%(elem)
+      additional_text = (
+          'The target function is used in various places of '
+          'the target project. Please see the following samples of code using '
+          'the target, which you should use as inspiration for the harness to '
+          'structure the code:\n')
+      for elem in sample_cross_references[:3]:
+        additional_text += 'Example usage:\n```c\n%s\n```\n' % (elem)
     else:
-        additional_text = ''
+      additional_text = ''
 
-    prompt_text = prompt_text.replace('{ADDITIONAL_INFORMATION}', additional_text)
+    prompt_text = prompt_text.replace('{ADDITIONAL_INFORMATION}',
+                                      additional_text)
 
     self._prompt.add_priming(prompt_text)
     return self._prompt
@@ -775,9 +786,8 @@ class CSpecificBuilder(PromptBuilder):
     self._prompt.add_problem(final_problem)
 
   def post_proces_generated_code(self, generated_code: str) -> str:
-      """Adds specific C headers we always want in the harnesses."""
-      headers_to_always_include = ['stdio.h', 'stdlib.h', 'stdint.h']
-      for header in headers_to_always_include:
-          generated_code = f'#include <{header}>\n' + generated_code
-      return generated_code
-
+    """Adds specific C headers we always want in the harnesses."""
+    headers_to_always_include = ['stdio.h', 'stdlib.h', 'stdint.h']
+    for header in headers_to_always_include:
+      generated_code = f'#include <{header}>\n' + generated_code
+    return generated_code
