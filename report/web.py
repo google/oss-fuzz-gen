@@ -188,6 +188,20 @@ class FileSystem:
 
     return open(self._path, *args, **kwargs)
 
+  def getsize(self) -> int:
+    """getsize returns the byte size of the file at the specified path."""
+    if self._gcs_bucket is not None:
+      blob = self._gcs_bucket.get_blob(self._path)
+      if blob is None:
+        raise FileNotFoundError(
+            'GCS blob not found gs://{self._gcs_bucket.bucket}/{self._path}.')
+
+      # size can be None if use Bucket.blob() instead of Bucket.get_blob(). The
+      # type checker doesn't know this and insists we check if size is None.
+      return blob.size if blob.size is not None else 0
+
+    return os.path.getsize(self._path)
+
 
 class Results:
   """Results provides functions to explore the experiment results in a particular directory."""
@@ -254,9 +268,18 @@ class Results:
     if not last_log_file:
       return ''
 
-    with FileSystem(os.path.join(run_logs_dir,
-                                 last_log_file)).open(errors='replace') as f:
-      return self._truncate_logs(f.read(), MAX_RUN_LOGS_LEN)
+    log_path = os.path.join(run_logs_dir, last_log_file)
+    log_size = FileSystem(log_path).getsize()
+    with FileSystem(log_path).open(errors='replace') as f:
+      if log_size <= MAX_RUN_LOGS_LEN:
+        return f.read()
+
+      trancated_len = MAX_RUN_LOGS_LEN // 2
+      logs_beginning = f.read(trancated_len)
+      f.seek(log_size - trancated_len - 1, os.SEEK_SET)
+      logs_ending = f.read()
+
+      return logs_beginning + '\n...truncated...\n' + logs_ending
 
     return ''
 
@@ -399,13 +422,6 @@ class Results:
   def _sample_ids(self, target_paths: list[str]):
     for target in target_paths:
       yield os.path.splitext(os.path.basename(target))[0]
-
-  def _truncate_logs(self, logs: str, max_len: int) -> str:
-    if len(logs) <= max_len:
-      return logs
-
-    return logs[:max_len // 2] + '\n...truncated...\n' + logs[-(max_len // 2) +
-                                                              1:]
 
   def _create_benchmark(
       self, benchmark_id: str, status: str,
