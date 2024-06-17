@@ -31,7 +31,7 @@ from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, output_parser, prompt_builder, prompts
 
-# WARN: Avoid NUM_EVA for local experiments.
+# WARN: Avoid high value for NUM_EVA for local experiments.
 # NUM_EVA controls the number of fuzz targets to evaluate in parallel by each
 # experiment, while {run_all_experiments.NUM_EXP, default 2} experiments will
 # run in parallel.

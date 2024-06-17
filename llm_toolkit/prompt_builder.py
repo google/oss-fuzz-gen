@@ -464,7 +464,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     argument = self._get_template(self.generic_arg_description_template_file)
     argument = argument.replace('{ARG_COUNT}', str(count))
-    arugment = argument.replace('{ARG_TYPE}', arg_split[0])
+    argument = argument.replace('{ARG_TYPE}', arg_split[0])
     argument = argument.replace('{ARG_GENERIC}', arg_split[1][:-1])
 
     return argument
@@ -473,12 +473,12 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats general argument description."""
     argument = self._get_template(self.generic_arg_description_template_file)
     argument = argument.replace('{ARG_COUNT}', str(count))
-    arugment = argument.replace('{ARG_TYPE}', arg_type)
+    argument = argument.replace('{ARG_TYPE}', arg_type)
 
     return argument
 
   def _format_arguments(self) -> str:
-    """Formats a list of arugment descriptions."""
+    """Formats a list of argument descriptions."""
     argument_descriptions = []
 
     for count in range(len(self.function_args)):
