@@ -455,11 +455,11 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _format_import_mapping(self, full_class_name: str) -> str:
     """Formats the import mapping row on the prompt template."""
-    class_name = full_class_name.rsplit(".")[-1]
+    class_name = full_class_name.rsplit('.')[-1]
 
     mapping = self._get_template(self.import_template_file)
-    mapping = mapping.replace("{CLASS_NAME}", class_name)
-    mapping = mapping.replace("{FULL_CLASS_NAME}", full_class_name)
+    mapping = mapping.replace('{CLASS_NAME}', class_name)
+    mapping = mapping.replace('{FULL_CLASS_NAME}', full_class_name)
 
     return mapping
 
