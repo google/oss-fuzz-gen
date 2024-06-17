@@ -153,3 +153,17 @@ def get_project_language(project: str) -> str:
   with open(project_yaml_path, 'r') as benchmark_file:
     data = yaml.safe_load(benchmark_file)
     return data.get('language', 'C++')
+
+
+def get_project_repository(project: str) -> str:
+  """Returns the |project| repository read from its project.yaml."""
+  project_yaml_path = os.path.join(OSS_FUZZ_DIR, 'projects', project,
+                                   'project.yaml')
+  if not os.path.isfile(project_yaml_path):
+    logging.warning('Failed to find the project yaml of %s, return empty repository',
+                    project)
+    return ''
+
+  with open(project_yaml_path, 'r') as benchmark_file:
+    data = yaml.safe_load(benchmark_file)
+    return data.get('main_repo', '')

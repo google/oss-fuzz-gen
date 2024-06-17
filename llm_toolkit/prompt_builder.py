@@ -25,6 +25,7 @@ import requests
 import yaml
 
 from data_prep import introspector, project_targets
+from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
@@ -70,8 +71,8 @@ FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
 FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
 FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
 
-
 C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES = ['stdio.h', 'stdlib.h', 'stdint.h']
+
 
 class PromptBuilder:
   """Prompt builder."""
@@ -594,7 +595,7 @@ class CSpecificBuilder(PromptBuilder):
       prompt_text = f.read()
 
     # Format the priming
-    target_repository = introspector.query_introspector_project_repository(
+    target_repository = oss_fuzz_checkout.get_project_repository(
         self.benchmark.project)
     prompt_text = prompt_text.replace('{TARGET_REPO}', target_repository)
     prompt_text = prompt_text.replace('{TARGET_FUNCTION}',

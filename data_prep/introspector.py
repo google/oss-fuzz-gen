@@ -52,7 +52,6 @@ INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
 INTROSPECTOR_ALL_HEADER_FILES = ''
 INTROSPECTOR_ALL_FUNC_TYPES = ''
-INTROSPECTOR_REPOSITORY_API = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
 
 
@@ -74,8 +73,7 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_ORACLE_FAR_REACH, \
       INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
       INTROSPECTOR_ALL_HEADER_FILES, INTROSPECTOR_ALL_FUNC_TYPES, \
-      INTROSPECTOR_REPOSITORY_API, INTROSPECTOR_SAMPLE_XREFS, \
-      INTROSPECTOR_ORACLE_EASY_PARAMS
+      INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
@@ -96,7 +94,6 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
   INTROSPECTOR_ALL_HEADER_FILES = f'{INTROSPECTOR_ENDPOINT}/all-header-files'
   INTROSPECTOR_ALL_FUNC_TYPES = f'{INTROSPECTOR_ENDPOINT}/func-debug-types'
-  INTROSPECTOR_REPOSITORY_API = f'{INTROSPECTOR_ENDPOINT}/project-repository'
   INTROSPECTOR_SAMPLE_XREFS = (
       f'{INTROSPECTOR_ENDPOINT}/sample-cross-references')
 
@@ -244,12 +241,6 @@ def query_introspector_sample_xrefs(project: str, func_sig: str) -> List[str]:
       'function_signature': func_sig
   })
   return _get_data(resp, 'source-code-refs', [])
-
-
-def query_introspector_project_repository(project: str) -> str:
-  """Gets the OSS-Fuzz repository used for a Fuzz Introspector project."""
-  resp = _query_introspector(INTROSPECTOR_REPOSITORY_API, {'project': project})
-  return _get_data(resp, 'project-repository', '')
 
 
 def query_introspector_function_debug_arg_types(project: str,
