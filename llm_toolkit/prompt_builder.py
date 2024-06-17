@@ -661,6 +661,8 @@ class CSpecificBuilder(PromptBuilder):
 
   def post_proces_generated_code(self, generated_code: str) -> str:
     """Adds specific C headers we always want in the harnesses."""
+    # TODO: explore if we can make this more precise, by only adding headers
+    # if needed.
     for header in C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES:
       generated_code = f'#include <{header}>\n' + generated_code
     return generated_code
