@@ -607,13 +607,13 @@ class GenerateReport:
     try:
       rendered = self._jinja.render(
           'sample.html',
-          benchmark=benchmark.id,
-          sample=sample,
-          logs=self._results.get_logs(benchmark.id, sample.id),
-          run_logs=self._results.get_run_logs(benchmark.id, sample.id),
-          triage=self._results.get_triage(benchmark.id, sample.id),
-          targets=sample_targets)
-      self._write(f'sample/{benchmark.id}/{sample.id}', rendered)
+          benchmark=benchmark_id,
+          sample=self._results.match_sample(benchmark_id, sample_id),
+          logs=self._results.get_logs(benchmark_id, sample_id),
+          run_logs=self._results.get_run_logs(benchmark_id, sample_id),
+          triage=self._results.get_triage(benchmark_id, sample_id),
+          targets=self._results.get_targets(benchmark_id, sample_id))
+      self._write(f'sample/{benchmark_id}/{sample_id}', rendered)
     except Exception as e:
       logging.error('Failed to write sample/%s/%s:\n%s', benchmark.id,
                     sample.id, e)
