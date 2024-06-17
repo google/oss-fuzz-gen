@@ -518,7 +518,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     return data_filler
 
   def _format_arguments(self) -> str:
-    """Formats a list of arugment descriptions."""
+    """Formats a list of argument descriptions."""
     argument_descriptions = []
 
     for count, function_arg in enumerate(self.function_args):
