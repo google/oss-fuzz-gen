@@ -265,14 +265,28 @@ def _copy_project_src_from_local(project: str, out: str):
     logging.error('STDERR: %s', result.stderr)
     raise Exception(f'Failed to run docker command: {" ".join(run_container)}')
 
-  copy_src = ['docker', 'cp', f'{project}-container:/src', out]
-  result = sp.run(copy_src, capture_output=True, stdin=sp.DEVNULL, check=False)
-  if result.returncode:
-    logging.error('Failed to copy /src from OSS-Fuzz image of %s:', project)
-    logging.error('STDOUT: %s', result.stdout)
-    logging.error('STDERR: %s', result.stderr)
-    raise Exception(f'Failed to run docker command: {" ".join(copy_src)}')
-  logging.info('Done copying %s /src to %s.', project, out)
+  try:
+    copy_src = ['docker', 'cp', f'{project}-container:/src', out]
+    result = sp.run(copy_src,
+                    capture_output=True,
+                    stdin=sp.DEVNULL,
+                    check=False)
+    if result.returncode:
+      logging.error('Failed to copy /src from OSS-Fuzz image of %s:', project)
+      logging.error('STDOUT: %s', result.stdout)
+      logging.error('STDERR: %s', result.stderr)
+      raise Exception(f'Failed to run docker command: {" ".join(copy_src)}')
+    logging.info('Done copying %s /src to %s.', project, out)
+  finally:
+    # Shut down the container that was just started.
+    result = sp.run(['docker', 'container', 'stop', f'{project}-container'],
+                    capture_output=True,
+                    stdin=sp.DEVNULL,
+                    check=False)
+    if result.returncode:
+      logging.error('Failed to stop container image: %s-container', project)
+      logging.error('STDOUT: %s', result.stdout)
+      logging.error('STDERR: %s', result.stderr)
 
 
 def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
