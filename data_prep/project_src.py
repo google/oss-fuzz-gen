@@ -125,9 +125,11 @@ def _get_harness(src_file: str, out: str, language: str) -> tuple[str, str]:
 
   content = _format_source(src_file)
 
-  if language in {'c++', 'c'} and 'int LLVMFuzzerTestOneInput' not in content:
+  if language.lower() in {'c++', 'c'
+                         } and 'int LLVMFuzzerTestOneInput' not in content:
     return '', ''
-  if language == 'jvm' and 'static void fuzzerTestOneInput' not in content:
+  if language.lower(
+  ) == 'jvm' and 'static void fuzzerTestOneInput' not in content:
     return '', ''
 
   short_path = src_file[len(out):]
