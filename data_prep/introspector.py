@@ -49,6 +49,7 @@ INTROSPECTOR_XREF = ''
 INTROSPECTOR_TYPE = ''
 INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
+INTROSPECTOR_ALL_HEADER_FILES = ''
 
 
 def get_oracle_dict() -> Dict[str, Any]:
@@ -66,7 +67,8 @@ def set_introspector_endpoints(endpoint):
   global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNC_SIG, \
       INTROSPECTOR_FUNCTION_SOURCE, INTROSPECTOR_PROJECT_SOURCE, \
       INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_ORACLE_FAR_REACH, \
-      INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE
+      INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
+      INTROSPECTOR_ALL_HEADER_FILES
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
@@ -83,6 +85,7 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
   INTROSPECTOR_ADDR_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
+  INTROSPECTOR_ALL_HEADER_FILES = (f'{INTROSPECTOR_ENDPOINT}/all-header-files')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -180,6 +183,13 @@ def query_introspector_cfg(project: str) -> dict:
   """Queries FuzzIntrospector API for CFG."""
   resp = _query_introspector(INTROSPECTOR_CFG, {'project': project})
   return _get_data(resp, 'project', {})
+
+
+def query_introspector_header_files(project: str) -> List[str]:
+  resp = _query_introspector(INTROSPECTOR_ALL_HEADER_FILES,
+                             {'project': project})
+  all_header_files = _get_data(resp, 'all-header-files', [])
+  return all_header_files
 
 
 def query_introspector_function_source(project: str, func_sig: str) -> str:

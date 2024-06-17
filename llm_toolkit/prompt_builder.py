@@ -24,7 +24,7 @@ import jinja2
 import requests
 import yaml
 
-from data_prep import project_targets
+from data_prep import introspector, project_targets
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
@@ -46,6 +46,7 @@ FDP_JVM_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH,
                                          'jansi_colors-problem.txt')
 FDP_JVM_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH,
                                           'jansi_colors-solution.java')
+HEADER_FIXER_PROMPT = os.path.join(DEFAULT_TEMPLATE_DIR, 'header_fixer.txt')
 
 EXAMPLES = {
     'c++': [
@@ -271,7 +272,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming()
     problem = self._format_fixer_problem(raw_code, error_desc, errors,
-                                         priming_weight)
+                                         priming_weight, benchmark)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -287,7 +288,8 @@ class DefaultTemplateBuilder(PromptBuilder):
     return priming, priming_weight
 
   def _format_fixer_problem(self, raw_code: str, error_desc: Optional[str],
-                            errors: list[str], priming_weight: int) -> str:
+                            errors: list[str], priming_weight: int,
+                            benchmark: Benchmark) -> str:
     """Formats a problem for code fixer based on the template."""
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
@@ -297,6 +299,17 @@ class DefaultTemplateBuilder(PromptBuilder):
     else:
       # Build error does not pass error desc.
       error_summary = BUILD_ERROR_SUMMARY
+    headers_to_avoid = introspector.query_introspector_header_files(
+        benchmark.project)
+    if len(headers_to_avoid) > 0:
+      with open(HEADER_FIXER_PROMPT, 'r') as f:
+        header_avoid_string = f.read()
+      for header_file in headers_to_avoid:
+        header_avoid_string += '- %s\n' % (os.path.basename(header_file))
+    else:
+      header_avoid_string = ''
+    problem = problem.replace('{ADDITIONAL_MESSAGE}', header_avoid_string)
+
     problem = problem.replace('{ERROR_SUMMARY}', error_summary)
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
