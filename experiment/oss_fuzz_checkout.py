@@ -160,8 +160,9 @@ def get_project_repository(project: str) -> str:
   project_yaml_path = os.path.join(OSS_FUZZ_DIR, 'projects', project,
                                    'project.yaml')
   if not os.path.isfile(project_yaml_path):
-    logging.warning('Failed to find the project yaml of %s, return empty repository',
-                    project)
+    logging.warning(
+        'Failed to find the project yaml of %s, return empty repository',
+        project)
     return ''
 
   with open(project_yaml_path, 'r') as benchmark_file:
