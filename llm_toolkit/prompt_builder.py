@@ -94,7 +94,7 @@ class PromptBuilder:
     """Builds a fixer prompt."""
 
   def post_process_generated_code(self, generated_code: str) -> str:
-    """Allow prompt builder to adjust the generated code."""
+    """Allows prompt builder to adjust the generated code."""
     # return the same by default
     return generated_code
 
@@ -602,14 +602,14 @@ class CSpecificBuilder(PromptBuilder):
     prompt_text = prompt_text.replace('{TARGET_FUNCTION_SOURCE_CODE}',
                                       function_source)
 
-    # Set header avoidance string if there are any headers.
-    headers_to_avoid = introspector.query_introspector_header_files(
+    # Set header inclusion string if there are any headers.
+    headers_to_include = introspector.query_introspector_header_files(
         self.benchmark.project)
-    header_avoid_string = ''
-    if headers_to_avoid:
-      header_avoid_string = ', '.join(headers_to_avoid)
+    header_inclusion_string = ''
+    if headers_to_include:
+      header_inclusion_string = ', '.join(headers_to_include)
     prompt_text = prompt_text.replace('{TARGET_HEADER_FILES}',
-                                      header_avoid_string)
+                                      header_inclusion_string)
 
     # Add function arg types
     arg_types = introspector.query_introspector_function_debug_arg_types(
