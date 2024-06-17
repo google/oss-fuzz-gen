@@ -71,6 +71,8 @@ FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
 FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
 
 
+C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES = ['stdio.h', 'stdlib.h', 'stdint.h']
+
 class PromptBuilder:
   """Prompt builder."""
 
@@ -608,6 +610,8 @@ class CSpecificBuilder(PromptBuilder):
     header_inclusion_string = ''
     if headers_to_include:
       header_inclusion_string = ', '.join(headers_to_include)
+
+    # TODO: Programmatically select and refine the header.
     prompt_text = prompt_text.replace('{TARGET_HEADER_FILES}',
                                       header_inclusion_string)
 
@@ -657,7 +661,6 @@ class CSpecificBuilder(PromptBuilder):
 
   def post_proces_generated_code(self, generated_code: str) -> str:
     """Adds specific C headers we always want in the harnesses."""
-    headers_to_always_include = ['stdio.h', 'stdlib.h', 'stdint.h']
-    for header in headers_to_always_include:
+    for header in C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES:
       generated_code = f'#include <{header}>\n' + generated_code
     return generated_code
