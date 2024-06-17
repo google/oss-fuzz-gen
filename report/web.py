@@ -199,21 +199,20 @@ class Results:
 
     return ''
 
+  def get_triage(self, benchmark: str, sample: str) -> str:
+    """Gets the triage of benchmark |benchmark| with sample ID |sample|."""
+    fixed_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
+    triage_dir = os.path.join(fixed_dir, f'{sample}-triage')
+    if not os.path.exists(triage_dir):
+      return ''
 
-def get_triage(benchmark: str, sample: str) -> str:
-  """Gets the triage of benchmark |benchmark| with sample ID |sample|."""
-  fixed_dir = os.path.join(RESULTS_DIR, benchmark, 'fixed_targets')
-  triage_dir = os.path.join(fixed_dir, f'{sample}-triage')
-  if not os.path.exists(triage_dir):
+    for name in os.listdir(triage_dir):
+      if name.endswith('.txt') and name != 'prompt.txt':
+        triage_path = os.path.join(triage_dir, name)
+        with open(triage_path) as f:
+          return f.read()
+
     return ''
-
-  for name in os.listdir(triage_dir):
-    if name.endswith('.txt') and name != 'prompt.txt':
-      triage_path = os.path.join(triage_dir, name)
-      with open(triage_path) as f:
-        return f.read()
-
-  return ''
 
   def get_targets(self, benchmark: str, sample: str) -> list[Target]:
     """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
@@ -520,6 +519,7 @@ class GenerateReport:
           sample=self._results.match_sample(benchmark_id, sample_id),
           logs=self._results.get_logs(benchmark_id, sample_id),
           run_logs=self._results.get_run_logs(benchmark_id, sample_id),
+          triage=self._results.get_triage(benchmark_id, sample_id),
           targets=self._results.get_targets(benchmark_id, sample_id))
       self._write(f'sample/{benchmark_id}/{sample_id}', rendered)
     except Exception as e:
