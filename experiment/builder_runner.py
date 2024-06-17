@@ -145,13 +145,13 @@ class BuilderRunner:
     # overloaded methods. Thus it need to use the regex to identify
     # if there are method calls with unknown variable names that match
     # the target method.
-    base_arg_regex = r'[a-zA-Z_$][a-zA-Z_$0-9(),.]*'
+    base_arg_regex = r'[\s]*[a-zA-Z_$][a-zA-Z_$0-9(),.]*'
     signature = self.benchmark.function_signature
     name = signature.split('].')[1].split('(')[0]
     arg_count = len(signature.split('(')[1].split(')')[0].split(','))
 
-    pattern = r'(%s\(%s\))' % (name, ', '.join([base_arg_regex] * arg_count))
-    match = re.search(pattern, code)
+    pattern = r'(%s\(%s\))' % (name, ','.join([base_arg_regex] * arg_count))
+    match = re.search(pattern, ''.join(code.splitlines()))
 
     return bool(match)
 
