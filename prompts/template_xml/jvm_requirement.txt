@@ -80,12 +80,12 @@ Never make an inner method call during target method invocation. This includes g
 </list>
 </item>
 <item>
-Here is a list of class and its full qualified name. You must import all classes by its full qualified name.
+Here is a list of classes and their fully qualified name. You must import all classes by their fully qualified name.
 For example, if the full qualified name of a class is <code>abc.def.ghi</code>, then you must add an import
 statement <code>import abc.def.ghi;</code> in the result code.
-Do not import the same class for more multiple time.
-Each item in this list has two atrribute, <class_name> tag contains the class name and <full_class_name>
-contains the full qualified name of the given class.
+Do not import the same class multiple times.
+Each item in this list has two attributes, <class_name> tag contains the class name and <full_class_name>
+contains the fully qualified name of the given class.
 <list>
 <item><class_name>FuzzedDataProvider</class_name><full_class_name>com.code_intelligence.jazzer.api.FuzzedDataProvider</full_class_name></item>
 {OTHER_IMPORT_STATEMENTS}
