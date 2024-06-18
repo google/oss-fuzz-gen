@@ -514,12 +514,25 @@ class GenerateReport:
 def _parse_arguments() -> argparse.Namespace:
   """Parses command line args."""
   parser = argparse.ArgumentParser(
-      description = 'Parse arguments to launch the web report generation.')
+      description='Parse arguments to launch the web report generation.')
 
-  parser.add_argument('--results-dir', '-r', help='Directory with results from OSS-Fuzz-gen.', required=True)
-  parser.add_argument('--output-dir', '-o', help='Directory to store statically generated web report.', default='results-report')
-  parser.add_argument('--benchmark-set', '-b', help='Directory with benchmarks used for the experiment.', default='')
-  parser.add_argument('--model', '-m', help='Model used for the experiment.', default='')
+  parser.add_argument('--results-dir',
+                      '-r',
+                      help='Directory with results from OSS-Fuzz-gen.',
+                      required=True)
+  parser.add_argument(
+      '--output-dir',
+      '-o',
+      help='Directory to store statically generated web report.',
+      default='results-report')
+  parser.add_argument('--benchmark-set',
+                      '-b',
+                      help='Directory with benchmarks used for the experiment.',
+                      default='')
+  parser.add_argument('--model',
+                      '-m',
+                      help='Model used for the experiment.',
+                      default='')
 
   return parser.parse_args()
 
@@ -527,7 +540,8 @@ def _parse_arguments() -> argparse.Namespace:
 def main():
   args = _parse_arguments()
 
-  results = Results(results_dir=args.results_dir, benchmark_set=args.benchmark_set)
+  results = Results(results_dir=args.results_dir,
+                    benchmark_set=args.benchmark_set)
   jinja_env = JinjaEnv(template_globals={'model': args.model})
   gr = GenerateReport(results=results,
                       jinja_env=jinja_env,
