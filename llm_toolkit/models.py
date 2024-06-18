@@ -403,6 +403,16 @@ class GeminiPro(GeminiModel):
   _vertex_ai_model = 'gemini-1.0-pro'
 
 
+class GeminiUltra(GeminiModel):
+  """Gemini Ultra."""
+
+  _max_output_tokens = 2048
+  context_window = 32760  # TODO(dongge): Confirm this later.
+
+  name = 'vertex_ai_gemini-ultra'
+  _vertex_ai_model = 'gemini-ultra'
+
+
 class GeminiExperimental(GeminiModel):
   """Gemini Experimental."""
 
