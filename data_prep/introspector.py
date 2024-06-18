@@ -192,8 +192,8 @@ def query_introspector_for_easy_param_targets(project: str) -> list[dict]:
 
 
 def query_introspector_for_all_public_candidates(project: str) -> list[dict]:
-  """Queries Fuzz Introspector for all public function / constructors targets,
-  with sorting and filter apply.
+  """Queries Fuzz Introspector for all public accessible function or
+  constructor candidates.
   """
   return query_introspector_oracle(project, INTROSPECTOR_ORACLE_ALL_CANDIDATES)
 
