@@ -139,7 +139,8 @@ def run_experiments(benchmark: benchmarklib.Benchmark,
         cloud_experiment_bucket=args.cloud_experiment_bucket,
         use_context=args.context,
         run_timeout=args.run_timeout,
-        dry_run=args.dry_run)
+        dry_run=args.dry_run,
+        prompt_builder_to_use=args.prompt_builder)
     return Result(benchmark, result)
   except Exception as e:
     print('Exception while running experiment:', e, file=sys.stderr)
@@ -232,6 +233,10 @@ def parse_args() -> argparse.Namespace:
       default=0,
       help=('Delay each experiment by certain seconds (e.g., 10s) to avoid '
             'exceeding quota limit in large scale experiments.'))
+  parser.add_argument('-p',
+                      '--prompt-builder',
+                      help='The prompt builder to use for harness generation.',
+                      default='DEFAULT')
 
   args = parser.parse_args()
   if args.num_samples:

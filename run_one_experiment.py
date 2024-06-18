@@ -31,7 +31,7 @@ from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, output_parser, prompt_builder, prompts
 
-# WARN: Avoid NUM_EVA for local experiments.
+# WARN: Avoid high value for NUM_EVA for local experiments.
 # NUM_EVA controls the number of fuzz targets to evaluate in parallel by each
 # experiment, while {run_all_experiments.NUM_EXP, default 2} experiments will
 # run in parallel.
@@ -82,6 +82,7 @@ def generate_targets(benchmark: Benchmark,
                      model: models.LLM,
                      prompt: prompts.Prompt,
                      work_dirs: WorkDirs,
+                     builder: prompt_builder.PromptBuilder,
                      debug: bool = DEBUG) -> list[str]:
   """Generates fuzz target with LLM."""
   print(f'Generating targets for {benchmark.project} '
@@ -97,6 +98,7 @@ def generate_targets(benchmark: Benchmark,
       continue
     raw_output = os.path.join(work_dirs.raw_targets, file)
     target_code = output_parser.parse_code(raw_output)
+    target_code = builder.post_process_generated_code(target_code)
     target_id, _ = os.path.splitext(raw_output)
     target_file = f'{target_id}{target_ext}'
     target_path = os.path.join(work_dirs.raw_targets, target_file)
@@ -221,7 +223,8 @@ def run(benchmark: Benchmark,
         cloud_experiment_bucket: str = '',
         use_context: bool = False,
         run_timeout: int = RUN_TIMEOUT,
-        dry_run: bool = False) -> Optional[AggregatedResult]:
+        dry_run: bool = False,
+        prompt_builder_to_use: str = 'DEFAULT') -> Optional[AggregatedResult]:
   """Generates code via LLM, and evaluates them."""
   model.cloud_setup()
   logging.basicConfig(level=logging.INFO)
@@ -255,8 +258,12 @@ def run(benchmark: Benchmark,
       builder = prompt_builder.DefaultJvmTemplateBuilder(
           model, benchmark.project, benchmark.params, template_dir)
     else:
-      # For C/C++ projects
-      builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
+      if prompt_builder_to_use == 'CSpecific':
+        builder = prompt_builder.CSpecificBuilder(model, benchmark,
+                                                  template_dir)
+      else:
+        # Use default
+        builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
 
     prompt = builder.build(benchmark.function_signature,
                            benchmark.file_type,
@@ -272,6 +279,7 @@ def run(benchmark: Benchmark,
                                          model,
                                          prompt,
                                          work_dirs,
+                                         builder,
                                          debug=debug)
     generated_targets = fix_code(work_dirs, generated_targets)
   return check_targets(model.ai_binary, benchmark, work_dirs, generated_targets,
