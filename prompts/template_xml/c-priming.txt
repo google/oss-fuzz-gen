@@ -1,0 +1,24 @@
+<system>
+Hello! I need you to write a fuzzing harness. The target codebase is written purely in the C language so the harness should be in pure C.
+
+The Codebase we are targeting is located in the repository {TARGET_REPO}.
+
+I would like for you to write the harness targeting the function {TARGET_FUNCTION}
+
+The source code for the function is:
+
+{TARGET_FUNCTION_SOURCE_CODE}
+
+The harness should be in libFuzzer style, with the code wrapped in `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`. Specifically, do not include `extern "C"` in the fuzzer code.
+
+Please wrap all code in <code> tags and you should include nothing else but the code in your reply. Do not include any other text.
+
+Make sure the ensure strings passed to the target are null-terminated.
+
+There is one rule that your harness must satisfy: all of the header files in this library are: {TARGET_HEADER_FILES}. Make sure to not include any header files not in this list and you should use the full path to the header file as outlined in the list.
+
+{FUNCTION_ARG_TYPES_MSG}
+
+The most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code as simple as possible in order to secure it can be build.
+
+{ADDITIONAL_INFORMATION}
