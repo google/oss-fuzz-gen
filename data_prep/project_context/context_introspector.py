@@ -162,7 +162,33 @@ class ContextRetriever:
       logging.warning(
           'Could not retrieve xrefs for project: %s '
           'function_signature: %s', project, func_sig)
+
+    # At times, xrefs can be noisy (multiple 100s of loc).
+    # Truncate them by default
+    xrefs = self._truncate_xrefs(xrefs)
     return xrefs
+
+  def _truncate_xrefs(self, xrefs: list[str]) -> list[str]:
+    """Truncates xrefs to 10 lines before and after the
+    function name is referenced."""
+    truncated = []
+    for xref in xrefs:
+      lines = xref.split('\n')
+      line_index = -1
+      start = 0
+      end = len(lines) - 1
+      for index, line in enumerate(lines):
+        if self._benchmark.function_name in line:
+          line_index = index
+          break
+      # If name was not found, then just return the entire function.
+      # If it was, truncate it.
+      if line_index != -1:
+        start = max(0, line_index - 10)
+        end = min(end, line_index + 10)
+      truncated.append('\n'.join(lines[start:end]))
+
+    return truncated
 
   def get_context_info(self) -> dict:
     """Retrieves contextual information and stores them in a dictionary."""
