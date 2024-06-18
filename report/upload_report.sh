@@ -56,7 +56,7 @@ mkdir results-report
 
 update_report() {
   # Generate the report
-  $PYTHON -m report.web "${RESULTS_DIR:?}" "${BENCHMARK_SET:?}" "$MODEL" results-report
+  $PYTHON -m report.web -r "${RESULTS_DIR:?}" -b "${BENCHMARK_SET:?}" -m "$MODEL" -o results-report
 
   cd results-report || exit 1
 
