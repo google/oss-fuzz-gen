@@ -24,7 +24,8 @@ import jinja2
 import requests
 import yaml
 
-from data_prep import project_targets
+from data_prep import introspector, project_targets
+from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
@@ -70,6 +71,8 @@ FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
 FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
 FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
 
+C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES = ['stdio.h', 'stdlib.h', 'stdint.h']
+
 
 class PromptBuilder:
   """Prompt builder."""
@@ -92,6 +95,11 @@ class PromptBuilder:
                          error_desc: Optional[str],
                          errors: list[str]) -> prompts.Prompt:
     """Builds a fixer prompt."""
+
+  def post_process_generated_code(self, generated_code: str) -> str:
+    """Allows prompt builder to adjust the generated code."""
+    # return the same by default
+    return generated_code
 
 
 class DefaultTemplateBuilder(PromptBuilder):
@@ -576,3 +584,119 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Builds a fixer prompt."""
     # Do nothing for jvm project now.
     return self._prompt
+
+
+class CSpecificBuilder(PromptBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model)
+    self._template_dir = template_dir
+    self.benchmark = benchmark
+
+    # Load templates.
+    self.priming_template_file = self._find_template(template_dir,
+                                                     'c-priming.txt')
+
+  def _find_template(self, template_dir: str, template_name: str) -> str:
+    """Finds template file based on |template_dir|."""
+    preferred_template = os.path.join(template_dir, template_name)
+    # Use the preferred template if it exists.
+    if os.path.isfile(preferred_template):
+      return preferred_template
+    # Fall back to the default template.
+    default_template = os.path.join(DEFAULT_TEMPLATE_DIR, template_name)
+    return default_template
+
+  def _get_template(self, template_file: str) -> str:
+    """Reads the template for prompts."""
+    with open(template_file) as file:
+      return file.read()
+
+  def build(self,
+            function_signature: str,
+            target_file_type: FileType,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    with open(self.priming_template_file, 'r') as f:
+      prompt_text = f.read()
+
+    # Format the priming
+    target_repository = oss_fuzz_checkout.get_project_repository(
+        self.benchmark.project)
+    prompt_text = prompt_text.replace('{TARGET_REPO}', target_repository)
+    prompt_text = prompt_text.replace('{TARGET_FUNCTION}',
+                                      self.benchmark.function_signature)
+    function_source = introspector.query_introspector_function_source(
+        self.benchmark.project, self.benchmark.function_signature)
+    prompt_text = prompt_text.replace('{TARGET_FUNCTION_SOURCE_CODE}',
+                                      function_source)
+
+    # Set header inclusion string if there are any headers.
+    headers_to_include = introspector.query_introspector_header_files(
+        self.benchmark.project)
+    header_inclusion_string = ''
+    if headers_to_include:
+      header_inclusion_string = ', '.join(headers_to_include)
+
+    # TODO: Programmatically select and refine the header.
+    prompt_text = prompt_text.replace('{TARGET_HEADER_FILES}',
+                                      header_inclusion_string)
+
+    # Add function arg types
+    arg_types = introspector.query_introspector_function_debug_arg_types(
+        self.benchmark.project, self.benchmark.function_signature)
+
+    arg_types_text = ''
+    if arg_types:
+      arg_types_text = 'The target function takes the following arguments:\n'
+      arg_types_text += '- ' + '- '.join(f'{arg}\n' for arg in arg_types)
+
+      arg_types_text += (
+          'You must make sure the arguments passed to the '
+          'function match the types of the function. Do this by casting '
+          'appropriately.\n')
+
+    prompt_text = prompt_text.replace('{FUNCTION_ARG_TYPES_MSG}',
+                                      arg_types_text)
+
+    sample_cross_references = introspector.query_introspector_sample_xrefs(
+        self.benchmark.project, self.benchmark.function_signature)
+    if sample_cross_references:
+      additional_text = (
+          'The target function is used in various places of the target project.'
+          'Please see the following samples of code using the target, which '
+          'you should use as inspiration for the harness to structure the code:'
+          '\n')
+
+      exp_usage = 'Example usage:\n'
+      additional_text += exp_usage + exp_usage.join(
+          f'```c{elem}\n```\n' for elem in sample_cross_references)
+    else:
+      additional_text = ''
+
+    prompt_text = prompt_text.replace('{ADDITIONAL_INFORMATION}',
+                                      additional_text)
+
+    self._prompt.add_priming(prompt_text)
+    return self._prompt
+
+  def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
+                         error_desc: Optional[str],
+                         errors: list[str]) -> prompts.Prompt:
+    """Prepares the code-fixing prompt."""
+    return self._prompt
+
+  def post_proces_generated_code(self, generated_code: str) -> str:
+    """Adds specific C headers we always want in the harnesses."""
+    # TODO: explore if we can make this more precise, by only adding headers
+    # if needed.
+    for header in C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES:
+      generated_code = f'#include <{header}>\n' + generated_code
+    return generated_code
