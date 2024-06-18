@@ -424,6 +424,7 @@ class BuilderRunner:
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
 
+    #TODO: DELETE
     print('project_name:', project_name)
     print('generated_project:', generated_project)
     print('target_path:', target_path)
