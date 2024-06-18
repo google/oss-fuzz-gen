@@ -403,7 +403,17 @@ class GeminiPro(GeminiModel):
   _vertex_ai_model = 'gemini-1.0-pro'
 
 
-class Gemini1D5(GeminiModel):
+class GeminiExperimental(GeminiModel):
+  """Gemini Experimental."""
+
+  _max_output_tokens = 8192
+  context_window = 32760  # TODO(dongge): Confirm this later.
+
+  name = 'vertex_ai_gemini-experimental'
+  _vertex_ai_model = 'gemini-experimental'
+
+
+class GeminiV1D5(GeminiModel):
   """Gemini 1.5."""
 
   _max_output_tokens = 8192
