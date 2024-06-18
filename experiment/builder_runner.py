@@ -525,10 +525,10 @@ class BuilderRunner:
                stderr=sp.STDOUT,
                check=True)
       except sp.CalledProcessError:
-        print(f'Failed to run {generated_project} with {sanitizer}')
+        print(f'Failed to build harnesses for {generated_project} with {sanitizer}')
         return False
 
-    print(f'Successfully run {generated_project} with {sanitizer}')
+    print(f'Successfully build harnesses for {generated_project} with {sanitizer}')
     return True
 
   def get_coverage_local(
