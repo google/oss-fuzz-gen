@@ -513,9 +513,9 @@ class GenerateReport:
 
 def _parse_arguments() -> argparse.Namespace:
   """Parses command line args."""
-  parser = argparse.ArgumentParser(
-      description='Report generation tool reads raw experiment output files and '
-      'generates a report in the form of HTML files in a directory hierarchy.')
+  parser = argparse.ArgumentParser(description=(
+      'Report generation tool reads raw experiment output files and '
+      'generates a report in the form of HTML files in a directory hierarchy.'))
 
   parser.add_argument('--results-dir',
                       '-r',
