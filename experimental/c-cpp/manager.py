@@ -1227,6 +1227,7 @@ def load_introspector_report():
     all_functions_list = json.loads(f.read())
 
   summary_report['MergedProjectProfile']['all-functions'] = all_functions_list
+  return summary_report
 
 
 def auto_generate(github_url,
