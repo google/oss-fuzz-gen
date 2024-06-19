@@ -14,6 +14,7 @@
 # limitations under the License.
 """A local server to visualize experiment result."""
 
+import argparse
 import dataclasses
 import json
 import logging
@@ -510,18 +511,42 @@ class GenerateReport:
       print(f'Failed to write sample/{benchmark_id}/{sample_id}:\n{e}')
 
 
-def main():
-  # TODO(Dongge): Use argparser as this script gets more complex.
-  results_dir = sys.argv[1]
-  benchmark_set = sys.argv[2] if len(sys.argv) > 2 else ''
-  model = sys.argv[3] if len(sys.argv) > 3 else ''
-  output_dir = sys.argv[4] if len(sys.argv) > 4 else 'results-report'
+def _parse_arguments() -> argparse.Namespace:
+  """Parses command line args."""
+  parser = argparse.ArgumentParser(description=(
+      'Report generation tool reads raw experiment output files and '
+      'generates a report in the form of HTML files in a directory hierarchy.'))
 
-  results = Results(results_dir=results_dir, benchmark_set=benchmark_set)
-  jinja_env = JinjaEnv(template_globals={'model': model})
+  parser.add_argument('--results-dir',
+                      '-r',
+                      help='Directory with results from OSS-Fuzz-gen.',
+                      required=True)
+  parser.add_argument(
+      '--output-dir',
+      '-o',
+      help='Directory to store statically generated web report.',
+      default='results-report')
+  parser.add_argument('--benchmark-set',
+                      '-b',
+                      help='Directory with benchmarks used for the experiment.',
+                      default='')
+  parser.add_argument('--model',
+                      '-m',
+                      help='Model used for the experiment.',
+                      default='')
+
+  return parser.parse_args()
+
+
+def main():
+  args = _parse_arguments()
+
+  results = Results(results_dir=args.results_dir,
+                    benchmark_set=args.benchmark_set)
+  jinja_env = JinjaEnv(template_globals={'model': args.model})
   gr = GenerateReport(results=results,
                       jinja_env=jinja_env,
-                      output_dir=output_dir)
+                      output_dir=args.output_dir)
   gr.generate()
 
 
