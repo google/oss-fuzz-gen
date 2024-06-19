@@ -493,7 +493,9 @@ def populate_benchmarks_using_introspector(project: str, language: str,
       continue
 
     filename = os.path.basename(function['function_filename'])
-    if language != 'jvm' and filename not in [os.path.basename(i) for i in interesting.keys()]:
+    if language != 'jvm' and filename not in [
+        os.path.basename(i) for i in interesting.keys()
+    ]:
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
       # Ignore jvm project for this checking because java source
       # files are not available in some cases.
