@@ -37,6 +37,7 @@ T = TypeVar('T', str, list, dict)  # Generic type.
 
 TIMEOUT = 45
 MAX_RETRY = 5
+REDUNDANT_LIMIT_MULTIPLIER = 10
 
 # By default exclude static functions when identifying fuzz target candidates
 # to generate benchmarks.
@@ -453,7 +454,11 @@ def populate_benchmarks_using_introspector(project: str, language: str,
     tmp_functions = query_introspector_for_targets(project, target_oracle)
 
     # Limit the amount of functions from each oracle.
-    functions += tmp_functions[:limit]
+    # As the later fuzzing harnesses generation could be failed,
+    # thus the benchmark size need to be much larger then the
+    # needed limit to allow oss-fuzz-gen to generate enough
+    # fuzzing harnesses even if there are some failing cases.
+    functions += tmp_functions[:(limit * REDUNDANT_LIMIT_MULTIPLIER)]
 
   if not functions:
     logging.error('No functions found using the oracles: %s', target_oracles)
