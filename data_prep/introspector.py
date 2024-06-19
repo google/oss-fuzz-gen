@@ -178,11 +178,12 @@ def _get_data(resp: Optional[requests.Response], key: str,
 
 def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
   """Queries a fuzz target oracle API from Fuzz Introspector."""
-  resp = _query_introspector(oracle_api, {
-      'project': project,
-      'exclude-static-functions': ORACLE_AVOID_STATIC_FUNCTIONS,
-      'only-referenced-functions': ORACLE_ONLY_REFERENCED_FUNCTIONS,
-  })
+  resp = _query_introspector(
+      oracle_api, {
+          'project': project,
+          'exclude-static-functions': ORACLE_AVOID_STATIC_FUNCTIONS,
+          'only-referenced-functions': ORACLE_ONLY_REFERENCED_FUNCTIONS,
+      })
   return _get_data(resp, 'functions', [])
 
 
