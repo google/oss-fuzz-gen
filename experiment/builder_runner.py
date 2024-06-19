@@ -152,7 +152,8 @@ class BuilderRunner:
     min_func_name = self._get_minimum_func_name(
         self.benchmark.function_signature)
 
-    return min_func_name in generated_code
+    pattern = rf'\b{min_func_name}\b'
+    return re.search(pattern, generated_code) is not None
 
   def _pre_build_check(self, target_path: str,
                        build_result: BuildResult) -> bool:
@@ -321,7 +322,7 @@ class BuilderRunner:
                                    symptom, crash_stacks)
             break
 
-    elif initcov == donecov and lastround is not None:
+    elif check_cov_increase and initcov == donecov and lastround is not None:
       # Another error fuzz target case: no cov increase.
       # A special case is initcov == donecov == None, which indicates no
       # interesting inputs were found. This may happen if the target rejected
@@ -525,10 +526,11 @@ class BuilderRunner:
                stderr=sp.STDOUT,
                check=True)
       except sp.CalledProcessError:
-        print(f'Failed to run {generated_project} with {sanitizer}')
+        print(
+            f'Failed to build fuzzer for {generated_project} with {sanitizer}')
         return False
 
-    print(f'Successfully run {generated_project} with {sanitizer}')
+    print(f'Successfully build fuzzer for {generated_project} with {sanitizer}')
     return True
 
   def get_coverage_local(
