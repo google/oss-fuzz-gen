@@ -322,7 +322,7 @@ class BuilderRunner:
                                    symptom, crash_stacks)
             break
 
-    elif initcov == donecov and lastround is not None:
+    elif check_cov_increase and initcov == donecov and lastround is not None:
       # Another error fuzz target case: no cov increase.
       # A special case is initcov == donecov == None, which indicates no
       # interesting inputs were found. This may happen if the target rejected
