@@ -303,22 +303,49 @@ def main():
   experiment_configs = get_experiment_configs(args)
   experiment_results = []
 
+  if args.generate_benchmarks:
+    number_of_oracle = len(args.generate_benchmarks.split(','))
+    max_target = args.generate_benchmarks_max * max(1, number_of_oracle)
+  else:
+    max_target = args.generate_benchmarks_max
+
   print(f'Running {NUM_EXP} experiment(s) in parallel.')
   if NUM_EXP == 1:
     for config in experiment_configs:
+      if len(experiment_results) > max_target:
+        # Stop the process if enough "good"
+        # fuzzing harnesses are generated
+        break
+
       result = run_experiments(*config)
-      experiment_results.append(result)
       _print_experiment_result(result)
+      experiment_results.append(result)
+      if result.result.build_success_rate == 0 or result.result.crash_rate > 0:
+        # If the build fails or the execution
+        # crashes, add 1 to the max_target to
+        # allow one more valid result
+        max_target += 1
   else:
-    experiment_tasks = []
+    experiment_results = []
     with Pool(NUM_EXP) as p:
       for config in experiment_configs:
+        if len(experiment_results) > max_target:
+          # Stop the process if enough "good"
+          # fuzzing harnesses are generated
+          break
+
         experiment_task = p.apply_async(run_experiments,
                                         config,
                                         callback=_print_experiment_result)
-        experiment_tasks.append(experiment_task)
+        result = experiment_task.get()
+        experiment_results.append(result)
+        if result.result.build_success_rate == 0 or result.result.crash_rate > 0:
+          # If the build fails or the execution
+          # crashes, add 1 to the max_target to
+          # allow one more valid result
+          max_target += 1
+
         time.sleep(args.delay)
-      experiment_results = [task.get() for task in experiment_tasks]
 
   _print_experiment_results(experiment_results)
 
