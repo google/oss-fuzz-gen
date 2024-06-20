@@ -33,7 +33,7 @@ from data_prep import project_src
 from experiment import benchmark as benchmarklib
 from experiment import oss_fuzz_checkout
 
-T = TypeVar('T', str, list, dict)  # Generic type.
+T = TypeVar('T', str, list, dict, int)  # Generic type.
 
 TIMEOUT = 45
 MAX_RETRY = 5
@@ -200,6 +200,15 @@ def query_introspector_function_source(project: str, func_sig: str) -> str:
       'function_signature': func_sig
   })
   return _get_data(resp, 'source', '')
+
+
+def query_introspector_function_line(project: str, func_sig: str) -> list:
+  """Queries FuzzIntrospector API for source line of |func_sig|."""
+  resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
+      'project': project,
+      'function_signature': func_sig
+  })
+  return [_get_data(resp, 'src_begin', 0), _get_data(resp, 'src_end', 0)]
 
 
 def query_introspector_source_code(project: str, filepath: str, begin_line: int,

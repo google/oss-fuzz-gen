@@ -25,7 +25,7 @@ import subprocess as sp
 import time
 import traceback
 import uuid
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 from typing import Any, Optional
 
 from google.cloud import storage
@@ -104,6 +104,8 @@ class BuilderRunner:
 
   # Regex for extract function name.
   FUNC_NAME = re.compile(r'(?:^|\s|\b)([\w:]+::)*(\w+)(?:<[^>]*>)?(?=\(|$)')
+  # Regex for extract line number,
+  LINE_NUMBER = re.compile(r':(\d+):')
 
   def __init__(self,
                benchmark: Benchmark,
@@ -219,10 +221,10 @@ class BuilderRunner:
 
     return stacks
 
-  def _parse_func_name_from_stacks(self, project_name: str,
-                                   stacks: list[list[str]]) -> list[str]:
+  def _parse_func_from_stacks(self, project_name: str,
+                              stacks: list[list[str]]) -> dict:
     """Parse project functions from stack traces."""
-    func_names = set()
+    func_info = defaultdict(set)
 
     for stack in stacks:
       for line in stack:
@@ -236,17 +238,18 @@ class BuilderRunner:
         if func_name == 'LLVMFuzzerTestOneInput':
           break
         if project_name in file_path:
-          match = self.FUNC_NAME.search(func_name)
-          if match:
-            func_name = match.group(2)
-            if func_name not in func_names:
-              func_names.add(func_name)
+          func_match = self.FUNC_NAME.search(func_name)
+          line_match = self.LINE_NUMBER.search(file_path)
+          if func_match and line_match:
+            func_name = func_match.group(2)
+            line_number = int(line_match.group(1))
+            func_info[func_name].add(line_number)
           else:
             logging.warning(
                 'Failed to parse function name from %s in project %s',
                 func_name, project_name)
 
-    return list(func_names)
+    return func_info
 
   def _parse_fuzz_cov_info_from_libfuzzer_logs(
       self,
@@ -320,12 +323,11 @@ class BuilderRunner:
       print('crashes:', crashes)
       symptom = SemanticCheckResult.extract_symptom(fuzzlog)
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
-      crash_func_names = self._parse_func_name_from_stacks(
-          project_name, crash_stacks)
+      crash_func = self._parse_func_from_stacks(project_name, crash_stacks)
       crash_info = SemanticCheckResult.extract_crash_info(fuzzlog)
 
       print('crash_stack:\n', crash_stacks)
-      print('crash_func_names:\n', crash_func_names)
+      print('crash_func:\n', crash_func)
       print('crash_info:\n', crash_info)
 
       # FP case 1: Common fuzz target errors.
@@ -335,7 +337,7 @@ class BuilderRunner:
         return ParseResult(
             cov_pcs, total_pcs, True, crash_info,
             SemanticCheckResult(SemanticCheckResult.NULL_DEREF, symptom,
-                                crash_stacks, crash_func_names))
+                                crash_stacks, crash_func))
 
       # Signal, normally indicating assertion failure due to inadequate
       # parameter initialization or wrong function usage.
@@ -343,7 +345,7 @@ class BuilderRunner:
         return ParseResult(
             cov_pcs, total_pcs, True, crash_info,
             SemanticCheckResult(SemanticCheckResult.SIGNAL, symptom,
-                                crash_stacks, crash_func_names))
+                                crash_stacks, crash_func))
 
       # OOM, normally indicating malloc's parameter is too large, e.g., because
       # of using parameter `size`.
@@ -353,7 +355,7 @@ class BuilderRunner:
         return ParseResult(
             cov_pcs, total_pcs, True, crash_info,
             SemanticCheckResult(SemanticCheckResult.FP_OOM, symptom,
-                                crash_stacks, crash_func_names))
+                                crash_stacks, crash_func))
 
       # FP case 2: fuzz target crashes at init or first few rounds.
       if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
@@ -362,7 +364,7 @@ class BuilderRunner:
         return ParseResult(
             cov_pcs, total_pcs, True, crash_info,
             SemanticCheckResult(SemanticCheckResult.FP_NEAR_INIT_CRASH, symptom,
-                                crash_stacks, crash_func_names))
+                                crash_stacks, crash_func))
 
       # FP case 3: 1st func of the 1st thread stack is in fuzz target.
       if len(crash_stacks) > 0:
@@ -374,13 +376,13 @@ class BuilderRunner:
               return ParseResult(
                   cov_pcs, total_pcs, True, crash_info,
                   SemanticCheckResult(SemanticCheckResult.FP_TARGET_CRASH,
-                                      symptom, crash_stacks, crash_func_names))
+                                      symptom, crash_stacks, crash_func))
             break
 
       return ParseResult(
           cov_pcs, total_pcs, True, crash_info,
           SemanticCheckResult(SemanticCheckResult.NO_SEMANTIC_ERR, symptom,
-                              crash_stacks, crash_func_names))
+                              crash_stacks, crash_func))
 
     if initcov == donecov and lastround is not None:
       # Another error fuzz target case: no cov increase.
