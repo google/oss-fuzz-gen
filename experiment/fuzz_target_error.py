@@ -32,6 +32,7 @@ class SemanticCheckResult:
   NULL_DEREF = 'NULL_DEREF'
   SIGNAL = 'SIGNAL'
   EXIT = 'EXIT'
+  OVERWRITE_CONST = 'OVERWRITE_CONST'
 
   # Regex for extract crash symptoms.
   # Matches over 18 types of ASAN errors symptoms
@@ -116,6 +117,11 @@ class SemanticCheckResult:
               'sign of memory corruption, likely due to the fuzz target is not '
               'well designed to effectively find memory corruption '
               'vulnerability in the function-under-test.')
+    if self.type == self.OVERWRITE_CONST:
+      return ('Fuzz target modified a const data. To fix this, ensure that all '
+              'input data passed to the fuzz target is treated as read-only '
+              'and not modified. Copy the input data to a separate buffer if '
+              'any modifications are necessary.')
 
     return ''
 
