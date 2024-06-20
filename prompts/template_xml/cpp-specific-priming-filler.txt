@@ -6,8 +6,6 @@ Use <code>FuzzedDataProvider</code> to generate these inputs, it is a single-hea
 #include <fuzzer/FuzzedDataProvider.h>
 </code>
 
-An advantage and disadvantage of using this library is that the input splitting happens dynamically, i.e. you don't need to define any structure of the input. This might be very helpful in certain cases, but would also make the corpus to be no longer in a particular format. For example, if you fuzz an image parser and split the fuzz input into several parts, the corpus elements will no longer be valid image files, and you won't be able to simply add image files to your corpus.
-
 ## Main concepts
 1. FuzzedDataProvider is a class whose constructor accepts <code>const uint8_t*</code>, <code>size_t</code> arguments. Usually, you would call it in the beginning of your LLVMFuzzerTestOneInput and pass the data, size parameters provided by the fuzzing engine, like this:
 <code>
@@ -29,11 +27,16 @@ These methods are using the last bytes of the fuzz input for deriving the reques
 ## Methods for extracting sequences of bytes
 Many of these methods have a length argument. You can always know how many bytes are left inside the provider object by calling <code>remaining_bytes()</code> method on it.
 
-1. <code>ConsumeBytes</code> and <code>ConsumeBytesWithTerminator</code> methods return a <code>std::vector</code> of the requested size. These methods are helpful when you know how long a certain part of the fuzz input should be. Use <code>.data()</code> and <code>.size()</code> methods of the resulting object if your API works with raw memory arguments.
-2. <code>ConsumeBytesAsString</code> method returns a <code>std::string</code> of the requested length. This is useful when you need a null-terminated C-string. Calling <code>c_str()</code> on the resulting object is the best way to obtain it.
+1. <code>ConsumeBytes</code> and <code>ConsumeBytesWithTerminator</code> methods return a <code>std::vector</code> of AT MOST UP TO the requested size. These methods are helpful when you know how long a certain part of the fuzz input should be. Use <code>.data()</code> and <code>.size()</code> methods of the resulting object if your API works with raw memory arguments.
+2. <code>ConsumeBytesAsString</code> method returns a <code>std::string</code> of AT MOST UP TO the requested length. This is useful when you need a null-terminated C-string. Calling <code>c_str()</code> on the resulting object is the best way to obtain it.
 3. <code>ConsumeRandomLengthString</code> method returns a <code>std::string</code> as well, but its length is derived from the fuzz input and typically is hard to predict, though always deterministic. The caller can provide the max length argument.
 4. <code>ConsumeRemainingBytes</code> and <code>ConsumeRemainingBytesAsString</code> methods return <code>std::vector</code> and <code>std::string</code> objects respectively, initialized with all the bytes from the fuzz input that left unused.
-5. <code>ConsumeData</code> method copies the requested number of bytes from the fuzz input to the given pointer (<code>void *destination</code>). The method is useful when you need to fill an existing buffer or object (e.g. a <code>struct</code>) with fuzzing data.
+5. <code>ConsumeData</code> method copies AT MOST UP TO the requested number of bytes from the fuzz input to the given pointer (<code>void *destination</code>). The method is useful when you need to fill an existing buffer or object (e.g. a <code>struct</code>) with fuzzing data.
+
+## General guidelines
+1. When consuming a sequence of bytes, the returned length may be less than the requested size if there is insufficient data left. Always use the <code>.size()</code> method to determine the actual length of the data consumed.
+2. When the returned length is smaller than the requested length, the fuzz target should terminate early to prevent false positive crashes from subsequent function calls due to insufficient data in parameters.
+3. For parameters that require a project-specific format (e.g., image, PDF), it is best to use the project's built-in constructors or initialization steps. Apply Fuzzing Data Provider for each primitive type variable during this process.
 
 Here are some sample code snippets to exemplify its usage:
 <code>
