@@ -242,7 +242,6 @@ class BuilderRunner:
       check_cov_increase: bool = True
   ) -> tuple[int, int, bool, SemanticCheckResult]:
     """Parses libFuzzer logs."""
-    del check_cov_increase
     lines = None
     try:
       fuzzlog = log_handle.read(-1)
