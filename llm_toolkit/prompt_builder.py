@@ -98,8 +98,7 @@ class PromptBuilder:
 
   @abstractmethod
   def build_triager_prompt(self, benchmark: Benchmark, target_code: str,
-                           crash_info: str,
-                           crash_func_names: list[str]) -> prompts.Prompt:
+                           crash_info: str, crash_func: dict) -> prompts.Prompt:
     """Builds a triager prompt."""
 
   def post_process_generated_code(self, generated_code: str) -> str:
@@ -367,8 +366,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     return problem.replace('{ERROR_MESSAGES}', error_message)
 
   def build_triager_prompt(self, benchmark: Benchmark, target_code: str,
-                           crash_info: str,
-                           crash_func_names: list[str]) -> prompts.Prompt:
+                           crash_info: str, crash_func: dict) -> prompts.Prompt:
     """Prepares the crash-triaging prompt."""
     priming, priming_weight = self._format_triager_priming()
     problem = self._format_triager_problem(benchmark, target_code, crash_info,
@@ -388,7 +386,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     return priming, priming_weight
 
   def _format_triager_problem(self, benchmark: Benchmark, target_code: str,
-                              crash_info: str, crash_func_names: list[str],
+                              crash_info: str, crash_func: dict,
                               priming_weight: int) -> str:
     """Formats a problem for crash triage based on the template."""
     with open(self.triager_problem_template_file) as f:
@@ -397,12 +395,13 @@ class DefaultTemplateBuilder(PromptBuilder):
                      .replace('{FUZZ_TARGET_CODE}', target_code)
 
     all_func_code = []
-    for func_name in crash_func_names:
-      func_sig = introspector.query_introspector_function_signature(
-          benchmark.project, func_name)
-      func_code = introspector.query_introspector_function_source(
-          benchmark.project, func_sig)
+    for func_name, line_number in crash_func:
+      func_code = self._slice_func_code(benchmark.project, func_name,
+                                        line_number)
+      print('func_code:', func_code)
       all_func_code.append(func_code)
+    #TODO: delete print
+    print('all_func_code:\n', all_func_code)
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{PROJECT_FUNCTION_CODE}',
@@ -453,6 +452,45 @@ class DefaultTemplateBuilder(PromptBuilder):
 
     self._add_examples(example_pair, final_problem, project_example_content)
     self._prompt.add_problem(final_problem)
+
+  #TODO: delete print
+  def _slice_func_code(self, project: str, func_name: str,
+                       target_lines: set) -> str:
+    """Slice the function code from the source code."""
+    print('func_name:', func_name)
+    print('target_lines:', target_lines)
+    func_sig = introspector.query_introspector_function_signature(
+        project, func_name)
+    print('func_sig:', func_sig)
+    func_code = introspector.query_introspector_function_source(
+        project, func_sig)
+    print('func_code:\n', func_code)
+    begin_line, end_line = introspector.query_introspector_function_line(
+        project, func_sig)
+    print('begin_line:', begin_line)
+    print('end_line:', end_line)
+    if begin_line != 0 and end_line != 0 and all(
+        begin_line <= line <= end_line for line in target_lines):
+      lines = func_code.split('\n')
+      print('lines:\n', lines)
+      output_lines = set()
+      result = []
+
+      for line in sorted(target_lines):
+        start = max(line - 4, begin_line)
+        end = line
+
+        if not any(l in output_lines for l in range(start, end + 1)):
+          code_snippet = '\n'.join(lines[(start -
+                                          begin_line):(end - begin_line) + 1])
+          result.append(f'line{start}-{end}: {code_snippet}')
+          output_lines.update(range(start, end + 1))
+
+      return '\n'.join(result)
+    else:
+      logging.warning('Failed to slice Project: %s Function: %s at Lines: %s',
+                      project, func_name, target_lines)
+      return ''
 
 
 class DefaultJvmTemplateBuilder(PromptBuilder):
@@ -669,8 +707,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     return self._prompt
 
   def build_triager_prompt(self, benchmark: Benchmark, target_code: str,
-                           crash_info: str,
-                           crash_func_names: list[str]) -> prompts.Prompt:
+                           crash_info: str, crash_func: dict) -> prompts.Prompt:
     """Builds a triager prompt."""
     # Do nothing for jvm project now.
     return self._prompt
