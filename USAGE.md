@@ -111,7 +111,8 @@ max coverage diff sample: <result-dir>/output-tinyxml2-tinyxml2-xmldocument-prin
 To visualize these results via a web UI, with more details on the
 exact prompts used, samples generated, and other logs, run:
 ```bash
-python -m report.web <results-dir> <port>
+python -m report.web -r <results-dir> -o <output-dir>
+python -m http.server <port> -d <output-dir>
 ```
 Where `<results-dir>` is the directory passed to `--work-dir` in your
 experiments (default value `./results`).

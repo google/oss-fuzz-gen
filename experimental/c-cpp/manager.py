@@ -31,6 +31,8 @@ import yaml
 MAX_FUZZ_PER_HEURISTIC = 15
 INTROSPECTOR_OSS_FUZZ_DIR = '/src/inspector'
 
+INTROSPECTOR_ALL_FUNCTIONS_FILE = 'all-fuzz-introspector-functions.json'
+
 LLM_MODEL = ''
 
 FUZZER_PRE_HEADERS = '''#include <stdlib.h>
@@ -1213,7 +1215,19 @@ def load_introspector_report():
                                      'summary.json')):
     return None
   with open(os.path.join(INTROSPECTOR_OSS_FUZZ_DIR, 'summary.json'), 'r') as f:
-    return json.loads(f.read())
+    summary_report = json.loads(f.read())
+
+  # Get all functions folder
+  if not os.path.isfile(
+      os.path.join(INTROSPECTOR_OSS_FUZZ_DIR, INTROSPECTOR_ALL_FUNCTIONS_FILE)):
+    return None
+  with open(
+      os.path.join(INTROSPECTOR_OSS_FUZZ_DIR, INTROSPECTOR_ALL_FUNCTIONS_FILE),
+      'r') as f:
+    all_functions_list = json.loads(f.read())
+
+  summary_report['MergedProjectProfile']['all-functions'] = all_functions_list
+  return summary_report
 
 
 def auto_generate(github_url,

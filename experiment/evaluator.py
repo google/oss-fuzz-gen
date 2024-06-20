@@ -295,7 +295,8 @@ class Evaluator:
       # 1. Evaluating generated driver.
       try:
         build_result, run_result = self.builder_runner.build_and_run(
-            generated_oss_fuzz_project, target_path, llm_fix_count)
+            generated_oss_fuzz_project, target_path, llm_fix_count,
+            self.benchmark.language)
       except Exception as e:
         logger.log('Exception occurred when building and running fuzz target '
                    f'in attempt {llm_fix_count}: {e}')
