@@ -11,6 +11,7 @@ Try as many variations of these inputs as possible. Do not use a random number g
 
 <instruction>
 All variables used MUST be declared and initialized. Carefully make sure that the variable and argument types in your code match and compiles successfully. Add type casts to make types match.
+All variable values MUST NOT be NULL whenever possible.
 
 Do not create new variables with the same names as existing variables.
 WRONG:
