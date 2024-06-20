@@ -14,7 +14,9 @@
 # limitations under the License.
 """A local server to visualize experiment result."""
 
+import argparse
 import dataclasses
+import io
 import json
 import logging
 import os
@@ -26,10 +28,13 @@ from typing import Any, Dict, List, Optional
 
 import jinja2
 import yaml
+from google.cloud import storage
 
 import run_one_experiment
 from experiment import evaluator
 from experiment.workdir import WorkDirs
+
+logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'WARN').upper())
 
 MAX_RUN_LOGS_LEN = 16 * 1024
 
@@ -89,6 +94,115 @@ class Target:
   fixer_prompt: Optional[str] = None
 
 
+class FileSystem:
+  """
+  FileSystem provides a wrapper over standard library and GCS client and
+  automatically chooses which to use based on the provided path.
+  """
+
+  _gcs_client = None
+
+  @classmethod
+  def _get_gcs_client(cls):
+    """
+    Returns a cached storage client (a new one is created on first call.
+
+    A new client does authentication on first call, so caching the client will
+    same multiple authentication round trips to GCP.
+    """
+    if cls._gcs_client is None:
+      cls._gcs_client = storage.Client()
+
+    return cls._gcs_client
+
+  def __init__(self, path: str):
+    logging.debug('file operation %s', path)
+    self._path = path
+    self._gcs_bucket: Optional[storage.Bucket] = None
+
+    if path.startswith('gs://'):
+      path = path.removeprefix('gs://')
+      self._gcs_bucket = FileSystem._get_gcs_client().bucket(path.split('/')[0])
+      self._path = '/'.join(path.split('/')[1:])
+
+  def listdir(self) -> List[str]:
+    """listdir returns a list of files and directories in path."""
+    if self._gcs_bucket is not None:
+      # Make sure the path ends with a /, otherwise GCS just returns the
+      # directory as a prefix and not list the contents.
+      prefix = self._path
+      if not self._path.endswith('/'):
+        prefix = f'{self._path}/'
+
+      # Unfortunately GCS doesn't work like a normal file system and the client
+      # library doesn't even pretend there is a directory hierarchy.
+      # The list API does return a list of prefixes that we can join with the
+      # list of objects to get something close to listdir(). But client library
+      # is pretty weird and it stores the prefixes on the iterator...
+      # https://github.com/googleapis/python-storage/blob/64edbd922a605247203790a90f9536d54e3a705a/google/cloud/storage/client.py#L1356
+      it = self._gcs_bucket.list_blobs(prefix=prefix, delimiter='/')
+      paths = [f.name for f in it] + [p.removesuffix('/') for p in it.prefixes]
+      r = [p.removeprefix(prefix) for p in paths]
+      return r
+
+    return os.listdir(self._path)
+
+  def exists(self) -> bool:
+    """exists returns true if the path is a file or directory."""
+    if self._gcs_bucket is not None:
+      return self.isfile() or self.isdir()
+
+    return os.path.exists(self._path)
+
+  def isfile(self) -> bool:
+    """isfile returns true if the path is a file."""
+    if self._gcs_bucket is not None:
+      return self._gcs_bucket.blob(self._path).exists()
+
+    return os.path.isfile(self._path)
+
+  def isdir(self) -> bool:
+    """isfile returns true if the path is a directory."""
+    if self._gcs_bucket is not None:
+      return len(self.listdir()) > 0
+
+    return os.path.isdir(self._path)
+
+  def makedirs(self):
+    """makedirs create parent(s) and directory in specified path."""
+    if self._gcs_bucket is not None:
+      # Do nothing. GCS doesn't have directories and files can be created with
+      # any path.
+      return
+
+    os.makedirs(self._path)
+
+  def open(self, *args, **kwargs) -> io.IOBase:
+    """
+    open returns a file handle to the file located at the specified path.
+
+    It has identical function signature to standard library open().
+    """
+    if self._gcs_bucket is not None:
+      return self._gcs_bucket.blob(self._path).open(*args, **kwargs)
+
+    return open(self._path, *args, **kwargs)
+
+  def getsize(self) -> int:
+    """getsize returns the byte size of the file at the specified path."""
+    if self._gcs_bucket is not None:
+      blob = self._gcs_bucket.get_blob(self._path)
+      if blob is None:
+        raise FileNotFoundError(
+            'GCS blob not found gs://{self._gcs_bucket.bucket}/{self._path}.')
+
+      # size can be None if use Bucket.blob() instead of Bucket.get_blob(). The
+      # type checker doesn't know this and insists we check if size is None.
+      return blob.size if blob.size is not None else 0
+
+    return os.path.getsize(self._path)
+
+
 class Results:
   """Results provides functions to explore the experiment results in a particular directory."""
 
@@ -98,32 +212,12 @@ class Results:
 
   def list_benchmark_ids(self) -> List[str]:
     return sorted(
-        filter(self._is_valid_benchmark_dir, os.listdir(self._results_dir)))
+        filter(self._is_valid_benchmark_dir,
+               FileSystem(self._results_dir).listdir()))
 
-  def list_benchmarks(self) -> List[Benchmark]:
-    """Lists benchmarks in the result directory."""
-    benchmarks = []
-    for benchmark in self.list_benchmark_ids():
-      results, targets = self._get_results(benchmark)
-      status = 'Done' if all(r for r in results) and results else 'Running'
-
-      filtered_results = []
-      for i, stat in enumerate(results):
-        if stat:
-          filtered_results.append((i, stat))
-
-      if filtered_results:
-        result = run_one_experiment.aggregate_results(filtered_results, targets)
-      else:
-        result = run_one_experiment.AggregatedResult()
-
-      benchmarks.append(self._create_benchmark(benchmark, status, result))
-
-    return benchmarks
-
-  def match_benchmark(self, benchmark_id: str) -> Benchmark:
+  def match_benchmark(self, benchmark_id: str, results: list[evaluator.Result],
+                      targets: list[str]) -> Benchmark:
     """Returns a benchmark class based on |benchmark_id|."""
-    results, targets = self._get_results(benchmark_id)
     status = 'Done' if results and all(results) else 'Running'
     filtered_results = [(i, stat) for i, stat in enumerate(results) if stat]
 
@@ -138,49 +232,29 @@ class Results:
     """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
     targets_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
 
-    for name in sorted(os.listdir(targets_dir)):
+    for name in sorted(FileSystem(targets_dir).listdir()):
       path = os.path.join(targets_dir, name)
-      if os.path.isfile(path) and name.startswith(sample + '.'):
-        with open(path) as f:
+      if name.startswith(sample + '.') and FileSystem(path).isfile():
+        with FileSystem(path).open() as f:
           code = f.read()
           code = json.dumps(code)
         return code
     return ''
 
-  def match_sample(self, benchmark: str,
-                   target_sample_id: str) -> Optional[Sample]:
-    """Identifies the samples object and its status of the given sample id."""
-    results, _ = self._get_results(benchmark)
-
-    for i, sample_id in enumerate(
-        self._sample_ids(self._get_generated_targets(benchmark))):
-      if sample_id != target_sample_id:
-        continue
-      status = 'Running'
-      result = evaluator.Result()
-      if results[i]:
-        status = 'Done'
-        result = results[i]
-
-      return Sample(sample_id, status, result)
-    logging.warning('Failed to identify benchmark sample: %s\n  %s', benchmark,
-                    target_sample_id)
-    return None
-
   def get_logs(self, benchmark: str, sample: str) -> str:
     status_dir = os.path.join(self._results_dir, benchmark, 'status')
     results_path = os.path.join(status_dir, sample, 'log.txt')
-    if not os.path.exists(results_path):
+    if not FileSystem(results_path).exists():
       return ''
 
-    with open(results_path) as f:
+    with FileSystem(results_path).open() as f:
       return f.read()
 
   def get_run_logs(self, benchmark: str, sample: str) -> str:
     """Returns the content of the last run log."""
     run_logs_dir = os.path.join(self._results_dir, benchmark, 'logs', 'run')
     largest_iteration, last_log_file = -1, None
-    for name in os.listdir(run_logs_dir):
+    for name in FileSystem(run_logs_dir).listdir():
       if name.startswith(sample + '.'):
         iteration = WorkDirs.get_run_log_iteration(name)
         if iteration is None:
@@ -194,8 +268,18 @@ class Results:
     if not last_log_file:
       return ''
 
-    with open(os.path.join(run_logs_dir, last_log_file), errors='replace') as f:
-      return self._truncate_logs(f.read(), MAX_RUN_LOGS_LEN)
+    log_path = os.path.join(run_logs_dir, last_log_file)
+    log_size = FileSystem(log_path).getsize()
+    with FileSystem(log_path).open(errors='replace') as f:
+      if log_size <= MAX_RUN_LOGS_LEN:
+        return f.read()
+
+      trancated_len = MAX_RUN_LOGS_LEN // 2
+      logs_beginning = f.read(trancated_len)
+      f.seek(log_size - trancated_len - 1, os.SEEK_SET)
+      logs_ending = f.read()
+
+      return logs_beginning + '\n...truncated...\n' + logs_ending
 
     return ''
 
@@ -204,26 +288,25 @@ class Results:
     targets_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
     targets = []
 
-    for name in sorted(os.listdir(targets_dir)):
+    for name in sorted(FileSystem(targets_dir).listdir()):
       path = os.path.join(targets_dir, name)
-      if os.path.isfile(path) and name.startswith(sample + '.'):
+      if name.startswith(sample + '.') and FileSystem(path).isfile():
         logging.debug(path)
-        with open(path) as f:
+        with FileSystem(path).open() as f:
           code = f.read()
         targets.insert(0, Target(code=code))
 
-      if os.path.isdir(path) and name.startswith(sample + '-F'):
+      if name.startswith(sample + '-F') and FileSystem(path).isdir():
         targets.append(self._get_fixed_target(path))
 
     return targets
 
-  def get_samples(self, benchmark: str) -> list[Sample]:
+  def get_samples(self, results: list[evaluator.Result],
+                  targets: list[str]) -> list[Sample]:
     """Gets the samples and their status of the given benchmark |bnmk|."""
     samples = []
-    results, _ = self._get_results(benchmark)
 
-    for i, sample_id in enumerate(
-        self._sample_ids(self._get_generated_targets(benchmark))):
+    for i, sample_id in enumerate(self._sample_ids(targets)):
       status = 'Running'
       result = evaluator.Result()
       if results[i]:
@@ -236,9 +319,9 @@ class Results:
 
   def get_prompt(self, benchmark: str) -> Optional[str]:
     root_dir = os.path.join(self._results_dir, benchmark)
-    for name in os.listdir(root_dir):
+    for name in FileSystem(root_dir).listdir():
       if re.match(r'^prompt.*txt$', name):
-        with open(os.path.join(root_dir, name)) as f:
+        with FileSystem(os.path.join(root_dir, name)).open() as f:
           content = f.read()
 
         # Prepare prompt text for HTML.
@@ -246,8 +329,8 @@ class Results:
 
     return None
 
-  def _get_results(self,
-                   benchmark: str) -> tuple[list[evaluator.Result], list[str]]:
+  def get_results(self,
+                  benchmark: str) -> tuple[list[evaluator.Result], list[str]]:
     """
     Returns results of all samples. Items can be None if they're not complete.
     """
@@ -258,11 +341,11 @@ class Results:
 
     for sample_id in self._sample_ids(targets):
       results_path = os.path.join(status_dir, sample_id, 'result.json')
-      if not os.path.exists(results_path):
+      if not FileSystem(results_path).exists():
         results.append(None)
         continue
 
-      with open(results_path) as f:
+      with FileSystem(results_path).open() as f:
         try:
           data = json.load(f)
         except Exception:
@@ -296,16 +379,23 @@ class Results:
     # Check prefix.
     if not cur_dir.startswith('output-'):
       return False
+
+    # Skip checking sub-directories in GCS. It's a lot of filesystem operations
+    # to go over the network.
+    if cur_dir.startswith('gs://'):
+      return True
+
     # Check sub-directories.
     expected_dirs = ['raw_targets', 'status', 'fixed_targets']
     return all(
-        os.path.isdir(os.path.join(self._results_dir, cur_dir, expected_dir))
+        FileSystem(os.path.join(self._results_dir, cur_dir,
+                                expected_dir)).isdir()
         for expected_dir in expected_dirs)
 
   def _get_generated_targets(self, benchmark: str) -> list[str]:
     targets = []
     raw_targets_dir = os.path.join(self._results_dir, benchmark, 'raw_targets')
-    for filename in sorted(os.listdir(raw_targets_dir)):
+    for filename in sorted(FileSystem(raw_targets_dir).listdir()):
       if os.path.splitext(filename)[1] in TARGET_EXTS:
         targets.append(os.path.join(raw_targets_dir, filename))
 
@@ -315,16 +405,16 @@ class Results:
     """Gets the fixed fuzz target from the benchmark's result |path|."""
     code = ''
     fixer_prompt = ''
-    for name in os.listdir(path):
+    for name in FileSystem(path).listdir():
       if name.endswith('.txt'):
-        with open(os.path.join(path, name)) as f:
+        with FileSystem(os.path.join(path, name)).open() as f:
           fixer_prompt = f.read()
 
       # Prepare prompt for being used in HTML.
       fixer_prompt = self._prepare_prompt_for_html_text(fixer_prompt)
 
       if name.endswith('.rawoutput'):
-        with open(os.path.join(path, name)) as f:
+        with FileSystem(os.path.join(path, name)).open() as f:
           code = f.read()
 
     return Target(code, fixer_prompt)
@@ -332,13 +422,6 @@ class Results:
   def _sample_ids(self, target_paths: list[str]):
     for target in target_paths:
       yield os.path.splitext(os.path.basename(target))[0]
-
-  def _truncate_logs(self, logs: str, max_len: int) -> str:
-    if len(logs) <= max_len:
-      return logs
-
-    return logs[:max_len // 2] + '\n...truncated...\n' + logs[-(max_len // 2) +
-                                                              1:]
 
   def _create_benchmark(
       self, benchmark_id: str, status: str,
@@ -353,11 +436,11 @@ class Results:
                                 target_function: str) -> str:
     """Finds the function signature by searching for its |benchmark_id|."""
     project_path = os.path.join(self._benchmark_dir, f'{project}.yaml')
-    if not os.path.isfile(project_path):
+    if not FileSystem(project_path).isfile():
       return ''
 
     matched_prefix_signature = ''
-    with open(project_path) as project_yaml_file:
+    with FileSystem(project_path).open() as project_yaml_file:
       functions = yaml.safe_load(project_yaml_file).get('functions', [])
       for function in functions:
         function_name = function.get('name', '')
@@ -438,90 +521,125 @@ class GenerateReport:
 
   def generate(self):
     """Generate and write every report file."""
-    self._write_index_html()
-    self._write_index_json()
-    for benchmark in self._results.list_benchmark_ids():
-      self._write_benchmark_index(benchmark)
-      self._write_benchmark_crash(benchmark)
-      for sample in self._results.get_samples(benchmark):
-        self._write_benchmark_sample(benchmark, sample.id)
+    benchmarks = []
+    for benchmark_id in self._results.list_benchmark_ids():
+      results, targets = self._results.get_results(benchmark_id)
+      benchmark = self._results.match_benchmark(benchmark_id, results, targets)
+      benchmarks.append(benchmark)
+      samples = self._results.get_samples(results, targets)
+      prompt = self._results.get_prompt(benchmark.id)
+
+      self._write_benchmark_index(benchmark, samples, prompt)
+      self._write_benchmark_crash(benchmark, samples)
+
+      for sample in samples:
+        sample_targets = self._results.get_targets(benchmark.id, sample.id)
+        self._write_benchmark_sample(benchmark, sample, sample_targets)
+
+    self._write_index_html(benchmarks)
+    self._write_index_json(benchmarks)
 
   def _write(self, output_path: str, content: str):
     """Utility write to filesystem function."""
     full_path = os.path.join(self._output_dir, output_path)
 
     parent_dir = os.path.dirname(full_path)
-    if not os.path.exists(parent_dir):
-      os.makedirs(parent_dir)
+    if not FileSystem(parent_dir).exists():
+      FileSystem(parent_dir).makedirs()
 
-    if not os.path.isdir(parent_dir):
+    if not FileSystem(parent_dir).isdir():
       raise Exception(
           f'Writing to {full_path} but {parent_dir} is not a directory!')
 
-    with open(full_path, 'w', encoding='utf-8') as f:
+    with FileSystem(full_path).open('w', encoding='utf-8') as f:
       f.write(content)
 
-  def _write_index_html(self):
+  def _write_index_html(self, benchmarks: List[Benchmark]):
     """Generate the report index.html and write to filesystem."""
-    rendered = self._jinja.render('index.html',
-                                  benchmarks=self._results.list_benchmarks())
+    rendered = self._jinja.render('index.html', benchmarks=benchmarks)
     self._write('index.html', rendered)
 
-  def _write_index_json(self):
+  def _write_index_json(self, benchmarks: List[Benchmark]):
     """Generate the report index.json and write to filesystem."""
-    rendered = self._jinja.render('index.json',
-                                  benchmarks=self._results.list_benchmarks())
+    rendered = self._jinja.render('index.json', benchmarks=benchmarks)
     self._write('index.json', rendered)
 
-  def _write_benchmark_index(self, benchmark_id: str):
+  def _write_benchmark_index(self, benchmark: Benchmark, samples: List[Sample],
+                             prompt: Optional[str]):
     """Generate the benchmark index.html and write to filesystem."""
-    rendered = self._jinja.render(
-        'benchmark.html',
-        benchmark=benchmark_id,
-        samples=self._results.get_samples(benchmark_id),
-        prompt=self._results.get_prompt(benchmark_id))
-    self._write(f'benchmark/{benchmark_id}/index.html', rendered)
+    rendered = self._jinja.render('benchmark.html',
+                                  benchmark=benchmark.id,
+                                  samples=samples,
+                                  prompt=prompt)
+    self._write(f'benchmark/{benchmark.id}/index.html', rendered)
 
-  def _write_benchmark_crash(self, benchmark_id: str):
+  def _write_benchmark_crash(self, benchmark: Benchmark, samples: List[Sample]):
     """Generate the benchmark crash.json and write to filesystem."""
     try:
-      rendered = self._jinja.render(
-          'crash.json',
-          benchmark=self._results.match_benchmark(benchmark_id).signature,
-          samples=self._results.get_samples(benchmark_id),
-          get_benchmark_final_target_code=partial(
-              self._results.get_final_target_code, benchmark_id))
-      self._write(f'benchmark/{benchmark_id}/crash.json', rendered)
+      rendered = self._jinja.render('crash.json',
+                                    benchmark=benchmark.signature,
+                                    samples=samples,
+                                    get_benchmark_final_target_code=partial(
+                                        self._results.get_final_target_code,
+                                        benchmark.id))
+      self._write(f'benchmark/{benchmark.id}/crash.json', rendered)
     except Exception as e:
-      print(f'Failed to write benchmark/{benchmark_id}/crash.json:\n{e}')
+      logging.error('Failed to write benchmark/%s/crash.json:\n%s',
+                    benchmark.id, e)
 
-  def _write_benchmark_sample(self, benchmark_id: str, sample_id: str):
+  def _write_benchmark_sample(self, benchmark: Benchmark, sample: Sample,
+                              sample_targets: List[Target]):
     """Generate the sample page and write to filesystem."""
     try:
       rendered = self._jinja.render(
           'sample.html',
-          benchmark=benchmark_id,
-          sample=self._results.match_sample(benchmark_id, sample_id),
-          logs=self._results.get_logs(benchmark_id, sample_id),
-          run_logs=self._results.get_run_logs(benchmark_id, sample_id),
-          targets=self._results.get_targets(benchmark_id, sample_id))
-      self._write(f'sample/{benchmark_id}/{sample_id}', rendered)
+          benchmark=benchmark.id,
+          sample=sample,
+          logs=self._results.get_logs(benchmark.id, sample.id),
+          run_logs=self._results.get_run_logs(benchmark.id, sample.id),
+          targets=sample_targets)
+      self._write(f'sample/{benchmark.id}/{sample.id}', rendered)
     except Exception as e:
-      print(f'Failed to write sample/{benchmark_id}/{sample_id}:\n{e}')
+      logging.error('Failed to write sample/%s/%s:\n%s', benchmark.id,
+                    sample.id, e)
+
+
+def _parse_arguments() -> argparse.Namespace:
+  """Parses command line args."""
+  parser = argparse.ArgumentParser(description=(
+      'Report generation tool reads raw experiment output files and '
+      'generates a report in the form of HTML files in a directory hierarchy.'))
+
+  parser.add_argument('--results-dir',
+                      '-r',
+                      help='Directory with results from OSS-Fuzz-gen.',
+                      required=True)
+  parser.add_argument(
+      '--output-dir',
+      '-o',
+      help='Directory to store statically generated web report.',
+      default='results-report')
+  parser.add_argument('--benchmark-set',
+                      '-b',
+                      help='Directory with benchmarks used for the experiment.',
+                      default='')
+  parser.add_argument('--model',
+                      '-m',
+                      help='Model used for the experiment.',
+                      default='')
+
+  return parser.parse_args()
 
 
 def main():
-  # TODO(Dongge): Use argparser as this script gets more complex.
-  results_dir = sys.argv[1]
-  benchmark_set = sys.argv[2] if len(sys.argv) > 2 else ''
-  model = sys.argv[3] if len(sys.argv) > 3 else ''
-  output_dir = sys.argv[4] if len(sys.argv) > 4 else 'results-report'
+  args = _parse_arguments()
 
-  results = Results(results_dir=results_dir, benchmark_set=benchmark_set)
-  jinja_env = JinjaEnv(template_globals={'model': model})
+  results = Results(results_dir=args.results_dir,
+                    benchmark_set=args.benchmark_set)
+  jinja_env = JinjaEnv(template_globals={'model': args.model})
   gr = GenerateReport(results=results,
                       jinja_env=jinja_env,
-                      output_dir=output_dir)
+                      output_dir=args.output_dir)
   gr.generate()
 
 
