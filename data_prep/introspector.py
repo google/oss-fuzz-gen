@@ -42,6 +42,8 @@ MAX_RETRY = 5
 # to generate benchmarks.
 ORACLE_AVOID_STATIC_FUNCTIONS = bool(
     int(os.getenv('OSS_FUZZ_AVOID_STATIC_FUNCTIONS', '1')))
+ORACLE_ONLY_REFERENCED_FUNCTIONS = bool(
+    int(os.getenv('OSS_FUZZ_ONLY_REFERENCED_FUNCTIONS', '0')))
 
 DEFAULT_INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
 INTROSPECTOR_ENDPOINT = ''
@@ -181,10 +183,12 @@ def _get_data(resp: Optional[requests.Response], key: str,
 
 def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
   """Queries a fuzz target oracle API from Fuzz Introspector."""
-  resp = _query_introspector(oracle_api, {
-      'project': project,
-      'exclude-static-functions': ORACLE_AVOID_STATIC_FUNCTIONS
-  })
+  resp = _query_introspector(
+      oracle_api, {
+          'project': project,
+          'exclude-static-functions': ORACLE_AVOID_STATIC_FUNCTIONS,
+          'only-referenced-functions': ORACLE_ONLY_REFERENCED_FUNCTIONS,
+      })
   return _get_data(resp, 'functions', [])
 
 
