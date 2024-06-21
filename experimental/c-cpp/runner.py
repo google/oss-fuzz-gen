@@ -292,7 +292,8 @@ def run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz,
   for idx, target in enumerate(target_repositories):
     worker_project_name = get_next_worker_project(oss_fuzz_base)
     run_on_targets(target, oss_fuzz_base, worker_project_name, idx, llm_model,
-                   None, disable_autofuzz, targets_per_heuristic, build_heuristics)
+                   None, disable_autofuzz, targets_per_heuristic,
+                   build_heuristics)
 
 
 def parse_commandline():
@@ -314,7 +315,8 @@ def parse_commandline():
                       help='Disable logging in subprocess.',
                       action='store_true')
   parser.add_argument('--build-heuristics',
-                      '-b', help='Comma-separated string of build heuristics to use',
+                      '-b',
+                      help='Comma-separated string of build heuristics to use',
                       default='all')
   parser.add_argument('--model', '-m', help='LLM model to use', type=str)
   return parser.parse_args()
@@ -342,7 +344,8 @@ def main():
                   args.targets_per_heuristic, args.model, args.build_heuristics)
   else:
     run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz,
-                   args.targets_per_heuristic, args.model, args.build_heuristics)
+                   args.targets_per_heuristic, args.model,
+                   args.build_heuristics)
 
 
 if __name__ == '__main__':

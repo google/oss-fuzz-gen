@@ -1266,8 +1266,8 @@ def auto_generate(github_url,
 
   # Check each of the build scripts.
   print('[+] Testing build suggestions')
-  build_results = build_generator.raw_build_evaluation(all_build_scripts,
-          initial_executable_files)
+  build_results = build_generator.raw_build_evaluation(
+      all_build_scripts, initial_executable_files)
   print(f'Checking results of {len(build_results)} build generators')
   for test_dir, test_build_result in build_results.items():
     build_heuristic = test_build_result['auto-build-setup'][2].heuristic_id

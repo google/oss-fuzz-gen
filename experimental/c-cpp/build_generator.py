@@ -629,7 +629,6 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
   build_heuristics_to_analyse = os.getenv('BUILD_HEURISTICS', 'all')
   if build_heuristics_to_analyse != 'all':
     all_build_heuristics = build_heuristics_to_analyse.split(',')
-    print(all_build_heuristics)
     for name in all_build_heuristics:
       for check in all_checks:
         if check.name == name:
