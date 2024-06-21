@@ -54,15 +54,15 @@ class SemanticCheckResult:
     # Need to catch this before ASAN.
     match = cls.SYMPTOM_SCARINESS.search(fuzzlog)
     if match:
-      return match.group(1)
+      return match.group(1).strip()
 
     match = cls.SYMPTOM_ASAN.search(fuzzlog)
     if match:
-      return f'ASAN-{match.group(0)}'
+      return f'ASAN-{match.group(0).strip()}'
 
     match = cls.SYMPTOM_LIBFUZZER.search(fuzzlog)
     if match:
-      return f'libFuzzer-{match.group(0)}'
+      return f'libFuzzer-{match.group(0).strip()}'
 
     return ''
 
