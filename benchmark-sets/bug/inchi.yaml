@@ -1,0 +1,21 @@
+"functions":
+- "name": "GetStructFromStdINCHI"
+  "params":
+  - "name": "inpInChI"
+    "type": "struct tagINCHI_InputINCHI *"
+  - "name": "outStruct"
+    "type": "struct tagINCHI_OutputStruct *"
+  "return_type": "int"
+  "signature": "int GetStructFromStdINCHI(inchi_InputINCHI *, inchi_OutputStruct *)"
+- "name": "GetINCHIEx"
+  "params":
+  - "name": "inp"
+    "type": "struct inchi_InputEx *"
+  - "name": "out"
+    "type": "struct tagINCHI_Output *"
+  "return_type": "int"
+  "signature": "int GetINCHIEx(inchi_InputEx *, inchi_Output *)"
+"language": "c"
+"project": "inchi"
+"target_name": "inchi_input_fuzzer"
+"target_path": "/src/inchi_input_fuzzer.c"
