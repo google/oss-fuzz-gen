@@ -443,4 +443,4 @@ class AIBinaryModel(GoogleModel):
     self.name = name
 
 
-DefaultModel = VertexAICodeBison32KModel
+DefaultModel = GeminiV1D5
