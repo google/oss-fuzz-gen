@@ -111,6 +111,7 @@ $PYTHON run_all_experiments.py \
   --work-dir ${LOCAL_RESULTS_DIR:?} \
   --num-samples 10 \
   --delay "${DELAY:?}" \
+  --prompt-builder "CSpecific" \
   --model "$MODEL"
 
 export ret_val=$?
