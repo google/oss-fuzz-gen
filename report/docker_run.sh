@@ -111,6 +111,7 @@ $PYTHON run_all_experiments.py \
   --work-dir ${LOCAL_RESULTS_DIR:?} \
   --num-samples 10 \
   --delay "${DELAY:?}" \
+  --context \
   --model "$MODEL"
 
 export ret_val=$?
