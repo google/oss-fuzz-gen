@@ -294,6 +294,17 @@ class BuilderRunner:
         return cov_pcs, total_pcs, True, SemanticCheckResult(
             SemanticCheckResult.SIGNAL, symptom, crash_stacks)
 
+      # Exit, normally indicating the fuzz target exited in a controlled manner,
+      # blocking its bug discovery.
+      if symptom.endswith('fuzz target exited'):
+        return cov_pcs, total_pcs, True, SemanticCheckResult(
+            SemanticCheckResult.EXIT, symptom, crash_stacks)
+
+      # Fuzz target modified constants.
+      if symptom.endswith('fuzz target overwrites its const input'):
+        return cov_pcs, total_pcs, True, SemanticCheckResult(
+            SemanticCheckResult.OVERWRITE_CONST, symptom, crash_stacks)
+
       # OOM, normally indicating malloc's parameter is too large, e.g., because
       # of using parameter `size`.
       # TODO(dongge): Refine this, 1) Merge this with the other oom case found
