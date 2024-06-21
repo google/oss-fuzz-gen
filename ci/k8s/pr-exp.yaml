@@ -46,7 +46,7 @@ spec:
         - name: LLM_NUM_EVA
           value: '10'
         - name: VERTEX_AI_LOCATIONS
-          value: 'us-central1,us-east4,us-west1,us-west4,northamerica-northeast1'
+          value: 'me-central1,me-central2,us-east5'
       # imagePullSecrets:
       # - name: oss-fuzz-base-artifect
       volumes:
