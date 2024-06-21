@@ -430,7 +430,7 @@ class GeminiV1D5(GeminiModel):
   context_window = 2000000
 
   name = 'vertex_ai_gemini-1-5'
-  _vertex_ai_model = 'gemini-1.5-pro-preview-0514'
+  _vertex_ai_model = 'gemini-1.5-pro-preview-0409'
 
 
 class AIBinaryModel(GoogleModel):
