@@ -274,9 +274,9 @@ class Results:
       if log_size <= MAX_RUN_LOGS_LEN:
         return f.read()
 
-      trancated_len = MAX_RUN_LOGS_LEN // 2
-      logs_beginning = f.read(trancated_len)
-      f.seek(log_size - trancated_len - 1, os.SEEK_SET)
+      truncated_len = MAX_RUN_LOGS_LEN // 2
+      logs_beginning = f.read(truncated_len)
+      f.seek(log_size - truncated_len - 1, os.SEEK_SET)
       logs_ending = f.read()
 
       return logs_beginning + '\n...truncated...\n' + logs_ending
