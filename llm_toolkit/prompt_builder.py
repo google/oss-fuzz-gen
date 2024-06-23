@@ -408,7 +408,7 @@ class DefaultTemplateBuilder(PromptBuilder):
                      .replace('{FUZZ_TARGET_CODE}', target_code)
 
     all_func_code = []
-    for func_name, line_number in crash_func:
+    for func_name, line_number in crash_func.items():
       func_code = self._slice_func_code(benchmark.project, func_name,
                                         line_number)
       print('func_code:', func_code)
