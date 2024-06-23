@@ -423,9 +423,8 @@ class DefaultTemplateBuilder(PromptBuilder):
       if prompt_size + func_code_token_num >= self._model.context_window:
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
-        logging.warning(
-            'Breaking because adding this function code would exceed context window'
-        )
+        logging.warning('Breaking because adding this function code \
+              would exceed context window')
         break
       prompt_size += func_code_token_num
       selected_func_code.append(func_code)
@@ -468,10 +467,10 @@ class DefaultTemplateBuilder(PromptBuilder):
           'Driver target line exceed maxium limit in Project: %s, \
                       try to use whole driver code in trigae prompt', project)
       return driver_code
-    else:
-      code_snippet = '\n'.join(lines[:target_line])
-      result = f'\nLine 1 - {target_line}:\n{code_snippet}'
-      return result
+
+    code_snippet = '\n'.join(lines[:target_line])
+    result = f'\nLine 1 - {target_line}:\n{code_snippet}'
+    return result
 
   def _slice_func_code(self, project: str, func_name: str,
                        target_lines: set) -> str:
@@ -493,15 +492,14 @@ class DefaultTemplateBuilder(PromptBuilder):
         if not any(l in output_lines for l in range(start, end + 1)):
           code_snippet = '\n'.join(lines[(start -
                                           begin_line):(end - begin_line) + 1])
-          result.append(
-              f'\nFunction Name:\n{func_name}\nLine {start} - {end}:\n{code_snippet}'
-          )
+          result.append(f'\nFunction Name:\n{func_name}\n\
+                Line {start} - {end}:\n{code_snippet}')
           output_lines.update(range(start, end + 1))
       return '\n'.join(result)
-    else:
-      logging.warning('Failed to slice Project: %s Function: %s at Lines: %s',
-                      project, func_name, target_lines)
-      return ''
+
+    logging.warning('Failed to slice Project: %s Function: %s at Lines: %s',
+                    project, func_name, target_lines)
+    return ''
 
 
 class DefaultJvmTemplateBuilder(PromptBuilder):
@@ -829,6 +827,11 @@ class CSpecificBuilder(PromptBuilder):
                          error_desc: Optional[str],
                          errors: list[str]) -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
+    return self._prompt
+
+  def build_triager_prompt(self, benchmark: Benchmark, driver_code: str,
+                           crash_info: str, crash_func: dict) -> prompts.Prompt:
+    """Builds a triager prompt."""
     return self._prompt
 
   def post_proces_generated_code(self, generated_code: str) -> str:

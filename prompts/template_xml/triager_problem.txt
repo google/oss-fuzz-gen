@@ -11,6 +11,6 @@ Below is driver code:
 Below is relevant project function code:
 <code>
 {PROJECT_FUNCTION_CODE}
-</code> 
+</code>
 
 <solution>
