@@ -48,7 +48,8 @@ class SemanticCheckResult:
   SYMPTOM_SCARINESS = re.compile(r'SCARINESS:\s*\d+\s*\((.*)\)\n')
 
   # Regex for extract crash information.
-  INFO_CRASH = re.compile(r'^={65}\r?\n([\s\S]*)', re.MULTILINE | re.DOTALL)
+  INFO_CRASH = re.compile(r'^={65}\r?\n(.*?)(?=SUMMARY)',
+                          re.MULTILINE | re.DOTALL)
 
   NO_COV_INCREASE_MSG_PREFIX = 'No code coverage increasement'
 
@@ -80,7 +81,7 @@ class SemanticCheckResult:
     """Extracts crash information from fuzzing logs."""
     match = cls.INFO_CRASH.search(fuzzlog)
     if match:
-      return match.group(0)
+      return match.group(1)
 
     logging.warning('Failed to match crash information.')
     return ''
