@@ -323,16 +323,11 @@ class DefaultTemplateBuilder(PromptBuilder):
     problem_weight = self._model.estimate_token_num(problem_prompt)
     template_weight = self._model.estimate_token_num(template_piece)
 
-    print('problem_weight_fix:', problem_weight)
-    print('template_weight_fix:', template_weight)
-    print('priming_weight_fix:', priming_weight)
-
     # the template will be replaced later and should not be counted
     prompt_size = priming_weight + problem_weight - template_weight
     # Add extra 20-tokens redundancy
     # TODO(mihaimaruseac): Is this needed?
     prompt_size += 20
-    print('prompt_size_fix_before:', prompt_size)
 
     # We are adding errors one by one until we reach the maximum prompt size
     selected_errors = []
@@ -345,15 +340,12 @@ class DefaultTemplateBuilder(PromptBuilder):
         continue
 
       error_prompt = self._prompt.create_prompt_piece(error, 'user')
-      print('error_prompt:', error_prompt)
       error_token_num = self._model.estimate_token_num(error_prompt)
-      print('error_token_num:', error_token_num)
       if prompt_size + error_token_num >= self._model.context_window:
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
         break
       prompt_size += error_token_num
-      print('prompt_size_fix_after:', prompt_size)
       selected_errors.append(error)
 
     # Now, compose the problem part of the prompt
@@ -377,13 +369,8 @@ class DefaultTemplateBuilder(PromptBuilder):
                            crash_info: str, crash_func: dict) -> prompts.Prompt:
     """Prepares the crash-triaging prompt."""
     priming, priming_weight = self._format_triager_priming()
-    #TODO: delete print
-    print('priming:', priming)
-    print('priming_weight:', priming_weight)
     problem = self._format_triager_problem(benchmark, driver_code, crash_info,
                                            crash_func, priming_weight)
-    #TODO: delete print
-    print('problem:', problem)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -407,14 +394,10 @@ class DefaultTemplateBuilder(PromptBuilder):
       if func_name == 'LLVMFuzzerTestOneInput':
         driver_code = self._slice_driver_code(benchmark.project, driver_code,
                                               line_number)
-        print('driver_code:\n', driver_code)
       else:
         func_code = self._slice_func_code(benchmark.project, func_name,
                                           line_number)
-        print('func_code:', func_code)
         all_func_code.append(func_code)
-    #TODO: delete print
-    print('all_func_code:\n', all_func_code)
 
     with open(self.triager_problem_template_file) as f:
       problem = f.read().strip()
@@ -428,38 +411,27 @@ class DefaultTemplateBuilder(PromptBuilder):
     problem_weight = self._model.estimate_token_num(problem_prompt)
     template_weight = self._model.estimate_token_num(template_piece)
 
-    print('priming_weight:', priming_weight)
-    print('problem_weight:', problem_weight)
-    print('template_weight:', template_weight)
-
     prompt_size = priming_weight + problem_weight - template_weight
     # Add extra 20-tokens redundancy
     prompt_size += 20
-    print('prompt_size_before:', prompt_size)
 
     # Add function code one by one until we reach the maximum prompt size
     selected_func_code = []
     for func_code in all_func_code:
       func_code_prompt = self._prompt.create_prompt_piece(func_code, 'user')
-      print('func_code_prompt:', func_code_prompt)
       func_code_token_num = self._model.estimate_token_num(func_code_prompt)
-      print('func_code_token_num:', func_code_token_num)
       if prompt_size + func_code_token_num >= self._model.context_window:
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
-        print(
+        logging.warning(
             'Breaking because adding this function code would exceed context window'
         )
         break
       prompt_size += func_code_token_num
-      print('prompt_size_after:', prompt_size)
       selected_func_code.append(func_code)
-
-    print('selected_func_code:\n', selected_func_code)
 
     # Compose the problem part of the prompt
     project_function_code = '\n'.join(selected_func_code)
-    print('project_function_code:\n', project_function_code)
     if project_function_code.strip():
       return problem.replace('{PROJECT_FUNCTION_CODE}',
                              project_function_code.strip())
@@ -495,41 +467,29 @@ class DefaultTemplateBuilder(PromptBuilder):
       logging.warning(
           'Driver target line exceed maxium limit in Project: %s, \
                       try to use whole driver code in trigae prompt', project)
-
       return driver_code
     else:
       code_snippet = '\n'.join(lines[:target_line])
       result = f'\nLine 1 - {target_line}:\n{code_snippet}'
-
       return result
 
-  #TODO: delete print
   def _slice_func_code(self, project: str, func_name: str,
                        target_lines: set) -> str:
     """Slice target line and four preceding lines from function code."""
-    print('func_name:', func_name)
-    print('target_lines:', target_lines)
     func_sig = introspector.query_introspector_function_signature(
         project, func_name)
-    print('func_sig:', func_sig)
     func_code = introspector.query_introspector_function_source(
         project, func_sig)
-    print('func_code:\n', func_code)
     begin_line, end_line = introspector.query_introspector_function_line(
         project, func_sig)
-    print('begin_line:', begin_line)
-    print('end_line:', end_line)
     if begin_line != 0 and end_line != 0 and all(
         begin_line <= line <= end_line for line in target_lines):
       lines = func_code.split('\n')
-      print('lines:\n', lines)
       output_lines = set()
       result = []
-
       for line in sorted(target_lines):
         start = max(line - 4, begin_line)
         end = line
-
         if not any(l in output_lines for l in range(start, end + 1)):
           code_snippet = '\n'.join(lines[(start -
                                           begin_line):(end - begin_line) + 1])
@@ -537,12 +497,10 @@ class DefaultTemplateBuilder(PromptBuilder):
               f'\nFunction Name:\n{func_name}\nLine {start} - {end}:\n{code_snippet}'
           )
           output_lines.update(range(start, end + 1))
-
       return '\n'.join(result)
     else:
       logging.warning('Failed to slice Project: %s Function: %s at Lines: %s',
                       project, func_name, target_lines)
-
       return ''
 
 

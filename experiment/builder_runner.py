@@ -328,15 +328,10 @@ class BuilderRunner:
     # NOTE: Crashes from incorrect fuzz targets will not be counted finally.
 
     if crashes:
-      print('crashes:', crashes)
       symptom = SemanticCheckResult.extract_symptom(fuzzlog)
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
       crash_func = self._parse_func_from_stacks(project_name, crash_stacks)
       crash_info = SemanticCheckResult.extract_crash_info(fuzzlog)
-
-      print('crash_stack:\n', crash_stacks)
-      print('crash_func:\n', crash_func)
-      print('crash_info:\n', crash_info)
 
       # FP case 1: Common fuzz target errors.
       # Null-deref, normally indicating inadequate parameter initialization or
@@ -438,7 +433,6 @@ class BuilderRunner:
       build_result: BuildResult,
       language: str) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target locally for fuzzing."""
-
     project_name = generated_project.split('-', 1)[0]
     benchmark_target_name = os.path.basename(target_path)
     project_target_name = os.path.basename(self.benchmark.target_path)
@@ -446,14 +440,6 @@ class BuilderRunner:
         benchmark_target_name, iteration)
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
-
-    #TODO: DELETE
-    print('project_name:', project_name)
-    print('generated_project:', generated_project)
-    print('target_path:', target_path)
-    print('benchmark_target_name:', benchmark_target_name)
-    print('project_target_name:', project_target_name)
-    print('benchmark_log_path:', benchmark_log_path)
 
     # Copy err.log into work dir (Ignored for JVM projects)
     if language != 'jvm':
