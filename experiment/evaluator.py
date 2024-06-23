@@ -246,7 +246,7 @@ class Evaluator:
       self,
       ai_binary: str,
       generated_oss_fuzz_project: str,
-      triaged_target_path: str,
+      driver_path: str,
       run_result: RunResult,
       logger: _Logger,
   ) -> str:
@@ -258,10 +258,10 @@ class Evaluator:
       crash_func = run_result.semantic_check.crash_func
       #TODO: delete print
       print('crash_func:', crash_func)
-      print('triaged_target_path:', triaged_target_path)
+      print('driver_path:', driver_path)
       return crash_triager.llm_triage(
           ai_binary,
-          triaged_target_path,
+          driver_path,
           self.benchmark,
           crash_info,
           crash_func,
