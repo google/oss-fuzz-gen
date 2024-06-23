@@ -407,7 +407,7 @@ class DefaultTemplateBuilder(PromptBuilder):
       if func_name == 'LLVMFuzzerTestOneInput':
         driver_code = self._slice_driver_code(benchmark.project, driver_code,
                                               line_number)
-        print('driver_code:', driver_code)
+        print('driver_code:\n', driver_code)
       else:
         func_code = self._slice_func_code(benchmark.project, func_name,
                                           line_number)
@@ -461,8 +461,8 @@ class DefaultTemplateBuilder(PromptBuilder):
     project_function_code = '\n'.join(selected_func_code)
     print('project_function_code:\n', project_function_code)
     if project_function_code.strip():
-      print('project_function_code_strip:\n', project_function_code.strip())
-      return problem.replace('{PROJECT_FUNCTION_CODE}', project_function_code)
+      return problem.replace('{PROJECT_FUNCTION_CODE}',
+                             project_function_code.strip())
 
     logging.warning(
         'Empty project function code in triage prompt for project: %s, \
@@ -508,9 +508,9 @@ class DefaultTemplateBuilder(PromptBuilder):
           return driver_code
         else:
           code_snippet = '\n'.join(lines[:target_line])
-          result = f'\nline1-{target_line}:\n{code_snippet}'
+          result = f'\nLine 1 - {target_line}:\n{code_snippet}'
 
-          return result
+          return result.strip()
     else:
       logging.warning(
           'Multiple target lines: %s in driver code in Project: %s, \
@@ -549,7 +549,9 @@ class DefaultTemplateBuilder(PromptBuilder):
         if not any(l in output_lines for l in range(start, end + 1)):
           code_snippet = '\n'.join(lines[(start -
                                           begin_line):(end - begin_line) + 1])
-          result.append(f'\nline{start}-{end}:\n{code_snippet}')
+          result.append(
+              f'\nFunction Name:\n{func_name}\nLine {start} - {end}:\n{code_snippet}'
+          )
           output_lines.update(range(start, end + 1))
 
       return '\n'.join(result)
