@@ -48,8 +48,7 @@ class SemanticCheckResult:
   SYMPTOM_SCARINESS = re.compile(r'SCARINESS:\s*\d+\s*\((.*)\)\n')
 
   # Regex for extract crash information.
-  INFO_CRASH = re.compile(r'^={65}\r?\n(.*?)(?=SUMMARY)',
-                          re.MULTILINE | re.DOTALL)
+  INFO_CRASH = re.compile(r'^ERROR: (.*?)(?=SUMMARY)', re.MULTILINE | re.DOTALL)
 
   NO_COV_INCREASE_MSG_PREFIX = 'No code coverage increasement'
 
