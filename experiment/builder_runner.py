@@ -237,6 +237,14 @@ class BuilderRunner:
           continue
         func_name, _, file_path = func_and_file_path.partition(' /')
         if func_name == 'LLVMFuzzerTestOneInput':
+          line_match = self.LINE_NUMBER.search(file_path)
+          if line_match:
+            line_number = int(line_match.group(1))
+            func_info[func_name].add(line_number)
+          else:
+            func_info[func_name].add(0)
+            logging.warning('Failed to parse line number from %s in project %s',
+                            func_name, project_name)
           break
         if project_name in file_path:
           func_match = self.FUNC_NAME.search(func_name)

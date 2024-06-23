@@ -97,7 +97,7 @@ class PromptBuilder:
     """Builds a fixer prompt."""
 
   @abstractmethod
-  def build_triager_prompt(self, benchmark: Benchmark, target_code: str,
+  def build_triager_prompt(self, benchmark: Benchmark, driver_code: str,
                            crash_info: str, crash_func: dict) -> prompts.Prompt:
     """Builds a triager prompt."""
 
@@ -402,19 +402,24 @@ class DefaultTemplateBuilder(PromptBuilder):
                               crash_info: str, crash_func: dict,
                               priming_weight: int) -> str:
     """Formats a problem for crash triage based on the template."""
+    all_func_code = []
+    for func_name, line_number in crash_func.items():
+      if func_name == 'LLVMFuzzerTestOneInput':
+        driver_code = self._slice_driver_code(benchmark.project, driver_code,
+                                              line_number)
+        print('driver_code:', driver_code)
+      else:
+        func_code = self._slice_func_code(benchmark.project, func_name,
+                                          line_number)
+        print('func_code:', func_code)
+        all_func_code.append(func_code)
+    #TODO: delete print
+    print('all_func_code:\n', all_func_code)
+
     with open(self.triager_problem_template_file) as f:
       problem = f.read().strip()
     problem = problem.replace('{CRASH_REPORT}', crash_info)\
                      .replace('{DRIVER_CODE}', driver_code)
-
-    all_func_code = []
-    for func_name, line_number in crash_func.items():
-      func_code = self._slice_func_code(benchmark.project, func_name,
-                                        line_number)
-      print('func_code:', func_code)
-      all_func_code.append(func_code)
-    #TODO: delete print
-    print('all_func_code:\n', all_func_code)
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{PROJECT_FUNCTION_CODE}',
@@ -481,10 +486,43 @@ class DefaultTemplateBuilder(PromptBuilder):
     self._add_examples(example_pair, final_problem, project_example_content)
     self._prompt.add_problem(final_problem)
 
+  def _slice_driver_code(self, project: str, driver_code: str,
+                         target_lines: set) -> str:
+    """Slice the driver code up to the target line."""
+    if len(target_lines) == 1:
+      target_line = next(iter(target_lines))
+      if target_line == 0:
+        logging.warning(
+            'Driver target line is 0 in Project: %s, \
+              try to use whole driver code in triage prompt', project)
+
+        return driver_code
+      else:
+        lines = driver_code.split('\n')
+        if target_line > len(lines):
+          logging.warning(
+              'Driver target line exceed maxium limit in Project: %s, \
+                          try to use whole driver code in trigae prompt',
+              project)
+
+          return driver_code
+        else:
+          code_snippet = '\n'.join(lines[:target_line])
+          result = f'\nline1-{target_line}:\n{code_snippet}'
+
+          return result
+    else:
+      logging.warning(
+          'Multiple target lines: %s in driver code in Project: %s, \
+                      try to use whole driver code in triage prompt',
+          target_lines, project)
+
+      return driver_code
+
   #TODO: delete print
   def _slice_func_code(self, project: str, func_name: str,
                        target_lines: set) -> str:
-    """Slice the function code from the source code."""
+    """Slice target line and four preceding lines from function code."""
     print('func_name:', func_name)
     print('target_lines:', target_lines)
     func_sig = introspector.query_introspector_function_signature(
@@ -518,6 +556,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     else:
       logging.warning('Failed to slice Project: %s Function: %s at Lines: %s',
                       project, func_name, target_lines)
+
       return ''
 
 
@@ -734,7 +773,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     # Do nothing for jvm project now.
     return self._prompt
 
-  def build_triager_prompt(self, benchmark: Benchmark, target_code: str,
+  def build_triager_prompt(self, benchmark: Benchmark, driver_code: str,
                            crash_info: str, crash_func: dict) -> prompts.Prompt:
     """Builds a triager prompt."""
     # Do nothing for jvm project now.
