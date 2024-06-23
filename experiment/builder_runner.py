@@ -25,7 +25,7 @@ import subprocess as sp
 import time
 import traceback
 import uuid
-from collections import namedtuple, defaultdict
+from collections import defaultdict, namedtuple
 from typing import Any, Optional
 
 from google.cloud import storage
@@ -366,8 +366,8 @@ class BuilderRunner:
       if symptom.endswith('fuzz target overwrites its const input'):
         return ParseResult(
             cov_pcs, total_pcs, True, crash_info,
-            crash_info.SemanticCheckResult(SemanticCheckResult.OVERWRITE_CONST,
-                                           symptom, crash_stacks, crash_func))
+            SemanticCheckResult(SemanticCheckResult.OVERWRITE_CONST, symptom,
+                                crash_stacks, crash_func))
 
       # OOM, normally indicating malloc's parameter is too large, e.g., because
       # of using parameter `size`.
