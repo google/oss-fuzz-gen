@@ -483,7 +483,7 @@ class DefaultTemplateBuilder(PromptBuilder):
         if not any(l in output_lines for l in range(start, end + 1)):
           code_snippet = '\n'.join(lines[(start -
                                           begin_line):(end - begin_line) + 1])
-          result.append(f'line{start}-{end}: {code_snippet}')
+          result.append(f'\nline{start}-{end}:\n{code_snippet}')
           output_lines.update(range(start, end + 1))
 
       return '\n'.join(result)

@@ -258,6 +258,7 @@ class Evaluator:
       crash_func = run_result.semantic_check.crash_func
       #TODO: delete print
       print('crash_func:', crash_func)
+      print('triaged_target_path:', triaged_target_path)
       return crash_triager.llm_triage(
           ai_binary,
           triaged_target_path,
