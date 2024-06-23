@@ -242,7 +242,6 @@ class BuilderRunner:
             line_number = int(line_match.group(1))
             func_info[func_name].add(line_number)
           else:
-            func_info[func_name].add(0)
             logging.warning('Failed to parse line number from %s in project %s',
                             func_name, project_name)
           break

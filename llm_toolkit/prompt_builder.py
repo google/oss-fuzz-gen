@@ -410,8 +410,8 @@ class DefaultTemplateBuilder(PromptBuilder):
 
     with open(self.triager_problem_template_file) as f:
       problem = f.read().strip()
-    problem = problem.replace('{CRASH_REPORT}', crash_info)\
-                     .replace('{DRIVER_CODE}', driver_code)
+    problem = problem.replace('{CRASH_REPORT}', crash_info.strip())\
+                     .replace('{DRIVER_CODE}', driver_code.strip())
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{PROJECT_FUNCTION_CODE}',
@@ -467,35 +467,19 @@ class DefaultTemplateBuilder(PromptBuilder):
   def _slice_driver_code(self, project: str, driver_code: str,
                          target_lines: set) -> str:
     """Slice the driver code up to the target line."""
-    if len(target_lines) == 1:
-      target_line = next(iter(target_lines))
-      if target_line == 0:
-        logging.warning(
-            'Driver target line is 0 in Project: %s, \
-              try to use whole driver code in triage prompt', project)
-
-        return driver_code
-      else:
-        lines = driver_code.split('\n')
-        if target_line > len(lines):
-          logging.warning(
-              'Driver target line exceed maxium limit in Project: %s, \
-                          try to use whole driver code in trigae prompt',
-              project)
-
-          return driver_code
-        else:
-          code_snippet = '\n'.join(lines[:target_line])
-          result = f'\nLine 1 - {target_line}:\n{code_snippet}'
-
-          return result.strip()
-    else:
+    target_line = max(target_lines)
+    lines = driver_code.split('\n')
+    if target_line > len(lines):
       logging.warning(
-          'Multiple target lines: %s in driver code in Project: %s, \
-                      try to use whole driver code in triage prompt',
-          target_lines, project)
+          'Driver target line exceed maxium limit in Project: %s, \
+                      try to use whole driver code in trigae prompt', project)
 
       return driver_code
+    else:
+      code_snippet = '\n'.join(lines[:target_line])
+      result = f'\nLine 1 - {target_line}:\n{code_snippet}'
+
+      return result
 
   #TODO: delete print
   def _slice_func_code(self, project: str, func_name: str,
