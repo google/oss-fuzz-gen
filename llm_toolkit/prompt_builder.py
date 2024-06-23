@@ -365,12 +365,17 @@ class DefaultTemplateBuilder(PromptBuilder):
         str(error_desc))
     return problem.replace('{ERROR_MESSAGES}', error_message)
 
-  def build_triager_prompt(self, benchmark: Benchmark, target_code: str,
+  def build_triager_prompt(self, benchmark: Benchmark, driver_code: str,
                            crash_info: str, crash_func: dict) -> prompts.Prompt:
     """Prepares the crash-triaging prompt."""
     priming, priming_weight = self._format_triager_priming()
-    problem = self._format_triager_problem(benchmark, target_code, crash_info,
-                                           crash_func_names, priming_weight)
+    #TODO: delete print
+    print('priming:', priming)
+    print('priming_weight:', priming_weight)
+    problem = self._format_triager_problem(benchmark, driver_code, crash_info,
+                                           crash_func, priming_weight)
+    #TODO: delete print
+    print('problem:', problem)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -385,14 +390,14 @@ class DefaultTemplateBuilder(PromptBuilder):
     # in the case of structured prompts, we will create nested structures.
     return priming, priming_weight
 
-  def _format_triager_problem(self, benchmark: Benchmark, target_code: str,
+  def _format_triager_problem(self, benchmark: Benchmark, driver_code: str,
                               crash_info: str, crash_func: dict,
                               priming_weight: int) -> str:
     """Formats a problem for crash triage based on the template."""
     with open(self.triager_problem_template_file) as f:
       problem = f.read().strip()
     problem = problem.replace('{CRASH_REPORT}', crash_info)\
-                     .replace('{FUZZ_TARGET_CODE}', target_code)
+                     .replace('{DRIVER_CODE}', driver_code)
 
     all_func_code = []
     for func_name, line_number in crash_func.items():

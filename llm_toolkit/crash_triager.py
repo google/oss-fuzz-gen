@@ -33,23 +33,23 @@ class TriageResult:
 # ========================= LLM Triage ========================= #
 def llm_triage(
     ai_binary: str,
-    target_path: str,
+    driver_path: str,
     benchmark: benchmarklib.Benchmark,
     crash_info: str,
     crash_func: dict,
     triage_model_name: str,
 ) -> str:
   """Triages crash with LLM based on crash information and relevant code."""
-  with open(target_path) as target_file:
-    target_code = target_file.read()
+  with open(driver_path) as target_file:
+    driver_code = target_file.read()
 
-  response_dir = f'{os.path.splitext(target_path)[0]}-triage'
+  response_dir = f'{os.path.splitext(driver_path)[0]}-triage'
   os.makedirs(response_dir, exist_ok=True)
   prompt_path = os.path.join(response_dir, 'prompt.txt')
 
   apply_llm_triage(ai_binary,
                    benchmark,
-                   target_code,
+                   driver_code,
                    crash_info,
                    crash_func,
                    prompt_path,
@@ -86,7 +86,7 @@ def llm_triage(
 def apply_llm_triage(
     ai_binary: str,
     benchmark: benchmarklib.Benchmark,
-    target_code: str,
+    driver_code: str,
     crash_info: str,
     crash_func: dict,
     prompt_path: str,
@@ -103,7 +103,7 @@ def apply_llm_triage(
   )
 
   builder = prompt_builder.DefaultTemplateBuilder(triage_model)
-  prompt = builder.build_triager_prompt(benchmark, target_code, crash_info,
+  prompt = builder.build_triager_prompt(benchmark, driver_code, crash_info,
                                         crash_func)
   prompt.save(prompt_path)
 

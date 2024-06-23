@@ -1,11 +1,11 @@
-Below is the crash report:
+Below is crash report:
 <log>
 {CRASH_REPORT}
 </log>
 
-Below is the fuzz driver code:
+Below is driver code:
 <code>
-{FUZZ_TARGET_CODE}
+{DRIVER_CODE}
 </code>
 
 Below is relevant project function code:
