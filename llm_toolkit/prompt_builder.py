@@ -473,40 +473,29 @@ class DefaultTemplateBuilder(PromptBuilder):
     result = f'\nLine 1 - {target_line}:\n{code_snippet}'
     return result
 
-  #TODO: delete print
   def _slice_func_code(self, project: str, func_name: str,
                        target_lines: set) -> str:
     """Slice target line and four preceding lines from function code."""
-    print('func_name:', func_name)
-    print('target_lines:', target_lines)
     func_sig = introspector.query_introspector_function_signature(
         project, func_name)
-    print('func_sig:', func_sig)
     func_code = introspector.query_introspector_function_source(
         project, func_sig)
-    print('func_code:\n', func_code)
     begin_line, end_line = introspector.query_introspector_function_line(
         project, func_sig)
-    print('begin_line:', begin_line)
-    print('end_line:', end_line)
     if begin_line != 0 and end_line != 0 and all(
         begin_line <= line <= end_line for line in target_lines):
       lines = func_code.split('\n')
-      print('lines:\n', lines)
       output_lines = set()
       result = []
-
       for line in sorted(target_lines):
         start = max(line - 4, begin_line)
         end = line
-
         if not any(l in output_lines for l in range(start, end + 1)):
           code_snippet = '\n'.join(lines[(start -
                                           begin_line):(end - begin_line) + 1])
           result.append(f'\nFunction Name:\n{func_name}\n\
                 Line {start} - {end}:\n{code_snippet}')
           output_lines.update(range(start, end + 1))
-
       return '\n'.join(result)
 
     logging.warning('Failed to slice Project: %s Function: %s at Lines: %s',
