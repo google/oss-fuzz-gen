@@ -161,7 +161,7 @@ class GenerateReport:
           logs=self._results.get_logs(benchmark.id, sample.id),
           run_logs=self._results.get_run_logs(benchmark.id, sample.id),
           targets=sample_targets)
-      self._write(f'sample/{benchmark.id}/{sample.id}', rendered)
+      self._write(f'sample/{benchmark.id}/{sample.id}.html', rendered)
     except Exception as e:
       logging.error('Failed to write sample/%s/%s:\n%s', benchmark.id,
                     sample.id, e)
