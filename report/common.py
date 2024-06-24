@@ -25,12 +25,13 @@ import yaml
 from google.cloud import storage
 
 import run_one_experiment
+from data_prep import project_src
 from experiment import evaluator
 from experiment.workdir import WorkDirs
 
 MAX_RUN_LOGS_LEN = 16 * 1024
 
-TARGET_EXTS = ('.c', '.cc', '.cpp', '.cxx', '.c++', '.java', '.py')
+TARGET_EXTS = project_src.SEARCH_EXTS + ['.java', '.py']
 
 
 @dataclasses.dataclass
