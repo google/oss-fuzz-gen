@@ -369,13 +369,8 @@ class DefaultTemplateBuilder(PromptBuilder):
                            crash_info: str, crash_func: dict) -> prompts.Prompt:
     """Prepares the crash-triaging prompt."""
     priming, priming_weight = self._format_triager_priming()
-    #TODO: delete print
-    print('priming:', priming)
-    print('priming_weight:', priming_weight)
     problem = self._format_triager_problem(benchmark, driver_code, crash_info,
                                            crash_func, priming_weight)
-    #TODO: delete print
-    print('problem:', problem)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -399,14 +394,10 @@ class DefaultTemplateBuilder(PromptBuilder):
       if func_name == 'LLVMFuzzerTestOneInput':
         driver_code = self._slice_driver_code(benchmark.project, driver_code,
                                               line_number)
-        print('driver_code:\n', driver_code)
       else:
         func_code = self._slice_func_code(benchmark.project, func_name,
                                           line_number)
-        print('func_code:', func_code)
         all_func_code.append(func_code)
-    #TODO: delete print
-    print('all_func_code:\n', all_func_code)
 
     with open(self.triager_problem_template_file) as f:
       problem = f.read().strip()

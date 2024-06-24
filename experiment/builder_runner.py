@@ -288,6 +288,7 @@ class BuilderRunner:
 
   def _parse_libfuzzer_logs(self,
                             log_handle,
+                            project_name: str,
                             check_cov_increase: bool = True) -> ParseResult:
     """Parses libFuzzer logs."""
     lines = None
@@ -332,11 +333,6 @@ class BuilderRunner:
       crash_func = self._parse_func_from_stacks(project_name, crash_stacks)
       crash_info = SemanticCheckResult.extract_crash_info(fuzzlog)
 
-      print('crash_stack:\n', crash_stacks)
-      print('crash_func_names:\n', crash_func_names)
-      print('crash_func:\n', crash_func)
-      print('crash_info:\n', crash_info)
-
       # FP case 1: Common fuzz target errors.
       # Null-deref, normally indicating inadequate parameter initialization or
       # wrong function usage.
@@ -352,7 +348,7 @@ class BuilderRunner:
         return ParseResult(
             cov_pcs, total_pcs, True, crash_info,
             SemanticCheckResult(SemanticCheckResult.SIGNAL, symptom,
-                                crash_stacks))
+                                crash_stacks, crash_func))
 
       # Exit, normally indicating the fuzz target exited in a controlled manner,
       # blocking its bug discovery.
@@ -441,7 +437,7 @@ class BuilderRunner:
       build_result: BuildResult,
       language: str) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target locally for fuzzing."""
-
+    project_name = generated_project.split('-', 1)[0]
     benchmark_target_name = os.path.basename(target_path)
     project_target_name = os.path.basename(self.benchmark.target_path)
     benchmark_log_path = self.work_dirs.build_logs_target(
