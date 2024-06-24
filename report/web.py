@@ -21,7 +21,6 @@ import json
 import logging
 import os
 import re
-import sys
 import urllib.parse
 from functools import partial
 from typing import Any, Dict, List, Optional
@@ -280,6 +279,21 @@ class Results:
       logs_ending = f.read()
 
       return logs_beginning + '\n...truncated...\n' + logs_ending
+
+    return ''
+
+  def get_triage(self, benchmark: str, sample: str) -> str:
+    """Gets the triage of benchmark |benchmark| with sample ID |sample|."""
+    fixed_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
+    triage_dir = os.path.join(fixed_dir, f'{sample}-triage')
+    if not os.path.exists(triage_dir):
+      return ''
+
+    for name in os.listdir(triage_dir):
+      if name.endswith('.txt') and name != 'prompt.txt':
+        triage_path = os.path.join(triage_dir, name)
+        with open(triage_path) as f:
+          return f.read()
 
     return ''
 
