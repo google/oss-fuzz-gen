@@ -444,6 +444,7 @@ class BuilderRunner:
         benchmark_target_name, iteration)
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
+
     # Copy err.log into work dir (Ignored for JVM projects)
     if language != 'jvm':
       try:
