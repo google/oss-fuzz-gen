@@ -608,7 +608,7 @@ class GenerateReport:
       rendered = self._jinja.render(
           'sample.html',
           benchmark=benchmark.id,
-          sample=self._results.match_sample(benchmark.id, sample.id),
+          sample=sample,
           logs=self._results.get_logs(benchmark.id, sample.id),
           run_logs=self._results.get_run_logs(benchmark.id, sample.id),
           triage=self._results.get_triage(benchmark.id, sample.id),
