@@ -74,7 +74,7 @@ fi
 # The LLM used to generate and fix fuzz targets.
 if [[ $MODEL = '' ]]
 then
-  MODEL='vertex_ai_code-bison-32k'
+  MODEL='vertex_ai_gemini-1-5'
   echo "LLM was not specified as the fifth argument. Defaulting to ${MODEL:?}."
 fi
 
@@ -111,6 +111,7 @@ $PYTHON run_all_experiments.py \
   --work-dir ${LOCAL_RESULTS_DIR:?} \
   --num-samples 10 \
   --delay "${DELAY:?}" \
+  --context \
   --model "$MODEL"
 
 export ret_val=$?
