@@ -134,7 +134,7 @@ class DefaultTemplateBuilder(PromptBuilder):
   def _format_priming(self, target_file_type: FileType) -> str:
     """Formats a priming based on the prompt template."""
     priming = self._get_template(self.priming_template_file)
-    priming.replace('{LANGUAGE}', target_file_type.value)
+    priming = priming.replace('{LANGUAGE}', target_file_type.value)
     if target_file_type == FileType.CPP:
       type_specific_priming = self._get_template(self.cpp_priming_filler_file)
     else:
