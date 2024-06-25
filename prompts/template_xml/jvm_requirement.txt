@@ -88,7 +88,7 @@ Each item in this list has two attributes, <class_name> tag contains the class n
 contains the fully qualified name of the given class.
 <list>
 <item><class_name>FuzzedDataProvider</class_name><full_class_name>com.code_intelligence.jazzer.api.FuzzedDataProvider</full_class_name></item>
-{OTHER_IMPORT_STATEMENTS}
+{IMPORT_MAPPINGS}
 </list>
 </requirements>
 
