@@ -139,6 +139,12 @@ class BuilderRunner:
     name = signature.split('].')[1].split('(')[0]
     arg_count = len(signature.split('(')[1].split(')')[0].split(','))
 
+    if '<init>' in name:
+      # JVM constructor name <init> does not exist in result code
+      # Retrieve the class name to locate a constructor call
+      class_name = signature[1:].split('].')[0].split('.')[-1]
+      name = f'new {class_name}'
+
     pattern = r'(%s\(%s\))' % (name, ','.join([base_arg_regex] * arg_count))
     match = re.search(pattern, ''.join(code.splitlines()))
 
