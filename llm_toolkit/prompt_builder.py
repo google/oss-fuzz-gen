@@ -484,7 +484,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _format_general_argument(self, count: int, arg_type: str) -> str:
     """Formats general argument description."""
-    argument = self._get_template(self.generic_arg_description_template_file)
+    argument = self._get_template(self.arg_description_template_file)
     argument = argument.replace('{ARG_COUNT}', str(count))
     argument = argument.replace('{ARG_TYPE}', arg_type)
 
