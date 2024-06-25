@@ -51,6 +51,7 @@ INTROSPECTOR_CFG = ''
 INTROSPECTOR_ORACLE_FAR_REACH = ''
 INTROSPECTOR_ORACLE_KEYWORD = ''
 INTROSPECTOR_ORACLE_EASY_PARAMS = ''
+INTROSPECTOR_ORACLE_ALL_CANDIDATES = ''
 INTROSPECTOR_FUNCTION_SOURCE = ''
 INTROSPECTOR_PROJECT_SOURCE = ''
 INTROSPECTOR_XREF = ''
@@ -69,6 +70,7 @@ def get_oracle_dict() -> Dict[str, Any]:
       'far-reach-low-coverage': get_unreached_functions,
       'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets,
       'easy-params-far-reach': query_introspector_for_easy_param_targets,
+      'all-public-candidates': query_introspector_for_all_public_candidates,
   }
   return oracle_dict
 
@@ -80,7 +82,8 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_ORACLE_FAR_REACH, \
       INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
       INTROSPECTOR_ALL_HEADER_FILES, INTROSPECTOR_ALL_FUNC_TYPES, \
-      INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS
+      INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS, \
+      INTROSPECTOR_ORACLE_ALL_CANDIDATES
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
@@ -92,6 +95,8 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/far-reach-low-cov-fuzz-keyword')
   INTROSPECTOR_ORACLE_EASY_PARAMS = (
       f'{INTROSPECTOR_ENDPOINT}/easy-params-far-reach')
+  INTROSPECTOR_ORACLE_ALL_CANDIDATES = (
+      f'{INTROSPECTOR_ENDPOINT}/all-public-candidates')
   INTROSPECTOR_FUNCTION_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
   INTROSPECTOR_PROJECT_SOURCE = f'{INTROSPECTOR_ENDPOINT}/project-source-code'
   INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
@@ -196,6 +201,13 @@ def query_introspector_for_easy_param_targets(project: str) -> list[dict]:
   """Queries Fuzz Introspector for targets that have fuzzer-friendly params,
   such as data buffers."""
   return query_introspector_oracle(project, INTROSPECTOR_ORACLE_EASY_PARAMS)
+
+
+def query_introspector_for_all_public_candidates(project: str) -> list[dict]:
+  """Queries Fuzz Introspector for all public accessible function or
+  constructor candidates.
+  """
+  return query_introspector_oracle(project, INTROSPECTOR_ORACLE_ALL_CANDIDATES)
 
 
 def query_introspector_for_targets(project, target_oracle) -> list[Dict]:

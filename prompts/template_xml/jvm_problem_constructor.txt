@@ -9,3 +9,9 @@ Here is the list of arguments of the target constructor with descriptions.
 <arguments>
 {ARGUMENTS}
 </arguments>
+Here is the source code of the target constructor for reference.
+<code>
+{SELF_SOURCE}
+</code>
+Here is a list of source codes of methods that directly invoke the target consturctor for reference.
+{CROSS_SOURCE}
