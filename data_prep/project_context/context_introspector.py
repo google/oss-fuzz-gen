@@ -18,12 +18,12 @@ class ContextRetriever:
     self._benchmark = benchmark
 
   def _get_embeddable_declaration(self) -> str:
-    """Retrieves declaration by language. Attach extern C to C projects."""
+    """Retrieves declaration by language."""
     lang = self._benchmark.language.lower()
     sig = self._benchmark.function_signature + ';'
 
     if lang == 'c':
-      return 'extern "C" ' + sig
+      return sig
 
     if lang != 'c++':
       logging.warning('Unsupported decl - Lang: %s Project: %s', lang,
