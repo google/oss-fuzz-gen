@@ -40,6 +40,10 @@ FDP_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'gdImageString-problem.txt')
 FDP_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH, 'gdImageString-solution.cc')
 FDP_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH, 'mpg123_decode-problem.txt')
 FDP_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH, 'mpg123_decode-solution.cc')
+C_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'fuzzerPolygonToCells.txt')
+C_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH, 'fuzzerPolygonToCells.c')
+C_EXAMPLE_2_PROBLEM = os.path.join(EXAMPLE_PATH, 'dns_message_parse.txt')
+C_EXAMPLE_2_SOLUTION = os.path.join(EXAMPLE_PATH, 'dns_message_parse.c')
 FDP_JVM_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'joni_regex-problem.txt')
 FDP_JVM_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH,
                                           'joni_regex-solution.java')
@@ -54,8 +58,8 @@ EXAMPLES = {
         [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
     ],
     'c': [
-        [FDP_EXAMPLE_1_PROBLEM, FDP_EXAMPLE_1_SOLUTION],
-        [FDP_EXAMPLE_2_PROBLEM, FDP_EXAMPLE_2_SOLUTION],
+        [C_EXAMPLE_1_PROBLEM, C_EXAMPLE_1_SOLUTION],
+        [C_EXAMPLE_2_PROBLEM, C_EXAMPLE_2_SOLUTION],
     ],
     'jvm': [
         [FDP_JVM_EXAMPLE_1_PROBLEM, FDP_JVM_EXAMPLE_1_SOLUTION],
@@ -130,7 +134,8 @@ class DefaultTemplateBuilder(PromptBuilder):
   def _format_priming(self, target_file_type: FileType) -> str:
     """Formats a priming based on the prompt template."""
     priming = self._get_template(self.priming_template_file)
-    if target_file_type in [FileType.C, FileType.CPP]:
+    priming.replace('{LANGUAGE}', target_file_type.value)
+    if target_file_type == FileType.CPP:
       type_specific_priming = self._get_template(self.cpp_priming_filler_file)
     else:
       type_specific_priming = ''
