@@ -627,16 +627,14 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
 
   print("Filtering out build scripts")
   build_heuristics_to_analyse = os.getenv('BUILD_HEURISTICS', 'all')
-  if build_heuristics_to_analyse != 'all':
+  if build_heuristics_to_analyse == 'all':
+    checks_to_test = all_checks
+  else:
     all_build_heuristics = build_heuristics_to_analyse.split(',')
     for name in all_build_heuristics:
       for check in all_checks:
         if check.name == name:
           checks_to_test.append(check)
-        else:
-          checks_to_test.append(check)
-  else:
-    checks_to_test = all_checks
 
   print(f"Using {len(checks_to_test)} checks.")
   for scanner in checks_to_test:
