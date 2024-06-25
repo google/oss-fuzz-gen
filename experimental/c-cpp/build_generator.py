@@ -623,7 +623,21 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
       AutogenScannerSH(),
   ]
 
-  for scanner in all_checks:
+  checks_to_test = []
+
+  print("Filtering out build scripts")
+  build_heuristics_to_analyse = os.getenv('BUILD_HEURISTICS', 'all')
+  if build_heuristics_to_analyse == 'all':
+    checks_to_test = all_checks
+  else:
+    all_build_heuristics = build_heuristics_to_analyse.split(',')
+    for name in all_build_heuristics:
+      for check in all_checks:
+        if check.name == name:
+          checks_to_test.append(check)
+
+  print(f"Using {len(checks_to_test)} checks.")
+  for scanner in checks_to_test:
     scanner.match_files(all_files)
     if scanner.is_matched():
       print('Matched: %s' % (scanner.name))
