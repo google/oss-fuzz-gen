@@ -8,3 +8,9 @@ Here is the list of arguments of the target method with descriptions.
 <arguments>
 {ARGUMENTS}
 </arguments>
+Here is the source code of the target method for reference.
+<code>
+{SELF_SOURCE}
+</code>
+Here is a list of source codes of methods that directly invoke the target method for reference.
+{CROSS_SOURCE}

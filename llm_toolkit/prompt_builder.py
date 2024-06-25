@@ -540,6 +540,23 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     return '\n'.join(argument_descriptions)
 
+  def _format_source_reference(self, signature: str) -> Tuple[str, str]:
+    """Formats the source code reference for this target."""
+    # Query for source code of the target method
+    source_code = introspector.query_introspector_function_source(
+        self.project_name, signature)
+
+    # Query for source code of target method callsites
+    xref_source_list = []
+    for xref in introspector.query_introspector_cross_references(
+        self.project_name, signature):
+      xref_source = introspector.query_introspector_function_source(
+          self.project_name, xref)
+      if xref_source:
+        xref_source_list.append(xref_source)
+
+    return source_code, '\n'.join(xref_source_list)
+
   def _format_problem(self, signature: str) -> str:
     """Formats a problem based on the prompt template."""
     problem = self._get_template(self.problem_template_file)
@@ -548,6 +565,11 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
                               self._format_requirement(signature))
     problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
     problem = problem.replace('{ARGUMENTS}', self._format_arguments())
+
+    self_source, cross_source = self._format_source_reference(signature)
+    problem = problem.replace('{SELF_SOURCE}', self_source)
+    problem = problem.replace('{CROSS_SOURCE}', cross_source)
+
     return problem
 
   def _prepare_prompt(self, base: str, final_problem: str):
