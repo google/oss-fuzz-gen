@@ -440,7 +440,7 @@ class BuilderRunner:
       build_result: BuildResult,
       language: str) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target locally for fuzzing."""
-    project_name = generated_project.split('-', 1)[0]
+    project_name = self.benchmark.project
     benchmark_target_name = os.path.basename(target_path)
     project_target_name = os.path.basename(self.benchmark.target_path)
     benchmark_log_path = self.work_dirs.build_logs_target(
@@ -770,7 +770,7 @@ class CloudBuilderRunner(BuilderRunner):
     """Builds and runs the fuzz target locally for fuzzing."""
     logging.info('Evaluating %s on cloud.', os.path.realpath(target_path))
 
-    project_name = generated_project.split('-', 1)[0]
+    project_name = self.benchmark.project
 
     uid = self.experiment_name + str(uuid.uuid4())
     run_log_name = f'{uid}.run.log'
