@@ -194,7 +194,7 @@ class BuilderRunner:
 
   def _parse_stacks_from_libfuzzer_logs(self,
                                         lines: list[str]) -> list[list[str]]:
-    """Parse stack traces from libFuzzer logs."""
+    """Parses stack traces from libFuzzer logs."""
     # TODO (dongge): Use stack parsing from ClusterFuzz.
     # There can have over one thread stack in a log.
     stacks = []
@@ -224,11 +224,14 @@ class BuilderRunner:
 
   def _parse_func_from_stacks(self, project_name: str,
                               stacks: list[list[str]]) -> dict:
-    """Parse project functions from stack traces."""
+    """Parses project functions from stack traces."""
     func_info = defaultdict(set)
 
     for stack in stacks:
       for line in stack:
+        # Use 3 spaces to divide each line of crash info into four parts.
+        # Only parse the fourth part, which includes the function name,
+        # file path, and line number.
         parts = line.split(' ', 3)
         if len(parts) < 4:
           continue
