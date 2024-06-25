@@ -36,7 +36,7 @@ td, th {
     </tr>
     {% for sample in samples %}
     <tr>
-        <td><a href="../../sample/{{ benchmark|urlencode }}/{{ sample.id }}">{{ sample.id }}</a></li></td>
+        <td><a href="../../sample/{{ benchmark|urlencode }}/{{ sample.id }}.html">{{ sample.id }}</a></li></td>
         <td>{{ sample.status }}</td>
         {% if sample.result %}
         <td style="color: {{ 'green' if sample.result.compiles else 'black' }}">{{ sample.result.compiles }}</td>
