@@ -548,8 +548,10 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     # Query for source code of target method callsites
     xref_source_list = []
-    for xref in introspector.query_introspector_cross_references(self.project_name, signature):
-      xref_source = query_introspector_function_source(self.project_name, xref)
+    for xref in introspector.query_introspector_cross_references(
+        self.project_name, signature):
+      xref_source = introspector.query_introspector_function_source(
+          self.project_name, xref)
       if xref_source:
         xref_source_list.append(xref_source)
 
