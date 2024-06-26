@@ -751,6 +751,19 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     # Do nothing for jvm project now.
     return self._prompt
 
+  def post_process_generated_code(self, generated_code: str) -> str:
+    """Allows prompt builder to adjust the generated code."""
+    # For unknown reason, LLM model keeps generating harnesses using
+    # FuzzedDataProvider::consumeObject() or FuzzedDataProvider::getObject()
+    # methods for generating random java.lang.Object intance which is
+    # actually not a valid method in FuzzedDataProvider. Try to change the
+    # calling of them to FuzzedDataProvider::consumeString(int) instead.
+
+    generated_code = generated_code.replace('data.consumeObject()', 'data.consumeString(data.remainingBytes()/2)')
+    generated_code = generated_code.replace('data.getObject()', 'data.consumeString(data.remainingBytes()/2)')
+
+    return generated_code
+
 
 class CSpecificBuilder(PromptBuilder):
   """Builder specifically targeted C (and excluding C++)."""
