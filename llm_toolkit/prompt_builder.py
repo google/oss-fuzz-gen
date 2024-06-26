@@ -17,6 +17,7 @@ Prompt building tools.
 
 import logging
 import os
+import re
 from abc import abstractmethod
 from typing import Optional, Tuple
 
@@ -753,16 +754,24 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def post_process_generated_code(self, generated_code: str) -> str:
     """Allows prompt builder to adjust the generated code."""
-    # For unknown reason, LLM model keeps generating harnesses using
+    # For unknown reasons, the LLM model keeps using wrong
     # FuzzedDataProvider::consumeObject() or FuzzedDataProvider::getObject()
-    # methods for generating random java.lang.Object intance which is
-    # actually not a valid method in FuzzedDataProvider. Try to change the
-    # calling of them to FuzzedDataProvider::consumeString(int) instead.
-
+    # methods to generate random java.lang.Object instance. These methods are
+    # not valid in FuzzedDataProvider. The fixes here change the calling of
+    # them to FuzzedDataProvider::consumeString(int) instead.
     generated_code = generated_code.replace(
         'data.consumeObject()', 'data.consumeString(data.remainingBytes()/2)')
     generated_code = generated_code.replace(
         'data.getObject()', 'data.consumeString(data.remainingBytes()/2)')
+
+    # For unknown reasons, the LLM model keeps using wrong
+    # FuzzedDataProvider::consumeInt(int) method to generate random int or
+    # java.lang.Integer instance. This method is not valid. The fixes here
+    # change the calling of that to FuzzedDataProvider::consumeInt(int,int)
+    # instead.
+    for item in re.findall(r'(data\.consumeInt\(([0-9]*)\))', generated_code):
+      generated_code = generated_code.replace(
+          item[0], item[0].replace(item[1], f'0, {item[1]}'))
 
     return generated_code
 
