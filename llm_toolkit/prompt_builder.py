@@ -759,8 +759,10 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     # actually not a valid method in FuzzedDataProvider. Try to change the
     # calling of them to FuzzedDataProvider::consumeString(int) instead.
 
-    generated_code = generated_code.replace('data.consumeObject()', 'data.consumeString(data.remainingBytes()/2)')
-    generated_code = generated_code.replace('data.getObject()', 'data.consumeString(data.remainingBytes()/2)')
+    generated_code = generated_code.replace(
+        'data.consumeObject()', 'data.consumeString(data.remainingBytes()/2)')
+    generated_code = generated_code.replace(
+        'data.getObject()', 'data.consumeString(data.remainingBytes()/2)')
 
     return generated_code
 
