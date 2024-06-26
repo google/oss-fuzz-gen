@@ -31,8 +31,11 @@ If the required arguments are instance of java.util.Collection<T> class or any o
 the generic type of that arguments is matched.
 </item>
 <item>
-If the required arguments is an array but it is not found in the first column of the above mapping table, please use array initiazation approach and filled it with random number of data of the required
+If the required argument is an array but it is not found in the first column of the above mapping table, please use array initiazation approach and filled it with random number of data of the required
 argument types.
+</item>
+<item>
+If the required argument are instance of java.lang.Object, please use any method mentioned in the second column of the above table. Please do not use method that is not exist in the above table.
 </item>
 </requirement>
 </data_mapping>
