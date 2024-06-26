@@ -754,24 +754,22 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def post_process_generated_code(self, generated_code: str) -> str:
     """Allows prompt builder to adjust the generated code."""
-    # For unknown reasons, the LLM model keeps using wrong
-    # FuzzedDataProvider::consumeObject() or FuzzedDataProvider::getObject()
-    # methods to generate random java.lang.Object instance. These methods are
-    # not valid in FuzzedDataProvider. The fixes here change the calling of
-    # them to FuzzedDataProvider::consumeString(int) instead.
+    # From observation, the LLM model keeps using wrong method calls including
+    # FuzzedDataProvider::consumeObject() or FuzzedDataProvider::getObject() or
+    # FuzzedDataProvider::consumeInt(int) to generate random Object / Integer
+    # instance. These methods are not valid in FuzzedDataProvider.
+
+    # The fixes here change the calling of data.consumeObject() and data.getObject()
+    # to data.consumeString(int)
     generated_code = generated_code.replace(
         'data.consumeObject()', 'data.consumeString(data.remainingBytes()/2)')
     generated_code = generated_code.replace(
         'data.getObject()', 'data.consumeString(data.remainingBytes()/2)')
 
-    # For unknown reasons, the LLM model keeps using wrong
-    # FuzzedDataProvider::consumeInt(int) method to generate random int or
-    # java.lang.Integer instance. This method is not valid. The fixes here
-    # change the calling of that to FuzzedDataProvider::consumeInt(int,int)
-    # instead.
-    for item in re.findall(r'(data\.consumeInt\(([0-9]*)\))', generated_code):
+    # The fixes here change the calling of data.consumeInt(int) to data.consumeInt(int,int)
+    for method_call in re.findall(r'(data\.consumeInt\(([0-9]*)\))', generated_code):
       generated_code = generated_code.replace(
-          item[0], item[0].replace(item[1], f'0, {item[1]}'))
+          method_call[0], method_call[0].replace(method_call[1], f'0, {method_call[1]}'))
 
     return generated_code
 
