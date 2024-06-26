@@ -160,6 +160,7 @@ class GenerateReport:
           sample=sample,
           logs=self._results.get_logs(benchmark.id, sample.id),
           run_logs=self._results.get_run_logs(benchmark.id, sample.id),
+          triage=self._results.get_triage(benchmark.id, sample.id),
           targets=sample_targets)
       self._write(f'sample/{benchmark.id}/{sample.id}.html', rendered)
     except Exception as e:

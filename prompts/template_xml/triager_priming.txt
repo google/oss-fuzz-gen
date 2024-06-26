@@ -1,0 +1,3 @@
+Given the following crash report, fuzz driver code and relevant project function code, analyze the cause of the crash.
+
+First, only answer “Crash is caused by bug in fuzz driver” or “Crash is caused by bug in project”. Second, offer a succinct and to-the-point analysis.
