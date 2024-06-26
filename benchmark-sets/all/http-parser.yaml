@@ -1,0 +1,37 @@
+"functions":
+- "name": "http_status_str"
+  "params":
+  - "name": ""
+    "type": "int"
+  "return_type": "char *"
+  "signature": "const char * http_status_str(DW_TAG_enumeration_typehttp_status)"
+- "name": "http_should_keep_alive"
+  "params":
+  - "name": ""
+    "type": "struct http_parser *"
+  "return_type": "int"
+  "signature": "int http_should_keep_alive(const http_parser *)"
+- "name": "http_parser_pause"
+  "params":
+  - "name": ""
+    "type": "struct http_parser *"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "void http_parser_pause(http_parser *, int)"
+- "name": "http_errno_description"
+  "params":
+  - "name": ""
+    "type": "int"
+  "return_type": "char *"
+  "signature": "const char * http_errno_description(DW_TAG_enumeration_typehttp_errno)"
+- "name": "http_errno_name"
+  "params":
+  - "name": ""
+    "type": "int"
+  "return_type": "char *"
+  "signature": "const char * http_errno_name(DW_TAG_enumeration_typehttp_errno)"
+"language": "c++"
+"project": "http-parser"
+"target_name": "fuzz_url"
+"target_path": "/src/http-parser/fuzzers/fuzz_url.c"
