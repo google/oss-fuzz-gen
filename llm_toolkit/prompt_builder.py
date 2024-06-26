@@ -759,17 +759,20 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     # FuzzedDataProvider::consumeInt(int) to generate random Object / Integer
     # instance. These methods are not valid in FuzzedDataProvider.
 
-    # The fixes here change the calling of data.consumeObject() and data.getObject()
-    # to data.consumeString(int)
+    # The fixes here change the calling of data.consumeObject() and
+    # data.getObject() to data.consumeString(int)
     generated_code = generated_code.replace(
         'data.consumeObject()', 'data.consumeString(data.remainingBytes()/2)')
     generated_code = generated_code.replace(
         'data.getObject()', 'data.consumeString(data.remainingBytes()/2)')
 
-    # The fixes here change the calling of data.consumeInt(int) to data.consumeInt(int,int)
-    for method_call in re.findall(r'(data\.consumeInt\(([0-9]*)\))', generated_code):
+    # The fixes here change the calling of data.consumeInt(int) to
+    # data.consumeInt(int,int)
+    for method_call in re.findall(r'(data\.consumeInt\(([0-9]*)\))',
+                                  generated_code):
       generated_code = generated_code.replace(
-          method_call[0], method_call[0].replace(method_call[1], f'0, {method_call[1]}'))
+          method_call[0], method_call[0].replace(method_call[1],
+                                                 f'0, {method_call[1]}'))
 
     return generated_code
 
