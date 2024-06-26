@@ -533,6 +533,11 @@ def populate_benchmarks_using_introspector(project: str, language: str,
       # Retrieve list of source file from introspector
       src_path_list = query_introspector_jvm_source_path(project)
       if src_path_list:
+        # For all JVM projects, the full class name is stored in the filename
+        # field. The full class name includes the package of the class and that
+        # forms part of the directory pattern of the source file that is needed
+        # for checking. For example, the source file of class a.b.c.d is always
+        # stored as <SOURCE_BASE>/a/b/c/d.java
         src_file = f'{filename.replace(".", "/")}.java'
         if src_file not in src_path_list:
           logging.error('error: %s %s', filename, interesting.keys())
