@@ -769,7 +769,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     # The fixes here change the calling of data.consumeInt(int) to
     # data.consumeInt(0, int). For example, data.consumeInt(12345) will
     # be replaced by data.consumeInt(0, 12345)
-    for wrong_method_call in re.findall(r'(data\.consumeInt\(([0-9]*)\))',
+    for wrong_method_call in re.findall(r'(data\.consumeInt\(([0-9]+)\))',
                                         generated_code):
       old_method_call = wrong_method_call[0]
       new_method_call = f'data.consumeInt(0, {wrong_method_call[1]})'
