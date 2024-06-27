@@ -69,33 +69,17 @@ EXCLUDED_FILE_PATH_SUBSTRINGS = ('/compiler-rt/', '/glibc-')
 
 def get_local_repo_path(repo_url):
   """Returns the local path of the repository."""
-  local_repo_name = repo_url.split("/")[-1]
+  local_repo_name = repo_url.split('/')[-1]
   return os.path.join(PROJECTS_DIR, local_repo_name)
 
 
-def get_commit_range(regression_range):
-  """
-    Parses a regression range string and returns the start and end commits.
+def get_git_commit_range(regression_range):
+  """Converts a regression range to a git commit range."""
+  # If the range is a single commit, return the range as previous commit:commit.
+  if not ':' in regression_range and not '..' in regression_range:
+    return f"{regression_range}~..{regression_range}"
 
-    Args:
-        regression_range: A string representing the regression range:
-            - "start_commit:end_commit"
-            - "start_commit..end_commit"
-            - "end_commit"
-
-    Returns:
-        A tuple (start_commit, end_commit), where:
-            - start_commit represents the first commit in the range
-            - end_commit represents the last commit in the range
-    """
-  # If the range is a single commit, return the range as parent commit:commit.
-  if regression_range.find(":") == -1 and regression_range.find("..") == -1:
-    return f"{regression_range}~", regression_range
-
-  delimiter = ":" if ":" in regression_range else ".."
-  start_commit, end_commit = regression_range.split(delimiter)
-
-  return start_commit, end_commit
+  return regression_range.replace(':', '..')
 
 
 def get_changeset_diff(repo_url, regression_range):
@@ -120,9 +104,8 @@ def get_changeset_diff(repo_url, regression_range):
   except InvalidGitRepositoryError:
     raise ValueError(f"Invalid Git repository path: {local_repo_path}")
 
-  start_commit, end_commit = get_commit_range(regression_range)
   try:
-    diff = repo.git.diff(f"{start_commit}..{end_commit}")
+    diff = repo.git.diff(get_git_commit_range(regression_range))
     return diff.encode('utf-8', 'replace').decode('utf-8')
   except Exception as e:
     raise RuntimeError(f"Error retrieving changeset diff: {e}")
@@ -167,7 +150,8 @@ if __name__ == "__main__":
   args = parser.parse_args()
   os.makedirs(PROJECTS_DIR, exist_ok=True)
 
-  stacktrace = open(args.crash_stacktrace).read()
+  with open(args.crash_stacktrace) as file_handle:
+    stacktrace = file_handle.read()
   changeset_diff = get_changeset_diff(args.repo_url, args.regression_range)
   source_code_content = ""
   found_sanitizer_error = False
