@@ -767,12 +767,13 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         'data.getObject()', 'data.consumeString(data.remainingBytes()/2)')
 
     # The fixes here change the calling of data.consumeInt(int) to
-    # data.consumeInt(int,int)
-    for method_call in re.findall(r'(data\.consumeInt\(([0-9]*)\))',
-                                  generated_code):
-      generated_code = generated_code.replace(
-          method_call[0], method_call[0].replace(method_call[1],
-                                                 f'0, {method_call[1]}'))
+    # data.consumeInt(0, int). For example, data.consumeInt(12345) will
+    # be replaced by data.consumeInt(0, 12345)
+    for wrong_method_call in re.findall(r'(data\.consumeInt\(([0-9]*)\))',
+                                        generated_code):
+      old_method_call = wrong_method_call[0]
+      new_method_call = f'data.consumeInt(0, {wrong_method_call[1]})'
+      generated_code = generated_code.replace(old_method_call, new_method_call)
 
     return generated_code
 
