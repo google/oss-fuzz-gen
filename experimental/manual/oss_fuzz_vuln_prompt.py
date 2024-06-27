@@ -1,24 +1,27 @@
 """Generate a prompt to identify and remediate the security vulnerability
 Usage:
   # Under venv.
-  1. python oss_fuzz_vuln_prompt.py \
-       --repo_url <repo_url> \
-       --regression_range <regression_range> \
-       --crash_revision <crash_revision> \
-       --crash_stacktrace <crash_stacktrace> > prompt.txt
+  1. python oss_fuzz_vuln_prompt.py
+       --repo_url <repo_url>
+       --regression_range <regression_range>
+       --crash_revision <crash_revision>
+       --crash_stacktrace <crash_stacktrace> > prompt.tx
     # <repo_url> is the URL of the git repository.
     # <regression_range> is the regression range or the regressing commit.
     # <crash_revision> is the revision where the crash occurred.
     # <crash_stacktrace> is the file containing the crash stacktrace.
 
-  2. python -m experimental.manual.prompter -p prompt.txt -l <model_name e.g. vertex_ai_gemini-1-5>
+  2. python -m experimental.manual.prompter
+       -p prompt.tx
+       -l <model_name e.g. vertex_ai_gemini-1-5>
 """
 
 import argparse
 import os
 import re
 import subprocess
-from git import Repo, InvalidGitRepositoryError, BadName
+
+from git import BadName, InvalidGitRepositoryError, Repo
 
 PROMPT_TEMPLATE = """
 Perform the following tasks to identify and remediate the security vulnerability:
@@ -75,15 +78,15 @@ def get_commit_range(regression_range):
     Parses a regression range string and returns the start and end commits.
 
     Args:
-        regression_range: A string representing the regression range, in formats like:
+        regression_range: A string representing the regression range:
             - "start_commit:end_commit"
             - "start_commit..end_commit"
-            - "end_commit" 
+            - "end_commit"
 
     Returns:
         A tuple (start_commit, end_commit), where:
-            - start_commit is a string representing the first commit in the range
-            - end_commit is a string representing the last commit in the range
+            - start_commit represents the first commit in the range
+            - end_commit represents the last commit in the range
     """
   # If the range is a single commit, return the range as parent commit:commit.
   if regression_range.find(":") == -1 and regression_range.find("..") == -1:
@@ -102,11 +105,13 @@ def get_changeset_diff(repo_url, regression_range):
   try:
     if not os.path.exists(local_repo_path):
       subprocess.run(["git", "clone", repo_url, local_repo_path],
-                     stdout=subprocess.DEVNULL)
+                     stdout=subprocess.DEVNULL,
+                     check=True)
     else:
       subprocess.run(["git", "pull"],
                      cwd=local_repo_path,
-                     stdout=subprocess.DEVNULL)
+                     stdout=subprocess.DEVNULL,
+                     check=True)
   except Exception as e:
     raise RuntimeError(f"Error cloning/pulling repository {repo_url}: {e}")
 
@@ -119,14 +124,14 @@ def get_changeset_diff(repo_url, regression_range):
   try:
     diff = repo.git.diff(f"{start_commit}..{end_commit}")
     return diff.encode('utf-8', 'replace').decode('utf-8')
-  except Exception as e:  # Catch git command errors
+  except Exception as e:
     raise RuntimeError(f"Error retrieving changeset diff: {e}")
 
 
 def get_file_content(repo_url, crash_revision, file_path):
   """Fetches the content of a file in a Git repository."""
   local_repo_path = get_local_repo_path(repo_url)
-  local_file_path = file_path.removeprefix('/src/')
+  local_file_path = file_path[:].removeprefix('/src/')
   local_file_path = local_file_path.split('/', 1)[-1]
 
   try:
@@ -142,10 +147,8 @@ def get_file_content(repo_url, crash_revision, file_path):
 
   try:
     return commit.tree[local_file_path].data_stream.read().decode('utf-8')
-  except Exception as e:
-    print(
-        f"Error: File '{local_file_path}' not found at commit '{crash_revision}'."
-    )
+  except Exception:
+    print(f"Error: '{local_file_path}' not found at commit '{crash_revision}'.")
     return None
 
 
@@ -186,7 +189,9 @@ if __name__ == "__main__":
     if not file_content:
       continue
 
-    source_code_content += f'**FILE CONTENT: {file_path} **\n{file_content}\n**FILE CONTENT END**\n'
+    source_code_content += (
+        f'**FILE CONTENT: {file_path} **\n{file_content}\n**FILE CONTENT END**\n'
+    )
 
   source_code_content = source_code_content[:PROMPT_MAX_LENGTH -
                                             len(PROMPT_TEMPLATE) -
