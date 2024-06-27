@@ -17,6 +17,7 @@ Prompt building tools.
 
 import logging
 import os
+import re
 from abc import abstractmethod
 from typing import Optional, Tuple
 
@@ -754,6 +755,31 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Builds a triager prompt."""
     # Do nothing for jvm project now.
     return self._prompt
+
+  def post_process_generated_code(self, generated_code: str) -> str:
+    """Allows prompt builder to adjust the generated code."""
+    # From observation, the LLM model keeps using wrong method calls including
+    # FuzzedDataProvider::consumeObject() or FuzzedDataProvider::getObject() or
+    # FuzzedDataProvider::consumeInt(int) to generate random Object / Integer
+    # instance. These methods are not valid in FuzzedDataProvider.
+
+    # The fixes here change the calling of data.consumeObject() and
+    # data.getObject() to data.consumeString(int)
+    generated_code = generated_code.replace(
+        'data.consumeObject()', 'data.consumeString(data.remainingBytes()/2)')
+    generated_code = generated_code.replace(
+        'data.getObject()', 'data.consumeString(data.remainingBytes()/2)')
+
+    # The fixes here change the calling of data.consumeInt(int) to
+    # data.consumeInt(0, int). For example, data.consumeInt(12345) will
+    # be replaced by data.consumeInt(0, 12345)
+    for wrong_method_call in re.findall(r'(data\.consumeInt\(([0-9]+)\))',
+                                        generated_code):
+      old_method_call = wrong_method_call[0]
+      new_method_call = f'data.consumeInt(0, {wrong_method_call[1]})'
+      generated_code = generated_code.replace(old_method_call, new_method_call)
+
+    return generated_code
 
 
 class CSpecificBuilder(PromptBuilder):
