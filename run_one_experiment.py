@@ -269,7 +269,8 @@ def run(benchmark: Benchmark,
                            benchmark.file_type,
                            example_pair,
                            project_examples,
-                           project_context_content=context_info)
+                           project_context_content=context_info,
+                           needs_extern=benchmark.needs_extern)
     prompt.save(work_dirs.prompt)
 
     if dry_run:
