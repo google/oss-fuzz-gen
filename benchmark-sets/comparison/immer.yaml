@@ -1,0 +1,15 @@
+"functions":
+- "name": "_ZN5immer6detail4rbts23slice_right_mut_visitorINS1_4nodeIiNS_13memory_policyINS_11heap_policyINS_8cpp_heapEEENS_22unsafe_refcount_policyENS_14no_lock_policyENS_20no_transience_policyELb0ELb1EEELj2ELj2EEELb1ELb1EE13visit_regularIRNS1_11regular_posISC_EEEENSt3__15tupleIJjPSC_jSK_EEEOT_mNSA_5applyIS7_E4type4editE"
+  "params":
+  - "name": "pos"
+    "type": "std::tuple *"
+  - "name": "last"
+    "type": "struct immer::detail::rbts::regular_sub_pos *"
+  - "name": "e"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "result_t std::__1::tuple<unsigned int, immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>*, unsigned int, immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>*> immer::detail::rbts::slice_right_mut_visitor<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, false, true>, 2u, 2u>, true, true>::visit_regular<immer::detail::rbts::regular_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::visit_regular<immer::detail::rbts::regular_sub_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, true, true>, 3U, 3U> > &>(regular_sub_pos<immer::detail::rbts::node<int, immer::memory_policy<immer::heap_policy<immer::cpp_heap>, immer::unsafe_refcount_policy, immer::no_lock_policy, immer::no_transience_policy, true, true>, 3U, 3U> > &, size_t, edit_t)"
+"language": "c++"
+"project": "immer"
+"target_name": "vector"
+"target_path": "/src/immer/extra/fuzzer/vector.cpp"

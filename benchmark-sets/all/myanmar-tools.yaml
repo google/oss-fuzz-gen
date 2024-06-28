@@ -1,0 +1,27 @@
+"functions":
+- "name": "GMTOpenZawgyiDetector"
+  "params": []
+  "return_type": "struct GMTZawgyiDetector *"
+  "signature": "GMTZawgyiDetector * GMTOpenZawgyiDetector()"
+- "name": "GMTGetZawgyiProbability"
+  "params":
+  - "name": "detector"
+    "type": "struct GMTZawgyiDetector *"
+  - "name": "input_utf8"
+    "type": "char *"
+  "return_type": "double"
+  "signature": "double GMTGetZawgyiProbability(GMTZawgyiDetector *, const char *)"
+- "name": "GMTGetZawgyiProbabilityWithLength"
+  "params":
+  - "name": "detector"
+    "type": "struct GMTZawgyiDetector *"
+  - "name": "input_utf8"
+    "type": "char *"
+  - "name": "length"
+    "type": "int"
+  "return_type": "double"
+  "signature": "double GMTGetZawgyiProbabilityWithLength(GMTZawgyiDetector *, const char *, int32_t)"
+"language": "c++"
+"project": "myanmar-tools"
+"target_name": "zawgyi_detector_fuzz_target"
+"target_path": "/src/myanmar-tools/clients/cpp/zawgyi_detector_fuzz_target.cpp"
