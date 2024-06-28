@@ -13,7 +13,7 @@ public static void testing(int test) {
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 // Other imports
 
-public class Fuzz {
+public class {HARNESS_NAME} {
   public static void fuzzerInitialize() {
     // Initializing objects for fuzzing
   }
