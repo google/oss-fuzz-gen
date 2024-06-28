@@ -168,17 +168,21 @@ def generate_data(project_name: str,
 
 def _remove_header_comments(code: str) -> str:
   """Removes comments and empty lines in the code."""
-  # Remove single-line comments.
-  single_line_comment = re.compile(r'//.*?\n')
-  code = re.sub(single_line_comment, '\n', code)
-
   # Remove multi-line comments.
   multi_line_comment = re.compile(r'/\*.*?\*/', re.DOTALL)
   code = re.sub(multi_line_comment, '', code)
 
+  # Remove single-line comments.
+  single_line_comment = re.compile(r'(?:^|\s+)//.*\n')
+  code = re.sub(single_line_comment, '\n', code)
+
   # Remove empty lines.
   empty_line = re.compile(r'\n+\s*\n+')
   code = re.sub(empty_line, '\n', code)
+
+  # Trim all newlines and spaces.
+  code.lstrip('\n ')
+  code.rstrip('\n ')
   return code
 
 
