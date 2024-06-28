@@ -92,7 +92,8 @@ class PromptBuilder:
             target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None,
+            needs_extern: bool = False) -> prompts.Prompt:
     """Builds a prompt."""
 
   @abstractmethod
@@ -141,10 +142,15 @@ class DefaultTemplateBuilder(PromptBuilder):
     self.triager_problem_template_file = self._find_template(
         template_dir, 'triager_problem.txt')
 
-  def _format_priming(self, target_file_type: FileType) -> str:
+  def _format_priming(self, target_file_type: FileType,
+                      needs_extern: bool) -> str:
     """Formats a priming based on the prompt template."""
     priming = self._get_template(self.priming_template_file)
     priming = priming.replace('{LANGUAGE}', target_file_type.value)
+    if needs_extern:
+      priming += ('\nNote that some code may need to be wrapped with '
+                  '<code>extern "C"</code> because the project under test is '
+                  'written in C but the fuzz target is in C++.\n')
     if target_file_type == FileType.CPP:
       type_specific_priming = self._get_template(self.cpp_priming_filler_file)
     else:
@@ -274,9 +280,10 @@ class DefaultTemplateBuilder(PromptBuilder):
             target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None,
+            needs_extern: bool = False) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
-    priming = self._format_priming(target_file_type)
+    priming = self._format_priming(target_file_type, needs_extern)
     final_problem = self.format_problem(function_signature)
     final_problem += (f'You MUST call <code>\n'
                       f'{function_signature}\n'
@@ -303,7 +310,11 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Formats a priming for code fixer based on the template."""
     with open(self.fixer_priming_template_file) as f:
       priming = f.read().strip() + '\n'
-    priming = priming.replace('{LANGUAGE}', benchmark.language)
+    priming = priming.replace('{LANGUAGE}', benchmark.file_type.value)
+    if benchmark.needs_extern:
+      priming += ('\nNote that some code may need to be wrapped with '
+                  '<code>extern "C"</code> because the project under test is '
+                  'written in C but the fuzz target is in C++.\n')
     priming_prompt = self._prompt.create_prompt_piece(priming, 'system')
     priming_weight = self._model.estimate_token_num(priming_prompt)
     # NOTE: We need to return the priming _as text_ and the weight. Otherwise,
@@ -733,7 +744,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
             target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None,
+            needs_extern: bool = False) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it.
        Ignore target_file_type, project_example_content
        and project_context_content parameters.
@@ -817,7 +829,8 @@ class CSpecificBuilder(PromptBuilder):
             target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None,
+            needs_extern: bool = False) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
 
     with open(self.priming_template_file, 'r') as f:

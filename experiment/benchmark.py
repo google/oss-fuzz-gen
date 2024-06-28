@@ -174,6 +174,12 @@ class Benchmark:
     """Returns the file type of the benchmark."""
     return get_file_type(self.target_path)
 
+  @property
+  def needs_extern(self) -> bool:
+    """Checks if it is C++ fuzz target for a C project, which needs `extern`."""
+    return (self.file_type.value.lower() == 'c++' and
+            self.language.lower() == 'c')
+
 
 def get_file_type(file_path: str) -> FileType:
   """Returns the file type based on the extension of |file_name|."""
