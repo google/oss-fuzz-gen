@@ -61,6 +61,7 @@ INTROSPECTOR_ADDR_TYPE = ''
 INTROSPECTOR_ALL_HEADER_FILES = ''
 INTROSPECTOR_ALL_FUNC_TYPES = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
+INTROSPECTOR_ALL_JVM_SOURCE_PATH = ''
 
 
 def get_oracle_dict() -> Dict[str, Any]:
@@ -83,7 +84,7 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
       INTROSPECTOR_ALL_HEADER_FILES, INTROSPECTOR_ALL_FUNC_TYPES, \
       INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS, \
-      INTROSPECTOR_ORACLE_ALL_CANDIDATES
+      INTROSPECTOR_ORACLE_ALL_CANDIDATES, INTROSPECTOR_ALL_JVM_SOURCE_PATH
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
@@ -108,6 +109,8 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_ALL_FUNC_TYPES = f'{INTROSPECTOR_ENDPOINT}/func-debug-types'
   INTROSPECTOR_SAMPLE_XREFS = (
       f'{INTROSPECTOR_ENDPOINT}/sample-cross-references')
+  INTROSPECTOR_ALL_JVM_SOURCE_PATH = (
+      f'{INTROSPECTOR_ENDPOINT}/all-project-source-files')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -274,6 +277,13 @@ def query_introspector_sample_xrefs(project: str, func_sig: str) -> List[str]:
       'function_signature': func_sig
   })
   return _get_data(resp, 'source-code-refs', [])
+
+
+def query_introspector_jvm_source_path(project: str) -> List[str]:
+  """Queries for sample references in the form of source code."""
+  resp = _query_introspector(INTROSPECTOR_ALL_JVM_SOURCE_PATH,
+                             {'project': project})
+  return _get_data(resp, 'src_path', [])
 
 
 def query_introspector_function_debug_arg_types(project: str,
@@ -518,9 +528,22 @@ def populate_benchmarks_using_introspector(project: str, language: str,
       continue
 
     filename = os.path.basename(function['function_filename'])
-    if filename not in [os.path.basename(i) for i in interesting.keys()]:
+
+    if language == 'jvm':
+      # Retrieve list of source file from introspector
+      src_path_list = query_introspector_jvm_source_path(project)
+      if src_path_list:
+        # For all JVM projects, the full class name is stored in the filename
+        # field. The full class name includes the package of the class and that
+        # forms part of the directory pattern of the source file that is needed
+        # for checking. For example, the source file of class a.b.c.d is always
+        # stored as <SOURCE_BASE>/a/b/c/d.java
+        src_file = f'{filename.replace(".", "/")}.java'
+        if src_file not in src_path_list:
+          logging.error('error: %s %s', filename, interesting.keys())
+          continue
+    elif filename not in [os.path.basename(i) for i in interesting.keys()]:
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
-      # Ignore jvm project for this checking.
       logging.error('error: %s %s', filename, interesting.keys())
       continue
 

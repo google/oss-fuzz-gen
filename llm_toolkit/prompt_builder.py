@@ -17,6 +17,7 @@ Prompt building tools.
 
 import logging
 import os
+import re
 from abc import abstractmethod
 from typing import Optional, Tuple
 
@@ -91,7 +92,8 @@ class PromptBuilder:
             target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None,
+            needs_extern: bool = False) -> prompts.Prompt:
     """Builds a prompt."""
 
   @abstractmethod
@@ -140,10 +142,15 @@ class DefaultTemplateBuilder(PromptBuilder):
     self.triager_problem_template_file = self._find_template(
         template_dir, 'triager_problem.txt')
 
-  def _format_priming(self, target_file_type: FileType) -> str:
+  def _format_priming(self, target_file_type: FileType,
+                      needs_extern: bool) -> str:
     """Formats a priming based on the prompt template."""
     priming = self._get_template(self.priming_template_file)
     priming = priming.replace('{LANGUAGE}', target_file_type.value)
+    if needs_extern:
+      priming += ('\nNote that some code may need to be wrapped with '
+                  '<code>extern "C"</code> because the project under test is '
+                  'written in C but the fuzz target is in C++.\n')
     if target_file_type == FileType.CPP:
       type_specific_priming = self._get_template(self.cpp_priming_filler_file)
     else:
@@ -273,9 +280,10 @@ class DefaultTemplateBuilder(PromptBuilder):
             target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None,
+            needs_extern: bool = False) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
-    priming = self._format_priming(target_file_type)
+    priming = self._format_priming(target_file_type, needs_extern)
     final_problem = self.format_problem(function_signature)
     final_problem += (f'You MUST call <code>\n'
                       f'{function_signature}\n'
@@ -302,7 +310,11 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Formats a priming for code fixer based on the template."""
     with open(self.fixer_priming_template_file) as f:
       priming = f.read().strip() + '\n'
-    priming = priming.replace('{LANGUAGE}', benchmark.language)
+    priming = priming.replace('{LANGUAGE}', benchmark.file_type.value)
+    if benchmark.needs_extern:
+      priming += ('\nNote that some code may need to be wrapped with '
+                  '<code>extern "C"</code> because the project under test is '
+                  'written in C but the fuzz target is in C++.\n')
     priming_prompt = self._prompt.create_prompt_piece(priming, 'system')
     priming_weight = self._model.estimate_token_num(priming_prompt)
     # NOTE: We need to return the priming _as text_ and the weight. Otherwise,
@@ -601,7 +613,11 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _format_import_mapping(self, full_class_name: str) -> str:
     """Formats the import mapping row on the prompt template."""
+    # full_class_name format: <package>.<class_name>$<inner_class_name>
+    # For example, the inner class Inner in class Test of package
+    # a.b.c will have a full_class_name of a.b.c.Test$Inner
     class_name = full_class_name.rsplit('.')[-1]
+    full_class_name = full_class_name.split('$')[0]
 
     mapping = self._get_template(self.import_template_file)
     mapping = mapping.replace('{CLASS_NAME}', class_name)
@@ -728,7 +744,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
             target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None,
+            needs_extern: bool = False) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it.
        Ignore target_file_type, project_example_content
        and project_context_content parameters.
@@ -750,6 +767,31 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Builds a triager prompt."""
     # Do nothing for jvm project now.
     return self._prompt
+
+  def post_process_generated_code(self, generated_code: str) -> str:
+    """Allows prompt builder to adjust the generated code."""
+    # From observation, the LLM model keeps using wrong method calls including
+    # FuzzedDataProvider::consumeObject() or FuzzedDataProvider::getObject() or
+    # FuzzedDataProvider::consumeInt(int) to generate random Object / Integer
+    # instance. These methods are not valid in FuzzedDataProvider.
+
+    # The fixes here change the calling of data.consumeObject() and
+    # data.getObject() to data.consumeString(int)
+    generated_code = generated_code.replace(
+        'data.consumeObject()', 'data.consumeString(data.remainingBytes()/2)')
+    generated_code = generated_code.replace(
+        'data.getObject()', 'data.consumeString(data.remainingBytes()/2)')
+
+    # The fixes here change the calling of data.consumeInt(int) to
+    # data.consumeInt(0, int). For example, data.consumeInt(12345) will
+    # be replaced by data.consumeInt(0, 12345)
+    for wrong_method_call in re.findall(r'(data\.consumeInt\(([0-9]+)\))',
+                                        generated_code):
+      old_method_call = wrong_method_call[0]
+      new_method_call = f'data.consumeInt(0, {wrong_method_call[1]})'
+      generated_code = generated_code.replace(old_method_call, new_method_call)
+
+    return generated_code
 
 
 class CSpecificBuilder(PromptBuilder):
@@ -787,7 +829,8 @@ class CSpecificBuilder(PromptBuilder):
             target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None,
+            needs_extern: bool = False) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
 
     with open(self.priming_template_file, 'r') as f:
