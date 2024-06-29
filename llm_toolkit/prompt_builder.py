@@ -137,6 +137,8 @@ class DefaultTemplateBuilder(PromptBuilder):
         template_dir, 'fixer_priming.txt')
     self.fixer_problem_template_file = self._find_template(
         template_dir, 'fixer_problem.txt')
+    self.fixer_context_template_file = self._find_template(
+        template_dir, 'fixer_context.txt')
     self.triager_priming_template_file = self._find_template(
         template_dir, 'triager_priming.txt')
     self.triager_problem_template_file = self._find_template(
@@ -295,13 +297,16 @@ class DefaultTemplateBuilder(PromptBuilder):
                          project_example_content)
     return self._prompt
 
-  def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
+  def build_fixer_prompt(self,
+                         benchmark: Benchmark,
+                         raw_code: str,
                          error_desc: Optional[str],
-                         errors: list[str]) -> prompts.Prompt:
+                         errors: list[str],
+                         context: str = '') -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming(benchmark)
     problem = self._format_fixer_problem(raw_code, error_desc, errors,
-                                         priming_weight)
+                                         priming_weight, context)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -322,7 +327,8 @@ class DefaultTemplateBuilder(PromptBuilder):
     return priming, priming_weight
 
   def _format_fixer_problem(self, raw_code: str, error_desc: Optional[str],
-                            errors: list[str], priming_weight: int) -> str:
+                            errors: list[str], priming_weight: int,
+                            context: str) -> str:
     """Formats a problem for code fixer based on the template."""
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
@@ -333,6 +339,12 @@ class DefaultTemplateBuilder(PromptBuilder):
       # Build error does not pass error desc.
       error_summary = BUILD_ERROR_SUMMARY
     problem = problem.replace('{ERROR_SUMMARY}', error_summary)
+
+    if context:
+      with open(self.fixer_context_template_file) as f:
+        context_template = f.read().strip()
+      context = context_template.replace('{CONTEXT_SOURCE_CODE}', context)
+    problem = problem.replace('{CONTEXT}', context)
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{ERROR_MESSAGES}',

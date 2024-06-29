@@ -21,6 +21,7 @@ import re
 import sys
 from typing import Callable, Optional
 
+from data_prep.project_context import context_introspector
 from experiment import benchmark as benchmarklib
 from llm_toolkit import models
 from llm_toolkit import output_parser as parser
@@ -406,11 +407,36 @@ def apply_llm_fix(ai_binary: str,
   )
 
   builder = prompt_builder.DefaultTemplateBuilder(fixer_model)
+
+  context = _collect_context(benchmark, errors)
   prompt = builder.build_fixer_prompt(benchmark, fuzz_target_source_code,
-                                      error_desc, errors)
+                                      error_desc, errors, context)
   prompt.save(prompt_path)
 
   fixer_model.generate_code(prompt, response_dir)
+
+
+def _collect_context(benchmark: benchmarklib.Benchmark, errors: list[str]):
+  """Collects the useful context to fix the errors."""
+  if not errors:
+    return ''
+
+  context = ''
+  for error in errors:
+    context += _collect_context_no_member(benchmark, error)
+
+  return ''
+
+
+def _collect_context_no_member(benchmark: benchmarklib.Benchmark,
+                               error: str) -> str:
+  """Collects the useful context to fix 'no member in' errors."""
+  matched = re.search(r"error: no member named '.*' in '([^']*)'", error)
+  if not matched:
+    return ''
+  target_type = matched.group(1)
+  ci = context_introspector.ContextRetriever(benchmark)
+  return ci.get_type_def(target_type)
 
 
 def main():
