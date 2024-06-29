@@ -8,7 +8,7 @@ from typing import Any
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 
-COMPLEX_TYPES = ['struct', 'enum', 'const', 'volatile']
+COMPLEX_TYPES = ['const', 'enum', 'struct', 'union', 'volatile']
 
 
 class ContextRetriever:
@@ -118,17 +118,9 @@ class ContextRetriever:
     if '' in type_tokens:
       type_tokens.remove('')
 
-    if 'struct' in type_tokens:
-      type_tokens.remove('struct')
-
-    if 'enum' in type_tokens:
-      type_tokens.remove('enum')
-
-    if 'const' in type_tokens:
-      type_tokens.remove('const')
-
-    if 'volatile' in type_tokens:
-      type_tokens.remove('volatile')
+    for complex_type in COMPLEX_TYPES:
+      if complex_type in type_tokens:
+        type_tokens.remove(complex_type)
 
     # If there is more than a single token
     # we probably do not care about querying for the type (?)

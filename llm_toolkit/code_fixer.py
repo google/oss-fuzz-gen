@@ -28,6 +28,7 @@ from llm_toolkit import output_parser as parser
 from llm_toolkit import prompt_builder
 
 ERROR_LINES = 20
+NO_MEMBER_ERROR_REGEX = r"error: no member named '.*' in '([^':]*):?.*'"
 
 
 def parse_args():
@@ -432,7 +433,7 @@ def _collect_context(benchmark: benchmarklib.Benchmark,
 def _collect_context_no_member(benchmark: benchmarklib.Benchmark,
                                error: str) -> str:
   """Collects the useful context to fix 'no member in' errors."""
-  matched = re.search(r"error: no member named '.*' in '([^']*)'", error)
+  matched = re.search(NO_MEMBER_ERROR_REGEX, error)
   if not matched:
     return ''
   target_type = matched.group(1)
