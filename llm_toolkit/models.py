@@ -198,7 +198,10 @@ class GPT(LLM):
     """Estimates the number of tokens in |text|."""
     # https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
     try:
-      encoder = tiktoken.encoding_for_model(self.name)
+      if 'gpt-4' in self.name:  # gpt-4 and gpt-4o
+        encoder = tiktoken.encoding_for_model('gpt-4')
+      else:
+        encoder = tiktoken.encoding_for_model(self.name)
     except KeyError:
       print(f'Could not get a tiktoken encoding for {self.name}.')
       encoder = tiktoken.get_encoding('cl100k_base')
