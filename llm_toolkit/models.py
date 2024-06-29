@@ -245,6 +245,11 @@ class GPT4(GPT):
   """OpenAI's GPTi-4 model."""
 
   name = 'gpt-4'
+  
+class GPT4o(GPT):
+  """OpenAI's GPTi-4 model."""
+
+  name = 'gpt-4o'
 
 
 class GoogleModel(LLM):
