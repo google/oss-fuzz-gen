@@ -416,7 +416,8 @@ def apply_llm_fix(ai_binary: str,
   fixer_model.generate_code(prompt, response_dir)
 
 
-def _collect_context(benchmark: benchmarklib.Benchmark, errors: list[str]):
+def _collect_context(benchmark: benchmarklib.Benchmark,
+                     errors: list[str]) -> str:
   """Collects the useful context to fix the errors."""
   if not errors:
     return ''
@@ -425,7 +426,7 @@ def _collect_context(benchmark: benchmarklib.Benchmark, errors: list[str]):
   for error in errors:
     context += _collect_context_no_member(benchmark, error)
 
-  return ''
+  return context
 
 
 def _collect_context_no_member(benchmark: benchmarklib.Benchmark,
