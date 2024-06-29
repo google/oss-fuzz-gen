@@ -22,6 +22,13 @@ Bug: {{ sample.result.crashes and not sample.result.is_semantic_error }}
 Crash reason: {{ sample.result.semantic_error }}
 <br>
 <br>
+
+<h2>Triage</h2>
+<pre>
+{{ triage }}
+</pre>
+<br>
+
 {% for target in targets %}
 {% if target.fixer_prompt %}
 <h3>Fixer prompt #{{ loop.index - 1 }}</h3>
@@ -49,4 +56,5 @@ Crash reason: {{ sample.result.semantic_error }}
 <pre>
 {{ run_logs }}
 </pre>
+
 {% endblock %}

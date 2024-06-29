@@ -14,6 +14,7 @@
 """
 Helper class for fuzz target semantic errors.
 """
+import logging
 import re
 from typing import Optional
 
@@ -46,6 +47,9 @@ class SemanticCheckResult:
   # E.g., matches 'SCARINESS: 10 (null-deref)'
   SYMPTOM_SCARINESS = re.compile(r'SCARINESS:\s*\d+\s*\((.*)\)\n')
 
+  # Regex for extract crash information.
+  INFO_CRASH = re.compile(r'ERROR: (.*?)(?=SUMMARY)', re.DOTALL)
+
   NO_COV_INCREASE_MSG_PREFIX = 'No code coverage increasement'
 
   @classmethod
@@ -71,13 +75,25 @@ class SemanticCheckResult:
     return (error_desc is not None) and error_desc.startswith(
         cls.NO_COV_INCREASE_MSG_PREFIX)
 
+  @classmethod
+  def extract_crash_info(cls, fuzzlog: str) -> str:
+    """Extracts crash information from fuzzing logs."""
+    match = cls.INFO_CRASH.search(fuzzlog)
+    if match:
+      return match.group(1)
+
+    logging.warning('Failed to match crash information.')
+    return ''
+
   def __init__(self,
                err_type: str,
                crash_symptom: str = '',
-               crash_stacks: Optional[list[list[str]]] = None):
+               crash_stacks: Optional[list[list[str]]] = None,
+               crash_func: Optional[dict] = None):
     self.type = err_type
     self.crash_symptom = crash_symptom
     self.crash_stacks = crash_stacks if crash_stacks else []
+    self.crash_func = crash_func if crash_func else {}
 
   def _get_error_desc(self) -> str:
     """Returns one sentence error description used in fix prompt."""
