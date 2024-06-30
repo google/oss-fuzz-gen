@@ -20,7 +20,7 @@ import os
 import shutil
 import subprocess
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Type
 
 import build_generator
 import cxxfilt
@@ -137,12 +137,16 @@ def add_to_source_cache(heuristic_name, target_func, fuzzer_source):
 
 class FuzzHeuristicGeneratorBase:
   """Base class for fuzzer heuristics generator."""
+  language = ''
+  name = ''
 
-  def __init__(self, test_dir):
+  def __init__(self, introspector_report: Dict[str, Any],
+               all_header_files: List[str], test_dir):
     self.test_dir = test_dir
-    self.all_header_files = []
+    self.all_header_files = all_header_files
     self.all_functions_in_project = []
-    self.introspector_report = {}
+    self.introspector_report = introspector_report
+    self.github_url = ''
 
   @abstractmethod
   def get_fuzzer_intrinsics(self, func) -> Dict[str, Any]:
@@ -270,7 +274,7 @@ class FuzzerGenHeuristic6(FuzzHeuristicGeneratorBase):
 
   def __init__(self, introspector_report: Dict[str, Any],
                all_header_files: List[str], test_dir: str):
-    super().__init__(test_dir)
+    super().__init__(introspector_report, all_header_files, test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
     self.github_url = ''
@@ -374,7 +378,7 @@ class FuzzerGenHeuristic5(FuzzHeuristicGeneratorBase):
 
   def __init__(self, introspector_report: Dict[str, Any],
                all_header_files: List[str], test_dir: str):
-    super().__init__(test_dir)
+    super().__init__(introspector_report, all_header_files, test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
     self.github_url = ''
@@ -450,7 +454,7 @@ class FuzzerGenHeuristic4(FuzzHeuristicGeneratorBase):
   name = 'FuzzerGenHeuristic4'
 
   def __init__(self, introspector_report, all_header_files, test_dir):
-    super().__init__(test_dir)
+    super().__init__(introspector_report, all_header_files, test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
     self.github_url = ''
@@ -523,7 +527,7 @@ class FuzzerGenHeuristic1(FuzzHeuristicGeneratorBase):
   name = 'FuzzerGenHeuristic1'
 
   def __init__(self, introspector_report, all_header_files, test_dir):
-    super().__init__(test_dir)
+    super().__init__(introspector_report, all_header_files, test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
     self.github_url = ''
@@ -588,7 +592,7 @@ class FuzzerGenHeuristic2(FuzzHeuristicGeneratorBase):
   name = 'FuzzerGenHeuristic2'
 
   def __init__(self, introspector_report, all_header_files, test_dir):
-    super().__init__(test_dir)
+    super().__init__(introspector_report, all_header_files, test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
     self.github_url = ''
@@ -652,7 +656,7 @@ class FuzzerGenHeuristic3(FuzzHeuristicGeneratorBase):
   name = 'FuzzerGenHeuristic3'
 
   def __init__(self, introspector_report, all_header_files, test_dir):
-    super().__init__(test_dir)
+    super().__init__(introspector_report, all_header_files, test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
     self.github_url = ''
@@ -1211,6 +1215,7 @@ def append_to_report(outdir, msg):
 
 
 def load_introspector_report():
+  """Extract introspector as python dictionary from local run."""
   if not os.path.isfile(os.path.join(INTROSPECTOR_OSS_FUZZ_DIR,
                                      'summary.json')):
     return None
@@ -1230,7 +1235,7 @@ def load_introspector_report():
   return summary_report
 
 
-def get_heuristics_to_use() -> List[FuzzHeuristicGeneratorBase]:
+def get_heuristics_to_use() -> List[Type[FuzzHeuristicGeneratorBase]]:
   """Returns the list of possible heuristics to use for harness generation."""
   heuristics_to_use = os.getenv('GENERATOR_HEURISTICS', 'all')
   heuristics_to_apply = []
