@@ -266,13 +266,13 @@ def get_cross_reference_functions(
 class FuzzerGenHeuristic6(FuzzHeuristicGeneratorBase):
   """Heuristic that provides context around target function."""
   language = 'c'
+  name = 'FuzzerGenHeuristic6'
 
   def __init__(self, introspector_report: Dict[str, Any],
                all_header_files: List[str], test_dir: str):
     super().__init__(test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
-    self.name = 'FuzzerGenHeuristic6'
     self.github_url = ''
 
   def get_fuzzing_targets(self) -> List[Any]:
@@ -370,13 +370,13 @@ The most important part of the harness is that it will build and compile correct
 class FuzzerGenHeuristic5(FuzzHeuristicGeneratorBase):
   """Heuristic that provides context around target function."""
   language = 'c'
+  name = 'FuzzerGenHeuristic5'
 
   def __init__(self, introspector_report: Dict[str, Any],
                all_header_files: List[str], test_dir: str):
     super().__init__(test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
-    self.name = 'FuzzerGenHeuristic5'
     self.github_url = ''
 
   def get_fuzzing_targets(self) -> List[Any]:
@@ -447,12 +447,12 @@ The most important part of the harness is that it will build and compile correct
 class FuzzerGenHeuristic4(FuzzHeuristicGeneratorBase):
   """Simple LLM fuzz heuristic."""
   language = 'c'
+  name = 'FuzzerGenHeuristic4'
 
   def __init__(self, introspector_report, all_header_files, test_dir):
     super().__init__(test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
-    self.name = 'FuzzerGenHeuristic4'
     self.github_url = ''
 
   def get_fuzzing_targets(self) -> List[Any]:
@@ -520,12 +520,12 @@ The most important part of the harness is that it will build and compile correct
 class FuzzerGenHeuristic1(FuzzHeuristicGeneratorBase):
   """Simple LLM fuzz heuristic."""
   language = 'c'
+  name = 'FuzzerGenHeuristic1'
 
   def __init__(self, introspector_report, all_header_files, test_dir):
     super().__init__(test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
-    self.name = 'FuzzerGenHeuristic1'
     self.github_url = ''
 
   def get_fuzzing_targets(self) -> List[Any]:
@@ -585,12 +585,12 @@ Finally, %s
 class FuzzerGenHeuristic2(FuzzHeuristicGeneratorBase):
   """Simple LLM fuzz heuristic."""
   language = 'c++'
+  name = 'FuzzerGenHeuristic2'
 
   def __init__(self, introspector_report, all_header_files, test_dir):
     super().__init__(test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
-    self.name = 'FuzzerGenHeuristic2'
     self.github_url = ''
 
   def get_fuzzing_targets(self) -> List[Any]:
@@ -649,12 +649,12 @@ Finally, %s
 class FuzzerGenHeuristic3(FuzzHeuristicGeneratorBase):
   """Simple LLM fuzz heuristic."""
   language = 'c++'
+  name = 'FuzzerGenHeuristic3'
 
   def __init__(self, introspector_report, all_header_files, test_dir):
     super().__init__(test_dir)
     self.introspector_report = introspector_report
     self.all_header_files = all_header_files
-    self.name = 'FuzzerGenHeuristic3'
     self.github_url = ''
 
   def get_fuzzing_targets(self) -> List[Any]:
@@ -1230,6 +1230,24 @@ def load_introspector_report():
   return summary_report
 
 
+def get_heuristics_to_use() -> List[FuzzHeuristicGeneratorBase]:
+  """Returns the list of possible heuristics to use for harness generation."""
+  heuristics_to_use = os.getenv('GENERATOR_HEURISTICS', 'all')
+  heuristics_to_apply = []
+  all_possible_heuristics = [
+      FuzzerGenHeuristic6, FuzzerGenHeuristic5, FuzzerGenHeuristic4,
+      FuzzerGenHeuristic3, FuzzerGenHeuristic2, FuzzerGenHeuristic1
+  ]
+  if heuristics_to_use == 'all':
+    heuristics_to_apply = all_possible_heuristics
+  else:
+    possible_heuristics = set(heuristics_to_use.split(','))
+    for heuristic in all_possible_heuristics:
+      if heuristic.name in possible_heuristics:
+        heuristics_to_apply.append(heuristic)
+  return heuristics_to_apply
+
+
 def auto_generate(github_url,
                   disable_testing_build_scripts=False,
                   disable_fuzzgen=False,
@@ -1351,10 +1369,7 @@ def auto_generate(github_url,
     # - A list of the static libraries created during the compilation process
     # We can now proceed to apply heuristics that use this data to generate
     # fuzzing harnesses and build scripts for these harnesses.
-    heuristics_to_apply = [
-        FuzzerGenHeuristic6, FuzzerGenHeuristic5, FuzzerGenHeuristic4,
-        FuzzerGenHeuristic3, FuzzerGenHeuristic2, FuzzerGenHeuristic1
-    ]
+    heuristics_to_apply = get_heuristics_to_use()
     idx = 0
     print(f'Running target functions through {len(heuristics_to_apply)}' +
           ' fuzzer harness generation heuristics')
