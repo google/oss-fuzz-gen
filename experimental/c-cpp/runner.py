@@ -359,7 +359,7 @@ def main():
   else:
     run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz,
                    args.targets_per_heuristic, args.model,
-                   args.build_heuristics, ags.generator_heuristics)
+                   args.build_heuristics, args.generator_heuristics)
 
 
 if __name__ == '__main__':
