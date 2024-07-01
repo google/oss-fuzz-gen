@@ -680,7 +680,10 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     requirement = requirement.replace('{IMPORT_MAPPINGS}', '\n'.join(mappings))
 
     harness_name = os.path.basename(self.target_path).replace('.java', '')
-    requirement = requirement.replace('{HARNESS_NAME}', harness_name)
+    if harness_name:
+      requirement = requirement.replace('{HARNESS_NAME}', harness_name)
+    else:
+      requirement = requirement.replace('{HARNESS_NAME}', 'Fuzz')
 
     return requirement
 
