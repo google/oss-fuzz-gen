@@ -31,6 +31,11 @@ ERROR_LINES = 20
 NO_MEMBER_ERROR_REGEX = r"error: no member named '.*' in '([^':]*):?.*'"
 FILE_NOT_FOUND_ERROR_REGEX = r"fatal error: '([^']*)' file not found"
 
+# The following strings identify errors when a C fuzz target attempts to use
+# FuzzedDataProvider.
+FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
+FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
+
 
 def parse_args():
   """Parses command line arguments."""
@@ -454,6 +459,8 @@ def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
   for error in errors:
     instruction += _collect_instruction_file_not_found(benchmark, error,
                                                        fuzz_target_source_code)
+    instruction += _collect_instruction_fdp_in_c_target(
+        benchmark, error, fuzz_target_source_code)
   return instruction
 
 
@@ -505,6 +512,27 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
         'Otherwise, consider replacing it with some of the following statements'
         f'that may be correct alternatives:\n<code>\n{statements}\n</code>\n')
   return instruction
+
+
+def _collect_instruction_fdp_in_c_target(benchmark: benchmarklib.Benchmark,
+                                         error: str,
+                                         fuzz_target_source_code: str) -> str:
+  """Collects instructions to ask LLM do not use FuzzedDataProvier in C targets
+  """
+  has_error_from_fdp = (FALSE_EXTERN_KEYWORD_ERROR in error or
+                        FALSE_FUZZED_DATA_PROVIDER_ERROR in error)
+  include_fdp = ('#include <fuzzer/FuzzedDataProvider.h>'
+                 in fuzz_target_source_code)
+  is_c = benchmark.file_type == benchmarklib.FileType.C
+  if (has_error_from_fdp or include_fdp) and is_c:
+    return (
+        'Please modify the generated C fuzz target to remove'
+        '<code>FuzzedDataProvider</code> and replace all its functionalities '
+        'with equivalent C code, because it will cause build failure in C fuzz '
+        'targets.\nAlso, ensure the whole fuzz target must be compatible with '
+        'plain C and does not include any C++ specific code or dependencies.\n')
+
+  return ''
 
 
 def main():

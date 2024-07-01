@@ -71,11 +71,6 @@ EXAMPLES = {
 BUILD_ERROR_SUMMARY = 'The code has the following build issues:'
 FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
 
-# The following strings identify errors when the fuzz target is built with clang
-# and cannot be built with clang++, which should be removed.
-FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
-FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
-
 C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES = ['stdio.h', 'stdlib.h', 'stdint.h']
 
 
@@ -371,13 +366,6 @@ class DefaultTemplateBuilder(PromptBuilder):
     # We are adding errors one by one until we reach the maximum prompt size
     selected_errors = []
     for error in errors:
-      # Skip C only errors.
-      # TODO(Dongge): Fix JCC to address this.
-      # https://github.com/google/oss-fuzz-gen/pull/208/files/a0c0db2fd5860e6e4d434467c5ec9f949ee2cff1#r1571651507
-      if (FALSE_EXTERN_KEYWORD_ERROR in error or
-          FALSE_FUZZED_DATA_PROVIDER_ERROR in error):
-        continue
-
       error_prompt = self._prompt.create_prompt_piece(error, 'user')
       error_token_num = self._model.estimate_token_num(error_prompt)
       if prompt_size + error_token_num >= self._model.context_window:
