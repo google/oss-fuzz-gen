@@ -477,7 +477,7 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
         f'for the declaration of <code>{benchmark.function_signature}</code>, '
         'you must replace it with the EXACT path of the actual file <filepath>'
         f'{function_file}</filepath>. For example:\n'
-        f'<code>\n#include "<function_file>"\n</code>\n')
+        f'<code>\n#include "{function_file}"\n</code>\n')
 
   # Step 2: Suggest similar alternatives.
   similar_headers = ci.get_similar_header_file_paths(wrong_file)
