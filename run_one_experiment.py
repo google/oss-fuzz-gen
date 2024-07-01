@@ -256,7 +256,8 @@ def run(benchmark: Benchmark,
     if benchmark.language == 'jvm':
       # For Java projects
       builder = prompt_builder.DefaultJvmTemplateBuilder(
-          model, benchmark.project, benchmark.params, template_dir)
+          model, benchmark.project, benchmark.params, benchmark.target_path,
+          template_dir)
     else:
       if prompt_builder_to_use == 'CSpecific':
         builder = prompt_builder.CSpecificBuilder(model, benchmark,
