@@ -536,16 +536,12 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def __init__(self,
                model: models.LLM,
-               project_name: str,
-               function_args: list[dict[str, str]],
-               target_path: str,
+               benchmark: Benchmark,
                template_dir: str = DEFAULT_TEMPLATE_DIR):
     super().__init__(model)
     self._template_dir = template_dir
-    self.project_name = project_name
+    self.benchmark = benchmark
     self.project_url = self._find_project_url(project_name)
-    self.target_path = target_path
-    self.function_args = function_args
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
@@ -665,7 +661,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     if self._need_import(class_name):
       classes.append(class_name)
 
-    for arg_dict in self.function_args:
+    for arg_dict in self.benchmark.params:
       arg_type = arg_dict['type'].split('<')[0]
       if self._need_import(arg_type):
         classes.append(arg_type)
@@ -676,7 +672,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     requirement = self._get_template(self.requirement_template_file)
     requirement = requirement.replace('{IMPORT_MAPPINGS}', '\n'.join(mappings))
 
-    harness_name = os.path.basename(self.target_path).replace('.java', '')
+    harness_name = os.path.basename(self.benchmark.target_path).replace('.java', '')
     if harness_name:
       requirement = requirement.replace('{HARNESS_NAME}', harness_name)
     else:
@@ -693,7 +689,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats a list of argument descriptions."""
     argument_descriptions = []
 
-    for count, function_arg in enumerate(self.function_args):
+    for count, function_arg in enumerate(self.benchmark.params):
       arg_type = function_arg['type']
       if self._has_generic(arg_type):
         argument = self._format_generic_argument(count, arg_type)
@@ -708,14 +704,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats the source code reference for this target."""
     # Query for source code of the target method
     source_code = introspector.query_introspector_function_source(
-        self.project_name, signature)
+        self.benchmark.project, signature)
 
     # Query for source code of target method callsites
     xref_source_list = []
     for xref in introspector.query_introspector_cross_references(
-        self.project_name, signature):
+        self.benchmark.project, signature):
       xref_source = introspector.query_introspector_function_source(
-          self.project_name, xref)
+          self.benchmark.project, xref)
       if xref_source:
         xref_source_list.append(xref_source)
 
@@ -735,7 +731,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     problem = problem.replace('{SELF_SOURCE}', self_source)
     problem = problem.replace('{CROSS_SOURCE}', cross_source)
 
-    problem = problem.replace("{PROJECT_NAME}", self.project_name)
+    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
     problem = problem.replace("{PROJECT_URL}", self.project_url)
 
     return problem
