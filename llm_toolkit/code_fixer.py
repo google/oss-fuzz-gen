@@ -411,7 +411,8 @@ def apply_llm_fix(ai_binary: str,
   builder = prompt_builder.DefaultTemplateBuilder(fixer_model)
 
   context = _collect_context(benchmark, errors)
-  instruction = _collect_instructions(benchmark, errors)
+  instruction = _collect_instructions(benchmark, errors,
+                                      fuzz_target_source_code)
   prompt = builder.build_fixer_prompt(benchmark, fuzz_target_source_code,
                                       error_desc, errors, context, instruction)
   prompt.save(prompt_path)
@@ -443,20 +444,22 @@ def _collect_context_no_member(benchmark: benchmarklib.Benchmark,
   return ci.get_type_def(target_type)
 
 
-def _collect_instructions(benchmark: benchmarklib.Benchmark,
-                          errors: list[str]) -> str:
+def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
+                          fuzz_target_source_code: str) -> str:
   """Collects the useful instructions to fix the errors."""
   if not errors:
     return ''
 
   instruction = ''
   for error in errors:
-    instruction += _collect_instruction_file_not_found(benchmark, error)
+    instruction += _collect_instruction_file_not_found(benchmark, error,
+                                                       fuzz_target_source_code)
   return instruction
 
 
 def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
-                                        error: str) -> str:
+                                        error: str,
+                                        fuzz_target_source_code: str) -> str:
   """Collects the useful instruction to fix 'file not found' errors."""
   matched = re.search(FILE_NOT_FOUND_ERROR_REGEX, error)
   if not matched:
@@ -471,7 +474,8 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
   ci = context_introspector.ContextRetriever(benchmark)
   # Step 2: Suggest the header/source file of the function under test.
   function_file = ci.get_target_function_file_path()
-  if function_file:
+  if (function_file and
+      '#include "{function_file}"' not in fuzz_target_source_code):
     instruction += (
         f'If the non-existent <filepath>{wrong_file}</filepath> was included '
         f'for the declaration of <code>{benchmark.function_signature}</code>, '
