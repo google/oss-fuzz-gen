@@ -599,13 +599,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     with open(template_file) as file:
       return file.read()
 
-  def _format_base(self) -> str:
-    """Formats a priming based on the prompt template."""
-    base = self._get_template(self.base_template_file)
-    base = base.replace("{PROJECT_NAME}", self.project_name)
-    base = base.replace("{PROJECT_URL}", self.project_url)
-    return base
-
   def _format_target_constructor(self, signature: str) -> str:
     """Formats a constructor based on the prompt template."""
     class_name = signature.split('].')[0][1:]
@@ -725,7 +718,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _format_problem(self, signature: str) -> str:
     """Formats a problem based on the prompt template."""
-    problem = self._get_template(self.problem_template_file)
+    base = self._get_template(self.base_template_file)
+    problem = base + self._get_template(self.problem_template_file)
     problem = problem.replace('{TARGET}', self._format_target(signature))
     problem = problem.replace('{REQUIREMENTS}',
                               self._format_requirement(signature))
@@ -736,12 +730,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     problem = problem.replace('{SELF_SOURCE}', self_source)
     problem = problem.replace('{CROSS_SOURCE}', cross_source)
 
+    problem = problem.replace("{PROJECT_NAME}", self.project_name)
+    problem = problem.replace("{PROJECT_URL}", self.project_url)
+
     return problem
 
-  def _prepare_prompt(self, base: str, final_problem: str):
+  def _prepare_prompt(self, prompt_str: str):
     """Constructs a prompt using the parameters and saves it."""
-    self._prompt.add_priming(base)
-    self._prompt.add_problem(final_problem)
+    self._prompt.add_priming(prompt_str)
 
   def _has_generic(self, arg: str) -> bool:
     """Determine if the argument type contains generic type."""
@@ -762,9 +758,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
        Ignore target_file_type, project_example_content
        and project_context_content parameters.
     """
-    base = self._format_base()
     final_problem = self._format_problem(function_signature)
-    self._prepare_prompt(base, final_problem)
+    self._prepare_prompt(final_problem)
     return self._prompt
 
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
