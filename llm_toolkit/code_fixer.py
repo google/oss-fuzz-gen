@@ -483,6 +483,17 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
         f'{function_file}</filepath>. For example:\n'
         f'<code>\n#include "{function_file}"\n</code>\n')
 
+  if '#include "{function_file}"' in fuzz_target_source_code:
+    function_file_base_name = os.path.basename(function_file)
+    function_file_prefix = function_file.removesuffix(function_file_base_name)
+    instruction += (
+        'In the generated code, ensure that the path prefix of <code>'
+        f'{function_file_base_name}</code> is consistent with other include '
+        f'statements related to the project({benchmark.project}). For example, '
+        'if another include statement is '
+        f'<code>#include <{benchmark.project}/header.h>\n</code>\n, '
+        f'you must modify the path prefix <code>{function_file_prefix}</code> '
+        f'in <code>\n#include "{function_file}"\n</code>\n to align with it.')
   # Step 2: Suggest similar alternatives.
   similar_headers = ci.get_similar_header_file_paths(wrong_file)
   if similar_headers:
