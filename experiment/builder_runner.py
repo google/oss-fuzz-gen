@@ -134,7 +134,13 @@ class BuilderRunner:
     pattern = (r'(?:[a-zA-Z_]\w*::)*([a-zA-Z_]\w*|operator[^(\s]*)(?:\s*<.*>)?'
                r'\s*\(')
     match = re.search(pattern, func_sig)
-    return match.group(1).strip() if match else func_sig
+    if not match:
+      return func_sig
+
+    function_name = match.group(1).strip()
+    if function_name.startswith('operator'):
+      return function_name.removeprefix('operator')
+    return function_name
 
   def _contains_target_jvm_method(self, target_path: str) -> bool:
     """Validates if the LLM-generated code contains the target jvm methods."""
