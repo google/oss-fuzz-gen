@@ -473,16 +473,20 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
   function_file = ci.get_target_function_file_path()
   if function_file:
     instruction += (
-        f'If the non-existent {wrong_file} was included for the declaration of'
-        f' <code>{benchmark.function_signature}</code>, you must replace it '
-        f'with the actual file <filepath>{function_file}</filepath>.\n')
+        f'If the non-existent <filepath>{wrong_file}</filepath> was included '
+        f'for the declaration of <code>{benchmark.function_signature}</code>, '
+        'you must replace it with the EXACT path of the actual file <filepath>'
+        f'{function_file}</filepath>. For example:\n'
+        f'<code>\n#include "<function_file>"\n</code>\n')
 
   # Step 2: Suggest similar alternatives.
   similar_headers = ci.get_similar_header_file_paths(wrong_file)
   if similar_headers:
+    statements = '\n'.join(
+        [f'#include "{header}"' for header in similar_headers])
     instruction += (
-        'Otherwise, please consider the following list of header files that '
-        f'might be correct alternatives: {", ".join(similar_headers)}.\n')
+        'Otherwise, consider replacing it with some of the following statements'
+        f'that may be correct alternatives:\n<code>{statements}\n</code>\n')
   return instruction
 
 
