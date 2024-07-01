@@ -474,8 +474,21 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
   ci = context_introspector.ContextRetriever(benchmark)
   # Step 2: Suggest the header/source file of the function under test.
   function_file = ci.get_target_function_file_path()
-  if (function_file and
-      f'#include "{function_file}"' not in fuzz_target_source_code):
+  if f'#include "{function_file}"' in fuzz_target_source_code:
+    function_file_base_name = os.path.basename(function_file)
+
+    instruction += (
+        'In the generated code, ensure that the path prefix of <code>'
+        f'{function_file_base_name}</code> is consistent with other include '
+        f'statements related to the project ({benchmark.project}). For example,'
+        'if another include statement is '
+        f'<code>#include <{benchmark.project}/header.h></code>, you must modify'
+        f' the path prefix in <code>#include "{function_file}"</code> to match '
+        'it, resulting in <code>'
+        f'#include <{benchmark.project}/{function_file_base_name}></code>.')
+    return instruction
+
+  if function_file:
     instruction += (
         f'If the non-existent <filepath>{wrong_file}</filepath> was included '
         f'for the declaration of <code>{benchmark.function_signature}</code>, '
@@ -483,17 +496,6 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
         f'{function_file}</filepath>. For example:\n'
         f'<code>\n#include "{function_file}"\n</code>\n')
 
-  if f'#include "{function_file}"' in fuzz_target_source_code:
-    function_file_base_name = os.path.basename(function_file)
-    function_file_prefix = function_file.removesuffix(function_file_base_name)
-    instruction += (
-        'In the generated code, ensure that the path prefix of <code>'
-        f'{function_file_base_name}</code> is consistent with other include '
-        f'statements related to the project({benchmark.project}). For example, '
-        'if another include statement is '
-        f'<code>#include <{benchmark.project}/header.h>\n</code>\n, '
-        f'you must modify the path prefix <code>{function_file_prefix}</code> '
-        f'in <code>\n#include "{function_file}"\n</code>\n to align with it.')
   # Step 2: Suggest similar alternatives.
   similar_headers = ci.get_similar_header_file_paths(wrong_file)
   if similar_headers:
