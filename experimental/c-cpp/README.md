@@ -77,7 +77,7 @@ libraries, then we will end up trying to build/run 400 harnesses.
 # Prepare
 # Vertex: Follow the steps at:
 # https://github.com/google/oss-fuzz-gen/blob/main/USAGE.md#vertex-ai
-export export GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_CREDS_FILE
+export GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_CREDS_FILE
 
 # chatgpt:
 export OPENAI_API_KEY=your-api-key
