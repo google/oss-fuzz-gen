@@ -3,6 +3,7 @@ better prompt generation."""
 
 import logging
 import os
+from difflib import SequenceMatcher
 from typing import Any
 
 from data_prep import introspector
@@ -217,3 +218,37 @@ class ContextRetriever:
           type_names.append(new_type_name)
 
     return type_def
+
+  def get_similar_header_file_paths(self, wrong_file: str) -> list[str]:
+    """Retrieves and finds 5 header file names closest to |wrong_name|."""
+    header_list = introspector.query_introspector_header_files(
+        self._benchmark.project)
+    candidate_header_scores = {
+        header:
+            SequenceMatcher(lambda x: x in ['_', '/', '-', '.'], wrong_file,
+                            header).ratio() for header in header_list
+    }
+    candidate_headers = sorted(candidate_header_scores,
+                               key=lambda x: candidate_header_scores[x],
+                               reverse=True)
+    return candidate_headers[:5]
+
+  def get_target_function_file_path(self) -> str:
+    """Retrieves the header/source file of the function under test."""
+    # Step 1: Find a header file that shares the same name as the source file.
+    # TODO: Make this more robust, e.g., when header file and base file do not
+    # share the same basename.
+    source_file = introspector.query_introspector_source_file_path(
+        self._benchmark.project, self._benchmark.function_signature)
+    source_file_base, _ = os.path.splitext(os.path.basename(source_file))
+    header_list = introspector.query_introspector_header_files(
+        self._benchmark.project)
+    candidate_headers = [
+        header for header in header_list
+        if os.path.basename(header).startswith(source_file_base)
+    ]
+    if candidate_headers:
+      return candidate_headers[0]
+
+    # Step 2: Use the source file If it does not have a same-name-header.
+    return source_file
