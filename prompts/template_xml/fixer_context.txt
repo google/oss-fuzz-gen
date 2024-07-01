@@ -1,0 +1,4 @@
+Below is the project source code context to assist you in fixing the error.
+<code>
+{CONTEXT_SOURCE_CODE}
+</code>
