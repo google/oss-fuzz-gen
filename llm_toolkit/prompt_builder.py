@@ -538,11 +538,13 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
                model: models.LLM,
                project_name: str,
                function_args: list[dict[str, str]],
+               target_path: str,
                template_dir: str = DEFAULT_TEMPLATE_DIR):
     super().__init__(model)
     self._template_dir = template_dir
     self.project_name = project_name
     self.project_url = self._find_project_url(project_name)
+    self.target_path = target_path
     self.function_args = function_args
 
     # Load templates.
@@ -673,6 +675,12 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     requirement = self._get_template(self.requirement_template_file)
     requirement = requirement.replace('{IMPORT_MAPPINGS}', '\n'.join(mappings))
+
+    harness_name = os.path.basename(self.target_path).replace('.java', '')
+    if harness_name:
+      requirement = requirement.replace('{HARNESS_NAME}', harness_name)
+    else:
+      requirement = requirement.replace('{HARNESS_NAME}', 'Fuzz')
 
     return requirement
 
