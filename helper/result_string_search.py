@@ -108,7 +108,7 @@ def main():
   search_lines = search_string.split('\n')
 
   # Iterates through all output-*/
-  for output_dir in os.listdir(result_dir):
+  for output_dir in sorted(os.listdir(result_dir)):
     if not os.path.isdir(os.path.join(result_dir, output_dir)):
       continue
 

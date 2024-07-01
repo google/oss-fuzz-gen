@@ -3,10 +3,13 @@ Below is the code needs to be built:
 {CODE_TO_BE_FIXED}
 </code>
 
+Below is the error to fix:
 {ERROR_SUMMARY}
 <error>
 {ERROR_MESSAGES}
 </error>
+
+{CONTEXT}
 
 Fix code:
 1. Consider possible solutions for the issues listed above.
