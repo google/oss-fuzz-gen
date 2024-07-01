@@ -10,6 +10,7 @@ Below is the error to fix:
 </error>
 
 {CONTEXT}
+{INSTRUCTION}
 
 Fix code:
 1. Consider possible solutions for the issues listed above.

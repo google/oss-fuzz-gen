@@ -228,6 +228,15 @@ def query_introspector_cfg(project: str) -> dict:
   return _get_data(resp, 'project', {})
 
 
+def query_introspector_source_file_path(project: str, func_sig: str) -> str:
+  """Queries FuzzIntrospector API for file path of |func_sig|."""
+  resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
+      'project': project,
+      'function_signature': func_sig
+  })
+  return _get_data(resp, 'filepath', '')
+
+
 def query_introspector_function_source(project: str, func_sig: str) -> str:
   """Queries FuzzIntrospector API for source code of |func_sig|."""
   resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {

@@ -139,6 +139,8 @@ class DefaultTemplateBuilder(PromptBuilder):
         template_dir, 'fixer_problem.txt')
     self.fixer_context_template_file = self._find_template(
         template_dir, 'fixer_context.txt')
+    self.fixer_instruction_template_file = self._find_template(
+        template_dir, 'fixer_instruction.txt')
     self.triager_priming_template_file = self._find_template(
         template_dir, 'triager_priming.txt')
     self.triager_problem_template_file = self._find_template(
@@ -302,11 +304,12 @@ class DefaultTemplateBuilder(PromptBuilder):
                          raw_code: str,
                          error_desc: Optional[str],
                          errors: list[str],
-                         context: str = '') -> prompts.Prompt:
+                         context: str = '',
+                         instruction: str = '') -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming(benchmark)
     problem = self._format_fixer_problem(raw_code, error_desc, errors,
-                                         priming_weight, context)
+                                         priming_weight, context, instruction)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -328,7 +331,7 @@ class DefaultTemplateBuilder(PromptBuilder):
 
   def _format_fixer_problem(self, raw_code: str, error_desc: Optional[str],
                             errors: list[str], priming_weight: int,
-                            context: str) -> str:
+                            context: str, instruction: str) -> str:
     """Formats a problem for code fixer based on the template."""
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
@@ -345,6 +348,12 @@ class DefaultTemplateBuilder(PromptBuilder):
         context_template = f.read().strip()
       context = context_template.replace('{CONTEXT_SOURCE_CODE}', context)
     problem = problem.replace('{CONTEXT}', context)
+
+    if instruction:
+      with open(self.fixer_instruction_template_file) as f:
+        instruction_template = f.read().strip()
+      instruction = instruction_template.replace('{INSTRUCTION}', instruction)
+    problem = problem.replace('{INSTRUCTION}', instruction)
 
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{ERROR_MESSAGES}',

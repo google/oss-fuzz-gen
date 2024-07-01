@@ -29,6 +29,7 @@ from llm_toolkit import prompt_builder
 
 ERROR_LINES = 20
 NO_MEMBER_ERROR_REGEX = r"error: no member named '.*' in '([^':]*):?.*'"
+FILE_NOT_FOUND_ERROR_REGEX = r"fatal error: '([^']*)' file not found"
 
 
 def parse_args():
@@ -410,8 +411,10 @@ def apply_llm_fix(ai_binary: str,
   builder = prompt_builder.DefaultTemplateBuilder(fixer_model)
 
   context = _collect_context(benchmark, errors)
+  instruction = _collect_instructions(benchmark, errors,
+                                      fuzz_target_source_code)
   prompt = builder.build_fixer_prompt(benchmark, fuzz_target_source_code,
-                                      error_desc, errors, context)
+                                      error_desc, errors, context, instruction)
   prompt.save(prompt_path)
 
   fixer_model.generate_code(prompt, response_dir)
@@ -439,6 +442,69 @@ def _collect_context_no_member(benchmark: benchmarklib.Benchmark,
   target_type = matched.group(1)
   ci = context_introspector.ContextRetriever(benchmark)
   return ci.get_type_def(target_type)
+
+
+def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
+                          fuzz_target_source_code: str) -> str:
+  """Collects the useful instructions to fix the errors."""
+  if not errors:
+    return ''
+
+  instruction = ''
+  for error in errors:
+    instruction += _collect_instruction_file_not_found(benchmark, error,
+                                                       fuzz_target_source_code)
+  return instruction
+
+
+def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
+                                        error: str,
+                                        fuzz_target_source_code: str) -> str:
+  """Collects the useful instruction to fix 'file not found' errors."""
+  matched = re.search(FILE_NOT_FOUND_ERROR_REGEX, error)
+  if not matched:
+    return ''
+
+  # Step 1: Say the file does not exist, do not include it.
+  wrong_file = matched.group(1)
+  instruction = (
+      f'IMPORTANT: DO NOT include the header file {wrong_file} in the generated'
+      'fuzz target again, the file does not exist in the project-under-test.\n')
+
+  ci = context_introspector.ContextRetriever(benchmark)
+  # Step 2: Suggest the header/source file of the function under test.
+  function_file = ci.get_target_function_file_path()
+  if f'#include "{function_file}"' in fuzz_target_source_code:
+    function_file_base_name = os.path.basename(function_file)
+
+    instruction += (
+        'In the generated code, ensure that the path prefix of <code>'
+        f'{function_file_base_name}</code> is consistent with other include '
+        f'statements related to the project ({benchmark.project}). For example,'
+        'if another include statement is '
+        f'<code>#include <{benchmark.project}/header.h></code>, you must modify'
+        f' the path prefix in <code>#include "{function_file}"</code> to match '
+        'it, resulting in <code>'
+        f'#include <{benchmark.project}/{function_file_base_name}></code>.')
+    return instruction
+
+  if function_file:
+    instruction += (
+        f'If the non-existent <filepath>{wrong_file}</filepath> was included '
+        f'for the declaration of <code>{benchmark.function_signature}</code>, '
+        'you must replace it with the EXACT path of the actual file <filepath>'
+        f'{function_file}</filepath>. For example:\n'
+        f'<code>\n#include "{function_file}"\n</code>\n')
+
+  # Step 2: Suggest similar alternatives.
+  similar_headers = ci.get_similar_header_file_paths(wrong_file)
+  if similar_headers:
+    statements = '\n'.join(
+        [f'#include "{header}"' for header in similar_headers])
+    instruction += (
+        'Otherwise, consider replacing it with some of the following statements'
+        f'that may be correct alternatives:\n<code>\n{statements}\n</code>\n')
+  return instruction
 
 
 def main():
