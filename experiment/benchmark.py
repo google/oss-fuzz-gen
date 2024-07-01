@@ -138,15 +138,16 @@ class Benchmark:
     self.commit = commit
 
     if self.language == 'jvm':
-      # For java project, in order to differentiate between overloaded methos,
+      # For java projects, in order to differentiate between overloaded methods
       # the full signature is being used as function_name. The full signature
-      # is following the format of
+      # is following the format of:
       # [<Full_Class_Name].<Method_Name>(<Parameter_List>)
-      # The benchmark id uses the function_signature directly and used as the
-      # name of the result directory. To avoid confusion in the directory name,
-      # these special characters in the id (coming from the function signature)
-      # are removed. Additional special characters exist for constructors which
-      # will shown as <init> because constructors does not have names.
+      # The benchmark id uses the function_signature directly and is used as
+      # the name of the result directory. In order to avoid confusion in the
+      # directory name remove special characters in the id coming from the
+      # function signature. Additional special characters exist for
+      # constructors which will be shown as <init> because constructors do not
+      # have names.
       self.function_signature = self.function_name
       self.id = self.id.replace('<', '').replace('>', '')
       self.id = self.id.replace('[', '').replace(']', '')
