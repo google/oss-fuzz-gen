@@ -541,7 +541,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     super().__init__(model)
     self._template_dir = template_dir
     self.benchmark = benchmark
-    self.project_url = self._find_project_url(project_name)
+    self.project_url = self._find_project_url(self.benchmark.project)
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
@@ -672,7 +672,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     requirement = self._get_template(self.requirement_template_file)
     requirement = requirement.replace('{IMPORT_MAPPINGS}', '\n'.join(mappings))
 
-    harness_name = os.path.basename(self.benchmark.target_path).replace('.java', '')
+    harness_name = os.path.basename(self.benchmark.target_path).replace(
+        '.java', '')
     if harness_name:
       requirement = requirement.replace('{HARNESS_NAME}', harness_name)
     else:
