@@ -138,9 +138,7 @@ class BuilderRunner:
       return func_sig
 
     function_name = match.group(1).strip()
-    if function_name.startswith('operator'):
-      return function_name.removeprefix('operator')
-    return function_name
+    return function_name.removeprefix('operator')
 
   def _contains_target_jvm_method(self, target_path: str) -> bool:
     """Validates if the LLM-generated code contains the target jvm methods."""
