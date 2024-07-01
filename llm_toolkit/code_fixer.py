@@ -475,7 +475,7 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
   # Step 2: Suggest the header/source file of the function under test.
   function_file = ci.get_target_function_file_path()
   if (function_file and
-      '#include "{function_file}"' not in fuzz_target_source_code):
+      f'#include "{function_file}"' not in fuzz_target_source_code):
     instruction += (
         f'If the non-existent <filepath>{wrong_file}</filepath> was included '
         f'for the declaration of <code>{benchmark.function_signature}</code>, '
@@ -483,7 +483,7 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
         f'{function_file}</filepath>. For example:\n'
         f'<code>\n#include "{function_file}"\n</code>\n')
 
-  if '#include "{function_file}"' in fuzz_target_source_code:
+  if f'#include "{function_file}"' in fuzz_target_source_code:
     function_file_base_name = os.path.basename(function_file)
     function_file_prefix = function_file.removesuffix(function_file_base_name)
     instruction += (
