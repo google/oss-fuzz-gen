@@ -501,7 +501,7 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
         [f'#include "{header}"' for header in similar_headers])
     instruction += (
         'Otherwise, consider replacing it with some of the following statements'
-        f'that may be correct alternatives:\n<code>{statements}\n</code>\n')
+        f'that may be correct alternatives:\n<code>\n{statements}\n</code>\n')
   return instruction
 
 
