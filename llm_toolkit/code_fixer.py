@@ -29,6 +29,7 @@ from llm_toolkit import prompt_builder
 
 ERROR_LINES = 20
 NO_MEMBER_ERROR_REGEX = r"error: no member named '.*' in '([^':]*):?.*'"
+FILE_NOT_FOUND_ERROR_REGEX = r"fatal error: '([^']*)' file not found"
 
 
 def parse_args():
@@ -425,8 +426,40 @@ def _collect_context(benchmark: benchmarklib.Benchmark,
 
   context = ''
   for error in errors:
+    context += _collect_context_file_not_found(benchmark, error)
     context += _collect_context_no_member(benchmark, error)
 
+  return context
+
+
+def _collect_context_file_not_found(benchmark: benchmarklib.Benchmark,
+                                    error: str) -> str:
+  """Collects the useful context to fix 'file not found' errors."""
+  matched = re.search(FILE_NOT_FOUND_ERROR_REGEX, error)
+  if not matched:
+    return ''
+
+  # Step 1: Say the file does not exist, do not include it.
+  wrong_file = matched.group(1)
+  context = (
+      f'IMPORTANT: DO NOT include the header file {wrong_file} in the generated'
+      'fuzz target again, the file does not exist in the project-under-test.\n')
+
+  ci = context_introspector.ContextRetriever(benchmark)
+  # Step 2: Suggest the header/source file of the function under test.
+  function_file = ci.get_target_function_file_path()
+  if function_file:
+    context += (
+        f'If the non-existent {wrong_file} was included for the declaration of'
+        f' <code>{benchmark.function_signature}</code>, you must replace it '
+        f'with the actual file <filepath>{function_file}</filepath>.\n')
+
+  # Step 2: Suggest similar alternatives.
+  similar_headers = ci.get_similar_header_file_paths(wrong_file)
+  if similar_headers:
+    context += (
+        'Otherwise, please consider the following list of header files that '
+        f'might be correct alternatives: {", ".join(similar_headers)}.\n')
   return context
 
 
