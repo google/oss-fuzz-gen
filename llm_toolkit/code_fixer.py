@@ -465,6 +465,7 @@ def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
                                                       fuzz_target_source_code)
   instruction += _collect_instruction_no_goto(fuzz_target_source_code)
   instruction += _collect_instruction_builtin_libs_first(benchmark, errors)
+  instruction += _collect_instruction_extern(benchmark)
 
   return instruction
 
@@ -576,6 +577,23 @@ def _collect_instruction_builtin_libs_first(benchmark: benchmarklib.Benchmark,
         'project-specific libraries that contain declarations before those that'
         'use these declared symbols.')
   return ''
+
+
+def _collect_instruction_extern(benchmark: benchmarklib.Benchmark) -> str:
+  """Collects the instructions to use extern "C" in C++ fuzz targets."""
+  if not benchmark.needs_extern:
+    return ''
+  instruction = (
+      'IMPORTANT: The fuzz target ({FUZZ_TARGET_FILE_NAME}) is written in C++, '
+      'whereas the project-under-test ({PROJECT_NAME}) is written in C. All '
+      'headers, functions, and code from the {PROJECT_NAME} project must be '
+      'consistently wrapped in <code>extern "C"</code> to ensure error-free '
+      'compilation and linkage between C and C++:\n<code>\nextern "C" {\n    //'
+      'Include necessary C headers, source files, functions, and code here.\n}'
+      '\n</code>\n')
+  instruction.replace('{FUZZ_TARGET_FILE_NAME}', benchmark.target_path)
+  instruction.replace('{PROJECT_NAME}', benchmark.project)
+  return instruction
 
 
 def main():
