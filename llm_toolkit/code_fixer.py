@@ -476,10 +476,22 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
   wrong_file = matched.group(1)
   instruction = (
       f'IMPORTANT: DO NOT include the header file {wrong_file} in the generated'
-      'fuzz target again, the file does not exist in the project-under-test.\n')
-
+      ' fuzz target again, the file does not exist in the project-under-test.\n'
+  )
+  # Step 2: Suggest the header file of the same name as the wrong one.
   ci = context_introspector.ContextRetriever(benchmark)
-  # Step 2: Suggest the header/source file of the function under test.
+  same_name_headers = ci.get_same_header_file_paths(wrong_file)
+  if same_name_headers:
+    statements = '\n'.join(
+        [f'#include "{header}"' for header in same_name_headers])
+    instruction += (
+        'Replace the non-existent <filepath>{wrong_file}</filepath> with the '
+        'following statement, which share the same file name but exists under '
+        'the correct path in the project-under-test:\n'
+        f'<code>\n{statements}\n</code>\n')
+    return instruction
+
+  # Step 3: Suggest the header/source file of the function under test.
   function_file = ci.get_target_function_file_path()
   if f'#include "{function_file}"' in fuzz_target_source_code:
     function_file_base_name = os.path.basename(function_file)
@@ -503,7 +515,7 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
         f'{function_file}</filepath>. For example:\n'
         f'<code>\n#include "{function_file}"\n</code>\n')
 
-  # Step 2: Suggest similar alternatives.
+  # Step 4: Suggest similar alternatives.
   similar_headers = ci.get_similar_header_file_paths(wrong_file)
   if similar_headers:
     statements = '\n'.join(
