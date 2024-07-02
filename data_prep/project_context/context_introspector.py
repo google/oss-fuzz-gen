@@ -219,6 +219,20 @@ class ContextRetriever:
 
     return type_def
 
+  def get_same_header_file_paths(self, wrong_file: str) -> list[str]:
+    """Retrieves path of header files with the same name as |wrong_name|."""
+    wrong_file_name = os.path.splitext(os.path.basename(wrong_file))
+    header_list = introspector.query_introspector_header_files(
+        self._benchmark.project)
+
+    candidate_headers = []
+    for header in header_list:
+      correct_file_name = os.path.splitext(os.path.basename(header))
+      if wrong_file_name == correct_file_name:
+        candidate_headers.append(header)
+
+    return candidate_headers[:5]
+
   def get_similar_header_file_paths(self, wrong_file: str) -> list[str]:
     """Retrieves and finds 5 header file names closest to |wrong_name|."""
     header_list = introspector.query_introspector_header_files(

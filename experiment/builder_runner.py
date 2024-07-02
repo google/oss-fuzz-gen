@@ -176,8 +176,7 @@ class BuilderRunner:
     min_func_name = self._get_minimum_func_name(
         self.benchmark.function_signature)
 
-    pattern = rf'\b{min_func_name}\b'
-    return re.search(pattern, generated_code) is not None
+    return min_func_name in generated_code
 
   def _pre_build_check(self, target_path: str,
                        build_result: BuildResult) -> bool:

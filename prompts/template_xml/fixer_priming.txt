@@ -3,4 +3,3 @@ Given the following {LANGUAGE} fuzz harness and its build error message, fix the
 If there is undeclared identifier or unknown type name error, fix it by finding and including the related libraries.
 
 MUST RETURN THE FULL CODE, INCLUDING UNCHANGED PARTS.
-EXTREMELY IMPORTANT: AVOID USING <code>goto</code>. If you have to write code using <code>goto</code>, you MUST MUST also declare all variables BEFORE the <code>goto</code>. Never introduce new variables after the <code>goto</code>.
