@@ -614,7 +614,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
   def _format_exceptions(self) -> str:
     """Formats the exception thrown from this method or constructor."""
     if self.benchmark.exceptions:
-      return '<exceptions>' + '\n'.join(exceptions) + '</exceptions>'
+      return '<exceptions>' + '\n'.join(self.benchmark.exceptions) + '</exceptions>'
 
     return ''
 
