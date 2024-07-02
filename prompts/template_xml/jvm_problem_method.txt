@@ -10,6 +10,7 @@ Here is the list of arguments of the target method with descriptions.
 <arguments>
 {ARGUMENTS}
 </arguments>
+{EXCEPTIONS}
 Here is the source code of the target method for reference.
 <code>
 {SELF_SOURCE}

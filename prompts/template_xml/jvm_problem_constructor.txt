@@ -11,6 +11,7 @@ Here is the list of arguments of the target constructor with descriptions.
 <arguments>
 {ARGUMENTS}
 </arguments>
+{EXCEPTIONS}
 Here is the source code of the target constructor for reference.
 <code>
 {SELF_SOURCE}
