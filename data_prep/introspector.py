@@ -44,6 +44,8 @@ ORACLE_AVOID_STATIC_FUNCTIONS = bool(
     int(os.getenv('OSS_FUZZ_AVOID_STATIC_FUNCTIONS', '1')))
 ORACLE_ONLY_REFERENCED_FUNCTIONS = bool(
     int(os.getenv('OSS_FUZZ_ONLY_REFERENCED_FUNCTIONS', '0')))
+ORACLE_ONLY_FUNCTIONS_WITH_HEADER_DECLARATIONS = bool(
+    int(os.getenv('OSS_FUZZ_ONLY_FUNCS_WITH_HEADER_DECLARATION', '1')))
 
 DEFAULT_INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
 INTROSPECTOR_ENDPOINT = ''
@@ -188,9 +190,14 @@ def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
   """Queries a fuzz target oracle API from Fuzz Introspector."""
   resp = _query_introspector(
       oracle_api, {
-          'project': project,
-          'exclude-static-functions': ORACLE_AVOID_STATIC_FUNCTIONS,
-          'only-referenced-functions': ORACLE_ONLY_REFERENCED_FUNCTIONS,
+          'project':
+              project,
+          'exclude-static-functions':
+              ORACLE_AVOID_STATIC_FUNCTIONS,
+          'only-referenced-functions':
+              ORACLE_ONLY_REFERENCED_FUNCTIONS,
+          'only-with-header-file-declaration':
+              ORACLE_ONLY_FUNCTIONS_WITH_HEADER_DECLARATIONS,
       })
   return _get_data(resp, 'functions', [])
 
