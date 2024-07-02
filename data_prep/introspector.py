@@ -437,6 +437,11 @@ def _get_arg_count(function: dict) -> int:
   return len(raw_arg_types)
 
 
+def _get_exceptions(function: dict) -> List[str]:
+  """Returns the exception list of this function."""
+  return function.get('exceptions', [])
+
+
 def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
   if language == 'jvm':
@@ -570,6 +575,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                _group_function_params(
                                    _get_clean_arg_types(function, project),
                                    _get_arg_names(function, project, language)),
+                               _get_exceptions(function),
                                harness,
                                target_name,
                                function_dict=function))
