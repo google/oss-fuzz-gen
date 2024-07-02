@@ -91,27 +91,28 @@ LOCAL_RESULTS_DIR='results'
 # GCS directory that build logs are stored in.
 #
 # Example directory: 2023-12-02-daily-comparison
-EXPERIMENT_NAME="${DATE:?}-${FREQUENCY_LABEL:?}-${BENCHMARK_SET:?}"
+EXPERIMENT_NAME="${DATE:?}-${FREQUENCY_LABEL:?}-custom1"
 # Report directory uses the same name as experiment.
 # See upload_report.sh on how this is used.
 GCS_REPORT_DIR="${SUB_DIR:?}/${EXPERIMENT_NAME:?}"
 
 # Generate a report and upload it to GCS
-bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" "${BENCHMARK_SET:?}" "${MODEL:?}" &
+bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" "?" "${MODEL:?}" &
 pid_report=$!
 
 
 # Run the experiment
 $PYTHON run_all_experiments.py \
-  --benchmarks-directory "benchmark-sets/${BENCHMARK_SET:?}" \
   --run-timeout "${RUN_TIMEOUT:?}" \
   --cloud-experiment-name "${EXPERIMENT_NAME:?}" \
   --cloud-experiment-bucket 'oss-fuzz-gcb-experiment-run-logs' \
   --template-directory 'prompts/template_xml' \
   --work-dir ${LOCAL_RESULTS_DIR:?} \
-  --num-samples 10 \
   --delay "${DELAY:?}" \
   --context \
+  -g easy-params-far-reach \
+  -gp htslib \
+  -gm 5 \
   --model "$MODEL"
 
 export ret_val=$?
