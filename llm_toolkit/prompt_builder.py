@@ -679,13 +679,17 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     else:
       requirement = requirement.replace('{HARNESS_NAME}', 'Fuzz')
 
-    function_class_name = self.benchmark.function_name[1:].split(']')[0]
+    class_name = self.benchmark.function_name[1:].split(']')[0]
     if '<init>' in self.benchmark.function_name:
-      creation = f'The target method is a constructor of {function_class_name}, invoke it directly with new keyword.'
-    elif self.benchmark.function_dict.get('is_static'):
-      creation = 'The target method is a static method, invoke it directly without creating an object.'
+      creation = (f'The target method is a constructor of {class_name} '
+                  'invoke it directly with new keyword.')
+    elif (self.benchmark.function_dict and
+          self.benchmark.function_dict.get('is_static')):
+      creation = ('The target method is a static method, invoke it directly '
+                  'without creating an object.')
     else:
-      creation = f'You must create the {function_class_name} object before calling the target method.'
+      creation = (f'You must create the {class_name} object before calling '
+                  'the target method.')
     requirement = requirement.replace('{STATIC_OR_INSTANCE}', creation)
 
     return requirement
