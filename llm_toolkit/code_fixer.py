@@ -30,11 +30,13 @@ from llm_toolkit import prompt_builder
 ERROR_LINES = 20
 NO_MEMBER_ERROR_REGEX = r"error: no member named '.*' in '([^':]*):?.*'"
 FILE_NOT_FOUND_ERROR_REGEX = r"fatal error: '([^']*)' file not found"
+UNKNOWN_TYPE_ERROR = 'error: unknown type name'
 
 # The following strings identify errors when a C fuzz target attempts to use
 # FuzzedDataProvider.
 FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
 FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
+FDP_INCLUDE_STATEMENT = '#include <fuzzer/FuzzedDataProvider.h>'
 
 
 def parse_args():
@@ -459,9 +461,11 @@ def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
   for error in errors:
     instruction += _collect_instruction_file_not_found(benchmark, error,
                                                        fuzz_target_source_code)
-    instruction += _collect_instruction_fdp_in_c_target(
-        benchmark, error, fuzz_target_source_code)
-    instruction += _collect_instruction_no_goto(fuzz_target_source_code)
+  instruction += _collect_instruction_fdp_in_c_target(benchmark, errors,
+                                                      fuzz_target_source_code)
+  instruction += _collect_instruction_no_goto(fuzz_target_source_code)
+  instruction += _collect_instruction_builtin_libs_first(benchmark, errors)
+
   return instruction
 
 
@@ -528,14 +532,14 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
 
 
 def _collect_instruction_fdp_in_c_target(benchmark: benchmarklib.Benchmark,
-                                         error: str,
+                                         errors: list[str],
                                          fuzz_target_source_code: str) -> str:
   """Collects instructions to ask LLM do not use FuzzedDataProvier in C targets
   """
-  has_error_from_fdp = (FALSE_EXTERN_KEYWORD_ERROR in error or
-                        FALSE_FUZZED_DATA_PROVIDER_ERROR in error)
-  include_fdp = ('#include <fuzzer/FuzzedDataProvider.h>'
-                 in fuzz_target_source_code)
+  has_error_from_fdp = any(FALSE_EXTERN_KEYWORD_ERROR in error or
+                           FALSE_FUZZED_DATA_PROVIDER_ERROR in error
+                           for error in errors)
+  include_fdp = FDP_INCLUDE_STATEMENT in fuzz_target_source_code
   is_c = benchmark.file_type == benchmarklib.FileType.C
   if (has_error_from_fdp or include_fdp) and is_c:
     return (
@@ -556,6 +560,21 @@ def _collect_instruction_no_goto(fuzz_target_source_code: str) -> str:
         'write code using <code>goto</code>, you MUST MUST also declare all '
         'variables BEFORE the <code>goto</code>. Never introduce new variables '
         'after the <code>goto</code>.')
+  return ''
+
+
+def _collect_instruction_builtin_libs_first(benchmark: benchmarklib.Benchmark,
+                                            errors: list[str]) -> str:
+  """Collects the instructions to include builtin libraries first to fix
+  unknown type name error."""
+  # Refine this, e.g., check if the symbol is builtin or from a project file.
+  if any(UNKNOWN_TYPE_ERROR in error for error in errors):
+    return (
+        'IMPORTANT: ALWAYS INCLUDE STANDARD LIBRARIES BEFORE PROJECT-SPECIFIC '
+        f'({benchmark.project}) LIBRARIES. This order prevents errors like '
+        '"unknown type name" for basic types. Additionally, include '
+        'project-specific libraries that contain declarations before those that'
+        'use these declared symbols.')
   return ''
 
 
