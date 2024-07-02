@@ -300,7 +300,7 @@ def query_introspector_jvm_source_path(project: str) -> List[str]:
 
 
 def query_introspector_header_files_to_include(project: str,
-                                                func_sig: str) -> List[str]:
+                                               func_sig: str) -> List[str]:
   """Queries Fuzz Introspector header files where a function is likely
   declared."""
   resp = _query_introspector(INTROSPECTOR_HEADERS_FOR_FUNC, {
