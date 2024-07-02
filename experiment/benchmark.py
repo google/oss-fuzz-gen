@@ -61,6 +61,7 @@ class Benchmark:
             'name': b.function_name,
             'return_type': b.return_type,
             'params': b.params,
+            'exceptions': b.exceptions,
         } for b in benchmarks],
     }
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
