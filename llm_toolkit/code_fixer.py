@@ -461,6 +461,7 @@ def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
                                                        fuzz_target_source_code)
     instruction += _collect_instruction_fdp_in_c_target(
         benchmark, error, fuzz_target_source_code)
+    instruction += _collect_instruction_no_goto(fuzz_target_source_code)
   return instruction
 
 
@@ -544,6 +545,17 @@ def _collect_instruction_fdp_in_c_target(benchmark: benchmarklib.Benchmark,
         'targets.\nAlso, ensure the whole fuzz target must be compatible with '
         'plain C and does not include any C++ specific code or dependencies.\n')
 
+  return ''
+
+
+def _collect_instruction_no_goto(fuzz_target_source_code: str) -> str:
+  """Collects the instruction to avoid using goto."""
+  if 'goto' in fuzz_target_source_code:
+    return (
+        'EXTREMELY IMPORTANT: AVOID USING <code>goto</code>. If you have to '
+        'write code using <code>goto</code>, you MUST MUST also declare all '
+        'variables BEFORE the <code>goto</code>. Never introduce new variables '
+        'after the <code>goto</code>.')
   return ''
 
 
