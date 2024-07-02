@@ -71,11 +71,6 @@ EXAMPLES = {
 BUILD_ERROR_SUMMARY = 'The code has the following build issues:'
 FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
 
-# The following strings identify errors when the fuzz target is built with clang
-# and cannot be built with clang++, which should be removed.
-FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
-FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
-
 C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES = ['stdio.h', 'stdlib.h', 'stdint.h']
 
 
@@ -139,6 +134,8 @@ class DefaultTemplateBuilder(PromptBuilder):
         template_dir, 'fixer_problem.txt')
     self.fixer_context_template_file = self._find_template(
         template_dir, 'fixer_context.txt')
+    self.fixer_instruction_template_file = self._find_template(
+        template_dir, 'fixer_instruction.txt')
     self.triager_priming_template_file = self._find_template(
         template_dir, 'triager_priming.txt')
     self.triager_problem_template_file = self._find_template(
@@ -302,11 +299,12 @@ class DefaultTemplateBuilder(PromptBuilder):
                          raw_code: str,
                          error_desc: Optional[str],
                          errors: list[str],
-                         context: str = '') -> prompts.Prompt:
+                         context: str = '',
+                         instruction: str = '') -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming(benchmark)
     problem = self._format_fixer_problem(raw_code, error_desc, errors,
-                                         priming_weight, context)
+                                         priming_weight, context, instruction)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -328,7 +326,7 @@ class DefaultTemplateBuilder(PromptBuilder):
 
   def _format_fixer_problem(self, raw_code: str, error_desc: Optional[str],
                             errors: list[str], priming_weight: int,
-                            context: str) -> str:
+                            context: str, instruction: str) -> str:
     """Formats a problem for code fixer based on the template."""
     with open(self.fixer_problem_template_file) as f:
       problem = f.read().strip()
@@ -346,6 +344,12 @@ class DefaultTemplateBuilder(PromptBuilder):
       context = context_template.replace('{CONTEXT_SOURCE_CODE}', context)
     problem = problem.replace('{CONTEXT}', context)
 
+    if instruction:
+      with open(self.fixer_instruction_template_file) as f:
+        instruction_template = f.read().strip()
+      instruction = instruction_template.replace('{INSTRUCTION}', instruction)
+    problem = problem.replace('{INSTRUCTION}', instruction)
+
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{ERROR_MESSAGES}',
                                                       'user')
@@ -362,13 +366,6 @@ class DefaultTemplateBuilder(PromptBuilder):
     # We are adding errors one by one until we reach the maximum prompt size
     selected_errors = []
     for error in errors:
-      # Skip C only errors.
-      # TODO(Dongge): Fix JCC to address this.
-      # https://github.com/google/oss-fuzz-gen/pull/208/files/a0c0db2fd5860e6e4d434467c5ec9f949ee2cff1#r1571651507
-      if (FALSE_EXTERN_KEYWORD_ERROR in error or
-          FALSE_FUZZED_DATA_PROVIDER_ERROR in error):
-        continue
-
       error_prompt = self._prompt.create_prompt_piece(error, 'user')
       error_token_num = self._model.estimate_token_num(error_prompt)
       if prompt_size + error_token_num >= self._model.context_window:
@@ -539,14 +536,12 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def __init__(self,
                model: models.LLM,
-               project_name: str,
-               function_args: list[dict[str, str]],
+               benchmark: Benchmark,
                template_dir: str = DEFAULT_TEMPLATE_DIR):
     super().__init__(model)
     self._template_dir = template_dir
-    self.project_name = project_name
-    self.project_url = self._find_project_url(project_name)
-    self.function_args = function_args
+    self.benchmark = benchmark
+    self.project_url = self._find_project_url(self.benchmark.project)
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
@@ -666,7 +661,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     if self._need_import(class_name):
       classes.append(class_name)
 
-    for arg_dict in self.function_args:
+    for arg_dict in self.benchmark.params:
       arg_type = arg_dict['type'].split('<')[0]
       if self._need_import(arg_type):
         classes.append(arg_type)
@@ -676,6 +671,13 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     requirement = self._get_template(self.requirement_template_file)
     requirement = requirement.replace('{IMPORT_MAPPINGS}', '\n'.join(mappings))
+
+    harness_name = os.path.basename(self.benchmark.target_path).replace(
+        '.java', '')
+    if harness_name:
+      requirement = requirement.replace('{HARNESS_NAME}', harness_name)
+    else:
+      requirement = requirement.replace('{HARNESS_NAME}', 'Fuzz')
 
     return requirement
 
@@ -688,7 +690,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats a list of argument descriptions."""
     argument_descriptions = []
 
-    for count, function_arg in enumerate(self.function_args):
+    for count, function_arg in enumerate(self.benchmark.params):
       arg_type = function_arg['type']
       if self._has_generic(arg_type):
         argument = self._format_generic_argument(count, arg_type)
@@ -703,14 +705,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats the source code reference for this target."""
     # Query for source code of the target method
     source_code = introspector.query_introspector_function_source(
-        self.project_name, signature)
+        self.benchmark.project, signature)
 
     # Query for source code of target method callsites
     xref_source_list = []
     for xref in introspector.query_introspector_cross_references(
-        self.project_name, signature):
+        self.benchmark.project, signature):
       xref_source = introspector.query_introspector_function_source(
-          self.project_name, xref)
+          self.benchmark.project, xref)
       if xref_source:
         xref_source_list.append(xref_source)
 
@@ -730,7 +732,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     problem = problem.replace('{SELF_SOURCE}', self_source)
     problem = problem.replace('{CROSS_SOURCE}', cross_source)
 
-    problem = problem.replace("{PROJECT_NAME}", self.project_name)
+    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
     problem = problem.replace("{PROJECT_URL}", self.project_url)
 
     return problem
