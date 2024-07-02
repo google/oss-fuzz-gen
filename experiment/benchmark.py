@@ -103,7 +103,8 @@ class Benchmark:
               use_project_examples=use_project_examples,
               cppify_headers=cppify_headers,
               commit=commit,
-              use_context=use_context))
+              use_context=use_context,
+              function_dict=function))
 
     return benchmarks
 

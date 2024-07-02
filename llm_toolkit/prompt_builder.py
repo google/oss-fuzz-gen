@@ -611,11 +611,12 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     return method
 
-def _format_exceptions(self) -> str:
+  def _format_exceptions(self) -> str:
     """Formats the exception thrown from this method or constructor."""
-    exceptions = self.benchmark.get('exceptions', [])
-    if exceptions:
-      return '<exceptions>' + '\n'.join(exceptions) + '</exceptions>'
+    if self.benchmark.function_dict:
+      exceptions = self.benchmark.function_dict.get('exceptions', [])
+      if exceptions:
+        return '<exceptions>' + '\n'.join(exceptions) + '</exceptions>'
 
     return ''
 
