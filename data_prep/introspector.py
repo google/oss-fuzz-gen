@@ -203,6 +203,7 @@ def query_introspector_for_optimal_targets(project: str) -> list[dict]:
   """Queries Fuzz Introspector for optimal target analysis."""
   return query_introspector_oracle(project, INTROSPECTOR_ORACLE_OPTIMAL)
 
+
 def query_introspector_for_keyword_targets(project: str) -> list[dict]:
   """Queries FuzzIntrospector for targets with interesting fuzz keywords."""
   return query_introspector_oracle(project, INTROSPECTOR_ORACLE_KEYWORD)
