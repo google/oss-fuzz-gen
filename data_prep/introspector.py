@@ -44,6 +44,8 @@ ORACLE_AVOID_STATIC_FUNCTIONS = bool(
     int(os.getenv('OSS_FUZZ_AVOID_STATIC_FUNCTIONS', '1')))
 ORACLE_ONLY_REFERENCED_FUNCTIONS = bool(
     int(os.getenv('OSS_FUZZ_ONLY_REFERENCED_FUNCTIONS', '0')))
+ORACLE_ONLY_FUNCTIONS_WITH_HEADER_DECLARATIONS = bool(
+    int(os.getenv('OSS_FUZZ_ONLY_FUNCS_WITH_HEADER_DECLARATION', '1')))
 
 DEFAULT_INTROSPECTOR_ENDPOINT = 'https://introspector.oss-fuzz.com/api'
 INTROSPECTOR_ENDPOINT = ''
@@ -52,6 +54,7 @@ INTROSPECTOR_ORACLE_FAR_REACH = ''
 INTROSPECTOR_ORACLE_KEYWORD = ''
 INTROSPECTOR_ORACLE_EASY_PARAMS = ''
 INTROSPECTOR_ORACLE_ALL_CANDIDATES = ''
+INTROSPECTOR_ORACLE_OPTIMAL = ''
 INTROSPECTOR_FUNCTION_SOURCE = ''
 INTROSPECTOR_PROJECT_SOURCE = ''
 INTROSPECTOR_XREF = ''
@@ -60,6 +63,7 @@ INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
 INTROSPECTOR_ALL_HEADER_FILES = ''
 INTROSPECTOR_ALL_FUNC_TYPES = ''
+INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
 INTROSPECTOR_ALL_JVM_SOURCE_PATH = ''
 
@@ -72,6 +76,7 @@ def get_oracle_dict() -> Dict[str, Any]:
       'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets,
       'easy-params-far-reach': query_introspector_for_easy_param_targets,
       'all-public-candidates': query_introspector_for_all_public_candidates,
+      'optimal-targets': query_introspector_for_optimal_targets,
   }
   return oracle_dict
 
@@ -84,7 +89,8 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
       INTROSPECTOR_ALL_HEADER_FILES, INTROSPECTOR_ALL_FUNC_TYPES, \
       INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS, \
-      INTROSPECTOR_ORACLE_ALL_CANDIDATES, INTROSPECTOR_ALL_JVM_SOURCE_PATH
+      INTROSPECTOR_ORACLE_ALL_CANDIDATES, INTROSPECTOR_ALL_JVM_SOURCE_PATH, \
+      INTROSPECTOR_ORACLE_OPTIMAL, INTROSPECTOR_HEADERS_FOR_FUNC
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
@@ -98,6 +104,7 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/easy-params-far-reach')
   INTROSPECTOR_ORACLE_ALL_CANDIDATES = (
       f'{INTROSPECTOR_ENDPOINT}/all-public-candidates')
+  INTROSPECTOR_ORACLE_OPTIMAL = f'{INTROSPECTOR_ENDPOINT}/optimal-targets'
   INTROSPECTOR_FUNCTION_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
   INTROSPECTOR_PROJECT_SOURCE = f'{INTROSPECTOR_ENDPOINT}/project-source-code'
   INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
@@ -107,6 +114,8 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
   INTROSPECTOR_ALL_HEADER_FILES = f'{INTROSPECTOR_ENDPOINT}/all-header-files'
   INTROSPECTOR_ALL_FUNC_TYPES = f'{INTROSPECTOR_ENDPOINT}/func-debug-types'
+  INTROSPECTOR_HEADERS_FOR_FUNC = (
+      f'{INTROSPECTOR_ENDPOINT}/get-header-files-needed-for-function')
   INTROSPECTOR_SAMPLE_XREFS = (
       f'{INTROSPECTOR_ENDPOINT}/sample-cross-references')
   INTROSPECTOR_ALL_JVM_SOURCE_PATH = (
@@ -188,11 +197,21 @@ def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
   """Queries a fuzz target oracle API from Fuzz Introspector."""
   resp = _query_introspector(
       oracle_api, {
-          'project': project,
-          'exclude-static-functions': ORACLE_AVOID_STATIC_FUNCTIONS,
-          'only-referenced-functions': ORACLE_ONLY_REFERENCED_FUNCTIONS,
+          'project':
+              project,
+          'exclude-static-functions':
+              ORACLE_AVOID_STATIC_FUNCTIONS,
+          'only-referenced-functions':
+              ORACLE_ONLY_REFERENCED_FUNCTIONS,
+          'only-with-header-file-declaration':
+              ORACLE_ONLY_FUNCTIONS_WITH_HEADER_DECLARATIONS,
       })
   return _get_data(resp, 'functions', [])
+
+
+def query_introspector_for_optimal_targets(project: str) -> list[dict]:
+  """Queries Fuzz Introspector for optimal target analysis."""
+  return query_introspector_oracle(project, INTROSPECTOR_ORACLE_OPTIMAL)
 
 
 def query_introspector_for_keyword_targets(project: str) -> list[dict]:
@@ -293,6 +312,18 @@ def query_introspector_jvm_source_path(project: str) -> List[str]:
   resp = _query_introspector(INTROSPECTOR_ALL_JVM_SOURCE_PATH,
                              {'project': project})
   return _get_data(resp, 'src_path', [])
+
+
+def query_introspector_header_files_to_include(project: str,
+                                               func_sig: str) -> List[str]:
+  """Queries Fuzz Introspector header files where a function is likely
+  declared."""
+  resp = _query_introspector(INTROSPECTOR_HEADERS_FOR_FUNC, {
+      'project': project,
+      'function_signature': func_sig
+  })
+  arg_types = _get_data(resp, 'headers-to-include', [])
+  return arg_types
 
 
 def query_introspector_function_debug_arg_types(project: str,
@@ -437,6 +468,11 @@ def _get_arg_count(function: dict) -> int:
   return len(raw_arg_types)
 
 
+def _get_exceptions(function: dict) -> List[str]:
+  """Returns the exception list of this function."""
+  return function.get('exceptions', [])
+
+
 def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
   if language == 'jvm':
@@ -570,6 +606,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                _group_function_params(
                                    _get_clean_arg_types(function, project),
                                    _get_arg_names(function, project, language)),
+                               _get_exceptions(function),
                                harness,
                                target_name,
                                function_dict=function))
