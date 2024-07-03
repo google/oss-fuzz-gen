@@ -616,6 +616,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     return method
 
+  def _format_exceptions(self) -> str:
+    """Formats the exception thrown from this method or constructor."""
+    if self.benchmark.exceptions:
+      return '<exceptions>' + '\n'.join(
+          self.benchmark.exceptions) + '</exceptions>'
+
+    return ''
+
   def _format_import_mapping(self, full_class_name: str) -> str:
     """Formats the import mapping row on the prompt template."""
     # full_class_name format: <package>.<class_name>$<inner_class_name>
@@ -654,9 +662,11 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
        method and format it for the prompts creation.
     """
     if '<init>' in signature:
-      return self._format_target_constructor(signature)
+      target = self._format_target_constructor(signature)
+    else:
+      target = self._format_target_method(signature)
 
-    return self._format_target_method(signature)
+    return target.replace('{EXCEPTIONS}', self._format_exceptions())
 
   def _format_requirement(self, signature: str) -> str:
     """Formats a requirement based on the prompt template."""
