@@ -124,7 +124,7 @@ def find_file(file_path, search_path):
       full_file_path = os.path.join(root, filename)
       return full_file_path[len(search_path) + 1:]
 
-  # File not found
+  # File not found.
   return None
 
 
