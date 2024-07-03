@@ -111,6 +111,23 @@ def get_changeset_diff(repo_url, regression_range):
     raise RuntimeError(f"Error retrieving changeset diff: {e}")
 
 
+def find_file(file_path, search_path):
+  """Finds a file in a search path."""
+  # If file already exists in the search path, return as-is.
+  if os.path.isfile(os.path.join(search_path, file_path)):
+    return file_path
+
+  # Find the file in the search path folder.
+  filename = os.path.basename(file_path)
+  for root, _, files in os.walk(search_path):
+    if filename in files:
+      full_file_path = os.path.join(root, filename)
+      return full_file_path[len(search_path) + 1:]
+
+  # File not found
+  return None
+
+
 def get_file_content(repo_url, crash_revision, file_path):
   """Fetches the content of a file in a Git repository."""
   local_repo_path = get_local_repo_path(repo_url)
@@ -128,10 +145,15 @@ def get_file_content(repo_url, crash_revision, file_path):
     print(f"Error: Commit hash '{crash_revision}' not found in repository.")
     return None
 
+  local_file_path = find_file(local_file_path, local_repo_path)
+  if not local_file_path:
+    print(f"Error: '{file_path}' not found in repository.")
+    return None
+
   try:
     return commit.tree[local_file_path].data_stream.read().decode('utf-8')
   except Exception:
-    print(f"Error: '{local_file_path}' not found at commit '{crash_revision}'.")
+    print(f"Error: '{file_path}' not found at commit '{crash_revision}'.")
     return None
 
 
