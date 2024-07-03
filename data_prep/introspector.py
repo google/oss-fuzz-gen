@@ -318,8 +318,8 @@ def query_introspector_jvm_source_path(project: str) -> List[str]:
   return _get_data(resp, 'src_path', [])
 
 
-def query_introspector_matching_function_type(project: str,
-                                              return_type: str) -> List[Dict]:
+def query_introspector_matching_function_type(
+    project: str, return_type: str) -> List[Dict[str, Any]]:
   """Queries for all functions that returns a given type in a given project."""
   simple_types_should_not_process = [
       'byte', 'char', 'boolean', 'short', 'long', 'int', 'float', 'double',
@@ -338,8 +338,8 @@ def query_introspector_matching_function_type(project: str,
   return _get_data(resp, 'functions', [])
 
 
-def query_introspector_matching_constructor_type(project: str,
-                                                 return_type: str) -> List[Dict]:
+def query_introspector_matching_constructor_type(
+    project: str, return_type: str) -> List[Dict[str, Any]]:
   """Queries for all constructors that returns a given type in a given
   project."""
   simple_types_should_not_process = [
