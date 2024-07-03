@@ -95,7 +95,10 @@ launch_local_introspector_deployment() {
   cd tools/web-fuzzing-introspection
   $PYTHON -m pip install -r ./requirements.txt
 
-  # Create the database for the projects we are interested in
+  # Create the database for the projects we are interested in. This is done
+  # by parsing the benchmark directory to FI, which will interpret this and
+  # generate a database for the projects corresponding to the .yaml files in
+  # the benchmark directory.
   cd app/static/assets/db/
   $PYTHON ./web_db_creator_from_summary.py \
     --output-dir=$PWD \
@@ -171,7 +174,7 @@ export ret_val=$?
 
 touch /experiment_ended
 
-if [[ $USE_LOCAL_INTROSPECTOR != '' ]]
+if [[ "$USE_LOCAL_INTROSPECTOR" = "true" ]]
 then
   echo "Shutting down introspector"
   curl --silent http://localhost:8080/api/shutdown || true
