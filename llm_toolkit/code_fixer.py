@@ -488,13 +488,14 @@ def _collect_instruction_cpp_target_cpp_projet_include_c_file(
     return ''
 
   # Yet the error is caused by a C file.
-  match = re.search(COMPILATION_ERROR_FILE_REGEX, error)
+  match = re.search(COMPILATION_ERROR_FILE_REGEX, error, re.MULTILINE)
   if not match:
     return ''
   file_basename, _ = os.path.splitext(os.path.basename(match.group(1)))
 
   # The fuzz target includes the file.
-  matches = re.findall(INCLUDE_FILE_REGEX, fuzz_target_source_code)
+  matches = re.findall(INCLUDE_FILE_REGEX, fuzz_target_source_code,
+                       re.MULTILINE)
   matching_include_lines = [line for line in matches if file_basename in line]
   if not matching_include_lines:
     return ''
@@ -508,7 +509,7 @@ def _collect_instruction_cpp_target_cpp_projet_include_c_file(
       f'IMPORTANT: This statement <code>{matching_include_line}</code> MUST be '
       f'replaced with <code>{fixed_include_line}</code> in the generated fuzz '
       'target to fix the compilation error above, because the fuzz target is in'
-      'C++ but the statement includes a file in C.\n')
+      ' C++ but the statement includes a file in C.\n')
 
 
 def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
