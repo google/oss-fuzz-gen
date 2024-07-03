@@ -473,6 +473,11 @@ def _get_exceptions(function: dict) -> List[str]:
   return function.get('exceptions', [])
 
 
+def _is_static(function: dict) -> bool:
+  """Returns the static property of this function."""
+  return function.get('is_static', False)
+
+
 def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
   if language == 'jvm':
@@ -607,6 +612,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                    _get_clean_arg_types(function, project),
                                    _get_arg_names(function, project, language)),
                                _get_exceptions(function),
+                               _is_static(function),
                                harness,
                                target_name,
                                function_dict=function))

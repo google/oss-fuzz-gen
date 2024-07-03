@@ -62,6 +62,7 @@ class Benchmark:
             'return_type': b.return_type,
             'params': b.params,
             'exceptions': b.exceptions,
+            'is_static': b.is_static,
         } for b in benchmarks],
     }
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
@@ -100,6 +101,7 @@ class Benchmark:
               function.get('return_type'),
               function.get('params'),
               function.get('exceptions', []),
+              function.get('is_static', False),
               data['target_path'],
               data.get('target_name'),
               use_project_examples=use_project_examples,
@@ -119,6 +121,7 @@ class Benchmark:
                return_type: str,
                params: list[dict[str, str]],
                exceptions: list[str],
+               is_static: bool,
                target_path: str,
                preferred_target_name: Optional[str] = None,
                use_project_examples=True,
@@ -134,6 +137,7 @@ class Benchmark:
     self.return_type = return_type
     self.params = params
     self.exceptions = exceptions
+    self.is_static = is_static
     self.function_dict = function_dict
     self.target_path = target_path
     self._preferred_target_name = preferred_target_name
