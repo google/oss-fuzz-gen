@@ -491,7 +491,7 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
     statements = '\n'.join(
         [f'#include "{header}"' for header in same_name_headers])
     instruction += (
-        'Replace the non-existent <filepath>{wrong_file}</filepath> with the '
+        f'Replace the non-existent <filepath>{wrong_file}</filepath> with the '
         'following statement, which share the same file name but exists under '
         'the correct path in the project-under-test:\n'
         f'<code>\n{statements}\n</code>\n')
