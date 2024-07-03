@@ -714,7 +714,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
       argument_descriptions.append(argument)
 
-    return '\n'.join(argument_descriptions)
+    return '<arguments>' + '\n'.join(argument_descriptions) + '</arguments>'
 
   def _format_source_reference(self, signature: str) -> Tuple[str, str]:
     """Formats the source code reference for this target."""
