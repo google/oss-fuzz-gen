@@ -174,6 +174,26 @@ class GenerateReport:
                     sample.id, e)
 
 
+def generate_report(args):
+  logging.info('Generating web page files in %s', args.output_dir)
+  results = Results(results_dir=args.results_dir,
+                    benchmark_set=args.benchmark_set)
+  jinja_env = JinjaEnv(template_globals={'model': args.model})
+  gr = GenerateReport(results=results,
+                      jinja_env=jinja_env,
+                      output_dir=args.output_dir)
+  gr.generate()
+
+
+def launch_webserver(args):
+  """Launches a local web server to browse results."""
+  logging.info('Launching webserver at %s:%d', LOCAL_HOST, LOCAL_PORT)
+  server = ThreadingHTTPServer((LOCAL_HOST, LOCAL_PORT),
+                               partial(SimpleHTTPRequestHandler,
+                                       directory=args.output_dir))
+  server.serve_forever()
+
+
 def _parse_arguments() -> argparse.Namespace:
   """Parses command line args."""
   parser = argparse.ArgumentParser(description=(
@@ -205,30 +225,12 @@ def _parse_arguments() -> argparse.Namespace:
   return parser.parse_args()
 
 
-def generate_report(args):
-  logging.info('Generating web page files in %s', args.output_dir)
-  results = Results(results_dir=args.results_dir,
-                    benchmark_set=args.benchmark_set)
-  jinja_env = JinjaEnv(template_globals={'model': args.model})
-  gr = GenerateReport(results=results,
-                      jinja_env=jinja_env,
-                      output_dir=args.output_dir)
-  gr.generate()
-
-
-def launch_webserver(args):
-  """Launches a local web server to browse results."""
-  logging.info('Launching webserver at %s:%d', LOCAL_HOST, LOCAL_PORT)
-  server = ThreadingHTTPServer((LOCAL_HOST, LOCAL_PORT),
-                               partial(SimpleHTTPRequestHandler,
-                                       directory=args.output_dir))
-  server.serve_forever()
-
-
 def main():
   args = _parse_arguments()
 
-  if args.serve:
+  if not args.serve:
+    generate_report(args)
+  else:
     logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'INFO').upper())
     # Launch web server
     thread = threading.Thread(target=launch_webserver, args=(args,))
@@ -242,8 +244,6 @@ def main():
       except KeyboardInterrupt:
         logging.info('Exiting.')
         os._exit(0)
-  else:
-    generate_report(args)
 
 
 if __name__ == '__main__':
