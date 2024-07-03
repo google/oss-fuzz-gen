@@ -17,19 +17,19 @@
 import argparse
 import logging
 import os
-import urllib.parse
-from functools import partial
 import threading
 import time
-from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
+import urllib.parse
+from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Dict, List, Optional
 
 import jinja2
 
 from report.common import Benchmark, FileSystem, Results, Sample, Target
 
-LOCAL_HOST='127.0.0.1'
-LOCAL_PORT=8012
+LOCAL_HOST = '127.0.0.1'
+LOCAL_PORT = 8012
 
 
 class JinjaEnv:
@@ -219,10 +219,9 @@ def generate_report(args):
 def launch_webserver(args):
   """Launches a local web server to browse results."""
   logging.info('Launching webserver at %s:%d', LOCAL_HOST, LOCAL_PORT)
-  server = ThreadingHTTPServer(
-             (LOCAL_HOST, LOCAL_PORT),
-             partial(SimpleHTTPRequestHandler, directory=args.output_dir)
-           )
+  server = ThreadingHTTPServer((LOCAL_HOST, LOCAL_PORT),
+                               partial(SimpleHTTPRequestHandler,
+                                       directory=args.output_dir))
   server.serve_forever()
 
 
@@ -232,7 +231,7 @@ def main():
   if args.serve:
     logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'INFO').upper())
     # Launch web server
-    thread = threading.Thread(target = launch_webserver, args=(args,))
+    thread = threading.Thread(target=launch_webserver, args=(args,))
     thread.start()
 
     # Generate results continuously while the process runs.
@@ -244,7 +243,8 @@ def main():
         logging.info('Exiting.')
         os._exit(0)
   else:
-    generate_report()
+    generate_report(args)
+
 
 if __name__ == '__main__':
   logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'WARN').upper())
