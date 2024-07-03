@@ -31,6 +31,9 @@ ERROR_LINES = 20
 NO_MEMBER_ERROR_REGEX = r"error: no member named '.*' in '([^':]*):?.*'"
 FILE_NOT_FOUND_ERROR_REGEX = r"fatal error: '([^']*)' file not found"
 UNKNOWN_TYPE_ERROR = 'error: unknown type name'
+COMPILATION_ERROR_FILE_REGEX = (r'^([^\s.:]+?\.(?:c|h)):\d+:\d+:\s+'
+                                r'(?:error|fatal error):\s.*')
+INCLUDE_FILE_REGEX = r'^\s*(#include\s*[<"][^">]+[>"])'
 
 # The following strings identify errors when a C fuzz target attempts to use
 # FuzzedDataProvider.
@@ -461,6 +464,8 @@ def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
   for error in errors:
     instruction += _collect_instruction_file_not_found(benchmark, error,
                                                        fuzz_target_source_code)
+    instruction += _collect_instruction_cpp_target_cpp_projet_include_c_file(
+        benchmark, error, fuzz_target_source_code)
   instruction += _collect_instruction_fdp_in_c_target(benchmark, errors,
                                                       fuzz_target_source_code)
   instruction += _collect_instruction_no_goto(fuzz_target_source_code)
@@ -468,6 +473,42 @@ def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
   instruction += _collect_instruction_extern(benchmark)
 
   return instruction
+
+
+def _collect_instruction_cpp_target_cpp_projet_include_c_file(
+    benchmark: benchmarklib.Benchmark, error: str,
+    fuzz_target_source_code: str) -> str:
+  """Collects the instructions when a C++ fuzz target include a C file from a
+  C++ project."""
+  # The fuzz target is in C++.
+  if benchmark.language.lower() == benchmarklib.FileType.C.value:
+    return ''
+  # The project is in C++.
+  if benchmark.file_type == benchmarklib.FileType.C:
+    return ''
+
+  # Yet the error is caused by a C file.
+  match = re.search(COMPILATION_ERROR_FILE_REGEX, error)
+  if not match:
+    return ''
+  file_basename, _ = os.path.splitext(os.path.basename(match.group(1)))
+
+  # The fuzz target includes the file.
+  matches = re.findall(INCLUDE_FILE_REGEX, fuzz_target_source_code)
+  matching_include_lines = [line for line in matches if file_basename in line]
+  if not matching_include_lines:
+    return ''
+  if len(matching_include_lines) > 1:
+    logging.warning(
+        '_collect_instruction_cpp_target_cpp_projet_include_c_file matched more'
+        ' than 1 line containing %s: %s', file_basename, matching_include_lines)
+  matching_include_line = matching_include_lines[0]
+  fixed_include_line = f'extern "C" {{\n{matching_include_line}\n}}\n'
+  return (
+      f'IMPORTANT: This statement <code>{matching_include_line}</code> MUST be '
+      f'replaced with <code>{fixed_include_line}</code> in the generated fuzz '
+      'target to fix the compilation error above, because the fuzz target is in'
+      'C++ but the statement includes a file in C.\n')
 
 
 def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
