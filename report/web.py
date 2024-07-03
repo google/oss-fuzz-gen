@@ -19,11 +19,17 @@ import logging
 import os
 import urllib.parse
 from functools import partial
+import threading
+import time
+from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from typing import Any, Dict, List, Optional
 
 import jinja2
 
 from report.common import Benchmark, FileSystem, Results, Sample, Target
+
+LOCAL_HOST='127.0.0.1'
+LOCAL_PORT=8012
 
 
 class JinjaEnv:
@@ -191,13 +197,16 @@ def _parse_arguments() -> argparse.Namespace:
                       '-m',
                       help='Model used for the experiment.',
                       default='')
+  parser.add_argument('--serve',
+                      '-s',
+                      help='Will launch a web server if set.',
+                      action='store_true')
 
   return parser.parse_args()
 
 
-def main():
-  args = _parse_arguments()
-
+def generate_report(args):
+  logging.info('Generating web page files in %s', args.output_dir)
   results = Results(results_dir=args.results_dir,
                     benchmark_set=args.benchmark_set)
   jinja_env = JinjaEnv(template_globals={'model': args.model})
@@ -206,6 +215,36 @@ def main():
                       output_dir=args.output_dir)
   gr.generate()
 
+
+def launch_webserver(args):
+  """Launches a local web server to browse results."""
+  logging.info('Launching webserver at %s:%d', LOCAL_HOST, LOCAL_PORT)
+  server = ThreadingHTTPServer(
+             (LOCAL_HOST, LOCAL_PORT),
+             partial(SimpleHTTPRequestHandler, directory=args.output_dir)
+           )
+  server.serve_forever()
+
+
+def main():
+  args = _parse_arguments()
+
+  if args.serve:
+    logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'INFO').upper())
+    # Launch web server
+    thread = threading.Thread(target = launch_webserver, args=(args,))
+    thread.start()
+
+    # Generate results continuously while the process runs.
+    while True:
+      generate_report(args)
+      try:
+        time.sleep(90)
+      except KeyboardInterrupt:
+        logging.info('Exiting.')
+        os._exit(0)
+  else:
+    generate_report()
 
 if __name__ == '__main__':
   logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'WARN').upper())
