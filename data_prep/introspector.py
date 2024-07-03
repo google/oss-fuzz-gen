@@ -60,6 +60,7 @@ INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
 INTROSPECTOR_ALL_HEADER_FILES = ''
 INTROSPECTOR_ALL_FUNC_TYPES = ''
+INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
 INTROSPECTOR_ALL_JVM_SOURCE_PATH = ''
 
@@ -84,7 +85,8 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
       INTROSPECTOR_ALL_HEADER_FILES, INTROSPECTOR_ALL_FUNC_TYPES, \
       INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS, \
-      INTROSPECTOR_ORACLE_ALL_CANDIDATES, INTROSPECTOR_ALL_JVM_SOURCE_PATH
+      INTROSPECTOR_ORACLE_ALL_CANDIDATES, INTROSPECTOR_ALL_JVM_SOURCE_PATH, \
+      INTROSPECTOR_HEADERS_FOR_FUNC
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
@@ -107,6 +109,8 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
   INTROSPECTOR_ALL_HEADER_FILES = f'{INTROSPECTOR_ENDPOINT}/all-header-files'
   INTROSPECTOR_ALL_FUNC_TYPES = f'{INTROSPECTOR_ENDPOINT}/func-debug-types'
+  INTROSPECTOR_HEADERS_FOR_FUNC = (
+      f'{INTROSPECTOR_ENDPOINT}/get-header-files-needed-for-function')
   INTROSPECTOR_SAMPLE_XREFS = (
       f'{INTROSPECTOR_ENDPOINT}/sample-cross-references')
   INTROSPECTOR_ALL_JVM_SOURCE_PATH = (
@@ -293,6 +297,18 @@ def query_introspector_jvm_source_path(project: str) -> List[str]:
   resp = _query_introspector(INTROSPECTOR_ALL_JVM_SOURCE_PATH,
                              {'project': project})
   return _get_data(resp, 'src_path', [])
+
+
+def query_introspector_header_files_to_include(project: str,
+                                               func_sig: str) -> List[str]:
+  """Queries Fuzz Introspector header files where a function is likely
+  declared."""
+  resp = _query_introspector(INTROSPECTOR_HEADERS_FOR_FUNC, {
+      'project': project,
+      'function_signature': func_sig
+  })
+  arg_types = _get_data(resp, 'headers-to-include', [])
+  return arg_types
 
 
 def query_introspector_function_debug_arg_types(project: str,
