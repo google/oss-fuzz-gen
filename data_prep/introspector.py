@@ -319,10 +319,8 @@ def query_introspector_jvm_source_path(project: str) -> List[str]:
 
 
 def query_introspector_matching_function_type(project: str,
-                                              return_type: str) -> List[str]:
-  """
-    Queries for all functions that returns a given type in a given project.
-  """
+                                              return_type: str) -> List[Dict]:
+  """Queries for all functions that returns a given type in a given project."""
   simple_types_should_not_process = [
       'byte', 'char', 'boolean', 'short', 'long', 'int', 'float', 'double',
       'void', 'java.lang.String', 'java.lang.CharSequence'
@@ -341,10 +339,9 @@ def query_introspector_matching_function_type(project: str,
 
 
 def query_introspector_matching_constructor_type(project: str,
-                                                 return_type: str) -> List[str]:
-  """
-    Queries for all constructors that returns a given type in a given project.
-  """
+                                                 return_type: str) -> List[Dict]:
+  """Queries for all constructors that returns a given type in a given
+  project."""
   simple_types_should_not_process = [
       'byte', 'char', 'boolean', 'short', 'long', 'int', 'float', 'double',
       'void', 'java.lang.String', 'java.lang.CharSequence'
