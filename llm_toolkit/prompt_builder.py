@@ -662,11 +662,9 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
        method and format it for the prompts creation.
     """
     if '<init>' in signature:
-      target = self._format_target_constructor(signature)
-    else:
-      target = self._format_target_method(signature)
+      return self._format_target_constructor(signature)
 
-    return target.replace('{EXCEPTIONS}', self._format_exceptions())
+    return self._format_target_method(signature)
 
   def _format_requirement(self, signature: str) -> str:
     """Formats a requirement based on the prompt template."""
@@ -742,6 +740,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
                               self._format_requirement(signature))
     problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
     problem = problem.replace('{ARGUMENTS}', self._format_arguments())
+    problem = problem.replace('{EXCEPTIONS}', self._format_exceptions())
 
     self_source, cross_source = self._format_source_reference(signature)
     problem = problem.replace('{SELF_SOURCE}', self_source)
