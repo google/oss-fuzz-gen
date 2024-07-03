@@ -723,8 +723,9 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       return ''
 
     constructors = []
-    for constructor in introspector.query_introspector_matching_constructor_type(self.benchmark.project, self.benchmark.return_type):
-      constructor_sig = constructor.get('function_signature')
+    for ctr in introspector.query_introspector_matching_constructor_type(
+        self.benchmark.project, self.benchmark.return_type):
+      constructor_sig = ctr.get('function_signature')
       if constructor_sig:
         constructors.append('<signature>' + constructor_sig + '</signature>')
 
@@ -732,17 +733,22 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       return '<constructors>' + '\n'.join(constructors) + '</constructors>'
 
     functions = []
-    for function in introspector.query_introspector_matching_function_type(self.benchmark.project, self.benchmark.return_type):
+    for function in introspector.query_introspector_matching_function_type(
+        self.benchmark.project, self.benchmark.return_type):
       is_static = function.get('is_static', False)
       function_sig = function.get('function_signature')
       if not function_sig:
         continue
       if is_static:
-        functions.append('<item><signature>' + funcion_sig + '</signature></item>')
+        functions.append('<item><signature>' + function_sig +
+                         '</signature></item>')
       else:
         function_class = function_sig[1:].split(']')[0]
-        function_str = '<signature>' + funcion_sig + '</signature>'
-        function_str = function_str + '<prerequisite>You MUST create an {CLASS_NAME} object before calling this constructing method.</prerequisite>'
+        function_str = '<signature>' + function_sig + '</signature>'
+        function_str = function_str + (
+            '<prerequisite>You MUST create an '
+            '{CLASS_NAME} object before calling this constructing method.'
+            '</prerequisite>')
         function_str = function_str.replace('{CLASS_NAME}', function_class)
         function_str = '<item>' + function_str + '</item>'
         functions.append(function_str)
