@@ -66,6 +66,7 @@ INTROSPECTOR_ALL_FUNC_TYPES = ''
 INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
 INTROSPECTOR_ALL_JVM_SOURCE_PATH = ''
+INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE = ''
 
 
 def get_oracle_dict() -> Dict[str, Any]:
@@ -90,7 +91,8 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ALL_HEADER_FILES, INTROSPECTOR_ALL_FUNC_TYPES, \
       INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS, \
       INTROSPECTOR_ORACLE_ALL_CANDIDATES, INTROSPECTOR_ALL_JVM_SOURCE_PATH, \
-      INTROSPECTOR_ORACLE_OPTIMAL, INTROSPECTOR_HEADERS_FOR_FUNC
+      INTROSPECTOR_ORACLE_OPTIMAL, INTROSPECTOR_HEADERS_FOR_FUNC, \
+      INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE
 
   INTROSPECTOR_ENDPOINT = endpoint
   logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
@@ -120,6 +122,8 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/sample-cross-references')
   INTROSPECTOR_ALL_JVM_SOURCE_PATH = (
       f'{INTROSPECTOR_ENDPOINT}/all-project-source-files')
+  INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE = (
+      f'{INTROSPECTOR_ENDPOINT}/function-with-matching-return-type')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -308,10 +312,50 @@ def query_introspector_sample_xrefs(project: str, func_sig: str) -> List[str]:
 
 
 def query_introspector_jvm_source_path(project: str) -> List[str]:
-  """Queries for sample references in the form of source code."""
+  """Queries for all java source paths of a given project."""
   resp = _query_introspector(INTROSPECTOR_ALL_JVM_SOURCE_PATH,
                              {'project': project})
   return _get_data(resp, 'src_path', [])
+
+
+def query_introspector_matching_function_type(project: str,
+                                              type: str) -> List[str]:
+  """
+    Queries for all functions that returns a given object type in a given project.
+  """
+  simple_types_should_not_process = [
+    'byte', 'char', 'boolean', 'short', 'long', 'int', 'float', 'double',
+    'void', 'java.lang.String', 'java.lang.CharSequence'
+  ]
+  if type in simple_types_should_not_process:
+    # Avoid querying introspector for simple object types as this API is
+    # not meant to be used for creating simple object.
+    return []
+
+  resp = _query_introspector(INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE,
+                             {'project': project, 'return_type': type})
+
+  return _get_data(resp, 'functions', [])
+
+
+def query_introspector_matching_constructor_type(project: str,
+                                                 type: str) -> List[str]:
+  """
+    Queries for all constructors that returns a given object type in a given project.
+  """
+  simple_types_should_not_process = [
+    'byte', 'char', 'boolean', 'short', 'long', 'int', 'float', 'double',
+    'void', 'java.lang.String', 'java.lang.CharSequence'
+  ]
+  if type in simple_types_should_not_process:
+    # Avoid querying introspector for simple object types as this API is
+    # not meant to be used for creating simple object.
+    return []
+
+  resp = _query_introspector(INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE,
+                             {'project': project, 'return_type': type})
+
+  return _get_data(resp, 'constructors', [])
 
 
 def query_introspector_header_files_to_include(project: str,
