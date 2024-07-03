@@ -31,7 +31,7 @@ spec:
         # Modify the follow command to customize one-off experiments.
         # For benchmark sets that need more disk, increase the results volume
         # size too.
-        command: ["/bin/bash", "report/docker_run.sh", "${GKE_EXP_BENCHMARK}", "${GKE_EXP_NAME}", "${GKE_EXP_FUZZING_TIMEOUT}", "ofg-pr", "${GKE_EXP_LLM}", "${GKE_EXP_DELAY}"]
+        command: ["/bin/bash", "report/docker_run.sh", "${GKE_EXP_BENCHMARK}", "${GKE_EXP_NAME}", "${GKE_EXP_FUZZING_TIMEOUT}", "ofg-pr", "${GKE_EXP_LLM}", "${GKE_EXP_DELAY}", "{GKE_EXP_LOCAL_INTROSPECTOR}"]
         resources:
           requests:
             cpu: ${GKE_EXP_REQ_CPU}

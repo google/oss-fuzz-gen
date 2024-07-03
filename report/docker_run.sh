@@ -34,6 +34,7 @@ RUN_TIMEOUT=$3
 SUB_DIR=$4
 MODEL=$5
 DELAY=$6
+USE_LOCAL_INTROSPECTOR=$7
 # Uses python3 by default and /venv/bin/python3 for Docker containers.
 PYTHON="$( [[ -x "/venv/bin/python3" ]] && echo "/venv/bin/python3" || echo "python3" )"
 export PYTHON
@@ -85,6 +86,57 @@ then
   echo "DELAY was not specified as the sixth argument. Defaulting to ${DELAY:?}."
 fi
 
+launch_local_introspector_deployment() {
+  set -x
+  BASE_DIR=$PWD
+  git clone https://github.com/ossf/fuzz-introspector
+  cd fuzz-introspector
+  ROOT_FI=$PWD
+  cd tools/web-fuzzing-introspection
+  $PYTHON -m pip install -r ./requirements.txt
+
+  # Create the database for the projects we are interested in
+  cd app/static/assets/db/
+  $PYTHON ./web_db_creator_from_summary.py \
+    --output-dir=$PWD \
+    --input-dir=$PWD \
+    --base-offset=1 \
+    --includes=$BASE_DIR/benchmark-sets/${BENCHMARK_SET}
+
+  cd $ROOT_FI/tools/web-fuzzing-introspection/app/
+
+  # Start a local webserver
+  cd $ROOT_FI/tools/web-fuzzing-introspection/app/
+  FUZZ_INTROSPECTOR_SHUTDOWN=1 python3 ./main.py >> /dev/null &
+
+  # Wait until the server has launched
+  SECONDS=5
+  while true
+  do
+    # Checking if exists
+    MSG=$(curl -v --silent 127.0.0.1:8080 2>&1 | grep "Fuzzing" | wc -l)
+    if [[ $MSG > 0 ]]; then
+      echo "Found it"
+      break
+    fi
+    echo "- Waiting for webapp to load. Sleeping ${SECONDS} seconds."
+    sleep ${SECONDS}
+  done
+
+  echo "Local version of introspector is up and running"
+
+  # Restore base dir as current dir
+  cd $BASE_DIR
+}
+
+if [[ "$USE_LOCAL_INTROSPECTOR" = "true" ]]
+then
+  launch_local_introspector_deployment
+  INTROSPECTOR_ENDPOINT="http://127.0.0.1:8080/api"
+else
+  INTROSPECTOR_ENDPOINT="https://introspector.oss-fuzz.com/api"
+fi
+
 DATE=$(date '+%Y-%m-%d')
 LOCAL_RESULTS_DIR='results'
 # Experiment name is used to label the Cloud Builds and as part of the
@@ -112,11 +164,18 @@ $PYTHON run_all_experiments.py \
   --num-samples 10 \
   --delay "${DELAY:?}" \
   --context \
+  --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
   --model "$MODEL"
 
 export ret_val=$?
 
 touch /experiment_ended
+
+if [[ $USE_LOCAL_INTROSPECTOR != '' ]]
+then
+  echo "Shutting down introspector"
+  curl --silent http://localhost:8080/api/shutdown || true
+fi
 
 # Wait for the report process to finish uploading.
 wait $pid_report
