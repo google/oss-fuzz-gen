@@ -716,6 +716,41 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     return '\n'.join(argument_descriptions)
 
+  def _format_constructors(self) -> str:
+    """Formats a list of functions / constructors to create the object for
+    invoking the target method."""
+    if self.benchmark.is_static:
+      return ''
+
+    constructors = []
+    for constructor in introspector.query_introspector_matching_constructor_type(self.benchmark.project, self.benchmark.return_type):
+      constructor_sig = constructor.get('function_signature')
+      if constructor_sig:
+        constructors.append('<signature>' + constructor_sig + '</signature>')
+
+    if constructors:
+      return '<constructors>' + '\n'.join(constructors) + '</constructors>'
+
+    functions = []
+    for function in introspector.query_introspector_matching_function_type(self.benchmark.project, self.benchmark.return_type):
+      is_static = function.get('is_static', False)
+      function_sig = function.get('function_signature')
+      if not function_sig:
+        continue
+      if is_static:
+        functions.append('<item><signature>' + funcion_sig + '</signature></item>')
+      else:
+        function_class = function_sig[1:].split(']')[0]
+        function_str = '<signature>' + funcion_sig + '</signature>'
+        function_str = function_str + '<prerequisite>You MUST create an {CLASS_NAME} object before calling this constructing method.</prerequisite>'
+        function_str = function_str.replace('{CLASS_NAME}', function_class)
+        function_str = '<item>' + function_str + '</item>'
+        functions.append(function_str)
+    if functions:
+      return '<constructors>' + '\n'.join(functions) + '</constructors>'
+
+    return ''
+
   def _format_source_reference(self, signature: str) -> Tuple[str, str]:
     """Formats the source code reference for this target."""
     # Query for source code of the target method
@@ -742,6 +777,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
                               self._format_requirement(signature))
     problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
     problem = problem.replace('{ARGUMENTS}', self._format_arguments())
+    problem = problem.replace('{CONSTRUCTORS}', self._format_constructors())
 
     self_source, cross_source = self._format_source_reference(signature)
     problem = problem.replace('{SELF_SOURCE}', self_source)
