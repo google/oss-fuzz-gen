@@ -564,6 +564,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         template_dir, 'jvm_arg_description.txt')
     self.generic_arg_description_template_file = self._find_template(
         template_dir, 'jvm_generic_arg_description.txt')
+    self.simple_arg_description_template_file = self._find_template(
+        template_dir, 'jvm_simple_arg_description.txt')
     self.import_template_file = self._find_template(template_dir,
                                                     'jvm_import_mapping.txt')
 
@@ -638,23 +640,54 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     return mapping
 
-  def _format_generic_argument(self, count: int, arg_type: str) -> str:
+  def _format_generic_argument(self, arg_type: str) -> str:
     """Formats generic argument description."""
-    arg_split = arg_type.split('<', 1)
+    generic_types = arg_type.split('<', 1)[1][:-1].split(',')
 
-    argument = self._get_template(self.generic_arg_description_template_file)
-    argument = argument.replace('{ARG_COUNT}', str(count))
-    argument = argument.replace('{ARG_TYPE}', arg_split[0])
-    argument = argument.replace('{ARG_GENERIC}', arg_split[1][:-1])
+    generic_desc = []
+    for generic_type in generic_types:
+      desc = self._get_template(self.generic_arg_description_template_file)
+      desc = desc.replace('{GENERIC_TYPE}', generic_type)
 
-    return argument
+      method_str = self._get_methods_for_simple_type(arg_type)
+      if method_str:
+        desc = desc.replace('{RANDOM_METHODS}', method_str)
+      else:
+        desc = desc.replace('{RANDOM_METHODS}',
+                            'correct constructors or static methods')
 
-  def _format_general_argument(self, count: int, arg_type: str) -> str:
+      generic_desc.append(desc)
+
+    if not generic_desc:
+      return '', ''
+
+    return f' with generic typese of {generic_types}', '\n'.join(generic_desc)
+
+  def _format_argument(self, count: int, arg_type: str) -> str:
     """Formats general argument description."""
+    # Simple arguments
+    if method_str:
+      argument = self._get_template(self.simple_arg_description_template_file)
+      argument = argument.replace('{ARG_COUNT}', str(count))
+      argument = argument.replace('{RANDOM_METHODS}', ' or '.join(method_str))
+      if '[]' in arg_type:
+        arg_type_no_array = arg_type.replace('[]', '')
+        argument = argument.replace(
+           '{SIMPLE_TYPE}', f'an array of {arg_type_no_array}')
+        argument = argument.replace(
+            '{ARRAY_OR_NOT}', (f'multiple {arg_type_no_array} variables and '
+            'initialise an array of {arg_type_no_array} with the generated '
+            'variables.'))
+      else:
+        argument = argument.replace('{SIMPLE_TYPE}', f'a {arg_type}')
+        argument = argument.replace('{ARRAY_OR_NOT}', 'the needed variables.')
+
+      return argument
+
+    # All other object arguments
     argument = self._get_template(self.arg_description_template_file)
     argument = argument.replace('{ARG_COUNT}', str(count))
     argument = argument.replace('{ARG_TYPE}', arg_type)
-
     return argument
 
   def _format_target(self, signature: str) -> str:
@@ -707,14 +740,18 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     for count, function_arg in enumerate(self.benchmark.params):
       arg_type = function_arg['type']
-      if self._has_generic(arg_type):
-        argument = self._format_generic_argument(count, arg_type)
-      else:
-        argument = self._format_general_argument(count, arg_type)
+      argument = self._format_argument(count, arg_type)
 
+      generic_type = ''
+      generic_desc = ''
+      if self._has_generic(arg_type):
+        generic_type, generic_desc = self._format_generic_argument(arg_type)
+
+      argument = argument.replace('{GENERIC_TYPE}', generic_type)
+      argument = argument.replace('{GENERIC_DESC}', generic_desc)
       argument_descriptions.append(argument)
 
-    return '\n'.join(argument_descriptions)
+    return '<arguments>' + '\n'.join(argument_descriptions) + '</arguments>'
 
   def _format_source_reference(self, signature: str) -> Tuple[str, str]:
     """Formats the source code reference for this target."""
@@ -758,11 +795,109 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _has_generic(self, arg: str) -> bool:
     """Determine if the argument type contains generic type."""
-    return '<' in arg and not arg.startswith('<') and arg.endswith('>')
+    return ('<' in arg and not arg.startswith('<') and arg.endswith('>') and
+            'java.lang.Class' not in arg and 'java.lang.Object' not in arg)
 
   def _need_import(self, class_name: str) -> bool:
     """Determine if the class with class_name needed to be imported."""
     return '.' in class_name and not class_name.startswith('java.lang.')
+
+  def _get_methods_for_simple_type(self, simple_type: str) -> str:
+    """Retrieve string descrbing how to generate random data of
+    the provided simple type."""
+    simple_type_mapping = {
+        'int': [
+            'FuzzedDataProvider::consumeInt()',
+            'FuzzedDataProvider::consumeInt(int, int)'
+        ],
+       'java.lang.Integer': [
+            'FuzzedDataProvider::consumeInt()',
+            'FuzzedDataProvider::consumeInt(int,int)'
+        ],
+        'boolean': [
+            'FuzzedDataProvider::consumeBoolean()',
+            'FuzzedDataProvider::pickValue(boolean[])'
+        ],
+        'java.lang.Boolean': [
+            'FuzzedDataProvider::consumeBoolean()',
+            'FuzzedDataProvider::pickValue(boolean[])'
+        ],
+        'byte': [
+            'FuzzedDataProvider::consumeByte()',
+            'FuzzedDataProvider::consumeByte(byte,byte)'
+        ],
+        'byte[]': [
+            'FuzzedDataProvider::consumeBytes(int)',
+            'FuzzedDataProvider::consumeRemainingAsBytes()'
+        ],
+        'java.lang.Byte': [
+            'FuzzedDataProvider::consumeByte()',
+            'FuzzedDataProvider::consumeByte(byte,byte)'
+        ],
+        'short': [
+            'FuzzedDataProvider::consumeShort()',
+            'FuzzedDataProvider::consumeShort(short,short)'
+        ],
+        'java.lang.Short': [
+            'FuzzedDataProvider::consumeShort()',
+            'FuzzedDataProvider::consumeShort(short,short)'
+        ],
+        'long': [
+            'FuzzedDataProvider::consumeLong()',
+            'FuzzedDataProvider::consumeLong(long, long)'
+        ],
+        'java.lang.Long': [
+            'FuzzedDataProvider::consumeLong()',
+            'FuzzedDataProvider::consumeLong(long,long)'
+        ],
+        'float': [
+            'FuzzedDataProvider::consumeFloat()',
+            'FuzzedDataProvider::consumeRegularFloat()',
+            'FuzzedDataProvider::consumeRegularFloat(float,float)',
+            'FuzzedDataProvider::consumeProbabilityFloat()'
+        ],
+        'java.lang.Float': [
+            'FuzzedDataProvider::consumeFloat()',
+            'FuzzedDataProvider::consumeRegularFloat()',
+            'FuzzedDataProvider::consumeRegularFloat(float, float)',
+            'FuzzedDataProvider::consumeProbabilityFloat()'
+        ],
+        'double': [
+            'FuzzedDataProvider::consumeDouble()',
+            'FuzzedDataProvider::consumeRegularDouble()',
+            'FuzzedDataProvider::consumeRegularDouble(double, double)',
+            'FuzzedDataProvider::consumeProbabilityDouble()'
+        ],
+        'java.lang.Double': [
+            'FuzzedDataProvider::consumeDouble()',
+            'FuzzedDataProvider::consumeRegularDouble()',
+            'FuzzedDataProvider::consumeRegularDouble(double, double)',
+            'FuzzedDataProvider::consumeProbabilityDouble()'
+        ],
+        'char': [
+            'FuzzedDataProvider::consumeChar()',
+            'FuzzedDataProvider::consumeCharNoSurrogates()',
+            'FuzzedDataProvider::consumeChar(char, char)'
+        ],
+        'java.lang.Character': [
+            'FuzzedDataProvider::consumeChar()',
+            'FuzzedDataProvider::consumeCharNoSurrogates()',
+            'FuzzedDataProvider::consumeChar(char,char)'
+        ],
+        'java.lang.String': [
+            'FuzzedDataProvider::consumeString(int)',
+            'FuzzedDataProvider::consumeAsciiString(int)',
+            'FuzzedDataProvider::consumeRemainingAsString()',
+            'FuzzedDataProvider::consumeRemainingAsAsciiString()'
+        ],
+        'java.lang.Class': ['Object::getClass()']
+    }
+
+    if simple_type in simple_type_mapping:
+      return simple_type_mapping[simple_type]
+
+    # If the type is not found, try if it is an array of any above types
+    return simple_type_mapping.get(simple_type.replace('[]', ''), '')
 
   def build(self,
             function_signature: str,
