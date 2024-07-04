@@ -15,8 +15,8 @@
 """Manager for running auto-gen from scratch."""
 
 import argparse
-import os
 import logging
+import os
 import shutil
 import subprocess
 import sys
@@ -112,7 +112,7 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
       ]
       subprocess.check_call(' '.join(cmd_to_run), shell=True, cwd=oss_fuzz_base)
     except subprocess.CalledProcessError:
-      logger.info(f'Failed coverage build: {target_cov_name}')
+      logger.info('Failed coverage build: %s', target_cov_name)
       continue
 
     # Run coverage and save report in the main folder.
@@ -130,7 +130,7 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
       ]
       subprocess.check_call(' '.join(cmd_to_run), shell=True, cwd=oss_fuzz_base)
     except subprocess.CalledProcessError:
-      logger.info(f'Failed coverage run: {target_cov_name}')
+      logger.info('Failed coverage run: %s', target_cov_name)
       continue
 
 
@@ -283,7 +283,7 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
   jobs = []
   for idx, target in enumerate(target_repositories):
     worker_project_name = get_next_worker_project(oss_fuzz_base)
-    logger.info(f'Worker project name {worker_project_name}')
+    logger.info('Worker project name %s', worker_project_name)
 
     setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
     proc = threading.Thread(target=run_on_targets,
