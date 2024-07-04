@@ -53,7 +53,7 @@ INTROSPECTOR_CFG = ''
 INTROSPECTOR_ORACLE_FAR_REACH = ''
 INTROSPECTOR_ORACLE_KEYWORD = ''
 INTROSPECTOR_ORACLE_EASY_PARAMS = ''
-INTROSPECTOR_ORACLE_ALL_CANDIDATES = ''
+INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES = ''
 INTROSPECTOR_ORACLE_OPTIMAL = ''
 INTROSPECTOR_FUNCTION_SOURCE = ''
 INTROSPECTOR_PROJECT_SOURCE = ''
@@ -76,7 +76,7 @@ def get_oracle_dict() -> Dict[str, Any]:
       'far-reach-low-coverage': get_unreached_functions,
       'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets,
       'easy-params-far-reach': query_introspector_for_easy_param_targets,
-      'all-public-candidates': query_introspector_for_all_public_candidates,
+      'jvm-public-candidates': query_introspector_jvm_all_public_candidates,
       'optimal-targets': query_introspector_for_optimal_targets,
   }
   return oracle_dict
@@ -90,7 +90,7 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
       INTROSPECTOR_ALL_HEADER_FILES, INTROSPECTOR_ALL_FUNC_TYPES, \
       INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS, \
-      INTROSPECTOR_ORACLE_ALL_CANDIDATES, INTROSPECTOR_ALL_JVM_SOURCE_PATH, \
+      INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES, INTROSPECTOR_ALL_JVM_SOURCE_PATH, \
       INTROSPECTOR_ORACLE_OPTIMAL, INTROSPECTOR_HEADERS_FOR_FUNC, \
       INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE
 
@@ -104,7 +104,7 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/far-reach-low-cov-fuzz-keyword')
   INTROSPECTOR_ORACLE_EASY_PARAMS = (
       f'{INTROSPECTOR_ENDPOINT}/easy-params-far-reach')
-  INTROSPECTOR_ORACLE_ALL_CANDIDATES = (
+  INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES = (
       f'{INTROSPECTOR_ENDPOINT}/all-public-candidates')
   INTROSPECTOR_ORACLE_OPTIMAL = f'{INTROSPECTOR_ENDPOINT}/optimal-targets'
   INTROSPECTOR_FUNCTION_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
@@ -229,11 +229,11 @@ def query_introspector_for_easy_param_targets(project: str) -> list[dict]:
   return query_introspector_oracle(project, INTROSPECTOR_ORACLE_EASY_PARAMS)
 
 
-def query_introspector_for_all_public_candidates(project: str) -> list[dict]:
+def query_introspector_jvm_all_public_candidates(project: str) -> list[dict]:
   """Queries Fuzz Introspector for all public accessible function or
   constructor candidates.
   """
-  return query_introspector_oracle(project, INTROSPECTOR_ORACLE_ALL_CANDIDATES)
+  return query_introspector_oracle(project, INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES)
 
 
 def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
