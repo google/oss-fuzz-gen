@@ -557,13 +557,21 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                            target_oracles: List[str]):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
 
-  functions = []
+  all_functions = []
   for target_oracle in target_oracles:
     logging.info('Extracting functions using oracle %s.', target_oracle)
     tmp_functions = query_introspector_for_targets(project, target_oracle)
 
     # Limit the amount of functions from each oracle.
-    functions += tmp_functions[:limit]
+    all_functions += tmp_functions[:limit]
+
+  # Limit the total amount of functions from all oracles, keep the priority
+  # order, and remove duplication.
+  functions = {}
+  for func in all_functions:
+    if len(functions) < limit and func['function_signature'] not in functions:
+      functions[func['function_signature']] = func
+  functions = functions.values()
 
   if not functions:
     logging.error('No functions found using the oracles: %s', target_oracles)
@@ -777,7 +785,8 @@ def _parse_arguments() -> argparse.Namespace:
   parser.add_argument('-t',
                       '--target-oracle',
                       type=str,
-                      default='far-reach-low-coverage',
+                      nargs='+',
+                      default=['optimal-targets', 'all-public-candidates'],
                       help='Oracle used to determine interesting targets.')
 
   return parser.parse_args()
@@ -805,7 +814,7 @@ if __name__ == '__main__':
   benchmarks = populate_benchmarks_using_introspector(args.project,
                                                       cur_project_language,
                                                       args.max_functions,
-                                                      [args.target_oracle])
+                                                      args.target_oracle)
   if benchmarks:
     benchmarklib.Benchmark.to_yaml(benchmarks, args.out)
   else:
