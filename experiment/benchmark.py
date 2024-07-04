@@ -61,6 +61,7 @@ class Benchmark:
             'name': b.function_name,
             'return_type': b.return_type,
             'params': b.params,
+            'exceptions': b.exceptions,
         } for b in benchmarks],
     }
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
@@ -98,12 +99,14 @@ class Benchmark:
               function.get('name'),
               function.get('return_type'),
               function.get('params'),
+              function.get('exceptions', []),
               data['target_path'],
               data.get('target_name'),
               use_project_examples=use_project_examples,
               cppify_headers=cppify_headers,
               commit=commit,
-              use_context=use_context))
+              use_context=use_context,
+              function_dict=function))
 
     return benchmarks
 
@@ -115,6 +118,7 @@ class Benchmark:
                function_name: str,
                return_type: str,
                params: list[dict[str, str]],
+               exceptions: list[str],
                target_path: str,
                preferred_target_name: Optional[str] = None,
                use_project_examples=True,
@@ -129,6 +133,7 @@ class Benchmark:
     self.function_name = function_name
     self.return_type = return_type
     self.params = params
+    self.exceptions = exceptions
     self.function_dict = function_dict
     self.target_path = target_path
     self._preferred_target_name = preferred_target_name

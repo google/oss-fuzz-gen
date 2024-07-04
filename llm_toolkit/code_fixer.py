@@ -30,11 +30,13 @@ from llm_toolkit import prompt_builder
 ERROR_LINES = 20
 NO_MEMBER_ERROR_REGEX = r"error: no member named '.*' in '([^':]*):?.*'"
 FILE_NOT_FOUND_ERROR_REGEX = r"fatal error: '([^']*)' file not found"
+UNKNOWN_TYPE_ERROR = 'error: unknown type name'
 
 # The following strings identify errors when a C fuzz target attempts to use
 # FuzzedDataProvider.
 FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
 FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
+FDP_INCLUDE_STATEMENT = '#include <fuzzer/FuzzedDataProvider.h>'
 
 
 def parse_args():
@@ -459,8 +461,12 @@ def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
   for error in errors:
     instruction += _collect_instruction_file_not_found(benchmark, error,
                                                        fuzz_target_source_code)
-    instruction += _collect_instruction_fdp_in_c_target(
-        benchmark, error, fuzz_target_source_code)
+  instruction += _collect_instruction_fdp_in_c_target(benchmark, errors,
+                                                      fuzz_target_source_code)
+  instruction += _collect_instruction_no_goto(fuzz_target_source_code)
+  instruction += _collect_instruction_builtin_libs_first(benchmark, errors)
+  instruction += _collect_instruction_extern(benchmark)
+
   return instruction
 
 
@@ -476,10 +482,22 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
   wrong_file = matched.group(1)
   instruction = (
       f'IMPORTANT: DO NOT include the header file {wrong_file} in the generated'
-      'fuzz target again, the file does not exist in the project-under-test.\n')
-
+      ' fuzz target again, the file does not exist in the project-under-test.\n'
+  )
+  # Step 2: Suggest the header file of the same name as the wrong one.
   ci = context_introspector.ContextRetriever(benchmark)
-  # Step 2: Suggest the header/source file of the function under test.
+  same_name_headers = ci.get_same_header_file_paths(wrong_file)
+  if same_name_headers:
+    statements = '\n'.join(
+        [f'#include "{header}"' for header in same_name_headers])
+    instruction += (
+        f'Replace the non-existent <filepath>{wrong_file}</filepath> with the '
+        'following statement, which share the same file name but exists under '
+        'the correct path in the project-under-test:\n'
+        f'<code>\n{statements}\n</code>\n')
+    return instruction
+
+  # Step 3: Suggest the header/source file of the function under test.
   function_file = ci.get_target_function_file_path()
   if f'#include "{function_file}"' in fuzz_target_source_code:
     function_file_base_name = os.path.basename(function_file)
@@ -503,7 +521,7 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
         f'{function_file}</filepath>. For example:\n'
         f'<code>\n#include "{function_file}"\n</code>\n')
 
-  # Step 2: Suggest similar alternatives.
+  # Step 4: Suggest similar alternatives.
   similar_headers = ci.get_similar_header_file_paths(wrong_file)
   if similar_headers:
     statements = '\n'.join(
@@ -515,14 +533,14 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
 
 
 def _collect_instruction_fdp_in_c_target(benchmark: benchmarklib.Benchmark,
-                                         error: str,
+                                         errors: list[str],
                                          fuzz_target_source_code: str) -> str:
   """Collects instructions to ask LLM do not use FuzzedDataProvier in C targets
   """
-  has_error_from_fdp = (FALSE_EXTERN_KEYWORD_ERROR in error or
-                        FALSE_FUZZED_DATA_PROVIDER_ERROR in error)
-  include_fdp = ('#include <fuzzer/FuzzedDataProvider.h>'
-                 in fuzz_target_source_code)
+  has_error_from_fdp = any(FALSE_EXTERN_KEYWORD_ERROR in error or
+                           FALSE_FUZZED_DATA_PROVIDER_ERROR in error
+                           for error in errors)
+  include_fdp = FDP_INCLUDE_STATEMENT in fuzz_target_source_code
   is_c = benchmark.file_type == benchmarklib.FileType.C
   if (has_error_from_fdp or include_fdp) and is_c:
     return (
@@ -533,6 +551,49 @@ def _collect_instruction_fdp_in_c_target(benchmark: benchmarklib.Benchmark,
         'plain C and does not include any C++ specific code or dependencies.\n')
 
   return ''
+
+
+def _collect_instruction_no_goto(fuzz_target_source_code: str) -> str:
+  """Collects the instruction to avoid using goto."""
+  if 'goto' in fuzz_target_source_code:
+    return (
+        'EXTREMELY IMPORTANT: AVOID USING <code>goto</code>. If you have to '
+        'write code using <code>goto</code>, you MUST MUST also declare all '
+        'variables BEFORE the <code>goto</code>. Never introduce new variables '
+        'after the <code>goto</code>.')
+  return ''
+
+
+def _collect_instruction_builtin_libs_first(benchmark: benchmarklib.Benchmark,
+                                            errors: list[str]) -> str:
+  """Collects the instructions to include builtin libraries first to fix
+  unknown type name error."""
+  # Refine this, e.g., check if the symbol is builtin or from a project file.
+  if any(UNKNOWN_TYPE_ERROR in error for error in errors):
+    return (
+        'IMPORTANT: ALWAYS INCLUDE STANDARD LIBRARIES BEFORE PROJECT-SPECIFIC '
+        f'({benchmark.project}) LIBRARIES. This order prevents errors like '
+        '"unknown type name" for basic types. Additionally, include '
+        'project-specific libraries that contain declarations before those that'
+        'use these declared symbols.')
+  return ''
+
+
+def _collect_instruction_extern(benchmark: benchmarklib.Benchmark) -> str:
+  """Collects the instructions to use extern "C" in C++ fuzz targets."""
+  if not benchmark.needs_extern:
+    return ''
+  instruction = (
+      'IMPORTANT: The fuzz target ({FUZZ_TARGET_FILE_NAME}) is written in C++, '
+      'whereas the project-under-test ({PROJECT_NAME}) is written in C. All '
+      'headers, functions, and code from the {PROJECT_NAME} project must be '
+      'consistently wrapped in <code>extern "C"</code> to ensure error-free '
+      'compilation and linkage between C and C++:\n<code>\nextern "C" {\n    //'
+      'Include necessary C headers, source files, functions, and code here.\n}'
+      '\n</code>\n')
+  instruction.replace('{FUZZ_TARGET_FILE_NAME}', benchmark.target_path)
+  instruction.replace('{PROJECT_NAME}', benchmark.project)
+  return instruction
 
 
 def main():

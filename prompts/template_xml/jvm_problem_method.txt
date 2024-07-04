@@ -6,14 +6,4 @@ The method signature follows the format of <code>[Full qualified name of the cla
 For example, for a method <code>test</code> in class <code>Test</code> of package <code>org.test</code> which takes in a single integer would have the following method signature:
 <code>[org.test.Test].test(int)</code>
 The target method is belonging to the Java project {PROJECT_NAME} ({PROJECT_URL}).
-Here is the list of arguments of the target method with descriptions.
-<arguments>
-{ARGUMENTS}
-</arguments>
-Here is the source code of the target method for reference.
-<code>
-{SELF_SOURCE}
-</code>
-Here is a list of source codes of methods that directly invoke the target method for reference.
-{CROSS_SOURCE}
 </target>

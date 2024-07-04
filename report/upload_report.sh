@@ -27,7 +27,6 @@ RESULTS_DIR=$1
 GCS_DIR=$2
 BENCHMARK_SET=$3
 MODEL=$4
-WEB_PORT=8080
 DATE=$(date '+%Y-%m-%d')
 
 # Sleep 5 minutes for the experiment to start.

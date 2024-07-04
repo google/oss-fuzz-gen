@@ -146,10 +146,15 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Formats a priming based on the prompt template."""
     priming = self._get_template(self.priming_template_file)
     priming = priming.replace('{LANGUAGE}', target_file_type.value)
+    # TODO(Dongge): Add project name and fuzz target file path.
     if needs_extern:
-      priming += ('\nNote that some code may need to be wrapped with '
-                  '<code>extern "C"</code> because the project under test is '
-                  'written in C but the fuzz target is in C++.\n')
+      priming += (
+          'IMPORTANT: The fuzz target is written in C++, whereas the '
+          'project-under-test is written in C. All headers, functions, and code'
+          'from the project must be consistently wrapped in '
+          '<code>extern "C"</code> to ensure error-free compilation and linkage'
+          'between C and C++:\n<code>\nextern "C" {\n    //Include necessary C '
+          'headers, source files, functions, and code here.\n}\n</code>\n')
     if target_file_type == FileType.CPP:
       type_specific_priming = self._get_template(self.cpp_priming_filler_file)
     else:
@@ -611,6 +616,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     return method
 
+  def _format_exceptions(self) -> str:
+    """Formats the exception thrown from this method or constructor."""
+    if self.benchmark.exceptions:
+      return '<exceptions>' + '\n'.join(
+          self.benchmark.exceptions) + '</exceptions>'
+
+    return ''
+
   def _format_import_mapping(self, full_class_name: str) -> str:
     """Formats the import mapping row on the prompt template."""
     # full_class_name format: <package>.<class_name>$<inner_class_name>
@@ -699,7 +712,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
       argument_descriptions.append(argument)
 
-    return '\n'.join(argument_descriptions)
+    return '<arguments>' + '\n'.join(argument_descriptions) + '</arguments>'
 
   def _format_source_reference(self, signature: str) -> Tuple[str, str]:
     """Formats the source code reference for this target."""
@@ -709,10 +722,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     # Query for source code of target method callsites
     xref_source_list = []
-    for xref in introspector.query_introspector_cross_references(
+    for xref_source in introspector.query_introspector_cross_references(
         self.benchmark.project, signature):
-      xref_source = introspector.query_introspector_function_source(
-          self.benchmark.project, xref)
       if xref_source:
         xref_source_list.append(xref_source)
 
@@ -727,6 +738,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
                               self._format_requirement(signature))
     problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
     problem = problem.replace('{ARGUMENTS}', self._format_arguments())
+    problem = problem.replace('{EXCEPTIONS}', self._format_exceptions())
 
     self_source, cross_source = self._format_source_reference(signature)
     problem = problem.replace('{SELF_SOURCE}', self_source)
@@ -857,8 +869,9 @@ class CSpecificBuilder(PromptBuilder):
                                       function_source)
 
     # Set header inclusion string if there are any headers.
-    headers_to_include = introspector.query_introspector_header_files(
-        self.benchmark.project)
+    headers_to_include = \
+        introspector.query_introspector_header_files_to_include(
+        self.benchmark.project, self.benchmark.function_signature)
     header_inclusion_string = ''
     if headers_to_include:
       header_inclusion_string = ', '.join(headers_to_include)

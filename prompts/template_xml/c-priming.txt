@@ -15,7 +15,7 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 
 Make sure the ensure strings passed to the target are null-terminated.
 
-There is one rule that your harness must satisfy: all of the header files in this library are: {TARGET_HEADER_FILES}. Make sure to not include any header files not in this list and you should use the full path to the header file as outlined in the list.
+The function we're fuzzing and corresponding types are included in the following header files: {TARGET_HEADER_FILES}. Please include these files in the target harness and use the full path to the header file as outlined in the list.
 
 {FUNCTION_ARG_TYPES_MSG}
 
