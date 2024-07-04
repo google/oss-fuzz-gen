@@ -708,11 +708,9 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
        method and format it for the prompts creation.
     """
     if '<init>' in signature:
-      target = self._format_target_constructor(signature)
-    else:
-      target = self._format_target_method(signature)
+      return self._format_target_constructor(signature)
 
-    return target.replace('{EXCEPTIONS}', self._format_exceptions())
+    return self._format_target_method(signature)
 
   def _format_requirement(self, signature: str) -> str:
     """Formats a requirement based on the prompt template."""
@@ -774,10 +772,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     # Query for source code of target method callsites
     xref_source_list = []
-    for xref in introspector.query_introspector_cross_references(
+    for xref_source in introspector.query_introspector_cross_references(
         self.benchmark.project, signature):
-      xref_source = introspector.query_introspector_function_source(
-          self.benchmark.project, xref)
       if xref_source:
         xref_source_list.append(xref_source)
 
@@ -791,6 +787,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     problem = problem.replace('{REQUIREMENTS}',
                               self._format_requirement(signature))
     problem = problem.replace('{ARGUMENTS}', self._format_arguments())
+    problem = problem.replace('{EXCEPTIONS}', self._format_exceptions())
 
     self_source, cross_source = self._format_source_reference(signature)
     problem = problem.replace('{SELF_SOURCE}', self_source)
