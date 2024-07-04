@@ -318,9 +318,10 @@ def query_introspector_jvm_source_path(project: str) -> List[str]:
   return _get_data(resp, 'src_path', [])
 
 
-def query_introspector_matching_function_type(
-    project: str, return_type: str) -> List[Dict[str, Any]]:
-  """Queries for all functions that returns a given type in a given project."""
+def query_introspector_matching_function_constructor_type(
+    project: str, return_type: str, is_function: bool) -> List[Dict[str, Any]]:
+  """Queries for all functions or all constructors that returns a given type
+  in a given project."""
   simple_types_should_not_process = [
       'byte', 'char', 'boolean', 'short', 'long', 'int', 'float', 'double',
       'void', 'java.lang.String', 'java.lang.CharSequence'
@@ -335,26 +336,8 @@ def query_introspector_matching_function_type(
       'return_type': return_type
   })
 
-  return _get_data(resp, 'functions', [])
-
-
-def query_introspector_matching_constructor_type(
-    project: str, return_type: str) -> List[Dict[str, Any]]:
-  """Queries for all constructors that returns a given type in a given
-  project."""
-  simple_types_should_not_process = [
-      'byte', 'char', 'boolean', 'short', 'long', 'int', 'float', 'double',
-      'void', 'java.lang.String', 'java.lang.CharSequence'
-  ]
-  if return_type in simple_types_should_not_process:
-    # Avoid querying introspector for simple object types as this API is
-    # not meant to be used for creating simple object.
-    return []
-
-  resp = _query_introspector(INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE, {
-      'project': project,
-      'return_type': return_type
-  })
+  if is_function:
+    return _get_data(resp, 'functions', [])
 
   return _get_data(resp, 'constructors', [])
 
