@@ -134,7 +134,8 @@ launch_local_introspector_deployment() {
 
 if [[ "$USE_LOCAL_INTROSPECTOR" = "true" ]]
 then
-  launch_local_introspector_deployment
+  export BENCHMARK_SET
+  bash report/launch_local_introspector.sh
   INTROSPECTOR_ENDPOINT="http://127.0.0.1:8080/api"
 else
   INTROSPECTOR_ENDPOINT="https://introspector.oss-fuzz.com/api"
