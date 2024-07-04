@@ -3,10 +3,13 @@ better prompt generation."""
 
 import logging
 import os
+from difflib import SequenceMatcher
 from typing import Any
 
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
+
+COMPLEX_TYPES = ['const', 'enum', 'struct', 'union', 'volatile']
 
 
 class ContextRetriever:
@@ -116,17 +119,9 @@ class ContextRetriever:
     if '' in type_tokens:
       type_tokens.remove('')
 
-    if 'struct' in type_tokens:
-      type_tokens.remove('struct')
-
-    if 'enum' in type_tokens:
-      type_tokens.remove('enum')
-
-    if 'const' in type_tokens:
-      type_tokens.remove('const')
-
-    if 'volatile' in type_tokens:
-      type_tokens.remove('volatile')
+    for complex_type in COMPLEX_TYPES:
+      if complex_type in type_tokens:
+        type_tokens.remove(complex_type)
 
     # If there is more than a single token
     # we probably do not care about querying for the type (?)
@@ -181,3 +176,93 @@ class ContextRetriever:
     logging.debug('Context: %s', context_info)
 
     return context_info
+
+  def _concat_info_lines(self, info: dict) -> str:
+    """Concatenates source code lines based on |info|."""
+    include_file = self._get_source_file(info)
+    include_lines = sorted([self._get_source_line(info)] + [
+        self._get_source_line(element) for element in info.get('elements', [])
+    ])
+
+    # Add the next line after the last element.
+    return introspector.query_introspector_source_code(self._benchmark.project,
+                                                       include_file,
+                                                       include_lines[0],
+                                                       include_lines[-1] + 1)
+
+  def get_type_def(self, type_name: str) -> str:
+    """Retrieves the source code definitions for the given |type_name|."""
+    type_names = [self._clean_type(type_name)]
+    considered_types = []
+    type_def = ''
+
+    while type_names:
+      # Breath-first is more suitable for prompting.
+      current_type = type_names.pop(0)
+      info_list = introspector.query_introspector_type_info(
+          self._benchmark.project, current_type)
+      if not info_list:
+        logging.warning('Could not type info for project: %s type: %s',
+                        self._benchmark.project, current_type)
+        continue
+
+      for info in info_list:
+        type_def += self._concat_info_lines(info) + '\n'
+        considered_types.append(current_type)
+
+        # Retrieve nested unseen types.
+        new_type_type = info.get('type')
+        new_type_name = info.get('name')
+        if (new_type_type and new_type_type in COMPLEX_TYPES and
+            new_type_name and new_type_name not in considered_types):
+          type_names.append(new_type_name)
+
+    return type_def
+
+  def get_same_header_file_paths(self, wrong_file: str) -> list[str]:
+    """Retrieves path of header files with the same name as |wrong_name|."""
+    wrong_file_name = os.path.splitext(os.path.basename(wrong_file))
+    header_list = introspector.query_introspector_header_files(
+        self._benchmark.project)
+
+    candidate_headers = []
+    for header in header_list:
+      correct_file_name = os.path.splitext(os.path.basename(header))
+      if wrong_file_name == correct_file_name:
+        candidate_headers.append(header)
+
+    return candidate_headers[:5]
+
+  def get_similar_header_file_paths(self, wrong_file: str) -> list[str]:
+    """Retrieves and finds 5 header file names closest to |wrong_name|."""
+    header_list = introspector.query_introspector_header_files(
+        self._benchmark.project)
+    candidate_header_scores = {
+        header:
+            SequenceMatcher(lambda x: x in ['_', '/', '-', '.'], wrong_file,
+                            header).ratio() for header in header_list
+    }
+    candidate_headers = sorted(candidate_header_scores,
+                               key=lambda x: candidate_header_scores[x],
+                               reverse=True)
+    return candidate_headers[:5]
+
+  def get_target_function_file_path(self) -> str:
+    """Retrieves the header/source file of the function under test."""
+    # Step 1: Find a header file that shares the same name as the source file.
+    # TODO: Make this more robust, e.g., when header file and base file do not
+    # share the same basename.
+    source_file = introspector.query_introspector_source_file_path(
+        self._benchmark.project, self._benchmark.function_signature)
+    source_file_base, _ = os.path.splitext(os.path.basename(source_file))
+    header_list = introspector.query_introspector_header_files(
+        self._benchmark.project)
+    candidate_headers = [
+        header for header in header_list
+        if os.path.basename(header).startswith(source_file_base)
+    ]
+    if candidate_headers:
+      return candidate_headers[0]
+
+    # Step 2: Use the source file If it does not have a same-name-header.
+    return source_file

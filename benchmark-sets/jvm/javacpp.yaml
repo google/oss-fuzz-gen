@@ -1,0 +1,31 @@
+"functions":
+- "name": "[org.bytedeco.javacpp.tools.InfoMap].put(org.bytedeco.javacpp.tools.Info)"
+  "params":
+  - "name": "arg0"
+    "type": "Info"
+  "return_type": "org.bytedeco.javacpp.tools.InfoMap"
+  "signature": "[org.bytedeco.javacpp.tools.InfoMap].put(org.bytedeco.javacpp.tools.Info)"
+- "name": "[org.bytedeco.javacpp.tools.InfoMap].put(int,org.bytedeco.javacpp.tools.Info)"
+  "params":
+  - "name": "arg0"
+    "type": "int"
+  - "name": "arg1"
+    "type": "Info"
+  "return_type": "org.bytedeco.javacpp.tools.InfoMap"
+  "signature": "[org.bytedeco.javacpp.tools.InfoMap].put(int,org.bytedeco.javacpp.tools.Info)"
+- "name": "[org.bytedeco.javacpp.ClassProperties].<init>(java.util.Properties)"
+  "params":
+  - "name": "arg0"
+    "type": "Properties"
+  "return_type": "void"
+  "signature": "[org.bytedeco.javacpp.ClassProperties].<init>(java.util.Properties)"
+- "name": "[org.bytedeco.javacpp.BooleanPointer].<init>(java.nio.ByteBuffer)"
+  "params":
+  - "name": "arg0"
+    "type": "ByteBuffer"
+  "return_type": "void"
+  "signature": "[org.bytedeco.javacpp.BooleanPointer].<init>(java.nio.ByteBuffer)"
+"language": "jvm"
+"project": "javacpp"
+"target_name": "JavacppFuzzer"
+"target_path": "/src/JavacppFuzzer.java"

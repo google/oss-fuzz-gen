@@ -198,7 +198,7 @@ class GPT(LLM):
     """Estimates the number of tokens in |text|."""
     # https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
     try:
-        encoder = tiktoken.encoding_for_model(self.name)
+      encoder = tiktoken.encoding_for_model(self.name)
     except KeyError:
       print(f'Could not get a tiktoken encoding for {self.name}.')
       encoder = tiktoken.get_encoding('cl100k_base')

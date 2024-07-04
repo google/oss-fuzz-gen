@@ -197,17 +197,6 @@ class Evaluator:
 
     shutil.copytree(existing_project_path, generated_project_path)
 
-    # Fix public java class name in target_file
-    if self.benchmark.language == 'jvm':
-      with open(target_file, 'r') as file:
-        code = file.read()
-
-      new = os.path.basename(self.benchmark.target_path).replace('.java', '')
-      code = code.replace('public class Fuzz', f'public class {new}')
-
-      with open(target_file, 'w') as file:
-        file.write(code)
-
     # Copy generated fuzzers to generated_project_path
     shutil.copyfile(
         target_file,

@@ -131,9 +131,14 @@ class BuilderRunner:
   def _get_minimum_func_name(self, func_sig: str) -> str:
     """Extracts the minimum function name from function signature,
     without name space, return type, params, templates."""
-    pattern = r'(?:[a-zA-Z_]\w*::)*([a-zA-Z_]\w*)(?:\s*<.*>)?\s*\('
+    pattern = (r'(?:[a-zA-Z_]\w*::)*([a-zA-Z_]\w*|operator[^(\s]*)(?:\s*<.*>)?'
+               r'\s*\(')
     match = re.search(pattern, func_sig)
-    return match.group(1).strip() if match else func_sig
+    if not match:
+      return func_sig
+
+    function_name = match.group(1).strip()
+    return function_name.removeprefix('operator')
 
   def _contains_target_jvm_method(self, target_path: str) -> bool:
     """Validates if the LLM-generated code contains the target jvm methods."""
@@ -171,8 +176,7 @@ class BuilderRunner:
     min_func_name = self._get_minimum_func_name(
         self.benchmark.function_signature)
 
-    pattern = rf'\b{min_func_name}\b'
-    return re.search(pattern, generated_code) is not None
+    return min_func_name in generated_code
 
   def _pre_build_check(self, target_path: str,
                        build_result: BuildResult) -> bool:

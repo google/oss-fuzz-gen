@@ -1,6 +1,15 @@
 <requirements>
-<item>Carefully study the method signature and its parameters, then follow the example problems and solutions to answer the final problem. YOU MUST call the target method to fuzz in the solution.</item>
-<item>Try as many variations of these inputs as possible. Do not use random number generator classes or methods such as <code>java.lang.Random</code> class.</item>
+<item>Try as many variations of these inputs as possible.</item>
+<item>Try creating the harness as complex as possible.</item>
+<item>Try adding some nested loop to invoke the target method for multiple times.</item>
+<item>The generated fuzzing harness should be wrapped with the <java_code> tag.</item>
+<item>NEVER use any methods from the <code>java.lang.Random</code> class in the generated code.</item>
+<item>NEVER use any classes or methods in the <code>java.lang.reflect</code> package in the generated code.</item>
+<item>NEVER use the @FuzzTest annotation for specifying the fuzzing method.</item>
+<item>Please avoid using any multithreading or multi-processing approach.</item>
+<item>Please add import statements for necessary classes, except for classes in the java.lang package.</item>
+<item>You must create the object before calling the target method.</item>
+<item>Please use {HARNESS_NAME} as the Java class name.</item>
 <item>Do not create new variables with the same names as existing variables.
 WRONG:
 <code>
@@ -13,7 +22,7 @@ public static void testing(int test) {
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 // Other imports
 
-public class Fuzz {
+public class {HARNESS_NAME} {
   public static void fuzzerInitialize() {
     // Initializing objects for fuzzing
   }
@@ -30,56 +39,6 @@ public class Fuzz {
 }
 </code></item>
 <item>
-Please ensure the newest version found from the Jazzer's github repository is used.
-The Javadoc of the newest version of Jazzer framework could be found in https://codeintelligencetesting.github.io/jazzer-docs/jazzer-api
-</item>
-<item>Please use Fuzz as the Java class name.</item>
-<item>Please use <code>public static void fuzzerTestOneInput(FuzzedDataProvider)</code> as the signature for the static fuzzing method.</item>
-<item>Please use the name fuzzerInitialize for the static method to initialize before fuzzing the target method.</item>
-<item>Please use the name fuzzerTearDown for the static method to tear down the settings after the target method is called.</item>
-<item>Please add import statements for necessary classes, except for classes in the java.lang package.</item>
-<item>Please avoid using the @FuzzTest annotation for specifying the fuzzing method.</item>
-<item>Please avoid using any methods or classes in the <code>java.lang.reflect</code> package.</item>
-<item>Please adds try catch block to catch possible <code>RuntimeException</code>.</item>
-<item>Please avoid catching the general Exception, Throwable or Error object. Instead, they should be thrown from the fuzzerTestOneInput method.</item>
-<item>If the target method is a static method, please avoid create the object before invocation.</item>
-<item>Please create the necessary objects only if the target method is an instance method.</item>
-<item>
-When it is necessary to create an instance of a class, try use the public accessible constructors of that class first.
-If no public accessible constructors are existed, try to search for public accessible constructors from any classes that extends or implements that needed class.
-If no public accessible constructors are found from the target classes or all its subclasses, then try to search for static methods in the project that returns
-an object matching the class of the neededinstance and invoke them to get the needed isntance.
-</item>
-<item>Always try to generate random data for arguments used to create fuzzing objects or used during target method invocation.</item>
-<item>Please ensure the random fuzzing data is provided by the FuzzedDataProvider class and are initialized before the target method is invoked.</item>
-<item>Try using static methods or constructors to create other types of arguments required for necessary object creations or invoking the target method.</item>
-<item>
-If <code>java.lang.Class</code> is needed as arguments, randomly choose any objects and invoke its <code>java.lang.Object::getClass()</code> methods.
-</item>
-<item>
-If <code>java.lang.Object</code> is needed as arguments, randomly choose any objects and directly passed it as the arguments. If creation of the objects is needed,
-use static or instance methods in the projects that give correct object types. Constructors of the needed methods can also be used to create the needed objects.
-</item>
-<item>
-If any arguments of the target methods requires a return value from method calls, always stored the return value as local variable and pass in the local variable.
-Never make an inner method call during target method invocation. This includes getting random primitive variables from FuzzedDataProvider.
-</item>
-<item>Please avoid using <code>getObject()</code> from any classes.</item>
-<item>Please avoid using any multi-threading or multi-processing approach.</item>
-<item>Please avoid using more than 3 layer of inner loopings.</item>
-<item>Please manually call <code>System.gc()</code> in suitable locatations if too much resources are being created.</item>
-<item>The sample fuzzing harness should be wrapped with the <java_code> tag.</item>
-<item>Consult the following list for reference of the target method.
-<list>
-<item>The javadoc of the target method.</item>
-<item>The examples and README files in the github repository.</item>
-<item>The junit test cases from the github repository.</item>
-<item>Try looking for test directories to locate junit test cases.</item>
-<item>Try looking for doc / docs directories or mark down files for documentations and examples.</item>
-<item>Try to locate if any other methods in the projects does call the target method.</item>
-</list>
-</item>
-<item>
 Here is a list of classes and their fully qualified name. You must import all classes by their fully qualified name.
 For example, if the full qualified name of a class is <code>abc.def.ghi</code>, then you must add an import
 statement <code>import abc.def.ghi;</code> in the result code.
@@ -89,6 +48,7 @@ contains the fully qualified name of the given class.
 <list>
 <item><class_name>FuzzedDataProvider</class_name><full_class_name>com.code_intelligence.jazzer.api.FuzzedDataProvider</full_class_name></item>
 {IMPORT_MAPPINGS}
+</item>
 </list>
 </requirements>
 

@@ -61,6 +61,7 @@ class Benchmark:
             'name': b.function_name,
             'return_type': b.return_type,
             'params': b.params,
+            'exceptions': b.exceptions,
         } for b in benchmarks],
     }
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
@@ -98,12 +99,14 @@ class Benchmark:
               function.get('name'),
               function.get('return_type'),
               function.get('params'),
+              function.get('exceptions', []),
               data['target_path'],
               data.get('target_name'),
               use_project_examples=use_project_examples,
               cppify_headers=cppify_headers,
               commit=commit,
-              use_context=use_context))
+              use_context=use_context,
+              function_dict=function))
 
     return benchmarks
 
@@ -115,6 +118,7 @@ class Benchmark:
                function_name: str,
                return_type: str,
                params: list[dict[str, str]],
+               exceptions: list[str],
                target_path: str,
                preferred_target_name: Optional[str] = None,
                use_project_examples=True,
@@ -129,6 +133,7 @@ class Benchmark:
     self.function_name = function_name
     self.return_type = return_type
     self.params = params
+    self.exceptions = exceptions
     self.function_dict = function_dict
     self.target_path = target_path
     self._preferred_target_name = preferred_target_name
@@ -138,15 +143,16 @@ class Benchmark:
     self.commit = commit
 
     if self.language == 'jvm':
-      # For java project, in order to differentiate between overloaded methos,
+      # For java projects, in order to differentiate between overloaded methods
       # the full signature is being used as function_name. The full signature
-      # is following the format of
+      # is following the format of:
       # [<Full_Class_Name].<Method_Name>(<Parameter_List>)
-      # The benchmark id uses the function_signature directly and used as the
-      # name of the result directory. To avoid confusion in the directory name,
-      # these special characters in the id (coming from the function signature)
-      # are removed. Additional special characters exist for constructors which
-      # will shown as <init> because constructors does not have names.
+      # The benchmark id uses the function_signature directly and is used as
+      # the name of the result directory. In order to avoid confusion in the
+      # directory name remove special characters in the id coming from the
+      # function signature. Additional special characters exist for
+      # constructors which will be shown as <init> because constructors do not
+      # have names.
       self.function_signature = self.function_name
       self.id = self.id.replace('<', '').replace('>', '')
       self.id = self.id.replace('[', '').replace(']', '')
