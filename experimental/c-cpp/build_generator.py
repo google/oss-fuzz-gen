@@ -15,12 +15,15 @@
 """Utilities for generating builder scripts for a GitHub repository."""
 
 import os
+import logging
 import shutil
 import subprocess
 from abc import abstractmethod
 from typing import Any, Dict, Iterator, List, Tuple
 
 import manager
+
+logger = logging.getLogger(name=__name__)
 
 
 ############################################################
@@ -73,7 +76,7 @@ class PureCFileCompiler(AutoBuildBase):
     for fi in file_list:
       for key, val in self.matches_found.items():
         if fi.endswith(key) and 'test' not in fi and 'example' not in fi:
-          print('Adding %s' % (fi))
+          logger.info('Adding %s' % (fi))
           # Remove the first folder as that is "this" dir.
           path_to_add = '/'.join(fi.split('/')[1:])
           val.append(path_to_add)
@@ -90,7 +93,7 @@ llvm-ar rcs libfuzz.a *.o
 ''' % (' '.join(self.matches_found['.c']))
     ]
     build_container.heuristic_id = self.name + '1'
-    print(build_container.list_of_commands[0])
+    logger.info(build_container.list_of_commands[0])
     yield build_container
 
   @property
@@ -483,9 +486,9 @@ class CMakeScanner(AutoBuildBase):
               self.cmake_options.add(option)
 
     if len(self.cmake_options) > 0:
-      print('Options:')
+      logger.info('Options:')
       for option in self.cmake_options:
-        print('%s' % (option))
+        logger.info('%s' % (option))
 
   def steps_to_build(self):
     # When we are running this, we are confident there are
@@ -625,7 +628,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
 
   checks_to_test = []
 
-  print("Filtering out build scripts")
+  logger.info("Filtering out build scripts")
   build_heuristics_to_analyse = os.getenv('BUILD_HEURISTICS', 'all')
   if build_heuristics_to_analyse == 'all':
     checks_to_test = all_checks
@@ -636,11 +639,11 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
         if check.name == name:
           checks_to_test.append(check)
 
-  print(f"Using {len(checks_to_test)} checks.")
+  logger.info(f"Using {len(checks_to_test)} checks.")
   for scanner in checks_to_test:
     scanner.match_files(all_files)
     if scanner.is_matched():
-      print('Matched: %s' % (scanner.name))
+      logger.info('Matched: %s' % (scanner.name))
       for auto_build_gen in scanner.steps_to_build():
         yield auto_build_gen
 
@@ -692,10 +695,11 @@ def extract_build_suggestions(
   # Get all of the build heuristics
   all_build_suggestions: List[AutoBuildContainer] = list(
       match_build_heuristics_on_folder(target_dir))
-  print('Found %d possible build suggestions' % (len(all_build_suggestions)))
+  logger.info('Found %d possible build suggestions' %
+              (len(all_build_suggestions)))
   #all_build_suggestions = all_build_suggestions[:2]
   for build_suggestion in all_build_suggestions:
-    print(f'- {build_suggestion.heuristic_id}')
+    logger.info(f'- {build_suggestion.heuristic_id}')
 
   # Convert the build heuristics into build scripts
   all_build_scripts = convert_build_heuristics_to_scripts(
@@ -709,7 +713,7 @@ def raw_build_evaluation(
   """Run each of the build scripts and extract any artifacts build by them."""
   build_results = {}
   for build_script, test_dir, build_suggestion in all_build_scripts:
-    print(f'Evaluating build heuristic {build_suggestion.heuristic_id}')
+    logger.info(f'Evaluating build heuristic {build_suggestion.heuristic_id}')
     with open('/src/build.sh', 'w') as bf:
       bf.write(build_script)
     try:
@@ -734,7 +738,8 @@ def raw_build_evaluation(
         if bfile not in initial_executable_files[key]:
           new_binary_files[key].append(bfile)
 
-    print(f'Static libs found {new_binary_files}')
+    logger.info(f'Static libs found {new_binary_files}')
+
     # binary_files_build['static-libs'])
     build_results[test_dir] = {
         'build-script': build_script,
