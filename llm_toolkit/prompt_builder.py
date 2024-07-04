@@ -665,6 +665,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _format_argument(self, count: int, arg_type: str) -> str:
     """Formats general argument description."""
+    method_str = self._get_methods_for_simple_type(arg_type)
+
     # Simple arguments
     if method_str:
       argument = self._get_template(self.simple_arg_description_template_file)
