@@ -643,7 +643,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     return mapping
 
-  def _format_generic_argument(self, arg_type: str) -> str:
+  def _format_generic_argument(self, arg_type: str) -> Tuple[str, str]:
     """Formats generic argument description."""
     generic_types = arg_type.split('<', 1)[1][:-1].split(',')
 
@@ -673,7 +673,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     # java.lang.Object argument
     if 'java.lang.Object' in arg_type:
       self.have_objects = True
-      argument = self._get_template(self.simple_object_description_template_file)
+      argument = self._get_template(self.object_arg_description_template_file)
       argument = argument.replace('{ARG_COUNT}', str(count))
       return argument
 
@@ -684,12 +684,13 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       argument = argument.replace('{RANDOM_METHODS}', ' or '.join(method_str))
       if '[]' in arg_type:
         arg_type_no_array = arg_type.replace('[]', '')
+        argument = argument.replace('{SIMPLE_TYPE}',
+                                    f'an array of {arg_type_no_array}')
         argument = argument.replace(
-           '{SIMPLE_TYPE}', f'an array of {arg_type_no_array}')
-        argument = argument.replace(
-            '{ARRAY_OR_NOT}', (f'multiple {arg_type_no_array} variables and '
-            'initialise an array of {arg_type_no_array} with the generated '
-            'variables.'))
+            '{ARRAY_OR_NOT}',
+            (f'multiple {arg_type_no_array} variables and '
+             'initialise an array of {arg_type_no_array} with the generated '
+             'variables.'))
       else:
         argument = argument.replace('{SIMPLE_TYPE}', f'a {arg_type}')
         argument = argument.replace('{ARRAY_OR_NOT}', 'the needed variables.')
@@ -825,7 +826,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
             'FuzzedDataProvider::consumeInt()',
             'FuzzedDataProvider::consumeInt(int, int)'
         ],
-       'java.lang.Integer': [
+        'java.lang.Integer': [
             'FuzzedDataProvider::consumeInt()',
             'FuzzedDataProvider::consumeInt(int,int)'
         ],
@@ -909,10 +910,11 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     }
 
     if simple_type in simple_type_mapping:
-      return simple_type_mapping[simple_type]
+      return ' or '.join(simple_type_mapping[simple_type])
 
     # If the type is not found, try if it is an array of any above types
-    return simple_type_mapping.get(simple_type.replace('[]', ''), '')
+    simple_type = simple_type.replace('[]', '')
+    return ' or '.join(simple_type_mapping.get(simple_type, []))
 
   def build(self,
             function_signature: str,
