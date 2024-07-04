@@ -786,8 +786,8 @@ def _parse_arguments() -> argparse.Namespace:
                       '--target-oracle',
                       type=str,
                       nargs='+',
-                      default=['optimal-targets', 'all-public-candidates'],
-                      help='Oracle used to determine interesting targets.')
+                      default=['optimal-targets', 'far-reach-low-coverage'],
+                      help='Oracles used to determine interesting targets.')
 
   return parser.parse_args()
 
