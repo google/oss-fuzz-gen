@@ -51,8 +51,8 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
   if llm_model == 'vertex':
     json_config = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', None)
     if json_config is None:
-      logging.info('vertex model is set but could not find configuration file.')
-      logging.info('Plese set GOOGLE_APPLICATION_CREDENTIALS env variable.')
+      logger.info('vertex model is set but could not find configuration file.')
+      logger.info('Plese set GOOGLE_APPLICATION_CREDENTIALS env variable.')
       sys.exit(1)
     shutil.copyfile(json_config, os.path.join(temp_project_dir, 'creds.json'))
 
@@ -88,7 +88,7 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
                             SHARED_MEMORY_RESULTS_DIR)
 
   for auto_fuzz_dir in os.listdir(worker_out):
-    logging.info(auto_fuzz_dir)
+    logger.info(auto_fuzz_dir)
     # Only continue if there is a corpus collected.
     corpus_dir = os.path.join(worker_out, auto_fuzz_dir, 'corpus',
                               'generated-fuzzer-no-leak')
@@ -112,7 +112,7 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
       ]
       subprocess.check_call(' '.join(cmd_to_run), shell=True, cwd=oss_fuzz_base)
     except subprocess.CalledProcessError:
-      logging.info(f'Failed coverage build: {target_cov_name}')
+      logger.info(f'Failed coverage build: {target_cov_name}')
       continue
 
     # Run coverage and save report in the main folder.
@@ -130,7 +130,7 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
       ]
       subprocess.check_call(' '.join(cmd_to_run), shell=True, cwd=oss_fuzz_base)
     except subprocess.CalledProcessError:
-      logging.info(f'Failed coverage run: {target_cov_name}')
+      logger.info(f'Failed coverage run: {target_cov_name}')
       continue
 
 
@@ -283,7 +283,7 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
   jobs = []
   for idx, target in enumerate(target_repositories):
     worker_project_name = get_next_worker_project(oss_fuzz_base)
-    logging.info(f'Worker project name {worker_project_name}')
+    logger.info(f'Worker project name {worker_project_name}')
 
     setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
     proc = threading.Thread(target=run_on_targets,
@@ -357,7 +357,7 @@ def main():
     target_repositories = read_targets_file(target)
   else:
     target_repositories = [target]
-  logging.info(target_repositories)
+  logger.info(target_repositories)
 
   silent_global = args.silent
 
