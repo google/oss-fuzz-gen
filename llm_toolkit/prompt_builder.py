@@ -547,6 +547,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self._template_dir = template_dir
     self.benchmark = benchmark
     self.project_url = self._find_project_url(self.benchmark.project)
+    self.have_objects = False
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
@@ -566,6 +567,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         template_dir, 'jvm_generic_arg_description.txt')
     self.simple_arg_description_template_file = self._find_template(
         template_dir, 'jvm_simple_arg_description.txt')
+    self.object_arg_description_template_file = self._find_template(
+        template_dir, 'jvm_object_arg_description.txt')
     self.import_template_file = self._find_template(template_dir,
                                                     'jvm_import_mapping.txt')
 
@@ -666,6 +669,13 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
   def _format_argument(self, count: int, arg_type: str) -> str:
     """Formats general argument description."""
     method_str = self._get_methods_for_simple_type(arg_type)
+
+    # java.lang.Object argument
+    if 'java.lang.Object' in arg_type:
+      self.have_objects = True
+      argument = self._get_template(self.simple_object_description_template_file)
+      argument = argument.replace('{ARG_COUNT}', str(count))
+      return argument
 
     # Simple arguments
     if method_str:
@@ -779,7 +789,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     problem = problem.replace('{TARGET}', self._format_target(signature))
     problem = problem.replace('{REQUIREMENTS}',
                               self._format_requirement(signature))
-    problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
     problem = problem.replace('{ARGUMENTS}', self._format_arguments())
 
     self_source, cross_source = self._format_source_reference(signature)
@@ -788,6 +797,10 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
     problem = problem.replace("{PROJECT_URL}", self.project_url)
+
+    # Full data mapping only needed when java.lang.Object is used.
+    if self.have_objects:
+      problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
 
     return problem
 
