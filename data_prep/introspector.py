@@ -90,8 +90,9 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
       INTROSPECTOR_ALL_HEADER_FILES, INTROSPECTOR_ALL_FUNC_TYPES, \
       INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS, \
-      INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES, INTROSPECTOR_ALL_JVM_SOURCE_PATH, \
-      INTROSPECTOR_ORACLE_OPTIMAL, INTROSPECTOR_HEADERS_FOR_FUNC, \
+      INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES, \
+      INTROSPECTOR_ALL_JVM_SOURCE_PATH, INTROSPECTOR_ORACLE_OPTIMAL, \
+      INTROSPECTOR_HEADERS_FOR_FUNC, \
       INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE
 
   INTROSPECTOR_ENDPOINT = endpoint
@@ -233,7 +234,8 @@ def query_introspector_jvm_all_public_candidates(project: str) -> list[dict]:
   """Queries Fuzz Introspector for all public accessible function or
   constructor candidates.
   """
-  return query_introspector_oracle(project, INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES)
+  return query_introspector_oracle(
+      project, INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES)
 
 
 def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
