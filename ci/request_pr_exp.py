@@ -130,6 +130,11 @@ def _parse_args(cmd) -> argparse.Namespace:
       type=int,
       default=REQUEST_MEM,
       help=f'Memory requested for experiment in Gi, default: {REQUEST_MEM} Gi.')
+  parser.add_argument(
+      '-i',
+      '--local-introspector',
+      action='store_true',
+      help='If set will use a local version of Fuzz Introspector\'s webapp')
   args = parser.parse_args(cmd)
 
   assert os.path.isfile(
@@ -250,6 +255,8 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['GKE_EXP_NAME'] = args.experiment_name
   exp_env_vars['GKE_EXP_REQ_CPU'] = args.request_cpus
   exp_env_vars['GKE_EXP_REQ_MEM'] = f'{args.request_memory}Gi'
+  if args.local_introspector:
+    exp_env_vars['GKE_EXP_LOCAL_INTROSPECTOR'] = 'true'
 
   with open(args.gke_template, 'r') as file:
     yaml_template = file.read()
