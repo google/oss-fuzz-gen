@@ -255,8 +255,8 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['GKE_EXP_NAME'] = args.experiment_name
   exp_env_vars['GKE_EXP_REQ_CPU'] = args.request_cpus
   exp_env_vars['GKE_EXP_REQ_MEM'] = f'{args.request_memory}Gi'
-  exp_env_vars[
-      'GKE_EXP_LOCAL_INTROSPECTOR'] = 'true' if args.local_introspector else ''
+  if args.local_introspector:
+    exp_env_vars['GKE_EXP_LOCAL_INTROSPECTOR'] = 'true'
 
   with open(args.gke_template, 'r') as file:
     yaml_template = file.read()
