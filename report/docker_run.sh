@@ -110,7 +110,7 @@ launch_local_introspector_deployment() {
 
   # Start a local webserver
   cd $ROOT_FI/tools/web-fuzzing-introspection/app/
-  FUZZ_INTROSPECTOR_SHUTDOWN=1 python3 ./main.py >> /dev/null &
+  FUZZ_INTROSPECTOR_SHUTDOWN=1 $PYTHON ./main.py >> /dev/null &
 
   # Wait until the server has launched
   SECONDS=5
