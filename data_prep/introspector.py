@@ -23,7 +23,7 @@ import re
 import subprocess
 import sys
 import time
-from typing import Any, Dict, List, Optional, TypeVar
+from typing import Any, Dict, List, Optional, OrderedDict, TypeVar
 from urllib.parse import urlencode
 
 import requests
@@ -552,26 +552,96 @@ def _group_function_params(param_types: list[str],
   } for param_type, param_name in zip(param_types, param_names)]
 
 
+def _select_top_functions_from_oracle(project: str, limit: int,
+                                      target_oracle: str,
+                                      target_oracles: list[str]) -> OrderedDict:
+  """Selects the top |limit| functions from |target_oracle|."""
+  if target_oracle not in target_oracles:
+    return OrderedDict()
+
+  logging.info('Extracting functions using oracle %s.', target_oracle)
+  functions = query_introspector_for_targets(project, target_oracle)[:limit]
+
+  return OrderedDict((func['function_signature'], func) for func in functions)
+
+
+def _combine_functions(a: list[str], b: list[str], c: list[str],
+                       limit: int) -> list[str]:
+  """Combines functions from three oracles. Prioritize on a, but include one of
+  b and c if any."""
+  head = a[:limit - 2]
+  b_in_head = any(i in b for i in head)
+  c_in_head = any(i in c for i in head)
+  # Result contains items from b and c and is long enough.
+  if b_in_head and c_in_head and len(a) >= limit:
+    return a
+
+  all_functions = a + b + c
+
+  if b_in_head or not b:
+    add_from_b = []
+  else:
+    add_from_b = [i for i in a[3:] if i in b]
+    add_from_b = [add_from_b[0]] if add_from_b else [b[0]]
+
+  if c_in_head or not c:
+    add_from_c = []
+  else:
+    add_from_c = [i for i in a[3:] if i in c]
+    add_from_c = [add_from_c[0]] if add_from_c else [c[0]]
+
+  combined = set(head + add_from_b + add_from_c)
+  # Result contains items from b and c, append more until long enough.
+  for func in all_functions:
+    if len(combined) >= limit:
+      continue
+    combined.add(func)
+  return list(combined)
+
+
+def _select_functions_from_oracles(project: str, limit: int,
+                                   target_oracles: List[str]) -> list[dict]:
+  """Selects function-under-test from oracles."""
+  all_functions = OrderedDict()
+  frlc_targets = _select_top_functions_from_oracle(project, limit,
+                                                   'far-reach-low-coverage',
+                                                   target_oracles)
+  # FRLC is the primary oracle. If it does not exist, follow oracle order and
+  # deduplicate.
+  if not frlc_targets:
+    for target_oracle in target_oracles:
+      tmp_functions = _select_top_functions_from_oracle(project, limit,
+                                                        target_oracle,
+                                                        target_oracles)
+      all_functions.update(tmp_functions)
+      return list(all_functions.values())[:limit]
+
+  # Selection rule: Prioritize on far-reach-low-coverage, but include one of
+  # optimal-targets, easy-params-far-reach if any.
+  all_functions.update(frlc_targets)
+
+  epfr_targets = _select_top_functions_from_oracle(project, limit,
+                                                   'easy-params-far-reach',
+                                                   target_oracles)
+  all_functions.update(epfr_targets)
+
+  ot_targets = _select_top_functions_from_oracle(project, limit,
+                                                 'optimal-targets',
+                                                 target_oracles)
+  all_functions.update(ot_targets)
+
+  selected_singatures = _combine_functions(list(frlc_targets.keys()),
+                                           list(epfr_targets.keys()),
+                                           list(ot_targets.keys()), limit)
+
+  return [all_functions[func] for func in selected_singatures]
+
+
 def populate_benchmarks_using_introspector(project: str, language: str,
                                            limit: int,
                                            target_oracles: List[str]):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
-
-  all_functions = []
-  for target_oracle in target_oracles:
-    logging.info('Extracting functions using oracle %s.', target_oracle)
-    tmp_functions = query_introspector_for_targets(project, target_oracle)
-
-    # Limit the amount of functions from each oracle.
-    all_functions += tmp_functions[:limit]
-
-  # Limit the total amount of functions from all oracles, keep the priority
-  # order, and remove duplication.
-  functions = {}
-  for func in all_functions:
-    if len(functions) < limit and func['function_signature'] not in functions:
-      functions[func['function_signature']] = func
-  functions = functions.values()
+  functions = _select_functions_from_oracles(project, limit, target_oracles)
 
   if not functions:
     logging.error('No functions found using the oracles: %s', target_oracles)
