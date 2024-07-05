@@ -52,5 +52,5 @@
   "signature": "Contents * resip::ContentsFactory<resip::MultipartSignedContents>::create(const ContentsFactory<resip::MultipartSignedContents> *, const HeaderFieldValue &, const Mime &)"
 "language": "c++"
 "project": "resiprocate"
-"target_name": "/src/resiprocate/rutil/dns/ares/ares-test-fuzz-name.c"
-"target_path": "/src/resiprocate/rutil/dns/ares/ares-test-fuzz-name.c"
+"target_name": "fuzzStack"
+"target_path": "/src/resiprocate/resip/stack/test/fuzzStack.cxx"

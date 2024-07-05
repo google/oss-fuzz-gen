@@ -64,5 +64,5 @@
   "signature": "Value facebook::jsi::WithRuntimeDecorator<facebook::jsi::detail::WithLock<facebook::hermes::HermesRuntimeImpl, facebook::hermes::(anonymous namespace)::HermesMutex>, facebook::hermes::HermesRuntimeImpl, facebook::jsi::ThreadSafeRuntime>::evaluatePreparedJavaScript(WithRuntimeDecorator<facebook::jsi::detail::WithLock<facebook::hermes::HermesRuntimeImpl, facebook::hermes::(anonymous namespace)::HermesMutex>, facebook::hermes::HermesRuntimeImpl, facebook::jsi::ThreadSafeRuntime> *, const shared_ptr<const facebook::jsi::PreparedJavaScript> &)"
 "language": "c++"
 "project": "hermes"
-"target_name": "/src/hermes/tools/fuzzers/libfuzzer/fuzzer-jsi-entry.cpp"
+"target_name": "fuzzer-jsi-entry"
 "target_path": "/src/hermes/tools/fuzzers/libfuzzer/fuzzer-jsi-entry.cpp"

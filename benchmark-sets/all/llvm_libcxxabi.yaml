@@ -44,5 +44,5 @@
   "signature": "void (anonymous namespace)::DumpVisitor::operator()(struct DumpVisitor *, const struct ForwardTemplateReference *)"
 "language": "c++"
 "project": "llvm_libcxxabi"
-"target_name": "partial_sort_copy.pass"
-"target_path": "/src/llvm-project/libcxx/test/libcxx/fuzzing/partial_sort_copy.pass.cpp"
+"target_name": "cxa_demangle_fuzzer"
+"target_path": "/src/llvm-project/libcxxabi/fuzz/cxa_demangle_fuzzer.cpp"
