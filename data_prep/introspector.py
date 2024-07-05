@@ -157,8 +157,9 @@ def _query_introspector(api: str, params: dict) -> Optional[requests.Response]:
         break
       delay = 5 * 2**attempt_num + random.randint(1, 10)
       logging.warning(
-          'Failed to get data from FI due to timeout on attempt %d, '
-          'retry in %ds...', attempt_num, delay)
+          'Failed to get data from FI due to timeout on attempt %d:\n'
+          '%s\n'
+          'retry in %ds...', attempt_num, _construct_url(api, params), delay)
       time.sleep(delay)
     except requests.exceptions.RequestException as err:
       logging.error(
