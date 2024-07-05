@@ -35,5 +35,5 @@
   "signature": "void wxPlatformInfo::wxPlatformInfo()"
 "language": "c++"
 "project": "wxwidgets"
-"target_name": "xml_parsebuffer_fuzzer"
-"target_path": "/src/wxwidgets/src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c"
+"target_name": "runner"
+"target_path": "/src/wxwidgets/tests/fuzz/runner.cpp"

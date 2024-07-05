@@ -52,5 +52,5 @@
   "signature": "Contents * resip::ContentsFactory<resip::MultipartSignedContents>::create(const ContentsFactory<resip::MultipartSignedContents> *, const HeaderFieldValue &, const Mime &)"
 "language": "c++"
 "project": "resiprocate"
-"target_name": "fuzzStack"
-"target_path": "/src/resiprocate/resip/stack/test/fuzzStack.cxx"
+"target_name": "fuzzUtil"
+"target_path": "/src/resiprocate/rutil/test/fuzzUtil.cxx"

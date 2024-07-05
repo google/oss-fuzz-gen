@@ -54,5 +54,5 @@
   "signature": "int policydb_to_image(sepol_handle_t *, policydb_t *, void **, size_t *)"
 "language": "c"
 "project": "selinux"
-"target_name": "checkpolicy-fuzzer"
-"target_path": "/src/selinux/checkpolicy/fuzz/checkpolicy-fuzzer.c"
+"target_name": "binpolicy-fuzzer"
+"target_path": "/src/selinux/libsepol/fuzz/binpolicy-fuzzer.c"

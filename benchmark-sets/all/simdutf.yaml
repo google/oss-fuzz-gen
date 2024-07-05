@@ -72,5 +72,5 @@
   "signature": "int simdutf::icelake::implementation::detect_encodings(const char *, size_t)"
 "language": "c++"
 "project": "simdutf"
-"target_name": "random_fuzzer"
-"target_path": "/src/simdutf/tests/random_fuzzer.cpp"
+"target_name": "roundtrip"
+"target_path": "/src/simdutf/fuzz/roundtrip.cc"

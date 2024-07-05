@@ -26,4 +26,4 @@
 "language": "c++"
 "project": "rapidjson"
 "target_name": "rapidjson"
-"target_path": "/src/fuzzing-headers/tests/rapidjson.cpp"
+"target_path": "/src/rapidjson-fuzzers/fuzzer.cpp"
