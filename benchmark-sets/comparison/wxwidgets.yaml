@@ -1,0 +1,16 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN16wxFontMapperBase17CharsetToEncodingERK8wxStringb"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "charset"
+    "type": "bool "
+  - "name": ""
+    "type": "bool"
+  "return_type": "int"
+  "signature": "DW_TAG_enumeration_typewxFontEncoding wxFontMapperBase::CharsetToEncoding(const wxString &, bool)"
+"language": "c++"
+"project": "wxwidgets"
+"target_name": "runner"
+"target_path": "/src/wxwidgets/tests/fuzz/runner.cpp"

@@ -1,0 +1,22 @@
+"functions":
+- "exceptions": []
+  "name": "mutt_send_message"
+  "params":
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int mutt_send_message(SendFlags, struct Email *, const char *, struct Mailbox *, struct EmailArray *, struct ConfigSubset *)"
+"language": "c++"
+"project": "neomutt"
+"target_name": "address-fuzz"
+"target_path": "/src/neomutt/fuzz/address.c"

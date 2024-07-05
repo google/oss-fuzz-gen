@@ -1,0 +1,16 @@
+"functions":
+- "exceptions": []
+  "name": "_ZNK5resip15ContentsFactoryINS_28MultipartAlternativeContentsEE6createERKNS_16HeaderFieldValueERKNS_4MimeE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Contents * resip::ContentsFactory<resip::MultipartAlternativeContents>::create(const ContentsFactory<resip::MultipartSignedContents> *, const HeaderFieldValue &, const Mime &)"
+"language": "c++"
+"project": "resiprocate"
+"target_name": "fuzzUtil"
+"target_path": "/src/resiprocate/rutil/test/fuzzUtil.cxx"

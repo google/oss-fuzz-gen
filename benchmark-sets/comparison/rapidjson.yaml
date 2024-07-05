@@ -1,0 +1,16 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN9rapidjson12GenericValueINS_4UTF8IcEENS_19MemoryPoolAllocatorINS_12CrtAllocatorEEEE14DoAllocMembersEjRS5_"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "capacity"
+    "type": "int"
+  - "name": "allocator"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Member * rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> >::DoAllocMembers(GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > *, SizeType, MemoryPoolAllocator<rapidjson::CrtAllocator> &)"
+"language": "c++"
+"project": "rapidjson"
+"target_name": "rapidjson"
+"target_path": "/src/rapidjson-fuzzers/fuzzer.cpp"

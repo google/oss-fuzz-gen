@@ -1,0 +1,14 @@
+"functions":
+- "exceptions": []
+  "name": "cil_write_resolve_ast"
+  "params":
+  - "name": "out"
+    "type": "bool "
+  - "name": "db"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int cil_write_resolve_ast(FILE *, cil_db_t *)"
+"language": "c"
+"project": "selinux"
+"target_name": "binpolicy-fuzzer"
+"target_path": "/src/selinux/libsepol/fuzz/binpolicy-fuzzer.c"
