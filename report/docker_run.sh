@@ -34,6 +34,7 @@ RUN_TIMEOUT=$3
 SUB_DIR=$4
 MODEL=$5
 DELAY=$6
+USE_LOCAL_INTROSPECTOR=$7
 # Uses python3 by default and /venv/bin/python3 for Docker containers.
 PYTHON="$( [[ -x "/venv/bin/python3" ]] && echo "/venv/bin/python3" || echo "python3" )"
 export PYTHON
@@ -85,6 +86,15 @@ then
   echo "DELAY was not specified as the sixth argument. Defaulting to ${DELAY:?}."
 fi
 
+if [[ "$USE_LOCAL_INTROSPECTOR" = "true" ]]
+then
+  export BENCHMARK_SET
+  bash report/launch_local_introspector.sh
+  INTROSPECTOR_ENDPOINT="http://127.0.0.1:8080/api"
+else
+  INTROSPECTOR_ENDPOINT="https://introspector.oss-fuzz.com/api"
+fi
+
 DATE=$(date '+%Y-%m-%d')
 LOCAL_RESULTS_DIR='results'
 # Experiment name is used to label the Cloud Builds and as part of the
@@ -112,11 +122,18 @@ $PYTHON run_all_experiments.py \
   --num-samples 10 \
   --delay "${DELAY:?}" \
   --context \
+  --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
   --model "$MODEL"
 
 export ret_val=$?
 
 touch /experiment_ended
+
+if [[ "$USE_LOCAL_INTROSPECTOR" = "true" ]]
+then
+  echo "Shutting down introspector"
+  curl --silent http://localhost:8080/api/shutdown || true
+fi
 
 # Wait for the report process to finish uploading.
 wait $pid_report
