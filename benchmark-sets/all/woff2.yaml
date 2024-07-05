@@ -1,0 +1,50 @@
+"functions":
+- "exceptions": []
+  "name": "BrotliDecoderTakeOutput"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const uint8_t * BrotliDecoderTakeOutput(BrotliDecoderStateInternal *, size_t *)"
+- "exceptions": []
+  "name": "BrotliDecoderCreateInstance"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "BrotliDecoderState * BrotliDecoderCreateInstance(brotli_alloc_func, brotli_free_func, void *)"
+- "exceptions": []
+  "name": "BrotliDecoderSetParameter"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int BrotliDecoderSetParameter(BrotliDecoderStateInternal *, BrotliDecoderParameter, uint32_t)"
+- "exceptions": []
+  "name": "BrotliDecoderIsFinished"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int BrotliDecoderIsFinished(const BrotliDecoderStateInternal *)"
+- "exceptions": []
+  "name": "BrotliDecoderHasMoreOutput"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int BrotliDecoderHasMoreOutput(const BrotliDecoderStateInternal *)"
+"language": "c++"
+"project": "woff2"
+"target_name": "convert_woff2ttf_fuzzer_new_entry"
+"target_path": "/src/woff2/src/convert_woff2ttf_fuzzer_new_entry.cc"

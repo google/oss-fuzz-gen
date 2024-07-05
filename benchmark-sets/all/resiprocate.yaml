@@ -1,0 +1,56 @@
+"functions":
+- "exceptions": []
+  "name": "_ZNK5resip15ContentsFactoryINS_28MultipartAlternativeContentsEE6createERKNS_16HeaderFieldValueERKNS_4MimeE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Contents * resip::ContentsFactory<resip::MultipartAlternativeContents>::create(const ContentsFactory<resip::MultipartSignedContents> *, const HeaderFieldValue &, const Mime &)"
+- "exceptions": []
+  "name": "_ZN5resip11SdpContentsaSERKS0_"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "SdpContents & resip::SdpContents::operator=(const SdpContents &)"
+- "exceptions": []
+  "name": "_ZNK5resip15ContentsFactoryINS_22MultipartMixedContentsEE6createERKNS_16HeaderFieldValueERKNS_4MimeE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Contents * resip::ContentsFactory<resip::MultipartMixedContents>::create(const ContentsFactory<resip::MultipartSignedContents> *, const HeaderFieldValue &, const Mime &)"
+- "exceptions": []
+  "name": "_ZN5resip19GenericPidfContentsaSERKS0_"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "GenericPidfContents & resip::GenericPidfContents::operator=(const GenericPidfContents &)"
+- "exceptions": []
+  "name": "_ZNK5resip15ContentsFactoryINS_23MultipartSignedContentsEE6createERKNS_16HeaderFieldValueERKNS_4MimeE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Contents * resip::ContentsFactory<resip::MultipartSignedContents>::create(const ContentsFactory<resip::MultipartSignedContents> *, const HeaderFieldValue &, const Mime &)"
+"language": "c++"
+"project": "resiprocate"
+"target_name": "/src/resiprocate/rutil/dns/ares/ares-test-fuzz-name.c"
+"target_path": "/src/resiprocate/rutil/dns/ares/ares-test-fuzz-name.c"

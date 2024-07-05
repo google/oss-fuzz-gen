@@ -1,0 +1,34 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN7acommon17MDInfoListofLists5clearEPNS_6ConfigE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "c"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void acommon::MDInfoListofLists::clear(Config *)"
+- "exceptions": []
+  "name": "_ZN7acommon6Config6removeERKNS_10ParmStringE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "key"
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "PosibErr<void> acommon::Config::remove(ParmStr)"
+- "exceptions": []
+  "name": "_ZN12_GLOBAL__N_111SuggestImpl7suggestEPKc"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "word"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "SuggestionList & (anonymous namespace)::SuggestImpl::suggest(const char *)"
+"language": "c++"
+"project": "aspell"
+"target_name": "aspell_fuzzer"
+"target_path": "/src/aspell-fuzz/aspell_fuzzer.cpp"

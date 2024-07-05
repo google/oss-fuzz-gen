@@ -1,0 +1,50 @@
+"functions":
+- "exceptions": []
+  "name": "ov_pcm_seek_page_lap"
+  "params":
+  - "name": "vf"
+    "type": "bool "
+  - "name": "pos"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int ov_pcm_seek_page_lap(OggVorbis_File *, ogg_int64_t)"
+- "exceptions": []
+  "name": "ov_pcm_seek_lap"
+  "params":
+  - "name": "vf"
+    "type": "bool "
+  - "name": "pos"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int ov_pcm_seek_lap(OggVorbis_File *, ogg_int64_t)"
+- "exceptions": []
+  "name": "ov_time_seek_page_lap"
+  "params":
+  - "name": "vf"
+    "type": "bool "
+  - "name": "pos"
+    "type": "double"
+  "return_type": "int"
+  "signature": "int ov_time_seek_page_lap(OggVorbis_File *, double)"
+- "exceptions": []
+  "name": "ov_time_seek_lap"
+  "params":
+  - "name": "vf"
+    "type": "bool "
+  - "name": "pos"
+    "type": "double"
+  "return_type": "int"
+  "signature": "int ov_time_seek_lap(OggVorbis_File *, double)"
+- "exceptions": []
+  "name": "ov_halfrate"
+  "params":
+  - "name": "vf"
+    "type": "bool "
+  - "name": "flag"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int ov_halfrate(OggVorbis_File *, int)"
+"language": "c++"
+"project": "vorbis"
+"target_name": "decode_fuzzer"
+"target_path": "/src/vorbis/contrib/oss-fuzz/decode_fuzzer.cc"

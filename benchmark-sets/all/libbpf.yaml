@@ -1,0 +1,44 @@
+"functions":
+- "exceptions": []
+  "name": "bpf_object__load"
+  "params":
+  - "name": "obj"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int bpf_object__load(struct bpf_object *)"
+- "exceptions": []
+  "name": "bpf_object__open"
+  "params":
+  - "name": "path"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct bpf_object * bpf_object__open(const char *)"
+- "exceptions": []
+  "name": "bpf_object__load_skeleton"
+  "params":
+  - "name": "s"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int bpf_object__load_skeleton(struct bpf_object_skeleton *)"
+- "exceptions": []
+  "name": "bpf_object__open_skeleton"
+  "params":
+  - "name": "s"
+    "type": "bool "
+  - "name": "opts"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int bpf_object__open_skeleton(struct bpf_object_skeleton *, const struct bpf_object_open_opts *)"
+- "exceptions": []
+  "name": "bpf_object__open_file"
+  "params":
+  - "name": "path"
+    "type": "bool "
+  - "name": "opts"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct bpf_object * bpf_object__open_file(const char *, const struct bpf_object_open_opts *)"
+"language": "c"
+"project": "libbpf"
+"target_name": "bpf-object-fuzzer"
+"target_path": "/src/libbpf/fuzz/bpf-object-fuzzer.c"

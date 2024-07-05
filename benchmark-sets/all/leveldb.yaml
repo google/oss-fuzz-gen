@@ -1,0 +1,48 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN7leveldb12_GLOBAL__N_16DBIter4PrevEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void leveldb::(anonymous namespace)::DBIter::Prev()"
+- "exceptions": []
+  "name": "_ZN7leveldb12_GLOBAL__N_16DBIter10SeekToLastEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void leveldb::(anonymous namespace)::DBIter::SeekToLast()"
+- "exceptions": []
+  "name": "_ZN7leveldb12_GLOBAL__N_16DBIter4SeekERKNS_5SliceE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void leveldb::(anonymous namespace)::DBIter::Seek(const Slice &)"
+- "exceptions": []
+  "name": "_ZN7leveldb6DBImpl19GetApproximateSizesEPKNS_5RangeEiPm"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void leveldb::DBImpl::GetApproximateSizes(const struct Range *, int, uint64_t *)"
+- "exceptions": []
+  "name": "_ZN7leveldb6DBImpl24TEST_NewInternalIteratorEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Iterator * leveldb::DBImpl::TEST_NewInternalIterator()"
+"language": "c++"
+"project": "leveldb"
+"target_name": "fuzz_db"
+"target_path": "/src/leveldb/fuzz_db.cc"

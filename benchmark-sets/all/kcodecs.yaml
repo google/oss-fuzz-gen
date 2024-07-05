@@ -1,0 +1,44 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN13QPluginLoader4loadEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool QPluginLoader::load()"
+- "exceptions": []
+  "name": "_ZN15QLibraryPrivate8isPluginEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool QLibraryPrivate::isPlugin()"
+- "exceptions": []
+  "name": "_ZNK14QFactoryLoader6keyMapEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "QMultiMap<int, QString> QFactoryLoader::keyMap()"
+- "exceptions": []
+  "name": "_ZNK14QFactoryLoader8instanceEi"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "QObject * QFactoryLoader::instance(int)"
+- "exceptions": []
+  "name": "_ZN15QLibraryPrivate17updatePluginStateEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void QLibraryPrivate::updatePluginState()"
+"language": "c++"
+"project": "kcodecs"
+"target_name": "kcodecs_fuzzer"
+"target_path": "/src/kcodecs_fuzzer.cc"

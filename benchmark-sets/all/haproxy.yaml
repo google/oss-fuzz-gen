@@ -1,0 +1,14 @@
+"functions":
+- "exceptions": []
+  "name": "init"
+  "params":
+  - "name": "argc"
+    "type": "int"
+  - "name": "argv"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void init(int, char **)"
+"language": "c++"
+"project": "haproxy"
+"target_name": "fuzz_cfg_parser"
+"target_path": "/src/fuzz_cfg_parser.c"

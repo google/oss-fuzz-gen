@@ -1,0 +1,60 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN5Eigen9TransposeINS_5BlockINS_6MatrixINSt3__17complexIdEELin1ELin1ELi0ELin1ELin1EEELin1ELi1ELb1EEEE6resizeEll"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "nrows"
+    "type": "size_t"
+  - "name": "ncols"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "void Eigen::Transpose<Eigen::Block<Eigen::Matrix<std::__1::complex<double>, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(Transpose<Eigen::Matrix<int, -1, -1, 0, -1, -1> > *, Index, Index)"
+- "exceptions": []
+  "name": "_ZN5Eigen9DenseBaseINS_5BlockINS_6MatrixIeLin1ELin1ELi0ELin1ELin1EEELin1ELi1ELb1EEEE6resizeEll"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "rows"
+    "type": "size_t"
+  - "name": "cols"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "void Eigen::DenseBase<Eigen::Block<Eigen::Matrix<long double, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(DenseBase<Eigen::Solve<Eigen::TriangularView<Eigen::Transpose<Eigen::Matrix<int, -1, -1, 0, -1, -1> >, 2U>, Eigen::Matrix<int, -1, 1, 0, -1, 1> > > *, Index, Index)"
+- "exceptions": []
+  "name": "_ZN5Eigen9TransposeINS_5BlockINS_6MatrixINSt3__17complexIfEELin1ELin1ELi0ELin1ELin1EEELin1ELi1ELb1EEEE6resizeEll"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "nrows"
+    "type": "size_t"
+  - "name": "ncols"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "void Eigen::Transpose<Eigen::Block<Eigen::Matrix<std::__1::complex<float>, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(Transpose<Eigen::Matrix<int, -1, -1, 0, -1, -1> > *, Index, Index)"
+- "exceptions": []
+  "name": "_ZN5Eigen9TransposeINS_5BlockINS_6MatrixIiLin1ELin1ELi0ELin1ELin1EEELin1ELi1ELb1EEEE6resizeEll"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "nrows"
+    "type": "size_t"
+  - "name": "ncols"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "void Eigen::Transpose<Eigen::Block<Eigen::Matrix<int, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(Transpose<Eigen::Matrix<int, -1, -1, 0, -1, -1> > *, Index, Index)"
+- "exceptions": []
+  "name": "_ZN5Eigen9TransposeINS_5BlockINS_6MatrixIeLin1ELin1ELi0ELin1ELin1EEELin1ELi1ELb1EEEE6resizeEll"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "nrows"
+    "type": "size_t"
+  - "name": "ncols"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "void Eigen::Transpose<Eigen::Block<Eigen::Matrix<long double, -1, -1, 0, -1, -1>, -1, 1, true> >::resize(Transpose<Eigen::Matrix<int, -1, -1, 0, -1, -1> > *, Index, Index)"
+"language": "c++"
+"project": "eigen"
+"target_name": "basicstuff_fuzzer"
+"target_path": "/src/basicstuff_fuzzer.cc"

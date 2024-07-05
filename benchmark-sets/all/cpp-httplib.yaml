@@ -1,0 +1,58 @@
+"functions":
+- "exceptions": []
+  "name": "_ZZN7httplib6Server7routingERNS_7RequestERNS_8ResponseERNS_6StreamEENKUlNSt3__18functionIFbPKcmEEEE_clESC_"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "receiver"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool httplib::Server::operator()(const void *, ContentReceiver)"
+- "exceptions": []
+  "name": "_ZZN7httplib6detail21process_server_socketIZNS_6Server24process_and_close_socketEiEUlRNS_6StreamEbRbE_EEbRKNSt3__16atomicIiEEimlllllT_ENKUlbS5_E_clEbS5_"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "close_connection"
+    "type": "bool"
+  - "name": "connection_closed"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool httplib::detail::process_server_socket<httplib::Server::operator()(const void *, bool, bool &)"
+- "exceptions": []
+  "name": "_ZN7httplib6Server24process_and_close_socketEi"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "sock"
+    "type": "int"
+  "return_type": "bool"
+  "signature": "bool httplib::Server::process_and_close_socket(socket_t)"
+- "exceptions": []
+  "name": "_ZZN7httplib6Server7routingERNS_7RequestERNS_8ResponseERNS_6StreamEENKUlNSt3__18functionIFbRKNS_17MultipartFormDataEEEENS8_IFbPKcmEEEE_clESD_SH_"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "header"
+    "type": "bool "
+  - "name": "receiver"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool httplib::Server::operator()(const void *, MultipartContentHeader, ContentReceiver)"
+- "exceptions": []
+  "name": "_ZZN7httplib6Server24process_and_close_socketEiENKUlRNS_6StreamEbRbE_clES2_bS3_"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "strm"
+    "type": "bool "
+  - "name": "close_connection"
+    "type": "bool"
+  - "name": "connection_closed"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool httplib::Server::operator()(const void *, Stream &, bool, bool &)"
+"language": "c++"
+"project": "cpp-httplib"
+"target_name": "server_fuzzer"
+"target_path": "/src/cpp-httplib/test/fuzzing/server_fuzzer.cc"

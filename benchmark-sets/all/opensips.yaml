@@ -1,0 +1,45 @@
+"functions":
+- "exceptions": []
+  "name": "receive_msg"
+  "params":
+  - "name": "buf"
+    "type": "bool "
+  - "name": "len"
+    "type": "int"
+  - "name": "rcv_info"
+    "type": "bool "
+  - "name": "existing_context"
+    "type": "bool "
+  - "name": "msg_flags"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int receive_msg(char *, unsigned int, struct receive_info *, context_p, unsigned int)"
+- "exceptions": []
+  "name": "start_timer_extra_processes"
+  "params":
+  - "name": "chd_rank"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int start_timer_extra_processes(int *)"
+- "exceptions": []
+  "name": "parse_sdp"
+  "params":
+  - "name": "_m"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "sdp_info_t * parse_sdp(struct sip_msg *)"
+- "exceptions": []
+  "name": "parse_opensips_cfg"
+  "params":
+  - "name": "cfg_file"
+    "type": "bool "
+  - "name": "preproc_cmdline"
+    "type": "bool "
+  - "name": "ret_buffer"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int parse_opensips_cfg(const char *, const char *, str *)"
+"language": "c"
+"project": "opensips"
+"target_name": "fuzz_msg_parser"
+"target_path": "/src/opensips/test/fuzz/fuzz_msg_parser.c"

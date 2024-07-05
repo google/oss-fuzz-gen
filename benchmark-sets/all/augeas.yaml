@@ -1,0 +1,60 @@
+"functions":
+- "exceptions": []
+  "name": "transform_save"
+  "params":
+  - "name": "aug"
+    "type": "bool "
+  - "name": "xfm"
+    "type": "bool "
+  - "name": "path"
+    "type": "bool "
+  - "name": "tree"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int transform_save(struct augeas *, struct tree *, const char *, struct tree *)"
+- "exceptions": []
+  "name": "aug_save"
+  "params":
+  - "name": "aug"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int aug_save(struct augeas *)"
+- "exceptions": []
+  "name": "aug_load_file"
+  "params":
+  - "name": "aug"
+    "type": "bool "
+  - "name": "file"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int aug_load_file(struct augeas *, const char *)"
+- "exceptions": []
+  "name": "aug_text_retrieve"
+  "params":
+  - "name": "aug"
+    "type": "bool "
+  - "name": "lens"
+    "type": "bool "
+  - "name": "node_in"
+    "type": "bool "
+  - "name": "path"
+    "type": "bool "
+  - "name": "node_out"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int aug_text_retrieve(struct augeas *, const char *, const char *, const char *, const char *)"
+- "exceptions": []
+  "name": "aug_preview"
+  "params":
+  - "name": "aug"
+    "type": "bool "
+  - "name": "path"
+    "type": "bool "
+  - "name": "out"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int aug_preview(struct augeas *, const char *, char **)"
+"language": "c++"
+"project": "augeas"
+"target_name": "augeas_escape_name_fuzzer"
+"target_path": "/src/augeas_escape_name_fuzzer.cc"

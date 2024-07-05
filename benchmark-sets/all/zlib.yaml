@@ -1,0 +1,56 @@
+"functions":
+- "exceptions": []
+  "name": "gzputs"
+  "params":
+  - "name": "file"
+    "type": "bool "
+  - "name": "s"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int gzputs(gzFile, const char *)"
+- "exceptions": []
+  "name": "gzprintf"
+  "params":
+  - "name": "file"
+    "type": "bool "
+  - "name": "format"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int gzprintf(gzFile, const char *, void)"
+- "exceptions": []
+  "name": "gzputc"
+  "params":
+  - "name": "file"
+    "type": "bool "
+  - "name": "c"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int gzputc(gzFile, int)"
+- "exceptions": []
+  "name": "gzfwrite"
+  "params":
+  - "name": "buf"
+    "type": "bool "
+  - "name": "size"
+    "type": "size_t"
+  - "name": "nitems"
+    "type": "size_t"
+  - "name": "file"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "z_size_t gzfwrite(voidpc, z_size_t, z_size_t, gzFile)"
+- "exceptions": []
+  "name": "gzsetparams"
+  "params":
+  - "name": "file"
+    "type": "bool "
+  - "name": "level"
+    "type": "int"
+  - "name": "strategy"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int gzsetparams(gzFile, int, int)"
+"language": "c++"
+"project": "zlib"
+"target_name": "zlib_uncompress2_fuzzer"
+"target_path": "/src/zlib_uncompress2_fuzzer.cc"

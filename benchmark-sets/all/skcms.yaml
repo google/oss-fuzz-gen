@@ -1,0 +1,62 @@
+"functions":
+- "exceptions": []
+  "name": "skcms_AreApproximateInverses"
+  "params":
+  - "name": "curve"
+    "type": "bool "
+  - "name": "inv_tf"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool skcms_AreApproximateInverses(const skcms_Curve *, const skcms_TransferFunction *)"
+- "exceptions": []
+  "name": "skcms_PrimariesToXYZD50"
+  "params":
+  - "name": "rx"
+    "type": "float"
+  - "name": "ry"
+    "type": "float"
+  - "name": "gx"
+    "type": "float"
+  - "name": "gy"
+    "type": "float"
+  - "name": "bx"
+    "type": "float"
+  - "name": "by"
+    "type": "float"
+  - "name": "wx"
+    "type": "float"
+  - "name": "wy"
+    "type": "float"
+  - "name": "toXYZD50"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool skcms_PrimariesToXYZD50(float, float, float, float, float, float, float, float, skcms_Matrix3x3 *)"
+- "exceptions": []
+  "name": "skcms_ApproximatelyEqualProfiles"
+  "params":
+  - "name": "A"
+    "type": "bool "
+  - "name": "B"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool skcms_ApproximatelyEqualProfiles(const skcms_ICCProfile *, const skcms_ICCProfile *)"
+- "exceptions": []
+  "name": "skcms_TRCs_AreApproximateInverse"
+  "params":
+  - "name": "profile"
+    "type": "bool "
+  - "name": "inv_tf"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool skcms_TRCs_AreApproximateInverse(const skcms_ICCProfile *, const skcms_TransferFunction *)"
+- "exceptions": []
+  "name": "skcms_MakeUsableAsDestinationWithSingleCurve"
+  "params":
+  - "name": "profile"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool skcms_MakeUsableAsDestinationWithSingleCurve(skcms_ICCProfile *)"
+"language": "c++"
+"project": "skcms"
+"target_name": "iccprofile_atf"
+"target_path": "/src/skcms/fuzz/fuzz_iccprofile_atf.c"

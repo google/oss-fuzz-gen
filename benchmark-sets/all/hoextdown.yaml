@@ -1,0 +1,52 @@
+"functions":
+- "exceptions": []
+  "name": "hoedown_buffer_putf"
+  "params":
+  - "name": "buf"
+    "type": "bool "
+  - "name": "file"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int hoedown_buffer_putf(hoedown_buffer *, FILE *)"
+- "exceptions": []
+  "name": "hoedown_document_render_inline"
+  "params":
+  - "name": "doc"
+    "type": "bool "
+  - "name": "ob"
+    "type": "bool "
+  - "name": "data"
+    "type": "bool "
+  - "name": "size"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "void hoedown_document_render_inline(hoedown_document *, hoedown_buffer *, const uint8_t *, size_t)"
+- "exceptions": []
+  "name": "hoedown_buffer_sets"
+  "params":
+  - "name": "buf"
+    "type": "bool "
+  - "name": "str"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void hoedown_buffer_sets(hoedown_buffer *, const char *)"
+- "exceptions": []
+  "name": "hoedown_buffer_put_utf8"
+  "params":
+  - "name": "buf"
+    "type": "bool "
+  - "name": "c"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void hoedown_buffer_put_utf8(hoedown_buffer *, unsigned int)"
+- "exceptions": []
+  "name": "hoedown_html_toc_renderer_new"
+  "params":
+  - "name": "nesting_level"
+    "type": "int"
+  "return_type": "void"
+  "signature": "hoedown_renderer * hoedown_html_toc_renderer_new(int)"
+"language": "c++"
+"project": "hoextdown"
+"target_name": "hoedown_fuzzer"
+"target_path": "/src/hoextdown/test/hoedown_fuzzer.c"

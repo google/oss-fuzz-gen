@@ -1,0 +1,62 @@
+"functions":
+- "exceptions": []
+  "name": "gf_sc_scene_update"
+  "params":
+  - "name": "compositor"
+    "type": "bool "
+  - "name": "type"
+    "type": "bool "
+  - "name": "com"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "GF_Err gf_sc_scene_update(GF_Compositor *, char *, char *)"
+- "exceptions": []
+  "name": "gf_sc_texture_update_frame"
+  "params":
+  - "name": "txh"
+    "type": "bool "
+  - "name": "disable_resync"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void gf_sc_texture_update_frame(GF_TextureHandler *, Bool)"
+- "exceptions": []
+  "name": "visual_draw_frame"
+  "params":
+  - "name": "visual"
+    "type": "bool "
+  - "name": "root"
+    "type": "bool "
+  - "name": "tr_state"
+    "type": "bool "
+  - "name": "is_root_visual"
+    "type": "int"
+  "return_type": "int"
+  "signature": "Bool visual_draw_frame(GF_VisualManager *, GF_Node *, GF_TraverseState *, Bool)"
+- "exceptions": []
+  "name": "gf_sc_draw_frame"
+  "params":
+  - "name": "compositor"
+    "type": "bool "
+  - "name": "no_flush"
+    "type": "int"
+  - "name": "ms_till_next"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "Bool gf_sc_draw_frame(GF_Compositor *, Bool, s32 *)"
+- "exceptions": []
+  "name": "visual_2d_draw_frame"
+  "params":
+  - "name": "visual"
+    "type": "bool "
+  - "name": "root"
+    "type": "bool "
+  - "name": "tr_state"
+    "type": "bool "
+  - "name": "is_root_visual"
+    "type": "int"
+  "return_type": "int"
+  "signature": "Bool visual_2d_draw_frame(GF_VisualManager *, GF_Node *, GF_TraverseState *, Bool)"
+"language": "c"
+"project": "gpac"
+"target_name": "fuzz_route"
+"target_path": "/src/gpac/testsuite/oss-fuzzers/fuzz_route.c"

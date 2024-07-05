@@ -1,0 +1,46 @@
+"functions":
+- "exceptions": []
+  "name": "Stralign_left"
+  "params":
+  - "name": "s"
+    "type": "bool "
+  - "name": "width"
+    "type": "int"
+  "return_type": "void"
+  "signature": "Str Stralign_left(Str, int)"
+- "exceptions": []
+  "name": "Strnew_m_charp"
+  "params":
+  - "name": "p"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Str Strnew_m_charp(const char *, void)"
+- "exceptions": []
+  "name": "Stralign_center"
+  "params":
+  - "name": "s"
+    "type": "bool "
+  - "name": "width"
+    "type": "int"
+  "return_type": "void"
+  "signature": "Str Stralign_center(Str, int)"
+- "exceptions": []
+  "name": "Sprintf"
+  "params":
+  - "name": "fmt"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Str Sprintf(char *, void)"
+- "exceptions": []
+  "name": "Stralign_right"
+  "params":
+  - "name": "s"
+    "type": "bool "
+  - "name": "width"
+    "type": "int"
+  "return_type": "void"
+  "signature": "Str Stralign_right(Str, int)"
+"language": "c"
+"project": "w3m"
+"target_name": "fuzz_conv"
+"target_path": "/src/w3m/fuzz/fuzz-conv.c"

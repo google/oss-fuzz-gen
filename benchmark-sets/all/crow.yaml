@@ -1,0 +1,40 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN4crow10HTTPParserINS_10ConnectionINS_13SocketAdaptorENS_4CrowIJEEEJEEEE11process_urlEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void crow::HTTPParser<crow::Connection<crow::SocketAdaptor, crow::Crow<>> >::process_url(struct HTTPParser<crow::Connection<crow::SocketAdaptor, crow::Crow<> > > *)"
+- "exceptions": []
+  "name": "_ZN4crow10HTTPParserINS_10ConnectionINS_13SocketAdaptorENS_4CrowIJEEEJEEEE15process_messageEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void crow::HTTPParser<crow::Connection<crow::SocketAdaptor, crow::Crow<>> >::process_message(struct HTTPParser<crow::Connection<crow::SocketAdaptor, crow::Crow<> > > *)"
+- "exceptions": []
+  "name": "_ZN4crow10ConnectionINS_13SocketAdaptorENS_4CrowIJEEEJEE6handleEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void crow::Connection<crow::SocketAdaptor, crow::Crow<>>::handle(Connection<crow::SocketAdaptor, crow::Crow<> > *)"
+- "exceptions": []
+  "name": "_ZN4crow4CrowIJEE3runEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void crow::Crow<>::run()"
+- "exceptions": []
+  "name": "_ZN4crow10ConnectionINS_13SocketAdaptorENS_4CrowIJEEEJEE10handle_urlEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void crow::Connection<crow::SocketAdaptor, crow::Crow<>>::handle_url(Connection<crow::SocketAdaptor, crow::Crow<> > *)"
+"language": "c++"
+"project": "crow"
+"target_name": "b64_fuzzer"
+"target_path": "/src/crow/tests/fuzz/b64_fuzzer.cpp"

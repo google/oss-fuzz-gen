@@ -1,0 +1,56 @@
+"functions":
+- "exceptions": []
+  "name": "sshkey_public_key_load"
+  "params":
+  - "name": "type"
+    "type": "int"
+  - "name": "args"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "sshkey_public_key_t * sshkey_public_key_load(key_type_t, struct __va_list_tag *)"
+- "exceptions": []
+  "name": "x509_ac_load"
+  "params":
+  - "name": "type"
+    "type": "int"
+  - "name": "args"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "x509_ac_t * x509_ac_load(certificate_type_t, struct __va_list_tag *)"
+- "exceptions": []
+  "name": "validate"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "subject"
+    "type": "bool "
+  - "name": "issuer"
+    "type": "bool "
+  - "name": "pathlen"
+    "type": "int"
+  - "name": "anchor"
+    "type": "bool"
+  - "name": "auth"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool validate(private_constraints_validator_t *, certificate_t *, certificate_t *, u_int, bool, auth_cfg_t *)"
+- "exceptions": []
+  "name": "settings_create_string"
+  "params":
+  - "name": "settings"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "settings_t * settings_create_string(char *)"
+- "exceptions": []
+  "name": "sshkey_certificate_load"
+  "params":
+  - "name": "type"
+    "type": "int"
+  - "name": "args"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "certificate_t * sshkey_certificate_load(certificate_type_t, struct __va_list_tag *)"
+"language": "c++"
+"project": "strongswan"
+"target_name": "fuzz_ids"
+"target_path": "/src/strongswan/fuzz/fuzz_ids.c"

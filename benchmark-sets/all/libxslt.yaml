@@ -1,0 +1,58 @@
+"functions":
+- "exceptions": []
+  "name": "xmlXIncludeProcessTreeFlags"
+  "params":
+  - "name": "tree"
+    "type": "bool "
+  - "name": "flags"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int xmlXIncludeProcessTreeFlags(xmlNodePtr, int)"
+- "exceptions": []
+  "name": "xmlReadDoc"
+  "params":
+  - "name": "cur"
+    "type": "bool "
+  - "name": "URL"
+    "type": "bool "
+  - "name": "encoding"
+    "type": "bool "
+  - "name": "options"
+    "type": "int"
+  "return_type": "void"
+  "signature": "xmlDocPtr xmlReadDoc(const xmlChar *, const char *, const char *, int)"
+- "exceptions": []
+  "name": "htmlSAXParseFile"
+  "params":
+  - "name": "filename"
+    "type": "bool "
+  - "name": "encoding"
+    "type": "bool "
+  - "name": "sax"
+    "type": "bool "
+  - "name": "userData"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "htmlDocPtr htmlSAXParseFile(const char *, const char *, htmlSAXHandlerPtr, void *)"
+- "exceptions": []
+  "name": "htmlCreateFileParserCtxt"
+  "params":
+  - "name": "filename"
+    "type": "bool "
+  - "name": "encoding"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "htmlParserCtxtPtr htmlCreateFileParserCtxt(const char *, const char *)"
+- "exceptions": []
+  "name": "xmlACatalogResolvePublic"
+  "params":
+  - "name": "catal"
+    "type": "bool "
+  - "name": "pubID"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "xmlChar * xmlACatalogResolvePublic(xmlCatalogPtr, const xmlChar *)"
+"language": "c++"
+"project": "libxslt"
+"target_name": "xslt"
+"target_path": "/src/libxslt/tests/fuzz/xslt.c"

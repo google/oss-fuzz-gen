@@ -1,0 +1,60 @@
+"functions":
+- "exceptions": []
+  "name": "_ZZN3uWS12TemplatedAppILb1EE7publishENSt3__117basic_string_viewIcNS2_11char_traitsIcEEEES6_NS_6OpCodeEbENKUlPNS_10SubscriberERNS_19TopicTreeBigMessageEE_clES9_SB_"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void uWS::TemplatedApp<true>::operator()(const void *, struct Subscriber *, struct TopicTreeBigMessage &)"
+- "exceptions": []
+  "name": "_ZZN3uWS9WebSocketILb0ELb1EZ4testvE13PerSocketDataE7publishENSt3__117basic_string_viewIcNS3_11char_traitsIcEEEES7_NS_6OpCodeEbENKUlPNS_10SubscriberERNS_19TopicTreeBigMessageEE_clESA_SC_"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void uWS::operator()(const void *, struct Subscriber *, struct TopicTreeBigMessage &)"
+- "exceptions": []
+  "name": "us_create_udp_socket"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "short"
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct us_udp_socket_t * us_create_udp_socket(struct us_loop_t *, struct us_udp_packet_buffer_t *, DW_TAG_subroutine_typeInfinite loop *, DW_TAG_subroutine_typeInfinite loop *, const char *, unsigned short, void *)"
+- "exceptions": []
+  "name": "_ZN3uWS12HttpResponseILb1EE16writeUnsignedHexEj"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "void uWS::HttpResponse<true>::writeUnsignedHex(struct HttpResponse<false> *, unsigned int)"
+- "exceptions": []
+  "name": "_ZN3uWS4Loop3runEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void uWS::Loop::run(struct Loop *)"
+"language": "c++"
+"project": "uwebsockets"
+"target_name": "WebSocket"
+"target_path": "/src/uWebSockets/fuzzing/WebSocket.cpp"

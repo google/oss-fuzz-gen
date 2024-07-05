@@ -1,0 +1,12 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN7msgpack2v14zone9finalizerclEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void msgpack::v1::zone::finalizer::operator()(struct finalizer *)"
+"language": "c++"
+"project": "msgpack-c"
+"target_name": "unpack_pack_fuzzer"
+"target_path": "/src/msgpack-c/fuzz/unpack_pack_fuzzer.cpp"

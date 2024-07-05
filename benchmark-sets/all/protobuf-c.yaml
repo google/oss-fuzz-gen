@@ -1,0 +1,50 @@
+"functions":
+- "exceptions": []
+  "name": "protobuf_c_message_pack_to_buffer"
+  "params":
+  - "name": "message"
+    "type": "bool "
+  - "name": "buffer"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "size_t protobuf_c_message_pack_to_buffer(const ProtobufCMessage *, ProtobufCBuffer *)"
+- "exceptions": []
+  "name": "protobuf_c_message_check"
+  "params":
+  - "name": "message"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "protobuf_c_boolean protobuf_c_message_check(const ProtobufCMessage *)"
+- "exceptions": []
+  "name": "protobuf_c_buffer_simple_append"
+  "params":
+  - "name": "buffer"
+    "type": "bool "
+  - "name": "len"
+    "type": "size_t"
+  - "name": "data"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void protobuf_c_buffer_simple_append(ProtobufCBuffer *, size_t, const uint8_t *)"
+- "exceptions": []
+  "name": "protobuf_c_service_descriptor_get_method_by_name"
+  "params":
+  - "name": "desc"
+    "type": "bool "
+  - "name": "name"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const ProtobufCMethodDescriptor * protobuf_c_service_descriptor_get_method_by_name(const ProtobufCServiceDescriptor *, const char *)"
+- "exceptions": []
+  "name": "protobuf_c_message_descriptor_get_field"
+  "params":
+  - "name": "desc"
+    "type": "bool "
+  - "name": "value"
+    "type": "int"
+  "return_type": "void"
+  "signature": "const ProtobufCFieldDescriptor * protobuf_c_message_descriptor_get_field(const ProtobufCMessageDescriptor *, unsigned int)"
+"language": "c"
+"project": "protobuf-c"
+"target_name": "fuzzer"
+"target_path": "/src/protobuf-c-fuzzers/fuzzer.cpp"

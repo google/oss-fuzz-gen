@@ -1,0 +1,60 @@
+"functions":
+- "exceptions": []
+  "name": "X509gen"
+  "params":
+  - "name": "priv"
+    "type": "bool "
+  - "name": "subj"
+    "type": "bool "
+  - "name": "valid"
+    "type": "bool "
+  - "name": "certlen"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "uchar * X509gen(RSApriv *, char *, ulong *, int *)"
+- "exceptions": []
+  "name": "X509toRSApub"
+  "params":
+  - "name": "cert"
+    "type": "bool "
+  - "name": "ncert"
+    "type": "int"
+  - "name": "name"
+    "type": "bool "
+  - "name": "nname"
+    "type": "int"
+  "return_type": "void"
+  "signature": "RSApub * X509toRSApub(uchar *, int, char *, int)"
+- "exceptions": []
+  "name": "X509req"
+  "params":
+  - "name": "priv"
+    "type": "bool "
+  - "name": "subj"
+    "type": "bool "
+  - "name": "certlen"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "uchar * X509req(RSApriv *, char *, int *)"
+- "exceptions": []
+  "name": "rsadecrypt"
+  "params":
+  - "name": "rsa"
+    "type": "bool "
+  - "name": "in"
+    "type": "bool "
+  - "name": "out"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "mpint * rsadecrypt(RSApriv *, mpint *, mpint *)"
+- "exceptions": []
+  "name": "__efgfmt"
+  "params":
+  - "name": "fmt"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int __efgfmt(Fmt *)"
+"language": "c"
+"project": "plan9port"
+"target_name": "fuzz_libsec"
+"target_path": "/src/fuzz_libsec.c"

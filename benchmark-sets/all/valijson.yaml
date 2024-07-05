@@ -1,0 +1,45 @@
+"functions":
+- "exceptions": []
+  "name": "_ZNK8valijson11constraints15BasicConstraintINS0_14EnumConstraintEE5cloneEPFPvmEPFvS4_E"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "allocFn"
+    "type": "bool "
+  - "name": "freeFn"
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "OwningPointer valijson::constraints::BasicConstraint<valijson::constraints::EnumConstraint>::clone(const struct BasicConstraint<valijson::constraints::TypeConstraint> *, CustomAlloc, CustomFree)"
+- "exceptions": []
+  "name": "_ZN8valijson8adapters12BasicAdapterINS0_23GenericRapidJsonAdapterIN9rapidjson12GenericValueINS3_4UTF8IcEENS3_19MemoryPoolAllocatorINS3_12CrtAllocatorEEEEEEENS0_21GenericRapidJsonArrayISA_EENS0_28GenericRapidJsonObjectMemberISA_EENS0_22GenericRapidJsonObjectISA_EENS0_21GenericRapidJsonValueISA_EEE23ObjectComparisonFunctorclERKNSt3__112basic_stringIcNSM_11char_traitsIcEENSM_9allocatorIcEEEERKNS0_7AdapterE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "key"
+    "type": "bool "
+  - "name": "value"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool valijson::adapters::BasicAdapter<valijson::adapters::GenericRapidJsonAdapter<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonArray<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObjectMember<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObject<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > > >::ObjectComparisonFunctor::operator()(const string &, const Adapter &)"
+- "exceptions": []
+  "name": "_ZNK8valijson8adapters27GenericRapidJsonFrozenValueIN9rapidjson12GenericValueINS2_4UTF8IcEENS2_19MemoryPoolAllocatorINS2_12CrtAllocatorEEEEEE5cloneEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "FrozenValue * valijson::adapters::GenericRapidJsonFrozenValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >::clone(const GenericRapidJsonFrozenValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > > *)"
+- "exceptions": []
+  "name": "_ZN8valijson8adapters12BasicAdapterINS0_23GenericRapidJsonAdapterIN9rapidjson12GenericValueINS3_4UTF8IcEENS3_19MemoryPoolAllocatorINS3_12CrtAllocatorEEEEEEENS0_21GenericRapidJsonArrayISA_EENS0_28GenericRapidJsonObjectMemberISA_EENS0_22GenericRapidJsonObjectISA_EENS0_21GenericRapidJsonValueISA_EEE22ArrayComparisonFunctorclERKNS0_7AdapterE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "adapter"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool valijson::adapters::BasicAdapter<valijson::adapters::GenericRapidJsonAdapter<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonArray<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObjectMember<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObject<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > > >::ArrayComparisonFunctor::operator()(const Adapter &)"
+"language": "c++"
+"project": "valijson"
+"target_name": "fuzzer"
+"target_path": "/src/valijson/tests/fuzzing/fuzzer.cpp"

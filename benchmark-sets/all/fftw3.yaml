@@ -1,0 +1,27 @@
+"functions":
+- "exceptions": []
+  "name": "search"
+  "params":
+  - "name": "ego"
+    "type": "bool "
+  - "name": "p"
+    "type": "bool "
+  - "name": "slvndx"
+    "type": "bool "
+  - "name": "flagsp"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "plan * search(planner *, const problem *, unsigned int *, flags_t *)"
+- "exceptions": []
+  "name": "elapsed"
+  "params":
+  - "name": "t1"
+    "type": "size_t"
+  - "name": "t0"
+    "type": "size_t"
+  "return_type": "double"
+  "signature": "double elapsed(ticks, ticks)"
+"language": "c++"
+"project": "fftw3"
+"target_name": "fftw3_fuzzer"
+"target_path": "/src/fftw3_fuzzer.cc"

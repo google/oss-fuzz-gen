@@ -1,0 +1,56 @@
+"functions":
+- "exceptions": []
+  "name": "ov_test"
+  "params":
+  - "name": "f"
+    "type": "bool "
+  - "name": "vf"
+    "type": "bool "
+  - "name": "initial"
+    "type": "bool "
+  - "name": "ibytes"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int ov_test(FILE *, OggVorbis_File *, const char *, long)"
+- "exceptions": []
+  "name": "ov_open"
+  "params":
+  - "name": "f"
+    "type": "bool "
+  - "name": "vf"
+    "type": "bool "
+  - "name": "initial"
+    "type": "bool "
+  - "name": "ibytes"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int ov_open(FILE *, OggVorbis_File *, const char *, long)"
+- "exceptions": []
+  "name": "ov_time_seek"
+  "params":
+  - "name": "vf"
+    "type": "bool "
+  - "name": "milliseconds"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int ov_time_seek(OggVorbis_File *, ogg_int64_t)"
+- "exceptions": []
+  "name": "ov_pcm_seek"
+  "params":
+  - "name": "vf"
+    "type": "bool "
+  - "name": "pos"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int ov_pcm_seek(OggVorbis_File *, ogg_int64_t)"
+- "exceptions": []
+  "name": "ov_test_open"
+  "params":
+  - "name": "vf"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int ov_test_open(OggVorbis_File *)"
+"language": "c++"
+"project": "tremor"
+"target_name": "decode_fuzzer"
+"target_path": "/src/tremor/decode_fuzzer.cc"

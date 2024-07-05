@@ -1,0 +1,58 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN6spdlog5sinks14ansicolor_sinkINS_7details13console_mutexEE11set_patternERKNSt3__112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "pattern"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void spdlog::sinks::ansicolor_sink<spdlog::details::console_mutex>::set_pattern(ansicolor_sink<spdlog::details::console_mutex> *, const string &)"
+- "exceptions": []
+  "name": "_ZN6spdlog5sinks9base_sinkINSt3__15mutexEE12set_pattern_ERKNS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "pattern"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void spdlog::sinks::base_sink<std::__1::mutex>::set_pattern_(base_sink<std::__1::mutex> *, const string &)"
+- "exceptions": []
+  "name": "_ZN6spdlog5sinks15basic_file_sinkINSt3__15mutexEE6flush_Ev"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void spdlog::sinks::basic_file_sink<std::__1::mutex>::flush_(basic_file_sink<std::__1::mutex> *)"
+- "exceptions": []
+  "name": "_ZN6spdlog5sinks15basic_file_sinkINSt3__15mutexEEC2ERKNS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEbRKNS_19file_event_handlersE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "filename"
+    "type": "bool "
+  - "name": "truncate"
+    "type": "bool"
+  - "name": "event_handlers"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void spdlog::sinks::basic_file_sink<std::__1::mutex>::basic_file_sink(basic_file_sink<std::__1::mutex> *, const filename_t &, bool, const struct file_event_handlers &)"
+- "exceptions": []
+  "name": "_ZN3fmt3v106detail13format_dragonENS1_8basic_fpIoEEjiRNS1_6bufferIcEERi"
+  "params":
+  - "name": "value"
+    "type": "bool "
+  - "name": "flags"
+    "type": "int"
+  - "name": "num_digits"
+    "type": "int"
+  - "name": "buf"
+    "type": "bool "
+  - "name": "exp10"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void fmt::v10::detail::format_dragon(struct basic_fp<unsigned __int128>, unsigned int, int, buffer<char> &, int &)"
+"language": "c++"
+"project": "spdlog"
+"target_name": "backtrace_fuzzer"
+"target_path": "/src/backtrace_fuzzer.cc"

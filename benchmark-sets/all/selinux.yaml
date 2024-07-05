@@ -1,0 +1,58 @@
+"functions":
+- "exceptions": []
+  "name": "cil_write_resolve_ast"
+  "params":
+  - "name": "out"
+    "type": "bool "
+  - "name": "db"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int cil_write_resolve_ast(FILE *, cil_db_t *)"
+- "exceptions": []
+  "name": "sepol_policydb_to_image"
+  "params":
+  - "name": "handle"
+    "type": "bool "
+  - "name": "p"
+    "type": "bool "
+  - "name": "newdata"
+    "type": "bool "
+  - "name": "newlen"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int sepol_policydb_to_image(sepol_handle_t *, sepol_policydb_t *, void **, size_t *)"
+- "exceptions": []
+  "name": "cil_write_build_ast"
+  "params":
+  - "name": "out"
+    "type": "bool "
+  - "name": "db"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int cil_write_build_ast(FILE *, cil_db_t *)"
+- "exceptions": []
+  "name": "cil_write_post_ast"
+  "params":
+  - "name": "out"
+    "type": "bool "
+  - "name": "db"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int cil_write_post_ast(FILE *, cil_db_t *)"
+- "exceptions": []
+  "name": "policydb_to_image"
+  "params":
+  - "name": "handle"
+    "type": "bool "
+  - "name": "policydb"
+    "type": "bool "
+  - "name": "newdata"
+    "type": "bool "
+  - "name": "newlen"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int policydb_to_image(sepol_handle_t *, policydb_t *, void **, size_t *)"
+"language": "c"
+"project": "selinux"
+"target_name": "checkpolicy-fuzzer"
+"target_path": "/src/selinux/checkpolicy/fuzz/checkpolicy-fuzzer.c"

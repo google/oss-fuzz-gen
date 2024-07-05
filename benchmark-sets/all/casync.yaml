@@ -1,0 +1,56 @@
+"functions":
+- "exceptions": []
+  "name": "var_tmp_dir"
+  "params":
+  - "name": "ret"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int var_tmp_dir(const char **)"
+- "exceptions": []
+  "name": "tmp_dir"
+  "params":
+  - "name": "ret"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int tmp_dir(const char **)"
+- "exceptions": []
+  "name": "tempfn_random"
+  "params":
+  - "name": "p"
+    "type": "bool "
+  - "name": "ret"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int tempfn_random(const char *, char **)"
+- "exceptions": []
+  "name": "compressor_encode"
+  "params":
+  - "name": "c"
+    "type": "bool "
+  - "name": "finalize"
+    "type": "bool"
+  - "name": "p"
+    "type": "bool "
+  - "name": "sz"
+    "type": "size_t"
+  - "name": "ret_done"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int compressor_encode(CompressorContext *, bool, void *, size_t, size_t *)"
+- "exceptions": []
+  "name": "xopendirat"
+  "params":
+  - "name": "fd"
+    "type": "int"
+  - "name": "name"
+    "type": "bool "
+  - "name": "flags"
+    "type": "int"
+  - "name": "ret"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int xopendirat(int, const char *, int, DIR **)"
+"language": "c++"
+"project": "casync"
+"target_name": "fuzz-compress"
+"target_path": "/src/casync/test/fuzz/fuzz-compress.c"

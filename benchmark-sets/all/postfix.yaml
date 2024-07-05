@@ -1,0 +1,29 @@
+"functions":
+- "exceptions": []
+  "name": "get_mail_conf_time_table"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void get_mail_conf_time_table(const CONFIG_TIME_TABLE *)"
+- "exceptions": []
+  "name": "get_mail_conf_time2"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int get_mail_conf_time2(const char *, const char *, int, int, int, int)"
+"language": "c"
+"project": "postfix"
+"target_name": "fuzz_tok822"
+"target_path": "/src/fuzz_tok822.c"

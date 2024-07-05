@@ -1,0 +1,48 @@
+"functions":
+- "exceptions": []
+  "name": "_ZNK12_GLOBAL__N_116itanium_demangle4Node4dumpEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void (anonymous namespace)::itanium_demangle::Node::dump()"
+- "exceptions": []
+  "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E22parseTemplateParamDeclEPNS0_14PODSmallVectorIPNS0_4NodeELm8EEE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "Params"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Node * (anonymous namespace)::itanium_demangle::parseTemplateParamDecl(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *, TemplateParamList *)"
+- "exceptions": []
+  "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E16parseSpecialNameEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Node * (anonymous namespace)::itanium_demangle::parseSpecialName(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)"
+- "exceptions": []
+  "name": "_ZN12_GLOBAL__N_111DumpVisitor5printENS_16itanium_demangle9NodeArrayE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "A"
+    "type": "bool "
+  - "name": ""
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "void (anonymous namespace)::DumpVisitor::print(struct DumpVisitor *, NodeArray)"
+- "exceptions": []
+  "name": "_ZN12_GLOBAL__N_111DumpVisitorclEPKNS_16itanium_demangle24ForwardTemplateReferenceE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "Node"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void (anonymous namespace)::DumpVisitor::operator()(struct DumpVisitor *, const struct ForwardTemplateReference *)"
+"language": "c++"
+"project": "llvm_libcxxabi"
+"target_name": "partial_sort_copy.pass"
+"target_path": "/src/llvm-project/libcxx/test/libcxx/fuzzing/partial_sort_copy.pass.cpp"

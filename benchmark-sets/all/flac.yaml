@@ -1,0 +1,50 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN4FLAC7Decoder4File8init_oggEPKc"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "filename"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "FLAC__StreamDecoderInitStatus FLAC::Decoder::File::init_ogg(const char *)"
+- "exceptions": []
+  "name": "_ZN4FLAC7Decoder12FuzzerStream17metadata_callbackEPK20FLAC__StreamMetadata"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "metadata"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void FLAC::Decoder::FuzzerStream::metadata_callback(const FLAC__StreamMetadata *)"
+- "exceptions": []
+  "name": "_ZN4FLAC7Decoder4File4initEPKc"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "filename"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "FLAC__StreamDecoderInitStatus FLAC::Decoder::File::init(const char *)"
+- "exceptions": []
+  "name": "_ZN4FLAC7Encoder4File8init_oggEPKc"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "filename"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "FLAC__StreamEncoderInitStatus FLAC::Encoder::File::init_ogg(const char *)"
+- "exceptions": []
+  "name": "_ZN4FLAC7Encoder4File4initEPKc"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "filename"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "FLAC__StreamEncoderInitStatus FLAC::Encoder::File::init(const char *)"
+"language": "c++"
+"project": "flac"
+"target_name": "fuzzer_encoder"
+"target_path": "/src/flac/oss-fuzz/encoder.cc"

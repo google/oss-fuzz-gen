@@ -1,0 +1,56 @@
+"functions":
+- "exceptions": []
+  "name": "mg_send_file_body"
+  "params":
+  - "name": "conn"
+    "type": "bool "
+  - "name": "path"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int mg_send_file_body(struct mg_connection *, const char *)"
+- "exceptions": []
+  "name": "mg_send_file"
+  "params":
+  - "name": "conn"
+    "type": "bool "
+  - "name": "path"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void mg_send_file(struct mg_connection *, const char *)"
+- "exceptions": []
+  "name": "mg_send_mime_file"
+  "params":
+  - "name": "conn"
+    "type": "bool "
+  - "name": "path"
+    "type": "bool "
+  - "name": "mime_type"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void mg_send_mime_file(struct mg_connection *, const char *, const char *)"
+- "exceptions": []
+  "name": "mg_handle_form_request"
+  "params":
+  - "name": "conn"
+    "type": "bool "
+  - "name": "fdh"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int mg_handle_form_request(struct mg_connection *, struct mg_form_data_handler *)"
+- "exceptions": []
+  "name": "mg_send_mime_file2"
+  "params":
+  - "name": "conn"
+    "type": "bool "
+  - "name": "path"
+    "type": "bool "
+  - "name": "mime_type"
+    "type": "bool "
+  - "name": "additional_headers"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void mg_send_mime_file2(struct mg_connection *, const char *, const char *, const char *)"
+"language": "c"
+"project": "civetweb"
+"target_name": "civetweb_fuzz3"
+"target_path": "/src/civetweb/fuzztest/fuzzmain.c"

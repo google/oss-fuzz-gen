@@ -1,0 +1,46 @@
+"functions":
+- "exceptions": []
+  "name": "cue_parse_file"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Cd * cue_parse_file(FILE *)"
+- "exceptions": []
+  "name": "track_get_isrc"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * track_get_isrc(const Track *)"
+- "exceptions": []
+  "name": "rem_get"
+  "params":
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * rem_get(RemType, Rem *)"
+- "exceptions": []
+  "name": "cd_get_track"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "Track * cd_get_track(const Cd *, int)"
+- "exceptions": []
+  "name": "cdtext_get"
+  "params":
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * cdtext_get(DW_TAG_enumeration_typePti, const Cdtext *)"
+"language": "c"
+"project": "libcue"
+"target_name": "fuzz"
+"target_path": "/src/libcue/oss-fuzz/fuzz.cpp"

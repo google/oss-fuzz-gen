@@ -1,0 +1,60 @@
+"functions":
+- "exceptions": []
+  "name": "archive_entry_linkify"
+  "params":
+  - "name": "res"
+    "type": "bool "
+  - "name": "e"
+    "type": "bool "
+  - "name": "f"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void archive_entry_linkify(struct archive_entry_linkresolver *, struct archive_entry **, struct archive_entry **)"
+- "exceptions": []
+  "name": "archive_entry_acl_text_w"
+  "params":
+  - "name": "entry"
+    "type": "bool "
+  - "name": "flags"
+    "type": "int"
+  "return_type": "void"
+  "signature": "const wchar_t * archive_entry_acl_text_w(struct archive_entry *, int)"
+- "exceptions": []
+  "name": "archive_entry_acl_to_text_w"
+  "params":
+  - "name": "entry"
+    "type": "bool "
+  - "name": "len"
+    "type": "bool "
+  - "name": "flags"
+    "type": "int"
+  "return_type": "void"
+  "signature": "wchar_t * archive_entry_acl_to_text_w(struct archive_entry *, la_ssize_t *, int)"
+- "exceptions": []
+  "name": "_archive_entry_acl_text_l"
+  "params":
+  - "name": "entry"
+    "type": "bool "
+  - "name": "flags"
+    "type": "int"
+  - "name": "acl_text"
+    "type": "bool "
+  - "name": "len"
+    "type": "bool "
+  - "name": "sc"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int _archive_entry_acl_text_l(struct archive_entry *, int, const char **, size_t *, struct archive_string_conv *)"
+- "exceptions": []
+  "name": "archive_entry_acl_text"
+  "params":
+  - "name": "entry"
+    "type": "bool "
+  - "name": "flags"
+    "type": "int"
+  "return_type": "void"
+  "signature": "const char * archive_entry_acl_text(struct archive_entry *, int)"
+"language": "c++"
+"project": "libarchive"
+"target_name": "libarchive_fuzzer"
+"target_path": "/src/libarchive_fuzzer.cc"

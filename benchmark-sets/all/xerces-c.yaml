@@ -1,0 +1,20 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN11xercesc_3_222UnionDatatypeValidator4initEPNS_17DatatypeValidatorEPNS_14RefHashTableOfINS_12KVStringPairENS_12StringHasherEEEPNS_16RefArrayVectorOfIDsEEPNS_13MemoryManagerE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "baseValidator"
+    "type": "bool "
+  - "name": "facets"
+    "type": "bool "
+  - "name": "enums"
+    "type": "bool "
+  - "name": "manager"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void xercesc_3_2::UnionDatatypeValidator::init(const DatatypeValidator *, const RefHashTableOf<xercesc_3_2::KVStringPair, xercesc_3_2::StringHasher> *, const RefArrayVectorOf<char16_t> *, const MemoryManager *)"
+"language": "c++"
+"project": "xerces-c"
+"target_name": "parse_target"
+"target_path": "/src/parse_target.cpp"

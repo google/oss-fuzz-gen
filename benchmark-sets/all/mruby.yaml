@@ -1,0 +1,47 @@
+"functions":
+- "exceptions": []
+  "name": "mrb_load_file_cxt"
+  "params":
+  - "name": "mrb"
+    "type": "bool "
+  - "name": "f"
+    "type": "bool "
+  - "name": "c"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "mrb_value mrb_load_file_cxt(mrb_state *, FILE *, mrb_ccontext *)"
+- "exceptions": []
+  "name": "mrb_load_nstring"
+  "params":
+  - "name": "mrb"
+    "type": "bool "
+  - "name": "s"
+    "type": "bool "
+  - "name": "len"
+    "type": "size_t"
+  "return_type": "size_t"
+  "signature": "mrb_value mrb_load_nstring(mrb_state *, const char *, size_t)"
+- "exceptions": []
+  "name": "mrb_load_file"
+  "params":
+  - "name": "mrb"
+    "type": "bool "
+  - "name": "f"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "mrb_value mrb_load_file(mrb_state *, FILE *)"
+- "exceptions": []
+  "name": "mrb_load_detect_file_cxt"
+  "params":
+  - "name": "mrb"
+    "type": "bool "
+  - "name": "fp"
+    "type": "bool "
+  - "name": "c"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "mrb_value mrb_load_detect_file_cxt(mrb_state *, FILE *, mrb_ccontext *)"
+"language": "c++"
+"project": "mruby"
+"target_name": "mruby_fuzzer"
+"target_path": "/src/mruby/oss-fuzz/mruby_fuzzer.c"

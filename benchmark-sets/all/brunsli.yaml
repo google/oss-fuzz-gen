@@ -1,0 +1,50 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN7brunsli14ComponentStateC2Ev"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void brunsli::ComponentState::ComponentState(struct ComponentState *)"
+- "exceptions": []
+  "name": "_ZN36BrunsliDecodeStreamingFuzzEmpty_Test8TestBodyEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void BrunsliDecodeStreamingFuzzEmpty_Test::TestBody()"
+- "exceptions": []
+  "name": "_ZN7brunsli37BrunsliEstimateDecoderPeakMemoryUsageEPKhm"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "size_t"
+  "return_type": "size_t"
+  "signature": "size_t brunsli::BrunsliEstimateDecoderPeakMemoryUsage(const uint8_t *, const size_t)"
+- "exceptions": []
+  "name": "_ZN27BrunsliDecodeFuzzEmpty_Test8TestBodyEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void BrunsliDecodeFuzzEmpty_Test::TestBody()"
+- "exceptions": []
+  "name": "_ZN7brunsli14BrunsliDecoder6DecodeEPmPPKhS1_PPh"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "DW_TAG_enumeration_typeStatus brunsli::BrunsliDecoder::Decode(size_t *, const uint8_t **, size_t *, uint8_t **)"
+"language": "c++"
+"project": "brunsli"
+"target_name": "fuzz_decode"
+"target_path": "/src/brunsli/c/tests/fuzz_decode.cc"

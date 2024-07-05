@@ -1,0 +1,27 @@
+"functions":
+- "exceptions": []
+  "name": "asn1_delete_structure2"
+  "params":
+  - "name": "structure"
+    "type": "bool "
+  - "name": "flags"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int asn1_delete_structure2(asn1_node *, unsigned int)"
+- "exceptions": []
+  "name": "asn1_parser2array"
+  "params":
+  - "name": "inputFileName"
+    "type": "bool "
+  - "name": "outputFileName"
+    "type": "bool "
+  - "name": "vectorName"
+    "type": "bool "
+  - "name": "error_desc"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int asn1_parser2array(const char *, const char *, const char *, char *)"
+"language": "c++"
+"project": "libtasn1"
+"target_name": "libtasn1_parser2tree_fuzzer"
+"target_path": "/src/libtasn1/fuzz/libtasn1_parser2tree_fuzzer.c"

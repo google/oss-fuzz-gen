@@ -1,0 +1,58 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN6snappy26UncompressAsMuchAsPossibleEPNS_6SourceEPNS_4SinkE"
+  "params":
+  - "name": "compressed"
+    "type": "bool "
+  - "name": "uncompressed"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "size_t snappy::UncompressAsMuchAsPossible(Source *, Sink *)"
+- "exceptions": []
+  "name": "_ZN6snappy17CompressFromIOVecEPK5iovecmPNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE"
+  "params":
+  - "name": "iov"
+    "type": "bool "
+  - "name": "iov_cnt"
+    "type": "size_t"
+  - "name": "compressed"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "size_t snappy::CompressFromIOVec(const struct iovec *, size_t, string *)"
+- "exceptions": []
+  "name": "_ZN6snappy17CompressFromIOVecEPK5iovecmPNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS_18CompressionOptionsE"
+  "params":
+  - "name": "iov"
+    "type": "bool "
+  - "name": "iov_cnt"
+    "type": "size_t"
+  - "name": "compressed"
+    "type": "bool "
+  - "name": "options"
+    "type": "int"
+  "return_type": "size_t"
+  "signature": "size_t snappy::CompressFromIOVec(const struct iovec *, size_t, string *, struct CompressionOptions)"
+- "exceptions": []
+  "name": "_ZN6snappy8CompressEPKcmPNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE"
+  "params":
+  - "name": "input"
+    "type": "bool "
+  - "name": "input_length"
+    "type": "size_t"
+  - "name": "compressed"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "size_t snappy::Compress(const char *, size_t, string *)"
+- "exceptions": []
+  "name": "_ZN6snappy10UncompressEPNS_6SourceEPNS_4SinkE"
+  "params":
+  - "name": "compressed"
+    "type": "bool "
+  - "name": "uncompressed"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool snappy::Uncompress(Source *, Sink *)"
+"language": "c++"
+"project": "snappy"
+"target_name": "snappy_compress_fuzzer"
+"target_path": "/src/snappy/snappy_compress_fuzzer.cc"

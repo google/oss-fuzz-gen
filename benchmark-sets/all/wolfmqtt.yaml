@@ -1,0 +1,50 @@
+"functions":
+- "exceptions": []
+  "name": "wolfSSL_CertManagerLoadCA"
+  "params":
+  - "name": "cm"
+    "type": "bool "
+  - "name": "file"
+    "type": "bool "
+  - "name": "path"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int wolfSSL_CertManagerLoadCA(WOLFSSL_CERT_MANAGER *, const char *, const char *)"
+- "exceptions": []
+  "name": "MqttClient_Publish_ex"
+  "params":
+  - "name": "client"
+    "type": "bool "
+  - "name": "publish"
+    "type": "bool "
+  - "name": "pubCb"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int MqttClient_Publish_ex(MqttClient *, MqttPublish *, MqttPublishCb)"
+- "exceptions": []
+  "name": "MqttClient_Disconnect"
+  "params":
+  - "name": "client"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int MqttClient_Disconnect(MqttClient *)"
+- "exceptions": []
+  "name": "MqttClient_Ping"
+  "params":
+  - "name": "client"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int MqttClient_Ping(MqttClient *)"
+- "exceptions": []
+  "name": "MqttClient_Disconnect_ex"
+  "params":
+  - "name": "client"
+    "type": "bool "
+  - "name": "p_disconnect"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int MqttClient_Disconnect_ex(MqttClient *, MqttDisconnect *)"
+"language": "c"
+"project": "wolfmqtt"
+"target_name": "wolfmqtt-fuzzer"
+"target_path": "/src/wolfmqtt-fuzzers/fuzzer.cpp"

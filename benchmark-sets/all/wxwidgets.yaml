@@ -1,0 +1,39 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN16wxFontMapperBase17CharsetToEncodingERK8wxStringb"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "charset"
+    "type": "bool "
+  - "name": ""
+    "type": "bool"
+  "return_type": "int"
+  "signature": "DW_TAG_enumeration_typewxFontEncoding wxFontMapperBase::CharsetToEncoding(const wxString &, bool)"
+- "exceptions": []
+  "name": "_ZN16wxFontMapperBase31NonInteractiveCharsetToEncodingERK8wxString"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "charset"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int wxFontMapperBase::NonInteractiveCharsetToEncoding(const wxString &)"
+- "exceptions": []
+  "name": "_ZN14wxPlatformInfo22InitForCurrentPlatformEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void wxPlatformInfo::InitForCurrentPlatform()"
+- "exceptions": []
+  "name": "_ZN14wxPlatformInfoC2Ev"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void wxPlatformInfo::wxPlatformInfo()"
+"language": "c++"
+"project": "wxwidgets"
+"target_name": "xml_parsebuffer_fuzzer"
+"target_path": "/src/wxwidgets/src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c"

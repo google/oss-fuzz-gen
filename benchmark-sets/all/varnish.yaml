@@ -1,0 +1,62 @@
+"functions":
+- "exceptions": []
+  "name": "WS_VSB_new"
+  "params":
+  - "name": "vsb"
+    "type": "bool "
+  - "name": "ws"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void WS_VSB_new(struct vsb *, struct ws *)"
+- "exceptions": []
+  "name": "VSB_quote_pfx"
+  "params":
+  - "name": "s"
+    "type": "bool "
+  - "name": "pfx"
+    "type": "bool "
+  - "name": "v"
+    "type": "bool "
+  - "name": "len"
+    "type": "int"
+  - "name": "how"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void VSB_quote_pfx(struct vsb *, const char *, const void *, int, int)"
+- "exceptions": []
+  "name": "WS_ReqPipeline"
+  "params":
+  - "name": "ws"
+    "type": "bool "
+  - "name": "b"
+    "type": "bool "
+  - "name": "e"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "unsigned int WS_ReqPipeline(struct ws *, const void *, const void *)"
+- "exceptions": []
+  "name": "VSB_quote"
+  "params":
+  - "name": "s"
+    "type": "bool "
+  - "name": "v"
+    "type": "bool "
+  - "name": "len"
+    "type": "int"
+  - "name": "how"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void VSB_quote(struct vsb *, const void *, int, int)"
+- "exceptions": []
+  "name": "WS_Panic"
+  "params":
+  - "name": "vsb"
+    "type": "bool "
+  - "name": "ws"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void WS_Panic(struct vsb *, const struct ws *)"
+"language": "c"
+"project": "varnish"
+"target_name": "esi_parse_fuzzer"
+"target_path": "/src/varnish-cache/bin/varnishd/fuzzers/esi_parse_fuzzer.c"

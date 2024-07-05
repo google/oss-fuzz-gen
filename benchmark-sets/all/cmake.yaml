@@ -1,0 +1,56 @@
+"functions":
+- "exceptions": []
+  "name": "XML_ParserCreateNS"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "char"
+  "return_type": "void"
+  "signature": "XML_Parser XML_ParserCreateNS(const XML_Char *, XML_Char)"
+- "exceptions": []
+  "name": "XmlInitUnknownEncoding"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "ENCODING * XmlInitUnknownEncoding(void *, int *, CONVERTER, void *)"
+- "exceptions": []
+  "name": "XML_ExternalEntityParserCreate"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "XML_Parser XML_ExternalEntityParserCreate(XML_Parser, const XML_Char *, const XML_Char *)"
+- "exceptions": []
+  "name": "XML_ParserReset"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "char"
+  "signature": "XML_Bool XML_ParserReset(XML_Parser, const XML_Char *)"
+- "exceptions": []
+  "name": "XML_SetBase"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "DW_TAG_enumeration_typeXML_Status XML_SetBase(XML_Parser, const XML_Char *)"
+"language": "c"
+"project": "cmake"
+"target_name": "xml_parser_fuzzer"
+"target_path": "/src/CMake/Tests/Fuzzing/xml_parser_fuzzer.cc"

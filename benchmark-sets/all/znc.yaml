@@ -1,0 +1,52 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN7CClient11UserCommandER7CString"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "sLine"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void CClient::UserCommand(CString &)"
+- "exceptions": []
+  "name": "_ZN4CZNC11ParseConfigERK7CStringRS0_"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "sConfig"
+    "type": "bool "
+  - "name": "sError"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool CZNC::ParseConfig(const CString &, CString &)"
+- "exceptions": []
+  "name": "_ZN7CClient13OnTextMessageER12CTextMessage"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "Message"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool CClient::OnTextMessage(CTextMessage &)"
+- "exceptions": []
+  "name": "_ZN7CClient14OnOtherMessageER8CMessage"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "Message"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool CClient::OnOtherMessage(CMessage &)"
+- "exceptions": []
+  "name": "_ZN7CClient8ReadLineERK7CString"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "sData"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void CClient::ReadLine(const CString &)"
+"language": "c++"
+"project": "znc"
+"target_name": "msg_parse_fuzzer"
+"target_path": "/src/msg_parse_fuzzer.cpp"

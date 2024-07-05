@@ -1,0 +1,60 @@
+"functions":
+- "exceptions": []
+  "name": "usrsctp_bindx"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int usrsctp_bindx(struct socket *, struct sockaddr *, int, int)"
+- "exceptions": []
+  "name": "usrsctp_connectx"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int usrsctp_connectx(struct socket *, const struct sockaddr *, int, sctp_assoc_t *)"
+- "exceptions": []
+  "name": "usrsctp_init_nothreads"
+  "params":
+  - "name": ""
+    "type": "short"
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void usrsctp_init_nothreads(uint16_t, DW_TAG_subroutine_typeInfinite loop *, DW_TAG_subroutine_typeInfinite loop *)"
+- "exceptions": []
+  "name": "usrsctp_peeloff"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "struct socket * usrsctp_peeloff(struct socket *, sctp_assoc_t)"
+- "exceptions": []
+  "name": "usrsctp_shutdown"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  "return_type": "int"
+  "signature": "int usrsctp_shutdown(struct socket *, int)"
+"language": "c++"
+"project": "usrsctp"
+"target_name": "fuzzer_fragment"
+"target_path": "/src/usrsctp/fuzzer/fuzzer_fragment.c"

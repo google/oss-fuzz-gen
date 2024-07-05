@@ -1,0 +1,50 @@
+"functions":
+- "exceptions": []
+  "name": "yaml_emitter_set_width"
+  "params":
+  - "name": "emitter"
+    "type": "bool "
+  - "name": "width"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void yaml_emitter_set_width(yaml_emitter_t *, int)"
+- "exceptions": []
+  "name": "yaml_emitter_set_output_file"
+  "params":
+  - "name": "emitter"
+    "type": "bool "
+  - "name": "file"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void yaml_emitter_set_output_file(yaml_emitter_t *, FILE *)"
+- "exceptions": []
+  "name": "yaml_emitter_set_indent"
+  "params":
+  - "name": "emitter"
+    "type": "bool "
+  - "name": "indent"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void yaml_emitter_set_indent(yaml_emitter_t *, int)"
+- "exceptions": []
+  "name": "yaml_emitter_set_encoding"
+  "params":
+  - "name": "emitter"
+    "type": "bool "
+  - "name": "encoding"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void yaml_emitter_set_encoding(yaml_emitter_t *, yaml_encoding_t)"
+- "exceptions": []
+  "name": "yaml_emitter_set_break"
+  "params":
+  - "name": "emitter"
+    "type": "bool "
+  - "name": "line_break"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void yaml_emitter_set_break(yaml_emitter_t *, yaml_break_t)"
+"language": "c++"
+"project": "libyaml"
+"target_name": "libyaml_loader_fuzzer"
+"target_path": "/src/libyaml_loader_fuzzer.c"

@@ -1,0 +1,12 @@
+"functions":
+- "exceptions": []
+  "name": "fribidi_get_bidi_type"
+  "params":
+  - "name": "ch"
+    "type": "int"
+  "return_type": "int"
+  "signature": "FriBidiCharType fribidi_get_bidi_type(FriBidiChar)"
+"language": "c"
+"project": "fribidi"
+"target_name": "fribidi-fuzzer"
+"target_path": "/src/fribidi/bin/fribidi-fuzzer.c"

@@ -1,0 +1,52 @@
+"functions":
+- "exceptions": []
+  "name": "redisAsyncRead"
+  "params":
+  - "name": "ac"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void redisAsyncRead(redisAsyncContext *)"
+- "exceptions": []
+  "name": "redisCommand"
+  "params":
+  - "name": "c"
+    "type": "bool "
+  - "name": "format"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void * redisCommand(redisContext *, const char *, void)"
+- "exceptions": []
+  "name": "redisCommandArgv"
+  "params":
+  - "name": "c"
+    "type": "bool "
+  - "name": "argc"
+    "type": "int"
+  - "name": "argv"
+    "type": "bool "
+  - "name": "argvlen"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void * redisCommandArgv(redisContext *, int, const char **, const size_t *)"
+- "exceptions": []
+  "name": "redisProcessCallbacks"
+  "params":
+  - "name": "ac"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void redisProcessCallbacks(redisAsyncContext *)"
+- "exceptions": []
+  "name": "redisvCommand"
+  "params":
+  - "name": "c"
+    "type": "bool "
+  - "name": "format"
+    "type": "bool "
+  - "name": "ap"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void * redisvCommand(redisContext *, const char *, struct __va_list_tag *)"
+"language": "c"
+"project": "hiredis"
+"target_name": "format_command_fuzzer"
+"target_path": "/src/hiredis/fuzzing/format_command_fuzzer.c"

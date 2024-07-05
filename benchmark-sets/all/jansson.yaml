@@ -1,0 +1,62 @@
+"functions":
+- "exceptions": []
+  "name": "json_dumpfd"
+  "params":
+  - "name": "json"
+    "type": "bool "
+  - "name": "output"
+    "type": "int"
+  - "name": "flags"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int json_dumpfd(const json_t *, int, size_t)"
+- "exceptions": []
+  "name": "json_dumpb"
+  "params":
+  - "name": "json"
+    "type": "bool "
+  - "name": "buffer"
+    "type": "bool "
+  - "name": "size"
+    "type": "size_t"
+  - "name": "flags"
+    "type": "size_t"
+  "return_type": "size_t"
+  "signature": "size_t json_dumpb(const json_t *, char *, size_t, size_t)"
+- "exceptions": []
+  "name": "json_load_file"
+  "params":
+  - "name": "path"
+    "type": "bool "
+  - "name": "flags"
+    "type": "size_t"
+  - "name": "error"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "json_t * json_load_file(const char *, size_t, json_error_t *)"
+- "exceptions": []
+  "name": "json_dump_file"
+  "params":
+  - "name": "json"
+    "type": "bool "
+  - "name": "path"
+    "type": "bool "
+  - "name": "flags"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int json_dump_file(const json_t *, const char *, size_t)"
+- "exceptions": []
+  "name": "json_dumpf"
+  "params":
+  - "name": "json"
+    "type": "bool "
+  - "name": "output"
+    "type": "bool "
+  - "name": "flags"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int json_dumpf(const json_t *, FILE *, size_t)"
+"language": "c++"
+"project": "jansson"
+"target_name": "json_load_dump_fuzzer"
+"target_path": "/src/jansson/test/ossfuzz/json_load_dump_fuzzer.cc"

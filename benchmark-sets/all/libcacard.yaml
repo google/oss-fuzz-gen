@@ -1,0 +1,39 @@
+"functions":
+- "exceptions": []
+  "name": "vcard_emul_force_card_remove"
+  "params":
+  - "name": "vreader"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "VCardEmulError vcard_emul_force_card_remove(VReader *)"
+- "exceptions": []
+  "name": "vcard_emul_reset"
+  "params":
+  - "name": "card"
+    "type": "bool "
+  - "name": "power"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void vcard_emul_reset(VCard *, VCardPower)"
+- "exceptions": []
+  "name": "vcard_emul_force_card_insert"
+  "params":
+  - "name": "vreader"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "VCardEmulError vcard_emul_force_card_insert(VReader *)"
+- "exceptions": []
+  "name": "vcard_emul_get_atr"
+  "params":
+  - "name": "card"
+    "type": "bool "
+  - "name": "atr"
+    "type": "bool "
+  - "name": "atr_len"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void vcard_emul_get_atr(VCard *, unsigned char *, int *)"
+"language": "c"
+"project": "libcacard"
+"target_name": "fuzz_simpletlv"
+"target_path": "/src/libcacard/fuzz/fuzz_simpletlv.c"

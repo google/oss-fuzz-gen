@@ -1,0 +1,60 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN11flatbuffers11GenTextFileERKNS_6ParserERKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESB_"
+  "params":
+  - "name": "parser"
+    "type": "bool "
+  - "name": "path"
+    "type": "bool "
+  - "name": "file_name"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * flatbuffers::GenTextFile(const Parser &, const string &, const string &)"
+- "exceptions": []
+  "name": "_ZN11flatbuffers16GenerateTextFileERKNS_6ParserERKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESB_"
+  "params":
+  - "name": "parser"
+    "type": "bool "
+  - "name": "path"
+    "type": "bool "
+  - "name": "file_name"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * flatbuffers::GenerateTextFile(const Parser &, const string &, const string &)"
+- "exceptions": []
+  "name": "_ZN11flatbuffers6Parser9SerializeEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void flatbuffers::Parser::Serialize()"
+- "exceptions": []
+  "name": "_ZN11flatbuffers12_GLOBAL__N_117TextCodeGenerator12GenerateCodeERKNS_6ParserERKNSt3__112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEESD_"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "parser"
+    "type": "bool "
+  - "name": "path"
+    "type": "bool "
+  - "name": "filename"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "DW_TAG_enumeration_typeStatus flatbuffers::(anonymous namespace)::TextCodeGenerator::GenerateCode(const Parser &, const string &, const string &)"
+- "exceptions": []
+  "name": "_ZN11flatbuffers21GenerateTextFromTableERKNS_6ParserEPKvRKNSt3__112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEPSB_"
+  "params":
+  - "name": "parser"
+    "type": "bool "
+  - "name": "table"
+    "type": "bool "
+  - "name": "table_name"
+    "type": "bool "
+  - "name": "_text"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool flatbuffers::GenerateTextFromTable(const Parser &, const void *, const string &, string *)"
+"language": "c++"
+"project": "flatbuffers"
+"target_name": "monster_debug"
+"target_path": "/src/flatbuffers/tests/fuzzer/monster_debug.cpp"

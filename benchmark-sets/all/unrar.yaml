@@ -1,0 +1,21 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN10MainHeaderD2Ev"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct MainHeader & MainHeader::operator=(struct MainHeader *, struct DW_TAG_rvalue_reference_typeMainHeader)"
+- "exceptions": []
+  "name": "_ZN4FileaSERS_"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "SrcFile"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void File::operator=(File &)"
+"language": "c++"
+"project": "unrar"
+"target_name": "unrar_fuzzer"
+"target_path": "/src/unrar/unrar_fuzzer.cc"
