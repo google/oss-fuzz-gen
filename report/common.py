@@ -252,7 +252,8 @@ class Results:
       if name.startswith(sample + '.'):
         iteration = WorkDirs.get_run_log_iteration(name)
         if iteration is None:
-          # Be compatible with older results where no '-Fxx' in run log file name
+          # Be compatible with older results where there is no '-Fxx' in run
+          # log file name.
           last_log_file = name
           break
 
@@ -327,6 +328,7 @@ class Results:
     return samples
 
   def get_prompt(self, benchmark: str) -> Optional[str]:
+    """Gets the prompt for a given benchmark."""
     root_dir = os.path.join(self._results_dir, benchmark)
     for name in FileSystem(root_dir).listdir():
       if re.match(r'^prompt.*txt$', name):
@@ -377,14 +379,14 @@ class Results:
         return html_presentable_content
     except json.decoder.JSONDecodeError:
       logging.debug('Using raw prompt text.')
-      pass
 
     # If execution goes here it the input was not a structured prompt but just
     # raw text, which is then returned.
     return raw_prompt_content
 
   def _is_valid_benchmark_dir(self, cur_dir: str) -> bool:
-    """Checks if |cur_dir| is a valid benchmark directory (e.g., no lost+found)."""
+    """Checks if |cur_dir| is a valid benchmark directory (e.g., no lost+found).
+    """
     # Check prefix.
     if not cur_dir.startswith('output-'):
       return False
