@@ -26,7 +26,7 @@ from typing import Any, Dict, List, Optional
 
 import jinja2
 
-from report.common import Benchmark, FileSystem, Results, Sample, Target
+from report.common import (AccummulatedResult, Benchmark, FileSystem, Results, Sample, Target)
 
 LOCAL_HOST = '127.0.0.1'
 LOCAL_PORT = 8012
@@ -105,7 +105,9 @@ class GenerateReport:
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
         self._write_benchmark_sample(benchmark, sample, sample_targets)
 
-    self._write_index_html(benchmarks)
+    accummulated_results = self._results.get_macro_insights(benchmarks)
+
+    self._write_index_html(benchmarks, accummulated_results)
     self._write_index_json(benchmarks)
 
   def _write(self, output_path: str, content: str):
@@ -123,9 +125,9 @@ class GenerateReport:
     with FileSystem(full_path).open('w', encoding='utf-8') as f:
       f.write(content)
 
-  def _write_index_html(self, benchmarks: List[Benchmark]):
+  def _write_index_html(self, benchmarks: List[Benchmark], accummulated_results: AccummulatedResult):
     """Generate the report index.html and write to filesystem."""
-    rendered = self._jinja.render('index.html', benchmarks=benchmarks)
+    rendered = self._jinja.render('index.html', benchmarks=benchmarks, accummulated_results=accummulated_results)
     self._write('index.html', rendered)
 
   def _write_index_json(self, benchmarks: List[Benchmark]):
