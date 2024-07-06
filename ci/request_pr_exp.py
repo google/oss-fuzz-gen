@@ -145,7 +145,7 @@ def _parse_args(cmd) -> argparse.Namespace:
       help='The number of samples to request from LLM, default: {NUM_SAMPLES}')
   parser.add_argument(
       '-nf',
-      '--num-fix',
+      '--llm-fix-limit',
       type=int,
       default=NUM_FIXES,
       help='The number of fixes to request from LLM, default: {NUM_FIXES}')
