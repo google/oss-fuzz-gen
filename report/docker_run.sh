@@ -34,6 +34,10 @@ RUN_TIMEOUT=$3
 SUB_DIR=$4
 MODEL=$5
 DELAY=$6
+USE_LOCAL_INTROSPECTOR=$7
+NUM_SAMPLES=$8
+LLM_FIX_LIMIT=$9
+
 # Uses python3 by default and /venv/bin/python3 for Docker containers.
 PYTHON="$( [[ -x "/venv/bin/python3" ]] && echo "/venv/bin/python3" || echo "python3" )"
 export PYTHON
@@ -85,6 +89,32 @@ then
   echo "DELAY was not specified as the sixth argument. Defaulting to ${DELAY:?}."
 fi
 
+if [[ "$USE_LOCAL_INTROSPECTOR" = "true" ]]
+then
+  export BENCHMARK_SET
+  INTROSPECTOR_ENDPOINT="http://127.0.0.1:8080/api"
+  echo "USE_LOCAL_INTROSPECTOR is enabled: ${INTROSPECTOR_ENDPOINT:?}"
+  bash report/launch_local_introspector.sh
+else
+  INTROSPECTOR_ENDPOINT="https://introspector.oss-fuzz.com/api"
+  echo "USE_LOCAL_INTROSPECTOR was not specified as the 7th argument. Defaulting to ${INTROSPECTOR_ENDPOINT:?}."
+fi
+
+if [[ "$NUM_SAMPLES" = '' ]]
+then
+  NUM_SAMPLES='10'
+  echo "NUM_SAMPLES was not specified as the 8th argument. Defaulting to ${NUM_SAMPLES:?}."
+fi
+
+if [[ "$LLM_FIX_LIMIT" = '' ]]
+then
+  LLM_FIX_LIMIT='5'
+  echo "LLM_FIX_LIMIT was not specified as the 9th argument. Defaulting to ${LLM_FIX_LIMIT:?}."
+else
+  export LLM_FIX_LIMIT
+  echo "LLM_FIX_LIMIT is set to ${LLM_FIX_LIMIT:?}."
+fi
+
 DATE=$(date '+%Y-%m-%d')
 LOCAL_RESULTS_DIR='results'
 # Experiment name is used to label the Cloud Builds and as part of the
@@ -109,14 +139,21 @@ $PYTHON run_all_experiments.py \
   --cloud-experiment-bucket 'oss-fuzz-gcb-experiment-run-logs' \
   --template-directory 'prompts/template_xml' \
   --work-dir ${LOCAL_RESULTS_DIR:?} \
-  --num-samples 10 \
+  --num-samples "${NUM_SAMPLES:?}" \
   --delay "${DELAY:?}" \
   --context \
+  --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
   --model "$MODEL"
 
 export ret_val=$?
 
 touch /experiment_ended
+
+if [[ "$USE_LOCAL_INTROSPECTOR" = "true" ]]
+then
+  echo "Shutting down introspector"
+  curl --silent http://localhost:8080/api/shutdown || true
+fi
 
 # Wait for the report process to finish uploading.
 wait $pid_report
