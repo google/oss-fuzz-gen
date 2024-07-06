@@ -1,4 +1,1 @@
-<argument>
-Arugment #{ARG_COUNT} requires an object instance of {ARG_TYPE} with generic types of {ARG_GENERIC}.
-Please match the correct generic type when creating object to be used for this argument.
-</argument>
+For generic type of {GENERIC_TYPE}, you MUST use {RANDOM_METHODS} to generate the needed variable.
