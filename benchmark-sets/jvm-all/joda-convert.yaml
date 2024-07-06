@@ -1,0 +1,49 @@
+"functions":
+- "exceptions": []
+  "name": "[org.joda.convert.StringConvert].<init>(boolean,org.joda.convert.StringConverterFactory[])"
+  "params":
+  - "name": "arg0"
+    "type": "boolean"
+  - "name": "arg1"
+    "type": "StringConverterFactory[]"
+  "return_type": "org.joda.convert.StringConvert"
+  "signature": "[org.joda.convert.StringConvert].<init>(boolean,org.joda.convert.StringConverterFactory[])"
+- "exceptions": []
+  "name": "[org.joda.convert.factory.NumericArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
+  "params":
+  - "name": "arg0"
+    "type": "Class<?>"
+  "return_type": "org.joda.convert.StringConverter<?>"
+  "signature": "[org.joda.convert.factory.NumericArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
+- "exceptions": []
+  "name": "[org.joda.convert.factory.NumericObjectArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
+  "params":
+  - "name": "arg0"
+    "type": "Class<?>"
+  "return_type": "org.joda.convert.StringConverter<?>"
+  "signature": "[org.joda.convert.factory.NumericObjectArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
+- "exceptions": []
+  "name": "[org.joda.convert.factory.BooleanObjectArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
+  "params":
+  - "name": "arg0"
+    "type": "Class<?>"
+  "return_type": "org.joda.convert.StringConverter<?>"
+  "signature": "[org.joda.convert.factory.BooleanObjectArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
+- "exceptions": []
+  "name": "[org.joda.convert.factory.BooleanArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
+  "params":
+  - "name": "arg0"
+    "type": "Class<?>"
+  "return_type": "org.joda.convert.StringConverter<?>"
+  "signature": "[org.joda.convert.factory.BooleanArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
+- "exceptions": []
+  "name": "[org.joda.convert.factory.CharObjectArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
+  "params":
+  - "name": "arg0"
+    "type": "Class<?>"
+  "return_type": "org.joda.convert.StringConverter<?>"
+  "signature": "[org.joda.convert.factory.CharObjectArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
+"language": "jvm"
+"project": "joda-convert"
+"target_name": "FromStringFuzzer"
+"target_path": "/src/FromStringFuzzer.java"

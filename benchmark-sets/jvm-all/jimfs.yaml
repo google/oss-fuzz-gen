@@ -1,0 +1,63 @@
+"functions":
+- "exceptions": []
+  "name": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].newByteChannel(java.nio.file.Path,java.util.Set,java.nio.file.attribute.FileAttribute[])"
+  "params":
+  - "name": "arg0"
+    "type": "Path"
+  - "name": "arg1"
+    "type": "Set"
+  - "name": "arg2"
+    "type": "FileAttribute[]"
+  "return_type": "java.nio.channels.SeekableByteChannel"
+  "signature": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].newByteChannel(java.nio.file.Path,java.util.Set,java.nio.file.attribute.FileAttribute[])"
+- "exceptions": []
+  "name": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].readAttributes(java.nio.file.Path,java.lang.Class,java.nio.file.LinkOption[])"
+  "params":
+  - "name": "arg0"
+    "type": "Path"
+  - "name": "arg1"
+    "type": "Class"
+  - "name": "arg2"
+    "type": "LinkOption[]"
+  "return_type": "java.nio.file.attribute.BasicFileAttributes"
+  "signature": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].readAttributes(java.nio.file.Path,java.lang.Class,java.nio.file.LinkOption[])"
+- "exceptions": []
+  "name": "[com.google.common.jimfs.Configuration$Builder].setAttributeViews(java.lang.String,java.lang.String[])"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "String[]"
+  "return_type": "com.google.common.jimfs.Configuration$Builder"
+  "signature": "[com.google.common.jimfs.Configuration$Builder].setAttributeViews(java.lang.String,java.lang.String[])"
+- "exceptions": []
+  "name": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].newDirectoryStream(java.nio.file.Path,java.nio.file.DirectoryStream$Filter)"
+  "params":
+  - "name": "arg0"
+    "type": "Path"
+  - "name": "arg1"
+    "type": "DirectoryStream$Filter"
+  "return_type": "java.nio.file.DirectoryStream"
+  "signature": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].newDirectoryStream(java.nio.file.Path,java.nio.file.DirectoryStream$Filter)"
+- "exceptions": []
+  "name": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].createDirectory(java.nio.file.Path,java.nio.file.attribute.FileAttribute[])"
+  "params":
+  - "name": "arg0"
+    "type": "Path"
+  - "name": "arg1"
+    "type": "FileAttribute[]"
+  "return_type": "void"
+  "signature": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].createDirectory(java.nio.file.Path,java.nio.file.attribute.FileAttribute[])"
+- "exceptions": []
+  "name": "[com.google.common.jimfs.PathType$ParseResult].<init>(java.lang.String,java.lang.Iterable)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "Iterable"
+  "return_type": "com.google.common.jimfs.PathType$ParseResult"
+  "signature": "[com.google.common.jimfs.PathType$ParseResult].<init>(java.lang.String,java.lang.Iterable)"
+"language": "jvm"
+"project": "jimfs"
+"target_name": "FileSystemFuzzer"
+"target_path": "/src/FileSystemFuzzer.java"

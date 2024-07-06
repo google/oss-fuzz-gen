@@ -1,0 +1,47 @@
+"functions":
+- "exceptions": []
+  "name": "[org.codehaus.janino.Unparser].unparseStatements(java.util.List<? extends BlockStatement>)"
+  "params":
+  - "name": "arg0"
+    "type": "List<? extends BlockStatement>"
+  "return_type": "void"
+  "signature": "[org.codehaus.janino.Unparser].unparseStatements(java.util.List<? extends BlockStatement>)"
+- "exceptions": []
+  "name": "[org.codehaus.janino.util.DeepCopier].copyCatchClauses(java.util.Collection<? extends CatchClause>)"
+  "params":
+  - "name": "arg0"
+    "type": "Collection<? extends CatchClause>"
+  "return_type": "java.util.List<CatchClause>"
+  "signature": "[org.codehaus.janino.util.DeepCopier].copyCatchClauses(java.util.Collection<? extends CatchClause>)"
+- "exceptions": []
+  "name": "[org.codehaus.janino.util.DeepCopier].copyResources(java.util.Collection<? extends Resource>)"
+  "params":
+  - "name": "arg0"
+    "type": "Collection<? extends Resource>"
+  "return_type": "java.util.List<Resource>"
+  "signature": "[org.codehaus.janino.util.DeepCopier].copyResources(java.util.Collection<? extends Resource>)"
+- "exceptions": []
+  "name": "[org.codehaus.janino.util.DeepCopier].copyBlockStatements(java.util.Collection<? extends BlockStatement>)"
+  "params":
+  - "name": "arg0"
+    "type": "Collection<? extends BlockStatement>"
+  "return_type": "java.util.List<BlockStatement>"
+  "signature": "[org.codehaus.janino.util.DeepCopier].copyBlockStatements(java.util.Collection<? extends BlockStatement>)"
+- "exceptions": []
+  "name": "[org.codehaus.janino.util.DeepCopier].copyCatchClause(org.codehaus.janino.Java$CatchClause)"
+  "params":
+  - "name": "arg0"
+    "type": "Java$CatchClause"
+  "return_type": "org.codehaus.janino.Java$CatchClause"
+  "signature": "[org.codehaus.janino.util.DeepCopier].copyCatchClause(org.codehaus.janino.Java$CatchClause)"
+- "exceptions": []
+  "name": "[org.codehaus.janino.util.DeepCopier].copyStatements(java.util.Collection<? extends BlockStatement>)"
+  "params":
+  - "name": "arg0"
+    "type": "Collection<? extends BlockStatement>"
+  "return_type": "java.util.List<BlockStatement>"
+  "signature": "[org.codehaus.janino.util.DeepCopier].copyStatements(java.util.Collection<? extends BlockStatement>)"
+"language": "jvm"
+"project": "janino"
+"target_name": "ExpressionEvaluatorFuzzer"
+"target_path": "/src/ExpressionEvaluatorFuzzer.java"

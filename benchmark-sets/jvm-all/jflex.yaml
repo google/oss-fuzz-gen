@@ -1,0 +1,53 @@
+"functions":
+- "exceptions": []
+  "name": "[jflex.core.unicode.UnicodeProperties].<init>(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "jflex.core.unicode.UnicodeProperties"
+  "signature": "[jflex.core.unicode.UnicodeProperties].<init>(java.lang.String)"
+- "exceptions": []
+  "name": "[jflex.core.unicode.IntCharSet].getCaseless(jflex.core.unicode.UnicodeProperties)"
+  "params":
+  - "name": "arg0"
+    "type": "UnicodeProperties"
+  "return_type": "jflex.core.unicode.IntCharSet"
+  "signature": "[jflex.core.unicode.IntCharSet].getCaseless(jflex.core.unicode.UnicodeProperties)"
+- "exceptions": []
+  "name": "[org.apache.tools.ant.util.FileUtils].resolveFile(java.io.File,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "File"
+  - "name": "arg1"
+    "type": "String"
+  "return_type": "java.io.File"
+  "signature": "[org.apache.tools.ant.util.FileUtils].resolveFile(java.io.File,java.lang.String)"
+- "exceptions": []
+  "name": "[org.apache.tools.ant.util.FileUtils].isLeadingPath(java.io.File,java.io.File)"
+  "params":
+  - "name": "arg0"
+    "type": "File"
+  - "name": "arg1"
+    "type": "File"
+  "return_type": "boolean"
+  "signature": "[org.apache.tools.ant.util.FileUtils].isLeadingPath(java.io.File,java.io.File)"
+- "exceptions": []
+  "name": "[org.apache.tools.ant.util.FileUtils].removeLeadingPath(java.io.File,java.io.File)"
+  "params":
+  - "name": "arg0"
+    "type": "File"
+  - "name": "arg1"
+    "type": "File"
+  "return_type": "java.lang.String"
+  "signature": "[org.apache.tools.ant.util.FileUtils].removeLeadingPath(java.io.File,java.io.File)"
+- "exceptions": []
+  "name": "[org.apache.tools.ant.util.FileUtils].fromURI(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "java.lang.String"
+  "signature": "[org.apache.tools.ant.util.FileUtils].fromURI(java.lang.String)"
+"language": "jvm"
+"project": "jflex"
+"target_name": "JflexFuzzer"
+"target_path": "/src/JflexFuzzer.java"

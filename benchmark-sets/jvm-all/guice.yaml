@@ -1,0 +1,51 @@
+"functions":
+- "exceptions": []
+  "name": "[com.google.inject.internal.RealOptionalBinder].newRealOptionalBinder(com.google.inject.Binder,com.google.inject.Key<T>)"
+  "params":
+  - "name": "arg0"
+    "type": "Binder"
+  - "name": "arg1"
+    "type": "Key<T>"
+  "return_type": "com.google.inject.internal.RealOptionalBinder<T>"
+  "signature": "[com.google.inject.internal.RealOptionalBinder].newRealOptionalBinder(com.google.inject.Binder,com.google.inject.Key<T>)"
+- "exceptions": []
+  "name": "[com.google.inject.internal.RealMultibinder].newRealSetBinder(com.google.inject.Binder,com.google.inject.Key<T>)"
+  "params":
+  - "name": "arg0"
+    "type": "Binder"
+  - "name": "arg1"
+    "type": "Key<T>"
+  "return_type": "com.google.inject.internal.RealMultibinder<T>"
+  "signature": "[com.google.inject.internal.RealMultibinder].newRealSetBinder(com.google.inject.Binder,com.google.inject.Key<T>)"
+- "exceptions": []
+  "name": "[com.google.inject.internal.PrivateElementsImpl].acceptVisitor(com.google.inject.spi.ElementVisitor<T>)"
+  "params":
+  - "name": "arg0"
+    "type": "ElementVisitor<T>"
+  "return_type": "java.lang.Object"
+  "signature": "[com.google.inject.internal.PrivateElementsImpl].acceptVisitor(com.google.inject.spi.ElementVisitor<T>)"
+- "exceptions": []
+  "name": "[com.google.inject.internal.PrivateElementsImpl].applyTo(com.google.inject.Binder)"
+  "params":
+  - "name": "arg0"
+    "type": "Binder"
+  "return_type": "void"
+  "signature": "[com.google.inject.internal.PrivateElementsImpl].applyTo(com.google.inject.Binder)"
+- "exceptions": []
+  "name": "[com.google.inject.spi.InjectionRequest].equals(java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  "return_type": "boolean"
+  "signature": "[com.google.inject.spi.InjectionRequest].equals(java.lang.Object)"
+- "exceptions": []
+  "name": "[com.google.inject.spi.ProviderLookup].equals(java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  "return_type": "boolean"
+  "signature": "[com.google.inject.spi.ProviderLookup].equals(java.lang.Object)"
+"language": "jvm"
+"project": "guice"
+"target_name": "InjectorFuzzer"
+"target_path": "/src/InjectorFuzzer.java"

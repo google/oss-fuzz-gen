@@ -1,0 +1,61 @@
+"functions":
+- "exceptions": []
+  "name": "[org.apache.log4j.helpers.OptionConverter].selectAndConfigure(java.net.URL,java.lang.String,org.apache.log4j.spi.LoggerRepository)"
+  "params":
+  - "name": "arg0"
+    "type": "URL"
+  - "name": "arg1"
+    "type": "String"
+  - "name": "arg2"
+    "type": "LoggerRepository"
+  "return_type": "void"
+  "signature": "[org.apache.log4j.helpers.OptionConverter].selectAndConfigure(java.net.URL,java.lang.String,org.apache.log4j.spi.LoggerRepository)"
+- "exceptions": []
+  "name": "[org.apache.log4j.xml.DOMConfigurator].doConfigure(java.lang.String,org.apache.log4j.spi.LoggerRepository)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "LoggerRepository"
+  "return_type": "void"
+  "signature": "[org.apache.log4j.xml.DOMConfigurator].doConfigure(java.lang.String,org.apache.log4j.spi.LoggerRepository)"
+- "exceptions": []
+  "name": "[org.apache.log4j.xml.DOMConfigurator].doConfigure(java.net.URL,org.apache.log4j.spi.LoggerRepository)"
+  "params":
+  - "name": "arg0"
+    "type": "URL"
+  - "name": "arg1"
+    "type": "LoggerRepository"
+  "return_type": "void"
+  "signature": "[org.apache.log4j.xml.DOMConfigurator].doConfigure(java.net.URL,org.apache.log4j.spi.LoggerRepository)"
+- "exceptions": []
+  "name": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.lang.String,org.apache.log4j.spi.LoggerRepository)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "LoggerRepository"
+  "return_type": "void"
+  "signature": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.lang.String,org.apache.log4j.spi.LoggerRepository)"
+- "exceptions": []
+  "name": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.net.URL,org.apache.log4j.spi.LoggerRepository)"
+  "params":
+  - "name": "arg0"
+    "type": "URL"
+  - "name": "arg1"
+    "type": "LoggerRepository"
+  "return_type": "void"
+  "signature": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.net.URL,org.apache.log4j.spi.LoggerRepository)"
+- "exceptions": []
+  "name": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.util.Properties,org.apache.log4j.spi.LoggerRepository)"
+  "params":
+  - "name": "arg0"
+    "type": "Properties"
+  - "name": "arg1"
+    "type": "LoggerRepository"
+  "return_type": "void"
+  "signature": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.util.Properties,org.apache.log4j.spi.LoggerRepository)"
+"language": "jvm"
+"project": "reload4j"
+"target_name": "LoggerFuzzer"
+"target_path": "/src/src/main/java/ossfuzz/LoggerFuzzer.java"

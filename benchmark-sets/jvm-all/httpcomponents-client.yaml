@@ -1,0 +1,67 @@
+"functions":
+- "exceptions": []
+  "name": "[org.apache.hc.core5.http.message.BasicHeaderValueParser].parseHeaderElement(java.lang.CharSequence,org.apache.hc.core5.http.message.ParserCursor)"
+  "params":
+  - "name": "arg0"
+    "type": "CharSequence"
+  - "name": "arg1"
+    "type": "ParserCursor"
+  "return_type": "org.apache.hc.core5.http.HeaderElement"
+  "signature": "[org.apache.hc.core5.http.message.BasicHeaderValueParser].parseHeaderElement(java.lang.CharSequence,org.apache.hc.core5.http.message.ParserCursor)"
+- "exceptions": []
+  "name": "[org.apache.hc.core5.http.message.BasicHeaderValueParser].parseParameters(java.lang.CharSequence,org.apache.hc.core5.http.message.ParserCursor)"
+  "params":
+  - "name": "arg0"
+    "type": "CharSequence"
+  - "name": "arg1"
+    "type": "ParserCursor"
+  "return_type": "org.apache.hc.core5.http.NameValuePair[]"
+  "signature": "[org.apache.hc.core5.http.message.BasicHeaderValueParser].parseParameters(java.lang.CharSequence,org.apache.hc.core5.http.message.ParserCursor)"
+- "exceptions": []
+  "name": "[org.apache.hc.core5.http.message.BasicHeaderValueParser].parseNameValuePair(java.lang.CharSequence,org.apache.hc.core5.http.message.ParserCursor)"
+  "params":
+  - "name": "arg0"
+    "type": "CharSequence"
+  - "name": "arg1"
+    "type": "ParserCursor"
+  "return_type": "org.apache.hc.core5.http.NameValuePair"
+  "signature": "[org.apache.hc.core5.http.message.BasicHeaderValueParser].parseNameValuePair(java.lang.CharSequence,org.apache.hc.core5.http.message.ParserCursor)"
+- "exceptions": []
+  "name": "[org.apache.hc.core5.util.Tokenizer].parseValue(java.lang.CharSequence,org.apache.hc.core5.util.Tokenizer$Cursor,org.apache.hc.core5.util.Tokenizer$Delimiter)"
+  "params":
+  - "name": "arg0"
+    "type": "CharSequence"
+  - "name": "arg1"
+    "type": "Tokenizer$Cursor"
+  - "name": "arg2"
+    "type": "Tokenizer$Delimiter"
+  "return_type": "java.lang.String"
+  "signature": "[org.apache.hc.core5.util.Tokenizer].parseValue(java.lang.CharSequence,org.apache.hc.core5.util.Tokenizer$Cursor,org.apache.hc.core5.util.Tokenizer$Delimiter)"
+- "exceptions": []
+  "name": "[org.apache.hc.core5.util.Tokenizer].parseToken(java.lang.CharSequence,org.apache.hc.core5.util.Tokenizer$Cursor,org.apache.hc.core5.util.Tokenizer$Delimiter)"
+  "params":
+  - "name": "arg0"
+    "type": "CharSequence"
+  - "name": "arg1"
+    "type": "Tokenizer$Cursor"
+  - "name": "arg2"
+    "type": "Tokenizer$Delimiter"
+  "return_type": "java.lang.String"
+  "signature": "[org.apache.hc.core5.util.Tokenizer].parseToken(java.lang.CharSequence,org.apache.hc.core5.util.Tokenizer$Cursor,org.apache.hc.core5.util.Tokenizer$Delimiter)"
+- "exceptions": []
+  "name": "[org.apache.hc.core5.util.Tokenizer].copyUnquotedContent(java.lang.CharSequence,org.apache.hc.core5.util.Tokenizer$Cursor,org.apache.hc.core5.util.Tokenizer$Delimiter,java.lang.StringBuilder)"
+  "params":
+  - "name": "arg0"
+    "type": "CharSequence"
+  - "name": "arg1"
+    "type": "Tokenizer$Cursor"
+  - "name": "arg2"
+    "type": "Tokenizer$Delimiter"
+  - "name": "arg3"
+    "type": "StringBuilder"
+  "return_type": "void"
+  "signature": "[org.apache.hc.core5.util.Tokenizer].copyUnquotedContent(java.lang.CharSequence,org.apache.hc.core5.util.Tokenizer$Cursor,org.apache.hc.core5.util.Tokenizer$Delimiter,java.lang.StringBuilder)"
+"language": "jvm"
+"project": "httpcomponents-client"
+"target_name": "HttpFuzzer"
+"target_path": "/src/HttpFuzzer.java"

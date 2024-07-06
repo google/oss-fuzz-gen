@@ -1,0 +1,73 @@
+"functions":
+- "exceptions": []
+  "name": "[org.locationtech.jts.operation.overlayng.OverlayNGRobust].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int)"
+  "params":
+  - "name": "arg0"
+    "type": "Geometry"
+  - "name": "arg1"
+    "type": "Geometry"
+  - "name": "arg2"
+    "type": "int"
+  "return_type": "org.locationtech.jts.geom.Geometry"
+  "signature": "[org.locationtech.jts.operation.overlayng.OverlayNGRobust].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int)"
+- "exceptions": []
+  "name": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int,org.locationtech.jts.noding.Noder)"
+  "params":
+  - "name": "arg0"
+    "type": "Geometry"
+  - "name": "arg1"
+    "type": "Geometry"
+  - "name": "arg2"
+    "type": "int"
+  - "name": "arg3"
+    "type": "Noder"
+  "return_type": "org.locationtech.jts.geom.Geometry"
+  "signature": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int,org.locationtech.jts.noding.Noder)"
+- "exceptions": []
+  "name": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int,org.locationtech.jts.geom.PrecisionModel)"
+  "params":
+  - "name": "arg0"
+    "type": "Geometry"
+  - "name": "arg1"
+    "type": "Geometry"
+  - "name": "arg2"
+    "type": "int"
+  - "name": "arg3"
+    "type": "PrecisionModel"
+  "return_type": "org.locationtech.jts.geom.Geometry"
+  "signature": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int,org.locationtech.jts.geom.PrecisionModel)"
+- "exceptions": []
+  "name": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int)"
+  "params":
+  - "name": "arg0"
+    "type": "Geometry"
+  - "name": "arg1"
+    "type": "Geometry"
+  - "name": "arg2"
+    "type": "int"
+  "return_type": "org.locationtech.jts.geom.Geometry"
+  "signature": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int)"
+- "exceptions": []
+  "name": "[org.locationtech.jts.operation.overlayng.PrecisionReducer].reducePrecision(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.PrecisionModel)"
+  "params":
+  - "name": "arg0"
+    "type": "Geometry"
+  - "name": "arg1"
+    "type": "PrecisionModel"
+  "return_type": "org.locationtech.jts.geom.Geometry"
+  "signature": "[org.locationtech.jts.operation.overlayng.PrecisionReducer].reducePrecision(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.PrecisionModel)"
+- "exceptions": []
+  "name": "[org.locationtech.jts.operation.buffer.BufferOp].bufferOp(org.locationtech.jts.geom.Geometry,double,org.locationtech.jts.operation.buffer.BufferParameters)"
+  "params":
+  - "name": "arg0"
+    "type": "Geometry"
+  - "name": "arg1"
+    "type": "double"
+  - "name": "arg2"
+    "type": "BufferParameters"
+  "return_type": "org.locationtech.jts.geom.Geometry"
+  "signature": "[org.locationtech.jts.operation.buffer.BufferOp].bufferOp(org.locationtech.jts.geom.Geometry,double,org.locationtech.jts.operation.buffer.BufferParameters)"
+"language": "jvm"
+"project": "jts"
+"target_name": "JtsFuzzer"
+"target_path": "/src/JtsFuzzer.java"

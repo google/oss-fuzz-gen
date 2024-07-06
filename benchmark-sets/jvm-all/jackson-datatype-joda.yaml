@@ -1,0 +1,49 @@
+"functions":
+- "exceptions": []
+  "name": "[com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat,java.util.Locale)"
+  "params":
+  - "name": "arg0"
+    "type": "JacksonJodaPeriodFormat"
+  - "name": "arg1"
+    "type": "Locale"
+  "return_type": "com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat"
+  "signature": "[com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat,java.util.Locale)"
+- "exceptions": []
+  "name": "[com.fasterxml.jackson.datatype.joda.ser.DurationSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
+  "params":
+  - "name": "arg0"
+    "type": "JacksonJodaDateFormat"
+  "return_type": "com.fasterxml.jackson.datatype.joda.ser.DurationSerializer"
+  "signature": "[com.fasterxml.jackson.datatype.joda.ser.DurationSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
+- "exceptions": []
+  "name": "[com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat].<init>(org.joda.time.format.DateTimeFormatter)"
+  "params":
+  - "name": "arg0"
+    "type": "DateTimeFormatter"
+  "return_type": "com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat"
+  "signature": "[com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat].<init>(org.joda.time.format.DateTimeFormatter)"
+- "exceptions": []
+  "name": "[com.fasterxml.jackson.datatype.joda.ser.YearMonthSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
+  "params":
+  - "name": "arg0"
+    "type": "JacksonJodaDateFormat"
+  "return_type": "com.fasterxml.jackson.datatype.joda.ser.YearMonthSerializer"
+  "signature": "[com.fasterxml.jackson.datatype.joda.ser.YearMonthSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
+- "exceptions": []
+  "name": "[com.fasterxml.jackson.datatype.joda.deser.PeriodDeserializer].<init>(boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "boolean"
+  "return_type": "com.fasterxml.jackson.datatype.joda.deser.PeriodDeserializer"
+  "signature": "[com.fasterxml.jackson.datatype.joda.deser.PeriodDeserializer].<init>(boolean)"
+- "exceptions": []
+  "name": "[com.fasterxml.jackson.datatype.joda.ser.IntervalSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
+  "params":
+  - "name": "arg0"
+    "type": "JacksonJodaDateFormat"
+  "return_type": "com.fasterxml.jackson.datatype.joda.ser.IntervalSerializer"
+  "signature": "[com.fasterxml.jackson.datatype.joda.ser.IntervalSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
+"language": "jvm"
+"project": "jackson-datatype-joda"
+"target_name": "JodaDeserializerFuzzer"
+"target_path": "/src/JodaDeserializerFuzzer.java"

@@ -1,0 +1,57 @@
+"functions":
+- "exceptions": []
+  "name": "[org.apache.commons.validator.routines.CreditCardValidator].<init>(long)"
+  "params":
+  - "name": "arg0"
+    "type": "long"
+  "return_type": "org.apache.commons.validator.routines.CreditCardValidator"
+  "signature": "[org.apache.commons.validator.routines.CreditCardValidator].<init>(long)"
+- "exceptions": []
+  "name": "[org.apache.commons.validator.routines.UrlValidator].<init>(java.lang.String[],org.apache.commons.validator.routines.RegexValidator,long)"
+  "params":
+  - "name": "arg0"
+    "type": "String[]"
+  - "name": "arg1"
+    "type": "RegexValidator"
+  - "name": "arg2"
+    "type": "long"
+  "return_type": "org.apache.commons.validator.routines.UrlValidator"
+  "signature": "[org.apache.commons.validator.routines.UrlValidator].<init>(java.lang.String[],org.apache.commons.validator.routines.RegexValidator,long)"
+- "exceptions": []
+  "name": "[org.apache.commons.validator.routines.UrlValidator].<init>(java.lang.String[],org.apache.commons.validator.routines.RegexValidator,long,org.apache.commons.validator.routines.DomainValidator)"
+  "params":
+  - "name": "arg0"
+    "type": "String[]"
+  - "name": "arg1"
+    "type": "RegexValidator"
+  - "name": "arg2"
+    "type": "long"
+  - "name": "arg3"
+    "type": "DomainValidator"
+  "return_type": "org.apache.commons.validator.routines.UrlValidator"
+  "signature": "[org.apache.commons.validator.routines.UrlValidator].<init>(java.lang.String[],org.apache.commons.validator.routines.RegexValidator,long,org.apache.commons.validator.routines.DomainValidator)"
+- "exceptions": []
+  "name": "[org.apache.commons.validator.util.ValidatorUtils].copyFastHashMap(org.apache.commons.collections.FastHashMap)"
+  "params":
+  - "name": "arg0"
+    "type": "FastHashMap"
+  "return_type": "org.apache.commons.collections.FastHashMap"
+  "signature": "[org.apache.commons.validator.util.ValidatorUtils].copyFastHashMap(org.apache.commons.collections.FastHashMap)"
+- "exceptions": []
+  "name": "[org.apache.commons.validator.ValidatorResources].<init>(java.io.InputStream[])"
+  "params":
+  - "name": "arg0"
+    "type": "InputStream[]"
+  "return_type": "org.apache.commons.validator.ValidatorResources"
+  "signature": "[org.apache.commons.validator.ValidatorResources].<init>(java.io.InputStream[])"
+- "exceptions": []
+  "name": "[org.apache.commons.validator.ValidatorResources].<init>(java.lang.String[])"
+  "params":
+  - "name": "arg0"
+    "type": "String[]"
+  "return_type": "org.apache.commons.validator.ValidatorResources"
+  "signature": "[org.apache.commons.validator.ValidatorResources].<init>(java.lang.String[])"
+"language": "jvm"
+"project": "apache-commons-validator"
+"target_name": "CreditCardValidatorFuzzer"
+"target_path": "/src/CreditCardValidatorFuzzer.java"

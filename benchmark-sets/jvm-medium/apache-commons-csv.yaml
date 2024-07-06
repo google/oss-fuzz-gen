@@ -1,0 +1,55 @@
+"functions":
+- "exceptions": []
+  "name": "[org.apache.commons.csv.CSVParser].<init>(java.io.Reader,org.apache.commons.csv.CSVFormat,long,long)"
+  "params":
+  - "name": "arg0"
+    "type": "Reader"
+  - "name": "arg1"
+    "type": "CSVFormat"
+  - "name": "arg2"
+    "type": "long"
+  - "name": "arg3"
+    "type": "long"
+  "return_type": "org.apache.commons.csv.CSVParser"
+  "signature": "[org.apache.commons.csv.CSVParser].<init>(java.io.Reader,org.apache.commons.csv.CSVFormat,long,long)"
+- "exceptions": []
+  "name": "[org.apache.commons.csv.CSVPrinter].<init>(java.lang.Appendable,org.apache.commons.csv.CSVFormat)"
+  "params":
+  - "name": "arg0"
+    "type": "Appendable"
+  - "name": "arg1"
+    "type": "CSVFormat"
+  "return_type": "org.apache.commons.csv.CSVPrinter"
+  "signature": "[org.apache.commons.csv.CSVPrinter].<init>(java.lang.Appendable,org.apache.commons.csv.CSVFormat)"
+- "exceptions": []
+  "name": "[org.apache.commons.csv.CSVPrinter].close(boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "boolean"
+  "return_type": "void"
+  "signature": "[org.apache.commons.csv.CSVPrinter].close(boolean)"
+- "exceptions": []
+  "name": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(char)"
+  "params":
+  - "name": "arg0"
+    "type": "char"
+  "return_type": "org.apache.commons.csv.CSVFormat$Builder"
+  "signature": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(char)"
+- "exceptions": []
+  "name": "[org.apache.commons.csv.CSVFormat$Builder].setDelimiter(char)"
+  "params":
+  - "name": "arg0"
+    "type": "char"
+  "return_type": "org.apache.commons.csv.CSVFormat$Builder"
+  "signature": "[org.apache.commons.csv.CSVFormat$Builder].setDelimiter(char)"
+- "exceptions": []
+  "name": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(java.lang.Character)"
+  "params":
+  - "name": "arg0"
+    "type": "Character"
+  "return_type": "org.apache.commons.csv.CSVFormat$Builder"
+  "signature": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(java.lang.Character)"
+"language": "jvm"
+"project": "apache-commons-csv"
+"target_name": "CSVParserFuzzer"
+"target_path": "/src/CSVParserFuzzer.java"

@@ -1,0 +1,61 @@
+"functions":
+- "exceptions": []
+  "name": "[org.apache.zookeeper.server.FinalRequestProcessor].processRequest(org.apache.zookeeper.server.Request)"
+  "params":
+  - "name": "arg0"
+    "type": "Request"
+  "return_type": "void"
+  "signature": "[org.apache.zookeeper.server.FinalRequestProcessor].processRequest(org.apache.zookeeper.server.Request)"
+- "exceptions": []
+  "name": "[org.apache.zookeeper.server.persistence.FileSnap].serialize(org.apache.zookeeper.server.DataTree,java.util.Map<Long,Integer>,java.io.File,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "DataTree"
+  - "name": "arg1"
+    "type": "Map<Long,Integer>"
+  - "name": "arg2"
+    "type": "File"
+  - "name": "arg3"
+    "type": "boolean"
+  "return_type": "void"
+  "signature": "[org.apache.zookeeper.server.persistence.FileSnap].serialize(org.apache.zookeeper.server.DataTree,java.util.Map<Long,Integer>,java.io.File,boolean)"
+- "exceptions": []
+  "name": "[org.apache.zookeeper.common.IOUtils].cleanup(org.slf4j.Logger,java.io.Closeable[])"
+  "params":
+  - "name": "arg0"
+    "type": "Logger"
+  - "name": "arg1"
+    "type": "Closeable[]"
+  "return_type": "void"
+  "signature": "[org.apache.zookeeper.common.IOUtils].cleanup(org.slf4j.Logger,java.io.Closeable[])"
+- "exceptions": []
+  "name": "[org.apache.zookeeper.server.persistence.SnapStream].getOutputStream(java.io.File,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "File"
+  - "name": "arg1"
+    "type": "boolean"
+  "return_type": "java.util.zip.CheckedOutputStream"
+  "signature": "[org.apache.zookeeper.server.persistence.SnapStream].getOutputStream(java.io.File,boolean)"
+- "exceptions": []
+  "name": "[org.apache.commons.io.IOUtils].close(java.io.Closeable,org.apache.commons.io.function.IOConsumer)"
+  "params":
+  - "name": "arg0"
+    "type": "Closeable"
+  - "name": "arg1"
+    "type": "IOConsumer"
+  "return_type": "void"
+  "signature": "[org.apache.commons.io.IOUtils].close(java.io.Closeable,org.apache.commons.io.function.IOConsumer)"
+- "exceptions": []
+  "name": "[org.apache.commons.io.IOUtils].closeQuietly(java.io.Closeable,java.util.function.Consumer)"
+  "params":
+  - "name": "arg0"
+    "type": "Closeable"
+  - "name": "arg1"
+    "type": "Consumer"
+  "return_type": "void"
+  "signature": "[org.apache.commons.io.IOUtils].closeQuietly(java.io.Closeable,java.util.function.Consumer)"
+"language": "jvm"
+"project": "zookeeper"
+"target_name": "DataTreeFuzzer"
+"target_path": "/src/DataTreeFuzzer.java"

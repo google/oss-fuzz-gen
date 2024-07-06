@@ -1,0 +1,51 @@
+"functions":
+- "exceptions": []
+  "name": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.MessageOrBuilder)"
+  "params":
+  - "name": "arg0"
+    "type": "MessageOrBuilder"
+  "return_type": "java.lang.String"
+  "signature": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.MessageOrBuilder)"
+- "exceptions": []
+  "name": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.MessageOrBuilder)"
+  "params":
+  - "name": "arg0"
+    "type": "MessageOrBuilder"
+  "return_type": "java.lang.String"
+  "signature": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.MessageOrBuilder)"
+- "exceptions": []
+  "name": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.MessageOrBuilder,java.lang.Appendable)"
+  "params":
+  - "name": "arg0"
+    "type": "MessageOrBuilder"
+  - "name": "arg1"
+    "type": "Appendable"
+  "return_type": "void"
+  "signature": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.MessageOrBuilder,java.lang.Appendable)"
+- "exceptions": []
+  "name": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.UnknownFieldSet)"
+  "params":
+  - "name": "arg0"
+    "type": "UnknownFieldSet"
+  "return_type": "java.lang.String"
+  "signature": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.UnknownFieldSet)"
+- "exceptions": []
+  "name": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.UnknownFieldSet)"
+  "params":
+  - "name": "arg0"
+    "type": "UnknownFieldSet"
+  "return_type": "java.lang.String"
+  "signature": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.UnknownFieldSet)"
+- "exceptions": []
+  "name": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.UnknownFieldSet,java.lang.Appendable)"
+  "params":
+  - "name": "arg0"
+    "type": "UnknownFieldSet"
+  - "name": "arg1"
+    "type": "Appendable"
+  "return_type": "void"
+  "signature": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.UnknownFieldSet,java.lang.Appendable)"
+"language": "jvm"
+"project": "protobuf-java"
+"target_name": "ProtobufFuzzer"
+"target_path": "/src/ProtobufFuzzer.java"

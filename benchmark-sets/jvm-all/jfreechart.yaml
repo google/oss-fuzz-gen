@@ -1,0 +1,47 @@
+"functions":
+- "exceptions": []
+  "name": "[org.jfree.chart.internal.CloneUtils].cloneMapValues(java.util.Map<K,V>)"
+  "params":
+  - "name": "arg0"
+    "type": "Map<K,V>"
+  "return_type": "java.util.Map<K,V>"
+  "signature": "[org.jfree.chart.internal.CloneUtils].cloneMapValues(java.util.Map<K,V>)"
+- "exceptions": []
+  "name": "[org.jfree.chart.internal.CloneUtils].clone(java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  "return_type": "java.lang.Object"
+  "signature": "[org.jfree.chart.internal.CloneUtils].clone(java.lang.Object)"
+- "exceptions": []
+  "name": "[org.jfree.chart.internal.CloneUtils].copy(java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  "return_type": "java.lang.Object"
+  "signature": "[org.jfree.chart.internal.CloneUtils].copy(java.lang.Object)"
+- "exceptions": []
+  "name": "[org.jfree.chart.internal.CloneUtils].cloneList(java.util.List<T>)"
+  "params":
+  - "name": "arg0"
+    "type": "List<T>"
+  "return_type": "java.util.List<T>"
+  "signature": "[org.jfree.chart.internal.CloneUtils].cloneList(java.util.List<T>)"
+- "exceptions": []
+  "name": "[org.jfree.chart.plot.PolarPlot].datasetChanged(org.jfree.data.general.DatasetChangeEvent)"
+  "params":
+  - "name": "arg0"
+    "type": "DatasetChangeEvent"
+  "return_type": "void"
+  "signature": "[org.jfree.chart.plot.PolarPlot].datasetChanged(org.jfree.data.general.DatasetChangeEvent)"
+- "exceptions": []
+  "name": "[org.jfree.chart.plot.CombinedDomainXYPlot].datasetChanged(org.jfree.data.general.DatasetChangeEvent)"
+  "params":
+  - "name": "arg0"
+    "type": "DatasetChangeEvent"
+  "return_type": "void"
+  "signature": "[org.jfree.chart.plot.CombinedDomainXYPlot].datasetChanged(org.jfree.data.general.DatasetChangeEvent)"
+"language": "jvm"
+"project": "jfreechart"
+"target_name": "TimeSeriesChartFuzzer"
+"target_path": "/src/TimeSeriesChartFuzzer.java"

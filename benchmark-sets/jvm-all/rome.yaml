@@ -1,0 +1,71 @@
+"functions":
+- "exceptions": []
+  "name": "[com.rometools.rome.feed.synd.SyndFeedImpl].<init>(com.rometools.rome.feed.WireFeed,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "WireFeed"
+  - "name": "arg1"
+    "type": "boolean"
+  "return_type": "com.rometools.rome.feed.synd.SyndFeedImpl"
+  "signature": "[com.rometools.rome.feed.synd.SyndFeedImpl].<init>(com.rometools.rome.feed.WireFeed,boolean)"
+- "exceptions": []
+  "name": "[com.rometools.rome.io.XmlReader].<init>(java.net.URLConnection,java.util.Map)"
+  "params":
+  - "name": "arg0"
+    "type": "URLConnection"
+  - "name": "arg1"
+    "type": "Map"
+  "return_type": "com.rometools.rome.io.XmlReader"
+  "signature": "[com.rometools.rome.io.XmlReader].<init>(java.net.URLConnection,java.util.Map)"
+- "exceptions": []
+  "name": "[com.rometools.rome.io.XmlReader].<init>(java.io.InputStream,java.lang.String,boolean,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "InputStream"
+  - "name": "arg1"
+    "type": "String"
+  - "name": "arg2"
+    "type": "boolean"
+  - "name": "arg3"
+    "type": "String"
+  "return_type": "com.rometools.rome.io.XmlReader"
+  "signature": "[com.rometools.rome.io.XmlReader].<init>(java.io.InputStream,java.lang.String,boolean,java.lang.String)"
+- "exceptions": []
+  "name": "[com.rometools.rome.io.XmlReader].<init>(java.io.InputStream,boolean,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "InputStream"
+  - "name": "arg1"
+    "type": "boolean"
+  - "name": "arg2"
+    "type": "String"
+  "return_type": "com.rometools.rome.io.XmlReader"
+  "signature": "[com.rometools.rome.io.XmlReader].<init>(java.io.InputStream,boolean,java.lang.String)"
+- "exceptions": []
+  "name": "[org.jdom2.Attribute].<init>(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "String"
+  - "name": "arg2"
+    "type": "AttributeType"
+  - "name": "arg3"
+    "type": "Namespace"
+  "return_type": "org.jdom2.Attribute"
+  "signature": "[org.jdom2.Attribute].<init>(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)"
+- "exceptions": []
+  "name": "[com.rometools.rome.feed.impl.PropertyDescriptor].<init>(java.lang.String,java.lang.reflect.Method,java.lang.reflect.Method)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "Method"
+  - "name": "arg2"
+    "type": "Method"
+  "return_type": "com.rometools.rome.feed.impl.PropertyDescriptor"
+  "signature": "[com.rometools.rome.feed.impl.PropertyDescriptor].<init>(java.lang.String,java.lang.reflect.Method,java.lang.reflect.Method)"
+"language": "jvm"
+"project": "rome"
+"target_name": "XmlReaderFuzzer"
+"target_path": "/src/XmlReaderFuzzer.java"

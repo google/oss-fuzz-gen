@@ -1,0 +1,59 @@
+"functions":
+- "exceptions": []
+  "name": "[org.apache.commons.cli.Option].<init>(java.lang.String,java.lang.String,boolean,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "String"
+  - "name": "arg2"
+    "type": "boolean"
+  - "name": "arg3"
+    "type": "String"
+  "return_type": "org.apache.commons.cli.Option"
+  "signature": "[org.apache.commons.cli.Option].<init>(java.lang.String,java.lang.String,boolean,java.lang.String)"
+- "exceptions": []
+  "name": "[org.apache.commons.cli.Option].<init>(java.lang.String,boolean,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "boolean"
+  - "name": "arg2"
+    "type": "String"
+  "return_type": "org.apache.commons.cli.Option"
+  "signature": "[org.apache.commons.cli.Option].<init>(java.lang.String,boolean,java.lang.String)"
+- "exceptions": []
+  "name": "[org.apache.commons.cli.Option].<init>(java.lang.String,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "String"
+  "return_type": "org.apache.commons.cli.Option"
+  "signature": "[org.apache.commons.cli.Option].<init>(java.lang.String,java.lang.String)"
+- "exceptions": []
+  "name": "[org.apache.commons.cli.TypeHandler].<init>(java.util.Map)"
+  "params":
+  - "name": "arg0"
+    "type": "Map"
+  "return_type": "org.apache.commons.cli.TypeHandler"
+  "signature": "[org.apache.commons.cli.TypeHandler].<init>(java.util.Map)"
+- "exceptions": []
+  "name": "[org.apache.commons.cli.DefaultParser].<init>(boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "boolean"
+  "return_type": "org.apache.commons.cli.DefaultParser"
+  "signature": "[org.apache.commons.cli.DefaultParser].<init>(boolean)"
+- "exceptions": []
+  "name": "[org.apache.commons.cli.CommandLine].hasOption(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "boolean"
+  "signature": "[org.apache.commons.cli.CommandLine].hasOption(java.lang.String)"
+"language": "jvm"
+"project": "apache-commons-cli"
+"target_name": "ParserFuzzer"
+"target_path": "/src/ParserFuzzer.java"

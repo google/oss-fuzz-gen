@@ -1,0 +1,63 @@
+"functions":
+- "exceptions": []
+  "name": "[com.fasterxml.uuid.EthernetAddress].<init>(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "com.fasterxml.uuid.EthernetAddress"
+  "signature": "[com.fasterxml.uuid.EthernetAddress].<init>(java.lang.String)"
+- "exceptions": []
+  "name": "[com.fasterxml.uuid.UUIDTimer].<init>(java.util.Random,com.fasterxml.uuid.TimestampSynchronizer,com.fasterxml.uuid.UUIDClock)"
+  "params":
+  - "name": "arg0"
+    "type": "Random"
+  - "name": "arg1"
+    "type": "TimestampSynchronizer"
+  - "name": "arg2"
+    "type": "UUIDClock"
+  "return_type": "com.fasterxml.uuid.UUIDTimer"
+  "signature": "[com.fasterxml.uuid.UUIDTimer].<init>(java.util.Random,com.fasterxml.uuid.TimestampSynchronizer,com.fasterxml.uuid.UUIDClock)"
+- "exceptions": []
+  "name": "[com.fasterxml.uuid.impl.TimeBasedGenerator].<init>(com.fasterxml.uuid.EthernetAddress,com.fasterxml.uuid.UUIDTimer)"
+  "params":
+  - "name": "arg0"
+    "type": "EthernetAddress"
+  - "name": "arg1"
+    "type": "UUIDTimer"
+  "return_type": "com.fasterxml.uuid.impl.TimeBasedGenerator"
+  "signature": "[com.fasterxml.uuid.impl.TimeBasedGenerator].<init>(com.fasterxml.uuid.EthernetAddress,com.fasterxml.uuid.UUIDTimer)"
+- "exceptions": []
+  "name": "[com.fasterxml.uuid.impl.TimeBasedReorderedGenerator].<init>(com.fasterxml.uuid.EthernetAddress,com.fasterxml.uuid.UUIDTimer)"
+  "params":
+  - "name": "arg0"
+    "type": "EthernetAddress"
+  - "name": "arg1"
+    "type": "UUIDTimer"
+  "return_type": "com.fasterxml.uuid.impl.TimeBasedReorderedGenerator"
+  "signature": "[com.fasterxml.uuid.impl.TimeBasedReorderedGenerator].<init>(com.fasterxml.uuid.EthernetAddress,com.fasterxml.uuid.UUIDTimer)"
+- "exceptions": []
+  "name": "[com.fasterxml.uuid.impl.NameBasedGenerator].<init>(java.util.UUID,java.security.MessageDigest,com.fasterxml.uuid.UUIDType)"
+  "params":
+  - "name": "arg0"
+    "type": "UUID"
+  - "name": "arg1"
+    "type": "MessageDigest"
+  - "name": "arg2"
+    "type": "UUIDType"
+  "return_type": "com.fasterxml.uuid.impl.NameBasedGenerator"
+  "signature": "[com.fasterxml.uuid.impl.NameBasedGenerator].<init>(java.util.UUID,java.security.MessageDigest,com.fasterxml.uuid.UUIDType)"
+- "exceptions": []
+  "name": "[com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer].<init>(java.io.File,java.io.File,long)"
+  "params":
+  - "name": "arg0"
+    "type": "File"
+  - "name": "arg1"
+    "type": "File"
+  - "name": "arg2"
+    "type": "long"
+  "return_type": "com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer"
+  "signature": "[com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer].<init>(java.io.File,java.io.File,long)"
+"language": "jvm"
+"project": "java-uuid-generator"
+"target_name": "GeneratorsFuzzer"
+"target_path": "/src/GeneratorsFuzzer.java"

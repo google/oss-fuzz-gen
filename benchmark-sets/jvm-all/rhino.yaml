@@ -1,0 +1,65 @@
+"functions":
+- "exceptions": []
+  "name": "[org.mozilla.javascript.Slot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  - "name": "arg1"
+    "type": "Scriptable"
+  - "name": "arg2"
+    "type": "Scriptable"
+  "return_type": "boolean"
+  "signature": "[org.mozilla.javascript.Slot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable)"
+- "exceptions": []
+  "name": "[org.mozilla.javascript.Sorting].median(java.lang.Object[],int,int,java.util.Comparator<Object>)"
+  "params":
+  - "name": "arg0"
+    "type": "Object[]"
+  - "name": "arg1"
+    "type": "int"
+  - "name": "arg2"
+    "type": "int"
+  - "name": "arg3"
+    "type": "Comparator<Object>"
+  "return_type": "int"
+  "signature": "[org.mozilla.javascript.Sorting].median(java.lang.Object[],int,int,java.util.Comparator<Object>)"
+- "exceptions": []
+  "name": "[org.mozilla.javascript.LambdaSlot].getValue(org.mozilla.javascript.Scriptable)"
+  "params":
+  - "name": "arg0"
+    "type": "Scriptable"
+  "return_type": "java.lang.Object"
+  "signature": "[org.mozilla.javascript.LambdaSlot].getValue(org.mozilla.javascript.Scriptable)"
+- "exceptions": []
+  "name": "[org.mozilla.javascript.NativeJavaObject].getDefaultValue(java.lang.Class<?>)"
+  "params":
+  - "name": "arg0"
+    "type": "Class<?>"
+  "return_type": "java.lang.Object"
+  "signature": "[org.mozilla.javascript.NativeJavaObject].getDefaultValue(java.lang.Class<?>)"
+- "exceptions": []
+  "name": "[org.mozilla.javascript.AccessorSlot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  - "name": "arg1"
+    "type": "Scriptable"
+  - "name": "arg2"
+    "type": "Scriptable"
+  - "name": "arg3"
+    "type": "boolean"
+  "return_type": "boolean"
+  "signature": "[org.mozilla.javascript.AccessorSlot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable,boolean)"
+- "exceptions": []
+  "name": "[org.mozilla.javascript.NativeArray$ElementComparator].compare(java.lang.Object,java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  - "name": "arg1"
+    "type": "Object"
+  "return_type": "int"
+  "signature": "[org.mozilla.javascript.NativeArray$ElementComparator].compare(java.lang.Object,java.lang.Object)"
+"language": "jvm"
+"project": "rhino"
+"target_name": "ParserFuzzer"
+"target_path": "/src/src/main/java/ossfuzz/ParserFuzzer.java"

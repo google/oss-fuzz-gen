@@ -1,0 +1,67 @@
+"functions":
+- "exceptions": []
+  "name": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,java.lang.String,int,byte[],java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "String"
+  - "name": "arg2"
+    "type": "int"
+  - "name": "arg3"
+    "type": "byte[]"
+  - "name": "arg4"
+    "type": "String"
+  "return_type": "com.jcraft.jsch.HostKey"
+  "signature": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,java.lang.String,int,byte[],java.lang.String)"
+- "exceptions": []
+  "name": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,int,byte[],java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "int"
+  - "name": "arg2"
+    "type": "byte[]"
+  - "name": "arg3"
+    "type": "String"
+  "return_type": "com.jcraft.jsch.HostKey"
+  "signature": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,int,byte[],java.lang.String)"
+- "exceptions": []
+  "name": "[com.jcraft.jsch.SSHAgentConnector].<init>(java.nio.file.Path)"
+  "params":
+  - "name": "arg0"
+    "type": "Path"
+  "return_type": "com.jcraft.jsch.SSHAgentConnector"
+  "signature": "[com.jcraft.jsch.SSHAgentConnector].<init>(java.nio.file.Path)"
+- "exceptions": []
+  "name": "[com.jcraft.jsch.SSHAgentConnector].<init>(com.jcraft.jsch.USocketFactory)"
+  "params":
+  - "name": "arg0"
+    "type": "USocketFactory"
+  "return_type": "com.jcraft.jsch.SSHAgentConnector"
+  "signature": "[com.jcraft.jsch.SSHAgentConnector].<init>(com.jcraft.jsch.USocketFactory)"
+- "exceptions": []
+  "name": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,int,byte[])"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "int"
+  - "name": "arg2"
+    "type": "byte[]"
+  "return_type": "com.jcraft.jsch.HostKey"
+  "signature": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,int,byte[])"
+- "exceptions": []
+  "name": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,byte[])"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "byte[]"
+  "return_type": "com.jcraft.jsch.HostKey"
+  "signature": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,byte[])"
+"language": "jvm"
+"project": "jsch"
+"target_name": "OpenSSHConfigFuzzer"
+"target_path": "/src/jsch-fuzzer/src/main/java/com/jcraft/jsch/OpenSSHConfigFuzzer.java"

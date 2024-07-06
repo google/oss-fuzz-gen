@@ -1,0 +1,63 @@
+"functions":
+- "exceptions": []
+  "name": "[org.stringtemplate.v4.compiler.CodeGenerator].ifstat(org.antlr.runtime.tree.CommonTree)"
+  "params":
+  - "name": "arg0"
+    "type": "CommonTree"
+  "return_type": "void"
+  "signature": "[org.stringtemplate.v4.compiler.CodeGenerator].ifstat(org.antlr.runtime.tree.CommonTree)"
+- "exceptions": []
+  "name": "[org.stringtemplate.v4.compiler.CodeGenerator].compoundElement(org.antlr.runtime.tree.CommonTree)"
+  "params":
+  - "name": "arg0"
+    "type": "CommonTree"
+  "return_type": "void"
+  "signature": "[org.stringtemplate.v4.compiler.CodeGenerator].compoundElement(org.antlr.runtime.tree.CommonTree)"
+- "exceptions": []
+  "name": "[org.stringtemplate.v4.STGroup].defineTemplateOrRegion(java.lang.String,java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token,java.util.List<FormalArgument>)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "String"
+  - "name": "arg2"
+    "type": "Token"
+  - "name": "arg3"
+    "type": "String"
+  - "name": "arg4"
+    "type": "Token"
+  - "name": "arg5"
+    "type": "List<FormalArgument>"
+  "return_type": "void"
+  "signature": "[org.stringtemplate.v4.STGroup].defineTemplateOrRegion(java.lang.String,java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token,java.util.List<FormalArgument>)"
+- "exceptions": []
+  "name": "[org.stringtemplate.v4.STGroup].defineRegion(java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "Token"
+  - "name": "arg2"
+    "type": "String"
+  - "name": "arg3"
+    "type": "Token"
+  "return_type": "org.stringtemplate.v4.compiler.CompiledST"
+  "signature": "[org.stringtemplate.v4.STGroup].defineRegion(java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token)"
+- "exceptions": []
+  "name": "[org.stringtemplate.v4.compiler.GroupParser].defaultValuePair(java.util.Map<String,Object>)"
+  "params":
+  - "name": "arg0"
+    "type": "Map<String,Object>"
+  "return_type": "void"
+  "signature": "[org.stringtemplate.v4.compiler.GroupParser].defaultValuePair(java.util.Map<String,Object>)"
+- "exceptions": []
+  "name": "[org.stringtemplate.v4.compiler.GroupParser].keyValuePair(java.util.Map<String,Object>)"
+  "params":
+  - "name": "arg0"
+    "type": "Map<String,Object>"
+  "return_type": "void"
+  "signature": "[org.stringtemplate.v4.compiler.GroupParser].keyValuePair(java.util.Map<String,Object>)"
+"language": "jvm"
+"project": "stringtemplate4"
+"target_name": "StringFuzzer"
+"target_path": "/src/StringFuzzer.java"

@@ -1,0 +1,47 @@
+"functions":
+- "exceptions": []
+  "name": "[org.apache.calcite.avatica.remote.LocalProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
+  "params":
+  - "name": "arg0"
+    "type": "Service$Request"
+  "return_type": "org.apache.calcite.avatica.remote.Service$Response"
+  "signature": "[org.apache.calcite.avatica.remote.LocalProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
+- "exceptions": []
+  "name": "[org.apache.calcite.avatica.remote.RemoteProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
+  "params":
+  - "name": "arg0"
+    "type": "Service$Request"
+  "return_type": "org.apache.calcite.avatica.remote.Service$Response"
+  "signature": "[org.apache.calcite.avatica.remote.RemoteProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
+- "exceptions": []
+  "name": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeResponse(org.apache.calcite.avatica.remote.Service$Response)"
+  "params":
+  - "name": "arg0"
+    "type": "Service$Response"
+  "return_type": "byte[]"
+  "signature": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeResponse(org.apache.calcite.avatica.remote.Service$Response)"
+- "exceptions": []
+  "name": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeRequest(org.apache.calcite.avatica.remote.Service$Request)"
+  "params":
+  - "name": "arg0"
+    "type": "Service$Request"
+  "return_type": "byte[]"
+  "signature": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeRequest(org.apache.calcite.avatica.remote.Service$Request)"
+- "exceptions": []
+  "name": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].parseRequest(byte[])"
+  "params":
+  - "name": "arg0"
+    "type": "byte[]"
+  "return_type": "org.apache.calcite.avatica.remote.Service$Request"
+  "signature": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].parseRequest(byte[])"
+- "exceptions": []
+  "name": "[org.apache.calcite.avatica.Meta$Frame].equals(java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  "return_type": "boolean"
+  "signature": "[org.apache.calcite.avatica.Meta$Frame].equals(java.lang.Object)"
+"language": "jvm"
+"project": "calcite-avatica"
+"target_name": "Base64Fuzzer"
+"target_path": "/src/Base64Fuzzer.java"

@@ -1,0 +1,53 @@
+"functions":
+- "exceptions": []
+  "name": "[com.twelvemonkeys.util.TimeFormat].<init>(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "com.twelvemonkeys.util.TimeFormat"
+  "signature": "[com.twelvemonkeys.util.TimeFormat].<init>(java.lang.String)"
+- "exceptions": []
+  "name": "[com.twelvemonkeys.io.ole2.CompoundDocument].<init>(java.io.File)"
+  "params":
+  - "name": "arg0"
+    "type": "File"
+  "return_type": "com.twelvemonkeys.io.ole2.CompoundDocument"
+  "signature": "[com.twelvemonkeys.io.ole2.CompoundDocument].<init>(java.io.File)"
+- "exceptions": []
+  "name": "[com.twelvemonkeys.io.ole2.CompoundDocument].<init>(javax.imageio.stream.ImageInputStream)"
+  "params":
+  - "name": "arg0"
+    "type": "ImageInputStream"
+  "return_type": "com.twelvemonkeys.io.ole2.CompoundDocument"
+  "signature": "[com.twelvemonkeys.io.ole2.CompoundDocument].<init>(javax.imageio.stream.ImageInputStream)"
+- "exceptions": []
+  "name": "[com.twelvemonkeys.imageio.spi.ProviderInfo].<init>(java.lang.Package)"
+  "params":
+  - "name": "arg0"
+    "type": "Package"
+  "return_type": "com.twelvemonkeys.imageio.spi.ProviderInfo"
+  "signature": "[com.twelvemonkeys.imageio.spi.ProviderInfo].<init>(java.lang.Package)"
+- "exceptions": []
+  "name": "[com.twelvemonkeys.image.ResampleOp].<init>(int,int,java.awt.RenderingHints)"
+  "params":
+  - "name": "arg0"
+    "type": "int"
+  - "name": "arg1"
+    "type": "int"
+  - "name": "arg2"
+    "type": "RenderingHints"
+  "return_type": "com.twelvemonkeys.image.ResampleOp"
+  "signature": "[com.twelvemonkeys.image.ResampleOp].<init>(int,int,java.awt.RenderingHints)"
+- "exceptions": []
+  "name": "[com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry].<init>(int,java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "int"
+  - "name": "arg1"
+    "type": "Object"
+  "return_type": "com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry"
+  "signature": "[com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry].<init>(int,java.lang.Object)"
+"language": "jvm"
+"project": "twelve-monkeys"
+"target_name": "WildcardStringParserFuzzer"
+"target_path": "/src/WildcardStringParserFuzzer.java"

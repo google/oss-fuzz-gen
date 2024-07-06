@@ -1,0 +1,63 @@
+"functions":
+- "exceptions": []
+  "name": "[com.github.difflib.algorithm.myers.MyersDiffWithLinearSpace].computeDiff(java.util.List<T>,java.util.List<T>,com.github.difflib.algorithm.DiffAlgorithmListener)"
+  "params":
+  - "name": "arg0"
+    "type": "List<T>"
+  - "name": "arg1"
+    "type": "List<T>"
+  - "name": "arg2"
+    "type": "DiffAlgorithmListener"
+  "return_type": "java.util.List<Change>"
+  "signature": "[com.github.difflib.algorithm.myers.MyersDiffWithLinearSpace].computeDiff(java.util.List<T>,java.util.List<T>,com.github.difflib.algorithm.DiffAlgorithmListener)"
+- "exceptions": []
+  "name": "[com.github.difflib.algorithm.myers.PathNode].<init>(int,int,boolean,boolean,com.github.difflib.algorithm.myers.PathNode)"
+  "params":
+  - "name": "arg0"
+    "type": "int"
+  - "name": "arg1"
+    "type": "int"
+  - "name": "arg2"
+    "type": "boolean"
+  - "name": "arg3"
+    "type": "boolean"
+  - "name": "arg4"
+    "type": "PathNode"
+  "return_type": "com.github.difflib.algorithm.myers.PathNode"
+  "signature": "[com.github.difflib.algorithm.myers.PathNode].<init>(int,int,boolean,boolean,com.github.difflib.algorithm.myers.PathNode)"
+- "exceptions": []
+  "name": "[com.github.difflib.text.DiffRow].equals(java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  "return_type": "boolean"
+  "signature": "[com.github.difflib.text.DiffRow].equals(java.lang.Object)"
+- "exceptions": []
+  "name": "[com.github.difflib.patch.Chunk].<init>(int,java.util.List)"
+  "params":
+  - "name": "arg0"
+    "type": "int"
+  - "name": "arg1"
+    "type": "List"
+  "return_type": "com.github.difflib.patch.Chunk"
+  "signature": "[com.github.difflib.patch.Chunk].<init>(int,java.util.List)"
+- "exceptions": []
+  "name": "[com.github.difflib.patch.Chunk].<init>(int,java.lang.Object[])"
+  "params":
+  - "name": "arg0"
+    "type": "int"
+  - "name": "arg1"
+    "type": "Object[]"
+  "return_type": "com.github.difflib.patch.Chunk"
+  "signature": "[com.github.difflib.patch.Chunk].<init>(int,java.lang.Object[])"
+- "exceptions": []
+  "name": "[com.github.difflib.patch.Chunk].equals(java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  "return_type": "boolean"
+  "signature": "[com.github.difflib.patch.Chunk].equals(java.lang.Object)"
+"language": "jvm"
+"project": "java-diff-utils"
+"target_name": "DiffUtilsFuzzer"
+"target_path": "/src/DiffUtilsFuzzer.java"
