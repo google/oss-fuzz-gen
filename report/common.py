@@ -197,7 +197,8 @@ class FileSystem:
 
 
 class Results:
-  """Results provides functions to explore the experiment results in a particular directory."""
+  """Results provides functions to explore the experiment results in a
+  particular directory."""
 
   def __init__(self, results_dir='results', benchmark_set='all'):
     self._results_dir = results_dir
