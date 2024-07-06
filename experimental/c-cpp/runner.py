@@ -23,11 +23,10 @@ import sys
 import threading
 from typing import List
 
+import constants
 import templates
 
 silent_global = False
-
-SHARED_MEMORY_RESULTS_DIR = 'autogen-results'
 
 logger = logging.getLogger(name=__name__)
 LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
@@ -85,7 +84,7 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
   the harness generation because we need the OSS-Fuzz base-runner image, where
   the generation is based on the OSS-Fuzz base-builder image."""
   worker_out = os.path.join(oss_fuzz_base, 'build', 'out', worker_name,
-                            SHARED_MEMORY_RESULTS_DIR)
+                            constants.SHARED_MEMORY_RESULTS_DIR)
 
   for auto_fuzz_dir in os.listdir(worker_out):
     logger.info(auto_fuzz_dir)
@@ -238,7 +237,7 @@ def run_on_targets(target,
 
   openai_api_key = os.getenv('OPENAI_API_KEY', None)
 
-  outdir = os.path.join('/out/', SHARED_MEMORY_RESULTS_DIR)
+  outdir = os.path.join('/out/', constants.SHARED_MEMORY_RESULTS_DIR)
   with open('status-log.txt', 'a') as f:
     f.write("Targeting: %s :: %d\n" % (target, idx))
   run_autogen(target,
@@ -260,14 +259,14 @@ def get_next_worker_project(oss_fuzz_base: str) -> str:
   """Gets next OSS-Fuzz worker projecet."""
   max_idx = -1
   for project_dir in os.listdir(os.path.join(oss_fuzz_base, 'projects')):
-    if not 'temp-project-' in project_dir:
+    if not constants.PROJECT_BASE in project_dir:
       continue
     try:
-      tmp_idx = int(project_dir.replace('temp-project-', ''))
+      tmp_idx = int(project_dir.replace(constants.PROJECT_BASE, ''))
       max_idx = max(tmp_idx, max_idx)
     except:
       continue
-  return f'temp-project-{max_idx+1}'
+  return f'{constants.PROJECT_BASE}{max_idx+1}'
 
 
 def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
