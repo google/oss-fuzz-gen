@@ -1,0 +1,4 @@
+<argument>
+Arugment #{ARG_COUNT} requires {SIMPLE_TYPE} variable.
+You must use {RANDOM_METHODS} to generate {ARRAY_OR_NOT}.
+</argument>
