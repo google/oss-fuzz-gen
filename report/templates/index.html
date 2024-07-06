@@ -98,7 +98,7 @@ td .signature {
     </tbody>
 </table>
 
-<h2>Accummulated results</h2>
+<h2>Accumulated results</h2>
 <table>
   <thead>
     <th>Metric</th>
@@ -107,27 +107,27 @@ td .signature {
   <tbody>
     <tr>
       <td>Total sample benchmarks</td>
-      <td>{{ accummulated_results.total_runs }}</td>
+      <td>{{ accumulated_results.total_runs }}</td>
     </tr>
     <tr>
       <td>Successful Builds</td>
-      <td>{{ accummulated_results.compiles }}</td>
+      <td>{{ accumulated_results.compiles }}</td>
     </tr>
     <tr>
       <td>Build rate</td>
-      <td>{{ accummulated_results.build_rate |percent }}%</td>
+      <td>{{ accumulated_results.build_rate |percent }}%</td>
     </tr>
     <tr>
       <td>Average coverage</td>
-      <td>{{ accummulated_results.average_coverage |percent }}%</td>
+      <td>{{ accumulated_results.average_coverage |percent }}%</td>
     </tr>
     <tr>
       <td>Average line coverage diff</td>
-      <td>{{ accummulated_results.average_line_coverage_diff |percent }}%</td>
+      <td>{{ accumulated_results.average_line_coverage_diff |percent }}%</td>
     </tr>
     <tr>
       <td>Benchmarks with crashes</td>
-      <td>{{ accummulated_results.crashes }}</td>
+      <td>{{ accumulated_results.crashes }}</td>
     </tr>
   </tbody>
 </table>

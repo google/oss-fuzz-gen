@@ -35,8 +35,8 @@ TARGET_EXTS = project_src.SEARCH_EXTS + ['.java', '.py']
 
 
 @dataclasses.dataclass
-class AccummulatedResult:
-  """Container for storing accummulated results."""
+class AccumulatedResult:
+  """Container for storing accumulated results."""
   compiles: int = 0
   crashes: int = 0
   crash_cases: int = 0
@@ -387,17 +387,17 @@ class Results:
     return results, targets
 
   def get_macro_insights(self,
-                         benchmarks: list[Benchmark]) -> AccummulatedResult:
+                         benchmarks: list[Benchmark]) -> AccumulatedResult:
     """Returns macro insights from the aggregated benchmark results."""
-    accummulated_results = AccummulatedResult()
+    accumulated_results = AccumulatedResult()
     for benchmark in benchmarks:
-      accummulated_results.compiles += int(
+      accumulated_results.compiles += int(
           benchmark.result.build_success_rate > 0.0)
-      accummulated_results.crashes += int(benchmark.result.found_bug > 0)
-      accummulated_results.total_coverage += benchmark.result.max_coverage
-      accummulated_results.total_runs += 1
-      accummulated_results.total_line_coverage_diff += benchmark.result.max_line_coverage_diff
-    return accummulated_results
+      accumulated_results.crashes += int(benchmark.result.found_bug > 0)
+      accumulated_results.total_coverage += benchmark.result.max_coverage
+      accumulated_results.total_runs += 1
+      accumulated_results.total_line_coverage_diff += benchmark.result.max_line_coverage_diff
+    return accumulated_results
 
   def _prepare_prompt_for_html_text(self, raw_prompt_content: str) -> str:
     """Converts a raw prompt file into presentable HTML text."""
