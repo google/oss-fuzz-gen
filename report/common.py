@@ -386,15 +386,17 @@ class Results:
 
     return results, targets
 
-  def get_macro_insights(self, benchmarks: list[Benchmark]) -> AccummulatedResult:
+  def get_macro_insights(self,
+                         benchmarks: list[Benchmark]) -> AccummulatedResult:
     """Returns macro insights from the aggregated benchmark results."""
     accummulated_results = AccummulatedResult()
     for benchmark in benchmarks:
-        accummulated_results.compiles += int(benchmark.result.build_success_rate > 0.0)
-        accummulated_results.crashes += int(benchmark.result.found_bug > 0)
-        accummulated_results.total_coverage += benchmark.result.max_coverage
-        accummulated_results.total_runs += 1.0
-        accummulated_results.total_line_coverage_diff += benchmark.result.max_line_coverage_diff
+      accummulated_results.compiles += int(
+          benchmark.result.build_success_rate > 0.0)
+      accummulated_results.crashes += int(benchmark.result.found_bug > 0)
+      accummulated_results.total_coverage += benchmark.result.max_coverage
+      accummulated_results.total_runs += 1
+      accummulated_results.total_line_coverage_diff += benchmark.result.max_line_coverage_diff
     return accummulated_results
 
   def _prepare_prompt_for_html_text(self, raw_prompt_content: str) -> str:
