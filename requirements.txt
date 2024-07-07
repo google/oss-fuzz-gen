@@ -14,7 +14,7 @@ astroid==2.15.8
     # via pylint
 cachetools==5.3.3
     # via google-auth
-certifi==2024.6.2
+certifi==2024.7.4
     # via
     #   httpcore
     #   httpx
