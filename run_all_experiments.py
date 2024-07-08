@@ -218,10 +218,12 @@ def parse_args() -> argparse.Namespace:
                       '--introspector-endpoint',
                       type=str,
                       default=introspector.DEFAULT_INTROSPECTOR_ENDPOINT)
-  parser.add_argument('-of',
-          '--oss-fuzz-dir',
-          help='Path to OSS-Fuzz dir to use. If not set will create temporary directory',
-          default='')
+  parser.add_argument(
+      '-of',
+      '--oss-fuzz-dir',
+      help=
+      'Path to OSS-Fuzz dir to use. If not set will create temporary directory',
+      default='')
   parser.add_argument(
       '-g',
       '--generate-benchmarks',

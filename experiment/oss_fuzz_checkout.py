@@ -81,7 +81,7 @@ def clone_oss_fuzz(oss_fuzz_dir: str = ''):
     _set_temp_oss_fuzz_repo()
   else:
     global OSS_FUZZ_DIR
-    OSS_FUZZ_DIR=oss_fuzz_dir
+    OSS_FUZZ_DIR = oss_fuzz_dir
 
   if not os.path.exists(OSS_FUZZ_DIR):
     _clone_oss_fuzz_repo()
