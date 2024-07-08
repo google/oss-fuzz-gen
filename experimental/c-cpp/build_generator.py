@@ -26,17 +26,6 @@ import manager
 logger = logging.getLogger(name=__name__)
 
 
-class BuildWorker:
-  """Keeper of data on auto generated builds."""
-
-  def __init__(self):
-    self.build_script: str = ''
-    self.build_suggestion: str = ''
-    self.build_directory: str = ''
-    self.executable_files_build: Dict[str, List[str]] = {}
-    self.base_fuzz_build: bool = False
-
-
 ############################################################
 #### Logic for auto building a given source code folder ####
 ############################################################
@@ -45,6 +34,17 @@ class AutoBuildContainer:
   def __init__(self):
     self.list_of_commands = []
     self.heuristic_id = ''
+
+
+class BuildWorker:
+  """Keeper of data on auto generated builds."""
+
+  def __init__(self, build_suggestion: AutoBuildContainer):
+    self.build_suggestion: AutoBuildContainer = build_suggestion
+    self.build_script: str = ''
+    self.build_directory: str = ''
+    self.executable_files_build: Dict[str, List[str]] = {}
+    self.base_fuzz_build: bool = False
 
 
 class AutoBuildBase:
@@ -744,9 +744,8 @@ def raw_build_evaluation(
     #    'executables-build': binary_files_build,
     #    'auto-build-setup': (build_script, test_dir, build_suggestion)
     #}
-    build_worker = BuildWorker()
+    build_worker = BuildWorker(build_suggestion)
     build_worker.build_script = build_script
-    build_worker.build_suggestion = build_suggestion
     build_worker.executable_files_build = binary_files_build
     build_worker.build_directory = test_dir
 

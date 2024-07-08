@@ -822,7 +822,7 @@ def build_empty_fuzzers(build_workers, language):
     build_worker.base_fuzz_build = base_fuzz_build
 
 
-def refine_static_libs(build_results) -> List[str]:
+def refine_static_libs(build_results) -> None:
   """Returns a list of static libraries with substitution of common gtest
   libraries, which should not be linked in the fuzzer builds."""
   for test_dir in build_results:
