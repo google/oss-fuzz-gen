@@ -343,30 +343,32 @@ def setup_logging():
   logging.basicConfig(level=logging.INFO, format=LOG_FMT)
 
 
+def extract_target_repositories(target_input) -> list[str]:
+  if os.path.isfile(target_input):
+    target_repositories = read_targets_file(target_input)
+  else:
+    target_repositories = [target_input]
+  logger.info(target_repositories)
+  return target_repositories
+
+
 def main():
   global silent_global
 
   args = parse_commandline()
+
   setup_logging()
-  target = args.input
-  disable_autofuzz = args.disable_fuzzgen
-
-  if os.path.isfile(target):
-    target_repositories = read_targets_file(target)
-  else:
-    target_repositories = [target]
-  logger.info(target_repositories)
-
+  target_repositories = extract_target_repositories(args.input)
   silent_global = args.silent
 
   use_multithreading = True
   if use_multithreading:
-    run_parallels(os.path.abspath(args.oss_fuzz), target_repositories, disable_autofuzz,
-                  args.targets_per_heuristic, args.model, args.build_heuristics,
-                  args.generator_heuristics)
+    run_parallels(os.path.abspath(args.oss_fuzz), target_repositories,
+                  args.disable_fuzzgen, args.targets_per_heuristic, args.model,
+                  args.build_heuristics, args.generator_heuristics)
   else:
-    run_sequential(os.path.abspath(args.oss_fuzz), target_repositories, disable_autofuzz,
-                   args.targets_per_heuristic, args.model,
+    run_sequential(os.path.abspath(args.oss_fuzz), target_repositories,
+                   args.disable_fuzzgen, args.targets_per_heuristic, args.model,
                    args.build_heuristics, args.generator_heuristics)
 
 
