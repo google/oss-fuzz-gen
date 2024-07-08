@@ -356,7 +356,7 @@ class VertexAIModel(GoogleModel):
 
     for i in range(self.num_samples):
       response = self.with_retry_on_error(
-          lambda i: self.do_generate(model, prompt.get(), parameters_list[i]),
+          lambda i=i: self.do_generate(model, prompt.get(), parameters_list[i]),
           GoogleAPICallError) or ''
       self._save_output(i, response, response_dir)
 
