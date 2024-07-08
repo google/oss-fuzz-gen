@@ -820,22 +820,22 @@ def build_empty_fuzzers(results, language):
     results[test_dir]['base-fuzz-build'] = base_fuzz_build
 
 
-def refine_static_libs(results) -> List[str]:
+def refine_static_libs(build_results) -> List[str]:
   """Returns a list of static libraries with substitution of common gtest
   libraries, which should not be linked in the fuzzer builds."""
-  for test_dir in results:
+  for test_dir in build_results:
     refined_static_list = []
     libs_to_avoid = {
         'libgtest.a', 'libgmock.a', 'libgmock_main.a', 'libgtest_main.a'
     }
-    for static_lib in results[test_dir]['executables-build']['static-libs']:
+    static_libs = build_results[test_dir]['executables-build']['static-libs']
+    for static_lib in static_libs:
       if any(
           os.path.basename(static_lib) in lib_to_avoid
           for lib_to_avoid in libs_to_avoid):
         continue
       refined_static_list.append(static_lib)
-
-  return refined_static_list
+    build_results[test_dir]['refined-static-libs'] = refined_static_list
 
 
 def get_language_defaults(language: str):
@@ -1304,7 +1304,7 @@ def auto_generate(github_url,
 
   # For each of the auto generated build scripts identify the
   # static libraries resulting from the build.
-  build_results[test_dir]['refined-static-libs'] = refine_static_libs(
+  refine_static_libs(
       build_results)
 
   # Stage 2: perform program analysis to extract data to be used for
@@ -1405,35 +1405,10 @@ def auto_generate(github_url,
                            introspector_report)
         idx += 1
 
-  if disable_fuzzgen:
-    return
 
   # Show those that succeeded.
   for hp in heuristics_passed:
     logger.info('Success: %s', hp)
-
-  logger.info('Auto-generated fuzzers:')
-  if outdir:
-    bash_script = '#!/bin/bash\n'
-    for folder in folders_with_results:
-      src_folder = folder
-      src_folder_base = os.path.basename(src_folder)
-
-      dst_folder = os.path.join(outdir, src_folder_base)
-      logger.info('Copying: %s to %s', folder, dst_folder)
-      if folder == '/src':
-        logger.info('Skipping')
-        continue
-      if folder.count('/') < 2:
-        logger.info('Skipping 2')
-        continue
-      if not os.path.isdir(outdir):
-        os.mkdir(outdir)
-
-      exec_command = os.path.join(dst_folder, folder.split('/')[-1])
-      bash_script += exec_command + ' -max_total_time=10\n'
-    logger.info('-' * 45)
-    logger.info(bash_script)
 
 
 def parse_commandline():
