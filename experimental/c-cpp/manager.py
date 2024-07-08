@@ -933,9 +933,9 @@ def generate_harness_intrinsics(
     # Generate a build script for compiling the fuzzer with ASAN.
     final_asan_build_script = results[test_dir].build_script + '\n'
     fuzzer_out = '/src/generated-fuzzer'
-    final_asan_build_script += ' '.join(fuzzer_build_cmd)
+    final_asan_build_script += ' '.join(fuzzer_build_cmd) + ' '
     final_asan_build_script += fuzzer_intrinsics['build-command-includes']
-    final_asan_build_script += '-o'
+    final_asan_build_script += ' -o '
     final_asan_build_script += fuzzer_out
 
     # Wrap all parts we need for building and running the fuzzer.
