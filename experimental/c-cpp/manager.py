@@ -900,8 +900,8 @@ def run_introspector_on_dir(build_results, test_dir,
 
 
 def log_fuzzer_source(full_fuzzer_source: str):
-  logger.info('-' * 20, ' HARNESS SOURCE ', '-' * 20, '\n', full_fuzzer_source,
-              '\n', '-' * 56)
+  logger.info('-' * 20 + ' HARNESS SOURCE ' + '-' * 20 + '\n'+ full_fuzzer_source+
+              '\n' + '-' * 56)
 
 
 def generate_harness_intrinsics(
