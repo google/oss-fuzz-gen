@@ -348,7 +348,6 @@ def main():
 
   args = parse_commandline()
   setup_logging()
-  oss_fuzz_base = args.oss_fuzz
   target = args.input
   disable_autofuzz = args.disable_fuzzgen
 
@@ -362,11 +361,11 @@ def main():
 
   use_multithreading = True
   if use_multithreading:
-    run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
+    run_parallels(os.path.abspath(args.oss_fuzz), target_repositories, disable_autofuzz,
                   args.targets_per_heuristic, args.model, args.build_heuristics,
                   args.generator_heuristics)
   else:
-    run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz,
+    run_sequential(os.path.abspath(args.oss_fuzz), target_repositories, disable_autofuzz,
                    args.targets_per_heuristic, args.model,
                    args.build_heuristics, args.generator_heuristics)
 
