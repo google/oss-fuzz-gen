@@ -206,9 +206,9 @@ def check_targets(
   return None
 
 
-def prepare() -> None:
+def prepare(oss_fuzz_dir: str) -> None:
   """Prepares the experiment environment."""
-  oss_fuzz_checkout.clone_oss_fuzz(temp_repo=True)
+  oss_fuzz_checkout.clone_oss_fuzz(oss_fuzz_dir)
   oss_fuzz_checkout.postprocess_oss_fuzz()
 
 
