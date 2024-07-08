@@ -25,7 +25,7 @@ import tempfile
 import time
 import traceback
 from abc import abstractmethod
-from typing import Any, Callable, Type
+from typing import Any, Callable, Optional, Type
 
 import openai
 import tiktoken
@@ -59,6 +59,7 @@ class LLM:
       max_tokens: int = MAX_TOKENS,
       num_samples: int = NUM_SAMPLES,
       temperature: float = TEMPERATURE,
+      temperature_list: Optional[list[float]] = None,
   ):
     self.ai_binary = ai_binary
 
@@ -66,6 +67,7 @@ class LLM:
     self.max_tokens = max_tokens
     self.num_samples = num_samples
     self.temperature = temperature
+    self.temperature_list = temperature_list
 
   def cloud_setup(self):
     """Runs Cloud specific-setup."""
@@ -81,6 +83,7 @@ class LLM:
       max_tokens: int = MAX_TOKENS,
       num_samples: int = NUM_SAMPLES,
       temperature: float = TEMPERATURE,
+      temperature_list: Optional[list[float]] = None,
   ):
     """Prepares the LLM for fuzz target generation."""
     if ai_binary:
@@ -94,6 +97,7 @@ class LLM:
             max_tokens,
             num_samples,
             temperature,
+            temperature_list,
         )
 
     raise ValueError(f'Bad model type {name}')
@@ -225,6 +229,9 @@ class GPT(LLM):
     """Generates code with OpenAI's API."""
     if self.ai_binary:
       print(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      print(f'OpenAI does not allow temperature list: {self.temperature_list}')
+
     client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
     completion = self.with_retry_on_error(
@@ -268,6 +275,9 @@ class GoogleModel(LLM):
     if not self.ai_binary:
       print(f'Error: This model requires a local AI binary: {self.ai_binary}')
       sys.exit(1)
+    if self.temperature_list:
+      print('AI Binary does not implement temperature list: '
+            f'{self.temperature_list}')
 
     with tempfile.NamedTemporaryFile(delete=False, mode='w') as f:
       f.write(prompt.get())
@@ -322,6 +332,17 @@ class VertexAIModel(GoogleModel):
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
     return model.predict(prefix=prompt, **config).text
 
+  def _prepare_parameters(self) -> list[dict]:
+    """Prepares the parameter dictionary for LLM query."""
+    return [{
+        'temperature':
+            self.temperature_list[index % len(self.temperature_list)] if
+            (self.temperature_list and
+             len(self.temperature_list) > index) else self.temperature,
+        'max_output_tokens':
+            self._max_output_tokens
+    } for index in range(self.num_samples)]
+
   def generate_code(self,
                     prompt: prompts.Prompt,
                     response_dir: str,
@@ -331,16 +352,13 @@ class VertexAIModel(GoogleModel):
       print(f'VertexAI does not use local AI binary: {self.ai_binary}')
 
     model = self.get_model()
-    parameters = {
-        'temperature': self.temperature,
-        'max_output_tokens': self._max_output_tokens,
-    }
+    parameters_list = self._prepare_parameters()
 
-    for index in range(self.num_samples):
+    for i in range(self.num_samples):
       response = self.with_retry_on_error(
-          lambda: self.do_generate(model, prompt.get(), parameters),
+          lambda i: self.do_generate(model, prompt.get(), parameters_list[i]),
           GoogleAPICallError) or ''
-      self._save_output(index, response, response_dir)
+      self._save_output(i, response, response_dir)
 
 
 class GeminiModel(VertexAIModel):
