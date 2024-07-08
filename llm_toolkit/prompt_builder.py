@@ -742,7 +742,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     if '<init>' in self.benchmark.function_name:
       creation = (f'The target method is a constructor of {class_name} '
                   'invoke it directly with new keyword.')
-    elif self.benchmark.is_static:
+    elif self.benchmark.is_jvm_static:
       creation = ('The target method is a static method, invoke it directly '
                   'without creating an object.')
     else:
