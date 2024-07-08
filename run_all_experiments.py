@@ -219,6 +219,12 @@ def parse_args() -> argparse.Namespace:
                       type=str,
                       default=introspector.DEFAULT_INTROSPECTOR_ENDPOINT)
   parser.add_argument(
+      '-of',
+      '--oss-fuzz-dir',
+      help=
+      'Path to OSS-Fuzz dir to use. If not set will create temporary directory',
+      default='')
+  parser.add_argument(
       '-g',
       '--generate-benchmarks',
       help=('Generate benchmarks and use those for analysis. This is a string '
@@ -307,7 +313,7 @@ def main():
   # right API endpoint is used throughout.
   introspector.set_introspector_endpoints(args.introspector_endpoint)
 
-  run_one_experiment.prepare()
+  run_one_experiment.prepare(args.oss_fuzz_dir)
 
   experiment_configs = get_experiment_configs(args)
   experiment_results = []
