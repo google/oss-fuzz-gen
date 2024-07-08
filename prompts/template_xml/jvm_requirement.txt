@@ -14,7 +14,7 @@
 WRONG:
 <code>
 public static void testing(int test) {
-  String test = "Testing;
+  String test = "Testing";
 }
 </code></item>
 <item>Always create the fuzzing harness from the following templates:
