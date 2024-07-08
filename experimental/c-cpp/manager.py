@@ -779,7 +779,7 @@ def get_all_introspector_files(target_dir):
   return introspection_files_found
 
 
-def build_empty_fuzzers(results, language):
+def build_empty_fuzzers(build_workers, language):
   """Run build scripts against an empty fuzzer harness."""
   # Stage 2: perform program analysis to extract data to be used for
   # harness generation.
@@ -788,11 +788,11 @@ def build_empty_fuzzers(results, language):
   # the resulting static libraries against an empty fuzzer.
   fuzz_compiler, _, empty_fuzzer_file, fuzz_template = get_language_defaults(
       language)
-  for test_dir in results:
+  for test_dir, build_worker in build_workers.items():
     logger.info('Test dir: %s :: %s', test_dir,
-                str(results[test_dir]['refined-static-libs']))
+                str(build_worker.executable_files_build['refined-static-libs']))
 
-    if len(results[test_dir]['refined-static-libs']) == 0:
+    if len(build_worker.executable_files_build['refined-static-libs']) == 0:
       continue
 
     logger.info('Trying to link in an empty fuzzer')
@@ -806,7 +806,7 @@ def build_empty_fuzzers(results, language):
         fuzz_compiler, '-fsanitize=fuzzer', '-fsanitize=address',
         empty_fuzzer_file
     ]
-    for refined_static_lib in results[test_dir]['refined-static-libs']:
+    for refined_static_lib in build_worker.executable_files_build['refined-static-libs']:
       cmd.append(os.path.join(test_dir, refined_static_lib))
 
     logger.info('Command [%s]', ' '.join(cmd))
@@ -817,7 +817,7 @@ def build_empty_fuzzers(results, language):
       base_fuzz_build = False
 
     logger.info('Base fuzz build: %s', str(base_fuzz_build))
-    results[test_dir]['base-fuzz-build'] = base_fuzz_build
+    build_worker.base_fuzz_build = base_fuzz_build
 
 
 def refine_static_libs(build_results) -> List[str]:
@@ -828,14 +828,15 @@ def refine_static_libs(build_results) -> List[str]:
     libs_to_avoid = {
         'libgtest.a', 'libgmock.a', 'libgmock_main.a', 'libgtest_main.a'
     }
-    static_libs = build_results[test_dir]['executables-build']['static-libs']
+    build_worker = build_results[test_dir]
+    static_libs = build_worker.executable_files_build['static-libs']
     for static_lib in static_libs:
       if any(
           os.path.basename(static_lib) in lib_to_avoid
           for lib_to_avoid in libs_to_avoid):
         continue
       refined_static_list.append(static_lib)
-    build_results[test_dir]['refined-static-libs'] = refined_static_list
+    build_worker.executable_files_build['refined-static-libs'] = refined_static_list
 
 
 def get_language_defaults(language: str):
@@ -847,7 +848,7 @@ def get_language_defaults(language: str):
   return compilers_and_flags[language]
 
 
-def run_introspector_on_dir(build_results, test_dir,
+def run_introspector_on_dir(build_worker, test_dir,
                             language) -> Tuple[bool, List[str]]:
   """Runs Fuzz Introspector on a target directory with the ability
     to analyse code without having fuzzers (FUZZ_INTROSPECTOR_AUTO_FUZZ=1).
@@ -859,7 +860,7 @@ def run_introspector_on_dir(build_results, test_dir,
     This is done by way of the OSS-Fuzz `compile` command and by setting
     the environment appropriately before running this command.
     """
-  introspector_vanilla_build_script = build_results[test_dir]['build-script']
+  introspector_vanilla_build_script = build_worker.build_script
   (fuzz_compiler, fuzz_flags, empty_fuzzer_file,
    fuzz_template) = get_language_defaults(language)
 
@@ -870,7 +871,7 @@ def run_introspector_on_dir(build_results, test_dir,
   fuzzer_build_cmd = [
       fuzz_compiler, fuzz_flags, '$LIB_FUZZING_ENGINE', empty_fuzzer_file
   ]
-  for refined_static_lib in build_results[test_dir]['refined-static-libs']:
+  for refined_static_lib in build_worker.executable_files_build['refined-static-libs']:
     fuzzer_build_cmd.append('-Wl,--whole-archive')
     fuzzer_build_cmd.append(os.path.join(test_dir, refined_static_lib))
 
@@ -942,7 +943,7 @@ def generate_harness_intrinsics(
       log_fuzzer_source(fuzzer_intrinsics['full-source-code'])
 
     # Generate a build script for compiling the fuzzer with ASAN.
-    final_asan_build_script = results[test_dir]['build-script']
+    final_asan_build_script = results[test_dir].build_script
     fuzzer_out = '/src/generated-fuzzer'
     final_asan_build_script += '\n%s %s -o %s' % (
         ' '.join(fuzzer_build_cmd), fuzzer_intrinsics['build-command-includes'],
@@ -1291,16 +1292,16 @@ def auto_generate(github_url,
   build_results = build_generator.raw_build_evaluation(
       all_build_scripts, initial_executable_files)
   logger.info('Checking results of %d build generators', len(build_results))
-  for test_dir, test_build_result in build_results.items():
-    build_heuristic = test_build_result['auto-build-setup'][2].heuristic_id
-    static_libs = test_build_result['executables-build']['static-libs']
+  for test_dir, build_worker in build_results.items():
+    build_heuristic = build_worker.build_suggestion.heuristic_id
+    static_libs = build_worker.executable_files_build['static-libs']
 
     append_to_report(
         outdir,
         f'build success: {build_heuristic} :: {test_dir} :: {static_libs}')
     logger.info('%s : %s : %s',
-                test_build_result['auto-build-setup'][2].heuristic_id, test_dir,
-                test_build_result['executables-build']['static-libs'])
+                build_heuristic, test_dir,
+                static_libs)
 
   # For each of the auto generated build scripts identify the
   # static libraries resulting from the build.
@@ -1328,12 +1329,11 @@ def auto_generate(github_url,
   folders_with_results = set()
   logger.info('Going through %d build results to generate fuzzers',
               len(build_results))
-  for test_dir, build_result in build_results.items():
-    # Skip if build suggestion did not work with an empty fuzzer.
-    build_heuristic_id = build_result['auto-build-setup'][2].heuristic_id
+  for test_dir, build_worker in build_results.items():
+    logger.info('Checking build heuristic: %s', build_worker.build_suggestion.heuristic_id)
 
-    logger.info('Checking build heuristic: %s', build_heuristic_id)
-    if build_result.get('base-fuzz-build', False) is False:
+    # Skip if build suggestion did not work with an empty fuzzer.
+    if not build_worker.base_fuzz_build:
       logger.info('Build failed, skipping')
       continue
 
@@ -1342,7 +1342,7 @@ def auto_generate(github_url,
     if os.path.isdir(INTROSPECTOR_OSS_FUZZ_DIR):
       shutil.rmtree(INTROSPECTOR_OSS_FUZZ_DIR)
 
-    _, fuzzer_build_cmd = run_introspector_on_dir(build_results, test_dir,
+    _, fuzzer_build_cmd = run_introspector_on_dir(build_worker, test_dir,
                                                   language)
 
     if os.path.isdir(INTROSPECTOR_OSS_FUZZ_DIR):

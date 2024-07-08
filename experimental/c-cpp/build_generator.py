@@ -26,6 +26,17 @@ import manager
 logger = logging.getLogger(name=__name__)
 
 
+class BuildWorker:
+  """Keeper of data on auto generated builds."""
+
+  def __init__(self):
+    self.build_script: str = ''
+    self.build_suggestion: str = ''
+    self.build_directory: str = ''
+    self.executable_files_build: Dict[str, List[str]] = {}
+    self.base_fuzz_build: bool = False
+
+
 ############################################################
 #### Logic for auto building a given source code folder ####
 ############################################################
@@ -708,7 +719,7 @@ def extract_build_suggestions(
 
 def raw_build_evaluation(
     all_build_scripts: List[Tuple[str, str, AutoBuildContainer]],
-    initial_executable_files: Dict[str, List[str]]) -> Dict[str, Any]:
+    initial_executable_files: Dict[str, List[str]]) -> Dict[str, BuildWorker]:
   """Run each of the build scripts and extract any artifacts build by them."""
   build_results = {}
   for build_script, test_dir, build_suggestion in all_build_scripts:
@@ -727,22 +738,18 @@ def raw_build_evaluation(
     # to running the build.
     binary_files_build = get_all_binary_files_from_folder(test_dir)
 
-    new_binary_files = {
-        'static-libs': [],
-        'dynamic-libs': [],
-        'object-files': []
-    }
-    for key, bfiles in binary_files_build.items():
-      for bfile in bfiles:
-        if bfile not in initial_executable_files[key]:
-          new_binary_files[key].append(bfile)
-
-    logger.info('Static libs found %s', str(new_binary_files))
-
     # binary_files_build['static-libs'])
-    build_results[test_dir] = {
-        'build-script': build_script,
-        'executables-build': binary_files_build,
-        'auto-build-setup': (build_script, test_dir, build_suggestion)
-    }
+    #build_results[test_dir] = {
+    #    'build-script': build_script,
+    #    'executables-build': binary_files_build,
+    #    'auto-build-setup': (build_script, test_dir, build_suggestion)
+    #}
+    build_worker = BuildWorker()
+    build_worker.build_script = build_script
+    build_worker.build_suggestion = build_suggestion
+    build_worker.executable_files_build = binary_files_build
+    build_worker.build_directory = test_dir
+
+    build_results[test_dir] = build_worker
+
   return build_results
