@@ -49,7 +49,7 @@ DEBUG: bool = False
 NUM_SAMPLES = 2
 MAX_TOKENS: int = 4096
 RUN_TIMEOUT: int = 30
-TEMPERATURE: float = 0.4
+TEMPERATURE: float = 1
 
 RESULTS_DIR = './results'
 
