@@ -547,7 +547,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self._template_dir = template_dir
     self.benchmark = benchmark
     self.project_url = self._find_project_url(self.benchmark.project)
-    self.have_objects = False
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
@@ -672,7 +671,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     # java.lang.Object argument
     if 'java.lang.Object' in arg_type:
-      self.have_objects = True
       argument = self._get_template(self.object_arg_description_template_file)
       argument = argument.replace('{ARG_COUNT}', str(count))
       return argument
@@ -796,9 +794,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
     problem = problem.replace("{PROJECT_URL}", self.project_url)
 
-    # Full data mapping only needed when java.lang.Object is used.
-    if self.have_objects:
-      problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
+    problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
 
     return problem
 
