@@ -681,7 +681,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     if method_str:
       argument = self._get_template(self.simple_arg_description_template_file)
       argument = argument.replace('{ARG_COUNT}', str(count))
-      argument = argument.replace('{RANDOM_METHODS}', ' or '.join(method_str))
+      argument = argument.replace('{RANDOM_METHODS}', method_str)
       if '[]' in arg_type:
         arg_type_no_array = arg_type.replace('[]', '')
         argument = argument.replace('{SIMPLE_TYPE}',
