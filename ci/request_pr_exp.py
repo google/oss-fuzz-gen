@@ -41,6 +41,8 @@ EXP_DELAY = 0
 FUZZING_TIMEOUT = 300
 REQUEST_CPU = 6
 REQUEST_MEM = 30
+NUM_SAMPLES = 2
+NUM_FIXES = 2
 
 PR_LINK_PREFIX = 'https://github.com/google/oss-fuzz-gen/pull'
 JOB_LINK_PREFIX = ('https://console.cloud.google.com/kubernetes/job/'
@@ -130,6 +132,23 @@ def _parse_args(cmd) -> argparse.Namespace:
       type=int,
       default=REQUEST_MEM,
       help=f'Memory requested for experiment in Gi, default: {REQUEST_MEM} Gi.')
+  parser.add_argument(
+      '-i',
+      '--local-introspector',
+      action='store_true',
+      help='If set will use a local version of fuzz introspector\'s webapp')
+  parser.add_argument(
+      '-ns',
+      '--num-samples',
+      type=int,
+      default=NUM_SAMPLES,
+      help='The number of samples to request from LLM, default: {NUM_SAMPLES}')
+  parser.add_argument(
+      '-nf',
+      '--llm-fix-limit',
+      type=int,
+      default=NUM_FIXES,
+      help='The number of fixes to request from LLM, default: {NUM_FIXES}')
   args = parser.parse_args(cmd)
 
   assert os.path.isfile(
@@ -250,6 +269,10 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['GKE_EXP_NAME'] = args.experiment_name
   exp_env_vars['GKE_EXP_REQ_CPU'] = args.request_cpus
   exp_env_vars['GKE_EXP_REQ_MEM'] = f'{args.request_memory}Gi'
+  if args.local_introspector:
+    exp_env_vars['GKE_EXP_LOCAL_INTROSPECTOR'] = 'true'
+  exp_env_vars['GKE_EXP_NUM_SAMPLES'] = f'{args.num_samples}'
+  exp_env_vars['GKE_EXP_LLM_FIX_LIMIT'] = f'{args.llm_fix_limit}'
 
   with open(args.gke_template, 'r') as file:
     yaml_template = file.read()

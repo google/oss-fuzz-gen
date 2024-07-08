@@ -17,13 +17,20 @@
 import argparse
 import logging
 import os
+import threading
+import time
 import urllib.parse
 from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Dict, List, Optional
 
 import jinja2
 
-from report.common import Benchmark, FileSystem, Results, Sample, Target
+from report.common import (AccumulatedResult, Benchmark, FileSystem, Results,
+                           Sample, Target)
+
+LOCAL_HOST = '127.0.0.1'
+LOCAL_PORT = 8012
 
 
 class JinjaEnv:
@@ -99,7 +106,9 @@ class GenerateReport:
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
         self._write_benchmark_sample(benchmark, sample, sample_targets)
 
-    self._write_index_html(benchmarks)
+    accumulated_results = self._results.get_macro_insights(benchmarks)
+
+    self._write_index_html(benchmarks, accumulated_results)
     self._write_index_json(benchmarks)
 
   def _write(self, output_path: str, content: str):
@@ -117,9 +126,12 @@ class GenerateReport:
     with FileSystem(full_path).open('w', encoding='utf-8') as f:
       f.write(content)
 
-  def _write_index_html(self, benchmarks: List[Benchmark]):
+  def _write_index_html(self, benchmarks: List[Benchmark],
+                        accumulated_results: AccumulatedResult):
     """Generate the report index.html and write to filesystem."""
-    rendered = self._jinja.render('index.html', benchmarks=benchmarks)
+    rendered = self._jinja.render('index.html',
+                                  benchmarks=benchmarks,
+                                  accumulated_results=accumulated_results)
     self._write('index.html', rendered)
 
   def _write_index_json(self, benchmarks: List[Benchmark]):
@@ -168,6 +180,27 @@ class GenerateReport:
                     sample.id, e)
 
 
+def generate_report(args: argparse.Namespace) -> None:
+  """Generates static web server files."""
+  logging.info('Generating web page files in %s', args.output_dir)
+  results = Results(results_dir=args.results_dir,
+                    benchmark_set=args.benchmark_set)
+  jinja_env = JinjaEnv(template_globals={'model': args.model})
+  gr = GenerateReport(results=results,
+                      jinja_env=jinja_env,
+                      output_dir=args.output_dir)
+  gr.generate()
+
+
+def launch_webserver(args):
+  """Launches a local web server to browse results."""
+  logging.info('Launching webserver at %s:%d', LOCAL_HOST, LOCAL_PORT)
+  server = ThreadingHTTPServer((LOCAL_HOST, LOCAL_PORT),
+                               partial(SimpleHTTPRequestHandler,
+                                       directory=args.output_dir))
+  server.serve_forever()
+
+
 def _parse_arguments() -> argparse.Namespace:
   """Parses command line args."""
   parser = argparse.ArgumentParser(description=(
@@ -191,6 +224,10 @@ def _parse_arguments() -> argparse.Namespace:
                       '-m',
                       help='Model used for the experiment.',
                       default='')
+  parser.add_argument('--serve',
+                      '-s',
+                      help='Will launch a web server if set.',
+                      action='store_true')
 
   return parser.parse_args()
 
@@ -198,13 +235,22 @@ def _parse_arguments() -> argparse.Namespace:
 def main():
   args = _parse_arguments()
 
-  results = Results(results_dir=args.results_dir,
-                    benchmark_set=args.benchmark_set)
-  jinja_env = JinjaEnv(template_globals={'model': args.model})
-  gr = GenerateReport(results=results,
-                      jinja_env=jinja_env,
-                      output_dir=args.output_dir)
-  gr.generate()
+  if not args.serve:
+    generate_report(args)
+  else:
+    logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'INFO').upper())
+    # Launch web server
+    thread = threading.Thread(target=launch_webserver, args=(args,))
+    thread.start()
+
+    # Generate results continuously while the process runs.
+    while True:
+      generate_report(args)
+      try:
+        time.sleep(90)
+      except KeyboardInterrupt:
+        logging.info('Exiting.')
+        os._exit(0)
 
 
 if __name__ == '__main__':

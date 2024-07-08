@@ -7,15 +7,4 @@ The constructor signature follows the format of <code>[Full qualified name of th
 For example, for the constructor of class <code>Test</code> of package <code>org.test</code> which takes in a single integer would have the following signature:
 <code>[org.test.Test].<init>(int)</code>
 The target method is belonging to the Java project {PROJECT_NAME} ({PROJECT_URL}).
-Here is the list of arguments of the target constructor with descriptions.
-<arguments>
-{ARGUMENTS}
-</arguments>
-{EXCEPTIONS}
-Here is the source code of the target constructor for reference.
-<code>
-{SELF_SOURCE}
-</code>
-Here is a list of source codes of methods that directly invoke the target consturctor for reference.
-{CROSS_SOURCE}
 </target>
