@@ -163,7 +163,7 @@ class FuzzHeuristicGeneratorBase:
 
   def log_prompt(self, prompt: str) -> None:
     """Logs the prompt to stdout."""
-    logger.info('-' * 20, ' PROMPT ', '-' * 20, '\n', prompt, '\n', '-' * 48)
+    logger.info('-' * 20 + ' PROMPT ' + '-' * 20 + '\n' + prompt + '\n' + '-' * 48)
 
   def get_header_intrinsics(self):
     """All header files and include directories."""
@@ -216,7 +216,7 @@ class FuzzHeuristicGeneratorBase:
     else:
       raise Exception(f'Did not find a relevant LLM for "{LLM_MODEL}".')
 
-    logger.info('>' * 45, ' Source:')
+    logger.info('>' * 45 + ' Source:')
     logger.info(fuzzer_source)
     logger.info('-' * 65)
     return fuzzer_source
@@ -356,7 +356,7 @@ The most important part of the harness is that it will build and compile correct
 ''' % (self.github_url, func['function_signature'], func_source_code,
        str(headers_to_include), type_constraints, cross_reference_text)
 
-    logger.info('-' * 45, '\n', prompt, '\n', '-' * 45)
+    logger.info('-' * 45 + '\n' + prompt + '\n' + '-' * 45)
 
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
