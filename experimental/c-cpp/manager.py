@@ -820,10 +820,9 @@ def build_empty_fuzzers(results, language):
     results[test_dir]['base-fuzz-build'] = base_fuzz_build
 
 
-def refine_static_libs(results):
-  """Create a new list for each build the contains the static libraries
-  build with the substitution of common gtest libraries, which should not be
-  linked in the fuzzer builds."""
+def refine_static_libs(results) -> List[str]:
+  """Returns a list of static libraries with substitution of common gtest
+  libraries, which should not be linked in the fuzzer builds."""
   for test_dir in results:
     refined_static_list = []
     libs_to_avoid = {
@@ -836,7 +835,7 @@ def refine_static_libs(results):
         continue
       refined_static_list.append(static_lib)
 
-    results[test_dir]['refined-static-libs'] = refined_static_list
+  return refined_static_list
 
 
 def get_language_defaults(language: str):
@@ -900,8 +899,8 @@ def run_introspector_on_dir(build_results, test_dir,
 
 
 def log_fuzzer_source(full_fuzzer_source: str):
-  logger.info('-' * 20 + ' HARNESS SOURCE ' + '-' * 20 + '\n'+ full_fuzzer_source+
-              '\n' + '-' * 56)
+  logger.info('-' * 20 + ' HARNESS SOURCE ' + '-' * 20 + '\n' +
+              full_fuzzer_source + '\n' + '-' * 56)
 
 
 def generate_harness_intrinsics(
@@ -1259,29 +1258,29 @@ def auto_generate(github_url,
                   disable_fuzz_build_and_test=False,
                   outdir=''):
   """Generates build script and fuzzer harnesses for a GitHub repository."""
+  target_source_path = os.path.join(os.getcwd(), github_url.split('/')[-1])
   dst_folder = github_url.split('/')[-1]
 
   # clone the base project into a dedicated folder
-  if not os.path.isdir(dst_folder):
+  if not os.path.isdir(target_source_path):
     subprocess.check_call('git clone --recurse-submodules %s %s' %
                           (github_url, dst_folder),
                           shell=True)
 
   # Stage 1: Build script generation
   initial_executable_files = get_all_binary_files_from_folder(
-      os.path.abspath(os.path.join(os.getcwd(), dst_folder)))
+      target_source_path)
 
-  language = determine_project_language(os.path.join(os.getcwd(), dst_folder))
+  language = determine_project_language(target_source_path)
   logger.info('Target language: %s', language)
   append_to_report(outdir, f'Target language: {language}')
 
   # record the path
-  abspath_of_target = os.path.join(os.getcwd(), dst_folder)
   logger.info('[+] Extracting build scripts statically')
   all_build_scripts: List[
       Tuple[str, str, build_generator.
             AutoBuildContainer]] = build_generator.extract_build_suggestions(
-                abspath_of_target, 'test-fuzz-build-')
+                target_source_path, 'test-fuzz-build-')
 
   # return now if we don't need to test build scripts
   if disable_testing_build_scripts is True:
@@ -1305,7 +1304,8 @@ def auto_generate(github_url,
 
   # For each of the auto generated build scripts identify the
   # static libraries resulting from the build.
-  refine_static_libs(build_results)
+  build_results[test_dir]['refined-static-libs'] = refine_static_libs(
+      build_results)
 
   # Stage 2: perform program analysis to extract data to be used for
   # harness generation.
