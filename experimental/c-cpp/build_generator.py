@@ -465,9 +465,9 @@ class CMakeScannerOptsParser(AutoBuildBase):
       if option['type'] != 'BOOL':
         continue
       if 'STATIC' in option['name'] and option['default'] != 'ON':
-        cmake_string += '-D%s=ON ' % (option['name'])
+        cmake_string += f'-D{option["name"]}=ON '
       elif option['default'] != 'OFF':
-        cmake_string += '-D%s=OFF ' % (option['name'])
+        cmake_string += f'-D{option["name"]}=OFF '
     return cmake_string
 
 
@@ -527,7 +527,7 @@ class CMakeScanner(AutoBuildBase):
     opt1 = [
         'mkdir fuzz-build',
         'cd fuzz-build',
-        'cmake %s ../' % (' '.join(cmake_opts)),
+        f'cmake {" ".join(cmake_opts)} ../',
         'make V=1 || true',
     ]
     build_container2 = AutoBuildContainer()
@@ -539,7 +539,7 @@ class CMakeScanner(AutoBuildBase):
     opt_static = [
         'mkdir fuzz-build',
         'cd fuzz-build',
-        'cmake %s ../' % (' '.join(cmake_opts)),
+        f'cmake {" ".join(cmake_opts)} ../',
         'sed -i \'s/SHARED/STATIC/g\' ../CMakeLists.txt',
         'make V=1 || true',
     ]
@@ -552,13 +552,13 @@ class CMakeScanner(AutoBuildBase):
     option_values = []
     for option in self.cmake_options:
       if 'BUILD_SHARED_LIBS' == option:
-        option_values.append('-D%s=OFF' % (option))
+        option_values.append(f'-D{option}=OFF')
       elif 'BUILD_STATIC' == option:
-        option_values.append('-D%s=ON' % (option))
+        option_values.append(f'-D{option}=ON')
       elif 'BUILD_SHARED' == option:
-        option_values.append('-D%s=OFF' % (option))
+        option_values.append(f'-D{option}=OFF')
       elif 'ENABLE_STATIC' == option:
-        option_values.append('-D%s=ON' % (option))
+        option_values.append(f'-D{option}=ON')
 
     if len(option_values) > 0:
       option_string = ' '.join(option_values)
@@ -569,7 +569,7 @@ class CMakeScanner(AutoBuildBase):
       bopt = [
           'mkdir fuzz-build',
           'cd fuzz-build',
-          'cmake %s %s ../' % (' '.join(cmake_default_options), option_string),
+          f'cmake {" ".join(cmake_default_options)} {option_string} ../',
           'make V=1',
       ]
       build_container3 = AutoBuildContainer()
@@ -582,15 +582,15 @@ class CMakeScanner(AutoBuildBase):
     option_values = []
     for option in self.cmake_options:
       if 'BUILD_SHARED_LIBS' == option:
-        option_values.append('-D%s=OFF' % (option))
+        option_values.append(f'-D{option}=OFF')
       elif 'BUILD_STATIC' == option:
-        option_values.append('-D%s=ON' % (option))
+        option_values.append(f'-D{option}=ON')
       elif 'BUILD_SHARED' == option:
-        option_values.append('-D%s=OFF' % (option))
+        option_values.append(f'-D{option}=OFF')
       elif 'ENABLE_STATIC' == option:
-        option_values.append('-D%s=ON' % (option))
+        option_values.append(f'-D{option}=ON')
       elif 'BUILD_TESTS' in option:
-        option_values.append('-D%s=ON' % (option))
+        option_values.append(f'-D{option}=ON')
 
     if len(option_values) > 0:
       option_string = ' '.join(option_values)
@@ -601,7 +601,7 @@ class CMakeScanner(AutoBuildBase):
       bopt = [
           'mkdir fuzz-build',
           'cd fuzz-build',
-          'cmake %s %s ../' % (' '.join(cmake_default_options), option_string),
+          f'cmake {" ".join(cmake_default_options)} {option_string} ../',
           'make V=1',
       ]
       build_container4 = AutoBuildContainer()
@@ -677,9 +677,9 @@ def get_all_binary_files_from_folder(path: str) -> Dict[str, List[str]]:
 def wrap_build_script(test_dir: str, build_container: AutoBuildContainer,
                       abspath_of_target: str) -> str:
   build_script = '#!/bin/bash\n'
-  build_script += 'rm -rf /%s\n' % (test_dir)
-  build_script += 'cp -rf %s %s\n' % (abspath_of_target, test_dir)
-  build_script += 'cd %s\n' % (test_dir)
+  build_script += f'rm -rf /{test_dir}\n'
+  build_script += f'cp -rf {abspath_of_target} {test_dir}\n'
+  build_script += f'cd {test_dir}\n'
   for cmd in build_container.list_of_commands:
     build_script += cmd + '\n'
 

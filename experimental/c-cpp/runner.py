@@ -64,17 +64,17 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
 
   # Build a version of the project
   if silent_global:
-    subprocess.check_call('python3 infra/helper.py build_fuzzers %s' %
-                          (project_name),
-                          shell=True,
-                          cwd=oss_fuzz_base,
-                          stdout=subprocess.DEVNULL,
-                          stderr=subprocess.DEVNULL)
+    subprocess.check_call(
+        f'python3 infra/helper.py build_fuzzers {project_name}',
+        shell=True,
+        cwd=oss_fuzz_base,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL)
   else:
-    subprocess.check_call('python3 infra/helper.py build_fuzzers %s' %
-                          (project_name),
-                          shell=True,
-                          cwd=oss_fuzz_base)
+    subprocess.check_call(
+        f'python3 infra/helper.py build_fuzzers {project_name}',
+        shell=True,
+        cwd=oss_fuzz_base)
 
 
 def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
@@ -145,11 +145,11 @@ def run_autogen(github_url,
                 generator_heuristics='all'):
   """Launch auto-gen analysis within OSS-Fuzz container."""
 
-  initiator_cmd = 'python3 /src/manager.py %s -o %s' % (github_url, outdir)
+  initiator_cmd = f'python3 /src/manager.py {github_url} -o {outdir}'
   if disable_autofuzz:
     initiator_cmd += ' --disable-fuzzgen'
-  initiator_cmd += ' --model=%s' % (model)
-  initiator_cmd += ' --targets-per-heuristic=%d' % (targets_per_heuristic)
+  initiator_cmd += f' --model={model}'
+  initiator_cmd += f' --targets-per-heuristic={targets_per_heuristic}'
 
   extra_environment = []
   if model == 'vertex':
@@ -157,7 +157,7 @@ def run_autogen(github_url,
     extra_environment.append('GOOGLE_APPLICATION_CREDENTIALS=/src/creds.json')
   elif model == 'openai':
     extra_environment.append('-e')
-    extra_environment.append('OPENAI_API_KEY=%s' % (openai_api_key))
+    extra_environment.append(f'OPENAI_API_KEY={openai_api_key}')
 
   cmd = [
       'docker',
@@ -174,18 +174,18 @@ def run_autogen(github_url,
       '-e',
       'FUZZING_LANGUAGE=c++',
       '-e',
-      'BUILD_HEURISTICS=%s' % (build_heuristics),
+      f'BUILD_HEURISTICS={build_heuristics}',
       '-e',
-      'GENERATOR_HEURISTICS=%s' % (generator_heuristics),
+      f'GENERATOR_HEURISTICS={generator_heuristics}',
   ] + extra_environment
 
   cmd += [
       '-v',
-      '%s/build/out/%s:/out' % (oss_fuzz_base, worker_project),
+      f'{oss_fuzz_base}/build/out/{worker_project}:/out',
       '-v',
-      '%s/build/work/%s:/work' % (oss_fuzz_base, worker_project),
+      f'{oss_fuzz_base}/build/work/{worker_project}:/work',
       '-t',
-      'gcr.io/oss-fuzz/%s' % (worker_project),
+      f'gcr.io/oss-fuzz/{worker_project}',
       # Command to run inside the container
       initiator_cmd
   ]
@@ -239,7 +239,7 @@ def run_on_targets(target,
 
   outdir = os.path.join('/out/', constants.SHARED_MEMORY_RESULTS_DIR)
   with open('status-log.txt', 'a') as f:
-    f.write("Targeting: %s :: %d\n" % (target, idx))
+    f.write(f'Targeting: {target} :: {idx}\n')
   run_autogen(target,
               outdir,
               oss_fuzz_base,
