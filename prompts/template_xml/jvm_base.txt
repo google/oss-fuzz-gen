@@ -4,4 +4,4 @@ The <target> tag contains information of the target method to invoke.
 The <arguments> tag contains information of each of the target method arguments.
 The <exceptions> tag contains a list of exceptions thrown by the target method that you MUST catch.
 The <constructor> tag contains constructor or method call details you MUST use to create the needed object before calling the target method.
-The <requirement> tag contains additional requirements that you MUST follow for this code generation.
+The <requirements> tag contains additional requirements that you MUST follow for this code generation.

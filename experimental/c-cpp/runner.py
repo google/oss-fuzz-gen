@@ -15,6 +15,7 @@
 """Manager for running auto-gen from scratch."""
 
 import argparse
+import logging
 import os
 import shutil
 import subprocess
@@ -22,11 +23,14 @@ import sys
 import threading
 from typing import List
 
+import constants
 import templates
 
 silent_global = False
 
-SHARED_MEMORY_RESULTS_DIR = 'autogen-results'
+logger = logging.getLogger(name=__name__)
+LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
+           ': %(funcName)s: %(message)s')
 
 
 def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
@@ -46,8 +50,8 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
   if llm_model == 'vertex':
     json_config = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', None)
     if json_config is None:
-      print('vertex model is set but could not find configuration file.')
-      print('Plese set GOOGLE_APPLICATION_CREDENTIALS env variable.')
+      logger.info('vertex model is set but could not find configuration file.')
+      logger.info('Plese set GOOGLE_APPLICATION_CREDENTIALS env variable.')
       sys.exit(1)
     shutil.copyfile(json_config, os.path.join(temp_project_dir, 'creds.json'))
 
@@ -80,10 +84,10 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
   the harness generation because we need the OSS-Fuzz base-runner image, where
   the generation is based on the OSS-Fuzz base-builder image."""
   worker_out = os.path.join(oss_fuzz_base, 'build', 'out', worker_name,
-                            SHARED_MEMORY_RESULTS_DIR)
+                            constants.SHARED_MEMORY_RESULTS_DIR)
 
   for auto_fuzz_dir in os.listdir(worker_out):
-    print(auto_fuzz_dir)
+    logger.info(auto_fuzz_dir)
     # Only continue if there is a corpus collected.
     corpus_dir = os.path.join(worker_out, auto_fuzz_dir, 'corpus',
                               'generated-fuzzer-no-leak')
@@ -107,7 +111,7 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
       ]
       subprocess.check_call(' '.join(cmd_to_run), shell=True, cwd=oss_fuzz_base)
     except subprocess.CalledProcessError:
-      print(f'Failed coverage build: {target_cov_name}')
+      logger.info('Failed coverage build: %s', target_cov_name)
       continue
 
     # Run coverage and save report in the main folder.
@@ -125,7 +129,7 @@ def run_coverage_runs(oss_fuzz_base: str, worker_name: str) -> None:
       ]
       subprocess.check_call(' '.join(cmd_to_run), shell=True, cwd=oss_fuzz_base)
     except subprocess.CalledProcessError:
-      print(f'Failed coverage run: {target_cov_name}')
+      logger.info('Failed coverage run: %s', target_cov_name)
       continue
 
 
@@ -233,7 +237,7 @@ def run_on_targets(target,
 
   openai_api_key = os.getenv('OPENAI_API_KEY', None)
 
-  outdir = os.path.join('/out/', SHARED_MEMORY_RESULTS_DIR)
+  outdir = os.path.join('/out/', constants.SHARED_MEMORY_RESULTS_DIR)
   with open('status-log.txt', 'a') as f:
     f.write("Targeting: %s :: %d\n" % (target, idx))
   run_autogen(target,
@@ -255,14 +259,14 @@ def get_next_worker_project(oss_fuzz_base: str) -> str:
   """Gets next OSS-Fuzz worker projecet."""
   max_idx = -1
   for project_dir in os.listdir(os.path.join(oss_fuzz_base, 'projects')):
-    if not 'temp-project-' in project_dir:
+    if not constants.PROJECT_BASE in project_dir:
       continue
     try:
-      tmp_idx = int(project_dir.replace('temp-project-', ''))
+      tmp_idx = int(project_dir.replace(constants.PROJECT_BASE, ''))
       max_idx = max(tmp_idx, max_idx)
     except:
       continue
-  return f'temp-project-{max_idx+1}'
+  return f'{constants.PROJECT_BASE}{max_idx+1}'
 
 
 def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
@@ -278,7 +282,7 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
   jobs = []
   for idx, target in enumerate(target_repositories):
     worker_project_name = get_next_worker_project(oss_fuzz_base)
-    print(f'Worker project name {worker_project_name}')
+    logger.info('Worker project name %s', worker_project_name)
 
     setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
     proc = threading.Thread(target=run_on_targets,
@@ -335,10 +339,15 @@ def parse_commandline():
   return parser.parse_args()
 
 
+def setup_logging():
+  logging.basicConfig(level=logging.INFO, format=LOG_FMT)
+
+
 def main():
   global silent_global
 
   args = parse_commandline()
+  setup_logging()
   oss_fuzz_base = args.oss_fuzz
   target = args.input
   disable_autofuzz = args.disable_fuzzgen
@@ -347,7 +356,7 @@ def main():
     target_repositories = read_targets_file(target)
   else:
     target_repositories = [target]
-  print(target_repositories)
+  logger.info(target_repositories)
 
   silent_global = args.silent
 
