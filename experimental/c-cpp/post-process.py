@@ -17,7 +17,7 @@ import json
 import logging
 import os
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import constants
 
@@ -37,7 +37,7 @@ def _get_edge_cov_from_line(line: str) -> Optional[int]:
   return None
 
 
-def interpret_llvm_run(log_path: str) -> Dict[str, Any]:
+def interpret_llvm_run(log_path: str) -> dict[str, Any]:
   """Interprets a stderr log from a libFuzzer run and returns the edge coverage
   as well as the lines reported by ASAN errors."""
   with open(log_path, 'r', encoding='ISO-8859-1') as libfuzzer_out:
@@ -58,7 +58,7 @@ def oss_fuzz_out_dir(oss_fuzz_dir: str) -> str:
   return os.path.join(oss_fuzz_dir, 'build', 'out')
 
 
-def get_oss_fuzz_generated_projects(oss_fuzz_dir: str) -> List[str]:
+def get_oss_fuzz_generated_projects(oss_fuzz_dir: str) -> list[str]:
   """Gets the sample sessions for auto-gen projects in a given OSS-Fuzz dir."""
   project_indices = []
   for project_out in os.listdir(oss_fuzz_out_dir(oss_fuzz_dir)):
@@ -70,15 +70,14 @@ def get_oss_fuzz_generated_projects(oss_fuzz_dir: str) -> List[str]:
         pass
 
   sorted_project_folders = [
-      constants.PROJECT_BASE + '%d' % (idx)
-      for idx in list(sorted(project_indices))
+      constants.PROJECT_BASE + f'{idx}' for idx in list(sorted(project_indices))
   ]
   return sorted_project_folders
 
 
 def interpret_single_harness_setup(
     oss_fuzz_dir: str, project_folder_out: str, generated_sample_setup: str,
-    generated_sample_setup_dir: str) -> Optional[Dict[str, Any]]:
+    generated_sample_setup_dir: str) -> Optional[dict[str, Any]]:
   """Analyses a single auto-generated set up within an auto-generated
   session."""
   fuzz_run = os.path.join(generated_sample_setup_dir, 'fuzz-run.err')
@@ -90,7 +89,7 @@ def interpret_single_harness_setup(
 
   # Check the covreage run
   coverage_proj = os.path.basename(
-      project_folder_out) + "-cov-" + generated_sample_setup
+      project_folder_out) + '-cov-' + generated_sample_setup
   harness_run_stats = os.path.join(oss_fuzz_out_dir(oss_fuzz_dir),
                                    coverage_proj, 'fuzzer_stats', 'fuzzer.json')
   if os.path.isfile(harness_run_stats):
@@ -108,7 +107,7 @@ def interpret_single_harness_setup(
 
 
 def extract_results_from_generated_samples(
-    oss_fuzz_dir: str, project_folder_out: str) -> List[Dict[str, Any]]:
+    oss_fuzz_dir: str, project_folder_out: str) -> list[dict[str, Any]]:
   """Iterates an auto-gen session and returns a list of successful results."""
   total_outcomes = []
   for generated_sample_setup in os.listdir(
@@ -116,7 +115,6 @@ def extract_results_from_generated_samples(
     generated_sample_setup_dir = os.path.join(
         project_folder_out, constants.SHARED_MEMORY_RESULTS_DIR,
         generated_sample_setup)
-    #print("Analysing %s"%(dd))
     if not os.path.isdir(generated_sample_setup_dir):
       continue
 
