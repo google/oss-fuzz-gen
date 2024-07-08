@@ -91,21 +91,6 @@ def determine_project_language(path: str) -> str:
   return target_language
 
 
-def get_all_binary_files_from_folder(path: str) -> Dict[str, List[str]]:
-  """Extracts binary artifacts from a list of files, based on file suffix."""
-  all_files = get_all_files_in_path(path, path)
-
-  executable_files = {'static-libs': [], 'dynamic-libs': [], 'object-files': []}
-  for fil in all_files:
-    if fil.endswith('.o'):
-      executable_files['object-files'].append(fil)
-    if fil.endswith('.a'):
-      executable_files['static-libs'].append(fil)
-    if fil.endswith('.so'):
-      executable_files['dynamic-libs'].append(fil)
-  return executable_files
-
-
 def get_all_functions_in_project(introspection_files_found):
   all_functions_in_project = []
   for fi_yaml_file in introspection_files_found:
@@ -1273,9 +1258,6 @@ def auto_generate(github_url,
         f'git clone --recurse-submodules {github_url} {dst_folder}', shell=True)
 
   # Stage 1: Build script generation
-  initial_executable_files = get_all_binary_files_from_folder(
-      target_source_path)
-
   language = determine_project_language(target_source_path)
   logger.info('Target language: %s', language)
   append_to_report(outdir, f'Target language: {language}')
@@ -1293,8 +1275,7 @@ def auto_generate(github_url,
 
   # Check each of the build scripts.
   logger.info('[+] Testing build suggestions')
-  build_results = build_generator.raw_build_evaluation(
-      all_build_scripts, initial_executable_files)
+  build_results = build_generator.raw_build_evaluation(all_build_scripts)
   logger.info('Checking results of %d build generators', len(build_results))
   for test_dir, build_worker in build_results.items():
     build_heuristic = build_worker.build_suggestion.heuristic_id

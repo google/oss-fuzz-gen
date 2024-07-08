@@ -19,7 +19,7 @@ import os
 import shutil
 import subprocess
 from abc import abstractmethod
-from typing import Any, Dict, Iterator, List, Tuple
+from typing import Dict, Iterator, List, Tuple
 
 import manager
 
@@ -718,8 +718,8 @@ def extract_build_suggestions(
 
 
 def raw_build_evaluation(
-    all_build_scripts: List[Tuple[str, str, AutoBuildContainer]],
-    initial_executable_files: Dict[str, List[str]]) -> Dict[str, BuildWorker]:
+    all_build_scripts: List[Tuple[str, str, AutoBuildContainer]]
+) -> Dict[str, BuildWorker]:
   """Run each of the build scripts and extract any artifacts build by them."""
   build_results = {}
   for build_script, test_dir, build_suggestion in all_build_scripts:
