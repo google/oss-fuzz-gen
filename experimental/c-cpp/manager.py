@@ -1040,7 +1040,7 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
 
   # Run the fuzzer and observer error
   if not os.path.isfile(
-      '/src/generated-fuzzer'):  #result_to_validate['fuzzer-out']):
+      '/src/generated-fuzzer'):
     logger.info('No fuzzing harness executable')
     logger.info('Copying [%s] to [%s]', fuzzer_gen_dir,
                 os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
