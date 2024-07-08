@@ -163,7 +163,8 @@ class FuzzHeuristicGeneratorBase:
 
   def log_prompt(self, prompt: str) -> None:
     """Logs the prompt to stdout."""
-    logger.info('-' * 20 + ' PROMPT ' + '-' * 20 + '\n' + prompt + '\n' + '-' * 48)
+    logger.info('-' * 20 + ' PROMPT ' + '-' * 20 + '\n' + prompt + '\n' +
+                '-' * 48)
 
   def get_header_intrinsics(self):
     """All header files and include directories."""
@@ -806,7 +807,8 @@ def build_empty_fuzzers(build_workers, language):
         fuzz_compiler, '-fsanitize=fuzzer', '-fsanitize=address',
         empty_fuzzer_file
     ]
-    for refined_static_lib in build_worker.executable_files_build['refined-static-libs']:
+    for refined_static_lib in build_worker.executable_files_build[
+        'refined-static-libs']:
       cmd.append(os.path.join(test_dir, refined_static_lib))
 
     logger.info('Command [%s]', ' '.join(cmd))
@@ -836,7 +838,8 @@ def refine_static_libs(build_results) -> List[str]:
           for lib_to_avoid in libs_to_avoid):
         continue
       refined_static_list.append(static_lib)
-    build_worker.executable_files_build['refined-static-libs'] = refined_static_list
+    build_worker.executable_files_build[
+        'refined-static-libs'] = refined_static_list
 
 
 def get_language_defaults(language: str):
@@ -871,7 +874,8 @@ def run_introspector_on_dir(build_worker, test_dir,
   fuzzer_build_cmd = [
       fuzz_compiler, fuzz_flags, '$LIB_FUZZING_ENGINE', empty_fuzzer_file
   ]
-  for refined_static_lib in build_worker.executable_files_build['refined-static-libs']:
+  for refined_static_lib in build_worker.executable_files_build[
+      'refined-static-libs']:
     fuzzer_build_cmd.append('-Wl,--whole-archive')
     fuzzer_build_cmd.append(os.path.join(test_dir, refined_static_lib))
 
@@ -1040,8 +1044,7 @@ def evaluate_heuristic(test_dir, result_to_validate, fuzzer_intrinsics,
     f.write(fuzzer_intrinsics['prompt'])
 
   # Run the fuzzer and observer error
-  if not os.path.isfile(
-      '/src/generated-fuzzer'):
+  if not os.path.isfile('/src/generated-fuzzer'):
     logger.info('No fuzzing harness executable')
     logger.info('Copying [%s] to [%s]', fuzzer_gen_dir,
                 os.path.join(outdir, os.path.basename(fuzzer_gen_dir)))
@@ -1299,14 +1302,11 @@ def auto_generate(github_url,
     append_to_report(
         outdir,
         f'build success: {build_heuristic} :: {test_dir} :: {static_libs}')
-    logger.info('%s : %s : %s',
-                build_heuristic, test_dir,
-                static_libs)
+    logger.info('%s : %s : %s', build_heuristic, test_dir, static_libs)
 
   # For each of the auto generated build scripts identify the
   # static libraries resulting from the build.
-  refine_static_libs(
-      build_results)
+  refine_static_libs(build_results)
 
   # Stage 2: perform program analysis to extract data to be used for
   # harness generation.
@@ -1330,7 +1330,8 @@ def auto_generate(github_url,
   logger.info('Going through %d build results to generate fuzzers',
               len(build_results))
   for test_dir, build_worker in build_results.items():
-    logger.info('Checking build heuristic: %s', build_worker.build_suggestion.heuristic_id)
+    logger.info('Checking build heuristic: %s',
+                build_worker.build_suggestion.heuristic_id)
 
     # Skip if build suggestion did not work with an empty fuzzer.
     if not build_worker.base_fuzz_build:
@@ -1404,7 +1405,6 @@ def auto_generate(github_url,
                            folders_with_results, outdir, github_url, language,
                            introspector_report)
         idx += 1
-
 
   # Show those that succeeded.
   for hp in heuristics_passed:
