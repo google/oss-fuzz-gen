@@ -647,24 +647,33 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats generic argument description."""
     generic_types = arg_type.split('<', 1)[1][:-1].split(',')
 
+    new_types = []
     generic_desc = []
     for generic_type in generic_types:
-      desc = self._get_template(self.generic_arg_description_template_file)
-      desc = desc.replace('{GENERIC_TYPE}', generic_type)
-
-      method_str = self._get_methods_for_simple_type(arg_type)
-      if method_str:
-        desc = desc.replace('{RANDOM_METHODS}', method_str)
+      if generic_type.endswith(('Object', 'T', 'K', 'V')):
+        # java.lang.Object generic type
+        desc = self._get_template(self.object_arg_description_template_file)
+        desc = 'For generic type of Object\n' + desc
+        new_types.append('Object')
       else:
-        desc = desc.replace('{RANDOM_METHODS}',
-                            'correct constructors or static methods')
+        new_types.append(generic_type)
+        desc = self._get_template(self.generic_arg_description_template_file)
+        desc = desc.replace('{GENERIC_TYPE}', generic_type)
+
+        method_str = self._get_methods_for_simple_type(generic_type)
+        if method_str:
+          desc = desc.replace('{RANDOM_METHODS}', method_str)
+        else:
+          desc = desc.replace('{RANDOM_METHODS}',
+                              'correct constructors or static methods')
 
       generic_desc.append(desc)
 
     if not generic_desc:
       return '', ''
 
-    return f' with generic typese of {generic_types}', '\n'.join(generic_desc)
+    generic_types = ','.join(new_types)
+    return f' with generic types of {generic_types}', '\n'.join(generic_desc)
 
   def _format_argument(self, count: int, arg_type: str) -> str:
     """Formats general argument description."""
