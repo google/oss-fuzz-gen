@@ -671,8 +671,9 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     # java.lang.Object argument
     if 'java.lang.Object' in arg_type:
-      argument = self._get_template(self.object_arg_description_template_file)
-      argument = argument.replace('{ARG_COUNT}', str(count))
+      base = self._get_template(self.object_arg_description_template_file)
+      prefix = 'Argument \#{count} requires an Object instance\n'
+      argument = '<argument>' + prefix + base + '</argument>'
       return argument
 
     # Simple arguments
