@@ -77,11 +77,11 @@ def _clone_oss_fuzz_repo():
 
 def clone_oss_fuzz(oss_fuzz_dir: str = ''):
   """Clones the OSS-Fuzz repository."""
-  if not oss_fuzz_dir:
-    _set_temp_oss_fuzz_repo()
-  else:
+  if oss_fuzz_dir:
     global OSS_FUZZ_DIR
     OSS_FUZZ_DIR = oss_fuzz_dir
+  else:
+    _set_temp_oss_fuzz_repo()
 
   if not os.path.exists(OSS_FUZZ_DIR):
     _clone_oss_fuzz_repo()
