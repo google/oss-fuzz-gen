@@ -39,11 +39,13 @@ class AutoBuildContainer:
 class BuildWorker:
   """Keeper of data on auto generated builds."""
 
-  def __init__(self, build_suggestion: AutoBuildContainer):
+  def __init__(self, build_suggestion: AutoBuildContainer, build_script: str,
+               build_directory: str, executable_files_build: Dict[str,
+                                                                  List[str]]):
     self.build_suggestion: AutoBuildContainer = build_suggestion
-    self.build_script: str = ''
-    self.build_directory: str = ''
-    self.executable_files_build: Dict[str, List[str]] = {}
+    self.build_script: str = build_script
+    self.build_directory: str = build_directory
+    self.executable_files_build: Dict[str, List[str]] = executable_files_build
     self.base_fuzz_build: bool = False
 
 
@@ -738,16 +740,8 @@ def raw_build_evaluation(
     # to running the build.
     binary_files_build = get_all_binary_files_from_folder(test_dir)
 
-    # binary_files_build['static-libs'])
-    #build_results[test_dir] = {
-    #    'build-script': build_script,
-    #    'executables-build': binary_files_build,
-    #    'auto-build-setup': (build_script, test_dir, build_suggestion)
-    #}
-    build_worker = BuildWorker(build_suggestion)
-    build_worker.build_script = build_script
-    build_worker.executable_files_build = binary_files_build
-    build_worker.build_directory = test_dir
+    build_worker = BuildWorker(build_suggestion, build_script, test_dir,
+                               binary_files_build)
 
     build_results[test_dir] = build_worker
 

@@ -148,9 +148,10 @@ class FuzzHeuristicGeneratorBase:
 
   def log_prompt(self, prompt: str) -> None:
     """Logs the prompt to stdout."""
-    prompt_out = '-' * 20 + ' PROMPT ' + '-' * 20 + '\n'
-    prompt_out += prompt + '\n'
-    prompt_out += '-' * 48
+    prompt_out = f'{"-"*20} PROMPT {"-"*20}\n{prompt}\n{"-" * 48}'
+    #prompt_out = '-' * 20 + ' PROMPT ' + '-' * 20 + '\n'
+    #prompt_out += prompt + '\n'
+    #prompt_out += '-' * 48
     logger.info(prompt_out)
 
   def get_header_intrinsics(self):
@@ -288,7 +289,7 @@ class FuzzerGenHeuristic6(FuzzHeuristicGeneratorBase):
 
     type_constraints = 'the types of types function are:\n'
     for idx, arg in enumerate(func['debug_function_info']['args']):
-      type_constraints += f'- Argument {idx+1} is of type \"{arg}\"\n'
+      type_constraints += f'- Argument {idx+1} is of type `{arg}`\n'
     type_constraints += (
         'You must make sure the arguments passed to the ' +
         'function match the types of the function. Do this by casting ' +
@@ -343,7 +344,7 @@ The most important part of the harness is that it will build and compile correct
 {cross_reference_text}
 '''
 
-    logger.info('%s%s%s', '-' * 45, '\n' + prompt + '\n', '-' * 45)
+    logger.info('%s%s%s', '-' * 45, f'\n{prompt}\n', '-' * 45)
 
     fuzzer_source = get_source_from_cache(self.name, func)
     if not fuzzer_source:
@@ -410,7 +411,7 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 
 Make sure the ensure strings passed to the target are null-terminated.
 
-There is one rule that your harness must satisfy: all of the header files in this library is {str(headers_to_include)}. Make sure to not include any header files not in this list.
+There is one rule that your harness must satisfy: all of the header files in this library is {headers_to_include}. Make sure to not include any header files not in this list.
 
 Finally, {type_constraints}
 
@@ -478,7 +479,7 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 
 Make sure the ensure strings passed to the target are null-terminated.
 
-There is one rule that your harness must satisfy: all of the header files in this library is {str(headers_to_include)}. Make sure to not include any header files not in this list.
+There is one rule that your harness must satisfy: all of the header files in this library is {headers_to_include}. Make sure to not include any header files not in this list.
 
 Finally, {type_constraints}
 
@@ -774,7 +775,7 @@ def build_empty_fuzzers(build_workers, language):
     logger.info('Test dir: %s :: %s', test_dir,
                 str(build_worker.executable_files_build['refined-static-libs']))
 
-    if len(build_worker.executable_files_build['refined-static-libs']) == 0:
+    if not build_worker.executable_files_build['refined-static-libs']:
       continue
 
     logger.info('Trying to link in an empty fuzzer')
@@ -886,9 +887,8 @@ def run_introspector_on_dir(build_worker, test_dir,
 
 
 def log_fuzzer_source(full_fuzzer_source: str):
-  harness_source_out = '-' * 20 + ' HARNESS SOURCE ' + '-' * 20 + '\n'
-  harness_source_out += full_fuzzer_source + '\n'
-  harness_source_out += '-' * 56
+  harness_source_out = (
+      f'{"-" * 20} HARNESS SOURCE {"-" * 20}\n{full_fuzzer_source}\n{"-" * 56}')
   logger.info(harness_source_out)
 
 
@@ -933,10 +933,9 @@ def generate_harness_intrinsics(
     # Generate a build script for compiling the fuzzer with ASAN.
     final_asan_build_script = results[test_dir].build_script + '\n'
     fuzzer_out = '/src/generated-fuzzer'
-    final_asan_build_script += ' '.join(fuzzer_build_cmd) + ' '
-    final_asan_build_script += fuzzer_intrinsics['build-command-includes']
-    final_asan_build_script += ' -o '
-    final_asan_build_script += fuzzer_out
+    fuzz_cmd = ' '.join(fuzzer_build_cmd) + ' '
+    fuzz_includes = fuzzer_intrinsics["build-command-includes"]
+    final_asan_build_script += f'{fuzz_cmd} {fuzz_includes} -o {fuzzer_out}'
 
     # Wrap all parts we need for building and running the fuzzer.
     harness_builds_to_validate.append({
