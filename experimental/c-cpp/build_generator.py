@@ -19,7 +19,7 @@ import os
 import shutil
 import subprocess
 from abc import abstractmethod
-from typing import Any, Dict, Iterator, List, Tuple
+from typing import Dict, Iterator, List, Tuple
 
 import manager
 
@@ -34,6 +34,19 @@ class AutoBuildContainer:
   def __init__(self):
     self.list_of_commands = []
     self.heuristic_id = ''
+
+
+class BuildWorker:
+  """Keeper of data on auto generated builds."""
+
+  def __init__(self, build_suggestion: AutoBuildContainer, build_script: str,
+               build_directory: str, executable_files_build: Dict[str,
+                                                                  List[str]]):
+    self.build_suggestion: AutoBuildContainer = build_suggestion
+    self.build_script: str = build_script
+    self.build_directory: str = build_directory
+    self.executable_files_build: Dict[str, List[str]] = executable_files_build
+    self.base_fuzz_build: bool = False
 
 
 class AutoBuildBase:
@@ -454,9 +467,9 @@ class CMakeScannerOptsParser(AutoBuildBase):
       if option['type'] != 'BOOL':
         continue
       if 'STATIC' in option['name'] and option['default'] != 'ON':
-        cmake_string += '-D%s=ON ' % (option['name'])
+        cmake_string += f'-D{option["name"]}=ON '
       elif option['default'] != 'OFF':
-        cmake_string += '-D%s=OFF ' % (option['name'])
+        cmake_string += f'-D{option["name"]}=OFF '
     return cmake_string
 
 
@@ -516,7 +529,7 @@ class CMakeScanner(AutoBuildBase):
     opt1 = [
         'mkdir fuzz-build',
         'cd fuzz-build',
-        'cmake %s ../' % (' '.join(cmake_opts)),
+        f'cmake {" ".join(cmake_opts)} ../',
         'make V=1 || true',
     ]
     build_container2 = AutoBuildContainer()
@@ -528,7 +541,7 @@ class CMakeScanner(AutoBuildBase):
     opt_static = [
         'mkdir fuzz-build',
         'cd fuzz-build',
-        'cmake %s ../' % (' '.join(cmake_opts)),
+        f'cmake {" ".join(cmake_opts)} ../',
         'sed -i \'s/SHARED/STATIC/g\' ../CMakeLists.txt',
         'make V=1 || true',
     ]
@@ -541,13 +554,13 @@ class CMakeScanner(AutoBuildBase):
     option_values = []
     for option in self.cmake_options:
       if 'BUILD_SHARED_LIBS' == option:
-        option_values.append('-D%s=OFF' % (option))
+        option_values.append(f'-D{option}=OFF')
       elif 'BUILD_STATIC' == option:
-        option_values.append('-D%s=ON' % (option))
+        option_values.append(f'-D{option}=ON')
       elif 'BUILD_SHARED' == option:
-        option_values.append('-D%s=OFF' % (option))
+        option_values.append(f'-D{option}=OFF')
       elif 'ENABLE_STATIC' == option:
-        option_values.append('-D%s=ON' % (option))
+        option_values.append(f'-D{option}=ON')
 
     if len(option_values) > 0:
       option_string = ' '.join(option_values)
@@ -558,7 +571,7 @@ class CMakeScanner(AutoBuildBase):
       bopt = [
           'mkdir fuzz-build',
           'cd fuzz-build',
-          'cmake %s %s ../' % (' '.join(cmake_default_options), option_string),
+          f'cmake {" ".join(cmake_default_options)} {option_string} ../',
           'make V=1',
       ]
       build_container3 = AutoBuildContainer()
@@ -571,15 +584,15 @@ class CMakeScanner(AutoBuildBase):
     option_values = []
     for option in self.cmake_options:
       if 'BUILD_SHARED_LIBS' == option:
-        option_values.append('-D%s=OFF' % (option))
+        option_values.append(f'-D{option}=OFF')
       elif 'BUILD_STATIC' == option:
-        option_values.append('-D%s=ON' % (option))
+        option_values.append(f'-D{option}=ON')
       elif 'BUILD_SHARED' == option:
-        option_values.append('-D%s=OFF' % (option))
+        option_values.append(f'-D{option}=OFF')
       elif 'ENABLE_STATIC' == option:
-        option_values.append('-D%s=ON' % (option))
+        option_values.append(f'-D{option}=ON')
       elif 'BUILD_TESTS' in option:
-        option_values.append('-D%s=ON' % (option))
+        option_values.append(f'-D{option}=ON')
 
     if len(option_values) > 0:
       option_string = ' '.join(option_values)
@@ -590,7 +603,7 @@ class CMakeScanner(AutoBuildBase):
       bopt = [
           'mkdir fuzz-build',
           'cd fuzz-build',
-          'cmake %s %s ../' % (' '.join(cmake_default_options), option_string),
+          f'cmake {" ".join(cmake_default_options)} {option_string} ../',
           'make V=1',
       ]
       build_container4 = AutoBuildContainer()
@@ -666,9 +679,9 @@ def get_all_binary_files_from_folder(path: str) -> Dict[str, List[str]]:
 def wrap_build_script(test_dir: str, build_container: AutoBuildContainer,
                       abspath_of_target: str) -> str:
   build_script = '#!/bin/bash\n'
-  build_script += 'rm -rf /%s\n' % (test_dir)
-  build_script += 'cp -rf %s %s\n' % (abspath_of_target, test_dir)
-  build_script += 'cd %s\n' % (test_dir)
+  build_script += f'rm -rf /{test_dir}\n'
+  build_script += f'cp -rf {abspath_of_target} {test_dir}\n'
+  build_script += f'cd {test_dir}\n'
   for cmd in build_container.list_of_commands:
     build_script += cmd + '\n'
 
@@ -707,8 +720,8 @@ def extract_build_suggestions(
 
 
 def raw_build_evaluation(
-    all_build_scripts: List[Tuple[str, str, AutoBuildContainer]],
-    initial_executable_files: Dict[str, List[str]]) -> Dict[str, Any]:
+    all_build_scripts: List[Tuple[str, str, AutoBuildContainer]]
+) -> Dict[str, BuildWorker]:
   """Run each of the build scripts and extract any artifacts build by them."""
   build_results = {}
   for build_script, test_dir, build_suggestion in all_build_scripts:
@@ -727,22 +740,9 @@ def raw_build_evaluation(
     # to running the build.
     binary_files_build = get_all_binary_files_from_folder(test_dir)
 
-    new_binary_files = {
-        'static-libs': [],
-        'dynamic-libs': [],
-        'object-files': []
-    }
-    for key, bfiles in binary_files_build.items():
-      for bfile in bfiles:
-        if bfile not in initial_executable_files[key]:
-          new_binary_files[key].append(bfile)
+    build_worker = BuildWorker(build_suggestion, build_script, test_dir,
+                               binary_files_build)
 
-    logger.info('Static libs found %s', str(new_binary_files))
+    build_results[test_dir] = build_worker
 
-    # binary_files_build['static-libs'])
-    build_results[test_dir] = {
-        'build-script': build_script,
-        'executables-build': binary_files_build,
-        'auto-build-setup': (build_script, test_dir, build_suggestion)
-    }
   return build_results

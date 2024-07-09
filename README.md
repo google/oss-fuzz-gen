@@ -11,8 +11,12 @@ Current supported models are:
 - Vertex AI code-bison
 - Vertex AI code-bison-32k
 - Gemini Pro
+- Gemini Ultra
+- Gemini Experimental
+- Gemini 1.5
 - OpenAI GPT-3.5-turbo
 - OpenAI GPT-4
+- OpenAI GPT-4o
 
 Generated fuzz targets are evaluated with four metrics against the most up-to-date data from production environment:
 - Compilability

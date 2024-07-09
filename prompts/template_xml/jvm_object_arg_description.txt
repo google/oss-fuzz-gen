@@ -1,5 +1,3 @@
-<argument>
-Argument #{ARG_COUNT} requires an Object instance
 You must use the generateObject() method to retrieve a random Object instance.
 Here is an example of the generateObject() method. DON'T USE IT DIRECTLY.
 You MUST change the content of the method to include ALL types in the list below.
@@ -15,4 +13,3 @@ private static Object generateObject(data) {
     default: return data.consumeByte();
   }
 </code>
-</argument>
