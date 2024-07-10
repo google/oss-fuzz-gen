@@ -212,8 +212,8 @@ class DefaultTemplateBuilder(PromptBuilder):
       targets.add(example[2])
       unique_examples.append(example)
 
-    if (sum(example[0] for example in unique_examples) + prompt_size <
-        self._model.context_window):
+    if (sum(example[0] for example in unique_examples) + prompt_size
+        < self._model.context_window):
       return [[example[1], example[2]] for example in examples]
 
     # Then prioritize complex (i.e., long) examples.
