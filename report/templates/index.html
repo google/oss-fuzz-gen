@@ -98,6 +98,40 @@ td .signature {
     </tbody>
 </table>
 
+<h2>Accumulated results</h2>
+<table>
+  <thead>
+    <th>Metric</th>
+    <th>Value</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Total sample benchmarks</td>
+      <td>{{ accumulated_results.total_runs }}</td>
+    </tr>
+    <tr>
+      <td>Successful Builds</td>
+      <td>{{ accumulated_results.compiles }}</td>
+    </tr>
+    <tr>
+      <td>Build rate</td>
+      <td>{{ accumulated_results.build_rate |percent }}%</td>
+    </tr>
+    <tr>
+      <td>Average coverage</td>
+      <td>{{ accumulated_results.average_coverage |percent }}%</td>
+    </tr>
+    <tr>
+      <td>Average line coverage diff</td>
+      <td>{{ accumulated_results.average_line_coverage_diff |percent }}%</td>
+    </tr>
+    <tr>
+      <td>Benchmarks with crashes</td>
+      <td>{{ accumulated_results.crashes }}</td>
+    </tr>
+  </tbody>
+</table>
+
 <script>
 (function() {
     const headers = Array.from(document.querySelectorAll('table.sortable-table th'));

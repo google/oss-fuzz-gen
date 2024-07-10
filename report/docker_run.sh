@@ -37,6 +37,7 @@ DELAY=$6
 USE_LOCAL_INTROSPECTOR=$7
 NUM_SAMPLES=$8
 LLM_FIX_LIMIT=$9
+VARY_TEMPERATURE=${10}
 
 # Uses python3 by default and /venv/bin/python3 for Docker containers.
 PYTHON="$( [[ -x "/venv/bin/python3" ]] && echo "/venv/bin/python3" || echo "python3" )"
@@ -114,6 +115,14 @@ else
   export LLM_FIX_LIMIT
   echo "LLM_FIX_LIMIT is set to ${LLM_FIX_LIMIT:?}."
 fi
+
+if [[ "$VARY_TEMPERATURE" = "true" ]]
+then
+    VARY_TEMPERATURE=(1.0 2.0 0.0 0.5 1.5):
+else
+    VARY_TEMPERATURE=()
+fi
+
 
 DATE=$(date '+%Y-%m-%d')
 LOCAL_RESULTS_DIR='results'

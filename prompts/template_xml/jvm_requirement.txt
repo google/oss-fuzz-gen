@@ -10,11 +10,12 @@
 <item>Please add import statements for necessary classes, except for classes in the java.lang package.</item>
 <item>You must create the object before calling the target method.</item>
 <item>Please use {HARNESS_NAME} as the Java class name.</item>
+<item>{STATIC_OR_INSTANCE}</item>
 <item>Do not create new variables with the same names as existing variables.
 WRONG:
 <code>
 public static void testing(int test) {
-  String test = "Testing;
+  String test = "Testing";
 }
 </code></item>
 <item>Always create the fuzzing harness from the following templates:
