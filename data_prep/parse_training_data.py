@@ -27,6 +27,7 @@ import argparse
 import json
 import logging
 import os
+import re
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Dict, List
@@ -34,6 +35,7 @@ from typing import Any, Dict, List
 from google.cloud import storage
 
 STORAGE_CLIENT = storage.Client()
+FUZZ_TARGET_FIXING_DIR_PATTERN = r'\d+-F\d+'
 
 
 class Benchmark:
@@ -52,6 +54,14 @@ class Benchmark:
       return ''
     with open(prompt_path) as prompt_file:
       return prompt_file.read()
+
+  def _get_code_fixing_dirs(self, fixed_target_dir):
+    """Gets the directories for fixing fuzz targets."""
+    return [
+        item for item in os.listdir(fixed_target_dir)
+        if (os.path.isdir(os.path.join(fixed_target_dir, item)) and
+            re.match(FUZZ_TARGET_FIXING_DIR_PATTERN, item))
+    ]
 
   @property
   def targets(self) -> Dict[str, List[str]]:
@@ -75,10 +85,7 @@ class Benchmark:
     if not os.path.isdir(fixed_target_dir):
       logging.warning('Fixed target dir does not exist: %s', fixed_target_dir)
       return {}
-    fix_dirs = [
-        instance for instance in os.listdir(fixed_target_dir)
-        if os.path.isdir(os.path.join(fixed_target_dir, instance))
-    ]
+    fix_dirs = self._get_code_fixing_dirs(fixed_target_dir)
     for fix_dir in sorted(fix_dirs):
       instance, _ = fix_dir.split('-F')
       code_path = [
