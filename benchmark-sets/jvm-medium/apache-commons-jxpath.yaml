@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.jxpath.functions.ConstructorFunction].invoke(org.apache.commons.jxpath.ExpressionContext,java.lang.Object[])"
   "params":
   - "name": "arg0"
@@ -9,6 +10,7 @@
   "return_type": "java.lang.Object"
   "signature": "[org.apache.commons.jxpath.functions.ConstructorFunction].invoke(org.apache.commons.jxpath.ExpressionContext,java.lang.Object[])"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.jxpath.ClassFunctions].getFunction(java.lang.String,java.lang.String,java.lang.Object[])"
   "params":
   - "name": "arg0"
@@ -20,6 +22,7 @@
   "return_type": "org.apache.commons.jxpath.Function"
   "signature": "[org.apache.commons.jxpath.ClassFunctions].getFunction(java.lang.String,java.lang.String,java.lang.Object[])"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.jxpath.FunctionLibrary].getFunction(java.lang.String,java.lang.String,java.lang.Object[])"
   "params":
   - "name": "arg0"
@@ -31,6 +34,7 @@
   "return_type": "org.apache.commons.jxpath.Function"
   "signature": "[org.apache.commons.jxpath.FunctionLibrary].getFunction(java.lang.String,java.lang.String,java.lang.Object[])"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.jxpath.util.JXPath11CompatibleTypeConverter].convert(java.lang.Object,java.lang.Class)"
   "params":
   - "name": "arg0"
@@ -40,6 +44,7 @@
   "return_type": "java.lang.Object"
   "signature": "[org.apache.commons.jxpath.util.JXPath11CompatibleTypeConverter].convert(java.lang.Object,java.lang.Class)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.jxpath.ri.NamespaceResolver].getPrefix(java.lang.String)"
   "params":
   - "name": "arg0"
@@ -47,6 +52,7 @@
   "return_type": "java.lang.String"
   "signature": "[org.apache.commons.jxpath.ri.NamespaceResolver].getPrefix(java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.jxpath.ri.model.container.ContainerPointer].attributeIterator(org.apache.commons.jxpath.ri.QName)"
   "params":
   - "name": "arg0"

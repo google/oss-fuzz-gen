@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.MessageOrBuilder)"
   "params":
   - "name": "arg0"
@@ -7,13 +8,16 @@
   "return_type": "java.lang.String"
   "signature": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.MessageOrBuilder)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.MessageOrBuilder)"
   "params":
   - "name": "arg0"
     "type": "MessageOrBuilder"
   "return_type": "java.lang.String"
   "signature": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.MessageOrBuilder)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.MessageOrBuilder,java.lang.Appendable)"
   "params":
   - "name": "arg0"
@@ -23,6 +27,7 @@
   "return_type": "void"
   "signature": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.MessageOrBuilder,java.lang.Appendable)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.UnknownFieldSet)"
   "params":
   - "name": "arg0"
@@ -30,13 +35,16 @@
   "return_type": "java.lang.String"
   "signature": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.UnknownFieldSet)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.UnknownFieldSet)"
   "params":
   - "name": "arg0"
     "type": "UnknownFieldSet"
   "return_type": "java.lang.String"
   "signature": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.UnknownFieldSet)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.UnknownFieldSet,java.lang.Appendable)"
   "params":
   - "name": "arg0"

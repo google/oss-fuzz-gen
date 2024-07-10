@@ -1,5 +1,7 @@
 "functions":
-- "exceptions": []
+- "exceptions":
+  - "org.jdom2.JDOMException"
+  "is_jvm_static": false
   "name": "[org.jdom2.output.support.AbstractSAXOutputProcessor].processAsDocument(org.jdom2.output.support.SAXTarget,org.jdom2.output.Format,java.util.List<? extends Content>)"
   "params":
   - "name": "arg0"
@@ -11,6 +13,7 @@
   "return_type": "void"
   "signature": "[org.jdom2.output.support.AbstractSAXOutputProcessor].processAsDocument(org.jdom2.output.support.SAXTarget,org.jdom2.output.Format,java.util.List<? extends Content>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.jdom2.output.support.AbstractFormattedWalker$MultiText].appendText(org.jdom2.output.support.AbstractFormattedWalker$Trim,java.lang.String)"
   "params":
   - "name": "arg0"
@@ -20,6 +23,7 @@
   "return_type": "void"
   "signature": "[org.jdom2.output.support.AbstractFormattedWalker$MultiText].appendText(org.jdom2.output.support.AbstractFormattedWalker$Trim,java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.jdom2.Document].setDocType(org.jdom2.DocType)"
   "params":
   - "name": "arg0"
@@ -27,6 +31,7 @@
   "return_type": "org.jdom2.Document"
   "signature": "[org.jdom2.Document].setDocType(org.jdom2.DocType)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.jdom2.output.support.AbstractFormattedWalker$MultiText].appendCDATA(org.jdom2.output.support.AbstractFormattedWalker$Trim,java.lang.String)"
   "params":
   - "name": "arg0"
@@ -36,6 +41,7 @@
   "return_type": "void"
   "signature": "[org.jdom2.output.support.AbstractFormattedWalker$MultiText].appendCDATA(org.jdom2.output.support.AbstractFormattedWalker$Trim,java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": true
   "name": "[org.jdom2.output.Format].escapeText(org.jdom2.output.EscapeStrategy,java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"
@@ -47,6 +53,7 @@
   "return_type": "java.lang.String"
   "signature": "[org.jdom2.output.Format].escapeText(org.jdom2.output.EscapeStrategy,java.lang.String,java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.jdom2.EntityRef].setSystemID(java.lang.String)"
   "params":
   - "name": "arg0"

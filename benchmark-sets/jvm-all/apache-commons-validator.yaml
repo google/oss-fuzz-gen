@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.validator.routines.CreditCardValidator].<init>(long)"
   "params":
   - "name": "arg0"
@@ -7,6 +8,7 @@
   "return_type": "org.apache.commons.validator.routines.CreditCardValidator"
   "signature": "[org.apache.commons.validator.routines.CreditCardValidator].<init>(long)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.validator.routines.UrlValidator].<init>(java.lang.String[],org.apache.commons.validator.routines.RegexValidator,long)"
   "params":
   - "name": "arg0"
@@ -18,6 +20,7 @@
   "return_type": "org.apache.commons.validator.routines.UrlValidator"
   "signature": "[org.apache.commons.validator.routines.UrlValidator].<init>(java.lang.String[],org.apache.commons.validator.routines.RegexValidator,long)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.validator.routines.UrlValidator].<init>(java.lang.String[],org.apache.commons.validator.routines.RegexValidator,long,org.apache.commons.validator.routines.DomainValidator)"
   "params":
   - "name": "arg0"
@@ -31,20 +34,27 @@
   "return_type": "org.apache.commons.validator.routines.UrlValidator"
   "signature": "[org.apache.commons.validator.routines.UrlValidator].<init>(java.lang.String[],org.apache.commons.validator.routines.RegexValidator,long,org.apache.commons.validator.routines.DomainValidator)"
 - "exceptions": []
+  "is_jvm_static": true
   "name": "[org.apache.commons.validator.util.ValidatorUtils].copyFastHashMap(org.apache.commons.collections.FastHashMap)"
   "params":
   - "name": "arg0"
     "type": "FastHashMap"
   "return_type": "org.apache.commons.collections.FastHashMap"
   "signature": "[org.apache.commons.validator.util.ValidatorUtils].copyFastHashMap(org.apache.commons.collections.FastHashMap)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  - "org.xml.sax.SAXException"
+  "is_jvm_static": false
   "name": "[org.apache.commons.validator.ValidatorResources].<init>(java.io.InputStream[])"
   "params":
   - "name": "arg0"
     "type": "InputStream[]"
   "return_type": "org.apache.commons.validator.ValidatorResources"
   "signature": "[org.apache.commons.validator.ValidatorResources].<init>(java.io.InputStream[])"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  - "org.xml.sax.SAXException"
+  "is_jvm_static": false
   "name": "[org.apache.commons.validator.ValidatorResources].<init>(java.lang.String[])"
   "params":
   - "name": "arg0"

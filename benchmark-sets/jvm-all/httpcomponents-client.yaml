@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.hc.core5.http.message.BasicHeaderValueParser].parseHeaderElement(java.lang.CharSequence,org.apache.hc.core5.http.message.ParserCursor)"
   "params":
   - "name": "arg0"
@@ -9,6 +10,7 @@
   "return_type": "org.apache.hc.core5.http.HeaderElement"
   "signature": "[org.apache.hc.core5.http.message.BasicHeaderValueParser].parseHeaderElement(java.lang.CharSequence,org.apache.hc.core5.http.message.ParserCursor)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.hc.core5.http.message.BasicHeaderValueParser].parseParameters(java.lang.CharSequence,org.apache.hc.core5.http.message.ParserCursor)"
   "params":
   - "name": "arg0"
@@ -18,6 +20,7 @@
   "return_type": "org.apache.hc.core5.http.NameValuePair[]"
   "signature": "[org.apache.hc.core5.http.message.BasicHeaderValueParser].parseParameters(java.lang.CharSequence,org.apache.hc.core5.http.message.ParserCursor)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.hc.core5.http.message.BasicHeaderValueParser].parseNameValuePair(java.lang.CharSequence,org.apache.hc.core5.http.message.ParserCursor)"
   "params":
   - "name": "arg0"
@@ -27,6 +30,7 @@
   "return_type": "org.apache.hc.core5.http.NameValuePair"
   "signature": "[org.apache.hc.core5.http.message.BasicHeaderValueParser].parseNameValuePair(java.lang.CharSequence,org.apache.hc.core5.http.message.ParserCursor)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.hc.core5.util.Tokenizer].parseValue(java.lang.CharSequence,org.apache.hc.core5.util.Tokenizer$Cursor,org.apache.hc.core5.util.Tokenizer$Delimiter)"
   "params":
   - "name": "arg0"
@@ -38,6 +42,7 @@
   "return_type": "java.lang.String"
   "signature": "[org.apache.hc.core5.util.Tokenizer].parseValue(java.lang.CharSequence,org.apache.hc.core5.util.Tokenizer$Cursor,org.apache.hc.core5.util.Tokenizer$Delimiter)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.hc.core5.util.Tokenizer].parseToken(java.lang.CharSequence,org.apache.hc.core5.util.Tokenizer$Cursor,org.apache.hc.core5.util.Tokenizer$Delimiter)"
   "params":
   - "name": "arg0"
@@ -49,6 +54,7 @@
   "return_type": "java.lang.String"
   "signature": "[org.apache.hc.core5.util.Tokenizer].parseToken(java.lang.CharSequence,org.apache.hc.core5.util.Tokenizer$Cursor,org.apache.hc.core5.util.Tokenizer$Delimiter)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.hc.core5.util.Tokenizer].copyUnquotedContent(java.lang.CharSequence,org.apache.hc.core5.util.Tokenizer$Cursor,org.apache.hc.core5.util.Tokenizer$Delimiter,java.lang.StringBuilder)"
   "params":
   - "name": "arg0"

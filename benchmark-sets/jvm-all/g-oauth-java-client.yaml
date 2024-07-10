@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.google.api.client.auth.oauth2.Credential].handleResponse(com.google.api.client.http.HttpRequest,com.google.api.client.http.HttpResponse,boolean)"
   "params":
   - "name": "arg0"
@@ -10,21 +11,27 @@
     "type": "boolean"
   "return_type": "boolean"
   "signature": "[com.google.api.client.auth.oauth2.Credential].handleResponse(com.google.api.client.http.HttpRequest,com.google.api.client.http.HttpResponse,boolean)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[com.google.api.client.auth.oauth2.Credential].intercept(com.google.api.client.http.HttpRequest)"
   "params":
   - "name": "arg0"
     "type": "HttpRequest"
   "return_type": "void"
   "signature": "[com.google.api.client.auth.oauth2.Credential].intercept(com.google.api.client.http.HttpRequest)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[com.google.api.client.auth.oauth.OAuthParameters].intercept(com.google.api.client.http.HttpRequest)"
   "params":
   - "name": "arg0"
     "type": "HttpRequest"
   "return_type": "void"
   "signature": "[com.google.api.client.auth.oauth.OAuthParameters].intercept(com.google.api.client.http.HttpRequest)"
-- "exceptions": []
+- "exceptions":
+  - "java.security.GeneralSecurityException"
+  "is_jvm_static": false
   "name": "[com.google.api.client.auth.oauth.OAuthParameters].computeSignature(java.lang.String,com.google.api.client.http.GenericUrl)"
   "params":
   - "name": "arg0"
@@ -34,6 +41,7 @@
   "return_type": "void"
   "signature": "[com.google.api.client.auth.oauth.OAuthParameters].computeSignature(java.lang.String,com.google.api.client.http.GenericUrl)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.google.api.client.auth.oauth2.Credential].setFromTokenResponse(com.google.api.client.auth.oauth2.TokenResponse)"
   "params":
   - "name": "arg0"
@@ -41,6 +49,7 @@
   "return_type": "com.google.api.client.auth.oauth2.Credential"
   "signature": "[com.google.api.client.auth.oauth2.Credential].setFromTokenResponse(com.google.api.client.auth.oauth2.TokenResponse)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.google.api.client.auth.oauth2.TokenRequest].<init>(com.google.api.client.http.HttpTransport,com.google.api.client.json.JsonFactory,com.google.api.client.http.GenericUrl,java.lang.String,java.lang.Class)"
   "params":
   - "name": "arg0"

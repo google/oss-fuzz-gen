@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[me.xdrop.fuzzywuzzy.model.BoundExtractedResult].<init>(java.lang.Object,java.lang.String,int,int)"
   "params":
   - "name": "arg0"
@@ -13,6 +14,7 @@
   "return_type": "me.xdrop.fuzzywuzzy.model.BoundExtractedResult"
   "signature": "[me.xdrop.fuzzywuzzy.model.BoundExtractedResult].<init>(java.lang.Object,java.lang.String,int,int)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[me.xdrop.fuzzywuzzy.model.ExtractedResult].<init>(java.lang.String,int,int)"
   "params":
   - "name": "arg0"
@@ -24,6 +26,7 @@
   "return_type": "me.xdrop.fuzzywuzzy.model.ExtractedResult"
   "signature": "[me.xdrop.fuzzywuzzy.model.ExtractedResult].<init>(java.lang.String,int,int)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[me.xdrop.fuzzywuzzy.Extractor].<init>(int)"
   "params":
   - "name": "arg0"
@@ -31,6 +34,7 @@
   "return_type": "me.xdrop.fuzzywuzzy.Extractor"
   "signature": "[me.xdrop.fuzzywuzzy.Extractor].<init>(int)"
 - "exceptions": []
+  "is_jvm_static": true
   "name": "[me.xdrop.diffutils.DiffUtils].getMatchingBlocks(java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"
@@ -40,6 +44,7 @@
   "return_type": "me.xdrop.diffutils.structs.MatchingBlock[]"
   "signature": "[me.xdrop.diffutils.DiffUtils].getMatchingBlocks(java.lang.String,java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": true
   "name": "[me.xdrop.diffutils.DiffUtils].getEditOps(java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"

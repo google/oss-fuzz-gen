@@ -1,5 +1,7 @@
 "functions":
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[org.apache.commons.csv.CSVParser].<init>(java.io.Reader,org.apache.commons.csv.CSVFormat,long,long)"
   "params":
   - "name": "arg0"
@@ -12,7 +14,9 @@
     "type": "long"
   "return_type": "org.apache.commons.csv.CSVParser"
   "signature": "[org.apache.commons.csv.CSVParser].<init>(java.io.Reader,org.apache.commons.csv.CSVFormat,long,long)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[org.apache.commons.csv.CSVPrinter].<init>(java.lang.Appendable,org.apache.commons.csv.CSVFormat)"
   "params":
   - "name": "arg0"
@@ -21,7 +25,9 @@
     "type": "CSVFormat"
   "return_type": "org.apache.commons.csv.CSVPrinter"
   "signature": "[org.apache.commons.csv.CSVPrinter].<init>(java.lang.Appendable,org.apache.commons.csv.CSVFormat)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[org.apache.commons.csv.CSVPrinter].close(boolean)"
   "params":
   - "name": "arg0"
@@ -29,6 +35,7 @@
   "return_type": "void"
   "signature": "[org.apache.commons.csv.CSVPrinter].close(boolean)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(char)"
   "params":
   - "name": "arg0"
@@ -36,6 +43,7 @@
   "return_type": "org.apache.commons.csv.CSVFormat$Builder"
   "signature": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(char)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.csv.CSVFormat$Builder].setDelimiter(char)"
   "params":
   - "name": "arg0"
@@ -43,6 +51,7 @@
   "return_type": "org.apache.commons.csv.CSVFormat$Builder"
   "signature": "[org.apache.commons.csv.CSVFormat$Builder].setDelimiter(char)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(java.lang.Character)"
   "params":
   - "name": "arg0"

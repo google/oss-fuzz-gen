@@ -1,12 +1,16 @@
 "functions":
-- "exceptions": []
+- "exceptions":
+  - "java.lang.NumberFormatException"
+  "is_jvm_static": false
   "name": "[com.fasterxml.uuid.EthernetAddress].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "String"
   "return_type": "com.fasterxml.uuid.EthernetAddress"
   "signature": "[com.fasterxml.uuid.EthernetAddress].<init>(java.lang.String)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[com.fasterxml.uuid.UUIDTimer].<init>(java.util.Random,com.fasterxml.uuid.TimestampSynchronizer,com.fasterxml.uuid.UUIDClock)"
   "params":
   - "name": "arg0"
@@ -18,6 +22,7 @@
   "return_type": "com.fasterxml.uuid.UUIDTimer"
   "signature": "[com.fasterxml.uuid.UUIDTimer].<init>(java.util.Random,com.fasterxml.uuid.TimestampSynchronizer,com.fasterxml.uuid.UUIDClock)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.fasterxml.uuid.impl.TimeBasedGenerator].<init>(com.fasterxml.uuid.EthernetAddress,com.fasterxml.uuid.UUIDTimer)"
   "params":
   - "name": "arg0"
@@ -27,6 +32,7 @@
   "return_type": "com.fasterxml.uuid.impl.TimeBasedGenerator"
   "signature": "[com.fasterxml.uuid.impl.TimeBasedGenerator].<init>(com.fasterxml.uuid.EthernetAddress,com.fasterxml.uuid.UUIDTimer)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.fasterxml.uuid.impl.TimeBasedReorderedGenerator].<init>(com.fasterxml.uuid.EthernetAddress,com.fasterxml.uuid.UUIDTimer)"
   "params":
   - "name": "arg0"
@@ -36,6 +42,7 @@
   "return_type": "com.fasterxml.uuid.impl.TimeBasedReorderedGenerator"
   "signature": "[com.fasterxml.uuid.impl.TimeBasedReorderedGenerator].<init>(com.fasterxml.uuid.EthernetAddress,com.fasterxml.uuid.UUIDTimer)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.fasterxml.uuid.impl.NameBasedGenerator].<init>(java.util.UUID,java.security.MessageDigest,com.fasterxml.uuid.UUIDType)"
   "params":
   - "name": "arg0"
@@ -46,7 +53,9 @@
     "type": "UUIDType"
   "return_type": "com.fasterxml.uuid.impl.NameBasedGenerator"
   "signature": "[com.fasterxml.uuid.impl.NameBasedGenerator].<init>(java.util.UUID,java.security.MessageDigest,com.fasterxml.uuid.UUIDType)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer].<init>(java.io.File,java.io.File,long)"
   "params":
   - "name": "arg0"

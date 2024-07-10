@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.glassfish.jaxb.core.api.impl.NameConverter$Standard].toVariableName(java.lang.String)"
   "params":
   - "name": "arg0"
@@ -7,6 +8,7 @@
   "return_type": "java.lang.String"
   "signature": "[org.glassfish.jaxb.core.api.impl.NameConverter$Standard].toVariableName(java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": true
   "name": "[org.glassfish.jaxb.runtime.v2.model.impl.RuntimeModelBuilder].createTransducer(org.glassfish.jaxb.runtime.v2.model.runtime.RuntimeNonElementRef)"
   "params":
   - "name": "arg0"
@@ -14,6 +16,7 @@
   "return_type": "org.glassfish.jaxb.runtime.v2.runtime.Transducer<V>"
   "signature": "[org.glassfish.jaxb.runtime.v2.model.impl.RuntimeModelBuilder].createTransducer(org.glassfish.jaxb.runtime.v2.model.runtime.RuntimeNonElementRef)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.glassfish.jaxb.runtime.v2.model.impl.ModelBuilder].getClassInfo(java.lang.Object,boolean,org.glassfish.jaxb.core.v2.model.'annotation'.Locatable)"
   "params":
   - "name": "arg0"
@@ -25,6 +28,7 @@
   "return_type": "org.glassfish.jaxb.core.v2.model.core.NonElement"
   "signature": "[org.glassfish.jaxb.runtime.v2.model.impl.ModelBuilder].getClassInfo(java.lang.Object,boolean,org.glassfish.jaxb.core.v2.model.'annotation'.Locatable)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.glassfish.jaxb.runtime.v2.model.impl.ModelBuilder].getTypeInfo(java.lang.Object,org.glassfish.jaxb.core.v2.model.'annotation'.Locatable)"
   "params":
   - "name": "arg0"
@@ -34,6 +38,7 @@
   "return_type": "org.glassfish.jaxb.core.v2.model.core.NonElement"
   "signature": "[org.glassfish.jaxb.runtime.v2.model.impl.ModelBuilder].getTypeInfo(java.lang.Object,org.glassfish.jaxb.core.v2.model.'annotation'.Locatable)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.glassfish.jaxb.runtime.v2.model.impl.ClassInfoImpl].getProperty(java.lang.String)"
   "params":
   - "name": "arg0"
@@ -41,6 +46,7 @@
   "return_type": "org.glassfish.jaxb.core.v2.model.core.PropertyInfo<T,C>"
   "signature": "[org.glassfish.jaxb.runtime.v2.model.impl.ClassInfoImpl].getProperty(java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.glassfish.jaxb.runtime.v2.model.impl.RuntimeModelBuilder].getClassInfo(java.lang.Class,boolean,org.glassfish.jaxb.core.v2.model.'annotation'.Locatable)"
   "params":
   - "name": "arg0"

@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.zaxxer.hikari.pool.HikariPool].<init>(com.zaxxer.hikari.HikariConfig)"
   "params":
   - "name": "arg0"
@@ -7,6 +8,7 @@
   "return_type": "com.zaxxer.hikari.pool.HikariPool"
   "signature": "[com.zaxxer.hikari.pool.HikariPool].<init>(com.zaxxer.hikari.HikariConfig)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.zaxxer.hikari.HikariDataSource].<init>(com.zaxxer.hikari.HikariConfig)"
   "params":
   - "name": "arg0"
@@ -14,6 +16,7 @@
   "return_type": "com.zaxxer.hikari.HikariDataSource"
   "signature": "[com.zaxxer.hikari.HikariDataSource].<init>(com.zaxxer.hikari.HikariConfig)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.zaxxer.hikari.util.DriverDataSource].<init>(java.lang.String,java.lang.String,java.util.Properties,java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"
@@ -29,6 +32,7 @@
   "return_type": "com.zaxxer.hikari.util.DriverDataSource"
   "signature": "[com.zaxxer.hikari.util.DriverDataSource].<init>(java.lang.String,java.lang.String,java.util.Properties,java.lang.String,java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.zaxxer.hikari.HikariConfig].<init>(java.util.Properties)"
   "params":
   - "name": "arg0"
@@ -36,6 +40,7 @@
   "return_type": "com.zaxxer.hikari.HikariConfig"
   "signature": "[com.zaxxer.hikari.HikariConfig].<init>(java.util.Properties)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.zaxxer.hikari.HikariConfig].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
@@ -43,6 +48,7 @@
   "return_type": "com.zaxxer.hikari.HikariConfig"
   "signature": "[com.zaxxer.hikari.HikariConfig].<init>(java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.zaxxer.hikari.util.ConcurrentBag].<init>(com.zaxxer.hikari.util.ConcurrentBag$IBagStateListener)"
   "params":
   - "name": "arg0"

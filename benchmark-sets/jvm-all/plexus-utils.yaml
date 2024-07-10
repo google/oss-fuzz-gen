@@ -1,5 +1,7 @@
 "functions":
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[org.codehaus.plexus.util.InterpolationFilterReader].read(char[],int,int)"
   "params":
   - "name": "arg0"
@@ -11,6 +13,7 @@
   "return_type": "int"
   "signature": "[org.codehaus.plexus.util.InterpolationFilterReader].read(char[],int,int)"
 - "exceptions": []
+  "is_jvm_static": true
   "name": "[org.codehaus.plexus.util.StringUtils].join(java.lang.Object[],java.lang.String)"
   "params":
   - "name": "arg0"
@@ -20,6 +23,7 @@
   "return_type": "java.lang.String"
   "signature": "[org.codehaus.plexus.util.StringUtils].join(java.lang.Object[],java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.codehaus.plexus.util.cli.shell.Shell].getShellCommandLine(java.lang.String[])"
   "params":
   - "name": "arg0"
@@ -27,6 +31,7 @@
   "return_type": "java.util.List<String>"
   "signature": "[org.codehaus.plexus.util.cli.shell.Shell].getShellCommandLine(java.lang.String[])"
 - "exceptions": []
+  "is_jvm_static": true
   "name": "[org.codehaus.plexus.util.Os].isOs(java.lang.String,java.lang.String,java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"
@@ -39,7 +44,9 @@
     "type": "String"
   "return_type": "boolean"
   "signature": "[org.codehaus.plexus.util.Os].isOs(java.lang.String,java.lang.String,java.lang.String,java.lang.String)"
-- "exceptions": []
+- "exceptions":
+  - "org.codehaus.plexus.util.reflection.ReflectorException"
+  "is_jvm_static": false
   "name": "[org.codehaus.plexus.util.reflection.Reflector].getObjectProperty(java.lang.Object,java.lang.String)"
   "params":
   - "name": "arg0"
@@ -49,6 +56,7 @@
   "return_type": "java.lang.Object"
   "signature": "[org.codehaus.plexus.util.reflection.Reflector].getObjectProperty(java.lang.Object,java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.codehaus.plexus.util.cli.shell.CmdShell].getCommandLine(java.lang.String,java.lang.String[])"
   "params":
   - "name": "arg0"

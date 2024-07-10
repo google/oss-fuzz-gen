@@ -1,5 +1,7 @@
 "functions":
-- "exceptions": []
+- "exceptions":
+  - "com.google.zxing.NotFoundException"
+  "is_jvm_static": false
   "name": "[com.google.zxing.MultiFormatReader].decode(com.google.zxing.BinaryBitmap,java.util.Map<DecodeHintType,?>)"
   "params":
   - "name": "arg0"
@@ -9,6 +11,7 @@
   "return_type": "com.google.zxing.Result"
   "signature": "[com.google.zxing.MultiFormatReader].decode(com.google.zxing.BinaryBitmap,java.util.Map<DecodeHintType,?>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.google.zxing.common.MinimalECIInput].<init>(java.lang.String,java.nio.charset.Charset,int)"
   "params":
   - "name": "arg0"
@@ -20,13 +23,18 @@
   "return_type": "com.google.zxing.common.MinimalECIInput"
   "signature": "[com.google.zxing.common.MinimalECIInput].<init>(java.lang.String,java.nio.charset.Charset,int)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.google.zxing.oned.MultiFormatOneDReader].<init>(java.util.Map)"
   "params":
   - "name": "arg0"
     "type": "Map"
   "return_type": "com.google.zxing.oned.MultiFormatOneDReader"
   "signature": "[com.google.zxing.oned.MultiFormatOneDReader].<init>(java.util.Map)"
-- "exceptions": []
+- "exceptions":
+  - "com.google.zxing.NotFoundException"
+  - "com.google.zxing.ChecksumException"
+  - "com.google.zxing.FormatException"
+  "is_jvm_static": false
   "name": "[com.google.zxing.multi.ByQuadrantReader].decode(com.google.zxing.BinaryBitmap,java.util.Map<DecodeHintType,?>)"
   "params":
   - "name": "arg0"
@@ -36,6 +44,7 @@
   "return_type": "com.google.zxing.Result"
   "signature": "[com.google.zxing.multi.ByQuadrantReader].decode(com.google.zxing.BinaryBitmap,java.util.Map<DecodeHintType,?>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.google.zxing.common.ECIEncoderSet].<init>(java.lang.String,java.nio.charset.Charset,int)"
   "params":
   - "name": "arg0"
@@ -47,6 +56,7 @@
   "return_type": "com.google.zxing.common.ECIEncoderSet"
   "signature": "[com.google.zxing.common.ECIEncoderSet].<init>(java.lang.String,java.nio.charset.Charset,int)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.google.zxing.BinaryBitmap].crop(int,int,int,int)"
   "params":
   - "name": "arg0"

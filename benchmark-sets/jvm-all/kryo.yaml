@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.esotericsoftware.kryo.serializers.CollectionSerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class<? extends T>)"
   "params":
   - "name": "arg0"
@@ -11,6 +12,7 @@
   "return_type": "java.util.Collection"
   "signature": "[com.esotericsoftware.kryo.serializers.CollectionSerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class<? extends T>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.esotericsoftware.kryo.serializers.MapSerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class<? extends T>)"
   "params":
   - "name": "arg0"
@@ -22,6 +24,7 @@
   "return_type": "java.util.Map"
   "signature": "[com.esotericsoftware.kryo.serializers.MapSerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class<? extends T>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.esotericsoftware.kryo.Kryo].readObjectOrNull(com.esotericsoftware.kryo.io.Input,java.lang.Class<T>)"
   "params":
   - "name": "arg0"
@@ -31,6 +34,7 @@
   "return_type": "java.lang.Object"
   "signature": "[com.esotericsoftware.kryo.Kryo].readObjectOrNull(com.esotericsoftware.kryo.io.Input,java.lang.Class<T>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.esotericsoftware.kryo.Kryo].readClassAndObject(com.esotericsoftware.kryo.io.Input)"
   "params":
   - "name": "arg0"
@@ -38,6 +42,7 @@
   "return_type": "java.lang.Object"
   "signature": "[com.esotericsoftware.kryo.Kryo].readClassAndObject(com.esotericsoftware.kryo.io.Input)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.esotericsoftware.kryo.serializers.RecordSerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class<? extends T>)"
   "params":
   - "name": "arg0"
@@ -49,6 +54,7 @@
   "return_type": "java.lang.Object"
   "signature": "[com.esotericsoftware.kryo.serializers.RecordSerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class<? extends T>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.esotericsoftware.kryo.serializers.DefaultArraySerializers$ObjectArraySerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class)"
   "params":
   - "name": "arg0"

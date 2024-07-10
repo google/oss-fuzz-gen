@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.collections4.bloomfilter.LayeredBloomFilter].contains(org.apache.commons.collections4.bloomfilter.BitMapExtractor)"
   "params":
   - "name": "arg0"
@@ -7,6 +8,7 @@
   "return_type": "boolean"
   "signature": "[org.apache.commons.collections4.bloomfilter.LayeredBloomFilter].contains(org.apache.commons.collections4.bloomfilter.BitMapExtractor)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.collections4.collection.IndexedCollection].removeIf(java.util.function.Predicate<? super C>)"
   "params":
   - "name": "arg0"
@@ -14,6 +16,7 @@
   "return_type": "boolean"
   "signature": "[org.apache.commons.collections4.collection.IndexedCollection].removeIf(java.util.function.Predicate<? super C>)"
 - "exceptions": []
+  "is_jvm_static": true
   "name": "[org.apache.commons.collections4.CollectionUtils].getCardinalityMap(java.lang.Iterable<? extends O>)"
   "params":
   - "name": "arg0"
@@ -21,6 +24,7 @@
   "return_type": "java.util.Map<O,Integer>"
   "signature": "[org.apache.commons.collections4.CollectionUtils].getCardinalityMap(java.lang.Iterable<? extends O>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.collections4.bloomfilter.LayeredBloomFilter].contains(org.apache.commons.collections4.bloomfilter.IndexExtractor)"
   "params":
   - "name": "arg0"
@@ -28,6 +32,7 @@
   "return_type": "boolean"
   "signature": "[org.apache.commons.collections4.bloomfilter.LayeredBloomFilter].contains(org.apache.commons.collections4.bloomfilter.IndexExtractor)"
 - "exceptions": []
+  "is_jvm_static": true
   "name": "[org.apache.commons.collections4.CollectionUtils].addAll(java.util.Collection<C>,java.lang.Iterable<? extends C>)"
   "params":
   - "name": "arg0"
@@ -37,6 +42,7 @@
   "return_type": "boolean"
   "signature": "[org.apache.commons.collections4.CollectionUtils].addAll(java.util.Collection<C>,java.lang.Iterable<? extends C>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.apache.commons.collections4.bloomfilter.LayeredBloomFilter].contains(org.apache.commons.collections4.bloomfilter.BloomFilter)"
   "params":
   - "name": "arg0"

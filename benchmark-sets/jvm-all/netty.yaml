@@ -1,5 +1,7 @@
 "functions":
-- "exceptions": []
+- "exceptions":
+  - "java.lang.Exception"
+  "is_jvm_static": false
   "name": "[io.netty.channel.CombinedChannelDuplexHandler].channelRead(io.netty.channel.ChannelHandlerContext,java.lang.Object)"
   "params":
   - "name": "arg0"
@@ -9,6 +11,7 @@
   "return_type": "void"
   "signature": "[io.netty.channel.CombinedChannelDuplexHandler].channelRead(io.netty.channel.ChannelHandlerContext,java.lang.Object)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[io.netty.handler.codec.http2.Http2ServerUpgradeCodec].prepareUpgradeResponse(io.netty.channel.ChannelHandlerContext,io.netty.handler.codec.http.FullHttpRequest,io.netty.handler.codec.http.HttpHeaders)"
   "params":
   - "name": "arg0"
@@ -19,7 +22,9 @@
     "type": "HttpHeaders"
   "return_type": "boolean"
   "signature": "[io.netty.handler.codec.http2.Http2ServerUpgradeCodec].prepareUpgradeResponse(io.netty.channel.ChannelHandlerContext,io.netty.handler.codec.http.FullHttpRequest,io.netty.handler.codec.http.HttpHeaders)"
-- "exceptions": []
+- "exceptions":
+  - "io.netty.handler.codec.http2.Http2Exception"
+  "is_jvm_static": false
   "name": "[io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder].decodeFrame(io.netty.channel.ChannelHandlerContext,io.netty.buffer.ByteBuf,java.util.List<Object>)"
   "params":
   - "name": "arg0"
@@ -30,7 +35,9 @@
     "type": "List<Object>"
   "return_type": "void"
   "signature": "[io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder].decodeFrame(io.netty.channel.ChannelHandlerContext,io.netty.buffer.ByteBuf,java.util.List<Object>)"
-- "exceptions": []
+- "exceptions":
+  - "io.netty.handler.codec.http2.Http2Exception"
+  "is_jvm_static": false
   "name": "[io.netty.handler.codec.http2.Http2InboundFrameLogger].readFrame(io.netty.channel.ChannelHandlerContext,io.netty.buffer.ByteBuf,io.netty.handler.codec.http2.Http2FrameListener)"
   "params":
   - "name": "arg0"
@@ -41,7 +48,9 @@
     "type": "Http2FrameListener"
   "return_type": "void"
   "signature": "[io.netty.handler.codec.http2.Http2InboundFrameLogger].readFrame(io.netty.channel.ChannelHandlerContext,io.netty.buffer.ByteBuf,io.netty.handler.codec.http2.Http2FrameListener)"
-- "exceptions": []
+- "exceptions":
+  - "io.netty.handler.codec.http2.Http2Exception"
+  "is_jvm_static": false
   "name": "[io.netty.handler.codec.http2.DefaultHttp2FrameReader].readFrame(io.netty.channel.ChannelHandlerContext,io.netty.buffer.ByteBuf,io.netty.handler.codec.http2.Http2FrameListener)"
   "params":
   - "name": "arg0"
@@ -52,7 +61,9 @@
     "type": "Http2FrameListener"
   "return_type": "void"
   "signature": "[io.netty.handler.codec.http2.DefaultHttp2FrameReader].readFrame(io.netty.channel.ChannelHandlerContext,io.netty.buffer.ByteBuf,io.netty.handler.codec.http2.Http2FrameListener)"
-- "exceptions": []
+- "exceptions":
+  - "java.lang.Exception"
+  "is_jvm_static": false
   "name": "[io.netty.channel.CombinedChannelDuplexHandler].write(io.netty.channel.ChannelHandlerContext,java.lang.Object,io.netty.channel.ChannelPromise)"
   "params":
   - "name": "arg0"

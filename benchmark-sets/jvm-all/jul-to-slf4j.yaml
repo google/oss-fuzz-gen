@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.slf4j.helpers.NormalizedParameters].<init>(java.lang.String,java.lang.Object[])"
   "params":
   - "name": "arg0"
@@ -9,6 +10,7 @@
   "return_type": "org.slf4j.helpers.NormalizedParameters"
   "signature": "[org.slf4j.helpers.NormalizedParameters].<init>(java.lang.String,java.lang.Object[])"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.slf4j.event.EventRecordingLogger].<init>(org.slf4j.helpers.SubstituteLogger,java.util.Queue)"
   "params":
   - "name": "arg0"
@@ -18,6 +20,7 @@
   "return_type": "org.slf4j.event.EventRecordingLogger"
   "signature": "[org.slf4j.event.EventRecordingLogger].<init>(org.slf4j.helpers.SubstituteLogger,java.util.Queue)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.slf4j.spi.DefaultLoggingEventBuilder].<init>(org.slf4j.Logger,org.slf4j.event.Level)"
   "params":
   - "name": "arg0"
@@ -27,6 +30,7 @@
   "return_type": "org.slf4j.spi.DefaultLoggingEventBuilder"
   "signature": "[org.slf4j.spi.DefaultLoggingEventBuilder].<init>(org.slf4j.Logger,org.slf4j.event.Level)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.slf4j.helpers.FormattingTuple].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
@@ -34,6 +38,7 @@
   "return_type": "org.slf4j.helpers.FormattingTuple"
   "signature": "[org.slf4j.helpers.FormattingTuple].<init>(java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.slf4j.helpers.FormattingTuple].<init>(java.lang.String,java.lang.Object[],java.lang.Throwable)"
   "params":
   - "name": "arg0"
@@ -45,6 +50,7 @@
   "return_type": "org.slf4j.helpers.FormattingTuple"
   "signature": "[org.slf4j.helpers.FormattingTuple].<init>(java.lang.String,java.lang.Object[],java.lang.Throwable)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.slf4j.helpers.NormalizedParameters].<init>(java.lang.String,java.lang.Object[],java.lang.Throwable)"
   "params":
   - "name": "arg0"

@@ -1,5 +1,7 @@
 "functions":
-- "exceptions": []
+- "exceptions":
+  - "java.lang.Exception"
+  "is_jvm_static": false
   "name": "[net.sf.cglib.transform.TransformingClassGenerator].generateClass(org.objectweb.asm.ClassVisitor)"
   "params":
   - "name": "arg0"
@@ -7,6 +9,7 @@
   "return_type": "void"
   "signature": "[net.sf.cglib.transform.TransformingClassGenerator].generateClass(org.objectweb.asm.ClassVisitor)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[net.sf.cglib.reflect.MulticastDelegate$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
   "params":
   - "name": "arg0"
@@ -14,6 +17,7 @@
   "return_type": "void"
   "signature": "[net.sf.cglib.reflect.MulticastDelegate$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[net.sf.cglib.core.KeyFactory$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
   "params":
   - "name": "arg0"
@@ -21,6 +25,7 @@
   "return_type": "void"
   "signature": "[net.sf.cglib.core.KeyFactory$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[net.sf.cglib.beans.BeanCopier$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
   "params":
   - "name": "arg0"
@@ -28,13 +33,16 @@
   "return_type": "void"
   "signature": "[net.sf.cglib.beans.BeanCopier$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[net.sf.cglib.beans.ImmutableBean$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
   "params":
   - "name": "arg0"
     "type": "ClassVisitor"
   "return_type": "void"
   "signature": "[net.sf.cglib.beans.ImmutableBean$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
-- "exceptions": []
+- "exceptions":
+  - "java.lang.NoSuchMethodException"
+  "is_jvm_static": false
   "name": "[net.sf.cglib.reflect.MethodDelegate$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
   "params":
   - "name": "arg0"

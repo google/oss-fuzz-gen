@@ -1,12 +1,17 @@
 "functions":
-- "exceptions": []
+- "exceptions":
+  - "org.codehaus.jettison.json.JSONException"
+  "is_jvm_static": false
   "name": "[org.codehaus.jettison.json.JSONObject].<init>(org.codehaus.jettison.json.JSONTokener)"
   "params":
   - "name": "arg0"
     "type": "JSONTokener"
   "return_type": "org.codehaus.jettison.json.JSONObject"
   "signature": "[org.codehaus.jettison.json.JSONObject].<init>(org.codehaus.jettison.json.JSONTokener)"
-- "exceptions": []
+- "exceptions":
+  - "org.codehaus.jettison.json.JSONException"
+  - "javax.xml.stream.XMLStreamException"
+  "is_jvm_static": false
   "name": "[org.codehaus.jettison.mapped.MappedXMLStreamReader].<init>(org.codehaus.jettison.json.JSONObject,org.codehaus.jettison.mapped.MappedNamespaceConvention)"
   "params":
   - "name": "arg0"
@@ -15,7 +20,9 @@
     "type": "MappedNamespaceConvention"
   "return_type": "org.codehaus.jettison.mapped.MappedXMLStreamReader"
   "signature": "[org.codehaus.jettison.mapped.MappedXMLStreamReader].<init>(org.codehaus.jettison.json.JSONObject,org.codehaus.jettison.mapped.MappedNamespaceConvention)"
-- "exceptions": []
+- "exceptions":
+  - "org.codehaus.jettison.json.JSONException"
+  "is_jvm_static": false
   "name": "[org.codehaus.jettison.json.JSONArray].<init>(org.codehaus.jettison.json.JSONTokener)"
   "params":
   - "name": "arg0"
@@ -23,20 +30,26 @@
   "return_type": "org.codehaus.jettison.json.JSONArray"
   "signature": "[org.codehaus.jettison.json.JSONArray].<init>(org.codehaus.jettison.json.JSONTokener)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.codehaus.jettison.mapped.MappedNamespaceConvention].<init>(org.codehaus.jettison.mapped.Configuration)"
   "params":
   - "name": "arg0"
     "type": "Configuration"
   "return_type": "org.codehaus.jettison.mapped.MappedNamespaceConvention"
   "signature": "[org.codehaus.jettison.mapped.MappedNamespaceConvention].<init>(org.codehaus.jettison.mapped.Configuration)"
-- "exceptions": []
+- "exceptions":
+  - "org.codehaus.jettison.json.JSONException"
+  - "javax.xml.stream.XMLStreamException"
+  "is_jvm_static": false
   "name": "[org.codehaus.jettison.mapped.MappedXMLStreamReader].<init>(org.codehaus.jettison.json.JSONObject)"
   "params":
   - "name": "arg0"
     "type": "JSONObject"
   "return_type": "org.codehaus.jettison.mapped.MappedXMLStreamReader"
   "signature": "[org.codehaus.jettison.mapped.MappedXMLStreamReader].<init>(org.codehaus.jettison.json.JSONObject)"
-- "exceptions": []
+- "exceptions":
+  - "org.codehaus.jettison.json.JSONException"
+  "is_jvm_static": false
   "name": "[org.codehaus.jettison.json.JSONObject].<init>(org.codehaus.jettison.json.JSONObject,java.lang.String[])"
   "params":
   - "name": "arg0"

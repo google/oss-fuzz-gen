@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.joda.convert.StringConvert].<init>(boolean,org.joda.convert.StringConverterFactory[])"
   "params":
   - "name": "arg0"
@@ -9,6 +10,7 @@
   "return_type": "org.joda.convert.StringConvert"
   "signature": "[org.joda.convert.StringConvert].<init>(boolean,org.joda.convert.StringConverterFactory[])"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.joda.convert.factory.NumericArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
   "params":
   - "name": "arg0"
@@ -16,6 +18,7 @@
   "return_type": "org.joda.convert.StringConverter<?>"
   "signature": "[org.joda.convert.factory.NumericArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.joda.convert.factory.NumericObjectArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
   "params":
   - "name": "arg0"
@@ -23,6 +26,7 @@
   "return_type": "org.joda.convert.StringConverter<?>"
   "signature": "[org.joda.convert.factory.NumericObjectArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.joda.convert.factory.BooleanObjectArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
   "params":
   - "name": "arg0"
@@ -30,6 +34,7 @@
   "return_type": "org.joda.convert.StringConverter<?>"
   "signature": "[org.joda.convert.factory.BooleanObjectArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.joda.convert.factory.BooleanArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
   "params":
   - "name": "arg0"
@@ -37,6 +42,7 @@
   "return_type": "org.joda.convert.StringConverter<?>"
   "signature": "[org.joda.convert.factory.BooleanArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.joda.convert.factory.CharObjectArrayStringConverterFactory].findConverter(java.lang.Class<?>)"
   "params":
   - "name": "arg0"

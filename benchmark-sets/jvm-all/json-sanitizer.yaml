@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": true
   "name": "[com.google.json.JsonSanitizer].sanitize(java.lang.String,int)"
   "params":
   - "name": "arg0"
@@ -8,13 +9,6 @@
     "type": "int"
   "return_type": "java.lang.String"
   "signature": "[com.google.json.JsonSanitizer].sanitize(java.lang.String,int)"
-- "exceptions": []
-  "name": "[com.google.json.JsonSanitizer].sanitize(java.lang.String)"
-  "params":
-  - "name": "arg0"
-    "type": "String"
-  "return_type": "java.lang.String"
-  "signature": "[com.google.json.JsonSanitizer].sanitize(java.lang.String)"
 "language": "jvm"
 "project": "json-sanitizer"
 "target_name": "DenylistFuzzer"

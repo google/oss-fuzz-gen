@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[twitter4j.TimeSpanConverter].<init>(java.util.Locale)"
   "params":
   - "name": "arg0"
@@ -7,6 +8,7 @@
   "return_type": "twitter4j.TimeSpanConverter"
   "signature": "[twitter4j.TimeSpanConverter].<init>(java.util.Locale)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[twitter4j.management.APIStatistics].<init>(int)"
   "params":
   - "name": "arg0"
@@ -14,6 +16,7 @@
   "return_type": "twitter4j.management.APIStatistics"
   "signature": "[twitter4j.management.APIStatistics].<init>(int)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[twitter4j.management.InvocationStatisticsCalculator].<init>(java.lang.String,int)"
   "params":
   - "name": "arg0"
@@ -23,6 +26,7 @@
   "return_type": "twitter4j.management.InvocationStatisticsCalculator"
   "signature": "[twitter4j.management.InvocationStatisticsCalculator].<init>(java.lang.String,int)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[twitter4j.OAuth2Token].<init>(java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"
@@ -32,6 +36,7 @@
   "return_type": "twitter4j.OAuth2Token"
   "signature": "[twitter4j.OAuth2Token].<init>(java.lang.String,java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[twitter4j.management.APIStatisticsOpenMBean].<init>(twitter4j.management.APIStatistics)"
   "params":
   - "name": "arg0"
@@ -39,6 +44,7 @@
   "return_type": "twitter4j.management.APIStatisticsOpenMBean"
   "signature": "[twitter4j.management.APIStatisticsOpenMBean].<init>(twitter4j.management.APIStatistics)"
 - "exceptions": []
+  "is_jvm_static": true
   "name": "[twitter4j.v1.QuickReply].of(java.lang.String,java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"

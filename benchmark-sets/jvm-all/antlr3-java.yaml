@@ -1,5 +1,7 @@
 "functions":
-- "exceptions": []
+- "exceptions":
+  - "org.antlr.runtime.RecognitionException"
+  "is_jvm_static": false
   "name": "[org.antlr.tool.Interpreter].scan(java.lang.String,org.antlr.runtime.debug.DebugEventListener,java.util.List<NFAState>)"
   "params":
   - "name": "arg0"
@@ -11,20 +13,25 @@
   "return_type": "void"
   "signature": "[org.antlr.tool.Interpreter].scan(java.lang.String,org.antlr.runtime.debug.DebugEventListener,java.util.List<NFAState>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.antlr.tool.Grammar].createLookaheadDFAs(boolean)"
   "params":
   - "name": "arg0"
     "type": "boolean"
   "return_type": "void"
   "signature": "[org.antlr.tool.Grammar].createLookaheadDFAs(boolean)"
-- "exceptions": []
+- "exceptions":
+  - "org.antlr.runtime.RecognitionException"
+  "is_jvm_static": false
   "name": "[org.antlr.grammar.v3.TreeToNFAConverter].setElement(org.antlr.misc.IntSet)"
   "params":
   - "name": "arg0"
     "type": "IntSet"
   "return_type": "void"
   "signature": "[org.antlr.grammar.v3.TreeToNFAConverter].setElement(org.antlr.misc.IntSet)"
-- "exceptions": []
+- "exceptions":
+  - "org.antlr.runtime.NoViableAltException"
+  "is_jvm_static": false
   "name": "[org.antlr.grammar.v3.ANTLRv3Lexer$DFA2].specialStateTransition(int,org.antlr.runtime.IntStream)"
   "params":
   - "name": "arg0"
@@ -33,7 +40,9 @@
     "type": "IntStream"
   "return_type": "int"
   "signature": "[org.antlr.grammar.v3.ANTLRv3Lexer$DFA2].specialStateTransition(int,org.antlr.runtime.IntStream)"
-- "exceptions": []
+- "exceptions":
+  - "org.antlr.runtime.RecognitionException"
+  "is_jvm_static": false
   "name": "[org.antlr.tool.Grammar].getSetFromRule(org.antlr.grammar.v3.TreeToNFAConverter,java.lang.String)"
   "params":
   - "name": "arg0"
@@ -42,7 +51,9 @@
     "type": "String"
   "return_type": "org.antlr.misc.IntSet"
   "signature": "[org.antlr.tool.Grammar].getSetFromRule(org.antlr.grammar.v3.TreeToNFAConverter,java.lang.String)"
-- "exceptions": []
+- "exceptions":
+  - "org.antlr.runtime.RecognitionException"
+  "is_jvm_static": false
   "name": "[org.antlr.grammar.v3.TreeToNFAConverter].setRule(org.antlr.tool.GrammarAST)"
   "params":
   - "name": "arg0"

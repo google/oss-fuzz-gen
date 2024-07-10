@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.mozilla.javascript.Slot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable)"
   "params":
   - "name": "arg0"
@@ -11,6 +12,7 @@
   "return_type": "boolean"
   "signature": "[org.mozilla.javascript.Slot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.mozilla.javascript.Sorting].median(java.lang.Object[],int,int,java.util.Comparator<Object>)"
   "params":
   - "name": "arg0"
@@ -24,6 +26,7 @@
   "return_type": "int"
   "signature": "[org.mozilla.javascript.Sorting].median(java.lang.Object[],int,int,java.util.Comparator<Object>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.mozilla.javascript.LambdaSlot].getValue(org.mozilla.javascript.Scriptable)"
   "params":
   - "name": "arg0"
@@ -31,6 +34,7 @@
   "return_type": "java.lang.Object"
   "signature": "[org.mozilla.javascript.LambdaSlot].getValue(org.mozilla.javascript.Scriptable)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.mozilla.javascript.NativeJavaObject].getDefaultValue(java.lang.Class<?>)"
   "params":
   - "name": "arg0"
@@ -38,6 +42,7 @@
   "return_type": "java.lang.Object"
   "signature": "[org.mozilla.javascript.NativeJavaObject].getDefaultValue(java.lang.Class<?>)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.mozilla.javascript.AccessorSlot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable,boolean)"
   "params":
   - "name": "arg0"
@@ -51,6 +56,7 @@
   "return_type": "boolean"
   "signature": "[org.mozilla.javascript.AccessorSlot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable,boolean)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.mozilla.javascript.NativeArray$ElementComparator].compare(java.lang.Object,java.lang.Object)"
   "params":
   - "name": "arg0"

@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadableInstant)"
   "params":
   - "name": "arg0"
@@ -7,13 +8,16 @@
   "return_type": "java.lang.String"
   "signature": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadableInstant)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadablePartial)"
   "params":
   - "name": "arg0"
     "type": "ReadablePartial"
   "return_type": "java.lang.String"
   "signature": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadablePartial)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadableInstant)"
   "params":
   - "name": "arg0"
@@ -22,7 +26,9 @@
     "type": "ReadableInstant"
   "return_type": "void"
   "signature": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadableInstant)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadablePartial)"
   "params":
   - "name": "arg0"
@@ -32,6 +38,7 @@
   "return_type": "void"
   "signature": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadablePartial)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.StringBuffer,long)"
   "params":
   - "name": "arg0"
@@ -40,7 +47,9 @@
     "type": "long"
   "return_type": "void"
   "signature": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.StringBuffer,long)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
   "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,long)"
   "params":
   - "name": "arg0"

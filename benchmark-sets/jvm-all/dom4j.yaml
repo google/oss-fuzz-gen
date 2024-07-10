@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.dom4j.DocumentFactory].createAttribute(org.dom4j.Element,java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"
@@ -11,6 +12,7 @@
   "return_type": "org.dom4j.Attribute"
   "signature": "[org.dom4j.DocumentFactory].createAttribute(org.dom4j.Element,java.lang.String,java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.dom4j.datatype.DatatypeDocumentFactory].createAttribute(org.dom4j.Element,org.dom4j.QName,java.lang.String)"
   "params":
   - "name": "arg0"
@@ -22,6 +24,7 @@
   "return_type": "org.dom4j.Attribute"
   "signature": "[org.dom4j.datatype.DatatypeDocumentFactory].createAttribute(org.dom4j.Element,org.dom4j.QName,java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.dom4j.datatype.DatatypeDocumentFactory].loadSchema(org.dom4j.Document,org.dom4j.Namespace)"
   "params":
   - "name": "arg0"
@@ -31,6 +34,7 @@
   "return_type": "void"
   "signature": "[org.dom4j.datatype.DatatypeDocumentFactory].loadSchema(org.dom4j.Document,org.dom4j.Namespace)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.dom4j.datatype.SchemaParser].build(org.dom4j.Document,org.dom4j.Namespace)"
   "params":
   - "name": "arg0"
@@ -40,6 +44,7 @@
   "return_type": "void"
   "signature": "[org.dom4j.datatype.SchemaParser].build(org.dom4j.Document,org.dom4j.Namespace)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.dom4j.datatype.DatatypeDocumentFactory].loadSchema(org.dom4j.Document)"
   "params":
   - "name": "arg0"
@@ -47,6 +52,7 @@
   "return_type": "void"
   "signature": "[org.dom4j.datatype.DatatypeDocumentFactory].loadSchema(org.dom4j.Document)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.dom4j.datatype.SchemaParser].build(org.dom4j.Document)"
   "params":
   - "name": "arg0"

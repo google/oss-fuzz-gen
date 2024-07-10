@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.fasterxml.jackson.dataformat.avro.schema.RecordVisitor].<init>(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.dataformat.avro.schema.VisitorFormatWrapperImpl)"
   "params":
   - "name": "arg0"
@@ -11,6 +12,7 @@
   "return_type": "com.fasterxml.jackson.dataformat.avro.schema.RecordVisitor"
   "signature": "[com.fasterxml.jackson.dataformat.avro.schema.RecordVisitor].<init>(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.dataformat.avro.schema.VisitorFormatWrapperImpl)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField].<init>(com.fasterxml.jackson.dataformat.protobuf.protoparser.protoparser.FieldElement,com.fasterxml.jackson.dataformat.protobuf.schema.FieldType)"
   "params":
   - "name": "arg0"
@@ -20,6 +22,7 @@
   "return_type": "com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField"
   "signature": "[com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField].<init>(com.fasterxml.jackson.dataformat.protobuf.protoparser.protoparser.FieldElement,com.fasterxml.jackson.dataformat.protobuf.schema.FieldType)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField].<init>(com.fasterxml.jackson.dataformat.protobuf.protoparser.protoparser.FieldElement,com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufMessage)"
   "params":
   - "name": "arg0"
@@ -29,6 +32,7 @@
   "return_type": "com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField"
   "signature": "[com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField].<init>(com.fasterxml.jackson.dataformat.protobuf.protoparser.protoparser.FieldElement,com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufMessage)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField].<init>(com.fasterxml.jackson.dataformat.protobuf.protoparser.protoparser.FieldElement,com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufEnum)"
   "params":
   - "name": "arg0"
@@ -38,6 +42,7 @@
   "return_type": "com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField"
   "signature": "[com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField].<init>(com.fasterxml.jackson.dataformat.protobuf.protoparser.protoparser.FieldElement,com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufEnum)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.fasterxml.jackson.dataformat.smile.SmileGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.OutputStream,byte[],int,boolean)"
   "params":
   - "name": "arg0"
@@ -59,6 +64,7 @@
   "return_type": "com.fasterxml.jackson.dataformat.smile.SmileGenerator"
   "signature": "[com.fasterxml.jackson.dataformat.smile.SmileGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.OutputStream,byte[],int,boolean)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.fasterxml.jackson.dataformat.smile.SmileGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.OutputStream)"
   "params":
   - "name": "arg0"

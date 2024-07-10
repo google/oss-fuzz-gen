@@ -1,12 +1,15 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.json.JSONArray].<init>(java.util.Collection)"
   "params":
   - "name": "arg0"
     "type": "Collection"
   "return_type": "org.json.JSONArray"
   "signature": "[org.json.JSONArray].<init>(java.util.Collection)"
-- "exceptions": []
+- "exceptions":
+  - "org.json.JSONException"
+  "is_jvm_static": false
   "name": "[org.json.JSONArray].<init>(java.lang.Object)"
   "params":
   - "name": "arg0"
@@ -14,13 +17,16 @@
   "return_type": "org.json.JSONArray"
   "signature": "[org.json.JSONArray].<init>(java.lang.Object)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.json.JSONObject].<init>(java.util.Map)"
   "params":
   - "name": "arg0"
     "type": "Map"
   "return_type": "org.json.JSONObject"
   "signature": "[org.json.JSONObject].<init>(java.util.Map)"
-- "exceptions": []
+- "exceptions":
+  - "org.json.JSONException"
+  "is_jvm_static": false
   "name": "[org.json.JSONObject].<init>(org.json.JSONObject,java.lang.String[])"
   "params":
   - "name": "arg0"
@@ -29,14 +35,18 @@
     "type": "String[]"
   "return_type": "org.json.JSONObject"
   "signature": "[org.json.JSONObject].<init>(org.json.JSONObject,java.lang.String[])"
-- "exceptions": []
+- "exceptions":
+  - "org.json.JSONException"
+  "is_jvm_static": false
   "name": "[org.json.JSONObject].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "String"
   "return_type": "org.json.JSONObject"
   "signature": "[org.json.JSONObject].<init>(java.lang.String)"
-- "exceptions": []
+- "exceptions":
+  - "org.json.JSONException"
+  "is_jvm_static": false
   "name": "[org.json.JSONArray].<init>(java.lang.String)"
   "params":
   - "name": "arg0"

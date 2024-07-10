@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.roaringbitmap.ArrayContainer].ixor(org.roaringbitmap.RunContainer)"
   "params":
   - "name": "arg0"
@@ -7,6 +8,7 @@
   "return_type": "org.roaringbitmap.Container"
   "signature": "[org.roaringbitmap.ArrayContainer].ixor(org.roaringbitmap.RunContainer)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.roaringbitmap.RunContainer].xor(org.roaringbitmap.ArrayContainer)"
   "params":
   - "name": "arg0"
@@ -14,6 +16,7 @@
   "return_type": "org.roaringbitmap.Container"
   "signature": "[org.roaringbitmap.RunContainer].xor(org.roaringbitmap.ArrayContainer)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.roaringbitmap.RunContainer].ixor(org.roaringbitmap.ArrayContainer)"
   "params":
   - "name": "arg0"
@@ -21,6 +24,7 @@
   "return_type": "org.roaringbitmap.Container"
   "signature": "[org.roaringbitmap.RunContainer].ixor(org.roaringbitmap.ArrayContainer)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.roaringbitmap.ArrayContainer].ior(org.roaringbitmap.RunContainer)"
   "params":
   - "name": "arg0"
@@ -28,6 +32,7 @@
   "return_type": "org.roaringbitmap.Container"
   "signature": "[org.roaringbitmap.ArrayContainer].ior(org.roaringbitmap.RunContainer)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.roaringbitmap.RunContainer].or(org.roaringbitmap.ArrayContainer)"
   "params":
   - "name": "arg0"
@@ -35,6 +40,7 @@
   "return_type": "org.roaringbitmap.Container"
   "signature": "[org.roaringbitmap.RunContainer].or(org.roaringbitmap.ArrayContainer)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.roaringbitmap.RunContainer].ior(org.roaringbitmap.ArrayContainer)"
   "params":
   - "name": "arg0"

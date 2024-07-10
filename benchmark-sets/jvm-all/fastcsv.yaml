@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(de.siegmar.fastcsv.reader.FieldModifier,java.util.List)"
   "params":
   - "name": "arg0"
@@ -9,6 +10,7 @@
   "return_type": "de.siegmar.fastcsv.reader.NamedCsvRecordHandler"
   "signature": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(de.siegmar.fastcsv.reader.FieldModifier,java.util.List)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(de.siegmar.fastcsv.reader.FieldModifier,java.lang.String[])"
   "params":
   - "name": "arg0"
@@ -18,6 +20,7 @@
   "return_type": "de.siegmar.fastcsv.reader.NamedCsvRecordHandler"
   "signature": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(de.siegmar.fastcsv.reader.FieldModifier,java.lang.String[])"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(java.util.List)"
   "params":
   - "name": "arg0"
@@ -25,6 +28,7 @@
   "return_type": "de.siegmar.fastcsv.reader.NamedCsvRecordHandler"
   "signature": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(java.util.List)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(java.lang.String[])"
   "params":
   - "name": "arg0"
@@ -32,6 +36,7 @@
   "return_type": "de.siegmar.fastcsv.reader.NamedCsvRecordHandler"
   "signature": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(java.lang.String[])"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[de.siegmar.fastcsv.reader.CsvReader$lambda_stream_0__1].<init>(de.siegmar.fastcsv.reader.CsvReader)"
   "params":
   - "name": "arg0"
@@ -39,6 +44,7 @@
   "return_type": "de.siegmar.fastcsv.reader.CsvReader$lambda_stream_0__1"
   "signature": "[de.siegmar.fastcsv.reader.CsvReader$lambda_stream_0__1].<init>(de.siegmar.fastcsv.reader.CsvReader)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[de.siegmar.fastcsv.reader.CsvRecordHandler].<init>(de.siegmar.fastcsv.reader.FieldModifier)"
   "params":
   - "name": "arg0"

@@ -1,5 +1,6 @@
 "functions":
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.bazaarvoice.jolt.common.Optional].equals(java.lang.Object)"
   "params":
   - "name": "arg0"
@@ -7,6 +8,7 @@
   "return_type": "boolean"
   "signature": "[com.bazaarvoice.jolt.common.Optional].equals(java.lang.Object)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.bazaarvoice.jolt.common.pathelement.ArrayPathElement].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
@@ -14,6 +16,7 @@
   "return_type": "com.bazaarvoice.jolt.common.pathelement.ArrayPathElement"
   "signature": "[com.bazaarvoice.jolt.common.pathelement.ArrayPathElement].<init>(java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.bazaarvoice.jolt.common.pathelement.StarDoublePathElement].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
@@ -21,6 +24,7 @@
   "return_type": "com.bazaarvoice.jolt.common.pathelement.StarDoublePathElement"
   "signature": "[com.bazaarvoice.jolt.common.pathelement.StarDoublePathElement].<init>(java.lang.String)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.bazaarvoice.jolt.modifier.spec.ModifierCompositeSpec].<init>(java.lang.String,java.util.Map,com.bazaarvoice.jolt.modifier.OpMode,com.bazaarvoice.jolt.modifier.TemplatrSpecBuilder)"
   "params":
   - "name": "arg0"
@@ -34,6 +38,7 @@
   "return_type": "com.bazaarvoice.jolt.modifier.spec.ModifierCompositeSpec"
   "signature": "[com.bazaarvoice.jolt.modifier.spec.ModifierCompositeSpec].<init>(java.lang.String,java.util.Map,com.bazaarvoice.jolt.modifier.OpMode,com.bazaarvoice.jolt.modifier.TemplatrSpecBuilder)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.bazaarvoice.jolt.removr.spec.RemovrCompositeSpec].<init>(java.lang.String,java.util.Map)"
   "params":
   - "name": "arg0"
@@ -43,6 +48,7 @@
   "return_type": "com.bazaarvoice.jolt.removr.spec.RemovrCompositeSpec"
   "signature": "[com.bazaarvoice.jolt.removr.spec.RemovrCompositeSpec].<init>(java.lang.String,java.util.Map)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[com.bazaarvoice.jolt.common.pathelement.StarSinglePathElement].<init>(java.lang.String)"
   "params":
   - "name": "arg0"

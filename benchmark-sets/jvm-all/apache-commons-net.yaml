@@ -1,0 +1,67 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.apache.commons.net.ntp.TimeInfo].<init>(org.apache.commons.net.ntp.NtpV3Packet,long,java.util.List,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "NtpV3Packet"
+  - "name": "arg1"
+    "type": "long"
+  - "name": "arg2"
+    "type": "List"
+  - "name": "arg3"
+    "type": "boolean"
+  "return_type": "org.apache.commons.net.ntp.TimeInfo"
+  "signature": "[org.apache.commons.net.ntp.TimeInfo].<init>(org.apache.commons.net.ntp.NtpV3Packet,long,java.util.List,boolean)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.apache.commons.net.nntp.NewGroupsOrNewsQuery].<init>(java.util.Calendar,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "Calendar"
+  - "name": "arg1"
+    "type": "boolean"
+  "return_type": "org.apache.commons.net.nntp.NewGroupsOrNewsQuery"
+  "signature": "[org.apache.commons.net.nntp.NewGroupsOrNewsQuery].<init>(java.util.Calendar,boolean)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.apache.commons.net.ftp.parser.NTFTPEntryParser].<init>(org.apache.commons.net.ftp.FTPClientConfig)"
+  "params":
+  - "name": "arg0"
+    "type": "FTPClientConfig"
+  "return_type": "org.apache.commons.net.ftp.parser.NTFTPEntryParser"
+  "signature": "[org.apache.commons.net.ftp.parser.NTFTPEntryParser].<init>(org.apache.commons.net.ftp.FTPClientConfig)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.apache.commons.net.util.Base64].<init>(int,byte[],boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "int"
+  - "name": "arg1"
+    "type": "byte[]"
+  - "name": "arg2"
+    "type": "boolean"
+  "return_type": "org.apache.commons.net.util.Base64"
+  "signature": "[org.apache.commons.net.util.Base64].<init>(int,byte[],boolean)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.apache.commons.net.ntp.TimeStamp].<init>(java.util.Date)"
+  "params":
+  - "name": "arg0"
+    "type": "Date"
+  "return_type": "org.apache.commons.net.ntp.TimeStamp"
+  "signature": "[org.apache.commons.net.ntp.TimeStamp].<init>(java.util.Date)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.apache.commons.net.util.Base64].<init>(int,byte[])"
+  "params":
+  - "name": "arg0"
+    "type": "int"
+  - "name": "arg1"
+    "type": "byte[]"
+  "return_type": "org.apache.commons.net.util.Base64"
+  "signature": "[org.apache.commons.net.util.Base64].<init>(int,byte[])"
+"language": "jvm"
+"project": "apache-commons-net"
+"target_name": "MLSxEntryParserFuzzer"
+"target_path": "/src/MLSxEntryParserFuzzer.java"

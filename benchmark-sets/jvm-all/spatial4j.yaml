@@ -1,5 +1,8 @@
 "functions":
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  - "com.fasterxml.jackson.core.JsonProcessingException"
+  "is_jvm_static": false
   "name": "[org.locationtech.spatial4j.io.jackson.GeometryDeserializer].deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)"
   "params":
   - "name": "arg0"
@@ -8,7 +11,10 @@
     "type": "DeserializationContext"
   "return_type": "org.locationtech.jts.geom.Geometry"
   "signature": "[org.locationtech.spatial4j.io.jackson.GeometryDeserializer].deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  - "com.fasterxml.jackson.core.JsonProcessingException"
+  "is_jvm_static": false
   "name": "[org.locationtech.spatial4j.io.jackson.ShapeDeserializer].deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)"
   "params":
   - "name": "arg0"
@@ -18,27 +24,35 @@
   "return_type": "org.locationtech.spatial4j.shape.Shape"
   "signature": "[org.locationtech.spatial4j.io.jackson.ShapeDeserializer].deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)"
 - "exceptions": []
+  "is_jvm_static": false
   "name": "[org.locationtech.spatial4j.io.SupportedFormats].read(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "String"
   "return_type": "org.locationtech.spatial4j.shape.Shape"
   "signature": "[org.locationtech.spatial4j.io.SupportedFormats].read(java.lang.String)"
-- "exceptions": []
+- "exceptions":
+  - "org.locationtech.spatial4j.exception.InvalidShapeException"
+  "is_jvm_static": false
   "name": "[org.locationtech.spatial4j.io.WKTReader].readIfSupported(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "Object"
   "return_type": "org.locationtech.spatial4j.shape.Shape"
   "signature": "[org.locationtech.spatial4j.io.WKTReader].readIfSupported(java.lang.Object)"
-- "exceptions": []
+- "exceptions":
+  - "org.locationtech.spatial4j.exception.InvalidShapeException"
+  "is_jvm_static": false
   "name": "[org.locationtech.spatial4j.io.GeoJSONReader].readIfSupported(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "Object"
   "return_type": "org.locationtech.spatial4j.shape.Shape"
   "signature": "[org.locationtech.spatial4j.io.GeoJSONReader].readIfSupported(java.lang.Object)"
-- "exceptions": []
+- "exceptions":
+  - "java.io.IOException"
+  - "java.text.ParseException"
+  "is_jvm_static": false
   "name": "[org.locationtech.spatial4j.io.GeoJSONReader].read(java.io.Reader)"
   "params":
   - "name": "arg0"
