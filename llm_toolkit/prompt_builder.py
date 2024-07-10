@@ -681,8 +681,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     # java.lang.Object argument
     if 'java.lang.Object' in arg_type:
       base = self._get_template(self.object_arg_description_template_file)
-      prefix = 'Argument \#{count} requires an Object instance\n'
-      argument = '<argument>' + prefix + base + '</argument>'
+      prefix = f'Argument #{count} requires an Object instance\n'
+      argument = f'<argument>{prefix}{base}</argument>'
       return argument
 
     # Simple arguments
@@ -784,6 +784,49 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     return '<arguments>' + '\n'.join(argument_descriptions) + '</arguments>'
 
+  def _format_constructors(self) -> str:
+    """Formats a list of functions / constructors to create the object for
+    invoking the target method."""
+    if self.benchmark.is_jvm_static:
+      return ''
+
+    constructors = []
+    ctrs = introspector.query_introspector_matching_function_constructor_type(
+        self.benchmark.project, self.benchmark.return_type, False)
+    for ctr in ctrs:
+      constructor_sig = ctr.get('function_signature')
+      if constructor_sig:
+        constructors.append(f'<signature>{constructor_sig}</signature>')
+
+    if constructors:
+      ctr_str = '\n'.join(constructors)
+      return f'<constructors>{ctr_str}</constructors>'
+
+    functions = []
+    funcs = introspector.query_introspector_matching_function_constructor_type(
+        self.benchmark.project, self.benchmark.return_type, True)
+    for func in funcs:
+      is_static = func.get('is_static', False)
+      function_sig = func.get('function_signature')
+      if not function_sig:
+        continue
+      if is_static:
+        functions.append(f'<item><signature>{function_sig}</signature></item>')
+      else:
+        function_class = function_sig[1:].split(']')[0]
+        function_str = f'<signature>{function_sig}</signature>'
+        function_str = function_str + (
+            '<prerequisite>You MUST create an '
+            f'{function_class} object before calling this constructing method.'
+            '</prerequisite>')
+        function_str = f'<item>{function_str}</item>'
+        functions.append(function_str)
+    if functions:
+      func_str = '\n'.join(functions)
+      return f'<constructors>{func_str}</constructors>'
+
+    return ''
+
   def _format_source_reference(self, signature: str) -> Tuple[str, str]:
     """Formats the source code reference for this target."""
     # Query for source code of the target method
@@ -807,6 +850,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     problem = problem.replace('{REQUIREMENTS}',
                               self._format_requirement(signature))
     problem = problem.replace('{ARGUMENTS}', self._format_arguments())
+    problem = problem.replace('{CONSTRUCTORS}', self._format_constructors())
     problem = problem.replace('{EXCEPTIONS}', self._format_exceptions())
 
     self_source, cross_source = self._format_source_reference(signature)
