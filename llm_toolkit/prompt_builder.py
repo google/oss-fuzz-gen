@@ -681,8 +681,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     # java.lang.Object argument
     if 'java.lang.Object' in arg_type:
       base = self._get_template(self.object_arg_description_template_file)
-      prefix = 'Argument #{count} requires an Object instance\n'
-      argument = '<argument>' + prefix + base + '</argument>'
+      prefix = f'Argument #{count} requires an Object instance\n'
+      argument = f'<argument>{prefix}{base}</argument>'
       return argument
 
     # Simple arguments
@@ -817,9 +817,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         function_str = f'<signature>{function_sig}</signature>'
         function_str = function_str + (
             '<prerequisite>You MUST create an '
-            '{CLASS_NAME} object before calling this constructing method.'
+            f'{function_class} object before calling this constructing method.'
             '</prerequisite>')
-        function_str = function_str.replace('{CLASS_NAME}', function_class)
         function_str = f'<item>{function_str}</item>'
         functions.append(function_str)
     if functions:
