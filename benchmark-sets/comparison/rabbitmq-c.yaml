@@ -1,0 +1,14 @@
+"functions":
+- "exceptions": []
+  "name": "amqp_tx_rollback"
+  "params":
+  - "name": "state"
+    "type": "bool "
+  - "name": "channel"
+    "type": "short"
+  "return_type": "void"
+  "signature": "amqp_tx_rollback_ok_t * amqp_tx_rollback(amqp_connection_state_t, amqp_channel_t)"
+"language": "c"
+"project": "rabbitmq-c"
+"target_name": "fuzz_url"
+"target_path": "/src/librabbitmq/fuzz/fuzz_url.c"

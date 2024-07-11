@@ -1,0 +1,20 @@
+"functions":
+- "exceptions": []
+  "name": "libewf_handle_open"
+  "params":
+  - "name": "handle"
+    "type": "bool "
+  - "name": "filenames"
+    "type": "bool "
+  - "name": "number_of_filenames"
+    "type": "int"
+  - "name": "access_flags"
+    "type": "int"
+  - "name": "error"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int libewf_handle_open(libewf_handle_t *, const char **, int, int, libcerror_error_t **)"
+"language": "c"
+"project": "libyal"
+"target_name": "libfcrypto_crypt_serpent_cbc_fuzzer"
+"target_path": "/src/libfcrypto/ossfuzz/crypt_serpent_cbc_fuzzer.cc"
