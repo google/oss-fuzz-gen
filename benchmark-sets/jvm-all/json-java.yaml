@@ -1,0 +1,68 @@
+"functions":
+- "exceptions":
+  - "org.json.JSONException"
+  "is_jvm_static": false
+  "name": "[org.json.JSONObject].write(java.io.Writer,int,int)"
+  "params":
+  - "name": "arg0"
+    "type": "Writer"
+  - "name": "arg1"
+    "type": "int"
+  - "name": "arg2"
+    "type": "int"
+  "return_type": "java.io.Writer"
+  "signature": "[org.json.JSONObject].write(java.io.Writer,int,int)"
+- "exceptions":
+  - "org.json.JSONException"
+  "is_jvm_static": false
+  "name": "[org.json.JSONArray].write(java.io.Writer,int,int)"
+  "params":
+  - "name": "arg0"
+    "type": "Writer"
+  - "name": "arg1"
+    "type": "int"
+  - "name": "arg2"
+    "type": "int"
+  "return_type": "java.io.Writer"
+  "signature": "[org.json.JSONArray].write(java.io.Writer,int,int)"
+- "exceptions":
+  - "org.json.JSONException"
+  "is_jvm_static": false
+  "name": "[org.json.JSONObject].toString(int)"
+  "params":
+  - "name": "arg0"
+    "type": "int"
+  "return_type": "java.lang.String"
+  "signature": "[org.json.JSONObject].toString(int)"
+- "exceptions":
+  - "org.json.JSONException"
+  "is_jvm_static": false
+  "name": "[org.json.JSONArray].toString(int)"
+  "params":
+  - "name": "arg0"
+    "type": "int"
+  "return_type": "java.lang.String"
+  "signature": "[org.json.JSONArray].toString(int)"
+- "exceptions":
+  - "org.json.JSONException"
+  "is_jvm_static": false
+  "name": "[org.json.JSONObject].<init>(org.json.JSONTokener,org.json.JSONParserConfiguration)"
+  "params":
+  - "name": "arg0"
+    "type": "JSONTokener"
+  - "name": "arg1"
+    "type": "JSONParserConfiguration"
+  "return_type": "org.json.JSONObject"
+  "signature": "[org.json.JSONObject].<init>(org.json.JSONTokener,org.json.JSONParserConfiguration)"
+- "exceptions": []
+  "is_jvm_static": true
+  "name": "[org.json.JSONObject].quote(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "java.lang.String"
+  "signature": "[org.json.JSONObject].quote(java.lang.String)"
+"language": "jvm"
+"project": "json-java"
+"target_name": "JsonJavaFuzzer"
+"target_path": "/src/JsonJavaFuzzer.java"

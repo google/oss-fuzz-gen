@@ -1,0 +1,71 @@
+"functions":
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[io.undertow.server.protocol.http.PipeliningBufferingStreamSinkConduit].awaitWritable(long,java.util.concurrent.TimeUnit)"
+  "params":
+  - "name": "arg0"
+    "type": "long"
+  - "name": "arg1"
+    "type": "TimeUnit"
+  "return_type": "void"
+  "signature": "[io.undertow.server.protocol.http.PipeliningBufferingStreamSinkConduit].awaitWritable(long,java.util.concurrent.TimeUnit)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[io.undertow.conduits.PreChunkedStreamSinkConduit].awaitWritable(long,java.util.concurrent.TimeUnit)"
+  "params":
+  - "name": "arg0"
+    "type": "long"
+  - "name": "arg1"
+    "type": "TimeUnit"
+  "return_type": "void"
+  "signature": "[io.undertow.conduits.PreChunkedStreamSinkConduit].awaitWritable(long,java.util.concurrent.TimeUnit)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[io.undertow.conduits.FixedLengthStreamSourceConduit].awaitReadable(long,java.util.concurrent.TimeUnit)"
+  "params":
+  - "name": "arg0"
+    "type": "long"
+  - "name": "arg1"
+    "type": "TimeUnit"
+  "return_type": "void"
+  "signature": "[io.undertow.conduits.FixedLengthStreamSourceConduit].awaitReadable(long,java.util.concurrent.TimeUnit)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[org.xnio.conduits.InflatingStreamSourceConduit].awaitReadable(long,java.util.concurrent.TimeUnit)"
+  "params":
+  - "name": "arg0"
+    "type": "long"
+  - "name": "arg1"
+    "type": "TimeUnit"
+  "return_type": "void"
+  "signature": "[org.xnio.conduits.InflatingStreamSourceConduit].awaitReadable(long,java.util.concurrent.TimeUnit)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[io.undertow.server.protocol.ajp.AjpServerRequestConduit].awaitReadable(long,java.util.concurrent.TimeUnit)"
+  "params":
+  - "name": "arg0"
+    "type": "long"
+  - "name": "arg1"
+    "type": "TimeUnit"
+  "return_type": "void"
+  "signature": "[io.undertow.server.protocol.ajp.AjpServerRequestConduit].awaitReadable(long,java.util.concurrent.TimeUnit)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[io.undertow.conduits.IdleTimeoutConduit].awaitReadable(long,java.util.concurrent.TimeUnit)"
+  "params":
+  - "name": "arg0"
+    "type": "long"
+  - "name": "arg1"
+    "type": "TimeUnit"
+  "return_type": "void"
+  "signature": "[io.undertow.conduits.IdleTimeoutConduit].awaitReadable(long,java.util.concurrent.TimeUnit)"
+"language": "jvm"
+"project": "undertow"
+"target_name": "RedirectHandlerFuzzer"
+"target_path": "/src/RedirectHandlerFuzzer.java"

@@ -1,0 +1,66 @@
+"functions":
+- "exceptions":
+  - "org.jdom2.JDOMException"
+  "is_jvm_static": false
+  "name": "[org.jdom2.output.support.AbstractSAXOutputProcessor].processAsDocument(org.jdom2.output.support.SAXTarget,org.jdom2.output.Format,java.util.List<? extends Content>)"
+  "params":
+  - "name": "arg0"
+    "type": "SAXTarget"
+  - "name": "arg1"
+    "type": "Format"
+  - "name": "arg2"
+    "type": "List<? extends Content>"
+  "return_type": "void"
+  "signature": "[org.jdom2.output.support.AbstractSAXOutputProcessor].processAsDocument(org.jdom2.output.support.SAXTarget,org.jdom2.output.Format,java.util.List<? extends Content>)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.jdom2.output.support.AbstractFormattedWalker$MultiText].appendText(org.jdom2.output.support.AbstractFormattedWalker$Trim,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "AbstractFormattedWalker$Trim"
+  - "name": "arg1"
+    "type": "String"
+  "return_type": "void"
+  "signature": "[org.jdom2.output.support.AbstractFormattedWalker$MultiText].appendText(org.jdom2.output.support.AbstractFormattedWalker$Trim,java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.jdom2.Document].setDocType(org.jdom2.DocType)"
+  "params":
+  - "name": "arg0"
+    "type": "DocType"
+  "return_type": "org.jdom2.Document"
+  "signature": "[org.jdom2.Document].setDocType(org.jdom2.DocType)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.jdom2.output.support.AbstractFormattedWalker$MultiText].appendCDATA(org.jdom2.output.support.AbstractFormattedWalker$Trim,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "AbstractFormattedWalker$Trim"
+  - "name": "arg1"
+    "type": "String"
+  "return_type": "void"
+  "signature": "[org.jdom2.output.support.AbstractFormattedWalker$MultiText].appendCDATA(org.jdom2.output.support.AbstractFormattedWalker$Trim,java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": true
+  "name": "[org.jdom2.output.Format].escapeText(org.jdom2.output.EscapeStrategy,java.lang.String,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "EscapeStrategy"
+  - "name": "arg1"
+    "type": "String"
+  - "name": "arg2"
+    "type": "String"
+  "return_type": "java.lang.String"
+  "signature": "[org.jdom2.output.Format].escapeText(org.jdom2.output.EscapeStrategy,java.lang.String,java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.jdom2.EntityRef].setSystemID(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "org.jdom2.EntityRef"
+  "signature": "[org.jdom2.EntityRef].setSystemID(java.lang.String)"
+"language": "jvm"
+"project": "jdom"
+"target_name": "SAXBuilderFuzzer"
+"target_path": "/src/SAXBuilderFuzzer.java"

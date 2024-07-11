@@ -1,0 +1,61 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.bazaarvoice.jolt.common.Optional].equals(java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  "return_type": "boolean"
+  "signature": "[com.bazaarvoice.jolt.common.Optional].equals(java.lang.Object)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.bazaarvoice.jolt.common.pathelement.ArrayPathElement].<init>(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "com.bazaarvoice.jolt.common.pathelement.ArrayPathElement"
+  "signature": "[com.bazaarvoice.jolt.common.pathelement.ArrayPathElement].<init>(java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.bazaarvoice.jolt.common.pathelement.StarDoublePathElement].<init>(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "com.bazaarvoice.jolt.common.pathelement.StarDoublePathElement"
+  "signature": "[com.bazaarvoice.jolt.common.pathelement.StarDoublePathElement].<init>(java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.bazaarvoice.jolt.modifier.spec.ModifierCompositeSpec].<init>(java.lang.String,java.util.Map,com.bazaarvoice.jolt.modifier.OpMode,com.bazaarvoice.jolt.modifier.TemplatrSpecBuilder)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "Map"
+  - "name": "arg2"
+    "type": "OpMode"
+  - "name": "arg3"
+    "type": "TemplatrSpecBuilder"
+  "return_type": "com.bazaarvoice.jolt.modifier.spec.ModifierCompositeSpec"
+  "signature": "[com.bazaarvoice.jolt.modifier.spec.ModifierCompositeSpec].<init>(java.lang.String,java.util.Map,com.bazaarvoice.jolt.modifier.OpMode,com.bazaarvoice.jolt.modifier.TemplatrSpecBuilder)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.bazaarvoice.jolt.removr.spec.RemovrCompositeSpec].<init>(java.lang.String,java.util.Map)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "Map"
+  "return_type": "com.bazaarvoice.jolt.removr.spec.RemovrCompositeSpec"
+  "signature": "[com.bazaarvoice.jolt.removr.spec.RemovrCompositeSpec].<init>(java.lang.String,java.util.Map)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.bazaarvoice.jolt.common.pathelement.StarSinglePathElement].<init>(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "com.bazaarvoice.jolt.common.pathelement.StarSinglePathElement"
+  "signature": "[com.bazaarvoice.jolt.common.pathelement.StarSinglePathElement].<init>(java.lang.String)"
+"language": "jvm"
+"project": "jolt"
+"target_name": "JsonUtilsFuzzer"
+"target_path": "/src/JsonUtilsFuzzer.java"

@@ -1,0 +1,55 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.slf4j.helpers.SubstituteLogger].isEnabledForLevel(org.slf4j.event.Level)"
+  "params":
+  - "name": "arg0"
+    "type": "Level"
+  "return_type": "boolean"
+  "signature": "[org.slf4j.helpers.SubstituteLogger].isEnabledForLevel(org.slf4j.event.Level)"
+- "exceptions": []
+  "is_jvm_static": true
+  "name": "[org.slf4j.helpers.Reporter].info(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "void"
+  "signature": "[org.slf4j.helpers.Reporter].info(java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": true
+  "name": "[org.slf4j.helpers.Reporter].warn(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "void"
+  "signature": "[org.slf4j.helpers.Reporter].warn(java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.slf4j.helpers.SubstituteLogger].log(org.slf4j.event.LoggingEvent)"
+  "params":
+  - "name": "arg0"
+    "type": "LoggingEvent"
+  "return_type": "void"
+  "signature": "[org.slf4j.helpers.SubstituteLogger].log(org.slf4j.event.LoggingEvent)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.slf4j.helpers.SubstituteLoggerFactory].getLogger(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "org.slf4j.Logger"
+  "signature": "[org.slf4j.helpers.SubstituteLoggerFactory].getLogger(java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.slf4j.event.EventRecordingLogger].<init>(org.slf4j.helpers.SubstituteLogger,java.util.Queue)"
+  "params":
+  - "name": "arg0"
+    "type": "SubstituteLogger"
+  - "name": "arg1"
+    "type": "Queue"
+  "return_type": "org.slf4j.event.EventRecordingLogger"
+  "signature": "[org.slf4j.event.EventRecordingLogger].<init>(org.slf4j.helpers.SubstituteLogger,java.util.Queue)"
+"language": "jvm"
+"project": "slf4j-api"
+"target_name": "LoggingFuzzer"
+"target_path": "/src/LoggingFuzzer.java"

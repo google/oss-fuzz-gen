@@ -1,0 +1,61 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.kohsuke.args4j.CmdLineParser].addArgument(org.kohsuke.args4j.spi.Setter,org.kohsuke.args4j.Argument)"
+  "params":
+  - "name": "arg0"
+    "type": "Setter"
+  - "name": "arg1"
+    "type": "Argument"
+  "return_type": "void"
+  "signature": "[org.kohsuke.args4j.CmdLineParser].addArgument(org.kohsuke.args4j.spi.Setter,org.kohsuke.args4j.Argument)"
+- "exceptions":
+  - "org.kohsuke.args4j.CmdLineException"
+  "is_jvm_static": false
+  "name": "[org.kohsuke.args4j.spi.SubCommandHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
+  "params":
+  - "name": "arg0"
+    "type": "Parameters"
+  "return_type": "int"
+  "signature": "[org.kohsuke.args4j.spi.SubCommandHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
+- "exceptions":
+  - "org.kohsuke.args4j.CmdLineException"
+  "is_jvm_static": false
+  "name": "[org.kohsuke.args4j.spi.BooleanOptionHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
+  "params":
+  - "name": "arg0"
+    "type": "Parameters"
+  "return_type": "int"
+  "signature": "[org.kohsuke.args4j.spi.BooleanOptionHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
+- "exceptions":
+  - "org.kohsuke.args4j.CmdLineException"
+  "is_jvm_static": false
+  "name": "[org.kohsuke.args4j.spi.StringArrayOptionHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
+  "params":
+  - "name": "arg0"
+    "type": "Parameters"
+  "return_type": "int"
+  "signature": "[org.kohsuke.args4j.spi.StringArrayOptionHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.kohsuke.args4j.CmdLineParser].addOption(org.kohsuke.args4j.spi.Setter,org.kohsuke.args4j.Option)"
+  "params":
+  - "name": "arg0"
+    "type": "Setter"
+  - "name": "arg1"
+    "type": "Option"
+  "return_type": "void"
+  "signature": "[org.kohsuke.args4j.CmdLineParser].addOption(org.kohsuke.args4j.spi.Setter,org.kohsuke.args4j.Option)"
+- "exceptions":
+  - "org.kohsuke.args4j.CmdLineException"
+  "is_jvm_static": false
+  "name": "[org.kohsuke.args4j.spi.ExplicitBooleanOptionHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
+  "params":
+  - "name": "arg0"
+    "type": "Parameters"
+  "return_type": "int"
+  "signature": "[org.kohsuke.args4j.spi.ExplicitBooleanOptionHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
+"language": "jvm"
+"project": "args4j"
+"target_name": "CmdLineParserFuzzer"
+"target_path": "/src/CmdLineParserFuzzer.java"

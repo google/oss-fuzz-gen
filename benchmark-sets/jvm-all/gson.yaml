@@ -1,0 +1,69 @@
+"functions":
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[com.google.gson.internal.bind.TreeTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "JsonWriter"
+  - "name": "arg1"
+    "type": "Object"
+  "return_type": "void"
+  "signature": "[com.google.gson.internal.bind.TreeTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[com.google.gson.internal.bind.ArrayTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "JsonWriter"
+  - "name": "arg1"
+    "type": "Object"
+  "return_type": "void"
+  "signature": "[com.google.gson.internal.bind.ArrayTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": true
+  "name": "[com.google.gson.internal.Streams].write(com.google.gson.JsonElement,com.google.gson.stream.JsonWriter)"
+  "params":
+  - "name": "arg0"
+    "type": "JsonElement"
+  - "name": "arg1"
+    "type": "JsonWriter"
+  "return_type": "void"
+  "signature": "[com.google.gson.internal.Streams].write(com.google.gson.JsonElement,com.google.gson.stream.JsonWriter)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[com.google.gson.internal.bind.ObjectTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "JsonWriter"
+  - "name": "arg1"
+    "type": "Object"
+  "return_type": "void"
+  "signature": "[com.google.gson.internal.bind.ObjectTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.google.gson.internal.Excluder].excludeField(java.lang.reflect.Field,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "Field"
+  - "name": "arg1"
+    "type": "boolean"
+  "return_type": "boolean"
+  "signature": "[com.google.gson.internal.Excluder].excludeField(java.lang.reflect.Field,boolean)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.google.gson.internal.Excluder].excludeClass(java.lang.Class<?>,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "Class<?>"
+  - "name": "arg1"
+    "type": "boolean"
+  "return_type": "boolean"
+  "signature": "[com.google.gson.internal.Excluder].excludeClass(java.lang.Class<?>,boolean)"
+"language": "jvm"
+"project": "gson"
+"target_name": "FuzzReader"
+"target_path": "/src/FuzzReader.java"

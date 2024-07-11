@@ -1,0 +1,57 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.github.zafarkhaja.semver.Version$Builder].<init>(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "com.github.zafarkhaja.semver.Version$Builder"
+  "signature": "[com.github.zafarkhaja.semver.Version$Builder].<init>(java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.github.zafarkhaja.semver.util.Stream].<init>(java.lang.Object[])"
+  "params":
+  - "name": "arg0"
+    "type": "Object[]"
+  "return_type": "com.github.zafarkhaja.semver.util.Stream"
+  "signature": "[com.github.zafarkhaja.semver.util.Stream].<init>(java.lang.Object[])"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.github.zafarkhaja.semver.expr.CompositeExpression].<init>(com.github.zafarkhaja.semver.expr.Expression)"
+  "params":
+  - "name": "arg0"
+    "type": "Expression"
+  "return_type": "com.github.zafarkhaja.semver.expr.CompositeExpression"
+  "signature": "[com.github.zafarkhaja.semver.expr.CompositeExpression].<init>(com.github.zafarkhaja.semver.expr.Expression)"
+- "exceptions": []
+  "is_jvm_static": true
+  "name": "[com.github.zafarkhaja.semver.Version].isValid(java.lang.String,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "boolean"
+  "return_type": "boolean"
+  "signature": "[com.github.zafarkhaja.semver.Version].isValid(java.lang.String,boolean)"
+- "exceptions": []
+  "is_jvm_static": true
+  "name": "[com.github.zafarkhaja.semver.Version].parse(java.lang.String,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "boolean"
+  "return_type": "com.github.zafarkhaja.semver.Version"
+  "signature": "[com.github.zafarkhaja.semver.Version].parse(java.lang.String,boolean)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.github.zafarkhaja.semver.util.Stream].consume(com.github.zafarkhaja.semver.util.Stream$ElementType[])"
+  "params":
+  - "name": "arg0"
+    "type": "Stream$ElementType[]"
+  "return_type": "java.lang.Object"
+  "signature": "[com.github.zafarkhaja.semver.util.Stream].consume(com.github.zafarkhaja.semver.util.Stream$ElementType[])"
+"language": "jvm"
+"project": "jsemver"
+"target_name": "VersionFuzzer"
+"target_path": "/src/VersionFuzzer.java"

@@ -1,0 +1,66 @@
+"functions":
+- "exceptions":
+  - "java.sql.SQLException"
+  "is_jvm_static": true
+  "name": "[org.sqlite.ExtendedCommand$BackupCommand].parse(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "org.sqlite.ExtendedCommand$BackupCommand"
+  "signature": "[org.sqlite.ExtendedCommand$BackupCommand].parse(java.lang.String)"
+- "exceptions":
+  - "java.sql.SQLException"
+  "is_jvm_static": true
+  "name": "[org.sqlite.ExtendedCommand$RestoreCommand].parse(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "org.sqlite.ExtendedCommand$RestoreCommand"
+  "signature": "[org.sqlite.ExtendedCommand$RestoreCommand].parse(java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.sqlite.SQLiteConnectionConfig].<init>(org.sqlite.SQLiteConfig$DateClass,org.sqlite.SQLiteConfig$DatePrecision,java.lang.String,int,org.sqlite.SQLiteConfig$TransactionMode,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "SQLiteConfig$DateClass"
+  - "name": "arg1"
+    "type": "SQLiteConfig$DatePrecision"
+  - "name": "arg2"
+    "type": "String"
+  - "name": "arg3"
+    "type": "int"
+  - "name": "arg4"
+    "type": "SQLiteConfig$TransactionMode"
+  - "name": "arg5"
+    "type": "boolean"
+  "return_type": "org.sqlite.SQLiteConnectionConfig"
+  "signature": "[org.sqlite.SQLiteConnectionConfig].<init>(org.sqlite.SQLiteConfig$DateClass,org.sqlite.SQLiteConfig$DatePrecision,java.lang.String,int,org.sqlite.SQLiteConfig$TransactionMode,boolean)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.sqlite.SQLiteConfig].<init>(java.util.Properties)"
+  "params":
+  - "name": "arg0"
+    "type": "Properties"
+  "return_type": "org.sqlite.SQLiteConfig"
+  "signature": "[org.sqlite.SQLiteConfig].<init>(java.util.Properties)"
+- "exceptions": []
+  "is_jvm_static": true
+  "name": "[org.sqlite.ExtendedCommand].removeQuotation(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "java.lang.String"
+  "signature": "[org.sqlite.ExtendedCommand].removeQuotation(java.lang.String)"
+- "exceptions":
+  - "java.sql.SQLException"
+  "is_jvm_static": false
+  "name": "[org.sqlite.ExtendedCommand$RestoreCommand].execute(org.sqlite.core.DB)"
+  "params":
+  - "name": "arg0"
+    "type": "DB"
+  "return_type": "void"
+  "signature": "[org.sqlite.ExtendedCommand$RestoreCommand].execute(org.sqlite.core.DB)"
+"language": "jvm"
+"project": "sqlite-jdbc"
+"target_name": "SqliteConnectionFuzzer"
+"target_path": "/src/SqliteConnectionFuzzer.java"

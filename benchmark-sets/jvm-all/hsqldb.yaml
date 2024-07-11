@@ -1,0 +1,80 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.hsqldb.persist.DataSpaceManagerBlocks].<init>(org.hsqldb.persist.DataFileCache)"
+  "params":
+  - "name": "arg0"
+    "type": "DataFileCache"
+  "return_type": "org.hsqldb.persist.DataSpaceManagerBlocks"
+  "signature": "[org.hsqldb.persist.DataSpaceManagerBlocks].<init>(org.hsqldb.persist.DataFileCache)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.hsqldb.TableDerived].<init>(org.hsqldb.Database,org.hsqldb.HsqlNameManager$HsqlName,int,org.hsqldb.QueryExpression,org.hsqldb.Expression,int,int)"
+  "params":
+  - "name": "arg0"
+    "type": "Database"
+  - "name": "arg1"
+    "type": "HsqlNameManager$HsqlName"
+  - "name": "arg2"
+    "type": "int"
+  - "name": "arg3"
+    "type": "QueryExpression"
+  - "name": "arg4"
+    "type": "Expression"
+  - "name": "arg5"
+    "type": "int"
+  - "name": "arg6"
+    "type": "int"
+  "return_type": "org.hsqldb.TableDerived"
+  "signature": "[org.hsqldb.TableDerived].<init>(org.hsqldb.Database,org.hsqldb.HsqlNameManager$HsqlName,int,org.hsqldb.QueryExpression,org.hsqldb.Expression,int,int)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.hsqldb.Table].<init>(org.hsqldb.Database,org.hsqldb.HsqlNameManager$HsqlName,int)"
+  "params":
+  - "name": "arg0"
+    "type": "Database"
+  - "name": "arg1"
+    "type": "HsqlNameManager$HsqlName"
+  - "name": "arg2"
+    "type": "int"
+  "return_type": "org.hsqldb.Table"
+  "signature": "[org.hsqldb.Table].<init>(org.hsqldb.Database,org.hsqldb.HsqlNameManager$HsqlName,int)"
+- "exceptions":
+  - "java.sql.SQLException"
+  "is_jvm_static": false
+  "name": "[org.hsqldb.jdbc.JDBCConnection].<init>(org.hsqldb.persist.HsqlProperties)"
+  "params":
+  - "name": "arg0"
+    "type": "HsqlProperties"
+  "return_type": "org.hsqldb.jdbc.JDBCConnection"
+  "signature": "[org.hsqldb.jdbc.JDBCConnection].<init>(org.hsqldb.persist.HsqlProperties)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.hsqldb.persist.DataFileCache].<init>(org.hsqldb.Database,java.lang.String,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "Database"
+  - "name": "arg1"
+    "type": "String"
+  - "name": "arg2"
+    "type": "boolean"
+  "return_type": "org.hsqldb.persist.DataFileCache"
+  "signature": "[org.hsqldb.persist.DataFileCache].<init>(org.hsqldb.Database,java.lang.String,boolean)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.hsqldb.types.IntervalSecondData].<init>(long,long,org.hsqldb.types.IntervalType,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "long"
+  - "name": "arg1"
+    "type": "long"
+  - "name": "arg2"
+    "type": "IntervalType"
+  - "name": "arg3"
+    "type": "boolean"
+  "return_type": "org.hsqldb.types.IntervalSecondData"
+  "signature": "[org.hsqldb.types.IntervalSecondData].<init>(long,long,org.hsqldb.types.IntervalType,boolean)"
+"language": "jvm"
+"project": "hsqldb"
+"target_name": "SqlPreparedStatementFuzzer"
+"target_path": "/src/SqlPreparedStatementFuzzer.java"

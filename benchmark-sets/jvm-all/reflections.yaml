@@ -1,0 +1,55 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.reflections.Reflections].<init>(java.lang.Object[])"
+  "params":
+  - "name": "arg0"
+    "type": "Object[]"
+  "return_type": "org.reflections.Reflections"
+  "signature": "[org.reflections.Reflections].<init>(java.lang.Object[])"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.reflections.Reflections].<init>(org.reflections.Configuration)"
+  "params":
+  - "name": "arg0"
+    "type": "Configuration"
+  "return_type": "org.reflections.Reflections"
+  "signature": "[org.reflections.Reflections].<init>(org.reflections.Configuration)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.reflections.vfs.SystemDir].<init>(java.io.File)"
+  "params":
+  - "name": "arg0"
+    "type": "File"
+  "return_type": "org.reflections.vfs.SystemDir"
+  "signature": "[org.reflections.vfs.SystemDir].<init>(java.io.File)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.reflections.scanners.SubTypesScanner].<init>(boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "boolean"
+  "return_type": "org.reflections.scanners.SubTypesScanner"
+  "signature": "[org.reflections.scanners.SubTypesScanner].<init>(boolean)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.reflections.Reflections].<init>(java.lang.String,org.reflections.scanners.Scanner[])"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "Scanner[]"
+  "return_type": "org.reflections.Reflections"
+  "signature": "[org.reflections.Reflections].<init>(java.lang.String,org.reflections.scanners.Scanner[])"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.reflections.util.FilterBuilder].equals(java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  "return_type": "boolean"
+  "signature": "[org.reflections.util.FilterBuilder].equals(java.lang.Object)"
+"language": "jvm"
+"project": "reflections"
+"target_name": "FilterBuilderFuzzer"
+"target_path": "/src/FilterBuilderFuzzer.java"

@@ -1,0 +1,65 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": true
+  "name": "[org.jsoup.select.NodeTraversor].traverse(org.jsoup.select.NodeVisitor,org.jsoup.nodes.Node)"
+  "params":
+  - "name": "arg0"
+    "type": "NodeVisitor"
+  - "name": "arg1"
+    "type": "Node"
+  "return_type": "void"
+  "signature": "[org.jsoup.select.NodeTraversor].traverse(org.jsoup.select.NodeVisitor,org.jsoup.nodes.Node)"
+- "exceptions": []
+  "is_jvm_static": true
+  "name": "[org.jsoup.internal.StringUtil].join(java.util.Iterator<?>,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "Iterator<?>"
+  - "name": "arg1"
+    "type": "String"
+  "return_type": "java.lang.String"
+  "signature": "[org.jsoup.internal.StringUtil].join(java.util.Iterator<?>,java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.jsoup.safety.Safelist].isSafeAttribute(java.lang.String,org.jsoup.nodes.Element,org.jsoup.nodes.Attribute)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "Element"
+  - "name": "arg2"
+    "type": "Attribute"
+  "return_type": "boolean"
+  "signature": "[org.jsoup.safety.Safelist].isSafeAttribute(java.lang.String,org.jsoup.nodes.Element,org.jsoup.nodes.Attribute)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.jsoup.helper.W3CDom$W3CBuilder].head(org.jsoup.nodes.Node,int)"
+  "params":
+  - "name": "arg0"
+    "type": "Node"
+  - "name": "arg1"
+    "type": "int"
+  "return_type": "void"
+  "signature": "[org.jsoup.helper.W3CDom$W3CBuilder].head(org.jsoup.nodes.Node,int)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.jsoup.safety.Safelist].getEnforcedAttributes(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "org.jsoup.nodes.Attributes"
+  "signature": "[org.jsoup.safety.Safelist].getEnforcedAttributes(java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.jsoup.nodes.Attributes].userData(java.lang.String,java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  - "name": "arg1"
+    "type": "Object"
+  "return_type": "org.jsoup.nodes.Attributes"
+  "signature": "[org.jsoup.nodes.Attributes].userData(java.lang.String,java.lang.Object)"
+"language": "jvm"
+"project": "jsoup"
+"target_name": "XmlFuzzer"
+"target_path": "/src/XmlFuzzer.java"

@@ -1,0 +1,55 @@
+"functions":
+- "exceptions":
+  - "java.lang.Exception"
+  "is_jvm_static": false
+  "name": "[net.sf.cglib.transform.TransformingClassGenerator].generateClass(org.objectweb.asm.ClassVisitor)"
+  "params":
+  - "name": "arg0"
+    "type": "ClassVisitor"
+  "return_type": "void"
+  "signature": "[net.sf.cglib.transform.TransformingClassGenerator].generateClass(org.objectweb.asm.ClassVisitor)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[net.sf.cglib.reflect.MulticastDelegate$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
+  "params":
+  - "name": "arg0"
+    "type": "ClassVisitor"
+  "return_type": "void"
+  "signature": "[net.sf.cglib.reflect.MulticastDelegate$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[net.sf.cglib.core.KeyFactory$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
+  "params":
+  - "name": "arg0"
+    "type": "ClassVisitor"
+  "return_type": "void"
+  "signature": "[net.sf.cglib.core.KeyFactory$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[net.sf.cglib.beans.BeanCopier$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
+  "params":
+  - "name": "arg0"
+    "type": "ClassVisitor"
+  "return_type": "void"
+  "signature": "[net.sf.cglib.beans.BeanCopier$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[net.sf.cglib.beans.ImmutableBean$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
+  "params":
+  - "name": "arg0"
+    "type": "ClassVisitor"
+  "return_type": "void"
+  "signature": "[net.sf.cglib.beans.ImmutableBean$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
+- "exceptions":
+  - "java.lang.NoSuchMethodException"
+  "is_jvm_static": false
+  "name": "[net.sf.cglib.reflect.MethodDelegate$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
+  "params":
+  - "name": "arg0"
+    "type": "ClassVisitor"
+  "return_type": "void"
+  "signature": "[net.sf.cglib.reflect.MethodDelegate$Generator].generateClass(org.objectweb.asm.ClassVisitor)"
+"language": "jvm"
+"project": "cglib"
+"target_name": "EnhancerFuzzer"
+"target_path": "/src/src/main/java/ossfuzz/EnhancerFuzzer.java"
