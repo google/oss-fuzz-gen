@@ -1,8 +1,6 @@
 {% if headers %}
 
-The code block below contains the header files which you must include. The function requires these header files to successfully compile.
-If the headers are private, do not include them.
-Header files:
+You must include the following header file in the fuzz target, it defines the function-under-test.
 <code>
 {{ headers }}
 </code>
