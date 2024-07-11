@@ -1,0 +1,78 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.apache.commons.compress.harmony.pack200.AttributeDefinitionBands].<init>(org.apache.commons.compress.harmony.pack200.Segment,int,org.objectweb.asm.Attribute[])"
+  "params":
+  - "name": "arg0"
+    "type": "Segment"
+  - "name": "arg1"
+    "type": "int"
+  - "name": "arg2"
+    "type": "Attribute[]"
+  "return_type": "org.apache.commons.compress.harmony.pack200.AttributeDefinitionBands"
+  "signature": "[org.apache.commons.compress.harmony.pack200.AttributeDefinitionBands].<init>(org.apache.commons.compress.harmony.pack200.Segment,int,org.objectweb.asm.Attribute[])"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.apache.commons.compress.harmony.pack200.FileBands].<init>(org.apache.commons.compress.harmony.pack200.CpBands,org.apache.commons.compress.harmony.pack200.SegmentHeader,org.apache.commons.compress.harmony.pack200.PackingOptions,org.apache.commons.compress.harmony.pack200.Archive$SegmentUnit,int)"
+  "params":
+  - "name": "arg0"
+    "type": "CpBands"
+  - "name": "arg1"
+    "type": "SegmentHeader"
+  - "name": "arg2"
+    "type": "PackingOptions"
+  - "name": "arg3"
+    "type": "Archive$SegmentUnit"
+  - "name": "arg4"
+    "type": "int"
+  "return_type": "org.apache.commons.compress.harmony.pack200.FileBands"
+  "signature": "[org.apache.commons.compress.harmony.pack200.FileBands].<init>(org.apache.commons.compress.harmony.pack200.CpBands,org.apache.commons.compress.harmony.pack200.SegmentHeader,org.apache.commons.compress.harmony.pack200.PackingOptions,org.apache.commons.compress.harmony.pack200.Archive$SegmentUnit,int)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream].<init>(java.io.InputStream,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "InputStream"
+  - "name": "arg1"
+    "type": "boolean"
+  "return_type": "org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream"
+  "signature": "[org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream].<init>(java.io.InputStream,boolean)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[org.apache.commons.compress.archivers.tar.TarArchiveEntry].<init>(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[])"
+  "params":
+  - "name": "arg0"
+    "type": "Path"
+  - "name": "arg1"
+    "type": "String"
+  - "name": "arg2"
+    "type": "LinkOption[]"
+  "return_type": "org.apache.commons.compress.archivers.tar.TarArchiveEntry"
+  "signature": "[org.apache.commons.compress.archivers.tar.TarArchiveEntry].<init>(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[])"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.apache.commons.compress.archivers.tar.TarArchiveEntry].<init>(java.io.File,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "File"
+  - "name": "arg1"
+    "type": "String"
+  "return_type": "org.apache.commons.compress.archivers.tar.TarArchiveEntry"
+  "signature": "[org.apache.commons.compress.archivers.tar.TarArchiveEntry].<init>(java.io.File,java.lang.String)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream].<init>(java.io.InputStream,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "InputStream"
+  - "name": "arg1"
+    "type": "boolean"
+  "return_type": "org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream"
+  "signature": "[org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream].<init>(java.io.InputStream,boolean)"
+"language": "jvm"
+"project": "apache-commons-compress"
+"target_name": "CompressorZFuzzer"
+"target_path": "/src/CompressorZFuzzer.java"

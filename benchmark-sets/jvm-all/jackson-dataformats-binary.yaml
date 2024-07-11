@@ -1,0 +1,85 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.fasterxml.jackson.dataformat.avro.schema.RecordVisitor].<init>(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.dataformat.avro.schema.VisitorFormatWrapperImpl)"
+  "params":
+  - "name": "arg0"
+    "type": "SerializerProvider"
+  - "name": "arg1"
+    "type": "JavaType"
+  - "name": "arg2"
+    "type": "VisitorFormatWrapperImpl"
+  "return_type": "com.fasterxml.jackson.dataformat.avro.schema.RecordVisitor"
+  "signature": "[com.fasterxml.jackson.dataformat.avro.schema.RecordVisitor].<init>(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.dataformat.avro.schema.VisitorFormatWrapperImpl)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField].<init>(com.fasterxml.jackson.dataformat.protobuf.protoparser.protoparser.FieldElement,com.fasterxml.jackson.dataformat.protobuf.schema.FieldType)"
+  "params":
+  - "name": "arg0"
+    "type": "FieldElement"
+  - "name": "arg1"
+    "type": "FieldType"
+  "return_type": "com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField"
+  "signature": "[com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField].<init>(com.fasterxml.jackson.dataformat.protobuf.protoparser.protoparser.FieldElement,com.fasterxml.jackson.dataformat.protobuf.schema.FieldType)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField].<init>(com.fasterxml.jackson.dataformat.protobuf.protoparser.protoparser.FieldElement,com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufMessage)"
+  "params":
+  - "name": "arg0"
+    "type": "FieldElement"
+  - "name": "arg1"
+    "type": "ProtobufMessage"
+  "return_type": "com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField"
+  "signature": "[com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField].<init>(com.fasterxml.jackson.dataformat.protobuf.protoparser.protoparser.FieldElement,com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufMessage)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField].<init>(com.fasterxml.jackson.dataformat.protobuf.protoparser.protoparser.FieldElement,com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufEnum)"
+  "params":
+  - "name": "arg0"
+    "type": "FieldElement"
+  - "name": "arg1"
+    "type": "ProtobufEnum"
+  "return_type": "com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField"
+  "signature": "[com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufField].<init>(com.fasterxml.jackson.dataformat.protobuf.protoparser.protoparser.FieldElement,com.fasterxml.jackson.dataformat.protobuf.schema.ProtobufEnum)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.fasterxml.jackson.dataformat.smile.SmileGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.OutputStream,byte[],int,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "IOContext"
+  - "name": "arg1"
+    "type": "int"
+  - "name": "arg2"
+    "type": "int"
+  - "name": "arg3"
+    "type": "ObjectCodec"
+  - "name": "arg4"
+    "type": "OutputStream"
+  - "name": "arg5"
+    "type": "byte[]"
+  - "name": "arg6"
+    "type": "int"
+  - "name": "arg7"
+    "type": "boolean"
+  "return_type": "com.fasterxml.jackson.dataformat.smile.SmileGenerator"
+  "signature": "[com.fasterxml.jackson.dataformat.smile.SmileGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.OutputStream,byte[],int,boolean)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.fasterxml.jackson.dataformat.smile.SmileGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.OutputStream)"
+  "params":
+  - "name": "arg0"
+    "type": "IOContext"
+  - "name": "arg1"
+    "type": "int"
+  - "name": "arg2"
+    "type": "int"
+  - "name": "arg3"
+    "type": "ObjectCodec"
+  - "name": "arg4"
+    "type": "OutputStream"
+  "return_type": "com.fasterxml.jackson.dataformat.smile.SmileGenerator"
+  "signature": "[com.fasterxml.jackson.dataformat.smile.SmileGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.OutputStream)"
+"language": "jvm"
+"project": "jackson-dataformats-binary"
+"target_name": "CborFuzzer"
+"target_path": "/src/CborFuzzer.java"

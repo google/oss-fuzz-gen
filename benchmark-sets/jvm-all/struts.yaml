@@ -1,0 +1,59 @@
+"functions":
+- "exceptions":
+  - "org.apache.jasper.JasperException"
+  "is_jvm_static": false
+  "name": "[org.apache.jasper.compiler.Node$Nodes].visit(org.apache.jasper.compiler.Node$Visitor)"
+  "params":
+  - "name": "arg0"
+    "type": "Node$Visitor"
+  "return_type": "void"
+  "signature": "[org.apache.jasper.compiler.Node$Nodes].visit(org.apache.jasper.compiler.Node$Visitor)"
+- "exceptions":
+  - "org.apache.jasper.JasperException"
+  "is_jvm_static": false
+  "name": "[org.apache.jasper.compiler.Node$NamedAttribute].accept(org.apache.jasper.compiler.Node$Visitor)"
+  "params":
+  - "name": "arg0"
+    "type": "Node$Visitor"
+  "return_type": "void"
+  "signature": "[org.apache.jasper.compiler.Node$NamedAttribute].accept(org.apache.jasper.compiler.Node$Visitor)"
+- "exceptions":
+  - "org.apache.jasper.JasperException"
+  "is_jvm_static": false
+  "name": "[org.apache.jasper.compiler.Node$Visitor].visit(org.apache.jasper.compiler.Node$NamedAttribute)"
+  "params":
+  - "name": "arg0"
+    "type": "Node$NamedAttribute"
+  "return_type": "void"
+  "signature": "[org.apache.jasper.compiler.Node$Visitor].visit(org.apache.jasper.compiler.Node$NamedAttribute)"
+- "exceptions":
+  - "org.apache.jasper.JasperException"
+  "is_jvm_static": false
+  "name": "[org.apache.jasper.compiler.Node$AttributeGenerator].accept(org.apache.jasper.compiler.Node$Visitor)"
+  "params":
+  - "name": "arg0"
+    "type": "Node$Visitor"
+  "return_type": "void"
+  "signature": "[org.apache.jasper.compiler.Node$AttributeGenerator].accept(org.apache.jasper.compiler.Node$Visitor)"
+- "exceptions":
+  - "org.apache.jasper.JasperException"
+  "is_jvm_static": false
+  "name": "[org.apache.jasper.compiler.Node$Visitor].visit(org.apache.jasper.compiler.Node$AttributeGenerator)"
+  "params":
+  - "name": "arg0"
+    "type": "Node$AttributeGenerator"
+  "return_type": "void"
+  "signature": "[org.apache.jasper.compiler.Node$Visitor].visit(org.apache.jasper.compiler.Node$AttributeGenerator)"
+- "exceptions":
+  - "org.apache.jasper.JasperException"
+  "is_jvm_static": false
+  "name": "[org.apache.jasper.compiler.Node$DoBodyAction].accept(org.apache.jasper.compiler.Node$Visitor)"
+  "params":
+  - "name": "arg0"
+    "type": "Node$Visitor"
+  "return_type": "void"
+  "signature": "[org.apache.jasper.compiler.Node$DoBodyAction].accept(org.apache.jasper.compiler.Node$Visitor)"
+"language": "jvm"
+"project": "struts"
+"target_name": "StrutsSimpleRequestFuzzer"
+"target_path": "/src/struts2-fuzzer/fuzzer/src/main/java/org/apache/struts/test/StrutsSimpleRequestFuzzer.java"

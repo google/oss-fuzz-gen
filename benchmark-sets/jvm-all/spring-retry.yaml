@@ -1,0 +1,58 @@
+"functions":
+- "exceptions":
+  - "java.lang.Throwable"
+  "is_jvm_static": false
+  "name": "[org.springframework.retry.annotation.AnnotationAwareRetryOperationsInterceptor].invoke(org.aopalliance.intercept.MethodInvocation)"
+  "params":
+  - "name": "arg0"
+    "type": "MethodInvocation"
+  "return_type": "java.lang.Object"
+  "signature": "[org.springframework.retry.annotation.AnnotationAwareRetryOperationsInterceptor].invoke(org.aopalliance.intercept.MethodInvocation)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.springframework.retry.policy.CompositeRetryPolicy].canRetry(org.springframework.retry.RetryContext)"
+  "params":
+  - "name": "arg0"
+    "type": "RetryContext"
+  "return_type": "boolean"
+  "signature": "[org.springframework.retry.policy.CompositeRetryPolicy].canRetry(org.springframework.retry.RetryContext)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.springframework.retry.policy.CompositeRetryPolicy].registerThrowable(org.springframework.retry.RetryContext,java.lang.Throwable)"
+  "params":
+  - "name": "arg0"
+    "type": "RetryContext"
+  - "name": "arg1"
+    "type": "Throwable"
+  "return_type": "void"
+  "signature": "[org.springframework.retry.policy.CompositeRetryPolicy].registerThrowable(org.springframework.retry.RetryContext,java.lang.Throwable)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.springframework.retry.policy.CircuitBreakerRetryPolicy].registerThrowable(org.springframework.retry.RetryContext,java.lang.Throwable)"
+  "params":
+  - "name": "arg0"
+    "type": "RetryContext"
+  - "name": "arg1"
+    "type": "Throwable"
+  "return_type": "void"
+  "signature": "[org.springframework.retry.policy.CircuitBreakerRetryPolicy].registerThrowable(org.springframework.retry.RetryContext,java.lang.Throwable)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.springframework.retry.policy.CircuitBreakerRetryPolicy].canRetry(org.springframework.retry.RetryContext)"
+  "params":
+  - "name": "arg0"
+    "type": "RetryContext"
+  "return_type": "boolean"
+  "signature": "[org.springframework.retry.policy.CircuitBreakerRetryPolicy].canRetry(org.springframework.retry.RetryContext)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.springframework.classify.BackToBackPatternClassifier].classify(java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  "return_type": "java.lang.Object"
+  "signature": "[org.springframework.classify.BackToBackPatternClassifier].classify(java.lang.Object)"
+"language": "jvm"
+"project": "spring-retry"
+"target_name": "PatternMatcher_match_Fuzzer"
+"target_path": "/src/PatternMatcher_match_Fuzzer.java"

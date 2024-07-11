@@ -1,0 +1,14 @@
+"functions":
+- "exceptions":
+  - "java.text.ParseException"
+  "is_jvm_static": false
+  "name": "[org.kie.soup.commons.cron.CronExpression].<init>(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "String"
+  "return_type": "org.kie.soup.commons.cron.CronExpression"
+  "signature": "[org.kie.soup.commons.cron.CronExpression].<init>(java.lang.String)"
+"language": "jvm"
+"project": "kie-soup"
+"target_name": "CronExpressionFuzzer"
+"target_path": "/src/CronExpressionFuzzer.java"

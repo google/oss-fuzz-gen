@@ -1,0 +1,55 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.google.common.collect.HashBiMap].forEach(java.util.function.BiConsumer<? super K,? super V>)"
+  "params":
+  - "name": "arg0"
+    "type": "BiConsumer<? super K,? super V>"
+  "return_type": "void"
+  "signature": "[com.google.common.collect.HashBiMap].forEach(java.util.function.BiConsumer<? super K,? super V>)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.google.common.collect.ImmutableSortedMap].forEach(java.util.function.BiConsumer<? super K,? super V>)"
+  "params":
+  - "name": "arg0"
+    "type": "BiConsumer<? super K,? super V>"
+  "return_type": "void"
+  "signature": "[com.google.common.collect.ImmutableSortedMap].forEach(java.util.function.BiConsumer<? super K,? super V>)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.google.common.collect.TreeRangeMap].remove(com.google.common.collect.Range<K>)"
+  "params":
+  - "name": "arg0"
+    "type": "Range<K>"
+  "return_type": "void"
+  "signature": "[com.google.common.collect.TreeRangeMap].remove(com.google.common.collect.Range<K>)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.google.common.collect.ConcurrentHashMultiset].toArray(java.lang.Object[])"
+  "params":
+  - "name": "arg0"
+    "type": "Object[]"
+  "return_type": "java.lang.Object[]"
+  "signature": "[com.google.common.collect.ConcurrentHashMultiset].toArray(java.lang.Object[])"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.google.common.collect.TreeMultiset].forEachEntry(java.util.function.ObjIntConsumer<? super E>)"
+  "params":
+  - "name": "arg0"
+    "type": "ObjIntConsumer<? super E>"
+  "return_type": "void"
+  "signature": "[com.google.common.collect.TreeMultiset].forEachEntry(java.util.function.ObjIntConsumer<? super E>)"
+- "exceptions": []
+  "is_jvm_static": true
+  "name": "[com.google.common.collect.Iterables].removeIf(java.lang.Iterable<T>,com.google.common.base.Predicate<? super T>)"
+  "params":
+  - "name": "arg0"
+    "type": "Iterable<T>"
+  - "name": "arg1"
+    "type": "Predicate<? super T>"
+  "return_type": "boolean"
+  "signature": "[com.google.common.collect.Iterables].removeIf(java.lang.Iterable<T>,com.google.common.base.Predicate<? super T>)"
+"language": "jvm"
+"project": "guava"
+"target_name": "HostAndPortFuzzer"
+"target_path": "/src/HostAndPortFuzzer.java"

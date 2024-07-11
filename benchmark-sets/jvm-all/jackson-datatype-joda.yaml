@@ -1,0 +1,55 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat,java.util.Locale)"
+  "params":
+  - "name": "arg0"
+    "type": "JacksonJodaPeriodFormat"
+  - "name": "arg1"
+    "type": "Locale"
+  "return_type": "com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat"
+  "signature": "[com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat,java.util.Locale)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.fasterxml.jackson.datatype.joda.ser.LocalDateSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
+  "params":
+  - "name": "arg0"
+    "type": "JacksonJodaDateFormat"
+  "return_type": "com.fasterxml.jackson.datatype.joda.ser.LocalDateSerializer"
+  "signature": "[com.fasterxml.jackson.datatype.joda.ser.LocalDateSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat].<init>(org.joda.time.format.DateTimeFormatter)"
+  "params":
+  - "name": "arg0"
+    "type": "DateTimeFormatter"
+  "return_type": "com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat"
+  "signature": "[com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat].<init>(org.joda.time.format.DateTimeFormatter)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
+  "params":
+  - "name": "arg0"
+    "type": "JacksonJodaDateFormat"
+  "return_type": "com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer"
+  "signature": "[com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.fasterxml.jackson.datatype.joda.deser.PeriodDeserializer].<init>(boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "boolean"
+  "return_type": "com.fasterxml.jackson.datatype.joda.deser.PeriodDeserializer"
+  "signature": "[com.fasterxml.jackson.datatype.joda.deser.PeriodDeserializer].<init>(boolean)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[com.fasterxml.jackson.datatype.joda.ser.LocalTimeSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
+  "params":
+  - "name": "arg0"
+    "type": "JacksonJodaDateFormat"
+  "return_type": "com.fasterxml.jackson.datatype.joda.ser.LocalTimeSerializer"
+  "signature": "[com.fasterxml.jackson.datatype.joda.ser.LocalTimeSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
+"language": "jvm"
+"project": "jackson-datatype-joda"
+"target_name": "JodaDeserializerFuzzer"
+"target_path": "/src/JodaDeserializerFuzzer.java"

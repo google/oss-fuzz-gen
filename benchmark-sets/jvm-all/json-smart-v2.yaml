@@ -1,0 +1,77 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[net.minidev.json.writer.UpdaterMapper].convert(java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  "return_type": "java.lang.Object"
+  "signature": "[net.minidev.json.writer.UpdaterMapper].convert(java.lang.Object)"
+- "exceptions":
+  - "net.minidev.json.parser.ParseException"
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[net.minidev.json.writer.MapperRemapped].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  - "name": "arg1"
+    "type": "String"
+  - "name": "arg2"
+    "type": "Object"
+  "return_type": "void"
+  "signature": "[net.minidev.json.writer.MapperRemapped].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
+- "exceptions":
+  - "net.minidev.json.parser.ParseException"
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[net.minidev.json.writer.UpdaterMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  - "name": "arg1"
+    "type": "String"
+  - "name": "arg2"
+    "type": "Object"
+  "return_type": "void"
+  "signature": "[net.minidev.json.writer.UpdaterMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
+- "exceptions":
+  - "net.minidev.json.parser.ParseException"
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[net.minidev.json.writer.UpdaterMapper].addValue(java.lang.Object,java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  - "name": "arg1"
+    "type": "Object"
+  "return_type": "void"
+  "signature": "[net.minidev.json.writer.UpdaterMapper].addValue(java.lang.Object,java.lang.Object)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[net.minidev.json.writer.CompessorMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  - "name": "arg1"
+    "type": "String"
+  - "name": "arg2"
+    "type": "Object"
+  "return_type": "void"
+  "signature": "[net.minidev.json.writer.CompessorMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": false
+  "name": "[net.minidev.json.writer.CompessorMapper].addValue(java.lang.Object,java.lang.Object)"
+  "params":
+  - "name": "arg0"
+    "type": "Object"
+  - "name": "arg1"
+    "type": "Object"
+  "return_type": "void"
+  "signature": "[net.minidev.json.writer.CompessorMapper].addValue(java.lang.Object,java.lang.Object)"
+"language": "jvm"
+"project": "json-smart-v2"
+"target_name": "JSONParserFuzzer"
+"target_path": "/src/JSONParserFuzzer.java"
