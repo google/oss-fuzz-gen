@@ -516,8 +516,8 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
     return instruction
 
   # Step 3: Suggest the header/source file of the function under test.
-  function_file = ci.get_target_function_file_path()
-  if f'#include "{function_file}"' in fuzz_target_source_code:
+  function_file = ci.get_prefixed_header_file()
+  if function_file and f'#include "{function_file}"' in fuzz_target_source_code:
     function_file_base_name = os.path.basename(function_file)
 
     instruction += (
