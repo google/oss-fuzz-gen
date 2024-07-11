@@ -69,6 +69,7 @@ def exec_command_from_github(pull_request_number):
   # Set the branch so that the trial_build builds the projects from the PR
   # branch.
   command.extend(['-p', str(pull_request_number)])
+  command = [c for c in command if c]
   logging.info('Command: %s.', command)
   return request_pr_exp.main(command)
 
