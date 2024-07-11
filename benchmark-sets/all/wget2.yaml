@@ -1,0 +1,58 @@
+"functions":
+- "exceptions": []
+  "name": "wget_tcp_vprintf"
+  "params":
+  - "name": "tcp"
+    "type": "bool "
+  - "name": "fmt"
+    "type": "bool "
+  - "name": "args"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "ssize_t wget_tcp_vprintf(wget_tcp *, const char *, struct __va_list_tag *)"
+- "exceptions": []
+  "name": "wget_tcp_printf"
+  "params":
+  - "name": "tcp"
+    "type": "bool "
+  - "name": "fmt"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "ssize_t wget_tcp_printf(wget_tcp *, const char *, void)"
+- "exceptions": []
+  "name": "gnutls_record_recv_packet"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  - "name": "packet"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "ssize_t gnutls_record_recv_packet(gnutls_session_t, gnutls_packet_t *)"
+- "exceptions": []
+  "name": "gnutls_session_get_data"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  - "name": "session_data"
+    "type": "bool "
+  - "name": "session_data_size"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int gnutls_session_get_data(gnutls_session_t, void *, size_t *)"
+- "exceptions": []
+  "name": "gnutls_record_recv_seq"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  - "name": "data"
+    "type": "bool "
+  - "name": "data_size"
+    "type": "size_t"
+  - "name": "seq"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "ssize_t gnutls_record_recv_seq(gnutls_session_t, void *, size_t, unsigned char *)"
+"language": "c++"
+"project": "wget2"
+"target_name": "libwget_css_url_fuzzer"
+"target_path": "/src/wget2/fuzz/libwget_css_url_fuzzer.c"

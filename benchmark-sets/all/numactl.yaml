@@ -1,30 +1,39 @@
 "functions":
-- "name": "numa_get_run_node_mask_v1"
-  "params": []
-  "return_type": "void"
-  "signature": "nodemask_t numa_get_run_node_mask_v1()"
-- "name": "numa_bind_v2"
+- "exceptions": []
+  "name": "numa_node_of_cpu"
   "params":
-  - "name": "bmp"
-    "type": "struct bitmask *"
-  "return_type": "void"
-  "signature": "void numa_bind_v2(bitmask *)"
-- "name": "numa_bind_v1"
-  "params":
-  - "name": "nodemask"
-    "type": "struct nodemask_t *"
-  "return_type": "void"
-  "signature": "void numa_bind_v1(const nodemask_t *)"
-- "name": "numa_get_run_node_mask_v2"
-  "params": []
-  "return_type": "struct bitmask *"
-  "signature": "bitmask * numa_get_run_node_mask_v2()"
-- "name": "numa_run_on_node_mask_v2"
-  "params":
-  - "name": "bmp"
-    "type": "struct bitmask *"
+  - "name": "cpu"
+    "type": "int"
   "return_type": "int"
-  "signature": "int numa_run_on_node_mask_v2(bitmask *)"
+  "signature": "int numa_node_of_cpu(int)"
+- "exceptions": []
+  "name": "numa_run_on_node"
+  "params":
+  - "name": "node"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int numa_run_on_node(int)"
+- "exceptions": []
+  "name": "numa_set_preferred_many"
+  "params":
+  - "name": "bitmask"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void numa_set_preferred_many(struct bitmask *)"
+- "exceptions": []
+  "name": "numa_parse_nodestring_all"
+  "params":
+  - "name": "s"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct bitmask * numa_parse_nodestring_all(const char *)"
+- "exceptions": []
+  "name": "numa_run_on_node_mask_all"
+  "params":
+  - "name": "bmp"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int numa_run_on_node_mask_all(struct bitmask *)"
 "language": "c"
 "project": "numactl"
 "target_name": "fuzz_parse_str"

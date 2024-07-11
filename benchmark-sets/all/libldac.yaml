@@ -1,21 +1,15 @@
 "functions":
-- "name": "ldacBT_alter_eqmid_priority"
+- "exceptions": []
+  "name": "ldacBT_set_eqmid_core"
   "params":
   - "name": "hLdacBT"
-    "type": "struct _st_ldacbt_handle *"
-  - "name": "priority"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int ldacBT_alter_eqmid_priority(HANDLE_LDAC_BT, int)"
-- "name": "ldacBT_set_eqmid"
-  "params":
-  - "name": "hLdacBT"
-    "type": "struct _st_ldacbt_handle *"
+    "type": "bool "
   - "name": "eqmid"
     "type": "int"
-  "return_type": "int"
-  "signature": "int ldacBT_set_eqmid(HANDLE_LDAC_BT, int)"
-- "name": "ldaclib_check_nlnn_shift"
+  "return_type": "void"
+  "signature": "void ldacBT_set_eqmid_core(HANDLE_LDAC_BT, int)"
+- "exceptions": []
+  "name": "ldaclib_check_nlnn_shift"
   "params":
   - "name": "smplrate_id"
     "type": "int"
@@ -23,20 +17,31 @@
     "type": "int"
   "return_type": "int"
   "signature": "LDAC_RESULT ldaclib_check_nlnn_shift(int, int)"
-- "name": "ldacBT_get_error_code"
+- "exceptions": []
+  "name": "ldacBT_alter_eqmid_priority"
   "params":
   - "name": "hLdacBT"
-    "type": "struct _st_ldacbt_handle *"
+    "type": "bool "
+  - "name": "priority"
+    "type": "int"
   "return_type": "int"
-  "signature": "int ldacBT_get_error_code(HANDLE_LDAC_BT)"
-- "name": "ldacBT_set_eqmid_core"
+  "signature": "int ldacBT_alter_eqmid_priority(HANDLE_LDAC_BT, int)"
+- "exceptions": []
+  "name": "ldacBT_set_eqmid"
   "params":
   - "name": "hLdacBT"
-    "type": "struct _st_ldacbt_handle *"
+    "type": "bool "
   - "name": "eqmid"
     "type": "int"
-  "return_type": "void"
-  "signature": "void ldacBT_set_eqmid_core(HANDLE_LDAC_BT, int)"
+  "return_type": "int"
+  "signature": "int ldacBT_set_eqmid(HANDLE_LDAC_BT, int)"
+- "exceptions": []
+  "name": "ldacBT_get_error_code"
+  "params":
+  - "name": "hLdacBT"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int ldacBT_get_error_code(HANDLE_LDAC_BT)"
 "language": "c++"
 "project": "libldac"
 "target_name": "libldac_encode_fuzzer"

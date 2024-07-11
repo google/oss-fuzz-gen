@@ -1,0 +1,56 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN7glslang11HlslGrammar15acceptPostDeclsERNS_10TQualifierE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool glslang::HlslGrammar::acceptPostDecls(TQualifier &)"
+- "exceptions": []
+  "name": "_ZN7glslang16HlslParseContext18parseShaderStringsERNS_10TPpContextERNS_13TInputScannerEb"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool"
+  "return_type": "bool"
+  "signature": "bool glslang::HlslParseContext::parseShaderStrings(TPpContext &, TInputScanner &, bool)"
+- "exceptions": []
+  "name": "_ZN7glslang11HlslGrammar17acceptTextureTypeERNS_5TTypeE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool glslang::HlslGrammar::acceptTextureType(TType &)"
+- "exceptions": []
+  "name": "_ZN7glslang11HlslGrammar12acceptStructERNS_5TTypeERP11TIntermNode"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool glslang::HlslGrammar::acceptStruct(TType &, TIntermNode &*)"
+- "exceptions": []
+  "name": "_ZN7glslang11HlslGrammar17acceptDeclarationERP11TIntermNode"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool glslang::HlslGrammar::acceptDeclaration(TIntermNode &*)"
+"language": "c++"
+"project": "glslang"
+"target_name": "compile_fuzzer"
+"target_path": "/src/compile_fuzzer.cc"

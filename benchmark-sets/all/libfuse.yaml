@@ -1,0 +1,39 @@
+"functions":
+- "exceptions": []
+  "name": "fuse_opt_match"
+  "params":
+  - "name": "opts"
+    "type": "bool "
+  - "name": "opt"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int fuse_opt_match(const struct fuse_opt *, const char *)"
+- "exceptions": []
+  "name": "af_gb_alloc_data"
+  "params":
+  - "name": "len"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "char * af_gb_alloc_data(size_t)"
+- "exceptions": []
+  "name": "fuse_opt_add_opt_escaped"
+  "params":
+  - "name": "opts"
+    "type": "bool "
+  - "name": "opt"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int fuse_opt_add_opt_escaped(char **, const char *)"
+- "exceptions": []
+  "name": "fuse_opt_add_opt"
+  "params":
+  - "name": "opts"
+    "type": "bool "
+  - "name": "opt"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int fuse_opt_add_opt(char **, const char *)"
+"language": "c"
+"project": "libfuse"
+"target_name": "fuzz_optparse"
+"target_path": "/src/fuzz_optparse.c"

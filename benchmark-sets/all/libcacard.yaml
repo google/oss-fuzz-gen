@@ -1,33 +1,39 @@
 "functions":
-- "name": "vcard_emul_new_event_thread"
-  "params":
-  - "name": "module"
-    "type": "struct SECMODModuleStr *"
-  "return_type": "void"
-  "signature": "void vcard_emul_new_event_thread(SECMODModule *)"
-- "name": "vcard_emul_event_thread"
-  "params":
-  - "name": "arg"
-    "type": "char *"
-  "return_type": "void"
-  "signature": "void vcard_emul_event_thread(void *)"
-- "name": "vcard_emul_force_card_insert"
+- "exceptions": []
+  "name": "vcard_emul_force_card_remove"
   "params":
   - "name": "vreader"
-    "type": "struct VReaderStruct *"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "VCardEmulError vcard_emul_force_card_remove(VReader *)"
+- "exceptions": []
+  "name": "vcard_emul_reset"
+  "params":
+  - "name": "card"
+    "type": "bool "
+  - "name": "power"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void vcard_emul_reset(VCard *, VCardPower)"
+- "exceptions": []
+  "name": "vcard_emul_force_card_insert"
+  "params":
+  - "name": "vreader"
+    "type": "bool "
   "return_type": "int"
   "signature": "VCardEmulError vcard_emul_force_card_insert(VReader *)"
-- "name": "vcard_emul_mirror_card"
+- "exceptions": []
+  "name": "vcard_emul_get_atr"
   "params":
-  - "name": "vreader"
-    "type": "struct VReaderStruct *"
-  "return_type": "struct VCardStruct *"
-  "signature": "VCard * vcard_emul_mirror_card(VReader *)"
-- "name": "vcard_emul_replay_insertion_events"
-  "params": []
+  - "name": "card"
+    "type": "bool "
+  - "name": "atr"
+    "type": "bool "
+  - "name": "atr_len"
+    "type": "bool "
   "return_type": "void"
-  "signature": "void vcard_emul_replay_insertion_events()"
+  "signature": "void vcard_emul_get_atr(VCard *, unsigned char *, int *)"
 "language": "c"
 "project": "libcacard"
-"target_name": "fuzz_xfer"
-"target_path": "/src/libcacard/fuzz/fuzz_xfer.c"
+"target_name": "fuzz_simpletlv"
+"target_path": "/src/libcacard/fuzz/fuzz_simpletlv.c"

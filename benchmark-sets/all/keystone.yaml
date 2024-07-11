@@ -1,0 +1,52 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN12_GLOBAL__N_19AsmParser3RunEbmb"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "NoInitialTextSection"
+    "type": "bool"
+  - "name": "Address"
+    "type": "size_t"
+  - "name": "NoFinalize"
+    "type": "bool"
+  "return_type": "size_t"
+  "signature": "size_t (anonymous namespace)::AsmParser::Run(bool, uint64_t, bool)"
+- "exceptions": []
+  "name": "_ZL16adjustFixupValuejm"
+  "params":
+  - "name": "Kind"
+    "type": "int"
+  - "name": "Value"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "unsigned int adjustFixupValue(unsigned int, uint64_t)"
+- "exceptions": []
+  "name": "_ZNK12_GLOBAL__N_114SystemZOperand5isMemENS_10MemoryKindENS_12RegisterKindE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "MemKind"
+    "type": "int"
+  - "name": "RegKind"
+    "type": "int"
+  "return_type": "bool"
+  "signature": "bool (anonymous namespace)::SystemZOperand::isMem(DW_TAG_enumeration_typeMemoryKind, DW_TAG_enumeration_typeRegisterKind)"
+- "exceptions": []
+  "name": "ks_strerror"
+  "params":
+  - "name": "code"
+    "type": "int"
+  "return_type": "void"
+  "signature": "const char * ks_strerror(ks_err)"
+- "exceptions": []
+  "name": "ks_arch_supported"
+  "params":
+  - "name": "arch"
+    "type": "int"
+  "return_type": "bool"
+  "signature": "bool ks_arch_supported(ks_arch)"
+"language": "c++"
+"project": "keystone"
+"target_name": "fuzz_asm_arm_armbe"
+"target_path": "/src/keystone/suite/fuzz/fuzz_asm_arm_armbe.c"

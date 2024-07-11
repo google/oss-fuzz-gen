@@ -1,0 +1,38 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN6duckdb13TableRelation6DeleteERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void duckdb::TableRelation::Delete(const string &)"
+- "exceptions": []
+  "name": "_ZN6duckdb8Relation4HeadEm"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "void duckdb::Relation::Head(idx_t)"
+- "exceptions": []
+  "name": "_ZZN6duckdb13ClientContext11VerifyQueryERNS_17ClientContextLockERKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS_10unique_ptrINS_12SQLStatementENS3_14default_deleteISD_EELb1EEEENK3$_0clESB_SG_"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "unique_ptr<duckdb::QueryResult, std::__1::default_delete<duckdb::QueryResult>, true> duckdb::ClientContext::operator()(const void *, const string &, unique_ptr<duckdb::SQLStatement, std::__1::default_delete<duckdb::SQLStatement>, true>)"
+"language": "c++"
+"project": "duckdb"
+"target_name": "parse_fuzz_test"
+"target_path": "/src/duckdb/test/ossfuzz/parse_fuzz_test.cpp"

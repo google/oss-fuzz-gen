@@ -1,39 +1,46 @@
 "functions":
-- "name": "lwan_init"
+- "exceptions": []
+  "name": "lwan_response"
   "params":
-  - "name": "l"
-    "type": "struct lwan *"
+  - "name": "request"
+    "type": "bool "
+  - "name": "status"
+    "type": "int"
   "return_type": "void"
-  "signature": "void lwan_init(lwan *)"
-- "name": "lwan_init_with_config"
+  "signature": "void lwan_response(struct lwan_request *, DW_TAG_enumeration_typelwan_http_status)"
+- "exceptions": []
+  "name": "lwan_init"
   "params":
   - "name": "l"
-    "type": "struct lwan *"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void lwan_init(struct lwan *)"
+- "exceptions": []
+  "name": "lwan_process_request"
+  "params":
+  - "name": "l"
+    "type": "bool "
+  - "name": "request"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void lwan_process_request(struct lwan *, struct lwan_request *)"
+- "exceptions": []
+  "name": "lwan_init_with_config"
+  "params":
+  - "name": "l"
+    "type": "bool "
   - "name": "config"
-    "type": "struct lwan_config *"
+    "type": "bool "
   "return_type": "void"
-  "signature": "void lwan_init_with_config(lwan *, const lwan_config *)"
-- "name": "lwan_thread_init"
+  "signature": "void lwan_init_with_config(struct lwan *, const struct lwan_config *)"
+- "exceptions": []
+  "name": "lwan_thread_init"
   "params":
   - "name": "l"
-    "type": "struct lwan *"
+    "type": "bool "
   "return_type": "void"
-  "signature": "void lwan_thread_init(lwan *)"
-- "name": "create_thread"
-  "params":
-  - "name": "l"
-    "type": "struct lwan *"
-  - "name": "thread"
-    "type": "struct lwan_thread *"
-  "return_type": "void"
-  "signature": "void create_thread(lwan *, lwan_thread *)"
-- "name": "thread_io_loop"
-  "params":
-  - "name": "data"
-    "type": "char *"
-  "return_type": "char *"
-  "signature": "void * thread_io_loop(void *)"
+  "signature": "void lwan_thread_init(struct lwan *)"
 "language": "c++"
 "project": "lwan"
-"target_name": "config_fuzzer"
-"target_path": "/src/lwan/src/bin/fuzz/config_fuzzer.cc"
+"target_name": "h2_huffman_fuzzer"
+"target_path": "/src/lwan/src/bin/fuzz/h2_huffman_fuzzer.cc"

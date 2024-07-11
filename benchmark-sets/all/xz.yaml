@@ -1,0 +1,56 @@
+"functions":
+- "exceptions": []
+  "name": "lzma_index_buffer_encode"
+  "params":
+  - "name": "i"
+    "type": "bool "
+  - "name": "out"
+    "type": "bool "
+  - "name": "out_pos"
+    "type": "bool "
+  - "name": "out_size"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "lzma_ret lzma_index_buffer_encode(const lzma_index *, uint8_t *, size_t *, size_t)"
+- "exceptions": []
+  "name": "lzma_block_decoder"
+  "params":
+  - "name": "strm"
+    "type": "bool "
+  - "name": "block"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "lzma_ret lzma_block_decoder(lzma_stream *, lzma_block *)"
+- "exceptions": []
+  "name": "lzma_lzma_encoder_init"
+  "params":
+  - "name": "next"
+    "type": "bool "
+  - "name": "allocator"
+    "type": "bool "
+  - "name": "filters"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "lzma_ret lzma_lzma_encoder_init(lzma_next_coder *, const lzma_allocator *, const lzma_filter_info *)"
+- "exceptions": []
+  "name": "lzma_raw_decoder"
+  "params":
+  - "name": "strm"
+    "type": "bool "
+  - "name": "options"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "lzma_ret lzma_raw_decoder(lzma_stream *, const lzma_filter *)"
+- "exceptions": []
+  "name": "lzma_block_encoder"
+  "params":
+  - "name": "strm"
+    "type": "bool "
+  - "name": "block"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "lzma_ret lzma_block_encoder(lzma_stream *, lzma_block *)"
+"language": "c++"
+"project": "xz"
+"target_name": "fuzz_decode_alone"
+"target_path": "/src/xz/tests/ossfuzz/fuzz_decode_alone.c"

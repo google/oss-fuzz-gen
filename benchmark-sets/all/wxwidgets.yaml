@@ -1,34 +1,38 @@
 "functions":
-- "name": "_Z15wxGetFreeMemoryv"
-  "params": []
-  "return_type": "size_t"
-  "signature": "wxMemorySize wxGetFreeMemory()"
-- "name": "_ZN14wxPlatformInfoC2Ev"
+- "exceptions": []
+  "name": "_ZN16wxFontMapperBase17CharsetToEncodingERK8wxStringb"
   "params":
   - "name": "this"
-    "type": "wxPlatformInfo *"
-  "return_type": "void"
-  "signature": "void wxPlatformInfo::wxPlatformInfo()"
-- "name": "_ZN14wxPlatformInfo3GetEv"
-  "params": []
-  "return_type": "wxPlatformInfo *"
-  "signature": "const wxPlatformInfo & Get()"
-- "name": "_ZN14wxPlatformInfo22InitForCurrentPlatformEv"
+    "type": "bool "
+  - "name": "charset"
+    "type": "bool "
+  - "name": ""
+    "type": "bool"
+  "return_type": "int"
+  "signature": "DW_TAG_enumeration_typewxFontEncoding wxFontMapperBase::CharsetToEncoding(const wxString &, bool)"
+- "exceptions": []
+  "name": "_ZN16wxFontMapperBase31NonInteractiveCharsetToEncodingERK8wxString"
   "params":
   - "name": "this"
-    "type": "wxPlatformInfo *"
+    "type": "bool "
+  - "name": "charset"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int wxFontMapperBase::NonInteractiveCharsetToEncoding(const wxString &)"
+- "exceptions": []
+  "name": "_ZN14wxPlatformInfo22InitForCurrentPlatformEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
   "return_type": "void"
   "signature": "void wxPlatformInfo::InitForCurrentPlatform()"
-- "name": "_ZN24wxFileTranslationsLoader11LoadCatalogERK8wxStringS2_"
+- "exceptions": []
+  "name": "_ZN14wxPlatformInfoC2Ev"
   "params":
   - "name": "this"
-    "type": "wxAppTraits *"
-  - "name": "domain"
-    "type": "wxString *"
-  - "name": "lang"
-    "type": "wxString *"
-  "return_type": "wxMsgCatalog *"
-  "signature": "wxMsgCatalog * wxFileTranslationsLoader::LoadCatalog(const wxString &, const wxString &)"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void wxPlatformInfo::wxPlatformInfo()"
 "language": "c++"
 "project": "wxwidgets"
 "target_name": "runner"
