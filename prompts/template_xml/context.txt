@@ -1,12 +1,11 @@
-{% if headers %}
-
+{% if header %}
 You must include the following header file in the fuzz target, it defines the function-under-test.
 <code>
-{{ headers }}
+{{ header }}
 </code>
 {% endif %}
-{% if must_insert %}
 
+{% if must_insert %}
 You must insert code in the below code block before the function being tested:
 <code>
 {{ must_insert }}
