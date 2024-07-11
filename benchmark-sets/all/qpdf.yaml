@@ -1,0 +1,40 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN24QPDFNameTreeObjectHelper8iteratormmEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "iterator & QPDFNameTreeObjectHelper::iterator::operator--()"
+- "exceptions": []
+  "name": "_ZZN26QPDFAcroFormDocumentHelper20transformAnnotationsE16QPDFObjectHandleRNSt3__16vectorIS0_NS1_9allocatorIS0_EEEES6_RNS1_3setI10QPDFObjGenNS1_4lessIS8_EENS3_IS8_EEEERK10QPDFMatrixP4QPDFPS_ENK3$_2clEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void QPDFAcroFormDocumentHelper::operator()(const void *)"
+- "exceptions": []
+  "name": "_ZN26QPDFNumberTreeObjectHelper8iteratorppEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "iterator & QPDFNumberTreeObjectHelper::iterator::operator++()"
+- "exceptions": []
+  "name": "_ZN26QPDFNumberTreeObjectHelper8iteratormmEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "iterator & QPDFNumberTreeObjectHelper::iterator::operator--()"
+- "exceptions": []
+  "name": "_ZN24QPDFNameTreeObjectHelper8iteratorppEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "iterator & QPDFNameTreeObjectHelper::iterator::operator++()"
+"language": "c++"
+"project": "qpdf"
+"target_name": "future_pngpredictor_fuzzer"
+"target_path": "/src/qpdf/fuzz/pngpredictor_fuzzer.cc"

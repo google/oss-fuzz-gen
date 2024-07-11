@@ -1,0 +1,14 @@
+"functions":
+- "exceptions": []
+  "name": "TPM2_Create"
+  "params":
+  - "name": "in"
+    "type": "bool "
+  - "name": "out"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "TPM_RC TPM2_Create(Create_In *, Create_Out *)"
+"language": "c++"
+"project": "ibmswtpm2"
+"target_name": "fuzz_tpm_server"
+"target_path": "/src/ibmswtpm2/src/fuzzer.cc"

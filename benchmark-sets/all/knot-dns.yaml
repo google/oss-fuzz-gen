@@ -1,0 +1,54 @@
+"functions":
+- "exceptions": []
+  "name": "gnutls_bye"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  - "name": "how"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int gnutls_bye(gnutls_session_t, gnutls_close_request_t)"
+- "exceptions": []
+  "name": "_gnutls_recv_int"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  - "name": "type"
+    "type": "int"
+  - "name": "data"
+    "type": "bool "
+  - "name": "data_size"
+    "type": "size_t"
+  - "name": "seq"
+    "type": "bool "
+  - "name": "ms"
+    "type": "int"
+  "return_type": "size_t"
+  "signature": "ssize_t _gnutls_recv_int(gnutls_session_t, content_type_t, uint8_t *, size_t, void *, unsigned int)"
+- "exceptions": []
+  "name": "gnutls_record_recv_packet"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  - "name": "packet"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "ssize_t gnutls_record_recv_packet(gnutls_session_t, gnutls_packet_t *)"
+- "exceptions": []
+  "name": "gnutls_handshake"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int gnutls_handshake(gnutls_session_t)"
+- "exceptions": []
+  "name": "handshake_client"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int handshake_client(gnutls_session_t)"
+"language": "c++"
+"project": "knot-dns"
+"target_name": "fuzz_zscanner"
+"target_path": "/src/knot-dns/tests-fuzz/fuzz_zscanner.c"

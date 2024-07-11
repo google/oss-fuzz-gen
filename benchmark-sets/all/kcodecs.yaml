@@ -1,44 +1,41 @@
 "functions":
-- "name": "_ZN13QPluginLoader4loadEv"
+- "exceptions": []
+  "name": "_ZN13QPluginLoader4loadEv"
   "params":
   - "name": ""
-    "type": "QLibrary *"
+    "type": "bool "
   "return_type": "bool"
   "signature": "bool QPluginLoader::load()"
-- "name": "_ZN12_GLOBAL__N_113customConvertEPKN8QVariant7PrivateEiPvPb"
+- "exceptions": []
+  "name": "_ZN15QLibraryPrivate8isPluginEv"
   "params":
   - "name": ""
-    "type": "struct QVariant::Private *"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "char *"
-  "return_type": "bool"
-  "signature": "bool (anonymous namespace)::customConvert(const Private *, int, void *, bool *)"
-- "name": "_ZN12_GLOBAL__N_17convertEPKN8QVariant7PrivateEiPvPb"
-  "params":
-  - "name": ""
-    "type": "struct QVariant::Private *"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "char *"
-  - "name": ""
-    "type": "char *"
-  "return_type": "bool"
-  "signature": "bool (anonymous namespace)::convert(const Private *, int, void *, bool *)"
-- "name": "_ZN15QLibraryPrivate8isPluginEv"
-  "params":
-  - "name": ""
-    "type": "QLibraryPrivate *"
+    "type": "bool "
   "return_type": "bool"
   "signature": "bool QLibraryPrivate::isPlugin()"
-- "name": "_ZN15QLibraryPrivate17updatePluginStateEv"
+- "exceptions": []
+  "name": "_ZNK14QFactoryLoader6keyMapEv"
   "params":
   - "name": ""
-    "type": "QLibraryPrivate *"
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "QMultiMap<int, QString> QFactoryLoader::keyMap()"
+- "exceptions": []
+  "name": "_ZNK14QFactoryLoader8instanceEi"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "QObject * QFactoryLoader::instance(int)"
+- "exceptions": []
+  "name": "_ZN15QLibraryPrivate17updatePluginStateEv"
+  "params":
+  - "name": ""
+    "type": "bool "
   "return_type": "void"
   "signature": "void QLibraryPrivate::updatePluginState()"
 "language": "c++"

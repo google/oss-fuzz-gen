@@ -1,0 +1,58 @@
+"functions":
+- "exceptions": []
+  "name": "gnutls_record_recv_packet"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  - "name": "packet"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "ssize_t gnutls_record_recv_packet(gnutls_session_t, gnutls_packet_t *)"
+- "exceptions": []
+  "name": "gnutls_bye"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  - "name": "how"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int gnutls_bye(gnutls_session_t, gnutls_close_request_t)"
+- "exceptions": []
+  "name": "gnutls_session_ticket_send"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  - "name": "nr"
+    "type": "int"
+  - "name": "flags"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int gnutls_session_ticket_send(gnutls_session_t, unsigned int, unsigned int)"
+- "exceptions": []
+  "name": "gnutls_certificate_verify_peers3"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  - "name": "hostname"
+    "type": "bool "
+  - "name": "status"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int gnutls_certificate_verify_peers3(gnutls_session_t, const char *, unsigned int *)"
+- "exceptions": []
+  "name": "gnutls_record_recv_seq"
+  "params":
+  - "name": "session"
+    "type": "bool "
+  - "name": "data"
+    "type": "bool "
+  - "name": "data_size"
+    "type": "size_t"
+  - "name": "seq"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "ssize_t gnutls_record_recv_seq(gnutls_session_t, void *, size_t, unsigned char *)"
+"language": "c++"
+"project": "gnutls"
+"target_name": "libtasn1_gnutls_der_fuzzer"
+"target_path": "/src/libtasn1/fuzz/libtasn1_gnutls_der_fuzzer.c"

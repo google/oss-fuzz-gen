@@ -1,38 +1,45 @@
 "functions":
-- "name": "cue_parse_file"
+- "exceptions": []
+  "name": "cue_parse_file"
   "params":
   - "name": ""
-    "type": "struct _IO_FILE *"
-  "return_type": "struct Cd *"
+    "type": "bool "
+  "return_type": "void"
   "signature": "Cd * cue_parse_file(FILE *)"
-- "name": "cd_dump"
+- "exceptions": []
+  "name": "track_get_isrc"
   "params":
   - "name": ""
-    "type": "struct Cd *"
+    "type": "bool "
   "return_type": "void"
-  "signature": "void cd_dump(Cd *)"
-- "name": "cd_track_dump"
-  "params":
-  - "name": ""
-    "type": "struct Track *"
-  "return_type": "void"
-  "signature": "void cd_track_dump(Track *)"
-- "name": "cdtext_dump"
-  "params":
-  - "name": ""
-    "type": "struct Cdtext *"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void cdtext_dump(Cdtext *, int)"
-- "name": "cdtext_get_key"
+  "signature": "const char * track_get_isrc(const Track *)"
+- "exceptions": []
+  "name": "rem_get"
   "params":
   - "name": ""
     "type": "int"
   - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * rem_get(RemType, Rem *)"
+- "exceptions": []
+  "name": "cd_get_track"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
     "type": "int"
-  "return_type": "char *"
-  "signature": "const char * cdtext_get_key(int, int)"
+  "return_type": "void"
+  "signature": "Track * cd_get_track(const Cd *, int)"
+- "exceptions": []
+  "name": "cdtext_get"
+  "params":
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * cdtext_get(DW_TAG_enumeration_typePti, const Cdtext *)"
 "language": "c"
 "project": "libcue"
 "target_name": "fuzz"
