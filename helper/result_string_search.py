@@ -69,11 +69,6 @@ def _parse_args() -> argparse.Namespace:
   ), ('--sub must be a directory in output-* directories under <result>\n'
       'E.g. fixed_targets, logs, raw_targets, status.')
 
-  # if args.url:
-  #   assert '[benchmark]' in args.url, (
-  #       '--url must contain "[benchmark]"\n'
-  #       'E.g. http://localhost:8080/benchmark/[benchmark]')
-
   return args
 
 
