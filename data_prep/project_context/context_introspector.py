@@ -290,8 +290,9 @@ class ContextRetriever:
 
     if not header_file:
       return None
-    return (f'extern "C" {header_file}'
-            if self._benchmark.needs_extern else header_file)
+    include_statement = f'#include "{header_file}"'
+    return (f'extern "C" {{\n{include_statement}\n}}'
+            if self._benchmark.needs_extern else include_statement)
 
   def get_prefixed_header_file_by_name(self, func_name: str) -> Optional[str]:
     """Retrieves the header file based on function name with `extern "C"` if

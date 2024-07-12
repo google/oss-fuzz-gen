@@ -1,7 +1,7 @@
 {% if header %}
-You must include the following header file in the fuzz target, it defines the function-under-test.
+You must add the following #include statement in the fuzz target, its header file defines the function-under-test.
 <code>
-{{ header }}
+{{ include_statement }}
 </code>
 {% endif %}
 

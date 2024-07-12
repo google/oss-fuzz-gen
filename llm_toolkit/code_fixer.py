@@ -30,7 +30,7 @@ from llm_toolkit import prompt_builder
 ERROR_LINES = 20
 NO_MEMBER_ERROR_REGEX = r"error: no member named '.*' in '([^':]*):?.*'"
 FILE_NOT_FOUND_ERROR_REGEX = r"fatal error: '([^']*)' file not found"
-UNDEFINED_REF_ERROR_REGEX = r"undefined reference to `([^'])'"
+UNDEFINED_REF_ERROR_REGEX = r"undefined reference to `([^']*)'"
 UNKNOWN_TYPE_ERROR = 'error: unknown type name'
 
 # The following strings identify errors when a C fuzz target attempts to use
@@ -484,8 +484,9 @@ def _collect_instruction_undefined_reference(benchmark: benchmarklib.Benchmark,
   undefined_func = matched.group(1)
   ci = context_introspector.ContextRetriever(benchmark)
   header_file = ci.get_prefixed_header_file_by_name(undefined_func)
-  return ('You must include the following header to fix the error '
-          f'{matched.group(0)}:\n<code>\n{header_file}\n</code>.')
+  return (
+      'You must add the following #include statement to fix the error <error>'
+      f'{matched.group(0)}</error>:\n<code>\n{header_file}\n</code>.')
 
 
 def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
