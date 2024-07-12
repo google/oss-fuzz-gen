@@ -475,18 +475,21 @@ def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
 def _collect_instruction_undefined_reference(benchmark: benchmarklib.Benchmark,
                                              error: str) -> str:
   """Collects the instructions to fix the 'undefined reference' errors."""
-  # Cannot map demangled C++ function name to signature.
-  if not benchmark.is_c_projcet:
-    return ''
   matched = re.search(UNDEFINED_REF_ERROR_REGEX, error)
   if not matched:
     return ''
   undefined_func = matched.group(1)
   ci = context_introspector.ContextRetriever(benchmark)
   header_file = ci.get_prefixed_header_file_by_name(undefined_func)
-  return (
-      'You must add the following #include statement to fix the error <error>'
-      f'{matched.group(0)}</error>:\n<code>\n{header_file}\n</code>.')
+  if header_file:
+    return ('You must add the following #include statement to fix the error '
+            f'<error>{matched.group(0)}</error>:\n<code>\n{header_file}\n'
+            '</code>.')
+  if benchmark.is_c_projcet:
+    return (f'You must remove the function {matched.group(1)} from the '
+            'generated fuzz target, because the function does not exist')
+  # Cannot map demangled C++ function name to signature.
+  return ''
 
 
 def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
