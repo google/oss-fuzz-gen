@@ -300,3 +300,17 @@ class ContextRetriever:
     func_sig = introspector.query_introspector_function_signature(
         self._benchmark.project, func_name)
     return self.get_prefixed_header_file(func_sig)
+
+  def get_prefixed_source_file(self,
+                               function_signature: str = '') -> Optional[str]:
+    """Retrieves the source file with `extern "C"` if needed."""
+    if function_signature:
+      source_file = introspector.query_introspector_source_file_path(
+          self._benchmark.project, function_signature)
+    else:
+      source_file = introspector.query_introspector_source_file_path(
+          self._benchmark.project, self._benchmark.function_signature)
+
+    include_statement = f'#include "{source_file}"'
+    return (f'extern "C" {{\n{include_statement}\n}}'
+            if self._benchmark.needs_extern else include_statement)

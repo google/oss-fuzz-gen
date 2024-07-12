@@ -462,7 +462,8 @@ def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
   for error in errors:
     instruction += _collect_instruction_file_not_found(benchmark, error,
                                                        fuzz_target_source_code)
-    instruction += _collect_instruction_undefined_reference(benchmark, error)
+    instruction += _collect_instruction_undefined_reference(
+        benchmark, error, fuzz_target_source_code)
   instruction += _collect_instruction_fdp_in_c_target(benchmark, errors,
                                                       fuzz_target_source_code)
   instruction += _collect_instruction_no_goto(fuzz_target_source_code)
@@ -472,8 +473,9 @@ def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
   return instruction
 
 
-def _collect_instruction_undefined_reference(benchmark: benchmarklib.Benchmark,
-                                             error: str) -> str:
+def _collect_instruction_undefined_reference(
+    benchmark: benchmarklib.Benchmark, error: str,
+    fuzz_target_source_code: str) -> str:
   """Collects the instructions to fix the 'undefined reference' errors."""
   matched_funcs = re.findall(UNDEFINED_REF_ERROR_REGEX, error)
   if not matched_funcs:
@@ -484,16 +486,30 @@ def _collect_instruction_undefined_reference(benchmark: benchmarklib.Benchmark,
       continue
     ci = context_introspector.ContextRetriever(benchmark)
     header_file = ci.get_prefixed_header_file_by_name(undefined_func)
-    if header_file:
+    if header_file and header_file not in fuzz_target_source_code:
       instruction += (
           'You must add the following #include statement to fix the error of '
           f'<error>undefined reference to {undefined_func}</error>:\n<code>\n'
           f'{header_file}\n</code>.\n')
-    elif benchmark.is_c_projcet:
+    elif not header_file and benchmark.is_c_projcet:
       instruction += (
           f'You must remove the function <code>{undefined_func}</code> from the'
           ' generated fuzz target, because the function does not exist.\n')
-    # Cannot map demangled C++ function name to signature.
+    elif not header_file or header_file in fuzz_target_source_code:
+      # C project: NO header file found, or
+      # C++: Cannot map demangled C++ function name to signature
+      if header_file:
+        # To avoid redefinition.
+        instruction += ('You must remove the following statement <code>\n'
+                        f'{header_file}</code>')
+      source_file = ci.get_prefixed_source_file(undefined_func)
+      if not source_file and benchmark.function_name in undefined_func:
+        source_file = ci.get_prefixed_source_file()
+      if source_file:
+        instruction += (
+            'You must add the following #include statement to fix the error of '
+            f'<error>undefined reference to {undefined_func}</error>:\n<code>\n'
+            f'{header_file}\n</code>.\n')
   return instruction
 
 
