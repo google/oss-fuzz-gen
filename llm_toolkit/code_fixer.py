@@ -501,7 +501,7 @@ def _collect_instruction_undefined_reference(
       if header_file:
         # To avoid redefinition.
         instruction += ('You must remove the following statement <code>\n'
-                        f'{header_file}</code>')
+                        f'{header_file}</code>\n')
       source_file = ci.get_prefixed_source_file(undefined_func)
       if not source_file and benchmark.function_name in undefined_func:
         source_file = ci.get_prefixed_source_file()
@@ -509,7 +509,7 @@ def _collect_instruction_undefined_reference(
         instruction += (
             'You must add the following #include statement to fix the error of '
             f'<error>undefined reference to {undefined_func}</error>:\n<code>\n'
-            f'{header_file}\n</code>.\n')
+            f'{source_file}\n</code>.\n')
   return instruction
 
 

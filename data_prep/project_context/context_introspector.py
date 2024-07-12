@@ -310,6 +310,8 @@ class ContextRetriever:
     else:
       source_file = introspector.query_introspector_source_file_path(
           self._benchmark.project, self._benchmark.function_signature)
+    if not source_file:
+      return None
 
     include_statement = f'#include "{source_file}"'
     return (f'extern "C" {{\n{include_statement}\n}}'
