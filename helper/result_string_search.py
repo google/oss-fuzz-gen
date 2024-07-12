@@ -28,6 +28,7 @@ Optionally:
 import argparse
 import logging
 import os
+from typing import Optional
 
 
 def _parse_args() -> argparse.Namespace:
@@ -68,15 +69,11 @@ def _parse_args() -> argparse.Namespace:
   ), ('--sub must be a directory in output-* directories under <result>\n'
       'E.g. fixed_targets, logs, raw_targets, status.')
 
-  if args.url:
-    assert '[benchmark]' in args.url, (
-        '--url must contain "[benchmark]"\n'
-        'E.g. http://localhost:8080/benchmark/[benchmark]')
-
   return args
 
 
-def find_in_dir(search_lines: list[str], file_paths: list[str]) -> bool:
+def find_in_dir(search_lines: list[str],
+                file_paths: list[str]) -> Optional[str]:
   """Returns True if any file in |file_paths| contains |search_lines|."""
   # Caveat: With support for multiline search in potentially large files
   # (e.g. log files), this function does not search for the exact substring
@@ -92,11 +89,11 @@ def find_in_dir(search_lines: list[str], file_paths: list[str]) -> bool:
           count += 1
           if count == len(search_lines):
             logging.info('Found in %s', file_path)
-            return True
+            return file_path
         else:
           count = 0
 
-  return False
+  return None
 
 
 def main():
@@ -120,15 +117,14 @@ def main():
         sub_dir.remove('corpora')
 
       # Iterates through all files in directory.
-      if find_in_dir(search_lines,
-                     [os.path.join(path, file_name) for file_name in files]):
-        hits.append(output_dir)
+      if file_path := find_in_dir(
+          search_lines, [os.path.join(path, file_name) for file_name in files]):
+        hits.append(file_path)
         break
 
   url = args.url
   if url:
-    benchmark_report = '\n'.join(
-        [url.replace('[benchmark]', hit) for hit in hits])
+    benchmark_report = '\n'.join([f'{url}/{hit}' for hit in hits])
   else:
     benchmark_report = '\n'.join(hits)
   logging.info('Search string:\n%s\nwas found in:\n%s', search_string,
