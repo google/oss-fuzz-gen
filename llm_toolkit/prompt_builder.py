@@ -711,7 +711,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     argument = argument.replace('{ARG_TYPE}', arg_type)
     return argument
 
-  def _format_target(self, signature: str) -> Tuple[bool, str]:
+  def _format_target(self, signature: str) -> tuple[bool, str]:
     """Determine if the signature is a constructor or a general
        method and format it for the prompts creation.
     """
