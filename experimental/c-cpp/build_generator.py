@@ -75,6 +75,53 @@ class AutoBuildBase:
     return False
 
 
+class HeaderOnlyCBuilder(AutoBuildBase):
+  """Wrapper for building header-only targets"""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {'.h': []}
+
+  def match_files(self, file_list):
+    """Matches files needed for the build heuristic."""
+    file_dicts = {
+        '.c': [],
+        '.h': [],
+    }
+    for fi in file_list:
+      for key, val in file_dicts.items():
+        if fi.endswith(key) and 'test' not in fi and 'example' not in fi:
+          # Remove the first folder as that is "this" dir.
+          path_to_add = '/'.join(fi.split('/')[1:])
+          val.append(path_to_add)
+    if not file_dicts['.c'] and file_dicts['.h']:
+      self.matches_found['.h'] = file_dicts['.h']
+
+  def steps_to_build(self) -> Iterator[AutoBuildContainer]:
+    build_container = AutoBuildContainer()
+
+    header_writers = ''
+    for header_file in self.matches_found['.h']:
+      header_writers += f'echo "#include \\"{header_file}\\"" >> empty_wrapper.c\n'
+
+    build_container.list_of_commands = [
+        f'''touch empty_wrapper.c
+# Write includes for each of the header files
+{header_writers}
+rm -rf *.o
+$CC $CFLAGS -c empty_wrapper.c -o empty_wrapper.o
+llvm-ar rcs libfuzz.a *.o
+'''
+    ]
+    build_container.heuristic_id = self.name + '1'
+    logger.info(build_container.list_of_commands[0])
+    yield build_container
+
+  @property
+  def name(self):
+    return 'HeaderOnlyCBuilder'
+
+
 class PureCFileCompiler(AutoBuildBase):
   """Builder for compiling .c files direcetly in root repo dir."""
 
@@ -637,6 +684,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
       RawMake(),
       BootstrapScanner(),
       AutogenScannerSH(),
+      HeaderOnlyCBuilder(),
   ]
 
   checks_to_test = []
