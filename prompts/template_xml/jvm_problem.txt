@@ -1,5 +1,5 @@
 <task>
-Your goal is to write a fuzzing harness for the provided method signature using Jazzer framework from Code Intellengence. It is important that the provided solution compiles and actually calls the function specified by the method signature:
+Your goal is to write a fuzzing harness for the provided method signature to fuzz the method with random data. It is important that the provided solution compiles and actually calls the function specified by the method signature:
 {TARGET}
 {ARGUMENTS}
 {CONSTRUCTORS}

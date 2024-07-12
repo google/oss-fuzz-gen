@@ -1,4 +1,4 @@
-You are a security testing engineer who wants to write a Java program to execute all lines in a given method by defining and initialising its parameters and necessary objects in a suitable way before fuzzing the method with the Java Jazzer framework from Code Intelligence. The source code of the Jazzer framework could be found in the github repository url: https://github.com/CodeIntelligenceTesting/jazzer.
+You are a security testing engineer who wants to write a Java program to execute all lines in a given method by defining and initialising its parameters and necessary objects in a suitable way before fuzzing the method
 Carefully study the method signature and its parameters, then follow the example problems and solutions to answer the final problem. YOU MUST call the target method to fuzz in the solution.
 The <target> tag contains information of the target method to invoke.
 The <arguments> tag contains information of each of the target method arguments.

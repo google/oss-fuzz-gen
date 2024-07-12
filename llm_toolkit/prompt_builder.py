@@ -679,7 +679,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     method_str = self._get_methods_for_simple_type(arg_type)
 
     # java.lang.Object argument
-    if 'java.lang.Object' in arg_type:
+    if 'Object' in arg_type.split('.')[-1]:
       base = self._get_template(self.object_arg_description_template_file)
       prefix = f'Argument #{count} requires an Object instance\n'
       argument = f'<argument>{prefix}{base}</argument>'
@@ -890,15 +890,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
             'FuzzedDataProvider::consumeInt()',
             'FuzzedDataProvider::consumeInt(int, int)'
         ],
-        'java.lang.Integer': [
-            'FuzzedDataProvider::consumeInt()',
-            'FuzzedDataProvider::consumeInt(int,int)'
-        ],
         'boolean': [
-            'FuzzedDataProvider::consumeBoolean()',
-            'FuzzedDataProvider::pickValue(boolean[])'
-        ],
-        'java.lang.Boolean': [
             'FuzzedDataProvider::consumeBoolean()',
             'FuzzedDataProvider::pickValue(boolean[])'
         ],
@@ -910,15 +902,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
             'FuzzedDataProvider::consumeBytes(int)',
             'FuzzedDataProvider::consumeRemainingAsBytes()'
         ],
-        'java.lang.Byte': [
-            'FuzzedDataProvider::consumeByte()',
-            'FuzzedDataProvider::consumeByte(byte,byte)'
-        ],
         'short': [
-            'FuzzedDataProvider::consumeShort()',
-            'FuzzedDataProvider::consumeShort(short,short)'
-        ],
-        'java.lang.Short': [
             'FuzzedDataProvider::consumeShort()',
             'FuzzedDataProvider::consumeShort(short,short)'
         ],
@@ -926,29 +910,13 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
             'FuzzedDataProvider::consumeLong()',
             'FuzzedDataProvider::consumeLong(long, long)'
         ],
-        'java.lang.Long': [
-            'FuzzedDataProvider::consumeLong()',
-            'FuzzedDataProvider::consumeLong(long,long)'
-        ],
         'float': [
             'FuzzedDataProvider::consumeFloat()',
             'FuzzedDataProvider::consumeRegularFloat()',
             'FuzzedDataProvider::consumeRegularFloat(float,float)',
             'FuzzedDataProvider::consumeProbabilityFloat()'
         ],
-        'java.lang.Float': [
-            'FuzzedDataProvider::consumeFloat()',
-            'FuzzedDataProvider::consumeRegularFloat()',
-            'FuzzedDataProvider::consumeRegularFloat(float, float)',
-            'FuzzedDataProvider::consumeProbabilityFloat()'
-        ],
         'double': [
-            'FuzzedDataProvider::consumeDouble()',
-            'FuzzedDataProvider::consumeRegularDouble()',
-            'FuzzedDataProvider::consumeRegularDouble(double, double)',
-            'FuzzedDataProvider::consumeProbabilityDouble()'
-        ],
-        'java.lang.Double': [
             'FuzzedDataProvider::consumeDouble()',
             'FuzzedDataProvider::consumeRegularDouble()',
             'FuzzedDataProvider::consumeRegularDouble(double, double)',
@@ -959,19 +927,19 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
             'FuzzedDataProvider::consumeCharNoSurrogates()',
             'FuzzedDataProvider::consumeChar(char, char)'
         ],
-        'java.lang.Character': [
-            'FuzzedDataProvider::consumeChar()',
-            'FuzzedDataProvider::consumeCharNoSurrogates()',
-            'FuzzedDataProvider::consumeChar(char,char)'
-        ],
-        'java.lang.String': [
+        'string': [
             'FuzzedDataProvider::consumeString(int)',
             'FuzzedDataProvider::consumeAsciiString(int)',
             'FuzzedDataProvider::consumeRemainingAsString()',
             'FuzzedDataProvider::consumeRemainingAsAsciiString()'
         ],
-        'java.lang.Class': ['Object::getClass()']
+        'class': ['Object::getClass()']
     }
+
+    # Extract simple type
+    simple_type = simple_type.replace('java.lang.Integer', 'int')
+    simple_type = simple_type.replace('java.lang.Character', 'char')
+    simple_type = simple_type.split('.')[-1].lower()
 
     if simple_type in simple_type_mapping:
       return ' or '.join(simple_type_mapping[simple_type])
