@@ -4,7 +4,7 @@ better prompt generation."""
 import logging
 import os
 from difflib import SequenceMatcher
-from typing import Any
+from typing import Any, Optional
 
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
@@ -165,12 +165,14 @@ class ContextRetriever:
     func_source = self._get_function_implementation()
     files = self._get_files_to_include()
     decl = self._get_embeddable_declaration()
+    header = self.get_prefixed_header_file()
 
     context_info = {
         'xrefs': xrefs,
         'func_source': func_source,
         'files': files,
-        'decl': decl
+        'decl': decl,
+        'header': header,
     }
 
     logging.debug('Context: %s', context_info)
@@ -247,9 +249,21 @@ class ContextRetriever:
                                reverse=True)
     return candidate_headers[:5]
 
-  def get_target_function_file_path(self) -> str:
+  def _get_header_files_to_include(self, func_sig: str) -> Optional[str]:
+    """Retrieves the header file of the function signature."""
+    header_file = introspector.query_introspector_header_files_to_include(
+        self._benchmark.project, func_sig)
+    return header_file[0] if header_file else None
+
+  def _get_target_function_file_path(self) -> str:
     """Retrieves the header/source file of the function under test."""
-    # Step 1: Find a header file that shares the same name as the source file.
+    # Step 1: Find a header file from the default API.
+    header_file = self._get_header_files_to_include(
+        self._benchmark.function_signature)
+    if header_file:
+      return header_file
+
+    # Step 2: Find a header file that shares the same name as the source file.
     # TODO: Make this more robust, e.g., when header file and base file do not
     # share the same basename.
     source_file = introspector.query_introspector_source_file_path(
@@ -264,5 +278,54 @@ class ContextRetriever:
     if candidate_headers:
       return candidate_headers[0]
 
-    # Step 2: Use the source file If it does not have a same-name-header.
+    # Step 3: Use the source file If it does not have a same-name-header.
     return source_file
+
+  def get_prefixed_header_file(self, func_sig: str = '') -> Optional[str]:
+    """Retrieves the header_file with `extern "C"` if needed."""
+    logging.warning('[GPHF] func_sig: %s', func_sig)
+    if func_sig:
+      header_file = self._get_header_files_to_include(func_sig)
+      logging.warning('[GPHF] header_file: %s', header_file)
+    else:
+      header_file = self._get_target_function_file_path()
+      logging.warning('[GPHF] header_file: %s', header_file)
+
+    if not header_file:
+      return None
+    include_statement = f'#include "{header_file}"'
+    logging.warning('[GPHF] include_statement: %s', include_statement)
+    logging.warning('[GPHF] self._benchmark.needs_extern: %s',
+                    self._benchmark.needs_extern)
+    return (f'extern "C" {{\n{include_statement}\n}}'
+            if self._benchmark.needs_extern else include_statement)
+
+  def get_prefixed_header_file_by_name(self, func_name: str) -> Optional[str]:
+    """Retrieves the header file based on function name with `extern "C"` if
+    needed."""
+    logging.warning('[GPHFBN] func_name: %s', func_name)
+    func_sig = introspector.query_introspector_function_signature(
+        self._benchmark.project, func_name)
+    logging.warning('[GPHFBN] func_sig: %s', func_sig)
+    return self.get_prefixed_header_file(func_sig)
+
+  def get_prefixed_source_file(self,
+                               function_signature: str = '') -> Optional[str]:
+    """Retrieves the source file with `extern "C"` if needed."""
+    logging.warning('[GPSF] function_signature: %s', function_signature)
+    if function_signature:
+      source_file = introspector.query_introspector_source_file_path(
+          self._benchmark.project, function_signature)
+    else:
+      source_file = introspector.query_introspector_source_file_path(
+          self._benchmark.project, self._benchmark.function_signature)
+    logging.warning('[GPSF] source_file: %s', source_file)
+    if not source_file:
+      return None
+
+    include_statement = f'#include "{source_file}"'
+    logging.warning('[GPSF] include_statement: %s', include_statement)
+    logging.warning('[GPSF] self._benchmark.needs_extern: %s',
+                    self._benchmark.needs_extern)
+    return (f'extern "C" {{\n{include_statement}\n}}'
+            if self._benchmark.needs_extern else include_statement)
