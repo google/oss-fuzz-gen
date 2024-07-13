@@ -1,0 +1,16 @@
+"functions":
+- "exceptions": []
+  "name": "sf_open"
+  "params":
+  - "name": "path"
+    "type": "bool "
+  - "name": "mode"
+    "type": "int"
+  - "name": "sfinfo"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "SNDFILE * sf_open(const char *, int, SF_INFO *)"
+"language": "c"
+"project": "libsndfile"
+"target_name": "sndfile_fuzzer"
+"target_path": "/src/libsndfile/ossfuzz/sndfile_fuzzer.cc"

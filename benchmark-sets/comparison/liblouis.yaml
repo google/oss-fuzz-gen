@@ -1,0 +1,14 @@
+"functions":
+- "exceptions": []
+  "name": "lou_getTypeformForEmphClass"
+  "params":
+  - "name": "tableList"
+    "type": "bool "
+  - "name": "emphClass"
+    "type": "bool "
+  "return_type": "short"
+  "signature": "formtype lou_getTypeformForEmphClass(const char *, const char *)"
+"language": "c"
+"project": "liblouis"
+"target_name": "fuzz_translate_generic"
+"target_path": "/src/liblouis/tests/fuzzing/fuzz_translate_generic.c"

@@ -1,0 +1,23 @@
+"functions":
+- "exceptions": []
+  "name": "mnt_new_table_from_dir"
+  "params":
+  - "name": "dirname"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct libmnt_table * mnt_new_table_from_dir(const char *)"
+- "exceptions": []
+  "name": "__mnt_table_parse_mountinfo"
+  "params":
+  - "name": "tb"
+    "type": "bool "
+  - "name": "filename"
+    "type": "bool "
+  - "name": "u_tb"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int __mnt_table_parse_mountinfo(struct libmnt_table *, const char *, struct libmnt_table *)"
+"language": "c"
+"project": "util-linux"
+"target_name": "test_last_fuzz"
+"target_path": "/src/util-linux/login-utils/last.c"
