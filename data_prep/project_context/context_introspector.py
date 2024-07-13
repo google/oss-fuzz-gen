@@ -231,7 +231,7 @@ class ContextRetriever:
     for header in header_list:
       correct_file_name = os.path.splitext(os.path.basename(header))
       if wrong_file_name == correct_file_name:
-        candidate_headers.append(header)
+        candidate_headers.append(os.path.normpath(header))
 
     return candidate_headers[:5]
 
@@ -247,7 +247,7 @@ class ContextRetriever:
     candidate_headers = sorted(candidate_header_scores,
                                key=lambda x: candidate_header_scores[x],
                                reverse=True)
-    return candidate_headers[:5]
+    return [os.path.normpath(header) for header in candidate_headers[:5]]
 
   def _get_header_files_to_include(self, func_sig: str) -> Optional[str]:
     """Retrieves the header file of the function signature."""
@@ -290,7 +290,7 @@ class ContextRetriever:
 
     if not header_file:
       return None
-    include_statement = f'#include "{header_file}"'
+    include_statement = f'#include "{os.path.normpath(header_file)}"'
     return (f'extern "C" {{\n{include_statement}\n}}'
             if self._benchmark.needs_extern else include_statement)
 
@@ -313,6 +313,6 @@ class ContextRetriever:
     if not source_file:
       return None
 
-    include_statement = f'#include "{source_file}"'
+    include_statement = f'#include "{os.path.normpath(source_file)}"'
     return (f'extern "C" {{\n{include_statement}\n}}'
             if self._benchmark.needs_extern else include_statement)
