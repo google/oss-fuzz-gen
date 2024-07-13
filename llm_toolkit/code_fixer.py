@@ -508,8 +508,8 @@ def _collect_instruction_undefined_reference(
       if source_file:
         instruction += (
             'You must add the following #include statement to fix the error of '
-            f'<error>undefined reference to {undefined_func}</error>:\n<code>\n'
-            f'{source_file}\n</code>.\n')
+            f"<error>undefined reference to `{undefined_func}'</error>:\n"
+            f'<code>\n{source_file}\n</code>.\n')
   return instruction
 
 
