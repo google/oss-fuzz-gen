@@ -510,6 +510,14 @@ def _collect_instruction_undefined_reference(
             'You must add the following #include statement to fix the error of '
             f"<error>undefined reference to `{undefined_func}'</error>:\n"
             f'<code>\n{source_file}\n</code>.\n')
+    else:
+      instruction += (
+          f"To fix <error>undefined reference to `{undefined_func}'</error>,"
+          'check the library documentation (e.g. README.md, comments) for '
+          'special instructions, such as required macros or specific inclusion '
+          'methods. Ensure any necessary definitions or inclusions are '
+          'correctly implemented in your generated fuzz target, following the '
+          "library's guidance.")
   return instruction
 
 
