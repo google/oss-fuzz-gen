@@ -417,18 +417,12 @@ def apply_llm_fix(ai_binary: str,
   )
 
   builder = prompt_builder.DefaultTemplateBuilder(fixer_model)
-  logging.warning('[ALF] Benchmark: %s; %s; %s', benchmark.project,
-                  benchmark.function_signature, benchmark.function_name)
-  logging.warning('[ALF] Errors: %s', ';'.join(errors))
 
   context = _collect_context(benchmark, errors)
-  logging.warning('[ALF] Context: %s', context)
   instruction = _collect_instructions(benchmark, errors,
                                       fuzz_target_source_code)
-  logging.warning('[ALF] Instruction: %s', instruction)
   prompt = builder.build_fixer_prompt(benchmark, fuzz_target_source_code,
                                       error_desc, errors, context, instruction)
-  logging.warning('[ALF] Prompt: %s', prompt)
   prompt.save(prompt_path)
 
   fixer_model.generate_code(prompt, response_dir)
@@ -437,17 +431,13 @@ def apply_llm_fix(ai_binary: str,
 def _collect_context(benchmark: benchmarklib.Benchmark,
                      errors: list[str]) -> str:
   """Collects the useful context to fix the errors."""
-  logging.warning('[_CC] Errors: %s', ';'.join(errors))
   if not errors:
-    logging.warning('[_CC] No error: %s', ';'.join(errors))
     return ''
 
   context = ''
   for error in errors:
     context += _collect_context_no_member(benchmark, error)
-    logging.warning('[_CC] Error ~ Context: %s ~ %s', error, context)
 
-  logging.warning('[_CC] Final Context: %s', context)
   return context
 
 
@@ -465,22 +455,15 @@ def _collect_context_no_member(benchmark: benchmarklib.Benchmark,
 def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
                           fuzz_target_source_code: str) -> str:
   """Collects the useful instructions to fix the errors."""
-  logging.warning('[_CI] Errors: %s', ';'.join(errors))
   if not errors:
     return ''
 
   instruction = ''
   for error in errors:
-    logging.warning('[CI] Error: %s', error)
-    logging.warning('[CI] fuzz_target_source_code: %s', fuzz_target_source_code)
-    logging.warning('[CI] Benchmark: %s; %s; %s; %s', benchmark.project,
-                    benchmark.function_name, benchmark.function_signature,
-                    benchmark.function_dict)
     instruction += _collect_instruction_file_not_found(benchmark, error,
                                                        fuzz_target_source_code)
     instruction += _collect_instruction_undefined_reference(
         benchmark, error, fuzz_target_source_code)
-    logging.warning('[_CI] Error ~ Instruction: %s ~ %s', error, instruction)
   instruction += _collect_instruction_fdp_in_c_target(benchmark, errors,
                                                       fuzz_target_source_code)
   instruction += _collect_instruction_no_goto(fuzz_target_source_code)
@@ -494,42 +477,24 @@ def _collect_instruction_undefined_reference(
     benchmark: benchmarklib.Benchmark, error: str,
     fuzz_target_source_code: str) -> str:
   """Collects the instructions to fix the 'undefined reference' errors."""
-  logging.warning('[CIUR] Benchmark: %s; %s; %s; %s', benchmark.project,
-                  benchmark.function_name, benchmark.function_signature,
-                  benchmark.function_dict)
-  logging.warning('[CIUR] Error: %s', error)
-  logging.warning('[CIUR] fuzz_target_source_code: %s', fuzz_target_source_code)
-  logging.warning('[CIUR] UNDEFINED_REF_ERROR_REGEX: %s',
-                  UNDEFINED_REF_ERROR_REGEX)
-  logging.warning('[CIUR] matched: %s',
-                  re.findall(UNDEFINED_REF_ERROR_REGEX, error))
   matched_funcs = re.findall(UNDEFINED_REF_ERROR_REGEX, error)
   if not matched_funcs:
-    logging.warning('[CIUR] No matched')
     return ''
   instruction = ''
   for undefined_func in matched_funcs:
-    logging.warning('[CIUR] undefined_func: %s', undefined_func)
     if undefined_func == 'LLVMFuzzerTestOneInput':
       continue
     ci = context_introspector.ContextRetriever(benchmark)
     header_file = ci.get_prefixed_header_file_by_name(undefined_func)
-    logging.warning('[CIUR] benchmark.is_c_projcet: %s', benchmark.is_c_projcet)
-    logging.warning('[CIUR] header_file: %s', header_file)
-    logging.warning(
-        '[CIUR] header_file not in fuzz_target_source_code: %s', header_file
-        not in fuzz_target_source_code if header_file else 'No headerfile')
     if header_file and header_file not in fuzz_target_source_code:
       instruction += (
           'You must add the following #include statement to fix the error of '
           f'<error>undefined reference to {undefined_func}</error>:\n<code>\n'
           f'{header_file}\n</code>.\n')
-      logging.warning('[CIUR] 1 instruction: %s', instruction)
     elif not header_file and benchmark.is_c_projcet:
       instruction += (
           f'You must remove the function <code>{undefined_func}</code> from the'
           ' generated fuzz target, because the function does not exist.\n')
-      logging.warning('[CIUR] 2 instruction: %s', instruction)
     elif not header_file or header_file in fuzz_target_source_code:
       # C project: NO header file found, or
       # C++: Cannot map demangled C++ function name to signature
@@ -537,21 +502,14 @@ def _collect_instruction_undefined_reference(
         # To avoid redefinition.
         instruction += ('You must remove the following statement <code>\n'
                         f'{header_file}</code>\n')
-        logging.warning('[CIUR] 3 instruction: %s', instruction)
       source_file = ci.get_prefixed_source_file(undefined_func)
-      logging.warning('[CIUR] 3 source_file: %s', source_file)
-      logging.warning('[CIUR] benchmark.function_name in undefined_func: %s',
-                      benchmark.function_name in undefined_func)
       if not source_file and benchmark.function_name in undefined_func:
         source_file = ci.get_prefixed_source_file()
-        logging.warning('[CIUR] 4 source_file: %s', source_file)
       if source_file:
         instruction += (
             'You must add the following #include statement to fix the error of '
             f'<error>undefined reference to {undefined_func}</error>:\n<code>\n'
             f'{source_file}\n</code>.\n')
-        logging.warning('[CIUR] 4 instruction: %s', source_file)
-  logging.warning('[CIUR] 5 instruction: %s', instruction)
   return instruction
 
 
@@ -559,58 +517,33 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
                                         error: str,
                                         fuzz_target_source_code: str) -> str:
   """Collects the useful instruction to fix 'file not found' errors."""
-  logging.warning('[CIFNF] Benchmark: %s; %s; %s; %s', benchmark.project,
-                  benchmark.function_name, benchmark.function_signature,
-                  benchmark.function_dict)
-  logging.warning('[CIFNF] Error: %s', error)
-  logging.warning('[CIFNF] fuzz_target_source_code: %s',
-                  fuzz_target_source_code)
-  logging.warning('[CIFNF] FILE_NOT_FOUND_ERROR_REGEX: %s',
-                  FILE_NOT_FOUND_ERROR_REGEX)
-  logging.warning('[CIFNF] matched: %s',
-                  re.search(FILE_NOT_FOUND_ERROR_REGEX, error))
   matched = re.search(FILE_NOT_FOUND_ERROR_REGEX, error)
   if not matched:
-    logging.warning('[CIFNF]: Not matched')
     return ''
 
   # Step 1: Say the file does not exist, do not include it.
   wrong_file = matched.group(1)
-  logging.warning('[CIFNF] wrong_file: %s', wrong_file)
   instruction = (
       f'IMPORTANT: DO NOT include the header file {wrong_file} in the generated'
       ' fuzz target again, the file does not exist in the project-under-test.\n'
   )
-  logging.warning('[CIFNF] instruction: %s', instruction)
   # Step 2: Suggest the header file of the same name as the wrong one.
   ci = context_introspector.ContextRetriever(benchmark)
   same_name_headers = ci.get_same_header_file_paths(wrong_file)
-  logging.warning('[CIFNF] same_name_headers: %s', ';'.join(same_name_headers))
   if same_name_headers:
     statements = '\n'.join(
         [f'#include "{header}"' for header in same_name_headers])
-    logging.warning('[CIFNF] Same header statements: %s', same_name_headers)
     instruction += (
         f'Replace the non-existent <filepath>{wrong_file}</filepath> with the '
         'following statement, which share the same file name but exists under '
         'the correct path in the project-under-test:\n'
         f'<code>\n{statements}\n</code>\n')
-    logging.warning('[CIFNF] Same header instruction: %s', instruction)
     return instruction
 
   # Step 3: Suggest the header/source file of the function under test.
   function_file = ci.get_prefixed_header_file()
-  logging.warning('[CIFNF] function_file: %s', function_file)
-  logging.warning(
-      '[CIFNF] function_file in fuzz_target_source_code: %s', function_file
-      in fuzz_target_source_code if function_file else 'No function_file')
-  logging.warning(
-      '[CIFNF] include function_file in fuzz_target_source_code: %s',
-      f'#include "{function_file}"' in fuzz_target_source_code)
   if function_file and f'#include "{function_file}"' in fuzz_target_source_code:
     function_file_base_name = os.path.basename(function_file)
-    logging.warning('[CIFNF] function_file_base_name: %s',
-                    function_file_base_name)
 
     instruction += (
         'In the generated code, ensure that the path prefix of <code>'
@@ -621,11 +554,8 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
         f' the path prefix in <code>#include "{function_file}"</code> to match '
         'it, resulting in <code>'
         f'#include <{benchmark.project}/{function_file_base_name}></code>.')
-    logging.warning('[CIFNF] function_file in fuzz_target instruction: %s',
-                    instruction)
     return instruction
 
-  logging.warning('[CIFNF] function_file: %s', function_file)
   if function_file:
     instruction += (
         f'If the non-existent <filepath>{wrong_file}</filepath> was included '
@@ -633,12 +563,9 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
         'you must replace it with the EXACT path of the actual file <filepath>'
         f'{function_file}</filepath>. For example:\n'
         f'<code>\n#include "{function_file}"\n</code>\n')
-    logging.warning('[CIFNF] function_file in fuzz_target instruction: %s',
-                    instruction)
 
   # Step 4: Suggest similar alternatives.
   similar_headers = ci.get_similar_header_file_paths(wrong_file)
-  logging.warning('[CIFNF] similar_headers: %s', similar_headers)
   if similar_headers:
     statements = '\n'.join(
         [f'#include "{header}"' for header in similar_headers])

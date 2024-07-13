@@ -283,49 +283,36 @@ class ContextRetriever:
 
   def get_prefixed_header_file(self, func_sig: str = '') -> Optional[str]:
     """Retrieves the header_file with `extern "C"` if needed."""
-    logging.warning('[GPHF] func_sig: %s', func_sig)
     if func_sig:
       header_file = self._get_header_files_to_include(func_sig)
-      logging.warning('[GPHF] header_file: %s', header_file)
     else:
       header_file = self._get_target_function_file_path()
-      logging.warning('[GPHF] header_file: %s', header_file)
 
     if not header_file:
       return None
     include_statement = f'#include "{header_file}"'
-    logging.warning('[GPHF] include_statement: %s', include_statement)
-    logging.warning('[GPHF] self._benchmark.needs_extern: %s',
-                    self._benchmark.needs_extern)
     return (f'extern "C" {{\n{include_statement}\n}}'
             if self._benchmark.needs_extern else include_statement)
 
   def get_prefixed_header_file_by_name(self, func_name: str) -> Optional[str]:
     """Retrieves the header file based on function name with `extern "C"` if
     needed."""
-    logging.warning('[GPHFBN] func_name: %s', func_name)
     func_sig = introspector.query_introspector_function_signature(
         self._benchmark.project, func_name)
-    logging.warning('[GPHFBN] func_sig: %s', func_sig)
     return self.get_prefixed_header_file(func_sig)
 
   def get_prefixed_source_file(self,
                                function_signature: str = '') -> Optional[str]:
     """Retrieves the source file with `extern "C"` if needed."""
-    logging.warning('[GPSF] function_signature: %s', function_signature)
     if function_signature:
       source_file = introspector.query_introspector_source_file_path(
           self._benchmark.project, function_signature)
     else:
       source_file = introspector.query_introspector_source_file_path(
           self._benchmark.project, self._benchmark.function_signature)
-    logging.warning('[GPSF] source_file: %s', source_file)
     if not source_file:
       return None
 
     include_statement = f'#include "{source_file}"'
-    logging.warning('[GPSF] include_statement: %s', include_statement)
-    logging.warning('[GPSF] self._benchmark.needs_extern: %s',
-                    self._benchmark.needs_extern)
     return (f'extern "C" {{\n{include_statement}\n}}'
             if self._benchmark.needs_extern else include_statement)
