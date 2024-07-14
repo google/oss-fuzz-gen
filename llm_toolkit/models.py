@@ -129,7 +129,7 @@ class LLM:
                     prompt: prompts.Prompt,
                     response_dir: str,
                     log_output: bool = False) -> None:
-    """Generates fuzz targets to the |response_dir|."""
+    """Queries the LLM and stores responses in |response_dir|."""
 
   @abstractmethod
   def prompt_type(self) -> type[prompts.Prompt]:
@@ -226,7 +226,7 @@ class GPT(LLM):
                     prompt: prompts.Prompt,
                     response_dir: str,
                     log_output: bool = False) -> None:
-    """Generates code with OpenAI's API."""
+    """Queries OpenAI's API and stores response in |response_dir|."""
     if self.ai_binary:
       print(f'OpenAI does not use local AI binary: {self.ai_binary}')
     if self.temperature_list:
@@ -277,7 +277,7 @@ class GoogleModel(LLM):
                     prompt: prompts.Prompt,
                     response_dir: str,
                     log_output: bool = False) -> None:
-    """Generates code with internal LLM."""
+    """Queries a Google LLM and stores results in |response_dir|."""
     if not self.ai_binary:
       print(f'Error: This model requires a local AI binary: {self.ai_binary}')
       sys.exit(1)
