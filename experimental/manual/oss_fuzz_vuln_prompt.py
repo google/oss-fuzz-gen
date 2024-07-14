@@ -180,6 +180,7 @@ if __name__ == "__main__":
   changeset_diff = get_changeset_diff(args.repo_url, args.regression_range)
   source_code_content = ""
   found_sanitizer_error = False
+  parsed_file_paths = set()
   for line in stacktrace.splitlines():
     if not STACK_FRAME_START_REGEX.match(line):
       continue
@@ -189,6 +190,8 @@ if __name__ == "__main__":
       continue
 
     file_path = match.group(1)
+    if file_path in parsed_file_paths:
+      continue
     if any(
         substring in file_path for substring in EXCLUDED_FILE_PATH_SUBSTRINGS):
       continue
@@ -201,6 +204,7 @@ if __name__ == "__main__":
     source_code_content += (
         f'**FILE CONTENT: {file_path} **\n{file_content}\n**FILE CONTENT END**\n'
     )
+    parsed_file_paths.add(file_path)
 
   source_code_content = source_code_content[:PROMPT_MAX_LENGTH -
                                             len(PROMPT_TEMPLATE) -
