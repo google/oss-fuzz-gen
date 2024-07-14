@@ -72,4 +72,4 @@ if __name__ == "__main__":
   model = setup_model()
   prompt = construct_prompt()
   os.makedirs(args.response_dir, exist_ok=True)
-  model.generate_code(prompt, response_dir=args.response_dir)
+  model.query_llm(prompt, response_dir=args.response_dir)
