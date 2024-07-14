@@ -28,7 +28,7 @@ from experiment.benchmark import Benchmark
 from experiment.builder_runner import BuildResult, RunResult
 from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
-from llm_toolkit import code_fixer, crash_triager, corpus_generator
+from llm_toolkit import code_fixer, corpus_generator, crash_triager
 from llm_toolkit.crash_triager import TriageResult
 
 LLM_FIX_LIMIT = int(os.getenv('LLM_FIX_LIMIT', '5'))
@@ -257,16 +257,15 @@ class Evaluator:
     logger.log(f'Warning: no crash info in {generated_oss_fuzz_project}.')
     return TriageResult.NOT_APPLICABLE
 
-  def extend_build_with_corpus(self, ai_binary, target_path, generated_oss_fuzz_project):
+  def extend_build_with_corpus(self, ai_binary, target_path,
+                               generated_oss_fuzz_project):
     """Extends an OSS-Fuzz project with corpus generated programmatically."""
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                        'projects', generated_oss_fuzz_project)
+                                          'projects',
+                                          generated_oss_fuzz_project)
     generated_corp = corpus_generator.generate_corpus(
-        ai_binary,
-        self.builder_runner.fixer_model_name,
-        target_path,
-        self.benchmark
-    )
+        ai_binary, self.builder_runner.fixer_model_name, target_path,
+        self.benchmark)
 
     corpus_generator_path = os.path.join(generated_project_path, 'corp_gen.py')
     with open(corpus_generator_path, 'w') as f:
@@ -282,7 +281,9 @@ class Evaluator:
       f.write('\npushd /src/generated-corpus')
       f.write('\npython3 $SRC/corp_gen.py')
       f.write('\npopd')
-      f.write(f'\nzip $OUT/{target_harness_file}_seed_corpus.zip /src/generated-corpus/*')
+      f.write(
+          f'\nzip $OUT/{target_harness_file}_seed_corpus.zip /src/generated-corpus/*'
+      )
 
   def check_target(self, ai_binary, target_path: str) -> Result:
     """Builds and runs a target."""
@@ -303,7 +304,8 @@ class Evaluator:
     # TODO: Log run success/failure.
 
     if GENERATE_CORPUS:
-      self.extend_build_with_corpus(ai_binary, target_path, generated_oss_fuzz_project)
+      self.extend_build_with_corpus(ai_binary, target_path,
+                                    generated_oss_fuzz_project)
 
     # Loop of evaluating and fixing fuzz target.
     llm_fix_count = 0

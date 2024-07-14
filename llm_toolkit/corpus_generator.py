@@ -17,11 +17,11 @@
 import os
 
 from data_prep import introspector
+from experiment import oss_fuzz_checkout
+from experiment.benchmark import Benchmark
 from llm_toolkit import models
 from llm_toolkit import output_parser as parser
 from llm_toolkit import prompt_builder
-from experiment.benchmark import Benchmark
-from experiment import oss_fuzz_checkout
 
 
 def generate_corpus(
@@ -37,23 +37,27 @@ def generate_corpus(
       name=fixer_model_name,
   )
 
-
   # Get the corpus generation template
-  with open(os.path.join(prompt_builder.DEFAULT_TEMPLATE_DIR, 'corpus_generation_via_python_script.txt'), 'r') as f:
+  with open(
+      os.path.join(prompt_builder.DEFAULT_TEMPLATE_DIR,
+                   'corpus_generation_via_python_script.txt'), 'r') as f:
     prompt_to_query = f.read()
   with open(target_harness_path) as target_harness_file:
     target_harness_code = target_harness_file.read()
 
-  prompt_to_query = prompt_to_query.replace('{HARNESS_SOURCE_CODE}', target_harness_code)
+  prompt_to_query = prompt_to_query.replace('{HARNESS_SOURCE_CODE}',
+                                            target_harness_code)
 
-
-  project_repository = oss_fuzz_checkout.get_project_repository(benchmark.project)
+  project_repository = oss_fuzz_checkout.get_project_repository(
+      benchmark.project)
   target_source_code = introspector.query_introspector_function_source(
-    benchmark.project, benchmark.function_signature)
+      benchmark.project, benchmark.function_signature)
 
   prompt_to_query = prompt_to_query.replace('{PROJECT_NAME}', benchmark.project)
-  prompt_to_query = prompt_to_query.replace('{PROJECT_REPOSITORY}', project_repository)
-  prompt_to_query = prompt_to_query.replace('{TARGET_FUNCTION_SOURCE}', target_source_code)
+  prompt_to_query = prompt_to_query.replace('{PROJECT_REPOSITORY}',
+                                            project_repository)
+  prompt_to_query = prompt_to_query.replace('{TARGET_FUNCTION_SOURCE}',
+                                            target_source_code)
 
   prompt = corpus_model.prompt_type()()
   prompt.add_priming(prompt_to_query)
@@ -70,12 +74,12 @@ def generate_corpus(
     corpus_generator_path = os.path.join(response_dir, file)
     with open(corpus_generator_path, 'r') as f:
       corpus_generator_source = f.read()
-    
+
     corpus_generator_source = corpus_generator_source.replace('</results>', '')
     corpus_generator_source = corpus_generator_source.replace('<results>', '')
     corpus_generator_source = corpus_generator_source.replace('```python', '')
     corpus_generator_source = corpus_generator_source.replace('```', '')
     return corpus_generator_source
-  
+
   # Return an empty Python program if generation failed.
   return 'import os'
