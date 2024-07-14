@@ -24,7 +24,8 @@ import subprocess
 from git import BadName, InvalidGitRepositoryError, Repo
 
 PROMPT_TEMPLATE = """
-Perform the following tasks to identify and remediate the security vulnerability:
+You are a seasoned security engineer with 25 years of experience in vulnerability assessment and remediation.
+Your task is to thoroughly analyze, identify and remediate the security vulnerability:
 
 1. Vulnerability Identification:
 --- Stack Trace ---
@@ -56,15 +57,17 @@ Perform the following tasks to identify and remediate the security vulnerability
 * Create a patch that completely addresses the root cause of the vulnerability.
 * Return the patch in git diff format (Use prefix '+' for added and '-' for removed lines).
 * Ensure the patch applies cleanly on the source code files provided.
-* Ensure the patch preserves the intended functionality of the codebase without introducing regressions.
-* Thoroughly test the patch in the relevant environment to verify that it eliminates the crash and prevents exploitation.
+* Ensure the patch preserves the intended functionality of the codebase without introducing functional and performance regressions.
+* Thoroughly analyze the patch to verify that it does not introduce a new security vulnerability.
+* Thoroughly analyze the patch to verify that it eliminates the crash and prevents exploitation.
 """
 PROMPT_MAX_LENGTH = 1048576
 PROJECTS_DIR = os.path.join('oss-fuzz', 'projects')
 STACK_FRAME_START_REGEX = re.compile(r'\s*#\d+\s+0x[0-9A-Fa-f]+\s+')
 STACK_FRAME_PATH_LINE_REGEX = re.compile(
     r'(?<=\[|\(|\s)([a-zA-Z/.][^\s]*?)\s*(:|@)\s*(\d+)(?=\]$|\)$|:\d+$|$)')
-EXCLUDED_FILE_PATH_SUBSTRINGS = ('/compiler-rt/', '/glibc-')
+EXCLUDED_FILE_PATH_SUBSTRINGS = ('/compiler-rt/', '/glibc-',
+                                 '/usr/local/include/')
 
 
 def get_local_repo_path(repo_url):
