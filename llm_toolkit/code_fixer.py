@@ -498,19 +498,27 @@ def _collect_instruction_undefined_reference(
     elif not header_file or header_file in fuzz_target_source_code:
       # C project: NO header file found, or
       # C++: Cannot map demangled C++ function name to signature
-      if header_file:
-        # To avoid redefinition.
-        instruction += ('You must remove the following statement <code>\n'
-                        f'{header_file}</code>\n')
       source_file = ci.get_prefixed_source_file(undefined_func)
       if not source_file and benchmark.function_name in undefined_func:
         source_file = ci.get_prefixed_source_file()
       if source_file:
+        if header_file:
+          # To avoid redefinition.
+          instruction += ('You must remove the following statement\n<code>\n'
+                          f'{header_file}</code>\n')
         instruction += (
             'You must add the following #include statement to fix the error of '
             f"<error>undefined reference to `{undefined_func}'</error>:\n"
             f'<code>\n{source_file}\n</code>.\n')
     else:
+      instruction += (
+          f"To fix <error>undefined reference to `{undefined_func}'</error>,"
+          'check the library documentation (e.g. README.md, comments) for '
+          'special instructions, such as required macros or specific inclusion '
+          'methods. Ensure any necessary definitions or inclusions are '
+          'correctly implemented in your generated fuzz target, following the '
+          "library's guidance.")
+    if not instruction:
       instruction += (
           f"To fix <error>undefined reference to `{undefined_func}'</error>,"
           'check the library documentation (e.g. README.md, comments) for '
