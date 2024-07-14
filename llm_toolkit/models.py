@@ -125,11 +125,11 @@ class LLM:
 
   # ============================== Generation ============================== #
   @abstractmethod
-  def generate_code(self,
-                    prompt: prompts.Prompt,
-                    response_dir: str,
-                    log_output: bool = False) -> None:
-    """Generates fuzz targets to the |response_dir|."""
+  def query_llm(self,
+                prompt: prompts.Prompt,
+                response_dir: str,
+                log_output: bool = False) -> None:
+    """Queries the LLM and stores responses in |response_dir|."""
 
   @abstractmethod
   def prompt_type(self) -> type[prompts.Prompt]:
@@ -222,11 +222,11 @@ class GPT(LLM):
     return prompts.OpenAIPrompt
 
   # ============================== Generation ============================== #
-  def generate_code(self,
-                    prompt: prompts.Prompt,
-                    response_dir: str,
-                    log_output: bool = False) -> None:
-    """Generates code with OpenAI's API."""
+  def query_llm(self,
+                prompt: prompts.Prompt,
+                response_dir: str,
+                log_output: bool = False) -> None:
+    """Queries OpenAI's API and stores response in |response_dir|."""
     if self.ai_binary:
       print(f'OpenAI does not use local AI binary: {self.ai_binary}')
     if self.temperature_list:
@@ -273,11 +273,11 @@ class GoogleModel(LLM):
     return int(len(re.split('[^a-zA-Z0-9]+', text)) * 1.5 + 0.5)
 
   # ============================== Generation ============================== #
-  def generate_code(self,
-                    prompt: prompts.Prompt,
-                    response_dir: str,
-                    log_output: bool = False) -> None:
-    """Generates code with internal LLM."""
+  def query_llm(self,
+                prompt: prompts.Prompt,
+                response_dir: str,
+                log_output: bool = False) -> None:
+    """Queries a Google LLM and stores results in |response_dir|."""
     if not self.ai_binary:
       print(f'Error: This model requires a local AI binary: {self.ai_binary}')
       sys.exit(1)
@@ -349,10 +349,10 @@ class VertexAIModel(GoogleModel):
             self._max_output_tokens
     } for index in range(self.num_samples)]
 
-  def generate_code(self,
-                    prompt: prompts.Prompt,
-                    response_dir: str,
-                    log_output: bool = False) -> None:
+  def query_llm(self,
+                prompt: prompts.Prompt,
+                response_dir: str,
+                log_output: bool = False) -> None:
     del log_output
     if self.ai_binary:
       print(f'VertexAI does not use local AI binary: {self.ai_binary}')

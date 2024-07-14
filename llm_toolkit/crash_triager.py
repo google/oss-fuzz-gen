@@ -107,4 +107,4 @@ def apply_llm_triage(
                                         crash_func)
   prompt.save(prompt_path)
 
-  triage_model.generate_code(prompt, response_dir)
+  triage_model.query_llm(prompt, response_dir)

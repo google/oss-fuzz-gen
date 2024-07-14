@@ -424,7 +424,7 @@ def apply_llm_fix(ai_binary: str,
                                       error_desc, errors, context, instruction)
   prompt.save(prompt_path)
 
-  fixer_model.generate_code(prompt, response_dir)
+  fixer_model.query_llm(prompt, response_dir)
 
 
 def _collect_context(benchmark: benchmarklib.Benchmark,
