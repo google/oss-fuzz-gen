@@ -87,9 +87,7 @@ def generate_targets(benchmark: Benchmark,
   """Generates fuzz target with LLM."""
   print(f'Generating targets for {benchmark.project} '
         f'{benchmark.function_signature} using {model.name}..')
-  model.query_llm(prompt,
-                      response_dir=work_dirs.raw_targets,
-                      log_output=debug)
+  model.query_llm(prompt, response_dir=work_dirs.raw_targets, log_output=debug)
 
   _, target_ext = os.path.splitext(benchmark.target_path)
   generated_targets = []

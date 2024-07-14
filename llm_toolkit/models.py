@@ -126,9 +126,9 @@ class LLM:
   # ============================== Generation ============================== #
   @abstractmethod
   def query_llm(self,
-                    prompt: prompts.Prompt,
-                    response_dir: str,
-                    log_output: bool = False) -> None:
+                prompt: prompts.Prompt,
+                response_dir: str,
+                log_output: bool = False) -> None:
     """Queries the LLM and stores responses in |response_dir|."""
 
   @abstractmethod
@@ -223,9 +223,9 @@ class GPT(LLM):
 
   # ============================== Generation ============================== #
   def query_llm(self,
-                    prompt: prompts.Prompt,
-                    response_dir: str,
-                    log_output: bool = False) -> None:
+                prompt: prompts.Prompt,
+                response_dir: str,
+                log_output: bool = False) -> None:
     """Queries OpenAI's API and stores response in |response_dir|."""
     if self.ai_binary:
       print(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -274,9 +274,9 @@ class GoogleModel(LLM):
 
   # ============================== Generation ============================== #
   def query_llm(self,
-                    prompt: prompts.Prompt,
-                    response_dir: str,
-                    log_output: bool = False) -> None:
+                prompt: prompts.Prompt,
+                response_dir: str,
+                log_output: bool = False) -> None:
     """Queries a Google LLM and stores results in |response_dir|."""
     if not self.ai_binary:
       print(f'Error: This model requires a local AI binary: {self.ai_binary}')
@@ -350,9 +350,9 @@ class VertexAIModel(GoogleModel):
     } for index in range(self.num_samples)]
 
   def query_llm(self,
-                    prompt: prompts.Prompt,
-                    response_dir: str,
-                    log_output: bool = False) -> None:
+                prompt: prompts.Prompt,
+                response_dir: str,
+                log_output: bool = False) -> None:
     del log_output
     if self.ai_binary:
       print(f'VertexAI does not use local AI binary: {self.ai_binary}')
