@@ -125,7 +125,7 @@ class LLM:
 
   # ============================== Generation ============================== #
   @abstractmethod
-  def generate_code(self,
+  def query_llm(self,
                     prompt: prompts.Prompt,
                     response_dir: str,
                     log_output: bool = False) -> None:
@@ -222,7 +222,7 @@ class GPT(LLM):
     return prompts.OpenAIPrompt
 
   # ============================== Generation ============================== #
-  def generate_code(self,
+  def query_llm(self,
                     prompt: prompts.Prompt,
                     response_dir: str,
                     log_output: bool = False) -> None:
@@ -273,7 +273,7 @@ class GoogleModel(LLM):
     return int(len(re.split('[^a-zA-Z0-9]+', text)) * 1.5 + 0.5)
 
   # ============================== Generation ============================== #
-  def generate_code(self,
+  def query_llm(self,
                     prompt: prompts.Prompt,
                     response_dir: str,
                     log_output: bool = False) -> None:
@@ -349,7 +349,7 @@ class VertexAIModel(GoogleModel):
             self._max_output_tokens
     } for index in range(self.num_samples)]
 
-  def generate_code(self,
+  def query_llm(self,
                     prompt: prompts.Prompt,
                     response_dir: str,
                     log_output: bool = False) -> None:

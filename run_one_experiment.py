@@ -87,7 +87,7 @@ def generate_targets(benchmark: Benchmark,
   """Generates fuzz target with LLM."""
   print(f'Generating targets for {benchmark.project} '
         f'{benchmark.function_signature} using {model.name}..')
-  model.generate_code(prompt,
+  model.query_llm(prompt,
                       response_dir=work_dirs.raw_targets,
                       log_output=debug)
 
