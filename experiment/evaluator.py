@@ -28,10 +28,11 @@ from experiment.benchmark import Benchmark
 from experiment.builder_runner import BuildResult, RunResult
 from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
-from llm_toolkit import code_fixer, crash_triager
+from llm_toolkit import code_fixer, crash_triager, corpus_generator
 from llm_toolkit.crash_triager import TriageResult
 
 LLM_FIX_LIMIT = int(os.getenv('LLM_FIX_LIMIT', '5'))
+GENERATE_CORPUS = bool(os.getenv('LLM_GENERATE_CORPUS', ''))
 
 OSS_FUZZ_COVERAGE_BUCKET = 'oss-fuzz-coverage'
 
@@ -206,6 +207,7 @@ class Evaluator:
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(f'\nCOPY {os.path.basename(target_file)} '
               f'{self.benchmark.target_path}\n')
+
     return name
 
   def _fix_generated_fuzz_target(self, ai_binary: str,
@@ -255,6 +257,33 @@ class Evaluator:
     logger.log(f'Warning: no crash info in {generated_oss_fuzz_project}.')
     return TriageResult.NOT_APPLICABLE
 
+  def extend_build_with_corpus(self, ai_binary, target_path, generated_oss_fuzz_project):
+    """Extends an OSS-Fuzz project with corpus generated programmatically."""
+    generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
+                                        'projects', generated_oss_fuzz_project)
+    generated_corp = corpus_generator.generate_corpus(
+        ai_binary,
+        self.builder_runner.fixer_model_name,
+        target_path,
+        self.benchmark
+    )
+
+    corpus_generator_path = os.path.join(generated_project_path, 'corp_gen.py')
+    with open(corpus_generator_path, 'w') as f:
+      f.write(generated_corp)
+
+    with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
+      f.write('COPY corp_gen.py $SRC/corp_gen.py\n')
+    target_harness_file = os.path.basename(self.benchmark.target_path)
+    target_harness_file = os.path.splitext(target_harness_file)[0]
+    with open(os.path.join(generated_project_path, 'build.sh'), 'a') as f:
+      f.write('\n# Generate a corpus for the modified harness.')
+      f.write('\nmkdir -p /src/generated-corpus')
+      f.write('\npushd /src/generated-corpus')
+      f.write('\npython3 $SRC/corp_gen.py')
+      f.write('\npopd')
+      f.write(f'\nzip $OUT/{target_harness_file}_seed_corpus.zip /src/generated-corpus/*')
+
   def check_target(self, ai_binary, target_path: str) -> Result:
     """Builds and runs a target."""
     generated_target_name = os.path.basename(target_path)
@@ -272,6 +301,9 @@ class Evaluator:
 
     # TODO: Log build failure.
     # TODO: Log run success/failure.
+
+    if GENERATE_CORPUS:
+      self.extend_build_with_corpus(ai_binary, target_path, generated_oss_fuzz_project)
 
     # Loop of evaluating and fixing fuzz target.
     llm_fix_count = 0
