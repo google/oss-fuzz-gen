@@ -30,7 +30,6 @@ from report.common import (AccumulatedResult, Benchmark, FileSystem, Results,
                            Sample, Target)
 
 LOCAL_HOST = '127.0.0.1'
-LOCAL_PORT = 8012
 
 
 class JinjaEnv:
@@ -194,8 +193,8 @@ def generate_report(args: argparse.Namespace) -> None:
 
 def launch_webserver(args):
   """Launches a local web server to browse results."""
-  logging.info('Launching webserver at %s:%d', LOCAL_HOST, LOCAL_PORT)
-  server = ThreadingHTTPServer((LOCAL_HOST, LOCAL_PORT),
+  logging.info('Launching webserver at %s:%d', LOCAL_HOST, args.port)
+  server = ThreadingHTTPServer((LOCAL_HOST, args.port),
                                partial(SimpleHTTPRequestHandler,
                                        directory=args.output_dir))
   server.serve_forever()
@@ -228,6 +227,11 @@ def _parse_arguments() -> argparse.Namespace:
                       '-s',
                       help='Will launch a web server if set.',
                       action='store_true')
+  parser.add_argument('--port',
+                      '-p',
+                      help='Port to launch webserver on.',
+                      type=int,
+                      default=8012)
 
   return parser.parse_args()
 
