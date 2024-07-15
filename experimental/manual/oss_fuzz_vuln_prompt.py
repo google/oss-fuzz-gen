@@ -66,8 +66,7 @@ PROJECTS_DIR = os.path.join('oss-fuzz', 'projects')
 STACK_FRAME_START_REGEX = re.compile(r'\s*#\d+\s+0x[0-9A-Fa-f]+\s+')
 STACK_FRAME_PATH_LINE_REGEX = re.compile(
     r'(?<=\[|\(|\s)([a-zA-Z/.][^\s]*?)\s*(:|@)\s*(\d+)(?=\]$|\)$|:\d+$|$)')
-EXCLUDED_FILE_PATH_SUBSTRINGS = ('/compiler-rt/', '/glibc-',
-                                 '/usr/local/include/')
+EXCLUDED_FILE_PATH_SUBSTRINGS = ('/compiler-rt/', '/glibc-', '/usr/')
 
 
 def get_local_repo_path(repo_url):
