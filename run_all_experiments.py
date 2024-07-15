@@ -18,9 +18,12 @@ import argparse
 import logging
 import os
 import sys
+import json
 import time
 import traceback
+from datetime import timedelta
 from multiprocessing import Pool
+from typing import Any
 
 import run_one_experiment
 from data_prep import introspector
@@ -28,6 +31,7 @@ from experiment import benchmark as benchmarklib
 from experiment import oss_fuzz_checkout
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
+
 
 # WARN: Avoid large NUM_EXP for local experiments.
 # NUM_EXP controls the number of experiments in parallel, while each experiment
@@ -45,6 +49,8 @@ BENCHMARK_ROOT: str = './benchmark-sets'
 BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
 RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
 GENERATED_BENCHMARK: str = 'generated-benchmark-'
+JSON_REPORT = 'report.json'
+TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
 
 class Result:
@@ -304,10 +310,31 @@ def _print_experiment_results(results: list[Result]):
     print(f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
           f'\n{result.result}\n')
 
+def add_to_json_report(outdir: str, key: str, value: Any) -> None:
+  """Adds a key/value pair to JSON report."""
+  if not os.path.isdir(outdir):
+    os.mkdir(outdir)
+  json_report_path = os.path.join(outdir, JSON_REPORT)
+  if os.path.isfile(json_report_path):
+    with open(json_report_path, 'r') as f:
+      json_report = json.load(f)
+  else:
+    json_report = dict()
+
+  json_report[key] = value
+
+  # Overwrite the new json file
+  with open(json_report_path, 'w') as f:
+    f.write(json.dumps(json_report))
+
 
 def main():
   logging.basicConfig(level=logging.INFO)
   args = parse_args()
+
+  # Capture time at start
+  start = time.time()
+  add_to_json_report(args.work_dir, 'start_time', time.strftime(TIME_STAMP_FMT, time.gmtime(start)))
 
   # Set introspector endpoint before performing any operations to ensure the
   # right API endpoint is used throughout.
@@ -334,6 +361,11 @@ def main():
         experiment_tasks.append(experiment_task)
         time.sleep(args.delay)
       experiment_results = [task.get() for task in experiment_tasks]
+
+  # Capture time at end
+  end = time.time()
+  add_to_json_report(args.work_dir, 'completion_time', time.strftime(TIME_STAMP_FMT, time.gmtime(end)))
+  add_to_json_report(args.work_dir, 'total_run_time', str(timedelta(seconds=end-start)))
 
   _print_experiment_results(experiment_results)
 
