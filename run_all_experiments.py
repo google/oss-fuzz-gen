@@ -15,10 +15,10 @@
 """Run an experiment with all function-under-tests."""
 
 import argparse
+import json
 import logging
 import os
 import sys
-import json
 import time
 import traceback
 from datetime import timedelta
@@ -31,7 +31,6 @@ from experiment import benchmark as benchmarklib
 from experiment import oss_fuzz_checkout
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
-
 
 # WARN: Avoid large NUM_EXP for local experiments.
 # NUM_EXP controls the number of experiments in parallel, while each experiment
@@ -310,6 +309,7 @@ def _print_experiment_results(results: list[Result]):
     print(f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
           f'\n{result.result}\n')
 
+
 def add_to_json_report(outdir: str, key: str, value: Any) -> None:
   """Adds a key/value pair to JSON report."""
   if not os.path.isdir(outdir):
@@ -319,7 +319,7 @@ def add_to_json_report(outdir: str, key: str, value: Any) -> None:
     with open(json_report_path, 'r') as f:
       json_report = json.load(f)
   else:
-    json_report = dict()
+    json_report = {}
 
   json_report[key] = value
 
@@ -334,7 +334,8 @@ def main():
 
   # Capture time at start
   start = time.time()
-  add_to_json_report(args.work_dir, 'start_time', time.strftime(TIME_STAMP_FMT, time.gmtime(start)))
+  add_to_json_report(args.work_dir, 'start_time',
+                     time.strftime(TIME_STAMP_FMT, time.gmtime(start)))
 
   # Set introspector endpoint before performing any operations to ensure the
   # right API endpoint is used throughout.
@@ -364,8 +365,10 @@ def main():
 
   # Capture time at end
   end = time.time()
-  add_to_json_report(args.work_dir, 'completion_time', time.strftime(TIME_STAMP_FMT, time.gmtime(end)))
-  add_to_json_report(args.work_dir, 'total_run_time', str(timedelta(seconds=end-start)))
+  add_to_json_report(args.work_dir, 'completion_time',
+                     time.strftime(TIME_STAMP_FMT, time.gmtime(end)))
+  add_to_json_report(args.work_dir, 'total_run_time',
+                     str(timedelta(seconds=end - start)))
 
   _print_experiment_results(experiment_results)
 
