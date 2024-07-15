@@ -874,7 +874,7 @@ def _parse_arguments() -> argparse.Namespace:
 set_introspector_endpoints(DEFAULT_INTROSPECTOR_ENDPOINT)
 
 if __name__ == '__main__':
-  logging.basicConfig(level=logger.INFO)
+  logging.basicConfig(level=logging.INFO)
 
   args = _parse_arguments()
   if args.out:

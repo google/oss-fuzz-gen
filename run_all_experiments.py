@@ -150,7 +150,7 @@ def run_experiments(benchmark: benchmarklib.Benchmark,
         prompt_builder_to_use=args.prompt_builder)
     return Result(benchmark, result)
   except Exception as e:
-    logger.info('Exception while running experiment:', e, file=sys.stderr)
+    logger.error('Exception while running experiment: %s', str(e))
     traceback.print_exc()
     return Result(benchmark, f'Exception while running experiment: {e}')
 
