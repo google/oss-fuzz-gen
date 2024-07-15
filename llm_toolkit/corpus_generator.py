@@ -72,7 +72,7 @@ def get_corpus_generator_script(
   prompt_path = os.path.join(response_dir, 'prompt.txt')
   prompt.save(prompt_path)
 
-  corpus_model.generate_code(prompt, response_dir)
+  corpus_model.query_llm(prompt, response_dir)
   for file in os.listdir(response_dir):
     if not parser.is_raw_output(file):
       continue
