@@ -1,8 +1,8 @@
 import json
+import logging
 import os
 import re
 import shutil
-import logging
 import subprocess
 import uuid
 from collections import defaultdict
@@ -311,7 +311,8 @@ class ContextRetriever:
         logger.info(e)
         continue
 
-    logger.info(f'Header location could not be found for {self._function_signature}')
+    logger.info(
+        f'Header location could not be found for {self._function_signature}')
     return ''
 
   def get_type_info(self) -> List[str]:

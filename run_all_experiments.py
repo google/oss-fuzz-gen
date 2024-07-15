@@ -103,8 +103,9 @@ def get_experiment_configs(
     |args| setting."""
   benchmark_yamls = []
   if args.benchmark_yaml:
-    logger.info(f'A benchmark yaml file ({args.benchmark_yaml}) is provided. '
-          f'Will use it and ignore the files in {args.benchmarks_directory}.')
+    logger.info(
+        f'A benchmark yaml file ({args.benchmark_yaml}) is provided. '
+        f'Will use it and ignore the files in {args.benchmarks_directory}.')
     benchmark_yamls = [args.benchmark_yaml]
   else:
     if args.generate_benchmarks:
@@ -223,7 +224,11 @@ def parse_args() -> argparse.Namespace:
                       '--introspector-endpoint',
                       type=str,
                       default=introspector.DEFAULT_INTROSPECTOR_ENDPOINT)
-  parser.add_argument('-lo', '--log-level', help='Sets the logging level. Options available: [{LOG_LEVELS}]', default='info')
+  parser.add_argument(
+      '-lo',
+      '--log-level',
+      help='Sets the logging level. Options available: [{LOG_LEVELS}]',
+      default='info')
   parser.add_argument(
       '-of',
       '--oss-fuzz-dir',
@@ -298,8 +303,8 @@ def parse_args() -> argparse.Namespace:
 def _print_experiment_result(result: Result):
   """Prints the |result| of a single experiment."""
   logger.info(f'\n**** Finished benchmark {result.benchmark.project}, '
-        f'{result.benchmark.function_signature} ****\n'
-        f'{result.result}')
+              f'{result.benchmark.function_signature} ****\n'
+              f'{result.result}')
 
 
 def _print_experiment_results(results: list[Result]):
@@ -307,8 +312,9 @@ def _print_experiment_results(results: list[Result]):
   logger.info('\n\n**** FINAL RESULTS: ****\n\n')
   for result in results:
     logger.info('=' * 80)
-    logger.info(f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
-          f'\n{result.result}\n')
+    logger.info(
+        f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
+        f'\n{result.result}\n')
 
 
 def _setup_logging(verbose: str = 'info') -> None:
@@ -320,8 +326,8 @@ def _setup_logging(verbose: str = 'info') -> None:
       level=log_level,
       format=LOG_FMT,
       datefmt='%Y-%m-%d %H:%M:%S',
-  )    
-      
+  )
+
 
 def main():
   args = parse_args()

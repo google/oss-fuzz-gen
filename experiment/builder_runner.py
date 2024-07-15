@@ -200,7 +200,7 @@ class BuilderRunner:
            '`LLVMFuzzerTestOneInput`.')
       ]
       logger.info(f'Missing target function: {target_path} does not contain '
-            f'{self.benchmark.function_signature}')
+                  f'{self.benchmark.function_signature}')
 
     return result
 
@@ -258,7 +258,7 @@ class BuilderRunner:
             func_info[func_name].add(line_number)
           else:
             logger.warning('Failed to parse line number from %s in project %s',
-                            func_name, project_name)
+                           func_name, project_name)
           break
         if project_name in file_path:
           func_match = self.FUNC_NAME.search(func_name)
@@ -629,7 +629,8 @@ class BuilderRunner:
             f'Failed to build fuzzer for {generated_project} with {sanitizer}')
         return False
 
-    logger.info(f'Successfully build fuzzer for {generated_project} with {sanitizer}')
+    logger.info(
+        f'Successfully build fuzzer for {generated_project} with {sanitizer}')
     return True
 
   def get_coverage_local(
@@ -669,8 +670,8 @@ class BuilderRunner:
              check=True)
     except sp.CalledProcessError as e:
       logger.info(f'Failed to generate coverage for {generated_project}:\n'
-            f'{e.stdout}\n'
-            f'{e.stderr}')
+                  f'{e.stdout}\n'
+                  f'{e.stderr}')
       return None, None
 
     if self.benchmark.language == 'jvm':
@@ -744,8 +745,8 @@ class CloudBuilderRunner(BuilderRunner):
 
         if not delay or attempt_id == CLOUD_EXP_MAX_ATTEMPT:
           logger.error('Failed to evaluate %s on cloud, attempt %d:\n%s\n%s',
-                        os.path.realpath(target_path), attempt_id, stdout,
-                        stderr)
+                       os.path.realpath(target_path), attempt_id, stdout,
+                       stderr)
           break
 
         logger.warning(
@@ -835,11 +836,11 @@ class CloudBuilderRunner(BuilderRunner):
       blob = bucket.blob(build_log_name)
       if blob.exists():
         logger.info('Downloading cloud build log of %s: %s to %s',
-                     os.path.realpath(target_path), build_log_name, f)
+                    os.path.realpath(target_path), build_log_name, f)
         blob.download_to_file(f)
       else:
         logger.warning('Cannot find cloud build log of %s: %s',
-                        os.path.realpath(target_path), build_log_name)
+                       os.path.realpath(target_path), build_log_name)
 
     # Ignored for JVM project since JVM project does not generate err.log
     if language != 'jvm':
@@ -849,11 +850,11 @@ class CloudBuilderRunner(BuilderRunner):
         blob = bucket.blob(err_log_name)
         if blob.exists():
           logger.info('Downloading jcc error log of %s: %s to %s',
-                       os.path.realpath(target_path), err_log_name, f)
+                      os.path.realpath(target_path), err_log_name, f)
           blob.download_to_file(f)
         else:
           logger.warning('Cannot find jcc error log of %s: %s',
-                          os.path.realpath(target_path), err_log_name)
+                         os.path.realpath(target_path), err_log_name)
 
     with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
               'wb') as f:
@@ -861,11 +862,11 @@ class CloudBuilderRunner(BuilderRunner):
       if blob.exists():
         build_result.succeeded = True
         logger.info('Downloading cloud run log of %s: %s to %s',
-                     os.path.realpath(target_path), run_log_name, f)
+                    os.path.realpath(target_path), run_log_name, f)
         blob.download_to_file(f)
       else:
         logger.warning('Cannot find cloud run log of %s: %s',
-                        os.path.realpath(target_path), run_log_name)
+                       os.path.realpath(target_path), run_log_name)
 
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(
@@ -873,10 +874,10 @@ class CloudBuilderRunner(BuilderRunner):
           os.path.basename(self.benchmark.target_path))
       build_result.errors = errors
       logger.info('Cloud evaluation of %s indicates a failure: %s',
-                   os.path.realpath(target_path), errors)
+                  os.path.realpath(target_path), errors)
       return build_result, None
     logger.info('Cloud evaluation of %s indicates a success.',
-                 os.path.realpath(target_path))
+                os.path.realpath(target_path))
 
     corpus_dir = self.work_dirs.corpus(generated_target_name)
     with open(os.path.join(corpus_dir, 'corpus.zip'), 'wb') as f:

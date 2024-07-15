@@ -96,7 +96,8 @@ def _bucket_match_target_content_signatures(
     logger.info('Error: No fuzz target functions available.')
     return {}
   if not os.path.isdir(fuzz_target_dir):
-    logger.info('Error: Fuzz target directory does not exist ({fuzz_target_dir})')
+    logger.info(
+        'Error: Fuzz target directory does not exist ({fuzz_target_dir})')
     return {}
 
   target_path_contents = _match_target_path_content(list(target_funcs.keys()),
@@ -145,11 +146,13 @@ def generate_data(project_name: str,
       target_funcs, project_fuzz_target_dir, project_name)
 
   if target_content_signature_dict:
-    logger.info(f'Downloaded human-written fuzz targets of {project_name} from Google'
-          f' Cloud Bucket: {OSS_FUZZ_EXP_BUCKET}.')
+    logger.info(
+        f'Downloaded human-written fuzz targets of {project_name} from Google'
+        f' Cloud Bucket: {OSS_FUZZ_EXP_BUCKET}.')
   else:
-    logger.info(f'Failed to download human-written fuzz target of {project_name} '
-          f'from Google Cloud Bucket: {OSS_FUZZ_EXP_BUCKET}.')
+    logger.info(
+        f'Failed to download human-written fuzz target of {project_name} '
+        f'from Google Cloud Bucket: {OSS_FUZZ_EXP_BUCKET}.')
     logger.info('Will try to build from Google Cloud or local docker image.')
     target_content_signature_dict = _match_target_content_signatures(
         target_funcs, project_name, language, cloud_experiment_bucket)

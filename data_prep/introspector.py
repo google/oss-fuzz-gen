@@ -195,8 +195,8 @@ def _get_data(resp: Optional[requests.Response], key: str,
     return content
 
   logger.error('Failed to get %s from FI:\n'
-                '%s\n'
-                '%s', key, resp.url, data)
+               '%s\n'
+               '%s', key, resp.url, data)
   return default_value
 
 
@@ -477,7 +477,7 @@ def get_raw_function_name(function: dict, project: str) -> str:
               function.get('raw_function_name', ''))
   if not raw_name:
     logger.error('No raw function name in project: %s for function: %s',
-                  project, function)
+                 project, function)
   return raw_name
 
 
@@ -678,7 +678,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
 
   target_name = get_target_name(project, harness)
   logger.info('Fuzz target binary found for project %s: %s', project,
-               target_name)
+              target_name)
 
   potential_benchmarks = []
   for function in functions:
@@ -887,7 +887,7 @@ if __name__ == '__main__':
     oss_fuzz_checkout.postprocess_oss_fuzz()
   except subprocess.CalledProcessError as e:
     logger.error('Failed to prepare OSS-Fuzz directory for project %s: %s',
-                  args.project, e)
+                 args.project, e)
   cur_project_language = oss_fuzz_checkout.get_project_language(args.project)
   benchmarks = populate_benchmarks_using_introspector(args.project,
                                                       cur_project_language,

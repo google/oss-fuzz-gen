@@ -392,7 +392,8 @@ def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
   # code.
   preferred_fix_path, preferred_fix_code = max(fixed_code_candidates,
                                                key=lambda x: len(x[1]))
-  logger.info(f'Will use the longest fix: {os.path.relpath(preferred_fix_path)}.')
+  logger.info(
+      f'Will use the longest fix: {os.path.relpath(preferred_fix_path)}.')
   preferred_fix_name, _ = os.path.splitext(preferred_fix_path)
   fixed_target_path = os.path.join(response_dir,
                                    f'{preferred_fix_name}{target_ext}')

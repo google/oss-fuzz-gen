@@ -99,7 +99,7 @@ class Benchmark:
         fixed_code = code_file.read()
       if not all_targets.get(instance):
         logger.warning('Benchmark instance does not exist: %s - %s',
-                        self.benchmark_dir, instance)
+                       self.benchmark_dir, instance)
         continue
       all_targets[instance].append(fixed_code)
     return all_targets
@@ -117,7 +117,7 @@ class Benchmark:
       status_json_path = os.path.join(status_dir, instance, 'result.json')
       if not os.path.isfile(status_json_path):
         logger.info('Missing result JSON of benchmark instance: %s - %s',
-                     self.benchmark, instance)
+                    self.benchmark, instance)
         continue
       with open(status_json_path) as file:
         try:

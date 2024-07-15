@@ -16,10 +16,10 @@ LLM-generated project Evaluator.
 """
 import dataclasses
 import json
+import logging
 import os
 import re
 import shutil
-import logging
 from typing import Optional
 
 from google.cloud import storage
@@ -223,7 +223,7 @@ class Evaluator:
         error_desc, errors = run_result.semantic_check.get_error_info()
       else:
         dual_logger.log(f'Warning: Build succeed but no run_result in '
-                   f'{generated_oss_fuzz_project}.')
+                        f'{generated_oss_fuzz_project}.')
         error_desc, errors = '', []
     else:
       error_desc, errors = None, build_result.errors
@@ -285,8 +285,9 @@ class Evaluator:
             generated_oss_fuzz_project, target_path, llm_fix_count,
             self.benchmark.language)
       except Exception as e:
-        dual_logger.log('Exception occurred when building and running fuzz target '
-                   f'in attempt {llm_fix_count}: {e}')
+        dual_logger.log(
+            'Exception occurred when building and running fuzz target '
+            f'in attempt {llm_fix_count}: {e}')
         build_result = BuildResult()
         run_result = None
 
@@ -301,33 +302,34 @@ class Evaluator:
         break
       llm_fix_count += 1
       dual_logger.log(f'Fixing {target_path} with '
-                 f'{self.builder_runner.fixer_model_name}, '
-                 f'attempt {llm_fix_count}.')
+                      f'{self.builder_runner.fixer_model_name}, '
+                      f'attempt {llm_fix_count}.')
       try:
         self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
                                         target_path, llm_fix_count,
                                         build_result, run_result, dual_logger)
       except Exception as e:
         dual_logger.log('Exception occurred when fixing fuzz target in attempt '
-                   f'{llm_fix_count}: {e}')
+                        f'{llm_fix_count}: {e}')
         break
 
     # Logs and returns the result.
     if not build_result.succeeded:
       dual_logger.log(f'Failed to build {target_path} with '
-                 f'{self.builder_runner.fixer_model_name} in '
-                 f'{llm_fix_count} iterations of fixing.')
+                      f'{self.builder_runner.fixer_model_name} in '
+                      f'{llm_fix_count} iterations of fixing.')
       return dual_logger.return_result(
           Result(False, False, 0.0, 0.0, '', '', False,
                  SemanticCheckResult.NOT_APPLICABLE,
                  TriageResult.NOT_APPLICABLE))
 
     dual_logger.log(f'Successfully built {target_path} with '
-               f'{self.builder_runner.fixer_model_name} in '
-               f'{llm_fix_count} iterations of fixing.')
+                    f'{self.builder_runner.fixer_model_name} in '
+                    f'{llm_fix_count} iterations of fixing.')
 
     if not run_result:
-      dual_logger.log(f'Warning: no run result in {generated_oss_fuzz_project}.')
+      dual_logger.log(
+          f'Warning: no run result in {generated_oss_fuzz_project}.')
       return dual_logger.return_result(
           Result(True, False, 0.0, 0.0, '', '', False,
                  SemanticCheckResult.NOT_APPLICABLE,
@@ -335,7 +337,7 @@ class Evaluator:
 
     # Triage the crash with LLM
     dual_logger.log(f'Triaging the crash related to {target_path} with '
-               f'{self.builder_runner.fixer_model_name}.')
+                    f'{self.builder_runner.fixer_model_name}.')
     run_result.triage = self.triage_crash(
         ai_binary,
         generated_oss_fuzz_project,
@@ -355,8 +357,8 @@ class Evaluator:
 
     if not run_result.succeeded:
       dual_logger.log(f'Warning: Failed to fix semantic error '
-                 f'{run_result.semantic_check.type}'
-                 f' in {generated_oss_fuzz_project}.')
+                      f'{run_result.semantic_check.type}'
+                      f' in {generated_oss_fuzz_project}.')
       return dual_logger.return_result(
           Result(True, run_result.crashes, 0.0, 0.0,
                  run_result.coverage_report_path, run_result.reproducer_path,
@@ -383,7 +385,8 @@ class Evaluator:
     if run_result.total_pcs:
       coverage_percent = run_result.cov_pcs / run_result.total_pcs
     else:
-      dual_logger.log(f'Warning: total_pcs == 0 in {generated_oss_fuzz_project}.')
+      dual_logger.log(
+          f'Warning: total_pcs == 0 in {generated_oss_fuzz_project}.')
       coverage_percent = 0.0
 
     existing_textcov = self._load_existing_textcov()
@@ -392,14 +395,16 @@ class Evaluator:
     if total_lines:
       coverage_diff = run_result.coverage.covered_lines / total_lines
     else:
-      dual_logger.log(f'Warning: total_lines == 0 in {generated_oss_fuzz_project}.')
+      dual_logger.log(
+          f'Warning: total_lines == 0 in {generated_oss_fuzz_project}.')
       coverage_diff = 0.0
 
-    dual_logger.log(f'Result for {generated_oss_fuzz_project}: '
-               f'crashes={run_result.crashes}, coverage={coverage_percent} '
-               f'({run_result.cov_pcs}/{run_result.total_pcs}), '
-               f'coverage diff={coverage_diff} '
-               f'({run_result.coverage.covered_lines}/{total_lines})')
+    dual_logger.log(
+        f'Result for {generated_oss_fuzz_project}: '
+        f'crashes={run_result.crashes}, coverage={coverage_percent} '
+        f'({run_result.cov_pcs}/{run_result.total_pcs}), '
+        f'coverage diff={coverage_diff} '
+        f'({run_result.coverage.covered_lines}/{total_lines})')
     return dual_logger.return_result(
         Result(True, run_result.crashes, coverage_percent, coverage_diff,
                run_result.coverage_report_path, run_result.reproducer_path,

@@ -88,7 +88,7 @@ def generate_targets(benchmark: Benchmark,
                      debug: bool = DEBUG) -> list[str]:
   """Generates fuzz target with LLM."""
   logger.info(f'Generating targets for {benchmark.project} '
-        f'{benchmark.function_signature} using {model.name}..')
+              f'{benchmark.function_signature} using {model.name}..')
   model.query_llm(prompt, response_dir=work_dirs.raw_targets, log_output=debug)
 
   _, target_ext = os.path.splitext(benchmark.target_path)
@@ -195,7 +195,7 @@ def check_targets(
         p.starmap(evaluator.check_target, ai_target_pairs)):
       if target_stat is None:
         logger.error('This should never happen: Error evaluating target: %s',
-                      generated_targets[i])
+                     generated_targets[i])
         target_stat = exp_evaluator.Result()
 
       target_stats.append((i, target_stat))

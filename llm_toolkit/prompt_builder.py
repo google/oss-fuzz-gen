@@ -534,7 +534,7 @@ class DefaultTemplateBuilder(PromptBuilder):
       return '\n'.join(result)
 
     logger.warning('Failed to slice Project: %s Function: %s at Lines: %s',
-                    project, func_name, target_lines)
+                   project, func_name, target_lines)
     return ''
 
 

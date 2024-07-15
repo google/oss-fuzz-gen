@@ -163,13 +163,15 @@ def _copy_project_src(project: str,
                       cloud_experiment_bucket: str = ''):
   """Copies /|src| from cloud if bucket is available or from local image."""
   if cloud_experiment_bucket:
-    logger.info(f'Retrieving human-written fuzz targets of {project} from Google '
-          'Cloud Build.')
+    logger.info(
+        f'Retrieving human-written fuzz targets of {project} from Google '
+        'Cloud Build.')
     bucket_dirname = _build_project_on_cloud(project, cloud_experiment_bucket)
     _copy_project_src_from_cloud(bucket_dirname, out, cloud_experiment_bucket)
   else:
-    logger.info(f'Retrieving human-written fuzz targets of {project} from local '
-          'Docker build.')
+    logger.info(
+        f'Retrieving human-written fuzz targets of {project} from local '
+        'Docker build.')
     _build_project_local_docker(project)
     _copy_project_src_from_local(project, out)
 
@@ -374,12 +376,12 @@ def _copy_fuzz_targets(harness_path: str, dest_dir: str, project: str):
   result = sp.run(command, capture_output=True, stdin=sp.DEVNULL, check=True)
   if result.returncode:
     logger.error('Failed to copy harness from %s to %s: %s %s.', harness_path,
-                  dest_dir, result.stdout, result.stderr)
+                 dest_dir, result.stdout, result.stderr)
     raise Exception(f'Failed to copy harness from {harness_path} to {dest_dir}',
                     harness_path, dest_dir)
 
   logger.info('Retrieved fuzz targets from %s:\n  %s', project,
-               '\n  '.join(os.listdir(dest_dir)))
+              '\n  '.join(os.listdir(dest_dir)))
 
 
 def search_source(

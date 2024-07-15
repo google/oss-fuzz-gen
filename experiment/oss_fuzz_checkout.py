@@ -153,7 +153,7 @@ def get_project_language(project: str) -> str:
                                    'project.yaml')
   if not os.path.isfile(project_yaml_path):
     logger.warning('Failed to find the project yaml of %s, assuming it is C++',
-                    project)
+                   project)
     return 'C++'
 
   with open(project_yaml_path, 'r') as benchmark_file:
