@@ -1,14 +1,14 @@
 <task>
-Your goal is to write a fuzzing harness for the provided method signature using Jazzer framework from Code Intellengence. It is important that the provided solution compiles and actually calls the function specified by the method signature:
+Your goal is to write a fuzzing harness for the provided method signature to fuzz the method with random data. It is important that the provided solution compiles and actually calls the function specified by the method signature:
 {TARGET}
 {ARGUMENTS}
 {CONSTRUCTORS}
 {EXCEPTIONS}
-Here is the source code of the target constructor for reference.
+Here is the source code of the target {METHOD_OR_CONSTRUCTOR} for reference.
 <code>
 {SELF_SOURCE}
 </code>
-Here is a list of source codes of methods that directly invoke the target consturctor for reference.
+Here is a list of source codes of methods/constructors that directly invoke the target {METHOD_OR_CONSTRUCTOR} for reference.
 {CROSS_SOURCE}
 {REQUIREMENTS}
 {DATA_MAPPING}

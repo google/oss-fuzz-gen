@@ -679,7 +679,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     method_str = self._get_methods_for_simple_type(arg_type)
 
     # java.lang.Object argument
-    if 'java.lang.Object' in arg_type:
+    if 'Object' in arg_type.split('.')[-1]:
       base = self._get_template(self.object_arg_description_template_file)
       prefix = f'Argument #{count} requires an Object instance\n'
       argument = f'<argument>{prefix}{base}</argument>'
@@ -711,14 +711,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     argument = argument.replace('{ARG_TYPE}', arg_type)
     return argument
 
-  def _format_target(self, signature: str) -> str:
+  def _format_target(self, signature: str) -> tuple[bool, str]:
     """Determine if the signature is a constructor or a general
        method and format it for the prompts creation.
     """
     if '<init>' in signature:
-      return self._format_target_constructor(signature)
+      return True, self._format_target_constructor(signature)
 
-    return self._format_target_method(signature)
+    return False, self._format_target_method(signature)
 
   def _format_requirement(self, signature: str) -> str:
     """Formats a requirement based on the prompt template."""
@@ -846,7 +846,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats a problem based on the prompt template."""
     base = self._get_template(self.base_template_file)
     problem = base + self._get_template(self.problem_template_file)
-    problem = problem.replace('{TARGET}', self._format_target(signature))
+    is_constructor, target_str = self._format_target(signature)
+    problem = problem.replace('{TARGET}', target_str)
     problem = problem.replace('{REQUIREMENTS}',
                               self._format_requirement(signature))
     problem = problem.replace('{ARGUMENTS}', self._format_arguments())
@@ -856,6 +857,10 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self_source, cross_source = self._format_source_reference(signature)
     problem = problem.replace('{SELF_SOURCE}', self_source)
     problem = problem.replace('{CROSS_SOURCE}', cross_source)
+    if is_constructor:
+      problem = problem.replace('{METHOD_OR_CONSTRUCTOR}', 'constructor')
+    else:
+      problem = problem.replace('{METHOD_OR_CONSTRUCTOR}', 'method')
 
     problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
     problem = problem.replace("{PROJECT_URL}", self.project_url)
@@ -885,15 +890,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
             'FuzzedDataProvider::consumeInt()',
             'FuzzedDataProvider::consumeInt(int, int)'
         ],
-        'java.lang.Integer': [
-            'FuzzedDataProvider::consumeInt()',
-            'FuzzedDataProvider::consumeInt(int,int)'
-        ],
         'boolean': [
-            'FuzzedDataProvider::consumeBoolean()',
-            'FuzzedDataProvider::pickValue(boolean[])'
-        ],
-        'java.lang.Boolean': [
             'FuzzedDataProvider::consumeBoolean()',
             'FuzzedDataProvider::pickValue(boolean[])'
         ],
@@ -905,15 +902,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
             'FuzzedDataProvider::consumeBytes(int)',
             'FuzzedDataProvider::consumeRemainingAsBytes()'
         ],
-        'java.lang.Byte': [
-            'FuzzedDataProvider::consumeByte()',
-            'FuzzedDataProvider::consumeByte(byte,byte)'
-        ],
         'short': [
-            'FuzzedDataProvider::consumeShort()',
-            'FuzzedDataProvider::consumeShort(short,short)'
-        ],
-        'java.lang.Short': [
             'FuzzedDataProvider::consumeShort()',
             'FuzzedDataProvider::consumeShort(short,short)'
         ],
@@ -921,29 +910,13 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
             'FuzzedDataProvider::consumeLong()',
             'FuzzedDataProvider::consumeLong(long, long)'
         ],
-        'java.lang.Long': [
-            'FuzzedDataProvider::consumeLong()',
-            'FuzzedDataProvider::consumeLong(long,long)'
-        ],
         'float': [
             'FuzzedDataProvider::consumeFloat()',
             'FuzzedDataProvider::consumeRegularFloat()',
             'FuzzedDataProvider::consumeRegularFloat(float,float)',
             'FuzzedDataProvider::consumeProbabilityFloat()'
         ],
-        'java.lang.Float': [
-            'FuzzedDataProvider::consumeFloat()',
-            'FuzzedDataProvider::consumeRegularFloat()',
-            'FuzzedDataProvider::consumeRegularFloat(float, float)',
-            'FuzzedDataProvider::consumeProbabilityFloat()'
-        ],
         'double': [
-            'FuzzedDataProvider::consumeDouble()',
-            'FuzzedDataProvider::consumeRegularDouble()',
-            'FuzzedDataProvider::consumeRegularDouble(double, double)',
-            'FuzzedDataProvider::consumeProbabilityDouble()'
-        ],
-        'java.lang.Double': [
             'FuzzedDataProvider::consumeDouble()',
             'FuzzedDataProvider::consumeRegularDouble()',
             'FuzzedDataProvider::consumeRegularDouble(double, double)',
@@ -954,19 +927,19 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
             'FuzzedDataProvider::consumeCharNoSurrogates()',
             'FuzzedDataProvider::consumeChar(char, char)'
         ],
-        'java.lang.Character': [
-            'FuzzedDataProvider::consumeChar()',
-            'FuzzedDataProvider::consumeCharNoSurrogates()',
-            'FuzzedDataProvider::consumeChar(char,char)'
-        ],
-        'java.lang.String': [
+        'string': [
             'FuzzedDataProvider::consumeString(int)',
             'FuzzedDataProvider::consumeAsciiString(int)',
             'FuzzedDataProvider::consumeRemainingAsString()',
             'FuzzedDataProvider::consumeRemainingAsAsciiString()'
         ],
-        'java.lang.Class': ['Object::getClass()']
+        'class': ['Object::getClass()']
     }
+
+    # Extract simple type
+    simple_type = simple_type.replace('java.lang.Integer', 'int')
+    simple_type = simple_type.replace('java.lang.Character', 'char')
+    simple_type = simple_type.split('.')[-1].lower()
 
     if simple_type in simple_type_mapping:
       return ' or '.join(simple_type_mapping[simple_type])

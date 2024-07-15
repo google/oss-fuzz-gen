@@ -34,9 +34,5 @@ the generic type of that argument is matched.
 If the required argument is an array but it is not found in the first column of the above mapping table, please use the array initialisation approach and fill it with random numbers of data of the required
 argument types.
 </item>
-<item>
-If the required argument are instance of java.lang.Object, please use any method mentioned in the second column of the above table. Please do not use any methods that do not exist in the above table. Never
-call the FuzzedDataProvider::consumeObject() as this is not a supported method.
-</item>
 </requirement>
 </data_mapping>
