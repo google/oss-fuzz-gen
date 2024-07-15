@@ -37,6 +37,8 @@ from vertexai.preview.language_models import CodeGenerationModel
 
 from llm_toolkit import prompts
 
+logger = logging.getLogger(__name__)
+
 # Model hyper-parameters.
 MAX_TOKENS: int = 2000
 NUM_SAMPLES: int = 1
@@ -204,7 +206,7 @@ class GPT(LLM):
     try:
       encoder = tiktoken.encoding_for_model(self.name)
     except KeyError:
-      print(f'Could not get a tiktoken encoding for {self.name}.')
+      logger.info(f'Could not get a tiktoken encoding for {self.name}.')
       encoder = tiktoken.get_encoding('cl100k_base')
 
     num_tokens = 0
@@ -228,9 +230,9 @@ class GPT(LLM):
                 log_output: bool = False) -> None:
     """Queries OpenAI's API and stores response in |response_dir|."""
     if self.ai_binary:
-      print(f'OpenAI does not use local AI binary: {self.ai_binary}')
+      logger.info(f'OpenAI does not use local AI binary: {self.ai_binary}')
     if self.temperature_list:
-      print(f'OpenAI does not allow temperature list: {self.temperature_list}')
+      logger.info(f'OpenAI does not allow temperature list: {self.temperature_list}')
 
     client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
@@ -242,7 +244,7 @@ class GPT(LLM):
         openai.OpenAIError)
     # TODO: Add a default value for completion.
     if log_output:
-      print(completion)
+      logger.info(completion)
     for index, choice in enumerate(completion.choices):  # type: ignore
       content = choice.message.content
       self._save_output(index, content, response_dir)
@@ -279,10 +281,10 @@ class GoogleModel(LLM):
                 log_output: bool = False) -> None:
     """Queries a Google LLM and stores results in |response_dir|."""
     if not self.ai_binary:
-      print(f'Error: This model requires a local AI binary: {self.ai_binary}')
+      logger.info(f'Error: This model requires a local AI binary: {self.ai_binary}')
       sys.exit(1)
     if self.temperature_list:
-      print('AI Binary does not implement temperature list: '
+      logger.info('AI Binary does not implement temperature list: '
             f'{self.temperature_list}')
 
     with tempfile.NamedTemporaryFile(delete=False, mode='w') as f:
@@ -310,9 +312,9 @@ class GoogleModel(LLM):
       stdout, stderr = proc.communicate()
 
       if proc.returncode != 0:
-        print(f'Failed to generate targets with prompt {prompt.get()}')
-        print(f'stdout: {stdout}')
-        print(f'stderr: {stderr}')
+        logger.info(f'Failed to generate targets with prompt {prompt.get()}')
+        logger.info(f'stdout: {stdout}')
+        logger.info(f'stderr: {stderr}')
     finally:
       os.unlink(prompt_path)
 
@@ -355,7 +357,7 @@ class VertexAIModel(GoogleModel):
                 log_output: bool = False) -> None:
     del log_output
     if self.ai_binary:
-      print(f'VertexAI does not use local AI binary: {self.ai_binary}')
+      logger.info(f'VertexAI does not use local AI binary: {self.ai_binary}')
 
     model = self.get_model()
     parameters_list = self._prepare_parameters()

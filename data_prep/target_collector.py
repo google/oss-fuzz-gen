@@ -20,12 +20,15 @@
 
 import datetime
 import json
+import logging
 import os
 import shutil
 import sys
 from typing import Set
 
 import requests
+
+logger = logging.getLogger(__name__)
 
 
 def _extract_introspector_report(project_name, date_str):
@@ -47,7 +50,7 @@ def _get_targets(project_name: str) -> Set[str]:
   introspector_json_report = _extract_introspector_report(
       project_name, yesterday.strftime('%Y%m%d'))
   if introspector_json_report is None:
-    print('Error: No fuzz introspector report is found.')
+    logger.info('Error: No fuzz introspector report is found.')
     return set()
 
   annotated_cfg = introspector_json_report['analyses']['AnnotatedCFG']

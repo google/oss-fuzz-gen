@@ -9,6 +9,8 @@ from typing import Any
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 
+logger = logging.getLogger(__name__)
+
 COMPLEX_TYPES = ['const', 'enum', 'struct', 'union', 'volatile']
 
 

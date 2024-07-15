@@ -27,6 +27,8 @@ from llm_toolkit import models
 from llm_toolkit import output_parser as parser
 from llm_toolkit import prompt_builder
 
+logger = logging.getLogger(__name__)
+
 ERROR_LINES = 20
 NO_MEMBER_ERROR_REGEX = r"error: no member named '.*' in '([^':]*):?.*'"
 FILE_NOT_FOUND_ERROR_REGEX = r"fatal error: '([^']*)' file not found"
@@ -284,7 +286,7 @@ def extract_error_message(log_path: str,
         for line in log_lines[error_lines_range[0]:error_lines_range[1] + 1])
 
   if not errors:
-    logging.warning('Failed to parse error message from %s.', log_path)
+    logger.warning('Failed to parse error message from %s.', log_path)
   return group_error_messages(errors)
 
 
@@ -377,7 +379,7 @@ def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
     fixed_code_candidates.append([fixed_code_path, fixed_code])
 
   if not fixed_code_candidates:
-    print(f'LLM did not generate rawoutput for {prompt_path}.')
+    logger.info(f'LLM did not generate rawoutput for {prompt_path}.')
     return
 
   # TODO(Dongge): Use the common vote:
@@ -390,7 +392,7 @@ def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
   # code.
   preferred_fix_path, preferred_fix_code = max(fixed_code_candidates,
                                                key=lambda x: len(x[1]))
-  print(f'Will use the longest fix: {os.path.relpath(preferred_fix_path)}.')
+  logger.info(f'Will use the longest fix: {os.path.relpath(preferred_fix_path)}.')
   preferred_fix_name, _ = os.path.splitext(preferred_fix_path)
   fixed_target_path = os.path.join(response_dir,
                                    f'{preferred_fix_name}{target_ext}')
