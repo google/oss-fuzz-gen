@@ -797,9 +797,11 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       constructor_sig = ctr.get('function_signature')
       if constructor_sig:
         constructors.append(f'<signature>{constructor_sig}</signature>')
+        self.benchmark.exceptions.extend(ctr.get('exceptions'))
 
     if constructors:
       ctr_str = '\n'.join(constructors)
+      self.benchmark.exceptions = list(set(self.benchmark.exceptions))
       return f'<constructors>{ctr_str}</constructors>'
 
     functions = []
@@ -810,6 +812,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       function_sig = func.get('function_signature')
       if not function_sig:
         continue
+      self.benchmark.exceptions.extend(func.get('exceptions'))
       if is_static:
         functions.append(f'<item><signature>{function_sig}</signature></item>')
       else:
@@ -823,6 +826,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         functions.append(function_str)
     if functions:
       func_str = '\n'.join(functions)
+      self.benchmark.exceptions = list(set(self.benchmark.exceptions))
       return f'<constructors>{func_str}</constructors>'
 
     return ''
