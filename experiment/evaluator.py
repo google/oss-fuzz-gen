@@ -263,7 +263,7 @@ class Evaluator:
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects',
                                           generated_oss_fuzz_project)
-    generated_corp = corpus_generator.generate_corpus(
+    generated_corp = corpus_generator.get_corpus_generator_script(
         ai_binary, self.builder_runner.fixer_model_name, target_path,
         self.benchmark)
 

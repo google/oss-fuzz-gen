@@ -24,14 +24,19 @@ from llm_toolkit import output_parser as parser
 from llm_toolkit import prompt_builder
 
 
-def generate_corpus(
+def get_corpus_generator_script(
     ai_binary: str,
     fixer_model_name: str,
     target_harness_path: str,
     benchmark: Benchmark,
 ) -> str:
   """Uses LLMs to generate a python script that will create a seed corpus for a
-  harness."""
+  harness.
+
+  The script generated is purely generated and should be considered untrusted
+  in the general sense. OSS-Fuzz-gen already executes arbitrary code since
+  OSS-Fuzz-gen executes arbitrary open source projects with no checking on
+  what code is committed to the given projects."""
   corpus_model = models.LLM.setup(
       ai_binary=ai_binary,
       name=fixer_model_name,
