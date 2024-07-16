@@ -547,6 +547,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self._template_dir = template_dir
     self.benchmark = benchmark
     self.project_url = self._find_project_url(self.benchmark.project)
+    self.exceptions = set(self.benchmark.exceptions)
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
@@ -622,9 +623,12 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _format_exceptions(self) -> str:
     """Formats the exception thrown from this method or constructor."""
-    if self.benchmark.exceptions:
-      return '<exceptions>' + '\n'.join(
-          self.benchmark.exceptions) + '</exceptions>'
+    if self.exceptions:
+      exception_str_list = [
+          f'<exception>{exp}</exception>' for exp in self.exceptions
+      ]
+      return '<exceptions>\n' + '\n'.join(
+          exception_str_list) + '\n</exceptions>'
 
     return ''
 
@@ -797,6 +801,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       constructor_sig = ctr.get('function_signature')
       if constructor_sig:
         constructors.append(f'<signature>{constructor_sig}</signature>')
+        self.exceptions.update(ctr.get('exceptions', []))
 
     if constructors:
       ctr_str = '\n'.join(constructors)
@@ -810,6 +815,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       function_sig = func.get('function_signature')
       if not function_sig:
         continue
+      self.exceptions.update(func.get('exceptions', []))
       if is_static:
         functions.append(f'<item><signature>{function_sig}</signature></item>')
       else:
