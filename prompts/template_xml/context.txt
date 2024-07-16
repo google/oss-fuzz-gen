@@ -1,14 +1,11 @@
-{% if headers %}
-
-The code block below contains the header files which you must include. The function requires these header files to successfully compile.
-If the headers are private, do not include them.
-Header files:
+{% if include_statement %}
+You must add the following #include statement in the fuzz target, its header file defines the function-under-test.
 <code>
-{{ headers }}
+{{ include_statement }}
 </code>
 {% endif %}
-{% if must_insert %}
 
+{% if must_insert %}
 You must insert code in the below code block before the function being tested:
 <code>
 {{ must_insert }}

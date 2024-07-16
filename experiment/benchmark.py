@@ -185,10 +185,29 @@ class Benchmark:
     return get_file_type(self.target_path)
 
   @property
+  def is_c_target(self) -> bool:
+    """Validates if the project is written in C."""
+    return self.file_type.value.lower() == 'c'
+
+  @property
+  def is_cpp_target(self) -> bool:
+    """Validates if the project is written in C++."""
+    return self.file_type.value.lower() == 'c++'
+
+  @property
+  def is_c_projcet(self) -> bool:
+    """Validates if the project is written in C."""
+    return self.language.lower() == 'c'
+
+  @property
+  def is_cpp_projcet(self) -> bool:
+    """Validates if the project is written in C++."""
+    return self.language.lower() == 'c++'
+
+  @property
   def needs_extern(self) -> bool:
     """Checks if it is C++ fuzz target for a C project, which needs `extern`."""
-    return (self.file_type.value.lower() == 'c++' and
-            self.language.lower() == 'c')
+    return self.is_cpp_target and self.is_c_projcet
 
 
 def get_file_type(file_path: str) -> FileType:

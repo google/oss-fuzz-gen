@@ -30,6 +30,7 @@ from llm_toolkit import prompt_builder
 ERROR_LINES = 20
 NO_MEMBER_ERROR_REGEX = r"error: no member named '.*' in '([^':]*):?.*'"
 FILE_NOT_FOUND_ERROR_REGEX = r"fatal error: '([^']*)' file not found"
+UNDEFINED_REF_ERROR_REGEX = r"undefined reference to `([^']*)'"
 UNKNOWN_TYPE_ERROR = 'error: unknown type name'
 
 # The following strings identify errors when a C fuzz target attempts to use
@@ -461,12 +462,70 @@ def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
   for error in errors:
     instruction += _collect_instruction_file_not_found(benchmark, error,
                                                        fuzz_target_source_code)
+    instruction += _collect_instruction_undefined_reference(
+        benchmark, error, fuzz_target_source_code)
   instruction += _collect_instruction_fdp_in_c_target(benchmark, errors,
                                                       fuzz_target_source_code)
   instruction += _collect_instruction_no_goto(fuzz_target_source_code)
   instruction += _collect_instruction_builtin_libs_first(benchmark, errors)
   instruction += _collect_instruction_extern(benchmark)
 
+  return instruction
+
+
+def _collect_instruction_undefined_reference(
+    benchmark: benchmarklib.Benchmark, error: str,
+    fuzz_target_source_code: str) -> str:
+  """Collects the instructions to fix the 'undefined reference' errors."""
+  matched_funcs = re.findall(UNDEFINED_REF_ERROR_REGEX, error)
+  if not matched_funcs:
+    return ''
+  instruction = ''
+  for undefined_func in matched_funcs:
+    if undefined_func == 'LLVMFuzzerTestOneInput':
+      continue
+    ci = context_introspector.ContextRetriever(benchmark)
+    header_file = ci.get_prefixed_header_file_by_name(undefined_func)
+    if header_file and header_file not in fuzz_target_source_code:
+      instruction += (
+          'You must add the following #include statement to fix the error of '
+          f'<error>undefined reference to {undefined_func}</error>:\n<code>\n'
+          f'{header_file}\n</code>.\n')
+    elif not header_file and benchmark.is_c_projcet:
+      instruction += (
+          f'You must remove the function <code>{undefined_func}</code> from the'
+          ' generated fuzz target, because the function does not exist.\n')
+    elif not header_file or header_file in fuzz_target_source_code:
+      # C project: NO header file found, or
+      # C++: Cannot map demangled C++ function name to signature
+      source_file = ci.get_prefixed_source_file(undefined_func)
+      if not source_file and benchmark.function_name in undefined_func:
+        source_file = ci.get_prefixed_source_file()
+      if source_file:
+        if header_file:
+          # To avoid redefinition.
+          instruction += ('You must remove the following statement\n<code>\n'
+                          f'{header_file}</code>\n')
+        instruction += (
+            'You must add the following #include statement to fix the error of '
+            f"<error>undefined reference to `{undefined_func}'</error>:\n"
+            f'<code>\n{source_file}\n</code>.\n')
+    else:
+      instruction += (
+          f"To fix <error>undefined reference to `{undefined_func}'</error>,"
+          'check the library documentation (e.g. README.md, comments) for '
+          'special instructions, such as required macros or specific inclusion '
+          'methods. Ensure any necessary definitions or inclusions are '
+          'correctly implemented in your generated fuzz target, following the '
+          "library's guidance.")
+    if not instruction:
+      instruction += (
+          f"To fix <error>undefined reference to `{undefined_func}'</error>,"
+          'check the library documentation (e.g. README.md, comments) for '
+          'special instructions, such as required macros or specific inclusion '
+          'methods. Ensure any necessary definitions or inclusions are '
+          'correctly implemented in your generated fuzz target, following the '
+          "library's guidance.")
   return instruction
 
 
@@ -498,8 +557,8 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
     return instruction
 
   # Step 3: Suggest the header/source file of the function under test.
-  function_file = ci.get_target_function_file_path()
-  if f'#include "{function_file}"' in fuzz_target_source_code:
+  function_file = ci.get_prefixed_header_file()
+  if function_file and f'#include "{function_file}"' in fuzz_target_source_code:
     function_file_base_name = os.path.basename(function_file)
 
     instruction += (
