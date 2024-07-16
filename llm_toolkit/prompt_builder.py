@@ -198,6 +198,7 @@ class DefaultTemplateBuilder(PromptBuilder):
         must_insert=context_info['decl'],
         func_source=context_info['func_source'],
         xrefs='\n'.join(context_info['xrefs']),
+        include_statement=context_info['header'],
     )
 
   def _select_examples(self, examples: list[list],
