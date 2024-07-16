@@ -49,6 +49,7 @@ RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
 GENERATED_BENCHMARK: str = 'generated-benchmark-'
 PROJECT_SUMMARY_JSON = os.path.join(RESULTS_DIR, 'project_coverage_gain.json')
 
+
 class Result:
   benchmark: benchmarklib.Benchmark
   result: run_one_experiment.AggregatedResult | str
@@ -316,6 +317,8 @@ def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
   """Process and calculate the total coverage gain for each project."""
   textcov_dict: dict[str, list[textcov.Textcov]] = {}
   for result in results:
+    if not isinstance(result.result, run_one_experiment.AggregatedResult):
+      continue
     cov = result.result.gained_textcov
     if result.benchmark.project in textcov_dict:
       textcov_dict[result.benchmark.project].append(cov)

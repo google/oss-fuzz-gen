@@ -26,8 +26,8 @@ from typing import Any, Dict, List, Optional
 
 import jinja2
 
-from report.common import (AccumulatedResult, Benchmark, FileSystem, Results,
-                           Sample, Target)
+from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
+                           Results, Sample, Target)
 
 LOCAL_HOST = '127.0.0.1'
 
@@ -128,7 +128,7 @@ class GenerateReport:
 
   def _write_index_html(self, benchmarks: list[Benchmark],
                         accumulated_results: AccumulatedResult,
-                        projects: list[dict]):
+                        projects: list[Project]):
     """Generate the report index.html and write to filesystem."""
     rendered = self._jinja.render('index.html',
                                   benchmarks=benchmarks,

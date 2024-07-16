@@ -18,8 +18,8 @@ for file in $CHANGED_PY; do
     if [ -f "$file" ]; then
         # Ensure the script continues after yapf --diff
         yapf --diff "$file" || true
-        yapf --parallel --in-place --print-modified "$file"
-        isort "$file"
+        yapf --parallel --in-place "$file"
+#        isort "$file"
 
         # Ensure Pylint continues after linting errors.
         # Ignore long lines with URLs.

@@ -433,7 +433,7 @@ class Results:
           pass
 
     # Update project summary with coverage gain information
-    project_summary_list = project_summary_dict.values()
+    project_summary_list = list(project_summary_dict.values())
     if coverage_dict:
       for project in project_summary_list:
         if project.name in coverage_dict:
