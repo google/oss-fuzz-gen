@@ -15,6 +15,7 @@
 """Run an experiment with all function-under-tests."""
 
 import argparse
+import json
 import logging
 import os
 import sys
@@ -27,7 +28,10 @@ from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import oss_fuzz_checkout
 from experiment.workdir import WorkDirs
+from experiment import textcov
 from llm_toolkit import models, prompt_builder
+
+from typing import Dict, List
 
 # WARN: Avoid large NUM_EXP for local experiments.
 # NUM_EXP controls the number of experiments in parallel, while each experiment
@@ -296,7 +300,7 @@ def _print_experiment_result(result: Result):
         f'{result.result}')
 
 
-def _print_experiment_results(results: list[Result]):
+def _print_experiment_results(results: list[Result], cov_gain: Dict[str, float]):
   """Prints the |results| of multiple experiments."""
   print('\n\n**** FINAL RESULTS: ****\n\n')
   for result in results:
@@ -304,6 +308,34 @@ def _print_experiment_results(results: list[Result]):
     print(f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
           f'\n{result.result}\n')
 
+  print('\n\n**** TOTAL COVERAGE GAIN: ****\n\n')
+  for project in cov_gain:
+    print(f'*{project}: {cov_gain[project]}')
+
+
+def _process_total_coverage_gain(results: list[Result]) -> Dict[str, float]:
+  """Process and calculate the total coverage gain for each project."""
+  textcov_dict: Dict[str, List[textcov.Textcov]] = dict()
+  for result in results:
+    cov = result.result.gained_textcov
+    if result.benchmark.project in textcov_dict:
+      textcov_dict[result.benchmark.project].append(cov)
+    else:
+      textcov_dict[result.benchmark.project] = [cov]
+
+  coverage_gain: Dict[str, float] = dict()
+  for project in textcov_dict:
+    total_cov = textcov.Textcov()
+    for cov in textcov_dict[project]:
+      total_cov.merge(cov)
+    coverage_gain[project] = total_cov.covered_lines / total_cov.total_lines
+
+  # Write to summary file
+  summary_path = os.path.join(RESULTS_DIR, 'project_coverage_gain.json')
+  with open(summary_path, 'w') as f:
+    json.dump(coverage_gain, f)
+
+  return coverage_gain
 
 def main():
   logging.basicConfig(level=logging.INFO)
@@ -335,7 +367,10 @@ def main():
         time.sleep(args.delay)
       experiment_results = [task.get() for task in experiment_tasks]
 
-  _print_experiment_results(experiment_results)
+  # Process total gain from all generated harnesses for each projects
+  coverage_gain_dict = _process_total_coverage_gain(experiment_results)
+
+  _print_experiment_results(experiment_results, coverage_gain_dict)
 
 
 if __name__ == '__main__':

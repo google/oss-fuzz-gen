@@ -106,8 +106,9 @@ class GenerateReport:
         self._write_benchmark_sample(benchmark, sample, sample_targets)
 
     accumulated_results = self._results.get_macro_insights(benchmarks)
+    projects = self._results.get_project_summary(benchmarks)
 
-    self._write_index_html(benchmarks, accumulated_results)
+    self._write_index_html(benchmarks, accumulated_results, projects)
     self._write_index_json(benchmarks)
 
   def _write(self, output_path: str, content: str):
@@ -126,11 +127,13 @@ class GenerateReport:
       f.write(content)
 
   def _write_index_html(self, benchmarks: List[Benchmark],
-                        accumulated_results: AccumulatedResult):
+                        accumulated_results: AccumulatedResult,
+                        projects: List[Dict[str, Any]]):
     """Generate the report index.html and write to filesystem."""
     rendered = self._jinja.render('index.html',
                                   benchmarks=benchmarks,
-                                  accumulated_results=accumulated_results)
+                                  accumulated_results=accumulated_results,
+                                  projects=projects)
     self._write('index.html', rendered)
 
   def _write_index_json(self, benchmarks: List[Benchmark]):
@@ -177,7 +180,6 @@ class GenerateReport:
     except Exception as e:
       logging.error('Failed to write sample/%s/%s:\n%s', benchmark.id,
                     sample.id, e)
-
 
 def generate_report(args: argparse.Namespace) -> None:
   """Generates static web server files."""

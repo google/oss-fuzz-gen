@@ -19,7 +19,7 @@ import json
 import logging
 import os
 import re
-from typing import List, Optional
+from typing import List, Dict, Optional
 
 import yaml
 from google.cloud import storage
@@ -401,6 +401,38 @@ class Results:
       accumulated_results.total_runs += 1
       accumulated_results.total_line_coverage_diff += benchmark.result.max_line_coverage_diff
     return accumulated_results
+
+  def get_project_summary(self,
+                          benchmarks: List[Benchmark]) -> List[Dict]:
+    """Returns a list of project summary."""
+    project_summary_dict = {}
+    for benchmark in benchmarks:
+      if benchmark.project in project_summary_dict:
+        project_summary_dict[benchmark.project]['count'] += 1
+      else:
+        new_dict = {'count': 1, 'name': benchmark.project, 'coverage_gain': '0.0%'}
+        project_summary_dict[benchmark.project] = new_dict
+
+    # Retrieve coverage gain information
+    coverage_dict = {}
+    summary_path = os.path.join(self._results_dir, 'project_coverage_gain.json')
+    if FileSystem(summary_path).exists():
+      with FileSystem(summary_path).open() as f:
+        try:
+          coverage_dict = json.load(f)
+        except:
+          # Skip if error
+          pass
+
+    # Update project summary with coverage gain information
+    project_summary_list = project_summary_dict.values()
+    if coverage_dict:
+      for project in project_summary_list:
+        if project['name'] in coverage_dict:
+          coverage_gain_str = '%.4f' % (coverage_dict[project['name']] * 100)
+          project['coverage_gain'] = f'{coverage_gain_str}%'
+
+    return project_summary_list
 
   def _prepare_prompt_for_html_text(self, raw_prompt_content: str) -> str:
     """Converts a raw prompt file into presentable HTML text."""

@@ -98,6 +98,26 @@ td .signature {
     </tbody>
 </table>
 
+<h2>Project summary</h2>
+<table class="sortable-table">
+    <thead>
+        <tr>
+            <th data-sorted="asc">Project</th>
+            <th data-sort-number>Total generated harnesses</th>
+            <th data-sort-number>Total coverage gain</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in projects %}
+        <tr>
+            <td data-sort-value="{{ project['name'] }}">{{ project['name'] }}</td>
+            <td data-sort-value="{{ project['count'] }}">{{ project['count'] }}</td>
+            <td data-sort-value="{{ project['coverage_gain'] }}">{{ project['coverage_gain'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 <h2>Accumulated results</h2>
 <table>
   <thead>
