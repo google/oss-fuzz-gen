@@ -41,7 +41,7 @@ class JinjaEnv:
 
   @staticmethod
   def _percent(num: float):
-    return '%0.2f' % (num * 100)
+    return f'{num*100:.2f}'
 
   @staticmethod
   def _cov_report_link(link: str):
