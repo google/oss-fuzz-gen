@@ -237,7 +237,7 @@ class Textcov:
     jacoco_report = ET.parse(file_handle)
 
     # Process source file information
-    line_coverage_dict = dict()
+    line_coverage_dict = {}
     for item in jacoco_report.iter():
       if item.tag == 'sourcefile':
         line_coverage = []
@@ -271,7 +271,7 @@ class Textcov:
             if method_item.attrib['name'] not in JVM_SKIPPED_METHOD:
               class_method_items.append((class_name, method_item, coverage))
 
-    for class_name, method_item in class_method_items:
+    for class_name, method_item, coverage in class_method_items:
       method_dict = method_item.attrib
       method_name = method_dict['name']
 
@@ -296,14 +296,15 @@ class Textcov:
 
       # Retrieve line coverage information
       total_line = 0
-      covered_line = 0
       for cov_data in method_item:
         if cov_data.attrib['type'] == 'LINE':
-          covered_line = int(cov_data.attrib['covered'])
           total_line = int(cov_data.attrib['covered']) + int(
               cov_data.attrib['missed'])
 
       for count in range(start_index, start_index + total_line):
+        if count >= len(coverage):
+          # Fail safe
+          break
         line_no, is_reached = coverage[count]
         line = f'Line{line_no}'
         if is_reached:
