@@ -24,7 +24,7 @@ from llm_toolkit import output_parser as parser
 from llm_toolkit import prompt_builder
 
 
-def get_corpus_generator_script(
+def get_script(
     ai_binary: str,
     fixer_model_name: str,
     target_harness_path: str,

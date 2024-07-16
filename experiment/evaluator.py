@@ -263,7 +263,7 @@ class Evaluator:
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects',
                                           generated_oss_fuzz_project)
-    generated_corp = corpus_generator.get_corpus_generator_script(
+    generated_corp = corpus_generator.get_script(
         ai_binary, self.builder_runner.fixer_model_name, target_path,
         self.benchmark)
 
@@ -275,15 +275,14 @@ class Evaluator:
       f.write('COPY corp_gen.py $SRC/corp_gen.py\n')
     target_harness_file = os.path.basename(self.benchmark.target_path)
     target_harness_file = os.path.splitext(target_harness_file)[0]
+    corpus_dst = '/src/generated-corpus/*'
     with open(os.path.join(generated_project_path, 'build.sh'), 'a') as f:
       f.write('\n# Generate a corpus for the modified harness.')
       f.write('\nmkdir -p /src/generated-corpus')
       f.write('\npushd /src/generated-corpus')
       f.write('\npython3 $SRC/corp_gen.py')
       f.write('\npopd')
-      f.write(
-          f'\nzip $OUT/{target_harness_file}_seed_corpus.zip /src/generated-corpus/*'
-      )
+      f.write(f'\nzip $OUT/{target_harness_file}_seed_corpus.zip {corpus_dst}')
 
   def check_target(self, ai_binary, target_path: str) -> Result:
     """Builds and runs a target."""
