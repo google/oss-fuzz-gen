@@ -300,7 +300,8 @@ def _print_experiment_result(result: Result):
         f'{result.result}')
 
 
-def _print_experiment_results(results: list[Result], cov_gain: Dict[str, float]):
+def _print_experiment_results(results: list[Result], cov_gain: Dict[str,
+                                                                    float]):
   """Prints the |results| of multiple experiments."""
   print('\n\n**** FINAL RESULTS: ****\n\n')
   for result in results:
@@ -315,7 +316,7 @@ def _print_experiment_results(results: list[Result], cov_gain: Dict[str, float])
 
 def _process_total_coverage_gain(results: list[Result]) -> Dict[str, float]:
   """Process and calculate the total coverage gain for each project."""
-  textcov_dict: Dict[str, List[textcov.Textcov]] = dict()
+  textcov_dict: Dict[str, List[textcov.Textcov]] = {}
   for result in results:
     cov = result.result.gained_textcov
     if result.benchmark.project in textcov_dict:
@@ -323,7 +324,7 @@ def _process_total_coverage_gain(results: list[Result]) -> Dict[str, float]:
     else:
       textcov_dict[result.benchmark.project] = [cov]
 
-  coverage_gain: Dict[str, float] = dict()
+  coverage_gain: Dict[str, float] = {}
   for project in textcov_dict:
     total_cov = textcov.Textcov()
     for cov in textcov_dict[project]:
@@ -336,6 +337,7 @@ def _process_total_coverage_gain(results: list[Result]) -> Dict[str, float]:
     json.dump(coverage_gain, f)
 
   return coverage_gain
+
 
 def main():
   logging.basicConfig(level=logging.INFO)

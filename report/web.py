@@ -181,6 +181,7 @@ class GenerateReport:
       logging.error('Failed to write sample/%s/%s:\n%s', benchmark.id,
                     sample.id, e)
 
+
 def generate_report(args: argparse.Namespace) -> None:
   """Generates static web server files."""
   logging.info('Generating web page files in %s', args.output_dir)
