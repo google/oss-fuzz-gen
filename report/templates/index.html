@@ -88,7 +88,7 @@ td .signature {
                 </pre>
             </td>
             <td data-sort-value="{{ benchmark.status }}">{{ benchmark.status }}</td>
-            <td data-sort-value={{ benchmark.result.build_success_rate|percent }}>{{ benchmark.result.build_success_rate|percent}}</td>
+            <td data-sort-value="{{ benchmark.result.build_success_rate|percent }}">{{ benchmark.result.build_success_rate|percent}}</td>
             <td data-sort-value="{{ benchmark.result.crash_rate|percent }}"><a href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{ benchmark.result.crash_rate|percent }} </a></td>
             <td data-sort-value="{{ benchmark.result.found_bug }}">{{ benchmark.result.found_bug }}</td>
             <td data-sort-value="{{ benchmark.result.max_coverage |percent }}">{{ benchmark.result.max_coverage |percent }}</td>
@@ -102,6 +102,7 @@ td .signature {
 <table class="sortable-table">
     <thead>
         <tr>
+            <th></th>
             <th data-sorted="asc">Project</th>
             <th data-sort-number>Total generated harnesses</th>
             <th data-sort-number>Total coverage gain</th>
@@ -110,9 +111,10 @@ td .signature {
     <tbody>
         {% for project in projects %}
         <tr>
-            <td data-sort-value="{{ project['name'] }}">{{ project['name'] }}</td>
-            <td data-sort-value="{{ project['count'] }}">{{ project['count'] }}</td>
-            <td data-sort-value="{{ project['coverage_gain'] }}">{{ project['coverage_gain'] }}</td>
+            <td class="table-index">{{ loop.index }}</td>
+            <td data-sort-value="{{ project.name }}">{{ project.name }}</td>
+            <td data-sort-value="{{ project.count }}">{{ project.count }}</td>
+            <td data-sort-value="{{ project.coverage_gain|percent }}">{{ project.coverage_gain|percent }}</td>
         </tr>
         {% endfor %}
     </tbody>

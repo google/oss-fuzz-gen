@@ -69,6 +69,14 @@ class Benchmark:
 
 
 @dataclasses.dataclass
+class Project:
+  """The class of project summary."""
+  name: str
+  count: int = 1
+  coverage_gain: float = 0.0
+
+
+@dataclasses.dataclass
 class Sample:
   """Result of a fuzz target sample of a benchmark."""
   id: str
@@ -403,19 +411,16 @@ class Results:
       accumulated_results.total_line_coverage_diff += new_line_coverage_diff
     return accumulated_results
 
-  def get_project_summary(self, benchmarks: list[Benchmark]) -> list[dict]:
+  def get_project_summary(self,
+                          benchmarks: list[Benchmark]) -> list[Project]:
     """Returns a list of project summary."""
     project_summary_dict = {}
     for benchmark in benchmarks:
       if benchmark.project in project_summary_dict:
-        project_summary_dict[benchmark.project]['count'] += 1
+        project_summary_dict[benchmark.project].count += 1
       else:
-        new_dict = {
-            'count': 1,
-            'name': benchmark.project,
-            'coverage_gain': '0.0%'
-        }
-        project_summary_dict[benchmark.project] = new_dict
+        new_project = Project(benchmark.project)
+        project_summary_dict[benchmark.project] = new_project
 
     # Retrieve coverage gain information
     coverage_dict = {}
@@ -432,9 +437,8 @@ class Results:
     project_summary_list = project_summary_dict.values()
     if coverage_dict:
       for project in project_summary_list:
-        if project['name'] in coverage_dict:
-          coverage_gain_str = '%.4f' % (coverage_dict[project['name']] * 100)
-          project['coverage_gain'] = f'{coverage_gain_str}%'
+        if project.name in coverage_dict:
+          project.coverage_gain = coverage_dict[project.name]
 
     return project_summary_list
 
