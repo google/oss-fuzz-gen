@@ -31,8 +31,6 @@ from experiment.workdir import WorkDirs
 from experiment import textcov
 from llm_toolkit import models, prompt_builder
 
-from typing import Dict, List
-
 # WARN: Avoid large NUM_EXP for local experiments.
 # NUM_EXP controls the number of experiments in parallel, while each experiment
 # will evaluate {run_one_experiment.NUM_EVA, default 3} fuzz targets in
@@ -49,7 +47,7 @@ BENCHMARK_ROOT: str = './benchmark-sets'
 BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
 RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
 GENERATED_BENCHMARK: str = 'generated-benchmark-'
-
+PROJECT_SUMMARY_JSON = os.path.join(RESULTS_DIR, 'project_coverage_gain.json')
 
 class Result:
   benchmark: benchmarklib.Benchmark
@@ -332,8 +330,7 @@ def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
     coverage_gain[project] = total_cov.covered_lines / total_cov.total_lines
 
   # Write to summary file
-  summary_path = os.path.join(RESULTS_DIR, 'project_coverage_gain.json')
-  with open(summary_path, 'w') as f:
+  with open(PROJECT_SUMMARY_JSON, 'w') as f:
     json.dump(coverage_gain, f)
 
   return coverage_gain

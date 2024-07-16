@@ -19,7 +19,7 @@ import json
 import logging
 import os
 import re
-from typing import List, Dict, Optional
+from typing import List, Optional
 
 import yaml
 from google.cloud import storage
@@ -70,7 +70,7 @@ class Benchmark:
 
 @dataclasses.dataclass
 class Project:
-  """The class of project summary."""
+  """Results for a project entire."""
   name: str
   count: int = 1
   coverage_gain: float = 0.0
@@ -411,8 +411,7 @@ class Results:
       accumulated_results.total_line_coverage_diff += new_line_coverage_diff
     return accumulated_results
 
-  def get_project_summary(self,
-                          benchmarks: list[Benchmark]) -> list[Project]:
+  def get_project_summary(self, benchmarks: list[Benchmark]) -> list[Project]:
     """Returns a list of project summary."""
     project_summary_dict = {}
     for benchmark in benchmarks:
