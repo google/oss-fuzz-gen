@@ -403,7 +403,7 @@ class Results:
       accumulated_results.total_line_coverage_diff += new_line_coverage_diff
     return accumulated_results
 
-  def get_project_summary(self, benchmarks: List[Benchmark]) -> List[Dict]:
+  def get_project_summary(self, benchmarks: list[Benchmark]) -> list[dict]:
     """Returns a list of project summary."""
     project_summary_dict = {}
     for benchmark in benchmarks:

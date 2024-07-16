@@ -126,9 +126,9 @@ class GenerateReport:
     with FileSystem(full_path).open('w', encoding='utf-8') as f:
       f.write(content)
 
-  def _write_index_html(self, benchmarks: List[Benchmark],
+  def _write_index_html(self, benchmarks: list[Benchmark],
                         accumulated_results: AccumulatedResult,
-                        projects: List[Dict[str, Any]]):
+                        projects: list[dict]):
     """Generate the report index.html and write to filesystem."""
     rendered = self._jinja.render('index.html',
                                   benchmarks=benchmarks,

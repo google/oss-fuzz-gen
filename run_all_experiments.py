@@ -300,7 +300,7 @@ def _print_experiment_result(result: Result):
         f'{result.result}')
 
 
-def _print_experiment_results(results: list[Result], cov_gain: Dict[str,
+def _print_experiment_results(results: list[Result], cov_gain: dict[str,
                                                                     float]):
   """Prints the |results| of multiple experiments."""
   print('\n\n**** FINAL RESULTS: ****\n\n')
@@ -314,9 +314,9 @@ def _print_experiment_results(results: list[Result], cov_gain: Dict[str,
     print(f'*{project}: {cov_gain[project]}')
 
 
-def _process_total_coverage_gain(results: list[Result]) -> Dict[str, float]:
+def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
   """Process and calculate the total coverage gain for each project."""
-  textcov_dict: Dict[str, List[textcov.Textcov]] = {}
+  textcov_dict: dict[str, list[textcov.Textcov]] = {}
   for result in results:
     cov = result.result.gained_textcov
     if result.benchmark.project in textcov_dict:
@@ -324,7 +324,7 @@ def _process_total_coverage_gain(results: list[Result]) -> Dict[str, float]:
     else:
       textcov_dict[result.benchmark.project] = [cov]
 
-  coverage_gain: Dict[str, float] = {}
+  coverage_gain: dict[str, float] = {}
   for project in textcov_dict:
     total_cov = textcov.Textcov()
     for cov in textcov_dict[project]:
