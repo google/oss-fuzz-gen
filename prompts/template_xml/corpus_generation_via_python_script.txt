@@ -1,0 +1,23 @@
+Hi! I'm a security engineer that is looking to improve the quality of my fuzzing harness.
+
+The goal is to look at how the corpus of the fuzzing harness can be improved.
+
+The project is {PROJECT_NAME} and the repository of the project is {PROJECT_REPOSITORY}.
+
+The fuzzer I'm working on is:
+<code>
+{HARNESS_SOURCE_CODE}
+</code>
+
+The target code of the harness is:
+<code>
+{TARGET_FUNCTION_SOURCE}
+</code>
+
+Could you please construct a small Python program that generate 10 initial seeds for my fuzz harness?
+
+The corpus generator should be focused on making structured seeds that reflect the structure of the target function. It should not be based purely on the output from random.
+
+The program you write to generate seeds should take no input and should output the seeds into the current working folder.
+
+Wrap the program in <results> tags in the reply and do not return any other text.
