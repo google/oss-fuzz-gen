@@ -127,7 +127,7 @@ class Function:
     if language == 'jvm':
       total_line = len(self.lines)
       self.lines = {}
-      new_covered_lines = other.covered_lines - self.covered_lines
+      new_covered_lines = self.covered_lines - other.covered_lines
       for i in range(total_line):
         line = f'Line{i}'
         if i >= new_covered_lines:
@@ -348,6 +348,7 @@ class Textcov:
     arg = ''
     start = False
     next_arg = ''
+    array_count = 0
     for c in desc:
       if c == '(':
         continue
@@ -363,16 +364,26 @@ class Textcov:
       else:
         if c == 'L':
           start = True
-          args.append(next_arg)
+          if next_arg:
+            if array_count > 0:
+              next_arg = f'{next_arg}{"[]" * array_count}'
+              array_count = 0
+            args.append(next_arg)
           arg = ''
           next_arg = ''
-        elif c in ['[', ']']:
-          next_arg = next_arg + c
+        elif c == '[':
+          array_count += 1
         else:
           if c in JVM_CLASS_MAPPING:
-            args.append(next_arg)
+            if next_arg:
+              if array_count > 0:
+                next_arg = f'{next_arg}{"[]" * array_count}'
+                array_count = 0
+              args.append(next_arg)
             next_arg = JVM_CLASS_MAPPING[c]
 
     if next_arg:
+      if array_count > 0:
+        next_arg = f'{next_arg}{"[]" * array_count}'
       args.append(next_arg)
     return args
