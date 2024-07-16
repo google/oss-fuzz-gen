@@ -624,7 +624,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats the exception thrown from this method or constructor."""
     if self.benchmark.exceptions:
       exception_str_list = [
-        f'<exception>{exp}</exception>' for exp in self.benchmark.exceptions
+          f'<exception>{exp}</exception>' for exp in self.benchmark.exceptions
       ]
       return '<exceptions>\n' + '\n'.join(
           exception_str_list) + '\n</exceptions>'
