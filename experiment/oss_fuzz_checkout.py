@@ -24,6 +24,8 @@ import tempfile
 
 import yaml
 
+logger = logging.getLogger(__name__)
+
 BUILD_DIR: str = 'build'
 GLOBAL_TEMP_DIR: str = ''
 # Assume OSS-Fuzz is at repo root dir by default.
@@ -41,9 +43,9 @@ def _remove_temp_oss_fuzz_repo():
   try:
     shutil.rmtree(OSS_FUZZ_DIR)
   except PermissionError as e:
-    logging.warning('No permission to remove %s: %s', OSS_FUZZ_DIR, e)
+    logger.warning('No permission to remove %s: %s', OSS_FUZZ_DIR, e)
   except FileNotFoundError as e:
-    logging.warning('No OSS-Fuzz directory %s: %s', OSS_FUZZ_DIR, e)
+    logger.warning('No OSS-Fuzz directory %s: %s', OSS_FUZZ_DIR, e)
 
 
 def _set_temp_oss_fuzz_repo():
@@ -71,8 +73,8 @@ def _clone_oss_fuzz_repo():
                   stdin=sp.DEVNULL)
   stdout, stderr = proc.communicate()
   if proc.returncode != 0:
-    print(stdout)
-    print(stderr)
+    logger.info(stdout)
+    logger.info(stderr)
 
 
 def clone_oss_fuzz(oss_fuzz_dir: str = ''):
@@ -126,9 +128,9 @@ def postprocess_oss_fuzz() -> None:
                   stdin=sp.DEVNULL,
                   capture_output=True)
   if result.returncode:
-    print(f'Failed to postprocess OSS-Fuzz ({OSS_FUZZ_DIR})')
-    print('stdout: ', result.stdout)
-    print('stderr: ', result.stderr)
+    logger.info(f'Failed to postprocess OSS-Fuzz ({OSS_FUZZ_DIR})')
+    logger.info('stdout: ', result.stdout)
+    logger.info('stderr: ', result.stderr)
 
 
 def list_c_cpp_projects() -> list[str]:
@@ -150,8 +152,8 @@ def get_project_language(project: str) -> str:
   project_yaml_path = os.path.join(OSS_FUZZ_DIR, 'projects', project,
                                    'project.yaml')
   if not os.path.isfile(project_yaml_path):
-    logging.warning('Failed to find the project yaml of %s, assuming it is C++',
-                    project)
+    logger.warning('Failed to find the project yaml of %s, assuming it is C++',
+                   project)
     return 'C++'
 
   with open(project_yaml_path, 'r') as benchmark_file:
@@ -164,7 +166,7 @@ def get_project_repository(project: str) -> str:
   project_yaml_path = os.path.join(OSS_FUZZ_DIR, 'projects', project,
                                    'project.yaml')
   if not os.path.isfile(project_yaml_path):
-    logging.warning(
+    logger.warning(
         'Failed to find the project yaml of %s, return empty repository',
         project)
     return ''

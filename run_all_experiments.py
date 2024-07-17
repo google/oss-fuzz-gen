@@ -29,6 +29,8 @@ from experiment import oss_fuzz_checkout
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
 
+logger = logging.getLogger(__name__)
+
 # WARN: Avoid large NUM_EXP for local experiments.
 # NUM_EXP controls the number of experiments in parallel, while each experiment
 # will evaluate {run_one_experiment.NUM_EVA, default 3} fuzz targets in
@@ -45,6 +47,9 @@ BENCHMARK_ROOT: str = './benchmark-sets'
 BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
 RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
 GENERATED_BENCHMARK: str = 'generated-benchmark-'
+
+LOG_LEVELS = {'debug', 'info'}
+LOG_FMT = '%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s'
 
 
 class Result:
@@ -71,9 +76,9 @@ def get_next_generated_benchmarks_dir() -> str:
 
 def generate_benchmarks(args: argparse.Namespace) -> None:
   """Generates benchmarks, write to filesystem and set args benchmark dir."""
-  logging.info('Generating benchmarks.')
+  logger.info('Generating benchmarks.')
   benchmark_dir = get_next_generated_benchmarks_dir()
-  logging.info('Setting benchmark directory to %s.', benchmark_dir)
+  logger.info('Setting benchmark directory to %s.', benchmark_dir)
   os.makedirs(benchmark_dir)
   args.benchmarks_directory = benchmark_dir
   benchmark_oracles = [
@@ -98,8 +103,9 @@ def get_experiment_configs(
     |args| setting."""
   benchmark_yamls = []
   if args.benchmark_yaml:
-    print(f'A benchmark yaml file ({args.benchmark_yaml}) is provided. '
-          f'Will use it and ignore the files in {args.benchmarks_directory}.')
+    logger.info(
+        f'A benchmark yaml file ({args.benchmark_yaml}) is provided. '
+        f'Will use it and ignore the files in {args.benchmarks_directory}.')
     benchmark_yamls = [args.benchmark_yaml]
   else:
     if args.generate_benchmarks:
@@ -144,7 +150,7 @@ def run_experiments(benchmark: benchmarklib.Benchmark,
         prompt_builder_to_use=args.prompt_builder)
     return Result(benchmark, result)
   except Exception as e:
-    print('Exception while running experiment:', e, file=sys.stderr)
+    logger.error('Exception while running experiment: %s', str(e))
     traceback.print_exc()
     return Result(benchmark, f'Exception while running experiment: {e}')
 
@@ -219,6 +225,11 @@ def parse_args() -> argparse.Namespace:
                       type=str,
                       default=introspector.DEFAULT_INTROSPECTOR_ENDPOINT)
   parser.add_argument(
+      '-lo',
+      '--log-level',
+      help='Sets the logging level. Options available: [{LOG_LEVELS}]',
+      default='info')
+  parser.add_argument(
       '-of',
       '--oss-fuzz-dir',
       help=
@@ -291,23 +302,37 @@ def parse_args() -> argparse.Namespace:
 
 def _print_experiment_result(result: Result):
   """Prints the |result| of a single experiment."""
-  print(f'\n**** Finished benchmark {result.benchmark.project}, '
-        f'{result.benchmark.function_signature} ****\n'
-        f'{result.result}')
+  logger.info(f'\n**** Finished benchmark {result.benchmark.project}, '
+              f'{result.benchmark.function_signature} ****\n'
+              f'{result.result}')
 
 
 def _print_experiment_results(results: list[Result]):
   """Prints the |results| of multiple experiments."""
-  print('\n\n**** FINAL RESULTS: ****\n\n')
+  logger.info('\n\n**** FINAL RESULTS: ****\n\n')
   for result in results:
-    print('=' * 80)
-    print(f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
-          f'\n{result.result}\n')
+    logger.info('=' * 80)
+    logger.info(
+        f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
+        f'\n{result.result}\n')
+
+
+def _setup_logging(verbose: str = 'info') -> None:
+  if verbose == "debug":
+    log_level = logging.DEBUG
+  else:
+    log_level = logging.INFO
+  logging.basicConfig(
+      level=log_level,
+      format=LOG_FMT,
+      datefmt='%Y-%m-%d %H:%M:%S',
+  )
 
 
 def main():
-  logging.basicConfig(level=logging.INFO)
   args = parse_args()
+  _setup_logging(args.log_level)
+  logger.info('Starting experiments')
 
   # Set introspector endpoint before performing any operations to ensure the
   # right API endpoint is used throughout.
@@ -318,7 +343,7 @@ def main():
   experiment_configs = get_experiment_configs(args)
   experiment_results = []
 
-  print(f'Running {NUM_EXP} experiment(s) in parallel.')
+  logger.info(f'Running {NUM_EXP} experiment(s) in parallel.')
   if NUM_EXP == 1:
     for config in experiment_configs:
       result = run_experiments(*config)
