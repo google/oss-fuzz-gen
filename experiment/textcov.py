@@ -260,7 +260,7 @@ class Textcov:
         if textcov.is_fuzzer_class(item):
           continue
 
-        # Get line covgerage information for this class
+        # Get line coverage information for this class
         coverage = line_coverage_dict[item.attrib['sourcefilename']]
 
         # Get class name and skip fuzzing and testing classes
@@ -277,7 +277,7 @@ class Textcov:
       method_dict = method_item.attrib
       method_name = method_dict['name']
 
-      # Deteremine start index in coverage list
+      # Determine start index in coverage list
       start_line = int(method_dict['line'])
       start_index = -1
       for count, item in enumerate(coverage):
@@ -285,7 +285,7 @@ class Textcov:
           start_index = count
           break
 
-      # Coverage information failed to retrieve, skipping this method
+      # Failed to retrieve coverage information, skipping this method
       if start_index == -1:
         continue
 
