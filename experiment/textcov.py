@@ -24,6 +24,8 @@ from typing import BinaryIO, List, Optional
 
 import chardet
 
+logger = logging.getLogger(__name__)
+
 # No spaces at the beginning, and ends with a ":".
 FUNCTION_PATTERN = re.compile(r'^([^\s].*):$')
 LINE_PATTERN = re.compile(r'^\s*\d+\|\s*([\d\.a-zA-Z]+)\|(.*)')
@@ -162,7 +164,7 @@ class Textcov:
       result = chardet.detect(raw_data)
       encoding = result['encoding']
       if encoding is None:
-        logging.warning('Failed to decode.')
+        logger.warning('Failed to decode.')
         raise UnicodeDecodeError("chardet", raw_data, 0, len(raw_data),
                                  "Cannot detect encoding")
 
@@ -186,7 +188,7 @@ class Textcov:
     try:
       demangled = demangle(cls._read_file_with_fallback(file_handle))
     except Exception as e:
-      logging.warning('Decoding failure: %s', e)
+      logger.warning('Decoding failure: %s', e)
       demangled = ''
     demangled = _discard_fuzz_target_lines(demangled)
 

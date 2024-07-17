@@ -31,6 +31,8 @@ from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
 
+logger = logging.getLogger(__name__)
+
 DEFAULT_TEMPLATE_DIR: str = 'prompts/template_xml/'
 
 # TODO(Dongge): Refactor this tot avoid hard-coding.
@@ -198,6 +200,7 @@ class DefaultTemplateBuilder(PromptBuilder):
         must_insert=context_info['decl'],
         func_source=context_info['func_source'],
         xrefs='\n'.join(context_info['xrefs']),
+        include_statement=context_info['header'],
     )
 
   def _select_examples(self, examples: list[list],
@@ -392,7 +395,7 @@ class DefaultTemplateBuilder(PromptBuilder):
                     .replace('</error>\n', '')
 
     # Log warning for an unexpected empty error message.
-    logging.warning(
+    logger.warning(
         'Unexpected empty error message in fix prompt for error_desc: %s',
         str(error_desc))
     return problem.replace('{ERROR_MESSAGES}', error_message)
@@ -455,7 +458,7 @@ class DefaultTemplateBuilder(PromptBuilder):
       if prompt_size + func_code_token_num >= self._model.context_window:
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
-        logging.warning('Breaking because adding this function code \
+        logger.warning('Breaking because adding this function code \
               would exceed context window')
         break
       prompt_size += func_code_token_num
@@ -467,7 +470,7 @@ class DefaultTemplateBuilder(PromptBuilder):
       return problem.replace('{PROJECT_FUNCTION_CODE}',
                              project_function_code.strip())
 
-    logging.warning(
+    logger.warning(
         'Empty project function code in triage prompt for project: %s, \
           function name: %s', benchmark.project, benchmark.function_name)
 
@@ -496,7 +499,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     lines = driver_code.split('\n')
 
     if target_line > len(lines):
-      logging.warning(
+      logger.warning(
           'Driver target line exceed maxium limit in Project: %s, \
                       try to use whole driver code in trigae prompt', project)
       return driver_code
@@ -531,8 +534,8 @@ class DefaultTemplateBuilder(PromptBuilder):
           output_lines.update(range(start, end + 1))
       return '\n'.join(result)
 
-    logging.warning('Failed to slice Project: %s Function: %s at Lines: %s',
-                    project, func_name, target_lines)
+    logger.warning('Failed to slice Project: %s Function: %s at Lines: %s',
+                   project, func_name, target_lines)
     return ''
 
 
@@ -547,6 +550,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self._template_dir = template_dir
     self.benchmark = benchmark
     self.project_url = self._find_project_url(self.benchmark.project)
+    self.exceptions = set(self.benchmark.exceptions)
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
@@ -585,7 +589,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     except:
       pass
 
-    print(f'Cannot retrieve project url of project {project_name}')
+    logger.info(f'Cannot retrieve project url of project {project_name}')
     return ''
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
@@ -622,9 +626,12 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _format_exceptions(self) -> str:
     """Formats the exception thrown from this method or constructor."""
-    if self.benchmark.exceptions:
-      return '<exceptions>' + '\n'.join(
-          self.benchmark.exceptions) + '</exceptions>'
+    if self.exceptions:
+      exception_str_list = [
+          f'<exception>{exp}</exception>' for exp in self.exceptions
+      ]
+      return '<exceptions>\n' + '\n'.join(
+          exception_str_list) + '\n</exceptions>'
 
     return ''
 
@@ -797,6 +804,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       constructor_sig = ctr.get('function_signature')
       if constructor_sig:
         constructors.append(f'<signature>{constructor_sig}</signature>')
+        self.exceptions.update(ctr.get('exceptions', []))
 
     if constructors:
       ctr_str = '\n'.join(constructors)
@@ -810,6 +818,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       function_sig = func.get('function_signature')
       if not function_sig:
         continue
+      self.exceptions.update(func.get('exceptions', []))
       if is_static:
         functions.append(f'<item><signature>{function_sig}</signature></item>')
       else:

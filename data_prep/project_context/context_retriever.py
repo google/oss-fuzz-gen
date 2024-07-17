@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import re
 import shutil
@@ -10,6 +11,8 @@ from typing import List, Tuple
 from google.cloud import storage
 
 from experiment import benchmark as benchmarklib
+
+logger = logging.getLogger(__name__)
 
 
 class ContextRetriever:
@@ -210,11 +213,11 @@ class ContextRetriever:
 
     # Only the unqualified type and identifier should exist here.
     if len(tokens) > 2:
-      print(f'Error with extracting type: {tokens}')
+      logger.info(f'Error with extracting type: {tokens}')
       return ''
 
     if len(tokens) == 0:
-      print(f'Type dequalifying failed: {fully_qualified_type}')
+      logger.info(f'Type dequalifying failed: {fully_qualified_type}')
       return ''
 
     dequal_type = tokens[0]
@@ -276,7 +279,7 @@ class ContextRetriever:
           ast_json = json.load(ast_file)
         # Files generated and uploaded are occasionally empty.
         except Exception as e:
-          print(e)
+          logger.info(e)
           continue
 
       ast_nodes = ast_json.get('inner', [])
@@ -305,10 +308,11 @@ class ContextRetriever:
           return header
       # ASTs from the bucket are occasionally empty.
       except Exception as e:
-        print(e)
+        logger.info(e)
         continue
 
-    print(f'Header location could not be found for {self._function_signature}')
+    logger.info(
+        f'Header location could not be found for {self._function_signature}')
     return ''
 
   def get_type_info(self) -> List[str]:

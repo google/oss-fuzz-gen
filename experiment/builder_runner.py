@@ -38,6 +38,8 @@ from llm_toolkit import code_fixer
 from llm_toolkit.crash_triager import TriageResult
 from llm_toolkit.models import DefaultModel
 
+logger = logging.getLogger(__name__)
+
 # The directory in the oss-fuzz image
 JCC_DIR = '/usr/local/bin'
 
@@ -196,8 +198,8 @@ class BuilderRunner:
            f'`{self.benchmark.function_signature}` INSIDE FUNCTION '
            '`LLVMFuzzerTestOneInput`.')
       ]
-      print(f'Missing target function: {target_path} does not contain '
-            f'{self.benchmark.function_signature}')
+      logger.info(f'Missing target function: {target_path} does not contain '
+                  f'{self.benchmark.function_signature}')
 
     return result
 
@@ -254,8 +256,8 @@ class BuilderRunner:
             line_number = int(line_match.group(1))
             func_info[func_name].add(line_number)
           else:
-            logging.warning('Failed to parse line number from %s in project %s',
-                            func_name, project_name)
+            logger.warning('Failed to parse line number from %s in project %s',
+                           func_name, project_name)
           break
         if project_name in file_path:
           func_match = self.FUNC_NAME.search(func_name)
@@ -265,7 +267,7 @@ class BuilderRunner:
             line_number = int(line_match.group(1))
             func_info[func_name].add(line_number)
           else:
-            logging.warning(
+            logger.warning(
                 'Failed to parse function name from %s in project %s',
                 func_name, project_name)
 
@@ -311,7 +313,7 @@ class BuilderRunner:
       lines = fuzzlog.split('\n')
     except MemoryError as e:
       # Some logs from abnormal fuzz targets are too large to be parsed.
-      logging.error('%s is too large to parse: %s', log_handle.name, e)
+      logger.error('%s is too large to parse: %s', log_handle.name, e)
       return ParseResult(0, 0, False, '',
                          SemanticCheckResult(SemanticCheckResult.LOG_MESS_UP))
 
@@ -439,7 +441,7 @@ class BuilderRunner:
       return self.build_and_run_local(generated_project, target_path, iteration,
                                       build_result, language)
     except Exception as err:
-      logging.warning(
+      logger.warning(
           'Error occurred when building and running fuzz target locally'
           '(attempt %d) %s: %s', iteration, err, traceback.format_exc())
       raise err
@@ -465,7 +467,7 @@ class BuilderRunner:
                          'err.log'),
             self.work_dirs.error_logs_target(benchmark_target_name, iteration))
       except FileNotFoundError as e:
-        logging.error('Cannot get err.log for %s: %s', generated_project, e)
+        logger.error('Cannot get err.log for %s: %s', generated_project, e)
 
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(benchmark_log_path,
@@ -501,7 +503,7 @@ class BuilderRunner:
     """Runs a target in the fixed target directory."""
     # If target name is not overridden, use the basename of the target path
     # in the Dockerfile.
-    print(f'Running {generated_project}')
+    logger.info(f'Running {generated_project}')
     corpus_dir = self.work_dirs.corpus(benchmark_target_name)
     command = [
         'python3', 'infra/helper.py', 'run_fuzzer', '--corpus-dir', corpus_dir,
@@ -519,20 +521,20 @@ class BuilderRunner:
       try:
         proc.wait(timeout=self.run_timeout + 5)
       except sp.TimeoutExpired:
-        print(f'{generated_project} timed out during fuzzing.')
+        logger.info(f'{generated_project} timed out during fuzzing.')
         # Try continuing and parsing the logs even in case of timeout.
 
     if proc.returncode != 0:
-      print(f'********** Failed to run {generated_project}. **********')
+      logger.info(f'********** Failed to run {generated_project}. **********')
     else:
-      print(f'Successfully run {generated_project}.')
+      logger.info(f'Successfully run {generated_project}.')
 
   def build_target_local(self,
                          generated_project: str,
                          log_path: str,
                          sanitizer: str = 'address') -> bool:
     """Builds a target with OSS-Fuzz."""
-    print(f'Building {generated_project} with {sanitizer}')
+    logger.info(f'Building {generated_project} with {sanitizer}')
     command = [
         'docker', 'build', '-t', f'gcr.io/oss-fuzz/{generated_project}',
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
@@ -547,7 +549,7 @@ class BuilderRunner:
                stderr=sp.STDOUT,
                check=True)
       except sp.CalledProcessError:
-        print(f'Failed to build image for {generated_project}')
+        logger.info(f'Failed to build image for {generated_project}')
         return False
 
     outdir = get_build_artifact_dir(generated_project, 'out')
@@ -622,11 +624,12 @@ class BuilderRunner:
                stderr=sp.STDOUT,
                check=True)
       except sp.CalledProcessError:
-        print(
+        logger.info(
             f'Failed to build fuzzer for {generated_project} with {sanitizer}')
         return False
 
-    print(f'Successfully build fuzzer for {generated_project} with {sanitizer}')
+    logger.info(
+        f'Successfully build fuzzer for {generated_project} with {sanitizer}')
     return True
 
   def get_coverage_local(
@@ -640,7 +643,7 @@ class BuilderRunner:
                                              log_path,
                                              sanitizer='coverage')
     if not built_coverage:
-      print(f'Failed to make coverage build for {generated_project}')
+      logger.info(f'Failed to make coverage build for {generated_project}')
       return None, None
 
     corpus_dir = self.work_dirs.corpus(benchmark_target_name)
@@ -665,9 +668,9 @@ class BuilderRunner:
              stdin=sp.DEVNULL,
              check=True)
     except sp.CalledProcessError as e:
-      print(f'Failed to generate coverage for {generated_project}:\n'
-            f'{e.stdout}\n'
-            f'{e.stderr}')
+      logger.info(f'Failed to generate coverage for {generated_project}:\n'
+                  f'{e.stdout}\n'
+                  f'{e.stderr}')
       return None, None
 
     if self.benchmark.language == 'jvm':
@@ -740,12 +743,12 @@ class CloudBuilderRunner(BuilderRunner):
                       if err in stdout + stderr), 0)
 
         if not delay or attempt_id == CLOUD_EXP_MAX_ATTEMPT:
-          logging.error('Failed to evaluate %s on cloud, attempt %d:\n%s\n%s',
-                        os.path.realpath(target_path), attempt_id, stdout,
-                        stderr)
+          logger.error('Failed to evaluate %s on cloud, attempt %d:\n%s\n%s',
+                       os.path.realpath(target_path), attempt_id, stdout,
+                       stderr)
           break
 
-        logging.warning(
+        logger.warning(
             'Failed to evaluate %s on cloud, attempt %d, retry in %ds:\n'
             '%s\n%s', os.path.realpath(target_path), attempt_id, delay, stdout,
             stderr)
@@ -766,7 +769,7 @@ class CloudBuilderRunner(BuilderRunner):
       return self.build_and_run_cloud(generated_project, target_path, iteration,
                                       build_result, language)
     except Exception as err:
-      logging.warning(
+      logger.warning(
           'Error occurred when building and running fuzz target on cloud'
           '(attempt %d) %s: %s', iteration, err, traceback.format_exc())
       traceback.print_exc()
@@ -777,7 +780,7 @@ class CloudBuilderRunner(BuilderRunner):
       build_result: BuildResult,
       language: str) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target locally for fuzzing."""
-    logging.info('Evaluating %s on cloud.', os.path.realpath(target_path))
+    logger.info('Evaluating %s on cloud.', os.path.realpath(target_path))
 
     project_name = self.benchmark.project
 
@@ -818,7 +821,7 @@ class CloudBuilderRunner(BuilderRunner):
         cwd=oss_fuzz_checkout.OSS_FUZZ_DIR):
       return build_result, None
 
-    logging.info('Evaluated %s on cloud.', os.path.realpath(target_path))
+    logger.info('Evaluated %s on cloud.', os.path.realpath(target_path))
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(self.experiment_bucket)
@@ -831,12 +834,12 @@ class CloudBuilderRunner(BuilderRunner):
         'wb') as f:
       blob = bucket.blob(build_log_name)
       if blob.exists():
-        logging.info('Downloading cloud build log of %s: %s to %s',
-                     os.path.realpath(target_path), build_log_name, f)
+        logger.info('Downloading cloud build log of %s: %s to %s',
+                    os.path.realpath(target_path), build_log_name, f)
         blob.download_to_file(f)
       else:
-        logging.warning('Cannot find cloud build log of %s: %s',
-                        os.path.realpath(target_path), build_log_name)
+        logger.warning('Cannot find cloud build log of %s: %s',
+                       os.path.realpath(target_path), build_log_name)
 
     # Ignored for JVM project since JVM project does not generate err.log
     if language != 'jvm':
@@ -845,35 +848,35 @@ class CloudBuilderRunner(BuilderRunner):
           'wb') as f:
         blob = bucket.blob(err_log_name)
         if blob.exists():
-          logging.info('Downloading jcc error log of %s: %s to %s',
-                       os.path.realpath(target_path), err_log_name, f)
+          logger.info('Downloading jcc error log of %s: %s to %s',
+                      os.path.realpath(target_path), err_log_name, f)
           blob.download_to_file(f)
         else:
-          logging.warning('Cannot find jcc error log of %s: %s',
-                          os.path.realpath(target_path), err_log_name)
+          logger.warning('Cannot find jcc error log of %s: %s',
+                         os.path.realpath(target_path), err_log_name)
 
     with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
               'wb') as f:
       blob = bucket.blob(run_log_name)
       if blob.exists():
         build_result.succeeded = True
-        logging.info('Downloading cloud run log of %s: %s to %s',
-                     os.path.realpath(target_path), run_log_name, f)
+        logger.info('Downloading cloud run log of %s: %s to %s',
+                    os.path.realpath(target_path), run_log_name, f)
         blob.download_to_file(f)
       else:
-        logging.warning('Cannot find cloud run log of %s: %s',
-                        os.path.realpath(target_path), run_log_name)
+        logger.warning('Cannot find cloud run log of %s: %s',
+                       os.path.realpath(target_path), run_log_name)
 
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(
           self.work_dirs.build_logs_target(generated_target_name, iteration),
           os.path.basename(self.benchmark.target_path))
       build_result.errors = errors
-      logging.info('Cloud evaluation of %s indicates a failure: %s',
-                   os.path.realpath(target_path), errors)
+      logger.info('Cloud evaluation of %s indicates a failure: %s',
+                  os.path.realpath(target_path), errors)
       return build_result, None
-    logging.info('Cloud evaluation of %s indicates a success.',
-                 os.path.realpath(target_path))
+    logger.info('Cloud evaluation of %s indicates a success.',
+                os.path.realpath(target_path))
 
     corpus_dir = self.work_dirs.corpus(generated_target_name)
     with open(os.path.join(corpus_dir, 'corpus.zip'), 'wb') as f:

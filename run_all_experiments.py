@@ -15,12 +15,15 @@
 """Run an experiment with all function-under-tests."""
 
 import argparse
+import json
 import logging
 import os
 import sys
 import time
 import traceback
+from datetime import timedelta
 from multiprocessing import Pool
+from typing import Any
 
 import run_one_experiment
 from data_prep import introspector
@@ -28,6 +31,8 @@ from experiment import benchmark as benchmarklib
 from experiment import oss_fuzz_checkout
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
+
+logger = logging.getLogger(__name__)
 
 # WARN: Avoid large NUM_EXP for local experiments.
 # NUM_EXP controls the number of experiments in parallel, while each experiment
@@ -45,6 +50,11 @@ BENCHMARK_ROOT: str = './benchmark-sets'
 BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
 RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
 GENERATED_BENCHMARK: str = 'generated-benchmark-'
+JSON_REPORT = 'report.json'
+TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
+
+LOG_LEVELS = {'debug', 'info'}
+LOG_FMT = '%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s'
 
 
 class Result:
@@ -71,9 +81,9 @@ def get_next_generated_benchmarks_dir() -> str:
 
 def generate_benchmarks(args: argparse.Namespace) -> None:
   """Generates benchmarks, write to filesystem and set args benchmark dir."""
-  logging.info('Generating benchmarks.')
+  logger.info('Generating benchmarks.')
   benchmark_dir = get_next_generated_benchmarks_dir()
-  logging.info('Setting benchmark directory to %s.', benchmark_dir)
+  logger.info('Setting benchmark directory to %s.', benchmark_dir)
   os.makedirs(benchmark_dir)
   args.benchmarks_directory = benchmark_dir
   benchmark_oracles = [
@@ -98,8 +108,9 @@ def get_experiment_configs(
     |args| setting."""
   benchmark_yamls = []
   if args.benchmark_yaml:
-    print(f'A benchmark yaml file ({args.benchmark_yaml}) is provided. '
-          f'Will use it and ignore the files in {args.benchmarks_directory}.')
+    logger.info(
+        f'A benchmark yaml file ({args.benchmark_yaml}) is provided. '
+        f'Will use it and ignore the files in {args.benchmarks_directory}.')
     benchmark_yamls = [args.benchmark_yaml]
   else:
     if args.generate_benchmarks:
@@ -144,7 +155,7 @@ def run_experiments(benchmark: benchmarklib.Benchmark,
         prompt_builder_to_use=args.prompt_builder)
     return Result(benchmark, result)
   except Exception as e:
-    print('Exception while running experiment:', e, file=sys.stderr)
+    logger.error('Exception while running experiment: %s', str(e))
     traceback.print_exc()
     return Result(benchmark, f'Exception while running experiment: {e}')
 
@@ -219,6 +230,11 @@ def parse_args() -> argparse.Namespace:
                       type=str,
                       default=introspector.DEFAULT_INTROSPECTOR_ENDPOINT)
   parser.add_argument(
+      '-lo',
+      '--log-level',
+      help='Sets the logging level. Options available: [{LOG_LEVELS}]',
+      default='info')
+  parser.add_argument(
       '-of',
       '--oss-fuzz-dir',
       help=
@@ -291,23 +307,59 @@ def parse_args() -> argparse.Namespace:
 
 def _print_experiment_result(result: Result):
   """Prints the |result| of a single experiment."""
-  print(f'\n**** Finished benchmark {result.benchmark.project}, '
-        f'{result.benchmark.function_signature} ****\n'
-        f'{result.result}')
+  logger.info(f'\n**** Finished benchmark {result.benchmark.project}, '
+              f'{result.benchmark.function_signature} ****\n'
+              f'{result.result}')
 
 
 def _print_experiment_results(results: list[Result]):
   """Prints the |results| of multiple experiments."""
-  print('\n\n**** FINAL RESULTS: ****\n\n')
+  logger.info('\n\n**** FINAL RESULTS: ****\n\n')
   for result in results:
-    print('=' * 80)
-    print(f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
-          f'\n{result.result}\n')
+    logger.info('=' * 80)
+    logger.info(
+        f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
+        f'\n{result.result}\n')
+
+
+def _setup_logging(verbose: str = 'info') -> None:
+  if verbose == "debug":
+    log_level = logging.DEBUG
+  else:
+    log_level = logging.INFO
+  logging.basicConfig(
+      level=log_level,
+      format=LOG_FMT,
+      datefmt='%Y-%m-%d %H:%M:%S',
+  )
+
+
+def add_to_json_report(outdir: str, key: str, value: Any) -> None:
+  """Adds a key/value pair to JSON report."""
+  os.makedirs(outdir, exist_ok=True)
+  json_report_path = os.path.join(outdir, JSON_REPORT)
+  if os.path.isfile(json_report_path):
+    with open(json_report_path, 'r') as f:
+      json_report = json.load(f)
+  else:
+    json_report = {}
+
+  json_report[key] = value
+
+  # Overwrite the new json file
+  with open(json_report_path, 'w') as f:
+    f.write(json.dumps(json_report))
 
 
 def main():
-  logging.basicConfig(level=logging.INFO)
   args = parse_args()
+  _setup_logging(args.log_level)
+  logger.info('Starting experiments')
+
+  # Capture time at start
+  start = time.time()
+  add_to_json_report(args.work_dir, 'start_time',
+                     time.strftime(TIME_STAMP_FMT, time.gmtime(start)))
 
   # Set introspector endpoint before performing any operations to ensure the
   # right API endpoint is used throughout.
@@ -318,7 +370,7 @@ def main():
   experiment_configs = get_experiment_configs(args)
   experiment_results = []
 
-  print(f'Running {NUM_EXP} experiment(s) in parallel.')
+  logger.info(f'Running {NUM_EXP} experiment(s) in parallel.')
   if NUM_EXP == 1:
     for config in experiment_configs:
       result = run_experiments(*config)
@@ -334,6 +386,13 @@ def main():
         experiment_tasks.append(experiment_task)
         time.sleep(args.delay)
       experiment_results = [task.get() for task in experiment_tasks]
+
+  # Capture time at end
+  end = time.time()
+  add_to_json_report(args.work_dir, 'completion_time',
+                     time.strftime(TIME_STAMP_FMT, time.gmtime(end)))
+  add_to_json_report(args.work_dir, 'total_run_time',
+                     str(timedelta(seconds=end - start)))
 
   _print_experiment_results(experiment_results)
 
