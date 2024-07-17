@@ -127,15 +127,11 @@ class Function:
     """Subtract covered lines."""
 
     if language == 'jvm':
-      total_line = len(self.lines)
-      self.lines = {}
-      new_covered_lines = other.covered_lines - self.covered_lines
-      for i in range(total_line):
-        line = f'Line{i}'
-        if i >= new_covered_lines:
-          self.lines[line] = Line(contents=line, hit_count=0)
-        else:
-          self.lines[line] = Line(contents=line, hit_count=1)
+      for line_no in self.lines:
+        line = self.lines[line_no]
+        other_line = other.lines.get(line_no)
+        if other_line and other_line.hit_count > 0:
+          self.lines[line_no].hit_count = 0
     else:
       # For our analysis purposes, we completely delete any lines that are
       # hit by the other, rather than subtracting hitcounts.
@@ -242,12 +238,30 @@ class Textcov:
     textcov.language = 'jvm'
     jacoco_report = ET.parse(file_handle)
 
+    # Process source file information
+    line_coverage_dict = {}
+    for item in jacoco_report.iter():
+      if item.tag == 'sourcefile':
+        line_coverage = []
+        for line_item in item:
+          if line_item.tag == 'line':
+            line_no = int(line_item.attrib['nr'])
+            if line_item.attrib['mi'] == '0':
+              line_coverage.append((line_no, True))
+            else:
+              line_coverage.append((line_no, False))
+        line_coverage_dict[item.attrib['name']] = line_coverage
+
+    # Process methods
     class_method_items = []
     for item in jacoco_report.iter():
       if item.tag == 'class':
         # Skip fuzzer classes
         if textcov.is_fuzzer_class(item):
           continue
+
+        # Get line coverage information for this class
+        coverage = line_coverage_dict[item.attrib['sourcefilename']]
 
         # Get class name and skip fuzzing and testing classes
         class_name = item.attrib['name'].replace('/', '.')
@@ -257,11 +271,23 @@ class Textcov:
         for method_item in item:
           if method_item.tag == 'method':
             if method_item.attrib['name'] not in JVM_SKIPPED_METHOD:
-              class_method_items.append((class_name, method_item))
+              class_method_items.append((class_name, method_item, coverage))
 
-    for class_name, method_item in class_method_items:
+    for class_name, method_item, coverage in class_method_items:
       method_dict = method_item.attrib
       method_name = method_dict['name']
+
+      # Determine start index in coverage list
+      start_line = int(method_dict['line'])
+      start_index = -1
+      for count, item in enumerate(coverage):
+        if item[0] == start_line:
+          start_index = count
+          break
+
+      # Failed to retrieve coverage information, skipping this method
+      if start_index == -1:
+        continue
 
       # Process all arguments type from shortern Java Class naming
       args = textcov.determine_jvm_arguments_type(method_dict['desc'])
@@ -272,18 +298,21 @@ class Textcov:
 
       # Retrieve line coverage information
       total_line = 0
-      covered_line = 0
       for cov_data in method_item:
         if cov_data.attrib['type'] == 'LINE':
-          covered_line = int(cov_data.attrib['covered'])
           total_line = int(cov_data.attrib['covered']) + int(
               cov_data.attrib['missed'])
-      for i in range(total_line):
-        line = f'Line{i}'
-        if i >= covered_line:
-          current_method.lines[line] = Line(contents=line, hit_count=0)
-        else:
+
+      for count in range(start_index, start_index + total_line):
+        if count >= len(coverage):
+          # Fail safe
+          break
+        line_no, is_reached = coverage[count]
+        line = f'Line{line_no}'
+        if is_reached:
           current_method.lines[line] = Line(contents=line, hit_count=1)
+        else:
+          current_method.lines[line] = Line(contents=line, hit_count=0)
 
       textcov.functions[full_method_name] = current_method
 
@@ -350,6 +379,7 @@ class Textcov:
     arg = ''
     start = False
     next_arg = ''
+    array_count = 0
     for c in desc:
       if c == '(':
         continue
@@ -365,16 +395,26 @@ class Textcov:
       else:
         if c == 'L':
           start = True
-          args.append(next_arg)
+          if next_arg:
+            if array_count > 0:
+              next_arg = f'{next_arg}{"[]" * array_count}'
+              array_count = 0
+            args.append(next_arg)
           arg = ''
           next_arg = ''
-        elif c in ['[', ']']:
-          next_arg = next_arg + c
+        elif c == '[':
+          array_count += 1
         else:
           if c in JVM_CLASS_MAPPING:
-            args.append(next_arg)
+            if next_arg:
+              if array_count > 0:
+                next_arg = f'{next_arg}{"[]" * array_count}'
+                array_count = 0
+              args.append(next_arg)
             next_arg = JVM_CLASS_MAPPING[c]
 
     if next_arg:
+      if array_count > 0:
+        next_arg = f'{next_arg}{"[]" * array_count}'
       args.append(next_arg)
     return args
