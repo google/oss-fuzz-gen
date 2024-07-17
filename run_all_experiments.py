@@ -365,6 +365,8 @@ def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
     if not isinstance(result.result, run_one_experiment.AggregatedResult):
       continue
     cov = result.result.gained_textcov
+    if not cov:
+      continue
     if result.benchmark.project in textcov_dict:
       textcov_dict[result.benchmark.project].append(cov)
     else:

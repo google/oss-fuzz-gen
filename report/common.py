@@ -426,10 +426,9 @@ class Results:
       with FileSystem(summary_path).open() as f:
         try:
           coverage_dict = json.load(f)
-        except ValueError as e:
+        except ValueError:
           # Skip if error
           logging.debug('Failed to decode project_coverage_gain.json')
-          pass
 
     # Update project summary with coverage gain information
     project_summary_list = list(project_summary_dict.values())
