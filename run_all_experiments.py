@@ -312,8 +312,7 @@ def _print_experiment_results(results: list[Result]):
 
 def add_to_json_report(outdir: str, key: str, value: Any) -> None:
   """Adds a key/value pair to JSON report."""
-  if not os.path.isdir(outdir):
-    os.mkdir(outdir)
+  os.makedirs(outdir, exist_ok=True)
   json_report_path = os.path.join(outdir, JSON_REPORT)
   if os.path.isfile(json_report_path):
     with open(json_report_path, 'r') as f:
