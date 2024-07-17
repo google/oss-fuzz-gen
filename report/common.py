@@ -407,8 +407,9 @@ class Results:
       accumulated_results.crashes += int(benchmark.result.found_bug > 0)
       accumulated_results.total_coverage += benchmark.result.max_coverage
       accumulated_results.total_runs += 1
-      new_line_coverage_diff = benchmark.result.max_line_coverage_diff
-      accumulated_results.total_line_coverage_diff += new_line_coverage_diff
+      accumulated_results.total_line_coverage_diff += (
+          benchmark.result.max_line_coverage_diff
+      )
     return accumulated_results
 
   def get_project_summary(self, benchmarks: list[Benchmark]) -> list[Project]:
