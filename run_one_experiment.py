@@ -32,6 +32,8 @@ from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, output_parser, prompt_builder, prompts
 
+logger = logging.getLogger(__name__)
+
 # WARN: Avoid high value for NUM_EVA for local experiments.
 # NUM_EVA controls the number of fuzz targets to evaluate in parallel by each
 # experiment, while {run_all_experiments.NUM_EXP, default 2} experiments will
@@ -87,8 +89,8 @@ def generate_targets(benchmark: Benchmark,
                      builder: prompt_builder.PromptBuilder,
                      debug: bool = DEBUG) -> list[str]:
   """Generates fuzz target with LLM."""
-  print(f'Generating targets for {benchmark.project} '
-        f'{benchmark.function_signature} using {model.name}..')
+  logger.info(f'Generating targets for {benchmark.project} '
+              f'{benchmark.function_signature} using {model.name}..')
   model.query_llm(prompt, response_dir=work_dirs.raw_targets, log_output=debug)
 
   _, target_ext = os.path.splitext(benchmark.target_path)
@@ -107,9 +109,10 @@ def generate_targets(benchmark: Benchmark,
 
   if generated_targets:
     targets_relpath = map(os.path.relpath, generated_targets)
-    print('Generated:\n', '\n '.join(targets_relpath))
+    targets_relpath_str = '\n '.join(targets_relpath)
+    logger.info(f'Generated:\n {targets_relpath_str}')
   else:
-    print(f'Failed to generate targets: {generated_targets}')
+    logger.info(f'Failed to generate targets: {generated_targets}')
   return generated_targets
 
 
@@ -197,8 +200,8 @@ def check_targets(
     for i, target_stat in enumerate(
         p.starmap(evaluator.check_target, ai_target_pairs)):
       if target_stat is None:
-        logging.error('This should never happen: Error evaluating target: %s',
-                      generated_targets[i])
+        logger.error('This should never happen: Error evaluating target: %s',
+                     generated_targets[i])
         target_stat = exp_evaluator.Result()
 
       target_stats.append((i, target_stat))
@@ -206,7 +209,7 @@ def check_targets(
   if len(target_stats) > 0:
     return aggregate_results(target_stats, generated_targets)
 
-  print('No targets to check.')
+  logger.info('No targets to check.')
   return None
 
 
@@ -231,7 +234,6 @@ def run(benchmark: Benchmark,
         prompt_builder_to_use: str = 'DEFAULT') -> Optional[AggregatedResult]:
   """Generates code via LLM, and evaluates them."""
   model.cloud_setup()
-  logging.basicConfig(level=logging.INFO)
 
   if example_pair is None:
     example_pair = prompt_builder.EXAMPLES[benchmark.language]
