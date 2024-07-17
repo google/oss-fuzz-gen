@@ -252,11 +252,13 @@ def run_on_targets(target,
               generator_heuristics=generator_heuristics)
 
   # Cleanup the OSS-Fuzz docker image
-  clean_up_cmd = ['docker', 'image', 'rm', f'gcr.io/oss-fuzz/{worker_project_name}']
+  clean_up_cmd = [
+      'docker', 'image', 'rm', f'gcr.io/oss-fuzz/{worker_project_name}'
+  ]
   try:
     subprocess.check_call(' '.join(clean_up_cmd), shell=True)
   except subprocess.CalledProcessError:
-      pass
+    pass
 
   if semaphore is not None:
     semaphore.release()
