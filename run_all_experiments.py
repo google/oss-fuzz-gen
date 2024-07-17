@@ -28,9 +28,8 @@ from typing import Any
 import run_one_experiment
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
-from experiment import oss_fuzz_checkout
+from experiment import oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
-from experiment import textcov
 from llm_toolkit import models, prompt_builder
 
 logger = logging.getLogger(__name__)
