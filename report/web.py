@@ -15,6 +15,7 @@
 """Report generation tool to create HTML reports for experiment result."""
 
 import argparse
+import json
 import logging
 import os
 import threading
@@ -83,10 +84,17 @@ class GenerateReport:
   def __init__(self,
                results: Results,
                jinja_env: JinjaEnv,
+               results_dir: str,
                output_dir: str = 'results-report'):
     self._results = results
     self._output_dir = output_dir
     self._jinja = jinja_env
+    self.results_dir = results_dir
+
+  def read_timings(self):
+    with open(os.path.join(self.results_dir, 'report.json'), 'r') as f:
+      timings_dict = json.loads(f.read())
+    return timings_dict
 
   def generate(self):
     """Generate and write every report file."""
@@ -107,7 +115,9 @@ class GenerateReport:
 
     accumulated_results = self._results.get_macro_insights(benchmarks)
 
-    self._write_index_html(benchmarks, accumulated_results)
+    time_results = self.read_timings()
+
+    self._write_index_html(benchmarks, accumulated_results, time_results)
     self._write_index_json(benchmarks)
 
   def _write(self, output_path: str, content: str):
@@ -126,11 +136,13 @@ class GenerateReport:
       f.write(content)
 
   def _write_index_html(self, benchmarks: List[Benchmark],
-                        accumulated_results: AccumulatedResult):
+                        accumulated_results: AccumulatedResult,
+                        time_results: dict[str, Any]):
     """Generate the report index.html and write to filesystem."""
     rendered = self._jinja.render('index.html',
                                   benchmarks=benchmarks,
-                                  accumulated_results=accumulated_results)
+                                  accumulated_results=accumulated_results,
+                                  time_results=time_results)
     self._write('index.html', rendered)
 
   def _write_index_json(self, benchmarks: List[Benchmark]):
@@ -187,6 +199,7 @@ def generate_report(args: argparse.Namespace) -> None:
   jinja_env = JinjaEnv(template_globals={'model': args.model})
   gr = GenerateReport(results=results,
                       jinja_env=jinja_env,
+                      results_dir=args.results_dir,
                       output_dir=args.output_dir)
   gr.generate()
 
