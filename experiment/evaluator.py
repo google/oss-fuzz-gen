@@ -69,8 +69,7 @@ class Result:
     return dataclasses.asdict(self)
 
 
-def load_existing_textcov(project: str,
-                          language: str = 'c++') -> textcov.Textcov:
+def load_existing_textcov(project: str) -> textcov.Textcov:
   """Loads existing textcovs."""
   storage_client = storage.Client.create_anonymous_client()
   bucket = storage_client.bucket(OSS_FUZZ_COVERAGE_BUCKET)
@@ -92,20 +91,38 @@ def load_existing_textcov(project: str,
   # Download and merge them.
   existing_textcov = textcov.Textcov()
   for blob in blobs:
-    if language == 'jvm':
-      if blob.name != 'jacoco.xml':
-        continue
-      logger.info(f'Loading existing textcov from {blob.name}')
-      existing_textcov.merge(textcov.Textcov.from_jvm_file(blob))
-    else:
-      if not blob.name.endswith('.covreport'):
-        continue
+    if not blob.name.endswith('.covreport'):
+      continue
 
-      logger.info(f'Loading existing textcov from {blob.name}')
-      with blob.open('rb') as f:
-        existing_textcov.merge(textcov.Textcov.from_file(f))
+    logger.info(f'Loading existing textcov from {blob.name}')
+    with blob.open('rb') as f:
+      existing_textcov.merge(textcov.Textcov.from_file(f))
 
   return existing_textcov
+
+
+def load_existing_jvm_textcov(project: str) -> textcov.Textcov:
+  """Loads existing textcovs for JVM project."""
+  storage_client = storage.Client.create_anonymous_client()
+  bucket = storage_client.bucket(OSS_FUZZ_COVERAGE_BUCKET)
+  blobs = storage_client.list_blobs(bucket,
+                                    prefix=f'{project}/reports/',
+                                    delimiter='/')
+  # Iterate through all blobs first to get the prefixes (i.e. "subdirectories").
+  for blob in blobs:
+    continue
+
+  if not blobs.prefixes:  # type: ignore
+    # No existing coverage reports.
+    raise RuntimeError(f'No existing coverage reports for {project}')
+
+  latest_dir = sorted(blobs.prefixes)[-1]  # type: ignore
+  blob = bucket.blob(f'{latest_dir}linux/jacoco.xml')
+  logger.info(f'Loading existing jacoco.xml textcov from {blob.name}')
+  with blob.open() as f:
+    return textcov.Textcov.from_jvm_file(f)
+
+  return textcov.Textcov()
 
 
 def load_existing_coverage_summary(project: str) -> dict:
@@ -451,5 +468,7 @@ class Evaluator:
 
   def _load_existing_textcov(self) -> textcov.Textcov:
     """Loads existing textcovs."""
-    return load_existing_textcov(self.benchmark.project,
-                                 self.benchmark.language)
+    if self.benchmark.language == 'jvm':
+      return load_existing_jvm_textcov(self.benchmark.project)
+
+    return load_existing_textcov(self.benchmark.project)
