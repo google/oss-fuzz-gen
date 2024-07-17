@@ -56,7 +56,8 @@ JSON_REPORT = 'report.json'
 TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
 LOG_LEVELS = {'debug', 'info'}
-LOG_FMT = '%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s'
+LOG_FMT = ('%(asctime)s.%(msecs)03d %(levelname)s '
+           '%(module)s - %(funcName)s: %(message)s')
 
 
 class Result:
@@ -373,9 +374,9 @@ def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
       textcov_dict[result.benchmark.project] = [cov]
 
   coverage_gain: dict[str, float] = {}
-  for project in textcov_dict:
+  for project, cov_list in textcov_dict.items():
     total_cov = textcov.Textcov()
-    for cov in textcov_dict[project]:
+    for cov in cov_list:
       total_cov.merge(cov)
     coverage_gain[project] = total_cov.covered_lines / total_cov.total_lines
 
