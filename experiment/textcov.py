@@ -396,9 +396,8 @@ class Textcov:
         if c == 'L':
           start = True
           if next_arg:
-            if array_count > 0:
-              next_arg = f'{next_arg}{"[]" * array_count}'
-              array_count = 0
+            next_arg = f'{next_arg}{"[]" * array_count}'
+            array_count = 0
             args.append(next_arg)
           arg = ''
           next_arg = ''
@@ -407,14 +406,12 @@ class Textcov:
         else:
           if c in JVM_CLASS_MAPPING:
             if next_arg:
-              if array_count > 0:
-                next_arg = f'{next_arg}{"[]" * array_count}'
-                array_count = 0
+              next_arg = f'{next_arg}{"[]" * array_count}'
+              array_count = 0
               args.append(next_arg)
             next_arg = JVM_CLASS_MAPPING[c]
 
     if next_arg:
-      if array_count > 0:
-        next_arg = f'{next_arg}{"[]" * array_count}'
+      next_arg = f'{next_arg}{"[]" * array_count}'
       args.append(next_arg)
     return args
