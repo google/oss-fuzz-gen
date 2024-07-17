@@ -434,16 +434,9 @@ class FuzzerGenHeuristicTestConverter(FuzzHeuristicGeneratorBase):
 
     # Include any weird macros defined that does not have any values. This
     # was found empirically to be valuable.
-    print("TEST:")
-    print(test_case.test_content)
-    print(">>>>>>>>>>>TEST")
     macros_defined_in_test = []
     for line in test_case.test_content.split('\n'):
-      print(line)
-      print(line.split(' '))
       if '#define' in line and len(line.split(' ')) == 2:
-        print("DEFINE\n" * 30)
-        print(line)
         macros_defined_in_test.append(line)
 
     logger.info('Sample targets:')
