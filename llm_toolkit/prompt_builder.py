@@ -31,6 +31,8 @@ from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
 
+logger = logging.getLogger(__name__)
+
 DEFAULT_TEMPLATE_DIR: str = 'prompts/template_xml/'
 
 # TODO(Dongge): Refactor this tot avoid hard-coding.
@@ -393,7 +395,7 @@ class DefaultTemplateBuilder(PromptBuilder):
                     .replace('</error>\n', '')
 
     # Log warning for an unexpected empty error message.
-    logging.warning(
+    logger.warning(
         'Unexpected empty error message in fix prompt for error_desc: %s',
         str(error_desc))
     return problem.replace('{ERROR_MESSAGES}', error_message)
@@ -456,7 +458,7 @@ class DefaultTemplateBuilder(PromptBuilder):
       if prompt_size + func_code_token_num >= self._model.context_window:
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
-        logging.warning('Breaking because adding this function code \
+        logger.warning('Breaking because adding this function code \
               would exceed context window')
         break
       prompt_size += func_code_token_num
@@ -468,7 +470,7 @@ class DefaultTemplateBuilder(PromptBuilder):
       return problem.replace('{PROJECT_FUNCTION_CODE}',
                              project_function_code.strip())
 
-    logging.warning(
+    logger.warning(
         'Empty project function code in triage prompt for project: %s, \
           function name: %s', benchmark.project, benchmark.function_name)
 
@@ -497,7 +499,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     lines = driver_code.split('\n')
 
     if target_line > len(lines):
-      logging.warning(
+      logger.warning(
           'Driver target line exceed maxium limit in Project: %s, \
                       try to use whole driver code in trigae prompt', project)
       return driver_code
@@ -532,8 +534,8 @@ class DefaultTemplateBuilder(PromptBuilder):
           output_lines.update(range(start, end + 1))
       return '\n'.join(result)
 
-    logging.warning('Failed to slice Project: %s Function: %s at Lines: %s',
-                    project, func_name, target_lines)
+    logger.warning('Failed to slice Project: %s Function: %s at Lines: %s',
+                   project, func_name, target_lines)
     return ''
 
 
@@ -587,7 +589,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     except:
       pass
 
-    print(f'Cannot retrieve project url of project {project_name}')
+    logger.info(f'Cannot retrieve project url of project {project_name}')
     return ''
 
   def _find_template(self, template_dir: str, template_name: str) -> str:

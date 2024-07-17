@@ -33,6 +33,8 @@ from data_prep import project_src
 from experiment import benchmark as benchmarklib
 from experiment import oss_fuzz_checkout
 
+logger = logging.getLogger(__name__)
+
 T = TypeVar('T', str, list, dict, int)  # Generic type.
 
 TIMEOUT = 45
@@ -96,7 +98,6 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE
 
   INTROSPECTOR_ENDPOINT = endpoint
-  logging.info('Fuzz Introspector endpoint set to %s', INTROSPECTOR_ENDPOINT)
 
   INTROSPECTOR_CFG = f'{INTROSPECTOR_ENDPOINT}/annotated-cfg'
   INTROSPECTOR_ORACLE_FAR_REACH = (
@@ -139,7 +140,7 @@ def _query_introspector(api: str, params: dict) -> Optional[requests.Response]:
     try:
       resp = requests.get(api, params, timeout=TIMEOUT)
       if not resp.ok:
-        logging.error(
+        logger.error(
             'Failed to get data from FI:\n'
             '%s\n'
             '-----------Response received------------\n'
@@ -150,19 +151,19 @@ def _query_introspector(api: str, params: dict) -> Optional[requests.Response]:
       return resp
     except requests.exceptions.Timeout as err:
       if attempt_num == MAX_RETRY:
-        logging.error(
+        logger.error(
             'Failed to get data from FI due to timeout, max retry exceeded:\n'
             '%s\n'
             'Error: %s', _construct_url(api, params), err)
         break
       delay = 5 * 2**attempt_num + random.randint(1, 10)
-      logging.warning(
+      logger.warning(
           'Failed to get data from FI due to timeout on attempt %d:\n'
           '%s\n'
           'retry in %ds...', attempt_num, _construct_url(api, params), delay)
       time.sleep(delay)
     except requests.exceptions.RequestException as err:
-      logging.error(
+      logger.error(
           'Failed to get data from FI due to unexpected error:\n'
           '%s\n'
           'Error: %s', _construct_url(api, params), err)
@@ -180,7 +181,7 @@ def _get_data(resp: Optional[requests.Response], key: str,
   try:
     data = resp.json()
   except requests.exceptions.InvalidJSONError:
-    logging.error(
+    logger.error(
         'Unable to parse response from FI:\n'
         '%s\n'
         '-----------Response received------------\n'
@@ -193,9 +194,9 @@ def _get_data(resp: Optional[requests.Response], key: str,
   if content:
     return content
 
-  logging.error('Failed to get %s from FI:\n'
-                '%s\n'
-                '%s', key, resp.url, data)
+  logger.error('Failed to get %s from FI:\n'
+               '%s\n'
+               '%s', key, resp.url, data)
   return default_value
 
 
@@ -243,7 +244,7 @@ def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
   """Queries introspector for target functions."""
   query_func = get_oracle_dict().get(target_oracle, None)
   if not query_func:
-    logging.error('No such oracle "%s"', target_oracle)
+    logger.error('No such oracle "%s"', target_oracle)
     sys.exit(1)
   return query_func(project)
 
@@ -453,7 +454,7 @@ def _get_raw_return_type(function: dict, project: str) -> str:
   """Returns the raw function type."""
   return_type = function.get('return-type') or function.get('return_type', '')
   if not return_type:
-    logging.error(
+    logger.error(
         'Missing return type in project: %s\n'
         '  raw_function_name: %s', project,
         get_raw_function_name(function, project))
@@ -475,8 +476,8 @@ def get_raw_function_name(function: dict, project: str) -> str:
   raw_name = (function.get('raw-function-name') or
               function.get('raw_function_name', ''))
   if not raw_name:
-    logging.error('No raw function name in project: %s for function: %s',
-                  project, function)
+    logger.error('No raw function name in project: %s for function: %s',
+                 project, function)
   return raw_name
 
 
@@ -485,7 +486,7 @@ def _get_clean_arg_types(function: dict, project: str) -> list[str]:
   raw_arg_types = (function.get('arg-types') or
                    function.get('function_arguments', []))
   if not raw_arg_types:
-    logging.error(
+    logger.error(
         'Missing argument types in project: %s\n'
         '  raw_function_name: %s', project,
         get_raw_function_name(function, project))
@@ -521,7 +522,7 @@ def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
     arg_names = (function.get('arg-names') or
                  function.get('function_argument_names', []))
   if not arg_names:
-    logging.error(
+    logger.error(
         'Missing argument names in project: %s\n'
         '  raw_function_name: %s', project,
         get_raw_function_name(function, project))
@@ -535,7 +536,7 @@ def get_function_signature(function: dict, project: str) -> str:
     # For JVM projects, the full function signature are the raw function name
     return get_raw_function_name(function, project)
   if not function_signature:
-    logging.error(
+    logger.error(
         'Missing function signature in project: %s\n'
         '  raw_function_name: %s', project,
         get_raw_function_name(function, project))
@@ -565,7 +566,7 @@ def _select_top_functions_from_oracle(project: str, limit: int,
   if target_oracle not in target_oracles:
     return OrderedDict()
 
-  logging.info('Extracting functions using oracle %s.', target_oracle)
+  logger.info('Extracting functions using oracle %s.', target_oracle)
   functions = query_introspector_for_targets(project, target_oracle)[:limit]
 
   return OrderedDict((func['function_signature'], func) for func in functions)
@@ -650,7 +651,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
   functions = _select_functions_from_oracles(project, limit, target_oracles)
 
   if not functions:
-    logging.error('No functions found using the oracles: %s', target_oracles)
+    logger.error('No functions found using the oracles: %s', target_oracles)
     return []
 
   if language == 'jvm':
@@ -671,13 +672,13 @@ def populate_benchmarks_using_introspector(project: str, language: str,
   harnesses, interesting = result
   harness = pick_one(harnesses)
   if not harness:
-    logging.error('No fuzz target found in project %s.', project)
+    logger.error('No fuzz target found in project %s.', project)
     return []
-  logging.info('Fuzz target file found for project %s: %s', project, harness)
+  logger.info('Fuzz target file found for project %s: %s', project, harness)
 
   target_name = get_target_name(project, harness)
-  logging.info('Fuzz target binary found for project %s: %s', project,
-               target_name)
+  logger.info('Fuzz target binary found for project %s: %s', project,
+              target_name)
 
   potential_benchmarks = []
   for function in functions:
@@ -699,17 +700,17 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         # stored as <SOURCE_BASE>/a/b/c/d.java
         src_file = f'{filename.replace(".", "/")}.java'
         if src_file not in src_path_list:
-          logging.error('error: %s %s', filename, interesting.keys())
+          logger.error('error: %s %s', filename, interesting.keys())
           continue
     elif filename not in [os.path.basename(i) for i in interesting.keys()]:
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
-      logging.error('error: %s %s', filename, interesting.keys())
+      logger.error('error: %s %s', filename, interesting.keys())
       continue
 
     function_signature = get_function_signature(function, project)
     if not function_signature:
       continue
-    logging.info('Function signature to fuzz: %s', function_signature)
+    logger.info('Function signature to fuzz: %s', function_signature)
     potential_benchmarks.append(
         benchmarklib.Benchmark('cli',
                                project,
@@ -728,7 +729,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
 
     if len(potential_benchmarks) >= (limit * len(target_oracles)):
       break
-  print("Length of potential targets: %d" % (len(potential_benchmarks)))
+  logger.info("Length of potential targets: %d" % (len(potential_benchmarks)))
 
   return potential_benchmarks
 
@@ -761,7 +762,7 @@ def _identify_latest_report(project_name: str):
   if summaries:
     return ('https://storage.googleapis.com/oss-fuzz-introspector/'
             f'{summaries[-1]}')
-  logging.error('Error: %s has no summary.', project_name)
+  logger.error('Error: %s has no summary.', project_name)
   return None
 
 
@@ -799,14 +800,14 @@ def get_project_funcs(project_name: str) -> Dict[str, List[Dict]]:
     from FuzzIntrospector."""
   introspector_json_report = _extract_introspector_report(project_name)
   if introspector_json_report is None:
-    logging.error('No fuzz introspector report is found.')
+    logger.error('No fuzz introspector report is found.')
     return {}
 
   if introspector_json_report.get('analyses') is None:
-    logging.error('Error: introspector_json_report has no "analyses"')
+    logger.error('Error: introspector_json_report has no "analyses"')
     return {}
   if introspector_json_report.get('analyses').get('AnnotatedCFG') is None:
-    logging.error(
+    logger.error(
         'Error: introspector_json_report["analyses"] has no "AnnotatedCFG"')
     return {}
 
@@ -885,8 +886,8 @@ if __name__ == '__main__':
     oss_fuzz_checkout.clone_oss_fuzz()
     oss_fuzz_checkout.postprocess_oss_fuzz()
   except subprocess.CalledProcessError as e:
-    logging.error('Failed to prepare OSS-Fuzz directory for project %s: %s',
-                  args.project, e)
+    logger.error('Failed to prepare OSS-Fuzz directory for project %s: %s',
+                 args.project, e)
   cur_project_language = oss_fuzz_checkout.get_project_language(args.project)
   benchmarks = populate_benchmarks_using_introspector(args.project,
                                                       cur_project_language,
@@ -895,5 +896,5 @@ if __name__ == '__main__':
   if benchmarks:
     benchmarklib.Benchmark.to_yaml(benchmarks, args.out)
   else:
-    logging.error('Nothing found for %s', args.project)
+    logger.error('Nothing found for %s', args.project)
     sys.exit(1)
