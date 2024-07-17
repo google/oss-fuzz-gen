@@ -415,11 +415,9 @@ class Results:
     """Returns a list of project summary."""
     project_summary_dict = {}
     for benchmark in benchmarks:
-      if benchmark.project in project_summary_dict:
-        project_summary_dict[benchmark.project].count += 1
-      else:
-        new_project = Project(benchmark.project)
-        project_summary_dict[benchmark.project] = new_project
+      if benchmark.project not in project_summary_dict:
+        project_summary_dict[benchmark.project] = Project(benchmark.project)
+      project_summary_dict[benchmark.project].count += 1
 
     # Retrieve coverage gain information
     coverage_dict = {}
@@ -428,8 +426,9 @@ class Results:
       with FileSystem(summary_path).open() as f:
         try:
           coverage_dict = json.load(f)
-        except:
+        except ValueError as e:
           # Skip if error
+          logging.debug('Failed to decode project_coverage_gain.json')
           pass
 
     # Update project summary with coverage gain information

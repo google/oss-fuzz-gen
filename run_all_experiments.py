@@ -359,7 +359,7 @@ def add_to_json_report(outdir: str, key: str, value: Any) -> None:
 
 
 def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
-  """Process and calculate the total coverage gain for each project."""
+  """Processes and calculates the total coverage gain for each project."""
   textcov_dict: dict[str, list[textcov.Textcov]] = {}
   for result in results:
     if not isinstance(result.result, run_one_experiment.AggregatedResult):

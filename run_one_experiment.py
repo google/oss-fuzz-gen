@@ -68,7 +68,7 @@ class AggregatedResult:
   max_coverage_sample: str = ''
   max_coverage_diff_sample: str = ''
   max_coverage_diff_report: str = ''
-  gained_textcov: textcov.Textcov = textcov.Textcov()
+  gained_textcov: textcov.Textcov = None
 
   def __str__(self):
     return (
@@ -80,6 +80,11 @@ class AggregatedResult:
         f'max coverage sample: {self.max_coverage_sample}\n'
         f'max coverage diff sample: {self.max_coverage_diff_sample}\n'
         f'max coverage diff report: {self.max_coverage_diff_report or "None"}')
+
+
+  def __post_init__(self, *args, **kwargs):  # pylint: disable=unused-argument
+    if not self.gained_textcov:
+      self.gained_textcov = textcov.Textcov()
 
 
 def generate_targets(benchmark: Benchmark,

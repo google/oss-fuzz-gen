@@ -53,7 +53,7 @@ class Result:
   is_semantic_error: bool = False
   semantic_error: str = ''
   triage: str = ''
-  textcov_updated: textcov.Textcov = textcov.Textcov()
+  textcov_updated: textcov.Textcov = None
   # Deprecated renamed fields. Keeping them for backward compatibility.
   # TODO https://github.com/google/oss-fuzz-gen/issues/215
   is_driver_fuzz_err: bool = dataclasses.field(kw_only=True, default=False)
@@ -64,6 +64,9 @@ class Result:
       self.is_semantic_error = self.is_driver_fuzz_err
     if self.driver_fuzz_err:
       self.semantic_error = self.driver_fuzz_err
+    if not self.textcov_updated:
+      self.textcov_updated =  textcov.Textcov()
+
 
   def dict(self):
     return dataclasses.asdict(self)
