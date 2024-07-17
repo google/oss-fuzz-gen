@@ -93,7 +93,7 @@ def load_existing_textcov(project: str) -> textcov.Textcov:
     if not blob.name.endswith('.covreport'):
       continue
 
-   logger.info(f'Loading existing textcov from {blob.name}')
+    logger.info(f'Loading existing textcov from {blob.name}')
     with blob.open('rb') as f:
       existing_textcov.merge(textcov.Textcov.from_file(f))
 
