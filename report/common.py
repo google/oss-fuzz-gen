@@ -408,8 +408,7 @@ class Results:
       accumulated_results.total_coverage += benchmark.result.max_coverage
       accumulated_results.total_runs += 1
       accumulated_results.total_line_coverage_diff += (
-          benchmark.result.max_line_coverage_diff
-      )
+          benchmark.result.max_line_coverage_diff)
     return accumulated_results
 
   def get_project_summary(self, benchmarks: list[Benchmark]) -> list[Project]:
