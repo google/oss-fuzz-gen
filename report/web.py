@@ -115,10 +115,11 @@ class GenerateReport:
 
     accumulated_results = self._results.get_macro_insights(benchmarks)
     projects = self._results.get_project_summary(benchmarks)
-    
+
     time_results = self.read_timings()
-    
-    self._write_index_html(benchmarks, accumulated_results, time_results, projects)
+
+    self._write_index_html(benchmarks, accumulated_results, time_results,
+                           projects)
     self._write_index_json(benchmarks)
 
   def _write(self, output_path: str, content: str):
@@ -138,13 +139,12 @@ class GenerateReport:
 
   def _write_index_html(self, benchmarks: List[Benchmark],
                         accumulated_results: AccumulatedResult,
-                        time_results: dict[str, Any],
-                        projects: list[Project]):
+                        time_results: dict[str, Any], projects: list[Project]):
     """Generate the report index.html and write to filesystem."""
     rendered = self._jinja.render('index.html',
                                   benchmarks=benchmarks,
                                   accumulated_results=accumulated_results,
-                                  time_results=time_results,                                  
+                                  time_results=time_results,
                                   projects=projects)
     self._write('index.html', rendered)
 

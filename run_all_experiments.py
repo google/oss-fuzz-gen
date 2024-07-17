@@ -324,6 +324,10 @@ def _print_experiment_results(results: list[Result], cov_gain: dict[str,
         f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
         f'\n{result.result}\n')
 
+  print('\n\n**** TOTAL COVERAGE GAIN: ****\n\n')
+  for project in cov_gain:
+    print(f'*{project}: {cov_gain[project]}')
+
 
 def _setup_logging(verbose: str = 'info') -> None:
   if verbose == "debug":
@@ -352,10 +356,6 @@ def add_to_json_report(outdir: str, key: str, value: Any) -> None:
   # Overwrite the new json file
   with open(json_report_path, 'w') as f:
     f.write(json.dumps(json_report))
-
-  print('\n\n**** TOTAL COVERAGE GAIN: ****\n\n')
-  for project in cov_gain:
-    print(f'*{project}: {cov_gain[project]}')
 
 
 def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
@@ -429,7 +429,7 @@ def main():
                      time.strftime(TIME_STAMP_FMT, time.gmtime(end)))
   add_to_json_report(args.work_dir, 'total_run_time',
                      str(timedelta(seconds=end - start)))
-  
+
   _print_experiment_results(experiment_results, coverage_gain_dict)
 
 
