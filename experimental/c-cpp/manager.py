@@ -179,12 +179,12 @@ class FuzzHeuristicGeneratorBase:
     self.github_url = ''
 
   def get_fuzzer_intrinsics(self, func) -> Dict[str, Any]:  # pylint: disable=unused-argument
-    """generates fuzzer source code, build and include directives."""
+    """Generates fuzzer source code, build and include directives."""
     # By default return empty dictionary.
     return {}
 
   def get_fuzzer_test_intrinsics(self, test_case: Test) -> Dict[str, Any]:  # pylint: disable=unused-argument
-    """generates fuzzer source code, build and include directives."""
+    """Generates fuzzer source code, build and include directives."""
     # By default return empty dictionary.
     return {}
 
@@ -425,10 +425,11 @@ class FuzzerGenHeuristicTestConverter(FuzzHeuristicGeneratorBase):
     self.all_header_files = all_header_files
     self.github_url = ''
 
-  def get_fuzzing_targets(self) -> List[Any]:
+  def get_fuzzing_targets(self) -> List:
     return []
 
   def get_fuzzer_test_intrinsics(self, test_case: Test) -> Dict[str, Any]:
+    """Returns the fuzzer intrinsics based on test conversion."""
     (headers_to_include, _,
      build_command_includes) = self.get_header_intrinsics()
 
@@ -1029,8 +1030,8 @@ def get_tests_converted_to_harnesses(build_results, language, test_dir,
     # Generate a build script for compiling the fuzzer with ASAN.
     final_asan_build_script = build_results[test_dir].build_script + '\n'
     fuzzer_out = '/src/generated-fuzzer'
-    fuzz_cmd = ' '.join(fuzzer_build_cmd) + ' '
-    fuzz_includes = fuzzer_intrinsics["build-command-includes"]
+    fuzz_cmd = ' '.join(fuzzer_build_cmd)
+    fuzz_includes = fuzzer_intrinsics['build-command-includes']
     final_asan_build_script += f'{fuzz_cmd} {fuzz_includes} -o {fuzzer_out}'
 
     return_list.append(
@@ -1384,7 +1385,8 @@ def get_all_test_scripts(target_source_path) -> List[Test]:
     is_test = any(['test' in path for path in split_path])
     if not is_test:
       continue
-    if not file.endswith('.c') and not file.endswith('.cpp'):
+    test_extensions = ['.cc', '.cpp', '.cxx', '.c++', 'c']
+    if not any(file.endswith(ext) for ext in test_extensions):
       continue
     # Let's say this is a test
     logger.info('Found test: %s', file)
