@@ -127,8 +127,7 @@ class Function:
     """Subtract covered lines."""
 
     if language == 'jvm':
-      for line_no in self.lines:
-        line = self.lines[line_no]
+      for line_no, line in self.lines.items():
         other_line = other.lines.get(line_no)
         if other_line and other_line.hit_count > 0:
           self.lines[line_no].hit_count = 0
@@ -396,7 +395,7 @@ class Textcov:
         if c == 'L':
           start = True
           if next_arg:
-            next_arg = f'{next_arg}{"[]" * array_count}'
+            next_arg += '[]' * array_count
             array_count = 0
             args.append(next_arg)
           arg = ''
@@ -406,12 +405,12 @@ class Textcov:
         else:
           if c in JVM_CLASS_MAPPING:
             if next_arg:
-              next_arg = f'{next_arg}{"[]" * array_count}'
+              next_arg += '[]' * array_count
               array_count = 0
               args.append(next_arg)
             next_arg = JVM_CLASS_MAPPING[c]
 
     if next_arg:
-      next_arg = f'{next_arg}{"[]" * array_count}'
+      next_arg += '[]' * array_count
       args.append(next_arg)
     return args
