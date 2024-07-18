@@ -28,7 +28,7 @@ from typing import Any
 import run_one_experiment
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
-from experiment import oss_fuzz_checkout, textcov
+from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
 
@@ -377,7 +377,16 @@ def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
     total_cov = textcov.Textcov()
     for cov in cov_list:
       total_cov.merge(cov)
-    coverage_gain[project] = total_cov.covered_lines / total_cov.total_lines
+
+    total_lines = max(
+        total_cov.total_lines,
+        sum([
+            f['summary']['lines']['count']
+            for f in evaluator.load_existing_coverage_summary(project)['data']
+            [0]['files']
+        ]))
+
+    coverage_gain[project] = total_cov.covered_lines / total_lines
 
   # Write to summary file
   with open(PROJECT_SUMMARY_JSON, 'w') as f:
