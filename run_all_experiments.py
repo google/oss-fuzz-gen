@@ -386,7 +386,11 @@ def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
             [0]['files']
         ]))
 
-    coverage_gain[project] = total_cov.covered_lines / total_lines
+    if total_lines <= 0:
+      # Fail safe when total lines is 0 because of invalid coverage report
+      coverage_gain[project] = 0
+    else:
+      coverage_gain[project] = total_cov.covered_lines / total_lines
 
   # Write to summary file
   with open(PROJECT_SUMMARY_JSON, 'w') as f:
