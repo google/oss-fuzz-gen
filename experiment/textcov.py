@@ -261,11 +261,15 @@ class Textcov:
           continue
 
         # Get line coverage information for this class
-        coverage = line_coverage_dict[item.attrib['sourcefilename']]
+        sourcefilename = item.attrib.get('sourcefilename')
+        if not sourcefilename:
+          # Fail safe for invalid jacoco.xml with no sourcefilename
+          continue
+        coverage = line_coverage_dict.get(sourcefilename, [])
 
         # Get class name and skip fuzzing and testing classes
-        class_name = item.attrib['name'].replace('/', '.')
-        if 'test' in class_name.lower() or 'fuzzer' in class_name.lower():
+        class_name = item.attrib.get('name', '').replace('/', '.')
+        if not class_name or 'test' in class_name.lower() or 'fuzzer' in class_name.lower():
           continue
 
         for method_item in item:
@@ -278,7 +282,7 @@ class Textcov:
       method_name = method_dict['name']
 
       # Determine start index in coverage list
-      start_line = int(method_dict['line'])
+      start_line = int(method_dict.get('line', '-1'))
       start_index = -1
       for count, item in enumerate(coverage):
         if item[0] == start_line:
