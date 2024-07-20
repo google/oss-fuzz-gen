@@ -269,7 +269,8 @@ class Textcov:
 
         # Get class name and skip fuzzing and testing classes
         class_name = item.attrib.get('name', '').replace('/', '.')
-        if not class_name or 'test' in class_name.lower() or 'fuzzer' in class_name.lower():
+        if not class_name or 'test' in class_name.lower(
+        ) or 'fuzzer' in class_name.lower():
           continue
 
         for method_item in item:
