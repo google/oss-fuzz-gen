@@ -213,68 +213,65 @@ def prepare(oss_fuzz_dir: str) -> None:
   oss_fuzz_checkout.postprocess_oss_fuzz()
 
 
-def generate_targets_for_analysis(
-    model: models.LLM,
-    benchmark: Benchmark,
-    work_dirs: WorkDirs,
-    template_dir: str,
-    use_context: bool,
-    debug: bool = DEBUG,
-    prompt_builder_to_use: str = 'DEFAULT',
-    example_pair: Optional[list[list[str]]] = None,
-    cloud_experiment_bucket: str = '',
-    dry_run: bool = False) -> List[str]:
-    """Generates a set of harnesses and build scripts ready to be evaluated
-    by `check_targets`. This is where the core first LLM logic is used to generate
-    harnesses.
-    
+def generate_targets_for_analysis(model: models.LLM,
+                                  benchmark: Benchmark,
+                                  work_dirs: WorkDirs,
+                                  template_dir: str,
+                                  use_context: bool,
+                                  example_pair: list[list[str]],
+                                  debug: bool = DEBUG,
+                                  prompt_builder_to_use: str = 'DEFAULT',
+                                  cloud_experiment_bucket: str = '',
+                                  dry_run: bool = False) -> List[str]:
+  """Generates a set of harnesses and build scripts ready to be evaluated
+    by `check_targets`. This is where the core first LLM logic is used to
+    generate harnesses.
+
     Returns a list of folders with the generated artifacts.
     """
-    
-    
-    if benchmark.use_project_examples:
-      project_examples = project_targets.generate_data(
-          benchmark.project,
-          benchmark.language,
-          cloud_experiment_bucket=cloud_experiment_bucket)
+
+  if benchmark.use_project_examples:
+    project_examples = project_targets.generate_data(
+        benchmark.project,
+        benchmark.language,
+        cloud_experiment_bucket=cloud_experiment_bucket)
+  else:
+    project_examples = []
+
+  if use_context:
+    retriever = ContextRetriever(benchmark)
+    context_info = retriever.get_context_info()
+  else:
+    context_info = {}
+
+  if benchmark.language == 'jvm':
+    # For Java projects
+    builder = prompt_builder.DefaultJvmTemplateBuilder(model, benchmark,
+                                                       template_dir)
+  else:
+    if prompt_builder_to_use == 'CSpecific':
+      builder = prompt_builder.CSpecificBuilder(model, benchmark, template_dir)
     else:
-      project_examples = []
+      # Use default
+      builder = prompt_builder.DefaultTemplateBuilder(model, benchmark,
+                                                      template_dir)
 
-    if use_context:
-      retriever = ContextRetriever(benchmark)
-      context_info = retriever.get_context_info()
-    else:
-      context_info = {}
+  prompt = builder.build(example_pair,
+                         project_example_content=project_examples,
+                         project_context_content=context_info)
+  prompt.save(work_dirs.prompt)
 
-    if benchmark.language == 'jvm':
-      # For Java projects
-      builder = prompt_builder.DefaultJvmTemplateBuilder(
-          model, benchmark, template_dir)
-    else:
-      if prompt_builder_to_use == 'CSpecific':
-        builder = prompt_builder.CSpecificBuilder(model, benchmark,
-                                                  template_dir)
-      else:
-        # Use default
-        builder = prompt_builder.DefaultTemplateBuilder(model, benchmark, 
-                                                        template_dir)
+  if dry_run:
+    return []
 
-    prompt = builder.build(example_pair,
-                           project_example_content=project_examples,
-                           project_context_content=context_info)
-    prompt.save(work_dirs.prompt)
-
-    if dry_run:
-      return []
-
-    generated_targets = generate_targets(benchmark,
-                                         model,
-                                         prompt,
-                                         work_dirs,
-                                         builder,
-                                         debug=debug)
-    generated_targets = fix_code(work_dirs, generated_targets)
-    return generated_targets
+  generated_targets = generate_targets(benchmark,
+                                       model,
+                                       prompt,
+                                       work_dirs,
+                                       builder,
+                                       debug=debug)
+  generated_targets = fix_code(work_dirs, generated_targets)
+  return generated_targets
 
 
 def run(benchmark: Benchmark,
@@ -296,17 +293,17 @@ def run(benchmark: Benchmark,
     example_pair = prompt_builder.EXAMPLES[benchmark.language]
 
   generated_targets = generate_targets_for_analysis(
-      model = model,
-      benchmark = benchmark,
-      work_dirs = work_dirs,
-      template_dir = template_dir,
-      use_context = use_context,
-      debug = debug,
-      prompt_builder_to_use = prompt_builder_to_use,
-      example_pair = example_pair,
-      cloud_experiment_bucket = cloud_experiment_bucket,
-      dry_run = dry_run)
-  
+      model=model,
+      benchmark=benchmark,
+      work_dirs=work_dirs,
+      template_dir=template_dir,
+      use_context=use_context,
+      example_pair=example_pair,
+      debug=debug,
+      prompt_builder_to_use=prompt_builder_to_use,
+      cloud_experiment_bucket=cloud_experiment_bucket,
+      dry_run=dry_run)
+
   logger.info('Generated %d targets', len(generated_targets))
   if not generated_targets:
     return None
