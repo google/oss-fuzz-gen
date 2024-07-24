@@ -318,21 +318,21 @@ class Claude(LLM):
 class ClaudeHaikuV3(Claude):
   """Claude Haiku 3."""
 
-  name = 'claude-3-haiku'
+  name = 'vertex_ai_claude-3-haiku'
   _vertex_ai_model = 'claude-3-haiku@20240307'
 
 
 class ClaudeOpusV3(Claude):
   """Claude Opus 3."""
 
-  name = 'claude-3-opus'
+  name = 'vertex_ai_claude-3-opus'
   _vertex_ai_model = 'claude-3-opus@20240229'
 
 
 class ClaudeSonnetV3D5(Claude):
   """Claude Sonnet 3.5."""
 
-  name = 'claude-3-5-sonnet'
+  name = 'vertex_ai_claude-3-5-sonnet'
   _vertex_ai_model = 'claude-3-5-sonnet@20240620'
 
 
