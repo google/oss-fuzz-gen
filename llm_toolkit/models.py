@@ -231,7 +231,7 @@ class GPT(LLM):
                 log_output: bool = False) -> None:
     """Queries OpenAI's API and stores response in |response_dir|."""
     if self.ai_binary:
-      logger.info(f'OpenAI does not use local AI binary: {self.ai_binary}')
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
     if self.temperature_list:
       logger.info(
           f'OpenAI does not allow temperature list: {self.temperature_list}')
@@ -268,9 +268,8 @@ class Claude(LLM):
   """Anthropic's Claude model encapsulator."""
 
   _max_output_tokens = 4096
+  _vertex_ai_model = ''
   context_window = 200000
-
-  name = "claude-3-haiku@20240307"
 
   # ================================ Prompt ================================ #
   def estimate_token_num(self, text) -> int:
@@ -282,6 +281,9 @@ class Claude(LLM):
     """Returns the expected prompt type."""
     return prompts.ClaudePrompt
 
+  def get_model(self) -> Any:
+    return self._vertex_ai_model
+
   # ============================== Generation ============================== #
   def query_llm(self,
                 prompt: prompts.Prompt,
@@ -289,7 +291,7 @@ class Claude(LLM):
                 log_output: bool = False) -> None:
     """Queries Claude's API and stores response in |response_dir|."""
     if self.ai_binary:
-      logger.info(f'Claude does not use local AI binary: {self.ai_binary}')
+      raise ValueError(f'Claude does not use local AI binary: {self.ai_binary}')
     if self.temperature_list:
       logger.info(
           f'Claude does not allow temperature list: {self.temperature_list}')
@@ -303,7 +305,7 @@ class Claude(LLM):
     completion = self.with_retry_on_error(
         lambda: client.messages.create(max_tokens=self._max_output_tokens,
                                        messages=prompt.get(),
-                                       model=self.name,
+                                       model=self.get_model(),
                                        temperature=self.temperature),
         anthropic.AnthropicError)
     if log_output:
@@ -313,16 +315,25 @@ class Claude(LLM):
       self._save_output(index, content, response_dir)
 
 
+class ClaudeHaikuV3(Claude):
+  """Claude Haiku 3."""
+
+  name = 'claude-3-haiku'
+  _vertex_ai_model = 'claude-3-haiku@20240307'
+
+
 class ClaudeOpusV3(Claude):
   """Claude Opus 3."""
 
-  name = 'claude-3-opus@20240229'
+  name = 'claude-3-opus'
+  _vertex_ai_model = 'claude-3-opus@20240229'
 
 
 class ClaudeSonnetV3D5(Claude):
   """Claude Sonnet 3.5."""
 
-  name = 'claude-3-5-sonnet@20240620'
+  name = 'claude-3-5-sonnet'
+  _vertex_ai_model = 'claude-3-5-sonnet@20240620'
 
 
 class GoogleModel(LLM):
