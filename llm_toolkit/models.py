@@ -281,7 +281,7 @@ class Claude(LLM):
     """Returns the expected prompt type."""
     return prompts.ClaudePrompt
 
-  def get_model(self) -> Any:
+  def get_model(self) -> str:
     return self._vertex_ai_model
 
   # ============================== Generation ============================== #
