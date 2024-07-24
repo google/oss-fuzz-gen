@@ -27,6 +27,7 @@ import traceback
 from abc import abstractmethod
 from typing import Any, Callable, Optional, Type
 
+import anthropic
 import openai
 import tiktoken
 import vertexai
@@ -261,6 +262,67 @@ class GPT4o(GPT):
   """OpenAI's GPTi-4 model."""
 
   name = 'gpt-4o'
+
+
+class Claude(LLM):
+  """Anthropic's Claude model encapsulator."""
+
+  _max_output_tokens = 4096
+  context_window = 200000
+
+  name = "claude-3-haiku@20240307"
+
+  # ================================ Prompt ================================ #
+  def estimate_token_num(self, text) -> int:
+    """Estimates the number of tokens in |text|."""
+    client = anthropic.Client()
+    return client.count_tokens(text)
+
+  def prompt_type(self) -> type[prompts.Prompt]:
+    """Returns the expected prompt type."""
+    return prompts.ClaudePrompt
+
+  # ============================== Generation ============================== #
+  def query_llm(self,
+                prompt: prompts.Prompt,
+                response_dir: str,
+                log_output: bool = False) -> None:
+    """Queries Claude's API and stores response in |response_dir|."""
+    if self.ai_binary:
+      logger.info(f'Claude does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info(
+          f'Claude does not allow temperature list: {self.temperature_list}')
+
+    vertex_ai_locations = os.getenv('VERTEX_AI_LOCATIONS',
+                                    'europe-west1').split(',')
+    project_id = os.getenv('GOOGLE_CLOUD_PROJECT', 'oss-fuzz')
+    region = random.sample(vertex_ai_locations, 1)[0]
+    client = anthropic.AnthropicVertex(region=region, project_id=project_id)
+
+    completion = self.with_retry_on_error(
+        lambda: client.messages.create(max_tokens=self._max_output_tokens,
+                                       messages=prompt.get(),
+                                       model=self.name,
+                                       temperature=self.temperature),
+        anthropic.AnthropicError)
+    if log_output:
+      logger.info(completion)
+    for index, choice in enumerate(completion.content):
+      content = choice.text
+      self._save_output(index, content, response_dir)
+
+
+class ClaudeOpusV3(Claude):
+  """Claude Opus 3."""
+
+  name = 'claude-3-opus@20240229'
+
+
+class ClaudeSonnetV3D5(Claude):
+  """Claude Sonnet 3.5."""
+
+  name = 'claude-3-5-sonnet@20240620'
 
 
 class GoogleModel(LLM):
