@@ -127,8 +127,7 @@ class Function:
     """Subtract covered lines."""
 
     if language == 'jvm':
-      for line_no in self.lines:
-        line = self.lines[line_no]
+      for line_no, line in self.lines.items():
         other_line = other.lines.get(line_no)
         if other_line and other_line.hit_count > 0:
           self.lines[line_no].hit_count = 0
@@ -261,11 +260,16 @@ class Textcov:
           continue
 
         # Get line coverage information for this class
-        coverage = line_coverage_dict[item.attrib['sourcefilename']]
+        sourcefilename = item.attrib.get('sourcefilename')
+        if not sourcefilename:
+          # Fail safe for invalid jacoco.xml with no sourcefilename
+          continue
+        coverage = line_coverage_dict.get(sourcefilename, [])
 
         # Get class name and skip fuzzing and testing classes
-        class_name = item.attrib['name'].replace('/', '.')
-        if 'test' in class_name.lower() or 'fuzzer' in class_name.lower():
+        class_name = item.attrib.get('name', '').replace('/', '.')
+        if not class_name or 'test' in class_name.lower(
+        ) or 'fuzzer' in class_name.lower():
           continue
 
         for method_item in item:
@@ -278,7 +282,7 @@ class Textcov:
       method_name = method_dict['name']
 
       # Determine start index in coverage list
-      start_line = int(method_dict['line'])
+      start_line = int(method_dict.get('line', '-1'))
       start_index = -1
       for count, item in enumerate(coverage):
         if item[0] == start_line:
@@ -396,9 +400,8 @@ class Textcov:
         if c == 'L':
           start = True
           if next_arg:
-            if array_count > 0:
-              next_arg = f'{next_arg}{"[]" * array_count}'
-              array_count = 0
+            next_arg += '[]' * array_count
+            array_count = 0
             args.append(next_arg)
           arg = ''
           next_arg = ''
@@ -407,14 +410,12 @@ class Textcov:
         else:
           if c in JVM_CLASS_MAPPING:
             if next_arg:
-              if array_count > 0:
-                next_arg = f'{next_arg}{"[]" * array_count}'
-                array_count = 0
+              next_arg += '[]' * array_count
+              array_count = 0
               args.append(next_arg)
             next_arg = JVM_CLASS_MAPPING[c]
 
     if next_arg:
-      if array_count > 0:
-        next_arg = f'{next_arg}{"[]" * array_count}'
+      next_arg += '[]' * array_count
       args.append(next_arg)
     return args
