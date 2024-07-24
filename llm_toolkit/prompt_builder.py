@@ -85,12 +85,9 @@ class PromptBuilder:
 
   @abstractmethod
   def build(self,
-            function_signature: str,
-            target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None,
-            needs_extern: bool = False) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
     """Builds a prompt."""
 
   @abstractmethod
@@ -115,9 +112,11 @@ class DefaultTemplateBuilder(PromptBuilder):
 
   def __init__(self,
                model: models.LLM,
+               benchmark: Benchmark,
                template_dir: str = DEFAULT_TEMPLATE_DIR):
     super().__init__(model)
     self._template_dir = template_dir
+    self.benchmark = benchmark
 
     # Load templates.
     self.priming_template_file = self._find_template(template_dir,
@@ -283,17 +282,14 @@ class DefaultTemplateBuilder(PromptBuilder):
       self._prompt.add_solution(solution)
 
   def build(self,
-            function_signature: str,
-            target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None,
-            needs_extern: bool = False) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
-    priming = self._format_priming(target_file_type, needs_extern)
-    final_problem = self.format_problem(function_signature)
+    priming = self._format_priming(self.benchmark.file_type, self.benchmark.needs_extern)
+    final_problem = self.format_problem(self.benchmark.function_signature)
     final_problem += (f'You MUST call <code>\n'
-                      f'{function_signature}\n'
+                      f'{self.benchmark.function_signature}\n'
                       f'</code> in your solution!\n')
     if project_context_content:
       final_problem += self.format_context(project_context_content)
@@ -958,17 +954,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     return ' or '.join(simple_type_mapping.get(simple_type, []))
 
   def build(self,
-            function_signature: str,
-            target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None,
-            needs_extern: bool = False) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it.
        Ignore target_file_type, project_example_content
        and project_context_content parameters.
     """
-    final_problem = self._format_problem(function_signature)
+    final_problem = self._format_problem(self.benchmark.function_signature)
     self._prepare_prompt(final_problem)
     return self._prompt
 
@@ -1042,12 +1035,9 @@ class CSpecificBuilder(PromptBuilder):
       return file.read()
 
   def build(self,
-            function_signature: str,
-            target_file_type: FileType,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None,
-            needs_extern: bool = False) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
 
     with open(self.priming_template_file, 'r') as f:

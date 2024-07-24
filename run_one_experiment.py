@@ -213,32 +213,25 @@ def prepare(oss_fuzz_dir: str) -> None:
   oss_fuzz_checkout.postprocess_oss_fuzz()
 
 
-def run(benchmark: Benchmark,
-        model: models.LLM,
-        template_dir: str,
-        work_dirs: WorkDirs,
-        example_pair: Optional[list[list[str]]] = None,
-        debug: bool = DEBUG,
-        manual_fix: bool = False,
-        cloud_experiment_name: str = '',
-        cloud_experiment_bucket: str = '',
-        use_context: bool = False,
-        run_timeout: int = RUN_TIMEOUT,
-        dry_run: bool = False,
-        prompt_builder_to_use: str = 'DEFAULT') -> Optional[AggregatedResult]:
-  """Generates code via LLM, and evaluates them."""
-  model.cloud_setup()
-
-  if example_pair is None:
-    example_pair = prompt_builder.EXAMPLES[benchmark.language]
-
-  if manual_fix:
-    generated_targets = [
-        os.path.join(work_dirs.fixed_targets, f)
-        for f in os.listdir(work_dirs.fixed_targets)
-        if benchmarklib.is_c_file(f) or benchmarklib.is_cpp_file(f)
-    ]
-  else:
+def generate_targets_for_analysis(
+    model: models.LLM,
+    benchmark: Benchmark,
+    work_dirs: WorkDirs,
+    template_dir: str,
+    use_context: bool,
+    debug: bool = DEBUG,
+    prompt_builder_to_use: str = 'DEFAULT',
+    example_pair: Optional[list[list[str]]] = None,
+    cloud_experiment_bucket: str = '',
+    dry_run: bool = False) -> List[str]:
+    """Generates a set of harnesses and build scripts ready to be evaluated
+    by `check_targets`. This is where the core first LLM logic is used to generate
+    harnesses.
+    
+    Returns a list of folders with the generated artifacts.
+    """
+    
+    
     if benchmark.use_project_examples:
       project_examples = project_targets.generate_data(
           benchmark.project,
@@ -263,18 +256,16 @@ def run(benchmark: Benchmark,
                                                   template_dir)
       else:
         # Use default
-        builder = prompt_builder.DefaultTemplateBuilder(model, template_dir)
+        builder = prompt_builder.DefaultTemplateBuilder(model, benchmark, 
+                                                        template_dir)
 
-    prompt = builder.build(benchmark.function_signature,
-                           benchmark.file_type,
-                           example_pair,
-                           project_examples,
-                           project_context_content=context_info,
-                           needs_extern=benchmark.needs_extern)
+    prompt = builder.build(example_pair,
+                           project_example_content=project_examples,
+                           project_context_content=context_info)
     prompt.save(work_dirs.prompt)
 
     if dry_run:
-      return None
+      return []
 
     generated_targets = generate_targets(benchmark,
                                          model,
@@ -283,6 +274,43 @@ def run(benchmark: Benchmark,
                                          builder,
                                          debug=debug)
     generated_targets = fix_code(work_dirs, generated_targets)
+    return generated_targets
+
+
+def run(benchmark: Benchmark,
+        model: models.LLM,
+        template_dir: str,
+        work_dirs: WorkDirs,
+        example_pair: Optional[list[list[str]]] = None,
+        debug: bool = DEBUG,
+        cloud_experiment_name: str = '',
+        cloud_experiment_bucket: str = '',
+        use_context: bool = False,
+        run_timeout: int = RUN_TIMEOUT,
+        dry_run: bool = False,
+        prompt_builder_to_use: str = 'DEFAULT') -> Optional[AggregatedResult]:
+  """Generates code via LLM, and evaluates them."""
+  model.cloud_setup()
+
+  if example_pair is None:
+    example_pair = prompt_builder.EXAMPLES[benchmark.language]
+
+  generated_targets = generate_targets_for_analysis(
+      model = model,
+      benchmark = benchmark,
+      work_dirs = work_dirs,
+      template_dir = template_dir,
+      use_context = use_context,
+      debug = debug,
+      prompt_builder_to_use = prompt_builder_to_use,
+      example_pair = example_pair,
+      cloud_experiment_bucket = cloud_experiment_bucket,
+      dry_run = dry_run)
+  
+  logger.info('Generated %d targets', len(generated_targets))
+  if not generated_targets:
+    return None
+
   return check_targets(model.ai_binary, benchmark, work_dirs, generated_targets,
                        cloud_experiment_name, cloud_experiment_bucket,
                        run_timeout, model.name)
