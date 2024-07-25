@@ -12,7 +12,7 @@
   "name": "[org.json.JSONArray].<init>(java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "org.json.JSONArray"
   "signature": "[org.json.JSONArray].<init>(java.lang.Object)"
 "language": "jvm"
