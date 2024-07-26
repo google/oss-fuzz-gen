@@ -57,6 +57,7 @@ INTROSPECTOR_ORACLE_KEYWORD = ''
 INTROSPECTOR_ORACLE_EASY_PARAMS = ''
 INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES = ''
 INTROSPECTOR_ORACLE_OPTIMAL = ''
+INTROSPECTOR_ORACLE_ALL_TESTS = ''
 INTROSPECTOR_FUNCTION_SOURCE = ''
 INTROSPECTOR_PROJECT_SOURCE = ''
 INTROSPECTOR_XREF = ''
@@ -81,6 +82,7 @@ def get_oracle_dict() -> Dict[str, Any]:
       'easy-params-far-reach': query_introspector_for_easy_param_targets,
       'jvm-public-candidates': query_introspector_jvm_all_public_candidates,
       'optimal-targets': query_introspector_for_optimal_targets,
+      'test-migration': query_introspector_for_tests,
   }
   return oracle_dict
 
@@ -96,7 +98,8 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES, \
       INTROSPECTOR_ALL_JVM_SOURCE_PATH, INTROSPECTOR_ORACLE_OPTIMAL, \
       INTROSPECTOR_HEADERS_FOR_FUNC, \
-      INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE
+      INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE, \
+      INTROSPECTOR_ORACLE_ALL_TESTS
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -127,6 +130,9 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/all-project-source-files')
   INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/function-with-matching-return-type')
+  INTROSPECTOR_ORACLE_ALL_TESTS = (
+    f'{INTROSPECTOR_ENDPOINT}/project-tests'
+  )
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -199,6 +205,16 @@ def _get_data(resp: Optional[requests.Response], key: str,
                '%s\n'
                '%s', key, resp.url, data)
   return default_value
+
+
+def query_introspector_for_tests(project: str) -> list[str]:
+  """Gets the list of test files in the target project."""
+  resp = _query_introspector(
+      INTROSPECTOR_ORACLE_ALL_TESTS, {
+          'project':
+              project,
+      })
+  return _get_data(resp, 'test-file-list', [])
 
 
 def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
@@ -644,11 +660,46 @@ def _select_functions_from_oracles(project: str, limit: int,
 
   return [all_functions[func] for func in selected_singatures]
 
+def _get_harness_from_source(project, filenames, language):
+  result = project_src.search_source(project, filenames, language)
+  if not result:
+    return None
+
+  harnesses, interesting = result
+  harness = pick_one(harnesses)
+  return harness
 
 def populate_benchmarks_using_introspector(project: str, language: str,
                                            limit: int,
                                            target_oracles: List[str]):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
+  for target_oracle in target_oracles:
+    if 'test-migration' in target_oracle:
+      harness = _get_harness_from_source(project, [], language)
+      if not harness:
+        logger.error('No fuzz target found in project %s.', project)
+        return []    
+      logger.info('Using harness path %s', harness)
+      potential_benchmarks = []
+      test_files = query_introspector_for_tests(project)
+      for test_file in test_files:
+        potential_benchmarks.append(benchmarklib.Benchmark(
+            benchmark_id='cli',
+            project=project,
+            language=language,
+            function_signature='test-file',
+            function_name='test-file',
+            return_type='test',
+            params=[],
+            exceptions=[],
+            is_jvm_static=False,
+            target_path=harness,
+            preferred_target_name='',
+            is_test_benchmark = True,
+            test_file_path = test_file))
+      return potential_benchmarks[:limit]
+        
+
   functions = _select_functions_from_oracles(project, limit, target_oracles)
 
   if not functions:
@@ -666,12 +717,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         for function in functions
     ]
 
-  result = project_src.search_source(project, filenames, language)
-  if not result:
-    return []
-
-  harnesses, interesting = result
-  harness = pick_one(harnesses)
+  harness = _get_harness_from_source(project, filenames, language)
   if not harness:
     logger.error('No fuzz target found in project %s.', project)
     return []
