@@ -634,7 +634,8 @@ def _select_functions_from_oracles(project: str, limit: int,
                                                         target_oracle,
                                                         target_oracles)
       all_functions.update(tmp_functions)
-      return list(all_functions.values())[:limit]
+
+    return list(all_functions.values())[:limit]
 
   # Selection rule: Prioritize on far-reach-low-coverage, but include one of
   # optimal-targets, easy-params-far-reach if any.
