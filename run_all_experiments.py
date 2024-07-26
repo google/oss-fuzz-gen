@@ -102,8 +102,7 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
 
 
 def prepare_experiment_targets(
-    args: argparse.Namespace
-) -> list[tuple[benchmarklib.Benchmark, argparse.Namespace]]:
+    args: argparse.Namespace) -> list[benchmarklib.Benchmark]:
   """Constructs a list of experiment configs based on the |BENCHMARK_DIR| and
     |args| setting."""
   benchmark_yamls = []
@@ -370,7 +369,8 @@ def main():
   experiment_targets = prepare_experiment_targets(args)
   experiment_results = []
 
-  logger.info(f'Running %s experiment(s) in parallels of %s.', len(experiment_targets), str(NUM_EXP))
+  logger.info(f'Running %s experiment(s) in parallels of %s.',
+              len(experiment_targets), str(NUM_EXP))
   if NUM_EXP == 1:
     for target_benchmark in experiment_targets:
       result = run_experiments(target_benchmark, args)

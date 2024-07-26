@@ -17,14 +17,12 @@
 import dataclasses
 import logging
 import os
-import sys
 import shutil
 from multiprocessing import pool
 from typing import List, Optional
 
 from data_prep import project_targets
 from data_prep.project_context.context_introspector import ContextRetriever
-from experiment import benchmark as benchmarklib
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
 from experiment import oss_fuzz_checkout
@@ -247,16 +245,19 @@ def generate_targets_for_analysis(model: models.LLM,
 
   # If this is a test benchmark then we will use a test prompt builder.
   if benchmark.is_test_benchmark:
-    logger.info('Generating a target for test case: %s', benchmark.test_file_path)
-    builder = prompt_builder.TestToHarnessConverter(model, benchmark, template_dir)
+    logger.info('Generating a target for test case: %s',
+                benchmark.test_file_path)
+    builder = prompt_builder.TestToHarnessConverter(model, benchmark,
+                                                    template_dir)
   else:
     if benchmark.language == 'jvm':
       # For Java projects
-      builder = prompt_builder.DefaultJvmTemplateBuilder(model, benchmark,
-                                                        template_dir)
+      builder = prompt_builder.DefaultJvmTemplateBuilder(
+          model, benchmark, template_dir)
     else:
       if prompt_builder_to_use == 'CSpecific':
-        builder = prompt_builder.CSpecificBuilder(model, benchmark, template_dir)
+        builder = prompt_builder.CSpecificBuilder(model, benchmark,
+                                                  template_dir)
       else:
         # Use default
         builder = prompt_builder.DefaultTemplateBuilder(model, benchmark,

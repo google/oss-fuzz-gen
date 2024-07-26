@@ -1126,6 +1126,7 @@ class CSpecificBuilder(PromptBuilder):
       generated_code = f'#include <{header}>\n' + generated_code
     return generated_code
 
+
 class TestToHarnessConverter(PromptBuilder):
   """Builder specifically targeted C (and excluding C++)."""
 
@@ -1138,8 +1139,8 @@ class TestToHarnessConverter(PromptBuilder):
     self.benchmark = benchmark
 
     # Load templates.
-    self.priming_template_file = self._find_template(template_dir,
-                                                     'test_to_harness_priming.txt')
+    self.priming_template_file = self._find_template(
+        template_dir, 'test_to_harness_priming.txt')
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
     """Finds template file based on |template_dir|."""
@@ -1178,8 +1179,9 @@ class TestToHarnessConverter(PromptBuilder):
     target_repository = oss_fuzz_checkout.get_project_repository(
         self.benchmark.project)
     test_source_code = introspector.query_introspector_source_code(
-      self.benchmark.project, self.benchmark.test_file_path.replace('//', '/'), 0, 9999999)
-    
+        self.benchmark.project,
+        self.benchmark.test_file_path.replace('//', '/'), 0, 9999999)
+
     included_header_files = self.extract_header_files(test_source_code)
 
     prompt_text = prompt_text.replace("{TARGET_REPO}", target_repository)
@@ -1202,7 +1204,8 @@ should be written in CPP. This means the  harness should have the structure:
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
 </code>
       '''
-    prompt_text = prompt_text.replace('{PROGRAMMING_LANGUAGE_TEXT}', language_prompt)
+    prompt_text = prompt_text.replace('{PROGRAMMING_LANGUAGE_TEXT}',
+                                      language_prompt)
 
     language_text = f'''The following header files are used in the test. Please make sure
   to include the same ones: {included_header_files}'''
@@ -1233,7 +1236,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
     if self.benchmark.language.lower() == 'c':
       for i in range(10):
         logger.info('Replaceing the func sign')
-      generated_code = generated_code.replace('extern "C" int LLVMFuzzerTestOneInput', 'int LLVMFuzzerTestOneInput')
+      generated_code = generated_code.replace(
+          'extern "C" int LLVMFuzzerTestOneInput', 'int LLVMFuzzerTestOneInput')
     logger.info('Final')
     logger.info(generated_code)
     return generated_code

@@ -159,12 +159,14 @@ def append_extern_c(raw_content: str) -> str:
   fixed_content = re.sub(pattern, replacement, raw_content)
   return fixed_content
 
+
 def remove_extern_c(raw_content: str) -> str:
   """Removes `extern "C"` before fuzzer entry `LLVMFuzzerTestOneInput`."""
   pattern = r'extern "C" int LLVMFuzzerTestOneInput'
   replacement = f'int LLVMFuzzerTestOneInput'
   fixed_content = re.sub(pattern, replacement, raw_content)
   return fixed_content
+
 
 def insert_cstdlib(raw_content: str) -> str:
   """Includes `cstdlib` library."""
