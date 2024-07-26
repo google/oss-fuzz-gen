@@ -370,7 +370,8 @@ def main():
   experiment_configs = get_experiment_configs(args)
   experiment_results = []
 
-  logger.info(f'Running {NUM_EXP} experiment(s) in parallel.')
+  logger.info(f'Running %s experiment(s) in parallels of %s.',
+              len(experiment_configs), str(NUM_EXP))
   if NUM_EXP == 1:
     for config in experiment_configs:
       result = run_experiments(*config)
