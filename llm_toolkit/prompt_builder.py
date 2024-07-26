@@ -1118,7 +1118,7 @@ class CSpecificBuilder(PromptBuilder):
     """Builds a triager prompt."""
     return self._prompt
 
-  def post_proces_generated_code(self, generated_code: str) -> str:
+  def post_process_generated_code(self, generated_code: str) -> str:
     """Adds specific C headers we always want in the harnesses."""
     # TODO: explore if we can make this more precise, by only adding headers
     # if needed.
