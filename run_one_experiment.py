@@ -23,7 +23,6 @@ from typing import List, Optional
 
 from data_prep import project_targets
 from data_prep.project_context.context_introspector import ContextRetriever
-from experiment import benchmark as benchmarklib
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
 from experiment import oss_fuzz_checkout
@@ -87,8 +86,9 @@ def generate_targets(benchmark: Benchmark,
                      builder: prompt_builder.PromptBuilder,
                      debug: bool = DEBUG) -> list[str]:
   """Generates fuzz target with LLM."""
-  logger.info(f'Generating targets for %s %s using %s..',
-              benchmark.project, benchmark.function_signature, model.name)
+  logger.info(
+      f'Generating targets for {benchmark.project} {benchmark.function_signature} using {model.name}..'
+  )
   model.query_llm(prompt, response_dir=work_dirs.raw_targets, log_output=debug)
 
   _, target_ext = os.path.splitext(benchmark.target_path)

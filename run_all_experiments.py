@@ -55,7 +55,7 @@ TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
 LOG_LEVELS = {'debug', 'info'}
 LOG_FMT = (
- '%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s'
+    '%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s'
 )
 
 
