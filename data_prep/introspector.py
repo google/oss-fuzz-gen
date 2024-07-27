@@ -706,7 +706,8 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         for function in functions
     ]
 
-  harnesses, interesting = project_src.search_source(project, filenames, language)
+  harnesses, interesting = project_src.search_source(project, filenames,
+                                                     language)
   harness = pick_one(harnesses)
   if not harness:
     logger.error('No fuzz target found in project %s.', project)
