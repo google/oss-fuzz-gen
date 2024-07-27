@@ -54,7 +54,8 @@ JSON_REPORT = 'report.json'
 TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
 LOG_LEVELS = {'debug', 'info'}
-LOG_FMT = '%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s'
+LOG_FMT = ('%(asctime)s.%(msecs)03d %(levelname)s '
+           '%(module)s - %(funcName)s: %(message)s')
 
 
 class Result:
@@ -108,8 +109,8 @@ def prepare_experiment_targets(
   benchmark_yamls = []
   if args.benchmark_yaml:
     logger.info(
-        f'A benchmark yaml file ({args.benchmark_yaml}) is provided. '
-        f'Will use it and ignore the files in {args.benchmarks_directory}.')
+        'A benchmark yaml file %s is provided. Will use it and ignore '
+        'the files in %s.', args.benchmark_yaml, args.benchmarks_directory)
     benchmark_yamls = [args.benchmark_yaml]
   else:
     if args.generate_benchmarks:
@@ -371,6 +372,7 @@ def main():
 
   logger.info(f'Running %s experiment(s) in parallels of %s.',
               len(experiment_targets), str(NUM_EXP))
+
   if NUM_EXP == 1:
     for target_benchmark in experiment_targets:
       result = run_experiments(target_benchmark, args)

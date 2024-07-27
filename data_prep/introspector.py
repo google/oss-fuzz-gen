@@ -773,7 +773,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
 
     if len(potential_benchmarks) >= (limit * len(target_oracles)):
       break
-  logger.info("Length of potential targets: %d" % (len(potential_benchmarks)))
+  logger.info('Length of potential targets: %d', len(potential_benchmarks))
 
   return potential_benchmarks
 

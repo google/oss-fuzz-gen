@@ -86,8 +86,8 @@ def generate_targets(benchmark: Benchmark,
                      builder: prompt_builder.PromptBuilder,
                      debug: bool = DEBUG) -> list[str]:
   """Generates fuzz target with LLM."""
-  logger.info(f'Generating targets for {benchmark.project} '
-              f'{benchmark.function_signature} using {model.name}..')
+  logger.info('Generating targets for %s %s using %s..', benchmark.project,
+              benchmark.function_signature, model.name)
   model.query_llm(prompt, response_dir=work_dirs.raw_targets, log_output=debug)
 
   _, target_ext = os.path.splitext(benchmark.target_path)
@@ -107,9 +107,9 @@ def generate_targets(benchmark: Benchmark,
   if generated_targets:
     targets_relpath = map(os.path.relpath, generated_targets)
     targets_relpath_str = '\n '.join(targets_relpath)
-    logger.info(f'Generated:\n {targets_relpath_str}')
+    logger.info('Generated:\n %s', targets_relpath_str)
   else:
-    logger.info(f'Failed to generate targets: {generated_targets}')
+    logger.info('Failed to generate targets: %s', generated_targets)
   return generated_targets
 
 
