@@ -1128,7 +1128,7 @@ class CSpecificBuilder(PromptBuilder):
 
 
 class TestToHarnessConverter(PromptBuilder):
-  """Builder specifically targeted C (and excluding C++)."""
+  """Builder for test-to-harness conversion."""
 
   def __init__(self,
                model: models.LLM,
