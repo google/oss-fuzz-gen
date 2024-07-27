@@ -529,49 +529,44 @@ class BuilderRunner:
     else:
       logger.info(f'Successfully run {generated_project}.')
 
-
   def is_image_cached(self, project_name):
     cached_image_name = f'cached_image_{project_name}'
     try:
-      sp.run(['docker', 'inspect', '--type=image', cached_image_name], check=True,
-                       stdin=sp.DEVNULL,
-               stdout=sp.DEVNULL,
-               stderr=sp.STDOUT,     
-             
-             )
+      sp.run(
+          ['docker', 'inspect', '--type=image', cached_image_name],
+          check=True,
+          stdin=sp.DEVNULL,
+          stdout=sp.DEVNULL,
+          stderr=sp.STDOUT,
+      )
       return True
     except sp.CalledProcessError:
       return False
-    
+
   def _rewrite_project_to_cached_project(self, generated_project):
     cached_image_name = f'cached_image_{self.benchmark.project}'
 
-    generated_project_folder = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
-                     generated_project)
+    generated_project_folder = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
+                                            'projects', generated_project)
 
-    cached_dockerfile = os.path.join(generated_project_folder, 'Dockerfile_cached')
+    cached_dockerfile = os.path.join(generated_project_folder,
+                                     'Dockerfile_cached')
     if os.path.isfile(cached_dockerfile):
       logger.info('Already converted')
       return
 
-
     dockerfile = os.path.join(generated_project_folder, 'Dockerfile')
     with open(dockerfile, 'r') as f:
       docker_content = f.read()
-    
-    original_dockerfile = os.path.join(generated_project_folder, 'Dockerfile_original')
+
+    original_dockerfile = os.path.join(generated_project_folder,
+                                       'Dockerfile_original')
     shutil.copy(dockerfile, original_dockerfile)
-    
-    
 
-    #logger.info('DOCKER BEFORE %s', docker_content)
-    # Rewrite the
-
-    docker_content = docker_content.replace('FROM gcr.io/oss-fuzz-base/base-builder', f'FROM {cached_image_name}')
+    docker_content = docker_content.replace(
+        'FROM gcr.io/oss-fuzz-base/base-builder', f'FROM {cached_image_name}')
     docker_content += '\n' + 'COPY adjusted_build.sh $SRC/build.sh\n'
 
-
-    #logger.info('DOCKER AFTER %s', docker_content)
     # Now comment out everything except the first FROM and the last two Dockers
     from_line = -1
     copy_fuzzer_line = -1
@@ -583,45 +578,39 @@ class BuilderRunner:
       if 'COPY' in line:
         copy_fuzzer_line = copy_build_line
         copy_build_line = line_idx
-    
+
     lines_to_keep = {from_line, copy_fuzzer_line, copy_build_line}
-    #logger.info('line indices: %s', str(lines_to_keep))
     new_content = ''
     for line_idx, line in enumerate(docker_content.split('\n')):
       if line_idx not in lines_to_keep:
-        #logger.info('Commenting out %s', line)
         new_content += '# ' + line + '\n'
       else:
-        #logger.info('Keeping %s', line)
         new_content += line + '\n'
-    
+
     # Overwrite the existing one
     with open(cached_dockerfile, 'w') as f:
       f.write(new_content)
 
-    #logger.info('New Dockerfile: %s', new_content)
-
     # Copy over adjusted build script
     shutil.copy(os.path.join('fuzzer_build_script', self.benchmark.project),
-              os.path.join(generated_project_folder, 'adjusted_build.sh'))
-
+                os.path.join(generated_project_folder, 'adjusted_build.sh'))
 
   def prepare_build(self, sanitizer, generated_project):
-    generated_project_folder = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
-                     generated_project)
+    generated_project_folder = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
+                                            'projects', generated_project)
     if not ENABLE_CACHING:
       return
     dockerfile_to_use = os.path.join(generated_project_folder, 'Dockerfile')
-    original_dockerfile = os.path.join(generated_project_folder, 'Dockerfile_original')
+    original_dockerfile = os.path.join(generated_project_folder,
+                                       'Dockerfile_original')
     if sanitizer == 'address' and self.is_image_cached(self.benchmark.project):
       logger.info('Using cached dockerfile')
-      cached_dockerfile = os.path.join(generated_project_folder, 'Dockerfile_cached')
+      cached_dockerfile = os.path.join(generated_project_folder,
+                                       'Dockerfile_cached')
       shutil.copy(cached_dockerfile, dockerfile_to_use)
     else:
       logger.info('Using original dockerfile')
       shutil.copy(original_dockerfile, dockerfile_to_use)
-    
-
 
   def build_target_local(self,
                          generated_project: str,
@@ -630,8 +619,8 @@ class BuilderRunner:
     """Builds a target with OSS-Fuzz."""
     logger.info(f'Building {generated_project} with {sanitizer}')
 
-
-    if ENABLE_CACHING and sanitizer == 'address' and self.is_image_cached(self.benchmark.project):
+    if ENABLE_CACHING and sanitizer == 'address' and self.is_image_cached(
+        self.benchmark.project):
       logger.info('We should use cached instance.')
       self._rewrite_project_to_cached_project(generated_project)
       # Rewrite for caching.
@@ -771,11 +760,12 @@ class BuilderRunner:
     ]
 
     try:
-      sp.run(command,
-             #capture_output=True,
-             cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
-             stdin=sp.DEVNULL,
-             check=True)
+      sp.run(
+          command,
+          #capture_output=True,
+          cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
+          stdin=sp.DEVNULL,
+          check=True)
     except sp.CalledProcessError as e:
       logger.info(f'Failed to generate coverage for {generated_project}:\n'
                   f'{e.stdout}\n'
