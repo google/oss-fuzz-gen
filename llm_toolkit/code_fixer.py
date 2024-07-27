@@ -103,7 +103,6 @@ def collect_specific_fixes(project: str,
   """Returns a list code fix functions given the language and |project|."""
   required_fixes = set()
   if benchmarklib.is_cpp_file(file_name):
-    logger.info('Selecting CPP specific fixes')
     required_fixes = required_fixes.union([
         append_extern_c,
         insert_cstdint,
@@ -112,11 +111,9 @@ def collect_specific_fixes(project: str,
 
   # TODO(Dongge): Remove this.
   if benchmarklib.is_c_file(file_name):
-    logger.info('Selecting C specific fixes')
     required_fixes = required_fixes.union([
         insert_stdint,
         include_builtin_library,
-        remove_extern_c,
     ])
 
   # TODO(Dongge): Remove this.
@@ -156,14 +153,6 @@ def append_extern_c(raw_content: str) -> str:
   """Appends `extern "C"` before fuzzer entry `LLVMFuzzerTestOneInput`."""
   pattern = r'int LLVMFuzzerTestOneInput'
   replacement = f'extern "C" {pattern}'
-  fixed_content = re.sub(pattern, replacement, raw_content)
-  return fixed_content
-
-
-def remove_extern_c(raw_content: str) -> str:
-  """Removes `extern "C"` before fuzzer entry `LLVMFuzzerTestOneInput`."""
-  pattern = r'extern "C" int LLVMFuzzerTestOneInput'
-  replacement = f'int LLVMFuzzerTestOneInput'
   fixed_content = re.sub(pattern, replacement, raw_content)
   return fixed_content
 
