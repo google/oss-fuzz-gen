@@ -658,25 +658,13 @@ def _select_functions_from_oracles(project: str, limit: int,
   return [all_functions[func] for func in selected_singatures]
 
 
-def _get_harnesses_from_source(project, filenames, language):
-  result = project_src.search_source(project, filenames, language)
-  if not result:
-    return None
-
-  harnesses, interesting = result
-  return harnesses, interesting
-
-
 def populate_benchmarks_using_introspector(project: str, language: str,
                                            limit: int,
                                            target_oracles: List[str]):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
   for target_oracle in target_oracles:
     if 'test-migration' in target_oracle:
-      result = _get_harnesses_from_source(project, [], language)
-      if result is None:
-        return []
-      harnesses, interesting = result
+      harnesses, interesting = project_src.search_source(project, [], language)
       harness = pick_one(harnesses)
       if not harness:
         logger.error('No fuzz target found in project %s.', project)
@@ -718,10 +706,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         for function in functions
     ]
 
-  result = _get_harnesses_from_source(project, filenames, language)
-  if result is None:
-    return []
-  harnesses, interesting = result
+  harnesses, interesting = project_src.search_source(project, filenames, language)
   harness = pick_one(harnesses)
   if not harness:
     logger.error('No fuzz target found in project %s.', project)

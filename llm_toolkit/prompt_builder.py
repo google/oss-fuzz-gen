@@ -1227,17 +1227,10 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
 
   def post_process_generated_code(self, generated_code: str) -> str:
     """Adds specific C headers we always want in the harnesses."""
-    # TODO: explore if we can make this more precise, by only adding headers
-    # if needed.
     for header in C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES:
       generated_code = f'#include <{header}>\n' + generated_code
     generated_code += '\n'
-    logger.info('')
     if self.benchmark.language.lower() == 'c':
-      for i in range(10):
-        logger.info('Replaceing the func sign')
       generated_code = generated_code.replace(
           'extern "C" int LLVMFuzzerTestOneInput', 'int LLVMFuzzerTestOneInput')
-    logger.info('Final')
-    logger.info(generated_code)
     return generated_code
