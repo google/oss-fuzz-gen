@@ -662,6 +662,11 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                            limit: int,
                                            target_oracles: List[str]):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
+
+  # If there is any oracle with test-migration then only do this oracle
+  # selection, because the benchmarks will have different .yaml structure.
+  # TODO(David): clean up benchmark code to make it more flexible for varying
+  # forms of target selectors.
   for target_oracle in target_oracles:
     if 'test-migration' in target_oracle:
       harnesses, interesting = project_src.search_source(project, [], language)
