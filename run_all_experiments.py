@@ -21,6 +21,7 @@ import os
 import sys
 import time
 import traceback
+import subprocess as sp
 from datetime import timedelta
 from multiprocessing import Pool
 from typing import Any
@@ -127,6 +128,62 @@ def get_experiment_configs(
 
   return [(config, args) for config in experiment_configs]
 
+
+def has_cache_build_script(project):
+  cached_build_script = os.path.join('fuzzer_build_script', project)
+  if os.path.isfile(cached_build_script):
+    return True
+  return False
+
+
+def prepare_image_cache(project):
+  # Only create a cached image if we have a post-build build script
+  if not has_cache_build_script(project):
+    return False
+
+  cached_container_name = f'cached_container_{project}'
+  adjusted_env = os.environ | {'OSS_FUZZ_SAVE_CONTAINERS_NAME': cached_container_name}
+
+  # Create cached image by building using OSS-Fuzz with set variable
+  command = ['python3', 'infra/helper.py', 'build_fuzzers', project]
+  try:
+    sp.run(command,
+            cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
+            env= adjusted_env,
+            check=True)
+  except sp.CalledProcessError:
+    logger.info('Failed to build fuzzer for %s.', project)
+    return False
+  
+  # Commit the container to an image
+  cached_image_name = f'cached_image_{project}'
+  command = ['docker', 'commit', cached_container_name, cached_image_name ]
+  try:
+    sp.run(command, check=True)
+  except sp.CalledProcessError:
+    logger.info('Could not rename image.')
+    return False
+  logger.info('Created cached image %s', cached_image_name)
+
+  # Delete the container we created
+  command = ['docker', 'container', 'rm', cached_container_name ]
+  try:
+    sp.run(command, check=True)
+  except sp.CalledProcessError:
+    logger.info('Could not rename image.')
+    return False  
+  return True
+
+
+def prepare_cached_images(experiment_configs):
+  all_projects = set()
+  for benchmark, args in experiment_configs:
+    all_projects.add(benchmark.project)
+  
+  logger.info('Preparing cache for %d projects', len(all_projects))
+
+  for project in all_projects:
+    prepare_image_cache(project)
 
 def run_experiments(benchmark: benchmarklib.Benchmark,
                     args: argparse.Namespace) -> Result:
@@ -369,6 +426,8 @@ def main():
 
   experiment_configs = get_experiment_configs(args)
   experiment_results = []
+
+  prepare_cached_images(experiment_configs)
 
   logger.info(f'Running %s experiment(s) in parallels of %s.',
               len(experiment_configs), str(NUM_EXP))
