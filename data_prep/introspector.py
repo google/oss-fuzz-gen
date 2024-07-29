@@ -65,6 +65,7 @@ INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
 INTROSPECTOR_ALL_HEADER_FILES = ''
 INTROSPECTOR_ALL_FUNC_TYPES = ''
+
 INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
 INTROSPECTOR_ALL_JVM_SOURCE_PATH = ''
@@ -621,7 +622,8 @@ def _select_functions_from_oracles(project: str, limit: int,
                                                         target_oracle,
                                                         target_oracles)
       all_functions.update(tmp_functions)
-      return list(all_functions.values())[:limit]
+
+    return list(all_functions.values())[:limit]
 
   # Selection rule: Prioritize on far-reach-low-coverage, but include one of
   # optimal-targets, easy-params-far-reach if any.
@@ -712,24 +714,25 @@ def populate_benchmarks_using_introspector(project: str, language: str,
       continue
     logger.info('Function signature to fuzz: %s', function_signature)
     potential_benchmarks.append(
-        benchmarklib.Benchmark('cli',
-                               project,
-                               language,
-                               function_signature,
-                               get_raw_function_name(function, project),
-                               _get_clean_return_type(function, project),
-                               _group_function_params(
-                                   _get_clean_arg_types(function, project),
-                                   _get_arg_names(function, project, language)),
-                               _get_exceptions(function),
-                               _is_jvm_static(function),
-                               harness,
-                               target_name,
-                               function_dict=function))
+        benchmarklib.Benchmark(
+            benchmark_id='cli',
+            project=project,
+            language=language,
+            function_signature=function_signature,
+            function_name=get_raw_function_name(function, project),
+            return_type=_get_clean_return_type(function, project),
+            params=_group_function_params(
+                _get_clean_arg_types(function, project),
+                _get_arg_names(function, project, language)),
+            exceptions=_get_exceptions(function),
+            is_jvm_static=_is_jvm_static(function),
+            target_path=harness,
+            preferred_target_name=target_name,
+            function_dict=function))
 
     if len(potential_benchmarks) >= (limit * len(target_oracles)):
       break
-  logger.info("Length of potential targets: %d" % (len(potential_benchmarks)))
+  logger.info('Length of potential targets: %d', len(potential_benchmarks))
 
   return potential_benchmarks
 
