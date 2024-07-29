@@ -4,9 +4,9 @@
   "name": "[org.quartz.utils.StringKeyDirtyFlagMap].put(java.lang.String,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "java.lang.Object"
   "signature": "[org.quartz.utils.StringKeyDirtyFlagMap].put(java.lang.String,java.lang.Object)"
 - "exceptions": []
@@ -14,9 +14,9 @@
   "name": "[org.quartz.utils.DirtyFlagMap].put(java.lang.Object,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "java.lang.Object"
   "signature": "[org.quartz.utils.DirtyFlagMap].put(java.lang.Object,java.lang.Object)"
 "language": "jvm"
