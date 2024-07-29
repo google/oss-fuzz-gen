@@ -26,7 +26,7 @@
   "name": "[CloneableFileReader].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "CloneableFileReader"
   "signature": "[CloneableFileReader].<init>(java.lang.String)"
 - "exceptions": []
@@ -51,11 +51,23 @@
   "name": "[org.xmlpull.v1.XmlPullParserFactory].newInstance(java.lang.String,java.lang.Class)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
     "type": "Class"
   "return_type": "org.xmlpull.v1.XmlPullParserFactory"
   "signature": "[org.xmlpull.v1.XmlPullParserFactory].newInstance(java.lang.String,java.lang.Class)"
+- "exceptions":
+  - "org.xmlpull.v1.XmlPullParserException"
+  "is_jvm_static": false
+  "name": "[org.xmlpull.v1.XmlPullParserFactory].setFeature(java.lang.String,boolean)"
+  "params":
+  - "name": "arg0"
+    "type": "java.lang.String"
+  - "name": "arg1"
+    "type": "boolean"
+  "return_type": "org.xmlpull.v1.XmlPullParserFactory"
+  "signature": "[org.xmlpull.v1.XmlPullParserFactory].setFeature(java.lang.String,boolean)"
+
 "language": "jvm"
 "project": "xmlpull"
 "target_name": "PullParserFactoryFuzzer"
