@@ -59,6 +59,19 @@
     "type": "org.dom4j.Document"
   "return_type": "void"
   "signature": "[org.dom4j.datatype.SchemaParser].build(org.dom4j.Document)"
+- "exceptions":
+  - "org.xml.sax.SAXException"
+  "is_jvm_static": false
+  "name": "[org.dom4j.io.DOMSAXContentHandler].endElement(java.lang.String,java.lang.String,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "java.lang.String"
+  - "name": "arg1"
+    "type": "java.lang.String"
+  - "name": "arg2"
+    "type": "java.lang.String"
+  "return_type": "void"
+  "signature": "[org.dom4j.io.DOMSAXContentHandler].endElement(java.lang.String,java.lang.String,java.lang.String)"
 "language": "jvm"
 "project": "dom4j"
 "target_name": "DOMReaderFuzzer"

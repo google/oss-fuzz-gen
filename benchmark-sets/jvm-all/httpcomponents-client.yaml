@@ -67,6 +67,24 @@
     "type": "java.lang.StringBuilder"
   "return_type": "void"
   "signature": "[org.apache.hc.core5.util.Tokenizer].copyUnquotedContent(java.lang.CharSequence,org.apache.hc.core5.util.Tokenizer$Cursor,org.apache.hc.core5.util.Tokenizer$Delimiter,java.lang.StringBuilder)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.apache.hc.client5.http.classic.methods.HttpPost].<init>(java.net.URI)"
+  "params":
+  - "name": "arg0"
+    "type": "java.net.URI"
+  "return_type": "org.apache.hc.client5.http.classic.methods.HttpPost"
+  "signature": "[org.apache.hc.client5.http.classic.methods.HttpPost].<init>(java.net.URI)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.apache.hc.client5.http.classic.methods.HttpUriRequestBase].<init>(java.lang.String,java.net.URI)"
+  "params":
+  - "name": "arg0"
+    "type": "java.lang.String"
+  - "name": "arg1"
+    "type": "java.net.URI"
+  "return_type": "org.apache.hc.client5.http.classic.methods.HttpUriRequestBase"
+  "signature": "[org.apache.hc.client5.http.classic.methods.HttpUriRequestBase].<init>(java.lang.String,java.net.URI)"
 "language": "jvm"
 "project": "httpcomponents-client"
 "target_name": "HttpFuzzer"

@@ -20,6 +20,15 @@
   "return_type": "jakarta.mail.internet.InternetAddress"
   "signature": "[jakarta.mail.internet.InternetAddress].<init>(java.lang.String,boolean)"
 - "exceptions":
+  - "jakarta.mail.internet.AddressException"
+  "is_jvm_static": false
+  "name": "[jakarta.mail.internet.InternetAddress].<init>(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "java.lang.String"
+  "return_type": "jakarta.mail.internet.InternetAddress"
+  "signature": "[jakarta.mail.internet.InternetAddress].<init>(java.lang.String)"
+- "exceptions":
   - "jakarta.mail.internet.ParseException"
   "is_jvm_static": false
   "name": "[jakarta.mail.internet.ContentDisposition].<init>(java.lang.String)"

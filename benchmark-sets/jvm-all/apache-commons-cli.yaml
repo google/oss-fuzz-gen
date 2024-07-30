@@ -62,6 +62,18 @@
     "type": "java.lang.String"
   "return_type": "boolean"
   "signature": "[org.apache.commons.cli.CommandLine].hasOption(java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.apache.commons.cli.DefaultParser].parse(org.apache.commons.cli.Options,java.lang.String[],java.util.Properties)"
+  "params":
+  - "name": "arg0"
+    "type": "g.apache.commons.cli.Options"
+  - "name": "arg1"
+    "type": "java.lang.String[]"
+  - "name": "arg2"
+    "type": "java.util.Properties"
+  "return_type": "org.apache.commons.cli.CommandLine"
+  "signature": "[org.apache.commons.cli.DefaultParser].parse(org.apache.commons.cli.Options,java.lang.String[],java.util.Properties)"
 "language": "jvm"
 "project": "apache-commons-cli"
 "target_name": "ParserFuzzer"
