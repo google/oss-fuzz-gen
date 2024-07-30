@@ -142,7 +142,8 @@ def run_autogen(github_url,
                 openai_api_key=None,
                 targets_per_heuristic=5,
                 build_heuristics='all',
-                generator_heuristics='all'):
+                generator_heuristics='all',
+                max_successful_builds:int = -1):
   """Launch auto-gen analysis within OSS-Fuzz container."""
 
   initiator_cmd = f'python3 /src/manager.py {github_url} -o {outdir}'
@@ -150,6 +151,8 @@ def run_autogen(github_url,
     initiator_cmd += ' --disable-fuzzgen'
   initiator_cmd += f' --model={model}'
   initiator_cmd += f' --targets-per-heuristic={targets_per_heuristic}'
+  if max_successful_builds > 0:
+      initiator_cmd += f' --max-successful={max_successful_builds}'
 
   extra_environment = []
   if model == 'vertex':
@@ -229,7 +232,8 @@ def run_on_targets(target,
                    disable_autofuzz=False,
                    targets_per_heuristic=5,
                    build_heuristics='all',
-                   generator_heuristics='all'):
+                   generator_heuristics='all',
+                   max_successful_builds: int = -1):
   """Thread entry point for single project auto-gen."""
 
   if semaphore is not None:
@@ -249,7 +253,8 @@ def run_on_targets(target,
               targets_per_heuristic=targets_per_heuristic,
               openai_api_key=openai_api_key,
               build_heuristics=build_heuristics,
-              generator_heuristics=generator_heuristics)
+              generator_heuristics=generator_heuristics,
+              max_successful_builds = max_successful_builds)
 
   # Cleanup the OSS-Fuzz docker image
   clean_up_cmd = [
@@ -280,7 +285,7 @@ def get_next_worker_project(oss_fuzz_base: str) -> str:
 
 def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
                   targets_per_heuristic, llm_model, build_heuristics,
-                  generator_heuristics):
+                  generator_heuristics, max_successful_builds):
   """Run auto-gen on a list of projects in parallel.
 
   Parallelisation is done by way of threads. Practically
@@ -298,7 +303,7 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
                             args=(target, oss_fuzz_base, worker_project_name,
                                   idx, llm_model, semaphore, disable_autofuzz,
                                   targets_per_heuristic, build_heuristics,
-                                  generator_heuristics))
+                                  generator_heuristics, max_successful_builds))
     jobs.append(proc)
     proc.start()
 
@@ -345,6 +350,7 @@ def parse_commandline():
       help='Comma-separated string of generator heuristics to use.',
       default='all')
   parser.add_argument('--model', '-m', help='LLM model to use', type=str)
+  parser.add_argument('--max_successful', '-ma', help='Max number of successful builds to generate.', type=int)
   return parser.parse_args()
 
 
@@ -374,7 +380,7 @@ def main():
   if use_multithreading:
     run_parallels(os.path.abspath(args.oss_fuzz), target_repositories,
                   args.disable_fuzzgen, args.targets_per_heuristic, args.model,
-                  args.build_heuristics, args.generator_heuristics)
+                  args.build_heuristics, args.generator_heuristics,args.max_successful)
   else:
     run_sequential(os.path.abspath(args.oss_fuzz), target_repositories,
                    args.disable_fuzzgen, args.targets_per_heuristic, args.model,
