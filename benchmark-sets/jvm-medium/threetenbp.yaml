@@ -4,7 +4,7 @@
   "name": "[org.threeten.bp.format.DateTimeFormatter].format(org.threeten.bp.temporal.TemporalAccessor)"
   "params":
   - "name": "arg0"
-    "type": "TemporalAccessor"
+    "type": "org.threeten.bp.temporal.TemporalAccessor"
   "return_type": "java.lang.String"
   "signature": "[org.threeten.bp.format.DateTimeFormatter].format(org.threeten.bp.temporal.TemporalAccessor)"
 - "exceptions": []
@@ -12,9 +12,9 @@
   "name": "[org.threeten.bp.format.DateTimeFormatter].formatTo(org.threeten.bp.temporal.TemporalAccessor,java.lang.Appendable)"
   "params":
   - "name": "arg0"
-    "type": "TemporalAccessor"
+    "type": "org.threeten.bp.temporal.TemporalAccessor"
   - "name": "arg1"
-    "type": "Appendable"
+    "type": "java.lang.Appendable"
   "return_type": "void"
   "signature": "[org.threeten.bp.format.DateTimeFormatter].formatTo(org.threeten.bp.temporal.TemporalAccessor,java.lang.Appendable)"
 - "exceptions": []
@@ -22,7 +22,7 @@
   "name": "[org.threeten.bp.Instant].query(org.threeten.bp.temporal.TemporalQuery<R>)"
   "params":
   - "name": "arg0"
-    "type": "TemporalQuery<R>"
+    "type": "org.threeten.bp.temporal.TemporalQuery<R>"
   "return_type": "java.lang.Object"
   "signature": "[org.threeten.bp.Instant].query(org.threeten.bp.temporal.TemporalQuery<R>)"
 - "exceptions": []
@@ -30,7 +30,7 @@
   "name": "[org.threeten.bp.ZoneOffset].query(org.threeten.bp.temporal.TemporalQuery<R>)"
   "params":
   - "name": "arg0"
-    "type": "TemporalQuery<R>"
+    "type": "org.threeten.bp.temporal.TemporalQuery<R>"
   "return_type": "java.lang.Object"
   "signature": "[org.threeten.bp.ZoneOffset].query(org.threeten.bp.temporal.TemporalQuery<R>)"
 - "exceptions": []
@@ -38,7 +38,7 @@
   "name": "[org.threeten.bp.LocalTime].query(org.threeten.bp.temporal.TemporalQuery<R>)"
   "params":
   - "name": "arg0"
-    "type": "TemporalQuery<R>"
+    "type": "org.threeten.bp.temporal.TemporalQuery<R>"
   "return_type": "java.lang.Object"
   "signature": "[org.threeten.bp.LocalTime].query(org.threeten.bp.temporal.TemporalQuery<R>)"
 - "exceptions": []
@@ -46,7 +46,7 @@
   "name": "[org.threeten.bp.Duration].addTo(org.threeten.bp.temporal.Temporal)"
   "params":
   - "name": "arg0"
-    "type": "Temporal"
+    "type": "org.threeten.bp.temporal.Temporal"
   "return_type": "org.threeten.bp.temporal.Temporal"
   "signature": "[org.threeten.bp.Duration].addTo(org.threeten.bp.temporal.Temporal)"
 "language": "jvm"
