@@ -1400,8 +1400,10 @@ def auto_generate(github_url,
                   disable_testing_build_scripts=False,
                   disable_fuzzgen=False,
                   disable_fuzz_build_and_test=False,
-                  outdir=''):
+                  outdir='',
+                  max_successful=-1):
   """Generates build script and fuzzer harnesses for a GitHub repository."""
+  logger.info('Generating a max number of %d harnesses', max_successful)
   target_source_path = os.path.join(os.getcwd(), github_url.split('/')[-1])
   dst_folder = github_url.split('/')[-1]
 
@@ -1466,6 +1468,7 @@ def auto_generate(github_url,
               len(build_results))
 
   all_test_scripts = get_all_test_scripts(target_source_path)
+  successful_builds = 0
 
   for test_dir, build_worker in build_results.items():
     logger.info('Checking build heuristic: %s',
@@ -1542,11 +1545,24 @@ def auto_generate(github_url,
       logger.info('Fuzzer harnesses to evaluate: %d',
                   len(harness_builds_to_validate))
       for generated_harness in harness_builds_to_validate:
+        if max_successful > -1 and max_successful <= successful_builds:
+          logger.info('Has generated %d successful builds, exiting now.',
+                      successful_builds)
+          return
         logger.info('Evaluating harness')
         # Make a directory and store artifacts there
         evaluate_heuristic(test_dir, generated_harness, heuristics_passed, idx,
                            disable_fuzz_build_and_test, folders_with_results,
                            outdir, github_url, introspector_report)
+
+        if heuristics_passed.get(
+            generated_harness.fuzzer_intrinsics['autogen-id'], False):
+          logger.info('successful build: %s',
+                      str(generated_harness.fuzzer_intrinsics['autogen-id']))
+          successful_builds += 1
+        else:
+          logger.info('failed build: %s',
+                      str(generated_harness.fuzzer_intrinsics['autogen-id']))
         idx += 1
 
   # Show those that succeeded.
@@ -1578,6 +1594,11 @@ def parse_commandline():
                       '-m',
                       help='Model to use for auto generation',
                       type=str)
+  parser.add_argument('--max-successful',
+                      '-ms',
+                      help='Maximum number of successful candidates to find.',
+                      type=int,
+                      default=-1)
   return parser
 
 
@@ -1598,7 +1619,7 @@ def main():
   MAX_FUZZ_PER_HEURISTIC = args.targets_per_heuristic
 
   auto_generate(args.repo, args.disable_build_test, args.disable_fuzzgen,
-                args.disable_fuzz_build_and_test, args.out)
+                args.disable_fuzz_build_and_test, args.out, args.max_successful)
 
 
 if __name__ == '__main__':
