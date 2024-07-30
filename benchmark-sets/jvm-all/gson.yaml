@@ -5,9 +5,9 @@
   "name": "[com.google.gson.internal.bind.TreeTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "JsonWriter"
+    "type": "com.google.gson.stream.JsonWriter"
   - "name": "arg1"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[com.google.gson.internal.bind.TreeTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
 - "exceptions":
@@ -16,9 +16,9 @@
   "name": "[com.google.gson.internal.bind.ArrayTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "JsonWriter"
+    "type": "com.google.gson.stream.JsonWriter"
   - "name": "arg1"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[com.google.gson.internal.bind.ArrayTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
 - "exceptions":
@@ -27,9 +27,9 @@
   "name": "[com.google.gson.internal.Streams].write(com.google.gson.JsonElement,com.google.gson.stream.JsonWriter)"
   "params":
   - "name": "arg0"
-    "type": "JsonElement"
+    "type": "com.google.gson.JsonElement"
   - "name": "arg1"
-    "type": "JsonWriter"
+    "type": "com.google.gson.stream.JsonWriter"
   "return_type": "void"
   "signature": "[com.google.gson.internal.Streams].write(com.google.gson.JsonElement,com.google.gson.stream.JsonWriter)"
 - "exceptions":
@@ -38,9 +38,9 @@
   "name": "[com.google.gson.internal.bind.ObjectTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "JsonWriter"
+    "type": "com.google.gson.stream.JsonWriter"
   - "name": "arg1"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[com.google.gson.internal.bind.ObjectTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
 - "exceptions": []
@@ -48,7 +48,7 @@
   "name": "[com.google.gson.internal.Excluder].excludeField(java.lang.reflect.Field,boolean)"
   "params":
   - "name": "arg0"
-    "type": "Field"
+    "type": "java.lang.reflect.Field"
   - "name": "arg1"
     "type": "boolean"
   "return_type": "boolean"
@@ -58,7 +58,7 @@
   "name": "[com.google.gson.internal.Excluder].excludeClass(java.lang.Class<?>,boolean)"
   "params":
   - "name": "arg0"
-    "type": "Class<?>"
+    "type": "java.lang.Class<?>"
   - "name": "arg1"
     "type": "boolean"
   "return_type": "boolean"

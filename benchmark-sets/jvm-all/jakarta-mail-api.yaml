@@ -5,7 +5,7 @@
   "name": "[jakarta.mail.internet.ParameterList].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "jakarta.mail.internet.ParameterList"
   "signature": "[jakarta.mail.internet.ParameterList].<init>(java.lang.String)"
 - "exceptions":
@@ -14,7 +14,7 @@
   "name": "[jakarta.mail.internet.InternetAddress].<init>(java.lang.String,boolean)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
     "type": "boolean"
   "return_type": "jakarta.mail.internet.InternetAddress"
@@ -25,7 +25,7 @@
   "name": "[jakarta.mail.internet.ContentDisposition].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "jakarta.mail.internet.ContentDisposition"
   "signature": "[jakarta.mail.internet.ContentDisposition].<init>(java.lang.String)"
 - "exceptions":
@@ -34,7 +34,7 @@
   "name": "[jakarta.mail.internet.ContentType].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "jakarta.mail.internet.ContentType"
   "signature": "[jakarta.mail.internet.ContentType].<init>(java.lang.String)"
 - "exceptions": []
@@ -42,7 +42,7 @@
   "name": "[jakarta.mail.URLName].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "jakarta.mail.URLName"
   "signature": "[jakarta.mail.URLName].<init>(java.lang.String)"
 - "exceptions":
@@ -51,7 +51,7 @@
   "name": "[jakarta.mail.internet.MimeMessage].<init>(jakarta.mail.internet.MimeMessage)"
   "params":
   - "name": "arg0"
-    "type": "MimeMessage"
+    "type": "jakarta.mail.internet.MimeMessage"
   "return_type": "jakarta.mail.internet.MimeMessage"
   "signature": "[jakarta.mail.internet.MimeMessage].<init>(jakarta.mail.internet.MimeMessage)"
 "language": "jvm"

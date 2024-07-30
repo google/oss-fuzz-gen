@@ -67,7 +67,6 @@
     "type": "boolean"
   "return_type": "org.xmlpull.v1.XmlPullParserFactory"
   "signature": "[org.xmlpull.v1.XmlPullParserFactory].setFeature(java.lang.String,boolean)"
-
 "language": "jvm"
 "project": "xmlpull"
 "target_name": "PullParserFactoryFuzzer"

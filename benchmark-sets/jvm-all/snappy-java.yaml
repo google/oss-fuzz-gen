@@ -7,6 +7,15 @@
     "type": "java.nio.ByteBuffer"
   "return_type": "void"
   "signature": "[org.xerial.snappy.SnappyFramedInputStream].read(java.nio.ByteBuffer)"
+- "exceptions":
+  - "java.io.IOException"
+  "is_jvm_static": true
+  "name": "[org.xerial.snappy.SnappyCodec].readHeader(java.io.InputStream)"
+  "params":
+  - "name": "arg0"
+    "type": "java.io.InputStream"
+  "return_type": "org.xerial.snappy.SnappyCodec"
+  "signature": "[org.xerial.snappy.SnappyCodec].readHeader(java.io.InputStream)"
 "language": "jvm"
 "project": "snappy-java"
 "target_name": "SnappyStreamFuzzer"
