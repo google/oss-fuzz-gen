@@ -1546,19 +1546,23 @@ def auto_generate(github_url,
                   len(harness_builds_to_validate))
       for generated_harness in harness_builds_to_validate:
         if max_successful > -1 and max_successful <= successful_builds:
-            logger.info('Has generated %d successful builds, exiting now.', successful_builds)
-            return
+          logger.info('Has generated %d successful builds, exiting now.',
+                      successful_builds)
+          return
         logger.info('Evaluating harness')
         # Make a directory and store artifacts there
         evaluate_heuristic(test_dir, generated_harness, heuristics_passed, idx,
                            disable_fuzz_build_and_test, folders_with_results,
                            outdir, github_url, introspector_report)
 
-        if heuristics_passed.get(generated_harness.fuzzer_intrinsics['autogen-id'], False):
-            logger.info('successful build: %s', str(generated_harness.fuzzer_intrinsics['autogen-id']))
-            successful_builds += 1
+        if heuristics_passed.get(
+            generated_harness.fuzzer_intrinsics['autogen-id'], False):
+          logger.info('successful build: %s',
+                      str(generated_harness.fuzzer_intrinsics['autogen-id']))
+          successful_builds += 1
         else:
-            logger.info('failed build: %s', str(generated_harness.fuzzer_intrinsics['autogen-id']))
+          logger.info('failed build: %s',
+                      str(generated_harness.fuzzer_intrinsics['autogen-id']))
         idx += 1
 
   # Show those that succeeded.
@@ -1590,7 +1594,11 @@ def parse_commandline():
                       '-m',
                       help='Model to use for auto generation',
                       type=str)
-  parser.add_argument('--max-successful', '-ms', help='Maximum number of successful candidates to find.', type=int, default=-1)
+  parser.add_argument('--max-successful',
+                      '-ms',
+                      help='Maximum number of successful candidates to find.',
+                      type=int,
+                      default=-1)
   return parser
 
 
