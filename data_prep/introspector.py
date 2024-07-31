@@ -683,7 +683,8 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                            target_oracles: List[str]):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
   if language == 'jvm':
-    functions = _select_functions_from_jvm_oracles(project, limit, target_oracles)
+    functions = _select_functions_from_jvm_oracles(project, limit,
+                                                   target_oracles)
   else:
     functions = _select_functions_from_oracles(project, limit, target_oracles)
 
