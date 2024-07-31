@@ -6,8 +6,11 @@
 #
 annotated-types==0.7.0
     # via pydantic
+anthropic==0.31.2
+    # via -r requirements.in
 anyio==4.4.0
     # via
+    #   anthropic
     #   httpx
     #   openai
 astroid==3.2.2
@@ -28,9 +31,15 @@ cxxfilt==0.3.0
 dill==0.3.8
     # via pylint
 distro==1.9.0
-    # via openai
+    # via
+    #   anthropic
+    #   openai
 docstring-parser==0.16
     # via google-cloud-aiplatform
+filelock==3.15.4
+    # via huggingface-hub
+fsspec==2024.6.1
+    # via huggingface-hub
 gitdb==4.0.11
     # via gitpython
 gitpython==3.1.43
@@ -90,7 +99,11 @@ h11==0.14.0
 httpcore==1.0.5
     # via httpx
 httpx==0.27.0
-    # via openai
+    # via
+    #   anthropic
+    #   openai
+huggingface-hub==0.24.1
+    # via tokenizers
 idna==3.7
     # via
     #   anyio
@@ -102,6 +115,8 @@ isort==5.13.2
     # via pylint
 jinja2==3.1.4
     # via -r requirements.in
+jiter==0.5.0
+    # via anthropic
 markupsafe==2.1.5
     # via jinja2
 mccabe==0.7.0
@@ -118,6 +133,7 @@ packaging==24.1
     # via
     #   google-cloud-aiplatform
     #   google-cloud-bigquery
+    #   huggingface-hub
 pandas==2.2.2
     # via -r requirements.in
 platformdirs==4.2.2
@@ -146,6 +162,7 @@ pyasn1-modules==0.4.0
     # via google-auth
 pydantic==2.8.2
     # via
+    #   anthropic
     #   google-cloud-aiplatform
     #   openai
 pydantic-core==2.20.1
@@ -161,7 +178,9 @@ python-dateutil==2.9.0.post0
 pytz==2024.1
     # via pandas
 pyyaml==6.0.1
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   huggingface-hub
 regex==2024.5.15
     # via tiktoken
 requests==2.32.0
@@ -170,6 +189,7 @@ requests==2.32.0
     #   google-api-core
     #   google-cloud-bigquery
     #   google-cloud-storage
+    #   huggingface-hub
     #   tiktoken
 rsa==4.9
     # via google-auth
@@ -181,19 +201,26 @@ smmap==5.0.1
     # via gitdb
 sniffio==1.3.1
     # via
+    #   anthropic
     #   anyio
     #   httpx
     #   openai
 tiktoken==0.7.0
     # via -r requirements.in
+tokenizers==0.19.1
+    # via anthropic
 tomli==2.0.1
     # via yapf
 tomlkit==0.12.5
     # via pylint
 tqdm==4.66.4
-    # via openai
+    # via
+    #   huggingface-hub
+    #   openai
 typing-extensions==4.12.2
     # via
+    #   anthropic
+    #   huggingface-hub
     #   openai
     #   pydantic
     #   pydantic-core

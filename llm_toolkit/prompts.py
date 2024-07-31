@@ -133,3 +133,7 @@ class OpenAIPrompt(Prompt):
     """Saves the prompt to a filelocation."""
     with open(location, 'w+') as prompt_file:
       json.dump(self._prompt, prompt_file)
+
+
+class ClaudePrompt(OpenAIPrompt):
+  """Claude style structured prompt."""

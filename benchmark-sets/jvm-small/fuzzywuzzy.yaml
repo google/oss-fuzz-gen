@@ -4,9 +4,9 @@
   "name": "[me.xdrop.fuzzywuzzy.model.BoundExtractedResult].<init>(java.lang.Object,java.lang.String,int,int)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg2"
     "type": "int"
   - "name": "arg3"
@@ -18,7 +18,7 @@
   "name": "[me.xdrop.fuzzywuzzy.model.ExtractedResult].<init>(java.lang.String,int,int)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
     "type": "int"
   - "name": "arg2"
@@ -38,9 +38,9 @@
   "name": "[me.xdrop.diffutils.DiffUtils].getMatchingBlocks(java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "me.xdrop.diffutils.structs.MatchingBlock[]"
   "signature": "[me.xdrop.diffutils.DiffUtils].getMatchingBlocks(java.lang.String,java.lang.String)"
 - "exceptions": []
@@ -48,11 +48,31 @@
   "name": "[me.xdrop.diffutils.DiffUtils].getEditOps(java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "me.xdrop.diffutils.structs.EditOp[]"
   "signature": "[me.xdrop.diffutils.DiffUtils].getEditOps(java.lang.String,java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": true
+  "name": "[me.xdrop.diffutils.DiffUtils].levEditDistance(java.lang.String,java.lang.String,int)"
+  "params":
+  - "name": "arg0"
+    "type": "java.lang.String"
+  - "name": "arg1"
+    "type": "java.lang.String"
+  - "name": "arg2"
+    "type": "int"
+  "return_type": "int"
+  "signature": "[me.xdrop.diffutils.DiffUtils].levEditDistance(java.lang.String,java.lang.String,int)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[me.xdrop.fuzzywuzzy.algorithms.DefaultStringProcessor].process(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "java.lang.String"
+  "return_type": "void"
+  "signature": "[me.xdrop.fuzzywuzzy.algorithms.DefaultStringProcessor].process(java.lang.String)"
 "language": "jvm"
 "project": "fuzzywuzzy"
 "target_name": "FuzzySearchFuzzer"

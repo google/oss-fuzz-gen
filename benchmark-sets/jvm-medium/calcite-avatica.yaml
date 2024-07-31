@@ -4,7 +4,7 @@
   "name": "[org.apache.calcite.avatica.remote.LocalProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
   "params":
   - "name": "arg0"
-    "type": "Service$Request"
+    "type": "org.apache.calcite.avatica.remote.Service$Request"
   "return_type": "org.apache.calcite.avatica.remote.Service$Response"
   "signature": "[org.apache.calcite.avatica.remote.LocalProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
 - "exceptions": []
@@ -12,7 +12,7 @@
   "name": "[org.apache.calcite.avatica.remote.RemoteProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
   "params":
   - "name": "arg0"
-    "type": "Service$Request"
+    "type": "org.apache.calcite.avatica.remote.Service$Request"
   "return_type": "org.apache.calcite.avatica.remote.Service$Response"
   "signature": "[org.apache.calcite.avatica.remote.RemoteProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
 - "exceptions":
@@ -21,7 +21,7 @@
   "name": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeResponse(org.apache.calcite.avatica.remote.Service$Response)"
   "params":
   - "name": "arg0"
-    "type": "Service$Response"
+    "type": "org.apache.calcite.avatica.remote.Service$Response"
   "return_type": "byte[]"
   "signature": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeResponse(org.apache.calcite.avatica.remote.Service$Response)"
 - "exceptions":
@@ -30,7 +30,7 @@
   "name": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeRequest(org.apache.calcite.avatica.remote.Service$Request)"
   "params":
   - "name": "arg0"
-    "type": "Service$Request"
+    "type": "org.apache.calcite.avatica.remote.Service$Request"
   "return_type": "byte[]"
   "signature": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeRequest(org.apache.calcite.avatica.remote.Service$Request)"
 - "exceptions":
@@ -47,7 +47,7 @@
   "name": "[org.apache.calcite.avatica.Meta$Frame].equals(java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "boolean"
   "signature": "[org.apache.calcite.avatica.Meta$Frame].equals(java.lang.Object)"
 "language": "jvm"

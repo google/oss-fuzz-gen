@@ -1,0 +1,13 @@
+"functions":
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.xerial.snappy.SnappyFramedInputStream].read(java.nio.ByteBuffer)"
+  "params":
+  - "name": "arg0"
+    "type": "java.nio.ByteBuffer"
+  "return_type": "void"
+  "signature": "[org.xerial.snappy.SnappyFramedInputStream].read(java.nio.ByteBuffer)"
+"language": "jvm"
+"project": "snappy-java"
+"target_name": "SnappyStreamFuzzer"
+"target_path": "/src/SnappyStreamFuzzer.java"

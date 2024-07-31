@@ -4,7 +4,7 @@
   "name": "[net.objecthunter.exp4j.ExpressionBuilder].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "net.objecthunter.exp4j.ExpressionBuilder"
   "signature": "[net.objecthunter.exp4j.ExpressionBuilder].<init>(java.lang.String)"
 - "exceptions": []
@@ -12,13 +12,13 @@
   "name": "[net.objecthunter.exp4j.tokenizer.Tokenizer].<init>(java.lang.String,java.util.Map,java.util.Map,java.util.Set,boolean)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "Map"
+    "type": "java.util.Map"
   - "name": "arg2"
-    "type": "Map"
+    "type": "java.util.Map"
   - "name": "arg3"
-    "type": "Set"
+    "type": "java.util.Set"
   - "name": "arg4"
     "type": "boolean"
   "return_type": "net.objecthunter.exp4j.tokenizer.Tokenizer"
@@ -28,13 +28,13 @@
   "name": "[net.objecthunter.exp4j.tokenizer.Tokenizer].<init>(java.lang.String,java.util.Map,java.util.Map,java.util.Set)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "Map"
+    "type": "java.util.Map"
   - "name": "arg2"
-    "type": "Map"
+    "type": "java.util.Map"
   - "name": "arg3"
-    "type": "Set"
+    "type": "java.util.Set"
   "return_type": "net.objecthunter.exp4j.tokenizer.Tokenizer"
   "signature": "[net.objecthunter.exp4j.tokenizer.Tokenizer].<init>(java.lang.String,java.util.Map,java.util.Map,java.util.Set)"
 - "exceptions": []
@@ -44,7 +44,7 @@
   - "name": "arg0"
     "type": "boolean"
   - "name": "arg1"
-    "type": "List"
+    "type": "java.util.List"
   "return_type": "net.objecthunter.exp4j.ValidationResult"
   "signature": "[net.objecthunter.exp4j.ValidationResult].<init>(boolean,java.util.List)"
 - "exceptions": []
@@ -52,7 +52,7 @@
   "name": "[net.objecthunter.exp4j.tokenizer.FunctionToken].<init>(net.objecthunter.exp4j.function.Function)"
   "params":
   - "name": "arg0"
-    "type": "Function"
+    "type": "net.objecthunter.exp4j.function.Function"
   "return_type": "net.objecthunter.exp4j.tokenizer.FunctionToken"
   "signature": "[net.objecthunter.exp4j.tokenizer.FunctionToken].<init>(net.objecthunter.exp4j.function.Function)"
 - "exceptions": []
@@ -60,7 +60,7 @@
   "name": "[net.objecthunter.exp4j.tokenizer.OperatorToken].<init>(net.objecthunter.exp4j.operator.Operator)"
   "params":
   - "name": "arg0"
-    "type": "Operator"
+    "type": "net.objecthunter.exp4j.operator.Operator"
   "return_type": "net.objecthunter.exp4j.tokenizer.OperatorToken"
   "signature": "[net.objecthunter.exp4j.tokenizer.OperatorToken].<init>(net.objecthunter.exp4j.operator.Operator)"
 "language": "jvm"

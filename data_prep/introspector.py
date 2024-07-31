@@ -65,6 +65,7 @@ INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
 INTROSPECTOR_ALL_HEADER_FILES = ''
 INTROSPECTOR_ALL_FUNC_TYPES = ''
+
 INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
 INTROSPECTOR_ALL_JVM_SOURCE_PATH = ''
@@ -544,17 +545,23 @@ def get_function_signature(function: dict, project: str) -> str:
 
 
 # TODO(dongge): Remove this function when FI fixes it.
-def _parse_type_from_raw_tagged_type(tagged_type: str) -> str:
+def _parse_type_from_raw_tagged_type(tagged_type: str, language: str) -> str:
   """Returns type name from |tagged_type| such as struct.TypeA"""
   # Assume: Types do not contain dot(.).
+  # (ascchan): This assumption is wrong on Java projects because
+  # most full qulified classes name of Java projects have dot(.) to
+  # identify the package name of the classes. Thus for Java projects,
+  # this action needed to be skipped until this function is removed.
+  if language == 'jvm':
+    return tagged_type
   return tagged_type.split('.')[-1]
 
 
-def _group_function_params(param_types: list[str],
-                           param_names: list[str]) -> list[dict[str, str]]:
+def _group_function_params(param_types: list[str], param_names: list[str],
+                           language: str) -> list[dict[str, str]]:
   """Groups the type and name of each parameter."""
   return [{
-      'type': _parse_type_from_raw_tagged_type(param_type),
+      'type': _parse_type_from_raw_tagged_type(param_type, language),
       'name': param_name
   } for param_type, param_name in zip(param_types, param_names)]
 
@@ -621,7 +628,8 @@ def _select_functions_from_oracles(project: str, limit: int,
                                                         target_oracle,
                                                         target_oracles)
       all_functions.update(tmp_functions)
-      return list(all_functions.values())[:limit]
+
+    return list(all_functions.values())[:limit]
 
   # Selection rule: Prioritize on far-reach-low-coverage, but include one of
   # optimal-targets, easy-params-far-reach if any.
@@ -712,24 +720,25 @@ def populate_benchmarks_using_introspector(project: str, language: str,
       continue
     logger.info('Function signature to fuzz: %s', function_signature)
     potential_benchmarks.append(
-        benchmarklib.Benchmark('cli',
-                               project,
-                               language,
-                               function_signature,
-                               get_raw_function_name(function, project),
-                               _get_clean_return_type(function, project),
-                               _group_function_params(
-                                   _get_clean_arg_types(function, project),
-                                   _get_arg_names(function, project, language)),
-                               _get_exceptions(function),
-                               _is_jvm_static(function),
-                               harness,
-                               target_name,
-                               function_dict=function))
+        benchmarklib.Benchmark(
+            benchmark_id='cli',
+            project=project,
+            language=language,
+            function_signature=function_signature,
+            function_name=get_raw_function_name(function, project),
+            return_type=_get_clean_return_type(function, project),
+            params=_group_function_params(
+                _get_clean_arg_types(function, project),
+                _get_arg_names(function, project, language), language),
+            exceptions=_get_exceptions(function),
+            is_jvm_static=_is_jvm_static(function),
+            target_path=harness,
+            preferred_target_name=target_name,
+            function_dict=function))
 
     if len(potential_benchmarks) >= (limit * len(target_oracles)):
       break
-  logger.info("Length of potential targets: %d" % (len(potential_benchmarks)))
+  logger.info('Length of potential targets: %d', len(potential_benchmarks))
 
   return potential_benchmarks
 

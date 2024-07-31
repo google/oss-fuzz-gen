@@ -6,9 +6,9 @@
   "name": "[org.locationtech.spatial4j.io.jackson.GeometryDeserializer].deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)"
   "params":
   - "name": "arg0"
-    "type": "JsonParser"
+    "type": "com.fasterxml.jackson.core.JsonParser"
   - "name": "arg1"
-    "type": "DeserializationContext"
+    "type": "com.fasterxml.jackson.databind.DeserializationContext"
   "return_type": "org.locationtech.jts.geom.Geometry"
   "signature": "[org.locationtech.spatial4j.io.jackson.GeometryDeserializer].deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)"
 - "exceptions":
@@ -18,9 +18,9 @@
   "name": "[org.locationtech.spatial4j.io.jackson.ShapeDeserializer].deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)"
   "params":
   - "name": "arg0"
-    "type": "JsonParser"
+    "type": "com.fasterxml.jackson.core.JsonParser"
   - "name": "arg1"
-    "type": "DeserializationContext"
+    "type": "com.fasterxml.jackson.databind.DeserializationContext"
   "return_type": "org.locationtech.spatial4j.shape.Shape"
   "signature": "[org.locationtech.spatial4j.io.jackson.ShapeDeserializer].deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)"
 - "exceptions": []
@@ -28,7 +28,7 @@
   "name": "[org.locationtech.spatial4j.io.SupportedFormats].read(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "org.locationtech.spatial4j.shape.Shape"
   "signature": "[org.locationtech.spatial4j.io.SupportedFormats].read(java.lang.String)"
 - "exceptions":
@@ -37,7 +37,7 @@
   "name": "[org.locationtech.spatial4j.io.WKTReader].readIfSupported(java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "org.locationtech.spatial4j.shape.Shape"
   "signature": "[org.locationtech.spatial4j.io.WKTReader].readIfSupported(java.lang.Object)"
 - "exceptions":
@@ -46,7 +46,7 @@
   "name": "[org.locationtech.spatial4j.io.GeoJSONReader].readIfSupported(java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "org.locationtech.spatial4j.shape.Shape"
   "signature": "[org.locationtech.spatial4j.io.GeoJSONReader].readIfSupported(java.lang.Object)"
 - "exceptions":
@@ -56,7 +56,7 @@
   "name": "[org.locationtech.spatial4j.io.GeoJSONReader].read(java.io.Reader)"
   "params":
   - "name": "arg0"
-    "type": "Reader"
+    "type": "java.io.Reader"
   "return_type": "org.locationtech.spatial4j.shape.Shape"
   "signature": "[org.locationtech.spatial4j.io.GeoJSONReader].read(java.io.Reader)"
 "language": "jvm"

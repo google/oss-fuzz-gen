@@ -111,8 +111,8 @@ def get_experiment_configs(
   benchmark_yamls = []
   if args.benchmark_yaml:
     logger.info(
-        f'A benchmark yaml file ({args.benchmark_yaml}) is provided. '
-        f'Will use it and ignore the files in {args.benchmarks_directory}.')
+        'A benchmark yaml file %s is provided. Will use it and ignore '
+        'the files in %s.', args.benchmark_yaml, args.benchmarks_directory)
     benchmark_yamls = [args.benchmark_yaml]
   else:
     if args.generate_benchmarks:
@@ -418,7 +418,8 @@ def main():
   experiment_configs = get_experiment_configs(args)
   experiment_results = []
 
-  logger.info(f'Running {NUM_EXP} experiment(s) in parallel.')
+  logger.info('Running %d experiment(s) in parallels of %d.',
+              len(experiment_configs), NUM_EXP)
   if NUM_EXP == 1:
     for config in experiment_configs:
       result = run_experiments(*config)
