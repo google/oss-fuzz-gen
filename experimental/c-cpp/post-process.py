@@ -17,7 +17,6 @@ import argparse
 import json
 import logging
 import os
-import sys
 from typing import Any, Dict, List, Optional
 
 import constants
@@ -157,12 +156,14 @@ def read_session_project_report(project_folder_out):
   }
 
 
-def analyse_project_session(oss_fuzz_dir: str, project_folder_out: str, to_print: bool = False) -> List[Dict[str, Any]]:
+def analyse_project_session(oss_fuzz_dir: str,
+                            project_folder_out: str,
+                            to_print: bool = False) -> List[Dict[str, Any]]:
   """Interprets the results for a auto-gen session."""
   logger.info('Analysing: %s', project_folder_out)
   project_report = read_session_project_report(project_folder_out)
   if not project_report:
-    return
+    return []
 
   total_outcomes = extract_results_from_generated_samples(
       oss_fuzz_dir, project_folder_out)
@@ -174,14 +175,14 @@ def analyse_project_session(oss_fuzz_dir: str, project_folder_out: str, to_print
     logger.info('Results: %s', project_report['project'])
     logger.info('- Language: %s', project_report['language'])
     logger.info('- Functions from Fuzz Introspector: %s',
-              project_report['total-functions'])
+                project_report['total-functions'])
     logger.info('- Harnesses generated: %d', len(total_outcomes))
     for harness_result in sorted_outcomes:
       logger.info('%s :: %d :: %d :: [asan errors: %d] :: coverage: %f ',
-                harness_result['target'], harness_result['cov_history'][0],
-                harness_result['cov_history'][-1],
-                len(harness_result['addr_san']),
-                harness_result['line_coverage'])
+                  harness_result['target'], harness_result['cov_history'][0],
+                  harness_result['cov_history'][-1],
+                  len(harness_result['addr_san']),
+                  harness_result['line_coverage'])
   return sorted_outcomes
 
 
@@ -211,19 +212,18 @@ def get_top_projects(oss_fuzz_dir: str) -> List[Dict[str, Any]]:
       continue
 
     sorted_projects = analyse_project_session(oss_fuzz_dir, project_folder_out)
-    if len(sorted_projects):
+    if sorted_projects:
       top_projects.append(sorted_projects[0])
 
   for top_project in top_projects:
     logger.info('%s :: %d :: %d :: [asan errors: %d] :: coverage: %f ',
-                top_project['target'], top_project['cov_history'][0],
-                top_project['cov_history'][-1],
-                len(top_project['addr_san']),
-                top_project['line_coverage'])
+                top_project['target'],
+                top_project['cov_history'][0], top_project['cov_history'][-1],
+                len(top_project['addr_san']), top_project['line_coverage'])
   return top_projects
 
 
-def parse_args() -> argparse.Namespace: 
+def parse_args() -> argparse.Namespace:
   """Parses commandline arguments."""
   parser = argparse.ArgumentParser()
 
@@ -233,17 +233,17 @@ def parse_args() -> argparse.Namespace:
       help='prints results of auto-gen to stdout',
   )
   print_parser.add_argument('--oss-fuzz-dir',
-                             type=str,
-                             help='OSS-Fuzz directory with generated results',
-                             required=True)
+                            type=str,
+                            help='OSS-Fuzz directory with generated results',
+                            required=True)
   top_finder = subparsers.add_parser(
       'top-projects',
       help='prints status of top projects',
   )
   top_finder.add_argument('--oss-fuzz-dir',
-                             type=str,
-                             help='OSS-Fuzz directory with generated results',
-                             required=True)
+                          type=str,
+                          help='OSS-Fuzz directory with generated results',
+                          required=True)
   args = parser.parse_args()
   return args
 
