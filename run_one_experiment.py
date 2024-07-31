@@ -66,7 +66,8 @@ class AggregatedResult:
   max_coverage_sample: str = ''
   max_coverage_diff_sample: str = ''
   max_coverage_diff_report: str = ''
-  full_textcov: textcov.Textcov = dataclasses.field(default_factory=textcov.Textcov)
+  full_textcov: textcov.Textcov = dataclasses.field(
+      default_factory=textcov.Textcov)
 
   def __str__(self):
     return (
