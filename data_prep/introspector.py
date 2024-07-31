@@ -613,8 +613,34 @@ def _combine_functions(a: list[str], b: list[str], c: list[str],
   return list(combined)
 
 
+def _select_functions_from_jvm_oracles(project: str, limit: int,
+                                       target_oracles: list[str]) -> list[dict]:
+  """Selects functions from oracles designated for jvm projects, with
+  jvm-public-candidates as the prioritised oracle"""
+  all_functions = OrderedDict()
+
+  if 'jvm-public-candidates' in target_oracles:
+    # JPC is the primary oracle for JVM projects. If it does exist, all other
+    # oracles are ignored because the results from all other oracles are subsets
+    # of the results from JPC oracle for JVM projects.
+    jpc_targets = _select_top_functions_from_oracle(project, limit,
+                                                    'jvm-public-candidates',
+                                                    target_oracles)
+    all_functions.update(jpc_targets)
+  else:
+    # JPC does not exist in target_oracles, follow given oracle order and
+    # dedulicate instead.
+    for target_oracle in target_oracles:
+      tmp_functions = _select_top_functions_from_oracle(project, limit,
+                                                        target_oracle,
+                                                        target_oracles)
+      all_functions.update(tmp_functions)
+
+  return list(all_functions.values())[:limit]
+
+
 def _select_functions_from_oracles(project: str, limit: int,
-                                   target_oracles: List[str]) -> list[dict]:
+                                   target_oracles: list[str]) -> list[dict]:
   """Selects function-under-test from oracles."""
   all_functions = OrderedDict()
   frlc_targets = _select_top_functions_from_oracle(project, limit,
@@ -656,7 +682,10 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                            limit: int,
                                            target_oracles: List[str]):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
-  functions = _select_functions_from_oracles(project, limit, target_oracles)
+  if language == 'jvm':
+    functions = _select_functions_from_jvm_oracles(project, limit, target_oracles)
+  else:
+    functions = _select_functions_from_oracles(project, limit, target_oracles)
 
   if not functions:
     logger.error('No functions found using the oracles: %s', target_oracles)
