@@ -4,7 +4,7 @@
   "name": "[org.reflections.Reflections].<init>(java.lang.Object[])"
   "params":
   - "name": "arg0"
-    "type": "Object[]"
+    "type": "java.lang.Object[]"
   "return_type": "org.reflections.Reflections"
   "signature": "[org.reflections.Reflections].<init>(java.lang.Object[])"
 - "exceptions": []
@@ -12,7 +12,7 @@
   "name": "[org.reflections.Reflections].<init>(org.reflections.Configuration)"
   "params":
   - "name": "arg0"
-    "type": "Configuration"
+    "type": "org.reflections.Configuration"
   "return_type": "org.reflections.Reflections"
   "signature": "[org.reflections.Reflections].<init>(org.reflections.Configuration)"
 - "exceptions": []
@@ -20,7 +20,7 @@
   "name": "[org.reflections.vfs.SystemDir].<init>(java.io.File)"
   "params":
   - "name": "arg0"
-    "type": "File"
+    "type": "java.io.File"
   "return_type": "org.reflections.vfs.SystemDir"
   "signature": "[org.reflections.vfs.SystemDir].<init>(java.io.File)"
 - "exceptions": []
@@ -36,9 +36,9 @@
   "name": "[org.reflections.Reflections].<init>(java.lang.String,org.reflections.scanners.Scanner[])"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "Scanner[]"
+    "type": "org.reflections.scanners.Scanner[]"
   "return_type": "org.reflections.Reflections"
   "signature": "[org.reflections.Reflections].<init>(java.lang.String,org.reflections.scanners.Scanner[])"
 - "exceptions": []
@@ -46,7 +46,7 @@
   "name": "[org.reflections.util.FilterBuilder].equals(java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "boolean"
   "signature": "[org.reflections.util.FilterBuilder].equals(java.lang.Object)"
 "language": "jvm"

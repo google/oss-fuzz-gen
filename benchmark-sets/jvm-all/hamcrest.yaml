@@ -4,9 +4,9 @@
   "name": "[org.hamcrest.beans.HasPropertyWithValue].matchesSafely(java.lang.Object,org.hamcrest.Description)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "Description"
+    "type": "org.hamcrest.Description"
   "return_type": "boolean"
   "signature": "[org.hamcrest.beans.HasPropertyWithValue].matchesSafely(java.lang.Object,org.hamcrest.Description)"
 - "exceptions": []
@@ -14,9 +14,9 @@
   "name": "[org.hamcrest.core.Every].matchesSafely(java.lang.Iterable<? extends T>,org.hamcrest.Description)"
   "params":
   - "name": "arg0"
-    "type": "Iterable<? extends T>"
+    "type": "java.lang.Iterable<? extends T>"
   - "name": "arg1"
-    "type": "Description"
+    "type": "org.hamcrest.Description"
   "return_type": "boolean"
   "signature": "[org.hamcrest.core.Every].matchesSafely(java.lang.Iterable<? extends T>,org.hamcrest.Description)"
 - "exceptions": []
@@ -24,9 +24,9 @@
   "name": "[org.hamcrest.collection.IsArray].describeMismatchSafely(java.lang.Object,org.hamcrest.Description)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "Description"
+    "type": "org.hamcrest.Description"
   "return_type": "void"
   "signature": "[org.hamcrest.collection.IsArray].describeMismatchSafely(java.lang.Object,org.hamcrest.Description)"
 - "exceptions": []
@@ -34,9 +34,9 @@
   "name": "[org.hamcrest.collection.IsArray].describeMismatchSafely(java.lang.Object[],org.hamcrest.Description)"
   "params":
   - "name": "arg0"
-    "type": "Object[]"
+    "type": "java.lang.Object[]"
   - "name": "arg1"
-    "type": "Description"
+    "type": "org.hamcrest.Description"
   "return_type": "void"
   "signature": "[org.hamcrest.collection.IsArray].describeMismatchSafely(java.lang.Object[],org.hamcrest.Description)"
 - "exceptions": []
@@ -44,7 +44,7 @@
   "name": "[org.hamcrest.collection.IsArray].matchesSafely(java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "boolean"
   "signature": "[org.hamcrest.collection.IsArray].matchesSafely(java.lang.Object)"
 - "exceptions": []
@@ -52,7 +52,7 @@
   "name": "[org.hamcrest.collection.IsArray].matchesSafely(java.lang.Object[])"
   "params":
   - "name": "arg0"
-    "type": "Object[]"
+    "type": "java.lang.Object[]"
   "return_type": "boolean"
   "signature": "[org.hamcrest.collection.IsArray].matchesSafely(java.lang.Object[])"
 "language": "jvm"

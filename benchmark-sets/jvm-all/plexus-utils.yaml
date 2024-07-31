@@ -17,9 +17,9 @@
   "name": "[org.codehaus.plexus.util.StringUtils].join(java.lang.Object[],java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "Object[]"
+    "type": "java.lang.Object[]"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.codehaus.plexus.util.StringUtils].join(java.lang.Object[],java.lang.String)"
 - "exceptions": []
@@ -27,7 +27,7 @@
   "name": "[org.codehaus.plexus.util.cli.shell.Shell].getShellCommandLine(java.lang.String[])"
   "params":
   - "name": "arg0"
-    "type": "String[]"
+    "type": "java.lang.String[]"
   "return_type": "java.util.List<String>"
   "signature": "[org.codehaus.plexus.util.cli.shell.Shell].getShellCommandLine(java.lang.String[])"
 - "exceptions": []
@@ -35,13 +35,13 @@
   "name": "[org.codehaus.plexus.util.Os].isOs(java.lang.String,java.lang.String,java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg2"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg3"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "boolean"
   "signature": "[org.codehaus.plexus.util.Os].isOs(java.lang.String,java.lang.String,java.lang.String,java.lang.String)"
 - "exceptions":
@@ -50,9 +50,9 @@
   "name": "[org.codehaus.plexus.util.reflection.Reflector].getObjectProperty(java.lang.Object,java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.lang.Object"
   "signature": "[org.codehaus.plexus.util.reflection.Reflector].getObjectProperty(java.lang.Object,java.lang.String)"
 - "exceptions": []
@@ -60,9 +60,9 @@
   "name": "[org.codehaus.plexus.util.cli.shell.CmdShell].getCommandLine(java.lang.String,java.lang.String[])"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "String[]"
+    "type": "java.lang.String[]"
   "return_type": "java.util.List<String>"
   "signature": "[org.codehaus.plexus.util.cli.shell.CmdShell].getCommandLine(java.lang.String,java.lang.String[])"
 "language": "jvm"

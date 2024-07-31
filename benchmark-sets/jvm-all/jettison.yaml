@@ -5,7 +5,7 @@
   "name": "[org.codehaus.jettison.json.JSONObject].<init>(org.codehaus.jettison.json.JSONTokener)"
   "params":
   - "name": "arg0"
-    "type": "JSONTokener"
+    "type": "org.codehaus.jettison.json.JSONTokener"
   "return_type": "org.codehaus.jettison.json.JSONObject"
   "signature": "[org.codehaus.jettison.json.JSONObject].<init>(org.codehaus.jettison.json.JSONTokener)"
 - "exceptions":
@@ -15,9 +15,9 @@
   "name": "[org.codehaus.jettison.mapped.MappedXMLStreamReader].<init>(org.codehaus.jettison.json.JSONObject,org.codehaus.jettison.mapped.MappedNamespaceConvention)"
   "params":
   - "name": "arg0"
-    "type": "JSONObject"
+    "type": "org.codehaus.jettison.json.JSONObject"
   - "name": "arg1"
-    "type": "MappedNamespaceConvention"
+    "type": "org.codehaus.jettison.mapped.MappedNamespaceConvention"
   "return_type": "org.codehaus.jettison.mapped.MappedXMLStreamReader"
   "signature": "[org.codehaus.jettison.mapped.MappedXMLStreamReader].<init>(org.codehaus.jettison.json.JSONObject,org.codehaus.jettison.mapped.MappedNamespaceConvention)"
 - "exceptions":
@@ -26,7 +26,7 @@
   "name": "[org.codehaus.jettison.json.JSONArray].<init>(org.codehaus.jettison.json.JSONTokener)"
   "params":
   - "name": "arg0"
-    "type": "JSONTokener"
+    "type": "org.codehaus.jettison.json.JSONTokener"
   "return_type": "org.codehaus.jettison.json.JSONArray"
   "signature": "[org.codehaus.jettison.json.JSONArray].<init>(org.codehaus.jettison.json.JSONTokener)"
 - "exceptions": []
@@ -34,7 +34,7 @@
   "name": "[org.codehaus.jettison.mapped.MappedNamespaceConvention].<init>(org.codehaus.jettison.mapped.Configuration)"
   "params":
   - "name": "arg0"
-    "type": "Configuration"
+    "type": "org.codehaus.jettison.mapped.Configuration"
   "return_type": "org.codehaus.jettison.mapped.MappedNamespaceConvention"
   "signature": "[org.codehaus.jettison.mapped.MappedNamespaceConvention].<init>(org.codehaus.jettison.mapped.Configuration)"
 - "exceptions":
@@ -44,7 +44,7 @@
   "name": "[org.codehaus.jettison.mapped.MappedXMLStreamReader].<init>(org.codehaus.jettison.json.JSONObject)"
   "params":
   - "name": "arg0"
-    "type": "JSONObject"
+    "type": "org.codehaus.jettison.json.JSONObject"
   "return_type": "org.codehaus.jettison.mapped.MappedXMLStreamReader"
   "signature": "[org.codehaus.jettison.mapped.MappedXMLStreamReader].<init>(org.codehaus.jettison.json.JSONObject)"
 - "exceptions":
@@ -53,9 +53,9 @@
   "name": "[org.codehaus.jettison.json.JSONObject].<init>(org.codehaus.jettison.json.JSONObject,java.lang.String[])"
   "params":
   - "name": "arg0"
-    "type": "JSONObject"
+    "type": "org.codehaus.jettison.json.JSONObject"
   - "name": "arg1"
-    "type": "String[]"
+    "type": "java.lang.String[]"
   "return_type": "org.codehaus.jettison.json.JSONObject"
   "signature": "[org.codehaus.jettison.json.JSONObject].<init>(org.codehaus.jettison.json.JSONObject,java.lang.String[])"
 "language": "jvm"

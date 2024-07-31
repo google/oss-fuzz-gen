@@ -5,7 +5,7 @@
   "name": "[org.stringtemplate.v4.compiler.CodeGenerator].ifstat(org.antlr.runtime.tree.CommonTree)"
   "params":
   - "name": "arg0"
-    "type": "CommonTree"
+    "type": "org.antlr.runtime.tree.CommonTree"
   "return_type": "void"
   "signature": "[org.stringtemplate.v4.compiler.CodeGenerator].ifstat(org.antlr.runtime.tree.CommonTree)"
 - "exceptions":
@@ -14,7 +14,7 @@
   "name": "[org.stringtemplate.v4.compiler.CodeGenerator].compoundElement(org.antlr.runtime.tree.CommonTree)"
   "params":
   - "name": "arg0"
-    "type": "CommonTree"
+    "type": "org.antlr.runtime.tree.CommonTree"
   "return_type": "void"
   "signature": "[org.stringtemplate.v4.compiler.CodeGenerator].compoundElement(org.antlr.runtime.tree.CommonTree)"
 - "exceptions": []
@@ -22,17 +22,17 @@
   "name": "[org.stringtemplate.v4.STGroup].defineTemplateOrRegion(java.lang.String,java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token,java.util.List<FormalArgument>)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg2"
-    "type": "Token"
+    "type": "org.antlr.runtime.Token"
   - "name": "arg3"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg4"
-    "type": "Token"
+    "type": "org.antlr.runtime.Token"
   - "name": "arg5"
-    "type": "List<FormalArgument>"
+    "type": "java.util.List<FormalArgument>"
   "return_type": "void"
   "signature": "[org.stringtemplate.v4.STGroup].defineTemplateOrRegion(java.lang.String,java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token,java.util.List<FormalArgument>)"
 - "exceptions": []
@@ -40,13 +40,13 @@
   "name": "[org.stringtemplate.v4.STGroup].defineRegion(java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "Token"
+    "type": "org.antlr.runtime.Token"
   - "name": "arg2"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg3"
-    "type": "Token"
+    "type": "org.antlr.runtime.Token"
   "return_type": "org.stringtemplate.v4.compiler.CompiledST"
   "signature": "[org.stringtemplate.v4.STGroup].defineRegion(java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token)"
 - "exceptions":
@@ -55,7 +55,7 @@
   "name": "[org.stringtemplate.v4.compiler.GroupParser].defaultValuePair(java.util.Map<String,Object>)"
   "params":
   - "name": "arg0"
-    "type": "Map<String,Object>"
+    "type": "java.util.Map<String,Object>"
   "return_type": "void"
   "signature": "[org.stringtemplate.v4.compiler.GroupParser].defaultValuePair(java.util.Map<String,Object>)"
 - "exceptions":
@@ -64,9 +64,27 @@
   "name": "[org.stringtemplate.v4.compiler.GroupParser].keyValuePair(java.util.Map<String,Object>)"
   "params":
   - "name": "arg0"
-    "type": "Map<String,Object>"
+    "type": "java.util.Map<String,Object>"
   "return_type": "void"
   "signature": "[org.stringtemplate.v4.compiler.GroupParser].keyValuePair(java.util.Map<String,Object>)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.stringtemplate.v4.ST].<init>(org.stringtemplate.v4.STGroup,java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "org.stringtemplate.v4.STGroup"
+  - "name": "arg1"
+    "type": "java.lang.String"
+  "return_type": "org.stringtemplate.v4.ST"
+  "signature": "[org.stringtemplate.v4.ST].<init>(org.stringtemplate.v4.STGroup,java.lang.String)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.stringtemplate.v4.ST].<init>(java.lang.String)"
+  "params":
+  - "name": "arg0"
+    "type": "java.lang.String"
+  "return_type": "org.stringtemplate.v4.ST"
+  "signature": "[org.stringtemplate.v4.ST].<init>(java.lang.String)"
 "language": "jvm"
 "project": "stringtemplate4"
 "target_name": "StringFuzzer"

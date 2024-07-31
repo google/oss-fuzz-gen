@@ -5,7 +5,7 @@
   "name": "[org.apache.jasper.compiler.Node$Nodes].visit(org.apache.jasper.compiler.Node$Visitor)"
   "params":
   - "name": "arg0"
-    "type": "Node$Visitor"
+    "type": "org.apache.jasper.compiler.Node$Visitor"
   "return_type": "void"
   "signature": "[org.apache.jasper.compiler.Node$Nodes].visit(org.apache.jasper.compiler.Node$Visitor)"
 - "exceptions":
@@ -14,7 +14,7 @@
   "name": "[org.apache.jasper.compiler.Node$NamedAttribute].accept(org.apache.jasper.compiler.Node$Visitor)"
   "params":
   - "name": "arg0"
-    "type": "Node$Visitor"
+    "type": "org.apache.jasper.compiler.Node$Visitor"
   "return_type": "void"
   "signature": "[org.apache.jasper.compiler.Node$NamedAttribute].accept(org.apache.jasper.compiler.Node$Visitor)"
 - "exceptions":
@@ -23,7 +23,7 @@
   "name": "[org.apache.jasper.compiler.Node$Visitor].visit(org.apache.jasper.compiler.Node$NamedAttribute)"
   "params":
   - "name": "arg0"
-    "type": "Node$NamedAttribute"
+    "type": "org.apache.jasper.compiler.Node$NamedAttribute"
   "return_type": "void"
   "signature": "[org.apache.jasper.compiler.Node$Visitor].visit(org.apache.jasper.compiler.Node$NamedAttribute)"
 - "exceptions":
@@ -32,7 +32,7 @@
   "name": "[org.apache.jasper.compiler.Node$AttributeGenerator].accept(org.apache.jasper.compiler.Node$Visitor)"
   "params":
   - "name": "arg0"
-    "type": "Node$Visitor"
+    "type": "org.apache.jasper.compiler.Node$Visitor"
   "return_type": "void"
   "signature": "[org.apache.jasper.compiler.Node$AttributeGenerator].accept(org.apache.jasper.compiler.Node$Visitor)"
 - "exceptions":
@@ -41,7 +41,7 @@
   "name": "[org.apache.jasper.compiler.Node$Visitor].visit(org.apache.jasper.compiler.Node$AttributeGenerator)"
   "params":
   - "name": "arg0"
-    "type": "Node$AttributeGenerator"
+    "type": "org.apache.jasper.compiler.Node$AttributeGenerator"
   "return_type": "void"
   "signature": "[org.apache.jasper.compiler.Node$Visitor].visit(org.apache.jasper.compiler.Node$AttributeGenerator)"
 - "exceptions":
@@ -50,7 +50,7 @@
   "name": "[org.apache.jasper.compiler.Node$DoBodyAction].accept(org.apache.jasper.compiler.Node$Visitor)"
   "params":
   - "name": "arg0"
-    "type": "Node$Visitor"
+    "type": "org.apache.jasper.compiler.Node$Visitor"
   "return_type": "void"
   "signature": "[org.apache.jasper.compiler.Node$DoBodyAction].accept(org.apache.jasper.compiler.Node$Visitor)"
 "language": "jvm"
