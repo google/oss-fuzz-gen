@@ -4,7 +4,7 @@
   "name": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadableInstant)"
   "params":
   - "name": "arg0"
-    "type": "ReadableInstant"
+    "type": "org.joda.time.ReadableInstant"
   "return_type": "java.lang.String"
   "signature": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadableInstant)"
 - "exceptions": []
@@ -12,7 +12,7 @@
   "name": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadablePartial)"
   "params":
   - "name": "arg0"
-    "type": "ReadablePartial"
+    "type": "org.joda.time.ReadablePartial"
   "return_type": "java.lang.String"
   "signature": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadablePartial)"
 - "exceptions":
@@ -21,9 +21,9 @@
   "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadableInstant)"
   "params":
   - "name": "arg0"
-    "type": "Appendable"
+    "type": "java.lang.Appendable"
   - "name": "arg1"
-    "type": "ReadableInstant"
+    "type": "org.joda.time.ReadableInstant"
   "return_type": "void"
   "signature": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadableInstant)"
 - "exceptions":
@@ -32,9 +32,9 @@
   "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadablePartial)"
   "params":
   - "name": "arg0"
-    "type": "Appendable"
+    "type": "java.lang.Appendable"
   - "name": "arg1"
-    "type": "ReadablePartial"
+    "type": "org.joda.time.ReadablePartial"
   "return_type": "void"
   "signature": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadablePartial)"
 - "exceptions": []
@@ -42,7 +42,7 @@
   "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.StringBuffer,long)"
   "params":
   - "name": "arg0"
-    "type": "StringBuffer"
+    "type": "java.lang.StringBuffer"
   - "name": "arg1"
     "type": "long"
   "return_type": "void"
@@ -53,7 +53,7 @@
   "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,long)"
   "params":
   - "name": "arg0"
-    "type": "Appendable"
+    "type": "java.lang.Appendable"
   - "name": "arg1"
     "type": "long"
   "return_type": "void"

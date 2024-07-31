@@ -5,7 +5,7 @@
   "name": "[org.kie.soup.commons.cron.CronExpression].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "org.kie.soup.commons.cron.CronExpression"
   "signature": "[org.kie.soup.commons.cron.CronExpression].<init>(java.lang.String)"
 "language": "jvm"

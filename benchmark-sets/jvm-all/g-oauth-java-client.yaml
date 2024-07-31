@@ -4,9 +4,9 @@
   "name": "[com.google.api.client.auth.oauth2.Credential].handleResponse(com.google.api.client.http.HttpRequest,com.google.api.client.http.HttpResponse,boolean)"
   "params":
   - "name": "arg0"
-    "type": "HttpRequest"
+    "type": "com.google.api.client.http.HttpRequest"
   - "name": "arg1"
-    "type": "HttpResponse"
+    "type": "com.google.api.client.http.HttpResponse"
   - "name": "arg2"
     "type": "boolean"
   "return_type": "boolean"
@@ -17,7 +17,7 @@
   "name": "[com.google.api.client.auth.oauth2.Credential].intercept(com.google.api.client.http.HttpRequest)"
   "params":
   - "name": "arg0"
-    "type": "HttpRequest"
+    "type": "com.google.api.client.http.HttpRequest"
   "return_type": "void"
   "signature": "[com.google.api.client.auth.oauth2.Credential].intercept(com.google.api.client.http.HttpRequest)"
 - "exceptions":
@@ -26,7 +26,7 @@
   "name": "[com.google.api.client.auth.oauth.OAuthParameters].intercept(com.google.api.client.http.HttpRequest)"
   "params":
   - "name": "arg0"
-    "type": "HttpRequest"
+    "type": "com.google.api.client.http.HttpRequest"
   "return_type": "void"
   "signature": "[com.google.api.client.auth.oauth.OAuthParameters].intercept(com.google.api.client.http.HttpRequest)"
 - "exceptions":
@@ -35,9 +35,9 @@
   "name": "[com.google.api.client.auth.oauth.OAuthParameters].computeSignature(java.lang.String,com.google.api.client.http.GenericUrl)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "GenericUrl"
+    "type": "com.google.api.client.http.GenericUrl"
   "return_type": "void"
   "signature": "[com.google.api.client.auth.oauth.OAuthParameters].computeSignature(java.lang.String,com.google.api.client.http.GenericUrl)"
 - "exceptions": []
@@ -45,7 +45,7 @@
   "name": "[com.google.api.client.auth.oauth2.Credential].setFromTokenResponse(com.google.api.client.auth.oauth2.TokenResponse)"
   "params":
   - "name": "arg0"
-    "type": "TokenResponse"
+    "type": "com.google.api.client.auth.oauth2.TokenResponse"
   "return_type": "com.google.api.client.auth.oauth2.Credential"
   "signature": "[com.google.api.client.auth.oauth2.Credential].setFromTokenResponse(com.google.api.client.auth.oauth2.TokenResponse)"
 - "exceptions": []
@@ -53,15 +53,15 @@
   "name": "[com.google.api.client.auth.oauth2.TokenRequest].<init>(com.google.api.client.http.HttpTransport,com.google.api.client.json.JsonFactory,com.google.api.client.http.GenericUrl,java.lang.String,java.lang.Class)"
   "params":
   - "name": "arg0"
-    "type": "HttpTransport"
+    "type": "com.google.api.client.http.HttpTransport"
   - "name": "arg1"
-    "type": "JsonFactory"
+    "type": "com.google.api.client.json.JsonFactory"
   - "name": "arg2"
-    "type": "GenericUrl"
+    "type": "com.google.api.client.http.GenericUrl"
   - "name": "arg3"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg4"
-    "type": "Class"
+    "type": "java.lang.Class"
   "return_type": "com.google.api.client.auth.oauth2.TokenRequest"
   "signature": "[com.google.api.client.auth.oauth2.TokenRequest].<init>(com.google.api.client.http.HttpTransport,com.google.api.client.json.JsonFactory,com.google.api.client.http.GenericUrl,java.lang.String,java.lang.Class)"
 "language": "jvm"

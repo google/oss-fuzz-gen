@@ -4,7 +4,7 @@
   "name": "[org.apache.zookeeper.server.FinalRequestProcessor].processRequest(org.apache.zookeeper.server.Request)"
   "params":
   - "name": "arg0"
-    "type": "Request"
+    "type": "org.apache.zookeeper.server.Request"
   "return_type": "void"
   "signature": "[org.apache.zookeeper.server.FinalRequestProcessor].processRequest(org.apache.zookeeper.server.Request)"
 - "exceptions":
@@ -13,11 +13,11 @@
   "name": "[org.apache.zookeeper.server.persistence.FileSnap].serialize(org.apache.zookeeper.server.DataTree,java.util.Map<Long,Integer>,java.io.File,boolean)"
   "params":
   - "name": "arg0"
-    "type": "DataTree"
+    "type": "org.apache.zookeeper.server.DataTree"
   - "name": "arg1"
-    "type": "Map<Long,Integer>"
+    "type": "java.util.Map<Long,Integer>"
   - "name": "arg2"
-    "type": "File"
+    "type": "java.io.File"
   - "name": "arg3"
     "type": "boolean"
   "return_type": "void"
@@ -27,9 +27,9 @@
   "name": "[org.apache.zookeeper.common.IOUtils].cleanup(org.slf4j.Logger,java.io.Closeable[])"
   "params":
   - "name": "arg0"
-    "type": "Logger"
+    "type": "org.slf4j.Logger"
   - "name": "arg1"
-    "type": "Closeable[]"
+    "type": "java.io.Closeable[]"
   "return_type": "void"
   "signature": "[org.apache.zookeeper.common.IOUtils].cleanup(org.slf4j.Logger,java.io.Closeable[])"
 - "exceptions":
@@ -38,7 +38,7 @@
   "name": "[org.apache.zookeeper.server.persistence.SnapStream].getOutputStream(java.io.File,boolean)"
   "params":
   - "name": "arg0"
-    "type": "File"
+    "type": "java.io.File"
   - "name": "arg1"
     "type": "boolean"
   "return_type": "java.util.zip.CheckedOutputStream"
@@ -49,9 +49,9 @@
   "name": "[org.apache.commons.io.IOUtils].close(java.io.Closeable,org.apache.commons.io.function.IOConsumer)"
   "params":
   - "name": "arg0"
-    "type": "Closeable"
+    "type": "java.io.Closeable"
   - "name": "arg1"
-    "type": "IOConsumer"
+    "type": "org.apache.commons.io.function.IOConsumer"
   "return_type": "void"
   "signature": "[org.apache.commons.io.IOUtils].close(java.io.Closeable,org.apache.commons.io.function.IOConsumer)"
 - "exceptions": []
@@ -59,9 +59,9 @@
   "name": "[org.apache.commons.io.IOUtils].closeQuietly(java.io.Closeable,java.util.function.Consumer)"
   "params":
   - "name": "arg0"
-    "type": "Closeable"
+    "type": "java.io.Closeable"
   - "name": "arg1"
-    "type": "Consumer"
+    "type": "java.util.function.Consumer"
   "return_type": "void"
   "signature": "[org.apache.commons.io.IOUtils].closeQuietly(java.io.Closeable,java.util.function.Consumer)"
 "language": "jvm"

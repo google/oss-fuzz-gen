@@ -4,7 +4,7 @@
   "name": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.MessageOrBuilder)"
   "params":
   - "name": "arg0"
-    "type": "MessageOrBuilder"
+    "type": "com.google.protobuf.MessageOrBuilder"
   "return_type": "java.lang.String"
   "signature": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.MessageOrBuilder)"
 - "exceptions": []
@@ -12,7 +12,7 @@
   "name": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.MessageOrBuilder)"
   "params":
   - "name": "arg0"
-    "type": "MessageOrBuilder"
+    "type": "com.google.protobuf.MessageOrBuilder"
   "return_type": "java.lang.String"
   "signature": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.MessageOrBuilder)"
 - "exceptions":
@@ -21,9 +21,9 @@
   "name": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.MessageOrBuilder,java.lang.Appendable)"
   "params":
   - "name": "arg0"
-    "type": "MessageOrBuilder"
+    "type": "com.google.protobuf.MessageOrBuilder"
   - "name": "arg1"
-    "type": "Appendable"
+    "type": "java.lang.Appendable"
   "return_type": "void"
   "signature": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.MessageOrBuilder,java.lang.Appendable)"
 - "exceptions": []
@@ -31,7 +31,7 @@
   "name": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.UnknownFieldSet)"
   "params":
   - "name": "arg0"
-    "type": "UnknownFieldSet"
+    "type": "com.google.protobuf.UnknownFieldSet"
   "return_type": "java.lang.String"
   "signature": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.UnknownFieldSet)"
 - "exceptions": []
@@ -39,7 +39,7 @@
   "name": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.UnknownFieldSet)"
   "params":
   - "name": "arg0"
-    "type": "UnknownFieldSet"
+    "type": "com.google.protobuf.UnknownFieldSet"
   "return_type": "java.lang.String"
   "signature": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.UnknownFieldSet)"
 - "exceptions":
@@ -48,9 +48,9 @@
   "name": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.UnknownFieldSet,java.lang.Appendable)"
   "params":
   - "name": "arg0"
-    "type": "UnknownFieldSet"
+    "type": "com.google.protobuf.UnknownFieldSet"
   - "name": "arg1"
-    "type": "Appendable"
+    "type": "java.lang.Appendable"
   "return_type": "void"
   "signature": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.UnknownFieldSet,java.lang.Appendable)"
 "language": "jvm"

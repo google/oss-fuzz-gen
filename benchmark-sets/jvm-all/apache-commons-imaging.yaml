@@ -6,7 +6,7 @@
   "name": "[org.apache.commons.imaging.icc.IccProfileInfo].toString(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.apache.commons.imaging.icc.IccProfileInfo].toString(java.lang.String)"
 - "exceptions":
@@ -16,9 +16,9 @@
   "name": "[org.apache.commons.imaging.icc.IccTag].dump(java.io.PrintWriter,java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "PrintWriter"
+    "type": "java.io.PrintWriter"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "void"
   "signature": "[org.apache.commons.imaging.icc.IccTag].dump(java.io.PrintWriter,java.lang.String)"
 - "exceptions": []
@@ -26,7 +26,7 @@
   "name": "[org.apache.commons.imaging.common.GenericImageMetadata].toString(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.apache.commons.imaging.common.GenericImageMetadata].toString(java.lang.String)"
 - "exceptions": []
@@ -34,7 +34,7 @@
   "name": "[org.apache.commons.imaging.formats.jpeg.JpegImageMetadata].toString(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.apache.commons.imaging.formats.jpeg.JpegImageMetadata].toString(java.lang.String)"
 - "exceptions": []
@@ -42,7 +42,7 @@
   "name": "[org.apache.commons.imaging.formats.tiff.TiffImageMetadata$Directory].toString(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.apache.commons.imaging.formats.tiff.TiffImageMetadata$Directory].toString(java.lang.String)"
 - "exceptions":
@@ -55,7 +55,7 @@
   - "name": "arg1"
     "type": "int"
   - "name": "arg2"
-    "type": "InputStream"
+    "type": "java.io.InputStream"
   "return_type": "org.apache.commons.imaging.formats.jpeg.segments.DhtSegment"
   "signature": "[org.apache.commons.imaging.formats.jpeg.segments.DhtSegment].<init>(int,int,java.io.InputStream)"
 "language": "jvm"

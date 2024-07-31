@@ -43,7 +43,7 @@
   "name": "[ee.jakarta.tck.jsonp.common.MyBufferedReader].<init>(java.io.Reader,int,boolean)"
   "params":
   - "name": "arg0"
-    "type": "Reader"
+    "type": "java.io.Reader"
   - "name": "arg1"
     "type": "int"
   - "name": "arg2"
@@ -55,7 +55,7 @@
   "name": "[ee.jakarta.tck.jsonp.common.MyBufferedWriter].<init>(java.io.Writer,int,boolean)"
   "params":
   - "name": "arg0"
-    "type": "Writer"
+    "type": "java.io.Writer"
   - "name": "arg1"
     "type": "int"
   - "name": "arg2"

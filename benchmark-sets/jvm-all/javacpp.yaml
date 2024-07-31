@@ -4,7 +4,7 @@
   "name": "[org.bytedeco.javacpp.tools.InfoMap].put(org.bytedeco.javacpp.tools.Info)"
   "params":
   - "name": "arg0"
-    "type": "Info"
+    "type": "org.bytedeco.javacpp.tools.Info"
   "return_type": "org.bytedeco.javacpp.tools.InfoMap"
   "signature": "[org.bytedeco.javacpp.tools.InfoMap].put(org.bytedeco.javacpp.tools.Info)"
 - "exceptions": []
@@ -14,7 +14,7 @@
   - "name": "arg0"
     "type": "int"
   - "name": "arg1"
-    "type": "Info"
+    "type": "org.bytedeco.javacpp.tools.Info"
   "return_type": "org.bytedeco.javacpp.tools.InfoMap"
   "signature": "[org.bytedeco.javacpp.tools.InfoMap].put(int,org.bytedeco.javacpp.tools.Info)"
 - "exceptions": []
@@ -22,7 +22,7 @@
   "name": "[org.bytedeco.javacpp.ClassProperties].<init>(java.util.Properties)"
   "params":
   - "name": "arg0"
-    "type": "Properties"
+    "type": "java.util.Properties"
   "return_type": "org.bytedeco.javacpp.ClassProperties"
   "signature": "[org.bytedeco.javacpp.ClassProperties].<init>(java.util.Properties)"
 - "exceptions": []
@@ -30,7 +30,7 @@
   "name": "[org.bytedeco.javacpp.BooleanPointer].<init>(java.nio.ByteBuffer)"
   "params":
   - "name": "arg0"
-    "type": "ByteBuffer"
+    "type": "java.nio.ByteBuffer"
   "return_type": "org.bytedeco.javacpp.BooleanPointer"
   "signature": "[org.bytedeco.javacpp.BooleanPointer].<init>(java.nio.ByteBuffer)"
 - "exceptions": []
@@ -38,7 +38,7 @@
   "name": "[org.bytedeco.javacpp.BytePointer].<init>(java.nio.ByteBuffer)"
   "params":
   - "name": "arg0"
-    "type": "ByteBuffer"
+    "type": "java.nio.ByteBuffer"
   "return_type": "org.bytedeco.javacpp.BytePointer"
   "signature": "[org.bytedeco.javacpp.BytePointer].<init>(java.nio.ByteBuffer)"
 - "exceptions": []
@@ -46,7 +46,7 @@
   "name": "[org.bytedeco.javacpp.DoublePointer].<init>(java.nio.DoubleBuffer)"
   "params":
   - "name": "arg0"
-    "type": "DoubleBuffer"
+    "type": "java.nio.DoubleBuffer"
   "return_type": "org.bytedeco.javacpp.DoublePointer"
   "signature": "[org.bytedeco.javacpp.DoublePointer].<init>(java.nio.DoubleBuffer)"
 "language": "jvm"

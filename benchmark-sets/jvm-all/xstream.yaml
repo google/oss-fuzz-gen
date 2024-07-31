@@ -5,7 +5,7 @@
   "name": "[com.thoughtworks.xstream.io.xml.SaxWriter].parse(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "void"
   "signature": "[com.thoughtworks.xstream.io.xml.SaxWriter].parse(java.lang.String)"
 - "exceptions":
@@ -14,7 +14,7 @@
   "name": "[com.thoughtworks.xstream.io.xml.SaxWriter].parse(org.xml.sax.InputSource)"
   "params":
   - "name": "arg0"
-    "type": "InputSource"
+    "type": "org.xml.sax.InputSource"
   "return_type": "void"
   "signature": "[com.thoughtworks.xstream.io.xml.SaxWriter].parse(org.xml.sax.InputSource)"
 - "exceptions": []
@@ -22,11 +22,11 @@
   "name": "[com.thoughtworks.xstream.converters.extended.NamedMapConverter].marshal(java.lang.Object,com.thoughtworks.xstream.io.HierarchicalStreamWriter,com.thoughtworks.xstream.converters.MarshallingContext)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "HierarchicalStreamWriter"
+    "type": "com.thoughtworks.xstream.io.HierarchicalStreamWriter"
   - "name": "arg2"
-    "type": "MarshallingContext"
+    "type": "com.thoughtworks.xstream.converters.MarshallingContext"
   "return_type": "void"
   "signature": "[com.thoughtworks.xstream.converters.extended.NamedMapConverter].marshal(java.lang.Object,com.thoughtworks.xstream.io.HierarchicalStreamWriter,com.thoughtworks.xstream.converters.MarshallingContext)"
 - "exceptions": []
@@ -34,11 +34,11 @@
   "name": "[com.thoughtworks.xstream.converters.reflection.SerializableConverter].doMarshal(java.lang.Object,com.thoughtworks.xstream.io.HierarchicalStreamWriter,com.thoughtworks.xstream.converters.MarshallingContext)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "HierarchicalStreamWriter"
+    "type": "com.thoughtworks.xstream.io.HierarchicalStreamWriter"
   - "name": "arg2"
-    "type": "MarshallingContext"
+    "type": "com.thoughtworks.xstream.converters.MarshallingContext"
   "return_type": "void"
   "signature": "[com.thoughtworks.xstream.converters.reflection.SerializableConverter].doMarshal(java.lang.Object,com.thoughtworks.xstream.io.HierarchicalStreamWriter,com.thoughtworks.xstream.converters.MarshallingContext)"
 - "exceptions": []
@@ -46,11 +46,11 @@
   "name": "[com.thoughtworks.xstream.converters.reflection.CGLIBEnhancedConverter].marshal(java.lang.Object,com.thoughtworks.xstream.io.HierarchicalStreamWriter,com.thoughtworks.xstream.converters.MarshallingContext)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "HierarchicalStreamWriter"
+    "type": "com.thoughtworks.xstream.io.HierarchicalStreamWriter"
   - "name": "arg2"
-    "type": "MarshallingContext"
+    "type": "com.thoughtworks.xstream.converters.MarshallingContext"
   "return_type": "void"
   "signature": "[com.thoughtworks.xstream.converters.reflection.CGLIBEnhancedConverter].marshal(java.lang.Object,com.thoughtworks.xstream.io.HierarchicalStreamWriter,com.thoughtworks.xstream.converters.MarshallingContext)"
 - "exceptions": []
@@ -58,11 +58,11 @@
   "name": "[com.thoughtworks.xstream.converters.extended.NamedArrayConverter].marshal(java.lang.Object,com.thoughtworks.xstream.io.HierarchicalStreamWriter,com.thoughtworks.xstream.converters.MarshallingContext)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "HierarchicalStreamWriter"
+    "type": "com.thoughtworks.xstream.io.HierarchicalStreamWriter"
   - "name": "arg2"
-    "type": "MarshallingContext"
+    "type": "com.thoughtworks.xstream.converters.MarshallingContext"
   "return_type": "void"
   "signature": "[com.thoughtworks.xstream.converters.extended.NamedArrayConverter].marshal(java.lang.Object,com.thoughtworks.xstream.io.HierarchicalStreamWriter,com.thoughtworks.xstream.converters.MarshallingContext)"
 "language": "jvm"
