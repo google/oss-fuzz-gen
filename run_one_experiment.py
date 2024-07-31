@@ -66,7 +66,7 @@ class AggregatedResult:
   max_coverage_sample: str = ''
   max_coverage_diff_sample: str = ''
   max_coverage_diff_report: str = ''
-  gained_textcov: Optional[textcov.Textcov] = None
+  full_textcov: textcov.Textcov = dataclasses.field(default_factory=textcov.Textcov)
 
   def __str__(self):
     return (
@@ -78,10 +78,6 @@ class AggregatedResult:
         f'max coverage sample: {self.max_coverage_sample}\n'
         f'max coverage diff sample: {self.max_coverage_diff_sample}\n'
         f'max coverage diff report: {self.max_coverage_diff_report or "None"}')
-
-  def __post_init__(self, *args, **kwargs):  # pylint: disable=unused-argument
-    if not self.gained_textcov:
-      self.gained_textcov = textcov.Textcov()
 
 
 def generate_targets(benchmark: Benchmark,
@@ -159,8 +155,8 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
       max_coverage_diff_sample = generated_targets[i]
       max_coverage_diff_report = stat.coverage_report_path
 
-    if isinstance(stat.textcov_updated, textcov.Textcov):
-      all_textcov.merge(stat.textcov_updated)
+    if isinstance(stat.full_textcov, textcov.Textcov):
+      all_textcov.merge(stat.full_textcov)
 
   return AggregatedResult(build_success_rate, crash_rate, found_bug,
                           max_coverage, max_line_coverage_diff,
