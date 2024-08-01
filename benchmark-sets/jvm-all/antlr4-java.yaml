@@ -4,11 +4,11 @@
   "name": "[org.antlr.v4.analysis.LeftRecursiveRuleTransformer].translateLeftRecursiveRule(org.antlr.v4.tool.ast.GrammarRootAST,org.antlr.v4.tool.LeftRecursiveRule,java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "GrammarRootAST"
+    "type": "org.antlr.v4.tool.ast.GrammarRootAST"
   - "name": "arg1"
-    "type": "LeftRecursiveRule"
+    "type": "org.antlr.v4.tool.LeftRecursiveRule"
   - "name": "arg2"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "boolean"
   "signature": "[org.antlr.v4.analysis.LeftRecursiveRuleTransformer].translateLeftRecursiveRule(org.antlr.v4.tool.ast.GrammarRootAST,org.antlr.v4.tool.LeftRecursiveRule,java.lang.String)"
 - "exceptions":
@@ -17,7 +17,7 @@
   "name": "[org.antlr.v4.parse.ATNBuilder].ruleBlock(org.antlr.v4.tool.ast.GrammarAST)"
   "params":
   - "name": "arg0"
-    "type": "GrammarAST"
+    "type": "org.antlr.v4.tool.ast.GrammarAST"
   "return_type": "org.antlr.v4.automata.ATNFactory$Handle"
   "signature": "[org.antlr.v4.parse.ATNBuilder].ruleBlock(org.antlr.v4.tool.ast.GrammarAST)"
 - "exceptions":
@@ -26,7 +26,7 @@
   "name": "[org.antlr.v4.parse.ATNBuilder].block(org.antlr.v4.tool.ast.GrammarAST)"
   "params":
   - "name": "arg0"
-    "type": "GrammarAST"
+    "type": "org.antlr.v4.tool.ast.GrammarAST"
   "return_type": "org.antlr.v4.automata.ATNFactory$Handle"
   "signature": "[org.antlr.v4.parse.ATNBuilder].block(org.antlr.v4.tool.ast.GrammarAST)"
 - "exceptions": []
@@ -34,9 +34,9 @@
   "name": "[org.antlr.v4.analysis.LeftRecursiveRuleTransformer].parseArtificialRule(org.antlr.v4.tool.Grammar,java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "Grammar"
+    "type": "org.antlr.v4.tool.Grammar"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "org.antlr.v4.tool.ast.RuleAST"
   "signature": "[org.antlr.v4.analysis.LeftRecursiveRuleTransformer].parseArtificialRule(org.antlr.v4.tool.Grammar,java.lang.String)"
 - "exceptions": []
@@ -44,7 +44,7 @@
   "name": "[org.antlr.v4.codegen.model.RuleFunction].getDeclsForAllElements(java.util.List<AltAST>)"
   "params":
   - "name": "arg0"
-    "type": "List<AltAST>"
+    "type": "java.util.List<AltAST>"
   "return_type": "java.util.Set<Decl>"
   "signature": "[org.antlr.v4.codegen.model.RuleFunction].getDeclsForAllElements(java.util.List<AltAST>)"
 - "exceptions": []

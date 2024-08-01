@@ -4,7 +4,7 @@
   "name": "[org.slf4j.helpers.SubstituteLogger].isEnabledForLevel(org.slf4j.event.Level)"
   "params":
   - "name": "arg0"
-    "type": "Level"
+    "type": "org.slf4j.event.Level"
   "return_type": "boolean"
   "signature": "[org.slf4j.helpers.SubstituteLogger].isEnabledForLevel(org.slf4j.event.Level)"
 - "exceptions": []
@@ -12,7 +12,7 @@
   "name": "[org.slf4j.helpers.Reporter].info(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "void"
   "signature": "[org.slf4j.helpers.Reporter].info(java.lang.String)"
 - "exceptions": []
@@ -20,7 +20,7 @@
   "name": "[org.slf4j.helpers.Reporter].warn(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "void"
   "signature": "[org.slf4j.helpers.Reporter].warn(java.lang.String)"
 - "exceptions": []
@@ -28,7 +28,7 @@
   "name": "[org.slf4j.helpers.SubstituteLogger].log(org.slf4j.event.LoggingEvent)"
   "params":
   - "name": "arg0"
-    "type": "LoggingEvent"
+    "type": "org.slf4j.event.LoggingEvent"
   "return_type": "void"
   "signature": "[org.slf4j.helpers.SubstituteLogger].log(org.slf4j.event.LoggingEvent)"
 - "exceptions": []
@@ -36,7 +36,7 @@
   "name": "[org.slf4j.helpers.SubstituteLoggerFactory].getLogger(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "org.slf4j.Logger"
   "signature": "[org.slf4j.helpers.SubstituteLoggerFactory].getLogger(java.lang.String)"
 - "exceptions": []
@@ -44,9 +44,9 @@
   "name": "[org.slf4j.event.EventRecordingLogger].<init>(org.slf4j.helpers.SubstituteLogger,java.util.Queue)"
   "params":
   - "name": "arg0"
-    "type": "SubstituteLogger"
+    "type": "org.slf4j.helpers.SubstituteLogger"
   - "name": "arg1"
-    "type": "Queue"
+    "type": "java.util.Queue"
   "return_type": "org.slf4j.event.EventRecordingLogger"
   "signature": "[org.slf4j.event.EventRecordingLogger].<init>(org.slf4j.helpers.SubstituteLogger,java.util.Queue)"
 "language": "jvm"

@@ -4,9 +4,9 @@
   "name": "[com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat,java.util.Locale)"
   "params":
   - "name": "arg0"
-    "type": "JacksonJodaPeriodFormat"
+    "type": "com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat"
   - "name": "arg1"
-    "type": "Locale"
+    "type": "java.util.Locale"
   "return_type": "com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat"
   "signature": "[com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaPeriodFormat,java.util.Locale)"
 - "exceptions": []
@@ -14,7 +14,7 @@
   "name": "[com.fasterxml.jackson.datatype.joda.ser.LocalDateSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
   "params":
   - "name": "arg0"
-    "type": "JacksonJodaDateFormat"
+    "type": "com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat"
   "return_type": "com.fasterxml.jackson.datatype.joda.ser.LocalDateSerializer"
   "signature": "[com.fasterxml.jackson.datatype.joda.ser.LocalDateSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
 - "exceptions": []
@@ -22,7 +22,7 @@
   "name": "[com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat].<init>(org.joda.time.format.DateTimeFormatter)"
   "params":
   - "name": "arg0"
-    "type": "DateTimeFormatter"
+    "type": "org.joda.time.format.DateTimeFormatter"
   "return_type": "com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat"
   "signature": "[com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat].<init>(org.joda.time.format.DateTimeFormatter)"
 - "exceptions": []
@@ -30,7 +30,7 @@
   "name": "[com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
   "params":
   - "name": "arg0"
-    "type": "JacksonJodaDateFormat"
+    "type": "com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat"
   "return_type": "com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer"
   "signature": "[com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
 - "exceptions": []
@@ -46,7 +46,7 @@
   "name": "[com.fasterxml.jackson.datatype.joda.ser.LocalTimeSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
   "params":
   - "name": "arg0"
-    "type": "JacksonJodaDateFormat"
+    "type": "com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat"
   "return_type": "com.fasterxml.jackson.datatype.joda.ser.LocalTimeSerializer"
   "signature": "[com.fasterxml.jackson.datatype.joda.ser.LocalTimeSerializer].<init>(com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat)"
 "language": "jvm"

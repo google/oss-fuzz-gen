@@ -4,7 +4,7 @@
   "name": "[net.minidev.json.writer.UpdaterMapper].convert(java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "java.lang.Object"
   "signature": "[net.minidev.json.writer.UpdaterMapper].convert(java.lang.Object)"
 - "exceptions":
@@ -14,11 +14,11 @@
   "name": "[net.minidev.json.writer.MapperRemapped].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg2"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[net.minidev.json.writer.MapperRemapped].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
 - "exceptions":
@@ -28,11 +28,11 @@
   "name": "[net.minidev.json.writer.UpdaterMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg2"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[net.minidev.json.writer.UpdaterMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
 - "exceptions":
@@ -42,9 +42,9 @@
   "name": "[net.minidev.json.writer.UpdaterMapper].addValue(java.lang.Object,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[net.minidev.json.writer.UpdaterMapper].addValue(java.lang.Object,java.lang.Object)"
 - "exceptions":
@@ -53,11 +53,11 @@
   "name": "[net.minidev.json.writer.CompessorMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg2"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[net.minidev.json.writer.CompessorMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
 - "exceptions":
@@ -66,9 +66,9 @@
   "name": "[net.minidev.json.writer.CompessorMapper].addValue(java.lang.Object,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[net.minidev.json.writer.CompessorMapper].addValue(java.lang.Object,java.lang.Object)"
 "language": "jvm"

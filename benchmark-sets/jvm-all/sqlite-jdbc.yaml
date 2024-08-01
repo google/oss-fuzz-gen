@@ -5,7 +5,7 @@
   "name": "[org.sqlite.ExtendedCommand$BackupCommand].parse(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "org.sqlite.ExtendedCommand$BackupCommand"
   "signature": "[org.sqlite.ExtendedCommand$BackupCommand].parse(java.lang.String)"
 - "exceptions":
@@ -14,7 +14,7 @@
   "name": "[org.sqlite.ExtendedCommand$RestoreCommand].parse(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "org.sqlite.ExtendedCommand$RestoreCommand"
   "signature": "[org.sqlite.ExtendedCommand$RestoreCommand].parse(java.lang.String)"
 - "exceptions": []
@@ -22,15 +22,15 @@
   "name": "[org.sqlite.SQLiteConnectionConfig].<init>(org.sqlite.SQLiteConfig$DateClass,org.sqlite.SQLiteConfig$DatePrecision,java.lang.String,int,org.sqlite.SQLiteConfig$TransactionMode,boolean)"
   "params":
   - "name": "arg0"
-    "type": "SQLiteConfig$DateClass"
+    "type": "org.sqlite.SQLiteConfig$DateClass"
   - "name": "arg1"
-    "type": "SQLiteConfig$DatePrecision"
+    "type": "org.sqlite.SQLiteConfig$DatePrecision"
   - "name": "arg2"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg3"
     "type": "int"
   - "name": "arg4"
-    "type": "SQLiteConfig$TransactionMode"
+    "type": "org.sqlite.SQLiteConfig$TransactionMode"
   - "name": "arg5"
     "type": "boolean"
   "return_type": "org.sqlite.SQLiteConnectionConfig"
@@ -40,7 +40,7 @@
   "name": "[org.sqlite.SQLiteConfig].<init>(java.util.Properties)"
   "params":
   - "name": "arg0"
-    "type": "Properties"
+    "type": "java.util.Properties"
   "return_type": "org.sqlite.SQLiteConfig"
   "signature": "[org.sqlite.SQLiteConfig].<init>(java.util.Properties)"
 - "exceptions": []
@@ -48,7 +48,7 @@
   "name": "[org.sqlite.ExtendedCommand].removeQuotation(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.sqlite.ExtendedCommand].removeQuotation(java.lang.String)"
 - "exceptions":
@@ -57,7 +57,7 @@
   "name": "[org.sqlite.ExtendedCommand$RestoreCommand].execute(org.sqlite.core.DB)"
   "params":
   - "name": "arg0"
-    "type": "DB"
+    "type": "org.sqlite.core.DB"
   "return_type": "void"
   "signature": "[org.sqlite.ExtendedCommand$RestoreCommand].execute(org.sqlite.core.DB)"
 "language": "jvm"

@@ -37,8 +37,8 @@ EMPTY_OSS_FUZZ_BUILD = '''#!/bin/bash -eu
 
 BASE_DOCKER_HEAD = OSS_FUZZ_LICENSE + '''
 FROM gcr.io/oss-fuzz-base/base-builder
-RUN apt-get update && apt-get install -y make autoconf automake autopoint \
-                      libtool cmake pkg-config curl check libcpputest-dev \
+RUN apt-get update && apt-get install -y make autoconf automake autopoint \\
+                      libtool cmake pkg-config curl check libcpputest-dev \\
                       flex bison re2c
 '''
 
@@ -112,10 +112,10 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 # Docker file used for starting the auto-gen workflow within an OSS-Fuzz
 # base-builder image.
 AUTOGEN_DOCKER_FILE = BASE_DOCKER_HEAD + '''
-RUN rm /usr/local/bin/cargo && \
- curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \
+RUN rm /usr/local/bin/cargo && \\
+ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \\
  apt-get install -y cargo
-RUN python3 -m pip install --upgrade pip && \
+RUN python3 -m pip install --upgrade pip && \\
     python3 -m pip install pydantic-core pyyaml cxxfilt openai==1.16.2
 RUN python3 -m pip install --upgrade google-cloud-aiplatform
 COPY *.py *.json $SRC/

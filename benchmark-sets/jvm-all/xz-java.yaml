@@ -5,13 +5,13 @@
   "name": "[org.tukaani.xz.SeekableXZInputStream].<init>(org.tukaani.xz.SeekableInputStream,int,boolean,org.tukaani.xz.ArrayCache)"
   "params":
   - "name": "arg0"
-    "type": "SeekableInputStream"
+    "type": "org.tukaani.xz.SeekableInputStream"
   - "name": "arg1"
     "type": "int"
   - "name": "arg2"
     "type": "boolean"
   - "name": "arg3"
-    "type": "ArrayCache"
+    "type": "org.tukaani.xz.ArrayCache"
   "return_type": "org.tukaani.xz.SeekableXZInputStream"
   "signature": "[org.tukaani.xz.SeekableXZInputStream].<init>(org.tukaani.xz.SeekableInputStream,int,boolean,org.tukaani.xz.ArrayCache)"
 - "exceptions":
@@ -43,7 +43,7 @@
   "name": "[org.tukaani.xz.SeekableXZInputStream].<init>(org.tukaani.xz.SeekableInputStream,int,boolean)"
   "params":
   - "name": "arg0"
-    "type": "SeekableInputStream"
+    "type": "org.tukaani.xz.SeekableInputStream"
   - "name": "arg1"
     "type": "int"
   - "name": "arg2"
@@ -56,11 +56,11 @@
   "name": "[org.tukaani.xz.SeekableXZInputStream].<init>(org.tukaani.xz.SeekableInputStream,int,org.tukaani.xz.ArrayCache)"
   "params":
   - "name": "arg0"
-    "type": "SeekableInputStream"
+    "type": "org.tukaani.xz.SeekableInputStream"
   - "name": "arg1"
     "type": "int"
   - "name": "arg2"
-    "type": "ArrayCache"
+    "type": "org.tukaani.xz.ArrayCache"
   "return_type": "org.tukaani.xz.SeekableXZInputStream"
   "signature": "[org.tukaani.xz.SeekableXZInputStream].<init>(org.tukaani.xz.SeekableInputStream,int,org.tukaani.xz.ArrayCache)"
 - "exceptions":
@@ -69,7 +69,7 @@
   "name": "[org.tukaani.xz.LZMAInputStream].<init>(java.io.InputStream,long,int,int,int,int,byte[])"
   "params":
   - "name": "arg0"
-    "type": "InputStream"
+    "type": "java.io.InputStream"
   - "name": "arg1"
     "type": "long"
   - "name": "arg2"
@@ -90,9 +90,9 @@
   "name": "[org.tukaani.xz.index.IndexDecoder].<init>(org.tukaani.xz.SeekableInputStream,org.tukaani.xz.common.StreamFlags,long,int)"
   "params":
   - "name": "arg0"
-    "type": "SeekableInputStream"
+    "type": "org.tukaani.xz.SeekableInputStream"
   - "name": "arg1"
-    "type": "StreamFlags"
+    "type": "org.tukaani.xz.StreamFlags"
   - "name": "arg2"
     "type": "long"
   - "name": "arg3"

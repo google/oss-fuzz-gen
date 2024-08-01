@@ -4,7 +4,7 @@
   "name": "[co.nstant.in.cbor.CborEncoder].<init>(java.io.OutputStream)"
   "params":
   - "name": "arg0"
-    "type": "OutputStream"
+    "type": "java.io.OutputStream"
   "return_type": "co.nstant.in.cbor.CborEncoder"
   "signature": "[co.nstant.in.cbor.CborEncoder].<init>(java.io.OutputStream)"
 - "exceptions": []
@@ -12,7 +12,7 @@
   "name": "[co.nstant.in.cbor.CborDecoder].<init>(java.io.InputStream)"
   "params":
   - "name": "arg0"
-    "type": "InputStream"
+    "type": "java.io.InputStream"
   "return_type": "co.nstant.in.cbor.CborDecoder"
   "signature": "[co.nstant.in.cbor.CborDecoder].<init>(java.io.InputStream)"
 - "exceptions":
@@ -21,9 +21,9 @@
   "name": "[co.nstant.in.cbor.model.RationalNumber].<init>(co.nstant.in.cbor.model.Number,co.nstant.in.cbor.model.Number)"
   "params":
   - "name": "arg0"
-    "type": "Number"
+    "type": "co.nstant.in.cbor.model.Number"
   - "name": "arg1"
-    "type": "Number"
+    "type": "co.nstant.in.cbor.model.Number"
   "return_type": "co.nstant.in.cbor.model.RationalNumber"
   "signature": "[co.nstant.in.cbor.model.RationalNumber].<init>(co.nstant.in.cbor.model.Number,co.nstant.in.cbor.model.Number)"
 - "exceptions": []
@@ -31,9 +31,9 @@
   "name": "[co.nstant.in.cbor.encoder.SpecialEncoder].<init>(co.nstant.in.cbor.CborEncoder,java.io.OutputStream)"
   "params":
   - "name": "arg0"
-    "type": "CborEncoder"
+    "type": "co.nstant.in.cbor.CborEncoder"
   - "name": "arg1"
-    "type": "OutputStream"
+    "type": "java.io.OutputStream"
   "return_type": "co.nstant.in.cbor.encoder.SpecialEncoder"
   "signature": "[co.nstant.in.cbor.encoder.SpecialEncoder].<init>(co.nstant.in.cbor.CborEncoder,java.io.OutputStream)"
 - "exceptions": []
@@ -41,9 +41,9 @@
   "name": "[co.nstant.in.cbor.model.LanguageTaggedString].<init>(co.nstant.in.cbor.model.UnicodeString,co.nstant.in.cbor.model.UnicodeString)"
   "params":
   - "name": "arg0"
-    "type": "UnicodeString"
+    "type": "co.nstant.in.cbor.model.UnicodeString"
   - "name": "arg1"
-    "type": "UnicodeString"
+    "type": "co.nstant.in.cbor.model.UnicodeString"
   "return_type": "co.nstant.in.cbor.model.LanguageTaggedString"
   "signature": "[co.nstant.in.cbor.model.LanguageTaggedString].<init>(co.nstant.in.cbor.model.UnicodeString,co.nstant.in.cbor.model.UnicodeString)"
 - "exceptions": []
@@ -51,9 +51,9 @@
   "name": "[co.nstant.in.cbor.decoder.SpecialDecoder].<init>(co.nstant.in.cbor.CborDecoder,java.io.InputStream)"
   "params":
   - "name": "arg0"
-    "type": "CborDecoder"
+    "type": "co.nstant.in.cbor.CborDecoder"
   - "name": "arg1"
-    "type": "InputStream"
+    "type": "java.io.InputStream"
   "return_type": "co.nstant.in.cbor.decoder.SpecialDecoder"
   "signature": "[co.nstant.in.cbor.decoder.SpecialDecoder].<init>(co.nstant.in.cbor.CborDecoder,java.io.InputStream)"
 "language": "jvm"

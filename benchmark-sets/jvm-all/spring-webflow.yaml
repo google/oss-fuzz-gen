@@ -5,7 +5,7 @@
   "name": "[org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl].getFlowModel(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "org.springframework.webflow.engine.model.FlowModel"
   "signature": "[org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl].getFlowModel(java.lang.String)"
 - "exceptions":
@@ -14,7 +14,7 @@
   "name": "[org.springframework.webflow.engine.Flow].setStartState(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "void"
   "signature": "[org.springframework.webflow.engine.Flow].setStartState(java.lang.String)"
 - "exceptions":
@@ -23,7 +23,7 @@
   "name": "[org.springframework.webflow.engine.Flow].setStartState(org.springframework.webflow.engine.State)"
   "params":
   - "name": "arg0"
-    "type": "State"
+    "type": "org.springframework.webflow.engine.State"
   "return_type": "void"
   "signature": "[org.springframework.webflow.engine.Flow].setStartState(org.springframework.webflow.engine.State)"
 - "exceptions":
@@ -32,7 +32,7 @@
   "name": "[org.springframework.core.convert.support.ConvertingPropertyEditorAdapter].setAsText(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "void"
   "signature": "[org.springframework.core.convert.support.ConvertingPropertyEditorAdapter].setAsText(java.lang.String)"
 - "exceptions": []
@@ -40,13 +40,13 @@
   "name": "[org.springframework.webflow.expression.spel.ScopeSearchingPropertyAccessor].write(org.springframework.expression.EvaluationContext,java.lang.Object,java.lang.String,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "EvaluationContext"
+    "type": "org.springframework.expression.EvaluationContext"
   - "name": "arg1"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg2"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg3"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[org.springframework.webflow.expression.spel.ScopeSearchingPropertyAccessor].write(org.springframework.expression.EvaluationContext,java.lang.Object,java.lang.String,java.lang.Object)"
 - "exceptions":
@@ -55,11 +55,11 @@
   "name": "[org.springframework.binding.convert.service.GenericConversionService].getConversionExecutor(java.lang.String,java.lang.Class<?>,java.lang.Class<?>)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "Class<?>"
+    "type": "java.lang.Class<?>"
   - "name": "arg2"
-    "type": "Class<?>"
+    "type": "java.lang.Class<?>"
   "return_type": "org.springframework.binding.convert.ConversionExecutor"
   "signature": "[org.springframework.binding.convert.service.GenericConversionService].getConversionExecutor(java.lang.String,java.lang.Class<?>,java.lang.Class<?>)"
 "language": "jvm"

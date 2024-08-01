@@ -4,9 +4,9 @@
   "name": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(de.siegmar.fastcsv.reader.FieldModifier,java.util.List)"
   "params":
   - "name": "arg0"
-    "type": "FieldModifier"
+    "type": "de.siegmar.fastcsv.reader.FieldModifier"
   - "name": "arg1"
-    "type": "List"
+    "type": "java.util.List"
   "return_type": "de.siegmar.fastcsv.reader.NamedCsvRecordHandler"
   "signature": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(de.siegmar.fastcsv.reader.FieldModifier,java.util.List)"
 - "exceptions": []
@@ -14,9 +14,9 @@
   "name": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(de.siegmar.fastcsv.reader.FieldModifier,java.lang.String[])"
   "params":
   - "name": "arg0"
-    "type": "FieldModifier"
+    "type": "de.siegmar.fastcsv.reader.FieldModifier"
   - "name": "arg1"
-    "type": "String[]"
+    "type": "java.lang.String[]"
   "return_type": "de.siegmar.fastcsv.reader.NamedCsvRecordHandler"
   "signature": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(de.siegmar.fastcsv.reader.FieldModifier,java.lang.String[])"
 - "exceptions": []
@@ -24,7 +24,7 @@
   "name": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(java.util.List)"
   "params":
   - "name": "arg0"
-    "type": "List"
+    "type": "java.util.List"
   "return_type": "de.siegmar.fastcsv.reader.NamedCsvRecordHandler"
   "signature": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(java.util.List)"
 - "exceptions": []
@@ -32,7 +32,7 @@
   "name": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(java.lang.String[])"
   "params":
   - "name": "arg0"
-    "type": "String[]"
+    "type": "java.util.String[]"
   "return_type": "de.siegmar.fastcsv.reader.NamedCsvRecordHandler"
   "signature": "[de.siegmar.fastcsv.reader.NamedCsvRecordHandler].<init>(java.lang.String[])"
 - "exceptions": []
@@ -40,7 +40,7 @@
   "name": "[de.siegmar.fastcsv.reader.CsvReader$lambda_stream_0__1].<init>(de.siegmar.fastcsv.reader.CsvReader)"
   "params":
   - "name": "arg0"
-    "type": "CsvReader"
+    "type": "de.siegmar.fastcsv.reader.CsvReader"
   "return_type": "de.siegmar.fastcsv.reader.CsvReader$lambda_stream_0__1"
   "signature": "[de.siegmar.fastcsv.reader.CsvReader$lambda_stream_0__1].<init>(de.siegmar.fastcsv.reader.CsvReader)"
 - "exceptions": []
@@ -48,7 +48,7 @@
   "name": "[de.siegmar.fastcsv.reader.CsvRecordHandler].<init>(de.siegmar.fastcsv.reader.FieldModifier)"
   "params":
   - "name": "arg0"
-    "type": "FieldModifier"
+    "type": "de.siegmar.fastcsv.reader.FieldModifier"
   "return_type": "de.siegmar.fastcsv.reader.CsvRecordHandler"
   "signature": "[de.siegmar.fastcsv.reader.CsvRecordHandler].<init>(de.siegmar.fastcsv.reader.FieldModifier)"
 "language": "jvm"

@@ -4,11 +4,11 @@
   "name": "[com.esotericsoftware.kryo.serializers.CollectionSerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class<? extends T>)"
   "params":
   - "name": "arg0"
-    "type": "Kryo"
+    "type": "com.esotericsoftware.kryo.Kryo"
   - "name": "arg1"
-    "type": "Input"
+    "type": "com.esotericsoftware.kryo.io.Input"
   - "name": "arg2"
-    "type": "Class<? extends T>"
+    "type": "java.lang.Class<? extends T>"
   "return_type": "java.util.Collection"
   "signature": "[com.esotericsoftware.kryo.serializers.CollectionSerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class<? extends T>)"
 - "exceptions": []
@@ -16,11 +16,11 @@
   "name": "[com.esotericsoftware.kryo.serializers.MapSerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class<? extends T>)"
   "params":
   - "name": "arg0"
-    "type": "Kryo"
+    "type": "com.esotericsoftware.kryo.Kryo"
   - "name": "arg1"
-    "type": "Input"
+    "type": "com.esotericsoftware.kryo.io.Input"
   - "name": "arg2"
-    "type": "Class<? extends T>"
+    "type": "java.lang.Class<? extends T>"
   "return_type": "java.util.Map"
   "signature": "[com.esotericsoftware.kryo.serializers.MapSerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class<? extends T>)"
 - "exceptions": []
@@ -28,9 +28,9 @@
   "name": "[com.esotericsoftware.kryo.Kryo].readObjectOrNull(com.esotericsoftware.kryo.io.Input,java.lang.Class<T>)"
   "params":
   - "name": "arg0"
-    "type": "Input"
+    "type": "com.esotericsoftware.kryo.io.Input"
   - "name": "arg1"
-    "type": "Class<T>"
+    "type": "java.lang.Class<T>"
   "return_type": "java.lang.Object"
   "signature": "[com.esotericsoftware.kryo.Kryo].readObjectOrNull(com.esotericsoftware.kryo.io.Input,java.lang.Class<T>)"
 - "exceptions": []
@@ -38,7 +38,7 @@
   "name": "[com.esotericsoftware.kryo.Kryo].readClassAndObject(com.esotericsoftware.kryo.io.Input)"
   "params":
   - "name": "arg0"
-    "type": "Input"
+    "type": "com.esotericsoftware.kryo.io.Input"
   "return_type": "java.lang.Object"
   "signature": "[com.esotericsoftware.kryo.Kryo].readClassAndObject(com.esotericsoftware.kryo.io.Input)"
 - "exceptions": []
@@ -46,11 +46,11 @@
   "name": "[com.esotericsoftware.kryo.serializers.RecordSerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class<? extends T>)"
   "params":
   - "name": "arg0"
-    "type": "Kryo"
+    "type": "com.esotericsoftware.kryo.Kryo"
   - "name": "arg1"
-    "type": "Input"
+    "type": "com.esotericsoftware.kryo.io.Input"
   - "name": "arg2"
-    "type": "Class<? extends T>"
+    "type": "java.lang.Class<? extends T>"
   "return_type": "java.lang.Object"
   "signature": "[com.esotericsoftware.kryo.serializers.RecordSerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class<? extends T>)"
 - "exceptions": []
@@ -58,11 +58,11 @@
   "name": "[com.esotericsoftware.kryo.serializers.DefaultArraySerializers$ObjectArraySerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class)"
   "params":
   - "name": "arg0"
-    "type": "Kryo"
+    "type": "com.esotericsoftware.kryo.Kryo"
   - "name": "arg1"
-    "type": "Input"
+    "type": "com.esotericsoftware.kryo.io.Input"
   - "name": "arg2"
-    "type": "Class"
+    "type": "java.lang.Class"
   "return_type": "java.lang.Object[]"
   "signature": "[com.esotericsoftware.kryo.serializers.DefaultArraySerializers$ObjectArraySerializer].read(com.esotericsoftware.kryo.Kryo,com.esotericsoftware.kryo.io.Input,java.lang.Class)"
 "language": "jvm"

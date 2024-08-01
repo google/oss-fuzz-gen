@@ -18,7 +18,7 @@
   "name": "[org.xnio.conduits.FramingMessageSourceConduit].receive(java.nio.ByteBuffer[],int,int)"
   "params":
   - "name": "arg0"
-    "type": "ByteBuffer[]"
+    "type": "java.nio.ByteBuffer[]"
   - "name": "arg1"
     "type": "int"
   - "name": "arg2"
@@ -31,7 +31,7 @@
   "name": "[org.xnio.conduits.FramingMessageSourceConduit].receive(java.nio.ByteBuffer)"
   "params":
   - "name": "arg0"
-    "type": "ByteBuffer"
+    "type": "java.nio.ByteBuffer"
   "return_type": "int"
   "signature": "[org.xnio.conduits.FramingMessageSourceConduit].receive(java.nio.ByteBuffer)"
 - "exceptions":
@@ -40,7 +40,7 @@
   "name": "[org.xnio.channels.FixedLengthStreamSourceChannel].read(java.nio.ByteBuffer[],int,int)"
   "params":
   - "name": "arg0"
-    "type": "ByteBuffer[]"
+    "type": "java.nio.ByteBuffer[]"
   - "name": "arg1"
     "type": "int"
   - "name": "arg2"
@@ -53,7 +53,7 @@
   "name": "[org.xnio.channels.Channels].drain(java.nio.channels.FileChannel,long,long)"
   "params":
   - "name": "arg0"
-    "type": "FileChannel"
+    "type": "java.nio.channels.FileChannel"
   - "name": "arg1"
     "type": "long"
   - "name": "arg2"
@@ -66,7 +66,7 @@
   "name": "[org.xnio.channels.Channels].drain(org.xnio.channels.StreamSourceChannel,long)"
   "params":
   - "name": "arg0"
-    "type": "StreamSourceChannel"
+    "type": "org.xnio.channels.StreamSourceChannel"
   - "name": "arg1"
     "type": "long"
   "return_type": "long"

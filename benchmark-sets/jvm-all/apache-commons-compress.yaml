@@ -4,11 +4,11 @@
   "name": "[org.apache.commons.compress.harmony.pack200.AttributeDefinitionBands].<init>(org.apache.commons.compress.harmony.pack200.Segment,int,org.objectweb.asm.Attribute[])"
   "params":
   - "name": "arg0"
-    "type": "Segment"
+    "type": "org.apache.commons.compress.harmony.pack200.Segment"
   - "name": "arg1"
     "type": "int"
   - "name": "arg2"
-    "type": "Attribute[]"
+    "type": "org.objectweb.asm.Attribute[]"
   "return_type": "org.apache.commons.compress.harmony.pack200.AttributeDefinitionBands"
   "signature": "[org.apache.commons.compress.harmony.pack200.AttributeDefinitionBands].<init>(org.apache.commons.compress.harmony.pack200.Segment,int,org.objectweb.asm.Attribute[])"
 - "exceptions": []
@@ -16,13 +16,13 @@
   "name": "[org.apache.commons.compress.harmony.pack200.FileBands].<init>(org.apache.commons.compress.harmony.pack200.CpBands,org.apache.commons.compress.harmony.pack200.SegmentHeader,org.apache.commons.compress.harmony.pack200.PackingOptions,org.apache.commons.compress.harmony.pack200.Archive$SegmentUnit,int)"
   "params":
   - "name": "arg0"
-    "type": "CpBands"
+    "type": "org.apache.commons.compress.harmony.pack200.CpBands"
   - "name": "arg1"
-    "type": "SegmentHeader"
+    "type": "org.apache.commons.compress.harmony.pack200.SegmentHeader"
   - "name": "arg2"
-    "type": "PackingOptions"
+    "type": "org.apache.commons.compress.harmony.pack200.PackingOptions"
   - "name": "arg3"
-    "type": "Archive$SegmentUnit"
+    "type": "org.apache.commons.compress.harmony.pack200.Archive$SegmentUnit"
   - "name": "arg4"
     "type": "int"
   "return_type": "org.apache.commons.compress.harmony.pack200.FileBands"
@@ -33,7 +33,7 @@
   "name": "[org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream].<init>(java.io.InputStream,boolean)"
   "params":
   - "name": "arg0"
-    "type": "InputStream"
+    "type": "java.io.InputStream"
   - "name": "arg1"
     "type": "boolean"
   "return_type": "org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream"
@@ -44,11 +44,11 @@
   "name": "[org.apache.commons.compress.archivers.tar.TarArchiveEntry].<init>(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[])"
   "params":
   - "name": "arg0"
-    "type": "Path"
+    "type": "java.nio.file.Path"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg2"
-    "type": "LinkOption[]"
+    "type": "java.nio.file.LinkOption[]"
   "return_type": "org.apache.commons.compress.archivers.tar.TarArchiveEntry"
   "signature": "[org.apache.commons.compress.archivers.tar.TarArchiveEntry].<init>(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[])"
 - "exceptions": []
@@ -56,9 +56,9 @@
   "name": "[org.apache.commons.compress.archivers.tar.TarArchiveEntry].<init>(java.io.File,java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "File"
+    "type": "java.io.File"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "org.apache.commons.compress.archivers.tar.TarArchiveEntry"
   "signature": "[org.apache.commons.compress.archivers.tar.TarArchiveEntry].<init>(java.io.File,java.lang.String)"
 - "exceptions":
@@ -67,7 +67,7 @@
   "name": "[org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream].<init>(java.io.InputStream,boolean)"
   "params":
   - "name": "arg0"
-    "type": "InputStream"
+    "type": "java.io.InputStream"
   - "name": "arg1"
     "type": "boolean"
   "return_type": "org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream"

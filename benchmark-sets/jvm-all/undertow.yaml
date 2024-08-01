@@ -7,7 +7,7 @@
   - "name": "arg0"
     "type": "long"
   - "name": "arg1"
-    "type": "TimeUnit"
+    "type": "java.util.concurrent.TimeUnit"
   "return_type": "void"
   "signature": "[io.undertow.server.protocol.http.PipeliningBufferingStreamSinkConduit].awaitWritable(long,java.util.concurrent.TimeUnit)"
 - "exceptions":
@@ -18,7 +18,7 @@
   - "name": "arg0"
     "type": "long"
   - "name": "arg1"
-    "type": "TimeUnit"
+    "type": "java.util.concurrent.TimeUnit"
   "return_type": "void"
   "signature": "[io.undertow.conduits.PreChunkedStreamSinkConduit].awaitWritable(long,java.util.concurrent.TimeUnit)"
 - "exceptions":
@@ -29,7 +29,7 @@
   - "name": "arg0"
     "type": "long"
   - "name": "arg1"
-    "type": "TimeUnit"
+    "type": "java.util.concurrent.TimeUnit"
   "return_type": "void"
   "signature": "[io.undertow.conduits.FixedLengthStreamSourceConduit].awaitReadable(long,java.util.concurrent.TimeUnit)"
 - "exceptions":
@@ -40,7 +40,7 @@
   - "name": "arg0"
     "type": "long"
   - "name": "arg1"
-    "type": "TimeUnit"
+    "type": "java.util.concurrent.TimeUnit"
   "return_type": "void"
   "signature": "[org.xnio.conduits.InflatingStreamSourceConduit].awaitReadable(long,java.util.concurrent.TimeUnit)"
 - "exceptions":
@@ -51,7 +51,7 @@
   - "name": "arg0"
     "type": "long"
   - "name": "arg1"
-    "type": "TimeUnit"
+    "type": "java.util.concurrent.TimeUnit"
   "return_type": "void"
   "signature": "[io.undertow.server.protocol.ajp.AjpServerRequestConduit].awaitReadable(long,java.util.concurrent.TimeUnit)"
 - "exceptions":
@@ -62,7 +62,7 @@
   - "name": "arg0"
     "type": "long"
   - "name": "arg1"
-    "type": "TimeUnit"
+    "type": "java.util.concurrent.TimeUnit"
   "return_type": "void"
   "signature": "[io.undertow.conduits.IdleTimeoutConduit].awaitReadable(long,java.util.concurrent.TimeUnit)"
 "language": "jvm"

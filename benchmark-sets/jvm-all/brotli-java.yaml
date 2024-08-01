@@ -5,7 +5,7 @@
   "name": "[org.brotli.dec.BrotliInputStream].<init>(java.io.InputStream,int)"
   "params":
   - "name": "arg0"
-    "type": "InputStream"
+    "type": "java.io.InputStream"
   - "name": "arg1"
     "type": "int"
   "return_type": "org.brotli.dec.BrotliInputStream"
@@ -16,7 +16,7 @@
   "name": "[org.brotli.dec.BrotliInputStream].<init>(java.io.InputStream)"
   "params":
   - "name": "arg0"
-    "type": "InputStream"
+    "type": "java.io.InputStream"
   "return_type": "org.brotli.dec.BrotliInputStream"
   "signature": "[org.brotli.dec.BrotliInputStream].<init>(java.io.InputStream)"
 - "exceptions":

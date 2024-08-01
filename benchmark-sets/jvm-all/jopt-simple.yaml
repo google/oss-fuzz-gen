@@ -4,9 +4,9 @@
   "name": "[joptsimple.internal.Reflection].convertWith(joptsimple.ValueConverter<V>,java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "ValueConverter<V>"
+    "type": "joptsimple.ValueConverter<V>"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.lang.Object"
   "signature": "[joptsimple.internal.Reflection].convertWith(joptsimple.ValueConverter<V>,java.lang.String)"
 - "exceptions": []
@@ -14,7 +14,7 @@
   "name": "[joptsimple.util.PathConverter].convert(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.nio.file.Path"
   "signature": "[joptsimple.util.PathConverter].convert(java.lang.String)"
 - "exceptions": []
@@ -22,9 +22,9 @@
   "name": "[jdk.internal.reflect.Reflection].filterMethods(java.lang.Class,java.lang.reflect.Method[])"
   "params":
   - "name": "arg0"
-    "type": "Class"
+    "type": "java.lang.Class"
   - "name": "arg1"
-    "type": "Method[]"
+    "type": "java.lang.reflect.Method[]"
   "return_type": "java.lang.reflect.Method[]"
   "signature": "[jdk.internal.reflect.Reflection].filterMethods(java.lang.Class,java.lang.reflect.Method[])"
 - "exceptions": []
@@ -40,7 +40,7 @@
   "name": "[joptsimple.util.DateConverter].convert(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.util.Date"
   "signature": "[joptsimple.util.DateConverter].convert(java.lang.String)"
 - "exceptions": []
@@ -48,7 +48,7 @@
   "name": "[joptsimple.util.RegexMatcher].convert(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[joptsimple.util.RegexMatcher].convert(java.lang.String)"
 "language": "jvm"

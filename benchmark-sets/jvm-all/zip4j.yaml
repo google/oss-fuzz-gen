@@ -9,7 +9,7 @@
   - "name": "arg1"
     "type": "char[]"
   - "name": "arg2"
-    "type": "AesKeyStrength"
+    "type": "net.lingala.zip4j.model.enums.AesKeyStrength"
   - "name": "arg3"
     "type": "boolean"
   "return_type": "byte[]"
@@ -31,7 +31,7 @@
   "name": "[net.lingala.zip4j.model.ZipParameters].<init>(net.lingala.zip4j.model.ZipParameters)"
   "params":
   - "name": "arg0"
-    "type": "ZipParameters"
+    "type": "net.lingala.zip4j.model.ZipParameters"
   "return_type": "net.lingala.zip4j.model.ZipParameters"
   "signature": "[net.lingala.zip4j.model.ZipParameters].<init>(net.lingala.zip4j.model.ZipParameters)"
 - "exceptions":
@@ -53,13 +53,13 @@
   "name": "[net.lingala.zip4j.io.outputstream.ZipOutputStream].<init>(java.io.OutputStream,char[],net.lingala.zip4j.model.Zip4jConfig,net.lingala.zip4j.model.ZipModel)"
   "params":
   - "name": "arg0"
-    "type": "OutputStream"
+    "type": "java.io.OutputStream"
   - "name": "arg1"
     "type": "char[]"
   - "name": "arg2"
-    "type": "Zip4jConfig"
+    "type": "net.lingala.zip4j.model.Zip4jConfig"
   - "name": "arg3"
-    "type": "ZipModel"
+    "type": "net.lingala.zip4j.model.ZipModel"
   "return_type": "net.lingala.zip4j.io.outputstream.ZipOutputStream"
   "signature": "[net.lingala.zip4j.io.outputstream.ZipOutputStream].<init>(java.io.OutputStream,char[],net.lingala.zip4j.model.Zip4jConfig,net.lingala.zip4j.model.ZipModel)"
 - "exceptions": []

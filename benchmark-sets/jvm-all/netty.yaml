@@ -5,9 +5,9 @@
   "name": "[io.netty.channel.CombinedChannelDuplexHandler].channelRead(io.netty.channel.ChannelHandlerContext,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "ChannelHandlerContext"
+    "type": "io.netty.channel.ChannelHandlerContext"
   - "name": "arg1"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[io.netty.channel.CombinedChannelDuplexHandler].channelRead(io.netty.channel.ChannelHandlerContext,java.lang.Object)"
 - "exceptions": []
@@ -15,11 +15,11 @@
   "name": "[io.netty.handler.codec.http2.Http2ServerUpgradeCodec].prepareUpgradeResponse(io.netty.channel.ChannelHandlerContext,io.netty.handler.codec.http.FullHttpRequest,io.netty.handler.codec.http.HttpHeaders)"
   "params":
   - "name": "arg0"
-    "type": "ChannelHandlerContext"
+    "type": "io.netty.channel.ChannelHandlerContext"
   - "name": "arg1"
-    "type": "FullHttpRequest"
+    "type": "io.netty.channel.codec.http.FullHttpRequest"
   - "name": "arg2"
-    "type": "HttpHeaders"
+    "type": "io.netty.channel.codec.http.HttpHeaders"
   "return_type": "boolean"
   "signature": "[io.netty.handler.codec.http2.Http2ServerUpgradeCodec].prepareUpgradeResponse(io.netty.channel.ChannelHandlerContext,io.netty.handler.codec.http.FullHttpRequest,io.netty.handler.codec.http.HttpHeaders)"
 - "exceptions":
@@ -28,11 +28,11 @@
   "name": "[io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder].decodeFrame(io.netty.channel.ChannelHandlerContext,io.netty.buffer.ByteBuf,java.util.List<Object>)"
   "params":
   - "name": "arg0"
-    "type": "ChannelHandlerContext"
+    "type": "io.netty.channel.ChannelHandlerContext"
   - "name": "arg1"
-    "type": "ByteBuf"
+    "type": "io.netty.buffer.ByteBuf"
   - "name": "arg2"
-    "type": "List<Object>"
+    "type": "java.util.List<Object>"
   "return_type": "void"
   "signature": "[io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder].decodeFrame(io.netty.channel.ChannelHandlerContext,io.netty.buffer.ByteBuf,java.util.List<Object>)"
 - "exceptions":
@@ -41,37 +41,24 @@
   "name": "[io.netty.handler.codec.http2.Http2InboundFrameLogger].readFrame(io.netty.channel.ChannelHandlerContext,io.netty.buffer.ByteBuf,io.netty.handler.codec.http2.Http2FrameListener)"
   "params":
   - "name": "arg0"
-    "type": "ChannelHandlerContext"
+    "type": "io.netty.channel.ChannelHandlerContext"
   - "name": "arg1"
-    "type": "ByteBuf"
+    "type": "io.netty.buffer.ByteBuf"
   - "name": "arg2"
-    "type": "Http2FrameListener"
+    "type": "io.netty.handler.codec.http2.Http2FrameListener"
   "return_type": "void"
   "signature": "[io.netty.handler.codec.http2.Http2InboundFrameLogger].readFrame(io.netty.channel.ChannelHandlerContext,io.netty.buffer.ByteBuf,io.netty.handler.codec.http2.Http2FrameListener)"
-- "exceptions":
-  - "io.netty.handler.codec.http2.Http2Exception"
-  "is_jvm_static": false
-  "name": "[io.netty.handler.codec.http2.DefaultHttp2FrameReader].readFrame(io.netty.channel.ChannelHandlerContext,io.netty.buffer.ByteBuf,io.netty.handler.codec.http2.Http2FrameListener)"
-  "params":
-  - "name": "arg0"
-    "type": "ChannelHandlerContext"
-  - "name": "arg1"
-    "type": "ByteBuf"
-  - "name": "arg2"
-    "type": "Http2FrameListener"
-  "return_type": "void"
-  "signature": "[io.netty.handler.codec.http2.DefaultHttp2FrameReader].readFrame(io.netty.channel.ChannelHandlerContext,io.netty.buffer.ByteBuf,io.netty.handler.codec.http2.Http2FrameListener)"
 - "exceptions":
   - "java.lang.Exception"
   "is_jvm_static": false
   "name": "[io.netty.channel.CombinedChannelDuplexHandler].write(io.netty.channel.ChannelHandlerContext,java.lang.Object,io.netty.channel.ChannelPromise)"
   "params":
   - "name": "arg0"
-    "type": "ChannelHandlerContext"
+    "type": "io.netty.channel.ChannelHandlerContext"
   - "name": "arg1"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg2"
-    "type": "ChannelPromise"
+    "type": "io.netty.channel.ChannelPromise"
   "return_type": "void"
   "signature": "[io.netty.channel.CombinedChannelDuplexHandler].write(io.netty.channel.ChannelHandlerContext,java.lang.Object,io.netty.channel.ChannelPromise)"
 "language": "jvm"

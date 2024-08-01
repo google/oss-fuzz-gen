@@ -4,11 +4,11 @@
   "name": "[com.cronutils.mapper.CronMapper].<init>(com.cronutils.model.definition.CronDefinition,com.cronutils.model.definition.CronDefinition,com.cronutils.Function)"
   "params":
   - "name": "arg0"
-    "type": "CronDefinition"
+    "type": "com.cronutils.model.definition.CronDefinition"
   - "name": "arg1"
-    "type": "CronDefinition"
+    "type": "com.cronutils.model.definition.CronDefinition"
   - "name": "arg2"
-    "type": "Function"
+    "type": "com.cronutils.Function"
   "return_type": "com.cronutils.mapper.CronMapper"
   "signature": "[com.cronutils.mapper.CronMapper].<init>(com.cronutils.model.definition.CronDefinition,com.cronutils.model.definition.CronDefinition,com.cronutils.Function)"
 - "exceptions": []
@@ -16,11 +16,11 @@
   "name": "[com.cronutils.model.definition.CronDefinition].<init>(java.util.List,java.util.Set,java.util.Set,boolean)"
   "params":
   - "name": "arg0"
-    "type": "List"
+    "type": "java.util.List"
   - "name": "arg1"
-    "type": "Set"
+    "type": "java.util.Set"
   - "name": "arg2"
-    "type": "Set"
+    "type": "java.util.Set"
   - "name": "arg3"
     "type": "boolean"
   "return_type": "com.cronutils.model.definition.CronDefinition"
@@ -30,9 +30,9 @@
   "name": "[com.cronutils.model.field.expression.On].<init>(com.cronutils.model.field.value.IntegerFieldValue,com.cronutils.model.field.value.SpecialCharFieldValue)"
   "params":
   - "name": "arg0"
-    "type": "IntegerFieldValue"
+    "type": "com.cronutils.model.field.value.IntegerFieldValue"
   - "name": "arg1"
-    "type": "SpecialCharFieldValue"
+    "type": "com.cronutils.model.field.value.SpecialCharFieldValue"
   "return_type": "com.cronutils.model.field.expression.On"
   "signature": "[com.cronutils.model.field.expression.On].<init>(com.cronutils.model.field.value.IntegerFieldValue,com.cronutils.model.field.value.SpecialCharFieldValue)"
 - "exceptions": []
@@ -40,7 +40,7 @@
   "name": "[com.cronutils.model.CompositeCron].<init>(java.util.List)"
   "params":
   - "name": "arg0"
-    "type": "List"
+    "type": "java.util.List"
   "return_type": "com.cronutils.model.CompositeCron"
   "signature": "[com.cronutils.model.CompositeCron].<init>(java.util.List)"
 - "exceptions": []
@@ -48,9 +48,9 @@
   "name": "[com.cronutils.model.SingleCron].<init>(com.cronutils.model.definition.CronDefinition,java.util.List)"
   "params":
   - "name": "arg0"
-    "type": "CronDefinition"
+    "type": "com.cronutils.model.definition.CronDefinition"
   - "name": "arg1"
-    "type": "List"
+    "type": "java.util.List"
   "return_type": "com.cronutils.model.SingleCron"
   "signature": "[com.cronutils.model.SingleCron].<init>(com.cronutils.model.definition.CronDefinition,java.util.List)"
 - "exceptions": []
@@ -58,9 +58,9 @@
   "name": "[com.cronutils.model.field.expression.Every].<init>(com.cronutils.model.field.expression.FieldExpression,com.cronutils.model.field.value.IntegerFieldValue)"
   "params":
   - "name": "arg0"
-    "type": "FieldExpression"
+    "type": "(com.cronutils.model.field.expression.FieldExpression"
   - "name": "arg1"
-    "type": "IntegerFieldValue"
+    "type": "cronutils.model.field.value.IntegerFieldValue"
   "return_type": "com.cronutils.model.field.expression.Every"
   "signature": "[com.cronutils.model.field.expression.Every].<init>(com.cronutils.model.field.expression.FieldExpression,com.cronutils.model.field.value.IntegerFieldValue)"
 "language": "jvm"

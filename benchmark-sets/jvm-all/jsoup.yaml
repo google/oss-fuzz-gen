@@ -4,9 +4,9 @@
   "name": "[org.jsoup.select.NodeTraversor].traverse(org.jsoup.select.NodeVisitor,org.jsoup.nodes.Node)"
   "params":
   - "name": "arg0"
-    "type": "NodeVisitor"
+    "type": "org.jsoup.select.NodeVisitor"
   - "name": "arg1"
-    "type": "Node"
+    "type": "org.jsoup.nodes.Node"
   "return_type": "void"
   "signature": "[org.jsoup.select.NodeTraversor].traverse(org.jsoup.select.NodeVisitor,org.jsoup.nodes.Node)"
 - "exceptions": []
@@ -14,9 +14,9 @@
   "name": "[org.jsoup.internal.StringUtil].join(java.util.Iterator<?>,java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "Iterator<?>"
+    "type": "java.util.Iterator<?>"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.jsoup.internal.StringUtil].join(java.util.Iterator<?>,java.lang.String)"
 - "exceptions": []
@@ -24,11 +24,11 @@
   "name": "[org.jsoup.safety.Safelist].isSafeAttribute(java.lang.String,org.jsoup.nodes.Element,org.jsoup.nodes.Attribute)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "Element"
+    "type": "org.jsoup.nodes.Element"
   - "name": "arg2"
-    "type": "Attribute"
+    "type": "org.jsoup.nodes.Attribute"
   "return_type": "boolean"
   "signature": "[org.jsoup.safety.Safelist].isSafeAttribute(java.lang.String,org.jsoup.nodes.Element,org.jsoup.nodes.Attribute)"
 - "exceptions": []
@@ -36,7 +36,7 @@
   "name": "[org.jsoup.helper.W3CDom$W3CBuilder].head(org.jsoup.nodes.Node,int)"
   "params":
   - "name": "arg0"
-    "type": "Node"
+    "type": "org.jsoup.nodes.Node"
   - "name": "arg1"
     "type": "int"
   "return_type": "void"
@@ -46,7 +46,7 @@
   "name": "[org.jsoup.safety.Safelist].getEnforcedAttributes(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "org.jsoup.nodes.Attributes"
   "signature": "[org.jsoup.safety.Safelist].getEnforcedAttributes(java.lang.String)"
 - "exceptions": []
@@ -54,9 +54,9 @@
   "name": "[org.jsoup.nodes.Attributes].userData(java.lang.String,java.lang.Object)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "Object"
+    "type": "java.lang.Object"
   "return_type": "org.jsoup.nodes.Attributes"
   "signature": "[org.jsoup.nodes.Attributes].userData(java.lang.String,java.lang.Object)"
 "language": "jvm"

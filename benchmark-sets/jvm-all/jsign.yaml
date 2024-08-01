@@ -4,9 +4,9 @@
   "name": "[net.jsign.json-io.util.io.JsonWriter].<init>(java.io.OutputStream,java.util.Map)"
   "params":
   - "name": "arg0"
-    "type": "OutputStream"
+    "type": "java.io.OutputStream"
   - "name": "arg1"
-    "type": "Map"
+    "type": "java.util.Map"
   "return_type": "net.jsign.json-io.util.io.JsonWriter"
   "signature": "[net.jsign.json-io.util.io.JsonWriter].<init>(java.io.OutputStream,java.util.Map)"
 - "exceptions":
@@ -15,7 +15,7 @@
   "name": "[net.jsign.mscab.MSCabinetFile].<init>(java.nio.channels.SeekableByteChannel)"
   "params":
   - "name": "arg0"
-    "type": "SeekableByteChannel"
+    "type": "java.nio.channels.SeekableByteChannel"
   "return_type": "net.jsign.mscab.MSCabinetFile"
   "signature": "[net.jsign.mscab.MSCabinetFile].<init>(java.nio.channels.SeekableByteChannel)"
 - "exceptions": []
@@ -23,7 +23,7 @@
   "name": "[net.jsign.json-io.util.io.JsonWriter].<init>(java.io.OutputStream)"
   "params":
   - "name": "arg0"
-    "type": "OutputStream"
+    "type": "java.io.OutputStream"
   "return_type": "net.jsign.json-io.util.io.JsonWriter"
   "signature": "[net.jsign.json-io.util.io.JsonWriter].<init>(java.io.OutputStream)"
 - "exceptions":
@@ -32,7 +32,7 @@
   "name": "[net.jsign.navx.NAVXFile].createIndirectData(net.jsign.DigestAlgorithm)"
   "params":
   - "name": "arg0"
-    "type": "DigestAlgorithm"
+    "type": "net.jsign.DigestAlgorithm"
   "return_type": "net.jsign.bouncycastle.asn1.ASN1Object"
   "signature": "[net.jsign.navx.NAVXFile].createIndirectData(net.jsign.DigestAlgorithm)"
 - "exceptions": []
@@ -40,13 +40,13 @@
   "name": "[net.jsign.jca.GaraSignCredentials].<init>(java.lang.String,java.lang.String,java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg2"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg3"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "net.jsign.jca.GaraSignCredentials"
   "signature": "[net.jsign.jca.GaraSignCredentials].<init>(java.lang.String,java.lang.String,java.lang.String,java.lang.String)"
 - "exceptions":
@@ -55,7 +55,7 @@
   "name": "[net.jsign.mscab.MSCabinetFile].<init>(java.io.File)"
   "params":
   - "name": "arg0"
-    "type": "File"
+    "type": "java.io.File"
   "return_type": "net.jsign.mscab.MSCabinetFile"
   "signature": "[net.jsign.mscab.MSCabinetFile].<init>(java.io.File)"
 "language": "jvm"

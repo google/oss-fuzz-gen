@@ -5,7 +5,7 @@
   "name": "[com.fasterxml.uuid.EthernetAddress].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "com.fasterxml.uuid.EthernetAddress"
   "signature": "[com.fasterxml.uuid.EthernetAddress].<init>(java.lang.String)"
 - "exceptions":
@@ -14,11 +14,11 @@
   "name": "[com.fasterxml.uuid.UUIDTimer].<init>(java.util.Random,com.fasterxml.uuid.TimestampSynchronizer,com.fasterxml.uuid.UUIDClock)"
   "params":
   - "name": "arg0"
-    "type": "Random"
+    "type": "java.util.Random"
   - "name": "arg1"
-    "type": "TimestampSynchronizer"
+    "type": "com.fasterxml.uuid.TimestampSynchronizer"
   - "name": "arg2"
-    "type": "UUIDClock"
+    "type": "com.fasterxml.uuid.UUIDClock"
   "return_type": "com.fasterxml.uuid.UUIDTimer"
   "signature": "[com.fasterxml.uuid.UUIDTimer].<init>(java.util.Random,com.fasterxml.uuid.TimestampSynchronizer,com.fasterxml.uuid.UUIDClock)"
 - "exceptions": []
@@ -26,9 +26,9 @@
   "name": "[com.fasterxml.uuid.impl.TimeBasedGenerator].<init>(com.fasterxml.uuid.EthernetAddress,com.fasterxml.uuid.UUIDTimer)"
   "params":
   - "name": "arg0"
-    "type": "EthernetAddress"
+    "type": "com.fasterxml.uuid.EthernetAddress"
   - "name": "arg1"
-    "type": "UUIDTimer"
+    "type": "com.fasterxml.uuid.UUIDTimer"
   "return_type": "com.fasterxml.uuid.impl.TimeBasedGenerator"
   "signature": "[com.fasterxml.uuid.impl.TimeBasedGenerator].<init>(com.fasterxml.uuid.EthernetAddress,com.fasterxml.uuid.UUIDTimer)"
 - "exceptions": []
@@ -36,9 +36,9 @@
   "name": "[com.fasterxml.uuid.impl.TimeBasedReorderedGenerator].<init>(com.fasterxml.uuid.EthernetAddress,com.fasterxml.uuid.UUIDTimer)"
   "params":
   - "name": "arg0"
-    "type": "EthernetAddress"
+    "type": "com.fasterxml.uuid.EthernetAddress"
   - "name": "arg1"
-    "type": "UUIDTimer"
+    "type": "com.fasterxml.uuid.UUIDTimer"
   "return_type": "com.fasterxml.uuid.impl.TimeBasedReorderedGenerator"
   "signature": "[com.fasterxml.uuid.impl.TimeBasedReorderedGenerator].<init>(com.fasterxml.uuid.EthernetAddress,com.fasterxml.uuid.UUIDTimer)"
 - "exceptions": []
@@ -46,11 +46,11 @@
   "name": "[com.fasterxml.uuid.impl.NameBasedGenerator].<init>(java.util.UUID,java.security.MessageDigest,com.fasterxml.uuid.UUIDType)"
   "params":
   - "name": "arg0"
-    "type": "UUID"
+    "type": "java.util.UUID"
   - "name": "arg1"
-    "type": "MessageDigest"
+    "type": "java.security.MessageDigest"
   - "name": "arg2"
-    "type": "UUIDType"
+    "type": "com.fasterxml.uuid.UUIDType"
   "return_type": "com.fasterxml.uuid.impl.NameBasedGenerator"
   "signature": "[com.fasterxml.uuid.impl.NameBasedGenerator].<init>(java.util.UUID,java.security.MessageDigest,com.fasterxml.uuid.UUIDType)"
 - "exceptions":
@@ -59,9 +59,9 @@
   "name": "[com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer].<init>(java.io.File,java.io.File,long)"
   "params":
   - "name": "arg0"
-    "type": "File"
+    "type": "java.io.File"
   - "name": "arg1"
-    "type": "File"
+    "type": "java.io.File"
   - "name": "arg2"
     "type": "long"
   "return_type": "com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer"

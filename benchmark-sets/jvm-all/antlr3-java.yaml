@@ -5,11 +5,11 @@
   "name": "[org.antlr.tool.Interpreter].scan(java.lang.String,org.antlr.runtime.debug.DebugEventListener,java.util.List<NFAState>)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "DebugEventListener"
+    "type": "org.antlr.runtime.debug.DebugEventListener"
   - "name": "arg2"
-    "type": "List<NFAState>"
+    "type": "java.util.List<NFAState>"
   "return_type": "void"
   "signature": "[org.antlr.tool.Interpreter].scan(java.lang.String,org.antlr.runtime.debug.DebugEventListener,java.util.List<NFAState>)"
 - "exceptions": []
@@ -26,7 +26,7 @@
   "name": "[org.antlr.grammar.v3.TreeToNFAConverter].setElement(org.antlr.misc.IntSet)"
   "params":
   - "name": "arg0"
-    "type": "IntSet"
+    "type": "org.antlr.misc.IntSet"
   "return_type": "void"
   "signature": "[org.antlr.grammar.v3.TreeToNFAConverter].setElement(org.antlr.misc.IntSet)"
 - "exceptions":
@@ -37,7 +37,7 @@
   - "name": "arg0"
     "type": "int"
   - "name": "arg1"
-    "type": "IntStream"
+    "type": "org.antlr.runtime.IntStream"
   "return_type": "int"
   "signature": "[org.antlr.grammar.v3.ANTLRv3Lexer$DFA2].specialStateTransition(int,org.antlr.runtime.IntStream)"
 - "exceptions":
@@ -46,9 +46,9 @@
   "name": "[org.antlr.tool.Grammar].getSetFromRule(org.antlr.grammar.v3.TreeToNFAConverter,java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "TreeToNFAConverter"
+    "type": "org.antlr.grammar.v3.TreeToNFAConverter"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "org.antlr.misc.IntSet"
   "signature": "[org.antlr.tool.Grammar].getSetFromRule(org.antlr.grammar.v3.TreeToNFAConverter,java.lang.String)"
 - "exceptions":
@@ -57,7 +57,7 @@
   "name": "[org.antlr.grammar.v3.TreeToNFAConverter].setRule(org.antlr.tool.GrammarAST)"
   "params":
   - "name": "arg0"
-    "type": "GrammarAST"
+    "type": "org.antlr.tool.GrammarAST"
   "return_type": "org.antlr.misc.IntSet"
   "signature": "[org.antlr.grammar.v3.TreeToNFAConverter].setRule(org.antlr.tool.GrammarAST)"
 "language": "jvm"

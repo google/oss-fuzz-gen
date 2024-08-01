@@ -4,7 +4,7 @@
   "name": "[com.graphbuilder.curve.GroupIterator].<init>(java.lang.String,int)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
     "type": "int"
   "return_type": "com.graphbuilder.curve.GroupIterator"
@@ -14,9 +14,9 @@
   "name": "[com.graphbuilder.curve.NURBSpline].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
   "params":
   - "name": "arg0"
-    "type": "ControlPath"
+    "type": "com.graphbuilder.curve.ControlPath"
   - "name": "arg1"
-    "type": "GroupIterator"
+    "type": "com.graphbuilder.curve.GroupIterator"
   "return_type": "com.graphbuilder.curve.NURBSpline"
   "signature": "[com.graphbuilder.curve.NURBSpline].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
 - "exceptions": []
@@ -32,9 +32,9 @@
   "name": "[com.graphbuilder.curve.BSpline].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
   "params":
   - "name": "arg0"
-    "type": "ControlPath"
+    "type": "com.graphbuilder.curve.ControlPath"
   - "name": "arg1"
-    "type": "GroupIterator"
+    "type": "com.graphbuilder.curve.GroupIterator"
   "return_type": "com.graphbuilder.curve.BSpline"
   "signature": "[com.graphbuilder.curve.BSpline].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
 - "exceptions": []
@@ -42,9 +42,9 @@
   "name": "[com.graphbuilder.curve.LagrangeCurve].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
   "params":
   - "name": "arg0"
-    "type": "ControlPath"
+    "type": "com.graphbuilder.curve.ControlPath"
   - "name": "arg1"
-    "type": "GroupIterator"
+    "type": "com.graphbuilder.curve.GroupIterator"
   "return_type": "com.graphbuilder.curve.LagrangeCurve"
   "signature": "[com.graphbuilder.curve.LagrangeCurve].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
 - "exceptions": []

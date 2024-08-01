@@ -4,7 +4,7 @@
   "name": "[org.apache.poi.sl.draw.DrawTextParagraph].draw(java.awt.Graphics2D)"
   "params":
   - "name": "arg0"
-    "type": "Graphics2D"
+    "type": "java.awt.Graphics2D"
   "return_type": "void"
   "signature": "[org.apache.poi.sl.draw.DrawTextParagraph].draw(java.awt.Graphics2D)"
 - "exceptions": []
@@ -12,7 +12,7 @@
   "name": "[org.apache.poi.sl.draw.DrawTextShape].drawParagraphs(java.awt.Graphics2D,double,double)"
   "params":
   - "name": "arg0"
-    "type": "Graphics2D"
+    "type": "java.awt.Graphics2D"
   - "name": "arg1"
     "type": "double"
   - "name": "arg2"
@@ -24,9 +24,9 @@
   "name": "[org.apache.poi.sl.draw.DrawShape].getAnchor(java.awt.Graphics2D,org.apache.poi.sl.usermodel.PlaceableShape<?,?>)"
   "params":
   - "name": "arg0"
-    "type": "Graphics2D"
+    "type": "java.awt.Graphics2D"
   - "name": "arg1"
-    "type": "PlaceableShape<?,?>"
+    "type": "org.apache.poi.sl.usermodel.PlaceableShape<?,?>"
   "return_type": "java.awt.geom.Rectangle2D"
   "signature": "[org.apache.poi.sl.draw.DrawShape].getAnchor(java.awt.Graphics2D,org.apache.poi.sl.usermodel.PlaceableShape<?,?>)"
 - "exceptions": []
@@ -34,7 +34,7 @@
   "name": "[org.apache.poi.sl.draw.DrawTextShape].getTextHeight(java.awt.Graphics2D)"
   "params":
   - "name": "arg0"
-    "type": "Graphics2D"
+    "type": "java.awt.Graphics2D"
   "return_type": "double"
   "signature": "[org.apache.poi.sl.draw.DrawTextShape].getTextHeight(java.awt.Graphics2D)"
 - "exceptions": []
@@ -42,11 +42,11 @@
   "name": "[org.apache.poi.sl.draw.DrawPaint].getPaint(java.awt.Graphics2D,org.apache.poi.sl.usermodel.PaintStyle,org.apache.poi.sl.usermodel.PaintStyle$PaintModifier)"
   "params":
   - "name": "arg0"
-    "type": "Graphics2D"
+    "type": "java.awt.Graphics2D"
   - "name": "arg1"
-    "type": "PaintStyle"
+    "type": "org.apache.poi.sl.usermodel.PaintStyle"
   - "name": "arg2"
-    "type": "PaintStyle$PaintModifier"
+    "type": "org.apache.poi.sl.usermodel.PaintStyle$PaintModifier"
   "return_type": "java.awt.Paint"
   "signature": "[org.apache.poi.sl.draw.DrawPaint].getPaint(java.awt.Graphics2D,org.apache.poi.sl.usermodel.PaintStyle,org.apache.poi.sl.usermodel.PaintStyle$PaintModifier)"
 - "exceptions": []
@@ -54,9 +54,9 @@
   "name": "[org.apache.poi.sl.draw.DrawPaint].getPaint(java.awt.Graphics2D,org.apache.poi.sl.usermodel.PaintStyle)"
   "params":
   - "name": "arg0"
-    "type": "Graphics2D"
+    "type": "java.awt.Graphics2D"
   - "name": "arg1"
-    "type": "PaintStyle"
+    "type": "org.apache.poi.sl.usermodel.PaintStyle"
   "return_type": "java.awt.Paint"
   "signature": "[org.apache.poi.sl.draw.DrawPaint].getPaint(java.awt.Graphics2D,org.apache.poi.sl.usermodel.PaintStyle)"
 "language": "jvm"

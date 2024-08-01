@@ -1,70 +1,21 @@
 "functions":
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.xerial.snappy.SnappyFramedInputStream].read(byte[],int,int)"
-  "params":
-  - "name": "arg0"
-    "type": "byte[]"
-  - "name": "arg1"
-    "type": "int"
-  - "name": "arg2"
-    "type": "int"
-  "return_type": "int"
-  "signature": "[org.xerial.snappy.SnappyFramedInputStream].read(byte[],int,int)"
-- "exceptions":
-  - "java.io.IOException"
+- "exceptions": []
   "is_jvm_static": false
   "name": "[org.xerial.snappy.SnappyFramedInputStream].read(java.nio.ByteBuffer)"
   "params":
   - "name": "arg0"
-    "type": "ByteBuffer"
-  "return_type": "int"
+    "type": "java.nio.ByteBuffer"
+  "return_type": "void"
   "signature": "[org.xerial.snappy.SnappyFramedInputStream].read(java.nio.ByteBuffer)"
 - "exceptions":
   - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.xerial.snappy.SnappyFramedInputStream].<init>(java.nio.channels.ReadableByteChannel,boolean,org.xerial.snappy.pool.BufferPool)"
+  "is_jvm_static": true
+  "name": "[org.xerial.snappy.SnappyCodec].readHeader(java.io.InputStream)"
   "params":
   - "name": "arg0"
-    "type": "ReadableByteChannel"
-  - "name": "arg1"
-    "type": "boolean"
-  - "name": "arg2"
-    "type": "BufferPool"
-  "return_type": "org.xerial.snappy.SnappyFramedInputStream"
-  "signature": "[org.xerial.snappy.SnappyFramedInputStream].<init>(java.nio.channels.ReadableByteChannel,boolean,org.xerial.snappy.pool.BufferPool)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.xerial.snappy.pool.CachingBufferPool].allocateArray(int)"
-  "params":
-  - "name": "arg0"
-    "type": "int"
-  "return_type": "byte[]"
-  "signature": "[org.xerial.snappy.pool.CachingBufferPool].allocateArray(int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.xerial.snappy.pool.CachingBufferPool].allocateDirect(int)"
-  "params":
-  - "name": "arg0"
-    "type": "int"
-  "return_type": "java.nio.ByteBuffer"
-  "signature": "[org.xerial.snappy.pool.CachingBufferPool].allocateDirect(int)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.xerial.snappy.SnappyFramedOutputStream].<init>(java.nio.channels.WritableByteChannel,int,double,org.xerial.snappy.pool.BufferPool)"
-  "params":
-  - "name": "arg0"
-    "type": "WritableByteChannel"
-  - "name": "arg1"
-    "type": "int"
-  - "name": "arg2"
-    "type": "double"
-  - "name": "arg3"
-    "type": "BufferPool"
-  "return_type": "org.xerial.snappy.SnappyFramedOutputStream"
-  "signature": "[org.xerial.snappy.SnappyFramedOutputStream].<init>(java.nio.channels.WritableByteChannel,int,double,org.xerial.snappy.pool.BufferPool)"
+    "type": "java.io.InputStream"
+  "return_type": "org.xerial.snappy.SnappyCodec"
+  "signature": "[org.xerial.snappy.SnappyCodec].readHeader(java.io.InputStream)"
 "language": "jvm"
 "project": "snappy-java"
 "target_name": "SnappyStreamFuzzer"

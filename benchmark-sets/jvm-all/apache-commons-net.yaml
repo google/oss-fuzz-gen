@@ -4,7 +4,7 @@
   "name": "[org.apache.commons.net.ntp.TimeInfo].<init>(org.apache.commons.net.ntp.NtpV3Packet,long,java.util.List,boolean)"
   "params":
   - "name": "arg0"
-    "type": "NtpV3Packet"
+    "type": "org.apache.commons.net.ntp.NtpV3Packet"
   - "name": "arg1"
     "type": "long"
   - "name": "arg2"
@@ -18,7 +18,7 @@
   "name": "[org.apache.commons.net.nntp.NewGroupsOrNewsQuery].<init>(java.util.Calendar,boolean)"
   "params":
   - "name": "arg0"
-    "type": "Calendar"
+    "type": "java.util.Calendar"
   - "name": "arg1"
     "type": "boolean"
   "return_type": "org.apache.commons.net.nntp.NewGroupsOrNewsQuery"
@@ -28,7 +28,7 @@
   "name": "[org.apache.commons.net.ftp.parser.NTFTPEntryParser].<init>(org.apache.commons.net.ftp.FTPClientConfig)"
   "params":
   - "name": "arg0"
-    "type": "FTPClientConfig"
+    "type": "org.apache.commons.net.ftp.FTPClientConfig"
   "return_type": "org.apache.commons.net.ftp.parser.NTFTPEntryParser"
   "signature": "[org.apache.commons.net.ftp.parser.NTFTPEntryParser].<init>(org.apache.commons.net.ftp.FTPClientConfig)"
 - "exceptions": []
@@ -48,7 +48,7 @@
   "name": "[org.apache.commons.net.ntp.TimeStamp].<init>(java.util.Date)"
   "params":
   - "name": "arg0"
-    "type": "Date"
+    "type": "java.util.Date"
   "return_type": "org.apache.commons.net.ntp.TimeStamp"
   "signature": "[org.apache.commons.net.ntp.TimeStamp].<init>(java.util.Date)"
 - "exceptions": []

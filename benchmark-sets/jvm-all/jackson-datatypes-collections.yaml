@@ -4,11 +4,11 @@
   "name": "[com.fasterxml.jackson.datatype.guava.deser.RangeDeserializer].<init>(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer,com.google.common.collect.BoundType)"
   "params":
   - "name": "arg0"
-    "type": "JavaType"
+    "type": "com.fasterxml.jackson.databind.JavaType"
   - "name": "arg1"
-    "type": "JsonDeserializer"
+    "type": "com.fasterxml.jackson.databind.JsonDeserializer"
   - "name": "arg2"
-    "type": "BoundType"
+    "type": "com.google.common.collect.BoundType"
   "return_type": "com.fasterxml.jackson.datatype.guava.deser.RangeDeserializer"
   "signature": "[com.fasterxml.jackson.datatype.guava.deser.RangeDeserializer].<init>(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer,com.google.common.collect.BoundType)"
 - "exceptions": []
@@ -16,9 +16,9 @@
   "name": "[com.fasterxml.jackson.datatype.guava.deser.RangeDeserializer].<init>(com.google.common.collect.BoundType,com.fasterxml.jackson.databind.JavaType)"
   "params":
   - "name": "arg0"
-    "type": "BoundType"
+    "type": "com.google.common.collect.BoundType"
   - "name": "arg1"
-    "type": "JavaType"
+    "type": "com.fasterxml.jackson.databind.JavaType"
   "return_type": "com.fasterxml.jackson.datatype.guava.deser.RangeDeserializer"
   "signature": "[com.fasterxml.jackson.datatype.guava.deser.RangeDeserializer].<init>(com.google.common.collect.BoundType,com.fasterxml.jackson.databind.JavaType)"
 - "exceptions": []
@@ -26,9 +26,9 @@
   "name": "[com.fasterxml.jackson.datatype.guava.ser.RangeSerializer].<init>(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonSerializer)"
   "params":
   - "name": "arg0"
-    "type": "JavaType"
+    "type": "com.fasterxml.jackson.databind.JavaType"
   - "name": "arg1"
-    "type": "JsonSerializer"
+    "type": "com.fasterxml.jackson.databind.JsonSerializer"
   "return_type": "com.fasterxml.jackson.datatype.guava.ser.RangeSerializer"
   "signature": "[com.fasterxml.jackson.datatype.guava.ser.RangeSerializer].<init>(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonSerializer)"
 - "exceptions": []
@@ -36,11 +36,11 @@
   "name": "[com.fasterxml.jackson.datatype.guava.ser.RangeSerializer].<init>(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonSerializer,com.fasterxml.jackson.datatype.guava.deser.util.RangeHelper$RangeProperties)"
   "params":
   - "name": "arg0"
-    "type": "JavaType"
+    "type": "com.fasterxml.jackson.databind.JavaType"
   - "name": "arg1"
-    "type": "JsonSerializer"
+    "type": "com.fasterxml.jackson.databind.JsonSerializer"
   - "name": "arg2"
-    "type": "RangeHelper$RangeProperties"
+    "type": "com.fasterxml.jackson.datatype.guava.deser.util.RangeHelper$RangeProperties"
   "return_type": "com.fasterxml.jackson.datatype.guava.ser.RangeSerializer"
   "signature": "[com.fasterxml.jackson.datatype.guava.ser.RangeSerializer].<init>(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonSerializer,com.fasterxml.jackson.datatype.guava.deser.util.RangeHelper$RangeProperties)"
 - "exceptions": []
@@ -48,9 +48,9 @@
   "name": "[com.fasterxml.jackson.datatype.guava.deser.RangeDeserializer].<init>(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer)"
   "params":
   - "name": "arg0"
-    "type": "JavaType"
+    "type": "com.fasterxml.jackson.databind.JavaType"
   - "name": "arg1"
-    "type": "JsonDeserializer"
+    "type": "com.fasterxml.jackson.databind.JsonDeserializer"
   "return_type": "com.fasterxml.jackson.datatype.guava.deser.RangeDeserializer"
   "signature": "[com.fasterxml.jackson.datatype.guava.deser.RangeDeserializer].<init>(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer)"
 - "exceptions": []
@@ -58,7 +58,7 @@
   "name": "[com.fasterxml.jackson.datatype.guava.ser.RangeSerializer].<init>(com.fasterxml.jackson.databind.JavaType)"
   "params":
   - "name": "arg0"
-    "type": "JavaType"
+    "type": "com.fasterxml.jackson.databind.JavaType"
   "return_type": "com.fasterxml.jackson.datatype.guava.ser.RangeSerializer"
   "signature": "[com.fasterxml.jackson.datatype.guava.ser.RangeSerializer].<init>(com.fasterxml.jackson.databind.JavaType)"
 "language": "jvm"
