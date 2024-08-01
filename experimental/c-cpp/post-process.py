@@ -17,6 +17,7 @@ import argparse
 import json
 import logging
 import os
+import shutil
 from typing import Any, Dict, List, Optional
 
 import constants
@@ -223,6 +224,47 @@ def get_top_projects(oss_fuzz_dir: str) -> List[Dict[str, Any]]:
   return top_projects
 
 
+def get_oss_fuzz_project_name(oss_fuzz_dir: str, project: str) -> str:
+  """Utility to create OSS-Fuzz project names."""
+  idx = 0
+  while True:
+    project_name = f'auto-gen-{project}-{idx}'
+    dst = os.path.join(oss_fuzz_dir, project_name)
+    if not os.path.isdir(dst):
+      return project_name
+    idx += 1
+
+
+def extract_repo_from_report(report_file: str) -> str:
+  """Extract the GitHub project used for auto-generation."""
+  with open(report_file, 'r') as f:
+    report_content = f.read()
+  target = report_content.split('\n')[0].replace('Analysing: ', '')
+  github_project = target.split('/')[-1]
+  return github_project
+
+
+def copy_top_projects_to_dst(oss_fuzz_dir: str, destination: str) -> None:
+  """Copies top generated projects into a given destination folder."""
+  top_projects = get_top_projects(oss_fuzz_dir)
+
+  os.makedirs(destination, exist_ok=True)
+  for top_project in top_projects:
+    project_basedir = os.path.dirname(top_project['target'])
+
+    # Prepare destiantion project name
+    project_report = os.path.join(project_basedir, '../report.txt')
+    base_oss_fuzz_name = extract_repo_from_report(project_report)
+    auto_gen_oss_fuzz_name = get_oss_fuzz_project_name(destination,
+                                                       base_oss_fuzz_name)
+    dst_oss_project = os.path.join(destination, auto_gen_oss_fuzz_name)
+
+    # Copy the generate OSS-Fuzz project to the destination
+    project_oss_fuzz_dir = os.path.join(project_basedir, 'oss-fuzz-project')
+    shutil.copytree(project_oss_fuzz_dir, dst_oss_project)
+    logger.info('- Created OSS-Fuzz project: %s', dst_oss_project)
+
+
 def parse_args() -> argparse.Namespace:
   """Parses commandline arguments."""
   parser = argparse.ArgumentParser()
@@ -244,6 +286,18 @@ def parse_args() -> argparse.Namespace:
                           type=str,
                           help='OSS-Fuzz directory with generated results',
                           required=True)
+  extract_top = subparsers.add_parser(
+      'extract-top',
+      help='Copies top projects to target folder.',
+  )
+  extract_top.add_argument('--oss-fuzz-dir',
+                           type=str,
+                           help='OSS-Fuzz directory with generated results',
+                           required=True)
+  extract_top.add_argument('--destination',
+                           type=str,
+                           help='Destination folder to store projects.',
+                           required=True)
   args = parser.parse_args()
   return args
 
@@ -261,6 +315,8 @@ def main() -> None:
     analyse_oss_fuzz_build(args.oss_fuzz_dir)
   elif args.command == 'top-projects':
     get_top_projects(args.oss_fuzz_dir)
+  elif args.command == 'extract-top':
+    copy_top_projects_to_dst(args.oss_fuzz_dir, args.destination)
 
 
 if __name__ == '__main__':
