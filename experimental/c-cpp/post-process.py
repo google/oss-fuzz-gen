@@ -223,6 +223,7 @@ def get_top_projects(oss_fuzz_dir: str) -> List[Dict[str, Any]]:
                 len(top_project['addr_san']), top_project['line_coverage'])
   return top_projects
 
+
 def get_oss_fuzz_project_name(oss_fuzz_dir: str, project: str) -> str:
   """Utility to create OSS-Fuzz project names."""
   idx = 0
@@ -233,6 +234,7 @@ def get_oss_fuzz_project_name(oss_fuzz_dir: str, project: str) -> str:
       return project_name
     idx += 1
 
+
 def extract_repo_from_report(report_file: str) -> str:
   """Extract the GitHub project used for auto-generation."""
   with open(report_file, 'r') as f:
@@ -240,6 +242,7 @@ def extract_repo_from_report(report_file: str) -> str:
   target = report_content.split('\n')[0].replace('Analysing: ', '')
   github_project = target.split('/')[-1]
   return github_project
+
 
 def copy_top_projects_to_dst(oss_fuzz_dir: str, destination: str) -> None:
   """Copies top generated projects into a given destination folder."""
@@ -252,7 +255,8 @@ def copy_top_projects_to_dst(oss_fuzz_dir: str, destination: str) -> None:
     # Prepare destiantion project name
     project_report = os.path.join(project_basedir, '../report.txt')
     base_oss_fuzz_name = extract_repo_from_report(project_report)
-    auto_gen_oss_fuzz_name = get_oss_fuzz_project_name(destination, base_oss_fuzz_name)
+    auto_gen_oss_fuzz_name = get_oss_fuzz_project_name(destination,
+                                                       base_oss_fuzz_name)
     dst_oss_project = os.path.join(destination, auto_gen_oss_fuzz_name)
 
     # Copy the generate OSS-Fuzz project to the destination
@@ -287,13 +291,13 @@ def parse_args() -> argparse.Namespace:
       help='Copies top projects to target folder.',
   )
   extract_top.add_argument('--oss-fuzz-dir',
-                          type=str,
-                          help='OSS-Fuzz directory with generated results',
-                          required=True)
+                           type=str,
+                           help='OSS-Fuzz directory with generated results',
+                           required=True)
   extract_top.add_argument('--destination',
-                          type=str,
-                          help='Destination folder to store projects.',
-                          required=True)
+                           type=str,
+                           help='Destination folder to store projects.',
+                           required=True)
   args = parser.parse_args()
   return args
 
