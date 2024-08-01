@@ -324,9 +324,9 @@ def _print_experiment_results(results: list[Result], cov_gain: dict[str,
         f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
         f'\n{result.result}\n')
 
-  print('\n\n**** TOTAL COVERAGE GAIN: ****\n\n')
+  logger.info('**** TOTAL COVERAGE GAIN: ****')
   for project in cov_gain:
-    print(f'*{project}: {cov_gain[project]}')
+    logger.info(f'*{project}: {cov_gain[project]}')
 
 
 def _setup_logging(verbose: str = 'info') -> None:
@@ -367,10 +367,9 @@ def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
     cov = result.result.full_textcov
     if not cov:
       continue
-    if result.benchmark.project in textcov_dict:
-      textcov_dict[result.benchmark.project].append(cov)
-    else:
-      textcov_dict[result.benchmark.project] = [cov]
+    if result.benchmark.project not in textcov_dict:
+      textcov_dict[result.benchmark.project] = []
+    textcov_dict[result.benchmark.project].append(cov)
 
   coverage_gain: dict[str, float] = {}
   for project, cov_list in textcov_dict.items():
@@ -378,16 +377,16 @@ def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
     for cov in cov_list:
       total_cov.merge(cov)
 
-    total_lines = max(
-        total_cov.total_lines,
-        sum([
-            f['summary']['lines']['count']
-            for f in evaluator.load_existing_coverage_summary(project)['data']
-            [0]['files']
-        ]))
+    coverage_summary = evaluator.load_existing_coverage_summary(
+        project)['data'][0]['files']
+    lines = [f['summary']['lines']['count'] for f in coverage_summary]
+
+    total_lines = max(total_cov.total_lines, sum(lines))
 
     if total_lines <= 0:
       # Fail safe when total lines is 0 because of invalid coverage report
+      logger.warning(
+          'Line coverage information missing from the coverage report.')
       coverage_gain[project] = 0
     else:
       coverage_gain[project] = total_cov.covered_lines / total_lines
