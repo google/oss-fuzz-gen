@@ -1,0 +1,48 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN2ot3Srp6Server17SetAutoEnableModeEb"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "aEnabled"
+    "type": "bool"
+  "return_type": "void"
+  "signature": "void ot::Srp::Server::SetAutoEnableMode(bool)"
+- "exceptions": []
+  "name": "otSrpServerSetAutoEnableMode"
+  "params":
+  - "name": "aInstance"
+    "type": "bool "
+  - "name": "aEnabled"
+    "type": "bool"
+  "return_type": "void"
+  "signature": "void otSrpServerSetAutoEnableMode(otInstance *, bool)"
+- "exceptions": []
+  "name": "_ZN2ot12BorderRouter14RoutingManager4StopEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void ot::BorderRouter::RoutingManager::Stop()"
+- "exceptions": []
+  "name": "otPlatRadioEnergyScanDone"
+  "params":
+  - "name": "aInstance"
+    "type": "bool "
+  - "name": "aEnergyScanMaxRssi"
+    "type": "char"
+  "return_type": "void"
+  "signature": "void otPlatRadioEnergyScanDone(otInstance *, int8_t)"
+- "exceptions": []
+  "name": "_ZN2ot7MeshCoP6Joiner7ConnectERNS1_12JoinerRouterE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "aRouter"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "Error ot::MeshCoP::Joiner::Connect(struct JoinerRouter &)"
+"language": "c++"
+"project": "openthread"
+"target_name": "ot-cli-received-fuzzer"
+"target_path": "/src/openthread/tests/fuzz/cli_received.cpp"

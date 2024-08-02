@@ -1,0 +1,34 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN7cxxopts10exceptions9exceptionD0Ev"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void cxxopts::exceptions::exception::~~exception()"
+- "exceptions": []
+  "name": "_ZN7cxxopts11OptionAdderclERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_RKNS1_10shared_ptrIKNS_5ValueEEES7_"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "opts"
+    "type": "bool "
+  - "name": "desc"
+    "type": "bool "
+  - "name": "value"
+    "type": "bool "
+  - "name": "arg_help"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "OptionAdder & cxxopts::OptionAdder::operator()(const string &, const string &, const shared_ptr<const cxxopts::Value> &, string)"
+- "exceptions": []
+  "name": "_ZNK7cxxopts10exceptions9exception4whatEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * cxxopts::exceptions::exception::what()"
+"language": "c++"
+"project": "cxxopts"
+"target_name": "cxxopts_fuzz_test"
+"target_path": "/src/cxxopts/test/fuzz.cpp"

@@ -1,0 +1,56 @@
+"functions":
+- "exceptions": []
+  "name": "_ZN8rawspeed15VC5Decompressor7Wavelet18combineLowHighPassENS_10Array2DRefIKsEES4_ibb"
+  "params":
+  - "name": "low"
+    "type": "bool "
+  - "name": "high"
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "bool"
+  - "name": ""
+    "type": "bool"
+  "return_type": "void"
+  "signature": "struct BandData rawspeed::VC5Decompressor::Wavelet::combineLowHighPass(const Array2DRef<const short>, const Array2DRef<const short>, int, bool, bool)"
+- "exceptions": []
+  "name": "_ZN8rawspeed15RawImageDataU1615scaleBlackWhiteEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void rawspeed::RawImageDataU16::scaleBlackWhite()"
+- "exceptions": []
+  "name": "_ZN8rawspeed10DngDecoder17decodeRawInternalEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "RawImage rawspeed::DngDecoder::decodeRawInternal()"
+- "exceptions": []
+  "name": "_ZN8rawspeed10Cr2Decoder15sRawInterpolateEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void rawspeed::Cr2Decoder::sRawInterpolate()"
+- "exceptions": []
+  "name": "_ZN8rawspeed15VC5Decompressor7Wavelet15reconstructPassENS_10Array2DRefIKsEES4_"
+  "params":
+  - "name": "high"
+    "type": "bool "
+  - "name": "low"
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct BandData rawspeed::VC5Decompressor::Wavelet::reconstructPass(const Array2DRef<const short>, const Array2DRef<const short>)"
+"language": "c++"
+"project": "librawspeed"
+"target_name": "SonyArw2DecompressorFuzzer"
+"target_path": "/src/librawspeed/fuzz/librawspeed/decompressors/SonyArw2Decompressor.cpp"

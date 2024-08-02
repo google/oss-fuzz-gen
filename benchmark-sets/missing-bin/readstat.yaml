@@ -1,0 +1,58 @@
+"functions":
+- "exceptions": []
+  "name": "ck_double_hash_insert"
+  "params":
+  - "name": "key"
+    "type": "double"
+  - "name": "value"
+    "type": "bool "
+  - "name": "table"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int ck_double_hash_insert(double, const void *, ck_hash_table_t *)"
+- "exceptions": []
+  "name": "readstat_value_is_missing"
+  "params":
+  - "name": "value"
+    "type": "size_t"
+  - "name": "variable"
+    "type": "size_t"
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int readstat_value_is_missing(readstat_value_t, readstat_variable_t *)"
+- "exceptions": []
+  "name": "ck_double_hash_lookup"
+  "params":
+  - "name": "key"
+    "type": "double"
+  - "name": "table"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const void * ck_double_hash_lookup(double, ck_hash_table_t *)"
+- "exceptions": []
+  "name": "ck_float_hash_insert"
+  "params":
+  - "name": "key"
+    "type": "float"
+  - "name": "value"
+    "type": "bool "
+  - "name": "table"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int ck_float_hash_insert(float, const void *, ck_hash_table_t *)"
+- "exceptions": []
+  "name": "readstat_value_is_defined_missing"
+  "params":
+  - "name": "value"
+    "type": "size_t"
+  - "name": "variable"
+    "type": "size_t"
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int readstat_value_is_defined_missing(readstat_value_t, readstat_variable_t *)"
+"language": "c++"
+"project": "readstat"
+"target_name": "fuzz_compression_sav"
+"target_path": "/src/readstat/src/fuzz/fuzz_compression_sav.c"
