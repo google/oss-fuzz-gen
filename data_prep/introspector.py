@@ -557,17 +557,23 @@ def get_function_signature(function: dict, project: str) -> str:
 
 
 # TODO(dongge): Remove this function when FI fixes it.
-def _parse_type_from_raw_tagged_type(tagged_type: str) -> str:
+def _parse_type_from_raw_tagged_type(tagged_type: str, language: str) -> str:
   """Returns type name from |tagged_type| such as struct.TypeA"""
   # Assume: Types do not contain dot(.).
+  # (ascchan): This assumption is wrong on Java projects because
+  # most full qulified classes name of Java projects have dot(.) to
+  # identify the package name of the classes. Thus for Java projects,
+  # this action needed to be skipped until this function is removed.
+  if language == 'jvm':
+    return tagged_type
   return tagged_type.split('.')[-1]
 
 
-def _group_function_params(param_types: list[str],
-                           param_names: list[str]) -> list[dict[str, str]]:
+def _group_function_params(param_types: list[str], param_names: list[str],
+                           language: str) -> list[dict[str, str]]:
   """Groups the type and name of each parameter."""
   return [{
-      'type': _parse_type_from_raw_tagged_type(param_type),
+      'type': _parse_type_from_raw_tagged_type(param_type, language),
       'name': param_name
   } for param_type, param_name in zip(param_types, param_names)]
 
@@ -619,8 +625,34 @@ def _combine_functions(a: list[str], b: list[str], c: list[str],
   return list(combined)
 
 
+def _select_functions_from_jvm_oracles(project: str, limit: int,
+                                       target_oracles: list[str]) -> list[dict]:
+  """Selects functions from oracles designated for jvm projects, with
+  jvm-public-candidates as the prioritised oracle"""
+  all_functions = OrderedDict()
+
+  if 'jvm-public-candidates' in target_oracles:
+    # JPC is the primary oracle for JVM projects. If it does exist, all other
+    # oracles are ignored because the results from all other oracles are subsets
+    # of the results from JPC oracle for JVM projects.
+    jpc_targets = _select_top_functions_from_oracle(project, limit,
+                                                    'jvm-public-candidates',
+                                                    target_oracles)
+    all_functions.update(jpc_targets)
+  else:
+    # JPC does not exist in target_oracles, follow given oracle order and
+    # dedulicate instead.
+    for target_oracle in target_oracles:
+      tmp_functions = _select_top_functions_from_oracle(project, limit,
+                                                        target_oracle,
+                                                        target_oracles)
+      all_functions.update(tmp_functions)
+
+  return list(all_functions.values())[:limit]
+
+
 def _select_functions_from_oracles(project: str, limit: int,
-                                   target_oracles: List[str]) -> list[dict]:
+                                   target_oracles: list[str]) -> list[dict]:
   """Selects function-under-test from oracles."""
   all_functions = OrderedDict()
   frlc_targets = _select_top_functions_from_oracle(project, limit,
@@ -701,7 +733,11 @@ def populate_benchmarks_using_introspector(project: str, language: str,
     if 'test-migration' in target_oracle:
       return populate_benchmarks_using_test_migration(project, language, limit)
 
-  functions = _select_functions_from_oracles(project, limit, target_oracles)
+  if language == 'jvm':
+    functions = _select_functions_from_jvm_oracles(project, limit,
+                                                   target_oracles)
+  else:
+    functions = _select_functions_from_oracles(project, limit, target_oracles)
 
   if not functions:
     logger.error('No functions found using the oracles: %s', target_oracles)
@@ -771,7 +807,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
             return_type=_get_clean_return_type(function, project),
             params=_group_function_params(
                 _get_clean_arg_types(function, project),
-                _get_arg_names(function, project, language)),
+                _get_arg_names(function, project, language), language),
             exceptions=_get_exceptions(function),
             is_jvm_static=_is_jvm_static(function),
             target_path=harness,

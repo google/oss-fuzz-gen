@@ -52,5 +52,5 @@
   "signature": "int bam_index_build(const char *, int)"
 "language": "c++"
 "project": "htslib"
-"target_name": "fqzcomp_qual_fuzz"
-"target_path": "/src/htslib/htscodecs/tests/fqzcomp_qual_fuzz.c"
+"target_name": "hts_open_fuzzer"
+"target_path": "/src/htslib/test/fuzz/hts_open_fuzzer.c"

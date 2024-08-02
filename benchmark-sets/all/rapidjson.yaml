@@ -25,5 +25,5 @@
   "signature": "void rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> >::SetObjectRaw(GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > *, Member *, SizeType, MemoryPoolAllocator<rapidjson::CrtAllocator> &)"
 "language": "c++"
 "project": "rapidjson"
-"target_name": "rapidjson"
+"target_name": "fuzzer"
 "target_path": "/src/rapidjson-fuzzers/fuzzer.cpp"

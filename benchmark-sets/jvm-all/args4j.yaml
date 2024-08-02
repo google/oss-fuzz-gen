@@ -4,9 +4,9 @@
   "name": "[org.kohsuke.args4j.CmdLineParser].addArgument(org.kohsuke.args4j.spi.Setter,org.kohsuke.args4j.Argument)"
   "params":
   - "name": "arg0"
-    "type": "Setter"
+    "type": "org.kohsuke.args4j.spi.Setter"
   - "name": "arg1"
-    "type": "Argument"
+    "type": "org.kohsuke.args4j.Argument"
   "return_type": "void"
   "signature": "[org.kohsuke.args4j.CmdLineParser].addArgument(org.kohsuke.args4j.spi.Setter,org.kohsuke.args4j.Argument)"
 - "exceptions":
@@ -15,7 +15,7 @@
   "name": "[org.kohsuke.args4j.spi.SubCommandHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
   "params":
   - "name": "arg0"
-    "type": "Parameters"
+    "type": "org.kohsuke.args4j.spi.Parameters"
   "return_type": "int"
   "signature": "[org.kohsuke.args4j.spi.SubCommandHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
 - "exceptions":
@@ -24,7 +24,7 @@
   "name": "[org.kohsuke.args4j.spi.BooleanOptionHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
   "params":
   - "name": "arg0"
-    "type": "Parameters"
+    "type": "org.kohsuke.args4j.spi.Parameters"
   "return_type": "int"
   "signature": "[org.kohsuke.args4j.spi.BooleanOptionHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
 - "exceptions":
@@ -33,7 +33,7 @@
   "name": "[org.kohsuke.args4j.spi.StringArrayOptionHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
   "params":
   - "name": "arg0"
-    "type": "Parameters"
+    "type": "org.kohsuke.args4j.spi.Parameters"
   "return_type": "int"
   "signature": "[org.kohsuke.args4j.spi.StringArrayOptionHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
 - "exceptions": []
@@ -41,9 +41,9 @@
   "name": "[org.kohsuke.args4j.CmdLineParser].addOption(org.kohsuke.args4j.spi.Setter,org.kohsuke.args4j.Option)"
   "params":
   - "name": "arg0"
-    "type": "Setter"
+    "type": "org.kohsuke.args4j.spi.Setter"
   - "name": "arg1"
-    "type": "Option"
+    "type": "org.kohsuke.args4j.Option"
   "return_type": "void"
   "signature": "[org.kohsuke.args4j.CmdLineParser].addOption(org.kohsuke.args4j.spi.Setter,org.kohsuke.args4j.Option)"
 - "exceptions":
@@ -52,7 +52,7 @@
   "name": "[org.kohsuke.args4j.spi.ExplicitBooleanOptionHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
   "params":
   - "name": "arg0"
-    "type": "Parameters"
+    "type": "org.kohsuke.args4j.spi.Parameters"
   "return_type": "int"
   "signature": "[org.kohsuke.args4j.spi.ExplicitBooleanOptionHandler].parseArguments(org.kohsuke.args4j.spi.Parameters)"
 "language": "jvm"
