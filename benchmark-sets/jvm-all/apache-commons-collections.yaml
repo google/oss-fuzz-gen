@@ -4,7 +4,7 @@
   "name": "[org.apache.commons.collections4.bloomfilter.LayeredBloomFilter].contains(org.apache.commons.collections4.bloomfilter.BitMapExtractor)"
   "params":
   - "name": "arg0"
-    "type": "BitMapExtractor"
+    "type": "org.apache.commons.collections4.bloomfilter.BitMapExtractor"
   "return_type": "boolean"
   "signature": "[org.apache.commons.collections4.bloomfilter.LayeredBloomFilter].contains(org.apache.commons.collections4.bloomfilter.BitMapExtractor)"
 - "exceptions": []
@@ -12,7 +12,7 @@
   "name": "[org.apache.commons.collections4.collection.IndexedCollection].removeIf(java.util.function.Predicate<? super C>)"
   "params":
   - "name": "arg0"
-    "type": "Predicate<? super C>"
+    "type": "java.util.function.Predicate<? super C>"
   "return_type": "boolean"
   "signature": "[org.apache.commons.collections4.collection.IndexedCollection].removeIf(java.util.function.Predicate<? super C>)"
 - "exceptions": []
@@ -20,7 +20,7 @@
   "name": "[org.apache.commons.collections4.CollectionUtils].getCardinalityMap(java.lang.Iterable<? extends O>)"
   "params":
   - "name": "arg0"
-    "type": "Iterable<? extends O>"
+    "type": "java.lang.Iterable<? extends O>"
   "return_type": "java.util.Map<O,Integer>"
   "signature": "[org.apache.commons.collections4.CollectionUtils].getCardinalityMap(java.lang.Iterable<? extends O>)"
 - "exceptions": []
@@ -28,7 +28,7 @@
   "name": "[org.apache.commons.collections4.bloomfilter.LayeredBloomFilter].contains(org.apache.commons.collections4.bloomfilter.IndexExtractor)"
   "params":
   - "name": "arg0"
-    "type": "IndexExtractor"
+    "type": "org.apache.commons.collections4.bloomfilter.IndexExtractor"
   "return_type": "boolean"
   "signature": "[org.apache.commons.collections4.bloomfilter.LayeredBloomFilter].contains(org.apache.commons.collections4.bloomfilter.IndexExtractor)"
 - "exceptions": []
@@ -36,9 +36,9 @@
   "name": "[org.apache.commons.collections4.CollectionUtils].addAll(java.util.Collection<C>,java.lang.Iterable<? extends C>)"
   "params":
   - "name": "arg0"
-    "type": "Collection<C>"
+    "type": "java.util.Collection<C>"
   - "name": "arg1"
-    "type": "Iterable<? extends C>"
+    "type": "java.lang.Iterable<? extends C>"
   "return_type": "boolean"
   "signature": "[org.apache.commons.collections4.CollectionUtils].addAll(java.util.Collection<C>,java.lang.Iterable<? extends C>)"
 - "exceptions": []
@@ -46,7 +46,7 @@
   "name": "[org.apache.commons.collections4.bloomfilter.LayeredBloomFilter].contains(org.apache.commons.collections4.bloomfilter.BloomFilter)"
   "params":
   - "name": "arg0"
-    "type": "BloomFilter"
+    "type": "org.apache.commons.collections4.bloomfilter.BloomFilter"
   "return_type": "boolean"
   "signature": "[org.apache.commons.collections4.bloomfilter.LayeredBloomFilter].contains(org.apache.commons.collections4.bloomfilter.BloomFilter)"
 "language": "jvm"

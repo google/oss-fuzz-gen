@@ -57,6 +57,7 @@ INTROSPECTOR_ORACLE_KEYWORD = ''
 INTROSPECTOR_ORACLE_EASY_PARAMS = ''
 INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES = ''
 INTROSPECTOR_ORACLE_OPTIMAL = ''
+INTROSPECTOR_ORACLE_ALL_TESTS = ''
 INTROSPECTOR_FUNCTION_SOURCE = ''
 INTROSPECTOR_PROJECT_SOURCE = ''
 INTROSPECTOR_XREF = ''
@@ -81,6 +82,7 @@ def get_oracle_dict() -> Dict[str, Any]:
       'easy-params-far-reach': query_introspector_for_easy_param_targets,
       'jvm-public-candidates': query_introspector_jvm_all_public_candidates,
       'optimal-targets': query_introspector_for_optimal_targets,
+      'test-migration': query_introspector_for_tests,
   }
   return oracle_dict
 
@@ -96,7 +98,8 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES, \
       INTROSPECTOR_ALL_JVM_SOURCE_PATH, INTROSPECTOR_ORACLE_OPTIMAL, \
       INTROSPECTOR_HEADERS_FOR_FUNC, \
-      INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE
+      INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE, \
+      INTROSPECTOR_ORACLE_ALL_TESTS
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -127,6 +130,7 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/all-project-source-files')
   INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/function-with-matching-return-type')
+  INTROSPECTOR_ORACLE_ALL_TESTS = f'{INTROSPECTOR_ENDPOINT}/project-tests'
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -199,6 +203,14 @@ def _get_data(resp: Optional[requests.Response], key: str,
                '%s\n'
                '%s', key, resp.url, data)
   return default_value
+
+
+def query_introspector_for_tests(project: str) -> list[str]:
+  """Gets the list of test files in the target project."""
+  resp = _query_introspector(INTROSPECTOR_ORACLE_ALL_TESTS, {
+      'project': project,
+  })
+  return _get_data(resp, 'test-file-list', [])
 
 
 def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
@@ -545,17 +557,23 @@ def get_function_signature(function: dict, project: str) -> str:
 
 
 # TODO(dongge): Remove this function when FI fixes it.
-def _parse_type_from_raw_tagged_type(tagged_type: str) -> str:
+def _parse_type_from_raw_tagged_type(tagged_type: str, language: str) -> str:
   """Returns type name from |tagged_type| such as struct.TypeA"""
   # Assume: Types do not contain dot(.).
+  # (ascchan): This assumption is wrong on Java projects because
+  # most full qulified classes name of Java projects have dot(.) to
+  # identify the package name of the classes. Thus for Java projects,
+  # this action needed to be skipped until this function is removed.
+  if language == 'jvm':
+    return tagged_type
   return tagged_type.split('.')[-1]
 
 
-def _group_function_params(param_types: list[str],
-                           param_names: list[str]) -> list[dict[str, str]]:
+def _group_function_params(param_types: list[str], param_names: list[str],
+                           language: str) -> list[dict[str, str]]:
   """Groups the type and name of each parameter."""
   return [{
-      'type': _parse_type_from_raw_tagged_type(param_type),
+      'type': _parse_type_from_raw_tagged_type(param_type, language),
       'name': param_name
   } for param_type, param_name in zip(param_types, param_names)]
 
@@ -607,8 +625,34 @@ def _combine_functions(a: list[str], b: list[str], c: list[str],
   return list(combined)
 
 
+def _select_functions_from_jvm_oracles(project: str, limit: int,
+                                       target_oracles: list[str]) -> list[dict]:
+  """Selects functions from oracles designated for jvm projects, with
+  jvm-public-candidates as the prioritised oracle"""
+  all_functions = OrderedDict()
+
+  if 'jvm-public-candidates' in target_oracles:
+    # JPC is the primary oracle for JVM projects. If it does exist, all other
+    # oracles are ignored because the results from all other oracles are subsets
+    # of the results from JPC oracle for JVM projects.
+    jpc_targets = _select_top_functions_from_oracle(project, limit,
+                                                    'jvm-public-candidates',
+                                                    target_oracles)
+    all_functions.update(jpc_targets)
+  else:
+    # JPC does not exist in target_oracles, follow given oracle order and
+    # dedulicate instead.
+    for target_oracle in target_oracles:
+      tmp_functions = _select_top_functions_from_oracle(project, limit,
+                                                        target_oracle,
+                                                        target_oracles)
+      all_functions.update(tmp_functions)
+
+  return list(all_functions.values())[:limit]
+
+
 def _select_functions_from_oracles(project: str, limit: int,
-                                   target_oracles: List[str]) -> list[dict]:
+                                   target_oracles: list[str]) -> list[dict]:
   """Selects function-under-test from oracles."""
   all_functions = OrderedDict()
   frlc_targets = _select_top_functions_from_oracle(project, limit,
@@ -646,11 +690,54 @@ def _select_functions_from_oracles(project: str, limit: int,
   return [all_functions[func] for func in selected_singatures]
 
 
+def populate_benchmarks_using_test_migration(
+    project: str, language: str, limit: int) -> list[benchmarklib.Benchmark]:
+  """Populates benchmarks using tests for test-to-harness conversion."""
+  harnesses, _ = project_src.search_source(project, [], language)
+  harness = pick_one(harnesses)
+  if not harness:
+    logger.error('No fuzz target found in project %s.', project)
+    return []
+  logger.info('Using harness path %s', harness)
+  potential_benchmarks = []
+  test_files = query_introspector_for_tests(project)
+  for test_file in test_files:
+    potential_benchmarks.append(
+        benchmarklib.Benchmark(benchmark_id='cli',
+                               project=project,
+                               language=language,
+                               function_signature='test-file',
+                               function_name='test-file',
+                               return_type='test',
+                               params=[],
+                               exceptions=[],
+                               is_jvm_static=False,
+                               target_path=harness,
+                               preferred_target_name='',
+                               is_test_benchmark=True,
+                               test_file_path=test_file))
+  return potential_benchmarks[:limit]
+
+
 def populate_benchmarks_using_introspector(project: str, language: str,
                                            limit: int,
                                            target_oracles: List[str]):
   """Populates benchmark YAML files from the data from FuzzIntrospector."""
-  functions = _select_functions_from_oracles(project, limit, target_oracles)
+
+  # If there is any oracle with test-migration then only do this oracle
+  # selection, because the benchmarks will have different .yaml structure.
+  # TODO(David): clean up benchmark code to make it more flexible for varying
+  # forms of target selectors, and potential mixing both types of target
+  # selectors.
+  for target_oracle in target_oracles:
+    if 'test-migration' in target_oracle:
+      return populate_benchmarks_using_test_migration(project, language, limit)
+
+  if language == 'jvm':
+    functions = _select_functions_from_jvm_oracles(project, limit,
+                                                   target_oracles)
+  else:
+    functions = _select_functions_from_oracles(project, limit, target_oracles)
 
   if not functions:
     logger.error('No functions found using the oracles: %s', target_oracles)
@@ -667,11 +754,8 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         for function in functions
     ]
 
-  result = project_src.search_source(project, filenames, language)
-  if not result:
-    return []
-
-  harnesses, interesting = result
+  harnesses, interesting = project_src.search_source(project, filenames,
+                                                     language)
   harness = pick_one(harnesses)
   if not harness:
     logger.error('No fuzz target found in project %s.', project)
@@ -723,7 +807,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
             return_type=_get_clean_return_type(function, project),
             params=_group_function_params(
                 _get_clean_arg_types(function, project),
-                _get_arg_names(function, project, language)),
+                _get_arg_names(function, project, language), language),
             exceptions=_get_exceptions(function),
             is_jvm_static=_is_jvm_static(function),
             target_path=harness,
@@ -732,7 +816,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
 
     if len(potential_benchmarks) >= (limit * len(target_oracles)):
       break
-  logger.info("Length of potential targets: %d" % (len(potential_benchmarks)))
+  logger.info('Length of potential targets: %d', len(potential_benchmarks))
 
   return potential_benchmarks
 

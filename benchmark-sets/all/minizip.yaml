@@ -48,5 +48,5 @@
   "signature": "int32_t mz_zip_locate_next_entry(void *, void *, mz_zip_locate_entry_cb)"
 "language": "c++"
 "project": "minizip"
-"target_name": "standalone"
-"target_path": "/src/minizip-ng/test/fuzz/standalone.c"
+"target_name": "unzip_fuzzer"
+"target_path": "/src/minizip-ng/test/fuzz/unzip_fuzzer.c"

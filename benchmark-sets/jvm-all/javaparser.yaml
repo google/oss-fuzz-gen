@@ -4,9 +4,9 @@
   "name": "[com.github.javaparser.JavaParser].parse(com.github.javaparser.ParseStart<N>,com.github.javaparser.Provider)"
   "params":
   - "name": "arg0"
-    "type": "ParseStart<N>"
+    "type": "com.github.javaparser.ParseStart<N>"
   - "name": "arg1"
-    "type": "Provider"
+    "type": "com.github.javaparser.Provider"
   "return_type": "com.github.javaparser.ParseResult<N>"
   "signature": "[com.github.javaparser.JavaParser].parse(com.github.javaparser.ParseStart<N>,com.github.javaparser.Provider)"
 - "exceptions": []
@@ -14,9 +14,9 @@
   "name": "[com.github.javaparser.ast.visitor.HashCodeVisitor].visit(com.github.javaparser.ast.stmt.ExplicitConstructorInvocationStmt,java.lang.Void)"
   "params":
   - "name": "arg0"
-    "type": "ExplicitConstructorInvocationStmt"
+    "type": "com.github.javaparser.ast.stmt.ExplicitConstructorInvocationStmt"
   - "name": "arg1"
-    "type": "Void"
+    "type": "java.lang.Void"
   "return_type": "java.lang.Integer"
   "signature": "[com.github.javaparser.ast.visitor.HashCodeVisitor].visit(com.github.javaparser.ast.stmt.ExplicitConstructorInvocationStmt,java.lang.Void)"
 - "exceptions": []
@@ -24,9 +24,9 @@
   "name": "[com.github.javaparser.ast.visitor.HashCodeVisitor].visit(com.github.javaparser.ast.expr.ObjectCreationExpr,java.lang.Void)"
   "params":
   - "name": "arg0"
-    "type": "ObjectCreationExpr"
+    "type": "com.github.javaparser.ast.expr.ObjectCreationExpr"
   - "name": "arg1"
-    "type": "Void"
+    "type": "java.lang.Void"
   "return_type": "java.lang.Integer"
   "signature": "[com.github.javaparser.ast.visitor.HashCodeVisitor].visit(com.github.javaparser.ast.expr.ObjectCreationExpr,java.lang.Void)"
 - "exceptions": []
@@ -34,9 +34,9 @@
   "name": "[com.github.javaparser.ast.visitor.HashCodeVisitor].visit(com.github.javaparser.ast.type.ClassOrInterfaceType,java.lang.Void)"
   "params":
   - "name": "arg0"
-    "type": "ClassOrInterfaceType"
+    "type": "com.github.javaparser.ast.type.ClassOrInterfaceType"
   - "name": "arg1"
-    "type": "Void"
+    "type": "java.lang.Void"
   "return_type": "java.lang.Integer"
   "signature": "[com.github.javaparser.ast.visitor.HashCodeVisitor].visit(com.github.javaparser.ast.type.ClassOrInterfaceType,java.lang.Void)"
 - "exceptions": []
@@ -44,9 +44,9 @@
   "name": "[com.github.javaparser.ast.visitor.HashCodeVisitor].visit(com.github.javaparser.ast.CompilationUnit,java.lang.Void)"
   "params":
   - "name": "arg0"
-    "type": "CompilationUnit"
+    "type": "com.github.javaparser.ast.CompilationUnit"
   - "name": "arg1"
-    "type": "Void"
+    "type": "java.lang.Void"
   "return_type": "java.lang.Integer"
   "signature": "[com.github.javaparser.ast.visitor.HashCodeVisitor].visit(com.github.javaparser.ast.CompilationUnit,java.lang.Void)"
 - "exceptions": []
@@ -54,9 +54,9 @@
   "name": "[com.github.javaparser.ast.visitor.HashCodeVisitor].visit(com.github.javaparser.ast.ImportDeclaration,java.lang.Void)"
   "params":
   - "name": "arg0"
-    "type": "ImportDeclaration"
+    "type": "com.github.javaparser.ast.ImportDeclaration"
   - "name": "arg1"
-    "type": "Void"
+    "type": "java.lang.Void"
   "return_type": "java.lang.Integer"
   "signature": "[com.github.javaparser.ast.visitor.HashCodeVisitor].visit(com.github.javaparser.ast.ImportDeclaration,java.lang.Void)"
 "language": "jvm"

@@ -5,7 +5,7 @@
   "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].recordDeclaration(java.util.List<ModifierContext>)"
   "params":
   - "name": "arg0"
-    "type": "List<ModifierContext>"
+    "type": "java.util.List<ModifierContext>"
   "return_type": "com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser$RecordDeclarationContext"
   "signature": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].recordDeclaration(java.util.List<ModifierContext>)"
 - "exceptions":
@@ -14,7 +14,7 @@
   "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].constructorDeclaration(java.util.List<ModifierContext>)"
   "params":
   - "name": "arg0"
-    "type": "List<ModifierContext>"
+    "type": "java.util.List<ModifierContext>"
   "return_type": "com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser$ConstructorDeclarationContext"
   "signature": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].constructorDeclaration(java.util.List<ModifierContext>)"
 - "exceptions":
@@ -23,7 +23,7 @@
   "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].interfaceDeclaration(java.util.List<ModifierContext>)"
   "params":
   - "name": "arg0"
-    "type": "List<ModifierContext>"
+    "type": "java.util.List<ModifierContext>"
   "return_type": "com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser$InterfaceDeclarationContext"
   "signature": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].interfaceDeclaration(java.util.List<ModifierContext>)"
 - "exceptions":
@@ -32,7 +32,7 @@
   "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].methodDeclaration(java.util.List<ModifierContext>)"
   "params":
   - "name": "arg0"
-    "type": "List<ModifierContext>"
+    "type": "java.util.List<ModifierContext>"
   "return_type": "com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser$MethodDeclarationContext"
   "signature": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].methodDeclaration(java.util.List<ModifierContext>)"
 - "exceptions":
@@ -41,7 +41,7 @@
   "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].interfaceMethodDeclaration(java.util.List<ModifierContext>)"
   "params":
   - "name": "arg0"
-    "type": "List<ModifierContext>"
+    "type": "java.util.List<ModifierContext>"
   "return_type": "com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser$InterfaceMethodDeclarationContext"
   "signature": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].interfaceMethodDeclaration(java.util.List<ModifierContext>)"
 - "exceptions":
@@ -50,7 +50,7 @@
   "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].enumDeclaration(java.util.List<ModifierContext>)"
   "params":
   - "name": "arg0"
-    "type": "List<ModifierContext>"
+    "type": "java.util.List<ModifierContext>"
   "return_type": "com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser$EnumDeclarationContext"
   "signature": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].enumDeclaration(java.util.List<ModifierContext>)"
 "language": "jvm"

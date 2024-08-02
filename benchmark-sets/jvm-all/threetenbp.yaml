@@ -4,7 +4,7 @@
   "name": "[org.threeten.bp.format.DateTimeFormatter].format(org.threeten.bp.temporal.TemporalAccessor)"
   "params":
   - "name": "arg0"
-    "type": "TemporalAccessor"
+    "type": "org.threeten.bp.temporal.TemporalAccessor"
   "return_type": "java.lang.String"
   "signature": "[org.threeten.bp.format.DateTimeFormatter].format(org.threeten.bp.temporal.TemporalAccessor)"
 - "exceptions": []
@@ -12,9 +12,9 @@
   "name": "[org.threeten.bp.format.DateTimeFormatter].formatTo(org.threeten.bp.temporal.TemporalAccessor,java.lang.Appendable)"
   "params":
   - "name": "arg0"
-    "type": "TemporalAccessor"
+    "type": "org.threeten.bp.temporal.TemporalAccessor"
   - "name": "arg1"
-    "type": "Appendable"
+    "type": "java.lang.Appendable"
   "return_type": "void"
   "signature": "[org.threeten.bp.format.DateTimeFormatter].formatTo(org.threeten.bp.temporal.TemporalAccessor,java.lang.Appendable)"
 - "exceptions": []
@@ -22,7 +22,7 @@
   "name": "[org.threeten.bp.Instant].query(org.threeten.bp.temporal.TemporalQuery<R>)"
   "params":
   - "name": "arg0"
-    "type": "TemporalQuery<R>"
+    "type": "org.threeten.bp.temporal.TemporalQuery<R>"
   "return_type": "java.lang.Object"
   "signature": "[org.threeten.bp.Instant].query(org.threeten.bp.temporal.TemporalQuery<R>)"
 - "exceptions": []
@@ -30,7 +30,7 @@
   "name": "[org.threeten.bp.ZoneOffset].query(org.threeten.bp.temporal.TemporalQuery<R>)"
   "params":
   - "name": "arg0"
-    "type": "TemporalQuery<R>"
+    "type": "org.threeten.bp.temporal.TemporalQuery<R>"
   "return_type": "java.lang.Object"
   "signature": "[org.threeten.bp.ZoneOffset].query(org.threeten.bp.temporal.TemporalQuery<R>)"
 - "exceptions": []
@@ -38,7 +38,7 @@
   "name": "[org.threeten.bp.LocalTime].query(org.threeten.bp.temporal.TemporalQuery<R>)"
   "params":
   - "name": "arg0"
-    "type": "TemporalQuery<R>"
+    "type": "org.threeten.bp.temporal.TemporalQuery<R>"
   "return_type": "java.lang.Object"
   "signature": "[org.threeten.bp.LocalTime].query(org.threeten.bp.temporal.TemporalQuery<R>)"
 - "exceptions": []
@@ -46,9 +46,43 @@
   "name": "[org.threeten.bp.Duration].addTo(org.threeten.bp.temporal.Temporal)"
   "params":
   - "name": "arg0"
-    "type": "Temporal"
+    "type": "org.threeten.bp.temporal.Temporal"
   "return_type": "org.threeten.bp.temporal.Temporal"
   "signature": "[org.threeten.bp.Duration].addTo(org.threeten.bp.temporal.Temporal)"
+- "exceptions": []
+  "is_jvm_static": true
+  "name": "[org.threeten.bp.ZonedDateTime].ofInstant(org.threeten.bp.Instant,org.threeten.bp.ZoneId)"
+  "params":
+  - "name": "arg0"
+    "type": "org.threeten.bp.Instant"
+  - "name": "arg1"
+    "type": "org.threeten.bp.ZoneId"
+  "return_type": "org.threeten.bp.ZonedDateTime"
+  "signature": "[org.threeten.bp.ZonedDateTime].ofInstant(org.threeten.bp.Instant,org.threeten.bp.ZoneId)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.threeten.bp.LocalDate].minusYears(long)"
+  "params":
+  - "name": "arg0"
+    "type": "long"
+  "return_type": "org.threeten.bp.LocalDate"
+  "signature": "[org.threeten.bp.LocalDate].minusYears(long)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.threeten.bp.chrono.JapaneseChronology].dateEpochDay(long)"
+  "params":
+  - "name": "arg0"
+    "type": "long"
+  "return_type": "org.threeten.bp.chrono.JapaneseDate"
+  "signature": "[org.threeten.bp.chrono.JapaneseChronology].dateEpochDay(long)"
+- "exceptions": []
+  "is_jvm_static": false
+  "name": "[org.threeten.bp.chrono.HijrahChronology].dateEpochDay(long)"
+  "params":
+  - "name": "arg0"
+    "type": "long"
+  "return_type": "org.threeten.bp.chrono.HijrahDate"
+  "signature": "[org.threeten.bp.chrono.HijrahChronology].dateEpochDay(long)"
 "language": "jvm"
 "project": "threetenbp"
 "target_name": "ThreetenbpFuzzer"

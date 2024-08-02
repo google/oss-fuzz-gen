@@ -207,6 +207,7 @@ class Evaluator:
 
   def create_ossfuzz_project(self, name: str, target_file: str) -> str:
     """Creates an OSS-Fuzz project with the generated target."""
+    logger.info(f'target file: {target_file}')
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects', name)
     if os.path.exists(generated_project_path):

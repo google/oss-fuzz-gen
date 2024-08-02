@@ -55,7 +55,8 @@ JSON_REPORT = 'report.json'
 TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
 LOG_LEVELS = {'debug', 'info'}
-LOG_FMT = '%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s'
+LOG_FMT = ('%(asctime)s.%(msecs)03d %(levelname)s '
+           '%(module)s - %(funcName)s: %(message)s')
 
 
 class Result:
@@ -102,16 +103,15 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
       benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
 
 
-def get_experiment_configs(
-    args: argparse.Namespace
-) -> list[tuple[benchmarklib.Benchmark, argparse.Namespace]]:
+def prepare_experiment_targets(
+    args: argparse.Namespace) -> list[benchmarklib.Benchmark]:
   """Constructs a list of experiment configs based on the |BENCHMARK_DIR| and
     |args| setting."""
   benchmark_yamls = []
   if args.benchmark_yaml:
     logger.info(
-        f'A benchmark yaml file ({args.benchmark_yaml}) is provided. '
-        f'Will use it and ignore the files in {args.benchmarks_directory}.')
+        'A benchmark yaml file %s is provided. Will use it and ignore '
+        'the files in %s.', args.benchmark_yaml, args.benchmarks_directory)
     benchmark_yamls = [args.benchmark_yaml]
   else:
     if args.generate_benchmarks:
@@ -126,7 +126,7 @@ def get_experiment_configs(
   for benchmark_file in benchmark_yamls:
     experiment_configs.extend(benchmarklib.Benchmark.from_yaml(benchmark_file))
 
-  return [(config, args) for config in experiment_configs]
+  return experiment_configs
 
 
 def has_cache_build_script(project):
@@ -427,24 +427,25 @@ def main():
 
   run_one_experiment.prepare(args.oss_fuzz_dir)
 
-  experiment_configs = get_experiment_configs(args)
+  experiment_targets = prepare_experiment_targets(args)
   experiment_results = []
 
   prepare_cached_images(experiment_configs)
 
   logger.info(f'Running %s experiment(s) in parallels of %s.',
-              len(experiment_configs), str(NUM_EXP))
+              len(experiment_targets), str(NUM_EXP))
+
   if NUM_EXP == 1:
-    for config in experiment_configs:
-      result = run_experiments(*config)
+    for target_benchmark in experiment_targets:
+      result = run_experiments(target_benchmark, args)
       experiment_results.append(result)
       _print_experiment_result(result)
   else:
     experiment_tasks = []
     with Pool(NUM_EXP) as p:
-      for config in experiment_configs:
+      for target_benchmark in experiment_targets:
         experiment_task = p.apply_async(run_experiments,
-                                        config,
+                                        (target_benchmark, args),
                                         callback=_print_experiment_result)
         experiment_tasks.append(experiment_task)
         time.sleep(args.delay)

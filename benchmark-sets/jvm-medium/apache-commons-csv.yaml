@@ -5,9 +5,9 @@
   "name": "[org.apache.commons.csv.CSVParser].<init>(java.io.Reader,org.apache.commons.csv.CSVFormat,long,long)"
   "params":
   - "name": "arg0"
-    "type": "Reader"
+    "type": "java.io.Reader"
   - "name": "arg1"
-    "type": "CSVFormat"
+    "type": "org.apache.commons.csv.CSVFormat"
   - "name": "arg2"
     "type": "long"
   - "name": "arg3"
@@ -20,9 +20,9 @@
   "name": "[org.apache.commons.csv.CSVPrinter].<init>(java.lang.Appendable,org.apache.commons.csv.CSVFormat)"
   "params":
   - "name": "arg0"
-    "type": "Appendable"
+    "type": "java.lang.Appendable"
   - "name": "arg1"
-    "type": "CSVFormat"
+    "type": "org.apache.commons.csv.CSVFormat"
   "return_type": "org.apache.commons.csv.CSVPrinter"
   "signature": "[org.apache.commons.csv.CSVPrinter].<init>(java.lang.Appendable,org.apache.commons.csv.CSVFormat)"
 - "exceptions":
@@ -55,7 +55,7 @@
   "name": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(java.lang.Character)"
   "params":
   - "name": "arg0"
-    "type": "Character"
+    "type": "java.lang.Character"
   "return_type": "org.apache.commons.csv.CSVFormat$Builder"
   "signature": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(java.lang.Character)"
 "language": "jvm"

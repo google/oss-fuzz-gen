@@ -4,9 +4,9 @@
   "name": "[org.apache.commons.jxpath.functions.ConstructorFunction].invoke(org.apache.commons.jxpath.ExpressionContext,java.lang.Object[])"
   "params":
   - "name": "arg0"
-    "type": "ExpressionContext"
+    "type": "org.apache.commons.jxpath.ExpressionContext"
   - "name": "arg1"
-    "type": "Object[]"
+    "type": "java.lang.Object[]"
   "return_type": "java.lang.Object"
   "signature": "[org.apache.commons.jxpath.functions.ConstructorFunction].invoke(org.apache.commons.jxpath.ExpressionContext,java.lang.Object[])"
 - "exceptions": []
@@ -14,11 +14,11 @@
   "name": "[org.apache.commons.jxpath.ClassFunctions].getFunction(java.lang.String,java.lang.String,java.lang.Object[])"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg2"
-    "type": "Object[]"
+    "type": "java.lang.Object[]"
   "return_type": "org.apache.commons.jxpath.Function"
   "signature": "[org.apache.commons.jxpath.ClassFunctions].getFunction(java.lang.String,java.lang.String,java.lang.Object[])"
 - "exceptions": []
@@ -26,11 +26,11 @@
   "name": "[org.apache.commons.jxpath.FunctionLibrary].getFunction(java.lang.String,java.lang.String,java.lang.Object[])"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg1"
-    "type": "String"
+    "type": "java.lang.String"
   - "name": "arg2"
-    "type": "Object[]"
+    "type": "java.lang.Object[]"
   "return_type": "org.apache.commons.jxpath.Function"
   "signature": "[org.apache.commons.jxpath.FunctionLibrary].getFunction(java.lang.String,java.lang.String,java.lang.Object[])"
 - "exceptions": []
@@ -38,9 +38,9 @@
   "name": "[org.apache.commons.jxpath.util.JXPath11CompatibleTypeConverter].convert(java.lang.Object,java.lang.Class)"
   "params":
   - "name": "arg0"
-    "type": "Object"
+    "type": "java.lang.Object"
   - "name": "arg1"
-    "type": "Class"
+    "type": "java.lang.Class"
   "return_type": "java.lang.Object"
   "signature": "[org.apache.commons.jxpath.util.JXPath11CompatibleTypeConverter].convert(java.lang.Object,java.lang.Class)"
 - "exceptions": []
@@ -48,7 +48,7 @@
   "name": "[org.apache.commons.jxpath.ri.NamespaceResolver].getPrefix(java.lang.String)"
   "params":
   - "name": "arg0"
-    "type": "String"
+    "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.apache.commons.jxpath.ri.NamespaceResolver].getPrefix(java.lang.String)"
 - "exceptions": []
@@ -56,7 +56,7 @@
   "name": "[org.apache.commons.jxpath.ri.model.container.ContainerPointer].attributeIterator(org.apache.commons.jxpath.ri.QName)"
   "params":
   - "name": "arg0"
-    "type": "QName"
+    "type": "org.apache.commons.jxpath.ri.QName"
   "return_type": "org.apache.commons.jxpath.ri.model.NodeIterator"
   "signature": "[org.apache.commons.jxpath.ri.model.container.ContainerPointer].attributeIterator(org.apache.commons.jxpath.ri.QName)"
 "language": "jvm"
