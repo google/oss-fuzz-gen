@@ -102,9 +102,8 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
       benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
 
 
-def get_experiment_configs(
-    args: argparse.Namespace
-) -> list[tuple[benchmarklib.Benchmark, argparse.Namespace]]:
+def prepare_experiment_targets(
+    args: argparse.Namespace) -> list[benchmarklib.Benchmark]:
   """Constructs a list of experiment configs based on the |BENCHMARK_DIR| and
     |args| setting."""
   benchmark_yamls = []
@@ -126,7 +125,7 @@ def get_experiment_configs(
   for benchmark_file in benchmark_yamls:
     experiment_configs.extend(benchmarklib.Benchmark.from_yaml(benchmark_file))
 
-  return [(config, args) for config in experiment_configs]
+  return experiment_configs
 
 
 def run_experiments(benchmark: benchmarklib.Benchmark,
@@ -368,22 +367,23 @@ def main():
 
   run_one_experiment.prepare(args.oss_fuzz_dir)
 
-  experiment_configs = get_experiment_configs(args)
+  experiment_targets = prepare_experiment_targets(args)
   experiment_results = []
 
-  logger.info('Running %d experiment(s) in parallels of %d.',
-              len(experiment_configs), NUM_EXP)
+  logger.info(f'Running %s experiment(s) in parallels of %s.',
+              len(experiment_targets), str(NUM_EXP))
+
   if NUM_EXP == 1:
-    for config in experiment_configs:
-      result = run_experiments(*config)
+    for target_benchmark in experiment_targets:
+      result = run_experiments(target_benchmark, args)
       experiment_results.append(result)
       _print_experiment_result(result)
   else:
     experiment_tasks = []
     with Pool(NUM_EXP) as p:
-      for config in experiment_configs:
+      for target_benchmark in experiment_targets:
         experiment_task = p.apply_async(run_experiments,
-                                        config,
+                                        (target_benchmark, args),
                                         callback=_print_experiment_result)
         experiment_tasks.append(experiment_task)
         time.sleep(args.delay)
