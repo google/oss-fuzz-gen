@@ -64,5 +64,5 @@
   "signature": "int pr_data_xfer(char *, size_t)"
 "language": "c"
 "project": "proftpd"
-"target_name": "json_fuzzer"
+"target_name": "fuzzer"
 "target_path": "/src/proftpd/tests/fuzzing/json_fuzzer.c"

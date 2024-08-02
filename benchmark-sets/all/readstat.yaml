@@ -54,5 +54,5 @@
   "signature": "int readstat_value_is_defined_missing(readstat_value_t, readstat_variable_t *)"
 "language": "c++"
 "project": "readstat"
-"target_name": "fuzz_grammar_sav_time"
-"target_path": "/src/readstat/src/fuzz/fuzz_grammar_sav_time.c"
+"target_name": "fuzz_compression_sav"
+"target_path": "/src/readstat/src/fuzz/fuzz_compression_sav.c"
