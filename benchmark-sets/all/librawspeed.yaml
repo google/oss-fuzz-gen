@@ -52,5 +52,5 @@
   "signature": "struct BandData rawspeed::VC5Decompressor::Wavelet::reconstructPass(const Array2DRef<const short>, const Array2DRef<const short>)"
 "language": "c++"
 "project": "librawspeed"
-"target_name": "libFuzzer_dummy_main"
-"target_path": "/src/librawspeed/fuzz/libFuzzer_dummy_main.cpp"
+"target_name": "SonyArw2DecompressorFuzzer"
+"target_path": "/src/librawspeed/fuzz/librawspeed/decompressors/SonyArw2Decompressor.cpp"

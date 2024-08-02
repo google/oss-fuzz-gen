@@ -44,5 +44,5 @@
   "signature": "Error ot::MeshCoP::Joiner::Connect(struct JoinerRouter &)"
 "language": "c++"
 "project": "openthread"
-"target_name": "fuzz_x509csr"
-"target_path": "/src/openthread/third_party/mbedtls/repo/programs/fuzz/fuzz_x509csr.c"
+"target_name": "ot-cli-received-fuzzer"
+"target_path": "/src/openthread/tests/fuzz/cli_received.cpp"
