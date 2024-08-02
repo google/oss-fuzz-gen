@@ -658,6 +658,35 @@ def _select_functions_from_oracles(project: str, limit: int,
   return [all_functions[func] for func in selected_singatures]
 
 
+def populate_benchmarks_using_test_migration(
+    project: str, language: str, limit: int) -> list[benchmarklib.Benchmark]:
+  """Populates benchmarks using tests for test-to-harness conversion."""
+  harnesses, _ = project_src.search_source(project, [], language)
+  harness = pick_one(harnesses)
+  if not harness:
+    logger.error('No fuzz target found in project %s.', project)
+    return []
+  logger.info('Using harness path %s', harness)
+  potential_benchmarks = []
+  test_files = query_introspector_for_tests(project)
+  for test_file in test_files:
+    potential_benchmarks.append(
+        benchmarklib.Benchmark(benchmark_id='cli',
+                               project=project,
+                               language=language,
+                               function_signature='test-file',
+                               function_name='test-file',
+                               return_type='test',
+                               params=[],
+                               exceptions=[],
+                               is_jvm_static=False,
+                               target_path=harness,
+                               preferred_target_name='',
+                               is_test_benchmark=True,
+                               test_file_path=test_file))
+  return potential_benchmarks[:limit]
+
+
 def populate_benchmarks_using_introspector(project: str, language: str,
                                            limit: int,
                                            target_oracles: List[str]):
@@ -666,33 +695,11 @@ def populate_benchmarks_using_introspector(project: str, language: str,
   # If there is any oracle with test-migration then only do this oracle
   # selection, because the benchmarks will have different .yaml structure.
   # TODO(David): clean up benchmark code to make it more flexible for varying
-  # forms of target selectors.
+  # forms of target selectors, and potential mixing both types of target
+  # selectors.
   for target_oracle in target_oracles:
     if 'test-migration' in target_oracle:
-      harnesses, interesting = project_src.search_source(project, [], language)
-      harness = pick_one(harnesses)
-      if not harness:
-        logger.error('No fuzz target found in project %s.', project)
-        return []
-      logger.info('Using harness path %s', harness)
-      potential_benchmarks = []
-      test_files = query_introspector_for_tests(project)
-      for test_file in test_files:
-        potential_benchmarks.append(
-            benchmarklib.Benchmark(benchmark_id='cli',
-                                   project=project,
-                                   language=language,
-                                   function_signature='test-file',
-                                   function_name='test-file',
-                                   return_type='test',
-                                   params=[],
-                                   exceptions=[],
-                                   is_jvm_static=False,
-                                   target_path=harness,
-                                   preferred_target_name='',
-                                   is_test_benchmark=True,
-                                   test_file_path=test_file))
-      return potential_benchmarks[:limit]
+      return populate_benchmarks_using_test_migration(project, language, limit)
 
   functions = _select_functions_from_oracles(project, limit, target_oracles)
 

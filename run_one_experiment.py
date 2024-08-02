@@ -249,19 +249,16 @@ def generate_targets_for_analysis(model: models.LLM,
                 benchmark.test_file_path)
     builder = prompt_builder.TestToHarnessConverter(model, benchmark,
                                                     template_dir)
+  elif benchmark.language == 'jvm':
+    # For Java projects
+    builder = prompt_builder.DefaultJvmTemplateBuilder(model, benchmark,
+                                                       template_dir)
+  elif prompt_builder_to_use == 'CSpecific':
+    builder = prompt_builder.CSpecificBuilder(model, benchmark, template_dir)
   else:
-    if benchmark.language == 'jvm':
-      # For Java projects
-      builder = prompt_builder.DefaultJvmTemplateBuilder(
-          model, benchmark, template_dir)
-    else:
-      if prompt_builder_to_use == 'CSpecific':
-        builder = prompt_builder.CSpecificBuilder(model, benchmark,
-                                                  template_dir)
-      else:
-        # Use default
-        builder = prompt_builder.DefaultTemplateBuilder(model, benchmark,
-                                                        template_dir)
+    # Use default
+    builder = prompt_builder.DefaultTemplateBuilder(model, benchmark,
+                                                    template_dir)
 
   prompt = builder.build(example_pair,
                          project_example_content=project_examples,

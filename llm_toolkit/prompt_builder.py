@@ -1207,8 +1207,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
     prompt_text = prompt_text.replace('{PROGRAMMING_LANGUAGE_TEXT}',
                                       language_prompt)
 
-    language_text = f'''The following header files are used in the test. Please make sure
-  to include the same ones: {included_header_files}'''
+    language_text = f'''The following header files are used in the test. Please
+ make sure to include the same ones: {included_header_files}'''
     prompt_text = prompt_text.replace('{HEADER_FILE_LANG}', language_text)
 
     self._prompt.add_priming(prompt_text)
@@ -1228,7 +1228,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
   def post_process_generated_code(self, generated_code: str) -> str:
     """Adds specific C headers we always want in the harnesses."""
     for header in C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES:
-      generated_code = f'#include <{header}>\n' + generated_code
+      generated_code = f'#include <{header}>\n{generated_code}'
     generated_code += '\n'
     if self.benchmark.language.lower() == 'c':
       generated_code = generated_code.replace(
