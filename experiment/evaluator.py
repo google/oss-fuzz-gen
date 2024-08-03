@@ -53,7 +53,7 @@ class Result:
   is_semantic_error: bool = False
   semantic_error: str = ''
   triage: str = ''
-  full_textcov: textcov.Textcov = dataclasses.field(
+  textcov_diff: textcov.Textcov = dataclasses.field(
       default_factory=textcov.Textcov)
   # Deprecated renamed fields. Keeping them for backward compatibility.
   # TODO https://github.com/google/oss-fuzz-gen/issues/215

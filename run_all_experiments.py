@@ -50,7 +50,7 @@ BENCHMARK_ROOT: str = './benchmark-sets'
 BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
 RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
 GENERATED_BENCHMARK: str = 'generated-benchmark-'
-PROJECT_SUMMARY_JSON = os.path.join(RESULTS_DIR, 'project_coverage_gain.json')
+PROJECT_SUMMARY_JSON = os.path.join(RESULTS_DIR, 'project_summary.json')
 JSON_REPORT = 'report.json'
 TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
@@ -314,8 +314,8 @@ def _print_experiment_result(result: Result):
               f'{result.result}')
 
 
-def _print_experiment_results(results: list[Result], cov_gain: dict[str,
-                                                                    float]):
+def _print_experiment_results(results: list[Result],
+                              cov_gain: dict[str, dict[str, Any]]):
   """Prints the |results| of multiple experiments."""
   logger.info('\n\n**** FINAL RESULTS: ****\n\n')
   for result in results:
@@ -326,7 +326,7 @@ def _print_experiment_results(results: list[Result], cov_gain: dict[str,
 
   logger.info('**** TOTAL COVERAGE GAIN: ****')
   for project in cov_gain:
-    logger.info(f'*{project}: {cov_gain[project]}')
+    logger.info(f'*{project}: {cov_gain[project]["coverage_diff"]}')
 
 
 def _setup_logging(verbose: str = 'info') -> None:
@@ -358,20 +358,23 @@ def add_to_json_report(outdir: str, key: str, value: Any) -> None:
     f.write(json.dumps(json_report))
 
 
-def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
+def _process_total_coverage_gain(
+    results: list[Result]) -> dict[str, dict[str, Any]]:
   """Processes and calculates the total coverage gain for each project."""
   textcov_dict: dict[str, list[textcov.Textcov]] = {}
   for result in results:
+    # TODO(dongge): Do not use a hacky string for result.result when an
+    # exception happened during experiments?
     if not isinstance(result.result, run_one_experiment.AggregatedResult):
       continue
-    cov = result.result.full_textcov
+    cov = result.result.full_textcov_diff
     if not cov:
       continue
     if result.benchmark.project not in textcov_dict:
       textcov_dict[result.benchmark.project] = []
     textcov_dict[result.benchmark.project].append(cov)
 
-  coverage_gain: dict[str, float] = {}
+  coverage_gain: dict[str, dict[str, Any]] = {}
   for project, cov_list in textcov_dict.items():
     total_cov = textcov.Textcov()
     for cov in cov_list:
@@ -387,9 +390,11 @@ def _process_total_coverage_gain(results: list[Result]) -> dict[str, float]:
       # Fail safe when total lines is 0 because of invalid coverage report
       logger.warning(
           'Line coverage information missing from the coverage report.')
-      coverage_gain[project] = 0
+      coverage_gain[project] = {'coverage_diff': 0}
     else:
-      coverage_gain[project] = total_cov.covered_lines / total_lines
+      coverage_gain[project] = {
+          'coverage_diff': total_cov.covered_lines / total_lines
+      }
 
   # Write to summary file
   with open(PROJECT_SUMMARY_JSON, 'w') as f:

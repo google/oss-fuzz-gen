@@ -66,7 +66,7 @@ class AggregatedResult:
   max_coverage_sample: str = ''
   max_coverage_diff_sample: str = ''
   max_coverage_diff_report: str = ''
-  full_textcov: textcov.Textcov = dataclasses.field(
+  full_textcov_diff: textcov.Textcov = dataclasses.field(
       default_factory=textcov.Textcov)
 
   def __str__(self):
@@ -156,8 +156,8 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
       max_coverage_diff_sample = generated_targets[i]
       max_coverage_diff_report = stat.coverage_report_path
 
-    if isinstance(stat.full_textcov, textcov.Textcov):
-      all_textcov.merge(stat.full_textcov)
+    if isinstance(stat.textcov_diff, textcov.Textcov):
+      all_textcov.merge(stat.textcov_diff)
 
   return AggregatedResult(build_success_rate, crash_rate, found_bug,
                           max_coverage, max_line_coverage_diff,

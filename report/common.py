@@ -421,7 +421,7 @@ class Results:
 
     # Retrieve coverage gain information
     coverage_dict = {}
-    summary_path = os.path.join(self._results_dir, 'project_coverage_gain.json')
+    summary_path = os.path.join(self._results_dir, 'project_summary.json')
     if FileSystem(summary_path).exists():
       with FileSystem(summary_path).open() as f:
         try:
