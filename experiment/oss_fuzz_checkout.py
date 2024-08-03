@@ -175,8 +175,10 @@ def get_project_repository(project: str) -> str:
     data = yaml.safe_load(benchmark_file)
     return data.get('main_repo', '')
 
-def get_project_cache_name(project:str) -> str:
+
+def get_project_cache_name(project: str) -> str:
   return f'gcr.io.oss-fuzz.{project}_cache'
 
-def get_project_cache_image_name(project:str, sanitizer: str) -> str:
+
+def get_project_cache_image_name(project: str, sanitizer: str) -> str:
   return f'gcr.io/oss-fuzz/{project}_{sanitizer}_cache'

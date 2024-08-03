@@ -530,7 +530,8 @@ class BuilderRunner:
       logger.info(f'Successfully run {generated_project}.')
 
   def is_image_cached(self, project_name: str, sanitizer: str):
-    cached_image_name = oss_fuzz_checkout.get_project_cache_image_name(project_name, sanitizer)
+    cached_image_name = oss_fuzz_checkout.get_project_cache_image_name(
+        project_name, sanitizer)
     try:
       sp.run(
           ['docker', 'inspect', '--type=image', cached_image_name],
@@ -543,8 +544,10 @@ class BuilderRunner:
     except sp.CalledProcessError:
       return False
 
-  def _rewrite_project_to_cached_project(self, generated_project, sanitizer: str):
-    cached_image_name = oss_fuzz_checkout.get_project_cache_image_name(self.benchmark.project, sanitizer)
+  def _rewrite_project_to_cached_project(self, generated_project,
+                                         sanitizer: str):
+    cached_image_name = oss_fuzz_checkout.get_project_cache_image_name(
+        self.benchmark.project, sanitizer)
 
     generated_project_folder = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                             'projects', generated_project)
@@ -606,7 +609,9 @@ class BuilderRunner:
     dockerfile_to_use = os.path.join(generated_project_folder, 'Dockerfile')
     original_dockerfile = os.path.join(generated_project_folder,
                                        'Dockerfile_original')
-    if (sanitizer == 'address' or sanitizer == 'coverage') and self.is_image_cached(self.benchmark.project, sanitizer):
+    if (sanitizer == 'address' or
+        sanitizer == 'coverage') and self.is_image_cached(
+            self.benchmark.project, sanitizer):
       logger.info('Using cached dockerfile')
       cached_dockerfile = os.path.join(generated_project_folder,
                                        f'Dockerfile_{sanitizer}_cached')
@@ -622,12 +627,12 @@ class BuilderRunner:
     """Builds a target with OSS-Fuzz."""
     logger.info(f'Building {generated_project} with {sanitizer}')
 
-    if ENABLE_CACHING and self.is_image_cached(
-        self.benchmark.project, sanitizer):
+    if ENABLE_CACHING and self.is_image_cached(self.benchmark.project,
+                                               sanitizer):
       logger.info('We should use cached instance.')
       # Rewrite for caching.
       self._rewrite_project_to_cached_project(generated_project, sanitizer)
-      
+
       # Prepare build
       self.prepare_build(sanitizer, generated_project)
 

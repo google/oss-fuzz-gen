@@ -134,7 +134,8 @@ def has_cache_build_script(project):
   return os.path.isfile(cached_build_script)
 
 
-def prepare_image_cache(project):
+def prepare_image_cache(project: str) -> bool:
+  """Prepares cached images of fuzzer build containers."""
   # Only create a cached image if we have a post-build build script
   if not has_cache_build_script(project):
     logger.info('No cached script for %s', project)
@@ -150,19 +151,23 @@ def prepare_image_cache(project):
   sanitizers = ['address', 'coverage']
   for sanitizer in sanitizers:
     # Create cached image by building using OSS-Fuzz with set variable
-    command = ['python3', 'infra/helper.py', 'build_fuzzers', project, '--sanitizer', sanitizer]
+    command = [
+        'python3', 'infra/helper.py', 'build_fuzzers', project, '--sanitizer',
+        sanitizer
+    ]
     try:
       sp.run(command,
-            cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
-            env=adjusted_env,
-            check=True)
+             cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
+             env=adjusted_env,
+             check=True)
     except sp.CalledProcessError:
       logger.info('Failed to build fuzzer for %s.', project)
       return False
 
     # Commit the container to an image
-    cached_image_name = oss_fuzz_checkout.get_project_cache_image_name(project, sanitizer)
-    
+    cached_image_name = oss_fuzz_checkout.get_project_cache_image_name(
+        project, sanitizer)
+
     command = ['docker', 'commit', cached_container_name, cached_image_name]
     try:
       sp.run(command, check=True)
@@ -177,6 +182,7 @@ def prepare_image_cache(project):
       sp.run(command, check=True)
     except sp.CalledProcessError:
       logger.info('Could not rename image.')
+  return True
 
 
 def prepare_cached_images(experiment_targets):
