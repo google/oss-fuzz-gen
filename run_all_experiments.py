@@ -131,55 +131,57 @@ def prepare_experiment_targets(
 
 def has_cache_build_script(project):
   cached_build_script = os.path.join('fuzzer_build_script', project)
-  if os.path.isfile(cached_build_script):
-    return True
-  return False
+  return os.path.isfile(cached_build_script)
 
 
 def prepare_image_cache(project):
   # Only create a cached image if we have a post-build build script
   if not has_cache_build_script(project):
+    logger.info('No cached script for %s', project)
     return False
+  logger.info('%s has a cached build script', project)
 
-  cached_container_name = f'cached_container_{project}'
+  cached_container_name = oss_fuzz_checkout.get_project_cache_name(project)
   adjusted_env = os.environ | {
       'OSS_FUZZ_SAVE_CONTAINERS_NAME': cached_container_name
   }
 
-  # Create cached image by building using OSS-Fuzz with set variable
-  command = ['python3', 'infra/helper.py', 'build_fuzzers', project]
-  try:
-    sp.run(command,
-           cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
-           env=adjusted_env,
-           check=True)
-  except sp.CalledProcessError:
-    logger.info('Failed to build fuzzer for %s.', project)
-    return False
+  logger.info('Creating a cached images')
+  sanitizers = ['address', 'coverage']
+  for sanitizer in sanitizers:
+    # Create cached image by building using OSS-Fuzz with set variable
+    command = ['python3', 'infra/helper.py', 'build_fuzzers', project, '--sanitizer', sanitizer]
+    try:
+      sp.run(command,
+            cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
+            env=adjusted_env,
+            check=True)
+    except sp.CalledProcessError:
+      logger.info('Failed to build fuzzer for %s.', project)
+      return False
 
-  # Commit the container to an image
-  cached_image_name = f'cached_image_{project}'
-  command = ['docker', 'commit', cached_container_name, cached_image_name]
-  try:
-    sp.run(command, check=True)
-  except sp.CalledProcessError:
-    logger.info('Could not rename image.')
-    return False
-  logger.info('Created cached image %s', cached_image_name)
+    # Commit the container to an image
+    cached_image_name = oss_fuzz_checkout.get_project_cache_image_name(project, sanitizer)
+    
+    command = ['docker', 'commit', cached_container_name, cached_image_name]
+    try:
+      sp.run(command, check=True)
+    except sp.CalledProcessError:
+      logger.info('Could not rename image.')
+      return False
+    logger.info('Created cached image %s', cached_image_name)
 
-  # Delete the container we created
-  command = ['docker', 'container', 'rm', cached_container_name]
-  try:
-    sp.run(command, check=True)
-  except sp.CalledProcessError:
-    logger.info('Could not rename image.')
-    return False
-  return True
+    # Delete the container we created
+    command = ['docker', 'container', 'rm', cached_container_name]
+    try:
+      sp.run(command, check=True)
+    except sp.CalledProcessError:
+      logger.info('Could not rename image.')
 
 
-def prepare_cached_images(experiment_configs):
+def prepare_cached_images(experiment_targets):
   all_projects = set()
-  for benchmark, args in experiment_configs:
+  for benchmark in experiment_targets:
     all_projects.add(benchmark.project)
 
   logger.info('Preparing cache for %d projects', len(all_projects))
@@ -430,7 +432,7 @@ def main():
   experiment_targets = prepare_experiment_targets(args)
   experiment_results = []
 
-  prepare_cached_images(experiment_configs)
+  prepare_cached_images(experiment_targets)
 
   logger.info(f'Running %s experiment(s) in parallels of %s.',
               len(experiment_targets), str(NUM_EXP))
