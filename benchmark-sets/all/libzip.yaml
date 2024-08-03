@@ -76,5 +76,5 @@
   "signature": "zip_source_t * zip_source_window_create(zip_source_t *, zip_uint64_t, zip_int64_t, zip_error_t *)"
 "language": "c++"
 "project": "libzip"
-"target_name": "fuzz_main"
-"target_path": "/src/libzip/ossfuzz/fuzz_main.c"
+"target_name": "zip_read_fuzzer"
+"target_path": "/src/libzip/ossfuzz/zip_read_fuzzer.c"

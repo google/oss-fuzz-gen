@@ -60,5 +60,5 @@
   "signature": "int ZMQParserInterface::parseSingleTLVFlow(ndpi_serializer *, u_int32_t)"
 "language": "c++"
 "project": "ntopng"
-"target_name": "onefile"
-"target_path": "/src/ntopng/fuzz/onefile.cpp"
+"target_name": "fuzz_dissect_packet"
+"target_path": "/src/ntopng/fuzz/fuzz_dissect_packet.cpp"

@@ -228,7 +228,7 @@ def generate_targets_for_analysis(model: models.LLM,
 
     Returns a list of folders with the generated artifacts.
     """
-
+  logger.info('Generating targets')
   if benchmark.use_project_examples:
     project_examples = project_targets.generate_data(
         benchmark.project,
@@ -243,17 +243,22 @@ def generate_targets_for_analysis(model: models.LLM,
   else:
     context_info = {}
 
-  if benchmark.language == 'jvm':
+  # If this is a test benchmark then we will use a test prompt builder.
+  if benchmark.is_test_benchmark:
+    logger.info('Generating a target for test case: %s',
+                benchmark.test_file_path)
+    builder = prompt_builder.TestToHarnessConverter(model, benchmark,
+                                                    template_dir)
+  elif benchmark.language == 'jvm':
     # For Java projects
     builder = prompt_builder.DefaultJvmTemplateBuilder(model, benchmark,
                                                        template_dir)
+  elif prompt_builder_to_use == 'CSpecific':
+    builder = prompt_builder.CSpecificBuilder(model, benchmark, template_dir)
   else:
-    if prompt_builder_to_use == 'CSpecific':
-      builder = prompt_builder.CSpecificBuilder(model, benchmark, template_dir)
-    else:
-      # Use default
-      builder = prompt_builder.DefaultTemplateBuilder(model, benchmark,
-                                                      template_dir)
+    # Use default
+    builder = prompt_builder.DefaultTemplateBuilder(model, benchmark,
+                                                    template_dir)
 
   prompt = builder.build(example_pair,
                          project_example_content=project_examples,
