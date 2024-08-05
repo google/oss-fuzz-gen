@@ -772,7 +772,7 @@ class BuilderRunner:
     try:
       sp.run(
           command,
-          #capture_output=True,
+          capture_output=True,
           cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
           stdin=sp.DEVNULL,
           check=True)
