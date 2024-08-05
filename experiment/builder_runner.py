@@ -529,7 +529,9 @@ class BuilderRunner:
     else:
       logger.info(f'Successfully run {generated_project}.')
 
-  def is_image_cached(self, project_name: str, sanitizer: str):
+  def is_image_cached(self, project_name: str, sanitizer: str) -> bool:
+    """Checks whether a project has a cached Docker image post fuzzer
+    building."""
     cached_image_name = oss_fuzz_checkout.get_project_cache_image_name(
         project_name, sanitizer)
     try:
@@ -545,7 +547,8 @@ class BuilderRunner:
       return False
 
   def _rewrite_project_to_cached_project(self, generated_project,
-                                         sanitizer: str):
+                                         sanitizer: str) -> None:
+    """Rewrites Dockerfile of a project to enable cached build scripts."""
     cached_image_name = oss_fuzz_checkout.get_project_cache_image_name(
         self.benchmark.project, sanitizer)
 
@@ -602,6 +605,7 @@ class BuilderRunner:
                 os.path.join(generated_project_folder, 'adjusted_build.sh'))
 
   def prepare_build(self, sanitizer, generated_project):
+    """Prepares the correct Dockerfile to be used for cached builds."""
     generated_project_folder = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                             'projects', generated_project)
     if not ENABLE_CACHING:

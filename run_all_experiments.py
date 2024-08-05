@@ -129,7 +129,8 @@ def prepare_experiment_targets(
   return experiment_configs
 
 
-def has_cache_build_script(project):
+def has_cache_build_script(project: str) -> bool:
+  """Checks if a project has cached fuzzer build script."""
   cached_build_script = os.path.join('fuzzer_build_script', project)
   return os.path.isfile(cached_build_script)
 
@@ -185,7 +186,8 @@ def prepare_image_cache(project: str) -> bool:
   return True
 
 
-def prepare_cached_images(experiment_targets):
+def prepare_cached_images(experiment_targets: list[benchmarklib.Benchmark]) -> None:
+  """Builds cached Docker images for a set of targets."""
   all_projects = set()
   for benchmark in experiment_targets:
     all_projects.add(benchmark.project)
