@@ -152,6 +152,7 @@ $PYTHON run_all_experiments.py \
   --delay "${DELAY:?}" \
   --context \
   --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
+  --temperature-list "${VARY_TEMPERATURE[@]}" \
   --model "$MODEL"
 
 export ret_val=$?

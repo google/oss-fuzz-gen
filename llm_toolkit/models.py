@@ -419,9 +419,8 @@ class VertexAIModel(GoogleModel):
     """Prepares the parameter dictionary for LLM query."""
     return [{
         'temperature':
-            self.temperature_list[index % len(self.temperature_list)] if
-            (self.temperature_list and
-             len(self.temperature_list) > index) else self.temperature,
+            self.temperature_list[index % len(self.temperature_list)]
+            if self.temperature_list else self.temperature,
         'max_output_tokens':
             self._max_output_tokens
     } for index in range(self.num_samples)]
