@@ -186,7 +186,8 @@ def prepare_image_cache(project: str) -> bool:
   return True
 
 
-def prepare_cached_images(experiment_targets: list[benchmarklib.Benchmark]) -> None:
+def prepare_cached_images(
+    experiment_targets: list[benchmarklib.Benchmark]) -> None:
   """Builds cached Docker images for a set of targets."""
   all_projects = set()
   for benchmark in experiment_targets:
