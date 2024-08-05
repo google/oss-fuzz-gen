@@ -441,7 +441,8 @@ def main():
   experiment_targets = prepare_experiment_targets(args)
   experiment_results = []
 
-  prepare_cached_images(experiment_targets)
+  if oss_fuzz_checkout.ENABLE_CACHING:
+    prepare_cached_images(experiment_targets)
 
   logger.info(f'Running %s experiment(s) in parallels of %s.',
               len(experiment_targets), str(NUM_EXP))

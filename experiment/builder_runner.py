@@ -42,7 +42,6 @@ logger = logging.getLogger(__name__)
 
 # The directory in the oss-fuzz image
 JCC_DIR = '/usr/local/bin'
-ENABLE_CACHING = os.getenv('OFG_USE_CACHING', False)
 RUN_TIMEOUT: int = 30
 CLOUD_EXP_MAX_ATTEMPT = 5
 
@@ -561,8 +560,8 @@ class BuilderRunner:
       logger.info('Already converted')
       return
 
-    # Check if there is an original Dockerfile, because we should use that in case,
-    # as otherwise the "Dockerfile" may be a copy of another sanitizer.
+    # Check if there is an original Dockerfile, because we should use that in
+    # case,as otherwise the "Dockerfile" may be a copy of another sanitizer.
     original_dockerfile = os.path.join(generated_project_folder,
                                        'Dockerfile_original')
     if not os.path.isfile(original_dockerfile):
@@ -608,14 +607,12 @@ class BuilderRunner:
     """Prepares the correct Dockerfile to be used for cached builds."""
     generated_project_folder = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                             'projects', generated_project)
-    if not ENABLE_CACHING:
+    if not oss_fuzz_checkout.ENABLE_CACHING:
       return
     dockerfile_to_use = os.path.join(generated_project_folder, 'Dockerfile')
     original_dockerfile = os.path.join(generated_project_folder,
                                        'Dockerfile_original')
-    if (sanitizer == 'address' or
-        sanitizer == 'coverage') and self.is_image_cached(
-            self.benchmark.project, sanitizer):
+    if self.is_image_cached(self.benchmark.project, sanitizer):
       logger.info('Using cached dockerfile')
       cached_dockerfile = os.path.join(generated_project_folder,
                                        f'Dockerfile_{sanitizer}_cached')
@@ -631,8 +628,8 @@ class BuilderRunner:
     """Builds a target with OSS-Fuzz."""
     logger.info(f'Building {generated_project} with {sanitizer}')
 
-    if ENABLE_CACHING and self.is_image_cached(self.benchmark.project,
-                                               sanitizer):
+    if oss_fuzz_checkout.ENABLE_CACHING and self.is_image_cached(
+        self.benchmark.project, sanitizer):
       logger.info('We should use cached instance.')
       # Rewrite for caching.
       self._rewrite_project_to_cached_project(generated_project, sanitizer)
