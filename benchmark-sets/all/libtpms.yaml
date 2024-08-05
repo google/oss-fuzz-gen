@@ -67,5 +67,5 @@
   "signature": "TPM_RESULT TPM_Process_GetCapability(tpm_state_t *, TPM_STORE_BUFFER *, TPM_TAG, uint32_t, TPM_COMMAND_CODE, unsigned char *, TPM_TRANSPORT_INTERNAL *)"
 "language": "c++"
 "project": "libtpms"
-"target_name": "fuzz-main"
-"target_path": "/src/libtpms/tests/fuzz-main.c"
+"target_name": "fuzz"
+"target_path": "/src/libtpms/tests/fuzz.cc"

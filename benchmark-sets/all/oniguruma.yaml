@@ -31,5 +31,5 @@
   "signature": "int onig_scan(regex_t *, const OnigUChar *, const OnigUChar *, OnigRegion *, OnigOptionType, DW_TAG_subroutine_typeInfinite loop *, void *)"
 "language": "c"
 "project": "oniguruma"
-"target_name": "regset"
-"target_path": "/src/oniguruma/harnesses/regset.c"
+"target_name": "fuzzer"
+"target_path": "/src/oniguruma/harnesses/base.c"

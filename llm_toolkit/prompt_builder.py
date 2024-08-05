@@ -1125,3 +1125,112 @@ class CSpecificBuilder(PromptBuilder):
     for header in C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES:
       generated_code = f'#include <{header}>\n' + generated_code
     return generated_code
+
+
+class TestToHarnessConverter(PromptBuilder):
+  """Builder for test-to-harness conversion."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model)
+    self._template_dir = template_dir
+    self.benchmark = benchmark
+
+    # Load templates.
+    self.priming_template_file = self._find_template(
+        template_dir, 'test_to_harness_priming.txt')
+
+  def _find_template(self, template_dir: str, template_name: str) -> str:
+    """Finds template file based on |template_dir|."""
+    preferred_template = os.path.join(template_dir, template_name)
+    # Use the preferred template if it exists.
+    if os.path.isfile(preferred_template):
+      return preferred_template
+    # Fall back to the default template.
+    default_template = os.path.join(DEFAULT_TEMPLATE_DIR, template_name)
+    return default_template
+
+  def _get_template(self, template_file: str) -> str:
+    """Reads the template for prompts."""
+    with open(template_file) as file:
+      return file.read()
+
+  def extract_header_files(self, text):
+    # Include any weird macros defined that does not have any values. This
+    # was found empirically to be valuable.
+    includes_in_test = set()
+    for line in text.split('\n'):
+      if '#include' in line and 'test' not in line:
+        includes_in_test.add(line)
+    return includes_in_test
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    with open(self.priming_template_file, 'r') as f:
+      prompt_text = f.read()
+
+    # Format the priming
+    target_repository = oss_fuzz_checkout.get_project_repository(
+        self.benchmark.project)
+    test_source_code = introspector.query_introspector_source_code(
+        self.benchmark.project,
+        self.benchmark.test_file_path.replace('//', '/'), 0, 9999999)
+
+    included_header_files = self.extract_header_files(test_source_code)
+
+    prompt_text = prompt_text.replace("{TARGET_REPO}", target_repository)
+    prompt_text = prompt_text.replace("{TEST_SOURCE_CODE}", test_source_code)
+    prompt_text = prompt_text.replace('{PROG_LANG}', self.benchmark.language)
+
+    if self.benchmark.language.lower() == 'c':
+      language_prompt = '''This is a C programming language so the harness
+should be written in C. This means the  harness should have the structure:
+<code>
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
+</code>
+Specifically, you should *not* include any `extern "C"` in the harness definition,
+and you should write the harness in pure C.
+      '''
+    else:
+      language_prompt = '''This is a CPP programming language so the harness
+should be written in CPP. This means the  harness should have the structure:
+<code>
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
+</code>
+      '''
+    prompt_text = prompt_text.replace('{PROGRAMMING_LANGUAGE_TEXT}',
+                                      language_prompt)
+
+    language_text = f'''The following header files are used in the test. Please
+ make sure to include the same ones: {included_header_files}'''
+    prompt_text = prompt_text.replace('{HEADER_FILE_LANG}', language_text)
+
+    self._prompt.add_priming(prompt_text)
+    return self._prompt
+
+  def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
+                         error_desc: Optional[str],
+                         errors: list[str]) -> prompts.Prompt:
+    """Prepares the code-fixing prompt."""
+    return self._prompt
+
+  def build_triager_prompt(self, benchmark: Benchmark, driver_code: str,
+                           crash_info: str, crash_func: dict) -> prompts.Prompt:
+    """Builds a triager prompt."""
+    return self._prompt
+
+  def post_process_generated_code(self, generated_code: str) -> str:
+    """Adds specific C headers we always want in the harnesses."""
+    for header in C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES:
+      generated_code = f'#include <{header}>\n{generated_code}'
+    generated_code += '\n'
+    if self.benchmark.language.lower() == 'c':
+      generated_code = generated_code.replace(
+          'extern "C" int LLVMFuzzerTestOneInput', 'int LLVMFuzzerTestOneInput')
+    return generated_code

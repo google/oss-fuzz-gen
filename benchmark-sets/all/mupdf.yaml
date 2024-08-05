@@ -60,5 +60,5 @@
   "signature": "void pdf_save_snapshot(fz_context *, pdf_document *, const char *)"
 "language": "c++"
 "project": "mupdf"
-"target_name": "fuzzer-api"
-"target_path": "/src/mupdf/thirdparty/tesseract/unittest/fuzzers/fuzzer-api.cpp"
+"target_name": "pdf_fuzzer"
+"target_path": "/src/pdf_fuzzer.cc"

@@ -30,5 +30,5 @@
   "signature": "const char * cxxopts::exceptions::exception::what()"
 "language": "c++"
 "project": "cxxopts"
-"target_name": "fuzz"
+"target_name": "cxxopts_fuzz_test"
 "target_path": "/src/cxxopts/test/fuzz.cpp"

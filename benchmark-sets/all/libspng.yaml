@@ -64,5 +64,5 @@
   "signature": "void PngMutator::PngMutator(istream &)"
 "language": "c++"
 "project": "libspng"
-"target_name": "fuzz_main"
-"target_path": "/src/libspng/tests/fuzz_main.c"
+"target_name": "spng_read_fuzzer"
+"target_path": "/src/libspng/tests/spng_read_fuzzer.c"

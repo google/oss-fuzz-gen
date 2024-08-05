@@ -56,5 +56,5 @@
   "signature": "bool flatbuffers::GenerateTextFromTable(const Parser &, const void *, const string &, string *)"
 "language": "c++"
 "project": "flatbuffers"
-"target_name": "monster_debug"
-"target_path": "/src/flatbuffers/tests/fuzzer/monster_debug.cpp"
+"target_name": "monster_fuzzer"
+"target_path": "/src/flatbuffers/tests/fuzzer/flatbuffers_monster_fuzzer.cc"

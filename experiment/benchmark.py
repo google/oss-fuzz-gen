@@ -48,23 +48,26 @@ class Benchmark:
     # Register the custom representer
     yaml.add_representer(str, quoted_string_presenter)
     result = {
-        'project':
-            benchmarks[0].project,
-        'language':
-            benchmarks[0].language,
-        'target_path':
-            benchmarks[0].target_path,
-        'target_name':
-            benchmarks[0].target_name,
-        'functions': [{
-            'signature': b.function_signature,
-            'name': b.function_name,
-            'return_type': b.return_type,
-            'params': b.params,
-            'exceptions': b.exceptions,
-            'is_jvm_static': b.is_jvm_static,
-        } for b in benchmarks],
+        'project': benchmarks[0].project,
+        'language': benchmarks[0].language,
+        'target_path': benchmarks[0].target_path,
+        'target_name': benchmarks[0].target_name,
+        'is_test_benchmark': benchmarks[0].is_test_benchmark,
     }
+    if benchmarks[0].is_test_benchmark:
+      result['test_files'] = [{
+          'test_file_path': b.test_file_path
+      } for b in benchmarks]
+    else:
+      result['functions'] = [{
+          'signature': b.function_signature,
+          'name': b.function_name,
+          'return_type': b.return_type,
+          'params': b.params,
+          'exceptions': b.exceptions,
+          'is_jvm_static': b.is_jvm_static,
+      } for b in benchmarks]
+
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
               'w') as file:
       yaml.dump(result, file, default_flow_style=False, width=sys.maxsize)
@@ -83,32 +86,61 @@ class Benchmark:
     cppify_headers = data.get('cppify_headers', False)
     commit = data.get('commit')
     functions = data.get('functions', [])
-    for function in functions:
-      # Long raw_function_names (particularly for c++ projects) may exceed
-      # filesystem limits on file path/name length when creating WorkDir.
-      max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
-      # Docker tag name cannot exceed 127 characters, and will be suffixed by
-      # '<sample-id>-experiment'.
-      docker_name_len = 127 - len('-03-experiment')
-      max_len = min(max_len, docker_name_len)
-      truncated_id = f'{project_name}-{function.get("name")}'[:max_len]
-      benchmarks.append(
-          cls(truncated_id.lower(),
-              data['project'],
-              data['language'],
-              function.get('signature'),
-              function.get('name'),
-              function.get('return_type'),
-              function.get('params'),
-              function.get('exceptions', []),
-              function.get('is_jvm_static', False),
-              data['target_path'],
-              data.get('target_name'),
-              use_project_examples=use_project_examples,
-              cppify_headers=cppify_headers,
-              commit=commit,
-              use_context=use_context,
-              function_dict=function))
+
+    is_test_benchmark = data.get('is_test_benchmark', False)
+    test_files = data.get('test_files', [])
+    if is_test_benchmark:
+      for test_file in test_files:
+        max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
+        test_file_path = test_file.get('test_file_path')
+        normalized_test_path = test_file_path.replace("/",
+                                                      "_").replace(".", "_")
+        truncated_id = f'{project_name}-{normalized_test_path}'[:max_len]
+
+        benchmarks.append(
+            cls(
+                truncated_id.lower(),
+                data['project'],
+                data['language'],
+                '',
+                '',
+                '',
+                [],
+                [],
+                False,
+                data['target_path'],
+                data.get('target_name', ''),
+                is_test_benchmark=True,
+                test_file_path=test_file_path,
+            ))
+    else:
+      # function type benchmark
+      for function in functions:
+        # Long raw_function_names (particularly for c++ projects) may exceed
+        # filesystem limits on file path/name length when creating WorkDir.
+        max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
+        # Docker tag name cannot exceed 127 characters, and will be suffixed by
+        # '<sample-id>-experiment'.
+        docker_name_len = 127 - len('-03-experiment')
+        max_len = min(max_len, docker_name_len)
+        truncated_id = f'{project_name}-{function.get("name")}'[:max_len]
+        benchmarks.append(
+            cls(truncated_id.lower(),
+                data['project'],
+                data['language'],
+                function.get('signature'),
+                function.get('name'),
+                function.get('return_type'),
+                function.get('params'),
+                function.get('exceptions', []),
+                function.get('is_jvm_static', False),
+                data['target_path'],
+                data.get('target_name'),
+                use_project_examples=use_project_examples,
+                cppify_headers=cppify_headers,
+                commit=commit,
+                use_context=use_context,
+                function_dict=function))
 
     return benchmarks
 
@@ -128,7 +160,9 @@ class Benchmark:
                cppify_headers=False,
                use_context=False,
                commit=None,
-               function_dict: Optional[dict] = None):
+               function_dict: Optional[dict] = None,
+               is_test_benchmark: bool = False,
+               test_file_path: str = ''):
     self.id = benchmark_id
     self.project = project
     self.language = language
@@ -145,6 +179,8 @@ class Benchmark:
     self.use_context = use_context
     self.cppify_headers = cppify_headers
     self.commit = commit
+    self.test_file_path = test_file_path
+    self.is_test_benchmark = is_test_benchmark
 
     if self.language == 'jvm':
       # For java projects, in order to differentiate between overloaded methods

@@ -66,5 +66,5 @@
   "signature": "size_t jxl::test::Roundtrip(const PackedPixelFile &, const struct JXLCompressParams &, struct JXLDecompressParams, ThreadPool *, PackedPixelFile *)"
 "language": "c++"
 "project": "libjxl"
-"target_name": "fuzz_iccprofile_atf"
-"target_path": "/src/libjxl/third_party/skcms/fuzz/fuzz_iccprofile_atf.c"
+"target_name": "cjxl_fuzzer"
+"target_path": "/src/libjxl/tools/cjxl_fuzzer.cc"

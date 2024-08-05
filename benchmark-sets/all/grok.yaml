@@ -42,5 +42,5 @@
   "signature": "bool grk::CodeStreamDecompress::decompressTile()"
 "language": "c++"
 "project": "grok"
-"target_name": "libpng_read_fuzzer"
-"target_path": "/src/grok/thirdparty/libpng/contrib/oss-fuzz/libpng_read_fuzzer.cc"
+"target_name": "grk_decompress_fuzzer"
+"target_path": "/src/grok/tests/fuzzers/grk_decompress_fuzzer.cpp"
