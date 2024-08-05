@@ -471,7 +471,7 @@ class GeminiModel(VertexAIModel):
             threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
         ),
     ]
-    logger.info('%s generating response with config: %s', model.name, config)
+    logger.info('%s generating response with config: %s', self.name, config)
     return model.generate_content(prompt,
                                   generation_config=config,
                                   safety_settings=safety_config).text
