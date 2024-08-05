@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   scan-schedule-push:
-    uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@ba0b4d196d231340e0ae94ae00933c8be0984192" # v1.7.4
+    uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@7ac94f9d40028db4cacf8d53adec6626f5d3d2f7" # v1.8.2
     with:
       # Example of specifying custom arguments
       scan-args: |-
