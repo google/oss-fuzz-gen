@@ -770,12 +770,11 @@ class BuilderRunner:
     ]
 
     try:
-      sp.run(
-          command,
-          capture_output=True,
-          cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
-          stdin=sp.DEVNULL,
-          check=True)
+      sp.run(command,
+             capture_output=True,
+             cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
+             stdin=sp.DEVNULL,
+             check=True)
     except sp.CalledProcessError as e:
       logger.info(f'Failed to generate coverage for {generated_project}:\n'
                   f'{e.stdout}\n'

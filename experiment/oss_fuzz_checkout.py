@@ -178,8 +178,11 @@ def get_project_repository(project: str) -> str:
 
 
 def get_project_cache_name(project: str) -> str:
+  """Gets name of cached container for a project."""
   return f'gcr.io.oss-fuzz.{project}_cache'
 
 
 def get_project_cache_image_name(project: str, sanitizer: str) -> str:
+  """Gets name of cached Docker image for a project and a respective
+  sanitizer."""
   return f'gcr.io/oss-fuzz/{project}_{sanitizer}_cache'
