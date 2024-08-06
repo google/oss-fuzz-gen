@@ -766,7 +766,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     close_statement = ''
     if self.benchmark.need_close:
-      close_statement = ('<item>You MUST invoke the close method of the '
+      close_statement = (
+          '<item>You MUST invoke the close method of the '
           f'{class_name} objects in the finally block after the target method '
           'is invoked.</item>')
 
