@@ -523,6 +523,11 @@ def _is_jvm_static(function: dict) -> bool:
   return function.get('is_static', False)
 
 
+def _need_close(function: dict) -> bool:
+  """Returns the static property of this function for JVM project."""
+  return function.get('need_close', False)
+
+
 def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
   if language == 'jvm':
@@ -712,6 +717,7 @@ def populate_benchmarks_using_test_migration(
                                params=[],
                                exceptions=[],
                                is_jvm_static=False,
+                               need_close=False,
                                target_path=harness,
                                preferred_target_name='',
                                is_test_benchmark=True,
@@ -810,6 +816,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                 _get_arg_names(function, project, language), language),
             exceptions=_get_exceptions(function),
             is_jvm_static=_is_jvm_static(function),
+            need_close=_need_close(function),
             target_path=harness,
             preferred_target_name=target_name,
             function_dict=function))

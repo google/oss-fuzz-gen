@@ -66,6 +66,7 @@ class Benchmark:
           'params': b.params,
           'exceptions': b.exceptions,
           'is_jvm_static': b.is_jvm_static,
+          'need_close': b.need_close,
       } for b in benchmarks]
 
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
@@ -108,6 +109,7 @@ class Benchmark:
                 [],
                 [],
                 False,
+                False,
                 data['target_path'],
                 data.get('target_name', ''),
                 is_test_benchmark=True,
@@ -134,6 +136,7 @@ class Benchmark:
                 function.get('params'),
                 function.get('exceptions', []),
                 function.get('is_jvm_static', False),
+                function.get('need_close', False),
                 data['target_path'],
                 data.get('target_name'),
                 use_project_examples=use_project_examples,
@@ -154,6 +157,7 @@ class Benchmark:
                params: list[dict[str, str]],
                exceptions: list[str],
                is_jvm_static: bool,
+               need_close: bool,
                target_path: str,
                preferred_target_name: Optional[str] = None,
                use_project_examples=True,
@@ -172,6 +176,7 @@ class Benchmark:
     self.params = params
     self.exceptions = exceptions
     self.is_jvm_static = is_jvm_static
+    self.need_close = need_close
     self.function_dict = function_dict
     self.target_path = target_path
     self._preferred_target_name = preferred_target_name

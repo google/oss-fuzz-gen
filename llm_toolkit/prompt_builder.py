@@ -764,6 +764,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
                   'the target method.')
     requirement = requirement.replace('{STATIC_OR_INSTANCE}', creation)
 
+    close_statement = ''
+    if self.benchmark.need_close:
+      close_statement = ('<item>You MUST invoke the close method of the '
+          f'{class_name} objects in the finally block after the target method '
+          'is invoked.</item>')
+
+    requirement = requirement.replace('{NEED_CLOSE}', close_statement)
+
     return requirement
 
   def _format_data_filler(self) -> str:
