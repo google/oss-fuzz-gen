@@ -281,7 +281,7 @@ def _fill_template(args: argparse.Namespace) -> str:
     exp_env_vars['GKE_EXP_LOCAL_INTROSPECTOR'] = 'true'
   exp_env_vars['GKE_EXP_NUM_SAMPLES'] = f'{args.num_samples}'
   exp_env_vars['GKE_EXP_LLM_FIX_LIMIT'] = f'{args.llm_fix_limit}'
-  exp_env_vars['GKE_EXP_VARY_TEMPERATURE'] = f'{args.vary_temperature}'
+  exp_env_vars['GKE_EXP_VARY_TEMPERATURE'] = f'{args.vary_temperature}'.lower()
 
   with open(args.gke_template, 'r') as file:
     yaml_template = file.read()
