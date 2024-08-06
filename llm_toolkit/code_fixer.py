@@ -646,15 +646,13 @@ def _collect_instruction_extern(benchmark: benchmarklib.Benchmark) -> str:
   if not benchmark.needs_extern:
     return ''
   instruction = (
-      'IMPORTANT: The fuzz target ({FUZZ_TARGET_FILE_NAME}) is written in C++, '
-      'whereas the project-under-test ({PROJECT_NAME}) is written in C. All '
-      'headers, functions, and code from the {PROJECT_NAME} project must be '
-      'consistently wrapped in <code>extern "C"</code> to ensure error-free '
+      f'IMPORTANT: The fuzz target ({benchmark.target_path}) is written in C++,'
+      ' whereas the project-under-test ({PROJECT_NAME}) is written in C. All '
+      f'headers, functions, and code from the {benchmark.project} project must '
+      'be consistently wrapped in <code>extern "C"</code> to ensure error-free '
       'compilation and linkage between C and C++:\n<code>\nextern "C" {\n    //'
       'Include necessary C headers, source files, functions, and code here.\n}'
       '\n</code>\n')
-  instruction.replace('{FUZZ_TARGET_FILE_NAME}', benchmark.target_path)
-  instruction.replace('{PROJECT_NAME}', benchmark.project)
   return instruction
 
 
