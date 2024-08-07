@@ -528,99 +528,6 @@ class BuilderRunner:
     else:
       logger.info(f'Successfully run {generated_project}.')
 
-  def _is_image_cached(self, project_name: str, sanitizer: str) -> bool:
-    """Checks whether a project has a cached Docker image post fuzzer
-    building."""
-    cached_image_name = oss_fuzz_checkout.get_project_cache_image_name(
-        project_name, sanitizer)
-    try:
-      sp.run(
-          ['docker', 'inspect', '--type=image', cached_image_name],
-          check=True,
-          stdin=sp.DEVNULL,
-          stdout=sp.DEVNULL,
-          stderr=sp.STDOUT,
-      )
-      return True
-    except sp.CalledProcessError:
-      return False
-
-  def _rewrite_project_to_cached_project(self, generated_project,
-                                         sanitizer: str) -> None:
-    """Rewrites Dockerfile of a project to enable cached build scripts."""
-    cached_image_name = oss_fuzz_checkout.get_project_cache_image_name(
-        self.benchmark.project, sanitizer)
-
-    generated_project_folder = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                            'projects', generated_project)
-
-    cached_dockerfile = os.path.join(generated_project_folder,
-                                     f'Dockerfile_{sanitizer}_cached')
-    if os.path.isfile(cached_dockerfile):
-      logger.info('Already converted')
-      return
-
-    # Check if there is an original Dockerfile, because we should use that in
-    # case,as otherwise the "Dockerfile" may be a copy of another sanitizer.
-    original_dockerfile = os.path.join(generated_project_folder,
-                                       'Dockerfile_original')
-    if not os.path.isfile(original_dockerfile):
-      dockerfile = os.path.join(generated_project_folder, 'Dockerfile')
-      shutil.copy(dockerfile, original_dockerfile)
-
-    with open(original_dockerfile, 'r') as f:
-      docker_content = f.read()
-
-    docker_content = docker_content.replace(
-        'FROM gcr.io/oss-fuzz-base/base-builder', f'FROM {cached_image_name}')
-    docker_content += '\n' + 'COPY adjusted_build.sh $SRC/build.sh\n'
-
-    # Now comment out everything except the first FROM and the last two Dockers
-    from_line = -1
-    copy_fuzzer_line = -1
-    copy_build_line = -1
-
-    for line_idx, line in enumerate(docker_content.split('\n')):
-      if line.startswith('FROM') and from_line == -1:
-        from_line = line_idx
-      if line.startswith('COPY'):
-        copy_fuzzer_line = copy_build_line
-        copy_build_line = line_idx
-
-    lines_to_keep = {from_line, copy_fuzzer_line, copy_build_line}
-    new_content = ''
-    for line_idx, line in enumerate(docker_content.split('\n')):
-      if line_idx not in lines_to_keep:
-        new_content += f'# {line}\n'
-      else:
-        new_content += f'{line}\n'
-
-    # Overwrite the existing one
-    with open(cached_dockerfile, 'w') as f:
-      f.write(new_content)
-
-    # Copy over adjusted build script
-    shutil.copy(os.path.join('fuzzer_build_script', self.benchmark.project),
-                os.path.join(generated_project_folder, 'adjusted_build.sh'))
-
-  def prepare_build(self, sanitizer, generated_project):
-    """Prepares the correct Dockerfile to be used for cached builds."""
-    generated_project_folder = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                            'projects', generated_project)
-    if not oss_fuzz_checkout.ENABLE_CACHING:
-      return
-    dockerfile_to_use = os.path.join(generated_project_folder, 'Dockerfile')
-    original_dockerfile = os.path.join(generated_project_folder,
-                                       'Dockerfile_original')
-    if self._is_image_cached(self.benchmark.project, sanitizer):
-      logger.info('Using cached dockerfile')
-      cached_dockerfile = os.path.join(generated_project_folder,
-                                       f'Dockerfile_{sanitizer}_cached')
-      shutil.copy(cached_dockerfile, dockerfile_to_use)
-    else:
-      logger.info('Using original dockerfile')
-      shutil.copy(original_dockerfile, dockerfile_to_use)
-
   def build_target_local(self,
                          generated_project: str,
                          log_path: str,
@@ -628,14 +535,14 @@ class BuilderRunner:
     """Builds a target with OSS-Fuzz."""
     logger.info(f'Building {generated_project} with {sanitizer}')
 
-    if oss_fuzz_checkout.ENABLE_CACHING and self._is_image_cached(
+    if oss_fuzz_checkout.ENABLE_CACHING and oss_fuzz_checkout.is_image_cached(
         self.benchmark.project, sanitizer):
       logger.info('We should use cached instance.')
       # Rewrite for caching.
-      self._rewrite_project_to_cached_project(generated_project, sanitizer)
+      oss_fuzz_checkout.rewrite_project_to_cached_project(self.benchmark.project, generated_project, sanitizer)
 
       # Prepare build
-      self.prepare_build(sanitizer, generated_project)
+      oss_fuzz_checkout.prepare_build(self.benchmark.project, sanitizer, generated_project)
 
     else:
       logger.info('The project does not have any cache')
