@@ -74,7 +74,7 @@ class BuildResult:
   errors: list[str] = dataclasses.field(default_factory=list)
   log_path: str = ''
 
-  def dict(self):
+  def to_dict(self):
     return dataclasses.asdict(self)
 
 
@@ -97,7 +97,7 @@ class RunResult:
   semantic_check: SemanticCheckResult = SemanticCheckResult(
       SemanticCheckResult.NOT_APPLICABLE)
 
-  def dict(self):
+  def to_dict(self):
     return dataclasses.asdict(self)
 
 

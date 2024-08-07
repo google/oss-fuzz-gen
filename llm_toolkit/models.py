@@ -110,8 +110,7 @@ class LLM:
     """All subclasses."""
     yield cls
     for subcls in cls.__subclasses__():
-      for subsubcls in subcls.all_llm_subclasses():
-        yield subsubcls
+      yield from subcls.all_llm_subclasses()
 
   @classmethod
   def all_llm_names(cls):

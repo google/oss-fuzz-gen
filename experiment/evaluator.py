@@ -64,7 +64,7 @@ class Result:
     if self.driver_fuzz_err:
       self.semantic_error = self.driver_fuzz_err
 
-  def dict(self):
+  def to_dict(self):
     return dataclasses.asdict(self)
 
 
@@ -182,7 +182,7 @@ class _Logger:
 
   def return_result(self, result: Result):
     with open(self._result_path, 'w') as f:
-      json.dump(result.dict(), f)
+      json.dump(result.to_dict(), f)
 
     return result
 
