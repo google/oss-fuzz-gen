@@ -207,7 +207,7 @@ class GPT(LLM):
     try:
       encoder = tiktoken.encoding_for_model(self.name)
     except KeyError:
-      logger.info(f'Could not get a tiktoken encoding for {self.name}.')
+      logger.info('Could not get a tiktoken encoding for %s.', self.name)
       encoder = tiktoken.get_encoding('cl100k_base')
 
     num_tokens = 0
@@ -387,9 +387,9 @@ class GoogleModel(LLM):
       stdout, stderr = proc.communicate()
 
       if proc.returncode != 0:
-        logger.info(f'Failed to generate targets with prompt {prompt.get()}')
-        logger.info(f'stdout: {stdout}')
-        logger.info(f'stderr: {stderr}')
+        logger.info('Failed to generate targets with prompt %s', prompt.get())
+        logger.info('stdout: %s', stdout)
+        logger.info('stderr: %s', stderr)
     finally:
       os.unlink(prompt_path)
 
@@ -431,7 +431,7 @@ class VertexAIModel(GoogleModel):
                 log_output: bool = False) -> None:
     del log_output
     if self.ai_binary:
-      logger.info(f'VertexAI does not use local AI binary: {self.ai_binary}')
+      logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
 
     model = self.get_model()
     parameters_list = self._prepare_parameters()

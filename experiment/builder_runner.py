@@ -198,8 +198,8 @@ class BuilderRunner:
            f'`{self.benchmark.function_signature}` INSIDE FUNCTION '
            '`LLVMFuzzerTestOneInput`.')
       ]
-      logger.info(f'Missing target function: {target_path} does not contain '
-                  f'{self.benchmark.function_signature}')
+      logger.info('Missing target function: %s does not contain %s',
+                  target_path, self.benchmark.function_signature)
 
     return result
 
@@ -503,7 +503,7 @@ class BuilderRunner:
     """Runs a target in the fixed target directory."""
     # If target name is not overridden, use the basename of the target path
     # in the Dockerfile.
-    logger.info(f'Running {generated_project}')
+    logger.info('Running %s', generated_project)
     corpus_dir = self.work_dirs.corpus(benchmark_target_name)
     command = [
         'python3', 'infra/helper.py', 'run_fuzzer', '--corpus-dir', corpus_dir,
@@ -521,20 +521,20 @@ class BuilderRunner:
       try:
         proc.wait(timeout=self.run_timeout + 5)
       except sp.TimeoutExpired:
-        logger.info(f'{generated_project} timed out during fuzzing.')
+        logger.info('%s timed out during fuzzing.', generated_project)
         # Try continuing and parsing the logs even in case of timeout.
 
     if proc.returncode != 0:
-      logger.info(f'********** Failed to run {generated_project}. **********')
+      logger.info('********** Failed to run %s. **********', generated_project)
     else:
-      logger.info(f'Successfully run {generated_project}.')
+      logger.info('Successfully run %s.', generated_project)
 
   def build_target_local(self,
                          generated_project: str,
                          log_path: str,
                          sanitizer: str = 'address') -> bool:
     """Builds a target with OSS-Fuzz."""
-    logger.info(f'Building {generated_project} with {sanitizer}')
+    logger.info('Building %s with %s', generated_project, sanitizer)
     command = [
         'docker', 'build', '-t', f'gcr.io/oss-fuzz/{generated_project}',
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
@@ -549,7 +549,7 @@ class BuilderRunner:
                stderr=sp.STDOUT,
                check=True)
       except sp.CalledProcessError:
-        logger.info(f'Failed to build image for {generated_project}')
+        logger.info('Failed to build image for %s', generated_project)
         return False
 
     outdir = get_build_artifact_dir(generated_project, 'out')
@@ -583,7 +583,7 @@ class BuilderRunner:
         '-v',
         f'{workdir}:/work',
         # Allows jcc to write err.log.
-        # From https://github.com/google/oss-fuzz/blob/090e0d6/infra/base-images/base-builder/jcc/jcc.go#L360
+        # https://github.com/google/oss-fuzz/blob/090e0d6/infra/base-images/base-builder/jcc/jcc.go#L360
         '-v',
         f'{workspacedir}:/workspace',
     ]
@@ -624,12 +624,12 @@ class BuilderRunner:
                stderr=sp.STDOUT,
                check=True)
       except sp.CalledProcessError:
-        logger.info(
-            f'Failed to build fuzzer for {generated_project} with {sanitizer}')
+        logger.info('Failed to build fuzzer for %s with %s', generated_project,
+                    sanitizer)
         return False
 
-    logger.info(
-        f'Successfully build fuzzer for {generated_project} with {sanitizer}')
+    logger.info('Successfully build fuzzer for %s with %s', generated_project,
+                sanitizer)
     return True
 
   def get_coverage_local(
@@ -643,7 +643,7 @@ class BuilderRunner:
                                              log_path,
                                              sanitizer='coverage')
     if not built_coverage:
-      logger.info(f'Failed to make coverage build for {generated_project}')
+      logger.info('Failed to make coverage build for %s', generated_project)
       return None, None
 
     corpus_dir = self.work_dirs.corpus(benchmark_target_name)
@@ -668,9 +668,8 @@ class BuilderRunner:
              stdin=sp.DEVNULL,
              check=True)
     except sp.CalledProcessError as e:
-      logger.info(f'Failed to generate coverage for {generated_project}:\n'
-                  f'{e.stdout}\n'
-                  f'{e.stderr}')
+      logger.info('Failed to generate coverage for %s:\n%s\n%s',
+                  generated_project, e.stdout, e.stderr)
       return None, None
 
     if self.benchmark.language == 'jvm':

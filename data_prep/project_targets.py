@@ -225,7 +225,7 @@ def _match_target_content_signatures(
       cloud_experiment_bucket=cloud_experiment_bucket)
 
   if not source_content[0]:
-    logger.info(f'Error: No fuzz target found for project {project_name}.')
+    logger.info('Error: No fuzz target found for project %s', project_name)
     return {}
 
   target_path_contents = source_content[0]
@@ -235,7 +235,7 @@ def _match_target_content_signatures(
     content = target_path_contents.get(target_path)
     # Some projects' `target_path` is different from the actual
     # path in container, due to relocation in build process.
-    # For example, target_path is /src/hiredis/format_command_fuzzer.c, different
+    # E.g., target_path is /src/hiredis/format_command_fuzzer.c,
     # from the actual path /src/hiredis/fuzzing/format_command_fuzzer.c in
     # https://storage.googleapis.com/oss-fuzz-introspector/hiredis/inspector-report/20240120/summary.json
     if not content:
@@ -332,7 +332,7 @@ def _generate_project_training_data(project_name: str,
     return generate_data(project_name, language, sig_per_target, max_samples,
                          cloud_experiment_bucket)
   except Exception as e:
-    logger.info(f'Project {project_name} failed:\n{e}')
+    logger.info('Project %s failed:\n%s', project_name, e)
     return None
 
 
