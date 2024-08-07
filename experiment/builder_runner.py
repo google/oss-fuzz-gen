@@ -528,7 +528,7 @@ class BuilderRunner:
     else:
       logger.info(f'Successfully run {generated_project}.')
 
-  def is_image_cached(self, project_name: str, sanitizer: str) -> bool:
+  def _is_image_cached(self, project_name: str, sanitizer: str) -> bool:
     """Checks whether a project has a cached Docker image post fuzzer
     building."""
     cached_image_name = oss_fuzz_checkout.get_project_cache_image_name(
@@ -612,7 +612,7 @@ class BuilderRunner:
     dockerfile_to_use = os.path.join(generated_project_folder, 'Dockerfile')
     original_dockerfile = os.path.join(generated_project_folder,
                                        'Dockerfile_original')
-    if self.is_image_cached(self.benchmark.project, sanitizer):
+    if self._is_image_cached(self.benchmark.project, sanitizer):
       logger.info('Using cached dockerfile')
       cached_dockerfile = os.path.join(generated_project_folder,
                                        f'Dockerfile_{sanitizer}_cached')
@@ -628,7 +628,7 @@ class BuilderRunner:
     """Builds a target with OSS-Fuzz."""
     logger.info(f'Building {generated_project} with {sanitizer}')
 
-    if oss_fuzz_checkout.ENABLE_CACHING and self.is_image_cached(
+    if oss_fuzz_checkout.ENABLE_CACHING and self._is_image_cached(
         self.benchmark.project, sanitizer):
       logger.info('We should use cached instance.')
       # Rewrite for caching.

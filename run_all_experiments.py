@@ -149,8 +149,7 @@ def prepare_image_cache(project: str) -> bool:
   }
 
   logger.info('Creating a cached images')
-  sanitizers = ['address', 'coverage']
-  for sanitizer in sanitizers:
+  for sanitizer in ['address', 'coverage']:
     # Create cached image by building using OSS-Fuzz with set variable
     command = [
         'python3', 'infra/helper.py', 'build_fuzzers', project, '--sanitizer',
