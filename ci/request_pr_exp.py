@@ -43,6 +43,7 @@ REQUEST_CPU = 6
 REQUEST_MEM = 30
 NUM_SAMPLES = 2
 NUM_FIXES = 2
+VARY_TEMPERATURE = True
 
 PR_LINK_PREFIX = 'https://github.com/google/oss-fuzz-gen/pull'
 JOB_LINK_PREFIX = ('https://console.cloud.google.com/kubernetes/job/'
@@ -142,13 +143,20 @@ def _parse_args(cmd) -> argparse.Namespace:
       '--num-samples',
       type=int,
       default=NUM_SAMPLES,
-      help='The number of samples to request from LLM, default: {NUM_SAMPLES}')
+      help=f'The number of samples to request from LLM, default: {NUM_SAMPLES}')
   parser.add_argument(
       '-nf',
       '--llm-fix-limit',
       type=int,
       default=NUM_FIXES,
-      help='The number of fixes to request from LLM, default: {NUM_FIXES}')
+      help=f'The number of fixes to request from LLM, default: {NUM_FIXES}')
+  parser.add_argument(
+      '-vt',
+      '--vary-temperature',
+      type=bool,
+      default=VARY_TEMPERATURE,
+      help=('Use different temperatures for each sample, default: '
+            f'{VARY_TEMPERATURE}'))
   args = parser.parse_args(cmd)
 
   assert os.path.isfile(
@@ -273,6 +281,7 @@ def _fill_template(args: argparse.Namespace) -> str:
     exp_env_vars['GKE_EXP_LOCAL_INTROSPECTOR'] = 'true'
   exp_env_vars['GKE_EXP_NUM_SAMPLES'] = f'{args.num_samples}'
   exp_env_vars['GKE_EXP_LLM_FIX_LIMIT'] = f'{args.llm_fix_limit}'
+  exp_env_vars['GKE_EXP_VARY_TEMPERATURE'] = f'{args.vary_temperature}'.lower()
 
   with open(args.gke_template, 'r') as file:
     yaml_template = file.read()

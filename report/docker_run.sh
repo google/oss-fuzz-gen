@@ -118,7 +118,7 @@ fi
 
 if [[ "$VARY_TEMPERATURE" = "true" ]]
 then
-    VARY_TEMPERATURE=(1.0 2.0 0.0 0.5 1.5):
+    VARY_TEMPERATURE=(0.0 0.1 0.2 0.3 0.4)
 else
     VARY_TEMPERATURE=()
 fi
@@ -152,6 +152,7 @@ $PYTHON run_all_experiments.py \
   --delay "${DELAY:?}" \
   --context \
   --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
+  --temperature-list "${VARY_TEMPERATURE[@]}" \
   --model "$MODEL"
 
 export ret_val=$?
