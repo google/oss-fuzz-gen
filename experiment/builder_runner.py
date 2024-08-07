@@ -164,7 +164,7 @@ class BuilderRunner:
       # to match all possible ways to call the constructors
       return True
 
-    pattern = r'(%s\(%s\))' % (name, ','.join([base_arg_regex] * arg_count))
+    pattern = rf'({name}\({", ".join([base_arg_regex] * arg_count)}\))'
     match = re.search(pattern, ''.join(code.splitlines()).replace(' ', ''))
 
     return bool(match)

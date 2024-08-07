@@ -233,8 +233,8 @@ class GPT(LLM):
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
     if self.temperature_list:
-      logger.info(
-          f'OpenAI does not allow temperature list: {self.temperature_list}')
+      logger.info('OpenAI does not allow temperature list: %s',
+                  self.temperature_list)
 
     client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
@@ -293,8 +293,8 @@ class Claude(LLM):
     if self.ai_binary:
       raise ValueError(f'Claude does not use local AI binary: {self.ai_binary}')
     if self.temperature_list:
-      logger.info(
-          f'Claude does not allow temperature list: {self.temperature_list}')
+      logger.info('Claude does not allow temperature list: %s',
+                  self.temperature_list)
 
     vertex_ai_locations = os.getenv('VERTEX_AI_LOCATIONS',
                                     'europe-west1').split(',')
@@ -355,12 +355,12 @@ class GoogleModel(LLM):
                 log_output: bool = False) -> None:
     """Queries a Google LLM and stores results in |response_dir|."""
     if not self.ai_binary:
-      logger.info(
-          f'Error: This model requires a local AI binary: {self.ai_binary}')
+      logger.info('Error: This model requires a local AI binary: %s',
+                  self.ai_binary)
       sys.exit(1)
     if self.temperature_list:
-      logger.info('AI Binary does not implement temperature list: '
-                  f'{self.temperature_list}')
+      logger.info('AI Binary does not implement temperature list: %s',
+                  self.temperature_list)
 
     with tempfile.NamedTemporaryFile(delete=False, mode='w') as f:
       f.write(prompt.get())

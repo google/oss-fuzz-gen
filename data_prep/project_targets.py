@@ -147,12 +147,12 @@ def generate_data(project_name: str,
 
   if target_content_signature_dict:
     logger.info(
-        f'Downloaded human-written fuzz targets of {project_name} from Google'
-        f' Cloud Bucket: {OSS_FUZZ_EXP_BUCKET}.')
+        'Downloaded human-written fuzz targets of %s from Google Cloud Bucket: '
+        '%s', project_name, OSS_FUZZ_EXP_BUCKET)
   else:
     logger.info(
-        f'Failed to download human-written fuzz target of {project_name} '
-        f'from Google Cloud Bucket: {OSS_FUZZ_EXP_BUCKET}.')
+        'Failed to download human-written fuzz target of %s from Google Cloud '
+        'Bucket: %s.', project_name, OSS_FUZZ_EXP_BUCKET)
     logger.info('Will try to build from Google Cloud or local docker image.')
     target_content_signature_dict = _match_target_content_signatures(
         target_funcs, project_name, language, cloud_experiment_bucket)
