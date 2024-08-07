@@ -539,10 +539,12 @@ class BuilderRunner:
         self.benchmark.project, sanitizer):
       logger.info('We should use cached instance.')
       # Rewrite for caching.
-      oss_fuzz_checkout.rewrite_project_to_cached_project(self.benchmark.project, generated_project, sanitizer)
+      oss_fuzz_checkout.rewrite_project_to_cached_project(
+          self.benchmark.project, generated_project, sanitizer)
 
       # Prepare build
-      oss_fuzz_checkout.prepare_build(self.benchmark.project, sanitizer, generated_project)
+      oss_fuzz_checkout.prepare_build(self.benchmark.project, sanitizer,
+                                      generated_project)
 
     else:
       logger.info('The project does not have any cache')

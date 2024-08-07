@@ -18,7 +18,6 @@ import argparse
 import json
 import logging
 import os
-import subprocess as sp
 import sys
 import time
 import traceback

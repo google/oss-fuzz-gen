@@ -189,10 +189,12 @@ def get_project_cache_image_name(project: str, sanitizer: str) -> str:
   sanitizer."""
   return f'gcr.io/oss-fuzz/{project}_{sanitizer}_cache'
 
+
 def has_cache_build_script(project: str) -> bool:
   """Checks if a project has cached fuzzer build script."""
   cached_build_script = os.path.join('fuzzer_build_script', project)
   return os.path.isfile(cached_build_script)
+
 
 def prepare_image_cache(project: str) -> bool:
   """Prepares cached images of fuzzer build containers."""
@@ -215,17 +217,13 @@ def prepare_image_cache(project: str) -> bool:
         sanitizer
     ]
     try:
-      sp.run(command,
-             cwd=OSS_FUZZ_DIR,
-             env=adjusted_env,
-             check=True)
+      sp.run(command, cwd=OSS_FUZZ_DIR, env=adjusted_env, check=True)
     except sp.CalledProcessError:
       logger.info('Failed to build fuzzer for %s.', project)
       return False
 
     # Commit the container to an image
-    cached_image_name = get_project_cache_image_name(
-        project, sanitizer)
+    cached_image_name = get_project_cache_image_name(project, sanitizer)
 
     command = ['docker', 'commit', cached_container_name, cached_image_name]
     try:
@@ -256,11 +254,11 @@ def prepare_cached_images(
   for project in all_projects:
     prepare_image_cache(project)
 
+
 def is_image_cached(project_name: str, sanitizer: str) -> bool:
   """Checks whether a project has a cached Docker image post fuzzer
   building."""
-  cached_image_name = get_project_cache_image_name(
-      project_name, sanitizer)
+  cached_image_name = get_project_cache_image_name(project_name, sanitizer)
   try:
     sp.run(
         ['docker', 'inspect', '--type=image', cached_image_name],
@@ -273,15 +271,14 @@ def is_image_cached(project_name: str, sanitizer: str) -> bool:
   except sp.CalledProcessError:
     return False
 
-def rewrite_project_to_cached_project(project_name: str,
-                                       generated_project: str,
-                                       sanitizer: str) -> None:
-  """Rewrites Dockerfile of a project to enable cached build scripts."""
-  cached_image_name = get_project_cache_image_name(
-      project_name, sanitizer)
 
-  generated_project_folder = os.path.join(OSS_FUZZ_DIR,
-                                          'projects', generated_project)
+def rewrite_project_to_cached_project(project_name: str, generated_project: str,
+                                      sanitizer: str) -> None:
+  """Rewrites Dockerfile of a project to enable cached build scripts."""
+  cached_image_name = get_project_cache_image_name(project_name, sanitizer)
+
+  generated_project_folder = os.path.join(OSS_FUZZ_DIR, 'projects',
+                                          generated_project)
 
   cached_dockerfile = os.path.join(generated_project_folder,
                                    f'Dockerfile_{sanitizer}_cached')
@@ -332,10 +329,11 @@ def rewrite_project_to_cached_project(project_name: str,
   shutil.copy(os.path.join('fuzzer_build_script', project_name),
               os.path.join(generated_project_folder, 'adjusted_build.sh'))
 
+
 def prepare_build(project_name, sanitizer, generated_project):
   """Prepares the correct Dockerfile to be used for cached builds."""
-  generated_project_folder = os.path.join(OSS_FUZZ_DIR,
-                                          'projects', generated_project)
+  generated_project_folder = os.path.join(OSS_FUZZ_DIR, 'projects',
+                                          generated_project)
   if not ENABLE_CACHING:
     return
   dockerfile_to_use = os.path.join(generated_project_folder, 'Dockerfile')
