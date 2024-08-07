@@ -435,7 +435,7 @@ class Results:
     if coverage_dict:
       for project in project_summary_list:
         if project.name in coverage_dict:
-          project.coverage_gain = coverage_dict[project.name]
+          project.coverage_gain = coverage_dict[project.name]['coverage_diff']
 
     return project_summary_list
 
