@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN9OpenBabel18GAMESSOutputFormat12ReadMoleculeEPNS_6OBBaseEPNS_12OBConversionE"
+- "name": "_ZN9OpenBabel18GAMESSOutputFormat12ReadMoleculeEPNS_6OBBaseEPNS_12OBConversionE"
   "params":
   - "name": ""
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool OpenBabel::GAMESSOutputFormat::ReadMolecule(OBBase *, OBConversion *)"
-- "exceptions": []
-  "name": "_ZN9OpenBabel21ChemDrawBinaryXFormat12ReadMoleculeEPNS_6OBBaseEPNS_12OBConversionE"
+- "name": "_ZN9OpenBabel21ChemDrawBinaryXFormat12ReadMoleculeEPNS_6OBBaseEPNS_12OBConversionE"
   "params":
   - "name": ""
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool OpenBabel::ChemDrawBinaryXFormat::ReadMolecule(OBBase *, OBConversion *)"
-- "exceptions": []
-  "name": "_ZN9OpenBabel7OpGen3D2DoEPNS_6OBBaseEPKcPKNSt3__13mapINS5_12basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEESC_NS5_4lessISC_EENSA_INS5_4pairIKSC_SC_EEEEEEPNS_12OBConversionE"
+- "name": "_ZN9OpenBabel7OpGen3D2DoEPNS_6OBBaseEPKcPKNSt3__13mapINS5_12basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEESC_NS5_4lessISC_EENSA_INS5_4pairIKSC_SC_EEEEEEPNS_12OBConversionE"
   "params":
   - "name": ""
     "type": "bool "
@@ -36,8 +33,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool OpenBabel::OpGen3D::Do(OBBase *, const char *, OpMap *, OBConversion *)"
-- "exceptions": []
-  "name": "_ZN9OpenBabel10VASPFormat12ReadMoleculeEPNS_6OBBaseEPNS_12OBConversionE"
+- "name": "_ZN9OpenBabel10VASPFormat12ReadMoleculeEPNS_6OBBaseEPNS_12OBConversionE"
   "params":
   - "name": ""
     "type": "bool "
@@ -47,8 +43,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool OpenBabel::VASPFormat::ReadMolecule(OBBase *, OBConversion *)"
-- "exceptions": []
-  "name": "_ZN9OpenBabel9AliasData14FromNameLookupERNS_5OBMolEj"
+- "name": "_ZN9OpenBabel9AliasData14FromNameLookupERNS_5OBMolEj"
   "params":
   - "name": ""
     "type": "bool "

@@ -1,20 +1,17 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN8opendnp38OContext9OnTxReadyEv"
+- "name": "_ZN8opendnp38OContext9OnTxReadyEv"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "bool"
   "signature": "bool opendnp3::OContext::OnTxReady()"
-- "exceptions": []
-  "name": "_ZZN8opendnp38OContext22RestartSolConfirmTimerEvENK3$_0clEv"
+- "name": "_ZZN8opendnp38OContext22RestartSolConfirmTimerEvENK3$_0clEv"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "void opendnp3::OContext::operator()(const void *)"
-- "exceptions": []
-  "name": "_ZN8opendnp325StateSolicitedConfirmWait19OnNewNonReadRequestERNS_8OContextERKNS_13ParsedRequestE"
+- "name": "_ZN8opendnp325StateSolicitedConfirmWait19OnNewNonReadRequestERNS_8OContextERKNS_13ParsedRequestE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -24,8 +21,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "OutstationState & opendnp3::StateSolicitedConfirmWait::OnNewNonReadRequest(OContext &, const struct ParsedRequest &)"
-- "exceptions": []
-  "name": "_ZN8opendnp320FreezeRequestHandler13ProcessHeaderERKNS_11RangeHeaderE"
+- "name": "_ZN8opendnp320FreezeRequestHandler13ProcessHeaderERKNS_11RangeHeaderE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -33,8 +29,7 @@
     "type": "bool "
   "return_type": "short"
   "signature": "IINField opendnp3::FreezeRequestHandler::ProcessHeader(const RangeHeader &)"
-- "exceptions": []
-  "name": "_ZN8opendnp327StateUnsolicitedConfirmWait19OnNewNonReadRequestERNS_8OContextERKNS_13ParsedRequestE"
+- "name": "_ZN8opendnp327StateUnsolicitedConfirmWait19OnNewNonReadRequestERNS_8OContextERKNS_13ParsedRequestE"
   "params":
   - "name": "this"
     "type": "bool "

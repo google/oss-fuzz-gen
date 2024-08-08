@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "onig_set_meta_char"
+- "name": "onig_set_meta_char"
   "params":
   - "name": "enc"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int onig_set_meta_char(OnigSyntaxType *, unsigned int, OnigCodePoint)"
-- "exceptions": []
-  "name": "onig_scan"
+- "name": "onig_scan"
   "params":
   - "name": "reg"
     "type": "bool "

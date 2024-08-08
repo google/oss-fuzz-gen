@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN2ot3Srp6Server17SetAutoEnableModeEb"
+- "name": "_ZN2ot3Srp6Server17SetAutoEnableModeEb"
   "params":
   - "name": "this"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool"
   "return_type": "void"
   "signature": "void ot::Srp::Server::SetAutoEnableMode(bool)"
-- "exceptions": []
-  "name": "otSrpServerSetAutoEnableMode"
+- "name": "otSrpServerSetAutoEnableMode"
   "params":
   - "name": "aInstance"
     "type": "bool "
@@ -17,15 +15,13 @@
     "type": "bool"
   "return_type": "void"
   "signature": "void otSrpServerSetAutoEnableMode(otInstance *, bool)"
-- "exceptions": []
-  "name": "_ZN2ot12BorderRouter14RoutingManager4StopEv"
+- "name": "_ZN2ot12BorderRouter14RoutingManager4StopEv"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "void ot::BorderRouter::RoutingManager::Stop()"
-- "exceptions": []
-  "name": "otPlatRadioEnergyScanDone"
+- "name": "otPlatRadioEnergyScanDone"
   "params":
   - "name": "aInstance"
     "type": "bool "
@@ -33,8 +29,7 @@
     "type": "char"
   "return_type": "void"
   "signature": "void otPlatRadioEnergyScanDone(otInstance *, int8_t)"
-- "exceptions": []
-  "name": "_ZN2ot7MeshCoP6Joiner7ConnectERNS1_12JoinerRouterE"
+- "name": "_ZN2ot7MeshCoP6Joiner7ConnectERNS1_12JoinerRouterE"
   "params":
   - "name": "this"
     "type": "bool "

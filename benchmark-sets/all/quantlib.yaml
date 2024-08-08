@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "_ZNK8QuantLib6HandleINS_5QuoteEEptEv"
+- "name": "_ZNK8QuantLib6HandleINS_5QuoteEEptEv"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "const shared_ptr<QuantLib::Quote> & QuantLib::Handle<QuantLib::Quote>::operator->(const Handle<QuantLib::Quote> *)"
-- "exceptions": []
-  "name": "_ZN5boost10shared_ptrIN8QuantLib6PayoffEEaSERKS3_"
+- "name": "_ZN5boost10shared_ptrIN8QuantLib6PayoffEEaSERKS3_"
   "params":
   - "name": ""
     "type": "bool "
@@ -15,8 +13,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "shared_ptr<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > & boost::shared_ptr<QuantLib::Payoff>::operator=(shared_ptr<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > *, const shared_ptr<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > &)"
-- "exceptions": []
-  "name": "_ZN8QuantLib6HandleINS_5QuoteEE4LinkD2Ev"
+- "name": "_ZN8QuantLib6HandleINS_5QuoteEE4LinkD2Ev"
   "params":
   - "name": ""
     "type": "bool "

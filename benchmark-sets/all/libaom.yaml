@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "av1_filter_block_plane_vert_opt_chroma"
+- "name": "av1_filter_block_plane_vert_opt_chroma"
   "params":
   - "name": ""
     "type": "bool "
@@ -24,8 +23,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void av1_filter_block_plane_vert_opt_chroma(const const AV1_COMMON *, const const MACROBLOCKD *, const const MACROBLOCKD_PLANE *, const uint32_t, const uint32_t, AV1_DEBLOCKING_PARAMETERS *, TX_SIZE *, int, bool, int)"
-- "exceptions": []
-  "name": "av1_realloc_and_scale_if_required"
+- "name": "av1_realloc_and_scale_if_required"
   "params":
   - "name": ""
     "type": "bool "
@@ -47,8 +45,7 @@
     "type": "bool"
   "return_type": "void"
   "signature": "YV12_BUFFER_CONFIG * av1_realloc_and_scale_if_required(AV1_COMMON *, YV12_BUFFER_CONFIG *, YV12_BUFFER_CONFIG *, const InterpFilter, const int, const _Bool, const _Bool, const int, const _Bool)"
-- "exceptions": []
-  "name": "av1_highbd_dr_prediction_z3_avx2"
+- "name": "av1_highbd_dr_prediction_z3_avx2"
   "params":
   - "name": ""
     "type": "bool "
@@ -72,8 +69,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void av1_highbd_dr_prediction_z3_avx2(uint16_t *, ptrdiff_t, int, int, const uint16_t *, const uint16_t *, int, int, int, int)"
-- "exceptions": []
-  "name": "av1_dr_prediction_z3_sse4_1"
+- "name": "av1_dr_prediction_z3_sse4_1"
   "params":
   - "name": ""
     "type": "bool "
@@ -95,8 +91,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void av1_dr_prediction_z3_sse4_1(uint8_t *, ptrdiff_t, int, int, const uint8_t *, const uint8_t *, int, int, int)"
-- "exceptions": []
-  "name": "av1_resize_and_extend_frame_nonnormative"
+- "name": "av1_resize_and_extend_frame_nonnormative"
   "params":
   - "name": ""
     "type": "bool "

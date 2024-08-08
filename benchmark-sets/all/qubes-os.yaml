@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "process_io"
+- "name": "process_io"
   "params":
   - "name": "req"
     "type": "bool "
   "return_type": "int"
   "signature": "int process_io(const struct process_io_request *)"
-- "exceptions": []
-  "name": "init"
+- "name": "init"
   "params":
   - "name": "xid"
     "type": "int"
@@ -15,8 +13,7 @@
     "type": "bool"
   "return_type": "void"
   "signature": "void init(int, bool)"
-- "exceptions": []
-  "name": "handle_client_data"
+- "name": "handle_client_data"
   "params":
   - "name": "d"
     "type": "bool "
@@ -28,8 +25,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int handle_client_data(struct db_daemon_data *, struct client *, char *, int)"
-- "exceptions": []
-  "name": "load_service_config"
+- "name": "load_service_config"
   "params":
   - "name": "cmd"
     "type": "bool "
@@ -39,8 +35,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int load_service_config(struct qrexec_parsed_command *, int *, char **)"
-- "exceptions": []
-  "name": "execute_qubes_rpc_command"
+- "name": "execute_qubes_rpc_command"
   "params":
   - "name": "cmdline"
     "type": "bool "

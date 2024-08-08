@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "igraph_sparsemat_arpack_rssolve"
+- "name": "igraph_sparsemat_arpack_rssolve"
   "params":
   - "name": "A"
     "type": "bool "

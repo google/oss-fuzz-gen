@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN8Terminal11Framebuffer6resizeEii"
+- "name": "_ZN8Terminal11Framebuffer6resizeEii"
   "params":
   - "name": "this"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void Terminal::Framebuffer::resize(int, int)"
-- "exceptions": []
-  "name": "_ZNK8Terminal8Complete9init_diffB5cxx11Ev"
+- "name": "_ZNK8Terminal8Complete9init_diffB5cxx11Ev"
   "params":
   - "name": "this"
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "string Terminal::Complete::init_diff()"
-- "exceptions": []
-  "name": "_ZNK6Parser6Resize15act_on_terminalEPN8Terminal8EmulatorE"
+- "name": "_ZNK6Parser6Resize15act_on_terminalEPN8Terminal8EmulatorE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -28,8 +25,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void Parser::Resize::act_on_terminal(Emulator *)"
-- "exceptions": []
-  "name": "_ZN8Terminal8Emulator6resizeEmm"
+- "name": "_ZN8Terminal8Emulator6resizeEmm"
   "params":
   - "name": "this"
     "type": "bool "
@@ -39,8 +35,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void Terminal::Emulator::resize(size_t, size_t)"
-- "exceptions": []
-  "name": "_ZNK8Terminal8Complete9diff_fromB5cxx11ERKS0_"
+- "name": "_ZNK8Terminal8Complete9diff_fromB5cxx11ERKS0_"
   "params":
   - "name": "this"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "hoedown_document_render_inline"
+- "name": "hoedown_document_render_inline"
   "params":
   - "name": "doc"
     "type": "bool "

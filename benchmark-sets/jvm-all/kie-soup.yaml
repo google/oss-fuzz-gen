@@ -1,8 +1,5 @@
 "functions":
-- "exceptions":
-  - "java.text.ParseException"
-  "is_jvm_static": false
-  "name": "[org.kie.soup.commons.cron.CronExpression].<init>(java.lang.String)"
+- "name": "[org.kie.soup.commons.cron.CronExpression].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"

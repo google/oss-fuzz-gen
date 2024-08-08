@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "JS_NewTypedArray"
+- "name": "JS_NewTypedArray"
   "params":
   - "name": ""
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "JSValue JS_NewTypedArray(JSContext *, int, JSValue *, JSTypedArrayEnum)"
-- "exceptions": []
-  "name": "JS_ParseJSON"
+- "name": "JS_ParseJSON"
   "params":
   - "name": ""
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "JSValue JS_ParseJSON(JSContext *, const char *, size_t, const char *)"
-- "exceptions": []
-  "name": "JS_JSONStringify"
+- "name": "JS_JSONStringify"
   "params":
   - "name": ""
     "type": "bool "
@@ -42,8 +39,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "JSValue JS_JSONStringify(JSContext *, JSValue, JSValue, JSValue)"
-- "exceptions": []
-  "name": "JS_NewArrayBuffer"
+- "name": "JS_NewArrayBuffer"
   "params":
   - "name": ""
     "type": "bool "
@@ -59,8 +55,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "JSValue JS_NewArrayBuffer(JSContext *, uint8_t *, size_t, JSFreeArrayBufferDataFunc *, void *, BOOL)"
-- "exceptions": []
-  "name": "JS_ParseJSON2"
+- "name": "JS_ParseJSON2"
   "params":
   - "name": ""
     "type": "bool "

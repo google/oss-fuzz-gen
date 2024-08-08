@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "tjEncodeYUV"
+- "name": "tjEncodeYUV"
   "params":
   - "name": "handle"
     "type": "bool "
@@ -22,8 +21,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int tjEncodeYUV(tjhandle, unsigned char *, int, int, int, int, unsigned char *, int, int)"
-- "exceptions": []
-  "name": "tjCompress"
+- "name": "tjCompress"
   "params":
   - "name": "handle"
     "type": "bool "
@@ -49,8 +47,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int tjCompress(tjhandle, unsigned char *, int, int, int, int, unsigned char *, unsigned long *, int, int, int)"
-- "exceptions": []
-  "name": "tjDecompressToYUV"
+- "name": "tjDecompressToYUV"
   "params":
   - "name": "handle"
     "type": "bool "
@@ -64,8 +61,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int tjDecompressToYUV(tjhandle, unsigned char *, unsigned long, unsigned char *, int)"
-- "exceptions": []
-  "name": "tj3SaveImage16"
+- "name": "tj3SaveImage16"
   "params":
   - "name": "handle"
     "type": "bool "
@@ -83,8 +79,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int tj3SaveImage16(tjhandle, const char *, const J16SAMPLE *, int, int, int, int)"
-- "exceptions": []
-  "name": "tjDecompress"
+- "name": "tjDecompress"
   "params":
   - "name": "handle"
     "type": "bool "

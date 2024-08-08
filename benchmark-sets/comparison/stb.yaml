@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "stbi_is_16_bit_from_file"
+- "name": "stbi_is_16_bit_from_file"
   "params":
   - "name": "f"
     "type": "bool "

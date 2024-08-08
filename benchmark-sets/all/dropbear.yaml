@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "mp_lcm"
+- "name": "mp_lcm"
   "params":
   - "name": ""
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "mp_err mp_lcm(const mp_int *, const mp_int *, mp_int *)"
-- "exceptions": []
-  "name": "ltc_ecc_projective_add_point"
+- "name": "ltc_ecc_projective_add_point"
   "params":
   - "name": "P"
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ltc_ecc_projective_add_point(ecc_point *, ecc_point *, ecc_point *, void *, void *)"
-- "exceptions": []
-  "name": "mp_prime_next_prime"
+- "name": "mp_prime_next_prime"
   "params":
   - "name": ""
     "type": "bool "

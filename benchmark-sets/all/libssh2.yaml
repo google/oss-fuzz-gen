@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "libssh2_session_startup"
+- "name": "libssh2_session_startup"
   "params":
   - "name": "session"
     "type": "bool "
@@ -8,15 +7,13 @@
     "type": "int"
   "return_type": "int"
   "signature": "int libssh2_session_startup(LIBSSH2_SESSION *, int)"
-- "exceptions": []
-  "name": "libssh2_channel_forward_cancel"
+- "name": "libssh2_channel_forward_cancel"
   "params":
   - "name": "listener"
     "type": "bool "
   "return_type": "int"
   "signature": "int libssh2_channel_forward_cancel(LIBSSH2_LISTENER *)"
-- "exceptions": []
-  "name": "libssh2_channel_read_ex"
+- "name": "libssh2_channel_read_ex"
   "params":
   - "name": "channel"
     "type": "bool "
@@ -28,8 +25,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "ssize_t libssh2_channel_read_ex(LIBSSH2_CHANNEL *, int, char *, size_t)"
-- "exceptions": []
-  "name": "libssh2_channel_direct_tcpip_ex"
+- "name": "libssh2_channel_direct_tcpip_ex"
   "params":
   - "name": "session"
     "type": "bool "
@@ -43,8 +39,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "LIBSSH2_CHANNEL * libssh2_channel_direct_tcpip_ex(LIBSSH2_SESSION *, const char *, int, const char *, int)"
-- "exceptions": []
-  "name": "libssh2_channel_direct_streamlocal_ex"
+- "name": "libssh2_channel_direct_streamlocal_ex"
   "params":
   - "name": "session"
     "type": "bool "

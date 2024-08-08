@@ -1,15 +1,11 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.bytedeco.javacpp.tools.InfoMap].put(org.bytedeco.javacpp.tools.Info)"
+- "name": "[org.bytedeco.javacpp.tools.InfoMap].put(org.bytedeco.javacpp.tools.Info)"
   "params":
   - "name": "arg0"
     "type": "org.bytedeco.javacpp.tools.Info"
   "return_type": "org.bytedeco.javacpp.tools.InfoMap"
   "signature": "[org.bytedeco.javacpp.tools.InfoMap].put(org.bytedeco.javacpp.tools.Info)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.bytedeco.javacpp.tools.InfoMap].put(int,org.bytedeco.javacpp.tools.Info)"
+- "name": "[org.bytedeco.javacpp.tools.InfoMap].put(int,org.bytedeco.javacpp.tools.Info)"
   "params":
   - "name": "arg0"
     "type": "int"
@@ -17,33 +13,25 @@
     "type": "org.bytedeco.javacpp.tools.Info"
   "return_type": "org.bytedeco.javacpp.tools.InfoMap"
   "signature": "[org.bytedeco.javacpp.tools.InfoMap].put(int,org.bytedeco.javacpp.tools.Info)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.bytedeco.javacpp.ClassProperties].<init>(java.util.Properties)"
+- "name": "[org.bytedeco.javacpp.ClassProperties].<init>(java.util.Properties)"
   "params":
   - "name": "arg0"
     "type": "java.util.Properties"
   "return_type": "org.bytedeco.javacpp.ClassProperties"
   "signature": "[org.bytedeco.javacpp.ClassProperties].<init>(java.util.Properties)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.bytedeco.javacpp.BooleanPointer].<init>(java.nio.ByteBuffer)"
+- "name": "[org.bytedeco.javacpp.BooleanPointer].<init>(java.nio.ByteBuffer)"
   "params":
   - "name": "arg0"
     "type": "java.nio.ByteBuffer"
   "return_type": "org.bytedeco.javacpp.BooleanPointer"
   "signature": "[org.bytedeco.javacpp.BooleanPointer].<init>(java.nio.ByteBuffer)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.bytedeco.javacpp.BytePointer].<init>(java.nio.ByteBuffer)"
+- "name": "[org.bytedeco.javacpp.BytePointer].<init>(java.nio.ByteBuffer)"
   "params":
   - "name": "arg0"
     "type": "java.nio.ByteBuffer"
   "return_type": "org.bytedeco.javacpp.BytePointer"
   "signature": "[org.bytedeco.javacpp.BytePointer].<init>(java.nio.ByteBuffer)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.bytedeco.javacpp.DoublePointer].<init>(java.nio.DoubleBuffer)"
+- "name": "[org.bytedeco.javacpp.DoublePointer].<init>(java.nio.DoubleBuffer)"
   "params":
   - "name": "arg0"
     "type": "java.nio.DoubleBuffer"

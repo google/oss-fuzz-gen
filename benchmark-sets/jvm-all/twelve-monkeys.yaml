@@ -1,41 +1,29 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.twelvemonkeys.util.TimeFormat].<init>(java.lang.String)"
+- "name": "[com.twelvemonkeys.util.TimeFormat].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "com.twelvemonkeys.util.TimeFormat"
   "signature": "[com.twelvemonkeys.util.TimeFormat].<init>(java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.twelvemonkeys.imageio.spi.ProviderInfo].<init>(java.lang.Package)"
+- "name": "[com.twelvemonkeys.imageio.spi.ProviderInfo].<init>(java.lang.Package)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Package"
   "return_type": "com.twelvemonkeys.imageio.spi.ProviderInfo"
   "signature": "[com.twelvemonkeys.imageio.spi.ProviderInfo].<init>(java.lang.Package)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.twelvemonkeys.io.ole2.CompoundDocument].<init>(java.io.File)"
+- "name": "[com.twelvemonkeys.io.ole2.CompoundDocument].<init>(java.io.File)"
   "params":
   - "name": "arg0"
     "type": "java.io.File"
   "return_type": "com.twelvemonkeys.io.ole2.CompoundDocument"
   "signature": "[com.twelvemonkeys.io.ole2.CompoundDocument].<init>(java.io.File)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.twelvemonkeys.io.ole2.CompoundDocument].<init>(javax.imageio.stream.ImageInputStream)"
+- "name": "[com.twelvemonkeys.io.ole2.CompoundDocument].<init>(javax.imageio.stream.ImageInputStream)"
   "params":
   - "name": "arg0"
     "type": "javax.imageio.stream.ImageInputStream"
   "return_type": "com.twelvemonkeys.io.ole2.CompoundDocument"
   "signature": "[com.twelvemonkeys.io.ole2.CompoundDocument].<init>(javax.imageio.stream.ImageInputStream)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.twelvemonkeys.image.ResampleOp].<init>(int,int,java.awt.RenderingHints)"
+- "name": "[com.twelvemonkeys.image.ResampleOp].<init>(int,int,java.awt.RenderingHints)"
   "params":
   - "name": "arg0"
     "type": "int"
@@ -45,9 +33,7 @@
     "type": "java.awt.RenderingHints"
   "return_type": "com.twelvemonkeys.image.ResampleOp"
   "signature": "[com.twelvemonkeys.image.ResampleOp].<init>(int,int,java.awt.RenderingHints)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry].<init>(int,java.lang.Object)"
+- "name": "[com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry].<init>(int,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "int"
@@ -55,17 +41,13 @@
     "type": "java.lang.Object"
   "return_type": "com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry"
   "signature": "[com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry].<init>(int,java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.twelvemonkeys.image.BufferedImageIcon].<init>(java.awt.image.BufferedImage)"
+- "name": "[com.twelvemonkeys.image.BufferedImageIcon].<init>(java.awt.image.BufferedImage)"
   "params":
   - "name": "arg0"
     "type": "java.awt.image.BufferedImage"
   "return_type": "com.twelvemonkeys.image.BufferedImageIcon"
   "signature": "[com.twelvemonkeys.image.BufferedImageIcon].<init>(java.awt.image.BufferedImage)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.twelvemonkeys.image.BrightnessContrastFilter].<init>(float,float)"
+- "name": "[com.twelvemonkeys.image.BrightnessContrastFilter].<init>(float,float)"
   "params":
   - "name": "arg0"
     "type": "float"

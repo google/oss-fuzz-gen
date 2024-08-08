@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_Z16getProgramMemoryPK5TokenS1_RKN9ValueFlow5ValueERK8Settings"
+- "name": "_Z16getProgramMemoryPK5TokenS1_RKN9ValueFlow5ValueERK8Settings"
   "params":
   - "name": "tok"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct ProgramMemory getProgramMemory(const Token *, const Token *, const Value &, const Settings &)"
-- "exceptions": []
-  "name": "_ZN8CppCheck5checkERK15FileWithDetails"
+- "name": "_ZN8CppCheck5checkERK15FileWithDetails"
   "params":
   - "name": "this"
     "type": "bool "
@@ -23,8 +21,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "unsigned int CppCheck::check(const FileWithDetails &)"
-- "exceptions": []
-  "name": "_ZN10CheckOther9runChecksERK9TokenizerP11ErrorLogger"
+- "name": "_ZN10CheckOther9runChecksERK9TokenizerP11ErrorLogger"
   "params":
   - "name": "this"
     "type": "bool "
@@ -34,8 +31,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void CheckOther::runChecks(const Tokenizer &, ErrorLogger *)"
-- "exceptions": []
-  "name": "_ZN8CppCheck5checkERK12FileSettings"
+- "name": "_ZN8CppCheck5checkERK12FileSettings"
   "params":
   - "name": "this"
     "type": "bool "
@@ -43,8 +39,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "unsigned int CppCheck::check(const struct FileSettings &)"
-- "exceptions": []
-  "name": "_ZN8CppCheck10checkClangERK15FileWithDetails"
+- "name": "_ZN8CppCheck10checkClangERK15FileWithDetails"
   "params":
   - "name": "this"
     "type": "bool "

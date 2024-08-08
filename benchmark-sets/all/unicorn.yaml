@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "decNumberLn"
+- "name": "decNumberLn"
   "params":
   - "name": "res"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "decNumber * decNumberLn(decNumber *, const decNumber *, decContext *)"
-- "exceptions": []
-  "name": "decNumberSquareRoot"
+- "name": "decNumberSquareRoot"
   "params":
   - "name": "res"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "decNumber * decNumberSquareRoot(decNumber *, const decNumber *, decContext *)"
-- "exceptions": []
-  "name": "ppc64_v3_handle_mmu_fault"
+- "name": "ppc64_v3_handle_mmu_fault"
   "params":
   - "name": "cpu"
     "type": "bool "
@@ -34,8 +31,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int ppc64_v3_handle_mmu_fault(PowerPCCPU *, vaddr, int, int)"
-- "exceptions": []
-  "name": "decNumberLog10"
+- "name": "decNumberLog10"
   "params":
   - "name": "res"
     "type": "bool "
@@ -45,8 +41,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "decNumber * decNumberLog10(decNumber *, const decNumber *, decContext *)"
-- "exceptions": []
-  "name": "decNumberPower"
+- "name": "decNumberPower"
   "params":
   - "name": "res"
     "type": "bool "

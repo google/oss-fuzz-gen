@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "redisAsyncRead"
+- "name": "redisAsyncRead"
   "params":
   - "name": "ac"
     "type": "bool "
   "return_type": "void"
   "signature": "void redisAsyncRead(redisAsyncContext *)"
-- "exceptions": []
-  "name": "redisCommand"
+- "name": "redisCommand"
   "params":
   - "name": "c"
     "type": "bool "
@@ -15,8 +13,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void * redisCommand(redisContext *, const char *, void)"
-- "exceptions": []
-  "name": "redisCommandArgv"
+- "name": "redisCommandArgv"
   "params":
   - "name": "c"
     "type": "bool "
@@ -28,15 +25,13 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void * redisCommandArgv(redisContext *, int, const char **, const size_t *)"
-- "exceptions": []
-  "name": "redisProcessCallbacks"
+- "name": "redisProcessCallbacks"
   "params":
   - "name": "ac"
     "type": "bool "
   "return_type": "void"
   "signature": "void redisProcessCallbacks(redisAsyncContext *)"
-- "exceptions": []
-  "name": "redisvCommand"
+- "name": "redisvCommand"
   "params":
   - "name": "c"
     "type": "bool "

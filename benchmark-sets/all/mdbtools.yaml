@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "mdb_data_dump"
+- "name": "mdb_data_dump"
   "params":
   - "name": "table"
     "type": "bool "
   "return_type": "void"
   "signature": "void mdb_data_dump(MdbTableDef *)"
-- "exceptions": []
-  "name": "mdb_print_schema"
+- "name": "mdb_print_schema"
   "params":
   - "name": "mdb"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int mdb_print_schema(MdbHandle *, FILE *, char *, char *, guint32)"
-- "exceptions": []
-  "name": "mdb_dump_catalog"
+- "name": "mdb_dump_catalog"
   "params":
   - "name": "mdb"
     "type": "bool "
@@ -30,15 +27,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "void mdb_dump_catalog(MdbHandle *, int)"
-- "exceptions": []
-  "name": "mdb_table_dump"
+- "name": "mdb_table_dump"
   "params":
   - "name": "entry"
     "type": "bool "
   "return_type": "void"
   "signature": "void mdb_table_dump(MdbCatalogEntry *)"
-- "exceptions": []
-  "name": "mdb_read_table_by_name"
+- "name": "mdb_read_table_by_name"
   "params":
   - "name": "mdb"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "xmlXIncludeProcessTreeFlags"
+- "name": "xmlXIncludeProcessTreeFlags"
   "params":
   - "name": "tree"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int xmlXIncludeProcessTreeFlags(xmlNodePtr, int)"
-- "exceptions": []
-  "name": "xmlReadDoc"
+- "name": "xmlReadDoc"
   "params":
   - "name": "cur"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "xmlDocPtr xmlReadDoc(const xmlChar *, const char *, const char *, int)"
-- "exceptions": []
-  "name": "htmlSAXParseFile"
+- "name": "htmlSAXParseFile"
   "params":
   - "name": "filename"
     "type": "bool "
@@ -34,8 +31,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "htmlDocPtr htmlSAXParseFile(const char *, const char *, htmlSAXHandlerPtr, void *)"
-- "exceptions": []
-  "name": "htmlCreateFileParserCtxt"
+- "name": "htmlCreateFileParserCtxt"
   "params":
   - "name": "filename"
     "type": "bool "
@@ -43,8 +39,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "htmlParserCtxtPtr htmlCreateFileParserCtxt(const char *, const char *)"
-- "exceptions": []
-  "name": "xmlACatalogResolvePublic"
+- "name": "xmlACatalogResolvePublic"
   "params":
   - "name": "catal"
     "type": "bool "

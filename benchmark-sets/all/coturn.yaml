@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "stun_set_allocate_response_str"
+- "name": "stun_set_allocate_response_str"
   "params":
   - "name": "buf"
     "type": "bool "
@@ -28,8 +27,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int stun_set_allocate_response_str(uint8_t *, size_t *, stun_tid *, const ioa_addr *, const ioa_addr *, const ioa_addr *, uint32_t, uint32_t, int, const uint8_t *, uint64_t, char *)"
-- "exceptions": []
-  "name": "stun_set_binding_response"
+- "name": "stun_set_binding_response"
   "params":
   - "name": "buf"
     "type": "bool "
@@ -43,8 +41,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int stun_set_binding_response(stun_buffer *, stun_tid *, const ioa_addr *, int, const uint8_t *)"
-- "exceptions": []
-  "name": "stun_set_channel_bind_request"
+- "name": "stun_set_channel_bind_request"
   "params":
   - "name": "buf"
     "type": "bool "
@@ -54,8 +51,7 @@
     "type": "short"
   "return_type": "short"
   "signature": "uint16_t stun_set_channel_bind_request(stun_buffer *, const ioa_addr *, uint16_t)"
-- "exceptions": []
-  "name": "stun_set_allocate_response"
+- "name": "stun_set_allocate_response"
   "params":
   - "name": "buf"
     "type": "bool "
@@ -81,8 +77,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int stun_set_allocate_response(stun_buffer *, stun_tid *, const ioa_addr *, const ioa_addr *, const ioa_addr *, uint32_t, uint32_t, int, const uint8_t *, uint64_t, char *)"
-- "exceptions": []
-  "name": "stun_set_binding_response_str"
+- "name": "stun_set_binding_response_str"
   "params":
   - "name": "buf"
     "type": "bool "

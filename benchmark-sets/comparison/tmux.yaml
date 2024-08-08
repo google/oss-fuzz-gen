@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "cmd_attach_session"
+- "name": "cmd_attach_session"
   "params":
   - "name": "item"
     "type": "bool "

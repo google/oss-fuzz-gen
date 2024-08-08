@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "sqlite3_get_table"
+- "name": "sqlite3_get_table"
   "params":
   - "name": "db"
     "type": "bool "
@@ -16,8 +15,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int sqlite3_get_table(sqlite3 *, const char *, char ***, int *, int *, char **)"
-- "exceptions": []
-  "name": "SSLExp_RecordLayerData"
+- "name": "SSLExp_RecordLayerData"
   "params":
   - "name": "fd"
     "type": "bool "
@@ -31,8 +29,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "SECStatus SSLExp_RecordLayerData(PRFileDesc *, PRUint16, SSLContentType, const PRUint8 *, unsigned int)"
-- "exceptions": []
-  "name": "sqlite3_blob_open"
+- "name": "sqlite3_blob_open"
   "params":
   - "name": "db"
     "type": "bool "
@@ -50,8 +47,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int sqlite3_blob_open(sqlite3 *, const char *, const char *, const char *, sqlite_int64, int, sqlite3_blob **)"
-- "exceptions": []
-  "name": "SSL_ForceHandshakeWithTimeout"
+- "name": "SSL_ForceHandshakeWithTimeout"
   "params":
   - "name": "fd"
     "type": "bool "
@@ -59,8 +55,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "SECStatus SSL_ForceHandshakeWithTimeout(PRFileDesc *, PRIntervalTime)"
-- "exceptions": []
-  "name": "s_open"
+- "name": "s_open"
   "params":
   - "name": "directory"
     "type": "bool "

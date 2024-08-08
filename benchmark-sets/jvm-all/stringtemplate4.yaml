@@ -1,25 +1,17 @@
 "functions":
-- "exceptions":
-  - "org.antlr.runtime.RecognitionException"
-  "is_jvm_static": false
-  "name": "[org.stringtemplate.v4.compiler.CodeGenerator].ifstat(org.antlr.runtime.tree.CommonTree)"
+- "name": "[org.stringtemplate.v4.compiler.CodeGenerator].ifstat(org.antlr.runtime.tree.CommonTree)"
   "params":
   - "name": "arg0"
     "type": "org.antlr.runtime.tree.CommonTree"
   "return_type": "void"
   "signature": "[org.stringtemplate.v4.compiler.CodeGenerator].ifstat(org.antlr.runtime.tree.CommonTree)"
-- "exceptions":
-  - "org.antlr.runtime.RecognitionException"
-  "is_jvm_static": false
-  "name": "[org.stringtemplate.v4.compiler.CodeGenerator].compoundElement(org.antlr.runtime.tree.CommonTree)"
+- "name": "[org.stringtemplate.v4.compiler.CodeGenerator].compoundElement(org.antlr.runtime.tree.CommonTree)"
   "params":
   - "name": "arg0"
     "type": "org.antlr.runtime.tree.CommonTree"
   "return_type": "void"
   "signature": "[org.stringtemplate.v4.compiler.CodeGenerator].compoundElement(org.antlr.runtime.tree.CommonTree)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.stringtemplate.v4.STGroup].defineTemplateOrRegion(java.lang.String,java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token,java.util.List<FormalArgument>)"
+- "name": "[org.stringtemplate.v4.STGroup].defineTemplateOrRegion(java.lang.String,java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token,java.util.List<FormalArgument>)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -35,9 +27,7 @@
     "type": "java.util.List<FormalArgument>"
   "return_type": "void"
   "signature": "[org.stringtemplate.v4.STGroup].defineTemplateOrRegion(java.lang.String,java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token,java.util.List<FormalArgument>)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.stringtemplate.v4.STGroup].defineRegion(java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token)"
+- "name": "[org.stringtemplate.v4.STGroup].defineRegion(java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -49,27 +39,19 @@
     "type": "org.antlr.runtime.Token"
   "return_type": "org.stringtemplate.v4.compiler.CompiledST"
   "signature": "[org.stringtemplate.v4.STGroup].defineRegion(java.lang.String,org.antlr.runtime.Token,java.lang.String,org.antlr.runtime.Token)"
-- "exceptions":
-  - "org.antlr.runtime.RecognitionException"
-  "is_jvm_static": false
-  "name": "[org.stringtemplate.v4.compiler.GroupParser].defaultValuePair(java.util.Map<String,Object>)"
+- "name": "[org.stringtemplate.v4.compiler.GroupParser].defaultValuePair(java.util.Map<String,Object>)"
   "params":
   - "name": "arg0"
     "type": "java.util.Map<String,Object>"
   "return_type": "void"
   "signature": "[org.stringtemplate.v4.compiler.GroupParser].defaultValuePair(java.util.Map<String,Object>)"
-- "exceptions":
-  - "org.antlr.runtime.RecognitionException"
-  "is_jvm_static": false
-  "name": "[org.stringtemplate.v4.compiler.GroupParser].keyValuePair(java.util.Map<String,Object>)"
+- "name": "[org.stringtemplate.v4.compiler.GroupParser].keyValuePair(java.util.Map<String,Object>)"
   "params":
   - "name": "arg0"
     "type": "java.util.Map<String,Object>"
   "return_type": "void"
   "signature": "[org.stringtemplate.v4.compiler.GroupParser].keyValuePair(java.util.Map<String,Object>)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.stringtemplate.v4.ST].<init>(org.stringtemplate.v4.STGroup,java.lang.String)"
+- "name": "[org.stringtemplate.v4.ST].<init>(org.stringtemplate.v4.STGroup,java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "org.stringtemplate.v4.STGroup"
@@ -77,9 +59,7 @@
     "type": "java.lang.String"
   "return_type": "org.stringtemplate.v4.ST"
   "signature": "[org.stringtemplate.v4.ST].<init>(org.stringtemplate.v4.STGroup,java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.stringtemplate.v4.ST].<init>(java.lang.String)"
+- "name": "[org.stringtemplate.v4.ST].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"

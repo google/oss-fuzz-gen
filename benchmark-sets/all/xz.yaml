@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "lzma_index_buffer_encode"
+- "name": "lzma_index_buffer_encode"
   "params":
   - "name": "i"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "lzma_ret lzma_index_buffer_encode(const lzma_index *, uint8_t *, size_t *, size_t)"
-- "exceptions": []
-  "name": "lzma_block_decoder"
+- "name": "lzma_block_decoder"
   "params":
   - "name": "strm"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "lzma_ret lzma_block_decoder(lzma_stream *, lzma_block *)"
-- "exceptions": []
-  "name": "lzma_lzma_encoder_init"
+- "name": "lzma_lzma_encoder_init"
   "params":
   - "name": "next"
     "type": "bool "
@@ -32,8 +29,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "lzma_ret lzma_lzma_encoder_init(lzma_next_coder *, const lzma_allocator *, const lzma_filter_info *)"
-- "exceptions": []
-  "name": "lzma_raw_decoder"
+- "name": "lzma_raw_decoder"
   "params":
   - "name": "strm"
     "type": "bool "
@@ -41,8 +37,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "lzma_ret lzma_raw_decoder(lzma_stream *, const lzma_filter *)"
-- "exceptions": []
-  "name": "lzma_block_encoder"
+- "name": "lzma_block_encoder"
   "params":
   - "name": "strm"
     "type": "bool "

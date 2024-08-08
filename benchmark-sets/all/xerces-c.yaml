@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN11xercesc_3_222UnionDatatypeValidator4initEPNS_17DatatypeValidatorEPNS_14RefHashTableOfINS_12KVStringPairENS_12StringHasherEEEPNS_16RefArrayVectorOfIDsEEPNS_13MemoryManagerE"
+- "name": "_ZN11xercesc_3_222UnionDatatypeValidator4initEPNS_17DatatypeValidatorEPNS_14RefHashTableOfINS_12KVStringPairENS_12StringHasherEEEPNS_16RefArrayVectorOfIDsEEPNS_13MemoryManagerE"
   "params":
   - "name": "this"
     "type": "bool "

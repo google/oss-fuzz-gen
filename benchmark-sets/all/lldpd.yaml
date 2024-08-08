@@ -1,20 +1,17 @@
 "functions":
-- "exceptions": []
-  "name": "lldpd_loop"
+- "name": "lldpd_loop"
   "params":
   - "name": "cfg"
     "type": "bool "
   "return_type": "void"
   "signature": "void lldpd_loop(struct lldpd *)"
-- "exceptions": []
-  "name": "netlink_get_interfaces"
+- "name": "netlink_get_interfaces"
   "params":
   - "name": "cfg"
     "type": "bool "
   "return_type": "void"
   "signature": "struct interfaces_device_list * netlink_get_interfaces(struct lldpd *)"
-- "exceptions": []
-  "name": "levent_iface_subscribe"
+- "name": "levent_iface_subscribe"
   "params":
   - "name": "cfg"
     "type": "bool "
@@ -22,15 +19,13 @@
     "type": "int"
   "return_type": "int"
   "signature": "int levent_iface_subscribe(struct lldpd *, int)"
-- "exceptions": []
-  "name": "interfaces_update"
+- "name": "interfaces_update"
   "params":
   - "name": "cfg"
     "type": "bool "
   "return_type": "void"
   "signature": "void interfaces_update(struct lldpd *)"
-- "exceptions": []
-  "name": "levent_loop"
+- "name": "levent_loop"
   "params":
   - "name": "cfg"
     "type": "bool "

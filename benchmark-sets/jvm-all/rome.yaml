@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.rometools.rome.feed.synd.SyndFeedImpl].<init>(com.rometools.rome.feed.WireFeed,boolean)"
+- "name": "[com.rometools.rome.feed.synd.SyndFeedImpl].<init>(com.rometools.rome.feed.WireFeed,boolean)"
   "params":
   - "name": "arg0"
     "type": "com.rometools.rome.feed.WireFeed"
@@ -9,10 +7,7 @@
     "type": "boolean"
   "return_type": "com.rometools.rome.feed.synd.SyndFeedImpl"
   "signature": "[com.rometools.rome.feed.synd.SyndFeedImpl].<init>(com.rometools.rome.feed.WireFeed,boolean)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.rometools.rome.io.XmlReader].<init>(java.net.URLConnection,java.util.Map)"
+- "name": "[com.rometools.rome.io.XmlReader].<init>(java.net.URLConnection,java.util.Map)"
   "params":
   - "name": "arg0"
     "type": "java.net.URLConnection"
@@ -20,11 +15,7 @@
     "type": "java.util.Map"
   "return_type": "com.rometools.rome.io.XmlReader"
   "signature": "[com.rometools.rome.io.XmlReader].<init>(java.net.URLConnection,java.util.Map)"
-- "exceptions":
-  - "java.io.IOException"
-  - "com.rometools.rome.io.XmlReaderException"
-  "is_jvm_static": false
-  "name": "[com.rometools.rome.io.XmlReader].<init>(java.io.InputStream,java.lang.String,boolean,java.lang.String)"
+- "name": "[com.rometools.rome.io.XmlReader].<init>(java.io.InputStream,java.lang.String,boolean,java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.io.InputStream"
@@ -36,11 +27,7 @@
     "type": "java.lang.String"
   "return_type": "com.rometools.rome.io.XmlReader"
   "signature": "[com.rometools.rome.io.XmlReader].<init>(java.io.InputStream,java.lang.String,boolean,java.lang.String)"
-- "exceptions":
-  - "java.io.IOException"
-  - "com.rometools.rome.io.XmlReaderException"
-  "is_jvm_static": false
-  "name": "[com.rometools.rome.io.XmlReader].<init>(java.io.InputStream,boolean,java.lang.String)"
+- "name": "[com.rometools.rome.io.XmlReader].<init>(java.io.InputStream,boolean,java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.io.InputStream"
@@ -50,9 +37,7 @@
     "type": "java.lang.String"
   "return_type": "com.rometools.rome.io.XmlReader"
   "signature": "[com.rometools.rome.io.XmlReader].<init>(java.io.InputStream,boolean,java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jdom2.Attribute].<init>(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)"
+- "name": "[org.jdom2.Attribute].<init>(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -64,9 +49,7 @@
     "type": "org.jdom2.Namespace"
   "return_type": "org.jdom2.Attribute"
   "signature": "[org.jdom2.Attribute].<init>(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.rometools.rome.feed.impl.PropertyDescriptor].<init>(java.lang.String,java.lang.reflect.Method,java.lang.reflect.Method)"
+- "name": "[com.rometools.rome.feed.impl.PropertyDescriptor].<init>(java.lang.String,java.lang.reflect.Method,java.lang.reflect.Method)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"

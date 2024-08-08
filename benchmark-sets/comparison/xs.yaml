@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "fxLoadModulesRejected"
+- "name": "fxLoadModulesRejected"
   "params":
   - "name": "the"
     "type": "bool "
   "return_type": "void"
   "signature": "void fxLoadModulesRejected(txMachine *)"
-- "exceptions": []
-  "name": "fxAwaitImport"
+- "name": "fxAwaitImport"
   "params":
   - "name": "the"
     "type": "bool "

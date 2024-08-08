@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "init"
+- "name": "init"
   "params":
   - "name": "argc"
     "type": "int"

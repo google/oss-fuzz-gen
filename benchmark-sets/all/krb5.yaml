@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "krb5_gss_store_cred_into"
+- "name": "krb5_gss_store_cred_into"
   "params":
   - "name": "minor_status"
     "type": "bool "
@@ -22,8 +21,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "OM_uint32 krb5_gss_store_cred_into(OM_uint32 *, gss_cred_id_t, gss_cred_usage_t, const gss_OID, OM_uint32, OM_uint32, gss_const_key_value_set_t, gss_OID_set *, gss_cred_usage_t *)"
-- "exceptions": []
-  "name": "iakerb_gss_accept_sec_context"
+- "name": "iakerb_gss_accept_sec_context"
   "params":
   - "name": "minor_status"
     "type": "bool "
@@ -49,8 +47,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "OM_uint32 iakerb_gss_accept_sec_context(OM_uint32 *, gss_ctx_id_t *, gss_cred_id_t, gss_buffer_t, gss_channel_bindings_t, gss_name_t *, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *, gss_cred_id_t *)"
-- "exceptions": []
-  "name": "krb5_gss_store_cred"
+- "name": "krb5_gss_store_cred"
   "params":
   - "name": "minor_status"
     "type": "bool "
@@ -70,8 +67,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "OM_uint32 krb5_gss_store_cred(OM_uint32 *, gss_cred_id_t, gss_cred_usage_t, const gss_OID, OM_uint32, OM_uint32, gss_OID_set *, gss_cred_usage_t *)"
-- "exceptions": []
-  "name": "krb5_gss_acquire_cred_impersonate_name"
+- "name": "krb5_gss_acquire_cred_impersonate_name"
   "params":
   - "name": "minor_status"
     "type": "bool "
@@ -93,8 +89,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "OM_uint32 krb5_gss_acquire_cred_impersonate_name(OM_uint32 *, const gss_cred_id_t, const gss_name_t, OM_uint32, const gss_OID_set, gss_cred_usage_t, gss_cred_id_t *, gss_OID_set *, OM_uint32 *)"
-- "exceptions": []
-  "name": "iakerb_gss_init_sec_context"
+- "name": "iakerb_gss_init_sec_context"
   "params":
   - "name": "minor_status"
     "type": "bool "

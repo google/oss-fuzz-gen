@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "usrsctp_bindx"
+- "name": "usrsctp_bindx"
   "params":
   - "name": ""
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int usrsctp_bindx(struct socket *, struct sockaddr *, int, int)"
-- "exceptions": []
-  "name": "usrsctp_connectx"
+- "name": "usrsctp_connectx"
   "params":
   - "name": ""
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int usrsctp_connectx(struct socket *, const struct sockaddr *, int, sctp_assoc_t *)"
-- "exceptions": []
-  "name": "usrsctp_init_nothreads"
+- "name": "usrsctp_init_nothreads"
   "params":
   - "name": ""
     "type": "short"
@@ -36,8 +33,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void usrsctp_init_nothreads(uint16_t, DW_TAG_subroutine_typeInfinite loop *, DW_TAG_subroutine_typeInfinite loop *)"
-- "exceptions": []
-  "name": "usrsctp_peeloff"
+- "name": "usrsctp_peeloff"
   "params":
   - "name": ""
     "type": "bool "
@@ -45,8 +41,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "struct socket * usrsctp_peeloff(struct socket *, sctp_assoc_t)"
-- "exceptions": []
-  "name": "usrsctp_shutdown"
+- "name": "usrsctp_shutdown"
   "params":
   - "name": ""
     "type": "bool "

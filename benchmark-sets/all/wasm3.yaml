@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "m3_GetFunctionName"
+- "name": "m3_GetFunctionName"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "const char * m3_GetFunctionName(IM3Function)"
-- "exceptions": []
-  "name": "m3_GetMemorySize"
+- "name": "m3_GetMemorySize"
   "params":
   - "name": ""
     "type": "bool "

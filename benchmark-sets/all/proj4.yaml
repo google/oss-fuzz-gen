@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "proj_get_suggested_operation"
+- "name": "proj_get_suggested_operation"
   "params":
   - "name": ""
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int proj_get_suggested_operation(PJ_CONTEXT *, PJ_OBJ_LIST *, PJ_DIRECTION, PJ_COORD)"
-- "exceptions": []
-  "name": "_ZNK5osgeo4proj3crs8BoundCRS9_identifyERKNSt3__110shared_ptrINS0_2io16AuthorityFactoryEEE"
+- "name": "_ZNK5osgeo4proj3crs8BoundCRS9_identifyERKNSt3__110shared_ptrINS0_2io16AuthorityFactoryEEE"
   "params":
   - "name": ""
     "type": "bool "
@@ -23,8 +21,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "list<std::__1::pair<dropbox::oxygen::nn<std::__1::shared_ptr<osgeo::proj::crs::CRS> >, int>, std::__1::allocator<std::__1::pair<dropbox::oxygen::nn<std::__1::shared_ptr<osgeo::proj::crs::CRS> >, int> > > osgeo::proj::crs::BoundCRS::_identify(const AuthorityFactoryPtr &)"
-- "exceptions": []
-  "name": "proj_factors"
+- "name": "proj_factors"
   "params":
   - "name": ""
     "type": "bool "
@@ -34,8 +31,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "PJ_FACTORS proj_factors(PJ *, PJ_COORD)"
-- "exceptions": []
-  "name": "_ZN5osgeo4proj14CurlFileHandle4openEP6pj_ctxPKcymPvPmmPcS6_"
+- "name": "_ZN5osgeo4proj14CurlFileHandle4openEP6pj_ctxPKcymPvPmmPcS6_"
   "params":
   - "name": ""
     "type": "bool "
@@ -57,8 +53,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "PROJ_NETWORK_HANDLE * osgeo::proj::CurlFileHandle::open(PJ_CONTEXT *, const char *, unsigned long long, size_t, void *, size_t *, size_t, char *, void *)"
-- "exceptions": []
-  "name": "proj_crs_create_bound_crs_to_WGS84"
+- "name": "proj_crs_create_bound_crs_to_WGS84"
   "params":
   - "name": ""
     "type": "bool "

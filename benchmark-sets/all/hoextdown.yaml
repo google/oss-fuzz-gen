@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "hoedown_buffer_putf"
+- "name": "hoedown_buffer_putf"
   "params":
   - "name": "buf"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int hoedown_buffer_putf(hoedown_buffer *, FILE *)"
-- "exceptions": []
-  "name": "hoedown_document_render_inline"
+- "name": "hoedown_document_render_inline"
   "params":
   - "name": "doc"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void hoedown_document_render_inline(hoedown_document *, hoedown_buffer *, const uint8_t *, size_t)"
-- "exceptions": []
-  "name": "hoedown_buffer_sets"
+- "name": "hoedown_buffer_sets"
   "params":
   - "name": "buf"
     "type": "bool "
@@ -30,8 +27,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void hoedown_buffer_sets(hoedown_buffer *, const char *)"
-- "exceptions": []
-  "name": "hoedown_buffer_put_utf8"
+- "name": "hoedown_buffer_put_utf8"
   "params":
   - "name": "buf"
     "type": "bool "
@@ -39,8 +35,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void hoedown_buffer_put_utf8(hoedown_buffer *, unsigned int)"
-- "exceptions": []
-  "name": "hoedown_html_toc_renderer_new"
+- "name": "hoedown_html_toc_renderer_new"
   "params":
   - "name": "nesting_level"
     "type": "int"

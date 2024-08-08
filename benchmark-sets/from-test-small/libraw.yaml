@@ -1,4 +1,4 @@
-"is_test_benchmark": true
+"is_test_benchmark": !!bool "true"
 "language": "c++"
 "project": "libraw"
 "target_name": "libraw_fuzzer"

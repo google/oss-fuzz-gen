@@ -1,49 +1,35 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.jfree.chart.internal.CloneUtils].cloneMapValues(java.util.Map<K,V>)"
+- "name": "[org.jfree.chart.internal.CloneUtils].cloneMapValues(java.util.Map<K,V>)"
   "params":
   - "name": "arg0"
     "type": "java.util.Map<K,V>"
   "return_type": "java.util.Map<K,V>"
   "signature": "[org.jfree.chart.internal.CloneUtils].cloneMapValues(java.util.Map<K,V>)"
-- "exceptions":
-  - "java.lang.CloneNotSupportedException"
-  "is_jvm_static": true
-  "name": "[org.jfree.chart.internal.CloneUtils].clone(java.lang.Object)"
+- "name": "[org.jfree.chart.internal.CloneUtils].clone(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
   "return_type": "java.lang.Object"
   "signature": "[org.jfree.chart.internal.CloneUtils].clone(java.lang.Object)"
-- "exceptions":
-  - "java.lang.CloneNotSupportedException"
-  "is_jvm_static": true
-  "name": "[org.jfree.chart.internal.CloneUtils].copy(java.lang.Object)"
+- "name": "[org.jfree.chart.internal.CloneUtils].copy(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
   "return_type": "java.lang.Object"
   "signature": "[org.jfree.chart.internal.CloneUtils].copy(java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.jfree.chart.internal.CloneUtils].cloneList(java.util.List<T>)"
+- "name": "[org.jfree.chart.internal.CloneUtils].cloneList(java.util.List<T>)"
   "params":
   - "name": "arg0"
     "type": "java.util.List<T>"
   "return_type": "java.util.List<T>"
   "signature": "[org.jfree.chart.internal.CloneUtils].cloneList(java.util.List<T>)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jfree.chart.plot.PolarPlot].datasetChanged(org.jfree.data.general.DatasetChangeEvent)"
+- "name": "[org.jfree.chart.plot.PolarPlot].datasetChanged(org.jfree.data.general.DatasetChangeEvent)"
   "params":
   - "name": "arg0"
     "type": "org.jfree.data.general.DatasetChangeEvent"
   "return_type": "void"
   "signature": "[org.jfree.chart.plot.PolarPlot].datasetChanged(org.jfree.data.general.DatasetChangeEvent)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jfree.chart.plot.CombinedDomainXYPlot].datasetChanged(org.jfree.data.general.DatasetChangeEvent)"
+- "name": "[org.jfree.chart.plot.CombinedDomainXYPlot].datasetChanged(org.jfree.data.general.DatasetChangeEvent)"
   "params":
   - "name": "arg0"
     "type": "org.jfree.data.general.DatasetChangeEvent"

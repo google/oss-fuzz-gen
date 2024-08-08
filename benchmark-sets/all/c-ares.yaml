@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ares_getnameinfo"
+- "name": "ares_getnameinfo"
   "params":
   - "name": "channel"
     "type": "bool "
@@ -16,8 +15,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void ares_getnameinfo(ares_channel_t *, const struct sockaddr *, ares_socklen_t, int, ares_nameinfo_callback, void *)"
-- "exceptions": []
-  "name": "ares_dup"
+- "name": "ares_dup"
   "params":
   - "name": "dest"
     "type": "bool "
@@ -25,15 +23,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ares_dup(ares_channel_t **, const ares_channel_t *)"
-- "exceptions": []
-  "name": "ares_init"
+- "name": "ares_init"
   "params":
   - "name": "channelptr"
     "type": "bool "
   "return_type": "int"
   "signature": "int ares_init(ares_channel_t **)"
-- "exceptions": []
-  "name": "ares_getaddrinfo"
+- "name": "ares_getaddrinfo"
   "params":
   - "name": "channel"
     "type": "bool "
@@ -49,8 +45,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void ares_getaddrinfo(ares_channel_t *, const char *, const char *, const struct ares_addrinfo_hints *, ares_addrinfo_callback, void *)"
-- "exceptions": []
-  "name": "ares_init_options"
+- "name": "ares_init_options"
   "params":
   - "name": "channelptr"
     "type": "bool "

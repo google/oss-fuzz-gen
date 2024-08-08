@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "vp9_loopfilter_job"
+- "name": "vp9_loopfilter_job"
   "params":
   - "name": ""
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void vp9_loopfilter_job(LFWorkerData *, VP9LfSync *)"
-- "exceptions": []
-  "name": "vpx_highbd_convolve8_avg_sse2"
+- "name": "vpx_highbd_convolve8_avg_sse2"
   "params":
   - "name": ""
     "type": "bool "
@@ -37,8 +35,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void vpx_highbd_convolve8_avg_sse2(const uint16_t *, ptrdiff_t, uint16_t *, ptrdiff_t, const InterpKernel *, int, int, int, int, int, int, int)"
-- "exceptions": []
-  "name": "vpx_highbd_convolve8_sse2"
+- "name": "vpx_highbd_convolve8_sse2"
   "params":
   - "name": ""
     "type": "bool "
@@ -66,8 +63,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void vpx_highbd_convolve8_sse2(const uint16_t *, ptrdiff_t, uint16_t *, ptrdiff_t, const InterpKernel *, int, int, int, int, int, int, int)"
-- "exceptions": []
-  "name": "vp9_loop_filter_frame"
+- "name": "vp9_loop_filter_frame"
   "params":
   - "name": ""
     "type": "bool "
@@ -83,8 +79,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void vp9_loop_filter_frame(YV12_BUFFER_CONFIG *, VP9_COMMON *, MACROBLOCKD *, int, int, int)"
-- "exceptions": []
-  "name": "vp8_post_proc_frame"
+- "name": "vp8_post_proc_frame"
   "params":
   - "name": ""
     "type": "bool "

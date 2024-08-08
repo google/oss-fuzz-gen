@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.jayway.jsonpath.spi.json.JakartaJsonProvider].setProperty(java.lang.Object,java.lang.Object,java.lang.Object)"
+- "name": "[com.jayway.jsonpath.spi.json.JakartaJsonProvider].setProperty(java.lang.Object,java.lang.Object,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -11,9 +9,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[com.jayway.jsonpath.spi.json.JakartaJsonProvider].setProperty(java.lang.Object,java.lang.Object,java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.jayway.jsonpath.spi.mapper.TapestryMappingProvider].map(java.lang.Object,java.lang.Class<T>,com.jayway.jsonpath.Configuration)"
+- "name": "[com.jayway.jsonpath.spi.mapper.TapestryMappingProvider].map(java.lang.Object,java.lang.Class<T>,com.jayway.jsonpath.Configuration)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -23,9 +19,7 @@
     "type": "com.jayway.jsonpath.Configuration"
   "return_type": "java.lang.Object"
   "signature": "[com.jayway.jsonpath.spi.mapper.TapestryMappingProvider].map(java.lang.Object,java.lang.Class<T>,com.jayway.jsonpath.Configuration)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider].setProperty(java.lang.Object,java.lang.Object,java.lang.Object)"
+- "name": "[com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider].setProperty(java.lang.Object,java.lang.Object,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -35,9 +29,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider].setProperty(java.lang.Object,java.lang.Object,java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.jayway.jsonpath.spi.mapper.JakartaMappingProvider].map(java.lang.Object,java.lang.Class<T>,com.jayway.jsonpath.Configuration)"
+- "name": "[com.jayway.jsonpath.spi.mapper.JakartaMappingProvider].map(java.lang.Object,java.lang.Class<T>,com.jayway.jsonpath.Configuration)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -47,9 +39,7 @@
     "type": "com.jayway.jsonpath.Configuration"
   "return_type": "java.lang.Object"
   "signature": "[com.jayway.jsonpath.spi.mapper.JakartaMappingProvider].map(java.lang.Object,java.lang.Class<T>,com.jayway.jsonpath.Configuration)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.jayway.jsonpath.spi.json.JsonOrgJsonProvider].setProperty(java.lang.Object,java.lang.Object,java.lang.Object)"
+- "name": "[com.jayway.jsonpath.spi.json.JsonOrgJsonProvider].setProperty(java.lang.Object,java.lang.Object,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -59,9 +49,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[com.jayway.jsonpath.spi.json.JsonOrgJsonProvider].setProperty(java.lang.Object,java.lang.Object,java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.jayway.jsonpath.spi.json.GsonJsonProvider].setProperty(java.lang.Object,java.lang.Object,java.lang.Object)"
+- "name": "[com.jayway.jsonpath.spi.json.GsonJsonProvider].setProperty(java.lang.Object,java.lang.Object,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"

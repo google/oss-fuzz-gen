@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.graphbuilder.curve.GroupIterator].<init>(java.lang.String,int)"
+- "name": "[com.graphbuilder.curve.GroupIterator].<init>(java.lang.String,int)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -9,9 +7,7 @@
     "type": "int"
   "return_type": "com.graphbuilder.curve.GroupIterator"
   "signature": "[com.graphbuilder.curve.GroupIterator].<init>(java.lang.String,int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.graphbuilder.curve.NURBSpline].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
+- "name": "[com.graphbuilder.curve.NURBSpline].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
   "params":
   - "name": "arg0"
     "type": "com.graphbuilder.curve.ControlPath"
@@ -19,17 +15,13 @@
     "type": "com.graphbuilder.curve.GroupIterator"
   "return_type": "com.graphbuilder.curve.NURBSpline"
   "signature": "[com.graphbuilder.curve.NURBSpline].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.graphbuilder.curve.GroupIterator].<init>(int[])"
+- "name": "[com.graphbuilder.curve.GroupIterator].<init>(int[])"
   "params":
   - "name": "arg0"
     "type": "int[]"
   "return_type": "com.graphbuilder.curve.GroupIterator"
   "signature": "[com.graphbuilder.curve.GroupIterator].<init>(int[])"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.graphbuilder.curve.BSpline].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
+- "name": "[com.graphbuilder.curve.BSpline].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
   "params":
   - "name": "arg0"
     "type": "com.graphbuilder.curve.ControlPath"
@@ -37,9 +29,7 @@
     "type": "com.graphbuilder.curve.GroupIterator"
   "return_type": "com.graphbuilder.curve.BSpline"
   "signature": "[com.graphbuilder.curve.BSpline].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.graphbuilder.curve.LagrangeCurve].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
+- "name": "[com.graphbuilder.curve.LagrangeCurve].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
   "params":
   - "name": "arg0"
     "type": "com.graphbuilder.curve.ControlPath"
@@ -47,9 +37,7 @@
     "type": "com.graphbuilder.curve.GroupIterator"
   "return_type": "com.graphbuilder.curve.LagrangeCurve"
   "signature": "[com.graphbuilder.curve.LagrangeCurve].<init>(com.graphbuilder.curve.ControlPath,com.graphbuilder.curve.GroupIterator)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.graphbuilder.math.FuncNode].child(int)"
+- "name": "[com.graphbuilder.math.FuncNode].child(int)"
   "params":
   - "name": "arg0"
     "type": "int"

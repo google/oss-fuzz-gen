@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN5resip11SdpContentsaSERKS0_"
+- "name": "_ZN5resip11SdpContentsaSERKS0_"
   "params":
   - "name": ""
     "type": "bool "

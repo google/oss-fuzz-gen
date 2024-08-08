@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "zip_source_winzip_aes_encode"
+- "name": "zip_source_winzip_aes_encode"
   "params":
   - "name": "za"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "zip_source_t * zip_source_winzip_aes_encode(zip_t *, zip_source_t *, zip_uint16_t, int, const char *)"
-- "exceptions": []
-  "name": "zip_file_extra_field_set"
+- "name": "zip_file_extra_field_set"
   "params":
   - "name": "za"
     "type": "bool "
@@ -33,8 +31,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int zip_file_extra_field_set(zip_t *, zip_uint64_t, zip_uint16_t, zip_uint16_t, const zip_uint8_t *, zip_uint16_t, zip_flags_t)"
-- "exceptions": []
-  "name": "zip_file_extra_field_delete_by_id"
+- "name": "zip_file_extra_field_delete_by_id"
   "params":
   - "name": "za"
     "type": "bool "
@@ -48,8 +45,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int zip_file_extra_field_delete_by_id(zip_t *, zip_uint64_t, zip_uint16_t, zip_uint16_t, zip_flags_t)"
-- "exceptions": []
-  "name": "zip_file_replace"
+- "name": "zip_file_replace"
   "params":
   - "name": "za"
     "type": "bool "
@@ -61,8 +57,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int zip_file_replace(zip_t *, zip_uint64_t, zip_source_t *, zip_flags_t)"
-- "exceptions": []
-  "name": "zip_source_window_create"
+- "name": "zip_source_window_create"
   "params":
   - "name": "src"
     "type": "bool "

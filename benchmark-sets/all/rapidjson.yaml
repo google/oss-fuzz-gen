@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN9rapidjson12GenericValueINS_4UTF8IcEENS_19MemoryPoolAllocatorINS_12CrtAllocatorEEEE14DoAllocMembersEjRS5_"
+- "name": "_ZN9rapidjson12GenericValueINS_4UTF8IcEENS_19MemoryPoolAllocatorINS_12CrtAllocatorEEEE14DoAllocMembersEjRS5_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "Member * rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> >::DoAllocMembers(GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > *, SizeType, MemoryPoolAllocator<rapidjson::CrtAllocator> &)"
-- "exceptions": []
-  "name": "_ZN9rapidjson12GenericValueINS_4UTF8IcEENS_19MemoryPoolAllocatorINS_12CrtAllocatorEEEE12SetObjectRawEPNS_13GenericMemberIS2_S5_EEjRS5_"
+- "name": "_ZN9rapidjson12GenericValueINS_4UTF8IcEENS_19MemoryPoolAllocatorINS_12CrtAllocatorEEEE12SetObjectRawEPNS_13GenericMemberIS2_S5_EEjRS5_"
   "params":
   - "name": "this"
     "type": "bool "

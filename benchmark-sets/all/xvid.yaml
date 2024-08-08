@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "enc_encode"
+- "name": "enc_encode"
   "params":
   - "name": "pEnc"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int enc_encode(Encoder *, xvid_enc_frame_t *, xvid_enc_stats_t *)"
-- "exceptions": []
-  "name": "xvid_encore"
+- "name": "xvid_encore"
   "params":
   - "name": "handle"
     "type": "bool "
@@ -23,8 +21,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int xvid_encore(void *, int, void *, void *)"
-- "exceptions": []
-  "name": "MotionEstimationBVOP"
+- "name": "MotionEstimationBVOP"
   "params":
   - "name": "pParam"
     "type": "bool "
@@ -58,15 +55,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "void MotionEstimationBVOP(const MBParam *, const FRAMEINFO *, const int32_t, const int32_t, const const MACROBLOCK *, const const IMAGE *, const const IMAGE *, const const IMAGE *, const const IMAGE *, const const FRAMEINFO *, const const IMAGE *, const const IMAGE *, const const IMAGE *, const const IMAGE *, const int)"
-- "exceptions": []
-  "name": "MotionEstimateSMP"
+- "name": "MotionEstimateSMP"
   "params":
   - "name": "h"
     "type": "bool "
   "return_type": "void"
   "signature": "void MotionEstimateSMP(SMPData *)"
-- "exceptions": []
-  "name": "SMPMotionEstimationBVOP"
+- "name": "SMPMotionEstimationBVOP"
   "params":
   - "name": "h"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN3rnp8KeyStore16import_signatureER9pgp_key_tRK15pgp_signature_t"
+- "name": "_ZN3rnp8KeyStore16import_signatureER9pgp_key_tRK15pgp_signature_t"
   "params":
   - "name": ""
     "type": "bool "

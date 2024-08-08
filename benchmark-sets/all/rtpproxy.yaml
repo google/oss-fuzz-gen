@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ucl_object_insert_key"
+- "name": "ucl_object_insert_key"
   "params":
   - "name": "top"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "bool ucl_object_insert_key(ucl_object_t *, ucl_object_t *, const char *, size_t, bool)"
-- "exceptions": []
-  "name": "process_rtp_only"
+- "name": "process_rtp_only"
   "params":
   - "name": "cfsp"
     "type": "bool "
@@ -35,8 +33,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void process_rtp_only(const struct rtpp_cfg *, struct rtpp_polltbl *, const struct rtpp_timestamp *, int, struct sthread_args *, struct rtpp_proc_rstats *, struct epoll_event *, int)"
-- "exceptions": []
-  "name": "rtpp_command_stream_get"
+- "name": "rtpp_command_stream_get"
   "params":
   - "name": "cfsp"
     "type": "bool "
@@ -50,8 +47,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct rtpp_command * rtpp_command_stream_get(const struct rtpp_cfg *, struct rtpp_cmd_connection *, int *, const struct rtpp_timestamp *, struct rtpp_command_stats *)"
-- "exceptions": []
-  "name": "get_command"
+- "name": "get_command"
   "params":
   - "name": "cfsp"
     "type": "bool "
@@ -69,8 +65,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct rtpp_command * get_command(const struct rtpp_cfg *, struct rtpp_ctrl_sock *, int, int *, const struct rtpp_timestamp *, struct rtpp_command_stats *, struct rtpp_cmd_rcache *)"
-- "exceptions": []
-  "name": "rtp_resizer_get"
+- "name": "rtp_resizer_get"
   "params":
   - "name": "this"
     "type": "bool "

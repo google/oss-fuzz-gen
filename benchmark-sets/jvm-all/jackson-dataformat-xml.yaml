@@ -1,8 +1,5 @@
 "functions":
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader,com.fasterxml.jackson.dataformat.xml.XmlNameProcessor)"
+- "name": "[com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader,com.fasterxml.jackson.dataformat.xml.XmlNameProcessor)"
   "params":
   - "name": "arg0"
     "type": "com.fasterxml.jackson.core.io.IOContext"
@@ -18,9 +15,7 @@
     "type": "com.fasterxml.jackson.dataformat.xml.XmlNameProcessor"
   "return_type": "com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser"
   "signature": "[com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader,com.fasterxml.jackson.dataformat.xml.XmlNameProcessor)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.fasterxml.jackson.dataformat.xml.XmlFactory].<init>(com.fasterxml.jackson.core.ObjectCodec,int,int,javax.xml.stream.XMLInputFactory,javax.xml.stream.XMLOutputFactory,java.lang.String)"
+- "name": "[com.fasterxml.jackson.dataformat.xml.XmlFactory].<init>(com.fasterxml.jackson.core.ObjectCodec,int,int,javax.xml.stream.XMLInputFactory,javax.xml.stream.XMLOutputFactory,java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "com.fasterxml.jackson.core.ObjectCodec"
@@ -36,9 +31,7 @@
     "type": "java.lang.String"
   "return_type": "com.fasterxml.jackson.dataformat.xml.XmlFactory"
   "signature": "[com.fasterxml.jackson.dataformat.xml.XmlFactory].<init>(com.fasterxml.jackson.core.ObjectCodec,int,int,javax.xml.stream.XMLInputFactory,javax.xml.stream.XMLOutputFactory,java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.fasterxml.jackson.dataformat.xml.deser.XmlTokenStream].<init>(javax.xml.stream.XMLStreamReader,com.fasterxml.jackson.core.io.ContentReference,int,com.fasterxml.jackson.dataformat.xml.XmlNameProcessor)"
+- "name": "[com.fasterxml.jackson.dataformat.xml.deser.XmlTokenStream].<init>(javax.xml.stream.XMLStreamReader,com.fasterxml.jackson.core.io.ContentReference,int,com.fasterxml.jackson.dataformat.xml.XmlNameProcessor)"
   "params":
   - "name": "arg0"
     "type": "javax.xml.stream.XMLStreamReader"
@@ -50,9 +43,7 @@
     "type": "com.fasterxml.jackson.dataformat.xml.XmlNameProcessor"
   "return_type": "com.fasterxml.jackson.dataformat.xml.deser.XmlTokenStream"
   "signature": "[com.fasterxml.jackson.dataformat.xml.deser.XmlTokenStream].<init>(javax.xml.stream.XMLStreamReader,com.fasterxml.jackson.core.io.ContentReference,int,com.fasterxml.jackson.dataformat.xml.XmlNameProcessor)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.fasterxml.jackson.dataformat.xml.util.XmlInfo].<init>(java.lang.Boolean,java.lang.String,java.lang.Boolean,java.lang.Boolean)"
+- "name": "[com.fasterxml.jackson.dataformat.xml.util.XmlInfo].<init>(java.lang.Boolean,java.lang.String,java.lang.Boolean,java.lang.Boolean)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Boolean"
@@ -64,9 +55,7 @@
     "type": "java.lang.Boolean"
   "return_type": "com.fasterxml.jackson.dataformat.xml.util.XmlInfo"
   "signature": "[com.fasterxml.jackson.dataformat.xml.util.XmlInfo].<init>(java.lang.Boolean,java.lang.String,java.lang.Boolean,java.lang.Boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.fasterxml.jackson.dataformat.xml.XmlMapper].<init>(com.fasterxml.jackson.dataformat.xml.XmlFactory,com.fasterxml.jackson.dataformat.xml.JacksonXmlModule)"
+- "name": "[com.fasterxml.jackson.dataformat.xml.XmlMapper].<init>(com.fasterxml.jackson.dataformat.xml.XmlFactory,com.fasterxml.jackson.dataformat.xml.JacksonXmlModule)"
   "params":
   - "name": "arg0"
     "type": "com.fasterxml.jackson.dataformat.xml.XmlFactory"
@@ -74,9 +63,7 @@
     "type": "com.fasterxml.jackson.dataformat.xml.JacksonXmlModule"
   "return_type": "com.fasterxml.jackson.dataformat.xml.XmlMapper"
   "signature": "[com.fasterxml.jackson.dataformat.xml.XmlMapper].<init>(com.fasterxml.jackson.dataformat.xml.XmlFactory,com.fasterxml.jackson.dataformat.xml.JacksonXmlModule)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamWriter,com.fasterxml.jackson.dataformat.xml.XmlNameProcessor)"
+- "name": "[com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamWriter,com.fasterxml.jackson.dataformat.xml.XmlNameProcessor)"
   "params":
   - "name": "arg0"
     "type": "com.fasterxml.jackson.core.io.IOContext"

@@ -1,48 +1,35 @@
 "functions":
-- "exceptions":
-  - "java.lang.IllegalArgumentException"
-  "is_jvm_static": false
-  "name": "[org.apache.bcel.classfile.ConstantPool].constantToString(org.apache.bcel.classfile.Constant)"
+- "name": "[org.apache.bcel.classfile.ConstantPool].constantToString(org.apache.bcel.classfile.Constant)"
   "params":
   - "name": "arg0"
     "type": "org.apache.bcel.classfile.Constant"
   "return_type": "java.lang.String"
   "signature": "[org.apache.bcel.classfile.ConstantPool].constantToString(org.apache.bcel.classfile.Constant)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.bcel.classfile.JavaClass].equals(java.lang.Object)"
+- "name": "[org.apache.bcel.classfile.JavaClass].equals(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
   "return_type": "boolean"
   "signature": "[org.apache.bcel.classfile.JavaClass].equals(java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.bcel.classfile.Field].equals(java.lang.Object)"
+- "name": "[org.apache.bcel.classfile.Field].equals(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
   "return_type": "boolean"
   "signature": "[org.apache.bcel.classfile.Field].equals(java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.bcel.generic.FieldGen].equals(java.lang.Object)"
+- "name": "[org.apache.bcel.generic.FieldGen].equals(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
   "return_type": "boolean"
   "signature": "[org.apache.bcel.generic.FieldGen].equals(java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.bcel.generic.MethodGen].equals(java.lang.Object)"
+- "name": "[org.apache.bcel.generic.MethodGen].equals(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
   "return_type": "boolean"
   "signature": "[org.apache.bcel.generic.MethodGen].equals(java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.bcel.generic.ClassGen].equals(java.lang.Object)"
+- "name": "[org.apache.bcel.generic.ClassGen].equals(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"

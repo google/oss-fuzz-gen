@@ -1,17 +1,11 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[net.minidev.json.writer.UpdaterMapper].convert(java.lang.Object)"
+- "name": "[net.minidev.json.writer.UpdaterMapper].convert(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
   "return_type": "java.lang.Object"
   "signature": "[net.minidev.json.writer.UpdaterMapper].convert(java.lang.Object)"
-- "exceptions":
-  - "net.minidev.json.parser.ParseException"
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[net.minidev.json.writer.MapperRemapped].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
+- "name": "[net.minidev.json.writer.MapperRemapped].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -21,11 +15,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[net.minidev.json.writer.MapperRemapped].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
-- "exceptions":
-  - "net.minidev.json.parser.ParseException"
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[net.minidev.json.writer.UpdaterMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
+- "name": "[net.minidev.json.writer.UpdaterMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -35,11 +25,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[net.minidev.json.writer.UpdaterMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
-- "exceptions":
-  - "net.minidev.json.parser.ParseException"
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[net.minidev.json.writer.UpdaterMapper].addValue(java.lang.Object,java.lang.Object)"
+- "name": "[net.minidev.json.writer.UpdaterMapper].addValue(java.lang.Object,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -47,10 +33,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[net.minidev.json.writer.UpdaterMapper].addValue(java.lang.Object,java.lang.Object)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[net.minidev.json.writer.CompessorMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
+- "name": "[net.minidev.json.writer.CompessorMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -60,10 +43,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[net.minidev.json.writer.CompessorMapper].setValue(java.lang.Object,java.lang.String,java.lang.Object)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[net.minidev.json.writer.CompessorMapper].addValue(java.lang.Object,java.lang.Object)"
+- "name": "[net.minidev.json.writer.CompessorMapper].addValue(java.lang.Object,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"

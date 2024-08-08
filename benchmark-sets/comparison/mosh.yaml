@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN8Terminal11Framebuffer6resizeEii"
+- "name": "_ZN8Terminal11Framebuffer6resizeEii"
   "params":
   - "name": "this"
     "type": "bool "

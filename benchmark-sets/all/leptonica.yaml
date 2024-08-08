@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "TIFFFdOpen"
+- "name": "TIFFFdOpen"
   "params":
   - "name": "fd"
     "type": "int"
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "TIFF * TIFFFdOpen(int, const char *, const char *)"
-- "exceptions": []
-  "name": "WebPEncodeLosslessBGR"
+- "name": "WebPEncodeLosslessBGR"
   "params":
   - "name": "in"
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "size_t WebPEncodeLosslessBGR(const uint8_t *, int, int, int, uint8_t **)"
-- "exceptions": []
-  "name": "WebPEncodeLosslessBGRA"
+- "name": "WebPEncodeLosslessBGRA"
   "params":
   - "name": "in"
     "type": "bool "
@@ -40,8 +37,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "size_t WebPEncodeLosslessBGRA(const uint8_t *, int, int, int, uint8_t **)"
-- "exceptions": []
-  "name": "WebPEncodeLosslessRGB"
+- "name": "WebPEncodeLosslessRGB"
   "params":
   - "name": "in"
     "type": "bool "
@@ -55,8 +51,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "size_t WebPEncodeLosslessRGB(const uint8_t *, int, int, int, uint8_t **)"
-- "exceptions": []
-  "name": "jbGetComponents"
+- "name": "jbGetComponents"
   "params":
   - "name": "pixs"
     "type": "bool "

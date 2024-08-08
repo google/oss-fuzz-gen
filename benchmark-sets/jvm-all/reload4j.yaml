@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.apache.log4j.helpers.OptionConverter].selectAndConfigure(java.net.URL,java.lang.String,org.apache.log4j.spi.LoggerRepository)"
+- "name": "[org.apache.log4j.helpers.OptionConverter].selectAndConfigure(java.net.URL,java.lang.String,org.apache.log4j.spi.LoggerRepository)"
   "params":
   - "name": "arg0"
     "type": "java.net.URL"
@@ -11,9 +9,7 @@
     "type": "org.apache.log4j.spi.LoggerRepository"
   "return_type": "void"
   "signature": "[org.apache.log4j.helpers.OptionConverter].selectAndConfigure(java.net.URL,java.lang.String,org.apache.log4j.spi.LoggerRepository)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.log4j.xml.DOMConfigurator].doConfigure(java.lang.String,org.apache.log4j.spi.LoggerRepository)"
+- "name": "[org.apache.log4j.xml.DOMConfigurator].doConfigure(java.lang.String,org.apache.log4j.spi.LoggerRepository)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -21,9 +17,7 @@
     "type": "org.apache.log4j.spi.LoggerRepository"
   "return_type": "void"
   "signature": "[org.apache.log4j.xml.DOMConfigurator].doConfigure(java.lang.String,org.apache.log4j.spi.LoggerRepository)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.log4j.xml.DOMConfigurator].doConfigure(java.net.URL,org.apache.log4j.spi.LoggerRepository)"
+- "name": "[org.apache.log4j.xml.DOMConfigurator].doConfigure(java.net.URL,org.apache.log4j.spi.LoggerRepository)"
   "params":
   - "name": "arg0"
     "type": "java.net.URL"
@@ -31,9 +25,7 @@
     "type": "org.apache.log4j.spi.LoggerRepository"
   "return_type": "void"
   "signature": "[org.apache.log4j.xml.DOMConfigurator].doConfigure(java.net.URL,org.apache.log4j.spi.LoggerRepository)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.lang.String,org.apache.log4j.spi.LoggerRepository)"
+- "name": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.lang.String,org.apache.log4j.spi.LoggerRepository)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -41,9 +33,7 @@
     "type": "org.apache.log4j.spi.LoggerRepository"
   "return_type": "void"
   "signature": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.lang.String,org.apache.log4j.spi.LoggerRepository)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.net.URL,org.apache.log4j.spi.LoggerRepository)"
+- "name": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.net.URL,org.apache.log4j.spi.LoggerRepository)"
   "params":
   - "name": "arg0"
     "type": "java.net.URL"
@@ -51,9 +41,7 @@
     "type": "org.apache.log4j.spi.LoggerRepository"
   "return_type": "void"
   "signature": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.net.URL,org.apache.log4j.spi.LoggerRepository)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.util.Properties,org.apache.log4j.spi.LoggerRepository)"
+- "name": "[org.apache.log4j.PropertyConfigurator].doConfigure(java.util.Properties,org.apache.log4j.spi.LoggerRepository)"
   "params":
   - "name": "arg0"
     "type": "java.util.Properties"

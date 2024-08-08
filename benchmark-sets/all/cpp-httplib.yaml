@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZZN7httplib6Server7routingERNS_7RequestERNS_8ResponseERNS_6StreamEENKUlNSt3__18functionIFbPKcmEEEE_clESC_"
+- "name": "_ZZN7httplib6Server7routingERNS_7RequestERNS_8ResponseERNS_6StreamEENKUlNSt3__18functionIFbPKcmEEEE_clESC_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool httplib::Server::operator()(const void *, ContentReceiver)"
-- "exceptions": []
-  "name": "_ZZN7httplib6detail21process_server_socketIZNS_6Server24process_and_close_socketEiEUlRNS_6StreamEbRbE_EEbRKNSt3__16atomicIiEEimlllllT_ENKUlbS5_E_clEbS5_"
+- "name": "_ZZN7httplib6detail21process_server_socketIZNS_6Server24process_and_close_socketEiEUlRNS_6StreamEbRbE_EEbRKNSt3__16atomicIiEEimlllllT_ENKUlbS5_E_clEbS5_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool httplib::detail::process_server_socket<httplib::Server::operator()(const void *, bool, bool &)"
-- "exceptions": []
-  "name": "_ZN7httplib6Server24process_and_close_socketEi"
+- "name": "_ZN7httplib6Server24process_and_close_socketEi"
   "params":
   - "name": "this"
     "type": "bool "
@@ -28,8 +25,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool httplib::Server::process_and_close_socket(socket_t)"
-- "exceptions": []
-  "name": "_ZZN7httplib6Server7routingERNS_7RequestERNS_8ResponseERNS_6StreamEENKUlNSt3__18functionIFbRKNS_17MultipartFormDataEEEENS8_IFbPKcmEEEE_clESD_SH_"
+- "name": "_ZZN7httplib6Server7routingERNS_7RequestERNS_8ResponseERNS_6StreamEENKUlNSt3__18functionIFbRKNS_17MultipartFormDataEEEENS8_IFbPKcmEEEE_clESD_SH_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -39,8 +35,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool httplib::Server::operator()(const void *, MultipartContentHeader, ContentReceiver)"
-- "exceptions": []
-  "name": "_ZZN7httplib6Server24process_and_close_socketEiENKUlRNS_6StreamEbRbE_clES2_bS3_"
+- "name": "_ZZN7httplib6Server24process_and_close_socketEiENKUlRNS_6StreamEbRbE_clES2_bS3_"
   "params":
   - "name": "this"
     "type": "bool "

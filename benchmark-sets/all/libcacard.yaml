@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "vcard_emul_force_card_remove"
+- "name": "vcard_emul_force_card_remove"
   "params":
   - "name": "vreader"
     "type": "bool "
   "return_type": "int"
   "signature": "VCardEmulError vcard_emul_force_card_remove(VReader *)"
-- "exceptions": []
-  "name": "vcard_emul_reset"
+- "name": "vcard_emul_reset"
   "params":
   - "name": "card"
     "type": "bool "
@@ -15,15 +13,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "void vcard_emul_reset(VCard *, VCardPower)"
-- "exceptions": []
-  "name": "vcard_emul_force_card_insert"
+- "name": "vcard_emul_force_card_insert"
   "params":
   - "name": "vreader"
     "type": "bool "
   "return_type": "int"
   "signature": "VCardEmulError vcard_emul_force_card_insert(VReader *)"
-- "exceptions": []
-  "name": "vcard_emul_get_atr"
+- "name": "vcard_emul_get_atr"
   "params":
   - "name": "card"
     "type": "bool "

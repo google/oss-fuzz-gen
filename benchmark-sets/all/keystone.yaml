@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN12_GLOBAL__N_19AsmParser3RunEbmb"
+- "name": "_ZN12_GLOBAL__N_19AsmParser3RunEbmb"
   "params":
   - "name": "this"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool"
   "return_type": "size_t"
   "signature": "size_t (anonymous namespace)::AsmParser::Run(bool, uint64_t, bool)"
-- "exceptions": []
-  "name": "_ZL16adjustFixupValuejm"
+- "name": "_ZL16adjustFixupValuejm"
   "params":
   - "name": "Kind"
     "type": "int"
@@ -21,8 +19,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "unsigned int adjustFixupValue(unsigned int, uint64_t)"
-- "exceptions": []
-  "name": "_ZNK12_GLOBAL__N_114SystemZOperand5isMemENS_10MemoryKindENS_12RegisterKindE"
+- "name": "_ZNK12_GLOBAL__N_114SystemZOperand5isMemENS_10MemoryKindENS_12RegisterKindE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -32,15 +29,13 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool (anonymous namespace)::SystemZOperand::isMem(DW_TAG_enumeration_typeMemoryKind, DW_TAG_enumeration_typeRegisterKind)"
-- "exceptions": []
-  "name": "ks_strerror"
+- "name": "ks_strerror"
   "params":
   - "name": "code"
     "type": "int"
   "return_type": "void"
   "signature": "const char * ks_strerror(ks_err)"
-- "exceptions": []
-  "name": "ks_arch_supported"
+- "name": "ks_arch_supported"
   "params":
   - "name": "arch"
     "type": "int"

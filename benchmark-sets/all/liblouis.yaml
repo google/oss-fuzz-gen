@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_lou_defaultTableResolver"
+- "name": "_lou_defaultTableResolver"
   "params":
   - "name": "tableList"
     "type": "bool "
@@ -8,15 +7,13 @@
     "type": "bool "
   "return_type": "void"
   "signature": "char ** _lou_defaultTableResolver(const char *, const char *)"
-- "exceptions": []
-  "name": "lou_getEmphClasses"
+- "name": "lou_getEmphClasses"
   "params":
   - "name": "tableList"
     "type": "bool "
   "return_type": "void"
   "signature": "const char ** lou_getEmphClasses(const char *)"
-- "exceptions": []
-  "name": "lou_getTypeformForEmphClass"
+- "name": "lou_getTypeformForEmphClass"
   "params":
   - "name": "tableList"
     "type": "bool "
@@ -24,8 +21,7 @@
     "type": "bool "
   "return_type": "short"
   "signature": "formtype lou_getTypeformForEmphClass(const char *, const char *)"
-- "exceptions": []
-  "name": "lou_translatePrehyphenated"
+- "name": "lou_translatePrehyphenated"
   "params":
   - "name": "tableList"
     "type": "bool "
@@ -55,8 +51,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int lou_translatePrehyphenated(const char *, const widechar *, int *, widechar *, int *, formtype *, char *, int *, int *, int *, char *, char *, int)"
-- "exceptions": []
-  "name": "lou_hyphenate"
+- "name": "lou_hyphenate"
   "params":
   - "name": "tableList"
     "type": "bool "

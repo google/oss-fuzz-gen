@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.xerial.snappy.SnappyFramedInputStream].read(java.nio.ByteBuffer)"
+- "name": "[org.xerial.snappy.SnappyFramedInputStream].read(java.nio.ByteBuffer)"
   "params":
   - "name": "arg0"
     "type": "java.nio.ByteBuffer"

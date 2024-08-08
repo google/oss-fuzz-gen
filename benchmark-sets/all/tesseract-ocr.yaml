@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN9tesseract11TessBaseAPI12ProcessPagesEPKcS2_iPNS_18TessResultRendererE"
+- "name": "_ZN9tesseract11TessBaseAPI12ProcessPagesEPKcS2_iPNS_18TessResultRendererE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool tesseract::TessBaseAPI::ProcessPages(const char *, const char *, int, TessResultRenderer *)"
-- "exceptions": []
-  "name": "_ZN9tesseract9Tesseract19classify_word_pass1ERKNS_8WordDataEPPNS_8WERD_RESEPNS_13PointerVectorIS4_EE"
+- "name": "_ZN9tesseract9Tesseract19classify_word_pass1ERKNS_8WordDataEPPNS_8WERD_RESEPNS_13PointerVectorIS4_EE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -27,8 +25,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void tesseract::Tesseract::classify_word_pass1(const struct WordData &, WERD_RES **, PointerVector<tesseract::WERD_RES> *)"
-- "exceptions": []
-  "name": "_ZN9tesseract15TessTsvRenderer15AddImageHandlerEPNS_11TessBaseAPIE"
+- "name": "_ZN9tesseract15TessTsvRenderer15AddImageHandlerEPNS_11TessBaseAPIE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -36,8 +33,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool tesseract::TessTsvRenderer::AddImageHandler(TessBaseAPI *)"
-- "exceptions": []
-  "name": "_ZN9tesseract19TessBoxTextRenderer15AddImageHandlerEPNS_11TessBaseAPIE"
+- "name": "_ZN9tesseract19TessBoxTextRenderer15AddImageHandlerEPNS_11TessBaseAPIE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -45,8 +41,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool tesseract::TessBoxTextRenderer::AddImageHandler(TessBaseAPI *)"
-- "exceptions": []
-  "name": "_ZN9tesseract11TessBaseAPI10GetTSVTextEi"
+- "name": "_ZN9tesseract11TessBaseAPI10GetTSVTextEi"
   "params":
   - "name": "this"
     "type": "bool "

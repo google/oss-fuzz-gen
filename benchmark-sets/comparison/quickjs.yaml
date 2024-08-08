@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "JS_ParseJSON2"
+- "name": "JS_ParseJSON2"
   "params":
   - "name": ""
     "type": "bool "

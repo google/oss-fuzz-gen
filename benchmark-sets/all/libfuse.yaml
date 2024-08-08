@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "fuse_opt_match"
+- "name": "fuse_opt_match"
   "params":
   - "name": "opts"
     "type": "bool "
@@ -8,15 +7,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int fuse_opt_match(const struct fuse_opt *, const char *)"
-- "exceptions": []
-  "name": "af_gb_alloc_data"
+- "name": "af_gb_alloc_data"
   "params":
   - "name": "len"
     "type": "size_t"
   "return_type": "void"
   "signature": "char * af_gb_alloc_data(size_t)"
-- "exceptions": []
-  "name": "fuse_opt_add_opt_escaped"
+- "name": "fuse_opt_add_opt_escaped"
   "params":
   - "name": "opts"
     "type": "bool "
@@ -24,8 +21,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int fuse_opt_add_opt_escaped(char **, const char *)"
-- "exceptions": []
-  "name": "fuse_opt_add_opt"
+- "name": "fuse_opt_add_opt"
   "params":
   - "name": "opts"
     "type": "bool "

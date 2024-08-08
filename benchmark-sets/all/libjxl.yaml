@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "JxlEncoderFlushInput"
+- "name": "JxlEncoderFlushInput"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "int"
   "signature": "JxlEncoderStatus JxlEncoderFlushInput(JxlEncoder *)"
-- "exceptions": []
-  "name": "_ZN3jxl6extras14EncodeImageJXLERKNS0_17JXLCompressParamsERKNS0_15PackedPixelFileEPKNSt3__16vectorIhNS7_9allocatorIhEEEEPSB_"
+- "name": "_ZN3jxl6extras14EncodeImageJXLERKNS0_17JXLCompressParamsERKNS0_15PackedPixelFileEPKNSt3__16vectorIhNS7_9allocatorIhEEEEPSB_"
   "params":
   - "name": ""
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool jxl::extras::EncodeImageJXL(const struct JXLCompressParams &, const PackedPixelFile &, const vector<unsigned char, std::__1::allocator<unsigned char> > *, vector<unsigned char, std::__1::allocator<unsigned char> > *)"
-- "exceptions": []
-  "name": "JxlEncoderAddChunkedFrame"
+- "name": "JxlEncoderAddChunkedFrame"
   "params":
   - "name": ""
     "type": "bool "
@@ -30,8 +27,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "JxlEncoderStatus JxlEncoderAddChunkedFrame(const JxlEncoderFrameSettings *, int, struct JxlChunkedFrameInputSource)"
-- "exceptions": []
-  "name": "_ZN3jxl4test9RoundtripEPNS_10CodecInOutERKNS_14CompressParamsENS_6extras19JXLDecompressParamsES2_RNSt3__118basic_stringstreamIcNS8_11char_traitsIcEENS8_9allocatorIcEEEEPmPNS_10ThreadPoolE"
+- "name": "_ZN3jxl4test9RoundtripEPNS_10CodecInOutERKNS_14CompressParamsENS_6extras19JXLDecompressParamsES2_RNSt3__118basic_stringstreamIcNS8_11char_traitsIcEENS8_9allocatorIcEEEEPmPNS_10ThreadPoolE"
   "params":
   - "name": ""
     "type": "bool "
@@ -49,8 +45,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool jxl::test::Roundtrip(CodecInOut *, const struct CompressParams &, struct JXLDecompressParams, DW_TAG_restrict_typeCodecInOut *, stringstream &, size_t *, ThreadPool *)"
-- "exceptions": []
-  "name": "_ZN3jxl4test9RoundtripERKNS_6extras15PackedPixelFileERKNS1_17JXLCompressParamsENS1_19JXLDecompressParamsEPNS_10ThreadPoolEPS2_"
+- "name": "_ZN3jxl4test9RoundtripERKNS_6extras15PackedPixelFileERKNS1_17JXLCompressParamsENS1_19JXLDecompressParamsEPNS_10ThreadPoolEPS2_"
   "params":
   - "name": ""
     "type": "bool "

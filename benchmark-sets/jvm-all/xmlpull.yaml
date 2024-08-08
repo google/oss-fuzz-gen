@@ -1,8 +1,5 @@
 "functions":
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[CloneableFileReader].read(char[],int,int)"
+- "name": "[CloneableFileReader].read(char[],int,int)"
   "params":
   - "name": "arg0"
     "type": "char[]"
@@ -12,43 +9,31 @@
     "type": "int"
   "return_type": "int"
   "signature": "[CloneableFileReader].read(char[],int,int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[BestDeal].<init>(int)"
+- "name": "[BestDeal].<init>(int)"
   "params":
   - "name": "arg0"
     "type": "int"
   "return_type": "BestDeal"
   "signature": "[BestDeal].<init>(int)"
-- "exceptions":
-  - "java.io.FileNotFoundException"
-  "is_jvm_static": false
-  "name": "[CloneableFileReader].<init>(java.lang.String)"
+- "name": "[CloneableFileReader].<init>(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "CloneableFileReader"
   "signature": "[CloneableFileReader].<init>(java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[CloneParser$CloenableCharArrayReader].<init>(char[])"
+- "name": "[CloneParser$CloenableCharArrayReader].<init>(char[])"
   "params":
   - "name": "arg0"
     "type": "char[]"
   "return_type": "CloneParser$CloenableCharArrayReader"
   "signature": "[CloneParser$CloenableCharArrayReader].<init>(char[])"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.xmlpull.v1.XmlPullParserFactory].setNamespaceAware(boolean)"
+- "name": "[org.xmlpull.v1.XmlPullParserFactory].setNamespaceAware(boolean)"
   "params":
   - "name": "arg0"
     "type": "boolean"
   "return_type": "void"
   "signature": "[org.xmlpull.v1.XmlPullParserFactory].setNamespaceAware(boolean)"
-- "exceptions":
-  - "org.xmlpull.v1.XmlPullParserException"
-  "is_jvm_static": true
-  "name": "[org.xmlpull.v1.XmlPullParserFactory].newInstance(java.lang.String,java.lang.Class)"
+- "name": "[org.xmlpull.v1.XmlPullParserFactory].newInstance(java.lang.String,java.lang.Class)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -56,10 +41,7 @@
     "type": "Class"
   "return_type": "org.xmlpull.v1.XmlPullParserFactory"
   "signature": "[org.xmlpull.v1.XmlPullParserFactory].newInstance(java.lang.String,java.lang.Class)"
-- "exceptions":
-  - "org.xmlpull.v1.XmlPullParserException"
-  "is_jvm_static": false
-  "name": "[org.xmlpull.v1.XmlPullParserFactory].setFeature(java.lang.String,boolean)"
+- "name": "[org.xmlpull.v1.XmlPullParserFactory].setFeature(java.lang.String,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"

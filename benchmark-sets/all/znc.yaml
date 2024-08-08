@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN7CClient11UserCommandER7CString"
+- "name": "_ZN7CClient11UserCommandER7CString"
   "params":
   - "name": "this"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void CClient::UserCommand(CString &)"
-- "exceptions": []
-  "name": "_ZN4CZNC11ParseConfigERK7CStringRS0_"
+- "name": "_ZN4CZNC11ParseConfigERK7CStringRS0_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool CZNC::ParseConfig(const CString &, CString &)"
-- "exceptions": []
-  "name": "_ZN7CClient13OnTextMessageER12CTextMessage"
+- "name": "_ZN7CClient13OnTextMessageER12CTextMessage"
   "params":
   - "name": "this"
     "type": "bool "
@@ -28,8 +25,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool CClient::OnTextMessage(CTextMessage &)"
-- "exceptions": []
-  "name": "_ZN7CClient14OnOtherMessageER8CMessage"
+- "name": "_ZN7CClient14OnOtherMessageER8CMessage"
   "params":
   - "name": "this"
     "type": "bool "
@@ -37,8 +33,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool CClient::OnOtherMessage(CMessage &)"
-- "exceptions": []
-  "name": "_ZN7CClient8ReadLineERK7CString"
+- "name": "_ZN7CClient8ReadLineERK7CString"
   "params":
   - "name": "this"
     "type": "bool "

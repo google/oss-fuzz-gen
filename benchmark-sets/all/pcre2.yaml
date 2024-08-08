@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "sljit_allocate_stack"
+- "name": "sljit_allocate_stack"
   "params":
   - "name": "start_size"
     "type": "size_t"
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct sljit_stack * sljit_allocate_stack(sljit_uw, sljit_uw, void *)"
-- "exceptions": []
-  "name": "sljit_free_stack"
+- "name": "sljit_free_stack"
   "params":
   - "name": "stack"
     "type": "bool "

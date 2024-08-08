@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "rfbStartOnHoldClient"
+- "name": "rfbStartOnHoldClient"
   "params":
   - "name": "cl"
     "type": "bool "
   "return_type": "void"
   "signature": "void rfbStartOnHoldClient(rfbClientPtr)"
-- "exceptions": []
-  "name": "rfbReverseConnection"
+- "name": "rfbReverseConnection"
   "params":
   - "name": "rfbScreen"
     "type": "bool "
@@ -17,15 +15,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "rfbClientPtr rfbReverseConnection(rfbScreenInfoPtr, char *, int)"
-- "exceptions": []
-  "name": "rfbUpdateClient"
+- "name": "rfbUpdateClient"
   "params":
   - "name": "cl"
     "type": "bool "
   "return_type": "char"
   "signature": "rfbBool rfbUpdateClient(rfbClientPtr)"
-- "exceptions": []
-  "name": "rfbProcessEvents"
+- "name": "rfbProcessEvents"
   "params":
   - "name": "screen"
     "type": "bool "
@@ -33,8 +29,7 @@
     "type": "size_t"
   "return_type": "char"
   "signature": "rfbBool rfbProcessEvents(rfbScreenInfoPtr, long)"
-- "exceptions": []
-  "name": "rfbRunEventLoop"
+- "name": "rfbRunEventLoop"
   "params":
   - "name": "screen"
     "type": "bool "

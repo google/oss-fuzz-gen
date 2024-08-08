@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "mutate"
+- "name": "mutate"
   "params":
   - "name": "p"
     "type": "bool "
@@ -10,15 +9,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "void mutate(struct param *, unsigned int, unsigned int)"
-- "exceptions": []
-  "name": "mutate_blob"
+- "name": "mutate_blob"
   "params":
   - "name": "blob"
     "type": "bool "
   "return_type": "void"
   "signature": "void mutate_blob(struct blob *)"
-- "exceptions": []
-  "name": "pack_dummy"
+- "name": "pack_dummy"
   "params":
   - "name": "ptr"
     "type": "bool "
@@ -26,15 +23,13 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "size_t pack_dummy(uint8_t *, size_t)"
-- "exceptions": []
-  "name": "mutate_string"
+- "name": "mutate_string"
   "params":
   - "name": "s"
     "type": "bool "
   "return_type": "void"
   "signature": "void mutate_string(char *)"
-- "exceptions": []
-  "name": "mutate_int"
+- "name": "mutate_int"
   "params":
   - "name": "i"
     "type": "bool "

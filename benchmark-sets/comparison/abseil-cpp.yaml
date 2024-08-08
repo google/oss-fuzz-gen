@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZZN4absl19str_format_internal12_GLOBAL__N_115BinaryToDecimal13RunConversionENS_7uint128EiNS_11FunctionRefIFvS2_EEEENKUlNS_4SpanIjEEE_clES8_"
+- "name": "_ZZN4absl19str_format_internal12_GLOBAL__N_115BinaryToDecimal13RunConversionENS_7uint128EiNS_11FunctionRefIFvS2_EEEENKUlNS_4SpanIjEEE_clES8_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void absl::str_format_internal::(anonymous namespace)::BinaryToDecimal::operator()(const void *, Span<unsigned int>)"
-- "exceptions": []
-  "name": "_ZZN4absl19str_format_internal12_GLOBAL__N_122FormatFNegativeExpSlowENS_7uint128EiRKNS1_11FormatStateEENK3$_0clENS1_24FractionalDigitGeneratorE"
+- "name": "_ZZN4absl19str_format_internal12_GLOBAL__N_122FormatFNegativeExpSlowENS_7uint128EiRKNS1_11FormatStateEENK3$_0clENS1_24FractionalDigitGeneratorE"
   "params":
   - "name": "this"
     "type": "bool "

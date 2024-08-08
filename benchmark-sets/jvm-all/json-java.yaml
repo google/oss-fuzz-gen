@@ -1,15 +1,11 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.json.JSONArray].toString(int)"
+- "name": "[org.json.JSONArray].toString(int)"
   "params":
   - "name": "arg0"
     "type": "int"
   "return_type": "java.lang.String"
   "signature": "[org.json.JSONArray].toString(int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.json.JSONArray].<init>(java.lang.Object)"
+- "name": "[org.json.JSONArray].<init>(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"

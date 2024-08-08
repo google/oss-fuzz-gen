@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN8rawspeed15VC5Decompressor7Wavelet18combineLowHighPassENS_10Array2DRefIKsEES4_ibb"
+- "name": "_ZN8rawspeed15VC5Decompressor7Wavelet18combineLowHighPassENS_10Array2DRefIKsEES4_ibb"
   "params":
   - "name": "low"
     "type": "bool "
@@ -16,15 +15,13 @@
     "type": "bool"
   "return_type": "void"
   "signature": "struct BandData rawspeed::VC5Decompressor::Wavelet::combineLowHighPass(const Array2DRef<const short>, const Array2DRef<const short>, int, bool, bool)"
-- "exceptions": []
-  "name": "_ZN8rawspeed15RawImageDataU1615scaleBlackWhiteEv"
+- "name": "_ZN8rawspeed15RawImageDataU1615scaleBlackWhiteEv"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "void rawspeed::RawImageDataU16::scaleBlackWhite()"
-- "exceptions": []
-  "name": "_ZN8rawspeed10DngDecoder17decodeRawInternalEv"
+- "name": "_ZN8rawspeed10DngDecoder17decodeRawInternalEv"
   "params":
   - "name": ""
     "type": "bool "
@@ -32,15 +29,13 @@
     "type": "bool "
   "return_type": "void"
   "signature": "RawImage rawspeed::DngDecoder::decodeRawInternal()"
-- "exceptions": []
-  "name": "_ZN8rawspeed10Cr2Decoder15sRawInterpolateEv"
+- "name": "_ZN8rawspeed10Cr2Decoder15sRawInterpolateEv"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "void rawspeed::Cr2Decoder::sRawInterpolate()"
-- "exceptions": []
-  "name": "_ZN8rawspeed15VC5Decompressor7Wavelet15reconstructPassENS_10Array2DRefIKsEES4_"
+- "name": "_ZN8rawspeed15VC5Decompressor7Wavelet15reconstructPassENS_10Array2DRefIKsEES4_"
   "params":
   - "name": "high"
     "type": "bool "

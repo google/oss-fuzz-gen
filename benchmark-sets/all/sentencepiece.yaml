@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN13sentencepiece10ModelProto14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
+- "name": "_ZN13sentencepiece10ModelProto14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "const char * sentencepiece::ModelProto::_InternalParse(const char *, ParseContext *)"
-- "exceptions": []
-  "name": "_ZN13sentencepiece22NBestSentencePieceText14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
+- "name": "_ZN13sentencepiece22NBestSentencePieceText14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "const char * sentencepiece::NBestSentencePieceText::_InternalParse(const char *, ParseContext *)"
-- "exceptions": []
-  "name": "_ZN13sentencepiece17SentencePieceText14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
+- "name": "_ZN13sentencepiece17SentencePieceText14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -32,8 +29,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "const char * sentencepiece::SentencePieceText::_InternalParse(const char *, ParseContext *)"
-- "exceptions": []
-  "name": "_ZN13sentencepiece12SelfTestData14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
+- "name": "_ZN13sentencepiece12SelfTestData14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -43,8 +39,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "const char * sentencepiece::SelfTestData::_InternalParse(const char *, ParseContext *)"
-- "exceptions": []
-  "name": "_ZN13sentencepiece11TrainerSpec14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
+- "name": "_ZN13sentencepiece11TrainerSpec14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
   "params":
   - "name": "this"
     "type": "bool "

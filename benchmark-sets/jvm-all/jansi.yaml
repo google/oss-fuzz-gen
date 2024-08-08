@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.fusesource.jansi.io.AnsiOutputStream].<init>(java.io.OutputStream,org.fusesource.jansi.io.AnsiOutputStream$WidthSupplier,org.fusesource.jansi.AnsiMode,org.fusesource.jansi.io.AnsiProcessor,org.fusesource.jansi.AnsiType,org.fusesource.jansi.AnsiColors,java.nio.charset.Charset,org.fusesource.jansi.io.AnsiOutputStream$IoRunnable,org.fusesource.jansi.io.AnsiOutputStream$IoRunnable,boolean)"
+- "name": "[org.fusesource.jansi.io.AnsiOutputStream].<init>(java.io.OutputStream,org.fusesource.jansi.io.AnsiOutputStream$WidthSupplier,org.fusesource.jansi.AnsiMode,org.fusesource.jansi.io.AnsiProcessor,org.fusesource.jansi.AnsiType,org.fusesource.jansi.AnsiColors,java.nio.charset.Charset,org.fusesource.jansi.io.AnsiOutputStream$IoRunnable,org.fusesource.jansi.io.AnsiOutputStream$IoRunnable,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.io.OutputStream"
@@ -25,10 +23,7 @@
     "type": "boolean"
   "return_type": "org.fusesource.jansi.io.AnsiOutputStream"
   "signature": "[org.fusesource.jansi.io.AnsiOutputStream].<init>(java.io.OutputStream,org.fusesource.jansi.io.AnsiOutputStream$WidthSupplier,org.fusesource.jansi.AnsiMode,org.fusesource.jansi.io.AnsiProcessor,org.fusesource.jansi.AnsiType,org.fusesource.jansi.AnsiColors,java.nio.charset.Charset,org.fusesource.jansi.io.AnsiOutputStream$IoRunnable,org.fusesource.jansi.io.AnsiOutputStream$IoRunnable,boolean)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.fusesource.jansi.io.WindowsAnsiProcessor].<init>(java.io.OutputStream,long)"
+- "name": "[org.fusesource.jansi.io.WindowsAnsiProcessor].<init>(java.io.OutputStream,long)"
   "params":
   - "name": "arg0"
     "type": "java.io.OutputStream"
@@ -36,10 +31,7 @@
     "type": "long"
   "return_type": "org.fusesource.jansi.io.WindowsAnsiProcessor"
   "signature": "[org.fusesource.jansi.io.WindowsAnsiProcessor].<init>(java.io.OutputStream,long)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.fusesource.jansi.io.WindowsAnsiProcessor].<init>(java.io.OutputStream,boolean)"
+- "name": "[org.fusesource.jansi.io.WindowsAnsiProcessor].<init>(java.io.OutputStream,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.io.OutputStream"
@@ -47,18 +39,13 @@
     "type": "boolean"
   "return_type": "org.fusesource.jansi.io.WindowsAnsiProcessor"
   "signature": "[org.fusesource.jansi.io.WindowsAnsiProcessor].<init>(java.io.OutputStream,boolean)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.fusesource.jansi.io.WindowsAnsiProcessor].<init>(java.io.OutputStream)"
+- "name": "[org.fusesource.jansi.io.WindowsAnsiProcessor].<init>(java.io.OutputStream)"
   "params":
   - "name": "arg0"
     "type": "java.io.OutputStream"
   "return_type": "org.fusesource.jansi.io.WindowsAnsiProcessor"
   "signature": "[org.fusesource.jansi.io.WindowsAnsiProcessor].<init>(java.io.OutputStream)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.fusesource.jansi.io.ColorsAnsiProcessor].<init>(java.io.OutputStream,org.fusesource.jansi.AnsiColors)"
+- "name": "[org.fusesource.jansi.io.ColorsAnsiProcessor].<init>(java.io.OutputStream,org.fusesource.jansi.AnsiColors)"
   "params":
   - "name": "arg0"
     "type": "java.io.OutputStream"
@@ -66,9 +53,7 @@
     "type": "org.fusesource.jansi.AnsiColors"
   "return_type": "org.fusesource.jansi.io.ColorsAnsiProcessor"
   "signature": "[org.fusesource.jansi.io.ColorsAnsiProcessor].<init>(java.io.OutputStream,org.fusesource.jansi.AnsiColors)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.fusesource.jansi.Ansi].<init>(int)"
+- "name": "[org.fusesource.jansi.Ansi].<init>(int)"
   "params":
   - "name": "arg0"
     "type": "int"

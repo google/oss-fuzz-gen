@@ -1,27 +1,23 @@
 "functions":
-- "exceptions": []
-  "name": "_ZNOSt3__123__optional_storage_baseINS_6localeELb0EE5__getB8ne190000Ev"
+- "name": "_ZNOSt3__123__optional_storage_baseINS_6localeELb0EE5__getB8ne190000Ev"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "DW_TAG_rvalue_reference_typevalue_type std::__1::__optional_storage_base<std::__1::locale, false>::__get(struct __optional_storage_base<std::__1::locale, false> *)"
-- "exceptions": []
-  "name": "_ZNRSt3__18optionalINS_6localeEEdeB8ne190000Ev"
+- "name": "_ZNRSt3__18optionalINS_6localeEEdeB8ne190000Ev"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "value_type & std::__1::optional<std::__1::locale>::operator*(optional<std::__1::locale> *)"
-- "exceptions": []
-  "name": "_ZNOSt3__18__format15__format_bufferINS_20back_insert_iteratorINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEEcE8__out_itB8ne190000Ev"
+- "name": "_ZNOSt3__18__format15__format_bufferINS_20back_insert_iteratorINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEEcE8__out_itB8ne190000Ev"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "back_insert_iterator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > std::__1::__format::__format_buffer<std::__1::back_insert_iterator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, char>::__out_it(__format_buffer<std::__1::back_insert_iterator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, char> *)"
-- "exceptions": []
-  "name": "_ZZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1B8ne190000EOS5_ENKUlRS5_E_clES7_"
+- "name": "_ZZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1B8ne190000EOS5_ENKUlRS5_E_clES7_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -29,8 +25,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "DW_TAG_rvalue_reference_type__compressed_pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::__rep, std::__1::allocator<char> > std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::operator()(const void *, basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &)"
-- "exceptions": []
-  "name": "_ZNRSt3__123__optional_storage_baseINS_6localeELb0EE5__getB8ne190000Ev"
+- "name": "_ZNRSt3__123__optional_storage_baseINS_6localeELb0EE5__getB8ne190000Ev"
   "params":
   - "name": "this"
     "type": "bool "

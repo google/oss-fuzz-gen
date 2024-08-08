@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ptls_send"
+- "name": "ptls_send"
   "params":
   - "name": "tls"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int ptls_send(ptls_t *, ptls_buffer_t *, const void *, size_t)"
-- "exceptions": []
-  "name": "ptls_server_handle_message"
+- "name": "ptls_server_handle_message"
   "params":
   - "name": "tls"
     "type": "bool "
@@ -31,8 +29,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ptls_server_handle_message(ptls_t *, ptls_buffer_t *, size_t *, size_t, const void *, size_t, ptls_handshake_properties_t *)"
-- "exceptions": []
-  "name": "ptls_import"
+- "name": "ptls_import"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -44,8 +41,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int ptls_import(ptls_context_t *, ptls_t **, ptls_iovec_t)"
-- "exceptions": []
-  "name": "ptls_client_handle_message"
+- "name": "ptls_client_handle_message"
   "params":
   - "name": "tls"
     "type": "bool "
@@ -63,8 +59,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ptls_client_handle_message(ptls_t *, ptls_buffer_t *, size_t *, size_t, const void *, size_t, ptls_handshake_properties_t *)"
-- "exceptions": []
-  "name": "ptls_handle_message"
+- "name": "ptls_handle_message"
   "params":
   - "name": "tls"
     "type": "bool "

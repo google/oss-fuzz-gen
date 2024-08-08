@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "wpa_supplicant_deinit"
+- "name": "wpa_supplicant_deinit"
   "params":
   - "name": "global"
     "type": "bool "
   "return_type": "void"
   "signature": "void wpa_supplicant_deinit(struct wpa_global *)"
-- "exceptions": []
-  "name": "wpa_supplicant_add_iface"
+- "name": "wpa_supplicant_add_iface"
   "params":
   - "name": "global"
     "type": "bool "
@@ -17,22 +15,19 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct wpa_supplicant * wpa_supplicant_add_iface(struct wpa_global *, struct wpa_interface *, struct wpa_supplicant *)"
-- "exceptions": []
-  "name": "wpa_supplicant_init"
+- "name": "wpa_supplicant_init"
   "params":
   - "name": "params"
     "type": "bool "
   "return_type": "void"
   "signature": "struct wpa_global * wpa_supplicant_init(struct wpa_params *)"
-- "exceptions": []
-  "name": "wpa_supplicant_reload_configuration"
+- "name": "wpa_supplicant_reload_configuration"
   "params":
   - "name": "wpa_s"
     "type": "bool "
   "return_type": "int"
   "signature": "int wpa_supplicant_reload_configuration(struct wpa_supplicant *)"
-- "exceptions": []
-  "name": "wpa_supplicant_run"
+- "name": "wpa_supplicant_run"
   "params":
   - "name": "global"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ext2fs_symlink"
+- "name": "ext2fs_symlink"
   "params":
   - "name": "fs"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "errcode_t ext2fs_symlink(ext2_filsys, ext2_ino_t, ext2_ino_t, const char *, const char *)"
-- "exceptions": []
-  "name": "ext2fs_dir_iterate"
+- "name": "ext2fs_dir_iterate"
   "params":
   - "name": "fs"
     "type": "bool "
@@ -31,8 +29,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "errcode_t ext2fs_dir_iterate(ext2_filsys, ext2_ino_t, int, char *, DW_TAG_subroutine_typeInfinite loop *, void *)"
-- "exceptions": []
-  "name": "ext2fs_link"
+- "name": "ext2fs_link"
   "params":
   - "name": "fs"
     "type": "bool "
@@ -46,8 +43,7 @@
     "type": "int"
   "return_type": "size_t"
   "signature": "errcode_t ext2fs_link(ext2_filsys, ext2_ino_t, const char *, ext2_ino_t, int)"
-- "exceptions": []
-  "name": "ext2fs_lookup"
+- "name": "ext2fs_lookup"
   "params":
   - "name": "fs"
     "type": "bool "
@@ -63,8 +59,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "errcode_t ext2fs_lookup(ext2_filsys, ext2_ino_t, const char *, int, char *, ext2_ino_t *)"
-- "exceptions": []
-  "name": "ext2fs_dir_iterate2"
+- "name": "ext2fs_dir_iterate2"
   "params":
   - "name": "fs"
     "type": "bool "

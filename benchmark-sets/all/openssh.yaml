@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "kex_setup"
+- "name": "kex_setup"
   "params":
   - "name": "ssh"
     "type": "bool "
@@ -8,15 +7,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int kex_setup(struct ssh *, char **)"
-- "exceptions": []
-  "name": "ssh_packet_read"
+- "name": "ssh_packet_read"
   "params":
   - "name": "ssh"
     "type": "bool "
   "return_type": "int"
   "signature": "int ssh_packet_read(struct ssh *)"
-- "exceptions": []
-  "name": "ssh_dispatch_run_fatal"
+- "name": "ssh_dispatch_run_fatal"
   "params":
   - "name": "ssh"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void ssh_dispatch_run_fatal(struct ssh *, int, DW_TAG_volatile_typesig_atomic_t *)"
-- "exceptions": []
-  "name": "ssh_dispatch_run"
+- "name": "ssh_dispatch_run"
   "params":
   - "name": "ssh"
     "type": "bool "
@@ -37,8 +33,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ssh_dispatch_run(struct ssh *, int, DW_TAG_volatile_typesig_atomic_t *)"
-- "exceptions": []
-  "name": "kex_gen_client"
+- "name": "kex_gen_client"
   "params":
   - "name": "ssh"
     "type": "bool "

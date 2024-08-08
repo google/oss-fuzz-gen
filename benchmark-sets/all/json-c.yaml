@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "json_object_equal"
+- "name": "json_object_equal"
   "params":
   - "name": "jso1"
     "type": "bool "
@@ -8,15 +7,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int json_object_equal(struct json_object *, struct json_object *)"
-- "exceptions": []
-  "name": "json_tokener_parse"
+- "name": "json_tokener_parse"
   "params":
   - "name": "str"
     "type": "bool "
   "return_type": "void"
   "signature": "struct json_object * json_tokener_parse(const char *)"
-- "exceptions": []
-  "name": "json_object_deep_copy"
+- "name": "json_object_deep_copy"
   "params":
   - "name": "src"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int json_object_deep_copy(struct json_object *, struct json_object **, json_c_shallow_copy_fn *)"
-- "exceptions": []
-  "name": "json_tokener_parse_verbose"
+- "name": "json_tokener_parse_verbose"
   "params":
   - "name": "str"
     "type": "bool "
@@ -35,8 +31,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct json_object * json_tokener_parse_verbose(const char *, DW_TAG_enumeration_typejson_tokener_error *)"
-- "exceptions": []
-  "name": "json_object_new_string"
+- "name": "json_object_new_string"
   "params":
   - "name": "s"
     "type": "bool "

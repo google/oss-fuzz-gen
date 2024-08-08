@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "gzputs"
+- "name": "gzputs"
   "params":
   - "name": "file"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int gzputs(gzFile, const char *)"
-- "exceptions": []
-  "name": "gzprintf"
+- "name": "gzprintf"
   "params":
   - "name": "file"
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int gzprintf(gzFile, const char *, void)"
-- "exceptions": []
-  "name": "gzputc"
+- "name": "gzputc"
   "params":
   - "name": "file"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int gzputc(gzFile, int)"
-- "exceptions": []
-  "name": "gzfwrite"
+- "name": "gzfwrite"
   "params":
   - "name": "buf"
     "type": "bool "
@@ -39,8 +35,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "z_size_t gzfwrite(voidpc, z_size_t, z_size_t, gzFile)"
-- "exceptions": []
-  "name": "gzsetparams"
+- "name": "gzsetparams"
   "params":
   - "name": "file"
     "type": "bool "

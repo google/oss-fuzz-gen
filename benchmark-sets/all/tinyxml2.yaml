@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZNK8tinyxml210XMLElement12ShallowCloneEPNS_11XMLDocumentE"
+- "name": "_ZNK8tinyxml210XMLElement12ShallowCloneEPNS_11XMLDocumentE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "XMLNode * tinyxml2::XMLElement::ShallowClone(XMLDocument *)"
-- "exceptions": []
-  "name": "_ZN8tinyxml210XMLPrinter10VisitEnterERKNS_10XMLElementEPKNS_12XMLAttributeE"
+- "name": "_ZN8tinyxml210XMLPrinter10VisitEnterERKNS_10XMLElementEPKNS_12XMLAttributeE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool tinyxml2::XMLPrinter::VisitEnter(const XMLElement &, const XMLAttribute *)"
-- "exceptions": []
-  "name": "_ZN8tinyxml210XMLElement9ParseDeepEPcPNS_7StrPairEPi"
+- "name": "_ZN8tinyxml210XMLElement9ParseDeepEPcPNS_7StrPairEPi"
   "params":
   - "name": "this"
     "type": "bool "
@@ -32,8 +29,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "char * tinyxml2::XMLElement::ParseDeep(char *, StrPair *, int *)"
-- "exceptions": []
-  "name": "_ZN8tinyxml210XMLElement12SetAttributeEPKcS2_"
+- "name": "_ZN8tinyxml210XMLElement12SetAttributeEPKcS2_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -43,8 +39,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void tinyxml2::XMLElement::SetAttribute(const char *, const char *)"
-- "exceptions": []
-  "name": "_ZN8tinyxml211XMLDocument8LoadFileEPKc"
+- "name": "_ZN8tinyxml211XMLDocument8LoadFileEPKc"
   "params":
   - "name": "this"
     "type": "bool "

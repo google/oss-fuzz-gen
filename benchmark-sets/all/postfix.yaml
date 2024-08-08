@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "get_mail_conf_time_table"
+- "name": "get_mail_conf_time_table"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "void get_mail_conf_time_table(const CONFIG_TIME_TABLE *)"
-- "exceptions": []
-  "name": "get_mail_conf_time2"
+- "name": "get_mail_conf_time2"
   "params":
   - "name": ""
     "type": "bool "

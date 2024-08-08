@@ -1,8 +1,5 @@
 "functions":
-- "exceptions":
-  - "java.lang.IllegalArgumentException"
-  "is_jvm_static": false
-  "name": "[org.apache.commons.cli.Option].<init>(java.lang.String,java.lang.String,boolean,java.lang.String)"
+- "name": "[org.apache.commons.cli.Option].<init>(java.lang.String,java.lang.String,boolean,java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -14,10 +11,7 @@
     "type": "java.lang.String"
   "return_type": "org.apache.commons.cli.Option"
   "signature": "[org.apache.commons.cli.Option].<init>(java.lang.String,java.lang.String,boolean,java.lang.String)"
-- "exceptions":
-  - "java.lang.IllegalArgumentException"
-  "is_jvm_static": false
-  "name": "[org.apache.commons.cli.Option].<init>(java.lang.String,boolean,java.lang.String)"
+- "name": "[org.apache.commons.cli.Option].<init>(java.lang.String,boolean,java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -27,10 +21,7 @@
     "type": "java.lang.String"
   "return_type": "org.apache.commons.cli.Option"
   "signature": "[org.apache.commons.cli.Option].<init>(java.lang.String,boolean,java.lang.String)"
-- "exceptions":
-  - "java.lang.IllegalArgumentException"
-  "is_jvm_static": false
-  "name": "[org.apache.commons.cli.Option].<init>(java.lang.String,java.lang.String)"
+- "name": "[org.apache.commons.cli.Option].<init>(java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -38,25 +29,19 @@
     "type": "java.lang.String"
   "return_type": "org.apache.commons.cli.Option"
   "signature": "[org.apache.commons.cli.Option].<init>(java.lang.String,java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.cli.TypeHandler].<init>(java.util.Map)"
+- "name": "[org.apache.commons.cli.TypeHandler].<init>(java.util.Map)"
   "params":
   - "name": "arg0"
     "type": "Map"
   "return_type": "org.apache.commons.cli.TypeHandler"
   "signature": "[org.apache.commons.cli.TypeHandler].<init>(java.util.Map)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.cli.DefaultParser].<init>(boolean)"
+- "name": "[org.apache.commons.cli.DefaultParser].<init>(boolean)"
   "params":
   - "name": "arg0"
     "type": "boolean"
   "return_type": "org.apache.commons.cli.DefaultParser"
   "signature": "[org.apache.commons.cli.DefaultParser].<init>(boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.cli.CommandLine].hasOption(java.lang.String)"
+- "name": "[org.apache.commons.cli.CommandLine].hasOption(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"

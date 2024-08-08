@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPA4_m"
+- "name": "_ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPA4_m"
   "params":
   - "name": "this"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void highwayhash::HighwayHashCat<4u>::operator()(const struct HighwayHashCat<2U> *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t, DW_TAG_restrict_typeHHResult256 *)"
-- "exceptions": []
-  "name": "_ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPA2_m"
+- "name": "_ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPA2_m"
   "params":
   - "name": "this"
     "type": "bool "
@@ -29,8 +27,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void highwayhash::HighwayHashCat<4u>::operator()(const struct HighwayHashCat<2U> *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t, DW_TAG_restrict_typeHHResult128 *)"
-- "exceptions": []
-  "name": "_ZNK11highwayhash14HighwayHashCatILj2EEclERA4_KmPKNS_10StringViewEmPA2_m"
+- "name": "_ZNK11highwayhash14HighwayHashCatILj2EEclERA4_KmPKNS_10StringViewEmPA2_m"
   "params":
   - "name": "this"
     "type": "bool "
@@ -44,8 +41,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void highwayhash::HighwayHashCat<2u>::operator()(const struct HighwayHashCat<2U> *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t, DW_TAG_restrict_typeHHResult128 *)"
-- "exceptions": []
-  "name": "_ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPm"
+- "name": "_ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPm"
   "params":
   - "name": "this"
     "type": "bool "
@@ -59,8 +55,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void highwayhash::HighwayHashCat<4u>::operator()(const struct HighwayHashCat<2U> *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t, DW_TAG_restrict_typeHHResult64 *)"
-- "exceptions": []
-  "name": "_ZNK11highwayhash14HighwayHashCatILj2EEclERA4_KmPKNS_10StringViewEmPA4_m"
+- "name": "_ZNK11highwayhash14HighwayHashCatILj2EEclERA4_KmPKNS_10StringViewEmPA4_m"
   "params":
   - "name": "this"
     "type": "bool "

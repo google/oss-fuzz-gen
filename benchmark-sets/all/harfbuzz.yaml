@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZZNK2OT21ChainContextFormat1_4INS_6Layout11MediumTypesEE14collect_glyphsEPNS_27hb_collect_glyphs_context_tEENKUlRKNS_12ChainRuleSetIS2_EEE_clES9_"
+- "name": "_ZZNK2OT21ChainContextFormat1_4INS_6Layout11MediumTypesEE14collect_glyphsEPNS_27hb_collect_glyphs_context_tEENKUlRKNS_12ChainRuleSetIS2_EEE_clES9_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void OT::ChainContextFormat1_4<OT::Layout::MediumTypes>::operator()(const void *, const ChainRuleSet &)"
-- "exceptions": []
-  "name": "_ZZ16hb_shape_justifyENK3$_0clEd"
+- "name": "_ZZ16hb_shape_justifyENK3$_0clEd"
   "params":
   - "name": "this"
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "double"
   "return_type": "double"
   "signature": "double hb_shape_justify::$_0::operator()(const void *, double)"
-- "exceptions": []
-  "name": "_ZZNK2OT21ChainContextFormat1_4INS_6Layout10SmallTypesEE14collect_glyphsEPNS_27hb_collect_glyphs_context_tEENKUlRKNS_12ChainRuleSetIS2_EEE_clES9_"
+- "name": "_ZZNK2OT21ChainContextFormat1_4INS_6Layout10SmallTypesEE14collect_glyphsEPNS_27hb_collect_glyphs_context_tEENKUlRKNS_12ChainRuleSetIS2_EEE_clES9_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void OT::ChainContextFormat1_4<OT::Layout::SmallTypes>::operator()(const void *, const ChainRuleSet &)"
-- "exceptions": []
-  "name": "_ZZNK2OT21ChainContextFormat2_5INS_6Layout11MediumTypesEE14collect_glyphsEPNS_27hb_collect_glyphs_context_tEENKUlRKNS_12ChainRuleSetINS1_10SmallTypesEEEE_clESA_"
+- "name": "_ZZNK2OT21ChainContextFormat2_5INS_6Layout11MediumTypesEE14collect_glyphsEPNS_27hb_collect_glyphs_context_tEENKUlRKNS_12ChainRuleSetINS1_10SmallTypesEEEE_clESA_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -35,8 +31,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void OT::ChainContextFormat2_5<OT::Layout::MediumTypes>::operator()(const void *, const ChainRuleSet &)"
-- "exceptions": []
-  "name": "_ZZNK2OT21ChainContextFormat2_5INS_6Layout10SmallTypesEE14collect_glyphsEPNS_27hb_collect_glyphs_context_tEENKUlRKNS_12ChainRuleSetIS2_EEE_clES9_"
+- "name": "_ZZNK2OT21ChainContextFormat2_5INS_6Layout10SmallTypesEE14collect_glyphsEPNS_27hb_collect_glyphs_context_tEENKUlRKNS_12ChainRuleSetIS2_EEE_clES9_"
   "params":
   - "name": "this"
     "type": "bool "

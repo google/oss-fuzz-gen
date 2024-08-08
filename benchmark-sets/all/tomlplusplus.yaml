@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN4toml2v313source_regionaSERKS1_"
+- "name": "_ZN4toml2v313source_regionaSERKS1_"
   "params":
   - "name": "this"
     "type": "bool "

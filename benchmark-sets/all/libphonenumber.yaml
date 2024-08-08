@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN6icu_6612RegexMatcherC2ERKNS_13UnicodeStringES3_jR10UErrorCode"
+- "name": "_ZN6icu_6612RegexMatcherC2ERKNS_13UnicodeStringES3_jR10UErrorCode"
   "params":
   - "name": "this"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void icu_66::RegexMatcher::RegexMatcher(const UnicodeString &, const UnicodeString &, uint32_t, UErrorCode &)"
-- "exceptions": []
-  "name": "_ZN6icu_6612RegexPattern7matchesERKNS_13UnicodeStringES3_R11UParseErrorR10UErrorCode"
+- "name": "_ZN6icu_6612RegexPattern7matchesERKNS_13UnicodeStringES3_R11UParseErrorR10UErrorCode"
   "params":
   - "name": "regex"
     "type": "bool "
@@ -27,8 +25,7 @@
     "type": "bool "
   "return_type": "char"
   "signature": "UBool icu_66::RegexPattern::matches(const UnicodeString &, const UnicodeString &, UParseError &, UErrorCode &)"
-- "exceptions": []
-  "name": "_ZN6icu_6612RegexPattern7matchesEP5UTextS2_R11UParseErrorR10UErrorCode"
+- "name": "_ZN6icu_6612RegexPattern7matchesEP5UTextS2_R11UParseErrorR10UErrorCode"
   "params":
   - "name": "regex"
     "type": "bool "
@@ -40,8 +37,7 @@
     "type": "bool "
   "return_type": "char"
   "signature": "UBool icu_66::RegexPattern::matches(UText *, UText *, UParseError &, UErrorCode &)"
-- "exceptions": []
-  "name": "_ZN6icu_6612RegexMatcherC2EP5UTextjR10UErrorCode"
+- "name": "_ZN6icu_6612RegexMatcherC2EP5UTextjR10UErrorCode"
   "params":
   - "name": "this"
     "type": "bool "
@@ -53,8 +49,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void icu_66::RegexMatcher::RegexMatcher(UText *, uint32_t, UErrorCode &)"
-- "exceptions": []
-  "name": "_ZN6icu_6612RegexMatcherC2ERKNS_13UnicodeStringEjR10UErrorCode"
+- "name": "_ZN6icu_6612RegexMatcherC2ERKNS_13UnicodeStringEjR10UErrorCode"
   "params":
   - "name": "this"
     "type": "bool "

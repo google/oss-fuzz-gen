@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "cJSON_ReplaceItemInObjectCaseSensitive"
+- "name": "cJSON_ReplaceItemInObjectCaseSensitive"
   "params":
   - "name": "object"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "cJSON_bool cJSON_ReplaceItemInObjectCaseSensitive(cJSON *, const char *, cJSON *)"
-- "exceptions": []
-  "name": "cJSON_ParseWithLength"
+- "name": "cJSON_ParseWithLength"
   "params":
   - "name": "value"
     "type": "bool "
@@ -19,15 +17,13 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "cJSON * cJSON_ParseWithLength(const char *, size_t)"
-- "exceptions": []
-  "name": "cJSON_Parse"
+- "name": "cJSON_Parse"
   "params":
   - "name": "value"
     "type": "bool "
   "return_type": "void"
   "signature": "cJSON * cJSON_Parse(const char *)"
-- "exceptions": []
-  "name": "cJSON_PrintPreallocated"
+- "name": "cJSON_PrintPreallocated"
   "params":
   - "name": "item"
     "type": "bool "
@@ -39,8 +35,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "cJSON_bool cJSON_PrintPreallocated(cJSON *, char *, const int, const cJSON_bool)"
-- "exceptions": []
-  "name": "cJSON_Compare"
+- "name": "cJSON_Compare"
   "params":
   - "name": "a"
     "type": "bool "

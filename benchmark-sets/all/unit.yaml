@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "nxt_runtime_create"
+- "name": "nxt_runtime_create"
   "params":
   - "name": "task"
     "type": "bool "
   "return_type": "int"
   "signature": "nxt_int_t nxt_runtime_create(nxt_task_t *)"
-- "exceptions": []
-  "name": "nxt_process_init_start"
+- "name": "nxt_process_init_start"
   "params":
   - "name": "task"
     "type": "bool "
@@ -15,8 +13,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "nxt_int_t nxt_process_init_start(nxt_task_t *, nxt_process_init_t)"
-- "exceptions": []
-  "name": "nxt_main_process_start"
+- "name": "nxt_main_process_start"
   "params":
   - "name": "thr"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "nxt_int_t nxt_main_process_start(nxt_thread_t *, nxt_task_t *, nxt_runtime_t *)"
-- "exceptions": []
-  "name": "nxt_process_start"
+- "name": "nxt_process_start"
   "params":
   - "name": "task"
     "type": "bool "
@@ -35,8 +31,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "nxt_int_t nxt_process_start(nxt_task_t *, nxt_process_t *)"
-- "exceptions": []
-  "name": "nxt_http_application_handler"
+- "name": "nxt_http_application_handler"
   "params":
   - "name": "task"
     "type": "bool "

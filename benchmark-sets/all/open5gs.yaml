@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ogs_nas_esm_decode"
+- "name": "ogs_nas_esm_decode"
   "params":
   - "name": "message"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ogs_nas_esm_decode(ogs_nas_eps_message_t *, ogs_pkbuf_t *)"
-- "exceptions": []
-  "name": "ogs_gtp_context_parse_config"
+- "name": "ogs_gtp_context_parse_config"
   "params":
   - "name": "local"
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ogs_gtp_context_parse_config(const char *, const char *)"
-- "exceptions": []
-  "name": "ogs_gtp2_send_echo_request"
+- "name": "ogs_gtp2_send_echo_request"
   "params":
   - "name": "gnode"
     "type": "bool "
@@ -28,8 +25,7 @@
     "type": "char"
   "return_type": "void"
   "signature": "void ogs_gtp2_send_echo_request(ogs_gtp_node_t *, uint8_t, uint8_t)"
-- "exceptions": []
-  "name": "ogs_gtp2_send_error_message"
+- "name": "ogs_gtp2_send_error_message"
   "params":
   - "name": "xact"
     "type": "bool "
@@ -41,8 +37,7 @@
     "type": "char"
   "return_type": "void"
   "signature": "void ogs_gtp2_send_error_message(ogs_gtp_xact_t *, uint32_t, uint8_t, uint8_t)"
-- "exceptions": []
-  "name": "ogs_gtp2_send_echo_response"
+- "name": "ogs_gtp2_send_echo_response"
   "params":
   - "name": "xact"
     "type": "bool "

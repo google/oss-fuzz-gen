@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "g_obex_put_req"
+- "name": "g_obex_put_req"
   "params":
   - "name": "obex"
     "type": "bool "
@@ -16,8 +15,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "guint g_obex_put_req(GObex *, GObexDataProducer, GObexFunc, gpointer, GError **, guint, void)"
-- "exceptions": []
-  "name": "g_obex_new"
+- "name": "g_obex_new"
   "params":
   - "name": "io"
     "type": "bool "
@@ -29,8 +27,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "GObex * g_obex_new(GIOChannel *, GObexTransportType, gssize, gssize)"
-- "exceptions": []
-  "name": "g_obex_get_req"
+- "name": "g_obex_get_req"
   "params":
   - "name": "obex"
     "type": "bool "
@@ -46,8 +43,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "guint g_obex_get_req(GObex *, GObexDataConsumer, GObexFunc, gpointer, GError **, guint, void)"
-- "exceptions": []
-  "name": "g_obex_get_req_pkt"
+- "name": "g_obex_get_req_pkt"
   "params":
   - "name": "obex"
     "type": "bool "
@@ -63,8 +59,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "guint g_obex_get_req_pkt(GObex *, GObexPacket *, GObexDataConsumer, GObexFunc, gpointer, GError **)"
-- "exceptions": []
-  "name": "g_obex_put_req_pkt"
+- "name": "g_obex_put_req_pkt"
   "params":
   - "name": "obex"
     "type": "bool "

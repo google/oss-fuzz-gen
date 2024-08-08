@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "nb_encode"
+- "name": "nb_encode"
   "params":
   - "name": "state"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int nb_encode(void *, void *, SpeexBits *)"
-- "exceptions": []
-  "name": "vbr_analysis"
+- "name": "vbr_analysis"
   "params":
   - "name": "vbr"
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "float"
   "return_type": "float"
   "signature": "float vbr_analysis(VBRState *, spx_word16_t *, int, int, float)"
-- "exceptions": []
-  "name": "sb_encode"
+- "name": "sb_encode"
   "params":
   - "name": "state"
     "type": "bool "
@@ -36,8 +33,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int sb_encode(void *, void *, SpeexBits *)"
-- "exceptions": []
-  "name": "split_cb_search_shape_sign"
+- "name": "split_cb_search_shape_sign"
   "params":
   - "name": "target"
     "type": "bool "
@@ -67,8 +63,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void split_cb_search_shape_sign(spx_word16_t *, spx_coef_t *, spx_coef_t *, spx_coef_t *, const void *, int, int, spx_sig_t *, spx_word16_t *, SpeexBits *, char *, int, int)"
-- "exceptions": []
-  "name": "pitch_search_3tap"
+- "name": "pitch_search_3tap"
   "params":
   - "name": "target"
     "type": "bool "

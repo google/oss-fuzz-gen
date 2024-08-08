@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "roaring_bitmap_or_many"
+- "name": "roaring_bitmap_or_many"
   "params":
   - "name": ""
     "type": "size_t"
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "roaring_bitmap_t * roaring_bitmap_or_many(size_t, const roaring_bitmap_t **)"
-- "exceptions": []
-  "name": "roaring_bitmap_lazy_xor_inplace"
+- "name": "roaring_bitmap_lazy_xor_inplace"
   "params":
   - "name": ""
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void roaring_bitmap_lazy_xor_inplace(roaring_bitmap_t *, const roaring_bitmap_t *)"
-- "exceptions": []
-  "name": "roaring_bitmap_add_offset"
+- "name": "roaring_bitmap_add_offset"
   "params":
   - "name": ""
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "roaring_bitmap_t * roaring_bitmap_add_offset(const roaring_bitmap_t *, int64_t)"
-- "exceptions": []
-  "name": "roaring_bitmap_xor_many"
+- "name": "roaring_bitmap_xor_many"
   "params":
   - "name": ""
     "type": "size_t"
@@ -35,8 +31,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "roaring_bitmap_t * roaring_bitmap_xor_many(size_t, const roaring_bitmap_t **)"
-- "exceptions": []
-  "name": "roaring_bitmap_lazy_or"
+- "name": "roaring_bitmap_lazy_or"
   "params":
   - "name": ""
     "type": "bool "

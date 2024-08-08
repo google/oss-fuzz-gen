@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.hamcrest.beans.HasPropertyWithValue].matchesSafely(java.lang.Object,org.hamcrest.Description)"
+- "name": "[org.hamcrest.beans.HasPropertyWithValue].matchesSafely(java.lang.Object,org.hamcrest.Description)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -9,9 +7,7 @@
     "type": "org.hamcrest.Description"
   "return_type": "boolean"
   "signature": "[org.hamcrest.beans.HasPropertyWithValue].matchesSafely(java.lang.Object,org.hamcrest.Description)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.hamcrest.core.Every].matchesSafely(java.lang.Iterable<? extends T>,org.hamcrest.Description)"
+- "name": "[org.hamcrest.core.Every].matchesSafely(java.lang.Iterable<? extends T>,org.hamcrest.Description)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Iterable<? extends T>"
@@ -19,9 +15,7 @@
     "type": "org.hamcrest.Description"
   "return_type": "boolean"
   "signature": "[org.hamcrest.core.Every].matchesSafely(java.lang.Iterable<? extends T>,org.hamcrest.Description)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.hamcrest.collection.IsArray].describeMismatchSafely(java.lang.Object,org.hamcrest.Description)"
+- "name": "[org.hamcrest.collection.IsArray].describeMismatchSafely(java.lang.Object,org.hamcrest.Description)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -29,9 +23,7 @@
     "type": "org.hamcrest.Description"
   "return_type": "void"
   "signature": "[org.hamcrest.collection.IsArray].describeMismatchSafely(java.lang.Object,org.hamcrest.Description)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.hamcrest.collection.IsArray].describeMismatchSafely(java.lang.Object[],org.hamcrest.Description)"
+- "name": "[org.hamcrest.collection.IsArray].describeMismatchSafely(java.lang.Object[],org.hamcrest.Description)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object[]"
@@ -39,17 +31,13 @@
     "type": "org.hamcrest.Description"
   "return_type": "void"
   "signature": "[org.hamcrest.collection.IsArray].describeMismatchSafely(java.lang.Object[],org.hamcrest.Description)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.hamcrest.collection.IsArray].matchesSafely(java.lang.Object)"
+- "name": "[org.hamcrest.collection.IsArray].matchesSafely(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
   "return_type": "boolean"
   "signature": "[org.hamcrest.collection.IsArray].matchesSafely(java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.hamcrest.collection.IsArray].matchesSafely(java.lang.Object[])"
+- "name": "[org.hamcrest.collection.IsArray].matchesSafely(java.lang.Object[])"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object[]"

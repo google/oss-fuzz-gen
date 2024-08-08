@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "janus_sdp_generate_answer_mline"
+- "name": "janus_sdp_generate_answer_mline"
   "params":
   - "name": "offer"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int janus_sdp_generate_answer_mline(janus_sdp *, janus_sdp *, janus_sdp_mline *, void)"
-- "exceptions": []
-  "name": "janus_rtp_simulcasting_context_process_rtp"
+- "name": "janus_rtp_simulcasting_context_process_rtp"
   "params":
   - "name": "context"
     "type": "bool "
@@ -35,8 +33,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "gboolean janus_rtp_simulcasting_context_process_rtp(janus_rtp_simulcasting_context *, char *, int, uint8_t *, int, uint32_t *, char **, janus_videocodec, janus_rtp_switching_context *, janus_mutex *)"
-- "exceptions": []
-  "name": "janus_sdp_generate_offer"
+- "name": "janus_sdp_generate_offer"
   "params":
   - "name": "name"
     "type": "bool "
@@ -44,8 +41,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "janus_sdp * janus_sdp_generate_offer(const char *, const char *, void)"
-- "exceptions": []
-  "name": "janus_rtp_svc_context_process_rtp"
+- "name": "janus_rtp_svc_context_process_rtp"
   "params":
   - "name": "context"
     "type": "bool "
@@ -65,8 +61,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "gboolean janus_rtp_svc_context_process_rtp(janus_rtp_svc_context *, char *, int, uint8_t *, int, janus_videocodec, janus_vp9_svc_info *, janus_rtp_switching_context *)"
-- "exceptions": []
-  "name": "janus_sdp_generate_offer_mline"
+- "name": "janus_sdp_generate_offer_mline"
   "params":
   - "name": "offer"
     "type": "bool "

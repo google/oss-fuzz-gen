@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN4brpc6policy15DiscoveryClient10DoRegisterEv"
+- "name": "_ZN4brpc6policy15DiscoveryClient10DoRegisterEv"
   "params":
   - "name": ""
     "type": "bool "

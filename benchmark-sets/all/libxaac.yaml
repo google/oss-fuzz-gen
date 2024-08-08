@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ixheaacd_hbe_apply_ifft_336"
+- "name": "ixheaacd_hbe_apply_ifft_336"
   "params":
   - "name": ""
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "VOID ixheaacd_hbe_apply_ifft_336(FLOAT32 *, FLOAT32 *, WORD32, WORD32)"
-- "exceptions": []
-  "name": "ixheaacd_hbe_apply_ifft_224"
+- "name": "ixheaacd_hbe_apply_ifft_224"
   "params":
   - "name": ""
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "VOID ixheaacd_hbe_apply_ifft_224(FLOAT32 *, FLOAT32 *, WORD32, WORD32)"
-- "exceptions": []
-  "name": "ixheaacd_hbe_apply_fft_288"
+- "name": "ixheaacd_hbe_apply_fft_288"
   "params":
   - "name": ""
     "type": "bool "
@@ -38,15 +35,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "VOID ixheaacd_hbe_apply_fft_288(FLOAT32 *, FLOAT32 *, WORD32, WORD32)"
-- "exceptions": []
-  "name": "ixheaacd_mps_apply_mix_matrix"
+- "name": "ixheaacd_mps_apply_mix_matrix"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "VOID ixheaacd_mps_apply_mix_matrix(ia_mps_dec_state_struct *)"
-- "exceptions": []
-  "name": "ixheaacd_apply_rot_dec"
+- "name": "ixheaacd_apply_rot_dec"
   "params":
   - "name": ""
     "type": "bool "

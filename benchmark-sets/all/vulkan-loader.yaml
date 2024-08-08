@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "terminator_EnumerateInstanceLayerProperties"
+- "name": "terminator_EnumerateInstanceLayerProperties"
   "params":
   - "name": ""
     "type": "bool "
@@ -8,15 +7,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "VkResult terminator_EnumerateInstanceLayerProperties(uint32_t *, VkLayerProperties *)"
-- "exceptions": []
-  "name": "vkEnumerateInstanceVersion"
+- "name": "vkEnumerateInstanceVersion"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "int"
   "signature": "VkResult vkEnumerateInstanceVersion(uint32_t *)"
-- "exceptions": []
-  "name": "terminator_pre_instance_EnumerateInstanceLayerProperties"
+- "name": "terminator_pre_instance_EnumerateInstanceLayerProperties"
   "params":
   - "name": ""
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "VkResult terminator_pre_instance_EnumerateInstanceLayerProperties(const VkEnumerateInstanceLayerPropertiesChain *, uint32_t *, VkLayerProperties *)"
-- "exceptions": []
-  "name": "vkGetDeviceProcAddr"
+- "name": "vkGetDeviceProcAddr"
   "params":
   - "name": ""
     "type": "bool "
@@ -35,8 +31,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "PFN_vkVoidFunction vkGetDeviceProcAddr(VkDevice, const char *)"
-- "exceptions": []
-  "name": "vkEnumerateInstanceLayerProperties"
+- "name": "vkEnumerateInstanceLayerProperties"
   "params":
   - "name": ""
     "type": "bool "

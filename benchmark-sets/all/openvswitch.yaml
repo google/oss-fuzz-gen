@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "parse_ofp_flow_stats_request_str"
+- "name": "parse_ofp_flow_stats_request_str"
   "params":
   - "name": "fsr"
     "type": "bool "
@@ -16,8 +15,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "char * parse_ofp_flow_stats_request_str(struct ofputil_flow_stats_request *, bool, const char *, const struct ofputil_port_map *, const struct ofputil_table_map *, DW_TAG_enumeration_typeofputil_protocol *)"
-- "exceptions": []
-  "name": "parse_ofp_bundle_file"
+- "name": "parse_ofp_bundle_file"
   "params":
   - "name": "file_name"
     "type": "bool "
@@ -33,15 +31,13 @@
     "type": "bool "
   "return_type": "void"
   "signature": "char * parse_ofp_bundle_file(const char *, const struct ofputil_port_map *, const struct ofputil_table_map *, struct ofputil_bundle_msg **, size_t *, DW_TAG_enumeration_typeofputil_protocol *)"
-- "exceptions": []
-  "name": "ovsdb_idl_txn_commit_block"
+- "name": "ovsdb_idl_txn_commit_block"
   "params":
   - "name": "txn"
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typeovsdb_idl_txn_status ovsdb_idl_txn_commit_block(struct ovsdb_idl_txn *)"
-- "exceptions": []
-  "name": "parse_ofp_flow_mod_file"
+- "name": "parse_ofp_flow_mod_file"
   "params":
   - "name": "file_name"
     "type": "bool "
@@ -59,8 +55,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "char * parse_ofp_flow_mod_file(const char *, const struct ofputil_port_map *, const struct ofputil_table_map *, int, struct ofputil_flow_mod **, size_t *, DW_TAG_enumeration_typeofputil_protocol *)"
-- "exceptions": []
-  "name": "dp_netdev_input"
+- "name": "dp_netdev_input"
   "params":
   - "name": "pmd"
     "type": "bool "

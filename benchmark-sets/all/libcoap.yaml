@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "coap_ws_read"
+- "name": "coap_ws_read"
   "params":
   - "name": "session"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "ssize_t coap_ws_read(coap_session_t *, uint8_t *, size_t)"
-- "exceptions": []
-  "name": "coap_new_client_session_oscore_pki"
+- "name": "coap_new_client_session_oscore_pki"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -27,8 +25,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "coap_session_t * coap_new_client_session_oscore_pki(coap_context_t *, const coap_address_t *, const coap_address_t *, coap_proto_t, coap_dtls_pki_t *, coap_oscore_conf_t *)"
-- "exceptions": []
-  "name": "coap_new_client_session_oscore_pki_lkd"
+- "name": "coap_new_client_session_oscore_pki_lkd"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -44,8 +41,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "coap_session_t * coap_new_client_session_oscore_pki_lkd(coap_context_t *, const coap_address_t *, const coap_address_t *, coap_proto_t, coap_dtls_pki_t *, coap_oscore_conf_t *)"
-- "exceptions": []
-  "name": "coap_new_client_session_oscore_psk_lkd"
+- "name": "coap_new_client_session_oscore_psk_lkd"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -61,8 +57,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "coap_session_t * coap_new_client_session_oscore_psk_lkd(coap_context_t *, const coap_address_t *, const coap_address_t *, coap_proto_t, coap_dtls_cpsk_t *, coap_oscore_conf_t *)"
-- "exceptions": []
-  "name": "coap_new_client_session_oscore_psk"
+- "name": "coap_new_client_session_oscore_psk"
   "params":
   - "name": "ctx"
     "type": "bool "

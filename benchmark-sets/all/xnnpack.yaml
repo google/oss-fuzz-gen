@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "xnn_create_convolution2d_nhwc_qd8_f16_qc8w"
+- "name": "xnn_create_convolution2d_nhwc_qd8_f16_qc8w"
   "params":
   - "name": ""
     "type": "int"
@@ -52,8 +51,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typexnn_status xnn_create_convolution2d_nhwc_qd8_f16_qc8w(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, size_t, size_t, size_t, size_t, const float *, const int8_t *, const float *, float, float, uint32_t, xnn_code_cache_t, xnn_weights_cache_t, xnn_operator_t *)"
-- "exceptions": []
-  "name": "xnn_create_fused_convolution2d_nhwc_f32"
+- "name": "xnn_create_fused_convolution2d_nhwc_f32"
   "params":
   - "name": ""
     "type": "int"
@@ -103,8 +101,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typexnn_status xnn_create_fused_convolution2d_nhwc_f32(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, size_t, size_t, size_t, size_t, const float *, const float *, size_t, struct xnn_post_operation *, uint32_t, xnn_code_cache_t, xnn_weights_cache_t, xnn_operator_t *)"
-- "exceptions": []
-  "name": "xnn_create_convolution2d_nhwc_qu8"
+- "name": "xnn_create_convolution2d_nhwc_qu8"
   "params":
   - "name": ""
     "type": "int"
@@ -166,8 +163,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typexnn_status xnn_create_convolution2d_nhwc_qu8(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, size_t, size_t, size_t, size_t, uint8_t, float, uint8_t, float, const uint8_t *, const int32_t *, uint8_t, float, uint8_t, uint8_t, uint32_t, xnn_code_cache_t, xnn_weights_cache_t, xnn_operator_t *)"
-- "exceptions": []
-  "name": "xnn_create_convolution2d_nhwc_qs8_qc8w"
+- "name": "xnn_create_convolution2d_nhwc_qs8_qc8w"
   "params":
   - "name": ""
     "type": "int"
@@ -227,8 +223,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typexnn_status xnn_create_convolution2d_nhwc_qs8_qc8w(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, size_t, size_t, size_t, size_t, int8_t, float, const float *, const int8_t *, const int32_t *, int8_t, float, int8_t, int8_t, uint32_t, xnn_code_cache_t, xnn_weights_cache_t, xnn_operator_t *)"
-- "exceptions": []
-  "name": "xnn_create_convolution2d_nhwc_f32"
+- "name": "xnn_create_convolution2d_nhwc_f32"
   "params":
   - "name": ""
     "type": "int"

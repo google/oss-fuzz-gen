@@ -1,34 +1,29 @@
 "functions":
-- "exceptions": []
-  "name": "kex_gen_server"
+- "name": "kex_gen_server"
   "params":
   - "name": "ssh"
     "type": "bool "
   "return_type": "int"
   "signature": "int kex_gen_server(struct ssh *)"
-- "exceptions": []
-  "name": "kex_send_newkeys"
+- "name": "kex_send_newkeys"
   "params":
   - "name": "ssh"
     "type": "bool "
   "return_type": "int"
   "signature": "int kex_send_newkeys(struct ssh *)"
-- "exceptions": []
-  "name": "kexgex_client"
+- "name": "kexgex_client"
   "params":
   - "name": "ssh"
     "type": "bool "
   "return_type": "int"
   "signature": "int kexgex_client(struct ssh *)"
-- "exceptions": []
-  "name": "kex_gen_client"
+- "name": "kex_gen_client"
   "params":
   - "name": "ssh"
     "type": "bool "
   "return_type": "int"
   "signature": "int kex_gen_client(struct ssh *)"
-- "exceptions": []
-  "name": "kexgex_server"
+- "name": "kexgex_server"
   "params":
   - "name": "ssh"
     "type": "bool "

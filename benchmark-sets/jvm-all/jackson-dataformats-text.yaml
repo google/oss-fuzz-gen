@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.fasterxml.jackson.dataformat.csv.impl.CsvEncoder].<init>(com.fasterxml.jackson.core.io.IOContext,int,java.io.Writer,com.fasterxml.jackson.dataformat.csv.CsvSchema,boolean)"
+- "name": "[com.fasterxml.jackson.dataformat.csv.impl.CsvEncoder].<init>(com.fasterxml.jackson.core.io.IOContext,int,java.io.Writer,com.fasterxml.jackson.dataformat.csv.CsvSchema,boolean)"
   "params":
   - "name": "arg0"
     "type": "com.fasterxml.jackson.core.io.IOContext"
@@ -15,9 +13,7 @@
     "type": "boolean"
   "return_type": "com.fasterxml.jackson.dataformat.csv.impl.CsvEncoder"
   "signature": "[com.fasterxml.jackson.dataformat.csv.impl.CsvEncoder].<init>(com.fasterxml.jackson.core.io.IOContext,int,java.io.Writer,com.fasterxml.jackson.dataformat.csv.CsvSchema,boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.fasterxml.jackson.dataformat.csv.impl.CsvEncoder].<init>(com.fasterxml.jackson.dataformat.csv.impl.CsvEncoder,com.fasterxml.jackson.dataformat.csv.CsvSchema)"
+- "name": "[com.fasterxml.jackson.dataformat.csv.impl.CsvEncoder].<init>(com.fasterxml.jackson.dataformat.csv.impl.CsvEncoder,com.fasterxml.jackson.dataformat.csv.CsvSchema)"
   "params":
   - "name": "arg0"
     "type": "com.fasterxml.jackson.dataformat.csv.impl.CsvEncoder"
@@ -25,9 +21,7 @@
     "type": "com.fasterxml.jackson.dataformat.csv.CsvSchema"
   "return_type": "com.fasterxml.jackson.dataformat.csv.impl.CsvEncoder"
   "signature": "[com.fasterxml.jackson.dataformat.csv.impl.CsvEncoder].<init>(com.fasterxml.jackson.dataformat.csv.impl.CsvEncoder,com.fasterxml.jackson.dataformat.csv.CsvSchema)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.fasterxml.jackson.dataformat.csv.CsvGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.Writer,com.fasterxml.jackson.dataformat.csv.CsvSchema)"
+- "name": "[com.fasterxml.jackson.dataformat.csv.CsvGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.Writer,com.fasterxml.jackson.dataformat.csv.CsvSchema)"
   "params":
   - "name": "arg0"
     "type": "com.fasterxml.jackson.core.io.IOContext"
@@ -43,10 +37,7 @@
     "type": "com.fasterxml.jackson.dataformat.csv.CsvSchema"
   "return_type": "com.fasterxml.jackson.dataformat.csv.CsvGenerator"
   "signature": "[com.fasterxml.jackson.dataformat.csv.CsvGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.Writer,com.fasterxml.jackson.dataformat.csv.CsvSchema)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.fasterxml.jackson.dataformat.yaml.YAMLGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.dataformat.yaml.util.StringQuotingChecker,com.fasterxml.jackson.core.ObjectCodec,java.io.Writer,org.yaml.snakeyaml.DumperOptions$Version)"
+- "name": "[com.fasterxml.jackson.dataformat.yaml.YAMLGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.dataformat.yaml.util.StringQuotingChecker,com.fasterxml.jackson.core.ObjectCodec,java.io.Writer,org.yaml.snakeyaml.DumperOptions$Version)"
   "params":
   - "name": "arg0"
     "type": "com.fasterxml.jackson.core.io.IOContext"
@@ -64,9 +55,7 @@
     "type": "org.yaml.snakeyamlDumperOptions$Version"
   "return_type": "com.fasterxml.jackson.dataformat.yaml.YAMLGenerator"
   "signature": "[com.fasterxml.jackson.dataformat.yaml.YAMLGenerator].<init>(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.dataformat.yaml.util.StringQuotingChecker,com.fasterxml.jackson.core.ObjectCodec,java.io.Writer,org.yaml.snakeyaml.DumperOptions$Version)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.fasterxml.jackson.dataformat.csv.CsvSchema].<init>(com.fasterxml.jackson.dataformat.csv.CsvSchema$Column[],int,char,int,int,char[],java.lang.String,char[],java.lang.String)"
+- "name": "[com.fasterxml.jackson.dataformat.csv.CsvSchema].<init>(com.fasterxml.jackson.dataformat.csv.CsvSchema$Column[],int,char,int,int,char[],java.lang.String,char[],java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "com.fasterxml.jackson.dataformat.csv.CsvSchema$Column[]"
@@ -88,9 +77,7 @@
     "type": "java.lang.String"
   "return_type": "com.fasterxml.jackson.dataformat.csv.CsvSchema"
   "signature": "[com.fasterxml.jackson.dataformat.csv.CsvSchema].<init>(com.fasterxml.jackson.dataformat.csv.CsvSchema$Column[],int,char,int,int,char[],java.lang.String,char[],java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.fasterxml.jackson.dataformat.csv.CsvSchema].<init>(com.fasterxml.jackson.dataformat.csv.CsvSchema$Column[],int,char,int,int,char[],int,char[])"
+- "name": "[com.fasterxml.jackson.dataformat.csv.CsvSchema].<init>(com.fasterxml.jackson.dataformat.csv.CsvSchema$Column[],int,char,int,int,char[],int,char[])"
   "params":
   - "name": "arg0"
     "type": "com.fasterxml.jackson.dataformat.csv.CsvSchema$Column[]"

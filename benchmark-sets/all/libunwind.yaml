@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "access_mem"
+- "name": "access_mem"
   "params":
   - "name": "as"
     "type": "bool "

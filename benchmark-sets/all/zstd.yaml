@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ZDICT_trainFromBuffer"
+- "name": "ZDICT_trainFromBuffer"
   "params":
   - "name": "dictBuffer"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "int"
   "return_type": "size_t"
   "signature": "size_t ZDICT_trainFromBuffer(void *, size_t, const void *, const size_t *, unsigned int)"
-- "exceptions": []
-  "name": "ZDICT_optimizeTrainFromBuffer_cover"
+- "name": "ZDICT_optimizeTrainFromBuffer_cover"
   "params":
   - "name": "dictBuffer"
     "type": "bool "
@@ -31,8 +29,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "size_t ZDICT_optimizeTrainFromBuffer_cover(void *, size_t, const void *, const size_t *, unsigned int, ZDICT_cover_params_t *)"
-- "exceptions": []
-  "name": "ZDICT_optimizeTrainFromBuffer_fastCover"
+- "name": "ZDICT_optimizeTrainFromBuffer_fastCover"
   "params":
   - "name": "dictBuffer"
     "type": "bool "
@@ -48,8 +45,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "size_t ZDICT_optimizeTrainFromBuffer_fastCover(void *, size_t, const void *, const size_t *, unsigned int, ZDICT_fastCover_params_t *)"
-- "exceptions": []
-  "name": "ZSTD_flushStream"
+- "name": "ZSTD_flushStream"
   "params":
   - "name": "zcs"
     "type": "bool "
@@ -57,8 +53,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "size_t ZSTD_flushStream(ZSTD_CStream *, ZSTD_outBuffer *)"
-- "exceptions": []
-  "name": "ZDICT_trainFromBuffer_legacy"
+- "name": "ZDICT_trainFromBuffer_legacy"
   "params":
   - "name": "dictBuffer"
     "type": "bool "

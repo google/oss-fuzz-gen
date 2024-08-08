@@ -1,53 +1,35 @@
 "functions":
-- "exceptions":
-  - "org.antlr.v4.runtime.RecognitionException"
-  "is_jvm_static": false
-  "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].recordDeclaration(java.util.List<ModifierContext>)"
+- "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].recordDeclaration(java.util.List<ModifierContext>)"
   "params":
   - "name": "arg0"
     "type": "java.util.List<ModifierContext>"
   "return_type": "com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser$RecordDeclarationContext"
   "signature": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].recordDeclaration(java.util.List<ModifierContext>)"
-- "exceptions":
-  - "org.antlr.v4.runtime.RecognitionException"
-  "is_jvm_static": false
-  "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].constructorDeclaration(java.util.List<ModifierContext>)"
+- "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].constructorDeclaration(java.util.List<ModifierContext>)"
   "params":
   - "name": "arg0"
     "type": "java.util.List<ModifierContext>"
   "return_type": "com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser$ConstructorDeclarationContext"
   "signature": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].constructorDeclaration(java.util.List<ModifierContext>)"
-- "exceptions":
-  - "org.antlr.v4.runtime.RecognitionException"
-  "is_jvm_static": false
-  "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].interfaceDeclaration(java.util.List<ModifierContext>)"
+- "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].interfaceDeclaration(java.util.List<ModifierContext>)"
   "params":
   - "name": "arg0"
     "type": "java.util.List<ModifierContext>"
   "return_type": "com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser$InterfaceDeclarationContext"
   "signature": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].interfaceDeclaration(java.util.List<ModifierContext>)"
-- "exceptions":
-  - "org.antlr.v4.runtime.RecognitionException"
-  "is_jvm_static": false
-  "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].methodDeclaration(java.util.List<ModifierContext>)"
+- "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].methodDeclaration(java.util.List<ModifierContext>)"
   "params":
   - "name": "arg0"
     "type": "java.util.List<ModifierContext>"
   "return_type": "com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser$MethodDeclarationContext"
   "signature": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].methodDeclaration(java.util.List<ModifierContext>)"
-- "exceptions":
-  - "org.antlr.v4.runtime.RecognitionException"
-  "is_jvm_static": false
-  "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].interfaceMethodDeclaration(java.util.List<ModifierContext>)"
+- "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].interfaceMethodDeclaration(java.util.List<ModifierContext>)"
   "params":
   - "name": "arg0"
     "type": "java.util.List<ModifierContext>"
   "return_type": "com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser$InterfaceMethodDeclarationContext"
   "signature": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].interfaceMethodDeclaration(java.util.List<ModifierContext>)"
-- "exceptions":
-  - "org.antlr.v4.runtime.RecognitionException"
-  "is_jvm_static": false
-  "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].enumDeclaration(java.util.List<ModifierContext>)"
+- "name": "[com.puppycrawl.tools.checkstyle.grammar.java.JavaLanguageParser].enumDeclaration(java.util.List<ModifierContext>)"
   "params":
   - "name": "arg0"
     "type": "java.util.List<ModifierContext>"

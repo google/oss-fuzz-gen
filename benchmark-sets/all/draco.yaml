@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
+- "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
   "params":
   - "name": ""
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "ValueType draco::PointAttribute::DeduplicateValues(const GeometryAttribute &, AttributeValueIndex)"
-- "exceptions": []
-  "name": "_ZN5draco11CornerTable4InitERKNS_15IndexTypeVectorINS_9IndexTypeIjNS_19FaceIndex_tag_type_EEENSt3__15arrayINS2_IjNS_21VertexIndex_tag_type_EEELm3EEEEE"
+- "name": "_ZN5draco11CornerTable4InitERKNS_15IndexTypeVectorINS_9IndexTypeIjNS_19FaceIndex_tag_type_EEENSt3__15arrayINS2_IjNS_21VertexIndex_tag_type_EEELm3EEEEE"
   "params":
   - "name": ""
     "type": "bool "
@@ -19,15 +17,13 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool draco::CornerTable::Init(const IndexTypeVector<draco::IndexType<unsigned int, draco::FaceIndex_tag_type_>, std::__1::array<draco::IndexType<unsigned int, draco::VertexIndex_tag_type_>, 3UL> > &)"
-- "exceptions": []
-  "name": "_ZN5draco10PointCloud26DeduplicateAttributeValuesEv"
+- "name": "_ZN5draco10PointCloud26DeduplicateAttributeValuesEv"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "bool"
   "signature": "bool draco::PointCloud::DeduplicateAttributeValues()"
-- "exceptions": []
-  "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeE"
+- "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeE"
   "params":
   - "name": ""
     "type": "bool "
@@ -35,8 +31,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "ValueType draco::PointAttribute::DeduplicateValues(const GeometryAttribute &)"
-- "exceptions": []
-  "name": "_ZN5draco11CornerTable6CreateERKNS_15IndexTypeVectorINS_9IndexTypeIjNS_19FaceIndex_tag_type_EEENSt3__15arrayINS2_IjNS_21VertexIndex_tag_type_EEELm3EEEEE"
+- "name": "_ZN5draco11CornerTable6CreateERKNS_15IndexTypeVectorINS_9IndexTypeIjNS_19FaceIndex_tag_type_EEENSt3__15arrayINS2_IjNS_21VertexIndex_tag_type_EEELm3EEEEE"
   "params":
   - "name": ""
     "type": "bool "

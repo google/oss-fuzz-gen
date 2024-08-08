@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN6icu_597CaseMap7toLowerEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode"
+- "name": "_ZN6icu_597CaseMap7toLowerEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode"
   "params":
   - "name": "locale"
     "type": "bool "
@@ -20,15 +19,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int32_t icu_59::CaseMap::toLower(const char *, uint32_t, const UChar *, int32_t, UChar *, int32_t, Edits *, UErrorCode &)"
-- "exceptions": []
-  "name": "_ZNK6icu_596Locale7getLCIDEv"
+- "name": "_ZNK6icu_596Locale7getLCIDEv"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "int"
   "signature": "uint32_t icu_59::Locale::getLCID()"
-- "exceptions": []
-  "name": "_ZNK6icu_5920UnicodeSetStringSpan12spanBackUTF8EPKhi17USetSpanCondition"
+- "name": "_ZNK6icu_5920UnicodeSetStringSpan12spanBackUTF8EPKhi17USetSpanCondition"
   "params":
   - "name": "this"
     "type": "bool "
@@ -40,8 +37,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int32_t icu_59::UnicodeSetStringSpan::spanBackUTF8(const uint8_t *, int32_t, USetSpanCondition)"
-- "exceptions": []
-  "name": "_ZN6icu_597CaseMap7toUpperEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode"
+- "name": "_ZN6icu_597CaseMap7toUpperEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode"
   "params":
   - "name": "locale"
     "type": "bool "

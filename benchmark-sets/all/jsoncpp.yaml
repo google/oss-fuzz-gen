@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN4Json6Reader5parseERNSt3__113basic_istreamIcNS1_11char_traitsIcEEEERNS_5ValueEb"
+- "name": "_ZN4Json6Reader5parseERNSt3__113basic_istreamIcNS1_11char_traitsIcEEEERNS_5ValueEb"
   "params":
   - "name": ""
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "bool Json::Reader::parse(istream &, Value &, bool)"
-- "exceptions": []
-  "name": "_ZN4Json6Reader5parseERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERNS_5ValueEb"
+- "name": "_ZN4Json6Reader5parseERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERNS_5ValueEb"
   "params":
   - "name": ""
     "type": "bool "
@@ -25,15 +23,13 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "bool Json::Reader::parse(const string &, Value &, bool)"
-- "exceptions": []
-  "name": "_ZN4Json6Reader9readValueEv"
+- "name": "_ZN4Json6Reader9readValueEv"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "bool"
   "signature": "bool Json::Reader::readValue()"
-- "exceptions": []
-  "name": "_ZN4Json6Reader10readObjectERNS0_5TokenE"
+- "name": "_ZN4Json6Reader10readObjectERNS0_5TokenE"
   "params":
   - "name": ""
     "type": "bool "
@@ -41,8 +37,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool Json::Reader::readObject(Token &)"
-- "exceptions": []
-  "name": "_ZN4Json6Reader9readArrayERNS0_5TokenE"
+- "name": "_ZN4Json6Reader9readArrayERNS0_5TokenE"
   "params":
   - "name": ""
     "type": "bool "

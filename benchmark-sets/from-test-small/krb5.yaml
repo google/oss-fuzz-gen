@@ -1,4 +1,4 @@
-"is_test_benchmark": true
+"is_test_benchmark": !!bool "true"
 "language": "c"
 "project": "krb5"
 "target_name": "fuzz_gss"

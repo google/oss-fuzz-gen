@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "lou_getTypeformForEmphClass"
+- "name": "lou_getTypeformForEmphClass"
   "params":
   - "name": "tableList"
     "type": "bool "

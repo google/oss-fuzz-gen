@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_Z14InitWeaveStackbb"
+- "name": "_Z14InitWeaveStackbb"
   "params":
   - "name": "listen"
     "type": "bool"
@@ -8,8 +7,7 @@
     "type": "bool"
   "return_type": "void"
   "signature": "void InitWeaveStack(bool, bool)"
-- "exceptions": []
-  "name": "_ZN2nl5Weave20WeaveSecurityManager24HandleUnsolicitedMessageEPNS0_15ExchangeContextEPKNS_4Inet12IPPacketInfoEPKNS0_16WeaveMessageInfoEjhPNS0_6System12PacketBufferE"
+- "name": "_ZN2nl5Weave20WeaveSecurityManager24HandleUnsolicitedMessageEPNS0_15ExchangeContextEPKNS_4Inet12IPPacketInfoEPKNS0_16WeaveMessageInfoEjhPNS0_6System12PacketBufferE"
   "params":
   - "name": "ec"
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void nl::Weave::WeaveSecurityManager::HandleUnsolicitedMessage(ExchangeContext *, const IPPacketInfo *, const struct WeaveMessageInfo *, uint32_t, uint8_t, PacketBuffer *)"
-- "exceptions": []
-  "name": "_ZN2nl5Weave20WeaveSecurityManager22HandleCASESessionStartEPNS0_15ExchangeContextEPKNS_4Inet12IPPacketInfoEPKNS0_16WeaveMessageInfoEPNS0_6System12PacketBufferE"
+- "name": "_ZN2nl5Weave20WeaveSecurityManager22HandleCASESessionStartEPNS0_15ExchangeContextEPKNS_4Inet12IPPacketInfoEPKNS0_16WeaveMessageInfoEPNS0_6System12PacketBufferE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -40,8 +37,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void nl::Weave::WeaveSecurityManager::HandleCASESessionStart(ExchangeContext *, const IPPacketInfo *, const struct WeaveMessageInfo *, PacketBuffer *)"
-- "exceptions": []
-  "name": "_ZN2nl5Weave20WeaveSecurityManager4InitERNS0_20WeaveExchangeManagerERNS0_6System5LayerE"
+- "name": "_ZN2nl5Weave20WeaveSecurityManager4InitERNS0_20WeaveExchangeManagerERNS0_6System5LayerE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -51,8 +47,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "WEAVE_ERROR nl::Weave::WeaveSecurityManager::Init(WeaveExchangeManager &, Layer &)"
-- "exceptions": []
-  "name": "_ZN2nl5Weave20WeaveSecurityManager31HandleKeyExportMessageInitiatorEPNS0_15ExchangeContextEPKNS_4Inet12IPPacketInfoEPKNS0_16WeaveMessageInfoEjhPNS0_6System12PacketBufferE"
+- "name": "_ZN2nl5Weave20WeaveSecurityManager31HandleKeyExportMessageInitiatorEPNS0_15ExchangeContextEPKNS_4Inet12IPPacketInfoEPKNS0_16WeaveMessageInfoEjhPNS0_6System12PacketBufferE"
   "params":
   - "name": "ec"
     "type": "bool "
