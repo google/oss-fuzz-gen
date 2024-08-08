@@ -50,7 +50,7 @@ BENCHMARK_ROOT: str = './benchmark-sets'
 BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
 RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
 GENERATED_BENCHMARK: str = 'generated-benchmark-'
-PROJECT_SUMMARY_JSON = os.path.join(RESULTS_DIR, 'project_summary.json')
+PROJECT_SUMMARY_JSON = 'project_summary.json'
 JSON_REPORT = 'report.json'
 TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
@@ -355,7 +355,7 @@ def add_to_json_report(outdir: str, key: str, value: Any) -> None:
     f.write(json.dumps(json_report))
 
 
-def _process_total_coverage_gain(
+def _process_total_coverage_gain(outdir: str,
     results: list[Result]) -> dict[str, dict[str, Any]]:
   """Processes and calculates the total coverage gain for each project."""
   textcov_dict: dict[str, list[textcov.Textcov]] = {}
@@ -394,7 +394,7 @@ def _process_total_coverage_gain(
       }
 
   # Write to summary file
-  with open(PROJECT_SUMMARY_JSON, 'w') as f:
+  with open(os.path.join(outdir, PROJECT_SUMMARY_JSON), 'w') as f:
     json.dump(coverage_gain, f)
 
   return coverage_gain
@@ -439,7 +439,8 @@ def main():
       experiment_results = [task.get() for task in experiment_tasks]
 
   # Process total gain from all generated harnesses for each projects
-  coverage_gain_dict = _process_total_coverage_gain(experiment_results)
+  coverage_gain_dict = _process_total_coverage_gain(args.workdir,
+                                                    experiment_results)
 
   # Capture time at end
   end = time.time()
