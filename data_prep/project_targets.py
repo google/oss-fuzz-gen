@@ -107,7 +107,7 @@ def _bucket_match_target_content_signatures(
     content = target_path_contents.get(target_path)
     # Some projects' `target_path` is different from the actual
     # path in container, due to relocation in build process.
-    # For example, target_path is /src/hiredis/format_command_fuzzer.c, different
+    # E.g., target_path is /src/hiredis/format_command_fuzzer.c, different
     # from the actual path /src/hiredis/fuzzing/format_command_fuzzer.c in
     # https://storage.googleapis.com/oss-fuzz-introspector/hiredis/inspector-report/20240120/summary.json
     if not content:
@@ -147,12 +147,12 @@ def generate_data(project_name: str,
 
   if target_content_signature_dict:
     logger.info(
-        f'Downloaded human-written fuzz targets of {project_name} from Google'
-        f' Cloud Bucket: {OSS_FUZZ_EXP_BUCKET}.')
+        'Downloaded human-written fuzz targets of %s from Google Cloud Bucket: '
+        '%s', project_name, OSS_FUZZ_EXP_BUCKET)
   else:
     logger.info(
-        f'Failed to download human-written fuzz target of {project_name} '
-        f'from Google Cloud Bucket: {OSS_FUZZ_EXP_BUCKET}.')
+        'Failed to download human-written fuzz target of %s from Google Cloud '
+        'Bucket: %s.', project_name, OSS_FUZZ_EXP_BUCKET)
     logger.info('Will try to build from Google Cloud or local docker image.')
     target_content_signature_dict = _match_target_content_signatures(
         target_funcs, project_name, language, cloud_experiment_bucket)
@@ -225,7 +225,7 @@ def _match_target_content_signatures(
       cloud_experiment_bucket=cloud_experiment_bucket)
 
   if not source_content[0]:
-    logger.info(f'Error: No fuzz target found for project {project_name}.')
+    logger.info('Error: No fuzz target found for project %s', project_name)
     return {}
 
   target_path_contents = source_content[0]
@@ -235,7 +235,7 @@ def _match_target_content_signatures(
     content = target_path_contents.get(target_path)
     # Some projects' `target_path` is different from the actual
     # path in container, due to relocation in build process.
-    # For example, target_path is /src/hiredis/format_command_fuzzer.c, different
+    # E.g., target_path is /src/hiredis/format_command_fuzzer.c,
     # from the actual path /src/hiredis/fuzzing/format_command_fuzzer.c in
     # https://storage.googleapis.com/oss-fuzz-introspector/hiredis/inspector-report/20240120/summary.json
     if not content:
@@ -332,7 +332,7 @@ def _generate_project_training_data(project_name: str,
     return generate_data(project_name, language, sig_per_target, max_samples,
                          cloud_experiment_bucket)
   except Exception as e:
-    logger.info(f'Project {project_name} failed:\n{e}')
+    logger.info('Project %s failed:\n%s', project_name, e)
     return None
 
 

@@ -128,9 +128,9 @@ def postprocess_oss_fuzz() -> None:
                   stdin=sp.DEVNULL,
                   capture_output=True)
   if result.returncode:
-    logger.info(f'Failed to postprocess OSS-Fuzz ({OSS_FUZZ_DIR})')
-    logger.info('stdout: ', result.stdout)
-    logger.info('stderr: ', result.stderr)
+    logger.info('Failed to postprocess OSS-Fuzz (%s)', OSS_FUZZ_DIR)
+    logger.info('stdout: %s', result.stdout)
+    logger.info('stderr: %s', result.stderr)
 
 
 def list_c_cpp_projects() -> list[str]:

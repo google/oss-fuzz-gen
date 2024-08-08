@@ -308,9 +308,9 @@ def parse_args() -> argparse.Namespace:
 
 def _print_experiment_result(result: Result):
   """Prints the |result| of a single experiment."""
-  logger.info(f'\n**** Finished benchmark {result.benchmark.project}, '
-              f'{result.benchmark.function_signature} ****\n'
-              f'{result.result}')
+  logger.info('\n**** Finished benchmark %s, %s ****\n%s',
+              result.benchmark.project, result.benchmark.function_signature,
+              result.result)
 
 
 def _print_experiment_results(results: list[Result],
@@ -318,10 +318,8 @@ def _print_experiment_results(results: list[Result],
   """Prints the |results| of multiple experiments."""
   logger.info('\n\n**** FINAL RESULTS: ****\n\n')
   for result in results:
-    logger.info('=' * 80)
-    logger.info(
-        f'*{result.benchmark.project}, {result.benchmark.function_signature}*'
-        f'\n{result.result}\n')
+    logger.info('%s\n*%s, %s*\n%s\n', '=' * 80, result.benchmark.project,
+                result.benchmark.function_signature, result.result)
 
   logger.info('**** TOTAL COVERAGE GAIN: ****')
   for project in cov_gain:
@@ -421,7 +419,7 @@ def main():
   experiment_targets = prepare_experiment_targets(args)
   experiment_results = []
 
-  logger.info(f'Running %s experiment(s) in parallels of %s.',
+  logger.info('Running %s experiment(s) in parallels of %s.',
               len(experiment_targets), str(NUM_EXP))
 
   if NUM_EXP == 1:
