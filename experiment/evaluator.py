@@ -64,7 +64,7 @@ class Result:
     if self.driver_fuzz_err:
       self.semantic_error = self.driver_fuzz_err
 
-  def dict(self):
+  def to_dict(self):
     return dataclasses.asdict(self)
 
 
@@ -93,7 +93,7 @@ def load_existing_textcov(project: str) -> textcov.Textcov:
     if not blob.name.endswith('.covreport'):
       continue
 
-    logger.info(f'Loading existing textcov from {blob.name}')
+    logger.info('Loading existing textcov from %s', blob.name)
     with blob.open('rb') as f:
       existing_textcov.merge(textcov.Textcov.from_file(f))
 
@@ -117,11 +117,9 @@ def load_existing_jvm_textcov(project: str) -> textcov.Textcov:
 
   latest_dir = sorted(blobs.prefixes)[-1]  # type: ignore
   blob = bucket.blob(f'{latest_dir}linux/jacoco.xml')
-  logger.info(f'Loading existing jacoco.xml textcov from {blob.name}')
+  logger.info('Loading existing jacoco.xml textcov from %s', blob.name)
   with blob.open() as f:
     return textcov.Textcov.from_jvm_file(f)
-
-  return textcov.Textcov()
 
 
 def load_existing_coverage_summary(project: str) -> dict:
@@ -141,7 +139,7 @@ def load_existing_coverage_summary(project: str) -> dict:
 
   latest_dir = sorted(blobs.prefixes)[-1]  # type: ignore
   blob = bucket.blob(f'{latest_dir}linux/summary.json')
-  logger.info(f'Loading existing summary.json from {blob.name}')
+  logger.info('Loading existing summary.json from %s', blob.name)
   with blob.open() as f:
     return json.load(f)
 
@@ -184,7 +182,7 @@ class _Logger:
 
   def return_result(self, result: Result):
     with open(self._result_path, 'w') as f:
-      json.dump(result.dict(), f)
+      json.dump(result.to_dict(), f)
 
     return result
 
@@ -207,11 +205,11 @@ class Evaluator:
 
   def create_ossfuzz_project(self, name: str, target_file: str) -> str:
     """Creates an OSS-Fuzz project with the generated target."""
-    logger.info(f'target file: {target_file}')
+    logger.info('target file: %s', target_file)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects', name)
     if os.path.exists(generated_project_path):
-      logger.info(f'Project {generated_project_path} already exists.')
+      logger.info('Project %s already exists.', generated_project_path)
       return name
 
     existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
