@@ -549,7 +549,9 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self._template_dir = template_dir
     self.benchmark = benchmark
     self.project_url = self._find_project_url(self.benchmark.project)
-    self.exceptions = set(self.benchmark.exceptions)
+
+    # Retrieve additional properties for the target method
+    self.exceptions, self.is_jvm_static, self.need_close = introspector.query_introspector_function_props(self.benchmark.project, self.benchmark.function_signature)
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
@@ -756,13 +758,21 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     if '<init>' in self.benchmark.function_name:
       creation = (f'The target method is a constructor of {class_name} '
                   'invoke it directly with new keyword.')
-    elif self.benchmark.is_jvm_static:
+    elif self.is_jvm_static:
       creation = ('The target method is a static method, invoke it directly '
                   'without creating an object.')
     else:
       creation = (f'You must create the {class_name} object before calling '
                   'the target method.')
     requirement = requirement.replace('{STATIC_OR_INSTANCE}', creation)
+
+    close_statement = ''
+    if self.need_close:
+      close_statement = ('<item>You MUST invoke the close method of the '
+          f'{class_name} objects in the finally block after the target method '
+          'is invoked.</item>')
+
+    requirement = requirement.replace('{NEED_CLOSE}', close_statement)
 
     return requirement
 
@@ -793,7 +803,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
   def _format_constructors(self) -> str:
     """Formats a list of functions / constructors to create the object for
     invoking the target method."""
-    if self.benchmark.is_jvm_static:
+    if self.is_jvm_static:
       return ''
 
     constructors = []
@@ -803,7 +813,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       constructor_sig = ctr.get('function_signature')
       if constructor_sig:
         constructors.append(f'<signature>{constructor_sig}</signature>')
-        self.exceptions.update(ctr.get('exceptions', []))
+        self.exceptions.update(introspector.query_introspector_function_props(ctr.get('project'), constructor_sig)[0])
 
     if constructors:
       ctr_str = '\n'.join(constructors)
@@ -817,7 +827,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       function_sig = func.get('function_signature')
       if not function_sig:
         continue
-      self.exceptions.update(func.get('exceptions', []))
+      self.exceptions.update(introspector.query_introspector_function_props(func.get('project'), function_sig)[0])
       if is_static:
         functions.append(f'<item><signature>{function_sig}</signature></item>')
       else:
