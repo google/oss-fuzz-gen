@@ -111,11 +111,6 @@ def _parse_args(cmd) -> argparse.Namespace:
       help=('Delay each benchmark experiment by N seconds, default: '
             f'{EXP_DELAY}.'))
   parser.add_argument(
-      '-f',
-      '--force',
-      action='store_true',
-      help='Remove existing GKE job and bucket before creating new ones.')
-  parser.add_argument(
       '-to',
       '--fuzzing-timeout',
       type=int,
@@ -232,9 +227,8 @@ def _prepare_experiment_info(args: argparse.Namespace) -> tuple[str, str, str]:
       f'{BUCKET_GS_LINK_PREFIX}/{datetime.now().strftime("%Y-%m-%d")}-'
       f'{args.pr_id}-{args.name_suffix}-{args.benchmark_set}')
 
-  if args.force:
-    logging.info(
-        'FORCE mode enable, will first remove existing GKE job and bucket.')
+  logging.info(
+      'FORCE mode enable, will first remove existing GKE job and bucket.')
 
   logging.info(
       'Requesting a GKE experiment named %s:\nPR: %s\nJOB: %s\nREPORT: %s\n'
@@ -305,8 +299,7 @@ def main(cmd=None):
   args = _parse_args(cmd)
   gke_job_name, bucket_link, bucket_gs_link = _prepare_experiment_info(args)
   _get_gke_credential(args)
-  if args.force:
-    _remove_existing_job_bucket(gke_job_name, bucket_link, bucket_gs_link)
+  _remove_existing_job_bucket(gke_job_name, bucket_link, bucket_gs_link)
   _request_experiment(_fill_template(args))
 
 
