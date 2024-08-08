@@ -551,7 +551,9 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self.project_url = self._find_project_url(self.benchmark.project)
 
     # Retrieve additional properties for the target method
-    self.exceptions, self.is_jvm_static, self.need_close = introspector.query_introspector_function_props(self.benchmark.project, self.benchmark.function_signature)
+    temp_properties = introspector.query_introspector_function_props(
+        self.benchmark.project, self.benchmark.function_signature)
+    self.exceptions, self.is_jvm_static, self.need_close = temp_properties
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
@@ -768,7 +770,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     close_statement = ''
     if self.need_close:
-      close_statement = ('<item>You MUST invoke the close method of the '
+      close_statement = (
+          '<item>You MUST invoke the close method of the '
           f'{class_name} objects in the finally block after the target method '
           'is invoked.</item>')
 
@@ -810,10 +813,12 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     ctrs = introspector.query_introspector_matching_function_constructor_type(
         self.benchmark.project, self.benchmark.return_type, False)
     for ctr in ctrs:
-      constructor_sig = ctr.get('function_signature')
+      constructor_sig = ctr.get('function_signature', '')
       if constructor_sig:
         constructors.append(f'<signature>{constructor_sig}</signature>')
-        self.exceptions.update(introspector.query_introspector_function_props(ctr.get('project'), constructor_sig)[0])
+        self.exceptions.update(
+            introspector.query_introspector_function_props(
+                ctr.get('project', ''), constructor_sig)[0])
 
     if constructors:
       ctr_str = '\n'.join(constructors)
@@ -824,10 +829,12 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         self.benchmark.project, self.benchmark.return_type, True)
     for func in funcs:
       is_static = func.get('is_static', False)
-      function_sig = func.get('function_signature')
+      function_sig = func.get('function_signature', '')
       if not function_sig:
         continue
-      self.exceptions.update(introspector.query_introspector_function_props(func.get('project'), function_sig)[0])
+      self.exceptions.update(
+          introspector.query_introspector_function_props(
+              func.get('project', ''), function_sig)[0])
       if is_static:
         functions.append(f'<item><signature>{function_sig}</signature></item>')
       else:

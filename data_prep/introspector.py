@@ -303,11 +303,9 @@ def query_introspector_function_props(project: str, func_sig: str) -> tuple:
       'project': project,
       'function_signature': func_sig
   })
-  return (
-      _get_data(resp, 'exceptions', []),
-      _get_data(resp, 'is-jvm-static', False),
-      _get_data(resp, 'need-close', False)
-  )
+  return (_get_data(resp, 'exceptions',
+                    []), _get_data(resp, 'is-jvm-static',
+                                   False), _get_data(resp, 'need-close', False))
 
 
 def query_introspector_source_code(project: str, filepath: str, begin_line: int,
@@ -715,8 +713,6 @@ def populate_benchmarks_using_test_migration(
                                function_name='test-file',
                                return_type='test',
                                params=[],
-                               exceptions=[],
-                               is_jvm_static=False,
                                target_path=harness,
                                preferred_target_name='',
                                is_test_benchmark=True,
