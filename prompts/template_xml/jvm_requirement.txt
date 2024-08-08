@@ -8,10 +8,12 @@
 <item>NEVER use the @FuzzTest annotation for specifying the fuzzing method.</item>
 <item>Please avoid using any multithreading or multi-processing approach.</item>
 <item>Please add import statements for necessary classes, except for classes in the java.lang package.</item>
-<item>You must create the object before calling the target method.</item>
-<item>You must catch java.lang.UnsupportOperationException.</item>
+<item>You MUST create the object before calling the target method.</item>
+<item>You MUST catch java.lang.RuntimeException.</item>
 <item>Please use {HARNESS_NAME} as the Java class name.</item>
 <item>{STATIC_OR_INSTANCE}</item>
+{NEED_CLOSE}
+<item>You MUST invoke the close method of any resource class objects that implements the java.lang.AutoCloseable interface in the finally block after the target method is invoked.</item>
 <item>Do not create new variables with the same names as existing variables.
 WRONG:
 <code>
