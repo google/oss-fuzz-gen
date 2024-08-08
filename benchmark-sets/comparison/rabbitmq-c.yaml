@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "amqp_tx_rollback"
+- "name": "amqp_tx_rollback"
   "params":
   - "name": "state"
     "type": "bool "

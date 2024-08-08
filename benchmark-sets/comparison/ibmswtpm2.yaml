@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "TPM2_Create"
+- "name": "TPM2_Create"
   "params":
   - "name": "in"
     "type": "bool "
