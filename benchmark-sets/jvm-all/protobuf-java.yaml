@@ -1,24 +1,17 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.MessageOrBuilder)"
+- "name": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.MessageOrBuilder)"
   "params":
   - "name": "arg0"
     "type": "com.google.protobuf.MessageOrBuilder"
   "return_type": "java.lang.String"
   "signature": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.MessageOrBuilder)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.MessageOrBuilder)"
+- "name": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.MessageOrBuilder)"
   "params":
   - "name": "arg0"
     "type": "com.google.protobuf.MessageOrBuilder"
   "return_type": "java.lang.String"
   "signature": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.MessageOrBuilder)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.MessageOrBuilder,java.lang.Appendable)"
+- "name": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.MessageOrBuilder,java.lang.Appendable)"
   "params":
   - "name": "arg0"
     "type": "com.google.protobuf.MessageOrBuilder"
@@ -26,26 +19,19 @@
     "type": "java.lang.Appendable"
   "return_type": "void"
   "signature": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.MessageOrBuilder,java.lang.Appendable)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.UnknownFieldSet)"
+- "name": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.UnknownFieldSet)"
   "params":
   - "name": "arg0"
     "type": "com.google.protobuf.UnknownFieldSet"
   "return_type": "java.lang.String"
   "signature": "[com.google.protobuf.DebugFormat].toString(com.google.protobuf.UnknownFieldSet)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.UnknownFieldSet)"
+- "name": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.UnknownFieldSet)"
   "params":
   - "name": "arg0"
     "type": "com.google.protobuf.UnknownFieldSet"
   "return_type": "java.lang.String"
   "signature": "[com.google.protobuf.TextFormat$Printer].printToString(com.google.protobuf.UnknownFieldSet)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.UnknownFieldSet,java.lang.Appendable)"
+- "name": "[com.google.protobuf.TextFormat$Printer].print(com.google.protobuf.UnknownFieldSet,java.lang.Appendable)"
   "params":
   - "name": "arg0"
     "type": "com.google.protobuf.UnknownFieldSet"

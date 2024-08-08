@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.locationtech.jts.operation.overlayng.OverlayNGRobust].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int)"
+- "name": "[org.locationtech.jts.operation.overlayng.OverlayNGRobust].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int)"
   "params":
   - "name": "arg0"
     "type": "org.locationtech.jts.geom.Geometry"
@@ -11,9 +9,7 @@
     "type": "int"
   "return_type": "org.locationtech.jts.geom.Geometry"
   "signature": "[org.locationtech.jts.operation.overlayng.OverlayNGRobust].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int,org.locationtech.jts.noding.Noder)"
+- "name": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int,org.locationtech.jts.noding.Noder)"
   "params":
   - "name": "arg0"
     "type": "org.locationtech.jts.geom.Geometry"
@@ -25,9 +21,7 @@
     "type": "org.locationtech.jts.noding.Noder"
   "return_type": "org.locationtech.jts.geom.Geometry"
   "signature": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int,org.locationtech.jts.noding.Noder)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int,org.locationtech.jts.geom.PrecisionModel)"
+- "name": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int,org.locationtech.jts.geom.PrecisionModel)"
   "params":
   - "name": "arg0"
     "type": "org.locationtech.jts.geom.Geometry"
@@ -39,9 +33,7 @@
     "type": "org.locationtech.jts.geom.PrecisionModel"
   "return_type": "org.locationtech.jts.geom.Geometry"
   "signature": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int,org.locationtech.jts.geom.PrecisionModel)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int)"
+- "name": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int)"
   "params":
   - "name": "arg0"
     "type": "org.locationtech.jts.geom.Geometry"
@@ -51,9 +43,7 @@
     "type": "int"
   "return_type": "org.locationtech.jts.geom.Geometry"
   "signature": "[org.locationtech.jts.operation.overlayng.OverlayNG].overlay(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.Geometry,int)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.locationtech.jts.operation.overlayng.PrecisionReducer].reducePrecision(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.PrecisionModel)"
+- "name": "[org.locationtech.jts.operation.overlayng.PrecisionReducer].reducePrecision(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.PrecisionModel)"
   "params":
   - "name": "arg0"
     "type": "org.locationtech.jts.geom.Geometry"
@@ -61,9 +51,7 @@
     "type": "org.locationtech.jts.geom.PrecisionModel"
   "return_type": "org.locationtech.jts.geom.Geometry"
   "signature": "[org.locationtech.jts.operation.overlayng.PrecisionReducer].reducePrecision(org.locationtech.jts.geom.Geometry,org.locationtech.jts.geom.PrecisionModel)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.locationtech.jts.operation.buffer.BufferOp].bufferOp(org.locationtech.jts.geom.Geometry,double,org.locationtech.jts.operation.buffer.BufferParameters)"
+- "name": "[org.locationtech.jts.operation.buffer.BufferOp].bufferOp(org.locationtech.jts.geom.Geometry,double,org.locationtech.jts.operation.buffer.BufferParameters)"
   "params":
   - "name": "arg0"
     "type": "org.locationtech.jts.geom.Geometry"

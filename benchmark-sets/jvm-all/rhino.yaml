@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.mozilla.javascript.Slot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable)"
+- "name": "[org.mozilla.javascript.Slot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -11,9 +9,7 @@
     "type": "org.mozilla.javascript.Scriptable"
   "return_type": "boolean"
   "signature": "[org.mozilla.javascript.Slot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.mozilla.javascript.Sorting].median(java.lang.Object[],int,int,java.util.Comparator<Object>)"
+- "name": "[org.mozilla.javascript.Sorting].median(java.lang.Object[],int,int,java.util.Comparator<Object>)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object[]"
@@ -25,25 +21,19 @@
     "type": "java.util.Comparator<Object>"
   "return_type": "int"
   "signature": "[org.mozilla.javascript.Sorting].median(java.lang.Object[],int,int,java.util.Comparator<Object>)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.mozilla.javascript.LambdaSlot].getValue(org.mozilla.javascript.Scriptable)"
+- "name": "[org.mozilla.javascript.LambdaSlot].getValue(org.mozilla.javascript.Scriptable)"
   "params":
   - "name": "arg0"
     "type": "org.mozilla.javascript.Scriptable"
   "return_type": "java.lang.Object"
   "signature": "[org.mozilla.javascript.LambdaSlot].getValue(org.mozilla.javascript.Scriptable)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.mozilla.javascript.NativeJavaObject].getDefaultValue(java.lang.Class<?>)"
+- "name": "[org.mozilla.javascript.NativeJavaObject].getDefaultValue(java.lang.Class<?>)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Class<?>"
   "return_type": "java.lang.Object"
   "signature": "[org.mozilla.javascript.NativeJavaObject].getDefaultValue(java.lang.Class<?>)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.mozilla.javascript.AccessorSlot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable,boolean)"
+- "name": "[org.mozilla.javascript.AccessorSlot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -55,9 +45,7 @@
     "type": "boolean"
   "return_type": "boolean"
   "signature": "[org.mozilla.javascript.AccessorSlot].setValue(java.lang.Object,org.mozilla.javascript.Scriptable,org.mozilla.javascript.Scriptable,boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.mozilla.javascript.NativeArray$ElementComparator].compare(java.lang.Object,java.lang.Object)"
+- "name": "[org.mozilla.javascript.NativeArray$ElementComparator].compare(java.lang.Object,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"

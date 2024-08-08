@@ -1,23 +1,17 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.joni.ast.EncloseNode].toString(int)"
+- "name": "[org.joni.ast.EncloseNode].toString(int)"
   "params":
   - "name": "arg0"
     "type": "int"
   "return_type": "java.lang.String"
   "signature": "[org.joni.ast.EncloseNode].toString(int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.joni.ast.CClassNode].clearNotFlag(org.joni.ScanEnvironment)"
+- "name": "[org.joni.ast.CClassNode].clearNotFlag(org.joni.ScanEnvironment)"
   "params":
   - "name": "arg0"
     "type": "org.joni.ScanEnvironment"
   "return_type": "void"
   "signature": "[org.joni.ast.CClassNode].clearNotFlag(org.joni.ScanEnvironment)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.joni.CodeRangeBuffer].andCodeRange1(org.joni.CodeRangeBuffer,org.joni.ScanEnvironment,int,int,int[],int)"
+- "name": "[org.joni.CodeRangeBuffer].andCodeRange1(org.joni.CodeRangeBuffer,org.joni.ScanEnvironment,int,int,int[],int)"
   "params":
   - "name": "arg0"
     "type": "org.joni.CodeRangeBuffer"
@@ -33,9 +27,7 @@
     "type": "int"
   "return_type": "org.joni.CodeRangeBuffer"
   "signature": "[org.joni.CodeRangeBuffer].andCodeRange1(org.joni.CodeRangeBuffer,org.joni.ScanEnvironment,int,int,int[],int)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.joni.CodeRangeBuffer].addAllMultiByteRange(org.joni.ScanEnvironment,org.joni.CodeRangeBuffer)"
+- "name": "[org.joni.CodeRangeBuffer].addAllMultiByteRange(org.joni.ScanEnvironment,org.joni.CodeRangeBuffer)"
   "params":
   - "name": "arg0"
     "type": "org.joni.ScanEnvironment"
@@ -43,17 +35,13 @@
     "type": "org.joni.CodeRangeBuffer"
   "return_type": "org.joni.CodeRangeBuffer"
   "signature": "[org.joni.CodeRangeBuffer].addAllMultiByteRange(org.joni.ScanEnvironment,org.joni.CodeRangeBuffer)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.joni.Option].toString(int)"
+- "name": "[org.joni.Option].toString(int)"
   "params":
   - "name": "arg0"
     "type": "int"
   "return_type": "java.lang.String"
   "signature": "[org.joni.Option].toString(int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.joni.Regex].<init>(byte[],int,int,int,int,org.jcodings.Encoding,org.joni.Syntax,org.joni.WarnCallback)"
+- "name": "[org.joni.Regex].<init>(byte[],int,int,int,int,org.jcodings.Encoding,org.joni.Syntax,org.joni.WarnCallback)"
   "params":
   - "name": "arg0"
     "type": "byte[]"

@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.net.ntp.TimeInfo].<init>(org.apache.commons.net.ntp.NtpV3Packet,long,java.util.List,boolean)"
+- "name": "[org.apache.commons.net.ntp.TimeInfo].<init>(org.apache.commons.net.ntp.NtpV3Packet,long,java.util.List,boolean)"
   "params":
   - "name": "arg0"
     "type": "org.apache.commons.net.ntp.NtpV3Packet"
@@ -13,9 +11,7 @@
     "type": "boolean"
   "return_type": "org.apache.commons.net.ntp.TimeInfo"
   "signature": "[org.apache.commons.net.ntp.TimeInfo].<init>(org.apache.commons.net.ntp.NtpV3Packet,long,java.util.List,boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.net.nntp.NewGroupsOrNewsQuery].<init>(java.util.Calendar,boolean)"
+- "name": "[org.apache.commons.net.nntp.NewGroupsOrNewsQuery].<init>(java.util.Calendar,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.util.Calendar"
@@ -23,17 +19,13 @@
     "type": "boolean"
   "return_type": "org.apache.commons.net.nntp.NewGroupsOrNewsQuery"
   "signature": "[org.apache.commons.net.nntp.NewGroupsOrNewsQuery].<init>(java.util.Calendar,boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.net.ftp.parser.NTFTPEntryParser].<init>(org.apache.commons.net.ftp.FTPClientConfig)"
+- "name": "[org.apache.commons.net.ftp.parser.NTFTPEntryParser].<init>(org.apache.commons.net.ftp.FTPClientConfig)"
   "params":
   - "name": "arg0"
     "type": "org.apache.commons.net.ftp.FTPClientConfig"
   "return_type": "org.apache.commons.net.ftp.parser.NTFTPEntryParser"
   "signature": "[org.apache.commons.net.ftp.parser.NTFTPEntryParser].<init>(org.apache.commons.net.ftp.FTPClientConfig)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.net.util.Base64].<init>(int,byte[],boolean)"
+- "name": "[org.apache.commons.net.util.Base64].<init>(int,byte[],boolean)"
   "params":
   - "name": "arg0"
     "type": "int"
@@ -43,17 +35,13 @@
     "type": "boolean"
   "return_type": "org.apache.commons.net.util.Base64"
   "signature": "[org.apache.commons.net.util.Base64].<init>(int,byte[],boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.net.ntp.TimeStamp].<init>(java.util.Date)"
+- "name": "[org.apache.commons.net.ntp.TimeStamp].<init>(java.util.Date)"
   "params":
   - "name": "arg0"
     "type": "java.util.Date"
   "return_type": "org.apache.commons.net.ntp.TimeStamp"
   "signature": "[org.apache.commons.net.ntp.TimeStamp].<init>(java.util.Date)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.net.util.Base64].<init>(int,byte[])"
+- "name": "[org.apache.commons.net.util.Base64].<init>(int,byte[])"
   "params":
   - "name": "arg0"
     "type": "int"

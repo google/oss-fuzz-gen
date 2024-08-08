@@ -1,8 +1,5 @@
 "functions":
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.google.gson.internal.bind.TreeTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
+- "name": "[com.google.gson.internal.bind.TreeTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "com.google.gson.stream.JsonWriter"
@@ -10,10 +7,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[com.google.gson.internal.bind.TreeTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.google.gson.internal.bind.ArrayTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
+- "name": "[com.google.gson.internal.bind.ArrayTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "com.google.gson.stream.JsonWriter"
@@ -21,10 +15,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[com.google.gson.internal.bind.ArrayTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": true
-  "name": "[com.google.gson.internal.Streams].write(com.google.gson.JsonElement,com.google.gson.stream.JsonWriter)"
+- "name": "[com.google.gson.internal.Streams].write(com.google.gson.JsonElement,com.google.gson.stream.JsonWriter)"
   "params":
   - "name": "arg0"
     "type": "com.google.gson.JsonElement"
@@ -32,10 +23,7 @@
     "type": "com.google.gson.stream.JsonWriter"
   "return_type": "void"
   "signature": "[com.google.gson.internal.Streams].write(com.google.gson.JsonElement,com.google.gson.stream.JsonWriter)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.google.gson.internal.bind.ObjectTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
+- "name": "[com.google.gson.internal.bind.ObjectTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "com.google.gson.stream.JsonWriter"
@@ -43,9 +31,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[com.google.gson.internal.bind.ObjectTypeAdapter].write(com.google.gson.stream.JsonWriter,java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.google.gson.internal.Excluder].excludeField(java.lang.reflect.Field,boolean)"
+- "name": "[com.google.gson.internal.Excluder].excludeField(java.lang.reflect.Field,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.lang.reflect.Field"
@@ -53,9 +39,7 @@
     "type": "boolean"
   "return_type": "boolean"
   "signature": "[com.google.gson.internal.Excluder].excludeField(java.lang.reflect.Field,boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.google.gson.internal.Excluder].excludeClass(java.lang.Class<?>,boolean)"
+- "name": "[com.google.gson.internal.Excluder].excludeClass(java.lang.Class<?>,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Class<?>"
@@ -63,10 +47,7 @@
     "type": "boolean"
   "return_type": "boolean"
   "signature": "[com.google.gson.internal.Excluder].excludeClass(java.lang.Class<?>,boolean)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.google.gson.stream.JsonWriter].value(java.lang.String)"
+- "name": "[com.google.gson.stream.JsonWriter].value(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"

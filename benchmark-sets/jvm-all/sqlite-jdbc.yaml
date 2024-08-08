@@ -1,25 +1,17 @@
 "functions":
-- "exceptions":
-  - "java.sql.SQLException"
-  "is_jvm_static": true
-  "name": "[org.sqlite.ExtendedCommand$BackupCommand].parse(java.lang.String)"
+- "name": "[org.sqlite.ExtendedCommand$BackupCommand].parse(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "org.sqlite.ExtendedCommand$BackupCommand"
   "signature": "[org.sqlite.ExtendedCommand$BackupCommand].parse(java.lang.String)"
-- "exceptions":
-  - "java.sql.SQLException"
-  "is_jvm_static": true
-  "name": "[org.sqlite.ExtendedCommand$RestoreCommand].parse(java.lang.String)"
+- "name": "[org.sqlite.ExtendedCommand$RestoreCommand].parse(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "org.sqlite.ExtendedCommand$RestoreCommand"
   "signature": "[org.sqlite.ExtendedCommand$RestoreCommand].parse(java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.sqlite.SQLiteConnectionConfig].<init>(org.sqlite.SQLiteConfig$DateClass,org.sqlite.SQLiteConfig$DatePrecision,java.lang.String,int,org.sqlite.SQLiteConfig$TransactionMode,boolean)"
+- "name": "[org.sqlite.SQLiteConnectionConfig].<init>(org.sqlite.SQLiteConfig$DateClass,org.sqlite.SQLiteConfig$DatePrecision,java.lang.String,int,org.sqlite.SQLiteConfig$TransactionMode,boolean)"
   "params":
   - "name": "arg0"
     "type": "org.sqlite.SQLiteConfig$DateClass"
@@ -35,26 +27,19 @@
     "type": "boolean"
   "return_type": "org.sqlite.SQLiteConnectionConfig"
   "signature": "[org.sqlite.SQLiteConnectionConfig].<init>(org.sqlite.SQLiteConfig$DateClass,org.sqlite.SQLiteConfig$DatePrecision,java.lang.String,int,org.sqlite.SQLiteConfig$TransactionMode,boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.sqlite.SQLiteConfig].<init>(java.util.Properties)"
+- "name": "[org.sqlite.SQLiteConfig].<init>(java.util.Properties)"
   "params":
   - "name": "arg0"
     "type": "java.util.Properties"
   "return_type": "org.sqlite.SQLiteConfig"
   "signature": "[org.sqlite.SQLiteConfig].<init>(java.util.Properties)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.sqlite.ExtendedCommand].removeQuotation(java.lang.String)"
+- "name": "[org.sqlite.ExtendedCommand].removeQuotation(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.sqlite.ExtendedCommand].removeQuotation(java.lang.String)"
-- "exceptions":
-  - "java.sql.SQLException"
-  "is_jvm_static": false
-  "name": "[org.sqlite.ExtendedCommand$RestoreCommand].execute(org.sqlite.core.DB)"
+- "name": "[org.sqlite.ExtendedCommand$RestoreCommand].execute(org.sqlite.core.DB)"
   "params":
   - "name": "arg0"
     "type": "org.sqlite.core.DB"

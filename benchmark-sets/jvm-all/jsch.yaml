@@ -1,8 +1,5 @@
 "functions":
-- "exceptions":
-  - "com.jcraft.jsch.JSchException"
-  "is_jvm_static": false
-  "name": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,java.lang.String,int,byte[],java.lang.String)"
+- "name": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,java.lang.String,int,byte[],java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -16,10 +13,7 @@
     "type": "java.lang.String"
   "return_type": "com.jcraft.jsch.HostKey"
   "signature": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,java.lang.String,int,byte[],java.lang.String)"
-- "exceptions":
-  - "com.jcraft.jsch.JSchException"
-  "is_jvm_static": false
-  "name": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,int,byte[],java.lang.String)"
+- "name": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,int,byte[],java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -31,28 +25,19 @@
     "type": "java.lang.String"
   "return_type": "com.jcraft.jsch.HostKey"
   "signature": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,int,byte[],java.lang.String)"
-- "exceptions":
-  - "com.jcraft.jsch.AgentProxyException"
-  "is_jvm_static": false
-  "name": "[com.jcraft.jsch.SSHAgentConnector].<init>(java.nio.file.Path)"
+- "name": "[com.jcraft.jsch.SSHAgentConnector].<init>(java.nio.file.Path)"
   "params":
   - "name": "arg0"
     "type": "java.nio.file.Path"
   "return_type": "com.jcraft.jsch.SSHAgentConnector"
   "signature": "[com.jcraft.jsch.SSHAgentConnector].<init>(java.nio.file.Path)"
-- "exceptions":
-  - "com.jcraft.jsch.AgentProxyException"
-  "is_jvm_static": false
-  "name": "[com.jcraft.jsch.SSHAgentConnector].<init>(com.jcraft.jsch.USocketFactory)"
+- "name": "[com.jcraft.jsch.SSHAgentConnector].<init>(com.jcraft.jsch.USocketFactory)"
   "params":
   - "name": "arg0"
     "type": "USocketFactory"
   "return_type": "com.jcraft.jsch.SSHAgentConnector"
   "signature": "[com.jcraft.jsch.SSHAgentConnector].<init>(com.jcraft.jsch.USocketFactory)"
-- "exceptions":
-  - "com.jcraft.jsch.JSchException"
-  "is_jvm_static": false
-  "name": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,int,byte[])"
+- "name": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,int,byte[])"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -62,10 +47,7 @@
     "type": "byte[]"
   "return_type": "com.jcraft.jsch.HostKey"
   "signature": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,int,byte[])"
-- "exceptions":
-  - "com.jcraft.jsch.JSchException"
-  "is_jvm_static": false
-  "name": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,byte[])"
+- "name": "[com.jcraft.jsch.HostKey].<init>(java.lang.String,byte[])"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"

@@ -1,47 +1,35 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.drew.metadata.exif.makernotes.OlympusCameraSettingsMakernoteDescriptor].getDescription(int)"
+- "name": "[com.drew.metadata.exif.makernotes.OlympusCameraSettingsMakernoteDescriptor].getDescription(int)"
   "params":
   - "name": "arg0"
     "type": "int"
   "return_type": "java.lang.String"
   "signature": "[com.drew.metadata.exif.makernotes.OlympusCameraSettingsMakernoteDescriptor].getDescription(int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.drew.metadata.exif.makernotes.OlympusMakernoteDescriptor].getDescription(int)"
+- "name": "[com.drew.metadata.exif.makernotes.OlympusMakernoteDescriptor].getDescription(int)"
   "params":
   - "name": "arg0"
     "type": "int"
   "return_type": "java.lang.String"
   "signature": "[com.drew.metadata.exif.makernotes.OlympusMakernoteDescriptor].getDescription(int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.drew.metadata.exif.makernotes.PanasonicMakernoteDescriptor].getDescription(int)"
+- "name": "[com.drew.metadata.exif.makernotes.PanasonicMakernoteDescriptor].getDescription(int)"
   "params":
   - "name": "arg0"
     "type": "int"
   "return_type": "java.lang.String"
   "signature": "[com.drew.metadata.exif.makernotes.PanasonicMakernoteDescriptor].getDescription(int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.drew.metadata.exif.makernotes.NikonType2MakernoteDescriptor].getDescription(int)"
+- "name": "[com.drew.metadata.exif.makernotes.NikonType2MakernoteDescriptor].getDescription(int)"
   "params":
   - "name": "arg0"
     "type": "int"
   "return_type": "java.lang.String"
   "signature": "[com.drew.metadata.exif.makernotes.NikonType2MakernoteDescriptor].getDescription(int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.drew.metadata.photoshop.PhotoshopDescriptor].getDescription(int)"
+- "name": "[com.drew.metadata.photoshop.PhotoshopDescriptor].getDescription(int)"
   "params":
   - "name": "arg0"
     "type": "int"
   "return_type": "java.lang.String"
   "signature": "[com.drew.metadata.photoshop.PhotoshopDescriptor].getDescription(int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.drew.metadata.exif.GpsDescriptor].getDescription(int)"
+- "name": "[com.drew.metadata.exif.GpsDescriptor].getDescription(int)"
   "params":
   - "name": "arg0"
     "type": "int"

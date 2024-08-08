@@ -1,31 +1,23 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.netflix.spectator.api.histogram.BucketTimer].record(java.lang.Runnable)"
+- "name": "[com.netflix.spectator.api.histogram.BucketTimer].record(java.lang.Runnable)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Runnable"
   "return_type": "void"
   "signature": "[com.netflix.spectator.api.histogram.BucketTimer].record(java.lang.Runnable)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[com.netflix.servo.monitor.BasicGauge].lambda$initializeSpectator$0(com.netflix.servo.monitor.BasicGauge)"
+- "name": "[com.netflix.servo.monitor.BasicGauge].lambda$initializeSpectator$0(com.netflix.servo.monitor.BasicGauge)"
   "params":
   - "name": "arg0"
     "type": "com.netflix.servo.monitor.BasicGauge"
   "return_type": "double"
   "signature": "[com.netflix.servo.monitor.BasicGauge].lambda$initializeSpectator$0(com.netflix.servo.monitor.BasicGauge)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.netflix.servo.monitor.BasicGauge].getValue(int)"
+- "name": "[com.netflix.servo.monitor.BasicGauge].getValue(int)"
   "params":
   - "name": "arg0"
     "type": "int"
   "return_type": "java.lang.Number"
   "signature": "[com.netflix.servo.monitor.BasicGauge].getValue(int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.netflix.servo.publish.JvmMetricPoller].poll(com.netflix.servo.publish.MetricFilter,boolean)"
+- "name": "[com.netflix.servo.publish.JvmMetricPoller].poll(com.netflix.servo.publish.MetricFilter,boolean)"
   "params":
   - "name": "arg0"
     "type": "com.netflix.servo.publish.MetricFilter"
@@ -33,9 +25,7 @@
     "type": "boolean"
   "return_type": "java.util.List<Metric>"
   "signature": "[com.netflix.servo.publish.JvmMetricPoller].poll(com.netflix.servo.publish.MetricFilter,boolean)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[com.netflix.servo.monitor.DynamicCounter].increment(java.lang.String,java.lang.String[])"
+- "name": "[com.netflix.servo.monitor.DynamicCounter].increment(java.lang.String,java.lang.String[])"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -43,9 +33,7 @@
     "type": "java.lang.String[]"
   "return_type": "void"
   "signature": "[com.netflix.servo.monitor.DynamicCounter].increment(java.lang.String,java.lang.String[])"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[com.netflix.servo.SpectatorContext].register(com.netflix.servo.monitor.Monitor<?>)"
+- "name": "[com.netflix.servo.SpectatorContext].register(com.netflix.servo.monitor.Monitor<?>)"
   "params":
   - "name": "arg0"
     "type": "com.netflix.servo.monitor.Monitor<?>"
