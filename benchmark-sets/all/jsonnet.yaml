@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN8nlohmann6detail6parserINS_10basic_jsonINSt3__13mapENS3_6vectorENS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEblmdS9_NS_14adl_serializerEEEE5parseEbRSD_"
+- "name": "_ZN8nlohmann6detail6parserINS_10basic_jsonINSt3__13mapENS3_6vectorENS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEblmdS9_NS_14adl_serializerEEEE5parseEbRSD_"
   "params":
   - "name": ""
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void nlohmann::detail::parser<nlohmann::basic_json<std::__1::map, std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::adl_serializer> >::parse(parser<nlohmann::basic_json<std::__1::map, std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::adl_serializer> > *, const bool, basic_json<std::__1::map, std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::adl_serializer> &)"
-- "exceptions": []
-  "name": "jsonnet_evaluate_file_stream"
+- "name": "jsonnet_evaluate_file_stream"
   "params":
   - "name": ""
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "char * jsonnet_evaluate_file_stream(struct JsonnetVm *, const char *, int *)"
-- "exceptions": []
-  "name": "jsonnet_evaluate_file_multi"
+- "name": "jsonnet_evaluate_file_multi"
   "params":
   - "name": ""
     "type": "bool "
@@ -32,8 +29,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "char * jsonnet_evaluate_file_multi(struct JsonnetVm *, const char *, int *)"
-- "exceptions": []
-  "name": "_ZN7jsonnet8internal11jsonnet_fmtEPNS0_3ASTERNSt3__16vectorINS0_13FodderElementENS3_9allocatorIS5_EEEERKNS0_7FmtOptsE"
+- "name": "_ZN7jsonnet8internal11jsonnet_fmtEPNS0_3ASTERNSt3__16vectorINS0_13FodderElementENS3_9allocatorIS5_EEEERKNS0_7FmtOptsE"
   "params":
   - "name": ""
     "type": "bool "
@@ -45,8 +41,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "string jsonnet::internal::jsonnet_fmt(struct AST *, Fodder &, const struct FmtOpts &)"
-- "exceptions": []
-  "name": "jsonnet_evaluate_file"
+- "name": "jsonnet_evaluate_file"
   "params":
   - "name": ""
     "type": "bool "

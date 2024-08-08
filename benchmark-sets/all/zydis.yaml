@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ZydisFormatterBufferRestore"
+- "name": "ZydisFormatterBufferRestore"
   "params":
   - "name": ""
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "ZyanStatus ZydisFormatterBufferRestore(ZydisFormatterBuffer *, ZyanUPointer)"
-- "exceptions": []
-  "name": "ZydisFormatterBasePrintPrefixes"
+- "name": "ZydisFormatterBasePrintPrefixes"
   "params":
   - "name": ""
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "ZyanStatus ZydisFormatterBasePrintPrefixes(const ZydisFormatter *, ZydisFormatterBuffer *, ZydisFormatterContext *)"
-- "exceptions": []
-  "name": "ZydisEncoderNopFill"
+- "name": "ZydisEncoderNopFill"
   "params":
   - "name": ""
     "type": "bool "
@@ -28,8 +25,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "ZyanStatus ZydisEncoderNopFill(void *, ZyanUSize)"
-- "exceptions": []
-  "name": "ZydisFormatterSetHook"
+- "name": "ZydisFormatterSetHook"
   "params":
   - "name": ""
     "type": "bool "
@@ -39,8 +35,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "ZyanStatus ZydisFormatterSetHook(ZydisFormatter *, ZydisFormatterFunction, const void **)"
-- "exceptions": []
-  "name": "ZydisFormatterBufferGetString"
+- "name": "ZydisFormatterBufferGetString"
   "params":
   - "name": ""
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "skcms_AreApproximateInverses"
+- "name": "skcms_AreApproximateInverses"
   "params":
   - "name": "curve"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool skcms_AreApproximateInverses(const skcms_Curve *, const skcms_TransferFunction *)"
-- "exceptions": []
-  "name": "skcms_PrimariesToXYZD50"
+- "name": "skcms_PrimariesToXYZD50"
   "params":
   - "name": "rx"
     "type": "float"
@@ -31,8 +29,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool skcms_PrimariesToXYZD50(float, float, float, float, float, float, float, float, skcms_Matrix3x3 *)"
-- "exceptions": []
-  "name": "skcms_ApproximatelyEqualProfiles"
+- "name": "skcms_ApproximatelyEqualProfiles"
   "params":
   - "name": "A"
     "type": "bool "
@@ -40,8 +37,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool skcms_ApproximatelyEqualProfiles(const skcms_ICCProfile *, const skcms_ICCProfile *)"
-- "exceptions": []
-  "name": "skcms_TRCs_AreApproximateInverse"
+- "name": "skcms_TRCs_AreApproximateInverse"
   "params":
   - "name": "profile"
     "type": "bool "
@@ -49,8 +45,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool skcms_TRCs_AreApproximateInverse(const skcms_ICCProfile *, const skcms_TransferFunction *)"
-- "exceptions": []
-  "name": "skcms_MakeUsableAsDestinationWithSingleCurve"
+- "name": "skcms_MakeUsableAsDestinationWithSingleCurve"
   "params":
   - "name": "profile"
     "type": "bool "

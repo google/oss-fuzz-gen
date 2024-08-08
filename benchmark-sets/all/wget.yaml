@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "gnutls_record_recv_packet"
+- "name": "gnutls_record_recv_packet"
   "params":
   - "name": "session"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "ssize_t gnutls_record_recv_packet(gnutls_session_t, gnutls_packet_t *)"
-- "exceptions": []
-  "name": "gnutls_bye"
+- "name": "gnutls_bye"
   "params":
   - "name": "session"
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int gnutls_bye(gnutls_session_t, gnutls_close_request_t)"
-- "exceptions": []
-  "name": "gnutls_record_recv_seq"
+- "name": "gnutls_record_recv_seq"
   "params":
   - "name": "session"
     "type": "bool "
@@ -30,8 +27,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "ssize_t gnutls_record_recv_seq(gnutls_session_t, void *, size_t, unsigned char *)"
-- "exceptions": []
-  "name": "gnutls_record_recv"
+- "name": "gnutls_record_recv"
   "params":
   - "name": "session"
     "type": "bool "
@@ -41,8 +37,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "ssize_t gnutls_record_recv(gnutls_session_t, void *, size_t)"
-- "exceptions": []
-  "name": "gnutls_session_get_data"
+- "name": "gnutls_session_get_data"
   "params":
   - "name": "session"
     "type": "bool "

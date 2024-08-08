@@ -1,20 +1,17 @@
 "functions":
-- "exceptions": []
-  "name": "cue_parse_file"
+- "name": "cue_parse_file"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "Cd * cue_parse_file(FILE *)"
-- "exceptions": []
-  "name": "track_get_isrc"
+- "name": "track_get_isrc"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "const char * track_get_isrc(const Track *)"
-- "exceptions": []
-  "name": "rem_get"
+- "name": "rem_get"
   "params":
   - "name": ""
     "type": "int"
@@ -22,8 +19,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "const char * rem_get(RemType, Rem *)"
-- "exceptions": []
-  "name": "cd_get_track"
+- "name": "cd_get_track"
   "params":
   - "name": ""
     "type": "bool "
@@ -31,8 +27,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "Track * cd_get_track(const Cd *, int)"
-- "exceptions": []
-  "name": "cdtext_get"
+- "name": "cdtext_get"
   "params":
   - "name": ""
     "type": "int"

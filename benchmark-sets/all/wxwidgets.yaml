@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN16wxFontMapperBase17CharsetToEncodingERK8wxStringb"
+- "name": "_ZN16wxFontMapperBase17CharsetToEncodingERK8wxStringb"
   "params":
   - "name": "this"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool"
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typewxFontEncoding wxFontMapperBase::CharsetToEncoding(const wxString &, bool)"
-- "exceptions": []
-  "name": "_ZN16wxFontMapperBase31NonInteractiveCharsetToEncodingERK8wxString"
+- "name": "_ZN16wxFontMapperBase31NonInteractiveCharsetToEncodingERK8wxString"
   "params":
   - "name": "this"
     "type": "bool "
@@ -19,15 +17,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int wxFontMapperBase::NonInteractiveCharsetToEncoding(const wxString &)"
-- "exceptions": []
-  "name": "_ZN14wxPlatformInfo22InitForCurrentPlatformEv"
+- "name": "_ZN14wxPlatformInfo22InitForCurrentPlatformEv"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "void wxPlatformInfo::InitForCurrentPlatform()"
-- "exceptions": []
-  "name": "_ZN14wxPlatformInfoC2Ev"
+- "name": "_ZN14wxPlatformInfoC2Ev"
   "params":
   - "name": "this"
     "type": "bool "

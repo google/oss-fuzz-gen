@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "WS_VSB_new"
+- "name": "WS_VSB_new"
   "params":
   - "name": "vsb"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void WS_VSB_new(struct vsb *, struct ws *)"
-- "exceptions": []
-  "name": "VSB_quote_pfx"
+- "name": "VSB_quote_pfx"
   "params":
   - "name": "s"
     "type": "bool "
@@ -23,8 +21,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void VSB_quote_pfx(struct vsb *, const char *, const void *, int, int)"
-- "exceptions": []
-  "name": "WS_ReqPipeline"
+- "name": "WS_ReqPipeline"
   "params":
   - "name": "ws"
     "type": "bool "
@@ -34,8 +31,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "unsigned int WS_ReqPipeline(struct ws *, const void *, const void *)"
-- "exceptions": []
-  "name": "VSB_quote"
+- "name": "VSB_quote"
   "params":
   - "name": "s"
     "type": "bool "
@@ -47,8 +43,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void VSB_quote(struct vsb *, const void *, int, int)"
-- "exceptions": []
-  "name": "WS_Panic"
+- "name": "WS_Panic"
   "params":
   - "name": "vsb"
     "type": "bool "

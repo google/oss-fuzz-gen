@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "asn1_delete_structure2"
+- "name": "asn1_delete_structure2"
   "params":
   - "name": "structure"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int asn1_delete_structure2(asn1_node *, unsigned int)"
-- "exceptions": []
-  "name": "asn1_parser2array"
+- "name": "asn1_parser2array"
   "params":
   - "name": "inputFileName"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "mbedtls_cipher_write_tag"
+- "name": "mbedtls_cipher_write_tag"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int mbedtls_cipher_write_tag(mbedtls_cipher_context_t *, unsigned char *, size_t)"
-- "exceptions": []
-  "name": "mbedtls_cipher_update_ad"
+- "name": "mbedtls_cipher_update_ad"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int mbedtls_cipher_update_ad(mbedtls_cipher_context_t *, const unsigned char *, size_t)"
-- "exceptions": []
-  "name": "mbedtls_cipher_check_tag"
+- "name": "mbedtls_cipher_check_tag"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -32,8 +29,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int mbedtls_cipher_check_tag(mbedtls_cipher_context_t *, const unsigned char *, size_t)"
-- "exceptions": []
-  "name": "libinjection_sqli_get_token"
+- "name": "libinjection_sqli_get_token"
   "params":
   - "name": "sql_state"
     "type": "bool "
@@ -41,8 +37,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "struct libinjection_sqli_token * libinjection_sqli_get_token(struct libinjection_sqli_state *, int)"
-- "exceptions": []
-  "name": "libinjection_sqli_lookup_word"
+- "name": "libinjection_sqli_lookup_word"
   "params":
   - "name": "sql_state"
     "type": "bool "

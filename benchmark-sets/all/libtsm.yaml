@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "tsm_symbol_append"
+- "name": "tsm_symbol_append"
   "params":
   - "name": "tbl"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "tsm_symbol_t tsm_symbol_append(struct tsm_symbol_table *, tsm_symbol_t, uint32_t)"
-- "exceptions": []
-  "name": "tsm_vte_set_palette"
+- "name": "tsm_vte_set_palette"
   "params":
   - "name": "vte"
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int tsm_vte_set_palette(struct tsm_vte *, const char *)"
-- "exceptions": []
-  "name": "shl_htable_insert"
+- "name": "shl_htable_insert"
   "params":
   - "name": "htable"
     "type": "bool "
@@ -30,8 +27,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int shl_htable_insert(struct shl_htable *, const void *, size_t)"
-- "exceptions": []
-  "name": "tsm_vte_handle_keyboard"
+- "name": "tsm_vte_handle_keyboard"
   "params":
   - "name": "vte"
     "type": "bool "
@@ -45,8 +41,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool tsm_vte_handle_keyboard(struct tsm_vte *, uint32_t, uint32_t, unsigned int, uint32_t)"
-- "exceptions": []
-  "name": "shl_htable_remove"
+- "name": "shl_htable_remove"
   "params":
   - "name": "htable"
     "type": "bool "

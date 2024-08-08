@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "XmlParseXmlDeclNS"
+- "name": "XmlParseXmlDeclNS"
   "params":
   - "name": "isGeneralTextEntity"
     "type": "int"
@@ -24,8 +23,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int XmlParseXmlDecl(int, const ENCODING *, const char *, const char *, const char **, const char **, const char **, const char **, const ENCODING **, int *)"
-- "exceptions": []
-  "name": "XmlInitUnknownEncoding"
+- "name": "XmlInitUnknownEncoding"
   "params":
   - "name": "mem"
     "type": "bool "
@@ -37,8 +35,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "ENCODING * XmlInitUnknownEncoding(void *, int *, CONVERTER, void *)"
-- "exceptions": []
-  "name": "XmlInitUnknownEncodingNS"
+- "name": "XmlInitUnknownEncodingNS"
   "params":
   - "name": "mem"
     "type": "bool "
@@ -50,8 +47,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "ENCODING * XmlInitUnknownEncodingNS(void *, int *, CONVERTER, void *)"
-- "exceptions": []
-  "name": "XML_SetBase"
+- "name": "XML_SetBase"
   "params":
   - "name": "parser"
     "type": "bool "
@@ -59,8 +55,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typeXML_Status XML_SetBase(XML_Parser, const XML_Char *)"
-- "exceptions": []
-  "name": "XML_ResumeParser"
+- "name": "XML_ResumeParser"
   "params":
   - "name": "parser"
     "type": "bool "

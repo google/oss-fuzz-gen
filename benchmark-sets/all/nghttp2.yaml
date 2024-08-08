@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "nghttp2_session_recv"
+- "name": "nghttp2_session_recv"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "int"
   "signature": "int nghttp2_session_recv(nghttp2_session *)"
-- "exceptions": []
-  "name": "nghttp2_session_mem_send"
+- "name": "nghttp2_session_mem_send"
   "params":
   - "name": ""
     "type": "bool "
@@ -15,8 +13,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "ssize_t nghttp2_session_mem_send(nghttp2_session *, const uint8_t **)"
-- "exceptions": []
-  "name": "nghttp2_submit_request2"
+- "name": "nghttp2_submit_request2"
   "params":
   - "name": ""
     "type": "bool "
@@ -32,8 +29,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int32_t nghttp2_submit_request2(nghttp2_session *, const nghttp2_priority_spec *, const nghttp2_nv *, size_t, const nghttp2_data_provider2 *, void *)"
-- "exceptions": []
-  "name": "nghttp2_session_mem_recv"
+- "name": "nghttp2_session_mem_recv"
   "params":
   - "name": ""
     "type": "bool "
@@ -43,8 +39,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "ssize_t nghttp2_session_mem_recv(nghttp2_session *, const uint8_t *, size_t)"
-- "exceptions": []
-  "name": "nghttp2_session_send"
+- "name": "nghttp2_session_send"
   "params":
   - "name": ""
     "type": "bool "

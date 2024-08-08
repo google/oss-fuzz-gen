@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "opj_jp2_get_tile"
+- "name": "opj_jp2_get_tile"
   "params":
   - "name": ""
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "OPJ_BOOL opj_jp2_get_tile(opj_jp2_t *, opj_stream_private_t *, opj_image_t *, opj_event_mgr_t *, OPJ_UINT32)"
-- "exceptions": []
-  "name": "opj_jp2_decode_tile"
+- "name": "opj_jp2_decode_tile"
   "params":
   - "name": ""
     "type": "bool "
@@ -31,8 +29,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "OPJ_BOOL opj_jp2_decode_tile(opj_jp2_t *, OPJ_UINT32, OPJ_BYTE *, OPJ_UINT32, opj_stream_private_t *, opj_event_mgr_t *)"
-- "exceptions": []
-  "name": "opj_j2k_encode"
+- "name": "opj_j2k_encode"
   "params":
   - "name": ""
     "type": "bool "
@@ -42,8 +39,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "OPJ_BOOL opj_j2k_encode(opj_j2k_t *, opj_stream_private_t *, opj_event_mgr_t *)"
-- "exceptions": []
-  "name": "opj_jp2_encode"
+- "name": "opj_jp2_encode"
   "params":
   - "name": ""
     "type": "bool "
@@ -53,8 +49,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "OPJ_BOOL opj_jp2_encode(opj_jp2_t *, opj_stream_private_t *, opj_event_mgr_t *)"
-- "exceptions": []
-  "name": "opj_j2k_get_tile"
+- "name": "opj_j2k_get_tile"
   "params":
   - "name": ""
     "type": "bool "

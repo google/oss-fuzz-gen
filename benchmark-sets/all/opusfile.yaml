@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "op_read"
+- "name": "op_read"
   "params":
   - "name": "_of"
     "type": "bool "
@@ -12,15 +11,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int op_read(OggOpusFile *, opus_int16 *, int, int *)"
-- "exceptions": []
-  "name": "op_test_open"
+- "name": "op_test_open"
   "params":
   - "name": "_of"
     "type": "bool "
   "return_type": "int"
   "signature": "int op_test_open(OggOpusFile *)"
-- "exceptions": []
-  "name": "op_read_float"
+- "name": "op_read_float"
   "params":
   - "name": "_of"
     "type": "bool "
@@ -32,8 +29,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int op_read_float(OggOpusFile *, float *, int, int *)"
-- "exceptions": []
-  "name": "op_read_float_stereo"
+- "name": "op_read_float_stereo"
   "params":
   - "name": "_of"
     "type": "bool "
@@ -43,8 +39,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int op_read_float_stereo(OggOpusFile *, float *, int)"
-- "exceptions": []
-  "name": "op_open_file"
+- "name": "op_open_file"
   "params":
   - "name": "_path"
     "type": "bool "

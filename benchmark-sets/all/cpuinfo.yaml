@@ -1,20 +1,17 @@
 "functions":
-- "exceptions": []
-  "name": "cpuinfo_linux_get_processor_cur_frequency"
+- "name": "cpuinfo_linux_get_processor_cur_frequency"
   "params":
   - "name": "processor"
     "type": "int"
   "return_type": "int"
   "signature": "uint32_t cpuinfo_linux_get_processor_cur_frequency(uint32_t)"
-- "exceptions": []
-  "name": "cpuinfo_linux_get_processor_max_frequency"
+- "name": "cpuinfo_linux_get_processor_max_frequency"
   "params":
   - "name": "processor"
     "type": "int"
   "return_type": "int"
   "signature": "uint32_t cpuinfo_linux_get_processor_max_frequency(uint32_t)"
-- "exceptions": []
-  "name": "cpuinfo_linux_get_processor_package_id"
+- "name": "cpuinfo_linux_get_processor_package_id"
   "params":
   - "name": "processor"
     "type": "int"
@@ -22,15 +19,13 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool cpuinfo_linux_get_processor_package_id(uint32_t, DW_TAG_restrict_typeuint32_t *)"
-- "exceptions": []
-  "name": "cpuinfo_linux_get_processor_min_frequency"
+- "name": "cpuinfo_linux_get_processor_min_frequency"
   "params":
   - "name": "processor"
     "type": "int"
   "return_type": "int"
   "signature": "uint32_t cpuinfo_linux_get_processor_min_frequency(uint32_t)"
-- "exceptions": []
-  "name": "cpuinfo_linux_get_processor_core_id"
+- "name": "cpuinfo_linux_get_processor_core_id"
   "params":
   - "name": "processor"
     "type": "int"

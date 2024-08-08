@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "transform_save"
+- "name": "transform_save"
   "params":
   - "name": "aug"
     "type": "bool "
@@ -12,15 +11,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int transform_save(struct augeas *, struct tree *, const char *, struct tree *)"
-- "exceptions": []
-  "name": "aug_save"
+- "name": "aug_save"
   "params":
   - "name": "aug"
     "type": "bool "
   "return_type": "int"
   "signature": "int aug_save(struct augeas *)"
-- "exceptions": []
-  "name": "aug_load_file"
+- "name": "aug_load_file"
   "params":
   - "name": "aug"
     "type": "bool "
@@ -28,8 +25,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int aug_load_file(struct augeas *, const char *)"
-- "exceptions": []
-  "name": "aug_text_retrieve"
+- "name": "aug_text_retrieve"
   "params":
   - "name": "aug"
     "type": "bool "
@@ -43,8 +39,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int aug_text_retrieve(struct augeas *, const char *, const char *, const char *, const char *)"
-- "exceptions": []
-  "name": "aug_preview"
+- "name": "aug_preview"
   "params":
   - "name": "aug"
     "type": "bool "

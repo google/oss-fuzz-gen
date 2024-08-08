@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "mz_zip_add_mem_to_archive_file_in_place"
+- "name": "mz_zip_add_mem_to_archive_file_in_place"
   "params":
   - "name": ""
     "type": "bool "
@@ -18,8 +17,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "mz_bool mz_zip_add_mem_to_archive_file_in_place(const char *, const char *, const void *, size_t, const void *, mz_uint16, mz_uint)"
-- "exceptions": []
-  "name": "mz_zip_add_mem_to_archive_file_in_place_v2"
+- "name": "mz_zip_add_mem_to_archive_file_in_place_v2"
   "params":
   - "name": ""
     "type": "bool "
@@ -39,8 +37,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "mz_bool mz_zip_add_mem_to_archive_file_in_place_v2(const char *, const char *, const void *, size_t, const void *, mz_uint16, mz_uint, mz_zip_error *)"
-- "exceptions": []
-  "name": "mz_zip_validate_file_archive"
+- "name": "mz_zip_validate_file_archive"
   "params":
   - "name": ""
     "type": "bool "
@@ -50,8 +47,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "mz_bool mz_zip_validate_file_archive(const char *, mz_uint, mz_zip_error *)"
-- "exceptions": []
-  "name": "mz_zip_writer_add_file"
+- "name": "mz_zip_writer_add_file"
   "params":
   - "name": ""
     "type": "bool "
@@ -67,8 +63,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "mz_bool mz_zip_writer_add_file(mz_zip_archive *, const char *, const char *, const void *, mz_uint16, mz_uint)"
-- "exceptions": []
-  "name": "mz_zip_writer_add_cfile"
+- "name": "mz_zip_writer_add_cfile"
   "params":
   - "name": ""
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN8jsoncons15index_key_valueINS_10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEEEaSEOS7_"
+- "name": "_ZN8jsoncons15index_key_valueINS_10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEEEaSEOS7_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct index_key_value<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > > & jsoncons::index_key_value<jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> > >::operator=(struct index_key_value<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > > *, struct DW_TAG_rvalue_reference_typeindex_key_value<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > >)"
-- "exceptions": []
-  "name": "_ZN8jsonconsltERKNS_12basic_bigintINSt3__19allocatorIhEEEES6_"
+- "name": "_ZN8jsonconsltERKNS_12basic_bigintINSt3__19allocatorIhEEEES6_"
   "params":
   - "name": "x"
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool jsoncons::operator<(const basic_bigint<std::__1::allocator<unsigned char> > &, const basic_bigint<std::__1::allocator<unsigned char> > &)"
-- "exceptions": []
-  "name": "_ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEaSERKS5_"
+- "name": "_ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEaSERKS5_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > & jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >::operator=(basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > *, const basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > &)"
-- "exceptions": []
-  "name": "_ZN8jsoncons15index_key_valueINS_10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEEEaSERKS7_"
+- "name": "_ZN8jsoncons15index_key_valueINS_10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEEEaSERKS7_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -35,8 +31,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct index_key_value<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > > & jsoncons::index_key_value<jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> > >::operator=(struct index_key_value<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > > *, const struct index_key_value<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > > &)"
-- "exceptions": []
-  "name": "_ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEaSEOS5_"
+- "name": "_ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEaSEOS5_"
   "params":
   - "name": "this"
     "type": "bool "

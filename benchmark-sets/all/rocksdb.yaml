@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN7rocksdb13TransactionDB4OpenERKNS_7OptionsERKNS_20TransactionDBOptionsERKNSt3__112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEEPPS0_"
+- "name": "_ZN7rocksdb13TransactionDB4OpenERKNS_7OptionsERKNS_20TransactionDBOptionsERKNSt3__112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEEPPS0_"
   "params":
   - "name": ""
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "Status rocksdb::TransactionDB::Open(const struct Options &, const struct TransactionDBOptions &, const string &, TransactionDB **)"
-- "exceptions": []
-  "name": "_ZN7rocksdb2DB18OpenAndTrimHistoryERKNS_9DBOptionsERKNSt3__112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKNS4_6vectorINS_22ColumnFamilyDescriptorENS8_ISE_EEEEPNSD_IPNS_18ColumnFamilyHandleENS8_ISK_EEEEPPS0_SA_"
+- "name": "_ZN7rocksdb2DB18OpenAndTrimHistoryERKNS_9DBOptionsERKNSt3__112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKNS4_6vectorINS_22ColumnFamilyDescriptorENS8_ISE_EEEEPNSD_IPNS_18ColumnFamilyHandleENS8_ISK_EEEEPPS0_SA_"
   "params":
   - "name": ""
     "type": "bool "
@@ -33,8 +31,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "Status rocksdb::DB::OpenAndTrimHistory(const struct DBOptions &, const string &, const vector<rocksdb::ColumnFamilyDescriptor, std::__1::allocator<rocksdb::ColumnFamilyDescriptor> > &, vector<rocksdb::ColumnFamilyHandle *, std::__1::allocator<rocksdb::ColumnFamilyHandle *> > *, DB **, string)"
-- "exceptions": []
-  "name": "_ZN7rocksdb13TransactionDB4OpenERKNS_9DBOptionsERKNS_20TransactionDBOptionsERKNSt3__112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEERKNS7_6vectorINS_22ColumnFamilyDescriptorENSB_ISH_EEEEPNSG_IPNS_18ColumnFamilyHandleENSB_ISN_EEEEPPS0_"
+- "name": "_ZN7rocksdb13TransactionDB4OpenERKNS_9DBOptionsERKNS_20TransactionDBOptionsERKNSt3__112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEERKNS7_6vectorINS_22ColumnFamilyDescriptorENSB_ISH_EEEEPNSG_IPNS_18ColumnFamilyHandleENSB_ISN_EEEEPPS0_"
   "params":
   - "name": ""
     "type": "bool "
@@ -52,8 +49,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "Status rocksdb::TransactionDB::Open(const struct DBOptions &, const struct TransactionDBOptions &, const string &, const vector<rocksdb::ColumnFamilyDescriptor, std::__1::allocator<rocksdb::ColumnFamilyDescriptor> > &, vector<rocksdb::ColumnFamilyHandle *, std::__1::allocator<rocksdb::ColumnFamilyHandle *> > *, TransactionDB **)"
-- "exceptions": []
-  "name": "_ZN7rocksdb6DBImpl19IngestExternalFilesERKNSt3__16vectorINS_21IngestExternalFileArgENS1_9allocatorIS3_EEEE"
+- "name": "_ZN7rocksdb6DBImpl19IngestExternalFilesERKNSt3__16vectorINS_21IngestExternalFileArgENS1_9allocatorIS3_EEEE"
   "params":
   - "name": ""
     "type": "bool "
@@ -63,8 +59,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "Status rocksdb::DBImpl::IngestExternalFiles(const vector<rocksdb::IngestExternalFileArg, std::__1::allocator<rocksdb::IngestExternalFileArg> > &)"
-- "exceptions": []
-  "name": "_ZN7rocksdb18WriteUnpreparedTxn19RollbackToSavePointEv"
+- "name": "_ZN7rocksdb18WriteUnpreparedTxn19RollbackToSavePointEv"
   "params":
   - "name": ""
     "type": "bool "

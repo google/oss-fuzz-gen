@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "lyd_parse_op"
+- "name": "lyd_parse_op"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -18,8 +17,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "LY_ERR lyd_parse_op(const struct ly_ctx *, struct lyd_node *, struct ly_in *, LYD_FORMAT, DW_TAG_enumeration_typelyd_type, struct lyd_node **, struct lyd_node **)"
-- "exceptions": []
-  "name": "lyplg_ext_print_info_extension_instance"
+- "name": "lyplg_ext_print_info_extension_instance"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -29,8 +27,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void lyplg_ext_print_info_extension_instance(struct lyspr_ctx *, const struct lysc_ext_instance *, ly_bool *)"
-- "exceptions": []
-  "name": "yang_print_compiled"
+- "name": "yang_print_compiled"
   "params":
   - "name": "out"
     "type": "bool "
@@ -40,8 +37,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "LY_ERR yang_print_compiled(struct ly_out *, const struct lys_module *, uint32_t)"
-- "exceptions": []
-  "name": "ly_ctx_get_yanglib_data"
+- "name": "ly_ctx_get_yanglib_data"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -51,8 +47,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "LY_ERR ly_ctx_get_yanglib_data(const struct ly_ctx *, struct lyd_node **, const char *, void)"
-- "exceptions": []
-  "name": "lyd_parse_ext_op"
+- "name": "lyd_parse_ext_op"
   "params":
   - "name": "ext"
     "type": "bool "

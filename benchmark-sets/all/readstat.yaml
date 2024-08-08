@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ck_double_hash_insert"
+- "name": "ck_double_hash_insert"
   "params":
   - "name": "key"
     "type": "double"
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ck_double_hash_insert(double, const void *, ck_hash_table_t *)"
-- "exceptions": []
-  "name": "readstat_value_is_missing"
+- "name": "readstat_value_is_missing"
   "params":
   - "name": "value"
     "type": "size_t"
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int readstat_value_is_missing(readstat_value_t, readstat_variable_t *)"
-- "exceptions": []
-  "name": "ck_double_hash_lookup"
+- "name": "ck_double_hash_lookup"
   "params":
   - "name": "key"
     "type": "double"
@@ -30,8 +27,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "const void * ck_double_hash_lookup(double, ck_hash_table_t *)"
-- "exceptions": []
-  "name": "ck_float_hash_insert"
+- "name": "ck_float_hash_insert"
   "params":
   - "name": "key"
     "type": "float"
@@ -41,8 +37,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ck_float_hash_insert(float, const void *, ck_hash_table_t *)"
-- "exceptions": []
-  "name": "readstat_value_is_defined_missing"
+- "name": "readstat_value_is_defined_missing"
   "params":
   - "name": "value"
     "type": "size_t"

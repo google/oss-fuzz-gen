@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "avahi_string_list_new"
+- "name": "avahi_string_list_new"
   "params":
   - "name": "txt"
     "type": "bool "
   "return_type": "void"
   "signature": "AvahiStringList * avahi_string_list_new(const char *, void)"
-- "exceptions": []
-  "name": "avahi_string_list_add_vprintf"
+- "name": "avahi_string_list_add_vprintf"
   "params":
   - "name": "l"
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "AvahiStringList * avahi_string_list_add_vprintf(AvahiStringList *, const char *, struct __va_list_tag *)"
-- "exceptions": []
-  "name": "avahi_string_list_add_printf"
+- "name": "avahi_string_list_add_printf"
   "params":
   - "name": "l"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "AvahiStringList * avahi_string_list_add_printf(AvahiStringList *, const char *, void)"
-- "exceptions": []
-  "name": "avahi_dns_packet_new_reply"
+- "name": "avahi_dns_packet_new_reply"
   "params":
   - "name": "p"
     "type": "bool "
@@ -39,8 +35,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "AvahiDnsPacket * avahi_dns_packet_new_reply(AvahiDnsPacket *, unsigned int, int, int)"
-- "exceptions": []
-  "name": "avahi_string_list_add_pair"
+- "name": "avahi_string_list_add_pair"
   "params":
   - "name": "l"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "mbedtls_ssl_write"
+- "name": "mbedtls_ssl_write"
   "params":
   - "name": "ssl"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int mbedtls_ssl_write(mbedtls_ssl_context *, const unsigned char *, size_t)"
-- "exceptions": []
-  "name": "mbedtls_ssl_check_record"
+- "name": "mbedtls_ssl_check_record"
   "params":
   - "name": "ssl"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int mbedtls_ssl_check_record(const mbedtls_ssl_context *, unsigned char *, size_t)"
-- "exceptions": []
-  "name": "mbedtls_pk_parse_keyfile"
+- "name": "mbedtls_pk_parse_keyfile"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -36,8 +33,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int mbedtls_pk_parse_keyfile(mbedtls_pk_context *, const char *, const char *, DW_TAG_subroutine_typeInfinite loop *, void *)"
-- "exceptions": []
-  "name": "mbedtls_ssl_write_early_data"
+- "name": "mbedtls_ssl_write_early_data"
   "params":
   - "name": "ssl"
     "type": "bool "

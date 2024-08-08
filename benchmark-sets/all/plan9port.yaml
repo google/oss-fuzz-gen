@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "X509gen"
+- "name": "X509gen"
   "params":
   - "name": "priv"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "uchar * X509gen(RSApriv *, char *, ulong *, int *)"
-- "exceptions": []
-  "name": "X509toRSApub"
+- "name": "X509toRSApub"
   "params":
   - "name": "cert"
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "RSApub * X509toRSApub(uchar *, int, char *, int)"
-- "exceptions": []
-  "name": "X509req"
+- "name": "X509req"
   "params":
   - "name": "priv"
     "type": "bool "
@@ -36,8 +33,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "uchar * X509req(RSApriv *, char *, int *)"
-- "exceptions": []
-  "name": "rsadecrypt"
+- "name": "rsadecrypt"
   "params":
   - "name": "rsa"
     "type": "bool "
@@ -47,8 +43,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "mpint * rsadecrypt(RSApriv *, mpint *, mpint *)"
-- "exceptions": []
-  "name": "__efgfmt"
+- "name": "__efgfmt"
   "params":
   - "name": "fmt"
     "type": "bool "

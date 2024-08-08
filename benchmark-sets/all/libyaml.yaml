@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "yaml_emitter_set_width"
+- "name": "yaml_emitter_set_width"
   "params":
   - "name": "emitter"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void yaml_emitter_set_width(yaml_emitter_t *, int)"
-- "exceptions": []
-  "name": "yaml_emitter_set_output_file"
+- "name": "yaml_emitter_set_output_file"
   "params":
   - "name": "emitter"
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void yaml_emitter_set_output_file(yaml_emitter_t *, FILE *)"
-- "exceptions": []
-  "name": "yaml_emitter_set_indent"
+- "name": "yaml_emitter_set_indent"
   "params":
   - "name": "emitter"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void yaml_emitter_set_indent(yaml_emitter_t *, int)"
-- "exceptions": []
-  "name": "yaml_emitter_set_encoding"
+- "name": "yaml_emitter_set_encoding"
   "params":
   - "name": "emitter"
     "type": "bool "
@@ -35,8 +31,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void yaml_emitter_set_encoding(yaml_emitter_t *, yaml_encoding_t)"
-- "exceptions": []
-  "name": "yaml_emitter_set_break"
+- "name": "yaml_emitter_set_break"
   "params":
   - "name": "emitter"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ini_parse_file"
+- "name": "ini_parse_file"
   "params":
   - "name": "file"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ini_parse_file(FILE *, ini_handler, void *)"
-- "exceptions": []
-  "name": "ini_parse"
+- "name": "ini_parse"
   "params":
   - "name": "filename"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN8usbguard6Logger5writeERKNS_9LogStream6SourceENS1_5LevelERKNSt3__112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEE"
+- "name": "_ZN8usbguard6Logger5writeERKNS_9LogStream6SourceENS1_5LevelERKNSt3__112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void usbguard::Logger::write(const struct Source &, const DW_TAG_enumeration_typeLevel, const string &)"
-- "exceptions": []
-  "name": "_ZN8usbguard11OStreamSink5writeERKNS_9LogStream6SourceENS1_5LevelERKNSt3__112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEE"
+- "name": "_ZN8usbguard11OStreamSink5writeERKNS_9LogStream6SourceENS1_5LevelERKNSt3__112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void usbguard::OStreamSink::write(const struct Source &, DW_TAG_enumeration_typeLevel, const string &)"
-- "exceptions": []
-  "name": "_ZN8usbguard13AuditFileSink5writeERKNS_9LogStream6SourceENS1_5LevelERKNSt3__112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEE"
+- "name": "_ZN8usbguard13AuditFileSink5writeERKNS_9LogStream6SourceENS1_5LevelERKNSt3__112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -38,8 +35,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void usbguard::AuditFileSink::write(const struct Source &, DW_TAG_enumeration_typeLevel, const string &)"
-- "exceptions": []
-  "name": "_ZN8usbguard10SyslogSink5writeERKNS_9LogStream6SourceENS1_5LevelERKNSt3__112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEE"
+- "name": "_ZN8usbguard10SyslogSink5writeERKNS_9LogStream6SourceENS1_5LevelERKNSt3__112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -51,8 +47,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void usbguard::SyslogSink::write(const struct Source &, DW_TAG_enumeration_typeLevel, const string &)"
-- "exceptions": []
-  "name": "_ZN8usbguard6LoggerclERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEiS9_NS_9LogStream5LevelE"
+- "name": "_ZN8usbguard6LoggerclERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEiS9_NS_9LogStream5LevelE"
   "params":
   - "name": "this"
     "type": "bool "

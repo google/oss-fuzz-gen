@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN3fmt3v106vprintENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
+- "name": "_ZN3fmt3v106vprintENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
   "params":
   - "name": "fmt"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void fmt::v10::vprint(string_view, format_args)"
-- "exceptions": []
-  "name": "_ZN3fmt3v108vprintlnEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
+- "name": "_ZN3fmt3v108vprintlnEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
   "params":
   - "name": "f"
     "type": "bool "
@@ -27,8 +25,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void fmt::v10::vprintln(FILE *, string_view, format_args)"
-- "exceptions": []
-  "name": "_ZN3fmt3v1015vprint_bufferedEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
+- "name": "_ZN3fmt3v1015vprint_bufferedEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
   "params":
   - "name": "f"
     "type": "bool "
@@ -42,8 +39,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void fmt::v10::vprint_buffered(FILE *, string_view, format_args)"
-- "exceptions": []
-  "name": "_ZN3fmt3v106vprintEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
+- "name": "_ZN3fmt3v106vprintEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
   "params":
   - "name": "f"
     "type": "bool "
@@ -57,8 +53,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void fmt::v10::vprint(FILE *, string_view, format_args)"
-- "exceptions": []
-  "name": "_ZN3fmt3v106detail5printEP8_IO_FILENS0_17basic_string_viewIcEE"
+- "name": "_ZN3fmt3v106detail5printEP8_IO_FILENS0_17basic_string_viewIcEE"
   "params":
   - "name": "f"
     "type": "bool "

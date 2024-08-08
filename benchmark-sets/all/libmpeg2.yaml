@@ -1,20 +1,17 @@
 "functions":
-- "exceptions": []
-  "name": "impeg2_buf_mgr_get_num_active_buf"
+- "name": "impeg2_buf_mgr_get_num_active_buf"
   "params":
   - "name": "ps_buf_mgr"
     "type": "bool "
   "return_type": "int"
   "signature": "UWORD32 impeg2_buf_mgr_get_num_active_buf(buf_mgr_t *)"
-- "exceptions": []
-  "name": "impeg2_jobq_free"
+- "name": "impeg2_jobq_free"
   "params":
   - "name": "ps_jobq"
     "type": "bool "
   "return_type": "int"
   "signature": "IV_API_CALL_STATUS_T impeg2_jobq_free(jobq_t *)"
-- "exceptions": []
-  "name": "impeg2_buf_mgr_get_buf"
+- "name": "impeg2_buf_mgr_get_buf"
   "params":
   - "name": "ps_buf_mgr"
     "type": "bool "
@@ -22,8 +19,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void * impeg2_buf_mgr_get_buf(buf_mgr_t *, WORD32)"
-- "exceptions": []
-  "name": "impeg2_buf_mgr_get_status"
+- "name": "impeg2_buf_mgr_get_status"
   "params":
   - "name": "ps_buf_mgr"
     "type": "bool "

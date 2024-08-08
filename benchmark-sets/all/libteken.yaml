@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "teken_get_sequence"
+- "name": "teken_get_sequence"
   "params":
   - "name": "t"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "const char * teken_get_sequence(const teken_t *, unsigned int)"
-- "exceptions": []
-  "name": "teken_set_winsize_noreset"
+- "name": "teken_set_winsize_noreset"
   "params":
   - "name": "t"
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void teken_set_winsize_noreset(teken_t *, const teken_pos_t *)"
-- "exceptions": []
-  "name": "teken_set_cursor"
+- "name": "teken_set_cursor"
   "params":
   - "name": "t"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void teken_set_cursor(teken_t *, const teken_pos_t *)"
-- "exceptions": []
-  "name": "teken_state_2"
+- "name": "teken_state_2"
   "params":
   - "name": "t"
     "type": "bool "
@@ -35,8 +31,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void teken_state_2(teken_t *, teken_char_t)"
-- "exceptions": []
-  "name": "teken_get_defattr_cons25"
+- "name": "teken_get_defattr_cons25"
   "params":
   - "name": "t"
     "type": "bool "

@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN7WelsDec12CWelsDecoder18OpenDecoderThreadsEv"
+- "name": "_ZN7WelsDec12CWelsDecoder18OpenDecoderThreadsEv"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "void WelsDec::CWelsDecoder::OpenDecoderThreads()"
-- "exceptions": []
-  "name": "_ZN7WelsDec12CWelsDecoder18DecodeFrameNoDelayEPKhiPPhP13TagBufferInfo"
+- "name": "_ZN7WelsDec12CWelsDecoder18DecodeFrameNoDelayEPKhiPPhP13TagBufferInfo"
   "params":
   - "name": "this"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DECODING_STATE WelsDec::CWelsDecoder::DecodeFrameNoDelay(const unsigned char *, const int, unsigned char **, SBufferInfo *)"
-- "exceptions": []
-  "name": "SemWait"
+- "name": "SemWait"
   "params":
   - "name": "s"
     "type": "bool "
@@ -30,15 +27,13 @@
     "type": "int"
   "return_type": "int"
   "signature": "int SemWait(SWelsDecSemphore *, int32_t)"
-- "exceptions": []
-  "name": "_ZN7WelsDec12CWelsDecoder19CloseDecoderThreadsEv"
+- "name": "_ZN7WelsDec12CWelsDecoder19CloseDecoderThreadsEv"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "void WelsDec::CWelsDecoder::CloseDecoderThreads()"
-- "exceptions": []
-  "name": "_ZN7WelsDec12CWelsDecoder12DecodeParserEPKhiP15TagParserBsInfo"
+- "name": "_ZN7WelsDec12CWelsDecoder12DecodeParserEPKhiP15TagParserBsInfo"
   "params":
   - "name": "this"
     "type": "bool "

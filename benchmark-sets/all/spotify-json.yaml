@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "_ZNK7spotify4json6detail14field_registry5beginEv"
+- "name": "_ZNK7spotify4json6detail14field_registry5beginEv"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "const_iterator spotify::json::detail::field_registry::begin()"
-- "exceptions": []
-  "name": "_ZNK7spotify4json6detail14field_registry3endEv"
+- "name": "_ZNK7spotify4json6detail14field_registry3endEv"
   "params":
   - "name": "this"
     "type": "bool "

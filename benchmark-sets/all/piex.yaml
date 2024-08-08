@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZNK4piex14tiff_directory13TiffDirectory3GetEjPNSt3__16vectorINS0_9SRationalENS2_9allocatorIS4_EEEE"
+- "name": "_ZNK4piex14tiff_directory13TiffDirectory3GetEjPNSt3__16vectorINS0_9SRationalENS2_9allocatorIS4_EEEE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool piex::tiff_directory::TiffDirectory::Get(const Tag, vector<piex::tiff_directory::SRational, std::__1::allocator<piex::tiff_directory::SRational> > *)"
-- "exceptions": []
-  "name": "_ZNK4piex14tiff_directory13TiffDirectory3GetEjPNS0_9SRationalE"
+- "name": "_ZNK4piex14tiff_directory13TiffDirectory3GetEjPNS0_9SRationalE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool piex::tiff_directory::TiffDirectory::Get(const Tag, struct SRational *)"
-- "exceptions": []
-  "name": "_ZNK4piex14tiff_directory13TiffDirectory3GetEjPNS0_8RationalE"
+- "name": "_ZNK4piex14tiff_directory13TiffDirectory3GetEjPNS0_8RationalE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -32,15 +29,13 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool piex::tiff_directory::TiffDirectory::Get(const Tag, struct Rational *)"
-- "exceptions": []
-  "name": "_ZN4piex5IsRawEPNS_15StreamInterfaceE"
+- "name": "_ZN4piex5IsRawEPNS_15StreamInterfaceE"
   "params":
   - "name": "data"
     "type": "bool "
   "return_type": "bool"
   "signature": "bool piex::IsRaw(StreamInterface *)"
-- "exceptions": []
-  "name": "_ZN4piex18GetExifOrientationEPNS_15StreamInterfaceEjPj"
+- "name": "_ZN4piex18GetExifOrientationEPNS_15StreamInterfaceEjPj"
   "params":
   - "name": "stream"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "worksheet_add_table"
+- "name": "worksheet_add_table"
   "params":
   - "name": "self"
     "type": "bool "
@@ -16,15 +15,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "lxw_error worksheet_add_table(lxw_worksheet *, lxw_row_t, lxw_col_t, lxw_row_t, lxw_col_t, lxw_table_options *)"
-- "exceptions": []
-  "name": "lxw_chartsheet_new"
+- "name": "lxw_chartsheet_new"
   "params":
   - "name": "init_data"
     "type": "bool "
   "return_type": "void"
   "signature": "lxw_chartsheet * lxw_chartsheet_new(lxw_worksheet_init_data *)"
-- "exceptions": []
-  "name": "worksheet_write_rich_string"
+- "name": "worksheet_write_rich_string"
   "params":
   - "name": "self"
     "type": "bool "
@@ -38,8 +35,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "lxw_error worksheet_write_rich_string(lxw_worksheet *, lxw_row_t, lxw_col_t, lxw_rich_string_tuple **, lxw_format *)"
-- "exceptions": []
-  "name": "workbook_add_chartsheet"
+- "name": "workbook_add_chartsheet"
   "params":
   - "name": "self"
     "type": "bool "
@@ -47,8 +43,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "lxw_chartsheet * workbook_add_chartsheet(lxw_workbook *, const char *)"
-- "exceptions": []
-  "name": "new_workbook"
+- "name": "new_workbook"
   "params":
   - "name": "filename"
     "type": "bool "

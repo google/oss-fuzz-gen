@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "smux_accept"
+- "name": "smux_accept"
   "params":
   - "name": "sd"
     "type": "int"
   "return_type": "int"
   "signature": "int smux_accept(int)"
-- "exceptions": []
-  "name": "netsnmp_query_getnext"
+- "name": "netsnmp_query_getnext"
   "params":
   - "name": "list"
     "type": "bool "
@@ -15,15 +13,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int netsnmp_query_getnext(netsnmp_variable_list *, netsnmp_session *)"
-- "exceptions": []
-  "name": "agent_check_and_process"
+- "name": "agent_check_and_process"
   "params":
   - "name": "block"
     "type": "int"
   "return_type": "int"
   "signature": "int agent_check_and_process(int)"
-- "exceptions": []
-  "name": "netsnmp_query_walk"
+- "name": "netsnmp_query_walk"
   "params":
   - "name": "list"
     "type": "bool "
@@ -31,8 +27,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int netsnmp_query_walk(netsnmp_variable_list *, netsnmp_session *)"
-- "exceptions": []
-  "name": "netsnmp_query_set"
+- "name": "netsnmp_query_set"
   "params":
   - "name": "list"
     "type": "bool "

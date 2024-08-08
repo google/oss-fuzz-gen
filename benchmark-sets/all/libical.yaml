@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "icalcomponent_foreach_recurrence"
+- "name": "icalcomponent_foreach_recurrence"
   "params":
   - "name": "comp"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void icalcomponent_foreach_recurrence(icalcomponent *, struct icaltimetype, struct icaltimetype, DW_TAG_subroutine_typeInfinite loop *, void *)"
-- "exceptions": []
-  "name": "icalcomponent_set_due"
+- "name": "icalcomponent_set_due"
   "params":
   - "name": "comp"
     "type": "bool "
@@ -23,8 +21,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void icalcomponent_set_due(icalcomponent *, struct icaltimetype)"
-- "exceptions": []
-  "name": "icaltimezone_truncate_vtimezone"
+- "name": "icaltimezone_truncate_vtimezone"
   "params":
   - "name": "vtz"
     "type": "bool "
@@ -36,8 +33,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void icaltimezone_truncate_vtimezone(icalcomponent *, icaltimetype, icaltimetype, int)"
-- "exceptions": []
-  "name": "icalcomponent_merge_component"
+- "name": "icalcomponent_merge_component"
   "params":
   - "name": "comp"
     "type": "bool "
@@ -45,8 +41,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void icalcomponent_merge_component(icalcomponent *, icalcomponent *)"
-- "exceptions": []
-  "name": "icalcomponent_get_span"
+- "name": "icalcomponent_get_span"
   "params":
   - "name": "comp"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "search"
+- "name": "search"
   "params":
   - "name": "ego"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "plan * search(planner *, const problem *, unsigned int *, flags_t *)"
-- "exceptions": []
-  "name": "elapsed"
+- "name": "elapsed"
   "params":
   - "name": "t1"
     "type": "size_t"

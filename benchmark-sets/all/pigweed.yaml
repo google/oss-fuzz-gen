@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZZN2pw6string12FormatVaListERNS_17InlineBasicStringIcLm65535EEEPKcP13__va_list_tagENK3$_0clEPcm"
+- "name": "_ZZN2pw6string12FormatVaListERNS_17InlineBasicStringIcLm65535EEEPKcP13__va_list_tagENK3$_0clEPcm"
   "params":
   - "name": "this"
     "type": "bool "
@@ -10,29 +9,25 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "size_t pw::string::operator()(const void *, char *, size_t)"
-- "exceptions": []
-  "name": "_ZNK2pw6VectorIKSt4byteLm18446744073709551615EE4dataEv"
+- "name": "_ZNK2pw6VectorIKSt4byteLm18446744073709551615EE4dataEv"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "const unsigned long * pw::Vector<std::byte const, 18446744073709551615ul>::data(const Vector<const unsigned long, 18446744073709551615UL> *)"
-- "exceptions": []
-  "name": "_ZN3fit8internal11null_targetIvE6invokeEPv"
+- "name": "_ZN3fit8internal11null_targetIvE6invokeEPv"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "void fit::internal::null_target<void>::invoke(void *)"
-- "exceptions": []
-  "name": "_ZN2pw17InlineBasicStringIcLm65535EE4dataEv"
+- "name": "_ZN2pw17InlineBasicStringIcLm65535EE4dataEv"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "pointer pw::InlineBasicString<char, 65535ul>::data(InlineBasicString<char, 65535UL> *)"
-- "exceptions": []
-  "name": "_ZZN2pw6base646EncodeENS_4spanIKSt4byteLm18446744073709551615EEERNS_17InlineBasicStringIcLm65535EEEENK3$_0clEPcm"
+- "name": "_ZZN2pw6base646EncodeENS_4spanIKSt4byteLm18446744073709551615EEERNS_17InlineBasicStringIcLm65535EEEENK3$_0clEPcm"
   "params":
   - "name": "this"
     "type": "bool "

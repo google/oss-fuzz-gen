@@ -1,20 +1,17 @@
 "functions":
-- "exceptions": []
-  "name": "tcp_init_children"
+- "name": "tcp_init_children"
   "params":
   - "name": "woneinit"
     "type": "bool "
   "return_type": "int"
   "signature": "int tcp_init_children(int *)"
-- "exceptions": []
-  "name": "tcp_receive_loop"
+- "name": "tcp_receive_loop"
   "params":
   - "name": "unix_sock"
     "type": "int"
   "return_type": "void"
   "signature": "void tcp_receive_loop(int)"
-- "exceptions": []
-  "name": "fix_actions"
+- "name": "fix_actions"
   "params":
   - "name": "a"
     "type": "bool "
