@@ -588,7 +588,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     except:
       pass
 
-    logger.info(f'Cannot retrieve project url of project {project_name}')
+    logger.info('Cannot retrieve project url of project %s', project_name)
     return ''
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
