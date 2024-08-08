@@ -355,8 +355,8 @@ def add_to_json_report(outdir: str, key: str, value: Any) -> None:
     f.write(json.dumps(json_report))
 
 
-def _process_total_coverage_gain(outdir: str,
-    results: list[Result]) -> dict[str, dict[str, Any]]:
+def _process_total_coverage_gain(
+    outdir: str, results: list[Result]) -> dict[str, dict[str, Any]]:
   """Processes and calculates the total coverage gain for each project."""
   textcov_dict: dict[str, list[textcov.Textcov]] = {}
   for result in results:
