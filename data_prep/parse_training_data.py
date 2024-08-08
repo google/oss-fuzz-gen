@@ -264,7 +264,7 @@ def _download_files(experiment_dir: str, bucket_uri: str) -> None:
   blobs = bucket.list_blobs(prefix=directory_prefix)
   with ThreadPoolExecutor(max_workers=40) as executor:
     for i, blob in enumerate(blobs):
-      logger.info(f'{i} / {blobs_num}')
+      logger.info('%d / %d', i, blobs_num)
       executor.submit(_download_file, blob, experiment_dir)
 
 
