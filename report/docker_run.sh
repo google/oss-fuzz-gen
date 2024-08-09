@@ -118,7 +118,7 @@ fi
 
 if [[ "$VARY_TEMPERATURE" = "true" ]]
 then
-    VARY_TEMPERATURE=(0.0 0.1 0.2 0.3 0.4)
+    VARY_TEMPERATURE=(0.5 0.6 0.7 0.8 0.9)
 else
     VARY_TEMPERATURE=()
 fi
