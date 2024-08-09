@@ -53,6 +53,8 @@ class Result:
   is_semantic_error: bool = False
   semantic_error: str = ''
   triage: str = ''
+  textcov_diff: textcov.Textcov = dataclasses.field(
+      default_factory=textcov.Textcov)
   # Deprecated renamed fields. Keeping them for backward compatibility.
   # TODO https://github.com/google/oss-fuzz-gen/issues/215
   is_driver_fuzz_err: bool = dataclasses.field(kw_only=True, default=False)
@@ -458,7 +460,7 @@ class Evaluator:
         Result(True, run_result.crashes, coverage_percent, coverage_diff,
                run_result.coverage_report_path, run_result.reproducer_path,
                not run_result.succeeded, run_result.semantic_check.type,
-               run_result.triage))
+               run_result.triage, run_result.coverage))
 
   def _load_existing_coverage_summary(self) -> dict:
     """Load existing summary.json."""
