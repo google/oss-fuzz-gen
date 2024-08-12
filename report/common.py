@@ -421,11 +421,11 @@ class Results:
 
     # Retrieve coverage gain information
     coverage_dict = {}
-    summary_path = os.path.join(self._results_dir, 'project_summary.json')
+    summary_path = os.path.join(self._results_dir, 'report.json')
     if FileSystem(summary_path).exists():
       with FileSystem(summary_path).open() as f:
         try:
-          coverage_dict = json.load(f)
+          coverage_dict = json.load(f).get('project_summary', {})
         except ValueError:
           # Skip if error
           logging.debug('Failed to decode project_coverage_gain.json')

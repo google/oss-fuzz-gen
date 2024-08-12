@@ -50,7 +50,6 @@ BENCHMARK_ROOT: str = './benchmark-sets'
 BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
 RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
 GENERATED_BENCHMARK: str = 'generated-benchmark-'
-PROJECT_SUMMARY_JSON = os.path.join(RESULTS_DIR, 'project_summary.json')
 JSON_REPORT = 'report.json'
 TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
@@ -395,10 +394,6 @@ def _process_total_coverage_gain(
           'coverage_diff': total_cov.covered_lines / total_lines
       }
 
-  # Write to summary file
-  with open(PROJECT_SUMMARY_JSON, 'w') as f:
-    f.write(json.dumps(coverage_gain))
-
   return coverage_gain
 
 
@@ -445,6 +440,8 @@ def main():
 
   # Process total gain from all generated harnesses for each projects
   coverage_gain_dict = _process_total_coverage_gain(experiment_results)
+  add_to_json_report(args.work_dir, 'project_summary',
+                     coverage_gain_dict)
 
   # Capture time at end
   end = time.time()
