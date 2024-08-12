@@ -1,0 +1,429 @@
+<system>
+You are a security testing engineer who wants to write a C++ program to discover memory corruption vulnerabilities or maximize code coverage in a given function-under-test by executing all lines in it.
+You need to define and initializing its parameters in a suitable way before fuzzing the function-under-test through <code>LLVMFuzzerTestOneInput</code>, in particular, none of the parameters can be NULL.
+
+Carefully study the function signature and its parameters, then follow the example problems and solutions to answer the final problem. YOU MUST call the function to fuzz in the solution.
+
+Try as many variations of these inputs as possible. Do not use a random number generator such as <code>rand()</code>.
+</system>
+
+
+<instruction>
+
+Use <code>FuzzedDataProvider</code> to generate these inputs, it is a single-header C++ library that is helpful for splitting a fuzz input into multiple parts of various types. It can be included via
+<code>
+#include <fuzzer/FuzzedDataProvider.h>
+</code>
+
+## Main concepts
+1. FuzzedDataProvider is a class whose constructor accepts <code>const uint8_t*</code>, <code>size_t</code> arguments. Usually, you would call it in the beginning of your LLVMFuzzerTestOneInput and pass the data, size parameters provided by the fuzzing engine, like this:
+<code>
+FuzzedDataProvider stream(data, size);
+</code>
+2. Once an FDP object is constructed using the fuzz input, you can consume the data from the input by calling the FDP methods listed below.
+3. If there is not enough data left to consume, FDP will consume all the remaining bytes. For example, if you call <code>ConsumeBytes(10)</code> when there are only 4 bytes left in the fuzz input, FDP will return a vector of length 4.
+4. If there is no data left, FDP will return the default value for the requested type or an empty container (when consuming a sequence of bytes).
+5. If you consume data from FDP in a loop, make sure to check the value returned by <code>remaining_bytes()</code> between loop iterations.
+6. Do not use the methods that return <code>std::string</code> unless your API requires a string object or a C-style string with a trailing null byte. This is a common mistake that hides off-by-one buffer overflows from AddressSanitizer.
+
+## Methods for extracting individual values
+1. <code>ConsumeBool</code>, <code>ConsumeIntegral</code>, <code>ConsumeIntegralInRange</code> methods are helpful for extracting a single boolean or integer value (the exact type is defined by a template parameter), e.g. some flag for the target API, or a number of iterations for a loop, or length of a part of the fuzz input.
+2. <code>ConsumeProbability</code>, <code>ConsumeFloatingPoint</code>, <code>ConsumeFloatingPointInRange</code> methods are very similar to the ones mentioned above. The difference is that these methods return a floating point value.
+3. <code>ConsumeEnum</code> and <code>PickValueInArray</code> methods are handy when the fuzz input needs to be selected from a predefined set of values, such as an enum or an array.
+
+These methods are using the last bytes of the fuzz input for deriving the requested values. This allows to use valid / test files as a seed corpus in some cases.
+
+## Methods for extracting sequences of bytes
+Many of these methods have a length argument. You can always know how many bytes are left inside the provider object by calling <code>remaining_bytes()</code> method on it.
+
+1. <code>ConsumeBytes</code> and <code>ConsumeBytesWithTerminator</code> methods return a <code>std::vector</code> of AT MOST UP TO the requested size. These methods are helpful when you know how long a certain part of the fuzz input should be. Use <code>.data()</code> and <code>.size()</code> methods of the resulting object if your API works with raw memory arguments.
+2. <code>ConsumeBytesAsString</code> method returns a <code>std::string</code> of AT MOST UP TO the requested length. This is useful when you need a null-terminated C-string. Calling <code>c_str()</code> on the resulting object is the best way to obtain it.
+3. <code>ConsumeRandomLengthString</code> method returns a <code>std::string</code> as well, but its length is derived from the fuzz input and typically is hard to predict, though always deterministic. The caller can provide the max length argument.
+4. <code>ConsumeRemainingBytes</code> and <code>ConsumeRemainingBytesAsString</code> methods return <code>std::vector</code> and <code>std::string</code> objects respectively, initialized with all the bytes from the fuzz input that left unused.
+5. <code>ConsumeData</code> method copies AT MOST UP TO the requested number of bytes from the fuzz input to the given pointer (<code>void *destination</code>). The method is useful when you need to fill an existing buffer or object (e.g. a <code>struct</code>) with fuzzing data.
+
+## General guidelines
+1. When consuming a sequence of bytes, the returned length may be less than the requested size if there is insufficient data left. Always use the <code>.size()</code> method to determine the actual length of the data consumed.
+2. When the returned length is smaller than the requested length, the fuzz target should terminate early to prevent false positive crashes from subsequent function calls due to insufficient data in parameters.
+3. For parameters that require a project-specific format (e.g., image, PDF), it is best to use the project's built-in constructors or initialization steps. Apply Fuzzing Data Provider for each primitive type variable during this process.
+
+Here are some sample code snippets to exemplify its usage:
+<code>
+// Extract integral values
+FuzzedDataProvider fuzzed_data(data, size);
+
+// Intentionally using uint16_t here to avoid empty |second_part|.
+size_t first_part_size = fuzzed_data.ConsumeIntegral<uint16_t>();
+std::vector<uint8_t> first_part =
+    fuzzed_data.ConsumeBytes<uint8_t>(first_part_size);
+std::vector<uint8_t> second_part =
+    fuzzed_data.ConsumeRemainingBytes<uint8_t>();
+
+net::der::Input in1(first_part.data(), first_part.size());
+net::der::Input in2(second_part.data(), second_part.size());
+</code>
+
+<code>
+FuzzedDataProvider fuzzed_data_provider(data, size);
+
+// Store all chunks in a function scope list, as the API requires the caller
+// to make sure the fragment chunks data is accessible during the whole
+// decoding process. |http2::DecodeBuffer| does not copy the data, it is just
+// a wrapper for the chunk provided in its constructor.
+std::list<std::vector<char>> all_chunks;
+while (fuzzed_data_provider.remaining_bytes() > 0) {
+  size_t chunk_size = fuzzed_data_provider.ConsumeIntegralInRange(1, 32);
+  all_chunks.emplace_back(
+      fuzzed_data_provider.ConsumeBytes<char>(chunk_size));
+  const auto& chunk = all_chunks.back();
+
+  // http2::DecodeBuffer constructor does not accept nullptr buffer.
+  if (chunk.data() == nullptr)
+    continue;
+
+  http2::DecodeBuffer frame_data(chunk.data(), chunk.size());
+</code>
+
+<code>
+FuzzedDataProvider data_provider(data, size);
+std::string spki_hash = data_provider.ConsumeBytesAsString(32);
+std::string issuer_hash = data_provider.ConsumeBytesAsString(32);
+size_t serial_length = data_provider.ConsumeIntegralInRange(4, 19);
+std::string serial = data_provider.ConsumeBytesAsString(serial_length);
+std::string crlset_data = data_provider.ConsumeRemainingBytesAsString();
+</code>
+
+<code>
+FuzzedDataProvider data_provider(data, size);
+std::string spki_hash = data_provider.ConsumeBytesAsString(32);
+std::string issuer_hash = data_provider.ConsumeBytesAsString(32);
+size_t serial_length = data_provider.ConsumeIntegralInRange(4, 19);
+std::string serial = data_provider.ConsumeBytesAsString(serial_length);
+std::string crlset_data = data_provider.ConsumeRemainingBytesAsString();
+</code>
+
+<code>
+// Extract floating point values
+float probability = stream.ConsumeProbability();
+double double_arg = stream.ConsumeFloatingPoint<double>();
+double double_arg_in_range = stream.ConsumeFloatingPointInRange(-1.0, 1.0);
+</code>
+
+<code>
+// Extract value from predefined set, such as enum or array
+EnumType enum = stream.ConsumeEnum<EnumType>();
+int valid_values = stream.PickValueInArray({FLAG_1, FLAG_2, FLAG_3});
+</code>
+
+<code>
+// Extract an array of bytes as a vector. You MUST call .data() to use result as pointer and call .size() to use result as array size.
+std::vector<uint8_t> bytes = stream.ConsumeBytes<uint8_t>(stream.ConsumeIntegralInRange(0, max_size));
+void *data_ptr = bytes.data();
+int data_size = bytes.size();
+std::vector<uint8_t> bytes2 = stream.ConsumeBytes<uint8_t>(requested_size);
+void *data2_ptr = bytes2.data();
+int data2_size = bytes.size();
+</code>
+
+<code>
+// Extract a string. You MUST use .c_str() to use result as pointer and call .size() to use result as string size.
+std::string str = stream.ConsumeBytesAsString(stream.ConsumeIntegralInRange(0, max_size));
+char *ptr = str.c_str();
+char size = str.size();
+std::string str2 = stream.ConsumeBytesAsString(requested_size);
+char *ptr2 = str2.c_str();
+char size2 = str2.size();
+std::string str3 = stream.ConsumeRandomLengthString();
+char *ptr3 = str3.c_str();
+char size3 = str3.size();
+</code>
+
+<code>
+// Extract to user defined object
+struct_type_t obj;
+size_t consumed = stream.ConsumeData(&obj, sizeof(obj));
+</code>
+
+There MUST be AT MOST ONE call to <code>ConsumeRemainingBytes</code> to consume remaining input!
+<code>
+FuzzedDataProvider stream(data, size);
+
+std::vector<uint8_t> bytes3 = stream.ConsumeRemainingBytes();
+void *data3_ptr = bytes3.data();
+void *data3_size = bytes3.size();
+</code>
+
+</instruction>
+
+
+
+<instruction>
+All variables used MUST be declared and initialized. Carefully make sure that the variable and argument types in your code match and compiles successfully. Add type casts to make types match.
+All variable values MUST NOT be NULL whenever possible.
+
+Do not create new variables with the same names as existing variables.
+WRONG:
+<code>
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  void* data = Foo();
+}
+</code>
+</instruction>
+
+<instruction>
+EXTREMELY IMPORTANT: If you write code using <code>goto</code>, you MUST MUST also declare all variables BEFORE the <code>goto</code>. Never introduce new variables after the <code>goto</code>.
+WRONG:
+<code>
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  int a = bar();
+  if (!some_function()) goto EXIT;
+  Foo b = target_function(data, size);
+  int c = another_func();
+EXIT:
+  return 0;
+}
+</code>
+
+CORRECT:
+<code>
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  int a = bar();
+  Foo b;
+  int c;
+
+  if (!some_function()) goto EXIT;
+  b = target_function(data, size);
+  c = another_func()
+EXIT:
+  return 0;
+}
+</code>
+
+If an example provided for the same library includes a unique header file, then it must be included in the solution as well.
+</instruction>
+
+<task>
+Your goal is to write a fuzzing harness for the provided function-under-test signature using <code>LLVMFuzzerTestOneInput</code>. It is important that the provided solution compiles and actually calls the function-under-test specified by the function signature:
+<function signature>
+BGD_DECLARE(void) gdImageString (gdImagePtr im, gdFontPtr f, int x, int y, unsigned char *s, int color)
+</function signature>
+</task>
+
+<solution>
+
+//
+// you may not use this file except in compliance with the License.
+//
+//
+// distributed under the License is distributed on an "AS IS" BASIS,
+// See the License for the specific language governing permissions and
+//
+#include <fuzzer/FuzzedDataProvider.h>
+
+#include <cstddef>
+#include <cstdint>
+#include <cstdlib>
+#include <string>
+
+#include "gd.h"
+#include "gdfontg.h"
+#include "gdfontl.h"
+#include "gdfontmb.h"
+#include "gdfonts.h"
+#include "gdfontt.h"
+
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+  FuzzedDataProvider stream(data, size);
+  const uint8_t slate_width = stream.ConsumeIntegral<uint8_t>();
+  const uint8_t slate_height = stream.ConsumeIntegral<uint8_t>();
+  gdImagePtr slate_image = gdImageCreateTrueColor(slate_width, slate_height);
+  if (slate_image == nullptr) {
+    return 0;
+  }
+
+  const int x_position = stream.ConsumeIntegral<int>();
+  const int y_position = stream.ConsumeIntegral<int>();
+  const int text_color = stream.ConsumeIntegral<int>();
+  const gdFontPtr font_ptr = stream.PickValueInArray(
+      {gdFontGetGiant(), gdFontGetLarge(), gdFontGetMediumBold(),
+       gdFontGetSmall(), gdFontGetTiny()});
+  const std::string text = stream.ConsumeRemainingBytesAsString();
+
+  gdImageString(slate_image, font_ptr, x_position, y_position,
+                reinterpret_cast<uint8_t*>(const_cast<char*>(text.c_str())),
+                text_color);
+  gdImageDestroy(slate_image);
+  return 0;
+}
+</solution>
+
+
+<task>
+Your goal is to write a fuzzing harness for the provided function-under-test signature using <code>LLVMFuzzerTestOneInput</code>. It is important that the provided solution compiles and actually calls the function-under-test specified by the function signature:
+<function signature>
+MPG123_EXPORT int mpg123_decode(mpg123_handle *mh, const unsigned char *inmemory, size_t inmemsize, unsigned char *outmemory, size_t outmemsize, size_t *done )
+</function signature>
+</task>
+
+<solution>
+#include <fuzzer/FuzzedDataProvider.h>
+
+#include <cstddef>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <vector>
+
+#include "mpg123.h"
+
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+  static bool initialized = false;
+  if (!initialized) {
+    mpg123_init();
+    initialized = true;
+  }
+  int ret;
+  mpg123_handle* handle = mpg123_new(nullptr, &ret);
+  if (handle == nullptr) {
+    return 0;
+  }
+
+  ret = mpg123_param(handle, MPG123_ADD_FLAGS, MPG123_QUIET, 0.);
+  if(ret == MPG123_OK)
+    ret = mpg123_open_feed(handle);
+  if (ret != MPG123_OK) {
+    mpg123_delete(handle);
+    return 0;
+  }
+
+  std::vector<uint8_t> output_buffer(mpg123_outblock(handle));
+
+  size_t output_written = 0;
+  // Initially, start by feeding the decoder more data.
+  int decode_ret = MPG123_NEED_MORE;
+  FuzzedDataProvider provider(data, size);
+  while ((decode_ret != MPG123_ERR)) {
+    if (decode_ret == MPG123_NEED_MORE) {
+      if (provider.remaining_bytes() == 0
+          || mpg123_tellframe(handle) > 10000
+          || mpg123_tell_stream(handle) > 1<<20) {
+        break;
+      }
+      const size_t next_size = provider.ConsumeIntegralInRange<size_t>(
+          0,
+          provider.remaining_bytes());
+      auto next_input = provider.ConsumeBytes<unsigned char>(next_size);
+      decode_ret = mpg123_decode(handle, next_input.data(), next_input.size(),
+                                 output_buffer.data(), output_buffer.size(),
+                                 &output_written);
+    } else if (decode_ret != MPG123_ERR && decode_ret != MPG123_NEED_MORE) {
+      decode_ret = mpg123_decode(handle, nullptr, 0, output_buffer.data(),
+                                 output_buffer.size(), &output_written);
+    } else {
+      // Unhandled mpg123_decode return value.
+      abort();
+    }
+  }
+
+  mpg123_delete(handle);
+
+  return 0;
+}
+</solution>
+
+
+<task>
+Your goal is to write a fuzzing harness for the provided function-under-test signature using <code>LLVMFuzzerTestOneInput</code>. It is important that the provided solution compiles and actually calls the function-under-test specified by the function signature:
+<function signature>
+bool absl::SimpleAtob(string_view, Nonnull<bool *>)
+</function signature>
+</task>
+
+<solution>
+
+// you may not use this file except in compliance with the License.
+//
+// See the License for the specific language governing permissions and
+#include <string>
+
+#include <fuzzer/FuzzedDataProvider.h>
+
+#include "absl/strings/numbers.h"
+#include "absl/strings/str_cat.h"
+#include "absl/strings/str_format.h"
+#include "absl/strings/str_join.h"
+#include "absl/strings/str_split.h"
+
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  FuzzedDataProvider fuzzed_data(data, size);
+  float float_value = fuzzed_data.ConsumeFloatingPoint<float>();
+  double double_value = fuzzed_data.ConsumeFloatingPoint<double>();
+  int int_value = fuzzed_data.ConsumeIntegral<int>();
+  bool bool_value = fuzzed_data.ConsumeBool();
+  std::string str1 = fuzzed_data.ConsumeRandomLengthString();
+  std::string str2 = fuzzed_data.ConsumeRemainingBytesAsString();
+
+  std::string float_str = absl::StrFormat("%g", float_value);
+  std::string double_str = absl::StrFormat("%g", double_value);
+  std::string int_str = absl::StrFormat("%d", int_value);
+  std::string bool_str = absl::StrFormat("%d", bool_value);
+
+  if (!absl::SimpleAtof(float_str, &float_value))
+    return 0;
+  if (!absl::SimpleAtod(double_str, &double_value))
+    return 0;
+  if (!absl::SimpleAtoi(int_str, &int_value))
+    return 0;
+  if (!absl::SimpleAtob(bool_str, &bool_value))
+    return 0;
+
+  absl::StrAppend(&str1, str2);
+  std::string str_result = absl::StrCat(str1, float_value, double_value, int_value, bool_value);
+  std::vector<std::string> v = absl::StrSplit(str_result, ".");
+  absl::StrJoin(v, ".");
+  return 0;
+}
+</solution>
+
+
+<task>
+Your goal is to write a fuzzing harness for the provided function-under-test signature using <code>LLVMFuzzerTestOneInput</code>. It is important that the provided solution compiles and actually calls the function-under-test specified by the function signature:
+<function signature>
+{FUNCTION_UNDER_TEST}
+</function signature>
+
+The project-under-test is {PROJECT}, the repo has been cloned into <code>/src/{PROJECT}/</code>
+Use the existing fuzz target as an example at <code>{FUZZ_TARGET_PATH}</code> if needed, but remember your goal is to fuzz <code>{FUNCTION_UNDER_TEST}</code>.
+Your task is to focus on investigate project source code related to the function-under-test to design the fuzz target so that it can discover existing security vulnerabilities in the project via the function-under-test, and if there is no possible to find vulnerabilities, the next priority is maximize code coverage of the function.
+DO NOT WORRY about compilation, you can assume it always works for now. That is not related to your task now.
+Later we will replace the fuzz target <code>{FUZZ_TARGET_PATH}</code> with the one you generate, and the script to build the project and the fuzz target is at <code>/src/build.sh</code>. A sample compilation output has been placed at <code>/src/compile_output</code> if you wish to understand the compilation output.
+You have full bash access to everything in the build environment, including all source code, environment variables, and others.
+
+Your task is to iteratively respond me with ONE bash command to investigate the project under test until you know how to design the fuzz target so that it can discover existing security vulnerabilities or maximize the code coverage in the project via the function-under-test, and I will provide you with the output of the command.
+If the output is empty, I will response with a single space.
+Some rules:
+1. One command at a time.
+2. Each response your send should first explain the reason why you want to run the command wrapped by <reason></reason>, then provide the command to run wrapped in <bash></bash> in this format:
+<reason>
+Reasons here.
+</reason>
+<bash>
+One bash command here.
+</bash>
+3. There are other fuzz targets using <code>LLVMFuzzerTestOneInput</code> under <code>/src/</code>, use them as examples when investigating how to implement the new fuzz target.
+4. You are allowed to modify the fuzz target at <code>{FUZZ_TARGET_PATH}</code> or the build script at <code>/src/build.sh</code> ONLY. You MUST not modify an other files.
+5. Investigate the source code of the project to write the fuzz target, minimize headers as some headers may be unnecessary.
+6. You may modify <code>/src/build.sh</code> on if you have to, but NEVER modify other files.
+6. If you need to modify the <code>/src/build.sh<code>, also provide me with command to modify the script.
+7. The final goal is to answer two questions about the fuzz target: a) How to implement the fuzz target so that it can discover existing security vulnerabilities or maximize code coverage in the project via the function-under-test? b) What is the source code of the fuzz target?
+8. If you have a conclusion on how to implement the fuzz target (and modify the build script if you have to), output it wrapped by <conclusion></conclusion> followed by the target wrapped in <fuzz target></fuzz target>. and the command to modify the build script wrapped in <bash></bash>:
+<conclusion>
+Reasons here.
+</conclusion>
+<fuzz target>
+The full code of fixed fuzz target here.
+</fuzz target>
+<bash>
+One bash script to build script if needed, otherwise leave this empty.
+</bash>
+10. DO NOT attempt to build the fuzz target. STOP once you think the fuzz target. I will compile it by myself and show you the output.
