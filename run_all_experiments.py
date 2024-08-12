@@ -440,8 +440,7 @@ def main():
 
   # Process total gain from all generated harnesses for each projects
   coverage_gain_dict = _process_total_coverage_gain(experiment_results)
-  add_to_json_report(args.work_dir, 'project_summary',
-                     coverage_gain_dict)
+  add_to_json_report(args.work_dir, 'project_summary', coverage_gain_dict)
 
   # Capture time at end
   end = time.time()
