@@ -116,9 +116,9 @@ def main() -> None:
     while cur_round < 100:
       cur_round += 1
       print(f"ROUND {cur_round} Prompt:\n{prompt}")
-      response = chat.send_message(prompt or ' ',
-                                   stream=False,
-                                   safety_settings=SAFETY_CONFIG).text
+      response = chat.send_message(
+          prompt or ' ', stream=False,
+          safety_settings=SAFETY_CONFIG).text  # type: ignore
 
       print(f"ROUND {cur_round} LLM response:\n{response}")
       if _parse_tag(response, 'conclusion'):
