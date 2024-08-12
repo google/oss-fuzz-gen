@@ -25,7 +25,7 @@ from data_prep import project_targets
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
-from experiment import oss_fuzz_checkout
+from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, output_parser, prompt_builder, prompts
@@ -66,6 +66,8 @@ class AggregatedResult:
   max_coverage_sample: str = ''
   max_coverage_diff_sample: str = ''
   max_coverage_diff_report: str = ''
+  full_textcov_diff: textcov.Textcov = dataclasses.field(
+      default_factory=textcov.Textcov)
 
   def __str__(self):
     return (
@@ -145,6 +147,7 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
   max_coverage_diff_sample = ''
   max_coverage_diff_report = ''
 
+  all_textcov = textcov.Textcov()
   for i, stat in target_stats:
     if stat.coverage == max_coverage:
       max_coverage_sample = generated_targets[i]
@@ -153,10 +156,13 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
       max_coverage_diff_sample = generated_targets[i]
       max_coverage_diff_report = stat.coverage_report_path
 
+    if isinstance(stat.textcov_diff, textcov.Textcov):
+      all_textcov.merge(stat.textcov_diff)
+
   return AggregatedResult(build_success_rate, crash_rate, found_bug,
                           max_coverage, max_line_coverage_diff,
                           max_coverage_sample, max_coverage_diff_sample,
-                          max_coverage_diff_report)
+                          max_coverage_diff_report, all_textcov)
 
 
 def check_targets(
