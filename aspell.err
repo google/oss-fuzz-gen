@@ -1,0 +1,4 @@
+aspell_fuzzer.cpp:3:10: fatal error: 'aspell/common/config.hpp' file not found
+    3 | #include <aspell/common/config.hpp>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
