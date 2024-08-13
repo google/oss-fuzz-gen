@@ -322,7 +322,7 @@ def _print_experiment_results(results: list[Result],
 
   logger.info('**** TOTAL COVERAGE GAIN: ****')
   for project in cov_gain:
-    logger.info(f'*{project}: {cov_gain[project]["coverage_diff"]}')
+    logger.info('*%s: %s', project, cov_gain[project]["coverage_diff"])
 
 
 def _setup_logging(verbose: str = 'info') -> None:
@@ -384,15 +384,15 @@ def _process_total_coverage_gain(
 
     total_lines = max(total_cov.total_lines, sum(lines))
 
-    if total_lines <= 0:
-      # Fail safe when total lines is 0 because of invalid coverage report
-      logger.warning(
-          'Line coverage information missing from the coverage report.')
-      coverage_gain[project] = {'coverage_diff': 0.0}
-    else:
+    if total_lines:
       coverage_gain[project] = {
           'coverage_diff': total_cov.covered_lines / total_lines
       }
+    else:
+      # Fail safe when total_lines is 0 because of invalid coverage report
+      logger.warning(
+          'Line coverage information missing from the coverage report.')
+      coverage_gain[project] = {'coverage_diff': 0.0}
 
   return coverage_gain
 
