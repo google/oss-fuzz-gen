@@ -4,6 +4,7 @@
 enable=
   indexing-exception,
   old-raise-syntax,
+  logging-not-lazy
 
 # List of checkers and warnings to disable.
 # TODO: Shrink this list to as small as possible.
