@@ -69,6 +69,14 @@ class Benchmark:
 
 
 @dataclasses.dataclass
+class Project:
+  """Results for a project entire."""
+  name: str
+  count: int = 1
+  coverage_gain: float = 0.0
+
+
+@dataclasses.dataclass
 class Sample:
   """Result of a fuzz target sample of a benchmark."""
   id: str
@@ -399,8 +407,37 @@ class Results:
       accumulated_results.crashes += int(benchmark.result.found_bug > 0)
       accumulated_results.total_coverage += benchmark.result.max_coverage
       accumulated_results.total_runs += 1
-      accumulated_results.total_line_coverage_diff += benchmark.result.max_line_coverage_diff
+      accumulated_results.total_line_coverage_diff += (
+          benchmark.result.max_line_coverage_diff)
     return accumulated_results
+
+  def get_project_summary(self, benchmarks: list[Benchmark]) -> list[Project]:
+    """Returns a list of project summary."""
+    project_summary_dict = {}
+    for benchmark in benchmarks:
+      if benchmark.project not in project_summary_dict:
+        project_summary_dict[benchmark.project] = Project(benchmark.project)
+      project_summary_dict[benchmark.project].count += 1
+
+    # Retrieve coverage gain information
+    coverage_dict = {}
+    summary_path = os.path.join(self._results_dir, 'report.json')
+    if FileSystem(summary_path).exists():
+      with FileSystem(summary_path).open() as f:
+        try:
+          coverage_dict = json.load(f).get('project_summary', {})
+        except ValueError:
+          # Skip if error
+          logging.debug('Failed to decode project_coverage_gain.json')
+
+    # Update project summary with coverage gain information
+    project_summary_list = list(project_summary_dict.values())
+    if coverage_dict:
+      for project in project_summary_list:
+        if project.name in coverage_dict:
+          project.coverage_gain = coverage_dict[project.name]['coverage_diff']
+
+    return project_summary_list
 
   def _prepare_prompt_for_html_text(self, raw_prompt_content: str) -> str:
     """Converts a raw prompt file into presentable HTML text."""
