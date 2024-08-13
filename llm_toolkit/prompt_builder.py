@@ -553,7 +553,9 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     # Retrieve additional properties for the target method
     temp_properties = introspector.query_introspector_function_props(
         self.benchmark.project, self.benchmark.function_signature)
-    self.exceptions, self.is_jvm_static, self.need_close = temp_properties
+    self.exceptions = temp_properties.get('exceptions', [])
+    self.is_jvm_static = temp_properties.get('is-jvm-static', False)
+    self.need_close = temp_properties.get('need_close', False)
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')

@@ -297,15 +297,17 @@ def query_introspector_function_line(project: str, func_sig: str) -> list:
   return [_get_data(resp, 'src_begin', 0), _get_data(resp, 'src_end', 0)]
 
 
-def query_introspector_function_props(project: str, func_sig: str) -> tuple:
+def query_introspector_function_props(project: str, func_sig: str) -> dict:
   """Queries FuzzIntrospector API for additional properties of |func_sig|."""
   resp = _query_introspector(INTROSPECTOR_JVM_PROPERTIES, {
       'project': project,
       'function_signature': func_sig
   })
-  return (_get_data(resp, 'exceptions',
-                    []), _get_data(resp, 'is-jvm-static',
-                                   False), _get_data(resp, 'need-close', False))
+  return {
+      'exceptions': _get_data(resp, 'exceptions', []),
+      'is-jvm-static': _get_data(resp, 'is-jvm-static', False),
+      'need-close': _get_data(resp, 'need-close', False)
+  }
 
 
 def query_introspector_source_code(project: str, filepath: str, begin_line: int,
