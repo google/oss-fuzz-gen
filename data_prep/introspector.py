@@ -640,18 +640,13 @@ def _select_functions_from_jvm_oracles(project: str, limit: int,
     # JPC is the primary oracle for JVM projects. If it does exist, all other
     # oracles are ignored because the results from all other oracles are subsets
     # of the results from JPC oracle for JVM projects.
-    jpc_targets = _select_top_functions_from_oracle(project, limit,
-                                                    'jvm-public-candidates',
-                                                    target_oracles)
-    all_functions.update(jpc_targets)
-  else:
-    # JPC does not exist in target_oracles, follow given oracle order and
-    # dedulicate instead.
-    for target_oracle in target_oracles:
-      tmp_functions = _select_top_functions_from_oracle(project, limit,
-                                                        target_oracle,
-                                                        target_oracles)
-      all_functions.update(tmp_functions)
+    target_oracles = ['jvm-public-candidates']
+
+  for target_oracle in target_oracles:
+    tmp_functions = _select_top_functions_from_oracle(project, limit,
+                                                      target_oracle,
+                                                      target_oracles)
+    all_functions.update(tmp_functions)
 
   return list(all_functions.values())[:limit]
 

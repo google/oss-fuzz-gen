@@ -1,0 +1,12 @@
+cd src/fuzz
+
+make -j$n CFLAGS+="$CFLAGS" CXXFLAGS+="$CXXFLAGS"
+
+for fuzzer in *_fuzzer; do
+  cp $fuzzer $OUT
+
+  corpus=${fuzzer%_fuzzer}_corpus
+  if [ -d $corpus ]; then
+    zip -j $OUT/${fuzzer}_seed_corpus.zip $corpus/*
+  fi
+done

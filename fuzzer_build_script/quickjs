@@ -1,0 +1,13 @@
+#!/bin/bash -eu
+
+build_fuzz_target () {
+    local target=$1
+    shift
+    $CC $CFLAGS -I. -c fuzz/$target.c -o $target.o
+    $CXX $CXXFLAGS $target.o -o $OUT/$target $@ $LIB_FUZZING_ENGINE
+}
+
+build_fuzz_target fuzz_eval .obj/fuzz_common.o libquickjs.fuzz.a
+build_fuzz_target fuzz_compile .obj/fuzz_common.o libquickjs.fuzz.a
+build_fuzz_target fuzz_regexp .obj/libregexp.fuzz.o .obj/cutils.fuzz.o .obj/libunicode.fuzz.o
+
