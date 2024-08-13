@@ -28,7 +28,7 @@ from typing import Any
 import run_one_experiment
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
-from experiment import oss_fuzz_checkout
+from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
 
@@ -312,12 +312,17 @@ def _print_experiment_result(result: Result):
               result.result)
 
 
-def _print_experiment_results(results: list[Result]):
+def _print_experiment_results(results: list[Result],
+                              cov_gain: dict[str, dict[str, Any]]):
   """Prints the |results| of multiple experiments."""
   logger.info('\n\n**** FINAL RESULTS: ****\n\n')
   for result in results:
     logger.info('%s\n*%s, %s*\n%s\n', '=' * 80, result.benchmark.project,
                 result.benchmark.function_signature, result.result)
+
+  logger.info('**** TOTAL COVERAGE GAIN: ****')
+  for project in cov_gain:
+    logger.info('*%s: %s', project, cov_gain[project]["coverage_diff"])
 
 
 def _setup_logging(verbose: str = 'info') -> None:
@@ -347,6 +352,49 @@ def add_to_json_report(outdir: str, key: str, value: Any) -> None:
   # Overwrite the new json file
   with open(json_report_path, 'w') as f:
     f.write(json.dumps(json_report))
+
+
+def _process_total_coverage_gain(
+    results: list[Result]) -> dict[str, dict[str, Any]]:
+  """Processes and calculates the total coverage gain for each project."""
+  textcov_dict: dict[str, list[textcov.Textcov]] = {}
+  if not results:
+    return {}
+  for result in results:
+    # TODO(dongge): Do not use a hacky string for result.result when an
+    # exception happened during experiments?
+    if not isinstance(result.result, run_one_experiment.AggregatedResult):
+      continue
+    cov = result.result.full_textcov_diff
+    if not cov:
+      continue
+    if result.benchmark.project not in textcov_dict:
+      textcov_dict[result.benchmark.project] = []
+    textcov_dict[result.benchmark.project].append(cov)
+
+  coverage_gain: dict[str, dict[str, Any]] = {}
+  for project, cov_list in textcov_dict.items():
+    total_cov = textcov.Textcov()
+    for cov in cov_list:
+      total_cov.merge(cov)
+
+    coverage_summary = evaluator.load_existing_coverage_summary(
+        project)['data'][0]['files']
+    lines = [f['summary']['lines']['count'] for f in coverage_summary]
+
+    total_lines = max(total_cov.total_lines, sum(lines))
+
+    if total_lines:
+      coverage_gain[project] = {
+          'coverage_diff': total_cov.covered_lines / total_lines
+      }
+    else:
+      # Fail safe when total_lines is 0 because of invalid coverage report
+      logger.warning(
+          'Line coverage information missing from the coverage report.')
+      coverage_gain[project] = {'coverage_diff': 0.0}
+
+  return coverage_gain
 
 
 def main():
@@ -390,6 +438,10 @@ def main():
         time.sleep(args.delay)
       experiment_results = [task.get() for task in experiment_tasks]
 
+  # Process total gain from all generated harnesses for each projects
+  coverage_gain_dict = _process_total_coverage_gain(experiment_results)
+  add_to_json_report(args.work_dir, 'project_summary', coverage_gain_dict)
+
   # Capture time at end
   end = time.time()
   add_to_json_report(args.work_dir, 'completion_time',
@@ -397,7 +449,7 @@ def main():
   add_to_json_report(args.work_dir, 'total_run_time',
                      str(timedelta(seconds=end - start)))
 
-  _print_experiment_results(experiment_results)
+  _print_experiment_results(experiment_results, coverage_gain_dict)
 
 
 if __name__ == '__main__':
