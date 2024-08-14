@@ -96,8 +96,9 @@ def main() -> None:
   chat = model.start_chat()
 
   # Start the Docker container
-  container_id = _start_docker_container()
-  print(f"Started Docker container: {container_id}")
+  # container_id = _start_docker_container()
+  # print(f"Started Docker container: {container_id}")
+  container_id = f'gcr.io/oss-fuzz-gen/{PROJECT}'
   # fuzz_target_basename, ext = os.path.splitext(FUZZ_TARGET_PATH)
   # example = f'{fuzz_target_basename}_example{ext}'
   # execute_bash_command(container_id, f'mv "{FUZZ_TARGET_PATH}" "{example}"')
