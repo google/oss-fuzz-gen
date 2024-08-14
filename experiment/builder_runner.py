@@ -42,7 +42,6 @@ logger = logging.getLogger(__name__)
 
 # The directory in the oss-fuzz image
 JCC_DIR = '/usr/local/bin'
-
 RUN_TIMEOUT: int = 30
 CLOUD_EXP_MAX_ATTEMPT = 5
 
@@ -534,7 +533,24 @@ class BuilderRunner:
                          log_path: str,
                          sanitizer: str = 'address') -> bool:
     """Builds a target with OSS-Fuzz."""
+
     logger.info('Building %s with %s', generated_project, sanitizer)
+
+    if oss_fuzz_checkout.ENABLE_CACHING and oss_fuzz_checkout.is_image_cached(
+        self.benchmark.project, sanitizer):
+      logger.info('We should use cached instance.')
+      # Rewrite for caching.
+      oss_fuzz_checkout.rewrite_project_to_cached_project(
+          self.benchmark.project, generated_project, sanitizer)
+
+      # Prepare build
+      oss_fuzz_checkout.prepare_build(self.benchmark.project, sanitizer,
+                                      generated_project)
+
+    else:
+      logger.info('The project does not have any cache')
+
+    # Build the image
     command = [
         'docker', 'build', '-t', f'gcr.io/oss-fuzz/{generated_project}',
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
@@ -639,6 +655,7 @@ class BuilderRunner:
     sample_id = os.path.splitext(benchmark_target_name)[0]
     log_path = os.path.join(self.work_dirs.build_logs,
                             f'{sample_id}-coverage.log')
+    logger.info('Building project for coverage')
     built_coverage = self.build_target_local(generated_project,
                                              log_path,
                                              sanitizer='coverage')
@@ -646,6 +663,7 @@ class BuilderRunner:
       logger.info('Failed to make coverage build for %s', generated_project)
       return None, None
 
+    logger.info('Extracting coverage')
     corpus_dir = self.work_dirs.corpus(benchmark_target_name)
     command = [
         'python3',
