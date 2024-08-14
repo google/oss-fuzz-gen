@@ -426,4 +426,4 @@ The full code of fixed fuzz target here.
 <bash>
 One bash script to build script if needed, otherwise leave this empty.
 </bash>
-10. DO NOT attempt to build the fuzz target. STOP once you think the fuzz target. I will compile it by myself and show you the output.
+10. DO NOT attempt to build the fuzz target. STOP once you think the fuzz target is ready. I will compile it by myself and show you the output.
