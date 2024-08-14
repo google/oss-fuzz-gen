@@ -11,6 +11,7 @@ from vertexai.generative_models import GenerativeModel
 
 PROJECT = sys.argv[1]
 FUNCTION_UNDER_TEST = sys.argv[2]
+FUZZING_LANGUAGE = sys.argv[3]
 
 IMAGE_NAME = f'gcr.io/oss-fuzz/{PROJECT}'
 with open(f'benchmark-sets/all/{PROJECT}.yaml', 'r') as benchmark_file:
@@ -53,12 +54,14 @@ SAFETY_CONFIG = [
 
 
 def _start_docker_container() -> str:
-  result = subprocess.run(
-      ['docker', 'run', '-d', '-t', '--entrypoint=/bin/bash', IMAGE_NAME],
-      stdout=subprocess.PIPE,
-      stderr=subprocess.PIPE,
-      text=True,
-      check=True)
+  result = subprocess.run([
+      'docker', 'run', '-d', '-t', '--entrypoint=/bin/bash', '-e',
+      f'FUZZING_LANGUAGE={FUZZING_LANGUAGE}', IMAGE_NAME
+  ],
+                          stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE,
+                          text=True,
+                          check=True)
   container_id = result.stdout.strip()
   return container_id
 
@@ -105,9 +108,9 @@ def main() -> None:
 
   # replace_target = f'echo "{CODE_TO_BE_FIXED}" > "{FUZZ_TARGET_PATH}"'
   # execute_bash_command(container_id, replace_target)
-  execute_bash_command(
-      container_id,
-      'compile > /src/compile_output && rm -rf /out/* > /dev/null')
+  # execute_bash_command(
+  #     container_id,
+  #     'compile > /src/compile_output && rm -rf /out/* > /dev/null')
   output = ''
   response = ''
   cur_round = 0
@@ -137,6 +140,7 @@ EOF
           print(f"Agent output:\n{output}")
 
         print("================= Recompile ===========================")
+        container_id = _start_docker_container()
         prompt = execute_bash_command(container_id, 'compile > /dev/null')
         print(f"Recompile output:\n{prompt}")
         result_output = execute_bash_command(
