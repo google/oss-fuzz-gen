@@ -71,6 +71,7 @@ INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
 INTROSPECTOR_ALL_JVM_SOURCE_PATH = ''
 INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE = ''
+INTROSPECTOR_JVM_PROPERTIES = ''
 
 
 def get_oracle_dict() -> Dict[str, Any]:
@@ -99,7 +100,7 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ALL_JVM_SOURCE_PATH, INTROSPECTOR_ORACLE_OPTIMAL, \
       INTROSPECTOR_HEADERS_FOR_FUNC, \
       INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE, \
-      INTROSPECTOR_ORACLE_ALL_TESTS
+      INTROSPECTOR_ORACLE_ALL_TESTS, INTROSPECTOR_JVM_PROPERTIES
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -131,6 +132,7 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/function-with-matching-return-type')
   INTROSPECTOR_ORACLE_ALL_TESTS = f'{INTROSPECTOR_ENDPOINT}/project-tests'
+  INTROSPECTOR_JVM_PROPERTIES = f'{INTROSPECTOR_ENDPOINT}/jvm-method-properties'
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -293,6 +295,19 @@ def query_introspector_function_line(project: str, func_sig: str) -> list:
       'function_signature': func_sig
   })
   return [_get_data(resp, 'src_begin', 0), _get_data(resp, 'src_end', 0)]
+
+
+def query_introspector_function_props(project: str, func_sig: str) -> dict:
+  """Queries FuzzIntrospector API for additional properties of |func_sig|."""
+  resp = _query_introspector(INTROSPECTOR_JVM_PROPERTIES, {
+      'project': project,
+      'function_signature': func_sig
+  })
+  return {
+      'exceptions': _get_data(resp, 'exceptions', []),
+      'is-jvm-static': _get_data(resp, 'is-jvm-static', False),
+      'need-close': _get_data(resp, 'need-close', False)
+  }
 
 
 def query_introspector_source_code(project: str, filepath: str, begin_line: int,
@@ -513,16 +528,6 @@ def _get_arg_count(function: dict) -> int:
   return len(raw_arg_types)
 
 
-def _get_exceptions(function: dict) -> List[str]:
-  """Returns the exception list of this function."""
-  return function.get('exceptions', [])
-
-
-def _is_jvm_static(function: dict) -> bool:
-  """Returns the static property of this function for JVM project."""
-  return function.get('is_static', False)
-
-
 def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
   if language == 'jvm':
@@ -705,8 +710,6 @@ def populate_benchmarks_using_test_migration(
                                function_name='test-file',
                                return_type='test',
                                params=[],
-                               exceptions=[],
-                               is_jvm_static=False,
                                target_path=harness,
                                preferred_target_name='',
                                is_test_benchmark=True,
@@ -803,8 +806,6 @@ def populate_benchmarks_using_introspector(project: str, language: str,
             params=_group_function_params(
                 _get_clean_arg_types(function, project),
                 _get_arg_names(function, project, language), language),
-            exceptions=_get_exceptions(function),
-            is_jvm_static=_is_jvm_static(function),
             target_path=harness,
             preferred_target_name=target_name,
             function_dict=function))
