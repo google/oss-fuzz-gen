@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "pjsip_endpt_send_request_stateless"
+- "name": "pjsip_endpt_send_request_stateless"
   "params":
   - "name": "endpt"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "pj_status_t pjsip_endpt_send_request_stateless(pjsip_endpoint *, pjsip_tx_data *, void *, pjsip_send_callback)"
-- "exceptions": []
-  "name": "pjsip_endpt_send_raw_to_uri"
+- "name": "pjsip_endpt_send_raw_to_uri"
   "params":
   - "name": "endpt"
     "type": "bool "
@@ -31,8 +29,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "pj_status_t pjsip_endpt_send_raw_to_uri(pjsip_endpoint *, const pj_str_t *, const pjsip_tpselector *, const void *, pj_size_t, void *, pjsip_tp_send_callback)"
-- "exceptions": []
-  "name": "pjsip_tsx_retransmit_no_state"
+- "name": "pjsip_tsx_retransmit_no_state"
   "params":
   - "name": "tsx"
     "type": "bool "
@@ -40,8 +37,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "pj_status_t pjsip_tsx_retransmit_no_state(pjsip_transaction *, pjsip_tx_data *)"
-- "exceptions": []
-  "name": "pjsip_endpt_respond_stateless"
+- "name": "pjsip_endpt_respond_stateless"
   "params":
   - "name": "endpt"
     "type": "bool "
@@ -57,8 +53,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "pj_status_t pjsip_endpt_respond_stateless(pjsip_endpoint *, pjsip_rx_data *, int, const pj_str_t *, const pjsip_hdr *, const pjsip_msg_body *)"
-- "exceptions": []
-  "name": "pjmedia_endpt_create_sdp"
+- "name": "pjmedia_endpt_create_sdp"
   "params":
   - "name": "endpt"
     "type": "bool "

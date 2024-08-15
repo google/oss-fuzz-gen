@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "modbus_read_input_registers"
+- "name": "modbus_read_input_registers"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int modbus_read_input_registers(modbus_t *, int, int, uint16_t *)"
-- "exceptions": []
-  "name": "modbus_write_bits"
+- "name": "modbus_write_bits"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int modbus_write_bits(modbus_t *, int, int, const uint8_t *)"
-- "exceptions": []
-  "name": "modbus_write_and_read_registers"
+- "name": "modbus_write_and_read_registers"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -44,8 +41,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int modbus_write_and_read_registers(modbus_t *, int, int, const uint16_t *, int, int, uint16_t *)"
-- "exceptions": []
-  "name": "modbus_reply"
+- "name": "modbus_reply"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -57,8 +53,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int modbus_reply(modbus_t *, const uint8_t *, int, modbus_mapping_t *)"
-- "exceptions": []
-  "name": "modbus_read_input_bits"
+- "name": "modbus_read_input_bits"
   "params":
   - "name": "ctx"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN21dng_ref_counted_blockaSERKS_"
+- "name": "_ZN21dng_ref_counted_blockaSERKS_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "dng_ref_counted_block & dng_ref_counted_block::operator=(const dng_ref_counted_block &)"
-- "exceptions": []
-  "name": "_Z14SafeUint32MultjjjPj"
+- "name": "_Z14SafeUint32MultjjjPj"
   "params":
   - "name": "arg1"
     "type": "int"
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool SafeUint32Mult(uint32_t, uint32_t, uint32_t, uint32_t *)"
-- "exceptions": []
-  "name": "_Z12SafeInt32AddiiPi"
+- "name": "_Z12SafeInt32AddiiPi"
   "params":
   - "name": "arg1"
     "type": "int"
@@ -32,8 +29,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool SafeInt32Add(int32_t, int32_t, int32_t *)"
-- "exceptions": []
-  "name": "_Z14SafeUint32MultjjjjPj"
+- "name": "_Z14SafeUint32MultjjjjPj"
   "params":
   - "name": "arg1"
     "type": "int"
@@ -47,8 +43,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool SafeUint32Mult(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t *)"
-- "exceptions": []
-  "name": "_ZN15dng_hue_sat_mapaSERKS_"
+- "name": "_ZN15dng_hue_sat_mapaSERKS_"
   "params":
   - "name": "this"
     "type": "bool "

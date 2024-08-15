@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "irc_add_pic_to_stack_re_enc"
+- "name": "irc_add_pic_to_stack_re_enc"
   "params":
   - "name": "ps_pic_handling"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "WORD32 irc_add_pic_to_stack_re_enc(pic_handling_t *, WORD32, picture_type_e)"
-- "exceptions": []
-  "name": "irc_add_picture_to_stack_re_enc"
+- "name": "irc_add_picture_to_stack_re_enc"
   "params":
   - "name": "rate_control_api"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void irc_add_picture_to_stack_re_enc(rate_control_api_t *, WORD32, picture_type_e)"
-- "exceptions": []
-  "name": "ih264_dpb_mgr_count_ref_frames"
+- "name": "ih264_dpb_mgr_count_ref_frames"
   "params":
   - "name": "ps_dpb_mgr"
     "type": "bool "
@@ -32,8 +29,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "WORD32 ih264_dpb_mgr_count_ref_frames(dpb_mgr_t *, WORD32, WORD32)"
-- "exceptions": []
-  "name": "irc_calc_per_frm_bits"
+- "name": "irc_calc_per_frm_bits"
   "params":
   - "name": "ps_rd_model"
     "type": "bool "
@@ -61,8 +57,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "WORD32 irc_calc_per_frm_bits(rc_rd_model_t *, UWORD16 *, UWORD8 *, UWORD8, UWORD32 *, UWORD8, float *, float *, UWORD8, UWORD32, UWORD32, UWORD8 *)"
-- "exceptions": []
-  "name": "isvcd_compute_interlyr_motion_mode"
+- "name": "isvcd_compute_interlyr_motion_mode"
   "params":
   - "name": "pv_comp_mode_mv_ctxt"
     "type": "bool "

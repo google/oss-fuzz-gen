@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN9S2Polygon16InitToSimplifiedERKS_RKN9S2Builder12SnapFunctionE"
+- "name": "_ZN9S2Polygon16InitToSimplifiedERKS_RKN9S2Builder12SnapFunctionE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void S2Polygon::InitToSimplified(const S2Polygon &, const SnapFunction &)"
-- "exceptions": []
-  "name": "_ZN9S2Polygon13InitToSnappedERKS_i"
+- "name": "_ZN9S2Polygon13InitToSnappedERKS_i"
   "params":
   - "name": "this"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void S2Polygon::InitToSnapped(const S2Polygon &, int)"
-- "exceptions": []
-  "name": "_ZN9S2Polygon21InitToCellUnionBorderERK11S2CellUnion"
+- "name": "_ZN9S2Polygon21InitToCellUnionBorderERK11S2CellUnion"
   "params":
   - "name": "this"
     "type": "bool "
@@ -30,8 +27,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void S2Polygon::InitToCellUnionBorder(const S2CellUnion &)"
-- "exceptions": []
-  "name": "_ZN9S2Polygon22InitToSimplifiedInCellERKS_RK6S2Cell7S1AngleS5_"
+- "name": "_ZN9S2Polygon22InitToSimplifiedInCellERKS_RK6S2Cell7S1AngleS5_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -45,8 +41,7 @@
     "type": "double"
   "return_type": "void"
   "signature": "void S2Polygon::InitToSimplifiedInCell(const S2Polygon &, const S2Cell &, S1Angle, S1Angle)"
-- "exceptions": []
-  "name": "_ZN18S2BooleanOperation4Impl5BuildEP7S2Error"
+- "name": "_ZN18S2BooleanOperation4Impl5BuildEP7S2Error"
   "params":
   - "name": "this"
     "type": "bool "

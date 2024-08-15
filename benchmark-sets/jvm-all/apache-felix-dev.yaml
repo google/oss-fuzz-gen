@@ -1,8 +1,5 @@
 "functions":
-- "exceptions":
-  - "java.lang.IllegalArgumentException"
-  "is_jvm_static": true
-  "name": "[org.apache.felix.utils.properties.InterpolationHelper].substVars(java.lang.String,java.lang.String,java.util.Map,java.util.Map,org.apache.felix.utils.properties.InterpolationHelper$SubstitutionCallback,boolean,boolean,boolean)"
+- "name": "[org.apache.felix.utils.properties.InterpolationHelper].substVars(java.lang.String,java.lang.String,java.util.Map,java.util.Map,org.apache.felix.utils.properties.InterpolationHelper$SubstitutionCallback,boolean,boolean,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -22,9 +19,7 @@
     "type": "boolean"
   "return_type": "java.lang.String"
   "signature": "[org.apache.felix.utils.properties.InterpolationHelper].substVars(java.lang.String,java.lang.String,java.util.Map,java.util.Map,org.apache.felix.utils.properties.InterpolationHelper$SubstitutionCallback,boolean,boolean,boolean)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.apache.felix.utils.resource.ResourceUtils].toString(org.osgi.resource.Resource,java.lang.String,java.util.Map<String,Object>,java.util.Map<String,String>)"
+- "name": "[org.apache.felix.utils.resource.ResourceUtils].toString(org.osgi.resource.Resource,java.lang.String,java.util.Map<String,Object>,java.util.Map<String,String>)"
   "params":
   - "name": "arg0"
     "type": "org.osgi.resource.Resource"
@@ -36,9 +31,7 @@
     "type": "java.util.Map<String,String>"
   "return_type": "java.lang.String"
   "signature": "[org.apache.felix.utils.resource.ResourceUtils].toString(org.osgi.resource.Resource,java.lang.String,java.util.Map<String,Object>,java.util.Map<String,String>)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.felix.utils.properties.Properties].put(java.lang.String,java.util.List<String>,java.util.List<String>)"
+- "name": "[org.apache.felix.utils.properties.Properties].put(java.lang.String,java.util.List<String>,java.util.List<String>)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -48,9 +41,7 @@
     "type": "java.util.List<String>"
   "return_type": "java.lang.String"
   "signature": "[org.apache.felix.utils.properties.Properties].put(java.lang.String,java.util.List<String>,java.util.List<String>)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.felix.utils.properties.Properties].put(java.lang.String,java.lang.String)"
+- "name": "[org.apache.felix.utils.properties.Properties].put(java.lang.String,java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -58,9 +49,7 @@
     "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.apache.felix.utils.properties.Properties].put(java.lang.String,java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.felix.utils.properties.TypedProperties].put(java.lang.String,java.lang.Object)"
+- "name": "[org.apache.felix.utils.properties.TypedProperties].put(java.lang.String,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -68,9 +57,7 @@
     "type": "java.lang.Object"
   "return_type": "java.lang.Object"
   "signature": "[org.apache.felix.utils.properties.TypedProperties].put(java.lang.String,java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.felix.utils.properties.Properties].put(java.lang.Object,java.lang.Object)"
+- "name": "[org.apache.felix.utils.properties.Properties].put(java.lang.Object,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"

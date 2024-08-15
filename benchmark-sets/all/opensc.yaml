@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "sc_pkcs15init_change_attrib"
+- "name": "sc_pkcs15init_change_attrib"
   "params":
   - "name": "p15card"
     "type": "bool "
@@ -16,8 +15,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int sc_pkcs15init_change_attrib(struct sc_pkcs15_card *, struct sc_profile *, struct sc_pkcs15_object *, int, void *, int)"
-- "exceptions": []
-  "name": "awp_update_df_delete"
+- "name": "awp_update_df_delete"
   "params":
   - "name": "p15card"
     "type": "bool "
@@ -27,8 +25,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int awp_update_df_delete(struct sc_pkcs15_card *, struct sc_profile *, struct sc_pkcs15_object *)"
-- "exceptions": []
-  "name": "sc_pkcs15init_update_certificate"
+- "name": "sc_pkcs15init_update_certificate"
   "params":
   - "name": "p15card"
     "type": "bool "
@@ -42,8 +39,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int sc_pkcs15init_update_certificate(struct sc_pkcs15_card *, struct sc_profile *, struct sc_pkcs15_object *, const unsigned char *, size_t)"
-- "exceptions": []
-  "name": "sc_pkcs15init_delete_object"
+- "name": "sc_pkcs15init_delete_object"
   "params":
   - "name": "p15card"
     "type": "bool "
@@ -53,8 +49,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int sc_pkcs15init_delete_object(struct sc_pkcs15_card *, struct sc_profile *, struct sc_pkcs15_object *)"
-- "exceptions": []
-  "name": "sc_pkcs15init_store_private_key"
+- "name": "sc_pkcs15init_store_private_key"
   "params":
   - "name": "p15card"
     "type": "bool "

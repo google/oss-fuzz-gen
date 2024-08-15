@@ -1,20 +1,17 @@
 "functions":
-- "exceptions": []
-  "name": "X509_verify_cert"
+- "name": "X509_verify_cert"
   "params":
   - "name": "ctx"
     "type": "bool "
   "return_type": "int"
   "signature": "int X509_verify_cert(X509_STORE_CTX *)"
-- "exceptions": []
-  "name": "_ZN4bssl20ssl_client_handshakeEPNS_13SSL_HANDSHAKEE"
+- "name": "_ZN4bssl20ssl_client_handshakeEPNS_13SSL_HANDSHAKEE"
   "params":
   - "name": "hs"
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typessl_hs_wait_t bssl::ssl_client_handshake(struct SSL_HANDSHAKE *)"
-- "exceptions": []
-  "name": "_ZN4bssl9CheckOCSPENSt3__117basic_string_viewIcNS0_11char_traitsIcEEEES4_S4_lNS0_8optionalIlEEPNS_16OCSPVerifyResult14ResponseStatusE"
+- "name": "_ZN4bssl9CheckOCSPENSt3__117basic_string_viewIcNS0_11char_traitsIcEEEES4_S4_lNS0_8optionalIlEEPNS_16OCSPVerifyResult14ResponseStatusE"
   "params":
   - "name": "raw_response"
     "type": "bool "
@@ -36,8 +33,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typeOCSPRevocationStatus bssl::CheckOCSP(string_view, string_view, string_view, int64_t, optional<long>, DW_TAG_enumeration_typeResponseStatus *)"
-- "exceptions": []
-  "name": "_ZN4bssl9CheckOCSPENSt3__117basic_string_viewIcNS0_11char_traitsIcEEEEPKNS_17ParsedCertificateES7_lNS0_8optionalIlEEPNS_16OCSPVerifyResult14ResponseStatusE"
+- "name": "_ZN4bssl9CheckOCSPENSt3__117basic_string_viewIcNS0_11char_traitsIcEEEEPKNS_17ParsedCertificateES7_lNS0_8optionalIlEEPNS_16OCSPVerifyResult14ResponseStatusE"
   "params":
   - "name": "raw_response"
     "type": "bool "
@@ -55,8 +51,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typeOCSPRevocationStatus bssl::CheckOCSP(string_view, const ParsedCertificate *, const ParsedCertificate *, int64_t, optional<long>, DW_TAG_enumeration_typeResponseStatus *)"
-- "exceptions": []
-  "name": "_ZN4bssl12_GLOBAL__N_19CheckOCSPENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEES5_PKNS_17ParsedCertificateES5_S8_lNS1_8optionalIlEEPNS_16OCSPVerifyResult14ResponseStatusE"
+- "name": "_ZN4bssl12_GLOBAL__N_19CheckOCSPENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEES5_PKNS_17ParsedCertificateES5_S8_lNS1_8optionalIlEEPNS_16OCSPVerifyResult14ResponseStatusE"
   "params":
   - "name": "raw_response"
     "type": "bool "

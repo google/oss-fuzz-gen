@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "tty_open"
+- "name": "tty_open"
   "params":
   - "name": "tty"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int tty_open(struct tty *, char **)"
-- "exceptions": []
-  "name": "cmd_attach_session"
+- "name": "cmd_attach_session"
   "params":
   - "name": "item"
     "type": "bool "
@@ -29,8 +27,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typecmd_retval cmd_attach_session(struct cmdq_item *, const char *, int, int, int, const char *, int, const char *)"
-- "exceptions": []
-  "name": "client_main"
+- "name": "client_main"
   "params":
   - "name": "base"
     "type": "bool "
@@ -44,8 +41,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int client_main(struct event_base *, int, char **, uint64_t, int)"
-- "exceptions": []
-  "name": "server_start"
+- "name": "server_start"
   "params":
   - "name": "client"
     "type": "bool "
@@ -59,8 +55,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int server_start(struct tmuxproc *, int, struct event_base *, int, char *)"
-- "exceptions": []
-  "name": "server_client_open"
+- "name": "server_client_open"
   "params":
   - "name": "c"
     "type": "bool "

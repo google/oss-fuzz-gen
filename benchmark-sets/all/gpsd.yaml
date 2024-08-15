@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "gpsd_multipoll"
+- "name": "gpsd_multipoll"
   "params":
   - "name": ""
     "type": "bool"
@@ -12,8 +11,7 @@
     "type": "float"
   "return_type": "int"
   "signature": "int gpsd_multipoll(const _Bool, struct gps_device_t *, DW_TAG_subroutine_typeInfinite loop *, float)"
-- "exceptions": []
-  "name": "sirf_parse"
+- "name": "sirf_parse"
   "params":
   - "name": ""
     "type": "bool "
@@ -23,15 +21,13 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "gps_mask_t sirf_parse(struct gps_device_t *, unsigned char *, size_t)"
-- "exceptions": []
-  "name": "gpsd_poll"
+- "name": "gpsd_poll"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "size_t"
   "signature": "gps_mask_t gpsd_poll(struct gps_device_t *)"
-- "exceptions": []
-  "name": "gps_mainloop"
+- "name": "gps_mainloop"
   "params":
   - "name": ""
     "type": "bool "
@@ -41,8 +37,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int gps_mainloop(struct gps_data_t *, int, DW_TAG_subroutine_typeInfinite loop *)"
-- "exceptions": []
-  "name": "gpsd_activate"
+- "name": "gpsd_activate"
   "params":
   - "name": ""
     "type": "bool "

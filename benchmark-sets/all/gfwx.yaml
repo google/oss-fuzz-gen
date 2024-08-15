@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN7fuzzing5types9ContainerIhLb0ELb0EE4copyEPKvm"
+- "name": "_ZN7fuzzing5types9ContainerIhLb0ELb0EE4copyEPKvm"
   "params":
   - "name": "this"
     "type": "bool "
@@ -10,15 +9,13 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void fuzzing::types::Container<unsigned char, false, false>::copy(Container<char, true, false> *, const void *, size_t)"
-- "exceptions": []
-  "name": "_ZN7fuzzing5types9ContainerIcLb1ELb0EE4freeEv"
+- "name": "_ZN7fuzzing5types9ContainerIcLb1ELb0EE4freeEv"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "void fuzzing::types::Container<char, true, false>::free()"
-- "exceptions": []
-  "name": "_ZN7fuzzing5types9ContainerIcLb1ELb0EE8allocateEm"
+- "name": "_ZN7fuzzing5types9ContainerIcLb1ELb0EE8allocateEm"
   "params":
   - "name": "this"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void fuzzing::types::Container<char, true, false>::allocate(size_t)"
-- "exceptions": []
-  "name": "_ZN7fuzzing5types9ContainerIhLb0ELb0EE8allocateEm"
+- "name": "_ZN7fuzzing5types9ContainerIhLb0ELb0EE8allocateEm"
   "params":
   - "name": "this"
     "type": "bool "
@@ -35,8 +31,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void fuzzing::types::Container<unsigned char, false, false>::allocate(Container<char, true, false> *, size_t)"
-- "exceptions": []
-  "name": "_ZN7fuzzing5types9ContainerIhLb0ELb0EE4freeEv"
+- "name": "_ZN7fuzzing5types9ContainerIhLb0ELb0EE4freeEv"
   "params":
   - "name": "this"
     "type": "bool "

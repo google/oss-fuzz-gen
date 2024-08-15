@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "xls_open"
+- "name": "xls_open"
   "params":
   - "name": "file"
     "type": "bool "
@@ -8,15 +7,13 @@
     "type": "bool "
   "return_type": "void"
   "signature": "xlsWorkBook * xls_open(const char *, const char *)"
-- "exceptions": []
-  "name": "ole2_open_file"
+- "name": "ole2_open_file"
   "params":
   - "name": "file"
     "type": "bool "
   "return_type": "void"
   "signature": "OLE2 * ole2_open_file(const char *)"
-- "exceptions": []
-  "name": "xls_open_file"
+- "name": "xls_open_file"
   "params":
   - "name": "file"
     "type": "bool "
@@ -26,15 +23,13 @@
     "type": "bool "
   "return_type": "void"
   "signature": "xlsWorkBook * xls_open_file(const char *, const char *, xls_error_t *)"
-- "exceptions": []
-  "name": "xls_close_summaryInfo"
+- "name": "xls_close_summaryInfo"
   "params":
   - "name": "pSI"
     "type": "bool "
   "return_type": "void"
   "signature": "void xls_close_summaryInfo(xlsSummaryInfo *)"
-- "exceptions": []
-  "name": "xls_summaryInfo"
+- "name": "xls_summaryInfo"
   "params":
   - "name": "pWB"
     "type": "bool "

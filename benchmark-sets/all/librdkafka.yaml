@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "re_regexec"
+- "name": "re_regexec"
   "params":
   - "name": "prog"
     "type": "bool "

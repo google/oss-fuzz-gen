@@ -1,8 +1,5 @@
 "functions":
-- "exceptions":
-  - "net.lingala.zip4j.exception.ZipException"
-  "is_jvm_static": true
-  "name": "[net.lingala.zip4j.crypto.AesCipherUtil].derivePasswordBasedKey(byte[],char[],net.lingala.zip4j.model.enums.AesKeyStrength,boolean)"
+- "name": "[net.lingala.zip4j.crypto.AesCipherUtil].derivePasswordBasedKey(byte[],char[],net.lingala.zip4j.model.enums.AesKeyStrength,boolean)"
   "params":
   - "name": "arg0"
     "type": "byte[]"
@@ -14,9 +11,7 @@
     "type": "boolean"
   "return_type": "byte[]"
   "signature": "[net.lingala.zip4j.crypto.AesCipherUtil].derivePasswordBasedKey(byte[],char[],net.lingala.zip4j.model.enums.AesKeyStrength,boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[net.lingala.zip4j.crypto.PBKDF2.PBKDF2Engine].deriveKey(char[],int,boolean)"
+- "name": "[net.lingala.zip4j.crypto.PBKDF2.PBKDF2Engine].deriveKey(char[],int,boolean)"
   "params":
   - "name": "arg0"
     "type": "char[]"
@@ -26,18 +21,13 @@
     "type": "boolean"
   "return_type": "byte[]"
   "signature": "[net.lingala.zip4j.crypto.PBKDF2.PBKDF2Engine].deriveKey(char[],int,boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[net.lingala.zip4j.model.ZipParameters].<init>(net.lingala.zip4j.model.ZipParameters)"
+- "name": "[net.lingala.zip4j.model.ZipParameters].<init>(net.lingala.zip4j.model.ZipParameters)"
   "params":
   - "name": "arg0"
     "type": "net.lingala.zip4j.model.ZipParameters"
   "return_type": "net.lingala.zip4j.model.ZipParameters"
   "signature": "[net.lingala.zip4j.model.ZipParameters].<init>(net.lingala.zip4j.model.ZipParameters)"
-- "exceptions":
-  - "net.lingala.zip4j.exception.ZipException"
-  "is_jvm_static": false
-  "name": "[net.lingala.zip4j.crypto.AESDecrypter].decryptData(byte[],int,int)"
+- "name": "[net.lingala.zip4j.crypto.AESDecrypter].decryptData(byte[],int,int)"
   "params":
   - "name": "arg0"
     "type": "byte[]"
@@ -47,10 +37,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "[net.lingala.zip4j.crypto.AESDecrypter].decryptData(byte[],int,int)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[net.lingala.zip4j.io.outputstream.ZipOutputStream].<init>(java.io.OutputStream,char[],net.lingala.zip4j.model.Zip4jConfig,net.lingala.zip4j.model.ZipModel)"
+- "name": "[net.lingala.zip4j.io.outputstream.ZipOutputStream].<init>(java.io.OutputStream,char[],net.lingala.zip4j.model.Zip4jConfig,net.lingala.zip4j.model.ZipModel)"
   "params":
   - "name": "arg0"
     "type": "java.io.OutputStream"
@@ -62,9 +49,7 @@
     "type": "net.lingala.zip4j.model.ZipModel"
   "return_type": "net.lingala.zip4j.io.outputstream.ZipOutputStream"
   "signature": "[net.lingala.zip4j.io.outputstream.ZipOutputStream].<init>(java.io.OutputStream,char[],net.lingala.zip4j.model.Zip4jConfig,net.lingala.zip4j.model.ZipModel)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[net.lingala.zip4j.crypto.engine.ZipCryptoEngine].initKeys(char[],boolean)"
+- "name": "[net.lingala.zip4j.crypto.engine.ZipCryptoEngine].initKeys(char[],boolean)"
   "params":
   - "name": "arg0"
     "type": "char[]"

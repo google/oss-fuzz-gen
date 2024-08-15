@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "magic_list"
+- "name": "magic_list"
   "params":
   - "name": "ms"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int magic_list(struct magic_set *, const char *)"
-- "exceptions": []
-  "name": "magic_load_buffers"
+- "name": "magic_load_buffers"
   "params":
   - "name": "ms"
     "type": "bool "
@@ -21,22 +19,19 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int magic_load_buffers(struct magic_set *, void **, size_t *, size_t)"
-- "exceptions": []
-  "name": "cdf_tole4"
+- "name": "cdf_tole4"
   "params":
   - "name": "sv"
     "type": "int"
   "return_type": "int"
   "signature": "uint32_t cdf_tole4(uint32_t)"
-- "exceptions": []
-  "name": "cdf_tole8"
+- "name": "cdf_tole8"
   "params":
   - "name": "sv"
     "type": "size_t"
   "return_type": "size_t"
   "signature": "uint64_t cdf_tole8(uint64_t)"
-- "exceptions": []
-  "name": "buffer_apprentice"
+- "name": "buffer_apprentice"
   "params":
   - "name": "ms"
     "type": "bool "

@@ -1,39 +1,29 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.reflections.Reflections].<init>(java.lang.Object[])"
+- "name": "[org.reflections.Reflections].<init>(java.lang.Object[])"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object[]"
   "return_type": "org.reflections.Reflections"
   "signature": "[org.reflections.Reflections].<init>(java.lang.Object[])"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.reflections.Reflections].<init>(org.reflections.Configuration)"
+- "name": "[org.reflections.Reflections].<init>(org.reflections.Configuration)"
   "params":
   - "name": "arg0"
     "type": "org.reflections.Configuration"
   "return_type": "org.reflections.Reflections"
   "signature": "[org.reflections.Reflections].<init>(org.reflections.Configuration)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.reflections.vfs.SystemDir].<init>(java.io.File)"
+- "name": "[org.reflections.vfs.SystemDir].<init>(java.io.File)"
   "params":
   - "name": "arg0"
     "type": "java.io.File"
   "return_type": "org.reflections.vfs.SystemDir"
   "signature": "[org.reflections.vfs.SystemDir].<init>(java.io.File)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.reflections.scanners.SubTypesScanner].<init>(boolean)"
+- "name": "[org.reflections.scanners.SubTypesScanner].<init>(boolean)"
   "params":
   - "name": "arg0"
     "type": "boolean"
   "return_type": "org.reflections.scanners.SubTypesScanner"
   "signature": "[org.reflections.scanners.SubTypesScanner].<init>(boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.reflections.Reflections].<init>(java.lang.String,org.reflections.scanners.Scanner[])"
+- "name": "[org.reflections.Reflections].<init>(java.lang.String,org.reflections.scanners.Scanner[])"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -41,9 +31,7 @@
     "type": "org.reflections.scanners.Scanner[]"
   "return_type": "org.reflections.Reflections"
   "signature": "[org.reflections.Reflections].<init>(java.lang.String,org.reflections.scanners.Scanner[])"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.reflections.util.FilterBuilder].equals(java.lang.Object)"
+- "name": "[org.reflections.util.FilterBuilder].equals(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"

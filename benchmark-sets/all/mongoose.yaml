@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "mg_ws_connect"
+- "name": "mg_ws_connect"
   "params":
   - "name": "mgr"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct mg_connection * mg_ws_connect(struct mg_mgr *, const char *, mg_event_handler_t, void *, const char *, void)"
-- "exceptions": []
-  "name": "mg_mqtt_connect"
+- "name": "mg_mqtt_connect"
   "params":
   - "name": "mgr"
     "type": "bool "
@@ -29,22 +27,19 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct mg_connection * mg_mqtt_connect(struct mg_mgr *, const char *, const struct mg_mqtt_opts *, mg_event_handler_t, void *)"
-- "exceptions": []
-  "name": "mg_hello"
+- "name": "mg_hello"
   "params":
   - "name": "url"
     "type": "bool "
   "return_type": "void"
   "signature": "void mg_hello(const char *)"
-- "exceptions": []
-  "name": "mg_rpc_process"
+- "name": "mg_rpc_process"
   "params":
   - "name": "r"
     "type": "bool "
   "return_type": "void"
   "signature": "void mg_rpc_process(struct mg_rpc_req *)"
-- "exceptions": []
-  "name": "mg_sntp_connect"
+- "name": "mg_sntp_connect"
   "params":
   - "name": "mgr"
     "type": "bool "

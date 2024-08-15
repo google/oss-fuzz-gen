@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "plist_read_from_file"
+- "name": "plist_read_from_file"
   "params":
   - "name": "filename"
     "type": "bool "
@@ -10,15 +9,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "plist_err_t plist_read_from_file(const char *, plist_t *, plist_format_t *)"
-- "exceptions": []
-  "name": "plist_print"
+- "name": "plist_print"
   "params":
   - "name": "plist"
     "type": "bool "
   "return_type": "void"
   "signature": "void plist_print(plist_t)"
-- "exceptions": []
-  "name": "plist_from_memory"
+- "name": "plist_from_memory"
   "params":
   - "name": "plist_data"
     "type": "bool "
@@ -30,8 +27,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "plist_err_t plist_from_memory(const char *, uint32_t, plist_t *, plist_format_t *)"
-- "exceptions": []
-  "name": "plist_write_to_file"
+- "name": "plist_write_to_file"
   "params":
   - "name": "plist"
     "type": "bool "
@@ -43,8 +39,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "plist_err_t plist_write_to_file(plist_t, const char *, plist_format_t, plist_write_options_t)"
-- "exceptions": []
-  "name": "plist_write_to_stream"
+- "name": "plist_write_to_stream"
   "params":
   - "name": "plist"
     "type": "bool "

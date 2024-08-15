@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[com.google.json.EvalMinifier].minify(java.lang.String,int)"
+- "name": "[com.google.json.EvalMinifier].minify(java.lang.String,int)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -9,9 +7,7 @@
     "type": "int"
   "return_type": "java.lang.String"
   "signature": "[com.google.json.EvalMinifier].minify(java.lang.String,int)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[com.google.json.JsonSanitizer].sanitize(java.lang.String,int)"
+- "name": "[com.google.json.JsonSanitizer].sanitize(java.lang.String,int)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"

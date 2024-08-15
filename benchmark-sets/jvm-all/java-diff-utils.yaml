@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.github.difflib.algorithm.myers.MyersDiffWithLinearSpace].computeDiff(java.util.List<T>,java.util.List<T>,com.github.difflib.algorithm.DiffAlgorithmListener)"
+- "name": "[com.github.difflib.algorithm.myers.MyersDiffWithLinearSpace].computeDiff(java.util.List<T>,java.util.List<T>,com.github.difflib.algorithm.DiffAlgorithmListener)"
   "params":
   - "name": "arg0"
     "type": "java.util.List<T>"
@@ -11,9 +9,7 @@
     "type": "com.github.difflib.algorithm.DiffAlgorithmListener"
   "return_type": "java.util.List<Change>"
   "signature": "[com.github.difflib.algorithm.myers.MyersDiffWithLinearSpace].computeDiff(java.util.List<T>,java.util.List<T>,com.github.difflib.algorithm.DiffAlgorithmListener)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.github.difflib.algorithm.myers.PathNode].<init>(int,int,boolean,boolean,com.github.difflib.algorithm.myers.PathNode)"
+- "name": "[com.github.difflib.algorithm.myers.PathNode].<init>(int,int,boolean,boolean,com.github.difflib.algorithm.myers.PathNode)"
   "params":
   - "name": "arg0"
     "type": "int"
@@ -27,17 +23,13 @@
     "type": "com.github.difflib.algorithm.myers.PathNode"
   "return_type": "com.github.difflib.algorithm.myers.PathNode"
   "signature": "[com.github.difflib.algorithm.myers.PathNode].<init>(int,int,boolean,boolean,com.github.difflib.algorithm.myers.PathNode)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.github.difflib.text.DiffRow].equals(java.lang.Object)"
+- "name": "[com.github.difflib.text.DiffRow].equals(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
   "return_type": "boolean"
   "signature": "[com.github.difflib.text.DiffRow].equals(java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.github.difflib.patch.Chunk].<init>(int,java.util.List)"
+- "name": "[com.github.difflib.patch.Chunk].<init>(int,java.util.List)"
   "params":
   - "name": "arg0"
     "type": "int"
@@ -45,9 +37,7 @@
     "type": "java.util.List"
   "return_type": "com.github.difflib.patch.Chunk"
   "signature": "[com.github.difflib.patch.Chunk].<init>(int,java.util.List)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.github.difflib.patch.Chunk].<init>(int,java.lang.Object[])"
+- "name": "[com.github.difflib.patch.Chunk].<init>(int,java.lang.Object[])"
   "params":
   - "name": "arg0"
     "type": "int"
@@ -55,9 +45,7 @@
     "type": "java.lang.Object[]"
   "return_type": "com.github.difflib.patch.Chunk"
   "signature": "[com.github.difflib.patch.Chunk].<init>(int,java.lang.Object[])"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.github.difflib.patch.Chunk].equals(java.lang.Object)"
+- "name": "[com.github.difflib.patch.Chunk].equals(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"

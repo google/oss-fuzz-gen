@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZNK7simdutf7haswell14implementation16base64_to_binaryEPKDsmPcm"
+- "name": "_ZNK7simdutf7haswell14implementation16base64_to_binaryEPKDsmPcm"
   "params":
   - "name": "this"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "struct result simdutf::haswell::implementation::base64_to_binary(const char16_t *, size_t, char *, base64_options)"
-- "exceptions": []
-  "name": "_ZNK7simdutf8westmere14implementation16base64_to_binaryEPKDsmPcm"
+- "name": "_ZNK7simdutf8westmere14implementation16base64_to_binaryEPKDsmPcm"
   "params":
   - "name": "this"
     "type": "bool "
@@ -29,8 +27,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "struct result simdutf::westmere::implementation::base64_to_binary(const char16_t *, size_t, char *, base64_options)"
-- "exceptions": []
-  "name": "_ZNK7simdutf7icelake14implementation16base64_to_binaryEPKDsmPcm"
+- "name": "_ZNK7simdutf7icelake14implementation16base64_to_binaryEPKDsmPcm"
   "params":
   - "name": "this"
     "type": "bool "
@@ -44,8 +41,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "struct result simdutf::icelake::implementation::base64_to_binary(const char16_t *, size_t, char *, base64_options)"
-- "exceptions": []
-  "name": "_ZNK7simdutf7icelake14implementation16base64_to_binaryEPKcmPcm"
+- "name": "_ZNK7simdutf7icelake14implementation16base64_to_binaryEPKcmPcm"
   "params":
   - "name": "this"
     "type": "bool "
@@ -59,8 +55,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "struct result simdutf::icelake::implementation::base64_to_binary(const char *, size_t, char *, base64_options)"
-- "exceptions": []
-  "name": "_ZNK7simdutf7icelake14implementation16detect_encodingsEPKcm"
+- "name": "_ZNK7simdutf7icelake14implementation16detect_encodingsEPKcm"
   "params":
   - "name": "this"
     "type": "bool "

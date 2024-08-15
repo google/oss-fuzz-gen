@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN7acommon17MDInfoListofLists5clearEPNS_6ConfigE"
+- "name": "_ZN7acommon17MDInfoListofLists5clearEPNS_6ConfigE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void acommon::MDInfoListofLists::clear(Config *)"
-- "exceptions": []
-  "name": "_ZN7acommon6Config6removeERKNS_10ParmStringE"
+- "name": "_ZN7acommon6Config6removeERKNS_10ParmStringE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "PosibErr<void> acommon::Config::remove(ParmStr)"
-- "exceptions": []
-  "name": "_ZN12_GLOBAL__N_111SuggestImpl7suggestEPKc"
+- "name": "_ZN12_GLOBAL__N_111SuggestImpl7suggestEPKc"
   "params":
   - "name": "this"
     "type": "bool "

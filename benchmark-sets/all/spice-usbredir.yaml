@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "usbredirparser_send_buffered_bulk_packet"
+- "name": "usbredirparser_send_buffered_bulk_packet"
   "params":
   - "name": "parser"
     "type": "bool "
@@ -14,15 +13,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "void usbredirparser_send_buffered_bulk_packet(struct usbredirparser *, uint64_t, struct usb_redir_buffered_bulk_packet_header *, uint8_t *, int)"
-- "exceptions": []
-  "name": "usbredirparser_send_filter_reject"
+- "name": "usbredirparser_send_filter_reject"
   "params":
   - "name": "parser"
     "type": "bool "
   "return_type": "void"
   "signature": "void usbredirparser_send_filter_reject(struct usbredirparser *)"
-- "exceptions": []
-  "name": "usbredirparser_send_iso_packet"
+- "name": "usbredirparser_send_iso_packet"
   "params":
   - "name": "parser"
     "type": "bool "
@@ -36,8 +33,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void usbredirparser_send_iso_packet(struct usbredirparser *, uint64_t, struct usb_redir_iso_packet_header *, uint8_t *, int)"
-- "exceptions": []
-  "name": "usbredirparser_send_interrupt_packet"
+- "name": "usbredirparser_send_interrupt_packet"
   "params":
   - "name": "parser"
     "type": "bool "
@@ -51,8 +47,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void usbredirparser_send_interrupt_packet(struct usbredirparser *, uint64_t, struct usb_redir_interrupt_packet_header *, uint8_t *, int)"
-- "exceptions": []
-  "name": "usbredirparser_send_filter_filter"
+- "name": "usbredirparser_send_filter_filter"
   "params":
   - "name": "parser_pub"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN6YaHTTPlsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_8ResponseE"
+- "name": "_ZN6YaHTTPlsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_8ResponseE"
   "params":
   - "name": "os"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "ostream & YaHTTP::operator<<(ostream &, const Response &)"
-- "exceptions": []
-  "name": "_ZN18DNSDistPacketCache10CacheValueC2EOS0_"
+- "name": "_ZN18DNSDistPacketCache10CacheValueC2EOS0_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct CacheValue & DNSDistPacketCache::CacheValue::operator=(struct CacheValue *, const struct CacheValue &)"
-- "exceptions": []
-  "name": "_ZN6YaHTTPlsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_7RequestE"
+- "name": "_ZN6YaHTTPlsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_7RequestE"
   "params":
   - "name": "os"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "ostream & YaHTTP::operator<<(ostream &, const Request &)"
-- "exceptions": []
-  "name": "_ZN18DNSDistPacketCache3getER11DNSQuestiontPjRN5boost8optionalI7NetmaskEEbbjbbb"
+- "name": "_ZN18DNSDistPacketCache3getER11DNSQuestiontPjRN5boost8optionalI7NetmaskEEbbjbbb"
   "params":
   - "name": "this"
     "type": "bool "
@@ -53,8 +49,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "bool DNSDistPacketCache::get(struct DNSQuestion &, uint16_t, uint32_t *, optional<Netmask> &, bool, bool, uint32_t, bool, bool, bool)"
-- "exceptions": []
-  "name": "_ZNK6YaHTTP8HTTPBase5writeERNSt3__113basic_ostreamIcNS1_11char_traitsIcEEEE"
+- "name": "_ZNK6YaHTTP8HTTPBase5writeERNSt3__113basic_ostreamIcNS1_11char_traitsIcEEEE"
   "params":
   - "name": "this"
     "type": "bool "

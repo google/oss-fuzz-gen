@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN4Simd4Avx238SynetConvolution32fDepthwiseDotProduct7ForwardEPKfPfS4_"
+- "name": "_ZN4Simd4Avx238SynetConvolution32fDepthwiseDotProduct7ForwardEPKfPfS4_"
   "params":
   - "name": ""
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void Simd::Avx2::SynetConvolution32fDepthwiseDotProduct::Forward(const float *, float *, float *)"
-- "exceptions": []
-  "name": "_ZN4Simd4Avx228ConvolutionBiasAndActivationEPKfmm29SimdConvolutionActivationTypeS2_8SimdBoolPf"
+- "name": "_ZN4Simd4Avx228ConvolutionBiasAndActivationEPKfmm29SimdConvolutionActivationTypeS2_8SimdBoolPf"
   "params":
   - "name": ""
     "type": "bool "
@@ -31,8 +29,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void Simd::Avx2::ConvolutionBiasAndActivation(const float *, size_t, size_t, SimdConvolutionActivationType, const float *, SimdBool, float *)"
-- "exceptions": []
-  "name": "_ZN4Simd8Avx512bw23SynetConvolution32fInitEmPK25SimdConvolutionParameters26SimdSynetCompatibilityType"
+- "name": "_ZN4Simd8Avx512bw23SynetConvolution32fInitEmPK25SimdConvolutionParameters26SimdSynetCompatibilityType"
   "params":
   - "name": ""
     "type": "size_t"
@@ -42,8 +39,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void * Simd::Avx512bw::SynetConvolution32fInit(size_t, const SimdConvolutionParameters *, SimdSynetCompatibilityType)"
-- "exceptions": []
-  "name": "_ZN4Simd4Avx223SynetConvolution32fInitEmPK25SimdConvolutionParameters26SimdSynetCompatibilityType"
+- "name": "_ZN4Simd4Avx223SynetConvolution32fInitEmPK25SimdConvolutionParameters26SimdSynetCompatibilityType"
   "params":
   - "name": ""
     "type": "size_t"
@@ -53,8 +49,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void * Simd::Avx2::SynetConvolution32fInit(size_t, const SimdConvolutionParameters *, SimdSynetCompatibilityType)"
-- "exceptions": []
-  "name": "_ZN4Simd8Avx512bw29SynetMergedConvolution32fInitEmPK25SimdConvolutionParametersm8SimdBool26SimdSynetCompatibilityType"
+- "name": "_ZN4Simd8Avx512bw29SynetMergedConvolution32fInitEmPK25SimdConvolutionParametersm8SimdBool26SimdSynetCompatibilityType"
   "params":
   - "name": ""
     "type": "size_t"

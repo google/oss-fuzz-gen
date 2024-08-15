@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "cbor_intermediate_decref"
+- "name": "cbor_intermediate_decref"
   "params":
   - "name": "item"
     "type": "bool "
   "return_type": "void"
   "signature": "void cbor_intermediate_decref(cbor_item_t *)"
-- "exceptions": []
-  "name": "cbor_refcount"
+- "name": "cbor_refcount"
   "params":
   - "name": "item"
     "type": "bool "

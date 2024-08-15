@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "uriTestMemoryManager"
+- "name": "uriTestMemoryManager"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "int"
   "signature": "int uriTestMemoryManager(UriMemoryManager *)"
-- "exceptions": []
-  "name": "uriCompleteMemoryManager"
+- "name": "uriCompleteMemoryManager"
   "params":
   - "name": ""
     "type": "bool "
@@ -15,8 +13,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int uriCompleteMemoryManager(UriMemoryManager *, UriMemoryManager *)"
-- "exceptions": []
-  "name": "uriEmulateReallocarray"
+- "name": "uriEmulateReallocarray"
   "params":
   - "name": ""
     "type": "bool "
@@ -28,8 +25,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void * uriEmulateReallocarray(UriMemoryManager *, void *, size_t, size_t)"
-- "exceptions": []
-  "name": "uriEmulateCalloc"
+- "name": "uriEmulateCalloc"
   "params":
   - "name": ""
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "vivo_http_server_create"
+- "name": "vivo_http_server_create"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct vivo_http * vivo_http_server_create(struct vivo_exporter *, const char *, int, struct flb_config *)"
-- "exceptions": []
-  "name": "flb_config_load_config_format"
+- "name": "flb_config_load_config_format"
   "params":
   - "name": "config"
     "type": "bool "
@@ -21,22 +19,19 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int flb_config_load_config_format(struct flb_config *, struct flb_cf *)"
-- "exceptions": []
-  "name": "udp_conn_event"
+- "name": "udp_conn_event"
   "params":
   - "name": "data"
     "type": "bool "
   "return_type": "int"
   "signature": "int udp_conn_event(void *)"
-- "exceptions": []
-  "name": "flb_start_trace"
+- "name": "flb_start_trace"
   "params":
   - "name": "ctx"
     "type": "bool "
   "return_type": "int"
   "signature": "int flb_start_trace(flb_ctx_t *)"
-- "exceptions": []
-  "name": "in_metrics_init"
+- "name": "in_metrics_init"
   "params":
   - "name": "in"
     "type": "bool "

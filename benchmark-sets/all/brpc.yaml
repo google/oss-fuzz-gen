@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN4brpc6policy19ConsulNamingService16RunNamingServiceEPKcPNS_20NamingServiceActionsE"
+- "name": "_ZN4brpc6policy19ConsulNamingService16RunNamingServiceEPKcPNS_20NamingServiceActionsE"
   "params":
   - "name": ""
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int brpc::policy::ConsulNamingService::RunNamingService(const char *, NamingServiceActions *)"
-- "exceptions": []
-  "name": "_ZN4brpc6policy19ConsulNamingService10GetServersEPKcPSt6vectorINS_10ServerNodeESaIS5_EE"
+- "name": "_ZN4brpc6policy19ConsulNamingService10GetServersEPKcPSt6vectorINS_10ServerNodeESaIS5_EE"
   "params":
   - "name": ""
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int brpc::policy::ConsulNamingService::GetServers(const char *, vector<brpc::ServerNode, std::allocator<brpc::ServerNode> > *)"
-- "exceptions": []
-  "name": "_ZN4brpc6policy15DiscoveryClient8RegisterERKNS0_22DiscoveryRegisterParamE"
+- "name": "_ZN4brpc6policy15DiscoveryClient8RegisterERKNS0_22DiscoveryRegisterParamE"
   "params":
   - "name": ""
     "type": "bool "
@@ -30,15 +27,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int brpc::policy::DiscoveryClient::Register(const struct DiscoveryRegisterParam &)"
-- "exceptions": []
-  "name": "_ZN4brpc6policy15DiscoveryClient13PeriodicRenewEPv"
+- "name": "_ZN4brpc6policy15DiscoveryClient13PeriodicRenewEPv"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "void * brpc::policy::DiscoveryClient::PeriodicRenew(void *)"
-- "exceptions": []
-  "name": "_ZN4brpc6policy15DiscoveryClient10DoRegisterEv"
+- "name": "_ZN4brpc6policy15DiscoveryClient10DoRegisterEv"
   "params":
   - "name": ""
     "type": "bool "

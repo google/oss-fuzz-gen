@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_Z22is_legal_2d_block_sizejj"
+- "name": "_Z22is_legal_2d_block_sizejj"
   "params":
   - "name": "xdim"
     "type": "int"
@@ -8,8 +7,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool is_legal_2d_block_size(unsigned int, unsigned int)"
-- "exceptions": []
-  "name": "_Z22is_legal_3d_block_sizejjj"
+- "name": "_Z22is_legal_3d_block_sizejjj"
   "params":
   - "name": "xdim"
     "type": "int"
@@ -19,8 +17,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool is_legal_3d_block_size(unsigned int, unsigned int, unsigned int)"
-- "exceptions": []
-  "name": "_Z10encode_ise12quant_methodjPKhPhj"
+- "name": "_Z10encode_ise12quant_methodjPKhPhj"
   "params":
   - "name": "quant_level"
     "type": "int"
@@ -34,8 +31,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void encode_ise(DW_TAG_enumeration_typequant_method, unsigned int, const uint8_t *, uint8_t *, unsigned int)"
-- "exceptions": []
-  "name": "_Z20symbolic_to_physicalRK21block_size_descriptorRK25symbolic_compressed_blockPh"
+- "name": "_Z20symbolic_to_physicalRK21block_size_descriptorRK25symbolic_compressed_blockPh"
   "params":
   - "name": "bsd"
     "type": "bool "
@@ -45,8 +41,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void symbolic_to_physical(const struct block_size_descriptor &, const struct symbolic_compressed_block &, uint8_t *)"
-- "exceptions": []
-  "name": "_ZNK25symbolic_compressed_block20get_color_quant_modeEv"
+- "name": "_ZNK25symbolic_compressed_block20get_color_quant_modeEv"
   "params":
   - "name": "this"
     "type": "bool "

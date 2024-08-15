@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN4Ogre12SceneManager12_renderSceneEPNS_6CameraEPNS_8ViewportEb"
+- "name": "_ZN4Ogre12SceneManager12_renderSceneEPNS_6CameraEPNS_8ViewportEb"
   "params":
   - "name": ""
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool"
   "return_type": "void"
   "signature": "void Ogre::SceneManager::_renderScene(Camera *, Viewport *, bool)"
-- "exceptions": []
-  "name": "_ZN4Ogre12TerrainGroup17loadLegacyTerrainERKNS_10ConfigFileEllb"
+- "name": "_ZN4Ogre12TerrainGroup17loadLegacyTerrainERKNS_10ConfigFileEllb"
   "params":
   - "name": ""
     "type": "bool "
@@ -27,8 +25,7 @@
     "type": "bool"
   "return_type": "void"
   "signature": "void Ogre::TerrainGroup::loadLegacyTerrain(const ConfigFile &, long, long, bool)"
-- "exceptions": []
-  "name": "_ZN4Ogre14DotSceneLoader4loadERNS_9SharedPtrINS_10DataStreamEEERKNSt3__112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEPNS_9SceneNodeE"
+- "name": "_ZN4Ogre14DotSceneLoader4loadERNS_9SharedPtrINS_10DataStreamEEERKNSt3__112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEPNS_9SceneNodeE"
   "params":
   - "name": ""
     "type": "bool "
@@ -40,8 +37,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void Ogre::DotSceneLoader::load(DataStreamPtr &, const String &, SceneNode *)"
-- "exceptions": []
-  "name": "_ZNK12_GLOBAL__N_113DotSceneCodec6decodeERKN4Ogre9SharedPtrINS1_10DataStreamEEERKNS1_3AnyE"
+- "name": "_ZNK12_GLOBAL__N_113DotSceneCodec6decodeERKN4Ogre9SharedPtrINS1_10DataStreamEEERKNS1_3AnyE"
   "params":
   - "name": ""
     "type": "bool "
@@ -51,8 +47,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void (anonymous namespace)::DotSceneCodec::decode(const struct DotSceneCodec *, const DataStreamPtr &, const Any &)"
-- "exceptions": []
-  "name": "_ZN4Ogre12TerrainGroup17loadLegacyTerrainERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEllb"
+- "name": "_ZN4Ogre12TerrainGroup17loadLegacyTerrainERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEllb"
   "params":
   - "name": ""
     "type": "bool "

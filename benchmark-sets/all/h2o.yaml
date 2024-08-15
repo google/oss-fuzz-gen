@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "BrotliEncoderCompress"
+- "name": "BrotliEncoderCompress"
   "params":
   - "name": ""
     "type": "int"
@@ -18,8 +17,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int BrotliEncoderCompress(int, int, BrotliEncoderMode, size_t, const uint8_t *, size_t *, uint8_t *)"
-- "exceptions": []
-  "name": "BrotliEncoderCompressStream"
+- "name": "BrotliEncoderCompressStream"
   "params":
   - "name": ""
     "type": "bool "
@@ -37,8 +35,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int BrotliEncoderCompressStream(BrotliEncoderState *, BrotliEncoderOperation, size_t *, const uint8_t **, size_t *, uint8_t **, size_t *)"
-- "exceptions": []
-  "name": "ptls_init_compressed_certificate"
+- "name": "ptls_init_compressed_certificate"
   "params":
   - "name": ""
     "type": "bool "
@@ -52,8 +49,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int ptls_init_compressed_certificate(ptls_emit_compressed_certificate_t *, ptls_iovec_t *, size_t, ptls_iovec_t)"
-- "exceptions": []
-  "name": "h2o_send_redirect_internal"
+- "name": "h2o_send_redirect_internal"
   "params":
   - "name": ""
     "type": "bool "
@@ -69,8 +65,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void h2o_send_redirect_internal(h2o_req_t *, h2o_iovec_t, const char *, size_t, int)"
-- "exceptions": []
-  "name": "h2o_send_redirect"
+- "name": "h2o_send_redirect"
   "params":
   - "name": ""
     "type": "bool "

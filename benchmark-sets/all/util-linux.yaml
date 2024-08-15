@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "mnt_table_parse_fstab"
+- "name": "mnt_table_parse_fstab"
   "params":
   - "name": "tb"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int mnt_table_parse_fstab(struct libmnt_table *, const char *)"
-- "exceptions": []
-  "name": "mnt_table_is_fs_mounted"
+- "name": "mnt_table_is_fs_mounted"
   "params":
   - "name": "tb"
     "type": "bool "
@@ -17,15 +15,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int mnt_table_is_fs_mounted(struct libmnt_table *, struct libmnt_fs *)"
-- "exceptions": []
-  "name": "mnt_new_table_from_dir"
+- "name": "mnt_new_table_from_dir"
   "params":
   - "name": "dirname"
     "type": "bool "
   "return_type": "void"
   "signature": "struct libmnt_table * mnt_new_table_from_dir(const char *)"
-- "exceptions": []
-  "name": "__mnt_table_parse_mountinfo"
+- "name": "__mnt_table_parse_mountinfo"
   "params":
   - "name": "tb"
     "type": "bool "
@@ -35,8 +31,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int __mnt_table_parse_mountinfo(struct libmnt_table *, const char *, struct libmnt_table *)"
-- "exceptions": []
-  "name": "mnt_table_parse_mtab"
+- "name": "mnt_table_parse_mtab"
   "params":
   - "name": "tb"
     "type": "bool "

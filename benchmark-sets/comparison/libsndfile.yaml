@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "sf_open"
+- "name": "sf_open"
   "params":
   - "name": "path"
     "type": "bool "

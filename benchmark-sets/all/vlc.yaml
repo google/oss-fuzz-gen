@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ExecuteCommand"
+- "name": "ExecuteCommand"
   "params":
   - "name": "p_vlm"
     "type": "bool "
@@ -10,22 +9,19 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ExecuteCommand(vlm_t *, const char *, vlm_message_t **)"
-- "exceptions": []
-  "name": "Preparse"
+- "name": "Preparse"
   "params":
   - "name": "data"
     "type": "bool "
   "return_type": "void"
   "signature": "void * Preparse(void *)"
-- "exceptions": []
-  "name": "libvlc_release"
+- "name": "libvlc_release"
   "params":
   - "name": "p_instance"
     "type": "bool "
   "return_type": "void"
   "signature": "void libvlc_release(libvlc_instance_t *)"
-- "exceptions": []
-  "name": "vlm_New"
+- "name": "vlm_New"
   "params":
   - "name": "libvlc"
     "type": "bool "
@@ -33,8 +29,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "vlm_t * vlm_New(libvlc_int_t *, const char *)"
-- "exceptions": []
-  "name": "libvlc_InternalCleanup"
+- "name": "libvlc_InternalCleanup"
   "params":
   - "name": "p_libvlc"
     "type": "bool "

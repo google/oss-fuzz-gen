@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN8simdjson8westmere25dom_parser_implementation11stage2_nextERNS_3dom8documentE"
+- "name": "_ZN8simdjson8westmere25dom_parser_implementation11stage2_nextERNS_3dom8documentE"
   "params":
   - "name": ""
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typeerror_code simdjson::westmere::dom_parser_implementation::stage2_next(document &)"
-- "exceptions": []
-  "name": "_ZN8simdjson7icelake25dom_parser_implementation5parseEPKhmRNS_3dom8documentE"
+- "name": "_ZN8simdjson7icelake25dom_parser_implementation5parseEPKhmRNS_3dom8documentE"
   "params":
   - "name": ""
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typeerror_code simdjson::icelake::dom_parser_implementation::parse(const uint8_t *, size_t, document &)"
-- "exceptions": []
-  "name": "_ZN8simdjson7icelake25dom_parser_implementation6stage2ERNS_3dom8documentE"
+- "name": "_ZN8simdjson7icelake25dom_parser_implementation6stage2ERNS_3dom8documentE"
   "params":
   - "name": ""
     "type": "bool "
@@ -30,8 +27,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typeerror_code simdjson::icelake::dom_parser_implementation::stage2(document &)"
-- "exceptions": []
-  "name": "_ZN8simdjson8fallback25dom_parser_implementation11stage2_nextERNS_3dom8documentE"
+- "name": "_ZN8simdjson8fallback25dom_parser_implementation11stage2_nextERNS_3dom8documentE"
   "params":
   - "name": ""
     "type": "bool "
@@ -39,8 +35,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typeerror_code simdjson::fallback::dom_parser_implementation::stage2_next(document &)"
-- "exceptions": []
-  "name": "_ZN8simdjson7icelake25dom_parser_implementation11stage2_nextERNS_3dom8documentE"
+- "name": "_ZN8simdjson7icelake25dom_parser_implementation11stage2_nextERNS_3dom8documentE"
   "params":
   - "name": ""
     "type": "bool "

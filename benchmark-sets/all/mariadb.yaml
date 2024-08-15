@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "my_charset_get_by_name"
+- "name": "my_charset_get_by_name"
   "params":
   - "name": ""
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "CHARSET_INFO * my_charset_get_by_name(MY_CHARSET_LOADER *, const char *, uint, myf)"
-- "exceptions": []
-  "name": "get_charset_by_csname"
+- "name": "get_charset_by_csname"
   "params":
   - "name": ""
     "type": "bool "
@@ -23,8 +21,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "CHARSET_INFO * get_charset_by_csname(const char *, uint, myf)"
-- "exceptions": []
-  "name": "resolve_collation"
+- "name": "resolve_collation"
   "params":
   - "name": ""
     "type": "bool "
@@ -36,8 +33,7 @@
     "type": "size_t"
   "return_type": "char"
   "signature": "my_bool resolve_collation(const char *, CHARSET_INFO *, CHARSET_INFO **, myf)"
-- "exceptions": []
-  "name": "resolve_charset"
+- "name": "resolve_charset"
   "params":
   - "name": ""
     "type": "bool "
@@ -49,8 +45,7 @@
     "type": "size_t"
   "return_type": "char"
   "signature": "my_bool resolve_charset(const char *, CHARSET_INFO *, CHARSET_INFO **, myf)"
-- "exceptions": []
-  "name": "get_charset_by_name"
+- "name": "get_charset_by_name"
   "params":
   - "name": ""
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "janet_dobytes"
+- "name": "janet_dobytes"
   "params":
   - "name": "env"
     "type": "bool "
@@ -14,15 +13,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int janet_dobytes(JanetTable *, const uint8_t *, int32_t, const char *, Janet *)"
-- "exceptions": []
-  "name": "janet_loop_fiber"
+- "name": "janet_loop_fiber"
   "params":
   - "name": "fiber"
     "type": "bool "
   "return_type": "int"
   "signature": "int janet_loop_fiber(JanetFiber *)"
-- "exceptions": []
-  "name": "janet_dostring"
+- "name": "janet_dostring"
   "params":
   - "name": "env"
     "type": "bool "

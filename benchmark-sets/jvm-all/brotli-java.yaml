@@ -1,8 +1,5 @@
 "functions":
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.brotli.dec.BrotliInputStream].<init>(java.io.InputStream,int)"
+- "name": "[org.brotli.dec.BrotliInputStream].<init>(java.io.InputStream,int)"
   "params":
   - "name": "arg0"
     "type": "java.io.InputStream"
@@ -10,19 +7,13 @@
     "type": "int"
   "return_type": "org.brotli.dec.BrotliInputStream"
   "signature": "[org.brotli.dec.BrotliInputStream].<init>(java.io.InputStream,int)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.brotli.dec.BrotliInputStream].<init>(java.io.InputStream)"
+- "name": "[org.brotli.dec.BrotliInputStream].<init>(java.io.InputStream)"
   "params":
   - "name": "arg0"
     "type": "java.io.InputStream"
   "return_type": "org.brotli.dec.BrotliInputStream"
   "signature": "[org.brotli.dec.BrotliInputStream].<init>(java.io.InputStream)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.brotli.dec.BrotliInputStream].read(byte[],int,int)"
+- "name": "[org.brotli.dec.BrotliInputStream].read(byte[],int,int)"
   "params":
   - "name": "arg0"
     "type": "byte[]"

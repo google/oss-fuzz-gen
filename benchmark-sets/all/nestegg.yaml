@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "nestegg_track_seek"
+- "name": "nestegg_track_seek"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int nestegg_track_seek(nestegg *, unsigned int, uint64_t)"
-- "exceptions": []
-  "name": "nestegg_get_cue_point"
+- "name": "nestegg_get_cue_point"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -27,8 +25,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int nestegg_get_cue_point(nestegg *, unsigned int, int64_t, int64_t *, int64_t *, uint64_t *)"
-- "exceptions": []
-  "name": "nestegg_offset_seek"
+- "name": "nestegg_offset_seek"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -36,15 +33,13 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int nestegg_offset_seek(nestegg *, uint64_t)"
-- "exceptions": []
-  "name": "nestegg_read_reset"
+- "name": "nestegg_read_reset"
   "params":
   - "name": "ctx"
     "type": "bool "
   "return_type": "int"
   "signature": "int nestegg_read_reset(nestegg *)"
-- "exceptions": []
-  "name": "nestegg_sniff"
+- "name": "nestegg_sniff"
   "params":
   - "name": "buffer"
     "type": "bool "

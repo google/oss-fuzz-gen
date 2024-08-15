@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN3ada6parser9parse_urlINS_3urlEEET_NSt3__117basic_string_viewIcNS4_11char_traitsIcEEEEPKS3_"
+- "name": "_ZN3ada6parser9parse_urlINS_3urlEEET_NSt3__117basic_string_viewIcNS4_11char_traitsIcEEEEPKS3_"
   "params":
   - "name": "user_input"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct url ada::url ada::parser::parse_url<ada::parse_url<ada::url>(string_view, const struct url *)"
-- "exceptions": []
-  "name": "ada_can_parse_with_base"
+- "name": "ada_can_parse_with_base"
   "params":
   - "name": "input"
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "size_t"
   "return_type": "bool"
   "signature": "bool ada_can_parse_with_base(const char *, size_t, const char *, size_t)"
-- "exceptions": []
-  "name": "ada_idna_to_ascii"
+- "name": "ada_idna_to_ascii"
   "params":
   - "name": "input"
     "type": "bool "
@@ -34,8 +31,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "struct ada_owned_string ada_idna_to_ascii(const char *, size_t)"
-- "exceptions": []
-  "name": "ada_parse_with_base"
+- "name": "ada_parse_with_base"
   "params":
   - "name": "input"
     "type": "bool "
@@ -47,8 +43,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "ada_url ada_parse_with_base(const char *, size_t, const char *, size_t)"
-- "exceptions": []
-  "name": "_ZN3ada6parser9parse_urlINS_14url_aggregatorEEET_NSt3__117basic_string_viewIcNS4_11char_traitsIcEEEEPKS3_"
+- "name": "_ZN3ada6parser9parse_urlINS_14url_aggregatorEEET_NSt3__117basic_string_viewIcNS4_11char_traitsIcEEEEPKS3_"
   "params":
   - "name": "user_input"
     "type": "bool "

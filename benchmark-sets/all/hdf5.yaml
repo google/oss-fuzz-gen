@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "H5D__get_space"
+- "name": "H5D__get_space"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "size_t"
   "signature": "hid_t H5D__get_space(const H5D_t *)"
-- "exceptions": []
-  "name": "H5D__write"
+- "name": "H5D__write"
   "params":
   - "name": ""
     "type": "size_t"
@@ -15,8 +13,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "herr_t H5D__write(size_t, H5D_dset_io_info_t *)"
-- "exceptions": []
-  "name": "H5D__read"
+- "name": "H5D__read"
   "params":
   - "name": ""
     "type": "size_t"
@@ -24,15 +21,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "herr_t H5D__read(size_t, H5D_dset_io_info_t *)"
-- "exceptions": []
-  "name": "H5D__virtual_set_extent_unlim"
+- "name": "H5D__virtual_set_extent_unlim"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "int"
   "signature": "herr_t H5D__virtual_set_extent_unlim(const H5D_t *)"
-- "exceptions": []
-  "name": "H5D__chunk_copy"
+- "name": "H5D__chunk_copy"
   "params":
   - "name": ""
     "type": "bool "

@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN21ZMQCollectorInterface13collect_flowsEv"
+- "name": "_ZN21ZMQCollectorInterface13collect_flowsEv"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "void ZMQCollectorInterface::collect_flows()"
-- "exceptions": []
-  "name": "_ZN18ZMQParserInterface12parseTLVFlowEPKcijjPv"
+- "name": "_ZN18ZMQParserInterface12parseTLVFlowEPKcijjPv"
   "params":
   - "name": "this"
     "type": "bool "
@@ -23,8 +21,7 @@
     "type": "bool "
   "return_type": "char"
   "signature": "u_int8_t ZMQParserInterface::parseTLVFlow(const char *, int, u_int32_t, u_int32_t, void *)"
-- "exceptions": []
-  "name": "_ZN18ZMQParserInterface19parseSingleJSONFlowEP11json_objectj"
+- "name": "_ZN18ZMQParserInterface19parseSingleJSONFlowEP11json_objectj"
   "params":
   - "name": "this"
     "type": "bool "
@@ -34,8 +31,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int ZMQParserInterface::parseSingleJSONFlow(json_object *, u_int32_t)"
-- "exceptions": []
-  "name": "_ZN13PcapInterface17processNextPacketEP4pcapii"
+- "name": "_ZN13PcapInterface17processNextPacketEP4pcapii"
   "params":
   - "name": "this"
     "type": "bool "
@@ -47,8 +43,7 @@
     "type": "int"
   "return_type": "bool"
   "signature": "bool PcapInterface::processNextPacket(pcap_t *, int32_t, int)"
-- "exceptions": []
-  "name": "_ZN18ZMQParserInterface18parseSingleTLVFlowEP15ndpi_serializerj"
+- "name": "_ZN18ZMQParserInterface18parseSingleTLVFlowEP15ndpi_serializerj"
   "params":
   - "name": "this"
     "type": "bool "

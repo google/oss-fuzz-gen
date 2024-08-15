@@ -1,23 +1,17 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.yaml.snakeyaml.constructor.Constructor$ConstructScalar].construct(org.yaml.snakeyaml.nodes.Node)"
+- "name": "[org.yaml.snakeyaml.constructor.Constructor$ConstructScalar].construct(org.yaml.snakeyaml.nodes.Node)"
   "params":
   - "name": "arg0"
     "type": "org.yaml.snakeyaml.Node"
   "return_type": "java.lang.Object"
   "signature": "[org.yaml.snakeyaml.constructor.Constructor$ConstructScalar].construct(org.yaml.snakeyaml.nodes.Node)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.yaml.snakeyaml.constructor.Constructor$ConstructYamlObject].construct(org.yaml.snakeyaml.nodes.Node)"
+- "name": "[org.yaml.snakeyaml.constructor.Constructor$ConstructYamlObject].construct(org.yaml.snakeyaml.nodes.Node)"
   "params":
   - "name": "arg0"
     "type": "org.yaml.snakeyaml.Node"
   "return_type": "java.lang.Object"
   "signature": "[org.yaml.snakeyaml.constructor.Constructor$ConstructYamlObject].construct(org.yaml.snakeyaml.nodes.Node)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.yaml.snakeyaml.constructor.Constructor$ConstructYamlObject].construct2ndStep(org.yaml.snakeyaml.nodes.Node,java.lang.Object)"
+- "name": "[org.yaml.snakeyaml.constructor.Constructor$ConstructYamlObject].construct2ndStep(org.yaml.snakeyaml.nodes.Node,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "org.yaml.snakeyaml.Node"
@@ -25,9 +19,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[org.yaml.snakeyaml.constructor.Constructor$ConstructYamlObject].construct2ndStep(org.yaml.snakeyaml.nodes.Node,java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.yaml.snakeyaml.extensions.compactnotation.CompactConstructor$ConstructCompactObject].construct2ndStep(org.yaml.snakeyaml.nodes.Node,java.lang.Object)"
+- "name": "[org.yaml.snakeyaml.extensions.compactnotation.CompactConstructor$ConstructCompactObject].construct2ndStep(org.yaml.snakeyaml.nodes.Node,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "org.yaml.snakeyaml.Node"
@@ -35,9 +27,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[org.yaml.snakeyaml.extensions.compactnotation.CompactConstructor$ConstructCompactObject].construct2ndStep(org.yaml.snakeyaml.nodes.Node,java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.yaml.snakeyaml.constructor.Constructor$ConstructMapping].construct2ndStep(org.yaml.snakeyaml.nodes.Node,java.lang.Object)"
+- "name": "[org.yaml.snakeyaml.constructor.Constructor$ConstructMapping].construct2ndStep(org.yaml.snakeyaml.nodes.Node,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "org.yaml.snakeyaml.Node"
@@ -45,9 +35,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[org.yaml.snakeyaml.constructor.Constructor$ConstructMapping].construct2ndStep(org.yaml.snakeyaml.nodes.Node,java.lang.Object)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.yaml.snakeyaml.constructor.Constructor$ConstructMapping].construct(org.yaml.snakeyaml.nodes.Node)"
+- "name": "[org.yaml.snakeyaml.constructor.Constructor$ConstructMapping].construct(org.yaml.snakeyaml.nodes.Node)"
   "params":
   - "name": "arg0"
     "type": "org.yaml.snakeyaml.Node"

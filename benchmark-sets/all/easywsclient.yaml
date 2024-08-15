@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZZN12_GLOBAL__N_114_RealWebSocket9_dispatchERN12easywsclient12Callback_ImpEEN15CallbackAdapterclERKNSt3__16vectorIhNS5_9allocatorIhEEEE"
+- "name": "_ZZN12_GLOBAL__N_114_RealWebSocket9_dispatchERN12easywsclient12Callback_ImpEEN15CallbackAdapterclERKNSt3__16vectorIhNS5_9allocatorIhEEEE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void (anonymous namespace)::_RealWebSocket::operator()(struct CallbackAdapter *, const vector<unsigned char, std::__1::allocator<unsigned char> > &)"
-- "exceptions": []
-  "name": "_ZN12_GLOBAL__N_115_DummyWebSocket9_dispatchERN12easywsclient12Callback_ImpE"
+- "name": "_ZN12_GLOBAL__N_115_DummyWebSocket9_dispatchERN12easywsclient12Callback_ImpE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void (anonymous namespace)::_DummyWebSocket::_dispatch(struct Callback_Imp &)"
-- "exceptions": []
-  "name": "_ZN12_GLOBAL__N_114_RealWebSocket9_dispatchERN12easywsclient12Callback_ImpE"
+- "name": "_ZN12_GLOBAL__N_114_RealWebSocket9_dispatchERN12easywsclient12Callback_ImpE"
   "params":
   - "name": "this"
     "type": "bool "

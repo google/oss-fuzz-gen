@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "libesedb_index_get_record"
+- "name": "libesedb_index_get_record"
   "params":
   - "name": "index"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int libesedb_index_get_record(libesedb_index_t *, int, libesedb_record_t **, libcerror_error_t **)"
-- "exceptions": []
-  "name": "libewf_handle_open"
+- "name": "libewf_handle_open"
   "params":
   - "name": "handle"
     "type": "bool "
@@ -27,8 +25,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int libewf_handle_open(libewf_handle_t *, const char **, int, int, libcerror_error_t **)"
-- "exceptions": []
-  "name": "libfsapfs_volume_get_file_entry_by_utf16_path"
+- "name": "libfsapfs_volume_get_file_entry_by_utf16_path"
   "params":
   - "name": "volume"
     "type": "bool "
@@ -42,8 +39,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int libfsapfs_volume_get_file_entry_by_utf16_path(libfsapfs_volume_t *, const uint16_t *, size_t, libfsapfs_file_entry_t **, libcerror_error_t **)"
-- "exceptions": []
-  "name": "libscca_file_open"
+- "name": "libscca_file_open"
   "params":
   - "name": "file"
     "type": "bool "
@@ -55,8 +51,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int libscca_file_open(libscca_file_t *, const char *, int, libcerror_error_t **)"
-- "exceptions": []
-  "name": "libwrc_resource_get_value_by_language_identifier"
+- "name": "libwrc_resource_get_value_by_language_identifier"
   "params":
   - "name": "resource"
     "type": "bool "
