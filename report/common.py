@@ -321,7 +321,7 @@ class Results:
     fixed_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
     triage_dir = os.path.join(fixed_dir, f'{sample}-triage')
     if not os.path.exists(triage_dir):
-      return Triage[result, triager_prompt]
+      return Triage(result, triager_prompt)
 
     for name in os.listdir(triage_dir):
       if name == 'prompt.txt':
@@ -334,9 +334,9 @@ class Results:
       if name.endswith('.txt') and name != 'prompt.txt':
         triage_path = os.path.join(triage_dir, name)
         with open(triage_path) as f:
-          return f.read()
+          result = f.read()
 
-    return Triage[result, triager_prompt]
+    return Triage(result, triager_prompt)
 
   def get_targets(self, benchmark: str, sample: str) -> list[Target]:
     """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
