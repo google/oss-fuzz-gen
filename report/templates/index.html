@@ -64,7 +64,7 @@ td .signature {
 
 </style>
 
-<table class="sortable-table">
+<table class="sortable-table" id="benchmark-table">
     <thead>
         <tr>
             <th></th>
@@ -99,7 +99,7 @@ td .signature {
 </table>
 
 <h2>Project summary</h2>
-<table class="sortable-table">
+<table class="sortable-table" id="summary-table">
     <thead>
         <tr>
             <th></th>
@@ -168,33 +168,48 @@ td .signature {
 
 <script>
 (function() {
-    const headers = Array.from(document.querySelectorAll('table.sortable-table th'));
-    headers.map((th, colindex) => th.addEventListener('click', () => {
-        const sortAsc = th.dataset.sorted != "asc";
-        const sortNumber = th.dataset.sortNumber != undefined;
+    tables = Array.from(document.querySelectorAll('table.sortable-table'));
+    for (let di = 0; di < tables.length; di++) {
+        table_element = tables[di];
+        const table_id_name = table_element.id;
+        headers = Array.from(table_element.querySelectorAll('th'));
+        headers.map(
+            (th, colindex) => th.addEventListener('click', () => {
+                const sortAsc = th.dataset.sorted != "asc";
+                const sortNumber = th.dataset.sortNumber != undefined;
 
-        // Move sorted data attribute to the right column
-        headers.map(innerTH => delete innerTH.dataset.sorted);
-        th.dataset.sorted = sortAsc ? "asc" : "desc";
+                // Move sorted data attribute to the right column
+                headers.map(innerTH => delete innerTH.dataset.sorted);
+                th.dataset.sorted = sortAsc ? "asc" : "desc";
 
-        const tbody = document.querySelector('table.sortable-table tbody');
-        const rows = Array.from(tbody.children);
-        rows.sort((a, b) => {
-            let [valueA, valueB] = [a.children[colindex].dataset.sortValue, b.children[colindex].dataset.sortValue];
-            // Swap the values for descending.
-            if (!sortAsc) {
-                [valueB, valueA] = [valueA, valueB];
-            }
+                // Find the relevant table and sort it accordingly.
+                tables2 = Array.from(document.querySelectorAll('table.sortable-table'));
+                for (let dix = 0; dix < tables2.length; dix++) {
+                    the_table = tables2[dix];
+                    if (the_table.id == table_id_name) {
+                        const tbody = the_table.querySelector('tbody');
+                        const rows = Array.from(tbody.children);
+                        rows.sort((a, b) => {
+                            let [valueA, valueB] = [a.children[colindex].dataset.sortValue, b.children[colindex].dataset.sortValue];
+                            // Swap the values for descending.
+                            if (!sortAsc) {
+                                [valueB, valueA] = [valueA, valueB];
+                            }
 
-            if (sortNumber) {
-                return Number(valueB) - Number(valueA);
-            }
-            return valueA.localeCompare(valueB);
-        });
-        tbody.replaceChildren(...rows);
-        // Rewrite the index column
-        rows.map((r, i) => r.children[0].innerText = i+1);
-    }));
+                            if (sortNumber) {
+                                return Number(valueB) - Number(valueA);
+                            }
+                            return valueA.localeCompare(valueB);
+                        });
+                        tbody.replaceChildren(...rows);
+                        // Rewrite the index column
+                        rows.map((r, i) => r.children[0].innerText = i);
+                    }
+                }
+            }, )
+        );
+
+    }
 })();
 </script>
 {% endblock %}
