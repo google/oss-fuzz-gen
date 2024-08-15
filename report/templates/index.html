@@ -169,8 +169,8 @@ td .signature {
 <script>
 (function() {
     tables = Array.from(document.querySelectorAll('table.sortable-table'));
-    for (let di = 0; di < tables.length; di++) {
-        table_element = tables[di];
+    for (let tbl_idx1 = 0; tbl_idx1 < tables.length; tbl_idx1++) {
+        table_element = tables[tbl_idx1];
         const table_id_name = table_element.id;
         headers = Array.from(table_element.querySelectorAll('th'));
         headers.map(
@@ -183,9 +183,9 @@ td .signature {
                 th.dataset.sorted = sortAsc ? "asc" : "desc";
 
                 // Find the relevant table and sort it accordingly.
-                tables2 = Array.from(document.querySelectorAll('table.sortable-table'));
-                for (let dix = 0; dix < tables2.length; dix++) {
-                    the_table = tables2[dix];
+                inner_tables = Array.from(document.querySelectorAll('table.sortable-table'));
+                for (let tbl_idx2 = 0; tbl_idx2 < inner_tables.length; tbl_idx2++) {
+                    the_table = inner_tables[tbl_idx2];
                     if (the_table.id == table_id_name) {
                         const tbody = the_table.querySelector('tbody');
                         const rows = Array.from(tbody.children);
