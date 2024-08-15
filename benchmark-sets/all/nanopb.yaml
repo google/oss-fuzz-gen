@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "pb_get_encoded_size"
+- "name": "pb_get_encoded_size"
   "params":
   - "name": "size"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool pb_get_encoded_size(size_t *, const pb_msgdesc_t *, const void *)"
-- "exceptions": []
-  "name": "pb_encode_ex"
+- "name": "pb_encode_ex"
   "params":
   - "name": "stream"
     "type": "bool "

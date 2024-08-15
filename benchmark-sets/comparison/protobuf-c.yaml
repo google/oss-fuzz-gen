@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "protobuf_c_buffer_simple_append"
+- "name": "protobuf_c_buffer_simple_append"
   "params":
   - "name": "buffer"
     "type": "bool "

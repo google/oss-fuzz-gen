@@ -1,19 +1,11 @@
 "functions":
-- "exceptions":
-  - "org.apache.commons.imaging.ImagingException"
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.apache.commons.imaging.icc.IccProfileInfo].toString(java.lang.String)"
+- "name": "[org.apache.commons.imaging.icc.IccProfileInfo].toString(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.apache.commons.imaging.icc.IccProfileInfo].toString(java.lang.String)"
-- "exceptions":
-  - "org.apache.commons.imaging.ImagingException"
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.apache.commons.imaging.icc.IccTag].dump(java.io.PrintWriter,java.lang.String)"
+- "name": "[org.apache.commons.imaging.icc.IccTag].dump(java.io.PrintWriter,java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.io.PrintWriter"
@@ -21,34 +13,25 @@
     "type": "java.lang.String"
   "return_type": "void"
   "signature": "[org.apache.commons.imaging.icc.IccTag].dump(java.io.PrintWriter,java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.imaging.common.GenericImageMetadata].toString(java.lang.String)"
+- "name": "[org.apache.commons.imaging.common.GenericImageMetadata].toString(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.apache.commons.imaging.common.GenericImageMetadata].toString(java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.imaging.formats.jpeg.JpegImageMetadata].toString(java.lang.String)"
+- "name": "[org.apache.commons.imaging.formats.jpeg.JpegImageMetadata].toString(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.apache.commons.imaging.formats.jpeg.JpegImageMetadata].toString(java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.imaging.formats.tiff.TiffImageMetadata$Directory].toString(java.lang.String)"
+- "name": "[org.apache.commons.imaging.formats.tiff.TiffImageMetadata$Directory].toString(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.apache.commons.imaging.formats.tiff.TiffImageMetadata$Directory].toString(java.lang.String)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.apache.commons.imaging.formats.jpeg.segments.DhtSegment].<init>(int,int,java.io.InputStream)"
+- "name": "[org.apache.commons.imaging.formats.jpeg.segments.DhtSegment].<init>(int,int,java.io.InputStream)"
   "params":
   - "name": "arg0"
     "type": "int"

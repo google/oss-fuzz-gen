@@ -1,8 +1,5 @@
 "functions":
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.apache.commons.csv.CSVParser].<init>(java.io.Reader,org.apache.commons.csv.CSVFormat,long,long)"
+- "name": "[org.apache.commons.csv.CSVParser].<init>(java.io.Reader,org.apache.commons.csv.CSVFormat,long,long)"
   "params":
   - "name": "arg0"
     "type": "java.io.Reader"
@@ -14,10 +11,7 @@
     "type": "long"
   "return_type": "org.apache.commons.csv.CSVParser"
   "signature": "[org.apache.commons.csv.CSVParser].<init>(java.io.Reader,org.apache.commons.csv.CSVFormat,long,long)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.apache.commons.csv.CSVPrinter].<init>(java.lang.Appendable,org.apache.commons.csv.CSVFormat)"
+- "name": "[org.apache.commons.csv.CSVPrinter].<init>(java.lang.Appendable,org.apache.commons.csv.CSVFormat)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Appendable"
@@ -25,34 +19,25 @@
     "type": "org.apache.commons.csv.CSVFormat"
   "return_type": "org.apache.commons.csv.CSVPrinter"
   "signature": "[org.apache.commons.csv.CSVPrinter].<init>(java.lang.Appendable,org.apache.commons.csv.CSVFormat)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.apache.commons.csv.CSVPrinter].close(boolean)"
+- "name": "[org.apache.commons.csv.CSVPrinter].close(boolean)"
   "params":
   - "name": "arg0"
     "type": "boolean"
   "return_type": "void"
   "signature": "[org.apache.commons.csv.CSVPrinter].close(boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(char)"
+- "name": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(char)"
   "params":
   - "name": "arg0"
     "type": "char"
   "return_type": "org.apache.commons.csv.CSVFormat$Builder"
   "signature": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(char)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.csv.CSVFormat$Builder].setDelimiter(char)"
+- "name": "[org.apache.commons.csv.CSVFormat$Builder].setDelimiter(char)"
   "params":
   - "name": "arg0"
     "type": "char"
   "return_type": "org.apache.commons.csv.CSVFormat$Builder"
   "signature": "[org.apache.commons.csv.CSVFormat$Builder].setDelimiter(char)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(java.lang.Character)"
+- "name": "[org.apache.commons.csv.CSVFormat$Builder].setEscape(java.lang.Character)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Character"

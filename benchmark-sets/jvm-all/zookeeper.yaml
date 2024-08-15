@@ -1,16 +1,11 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.zookeeper.server.FinalRequestProcessor].processRequest(org.apache.zookeeper.server.Request)"
+- "name": "[org.apache.zookeeper.server.FinalRequestProcessor].processRequest(org.apache.zookeeper.server.Request)"
   "params":
   - "name": "arg0"
     "type": "org.apache.zookeeper.server.Request"
   "return_type": "void"
   "signature": "[org.apache.zookeeper.server.FinalRequestProcessor].processRequest(org.apache.zookeeper.server.Request)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.apache.zookeeper.server.persistence.FileSnap].serialize(org.apache.zookeeper.server.DataTree,java.util.Map<Long,Integer>,java.io.File,boolean)"
+- "name": "[org.apache.zookeeper.server.persistence.FileSnap].serialize(org.apache.zookeeper.server.DataTree,java.util.Map<Long,Integer>,java.io.File,boolean)"
   "params":
   - "name": "arg0"
     "type": "org.apache.zookeeper.server.DataTree"
@@ -22,9 +17,7 @@
     "type": "boolean"
   "return_type": "void"
   "signature": "[org.apache.zookeeper.server.persistence.FileSnap].serialize(org.apache.zookeeper.server.DataTree,java.util.Map<Long,Integer>,java.io.File,boolean)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.apache.zookeeper.common.IOUtils].cleanup(org.slf4j.Logger,java.io.Closeable[])"
+- "name": "[org.apache.zookeeper.common.IOUtils].cleanup(org.slf4j.Logger,java.io.Closeable[])"
   "params":
   - "name": "arg0"
     "type": "org.slf4j.Logger"
@@ -32,10 +25,7 @@
     "type": "java.io.Closeable[]"
   "return_type": "void"
   "signature": "[org.apache.zookeeper.common.IOUtils].cleanup(org.slf4j.Logger,java.io.Closeable[])"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": true
-  "name": "[org.apache.zookeeper.server.persistence.SnapStream].getOutputStream(java.io.File,boolean)"
+- "name": "[org.apache.zookeeper.server.persistence.SnapStream].getOutputStream(java.io.File,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.io.File"
@@ -43,10 +33,7 @@
     "type": "boolean"
   "return_type": "java.util.zip.CheckedOutputStream"
   "signature": "[org.apache.zookeeper.server.persistence.SnapStream].getOutputStream(java.io.File,boolean)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": true
-  "name": "[org.apache.commons.io.IOUtils].close(java.io.Closeable,org.apache.commons.io.function.IOConsumer)"
+- "name": "[org.apache.commons.io.IOUtils].close(java.io.Closeable,org.apache.commons.io.function.IOConsumer)"
   "params":
   - "name": "arg0"
     "type": "java.io.Closeable"
@@ -54,9 +41,7 @@
     "type": "org.apache.commons.io.function.IOConsumer"
   "return_type": "void"
   "signature": "[org.apache.commons.io.IOUtils].close(java.io.Closeable,org.apache.commons.io.function.IOConsumer)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.apache.commons.io.IOUtils].closeQuietly(java.io.Closeable,java.util.function.Consumer)"
+- "name": "[org.apache.commons.io.IOUtils].closeQuietly(java.io.Closeable,java.util.function.Consumer)"
   "params":
   - "name": "arg0"
     "type": "java.io.Closeable"

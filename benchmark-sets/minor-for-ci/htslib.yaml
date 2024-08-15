@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "bam_index_build"
+- "name": "bam_index_build"
   "params":
   - "name": "fn"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int bam_index_build(const char *, int)"
-- "exceptions": []
-  "name": "sam_index_build2"
+- "name": "sam_index_build2"
   "params":
   - "name": "fn"
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int sam_index_build2(const char *, const char *, int)"
-- "exceptions": []
-  "name": "sam_index_build"
+- "name": "sam_index_build"
   "params":
   - "name": "fn"
     "type": "bool "
@@ -28,8 +25,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int sam_index_build(const char *, int)"
-- "exceptions": []
-  "name": "sam_index_build3"
+- "name": "sam_index_build3"
   "params":
   - "name": "fn"
     "type": "bool "
@@ -41,8 +37,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int sam_index_build3(const char *, const char *, int, int)"
-- "exceptions": []
-  "name": "bcf_index_build"
+- "name": "bcf_index_build"
   "params":
   - "name": "fn"
     "type": "bool "
@@ -50,8 +45,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int bcf_index_build(const char *, int)"
-- "exceptions": []
-  "name": "hts_parse_region"
+- "name": "hts_parse_region"
   "params":
   - "name": "s"
     "type": "bool "
@@ -69,8 +63,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "const char * hts_parse_region(const char *, int *, hts_pos_t *, hts_pos_t *, hts_name2id_f, void *, int)"
-- "exceptions": []
-  "name": "hts_parse_decimal"
+- "name": "hts_parse_decimal"
   "params":
   - "name": "str"
     "type": "bool "
@@ -80,8 +73,7 @@
     "type": "int"
   "return_type": "size_t"
   "signature": "long long hts_parse_decimal(const char *, char **, int)"
-- "exceptions": []
-  "name": "hts_parse_reg"
+- "name": "hts_parse_reg"
   "params":
   - "name": "s"
     "type": "bool "
@@ -91,8 +83,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "const char * hts_parse_reg(const char *, int *, int *)"
-- "exceptions": []
-  "name": "hfile_list_plugins"
+- "name": "hfile_list_plugins"
   "params":
   - "name": "plist"
     "type": "bool "
@@ -100,8 +91,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int hfile_list_plugins(const char **, int *)"
-- "exceptions": []
-  "name": "hts_idx_load"
+- "name": "hts_idx_load"
   "params":
   - "name": "fn"
     "type": "bool "
@@ -109,15 +99,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "hts_idx_t * hts_idx_load(const char *, int)"
-- "exceptions": []
-  "name": "hts_file_type"
+- "name": "hts_file_type"
   "params":
   - "name": "fname"
     "type": "bool "
   "return_type": "int"
   "signature": "int hts_file_type(const char *)"
-- "exceptions": []
-  "name": "sam_hdr_remove_lines"
+- "name": "sam_hdr_remove_lines"
   "params":
   - "name": "bh"
     "type": "bool "

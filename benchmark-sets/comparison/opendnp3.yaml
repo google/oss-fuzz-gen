@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN8opendnp320FreezeRequestHandler13ProcessHeaderERKNS_11RangeHeaderE"
+- "name": "_ZN8opendnp320FreezeRequestHandler13ProcessHeaderERKNS_11RangeHeaderE"
   "params":
   - "name": "this"
     "type": "bool "

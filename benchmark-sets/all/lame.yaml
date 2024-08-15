@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN11EncoderCoreIlLb1EE6encodeERNSt3__16vectorIlNS1_9allocatorIlEEEEPhmb"
+- "name": "_ZN11EncoderCoreIlLb1EE6encodeERNSt3__16vectorIlNS1_9allocatorIlEEEEPhmb"
   "params":
   - "name": "this"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "bool"
   "return_type": "int"
   "signature": "int EncoderCore<long, true>::encode(EncoderCore<short, false> *, vector<short, std::__1::allocator<short> > &, uint8_t *, const size_t, const bool)"
-- "exceptions": []
-  "name": "lame_encode_finish"
+- "name": "lame_encode_finish"
   "params":
   - "name": "gfp"
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int lame_encode_finish(lame_global_flags *, unsigned char *, int)"
-- "exceptions": []
-  "name": "_ZN11EncoderCoreIdLb1EE6encodeERNSt3__16vectorIdNS1_9allocatorIdEEEEPhmb"
+- "name": "_ZN11EncoderCoreIdLb1EE6encodeERNSt3__16vectorIdNS1_9allocatorIdEEEEPhmb"
   "params":
   - "name": "this"
     "type": "bool "
@@ -40,8 +37,7 @@
     "type": "bool"
   "return_type": "int"
   "signature": "int EncoderCore<double, true>::encode(EncoderCore<short, false> *, vector<short, std::__1::allocator<short> > &, uint8_t *, const size_t, const bool)"
-- "exceptions": []
-  "name": "_ZN11EncoderCoreIfLb1EE6encodeERNSt3__16vectorIfNS1_9allocatorIfEEEEPhmb"
+- "name": "_ZN11EncoderCoreIfLb1EE6encodeERNSt3__16vectorIfNS1_9allocatorIfEEEEPhmb"
   "params":
   - "name": "this"
     "type": "bool "
@@ -55,8 +51,7 @@
     "type": "bool"
   "return_type": "int"
   "signature": "int EncoderCore<float, true>::encode(EncoderCore<short, false> *, vector<short, std::__1::allocator<short> > &, uint8_t *, const size_t, const bool)"
-- "exceptions": []
-  "name": "id3tag_set_fieldvalue_ucs2"
+- "name": "id3tag_set_fieldvalue_ucs2"
   "params":
   - "name": "gfp"
     "type": "bool "

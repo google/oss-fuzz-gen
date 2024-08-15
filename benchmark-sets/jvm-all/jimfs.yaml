@@ -1,8 +1,5 @@
 "functions":
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].newByteChannel(java.nio.file.Path,java.util.Set,java.nio.file.attribute.FileAttribute[])"
+- "name": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].newByteChannel(java.nio.file.Path,java.util.Set,java.nio.file.attribute.FileAttribute[])"
   "params":
   - "name": "arg0"
     "type": "java.nio.file.Path"
@@ -12,10 +9,7 @@
     "type": "java.nio.file.attribute.FileAttribute[]"
   "return_type": "java.nio.channels.SeekableByteChannel"
   "signature": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].newByteChannel(java.nio.file.Path,java.util.Set,java.nio.file.attribute.FileAttribute[])"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].readAttributes(java.nio.file.Path,java.lang.Class,java.nio.file.LinkOption[])"
+- "name": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].readAttributes(java.nio.file.Path,java.lang.Class,java.nio.file.LinkOption[])"
   "params":
   - "name": "arg0"
     "type": "java.nio.file.Path"
@@ -25,9 +19,7 @@
     "type": "java.nio.file.LinkOption[]"
   "return_type": "java.nio.file.attribute.BasicFileAttributes"
   "signature": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].readAttributes(java.nio.file.Path,java.lang.Class,java.nio.file.LinkOption[])"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.google.common.jimfs.Configuration$Builder].setAttributeViews(java.lang.String,java.lang.String[])"
+- "name": "[com.google.common.jimfs.Configuration$Builder].setAttributeViews(java.lang.String,java.lang.String[])"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -35,10 +27,7 @@
     "type": "java.lang.String[]"
   "return_type": "com.google.common.jimfs.Configuration$Builder"
   "signature": "[com.google.common.jimfs.Configuration$Builder].setAttributeViews(java.lang.String,java.lang.String[])"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].newDirectoryStream(java.nio.file.Path,java.nio.file.DirectoryStream$Filter)"
+- "name": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].newDirectoryStream(java.nio.file.Path,java.nio.file.DirectoryStream$Filter)"
   "params":
   - "name": "arg0"
     "type": "java.nio.file.Path"
@@ -46,10 +35,7 @@
     "type": "java.nio.file.DirectoryStream$Filter"
   "return_type": "java.nio.file.DirectoryStream"
   "signature": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].newDirectoryStream(java.nio.file.Path,java.nio.file.DirectoryStream$Filter)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].createDirectory(java.nio.file.Path,java.nio.file.attribute.FileAttribute[])"
+- "name": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].createDirectory(java.nio.file.Path,java.nio.file.attribute.FileAttribute[])"
   "params":
   - "name": "arg0"
     "type": "java.nio.file.Path"
@@ -57,9 +43,7 @@
     "type": "java.nio.file.attribute.FileAttribute[]"
   "return_type": "void"
   "signature": "[com.google.common.jimfs.SystemJimfsFileSystemProvider].createDirectory(java.nio.file.Path,java.nio.file.attribute.FileAttribute[])"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[com.google.common.jimfs.PathType$ParseResult].<init>(java.lang.String,java.lang.Iterable)"
+- "name": "[com.google.common.jimfs.PathType$ParseResult].<init>(java.lang.String,java.lang.Iterable)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"

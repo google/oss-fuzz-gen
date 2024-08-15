@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "fribidi_get_bidi_type"
+- "name": "fribidi_get_bidi_type"
   "params":
   - "name": "ch"
     "type": "int"

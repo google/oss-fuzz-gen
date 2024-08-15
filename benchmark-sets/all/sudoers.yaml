@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "sudo_mkstemps"
+- "name": "sudo_mkstemps"
   "params":
   - "name": "path"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int sudo_mkstemps(char *, int)"
-- "exceptions": []
-  "name": "sudo_make_grlist_item"
+- "name": "sudo_make_grlist_item"
   "params":
   - "name": "pw"
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct cache_item * sudo_make_grlist_item(const struct passwd *, const char **)"
-- "exceptions": []
-  "name": "sudo_set_grlist"
+- "name": "sudo_set_grlist"
   "params":
   - "name": "pw"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int sudo_set_grlist(struct passwd *, const char **)"
-- "exceptions": []
-  "name": "sudo_mkdtempat"
+- "name": "sudo_mkdtempat"
   "params":
   - "name": "dfd"
     "type": "int"
@@ -35,8 +31,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "char * sudo_mkdtempat(int, char *)"
-- "exceptions": []
-  "name": "free_cmndspec"
+- "name": "free_cmndspec"
   "params":
   - "name": "cs"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ov_pcm_seek_page_lap"
+- "name": "ov_pcm_seek_page_lap"
   "params":
   - "name": "vf"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int ov_pcm_seek_page_lap(OggVorbis_File *, ogg_int64_t)"
-- "exceptions": []
-  "name": "ov_pcm_seek_lap"
+- "name": "ov_pcm_seek_lap"
   "params":
   - "name": "vf"
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int ov_pcm_seek_lap(OggVorbis_File *, ogg_int64_t)"
-- "exceptions": []
-  "name": "ov_time_seek_page_lap"
+- "name": "ov_time_seek_page_lap"
   "params":
   - "name": "vf"
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "double"
   "return_type": "int"
   "signature": "int ov_time_seek_page_lap(OggVorbis_File *, double)"
-- "exceptions": []
-  "name": "ov_time_seek_lap"
+- "name": "ov_time_seek_lap"
   "params":
   - "name": "vf"
     "type": "bool "
@@ -35,8 +31,7 @@
     "type": "double"
   "return_type": "int"
   "signature": "int ov_time_seek_lap(OggVorbis_File *, double)"
-- "exceptions": []
-  "name": "ov_halfrate"
+- "name": "ov_halfrate"
   "params":
   - "name": "vf"
     "type": "bool "

@@ -1,16 +1,11 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.xerial.snappy.SnappyFramedInputStream].read(java.nio.ByteBuffer)"
+- "name": "[org.xerial.snappy.SnappyFramedInputStream].read(java.nio.ByteBuffer)"
   "params":
   - "name": "arg0"
     "type": "java.nio.ByteBuffer"
   "return_type": "void"
   "signature": "[org.xerial.snappy.SnappyFramedInputStream].read(java.nio.ByteBuffer)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": true
-  "name": "[org.xerial.snappy.SnappyCodec].readHeader(java.io.InputStream)"
+- "name": "[org.xerial.snappy.SnappyCodec].readHeader(java.io.InputStream)"
   "params":
   - "name": "arg0"
     "type": "java.io.InputStream"

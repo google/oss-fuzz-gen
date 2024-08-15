@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN6icu_7613MessageFormat12applyPatternERKNS_13UnicodeStringER11UParseErrorR10UErrorCode"
+- "name": "_ZN6icu_7613MessageFormat12applyPatternERKNS_13UnicodeStringER11UParseErrorR10UErrorCode"
   "params":
   - "name": "this"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void icu_76::MessageFormat::applyPattern(const UnicodeString &, UParseError &, UErrorCode &)"
-- "exceptions": []
-  "name": "_ZN6icu_7613MessageFormat20cacheExplicitFormatsER10UErrorCode"
+- "name": "_ZN6icu_7613MessageFormat20cacheExplicitFormatsER10UErrorCode"
   "params":
   - "name": "this"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void icu_76::MessageFormat::cacheExplicitFormats(UErrorCode &)"
-- "exceptions": []
-  "name": "_ZNK6icu_7621RuleBasedNumberFormat6formatElRKNS_13UnicodeStringERS1_RNS_13FieldPositionER10UErrorCode"
+- "name": "_ZNK6icu_7621RuleBasedNumberFormat6formatElRKNS_13UnicodeStringERS1_RNS_13FieldPositionER10UErrorCode"
   "params":
   - "name": "this"
     "type": "bool "
@@ -38,8 +35,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "UnicodeString & icu_76::RuleBasedNumberFormat::format(int64_t, const UnicodeString &, UnicodeString &, FieldPosition &, UErrorCode &)"
-- "exceptions": []
-  "name": "_ZN6icu_7613MessageFormat23createAppropriateFormatERNS_13UnicodeStringES2_RNS_11Formattable4TypeER11UParseErrorR10UErrorCode"
+- "name": "_ZN6icu_7613MessageFormat23createAppropriateFormatERNS_13UnicodeStringES2_RNS_11Formattable4TypeER11UParseErrorR10UErrorCode"
   "params":
   - "name": "this"
     "type": "bool "
@@ -55,8 +51,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "Format * icu_76::MessageFormat::createAppropriateFormat(UnicodeString &, UnicodeString &, DW_TAG_enumeration_typeType &, UParseError &, UErrorCode &)"
-- "exceptions": []
-  "name": "_ZNK6icu_7614TimeZoneFormat5parseE20UTimeZoneFormatStyleRKNS_13UnicodeStringERNS_13ParsePositionEiP23UTimeZoneFormatTimeType"
+- "name": "_ZNK6icu_7614TimeZoneFormat5parseE20UTimeZoneFormatStyleRKNS_13UnicodeStringERNS_13ParsePositionEiP23UTimeZoneFormatTimeType"
   "params":
   - "name": "this"
     "type": "bool "

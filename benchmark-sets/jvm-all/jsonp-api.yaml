@@ -1,8 +1,5 @@
 "functions":
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[ee.jakarta.tck.jsonp.common.MyBufferedReader].read(char[],int,int)"
+- "name": "[ee.jakarta.tck.jsonp.common.MyBufferedReader].read(char[],int,int)"
   "params":
   - "name": "arg0"
     "type": "char[]"
@@ -12,10 +9,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "[ee.jakarta.tck.jsonp.common.MyBufferedReader].read(char[],int,int)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[ee.jakarta.tck.jsonp.common.MyBufferedInputStream].read(byte[],int,int)"
+- "name": "[ee.jakarta.tck.jsonp.common.MyBufferedInputStream].read(byte[],int,int)"
   "params":
   - "name": "arg0"
     "type": "byte[]"
@@ -25,10 +19,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "[ee.jakarta.tck.jsonp.common.MyBufferedInputStream].read(byte[],int,int)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[ee.jakarta.tck.jsonp.common.MyBufferedWriter].write(char[],int,int)"
+- "name": "[ee.jakarta.tck.jsonp.common.MyBufferedWriter].write(char[],int,int)"
   "params":
   - "name": "arg0"
     "type": "char[]"
@@ -38,9 +29,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "[ee.jakarta.tck.jsonp.common.MyBufferedWriter].write(char[],int,int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[ee.jakarta.tck.jsonp.common.MyBufferedReader].<init>(java.io.Reader,int,boolean)"
+- "name": "[ee.jakarta.tck.jsonp.common.MyBufferedReader].<init>(java.io.Reader,int,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.io.Reader"
@@ -50,9 +39,7 @@
     "type": "boolean"
   "return_type": "ee.jakarta.tck.jsonp.common.MyBufferedReader"
   "signature": "[ee.jakarta.tck.jsonp.common.MyBufferedReader].<init>(java.io.Reader,int,boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[ee.jakarta.tck.jsonp.common.MyBufferedWriter].<init>(java.io.Writer,int,boolean)"
+- "name": "[ee.jakarta.tck.jsonp.common.MyBufferedWriter].<init>(java.io.Writer,int,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.io.Writer"
@@ -62,9 +49,7 @@
     "type": "boolean"
   "return_type": "ee.jakarta.tck.jsonp.common.MyBufferedWriter"
   "signature": "[ee.jakarta.tck.jsonp.common.MyBufferedWriter].<init>(java.io.Writer,int,boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[ee.jakarta.tck.jsonp.common.MyJsonLocation].<init>(long,long,long)"
+- "name": "[ee.jakarta.tck.jsonp.common.MyJsonLocation].<init>(long,long,long)"
   "params":
   - "name": "arg0"
     "type": "long"

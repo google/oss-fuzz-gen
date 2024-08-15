@@ -1,47 +1,35 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jooq.codegen.JavaGenerator].generate0(org.jooq.meta.Database)"
+- "name": "[org.jooq.codegen.JavaGenerator].generate0(org.jooq.meta.Database)"
   "params":
   - "name": "arg0"
     "type": "org.jooq.meta.Database"
   "return_type": "void"
   "signature": "[org.jooq.codegen.JavaGenerator].generate0(org.jooq.meta.Database)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jooq.codegen.XMLGenerator].generate0(org.jooq.meta.Database)"
+- "name": "[org.jooq.codegen.XMLGenerator].generate0(org.jooq.meta.Database)"
   "params":
   - "name": "arg0"
     "type": "org.jooq.meta.Database"
   "return_type": "void"
   "signature": "[org.jooq.codegen.XMLGenerator].generate0(org.jooq.meta.Database)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jooq.impl.TableImpl].as(org.jooq.Name)"
+- "name": "[org.jooq.impl.TableImpl].as(org.jooq.Name)"
   "params":
   - "name": "arg0"
     "type": "org.jooq.Name"
   "return_type": "org.jooq.Table<R>"
   "signature": "[org.jooq.impl.TableImpl].as(org.jooq.Name)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jooq.SchemaMapping].map(org.jooq.Table<R>)"
+- "name": "[org.jooq.SchemaMapping].map(org.jooq.Table<R>)"
   "params":
   - "name": "arg0"
     "type": "org.jooq.Table<R>"
   "return_type": "org.jooq.Table<R>"
   "signature": "[org.jooq.SchemaMapping].map(org.jooq.Table<R>)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jooq.SchemaMapping].map(org.jooq.UDT<R>)"
+- "name": "[org.jooq.SchemaMapping].map(org.jooq.UDT<R>)"
   "params":
   - "name": "arg0"
     "type": "org.jooq.UDT<R>"
   "return_type": "org.jooq.UDT<R>"
   "signature": "[org.jooq.SchemaMapping].map(org.jooq.UDT<R>)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jooq.impl.DefaultDSLContext].connectionResult(org.jooq.ConnectionCallable<T>)"
+- "name": "[org.jooq.impl.DefaultDSLContext].connectionResult(org.jooq.ConnectionCallable<T>)"
   "params":
   - "name": "arg0"
     "type": "org.jooq.ConnectionCallable<T>"

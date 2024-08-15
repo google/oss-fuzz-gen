@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "wolfSSL_CertManagerLoadCA"
+- "name": "wolfSSL_CertManagerLoadCA"
   "params":
   - "name": "cm"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int wolfSSL_CertManagerLoadCA(WOLFSSL_CERT_MANAGER *, const char *, const char *)"
-- "exceptions": []
-  "name": "MqttClient_Publish_ex"
+- "name": "MqttClient_Publish_ex"
   "params":
   - "name": "client"
     "type": "bool "
@@ -21,22 +19,19 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int MqttClient_Publish_ex(MqttClient *, MqttPublish *, MqttPublishCb)"
-- "exceptions": []
-  "name": "MqttClient_Disconnect"
+- "name": "MqttClient_Disconnect"
   "params":
   - "name": "client"
     "type": "bool "
   "return_type": "int"
   "signature": "int MqttClient_Disconnect(MqttClient *)"
-- "exceptions": []
-  "name": "MqttClient_Ping"
+- "name": "MqttClient_Ping"
   "params":
   - "name": "client"
     "type": "bool "
   "return_type": "int"
   "signature": "int MqttClient_Ping(MqttClient *)"
-- "exceptions": []
-  "name": "MqttClient_Disconnect_ex"
+- "name": "MqttClient_Disconnect_ex"
   "params":
   - "name": "client"
     "type": "bool "

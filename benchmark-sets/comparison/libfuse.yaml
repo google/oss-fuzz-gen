@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "af_gb_alloc_data"
+- "name": "af_gb_alloc_data"
   "params":
   - "name": "len"
     "type": "size_t"

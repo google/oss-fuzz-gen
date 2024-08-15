@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "sf_open"
+- "name": "sf_open"
   "params":
   - "name": "path"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "SNDFILE * sf_open(const char *, int, SF_INFO *)"
-- "exceptions": []
-  "name": "sf_command"
+- "name": "sf_command"
   "params":
   - "name": "sndfile"
     "type": "bool "
@@ -23,8 +21,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int sf_command(SNDFILE *, int, void *, int)"
-- "exceptions": []
-  "name": "sf_open_fd"
+- "name": "sf_open_fd"
   "params":
   - "name": "fd"
     "type": "int"
@@ -36,8 +33,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "SNDFILE * sf_open_fd(int, int, SF_INFO *, int)"
-- "exceptions": []
-  "name": "sf_get_chunk_iterator"
+- "name": "sf_get_chunk_iterator"
   "params":
   - "name": "sndfile"
     "type": "bool "
@@ -45,8 +41,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "SF_CHUNK_ITERATOR * sf_get_chunk_iterator(SNDFILE *, const SF_CHUNK_INFO *)"
-- "exceptions": []
-  "name": "sf_set_string"
+- "name": "sf_set_string"
   "params":
   - "name": "sndfile"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "Stralign_left"
+- "name": "Stralign_left"
   "params":
   - "name": "s"
     "type": "bool "
@@ -8,15 +7,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "Str Stralign_left(Str, int)"
-- "exceptions": []
-  "name": "Strnew_m_charp"
+- "name": "Strnew_m_charp"
   "params":
   - "name": "p"
     "type": "bool "
   "return_type": "void"
   "signature": "Str Strnew_m_charp(const char *, void)"
-- "exceptions": []
-  "name": "Stralign_center"
+- "name": "Stralign_center"
   "params":
   - "name": "s"
     "type": "bool "
@@ -24,15 +21,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "Str Stralign_center(Str, int)"
-- "exceptions": []
-  "name": "Sprintf"
+- "name": "Sprintf"
   "params":
   - "name": "fmt"
     "type": "bool "
   "return_type": "void"
   "signature": "Str Sprintf(char *, void)"
-- "exceptions": []
-  "name": "Stralign_right"
+- "name": "Stralign_right"
   "params":
   - "name": "s"
     "type": "bool "

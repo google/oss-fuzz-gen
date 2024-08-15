@@ -1,23 +1,17 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.datasketches.partitions.Partitioner$PartitionBoundsRow].<init>(org.apache.datasketches.partitions.Partitioner$StackElement)"
+- "name": "[org.apache.datasketches.partitions.Partitioner$PartitionBoundsRow].<init>(org.apache.datasketches.partitions.Partitioner$StackElement)"
   "params":
   - "name": "arg0"
     "type": "org.apache.datasketches.partitions.Partitioner$StackElement"
   "return_type": "org.apache.datasketches.partitions.Partitioner$PartitionBoundsRow"
   "signature": "[org.apache.datasketches.partitions.Partitioner$PartitionBoundsRow].<init>(org.apache.datasketches.partitions.Partitioner$StackElement)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.datasketches.cpc.CpcWrapper].<init>(org.apache.datasketches.memory.Memory)"
+- "name": "[org.apache.datasketches.cpc.CpcWrapper].<init>(org.apache.datasketches.memory.Memory)"
   "params":
   - "name": "arg0"
     "type": "org.apache.datasketches.memory.Memory"
   "return_type": "org.apache.datasketches.cpc.CpcWrapper"
   "signature": "[org.apache.datasketches.cpc.CpcWrapper].<init>(org.apache.datasketches.memory.Memory)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.datasketches.quantilescommon.DoublesSketchSortedView].<init>(double[],long[],org.apache.datasketches.quantilescommon.QuantilesDoublesAPI)"
+- "name": "[org.apache.datasketches.quantilescommon.DoublesSketchSortedView].<init>(double[],long[],org.apache.datasketches.quantilescommon.QuantilesDoublesAPI)"
   "params":
   - "name": "arg0"
     "type": "double[]"
@@ -27,9 +21,7 @@
     "type": "org.apache.datasketches.quantilescommon.QuantilesDoublesAPI"
   "return_type": "org.apache.datasketches.quantilescommon.DoublesSketchSortedView"
   "signature": "[org.apache.datasketches.quantilescommon.DoublesSketchSortedView].<init>(double[],long[],org.apache.datasketches.quantilescommon.QuantilesDoublesAPI)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.datasketches.quantilescommon.FloatsSketchSortedView].<init>(float[],long[],org.apache.datasketches.quantilescommon.QuantilesFloatsAPI)"
+- "name": "[org.apache.datasketches.quantilescommon.FloatsSketchSortedView].<init>(float[],long[],org.apache.datasketches.quantilescommon.QuantilesFloatsAPI)"
   "params":
   - "name": "arg0"
     "type": "float[]"
@@ -39,9 +31,7 @@
     "type": "org.apache.datasketches.quantilescommon.QuantilesFloatsAPI"
   "return_type": "org.apache.datasketches.quantilescommon.FloatsSketchSortedView"
   "signature": "[org.apache.datasketches.quantilescommon.FloatsSketchSortedView].<init>(float[],long[],org.apache.datasketches.quantilescommon.QuantilesFloatsAPI)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.datasketches.quantilescommon.LongsSketchSortedView].<init>(long[],long[],org.apache.datasketches.quantilescommon.QuantilesLongsAPI)"
+- "name": "[org.apache.datasketches.quantilescommon.LongsSketchSortedView].<init>(long[],long[],org.apache.datasketches.quantilescommon.QuantilesLongsAPI)"
   "params":
   - "name": "arg0"
     "type": "long[]"
@@ -51,9 +41,7 @@
     "type": "org.apache.datasketches.quantilescommon.QuantilesLongsAPI"
   "return_type": "org.apache.datasketches.quantilescommon.LongsSketchSortedView"
   "signature": "[org.apache.datasketches.quantilescommon.LongsSketchSortedView].<init>(long[],long[],org.apache.datasketches.quantilescommon.QuantilesLongsAPI)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.datasketches.quantilescommon.ItemsSketchSortedView].<init>(java.lang.Object[],long[],org.apache.datasketches.quantilescommon.QuantilesGenericAPI)"
+- "name": "[org.apache.datasketches.quantilescommon.ItemsSketchSortedView].<init>(java.lang.Object[],long[],org.apache.datasketches.quantilescommon.QuantilesGenericAPI)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object[]"

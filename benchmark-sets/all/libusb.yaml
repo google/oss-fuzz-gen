@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "libusb_interrupt_transfer"
+- "name": "libusb_interrupt_transfer"
   "params":
   - "name": "dev_handle"
     "type": "bool "
@@ -16,8 +15,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int libusb_interrupt_transfer(libusb_device_handle *, unsigned char, unsigned char *, int, int *, unsigned int)"
-- "exceptions": []
-  "name": "libusb_control_transfer"
+- "name": "libusb_control_transfer"
   "params":
   - "name": "dev_handle"
     "type": "bool "
@@ -37,8 +35,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int libusb_control_transfer(libusb_device_handle *, uint8_t, uint8_t, uint16_t, uint16_t, unsigned char *, uint16_t, unsigned int)"
-- "exceptions": []
-  "name": "libusb_get_string_descriptor_ascii"
+- "name": "libusb_get_string_descriptor_ascii"
   "params":
   - "name": "dev_handle"
     "type": "bool "
@@ -50,8 +47,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int libusb_get_string_descriptor_ascii(libusb_device_handle *, uint8_t, unsigned char *, int)"
-- "exceptions": []
-  "name": "libusb_get_bos_descriptor"
+- "name": "libusb_get_bos_descriptor"
   "params":
   - "name": "dev_handle"
     "type": "bool "
@@ -59,8 +55,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int libusb_get_bos_descriptor(libusb_device_handle *, struct libusb_bos_descriptor **)"
-- "exceptions": []
-  "name": "libusb_get_configuration"
+- "name": "libusb_get_configuration"
   "params":
   - "name": "dev_handle"
     "type": "bool "

@@ -1,24 +1,17 @@
 "functions":
-- "exceptions":
-  - "java.lang.Throwable"
-  "is_jvm_static": false
-  "name": "[org.springframework.retry.annotation.AnnotationAwareRetryOperationsInterceptor].invoke(org.aopalliance.intercept.MethodInvocation)"
+- "name": "[org.springframework.retry.annotation.AnnotationAwareRetryOperationsInterceptor].invoke(org.aopalliance.intercept.MethodInvocation)"
   "params":
   - "name": "arg0"
     "type": "org.aopalliance.intercept.MethodInvocation"
   "return_type": "java.lang.Object"
   "signature": "[org.springframework.retry.annotation.AnnotationAwareRetryOperationsInterceptor].invoke(org.aopalliance.intercept.MethodInvocation)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.springframework.retry.policy.CompositeRetryPolicy].canRetry(org.springframework.retry.RetryContext)"
+- "name": "[org.springframework.retry.policy.CompositeRetryPolicy].canRetry(org.springframework.retry.RetryContext)"
   "params":
   - "name": "arg0"
     "type": "org.springframework.retry.RetryContext"
   "return_type": "boolean"
   "signature": "[org.springframework.retry.policy.CompositeRetryPolicy].canRetry(org.springframework.retry.RetryContext)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.springframework.retry.policy.CompositeRetryPolicy].registerThrowable(org.springframework.retry.RetryContext,java.lang.Throwable)"
+- "name": "[org.springframework.retry.policy.CompositeRetryPolicy].registerThrowable(org.springframework.retry.RetryContext,java.lang.Throwable)"
   "params":
   - "name": "arg0"
     "type": "org.springframework.retry.RetryContext"
@@ -26,9 +19,7 @@
     "type": "java.lang.Throwable"
   "return_type": "void"
   "signature": "[org.springframework.retry.policy.CompositeRetryPolicy].registerThrowable(org.springframework.retry.RetryContext,java.lang.Throwable)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.springframework.retry.policy.CircuitBreakerRetryPolicy].registerThrowable(org.springframework.retry.RetryContext,java.lang.Throwable)"
+- "name": "[org.springframework.retry.policy.CircuitBreakerRetryPolicy].registerThrowable(org.springframework.retry.RetryContext,java.lang.Throwable)"
   "params":
   - "name": "arg0"
     "type": "org.springframework.retry.RetryContext"
@@ -36,17 +27,13 @@
     "type": "java.lang.Throwable"
   "return_type": "void"
   "signature": "[org.springframework.retry.policy.CircuitBreakerRetryPolicy].registerThrowable(org.springframework.retry.RetryContext,java.lang.Throwable)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.springframework.retry.policy.CircuitBreakerRetryPolicy].canRetry(org.springframework.retry.RetryContext)"
+- "name": "[org.springframework.retry.policy.CircuitBreakerRetryPolicy].canRetry(org.springframework.retry.RetryContext)"
   "params":
   - "name": "arg0"
     "type": "org.springframework.retry.RetryContext"
   "return_type": "boolean"
   "signature": "[org.springframework.retry.policy.CircuitBreakerRetryPolicy].canRetry(org.springframework.retry.RetryContext)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.springframework.classify.BackToBackPatternClassifier].classify(java.lang.Object)"
+- "name": "[org.springframework.classify.BackToBackPatternClassifier].classify(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "BPF_getInstruction"
+- "name": "BPF_getInstruction"
   "params":
   - "name": "ud"
     "type": "size_t"
@@ -18,8 +17,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool BPF_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t *, uint64_t, void *)"
-- "exceptions": []
-  "name": "LoongArch_printer"
+- "name": "LoongArch_printer"
   "params":
   - "name": "MI"
     "type": "bool "
@@ -29,8 +27,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void LoongArch_printer(MCInst *, SStream *, void *)"
-- "exceptions": []
-  "name": "PPC_getInstruction"
+- "name": "PPC_getInstruction"
   "params":
   - "name": "ud"
     "type": "size_t"
@@ -48,8 +45,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool PPC_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t *, uint64_t, void *)"
-- "exceptions": []
-  "name": "ARM_getInstruction"
+- "name": "ARM_getInstruction"
   "params":
   - "name": "ud"
     "type": "size_t"
@@ -67,8 +63,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool ARM_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t *, uint64_t, void *)"
-- "exceptions": []
-  "name": "AArch64_printer"
+- "name": "AArch64_printer"
   "params":
   - "name": "MI"
     "type": "bool "

@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.lang3.text.ExtendedMessageFormat].<init>(java.lang.String,java.util.Locale,java.util.Map)"
+- "name": "[org.apache.commons.lang3.text.ExtendedMessageFormat].<init>(java.lang.String,java.util.Locale,java.util.Map)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -11,9 +9,7 @@
     "type": "java.util.Map"
   "return_type": "org.apache.commons.lang3.text.ExtendedMessageFormat"
   "signature": "[org.apache.commons.lang3.text.ExtendedMessageFormat].<init>(java.lang.String,java.util.Locale,java.util.Map)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.lang3.builder.ReflectionDiffBuilder].<init>(java.lang.Object,java.lang.Object,org.apache.commons.lang3.builder.ToStringStyle)"
+- "name": "[org.apache.commons.lang3.builder.ReflectionDiffBuilder].<init>(java.lang.Object,java.lang.Object,org.apache.commons.lang3.builder.ToStringStyle)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -23,9 +19,7 @@
     "type": "org.apache.commons.lang3.builder.ToStringStyle"
   "return_type": "org.apache.commons.lang3.builder.ReflectionDiffBuilder"
   "signature": "[org.apache.commons.lang3.builder.ReflectionDiffBuilder].<init>(java.lang.Object,java.lang.Object,org.apache.commons.lang3.builder.ToStringStyle)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.lang3.builder.ReflectionToStringBuilder].<init>(java.lang.Object,org.apache.commons.lang3.builder.ToStringStyle,java.lang.StringBuffer,java.lang.Class,boolean,boolean,boolean)"
+- "name": "[org.apache.commons.lang3.builder.ReflectionToStringBuilder].<init>(java.lang.Object,org.apache.commons.lang3.builder.ToStringStyle,java.lang.StringBuffer,java.lang.Class,boolean,boolean,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -43,9 +37,7 @@
     "type": "boolean"
   "return_type": "org.apache.commons.lang3.builder.ReflectionToStringBuilder"
   "signature": "[org.apache.commons.lang3.builder.ReflectionToStringBuilder].<init>(java.lang.Object,org.apache.commons.lang3.builder.ToStringStyle,java.lang.StringBuffer,java.lang.Class,boolean,boolean,boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.lang3.builder.ReflectionToStringBuilder].<init>(java.lang.Object,org.apache.commons.lang3.builder.ToStringStyle,java.lang.StringBuffer,java.lang.Class,boolean,boolean)"
+- "name": "[org.apache.commons.lang3.builder.ReflectionToStringBuilder].<init>(java.lang.Object,org.apache.commons.lang3.builder.ToStringStyle,java.lang.StringBuffer,java.lang.Class,boolean,boolean)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"
@@ -61,9 +53,7 @@
     "type": "boolean"
   "return_type": "org.apache.commons.lang3.builder.ReflectionToStringBuilder"
   "signature": "[org.apache.commons.lang3.builder.ReflectionToStringBuilder].<init>(java.lang.Object,org.apache.commons.lang3.builder.ToStringStyle,java.lang.StringBuffer,java.lang.Class,boolean,boolean)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.lang3.text.StrSubstitutor].<init>(org.apache.commons.lang3.text.StrLookup,org.apache.commons.lang3.text.StrMatcher,org.apache.commons.lang3.text.StrMatcher,char,org.apache.commons.lang3.text.StrMatcher)"
+- "name": "[org.apache.commons.lang3.text.StrSubstitutor].<init>(org.apache.commons.lang3.text.StrLookup,org.apache.commons.lang3.text.StrMatcher,org.apache.commons.lang3.text.StrMatcher,char,org.apache.commons.lang3.text.StrMatcher)"
   "params":
   - "name": "arg0"
     "type": "org.apache.commons.lang3.text.StrLookup"
@@ -77,9 +67,7 @@
     "type": "org.apache.commons.lang3.text.StrMatcher"
   "return_type": "org.apache.commons.lang3.text.StrSubstitutor"
   "signature": "[org.apache.commons.lang3.text.StrSubstitutor].<init>(org.apache.commons.lang3.text.StrLookup,org.apache.commons.lang3.text.StrMatcher,org.apache.commons.lang3.text.StrMatcher,char,org.apache.commons.lang3.text.StrMatcher)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.commons.lang3.text.StrSubstitutor].<init>(org.apache.commons.lang3.text.StrLookup,java.lang.String,java.lang.String,char,java.lang.String)"
+- "name": "[org.apache.commons.lang3.text.StrSubstitutor].<init>(org.apache.commons.lang3.text.StrLookup,java.lang.String,java.lang.String,char,java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "org.apache.commons.lang3.text.StrLookup"

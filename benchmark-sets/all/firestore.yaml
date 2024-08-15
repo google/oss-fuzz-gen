@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZNK8firebase9firestore4core7OrderBy7CompareERKNS0_5model8DocumentES6_"
+- "name": "_ZNK8firebase9firestore4core7OrderBy7CompareERKNS0_5model8DocumentES6_"
   "params":
   - "name": "this"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typeComparisonResult firebase::firestore::core::OrderBy::Compare(const Document &, const Document &)"
-- "exceptions": []
-  "name": "_ZNK8firebase9firestore4core5Bound18SortsAfterDocumentERKNSt3__16vectorINS1_7OrderByENS3_9allocatorIS5_EEEERKNS0_5model8DocumentE"
+- "name": "_ZNK8firebase9firestore4core5Bound18SortsAfterDocumentERKNSt3__16vectorINS1_7OrderByENS3_9allocatorIS5_EEEERKNS0_5model8DocumentE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool firebase::firestore::core::Bound::SortsAfterDocument(const vector<firebase::firestore::core::OrderBy, std::__1::allocator<firebase::firestore::core::OrderBy> > &, const Document &)"
-- "exceptions": []
-  "name": "_ZNK8firebase9firestore4core5Bound17CompareToDocumentERKNSt3__16vectorINS1_7OrderByENS3_9allocatorIS5_EEEERKNS0_5model8DocumentE"
+- "name": "_ZNK8firebase9firestore4core5Bound17CompareToDocumentERKNSt3__16vectorINS1_7OrderByENS3_9allocatorIS5_EEEERKNS0_5model8DocumentE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -32,8 +29,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "DW_TAG_enumeration_typeComparisonResult firebase::firestore::core::Bound::CompareToDocument(const vector<firebase::firestore::core::OrderBy, std::__1::allocator<firebase::firestore::core::OrderBy> > &, const Document &)"
-- "exceptions": []
-  "name": "_ZNK8firebase9firestore4core5Bound19SortsBeforeDocumentERKNSt3__16vectorINS1_7OrderByENS3_9allocatorIS5_EEEERKNS0_5model8DocumentE"
+- "name": "_ZNK8firebase9firestore4core5Bound19SortsBeforeDocumentERKNSt3__16vectorINS1_7OrderByENS3_9allocatorIS5_EEEERKNS0_5model8DocumentE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -43,8 +39,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool firebase::firestore::core::Bound::SortsBeforeDocument(const vector<firebase::firestore::core::OrderBy, std::__1::allocator<firebase::firestore::core::OrderBy> > &, const Document &)"
-- "exceptions": []
-  "name": "_ZNK8firebase9firestore4core5Query13MatchesBoundsERKNS0_5model8DocumentE"
+- "name": "_ZNK8firebase9firestore4core5Query13MatchesBoundsERKNS0_5model8DocumentE"
   "params":
   - "name": "this"
     "type": "bool "

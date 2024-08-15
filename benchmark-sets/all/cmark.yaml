@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "cmark_node_check"
+- "name": "cmark_node_check"
   "params":
   - "name": ""
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int cmark_node_check(cmark_node *, FILE *)"
-- "exceptions": []
-  "name": "cmark_node_replace"
+- "name": "cmark_node_replace"
   "params":
   - "name": ""
     "type": "bool "
@@ -17,8 +15,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int cmark_node_replace(cmark_node *, cmark_node *)"
-- "exceptions": []
-  "name": "cmark_node_append_child"
+- "name": "cmark_node_append_child"
   "params":
   - "name": ""
     "type": "bool "
@@ -26,8 +23,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int cmark_node_append_child(cmark_node *, cmark_node *)"
-- "exceptions": []
-  "name": "cmark_node_insert_after"
+- "name": "cmark_node_insert_after"
   "params":
   - "name": ""
     "type": "bool "
@@ -35,8 +31,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int cmark_node_insert_after(cmark_node *, cmark_node *)"
-- "exceptions": []
-  "name": "cmark_node_prepend_child"
+- "name": "cmark_node_prepend_child"
   "params":
   - "name": ""
     "type": "bool "

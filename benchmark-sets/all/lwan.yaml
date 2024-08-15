@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "lwan_response"
+- "name": "lwan_response"
   "params":
   - "name": "request"
     "type": "bool "
@@ -8,15 +7,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "void lwan_response(struct lwan_request *, DW_TAG_enumeration_typelwan_http_status)"
-- "exceptions": []
-  "name": "lwan_init"
+- "name": "lwan_init"
   "params":
   - "name": "l"
     "type": "bool "
   "return_type": "void"
   "signature": "void lwan_init(struct lwan *)"
-- "exceptions": []
-  "name": "lwan_process_request"
+- "name": "lwan_process_request"
   "params":
   - "name": "l"
     "type": "bool "
@@ -24,8 +21,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void lwan_process_request(struct lwan *, struct lwan_request *)"
-- "exceptions": []
-  "name": "lwan_init_with_config"
+- "name": "lwan_init_with_config"
   "params":
   - "name": "l"
     "type": "bool "
@@ -33,8 +29,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void lwan_init_with_config(struct lwan *, const struct lwan_config *)"
-- "exceptions": []
-  "name": "lwan_thread_init"
+- "name": "lwan_thread_init"
   "params":
   - "name": "l"
     "type": "bool "

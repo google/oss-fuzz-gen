@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "SOPC_SecureChannels_OnInternalEvent"
+- "name": "SOPC_SecureChannels_OnInternalEvent"
   "params":
   - "name": ""
     "type": "bool "
@@ -14,29 +13,25 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void SOPC_SecureChannels_OnInternalEvent(SOPC_EventHandler *, int32_t, uint32_t, uintptr_t, uintptr_t)"
-- "exceptions": []
-  "name": "SOPC_SecureChannelsInternalContext_Initialize"
+- "name": "SOPC_SecureChannelsInternalContext_Initialize"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "void SOPC_SecureChannelsInternalContext_Initialize(SOPC_SetListenerFunc *)"
-- "exceptions": []
-  "name": "SOPC_Toolkit_Initialize"
+- "name": "SOPC_Toolkit_Initialize"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "int"
   "signature": "SOPC_ReturnStatus SOPC_Toolkit_Initialize(SOPC_ComEvent_Fct *)"
-- "exceptions": []
-  "name": "SOPC_Services_Initialize"
+- "name": "SOPC_Services_Initialize"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "void SOPC_Services_Initialize(SOPC_SetListenerFunc *)"
-- "exceptions": []
-  "name": "SOPC_SecureChannels_Initialize"
+- "name": "SOPC_SecureChannels_Initialize"
   "params":
   - "name": ""
     "type": "bool "

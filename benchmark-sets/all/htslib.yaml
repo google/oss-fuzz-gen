@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "sam_index_build2"
+- "name": "sam_index_build2"
   "params":
   - "name": "fn"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int sam_index_build2(const char *, const char *, int)"
-- "exceptions": []
-  "name": "bcf_index_build"
+- "name": "bcf_index_build"
   "params":
   - "name": "fn"
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int bcf_index_build(const char *, int)"
-- "exceptions": []
-  "name": "sam_index_build3"
+- "name": "sam_index_build3"
   "params":
   - "name": "fn"
     "type": "bool "
@@ -32,8 +29,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int sam_index_build3(const char *, const char *, int, int)"
-- "exceptions": []
-  "name": "sam_index_build"
+- "name": "sam_index_build"
   "params":
   - "name": "fn"
     "type": "bool "
@@ -41,8 +37,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int sam_index_build(const char *, int)"
-- "exceptions": []
-  "name": "bam_index_build"
+- "name": "bam_index_build"
   "params":
   - "name": "fn"
     "type": "bool "

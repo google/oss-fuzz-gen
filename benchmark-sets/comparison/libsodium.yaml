@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "argon2_finalize"
+- "name": "argon2_finalize"
   "params":
   - "name": "context"
     "type": "bool "

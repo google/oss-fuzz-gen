@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ZSTD_generateSequences"
+- "name": "ZSTD_generateSequences"
   "params":
   - "name": ""
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "size_t ZSTD_generateSequences(ZSTD_CCtx *, ZSTD_Sequence *, size_t, const void *, size_t)"
-- "exceptions": []
-  "name": "ZSTD_endStream"
+- "name": "ZSTD_endStream"
   "params":
   - "name": ""
     "type": "bool "
@@ -23,8 +21,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "size_t ZSTD_endStream(ZSTD_CStream *, ZSTD_outBuffer *)"
-- "exceptions": []
-  "name": "ZSTD_compress2"
+- "name": "ZSTD_compress2"
   "params":
   - "name": ""
     "type": "bool "
@@ -38,8 +35,7 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "size_t ZSTD_compress2(ZSTD_CCtx *, void *, size_t, const void *, size_t)"
-- "exceptions": []
-  "name": "ZSTD_decompressStream_simpleArgs"
+- "name": "ZSTD_decompressStream_simpleArgs"
   "params":
   - "name": ""
     "type": "bool "
@@ -57,8 +53,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "size_t ZSTD_decompressStream_simpleArgs(ZSTD_DCtx *, void *, size_t, size_t *, const void *, size_t, size_t *)"
-- "exceptions": []
-  "name": "ZSTD_compressStream"
+- "name": "ZSTD_compressStream"
   "params":
   - "name": ""
     "type": "bool "

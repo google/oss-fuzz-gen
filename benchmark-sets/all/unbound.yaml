@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ub_resolve_event"
+- "name": "ub_resolve_event"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -18,8 +17,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ub_resolve_event(struct ub_ctx *, const char *, int, int, void *, ub_event_callback_type, int *)"
-- "exceptions": []
-  "name": "auth_zones_startprobesequence"
+- "name": "auth_zones_startprobesequence"
   "params":
   - "name": "az"
     "type": "bool "
@@ -33,8 +31,7 @@
     "type": "short"
   "return_type": "int"
   "signature": "int auth_zones_startprobesequence(struct auth_zones *, struct module_env *, uint8_t *, size_t, uint16_t)"
-- "exceptions": []
-  "name": "ub_resolve"
+- "name": "ub_resolve"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -48,8 +45,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ub_resolve(struct ub_ctx *, const char *, int, int, struct ub_result **)"
-- "exceptions": []
-  "name": "ub_resolve_async"
+- "name": "ub_resolve_async"
   "params":
   - "name": "ctx"
     "type": "bool "
@@ -67,8 +63,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ub_resolve_async(struct ub_ctx *, const char *, int, int, void *, ub_callback_type, int *)"
-- "exceptions": []
-  "name": "auth_zones_notify"
+- "name": "auth_zones_notify"
   "params":
   - "name": "az"
     "type": "bool "

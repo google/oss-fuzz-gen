@@ -1,43 +1,29 @@
 "functions":
-- "exceptions":
-  - "org.springframework.webflow.engine.model.registry.NoSuchFlowModelException"
-  "is_jvm_static": false
-  "name": "[org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl].getFlowModel(java.lang.String)"
+- "name": "[org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl].getFlowModel(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "org.springframework.webflow.engine.model.FlowModel"
   "signature": "[org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl].getFlowModel(java.lang.String)"
-- "exceptions":
-  - "java.lang.IllegalArgumentException"
-  "is_jvm_static": false
-  "name": "[org.springframework.webflow.engine.Flow].setStartState(java.lang.String)"
+- "name": "[org.springframework.webflow.engine.Flow].setStartState(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "void"
   "signature": "[org.springframework.webflow.engine.Flow].setStartState(java.lang.String)"
-- "exceptions":
-  - "java.lang.IllegalArgumentException"
-  "is_jvm_static": false
-  "name": "[org.springframework.webflow.engine.Flow].setStartState(org.springframework.webflow.engine.State)"
+- "name": "[org.springframework.webflow.engine.Flow].setStartState(org.springframework.webflow.engine.State)"
   "params":
   - "name": "arg0"
     "type": "org.springframework.webflow.engine.State"
   "return_type": "void"
   "signature": "[org.springframework.webflow.engine.Flow].setStartState(org.springframework.webflow.engine.State)"
-- "exceptions":
-  - "java.lang.IllegalArgumentException"
-  "is_jvm_static": false
-  "name": "[org.springframework.core.convert.support.ConvertingPropertyEditorAdapter].setAsText(java.lang.String)"
+- "name": "[org.springframework.core.convert.support.ConvertingPropertyEditorAdapter].setAsText(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "void"
   "signature": "[org.springframework.core.convert.support.ConvertingPropertyEditorAdapter].setAsText(java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.springframework.webflow.expression.spel.ScopeSearchingPropertyAccessor].write(org.springframework.expression.EvaluationContext,java.lang.Object,java.lang.String,java.lang.Object)"
+- "name": "[org.springframework.webflow.expression.spel.ScopeSearchingPropertyAccessor].write(org.springframework.expression.EvaluationContext,java.lang.Object,java.lang.String,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "org.springframework.expression.EvaluationContext"
@@ -49,10 +35,7 @@
     "type": "java.lang.Object"
   "return_type": "void"
   "signature": "[org.springframework.webflow.expression.spel.ScopeSearchingPropertyAccessor].write(org.springframework.expression.EvaluationContext,java.lang.Object,java.lang.String,java.lang.Object)"
-- "exceptions":
-  - "org.springframework.binding.convert.ConversionExecutorNotFoundException"
-  "is_jvm_static": false
-  "name": "[org.springframework.binding.convert.service.GenericConversionService].getConversionExecutor(java.lang.String,java.lang.Class<?>,java.lang.Class<?>)"
+- "name": "[org.springframework.binding.convert.service.GenericConversionService].getConversionExecutor(java.lang.String,java.lang.Class<?>,java.lang.Class<?>)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"

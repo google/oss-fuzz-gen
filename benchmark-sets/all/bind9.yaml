@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "dns_view_freezezones"
+- "name": "dns_view_freezezones"
   "params":
   - "name": "view"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool"
   "return_type": "int"
   "signature": "isc_result_t dns_view_freezezones(dns_view_t *, bool)"
-- "exceptions": []
-  "name": "dns_view_asyncload"
+- "name": "dns_view_asyncload"
   "params":
   - "name": "view"
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "isc_result_t dns_view_asyncload(dns_view_t *, bool, dns_zt_callback_t *, void *)"
-- "exceptions": []
-  "name": "dns_zt_asyncload"
+- "name": "dns_zt_asyncload"
   "params":
   - "name": "zt"
     "type": "bool "
@@ -34,8 +31,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "isc_result_t dns_zt_asyncload(dns_zt_t *, bool, dns_zt_callback_t *, void *)"
-- "exceptions": []
-  "name": "dns_zt_freezezones"
+- "name": "dns_zt_freezezones"
   "params":
   - "name": "zt"
     "type": "bool "
@@ -45,8 +41,7 @@
     "type": "bool"
   "return_type": "int"
   "signature": "isc_result_t dns_zt_freezezones(dns_zt_t *, dns_view_t *, bool)"
-- "exceptions": []
-  "name": "dns__rbtdb_addrdataset"
+- "name": "dns__rbtdb_addrdataset"
   "params":
   - "name": "db"
     "type": "bool "

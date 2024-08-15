@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "evhttp_accept_socket"
+- "name": "evhttp_accept_socket"
   "params":
   - "name": ""
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int evhttp_accept_socket(struct evhttp *, int)"
-- "exceptions": []
-  "name": "evhttp_bind_socket_with_handle"
+- "name": "evhttp_bind_socket_with_handle"
   "params":
   - "name": ""
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "short"
   "return_type": "void"
   "signature": "struct evhttp_bound_socket * evhttp_bind_socket_with_handle(struct evhttp *, const char *, uint16_t)"
-- "exceptions": []
-  "name": "evhttp_accept_socket_with_handle"
+- "name": "evhttp_accept_socket_with_handle"
   "params":
   - "name": ""
     "type": "bool "
@@ -28,8 +25,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "struct evhttp_bound_socket * evhttp_accept_socket_with_handle(struct evhttp *, int)"
-- "exceptions": []
-  "name": "evhttp_start"
+- "name": "evhttp_start"
   "params":
   - "name": ""
     "type": "bool "
@@ -37,8 +33,7 @@
     "type": "short"
   "return_type": "void"
   "signature": "struct evhttp * evhttp_start(const char *, uint16_t)"
-- "exceptions": []
-  "name": "evhttp_bind_socket"
+- "name": "evhttp_bind_socket"
   "params":
   - "name": ""
     "type": "bool "

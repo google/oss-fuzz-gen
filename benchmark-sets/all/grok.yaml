@@ -1,20 +1,17 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN3grk20CodeStreamDecompress15decompressTilesEv"
+- "name": "_ZN3grk20CodeStreamDecompress15decompressTilesEv"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "bool"
   "signature": "bool grk::CodeStreamDecompress::decompressTiles()"
-- "exceptions": []
-  "name": "_ZZN3grk20CodeStreamDecompress14decompressTileEtENK3$_0clEv"
+- "name": "_ZZN3grk20CodeStreamDecompress14decompressTileEtENK3$_0clEv"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "bool"
   "signature": "bool grk::CodeStreamDecompress::operator()(const void *)"
-- "exceptions": []
-  "name": "_ZN3grk18CodeStreamCompress4initEP16_grk_cparametersPNS_8GrkImageE"
+- "name": "_ZN3grk18CodeStreamCompress4initEP16_grk_cparametersPNS_8GrkImageE"
   "params":
   - "name": ""
     "type": "bool "
@@ -24,8 +21,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool grk::CodeStreamCompress::init(grk_cparameters *, GrkImage *)"
-- "exceptions": []
-  "name": "_ZN3grk18CodeStreamCompress8compressEP16_grk_plugin_tile"
+- "name": "_ZN3grk18CodeStreamCompress8compressEP16_grk_plugin_tile"
   "params":
   - "name": ""
     "type": "bool "
@@ -33,8 +29,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "N/A ()"
-- "exceptions": []
-  "name": "_ZN3grk20CodeStreamDecompress14decompressTileEv"
+- "name": "_ZN3grk20CodeStreamDecompress14decompressTileEv"
   "params":
   - "name": ""
     "type": "bool "

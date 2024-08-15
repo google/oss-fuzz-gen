@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "buffer_copy_path_len2"
+- "name": "buffer_copy_path_len2"
   "params":
   - "name": "b"
     "type": "bool "
@@ -14,8 +13,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void buffer_copy_path_len2(const DW_TAG_restrict_typebuffer *, const const DW_TAG_restrict_typechar *, size_t, const const DW_TAG_restrict_typechar *, size_t)"
-- "exceptions": []
-  "name": "buffer_append_int"
+- "name": "buffer_append_int"
   "params":
   - "name": "b"
     "type": "bool "
@@ -23,8 +21,7 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "void buffer_append_int(buffer *, intmax_t)"
-- "exceptions": []
-  "name": "buffer_append_base64_decode"
+- "name": "buffer_append_base64_decode"
   "params":
   - "name": "out"
     "type": "bool "
@@ -36,8 +33,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "unsigned char * buffer_append_base64_decode(buffer *, const char *, size_t, base64_charset)"
-- "exceptions": []
-  "name": "buffer_append_strftime"
+- "name": "buffer_append_strftime"
   "params":
   - "name": "b"
     "type": "bool "
@@ -47,8 +43,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void buffer_append_strftime(const DW_TAG_restrict_typebuffer *, const const DW_TAG_restrict_typechar *, const const struct DW_TAG_restrict_typetm *)"
-- "exceptions": []
-  "name": "buffer_append_base64_enc"
+- "name": "buffer_append_base64_enc"
   "params":
   - "name": "out"
     "type": "bool "

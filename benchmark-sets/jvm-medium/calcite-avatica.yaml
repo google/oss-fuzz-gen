@@ -1,50 +1,35 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.calcite.avatica.remote.LocalProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
+- "name": "[org.apache.calcite.avatica.remote.LocalProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
   "params":
   - "name": "arg0"
     "type": "org.apache.calcite.avatica.remote.Service$Request"
   "return_type": "org.apache.calcite.avatica.remote.Service$Response"
   "signature": "[org.apache.calcite.avatica.remote.LocalProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.calcite.avatica.remote.RemoteProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
+- "name": "[org.apache.calcite.avatica.remote.RemoteProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
   "params":
   - "name": "arg0"
     "type": "org.apache.calcite.avatica.remote.Service$Request"
   "return_type": "org.apache.calcite.avatica.remote.Service$Response"
   "signature": "[org.apache.calcite.avatica.remote.RemoteProtobufService]._apply(org.apache.calcite.avatica.remote.Service$Request)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeResponse(org.apache.calcite.avatica.remote.Service$Response)"
+- "name": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeResponse(org.apache.calcite.avatica.remote.Service$Response)"
   "params":
   - "name": "arg0"
     "type": "org.apache.calcite.avatica.remote.Service$Response"
   "return_type": "byte[]"
   "signature": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeResponse(org.apache.calcite.avatica.remote.Service$Response)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeRequest(org.apache.calcite.avatica.remote.Service$Request)"
+- "name": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeRequest(org.apache.calcite.avatica.remote.Service$Request)"
   "params":
   - "name": "arg0"
     "type": "org.apache.calcite.avatica.remote.Service$Request"
   "return_type": "byte[]"
   "signature": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].serializeRequest(org.apache.calcite.avatica.remote.Service$Request)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].parseRequest(byte[])"
+- "name": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].parseRequest(byte[])"
   "params":
   - "name": "arg0"
     "type": "byte[]"
   "return_type": "org.apache.calcite.avatica.remote.Service$Request"
   "signature": "[org.apache.calcite.avatica.remote.ProtobufTranslationImpl].parseRequest(byte[])"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.apache.calcite.avatica.Meta$Frame].equals(java.lang.Object)"
+- "name": "[org.apache.calcite.avatica.Meta$Frame].equals(java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Object"

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "cmsCreateDeviceLinkFromCubeFileTHR"
+- "name": "cmsCreateDeviceLinkFromCubeFileTHR"
   "params":
   - "name": "ContextID"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "cmsHPROFILE cmsCreateDeviceLinkFromCubeFileTHR(cmsContext, const char *)"
-- "exceptions": []
-  "name": "cmsCreateProofingTransform"
+- "name": "cmsCreateProofingTransform"
   "params":
   - "name": "InputProfile"
     "type": "bool "
@@ -29,15 +27,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "cmsHTRANSFORM cmsCreateProofingTransform(cmsHPROFILE, cmsUInt32Number, cmsHPROFILE, cmsUInt32Number, cmsHPROFILE, cmsUInt32Number, cmsUInt32Number, cmsUInt32Number)"
-- "exceptions": []
-  "name": "cmsCreateDeviceLinkFromCubeFile"
+- "name": "cmsCreateDeviceLinkFromCubeFile"
   "params":
   - "name": "cFileName"
     "type": "bool "
   "return_type": "void"
   "signature": "cmsHPROFILE cmsCreateDeviceLinkFromCubeFile(const char *)"
-- "exceptions": []
-  "name": "_cmsDefaultICCintents"
+- "name": "_cmsDefaultICCintents"
   "params":
   - "name": "ContextID"
     "type": "bool "
@@ -55,8 +51,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "cmsPipeline * _cmsDefaultICCintents(cmsContext, cmsUInt32Number, cmsUInt32Number *, cmsHPROFILE *, cmsBool *, cmsFloat64Number *, cmsUInt32Number)"
-- "exceptions": []
-  "name": "cmsCreateProofingTransformTHR"
+- "name": "cmsCreateProofingTransformTHR"
   "params":
   - "name": "ContextID"
     "type": "bool "

@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN5muduo6Thread5startEv"
+- "name": "_ZN5muduo6Thread5startEv"
   "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
   "signature": "void muduo::Thread::start()"
-- "exceptions": []
-  "name": "_ZN5muduo6LoggerC2ENS0_10SourceFileEiNS0_8LogLevelE"
+- "name": "_ZN5muduo6LoggerC2ENS0_10SourceFileEiNS0_8LogLevelE"
   "params":
   - "name": ""
     "type": "bool "
@@ -21,8 +19,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "void muduo::Logger::Logger(SourceFile, int, DW_TAG_enumeration_typeLogLevel)"
-- "exceptions": []
-  "name": "_ZN5muduo6LoggerC2ENS0_10SourceFileEiNS0_8LogLevelEPKc"
+- "name": "_ZN5muduo6LoggerC2ENS0_10SourceFileEiNS0_8LogLevelEPKc"
   "params":
   - "name": ""
     "type": "bool "
@@ -38,8 +35,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void muduo::Logger::Logger(SourceFile, int, DW_TAG_enumeration_typeLogLevel, const char *)"
-- "exceptions": []
-  "name": "_ZN5muduo6LoggerC2ENS0_10SourceFileEib"
+- "name": "_ZN5muduo6LoggerC2ENS0_10SourceFileEib"
   "params":
   - "name": ""
     "type": "bool "
@@ -53,8 +49,7 @@
     "type": "bool"
   "return_type": "void"
   "signature": "void muduo::Logger::Logger(SourceFile, int, bool)"
-- "exceptions": []
-  "name": "_ZN5muduo6LoggerC2ENS0_10SourceFileEi"
+- "name": "_ZN5muduo6LoggerC2ENS0_10SourceFileEi"
   "params":
   - "name": ""
     "type": "bool "

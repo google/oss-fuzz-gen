@@ -1,13 +1,11 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN10MainHeaderD2Ev"
+- "name": "_ZN10MainHeaderD2Ev"
   "params":
   - "name": "this"
     "type": "bool "
   "return_type": "void"
   "signature": "struct MainHeader & MainHeader::operator=(struct MainHeader *, struct DW_TAG_rvalue_reference_typeMainHeader)"
-- "exceptions": []
-  "name": "_ZN4FileaSERS_"
+- "name": "_ZN4FileaSERS_"
   "params":
   - "name": "this"
     "type": "bool "

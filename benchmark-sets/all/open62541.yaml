@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "UA_Server_addReaderGroup"
+- "name": "UA_Server_addReaderGroup"
   "params":
   - "name": "server"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "UA_StatusCode UA_Server_addReaderGroup(UA_Server *, const UA_NodeId, const UA_ReaderGroupConfig *, UA_NodeId *)"
-- "exceptions": []
-  "name": "UA_Server_addPubSubConnection"
+- "name": "UA_Server_addPubSubConnection"
   "params":
   - "name": "server"
     "type": "bool "
@@ -23,8 +21,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "UA_StatusCode UA_Server_addPubSubConnection(UA_Server *, const UA_PubSubConnectionConfig *, UA_NodeId *)"
-- "exceptions": []
-  "name": "UA_Server_addWriterGroup"
+- "name": "UA_Server_addWriterGroup"
   "params":
   - "name": "server"
     "type": "bool "
@@ -36,8 +33,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "UA_StatusCode UA_Server_addWriterGroup(UA_Server *, const UA_NodeId, const UA_WriterGroupConfig *, UA_NodeId *)"
-- "exceptions": []
-  "name": "UA_ServerConfig_setDefaultWithFilestore"
+- "name": "UA_ServerConfig_setDefaultWithFilestore"
   "params":
   - "name": "conf"
     "type": "bool "

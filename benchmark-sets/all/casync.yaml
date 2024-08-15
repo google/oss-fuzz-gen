@@ -1,20 +1,17 @@
 "functions":
-- "exceptions": []
-  "name": "var_tmp_dir"
+- "name": "var_tmp_dir"
   "params":
   - "name": "ret"
     "type": "bool "
   "return_type": "int"
   "signature": "int var_tmp_dir(const char **)"
-- "exceptions": []
-  "name": "tmp_dir"
+- "name": "tmp_dir"
   "params":
   - "name": "ret"
     "type": "bool "
   "return_type": "int"
   "signature": "int tmp_dir(const char **)"
-- "exceptions": []
-  "name": "tempfn_random"
+- "name": "tempfn_random"
   "params":
   - "name": "p"
     "type": "bool "
@@ -22,8 +19,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int tempfn_random(const char *, char **)"
-- "exceptions": []
-  "name": "compressor_encode"
+- "name": "compressor_encode"
   "params":
   - "name": "c"
     "type": "bool "
@@ -37,8 +33,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int compressor_encode(CompressorContext *, bool, void *, size_t, size_t *)"
-- "exceptions": []
-  "name": "xopendirat"
+- "name": "xopendirat"
   "params":
   - "name": "fd"
     "type": "int"

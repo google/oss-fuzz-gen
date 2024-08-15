@@ -1,24 +1,17 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadableInstant)"
+- "name": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadableInstant)"
   "params":
   - "name": "arg0"
     "type": "org.joda.time.ReadableInstant"
   "return_type": "java.lang.String"
   "signature": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadableInstant)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadablePartial)"
+- "name": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadablePartial)"
   "params":
   - "name": "arg0"
     "type": "org.joda.time.ReadablePartial"
   "return_type": "java.lang.String"
   "signature": "[org.joda.time.format.DateTimeFormatter].print(org.joda.time.ReadablePartial)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadableInstant)"
+- "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadableInstant)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Appendable"
@@ -26,10 +19,7 @@
     "type": "org.joda.time.ReadableInstant"
   "return_type": "void"
   "signature": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadableInstant)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadablePartial)"
+- "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadablePartial)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Appendable"
@@ -37,9 +27,7 @@
     "type": "org.joda.time.ReadablePartial"
   "return_type": "void"
   "signature": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,org.joda.time.ReadablePartial)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.StringBuffer,long)"
+- "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.StringBuffer,long)"
   "params":
   - "name": "arg0"
     "type": "java.lang.StringBuffer"
@@ -47,10 +35,7 @@
     "type": "long"
   "return_type": "void"
   "signature": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.StringBuffer,long)"
-- "exceptions":
-  - "java.io.IOException"
-  "is_jvm_static": false
-  "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,long)"
+- "name": "[org.joda.time.format.DateTimeFormatter].printTo(java.lang.Appendable,long)"
   "params":
   - "name": "arg0"
     "type": "java.lang.Appendable"

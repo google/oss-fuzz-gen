@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZN11ArduinoJson8V710HB426detail11VariantSlotdlEPvS3_"
+- "name": "_ZN11ArduinoJson8V710HB426detail11VariantSlotdlEPvS3_"
   "params":
   - "name": ""
     "type": "bool "

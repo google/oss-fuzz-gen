@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "ssh_userauth_agent_pubkey"
+- "name": "ssh_userauth_agent_pubkey"
   "params":
   - "name": "session"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ssh_userauth_agent_pubkey(ssh_session, const char *, ssh_public_key)"
-- "exceptions": []
-  "name": "ssh_agent_get_first_ident"
+- "name": "ssh_agent_get_first_ident"
   "params":
   - "name": "session"
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "ssh_key ssh_agent_get_first_ident(struct ssh_session_struct *, char **)"
-- "exceptions": []
-  "name": "ssh_userauth_publickey"
+- "name": "ssh_userauth_publickey"
   "params":
   - "name": "session"
     "type": "bool "
@@ -30,8 +27,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ssh_userauth_publickey(ssh_session, const char *, const ssh_key)"
-- "exceptions": []
-  "name": "ssh_userauth_agent"
+- "name": "ssh_userauth_agent"
   "params":
   - "name": "session"
     "type": "bool "
@@ -39,8 +35,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int ssh_userauth_agent(ssh_session, const char *)"
-- "exceptions": []
-  "name": "ssh_userauth_publickey_auto"
+- "name": "ssh_userauth_publickey_auto"
   "params":
   - "name": "session"
     "type": "bool "

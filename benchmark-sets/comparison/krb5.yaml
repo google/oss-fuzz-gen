@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "krb5_gss_store_cred"
+- "name": "krb5_gss_store_cred"
   "params":
   - "name": "minor_status"
     "type": "bool "

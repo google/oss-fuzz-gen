@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "iesys_gen_auths"
+- "name": "iesys_gen_auths"
   "params":
   - "name": "esys_context"
     "type": "bool "
@@ -14,22 +13,19 @@
     "type": "bool "
   "return_type": "int"
   "signature": "TSS2_RC iesys_gen_auths(ESYS_CONTEXT *, RSRC_NODE_T *, RSRC_NODE_T *, RSRC_NODE_T *, TSS2L_SYS_AUTH_COMMAND *)"
-- "exceptions": []
-  "name": "test_esys_checks_pre"
+- "name": "test_esys_checks_pre"
   "params":
   - "name": "test_ctx"
     "type": "bool "
   "return_type": "int"
   "signature": "int test_esys_checks_pre(TSS2_TEST_ESYS_CONTEXT *)"
-- "exceptions": []
-  "name": "test_esys_checks_post"
+- "name": "test_esys_checks_post"
   "params":
   - "name": "test_ctx"
     "type": "bool "
   "return_type": "int"
   "signature": "int test_esys_checks_post(TSS2_TEST_ESYS_CONTEXT *)"
-- "exceptions": []
-  "name": "Tss2_Sys_CreatePrimary"
+- "name": "Tss2_Sys_CreatePrimary"
   "params":
   - "name": "sysContext"
     "type": "bool "
@@ -61,8 +57,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "TSS2_RC Tss2_Sys_CreatePrimary(TSS2_SYS_CONTEXT *, TPMI_RH_HIERARCHY, const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_SENSITIVE_CREATE *, const TPM2B_PUBLIC *, const TPM2B_DATA *, const TPML_PCR_SELECTION *, TPM2_HANDLE *, TPM2B_PUBLIC *, TPM2B_CREATION_DATA *, TPM2B_DIGEST *, TPMT_TK_CREATION *, TPM2B_NAME *, TSS2L_SYS_AUTH_RESPONSE *)"
-- "exceptions": []
-  "name": "Tss2_Sys_Create"
+- "name": "Tss2_Sys_Create"
   "params":
   - "name": "sysContext"
     "type": "bool "

@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "_ZNK17double_conversion23StringToDoubleConverter13StringToFloatEPKciPi"
+- "name": "_ZNK17double_conversion23StringToDoubleConverter13StringToFloatEPKciPi"
   "params":
   - "name": "this"
     "type": "bool "
@@ -12,8 +11,7 @@
     "type": "bool "
   "return_type": "float"
   "signature": "float double_conversion::StringToDoubleConverter::StringToFloat(const char *, int, int *)"
-- "exceptions": []
-  "name": "_ZNK17double_conversion23StringToDoubleConverter13StringToFloatEPKtiPi"
+- "name": "_ZNK17double_conversion23StringToDoubleConverter13StringToFloatEPKtiPi"
   "params":
   - "name": "this"
     "type": "bool "
@@ -25,8 +23,7 @@
     "type": "bool "
   "return_type": "float"
   "signature": "float double_conversion::StringToDoubleConverter::StringToFloat(const uc16 *, int, int *)"
-- "exceptions": []
-  "name": "_ZNK17double_conversion23StringToDoubleConverter14StringToDoubleEPKtiPi"
+- "name": "_ZNK17double_conversion23StringToDoubleConverter14StringToDoubleEPKtiPi"
   "params":
   - "name": "this"
     "type": "bool "
@@ -38,8 +35,7 @@
     "type": "bool "
   "return_type": "double"
   "signature": "double double_conversion::StringToDoubleConverter::StringToDouble(const uc16 *, int, int *)"
-- "exceptions": []
-  "name": "_ZN17double_conversion6StrtodENS_6VectorIKcEEi"
+- "name": "_ZN17double_conversion6StrtodENS_6VectorIKcEEi"
   "params":
   - "name": "buffer"
     "type": "bool "
@@ -49,8 +45,7 @@
     "type": "int"
   "return_type": "double"
   "signature": "double double_conversion::Strtod(Vector<const char>, int)"
-- "exceptions": []
-  "name": "_ZN17double_conversion6StrtofENS_6VectorIKcEEi"
+- "name": "_ZN17double_conversion6StrtofENS_6VectorIKcEEi"
   "params":
   - "name": "buffer"
     "type": "bool "

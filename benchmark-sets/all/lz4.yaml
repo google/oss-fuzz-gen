@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "LZ4_compress_destSize_extState"
+- "name": "LZ4_compress_destSize_extState"
   "params":
   - "name": "state"
     "type": "bool "
@@ -16,8 +15,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int LZ4_compress_destSize_extState(void *, const char *, char *, int *, int, int)"
-- "exceptions": []
-  "name": "LZ4_compressHC2_limitedOutput_withStateHC"
+- "name": "LZ4_compressHC2_limitedOutput_withStateHC"
   "params":
   - "name": "state"
     "type": "bool "
@@ -33,8 +31,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int LZ4_compressHC2_limitedOutput_withStateHC(void *, const char *, char *, int, int, int)"
-- "exceptions": []
-  "name": "LZ4_compressHC2_limitedOutput"
+- "name": "LZ4_compressHC2_limitedOutput"
   "params":
   - "name": "src"
     "type": "bool "
@@ -48,8 +45,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "int LZ4_compressHC2_limitedOutput(const char *, char *, int, int, int)"
-- "exceptions": []
-  "name": "LZ4F_getFrameInfo"
+- "name": "LZ4F_getFrameInfo"
   "params":
   - "name": "dctx"
     "type": "bool "
@@ -61,8 +57,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "size_t LZ4F_getFrameInfo(LZ4F_dctx *, LZ4F_frameInfo_t *, const void *, size_t *)"
-- "exceptions": []
-  "name": "LZ4_compress_HC_continue_destSize"
+- "name": "LZ4_compress_HC_continue_destSize"
   "params":
   - "name": "LZ4_streamHCPtr"
     "type": "bool "

@@ -1,7 +1,5 @@
 "functions":
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.jsoup.select.NodeTraversor].traverse(org.jsoup.select.NodeVisitor,org.jsoup.nodes.Node)"
+- "name": "[org.jsoup.select.NodeTraversor].traverse(org.jsoup.select.NodeVisitor,org.jsoup.nodes.Node)"
   "params":
   - "name": "arg0"
     "type": "org.jsoup.select.NodeVisitor"
@@ -9,9 +7,7 @@
     "type": "org.jsoup.nodes.Node"
   "return_type": "void"
   "signature": "[org.jsoup.select.NodeTraversor].traverse(org.jsoup.select.NodeVisitor,org.jsoup.nodes.Node)"
-- "exceptions": []
-  "is_jvm_static": true
-  "name": "[org.jsoup.internal.StringUtil].join(java.util.Iterator<?>,java.lang.String)"
+- "name": "[org.jsoup.internal.StringUtil].join(java.util.Iterator<?>,java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.util.Iterator<?>"
@@ -19,9 +15,7 @@
     "type": "java.lang.String"
   "return_type": "java.lang.String"
   "signature": "[org.jsoup.internal.StringUtil].join(java.util.Iterator<?>,java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jsoup.safety.Safelist].isSafeAttribute(java.lang.String,org.jsoup.nodes.Element,org.jsoup.nodes.Attribute)"
+- "name": "[org.jsoup.safety.Safelist].isSafeAttribute(java.lang.String,org.jsoup.nodes.Element,org.jsoup.nodes.Attribute)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
@@ -31,9 +25,7 @@
     "type": "org.jsoup.nodes.Attribute"
   "return_type": "boolean"
   "signature": "[org.jsoup.safety.Safelist].isSafeAttribute(java.lang.String,org.jsoup.nodes.Element,org.jsoup.nodes.Attribute)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jsoup.helper.W3CDom$W3CBuilder].head(org.jsoup.nodes.Node,int)"
+- "name": "[org.jsoup.helper.W3CDom$W3CBuilder].head(org.jsoup.nodes.Node,int)"
   "params":
   - "name": "arg0"
     "type": "org.jsoup.nodes.Node"
@@ -41,17 +33,13 @@
     "type": "int"
   "return_type": "void"
   "signature": "[org.jsoup.helper.W3CDom$W3CBuilder].head(org.jsoup.nodes.Node,int)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jsoup.safety.Safelist].getEnforcedAttributes(java.lang.String)"
+- "name": "[org.jsoup.safety.Safelist].getEnforcedAttributes(java.lang.String)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"
   "return_type": "org.jsoup.nodes.Attributes"
   "signature": "[org.jsoup.safety.Safelist].getEnforcedAttributes(java.lang.String)"
-- "exceptions": []
-  "is_jvm_static": false
-  "name": "[org.jsoup.nodes.Attributes].userData(java.lang.String,java.lang.Object)"
+- "name": "[org.jsoup.nodes.Attributes].userData(java.lang.String,java.lang.Object)"
   "params":
   - "name": "arg0"
     "type": "java.lang.String"

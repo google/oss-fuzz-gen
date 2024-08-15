@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "spvValidate"
+- "name": "spvValidate"
   "params":
   - "name": "context"
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "spv_result_t spvValidate(const spv_const_context, const spv_const_binary, spv_diagnostic *)"
-- "exceptions": []
-  "name": "_ZNK8spvtools9Optimizer3RunEPKjmPNSt3__16vectorIjNS3_9allocatorIjEEEE"
+- "name": "_ZNK8spvtools9Optimizer3RunEPKjmPNSt3__16vectorIjNS3_9allocatorIjEEEE"
   "params":
   - "name": "this"
     "type": "bool "
@@ -23,8 +21,7 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool spvtools::Optimizer::Run(const uint32_t *, const size_t, vector<unsigned int, std::__1::allocator<unsigned int> > *)"
-- "exceptions": []
-  "name": "spvOptimizerRun"
+- "name": "spvOptimizerRun"
   "params":
   - "name": "optimizer"
     "type": "bool "
@@ -38,8 +35,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "spv_result_t spvOptimizerRun(spv_optimizer_t *, const uint32_t *, const size_t, spv_binary *, const spv_optimizer_options)"
-- "exceptions": []
-  "name": "_ZNK8spvtools9Optimizer3RunEPKjmPNSt3__16vectorIjNS3_9allocatorIjEEEERKNS_16ValidatorOptionsEb"
+- "name": "_ZNK8spvtools9Optimizer3RunEPKjmPNSt3__16vectorIjNS3_9allocatorIjEEEERKNS_16ValidatorOptionsEb"
   "params":
   - "name": "this"
     "type": "bool "
@@ -55,8 +51,7 @@
     "type": "bool"
   "return_type": "bool"
   "signature": "bool spvtools::Optimizer::Run(const uint32_t *, const size_t, vector<unsigned int, std::__1::allocator<unsigned int> > *, const ValidatorOptions &, bool)"
-- "exceptions": []
-  "name": "_ZN8spvtools3opt15LoopFissionPass7ProcessEv"
+- "name": "_ZN8spvtools3opt15LoopFissionPass7ProcessEv"
   "params":
   - "name": "this"
     "type": "bool "

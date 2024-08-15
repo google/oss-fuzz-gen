@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "cl_scandesc"
+- "name": "cl_scandesc"
   "params":
   - "name": ""
     "type": "int"
@@ -16,8 +15,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "cl_error_t cl_scandesc(int, const char *, const char **, unsigned long *, const struct cl_engine *, struct cl_scan_options *)"
-- "exceptions": []
-  "name": "Lzma2Decode"
+- "name": "Lzma2Decode"
   "params":
   - "name": ""
     "type": "bool "
@@ -37,8 +35,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "SRes Lzma2Decode(Byte *, SizeT *, const Byte *, SizeT *, Byte, ELzmaFinishMode, ELzmaStatus *, ISzAlloc *)"
-- "exceptions": []
-  "name": "cli_matchregex"
+- "name": "cli_matchregex"
   "params":
   - "name": ""
     "type": "bool "
@@ -46,8 +43,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int cli_matchregex(const char *, const char *)"
-- "exceptions": []
-  "name": "qtmd_decompress"
+- "name": "qtmd_decompress"
   "params":
   - "name": ""
     "type": "bool "
@@ -55,8 +51,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int qtmd_decompress(struct qtmd_stream *, off_t)"
-- "exceptions": []
-  "name": "cl_cvdverify"
+- "name": "cl_cvdverify"
   "params":
   - "name": ""
     "type": "bool "

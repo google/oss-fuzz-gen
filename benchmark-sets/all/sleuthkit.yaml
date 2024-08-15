@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "tsk_fs_open_vol"
+- "name": "tsk_fs_open_vol"
   "params":
   - "name": "a_part_info"
     "type": "bool "
@@ -8,8 +7,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "TSK_FS_INFO * tsk_fs_open_vol(const TSK_VS_PART_INFO *, TSK_FS_TYPE_ENUM)"
-- "exceptions": []
-  "name": "tsk_fs_open_vol_decrypt"
+- "name": "tsk_fs_open_vol_decrypt"
   "params":
   - "name": "a_part_info"
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "TSK_FS_INFO * tsk_fs_open_vol_decrypt(const TSK_VS_PART_INFO *, TSK_FS_TYPE_ENUM, const char *)"
-- "exceptions": []
-  "name": "_ZNK12APFSFSCompat5istatE22TSK_FS_ISTAT_FLAG_ENUMP8_IO_FILEmmi"
+- "name": "_ZNK12APFSFSCompat5istatE22TSK_FS_ISTAT_FLAG_ENUMP8_IO_FILEmmi"
   "params":
   - "name": "this"
     "type": "bool "
@@ -36,8 +33,7 @@
     "type": "int"
   "return_type": "char"
   "signature": "uint8_t APFSFSCompat::istat(TSK_FS_ISTAT_FLAG_ENUM, FILE *, TSK_INUM_T, TSK_DADDR_T, int32_t)"
-- "exceptions": []
-  "name": "ntfs_dir_open_meta"
+- "name": "ntfs_dir_open_meta"
   "params":
   - "name": "a_fs"
     "type": "bool "
@@ -49,8 +45,7 @@
     "type": "int"
   "return_type": "int"
   "signature": "TSK_RETVAL_ENUM ntfs_dir_open_meta(TSK_FS_INFO *, TSK_FS_DIR **, TSK_INUM_T, int)"
-- "exceptions": []
-  "name": "ffs_dir_open_meta"
+- "name": "ffs_dir_open_meta"
   "params":
   - "name": "a_fs"
     "type": "bool "

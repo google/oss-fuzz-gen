@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "pn_data_vfill"
+- "name": "pn_data_vfill"
   "params":
   - "name": ""
     "type": "bool "
@@ -10,8 +9,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int pn_data_vfill(pn_data_t *, const char *, struct __va_list_tag *)"
-- "exceptions": []
-  "name": "pn_message_data"
+- "name": "pn_message_data"
   "params":
   - "name": ""
     "type": "bool "
@@ -19,8 +17,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int pn_message_data(pn_message_t *, pn_data_t *)"
-- "exceptions": []
-  "name": "pn_data_scan"
+- "name": "pn_data_scan"
   "params":
   - "name": ""
     "type": "bool "
@@ -28,8 +25,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int pn_data_scan(pn_data_t *, const char *, void)"
-- "exceptions": []
-  "name": "pn_message_send"
+- "name": "pn_message_send"
   "params":
   - "name": ""
     "type": "bool "
@@ -39,8 +35,7 @@
     "type": "bool "
   "return_type": "size_t"
   "signature": "ssize_t pn_message_send(pn_message_t *, pn_link_t *, pn_rwbytes_t *)"
-- "exceptions": []
-  "name": "pn_data_fill"
+- "name": "pn_data_fill"
   "params":
   - "name": ""
     "type": "bool "

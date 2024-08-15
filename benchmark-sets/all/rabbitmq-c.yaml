@@ -1,6 +1,5 @@
 "functions":
-- "exceptions": []
-  "name": "amqp_login_with_properties"
+- "name": "amqp_login_with_properties"
   "params":
   - "name": "state"
     "type": "bool "
@@ -20,8 +19,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "amqp_rpc_reply_t amqp_login_with_properties(amqp_connection_state_t, const char *, int, int, int, const amqp_table_t *, amqp_sasl_method_enum, void)"
-- "exceptions": []
-  "name": "amqp_confirm_select"
+- "name": "amqp_confirm_select"
   "params":
   - "name": "state"
     "type": "bool "
@@ -29,8 +27,7 @@
     "type": "short"
   "return_type": "void"
   "signature": "amqp_confirm_select_ok_t * amqp_confirm_select(amqp_connection_state_t, amqp_channel_t)"
-- "exceptions": []
-  "name": "amqp_channel_close"
+- "name": "amqp_channel_close"
   "params":
   - "name": "state"
     "type": "bool "
@@ -42,8 +39,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "amqp_rpc_reply_t amqp_channel_close(amqp_connection_state_t, amqp_channel_t, int)"
-- "exceptions": []
-  "name": "amqp_tx_rollback"
+- "name": "amqp_tx_rollback"
   "params":
   - "name": "state"
     "type": "bool "
@@ -51,8 +47,7 @@
     "type": "short"
   "return_type": "void"
   "signature": "amqp_tx_rollback_ok_t * amqp_tx_rollback(amqp_connection_state_t, amqp_channel_t)"
-- "exceptions": []
-  "name": "amqp_connection_close"
+- "name": "amqp_connection_close"
   "params":
   - "name": "state"
     "type": "bool "
