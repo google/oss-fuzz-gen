@@ -23,11 +23,21 @@ Crash reason: {{ sample.result.semantic_error }}
 <br>
 <br>
 
+{% if triage.result %}
 <h2>Triage</h2>
 <pre>
-{{ triage }}
+{{ triage.result }}
 </pre>
 <br>
+{% endif %}
+
+{% if triage.triager_prompt %}
+<h3>Triager prompt</h3>
+<pre>
+{{ triage.triager_prompt }}
+</pre>
+<br>
+{% endif %}
 
 {% for target in targets %}
 {% if target.fixer_prompt %}

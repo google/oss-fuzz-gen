@@ -117,6 +117,11 @@ class Target:
   code: str
   fixer_prompt: Optional[str] = None
 
+@dataclasses.dataclass
+class Triage:
+  result: str
+  triager_prompt: str
+
 
 class FileSystem:
   """
@@ -309,20 +314,29 @@ class Results:
 
     return ''
 
-  def get_triage(self, benchmark: str, sample: str) -> str:
+  def get_triage(self, benchmark: str, sample: str) -> Triage:
     """Gets the triage of benchmark |benchmark| with sample ID |sample|."""
+    result = ''
+    triager_prompt = ''
     fixed_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
     triage_dir = os.path.join(fixed_dir, f'{sample}-triage')
     if not os.path.exists(triage_dir):
-      return ''
+      return Triage[result, triager_prompt]
 
     for name in os.listdir(triage_dir):
+      if name == 'prompt.txt':
+        with FileSystem(os.path.join(triage_dir, name)).open() as f:
+          triager_prompt = f.read()
+
+        # Prepare prompt for being used in HTML.
+        triager_prompt = self._prepare_prompt_for_html_text(triager_prompt)
+
       if name.endswith('.txt') and name != 'prompt.txt':
         triage_path = os.path.join(triage_dir, name)
         with open(triage_path) as f:
           return f.read()
 
-    return ''
+    return Triage[result, triager_prompt]
 
   def get_targets(self, benchmark: str, sample: str) -> list[Target]:
     """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
@@ -485,7 +499,7 @@ class Results:
 
     return targets
 
-  def _get_fixed_target(self, path: str):
+  def _get_fixed_target(self, path: str) -> Target:
     """Gets the fixed fuzz target from the benchmark's result |path|."""
     code = ''
     fixer_prompt = ''
@@ -494,8 +508,8 @@ class Results:
         with FileSystem(os.path.join(path, name)).open() as f:
           fixer_prompt = f.read()
 
-      # Prepare prompt for being used in HTML.
-      fixer_prompt = self._prepare_prompt_for_html_text(fixer_prompt)
+        # Prepare prompt for being used in HTML.
+        fixer_prompt = self._prepare_prompt_for_html_text(fixer_prompt)
 
       if name.endswith('.rawoutput'):
         with FileSystem(os.path.join(path, name)).open() as f:
