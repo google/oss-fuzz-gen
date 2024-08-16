@@ -186,7 +186,7 @@ offers a set of APIs to inspect OSS-Fuzz projects in a programmatic way.
 It may be suited to run a local version of the Fuzz Introspector web application
 instead of directly querying [https://introspector.oss-fuzz.com](https://introspector.oss-fuzz.com).
 This can be useful in scenarios such as testing extension to OSS-Fuzz-gen that
-requires new program analysis data, network bandwith needs to be limited or perhaps
+requires new program analysis data, network bandwidth needs to be limited or perhaps
 the website is down. It's possible to set OSS-Fuzz-gen to use a local version
 of [https://introspector.oss-fuzz.com](https://introspector.oss-fuzz.com) by
 passing the `-e` flag to `run_all_experiments.py`. However, in order to do this,
