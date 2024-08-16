@@ -127,6 +127,7 @@ Configure and use framework in the following five steps:
 3. [Generate fuzz target](#Generate-Fuzz-Target)
 4. [Fix compilation error](#Fix-Compilation-Error)
 5. [Evaluate fuzz target](#Evaluate-Fuzz-Target)
+6. [Using local Fuzz Introspector instance](#Using-Local-Fuzz-Introspector-Instance)
 
 ### Configure Benchmark
 Prepare a [benchmark YAML](data_prep/README.md#Benchmark-YAML) that specifies
@@ -174,6 +175,25 @@ If the fuzz target compiles successfully, the framework fuzzes it with
 `libFuzzer` and measures its line coverage. The fuzzing timeout is specified by
 `--run-timeout` flag. Its line coverage is also compared against existing
 human-written fuzz targets from `OSS-Fuzz` in production.
+
+### Using Local Fuzz Introspector Instance
+
+OSS-Fuzz-gen relies on [Fuzz Introspector](https://github.com/ossf/fuzz-introspector)
+to extract information about the projects under analysis. This is done by querying
+[https://introspector.oss-fuzz.com](https://introspector.oss-fuzz.com) which
+offers a set of APIs to inspect OSS-Fuzz projects in a programmatic way.
+
+It may be suited to run a local version of the Fuzz Introspector web application
+instead of directly querying [https://introspector.oss-fuzz.com](https://introspector.oss-fuzz.com).
+This can be useful in scenarios such as testing extension to OSS-Fuzz-gen that
+requires new program analysis data, network bandwith needs to be limited or perhaps
+the website is down. It's possible to set OSS-Fuzz-gen to use a local version
+of [https://introspector.oss-fuzz.com](https://introspector.oss-fuzz.com) by
+passing the `-e` flag to `run_all_experiments.py`. However, in order to do this,
+a local instance of the Fuzz Introspector endpoint will first need to be
+initialized locally. This is simple to do and we reference the Fuzz Introspector
+guide [here](https://github.com/ossf/fuzz-introspector/tree/main/scripts/oss-fuzz-gen-e2e#usage) for this.
+
 
 ## Development
 
