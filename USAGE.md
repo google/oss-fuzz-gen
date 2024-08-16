@@ -121,7 +121,7 @@ Then navigate to `http://localhost:<port>` to view the result in [a table](#resu
 
 
 ## Detailed workflows
-Configure and use framework in the following five steps:
+Configure and use framework in the following steps:
 1. [Configure benchmark](#Configure-Benchmark)
 2. [Setup prompt template](#Setup-Prompt-Templates)
 3. [Generate fuzz target](#Generate-Fuzz-Target)
