@@ -91,8 +91,8 @@ class Benchmark:
       for test_file in test_files:
         max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
         test_file_path = test_file.get('test_file_path')
-        normalized_test_path = test_file_path.replace("/",
-                                                      "_").replace(".", "_")
+        normalized_test_path = test_file_path.replace('/', '_').replace(
+            '.', '_').replace('-', '_')
         truncated_id = f'{project_name}-{normalized_test_path}'[:max_len]
 
         benchmarks.append(
