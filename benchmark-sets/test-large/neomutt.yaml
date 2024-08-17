@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "neomutt"
+"target_name": "address"
+"target_path": "/src/neomutt/fuzz/address.c"
+"test_files":
+- "test_file_path": "//src/neomutt/test/charset/mutt_ch_lookup_remove.c"
+- "test_file_path": "//src/neomutt/test/neo/neomutt_account_add.c"
+- "test_file_path": "//src/neomutt/test/expando/simple_expando_render.c"
+- "test_file_path": "//src/neomutt/test/parse/mutt_rfc822_read_line.c"
+- "test_file_path": "//src/neomutt/test/md5/mutt_md5_finish_ctx.c"
+- "test_file_path": "//src/neomutt/test/group/mutt_grouplist_remove_addrlist.c"
+- "test_file_path": "//src/neomutt/test/expando/old_if_else.c"
+- "test_file_path": "//src/neomutt/test/parse/parse_extract_token.c"
+- "test_file_path": "//src/neomutt/test/date/mutt_date_normalize_time.c"

@@ -1,0 +1,10 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "miniz"
+"target_name": "zip_fuzzer"
+"target_path": "/src/miniz/tests/zip_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/miniz/tests/timer.cpp"
+- "test_file_path": "//src/miniz/tests/miniz_tester.cpp"
+- "test_file_path": "//src/miniz/tests/main.cpp"
+- "test_file_path": "//src/miniz/tests/catch_amalgamated.cpp"

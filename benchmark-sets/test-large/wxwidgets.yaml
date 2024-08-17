@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "wxwidgets"
+"target_name": "zip"
+"target_path": "/src/wxwidgets/tests/fuzz/zip.cpp"
+"test_files":
+- "test_file_path": "//src/wxwidgets/tests/base64/base64.cpp"
+- "test_file_path": "//src/wxwidgets/tests/graphics/ellipsization.cpp"
+- "test_file_path": "//src/wxwidgets/src/zlib/test/infcover.c"
+- "test_file_path": "//src/wxwidgets/tests/controls/treelistctrltest.cpp"
+- "test_file_path": "//src/wxwidgets/tests/events/clone.cpp"
+- "test_file_path": "//src/wxwidgets/tests/streams/ffilestream.cpp"
+- "test_file_path": "//src/wxwidgets/tests/streams/tempfile.cpp"
+- "test_file_path": "//src/wxwidgets/tests/controls/textentrytest.cpp"
+- "test_file_path": "//src/wxwidgets/tests/graphics/affinematrix.cpp"

@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "openexr"
+"target_name": "openexr_exrcorecheck_fuzzer"
+"target_path": "/src/openexr/src/test/OpenEXRFuzzTest/oss-fuzz/openexr_exrcorecheck_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/openexr/src/test/OpenEXRTest/testBadTypeAttributes.cpp"
+- "test_file_path": "//src/openexr/src/test/OpenEXRCoreTest/deep.cpp"
+- "test_file_path": "//src/openexr/src/test/OpenEXRTest/testCopyPixels.cpp"
+- "test_file_path": "//src/openexr/src/test/OpenEXRTest/testBackwardCompatibility.cpp"
+- "test_file_path": "//src/openexr/src/test/OpenEXRTest/testPartHelper.cpp"
+- "test_file_path": "//src/openexr/src/test/OpenEXRTest/testTiledRgba.cpp"
+- "test_file_path": "//src/openexr/src/test/OpenEXRTest/testAttributes.cpp"
+- "test_file_path": "//src/openexr/src/test/OpenEXRTest/testNativeFormat.cpp"
+- "test_file_path": "//src/openexr/src/test/OpenEXRTest/testMalformedImages.cpp"

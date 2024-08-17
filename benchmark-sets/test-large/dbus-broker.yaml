@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "dbus-broker"
+"target_name": "fuzz-message"
+"target_path": "/src/fuzz-message.c"
+"test_files":
+- "test_file_path": "//src/dbus-broker/test/dbus/util-broker.c"
+- "test_file_path": "//src/dbus-broker/test/dbus/test-matches.c"
+- "test_file_path": "//src/dbus-broker/test/dbus/util-message.c"
+- "test_file_path": "//src/dbus-broker/test/dbus/test-driver.c"
+- "test_file_path": "//src/dbus-broker/test/dbus/test-broker.c"
+- "test_file_path": "//src/dbus-broker/test/dbus/tool-flood.c"
+- "test_file_path": "//src/dbus-broker/test/dbus/bench-message.c"
+- "test_file_path": "//src/dbus-broker/test/dbus/test-lifetime.c"
+- "test_file_path": "//src/dbus-broker/test/dbus/bench-connect.c"

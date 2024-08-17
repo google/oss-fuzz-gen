@@ -1,0 +1,9 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "gpac"
+"target_name": "fuzz_parse"
+"target_path": "/src/gpac/testsuite/oss-fuzzers/fuzz_parse.c"
+"test_files":
+- "test_file_path": "//src/gpac/src/filters/unittests/ut_dec_scte35.c"
+- "test_file_path": "//src/gpac/src/utils/unittests/ut_xml_parser.c"
+- "test_file_path": "//src/gpac/src/utils/unittests/ut_os_config_init.c"

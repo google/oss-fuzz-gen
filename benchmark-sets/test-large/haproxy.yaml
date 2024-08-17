@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "haproxy"
+"target_name": "fuzz_cfg_parser"
+"target_path": "/src/haproxy/fuzz_cfg_parser.c"
+"test_files":
+- "test_file_path": "//src/haproxy/tests/exp/ip-hash.c"
+- "test_file_path": "//src/haproxy/tests/unit/test-arg.c"
+- "test_file_path": "//src/haproxy/tests/exp/test_hashes.c"
+- "test_file_path": "//src/haproxy/tests/exp/blocksig.c"
+- "test_file_path": "//src/haproxy/tests/unit/test-1-among.c"
+- "test_file_path": "//src/haproxy/tests/unit/ist.c"
+- "test_file_path": "//src/haproxy/tests/exp/filltab25.c"
+- "test_file_path": "//src/haproxy/tests/unit/test-list.c"
+- "test_file_path": "//src/haproxy/tests/exp/testinet.c"

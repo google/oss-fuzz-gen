@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "duckdb"
+"target_name": "parse_fuzz_test"
+"target_path": "/src/duckdb/test/ossfuzz/parse_fuzz_test.cpp"
+"test_files":
+- "test_file_path": "//src/duckdb/test/api/capi/test_capi_website.cpp"
+- "test_file_path": "//src/duckdb/test/sql/udf_function/test_aggregate_udf.cpp"
+- "test_file_path": "//src/duckdb/test/extension/test_remote_optimizer.cpp"
+- "test_file_path": "//src/duckdb/test/sql/parallelism/interquery/concurrent_checkpoint.cpp"
+- "test_file_path": "//src/duckdb/test/api/test_config.cpp"
+- "test_file_path": "//src/duckdb/test/api/test_lifecycle_hooks.cpp"
+- "test_file_path": "//src/duckdb/test/memoryleak/test_appender.cpp"
+- "test_file_path": "//src/duckdb/test/api/test_appender_api.cpp"
+- "test_file_path": "//src/duckdb/test/sqlite/result_helper.cpp"

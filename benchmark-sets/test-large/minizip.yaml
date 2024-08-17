@@ -1,0 +1,14 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "minizip"
+"target_name": "zip_fuzzer"
+"target_path": "/src/minizip-ng/test/fuzz/zip_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/minizip-ng/test/test_compat.cc"
+- "test_file_path": "//src/minizip-ng/test/test_crypt.cc"
+- "test_file_path": "//src/minizip-ng/test/test_path.cc"
+- "test_file_path": "//src/minizip-ng/test/test_encoding.cc"
+- "test_file_path": "//src/minizip-ng/test/test_stream.cc"
+- "test_file_path": "//src/minizip-ng/test/test_stream_compress.cc"
+- "test_file_path": "//src/minizip-ng/test/test_stream_crypt.cc"
+- "test_file_path": "//src/minizip-ng/test/test_main.cc"

@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "json"
+"target_name": "fuzzer-parse_json"
+"target_path": "/src/json/tests/src/fuzzer-parse_json.cpp"
+"test_files":
+- "test_file_path": "//src/json/tests/src/unit-ordered_json.cpp"
+- "test_file_path": "//src/json/tests/src/unit-constructor2.cpp"
+- "test_file_path": "//src/json/tests/src/unit-json_patch.cpp"
+- "test_file_path": "//src/json/tests/src/unit-cbor.cpp"
+- "test_file_path": "//src/json/tests/src/unit-custom-base-class.cpp"
+- "test_file_path": "//src/json/tests/src/unit-no-mem-leak-on-adl-serialize.cpp"
+- "test_file_path": "//src/json/tests/src/unit-reference_access.cpp"
+- "test_file_path": "//src/json/tests/src/unit-ubjson.cpp"
+- "test_file_path": "//src/json/tests/src/unit-bson.cpp"

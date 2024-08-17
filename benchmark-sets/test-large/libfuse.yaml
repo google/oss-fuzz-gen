@@ -1,0 +1,13 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "libfuse"
+"target_name": "fuzz_optparse"
+"target_path": "/src/fuzz_optparse.c"
+"test_files":
+- "test_file_path": "//src/libfuse/test/release_unlink_race.c"
+- "test_file_path": "//src/libfuse/test/readdir_inode.c"
+- "test_file_path": "//src/libfuse/test/wrong_command.c"
+- "test_file_path": "//src/libfuse/test/stracedecode.c"
+- "test_file_path": "//src/libfuse/test/test_write_cache.c"
+- "test_file_path": "//src/libfuse/test/test_setattr.c"
+- "test_file_path": "//src/libfuse/test/test_syscalls.c"

@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "phmap"
+"target_name": "phashmap_fuzz"
+"target_path": "/src/phashmap_fuzz.cc"
+"test_files":
+- "test_file_path": "//src/parallel-hashmap/tests/container_memory_test.cc"
+- "test_file_path": "//src/parallel-hashmap/tests/flat_hash_map_test.cc"
+- "test_file_path": "//src/parallel-hashmap/tests/raw_hash_set_test.cc"
+- "test_file_path": "//src/parallel-hashmap/tests/parallel_flat_hash_map_test.cc"
+- "test_file_path": "//src/parallel-hashmap/tests/btree_test.cc"
+- "test_file_path": "//src/parallel-hashmap/tests/parallel_node_hash_map_test.cc"
+- "test_file_path": "//src/parallel-hashmap/tests/parallel_flat_hash_set_test.cc"
+- "test_file_path": "//src/parallel-hashmap/tests/dump_load_test.cc"
+- "test_file_path": "//src/parallel-hashmap/tests/raw_hash_set_allocator_test.cc"

@@ -1,0 +1,9 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libtsm"
+"target_name": "libtsm_fuzzer"
+"target_path": "/src/libtsm_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/libtsm/test/test_symbol.c"
+- "test_file_path": "//src/libtsm/test/test_valgrind.c"
+- "test_file_path": "//src/libtsm/test/test_htable.c"

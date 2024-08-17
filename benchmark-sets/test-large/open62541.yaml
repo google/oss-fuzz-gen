@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "open62541"
+"target_name": "fuzz_json_decode"
+"target_path": "/src/open62541/tests/fuzz/fuzz_json_decode.cc"
+"test_files":
+- "test_file_path": "//src/open62541/deps/nodesetLoader/backends/open62541/tests/newHierachicalRef.c"
+- "test_file_path": "//src/open62541/deps/nodesetLoader/backends/open62541/tests/dataTypeImport/compareStructSpecialized.c"
+- "test_file_path": "//src/open62541/tests/check_cj5.c"
+- "test_file_path": "//src/open62541/deps/nodesetLoader/backends/open62541/tests/dataTypeImport/compareUnion.c"
+- "test_file_path": "//src/open62541/tests/check_types_range.c"
+- "test_file_path": "//src/open62541/tests/client/check_client_securechannel.c"
+- "test_file_path": "//src/open62541/deps/nodesetLoader/backends/open62541/tests/dataTypeImport/compareStructExtended.c"
+- "test_file_path": "//src/open62541/tests/testing-plugins/testing_networklayers.c"
+- "test_file_path": "//src/open62541/deps/nodesetLoader/backends/open62541/tests/integration/client/value_utils.cpp"

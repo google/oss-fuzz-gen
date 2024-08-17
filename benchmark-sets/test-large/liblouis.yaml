@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "liblouis"
+"target_name": "fuzz_backtranslate"
+"target_path": "/src/liblouis/tests/fuzzing/fuzz_backtranslate.c"
+"test_files":
+- "test_file_path": "//src/liblouis/tests/emphclass.c"
+- "test_file_path": "//src/liblouis/tests/hash_collision.c"
+- "test_file_path": "//src/liblouis/tests/suggestChunks.c"
+- "test_file_path": "//src/liblouis/tests/attributeNames.c"
+- "test_file_path": "//src/liblouis/tests/check_ueb_test_data.c"
+- "test_file_path": "//src/liblouis/tests/resolve_table.c"
+- "test_file_path": "//src/liblouis/tests/logging.c"
+- "test_file_path": "//src/liblouis/tests/findTable.c"
+- "test_file_path": "//src/liblouis/tests/checkTable.c"

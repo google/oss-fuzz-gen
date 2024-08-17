@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "resiprocate"
+"target_name": "fuzzUtil"
+"target_path": "/src/resiprocate/rutil/test/fuzzUtil.cxx"
+"test_files":
+- "test_file_path": "//src/resiprocate/resip/stack/test/testDnsCache.cxx"
+- "test_file_path": "//src/resiprocate/resip/stack/test/testDispatcher.cxx"
+- "test_file_path": "//src/resiprocate/resip/stack/test/testSocketFunc.cxx"
+- "test_file_path": "//src/resiprocate/resip/stack/test/testSelectInterruptor.cxx"
+- "test_file_path": "//src/resiprocate/resip/stack/test/testDnsStub.cxx"
+- "test_file_path": "//src/resiprocate/resip/stack/test/testAppTimer.cxx"
+- "test_file_path": "//src/resiprocate/rutil/test/testMD5Stream.cxx"
+- "test_file_path": "//src/resiprocate/resip/stack/test/testGperfHash.cxx"
+- "test_file_path": "//src/resiprocate/resip/stack/test/Register.cxx"

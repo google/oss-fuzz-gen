@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libical"
+"target_name": "libical_fuzzer"
+"target_path": "/src/libical_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/libical/src/test/regression.c"
+- "test_file_path": "//src/libical/src/test/regression-classify.c"
+- "test_file_path": "//src/libical/src/test/regression-storage.c"
+- "test_file_path": "//src/libical/src/test/stow.c"
+- "test_file_path": "//src/libical/src/test/libicalvcard/vcard_test_encode.c"
+- "test_file_path": "//src/libical/src/test/testmime.c"
+- "test_file_path": "//src/libical/src/test/testvcal.c"
+- "test_file_path": "//src/libical/src/test/icaltm_test.c"
+- "test_file_path": "//src/libical/src/test/copycluster.c"

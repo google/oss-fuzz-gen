@@ -1,0 +1,7 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "janet"
+"target_name": "fuzz_dostring"
+"target_path": "/src/janet/test/fuzzers/fuzz_dostring.c"
+"test_files":
+- "test_file_path": "//src/janet/test/amalg/main.c"

@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "glslang"
+"target_name": "compile_fuzzer"
+"target_path": "/src/compile_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/glslang/gtests/Common.cpp"
+- "test_file_path": "//src/glslang/gtests/Spv.FromFile.cpp"
+- "test_file_path": "//src/glslang/gtests/AST.FromFile.cpp"
+- "test_file_path": "//src/glslang/gtests/Pp.FromFile.cpp"
+- "test_file_path": "//src/glslang/gtests/VkRelaxed.FromFile.cpp"
+- "test_file_path": "//src/glslang/gtests/BuiltInResource.FromFile.cpp"
+- "test_file_path": "//src/glslang/gtests/Link.FromFile.Vk.cpp"
+- "test_file_path": "//src/glslang/gtests/HexFloat.cpp"
+- "test_file_path": "//src/glslang/gtests/Config.FromFile.cpp"

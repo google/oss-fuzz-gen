@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "clib"
+"target_name": "fuzz_manifest"
+"target_path": "/src/clib/test/fuzzing/fuzz_manifest.c"
+"test_files":
+- "test_file_path": "//src/clib/test/cache/cache-test.c"
+- "test_file_path": "//src/clib/test/package/package-load-from-manifest.c"
+- "test_file_path": "//src/clib/test/package/package-parse-version.c"
+- "test_file_path": "//src/clib/test/package/package-install-dependencies.c"
+- "test_file_path": "//src/clib/test/package/package-load-manifest-file.c"
+- "test_file_path": "//src/clib/test/package/package-new.c"
+- "test_file_path": "//src/clib/test/package/package-new-from-slug.c"
+- "test_file_path": "//src/clib/test/package/package-parse-name.c"
+- "test_file_path": "//src/clib/test/package/package-parse-author.c"

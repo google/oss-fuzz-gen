@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "wget2"
+"target_name": "libwget_ocsp_fuzzer"
+"target_path": "/src/wget2/fuzz/libwget_ocsp_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/nettle/testsuite/md2-test.c"
+- "test_file_path": "//src/nettle/testsuite/xts-test.c"
+- "test_file_path": "//src/gmp/tests/cxx/t-ops3.cc"
+- "test_file_path": "//src/nettle/testsuite/sha384-test.c"
+- "test_file_path": "//src/nettle/testsuite/cfb-test.c"
+- "test_file_path": "//src/gmp/tests/cxx/t-istream.cc"
+- "test_file_path": "//src/gmp/mini-gmp/tests/t-reuse.c"
+- "test_file_path": "//src/gmp/tests/mpf/t-trunc.c"
+- "test_file_path": "//src/gmp/tests/mpf/t-get_si.c"

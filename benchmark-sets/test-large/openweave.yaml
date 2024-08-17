@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "openweave"
+"target_name": "FuzzPASEResponderStep1"
+"target_path": "/src/openweave-core/src/test-apps/fuzz/FuzzPASEResponderStep1.cpp"
+"test_files":
+- "test_file_path": "//src/openweave-core/src/test-apps/weave-bdx-client-v0.cpp"
+- "test_file_path": "//src/openweave-core/src/test-apps/TestKeyExport.cpp"
+- "test_file_path": "//src/openweave-core/src/test-apps/nlweavebdxclient.cpp"
+- "test_file_path": "//src/openweave-core/src/test-apps/DeviceDescOptions.cpp"
+- "test_file_path": "//src/openweave-core/src/test-apps/TestPersistedStorage.cpp"
+- "test_file_path": "//src/openweave-core/src/test-apps/MockWdmViewServer.cpp"
+- "test_file_path": "//src/openweave-core/src/test-apps/schema/nest/test/trait/TestCommon.cpp"
+- "test_file_path": "//src/openweave-core/src/test-apps/TestSoftwareUpdate.cpp"
+- "test_file_path": "//src/openweave-core/src/test-apps/MockTimeSyncServer.cpp"

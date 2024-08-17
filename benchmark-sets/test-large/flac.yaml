@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "flac"
+"target_name": "tool_flac"
+"target_path": "/src/flac/oss-fuzz/tool_flac.c"
+"test_files":
+- "test_file_path": "//src/flac/src/test_libFLAC/endswap.c"
+- "test_file_path": "//src/flac/src/test_grabbag/picture/main.c"
+- "test_file_path": "//src/flac/src/test_libFLAC/main.c"
+- "test_file_path": "//src/flac/src/test_libFLAC++/main.cpp"
+- "test_file_path": "//src/flac/src/test_streams/main.c"
+- "test_file_path": "//src/flac/src/test_libFLAC++/metadata.cpp"
+- "test_file_path": "//src/flac/src/test_grabbag/cuesheet/main.c"
+- "test_file_path": "//src/flac/src/test_libFLAC/crc.c"
+- "test_file_path": "//src/flac/src/test_libFLAC++/metadata_manip.cpp"

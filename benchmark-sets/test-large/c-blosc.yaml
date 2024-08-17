@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "c-blosc"
+"target_name": "fuzz_decompress"
+"target_path": "/src/c-blosc/tests/fuzz/fuzz_decompress.c"
+"test_files":
+- "test_file_path": "//src/c-blosc/tests/test_shuffle_roundtrip_avx2.c"
+- "test_file_path": "//src/c-blosc/tests/print_versions.c"
+- "test_file_path": "//src/c-blosc/tests/test_nthreads.c"
+- "test_file_path": "//src/c-blosc/internal-complibs/zlib-1.3.1/test/minigzip.c"
+- "test_file_path": "//src/c-blosc/tests/test_compress_roundtrip.c"
+- "test_file_path": "//src/c-blosc/tests/test_shuffle_roundtrip_sse2.c"
+- "test_file_path": "//src/c-blosc/tests/test_shuffle_roundtrip_generic.c"
+- "test_file_path": "//src/c-blosc/tests/test_forksafe.c"
+- "test_file_path": "//src/c-blosc/internal-complibs/zlib-1.3.1/test/infcover.c"

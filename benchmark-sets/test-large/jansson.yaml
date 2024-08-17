@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "jansson"
+"target_name": "json_load_dump_fuzzer"
+"target_path": "/src/jansson/test/ossfuzz/json_load_dump_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/jansson/test/suites/api/test_version.c"
+- "test_file_path": "//src/jansson/test/suites/api/test_copy.c"
+- "test_file_path": "//src/jansson/test/suites/api/test_loadb.c"
+- "test_file_path": "//src/jansson/test/suites/api/test_equal.c"
+- "test_file_path": "//src/jansson/test/suites/api/test_load.c"
+- "test_file_path": "//src/jansson/test/suites/api/test_object.c"
+- "test_file_path": "//src/jansson/test/suites/api/test_array.c"
+- "test_file_path": "//src/jansson/test/suites/api/test_dump_callback.c"
+- "test_file_path": "//src/jansson/test/suites/api/test_sprintf.c"

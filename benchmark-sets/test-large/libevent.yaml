@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libevent"
+"target_name": "parse_query_fuzzer"
+"target_path": "/src/parse_query_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/libevent/sample/hello-world.c"
+- "test_file_path": "//src/libevent/sample/signal-test.c"
+- "test_file_path": "//src/libevent/test/test-dumpevents.c"
+- "test_file_path": "//src/libevent/test/bench_http.c"
+- "test_file_path": "//src/libevent/test/bench_cascade.c"
+- "test_file_path": "//src/libevent/test/test-fdleak.c"
+- "test_file_path": "//src/libevent/test/regress_rpc.c"
+- "test_file_path": "//src/libevent/test/regress_iocp.c"
+- "test_file_path": "//src/libevent/test/test-kq-collision.c"

@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "opendnp3"
+"target_name": "fuzzdecoder"
+"target_path": "/src/opendnp3/cpp/tests/fuzz/fuzzdecoder.cpp"
+"test_files":
+- "test_file_path": "//src/opendnp3/cpp/tests/unit/TestWriteConversions.cpp"
+- "test_file_path": "//src/opendnp3/cpp/tests/unit/TestMasterCommandRequests.cpp"
+- "test_file_path": "//src/opendnp3/cpp/tests/unit/TestLinkLayerKeepAlive.cpp"
+- "test_file_path": "//src/opendnp3/cpp/tests/unit/TestTransportLayer.cpp"
+- "test_file_path": "//src/opendnp3/cpp/tests/unit/utils/DNPHelpers.cpp"
+- "test_file_path": "//src/opendnp3/cpp/tests/unit/TestFlags.cpp"
+- "test_file_path": "//src/opendnp3/cpp/tests/dnp3mocks/src/DatabaseHelpers.cpp"
+- "test_file_path": "//src/opendnp3/cpp/tests/unit/TestLog.cpp"
+- "test_file_path": "//src/opendnp3/cpp/tests/asiotests/mocks/MockIO.cpp"

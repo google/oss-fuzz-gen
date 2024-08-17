@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "vlc"
+"target_name": "vlc-demux-libfuzzer"
+"target_path": "/src/vlc/test/vlc-demux-libfuzzer.c"
+"test_files":
+- "test_file_path": "//src/vlc/test/libvlc/equalizer.c"
+- "test_file_path": "//src/vlc/test/libvlc/core.c"
+- "test_file_path": "//src/vlc/test/src/video_output/video_output.c"
+- "test_file_path": "//src/vlc/test/modules/video_output/opengl/filters.c"
+- "test_file_path": "//src/vlc/test/modules/demux/ts_pes.c"
+- "test_file_path": "//src/vlc/compat/test/strnstr.c"
+- "test_file_path": "//src/vlc/src/test/xmlent.c"
+- "test_file_path": "//src/vlc/test/vlc-demux-run.c"
+- "test_file_path": "//src/vlc/test/modules/misc/medialibrary.c"

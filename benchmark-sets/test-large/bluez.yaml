@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "bluez"
+"target_name": "fuzz_textfile"
+"target_path": "/src/fuzz_textfile.c"
+"test_files":
+- "test_file_path": "//src/glib/subprojects/sysprof/src/tests/test-process-model.c"
+- "test_file_path": "//src/glib/subprojects/libffi/testsuite/libffi.call/cls_double_va.c"
+- "test_file_path": "//src/glib/subprojects/libffi/testsuite/libffi.call/struct7.c"
+- "test_file_path": "//src/glib/subprojects/sysprof/src/tests/memory-stack-stash.c"
+- "test_file_path": "//src/glib/glib/tests/macros.c"
+- "test_file_path": "//src/glib/gobject/tests/threadtests.c"
+- "test_file_path": "//src/glib/subprojects/sysprof/src/tests/test-capture-cursor.c"
+- "test_file_path": "//src/glib/gio/tests/cancellable.c"
+- "test_file_path": "//src/glib/gio/tests/gdbus-example-own-name.c"

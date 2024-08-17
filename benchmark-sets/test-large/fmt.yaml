@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "fmt"
+"target_name": "float"
+"target_path": "/src/fmt/test/fuzzing/float.cc"
+"test_files":
+- "test_file_path": "//src/fmt/test/gtest-extra-test.cc"
+- "test_file_path": "//src/fmt/test/format-test.cc"
+- "test_file_path": "//src/fmt/test/format-impl-test.cc"
+- "test_file_path": "//src/fmt/test/compile-test.cc"
+- "test_file_path": "//src/fmt/test/color-test.cc"
+- "test_file_path": "//src/fmt/test/std-test.cc"
+- "test_file_path": "//src/fmt/test/header-only-test.cc"
+- "test_file_path": "//src/fmt/test/compile-fp-test.cc"
+- "test_file_path": "//src/fmt/test/args-test.cc"

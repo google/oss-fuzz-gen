@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "unicorn"
+"target_name": "fuzz_emu_mips_32le"
+"target_path": "/src/unicorn/tests/fuzz/fuzz_emu_mips_32le.c"
+"test_files":
+- "test_file_path": "//src/unicorn/tests/regress/invalid_write_in_cpu_tb_exec_x86_64.c"
+- "test_file_path": "//src/unicorn/tests/regress/nr_mem_test.c"
+- "test_file_path": "//src/unicorn/samples/sample_arm.c"
+- "test_file_path": "//src/unicorn/samples/sample_mmu.c"
+- "test_file_path": "//src/unicorn/tests/unit/test_sparc.c"
+- "test_file_path": "//src/unicorn/tests/regress/mips_invalid_read_of_size_4_when_tracing.c"
+- "test_file_path": "//src/unicorn/tests/regress/001-bad_condition_code_0xe.c"
+- "test_file_path": "//src/unicorn/tests/unit/test_mips.c"
+- "test_file_path": "//src/unicorn/tests/regress/eflags_nosync.c"

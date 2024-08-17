@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "gnutls"
+"target_name": "gnutls_ocsp_resp_parser_fuzzer"
+"target_path": "/src/gnutls/fuzz/gnutls_ocsp_resp_parser_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/gmp/tests/cxx/t-ops3.cc"
+- "test_file_path": "//src/gmp/tests/mpz/t-bin.c"
+- "test_file_path": "//src/gmp/tests/rand/t-urndmm.c"
+- "test_file_path": "//src/gmp/tests/mpn/t-toom22.c"
+- "test_file_path": "//src/gmp/tests/mpz/t-divis.c"
+- "test_file_path": "//src/gmp/tests/mpn/t-broot.c"
+- "test_file_path": "//src/nettle/testsuite/chacha-poly1305-test.c"
+- "test_file_path": "//src/gmp/mini-gmp/tests/t-limbs.c"
+- "test_file_path": "//src/gmp/tests/mpn/t-fib2m.c"

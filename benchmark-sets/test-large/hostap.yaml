@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "hostap"
+"target_name": "eap-aka-peer"
+"target_path": "/src/hostap/tests/fuzzing/eap-aka-peer/eap-aka-peer.c"
+"test_files":
+- "test_file_path": "//src/hostap/tests/test-https_server.c"
+- "test_file_path": "//src/hostap/tests/test-milenage.c"
+- "test_file_path": "//src/hostap/tests/test-base64.c"
+- "test_file_path": "//src/hostap/tests/hwsim/tnc/hostap2_imv.c"
+- "test_file_path": "//src/hostap/tests/test-x509v3.c"
+- "test_file_path": "//src/hostap/tests/test-md4.c"
+- "test_file_path": "//src/hostap/tests/test-rsa-sig-ver.c"
+- "test_file_path": "//src/hostap/tests/hwsim/tnc/hostap_imc.c"
+- "test_file_path": "//src/hostap/tests/test-https.c"

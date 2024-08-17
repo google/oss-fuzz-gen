@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "librdkafka"
+"target_name": "fuzz_regex"
+"target_path": "/src/librdkafka/tests/fuzzers/fuzz_regex.c"
+"test_files":
+- "test_file_path": "//src/librdkafka/tests/xxxx-assign_partition.c"
+- "test_file_path": "//src/librdkafka/tests/0106-cgrp_sess_timeout.c"
+- "test_file_path": "//src/librdkafka/tests/0109-auto_create_topics.cpp"
+- "test_file_path": "//src/librdkafka/tests/0119-consumer_auth.cpp"
+- "test_file_path": "//src/librdkafka/tests/0006-symbols.c"
+- "test_file_path": "//src/librdkafka/tests/0145-pause_resume_mock.c"
+- "test_file_path": "//src/librdkafka/tests/0058-log.cpp"
+- "test_file_path": "//src/librdkafka/tests/0082-fetch_max_bytes.cpp"
+- "test_file_path": "//src/librdkafka/tests/0125-immediate_flush.c"

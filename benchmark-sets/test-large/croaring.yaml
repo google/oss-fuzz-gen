@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "croaring"
+"target_name": "croaring_fuzzer"
+"target_path": "/src/croaring_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/croaring/tests/roaring64_unit.cpp"
+- "test_file_path": "//src/croaring/tests/unit.c"
+- "test_file_path": "//src/croaring/tests/cpp_example2.cpp"
+- "test_file_path": "//src/croaring/tests/format_portability_unit.c"
+- "test_file_path": "//src/croaring/tests/art_unit.cpp"
+- "test_file_path": "//src/croaring/tests/cpp_unit_util.cpp"
+- "test_file_path": "//src/croaring/tests/c_example1.c"
+- "test_file_path": "//src/croaring/tests/cpp_example1.cpp"
+- "test_file_path": "//src/croaring/tests/container_comparison_unit.c"

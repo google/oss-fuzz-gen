@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "mbedtls"
+"target_name": "fuzz_x509crl"
+"target_path": "/src/mbedtls/programs/fuzz/fuzz_x509crl.c"
+"test_files":
+- "test_file_path": "//src/mbedtls/tests/src/random.c"
+- "test_file_path": "//src/mbedtls/tests/src/drivers/test_driver_key_agreement.c"
+- "test_file_path": "//src/mbedtls/tests/src/fake_external_rng_for_test.c"
+- "test_file_path": "//src/mbedtls/tests/src/threading_helpers.c"
+- "test_file_path": "//src/mbedtls/tests/src/helpers.c"
+- "test_file_path": "//src/mbedtls/tests/src/drivers/test_driver_cipher.c"
+- "test_file_path": "//src/mbedtls/tests/src/asn1_helpers.c"
+- "test_file_path": "//src/mbedtls/tests/src/drivers/test_driver_aead.c"
+- "test_file_path": "//src/mbedtls/tests/src/psa_crypto_stubs.c"

@@ -1,0 +1,14 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "kamailio"
+"target_name": "fuzz_parse_msg"
+"target_path": "/src/kamailio/misc/fuzz/fuzz_parse_msg.c"
+"test_files":
+- "test_file_path": "//src/kamailio/src/modules/ndb_cassandra/test-cpp/cassandra_types.cpp"
+- "test_file_path": "//src/kamailio/src/modules/ndb_cassandra/test-cpp/Cassandra.cpp"
+- "test_file_path": "//src/kamailio/src/modules/ndb_cassandra/test-cpp/thrift_wrapper.cpp"
+- "test_file_path": "//src/kamailio/src/modules/misctest/misctest_mod.c"
+- "test_file_path": "//src/kamailio/src/modules/janssonrpcc/unit_tests/seatest/seatest.c"
+- "test_file_path": "//src/kamailio/src/modules/ndb_cassandra/test-cpp/test.c"
+- "test_file_path": "//src/kamailio/src/modules/janssonrpcc/unit_tests/netstring.c"
+- "test_file_path": "//src/kamailio/src/modules/ndb_cassandra/test-cpp/cassandra_constants.cpp"

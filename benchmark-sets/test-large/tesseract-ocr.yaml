@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "tesseract-ocr"
+"target_name": "fuzzer-api"
+"target_path": "/src/tesseract/unittest/fuzzers/fuzzer-api.cpp"
+"test_files":
+- "test_file_path": "//src/tesseract/unittest/loadlang_test.cc"
+- "test_file_path": "//src/tesseract/unittest/recodebeam_test.cc"
+- "test_file_path": "//src/tesseract/unittest/stringrenderer_test.cc"
+- "test_file_path": "//src/tesseract/unittest/lang_model_test.cc"
+- "test_file_path": "//src/tesseract/unittest/intfeaturemap_test.cc"
+- "test_file_path": "//src/tesseract/unittest/shapetable_test.cc"
+- "test_file_path": "//src/tesseract/unittest/networkio_test.cc"
+- "test_file_path": "//src/tesseract/unittest/scanutils_test.cc"
+- "test_file_path": "//src/tesseract/unittest/validate_khmer_test.cc"

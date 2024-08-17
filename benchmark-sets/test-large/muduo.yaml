@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "muduo"
+"target_name": "muduo_http_fuzzer"
+"target_path": "/src/muduo_http_fuzzer.cpp"
+"test_files":
+- "test_file_path": "//src/muduo/muduo/base/tests/Logging_test.cc"
+- "test_file_path": "//src/muduo/muduo/net/tests/EventLoopThreadPool_unittest.cc"
+- "test_file_path": "//src/muduo/muduo/base/tests/BlockingQueue_bench.cc"
+- "test_file_path": "//src/muduo/muduo/net/tests/Buffer_unittest.cc"
+- "test_file_path": "//src/muduo/muduo/base/tests/Atomic_unittest.cc"
+- "test_file_path": "//src/muduo/muduo/base/tests/Timestamp_unittest.cc"
+- "test_file_path": "//src/muduo/muduo/base/tests/BlockingQueue_bench2.cc"
+- "test_file_path": "//src/muduo/muduo/base/tests/ThreadPool_test.cc"
+- "test_file_path": "//src/muduo/muduo/net/tests/TcpClient_reg3.cc"

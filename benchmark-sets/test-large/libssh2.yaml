@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libssh2"
+"target_name": "ssh2_client_fuzzer"
+"target_path": "/src/libssh2/tests/ossfuzz/ssh2_client_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/libssh2/tests/test_simple.c"
+- "test_file_path": "//src/libssh2/tests/test_auth_pubkey_ok_rsa_openssh.c"
+- "test_file_path": "//src/libssh2/tests/test_hostkey_hash.c"
+- "test_file_path": "//src/libssh2/tests/test_auth_pubkey_ok_ed25519.c"
+- "test_file_path": "//src/libssh2/tests/test_auth_pubkey_ok_ed25519_mem.c"
+- "test_file_path": "//src/libssh2/tests/test_auth_pubkey_ok_ecdsa.c"
+- "test_file_path": "//src/libssh2/tests/test_auth_pubkey_ok_rsa.c"
+- "test_file_path": "//src/libssh2/tests/test_auth_pubkey_ok_rsa_encrypted.c"
+- "test_file_path": "//src/libssh2/tests/test_hostkey.c"

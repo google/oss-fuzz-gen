@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libphonenumber"
+"target_name": "fuzz_phone"
+"target_path": "/src/libphonenumber/cpp/test/phonenumbers/fuzz_phone.cc"
+"test_files":
+- "test_file_path": "//src/libphonenumber/cpp/test/phonenumbers/geocoding/area_code_map_test.cc"
+- "test_file_path": "//src/libphonenumber/cpp/test/phonenumbers/regexp_adapter_test.cc"
+- "test_file_path": "//src/libphonenumber/cpp/test/phonenumbers/stringutil_test.cc"
+- "test_file_path": "//src/libphonenumber/cpp/test/phonenumbers/test_util.cc"
+- "test_file_path": "//src/libphonenumber/cpp/test/phonenumbers/regexp_cache_test.cc"
+- "test_file_path": "//src/libphonenumber/cpp/test/phonenumbers/phonenumberutil_test.cc"
+- "test_file_path": "//src/libphonenumber/cpp/test/phonenumbers/logger_test.cc"
+- "test_file_path": "//src/libphonenumber/cpp/test/phonenumbers/geocoding/phonenumber_offline_geocoder_test.cc"
+- "test_file_path": "//src/protobuf/src/google/protobuf/testing/zcgzip.cc"

@@ -1,0 +1,10 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "postfix"
+"target_name": "fuzz_mime"
+"target_path": "/src/fuzz_mime.c"
+"test_files":
+- "test_file_path": "//src/postfix/postfix/auxiliary/name-addr-test/gethostbyname.c"
+- "test_file_path": "//src/postfix/postfix/auxiliary/name-addr-test/gethostbyaddr.c"
+- "test_file_path": "//src/postfix/postfix/auxiliary/name-addr-test/getnameinfo.c"
+- "test_file_path": "//src/postfix/postfix/auxiliary/name-addr-test/getaddrinfo.c"

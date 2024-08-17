@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "boringssl"
+"target_name": "pkcs12"
+"target_path": "/src/boringssl/fuzz/pkcs12.cc"
+"test_files":
+- "test_file_path": "//src/boringssl/ssl/test/handshake_util.cc"
+- "test_file_path": "//src/boringssl/crypto/bytestring/cbs.c"
+- "test_file_path": "//src/boringssl/crypto/test/test_util.cc"
+- "test_file_path": "//src/boringssl/crypto/bytestring/cbb.c"
+- "test_file_path": "//src/boringssl/crypto/test/wycheproof_util.cc"
+- "test_file_path": "//src/boringssl/ssl/test/packeted_bio.cc"
+- "test_file_path": "//src/boringssl/crypto/bytestring/ber.c"
+- "test_file_path": "//src/boringssl/ssl/test/handshaker.cc"
+- "test_file_path": "//src/boringssl/crypto/test/gtest_main.cc"

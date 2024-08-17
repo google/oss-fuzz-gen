@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "spdlog"
+"target_name": "backtrace_fuzzer"
+"target_path": "/src/backtrace_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/spdlog/tests/test_dup_filter.cpp"
+- "test_file_path": "//src/spdlog/tests/test_async.cpp"
+- "test_file_path": "//src/spdlog/tests/test_errors.cpp"
+- "test_file_path": "//src/spdlog/tests/test_bin_to_hex.cpp"
+- "test_file_path": "//src/spdlog/tests/test_registry.cpp"
+- "test_file_path": "//src/spdlog/tests/test_circular_q.cpp"
+- "test_file_path": "//src/spdlog/tests/test_custom_callbacks.cpp"
+- "test_file_path": "//src/spdlog/tests/test_misc.cpp"
+- "test_file_path": "//src/spdlog/tests/test_macros.cpp"

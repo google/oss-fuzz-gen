@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "openjpeg"
+"target_name": "opj_decompress_fuzzer_J2K"
+"target_path": "/src/openjpeg/tests/fuzzers/opj_decompress_fuzzer_J2K.cpp"
+"test_files":
+- "test_file_path": "//src/openjpeg/tests/unit/testempty0.c"
+- "test_file_path": "//src/openjpeg/tests/ppm2rgb3.c"
+- "test_file_path": "//src/openjpeg/tests/j2k_random_tile_access.c"
+- "test_file_path": "//src/openjpeg/tests/include_openjpeg.c"
+- "test_file_path": "//src/openjpeg/tests/unit/testjp2.c"
+- "test_file_path": "//src/openjpeg/tests/unit/testempty1.c"
+- "test_file_path": "//src/openjpeg/tests/pdf2jp2.c"
+- "test_file_path": "//src/openjpeg/tests/unit/testempty2.c"
+- "test_file_path": "//src/openjpeg/tests/compare_images.c"

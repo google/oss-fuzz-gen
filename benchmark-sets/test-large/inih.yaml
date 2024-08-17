@@ -1,0 +1,9 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "inih"
+"target_name": "inihfuzz"
+"target_path": "/src/inih/inihfuzz.c"
+"test_files":
+- "test_file_path": "//src/inih/tests/unittest.c"
+- "test_file_path": "//src/inih/tests/unittest_string.c"
+- "test_file_path": "//src/inih/tests/unittest_alloc.c"

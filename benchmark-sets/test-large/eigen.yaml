@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "eigen"
+"target_name": "basicstuff_fuzzer"
+"target_path": "/src/basicstuff_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/eigen/unsupported/test/cxx11_tensor_concatenation.cpp"
+- "test_file_path": "//src/eigen/unsupported/test/cxx11_tensor_of_strings.cpp"
+- "test_file_path": "//src/eigen/test/skew_symmetric_matrix3.cpp"
+- "test_file_path": "//src/eigen/test/eigensolver_selfadjoint.cpp"
+- "test_file_path": "//src/eigen/unsupported/test/polynomialutils.cpp"
+- "test_file_path": "//src/eigen/unsupported/test/cxx11_tensor_mixed_indices.cpp"
+- "test_file_path": "//src/eigen/unsupported/test/alignedvector3.cpp"
+- "test_file_path": "//src/eigen/test/blasutil.cpp"
+- "test_file_path": "//src/eigen/unsupported/test/cxx11_tensor_custom_op.cpp"

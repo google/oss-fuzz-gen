@@ -1,0 +1,10 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "zlib"
+"target_name": "checksum_fuzzer"
+"target_path": "/src/checksum_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/zlib/test/minigzip.c"
+- "test_file_path": "//src/zlib/test/infcover.c"
+- "test_file_path": "//src/zlib/test/example.c"
+- "test_file_path": "//src/zlib/contrib/testzlib/testzlib.c"
