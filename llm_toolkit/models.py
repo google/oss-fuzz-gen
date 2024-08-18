@@ -204,7 +204,7 @@ class GPT(LLM):
     """Estimates the number of tokens in |text|."""
     # https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
     try:
-      encoder = tiktoken.encoding_for_model(self.name)
+      encoder = tiktoken.encoding_for_model(self.name.replace('-azure', ''))
     except KeyError:
       logger.info('Could not get a tiktoken encoding for %s.', self.name)
       encoder = tiktoken.get_encoding('cl100k_base')
@@ -235,7 +235,14 @@ class GPT(LLM):
       logger.info('OpenAI does not allow temperature list: %s',
                   self.temperature_list)
 
-    client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+    if self.name.endswith('azure'):
+      client = openai.AzureOpenAI(azure_endpoint=os.getenv(
+        "AZURE_OPENAI_ENDPOINT", "https://api.openai.com"),
+                                api_key=os.getenv("AZURE_OPENAI_API_KEY",
+                                                  "YOUR_API_KEY"),
+                                api_version="2024-02-01")
+    else:    
+      client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(messages=prompt.get(),
@@ -268,68 +275,14 @@ class AzureGPT(GPT):
 
   name = 'gpt-3.5-turbo-azure'
 
-  # ================================ Prompt ================================ #
-  def estimate_token_num(self, text) -> int:
-    """Estimates the number of tokens in |text|."""
-    # https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
-    try:
 
-      encoder = tiktoken.encoding_for_model(self.name.replace('-azure', ''))
-
-    except KeyError:
-      logger.info('Could not get a tiktoken encoding for %s.', self.name)
-      encoder = tiktoken.get_encoding('cl100k_base')
-
-    num_tokens = 0
-    for message in text:
-      num_tokens += 3
-      for key, value in message.items():
-        num_tokens += len(encoder.encode(value))
-        if key == 'name':
-          num_tokens += 1
-    num_tokens += 3
-    return num_tokens
-
-    # ============================== Generation ============================== #
-  def query_llm(self,
-                prompt: prompts.Prompt,
-                response_dir: str,
-                log_output: bool = False) -> None:
-    """Queries OpenAI's API and stores response in |response_dir|."""
-    if self.ai_binary:
-      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
-    if self.temperature_list:
-      logger.info('OpenAI does not allow temperature list: %s',
-                  self.temperature_list)
-
-    client = openai.AzureOpenAI(azure_endpoint=os.getenv(
-        "AZURE_OPENAI_ENDPOINT", "https://api.openai.com"),
-                                api_key=os.getenv("AZURE_OPENAI_API_KEY",
-                                                  "YOUR_API_KEY"),
-                                api_version="2024-02-01")
-
-    completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=prompt.get(),
-                                               model=self.name,
-                                               n=self.num_samples,
-                                               temperature=self.temperature),
-        openai.OpenAIError)
-
-    # TODO: Add a default value for completion.
-    if log_output:
-      logger.info(completion)
-    for index, choice in enumerate(completion.choices):  # type: ignore
-      content = choice.message.content
-      self._save_output(index, content, response_dir)
-
-
-class AzureGPT4(AzureGPT):
+class AzureGPT4(GPT):
   """Azure's GPTi-4 model."""
 
   name = 'gpt-4-azure'
 
 
-class AzureGPT4o(AzureGPT):
+class AzureGPT4o(GPT):
   """Azure's GPTi-4 model."""
 
   name = 'gpt-4o-azure'
