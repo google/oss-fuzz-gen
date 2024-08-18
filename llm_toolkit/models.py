@@ -237,11 +237,11 @@ class GPT(LLM):
 
     if self.name.endswith('azure'):
       client = openai.AzureOpenAI(azure_endpoint=os.getenv(
-        "AZURE_OPENAI_ENDPOINT", "https://api.openai.com"),
-                                api_key=os.getenv("AZURE_OPENAI_API_KEY",
-                                                  "YOUR_API_KEY"),
-                                api_version="2024-02-01")
-    else:    
+          "AZURE_OPENAI_ENDPOINT", "https://api.openai.com"),
+                                  api_key=os.getenv("AZURE_OPENAI_API_KEY",
+                                                    "YOUR_API_KEY"),
+                                  api_version="2024-02-01")
+    else:
       client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
     completion = self.with_retry_on_error(
