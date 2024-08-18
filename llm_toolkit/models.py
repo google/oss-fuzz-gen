@@ -290,12 +290,12 @@ class AzureGPT(GPT):
     num_tokens += 3
     return num_tokens
 
+
     # ============================== Generation ============================== #
   def query_llm(self,
                 prompt: prompts.Prompt,
                 response_dir: str,
-                log_output: bool = False,
-                build_spec=False) -> None:
+                log_output: bool = False) -> None:
     """Queries OpenAI's API and stores response in |response_dir|."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -309,22 +309,11 @@ class AzureGPT(GPT):
                                                   "YOUR_API_KEY"),
                                 api_version="2024-02-01")
 
-    if build_spec:
-      completion = self.with_retry_on_error(
-          lambda: client.chat.completions.create(messages=prompt.get(),
-                                                 model=self.name,
-                                                 n=1,
-                                                 temperature=self.temperature,
-                                                 max_tokens=self.max_tokens,
-                                                 stop=None), openai.OpenAIError)
-
-    else:
-
-      completion = self.with_retry_on_error(
-          lambda: client.chat.completions.create(messages=prompt.get(),
-                                                 model=self.name,
-                                                 n=self.num_samples,
-                                                 temperature=self.temperature),
+    completion = self.with_retry_on_error(
+        lambda: client.chat.completions.create(messages=prompt.get(),
+                                                model=self.name,
+                                                n=self.num_samples,
+                                                temperature=self.temperature),
           openai.OpenAIError)
 
     # TODO: Add a default value for completion.
