@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "h2o"
+"target_name": "driver_url"
+"target_path": "/src/h2o/fuzz/driver_url.cc"
+"test_files":
+- "test_file_path": "//src/h2o/deps/klib/test/ksort_test.cc"
+- "test_file_path": "//src/h2o/deps/klib/test/kstring_bench.c"
+- "test_file_path": "//src/h2o/deps/mruby-dir/test/dirtest.c"
+- "test_file_path": "//src/h2o/deps/yaml/tests/example-deconstructor.c"
+- "test_file_path": "//src/h2o/deps/mruby/examples/mrbgems/c_extension_example/test/example.c"
+- "test_file_path": "//src/h2o/deps/klib/test/khash_keith2.c"
+- "test_file_path": "//src/h2o/deps/picotls/deps/micro-ecc/test/test_ecdsa.c"
+- "test_file_path": "//src/h2o/deps/mruby/mrbgems/mruby-proc-binding/test/proc-binding.c"
+- "test_file_path": "//src/h2o/deps/klib/test/kbit_test.c"

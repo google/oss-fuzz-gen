@@ -1,0 +1,10 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "muparser"
+"target_name": "set_eval_fuzzer"
+"target_path": "/src/set_eval_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/muparser/samples/example2/example2.c"
+- "test_file_path": "//src/muparser/samples/example3/example3.cpp"
+- "test_file_path": "//src/muparser/test/t_ParserTest.cpp"
+- "test_file_path": "//src/muparser/samples/example1/example1.cpp"

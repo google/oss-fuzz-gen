@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "krb5"
+"target_name": "fuzz_krad"
+"target_path": "/src/krb5/src/tests/fuzzing/fuzz_krad.c"
+"test_files":
+- "test_file_path": "//src/krb5/src/tests/gssapi/t_oid.c"
+- "test_file_path": "//src/krb5/src/tests/gssapi/t_s4u.c"
+- "test_file_path": "//src/krb5/src/tests/gssapi/t_ccselect.c"
+- "test_file_path": "//src/krb5/src/tests/asn.1/t_trval.c"
+- "test_file_path": "//src/krb5/src/tests/asn.1/make-vectors.c"
+- "test_file_path": "//src/krb5/src/tests/asn.1/trval.c"
+- "test_file_path": "//src/krb5/src/tests/gss-threads/gss-server.c"
+- "test_file_path": "//src/krb5/src/tests/gss-threads/gss-misc.c"
+- "test_file_path": "//src/krb5/src/tests/gssapi/t_iov.c"

@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "xerces-c"
+"target_name": "parse_target"
+"target_path": "/src/parse_target.cpp"
+"test_files":
+- "test_file_path": "//src/xerces-c/samples/src/SAX2Print/SAX2PrintHandlers.cpp"
+- "test_file_path": "//src/xerces-c/samples/src/SAX2Print/SAX2FilterHandlers.cpp"
+- "test_file_path": "//src/xerces-c/tests/src/XSTSHarness/XMLHarnessHandlers.cpp"
+- "test_file_path": "//src/xerces-c/samples/src/XInclude/XInclude.cpp"
+- "test_file_path": "//src/xerces-c/tests/src/EncodingTest/EncodingTest.cpp"
+- "test_file_path": "//src/xerces-c/tests/src/UtilTests/CoreTests_URL.cpp"
+- "test_file_path": "//src/xerces-c/samples/src/StdInParse/StdInParse.cpp"
+- "test_file_path": "//src/xerces-c/samples/src/DOMCount/DOMCount.cpp"
+- "test_file_path": "//src/xerces-c/tests/src/NetAccessorTest/NetAccessorTest.cpp"

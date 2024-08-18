@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "libyang"
+"target_name": "lys_parse_mem"
+"target_path": "/src/libyang/tests/fuzz/lys_parse_mem.c"
+"test_files":
+- "test_file_path": "//src/libyang/tests/utests/types/union.c"
+- "test_file_path": "//src/libyang/tests/utests/data/test_printer_json.c"
+- "test_file_path": "//src/libyang/tests/utests/basic/test_inout.c"
+- "test_file_path": "//src/libyang/tests/utests/basic/test_common.c"
+- "test_file_path": "//src/libyang/tests/utests/data/test_tree_data_sorted.c"
+- "test_file_path": "//src/libyang/tests/utests/basic/test_hash_table.c"
+- "test_file_path": "//src/libyang/tests/utests/data/test_diff.c"
+- "test_file_path": "//src/libyang/tests/utests/extensions/test_structure.c"
+- "test_file_path": "//src/libyang/tests/utests/schema/test_yang.c"

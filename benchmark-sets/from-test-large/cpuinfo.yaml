@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "cpuinfo"
+"target_name": "fuzz_cpuinfo"
+"target_path": "/src/fuzz_cpuinfo.c"
+"test_files":
+- "test_file_path": "//src/cpuinfo/test/mock/huawei-mate-9.cc"
+- "test_file_path": "//src/cpuinfo/test/mock/huawei-mate-8.cc"
+- "test_file_path": "//src/cpuinfo/test/mock/galaxy-s5-global.cc"
+- "test_file_path": "//src/cpuinfo/test/mock/huawei-mate-20.cc"
+- "test_file_path": "//src/cpuinfo/test/mock/oppo-r15.cc"
+- "test_file_path": "//src/cpuinfo/deps/googlebenchmark/test/report_aggregates_only_test.cc"
+- "test_file_path": "//src/cpuinfo/test/mock/galaxy-s9-global.cc"
+- "test_file_path": "//src/cpuinfo/deps/googlebenchmark/test/spec_arg_test.cc"
+- "test_file_path": "//src/cpuinfo/deps/googlebenchmark/test/benchmark_gtest.cc"

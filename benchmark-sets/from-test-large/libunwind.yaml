@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "libunwind"
+"target_name": "fuzz_libunwind"
+"target_path": "/src/fuzz_libunwind.c"
+"test_files":
+- "test_file_path": "//src/libunwind/tests/Ltest-cxx-exceptions.cxx"
+- "test_file_path": "//src/libunwind/tests/Gtest-concurrent.c"
+- "test_file_path": "//src/libunwind/tests/Ltest-trace.c"
+- "test_file_path": "//src/libunwind/tests/test-reg-state.c"
+- "test_file_path": "//src/libunwind/tests/Gperf-trace.c"
+- "test_file_path": "//src/libunwind/tests/Gtest-nomalloc.c"
+- "test_file_path": "//src/libunwind/tests/aarch64-test-plt.c"
+- "test_file_path": "//src/libunwind/tests/test-init-remote.c"
+- "test_file_path": "//src/libunwind/tests/Lx64-test-dwarf-expressions.c"

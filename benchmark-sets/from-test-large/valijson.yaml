@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "valijson"
+"target_name": "fuzzer"
+"target_path": "/src/valijson/tests/fuzzing/fuzzer.cpp"
+"test_files":
+- "test_file_path": "//src/valijson/tests/test_yaml_cpp_adapter.cpp"
+- "test_file_path": "//src/valijson/tests/test_jsoncpp_adapter.cpp"
+- "test_file_path": "//src/valijson/tests/test_poly_constraint.cpp"
+- "test_file_path": "//src/valijson/tests/test_rapidjson_adapter.cpp"
+- "test_file_path": "//src/valijson/tests/test_json_pointer.cpp"
+- "test_file_path": "//src/valijson/tests/test_fetch_absolute_uri_document_callback.cpp"
+- "test_file_path": "//src/valijson/tests/test_adapter_comparison.cpp"
+- "test_file_path": "//src/valijson/tests/test_validation_errors.cpp"
+- "test_file_path": "//src/valijson/tests/test_fetch_urn_document_callback.cpp"

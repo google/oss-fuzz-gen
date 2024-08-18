@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "kcodecs"
+"target_name": "kcodecs_fuzzer"
+"target_path": "/src/kcodecs_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/qtbase/tests/auto/corelib/tools/qspan/tst_qspan.cpp"
+- "test_file_path": "//src/qtbase/tests/auto/corelib/serialization/qcborvalue/tst_qcborvalue.cpp"
+- "test_file_path": "//src/qtbase/tests/auto/widgets/kernel/qwidgetsvariant/tst_qwidgetsvariant.cpp"
+- "test_file_path": "//src/qtbase/tests/auto/corelib/io/qfilesystemwatcher/tst_qfilesystemwatcher.cpp"
+- "test_file_path": "//src/qtbase/tests/auto/testlib/selftests/subtest/tst_subtest.cpp"
+- "test_file_path": "//src/qtbase/tests/manual/examples/widgets/tools/plugandpaint/app/plugindialog.cpp"
+- "test_file_path": "//src/qtbase/tests/auto/gui/text/qtextdocumentlayout/tst_qtextdocumentlayout.cpp"
+- "test_file_path": "//src/qtbase/tests/auto/tools/qt_cmake_create/tst_qt_cmake_create.cpp"
+- "test_file_path": "//src/qtbase/tests/manual/examples/opengl/contextinfo/main.cpp"

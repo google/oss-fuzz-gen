@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "hdf5"
+"target_name": "h5_read_fuzzer"
+"target_path": "/src/h5_read_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/hdf5/test/cross_read.c"
+- "test_file_path": "//src/hdf5/tools/test/h5repack/testh5repack_detect_szip.c"
+- "test_file_path": "//src/hdf5/test/null_vfd_plugin.c"
+- "test_file_path": "//src/hdf5/test/swmr_reader.c"
+- "test_file_path": "//src/hdf5/test/gen_new_fill.c"
+- "test_file_path": "//src/hdf5/test/stab.c"
+- "test_file_path": "//src/hdf5/test/istore.c"
+- "test_file_path": "//src/hdf5/test/tchecksum.c"
+- "test_file_path": "//src/hdf5/testpar/t_prestart.c"

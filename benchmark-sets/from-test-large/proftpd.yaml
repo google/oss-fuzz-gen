@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "proftpd"
+"target_name": "fuzzer"
+"target_path": "/src/fuzzer.c"
+"test_files":
+- "test_file_path": "//src/proftpd/tests/api/regexp.c"
+- "test_file_path": "//src/proftpd/tests/api/data.c"
+- "test_file_path": "//src/proftpd/tests/api/netacl.c"
+- "test_file_path": "//src/proftpd/tests/api/stash.c"
+- "test_file_path": "//src/proftpd/tests/api/error.c"
+- "test_file_path": "//src/proftpd/tests/api/help.c"
+- "test_file_path": "//src/proftpd/tests/api/feat.c"
+- "test_file_path": "//src/proftpd/tests/api/event.c"
+- "test_file_path": "//src/proftpd/tests/api/fsio.c"

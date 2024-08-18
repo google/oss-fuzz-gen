@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "tinygltf"
+"target_name": "fuzz_gltf"
+"target_path": "/src/tinygltf/tests/fuzzer/fuzz_gltf.cc"
+"test_files":
+- "test_file_path": "//src/tinygltf/examples/common/glm/test/gtc/gtc_matrix_inverse.cpp"
+- "test_file_path": "//src/tinygltf/examples/common/glm/test/gtx/gtx_io.cpp"
+- "test_file_path": "//src/tinygltf/examples/common/glm/test/gtx/gtx_quaternion.cpp"
+- "test_file_path": "//src/tinygltf/examples/common/glm/test/core/core_func_exponential.cpp"
+- "test_file_path": "//src/tinygltf/examples/common/glm/test/core/core_force_unrestricted_gentype.cpp"
+- "test_file_path": "//src/tinygltf/examples/common/glm/test/core/core_type_vec1.cpp"
+- "test_file_path": "//src/tinygltf/examples/common/glm/test/gtx/gtx_euler_angle.cpp"
+- "test_file_path": "//src/tinygltf/examples/common/glm/test/gtx/gtx_simd_mat4.cpp"
+- "test_file_path": "//src/tinygltf/examples/common/glm/util/conan-package/test_package/main.cpp"

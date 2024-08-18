@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "nghttp2"
+"target_name": "fuzz_frames"
+"target_path": "/src/nghttp2/fuzz/fuzz_frames.cc"
+"test_files":
+- "test_file_path": "//src/nghttp2/tests/nghttp2_buf_test.c"
+- "test_file_path": "//src/nghttp2/tests/failmalloc_test.c"
+- "test_file_path": "//src/nghttp2/tests/nghttp2_session_test.c"
+- "test_file_path": "//src/nghttp2/tests/nghttp2_frame_test.c"
+- "test_file_path": "//src/nghttp2/tests/nghttp2_queue_test.c"
+- "test_file_path": "//src/nghttp2/tests/nghttp2_alpn_test.c"
+- "test_file_path": "//src/nghttp2/tests/nghttp2_helper_test.c"
+- "test_file_path": "//src/nghttp2/tests/malloc_wrapper.c"
+- "test_file_path": "//src/nghttp2/tests/nghttp2_pq_test.c"

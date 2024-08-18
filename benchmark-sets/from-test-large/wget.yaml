@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "wget"
+"target_name": "wget_ntlm_fuzzer"
+"target_path": "/src/wget/fuzz/wget_ntlm_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/nettle/testsuite/sm3-test.c"
+- "test_file_path": "//src/gmp/tests/mpf/t-eq.c"
+- "test_file_path": "//src/gmp/tests/mpn/t-asmtype.c"
+- "test_file_path": "//src/nettle/testsuite/camellia-test.c"
+- "test_file_path": "//src/gmp/tests/mpz/t-bit.c"
+- "test_file_path": "//src/gmp/tests/mpz/t-sqrtrem.c"
+- "test_file_path": "//src/gmp/tests/devel/test-sub_ddmmss.c"
+- "test_file_path": "//src/gmp/tests/rand/stat.c"
+- "test_file_path": "//src/gmp/tests/mpf/t-get_si.c"

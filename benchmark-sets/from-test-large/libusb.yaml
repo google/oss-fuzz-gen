@@ -1,0 +1,13 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libusb"
+"target_name": "libusb_fuzzer"
+"target_path": "/src/libusb_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/libusb/tests/set_option.c"
+- "test_file_path": "//src/libusb/tests/testlib.c"
+- "test_file_path": "//src/libusb/tests/init_context.c"
+- "test_file_path": "//src/libusb/tests/stress_mt.c"
+- "test_file_path": "//src/libusb/tests/macos.c"
+- "test_file_path": "//src/libusb/tests/stress.c"
+- "test_file_path": "//src/libusb/tests/umockdev.c"

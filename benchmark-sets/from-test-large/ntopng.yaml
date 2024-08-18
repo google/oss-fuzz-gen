@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "ntopng"
+"target_name": "fuzz_dissect_packet"
+"target_path": "/src/ntopng/fuzz/fuzz_dissect_packet.cpp"
+"test_files":
+- "test_file_path": "//src/ntopng/third-party/json-c/tests/test_visit.c"
+- "test_file_path": "//src/ntopng/third-party/json-c/tests/test_cast.c"
+- "test_file_path": "//src/ntopng/third-party/json-c/tests/test_object_iterator.c"
+- "test_file_path": "//src/ntopng/third-party/json-c/tests/test_util_file.c"
+- "test_file_path": "//src/ntopng/third-party/json-c/tests/test_set_serializer.c"
+- "test_file_path": "//src/ntopng/third-party/json-c/tests/testReplaceExisting.c"
+- "test_file_path": "//src/ntopng/third-party/json-c/tests/test_printbuf.c"
+- "test_file_path": "//src/ntopng/third-party/json-c/tests/test_int_add.c"
+- "test_file_path": "//src/ntopng/third-party/json-c/tests/test_charcase.c"

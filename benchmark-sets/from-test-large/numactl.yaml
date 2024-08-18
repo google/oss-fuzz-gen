@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "numactl"
+"target_name": "fuzz_parse_str"
+"target_path": "/src/numactl/fuzz/fuzz_parse_str.c"
+"test_files":
+- "test_file_path": "//src/numactl/test/tshared.c"
+- "test_file_path": "//src/numactl/test/randmap.c"
+- "test_file_path": "//src/numactl/test/move_pages.c"
+- "test_file_path": "//src/numactl/test/getnodemask.c"
+- "test_file_path": "//src/numactl/test/mbind_mig_pages.c"
+- "test_file_path": "//src/numactl/test/tshm.c"
+- "test_file_path": "//src/numactl/test/nodemap.c"
+- "test_file_path": "//src/numactl/test/prefered.c"
+- "test_file_path": "//src/numactl/test/realloc_test.c"

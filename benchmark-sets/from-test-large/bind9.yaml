@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "bind9"
+"target_name": "isc_lex_getmastertoken"
+"target_path": "/src/bind9/fuzz/isc_lex_getmastertoken.c"
+"test_files":
+- "test_file_path": "//src/bind9/tests/dns/dnstap_test.c"
+- "test_file_path": "//src/bind9/tests/dns/qpzone_test.c"
+- "test_file_path": "//src/bind9/tests/isc/mem_test.c"
+- "test_file_path": "//src/bind9/tests/isc/buffer_test.c"
+- "test_file_path": "//src/bind9/tests/dns/update_test.c"
+- "test_file_path": "//src/bind9/tests/dns/keytable_test.c"
+- "test_file_path": "//src/bind9/tests/isc/mutex_test.c"
+- "test_file_path": "//src/bind9/tests/dns/nametree_test.c"
+- "test_file_path": "//src/bind9/tests/bench/siphash.c"

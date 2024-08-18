@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "brunsli"
+"target_name": "fuzz_decode_streaming"
+"target_path": "/src/brunsli/c/tests/fuzz_decode_streaming.cc"
+"test_files":
+- "test_file_path": "//src/brunsli/c/tests/lehmer_code_test.cc"
+- "test_file_path": "//src/brunsli/c/tests/huffman_tree_test.cc"
+- "test_file_path": "//src/brunsli/c/tests/distributions_test.cc"
+- "test_file_path": "//src/brunsli/c/tests/stream_decode_test.cc"
+- "test_file_path": "//src/brunsli/c/tests/c_api_test.cc"
+- "test_file_path": "//src/brunsli/c/tests/build_huffman_table_test.cc"
+- "test_file_path": "//src/brunsli/c/tests/headerless_test.cc"
+- "test_file_path": "//src/brunsli/c/tests/test_utils.cc"
+- "test_file_path": "//src/brunsli/c/tests/bit_reader_test.cc"

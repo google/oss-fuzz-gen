@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "opensc"
+"target_name": "fuzz_card"
+"target_path": "/src/opensc/src/tests/fuzzing/fuzz_card.c"
+"test_files":
+- "test_file_path": "//src/opensc/src/tests/lottery.c"
+- "test_file_path": "//src/opensc/src/tests/p11test/p11test_case_readonly.c"
+- "test_file_path": "//src/opensc/src/tests/p11test/p11test_case_wait.c"
+- "test_file_path": "//src/opensc/src/tests/p11test/p11test_helpers.c"
+- "test_file_path": "//src/opensc/src/tests/p11test/p11test_loader.c"
+- "test_file_path": "//src/opensc/src/tests/p11test/p11test_case_usage.c"
+- "test_file_path": "//src/opensc/src/tests/p11test/p11test_case_interface.c"
+- "test_file_path": "//src/opensc/src/tests/unittests/base64.c"
+- "test_file_path": "//src/opensc/src/tests/unittests/compression.c"

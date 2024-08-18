@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "sleuthkit"
+"target_name": "sleuthkit_mmls_fuzzer"
+"target_path": "/src/sleuthkit_mmls_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/sleuthkit/tests/fs_thread_test.cpp"
+- "test_file_path": "//src/sleuthkit/samples/callback-cpp-style.cpp"
+- "test_file_path": "//src/sleuthkit/tests/fs_attrlist_apis.cpp"
+- "test_file_path": "//src/sleuthkit/samples/posix-cpp-style.cpp"
+- "test_file_path": "//src/sleuthkit/tests/read_apis.cpp"
+- "test_file_path": "//src/sleuthkit/unit_tests/base/test_base.cpp"
+- "test_file_path": "//src/sleuthkit/samples/callback-style.cpp"
+- "test_file_path": "//src/sleuthkit/samples/posix-style.cpp"
+- "test_file_path": "//src/sleuthkit/tests/fs_fname_apis.cpp"

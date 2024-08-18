@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "hpn-ssh"
+"target_name": "agent_fuzz"
+"target_path": "/src/hpn-ssh/regress/misc/fuzz-harness/agent_fuzz.cc"
+"test_files":
+- "test_file_path": "//src/hpn-ssh/regress/unittests/misc/test_parse.c"
+- "test_file_path": "//src/hpn-ssh/regress/unittests/sshbuf/test_sshbuf_getput_basic.c"
+- "test_file_path": "//src/hpn-ssh/regress/unittests/kex/test_proposal.c"
+- "test_file_path": "//src/hpn-ssh/regress/unittests/sshbuf/test_sshbuf_getput_crypto.c"
+- "test_file_path": "//src/hpn-ssh/regress/unittests/hostkeys/tests.c"
+- "test_file_path": "//src/hpn-ssh/regress/unittests/kex/test_kex.c"
+- "test_file_path": "//src/hpn-ssh/regress/unittests/misc/test_expand.c"
+- "test_file_path": "//src/hpn-ssh/regress/unittests/test_helper/test_helper.c"
+- "test_file_path": "//src/hpn-ssh/regress/unittests/conversion/tests.c"

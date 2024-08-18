@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "spirv-tools"
+"target_name": "spvtools_opt_legalization_fuzzer"
+"target_path": "/src/spirv-tools/test/fuzzers/spvtools_opt_legalization_fuzzer.cpp"
+"test_files":
+- "test_file_path": "//src/spirv-tools/test/diff/diff_files/spec_constant_op_autogen.cpp"
+- "test_file_path": "//src/spirv-tools/test/val/val_ray_tracing_reorder_test.cpp"
+- "test_file_path": "//src/spirv-tools/test/assembly_context_test.cpp"
+- "test_file_path": "//src/spirv-tools/test/opt/code_sink_test.cpp"
+- "test_file_path": "//src/spirv-tools/test/opt/amd_ext_to_khr.cpp"
+- "test_file_path": "//src/spirv-tools/test/diff/diff_files/different_decorations_fragment_autogen.cpp"
+- "test_file_path": "//src/spirv-tools/test/reduce/merge_blocks_test.cpp"
+- "test_file_path": "//src/spirv-tools/test/val/val_cfg_test.cpp"
+- "test_file_path": "//src/spirv-tools/test/text_to_binary_test.cpp"

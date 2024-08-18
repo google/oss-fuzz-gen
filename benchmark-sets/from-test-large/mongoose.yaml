@@ -1,0 +1,13 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "mongoose"
+"target_name": "fuzz"
+"target_path": "/src/mongoose/test/fuzz.c"
+"test_files":
+- "test_file_path": "//src/mongoose/test/mip_test.c"
+- "test_file_path": "//src/mongoose/test/driver_mock.c"
+- "test_file_path": "//src/mongoose/test/unit_test.c"
+- "test_file_path": "//src/mongoose/test/pack.c"
+- "test_file_path": "//src/mongoose/test/mip_tap_test.c"
+- "test_file_path": "//src/mongoose/test/mongoose.c"
+- "test_file_path": "//src/mongoose/test/mongoose_custom.c"

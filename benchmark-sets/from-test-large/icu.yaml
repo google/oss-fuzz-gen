@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "icu"
+"target_name": "relative_date_time_formatter_fuzzer"
+"target_path": "/src/icu/icu4c/source/test/fuzzer/relative_date_time_formatter_fuzzer.cpp"
+"test_files":
+- "test_file_path": "//src/icu/icu4c/source/test/letest/FontTableCache.cpp"
+- "test_file_path": "//src/icu/icu4c/source/test/intltest/dtfmttst.cpp"
+- "test_file_path": "//src/icu/icu4c/source/test/cintltst/cdateintervalformattest.c"
+- "test_file_path": "//src/icu/icu4c/source/test/intltest/g7coll.cpp"
+- "test_file_path": "//src/icu/icu4c/source/test/cintltst/cnumtst.c"
+- "test_file_path": "//src/icu/icu4c/source/test/cintltst/cdattst.c"
+- "test_file_path": "//src/icu/icu4c/source/test/intltest/listformattertest.cpp"
+- "test_file_path": "//src/icu/icu4c/source/test/intltest/dcfmtest.cpp"
+- "test_file_path": "//src/icu/icu4c/source/test/cintltst/cfintst.c"

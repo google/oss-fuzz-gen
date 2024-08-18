@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libpcap"
+"target_name": "fuzz_filter"
+"target_path": "/src/libpcap/testprogs/fuzz/fuzz_filter.c"
+"test_files":
+- "test_file_path": "//src/libpcap/testprogs/selpolltest.c"
+- "test_file_path": "//src/libpcap/testprogs/reactivatetest.c"
+- "test_file_path": "//src/libpcap/testprogs/opentest.c"
+- "test_file_path": "//src/libpcap/testprogs/findalldevstest.c"
+- "test_file_path": "//src/libpcap/testprogs/capturetest.c"
+- "test_file_path": "//src/libpcap/testprogs/nonblocktest.c"
+- "test_file_path": "//src/libpcap/testprogs/filtertest.c"
+- "test_file_path": "//src/libpcap/testprogs/writecaptest.c"
+- "test_file_path": "//src/libpcap/testprogs/findalldevstest-perf.c"

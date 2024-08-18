@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "unit"
+"target_name": "nxt_http_h1p_peer_fuzz"
+"target_path": "/src/unit/fuzzing/nxt_http_h1p_peer_fuzz.c"
+"test_files":
+- "test_file_path": "//src/unit/src/test/nxt_malloc_test.c"
+- "test_file_path": "//src/unit/src/test/nxt_base64_test.c"
+- "test_file_path": "//src/unit/src/test/nxt_rbtree1.c"
+- "test_file_path": "//src/unit/src/test/nxt_mem_zone_test.c"
+- "test_file_path": "//src/unit/src/test/nxt_msec_diff_test.c"
+- "test_file_path": "//src/unit/src/test/nxt_sprintf_test.c"
+- "test_file_path": "//src/unit/src/test/nxt_term_parse_test.c"
+- "test_file_path": "//src/unit/src/test/nxt_utf8_test.c"
+- "test_file_path": "//src/unit/src/test/nxt_cq_test.c"

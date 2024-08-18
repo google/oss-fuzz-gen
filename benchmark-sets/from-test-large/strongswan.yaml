@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "strongswan"
+"target_name": "fuzz_pb_tnc"
+"target_path": "/src/strongswan/fuzz/fuzz_pb_tnc.c"
+"test_files":
+- "test_file_path": "//src/strongswan/src/libstrongswan/plugins/test_vectors/test_vectors/null.c"
+- "test_file_path": "//src/strongswan/src/libimcv/plugins/imc_attestation/imc_attestation_process.c"
+- "test_file_path": "//src/strongswan/src/libstrongswan/plugins/test_vectors/test_vectors/rng.c"
+- "test_file_path": "//src/strongswan/src/libstrongswan/plugins/newhope/tests/suites/test_newhope_noise.c"
+- "test_file_path": "//src/strongswan/src/libstrongswan/tests/suites/test_metadata_set.c"
+- "test_file_path": "//src/strongswan/src/libstrongswan/tests/suites/test_signature_params.c"
+- "test_file_path": "//src/strongswan/src/libstrongswan/plugins/bliss/tests/suites/test_bliss_bitpacker.c"
+- "test_file_path": "//src/strongswan/src/libimcv/plugins/imv_attestation/imv_attestation_state.c"
+- "test_file_path": "//src/strongswan/src/libstrongswan/plugins/test_vectors/test_vectors/curve25519.c"

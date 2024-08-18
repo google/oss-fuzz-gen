@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "hermes"
+"target_name": "fuzzer-jsi-entry"
+"target_path": "/src/hermes/tools/fuzzers/libfuzzer/fuzzer-jsi-entry.cpp"
+"test_files":
+- "test_file_path": "//src/hermes/API/hermes/synthtest/tests/host_calls_js_calls_host.cpp"
+- "test_file_path": "//src/hermes/API/hermes/synthtest/tests/native_property_names.cpp"
+- "test_file_path": "//src/hermes/API/hermes/synthtest/Driver.cpp"
+- "test_file_path": "//src/hermes/API/hermes/synthtest/tests/host_function_return_this.cpp"
+- "test_file_path": "//src/hermes/API/hermes/inspector/chrome/tests/ConnectionTests.cpp"
+- "test_file_path": "//src/hermes/API/hermes/synthtest/tests/get_property_names.cpp"
+- "test_file_path": "//src/hermes/API/hermes/synthtest/tests/host_function_name_and_params.cpp"
+- "test_file_path": "//src/hermes/API/hermes/synthtest/tests/host_function_mutates_global_object.cpp"
+- "test_file_path": "//src/hermes/API/hermes/synthtest/tests/host_global_object.cpp"

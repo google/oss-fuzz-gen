@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "geos"
+"target_name": "fuzz_geo2"
+"target_path": "/src/geos/tests/fuzz/fuzz_geo2.c"
+"test_files":
+- "test_file_path": "//src/geos/tests/unit/noding/SegmentPointComparatorTest.cpp"
+- "test_file_path": "//src/geos/tests/unit/index/VertexSequencePackedRtreeTest.cpp"
+- "test_file_path": "//src/geos/tests/unit/geom/CoordinateSequenceTest.cpp"
+- "test_file_path": "//src/geos/tests/unit/triangulate/polygon/ConstrainedDelaunayTriangulatorTest.cpp"
+- "test_file_path": "//src/geos/tests/unit/operation/overlay/snap/GeometrySnapperTest.cpp"
+- "test_file_path": "//src/geos/tests/unit/capi/GEOSGeom_createCollectionTest.cpp"
+- "test_file_path": "//src/geos/tests/unit/capi/GEOSConcaveHullOfPolygonsTest.cpp"
+- "test_file_path": "//src/geos/tests/unit/capi/GEOSBoundaryTest.cpp"
+- "test_file_path": "//src/geos/tests/unit/algorithm/RobustLineIntersectorTest.cpp"

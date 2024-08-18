@@ -1,0 +1,10 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "qpdf"
+"target_name": "pngpredictor_fuzzer"
+"target_path": "/src/qpdf/fuzz/pngpredictor_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/zlib/contrib/testzlib/testzlib.c"
+- "test_file_path": "//src/zlib/test/infcover.c"
+- "test_file_path": "//src/zlib/test/example.c"
+- "test_file_path": "//src/zlib/test/minigzip.c"

@@ -1,0 +1,10 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "matio"
+"target_name": "matio_fuzzer"
+"target_path": "/src/matio/ossfuzz/matio_fuzzer.cpp"
+"test_files":
+- "test_file_path": "//src/zlib/contrib/testzlib/testzlib.c"
+- "test_file_path": "//src/zlib/test/infcover.c"
+- "test_file_path": "//src/zlib/test/example.c"
+- "test_file_path": "//src/zlib/test/minigzip.c"

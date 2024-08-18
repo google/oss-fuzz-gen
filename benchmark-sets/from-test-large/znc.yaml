@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "znc"
+"target_name": "msg_parse_fuzzer"
+"target_path": "/src/msg_parse_fuzzer.cpp"
+"test_files":
+- "test_file_path": "//src/znc/test/integration/tests/modules.cpp"
+- "test_file_path": "//src/znc/test/integration/tests/scripting.cpp"
+- "test_file_path": "//src/znc/test/UtilsTest.cpp"
+- "test_file_path": "//src/znc/test/BufferTest.cpp"
+- "test_file_path": "//src/znc/test/ClientTest.cpp"
+- "test_file_path": "//src/znc/test/NickTest.cpp"
+- "test_file_path": "//src/znc/test/integration/autoconf-all.cpp"
+- "test_file_path": "//src/znc/test/integration/framework/base.cpp"
+- "test_file_path": "//src/znc/test/QueryTest.cpp"

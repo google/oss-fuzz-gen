@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "nanopb"
+"target_name": "fuzztest"
+"target_path": "/src/nanopb/tests/build/fuzztest/fuzztest.c"
+"test_files":
+- "test_file_path": "//src/nanopb/tests/regression/issue_547/test.c"
+- "test_file_path": "//src/nanopb/tests/basic_buffer/decode_buffer.c"
+- "test_file_path": "//src/nanopb/tests/regression/issue_253/short_array.c"
+- "test_file_path": "//src/nanopb/tests/regression/issue_407/test_extensions.c"
+- "test_file_path": "//src/nanopb/tests/cyclic_messages/encode_cyclic_callback.c"
+- "test_file_path": "//src/nanopb/tests/alltypes_proto3/encode_alltypes.c"
+- "test_file_path": "//src/nanopb/build-tests/legacy_cmake_simple/simple.c"
+- "test_file_path": "//src/nanopb/tests/regression/issue_227/unaligned_uint64.c"
+- "test_file_path": "//src/nanopb/tests/alltypes_proto3/decode_alltypes.c"

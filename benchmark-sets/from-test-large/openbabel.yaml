@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "openbabel"
+"target_name": "fuzz_obconversion"
+"target_path": "/src/openbabel/test/fuzz/fuzz_obconversion.cpp"
+"test_files":
+- "test_file_path": "//src/openbabel/test/iterators.cpp"
+- "test_file_path": "//src/openbabel/test/residue.cpp"
+- "test_file_path": "//src/openbabel/test/multicmltest.cpp"
+- "test_file_path": "//src/openbabel/test/automorphismtest.cpp"
+- "test_file_path": "//src/openbabel/test/conversion.cpp"
+- "test_file_path": "//src/openbabel/test/invalidsmiles.cpp"
+- "test_file_path": "//src/openbabel/test/graphsymtest.cpp"
+- "test_file_path": "//src/openbabel/test/canonfragmenttest.cpp"
+- "test_file_path": "//src/openbabel/test/rotortest.cpp"

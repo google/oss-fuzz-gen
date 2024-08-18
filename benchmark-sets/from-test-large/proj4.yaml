@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "proj4"
+"target_name": "proj_crs_to_crs_fuzzer"
+"target_path": "/src/PROJ/test/fuzzers/proj_crs_to_crs_fuzzer.cpp"
+"test_files":
+- "test_file_path": "//src/PROJ/test/unit/test_io.cpp"
+- "test_file_path": "//src/PROJ/test/unit/pj_phi2_test.cpp"
+- "test_file_path": "//src/PROJ/test/unit/test_datum.cpp"
+- "test_file_path": "//src/PROJ/test/unit/test_operation.cpp"
+- "test_file_path": "//src/PROJ/test/unit/test_misc.cpp"
+- "test_file_path": "//src/PROJ/test/postinstall/c_app/c_app.c"
+- "test_file_path": "//src/PROJ/test/unit/test_crs.cpp"
+- "test_file_path": "//src/PROJ/test/benchmark/bench_proj_trans.cpp"
+- "test_file_path": "//src/PROJ/test/unit/test_c_api.cpp"

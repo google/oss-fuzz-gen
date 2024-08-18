@@ -1,0 +1,12 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "picotls"
+"target_name": "fuzz-server-hello"
+"target_path": "/src/picotls/fuzz/fuzz-server-hello.c"
+"test_files":
+- "test_file_path": "//src/picotls/deps/micro-ecc/test/test_compute.c"
+- "test_file_path": "//src/picotls/deps/micro-ecc/test/test_ecdsa.c"
+- "test_file_path": "//src/picotls/deps/micro-ecc/test/ecdsa_test_vectors.c"
+- "test_file_path": "//src/picotls/deps/micro-ecc/test/test_compress.c"
+- "test_file_path": "//src/picotls/deps/micro-ecc/test/test_ecdh.c"
+- "test_file_path": "//src/picotls/deps/micro-ecc/test/public_key_test_vectors.c"

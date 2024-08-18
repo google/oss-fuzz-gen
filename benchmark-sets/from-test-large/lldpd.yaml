@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "lldpd"
+"target_name": "fuzz_lldp"
+"target_path": "/src/lldpd/tests/fuzz_lldp.c"
+"test_files":
+- "test_file_path": "//src/lldpd/tests/decode.c"
+- "test_file_path": "//src/lldpd/libevent/sample/dns-example.c"
+- "test_file_path": "//src/lldpd/libevent/test/bench.c"
+- "test_file_path": "//src/lldpd/libevent/test/test-closed.c"
+- "test_file_path": "//src/lldpd/libevent/test/test-ratelim.c"
+- "test_file_path": "//src/lldpd/libevent/test/regress_bufferevent.c"
+- "test_file_path": "//src/lldpd/libevent/sample/https-client.c"
+- "test_file_path": "//src/lldpd/libevent/test/regress_ssl.c"
+- "test_file_path": "//src/lldpd/libevent/sample/event-read-fifo.c"

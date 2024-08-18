@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "mpg123"
+"target_name": "read_fuzzer"
+"target_path": "/src/read_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/mpg123/src/tests/volume.c"
+- "test_file_path": "//src/mpg123/src/tests/seek_whence.c"
+- "test_file_path": "//src/mpg123/src/tests/plain_id3.c"
+- "test_file_path": "//src/mpg123/src/tests/textprint.c"
+- "test_file_path": "//src/mpg123/src/tests/text.c"
+- "test_file_path": "//src/mpg123/src/tests/sweeper.c"
+- "test_file_path": "//src/mpg123/src/tests/noise.c"
+- "test_file_path": "//src/mpg123/src/tests/decode_fixed.c"
+- "test_file_path": "//src/mpg123/src/tests/resample_total.c"

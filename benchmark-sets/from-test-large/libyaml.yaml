@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libyaml"
+"target_name": "libyaml_reformatter_alt_fuzzer"
+"target_path": "/src/libyaml_reformatter_alt_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/libyaml/tests/example-deconstructor.c"
+- "test_file_path": "//src/libyaml/tests/example-deconstructor-alt.c"
+- "test_file_path": "//src/libyaml/tests/run-emitter.c"
+- "test_file_path": "//src/libyaml/tests/run-emitter-test-suite.c"
+- "test_file_path": "//src/libyaml/tests/test-version.c"
+- "test_file_path": "//src/libyaml/tests/run-dumper.c"
+- "test_file_path": "//src/libyaml/tests/run-parser.c"
+- "test_file_path": "//src/libyaml/tests/example-reformatter.c"
+- "test_file_path": "//src/libyaml/tests/example-reformatter-alt.c"

@@ -1,0 +1,13 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libspng"
+"target_name": "spng_write_fuzzer"
+"target_path": "/src/libspng/tests/spng_write_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/libspng/tests/target_clones.c"
+- "test_file_path": "//src/zlib/test/infcover.c"
+- "test_file_path": "//src/zlib/test/minigzip.c"
+- "test_file_path": "//src/zlib/test/example.c"
+- "test_file_path": "//src/libspng/tests/test.cpp"
+- "test_file_path": "//src/zlib/contrib/testzlib/testzlib.c"
+- "test_file_path": "//src/libspng/tests/testsuite.c"

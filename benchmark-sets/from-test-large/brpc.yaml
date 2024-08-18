@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "brpc"
+"target_name": "fuzz_uri"
+"target_path": "/src/brpc/test/fuzzing/fuzz_uri.cpp"
+"test_files":
+- "test_file_path": "//src/brpc/test/brpc_protobuf_json_unittest.cpp"
+- "test_file_path": "//src/brpc/test/brpc_event_dispatcher_unittest.cpp"
+- "test_file_path": "//src/brpc/test/bvar_file_dumper_unittest.cpp"
+- "test_file_path": "//src/brpc/test/brpc_mongo_protocol_unittest.cpp"
+- "test_file_path": "//src/brpc/test/butil_unittest_main.cpp"
+- "test_file_path": "//src/brpc/test/bthread_once_unittest.cpp"
+- "test_file_path": "//src/brpc/test/sys_info_unittest.cc"
+- "test_file_path": "//src/brpc/test/flat_map_unittest.cpp"
+- "test_file_path": "//src/brpc/test/bvar_reducer_unittest.cpp"

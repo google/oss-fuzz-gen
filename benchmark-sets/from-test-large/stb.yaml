@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "stb"
+"target_name": "stbi_read_fuzzer"
+"target_path": "/src/stb/tests/stbi_read_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/stb/stb_image_resize_test/stbirtest.c"
+- "test_file_path": "//src/stb/tests/grid_reachability.c"
+- "test_file_path": "//src/stb/tests/test_ds_cpp.cpp"
+- "test_file_path": "//src/stb/tests/test_ds.c"
+- "test_file_path": "//src/stb/tests/test_cpp_compilation.cpp"
+- "test_file_path": "//src/stb/tests/stblib_test.c"
+- "test_file_path": "//src/stb/tests/image_test.c"
+- "test_file_path": "//src/stb/stb_image_resize_test/dotimings.c"
+- "test_file_path": "//src/stb/tests/test_c_compilation.c"

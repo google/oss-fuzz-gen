@@ -1,0 +1,8 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "jsoncpp"
+"target_name": "fuzz"
+"target_path": "/src/jsoncpp/src/test_lib_json/fuzz.cpp"
+"test_files":
+- "test_file_path": "//src/jsoncpp/src/jsontestrunner/main.cpp"
+- "test_file_path": "//src/jsoncpp/src/test_lib_json/jsontest.cpp"

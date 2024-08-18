@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "leptonica"
+"target_name": "recog_basic_fuzzer"
+"target_path": "/src/leptonica/prog/fuzzing/recog_basic_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/libpng/contrib/libtests/tarith.c"
+- "test_file_path": "//src/libpng/contrib/libtests/pngstest.c"
+- "test_file_path": "//src/zlib/test/infcover.c"
+- "test_file_path": "//src/libpng/contrib/libtests/readpng.c"
+- "test_file_path": "//src/libpng/contrib/libtests/pngvalid.c"
+- "test_file_path": "//src/libpng/contrib/libtests/fakepng.c"
+- "test_file_path": "//src/zlib/contrib/testzlib/testzlib.c"
+- "test_file_path": "//src/libpng/contrib/libtests/pngunknown.c"
+- "test_file_path": "//src/libpng/contrib/libtests/makepng.c"

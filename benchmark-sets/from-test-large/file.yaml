@@ -1,0 +1,14 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "file"
+"target_name": "magic_fuzzer_loaddb"
+"target_path": "/src/magic_fuzzer_loaddb.cc"
+"test_files":
+- "test_file_path": "//src/binary-samples/anti-disassembler/Linux/pc_manipulation/pc_manipulation-amd64.c"
+- "test_file_path": "//src/binary-samples/anti-disassembler/Linux/pc_manipulation/pc_manipulation-i386.c"
+- "test_file_path": "//src/binary-samples/anti-disassembler/Linux/stack-buffer-overflow/stack-buffer-overflow.c"
+- "test_file_path": "//src/binary-samples/anti-disassembler/Linux/packer/packer-i386.c"
+- "test_file_path": "//src/binary-samples/anti-disassembler/Linux/anti-debug/breakpoint_detection.c"
+- "test_file_path": "//src/file/tests/test.c"
+- "test_file_path": "//src/binary-samples/anti-disassembler/Linux/self-modifying_code/self-modifying_code-i386.c"
+- "test_file_path": "//src/binary-samples/anti-disassembler/Linux/anti-debug/anti-ptrace.c"

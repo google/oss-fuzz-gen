@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "openthread"
+"target_name": "radio_receive_done"
+"target_path": "/src/openthread/tests/fuzz/radio_receive_done.cpp"
+"test_files":
+- "test_file_path": "//src/openthread/tests/unit/test_nat64.cpp"
+- "test_file_path": "//src/openthread/tests/unit/test_hmac_sha256.cpp"
+- "test_file_path": "//src/openthread/tests/unit/test_ecdsa.cpp"
+- "test_file_path": "//src/openthread/tests/unit/test_dns_client.cpp"
+- "test_file_path": "//src/openthread/tests/unit/test_pool.cpp"
+- "test_file_path": "//src/openthread/tests/unit/test_ip_address.cpp"
+- "test_file_path": "//src/openthread/tests/unit/test_link_quality.cpp"
+- "test_file_path": "//src/openthread/tests/unit/test_power_calibration.cpp"
+- "test_file_path": "//src/openthread/tests/unit/test_meshcop.cpp"

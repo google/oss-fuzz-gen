@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "knot-dns"
+"target_name": "fuzz_packet"
+"target_path": "/src/knot-dns/tests-fuzz/fuzz_packet.c"
+"test_files":
+- "test_file_path": "//src/nettle/testsuite/pbkdf2-test.c"
+- "test_file_path": "//src/nettle/testsuite/ecc-mod-arith-test.c"
+- "test_file_path": "//src/nettle/testsuite/rsa-sec-decrypt-test.c"
+- "test_file_path": "//src/nettle/testsuite/sexp-format-test.c"
+- "test_file_path": "//src/nettle/testsuite/sha384-test.c"
+- "test_file_path": "//src/nettle/testsuite/sha224-test.c"
+- "test_file_path": "//src/nettle/testsuite/des3-test.c"
+- "test_file_path": "//src/nettle/testsuite/umac-test.c"
+- "test_file_path": "//src/nettle/testsuite/hmac-test.c"

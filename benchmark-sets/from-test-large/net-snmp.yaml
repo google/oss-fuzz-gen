@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "net-snmp"
+"target_name": "snmp_pdu_parse_fuzzer"
+"target_path": "/src/net-snmp/testing/fuzzing/snmp_pdu_parse_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/net-snmp/testing/fulltests/unit-tests/T101pdu_type_clib.c"
+- "test_file_path": "//src/net-snmp/testing/fulltests/unit-tests/T019_snmp_service_clib.c"
+- "test_file_path": "//src/net-snmp/testing/fulltests/unit-tests/T009large_fd_set_clib.c"
+- "test_file_path": "//src/net-snmp/testing/fulltests/unit-tests/T005table_dataset_cagentlib.c"
+- "test_file_path": "//src/net-snmp/testing/fulltests/unit-tests/T028_objid_clib.c"
+- "test_file_path": "//src/net-snmp/testing/fulltests/unit-tests/T007inet_pton_clib.c"
+- "test_file_path": "//src/net-snmp/testing/fulltests/unit-tests/T004snmp_enum_clib.c"
+- "test_file_path": "//src/net-snmp/testing/fulltests/unit-tests/T104agentx_parse_cagentlib.c"
+- "test_file_path": "//src/net-snmp/testing/fulltests/unit-tests/T018read_config_capp.c"

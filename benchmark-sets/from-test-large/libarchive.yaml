@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libarchive"
+"target_name": "libarchive_fuzzer"
+"target_path": "/src/libarchive_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/libarchive/libarchive/test/test_compat_tar_directory.c"
+- "test_file_path": "//src/libarchive/libarchive/test/test_write_filter_lz4.c"
+- "test_file_path": "//src/libarchive/cpio/test/test_basic.c"
+- "test_file_path": "//src/libarchive/libarchive/test/test_compat_plexus_archiver_tar.c"
+- "test_file_path": "//src/libarchive/cat/test/test_empty_xz.c"
+- "test_file_path": "//src/libarchive/libarchive/test/test_read_format_zip_malformed.c"
+- "test_file_path": "//src/libarchive/tar/test/test_option_b.c"
+- "test_file_path": "//src/libarchive/libarchive/test/test_write_format_7zip_empty.c"
+- "test_file_path": "//src/libarchive/libarchive/test/test_write_format_zip64_stream.c"
