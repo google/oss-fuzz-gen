@@ -263,7 +263,6 @@ class GPT4o(GPT):
   name = 'gpt-4o'
 
 
-
 class AzureGPT(GPT):
   """Azure's GPT model."""
 
