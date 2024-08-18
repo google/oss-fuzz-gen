@@ -290,7 +290,6 @@ class AzureGPT(GPT):
     num_tokens += 3
     return num_tokens
 
-
     # ============================== Generation ============================== #
   def query_llm(self,
                 prompt: prompts.Prompt,
@@ -311,10 +310,10 @@ class AzureGPT(GPT):
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(messages=prompt.get(),
-                                                model=self.name,
-                                                n=self.num_samples,
-                                                temperature=self.temperature),
-          openai.OpenAIError)
+                                               model=self.name,
+                                               n=self.num_samples,
+                                               temperature=self.temperature),
+        openai.OpenAIError)
 
     # TODO: Add a default value for completion.
     if log_output:
