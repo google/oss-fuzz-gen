@@ -1,0 +1,12 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "e2fsprogs"
+"target_name": "ext2fs_read_bitmap_fuzzer"
+"target_path": "/src/fuzz/ext2fs_read_bitmap_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/e2fsprogs/lib/et/test_cases/heimdal.c"
+- "test_file_path": "//src/e2fsprogs/lib/et/test_cases/heimdal2.c"
+- "test_file_path": "//src/e2fsprogs/lib/et/test_cases/heimdal3.c"
+- "test_file_path": "//src/e2fsprogs/lib/et/test_cases/imap_err.c"
+- "test_file_path": "//src/e2fsprogs/lib/et/test_cases/continuation.c"
+- "test_file_path": "//src/e2fsprogs/lib/et/test_cases/simple.c"

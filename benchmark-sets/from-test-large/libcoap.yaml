@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libcoap"
+"target_name": "split_uri_target"
+"target_path": "/src/libcoap/tests/oss-fuzz/split_uri_target.c"
+"test_files":
+- "test_file_path": "//src/libcoap/tests/test_error_response.c"
+- "test_file_path": "//src/libcoap/tests/test_session.c"
+- "test_file_path": "//src/libcoap/tests/test_wellknown.c"
+- "test_file_path": "//src/libcoap/tests/test_options.c"
+- "test_file_path": "//src/libcoap/tests/testdriver.c"
+- "test_file_path": "//src/libcoap/tests/test_sendqueue.c"
+- "test_file_path": "//src/libcoap/tests/test_encode.c"
+- "test_file_path": "//src/libcoap/tests/test_pdu.c"
+- "test_file_path": "//src/libcoap/tests/test_oscore.c"

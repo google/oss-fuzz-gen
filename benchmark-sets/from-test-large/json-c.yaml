@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "json-c"
+"target_name": "tokener_parse_ex_fuzzer"
+"target_path": "/src/tokener_parse_ex_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/json-c/tests/test_visit.c"
+- "test_file_path": "//src/json-c/tests/test_parse.c"
+- "test_file_path": "//src/json-c/tests/parse_flags.c"
+- "test_file_path": "//src/json-c/tests/test2.c"
+- "test_file_path": "//src/json-c/tests/test_json_pointer.c"
+- "test_file_path": "//src/json-c/tests/test_float.c"
+- "test_file_path": "//src/json-c/tests/test_object_iterator.c"
+- "test_file_path": "//src/json-c/tests/test4.c"
+- "test_file_path": "//src/json-c/tests/test_int_add.c"

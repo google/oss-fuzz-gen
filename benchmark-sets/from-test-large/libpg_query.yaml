@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "libpg_query"
+"target_name": "fuzz_parser"
+"target_path": "/src/libpg_query/test/fuzz/fuzz_parser.c"
+"test_files":
+- "test_file_path": "//src/libpg_query/test/deparse_tests.c"
+- "test_file_path": "//src/libpg_query/test/fingerprint_opts.c"
+- "test_file_path": "//src/libpg_query/test/deparse.c"
+- "test_file_path": "//src/libpg_query/test/fingerprint_opts_tests.c"
+- "test_file_path": "//src/libpg_query/test/complex.c"
+- "test_file_path": "//src/libpg_query/test/parse_protobuf_opts.c"
+- "test_file_path": "//src/libpg_query/test/parse_protobuf.c"
+- "test_file_path": "//src/libpg_query/test/parse.c"
+- "test_file_path": "//src/libpg_query/test/parse_plpgsql.c"

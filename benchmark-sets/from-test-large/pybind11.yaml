@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "pybind11"
+"target_name": "pybind_fuzzer"
+"target_path": "/src/pybind_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/pybind11/tests/test_factory_constructors.cpp"
+- "test_file_path": "//src/pybind11/tests/test_eval.cpp"
+- "test_file_path": "//src/pybind11/tests/test_iostream.cpp"
+- "test_file_path": "//src/pybind11/tests/eigen_tensor_avoid_stl_array.cpp"
+- "test_file_path": "//src/pybind11/tests/test_eigen_tensor.cpp"
+- "test_file_path": "//src/pybind11/tests/test_const_name.cpp"
+- "test_file_path": "//src/pybind11/tests/test_numpy_dtypes.cpp"
+- "test_file_path": "//src/pybind11/tests/test_pickling.cpp"
+- "test_file_path": "//src/pybind11/tests/test_virtual_functions.cpp"

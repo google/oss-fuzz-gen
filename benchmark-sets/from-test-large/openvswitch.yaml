@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "openvswitch"
+"target_name": "odp_target"
+"target_path": "/src/openvswitch/tests/oss-fuzz/odp_target.c"
+"test_files":
+- "test_file_path": "//src/openvswitch/tests/test-reconnect.c"
+- "test_file_path": "//src/openvswitch/tests/test-rstp.c"
+- "test_file_path": "//src/openvswitch/tests/test-heap.c"
+- "test_file_path": "//src/openvswitch/tests/test-netlink-policy.c"
+- "test_file_path": "//src/openvswitch/tests/test-packets.c"
+- "test_file_path": "//src/openvswitch/tests/test-bundle.c"
+- "test_file_path": "//src/openvswitch/tests/test-barrier.c"
+- "test_file_path": "//src/openvswitch/tests/test-uuid.c"
+- "test_file_path": "//src/openvswitch/tests/test-stopwatch.c"

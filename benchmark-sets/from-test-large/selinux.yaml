@@ -1,0 +1,8 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "selinux"
+"target_name": "binpolicy-fuzzer"
+"target_path": "/src/selinux/libsepol/fuzz/binpolicy-fuzzer.c"
+"test_files":
+- "test_file_path": "//src/selinux/checkpolicy/test/dispol.c"
+- "test_file_path": "//src/selinux/checkpolicy/test/dismod.c"

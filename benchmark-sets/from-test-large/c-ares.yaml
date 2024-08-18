@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "c-ares"
+"target_name": "ares-test-fuzz-name"
+"target_path": "/src/c-ares/test/ares-test-fuzz-name.c"
+"test_files":
+- "test_file_path": "//src/c-ares/test/dns-dump.cc"
+- "test_file_path": "//src/c-ares/test/ares-test-parse-ptr.cc"
+- "test_file_path": "//src/c-ares/test/ares-test-parse-soa.cc"
+- "test_file_path": "//src/c-ares/test/ares-test.cc"
+- "test_file_path": "//src/c-ares/test/ares-test-parse.cc"
+- "test_file_path": "//src/c-ares/test/ares-test-parse-srv.cc"
+- "test_file_path": "//src/c-ares/test/dns-proto-test.cc"
+- "test_file_path": "//src/c-ares/test/ares_queryloop.c"
+- "test_file_path": "//src/c-ares/test/ares-test-live.cc"

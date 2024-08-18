@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "openssh"
+"target_name": "sshsigopt_fuzz"
+"target_path": "/src/openssh/regress/misc/fuzz-harness/sshsigopt_fuzz.cc"
+"test_files":
+- "test_file_path": "//src/openssh/regress/unittests/sshbuf/tests.c"
+- "test_file_path": "//src/openssh/regress/unittests/misc/test_convtime.c"
+- "test_file_path": "//src/openssh/regress/unittests/authopt/tests.c"
+- "test_file_path": "//src/openssh/regress/unittests/sshbuf/test_sshbuf_misc.c"
+- "test_file_path": "//src/openssh/regress/unittests/kex/tests.c"
+- "test_file_path": "//src/openssh/regress/unittests/misc/tests.c"
+- "test_file_path": "//src/openssh/regress/unittests/sshkey/test_file.c"
+- "test_file_path": "//src/openssh/regress/unittests/misc/test_argv.c"
+- "test_file_path": "//src/openssh/regress/unittests/hostkeys/test_iterate.c"

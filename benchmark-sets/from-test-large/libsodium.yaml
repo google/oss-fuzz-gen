@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libsodium"
+"target_name": "secret_key_auth_fuzzer"
+"target_path": "/src/secret_key_auth_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/libsodium/test/default/box7.c"
+- "test_file_path": "//src/libsodium/test/default/metamorphic.c"
+- "test_file_path": "//src/libsodium/test/default/generichash3.c"
+- "test_file_path": "//src/libsodium/test/default/core_ristretto255.c"
+- "test_file_path": "//src/libsodium/test/default/pwhash_argon2id.c"
+- "test_file_path": "//src/libsodium/test/default/aead_xchacha20poly1305.c"
+- "test_file_path": "//src/libsodium/test/default/stream.c"
+- "test_file_path": "//src/libsodium/test/default/scalarmult7.c"
+- "test_file_path": "//src/libsodium/test/default/aead_aegis128l.c"

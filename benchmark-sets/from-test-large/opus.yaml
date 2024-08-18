@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "opus"
+"target_name": "opus_projection_encoder_fuzzer"
+"target_path": "/src/opus/tests/opus_projection_encoder_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/opus/tests/opus_encode_regressions.c"
+- "test_file_path": "//src/opus/tests/test_opus_padding.c"
+- "test_file_path": "//src/opus/celt/tests/test_unit_mdct.c"
+- "test_file_path": "//src/opus/tests/test_opus_projection.c"
+- "test_file_path": "//src/opus/celt/tests/test_unit_mathops.c"
+- "test_file_path": "//src/opus/tests/test_opus_dred.c"
+- "test_file_path": "//src/opus/celt/tests/test_unit_cwrs32.c"
+- "test_file_path": "//src/opus/celt/tests/test_unit_types.c"
+- "test_file_path": "//src/opus/tests/test_opus_api.c"

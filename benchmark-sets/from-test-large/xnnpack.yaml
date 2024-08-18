@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "xnnpack"
+"target_name": "fuzz_model"
+"target_path": "/src/fuzz_model.cc"
+"test_files":
+- "test_file_path": "//src/xnnpack/test/clamp-nc.cc"
+- "test_file_path": "//src/xnnpack/test/qu8-gemm-minmax-fp32-2.cc"
+- "test_file_path": "//src/xnnpack/test/divide-nd.cc"
+- "test_file_path": "//src/xnnpack/test/f32-vdiv-minmax.cc"
+- "test_file_path": "//src/xnnpack/test/qu8-igemm-minmax-fp32.cc"
+- "test_file_path": "//src/xnnpack/test/deconvolution-nhwc.cc"
+- "test_file_path": "//src/xnnpack/test/f16-raddstoreexpminusmax.cc"
+- "test_file_path": "//src/xnnpack/test/x32-packw.cc"
+- "test_file_path": "//src/xnnpack/test/vcvt-microkernel-tester.cc"

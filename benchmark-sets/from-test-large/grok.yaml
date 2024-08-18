@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "grok"
+"target_name": "grk_decompress_fuzzer"
+"target_path": "/src/grok/tests/fuzzers/grk_decompress_fuzzer.cpp"
+"test_files":
+- "test_file_path": "//src/grok/src/lib/core/highway/hwy/tests/blockwise_test.cc"
+- "test_file_path": "//src/grok/src/lib/core/highway/hwy/tests/widen_mul_test.cc"
+- "test_file_path": "//src/grok/src/lib/core/highway/hwy/tests/swizzle_test.cc"
+- "test_file_path": "//src/grok/src/lib/core/highway/hwy/tests/demote_test.cc"
+- "test_file_path": "//src/grok/src/lib/core/highway/hwy/tests/compare_test.cc"
+- "test_file_path": "//src/grok/src/lib/core/highway/hwy/tests/crypto_test.cc"
+- "test_file_path": "//src/grok/src/lib/core/highway/hwy/tests/swizzle_block_test.cc"
+- "test_file_path": "//src/grok/src/lib/core/highway/hwy/tests/sums_abs_diff_test.cc"
+- "test_file_path": "//src/grok/src/lib/core/highway/hwy/tests/mask_convert_test.cc"

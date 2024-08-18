@@ -1,0 +1,7 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "pjsip"
+"target_name": "fuzz-vpx"
+"target_path": "/src/pjsip/tests/fuzz/fuzz-vpx.c"
+"test_files":
+- "test_file_path": "//src/pjsip/tests/pjsua/tools/cmp_wav.c"

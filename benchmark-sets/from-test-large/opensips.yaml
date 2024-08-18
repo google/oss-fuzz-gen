@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "opensips"
+"target_name": "fuzz_csv_parser"
+"target_path": "/src/opensips/parser/fuzz_csv_parser.c"
+"test_files":
+- "test_file_path": "//src/opensips/test/test_ut.c"
+- "test_file_path": "//src/opensips/parser/test/test_parse_qop.c"
+- "test_file_path": "//src/opensips/parser/test/test_parse_fcaps.c"
+- "test_file_path": "//src/opensips/mem/test/test_malloc.c"
+- "test_file_path": "//src/opensips/parser/test/test_parse_authenticate_body.c"
+- "test_file_path": "//src/opensips/modules/acc/test/test.c"
+- "test_file_path": "//src/opensips/parser/test/test_parser.c"
+- "test_file_path": "//src/opensips/modules/cfgutils/test/cfgutils.c"
+- "test_file_path": "//src/opensips/lib/test/test_csv.c"

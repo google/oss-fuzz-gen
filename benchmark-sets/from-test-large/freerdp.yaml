@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "freerdp"
+"target_name": "TestFuzzCryptoCertificateDataSetPEM"
+"target_path": "/src/FreeRDP/libfreerdp/core/test/TestFuzzCryptoCertificateDataSetPEM.c"
+"test_files":
+- "test_file_path": "//src/FreeRDP/winpr/libwinpr/utils/test/TestHashTable.c"
+- "test_file_path": "//src/FreeRDP/winpr/libwinpr/comm/test/TestCommConfig.c"
+- "test_file_path": "//src/FreeRDP/libfreerdp/primitives/test/TestPrimitivesSign.c"
+- "test_file_path": "//src/FreeRDP/winpr/libwinpr/synch/test/TestSynchWaitableTimerAPC.c"
+- "test_file_path": "//src/FreeRDP/winpr/libwinpr/comm/test/TestTimeouts.c"
+- "test_file_path": "//src/FreeRDP/libfreerdp/core/test/TestConnect.c"
+- "test_file_path": "//src/FreeRDP/winpr/libwinpr/file/test/TestFileCreateFile.c"
+- "test_file_path": "//src/FreeRDP/winpr/libwinpr/wtsapi/test/TestWtsApiShutdownSystem.c"
+- "test_file_path": "//src/FreeRDP/winpr/libwinpr/ncrypt/test/TestNCryptProviders.c"

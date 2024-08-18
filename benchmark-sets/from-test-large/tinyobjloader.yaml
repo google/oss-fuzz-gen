@@ -1,0 +1,7 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "tinyobjloader"
+"target_name": "fuzz_ParseFromString"
+"target_path": "/src/tinyobjloader/fuzzer/fuzz_ParseFromString.cc"
+"test_files":
+- "test_file_path": "//src/tinyobjloader/tests/tester.cc"

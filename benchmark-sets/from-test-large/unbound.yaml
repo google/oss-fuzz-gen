@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "unbound"
+"target_name": "fuzz_2"
+"target_path": "/src/unbound/fuzz_2.c"
+"test_files":
+- "test_file_path": "//src/unbound/testcode/perf.c"
+- "test_file_path": "//src/unbound/testcode/unitzonemd.c"
+- "test_file_path": "//src/unbound/testcode/checklocks.c"
+- "test_file_path": "//src/unbound/testcode/unitanchor.c"
+- "test_file_path": "//src/unbound/testcode/unitverify.c"
+- "test_file_path": "//src/unbound/testcode/pktview.c"
+- "test_file_path": "//src/unbound/testcode/delayer.c"
+- "test_file_path": "//src/unbound/testcode/streamtcp.c"
+- "test_file_path": "//src/unbound/testcode/asynclook.c"

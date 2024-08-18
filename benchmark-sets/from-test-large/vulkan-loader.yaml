@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "vulkan-loader"
+"target_name": "instance_enumerate_fuzzer"
+"target_path": "/src/instance_enumerate_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/vulkan-headers/tests/vk_icd.c"
+- "test_file_path": "//src/vulkan-loader/tests/framework/layer/wrap_objects.cpp"
+- "test_file_path": "//src/vulkan-loader/tests/framework/test_util.cpp"
+- "test_file_path": "//src/vulkan-loader/tests/loader_wsi_tests.cpp"
+- "test_file_path": "//src/vulkan-loader/tests/loader_layer_tests.cpp"
+- "test_file_path": "//src/vulkan-loader/tests/loader_regression_tests.cpp"
+- "test_file_path": "//src/vulkan-loader/tests/framework/data/stub.cpp"
+- "test_file_path": "//src/vulkan-loader/tests/framework/icd/test_icd.cpp"
+- "test_file_path": "//src/vulkan-loader/tests/live_verification/macos_static_loader_build.cpp"

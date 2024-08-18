@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "pugixml"
+"target_name": "fuzz_parse"
+"target_path": "/src/pugixml/tests/fuzz_parse.cpp"
+"test_files":
+- "test_file_path": "//src/pugixml/tests/test_xpath_xalan_5.cpp"
+- "test_file_path": "//src/pugixml/tests/test_parse.cpp"
+- "test_file_path": "//src/pugixml/tests/test_header_string_1.cpp"
+- "test_file_path": "//src/pugixml/tests/test_xpath_variables.cpp"
+- "test_file_path": "//src/pugixml/tests/test_xpath_xalan_3.cpp"
+- "test_file_path": "//src/pugixml/tests/test_xpath_paths_w3c.cpp"
+- "test_file_path": "//src/pugixml/tests/test_header_iostream_1.cpp"
+- "test_file_path": "//src/pugixml/tests/test_parse_doctype.cpp"
+- "test_file_path": "//src/pugixml/tests/test_header_string_iostream.cpp"

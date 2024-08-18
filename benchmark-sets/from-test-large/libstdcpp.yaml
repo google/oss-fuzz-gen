@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libstdcpp"
+"target_name": "one-arg"
+"target_path": "/src/one-arg.cpp"
+"test_files":
+- "test_file_path": "//src/libstdcpp/gcc/testsuite/gcc.dg/pr63743.c"
+- "test_file_path": "//src/libstdcpp/libstdc++-v3/testsuite/26_numerics/random/linear_congruential_engine/operators/call.cc"
+- "test_file_path": "//src/libstdcpp/gcc/testsuite/gcc.target/riscv/rvv/autovec/cond/cond_fmul-5.c"
+- "test_file_path": "//src/libstdcpp/libstdc++-v3/testsuite/21_strings/headers/string/types_std_c++0x.cc"
+- "test_file_path": "//src/libstdcpp/libstdc++-v3/testsuite/23_containers/array/capacity/size.cc"
+- "test_file_path": "//src/libstdcpp/libstdc++-v3/testsuite/tr1/8_c_compatibility/cmath/functions.cc"
+- "test_file_path": "//src/libstdcpp/libstdc++-v3/testsuite/23_containers/multimap/debug/construct2_neg.cc"
+- "test_file_path": "//src/libstdcpp/gcc/testsuite/gcc.target/i386/sse4-pr113079-2.c"
+- "test_file_path": "//src/libstdcpp/gcc/testsuite/gcc.target/xtensa/elim_GP_regmove_0.c"

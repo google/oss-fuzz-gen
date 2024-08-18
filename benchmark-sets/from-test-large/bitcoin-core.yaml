@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "bitcoin-core"
+"target_name": "fuzz"
+"target_path": "/src/bitcoin-core/src/test/fuzz/fuzz.cpp"
+"test_files":
+- "test_file_path": "//src/bitcoin-core/src/test/net_peer_connection_tests.cpp"
+- "test_file_path": "//src/bitcoin-core/src/test/disconnected_transactions.cpp"
+- "test_file_path": "//src/bitcoin-core/src/test/txvalidationcache_tests.cpp"
+- "test_file_path": "//src/bitcoin-core/src/test/util/mining.cpp"
+- "test_file_path": "//src/bitcoin-core/src/test/minisketch_tests.cpp"
+- "test_file_path": "//src/bitcoin-core/src/wallet/test/feebumper_tests.cpp"
+- "test_file_path": "//src/bitcoin-core/src/test/script_parse_tests.cpp"
+- "test_file_path": "//src/bitcoin-core/src/test/result_tests.cpp"
+- "test_file_path": "//src/bitcoin-core/src/test/pmt_tests.cpp"

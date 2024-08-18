@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "qpid-proton"
+"target_name": "fuzz-sniff-header"
+"target_path": "/src/qpid-proton/c/tests/fuzz/fuzz-sniff-header.c"
+"test_files":
+- "test_file_path": "//src/qpid-proton/c/tests/pn_test_proactor.cpp"
+- "test_file_path": "//src/qpid-proton/c/tests/raw_connection_test.cpp"
+- "test_file_path": "//src/qpid-proton/c/tests/raw_wake_test.cpp"
+- "test_file_path": "//src/qpid-proton/c/tests/event_test.cpp"
+- "test_file_path": "//src/qpid-proton/c/tests/message_test.cpp"
+- "test_file_path": "//src/qpid-proton/c/tests/object_test.cpp"
+- "test_file_path": "//src/qpid-proton/c/tests/threaderciser.c"
+- "test_file_path": "//src/qpid-proton/c/tests/proactor_test.cpp"
+- "test_file_path": "//src/qpid-proton/c/tests/url_test.cpp"

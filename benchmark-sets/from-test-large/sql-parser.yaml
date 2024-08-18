@@ -1,0 +1,12 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "sql-parser"
+"target_name": "fuzz_sql_parse"
+"target_path": "/src/sql-parser/fuzz_sql_parse.cpp"
+"test_files":
+- "test_file_path": "//src/sql-parser/test/sql_parser.cpp"
+- "test_file_path": "//src/sql-parser/test/select_tests.cpp"
+- "test_file_path": "//src/sql-parser/test/sql_tests.cpp"
+- "test_file_path": "//src/sql-parser/test/tpc_h_tests.cpp"
+- "test_file_path": "//src/sql-parser/test/auto_query_file_test.cpp"
+- "test_file_path": "//src/sql-parser/test/prepare_tests.cpp"

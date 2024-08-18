@@ -1,0 +1,8 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libass"
+"target_name": "fuzz"
+"target_path": "/src/libass/fuzz/fuzz.c"
+"test_files":
+- "test_file_path": "//src/harfbuzz/src/wasm/sample/c/shape-ot.cc"
+- "test_file_path": "//src/harfbuzz/src/wasm/sample/c/shape-fallback.cc"

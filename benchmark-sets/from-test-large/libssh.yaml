@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "libssh"
+"target_name": "ssh_server_fuzzer"
+"target_path": "/src/libssh/tests/fuzz/ssh_server_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/libssh/tests/server/test_server/main.c"
+- "test_file_path": "//src/libssh/tests/unittests/torture_pki_ed25519.c"
+- "test_file_path": "//src/libssh/tests/client/torture_client_global_requests.c"
+- "test_file_path": "//src/libssh/tests/client/torture_auth_common.c"
+- "test_file_path": "//src/libssh/tests/client/torture_request_env.c"
+- "test_file_path": "//src/libssh/tests/torture_pki.c"
+- "test_file_path": "//src/libssh/tests/unittests/torture_pki_rsa.c"
+- "test_file_path": "//src/libssh/tests/unittests/torture_callbacks.c"
+- "test_file_path": "//src/libssh/tests/client/torture_sftp_limits.c"

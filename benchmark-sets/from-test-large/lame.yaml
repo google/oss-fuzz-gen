@@ -1,0 +1,7 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "lame"
+"target_name": "fuzzer-encoder"
+"target_path": "/src/LAME-fuzzers/fuzzer-encoder.cpp"
+"test_files":
+- "test_file_path": "//src/lame/test/lame_test.cpp"

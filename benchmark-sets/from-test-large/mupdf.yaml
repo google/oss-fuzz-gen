@@ -1,0 +1,7 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "mupdf"
+"target_name": "pdf_fuzzer"
+"target_path": "/src/pdf_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/mupdf/source/tests/mu-office-test.c"

@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "zstd"
+"target_name": "generate_sequences"
+"target_path": "/src/zstd/tests/fuzz/generate_sequences.c"
+"test_files":
+- "test_file_path": "//src/zstd/tests/regression/config.c"
+- "test_file_path": "//src/zstd/tests/seqgen.c"
+- "test_file_path": "//src/zstd/tests/decodecorpus.c"
+- "test_file_path": "//src/zstd/tests/bigdict.c"
+- "test_file_path": "//src/zstd/tests/poolTests.c"
+- "test_file_path": "//src/zstd/tests/longmatch.c"
+- "test_file_path": "//src/zstd/tests/paramgrill.c"
+- "test_file_path": "//src/zstd/tests/zstreamtest.c"
+- "test_file_path": "//src/zstd/tests/loremOut.c"

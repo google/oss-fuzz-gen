@@ -1,0 +1,8 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "lighttpd"
+"target_name": "fuzz_burl"
+"target_path": "/src/fuzz_burl.c"
+"test_files":
+- "test_file_path": "//src/lighttpd1.4/tests/scgi-responder.c"
+- "test_file_path": "//src/lighttpd1.4/tests/fcgi-responder.c"

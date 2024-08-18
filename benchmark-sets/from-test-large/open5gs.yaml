@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "open5gs"
+"target_name": "gtp-message-fuzz"
+"target_path": "/src/open5gs/tests/fuzzing/gtp-message-fuzz.c"
+"test_files":
+- "test_file_path": "//src/open5gs/tests/core/timer-test.c"
+- "test_file_path": "//src/open5gs/tests/registration/ue-context-test.c"
+- "test_file_path": "//src/open5gs/tests/csfb/mo-sms-test.c"
+- "test_file_path": "//src/open5gs/tests/volte/diameter-rx-path.c"
+- "test_file_path": "//src/open5gs/tests/core/log-test.c"
+- "test_file_path": "//src/open5gs/tests/sctp/abts-main.c"
+- "test_file_path": "//src/open5gs/tests/common/application.c"
+- "test_file_path": "//src/open5gs/tests/registration/gmm-status-test.c"
+- "test_file_path": "//src/open5gs/tests/attach/simple-test.c"

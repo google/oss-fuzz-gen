@@ -1,0 +1,7 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "wabt"
+"target_name": "read_binary_interp_fuzzer"
+"target_path": "/src/read_binary_interp_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/wabt/test/spec-wasm2c-prefix.c"

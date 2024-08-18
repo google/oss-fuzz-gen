@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "tpm2-tss"
+"target_name": "main-sys"
+"target_path": "/src/tpm2-tss/test/fuzz/main-sys.c"
+"test_files":
+- "test_file_path": "//src/tpm2-tss/test/integration/fapi-pcr-test.int.c"
+- "test_file_path": "//src/tpm2-tss/test/integration/esys-unseal-password-auth.int.c"
+- "test_file_path": "//src/tpm2-tss/test/unit/fapi-check-ima-log.c"
+- "test_file_path": "//src/tpm2-tss/test/unit/fapi-io.c"
+- "test_file_path": "//src/tpm2-tss/test/integration/fapi-duplicate.int.c"
+- "test_file_path": "//src/tpm2-tss/test/integration/esys-policy-authorize.int.c"
+- "test_file_path": "//src/tpm2-tss/test/integration/main-fapi.c"
+- "test_file_path": "//src/tpm2-tss/test/integration/sys-param-encrypt-decrypt.int.c"
+- "test_file_path": "//src/tpm2-tss/test/integration/esys-policy-authorize-nv-opt.int.c"

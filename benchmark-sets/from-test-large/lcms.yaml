@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "lcms"
+"target_name": "cms_universal_transform_fuzzer"
+"target_path": "/src/cms_universal_transform_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/lcms/utils/samples/mkcmy.c"
+- "test_file_path": "//src/lcms/utils/samples/wtpt.c"
+- "test_file_path": "//src/lcms/plugins/fast_float/testbed/fast_float_testbed.c"
+- "test_file_path": "//src/lcms/utils/samples/mkgrayer.c"
+- "test_file_path": "//src/lcms/testbed/testcms2.c"
+- "test_file_path": "//src/lcms/plugins/fast_float/testbed/demo_cmyk.c"
+- "test_file_path": "//src/lcms/testbed/zoo_icc.c"
+- "test_file_path": "//src/lcms/testbed/alpha_test.c"
+- "test_file_path": "//src/lcms/testbed/testthread.cpp"

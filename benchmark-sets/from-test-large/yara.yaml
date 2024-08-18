@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "yara"
+"target_name": "pe_fuzzer"
+"target_path": "/src/yara/tests/oss-fuzz/pe_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/yara/libyara/modules/tests/tests.c"
+- "test_file_path": "//src/yara/tests/test-string.c"
+- "test_file_path": "//src/yara/tests/test-stack.c"
+- "test_file_path": "//src/yara/tests/test-exception.c"
+- "test_file_path": "//src/yara/tests/test-version.c"
+- "test_file_path": "//src/yara/tests/test-rules.c"
+- "test_file_path": "//src/yara/tests/test-math.c"
+- "test_file_path": "//src/yara/tests/test-macho.c"
+- "test_file_path": "//src/yara/tests/mapper.c"

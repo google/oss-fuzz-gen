@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "fluent-bit"
+"target_name": "signv4_fuzzer"
+"target_path": "/src/fluent-bit/tests/internal/fuzzers/signv4_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/fluent-bit/tests/runtime/filter_log_to_metrics.c"
+- "test_file_path": "//src/fluent-bit/tests/internal/gzip.c"
+- "test_file_path": "//src/fluent-bit/tests/internal/config_format.c"
+- "test_file_path": "//src/fluent-bit/lib/onigmo/sample/scan.c"
+- "test_file_path": "//src/fluent-bit/tests/runtime/filter_checklist.c"
+- "test_file_path": "//src/fluent-bit/tests/runtime/in_udp.c"
+- "test_file_path": "//src/fluent-bit/tests/runtime/in_head.c"
+- "test_file_path": "//src/fluent-bit/tests/runtime/in_splunk.c"
+- "test_file_path": "//src/fluent-bit/tests/runtime/in_random.c"

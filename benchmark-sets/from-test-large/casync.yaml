@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "casync"
+"target_name": "fuzz-compress"
+"target_path": "/src/casync/test/fuzz/fuzz-compress.c"
+"test_files":
+- "test_file_path": "//src/casync/test/test-feature-flags.c"
+- "test_file_path": "//src/casync/test/test-casync.c"
+- "test_file_path": "//src/casync/test/test-cachunker.c"
+- "test_file_path": "//src/casync/test/test-cautil.c"
+- "test_file_path": "//src/casync/test/test-caorigin.c"
+- "test_file_path": "//src/casync/test/test-calocation.c"
+- "test_file_path": "//src/casync/test/test-caencoder.c"
+- "test_file_path": "//src/casync/test/test-caindex.c"
+- "test_file_path": "//src/casync/test/test-cachunker-histogram.c"

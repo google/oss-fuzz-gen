@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "cjson"
+"target_name": "cjson_read_fuzzer"
+"target_path": "/src/cjson/fuzzing/cjson_read_fuzzer.c"
+"test_files":
+- "test_file_path": "//src/cjson/tests/unity/test/expectdata/testsample_mock_param.c"
+- "test_file_path": "//src/cjson/tests/unity/test/expectdata/testsample_run1.c"
+- "test_file_path": "//src/cjson/tests/unity/examples/example_3/test/TestProductionCode.c"
+- "test_file_path": "//src/cjson/tests/misc_utils_tests.c"
+- "test_file_path": "//src/cjson/tests/print_array.c"
+- "test_file_path": "//src/cjson/tests/unity/test/expectdata/testsample_yaml.c"
+- "test_file_path": "//src/cjson/tests/unity/examples/example_3/src/ProductionCode2.c"
+- "test_file_path": "//src/cjson/tests/parse_examples.c"
+- "test_file_path": "//src/cjson/tests/json_patch_tests.c"

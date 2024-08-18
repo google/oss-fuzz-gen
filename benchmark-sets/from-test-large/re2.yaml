@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "re2"
+"target_name": "re2_fuzzer"
+"target_path": "/src/re2/re2/fuzzing/re2_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/re2/re2/testing/dfa_test.cc"
+- "test_file_path": "//src/re2/re2/testing/re2_arg_test.cc"
+- "test_file_path": "//src/re2/re2/testing/regexp_generator.cc"
+- "test_file_path": "//src/re2/re2/testing/possible_match_test.cc"
+- "test_file_path": "//src/re2/re2/testing/null_walker.cc"
+- "test_file_path": "//src/re2/re2/testing/search_test.cc"
+- "test_file_path": "//src/re2/re2/testing/exhaustive_tester.cc"
+- "test_file_path": "//src/re2/re2/testing/exhaustive2_test.cc"
+- "test_file_path": "//src/re2/re2/testing/string_generator_test.cc"

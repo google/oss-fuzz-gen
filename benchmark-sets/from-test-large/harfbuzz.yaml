@@ -1,0 +1,15 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "harfbuzz"
+"target_name": "hb-set-fuzzer"
+"target_path": "/src/harfbuzz/test/fuzzing/hb-set-fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/harfbuzz/test/api/test-subset-cmap.c"
+- "test_file_path": "//src/harfbuzz/test/api/test-paint.c"
+- "test_file_path": "//src/harfbuzz/test/api/test-font.c"
+- "test_file_path": "//src/harfbuzz/test/api/test-subset.c"
+- "test_file_path": "//src/harfbuzz/test/api/test-subset-sbix.c"
+- "test_file_path": "//src/harfbuzz/test/api/test-subset-vmtx.c"
+- "test_file_path": "//src/harfbuzz/test/api/test-subset-cff1.c"
+- "test_file_path": "//src/harfbuzz/test/api/test-aat-layout.c"
+- "test_file_path": "//src/harfbuzz/test/api/test-subset-vvar.c"

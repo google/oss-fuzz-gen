@@ -1,0 +1,10 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libtiff"
+"target_name": "tiff_read_rgba_fuzzer"
+"target_path": "/src/libtiff/contrib/oss-fuzz/tiff_read_rgba_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/zlib/test/example.c"
+- "test_file_path": "//src/zlib/contrib/testzlib/testzlib.c"
+- "test_file_path": "//src/zlib/test/minigzip.c"
+- "test_file_path": "//src/zlib/test/infcover.c"

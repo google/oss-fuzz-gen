@@ -1,0 +1,11 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libjxl"
+"target_name": "djxl_fuzzer"
+"target_path": "/src/libjxl/tools/djxl_fuzzer.cc"
+"test_files":
+- "test_file_path": "//src/libjxl/tools/flicker_test/parameters.cc"
+- "test_file_path": "//src/libjxl/tools/flicker_test/split_view.cc"
+- "test_file_path": "//src/libjxl/tools/flicker_test/test_window.cc"
+- "test_file_path": "//src/libjxl/tools/flicker_test/main.cc"
+- "test_file_path": "//src/libjxl/tools/flicker_test/setup.cc"

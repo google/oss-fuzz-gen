@@ -1,0 +1,14 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "libvnc"
+"target_name": "fuzz_server"
+"target_path": "/src/libvncserver/test/fuzz_server.c"
+"test_files":
+- "test_file_path": "//src/libvncserver/test/tjutil.c"
+- "test_file_path": "//src/libvncserver/test/cargstest.c"
+- "test_file_path": "//src/libvncserver/test/tjbench.c"
+- "test_file_path": "//src/libvncserver/test/tjunittest.c"
+- "test_file_path": "//src/libvncserver/test/bmp.c"
+- "test_file_path": "//src/libvncserver/test/wstest.c"
+- "test_file_path": "//src/libvncserver/test/copyrecttest.c"
+- "test_file_path": "//src/libvncserver/test/encodingstest.c"

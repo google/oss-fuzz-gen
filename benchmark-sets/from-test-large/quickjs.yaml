@@ -1,0 +1,7 @@
+"is_test_benchmark": true
+"language": "c"
+"project": "quickjs"
+"target_name": "fuzz_regexp"
+"target_path": "/src/quickjs/fuzz/fuzz_regexp.c"
+"test_files":
+- "test_file_path": "//src/quickjs/tests/bjson.c"

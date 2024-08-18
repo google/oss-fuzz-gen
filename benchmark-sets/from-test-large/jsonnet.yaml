@@ -1,0 +1,12 @@
+"is_test_benchmark": true
+"language": "c++"
+"project": "jsonnet"
+"target_name": "convert_jsonnet_fuzzer_regular"
+"target_path": "/src/convert_jsonnet_fuzzer_regular.cc"
+"test_files":
+- "test_file_path": "//src/jsonnet/test_cmd/version1.golden.stdout.cpp"
+- "test_file_path": "//src/jsonnet/test_cmd/no_args.golden.stderr.cpp"
+- "test_file_path": "//src/jsonnet/test_cmd/simple4.golden.stderr.cpp"
+- "test_file_path": "//src/jsonnet/test_cmd/version2.golden.stdout.cpp"
+- "test_file_path": "//src/jsonnet/test_cmd/max_stack4.golden.stderr.cpp"
+- "test_file_path": "//src/jsonnet/test_cmd/help.golden.stdout.cpp"
