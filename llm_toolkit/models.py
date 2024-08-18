@@ -329,7 +329,7 @@ class AzureGPT4(AzureGPT):
   name = 'gpt-4-azure'
 
 
-class AzureGPT4oAzure(AzureGPT):
+class AzureGPT4o(AzureGPT):
   """Azure's GPTi-4 model."""
 
   name = 'gpt-4o-azure'
