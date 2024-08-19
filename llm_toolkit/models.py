@@ -206,12 +206,11 @@ class GPT(LLM):
     except KeyError:
       logger.info('Could not get a tiktoken encoding for %s.', self.name)
       return tiktoken.get_encoding('cl100k_base')
-    
+
   def _get_client(self):
     """Returns the OpenAI client."""
     return openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-  
-  
+
   # ================================ Prompt ================================ #
   def estimate_token_num(self, text) -> int:
     """Estimates the number of tokens in |text|."""
@@ -275,9 +274,9 @@ class GPT4o(GPT):
 
 class AzureGPT(GPT):
   """Azure's GPT model."""
-  
+
   name = 'gpt-3.5-turbo-azure'
-  
+
   def _get_tiktoken_encoding(self):
     """Returns the tiktoken encoding for the model."""
     try:
@@ -285,13 +284,13 @@ class AzureGPT(GPT):
     except KeyError:
       logger.info('Could not get a tiktoken encoding for %s.', self.name)
       return tiktoken.get_encoding('cl100k_base')
-    
+
   def _get_client(self):
     """Returns the Azure client."""
-    return openai.AzureOpenAI(azure_endpoint=os.getenv(
-        "AZURE_OPENAI_ENDPOINT"),
+    return openai.AzureOpenAI(azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
                               api_key=os.getenv("AZURE_OPENAI_API_KEY"),
                               api_version="2024-02-01")
+
 
 class AzureGPT4(AzureGPT):
   """Azure's GPTi-4 model."""
