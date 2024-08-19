@@ -1,0 +1,2 @@
+$CXX $CXXFLAGS $LIB_FUZZING_ENGINE tests/fuzz_parse.cpp src/pugixml.o -o ${OUT}/fuzz_parse
+$CXX $CXXFLAGS $LIB_FUZZING_ENGINE tests/fuzz_xpath.cpp src/pugixml.o -o ${OUT}/fuzz_xpath
