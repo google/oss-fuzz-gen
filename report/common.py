@@ -117,6 +117,7 @@ class Target:
   code: str
   fixer_prompt: Optional[str] = None
 
+
 @dataclasses.dataclass
 class Triage:
   result: str
