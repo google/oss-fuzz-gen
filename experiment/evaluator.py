@@ -83,7 +83,8 @@ def load_existing_textcov(project: str) -> textcov.Textcov:
 
   if not blobs.prefixes:  # type: ignore
     # No existing coverage reports.
-    raise RuntimeError(f'No existing coverage reports for {project}')
+    logger.info('No existing coverage report. Using empty.')
+    return textcov.Textcov()
 
   # Find the latest generated textcov date.
   latest_dir = sorted(blobs.prefixes)[-1]  # type: ignore
@@ -137,7 +138,8 @@ def load_existing_coverage_summary(project: str) -> dict:
 
   if not blobs.prefixes:  # type: ignore
     # No existing coverage reports.
-    raise RuntimeError(f'No existing coverage reports for {project}')
+    logger.info('No existing coverage reports, using empty one.')
+    return {}
 
   latest_dir = sorted(blobs.prefixes)[-1]  # type: ignore
   blob = bucket.blob(f'{latest_dir}linux/summary.json')
@@ -418,8 +420,12 @@ class Evaluator:
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
 
-    total_lines = _compute_total_lines_without_fuzz_targets(
+    if coverage_summary:
+      total_lines = _compute_total_lines_without_fuzz_targets(
         coverage_summary, generated_target_name)
+    else:
+      total_lines = 0
+
     if self.benchmark.language == 'jvm':
       # The Jacoco.xml coverage report used to generate
       # summary.json on OSS-Fuzz for JVM projects does
