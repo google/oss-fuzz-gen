@@ -123,7 +123,7 @@ done
 
 # Shut down the existing webapp if it's running
 curl --silent http://localhost:8080/api/shutdown || true
-                                                                               
+
 # Create Fuzz Introspector's webserver DB
 echo "[+] Creating the webapp DB"
 cd $ROOT_FI/tools/web-fuzzing-introspection/app/static/assets/db/
