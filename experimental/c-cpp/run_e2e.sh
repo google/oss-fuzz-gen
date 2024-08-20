@@ -159,7 +159,7 @@ LLM_NUM_EVA=1 LLM_NUM_EXP=1 ./run_all_experiments.py \
     --model=$OSS_FUZZ_GEN_MODEL \
     -g ${BENCHMARK_HEURISTICS} \
     -gp ${comma_separated} \
-    -gm ${VAR_HARNESSES_PER_ORACLE} \
+    -gm ${VAR_HARNESSES_PER_PROJECT} \
     -of ${OSS_FUZZ_DIR} \
     -e http://127.0.0.1:8080/api
 
