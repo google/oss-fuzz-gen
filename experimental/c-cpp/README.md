@@ -87,7 +87,8 @@ git clone https://github.com/google/oss-fuzz-gen
 cd oss-fuzz-gen/from-repo/c-cpp
 python3 ./runner.py -o /tmp/oss-fuzz-10 -t 15 -i TARGET_REPO_URL -m vertex
 
-# Use "-m openai" for chatgpt above
+# Post process the run to highlight results
+python3 ./post-process.py print --oss-fuzz-dir /tmp/oss-fuzz-10
 ```
 
 # Trophies
