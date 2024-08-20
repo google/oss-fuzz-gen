@@ -1551,7 +1551,7 @@ def auto_generate(github_url,
       logger.info('Fuzzer harnesses to evaluate: %d',
                   len(harness_builds_to_validate))
       for generated_harness in harness_builds_to_validate:
-        if max_successful > -1 and max_successful <= successful_builds:
+        if -1 < max_successful <= successful_builds:
           logger.info('Has generated %d successful builds, exiting now.',
                       successful_builds)
           return
