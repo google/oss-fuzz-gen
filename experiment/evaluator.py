@@ -422,7 +422,7 @@ class Evaluator:
 
     if coverage_summary:
       total_lines = _compute_total_lines_without_fuzz_targets(
-        coverage_summary, generated_target_name)
+          coverage_summary, generated_target_name)
     else:
       total_lines = 0
 
