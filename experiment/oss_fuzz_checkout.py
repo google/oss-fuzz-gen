@@ -35,6 +35,7 @@ ENABLE_CACHING = bool(int(os.getenv('OFG_USE_CACHING', '0')))
 # This will change if temp_dir is used.
 OSS_FUZZ_DIR: str = os.path.join(
     os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'oss-fuzz')
+CLEAN_UP_OSS_FUZZ = bool(int(os.getenv('OFG_CLEAN_UP_OSS_FUZZ', '1')))
 
 VENV_DIR: str = 'venv'
 
@@ -90,13 +91,14 @@ def clone_oss_fuzz(oss_fuzz_dir: str = ''):
 
   if not os.path.exists(OSS_FUZZ_DIR):
     _clone_oss_fuzz_repo()
-  # Remove existing targets.
-  clean_command = ['git', 'clean', '-fxd', '-e', VENV_DIR, '-e', BUILD_DIR]
-  sp.run(clean_command,
-         capture_output=True,
-         stdin=sp.DEVNULL,
-         check=True,
-         cwd=OSS_FUZZ_DIR)
+
+  if CLEAN_UP_OSS_FUZZ:
+    clean_command = ['git', 'clean', '-fxd', '-e', VENV_DIR, '-e', BUILD_DIR]
+    sp.run(clean_command,
+           capture_output=True,
+           stdin=sp.DEVNULL,
+           check=True,
+           cwd=OSS_FUZZ_DIR)
 
 
 def postprocess_oss_fuzz() -> None:
