@@ -24,6 +24,7 @@ from abc import abstractmethod
 from typing import Any, Dict, List, Optional, Tuple, Type
 
 import build_generator
+import constants
 import cxxfilt
 import openai
 import templates
@@ -225,22 +226,23 @@ class FuzzHeuristicGeneratorBase:
   def run_prompt_and_get_fuzzer_source(self, prompt):
     """Communicate to OpenAI prompt and extract harness source code."""
 
-    if LLM_MODEL == 'openai':
+    if LLM_MODEL == constants.MODEL_GPT_35_TURBO:
       client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-      completion = client.chat.completions.create(model="gpt-3.5-turbo",
-                                                  messages=[
-                                                      {
-                                                          'role': 'system',
-                                                          'content': prompt
-                                                      },
-                                                  ])
+      completion = client.chat.completions.create(
+          model=constants.MODEL_GPT_35_TURBO,
+          messages=[
+              {
+                  'role': 'system',
+                  'content': prompt
+              },
+          ])
       fuzzer_source = completion.choices[0].message.content
       if fuzzer_source is None:
         return ''
       fuzzer_source = fuzzer_source.replace('<code>', '').replace(
           '</code>', '').replace('```cpp', '').replace('```c',
                                                        '').replace('```', '')
-    elif LLM_MODEL == 'vertex':
+    elif LLM_MODEL == constants.MODEL_VERTEX:
       logger.info('Using vertex')
       from vertexai.language_models import CodeGenerationModel
       parameters = {'temperature': 0.5, 'max_output_tokens': 512}
@@ -1548,7 +1550,7 @@ def auto_generate(github_url,
       logger.info('Fuzzer harnesses to evaluate: %d',
                   len(harness_builds_to_validate))
       for generated_harness in harness_builds_to_validate:
-        if max_successful > -1 and max_successful <= successful_builds:
+        if -1 < max_successful <= successful_builds:
           logger.info('Has generated %d successful builds, exiting now.',
                       successful_builds)
           return

@@ -1,0 +1,9 @@
+cd $SRC/libyang/build
+
+static_pcre=($(find /src/pcre2 -name "libpcre2-8.a"))
+
+for fuzzer in lyd_parse_mem_json lyd_parse_mem_xml lys_parse_mem; do
+  $CC $CFLAGS -c ../tests/fuzz/${fuzzer}.c -I./libyang -I./compat
+  $CXX $CXXFLAGS $LIB_FUZZING_ENGINE ${fuzzer}.o -o $OUT/${fuzzer} \
+    ./libyang.a ${static_pcre}
+done

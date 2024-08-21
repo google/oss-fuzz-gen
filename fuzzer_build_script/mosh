@@ -1,12 +1,11 @@
-cd src/fuzz
+# Use libstdc++, not libc++, since the base image's prebuild libraries require
+# libstdc++.
+export CXXFLAGS="$CXXFLAGS -stdlib=libstdc++"
+
+cd $SRC/mosh/src/fuzz
 
 make -j$n CFLAGS+="$CFLAGS" CXXFLAGS+="$CXXFLAGS"
 
 for fuzzer in *_fuzzer; do
   cp $fuzzer $OUT
-
-  corpus=${fuzzer%_fuzzer}_corpus
-  if [ -d $corpus ]; then
-    zip -j $OUT/${fuzzer}_seed_corpus.zip $corpus/*
-  fi
 done

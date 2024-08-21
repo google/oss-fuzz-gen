@@ -56,7 +56,9 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
     shutil.copyfile(json_config, os.path.join(temp_project_dir, 'creds.json'))
 
   # Copy over the generator
-  files_to_copy = {'build_generator.py', 'manager.py', 'templates.py'}
+  files_to_copy = {
+      'build_generator.py', 'manager.py', 'templates.py', 'constants.py'
+  }
   for target_file in files_to_copy:
     shutil.copyfile(
         os.path.join(os.path.dirname(os.path.abspath(__file__)), target_file),
@@ -155,10 +157,10 @@ def run_autogen(github_url,
     initiator_cmd += f' --max-successful={max_successful_builds}'
 
   extra_environment = []
-  if model == 'vertex':
+  if model == constants.MODEL_VERTEX:
     extra_environment.append('-e')
     extra_environment.append('GOOGLE_APPLICATION_CREDENTIALS=/src/creds.json')
-  elif model == 'openai':
+  elif model == constants.MODEL_GPT_35_TURBO:
     extra_environment.append('-e')
     extra_environment.append(f'OPENAI_API_KEY={openai_api_key}')
 
@@ -349,7 +351,11 @@ def parse_commandline():
       '-g',
       help='Comma-separated string of generator heuristics to use.',
       default='all')
-  parser.add_argument('--model', '-m', help='LLM model to use', type=str)
+  parser.add_argument(
+      '--model',
+      '-m',
+      help=f'LLM model to use. Available: {str(constants.MODELS)}',
+      type=str)
   parser.add_argument('--max_successful',
                       '-ma',
                       help='Max number of successful builds to generate.',
