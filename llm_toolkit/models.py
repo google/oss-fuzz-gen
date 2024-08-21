@@ -199,15 +199,24 @@ class GPT(LLM):
 
   name = 'gpt-3.5-turbo'
 
+  def _get_tiktoken_encoding(self):
+    """Returns the tiktoken encoding for the model."""
+    try:
+      return tiktoken.encoding_for_model(self.name)
+    except KeyError:
+      logger.info('Could not get a tiktoken encoding for %s.', self.name)
+      return tiktoken.get_encoding('cl100k_base')
+
+  def _get_client(self):
+    """Returns the OpenAI client."""
+    return openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
   # ================================ Prompt ================================ #
   def estimate_token_num(self, text) -> int:
     """Estimates the number of tokens in |text|."""
     # https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
-    try:
-      encoder = tiktoken.encoding_for_model(self.name)
-    except KeyError:
-      logger.info('Could not get a tiktoken encoding for %s.', self.name)
-      encoder = tiktoken.get_encoding('cl100k_base')
+
+    encoder = self._get_tiktoken_encoding()
 
     num_tokens = 0
     for message in text:
@@ -235,7 +244,7 @@ class GPT(LLM):
       logger.info('OpenAI does not allow temperature list: %s',
                   self.temperature_list)
 
-    client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+    client = self._get_client()
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(messages=prompt.get(),
@@ -261,6 +270,40 @@ class GPT4o(GPT):
   """OpenAI's GPTi-4 model."""
 
   name = 'gpt-4o'
+
+
+class AzureGPT(GPT):
+  """Azure's GPT model."""
+
+  name = 'gpt-3.5-turbo-azure'
+
+  def _get_tiktoken_encoding(self):
+    """Returns the tiktoken encoding for the model."""
+    try:
+      return tiktoken.encoding_for_model(self.name.replace('-azure', ''))
+    except KeyError:
+      logger.info('Could not get a tiktoken encoding for %s.', self.name)
+      return tiktoken.get_encoding('cl100k_base')
+
+  def _get_client(self):
+    """Returns the Azure client."""
+    return openai.AzureOpenAI(azure_endpoint=os.getenv(
+        "AZURE_OPENAI_ENDPOINT", "https://api.openai.com"),
+                              api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                              api_version=os.getenv("AZURE_OPENAI_API_VERSION",
+                                                    "2024-02-01"))
+
+
+class AzureGPT4(AzureGPT):
+  """Azure's GPTi-4 model."""
+
+  name = 'gpt-4-azure'
+
+
+class AzureGPT4o(AzureGPT):
+  """Azure's GPTi-4 model."""
+
+  name = 'gpt-4o-azure'
 
 
 class Claude(LLM):
