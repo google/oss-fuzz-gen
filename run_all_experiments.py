@@ -378,8 +378,7 @@ def _process_total_coverage_gain(
     for cov in cov_list:
       total_cov.merge(cov)
 
-    coverage_summary = evaluator.load_existing_coverage_summary(
-        project)
+    coverage_summary = evaluator.load_existing_coverage_summary(project)
 
     try:
       coverage_summary_files = coverage_summary['data'][0]['files']
