@@ -54,7 +54,10 @@ def compute_coverage_diff(project: str, coverage_links: list[str]):
         new_textcov.merge(textcov.Textcov.from_file(f))
 
   new_textcov.subtract_covered_lines(existing_textcov)
-  total_lines = coverage_summary['data'][0]['totals']['lines']['count']
+  try:
+    total_lines = coverage_summary['data'][0]['totals']['lines']['count']
+  except KeyError:
+    total_lines = 1
 
   return new_textcov.covered_lines / total_lines
   #print(f'{project}:', new_textcov.covered_lines / total_lines)

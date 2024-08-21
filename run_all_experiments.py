@@ -378,9 +378,13 @@ def _process_total_coverage_gain(
     for cov in cov_list:
       total_cov.merge(cov)
 
-    coverage_summary = evaluator.load_existing_coverage_summary(
-        project)['data'][0]['files']
-    lines = [f['summary']['lines']['count'] for f in coverage_summary]
+    coverage_summary = evaluator.load_existing_coverage_summary(project)
+
+    try:
+      coverage_summary_files = coverage_summary['data'][0]['files']
+      lines = [f['summary']['lines']['count'] for f in coverage_summary_files]
+    except KeyError:
+      lines = []
 
     total_lines = max(total_cov.total_lines, sum(lines))
 
