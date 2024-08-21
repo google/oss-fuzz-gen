@@ -73,6 +73,16 @@ libraries, then we will end up trying to build/run 400 harnesses.
 
 ## Usage
 
+The logic in this folder supports two different use cases:
+
+1) [OSS-Fuzz form scratch without core OSS-Fuzz-gen](#OSS-Fuzz-from-scratch-without-core-OSS-Fuzz-gen) Generating
+   OSS-Fuzz projects from scratch based on auto-harnessing within this folder.
+2) [OSS-Fuzz from scratch including core OSS-Fuzz-gen](#OSS-Fuzz-from-scratch-including-core-OSS-Fuzz-gen) Generating
+   OSS-Fuzz projects from scratch using the auto-harnessing in this folder and
+   then applying core OSS-Fuzz-gen onto the generated OSS-Fuzz project.
+
+### OSS-Fuzz from scratch without core OSS-Fuzz-gen
+
 ```sh
 # Prepare
 # Vertex: Follow the steps at:
@@ -89,6 +99,31 @@ python3 ./runner.py -o /tmp/oss-fuzz-10 -t 15 -i TARGET_REPO_URL -m vertex
 
 # Post process the run to highlight results
 python3 ./post-process.py print --oss-fuzz-dir /tmp/oss-fuzz-10
+```
+
+### OSS-Fuzz from scratch including core OSS-Fuzz-gen
+
+```sh
+# Prepare
+# Vertex: Follow the steps at:
+# https://github.com/google/oss-fuzz-gen/blob/main/USAGE.md#vertex-ai
+export GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_CREDS_FILE
+
+# chatgpt:
+export OPENAI_API_KEY=your-api-key
+
+# Prepare folder and cwd
+git clone https://github.com/google/oss-fuzz-gen
+cd oss-fuzz-gen/experimental/c-cpp
+
+# Run end-to-end generation
+MODEL=gpt-3.5-turbo TARGETS=https://github.com/gregjesl/simpleson ./run_e2e.sh
+
+# Results are now available in regular OSS-Fuzz-gen style
+# Start virtualenv to launch webapp
+. ./workdir/.venv/bin/activate
+cd ../../
+python3 -m report.web -r results -s
 ```
 
 # Trophies
