@@ -14,6 +14,7 @@
 # limitations under the License.
 """Run an experiment with one function-under-test."""
 
+import argparse
 import dataclasses
 import logging
 import os
@@ -37,7 +38,6 @@ logger = logging.getLogger(__name__)
 # experiment, while {run_all_experiments.NUM_EXP, default 2} experiments will
 # run in parallel.
 NUM_EVA = int(os.getenv('LLM_NUM_EVA', '3'))
-DEBUG: bool = False
 
 # Default LLM hyper-parameters.
 # #182 shows Gemini returns NUM_SAMPLES independent responses via repeated
@@ -81,16 +81,13 @@ class AggregatedResult:
         f'max coverage diff report: {self.max_coverage_diff_report or "None"}')
 
 
-def generate_targets(benchmark: Benchmark,
-                     model: models.LLM,
-                     prompt: prompts.Prompt,
-                     work_dirs: WorkDirs,
-                     builder: prompt_builder.PromptBuilder,
-                     debug: bool = DEBUG) -> list[str]:
+def generate_targets(benchmark: Benchmark, model: models.LLM,
+                     prompt: prompts.Prompt, work_dirs: WorkDirs,
+                     builder: prompt_builder.PromptBuilder) -> list[str]:
   """Generates fuzz target with LLM."""
   logger.info('Generating targets for %s %s using %s..', benchmark.project,
               benchmark.function_signature, model.name)
-  model.query_llm(prompt, response_dir=work_dirs.raw_targets, log_output=debug)
+  model.query_llm(prompt, response_dir=work_dirs.raw_targets)
 
   _, target_ext = os.path.splitext(benchmark.target_path)
   generated_targets = []
@@ -218,16 +215,15 @@ def prepare(oss_fuzz_dir: str) -> None:
   oss_fuzz_checkout.postprocess_oss_fuzz()
 
 
-def generate_targets_for_analysis(model: models.LLM,
-                                  benchmark: Benchmark,
-                                  work_dirs: WorkDirs,
-                                  template_dir: str,
-                                  use_context: bool,
-                                  example_pair: list[list[str]],
-                                  debug: bool = DEBUG,
-                                  prompt_builder_to_use: str = 'DEFAULT',
-                                  cloud_experiment_bucket: str = '',
-                                  dry_run: bool = False) -> List[str]:
+def generate_targets_for_analysis(
+    model: models.LLM,
+    benchmark: Benchmark,
+    work_dirs: WorkDirs,
+    template_dir: str,
+    use_context: bool,
+    example_pair: list[list[str]],
+    prompt_builder_to_use: str = 'DEFAULT',
+    cloud_experiment_bucket: str = '') -> List[str]:
   """Generates a set of harnesses and build scripts ready to be evaluated
     by `check_targets`. This is where the core first LLM logic is used to
     generate harnesses.
@@ -271,53 +267,31 @@ def generate_targets_for_analysis(model: models.LLM,
                          project_context_content=context_info)
   prompt.save(work_dirs.prompt)
 
-  if dry_run:
-    return []
-
-  generated_targets = generate_targets(benchmark,
-                                       model,
-                                       prompt,
-                                       work_dirs,
-                                       builder,
-                                       debug=debug)
+  generated_targets = generate_targets(benchmark, model, prompt, work_dirs,
+                                       builder)
   generated_targets = fix_code(work_dirs, generated_targets)
   return generated_targets
 
 
-def run(benchmark: Benchmark,
-        model: models.LLM,
-        template_dir: str,
-        work_dirs: WorkDirs,
-        example_pair: Optional[list[list[str]]] = None,
-        debug: bool = DEBUG,
-        cloud_experiment_name: str = '',
-        cloud_experiment_bucket: str = '',
-        use_context: bool = False,
-        run_timeout: int = RUN_TIMEOUT,
-        dry_run: bool = False,
-        prompt_builder_to_use: str = 'DEFAULT') -> Optional[AggregatedResult]:
+def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
+        work_dirs: WorkDirs) -> Optional[AggregatedResult]:
   """Generates code via LLM, and evaluates them."""
   model.cloud_setup()
-
-  if example_pair is None:
-    example_pair = prompt_builder.EXAMPLES[benchmark.language]
 
   generated_targets = generate_targets_for_analysis(
       model=model,
       benchmark=benchmark,
       work_dirs=work_dirs,
-      template_dir=template_dir,
-      use_context=use_context,
-      example_pair=example_pair,
-      debug=debug,
-      prompt_builder_to_use=prompt_builder_to_use,
-      cloud_experiment_bucket=cloud_experiment_bucket,
-      dry_run=dry_run)
+      template_dir=args.template_directory,
+      use_context=args.context,
+      example_pair=prompt_builder.EXAMPLES[benchmark.language],
+      prompt_builder_to_use=args.prompt_builder,
+      cloud_experiment_bucket=args.cloud_experiment_bucket)
 
   logger.info('Generated %d targets', len(generated_targets))
   if not generated_targets:
     return None
 
   return check_targets(model.ai_binary, benchmark, work_dirs, generated_targets,
-                       cloud_experiment_name, cloud_experiment_bucket,
-                       run_timeout, model.name)
+                       args.cloud_experiment_name, args.cloud_experiment_bucket,
+                       args.run_timeout, model.name)
