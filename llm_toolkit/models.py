@@ -199,7 +199,7 @@ class GPT(LLM):
 
   name = 'gpt-3.5-turbo'
 
-  def _get_tiktoken_encoding(self, model_name:str):
+  def _get_tiktoken_encoding(self, model_name: str):
     """Returns the tiktoken encoding for the model."""
     try:
       return tiktoken.encoding_for_model(model_name)
@@ -277,7 +277,7 @@ class AzureGPT(GPT):
 
   name = 'gpt-3.5-turbo-azure'
 
-  def _get_tiktoken_encoding(self, model_name:str):
+  def _get_tiktoken_encoding(self, model_name: str):
     """Returns the tiktoken encoding for the model."""
     return super()._get_tiktoken_encoding(model_name.replace('-azure', ''))
 
