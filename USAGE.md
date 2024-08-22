@@ -75,7 +75,8 @@ export AZURE_OPENAI_ENDPOINT='<your-azure-endpoint>'
 export AZURE_OPENAI_API_VERSION='<your-azure-api-version>' # default is '2024-02-01'
 ```
 
-> Tip: To distinguish the two ways of accessing OpenAI models, you need to adding `-azure` to the model name **when using OpenAI on Azure**. For example, `gpt-3.5-turbo-azure` will use OpenAI on Azure, while `gpt-3.5-turbo` will use OpenAI on OpenAI.
+> Tip: 
+To distinguish between the two ways of accessing OpenAI models, you need to add `-azure` to the model name when **when using OpenAI on Azure**. For example, `gpt-3.5-turbo-azure` will use OpenAI on Azure, while `gpt-3.5-turbo` will use OpenAI on OpenAI.
 
 
 ## Running experiments
