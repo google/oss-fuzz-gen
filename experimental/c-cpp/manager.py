@@ -1310,6 +1310,45 @@ def create_clean_clusterfuzz_lite_from_success(github_repo: str, out_dir: str,
     f.write(templates.CFLITE_TEMPLATE)
 
 
+def convert_fuzz_build_line_to_loop(clean_build_content: str,
+                                    original_build_folder: str,
+                                    project_repo_dir: str) -> str:
+  """Adjust fuzz building script so that harnesses are build in a loop
+  iterating $SRC/fuzzers/*. The goal of this is to make it easier to add
+  additional harnesses that will also get build.
+  """
+  split_lines = clean_build_content.split('\n')
+  target_line_idx = -1
+  for idx in range(len(split_lines)):
+    if '/src/generated-fuzzer' in split_lines[idx]:
+      target_line_idx = idx
+      break
+  if target_line_idx == -1:
+    raise RuntimeError('Did not find harness build command.')
+
+  wrapper_script = '''for fuzzer in $SRC/fuzzers/*; do
+  fuzzer_target=$(basename $fuzzer)
+  LINE_TO_SUBSTITUTE
+done'''
+  target_line = split_lines[target_line_idx]
+
+  # Make adjustments to the harness build command:
+  # 1) Output fuzzers to $OUT/ instead of /src/generated-fuzzer
+  # 2) Name fuzzer baesd on bash variable instead of 'empty-fuzzer'
+  # 3) Use '$SRC/' instead of '/src/'
+  # 4) Rewrite file paths from test build directory to cloned directory, to
+  # adjust e.g. library and include paths.
+  target_line = target_line.replace(
+      '/src/generated-fuzzer', '$OUT/${fuzzer_target}').replace(
+          '/src/empty-fuzzer.cpp',
+          '${fuzzer}').replace('/src/empty-fuzzer.c', '${fuzzer}').replace(
+              '/src/', '$SRC/').replace(original_build_folder, project_repo_dir)
+
+  wrapper_script = wrapper_script.replace('LINE_TO_SUBSTITUTE', target_line)
+  split_lines[target_line_idx] = wrapper_script
+  return '\n'.join(split_lines)
+
+
 def convert_test_build_to_clean_build(test_build_script: str,
                                       project_repo_dir: str) -> str:
   """Rewrites a build.sh used during testing to a proper OSS-Fuzz build.sh."""
@@ -1319,18 +1358,11 @@ def convert_test_build_to_clean_build(test_build_script: str,
   original_build_folder = split_build_content[1].split('/')[-1]
 
   # Remove the lines used in the testing build script to navigate test folders.
-  clean_build_content_lines = split_build_content[:1] + split_build_content[4:]
+  clean_build_content_lines = '\n'.join(split_build_content[:1] +
+                                        split_build_content[4:])
 
-  # Make adjustments in the build to convert a test script to a clean script:
-  # 1) Output fuzzer to $OUT/fuzzer instead of /src/generated-fuzzer
-  # 2) Call the fuzzer 'fuzzer' instead of 'empty-fuzzer'
-  # 3) Use '$SRC/' instead of '/src/'
-  # 4) Rewrite file paths from test build directory to cloned directory, to
-  # adjust e.g. library and include paths.
-  clean_build_content = '\n'.join(clean_build_content_lines).replace(
-      '/src/generated-fuzzer',
-      '$OUT/fuzzer').replace('empty-fuzzer', 'fuzzer').replace(
-          '/src/', '$SRC/').replace(original_build_folder, project_repo_dir)
+  clean_build_content = convert_fuzz_build_line_to_loop(
+      clean_build_content_lines, original_build_folder, project_repo_dir)
   return clean_build_content
 
 
