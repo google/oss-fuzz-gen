@@ -199,12 +199,12 @@ class GPT(LLM):
 
   name = 'gpt-3.5-turbo'
 
-  def _get_tiktoken_encoding(self):
+  def _get_tiktoken_encoding(self, model_name: str):
     """Returns the tiktoken encoding for the model."""
     try:
-      return tiktoken.encoding_for_model(self.name)
+      return tiktoken.encoding_for_model(model_name)
     except KeyError:
-      logger.info('Could not get a tiktoken encoding for %s.', self.name)
+      logger.info('Could not get a tiktoken encoding for %s.', model_name)
       return tiktoken.get_encoding('cl100k_base')
 
   def _get_client(self):
@@ -216,7 +216,7 @@ class GPT(LLM):
     """Estimates the number of tokens in |text|."""
     # https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
 
-    encoder = self._get_tiktoken_encoding()
+    encoder = self._get_tiktoken_encoding(self.name)
 
     num_tokens = 0
     for message in text:
@@ -277,13 +277,9 @@ class AzureGPT(GPT):
 
   name = 'gpt-3.5-turbo-azure'
 
-  def _get_tiktoken_encoding(self):
+  def _get_tiktoken_encoding(self, model_name: str):
     """Returns the tiktoken encoding for the model."""
-    try:
-      return tiktoken.encoding_for_model(self.name.replace('-azure', ''))
-    except KeyError:
-      logger.info('Could not get a tiktoken encoding for %s.', self.name)
-      return tiktoken.get_encoding('cl100k_base')
+    return super()._get_tiktoken_encoding(model_name.replace('-azure', ''))
 
   def _get_client(self):
     """Returns the Azure client."""
