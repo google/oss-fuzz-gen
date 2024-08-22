@@ -132,9 +132,11 @@ main_repo: 'https://github.com/google/oss-fuzz'
 
 # Docker file used for OSS-Fuzz integrations.
 CLEAN_OSS_FUZZ_DOCKER = BASE_DOCKER_HEAD + '''
-COPY *.sh *.cpp *.c $SRC/
+COPY *.sh $SRC/
+RUN mkdir $SRC/fuzzers
+COPY *.cpp *.c $SRC/fuzzers/
 RUN git clone --recurse-submodules {repo_url} {project_repo_dir}
-WORKDIR {project_repo_dir}
+WORKDIR $SRC/{project_repo_dir}
 '''
 
 CLEAN_DOCKER_CFLITE = BASE_DOCKER_HEAD + '''
@@ -142,5 +144,5 @@ COPY . $SRC/{project_repo_dir}
 COPY .clusterfuzzlite/build.sh $SRC/build.sh
 COPY .clusterfuzzlite/*.cpp $SRC/
 COPY .clusterfuzzlite/*.c $SRC/
-WORKDIR {project_repo_dir}
+WORKDIR $SRC/{project_repo_dir}
 '''
