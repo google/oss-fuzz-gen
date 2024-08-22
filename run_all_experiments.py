@@ -142,17 +142,10 @@ def run_experiments(benchmark: benchmarklib.Benchmark,
         temperature_list=args.temperature_list,
     )
 
-    result = run_one_experiment.run(
-        benchmark=benchmark,
-        model=model,
-        template_dir=args.template_directory,
-        work_dirs=work_dirs,
-        cloud_experiment_name=args.cloud_experiment_name,
-        cloud_experiment_bucket=args.cloud_experiment_bucket,
-        use_context=args.context,
-        run_timeout=args.run_timeout,
-        dry_run=args.dry_run,
-        prompt_builder_to_use=args.prompt_builder)
+    result = run_one_experiment.run(benchmark=benchmark,
+                                    model=model,
+                                    args=args,
+                                    work_dirs=work_dirs)
     return Result(benchmark, result)
   except Exception as e:
     logger.error('Exception while running experiment: %s', str(e))
@@ -164,10 +157,6 @@ def parse_args() -> argparse.Namespace:
   """Parses command line arguments."""
   parser = argparse.ArgumentParser(
       description='Run all experiments that evaluates all target functions.')
-  parser.add_argument('-d',
-                      '--dry-run',
-                      action='store_true',
-                      help='Perform a dry-run -- only generate prompts.')
   parser.add_argument('-n',
                       '--num-samples',
                       type=int,
