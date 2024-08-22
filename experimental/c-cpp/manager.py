@@ -1319,8 +1319,8 @@ def convert_fuzz_build_line_to_loop(clean_build_content: str,
   """
   split_lines = clean_build_content.split('\n')
   target_line_idx = -1
-  for idx in range(len(split_lines)):
-    if '/src/generated-fuzzer' in split_lines[idx]:
+  for idx, tmp_line in enumerate(split_lines):
+    if '/src/generated-fuzzer' in tmp_line:
       target_line_idx = idx
       break
   if target_line_idx == -1:
