@@ -48,12 +48,34 @@ export VERTEX_AI_LOCATIONS=us-west1,us-west4,us-east4,us-central1,northamerica-n
 ```
 
 #### OpenAI
+
+There are two ways to access OpenAI models.
+
+1. [OpenAI API Key on OpenAI](#OpenAI-API-Key-on-OpenAI): This is the default way for using OpenAI models.
+
+2. [OpenAI API Key on Azure](#OpenAI-API-Key-on-Azure): Please refer to this section if you are using **OpenAI models on Azure**.
+
+##### OpenAI API Key on OpenAI
+
 OpenAI requires an API key.
 
 Then set it as an ENV variable:
 ```bash
 export OPENAI_API_KEY='<your-api-key>'
 ```
+
+##### OpenAI API Key on Azure
+
+If your OpenAI API key is hosted on Azure, you need the specified Endpoint, API key, and the API version (optional).
+
+Then set them as ENV variables:
+```bash
+export AZURE_OPENAI_API_KEY='<your-azure-api-key>'
+export AZURE_OPENAI_ENDPOINT='<your-azure-endpoint>'
+export AZURE_OPENAI_API_VERSION='<your-azure-api-version>' # default is '2024-02-01'
+```
+
+> Tip: To distinguish the two ways of accessing OpenAI models, you need to adding `-azure` to the model name **when using OpenAI on Azure**. For example, `gpt-3.5-turbo-azure` will use OpenAI on Azure, while `gpt-3.5-turbo` will use OpenAI on OpenAI.
 
 
 ## Running experiments
