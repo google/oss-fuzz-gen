@@ -15,12 +15,10 @@
 """Merged projects created by from-scratch and OFG core."""
 
 import argparse
-import logging
 import json
+import logging
 import os
 import shutil
-import sys
-
 from typing import Any
 
 logger = logging.getLogger(name=__name__)
@@ -59,8 +57,8 @@ def get_path_to_benchmark_harness(benchmark_path: str, status_name: str) -> str:
 
 def extract_top_project_of_benchmark(benchmark_path: str,
                                      project_path: str) -> dict:
-  """Identifies the top performing sample for a given benchmark result from OFG."""
-  top_project = dict()
+  """Return top performing sample for a given benchmark result from OFG."""
+  top_project = {}
   # Create folder names 01, 02, 03, ..., 11, 12... as named by OFG
   samples = [
       str(idx).zfill(2) for idx in range(1, 1 + len(os.listdir(benchmark_path)))
@@ -84,7 +82,7 @@ def extract_top_project_of_benchmark(benchmark_path: str,
 
 
 def get_all_top_folders(target='results') -> dict[str, Any]:
-  """Returns the paths of each top performing sample of an auto-gen benchmark."""
+  """Returns paths of each top performing sample of an auto-gen benchmark."""
   targets_to_copy = []
   for project_basename in os.listdir(target):
     project_path = os.path.join(target, project_basename)
@@ -121,9 +119,9 @@ def copy_all_top_ofg_autogens(result_dir: str, destination: str) -> None:
       continue
 
     fuzz_basename = os.path.basename(target['fuzzer_path'])
-    destination_basename = f'fuzzer_{target["target_benchmark"]}_{fuzz_basename}'
+    dst_basename = f'fuzzer_{target["target_benchmark"]}_{fuzz_basename}'
     shutil.copy(target['fuzzer_path'],
-                os.path.join(destination_path, destination_basename))
+                os.path.join(destination_path, dst_basename))
 
 
 def parse_commandline():
