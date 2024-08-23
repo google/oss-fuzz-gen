@@ -81,7 +81,7 @@ def extract_top_project_of_benchmark(benchmark_path: str,
   return top_project
 
 
-def get_all_top_folders(target='results') -> dict[str, Any]:
+def get_all_top_folders(target='results') -> list[dict[str, Any]]:
   """Returns paths of each top performing sample of an auto-gen benchmark."""
   targets_to_copy = []
   for project_basename in os.listdir(target):
