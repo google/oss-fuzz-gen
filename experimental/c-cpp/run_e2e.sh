@@ -165,3 +165,10 @@ LLM_NUM_EVA=1 LLM_NUM_EXP=1 ./run_all_experiments.py \
 
 echo "Shutting down started webserver"
 curl --silent http://localhost:8080/api/shutdown || true
+
+
+echo "Merging the generated projects"
+cd $BASE_DIR
+python3 ./result_merger.py -r ../../results/ -d ${WORKDIR}/auto-generated-projects/
+
+echo "Auto-generated OSS-Fuzz projects in ${WORKDIR}/auto-generated-projects/"
