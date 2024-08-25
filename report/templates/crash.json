@@ -9,6 +9,7 @@
         "crashes": "{{ sample.result.crashes }}",
         "crash_reason": "{{ sample.result.semantic_error }}",
         "bug": "{{ not sample.result.is_semantic_error }}",
+        "triage": "{{ sample.result.triage }}",
         "coverage": "{{ sample.result.coverage | percent }}",
         "coverage_diff": "{{ sample.result.line_coverage_diff }}",
         "coverage_report": "{{ sample.result.coverage_report_path | cov_report_link }}",
