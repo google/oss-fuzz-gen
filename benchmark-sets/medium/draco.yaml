@@ -1,0 +1,13 @@
+functions:
+- name: _ZN5draco11CornerTable6CreateERKNS_15IndexTypeVectorINS_9IndexTypeIjNS_19FaceIndex_tag_type_EEENSt3__15arrayINS2_IjNS_21VertexIndex_tag_type_EEELm3EEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: unique_ptr<draco::CornerTable, std::__1::default_delete<draco::CornerTable> > draco::CornerTable::Create(const IndexTypeVector<draco::IndexType<unsigned int, draco::FaceIndex_tag_type_>, std::__1::array<draco::IndexType<unsigned int, draco::VertexIndex_tag_type_>, 3UL> > &)
+language: c++
+project: draco
+target_name: draco_mesh_decoder_without_dequantization_fuzzer
+target_path: /src/draco/src/draco/tools/fuzz/draco_mesh_decoder_without_dequantization_fuzzer.cc

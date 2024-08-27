@@ -1,0 +1,27 @@
+functions:
+- name: _ZN5osgeo4proj14CurlFileHandle4openEP6pj_ctxPKcymPvPmmPcS6_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PROJ_NETWORK_HANDLE * osgeo::proj::CurlFileHandle::open(PJ_CONTEXT *, const char *, unsigned long long, size_t, void *, size_t *, size_t, char *, void *)
+language: c++
+project: proj4
+target_name: proj_crs_to_crs_fuzzer
+target_path: /src/PROJ/test/fuzzers/proj_crs_to_crs_fuzzer.cpp

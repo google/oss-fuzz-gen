@@ -1,0 +1,13 @@
+functions:
+- name: aug_load_file
+  params:
+  - name: aug
+    type: 'bool '
+  - name: file
+    type: 'bool '
+  return_type: int
+  signature: int aug_load_file(struct augeas *, const char *)
+language: c++
+project: augeas
+target_name: augeas_escape_name_fuzzer
+target_path: /src/augeas_escape_name_fuzzer.cc

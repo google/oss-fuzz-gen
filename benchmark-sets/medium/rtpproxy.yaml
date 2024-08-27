@@ -1,0 +1,19 @@
+functions:
+- name: ucl_object_insert_key
+  params:
+  - name: top
+    type: 'bool '
+  - name: elt
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: keylen
+    type: size_t
+  - name: copy_key
+    type: bool
+  return_type: bool
+  signature: bool ucl_object_insert_key(ucl_object_t *, ucl_object_t *, const char *, size_t, bool)
+language: c
+project: rtpproxy
+target_name: fuzz_command_parser
+target_path: /src/rtpproxy/scripts/fuzz/fuzz_command_parser.c

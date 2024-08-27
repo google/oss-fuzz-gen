@@ -1,0 +1,13 @@
+functions:
+- name: _ZN8CppCheck5checkERK15FileWithDetails
+  params:
+  - name: this
+    type: 'bool '
+  - name: file
+    type: 'bool '
+  return_type: int
+  signature: unsigned int CppCheck::check(const FileWithDetails &)
+language: c++
+project: cppcheck
+target_name: oss-fuzz-client
+target_path: /src/cppcheck/oss-fuzz/main.cpp

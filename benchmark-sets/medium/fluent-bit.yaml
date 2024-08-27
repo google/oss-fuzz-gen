@@ -1,0 +1,11 @@
+functions:
+- name: flb_start_trace
+  params:
+  - name: ctx
+    type: 'bool '
+  return_type: int
+  signature: int flb_start_trace(flb_ctx_t *)
+language: c++
+project: fluent-bit
+target_name: flb-it-fuzz-msgpack_to_gelf_fuzzer_OSSFUZZ
+target_path: /src/fluent-bit/tests/internal/fuzzers/msgpack_to_gelf_fuzzer.c

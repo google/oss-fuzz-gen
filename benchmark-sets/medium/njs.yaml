@@ -1,0 +1,17 @@
+functions:
+- name: njs_buffer_new
+  params:
+  - name: vm
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: start
+    type: 'bool '
+  - name: size
+    type: int
+  return_type: int
+  signature: njs_int_t njs_buffer_new(njs_vm_t *, njs_value_t *, const u_char *, uint32_t)
+language: c++
+project: njs
+target_name: njs_process_script_fuzzer
+target_path: /src/njs/external/njs_shell.c

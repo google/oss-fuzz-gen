@@ -1,0 +1,15 @@
+functions:
+- name: json_dumpf
+  params:
+  - name: json
+    type: 'bool '
+  - name: output
+    type: 'bool '
+  - name: flags
+    type: size_t
+  return_type: int
+  signature: int json_dumpf(const json_t *, FILE *, size_t)
+language: c++
+project: jansson
+target_name: json_load_dump_fuzzer
+target_path: /src/jansson/test/ossfuzz/json_load_dump_fuzzer.cc

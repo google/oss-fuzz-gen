@@ -1,0 +1,15 @@
+functions:
+- name: MmsValue_printToBuffer
+  params:
+  - name: self
+    type: 'bool '
+  - name: buffer
+    type: 'bool '
+  - name: bufferSize
+    type: int
+  return_type: void
+  signature: const char * MmsValue_printToBuffer(const MmsValue *, char *, int)
+language: c
+project: libiec61850
+target_name: fuzz_mms_decode
+target_path: /src/libiec61850/fuzz/fuzz_mms_decode.c

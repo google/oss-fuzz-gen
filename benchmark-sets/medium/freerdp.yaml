@@ -1,0 +1,11 @@
+functions:
+- name: freerdp_check_event_handles
+  params:
+  - name: context
+    type: 'bool '
+  return_type: int
+  signature: BOOL freerdp_check_event_handles(rdpContext *)
+language: c
+project: freerdp
+target_name: TestFuzzCoreClient
+target_path: /src/FreeRDP/libfreerdp/core/test/TestFuzzCoreClient.c

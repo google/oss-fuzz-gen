@@ -1,0 +1,17 @@
+functions:
+- name: buffer_append_base64_decode
+  params:
+  - name: out
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: in_length
+    type: size_t
+  - name: charset
+    type: int
+  return_type: void
+  signature: unsigned char * buffer_append_base64_decode(buffer *, const char *, size_t, base64_charset)
+language: c
+project: lighttpd
+target_name: fuzz_burl
+target_path: /src/fuzz_burl.c

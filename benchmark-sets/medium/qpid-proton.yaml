@@ -1,0 +1,13 @@
+functions:
+- name: pn_data_scan
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_data_scan(pn_data_t *, const char *, void)
+language: c++
+project: qpid-proton
+target_name: fuzz-connection-driver
+target_path: /src/qpid-proton/c/tests/fuzz/fuzz-connection-driver.c

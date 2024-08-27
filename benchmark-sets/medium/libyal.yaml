@@ -1,0 +1,19 @@
+functions:
+- name: libfsapfs_volume_get_file_entry_by_utf16_path
+  params:
+  - name: volume
+    type: 'bool '
+  - name: utf16_string
+    type: 'bool '
+  - name: utf16_string_length
+    type: size_t
+  - name: file_entry
+    type: 'bool '
+  - name: error
+    type: 'bool '
+  return_type: int
+  signature: int libfsapfs_volume_get_file_entry_by_utf16_path(libfsapfs_volume_t *, const uint16_t *, size_t, libfsapfs_file_entry_t **, libcerror_error_t **)
+language: c
+project: libyal
+target_name: libfcrypto_crypt_serpent_cbc_fuzzer
+target_path: /src/libfcrypto/ossfuzz/crypt_serpent_cbc_fuzzer.cc

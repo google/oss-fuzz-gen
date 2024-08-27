@@ -1,0 +1,13 @@
+functions:
+- name: _ZN7tinyobj7shape_tC2ERKS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct shape_t & tinyobj::shape_t::operator=(struct shape_t *, struct DW_TAG_rvalue_reference_typeshape_t)
+language: c++
+project: tinyobjloader
+target_name: fuzz_ParseFromString
+target_path: /src/tinyobjloader/fuzzer/fuzz_ParseFromString.cc

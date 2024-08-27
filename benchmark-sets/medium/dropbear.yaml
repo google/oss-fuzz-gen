@@ -1,0 +1,19 @@
+functions:
+- name: ltc_ecc_projective_add_point
+  params:
+  - name: P
+    type: 'bool '
+  - name: Q
+    type: 'bool '
+  - name: R
+    type: 'bool '
+  - name: modulus
+    type: 'bool '
+  - name: mp
+    type: 'bool '
+  return_type: int
+  signature: int ltc_ecc_projective_add_point(ecc_point *, ecc_point *, ecc_point *, void *, void *)
+language: c++
+project: dropbear
+target_name: fuzzer-client
+target_path: /src/dropbear/fuzz/fuzzer-client.c

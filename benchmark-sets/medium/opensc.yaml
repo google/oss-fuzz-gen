@@ -1,0 +1,15 @@
+functions:
+- name: sc_pkcs15init_delete_object
+  params:
+  - name: p15card
+    type: 'bool '
+  - name: profile
+    type: 'bool '
+  - name: obj
+    type: 'bool '
+  return_type: int
+  signature: int sc_pkcs15init_delete_object(struct sc_pkcs15_card *, struct sc_profile *, struct sc_pkcs15_object *)
+language: c++
+project: opensc
+target_name: fuzz_asn1_print
+target_path: /src/opensc/src/tests/fuzzing/fuzz_asn1_print.c

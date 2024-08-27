@@ -1,0 +1,17 @@
+functions:
+- name: _Z21lodepng_encode32_filePKcPKhjj
+  params:
+  - name: filename
+    type: 'bool '
+  - name: image
+    type: 'bool '
+  - name: w
+    type: int
+  - name: h
+    type: int
+  return_type: int
+  signature: unsigned int lodepng_encode32_file(const char *, const unsigned char *, unsigned int, unsigned int)
+language: c++
+project: lodepng
+target_name: lodepng_fuzzer
+target_path: /src/lodepng/lodepng_fuzzer.cpp

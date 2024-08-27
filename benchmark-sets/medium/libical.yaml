@@ -1,0 +1,13 @@
+functions:
+- name: icalcomponent_merge_component
+  params:
+  - name: comp
+    type: 'bool '
+  - name: comp_to_merge
+    type: 'bool '
+  return_type: void
+  signature: void icalcomponent_merge_component(icalcomponent *, icalcomponent *)
+language: c++
+project: libical
+target_name: libical_extended_fuzzer
+target_path: /src/libical_extended_fuzzer.cc

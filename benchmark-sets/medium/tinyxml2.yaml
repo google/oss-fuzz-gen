@@ -1,0 +1,13 @@
+functions:
+- name: _ZNK8tinyxml210XMLElement12ShallowCloneEPNS_11XMLDocumentE
+  params:
+  - name: this
+    type: 'bool '
+  - name: doc
+    type: 'bool '
+  return_type: void
+  signature: XMLNode * tinyxml2::XMLElement::ShallowClone(XMLDocument *)
+language: c++
+project: tinyxml2
+target_name: xmltest
+target_path: /src/xmltest.cpp

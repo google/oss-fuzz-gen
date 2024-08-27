@@ -1,0 +1,13 @@
+functions:
+- name: _ZN9tesseract11TessBaseAPI10GetTSVTextEi
+  params:
+  - name: this
+    type: 'bool '
+  - name: page_number
+    type: int
+  return_type: void
+  signature: char * tesseract::TessBaseAPI::GetTSVText(int)
+language: c++
+project: tesseract-ocr
+target_name: fuzzer-api-512x256
+target_path: /src/tesseract/unittest/fuzzers/fuzzer-api.cpp

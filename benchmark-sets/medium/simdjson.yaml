@@ -1,0 +1,13 @@
+functions:
+- name: _ZN8simdjson7icelake25dom_parser_implementation11stage2_nextERNS_3dom8documentE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeerror_code simdjson::icelake::dom_parser_implementation::stage2_next(document &)
+language: c++
+project: simdjson
+target_name: fuzz_atpointer
+target_path: /src/simdjson/fuzz/fuzz_atpointer.cpp

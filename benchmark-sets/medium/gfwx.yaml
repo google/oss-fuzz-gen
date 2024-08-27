@@ -1,0 +1,11 @@
+functions:
+- name: _ZN7fuzzing5types9ContainerIhLb0ELb0EE4freeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void fuzzing::types::Container<unsigned char, false, false>::free(Container<char, true, false> *)
+language: c++
+project: gfwx
+target_name: fuzzer-encoder
+target_path: /src/gfwx-fuzzers/encoder.cpp

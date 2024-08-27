@@ -1,0 +1,13 @@
+functions:
+- name: _ZN6YaHTTPlsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_7RequestE
+  params:
+  - name: os
+    type: 'bool '
+  - name: req
+    type: 'bool '
+  return_type: void
+  signature: ostream & YaHTTP::operator<<(ostream &, const Request &)
+language: c++
+project: powerdns
+target_name: fuzz_target_yahttp
+target_path: /src/pdns/pdns/fuzz_yahttp.cc

@@ -1,0 +1,17 @@
+functions:
+- name: _ZN7WelsDec12CWelsDecoder12DecodeParserEPKhiP15TagParserBsInfo
+  params:
+  - name: this
+    type: 'bool '
+  - name: kpSrc
+    type: 'bool '
+  - name: kiSrcLen
+    type: int
+  - name: pDstInfo
+    type: 'bool '
+  return_type: int
+  signature: DECODING_STATE WelsDec::CWelsDecoder::DecodeParser(const unsigned char *, const int, SParserBsInfo *)
+language: c++
+project: openh264
+target_name: decoder_fuzzer
+target_path: /src/decoder_fuzzer.cpp

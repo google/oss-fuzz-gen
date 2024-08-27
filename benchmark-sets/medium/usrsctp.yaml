@@ -1,0 +1,13 @@
+functions:
+- name: usrsctp_shutdown
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int usrsctp_shutdown(struct socket *, int)
+language: c++
+project: usrsctp
+target_name: fuzzer_fragment
+target_path: /src/usrsctp/fuzzer/fuzzer_fragment.c

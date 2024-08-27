@@ -1,0 +1,13 @@
+functions:
+- name: _ZN8rawspeed10DngDecoder17decodeRawInternalEv
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: RawImage rawspeed::DngDecoder::decodeRawInternal()
+language: c++
+project: librawspeed
+target_name: SonyArw2DecompressorFuzzer
+target_path: /src/librawspeed/fuzz/librawspeed/decompressors/SonyArw2Decompressor.cpp

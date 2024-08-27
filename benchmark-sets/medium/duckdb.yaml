@@ -1,0 +1,13 @@
+functions:
+- name: _ZN6duckdb8Relation4HeadEm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void duckdb::Relation::Head(idx_t)
+language: c++
+project: duckdb
+target_name: parse_fuzz_test
+target_path: /src/duckdb/test/ossfuzz/parse_fuzz_test.cpp

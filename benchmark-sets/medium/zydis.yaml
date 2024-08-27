@@ -1,0 +1,15 @@
+functions:
+- name: ZydisFormatterBasePrintPrefixes
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: ZyanStatus ZydisFormatterBasePrintPrefixes(const ZydisFormatter *, ZydisFormatterBuffer *, ZydisFormatterContext *)
+language: c
+project: zydis
+target_name: ZydisFuzzReEncoding
+target_path: /src/zydis/tools/ZydisFuzzShared.c

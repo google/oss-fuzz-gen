@@ -1,0 +1,27 @@
+functions:
+- name: LzmaEnc_MemEncode
+  params:
+  - name: pp
+    type: 'bool '
+  - name: dest
+    type: 'bool '
+  - name: destLen
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  - name: srcLen
+    type: size_t
+  - name: writeEndMark
+    type: int
+  - name: progress
+    type: 'bool '
+  - name: alloc
+    type: 'bool '
+  - name: allocBig
+    type: 'bool '
+  return_type: int
+  signature: SRes LzmaEnc_MemEncode(CLzmaEncHandle, Byte *, SizeT *, const Byte *, SizeT, int, ICompressProgress *, ISzAllocPtr, ISzAllocPtr)
+language: c++
+project: lzma
+target_name: lzma2dec_fuzzer
+target_path: /src/lzma-fuzz/lzma2dec_fuzzer.cc

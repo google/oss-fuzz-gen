@@ -1,0 +1,11 @@
+functions:
+- name: wpa_supplicant_run
+  params:
+  - name: global
+    type: 'bool '
+  return_type: int
+  signature: int wpa_supplicant_run(struct wpa_global *)
+language: c++
+project: hostap
+target_name: fuzzer-common
+target_path: /src/hostap/tests/fuzzing/fuzzer-common.c

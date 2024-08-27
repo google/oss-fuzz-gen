@@ -1,0 +1,19 @@
+functions:
+- name: nts_make_cookie
+  params:
+  - name: cookie
+    type: 'bool '
+  - name: aead
+    type: short
+  - name: c2s
+    type: 'bool '
+  - name: s2c
+    type: 'bool '
+  - name: keylen
+    type: int
+  return_type: int
+  signature: int nts_make_cookie(uint8_t *, uint16_t, uint8_t *, uint8_t *, int)
+language: c
+project: ntpsec
+target_name: FuzzServer
+target_path: /src/ntpsec/fuzz/FuzzServer.c

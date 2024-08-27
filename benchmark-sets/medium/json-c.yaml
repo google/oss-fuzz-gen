@@ -1,0 +1,11 @@
+functions:
+- name: json_object_new_string
+  params:
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: struct json_object * json_object_new_string(const char *)
+language: c++
+project: json-c
+target_name: tokener_parse_ex_fuzzer
+target_path: /src/json-c/fuzz/tokener_parse_ex_fuzzer.cc

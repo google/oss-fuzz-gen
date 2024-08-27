@@ -1,0 +1,13 @@
+functions:
+- name: jbig2_sd_glyph
+  params:
+  - name: dict
+    type: 'bool '
+  - name: id
+    type: int
+  return_type: void
+  signature: Jbig2Image * jbig2_sd_glyph(Jbig2SymbolDict *, unsigned int)
+language: c++
+project: jbig2dec
+target_name: jbig2_fuzzer
+target_path: /src/jbig2_fuzzer.cc

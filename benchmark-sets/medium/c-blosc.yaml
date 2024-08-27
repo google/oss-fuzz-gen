@@ -1,0 +1,19 @@
+functions:
+- name: ZSTD_generateSequences
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: size_t
+  signature: size_t ZSTD_generateSequences(ZSTD_CCtx *, ZSTD_Sequence *, size_t, const void *, size_t)
+language: c++
+project: c-blosc
+target_name: compress_fuzzer
+target_path: /src/c-blosc/tests/fuzz/fuzz_compress.c

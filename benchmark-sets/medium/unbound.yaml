@@ -1,0 +1,23 @@
+functions:
+- name: ub_resolve_event
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: rrtype
+    type: int
+  - name: rrclass
+    type: int
+  - name: mydata
+    type: 'bool '
+  - name: callback
+    type: 'bool '
+  - name: async_id
+    type: 'bool '
+  return_type: int
+  signature: int ub_resolve_event(struct ub_ctx *, const char *, int, int, void *, ub_event_callback_type, int *)
+language: c
+project: unbound
+target_name: fuzz_2_fuzzer
+target_path: /src/unbound/fuzz_2.c

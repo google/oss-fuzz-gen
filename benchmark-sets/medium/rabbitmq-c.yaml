@@ -1,0 +1,25 @@
+functions:
+- name: amqp_login_with_properties
+  params:
+  - name: state
+    type: 'bool '
+  - name: vhost
+    type: 'bool '
+  - name: channel_max
+    type: 'bool '
+  - name: frame_max
+    type: int
+  - name: heartbeat
+    type: int
+  - name: client_properties
+    type: int
+  - name: sasl_method
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: amqp_rpc_reply_t amqp_login_with_properties(amqp_connection_state_t, const char *, int, int, int, const amqp_table_t *, amqp_sasl_method_enum, void)
+language: c
+project: rabbitmq-c
+target_name: fuzz_url
+target_path: /src/librabbitmq/fuzz/fuzz_url.c

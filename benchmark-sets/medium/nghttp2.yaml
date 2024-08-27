@@ -1,0 +1,15 @@
+functions:
+- name: nghttp2_session_mem_recv
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: size_t
+  signature: ssize_t nghttp2_session_mem_recv(nghttp2_session *, const uint8_t *, size_t)
+language: c++
+project: nghttp2
+target_name: nghttp2_fuzzer_fdp
+target_path: /src/nghttp2/fuzz/fuzz_target_fdp.cc

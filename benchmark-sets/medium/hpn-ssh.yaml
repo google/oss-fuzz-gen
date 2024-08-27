@@ -1,0 +1,11 @@
+functions:
+- name: kex_gen_server
+  params:
+  - name: ssh
+    type: 'bool '
+  return_type: int
+  signature: int kex_gen_server(struct ssh *)
+language: c++
+project: hpn-ssh
+target_name: kex_fuzz
+target_path: /src/hpn-ssh/regress/misc/fuzz-harness/kex_fuzz.cc

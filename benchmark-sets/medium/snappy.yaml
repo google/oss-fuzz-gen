@@ -1,0 +1,17 @@
+functions:
+- name: _ZN6snappy17CompressFromIOVecEPK5iovecmPNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS_18CompressionOptionsE
+  params:
+  - name: iov
+    type: 'bool '
+  - name: iov_cnt
+    type: size_t
+  - name: compressed
+    type: 'bool '
+  - name: options
+    type: int
+  return_type: size_t
+  signature: size_t snappy::CompressFromIOVec(const struct iovec *, size_t, string *, struct CompressionOptions)
+language: c++
+project: snappy
+target_name: snappy_compress_fuzzer
+target_path: /src/snappy/snappy_compress_fuzzer.cc

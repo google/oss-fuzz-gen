@@ -1,0 +1,21 @@
+functions:
+- name: g_obex_get_req_pkt
+  params:
+  - name: obex
+    type: 'bool '
+  - name: req
+    type: 'bool '
+  - name: data_func
+    type: 'bool '
+  - name: complete_func
+    type: 'bool '
+  - name: user_data
+    type: 'bool '
+  - name: err
+    type: 'bool '
+  return_type: int
+  signature: guint g_obex_get_req_pkt(GObex *, GObexPacket *, GObexDataConsumer, GObexFunc, gpointer, GError **)
+language: c
+project: bluez
+target_name: fuzz_sdp
+target_path: /src/fuzz_sdp.c

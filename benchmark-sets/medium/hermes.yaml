@@ -1,0 +1,15 @@
+functions:
+- name: _ZN8facebook3jsi16RuntimeDecoratorINS_6hermes17HermesRuntimeImplENS0_17ThreadSafeRuntimeEE26evaluatePreparedJavaScriptERKNSt3__110shared_ptrIKNS0_18PreparedJavaScriptEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: js
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Value facebook::jsi::RuntimeDecorator<facebook::hermes::HermesRuntimeImpl, facebook::jsi::ThreadSafeRuntime>::evaluatePreparedJavaScript(RuntimeDecorator<facebook::hermes::HermesRuntimeImpl, facebook::jsi::ThreadSafeRuntime> *, const shared_ptr<const facebook::jsi::PreparedJavaScript> &)
+language: c++
+project: hermes
+target_name: fuzzer-jsi-entry
+target_path: /src/hermes/tools/fuzzers/libfuzzer/fuzzer-jsi-entry.cpp

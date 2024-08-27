@@ -1,0 +1,11 @@
+functions:
+- name: _ZN7cxxopts10exceptions9exceptionD0Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void cxxopts::exceptions::exception::~~exception()
+language: c++
+project: cxxopts
+target_name: cxxopts_fuzz_test
+target_path: /src/cxxopts/test/fuzz.cpp

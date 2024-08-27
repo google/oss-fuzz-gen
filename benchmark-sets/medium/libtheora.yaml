@@ -1,0 +1,17 @@
+functions:
+- name: th_decode_ctl
+  params:
+  - name: _dec
+    type: 'bool '
+  - name: _req
+    type: int
+  - name: _buf
+    type: 'bool '
+  - name: _buf_sz
+    type: size_t
+  return_type: int
+  signature: int th_decode_ctl(th_dec_ctx *, int, void *, size_t)
+language: c++
+project: libtheora
+target_name: fuzzer-decoder
+target_path: /src/oss-fuzz-fuzzers/libtheora/fuzzer.cpp

@@ -1,0 +1,11 @@
+functions:
+- name: ldacBT_get_error_code
+  params:
+  - name: hLdacBT
+    type: 'bool '
+  return_type: int
+  signature: int ldacBT_get_error_code(HANDLE_LDAC_BT)
+language: c++
+project: libldac
+target_name: libldac_encode_fuzzer
+target_path: /src/libldac/fuzzer/libldac_encode_fuzzer.cc

@@ -1,0 +1,19 @@
+functions:
+- name: WebPEncodeLosslessRGB
+  params:
+  - name: in
+    type: 'bool '
+  - name: w
+    type: int
+  - name: h
+    type: int
+  - name: bps
+    type: int
+  - name: out
+    type: 'bool '
+  return_type: size_t
+  signature: size_t WebPEncodeLosslessRGB(const uint8_t *, int, int, int, uint8_t **)
+language: c++
+project: leptonica
+target_name: pixconv_fuzzer
+target_path: /src/leptonica/prog/fuzzing/pixconv_fuzzer.cc

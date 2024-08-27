@@ -1,0 +1,13 @@
+functions:
+- name: evhttp_start
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: short
+  return_type: void
+  signature: struct evhttp * evhttp_start(const char *, uint16_t)
+language: c++
+project: libevent
+target_name: dns_config_fuzzer
+target_path: /src/dns_config_fuzzer.cc

@@ -1,0 +1,15 @@
+functions:
+- name: vcard_emul_get_atr
+  params:
+  - name: card
+    type: 'bool '
+  - name: atr
+    type: 'bool '
+  - name: atr_len
+    type: 'bool '
+  return_type: void
+  signature: void vcard_emul_get_atr(VCard *, unsigned char *, int *)
+language: c
+project: libcacard
+target_name: fuzz_simpletlv
+target_path: /src/libcacard/fuzz/fuzz_simpletlv.c

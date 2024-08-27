@@ -1,0 +1,13 @@
+functions:
+- name: libssh2_session_startup
+  params:
+  - name: session
+    type: 'bool '
+  - name: sock
+    type: int
+  return_type: int
+  signature: int libssh2_session_startup(LIBSSH2_SESSION *, int)
+language: c++
+project: libssh2
+target_name: ssh2_client_fuzzer
+target_path: /src/libssh2/tests/ossfuzz/ssh2_client_fuzzer.cc

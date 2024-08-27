@@ -1,0 +1,13 @@
+functions:
+- name: levent_iface_subscribe
+  params:
+  - name: cfg
+    type: 'bool '
+  - name: socket
+    type: int
+  return_type: int
+  signature: int levent_iface_subscribe(struct lldpd *, int)
+language: c
+project: lldpd
+target_name: fuzz_sonmp
+target_path: /src/lldpd/tests/fuzz_sonmp.c

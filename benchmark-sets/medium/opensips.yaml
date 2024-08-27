@@ -1,0 +1,11 @@
+functions:
+- name: parse_sdp
+  params:
+  - name: _m
+    type: 'bool '
+  return_type: void
+  signature: sdp_info_t * parse_sdp(struct sip_msg *)
+language: c
+project: opensips
+target_name: fuzz_msg_parser
+target_path: /src/opensips/test/fuzz/fuzz_msg_parser.c

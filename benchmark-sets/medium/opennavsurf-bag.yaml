@@ -1,0 +1,23 @@
+functions:
+- name: _ZNR3BAG7Dataset25createGeorefMetadataLayerE13BAG_DATA_TYPE23GEOREF_METADATA_PROFILERKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERKNS3_6vectorI15FieldDefinitionNS7_ISD_EEEEmi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: int
+  return_type: void
+  signature: GeorefMetadataLayer & BAG::Dataset::createGeorefMetadataLayer(DataType, GeorefMetadataProfile, const string &, const RecordDefinition &, uint64_t, int)
+language: c++
+project: opennavsurf-bag
+target_name: bag_read_fuzzer
+target_path: /src/bag/fuzzers/bag_read_fuzzer.cpp

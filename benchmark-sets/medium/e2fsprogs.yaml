@@ -1,0 +1,21 @@
+functions:
+- name: ext2fs_dir_iterate
+  params:
+  - name: fs
+    type: 'bool '
+  - name: dir
+    type: int
+  - name: flags
+    type: int
+  - name: block_buf
+    type: 'bool '
+  - name: func
+    type: 'bool '
+  - name: priv_data
+    type: 'bool '
+  return_type: size_t
+  signature: errcode_t ext2fs_dir_iterate(ext2_filsys, ext2_ino_t, int, char *, DW_TAG_subroutine_typeInfinite loop *, void *)
+language: c
+project: e2fsprogs
+target_name: ext2fs_read_bitmap_fuzzer
+target_path: /src/e2fsprogs/tests/fuzz/ext2fs_read_bitmap_fuzzer.cc

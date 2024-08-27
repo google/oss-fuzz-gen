@@ -1,0 +1,13 @@
+functions:
+- name: _ZN15SplashOutputDev12doUpdateFontEP8GfxState
+  params:
+  - name: this
+    type: 'bool '
+  - name: state
+    type: 'bool '
+  return_type: void
+  signature: void SplashOutputDev::doUpdateFont(GfxState *)
+language: c++
+project: xpdf
+target_name: fuzz_JBIG2
+target_path: /src/fuzz_JBIG2.cc

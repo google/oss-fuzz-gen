@@ -1,0 +1,11 @@
+functions:
+- name: _ZN24QPDFNameTreeObjectHelper8iteratormmEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: iterator & QPDFNameTreeObjectHelper::iterator::operator--()
+language: c++
+project: qpdf
+target_name: future_pngpredictor_fuzzer
+target_path: /src/qpdf/fuzz/pngpredictor_fuzzer.cc

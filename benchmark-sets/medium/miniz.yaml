@@ -1,0 +1,15 @@
+functions:
+- name: mz_zip_validate_file_archive
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: mz_bool mz_zip_validate_file_archive(const char *, mz_uint, mz_zip_error *)
+language: c
+project: miniz
+target_name: uncompress_fuzzer
+target_path: /src/miniz/tests/uncompress_fuzzer.c

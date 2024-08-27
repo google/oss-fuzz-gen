@@ -1,0 +1,43 @@
+functions:
+- name: sbrEncoder_Init
+  params:
+  - name: hSbrEncoder
+    type: 'bool '
+  - name: elInfo
+    type: 'bool '
+  - name: noElements
+    type: int
+  - name: inputBuffer
+    type: 'bool '
+  - name: inputBufferBufSize
+    type: int
+  - name: coreBandwidth
+    type: 'bool '
+  - name: inputBufferOffset
+    type: 'bool '
+  - name: numChannels
+    type: 'bool '
+  - name: syntaxFlags
+    type: int
+  - name: coreSampleRate
+    type: 'bool '
+  - name: downSampleFactor
+    type: 'bool '
+  - name: frameLength
+    type: 'bool '
+  - name: aot
+    type: int
+  - name: delay
+    type: 'bool '
+  - name: transformFactor
+    type: int
+  - name: headerPeriod
+    type: int
+  - name: statesInitFlag
+    type: int
+  return_type: int
+  signature: INT sbrEncoder_Init(HANDLE_SBR_ENCODER, SBR_ELEMENT_INFO *, int, INT_PCM *, UINT, INT *, INT *, INT *, const UINT, INT *, UINT *, INT *, AUDIO_OBJECT_TYPE, int *, int, const int, UINT)
+language: c++
+project: libfdk-aac
+target_name: aacDecoder_DecodeFrame
+target_path: /src/aacDecoder_DecodeFrame.cpp

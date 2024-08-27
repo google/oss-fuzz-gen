@@ -1,0 +1,13 @@
+functions:
+- name: _ZN7CClient8ReadLineERK7CString
+  params:
+  - name: this
+    type: 'bool '
+  - name: sData
+    type: 'bool '
+  return_type: void
+  signature: void CClient::ReadLine(const CString &)
+language: c++
+project: znc
+target_name: msg_parse_fuzzer
+target_path: /src/msg_parse_fuzzer.cpp

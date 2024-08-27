@@ -1,0 +1,15 @@
+functions:
+- name: _ZN2nl8wpantund17SpinelNCPTaskScan14vprocess_eventEiP13__va_list_tag
+  params:
+  - name: this
+    type: 'bool '
+  - name: event
+    type: int
+  - name: args
+    type: 'bool '
+  return_type: int
+  signature: int nl::wpantund::SpinelNCPTaskScan::vprocess_event(int, struct __va_list_tag *)
+language: c++
+project: wpantund
+target_name: ncp-spinel-fuzz
+target_path: /src/wpantund/src/ncp-spinel/ncp-spinel-fuzz.cpp

@@ -1,0 +1,17 @@
+functions:
+- name: yajl_lex_peek
+  params:
+  - name: lexer
+    type: 'bool '
+  - name: jsonText
+    type: 'bool '
+  - name: jsonTextLen
+    type: int
+  - name: offset
+    type: int
+  return_type: int
+  signature: yajl_tok yajl_lex_peek(yajl_lexer, const unsigned char *, unsigned int, unsigned int)
+language: c++
+project: yajl-ruby
+target_name: json_fuzzer
+target_path: /src/yajl-ruby/fuzz/json_fuzzer.c

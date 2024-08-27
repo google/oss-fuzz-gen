@@ -1,0 +1,13 @@
+functions:
+- name: _ZN7Imf_3_314RgbaOutputFile11writePixelsEi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void Imf_3_3::RgbaOutputFile::writePixels(int)
+language: c++
+project: openexr
+target_name: openexr_exrcheck_fuzzer
+target_path: /src/openexr/src/test/OpenEXRFuzzTest/oss-fuzz/openexr_exrcheck_fuzzer.cc

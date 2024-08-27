@@ -1,0 +1,13 @@
+functions:
+- name: _ZZN7httplib6Server7routingERNS_7RequestERNS_8ResponseERNS_6StreamEENKUlNSt3__18functionIFbPKcmEEEE_clESC_
+  params:
+  - name: this
+    type: 'bool '
+  - name: receiver
+    type: 'bool '
+  return_type: bool
+  signature: bool httplib::Server::operator()(const void *, ContentReceiver)
+language: c++
+project: cpp-httplib
+target_name: server_fuzzer
+target_path: /src/cpp-httplib/test/fuzzing/server_fuzzer.cc

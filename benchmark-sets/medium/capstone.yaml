@@ -1,0 +1,23 @@
+functions:
+- name: PPC_getInstruction
+  params:
+  - name: ud
+    type: size_t
+  - name: code
+    type: 'bool '
+  - name: code_len
+    type: size_t
+  - name: instr
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  - name: address
+    type: size_t
+  - name: info
+    type: 'bool '
+  return_type: bool
+  signature: bool PPC_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t *, uint64_t, void *)
+language: c++
+project: capstone
+target_name: driverbin
+target_path: /src/capstonev5/suite/fuzz/driverbin.c

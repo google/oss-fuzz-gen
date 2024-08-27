@@ -1,0 +1,17 @@
+functions:
+- name: _ZN4Simd4Avx238SynetConvolution32fDepthwiseDotProduct7ForwardEPKfPfS4_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void Simd::Avx2::SynetConvolution32fDepthwiseDotProduct::Forward(const float *, float *, float *)
+language: c++
+project: simd
+target_name: simd_load_fuzzer
+target_path: /src/simd_load_fuzzer.cpp

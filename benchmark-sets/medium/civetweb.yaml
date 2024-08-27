@@ -1,0 +1,15 @@
+functions:
+- name: mg_send_mime_file
+  params:
+  - name: conn
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  - name: mime_type
+    type: 'bool '
+  return_type: void
+  signature: void mg_send_mime_file(struct mg_connection *, const char *, const char *)
+language: c
+project: civetweb
+target_name: civetweb_fuzz3
+target_path: /src/civetweb/fuzztest/fuzzmain.c

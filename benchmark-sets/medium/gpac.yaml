@@ -1,0 +1,17 @@
+functions:
+- name: visual_2d_draw_frame
+  params:
+  - name: visual
+    type: 'bool '
+  - name: root
+    type: 'bool '
+  - name: tr_state
+    type: 'bool '
+  - name: is_root_visual
+    type: int
+  return_type: int
+  signature: Bool visual_2d_draw_frame(GF_VisualManager *, GF_Node *, GF_TraverseState *, Bool)
+language: c
+project: gpac
+target_name: fuzz_route
+target_path: /src/gpac/testsuite/oss-fuzzers/fuzz_route.c

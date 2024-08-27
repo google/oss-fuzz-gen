@@ -1,0 +1,27 @@
+functions:
+- name: dwarf_init_path_a
+  params:
+  - name: path
+    type: 'bool '
+  - name: true_path_out_buffer
+    type: 'bool '
+  - name: true_path_bufferlen
+    type: int
+  - name: groupnumber
+    type: int
+  - name: universalnumber
+    type: int
+  - name: errhand
+    type: 'bool '
+  - name: errarg
+    type: 'bool '
+  - name: ret_dbg
+    type: 'bool '
+  - name: error
+    type: 'bool '
+  return_type: int
+  signature: int dwarf_init_path_a(const char *, char *, unsigned int, unsigned int, unsigned int, Dwarf_Handler, Dwarf_Ptr, Dwarf_Debug *, Dwarf_Error *)
+language: c
+project: libdwarf
+target_name: fuzz_macro_dwarf4
+target_path: /src/libdwarf/fuzz/fuzz_macro_dwarf4.c

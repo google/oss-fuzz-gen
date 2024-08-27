@@ -1,0 +1,13 @@
+functions:
+- name: jq_util_input_next_input_cb
+  params:
+  - name: jq
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  return_type: void
+  signature: jv jq_util_input_next_input_cb(jq_state *, void *)
+language: c
+project: jq
+target_name: jq_fuzz_compile
+target_path: /src/jq/tests/jq_fuzz_compile.c

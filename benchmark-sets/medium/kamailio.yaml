@@ -1,0 +1,11 @@
+functions:
+- name: tcp_init_children
+  params:
+  - name: woneinit
+    type: 'bool '
+  return_type: int
+  signature: int tcp_init_children(int *)
+language: c
+project: kamailio
+target_name: fuzz_uri
+target_path: /src/kamailio/misc/fuzz/fuzz_uri.c

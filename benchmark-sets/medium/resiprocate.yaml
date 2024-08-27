@@ -1,0 +1,13 @@
+functions:
+- name: _ZN5resip19GenericPidfContentsaSERKS0_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: GenericPidfContents & resip::GenericPidfContents::operator=(const GenericPidfContents &)
+language: c++
+project: resiprocate
+target_name: fuzzUtil
+target_path: /src/resiprocate/rutil/test/fuzzUtil.cxx

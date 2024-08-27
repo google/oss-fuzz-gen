@@ -1,0 +1,11 @@
+functions:
+- name: http_should_keep_alive
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int http_should_keep_alive(const http_parser *)
+language: c++
+project: http-parser
+target_name: fuzz_url
+target_path: /src/http-parser/fuzzers/fuzz_url.c

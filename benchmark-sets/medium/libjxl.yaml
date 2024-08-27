@@ -1,0 +1,11 @@
+functions:
+- name: JxlEncoderFlushInput
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: JxlEncoderStatus JxlEncoderFlushInput(JxlEncoder *)
+language: c++
+project: libjxl
+target_name: cjxl_fuzzer
+target_path: /src/libjxl/tools/cjxl_fuzzer.cc

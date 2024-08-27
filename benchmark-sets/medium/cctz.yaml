@@ -1,0 +1,11 @@
+functions:
+- name: _ZN4cctz15fixed_time_zoneERKNSt3__16chrono8durationIlNS0_5ratioILl1ELl1EEEEE
+  params:
+  - name: offset
+    type: 'bool '
+  return_type: void
+  signature: time_zone cctz::fixed_time_zone(const seconds &)
+language: c++
+project: cctz
+target_name: fuzz_cctz
+target_path: /src/fuzz_cctz.cc

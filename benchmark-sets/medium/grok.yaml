@@ -1,0 +1,13 @@
+functions:
+- name: _ZN3grk18CodeStreamCompress8compressEP16_grk_plugin_tile
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: N/A ()
+language: c++
+project: grok
+target_name: grk_decompress_fuzzer
+target_path: /src/grok/tests/fuzzers/grk_decompress_fuzzer.cpp

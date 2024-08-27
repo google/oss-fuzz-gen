@@ -1,0 +1,13 @@
+functions:
+- name: _ZN4pugi18xpath_variable_setaSERKS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  return_type: void
+  signature: xpath_variable_set & pugi::xpath_variable_set::operator=(const xpath_variable_set &)
+language: c++
+project: pugixml
+target_name: fuzz_parse
+target_path: /src/pugixml/tests/fuzz_parse.cpp

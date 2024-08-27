@@ -1,0 +1,15 @@
+functions:
+- name: sljit_allocate_stack
+  params:
+  - name: start_size
+    type: size_t
+  - name: max_size
+    type: size_t
+  - name: allocator_data
+    type: 'bool '
+  return_type: void
+  signature: struct sljit_stack * sljit_allocate_stack(sljit_uw, sljit_uw, void *)
+language: c++
+project: pcre2
+target_name: pcre2_fuzzer_32_3l
+target_path: /src/pcre2/src/pcre2_fuzzsupport.c

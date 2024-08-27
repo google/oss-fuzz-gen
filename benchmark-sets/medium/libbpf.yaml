@@ -1,0 +1,13 @@
+functions:
+- name: bpf_object__open_file
+  params:
+  - name: path
+    type: 'bool '
+  - name: opts
+    type: 'bool '
+  return_type: void
+  signature: struct bpf_object * bpf_object__open_file(const char *, const struct bpf_object_open_opts *)
+language: c
+project: libbpf
+target_name: bpf-object-fuzzer
+target_path: /src/libbpf/fuzz/bpf-object-fuzzer.c

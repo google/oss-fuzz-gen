@@ -1,0 +1,21 @@
+functions:
+- name: parse_ofp_bundle_file
+  params:
+  - name: file_name
+    type: 'bool '
+  - name: port_map
+    type: 'bool '
+  - name: table_map
+    type: 'bool '
+  - name: bms
+    type: 'bool '
+  - name: n_bms
+    type: 'bool '
+  - name: usable_protocols
+    type: 'bool '
+  return_type: void
+  signature: char * parse_ofp_bundle_file(const char *, const struct ofputil_port_map *, const struct ofputil_table_map *, struct ofputil_bundle_msg **, size_t *, DW_TAG_enumeration_typeofputil_protocol *)
+language: c++
+project: openvswitch
+target_name: flow_extract_target
+target_path: /src/openvswitch/tests/oss-fuzz/flow_extract_target.c

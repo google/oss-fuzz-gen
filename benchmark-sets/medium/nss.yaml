@@ -1,0 +1,23 @@
+functions:
+- name: sqlite3_blob_open
+  params:
+  - name: db
+    type: 'bool '
+  - name: zDb
+    type: 'bool '
+  - name: zTable
+    type: 'bool '
+  - name: zColumn
+    type: 'bool '
+  - name: iRow
+    type: size_t
+  - name: wrFlag
+    type: int
+  - name: ppBlob
+    type: 'bool '
+  return_type: int
+  signature: int sqlite3_blob_open(sqlite3 *, const char *, const char *, const char *, sqlite_int64, int, sqlite3_blob **)
+language: c++
+project: nss
+target_name: mpi-mod
+target_path: /src/nss/fuzz/mpi_mod_target.cc

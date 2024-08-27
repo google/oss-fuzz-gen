@@ -1,0 +1,15 @@
+functions:
+- name: gnutls_session_get_data
+  params:
+  - name: session
+    type: 'bool '
+  - name: session_data
+    type: 'bool '
+  - name: session_data_size
+    type: 'bool '
+  return_type: int
+  signature: int gnutls_session_get_data(gnutls_session_t, void *, size_t *)
+language: c++
+project: wget2
+target_name: libwget_css_url_fuzzer
+target_path: /src/wget2/fuzz/libwget_css_url_fuzzer.c

@@ -1,0 +1,15 @@
+functions:
+- name: sf_set_string
+  params:
+  - name: sndfile
+    type: 'bool '
+  - name: str_type
+    type: int
+  - name: str
+    type: 'bool '
+  return_type: int
+  signature: int sf_set_string(SNDFILE *, int, const char *)
+language: c
+project: libsndfile
+target_name: sndfile_fuzzer
+target_path: /src/libsndfile/ossfuzz/sndfile_fuzzer.cc

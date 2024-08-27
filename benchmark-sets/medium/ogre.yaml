@@ -1,0 +1,15 @@
+functions:
+- name: _ZNK12_GLOBAL__N_113DotSceneCodec6decodeERKN4Ogre9SharedPtrINS1_10DataStreamEEERKNS1_3AnyE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::DotSceneCodec::decode(const struct DotSceneCodec *, const DataStreamPtr &, const Any &)
+language: c++
+project: ogre
+target_name: image_fuzz
+target_path: /src/image_fuzz.cpp

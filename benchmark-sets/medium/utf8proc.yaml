@@ -1,0 +1,19 @@
+functions:
+- name: utf8proc_decompose
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: int
+  return_type: size_t
+  signature: utf8proc_ssize_t utf8proc_decompose(const utf8proc_uint8_t *, utf8proc_ssize_t, utf8proc_int32_t *, utf8proc_ssize_t, utf8proc_option_t)
+language: c
+project: utf8proc
+target_name: fuzz_main
+target_path: /src/utf8proc/test/fuzz_main.c

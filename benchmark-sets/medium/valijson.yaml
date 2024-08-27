@@ -1,0 +1,13 @@
+functions:
+- name: _ZN8valijson8adapters12BasicAdapterINS0_23GenericRapidJsonAdapterIN9rapidjson12GenericValueINS3_4UTF8IcEENS3_19MemoryPoolAllocatorINS3_12CrtAllocatorEEEEEEENS0_21GenericRapidJsonArrayISA_EENS0_28GenericRapidJsonObjectMemberISA_EENS0_22GenericRapidJsonObjectISA_EENS0_21GenericRapidJsonValueISA_EEE22ArrayComparisonFunctorclERKNS0_7AdapterE
+  params:
+  - name: this
+    type: 'bool '
+  - name: adapter
+    type: 'bool '
+  return_type: bool
+  signature: bool valijson::adapters::BasicAdapter<valijson::adapters::GenericRapidJsonAdapter<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonArray<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObjectMember<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonObject<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > >, valijson::adapters::GenericRapidJsonValue<rapidjson::GenericValue<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> > > >::ArrayComparisonFunctor::operator()(const Adapter &)
+language: c++
+project: valijson
+target_name: fuzzer
+target_path: /src/valijson/tests/fuzzing/fuzzer.cpp

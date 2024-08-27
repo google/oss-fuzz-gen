@@ -1,0 +1,17 @@
+functions:
+- name: stbi_info
+  params:
+  - name: filename
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  return_type: int
+  signature: int stbi_info(const char *, int *, int *, int *)
+language: c++
+project: stb
+target_name: stb_png_read_fuzzer
+target_path: /src/stb/tests/stbi_read_fuzzer.c

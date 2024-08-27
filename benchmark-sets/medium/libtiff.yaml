@@ -1,0 +1,15 @@
+functions:
+- name: TIFFOpenExt
+  params:
+  - name: name
+    type: 'bool '
+  - name: mode
+    type: 'bool '
+  - name: opts
+    type: 'bool '
+  return_type: void
+  signature: TIFF * TIFFOpenExt(const char *, const char *, TIFFOpenOptions *)
+language: c++
+project: libtiff
+target_name: tiff_read_rgba_fuzzer
+target_path: /src/libtiff/contrib/oss-fuzz/tiff_read_rgba_fuzzer.cc

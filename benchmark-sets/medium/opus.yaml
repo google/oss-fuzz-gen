@@ -1,0 +1,21 @@
+functions:
+- name: opus_decode
+  params:
+  - name: st
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: len
+    type: int
+  - name: pcm
+    type: 'bool '
+  - name: frame_size
+    type: int
+  - name: decode_fec
+    type: int
+  return_type: int
+  signature: int opus_decode(OpusDecoder *, const unsigned char *, opus_int32, opus_int16 *, int, int)
+language: c++
+project: opus
+target_name: opus_multistream_decode_fuzzer_floating
+target_path: /src/opus/tests/opus_multistream_decode_fuzzer.cc

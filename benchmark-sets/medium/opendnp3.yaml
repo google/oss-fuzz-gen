@@ -1,0 +1,11 @@
+functions:
+- name: _ZZN8opendnp38OContext22RestartSolConfirmTimerEvENK3$_0clEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void opendnp3::OContext::operator()(const void *)
+language: c++
+project: opendnp3
+target_name: fuzzoutstation
+target_path: /src/opendnp3/cpp/tests/fuzz/fuzzoutstation.cpp

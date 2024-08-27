@@ -1,0 +1,13 @@
+functions:
+- name: cmsCreateDeviceLinkFromCubeFileTHR
+  params:
+  - name: ContextID
+    type: 'bool '
+  - name: cFileName
+    type: 'bool '
+  return_type: void
+  signature: cmsHPROFILE cmsCreateDeviceLinkFromCubeFileTHR(cmsContext, const char *)
+language: c++
+project: lcms
+target_name: cms_cie_cam02_fuzzer
+target_path: /src/cms_cie_cam02_fuzzer.c

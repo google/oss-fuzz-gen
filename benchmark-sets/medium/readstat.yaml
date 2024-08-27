@@ -1,0 +1,15 @@
+functions:
+- name: ck_double_hash_insert
+  params:
+  - name: key
+    type: double
+  - name: value
+    type: 'bool '
+  - name: table
+    type: 'bool '
+  return_type: int
+  signature: int ck_double_hash_insert(double, const void *, ck_hash_table_t *)
+language: c++
+project: readstat
+target_name: fuzz_compression_sav
+target_path: /src/readstat/src/fuzz/fuzz_compression_sav.c

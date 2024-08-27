@@ -1,0 +1,11 @@
+functions:
+- name: _ZN8pybind116detail14clear_instanceEP7_object
+  params:
+  - name: self
+    type: 'bool '
+  return_type: void
+  signature: void pybind11::detail::clear_instance(PyObject *)
+language: c++
+project: pybind11
+target_name: pybind_fuzzer
+target_path: /src/pybind_fuzzer.cc

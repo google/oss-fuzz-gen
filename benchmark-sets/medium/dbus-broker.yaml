@@ -1,0 +1,13 @@
+functions:
+- name: log_appendf
+  params:
+  - name: log
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: void
+  signature: void log_appendf(Log *, const char *, void)
+language: c
+project: dbus-broker
+target_name: fuzz-message
+target_path: /src/fuzz-message.c

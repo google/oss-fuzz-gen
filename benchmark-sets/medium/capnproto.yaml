@@ -1,0 +1,11 @@
+functions:
+- name: _ZN5capnp1_22initDynamicTestMessageENS_13DynamicStruct7BuilderE
+  params:
+  - name: builder
+    type: 'bool '
+  return_type: void
+  signature: void capnp::_::initDynamicTestMessage(Builder)
+language: c++
+project: capnproto
+target_name: capnp-llvm-fuzzer-testcase
+target_path: /src/capnproto/c++/src/capnp/llvm-fuzzer-testcase.c++

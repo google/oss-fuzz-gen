@@ -1,0 +1,21 @@
+functions:
+- name: ZDICT_optimizeTrainFromBuffer_fastCover
+  params:
+  - name: dictBuffer
+    type: 'bool '
+  - name: dictBufferCapacity
+    type: size_t
+  - name: samplesBuffer
+    type: 'bool '
+  - name: samplesSizes
+    type: 'bool '
+  - name: nbSamples
+    type: int
+  - name: parameters
+    type: 'bool '
+  return_type: size_t
+  signature: size_t ZDICT_optimizeTrainFromBuffer_fastCover(void *, size_t, const void *, const size_t *, unsigned int, ZDICT_fastCover_params_t *)
+language: c++
+project: zstd
+target_name: block_round_trip
+target_path: /src/zstd/tests/fuzz/block_round_trip.c

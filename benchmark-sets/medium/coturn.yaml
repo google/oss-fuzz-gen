@@ -1,0 +1,31 @@
+functions:
+- name: stun_set_allocate_response
+  params:
+  - name: buf
+    type: 'bool '
+  - name: tid
+    type: 'bool '
+  - name: relayed_addr1
+    type: 'bool '
+  - name: relayed_addr2
+    type: 'bool '
+  - name: reflexive_addr
+    type: 'bool '
+  - name: lifetime
+    type: int
+  - name: max_lifetime
+    type: int
+  - name: error_code
+    type: int
+  - name: reason
+    type: 'bool '
+  - name: reservation_token
+    type: size_t
+  - name: mobile_id
+    type: 'bool '
+  return_type: int
+  signature: int stun_set_allocate_response(stun_buffer *, stun_tid *, const ioa_addr *, const ioa_addr *, const ioa_addr *, uint32_t, uint32_t, int, const uint8_t *, uint64_t, char *)
+language: c
+project: coturn
+target_name: FuzzStun
+target_path: /src/coturn/fuzzing/FuzzStun.c

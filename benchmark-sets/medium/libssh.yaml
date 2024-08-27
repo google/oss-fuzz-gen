@@ -1,0 +1,15 @@
+functions:
+- name: ssh_userauth_publickey
+  params:
+  - name: session
+    type: 'bool '
+  - name: username
+    type: 'bool '
+  - name: privkey
+    type: 'bool '
+  return_type: int
+  signature: int ssh_userauth_publickey(ssh_session, const char *, const ssh_key)
+language: c
+project: libssh
+target_name: ssh_pubkey_fuzzer
+target_path: /src/libssh/tests/fuzz/ssh_pubkey_fuzzer.c

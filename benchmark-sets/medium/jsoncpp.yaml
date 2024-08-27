@@ -1,0 +1,17 @@
+functions:
+- name: _ZN4Json6Reader5parseERNSt3__113basic_istreamIcNS1_11char_traitsIcEEEERNS_5ValueEb
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: bool
+  signature: bool Json::Reader::parse(istream &, Value &, bool)
+language: c++
+project: jsoncpp
+target_name: jsoncpp_fuzzer
+target_path: /src/jsoncpp/src/test_lib_json/fuzz.cpp

@@ -1,0 +1,27 @@
+functions:
+- name: av1_realloc_and_scale_if_required
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: char
+  - name: ''
+    type: int
+  - name: ''
+    type: bool
+  - name: ''
+    type: bool
+  - name: ''
+    type: int
+  - name: ''
+    type: bool
+  return_type: void
+  signature: YV12_BUFFER_CONFIG * av1_realloc_and_scale_if_required(AV1_COMMON *, YV12_BUFFER_CONFIG *, YV12_BUFFER_CONFIG *, const InterpFilter, const int, const _Bool, const _Bool, const int, const _Bool)
+language: c++
+project: libaom
+target_name: av1_dec_fuzzer
+target_path: /src/aom/examples/av1_dec_fuzzer.cc

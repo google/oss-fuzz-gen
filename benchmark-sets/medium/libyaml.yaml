@@ -1,0 +1,13 @@
+functions:
+- name: yaml_emitter_set_width
+  params:
+  - name: emitter
+    type: 'bool '
+  - name: width
+    type: int
+  return_type: void
+  signature: void yaml_emitter_set_width(yaml_emitter_t *, int)
+language: c++
+project: libyaml
+target_name: libyaml_loader_fuzzer
+target_path: /src/libyaml_loader_fuzzer.c

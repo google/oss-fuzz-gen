@@ -1,0 +1,19 @@
+functions:
+- name: _ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPA4_m
+  params:
+  - name: this
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: fragments
+    type: 'bool '
+  - name: num_fragments
+    type: size_t
+  - name: hash
+    type: 'bool '
+  return_type: void
+  signature: void highwayhash::HighwayHashCat<4u>::operator()(const struct HighwayHashCat<2U> *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t, DW_TAG_restrict_typeHHResult256 *)
+language: c++
+project: highwayhash
+target_name: sip_hash_fuzzer
+target_path: /src/highwayhash/highwayhash/sip_hash_fuzzer.cc

@@ -1,0 +1,13 @@
+functions:
+- name: pjsip_tsx_retransmit_no_state
+  params:
+  - name: tsx
+    type: 'bool '
+  - name: tdata
+    type: 'bool '
+  return_type: int
+  signature: pj_status_t pjsip_tsx_retransmit_no_state(pjsip_transaction *, pjsip_tx_data *)
+language: c
+project: pjsip
+target_name: fuzz-crypto
+target_path: /src/pjsip/tests/fuzz/fuzz-crypto.c

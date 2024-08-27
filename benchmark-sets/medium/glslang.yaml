@@ -1,0 +1,17 @@
+functions:
+- name: _ZN7glslang16HlslParseContext18parseShaderStringsERNS_10TPpContextERNS_13TInputScannerEb
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: bool
+  signature: bool glslang::HlslParseContext::parseShaderStrings(TPpContext &, TInputScanner &, bool)
+language: c++
+project: glslang
+target_name: compile_fuzzer
+target_path: /src/compile_fuzzer.cc

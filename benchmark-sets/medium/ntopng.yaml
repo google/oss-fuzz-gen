@@ -1,0 +1,11 @@
+functions:
+- name: _ZN21ZMQCollectorInterface13collect_flowsEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void ZMQCollectorInterface::collect_flows()
+language: c++
+project: ntopng
+target_name: fuzz_dissect_packet
+target_path: /src/ntopng/fuzz/fuzz_dissect_packet.cpp

@@ -1,0 +1,11 @@
+functions:
+- name: op_test_open
+  params:
+  - name: _of
+    type: 'bool '
+  return_type: int
+  signature: int op_test_open(OggOpusFile *)
+language: c
+project: opusfile
+target_name: opusfile_fuzzer
+target_path: /src/opusfile_fuzzer.c

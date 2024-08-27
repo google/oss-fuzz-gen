@@ -1,0 +1,15 @@
+functions:
+- name: vp8_post_proc_frame
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int vp8_post_proc_frame(VP8_COMMON *, YV12_BUFFER_CONFIG *, vp8_ppflags_t *)
+language: c++
+project: libvpx
+target_name: vpx_dec_fuzzer_vp8
+target_path: /src/libvpx/examples/vpx_dec_fuzzer.cc

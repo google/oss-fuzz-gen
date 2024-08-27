@@ -1,0 +1,17 @@
+functions:
+- name: _ZN6icu_6612RegexMatcherC2ERKNS_13UnicodeStringEjR10UErrorCode
+  params:
+  - name: this
+    type: 'bool '
+  - name: regexp
+    type: 'bool '
+  - name: flags
+    type: int
+  - name: status
+    type: 'bool '
+  return_type: void
+  signature: void icu_66::RegexMatcher::RegexMatcher(const UnicodeString &, uint32_t, UErrorCode &)
+language: c++
+project: libphonenumber
+target_name: phonefuzz
+target_path: /src/libphonenumber/cpp/test/phonenumbers/fuzz_phone.cc

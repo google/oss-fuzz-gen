@@ -1,0 +1,17 @@
+functions:
+- name: sepol_policydb_to_image
+  params:
+  - name: handle
+    type: 'bool '
+  - name: p
+    type: 'bool '
+  - name: newdata
+    type: 'bool '
+  - name: newlen
+    type: 'bool '
+  return_type: int
+  signature: int sepol_policydb_to_image(sepol_handle_t *, sepol_policydb_t *, void **, size_t *)
+language: c
+project: selinux
+target_name: binpolicy-fuzzer
+target_path: /src/selinux/libsepol/fuzz/binpolicy-fuzzer.c

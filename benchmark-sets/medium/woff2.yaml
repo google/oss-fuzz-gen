@@ -1,0 +1,15 @@
+functions:
+- name: BrotliDecoderSetParameter
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: int
+  signature: int BrotliDecoderSetParameter(BrotliDecoderStateInternal *, BrotliDecoderParameter, uint32_t)
+language: c++
+project: woff2
+target_name: convert_woff2ttf_fuzzer_new_entry
+target_path: /src/woff2/src/convert_woff2ttf_fuzzer_new_entry.cc

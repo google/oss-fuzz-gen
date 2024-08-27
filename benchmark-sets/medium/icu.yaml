@@ -1,0 +1,21 @@
+functions:
+- name: _ZNK6icu_7614TimeZoneFormat5parseE20UTimeZoneFormatStyleRKNS_13UnicodeStringERNS_13ParsePositionEiP23UTimeZoneFormatTimeType
+  params:
+  - name: this
+    type: 'bool '
+  - name: style
+    type: int
+  - name: text
+    type: 'bool '
+  - name: pos
+    type: 'bool '
+  - name: parseOptions
+    type: int
+  - name: timeType
+    type: 'bool '
+  return_type: void
+  signature: TimeZone * icu_76::TimeZoneFormat::parse(UTimeZoneFormatStyle, const UnicodeString &, ParsePosition &, int32_t, UTimeZoneFormatTimeType *)
+language: c++
+project: icu
+target_name: collator_rulebased_fuzzer
+target_path: /src/icu/icu4c/source/test/fuzzer/collator_rulebased_fuzzer.cpp

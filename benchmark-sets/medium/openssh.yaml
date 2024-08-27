@@ -1,0 +1,13 @@
+functions:
+- name: kex_setup
+  params:
+  - name: ssh
+    type: 'bool '
+  - name: proposal
+    type: 'bool '
+  return_type: int
+  signature: int kex_setup(struct ssh *, char **)
+language: c++
+project: openssh
+target_name: kex_fuzz
+target_path: /src/openssh/regress/misc/fuzz-harness/kex_fuzz.cc

@@ -1,0 +1,11 @@
+functions:
+- name: cbor_intermediate_decref
+  params:
+  - name: item
+    type: 'bool '
+  return_type: void
+  signature: void cbor_intermediate_decref(cbor_item_t *)
+language: c++
+project: libcbor
+target_name: cbor_load_fuzzer
+target_path: /src/libcbor/oss-fuzz/cbor_load_fuzzer.cc

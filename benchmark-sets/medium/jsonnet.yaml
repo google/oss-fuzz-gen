@@ -1,0 +1,15 @@
+functions:
+- name: jsonnet_evaluate_file
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: char * jsonnet_evaluate_file(struct JsonnetVm *, const char *, int *)
+language: c++
+project: jsonnet
+target_name: convert_jsonnet_fuzzer_stream
+target_path: /src/convert_jsonnet_fuzzer_stream.cc

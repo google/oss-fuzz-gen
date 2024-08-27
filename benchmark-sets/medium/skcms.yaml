@@ -1,0 +1,27 @@
+functions:
+- name: skcms_PrimariesToXYZD50
+  params:
+  - name: rx
+    type: float
+  - name: ry
+    type: float
+  - name: gx
+    type: float
+  - name: gy
+    type: float
+  - name: bx
+    type: float
+  - name: by
+    type: float
+  - name: wx
+    type: float
+  - name: wy
+    type: float
+  - name: toXYZD50
+    type: 'bool '
+  return_type: bool
+  signature: bool skcms_PrimariesToXYZD50(float, float, float, float, float, float, float, float, skcms_Matrix3x3 *)
+language: c++
+project: skcms
+target_name: iccprofile_atf
+target_path: /src/skcms/fuzz/fuzz_iccprofile_atf.c

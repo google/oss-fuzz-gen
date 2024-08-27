@@ -1,0 +1,13 @@
+functions:
+- name: mdb_dump_catalog
+  params:
+  - name: mdb
+    type: 'bool '
+  - name: obj_type
+    type: int
+  return_type: void
+  signature: void mdb_dump_catalog(MdbHandle *, int)
+language: c
+project: mdbtools
+target_name: fuzz_mdb
+target_path: /src/mdbtools/src/fuzz/fuzz_mdb.c

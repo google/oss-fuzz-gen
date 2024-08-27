@@ -1,0 +1,13 @@
+functions:
+- name: workbook_add_chartsheet
+  params:
+  - name: self
+    type: 'bool '
+  - name: sheetname
+    type: 'bool '
+  return_type: void
+  signature: lxw_chartsheet * workbook_add_chartsheet(lxw_workbook *, const char *)
+language: c
+project: libxlsxwriter
+target_name: xlsx_fuzzer
+target_path: /src/libxlsxwriter/dev/fuzzing/xlsx_fuzzer.cpp

@@ -1,0 +1,13 @@
+functions:
+- name: cmark_node_append_child
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int cmark_node_append_child(cmark_node *, cmark_node *)
+language: c++
+project: cmark
+target_name: cmark_fuzzer
+target_path: /src/cmark/fuzz/cmark-fuzz.c

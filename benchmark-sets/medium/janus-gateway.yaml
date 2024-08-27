@@ -1,0 +1,15 @@
+functions:
+- name: janus_sdp_generate_answer_mline
+  params:
+  - name: offer
+    type: 'bool '
+  - name: answer
+    type: 'bool '
+  - name: offered
+    type: 'bool '
+  return_type: int
+  signature: int janus_sdp_generate_answer_mline(janus_sdp *, janus_sdp *, janus_sdp_mline *, void)
+language: c++
+project: janus-gateway
+target_name: sdp_fuzzer
+target_path: /src/janus-gateway/fuzzers/sdp_fuzzer.c

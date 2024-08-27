@@ -1,0 +1,11 @@
+functions:
+- name: gpsd_poll
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: gps_mask_t gpsd_poll(struct gps_device_t *)
+language: c
+project: gpsd
+target_name: FuzzPacket
+target_path: /src/gpsd/fuzzer/FuzzPacket.c

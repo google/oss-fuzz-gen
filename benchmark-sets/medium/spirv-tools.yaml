@@ -1,0 +1,15 @@
+functions:
+- name: spvValidate
+  params:
+  - name: context
+    type: 'bool '
+  - name: binary
+    type: 'bool '
+  - name: pDiagnostic
+    type: 'bool '
+  return_type: int
+  signature: spv_result_t spvValidate(const spv_const_context, const spv_const_binary, spv_diagnostic *)
+language: c++
+project: spirv-tools
+target_name: spvtools_opt_size_fuzzer
+target_path: /src/spirv-tools/test/fuzzers/spvtools_opt_size_fuzzer.cpp

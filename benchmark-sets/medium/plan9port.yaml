@@ -1,0 +1,17 @@
+functions:
+- name: X509toRSApub
+  params:
+  - name: cert
+    type: 'bool '
+  - name: ncert
+    type: int
+  - name: name
+    type: 'bool '
+  - name: nname
+    type: int
+  return_type: void
+  signature: RSApub * X509toRSApub(uchar *, int, char *, int)
+language: c
+project: plan9port
+target_name: fuzz_libsec
+target_path: /src/fuzz_libsec.c

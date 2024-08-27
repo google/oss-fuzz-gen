@@ -1,0 +1,11 @@
+functions:
+- name: _ZN7leveldb12_GLOBAL__N_16DBIter10SeekToLastEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void leveldb::(anonymous namespace)::DBIter::SeekToLast()
+language: c++
+project: leveldb
+target_name: fuzz_db
+target_path: /src/leveldb/fuzz_db.cc

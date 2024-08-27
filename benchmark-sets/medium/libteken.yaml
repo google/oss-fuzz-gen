@@ -1,0 +1,13 @@
+functions:
+- name: teken_get_sequence
+  params:
+  - name: t
+    type: 'bool '
+  - name: k
+    type: int
+  return_type: void
+  signature: const char * teken_get_sequence(const teken_t *, unsigned int)
+language: c++
+project: libteken
+target_name: libteken_fuzzer
+target_path: /src/libteken_fuzzer.c

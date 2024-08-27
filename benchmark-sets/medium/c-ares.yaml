@@ -1,0 +1,11 @@
+functions:
+- name: ares_init
+  params:
+  - name: channelptr
+    type: 'bool '
+  return_type: int
+  signature: int ares_init(ares_channel_t **)
+language: c++
+project: c-ares
+target_name: ares_create_query_fuzzer
+target_path: /src/c-ares/test/ares-test-fuzz-name.c

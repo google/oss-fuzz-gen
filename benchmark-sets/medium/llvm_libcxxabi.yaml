@@ -1,0 +1,15 @@
+functions:
+- name: _ZN12_GLOBAL__N_111DumpVisitor5printENS_16itanium_demangle9NodeArrayE
+  params:
+  - name: this
+    type: 'bool '
+  - name: A
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void (anonymous namespace)::DumpVisitor::print(struct DumpVisitor *, NodeArray)
+language: c++
+project: llvm_libcxxabi
+target_name: cxa_demangle_fuzzer
+target_path: /src/llvm-project/libcxxabi/fuzz/cxa_demangle_fuzzer.cpp

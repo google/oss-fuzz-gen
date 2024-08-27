@@ -1,0 +1,17 @@
+functions:
+- name: _ZNK8TXMPMetaINSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEE17SerializeToBufferEPS6_jj
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: void
+  signature: void TXMPMeta<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >::SerializeToBuffer(const TXMPMeta<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > *, basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > *, XMP_OptionBits, XMP_StringLen)
+language: c++
+project: exiv2
+target_name: fuzz-read-print-write
+target_path: /src/exiv2/fuzz/fuzz-read-print-write.cpp

@@ -1,0 +1,15 @@
+functions:
+- name: enc_encode
+  params:
+  - name: pEnc
+    type: 'bool '
+  - name: xFrame
+    type: 'bool '
+  - name: stats
+    type: 'bool '
+  return_type: int
+  signature: int enc_encode(Encoder *, xvid_enc_frame_t *, xvid_enc_stats_t *)
+language: c++
+project: xvid
+target_name: fuzzer-decoder
+target_path: /src/oss-fuzz-fuzzers/xvid/fuzzer.cpp

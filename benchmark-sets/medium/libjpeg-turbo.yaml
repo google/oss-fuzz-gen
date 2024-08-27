@@ -1,0 +1,27 @@
+functions:
+- name: tjDecompress
+  params:
+  - name: handle
+    type: 'bool '
+  - name: jpegBuf
+    type: 'bool '
+  - name: jpegSize
+    type: size_t
+  - name: dstBuf
+    type: 'bool '
+  - name: width
+    type: int
+  - name: pitch
+    type: int
+  - name: height
+    type: int
+  - name: pixelSize
+    type: int
+  - name: flags
+    type: int
+  return_type: int
+  signature: int tjDecompress(tjhandle, unsigned char *, unsigned long, unsigned char *, int, int, int, int, int)
+language: c
+project: libjpeg-turbo
+target_name: compress_lossless_fuzzer_dev
+target_path: /src/libjpeg-turbo.dev/fuzz/compress_lossless.cc

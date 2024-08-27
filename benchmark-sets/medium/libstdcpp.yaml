@@ -1,0 +1,15 @@
+functions:
+- name: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE6appendEmc
+  params:
+  - name: this
+    type: 'bool '
+  - name: __n
+    type: size_t
+  - name: __c
+    type: char
+  return_type: void
+  signature: basic_string<char, std::char_traits<char>, std::allocator<char> > & std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::append(basic_string<char, std::char_traits<char>, std::allocator<char> > *, size_type, char)
+language: c++
+project: libstdcpp
+target_name: one-arg
+target_path: /src/one-arg.cpp

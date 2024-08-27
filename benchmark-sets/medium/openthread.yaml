@@ -1,0 +1,13 @@
+functions:
+- name: otPlatRadioEnergyScanDone
+  params:
+  - name: aInstance
+    type: 'bool '
+  - name: aEnergyScanMaxRssi
+    type: char
+  return_type: void
+  signature: void otPlatRadioEnergyScanDone(otInstance *, int8_t)
+language: c++
+project: openthread
+target_name: ot-cli-received-fuzzer
+target_path: /src/openthread/tests/fuzz/cli_received.cpp

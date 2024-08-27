@@ -1,0 +1,13 @@
+functions:
+- name: free_cmndspec
+  params:
+  - name: cs
+    type: 'bool '
+  - name: csl
+    type: 'bool '
+  return_type: void
+  signature: void free_cmndspec(struct cmndspec *, struct cmndspec_list *)
+language: c
+project: sudoers
+target_name: fuzz_stubs
+target_path: /src/sudo/plugins/sudoers/regress/fuzz/fuzz_stubs.c

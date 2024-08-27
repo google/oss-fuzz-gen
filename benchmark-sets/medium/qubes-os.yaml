@@ -1,0 +1,17 @@
+functions:
+- name: handle_client_data
+  params:
+  - name: d
+    type: 'bool '
+  - name: client
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: data_len
+    type: int
+  return_type: int
+  signature: int handle_client_data(struct db_daemon_data *, struct client *, char *, int)
+language: c++
+project: qubes-os
+target_name: input-proxy-receiver_fuzzer
+target_path: /src/qubes-os/app-linux-input-proxy/fuzz/input-proxy-receiver_fuzzer.c

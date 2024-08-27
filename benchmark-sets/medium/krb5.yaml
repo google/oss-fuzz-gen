@@ -1,0 +1,31 @@
+functions:
+- name: iakerb_gss_accept_sec_context
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: context_handle
+    type: 'bool '
+  - name: verifier_cred_handle
+    type: 'bool '
+  - name: input_token
+    type: 'bool '
+  - name: input_chan_bindings
+    type: 'bool '
+  - name: src_name
+    type: 'bool '
+  - name: mech_type
+    type: 'bool '
+  - name: output_token
+    type: 'bool '
+  - name: ret_flags
+    type: 'bool '
+  - name: time_rec
+    type: 'bool '
+  - name: delegated_cred_handle
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 iakerb_gss_accept_sec_context(OM_uint32 *, gss_ctx_id_t *, gss_cred_id_t, gss_buffer_t, gss_channel_bindings_t, gss_name_t *, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *, gss_cred_id_t *)
+language: c
+project: krb5
+target_name: fuzz_json
+target_path: /src/krb5/src/tests/fuzzing/fuzz_json.c

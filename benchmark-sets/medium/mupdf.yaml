@@ -1,0 +1,15 @@
+functions:
+- name: pdf_save_snapshot
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: doc
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  return_type: void
+  signature: void pdf_save_snapshot(fz_context *, pdf_document *, const char *)
+language: c++
+project: mupdf
+target_name: pdf_fuzzer
+target_path: /src/pdf_fuzzer.cc

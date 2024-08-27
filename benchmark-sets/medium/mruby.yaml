@@ -1,0 +1,13 @@
+functions:
+- name: mrb_load_file
+  params:
+  - name: mrb
+    type: 'bool '
+  - name: f
+    type: 'bool '
+  return_type: size_t
+  signature: mrb_value mrb_load_file(mrb_state *, FILE *)
+language: c++
+project: mruby
+target_name: mruby_fuzzer
+target_path: /src/mruby/oss-fuzz/mruby_fuzzer.c

@@ -1,0 +1,13 @@
+functions:
+- name: yaml_emitter_dump
+  params:
+  - name: emitter
+    type: 'bool '
+  - name: document
+    type: 'bool '
+  return_type: int
+  signature: int yaml_emitter_dump(yaml_emitter_t *, yaml_document_t *)
+language: c
+project: xs
+target_name: xst_jsonparse
+target_path: /src/moddable/xs/tools/xstFuzz.c

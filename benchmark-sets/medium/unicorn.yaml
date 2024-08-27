@@ -1,0 +1,15 @@
+functions:
+- name: decNumberLn
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberLn(decNumber *, const decNumber *, decContext *)
+language: c++
+project: unicorn
+target_name: fuzz_emu_arm_armbe
+target_path: /src/unicorn/tests/fuzz/fuzz_emu_arm_armbe.c

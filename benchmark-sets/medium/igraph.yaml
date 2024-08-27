@@ -1,0 +1,21 @@
+functions:
+- name: igraph_sparsemat_arpack_rssolve
+  params:
+  - name: A
+    type: 'bool '
+  - name: options
+    type: 'bool '
+  - name: storage
+    type: 'bool '
+  - name: values
+    type: 'bool '
+  - name: vectors
+    type: 'bool '
+  - name: solvemethod
+    type: int
+  return_type: int
+  signature: igraph_error_t igraph_sparsemat_arpack_rssolve(const igraph_sparsemat_t *, igraph_arpack_options_t *, igraph_arpack_storage_t *, igraph_vector_t *, igraph_matrix_t *, igraph_sparsemat_solve_t)
+language: c
+project: igraph
+target_name: read_pajek
+target_path: /src/igraph/fuzzing/read_pajek.cpp

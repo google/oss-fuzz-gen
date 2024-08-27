@@ -1,0 +1,17 @@
+functions:
+- name: yr_compiler_add_bytes
+  params:
+  - name: compiler
+    type: 'bool '
+  - name: rules_data
+    type: 'bool '
+  - name: rules_size
+    type: size_t
+  - name: namespace_
+    type: 'bool '
+  return_type: int
+  signature: int yr_compiler_add_bytes(YR_COMPILER *, const void *, size_t, const char *)
+language: c++
+project: yara
+target_name: dex_fuzzer
+target_path: /src/yara/tests/oss-fuzz/dex_fuzzer.cc

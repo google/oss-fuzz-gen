@@ -1,0 +1,19 @@
+functions:
+- name: client_main
+  params:
+  - name: base
+    type: 'bool '
+  - name: argc
+    type: int
+  - name: argv
+    type: 'bool '
+  - name: flags
+    type: size_t
+  - name: feat
+    type: int
+  return_type: int
+  signature: int client_main(struct event_base *, int, char **, uint64_t, int)
+language: c
+project: tmux
+target_name: input-fuzzer
+target_path: /src/tmux/fuzz/input-fuzzer.c

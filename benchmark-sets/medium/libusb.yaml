@@ -1,0 +1,13 @@
+functions:
+- name: libusb_get_bos_descriptor
+  params:
+  - name: dev_handle
+    type: 'bool '
+  - name: bos
+    type: 'bool '
+  return_type: int
+  signature: int libusb_get_bos_descriptor(libusb_device_handle *, struct libusb_bos_descriptor **)
+language: c++
+project: libusb
+target_name: libusb_fuzzer
+target_path: /src/libusb_fuzzer.cc

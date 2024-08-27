@@ -1,0 +1,17 @@
+functions:
+- name: modbus_reply
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: req
+    type: 'bool '
+  - name: req_length
+    type: int
+  - name: mb_mapping
+    type: 'bool '
+  return_type: int
+  signature: int modbus_reply(modbus_t *, const uint8_t *, int, modbus_mapping_t *)
+language: c
+project: libmodbus
+target_name: FuzzServer
+target_path: /src/libmodbus/fuzz/FuzzServer.c

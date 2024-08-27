@@ -1,0 +1,17 @@
+functions:
+- name: dns_view_asyncload
+  params:
+  - name: view
+    type: 'bool '
+  - name: newonly
+    type: bool
+  - name: callback
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  return_type: int
+  signature: isc_result_t dns_view_asyncload(dns_view_t *, bool, dns_zt_callback_t *, void *)
+language: c
+project: bind9
+target_name: dns_qpkey_name_fuzzer
+target_path: /src/bind9/fuzz/dns_qpkey_name.c

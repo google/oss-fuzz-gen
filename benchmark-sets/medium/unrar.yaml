@@ -1,0 +1,11 @@
+functions:
+- name: _ZN10MainHeaderD2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: struct MainHeader & MainHeader::operator=(struct MainHeader *, struct DW_TAG_rvalue_reference_typeMainHeader)
+language: c++
+project: unrar
+target_name: unrar_fuzzer
+target_path: /src/unrar/unrar_fuzzer.cc

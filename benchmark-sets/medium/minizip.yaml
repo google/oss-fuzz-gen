@@ -1,0 +1,11 @@
+functions:
+- name: mz_zip_entry_is_symlink
+  params:
+  - name: handle
+    type: 'bool '
+  return_type: int
+  signature: int32_t mz_zip_entry_is_symlink(void *)
+language: c++
+project: minizip
+target_name: unzip_fuzzer
+target_path: /src/minizip-ng/test/fuzz/unzip_fuzzer.c

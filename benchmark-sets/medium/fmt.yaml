@@ -1,0 +1,19 @@
+functions:
+- name: _ZN3fmt3v1015vprint_bufferedEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE
+  params:
+  - name: f
+    type: 'bool '
+  - name: fmt
+    type: 'bool '
+  - name: args
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void fmt::v10::vprint_buffered(FILE *, string_view, format_args)
+language: c++
+project: fmt
+target_name: chrono-duration-fuzzer
+target_path: /src/fmt/test/fuzzing/chrono-duration.cc

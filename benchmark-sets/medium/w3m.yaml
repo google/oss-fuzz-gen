@@ -1,0 +1,11 @@
+functions:
+- name: Sprintf
+  params:
+  - name: fmt
+    type: 'bool '
+  return_type: void
+  signature: Str Sprintf(char *, void)
+language: c
+project: w3m
+target_name: fuzz_conv
+target_path: /src/w3m/fuzz/fuzz-conv.c

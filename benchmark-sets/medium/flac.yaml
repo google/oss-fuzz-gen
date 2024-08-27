@@ -1,0 +1,13 @@
+functions:
+- name: _ZN4FLAC7Encoder4File8init_oggEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  return_type: int
+  signature: FLAC__StreamEncoderInitStatus FLAC::Encoder::File::init_ogg(const char *)
+language: c++
+project: flac
+target_name: fuzzer_encoder
+target_path: /src/flac/oss-fuzz/encoder.cc

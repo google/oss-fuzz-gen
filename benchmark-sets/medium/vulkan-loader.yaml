@@ -1,0 +1,13 @@
+functions:
+- name: terminator_EnumerateInstanceLayerProperties
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult terminator_EnumerateInstanceLayerProperties(uint32_t *, VkLayerProperties *)
+language: c
+project: vulkan-loader
+target_name: instance_create_fuzzer
+target_path: /src/instance_create_fuzzer.c

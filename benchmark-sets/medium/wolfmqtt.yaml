@@ -1,0 +1,15 @@
+functions:
+- name: wolfSSL_CertManagerLoadCA
+  params:
+  - name: cm
+    type: 'bool '
+  - name: file
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  return_type: int
+  signature: int wolfSSL_CertManagerLoadCA(WOLFSSL_CERT_MANAGER *, const char *, const char *)
+language: c
+project: wolfmqtt
+target_name: wolfmqtt-fuzzer
+target_path: /src/wolfmqtt-fuzzers/fuzzer.cpp

@@ -1,0 +1,13 @@
+functions:
+- name: _ZN3uWS12HttpResponseILb1EE16writeUnsignedHexEj
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void uWS::HttpResponse<true>::writeUnsignedHex(struct HttpResponse<false> *, unsigned int)
+language: c++
+project: uwebsockets
+target_name: WebSocket
+target_path: /src/uWebSockets/fuzzing/WebSocket.cpp

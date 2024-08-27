@@ -1,0 +1,15 @@
+functions:
+- name: ly_ctx_get_yanglib_data
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: root_p
+    type: 'bool '
+  - name: content_id_format
+    type: 'bool '
+  return_type: int
+  signature: LY_ERR ly_ctx_get_yanglib_data(const struct ly_ctx *, struct lyd_node **, const char *, void)
+language: c
+project: libyang
+target_name: lyd_parse_mem_json
+target_path: /src/libyang/tests/fuzz/lyd_parse_mem_json.c

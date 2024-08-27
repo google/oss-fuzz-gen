@@ -1,0 +1,21 @@
+functions:
+- name: _ZN2nl5Weave20WeaveSecurityManager31HandleKeyExportMessageInitiatorEPNS0_15ExchangeContextEPKNS_4Inet12IPPacketInfoEPKNS0_16WeaveMessageInfoEjhPNS0_6System12PacketBufferE
+  params:
+  - name: ec
+    type: 'bool '
+  - name: pktInfo
+    type: 'bool '
+  - name: msgInfo
+    type: 'bool '
+  - name: profileId
+    type: int
+  - name: msgType
+    type: char
+  - name: msgBuf
+    type: 'bool '
+  return_type: void
+  signature: void nl::Weave::WeaveSecurityManager::HandleKeyExportMessageInitiator(ExchangeContext *, const IPPacketInfo *, const struct WeaveMessageInfo *, uint32_t, uint8_t, PacketBuffer *)
+language: c++
+project: openweave
+target_name: FuzzPASEKeyConfirm
+target_path: /src/openweave-core/src/test-apps/fuzz/FuzzPASEKeyConfirm.cpp

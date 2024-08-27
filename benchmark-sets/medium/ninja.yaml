@@ -1,0 +1,13 @@
+functions:
+- name: _ZN12DyndepParser9ParseEdgeEPNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: err
+    type: 'bool '
+  return_type: bool
+  signature: bool DyndepParser::ParseEdge(struct DyndepParser *, string *)
+language: c++
+project: ninja
+target_name: fuzzer
+target_path: /src/ninja/misc/manifest_fuzzer.cc

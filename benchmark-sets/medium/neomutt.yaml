@@ -1,0 +1,13 @@
+functions:
+- name: mutt_send_list_unsubscribe
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool mutt_send_list_unsubscribe(struct Mailbox *, struct Email *)
+language: c++
+project: neomutt
+target_name: address-fuzz
+target_path: /src/neomutt/fuzz/address.c

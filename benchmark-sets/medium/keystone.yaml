@@ -1,0 +1,17 @@
+functions:
+- name: _ZN12_GLOBAL__N_19AsmParser3RunEbmb
+  params:
+  - name: this
+    type: 'bool '
+  - name: NoInitialTextSection
+    type: bool
+  - name: Address
+    type: size_t
+  - name: NoFinalize
+    type: bool
+  return_type: size_t
+  signature: size_t (anonymous namespace)::AsmParser::Run(bool, uint64_t, bool)
+language: c++
+project: keystone
+target_name: fuzz_asm_arm_armbe
+target_path: /src/keystone/suite/fuzz/fuzz_asm_arm_armbe.c

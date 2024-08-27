@@ -1,0 +1,15 @@
+functions:
+- name: mbedtls_cipher_check_tag
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: tag
+    type: 'bool '
+  - name: tag_len
+    type: size_t
+  return_type: int
+  signature: int mbedtls_cipher_check_tag(mbedtls_cipher_context_t *, const unsigned char *, size_t)
+language: c++
+project: ndpi
+target_name: fuzz_filecfg_risk_domains
+target_path: /src/ndpi/fuzz/fuzz_filecfg_risk_domains.c

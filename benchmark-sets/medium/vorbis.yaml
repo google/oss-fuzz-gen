@@ -1,0 +1,13 @@
+functions:
+- name: ov_pcm_seek_page_lap
+  params:
+  - name: vf
+    type: 'bool '
+  - name: pos
+    type: size_t
+  return_type: int
+  signature: int ov_pcm_seek_page_lap(OggVorbis_File *, ogg_int64_t)
+language: c++
+project: vorbis
+target_name: decode_fuzzer
+target_path: /src/vorbis/contrib/oss-fuzz/decode_fuzzer.cc

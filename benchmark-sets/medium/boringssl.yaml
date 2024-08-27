@@ -1,0 +1,29 @@
+functions:
+- name: _ZN4bssl12_GLOBAL__N_19CheckOCSPENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEES5_PKNS_17ParsedCertificateES5_S8_lNS1_8optionalIlEEPNS_16OCSPVerifyResult14ResponseStatusE
+  params:
+  - name: raw_response
+    type: 'bool '
+  - name: certificate_der
+    type: size_t
+  - name: certificate
+    type: 'bool '
+  - name: issuer_certificate_der
+    type: size_t
+  - name: issuer_certificate
+    type: 'bool '
+  - name: verify_time_epoch_seconds
+    type: 'bool '
+  - name: max_age_seconds
+    type: 'bool '
+  - name: response_details
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeOCSPRevocationStatus bssl::(anonymous namespace)::CheckOCSP(string_view, string_view, const ParsedCertificate *, string_view, const ParsedCertificate *, int64_t, optional<long>, DW_TAG_enumeration_typeResponseStatus *)
+language: c++
+project: boringssl
+target_name: dtls_server
+target_path: /src/boringssl/fuzz/dtls_server.cc

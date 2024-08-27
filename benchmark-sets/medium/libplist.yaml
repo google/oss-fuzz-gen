@@ -1,0 +1,15 @@
+functions:
+- name: plist_read_from_file
+  params:
+  - name: filename
+    type: 'bool '
+  - name: plist
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: plist_err_t plist_read_from_file(const char *, plist_t *, plist_format_t *)
+language: c++
+project: libplist
+target_name: bplist_fuzzer
+target_path: /src/libplist/fuzz/bplist_fuzzer.cc

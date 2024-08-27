@@ -1,0 +1,15 @@
+functions:
+- name: _ZNK11butteraugli21ButteraugliComparator4MaskEPNSt3__16vectorINS_5ImageIfEENS1_9allocatorIS4_EEEES8_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void butteraugli::ButteraugliComparator::Mask(DW_TAG_restrict_typevector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > *, DW_TAG_restrict_typevector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > *)
+language: c++
+project: guetzli
+target_name: guetzli_fuzzer
+target_path: /src/guetzli/fuzz_target.cc

@@ -1,0 +1,17 @@
+functions:
+- name: gnutls_record_recv_seq
+  params:
+  - name: session
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: data_size
+    type: size_t
+  - name: seq
+    type: 'bool '
+  return_type: size_t
+  signature: ssize_t gnutls_record_recv_seq(gnutls_session_t, void *, size_t, unsigned char *)
+language: c++
+project: gnutls
+target_name: libtasn1_gnutls_der_fuzzer
+target_path: /src/libtasn1/fuzz/libtasn1_gnutls_der_fuzzer.c

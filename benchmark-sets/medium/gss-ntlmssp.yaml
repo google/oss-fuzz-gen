@@ -1,0 +1,35 @@
+functions:
+- name: gss_init_sec_context
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: claimant_cred_handle
+    type: 'bool '
+  - name: context_handle
+    type: 'bool '
+  - name: target_name
+    type: 'bool '
+  - name: mech_type
+    type: 'bool '
+  - name: req_flags
+    type: int
+  - name: time_req
+    type: int
+  - name: input_chan_bindings
+    type: 'bool '
+  - name: input_token
+    type: 'bool '
+  - name: actual_mech_type
+    type: 'bool '
+  - name: output_token
+    type: 'bool '
+  - name: ret_flags
+    type: 'bool '
+  - name: time_rec
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 gss_init_sec_context(OM_uint32 *, gss_cred_id_t, gss_ctx_id_t *, gss_name_t, gss_OID, OM_uint32, OM_uint32, gss_channel_bindings_t, gss_buffer_t, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *)
+language: c
+project: gss-ntlmssp
+target_name: fuzz-accept-sec-context
+target_path: /src/gss-ntlmssp/fuzzing/fuzz-accept-sec-context.c

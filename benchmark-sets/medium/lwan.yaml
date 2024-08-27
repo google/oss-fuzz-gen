@@ -1,0 +1,11 @@
+functions:
+- name: lwan_init
+  params:
+  - name: l
+    type: 'bool '
+  return_type: void
+  signature: void lwan_init(struct lwan *)
+language: c++
+project: lwan
+target_name: h2_huffman_fuzzer
+target_path: /src/lwan/src/bin/fuzz/h2_huffman_fuzzer.cc

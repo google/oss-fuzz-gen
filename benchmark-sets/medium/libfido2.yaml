@@ -1,0 +1,13 @@
+functions:
+- name: pack_dummy
+  params:
+  - name: ptr
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: size_t
+  signature: size_t pack_dummy(uint8_t *, size_t)
+language: c++
+project: libfido2
+target_name: fuzz_netlink
+target_path: /src/libfido2/fuzz/libfuzzer.c

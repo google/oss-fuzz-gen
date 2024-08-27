@@ -1,0 +1,17 @@
+functions:
+- name: ptls_import
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: tls
+    type: 'bool '
+  - name: params
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: int ptls_import(ptls_context_t *, ptls_t **, ptls_iovec_t)
+language: c++
+project: picotls
+target_name: fuzz-server-hello
+target_path: /src/picotls/fuzz/fuzz-server-hello.c

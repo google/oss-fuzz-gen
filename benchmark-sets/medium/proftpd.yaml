@@ -1,0 +1,19 @@
+functions:
+- name: dir_check
+  params:
+  - name: pp
+    type: 'bool '
+  - name: cmd
+    type: 'bool '
+  - name: group
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  - name: hidden
+    type: 'bool '
+  return_type: int
+  signature: int dir_check(pool *, cmd_rec *, const char *, const char *, int *)
+language: c
+project: proftpd
+target_name: fuzzer
+target_path: /src/proftpd/tests/fuzzing/json_fuzzer.c

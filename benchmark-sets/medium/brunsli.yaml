@@ -1,0 +1,11 @@
+functions:
+- name: _ZN7brunsli14ComponentStateC2Ev
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void brunsli::ComponentState::ComponentState(struct ComponentState *)
+language: c++
+project: brunsli
+target_name: fuzz_decode
+target_path: /src/brunsli/c/tests/fuzz_decode.cc

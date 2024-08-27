@@ -1,0 +1,15 @@
+functions:
+- name: _ZN6LibRaw17crxLoadDecodeLoopEPvi
+  params:
+  - name: this
+    type: 'bool '
+  - name: img
+    type: 'bool '
+  - name: nPlanes
+    type: int
+  return_type: void
+  signature: void LibRaw::crxLoadDecodeLoop(void *, int)
+language: c++
+project: libraw
+target_name: libraw_cr2_fuzzer
+target_path: /src/libraw_fuzzer.cc

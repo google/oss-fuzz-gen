@@ -1,0 +1,15 @@
+functions:
+- name: _ZN4wabt10WastParser16ParseCommandListEPNS_6ScriptEPNSt3__16vectorINS3_10unique_ptrINS_7CommandENS3_14default_deleteIS6_EEEENS3_9allocatorIS9_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: script
+    type: 'bool '
+  - name: commands
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseCommandList(struct Script *, CommandPtrVector *)
+language: c++
+project: wabt
+target_name: wasm2wat-fuzz
+target_path: /src/wabt/src/tools/wasm2wat-fuzz.cc

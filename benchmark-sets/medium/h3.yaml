@@ -1,0 +1,13 @@
+functions:
+- name: iterInitBaseCellNum
+  params:
+  - name: baseCellNum
+    type: int
+  - name: childRes
+    type: int
+  return_type: void
+  signature: IterCellsChildren iterInitBaseCellNum(int, int)
+language: c
+project: h3
+target_name: fuzzerCellProperties
+target_path: /src/h3/src/apps/fuzzers/fuzzerCellProperties.c

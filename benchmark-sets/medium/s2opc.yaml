@@ -1,0 +1,19 @@
+functions:
+- name: SOPC_SecureChannels_OnInternalEvent
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void SOPC_SecureChannels_OnInternalEvent(SOPC_EventHandler *, int32_t, uint32_t, uintptr_t, uintptr_t)
+language: c++
+project: s2opc
+target_name: sub_fuzzer
+target_path: /src/S2OPC/tests/PubSub/fuzzing/fuzz_sub.c

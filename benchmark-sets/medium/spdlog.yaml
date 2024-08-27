@@ -1,0 +1,13 @@
+functions:
+- name: _ZN6spdlog5sinks9base_sinkINSt3__15mutexEE12set_pattern_ERKNS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: pattern
+    type: 'bool '
+  return_type: void
+  signature: void spdlog::sinks::base_sink<std::__1::mutex>::set_pattern_(base_sink<std::__1::mutex> *, const string &)
+language: c++
+project: spdlog
+target_name: backtrace_fuzzer
+target_path: /src/backtrace_fuzzer.cc

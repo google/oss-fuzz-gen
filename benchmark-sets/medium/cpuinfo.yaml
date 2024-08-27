@@ -1,0 +1,11 @@
+functions:
+- name: cpuinfo_linux_get_processor_max_frequency
+  params:
+  - name: processor
+    type: int
+  return_type: int
+  signature: uint32_t cpuinfo_linux_get_processor_max_frequency(uint32_t)
+language: c
+project: cpuinfo
+target_name: fuzz_cpuinfo
+target_path: /src/fuzz_cpuinfo.c

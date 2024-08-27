@@ -1,0 +1,13 @@
+functions:
+- name: _ZN4brpc6policy15DiscoveryClient8RegisterERKNS0_22DiscoveryRegisterParamE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int brpc::policy::DiscoveryClient::Register(const struct DiscoveryRegisterParam &)
+language: c++
+project: brpc
+target_name: fuzz_uri
+target_path: /src/brpc/test/fuzzing/fuzz_uri.cpp

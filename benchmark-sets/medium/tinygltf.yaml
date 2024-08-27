@@ -1,0 +1,21 @@
+functions:
+- name: _ZN8tinygltf8TinyGLTF18LoadBinaryFromFileEPNS_5ModelEPNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESA_RKS9_j
+  params:
+  - name: this
+    type: 'bool '
+  - name: model
+    type: 'bool '
+  - name: err
+    type: 'bool '
+  - name: warn
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  - name: check_sections
+    type: int
+  return_type: bool
+  signature: bool tinygltf::TinyGLTF::LoadBinaryFromFile(Model *, string *, string *, const string &, unsigned int)
+language: c++
+project: tinygltf
+target_name: fuzz_gltf
+target_path: /src/tinygltf/tests/fuzzer/fuzz_gltf.cc

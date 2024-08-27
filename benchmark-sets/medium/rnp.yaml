@@ -1,0 +1,15 @@
+functions:
+- name: _ZN9pgp_key_t9unprotectERK23pgp_password_provider_tRN3rnp15SecurityContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool pgp_key_t::unprotect(struct pgp_key_t *, const pgp_password_provider_t &, SecurityContext &)
+language: c++
+project: rnp
+target_name: fuzz_dump
+target_path: /src/rnp/src/fuzzing/dump.c

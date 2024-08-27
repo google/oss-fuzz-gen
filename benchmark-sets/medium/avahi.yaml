@@ -1,0 +1,15 @@
+functions:
+- name: avahi_string_list_add_pair
+  params:
+  - name: l
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  return_type: void
+  signature: AvahiStringList * avahi_string_list_add_pair(AvahiStringList *, const char *, const char *)
+language: c++
+project: avahi
+target_name: fuzz-packet
+target_path: /src/avahi/fuzz/fuzz-packet.c

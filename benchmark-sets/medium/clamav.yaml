@@ -1,0 +1,25 @@
+functions:
+- name: Lzma2Decode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: char
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: SRes Lzma2Decode(Byte *, SizeT *, const Byte *, SizeT *, Byte, ELzmaFinishMode, ELzmaStatus *, ISzAlloc *)
+language: c++
+project: clamav
+target_name: clamav_scanfile_HWP3_fuzzer
+target_path: /src/clamav/fuzz/clamav_scanfile_fuzzer.cpp

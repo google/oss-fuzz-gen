@@ -1,0 +1,15 @@
+functions:
+- name: ogs_gtp2_send_echo_response
+  params:
+  - name: xact
+    type: 'bool '
+  - name: recovery
+    type: char
+  - name: features
+    type: char
+  return_type: void
+  signature: void ogs_gtp2_send_echo_response(ogs_gtp_xact_t *, uint8_t, uint8_t)
+language: c
+project: open5gs
+target_name: nas_message_fuzz
+target_path: /src/open5gs/tests/fuzzing/nas-message-fuzz.c

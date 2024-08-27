@@ -1,0 +1,19 @@
+functions:
+- name: access_mem
+  params:
+  - name: as
+    type: 'bool '
+  - name: addr
+    type: size_t
+  - name: val
+    type: 'bool '
+  - name: write
+    type: int
+  - name: arg
+    type: 'bool '
+  return_type: int
+  signature: int access_mem(unw_addr_space_t, unw_word_t, unw_word_t *, int, void *)
+language: c
+project: libunwind
+target_name: fuzz_libunwind
+target_path: /src/fuzz_libunwind.c

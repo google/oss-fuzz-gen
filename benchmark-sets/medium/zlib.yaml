@@ -1,0 +1,13 @@
+functions:
+- name: gzprintf
+  params:
+  - name: file
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: int gzprintf(gzFile, const char *, void)
+language: c++
+project: zlib
+target_name: zlib_uncompress2_fuzzer
+target_path: /src/zlib_uncompress2_fuzzer.cc

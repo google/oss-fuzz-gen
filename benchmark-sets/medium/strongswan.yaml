@@ -1,0 +1,13 @@
+functions:
+- name: sshkey_certificate_load
+  params:
+  - name: type
+    type: int
+  - name: args
+    type: 'bool '
+  return_type: void
+  signature: certificate_t * sshkey_certificate_load(certificate_type_t, struct __va_list_tag *)
+language: c++
+project: strongswan
+target_name: fuzz_ids
+target_path: /src/strongswan/fuzz/fuzz_ids.c

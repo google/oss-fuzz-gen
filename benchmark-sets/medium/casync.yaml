@@ -1,0 +1,19 @@
+functions:
+- name: compressor_encode
+  params:
+  - name: c
+    type: 'bool '
+  - name: finalize
+    type: bool
+  - name: p
+    type: 'bool '
+  - name: sz
+    type: size_t
+  - name: ret_done
+    type: 'bool '
+  return_type: int
+  signature: int compressor_encode(CompressorContext *, bool, void *, size_t, size_t *)
+language: c++
+project: casync
+target_name: fuzz-compress
+target_path: /src/casync/test/fuzz/fuzz-compress.c

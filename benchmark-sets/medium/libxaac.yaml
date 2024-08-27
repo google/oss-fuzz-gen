@@ -1,0 +1,11 @@
+functions:
+- name: ixheaacd_mps_apply_mix_matrix
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: VOID ixheaacd_mps_apply_mix_matrix(ia_mps_dec_state_struct *)
+language: c++
+project: libxaac
+target_name: xaac_dec_fuzzer
+target_path: /src/libxaac/fuzzer/xaac_dec_fuzzer.cpp

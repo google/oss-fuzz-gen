@@ -1,0 +1,13 @@
+functions:
+- name: impeg2_buf_mgr_get_status
+  params:
+  - name: ps_buf_mgr
+    type: 'bool '
+  - name: i4_buf_id
+    type: int
+  return_type: int
+  signature: UWORD32 impeg2_buf_mgr_get_status(buf_mgr_t *, WORD32)
+language: c++
+project: libmpeg2
+target_name: mpeg2_dec_fuzzer
+target_path: /src/libmpeg2/fuzzer/mpeg2_dec_fuzzer.cpp

@@ -1,0 +1,13 @@
+functions:
+- name: GEOSMakeValid_r
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Geometry * GEOSMakeValid_r(GEOSContextHandle_t, const Geometry *)
+language: c++
+project: geos
+target_name: fuzz_geo2
+target_path: /src/geos/tests/fuzz/fuzz_geo2.c

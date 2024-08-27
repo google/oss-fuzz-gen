@@ -1,0 +1,13 @@
+functions:
+- name: xmlXIncludeProcessTreeFlags
+  params:
+  - name: tree
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: int
+  signature: int xmlXIncludeProcessTreeFlags(xmlNodePtr, int)
+language: c++
+project: libxml2
+target_name: regexp
+target_path: /src/libxml2/fuzz/regexp.c

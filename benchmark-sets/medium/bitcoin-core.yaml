@@ -1,0 +1,17 @@
+functions:
+- name: _ZN6wallet12_GLOBAL__N_116WalletLoaderImpl13migrateWalletERKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKNS3_IcS5_16secure_allocatorIcEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: passphrase
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Result<interfaces::WalletMigrationResult> wallet::(anonymous namespace)::WalletLoaderImpl::migrateWallet(const string &, const SecureString &)
+language: c++
+project: bitcoin-core
+target_name: p2p_transport_bidirectional_v2
+target_path: /src/bitcoin-core/src/test/fuzz/fuzz.cpp

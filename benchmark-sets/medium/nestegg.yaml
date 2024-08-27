@@ -1,0 +1,13 @@
+functions:
+- name: nestegg_sniff
+  params:
+  - name: buffer
+    type: 'bool '
+  - name: length
+    type: size_t
+  return_type: int
+  signature: int nestegg_sniff(const unsigned char *, size_t)
+language: c++
+project: nestegg
+target_name: fuzz
+target_path: /src/nestegg/test/fuzz.cc

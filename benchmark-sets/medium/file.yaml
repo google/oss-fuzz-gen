@@ -1,0 +1,11 @@
+functions:
+- name: cdf_tole4
+  params:
+  - name: sv
+    type: int
+  return_type: int
+  signature: uint32_t cdf_tole4(uint32_t)
+language: c++
+project: file
+target_name: magic_fuzzer
+target_path: /src/magic_fuzzer.cc

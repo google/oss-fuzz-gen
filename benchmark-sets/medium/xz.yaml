@@ -1,0 +1,13 @@
+functions:
+- name: lzma_raw_decoder
+  params:
+  - name: strm
+    type: 'bool '
+  - name: options
+    type: 'bool '
+  return_type: int
+  signature: lzma_ret lzma_raw_decoder(lzma_stream *, const lzma_filter *)
+language: c++
+project: xz
+target_name: fuzz_decode_alone
+target_path: /src/xz/tests/ossfuzz/fuzz_decode_alone.c

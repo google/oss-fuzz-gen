@@ -1,0 +1,11 @@
+functions:
+- name: cJSON_Parse
+  params:
+  - name: value
+    type: 'bool '
+  return_type: void
+  signature: cJSON * cJSON_Parse(const char *)
+language: c++
+project: cjson
+target_name: cjson_read_fuzzer
+target_path: /src/cjson/fuzzing/cjson_read_fuzzer.c

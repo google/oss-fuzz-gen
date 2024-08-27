@@ -1,0 +1,13 @@
+functions:
+- name: hoedown_buffer_put_utf8
+  params:
+  - name: buf
+    type: 'bool '
+  - name: c
+    type: int
+  return_type: void
+  signature: void hoedown_buffer_put_utf8(hoedown_buffer *, unsigned int)
+language: c++
+project: hoextdown
+target_name: hoedown_fuzzer
+target_path: /src/hoextdown/test/hoedown_fuzzer.c

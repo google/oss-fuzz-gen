@@ -1,0 +1,13 @@
+functions:
+- name: ge25519_from_hash
+  params:
+  - name: s
+    type: 'bool '
+  - name: h
+    type: 'bool '
+  return_type: void
+  signature: void ge25519_from_hash(unsigned char *, const unsigned char *)
+language: c++
+project: libsodium
+target_name: secret_key_auth_fuzzer
+target_path: /src/secret_key_auth_fuzzer.cc

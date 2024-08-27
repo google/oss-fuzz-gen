@@ -1,0 +1,17 @@
+functions:
+- name: sam_index_build3
+  params:
+  - name: fn
+    type: 'bool '
+  - name: fnidx
+    type: 'bool '
+  - name: min_shift
+    type: int
+  - name: nthreads
+    type: int
+  return_type: int
+  signature: int sam_index_build3(const char *, const char *, int, int)
+language: c++
+project: htslib
+target_name: hts_open_fuzzer
+target_path: /src/htslib/test/fuzz/hts_open_fuzzer.c

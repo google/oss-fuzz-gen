@@ -1,0 +1,17 @@
+functions:
+- name: janet_dostring
+  params:
+  - name: env
+    type: 'bool '
+  - name: str
+    type: 'bool '
+  - name: sourcePath
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: int janet_dostring(JanetTable *, const char *, const char *, Janet *)
+language: c++
+project: janet
+target_name: fuzz_dostring
+target_path: /src/janet/test/fuzzers/fuzz_dostring.c

@@ -1,0 +1,15 @@
+functions:
+- name: _Z20symbolic_to_physicalRK21block_size_descriptorRK25symbolic_compressed_blockPh
+  params:
+  - name: bsd
+    type: 'bool '
+  - name: scb
+    type: 'bool '
+  - name: pcb
+    type: 'bool '
+  return_type: void
+  signature: void symbolic_to_physical(const struct block_size_descriptor &, const struct symbolic_compressed_block &, uint8_t *)
+language: c++
+project: astc-encoder
+target_name: fuzz_astc_physical_to_symbolic
+target_path: /src/astc-encoder/Source/Fuzzers/fuzz_astc_physical_to_symbolic.cpp

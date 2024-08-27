@@ -1,0 +1,27 @@
+functions:
+- name: H5D__chunk_copy
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5D__chunk_copy(H5F_t *, H5O_storage_chunk_t *, H5O_layout_chunk_t *, H5F_t *, H5O_storage_chunk_t *, const H5S_extent_t *, H5T_t *, const H5O_pline_t *, H5O_copy_t *)
+language: c
+project: hdf5
+target_name: h5_read_fuzzer
+target_path: /src/h5_read_fuzzer.c

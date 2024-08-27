@@ -1,0 +1,11 @@
+functions:
+- name: nxt_runtime_create
+  params:
+  - name: task
+    type: 'bool '
+  return_type: int
+  signature: nxt_int_t nxt_runtime_create(nxt_task_t *)
+language: c
+project: unit
+target_name: fuzz_http_h1p_peer
+target_path: /src/unit/fuzzing/nxt_http_h1p_peer_fuzz.c

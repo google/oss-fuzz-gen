@@ -1,0 +1,13 @@
+functions:
+- name: XML_ParserReset
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: char
+  signature: XML_Bool XML_ParserReset(XML_Parser, const XML_Char *)
+language: c
+project: cmake
+target_name: xml_parser_fuzzer
+target_path: /src/CMake/Tests/Fuzzing/xml_parser_fuzzer.cc

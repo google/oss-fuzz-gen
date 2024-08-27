@@ -1,0 +1,17 @@
+functions:
+- name: _Z14SafeUint32MultjjjPj
+  params:
+  - name: arg1
+    type: int
+  - name: arg2
+    type: int
+  - name: arg3
+    type: int
+  - name: result
+    type: 'bool '
+  return_type: bool
+  signature: bool SafeUint32Mult(uint32_t, uint32_t, uint32_t, uint32_t *)
+language: c++
+project: dng_sdk
+target_name: dng_parser_fuzzer
+target_path: /src/dng_sdk/fuzzer/dng_parser_fuzzer.cpp

@@ -1,0 +1,15 @@
+functions:
+- name: ih264_dpb_mgr_count_ref_frames
+  params:
+  - name: ps_dpb_mgr
+    type: 'bool '
+  - name: curr_frame_num
+    type: int
+  - name: max_frame_num
+    type: int
+  return_type: int
+  signature: WORD32 ih264_dpb_mgr_count_ref_frames(dpb_mgr_t *, WORD32, WORD32)
+language: c++
+project: libavc
+target_name: svc_enc_fuzzer
+target_path: /src/libavc/fuzzer/svc_enc_fuzzer.cpp

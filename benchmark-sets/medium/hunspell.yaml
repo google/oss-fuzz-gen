@@ -1,0 +1,15 @@
+functions:
+- name: _ZN8Hunspell7suggestEPPPcPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: slst
+    type: 'bool '
+  - name: word
+    type: 'bool '
+  return_type: int
+  signature: int Hunspell::suggest(char ***, const char *)
+language: c++
+project: hunspell
+target_name: fuzzer
+target_path: /src/hunspell/src/tools/fuzzer.cxx

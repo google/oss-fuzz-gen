@@ -1,0 +1,11 @@
+functions:
+- name: _ZN4crow10ConnectionINS_13SocketAdaptorENS_4CrowIJEEEJEE6handleEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void crow::Connection<crow::SocketAdaptor, crow::Crow<>>::handle(Connection<crow::SocketAdaptor, crow::Crow<> > *)
+language: c++
+project: crow
+target_name: b64_fuzzer
+target_path: /src/crow/tests/fuzz/b64_fuzzer.cpp

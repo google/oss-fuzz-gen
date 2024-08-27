@@ -1,0 +1,13 @@
+functions:
+- name: SlabAlloc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void * SlabAlloc(MemoryContext, Size)
+language: c
+project: libpg_query
+target_name: fuzz_parser
+target_path: /src/libpg_query/test/fuzz/fuzz_parser.c

@@ -1,0 +1,15 @@
+functions:
+- name: WS_ReqPipeline
+  params:
+  - name: ws
+    type: 'bool '
+  - name: b
+    type: 'bool '
+  - name: e
+    type: 'bool '
+  return_type: int
+  signature: unsigned int WS_ReqPipeline(struct ws *, const void *, const void *)
+language: c
+project: varnish
+target_name: esi_parse_fuzzer
+target_path: /src/varnish-cache/bin/varnishd/fuzzers/esi_parse_fuzzer.c

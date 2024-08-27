@@ -1,0 +1,13 @@
+functions:
+- name: tidySaveFile
+  params:
+  - name: tdoc
+    type: 'bool '
+  - name: filnam
+    type: 'bool '
+  return_type: int
+  signature: int tidySaveFile(TidyDoc, ctmbstr)
+language: c++
+project: tidy-html5
+target_name: tidy_fuzzer
+target_path: /src/tidy_fuzzer.c

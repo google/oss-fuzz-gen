@@ -1,0 +1,17 @@
+functions:
+- name: ixmlDocument_importNode
+  params:
+  - name: doc
+    type: 'bool '
+  - name: importNode
+    type: 'bool '
+  - name: deep
+    type: int
+  - name: rtNode
+    type: 'bool '
+  return_type: int
+  signature: int ixmlDocument_importNode(IXML_Document *, IXML_Node *, int, IXML_Node **)
+language: c
+project: pupnp
+target_name: FuzzIxml
+target_path: /src/pupnp/fuzzer/FuzzIxml.c

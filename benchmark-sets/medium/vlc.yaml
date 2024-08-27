@@ -1,0 +1,11 @@
+functions:
+- name: Preparse
+  params:
+  - name: data
+    type: 'bool '
+  return_type: void
+  signature: void * Preparse(void *)
+language: c
+project: vlc
+target_name: vlc-demux-libfuzzer
+target_path: /src/vlc/test/vlc-demux-libfuzzer.c

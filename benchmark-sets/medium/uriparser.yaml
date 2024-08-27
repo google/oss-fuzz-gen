@@ -1,0 +1,17 @@
+functions:
+- name: uriEmulateReallocarray
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void * uriEmulateReallocarray(UriMemoryManager *, void *, size_t, size_t)
+language: c++
+project: uriparser
+target_name: uri_parse_fuzzer
+target_path: /src/uri_parse_fuzzer.cc

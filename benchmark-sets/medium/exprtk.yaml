@@ -1,0 +1,15 @@
+functions:
+- name: _ZN6exprtk6parserIfE20expression_generatorIfEclERKNS_7details13operator_typeERA4_PNS4_15expression_nodeIfEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: expression_node_ptr exprtk::parser<float>::expression_generator<float>::operator()(expression_generator<double> *, const DW_TAG_enumeration_typeoperator_type &, DW_TAG_array_typeexpression_node_ptr &)
+language: c++
+project: exprtk
+target_name: exprtk_fuzzer
+target_path: /src/exprtk_fuzzer.cpp

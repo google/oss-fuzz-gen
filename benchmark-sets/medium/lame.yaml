@@ -1,0 +1,13 @@
+functions:
+- name: id3tag_set_fieldvalue_ucs2
+  params:
+  - name: gfp
+    type: 'bool '
+  - name: fieldvalue
+    type: 'bool '
+  return_type: int
+  signature: int id3tag_set_fieldvalue_ucs2(lame_t, const unsigned short *)
+language: c++
+project: lame
+target_name: fuzzer-encoder
+target_path: /src/LAME-fuzzers/fuzzer-encoder.cpp

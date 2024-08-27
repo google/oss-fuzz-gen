@@ -1,0 +1,15 @@
+functions:
+- name: nb_encode
+  params:
+  - name: state
+    type: 'bool '
+  - name: vin
+    type: 'bool '
+  - name: bits
+    type: 'bool '
+  return_type: int
+  signature: int nb_encode(void *, void *, SpeexBits *)
+language: c++
+project: speex
+target_name: speex_decode_fuzzer_fixed
+target_path: /src/speex/contrib/oss-fuzz/speexdec_fuzzer.cc

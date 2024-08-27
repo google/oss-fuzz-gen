@@ -1,0 +1,15 @@
+functions:
+- name: add_pic_to_stack
+  params:
+  - name: ps_pic_handling
+    type: 'bool '
+  - name: i4_enc_pic_id
+    type: int
+  - name: i4_rc_in_pic
+    type: int
+  return_type: void
+  signature: void add_pic_to_stack(pic_handling_t *, WORD32, WORD32)
+language: c++
+project: libhevc
+target_name: hevc_enc_fuzzer
+target_path: /src/libhevc/fuzzer/hevc_enc_fuzzer.cpp

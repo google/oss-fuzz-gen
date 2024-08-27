@@ -1,0 +1,29 @@
+functions:
+- name: XmlParseXmlDeclNS
+  params:
+  - name: isGeneralTextEntity
+    type: int
+  - name: enc
+    type: 'bool '
+  - name: ptr
+    type: 'bool '
+  - name: end
+    type: 'bool '
+  - name: badPtr
+    type: 'bool '
+  - name: versionPtr
+    type: 'bool '
+  - name: versionEndPtr
+    type: 'bool '
+  - name: encodingName
+    type: 'bool '
+  - name: encoding
+    type: 'bool '
+  - name: standalone
+    type: 'bool '
+  return_type: int
+  signature: int XmlParseXmlDecl(int, const ENCODING *, const char *, const char *, const char **, const char **, const char **, const char **, const ENCODING **, int *)
+language: c++
+project: expat
+target_name: xml_parsebuffer_fuzzer_US-ASCII
+target_path: /src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c

@@ -1,0 +1,13 @@
+functions:
+- name: _ZN18S2BooleanOperation4Impl5BuildEP7S2Error
+  params:
+  - name: this
+    type: 'bool '
+  - name: error
+    type: 'bool '
+  return_type: bool
+  signature: bool S2BooleanOperation::Impl::Build(S2Error *)
+language: c++
+project: s2geometry
+target_name: s2_fuzzer
+target_path: /src/s2geometry/src/s2_fuzzer.cc

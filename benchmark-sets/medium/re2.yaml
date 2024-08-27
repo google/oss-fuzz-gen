@@ -1,0 +1,15 @@
+functions:
+- name: _ZNK3re211FilteredRE214SlowFirstMatchENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: int re2::FilteredRE2::SlowFirstMatch(string_view)
+language: c++
+project: re2
+target_name: re2_fuzzer
+target_path: /src/re2/re2/fuzzing/re2_fuzzer.cc

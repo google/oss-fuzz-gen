@@ -1,0 +1,13 @@
+functions:
+- name: _ZN7acommon17MDInfoListofLists5clearEPNS_6ConfigE
+  params:
+  - name: this
+    type: 'bool '
+  - name: c
+    type: 'bool '
+  return_type: void
+  signature: void acommon::MDInfoListofLists::clear(Config *)
+language: c++
+project: aspell
+target_name: aspell_fuzzer
+target_path: /src/aspell-fuzz/aspell_fuzzer.cpp

@@ -1,0 +1,21 @@
+functions:
+- name: coap_new_client_session_oscore_psk
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: local_if
+    type: 'bool '
+  - name: server
+    type: 'bool '
+  - name: proto
+    type: int
+  - name: psk_data
+    type: 'bool '
+  - name: oscore_conf
+    type: 'bool '
+  return_type: void
+  signature: coap_session_t * coap_new_client_session_oscore_psk(coap_context_t *, const coap_address_t *, const coap_address_t *, coap_proto_t, coap_dtls_cpsk_t *, coap_oscore_conf_t *)
+language: c++
+project: libcoap
+target_name: pdu_parse_udp_fuzzer
+target_path: /src/libcoap/tests/oss-fuzz/pdu_parse_udp_target.c

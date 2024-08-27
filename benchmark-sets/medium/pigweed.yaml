@@ -1,0 +1,11 @@
+functions:
+- name: _ZN2pw17InlineBasicStringIcLm65535EE4dataEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: pointer pw::InlineBasicString<char, 65535ul>::data(InlineBasicString<char, 65535UL> *)
+language: c++
+project: pigweed
+target_name: get_int_bounded_fuzzer
+target_path: /src/pigweed/pw_random/get_int_bounded_fuzzer.cc

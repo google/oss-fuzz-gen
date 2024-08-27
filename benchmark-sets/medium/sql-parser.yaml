@@ -1,0 +1,13 @@
+functions:
+- name: _ZN4hsqllsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_10ColumnTypeE
+  params:
+  - name: stream
+    type: 'bool '
+  - name: column_type
+    type: 'bool '
+  return_type: void
+  signature: ostream & hsql::operator<<(ostream &, const struct ColumnType &)
+language: c++
+project: sql-parser
+target_name: fuzz_sql_parse
+target_path: /src/sql-parser/fuzz_sql_parse.cpp

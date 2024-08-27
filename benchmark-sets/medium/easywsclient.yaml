@@ -1,0 +1,13 @@
+functions:
+- name: _ZN12_GLOBAL__N_114_RealWebSocket9_dispatchERN12easywsclient12Callback_ImpE
+  params:
+  - name: this
+    type: 'bool '
+  - name: callable
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::_RealWebSocket::_dispatch(struct Callback_Imp &)
+language: c++
+project: easywsclient
+target_name: easyws_fuzzer
+target_path: /src/easyws_fuzzer.cpp

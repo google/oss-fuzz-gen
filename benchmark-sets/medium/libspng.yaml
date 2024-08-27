@@ -1,0 +1,17 @@
+functions:
+- name: LLVMFuzzerCustomMutator
+  params:
+  - name: Data
+    type: 'bool '
+  - name: Size
+    type: size_t
+  - name: MaxSize
+    type: size_t
+  - name: Seed
+    type: int
+  return_type: size_t
+  signature: size_t LLVMFuzzerCustomMutator(uint8_t *, size_t, size_t, unsigned int)
+language: c++
+project: libspng
+target_name: spng_read_fuzzer
+target_path: /src/libspng/tests/spng_read_fuzzer.c

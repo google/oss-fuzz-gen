@@ -1,0 +1,25 @@
+functions:
+- name: _ZN6icu_597CaseMap7toUpperEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode
+  params:
+  - name: locale
+    type: 'bool '
+  - name: options
+    type: int
+  - name: src
+    type: 'bool '
+  - name: srcLength
+    type: int
+  - name: dest
+    type: 'bool '
+  - name: destCapacity
+    type: int
+  - name: edits
+    type: 'bool '
+  - name: errorCode
+    type: 'bool '
+  return_type: int
+  signature: int32_t icu_59::CaseMap::toUpper(const char *, uint32_t, const UChar *, int32_t, UChar *, int32_t, Edits *, UErrorCode &)
+language: c++
+project: libpsl
+target_name: libpsl_load_dafsa_fuzzer
+target_path: /src/libpsl/fuzz/libpsl_load_dafsa_fuzzer.c

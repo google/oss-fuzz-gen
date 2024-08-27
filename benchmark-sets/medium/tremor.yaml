@@ -1,0 +1,13 @@
+functions:
+- name: ov_pcm_seek
+  params:
+  - name: vf
+    type: 'bool '
+  - name: pos
+    type: size_t
+  return_type: int
+  signature: int ov_pcm_seek(OggVorbis_File *, ogg_int64_t)
+language: c++
+project: tremor
+target_name: decode_fuzzer
+target_path: /src/tremor/decode_fuzzer.cc

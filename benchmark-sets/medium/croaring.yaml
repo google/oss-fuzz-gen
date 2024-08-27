@@ -1,0 +1,13 @@
+functions:
+- name: roaring_bitmap_or_many
+  params:
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: roaring_bitmap_t * roaring_bitmap_or_many(size_t, const roaring_bitmap_t **)
+language: c
+project: croaring
+target_name: croaring_fuzzer
+target_path: /src/croaring_fuzzer.c

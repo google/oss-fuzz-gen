@@ -1,0 +1,15 @@
+functions:
+- name: Mat_VarWrite
+  params:
+  - name: mat
+    type: 'bool '
+  - name: matvar
+    type: 'bool '
+  - name: compress
+    type: int
+  return_type: int
+  signature: int Mat_VarWrite(mat_t *, matvar_t *, DW_TAG_enumeration_typematio_compression)
+language: c++
+project: matio
+target_name: matio_fuzzer
+target_path: /src/matio/ossfuzz/matio_fuzzer.cpp

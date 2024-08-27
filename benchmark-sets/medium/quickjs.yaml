@@ -1,0 +1,21 @@
+functions:
+- name: JS_NewArrayBuffer
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: JSValue JS_NewArrayBuffer(JSContext *, uint8_t *, size_t, JSFreeArrayBufferDataFunc *, void *, BOOL)
+language: c
+project: quickjs
+target_name: fuzz_regexp
+target_path: /src/quickjs/fuzz/fuzz_regexp.c

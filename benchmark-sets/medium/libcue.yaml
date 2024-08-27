@@ -1,0 +1,11 @@
+functions:
+- name: track_get_isrc
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: const char * track_get_isrc(const Track *)
+language: c
+project: libcue
+target_name: fuzz
+target_path: /src/libcue/oss-fuzz/fuzz.cpp
