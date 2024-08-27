@@ -1197,9 +1197,9 @@ class TestToHarnessConverter(PromptBuilder):
     # Format the priming
     target_repository = oss_fuzz_checkout.get_project_repository(
         self.benchmark.project)
-    test_source_code = introspector.query_introspector_source_code(
+    test_source_code = introspector.query_introspector_test_source(
         self.benchmark.project,
-        self.benchmark.test_file_path.replace('//', '/'), 0, 9999999)
+        self.benchmark.test_file_path.replace('//', '/'))
 
     included_header_files = self.extract_header_files(test_source_code)
 
