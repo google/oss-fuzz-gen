@@ -66,6 +66,7 @@ INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
 INTROSPECTOR_ALL_HEADER_FILES = ''
 INTROSPECTOR_ALL_FUNC_TYPES = ''
+INTROSPECTOR_TEST_SOURCE = ''
 
 INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
@@ -330,10 +331,9 @@ def query_introspector_source_code(project: str, filepath: str, begin_line: int,
 
 def query_introspector_test_source(project: str, filepath: str) -> str:
   """Queries the source code of a test file from."""
-  resp = _query_introspector(
-          INTROSPECTOR_TEST_SOURCE, {
-          'project': project,
-          'filepath': filepath
+  resp = _query_introspector(INTROSPECTOR_TEST_SOURCE, {
+      'project': project,
+      'filepath': filepath
   })
   return _get_data(resp, 'source_code', '')
 
