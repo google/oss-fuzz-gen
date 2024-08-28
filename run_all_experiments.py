@@ -313,7 +313,6 @@ def _print_and_dump_experiment_result(result: Result):
   add_to_json_report(WORK_DIR, 'project_summary', coverage_gain_dict)
 
 
-
 def _print_experiment_results(results: list[Result],
                               cov_gain: dict[str, dict[str, Any]]):
   """Prints the |results| of multiple experiments."""
@@ -440,9 +439,9 @@ def main():
     experiment_tasks = []
     with Pool(NUM_EXP) as p:
       for target_benchmark in experiment_targets:
-        experiment_task = p.apply_async(run_experiments,
-                                        (target_benchmark, args),
-                                        callback=_print_and_dump_experiment_result)
+        experiment_task = p.apply_async(
+            run_experiments, (target_benchmark, args),
+            callback=_print_and_dump_experiment_result)
         experiment_tasks.append(experiment_task)
         time.sleep(args.delay)
       # Signal that no more work will be submitte to the pool.
