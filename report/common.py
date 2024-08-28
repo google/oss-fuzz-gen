@@ -72,7 +72,7 @@ class Benchmark:
 class Project:
   """Results for a project entire."""
   name: str
-  count: int = 1
+  count: int = 0
   coverage_gain: float = 0.0
 
 
