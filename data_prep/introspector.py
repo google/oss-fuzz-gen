@@ -66,6 +66,7 @@ INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
 INTROSPECTOR_ALL_HEADER_FILES = ''
 INTROSPECTOR_ALL_FUNC_TYPES = ''
+INTROSPECTOR_TEST_SOURCE = ''
 
 INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
@@ -100,7 +101,8 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ALL_JVM_SOURCE_PATH, INTROSPECTOR_ORACLE_OPTIMAL, \
       INTROSPECTOR_HEADERS_FOR_FUNC, \
       INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE, \
-      INTROSPECTOR_ORACLE_ALL_TESTS, INTROSPECTOR_JVM_PROPERTIES
+      INTROSPECTOR_ORACLE_ALL_TESTS, INTROSPECTOR_JVM_PROPERTIES, \
+      INTROSPECTOR_TEST_SOURCE
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -116,6 +118,7 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_ORACLE_OPTIMAL = f'{INTROSPECTOR_ENDPOINT}/optimal-targets'
   INTROSPECTOR_FUNCTION_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
   INTROSPECTOR_PROJECT_SOURCE = f'{INTROSPECTOR_ENDPOINT}/project-source-code'
+  INTROSPECTOR_TEST_SOURCE = f'{INTROSPECTOR_ENDPOINT}/project-test-code'
   INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
   INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
   INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
@@ -323,6 +326,15 @@ def query_introspector_source_code(project: str, filepath: str, begin_line: int,
           'end_line': end_line,
       })
 
+  return _get_data(resp, 'source_code', '')
+
+
+def query_introspector_test_source(project: str, filepath: str) -> str:
+  """Queries the source code of a test file from."""
+  resp = _query_introspector(INTROSPECTOR_TEST_SOURCE, {
+      'project': project,
+      'filepath': filepath
+  })
   return _get_data(resp, 'source_code', '')
 
 
