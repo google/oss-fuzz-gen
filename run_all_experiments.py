@@ -53,9 +53,13 @@ GENERATED_BENCHMARK: str = 'generated-benchmark-'
 JSON_REPORT = 'report.json'
 TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
+WORK_DIR = ''
+
 LOG_LEVELS = {'debug', 'info'}
 LOG_FMT = ('%(asctime)s.%(msecs)03d %(levelname)s '
            '%(module)s - %(funcName)s: %(message)s')
+
+EXPERIMENT_RESULTS = []
 
 
 class Result:
@@ -294,11 +298,19 @@ def parse_args() -> argparse.Namespace:
   return args
 
 
-def _print_experiment_result(result: Result):
+def _print_and_dump_experiment_result(result: Result):
   """Prints the |result| of a single experiment."""
   logger.info('\n**** Finished benchmark %s, %s ****\n%s',
               result.benchmark.project, result.benchmark.function_signature,
               result.result)
+
+  EXPERIMENT_RESULTS.append(result)
+
+  # Process total gain from all generated harnesses for each projects and
+  # update summary report. This makes it possible to view per-project stats
+  # as experiments complete rather than only after all experiments run.
+  coverage_gain_dict = _process_total_coverage_gain(EXPERIMENT_RESULTS)
+  add_to_json_report(WORK_DIR, 'project_summary', coverage_gain_dict)
 
 
 def _print_experiment_results(results: list[Result],
@@ -391,6 +403,8 @@ def _process_total_coverage_gain(
 
 
 def main():
+  global WORK_DIR, EXPERIMENT_RESULTS
+
   args = parse_args()
   _setup_logging(args.log_level)
   logger.info('Starting experiments')
@@ -407,7 +421,6 @@ def main():
   run_one_experiment.prepare(args.oss_fuzz_dir)
 
   experiment_targets = prepare_experiment_targets(args)
-  experiment_results = []
 
   if oss_fuzz_checkout.ENABLE_CACHING:
     oss_fuzz_checkout.prepare_cached_images(experiment_targets)
@@ -415,24 +428,30 @@ def main():
   logger.info('Running %s experiment(s) in parallels of %s.',
               len(experiment_targets), str(NUM_EXP))
 
+  # Set global variables that are updated throughout experiment runs.
+  EXPERIMENT_RESULTS = []
+  WORK_DIR = args.work_dir
   if NUM_EXP == 1:
     for target_benchmark in experiment_targets:
       result = run_experiments(target_benchmark, args)
-      experiment_results.append(result)
-      _print_experiment_result(result)
+      _print_and_dump_experiment_result(result)
   else:
     experiment_tasks = []
     with Pool(NUM_EXP) as p:
       for target_benchmark in experiment_targets:
-        experiment_task = p.apply_async(run_experiments,
-                                        (target_benchmark, args),
-                                        callback=_print_experiment_result)
+        experiment_task = p.apply_async(
+            run_experiments, (target_benchmark, args),
+            callback=_print_and_dump_experiment_result)
         experiment_tasks.append(experiment_task)
         time.sleep(args.delay)
-      experiment_results = [task.get() for task in experiment_tasks]
+      # Signal that no more work will be submitte to the pool.
+      p.close()
+
+      # Wait for all workers to complete.
+      p.join()
 
   # Process total gain from all generated harnesses for each projects
-  coverage_gain_dict = _process_total_coverage_gain(experiment_results)
+  coverage_gain_dict = _process_total_coverage_gain(EXPERIMENT_RESULTS)
   add_to_json_report(args.work_dir, 'project_summary', coverage_gain_dict)
 
   # Capture time at end
@@ -442,7 +461,7 @@ def main():
   add_to_json_report(args.work_dir, 'total_run_time',
                      str(timedelta(seconds=end - start)))
 
-  _print_experiment_results(experiment_results, coverage_gain_dict)
+  _print_experiment_results(EXPERIMENT_RESULTS, coverage_gain_dict)
 
 
 if __name__ == '__main__':
