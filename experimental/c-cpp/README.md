@@ -1,7 +1,99 @@
 # Auto-build oss-fuzz projects from a GitHub repo URL
 
+This directory holds logic for running auto-harness generation on projects
+from scratch. This is different in comparison to the core OSS-Fuzz-gen which
+focuses on improving existing OSS-Fuzz projects. The logic in this folder,
+therefore, is largely focused on automatically creating build scripts and
+OSS-Fuzz projects given arbitrary code repositories.
 
-## Overview
+The logic in this folder can be run in two ways:
+
+1) [OSS-Fuzz form scratch without core OSS-Fuzz-gen](#OSS-Fuzz-from-scratch-without-core-OSS-Fuzz-gen) Generating
+   OSS-Fuzz projects from scratch based on auto-harnessing within this folder.
+2) [OSS-Fuzz from scratch including core OSS-Fuzz-gen](#OSS-Fuzz-from-scratch-including-core-OSS-Fuzz-gen) Generating
+   OSS-Fuzz projects from scratch using the auto-harnessing in this folder and
+   then applying core OSS-Fuzz-gen onto the generated OSS-Fuzz project to
+   generate a larger set of harnesses for a given project.
+
+
+# Trophies
+
+Here we list a set of trophies based of this approach. Since we generate both
+OSS-Fuzz and ClusterFuzzLite integrations we highlight for each trophy which
+type was submitted to the upstream repository.
+
+| GitHub repository | Type | PR | Issues |
+| ----------------- | ---- | -- | ------ |
+| https://github.com/gregjesl/simpleson | ClusterFuzzLite | [40](https://github.com/gregjesl/simpleson/pull/40) | [39](https://github.com/gregjesl/simpleson/pull/39) |
+| https://github.com/memononen/nanosvg | OSS-Fuzz | [11944](https://github.com/google/oss-fuzz/pull/11944) | |
+| https://github.com/skeeto/pdjson | ClusterFuzzLite | [33](https://github.com/skeeto/pdjson/pull/33)  | |
+| https://github.com/kgabis/parson | ClusterFuzzLite | [214](https://github.com/kgabis/parson/pull/214) | |
+| https://github.com/rafagafe/tiny-json | ClusterFuzzLite | [18](https://github.com/rafagafe/tiny-json/pull/18) | |
+| https://github.com/kosma/minmea | ClusterFuzzLite | [79](https://github.com/kosma/minmea/pull/79) | |
+| https://github.com/marcobambini/sqlite-createtable-parser | ClusterFuzzLite | [5](https://github.com/marcobambini/sqlite-createtable-parser/pull/5) | [6](https://github.com/marcobambini/sqlite-createtable-parser/pull/6) |
+| https://github.com/benoitc/http-parser | ClusterFuzzLite | [102](https://github.com/benoitc/http-parser/pull/102) | [103](https://github.com/benoitc/http-parser/pull/103) |
+| https://github.com/orangeduck/mpc | ClusterFuzzLite | [169](https://github.com/orangeduck/mpc/pull/169) | |
+| https://github.com/JiapengLi/lorawan-parser | ClusterFuzzLite | [17](https://github.com/JiapengLi/lorawan-parser/pull/17) | |
+| https://github.com/argtable/argtable3 | ClusterFuzzLite | [96](https://github.com/argtable/argtable3/pull/96) | |
+| https://github.com/h2o/picohttpparser | ClusterFuzzLite | [83](https://github.com/h2o/picohttpparser/pull/83) | |
+| https://github.com/ndevilla/iniparser | ClusterFuzzLite | [161](https://github.com/ndevilla/iniparser/pull/161) | |
+| https://github.com/codeplea/tinyexpr | ClusterFuzzLite | [114](https://github.com/codeplea/tinyexpr/pull/114) | |
+| https://github.com/vincenthz/libjson | ClusterFuzzLite | [28](https://github.com/vincenthz/libjson/pull/28) | |
+
+# Usage
+
+## OSS-Fuzz from scratch without core OSS-Fuzz-gen
+
+```sh
+# Prepare
+# Vertex: Follow the steps at:
+# https://github.com/google/oss-fuzz-gen/blob/main/USAGE.md#vertex-ai
+export GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_CREDS_FILE
+
+# chatgpt:
+export OPENAI_API_KEY=your-api-key
+git clone https://github.com/google/oss-fuzz /tmp/oss-fuzz-10
+
+git clone https://github.com/google/oss-fuzz-gen
+cd oss-fuzz-gen/from-repo/c-cpp
+python3 ./runner.py -o /tmp/oss-fuzz-10 -t 15 -i TARGET_REPO_URL -m vertex
+
+# Post process the run to highlight results
+python3 ./post-process.py print --oss-fuzz-dir /tmp/oss-fuzz-10
+```
+
+## OSS-Fuzz from scratch including core OSS-Fuzz-gen
+
+```sh
+# Prepare
+# Vertex: Follow the steps at:
+# https://github.com/google/oss-fuzz-gen/blob/main/USAGE.md#vertex-ai
+export GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_CREDS_FILE
+
+# chatgpt:
+export OPENAI_API_KEY=your-api-key
+
+# Prepare folder and cwd
+git clone https://github.com/google/oss-fuzz-gen
+cd oss-fuzz-gen/experimental/c-cpp
+
+# Run end-to-end generation:
+# 1) Create an OSS-Fuzz project
+# 2) Extract additional harnesses using OSS-Fuzz-gen
+MODEL=gpt-3.5-turbo TARGETS=https://github.com/gregjesl/simpleson ./run_e2e.sh
+
+# We now have an auto generated OSS-Fuzz project in workdir/auto-generated-projects
+ls workdir/auto-generated-projects/
+auto-gen-simpleson-0
+
+# Build the project using the OSS-Fuzz CLI
+cd workdir/oss-fuzz
+cp -rf ../auto-generated-projects/auto-gen-simpleson-0 projects/my-auto-generated-simpleson
+python3 infra/helper.py build_fuzzers my-auto-generaetd-simpleson
+```
+
+
+# Overview of auto-generation
 
 The core part of approach in this module takes the following steps:
 
@@ -69,83 +161,3 @@ N x B x G where:
 For example, if we specify 20 best functions to be targeted for auto
 harnessing, and 5 build heuristics succeed in building one or more static
 libraries, then we will end up trying to build/run 400 harnesses.
-
-
-## Usage
-
-The logic in this folder supports two different use cases:
-
-1) [OSS-Fuzz form scratch without core OSS-Fuzz-gen](#OSS-Fuzz-from-scratch-without-core-OSS-Fuzz-gen) Generating
-   OSS-Fuzz projects from scratch based on auto-harnessing within this folder.
-2) [OSS-Fuzz from scratch including core OSS-Fuzz-gen](#OSS-Fuzz-from-scratch-including-core-OSS-Fuzz-gen) Generating
-   OSS-Fuzz projects from scratch using the auto-harnessing in this folder and
-   then applying core OSS-Fuzz-gen onto the generated OSS-Fuzz project.
-
-### OSS-Fuzz from scratch without core OSS-Fuzz-gen
-
-```sh
-# Prepare
-# Vertex: Follow the steps at:
-# https://github.com/google/oss-fuzz-gen/blob/main/USAGE.md#vertex-ai
-export GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_CREDS_FILE
-
-# chatgpt:
-export OPENAI_API_KEY=your-api-key
-git clone https://github.com/google/oss-fuzz /tmp/oss-fuzz-10
-
-git clone https://github.com/google/oss-fuzz-gen
-cd oss-fuzz-gen/from-repo/c-cpp
-python3 ./runner.py -o /tmp/oss-fuzz-10 -t 15 -i TARGET_REPO_URL -m vertex
-
-# Post process the run to highlight results
-python3 ./post-process.py print --oss-fuzz-dir /tmp/oss-fuzz-10
-```
-
-### OSS-Fuzz from scratch including core OSS-Fuzz-gen
-
-```sh
-# Prepare
-# Vertex: Follow the steps at:
-# https://github.com/google/oss-fuzz-gen/blob/main/USAGE.md#vertex-ai
-export GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_CREDS_FILE
-
-# chatgpt:
-export OPENAI_API_KEY=your-api-key
-
-# Prepare folder and cwd
-git clone https://github.com/google/oss-fuzz-gen
-cd oss-fuzz-gen/experimental/c-cpp
-
-# Run end-to-end generation
-MODEL=gpt-3.5-turbo TARGETS=https://github.com/gregjesl/simpleson ./run_e2e.sh
-
-# Results are now available in regular OSS-Fuzz-gen style
-# Start virtualenv to launch webapp
-. ./workdir/.venv/bin/activate
-cd ../../
-python3 -m report.web -r results -s
-```
-
-# Trophies
-
-Here we list a set of trophies based of this approach. Since we generate both
-OSS-Fuzz and ClusterFuzzLite integrations we highlight for each trophy which
-type was submitted to the upstream repository.
-
-| GitHub repository | Type | PR | Issues |
-| ----------------- | ---- | -- | ------ |
-| https://github.com/gregjesl/simpleson | ClusterFuzzLite | [40](https://github.com/gregjesl/simpleson/pull/40) | [39](https://github.com/gregjesl/simpleson/pull/39) |
-| https://github.com/memononen/nanosvg | OSS-Fuzz | [11944](https://github.com/google/oss-fuzz/pull/11944) | |
-| https://github.com/skeeto/pdjson | ClusterFuzzLite | [33](https://github.com/skeeto/pdjson/pull/33)  | |
-| https://github.com/kgabis/parson | ClusterFuzzLite | [214](https://github.com/kgabis/parson/pull/214) | |
-| https://github.com/rafagafe/tiny-json | ClusterFuzzLite | [18](https://github.com/rafagafe/tiny-json/pull/18) | |
-| https://github.com/kosma/minmea | ClusterFuzzLite | [79](https://github.com/kosma/minmea/pull/79) | |
-| https://github.com/marcobambini/sqlite-createtable-parser | ClusterFuzzLite | [5](https://github.com/marcobambini/sqlite-createtable-parser/pull/5) | [6](https://github.com/marcobambini/sqlite-createtable-parser/pull/6) |
-| https://github.com/benoitc/http-parser | ClusterFuzzLite | [102](https://github.com/benoitc/http-parser/pull/102) | [103](https://github.com/benoitc/http-parser/pull/103) |
-| https://github.com/orangeduck/mpc | ClusterFuzzLite | [169](https://github.com/orangeduck/mpc/pull/169) | |
-| https://github.com/JiapengLi/lorawan-parser | ClusterFuzzLite | [17](https://github.com/JiapengLi/lorawan-parser/pull/17) | |
-| https://github.com/argtable/argtable3 | ClusterFuzzLite | [96](https://github.com/argtable/argtable3/pull/96) | |
-| https://github.com/h2o/picohttpparser | ClusterFuzzLite | [83](https://github.com/h2o/picohttpparser/pull/83) | |
-| https://github.com/ndevilla/iniparser | ClusterFuzzLite | [161](https://github.com/ndevilla/iniparser/pull/161) | |
-| https://github.com/codeplea/tinyexpr | ClusterFuzzLite | [114](https://github.com/codeplea/tinyexpr/pull/114) | |
-| https://github.com/vincenthz/libjson | ClusterFuzzLite | [28](https://github.com/vincenthz/libjson/pull/28) | |
