@@ -1328,6 +1328,7 @@ def convert_fuzz_build_line_to_loop(clean_build_content: str,
 
   wrapper_script = '''for fuzzer in $SRC/fuzzers/*; do
   fuzzer_target=$(basename $fuzzer)
+  fuzzer_target="${fuzzer_target%.*}"
   LINE_TO_SUBSTITUTE
 done'''
   target_line = split_lines[target_line_idx]
