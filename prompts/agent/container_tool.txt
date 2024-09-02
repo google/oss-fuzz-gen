@@ -29,12 +29,12 @@ The full code of fixed fuzz target here.
 <build script>
 The full code of build script here if you modified the build script, otherwise omit this block.
 </build script>
- 
+
 Some general rules:
 1. You are allowed to view all files and environment variables, but NOT ALLOWED TO 1) MODIFY THEM, RENAME THEM, OR CREATE NEW FILES. You can only modify the fuzz target at <code>{FUZZ_TARGET_PATH}</code> or the build script at <code>/src/build.sh</code> ONLY, and output the final version in conclusion.  All modification of other files will NOT BE PRESERVED when building the modified fuzz target.
 2. Use the given fuzz target at <code>{FUZZ_TARGET_PATH}</code> and other fuzz targets using <code>LLVMFuzzerTestOneInput</code> under the same directory as examples. In particular, learn and resuse their ways to include headerfiles in your solution. In most cases, you can assume you only have to modified the content of <code>LLVMFuzzerTestOneInput</code> to fuzz the new function-under-test.
 3. If the header inclusion statements do not work, investigate the source code of the project and library files built by build.sh.
 4. If the building the fuzz target failed becaue it does not contain the function-under-test, consider modify <code>/src/build.sh</code> to build the full project. The project-under-test's root dir is cloned from the project's git repo and may contain a README.md that describes how to build the full project.
 5. YOU MUST NOT COMPILE the fuzz target. Respond the conclusion above once you think you have an answer. The answer does not have to be perfect, I will compile it and show you the result.
-6. Once I recive your conclusion, I will replace <code>{FUZZ_TARGET_PATH}</code> with your fuzz target. If you modified the build script, I will replace /src/build.sh with it too. 
+6. Once I recive your conclusion, I will replace <code>{FUZZ_TARGET_PATH}</code> with your fuzz target. If you modified the build script, I will replace /src/build.sh with it too.
 7. DO NOT wrap code snippets with ```, using the XML-style tags above will suffice.
