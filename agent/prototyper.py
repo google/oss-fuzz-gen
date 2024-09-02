@@ -67,7 +67,7 @@ class Prototyper(BaseAgent):
     return match.group(1).strip() if match else ''
 
   def _format_tool_execution_result(self, process: sp.CompletedProcess) -> str:
-    return (f'<bash>\n{" ".join(process.args)}\n</bash>\n'
+    return (f'<bash>\n{process.args}\n</bash>\n'
             f'<return code>\n{process.returncode}\n</return code>\n'
             f'<stdout>\n{process.stdout}\n</stdout>\n'
             f'<stderr>\n{process.stderr}\n</stderr>\n')

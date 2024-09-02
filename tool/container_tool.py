@@ -73,7 +73,9 @@ class ProjectContainerTool(BaseTool):
     execute_command_in_container = [
         'docker', 'exec', self.container_id, '/bin/bash', '-c', command
     ]
-    return self._execute_command(execute_command_in_container, True)
+    process = self._execute_command(execute_command_in_container, True)
+    process.args = command
+    return process
 
   def terminate(self) -> bool:
     """Terminates the container."""
