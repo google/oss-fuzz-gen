@@ -27,6 +27,10 @@ class Prompt:
     """Constructor."""
 
   @abstractmethod
+  def append(self, text: str) -> None:
+    """Appends to the formatted prompt."""
+
+  @abstractmethod
   def get(self) -> Any:
     """Gets the final formatted prompt."""
 
@@ -59,6 +63,10 @@ class TextPrompt(Prompt):
       initial = ''
 
     self._text = initial
+
+  def append(self, text: str) -> None:
+    """Gets the final formatted prompt."""
+    self._text += text
 
   def get(self) -> Any:
     """Gets the final formatted prompt."""
