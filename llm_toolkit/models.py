@@ -31,7 +31,7 @@ import anthropic
 import openai
 import tiktoken
 import vertexai
-from google.api_core.exceptions import GoogleAPICallError
+from google.api_core.exceptions import GoogleAPICallError, InvalidArgument
 from vertexai import generative_models
 from vertexai.preview.generative_models import ChatSession, GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
@@ -149,10 +149,11 @@ class LLM:
     logging.warning('Retry in %d seconds...', delay)
     time.sleep(delay)
 
-  def _is_retryable_error(self, err: Exception, api_error: Type[Exception],
+  def _is_retryable_error(self, err: Exception,
+                          api_errors: list[Type[Exception]],
                           tb: traceback.StackSummary) -> bool:
     """Validates if |err| is worth retrying."""
-    if isinstance(err, api_error):
+    if any(isinstance(err, api_error) for api_error in api_errors):
       return True
 
     # A known case from vertex package, no content due to mismatch roles.
@@ -171,7 +172,7 @@ class LLM:
     return False
 
   def with_retry_on_error(self, func: Callable,
-                          api_err: Type[Exception]) -> Any:
+                          api_errs: list[Type[Exception]]) -> Any:
     """
     Retry when the function returns an expected error with exponential backoff.
     """
@@ -182,7 +183,7 @@ class LLM:
         logging.warning('LLM API Error when responding (attempt %d): %s',
                         attempt, err)
         tb = traceback.extract_tb(err.__traceback__)
-        if (not self._is_retryable_error(err, api_err, tb) or
+        if (not self._is_retryable_error(err, api_errs, tb) or
             attempt == self._max_attempts):
           logging.warning(
               'LLM API cannot fix error when responding (attempt %d) %s: %s',
@@ -271,7 +272,7 @@ class GPT(LLM):
                                                model=self.name,
                                                n=self.num_samples,
                                                temperature=self.temperature),
-        openai.OpenAIError)
+        [openai.OpenAIError])
     for index, choice in enumerate(completion.choices):  # type: ignore
       content = choice.message.content
       self._save_output(index, content, response_dir)
@@ -359,7 +360,7 @@ class Claude(LLM):
                                        messages=prompt.get(),
                                        model=self.get_model(),
                                        temperature=self.temperature),
-        anthropic.AnthropicError)
+        [anthropic.AnthropicError])
     for index, choice in enumerate(completion.content):
       content = choice.text
       self._save_output(index, content, response_dir)
@@ -505,7 +506,7 @@ class VertexAIModel(GoogleModel):
     for i in range(self.num_samples):
       response = self.with_retry_on_error(
           lambda i=i: self.do_generate(model, prompt.get(), parameters_list[i]),
-          GoogleAPICallError) or ''
+          [GoogleAPICallError]) or ''
       self._save_output(i, response, response_dir)
 
 
@@ -626,7 +627,7 @@ class GeminiV1D5Chat(GeminiV1D5):
     parameters_list = self._prepare_parameters()[0]
     response = self.with_retry_on_error(
         lambda: self._do_generate(client, prompt.get(), parameters_list),
-        GoogleAPICallError) or ''
+        [GoogleAPICallError, InvalidArgument]) or ''
     return response
 
 
