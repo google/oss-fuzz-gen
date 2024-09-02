@@ -142,6 +142,11 @@ class OpenAIPrompt(Prompt):
     with open(location, 'w+') as prompt_file:
       json.dump(self._prompt, prompt_file)
 
+  def append(self, text: str) -> None:
+    """Appends to the formatted prompt."""
+    # A placeholder for now.
+    del text
+
 
 class ClaudePrompt(OpenAIPrompt):
   """Claude style structured prompt."""
