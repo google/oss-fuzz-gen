@@ -19,9 +19,12 @@ import dataclasses
 import logging
 import os
 import shutil
+import threading
 from multiprocessing import pool
 from typing import List, Optional
 
+import pipeline
+from agent.prototyper import Prototyper
 from data_prep import project_targets
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment import builder_runner as builder_runner_lib
@@ -30,6 +33,9 @@ from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, output_parser, prompt_builder, prompts
+from result_classes import BuildResult, ExperimentResult, Result
+
+thread_local = threading.local()
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +85,24 @@ class AggregatedResult:
         f'max coverage sample: {self.max_coverage_sample}\n'
         f'max coverage diff sample: {self.max_coverage_diff_sample}\n'
         f'max coverage diff report: {self.max_coverage_diff_report or "None"}')
+
+  @classmethod
+  def from_experiment_result(
+      cls, sample_results: list[ExperimentResult]) -> 'AggregatedResult':
+    """Aggereate experiment history results of all samples."""
+    if not sample_results:
+      return AggregatedResult()
+    sample_final_build_results = [[
+        result
+        for result in sample_result_history.history_results
+        if isinstance(result, BuildResult)
+    ][-1]
+                                  for sample_result_history in sample_results]
+    build_success_rate = sum([
+        int(sample_final_result.status)
+        for sample_final_result in sample_final_build_results
+    ]) / len(sample_final_build_results)
+    return AggregatedResult(build_success_rate=build_success_rate,)
 
 
 def generate_targets(benchmark: Benchmark, model: models.LLM,
@@ -273,10 +297,48 @@ def generate_targets_for_analysis(
   return generated_targets
 
 
+def initialize_thread(index):
+  """Initialize thread-local storage for each thread."""
+  # Thread-local storage object
+  thread_local.index = index
+  # Initialize more complex objects or variables if needed
+  print(f"Initialized thread-local storage for index={index}")
+
+
+def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
+                      args: argparse.Namespace, work_dirs: WorkDirs,
+                      trial: int) -> ExperimentResult:
+  """Runs the predefined 3-stage pipeline for one trial."""
+  logger.info('My sample ID: %s', getattr(thread_local, 'index', 'unknown'))
+  p = pipeline.Pipeline(args=args)
+  p.writing_stage.add_agent(Prototyper(model))
+  results = p.execute(
+      results=[Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)],
+      args=args)
+  return ExperimentResult(results)
+
+
+def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
+                       args: argparse.Namespace,
+                       work_dirs: WorkDirs) -> AggregatedResult:
+  """Runs all trial experiments in their pipelines."""
+  # Create a pool of worker processes
+  with pool.ThreadPool(processes=NUM_EVA) as p:
+    # Initialize thread-local storage in each worker before processing
+    task_args = [(benchmark, model, args, work_dirs, trial)
+                 for trial in range(1, NUM_EVA + 1)]
+    results = p.starmap(_fuzzing_pipeline, task_args)
+  return AggregatedResult.from_experiment_result(results)
+
+
 def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
         work_dirs: WorkDirs) -> Optional[AggregatedResult]:
   """Generates code via LLM, and evaluates them."""
   model.cloud_setup()
+
+  if args.agent:
+    # TODO(dongge): Make this default when it is ready.
+    return _fuzzing_pipelines(benchmark, model, args, work_dirs)
 
   generated_targets = generate_targets_for_analysis(
       model=model,
