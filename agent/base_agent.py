@@ -27,9 +27,12 @@ class BaseAgent(ABC):
   def _initial_prompt(self, results: list[Result]) -> Prompt:
     """The initial prompt of the agent."""
 
-  @abstractmethod
   def get_tool(self, tool_name: str) -> Optional[BaseTool]:
     """Gets a tool of the agent by name."""
+    for tool in self.tools:
+      if tool.name == tool_name:
+        return tool
+    return None
 
   @abstractmethod
   def execute(self, prev_results: list[Result]) -> Result:
