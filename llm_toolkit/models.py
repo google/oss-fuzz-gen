@@ -33,7 +33,7 @@ import tiktoken
 import vertexai
 from google.api_core.exceptions import GoogleAPICallError
 from vertexai import generative_models
-from vertexai.preview.generative_models import GenerativeModel
+from vertexai.preview.generative_models import ChatSession, GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
 
 from llm_toolkit import prompts
@@ -131,6 +131,14 @@ class LLM:
     """Queries the LLM and stores responses in |response_dir|."""
 
   @abstractmethod
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
+    """Queries the LLM in the given chat session and returns the response."""
+
+  @abstractmethod
+  def get_model(self) -> Any:
+    """Returns the underlying model instance."""
+
+  @abstractmethod
   def prompt_type(self) -> type[prompts.Prompt]:
     """Returns the expected prompt type."""
 
@@ -190,11 +198,29 @@ class LLM:
     with open(raw_output_path, 'w+') as output_file:
       output_file.write(content)
 
+  @abstractmethod
+  def get_chat_client(self, model: Any) -> Any:
+    """Returns a new chat session."""
+
 
 class GPT(LLM):
   """OpenAI's GPT model encapsulator."""
 
   name = 'gpt-3.5-turbo'
+
+  def get_model(self) -> Any:
+    """Returns the underlying model instance."""
+    # Placeholder: No suitable implementation/usage yet.
+
+  def get_chat_client(self, model: Any) -> Any:
+    """Returns a new chat session."""
+    del model
+    # Placeholder: To Be Implemented.
+
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
+    """Queries the LLM in the given chat session and returns the response."""
+    del client, prompt
+    # Placeholder: To Be Implemented.
 
   def _get_tiktoken_encoding(self, model_name: str):
     """Returns the tiktoken encoding for the model."""
@@ -338,6 +364,16 @@ class Claude(LLM):
       content = choice.text
       self._save_output(index, content, response_dir)
 
+  def get_chat_client(self, model: Any) -> Any:
+    """Returns a new chat session."""
+    del model
+    # Placeholder: To Be Implemented.
+
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
+    """Queries the LLM in the given chat session and returns the response."""
+    del client, prompt
+    # Placeholder: To Be Implemented.
+
 
 class ClaudeHaikuV3(Claude):
   """Claude Haiku 3."""
@@ -413,6 +449,20 @@ class GoogleModel(LLM):
     finally:
       os.unlink(prompt_path)
 
+  def get_model(self) -> Any:
+    """Returns the underlying model instance."""
+    raise NotImplementedError
+
+  def get_chat_client(self, model: Any) -> Any:
+    """Returns a new chat session."""
+    del model
+    raise NotImplementedError
+
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
+    """Queries the LLM in the given chat session and returns the response."""
+    del client, prompt
+    raise NotImplementedError
+
 
 class VertexAIModel(GoogleModel):
   """Vertex AI model."""
@@ -462,35 +512,36 @@ class VertexAIModel(GoogleModel):
 class GeminiModel(VertexAIModel):
   """Gemini models."""
 
+  safety_config = [
+      generative_models.SafetySetting(
+          category=generative_models.HarmCategory.
+          HARM_CATEGORY_DANGEROUS_CONTENT,
+          threshold=generative_models.HarmBlockThreshold.BLOCK_NONE,
+      ),
+      generative_models.SafetySetting(
+          category=generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT,
+          threshold=generative_models.HarmBlockThreshold.BLOCK_NONE,
+      ),
+      generative_models.SafetySetting(
+          category=generative_models.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+          threshold=generative_models.HarmBlockThreshold.BLOCK_NONE,
+      ),
+      generative_models.SafetySetting(
+          category=generative_models.HarmCategory.
+          HARM_CATEGORY_SEXUALLY_EXPLICIT,
+          threshold=generative_models.HarmBlockThreshold.BLOCK_NONE,
+      ),
+  ]
+
   def get_model(self) -> Any:
     return GenerativeModel(self._vertex_ai_model)
 
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
     # Loosen inapplicable restrictions just in case.
-    safety_config = [
-        generative_models.SafetySetting(
-            category=generative_models.HarmCategory.
-            HARM_CATEGORY_DANGEROUS_CONTENT,
-            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        ),
-        generative_models.SafetySetting(
-            category=generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT,
-            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        ),
-        generative_models.SafetySetting(
-            category=generative_models.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        ),
-        generative_models.SafetySetting(
-            category=generative_models.HarmCategory.
-            HARM_CATEGORY_SEXUALLY_EXPLICIT,
-            threshold=generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        ),
-    ]
     logger.info('%s generating response with config: %s', self.name, config)
     return model.generate_content(prompt,
                                   generation_config=config,
-                                  safety_settings=safety_config).text
+                                  safety_settings=self.safety_config).text
 
 
 class VertexAICodeBisonModel(VertexAIModel):
@@ -550,6 +601,35 @@ class GeminiV1D5(GeminiModel):
   _vertex_ai_model = 'gemini-1.5-pro-001'
 
 
+class GeminiV1D5Chat(GeminiV1D5):
+  """Gemini 1.5 for chat session."""
+  name = 'vertex_ai_gemini-1-5-chat'
+
+  def get_chat_client(self, model: GenerativeModel) -> Any:
+    return model.start_chat(response_validation=False)
+
+  def _do_generate(self, client: ChatSession, prompt: str,
+                   config: dict[str, Any]) -> Any:
+    """Generates chat response."""
+    logger.info('%s generating response with config: %s', self.name, config)
+    return client.send_message(
+        prompt,
+        stream=False,
+        generation_config=config,
+        safety_settings=self.safety_config).text  # type: ignore
+
+  def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:
+    if self.ai_binary:
+      logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
+
+    # TODO(dongge): Use different values for different trials
+    parameters_list = self._prepare_parameters()[0]
+    response = self.with_retry_on_error(
+        lambda: self._do_generate(client, prompt.get(), parameters_list),
+        GoogleAPICallError) or ''
+    return response
+
+
 class AIBinaryModel(GoogleModel):
   """A customized model hosted internally."""
 
@@ -558,6 +638,20 @@ class AIBinaryModel(GoogleModel):
   def __init__(self, name: str, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.name = name
+
+  def get_model(self) -> Any:
+    """Returns the underlying model instance."""
+    # Placeholder: No suitable implementation/usage yet.
+
+  def get_chat_client(self, model: Any) -> Any:
+    """Returns a new chat session."""
+    del model
+    # Placeholder: To Be Implemented.
+
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
+    """Queries the LLM in the given chat session and returns the response."""
+    del client, prompt
+    # Placeholder: To Be Implemented.
 
 
 DefaultModel = GeminiV1D5
