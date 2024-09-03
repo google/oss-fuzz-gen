@@ -55,7 +55,7 @@ class JinjaEnv:
     # Check if this is a java benchmark, which will always have a period in
     # the path, where C/C++ wont.
     # TODO(David) refactor to have paths for links more controlled.
-    is_jvm = '.' in path:
+    if '.' in path:
         return link_path + 'index.html'
     return link_path + 'report.html'
 
