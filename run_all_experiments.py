@@ -25,7 +25,6 @@ import traceback
 from datetime import timedelta
 from multiprocessing import Pool
 from typing import Any
-from urllib3.util import parse_url
 
 import run_one_experiment
 from data_prep import introspector
@@ -94,11 +93,12 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
   logger.info('Setting benchmark directory to %s.', benchmark_dir)
   os.makedirs(benchmark_dir)
   args.benchmarks_directory = benchmark_dir
-  benchmark_oracles = [
-      heuristic.strip() for heuristic in args.generate_benchmarks.split(',')
-  ]
 
   if args.generate_benchmarks_projects:
+    benchmark_oracles = [
+        heuristic.strip() for heuristic in args.generate_benchmarks.split(',')
+    ]
+
     # Generate benchmarks for existing OSS-Fuzz integrated projects
     projects_to_target = [
         project.strip()
@@ -107,7 +107,8 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
     for project in projects_to_target:
       project_lang = oss_fuzz_checkout.get_project_language(project)
       benchmarks = introspector.populate_benchmarks_using_introspector(
-          project, project_lang, args.generate_benchmarks_max, benchmark_oracles)
+          project, project_lang, args.generate_benchmarks_max,
+          benchmark_oracles)
       if benchmarks:
         benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
   else:
@@ -116,8 +117,7 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
 
     # Generate benchmarks for new projects from scratch
     project_urls = [
-        url.strip()
-        for url in args.generate_benchmarks_github_url.split(',')
+        url.strip() for url in args.generate_benchmarks_github_url.split(',')
     ]
     for url in project_urls:
       project_name = utils.get_project_name(url)
@@ -127,22 +127,42 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
         continue
 
       # Clone project for static analysis
-      base_dir = utils.get_next_project_dir()
-      print(base_dir)
+      base_dir = utils.get_next_project_dir(oss_fuzz_checkout.OSS_FUZZ_DIR)
       project_dir = os.path.join(base_dir, 'proj')
       if not utils.git_clone_project(url, project_dir):
         # Invalid url
         logger.warning(f'Failed to clone from the github url: {url}')
+        shutil.rmtree(base_dir)
         continue
 
       # Prepare OSS-Fuzz base files
       if not utils.prepare_base_files(base_dir, project_name, url):
         # Invalid build type or non-Java project
-        logger.warning(f'Build type of project {project_name} is not supported.')
+        logger.warning(
+            f'Build type of project {project_name} is not supported.')
+        shutil.rmtree(base_dir)
         continue
 
+      # Run OSS-Fuzz build and static analysis on the project
+      data_yaml_path = utils.run_oss_fuzz_build(os.path.basename(base_dir),
+                                                oss_fuzz_checkout.OSS_FUZZ_DIR)
+      if not data_yaml_path:
+        # Failed to build or run static analysis on the project
+        logger.warning(f'Failed to build project {project_name} with JDK15.')
+        shutil.rmtree(base_dir)
+        continue
+
+      # Save data.yaml from static analysis as benchmark files
+      benchmarks = benchmarklib.Benchmark.from_java_data_yaml(
+          data_yaml_path, project_name, project_dir)
+      print(benchmarks)
+      if benchmarks:
+        benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
+
       # Clean up the working directory for generating benchmark from scratch
-#      shutil.rmtree(base_dir)
+
+
+#        shutil.rmtree(base_dir)
 
 
 def prepare_experiment_targets(
@@ -164,6 +184,7 @@ def prepare_experiment_targets(
         for file in os.listdir(args.benchmarks_directory)
         if file.endswith('.yaml') or file.endswith('yml')
     ]
+
   experiment_configs = []
   for benchmark_file in benchmark_yamls:
     experiment_configs.extend(benchmarklib.Benchmark.from_yaml(benchmark_file))

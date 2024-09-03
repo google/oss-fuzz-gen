@@ -23,6 +23,8 @@ from typing import List, Optional
 
 import yaml
 
+from from_scratch import utils
+
 
 class FileType(Enum):
   """File types of target files."""
@@ -134,6 +136,53 @@ class Benchmark:
                 cppify_headers=cppify_headers,
                 commit=commit,
                 use_context=use_context,
+                function_dict=function))
+
+    return benchmarks
+
+  @classmethod
+  def from_java_data_yaml(cls, benchmark_path: str, project: str, project_dir: str) -> List:
+    """Constructs a benchmark based on a Java data yaml file from static analysis."""
+    # Retrieve the method list from the provided java data yaml file
+    benchmarks = []
+    with open(benchmark_path, 'r') as benchmark_file:
+      functions = yaml.safe_load(benchmark_file)['All functions']['Elements']
+
+    # Loop through the method list
+    if functions:
+      for function in functions:
+        # Skipping methods that are not belonging to the target project
+        class_name = function.get('functionSourceFile').split('$')[0]
+        if not utils.is_class_in_project(project_dir, class_name):
+          continue
+
+        # Generate an ID for each benchmark
+        max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
+        truncated_id = f'{project}-{function.get("name")}'[:max_len]
+
+        # generate the parameter list for the benchmark
+        param_list = []
+        for count, argType in enumerate(function.get('argTypes')):
+          param_list.append({
+              'name': f'arg{count}',
+              'type': argType
+           })
+
+        # Save the benchmark with data in the method list
+        benchmarks.append(
+            cls(truncated_id.lower(),
+                project,
+                'jvm',
+                function.get('functionName'),
+                function.get('functionName'),
+                function.get('returnType'),
+                param_list,
+                '/src/Fuzz.java',
+                'Fuzz',
+                use_project_examples=False,
+                cppify_headers=False,
+                commit=None,
+                use_context=False,
                 function_dict=function))
 
     return benchmarks

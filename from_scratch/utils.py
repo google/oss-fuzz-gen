@@ -16,12 +16,12 @@
 
 import os
 import subprocess
-
 from typing import Optional
+
 from urllib3.util import parse_url
 
-from experiment import oss_fuzz_checkout
 from from_scratch import oss_fuzz_templates
+
 
 # Project preparation utils
 ###########################
@@ -58,9 +58,9 @@ def get_project_name(github_url: str) -> Optional[str]:
     # Validate url for HTTPS type
     parsed_url = parse_url(github_url)
     host = parsed_url.host
-    path = parsed_url.path.split('/')
-    if host == 'github.com' and len(path) == 3:
-      return path[2]
+    path = parsed_url.path
+    if path and host == 'github.com' and len(path.split('/')) == 3:
+      return path.split('/')[2]
   elif github_url.startswith('git@github.com:'):
     # Validate url for SSH type
     path = github_url.split('/')
@@ -96,16 +96,15 @@ def prepare_base_files(base_dir: str, project_name: str, url: str) -> bool:
   return True
 
 
-def get_next_project_dir() -> str:
+def get_next_project_dir(oss_fuzz_dir) -> str:
   """Prepare the OSS-Fuzz project directory for static analysis"""
-  project_dir = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects')
+  project_dir = os.path.join(oss_fuzz_dir, 'projects')
   auto_gen = 'java-autofuzz-dir-'
   max_idx = -1
   for l in os.listdir(project_dir):
     if l.startswith(auto_gen):
       tmp_dir_idx = int(l.replace(auto_gen, ''))
-      if tmp_dir_idx > max_idx:
-        max_idx = tmp_dir_idx
+      max_idx = max(max_idx, tmp_dir_idx)
   return os.path.join(project_dir, f'{auto_gen}{max_idx + 1}')
 
 
@@ -115,14 +114,14 @@ def _get_build_file(base_dir: str, project_name: str) -> str:
   build_type = _find_project_build_type(os.path.join(base_dir, "proj"),
                                         project_name)
 
-  if build_type == "ant":
+  if build_type == 'ant':
     build_file = oss_fuzz_templates.BUILD_JAVA_ANT
-  elif build_type == "gradle":
+  elif build_type == 'gradle':
     build_file = oss_fuzz_templates.BUILD_JAVA_GRADLE
-  elif build_type == "maven":
+  elif build_type == 'maven':
     build_file = oss_fuzz_templates.BUILD_JAVA_MAVEN
   else:
-    return ""
+    return ''
 
   build_file = build_file + oss_fuzz_templates.BUILD_JAVA_BASE
 
@@ -170,3 +169,43 @@ def _find_project_build_type(project_dir: str, proj_name: str) -> str:
       return project_build_type
 
   return ''
+
+
+def is_class_in_project(project_dir: str, class_name: str) -> bool:
+  """Find if the given class name is in the project"""
+  class_path = class_name.replace(".", "/")
+  command = f'find {project_dir} -wholename */{class_path}.java'
+
+  try:
+    if not subprocess.check_output(
+        command, shell=True, stderr=subprocess.DEVNULL):
+      return False
+  except subprocess.CalledProcessError:
+    return False
+
+  return True
+
+
+# OSS-Fuzz project utils
+########################
+def run_oss_fuzz_build(project_name: str, oss_fuzz_dir: str) -> Optional[str]:
+  """Build the project with OSS-Fuzz commands and returns path of
+  fuzzerLogFile-Fuzz.data.yaml from static analysis"""
+  cmd = 'python3 infra/helper.py build_fuzzers {project_name}'
+  try:
+    subprocess.check_call(cmd,
+                          shell=True,
+                          cwd=oss_fuzz_dir,
+                          stdout=subprocess.DEVNULL,
+                          stderr=subprocess.DEVNULL)
+  except subprocess.CalledProcessError:
+    return None
+
+  # Locate the static analysis report
+  data_yaml_path = os.path.join(oss_fuzz_dir, 'build', 'out', project_name,
+                                'fuzzerLogFile-Fuzz.data.yaml')
+
+  if os.path.isfile(data_yaml_path):
+    return data_yaml_path
+
+  return None
