@@ -18,18 +18,21 @@ import argparse
 import json
 import logging
 import os
+import shutil
 import sys
 import time
 import traceback
 from datetime import timedelta
 from multiprocessing import Pool
 from typing import Any
+from urllib3.util import parse_url
 
 import run_one_experiment
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
+from from_scratch import utils
 from llm_toolkit import models, prompt_builder
 
 logger = logging.getLogger(__name__)
@@ -94,16 +97,52 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
   benchmark_oracles = [
       heuristic.strip() for heuristic in args.generate_benchmarks.split(',')
   ]
-  projects_to_target = [
-      project.strip()
-      for project in args.generate_benchmarks_projects.split(',')
-  ]
-  for project in projects_to_target:
-    project_lang = oss_fuzz_checkout.get_project_language(project)
-    benchmarks = introspector.populate_benchmarks_using_introspector(
-        project, project_lang, args.generate_benchmarks_max, benchmark_oracles)
-    if benchmarks:
-      benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
+
+  if args.generate_benchmarks_projects:
+    # Generate benchmarks for existing OSS-Fuzz integrated projects
+    projects_to_target = [
+        project.strip()
+        for project in args.generate_benchmarks_projects.split(',')
+    ]
+    for project in projects_to_target:
+      project_lang = oss_fuzz_checkout.get_project_language(project)
+      benchmarks = introspector.populate_benchmarks_using_introspector(
+          project, project_lang, args.generate_benchmarks_max, benchmark_oracles)
+      if benchmarks:
+        benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
+  else:
+    # Checkout OSS-Fuzz for static analysis
+    oss_fuzz_checkout.clone_oss_fuzz()
+
+    # Generate benchmarks for new projects from scratch
+    project_urls = [
+        url.strip()
+        for url in args.generate_benchmarks_github_url.split(',')
+    ]
+    for url in project_urls:
+      project_name = utils.get_project_name(url)
+      if not project_name:
+        # Invalid url
+        logger.warning(f'Skipping wrong github url: {url}')
+        continue
+
+      # Clone project for static analysis
+      base_dir = utils.get_next_project_dir()
+      print(base_dir)
+      project_dir = os.path.join(base_dir, 'proj')
+      if not utils.git_clone_project(url, project_dir):
+        # Invalid url
+        logger.warning(f'Failed to clone from the github url: {url}')
+        continue
+
+      # Prepare OSS-Fuzz base files
+      if not utils.prepare_base_files(base_dir, project_name, url):
+        # Invalid build type or non-Java project
+        logger.warning(f'Build type of project {project_name} is not supported.')
+        continue
+
+      # Clean up the working directory for generating benchmark from scratch
+#      shutil.rmtree(base_dir)
 
 
 def prepare_experiment_targets(
@@ -246,6 +285,12 @@ def parse_args() -> argparse.Namespace:
       '--generate-benchmarks-projects',
       help='Projects to generate benchmarks for in a comma separated string.',
       type=str)
+  parser.add_argument(
+      '-gs',
+      '--generate-benchmarks-github-url',
+      help=('Github urls for projects to generate benchmarks from scratch in a '
+            'comma separated string.'),
+      type=str)
   parser.add_argument('-gm',
                       '--generate-benchmarks-max',
                       help='Max targets to generate per benchmark heuristic.',
@@ -284,6 +329,21 @@ def parse_args() -> argparse.Namespace:
       '--generate-benchmarks. --benchmark-yaml takes one benchmark YAML file, '
       '--benchmarks-directory takes: a directory of them and '
       '--generate-benchmarks generates them during analysis.')
+
+  bench_project = bool(args.generate_benchmarks_projects)
+  bench_url = bool(args.generate_benchmarks_github_url)
+
+  num_options = int(bench_project) + int(bench_url)
+  assert num_options == 1, (
+      'Use one, and only one, of --generate-benchmarks-projects and '
+      '--generate-benchmarks-github-url. --generate-benchmarks-projects accepts a '
+      'comma-separated string of all target project names that already have '
+      'OSS-Fuzz integration, while --generate-benchmarks-github-url accepts a '
+      'comma-separated string of all GitHub URLs of projects that do not currently '
+      'have OSS-Fuzz integration. Use --generate-benchmarks-projects to improve '
+      'fuzzing of existing OSS-Fuzz integrated projects, and use '
+      '--generate-benchmarks-github-url to generate new OSS-Fuzz integration for '
+      'projects specified by the GitHub URLs.')
 
   # Validate templates.
   assert os.path.isdir(args.template_directory), (
