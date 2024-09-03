@@ -67,6 +67,7 @@ class Benchmark:
           'name': b.function_name,
           'return_type': b.return_type,
           'params': b.params,
+          'jvm_special_properties': b.jvm_special_properties,
       } for b in benchmarks]
 
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
@@ -138,6 +139,7 @@ class Benchmark:
                 commit=commit,
                 use_context=use_context,
                 is_new_integration=data['is_new_integration'],
+                jvm_special_properties=function.get('jvm_special_properties'),
                 function_dict=function))
 
     return benchmarks
@@ -168,6 +170,16 @@ class Benchmark:
         for count, arg_type in enumerate(function.get('argTypes')):
           param_list.append({'name': f'arg{count}', 'type': arg_type})
 
+        # Process JVM special properties
+        jvm_special_properties = {
+            'is-jvm-static':
+                function.get('JavaMethodInfo', {}).get('static', False),
+            'need-close':
+                function.get('JavaMethodInfo', {}).get('needClose', False),
+            'exceptions':
+                function.get('JavaMethodInfo', {}).get('exceptions', [])
+        }
+
         # Save the benchmark with data in the method list
         benchmarks.append(
             cls(truncated_id.lower(),
@@ -184,6 +196,7 @@ class Benchmark:
                 commit=None,
                 use_context=False,
                 is_new_integration=True,
+                jvm_special_properties=jvm_special_properties,
                 function_dict=function))
 
     return benchmarks
@@ -205,7 +218,8 @@ class Benchmark:
                function_dict: Optional[dict] = None,
                is_test_benchmark: bool = False,
                is_new_integration: bool = False,
-               test_file_path: str = ''):
+               test_file_path: str = '',
+               jvm_special_properties: Optional[dict] = None):
     self.id = benchmark_id
     self.project = project
     self.language = language
@@ -223,6 +237,13 @@ class Benchmark:
     self.test_file_path = test_file_path
     self.is_test_benchmark = is_test_benchmark
     self.is_new_integration = is_new_integration
+
+    # For new OSS-Fuzz integration, Fuzz-Introspector webapp cannot provide
+    # these properties, hence we store the extra properties in the benchmark.
+    if is_new_integration:
+      self.jvm_special_properties = jvm_special_properties
+    else:
+      self.jvm_special_properties = None
 
     if self.language == 'jvm':
       # For java projects, in order to differentiate between overloaded methods
