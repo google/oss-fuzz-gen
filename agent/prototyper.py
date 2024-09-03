@@ -231,11 +231,11 @@ class Prototyper(BaseAgent):
                                                build_result)
     return self._container_handle_command(cur_round, response)
 
-  def execute(self, prev_results: list[Result]) -> BuildResult:
+  def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
     logger.info('Executing Prototyper', extra={'trial': self.trial})
-    last_result = prev_results[-1]
-    prompt = self._initial_prompt(prev_results)
+    last_result = result_history[-1]
+    prompt = self._initial_prompt(result_history)
     benchmark = last_result.benchmark
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
     self.inspect_tool.execute('{compile && rm -rf /out/*} > /dev/null')

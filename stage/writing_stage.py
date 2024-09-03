@@ -15,19 +15,19 @@ logger.setLevel(logging.DEBUG)
 class WritingStage(BaseStage):
   """Writing to the fuzz target and build script."""
 
-  def _write_new_fuzz_target(self, prev_results: list[Result]) -> Result:
+  def _write_new_fuzz_target(self, result_history: list[Result]) -> Result:
     """Writes a new fuzz target."""
-    return self.get_agent('Prototyper').execute(prev_results)
+    return self.get_agent('Prototyper').execute(result_history)
 
-  def _refine_given_fuzz_targets(self, prev_results: list[Result]) -> Result:
+  def _refine_given_fuzz_targets(self, result_history: list[Result]) -> Result:
     """Writes a new fuzz target."""
-    return self.get_agent('Enhancer').execute(prev_results)
+    return self.get_agent('Enhancer').execute(result_history)
 
-  def execute(self, prev_stage_results: list[Result]) -> Result:
-    if prev_stage_results and prev_stage_results[-1].fuzz_target_source:
-      agent_result = self._refine_given_fuzz_targets(prev_stage_results)
+  def execute(self, result_history: list[Result]) -> Result:
+    if result_history and result_history[-1].fuzz_target_source:
+      agent_result = self._refine_given_fuzz_targets(result_history)
     else:
-      agent_result = self._write_new_fuzz_target(prev_stage_results)
+      agent_result = self._write_new_fuzz_target(result_history)
     logger.debug('Writing stage completed with with result:\n%s', agent_result)
     return agent_result
 

@@ -35,5 +35,5 @@ class BaseAgent(ABC):
     return None
 
   @abstractmethod
-  def execute(self, prev_results: list[Result]) -> Result:
+  def execute(self, result_history: list[Result]) -> Result:
     """Executes the agent based on previous result."""

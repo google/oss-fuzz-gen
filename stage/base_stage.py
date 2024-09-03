@@ -27,5 +27,5 @@ class BaseStage(ABC):
     raise RuntimeError(f'Agent {agent_name} is undefined')
 
   @abstractmethod
-  def execute(self, prev_stage_results: list[Result]) -> Result:
+  def execute(self, result_history: list[Result]) -> Result:
     """Executes the stage-specific actions using agents."""

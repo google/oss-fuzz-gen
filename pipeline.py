@@ -25,15 +25,16 @@ class Pipeline():
     self.evaluation_stage: EvalationStage = EvalationStage(args)
     self.analysis_stage: AnalysisStage = AnalysisStage(args)
 
-  def _terminate(self, results: list[Result]) -> bool:
+  def _terminate(self, result_history: list[Result]) -> bool:
     """Validates if the termination conditions have been satisfied."""
-    return bool(results and results[-1].fuzz_target_source)
+    return bool(result_history and result_history[-1].fuzz_target_source)
 
-  def _execute_one_cycle(self, results: list[Result]) -> None:
+  def _execute_one_cycle(self, result_history: list[Result]) -> None:
     """Executes the stages once."""
-    results.append(self.writing_stage.execute(prev_stage_results=results))
+    result_history.append(
+        self.writing_stage.execute(result_history=result_history))
 
-  def execute(self, results: list[Result]) -> list[Result]:
+  def execute(self, result_history: list[Result]) -> list[Result]:
     """
     Runs the fuzzing pipeline iteratively to assess and refine the fuzz target.
     1. Writing Stage refines the fuzz target and its build script using insights
@@ -43,6 +44,6 @@ class Pipeline():
     improvements.
     The process repeats until the termination conditions are met.
     """
-    while not self._terminate(results=results):
-      self._execute_one_cycle(results=results)
-    return results
+    while not self._terminate(result_history=result_history):
+      self._execute_one_cycle(result_history=result_history)
+    return result_history
