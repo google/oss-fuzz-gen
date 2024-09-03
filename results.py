@@ -54,24 +54,28 @@ class BuildResult(Result):
 
 
 class RunResult(Result):
+  """The fuzzing run-time result info."""
   status: bool  # Run success/failure
   error: str  # Run error message
   full_log: str  # Run full output
 
 
 class CrashResult(RunResult):
+  """The fuzzing run-time result with crash info."""
   stacktrace: str
   true_bug: bool  # True/False positive crash
   insight: str  # Reason and fixes for crashes
 
 
 class CoverageResult(RunResult):
+  """The fuzzing run-time result with code coverage info."""
   coverage_percentage: float
   coverage_reports: dict[str, str]  # {source_file: coverage_report_content}
   insight: str  # Reason and fixes for low coverage
 
 
 class ExperimentResult:
+  """All result history of a benchmark during a trial experiment."""
 
   def __init__(self, history_results: Optional[list[Result]] = None) -> None:
     self.history_results: list[Result] = history_results or []
