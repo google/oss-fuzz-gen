@@ -427,16 +427,13 @@ class Evaluator:
       total_lines = 0
 
     if self.benchmark.language == 'jvm':
-      # The Jacoco.xml coverage report used to generate
-      # summary.json on OSS-Fuzz for JVM projects does
-      # not trace the source file location. Thus the convertion
-      # may miss some classes because they are not there
-      # during coverage report generation.
-      # This fix get the total lines calculation from the
-      # jacoco.xml report of the current run directly and
-      # compare with the total_lines retrieved from summary.json
-      # Then the larger total_lines is used which is assumed
-      # to be more accurate.
+      # The Jacoco.xml coverage report used to generate summary.json on OSS-Fuzz
+      # for JVM projects does not trace the source file location. Thus the
+      # conversion may miss some classes because they are not present during
+      # coverage report generation. This fix gets the total line calculation
+      # from the jacoco.xml report of the current run directly and compares it
+      # with the total_lines retrieved from summary.json. Then the larger
+      # total_lines is used which is assumed to be more accurate.
       total_lines = max(total_lines, run_result.coverage.total_lines)
 
     if run_result.total_pcs:
