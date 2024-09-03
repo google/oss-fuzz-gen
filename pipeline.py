@@ -1,6 +1,8 @@
 """The fuzzing main pipeline."""
 import argparse
+from typing import Optional
 
+from agent.base_agent import BaseAgent
 from results import Result
 from stage.analysis_stage import AnalysisStage
 from stage.evaluation_stage import EvalationStage
@@ -19,11 +21,17 @@ class Pipeline():
        writing stage in the next iteration.
     """
 
-  def __init__(self, args: argparse.Namespace):
+  def __init__(self,
+               args: argparse.Namespace,
+               writing_stage_agents: Optional[list[BaseAgent]] = None,
+               evaluation_stage_agents: Optional[list[BaseAgent]] = None,
+               analysis_stage_agents: Optional[list[BaseAgent]] = None):
     self.args = args
-    self.writing_stage: WritingStage = WritingStage(args)
-    self.evaluation_stage: EvalationStage = EvalationStage(args)
-    self.analysis_stage: AnalysisStage = AnalysisStage(args)
+    self.writing_stage: WritingStage = WritingStage(args, writing_stage_agents)
+    self.evaluation_stage: EvalationStage = EvalationStage(
+        args, evaluation_stage_agents)
+    self.analysis_stage: AnalysisStage = AnalysisStage(args,
+                                                       analysis_stage_agents)
 
   def _terminate(self, result_history: list[Result]) -> bool:
     """Validates if the termination conditions have been satisfied."""
