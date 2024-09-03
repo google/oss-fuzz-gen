@@ -36,7 +36,7 @@ def git_clone_project(github_url: str, destination: str) -> bool:
                           stderr=subprocess.DEVNULL)
   except subprocess.TimeoutExpired:
     return False
-  except subprocess.CalledProcessError as e:
+  except subprocess.CalledProcessError:
     return False
   return True
 

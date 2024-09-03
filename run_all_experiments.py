@@ -158,7 +158,7 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
       if benchmarks:
         benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
 
-      # Clean up the working directory for generating benchmark from scratch
+        # Clean up the working directory for generating benchmark from scratch
         shutil.rmtree(base_dir)
 
 

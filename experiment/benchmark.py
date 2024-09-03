@@ -55,6 +55,7 @@ class Benchmark:
         'target_path': benchmarks[0].target_path,
         'target_name': benchmarks[0].target_name,
         'is_test_benchmark': benchmarks[0].is_test_benchmark,
+        'is_new_integration': benchmarks[0].is_new_integration,
     }
     if benchmarks[0].is_test_benchmark:
       result['test_files'] = [{
@@ -136,12 +137,14 @@ class Benchmark:
                 cppify_headers=cppify_headers,
                 commit=commit,
                 use_context=use_context,
+                is_new_integration=data['is_new_integration'],
                 function_dict=function))
 
     return benchmarks
 
   @classmethod
-  def from_java_data_yaml(cls, benchmark_path: str, project: str, project_dir: str) -> List:
+  def from_java_data_yaml(cls, benchmark_path: str, project: str,
+                          project_dir: str) -> List:
     """Constructs benchmarks based on a Java static analysis."""
     # Retrieve the method list from the provided java data yaml file
     benchmarks = []
@@ -163,10 +166,7 @@ class Benchmark:
         # generate the parameter list for the benchmark
         param_list = []
         for count, arg_type in enumerate(function.get('argTypes')):
-          param_list.append({
-              'name': f'arg{count}',
-              'type': arg_type
-           })
+          param_list.append({'name': f'arg{count}', 'type': arg_type})
 
         # Save the benchmark with data in the method list
         benchmarks.append(
@@ -183,6 +183,7 @@ class Benchmark:
                 cppify_headers=False,
                 commit=None,
                 use_context=False,
+                is_new_integration=True,
                 function_dict=function))
 
     return benchmarks
@@ -203,6 +204,7 @@ class Benchmark:
                commit=None,
                function_dict: Optional[dict] = None,
                is_test_benchmark: bool = False,
+               is_new_integration: bool = False,
                test_file_path: str = ''):
     self.id = benchmark_id
     self.project = project
@@ -220,6 +222,7 @@ class Benchmark:
     self.commit = commit
     self.test_file_path = test_file_path
     self.is_test_benchmark = is_test_benchmark
+    self.is_new_integration = is_new_integration
 
     if self.language == 'jvm':
       # For java projects, in order to differentiate between overloaded methods
