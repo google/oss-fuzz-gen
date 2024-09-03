@@ -5,7 +5,7 @@ from typing import Optional
 
 from llm_toolkit.models import LLM
 from llm_toolkit.prompts import Prompt
-from result_classes import Result
+from results import Result
 from tool.base_tool import BaseTool
 
 

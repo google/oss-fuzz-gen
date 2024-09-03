@@ -1,7 +1,7 @@
 """The fuzzing main pipeline."""
 import argparse
 
-from result_classes import Result
+from results import Result
 from stage.analysis_stage import AnalysisStage
 from stage.evaluation_stage import EvalationStage
 from stage.writing_stage import WritingStage

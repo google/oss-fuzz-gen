@@ -1,7 +1,7 @@
 """Writing to the fuzz target and build script."""
 import logging
 
-from result_classes import Result
+from results import Result
 from stage.base_stage import BaseStage
 
 logging.basicConfig(level=logging.DEBUG,

@@ -1,5 +1,5 @@
 """Evaluating the fuzz target and build script."""
-from result_classes import Result
+from results import Result
 from stage.base_stage import BaseStage
 
 

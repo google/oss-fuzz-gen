@@ -33,7 +33,7 @@ from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, output_parser, prompt_builder, prompts
-from result_classes import BuildResult, ExperimentResult, Result
+from results import BuildResult, ExperimentResult, Result
 
 thread_local = threading.local()
 
@@ -61,6 +61,7 @@ TEMPERATURE: float = 0.4
 RESULTS_DIR = './results'
 
 
+# TODO(dongge): Move this to results.py
 @dataclasses.dataclass
 class AggregatedResult:
   """Aggregated evaluation result."""

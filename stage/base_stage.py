@@ -3,7 +3,7 @@ import argparse
 from abc import ABC, abstractmethod
 
 from agent.base_agent import BaseAgent
-from result_classes import Result
+from results import Result
 
 
 class BaseStage(ABC):

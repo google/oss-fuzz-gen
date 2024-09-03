@@ -13,7 +13,7 @@ from agent.base_agent import BaseAgent
 from llm_toolkit.models import LLM
 from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
-from result_classes import BuildResult, Result
+from results import BuildResult, Result
 from tool.base_tool import BaseTool
 from tool.container_tool import ProjectContainerTool
 
