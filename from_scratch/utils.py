@@ -37,7 +37,6 @@ def git_clone_project(github_url: str, destination: str) -> bool:
   except subprocess.TimeoutExpired:
     return False
   except subprocess.CalledProcessError as e:
-    print(e)
     return False
   return True
 
@@ -74,7 +73,6 @@ def get_project_name(github_url: str) -> Optional[str]:
 def prepare_base_files(base_dir: str, project_name: str, url: str) -> bool:
   """Prepare OSS-Fuzz base files for Java project fuzzing"""
   build_file = _get_build_file(base_dir, project_name)
-
   if not build_file:
     return False
 
@@ -191,7 +189,8 @@ def is_class_in_project(project_dir: str, class_name: str) -> bool:
 def run_oss_fuzz_build(project_name: str, oss_fuzz_dir: str) -> Optional[str]:
   """Build the project with OSS-Fuzz commands and returns path of
   fuzzerLogFile-Fuzz.data.yaml from static analysis"""
-  cmd = 'python3 infra/helper.py build_fuzzers {project_name}'
+
+  cmd = f'python3 infra/helper.py build_fuzzers {project_name}'
   try:
     subprocess.check_call(cmd,
                           shell=True,

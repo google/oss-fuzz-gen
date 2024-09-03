@@ -155,14 +155,11 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
       # Save data.yaml from static analysis as benchmark files
       benchmarks = benchmarklib.Benchmark.from_java_data_yaml(
           data_yaml_path, project_name, project_dir)
-      print(benchmarks)
       if benchmarks:
         benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
 
       # Clean up the working directory for generating benchmark from scratch
-
-
-#        shutil.rmtree(base_dir)
+        shutil.rmtree(base_dir)
 
 
 def prepare_experiment_targets(
