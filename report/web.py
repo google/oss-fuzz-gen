@@ -50,7 +50,14 @@ class JinjaEnv:
       return '#'
 
     path = link.removeprefix('gs://oss-fuzz-gcb-experiment-run-logs/')
-    return f'https://llm-exp.oss-fuzz.com/{path}/report/linux/report.html'
+    link_path = f'https://llm-exp.oss-fuzz.com/{path}/report/linux/'
+
+    # Check if this is a java benchmark, which will always have a period in
+    # the path, where C/C++ wont.
+    # TODO(David) refactor to have paths for links more controlled.
+    is_jvm = '.' in path:
+        return link_path + 'index.html'
+    return link_path + 'report.html'
 
   def __init__(self, template_globals: Optional[Dict[str, Any]] = None):
     self._env = jinja2.Environment(
