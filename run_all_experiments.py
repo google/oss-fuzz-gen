@@ -357,14 +357,15 @@ def parse_args() -> argparse.Namespace:
   num_options = int(bench_project) + int(bench_url)
   assert num_options == 1, (
       'Use one, and only one, of --generate-benchmarks-projects and '
-      '--generate-benchmarks-github-url. --generate-benchmarks-projects accepts a '
-      'comma-separated string of all target project names that already have '
-      'OSS-Fuzz integration, while --generate-benchmarks-github-url accepts a '
-      'comma-separated string of all GitHub URLs of projects that do not currently '
-      'have OSS-Fuzz integration. Use --generate-benchmarks-projects to improve '
-      'fuzzing of existing OSS-Fuzz integrated projects, and use '
-      '--generate-benchmarks-github-url to generate new OSS-Fuzz integration for '
-      'projects specified by the GitHub URLs.')
+      '--generate-benchmarks-github-url. --generate-benchmarks-projects '
+      'accepts a comma-separated string of all target project names that '
+      'already have OSS-Fuzz integration, while --generate-benchmarks-'
+      'github-url accepts a comma-separated string of all GitHub URLs of '
+      'projects that do not currently have OSS-Fuzz integration. Use '
+      '--generate-benchmarks-projects to improve fuzzing of existing OSS-Fuzz '
+      'integrated projects, and use --generate-benchmarks-github-url to '
+      'generate new OSS-Fuzz integration for projects specified by the GitHub '
+      'URLs.')
 
   # Validate templates.
   assert os.path.isdir(args.template_directory), (

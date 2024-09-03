@@ -142,7 +142,7 @@ class Benchmark:
 
   @classmethod
   def from_java_data_yaml(cls, benchmark_path: str, project: str, project_dir: str) -> List:
-    """Constructs a benchmark based on a Java data yaml file from static analysis."""
+    """Constructs benchmarks based on a Java static analysis."""
     # Retrieve the method list from the provided java data yaml file
     benchmarks = []
     with open(benchmark_path, 'r') as benchmark_file:
@@ -162,10 +162,10 @@ class Benchmark:
 
         # generate the parameter list for the benchmark
         param_list = []
-        for count, argType in enumerate(function.get('argTypes')):
+        for count, arg_type in enumerate(function.get('argTypes')):
           param_list.append({
               'name': f'arg{count}',
-              'type': argType
+              'type': arg_type
            })
 
         # Save the benchmark with data in the method list
