@@ -1,7 +1,10 @@
 """The abstract base class for tools used by LLM agents to gather information
 or perform specific actions."""
+import os
 from abc import ABC, abstractmethod
 from typing import Any
+
+TOOL_TUTORIAL_DIR = os.path.join('prompts', 'tool')
 
 
 class BaseTool(ABC):
@@ -12,6 +15,11 @@ class BaseTool(ABC):
   def __init__(self, name: str = '') -> None:
     # The name of the tool.
     self.name: str = name or self.__class__.__name__
+
+  def _get_tutorial_file_content(self, filename: str) -> str:
+    tutorial_path = os.path.join(TOOL_TUTORIAL_DIR, filename)
+    with open(tutorial_path) as tool_tutorial_path:
+      return tool_tutorial_path.read()
 
   @abstractmethod
   def tutorial(self) -> str:

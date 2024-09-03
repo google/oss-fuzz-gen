@@ -1,6 +1,5 @@
 """A tool for LLM agents to interact within a project's docker container."""
 import logging
-import os
 import subprocess as sp
 
 from experiment import oss_fuzz_checkout
@@ -8,7 +7,6 @@ from experiment.benchmark import Benchmark
 from tool.base_tool import BaseTool
 
 logger = logging.getLogger(__name__)
-TOOL_TUTORIAL_PATH = os.path.join('prompts', 'agent', 'container_tool.txt')
 
 
 class ProjectContainerTool(BaseTool):
@@ -22,9 +20,8 @@ class ProjectContainerTool(BaseTool):
 
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
-    with open(TOOL_TUTORIAL_PATH) as tool_tutorial_path:
-      tutorial = tool_tutorial_path.read()
-    return tutorial.replace('{FUZZ_TARGET_PATH}', self.benchmark.target_path)
+    return self._get_tutorial_file_content('container_tool.txt').replace(
+        '{FUZZ_TARGET_PATH}', self.benchmark.target_path)
 
   def _prepare_project_image(self) -> str:
     """Prepares the project's OSS-Fuzz docker image and returns the image name.
