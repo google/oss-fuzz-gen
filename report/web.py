@@ -56,7 +56,7 @@ class JinjaEnv:
     # the path, where C/C++ wont.
     # TODO(David) refactor to have paths for links more controlled.
     if '.' in path:
-        return link_path + 'index.html'
+      return link_path + 'index.html'
     return link_path + 'report.html'
 
   def __init__(self, template_globals: Optional[Dict[str, Any]] = None):
