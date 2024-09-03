@@ -1,11 +1,16 @@
-"""The abstract base class for tools used by LLM agents."""
+"""The abstract base class for tools used by LLM agents to gather information
+or perform specific actions."""
 from abc import ABC, abstractmethod
 from typing import Any
 
 
 class BaseTool(ABC):
+  """Abstract base class for tools used by LLM agents to interact with various
+  environments or perform actions. Provides a common interface for creating
+  tool-specific guides and executing commands."""
 
   def __init__(self, name: str = '') -> None:
+    # The name of the tool.
     self.name: str = name or self.__class__.__name__
 
   @abstractmethod

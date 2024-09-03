@@ -1,4 +1,7 @@
-"""Writing to the fuzz target and build script."""
+"""The Writing Stage class for generating and refining fuzz targets and their
+corresponding build scripts. This stage is responsible for creating new fuzz
+targets or improving existing ones to enhance code coverage and bug-finding
+capabilities."""
 import logging
 
 from results import Result
@@ -13,7 +16,11 @@ logger.setLevel(logging.DEBUG)
 
 
 class WritingStage(BaseStage):
-  """Writing to the fuzz target and build script."""
+  """Handles the creation and refinement of fuzz targets and build scripts.
+  Initially, this stage outputs a new fuzz target and its build script for a
+  function under test. In later cycles, it uses run-time results and insights
+  from previous iterations to produce a revised fuzz target.
+  It leverages LLM agents to perform these tasks."""
 
   def _write_new_fuzz_target(self, result_history: list[Result]) -> Result:
     """Writes a new fuzz target."""
