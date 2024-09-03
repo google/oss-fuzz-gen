@@ -12,9 +12,8 @@ logger = logging.getLogger(__name__)
 class ProjectContainerTool(BaseTool):
   """A tool for LLM agents to interact within a project's docker container."""
 
-  def __init__(self, bechmark: Benchmark, name: str = '') -> None:
-    super().__init__(name)
-    self.benchmark = bechmark
+  def __init__(self, benchmark: Benchmark, name: str = '') -> None:
+    super().__init__(benchmark, name)
     self.image_name = self._prepare_project_image()
     self.container_id = self._start_docker_container()
 
