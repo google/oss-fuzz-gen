@@ -24,7 +24,10 @@ class WritingStage(BaseStage):
 
   def _write_new_fuzz_target(self, result_history: list[Result]) -> Result:
     """Writes a new fuzz target."""
-    return self.get_agent('Prototyper').execute(result_history)
+    agent = self.get_agent('Prototyper')
+    if self.args.cloud_experiment_name:
+      return self._execute_agent_cloud(agent, result_history)
+    return agent.execute(result_history)
 
   def _refine_given_fuzz_targets(self, result_history: list[Result]) -> Result:
     """Writes a new fuzz target."""

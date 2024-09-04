@@ -38,7 +38,7 @@ docstring-parser==0.16
     # via google-cloud-aiplatform
 filelock==3.15.4
     # via huggingface-hub
-fsspec==2024.6.1
+fsspec==2024.9.0
     # via huggingface-hub
 gitdb==4.0.11
     # via gitpython
@@ -46,21 +46,26 @@ gitpython==3.1.43
     # via -r requirements.in
 google-api-core[grpc]==2.19.2
     # via
+    #   google-api-python-client
     #   google-cloud-aiplatform
     #   google-cloud-bigquery
     #   google-cloud-core
-    #   google-cloud-pubsub
     #   google-cloud-resource-manager
     #   google-cloud-storage
+google-api-python-client==2.143.0
+    # via -r requirements.in
 google-auth==2.34.0
     # via
     #   google-api-core
+    #   google-api-python-client
+    #   google-auth-httplib2
     #   google-cloud-aiplatform
     #   google-cloud-bigquery
     #   google-cloud-core
-    #   google-cloud-pubsub
     #   google-cloud-resource-manager
     #   google-cloud-storage
+google-auth-httplib2==0.2.0
+    # via google-api-python-client
 google-cloud-aiplatform==1.64.0
     # via -r requirements.in
 google-cloud-bigquery==3.25.0
@@ -69,8 +74,6 @@ google-cloud-core==2.4.1
     # via
     #   google-cloud-bigquery
     #   google-cloud-storage
-google-cloud-pubsub==2.23.0
-    # via -r requirements.in
 google-cloud-resource-manager==1.12.5
     # via google-cloud-aiplatform
 google-cloud-storage==2.9.0
@@ -89,24 +92,23 @@ googleapis-common-protos[grpc]==1.65.0
     #   grpc-google-iam-v1
     #   grpcio-status
 grpc-google-iam-v1==0.13.1
-    # via
-    #   google-cloud-pubsub
-    #   google-cloud-resource-manager
+    # via google-cloud-resource-manager
 grpcio==1.66.1
     # via
     #   google-api-core
-    #   google-cloud-pubsub
     #   googleapis-common-protos
     #   grpc-google-iam-v1
     #   grpcio-status
 grpcio-status==1.66.1
-    # via
-    #   google-api-core
-    #   google-cloud-pubsub
+    # via google-api-core
 h11==0.14.0
     # via httpcore
 httpcore==1.0.5
     # via httpx
+httplib2==0.22.0
+    # via
+    #   google-api-python-client
+    #   google-auth-httplib2
 httpx==0.27.2
     # via
     #   anthropic
@@ -153,13 +155,11 @@ proto-plus==1.24.0
     # via
     #   google-api-core
     #   google-cloud-aiplatform
-    #   google-cloud-pubsub
     #   google-cloud-resource-manager
 protobuf==5.28.0
     # via
     #   google-api-core
     #   google-cloud-aiplatform
-    #   google-cloud-pubsub
     #   google-cloud-resource-manager
     #   googleapis-common-protos
     #   grpc-google-iam-v1
@@ -180,6 +180,8 @@ pydantic-core==2.20.1
     # via pydantic
 pylint==3.2.5
     # via -r requirements.in
+pyparsing==3.1.4
+    # via httplib2
 pyright==1.1.345
     # via -r requirements.in
 python-dateutil==2.9.0.post0
@@ -237,6 +239,8 @@ typing-extensions==4.12.2
     #   pydantic-core
 tzdata==2024.1
     # via pandas
+uritemplate==4.1.1
+    # via google-api-python-client
 urllib3==2.2.2
     # via requests
 yapf==0.40.1
