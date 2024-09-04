@@ -14,13 +14,18 @@
 # limitations under the License.
 """Provides a set of utils for oss-fuzz-gen on new Java projects integration"""
 
+import logging
 import os
+import shutil
 import subprocess
 from typing import Optional
 
 from urllib3.util import parse_url
 
 from auto_build import oss_fuzz_templates
+from experiment import benchmark as benchmarklib
+
+logger = logging.getLogger(__name__)
 
 
 # Project preparation utils
@@ -226,15 +231,118 @@ def sort_methods_by_fuzz_worthiness(functions: list[dict]) -> list[dict]:
     4) The number of arguments of this function in descending order.
     5) Number of source code lines in descending order."""
 
-  return sorted(
-      functions,
-      key=lambda item:
-      (item.get('JavaMethodInfo', {}).get('classEnum', False), -item.get(
-          'functionDepth', 0), -item.get('CyclomaticComplexity', 0), -item.
-       get('argCount', 0), -max(
-           0,
-           item.get('functionLinenumberEnd', 0) - item.get('functionLinenumber', 0))),
-      reverse=False)
+  return sorted(functions,
+                key=lambda item:
+                (item.get('JavaMethodInfo', {}).get('classEnum', False),
+                 -item.get('functionDepth', 0), -item.get(
+                     'CyclomaticComplexity', 0), -item.get('argCount', 0), -max(
+                         0,
+                         item.get('functionLinenumberEnd', 0) - item.get(
+                             'functionLinenumber', 0))),
+                reverse=False)
+
+
+def group_functions_by_return_type(functions: list[dict]) -> dict[str, dict]:
+  """Group functions by return type and its constructors/builders status."""
+
+  excluded_return_type = [
+      'byte', 'boolean', 'char', 'int', 'long', 'short', 'double', 'float',
+      'void', 'java.lang.Byte', 'java.lang.Short', 'java.lang.Integer',
+      'java.lang.Long', 'java.lang.Float', 'java.lang.Double',
+      'java.lang.Character', 'java.lang.Boolean', 'java.lang.String'
+  ]
+
+  functions_group_by_return_type = {}
+  for function in functions:
+    function_name = function.get('functionName', '')
+    return_type = function.get('returnType', '')
+    method_info = function.get('JavaMethodInfo', {})
+
+    # Preprocess constructor return types
+    if '<init>' in function_name:
+      return_type = function.get('functionSourceFile', '').split('$')[0]
+
+    # Skip methods with excluded return type
+    if not return_type or return_type in excluded_return_type:
+      continue
+
+    # Skip inaccessible methods
+    is_public = method_info.get('public', True) and method_info.get(
+        'classPublic', True)
+    is_concrete = method_info.get('concrete', True) and method_info.get(
+        'classConcrete', True)
+    is_java_lib = method_info.get('javaLibraryMethod', True)
+    if not is_public or not is_concrete or is_java_lib:
+      continue
+
+    return_type_group = functions_group_by_return_type.get(return_type, {})
+    function_dict = {
+        'function_signature': function_name,
+        'is_static': method_info.get('static', False),
+        'exceptions': method_info.get('exceptions', []),
+        'need-close': method_info.get('need-close', False)
+    }
+
+    if '<init>' in function_name:
+      constructors = return_type_group.get('constructors', [])
+      constructors.append(function_dict)
+      return_type_group['constructors'] = constructors
+    else:
+      builders = return_type_group.get('builders', [])
+      builders.append(function_dict)
+      return_type_group['buidlers'] = builders
+
+    functions_group_by_return_type[return_type] = return_type_group
+
+  return functions_group_by_return_type
+
+
+# Benchmark generation utils
+############################
+def generate_benchmarks_from_github_url(oss_fuzz_dir: str, benchmark_dir: str,
+                                        url: str) -> Optional[str]:
+  """This function generate benchmark yaml for the given project url."""
+
+  project_name = get_project_name(url)
+  if not project_name:
+    # Invalid url
+    logger.warning(f'Skipping wrong github url: {url}')
+    return None
+
+  # Clone project for static analysis
+  base_dir = get_next_project_dir(oss_fuzz_dir)
+  project_dir = os.path.join(base_dir, 'proj')
+  if not git_clone_project(url, project_dir):
+    # Invalid url
+    logger.warning(f'Failed to clone from the github url: {url}')
+    shutil.rmtree(base_dir)
+    return None
+
+  # Prepare OSS-Fuzz base files
+  if not prepare_base_files(base_dir, project_name, url):
+    # Invalid build type or non-Java project
+    logger.warning(f'Build type of project {project_name} is not supported.')
+    shutil.rmtree(base_dir)
+    return None
+
+  # Run OSS-Fuzz build and static analysis on the project
+  data_yaml_path = run_oss_fuzz_build(os.path.basename(base_dir), oss_fuzz_dir)
+  if not data_yaml_path:
+    # Failed to build or run static analysis on the project
+    logger.warning(f'Failed to build project {project_name} with JDK15.')
+    shutil.rmtree(base_dir)
+    return None
+
+  # Save data.yaml from static analysis as benchmark files
+  benchmarks = benchmarklib.Benchmark.from_java_data_yaml(
+      data_yaml_path, project_name, project_dir)
+  if benchmarks:
+    benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
+
+  # Clean up the working directory for generating benchmark from scratch
+  shutil.rmtree(project_dir)
+
+  return base_dir
 
 
 # OSS-Fuzz project utils

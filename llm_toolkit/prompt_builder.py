@@ -551,12 +551,20 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self.benchmark = benchmark
     self.project_url = self._find_project_url(self.benchmark.project)
 
+    # Check if the benchmarks are for new OSS-Fuzz integration
+    self.is_new_integration = self.benchmark.is_new_integration
+
     # Retrieve additional properties for the target method
-    temp_properties = introspector.query_introspector_function_props(
-        self.benchmark.project, self.benchmark.function_signature)
+    if self.is_new_integration:
+      temp_properties = self.benchmark.jvm_special_properties or {}
+    else:
+      temp_properties = introspector.query_introspector_function_props(
+          self.benchmark.project, self.benchmark.function_signature)
     self.exceptions = temp_properties.get('exceptions', [])
     self.is_jvm_static = temp_properties.get('is-jvm-static', False)
-    self.need_close = temp_properties.get('need_close', False)
+    self.need_close = temp_properties.get('need-close', False)
+    self.constructor_list = temp_properties.get('constructors', [])
+    self.builder_list = temp_properties.get('builders', [])
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
@@ -813,15 +821,23 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       return ''
 
     constructors = []
-    ctrs = introspector.query_introspector_matching_function_constructor_type(
-        self.benchmark.project, self.benchmark.return_type, False)
+    if self.is_new_integration:
+      ctrs = self.constructor_list
+    else:
+      ctrs = introspector.query_introspector_matching_function_constructor_type(
+          self.benchmark.project, self.benchmark.return_type, False)
     for ctr in ctrs:
       constructor_sig = ctr.get('function_signature', '')
-      if constructor_sig:
-        constructors.append(f'<signature>{constructor_sig}</signature>')
-        self.exceptions.update(
-            introspector.query_introspector_function_props(
-                ctr.get('project', ''), constructor_sig)[0])
+      if not constructor_sig:
+        continue
+
+      if self.is_new_integration:
+        properties = ctr
+      else:
+        properties = introspector.query_introspector_function_props(ctr.get('project', ''), constructor_sig)
+
+      constructors.append(f'<signature>{constructor_sig}</signature>')
+      self.exceptions.update(properties.get('exceptions', []))
 
     if constructors:
       ctr_str = '\n'.join(constructors)
@@ -831,14 +847,17 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     funcs = introspector.query_introspector_matching_function_constructor_type(
         self.benchmark.project, self.benchmark.return_type, True)
     for func in funcs:
-      is_static = func.get('is_static', False)
       function_sig = func.get('function_signature', '')
       if not function_sig:
         continue
-      self.exceptions.update(
-          introspector.query_introspector_function_props(
-              func.get('project', ''), function_sig)[0])
-      if is_static:
+
+      if self.is_new_integration:
+        properties = func
+      else:
+        properties = introspector.query_introspector_function_props(func.get('project', ''), function_sig)
+
+      self.exceptions.update(properties.get('exceptions', []))
+      if properties.get('is-jvm-static', False):
         functions.append(f'<item><signature>{function_sig}</signature></item>')
       else:
         function_class = function_sig[1:].split(']')[0]
@@ -882,9 +901,13 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     problem = problem.replace('{CONSTRUCTORS}', self._format_constructors())
     problem = problem.replace('{EXCEPTIONS}', self._format_exceptions())
 
-    self_source, cross_source = self._format_source_reference(signature)
+    self_source = ''
+    cross_source = ''
+    if not self.is_new_integration:
+      self_source, cross_source = self._format_source_reference(signature)
     problem = problem.replace('{SELF_SOURCE}', self_source)
     problem = problem.replace('{CROSS_SOURCE}', cross_source)
+
     if is_constructor:
       problem = problem.replace('{METHOD_OR_CONSTRUCTOR}', 'constructor')
     else:

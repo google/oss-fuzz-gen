@@ -41,6 +41,13 @@ def quoted_string_presenter(dumper, data):
   return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='"')
 
 
+# For ignoring inner structure alias dumping
+class NoAliasDumper(yaml.Dumper):
+
+  def ignore_aliases(self, data):
+    return True
+
+
 class Benchmark:
   """Represents a benchmark."""
 
@@ -67,12 +74,19 @@ class Benchmark:
           'name': b.function_name,
           'return_type': b.return_type,
           'params': b.params,
-          'jvm_special_properties': b.jvm_special_properties,
+          'jvm_special_properties': b.jvm_special_properties
       } for b in benchmarks]
 
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
               'w') as file:
-      yaml.dump(result, file, default_flow_style=False, width=sys.maxsize)
+      if benchmarks[0].is_new_integration:
+        yaml.dump(result,
+                  file,
+                  default_flow_style=False,
+                  width=sys.maxsize,
+                  Dumper=NoAliasDumper)
+      else:
+        yaml.dump(result, file, default_flow_style=False, width=sys.maxsize)
 
   @classmethod
   def from_yaml(cls, benchmark_path: str) -> List:
@@ -157,6 +171,7 @@ class Benchmark:
     if functions:
       # Sort method list by fuzz worthiness
       functions = utils.sort_methods_by_fuzz_worthiness(functions)
+      functions_by_return_type = utils.group_functions_by_return_type(functions)
 
       # Transform each method into benchmark
       for function in functions:
@@ -168,10 +183,21 @@ class Benchmark:
         max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
         truncated_id = f'{project}-{function.get("name")}'[:max_len]
 
-        # generate the parameter list for the benchmark
+        # Generate the parameter list for the benchmark
         param_list = []
         for count, arg_type in enumerate(function.get('argTypes', [])):
           param_list.append({'name': f'arg{count}', 'type': arg_type})
+
+        # Generate methods/constructors list creating the needed object
+        if '<init>' in function.get('functionName', ''):
+          constructors = []
+          builders = []
+        else:
+          class_name = function.get('functionSourceFile', '').split('$')[0]
+          functions_with_return_type = functions_by_return_type.get(
+              class_name, {})
+          constructors = functions_with_return_type.get('constructors', [])
+          builders = functions_with_return_type.get('builders', [])
 
         # Process JVM special properties
         jvm_special_properties = {
@@ -180,7 +206,11 @@ class Benchmark:
             'need-close':
                 function.get('JavaMethodInfo', {}).get('needClose', False),
             'exceptions':
-                function.get('JavaMethodInfo', {}).get('exceptions', [])
+                function.get('JavaMethodInfo', {}).get('exceptions', []),
+            'builders':
+                builders,
+            'constructors':
+                constructors
         }
 
         # Save the benchmark with data in the method list

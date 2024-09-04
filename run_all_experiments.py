@@ -26,7 +26,7 @@ from multiprocessing import Pool
 from typing import Any
 
 import run_one_experiment
-from auto_build import auto_build
+from auto_build import utils
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import evaluator, oss_fuzz_checkout, textcov
@@ -120,7 +120,8 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
     ]
     for url in project_urls:
       # Generate benchmark yaml for each project url
-      auto_build.generate_benchmarks_from_github_url(benchmark_dir, url)
+      utils.generate_benchmarks_from_github_url(oss_fuzz_checkout.OSS_FUZZ_DIR,
+                                                benchmark_dir, url)
 
 
 def prepare_experiment_targets(
@@ -308,7 +309,8 @@ def parse_args() -> argparse.Namespace:
   bench_dir = bool(args.benchmarks_directory)
   bench_gen = bool(args.generate_benchmarks)
   bench_url = bool(args.generate_benchmarks_github_url)
-  num_options = int(bench_yml) + int(bench_dir) + int(bench_gen) + int(bench_url)
+  num_options = int(bench_yml) + int(bench_dir) + int(bench_gen) + int(
+      bench_url)
   assert num_options == 1, (
       'One and only one of --benchmark-yaml, --benchmarks-directory, '
       '--generate-benchmarks and --generate-benchmarks-github-url. '
