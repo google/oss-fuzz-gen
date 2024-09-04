@@ -832,7 +832,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         continue
 
       if self.is_new_integration:
-        properties = ctr
+        properties = ctr.copy()
       else:
         properties = introspector.query_introspector_function_props(ctr.get('project', ''), constructor_sig)
 
@@ -852,7 +852,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         continue
 
       if self.is_new_integration:
-        properties = func
+        properties = func.copy()
       else:
         properties = introspector.query_introspector_function_props(func.get('project', ''), function_sig)
 
