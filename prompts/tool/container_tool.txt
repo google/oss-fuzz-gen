@@ -1,0 +1,40 @@
+To help write a simple but valid fuzz target, your can investigate any files in the fuzz target's build environment by iteratively send me a BASH command, and I will provide you with the output of the command.
+Some interaction protocols:
+1. Strictly ONE BASH command at a time.
+2. Each message your send should first explain the reason why you want to run the command wrapped by <reason></reason>, then provide the command to run wrapped in <bash></bash> in this format:
+<reason>
+Reasons here.
+</reason>
+<bash>
+One bash command here.
+</bash>
+3. Each repond I sent will repeat the command you sent in wrapped in <bash></bash> for you to double-check, followed by the command standard output wrappped in <stdout></stdout> and stderr wrapped in <<stderr></strderr> in this format:
+<bash>
+The command I executed, copied from the command you sent.
+</bash>
+<stdout>
+The standard output of the command.
+</stdout>
+<stderr>
+The standard error of the command.
+</stderr>
+4. The final goal is to answer two questions about the new fuzz target: a) How to modify the existing fuzz target at <code>{FUZZ_TARGET_PATH}</code> so that it can fuzz the new function-under-test? b) Do we nee to moidfy the build script at <code>/src/build.sh</code> to successfully build the new fuzz target?
+5. If you have a conclusion on both questions, output overal description wrapped by <conclusion></conclusion> followed by the modified target wrapped in <fuzz target></fuzz target>. If you modified the build script, output it wrapped in <build script></build script>:
+<conclusion>
+Overal description about fuzz target design.
+</conclusion>
+<fuzz target>
+The full code of fixed fuzz target here.
+</fuzz target>
+<build script>
+The full code of build script here if you modified the build script, otherwise omit this block.
+</build script>
+
+Some general rules:
+1. You are allowed to view all files and environment variables, but NOT ALLOWED TO 1) MODIFY THEM, RENAME THEM, OR CREATE NEW FILES. You can only modify the fuzz target at <code>{FUZZ_TARGET_PATH}</code> or the build script at <code>/src/build.sh</code> ONLY, and output the final version in conclusion.  All modification of other files will NOT BE PRESERVED when building the modified fuzz target.
+2. Use the given fuzz target at <code>{FUZZ_TARGET_PATH}</code> and other fuzz targets using <code>LLVMFuzzerTestOneInput</code> under the same directory as examples. In particular, learn and resuse their ways to include headerfiles in your solution. In most cases, you can assume you only have to modified the content of <code>LLVMFuzzerTestOneInput</code> to fuzz the new function-under-test.
+3. If the header inclusion statements do not work, investigate the source code of the project and library files built by build.sh.
+4. If the building the fuzz target failed becaue it does not contain the function-under-test, consider modify <code>/src/build.sh</code> to build the full project. The project-under-test's root dir is cloned from the project's git repo and may contain a README.md that describes how to build the full project.
+5. YOU MUST NOT COMPILE the fuzz target. Respond the conclusion above once you think you have an answer. The answer does not have to be perfect, I will compile it and show you the result.
+6. Once I recive your conclusion, I will replace <code>{FUZZ_TARGET_PATH}</code> with your fuzz target. If you modified the build script, I will replace /src/build.sh with it too.
+7. DO NOT wrap code snippets with ```, using the XML-style tags above will suffice.
