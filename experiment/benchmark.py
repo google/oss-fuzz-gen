@@ -23,7 +23,7 @@ from typing import List, Optional
 
 import yaml
 
-from from_scratch import utils
+from auto_build import utils
 
 
 class FileType(Enum):

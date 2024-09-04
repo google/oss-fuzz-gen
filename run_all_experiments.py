@@ -18,7 +18,6 @@ import argparse
 import json
 import logging
 import os
-import shutil
 import sys
 import time
 import traceback
@@ -27,11 +26,11 @@ from multiprocessing import Pool
 from typing import Any
 
 import run_one_experiment
+from auto_build import auto_build
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
-from from_scratch import utils
 from llm_toolkit import models, prompt_builder
 
 logger = logging.getLogger(__name__)
@@ -120,46 +119,8 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
         url.strip() for url in args.generate_benchmarks_github_url.split(',')
     ]
     for url in project_urls:
-      project_name = utils.get_project_name(url)
-      if not project_name:
-        # Invalid url
-        logger.warning(f'Skipping wrong github url: {url}')
-        continue
-
-      # Clone project for static analysis
-      base_dir = utils.get_next_project_dir(oss_fuzz_checkout.OSS_FUZZ_DIR)
-      project_dir = os.path.join(base_dir, 'proj')
-      if not utils.git_clone_project(url, project_dir):
-        # Invalid url
-        logger.warning(f'Failed to clone from the github url: {url}')
-        shutil.rmtree(base_dir)
-        continue
-
-      # Prepare OSS-Fuzz base files
-      if not utils.prepare_base_files(base_dir, project_name, url):
-        # Invalid build type or non-Java project
-        logger.warning(
-            f'Build type of project {project_name} is not supported.')
-        shutil.rmtree(base_dir)
-        continue
-
-      # Run OSS-Fuzz build and static analysis on the project
-      data_yaml_path = utils.run_oss_fuzz_build(os.path.basename(base_dir),
-                                                oss_fuzz_checkout.OSS_FUZZ_DIR)
-      if not data_yaml_path:
-        # Failed to build or run static analysis on the project
-        logger.warning(f'Failed to build project {project_name} with JDK15.')
-        shutil.rmtree(base_dir)
-        continue
-
-      # Save data.yaml from static analysis as benchmark files
-      benchmarks = benchmarklib.Benchmark.from_java_data_yaml(
-          data_yaml_path, project_name, project_dir)
-      if benchmarks:
-        benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
-
-        # Clean up the working directory for generating benchmark from scratch
-        shutil.rmtree(base_dir)
+      # Generate benchmark yaml for each project url
+      auto_build.generate_benchmarks_from_github_url(benchmark_dir, url)
 
 
 def prepare_experiment_targets(
@@ -173,7 +134,7 @@ def prepare_experiment_targets(
         'the files in %s.', args.benchmark_yaml, args.benchmarks_directory)
     benchmark_yamls = [args.benchmark_yaml]
   else:
-    if args.generate_benchmarks:
+    if args.generate_benchmarks or args.generate_benchmarks_github_url:
       generate_benchmarks(args)
 
     benchmark_yamls = [
@@ -346,27 +307,15 @@ def parse_args() -> argparse.Namespace:
   bench_yml = bool(benchmark_yaml)
   bench_dir = bool(args.benchmarks_directory)
   bench_gen = bool(args.generate_benchmarks)
-  num_options = int(bench_yml) + int(bench_dir) + int(bench_gen)
-  assert num_options == 1, (
-      'One and only one of --benchmark-yaml, --benchmarks-directory and '
-      '--generate-benchmarks. --benchmark-yaml takes one benchmark YAML file, '
-      '--benchmarks-directory takes: a directory of them and '
-      '--generate-benchmarks generates them during analysis.')
-
-  bench_project = bool(args.generate_benchmarks_projects)
   bench_url = bool(args.generate_benchmarks_github_url)
-
-  num_options = int(bench_project) + int(bench_url)
+  num_options = int(bench_yml) + int(bench_dir) + int(bench_gen) + int(bench_url)
   assert num_options == 1, (
-      'Use one, and only one, of --generate-benchmarks-projects and '
-      '--generate-benchmarks-github-url. --generate-benchmarks-projects '
-      'accepts a comma-separated string of all target project names that '
-      'already have OSS-Fuzz integration, while --generate-benchmarks-'
-      'github-url accepts a comma-separated string of all GitHub URLs of '
-      'projects that do not currently have OSS-Fuzz integration. Use '
-      '--generate-benchmarks-projects to improve fuzzing of existing OSS-Fuzz '
-      'integrated projects, and use --generate-benchmarks-github-url to '
-      'generate new OSS-Fuzz integration for projects specified by the GitHub '
+      'One and only one of --benchmark-yaml, --benchmarks-directory, '
+      '--generate-benchmarks and --generate-benchmarks-github-url. '
+      '--benchmark-yaml takes one benchmark YAML file, '
+      '--benchmarks-directory takes: a directory of them, '
+      '--generate-benchmarks generates them during analysis and '
+      ' generate new OSS-Fuzz integration for projects specified by the GitHub '
       'URLs.')
 
   # Validate templates.

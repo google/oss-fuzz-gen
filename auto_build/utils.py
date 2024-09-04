@@ -20,7 +20,7 @@ from typing import Optional
 
 from urllib3.util import parse_url
 
-from from_scratch import oss_fuzz_templates
+from auto_build import oss_fuzz_templates
 
 
 # Project preparation utils
