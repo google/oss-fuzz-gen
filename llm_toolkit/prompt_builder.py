@@ -19,7 +19,7 @@ import logging
 import os
 import re
 from abc import abstractmethod
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 
 import jinja2
 import requests
@@ -79,9 +79,9 @@ C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES = ['stdio.h', 'stdlib.h', 'stdint.h']
 class PromptBuilder:
   """Prompt builder."""
 
-  def __init__(self, model: models.LLM):
+  def __init__(self, model: models.LLM, initial=None):
     self._model = model
-    self._prompt = model.prompt_type()()
+    self._prompt = model.prompt_type()(initial)
 
   @abstractmethod
   def build(self,
@@ -113,8 +113,9 @@ class DefaultTemplateBuilder(PromptBuilder):
   def __init__(self,
                model: models.LLM,
                benchmark: Optional[Benchmark] = None,
-               template_dir: str = DEFAULT_TEMPLATE_DIR):
-    super().__init__(model)
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, initial)
     self._template_dir = template_dir
     self.benchmark = benchmark
 
