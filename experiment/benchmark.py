@@ -155,10 +155,13 @@ class Benchmark:
 
     # Loop through the method list
     if functions:
+      # Sort method list by fuzz worthiness
+      functions = utils.sort_methods_by_fuzz_worthiness(functions)
+
+      # Transform each method into benchmark
       for function in functions:
-        # Skipping methods that are not belonging to the target project
-        class_name = function.get('functionSourceFile').split('$')[0]
-        if not utils.is_class_in_project(project_dir, class_name):
+        # Skipping methods that are not fuzz worthy
+        if not utils.is_exclude_method(project_dir, function):
           continue
 
         # Generate an ID for each benchmark
