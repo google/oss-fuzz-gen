@@ -113,6 +113,9 @@ class GenerateReport:
     """Prepares coverage reports in local runs."""
     coverage_path = os.path.join(self.results_dir, benchmark.id,
                                  'code-coverage-reports')
+    if not os.path.isdir(coverage_path):
+      return
+
     coverage_report = ''
     for l in os.listdir(coverage_path):
       if l.split('.')[0] == sample.id:
