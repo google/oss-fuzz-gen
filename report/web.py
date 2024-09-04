@@ -117,13 +117,11 @@ class GenerateReport:
     for l in os.listdir(coverage_path):
       if l.split('.')[0] == sample.id:
         coverage_report = os.path.join(coverage_path, l)
-    #sample_targets = self._results.get_targets(benchmark.id, sample.id)
     if coverage_report:
       # Copy coverage to reports out
       dst = os.path.join(self._output_dir, 'sample', benchmark.id, 'coverage')
       os.makedirs(dst, exist_ok=True)
-      dst = os.path.join(self._output_dir, 'sample', benchmark.id, 'coverage',
-                         sample.id)
+      dst = os.path.join(dst, sample.id)
 
       shutil.copytree(coverage_report, dst, dirs_exist_ok=True)
       sample.result.coverage_report_path = \
