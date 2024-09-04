@@ -480,7 +480,7 @@ class BuilderRunner:
         generated_project, benchmark_target_name,
         self.work_dirs.run_logs_target(benchmark_target_name, iteration))
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
-        generated_project, benchmark_target_name, iteration))
+        generated_project, benchmark_target_name))
 
     # Parse libfuzzer logs to get fuzz target runtime details.
     with open(self.work_dirs.run_logs_target(benchmark_target_name, iteration),
@@ -650,7 +650,7 @@ class BuilderRunner:
 
   def get_coverage_local(
       self, generated_project: str,
-      benchmark_target_name: str, iteration: int) -> tuple[Optional[textcov.Textcov], Any]:
+      benchmark_target_name: str) -> tuple[Optional[textcov.Textcov], Any]:
     """Get coverage."""
     sample_id = os.path.splitext(benchmark_target_name)[0]
     log_path = os.path.join(self.work_dirs.build_logs,
@@ -712,7 +712,8 @@ class BuilderRunner:
 
     coverage_report = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build',
                                    'out', generated_project, 'report')
-    destination_coverage = self.work_dirs.code_coverage_report(benchmark_target_name)
+    destination_coverage = self.work_dirs.code_coverage_report(
+        benchmark_target_name)
     shutil.copytree(coverage_report, destination_coverage)
 
     coverage_summary = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build',

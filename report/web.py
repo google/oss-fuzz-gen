@@ -18,10 +18,10 @@ import argparse
 import json
 import logging
 import os
+import shutil
 import threading
 import time
 import urllib.parse
-import shutil
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Dict, List, Optional
@@ -47,6 +47,7 @@ class JinjaEnv:
 
   @staticmethod
   def _cov_report_link(link: str):
+    """Get URL to coverage report"""
     if not link:
       return '#'
 
@@ -108,9 +109,10 @@ class GenerateReport:
       timings_dict = json.loads(f.read())
     return timings_dict
 
-
   def _copy_and_set_coverage_report(self, benchmark, sample):
-    coverage_path = os.path.join(self.results_dir, benchmark.id, 'code-coverage-reports')
+    """Prepares coverage reports in local runs."""
+    coverage_path = os.path.join(self.results_dir, benchmark.id,
+                                 'code-coverage-reports')
     coverage_report = ''
     for l in os.listdir(coverage_path):
       if l.split('.')[0] == sample.id:
@@ -120,10 +122,12 @@ class GenerateReport:
       # Copy coverage to reports out
       dst = os.path.join(self._output_dir, 'sample', benchmark.id, 'coverage')
       os.makedirs(dst, exist_ok=True)
-      dst = os.path.join(self._output_dir, 'sample', benchmark.id, 'coverage', sample.id)
-          
+      dst = os.path.join(self._output_dir, 'sample', benchmark.id, 'coverage',
+                         sample.id)
+
       shutil.copytree(coverage_report, dst, dirs_exist_ok=True)
-      sample.result.coverage_report_path = '/sample/%s/coverage/%s/linux/'%(benchmark.id, sample.id)
+      sample.result.coverage_report_path = \
+        f'/sample/{benchmark.id}/coverage/{sample.id}/linux/'
 
   def generate(self):
     """Generate and write every report file."""
