@@ -21,6 +21,7 @@ import os
 import threading
 import time
 import urllib.parse
+import shutil
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Dict, List, Optional
@@ -49,13 +50,17 @@ class JinjaEnv:
     if not link:
       return '#'
 
-    path = link.removeprefix('gs://oss-fuzz-gcb-experiment-run-logs/')
-    link_path = f'https://llm-exp.oss-fuzz.com/{path}/report/linux/'
+    if 'gcb-experiment' not in link:
+      # In local rusn we don't overwrite the path
+      link_path = link
+    else:
+      path = link.removeprefix('gs://oss-fuzz-gcb-experiment-run-logs/')
+      link_path = f'https://llm-exp.oss-fuzz.com/{path}/report/linux/'
 
     # Check if this is a java benchmark, which will always have a period in
     # the path, where C/C++ wont.
     # TODO(David) refactor to have paths for links more controlled.
-    if '.' in path:
+    if '.' in link_path:
       return link_path + 'index.html'
     return link_path + 'report.html'
 
@@ -103,6 +108,23 @@ class GenerateReport:
       timings_dict = json.loads(f.read())
     return timings_dict
 
+
+  def _copy_and_set_coverage_report(self, benchmark, sample):
+    coverage_path = os.path.join(self.results_dir, benchmark.id, 'code-coverage-reports')
+    coverage_report = ''
+    for l in os.listdir(coverage_path):
+      if l.split('.')[0] == sample.id:
+        coverage_report = os.path.join(coverage_path, l)
+    #sample_targets = self._results.get_targets(benchmark.id, sample.id)
+    if coverage_report:
+      # Copy coverage to reports out
+      dst = os.path.join(self._output_dir, 'sample', benchmark.id, 'coverage')
+      os.makedirs(dst, exist_ok=True)
+      dst = os.path.join(self._output_dir, 'sample', benchmark.id, 'coverage', sample.id)
+          
+      shutil.copytree(coverage_report, dst, dirs_exist_ok=True)
+      sample.result.coverage_report_path = '/sample/%s/coverage/%s/linux/'%(benchmark.id, sample.id)
+
   def generate(self):
     """Generate and write every report file."""
     benchmarks = []
@@ -112,6 +134,10 @@ class GenerateReport:
       benchmarks.append(benchmark)
       samples = self._results.get_samples(results, targets)
       prompt = self._results.get_prompt(benchmark.id)
+
+      for sample in samples:
+        # If this is a local run then we need to set up coverage reports.
+        self._copy_and_set_coverage_report(benchmark, sample)
 
       self._write_benchmark_index(benchmark, samples, prompt)
       self._write_benchmark_crash(benchmark, samples)
