@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from agent.base_agent import BaseAgent
+from common.cloud_builder import CloudBuilder
 from results import Result
 
 
@@ -28,6 +29,13 @@ class BaseStage(ABC):
       if agent.name == agent_name:
         return agent
     raise RuntimeError(f'Agent {agent_name} is undefined')
+
+  def _execute_agent_cloud(self, agent: BaseAgent,
+                           result_history: list[Result]) -> Result:
+
+    cloud_builder = CloudBuilder(self.args)
+    pickle_dir = result_history[-1].work_dirs.pickles
+    return cloud_builder.run(agent, result_history, pickle_dir)
 
   @abstractmethod
   def execute(self, result_history: list[Result]) -> Result:
