@@ -197,34 +197,44 @@ def is_exclude_method(project_dir: str, function: dict) -> bool:
   6) The method has 0 arguments"""
 
   excluded_function_name = [
-      'fuzzertestoneinput', 'fuzzerinitialize', 'fuzzerteardown',
-      'exception', 'error', 'test'
+      'fuzzertestoneinput', 'fuzzerinitialize', 'fuzzerteardown', 'exception',
+      'error', 'test'
   ]
 
   method_name = function.get('functionName', '')
-  class_name = function.get('functionSourceFile').split('$')[0]
+  class_name = function.get('functionSourceFile', '').split('$')[0]
   method_info = function.get('JavaMethodInfo', {})
-  is_public = method_info.get('public', True) and method_info.get('classPublic', True)
-  is_concrete = method_info.get('concrete', True) and method_info.get('classConcrete', True)
+  is_public = method_info.get('public', True) and method_info.get(
+      'classPublic', True)
+  is_concrete = method_info.get('concrete', True) and method_info.get(
+      'classConcrete', True)
   is_java_lib = method_info.get('javaLibraryMethod', True)
   arg_count = function.get('argCount', 0)
 
-  return not _is_class_in_project(project_dir, class_name) or any(name in method_name.lower() for name in excluded_function_name) or not is_public or not is_concrete or is_java_lib or arg_count <= 0
+  return not _is_class_in_project(project_dir, class_name) or any(
+      name in method_name.lower() for name in excluded_function_name
+  ) or not is_public or not is_concrete or is_java_lib or arg_count <= 0
 
 
 def sort_methods_by_fuzz_worthiness(functions: list[dict]) -> list[dict]:
-    """Sort the function list according to the following criteria in order.
+  """Sort the function list according to the following criteria in order.
     The order is acscending unless otherwise specified.
     For boolean sorting, False is always in front of True in acscending order.
     1) If the function belongs to a enum class.
     2) The function call depth in descending order.
-    3) The accumulated cyclomatic complexity of the function in descending order.
+    3) The cyclomatic complexity of the function in descending order.
     4) The number of arguments of this function in descending order.
     5) Number of source code lines in descending order."""
 
-    return sorted(functions,
-        key=lambda item:
-        (item.get('JavaMethodInfo', {}).get('classEnum', False), -item.get('functionDepth', 0), -item.get('CyclomaticComplexity', 0), -item.get('argCount', 0), -max(0, item.get('functionLinenumberEnd') - item.get('functionLinenumber'))), reverse=False)
+  return sorted(
+      functions,
+      key=lambda item:
+      (item.get('JavaMethodInfo', {}).get('classEnum', False), -item.get(
+          'functionDepth', 0), -item.get('CyclomaticComplexity', 0), -item.
+       get('argCount', 0), -max(
+           0,
+           item.get('functionLinenumberEnd', 0) - item.get('functionLinenumber', 0))),
+      reverse=False)
 
 
 # OSS-Fuzz project utils

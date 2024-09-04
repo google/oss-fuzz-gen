@@ -170,7 +170,7 @@ class Benchmark:
 
         # generate the parameter list for the benchmark
         param_list = []
-        for count, arg_type in enumerate(function.get('argTypes')):
+        for count, arg_type in enumerate(function.get('argTypes', [])):
           param_list.append({'name': f'arg{count}', 'type': arg_type})
 
         # Process JVM special properties
@@ -188,9 +188,9 @@ class Benchmark:
             cls(truncated_id.lower(),
                 project,
                 'jvm',
-                function.get('functionName'),
-                function.get('functionName'),
-                function.get('returnType'),
+                function.get('functionName', ''),
+                function.get('functionName', ''),
+                function.get('returnType', ''),
                 param_list,
                 '/src/Fuzz.java',
                 'Fuzz',
