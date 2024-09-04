@@ -834,7 +834,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       if self.is_new_integration:
         properties = ctr.copy()
       else:
-        properties = introspector.query_introspector_function_props(ctr.get('project', ''), constructor_sig)
+        properties = introspector.query_introspector_function_props(
+            ctr.get('project', ''), constructor_sig)
 
       constructors.append(f'<signature>{constructor_sig}</signature>')
       self.exceptions.extend(properties.get('exceptions', []))
@@ -854,7 +855,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       if self.is_new_integration:
         properties = func.copy()
       else:
-        properties = introspector.query_introspector_function_props(func.get('project', ''), function_sig)
+        properties = introspector.query_introspector_function_props(
+            func.get('project', ''), function_sig)
 
       self.exceptions.extend(properties.get('exceptions', []))
       if properties.get('is-jvm-static', False):

@@ -335,7 +335,7 @@ def generate_benchmarks_from_github_url(oss_fuzz_dir: str, benchmark_dir: str,
 
   # Save data.yaml from static analysis as benchmark files
   benchmarks = benchmarklib.Benchmark.from_java_data_yaml(
-      data_yaml_path, project_name, project_dir)
+      data_yaml_path, project_name, project_dir, os.path.basename(base_dir))
   if benchmarks:
     benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
 

@@ -64,6 +64,9 @@ class Benchmark:
         'is_test_benchmark': benchmarks[0].is_test_benchmark,
         'is_new_integration': benchmarks[0].is_new_integration,
     }
+    if benchmarks[0].build_project_name:
+      result['build_project_name'] = benchmarks[0].build_project_name
+
     if benchmarks[0].is_test_benchmark:
       result['test_files'] = [{
           'test_file_path': b.test_file_path
@@ -154,13 +157,14 @@ class Benchmark:
                 use_context=use_context,
                 is_new_integration=data['is_new_integration'],
                 jvm_special_properties=function.get('jvm_special_properties'),
+                build_project_name=data.get('build_project_name'),
                 function_dict=function))
 
     return benchmarks
 
   @classmethod
   def from_java_data_yaml(cls, benchmark_path: str, project: str,
-                          project_dir: str) -> List:
+                          project_dir: str, build_project_name: str) -> List:
     """Constructs benchmarks based on a Java static analysis."""
     # Retrieve the method list from the provided java data yaml file
     benchmarks = []
@@ -230,6 +234,7 @@ class Benchmark:
                 use_context=False,
                 is_new_integration=True,
                 jvm_special_properties=jvm_special_properties,
+                build_project_name=build_project_name,
                 function_dict=function))
 
     return benchmarks
@@ -252,7 +257,8 @@ class Benchmark:
                is_test_benchmark: bool = False,
                is_new_integration: bool = False,
                test_file_path: str = '',
-               jvm_special_properties: Optional[dict] = None):
+               jvm_special_properties: Optional[dict] = None,
+               build_project_name: Optional[str] = None):
     self.id = benchmark_id
     self.project = project
     self.language = language
@@ -270,6 +276,7 @@ class Benchmark:
     self.test_file_path = test_file_path
     self.is_test_benchmark = is_test_benchmark
     self.is_new_integration = is_new_integration
+    self.build_project_name = build_project_name
 
     # For new OSS-Fuzz integration, Fuzz-Introspector webapp cannot provide
     # these properties, hence we store the extra properties in the benchmark.
