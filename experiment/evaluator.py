@@ -218,7 +218,8 @@ class Evaluator:
 
     if self.benchmark.is_new_integration and self.benchmark.build_project_name:
       existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                           'projects', self.benchmark.build_project_name)
+                                           'projects',
+                                           self.benchmark.build_project_name)
       target_file_name = 'Fuzz.java'
     else:
       existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
@@ -228,9 +229,8 @@ class Evaluator:
     shutil.copytree(existing_project_path, generated_project_path)
 
     # Copy generated fuzzers to generated_project_path
-    shutil.copyfile(
-        target_file,
-        os.path.join(generated_project_path, target_file_name))
+    shutil.copyfile(target_file,
+                    os.path.join(generated_project_path, target_file_name))
 
     # Add additional statement in dockerfile to overwrite with generated fuzzer
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:

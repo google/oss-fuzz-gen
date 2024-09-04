@@ -180,7 +180,7 @@ class Benchmark:
       # Transform each method into benchmark
       for function in functions:
         # Skipping methods that are not fuzz worthy
-        if not utils.is_exclude_method(project_dir, function):
+        if utils.is_exclude_method(project_dir, function):
           continue
 
         # Generate an ID for each benchmark
