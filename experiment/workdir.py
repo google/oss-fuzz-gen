@@ -38,6 +38,7 @@ class WorkDirs:
     os.makedirs(self.fixed_targets, exist_ok=True)
     os.makedirs(self.build_logs, exist_ok=True)
     os.makedirs(self.run_logs, exist_ok=True)
+    os.makedirs(self.dry_run_logs, exist_ok=True)
     os.makedirs(self._corpus_base, exist_ok=True)
 
   @property
@@ -76,6 +77,10 @@ class WorkDirs:
   @property
   def run_logs(self):
     return os.path.join(self._base_dir, 'logs', 'run')
+  
+  @property
+  def dry_run_logs(self):
+    return os.path.join(self._base_dir, 'logs', 'dry_run')
 
   def build_logs_target(self, generated_target_name: str, iteration: int):
     return os.path.join(self.build_logs,
@@ -88,6 +93,10 @@ class WorkDirs:
 
   def run_logs_target(self, generated_target_name: str, iteration: int):
     return os.path.join(self.run_logs,
+                        f'{generated_target_name}-F{iteration}.log')
+
+  def dry_run_logs_target(self, generated_target_name: str, iteration: int):
+    return os.path.join(self.dry_run_logs,
                         f'{generated_target_name}-F{iteration}.log')
 
   @classmethod
