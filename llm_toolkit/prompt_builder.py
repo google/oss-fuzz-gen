@@ -837,7 +837,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         properties = introspector.query_introspector_function_props(ctr.get('project', ''), constructor_sig)
 
       constructors.append(f'<signature>{constructor_sig}</signature>')
-      self.exceptions.update(properties.get('exceptions', []))
+      self.exceptions.extend(properties.get('exceptions', []))
 
     if constructors:
       ctr_str = '\n'.join(constructors)
@@ -856,7 +856,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       else:
         properties = introspector.query_introspector_function_props(func.get('project', ''), function_sig)
 
-      self.exceptions.update(properties.get('exceptions', []))
+      self.exceptions.extend(properties.get('exceptions', []))
       if properties.get('is-jvm-static', False):
         functions.append(f'<item><signature>{function_sig}</signature></item>')
       else:
