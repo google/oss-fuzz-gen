@@ -19,7 +19,7 @@ from __future__ import annotations
 import os
 import sys
 from enum import Enum
-from typing import List, Optional
+from typing import Any, List, Optional
 
 import yaml
 
@@ -56,29 +56,33 @@ class Benchmark:
     """Converts and saves selected fields of a benchmark to a YAML file."""
     # Register the custom representer
     yaml.add_representer(str, quoted_string_presenter)
-    result = {
+    result: dict[str, Any] = {
         'project': benchmarks[0].project,
         'language': benchmarks[0].language,
         'target_path': benchmarks[0].target_path,
         'target_name': benchmarks[0].target_name,
-        'is_test_benchmark': benchmarks[0].is_test_benchmark,
         'is_new_integration': benchmarks[0].is_new_integration,
     }
     if benchmarks[0].build_project_name:
       result['build_project_name'] = benchmarks[0].build_project_name
 
-    if benchmarks[0].is_test_benchmark:
-      result['test_files'] = [{
-          'test_file_path': b.test_file_path
-      } for b in benchmarks]
-    else:
-      result['functions'] = [{
-          'signature': b.function_signature,
-          'name': b.function_name,
-          'return_type': b.return_type,
-          'params': b.params,
-          'jvm_special_properties': b.jvm_special_properties
-      } for b in benchmarks]
+      
+    for benchmark in benchmarks:
+      if benchmark.test_file_path:
+        if 'test_files' not in result:
+          result['test_files'] = []
+        result['test_files'].append(
+            {'test_file_path': benchmark.test_file_path})
+      else:
+        if 'functions' not in result:
+          result['functions'] = []
+        result['functions'].append({
+            'signature': benchmark.function_signature,
+            'name': benchmark.function_name,
+            'return_type': benchmark.return_type,
+            'params': benchmark.params,
+            'jvm_special_properties': b.jvm_special_properties
+        })
 
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
               'w') as file:
@@ -106,9 +110,8 @@ class Benchmark:
     commit = data.get('commit')
     functions = data.get('functions', [])
 
-    is_test_benchmark = data.get('is_test_benchmark', False)
     test_files = data.get('test_files', [])
-    if is_test_benchmark:
+    if test_files:
       for test_file in test_files:
         max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
         test_file_path = test_file.get('test_file_path')
@@ -127,10 +130,10 @@ class Benchmark:
                 [],
                 data['target_path'],
                 data.get('target_name', ''),
-                is_test_benchmark=True,
                 test_file_path=test_file_path,
             ))
-    else:
+
+    if functions:
       # function type benchmark
       for function in functions:
         # Long raw_function_names (particularly for c++ projects) may exceed
@@ -254,9 +257,8 @@ class Benchmark:
                use_context=False,
                commit=None,
                function_dict: Optional[dict] = None,
-               is_test_benchmark: bool = False,
-               is_new_integration: bool = False,
                test_file_path: str = '',
+               is_new_integration: bool = False,
                jvm_special_properties: Optional[dict] = None,
                build_project_name: Optional[str] = None):
     self.id = benchmark_id
@@ -274,7 +276,6 @@ class Benchmark:
     self.cppify_headers = cppify_headers
     self.commit = commit
     self.test_file_path = test_file_path
-    self.is_test_benchmark = is_test_benchmark
     self.is_new_integration = is_new_integration
     self.build_project_name = build_project_name
 
