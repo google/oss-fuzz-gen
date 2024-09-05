@@ -77,7 +77,7 @@ def get_project_name(github_url: str) -> Optional[str]:
 
 def prepare_base_files(base_dir: str, project_name: str, url: str) -> bool:
   """Prepare OSS-Fuzz base files for Java project fuzzing"""
-  build_file = _get_build_file(base_dir, project_name)
+  build_file = _get_build_file(base_dir, project_name, True)
   if not build_file:
     return False
 
@@ -111,7 +111,8 @@ def get_next_project_dir(oss_fuzz_dir) -> str:
   return os.path.join(project_dir, f'{auto_gen}{max_idx + 1}')
 
 
-def _get_build_file(base_dir: str, project_name: str) -> str:
+def _get_build_file(base_dir: str, project_name: str,
+                    is_introspector: bool) -> str:
   """Prepare build.sh content for this project."""
 
   build_type = _find_project_build_type(os.path.join(base_dir, "proj"),
@@ -128,7 +129,10 @@ def _get_build_file(base_dir: str, project_name: str) -> str:
 
   build_file = build_file + oss_fuzz_templates.BUILD_JAVA_BASE
 
-  return build_file + oss_fuzz_templates.BUILD_JAVA_INTROSPECTOR
+  if is_introspector:
+    return build_file + oss_fuzz_templates.BUILD_JAVA_INTROSPECTOR
+
+  return build_file
 
 
 # Java Project discovery utils
@@ -339,7 +343,9 @@ def generate_benchmarks_from_github_url(oss_fuzz_dir: str, benchmark_dir: str,
   if benchmarks:
     benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
 
-  # Clean up the working directory for generating benchmark from scratch
+  # Clean up the working directory and remove introspector code from build.sh
+  with open(os.path.join(base_dir, 'build.sh'), 'w') as f:
+    f.write(_get_build_file(base_dir, project_name, False))
   shutil.rmtree(project_dir)
 
   return base_dir
