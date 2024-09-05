@@ -26,7 +26,7 @@ from multiprocessing import Pool
 from typing import Any
 
 import run_one_experiment
-from auto_build import utils
+from auto_build.jvm import utils
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import evaluator, oss_fuzz_checkout, textcov

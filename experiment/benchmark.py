@@ -23,7 +23,7 @@ from typing import Any, List, Optional
 
 import yaml
 
-from auto_build import utils
+from auto_build.jvm import utils
 
 
 class FileType(Enum):

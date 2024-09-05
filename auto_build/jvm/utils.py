@@ -22,7 +22,7 @@ from typing import Optional
 
 from urllib3.util import parse_url
 
-from auto_build import oss_fuzz_templates
+from auto_build.jvm import oss_fuzz_templates
 from experiment import benchmark as benchmarklib
 
 logger = logging.getLogger(__name__)
