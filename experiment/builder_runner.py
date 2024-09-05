@@ -49,6 +49,7 @@ LIBFUZZER_MODULES_LOADED_REGEX = re.compile(
     r'^INFO:\s+Loaded\s+\d+\s+(modules|PC tables)\s+\((\d+)\s+.*\).*')
 LIBFUZZER_COV_REGEX = re.compile(r'.*cov: (\d+) ft:')
 LIBFUZZER_CRASH_TYPE_REGEX = re.compile(r'.*Test unit written to.*')
+LIBFUZZER_DRY_RUN_CRASH_REGEX = re.compile(r'ERROR: AddressSanitizer:')
 LIBFUZZER_COV_LINE_PREFIX = re.compile(r'^#(\d+)')
 LIBFUZZER_STACK_FRAME_LINE_PREFIX = re.compile(r'^\s+#\d+')
 CRASH_EXCLUSIONS = re.compile(r'.*(slow-unit-|timeout-|leak-|oom-).*')
@@ -302,7 +303,8 @@ class BuilderRunner:
   def _parse_libfuzzer_logs(self,
                             log_handle,
                             project_name: str,
-                            check_cov_increase: bool = True) -> ParseResult:
+                            check_cov_increase: bool = True,
+                            dry_run_flag: bool = False) -> ParseResult:
     """Parses libFuzzer logs."""
     lines = None
     try:
@@ -329,11 +331,17 @@ class BuilderRunner:
         cov_pcs = int(m.group(1))
         continue
 
-      m = LIBFUZZER_CRASH_TYPE_REGEX.match(line)
-      if m and not CRASH_EXCLUSIONS.match(line):
-        # TODO(@happy-qop): Handling oom, slow cases in semantic checks & fix.
-        crashes = True
-        continue
+      if not dry_run_flag:
+        m = LIBFUZZER_CRASH_TYPE_REGEX.match(line)
+        if m and not CRASH_EXCLUSIONS.match(line):
+          # TODO(@happy-qop): Handling oom, slow cases in semantic checks & fix.
+          crashes = True
+          continue
+      else:
+        m = LIBFUZZER_DRY_RUN_CRASH_REGEX.match(line)
+        if m:
+          crashes = True
+          continue
 
     initcov, donecov, lastround = self._parse_fuzz_cov_info_from_libfuzzer_logs(
         lines)
@@ -452,8 +460,6 @@ class BuilderRunner:
     """Builds and runs the fuzz target locally for once and fuzzing."""
     project_name = self.benchmark.project
     benchmark_target_name = os.path.basename(target_path)
-    #TODO: delete print
-    print('benchmark_target_name: ', benchmark_target_name)
     project_target_name = os.path.basename(self.benchmark.target_path)
     benchmark_log_path = self.work_dirs.build_logs_target(
         benchmark_target_name, iteration)
@@ -496,7 +502,7 @@ class BuilderRunner:
       dry_run_result.cov_pcs, dry_run_result.total_pcs, \
         dry_run_result.crashes, dry_run_result.crash_info, \
           dry_run_result.semantic_check = \
-            self._parse_libfuzzer_logs(f, project_name, flag)
+            self._parse_libfuzzer_logs(f, project_name, flag, True)
       dry_run_result.succeeded = not dry_run_result.crashes
 
     if dry_run_result.succeeded:
