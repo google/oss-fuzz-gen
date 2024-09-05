@@ -93,3 +93,22 @@ class BaseAgent(ABC):
   @abstractmethod
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the agent based on previous result."""
+
+
+if __name__ == "__main__":
+  # Make this a class method so that child agents can inherit and reuse?
+  import logging
+  import sys
+
+  import utils
+
+  agent_pickle = sys.argv[1]
+  result_history_pickle = sys.argv[2]
+  new_result_pickle = sys.argv[3]
+
+  agent = utils.deserialize_from_pickle(agent_pickle)
+  result_history = utils.deserialize_from_pickle(result_history_pickle)
+  agent.logger.setLevel(logging.DEBUG)
+
+  result = agent.execute(result_history)
+  utils.serialize_to_pickle(result, new_result_pickle)
