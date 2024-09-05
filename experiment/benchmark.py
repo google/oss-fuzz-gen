@@ -66,7 +66,6 @@ class Benchmark:
     if benchmarks[0].build_project_name:
       result['build_project_name'] = benchmarks[0].build_project_name
 
-      
     for benchmark in benchmarks:
       if benchmark.test_file_path:
         if 'test_files' not in result:
@@ -81,7 +80,7 @@ class Benchmark:
             'name': benchmark.function_name,
             'return_type': benchmark.return_type,
             'params': benchmark.params,
-            'jvm_special_properties': b.jvm_special_properties
+            'jvm_special_properties': benchmark.jvm_special_properties
         })
 
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
