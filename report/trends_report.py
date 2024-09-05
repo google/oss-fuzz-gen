@@ -82,6 +82,20 @@ def _parse_arguments() -> argparse.Namespace:
   parser.add_argument('--benchmark-set',
                       help='Directory with benchmarks used for the experiment.',
                       required=True)
+  parser.add_argument('--run-timeout',
+                      help='Timeout the experiment uses for each fuzz test.',
+                      required=True,
+                      type=int)
+  parser.add_argument(
+      '--num-samples',
+      help='Number of samples the experiment requests from the LLM.',
+      required=True,
+      type=int)
+  parser.add_argument(
+      '--llm-fix-limit',
+      help='How many times the experiment asks the LLM to fix broken tests.',
+      required=True,
+      type=int)
   parser.add_argument('--model',
                       help='Model used for the experiment.',
                       required=True)
@@ -119,9 +133,14 @@ def main():
   summary_json = {
       'name': args.name,
       'date': args.date,
-      'benchmark-set': args.benchmark_set,
-      'llm-model': args.model,
+      'benchmark_set': args.benchmark_set,
+      'llm_model': args.model,
       'url': args.url,
+      'run_parameters': {
+          'run_timeout': args.run_timeout,
+          'num_samples': args.num_samples,
+          'llm_fix_limit': args.llm_fix_limit,
+      },
       'build_info': build_info,
       'tags': tags,
       **summary,

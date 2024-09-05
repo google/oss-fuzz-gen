@@ -177,11 +177,14 @@ $PYTHON -m report.trends_report \
   --date ${DATE:?} \
   --url "https://llm-exp.oss-fuzz.com/Result-reports/${GCS_REPORT_DIR:?}" \
   --benchmark-set ${BENCHMARK_SET:?} \
+  --run-timeout ${RUN_TIMEOUT:?} \
+  --num-samples ${NUM_SAMPLES:?} \
+  --llm-fix-limit ${LLM_FIX_LIMIT:?} \
   --model ${MODEL:?} \
   --tags ${FREQUENCY_LABEL:?} ${SUB_DIR:?} \
   --commit-hash "$(git rev-parse HEAD)" \
   --commit-date "$(git show --no-patch --format=%cs)" \
-  --git-branch "$(git rev-parse --abbrev-ref HEAD)"
+  --git-branch "$(git branch --show)"
 
 # Exit with the return value of `./run_all_experiments`.
 exit $ret_val
