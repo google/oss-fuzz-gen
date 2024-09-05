@@ -134,6 +134,8 @@ EXPERIMENT_NAME="${DATE:?}-${FREQUENCY_LABEL:?}-${BENCHMARK_SET:?}"
 # Report directory uses the same name as experiment.
 # See upload_report.sh on how this is used.
 GCS_REPORT_DIR="${SUB_DIR:?}/${EXPERIMENT_NAME:?}"
+# Trends report use a similarly named path.
+GCS_TREND_REPORT_PATH="${SUB_DIR:?}/${EXPERIMENT_NAME:?}.json"
 
 # Generate a report and upload it to GCS
 bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" "${BENCHMARK_SET:?}" "${MODEL:?}" &
@@ -167,6 +169,19 @@ fi
 
 # Wait for the report process to finish uploading.
 wait $pid_report
+
+$PYTHON -m report.trends_report \
+  --results-dir ${LOCAL_RESULTS_DIR:?} \
+  --output-path "gs://oss-fuzz-gcb-experiment-run-logs/trend-reports/${GCS_TREND_REPORT_PATH:?}" \
+  --name ${EXPERIMENT_NAME:?} \
+  --date ${DATE:?} \
+  --url "https://llm-exp.oss-fuzz.com/Result-reports/${GCS_REPORT_DIR:?}" \
+  --benchmark-set ${BENCHMARK_SET:?} \
+  --model ${MODEL:?} \
+  --tags ${FREQUENCY_LABEL:?} ${SUB_DIR:?} \
+  --commit-hash "$(git rev-parse HEAD)" \
+  --commit-date "$(git show --no-patch --format=%cs)" \
+  --git-branch "$(git rev-parse --abbrev-ref HEAD)"
 
 # Exit with the return value of `./run_all_experiments`.
 exit $ret_val
