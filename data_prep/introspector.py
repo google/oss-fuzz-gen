@@ -139,7 +139,8 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/function-with-matching-return-type')
   INTROSPECTOR_ORACLE_ALL_TESTS = f'{INTROSPECTOR_ENDPOINT}/project-tests'
   INTROSPECTOR_JVM_PROPERTIES = f'{INTROSPECTOR_ENDPOINT}/jvm-method-properties'
-  INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = (f'{INTROSPECTOR_ENDPOINT}/harness-source-and-executable')
+  INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = (
+      f'{INTROSPECTOR_ENDPOINT}/harness-source-and-executable')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -222,7 +223,8 @@ def query_introspector_for_tests(project: str) -> list[str]:
   return _get_data(resp, 'test-file-list', [])
 
 
-def query_introspector_for_harness_intrinsics(project: str) -> list[dict[str, str]]:
+def query_introspector_for_harness_intrinsics(
+    project: str) -> list[dict[str, str]]:
   """Gets the list of test files in the target project."""
   resp = _query_introspector(INTROSPECTOR_HARNESS_SOURCE_AND_EXEC, {
       'project': project,
@@ -714,26 +716,29 @@ def _select_functions_from_oracles(project: str, limit: int,
   return [all_functions[func] for func in selected_singatures]
 
 
-def _get_harness_intrinsics(project, filenames=[], language='') -> tuple[Optional[str], Optional[str], Optional[Dict[str, str]]]:
+def _get_harness_intrinsics(
+    project,
+    filenames,
+    language='') -> tuple[Optional[str], Optional[str], Dict[str, str]]:
   """Returns a harness source path and executable from a given project."""
   if USE_FI_TO_GET_TARGETS and language != 'jvm':
     harnesses = query_introspector_for_harness_intrinsics(project)
     harness_dict = harnesses[0]
     harness = harness_dict['source']
     target_name = harness_dict['executable']
-    interesting_files = dict()
+    interesting_files = {}
   else:
-    harnesses, interesting_files = project_src.search_source(project, filenames,
-                                                     language)
+    harnesses, interesting_files = project_src.search_source(
+        project, filenames, language)
     harness = pick_one(harnesses)
     if not harness:
       logger.error('No fuzz target found in project %s.', project)
-      return None, None
+      return None, None, {}
     target_name = get_target_name(project, harness)
 
   logger.info('Fuzz target file found for project %s: %s', project, harness)
   logger.info('Fuzz target binary found for project %s: %s', project,
-               target_name)
+              target_name)
 
   return harness, target_name, interesting_files
 
@@ -742,7 +747,7 @@ def populate_benchmarks_using_test_migration(
     project: str, language: str, limit: int) -> list[benchmarklib.Benchmark]:
   """Populates benchmarks using tests for test-to-harness conversion."""
 
-  harness, target_name = _get_harness_intrinsics(project, language=langue)
+  harness, target_name, _ = _get_harness_intrinsics(project, [], language)
   if not harness:
     return []
 
@@ -800,8 +805,8 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         for function in functions
     ]
 
-
-  harness, target_name, interesting = _get_harness_intrinsics(project, language=language, filenames=filenames)
+  harness, target_name, interesting = _get_harness_intrinsics(
+      project, filenames, language)
   if not harness:
     return []
 
@@ -827,7 +832,9 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         if src_file not in src_path_list:
           logger.error('error: %s %s', filename, interesting.keys())
           continue
-    elif interesting and filename not in [os.path.basename(i) for i in interesting.keys()]:
+    elif interesting and filename not in [
+        os.path.basename(i) for i in interesting.keys()
+    ]:
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
       logger.error('error: %s %s', filename, interesting.keys())
       continue
