@@ -24,8 +24,7 @@ class Prototyper(BaseAgent):
     default_prompt_builder = DefaultTemplateBuilder(model=self.llm,
                                                     benchmark=benchmark)
     prompt = default_prompt_builder.build([])
-    work_dirs = results[-1].work_dirs
-    prompt.save(work_dirs.prompt)
+    # TODO(dongge): Find a way to save prompt and log for agents
     return prompt
 
   def _update_fuzz_target_and_build_script(self, cur_round: int, response: str,
@@ -129,14 +128,14 @@ class Prototyper(BaseAgent):
       self.logger.info('***** Prototyper succeded in %d rounds *****',
                        cur_round,
                        extra={'trial': self.trial})
-      self.write_to_file(
-          os.path.join(build_result.work_dirs.fixed_targets,
-                       f'{build_result.trial}.fuzz_target'),
-          build_result.fuzz_target_source)
-      self.write_to_file(
-          os.path.join(build_result.work_dirs.fixed_targets,
-                       f'{build_result.trial}.build_script'),
-          build_result.build_script_source)
+      # self.write_to_file(
+      #     os.path.join(build_result.work_dirs.fixed_targets,
+      #                  f'{build_result.trial}.fuzz_target'),
+      #     build_result.fuzz_target_source)
+      # self.write_to_file(
+      #     os.path.join(build_result.work_dirs.fixed_targets,
+      #                  f'{build_result.trial}.build_script'),
+      #     build_result.build_script_source)
       return None
 
     self.logger.info('***** Failed to recompile in %d rounds *****',
@@ -198,3 +197,7 @@ class Prototyper(BaseAgent):
                         extra={'trial': self.trial})
       self.inspect_tool.terminate()
     return build_result
+
+
+# if __name__ == "__main__":
+#   prototyper = Prototyper()
