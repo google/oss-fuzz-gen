@@ -111,9 +111,6 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
       if benchmarks:
         benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
   else:
-    # Checkout OSS-Fuzz for static analysis
-    oss_fuzz_checkout.clone_oss_fuzz()
-
     # Generate benchmarks for new projects from scratch
     project_urls = [
         url.strip() for url in args.generate_benchmarks_github_url.split(',')

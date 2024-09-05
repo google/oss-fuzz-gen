@@ -448,7 +448,12 @@ class Evaluator:
           f'Warning: total_pcs == 0 in {generated_oss_fuzz_project}.')
       coverage_percent = 0.0
 
-    existing_textcov = self._load_existing_textcov()
+    if self.benchmark.is_new_integration:
+      # There is no existing coverage report for new integration
+      # Create an empty coverage report for processing
+      existing_textcov = textcov.Textcov()
+    else:
+      existing_textcov = self._load_existing_textcov()
     run_result.coverage.subtract_covered_lines(existing_textcov)
 
     if total_lines:
