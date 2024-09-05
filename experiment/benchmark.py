@@ -52,20 +52,22 @@ class Benchmark:
         'language': benchmarks[0].language,
         'target_path': benchmarks[0].target_path,
         'target_name': benchmarks[0].target_name,
-        'is_test_benchmark': benchmarks[0].is_test_benchmark,
     }
-    if benchmarks[0].is_test_benchmark:
-      result['test_files'] = [{
-          'test_file_path': b.test_file_path
-      } for b in benchmarks]
-    else:
-      result['functions'] = [{
-          'signature': b.function_signature,
-          'name': b.function_name,
-          'return_type': b.return_type,
-          'params': b.params,
-      } for b in benchmarks]
-
+    for benchmark in benchmarks:
+      if benchmark.test_file_path:
+        if 'test_files' not in result:
+          result['test_files'] = []
+        result['test_files'].append({'test_file_path': benchmark.test_file_path})
+      else:
+        if 'functions' not in result:
+          result['functions'] = []
+        result['functions'].append({
+          'signature': benchmark.function_signature,
+          'name': benchmark.function_name,
+          'return_type': benchmark.return_type,
+          'params': benchmark.params
+        })
+        
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
               'w') as file:
       yaml.dump(result, file, default_flow_style=False, width=sys.maxsize)
@@ -85,9 +87,8 @@ class Benchmark:
     commit = data.get('commit')
     functions = data.get('functions', [])
 
-    is_test_benchmark = data.get('is_test_benchmark', False)
     test_files = data.get('test_files', [])
-    if is_test_benchmark:
+    if test_files:
       for test_file in test_files:
         max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
         test_file_path = test_file.get('test_file_path')
@@ -106,10 +107,10 @@ class Benchmark:
                 [],
                 data['target_path'],
                 data.get('target_name', ''),
-                is_test_benchmark=True,
                 test_file_path=test_file_path,
             ))
-    else:
+
+    if functions:
       # function type benchmark
       for function in functions:
         # Long raw_function_names (particularly for c++ projects) may exceed
@@ -153,7 +154,6 @@ class Benchmark:
                use_context=False,
                commit=None,
                function_dict: Optional[dict] = None,
-               is_test_benchmark: bool = False,
                test_file_path: str = ''):
     self.id = benchmark_id
     self.project = project
@@ -170,7 +170,6 @@ class Benchmark:
     self.cppify_headers = cppify_headers
     self.commit = commit
     self.test_file_path = test_file_path
-    self.is_test_benchmark = is_test_benchmark
 
     if self.language == 'jvm':
       # For java projects, in order to differentiate between overloaded methods

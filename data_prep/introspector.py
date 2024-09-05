@@ -765,7 +765,6 @@ def populate_benchmarks_using_test_migration(
                                params=[],
                                target_path=harness,
                                preferred_target_name=target_name,
-                               is_test_benchmark=True,
                                test_file_path=test_file))
   return potential_benchmarks[:limit]
 
@@ -780,9 +779,10 @@ def populate_benchmarks_using_introspector(project: str, language: str,
   # TODO(David): clean up benchmark code to make it more flexible for varying
   # forms of target selectors, and potential mixing both types of target
   # selectors.
+  potential_benchmarks = []
   for target_oracle in target_oracles:
     if 'test-migration' in target_oracle:
-      return populate_benchmarks_using_test_migration(project, language, limit)
+      potential_benchmarks.extend(populate_benchmarks_using_test_migration(project, language, limit))
 
   if language == 'jvm':
     functions = _select_functions_from_jvm_oracles(project, limit,
@@ -791,8 +791,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
     functions = _select_functions_from_oracles(project, limit, target_oracles)
 
   if not functions:
-    logger.error('No functions found using the oracles: %s', target_oracles)
-    return []
+    return potential_benchmarks
 
   if language == 'jvm':
     filenames = [
@@ -810,7 +809,6 @@ def populate_benchmarks_using_introspector(project: str, language: str,
   if not harness:
     return []
 
-  potential_benchmarks = []
   for function in functions:
     if _get_arg_count(function) == 0:
       # Skipping functions / methods that does not take in any arguments.
