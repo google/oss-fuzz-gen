@@ -19,7 +19,7 @@ from __future__ import annotations
 import os
 import sys
 from enum import Enum
-from typing import List, Optional
+from typing import Any, List, Optional
 
 import yaml
 
@@ -47,7 +47,7 @@ class Benchmark:
     """Converts and saves selected fields of a benchmark to a YAML file."""
     # Register the custom representer
     yaml.add_representer(str, quoted_string_presenter)
-    result = {
+    result: dict[str, Any] = {
         'project': benchmarks[0].project,
         'language': benchmarks[0].language,
         'target_path': benchmarks[0].target_path,
@@ -57,17 +57,18 @@ class Benchmark:
       if benchmark.test_file_path:
         if 'test_files' not in result:
           result['test_files'] = []
-        result['test_files'].append({'test_file_path': benchmark.test_file_path})
+        result['test_files'].append(
+            {'test_file_path': benchmark.test_file_path})
       else:
         if 'functions' not in result:
           result['functions'] = []
         result['functions'].append({
-          'signature': benchmark.function_signature,
-          'name': benchmark.function_name,
-          'return_type': benchmark.return_type,
-          'params': benchmark.params
+            'signature': benchmark.function_signature,
+            'name': benchmark.function_name,
+            'return_type': benchmark.return_type,
+            'params': benchmark.params
         })
-        
+
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
               'w') as file:
       yaml.dump(result, file, default_flow_style=False, width=sys.maxsize)

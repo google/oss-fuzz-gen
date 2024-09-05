@@ -782,7 +782,8 @@ def populate_benchmarks_using_introspector(project: str, language: str,
   potential_benchmarks = []
   for target_oracle in target_oracles:
     if 'test-migration' in target_oracle:
-      potential_benchmarks.extend(populate_benchmarks_using_test_migration(project, language, limit))
+      potential_benchmarks.extend(
+          populate_benchmarks_using_test_migration(project, language, limit))
 
   if language == 'jvm':
     functions = _select_functions_from_jvm_oracles(project, limit,

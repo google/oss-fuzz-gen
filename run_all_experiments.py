@@ -332,6 +332,7 @@ def _print_experiment_results(results: list[Result],
 
 
 def _setup_logging(verbose: str = 'info') -> None:
+  """Set up logging level."""
   if verbose == "debug":
     log_level = logging.DEBUG
   else:
