@@ -371,6 +371,8 @@ def _setup_logging(verbose: str = 'info') -> None:
       format=LOG_FMT,
       datefmt='%Y-%m-%d %H:%M:%S',
   )
+  # Set the base logger level
+  logging.getLogger('').setLevel(log_level)
 
 
 def add_to_json_report(outdir: str, key: str, value: Any) -> None:
