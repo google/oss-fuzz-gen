@@ -338,7 +338,7 @@ class BuilderRunner:
           crashes = True
           continue
       else:
-        m = LIBFUZZER_DRY_RUN_CRASH_REGEX.match(line)
+        m = LIBFUZZER_DRY_RUN_CRASH_REGEX.search(line)
         if m:
           crashes = True
           continue
