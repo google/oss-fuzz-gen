@@ -93,16 +93,21 @@ $MVN clean package -Dmaven.javadoc.skip=true -DskipTests=true -Dpmd.skip=true -D
 """
 
 BUILD_JAVA_BASE = r"""
-wget -P $OUT/ https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar
-
 cd $BASEDIR
 
 mkdir -p $OUT/built_jar
 for JARFILE in $(find ./  -name "*.jar")
 do
-  if [[ "$JARFILE" != *sources.jar ]] && [[ "$JARFILE" != *javadoc.jar ]] && [[ "$JARFILE" != *tests.jar ]]
+  if [[ "$JARFILE" == *"target/"* ]] || [[ "$JARFILE" == *"build/"* ]] || [[ "$JARFILE" == *"dist/"* ]]
   then
-    cp $JARFILE $OUT/built_jar
+    if [[ "$JARFILE" != *sources.jar ]] && [[ "$JARFILE" != *javadoc.jar ]] && [[ "$JARFILE" != *tests.jar ]]
+    then
+      if [[ "$JARFILE" != *"dependency/"* ]]
+      then
+        cp $JARFILE $OUT/
+      fi
+      cp $JARFILE $OUT/built_jar
+    fi
   fi
 done
 
@@ -118,8 +123,8 @@ done
 cd $curr_dir
 cp -r $JAVA_HOME $OUT/
 
-BUILD_CLASSPATH=$JAZZER_API_PATH:$OUT/jar_temp:$OUT/commons-lang3-3.12.0.jar
-RUNTIME_CLASSPATH=\$this_dir/jar_temp:\$this_dir/commons-lang3-3.12.0.jar:\$this_dir
+BUILD_CLASSPATH=$JAZZER_API_PATH:$OUT/jar_temp:
+RUNTIME_CLASSPATH=\$this_dir/jar_temp:\$this_dir
 
 for fuzzer in $(ls $SRC/Fuzz*.java)
 do
