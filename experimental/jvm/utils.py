@@ -19,9 +19,9 @@ import logging
 import os
 import subprocess
 from typing import Optional
-from urllib3.util import parse_url
 
 import oss_fuzz_templates
+from urllib3.util import parse_url
 
 logger = logging.getLogger(__name__)
 
