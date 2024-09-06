@@ -116,7 +116,8 @@ def load_existing_jvm_textcov(project: str) -> textcov.Textcov:
 
   if not blobs.prefixes:  # type: ignore
     # No existing coverage reports.
-    raise RuntimeError(f'No existing coverage reports for {project}')
+    logger.info('No existing coverage report. Using empty.')
+    return textcov.Textcov()
 
   latest_dir = sorted(blobs.prefixes)[-1]  # type: ignore
   blob = bucket.blob(f'{latest_dir}linux/jacoco.xml')
