@@ -13,12 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ###############################################################################
-"""Provides a set of constant values for oss-fuzz-gen on new Java projects integration"""
+"""Provides a set of constant values for new Java projects integration"""
 
 MAVEN_URL = {
-  '3.1.1': 'https://archive.apache.org/dist/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.zip',
-  '3.2.5': 'https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip',
-  '3.9.2': 'https://archive.apache.org/dist/maven/maven-3/3.9.2/binaries/apache-maven-3.9.2-bin.zip',
+    '3.1.1':
+        'https://archive.apache.org/dist/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.zip',
+    '3.2.5':
+        'https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip',
+    '3.9.2':
+        'https://archive.apache.org/dist/maven/maven-3/3.9.2/binaries/apache-maven-3.9.2-bin.zip',
 }
 
 GRADLE_URL = 'https://services.gradle.org/distributions/gradle-7.4.2-bin.zip'

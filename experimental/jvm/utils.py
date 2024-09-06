@@ -164,7 +164,7 @@ def _find_dir_build_type(project_dir: str) -> tuple[str, str]:
   if os.path.exists(os.path.join(project_dir, 'build.xml')):
     return 'ant', ''
 
-  return ''
+  return '', ''
 
 
 def _get_maven_version(base_dir: str) -> str:
