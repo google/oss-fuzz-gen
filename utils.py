@@ -19,7 +19,12 @@ def serialize_to_pickle(variable: Any, pickle_path: str = '') -> str:
 def deserialize_from_pickle(pickle_path: Any) -> Any:
   """Serializes |variable| to a pickle file under |path_prefix| and returns
   the file path."""
-  with open(pickle_path, 'rb') as f:
-    obj = pickle.load(f)
-  logging.info('Deserialized %s to %s', pickle_path, obj)
-  return obj
+  try:
+    with open(pickle_path, 'rb') as f:
+      obj = pickle.load(f)
+    logging.info('Deserialized %s to %s', pickle_path, obj)
+    return obj
+  except FileNotFoundError as e:
+    logging.error('Failed to deserialize %s: File does not exist: %s',
+                  pickle_path, e)
+    return None
