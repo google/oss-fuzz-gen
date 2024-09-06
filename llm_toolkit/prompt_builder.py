@@ -819,7 +819,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       constructor_sig = ctr.get('function_signature', '')
       if constructor_sig:
         constructors.append(f'<signature>{constructor_sig}</signature>')
-        exceptions = introspector.query_introspector_function_props(ctr.get('project', ''), constructor_sig).get('exceptions', [])
+        exceptions = introspector.query_introspector_function_props(
+            ctr.get('project', ''), constructor_sig).get('exceptions', [])
         self.exceptions.extend(exceptions)
 
     if constructors:
@@ -834,7 +835,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       function_sig = func.get('function_signature', '')
       if not function_sig:
         continue
-      exceptions = introspector.query_introspector_function_props(func.get('project', ''), function_sig).get('exceptions', [])
+      exceptions = introspector.query_introspector_function_props(
+          func.get('project', ''), function_sig).get('exceptions', [])
       self.exceptions.extend(exceptions)
       if is_static:
         functions.append(f'<item><signature>{function_sig}</signature></item>')
