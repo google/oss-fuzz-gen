@@ -16,7 +16,7 @@ from googleapiclient.discovery import build as cloud_build
 
 import utils
 from agent.base_agent import BaseAgent
-from results import Result
+from results import BuildResult, Result
 
 OFG_REPO = 'https://github.com/google/oss-fuzz-gen.git'
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
@@ -47,6 +47,8 @@ class CloudBuilder:
         credentials=self.credentials,
         cache_discovery=False,
         client_options=US_CENTRAL_CLIENT_OPTIONS).projects().builds()
+    self.storage_client = storage.Client.from_service_account_json(
+        service_account_file)
 
   def _upload_to_gcs(self, local_file_path: str) -> str:
     """Uploads a file to Google Cloud Storage."""
@@ -67,7 +69,7 @@ class CloudBuilder:
       return ''
 
   def _request_cloud_build(self, agent_pickle_url: str, results_pickle_url: str,
-                           new_result_filename: str) -> None:
+                           new_result_filename: str) -> str:
     """Requests Cloud Build to execute the operation."""
     cloud_build_config = {
         'steps': [
@@ -176,7 +178,7 @@ class CloudBuilder:
     logging.info('Cloud Build ID: %s', build_id)
     return build_id
 
-  def _build_succeeds(self, build_id):
+  def _build_succeeds(self, build_id: str) -> bool:
     """Wait for a GCB build."""
     while True:
       try:
@@ -190,9 +192,19 @@ class CloudBuilder:
       except (googleapiclient.errors.HttpError, BrokenPipeError):
         return False
 
-  def _cancel_build(self, build_id):
+  def _cancel_build(self, build_id: str) -> None:
     """Cancel a GCB build"""
     self.builds.cancel(projectId=self.project_id, id=build_id).execute()
+
+  def _get_build_log(self, build_id: str) -> str:
+    """Downloads the build log"""
+    # Get the build details
+    bucket = self.storage_client.bucket(self.bucket_name)
+    log_file_uri = f'log-{build_id}.txt'
+    blob = bucket.blob(log_file_uri)
+    log_content = blob.download_as_text()
+    logging.debug(log_content)
+    return log_content
 
   def _download_from_gcs(self, destination_file_name: str) -> None:
     """Downloads the result file from GCS."""
@@ -227,6 +239,18 @@ class CloudBuilder:
         self._download_from_gcs(new_result_pickle)
     except (KeyboardInterrupt, SystemExit):
       self._cancel_build(build_id)
+    build_log = self._get_build_log(build_id)
 
     # Step 4: Deserialize pickled file.
-    return utils.deserialize_from_pickle(new_result_pickle)
+    result = utils.deserialize_from_pickle(new_result_pickle)
+    if result:
+      result.agent_dialogs = {agent.name: build_log}
+    else:
+      last_result = result_history[-1]
+      result = BuildResult(benchmark=last_result.benchmark,
+                           trial=last_result.trial,
+                           work_dirs=last_result.work_dirs,
+                           author=agent,
+                           agent_dialogs={agent.name: build_log})
+
+    return result

@@ -32,10 +32,11 @@ class BaseStage(ABC):
 
   def _execute_agent_cloud(self, agent: BaseAgent,
                            result_history: list[Result]) -> Result:
-
+    """Executes agent in cloud build."""
     cloud_builder = CloudBuilder(self.args)
     pickle_dir = result_history[-1].work_dirs.pickles
-    return cloud_builder.run(agent, result_history, pickle_dir)
+    result = cloud_builder.run(agent, result_history, pickle_dir)
+    return result
 
   @abstractmethod
   def execute(self, result_history: list[Result]) -> Result:
