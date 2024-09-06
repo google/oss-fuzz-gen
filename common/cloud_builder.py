@@ -9,6 +9,7 @@ from typing import Any
 
 import google.api_core.client_options
 import googleapiclient.errors
+from google.api_core.exceptions import NotFound
 from google.auth import default
 from google.cloud import storage
 from google.oauth2.service_account import Credentials
@@ -198,13 +199,16 @@ class CloudBuilder:
 
   def _get_build_log(self, build_id: str) -> str:
     """Downloads the build log"""
-    # Get the build details
-    bucket = self.storage_client.bucket(self.bucket_name)
     log_file_uri = f'log-{build_id}.txt'
-    blob = bucket.blob(log_file_uri)
-    log_content = blob.download_as_text()
-    logging.debug(log_content)
-    return log_content
+    try:
+      bucket = self.storage_client.bucket(self.bucket_name)
+      blob = bucket.blob(log_file_uri)
+      log_content = blob.download_as_text()
+      logging.debug(log_content)
+      return log_content
+    except NotFound as e:
+      logging.error('Cloud build log %s not found: %s', log_file_uri, e)
+      return ''
 
   def _download_from_gcs(self, destination_file_name: str) -> None:
     """Downloads the result file from GCS."""
@@ -243,14 +247,12 @@ class CloudBuilder:
 
     # Step 4: Deserialize pickled file.
     result = utils.deserialize_from_pickle(new_result_pickle)
-    if result:
-      result.agent_dialogs = {agent.name: build_log}
-    else:
+    if not result:
       last_result = result_history[-1]
       result = BuildResult(benchmark=last_result.benchmark,
                            trial=last_result.trial,
                            work_dirs=last_result.work_dirs,
-                           author=agent,
-                           agent_dialogs={agent.name: build_log})
+                           author=agent)
+    result.agent_dialogs = {agent.name: build_log}
 
     return result
