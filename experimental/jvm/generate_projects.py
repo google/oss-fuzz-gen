@@ -59,7 +59,7 @@ def main():
     project_name = utils.get_project_name(url)
     if not project_name:
       # Malformed url
-      logger.warning(f'Skipping wrong github url: {url}')
+      logger.warning('Skipping wrong github url: %s', url)
       continue
 
     # Clone project for static analysis
@@ -72,14 +72,14 @@ def main():
     project_dir = os.path.join(base_dir, 'proj')
     if not utils.git_clone_project(url, project_dir):
       # Clone error or invalid url
-      logger.warning(f'Failed to clone from the github url: {url}')
+      logger.warning('Failed to clone from the github url: %s', url)
       shutil.rmtree(base_dir)
       continue
 
     # Prepare OSS-Fuzz base files
     if not utils.prepare_base_files(base_dir, project_name, url):
       # Invalid build type or non-Java project
-      logger.warning(f'Build type of project {project_name} is not supported.')
+      logger.warning('Build type of project %s is not supported.', project_name)
       shutil.rmtree(base_dir)
       continue
 

@@ -15,19 +15,39 @@
 ##########################################################################
 """Templates of base java project files"""
 
-DOCKERFILE_JAVA = """FROM gcr.io/oss-fuzz-base/base-builder-jvm
-RUN curl -L https://dlcdn.apache.org//ant/binaries/apache-ant-1.10.14-bin.zip -o ant.zip && unzip ant.zip -d $SRC/ant && rm -rf ant.zip
-RUN curl -L https://services.gradle.org/distributions/gradle-7.4.2-bin.zip -o gradle.zip && unzip gradle.zip -d $SRC/gradle && rm -rf gradle.zip
-RUN curl -L https://archive.apache.org/dist/maven/maven-3/3.9.2/binaries/apache-maven-3.9.2-bin.zip -o maven.zip && unzip maven.zip -d $SRC/maven && rm -rf maven.zip
-RUN curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.15.8/protoc-3.15.8-linux-x86_64.zip -o protoc.zip && mkdir -p $SRC/protoc && unzip protoc.zip -d $SRC/protoc && rm -rf protoc.zip
-RUN curl -L https://download.java.net/java/GA/jdk15.0.2/0d1cfde4252546c6931946de8db48ee2/7/GPL/openjdk-15.0.2_linux-x64_bin.tar.gz -o jdk.tar.gz && tar zxf jdk.tar.gz && rm -rf jdk.tar.gz
+DOCKERFILE_JAVA_ANT = """FROM gcr.io/oss-fuzz-base/base-builder-jvm
+RUN curl -L {ANT_URL} -o ant.zip && unzip ant.zip -d $SRC/ant && rm -rf ant.zip
+RUN curl -L {PROTO_URL} -o protoc.zip && mkdir -p $SRC/protoc && unzip protoc.zip -d $SRC/protoc && rm -rf protoc.zip
+RUN curl -L {JDK15_URL} -o jdk.tar.gz && tar zxf jdk.tar.gz && rm -rf jdk.tar.gz
 ENV ANT="$SRC/ant/apache-ant-1.10.14/bin/ant"
+ENV JAVA_HOME="$SRC/jdk-15.0.2"
+ENV PATH="$JAVA_HOME/bin:$SRC/ant/apache-ant-1.10.14/bin:$SRC/protoc/bin:$PATH"
+RUN git clone --depth 1 {TARGET_REPO} proj
+COPY *.sh *.java $SRC/
+WORKDIR $SRC/proj
+"""
+
+DOCKERFILE_JAVA_GRADLE = """FROM gcr.io/oss-fuzz-base/base-builder-jvm
+RUN curl -L {GRADLE_URL} -o gradle.zip && unzip gradle.zip -d $SRC/gradle && rm -rf gradle.zip
+RUN curl -L {PROTO_URL} -o protoc.zip && mkdir -p $SRC/protoc && unzip protoc.zip -d $SRC/protoc && rm -rf protoc.zip
+RUN curl -L {JDK15_URL} -o jdk.tar.gz && tar zxf jdk.tar.gz && rm -rf jdk.tar.gz
 ENV GRADLE_HOME="$SRC/gradle/gradle-7.4.2"
 ENV GRADLE_OPTS="-Dfile.encoding=utf-8"
-ENV MVN="$SRC/maven/apache-maven-3.9.2/bin/mvn"
 ENV JAVA_HOME="$SRC/jdk-15.0.2"
-ENV PATH="$JAVA_HOME/bin:$SRC/ant/apache-ant-1.10.14/bin:$SRC/gradle/gradle-7.4.2/bin:$SRC/maven/apache-maven-3.9.2/bin:$SRC/protoc/bin:$PATH"
-RUN git clone --depth 1 TARGET_REPO proj
+ENV PATH="$JAVA_HOME/bin:$SRC/gradle/gradle-7.4.2/bin:$SRC/protoc/bin:$PATH"
+RUN git clone --depth 1 {TARGET_REPO} proj
+COPY *.sh *.java $SRC/
+WORKDIR $SRC/proj
+"""
+
+DOCKERFILE_JAVA_MAVEN = """FROM gcr.io/oss-fuzz-base/base-builder-jvm
+RUN curl -L {MAVEN_URL} -o maven.zip && unzip maven.zip -d $SRC/maven && rm -rf maven.zip
+RUN curl -L {PROTO_URL} -o protoc.zip && mkdir -p $SRC/protoc && unzip protoc.zip -d $SRC/protoc && rm -rf protoc.zip
+RUN curl -L {JDK15_URL} -o jdk.tar.gz && tar zxf jdk.tar.gz && rm -rf jdk.tar.gz
+ENV MVN="$SRC/maven/apache-maven-{MAVEN_VERSION}/bin/mvn"
+ENV JAVA_HOME="$SRC/jdk-15.0.2"
+ENV PATH="$JAVA_HOME/bin:$SRC/maven/apache-maven-{MAVEN_VERSION}/bin:$SRC/protoc/bin:$PATH"
+RUN git clone --depth 1 {TARGET_REPO} proj
 COPY *.sh *.java $SRC/
 WORKDIR $SRC/proj
 """
@@ -62,32 +82,6 @@ $EXCLUDE_SPOTLESS_CHECK\
 
 BUILD_JAVA_MAVEN = r"""BASEDIR=$(pwd)
 chmod +x $SRC/protoc/bin/protoc
-
-find ./ -name pom.xml -exec sed -i 's/compilerVersion>1.5</compilerVersion>1.8</g' {} \;
-find ./ -name pom.xml -exec sed -i 's/compilerVersion>1.6</compilerVersion>1.8</g' {} \;
-find ./ -name pom.xml -exec sed -i 's/source>1.5</source>1.8</g' {} \;
-find ./ -name pom.xml -exec sed -i 's/source>1.6</source>1.8</g' {} \;
-find ./ -name pom.xml -exec sed -i 's/target>1.5</target>1.8</g' {} \;
-find ./ -name pom.xml -exec sed -i 's/target>1.6</target>1.8</g' {} \;
-find ./ -name pom.xml -exec sed -i 's/java15/java18/g' {} \;
-find ./ -name pom.xml -exec sed -i 's/java16/java18/g' {} \;
-find ./ -name pom.xml -exec sed -i 's/java-1.5/java-1.8/g' {} \;
-find ./ -name pom.xml -exec sed -i 's/java-1.6/java-1.8/g' {} \;
-
-mkdir -p ~/.m2
-echo "<toolchains><toolchain><type>jdk</type><provides><version>1.8</version></provides>" > ~/.m2/toolchains.xml
-echo "<configuration><jdkHome>\${env.JAVA_HOME}</jdkHome></configuration></toolchain>" >> ~/.m2/toolchains.xml
-echo "<toolchain><type>jdk</type><provides><version>8</version></provides>" >> ~/.m2/toolchains.xml
-echo "<configuration><jdkHome>\${env.JAVA_HOME}</jdkHome></configuration></toolchain>" >> ~/.m2/toolchains.xml
-echo "<toolchain><type>jdk</type><provides><version>11</version></provides>" >> ~/.m2/toolchains.xml
-echo "<configuration><jdkHome>\${env.JAVA_HOME}</jdkHome></configuration></toolchain>" >> ~/.m2/toolchains.xml
-echo "<toolchain><type>jdk</type><provides><version>14</version></provides>" >> ~/.m2/toolchains.xml
-echo "<configuration><jdkHome>\${env.JAVA_HOME}</jdkHome></configuration></toolchain>" >> ~/.m2/toolchains.xml
-echo "<toolchain><type>jdk</type><provides><version>15</version></provides>" >> ~/.m2/toolchains.xml
-echo "<configuration><jdkHome>\${env.JAVA_HOME}</jdkHome></configuration></toolchain>" >> ~/.m2/toolchains.xml
-echo "<toolchain><type>jdk</type><provides><version>17</version></provides>" >> ~/.m2/toolchains.xml
-echo "<configuration><jdkHome>\${env.JAVA_HOME}</jdkHome></configuration></toolchain>" >> ~/.m2/toolchains.xml
-echo "</toolchains>" >> ~/.m2/toolchains.xml
 
 $MVN clean package -Dmaven.javadoc.skip=true -DskipTests=true -Dpmd.skip=true -Dencoding=UTF-8 \
 -Dmaven.antrun.skip=true -Dcheckstyle.skip=true dependency:copy-dependencies
@@ -162,7 +156,7 @@ done
 """
 
 YAML_JAVA = """homepage: https://github.com/google/oss-fuzz-gen
-main_repo: TARGET_REPO
+main_repo: {TARGET_REPO}
 language: jvm
 fuzzing_engines:
 - libfuzzer

@@ -20,7 +20,7 @@ import json
 import logging
 import os
 import shutil
-from typing import Any, List, Dict
+from typing import Optional
 
 logger = logging.getLogger(name=__name__)
 LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
@@ -38,12 +38,13 @@ def retrieve_top_harness_index(benchmark_dir: str) -> Optional[str]:
         json_dict = json.load(f)
         if json_dict.get('compiles', False):
           result.append({
-            'index': path,
-            'coverage': json_dict.get('coverage', 0.0)
+              'index': path,
+              'coverage': json_dict.get('coverage', 0.0)
           })
 
   if result:
-    return sorted(result, key = coverage, reverse = True)[0].get('index')
+    return sorted(result, key=lambda item: (item.get('coverage')),
+                  reverse=True)[0].get('index')
 
   return None
 
@@ -52,14 +53,15 @@ def retrieve_success_harness_name(project_dir_list: list[str]) -> list[str]:
   """Returns name of success harnesses of the target project."""
   result_list = []
   for project_dir in project_dir_list:
-    top_harness_index = retrieve_top_harness_path(project_dir)
+    top_harness_index = retrieve_top_harness_index(project_dir)
     if top_harness_index:
-      result_list.append(f'{os.path.basename(project_dir)}-{index}')
+      result_list.append(f'{os.path.basename(project_dir)}-{top_harness_index}')
 
   return result_list
 
 
-def group_result_dir_by_project_name(result_dir: str, project_name_list: list[str]) -> dict[str, list]:
+def group_result_dir_by_project_name(
+    result_dir: str, project_name_list: list[str]) -> dict[str, list]:
   """This function group the generater directory by project name."""
   result_dir_map = {}
   for project_basename in os.listdir(result_dir):
@@ -73,20 +75,24 @@ def group_result_dir_by_project_name(result_dir: str, project_name_list: list[st
   return result_dir_map
 
 
-def copy_success_ofg_autogens(result_dir: str, destination: str, project_name_list: list[str], oss_fuzz_path: str) -> None:
+def copy_success_ofg_autogens(result_dir: str, destination: str,
+                              project_name_list: list[str],
+                              oss_fuzz_path: str) -> None:
   """Copies the success harnesses for each projects to destination."""
-  result_dir_map = group_result_dir_by_project_name(os.path.abspath(result_dir))
+  result_dir_map = group_result_dir_by_project_name(os.path.abspath(result_dir),
+                                                    project_name_list)
 
   for project_name, project_dir_list in result_dir_map.items():
     logger.info('Handling project %s', project_name)
     destination_dir = os.path.join(destination, project_name)
     if not os.path.isdir(destination_dir):
-      os.mkdirs(destination_dir)
+      os.mkdir(destination_dir)
 
     top_harnesses = retrieve_success_harness_name(project_dir_list)
-    logger.info('Found %d success harnesses for project %s', len(top_harnesses), project_name)
+    logger.info('Found %d success harnesses for project %s', len(top_harnesses),
+                project_name)
     for name in top_harnesses:
-      src_dir = os.path.join(oss-fuzz-path, 'projects', name)
+      src_dir = os.path.join(oss_fuzz_path, 'projects', name)
       dst_dir = os.path.join(destination_dir, name.rsplit('-', 1)[0])
       shutil.copytree(src_dir, dst_dir)
 
@@ -112,11 +118,10 @@ def parse_commandline():
       '-p',
       help='A comma separated string of all target project name.',
       type=str)
-  parser.add_argument(
-      '--oss-fuzz-path',
-      '-o',
-      help='Path of the OSS-Fuzz used by OFG.',
-      type=str)
+  parser.add_argument('--oss-fuzz-path',
+                      '-o',
+                      help='Path of the OSS-Fuzz used by OFG.',
+                      type=str)
   return parser.parse_args()
 
 
@@ -125,7 +130,8 @@ def main():
   logging.basicConfig(level=logging.INFO, format=LOG_FMT)
 
   args = parse_commandline()
-  copy_success_ofg_autogens(args.result_dir, args.destination_dir, args.project_name, args.oss_fuzz_path)
+  copy_success_ofg_autogens(args.result_dir, args.destination_dir,
+                            args.project_name, args.oss_fuzz_path)
 
 
 if __name__ == "__main__":

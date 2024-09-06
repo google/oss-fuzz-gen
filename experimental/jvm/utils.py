@@ -20,6 +20,7 @@ import os
 import subprocess
 from typing import Optional
 
+import constants
 import oss_fuzz_templates
 from urllib3.util import parse_url
 
@@ -75,8 +76,15 @@ def get_project_name(github_url: str) -> Optional[str]:
 
 def prepare_base_files(base_dir: str, project_name: str, url: str) -> bool:
   """Prepare OSS-Fuzz base files for Java project fuzzing"""
-  build_file = _get_build_file(base_dir, project_name)
-  if not build_file:
+
+  # Determine build type and build directory for the project
+  build_type, version = _find_project_build_type(os.path.join(base_dir, "proj"),
+                                                 project_name)
+
+  # Preapre build.sh and Dockerfile
+  build_file = _get_build_file(build_type)
+  docker_file = _get_docker_file(build_type, version, url)
+  if not docker_file or not build_file:
     return False
 
   try:
@@ -84,10 +92,10 @@ def prepare_base_files(base_dir: str, project_name: str, url: str) -> bool:
       f.write(build_file)
 
     with open(os.path.join(base_dir, 'Dockerfile'), 'w') as f:
-      f.write(oss_fuzz_templates.DOCKERFILE_JAVA.replace("TARGET_REPO", url))
+      f.write(docker_file)
 
     with open(os.path.join(base_dir, 'project.yaml'), 'w') as f:
-      f.write(oss_fuzz_templates.YAML_JAVA.replace("TARGET_REPO", url))
+      f.write(oss_fuzz_templates.YAML_JAVA.replace("{TARGET_REPO}", url))
 
     with open(os.path.join(base_dir, 'Fuzz.java'), 'w') as f:
       f.write(oss_fuzz_templates.FUZZER_JAVA)
@@ -97,11 +105,8 @@ def prepare_base_files(base_dir: str, project_name: str, url: str) -> bool:
   return True
 
 
-def _get_build_file(base_dir: str, project_name: str) -> str:
+def _get_build_file(build_type: str) -> str:
   """Prepare build.sh content for this project."""
-
-  build_type = _find_project_build_type(os.path.join(base_dir, "proj"),
-                                        project_name)
 
   if build_type == 'ant':
     build_file = oss_fuzz_templates.BUILD_JAVA_ANT
@@ -115,44 +120,88 @@ def _get_build_file(base_dir: str, project_name: str) -> str:
   return build_file + oss_fuzz_templates.BUILD_JAVA_BASE
 
 
+def _get_docker_file(build_type: str, version: str, url: str) -> str:
+  """Prepare build.sh content for this project."""
+
+  if build_type == 'ant':
+    docker_file = oss_fuzz_templates.DOCKERFILE_JAVA_ANT
+    docker_file = docker_file.replace('{ANT_URL}', constants.ANT_URL)
+  elif build_type == 'gradle':
+    docker_file = oss_fuzz_templates.DOCKERFILE_JAVA_GRADLE
+    docker_file = docker_file.replace('{GRADLE_URL}', constants.GRADLE_URL)
+  elif build_type == 'maven':
+    # Check for invalid version
+    if version not in constants.MAVEN_URL:
+      return ''
+
+    docker_file = oss_fuzz_templates.DOCKERFILE_JAVA_MAVEN
+    docker_file = docker_file.replace('{MAVEN_URL}',
+                                      constants.MAVEN_URL[version])
+    docker_file = docker_file.replace('{MAVEN_VERSION}', version)
+  else:
+    return ''
+
+  docker_file = docker_file.replace('{PROTO_URL}', constants.PROTO_URL)
+  docker_file = docker_file.replace('{JDK15_URL}', constants.JDK15_URL)
+  docker_file = docker_file.replace('{TARGET_REPO}', url)
+
+  return docker_file
+
+
 # Java Project discovery utils
 ##############################
-def _find_dir_build_type(project_dir: str) -> str:
+def _find_dir_build_type(project_dir: str) -> tuple[str, str]:
   """Determine the java build project type of the directory"""
 
   if os.path.exists(os.path.join(project_dir, 'pom.xml')):
-    return 'maven'
+    return 'maven', _get_maven_version(project_dir)
 
   if os.path.exists(os.path.join(
       project_dir, 'build.gradle')) or os.path.exists(
           os.path.join(project_dir, 'build.gradle.kts')):
-    return 'gradle'
+    return 'gradle', ''
 
   if os.path.exists(os.path.join(project_dir, 'build.xml')):
-    return 'ant'
+    return 'ant', ''
 
   return ''
 
 
-def _find_project_build_type(project_dir: str, proj_name: str) -> str:
+def _get_maven_version(base_dir: str) -> str:
+  """Prepare Maven specific logic for build.sh."""
+  with open(os.path.join(base_dir, 'pom.xml'), 'r') as f:
+    data = f.read()
+
+  # Determine if the project requires older JVM
+  if '<source>1.5</source>' in data or '<target>1.5</target>' in data:
+    return '3.1.1'
+
+  if '<source>1.6</source>' in data or '<target>1.6</target>' in data:
+    return '3.2.5'
+
+  return '3.9.2'
+
+
+def _find_project_build_type(project_dir: str,
+                             proj_name: str) -> tuple[str, str]:
   """Search for base project directory to detect project build type"""
   # Search for current directory first
-  project_build_type = _find_dir_build_type(project_dir)
-  if project_build_type:
-    return project_build_type
+  project_build_data = _find_dir_build_type(project_dir)
+  if project_build_data:
+    return project_build_data
 
   # Search for sub directory with name same as project name
   for subdir in os.listdir(project_dir):
     if os.path.isdir(os.path.join(project_dir, subdir)) and subdir == proj_name:
-      project_build_type = _find_dir_build_type(
-          os.path.join(project_dir, subdir))
-    if project_build_type:
-      return project_build_type
+      target_dir = os.path.join(project_dir, subdir)
+      project_build_data = _find_dir_build_type(target_dir)
+    if project_build_data:
+      return project_build_data
 
   # Recursively look for subdirectory that contains build property file
   for root, _, _ in os.walk(project_dir):
-    project_build_type = _find_dir_build_type(root)
-    if project_build_type:
-      return project_build_type
+    project_build_data = _find_dir_build_type(root)
+    if project_build_data:
+      return project_build_data
 
-  return ''
+  return '', ''
