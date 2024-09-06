@@ -391,7 +391,7 @@ def query_introspector_matching_function_constructor_type(
 
   resp = _query_introspector(INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE, {
       'project': project,
-      'return_type': return_type
+      'return-type': return_type
   })
 
   if is_function:
