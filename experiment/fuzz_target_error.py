@@ -103,11 +103,11 @@ class SemanticCheckResult:
       # TODO(happy-qop): Add detailed description for this error type.
       return 'Overlong fuzzing log.'
     if self.type == self.FP_NEAR_INIT_CRASH:
-      return (f'Fuzzing crashed immediately at runtime ({self.crash_symptom})'
+      return (f'Crashed immediately at runtime ({self.crash_symptom})'
               ', indicating fuzz target code for invoking the function under'
               ' test is incorrect or unrobust.')
     if self.type == self.FP_TARGET_CRASH:
-      return (f'Fuzzing has crashes ({self.crash_symptom}) caused by fuzz '
+      return (f'The crash ({self.crash_symptom}) is caused by fuzz '
               'target code, indicating its usage for the function under '
               'test is incorrect or unrobust.')
     if self.type == self.FP_MEMLEAK:

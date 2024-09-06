@@ -49,6 +49,7 @@ LIBFUZZER_MODULES_LOADED_REGEX = re.compile(
     r'^INFO:\s+Loaded\s+\d+\s+(modules|PC tables)\s+\((\d+)\s+.*\).*')
 LIBFUZZER_COV_REGEX = re.compile(r'.*cov: (\d+) ft:')
 LIBFUZZER_CRASH_TYPE_REGEX = re.compile(r'.*Test unit written to.*')
+LIBFUZZER_DRY_RUN_CRASH_REGEX = re.compile(r'ERROR: AddressSanitizer:')
 LIBFUZZER_COV_LINE_PREFIX = re.compile(r'^#(\d+)')
 LIBFUZZER_STACK_FRAME_LINE_PREFIX = re.compile(r'^\s+#\d+')
 CRASH_EXCLUSIONS = re.compile(r'.*(slow-unit-|timeout-|leak-|oom-).*')
@@ -79,7 +80,7 @@ class BuildResult:
 
 @dataclasses.dataclass
 class RunResult:
-  """Checked results of conducting short-term fuzzing."""
+  """Checked results of conducting dry run fuzz target and short-term fuzzing."""
 
   succeeded: bool = False
   coverage_summary: dict = dataclasses.field(default_factory=dict)
@@ -302,7 +303,8 @@ class BuilderRunner:
   def _parse_libfuzzer_logs(self,
                             log_handle,
                             project_name: str,
-                            check_cov_increase: bool = True) -> ParseResult:
+                            check_cov_increase: bool = True,
+                            dry_run_flag: bool = False) -> ParseResult:
     """Parses libFuzzer logs."""
     lines = None
     try:
@@ -329,11 +331,17 @@ class BuilderRunner:
         cov_pcs = int(m.group(1))
         continue
 
-      m = LIBFUZZER_CRASH_TYPE_REGEX.match(line)
-      if m and not CRASH_EXCLUSIONS.match(line):
-        # TODO(@happy-qop): Handling oom, slow cases in semantic checks & fix.
-        crashes = True
-        continue
+      if not dry_run_flag:
+        m = LIBFUZZER_CRASH_TYPE_REGEX.match(line)
+        if m and not CRASH_EXCLUSIONS.match(line):
+          # TODO(@happy-qop): Handling oom, slow cases in semantic checks & fix.
+          crashes = True
+          continue
+      else:
+        m = LIBFUZZER_DRY_RUN_CRASH_REGEX.search(line)
+        if m:
+          crashes = True
+          continue
 
     initcov, donecov, lastround = self._parse_fuzz_cov_info_from_libfuzzer_logs(
         lines)
@@ -430,7 +438,7 @@ class BuilderRunner:
   def build_and_run(self, generated_project: str, target_path: str,
                     iteration: int,
                     language: str) -> tuple[BuildResult, Optional[RunResult]]:
-    """Builds and runs the fuzz target for fuzzing."""
+    """Builds and runs the fuzz target for dry run and fuzzing."""
     build_result = BuildResult()
 
     if not self._pre_build_check(target_path, build_result):
@@ -449,7 +457,7 @@ class BuilderRunner:
       self, generated_project: str, target_path: str, iteration: int,
       build_result: BuildResult,
       language: str) -> tuple[BuildResult, Optional[RunResult]]:
-    """Builds and runs the fuzz target locally for fuzzing."""
+    """Builds and runs the fuzz target locally for once and fuzzing."""
     project_name = self.benchmark.project
     benchmark_target_name = os.path.basename(target_path)
     project_target_name = os.path.basename(self.benchmark.target_path)
@@ -474,28 +482,84 @@ class BuilderRunner:
       build_result.errors = errors
       return build_result, None
 
-    run_result = RunResult()
+    # Prepare empty seed
+    empty_seed_path = os.path.join('/tmp', 'empty_seed')
+    if not os.path.exists(empty_seed_path):
+      with open(empty_seed_path, 'w') as f:
+        f.write('')
 
-    self.run_target_local(
-        generated_project, benchmark_target_name,
-        self.work_dirs.run_logs_target(benchmark_target_name, iteration))
-    run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
-        generated_project, benchmark_target_name))
-
-    # Parse libfuzzer logs to get fuzz target runtime details.
-    with open(self.work_dirs.run_logs_target(benchmark_target_name, iteration),
-              'rb') as f:
-      # In many case JVM projects won't have much cov
-      # difference in short running. Adding the flag for JVM
-      # projects to temporary skip the checking of coverage change.
+    dry_run_result = RunResult()
+    
+    # Dry run
+    self.dry_run_target_local(
+        generated_project, empty_seed_path,
+        self.work_dirs.dry_run_logs_target(benchmark_target_name, iteration))
+    
+    with open(
+        self.work_dirs.dry_run_logs_target(benchmark_target_name, iteration),
+        'rb') as f:
       flag = not self.benchmark.language == 'jvm'
-      run_result.cov_pcs, run_result.total_pcs, \
-        run_result.crashes, run_result.crash_info, \
-          run_result.semantic_check = \
-            self._parse_libfuzzer_logs(f, project_name, flag)
-      run_result.succeeded = not run_result.semantic_check.has_err
+      dry_run_result.cov_pcs, dry_run_result.total_pcs, \
+        dry_run_result.crashes, dry_run_result.crash_info, \
+          dry_run_result.semantic_check = \
+            self._parse_libfuzzer_logs(f, project_name, flag, True)
+      dry_run_result.succeeded = not dry_run_result.crashes
 
-    return build_result, run_result
+    if dry_run_result.succeeded:
+      run_result = RunResult()
+
+      # Short-term fuzzing
+      self.run_target_local(
+          generated_project, benchmark_target_name,
+          self.work_dirs.run_logs_target(benchmark_target_name, iteration))
+      run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
+          generated_project, benchmark_target_name))
+
+      # Parse libfuzzer logs to get fuzz target runtime details.
+      with open(self.work_dirs.run_logs_target(benchmark_target_name, iteration),
+                'rb') as f:
+        # In many case JVM projects won't have much cov
+        # difference in short running. Adding the flag for JVM
+        # projects to temporary skip the checking of coverage change.
+        flag = not self.benchmark.language == 'jvm'
+        run_result.cov_pcs, run_result.total_pcs, \
+          run_result.crashes, run_result.crash_info, \
+            run_result.semantic_check = \
+              self._parse_libfuzzer_logs(f, project_name, flag)
+        run_result.succeeded = not run_result.semantic_check.has_err
+
+      return build_result, run_result
+    
+    return build_result, dry_run_result
+  
+  def dry_run_target_local(self, generated_project: str, empty_seed_path: str,
+                        log_path: str):
+    """Runs a target once in the fixed target directory with empty seed."""
+    logger.info('Dry running %s', generated_project)
+    command = [
+        'python3', 'infra/helper.py', 'reproduce', generated_project,
+        self.benchmark.target_name, empty_seed_path, '--'
+    ] + self._libfuzzer_args() + ['-runs=0']
+
+    with open(log_path, 'w') as f:
+      proc = sp.Popen(command,
+                      stdin=sp.DEVNULL,
+                      stdout=f,
+                      stderr=sp.STDOUT,
+                      cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
+
+      # TODO(fdt622): Handle the timeout exception.
+      try:
+        proc.wait(timeout=self.run_timeout + 5)
+      except sp.TimeoutExpired:
+        logger.info('%s timed out during dry run.', generated_project)
+        # Try continuing and parsing the logs even in case of timeout.
+
+    if proc.returncode != 0:
+      logger.info('********** Failed to dry run %s. **********',
+                  generated_project)
+    else:
+      logger.info('Successfully dry run %s.', generated_project)
 
   def run_target_local(self, generated_project: str, benchmark_target_name: str,
                        log_path: str):
@@ -584,6 +648,8 @@ class BuilderRunner:
         'FUZZING_ENGINE=libfuzzer',
         '-e',
         f'SANITIZER={sanitizer}',
+        '-e', 
+        'ASAN_OPTIONS=${ASAN_OPTIONS}:check_initialization_order=true:detect_stack_use_after_return=true',
         '-e',
         'ARCHITECTURE=x86_64',
         '-e',
