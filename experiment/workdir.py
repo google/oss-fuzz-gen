@@ -84,7 +84,7 @@ class WorkDirs:
   @property
   def run_logs(self):
     return os.path.join(self._base_dir, 'logs', 'run')
-  
+
   @property
   def dry_run_logs(self):
     return os.path.join(self._base_dir, 'logs', 'dry_run')

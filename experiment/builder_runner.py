@@ -489,12 +489,12 @@ class BuilderRunner:
         f.write('')
 
     dry_run_result = RunResult()
-    
+
     # Dry run
     self.dry_run_target_local(
         generated_project, empty_seed_path,
         self.work_dirs.dry_run_logs_target(benchmark_target_name, iteration))
-    
+
     with open(
         self.work_dirs.dry_run_logs_target(benchmark_target_name, iteration),
         'rb') as f:
@@ -529,9 +529,9 @@ class BuilderRunner:
         run_result.succeeded = not run_result.semantic_check.has_err
 
       return build_result, run_result
-    
+
     return build_result, dry_run_result
-  
+
   def dry_run_target_local(self, generated_project: str, empty_seed_path: str,
                         log_path: str):
     """Runs a target once in the fixed target directory with empty seed."""
@@ -648,7 +648,7 @@ class BuilderRunner:
         'FUZZING_ENGINE=libfuzzer',
         '-e',
         f'SANITIZER={sanitizer}',
-        '-e', 
+        '-e',
         'ASAN_OPTIONS=${ASAN_OPTIONS}:check_initialization_order=true:detect_stack_use_after_return=true',
         '-e',
         'ARCHITECTURE=x86_64',
