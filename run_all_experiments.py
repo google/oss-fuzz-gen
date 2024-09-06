@@ -26,7 +26,6 @@ from multiprocessing import Pool
 from typing import Any
 
 import run_one_experiment
-from auto_build.jvm import utils
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import evaluator, oss_fuzz_checkout, textcov
@@ -92,33 +91,19 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
   logger.info('Setting benchmark directory to %s.', benchmark_dir)
   os.makedirs(benchmark_dir)
   args.benchmarks_directory = benchmark_dir
-
-  if args.generate_benchmarks_projects:
-    benchmark_oracles = [
-        heuristic.strip() for heuristic in args.generate_benchmarks.split(',')
-    ]
-
-    # Generate benchmarks for existing OSS-Fuzz integrated projects
-    projects_to_target = [
-        project.strip()
-        for project in args.generate_benchmarks_projects.split(',')
-    ]
-    for project in projects_to_target:
-      project_lang = oss_fuzz_checkout.get_project_language(project)
-      benchmarks = introspector.populate_benchmarks_using_introspector(
-          project, project_lang, args.generate_benchmarks_max,
-          benchmark_oracles)
-      if benchmarks:
-        benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
-  else:
-    # Generate benchmarks for new projects from scratch
-    project_urls = [
-        url.strip() for url in args.generate_benchmarks_github_url.split(',')
-    ]
-    for url in project_urls:
-      # Generate benchmark yaml for each project url
-      utils.generate_benchmarks_from_github_url(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                                benchmark_dir, url)
+  benchmark_oracles = [
+      heuristic.strip() for heuristic in args.generate_benchmarks.split(',')
+  ]
+  projects_to_target = [
+      project.strip()
+      for project in args.generate_benchmarks_projects.split(',')
+  ]
+  for project in projects_to_target:
+    project_lang = oss_fuzz_checkout.get_project_language(project)
+    benchmarks = introspector.populate_benchmarks_using_introspector(
+        project, project_lang, args.generate_benchmarks_max, benchmark_oracles)
+    if benchmarks:
+      benchmarklib.Benchmark.to_yaml(benchmarks, benchmark_dir)
 
 
 def prepare_experiment_targets(
@@ -132,7 +117,7 @@ def prepare_experiment_targets(
         'the files in %s.', args.benchmark_yaml, args.benchmarks_directory)
     benchmark_yamls = [args.benchmark_yaml]
   else:
-    if args.generate_benchmarks or args.generate_benchmarks_github_url:
+    if args.generate_benchmarks:
       generate_benchmarks(args)
 
     benchmark_yamls = [
@@ -140,7 +125,6 @@ def prepare_experiment_targets(
         for file in os.listdir(args.benchmarks_directory)
         if file.endswith('.yaml') or file.endswith('yml')
     ]
-
   experiment_configs = []
   for benchmark_file in benchmark_yamls:
     experiment_configs.extend(benchmarklib.Benchmark.from_yaml(benchmark_file))
@@ -262,12 +246,6 @@ def parse_args() -> argparse.Namespace:
       '--generate-benchmarks-projects',
       help='Projects to generate benchmarks for in a comma separated string.',
       type=str)
-  parser.add_argument(
-      '-gs',
-      '--generate-benchmarks-github-url',
-      help=('Github urls for projects to generate benchmarks from scratch in a '
-            'comma separated string.'),
-      type=str)
   parser.add_argument('-gm',
                       '--generate-benchmarks-max',
                       help='Max targets to generate per benchmark heuristic.',
@@ -305,17 +283,12 @@ def parse_args() -> argparse.Namespace:
   bench_yml = bool(benchmark_yaml)
   bench_dir = bool(args.benchmarks_directory)
   bench_gen = bool(args.generate_benchmarks)
-  bench_url = bool(args.generate_benchmarks_github_url)
-  num_options = int(bench_yml) + int(bench_dir) + int(bench_gen) + int(
-      bench_url)
+  num_options = int(bench_yml) + int(bench_dir) + int(bench_gen)
   assert num_options == 1, (
-      'One and only one of --benchmark-yaml, --benchmarks-directory, '
-      '--generate-benchmarks and --generate-benchmarks-github-url. '
-      '--benchmark-yaml takes one benchmark YAML file, '
-      '--benchmarks-directory takes: a directory of them, '
-      '--generate-benchmarks generates them during analysis and '
-      ' generate new OSS-Fuzz integration for projects specified by the GitHub '
-      'URLs.')
+      'One and only one of --benchmark-yaml, --benchmarks-directory and '
+      '--generate-benchmarks. --benchmark-yaml takes one benchmark YAML file, '
+      '--benchmarks-directory takes: a directory of them and '
+      '--generate-benchmarks generates them during analysis.')
 
   # Validate templates.
   assert os.path.isdir(args.template_directory), (

@@ -216,13 +216,8 @@ class Evaluator:
       logger.info('Project %s already exists.', generated_project_path)
       return name
 
-    if self.benchmark.is_new_integration and self.benchmark.build_project_name:
-      existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                           'projects',
-                                           self.benchmark.build_project_name)
-    else:
-      existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                           'projects', self.benchmark.project)
+    existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
+                                         'projects', self.benchmark.project)
 
     shutil.copytree(existing_project_path, generated_project_path)
 
@@ -448,12 +443,7 @@ class Evaluator:
           f'Warning: total_pcs == 0 in {generated_oss_fuzz_project}.')
       coverage_percent = 0.0
 
-    if self.benchmark.is_new_integration:
-      # There is no existing coverage report for new integration
-      # Create an empty coverage report for processing
-      existing_textcov = textcov.Textcov()
-    else:
-      existing_textcov = self._load_existing_textcov()
+    existing_textcov = self._load_existing_textcov()
     run_result.coverage.subtract_covered_lines(existing_textcov)
 
     if total_lines:

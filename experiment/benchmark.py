@@ -23,8 +23,6 @@ from typing import Any, List, Optional
 
 import yaml
 
-from auto_build.jvm import utils
-
 
 class FileType(Enum):
   """File types of target files."""
@@ -41,13 +39,6 @@ def quoted_string_presenter(dumper, data):
   return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='"')
 
 
-# For ignoring inner structure alias dumping
-class NoAliasDumper(yaml.Dumper):
-
-  def ignore_aliases(self, data):
-    return True
-
-
 class Benchmark:
   """Represents a benchmark."""
 
@@ -61,11 +52,7 @@ class Benchmark:
         'language': benchmarks[0].language,
         'target_path': benchmarks[0].target_path,
         'target_name': benchmarks[0].target_name,
-        'is_new_integration': benchmarks[0].is_new_integration,
     }
-    if benchmarks[0].build_project_name:
-      result['build_project_name'] = benchmarks[0].build_project_name
-
     for benchmark in benchmarks:
       if benchmark.test_file_path:
         if 'test_files' not in result:
@@ -79,20 +66,12 @@ class Benchmark:
             'signature': benchmark.function_signature,
             'name': benchmark.function_name,
             'return_type': benchmark.return_type,
-            'params': benchmark.params,
-            'jvm_special_properties': benchmark.jvm_special_properties
+            'params': benchmark.params
         })
 
     with open(os.path.join(outdir, f'{benchmarks[0].project}.yaml'),
               'w') as file:
-      if benchmarks[0].is_new_integration:
-        yaml.dump(result,
-                  file,
-                  default_flow_style=False,
-                  width=sys.maxsize,
-                  Dumper=NoAliasDumper)
-      else:
-        yaml.dump(result, file, default_flow_style=False, width=sys.maxsize)
+      yaml.dump(result, file, default_flow_style=False, width=sys.maxsize)
 
   @classmethod
   def from_yaml(cls, benchmark_path: str) -> List:
@@ -157,86 +136,6 @@ class Benchmark:
                 cppify_headers=cppify_headers,
                 commit=commit,
                 use_context=use_context,
-                is_new_integration=data['is_new_integration'],
-                jvm_special_properties=function.get('jvm_special_properties'),
-                build_project_name=data.get('build_project_name'),
-                function_dict=function))
-
-    return benchmarks
-
-  @classmethod
-  def from_java_data_yaml(cls, benchmark_path: str, project: str,
-                          project_dir: str, build_project_name: str) -> List:
-    """Constructs benchmarks based on a Java static analysis."""
-    # Retrieve the method list from the provided java data yaml file
-    benchmarks = []
-    with open(benchmark_path, 'r') as benchmark_file:
-      functions = yaml.safe_load(benchmark_file)['All functions']['Elements']
-
-    # Loop through the method list
-    if functions:
-      # Sort method list by fuzz worthiness
-      functions = utils.sort_methods_by_fuzz_worthiness(functions)
-      functions_by_return_type = utils.group_functions_by_return_type(functions)
-
-      # Transform each method into benchmark
-      for function in functions:
-        # Skipping methods that are not fuzz worthy
-        if utils.is_exclude_method(project_dir, function):
-          continue
-
-        # Generate an ID for each benchmark
-        max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
-        truncated_id = f'{project}-{function.get("name")}'[:max_len]
-
-        # Generate the parameter list for the benchmark
-        param_list = []
-        for count, arg_type in enumerate(function.get('argTypes', [])):
-          param_list.append({'name': f'arg{count}', 'type': arg_type})
-
-        # Generate methods/constructors list creating the needed object
-        if '<init>' in function.get('functionName', ''):
-          constructors = []
-          builders = []
-        else:
-          class_name = function.get('functionSourceFile', '').split('$')[0]
-          functions_with_return_type = functions_by_return_type.get(
-              class_name, {})
-          constructors = functions_with_return_type.get('constructors', [])
-          builders = functions_with_return_type.get('builders', [])
-
-        # Process JVM special properties
-        jvm_special_properties = {
-            'is-jvm-static':
-                function.get('JavaMethodInfo', {}).get('static', False),
-            'need-close':
-                function.get('JavaMethodInfo', {}).get('needClose', False),
-            'exceptions':
-                function.get('JavaMethodInfo', {}).get('exceptions', []),
-            'builders':
-                builders,
-            'constructors':
-                constructors
-        }
-
-        # Save the benchmark with data in the method list
-        benchmarks.append(
-            cls(truncated_id.lower(),
-                project,
-                'jvm',
-                function.get('functionName', ''),
-                function.get('functionName', ''),
-                function.get('returnType', ''),
-                param_list,
-                '/src/Fuzz.java',
-                'Fuzz',
-                use_project_examples=False,
-                cppify_headers=False,
-                commit=None,
-                use_context=False,
-                is_new_integration=True,
-                jvm_special_properties=jvm_special_properties,
-                build_project_name=build_project_name,
                 function_dict=function))
 
     return benchmarks
@@ -256,10 +155,7 @@ class Benchmark:
                use_context=False,
                commit=None,
                function_dict: Optional[dict] = None,
-               test_file_path: str = '',
-               is_new_integration: bool = False,
-               jvm_special_properties: Optional[dict] = None,
-               build_project_name: Optional[str] = None):
+               test_file_path: str = ''):
     self.id = benchmark_id
     self.project = project
     self.language = language
@@ -275,15 +171,6 @@ class Benchmark:
     self.cppify_headers = cppify_headers
     self.commit = commit
     self.test_file_path = test_file_path
-    self.is_new_integration = is_new_integration
-    self.build_project_name = build_project_name
-
-    # For new OSS-Fuzz integration, Fuzz-Introspector webapp cannot provide
-    # these properties, hence we store the extra properties in the benchmark.
-    if is_new_integration:
-      self.jvm_special_properties = jvm_special_properties
-    else:
-      self.jvm_special_properties = None
 
     if self.language == 'jvm':
       # For java projects, in order to differentiate between overloaded methods
