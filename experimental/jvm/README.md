@@ -29,14 +29,15 @@ cd oss-fuzz-gen/experimental/jvm
 # Run end-to-end generation:
 # 1) Create an OSS-Fuzz project
 # 2) Extract additional harnesses using OSS-Fuzz-gen
-MODEL=gpt-3.5-turbo TARGETS= ./run_e2e.sh
+MODEL=gpt-3.5-turbo TARGETS=https://github.com/jdereg/java-util ./run_e2e.sh
 
 # You now have an auto-generated OSS-Fuzz project in workdir/auto-generated-projects
 ls workdir/auto-generated-projects/
+java-util
 
 # Build the project using the OSS-Fuzz CLI
 cd workdir/oss-fuzz
-cp -rf ../auto-generated-projects/ projects/java-util
+cp -rf ../auto-generated-projects/java-util projects/java-util
 python3 infra/helper.py build_fuzzers java-util
 ```
 
