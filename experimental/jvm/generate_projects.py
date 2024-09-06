@@ -33,7 +33,10 @@ def parse_commandline():
   parser = argparse.ArgumentParser()
   parser.add_argument('--workdir', '-w', help='Working directory')
   parser.add_argument('--oss-fuzz', '-o', help='OSS-Fuzz base')
-  parser.add_argument('--github-url', '-u', help='A comma separated string with all GitHub URLs of target projects')
+  parser.add_argument(
+      '--github-url',
+      '-u',
+      help='A comma separated string with all GitHub URLs of target projects')
   parser.add_argument('--silent',
                       '-s',
                       help='Disable logging in subprocess.',

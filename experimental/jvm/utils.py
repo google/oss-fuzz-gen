@@ -43,6 +43,7 @@ def git_clone_project(github_url: str, destination: str) -> bool:
     return False
   return True
 
+
 def get_project_name(github_url: str) -> Optional[str]:
   """Get project name by simplify github url"""
   # HTTPS Type
