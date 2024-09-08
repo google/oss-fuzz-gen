@@ -6,10 +6,10 @@ import subprocess as sp
 from abc import ABC, abstractmethod
 from typing import Optional
 
+import logger
 from llm_toolkit.models import LLM
 from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
-from logger import logger
 from results import Result
 from tool.base_tool import BaseTool
 
@@ -33,6 +33,11 @@ class BaseAgent(ABC):
   def write_to_file(self, file_path: str, file_content: str):
     with open(file_path, 'w') as file:
       file.writelines(file_content)
+
+  def log(self, msg: str, level=logging.INFO):
+    """Method to log messages dynamically using the logger factory."""
+    agent_logger = logger.get_logger(self.name, self.trial, level)
+    agent_logger.log(level, msg)
 
   def get_tool(self, tool_name: str) -> Optional[BaseTool]:
     """Gets a tool of the agent by name."""
@@ -70,10 +75,9 @@ class BaseAgent(ABC):
     if command:
       prompt_text = self._format_bash_execution_result(tool.execute(command))
     else:
-      logger.warning('ROUND %d No BASH command from LLM response: %s',
-                     cur_round,
-                     response,
-                     extra={'trial': self.trial})
+      self.log(
+          f'ROUND {cur_round} No BASH command from LLM response: {response}',
+          logging.WARNING)
       prompt_text = ('No bash command received, Please follow the '
                      'interaction protocols:\n'
                      f'{tool.tutorial()}')
@@ -90,7 +94,6 @@ class BaseAgent(ABC):
 
 if __name__ == "__main__":
   # Make this a class method so that child agents can inherit and reuse?
-  import logging
   import sys
 
   import utils
@@ -101,7 +104,6 @@ if __name__ == "__main__":
 
   agent = utils.deserialize_from_pickle(agent_pickle)
   result_history = utils.deserialize_from_pickle(result_history_pickle)
-  logger.setLevel(logging.DEBUG)
 
   result = agent.execute(result_history)
   utils.serialize_to_pickle(result, new_result_pickle)

@@ -3,48 +3,18 @@ import json
 import logging
 import os
 
-from google.cloud import logging as cloud_logging
-from google.cloud.logging.handlers import CloudLoggingHandler
-
 from results import Result
 
 RESULT_JSON = 'result.json'
 
+_trial_logger = None
 
-class Logger(logging.Logger):
 
-  def __init__(self, name: str, trial: int = 0) -> None:
-    super().__init__(name)
-    self.trial = trial
+class CustomLoggerAdapter(logging.LoggerAdapter):
 
-    log_format = ('%(asctime)s [Trial ID: %(trial)02d] %(levelname)s '
-                  '[%(module)s.%(funcName)s]: %(message)s')
-    formatter = logging.Formatter(fmt=log_format, datefmt='%Y-%m-%d %H:%M:%S')
-
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(formatter)
-    self.addHandler(console_handler)
-
-    self.setLevel(logging.DEBUG)
-
-  def _add_context(self, msg, **kwargs):
-    # Automatically add extra context to log messages
-    extra = kwargs.get('extra', {})
-    extra['trial'] = self.trial
-    kwargs['extra'] = extra
+  def process(self, msg, kwargs):
+    kwargs['extra'] = {**kwargs.get('extra', {}), **(self.extra or {})}
     return msg, kwargs
-
-  def info(self, msg, *args, **kwargs):
-    msg, kwargs = self._add_context(msg, **kwargs)
-    super().info(msg, *args, **kwargs)
-
-  def warning(self, msg, *args, **kwargs):
-    msg, kwargs = self._add_context(msg, **kwargs)
-    super().warning(msg, *args, **kwargs)
-
-  def error(self, msg, *args, **kwargs):
-    msg, kwargs = self._add_context(msg, **kwargs)
-    super().error(msg, *args, **kwargs)
 
   def write_result(self, result_status_dir: str, result: Result) -> None:
     """Writes the final result into JSON for report generation."""
@@ -52,4 +22,49 @@ class Logger(logging.Logger):
       json.dump(result.to_dict(), f)
 
 
-logger = Logger(__name__)
+def get_logger(name: str,
+               trial: int = 0,
+               level=logging.DEBUG) -> CustomLoggerAdapter:
+  logger = logging.getLogger(name)
+  # Avoid adding duplicated handlers
+  if not logger.handlers:
+    formatter = logging.Formatter(
+        fmt=('%(asctime)s [Trial ID: %(trial)02d] %(levelname)s '
+             '[%(module)s.%(funcName)s]: %(message)s'),
+        datefmt='%Y-%m-%d %H:%M:%S')
+
+    handlers = [logging.StreamHandler()]
+
+    for handler in handlers:
+      handler.setFormatter(formatter)
+      logger.addHandler(handler)
+
+  logger.setLevel(level)
+  return CustomLoggerAdapter(logger, {'trial': trial})
+
+
+def set_logger_adapter(name: str = __name__,
+                       trial: int = 0,
+                       level=logging.INFO):
+  """Sets up and returns a singleton instance of CustomLoggerAdapter with the
+  specified trial."""
+  global _trial_logger
+  if _trial_logger is None:
+    logger = get_logger(name, level)
+    _trial_logger = CustomLoggerAdapter(logger, {'trial': trial})
+  return _trial_logger
+
+
+def get_logger_adapter():
+  """Returns the singleton instance of CustomLoggerAdapter."""
+  if _trial_logger is None:
+    raise ValueError('Logger adapter has not been initialized.')
+  return _trial_logger
+
+
+# def get_logger_adapter(name: str = __name__,
+#                        trial: int = 0,
+#                        level=logging.DEBUG):
+#   """Returns a CustomLoggerAdapter with a singleton logger."""
+#   logger = get_logger(name, level)
+#   return CustomLoggerAdapter(logger, {'trial': trial})
