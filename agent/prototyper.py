@@ -52,7 +52,7 @@ class Prototyper(BaseAgent):
           f'{build_script_source}', logging.DEBUG)
     else:
       self.log(f'ROUND {cur_round} No build script in conclusion: {response}',
-               logging.ERROR)
+               logging.DEBUG)
 
   def _update_build_result(self, buid_result: BuildResult,
                            compile_process: sp.CompletedProcess,
