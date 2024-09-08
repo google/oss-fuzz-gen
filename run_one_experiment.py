@@ -298,7 +298,7 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                       args: argparse.Namespace, work_dirs: WorkDirs,
                       trial: int) -> ExperimentResult:
   """Runs the predefined 3-stage pipeline for one trial."""
-  logger = Logger(__name__)
+  logger = Logger(__name__, trial)
   p = pipeline.Pipeline(
       args=args,
       writing_stage_agents=[Prototyper(trial=trial, llm=model)],
