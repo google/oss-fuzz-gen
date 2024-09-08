@@ -7,6 +7,7 @@ from typing import Optional
 from agent.base_agent import BaseAgent
 from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
+from logger import logger
 from results import BuildResult, Result
 from tool.container_tool import ProjectContainerTool
 
@@ -34,29 +35,29 @@ class Prototyper(BaseAgent):
         self._parse_tag(response, 'fuzz target'))
     build_result.fuzz_target_source = fuzz_target_source
     if fuzz_target_source:
-      self.logger.debug('ROUND %d Parsed fuzz target from LLM: %s',
-                        cur_round,
-                        fuzz_target_source,
-                        extra={'trial': self.trial})
+      logger.debug('ROUND %d Parsed fuzz target from LLM: %s',
+                   cur_round,
+                   fuzz_target_source,
+                   extra={'trial': self.trial})
     else:
-      self.logger.error('ROUND %d No fuzz target source code in conclusion: %s',
-                        cur_round,
-                        response,
-                        extra={'trial': self.trial})
+      logger.error('ROUND %d No fuzz target source code in conclusion: %s',
+                   cur_round,
+                   response,
+                   extra={'trial': self.trial})
 
     build_script_source = self._filter_code(
         self._parse_tag(response, 'build script'))
     build_result.build_script_source = build_script_source
     if build_script_source:
-      self.logger.debug('ROUND %d Parsed build script from LLM: %s',
-                        cur_round,
-                        build_script_source,
-                        extra={'trial': self.trial})
+      logger.debug('ROUND %d Parsed build script from LLM: %s',
+                   cur_round,
+                   build_script_source,
+                   extra={'trial': self.trial})
     else:
-      self.logger.debug('ROUND %d No build script in conclusion: %s',
-                        cur_round,
-                        response,
-                        extra={'trial': self.trial})
+      logger.debug('ROUND %d No build script in conclusion: %s',
+                   cur_round,
+                   response,
+                   extra={'trial': self.trial})
 
   def _update_build_result(self, buid_result: BuildResult,
                            compile_process: sp.CompletedProcess,
@@ -87,24 +88,24 @@ class Prototyper(BaseAgent):
               file_content=build_result.build_script_source))
 
     # Recompile.
-    self.logger.info('===== ROUND %d Recompile =====',
-                     cur_round,
-                     extra={'trial': self.trial})
+    logger.info('===== ROUND %d Recompile =====',
+                cur_round,
+                extra={'trial': self.trial})
     compile_command = 'compile > /dev/null'
     compile_process = compilation_tool.execute(compile_command)
     compile_succeed = compile_process.returncode == 0
-    self.logger.debug('ROUND %d Fuzz target compile Succeessfully: %s',
-                      cur_round,
-                      compile_succeed,
-                      extra={'trial': self.trial})
+    logger.debug('ROUND %d Fuzz target compile Succeessfully: %s',
+                 cur_round,
+                 compile_succeed,
+                 extra={'trial': self.trial})
 
     # Double-check binary.
     ls_result = compilation_tool.execute(f'ls /out/{benchmark.target_name}')
     binary_exists = ls_result.returncode == 0
-    self.logger.debug('ROUND %d Final fuzz target binary exists: %s',
-                      cur_round,
-                      binary_exists,
-                      extra={'trial': self.trial})
+    logger.debug('ROUND %d Final fuzz target binary exists: %s',
+                 cur_round,
+                 binary_exists,
+                 extra={'trial': self.trial})
     compilation_tool.terminate()
 
     self._update_build_result(build_result,
@@ -116,17 +117,17 @@ class Prototyper(BaseAgent):
       build_result: BuildResult) -> Optional[Prompt]:
     """Runs a compilation tool to validate the new fuzz target and build script
     from LLM."""
-    self.logger.info('----- ROUND %d Received conclusion -----',
-                     cur_round,
-                     extra={'trial': self.trial})
+    logger.info('----- ROUND %d Received conclusion -----',
+                cur_round,
+                extra={'trial': self.trial})
 
     self._update_fuzz_target_and_build_script(cur_round, response, build_result)
 
     self._validate_fuzz_target_and_build_script(cur_round, build_result)
     if build_result.status:
-      self.logger.info('***** Prototyper succeded in %d rounds *****',
-                       cur_round,
-                       extra={'trial': self.trial})
+      logger.info('***** Prototyper succeded in %d rounds *****',
+                  cur_round,
+                  extra={'trial': self.trial})
       # self.write_to_file(
       #     os.path.join(build_result.work_dirs.fixed_targets,
       #                  f'{build_result.trial}.fuzz_target'),
@@ -137,9 +138,9 @@ class Prototyper(BaseAgent):
       #     build_result.build_script_source)
       return None
 
-    self.logger.info('***** Failed to recompile in %d rounds *****',
-                     cur_round,
-                     extra={'trial': self.trial})
+    logger.info('***** Failed to recompile in %d rounds *****',
+                cur_round,
+                extra={'trial': self.trial})
     prompt_text = ('Failed to build fuzz target. Here is the fuzz target, build'
                    ' script, compliation command, and other compilation runtime'
                    ' output.\n<fuzz target>\n'
@@ -161,7 +162,7 @@ class Prototyper(BaseAgent):
 
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
-    self.logger.info('Executing Prototyper', extra={'trial': self.trial})
+    logger.info('Executing Prototyper', extra={'trial': self.trial})
     last_result = result_history[-1]
     prompt = self._initial_prompt(result_history)
     benchmark = last_result.benchmark
@@ -177,23 +178,23 @@ class Prototyper(BaseAgent):
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
       while prompt and cur_round < MAX_ROUND:
-        self.logger.debug('ROUND %d agent prompt: %s',
-                          cur_round,
-                          prompt.get(),
-                          extra={'trial': self.trial})
+        logger.debug('ROUND %d agent prompt: %s',
+                     cur_round,
+                     prompt.get(),
+                     extra={'trial': self.trial})
         response = self.llm.chat_llm(client=client, prompt=prompt)
-        self.logger.debug('ROUND %d LLM response: %s',
-                          cur_round,
-                          response,
-                          extra={'trial': self.trial})
+        logger.debug('ROUND %d LLM response: %s',
+                     cur_round,
+                     response,
+                     extra={'trial': self.trial})
         prompt = self._container_tool_reaction(cur_round, response,
                                                build_result)
         cur_round += 1
     finally:
       # Cleanup: stop and remove the container
-      self.logger.debug('Stopping and removing the inspect container %s...',
-                        self.inspect_tool.container_id,
-                        extra={'trial': self.trial})
+      logger.debug('Stopping and removing the inspect container %s...',
+                   self.inspect_tool.container_id,
+                   extra={'trial': self.trial})
       self.inspect_tool.terminate()
     return build_result
 

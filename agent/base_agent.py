@@ -9,7 +9,7 @@ from typing import Optional
 from llm_toolkit.models import LLM
 from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
-from logger import Logger
+from logger import logger
 from results import Result
 from tool.base_tool import BaseTool
 
@@ -22,14 +22,12 @@ class BaseAgent(ABC):
                llm: LLM,
                tools: Optional[list[BaseTool]] = None,
                args: Optional[argparse.Namespace] = None,
-               name: str = '',
-               logger: Optional[Logger] = None):
+               name: str = ''):
     self.trial: int = trial
     self.llm: LLM = llm
     self.tools: list[BaseTool] = tools or []
     self.args = args
     self.name: str = name or self.__class__.__name__
-    self.logger = logger or Logger(__name__)
     self.dialog: str = ''  # Communication history between LLM and tool.
 
   def write_to_file(self, file_path: str, file_content: str):
@@ -72,10 +70,10 @@ class BaseAgent(ABC):
     if command:
       prompt_text = self._format_bash_execution_result(tool.execute(command))
     else:
-      self.logger.warning('ROUND %d No BASH command from LLM response: %s',
-                          cur_round,
-                          response,
-                          extra={'trial': self.trial})
+      logger.warning('ROUND %d No BASH command from LLM response: %s',
+                     cur_round,
+                     response,
+                     extra={'trial': self.trial})
       prompt_text = ('No bash command received, Please follow the '
                      'interaction protocols:\n'
                      f'{tool.tutorial()}')
@@ -103,7 +101,7 @@ if __name__ == "__main__":
 
   agent = utils.deserialize_from_pickle(agent_pickle)
   result_history = utils.deserialize_from_pickle(result_history_pickle)
-  agent.logger.setLevel(logging.DEBUG)
+  logger.setLevel(logging.DEBUG)
 
   result = agent.execute(result_history)
   utils.serialize_to_pickle(result, new_result_pickle)

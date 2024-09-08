@@ -28,6 +28,8 @@ charset-normalizer==3.3.2
     # via requests
 cxxfilt==0.3.0
     # via -r requirements.in
+deprecated==1.2.14
+    # via opentelemetry-api
 dill==0.3.8
     # via pylint
 distro==1.9.0
@@ -36,7 +38,7 @@ distro==1.9.0
     #   openai
 docstring-parser==0.16
     # via google-cloud-aiplatform
-filelock==3.15.4
+filelock==3.16.0
     # via huggingface-hub
 fsspec==2024.9.0
     # via huggingface-hub
@@ -48,8 +50,10 @@ google-api-core[grpc]==2.19.2
     # via
     #   google-api-python-client
     #   google-cloud-aiplatform
+    #   google-cloud-appengine-logging
     #   google-cloud-bigquery
     #   google-cloud-core
+    #   google-cloud-logging
     #   google-cloud-resource-manager
     #   google-cloud-storage
 google-api-python-client==2.143.0
@@ -60,20 +64,29 @@ google-auth==2.34.0
     #   google-api-python-client
     #   google-auth-httplib2
     #   google-cloud-aiplatform
+    #   google-cloud-appengine-logging
     #   google-cloud-bigquery
     #   google-cloud-core
+    #   google-cloud-logging
     #   google-cloud-resource-manager
     #   google-cloud-storage
 google-auth-httplib2==0.2.0
     # via google-api-python-client
 google-cloud-aiplatform==1.64.0
     # via -r requirements.in
+google-cloud-appengine-logging==1.4.5
+    # via google-cloud-logging
+google-cloud-audit-log==0.3.0
+    # via google-cloud-logging
 google-cloud-bigquery==3.25.0
     # via google-cloud-aiplatform
 google-cloud-core==2.4.1
     # via
     #   google-cloud-bigquery
+    #   google-cloud-logging
     #   google-cloud-storage
+google-cloud-logging==3.11.2
+    # via -r requirements.in
 google-cloud-resource-manager==1.12.5
     # via google-cloud-aiplatform
 google-cloud-storage==2.9.0
@@ -89,10 +102,13 @@ google-resumable-media==2.7.2
 googleapis-common-protos[grpc]==1.65.0
     # via
     #   google-api-core
+    #   google-cloud-audit-log
     #   grpc-google-iam-v1
     #   grpcio-status
 grpc-google-iam-v1==0.13.1
-    # via google-cloud-resource-manager
+    # via
+    #   google-cloud-logging
+    #   google-cloud-resource-manager
 grpcio==1.66.1
     # via
     #   google-api-core
@@ -121,7 +137,9 @@ idna==3.8
     #   httpx
     #   requests
 importlib-metadata==8.4.0
-    # via yapf
+    # via
+    #   opentelemetry-api
+    #   yapf
 isort==5.13.2
     # via pylint
 jinja2==3.1.4
@@ -140,6 +158,8 @@ numpy==2.1.1
     #   shapely
 openai==1.16.2
     # via -r requirements.in
+opentelemetry-api==1.27.0
+    # via google-cloud-logging
 packaging==24.1
     # via
     #   google-cloud-aiplatform
@@ -147,7 +167,7 @@ packaging==24.1
     #   huggingface-hub
 pandas==2.2.2
     # via -r requirements.in
-platformdirs==4.2.2
+platformdirs==4.3.1
     # via
     #   pylint
     #   yapf
@@ -155,11 +175,16 @@ proto-plus==1.24.0
     # via
     #   google-api-core
     #   google-cloud-aiplatform
+    #   google-cloud-appengine-logging
+    #   google-cloud-logging
     #   google-cloud-resource-manager
 protobuf==5.28.0
     # via
     #   google-api-core
     #   google-cloud-aiplatform
+    #   google-cloud-appengine-logging
+    #   google-cloud-audit-log
+    #   google-cloud-logging
     #   google-cloud-resource-manager
     #   googleapis-common-protos
     #   grpc-google-iam-v1
@@ -171,12 +196,12 @@ pyasn1==0.6.0
     #   rsa
 pyasn1-modules==0.4.0
     # via google-auth
-pydantic==2.8.2
+pydantic==2.9.0
     # via
     #   anthropic
     #   google-cloud-aiplatform
     #   openai
-pydantic-core==2.20.1
+pydantic-core==2.23.2
     # via pydantic
 pylint==3.2.5
     # via -r requirements.in
@@ -238,11 +263,15 @@ typing-extensions==4.12.2
     #   pydantic
     #   pydantic-core
 tzdata==2024.1
-    # via pandas
+    # via
+    #   pandas
+    #   pydantic
 uritemplate==4.1.1
     # via google-api-python-client
 urllib3==2.2.2
     # via requests
+wrapt==1.16.0
+    # via deprecated
 yapf==0.40.1
     # via -r requirements.in
 zipp==3.20.1
