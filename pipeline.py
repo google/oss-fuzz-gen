@@ -40,7 +40,7 @@ class Pipeline():
 
   def _terminate(self, result_history: list[Result]) -> bool:
     """Validates if the termination conditions have been satisfied."""
-    return bool(result_history and result_history[-1].fuzz_target_source)
+    return bool(result_history and len(result_history) > 1)
 
   def _execute_one_cycle(self, result_history: list[Result]) -> None:
     """Executes the stages once."""
