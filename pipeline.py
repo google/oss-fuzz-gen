@@ -2,8 +2,8 @@
 import argparse
 from typing import Optional
 
+import logger
 from agent.base_agent import BaseAgent
-from logger import Logger
 from results import Result
 from stage.analysis_stage import AnalysisStage
 from stage.evaluation_stage import EvalationStage
@@ -26,17 +26,15 @@ class Pipeline():
                args: argparse.Namespace,
                writing_stage_agents: Optional[list[BaseAgent]] = None,
                evaluation_stage_agents: Optional[list[BaseAgent]] = None,
-               analysis_stage_agents: Optional[list[BaseAgent]] = None,
-               logger: Optional[Logger] = None):
+               analysis_stage_agents: Optional[list[BaseAgent]] = None):
     self.args = args
-    self.logger = logger or Logger(__name__)
-    self.writing_stage: WritingStage = WritingStage(args, writing_stage_agents,
-                                                    logger)
+    self.logger = logger.get_logger_adapter()
+    self.logger.debug('Pipline Initialized')
+    self.writing_stage: WritingStage = WritingStage(args, writing_stage_agents)
     self.evaluation_stage: EvalationStage = EvalationStage(
-        args, evaluation_stage_agents, logger)
+        args, evaluation_stage_agents)
     self.analysis_stage: AnalysisStage = AnalysisStage(args,
-                                                       analysis_stage_agents,
-                                                       logger)
+                                                       analysis_stage_agents)
 
   def _terminate(self, result_history: list[Result]) -> bool:
     """Validates if the termination conditions have been satisfied."""

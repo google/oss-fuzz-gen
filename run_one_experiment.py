@@ -22,6 +22,7 @@ import shutil
 from multiprocessing import pool
 from typing import List, Optional
 
+import logger
 import pipeline
 from agent.prototyper import Prototyper
 from data_prep import project_targets
@@ -32,7 +33,6 @@ from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, output_parser, prompt_builder, prompts
-from logger import Logger
 from results import BuildResult, ExperimentResult, Result
 
 # WARN: Avoid high value for NUM_EVA for local experiments.
@@ -298,11 +298,10 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                       args: argparse.Namespace, work_dirs: WorkDirs,
                       trial: int) -> ExperimentResult:
   """Runs the predefined 3-stage pipeline for one trial."""
-  logger = Logger(__name__, trial)
+  trial_logger = logger.set_logger_adapter(trial=trial)
+  trial_logger.info('Starts')
   p = pipeline.Pipeline(
-      args=args,
-      writing_stage_agents=[Prototyper(trial=trial, llm=model)],
-      logger=logger)
+      args=args, writing_stage_agents=[Prototyper(trial=trial, llm=model)])
   results = p.execute(result_history=[
       Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
   ])
