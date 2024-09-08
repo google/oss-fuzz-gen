@@ -1,7 +1,6 @@
 """An LLM agent to generate a simple fuzz target prototype that can build.
 Use it as a usual module locally, or as script in cloud builds.
 """
-import os
 import subprocess as sp
 from typing import Optional
 

@@ -9,6 +9,7 @@ from typing import Optional
 from llm_toolkit.models import LLM
 from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
+from logger import Logger
 from results import Result
 from tool.base_tool import BaseTool
 
@@ -21,21 +22,15 @@ class BaseAgent(ABC):
                llm: LLM,
                tools: Optional[list[BaseTool]] = None,
                args: Optional[argparse.Namespace] = None,
-               name: str = ''):
+               name: str = '',
+               logger: Optional[Logger] = None):
     self.trial: int = trial
     self.llm: LLM = llm
     self.tools: list[BaseTool] = tools or []
     self.args = args
     self.name: str = name or self.__class__.__name__
+    self.logger = logger or Logger(__name__)
     self.dialog: str = ''  # Communication history between LLM and tool.
-
-    # TODO(dongge): Replace this with google-cloud-log in a module.
-    logging.basicConfig(level=logging.DEBUG,
-                        format=('%(asctime)s [Trial: %02d] %(levelname)s '
-                                '[%(module)s.%(funcName)s]: %(message)s'))
-
-    self.logger = logging.getLogger(__name__)
-    self.logger.setLevel(logging.DEBUG)
 
   def write_to_file(self, file_path: str, file_content: str):
     with open(file_path, 'w') as file:

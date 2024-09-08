@@ -19,7 +19,6 @@ import dataclasses
 import logging
 import os
 import shutil
-import threading
 from multiprocessing import pool
 from typing import List, Optional
 
@@ -33,11 +32,8 @@ from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, output_parser, prompt_builder, prompts
+from logger import Logger
 from results import BuildResult, ExperimentResult, Result
-
-thread_local = threading.local()
-
-logger = logging.getLogger(__name__)
 
 # WARN: Avoid high value for NUM_EVA for local experiments.
 # NUM_EVA controls the number of fuzz targets to evaluate in parallel by each
@@ -110,8 +106,8 @@ def generate_targets(benchmark: Benchmark, model: models.LLM,
                      prompt: prompts.Prompt, work_dirs: WorkDirs,
                      builder: prompt_builder.PromptBuilder) -> list[str]:
   """Generates fuzz target with LLM."""
-  logger.info('Generating targets for %s %s using %s..', benchmark.project,
-              benchmark.function_signature, model.name)
+  logging.info('Generating targets for %s %s using %s..', benchmark.project,
+               benchmark.function_signature, model.name)
   model.query_llm(prompt, response_dir=work_dirs.raw_targets)
 
   _, target_ext = os.path.splitext(benchmark.target_path)
@@ -131,9 +127,9 @@ def generate_targets(benchmark: Benchmark, model: models.LLM,
   if generated_targets:
     targets_relpath = map(os.path.relpath, generated_targets)
     targets_relpath_str = '\n '.join(targets_relpath)
-    logger.info('Generated:\n %s', targets_relpath_str)
+    logging.info('Generated:\n %s', targets_relpath_str)
   else:
-    logger.info('Failed to generate targets: %s', generated_targets)
+    logging.info('Failed to generate targets: %s', generated_targets)
   return generated_targets
 
 
@@ -221,8 +217,8 @@ def check_targets(
     for i, target_stat in enumerate(
         p.starmap(evaluator.check_target, ai_target_pairs)):
       if target_stat is None:
-        logger.error('This should never happen: Error evaluating target: %s',
-                     generated_targets[i])
+        logging.error('This should never happen: Error evaluating target: %s',
+                      generated_targets[i])
         target_stat = exp_evaluator.Result()
 
       target_stats.append((i, target_stat))
@@ -230,7 +226,7 @@ def check_targets(
   if len(target_stats) > 0:
     return aggregate_results(target_stats, generated_targets)
 
-  logger.info('No targets to check.')
+  logging.info('No targets to check.')
   return None
 
 
@@ -255,7 +251,7 @@ def generate_targets_for_analysis(
 
     Returns a list of folders with the generated artifacts.
     """
-  logger.info('Generating targets')
+  logging.info('Generating targets')
   if benchmark.use_project_examples:
     project_examples = project_targets.generate_data(
         benchmark.project,
@@ -272,8 +268,8 @@ def generate_targets_for_analysis(
 
   # If this is a test benchmark then we will use a test prompt builder.
   if benchmark.is_test_benchmark:
-    logger.info('Generating a target for test case: %s',
-                benchmark.test_file_path)
+    logging.info('Generating a target for test case: %s',
+                 benchmark.test_file_path)
     builder = prompt_builder.TestToHarnessConverter(model, benchmark,
                                                     template_dir)
   elif benchmark.language == 'jvm':
@@ -298,21 +294,15 @@ def generate_targets_for_analysis(
   return generated_targets
 
 
-def initialize_thread(index):
-  """Initialize thread-local storage for each thread."""
-  # Thread-local storage object
-  thread_local.index = index
-  # Initialize more complex objects or variables if needed
-  print(f"Initialized thread-local storage for index={index}")
-
-
 def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                       args: argparse.Namespace, work_dirs: WorkDirs,
                       trial: int) -> ExperimentResult:
   """Runs the predefined 3-stage pipeline for one trial."""
-  logger.info('My sample ID: %s', getattr(thread_local, 'index', 'unknown'))
+  logger = Logger(__name__)
   p = pipeline.Pipeline(
-      args=args, writing_stage_agents=[Prototyper(trial=trial, llm=model)])
+      args=args,
+      writing_stage_agents=[Prototyper(trial=trial, llm=model)],
+      logger=logger)
   results = p.execute(result_history=[
       Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
   ])
@@ -352,7 +342,7 @@ def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
       prompt_builder_to_use=args.prompt_builder,
       cloud_experiment_bucket=args.cloud_experiment_bucket)
 
-  logger.info('Generated %d targets', len(generated_targets))
+  logging.info('Generated %d targets', len(generated_targets))
   if not generated_targets:
     return None
 
