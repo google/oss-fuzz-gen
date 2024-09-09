@@ -14,6 +14,7 @@
 """Common libraries for report generation."""
 
 import dataclasses
+import inspect
 import io
 import json
 import logging
@@ -31,7 +32,7 @@ from experiment.workdir import WorkDirs
 
 MAX_RUN_LOGS_LEN = 16 * 1024
 
-TARGET_EXTS = project_src.SEARCH_EXTS + ['.java', '.py']
+TARGET_EXTS = project_src.SEARCH_EXTS + ['.java', '.py'] + ['.fuzz_target']
 
 
 @dataclasses.dataclass
@@ -408,7 +409,12 @@ class Results:
         except Exception:
           return [], []
 
-      results.append(evaluator.Result(**data))
+      # TODO(dongge): Add new attributes to evaluator.Result.
+      valid_attributes = inspect.signature(evaluator.Result.__init__).parameters
+      filtered_data = {
+          key: value for key, value in data.items() if key in valid_attributes
+      }
+      results.append(evaluator.Result(**filtered_data))
 
     return results, targets
 

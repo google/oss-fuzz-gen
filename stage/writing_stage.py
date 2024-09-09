@@ -26,12 +26,15 @@ class WritingStage(BaseStage):
     return self.get_agent('Enhancer').execute(result_history)
 
   def execute(self, result_history: list[Result]) -> Result:
+    """Executes the writing stage."""
     if result_history and result_history[-1].fuzz_target_source:
       agent_result = self._refine_given_fuzz_targets(result_history)
     else:
       agent_result = self._write_new_fuzz_target(result_history)
+
+    # TODO(dongge): Save logs and more info into workdir.
+    self.logger.write_fuzz_target(agent_result)
+    self.logger.write_build_script(agent_result)
     self.logger.debug('Writing stage completed with with result:\n%s',
                       agent_result)
     return agent_result
-
-  # TODO(dongge): Save logs and more info into workdir.

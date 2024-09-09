@@ -28,7 +28,7 @@ class Pipeline():
                evaluation_stage_agents: Optional[list[BaseAgent]] = None,
                analysis_stage_agents: Optional[list[BaseAgent]] = None):
     self.args = args
-    self.logger = logger.get_logger_adapter()
+    self.logger = logger.get_trial_logger()
     self.logger.debug('Pipline Initialized')
     self.writing_stage: WritingStage = WritingStage(args, writing_stage_agents)
     self.evaluation_stage: EvalationStage = EvalationStage(

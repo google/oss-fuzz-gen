@@ -115,14 +115,6 @@ class Prototyper(BaseAgent):
     self._validate_fuzz_target_and_build_script(cur_round, build_result)
     if build_result.status:
       self.log('***** Prototyper succeded in {cur_round} rounds *****')
-      # self.write_to_file(
-      #     os.path.join(build_result.work_dirs.fixed_targets,
-      #                  f'{build_result.trial}.fuzz_target'),
-      #     build_result.fuzz_target_source)
-      # self.write_to_file(
-      #     os.path.join(build_result.work_dirs.fixed_targets,
-      #                  f'{build_result.trial}.build_script'),
-      #     build_result.build_script_source)
       return None
 
     self.log(f'***** Failed to recompile in {cur_round} rounds *****')
