@@ -1,15 +1,6 @@
 # Auto-build OSS-Fuzz Projects from a GitHub Repository URL for Java Projects
 
-This directory contains the logic for running auto-harness generation on projects
-from scratch. This differs from the core OSS-Fuzz-gen, which focuses on enhancing
-existing OSS-Fuzz projects. The logic in this folder is primarily geared towards
-automatically creating build scripts and OSS-Fuzz projects from arbitrary code 
-repositories.
-
-[OSS-Fuzz from scratch including core OSS-Fuzz-gen](#OSS-Fuzz-from-scratch-
-including-core-OSS-Fuzz-gen): Generating OSS-Fuzz projects from scratch using the
-auto-harnessing in this folder and then applying core OSS-Fuzz-gen onto the
-generated OSS-Fuzz project to produce a larger set of harnesses for a given project.
+This directory contains logic for automatically generating new OSS-Fuzz integrations for Java projects, including base files such as project.yaml, Dockerfile, and build scripts, along with dummy fuzzing harnesses for Fuzz-Introspector analysis. After generating a local analysis report with Fuzz-Introspector on the target projects, the core OSS-Fuzz-gen logic is invoked, referencing this report to produce a larger set of harnesses tailored for the specific project. The input to this process is a set of GitHub URLs for Java projects targeted for OSS-Fuzz integration. This directory is specifically designed for creating build scripts and OSS-Fuzz projects from scratch, distinguishing it from core OSS-Fuzz-gen, which focuses on enhancing existing OSS-Fuzz projects by automatically generating harnesses and project files from arbitrary code repositories.
 
 ## Usage
 
