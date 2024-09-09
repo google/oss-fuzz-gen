@@ -38,6 +38,7 @@ USE_LOCAL_INTROSPECTOR=$7
 NUM_SAMPLES=$8
 LLM_FIX_LIMIT=$9
 VARY_TEMPERATURE=${10}
+AGENT=${11}
 
 # Uses python3 by default and /venv/bin/python3 for Docker containers.
 PYTHON="$( [[ -x "/venv/bin/python3" ]] && echo "/venv/bin/python3" || echo "python3" )"
@@ -123,6 +124,10 @@ else
     VARY_TEMPERATURE=()
 fi
 
+AGENT_ARG=""
+if [[ "$AGENT" = "true" ]]; then
+    AGENT_ARG="--agent"
+fi
 
 DATE=$(date '+%Y-%m-%d')
 LOCAL_RESULTS_DIR='results'
@@ -155,7 +160,8 @@ $PYTHON run_all_experiments.py \
   --context \
   --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
   --temperature-list "${VARY_TEMPERATURE[@]}" \
-  --model "$MODEL"
+  --model "$MODEL" \
+  "$AGENT_ARG"
 
 export ret_val=$?
 
