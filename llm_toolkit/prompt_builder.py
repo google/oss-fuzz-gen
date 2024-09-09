@@ -1166,21 +1166,25 @@ class TestToHarnessConverter(PromptBuilder):
 
     # Constant prompt description and text
     self.language_prompt = {
-        'c': '''This is a C programming language so the harness
+        'c':
+            '''This is a C programming language so the harness
 should be written in C. This means the  harness should have the structure:
 <code>
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
 </code>
-Specifically, you should *not* include any `extern "C"` in the harness definition,
-and you should write the harness in pure C.
+Specifically, you should *not* include any `extern "C"` in the harness
+definition, and you should write the harness in pure C.
       ''',
-        'c++': '''This is a CPP programming language so the harness
+        'c++':
+            '''This is a CPP programming language so the harness
 should be written in CPP. This means the  harness should have the structure:
 <code>
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
 </code>
       ''',
-        'jvm': self._get_template(jvm_requirement_template_file).replace('{HARNESS_NAME}', self.benchmark.target_name)
+        'jvm':
+            self._get_template(jvm_requirement_template_file).replace(
+                '{HARNESS_NAME}', self.benchmark.target_name)
     }
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
@@ -1226,8 +1230,10 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
     prompt_text = prompt_text.replace("{TARGET_REPO}", target_repository)
     prompt_text = prompt_text.replace("{TEST_SOURCE_CODE}", test_source_code)
 
-    language_text = self.language_prompt.get(self.benchmark.language.lower(), '')
-    prompt_text = prompt_text.replace('{PROGRAMMING_LANGUAGE_TEXT}', language_text)
+    language_text = self.language_prompt.get(self.benchmark.language.lower(),
+                                             '')
+    prompt_text = prompt_text.replace('{PROGRAMMING_LANGUAGE_TEXT}',
+                                      language_text)
 
     if self.benchmark.language == 'jvm':
       # Fuzz Introspector use JVM as it support other JVM languages in addition
@@ -1236,9 +1242,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
       prompt_text = prompt_text.replace('{HEADER_FILE_LANG}', '')
     else:
       included_header_files = self.extract_header_files(test_source_code)
-      self.language_text = (f'The following header files are used in the '
-          'test. Please make sure to include the same ones: '
-          '{included_header_files}')
+      self.language_text = ('The following header files are used in the '
+                            'test. Please make sure to include the same ones: '
+                            f'{included_header_files}')
       prompt_text = prompt_text.replace('{PROG_LANG}', self.benchmark.language)
       prompt_text = prompt_text.replace('{HEADER_FILE_LANG}', language_text)
 
