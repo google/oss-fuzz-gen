@@ -154,7 +154,6 @@ def _parse_args(cmd) -> argparse.Namespace:
             f'{VARY_TEMPERATURE}'))
   parser.add_argument('-ae',
                       '--agent',
-                      type=bool,
                       action='store_true',
                       default=False,
                       help='Enables agent enhancement.')
