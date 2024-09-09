@@ -152,6 +152,12 @@ def _parse_args(cmd) -> argparse.Namespace:
       default=VARY_TEMPERATURE,
       help=('Use different temperatures for each sample, default: '
             f'{VARY_TEMPERATURE}'))
+  parser.add_argument('-ae',
+                      '--agent',
+                      type=bool,
+                      action='store_true',
+                      default=False,
+                      help='Enables agent enhancement.')
   args = parser.parse_args(cmd)
 
   assert os.path.isfile(
@@ -276,6 +282,7 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['GKE_EXP_NUM_SAMPLES'] = f'{args.num_samples}'
   exp_env_vars['GKE_EXP_LLM_FIX_LIMIT'] = f'{args.llm_fix_limit}'
   exp_env_vars['GKE_EXP_VARY_TEMPERATURE'] = f'{args.vary_temperature}'.lower()
+  exp_env_vars['GKE_EXP_AGENT'] = f'{args.agent}'.lower()
 
   with open(args.gke_template, 'r') as file:
     yaml_template = file.read()
