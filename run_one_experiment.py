@@ -267,7 +267,7 @@ def generate_targets_for_analysis(
     context_info = {}
 
   # If this is a test benchmark then we will use a test prompt builder.
-  if benchmark.is_test_benchmark:
+  if benchmark.test_file_path:
     logging.info('Generating a target for test case: %s',
                  benchmark.test_file_path)
     builder = prompt_builder.TestToHarnessConverter(model, benchmark,
