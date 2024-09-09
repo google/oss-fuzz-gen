@@ -613,7 +613,7 @@ def _select_top_functions_from_oracle(project: str, limit: int,
                                       target_oracle: str,
                                       target_oracles: list[str]) -> OrderedDict:
   """Selects the top |limit| functions from |target_oracle|."""
-  if target_oracle not in target_oracles:
+  if target_oracle not in target_oracles or target_oracle == 'test-migration':
     return OrderedDict()
 
   logger.info('Extracting functions using oracle %s.', target_oracle)
