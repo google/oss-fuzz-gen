@@ -49,7 +49,7 @@ Please feel free to create an issue or email us: oss-fuzz-team@google.com.
 
 ## Bugs Discovered
 
-So far, we have reported 6 new bugs/vulnerabilities found by automatically generated targets built
+So far, we have reported 7 new bugs/vulnerabilities found by automatically generated targets built
 by this framework:
 | Project |    Bug    |    LLM    | Prompt template |
 | ------- | --------- | --------- | --------------- |
