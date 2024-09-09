@@ -710,6 +710,13 @@ class BuilderRunner:
                 re.compile(r'^' + re.escape(target_basename) + ':')
             ])
 
+    coverage_report = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build',
+                                   'out', generated_project, 'report')
+    destination_coverage = self.work_dirs.code_coverage_report(
+        benchmark_target_name)
+
+    shutil.copytree(coverage_report, destination_coverage, dirs_exist_ok=True)
+
     coverage_summary = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build',
                                     'out', generated_project, 'report', 'linux',
                                     'summary.json')

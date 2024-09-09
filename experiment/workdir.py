@@ -54,6 +54,13 @@ class WorkDirs:
     os.makedirs(corpus_dir, exist_ok=True)
     return corpus_dir
 
+  def code_coverage_report(self, benchmark):
+    coverage_dir = os.path.join(self._base_dir, 'code-coverage-reports')
+    os.makedirs(coverage_dir, exist_ok=True)
+
+    benchmark_coverage = os.path.join(coverage_dir, benchmark)
+    return benchmark_coverage
+
   @property
   def status(self):
     return os.path.join(self._base_dir, 'status')
