@@ -12,7 +12,6 @@ import googleapiclient.errors
 from google.api_core.exceptions import NotFound
 from google.auth import default
 from google.cloud import storage
-from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build as cloud_build
 
 import utils
@@ -24,6 +23,45 @@ OF_REPO = 'https://github.com/google/oss-fuzz.git'
 US_CENTRAL_CLIENT_OPTIONS = google.api_core.client_options.ClientOptions(
     api_endpoint='https://us-central1-cloudbuild.googleapis.com/')
 
+AGENT_DOCKERFILE = """
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Python 3.11 and pip
+RUN apt-get update && \
+    apt-get install -y software-properties-common curl && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y python3.11 python3.11-dev python3.11-venv \
+        python3.11-distutils && \
+    curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11
+
+# Install Docker
+RUN apt-get install -y ca-certificates gnupg lsb-release && \
+    mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+        gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) \
+        signed-by=/etc/apt/keyrings/docker.gpg] \
+        https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
+        tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io \
+        docker-buildx-plugin docker-compose-plugin
+
+ENV DEBIAN_FRONTEND=dialog
+
+# Set the working directory
+WORKDIR /workspace/ofg
+
+# Copy the requirements file
+COPY requirements.txt /workspace/ofg/
+
+# Install Python dependencies
+RUN pip3.11 install --ignore-installed -r /workspace/ofg/requirements.txt
+"""
+
 
 class CloudBuilder:
   """Encapsulate functions to request Google Cloud Builds to execute agents."""
@@ -32,6 +70,8 @@ class CloudBuilder:
     #TODO(dongge): extra tags.
     self.credentials, self.project_id = default()
     assert self.project_id, 'Cloud experiment requires a Google cloud project.'
+    assert hasattr(self.credentials, 'service_account_email'), (
+        'Cloud experiment requires a service account email')
 
     self.bucket_name = args.cloud_experiment_bucket
     self.bucket = storage.Client().bucket(self.bucket_name)
@@ -106,7 +146,6 @@ class CloudBuilder:
                 'dir': '/workspace',
                 'args': ['-c', f'git clone --depth=1 {OF_REPO} ofg/oss-fuzz']
             },
-            # Step 3: Run the Python script with the pickle files
             {
                 'name':
                     'gcr.io/cloud-builders/docker',
@@ -116,28 +155,21 @@ class CloudBuilder:
                     '/workspace/ofg',
                 'args': [
                     '-c',
-                    """
-                    # Install Python 3.11 and pip
-                    apt-get update &&
-                    apt-get install -y software-properties-common &&
-                    add-apt-repository ppa:deadsnakes/ppa &&
-                    apt-get update &&
-                    apt-get install -y python3.11 python3.11-dev \
-                        python3.11-venv python3.11-distutils &&
-                    curl -sS https://bootstrap.pypa.io/get-pip.py | \
-                        python3.11 &&
-
-                    # Install Python dependencies
-                    pip3.11 install --ignore-installed -r \
-                        /workspace/ofg/requirements.txt &&
-
-                    # Run agent
-                    python3.11 -m agent.base_agent \
-                        /workspace/pickles/agent.pkl \
-                        /workspace/pickles/result_history.pkl \
-                        /workspace/pickles/new_result.pkl
-                    """,
+                    (f'echo "{AGENT_DOCKERFILE}" > Dockerfile && '
+                     'docker build -t agent-image:latest .')
                 ]
+            },
+            # Step 3: Run the Python script with the pickle files
+            {
+                'name':
+                    'gcr.io/cloud-builders/docker',
+                'args': [
+                    'run', '--rm', '-v', '/workspace:/workspace',
+                    'agent-image:latest', 'python3.11', '-m',
+                    'agent.base_agent', '/workspace/pickles/agent.pkl',
+                    '/workspace/pickles/result_history.pkl',
+                    '/workspace/pickles/new_result.pkl'
+                ],
             },
             # Step 4: Upload the result to GCS bucket
             {
@@ -158,8 +190,9 @@ class CloudBuilder:
         ],
         'timeout': '10800s',  # 3 hours
         'logsBucket': f'gs://{self.bucket_name}',
-        'serviceAccount': f'projects/{self.project_id}/serviceAccounts/'
-                          f'{self.credentials.service_account_email}'
+        'serviceAccount':
+            f'projects/{self.project_id}/serviceAccounts/'
+            f'{self.credentials.service_account_email}'  # type: ignore
     }
 
     # Convert to YAML string and submit the Cloud Build request
