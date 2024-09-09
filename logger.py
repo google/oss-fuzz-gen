@@ -11,60 +11,48 @@ _trial_logger = None
 
 
 class CustomLoggerAdapter(logging.LoggerAdapter):
+  """A logger adapter to enrich log messages and save status files."""
 
-  def process(self, msg, kwargs):
-    kwargs['extra'] = {**kwargs.get('extra', {}), **(self.extra or {})}
-    return msg, kwargs
+  def write_to_file(self, file_path: str, file_content: str) -> None:
+    """Writes the |file_content| into a local |file_path|."""
+    with open(file_path, 'w') as file:
+      file.writelines(file_content)
+
+  def write_fuzz_target(self, result: Result) -> None:
+    """Writes fuzz target."""
+    fuzz_target_path = os.path.join(result.work_dirs.raw_targets,
+                                    f'{result.trial:02d}.fuzz_target')
+    self.write_to_file(fuzz_target_path, result.fuzz_target_source)
+
+  def write_build_script(self, result: Result) -> None:
+    """Writes build script."""
+    build_script_path = os.path.join(result.work_dirs.raw_targets,
+                                     f'{result.trial:02d}.build_script')
+    self.write_to_file(build_script_path, result.build_script_source)
 
   def write_result(self, result_status_dir: str, result: Result) -> None:
     """Writes the final result into JSON for report generation."""
-    with open(os.path.join(result_status_dir, 'result.json'), 'w') as f:
+    trial_result_dir = os.path.join(result_status_dir, f'{result.trial:02d}')
+    os.makedirs(trial_result_dir, exist_ok=True)
+    with open(os.path.join(trial_result_dir, 'result.json'), 'w') as f:
       json.dump(result.to_dict(), f)
 
 
-def get_logger(name: str,
-               trial: int = 0,
-               level=logging.DEBUG) -> CustomLoggerAdapter:
-  logger = logging.getLogger(name)
-  # Avoid adding duplicated handlers
-  if not logger.handlers:
-    formatter = logging.Formatter(
-        fmt=('%(asctime)s [Trial ID: %(trial)02d] %(levelname)s '
-             '[%(module)s.%(funcName)s]: %(message)s'),
-        datefmt='%Y-%m-%d %H:%M:%S')
-
-    handlers = [logging.StreamHandler()]
-
-    for handler in handlers:
-      handler.setFormatter(formatter)
-      logger.addHandler(handler)
-
-  logger.setLevel(level)
-  return CustomLoggerAdapter(logger, {'trial': trial})
-
-
-def set_logger_adapter(name: str = __name__,
-                       trial: int = 0,
-                       level=logging.INFO):
-  """Sets up and returns a singleton instance of CustomLoggerAdapter with the
-  specified trial."""
+def get_trial_logger(name: str = __name__,
+                     trial: int = 0,
+                     level=logging.INFO) -> CustomLoggerAdapter:
+  """Sets up or retrieves the singleton instance of CustomLoggerAdapter."""
   global _trial_logger
   if _trial_logger is None:
-    logger = get_logger(name, level)
+    logger = logging.getLogger(name)
+    if not logger.handlers:  # Avoid adding duplicated handlers
+      formatter = logging.Formatter(
+          fmt=('%(asctime)s [Trial ID: %(trial)02d] %(levelname)s '
+               '[%(module)s.%(funcName)s]: %(message)s'),
+          datefmt='%Y-%m-%d %H:%M:%S')
+      handler = logging.StreamHandler()
+      handler.setFormatter(formatter)
+      logger.addHandler(handler)
+      logger.setLevel(level)
     _trial_logger = CustomLoggerAdapter(logger, {'trial': trial})
   return _trial_logger
-
-
-def get_logger_adapter():
-  """Returns the singleton instance of CustomLoggerAdapter."""
-  if _trial_logger is None:
-    raise ValueError('Logger adapter has not been initialized.')
-  return _trial_logger
-
-
-# def get_logger_adapter(name: str = __name__,
-#                        trial: int = 0,
-#                        level=logging.DEBUG):
-#   """Returns a CustomLoggerAdapter with a singleton logger."""
-#   logger = get_logger(name, level)
-#   return CustomLoggerAdapter(logger, {'trial': trial})

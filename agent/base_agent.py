@@ -30,13 +30,9 @@ class BaseAgent(ABC):
     self.name: str = name or self.__class__.__name__
     self.dialog: str = ''  # Communication history between LLM and tool.
 
-  def write_to_file(self, file_path: str, file_content: str):
-    with open(file_path, 'w') as file:
-      file.writelines(file_content)
-
   def log(self, msg: str, level=logging.INFO):
     """Method to log messages dynamically using the logger factory."""
-    agent_logger = logger.get_logger(self.name, self.trial, level)
+    agent_logger = logger.get_trial_logger()
     agent_logger.log(level, msg)
 
   def get_tool(self, tool_name: str) -> Optional[BaseTool]:

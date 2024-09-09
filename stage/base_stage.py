@@ -17,7 +17,7 @@ class BaseStage(ABC):
                agents: Optional[list[BaseAgent]] = None) -> None:
     self.args = args
     self.agents: list[BaseAgent] = agents or []
-    self.logger = logger.get_logger_adapter()
+    self.logger = logger.get_trial_logger()
 
   def add_agent(self, agent: BaseAgent) -> 'BaseStage':
     """Adds an agent for the stage."""
