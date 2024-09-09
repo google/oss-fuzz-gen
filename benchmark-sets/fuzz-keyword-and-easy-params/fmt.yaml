@@ -1,0 +1,15 @@
+"functions":
+- "name": "_ZN3fmt3v116detail19parse_chrono_formatIcRNS1_16chrono_formatterINS0_7contextENS0_14basic_appenderIcEEeNSt3__15ratioILl1000000ELl1EEEEEEEPKT_SE_SE_OT0_"
+  "params":
+  - "name": "begin"
+    "type": "bool "
+  - "name": "end"
+    "type": "bool "
+  - "name": "handler"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * char const* fmt::v11::detail::parse_chrono_format<char, fmt::v11::detail::chrono_formatter<fmt::v11::context, fmt::v11::basic_appender<char>, long double, std::__1::parse_chrono_format<char, fmt::v11::detail::chrono_formatter<fmt::v11::context, fmt::v11::basic_appender<char>, char, std::__1::ratio<1L, 1000000000000000000L> > &>(const char *, const char *, struct chrono_formatter<fmt::v11::context, fmt::v11::basic_appender<char>, char, std::__1::ratio<1L, 1000000000000000000L> > &)"
+"language": "c++"
+"project": "fmt"
+"target_name": "float-fuzzer"
+"target_path": "/src/fmt/test/fuzzing/float.cc"

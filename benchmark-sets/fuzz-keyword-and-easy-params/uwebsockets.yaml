@@ -1,0 +1,15 @@
+"functions":
+- "name": "_ZZZN3uWS11HttpContextILb1EE4initEvENKUlP11us_socket_tPciE_clES3_S4_iENKUlPvPNS_11HttpRequestEE_clES6_S8_"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void * uWS::HttpContext<true>::operator()(const void *, void *, struct HttpRequest *)"
+"language": "c++"
+"project": "uwebsockets"
+"target_name": "PerMessageDeflate"
+"target_path": "/src/uWebSockets/fuzzing/PerMessageDeflate.cpp"

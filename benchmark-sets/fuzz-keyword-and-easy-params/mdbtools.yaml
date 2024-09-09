@@ -1,0 +1,17 @@
+"functions":
+- "name": "g_option_context_parse"
+  "params":
+  - "name": "context"
+    "type": "bool "
+  - "name": "argc"
+    "type": "bool "
+  - "name": "argv"
+    "type": "bool "
+  - "name": "error"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "gboolean g_option_context_parse(GOptionContext *, gint *, gchar ***, GError **)"
+"language": "c"
+"project": "mdbtools"
+"target_name": "fuzz_mdb"
+"target_path": "/src/mdbtools/src/fuzz/fuzz_mdb.c"

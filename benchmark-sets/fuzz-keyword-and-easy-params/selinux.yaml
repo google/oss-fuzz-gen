@@ -1,0 +1,13 @@
+"functions":
+- "name": "cil_write_parse_ast"
+  "params":
+  - "name": "out"
+    "type": "bool "
+  - "name": "db"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int cil_write_parse_ast(FILE *, cil_db_t *)"
+"language": "c"
+"project": "selinux"
+"target_name": "checkpolicy-fuzzer"
+"target_path": "/src/selinux/checkpolicy/fuzz/checkpolicy-fuzzer.c"

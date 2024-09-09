@@ -1,0 +1,33 @@
+"functions":
+- "name": "_ZNK7cxxopts6values14abstract_valueIdE5parseEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void cxxopts::values::abstract_value<double>::parse(const abstract_value<int> *)"
+- "name": "_ZNK7cxxopts6values14abstract_valueIfE5parseEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void cxxopts::values::abstract_value<float>::parse(const abstract_value<int> *)"
+- "name": "_ZNK7cxxopts6values14abstract_valueIiE5parseEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void cxxopts::values::abstract_value<int>::parse()"
+- "name": "_ZN7cxxopts12OptionParser18consume_positionalERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERNS1_11__wrap_iterIPS8_EE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "a"
+    "type": "bool "
+  - "name": "next"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool cxxopts::OptionParser::consume_positional(const string &, PositionalListIterator &)"
+"language": "c++"
+"project": "cxxopts"
+"target_name": "cxxopts_fuzz_test"
+"target_path": "/src/cxxopts/test/fuzz.cpp"

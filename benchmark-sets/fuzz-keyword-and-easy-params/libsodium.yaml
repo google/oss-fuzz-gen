@@ -1,0 +1,21 @@
+"functions":
+- "name": "blake2b_compress_sse41"
+  "params":
+  - "name": "S"
+    "type": "bool "
+  - "name": "block"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int blake2b_compress_sse41(blake2b_state *, const uint8_t *)"
+- "name": "blake2b_compress_avx2"
+  "params":
+  - "name": "S"
+    "type": "bool "
+  - "name": "block"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int blake2b_compress_avx2(blake2b_state *, const uint8_t *)"
+"language": "c++"
+"project": "libsodium"
+"target_name": "secret_key_auth_fuzzer"
+"target_path": "/src/secret_key_auth_fuzzer.cc"

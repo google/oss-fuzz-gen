@@ -1,0 +1,21 @@
+"functions":
+- "name": "asn1toDSApriv"
+  "params":
+  - "name": "kd"
+    "type": "bool "
+  - "name": "kn"
+    "type": "int"
+  "return_type": "void"
+  "signature": "DSApriv * asn1toDSApriv(uchar *, int)"
+- "name": "asn1toRSApriv"
+  "params":
+  - "name": "kd"
+    "type": "bool "
+  - "name": "kn"
+    "type": "int"
+  "return_type": "void"
+  "signature": "RSApriv * asn1toRSApriv(uchar *, int)"
+"language": "c"
+"project": "plan9port"
+"target_name": "fuzz_libsec"
+"target_path": "/src/fuzz_libsec.c"

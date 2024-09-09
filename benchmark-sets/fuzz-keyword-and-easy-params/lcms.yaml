@@ -1,0 +1,11 @@
+"functions":
+- "name": "cmsCreateDeviceLinkFromCubeFile"
+  "params":
+  - "name": "cFileName"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "cmsHPROFILE cmsCreateDeviceLinkFromCubeFile(const char *)"
+"language": "c++"
+"project": "lcms"
+"target_name": "cms_dict_fuzzer"
+"target_path": "/src/cms_dict_fuzzer.c"

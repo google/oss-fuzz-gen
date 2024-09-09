@@ -1,0 +1,13 @@
+"functions":
+- "name": "_ZN8pybind117module_6importEPKc"
+  "params":
+  - "name": "name"
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "module_ pybind11::module_::import(const char *)"
+"language": "c++"
+"project": "pybind11"
+"target_name": "pybind_fuzzer"
+"target_path": "/src/pybind_fuzzer.cc"

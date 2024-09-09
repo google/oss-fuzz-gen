@@ -1,0 +1,37 @@
+"functions":
+- "name": "_lou_extParseDots"
+  "params":
+  - "name": "inString"
+    "type": "bool "
+  - "name": "outString"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int _lou_extParseDots(const char *, widechar *)"
+- "name": "_lou_getTranslationTable"
+  "params":
+  - "name": "tableList"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const TranslationTableHeader * _lou_getTranslationTable(const char *)"
+- "name": "lou_checkTable"
+  "params":
+  - "name": "tableList"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int lou_checkTable(const char *)"
+- "name": "lou_getTable"
+  "params":
+  - "name": "tableList"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const void * lou_getTable(const char *)"
+- "name": "_lou_getDisplayTable"
+  "params":
+  - "name": "tableList"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const DisplayTableHeader * _lou_getDisplayTable(const char *)"
+"language": "c"
+"project": "liblouis"
+"target_name": "table_fuzzer"
+"target_path": "/src/liblouis/tests/fuzzing/table_fuzzer.cc"

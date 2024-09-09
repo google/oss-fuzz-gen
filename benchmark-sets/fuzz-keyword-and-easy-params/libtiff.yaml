@@ -1,0 +1,27 @@
+"functions":
+- "name": "jpeg_start_compress"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "void jpeg_start_compress(j_compress_ptr, boolean)"
+- "name": "jinit_compress_master"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void jinit_compress_master(j_compress_ptr)"
+- "name": "compress_first_pass"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "boolean compress_first_pass(j_compress_ptr, JSAMPIMAGE)"
+"language": "c++"
+"project": "libtiff"
+"target_name": "tiff_read_rgba_fuzzer"
+"target_path": "/src/libtiff/contrib/oss-fuzz/tiff_read_rgba_fuzzer.cc"

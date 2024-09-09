@@ -1,0 +1,17 @@
+"functions":
+- "name": "compress"
+  "params":
+  - "name": "dest"
+    "type": "bool "
+  - "name": "destLen"
+    "type": "bool "
+  - "name": "source"
+    "type": "bool "
+  - "name": "sourceLen"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int compress(Bytef *, uLongf *, const Bytef *, uLong)"
+"language": "c++"
+"project": "zlib"
+"target_name": "checksum_fuzzer"
+"target_path": "/src/checksum_fuzzer.c"

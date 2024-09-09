@@ -1,0 +1,11 @@
+"functions":
+- "name": "pn_url_parse"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "pn_url_t * pn_url_parse(const char *)"
+"language": "c++"
+"project": "qpid-proton"
+"target_name": "fuzz-message-decode"
+"target_path": "/src/qpid-proton/c/tests/fuzz/fuzz-message-decode.c"

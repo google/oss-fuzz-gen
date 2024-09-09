@@ -1,0 +1,15 @@
+"functions":
+- "name": "VEP_Parse"
+  "params":
+  - "name": "vep"
+    "type": "bool "
+  - "name": "p"
+    "type": "bool "
+  - "name": "l"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "void VEP_Parse(struct vep_state *, const char *, size_t)"
+"language": "c"
+"project": "varnish"
+"target_name": "esi_parse_fuzzer"
+"target_path": "/src/varnish-cache/bin/varnishd/fuzzers/esi_parse_fuzzer.c"

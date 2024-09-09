@@ -1,0 +1,27 @@
+"functions":
+- "name": "_ZN8opendnp315LinkLayerParser10ReadHeaderEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool opendnp3::LinkLayerParser::ReadHeader()"
+- "name": "_ZN8opendnp37logging21ParseAndLogResponseTxERNS_6LoggerERKN7ser4cpp4RSeqImEE"
+  "params":
+  - "name": "logger"
+    "type": "bool "
+  - "name": "apdu"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void opendnp3::logging::ParseAndLogResponseTx(Logger &, const rseq_t &)"
+- "name": "_ZN8opendnp37logging20ParseAndLogRequestTxERNS_6LoggerERKN7ser4cpp4RSeqImEE"
+  "params":
+  - "name": "logger"
+    "type": "bool "
+  - "name": "apdu"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void opendnp3::logging::ParseAndLogRequestTx(Logger &, const rseq_t &)"
+"language": "c++"
+"project": "opendnp3"
+"target_name": "fuzzdecoder"
+"target_path": "/src/opendnp3/cpp/tests/fuzz/fuzzdecoder.cpp"

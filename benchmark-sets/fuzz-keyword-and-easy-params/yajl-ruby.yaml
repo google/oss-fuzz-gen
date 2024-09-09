@@ -1,0 +1,11 @@
+"functions":
+- "name": "yajl_parse_complete"
+  "params":
+  - "name": "hand"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "yajl_status yajl_parse_complete(yajl_handle)"
+"language": "c++"
+"project": "yajl-ruby"
+"target_name": "json_fuzzer"
+"target_path": "/src/yajl-ruby/fuzz/json_fuzzer.c"

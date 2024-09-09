@@ -1,0 +1,13 @@
+"functions":
+- "name": "janus_red_parse_blocks"
+  "params":
+  - "name": "buffer"
+    "type": "bool "
+  - "name": "len"
+    "type": "int"
+  "return_type": "void"
+  "signature": "GList * janus_red_parse_blocks(char *, int)"
+"language": "c++"
+"project": "janus-gateway"
+"target_name": "rtp_fuzzer"
+"target_path": "/src/janus-gateway/fuzzers/rtp_fuzzer.c"

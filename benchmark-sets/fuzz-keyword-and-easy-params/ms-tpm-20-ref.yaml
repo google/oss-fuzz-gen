@@ -1,0 +1,11 @@
+"functions":
+- "name": "ParseSessionBuffer"
+  "params":
+  - "name": "command"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "TPM_RC ParseSessionBuffer(COMMAND *)"
+"language": "c"
+"project": "ms-tpm-20-ref"
+"target_name": "tpm_cmd"
+"target_path": "/src/ms-tpm-20-ref/TPMCmd/fuzzer/tpm_cmd.c"

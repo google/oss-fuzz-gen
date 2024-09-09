@@ -1,0 +1,13 @@
+"functions":
+- "name": "parse_multihop_hostname"
+  "params":
+  - "name": "orighostarg"
+    "type": "bool "
+  - "name": "argv0"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void parse_multihop_hostname(const char *, const char *)"
+"language": "c++"
+"project": "dropbear"
+"target_name": "fuzzer-pubkey"
+"target_path": "/src/dropbear/fuzz/fuzzer-pubkey.c"

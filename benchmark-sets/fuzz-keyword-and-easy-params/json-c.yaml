@@ -1,0 +1,19 @@
+"functions":
+- "name": "json_tokener_parse_verbose"
+  "params":
+  - "name": "str"
+    "type": "bool "
+  - "name": "error"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct json_object * json_tokener_parse_verbose(const char *, DW_TAG_enumeration_typejson_tokener_error *)"
+- "name": "json_tokener_parse"
+  "params":
+  - "name": "str"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct json_object * json_tokener_parse(const char *)"
+"language": "c++"
+"project": "json-c"
+"target_name": "tokener_parse_ex_fuzzer"
+"target_path": "/src/tokener_parse_ex_fuzzer.cc"

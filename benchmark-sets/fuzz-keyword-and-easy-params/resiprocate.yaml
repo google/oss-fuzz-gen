@@ -1,0 +1,33 @@
+"functions":
+- "name": "_ZN5resip3Log10initializeERKNS_11ConfigParseERKNS_4DataEPNS_14ExternalLoggerE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void resip::Log::initialize(const ConfigParse &, const Data &, ExternalLogger *)"
+- "name": "_ZN5resip3Log23parseSyslogFacilityNameERKNS_4DataE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int resip::Log::parseSyslogFacilityName(const Data &)"
+- "name": "_ZNK5resip11ParseBuffer7PointerdeEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char & resip::ParseBuffer::Pointer::operator*()"
+- "name": "_ZN5resip11ParseBuffer8floatValEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "float"
+  "signature": "float resip::ParseBuffer::floatVal()"
+"language": "c++"
+"project": "resiprocate"
+"target_name": "fuzzUtil"
+"target_path": "/src/resiprocate/rutil/test/fuzzUtil.cxx"

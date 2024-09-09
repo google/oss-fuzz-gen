@@ -1,0 +1,17 @@
+"functions":
+- "name": "_ZN7acommon18open_file_readlockERNS_7FStreamENS_10ParmStringE"
+  "params":
+  - "name": "in"
+    "type": "bool "
+  - "name": "file"
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "PosibErr<void> acommon::open_file_readlock(FStream &, ParmString)"
+"language": "c++"
+"project": "aspell"
+"target_name": "aspell_fuzzer"
+"target_path": "/src/aspell-fuzz/aspell_fuzzer.cpp"

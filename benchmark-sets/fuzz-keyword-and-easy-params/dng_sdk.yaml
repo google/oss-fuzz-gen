@@ -1,0 +1,13 @@
+"functions":
+- "name": "_ZN12_GLOBAL__N_113SkipInputDataEP22jpeg_decompress_structl"
+  "params":
+  - "name": "cinfo"
+    "type": "bool "
+  - "name": "num_bytes"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "void (anonymous namespace)::SkipInputData(j_decompress_ptr, long)"
+"language": "c++"
+"project": "dng_sdk"
+"target_name": "dng_camera_profile_fuzzer"
+"target_path": "/src/dng_camera_profile_fuzzer.cpp"

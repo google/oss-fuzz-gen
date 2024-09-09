@@ -1,0 +1,27 @@
+"functions":
+- "name": "_ZN4absl12_GLOBAL__N_126CalculateFromParsedDecimalIdEENS0_15CalculatedFloatERKNS_16strings_internal11ParsedFloatE"
+  "params":
+  - "name": "parsed_decimal"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct CalculatedFloat absl::(anonymous namespace)::CalculatedFloat absl::(anonymous namespace)::CalculateFromParsedDecimal<double>(const struct ParsedFloat &)"
+- "name": "_ZN4absl12_GLOBAL__N_111MustRoundUpEmiRKNS_16strings_internal11ParsedFloatE"
+  "params":
+  - "name": "guess_mantissa"
+    "type": "size_t"
+  - "name": "guess_exponent"
+    "type": "int"
+  - "name": "parsed_decimal"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool absl::(anonymous namespace)::MustRoundUp(uint64_t, int, const struct ParsedFloat &)"
+- "name": "_ZN4absl12_GLOBAL__N_130CalculateFromParsedHexadecimalIdEENS0_15CalculatedFloatERKNS_16strings_internal11ParsedFloatE"
+  "params":
+  - "name": "parsed_hex"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct CalculatedFloat absl::(anonymous namespace)::CalculatedFloat absl::(anonymous namespace)::CalculateFromParsedHexadecimal<double>(const struct ParsedFloat &)"
+"language": "c++"
+"project": "abseil-cpp"
+"target_name": "string_escape_fuzzer"
+"target_path": "/src/string_escape_fuzzer.cc"

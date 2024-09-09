@@ -1,0 +1,17 @@
+"functions":
+- "name": "mg_sntp_request"
+  "params":
+  - "name": "c"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void mg_sntp_request(struct mg_connection *)"
+- "name": "mg_hello"
+  "params":
+  - "name": "url"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void mg_hello(const char *)"
+"language": "c++"
+"project": "mongoose"
+"target_name": "fuzz"
+"target_path": "/src/mongoose/test/fuzz.c"

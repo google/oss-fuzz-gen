@@ -1,0 +1,17 @@
+"functions":
+- "name": "_ZN7simdutf7icelake12_GLOBAL__N_122compress_decode_base64ILb0EcEENS_6resultEPcPKT0_mm"
+  "params":
+  - "name": "dst"
+    "type": "bool "
+  - "name": "src"
+    "type": "bool "
+  - "name": "srclen"
+    "type": "size_t"
+  - "name": "options"
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "struct result simdutf::result simdutf::icelake::(anonymous namespace)::compress_decode_base64<false, char>(char *, const char *, size_t, base64_options)"
+"language": "c++"
+"project": "simdutf"
+"target_name": "misc"
+"target_path": "/src/simdutf/fuzz/misc.cpp"

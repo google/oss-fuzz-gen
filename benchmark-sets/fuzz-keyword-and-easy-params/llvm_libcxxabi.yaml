@@ -1,0 +1,37 @@
+"functions":
+- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E9parseExprEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Node * (anonymous namespace)::itanium_demangle::parseExpr(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)"
+- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E16parseExprPrimaryEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Node * (anonymous namespace)::itanium_demangle::parseExprPrimary(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)"
+- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E18parseTemplateParamEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Node * (anonymous namespace)::itanium_demangle::parseTemplateParam(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)"
+- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E18parseSubobjectExprEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Node * (anonymous namespace)::itanium_demangle::parseSubobjectExpr(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)"
+- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E19parseUnresolvedNameEb"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "Global"
+    "type": "bool"
+  "return_type": "void"
+  "signature": "Node * (anonymous namespace)::itanium_demangle::parseUnresolvedName(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *, bool)"
+"language": "c++"
+"project": "llvm_libcxxabi"
+"target_name": "cxa_demangle_fuzzer"
+"target_path": "/src/llvm-project/libcxxabi/fuzz/cxa_demangle_fuzzer.cpp"

@@ -1,0 +1,13 @@
+"functions":
+- "name": "etharp_request"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "char"
+  "signature": "err_t etharp_request(struct netif *, const ip4_addr_t *)"
+"language": "c++"
+"project": "tinyusb"
+"target_name": "/src/tinyusb/test/fuzz/device/cdc/src/fuzz.cc"
+"target_path": "/src/tinyusb/test/fuzz/device/cdc/src/fuzz.cc"

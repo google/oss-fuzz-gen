@@ -1,0 +1,15 @@
+"functions":
+- "name": "wuffs_base__parse_number_u64"
+  "params":
+  - "name": "s"
+    "type": "bool "
+  - "name": "options"
+    "type": "size_t"
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "wuffs_base__result_u64 wuffs_base__parse_number_u64(wuffs_base__slice_u8, uint32_t)"
+"language": "c++"
+"project": "wuffs"
+"target_name": "bzip2_fuzzer"
+"target_path": "/src/wuffs/fuzz/c/fuzzlib/fuzzlib.c"

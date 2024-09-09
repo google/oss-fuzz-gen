@@ -1,0 +1,23 @@
+"functions":
+- "name": "cupsSetServer"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void cupsSetServer(const char *)"
+- "name": "_cupsGetPassword"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * _cupsGetPassword(const char *)"
+- "name": "cupsLangFind"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "cups_lang_t * cupsLangFind(const char *)"
+"language": "c++"
+"project": "libcups"
+"target_name": "fuzzipp"
+"target_path": "/src/libcups/ossfuzz/fuzzipp.c"

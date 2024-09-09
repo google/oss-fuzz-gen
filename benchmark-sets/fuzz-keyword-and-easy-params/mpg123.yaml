@@ -1,0 +1,13 @@
+"functions":
+- "name": "mpg123_new"
+  "params":
+  - "name": "decoder"
+    "type": "bool "
+  - "name": "error"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "mpg123_handle * mpg123_new(const char *, int *)"
+"language": "c++"
+"project": "mpg123"
+"target_name": "decode_fuzzer"
+"target_path": "/src/decode_fuzzer.cc"

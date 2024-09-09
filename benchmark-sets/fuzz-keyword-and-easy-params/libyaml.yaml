@@ -1,0 +1,11 @@
+"functions":
+- "name": "yaml_parser_initialize"
+  "params":
+  - "name": "parser"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int yaml_parser_initialize(yaml_parser_t *)"
+"language": "c++"
+"project": "libyaml"
+"target_name": "libyaml_emitter_fuzzer"
+"target_path": "/src/libyaml_emitter_fuzzer.c"

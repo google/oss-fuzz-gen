@@ -1,0 +1,37 @@
+"functions":
+- "name": "_ZNK5boost10wrapexceptINS_13property_tree11json_parser17json_parser_errorEE5cloneEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const clone_base * boost::wrapexcept<boost::property_tree::json_parser::json_parser_error>::clone(const struct wrapexcept<boost::property_tree::json_parser::json_parser_error> *)"
+- "name": "_ZNK5boost10wrapexceptINS_13property_tree11json_parser17json_parser_errorEE7rethrowEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void boost::wrapexcept<boost::property_tree::json_parser::json_parser_error>::rethrow(const struct wrapexcept<boost::property_tree::json_parser::json_parser_error> *)"
+- "name": "_ZN5boost13property_tree11json_parser6detail6parserINS2_18standard_callbacksINS0_11basic_ptreeINSt3__112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEESC_NS6_4lessISC_EEEEEENS2_8encodingIcEENS6_19istreambuf_iteratorIcS9_EESK_E14parse_exp_partERNS2_23number_callback_adapterISG_SI_SK_NS6_18input_iterator_tagEEE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "action"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void boost::property_tree::json_parser::detail::parser<boost::property_tree::json_parser::detail::standard_callbacks<boost::property_tree::basic_ptree<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >, boost::property_tree::json_parser::detail::encoding<char>, std::__1::istreambuf_iterator<char, std::__1::char_traits<char> >, std::__1::istreambuf_iterator<char, std::__1::char_traits<char> > >::parse_exp_part(parser<boost::property_tree::json_parser::detail::standard_callbacks<boost::property_tree::basic_ptree<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >, boost::property_tree::json_parser::detail::encoding<char>, std::__1::istreambuf_iterator<char, std::__1::char_traits<char> >, std::__1::istreambuf_iterator<char, std::__1::char_traits<char> > > *, number_adapter &)"
+- "name": "_ZN5boost13property_tree11json_parser6detail6parserINS2_18standard_callbacksINS0_11basic_ptreeINSt3__112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEESC_NS6_4lessISC_EEEEEENS2_8encodingIcEENS6_19istreambuf_iteratorIcS9_EESK_E19parse_codepoint_refEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void boost::property_tree::json_parser::detail::parser<boost::property_tree::json_parser::detail::standard_callbacks<boost::property_tree::basic_ptree<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >, boost::property_tree::json_parser::detail::encoding<char>, std::__1::istreambuf_iterator<char, std::__1::char_traits<char> >, std::__1::istreambuf_iterator<char, std::__1::char_traits<char> > >::parse_codepoint_ref(parser<boost::property_tree::json_parser::detail::standard_callbacks<boost::property_tree::basic_ptree<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >, boost::property_tree::json_parser::detail::encoding<char>, std::__1::istreambuf_iterator<char, std::__1::char_traits<char> >, std::__1::istreambuf_iterator<char, std::__1::char_traits<char> > > *)"
+- "name": "_ZN5boost13property_tree11json_parser6detail6parserINS2_18standard_callbacksINS0_11basic_ptreeINSt3__112basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEESC_NS6_4lessISC_EEEEEENS2_8encodingIcEENS6_19istreambuf_iteratorIcS9_EESK_E10parse_nullEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool boost::property_tree::json_parser::detail::parser<boost::property_tree::json_parser::detail::standard_callbacks<boost::property_tree::basic_ptree<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >, boost::property_tree::json_parser::detail::encoding<char>, std::__1::istreambuf_iterator<char, std::__1::char_traits<char> >, std::__1::istreambuf_iterator<char, std::__1::char_traits<char> > >::parse_null(parser<boost::property_tree::json_parser::detail::standard_callbacks<boost::property_tree::basic_ptree<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >, boost::property_tree::json_parser::detail::encoding<char>, std::__1::istreambuf_iterator<char, std::__1::char_traits<char> >, std::__1::istreambuf_iterator<char, std::__1::char_traits<char> > > *)"
+"language": "c++"
+"project": "boost"
+"target_name": "boost_uuid_fuzzer"
+"target_path": "/src/boost_uuid_fuzzer.cc"

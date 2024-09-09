@@ -1,0 +1,25 @@
+"functions":
+- "name": "roaring_bitmap_deserialize_safe"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "size_t"
+  "return_type": "void"
+  "signature": "roaring_bitmap_t * roaring_bitmap_deserialize_safe(const void *, size_t)"
+- "name": "roaring_bitmap_deserialize"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "roaring_bitmap_t * roaring_bitmap_deserialize(const void *)"
+- "name": "roaring_bitmap_portable_deserialize"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "roaring_bitmap_t * roaring_bitmap_portable_deserialize(const char *)"
+"language": "c"
+"project": "croaring"
+"target_name": "croaring_fuzzer"
+"target_path": "/src/croaring_fuzzer.c"

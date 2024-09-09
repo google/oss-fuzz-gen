@@ -1,0 +1,21 @@
+"functions":
+- "name": "INT123_parse_new_id3"
+  "params":
+  - "name": "fr"
+    "type": "bool "
+  - "name": "first4bytes"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int INT123_parse_new_id3(mpg123_handle *, unsigned long)"
+- "name": "mpg123_new"
+  "params":
+  - "name": "decoder"
+    "type": "bool "
+  - "name": "error"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "mpg123_handle * mpg123_new(const char *, int *)"
+"language": "c++"
+"project": "lame"
+"target_name": "fuzzer-encoder"
+"target_path": "/src/LAME-fuzzers/fuzzer-encoder.cpp"

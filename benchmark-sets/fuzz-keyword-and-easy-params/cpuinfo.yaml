@@ -1,0 +1,15 @@
+"functions":
+- "name": "cpuinfo_linux_parse_cpulist"
+  "params":
+  - "name": "filename"
+    "type": "bool "
+  - "name": "callback"
+    "type": "bool "
+  - "name": "context"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool cpuinfo_linux_parse_cpulist(const char *, cpuinfo_cpulist_callback, void *)"
+"language": "c"
+"project": "cpuinfo"
+"target_name": "fuzz_cpuinfo"
+"target_path": "/src/fuzz_cpuinfo.c"

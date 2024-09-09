@@ -1,0 +1,17 @@
+"functions":
+- "name": "numa_parse_cpustring_all"
+  "params":
+  - "name": "s"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct bitmask * numa_parse_cpustring_all(const char *)"
+- "name": "numa_parse_nodestring_all"
+  "params":
+  - "name": "s"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct bitmask * numa_parse_nodestring_all(const char *)"
+"language": "c"
+"project": "numactl"
+"target_name": "fuzz_parse_str"
+"target_path": "/src/numactl/fuzz/fuzz_parse_str.c"

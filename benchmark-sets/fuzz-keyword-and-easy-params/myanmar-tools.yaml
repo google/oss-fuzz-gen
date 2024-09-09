@@ -1,0 +1,37 @@
+"functions":
+- "name": "_ZN6googleL15ParseIdentifierEPNS_5StateEi"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  "return_type": "bool"
+  "signature": "bool google::ParseIdentifier(State *, int)"
+- "name": "_ZN6googleL17ParseCtorDtorNameEPNS_5StateE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool google::ParseCtorDtorName(State *)"
+- "name": "_ZN6googleL20ParseUnqualifiedNameEPNS_5StateE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool google::ParseUnqualifiedName(State *)"
+- "name": "_ZN6googleL17ParseOperatorNameEPNS_5StateE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool google::ParseOperatorName(State *)"
+- "name": "_ZN6googleL9ParseTypeEPNS_5StateE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool google::ParseType(State *)"
+"language": "c++"
+"project": "myanmar-tools"
+"target_name": "zawgyi_detector_fuzz_target"
+"target_path": "/src/myanmar-tools/clients/cpp/zawgyi_detector_fuzz_target.cpp"

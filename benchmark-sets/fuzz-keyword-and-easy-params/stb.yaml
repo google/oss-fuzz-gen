@@ -1,0 +1,11 @@
+"functions":
+- "name": "stbi_is_16_bit"
+  "params":
+  - "name": "filename"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int stbi_is_16_bit(const char *)"
+"language": "c++"
+"project": "stb"
+"target_name": "stb_png_read_fuzzer"
+"target_path": "/src/stb/tests/stbi_read_fuzzer.c"

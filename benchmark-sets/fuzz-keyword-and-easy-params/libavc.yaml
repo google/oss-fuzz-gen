@@ -1,0 +1,11 @@
+"functions":
+- "name": "ih264d_parse_end_of_sequence"
+  "params":
+  - "name": "ps_dec"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "WORD32 ih264d_parse_end_of_sequence(dec_struct_t *)"
+"language": "c++"
+"project": "libavc"
+"target_name": "avc_enc_fuzzer"
+"target_path": "/src/libavc/fuzzer/avc_enc_fuzzer.cpp"

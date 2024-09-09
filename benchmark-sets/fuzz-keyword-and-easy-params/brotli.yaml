@@ -1,0 +1,17 @@
+"functions":
+- "name": "BrotliDecoderDecompress"
+  "params":
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "BrotliDecoderResult BrotliDecoderDecompress(size_t, const uint8_t *, size_t *, uint8_t *)"
+"language": "c++"
+"project": "brotli"
+"target_name": "decode_fuzzer"
+"target_path": "/src/brotli/c/fuzz/decode_fuzzer.c"

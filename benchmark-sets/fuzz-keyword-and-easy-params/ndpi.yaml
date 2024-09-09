@@ -1,0 +1,13 @@
+"functions":
+- "name": "ndpi_deserialize_value_double"
+  "params":
+  - "name": "_deserializer"
+    "type": "bool "
+  - "name": "value"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int ndpi_deserialize_value_double(ndpi_serializer *, double *)"
+"language": "c++"
+"project": "ndpi"
+"target_name": "fuzz_gcrypt_gcm"
+"target_path": "/src/ndpi/fuzz/fuzz_gcrypt_gcm.cpp"

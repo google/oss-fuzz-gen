@@ -1,0 +1,17 @@
+"functions":
+- "name": "_ZN28descriptor_parse_Before_MainC2Ev"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void descriptor_parse_Before_Main::descriptor_parse_fuzz_target(FuzzBufferType)"
+- "name": "_ZN35mocked_descriptor_parse_Before_MainC2Ev"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void mocked_descriptor_parse_Before_Main::mocked_descriptor_parse_fuzz_target(FuzzBufferType)"
+"language": "c++"
+"project": "bitcoin-core"
+"target_name": "psbt"
+"target_path": "/src/bitcoin-core/src/test/fuzz/fuzz.cpp"

@@ -1,0 +1,17 @@
+"functions":
+- "name": "ZydisCompareRequestToInstruction"
+  "params":
+  - "name": "request"
+    "type": "bool "
+  - "name": "insn"
+    "type": "bool "
+  - "name": "operands"
+    "type": "bool "
+  - "name": "insn_bytes"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void ZydisCompareRequestToInstruction(const ZydisEncoderRequest *, const ZydisDecodedInstruction *, const ZydisDecodedOperand *, const ZyanU8 *)"
+"language": "c"
+"project": "zydis"
+"target_name": "ZydisFuzzReEncoding"
+"target_path": "/src/zydis/tools/ZydisFuzzShared.c"
