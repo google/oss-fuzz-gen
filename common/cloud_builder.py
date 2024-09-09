@@ -30,26 +30,19 @@ class CloudBuilder:
 
   def __init__(self, args: argparse.Namespace) -> None:
     #TODO(dongge): extra tags.
-    _, self.project_id = default()
+    self.credentials, self.project_id = default()
     assert self.project_id, 'Cloud experiment requires a Google cloud project.'
 
     self.bucket_name = args.cloud_experiment_bucket
     self.bucket = storage.Client().bucket(self.bucket_name)
 
-    # Service account.
-    self.service_account = os.getenv('GOOGLE_SERVICE_ACCOUNT', '')
-    service_account_file = os.getenv('GOOGLE_APPLICATION_CREDENTIALS', '')
-    logging.info('service_account_file: %s', service_account_file)
-    self.credentials = Credentials.from_service_account_file(
-        service_account_file)
     self.builds = cloud_build(
         'cloudbuild',
         'v1',
         credentials=self.credentials,
         cache_discovery=False,
         client_options=US_CENTRAL_CLIENT_OPTIONS).projects().builds()
-    self.storage_client = storage.Client.from_service_account_json(
-        service_account_file)
+    self.storage_client = storage.Client(credentials=self.credentials)
 
   def _upload_to_gcs(self, local_file_path: str) -> str:
     """Uploads a file to Google Cloud Storage."""
@@ -163,12 +156,10 @@ class CloudBuilder:
                 ]
             }
         ],
-        'timeout':
-            '10800s',  # 3 hours
-        'logsBucket':
-            f'gs://{self.bucket_name}',
-        'serviceAccount':
-            f'projects/{self.project_id}/serviceAccounts/{self.service_account}'
+        'timeout': '10800s',  # 3 hours
+        'logsBucket': f'gs://{self.bucket_name}',
+        'serviceAccount': f'projects/{self.project_id}/serviceAccounts/'
+                          f'{self.credentials.service_account_email}'
     }
 
     # Convert to YAML string and submit the Cloud Build request
