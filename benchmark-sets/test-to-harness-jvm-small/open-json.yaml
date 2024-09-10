@@ -1,0 +1,13 @@
+"language": "jvm"
+"project": "open-json"
+"target_name": "JsonTokenerFuzzer"
+"target_path": "/src/JsonTokenerFuzzer.java"
+"test_files":
+- "test_file_path": "org/json/ParsingTest.java"
+- "test_file_path": "org/json/JSONArrayTest.java"
+- "test_file_path": "org/json/JSONStringerTest.java"
+- "test_file_path": "org/json/JSONObjectTest.java"
+- "test_file_path": "org/json/JSONFunctionTestObject.java"
+- "test_file_path": "org/json/FileTest.java"
+- "test_file_path": "org/json/JSONTokenerTest.java"
+- "test_file_path": "org/json/SelfUseTest.java"
