@@ -174,6 +174,8 @@ class CloudBuilder:
             },
             # Step 3: Run the Python script with the pickle files
             {
+                'id':
+                    'agent-step',
                 'name':
                     'gcr.io/cloud-builders/docker',
                 'args': [
