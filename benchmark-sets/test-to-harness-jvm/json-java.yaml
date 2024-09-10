@@ -1,0 +1,11 @@
+"language": "jvm"
+"project": "json-java"
+"target_name": "JsonJavaFuzzer"
+"target_path": "/src/JsonJavaFuzzer.java"
+"test_files":
+- "test_file_path": "org/json/junit/EnumTest.java"
+- "test_file_path": "org/json/junit/StringBuilderWriterTest.java"
+- "test_file_path": "org/json/junit/PropertyTest.java"
+- "test_file_path": "org/json/junit/JSONObjectTest.java"
+- "test_file_path": "org/json/junit/XMLConfigurationTest.java"
+- "test_file_path": "org/json/junit/JSONObjectNumberTest.java"
