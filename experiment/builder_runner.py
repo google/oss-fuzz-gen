@@ -143,6 +143,13 @@ class BuilderRunner:
 
   def _contains_target_jvm_method(self, target_path: str) -> bool:
     """Validates if the LLM-generated code contains the target jvm methods."""
+    signature = self.benchmark.function_signature
+
+    # For test to harness approach, the target signature does not
+    # exist, no need to do this pre-check
+    if not signature or not '].' in signature:
+      return True
+
     with open(target_path) as generated_code_file:
       code = generated_code_file.read()
 
@@ -154,7 +161,6 @@ class BuilderRunner:
     # if there are method calls with unknown variable names that match
     # the target method.
     base_arg_regex = r'[\s]*[a-zA-Z_$][a-zA-Z_$0-9(),.]*'
-    signature = self.benchmark.function_signature
     name = signature.split('].')[1].split('(')[0]
     arg_count = len(signature.split('(')[1].split(')')[0].split(','))
 
