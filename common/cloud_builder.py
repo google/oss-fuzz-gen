@@ -147,18 +147,16 @@ class CloudBuilder:
                 'args': ['-c', f'git clone --depth=1 {OF_REPO} ofg/oss-fuzz']
             },
             {
-                'name': 'gcr.io/cloud-builders/docker',
-                'entrypoint': 'bash',
-                'dir': '/workspace/ofg',
-                'args': ['-c', (f'echo "{AGENT_DOCKERFILE}" > Dockerfile')]
-            },
-            {
                 'name':
                     'gcr.io/cloud-builders/docker',
+                'entrypoint':
+                    'bash',
                 'dir':
                     '/workspace/ofg',
                 'args': [
-                    'build', '--network=cloudbuild', '-t', 'agent-image', '.'
+                    '-c',
+                    (f'echo "{AGENT_DOCKERFILE}" > Dockerfile && '
+                     'docker build -t agent-image .')
                 ]
             },
             # Step 3: Run the Python script with the pickle files
