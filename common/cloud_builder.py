@@ -225,7 +225,7 @@ class CloudBuilder:
                                  id=build_id).execute().get('status')
         logging.info('Cloud Build %s Status: %s', build_id, status)
         if status in ['WORKING', 'QUEUED']:
-          time.sleep(15)  # Avoid rate limiting.
+          time.sleep(60)  # Avoid rate limiting.
           continue
         return status == 'SUCCESS'
       except (googleapiclient.errors.HttpError, BrokenPipeError):
