@@ -42,8 +42,7 @@ JVM_CLASS_MAPPING = {
 }
 
 JVM_SKIPPED_METHOD = [
-    '<init>', '<cinit>', 'fuzzerTestOneInput', 'fuzzerInitialize',
-    'fuzzerTearDown'
+    'fuzzerTestOneInput', 'fuzzerInitialize', 'fuzzerTearDown'
 ]
 
 
