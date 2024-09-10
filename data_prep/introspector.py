@@ -143,7 +143,8 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_JVM_PROPERTIES = f'{INTROSPECTOR_ENDPOINT}/jvm-method-properties'
   INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = (
       f'{INTROSPECTOR_ENDPOINT}/harness-source-and-executable')
-  INTROSPECTOR_JVM_PUBLIC_CLASSES = f'{INTROSPECTOR_ENDPOINT}/all-public-classes'
+  INTROSPECTOR_JVM_PUBLIC_CLASSES = (
+      f'{INTROSPECTOR_ENDPOINT}/all-public-classes')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -332,9 +333,8 @@ def query_introspector_function_props(project: str, func_sig: str) -> dict:
 
 def query_introspector_public_classes(project: str) -> list[str]:
   """Queries FuzzIntrospector API for all public classes of |project|."""
-  resp = _query_introspector(INTROSPECTOR_JVM_PUBLIC_CLASSES, {
-      'project': project
-  })
+  resp = _query_introspector(INTROSPECTOR_JVM_PUBLIC_CLASSES,
+                             {'project': project})
   return _get_data(resp, 'classes', [])
 
 
