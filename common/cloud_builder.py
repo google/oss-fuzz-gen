@@ -3,6 +3,7 @@ import argparse
 import logging
 import os
 import subprocess
+import tempfile
 import time
 import uuid
 from typing import Any
@@ -18,7 +19,6 @@ import utils
 from agent.base_agent import BaseAgent
 from results import BuildResult, Result
 
-OFG_REPO = 'https://github.com/google/oss-fuzz-gen.git'
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
 US_CENTRAL_CLIENT_OPTIONS = google.api_core.client_options.ClientOptions(
     api_endpoint='https://us-central1-cloudbuild.googleapis.com/')
@@ -92,6 +92,22 @@ class CloudBuilder:
     logging.info('Uploaded %s to %s', local_file_path, bucket_file_url)
     return bucket_file_url
 
+  def _prepare_and_upload_archive(self) -> str:
+    """Archives and uploads local OFG repo to cloud build."""
+    ofg_repo = subprocess.check_output(['git', 'rev-parse', '--show-toplevel'],
+                                       text=True).strip()
+    files_to_include = subprocess.check_output(
+        ['git', 'ls-files', '--cached', '--others', '--exclude-standard'],
+        cwd=ofg_repo,
+        text=True).splitlines()
+    with tempfile.TemporaryDirectory() as tmpdirname:
+      archive_name = f'ofg-repo-{uuid.uuid4().hex}.tar.gz'
+      archive_path = os.path.join(tmpdirname, archive_name)
+      tar_command = ['tar', '-czf', archive_path] + files_to_include
+      subprocess.run(tar_command, cwd=ofg_repo, check=True)
+      logging.info('Created archive: %s', archive_path)
+      return self._upload_to_gcs(archive_path)
+
   def _get_current_commit_id(self) -> str:
     """Gets the current commit ID from the local git repository."""
     try:
@@ -102,7 +118,8 @@ class CloudBuilder:
       logging.error('Error fetching the current commit ID: %s', e)
       return ''
 
-  def _request_cloud_build(self, agent_pickle_url: str, results_pickle_url: str,
+  def _request_cloud_build(self, ofg_repo_url: str, agent_pickle_url: str,
+                           results_pickle_url: str,
                            new_result_filename: str) -> str:
     """Requests Cloud Build to execute the operation."""
     cloud_build_config = {
@@ -125,26 +142,22 @@ class CloudBuilder:
                     'cp', results_pickle_url, 'pickles/result_history.pkl'
                 ]
             },
-            # Step 2: Prepare git repos.
+            # Step 2: Prepare OFG and OF repos.
             {
                 'name':
-                    'gcr.io/cloud-builders/git',
+                    'gcr.io/cloud-builders/gsutil',
                 'entrypoint':
                     'bash',
-                'dir':
-                    '/workspace',
                 'args': [
-                    '-c',
-                    (f'git clone --no-checkout {OFG_REPO} ofg && cd ofg &&'
-                     'git fetch --all && '
-                     f'git checkout {self._get_current_commit_id()}')
+                    '-c', f'gsutil cp {ofg_repo_url} /tmp/ofg-repo.tar.gz && '
+                    'mkdir /workspace/ofg && '
+                    f'tar -xzf /tmp/ofg-repo.tar.gz -C /workspace/ofg'
                 ]
             },
             {
                 'name': 'gcr.io/cloud-builders/git',
-                'entrypoint': 'bash',
                 'dir': '/workspace',
-                'args': ['-c', f'git clone --depth=1 {OF_REPO} ofg/oss-fuzz']
+                'args': ['clone', '--depth=1', OF_REPO, 'ofg/oss-fuzz']
             },
             {
                 'name':
@@ -252,13 +265,14 @@ class CloudBuilder:
         result_history, os.path.join(pickle_dir, f'{uuid.uuid4().hex}.pkl'))
     # TODO(dongge): Encrypt pickle files?
 
-    # Step 2: Upload pickle files to GCS.
+    # Step 2: Upload OFG repo and pickle files to GCS.
+    ofg_url = self._prepare_and_upload_archive()
     agent_url = self._upload_to_gcs(agent_pickle)
     results_url = self._upload_to_gcs(results_pickle)
 
     # Step 3: Request Cloud Build.
     new_result_filename = f'{uuid.uuid4().hex}.pkl'
-    build_id = self._request_cloud_build(agent_url, results_url,
+    build_id = self._request_cloud_build(ofg_url, agent_url, results_url,
                                          new_result_filename)
 
     # Step 4: Download new result pickle.
