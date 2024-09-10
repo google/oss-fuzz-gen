@@ -76,6 +76,7 @@ INTROSPECTOR_SAMPLE_XREFS = ''
 INTROSPECTOR_ALL_JVM_SOURCE_PATH = ''
 INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE = ''
 INTROSPECTOR_JVM_PROPERTIES = ''
+INTROSPECTOR_JVM_PUBLIC_CLASSES = ''
 
 
 def get_oracle_dict() -> Dict[str, Any]:
@@ -105,7 +106,8 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_HEADERS_FOR_FUNC, \
       INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE, \
       INTROSPECTOR_ORACLE_ALL_TESTS, INTROSPECTOR_JVM_PROPERTIES, \
-      INTROSPECTOR_TEST_SOURCE, INTROSPECTOR_HARNESS_SOURCE_AND_EXEC
+      INTROSPECTOR_TEST_SOURCE, INTROSPECTOR_HARNESS_SOURCE_AND_EXEC, \
+      INTROSPECTOR_JVM_PUBLIC_CLASSES
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -141,6 +143,7 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_JVM_PROPERTIES = f'{INTROSPECTOR_ENDPOINT}/jvm-method-properties'
   INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = (
       f'{INTROSPECTOR_ENDPOINT}/harness-source-and-executable')
+  INTROSPECTOR_JVM_PUBLIC_CLASSES = f'{INTROSPECTOR_ENDPOINT}/all-public-classes'
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -325,6 +328,14 @@ def query_introspector_function_props(project: str, func_sig: str) -> dict:
       'is-jvm-static': _get_data(resp, 'is-jvm-static', False),
       'need-close': _get_data(resp, 'need-close', False)
   }
+
+
+def query_introspector_public_classes(project: str) -> list[str]:
+  """Queries FuzzIntrospector API for all public classes of |project|."""
+  resp = _query_introspector(INTROSPECTOR_JVM_PUBLIC_CLASSES, {
+      'project': project
+  })
+  return _get_data(resp, 'classes', [])
 
 
 def query_introspector_source_code(project: str, filepath: str, begin_line: int,

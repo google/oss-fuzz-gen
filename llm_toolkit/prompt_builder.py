@@ -1240,6 +1240,11 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
       # to Java. Currently, the logic in OSS-Fuzz-Gen is only working on Java.
       prompt_text = prompt_text.replace('{PROG_LANG}', 'Java')
       prompt_text = prompt_text.replace('{HEADER_FILE_LANG}', '')
+
+      # Provide list of public classes of this project
+      classes = introspector.query_introspector_public_classes(
+          self.benchmark.project)
+      prompt_text = prompt_text.replace('{PUBLIC_CLASSES}', ','.join(classes))
     else:
       included_header_files = self.extract_header_files(test_source_code)
       self.language_text = ('The following header files are used in the '

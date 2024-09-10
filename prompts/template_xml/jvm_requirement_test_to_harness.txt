@@ -14,6 +14,7 @@ Here is a list of requirements that you MUST follow.
 <item>You MUST create the object before calling the target method.</item>
 <item>Please use {HARNESS_NAME} as the Java class name.</item>
 <item>You MUST invoke the close method of any resource class objects that implements the java.lang.AutoCloseable interface in the finally block after the target method is invoked.</item>
+<item>You MUST use similar approach as the examples and tests to catch exceptions.</item>
 <item>Do not create new variables with the same names as existing variables.
 WRONG:
 <code>
@@ -42,6 +43,10 @@ public class {HARNESS_NAME} {
   }
 }
 </code></item>
+<item>
+Here is a comma-separated list of all publicly accessible classes in this project. You can use any of these classes, as well as classes from the JVM library. Please AVOID using other classes in the project, even if it exists in the following test or sample code as they are not publicly accessible.
+{PUBLIC_CLASSES}
+</item>
 <item>
 You MUST ONLY use any of the following methods from the FuzzedDataProvider of the Jazzer framework for generating random data for fuzzing.
 If the needed return value is not found in the table, try use constructors or methods to create the needed random object. But you MUST try your best to randomise the random object with the methods in the table.
