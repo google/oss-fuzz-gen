@@ -4,15 +4,12 @@ Your goal is to write a fuzzing harness for the provided method signature to fuz
 <method_signature>
 {METHOD_SIGNATURE}
 </method_signature>
-<import>
-You MUST import all necessary python packages, including the following list of pakages.
-{IMPORT_LIST}
-</import>
 The target method is belonging to the Java project {PROJECT_NAME} ({PROJECT_URL}).
 This method requires {ARG_COUNT} arguments. You must prepare them with random seeded data.
 {CLASS_METHOD_OR_GENERAL_METHOD}
 </target>
 <requirements>
+<item>You MUST import all necessary python packages, including the pakage {PACKAGE} from the project.</item>
 <item>Try as many variations of these inputs as possible.</item>
 <item>Try creating the harness as complex as possible.</item>
 <item>Try adding some nested loop to invoke the target method for multiple times.</item>
