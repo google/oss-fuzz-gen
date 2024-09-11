@@ -324,6 +324,12 @@ def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
           interesting_filepaths.append(path)
         if path.endswith('.java'):
           potential_harnesses.append(path)
+      elif language == 'python':
+        # For Python
+        if path.endswith(tuple(interesting_filenames)):
+          interesting_filepaths.append(path)
+        if path.endswith('.py'):
+          potential_harnesses.append(path)
       else:
         # For C/C++
         short_path = path[len(out):]
