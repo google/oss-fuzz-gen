@@ -16,6 +16,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: ofg-pr-${GKE_EXP_NAME}
+  namespace: default
   labels:
     customLabel: "myCustomValue"
 spec:
