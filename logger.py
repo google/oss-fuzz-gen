@@ -4,6 +4,7 @@ project) to help identify log during debugging and result tracking."""
 import json
 import logging
 import os
+from typing import Mapping
 
 from results import Result
 
@@ -15,6 +16,11 @@ _trial_logger = None
 class CustomLoggerAdapter(logging.LoggerAdapter):
   """A note-taker to log and record experiment status, key info, and final
   results."""
+
+  def process(self, msg, kwargs):
+    # Combine 'extra' dictionaries and modify the message
+    kwargs['extra'] = {**(self.extra or {}), **(kwargs.get('extra') or {})}
+    return msg, kwargs
 
   def write_to_file(self, file_path: str, file_content: str) -> None:
     """Writes the |file_content| into a local |file_path|."""
@@ -41,21 +47,88 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
       json.dump(result.to_dict(), f)
 
 
+def debug(msg: object,
+          *args: object,
+          exc_info=None,
+          stack_info: bool = False,
+          stacklevel: int = 1,
+          extra: Mapping[str, object] | None = None,
+          **kwargs: object) -> None:
+  return get_trial_logger().debug(msg,
+                                  *args,
+                                  exc_info=exc_info,
+                                  stack_info=stack_info,
+                                  stacklevel=stacklevel,
+                                  extra=extra,
+                                  **kwargs)
+
+
+def info(msg: object,
+         *args: object,
+         exc_info=None,
+         stack_info: bool = False,
+         stacklevel: int = 1,
+         extra: Mapping[str, object] | None = None,
+         **kwargs: object) -> None:
+  return get_trial_logger().info(msg,
+                                 *args,
+                                 exc_info=exc_info,
+                                 stack_info=stack_info,
+                                 stacklevel=stacklevel,
+                                 extra=extra,
+                                 **kwargs)
+
+
+def warning(msg: object,
+            *args: object,
+            exc_info=None,
+            stack_info: bool = False,
+            stacklevel: int = 1,
+            extra: Mapping[str, object] | None = None,
+            **kwargs: object) -> None:
+  return get_trial_logger().warning(msg,
+                                    *args,
+                                    exc_info=exc_info,
+                                    stack_info=stack_info,
+                                    stacklevel=stacklevel,
+                                    extra=extra,
+                                    **kwargs)
+
+
+def error(msg: object,
+          *args: object,
+          exc_info=None,
+          stack_info: bool = False,
+          stacklevel: int = 1,
+          extra: Mapping[str, object] | None = None,
+          **kwargs: object) -> None:
+  return get_trial_logger().error(msg,
+                                  *args,
+                                  exc_info=exc_info,
+                                  stack_info=stack_info,
+                                  stacklevel=stacklevel,
+                                  extra=extra,
+                                  **kwargs)
+
+
 def get_trial_logger(name: str = __name__,
                      trial: int = 0,
-                     level=logging.INFO) -> CustomLoggerAdapter:
+                     level=logging.DEBUG) -> CustomLoggerAdapter:
   """Sets up or retrieves the singleton instance of CustomLoggerAdapter."""
   global _trial_logger
-  if _trial_logger is None:
-    logger = logging.getLogger(name)
-    if not logger.handlers:  # Avoid adding duplicated handlers
-      formatter = logging.Formatter(
-          fmt=('%(asctime)s [Trial ID: %(trial)02d] %(levelname)s '
-               '[%(module)s.%(funcName)s]: %(message)s'),
-          datefmt='%Y-%m-%d %H:%M:%S')
-      handler = logging.StreamHandler()
-      handler.setFormatter(formatter)
-      logger.addHandler(handler)
-      logger.setLevel(level)
-    _trial_logger = CustomLoggerAdapter(logger, {'trial': trial})
+  if _trial_logger:
+    return _trial_logger
+
+  logger = logging.getLogger(name)
+  if not logger.handlers:
+    formatter = logging.Formatter(
+        fmt=('%(asctime)s [Trial ID: %(trial)02d] %(levelname)s '
+             '[%(module)s.%(funcName)s]: %(message)s'),
+        datefmt='%Y-%m-%d %H:%M:%S')
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(level)
+
+  _trial_logger = CustomLoggerAdapter(logger, {'trial': trial})
   return _trial_logger

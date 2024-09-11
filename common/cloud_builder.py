@@ -108,16 +108,6 @@ class CloudBuilder:
       logging.info('Created archive: %s', archive_path)
       return self._upload_to_gcs(archive_path)
 
-  def _get_current_commit_id(self) -> str:
-    """Gets the current commit ID from the local git repository."""
-    try:
-      commit_id = subprocess.check_output(['git', 'rev-parse',
-                                           'HEAD']).decode('utf-8').strip()
-      return commit_id
-    except subprocess.CalledProcessError as e:
-      logging.error('Error fetching the current commit ID: %s', e)
-      return ''
-
   def _request_cloud_build(self, ofg_repo_url: str, agent_pickle_url: str,
                            results_pickle_url: str,
                            new_result_filename: str) -> str:

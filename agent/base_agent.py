@@ -31,11 +31,6 @@ class BaseAgent(ABC):
     self.name: str = name or self.__class__.__name__
     self.dialog: str = ''  # Communication history between LLM and tool.
 
-  def log(self, msg: str, level=logging.INFO):
-    """Method to log messages dynamically using the logger factory."""
-    agent_logger = logger.get_trial_logger()
-    agent_logger.log(level, msg)
-
   def get_tool(self, tool_name: str) -> Optional[BaseTool]:
     """Gets a tool of the agent by name."""
     for tool in self.tools:
@@ -72,7 +67,7 @@ class BaseAgent(ABC):
     if command:
       prompt_text = self._format_bash_execution_result(tool.execute(command))
     else:
-      self.log(
+      logger.warning(
           f'ROUND {cur_round} No BASH command from LLM response: {response}',
           logging.WARNING)
       prompt_text = ('No bash command received, Please follow the '
