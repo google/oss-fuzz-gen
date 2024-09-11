@@ -76,6 +76,7 @@ class CloudBuilder:
     self.bucket_name = args.cloud_experiment_bucket
     self.bucket = storage.Client().bucket(self.bucket_name)
 
+    # pylint: disable=no-member
     self.builds = cloud_build(
         'cloudbuild',
         'v1',
