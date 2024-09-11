@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: libtasn1
+target_name: asn1_get_length_ber_fuzzer
+target_path: /src/libtasn1/fuzz/asn1_get_length_ber_fuzzer.c

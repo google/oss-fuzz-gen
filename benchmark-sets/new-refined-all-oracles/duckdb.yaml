@@ -1,0 +1,496 @@
+functions:
+- name: _ZN6duckdb8Relation6DeleteERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb::Relation::Delete(const string &)
+- name: _ZN6duckdb8Relation5OrderERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: shared_ptr<duckdb::Relation, true> duckdb::Relation::Order(const string
+    &)
+- name: duckdb_execute_prepared_streaming
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: duckdb_state duckdb_execute_prepared_streaming(duckdb_prepared_statement,
+    duckdb_result *)
+- name: _ZZN6duckdb9Optimizer20RunBuiltInOptimizersEvENK4$_16clEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb::Optimizer::operator()(const void *)
+- name: _ZNK6duckdb15LogicalOperator4CopyERNS_13ClientContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: unique_ptr<duckdb::LogicalOperator, std::__1::default_delete<duckdb::LogicalOperator>,
+    true> duckdb::LogicalOperator::Copy(ClientContext &)
+- name: _ZN6duckdb14ConstantFilter8ToStringERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string duckdb::ConstantFilter::ToString(const string &)
+- name: _ZN6duckdb12StructFilter8ToStringERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string duckdb::StructFilter::ToString(const string &)
+- name: _ZN6duckdb3Bit8ToStringENS_8string_tE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string duckdb::Bit::ToString(struct string_t)
+- name: duckdb_arrow_scan
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: duckdb_state duckdb_arrow_scan(duckdb_connection, const char *, duckdb_arrow_stream)
+- name: _ZN6duckdb14PostgresParser5ParseERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb::PostgresParser::Parse(const string &)
+- name: _ZN6duckdb15OwningStringMapImNSt3__113unordered_mapINS_8string_tEmNS_10StringHashENS_14StringEqualityENS1_9allocatorINS1_4pairIKS3_mEEEEEEE7DestroyEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb::OwningStringMap<unsigned long, std::__1::unordered_map<duckdb::string_t,
+    unsigned long, duckdb::StringHash, duckdb::StringEquality, std::__1::allocator<std::__1::pair<duckdb::string_t
+    const, unsigned long> > > >::Destroy(OwningStringMap<unsigned long, std::__1::map<duckdb::string_t,
+    unsigned long, std::__1::less<duckdb::string_t>, std::__1::allocator<std::__1::pair<const
+    duckdb::string_t, unsigned long> > > > *)
+- name: _ZN6duckdb15OwningStringMapImNSt3__13mapINS_8string_tEmNS1_4lessIS3_EENS1_9allocatorINS1_4pairIKS3_mEEEEEEE7DestroyEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb::OwningStringMap<unsigned long, std::__1::map<duckdb::string_t,
+    unsigned long, std::__1::less<duckdb::string_t>, std::__1::allocator<std::__1::pair<duckdb::string_t
+    const, unsigned long> > > >::Destroy(OwningStringMap<unsigned long, std::__1::map<duckdb::string_t,
+    unsigned long, std::__1::less<duckdb::string_t>, std::__1::allocator<std::__1::pair<const
+    duckdb::string_t, unsigned long> > > > *)
+- name: _ZN6duckdb5ValueC2ENS_8string_tE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: val
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb::Value::Value(struct string_t)
+- name: _ZN10duckdb_fmt2v68internal18arg_formatter_baseINS0_12buffer_rangeIwEENS1_13error_handlerEE20cstring_spec_handler9on_stringEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb_fmt::v6::internal::arg_formatter_base<duckdb_fmt::v6::buffer_range<wchar_t>,
+    duckdb_fmt::v6::internal::error_handler>::cstring_spec_handler::on_string(struct
+    cstring_spec_handler *)
+- name: _ZN6duckdb15OwningStringMapINS_8ModeAttrENSt3__113unordered_mapINS_8string_tES1_NS_10StringHashENS_14StringEqualityENS2_9allocatorINS2_4pairIKS4_S1_EEEEEEE7DestroyEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb::OwningStringMap<duckdb::ModeAttr, std::__1::unordered_map<duckdb::string_t,
+    duckdb::ModeAttr, duckdb::StringHash, duckdb::StringEquality, std::__1::allocator<std::__1::pair<duckdb::string_t
+    const, duckdb::ModeAttr> > > >::Destroy(OwningStringMap<unsigned long, std::__1::map<duckdb::string_t,
+    unsigned long, std::__1::less<duckdb::string_t>, std::__1::allocator<std::__1::pair<const
+    duckdb::string_t, unsigned long> > > > *)
+- name: duckdb_query
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: duckdb_state duckdb_query(duckdb_connection, const char *, duckdb_result
+    *)
+- name: _ZN6duckdb5ValueC2EPKc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb::Value::Value(const char *)
+- name: duckdb_create_varchar
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: duckdb_value duckdb_create_varchar(const char *)
+- name: duckdb_query_arrow
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: duckdb_state duckdb_query_arrow(duckdb_connection, const char *, duckdb_arrow
+    *)
+- name: _ZZNK6duckdb19PhysicalBatchInsert8FinalizeERNS_8PipelineERNS_5EventERNS_13ClientContextERNS_25OperatorSinkFinalizeInputEENK3$_0clERNS_9DataChunkE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: bool duckdb::PhysicalBatchInsert::operator()(const void *, DataChunk
+    &)
+- name: _ZN6duckdb18CatalogSearchEntry5ParseERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct CatalogSearchEntry duckdb::CatalogSearchEntry::Parse(const string
+    &)
+- name: _ZN10duckdb_fmt2v68internal18arg_formatter_baseINS0_12buffer_rangeIcEENS1_13error_handlerEE20cstring_spec_handler9on_stringEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb_fmt::v6::internal::arg_formatter_base<duckdb_fmt::v6::buffer_range<char>,
+    duckdb_fmt::v6::internal::error_handler>::cstring_spec_handler::on_string(struct
+    cstring_spec_handler *)
+- name: _ZN6duckdb25OrderedAggregateOptimizer5ApplyERNS_15LogicalOperatorERNS_6vectorINSt3__117reference_wrapperINS_10ExpressionEEELb1EEERbb
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: void
+  signature: unique_ptr<duckdb::Expression, std::__1::default_delete<duckdb::Expression>,
+    true> duckdb::OrderedAggregateOptimizer::Apply(LogicalOperator &, vector<std::__1::reference_wrapper<duckdb::Expression>,
+    true> &, bool &, bool)
+- name: _ZN6duckdb8Relation5OrderERKNS_6vectorINSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEELb1EEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: shared_ptr<duckdb::Relation, true> duckdb::Relation::Order(const vector<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >, true> &)
+- name: _ZN6duckdb14OrderModifiers5ParseERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: short
+  signature: struct OrderModifiers duckdb::OrderModifiers::Parse(const string &)
+- name: _ZN6duckdb5Value3MAPERKNSt3__113unordered_mapINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES8_NS1_4hashIS8_EENS1_8equal_toIS8_EENS6_INS1_4pairIKS8_S8_EEEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Value duckdb::Value::MAP(const unordered_map<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::hash<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::equal_to<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<const
+    std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > > > > &)
+- name: duckdb_open
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: duckdb_state duckdb_open(const char *, duckdb_database *)
+- name: _ZN6duckdb15OwningStringMapINS_8ModeAttrENSt3__113unordered_mapINS_8string_tES1_NS_10StringHashENS_14StringEqualityENS2_9allocatorINS2_4pairIKS4_S1_EEEEEEE5clearEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb::OwningStringMap<duckdb::ModeAttr, std::__1::unordered_map<duckdb::string_t,
+    duckdb::ModeAttr, duckdb::StringHash, duckdb::StringEquality, std::__1::allocator<std::__1::pair<duckdb::string_t
+    const, duckdb::ModeAttr> > > >::clear(OwningStringMap<duckdb::ModeAttr, std::__1::unordered_map<duckdb::string_t,
+    duckdb::ModeAttr, duckdb::StringHash, duckdb::StringEquality, std::__1::allocator<std::__1::pair<const
+    duckdb::string_t, duckdb::ModeAttr> > > > *)
+- name: _ZN6duckdb19ConjunctionOrFilter8ToStringERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string duckdb::ConjunctionOrFilter::ToString(const string &)
+- name: _ZN6duckdb21InvalidInputExceptionC2ERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb::InvalidInputException::InvalidInputException(const string
+    &)
+- name: _ZN6duckdb10Connection5TableERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: shared_ptr<duckdb::Relation, true> duckdb::Connection::Table(const string
+    &)
+- name: _ZNK6duckdb14PhysicalUpdate4SinkERNS_16ExecutionContextERNS_9DataChunkERNS_17OperatorSinkInputE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: char
+  signature: DW_TAG_enumeration_typeSinkResultType duckdb::PhysicalUpdate::Sink(ExecutionContext
+    &, DataChunk &, struct OperatorSinkInput &)
+- name: _ZNK6duckdb19PhysicalBatchInsert4SinkERNS_16ExecutionContextERNS_9DataChunkERNS_17OperatorSinkInputE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: char
+  signature: DW_TAG_enumeration_typeSinkResultType duckdb::PhysicalBatchInsert::Sink(ExecutionContext
+    &, DataChunk &, struct OperatorSinkInput &)
+- name: duckdb_pending_prepared
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: duckdb_state duckdb_pending_prepared(duckdb_prepared_statement, duckdb_pending_result
+    *)
+- name: _ZNK6duckdb14DuckTableEntry4CopyERNS_13ClientContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: unique_ptr<duckdb::CatalogEntry, std::__1::default_delete<duckdb::CatalogEntry>,
+    true> duckdb::DuckTableEntry::Copy(ClientContext &)
+- name: _ZNK6duckdb14PhysicalInsert4SinkERNS_16ExecutionContextERNS_9DataChunkERNS_17OperatorSinkInputE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: char
+  signature: DW_TAG_enumeration_typeSinkResultType duckdb::PhysicalInsert::Sink(ExecutionContext
+    &, DataChunk &, struct OperatorSinkInput &)
+- name: _ZN6duckdb12BaseAppender6AppendEPKcj
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void duckdb::BaseAppender::Append(const char *, uint32_t)
+- name: _ZN6duckdb5Value4UUIDERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Value duckdb::Value::UUID(const string &)
+- name: duckdb_pending_prepared_streaming
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: duckdb_state duckdb_pending_prepared_streaming(duckdb_prepared_statement,
+    duckdb_pending_result *)
+- name: duckdb_execute_prepared_arrow
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: duckdb_state duckdb_execute_prepared_arrow(duckdb_prepared_statement,
+    duckdb_arrow *)
+- name: duckdb_arrow_array_scan
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: duckdb_state duckdb_arrow_array_scan(duckdb_connection, const char *,
+    duckdb_arrow_schema, duckdb_arrow_array, duckdb_arrow_stream *)
+- name: duckdb_open_ext
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: duckdb_state duckdb_open_ext(const char *, duckdb_database *, duckdb_config,
+    char **)
+- name: _ZN6duckdb5ValueC2ENSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb::Value::Value(string)
+- name: _ZN6duckdb4Blob8ToStringENS_8string_tE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string duckdb::Blob::ToString(struct string_t)
+- name: _ZN6duckdb5Value3BITERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Value duckdb::Value::BIT(const string &)
+- name: _ZN6duckdb20ConjunctionAndFilter8ToStringERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string duckdb::ConjunctionAndFilter::ToString(const string &)
+- name: _ZZNK6duckdb14PhysicalInsert7CombineERNS_16ExecutionContextERNS_24OperatorSinkCombineInputEENK3$_0clERNS_9DataChunkE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: bool duckdb::PhysicalInsert::operator()(const void *, DataChunk &)
+- name: _ZZN6duckdb13ClientContext6AppendERNS_16TableDescriptionERNS_20ColumnDataCollectionEENK3$_0clEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void duckdb::ClientContext::operator()(const void *)
+- name: duckdb_execute_prepared
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: duckdb_state duckdb_execute_prepared(duckdb_prepared_statement, duckdb_result
+    *)
+- name: _ZN6duckdb13QualifiedName5ParseERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct QualifiedName duckdb::QualifiedName::Parse(const string &)
+language: c++
+project: duckdb
+target_name: parse_fuzz_test
+target_path: /src/duckdb/test/ossfuzz/parse_fuzz_test.cpp

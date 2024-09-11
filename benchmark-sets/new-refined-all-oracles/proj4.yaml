@@ -1,0 +1,171 @@
+functions:
+- name: proj_trans_bounds
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: double
+  - name: ''
+    type: double
+  - name: ''
+    type: double
+  - name: ''
+    type: double
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int proj_trans_bounds(PJ_CONTEXT *, PJ *, PJ_DIRECTION, const double,
+    const double, const double, const double, double *, double *, double *, double
+    *, const int)
+- name: _ZZN5osgeo4proj2io10JSONParser16buildVerticalCRSERKN13proj_nlohmann10basic_jsonINSt3__13mapENS5_6vectorENS5_12basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEblmdSB_NS3_14adl_serializerENS7_IhNSB_IhEEEEEEENK3$_0clESJ_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: TransformationNNPtr osgeo::proj::io::JSONParser::operator()(const void
+    *, const json &)
+- name: _ZNK5osgeo4proj5datum22VerticalReferenceFrame12_exportToWKTEPNS0_2io12WKTFormatterE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: N/A ()
+- name: _ZNK5osgeo4proj3crs12ProjectedCRS8identifyERKNSt3__110shared_ptrINS0_2io16AuthorityFactoryEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: list<std::__1::pair<dropbox::oxygen::nn<std::__1::shared_ptr<osgeo::proj::crs::ProjectedCRS>
+    >, int>, std::__1::allocator<std::__1::pair<dropbox::oxygen::nn<std::__1::shared_ptr<osgeo::proj::crs::ProjectedCRS>
+    >, int> > > osgeo::proj::crs::ProjectedCRS::identify(const AuthorityFactoryPtr
+    &)
+- name: proj_create_from_wkt
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PJ * proj_create_from_wkt(PJ_CONTEXT *, const char *, const const char
+    **, PROJ_STRING_LIST *, PROJ_STRING_LIST *)
+- name: proj_grid_info
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PJ_GRID_INFO proj_grid_info(const char *)
+- name: _ZN8TINShift12TINShiftFile5parseERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: unique_ptr<TINShift::TINShiftFile, std::__1::default_delete<TINShift::TINShiftFile>
+    > TINShift::TINShiftFile::parse(const string &)
+- name: proj_get_insert_statements
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PROJ_STRING_LIST proj_get_insert_statements(PJ_CONTEXT *, PJ_INSERT_SESSION
+    *, const PJ *, const char *, const char *, int, const const char **, const const
+    char **)
+- name: _ZZN5osgeo4proj2io10JSONParser13buildBoundCRSERKN13proj_nlohmann10basic_jsonINSt3__13mapENS5_6vectorENS5_12basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEblmdSB_NS3_14adl_serializerENS7_IhNSB_IhEEEEEEENK3$_0clEv
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: TransformationNNPtr osgeo::proj::io::JSONParser::operator()(const void
+    *)
+- name: proj_create_cs
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PJ * proj_create_cs(PJ_CONTEXT *, PJ_COORDINATE_SYSTEM_TYPE, int, const
+    PJ_AXIS_DESCRIPTION *)
+- name: _ZN16DeformationModel10MasterFile5parseERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: unique_ptr<DeformationModel::MasterFile, std::__1::default_delete<DeformationModel::MasterFile>
+    > DeformationModel::MasterFile::parse(const string &)
+- name: _ZN5osgeo4proj2io16PROJStringParser20createFromPROJStringERKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct BaseObjectNNPtr osgeo::proj::io::PROJStringParser::createFromPROJString(const
+    string &)
+- name: proj_init_info
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PJ_INIT_INFO proj_init_info(const char *)
+language: c++
+project: proj4
+target_name: proj_crs_to_crs_fuzzer
+target_path: /src/PROJ/test/fuzzers/proj_crs_to_crs_fuzzer.cpp

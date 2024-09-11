@@ -1,0 +1,145 @@
+functions:
+- name: oc_pack_look1
+  params:
+  - name: _b
+    type: 'bool '
+  return_type: int
+  signature: int oc_pack_look1(oc_pack_buf *)
+- name: _ZN7fuzzing5types9ContainerIhLb0ELb0EE8allocateEm
+  params:
+  - name: this
+    type: 'bool '
+  - name: size
+    type: size_t
+  return_type: void
+  signature: void fuzzing::types::Container<unsigned char, false, false>::allocate(Container<char,
+    true, false> *, size_t)
+- name: _ZN7fuzzing5types9ContainerIhLb0ELb0EE4copyEPKvm
+  params:
+  - name: this
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: size
+    type: size_t
+  return_type: void
+  signature: void fuzzing::types::Container<unsigned char, false, false>::copy(Container<char,
+    true, false> *, const void *, size_t)
+- name: th_packet_isheader
+  params:
+  - name: _op
+    type: 'bool '
+  return_type: int
+  signature: int th_packet_isheader(ogg_packet *)
+- name: oc_loop_filter_init_c
+  params:
+  - name: _bv
+    type: 'bool '
+  - name: _flimit
+    type: int
+  return_type: void
+  signature: void oc_loop_filter_init_c(signed char *, int)
+- name: _ZN7fuzzing5types9ContainerIcLb1ELb0EE4copyEPKvm
+  params:
+  - name: this
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: size
+    type: size_t
+  return_type: void
+  signature: void fuzzing::types::Container<char, true, false>::copy(const void *,
+    size_t)
+- name: _ZN7fuzzing5types9ContainerIcLb1ELb0EE8allocateEm
+  params:
+  - name: this
+    type: 'bool '
+  - name: size
+    type: size_t
+  return_type: void
+  signature: void fuzzing::types::Container<char, true, false>::allocate(size_t)
+- name: th_comment_add_tag
+  params:
+  - name: _tc
+    type: 'bool '
+  - name: _tag
+    type: 'bool '
+  - name: _val
+    type: 'bool '
+  return_type: void
+  signature: void th_comment_add_tag(th_comment *, const char *, const char *)
+- name: _ZNSt9exceptionC2B7v180000Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void std::exception::exception()
+- name: th_granule_frame
+  params:
+  - name: _encdec
+    type: 'bool '
+  - name: _granpos
+    type: size_t
+  return_type: size_t
+  signature: ogg_int64_t th_granule_frame(void *, ogg_int64_t)
+- name: _ZN7fuzzing5types9ContainerIcLb1ELb0EE4freeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void fuzzing::types::Container<char, true, false>::free()
+- name: _ZN7fuzzing5types9ContainerIhLb0ELb0EE4freeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void fuzzing::types::Container<unsigned char, false, false>::free(Container<char,
+    true, false> *)
+- name: th_comment_add
+  params:
+  - name: _tc
+    type: 'bool '
+  - name: _comment
+    type: 'bool '
+  return_type: void
+  signature: void th_comment_add(th_comment *, const char *)
+- name: oc_state_borders_fill
+  params:
+  - name: _state
+    type: 'bool '
+  - name: _refi
+    type: int
+  return_type: void
+  signature: void oc_state_borders_fill(oc_theora_state *, int)
+- name: th_granule_time
+  params:
+  - name: _encdec
+    type: 'bool '
+  - name: _granpos
+    type: size_t
+  return_type: double
+  signature: double th_granule_time(void *, ogg_int64_t)
+- name: th_packet_iskeyframe
+  params:
+  - name: _op
+    type: 'bool '
+  return_type: int
+  signature: int th_packet_iskeyframe(ogg_packet *)
+- name: oc_pack_adv1
+  params:
+  - name: _b
+    type: 'bool '
+  return_type: void
+  signature: void oc_pack_adv1(oc_pack_buf *)
+- name: th_comment_query_count
+  params:
+  - name: _tc
+    type: 'bool '
+  - name: _tag
+    type: 'bool '
+  return_type: int
+  signature: int th_comment_query_count(th_comment *, const char *)
+language: c++
+project: libtheora
+target_name: fuzzer-decoder
+target_path: /src/oss-fuzz-fuzzers/libtheora/fuzzer.cpp

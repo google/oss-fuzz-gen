@@ -1,0 +1,33 @@
+functions:
+- name: _ZN7tinyobj6face_tC2EOS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void tinyobj::face_t::face_t(struct face_t *, const struct face_t &)
+- name: _ZN7tinyobjL14parseRawTripleEPPKc
+  params:
+  - name: token
+    type: 'bool '
+  return_type: void
+  signature: struct vertex_index_t tinyobj::parseRawTriple(const char **)
+- name: _ZN7tinyobj18MaterialFileReaderC2ERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: mtl_basedir
+    type: 'bool '
+  return_type: void
+  signature: void tinyobj::MaterialFileReader::MaterialFileReader(const string &)
+- name: _ZN7tinyobj18MaterialFileReaderD2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void tinyobj::MaterialFileReader::~~MaterialFileReader()
+language: c++
+project: tinyobjloader
+target_name: fuzz_ParseFromString
+target_path: /src/tinyobjloader/fuzzer/fuzz_ParseFromString.cc

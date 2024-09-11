@@ -1,0 +1,193 @@
+functions:
+- name: _ZNK12_GLOBAL__N_116itanium_demangle12InitListExpr9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::InitListExpr::printLeft(OutputBuffer
+    &)
+- name: _ZN12_GLOBAL__N_111DumpVisitor5printEPKNS_16itanium_demangle4NodeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: N
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::DumpVisitor::print(struct DumpVisitor *,
+    const Node *)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle13NodeArrayNode9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::NodeArrayNode::printLeft(const
+    struct NodeArrayNode *, OutputBuffer &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle20DynamicExceptionSpec9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::DynamicExceptionSpec::printLeft(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle15ClosureTypeName9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::ClosureTypeName::printLeft(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle19SizeofParamPackExpr9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::SizeofParamPackExpr::printLeft(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle25TemplateTemplateParamDecl9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::TemplateTemplateParamDecl::printLeft(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle12EnableIfAttr9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::EnableIfAttr::printLeft(OutputBuffer
+    &)
+- name: _ZN12_GLOBAL__N_111DumpVisitor5printENS_16itanium_demangle4Node4PrecE
+  params:
+  - name: this
+    type: 'bool '
+  - name: P
+    type: int
+  return_type: void
+  signature: void (anonymous namespace)::DumpVisitor::print(struct DumpVisitor *,
+    DW_TAG_enumeration_typePrec)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle10BinaryExpr9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::BinaryExpr::printLeft(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle8CallExpr9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::CallExpr::printLeft(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle21StructuredBindingName9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::StructuredBindingName::printLeft(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle14ConversionExpr9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::ConversionExpr::printLeft(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle15ExprRequirement9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::ExprRequirement::printLeft(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle15ConditionalExpr9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::ConditionalExpr::printLeft(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle8FoldExpr9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::FoldExpr::printLeft(OutputBuffer
+    &)
+- name: _ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E20parseFloatingLiteralIeEEPNS0_4NodeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: Node * (anonymous namespace)::itanium_demangle::parseFloatingLiteral<long
+    double>(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous
+    namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle12NoexceptSpec9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::NoexceptSpec::printLeft(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle15ClosureTypeName15printDeclaratorERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::ClosureTypeName::printDeclarator(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle10LambdaExpr9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::LambdaExpr::printLeft(OutputBuffer
+    &)
+- name: _ZNK12_GLOBAL__N_116itanium_demangle7NewExpr9printLeftERNS0_12OutputBufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: OB
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::itanium_demangle::NewExpr::printLeft(OutputBuffer
+    &)
+language: c++
+project: llvm_libcxxabi
+target_name: cxa_demangle_fuzzer
+target_path: /src/llvm-project/libcxxabi/fuzz/cxa_demangle_fuzzer.cpp

@@ -1,0 +1,29 @@
+functions:
+- name: _ZNKRSt3__123__optional_storage_baseI5ImageLb0EE5__getB7v180000Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const value_type & std::__1::__optional_storage_base<Image, false>::__get(const
+    struct __optional_storage_base<Image, false> *)
+- name: _ZNSt9exceptionC2B7v180000Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void std::exception::exception()
+- name: _ZN7fuzzing5types9ContainerIcLb1ELb0EE4copyEPKvm
+  params:
+  - name: this
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: size
+    type: size_t
+  return_type: void
+  signature: void fuzzing::types::Container<char, true, false>::copy(const void *,
+    size_t)
+language: c++
+project: gfwx
+target_name: fuzzer-encoder
+target_path: /src/gfwx-fuzzers/encoder.cpp

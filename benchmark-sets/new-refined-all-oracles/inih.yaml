@@ -1,0 +1,5 @@
+functions: []
+language: c
+project: inih
+target_name: inihfuzz
+target_path: /src/inih/inihfuzz.c

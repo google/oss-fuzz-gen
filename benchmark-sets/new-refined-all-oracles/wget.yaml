@@ -1,0 +1,85 @@
+functions:
+- name: gnutls_handshake_write
+  params:
+  - name: session
+    type: 'bool '
+  - name: level
+    type: int
+  - name: data
+    type: 'bool '
+  - name: data_size
+    type: size_t
+  return_type: int
+  signature: int gnutls_handshake_write(gnutls_session_t, gnutls_record_encryption_level_t,
+    const void *, size_t)
+- name: gnutls_session_ticket_send
+  params:
+  - name: session
+    type: 'bool '
+  - name: nr
+    type: int
+  - name: flags
+    type: int
+  return_type: int
+  signature: int gnutls_session_ticket_send(gnutls_session_t, unsigned int, unsigned
+    int)
+- name: psl_load_file
+  params:
+  - name: fname
+    type: 'bool '
+  return_type: void
+  signature: psl_ctx_t * psl_load_file(const char *)
+- name: psl_latest
+  params:
+  - name: fname
+    type: 'bool '
+  return_type: void
+  signature: psl_ctx_t * psl_latest(const char *)
+- name: gnutls_record_send_file
+  params:
+  - name: session
+    type: 'bool '
+  - name: fd
+    type: int
+  - name: offset
+    type: 'bool '
+  - name: count
+    type: size_t
+  return_type: size_t
+  signature: ssize_t gnutls_record_send_file(gnutls_session_t, int, off_t *, size_t)
+- name: gnutls_record_uncork
+  params:
+  - name: session
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: int
+  signature: int gnutls_record_uncork(gnutls_session_t, unsigned int)
+- name: locale_to_utf8
+  params:
+  - name: str
+    type: 'bool '
+  return_type: void
+  signature: const char * locale_to_utf8(const char *)
+- name: parse_charset
+  params:
+  - name: str
+    type: 'bool '
+  return_type: void
+  signature: char * parse_charset(const char *)
+- name: check_encoding_name
+  params:
+  - name: encoding
+    type: 'bool '
+  return_type: bool
+  signature: bool check_encoding_name(const char *)
+- name: gnutls_rehandshake
+  params:
+  - name: session
+    type: 'bool '
+  return_type: int
+  signature: int gnutls_rehandshake(gnutls_session_t)
+language: c++
+project: wget
+target_name: wget_robots_fuzzer
+target_path: /src/wget/fuzz/wget_robots_fuzzer.c

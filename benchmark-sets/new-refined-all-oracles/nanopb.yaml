@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: nanopb
+target_name: fuzztest_io_errors
+target_path: /src/nanopb/tests/build/fuzztest/fuzztest.c

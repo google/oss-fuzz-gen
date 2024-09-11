@@ -1,0 +1,171 @@
+functions:
+- name: _ZN7brunsli8internal3dec13MetadataStateC2Ev
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void brunsli::internal::dec::MetadataState::MetadataState(struct MetadataState
+    *)
+- name: _ZN7brunsli14BrunsliDecoderD2Ev
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void brunsli::BrunsliDecoder::~~BrunsliDecoder()
+- name: _ZN7brunsli14ComponentStateC2EOS0_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void brunsli::ComponentState::ComponentState(struct ComponentState *,
+    struct DW_TAG_rvalue_reference_typeComponentState)
+- name: _ZN7brunsli12ReadTestDataERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: vector<unsigned char, std::__1::allocator<unsigned char> > brunsli::ReadTestData(const
+    string &)
+- name: _ZN7brunsli20StringOutputFunctionEPvPKhm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: size_t
+  signature: size_t brunsli::StringOutputFunction(void *, const uint8_t *, size_t)
+- name: _ZN7brunsli8ParseMarEPKvm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: vector<std::__1::tuple<std::__1::vector<unsigned char, std::__1::allocator<unsigned
+    char> > >, std::__1::allocator<std::__1::tuple<std::__1::vector<unsigned char,
+    std::__1::allocator<unsigned char> > > > > brunsli::ParseMar(const void *, size_t)
+- name: _ZN7brunsli14ComponentState11SizeInBytesEi
+  params:
+  - name: ''
+    type: int
+  return_type: size_t
+  signature: size_t brunsli::ComponentState::SizeInBytes(int)
+- name: _ZN7brunsli8internal3dec11OutputChunkC2EOS2_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void brunsli::internal::dec::OutputChunk::OutputChunk(struct OutputChunk
+    *, struct DW_TAG_rvalue_reference_typeOutputChunk)
+- name: _ZN7brunsli14BrunsliDecoderC2Ev
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void brunsli::BrunsliDecoder::BrunsliDecoder()
+- name: BrotliDecoderHasMoreOutput
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int BrotliDecoderHasMoreOutput(const BrotliDecoderStateInternal *)
+- name: BrotliSafeReadBits32Slow
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int BrotliSafeReadBits32Slow(const BrotliBitReader *, uint32_t, uint32_t
+    *)
+- name: _ZN7brunsli17ComputeLehmerCodeEPKjmPj
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void brunsli::ComputeLehmerCode(const uint32_t *, const size_t, uint32_t
+    *)
+- name: BrotliDecoderIsFinished
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int BrotliDecoderIsFinished(const BrotliDecoderStateInternal *)
+- name: _ZN7brunsli14FindBestMatrixEPKibPh
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: uint32_t brunsli::FindBestMatrix(const int *, bool, uint8_t *)
+- name: _ZN7brunsli16ComponentStateDCC2EOS0_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void brunsli::ComponentStateDC::ComponentStateDC(struct ComponentStateDC
+    *, struct DW_TAG_rvalue_reference_typeComponentStateDC)
+- name: _ZN7brunsli8internal3dec5StateC2EOS2_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void brunsli::internal::dec::State::State(DW_TAG_rvalue_reference_typeState)
+- name: _ZN7brunsli22GetFallbackBrunsliFileEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: vector<unsigned char, std::__1::allocator<unsigned char> > GetFallbackBrunsliFile()
+- name: _ZN7brunsli9IsBrunsliEPKhm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: bool
+  signature: bool brunsli::IsBrunsli(const uint8_t *, const size_t)
+- name: BrotliDecoderSetParameter
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: int
+  signature: int BrotliDecoderSetParameter(BrotliDecoderStateInternal *, BrotliDecoderParameter,
+    uint32_t)
+- name: _ZN7brunsli19GetSmallBrunsliFileEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: vector<unsigned char, std::__1::allocator<unsigned char> > GetSmallBrunsliFile()
+language: c++
+project: brunsli
+target_name: fuzz_decode
+target_path: /src/brunsli/c/tests/fuzz_decode.cc

@@ -1,0 +1,22 @@
+functions:
+- name: qrexec_log
+  params:
+  - name: level
+    type: int
+  - name: errnoval
+    type: int
+  - name: file
+    type: 'bool '
+  - name: line
+    type: int
+  - name: func
+    type: 'bool '
+  - name: fmt
+    type: 'bool '
+  return_type: void
+  signature: void qrexec_log(int, int, const char *, int, const char *, const char
+    *, void)
+language: c++
+project: qubes-os
+target_name: db-daemon_fuzzer
+target_path: /src/qubes-os/qubes-core-qubesdb/fuzz/db-daemon_fuzzer.c

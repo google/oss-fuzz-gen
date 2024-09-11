@@ -1,0 +1,200 @@
+functions:
+- name: TPM2_CertifyCreation
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_CertifyCreation(CertifyCreation_In *, CertifyCreation_Out
+    *)
+- name: TPM2_GetSessionAuditDigest
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_GetSessionAuditDigest(GetSessionAuditDigest_In *, GetSessionAuditDigest_Out
+    *)
+- name: TPM2_MAC
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_MAC(MAC_In *, MAC_Out *)
+- name: TPM2_NV_ReadPublic
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_NV_ReadPublic(NV_ReadPublic_In *, NV_ReadPublic_Out *)
+- name: TPM2_PolicyAuthorizeNV
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_PolicyAuthorizeNV(PolicyAuthorizeNV_In *)
+- name: TPM2_PolicyPCR
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_PolicyPCR(PolicyPCR_In *)
+- name: TPM2_PolicyTicket
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_PolicyTicket(PolicyTicket_In *)
+- name: TPM2_ContextSave
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_ContextSave(ContextSave_In *, ContextSave_Out *)
+- name: TPM2_Commit
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_Commit(Commit_In *, Commit_Out *)
+- name: TPM2_EventSequenceComplete
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_EventSequenceComplete(EventSequenceComplete_In *, EventSequenceComplete_Out
+    *)
+- name: TPM2_GetTime
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_GetTime(GetTime_In *, GetTime_Out *)
+- name: TPM2_MakeCredential
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_MakeCredential(MakeCredential_In *, MakeCredential_Out *)
+- name: TPM2_Sign
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_Sign(Sign_In *, Sign_Out *)
+- name: TPM2_PolicySecret
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_PolicySecret(PolicySecret_In *, PolicySecret_Out *)
+- name: TPM2_Certify
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_Certify(Certify_In *, Certify_Out *)
+- name: TPM2_ObjectChangeAuth
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_ObjectChangeAuth(ObjectChangeAuth_In *, ObjectChangeAuth_Out
+    *)
+- name: TPM2_PolicyNV
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_PolicyNV(PolicyNV_In *)
+- name: TPM2_NV_Extend
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_NV_Extend(NV_Extend_In *)
+- name: TPM2_PolicySigned
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_PolicySigned(PolicySigned_In *, PolicySigned_Out *)
+- name: TPM2_MAC_Start
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_MAC_Start(MAC_Start_In *, MAC_Start_Out *)
+- name: TPM2_PolicyCounterTimer
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_PolicyCounterTimer(PolicyCounterTimer_In *)
+- name: TPM2_Duplicate
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_Duplicate(Duplicate_In *, Duplicate_Out *)
+- name: TPM2_GetCommandAuditDigest
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_GetCommandAuditDigest(GetCommandAuditDigest_In *, GetCommandAuditDigest_Out
+    *)
+- name: TPM2_ActivateCredential
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_ActivateCredential(ActivateCredential_In *, ActivateCredential_Out
+    *)
+- name: TPM2_EncryptDecrypt2
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_EncryptDecrypt2(EncryptDecrypt2_In *, EncryptDecrypt2_Out
+    *)
+language: c
+project: ms-tpm-20-ref
+target_name: tpm_cmd
+target_path: /src/ms-tpm-20-ref/TPMCmd/fuzzer/tpm_cmd.c

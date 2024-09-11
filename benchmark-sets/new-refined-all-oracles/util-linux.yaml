@@ -1,0 +1,285 @@
+functions:
+- name: __mnt_table_is_fs_mounted
+  params:
+  - name: tb
+    type: 'bool '
+  - name: fstab_fs
+    type: 'bool '
+  - name: tgt_prefix
+    type: 'bool '
+  return_type: int
+  signature: int __mnt_table_is_fs_mounted(struct libmnt_table *, struct libmnt_fs
+    *, const char *)
+- name: loopdev_has_backing_file
+  params:
+  - name: device
+    type: 'bool '
+  return_type: int
+  signature: int loopdev_has_backing_file(const char *)
+- name: mnt_table_find_pair
+  params:
+  - name: tb
+    type: 'bool '
+  - name: source
+    type: 'bool '
+  - name: target
+    type: 'bool '
+  - name: direction
+    type: int
+  return_type: void
+  signature: struct libmnt_fs * mnt_table_find_pair(struct libmnt_table *, const char
+    *, const char *, int)
+- name: uuid_generate_time
+  params:
+  - name: out
+    type: 'bool '
+  return_type: void
+  signature: void uuid_generate_time(unsigned char *)
+- name: loopdev_is_autoclear
+  params:
+  - name: device
+    type: 'bool '
+  return_type: int
+  signature: int loopdev_is_autoclear(const char *)
+- name: __mnt_new_table_from_file
+  params:
+  - name: filename
+    type: 'bool '
+  - name: fmt
+    type: int
+  - name: empty_for_enoent
+    type: int
+  return_type: void
+  signature: struct libmnt_table * __mnt_new_table_from_file(const char *, int, int)
+- name: mnt_table_parse_swaps
+  params:
+  - name: tb
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  return_type: int
+  signature: int mnt_table_parse_swaps(struct libmnt_table *, const char *)
+- name: mnt_table_get_fs_root
+  params:
+  - name: tb
+    type: 'bool '
+  - name: fs
+    type: 'bool '
+  - name: mountflags
+    type: size_t
+  - name: fsroot
+    type: 'bool '
+  return_type: void
+  signature: struct libmnt_fs * mnt_table_get_fs_root(struct libmnt_table *, struct
+    libmnt_fs *, unsigned long, char **)
+- name: blkid_evaluate_spec
+  params:
+  - name: spec
+    type: 'bool '
+  - name: cache
+    type: 'bool '
+  return_type: void
+  signature: char * blkid_evaluate_spec(const char *, blkid_cache *)
+- name: uuid_generate_time_safe
+  params:
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: int uuid_generate_time_safe(unsigned char *)
+- name: blkid_get_tag_value
+  params:
+  - name: cache
+    type: 'bool '
+  - name: tagname
+    type: 'bool '
+  - name: devname
+    type: 'bool '
+  return_type: void
+  signature: char * blkid_get_tag_value(blkid_cache, const char *, const char *)
+- name: blkid_new_probe_from_filename
+  params:
+  - name: filename
+    type: 'bool '
+  return_type: void
+  signature: blkid_probe blkid_new_probe_from_filename(const char *)
+- name: fdisk_reset_device_properties
+  params:
+  - name: cxt
+    type: 'bool '
+  return_type: int
+  signature: int fdisk_reset_device_properties(struct fdisk_context *)
+- name: fdisk_assign_device
+  params:
+  - name: cxt
+    type: 'bool '
+  - name: fname
+    type: 'bool '
+  - name: readonly
+    type: int
+  return_type: int
+  signature: int fdisk_assign_device(struct fdisk_context *, const char *, int)
+- name: uuid_generate
+  params:
+  - name: out
+    type: 'bool '
+  return_type: void
+  signature: void uuid_generate(unsigned char *)
+- name: blkid_probe_all_removable
+  params:
+  - name: cache
+    type: 'bool '
+  return_type: int
+  signature: int blkid_probe_all_removable(blkid_cache)
+- name: mnt_table_find_source
+  params:
+  - name: tb
+    type: 'bool '
+  - name: source
+    type: 'bool '
+  - name: direction
+    type: int
+  return_type: void
+  signature: struct libmnt_fs * mnt_table_find_source(struct libmnt_table *, const
+    char *, int)
+- name: fdisk_apply_script
+  params:
+  - name: cxt
+    type: 'bool '
+  - name: dp
+    type: 'bool '
+  return_type: int
+  signature: int fdisk_apply_script(struct fdisk_context *, struct fdisk_script *)
+- name: mnt_new_table_from_file
+  params:
+  - name: filename
+    type: 'bool '
+  return_type: void
+  signature: struct libmnt_table * mnt_new_table_from_file(const char *)
+- name: mnt_fs_match_source
+  params:
+  - name: fs
+    type: 'bool '
+  - name: source
+    type: 'bool '
+  - name: cache
+    type: 'bool '
+  return_type: int
+  signature: int mnt_fs_match_source(struct libmnt_fs *, const char *, struct libmnt_cache
+    *)
+- name: mnt_table_find_tag
+  params:
+  - name: tb
+    type: 'bool '
+  - name: tag
+    type: 'bool '
+  - name: val
+    type: 'bool '
+  - name: direction
+    type: int
+  return_type: void
+  signature: struct libmnt_fs * mnt_table_find_tag(struct libmnt_table *, const char
+    *, const char *, int)
+- name: fdisk_partition_to_string
+  params:
+  - name: pa
+    type: 'bool '
+  - name: cxt
+    type: 'bool '
+  - name: id
+    type: int
+  - name: data
+    type: 'bool '
+  return_type: int
+  signature: int fdisk_partition_to_string(struct fdisk_partition *, struct fdisk_context
+    *, int, char **)
+- name: fdisk_create_disklabel
+  params:
+  - name: cxt
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  return_type: int
+  signature: int fdisk_create_disklabel(struct fdisk_context *, const char *)
+- name: is_loopdev
+  params:
+  - name: device
+    type: 'bool '
+  return_type: int
+  signature: int is_loopdev(const char *)
+- name: mnt_table_find_srcpath
+  params:
+  - name: tb
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  - name: direction
+    type: int
+  return_type: void
+  signature: struct libmnt_fs * mnt_table_find_srcpath(struct libmnt_table *, const
+    char *, int)
+- name: mnt_table_parse_dir
+  params:
+  - name: tb
+    type: 'bool '
+  - name: dirname
+    type: 'bool '
+  return_type: int
+  signature: int mnt_table_parse_dir(struct libmnt_table *, const char *)
+- name: fdisk_apply_script_headers
+  params:
+  - name: cxt
+    type: 'bool '
+  - name: dp
+    type: 'bool '
+  return_type: int
+  signature: int fdisk_apply_script_headers(struct fdisk_context *, struct fdisk_script
+    *)
+- name: fdisk_reassign_device
+  params:
+  - name: cxt
+    type: 'bool '
+  return_type: int
+  signature: int fdisk_reassign_device(struct fdisk_context *)
+- name: fdisk_write_disklabel
+  params:
+  - name: cxt
+    type: 'bool '
+  return_type: int
+  signature: int fdisk_write_disklabel(struct fdisk_context *)
+- name: loopdev_get_backing_file
+  params:
+  - name: device
+    type: 'bool '
+  return_type: void
+  signature: char * loopdev_get_backing_file(const char *)
+- name: fdisk_assign_device_by_fd
+  params:
+  - name: cxt
+    type: 'bool '
+  - name: fd
+    type: int
+  - name: fname
+    type: 'bool '
+  - name: readonly
+    type: int
+  return_type: int
+  signature: int fdisk_assign_device_by_fd(struct fdisk_context *, int, const char
+    *, int)
+- name: mnt_table_parse_file
+  params:
+  - name: tb
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  return_type: int
+  signature: int mnt_table_parse_file(struct libmnt_table *, const char *)
+- name: loopdev_delete
+  params:
+  - name: device
+    type: 'bool '
+  return_type: int
+  signature: int loopdev_delete(const char *)
+language: c
+project: util-linux
+target_name: test_last_fuzz
+target_path: /src/util-linux/login-utils/last.c

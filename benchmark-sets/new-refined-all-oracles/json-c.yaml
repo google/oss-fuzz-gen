@@ -1,0 +1,193 @@
+functions:
+- name: array_list_insert_idx
+  params:
+  - name: arr
+    type: 'bool '
+  - name: idx
+    type: size_t
+  - name: data
+    type: 'bool '
+  return_type: int
+  signature: int array_list_insert_idx(struct array_list *, size_t, void *)
+- name: json_object_set_string_len
+  params:
+  - name: jso
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: len
+    type: int
+  return_type: int
+  signature: int json_object_set_string_len(json_object *, const char *, int)
+- name: json_object_set_string
+  params:
+  - name: jso
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: int
+  signature: int json_object_set_string(json_object *, const char *)
+- name: json_object_object_del
+  params:
+  - name: jso
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  return_type: void
+  signature: void json_object_object_del(struct json_object *, const char *)
+- name: sprintbuf
+  params:
+  - name: p
+    type: 'bool '
+  - name: msg
+    type: 'bool '
+  return_type: int
+  signature: int sprintbuf(struct printbuf *, const char *, void)
+- name: lh_table_insert
+  params:
+  - name: t
+    type: 'bool '
+  - name: k
+    type: 'bool '
+  - name: v
+    type: 'bool '
+  return_type: int
+  signature: int lh_table_insert(struct lh_table *, const void *, const void *)
+- name: json_object_int_inc
+  params:
+  - name: jso
+    type: 'bool '
+  - name: val
+    type: size_t
+  return_type: int
+  signature: int json_object_int_inc(struct json_object *, int64_t)
+- name: json_object_get_uint64
+  params:
+  - name: jso
+    type: 'bool '
+  return_type: size_t
+  signature: uint64_t json_object_get_uint64(const struct json_object *)
+- name: lh_table_delete
+  params:
+  - name: t
+    type: 'bool '
+  - name: k
+    type: 'bool '
+  return_type: int
+  signature: int lh_table_delete(struct lh_table *, const void *)
+- name: json_object_get_string
+  params:
+  - name: jso
+    type: 'bool '
+  return_type: void
+  signature: const char * json_object_get_string(struct json_object *)
+- name: json_object_get_int
+  params:
+  - name: jso
+    type: 'bool '
+  return_type: int
+  signature: int32_t json_object_get_int(const struct json_object *)
+- name: json_object_get_int64
+  params:
+  - name: jso
+    type: 'bool '
+  return_type: size_t
+  signature: int64_t json_object_get_int64(const struct json_object *)
+- name: json_object_array_put_idx
+  params:
+  - name: jso
+    type: 'bool '
+  - name: idx
+    type: size_t
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int json_object_array_put_idx(struct json_object *, size_t, struct json_object
+    *)
+- name: json_object_object_get_ex
+  params:
+  - name: jso
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  return_type: int
+  signature: int json_object_object_get_ex(const struct json_object *, const char
+    *, struct json_object **)
+- name: json_object_to_json_string_ext
+  params:
+  - name: jso
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: void
+  signature: const char * json_object_to_json_string_ext(struct json_object *, int)
+- name: json_object_to_file_ext
+  params:
+  - name: filename
+    type: 'bool '
+  - name: obj
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: int
+  signature: int json_object_to_file_ext(const char *, struct json_object *, int)
+- name: json_object_get_boolean
+  params:
+  - name: jso
+    type: 'bool '
+  return_type: int
+  signature: json_bool json_object_get_boolean(const struct json_object *)
+- name: json_object_to_json_string
+  params:
+  - name: jso
+    type: 'bool '
+  return_type: void
+  signature: const char * json_object_to_json_string(struct json_object *)
+- name: json_object_new_int
+  params:
+  - name: i
+    type: int
+  return_type: void
+  signature: struct json_object * json_object_new_int(int32_t)
+- name: json_object_object_get
+  params:
+  - name: jso
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  return_type: void
+  signature: struct json_object * json_object_object_get(const struct json_object
+    *, const char *)
+- name: json_object_array_insert_idx
+  params:
+  - name: jso
+    type: 'bool '
+  - name: idx
+    type: size_t
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int json_object_array_insert_idx(struct json_object *, size_t, struct
+    json_object *)
+- name: json_object_get_double
+  params:
+  - name: jso
+    type: 'bool '
+  return_type: double
+  signature: double json_object_get_double(const struct json_object *)
+- name: lh_table_lookup_ex
+  params:
+  - name: t
+    type: 'bool '
+  - name: k
+    type: 'bool '
+  - name: v
+    type: 'bool '
+  return_type: int
+  signature: json_bool lh_table_lookup_ex(struct lh_table *, const void *, void **)
+language: c++
+project: json-c
+target_name: tokener_parse_ex_fuzzer
+target_path: /src/tokener_parse_ex_fuzzer.cc

@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: astc-encoder
+target_name: fuzz_astc_physical_to_symbolic
+target_path: /src/astc-encoder/Source/Fuzzers/fuzz_astc_physical_to_symbolic.cpp

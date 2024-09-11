@@ -1,0 +1,62 @@
+functions:
+- name: magic_setparam
+  params:
+  - name: ms
+    type: 'bool '
+  - name: param
+    type: int
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int magic_setparam(struct magic_set *, int, const void *)
+- name: magic_errno
+  params:
+  - name: ms
+    type: 'bool '
+  return_type: int
+  signature: int magic_errno(struct magic_set *)
+- name: magic_error
+  params:
+  - name: ms
+    type: 'bool '
+  return_type: void
+  signature: const char * magic_error(struct magic_set *)
+- name: cdf_print_classid
+  params:
+  - name: buf
+    type: 'bool '
+  - name: buflen
+    type: size_t
+  - name: id
+    type: 'bool '
+  return_type: int
+  signature: int cdf_print_classid(char *, size_t, const cdf_classid_t *)
+- name: magic_getparam
+  params:
+  - name: ms
+    type: 'bool '
+  - name: param
+    type: int
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int magic_getparam(struct magic_set *, int, void *)
+- name: cdf_timespec_to_timestamp
+  params:
+  - name: t
+    type: 'bool '
+  - name: ts
+    type: 'bool '
+  return_type: int
+  signature: int cdf_timespec_to_timestamp(cdf_timestamp_t *, const struct timespec
+    *)
+- name: magic_getflags
+  params:
+  - name: ms
+    type: 'bool '
+  return_type: int
+  signature: int magic_getflags(struct magic_set *)
+language: c++
+project: file
+target_name: magic_fuzzer_loaddb
+target_path: /src/magic_fuzzer_loaddb.cc

@@ -1,0 +1,73 @@
+functions:
+- name: BrotliSetDictionaryData
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void BrotliSetDictionaryData(const uint8_t *)
+- name: BrotliDecoderSetMetadataCallbacks
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void BrotliDecoderSetMetadataCallbacks(BrotliDecoderStateInternal *,
+    brotli_decoder_metadata_start_func, brotli_decoder_metadata_chunk_func, void *)
+- name: BrotliDecoderGetErrorCode
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: BrotliDecoderErrorCode BrotliDecoderGetErrorCode(const BrotliDecoderStateInternal
+    *)
+- name: BrotliSharedDictionaryAttach
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int BrotliSharedDictionaryAttach(BrotliSharedDictionaryInternal *, BrotliSharedDictionaryType,
+    size_t, const uint8_t *)
+- name: BrotliDecoderIsUsed
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int BrotliDecoderIsUsed(const BrotliDecoderStateInternal *)
+- name: BrotliDecoderHasMoreOutput
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int BrotliDecoderHasMoreOutput(const BrotliDecoderStateInternal *)
+- name: BrotliDecoderSetParameter
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: int
+  signature: int BrotliDecoderSetParameter(BrotliDecoderStateInternal *, BrotliDecoderParameter,
+    uint32_t)
+- name: BrotliDecoderErrorString
+  params:
+  - name: ''
+    type: int
+  return_type: void
+  signature: const char * BrotliDecoderErrorString(BrotliDecoderErrorCode)
+language: c++
+project: brotli
+target_name: decode_fuzzer
+target_path: /src/brotli/c/fuzz/decode_fuzzer.c

@@ -1,0 +1,14 @@
+functions:
+- name: _ZN11ArduinoJson8V710HB426detail11VariantDatadlEPvS3_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void ArduinoJson::V710HB42::detail::VariantData::operator delete(void
+    *, void *)
+language: c++
+project: arduinojson
+target_name: msgpack_fuzzer
+target_path: /src/arduinojson/extras/fuzzing/msgpack_fuzzer.cpp

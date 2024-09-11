@@ -1,0 +1,32 @@
+functions:
+- name: mbedtls_ssl_send_fatal_handshake_failure
+  params:
+  - name: ssl
+    type: 'bool '
+  return_type: int
+  signature: int mbedtls_ssl_send_fatal_handshake_failure(mbedtls_ssl_context *)
+- name: psa_key_derivation_key_agreement
+  params:
+  - name: operation
+    type: 'bool '
+  - name: step
+    type: short
+  - name: private_key
+    type: int
+  - name: peer_key_external
+    type: 'bool '
+  - name: peer_key_length
+    type: size_t
+  return_type: int
+  signature: psa_status_t psa_key_derivation_key_agreement(psa_key_derivation_operation_t
+    *, psa_key_derivation_step_t, mbedtls_svc_key_id_t, const uint8_t *, size_t)
+- name: mbedtls_ssl_close_notify
+  params:
+  - name: ssl
+    type: 'bool '
+  return_type: int
+  signature: int mbedtls_ssl_close_notify(mbedtls_ssl_context *)
+language: c++
+project: mbedtls
+target_name: usepsa-fuzz_privkey
+target_path: /src/mbedtls/programs/fuzz/fuzz_privkey.c

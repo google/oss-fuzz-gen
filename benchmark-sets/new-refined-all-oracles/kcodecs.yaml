@@ -1,0 +1,527 @@
+functions:
+- name: _ZN11QJsonObject14fromVariantMapERK4QMapI7QString8QVariantE
+  params:
+  - name: map
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QJsonObject QJsonObject::fromVariantMap(const QVariantMap &)
+- name: _ZN11QDataStream12writeRawDataEPKcx
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: size_t
+  signature: qint64 QDataStream::writeRawData(const char *, qint64)
+- name: _ZNK5QHashI10QByteArray11QTzTimeZoneE4keysEv
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QList<unsigned char *> QHash<QByteArray, QTzTimeZone>::keys(const QHash<unsigned
+    char *, QFSFileEnginePrivate::StartAndLength> *)
+- name: _ZN10QByteArray13fromStdStringERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: s
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QByteArray QByteArray::fromStdString(const string &)
+- name: _ZN18QThreadStorageDataC2EPFvPvE
+  params:
+  - name: this
+    type: 'bool '
+  - name: func
+    type: 'bool '
+  return_type: void
+  signature: void QThreadStorageData::QThreadStorageData(DW_TAG_subroutine_typechar
+    ***)
+- name: _ZN12QJsonPrivate7Variant11toJsonArrayERK5QListI8QVariantE
+  params:
+  - name: list
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QJsonArray QJsonPrivate::Variant::toJsonArray(const QVariantList &)
+- name: _ZNK3$_07convertEPKviPvi
+  params:
+  - name: this
+    type: 'bool '
+  - name: from
+    type: 'bool '
+  - name: fromTypeId
+    type: int
+  - name: to
+    type: 'bool '
+  - name: toTypeId
+    type: int
+  return_type: bool
+  signature: bool $_0::convert(const struct void *, const void *, int, void *, int)
+- name: _ZN10QByteArrayaSEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: str
+    type: 'bool '
+  return_type: void
+  signature: QByteArray & QByteArray::operator=(const char *)
+- name: _ZNK13QMimeDatabase20mimeTypesForFileNameERK7QString
+  params:
+  - name: this
+    type: 'bool '
+  - name: fileName
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QList<QMimeType> QMimeDatabase::mimeTypesForFileName(const QString &)
+- name: _ZN10QByteArray7prependEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: QByteArray & QByteArray::prepend(const char *)
+- name: _ZNK13QStaticPlugin8metaDataEv
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QJsonObject QStaticPlugin::metaData(const struct QStaticPlugin *)
+- name: _ZN23QCoreApplicationPrivate13checkInstanceEPKc
+  params:
+  - name: function
+    type: 'bool '
+  return_type: bool
+  signature: bool QCoreApplicationPrivate::checkInstance(const char *)
+- name: _ZN13QJsonDocument11fromVariantERK8QVariant
+  params:
+  - name: variant
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QJsonDocument QJsonDocument::fromVariant(const QVariant &)
+- name: _ZN11QDataStream11readRawDataEPcx
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: size_t
+  signature: qint64 QDataStream::readRawData(char *, qint64)
+- name: _ZN18QMetaObjectPrivate31parameterTypeNamesFromSignatureEPKc
+  params:
+  - name: signature
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QList<QByteArray> QMetaObjectPrivate::parameterTypeNamesFromSignature(const
+    char *)
+- name: _ZN11QDataStream11readRawDataEPci
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: len
+    type: int
+  return_type: int
+  signature: int QDataStream::readRawData(char *, int)
+- name: _ZN11QTextStreamlsEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: string
+    type: 'bool '
+  return_type: void
+  signature: QTextStream & QTextStream::operator<<(const char *)
+- name: _ZN11QTextStreamrsEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: c
+    type: 'bool '
+  return_type: void
+  signature: QTextStream & QTextStream::operator>>(char *)
+- name: _ZN16QStringConverter15encodingForNameEPKc
+  params:
+  - name: name
+    type: 'bool '
+  return_type: size_t
+  signature: optional<QStringConverter::Encoding> QStringConverter::encodingForName(const
+    char *)
+- name: _ZN10QByteArray6appendEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: QByteArray & QByteArray::append(const char *)
+- name: _ZN20QMimeDatabasePrivate15mimeTypeForFileERK7QStringRK9QFileInfoN13QMimeDatabase9MatchModeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: fileName
+    type: 'bool '
+  - name: fileInfo
+    type: 'bool '
+  - name: mode
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: QMimeType QMimeDatabasePrivate::mimeTypeForFile(const QString &, const
+    QFileInfo &, DW_TAG_enumeration_typeMatchMode)
+- name: _ZNK14QObjectPrivate12receiverListEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: signal
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QObjectList QObjectPrivate::receiverList(const char *)
+- name: _ZN11QDataStream9readBlockEPci
+  params:
+  - name: this
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: len
+    type: int
+  return_type: int
+  signature: int QDataStream::readBlock(char *, int)
+- name: _ZN11QDataStream9readBlockEPcx
+  params:
+  - name: this
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: size_t
+  signature: qint64 QDataStream::readBlock(char *, qint64)
+- name: _ZN5QChar14compare_helperES_PKc
+  params:
+  - name: lhs
+    type: short
+  - name: rhs
+    type: 'bool '
+  return_type: int
+  signature: int QChar::compare_helper(const char *)
+- name: _ZZN20QMimeDatabasePrivate26mimeTypeForFileNameAndDataERK7QStringP9QIODeviceENK3$_0clES4_
+  params:
+  - name: this
+    type: 'bool '
+  - name: device
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QMimeType QMimeDatabasePrivate::operator()(const void *, QIODevice *)
+- name: _ZN20QMimeDatabasePrivate15mimeTypeForDataEP9QIODevice
+  params:
+  - name: this
+    type: 'bool '
+  - name: device
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QMimeType QMimeDatabasePrivate::mimeTypeForData(QIODevice *)
+- name: _ZN10QJsonValue11fromVariantERK8QVariant
+  params:
+  - name: variant
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QJsonValue QJsonValue::fromVariant(const QVariant &)
+- name: _ZNK7QObject8propertyEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QVariant QObject::property(const char *)
+- name: _ZN11QDataStream12writeRawDataEPKci
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: len
+    type: int
+  return_type: int
+  signature: int QDataStream::writeRawData(const char *, int)
+- name: _ZN10QJsonArray15fromVariantListERK5QListI8QVariantE
+  params:
+  - name: list
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QJsonArray QJsonArray::fromVariantList(const QVariantList &)
+- name: _ZNK13QMimeDatabase15mimeTypeForFileERK9QFileInfoNS_9MatchModeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: fileInfo
+    type: 'bool '
+  - name: mode
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: QMimeType QMimeDatabase::mimeTypeForFile(const QFileInfo &, DW_TAG_enumeration_typeMatchMode)
+- name: _ZN20QMimeDatabasePrivate24mimeTypeForFileExtensionERK7QString
+  params:
+  - name: this
+    type: 'bool '
+  - name: fileName
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QMimeType QMimeDatabasePrivate::mimeTypeForFileExtension(const QString
+    &)
+- name: _ZN20QMimeDatabasePrivate26mimeTypeForFileNameAndDataERK7QStringP9QIODevice
+  params:
+  - name: this
+    type: 'bool '
+  - name: fileName
+    type: 'bool '
+  - name: device
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QMimeType QMimeDatabasePrivate::mimeTypeForFileNameAndData(const QString
+    &, QIODevice *)
+- name: _ZNK13QMimeDatabase26mimeTypeForFileNameAndDataERK7QStringRK10QByteArray
+  params:
+  - name: this
+    type: 'bool '
+  - name: fileName
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QMimeType QMimeDatabase::mimeTypeForFileNameAndData(const QString &,
+    const QByteArray &)
+- name: _ZN11QMetaObject19normalizedSignatureEPKc
+  params:
+  - name: method
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QByteArray QMetaObject::normalizedSignature(const char *)
+- name: _ZN11QDataStreamlsEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: QDataStream & QDataStream::operator<<(const char *)
+- name: _Z11qt_readlinkPKc
+  params:
+  - name: path
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QByteArray qt_readlink(const char *)
+- name: _ZN20QMimeDatabasePrivate10findByDataERK10QByteArrayPi
+  params:
+  - name: this
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: accuracyPtr
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QMimeType QMimeDatabasePrivate::findByData(const QByteArray &, int *)
+- name: _ZN11QMetaObject14normalizedTypeEPKc
+  params:
+  - name: type
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QByteArray QMetaObject::normalizedType(const char *)
+- name: _ZN20QMimeDatabasePrivate12mimeInheritsERK7QStringS2_
+  params:
+  - name: this
+    type: 'bool '
+  - name: mime
+    type: 'bool '
+  - name: parent
+    type: 'bool '
+  return_type: bool
+  signature: bool QMimeDatabasePrivate::mimeInherits(const QString &, const QString
+    &)
+- name: _ZN10QByteArraypLEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: QByteArray & QByteArray::operator+=(const char *)
+- name: _ZNK13QMimeDatabase15mimeTypeForDataERK10QByteArray
+  params:
+  - name: this
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QMimeType QMimeDatabase::mimeTypeForData(const QByteArray &)
+- name: _ZNK13QMimeDatabase15mimeTypeForDataEP9QIODevice
+  params:
+  - name: this
+    type: 'bool '
+  - name: device
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QMimeType QMimeDatabase::mimeTypeForData(QIODevice *)
+- name: _ZNK14QFactoryLoader8metaDataEv
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: MetaDataList QFactoryLoader::metaData()
+- name: _ZNK13QMimeDatabase14mimeTypeForUrlERK4QUrl
+  params:
+  - name: this
+    type: 'bool '
+  - name: url
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QMimeType QMimeDatabase::mimeTypeForUrl(const QUrl &)
+- name: _Z7qgetenvPKc
+  params:
+  - name: varName
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QByteArray qgetenv(const char *)
+- name: _ZN5QChar12equal_helperES_PKc
+  params:
+  - name: lhs
+    type: short
+  - name: rhs
+    type: 'bool '
+  return_type: bool
+  signature: bool QChar::equal_helper(const char *)
+- name: _ZN12QJsonPrivate7Variant12toJsonObjectERK4QMapI7QString8QVariantE
+  params:
+  - name: map
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QJsonObject QJsonPrivate::Variant::toJsonObject(const QVariantMap &)
+- name: _ZNK7QObject9receiversEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: signal
+    type: 'bool '
+  return_type: int
+  signature: int QObject::receivers(const char *)
+- name: _ZNK13QMimeDatabase15mimeTypeForFileERK7QStringNS_9MatchModeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: fileName
+    type: 'bool '
+  - name: mode
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: QMimeType QMimeDatabase::mimeTypeForFile(const QString &, DW_TAG_enumeration_typeMatchMode)
+- name: _ZN11QJsonObject15fromVariantHashERK5QHashI7QString8QVariantE
+  params:
+  - name: hash
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QJsonObject QJsonObject::fromVariantHash(const QVariantHash &)
+- name: _ZN11QDataStream10writeBytesEPKcx
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: void
+  signature: QDataStream & QDataStream::writeBytes(const char *, qint64)
+- name: _Z21qMetaTypeTypeInternalPKc
+  params:
+  - name: typeName
+    type: 'bool '
+  return_type: int
+  signature: int qMetaTypeTypeInternal(const char *)
+- name: _ZNK13QMimeDatabase26mimeTypeForFileNameAndDataERK7QStringP9QIODevice
+  params:
+  - name: this
+    type: 'bool '
+  - name: fileName
+    type: 'bool '
+  - name: device
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QMimeType QMimeDatabase::mimeTypeForFileNameAndData(const QString &,
+    QIODevice *)
+- name: _ZN14QFactoryLoader18setExtraSearchPathERK7QString
+  params:
+  - name: this
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  return_type: void
+  signature: void QFactoryLoader::setExtraSearchPath(const QString &)
+language: c++
+project: kcodecs
+target_name: kcodecs_fuzzer
+target_path: /src/kcodecs_fuzzer.cc

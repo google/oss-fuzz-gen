@@ -1,0 +1,41 @@
+functions:
+- name: xls_set_formula_hander
+  params:
+  - name: handler
+    type: 'bool '
+  return_type: void
+  signature: void xls_set_formula_hander(xls_formula_handler)
+- name: xls_getError
+  params:
+  - name: code
+    type: int
+  return_type: void
+  signature: const char * xls_getError(xls_error_t)
+- name: xls_cell
+  params:
+  - name: pWS
+    type: 'bool '
+  - name: cellRow
+    type: short
+  - name: cellCol
+    type: short
+  return_type: void
+  signature: xlsCell * xls_cell(xlsWorkSheet *, WORD, WORD)
+- name: xls
+  params:
+  - name: debug
+    type: int
+  return_type: int
+  signature: int xls(int)
+- name: xls_row
+  params:
+  - name: pWS
+    type: 'bool '
+  - name: cellRow
+    type: short
+  return_type: void
+  signature: xlsRow * xls_row(xlsWorkSheet *, WORD)
+language: c++
+project: libxls
+target_name: fuzz_xls
+target_path: /src/libxls/fuzz/fuzz_xls.c

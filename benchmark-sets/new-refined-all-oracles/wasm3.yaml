@@ -1,0 +1,5 @@
+functions: []
+language: c
+project: wasm3
+target_name: fuzzer
+target_path: /src/wasm3/platforms/app_fuzz/fuzzer.c

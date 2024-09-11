@@ -1,0 +1,176 @@
+functions:
+- name: XML_SetHashSalt
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: int XML_SetHashSalt(XML_Parser, unsigned long)
+- name: XML_SetReturnNSTriplet
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void XML_SetReturnNSTriplet(XML_Parser, int)
+- name: XML_SetEncoding
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeXML_Status XML_SetEncoding(XML_Parser, const XML_Char
+    *)
+- name: _ZN11cmXMLParser13FindAttributeEPPKcS1_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: const char * cmXMLParser::FindAttribute(const char **, const char *)
+- name: XML_GetInputContext
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: const char * XML_GetInputContext(XML_Parser, int *, int *)
+- name: XML_GetCurrentByteIndex
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: XML_Index XML_GetCurrentByteIndex(XML_Parser)
+- name: XML_MemRealloc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void * XML_MemRealloc(XML_Parser, void *, size_t)
+- name: XML_GetParsingStatus
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void XML_GetParsingStatus(XML_Parser, XML_ParsingStatus *)
+- name: XML_StopParser
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: char
+  return_type: int
+  signature: DW_TAG_enumeration_typeXML_Status XML_StopParser(XML_Parser, XML_Bool)
+- name: XML_DefaultCurrent
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void XML_DefaultCurrent(XML_Parser)
+- name: XML_SetXmlDeclHandler
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void XML_SetXmlDeclHandler(XML_Parser, XML_XmlDeclHandler)
+- name: _ZN11cmXMLParser15ParsingCompleteEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int cmXMLParser::ParsingComplete()
+- name: XML_SetReparseDeferralEnabled
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: char
+  return_type: char
+  signature: XML_Bool XML_SetReparseDeferralEnabled(XML_Parser, XML_Bool)
+- name: XmlUtf16Encode
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int XmlUtf16Encode(int, unsigned short *)
+- name: XML_FreeContentModel
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void XML_FreeContentModel(XML_Parser, XML_Content *)
+- name: XML_ResumeParser
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeXML_Status XML_ResumeParser(XML_Parser)
+- name: XML_SetParamEntityParsing
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int XML_SetParamEntityParsing(XML_Parser, DW_TAG_enumeration_typeXML_ParamEntityParsing)
+- name: XML_MemFree
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void XML_MemFree(XML_Parser, void *)
+- name: XML_MemMalloc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void * XML_MemMalloc(XML_Parser, size_t)
+- name: XML_GetCurrentByteCount
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int XML_GetCurrentByteCount(XML_Parser)
+- name: XML_SetExternalEntityRefHandlerArg
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void XML_SetExternalEntityRefHandlerArg(XML_Parser, void *)
+- name: _ZN11cmXMLParser11ParseBufferEPKc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int cmXMLParser::ParseBuffer(const char *)
+language: c
+project: cmake
+target_name: xml_parser_fuzzer
+target_path: /src/CMake/Tests/Fuzzing/xml_parser_fuzzer.cc

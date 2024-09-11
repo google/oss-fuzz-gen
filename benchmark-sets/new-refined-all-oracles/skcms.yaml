@@ -1,0 +1,97 @@
+functions:
+- name: skcms_GetCHAD
+  params:
+  - name: profile
+    type: 'bool '
+  - name: m
+    type: 'bool '
+  return_type: bool
+  signature: bool skcms_GetCHAD(const skcms_ICCProfile *, skcms_Matrix3x3 *)
+- name: skcms_TransferFunction_makeScaledHLGish
+  params:
+  - name: tf
+    type: 'bool '
+  - name: K
+    type: float
+  - name: R
+    type: float
+  - name: G
+    type: float
+  - name: a
+    type: float
+  - name: b
+    type: float
+  - name: c
+    type: float
+  return_type: bool
+  signature: bool skcms_TransferFunction_makeScaledHLGish(skcms_TransferFunction *,
+    float, float, float, float, float, float)
+- name: skcms_GetWTPT
+  params:
+  - name: profile
+    type: 'bool '
+  - name: xyz
+    type: 'bool '
+  return_type: bool
+  signature: bool skcms_GetWTPT(const skcms_ICCProfile *, float *)
+- name: skcms_GetInputChannelCount
+  params:
+  - name: profile
+    type: 'bool '
+  return_type: int
+  signature: int skcms_GetInputChannelCount(const skcms_ICCProfile *)
+- name: skcms_AdaptToXYZD50
+  params:
+  - name: wx
+    type: float
+  - name: wy
+    type: float
+  - name: toXYZD50
+    type: 'bool '
+  return_type: bool
+  signature: bool skcms_AdaptToXYZD50(float, float, skcms_Matrix3x3 *)
+- name: skcms_TransferFunction_getType
+  params:
+  - name: tf
+    type: 'bool '
+  return_type: int
+  signature: skcms_TFType skcms_TransferFunction_getType(const skcms_TransferFunction
+    *)
+- name: skcms_TransferFunction_makePQish
+  params:
+  - name: tf
+    type: 'bool '
+  - name: A
+    type: float
+  - name: B
+    type: float
+  - name: C
+    type: float
+  - name: D
+    type: float
+  - name: E
+    type: float
+  - name: F
+    type: float
+  return_type: bool
+  signature: bool skcms_TransferFunction_makePQish(skcms_TransferFunction *, float,
+    float, float, float, float, float)
+- name: _ZN13skcms_private8baselineL4clutEPK9skcms_A2BPDv4_fS5_S5_S4_
+  params:
+  - name: a2b
+    type: 'bool '
+  - name: r
+    type: 'bool '
+  - name: g
+    type: 'bool '
+  - name: b
+    type: 'bool '
+  - name: a
+    type: 'bool '
+  return_type: void
+  signature: void skcms_private::baseline::clut(const skcms_A2B *, F *, F *, F *,
+    F)
+language: c++
+project: skcms
+target_name: iccprofile_info
+target_path: /src/skcms/fuzz/fuzz_iccprofile_info.c

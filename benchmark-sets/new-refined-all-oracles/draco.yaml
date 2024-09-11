@@ -1,0 +1,283 @@
+functions:
+- name: _ZN5draco4Mesh15DeleteAttributeEi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void draco::Mesh::DeleteAttribute(int)
+- name: _ZN5draco11CornerTable22ComputeOppositeCornersEPi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool draco::CornerTable::ComputeOppositeCorners(int *)
+- name: _ZNK5draco10PointCloud18ComputeBoundingBoxEv
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: BoundingBox draco::PointCloud::ComputeBoundingBox()
+- name: _ZN5draco18VertexRingIteratorINS_24MeshAttributeCornerTableEE4NextEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void draco::VertexRingIterator<draco::MeshAttributeCornerTable>::Next(VertexRingIterator<draco::MeshAttributeCornerTable>
+    *)
+- name: _ZNK5draco11CornerTable13IsDegeneratedENS_9IndexTypeIjNS_19FaceIndex_tag_type_EEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: face
+    type: int
+  return_type: bool
+  signature: bool draco::CornerTable::IsDegenerated(FaceIndex)
+- name: _ZN5draco28AttributeOctahedronTransform18TransformAttributeERKNS_14PointAttributeERKNSt3__16vectorINS_9IndexTypeIjNS_20PointIndex_tag_type_EEENS4_9allocatorIS8_EEEEPS1_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool draco::AttributeOctahedronTransform::TransformAttribute(const PointAttribute
+    &, const vector<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>, std::__1::allocator<draco::IndexType<unsigned
+    int, draco::PointIndex_tag_type_> > > &, PointAttribute *)
+- name: _ZNK5draco28AttributeOctahedronTransform25GeneratePortableAttributeERKNS_14PointAttributeERKNSt3__16vectorINS_9IndexTypeIjNS_20PointIndex_tag_type_EEENS4_9allocatorIS8_EEEEiPS1_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool draco::AttributeOctahedronTransform::GeneratePortableAttribute(const
+    PointAttribute &, const vector<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>,
+    std::__1::allocator<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>
+    > > &, int, PointAttribute *)
+- name: _ZN5draco18AttributeTransform24InitTransformedAttributeERKNS_14PointAttributeEi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: unique_ptr<draco::PointAttribute, std::__1::default_delete<draco::PointAttribute>
+    > draco::AttributeTransform::InitTransformedAttribute(const PointAttribute &,
+    int)
+- name: _ZN5draco18VertexRingIteratorINS_11CornerTableEE4NextEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void draco::VertexRingIterator<draco::CornerTable>::Next(VertexRingIterator<draco::MeshAttributeCornerTable>
+    *)
+- name: _ZN5draco4Mesh25ApplyPointIdDeduplicationERKNS_15IndexTypeVectorINS_9IndexTypeIjNS_20PointIndex_tag_type_EEES4_EERKNSt3__16vectorIS4_NS8_9allocatorIS4_EEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void draco::Mesh::ApplyPointIdDeduplication(const IndexTypeVector<draco::IndexType<unsigned
+    int, draco::PointIndex_tag_type_>, draco::IndexType<unsigned int, draco::PointIndex_tag_type_>
+    > &, const vector<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>,
+    std::__1::allocator<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>
+    > > &)
+- name: _ZN5draco14PointAttribute4InitENS_17GeometryAttribute4TypeEaNS_8DataTypeEbm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: char
+  - name: ''
+    type: int
+  - name: ''
+    type: bool
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void draco::PointAttribute::Init(DW_TAG_enumeration_typeType, int8_t,
+    DW_TAG_enumeration_typeDataType, bool, size_t)
+- name: _ZN5draco10PointCloud25ApplyPointIdDeduplicationERKNS_15IndexTypeVectorINS_9IndexTypeIjNS_20PointIndex_tag_type_EEES4_EERKNSt3__16vectorIS4_NS8_9allocatorIS4_EEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void draco::PointCloud::ApplyPointIdDeduplication(const IndexTypeVector<draco::IndexType<unsigned
+    int, draco::PointIndex_tag_type_>, draco::IndexType<unsigned int, draco::PointIndex_tag_type_>
+    > &, const vector<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>,
+    std::__1::allocator<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>
+    > > &)
+- name: _ZN5draco15MetadataDecoder14DecodeMetadataEPNS_13DecoderBufferEPNS_8MetadataE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool draco::MetadataDecoder::DecodeMetadata(DecoderBuffer *, Metadata
+    *)
+- name: _ZN5draco24MeshAttributeCornerTable17InitFromAttributeEPKNS_4MeshEPKNS_11CornerTableEPKNS_14PointAttributeE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool draco::MeshAttributeCornerTable::InitFromAttribute(const Mesh *,
+    const CornerTable *, const PointAttribute *)
+- name: _ZN5draco10PointCloud12AddAttributeERKNS_17GeometryAttributeEbj
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  - name: ''
+    type: int
+  return_type: int
+  signature: int draco::PointCloud::AddAttribute(const GeometryAttribute &, bool,
+    ValueType)
+- name: _ZNK5draco10PointCloud15CreateAttributeERKNS_17GeometryAttributeEbj
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  - name: ''
+    type: int
+  return_type: void
+  signature: unique_ptr<draco::PointAttribute, std::__1::default_delete<draco::PointAttribute>
+    > draco::PointCloud::CreateAttribute(const GeometryAttribute &, bool, ValueType)
+- name: _ZN5draco30AttributeQuantizationTransform18TransformAttributeERKNS_14PointAttributeERKNSt3__16vectorINS_9IndexTypeIjNS_20PointIndex_tag_type_EEENS4_9allocatorIS8_EEEEPS1_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool draco::AttributeQuantizationTransform::TransformAttribute(const
+    PointAttribute &, const vector<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>,
+    std::__1::allocator<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>
+    > > &, PointAttribute *)
+- name: _ZNK5draco30AttributeQuantizationTransform25GeneratePortableAttributeERKNS_14PointAttributeERKNSt3__16vectorINS_9IndexTypeIjNS_20PointIndex_tag_type_EEENS4_9allocatorIS8_EEEEiPS1_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void draco::AttributeQuantizationTransform::GeneratePortableAttribute(const
+    PointAttribute &, const vector<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>,
+    std::__1::allocator<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>
+    > > &, int, PointAttribute *)
+- name: _ZN5draco11CornerTable21BreakNonManifoldEdgesEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool draco::CornerTable::BreakNonManifoldEdges()
+- name: _ZN5draco10PointCloud15DeleteAttributeEi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void draco::PointCloud::DeleteAttribute(int)
+- name: _ZN5draco16GeometryMetadataC2ERKS0_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void draco::GeometryMetadata::GeometryMetadata(const GeometryMetadata
+    &)
+- name: _ZN5draco11CornerTable20ComputeVertexCornersEi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: bool
+  signature: bool draco::CornerTable::ComputeVertexCorners(int)
+- name: _ZNK5draco30AttributeQuantizationTransform25GeneratePortableAttributeERKNS_14PointAttributeEiPS1_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void draco::AttributeQuantizationTransform::GeneratePortableAttribute(const
+    PointAttribute &, int, PointAttribute *)
+- name: _ZN5draco10PointCloud19DeduplicatePointIdsEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void draco::PointCloud::DeduplicatePointIds()
+- name: _ZN5draco8MetadataC2ERKS0_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void draco::Metadata::Metadata(const Metadata &)
+language: c++
+project: draco
+target_name: draco_mesh_decoder_without_dequantization_fuzzer
+target_path: /src/draco/src/draco/tools/fuzz/draco_mesh_decoder_without_dequantization_fuzzer.cc

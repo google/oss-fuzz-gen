@@ -1,0 +1,307 @@
+functions:
+- name: crypto_auth_hmacsha512
+  params:
+  - name: out
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: inlen
+    type: size_t
+  - name: k
+    type: 'bool '
+  return_type: int
+  signature: int crypto_auth_hmacsha512(unsigned char *, const unsigned char *, unsigned
+    long long, const unsigned char *)
+- name: ristretto255_p3_tobytes
+  params:
+  - name: s
+    type: 'bool '
+  - name: h
+    type: 'bool '
+  return_type: void
+  signature: void ristretto255_p3_tobytes(unsigned char *, const ge25519_p3 *)
+- name: crypto_auth_hmacsha512_verify
+  params:
+  - name: h
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: inlen
+    type: size_t
+  - name: k
+    type: 'bool '
+  return_type: int
+  signature: int crypto_auth_hmacsha512_verify(const unsigned char *, const unsigned
+    char *, unsigned long long, const unsigned char *)
+- name: argon2_fill_segment_avx2
+  params:
+  - name: instance
+    type: 'bool '
+  - name: position
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void argon2_fill_segment_avx2(const argon2_instance_t *, argon2_position_t)
+- name: argon2_fill_segment_avx512f
+  params:
+  - name: instance
+    type: 'bool '
+  - name: position
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void argon2_fill_segment_avx512f(const argon2_instance_t *, argon2_position_t)
+- name: crypto_generichash_blake2b_salt_personal
+  params:
+  - name: out
+    type: 'bool '
+  - name: outlen
+    type: size_t
+  - name: in
+    type: 'bool '
+  - name: inlen
+    type: size_t
+  - name: key
+    type: 'bool '
+  - name: keylen
+    type: size_t
+  - name: salt
+    type: 'bool '
+  - name: personal
+    type: 'bool '
+  return_type: int
+  signature: int crypto_generichash_blake2b_salt_personal(unsigned char *, size_t,
+    const unsigned char *, unsigned long long, const unsigned char *, size_t, const
+    unsigned char *, const unsigned char *)
+- name: crypto_generichash_blake2b_init_salt_personal
+  params:
+  - name: state
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: keylen
+    type: size_t
+  - name: outlen
+    type: size_t
+  - name: salt
+    type: 'bool '
+  - name: personal
+    type: 'bool '
+  return_type: int
+  signature: int crypto_generichash_blake2b_init_salt_personal(crypto_generichash_blake2b_state
+    *, const unsigned char *, const size_t, const size_t, const unsigned char *, const
+    unsigned char *)
+- name: ge25519_from_uniform
+  params:
+  - name: s
+    type: 'bool '
+  - name: r
+    type: 'bool '
+  return_type: void
+  signature: void ge25519_from_uniform(unsigned char *, const unsigned char *)
+- name: ristretto255_frombytes
+  params:
+  - name: h
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: int
+  signature: int ristretto255_frombytes(ge25519_p3 *, const unsigned char *)
+- name: ristretto255_from_hash
+  params:
+  - name: s
+    type: 'bool '
+  - name: h
+    type: 'bool '
+  return_type: void
+  signature: void ristretto255_from_hash(unsigned char *, const unsigned char *)
+- name: blake2b_init_key_salt_personal
+  params:
+  - name: S
+    type: 'bool '
+  - name: outlen
+    type: char
+  - name: key
+    type: 'bool '
+  - name: keylen
+    type: char
+  - name: salt
+    type: 'bool '
+  - name: personal
+    type: 'bool '
+  return_type: int
+  signature: int blake2b_init_key_salt_personal(blake2b_state *, const uint8_t, const
+    void *, const uint8_t, const void *, const void *)
+- name: ge25519_double_scalarmult_vartime
+  params:
+  - name: r
+    type: 'bool '
+  - name: a
+    type: 'bool '
+  - name: A
+    type: 'bool '
+  - name: b
+    type: 'bool '
+  return_type: void
+  signature: void ge25519_double_scalarmult_vartime(ge25519_p2 *, const unsigned char
+    *, const ge25519_p3 *, const unsigned char *)
+- name: argon2_fill_segment_ref
+  params:
+  - name: instance
+    type: 'bool '
+  - name: position
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void argon2_fill_segment_ref(const argon2_instance_t *, argon2_position_t)
+- name: crypto_generichash_blake2b_init
+  params:
+  - name: state
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: keylen
+    type: size_t
+  - name: outlen
+    type: size_t
+  return_type: int
+  signature: int crypto_generichash_blake2b_init(crypto_generichash_blake2b_state
+    *, const unsigned char *, const size_t, const size_t)
+- name: ge25519_frombytes
+  params:
+  - name: h
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: int
+  signature: int ge25519_frombytes(ge25519_p3 *, const unsigned char *)
+- name: crypto_hash_sha512
+  params:
+  - name: out
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: inlen
+    type: size_t
+  return_type: int
+  signature: int crypto_hash_sha512(unsigned char *, const unsigned char *, unsigned
+    long long)
+- name: crypto_generichash_blake2b
+  params:
+  - name: out
+    type: 'bool '
+  - name: outlen
+    type: size_t
+  - name: in
+    type: 'bool '
+  - name: inlen
+    type: size_t
+  - name: key
+    type: 'bool '
+  - name: keylen
+    type: size_t
+  return_type: int
+  signature: int crypto_generichash_blake2b(unsigned char *, size_t, const unsigned
+    char *, unsigned long long, const unsigned char *, size_t)
+- name: ge25519_frombytes_negate_vartime
+  params:
+  - name: h
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: int
+  signature: int ge25519_frombytes_negate_vartime(ge25519_p3 *, const unsigned char
+    *)
+- name: ge25519_scalarmult_base
+  params:
+  - name: h
+    type: 'bool '
+  - name: a
+    type: 'bool '
+  return_type: void
+  signature: void ge25519_scalarmult_base(ge25519_p3 *, const unsigned char *)
+- name: argon2_fill_segment_ssse3
+  params:
+  - name: instance
+    type: 'bool '
+  - name: position
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void argon2_fill_segment_ssse3(const argon2_instance_t *, argon2_position_t)
+- name: blake2b_salt_personal
+  params:
+  - name: out
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: outlen
+    type: char
+  - name: inlen
+    type: size_t
+  - name: keylen
+    type: char
+  - name: salt
+    type: 'bool '
+  - name: personal
+    type: 'bool '
+  return_type: int
+  signature: int blake2b_salt_personal(uint8_t *, const void *, const void *, const
+    uint8_t, const uint64_t, uint8_t, const void *, const void *)
+- name: ge25519_scalarmult
+  params:
+  - name: h
+    type: 'bool '
+  - name: a
+    type: 'bool '
+  - name: p
+    type: 'bool '
+  return_type: void
+  signature: void ge25519_scalarmult(ge25519_p3 *, const unsigned char *, const ge25519_p3
+    *)
+- name: blake2b
+  params:
+  - name: out
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: outlen
+    type: char
+  - name: inlen
+    type: size_t
+  - name: keylen
+    type: char
+  return_type: int
+  signature: int blake2b(uint8_t *, const void *, const void *, const uint8_t, const
+    uint64_t, uint8_t)
+- name: ge25519_is_on_main_subgroup
+  params:
+  - name: p
+    type: 'bool '
+  return_type: int
+  signature: int ge25519_is_on_main_subgroup(const ge25519_p3 *)
+- name: blake2b_init_key
+  params:
+  - name: S
+    type: 'bool '
+  - name: outlen
+    type: char
+  - name: key
+    type: 'bool '
+  - name: keylen
+    type: char
+  return_type: int
+  signature: int blake2b_init_key(blake2b_state *, const uint8_t, const void *, const
+    uint8_t)
+language: c++
+project: libsodium
+target_name: secret_key_auth_fuzzer
+target_path: /src/secret_key_auth_fuzzer.cc

@@ -1,0 +1,5 @@
+functions: []
+language: c
+project: oniguruma
+target_name: fuzzer
+target_path: /src/oniguruma/harnesses/base.c

@@ -1,0 +1,194 @@
+functions:
+- name: pn_condition_info
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: pn_data_t * pn_condition_info(pn_condition_t *)
+- name: pn_message_properties
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: pn_data_t * pn_message_properties(pn_message_t *)
+- name: pn_terminus_outcomes
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: pn_data_t * pn_terminus_outcomes(pn_terminus_t *)
+- name: pn_data_appendn
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int pn_data_appendn(pn_data_t *, pn_data_t *, int)
+- name: pn_framing_send_amqp_with_payload
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: short
+  - name: ''
+    type: size_t
+  - name: payload
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_framing_send_amqp_with_payload(pn_transport_t *, uint16_t, pn_bytes_t,
+    pn_bytes_t)
+- name: pn_terminus_filter
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: pn_data_t * pn_terminus_filter(pn_terminus_t *)
+- name: pn_message_encode2
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: ssize_t pn_message_encode2(pn_message_t *, pn_rwbytes_t *)
+- name: pn_connection_driver_bind
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_connection_driver_bind(pn_connection_driver_t *)
+- name: pn_message_set_inferred
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: int
+  signature: int pn_message_set_inferred(pn_message_t *, bool)
+- name: pn_condition_redirect_port
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_condition_redirect_port(pn_condition_t *)
+- name: pn_message_instructions
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: pn_data_t * pn_message_instructions(pn_message_t *)
+- name: pn_framing_send_sasl
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_framing_send_sasl(pn_transport_t *, pn_bytes_t)
+- name: pn_ssl_init
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_ssl_init(pn_ssl_t *, pn_ssl_domain_t *, const char *)
+- name: pn_message_encode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_message_encode(pn_message_t *, char *, size_t *)
+- name: pn_condition_copy
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_condition_copy(pn_condition_t *, pn_condition_t *)
+- name: pn_data_append
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_data_append(pn_data_t *, pn_data_t *)
+- name: pn_terminus_copy
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_terminus_copy(pn_terminus_t *, pn_terminus_t *)
+- name: pn_terminus_properties
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: pn_data_t * pn_terminus_properties(pn_terminus_t *)
+- name: pn_message_annotations
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: pn_data_t * pn_message_annotations(pn_message_t *)
+- name: pn_disposition_data
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: pn_data_t * pn_disposition_data(pn_disposition_t *)
+- name: pn_link_remote_properties
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: pn_data_t * pn_link_remote_properties(pn_link_t *)
+- name: pn_condition_redirect_host
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: const char * pn_condition_redirect_host(pn_condition_t *)
+- name: pn_terminus_capabilities
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: pn_data_t * pn_terminus_capabilities(pn_terminus_t *)
+- name: pn_disposition_annotations
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: pn_data_t * pn_disposition_annotations(pn_disposition_t *)
+- name: pn_data_copy
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_data_copy(pn_data_t *, pn_data_t *)
+language: c++
+project: qpid-proton
+target_name: fuzz-message-decode
+target_path: /src/qpid-proton/c/tests/fuzz/fuzz-message-decode.c

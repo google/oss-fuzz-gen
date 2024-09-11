@@ -1,0 +1,196 @@
+functions:
+- name: terminator_EnumerateInstanceExtensionProperties
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult terminator_EnumerateInstanceExtensionProperties(const char *,
+    uint32_t *, VkExtensionProperties *)
+- name: terminator_CreateDevice
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult terminator_CreateDevice(VkPhysicalDevice, const VkDeviceCreateInfo
+    *, const VkAllocationCallbacks *, VkDevice *)
+- name: vkGetInstanceProcAddr
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PFN_vkVoidFunction vkGetInstanceProcAddr(VkInstance, const char *)
+- name: terminator_EnumerateDeviceExtensionProperties
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult terminator_EnumerateDeviceExtensionProperties(VkPhysicalDevice,
+    const char *, uint32_t *, VkExtensionProperties *)
+- name: terminator_CreateDisplayPlaneSurfaceKHR
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult terminator_CreateDisplayPlaneSurfaceKHR(VkInstance, const VkDisplaySurfaceCreateInfoKHR
+    *, const VkAllocationCallbacks *, VkSurfaceKHR *)
+- name: terminator_EnumeratePhysicalDevices
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult terminator_EnumeratePhysicalDevices(VkInstance, uint32_t *,
+    VkPhysicalDevice *)
+- name: vkCreateDevice
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult vkCreateDevice(VkPhysicalDevice, const VkDeviceCreateInfo *,
+    const VkAllocationCallbacks *, VkDevice *)
+- name: vkEnumeratePhysicalDeviceGroups
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult vkEnumeratePhysicalDeviceGroups(VkInstance, uint32_t *, VkPhysicalDeviceGroupProperties
+    *)
+- name: terminator_pre_instance_EnumerateInstanceExtensionProperties
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult terminator_pre_instance_EnumerateInstanceExtensionProperties(const
+    VkEnumerateInstanceExtensionPropertiesChain *, const char *, uint32_t *, VkExtensionProperties
+    *)
+- name: terminator_CreateInstance
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult terminator_CreateInstance(const VkInstanceCreateInfo *, const
+    VkAllocationCallbacks *, VkInstance *)
+- name: loader_layer_create_device
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult loader_layer_create_device(VkInstance, VkPhysicalDevice, const
+    VkDeviceCreateInfo *, const VkAllocationCallbacks *, VkDevice *, PFN_vkGetInstanceProcAddr,
+    PFN_vkGetDeviceProcAddr *)
+- name: loader_lookup_device_dispatch_table
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void * loader_lookup_device_dispatch_table(const VkLayerDispatchTable
+    *, const char *, _Bool *)
+- name: terminator_EnumeratePhysicalDeviceGroups
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult terminator_EnumeratePhysicalDeviceGroups(VkInstance, uint32_t
+    *, VkPhysicalDeviceGroupProperties *)
+- name: extension_instance_gpa
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool extension_instance_gpa(struct loader_instance *, const char *, void
+    **)
+- name: vkEnumeratePhysicalDevices
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: VkResult vkEnumeratePhysicalDevices(VkInstance, uint32_t *, VkPhysicalDevice
+    *)
+- name: loader_gpa_instance_terminator
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PFN_vkVoidFunction loader_gpa_instance_terminator(VkInstance, const char
+    *)
+language: c
+project: vulkan-loader
+target_name: settings_fuzzer
+target_path: /src/settings_fuzzer.c

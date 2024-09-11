@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: libcbor
+target_name: cbor_load_fuzzer
+target_path: /src/libcbor/oss-fuzz/cbor_load_fuzzer.cc

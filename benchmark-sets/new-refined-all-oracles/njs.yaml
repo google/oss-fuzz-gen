@@ -1,0 +1,283 @@
+functions:
+- name: njs_vm_value_enumerate
+  params:
+  - name: vm
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: flags
+    type: int
+  - name: retval
+    type: 'bool '
+  return_type: void
+  signature: njs_value_t * njs_vm_value_enumerate(njs_vm_t *, njs_value_t *, uint32_t,
+    njs_value_t *)
+- name: njs_error_constructor
+  params:
+  - name: vm
+    type: 'bool '
+  - name: args
+    type: 'bool '
+  - name: nargs
+    type: int
+  - name: type
+    type: size_t
+  - name: retval
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_error_constructor(njs_vm_t *, njs_value_t *, njs_uint_t,
+    njs_index_t, njs_value_t *)
+- name: njs_string_decode_hex
+  params:
+  - name: vm
+    type: 'bool '
+  - name: retval
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_string_decode_hex(njs_vm_t *, njs_value_t *, const njs_str_t
+    *)
+- name: njs_vm_object_iterate
+  params:
+  - name: vm
+    type: 'bool '
+  - name: args
+    type: 'bool '
+  - name: handler
+    type: 'bool '
+  - name: retval
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_vm_object_iterate(njs_vm_t *, njs_iterator_args_t *, njs_iterator_handler_t,
+    njs_value_t *)
+- name: njs_vm_external_constructor
+  params:
+  - name: vm
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: native
+    type: 'bool '
+  - name: ctor_props
+    type: 'bool '
+  - name: ctor_nprops
+    type: int
+  - name: proto_props
+    type: 'bool '
+  - name: proto_nprops
+    type: int
+  return_type: int
+  signature: njs_int_t njs_vm_external_constructor(njs_vm_t *, const njs_str_t *,
+    njs_function_native_t, const njs_external_t *, njs_uint_t, const njs_external_t
+    *, njs_uint_t)
+- name: njs_vm_function
+  params:
+  - name: vm
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  return_type: void
+  signature: njs_function_t * njs_vm_function(njs_vm_t *, const njs_str_t *)
+- name: njs_vm_prototype
+  params:
+  - name: vm
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: retval
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_vm_prototype(njs_vm_t *, njs_value_t *, njs_value_t *)
+- name: njs_vm_value_string_create_chb
+  params:
+  - name: vm
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: chain
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_vm_value_string_create_chb(njs_vm_t *, njs_value_t *, njs_chb_t
+    *)
+- name: njs_string_base64url
+  params:
+  - name: vm
+    type: 'bool '
+  - name: retval
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_string_base64url(njs_vm_t *, njs_value_t *, const njs_str_t
+    *)
+- name: njs_vm_object_alloc
+  params:
+  - name: vm
+    type: 'bool '
+  - name: retval
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_vm_object_alloc(njs_vm_t *, njs_value_t *, void)
+- name: njs_vm_array_prop
+  params:
+  - name: vm
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: index
+    type: size_t
+  - name: retval
+    type: 'bool '
+  return_type: void
+  signature: njs_value_t * njs_vm_array_prop(njs_vm_t *, njs_value_t *, int64_t, njs_opaque_value_t
+    *)
+- name: njs_string_decode_base64url
+  params:
+  - name: vm
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_string_decode_base64url(njs_vm_t *, njs_value_t *, const
+    njs_str_t *)
+- name: njs_object_prop_descriptor
+  params:
+  - name: vm
+    type: 'bool '
+  - name: dest
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_object_prop_descriptor(njs_vm_t *, njs_value_t *, njs_value_t
+    *, njs_value_t *)
+- name: njs_string_decode_base64
+  params:
+  - name: vm
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_string_decode_base64(njs_vm_t *, njs_value_t *, const njs_str_t
+    *)
+- name: njs_number_global_is_finite
+  params:
+  - name: vm
+    type: 'bool '
+  - name: args
+    type: 'bool '
+  - name: nargs
+    type: int
+  - name: unused
+    type: size_t
+  - name: retval
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_number_global_is_finite(njs_vm_t *, njs_value_t *, njs_uint_t,
+    njs_index_t, njs_value_t *)
+- name: njs_vm_value_to_string
+  params:
+  - name: vm
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_vm_value_to_string(njs_vm_t *, njs_str_t *, njs_value_t
+    *)
+- name: njs_object_get_prototype_of
+  params:
+  - name: vm
+    type: 'bool '
+  - name: args
+    type: 'bool '
+  - name: nargs
+    type: int
+  - name: unused
+    type: size_t
+  - name: retval
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_object_get_prototype_of(njs_vm_t *, njs_value_t *, njs_uint_t,
+    njs_index_t, njs_value_t *)
+- name: njs_await_rejected
+  params:
+  - name: vm
+    type: 'bool '
+  - name: args
+    type: 'bool '
+  - name: nargs
+    type: int
+  - name: unused
+    type: size_t
+  - name: retval
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_await_rejected(njs_vm_t *, njs_value_t *, njs_uint_t, njs_index_t,
+    njs_value_t *)
+- name: njs_string_base64
+  params:
+  - name: vm
+    type: 'bool '
+  - name: retval
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_string_base64(njs_vm_t *, njs_value_t *, const njs_str_t
+    *)
+- name: njs_number_global_is_nan
+  params:
+  - name: vm
+    type: 'bool '
+  - name: args
+    type: 'bool '
+  - name: nargs
+    type: int
+  - name: unused
+    type: size_t
+  - name: retval
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_number_global_is_nan(njs_vm_t *, njs_value_t *, njs_uint_t,
+    njs_index_t, njs_value_t *)
+- name: njs_typed_array_prototype_slice
+  params:
+  - name: vm
+    type: 'bool '
+  - name: args
+    type: 'bool '
+  - name: nargs
+    type: int
+  - name: copy
+    type: size_t
+  - name: retval
+    type: 'bool '
+  return_type: int
+  signature: njs_int_t njs_typed_array_prototype_slice(njs_vm_t *, njs_value_t *,
+    njs_uint_t, njs_index_t, njs_value_t *)
+- name: njs_vm_value_array_buffer_set
+  params:
+  - name: vm
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: start
+    type: 'bool '
+  - name: size
+    type: int
+  return_type: int
+  signature: njs_int_t njs_vm_value_array_buffer_set(njs_vm_t *, njs_value_t *, const
+    u_char *, uint32_t)
+language: c++
+project: njs
+target_name: njs_process_script_fuzzer
+target_path: /src/njs/external/njs_shell.c

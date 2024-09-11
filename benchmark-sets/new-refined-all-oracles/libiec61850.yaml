@@ -1,0 +1,182 @@
+functions:
+- name: MmsValue_newIntegerFromInt16
+  params:
+  - name: integer
+    type: short
+  return_type: void
+  signature: MmsValue * MmsValue_newIntegerFromInt16(int16_t)
+- name: MmsValue_setUint32
+  params:
+  - name: self
+    type: 'bool '
+  - name: integer
+    type: int
+  return_type: void
+  signature: void MmsValue_setUint32(MmsValue *, uint32_t)
+- name: MmsVariableSpecification_getMaxEncodedSize
+  params:
+  - name: self
+    type: 'bool '
+  return_type: int
+  signature: int MmsVariableSpecification_getMaxEncodedSize(MmsVariableSpecification
+    *)
+- name: MmsValue_newIntegerFromInt8
+  params:
+  - name: integer
+    type: char
+  return_type: void
+  signature: MmsValue * MmsValue_newIntegerFromInt8(int8_t)
+- name: MmsValue_cloneToBuffer
+  params:
+  - name: self
+    type: 'bool '
+  - name: destinationAddress
+    type: 'bool '
+  return_type: void
+  signature: uint8_t * MmsValue_cloneToBuffer(const MmsValue *, uint8_t *)
+- name: MmsValue_setInt8
+  params:
+  - name: self
+    type: 'bool '
+  - name: integer
+    type: char
+  return_type: void
+  signature: void MmsValue_setInt8(MmsValue *, int8_t)
+- name: MmsValue_newMmsString
+  params:
+  - name: string
+    type: 'bool '
+  return_type: void
+  signature: MmsValue * MmsValue_newMmsString(const char *)
+- name: MmsValue_setUint16
+  params:
+  - name: self
+    type: 'bool '
+  - name: integer
+    type: short
+  return_type: void
+  signature: void MmsValue_setUint16(MmsValue *, uint16_t)
+- name: MmsValue_setInt16
+  params:
+  - name: self
+    type: 'bool '
+  - name: integer
+    type: short
+  return_type: void
+  signature: void MmsValue_setInt16(MmsValue *, int16_t)
+- name: MmsValue_getMaxEncodedSize
+  params:
+  - name: self
+    type: 'bool '
+  return_type: int
+  signature: int MmsValue_getMaxEncodedSize(MmsValue *)
+- name: MmsValue_update
+  params:
+  - name: self
+    type: 'bool '
+  - name: update
+    type: 'bool '
+  return_type: bool
+  signature: bool MmsValue_update(MmsValue *, const MmsValue *)
+- name: MmsValue_getTypeString
+  params:
+  - name: self
+    type: 'bool '
+  return_type: void
+  signature: char * MmsValue_getTypeString(MmsValue *)
+- name: MmsValue_setVisibleString
+  params:
+  - name: self
+    type: 'bool '
+  - name: string
+    type: 'bool '
+  return_type: void
+  signature: void MmsValue_setVisibleString(MmsValue *, const char *)
+- name: MmsValue_newMmsStringFromByteArray
+  params:
+  - name: byteArray
+    type: 'bool '
+  - name: size
+    type: int
+  return_type: void
+  signature: MmsValue * MmsValue_newMmsStringFromByteArray(const uint8_t *, int)
+- name: MmsValue_newIntegerFromInt64
+  params:
+  - name: integer
+    type: size_t
+  return_type: void
+  signature: MmsValue * MmsValue_newIntegerFromInt64(int64_t)
+- name: MmsValue_clone
+  params:
+  - name: self
+    type: 'bool '
+  return_type: void
+  signature: MmsValue * MmsValue_clone(const MmsValue *)
+- name: MmsValue_newIntegerFromInt32
+  params:
+  - name: integer
+    type: int
+  return_type: void
+  signature: MmsValue * MmsValue_newIntegerFromInt32(int32_t)
+- name: MmsValue_setInt64
+  params:
+  - name: self
+    type: 'bool '
+  - name: integer
+    type: size_t
+  return_type: void
+  signature: void MmsValue_setInt64(MmsValue *, int64_t)
+- name: MmsValue_newVisibleString
+  params:
+  - name: string
+    type: 'bool '
+  return_type: void
+  signature: MmsValue * MmsValue_newVisibleString(const char *)
+- name: MmsValue_setUint8
+  params:
+  - name: self
+    type: 'bool '
+  - name: integer
+    type: char
+  return_type: void
+  signature: void MmsValue_setUint8(MmsValue *, uint8_t)
+- name: MmsValue_newUnsignedFromUint32
+  params:
+  - name: integer
+    type: int
+  return_type: void
+  signature: MmsValue * MmsValue_newUnsignedFromUint32(uint32_t)
+- name: MmsValue_setDeletableRecursive
+  params:
+  - name: self
+    type: 'bool '
+  return_type: void
+  signature: void MmsValue_setDeletableRecursive(MmsValue *)
+- name: MmsValue_equals
+  params:
+  - name: self
+    type: 'bool '
+  - name: otherValue
+    type: 'bool '
+  return_type: bool
+  signature: bool MmsValue_equals(const MmsValue *, const MmsValue *)
+- name: MmsValue_setInt32
+  params:
+  - name: self
+    type: 'bool '
+  - name: integer
+    type: int
+  return_type: void
+  signature: void MmsValue_setInt32(MmsValue *, int32_t)
+- name: MmsValue_setMmsString
+  params:
+  - name: self
+    type: 'bool '
+  - name: string
+    type: 'bool '
+  return_type: void
+  signature: void MmsValue_setMmsString(MmsValue *, const char *)
+language: c
+project: libiec61850
+target_name: fuzz_mms_decode
+target_path: /src/libiec61850/fuzz/fuzz_mms_decode.c

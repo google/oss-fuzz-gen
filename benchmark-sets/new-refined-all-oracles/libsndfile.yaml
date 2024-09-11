@@ -1,0 +1,27 @@
+functions:
+- name: sf_strerror
+  params:
+  - name: sndfile
+    type: 'bool '
+  return_type: void
+  signature: const char * sf_strerror(SNDFILE *)
+- name: sf_set_chunk
+  params:
+  - name: sndfile
+    type: 'bool '
+  - name: chunk_info
+    type: 'bool '
+  return_type: int
+  signature: int sf_set_chunk(SNDFILE *, const SF_CHUNK_INFO *)
+- name: sf_get_string
+  params:
+  - name: sndfile
+    type: 'bool '
+  - name: str_type
+    type: int
+  return_type: void
+  signature: const char * sf_get_string(SNDFILE *, int)
+language: c
+project: libsndfile
+target_name: sndfile_fuzzer
+target_path: /src/libsndfile/ossfuzz/sndfile_fuzzer.cc

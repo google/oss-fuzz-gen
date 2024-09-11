@@ -1,0 +1,101 @@
+functions:
+- name: _ZN11butteraugli21ButteraugliFuzzyClassEd
+  params:
+  - name: ''
+    type: double
+  return_type: double
+  signature: double butteraugli::ButteraugliFuzzyClass(double)
+- name: _ZN7guetzli15JPEGHuffmanCodeC2EOS0_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void guetzli::JPEGHuffmanCode::JPEGHuffmanCode(struct JPEGHuffmanCode
+    *, const struct JPEGHuffmanCode &)
+- name: _ZN11butteraugli11SimpleGammaEd
+  params:
+  - name: ''
+    type: double
+  return_type: double
+  signature: double butteraugli::SimpleGamma(double)
+- name: _ZN7guetzli13JPEGComponentC2ERKS0_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void guetzli::JPEGComponent::JPEGComponent(struct JPEGComponent *, const
+    struct JPEGComponent &)
+- name: _ZN11butteraugli31ButteraugliAdaptiveQuantizationEmmRKNSt3__16vectorINS1_IfNS0_9allocatorIfEEEENS2_IS4_EEEERS4_
+  params:
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool butteraugli::ButteraugliAdaptiveQuantization(size_t, size_t, const
+    vector<std::__1::vector<float, std::__1::allocator<float> >, std::__1::allocator<std::__1::vector<float,
+    std::__1::allocator<float> > > > &, vector<float, std::__1::allocator<float> >
+    &)
+- name: _ZN11butteraugli18CreateHeatMapImageERKNSt3__16vectorIfNS0_9allocatorIfEEEEddmmPNS1_IhNS2_IhEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: double
+  - name: ''
+    type: double
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void butteraugli::CreateHeatMapImage(const vector<float, std::__1::allocator<float>
+    > &, double, double, size_t, size_t, vector<unsigned char, std::__1::allocator<unsigned
+    char> > *)
+- name: _ZN11butteraugli23ButteraugliFuzzyInverseEd
+  params:
+  - name: ''
+    type: double
+  return_type: double
+  signature: double butteraugli::ButteraugliFuzzyInverse(double)
+- name: _ZN7guetzli14JPEGQuantTableC2ERKS0_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void guetzli::JPEGQuantTable::JPEGQuantTable(struct JPEGQuantTable *,
+    const struct JPEGQuantTable &)
+- name: _ZN7guetzli20OutputImageComponentC2ERKS0_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void guetzli::OutputImageComponent::~OutputImageComponent(const OutputImageComponent
+    &)
+- name: _ZN7guetzli20EstimateJpegDataSizeEiRKNSt3__16vectorINS_13JpegHistogramENS0_9allocatorIS2_EEEE
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: size_t guetzli::EstimateJpegDataSize(const int, const vector<guetzli::JpegHistogram,
+    std::__1::allocator<guetzli::JpegHistogram> > &)
+language: c++
+project: guetzli
+target_name: guetzli_fuzzer
+target_path: /src/guetzli/fuzz_target.cc

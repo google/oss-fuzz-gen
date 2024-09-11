@@ -1,0 +1,127 @@
+functions:
+- name: _ZN3uWS17WebSocketProtocolILb1E4ImplE9unmaskAllEPcS3_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void uWS::WebSocketProtocol<true, Impl>::unmaskAll(DW_TAG_restrict_typechar
+    *, DW_TAG_restrict_typechar *)
+- name: bsd_create_listen_socket_unix
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int bsd_create_listen_socket_unix(const char *, int)
+- name: _ZN3uWS16HttpResponseDataILb1EE14callOnWritableEm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: bool
+  signature: bool uWS::HttpResponseData<true>::callOnWritable(struct HttpResponseData<false>
+    *, uintmax_t)
+- name: us_socket_context_close
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void us_socket_context_close(int, struct us_socket_context_t *)
+- name: _ZZN3uWS12TemplatedAppILb1ENS_10CachingAppILb1EEEE7publishENSt3__117basic_string_viewIcNS4_11char_traitsIcEEEES8_NS_6OpCodeEbENKUlPNS_10SubscriberERNS_19TopicTreeBigMessageEE_clESB_SD_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void uWS::TemplatedApp<true, uWS::CachingApp<true> >::operator()(const
+    void *, struct Subscriber *, struct TopicTreeBigMessage &)
+- name: us_socket_context_connect_unix
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: void
+  signature: struct us_socket_t * us_socket_context_connect_unix(int, struct us_socket_context_t
+    *, const char *, int, int)
+- name: _ZN3uWS17WebSocketProtocolILb1E4ImplE11UnrolledXorILi13EEEvPcS4_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void uWS::WebSocketProtocol<true, Impl>::UnrolledXor<16>(DW_TAG_restrict_typechar
+    *, DW_TAG_restrict_typechar *)
+- name: us_socket_context_listen_unix
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: void
+  signature: struct us_listen_socket_t * us_socket_context_listen_unix(int, struct
+    us_socket_context_t *, const char *, int, int)
+- name: _ZZZN3uWS11HttpContextILb1EE4initEvENKUlP11us_socket_tPciE_clES3_S4_iENKUlPvNSt3__117basic_string_viewIcNS7_11char_traitsIcEEEEbE_clES6_SB_b
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: bool
+  return_type: void
+  signature: void * uWS::HttpContext<true>::operator()(const void *, void *, string_view,
+    bool)
+- name: _ZZ4testvEN4$_128__invokeEP11us_socket_t
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct us_socket_t * __invoke(struct us_socket_t *)
+- name: _ZN3uWS16HttpResponseDataILb0EE14callOnWritableEm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: bool
+  signature: bool uWS::HttpResponseData<false>::callOnWritable(struct HttpResponseData<false>
+    *, uintmax_t)
+- name: bsd_create_udp_socket
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int bsd_create_udp_socket(const char *, int)
+language: c++
+project: uwebsockets
+target_name: QueryParser
+target_path: /src/uWebSockets/fuzzing/QueryParser.cpp

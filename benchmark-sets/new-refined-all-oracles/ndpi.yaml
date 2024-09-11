@@ -1,0 +1,24 @@
+functions:
+- name: libinjection_sqli_callback
+  params:
+  - name: sf
+    type: 'bool '
+  - name: fn
+    type: 'bool '
+  - name: userdata
+    type: 'bool '
+  return_type: void
+  signature: void libinjection_sqli_callback(struct libinjection_sqli_state *, ptr_lookup_fn,
+    void *)
+- name: ndpi_timer_eq
+  params:
+  - name: a
+    type: 'bool '
+  - name: b
+    type: 'bool '
+  return_type: int
+  signature: unsigned int ndpi_timer_eq(const pkt_timeval *, const pkt_timeval *)
+language: c++
+project: ndpi
+target_name: fuzz_gcrypt_aes
+target_path: /src/ndpi/fuzz/fuzz_gcrypt_aes.cpp

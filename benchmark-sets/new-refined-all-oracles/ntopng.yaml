@@ -1,0 +1,460 @@
+functions:
+- name: _ZN15StringFifoQueue7enqueueEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: item
+    type: 'bool '
+  return_type: bool
+  signature: bool StringFifoQueue::enqueue(char *)
+- name: _ZN5Bloom8unsetBitEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: str
+    type: 'bool '
+  return_type: void
+  signature: void Bloom::unsetBit(char *)
+- name: _ZN14DummyInterfaceC2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void DummyInterface::DummyInterface()
+- name: _ZN15ParserInterface11processFlowEP10ParsedFlow
+  params:
+  - name: this
+    type: 'bool '
+  - name: zflow
+    type: 'bool '
+  return_type: bool
+  signature: bool ParserInterface::processFlow(ParsedFlow *)
+- name: _ZN5Prefs12loadFromFileEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  return_type: int
+  signature: int Prefs::loadFromFile(const char *)
+- name: _ZN5Prefs4helpEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void Prefs::help()
+- name: _ZN10ProtoStats5printEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: prefix
+    type: 'bool '
+  return_type: void
+  signature: void ProtoStats::print(const char *)
+- name: _ZN4Ntop23broadcastControlMessageEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: msg
+    type: 'bool '
+  return_type: bool
+  signature: bool Ntop::broadcastControlMessage(char *)
+- name: _ZN21ZMQCollectorInterface9purgeIdleElbb
+  params:
+  - name: this
+    type: 'bool '
+  - name: when
+    type: size_t
+  - name: force_idle
+    type: bool
+  - name: full_scan
+    type: bool
+  return_type: void
+  signature: void ZMQCollectorInterface::purgeIdle(time_t, bool, bool)
+- name: _ZN16SQLiteAlertStore8execFileEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  return_type: int
+  signature: int SQLiteAlertStore::execFile(const char *)
+- name: _ZN5Prefs9setOptionEiPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: optkey
+    type: int
+  - name: optarg
+    type: 'bool '
+  return_type: int
+  signature: int Prefs::setOption(int, char *)
+- name: _ZN13ViewInterface19viewed_flows_walkerEP4FlowPK7timeval
+  params:
+  - name: this
+    type: 'bool '
+  - name: f
+    type: 'bool '
+  - name: tv
+    type: 'bool '
+  return_type: void
+  signature: void ViewInterface::viewed_flows_walker(Flow *, const struct timeval
+    *)
+- name: _ZN5Bloom6setBitEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: str
+    type: 'bool '
+  return_type: void
+  signature: void Bloom::setBit(char *)
+- name: _ZN19CustomFlowLuaScript14periodicUpdateEP4Flow
+  params:
+  - name: this
+    type: 'bool '
+  - name: f
+    type: 'bool '
+  return_type: void
+  signature: void CustomFlowLuaScript::periodicUpdate(Flow *)
+- name: _ZN5Bloom8isSetBitEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: str
+    type: 'bool '
+  return_type: bool
+  signature: bool Bloom::isSetBit(char *)
+- name: _ZN18SQLiteStoreManager4initEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: db_file_full_path
+    type: 'bool '
+  return_type: int
+  signature: int SQLiteStoreManager::init(const char *)
+- name: _ZN19ServerConfiguration25reloadServerConfigurationEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  return_type: void
+  signature: void ServerConfiguration::reloadServerConfiguration(char *)
+- name: _ZN13ViewInterface12flowPollLoopEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void ViewInterface::flowPollLoop()
+- name: _ZN12ZMQPublisher14sendIPSMessageEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: msg
+    type: 'bool '
+  return_type: bool
+  signature: bool ZMQPublisher::sendIPSMessage(char *)
+- name: _ZN4Ntop19broadcastIPSMessageEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: msg
+    type: 'bool '
+  return_type: bool
+  signature: bool Ntop::broadcastIPSMessage(char *)
+- name: _ZN4Ntop19addLocalNetworkListEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: rule
+    type: 'bool '
+  return_type: void
+  signature: void Ntop::addLocalNetworkList(const char *)
+- name: _ZN4NtopC2EPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: appName
+    type: 'bool '
+  return_type: void
+  signature: void Ntop::Ntop(const char *)
+- name: _ZN4Host11get_countryEPcj
+  params:
+  - name: this
+    type: 'bool '
+  - name: buf
+    type: 'bool '
+  - name: buf_len
+    type: int
+  return_type: void
+  signature: char * Host::get_country(char *, u_int)
+- name: _ZN13PcapInterfaceC2EPKchb
+  params:
+  - name: this
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: ifIdx
+    type: char
+  - name: _delete_pcap_when_done
+    type: bool
+  return_type: void
+  signature: void PcapInterface::PcapInterface(const char *, u_int8_t, bool)
+- name: _ZN19CustomFlowLuaScript16protocolDetectedEP4Flow
+  params:
+  - name: this
+    type: 'bool '
+  - name: f
+    type: 'bool '
+  return_type: void
+  signature: void CustomFlowLuaScript::protocolDetected(Flow *)
+- name: _ZN4Ntop20loadMacManufacturersEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: dir
+    type: 'bool '
+  return_type: void
+  signature: void Ntop::loadMacManufacturers(char *)
+- name: _ZN4Host16setBlacklistNameEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  return_type: void
+  signature: void Host::setBlacklistName(char *)
+- name: _ZN9Bitmap1287setBitsEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: list
+    type: 'bool '
+  return_type: void
+  signature: void Bitmap128::setBits(char *)
+- name: _ZN4Ntop22createRuntimeInterfaceEPcS0_Pi
+  params:
+  - name: this
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: source
+    type: 'bool '
+  - name: iface_id
+    type: 'bool '
+  return_type: bool
+  signature: bool Ntop::createRuntimeInterface(char *, char *, int *)
+- name: _ZN5Redis16popHostToResolveEPcj
+  params:
+  - name: this
+    type: 'bool '
+  - name: hostname
+    type: 'bool '
+  - name: hostname_len
+    type: int
+  return_type: int
+  signature: int Redis::popHostToResolve(char *, u_int)
+- name: _ZN4Ntop15addLocalNetworkEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: _net
+    type: 'bool '
+  return_type: bool
+  signature: bool Ntop::addLocalNetwork(char *)
+- name: _ZNK11NtopGlobals10getSnaplenEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: ifname
+    type: 'bool '
+  return_type: int
+  signature: u_int NtopGlobals::getSnaplen(const char *)
+- name: _ZN4Ntop16setLocalNetworksEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: _nets
+    type: 'bool '
+  return_type: void
+  signature: void Ntop::setLocalNetworks(char *)
+- name: _ZN4Ntop17nDPISetDomainMaskEPKcm
+  params:
+  - name: this
+    type: 'bool '
+  - name: domain
+    type: 'bool '
+  - name: domain_mask
+    type: size_t
+  return_type: int
+  signature: int Ntop::nDPISetDomainMask(const char *, u_int64_t)
+- name: _ZN13ViewInterface18startPacketPollingEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void ViewInterface::startPacketPolling()
+- name: _ZN4Ntop15incBlacklisHitsENSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: listname
+    type: 'bool '
+  return_type: void
+  signature: void Ntop::incBlacklisHits(string)
+- name: _ZN4Ntop10deleteUserEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: username
+    type: 'bool '
+  return_type: bool
+  signature: bool Ntop::deleteUser(char *)
+- name: _ZN19CustomFlowLuaScript7flowEndEP4Flow
+  params:
+  - name: this
+    type: 'bool '
+  - name: f
+    type: 'bool '
+  return_type: void
+  signature: void CustomFlowLuaScript::flowEnd(Flow *)
+- name: _ZN21ZMQCollectorInterfaceC2EPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: _endpoint
+    type: 'bool '
+  return_type: void
+  signature: void ZMQCollectorInterface::ZMQCollectorInterface(const char *)
+- name: _ZN24SyslogCollectorInterfaceC2EPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: _endpoint
+    type: 'bool '
+  return_type: void
+  signature: void SyslogCollectorInterface::SyslogCollectorInterface(const char *)
+- name: _ZN4Ntop5startEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void Ntop::start()
+- name: _ZN4Host8get_cityEPcj
+  params:
+  - name: this
+    type: 'bool '
+  - name: buf
+    type: 'bool '
+  - name: buf_len
+    type: int
+  return_type: void
+  signature: char * Host::get_city(char *, u_int)
+- name: _ZN12ZMQPublisher18sendControlMessageEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: msg
+    type: 'bool '
+  return_type: bool
+  signature: bool ZMQPublisher::sendControlMessage(char *)
+- name: _ZN13PcapInterface17set_packet_filterEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: filter
+    type: 'bool '
+  return_type: bool
+  signature: bool PcapInterface::set_packet_filter(char *)
+- name: _ZN12ZMQPublisherC2EPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: endpoint
+    type: 'bool '
+  return_type: void
+  signature: void ZMQPublisher::ZMQPublisher(char *)
+- name: _ZN4Flow10updateJA4CEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: j
+    type: 'bool '
+  return_type: void
+  signature: void Flow::updateJA4C(char *)
+- name: _ZN18ZMQParserInterface14preprocessFlowEP10ParsedFlow
+  params:
+  - name: this
+    type: 'bool '
+  - name: flow
+    type: 'bool '
+  return_type: bool
+  signature: bool ZMQParserInterface::preprocessFlow(ParsedFlow *)
+- name: _ZN13ViewInterfaceC2EPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: _endpoint
+    type: 'bool '
+  return_type: void
+  signature: void ViewInterface::ViewInterface(const char *)
+- name: _ZL12flowPollLoopPv
+  params:
+  - name: ptr
+    type: 'bool '
+  return_type: void
+  signature: void * flowPollLoop(void *)
+- name: _ZN4Host15get_visual_nameEPcj
+  params:
+  - name: this
+    type: 'bool '
+  - name: buf
+    type: 'bool '
+  - name: buf_len
+    type: int
+  return_type: void
+  signature: char * Host::get_visual_name(char *, u_int)
+- name: _ZN4Host15setResolvedNameEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: resolved_name
+    type: 'bool '
+  return_type: void
+  signature: void Host::setResolvedName(const char *)
+- name: _ZN13ViewInterface11viewDequeueEj
+  params:
+  - name: this
+    type: 'bool '
+  - name: budget
+    type: int
+  return_type: size_t
+  signature: u_int64_t ViewInterface::viewDequeue(u_int)
+- name: _ZN4Ntop7getPingEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: ifname
+    type: 'bool '
+  return_type: void
+  signature: Ping * Ntop::getPing(char *)
+- name: _ZN15VirtualHostHash3getEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: vhost_name
+    type: 'bool '
+  return_type: void
+  signature: VirtualHost * VirtualHostHash::get(char *)
+- name: _ZN5Trace12set_log_fileEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: log_file
+    type: 'bool '
+  return_type: void
+  signature: void Trace::set_log_file(const char *)
+language: c++
+project: ntopng
+target_name: fuzz_dissect_packet
+target_path: /src/ntopng/fuzz/fuzz_dissect_packet.cpp

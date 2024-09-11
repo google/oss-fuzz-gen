@@ -1,0 +1,46 @@
+functions:
+- name: ixheaacd_decorrelation_dec
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: VOID ixheaacd_decorrelation_dec(ia_ps_dec_struct *, WORD32 *, WORD32
+    *, WORD32 *, WORD32 *, ia_ps_tables_struct *)
+- name: ixheaacd_hbe_apply_cfftn_gen
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: void
+  signature: VOID ixheaacd_hbe_apply_cfftn_gen(FLOAT32 *, FLOAT32 *, WORD32, WORD32)
+- name: ixheaacd_hbe_apply_cfftn
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: void
+  signature: VOID ixheaacd_hbe_apply_cfftn(FLOAT32 *, FLOAT32 *, WORD32, WORD32)
+language: c++
+project: libxaac
+target_name: xaac_enc_fuzzer
+target_path: /src/libxaac/fuzzer/xaac_enc_fuzzer.cpp

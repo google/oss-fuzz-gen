@@ -1,0 +1,33 @@
+functions:
+- name: _ZNK5phmap4priv12raw_hash_setINS0_17FlatHashMapPolicyIjiEENS_4HashIjEENS_7EqualToIjEENSt3__19allocatorINS8_4pairIKjiEEEEE8is_smallEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool phmap::priv::raw_hash_set<phmap::priv::FlatHashMapPolicy<unsigned
+    int, int>, phmap::Hash<unsigned int>, phmap::EqualTo<unsigned int>, std::__1::allocator<std::__1::pair<unsigned
+    int const, int> > >::is_small(const raw_hash_set<phmap::priv::FlatHashMapPolicy<unsigned
+    int, int>, phmap::Hash<unsigned int>, phmap::EqualTo<unsigned int>, std::__1::allocator<std::__1::pair<const
+    unsigned int, int> > > *)
+- name: _ZN5phmap4priv17FlatHashMapPolicyINSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEES8_E7elementEPNS0_13map_slot_typeIS8_S8_EE
+  params:
+  - name: slot
+    type: 'bool '
+  return_type: void
+  signature: struct pair<const unsigned int, int> & phmap::priv::FlatHashMapPolicy<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > >::element(slot_type
+    *)
+- name: _ZNK5phmap4priv13GroupSse2Impl37ConvertSpecialToEmptyAndFullToDeletedEPa
+  params:
+  - name: this
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  return_type: void
+  signature: void phmap::priv::GroupSse2Impl::ConvertSpecialToEmptyAndFullToDeleted(const
+    struct GroupSse2Impl *, ctrl_t *)
+language: c++
+project: phmap
+target_name: phashmap_fuzz
+target_path: /src/phashmap_fuzz.cc

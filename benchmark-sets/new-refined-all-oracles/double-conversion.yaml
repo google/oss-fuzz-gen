@@ -1,0 +1,165 @@
+functions:
+- name: _ZNK17double_conversion6Single8ExponentEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: int
+  signature: int double_conversion::Single::Exponent()
+- name: _ZNK17double_conversion6Single4SignEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: int
+  signature: int double_conversion::Single::Sign()
+- name: _ZN17double_conversion6Bignum6SquareEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void double_conversion::Bignum::Square()
+- name: _ZNK17double_conversion6Single13UpperBoundaryEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: DiyFp double_conversion::Single::UpperBoundary()
+- name: _ZN17double_conversion6Bignum12AssignUInt16Et
+  params:
+  - name: this
+    type: 'bool '
+  - name: value
+    type: short
+  return_type: void
+  signature: void double_conversion::Bignum::AssignUInt16(const uint16_t)
+- name: _ZNK17double_conversion6Single11SignificandEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: int
+  signature: uint32_t double_conversion::Single::Significand()
+- name: _ZN17double_conversion6Bignum14SubtractBignumERKS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: void
+  signature: void double_conversion::Bignum::SubtractBignum(const Bignum &)
+- name: _ZNK17double_conversion6Single10IsDenormalEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool double_conversion::Single::IsDenormal()
+- name: _ZN17double_conversion6Bignum12AssignBignumERKS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: void
+  signature: void double_conversion::Bignum::AssignBignum(const Bignum &)
+- name: _ZNK17double_conversion6Double7AsDiyFpEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: DiyFp double_conversion::Double::AsDiyFp()
+- name: _ZN17double_conversion6Bignum21DivideModuloIntBignumERKS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: short
+  signature: uint16_t double_conversion::Bignum::DivideModuloIntBignum(const Bignum
+    &)
+- name: _ZNK17double_conversion6Double14PreviousDoubleEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: double
+  signature: double double_conversion::Double::PreviousDouble()
+- name: _ZN17double_conversion6Bignum11PlusCompareERKS0_S2_S2_
+  params:
+  - name: a
+    type: 'bool '
+  - name: b
+    type: 'bool '
+  - name: c
+    type: 'bool '
+  return_type: int
+  signature: int double_conversion::Bignum::PlusCompare(const Bignum &, const Bignum
+    &, const Bignum &)
+- name: _ZN17double_conversion6Bignum13SubtractTimesERKS0_i
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  - name: factor
+    type: int
+  return_type: void
+  signature: void double_conversion::Bignum::SubtractTimes(const Bignum &, const int)
+- name: _ZNK17double_conversion6Single5valueEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: float
+  signature: float double_conversion::Single::value()
+- name: _ZN17double_conversion6Bignum9LessEqualERKS0_S2_
+  params:
+  - name: a
+    type: 'bool '
+  - name: b
+    type: 'bool '
+  return_type: bool
+  signature: bool double_conversion::Bignum::LessEqual(const Bignum &, const Bignum
+    &)
+- name: _ZN17double_conversion6VectorIKcE8pop_backEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void double_conversion::Vector<char const>::pop_back(Vector<const char>
+    *)
+- name: _ZN17double_conversion6Bignum17AssignPowerUInt16Eti
+  params:
+  - name: this
+    type: 'bool '
+  - name: base
+    type: short
+  - name: power_exponent
+    type: int
+  return_type: void
+  signature: void double_conversion::Bignum::AssignPowerUInt16(uint16_t, const int)
+- name: _ZNK17double_conversion6Bignum11ToHexStringEPci
+  params:
+  - name: this
+    type: 'bool '
+  - name: buffer
+    type: 'bool '
+  - name: buffer_size
+    type: int
+  return_type: bool
+  signature: bool double_conversion::Bignum::ToHexString(char *, const int)
+- name: _ZNK17double_conversion6Double9IsSpecialEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool double_conversion::Double::IsSpecial()
+- name: _ZN17double_conversion6Bignum15AssignHexStringENS_6VectorIKcEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void double_conversion::Bignum::AssignHexString(Vector<const char>)
+language: c++
+project: double-conversion
+target_name: string_to_double_fuzzer
+target_path: /src/string_to_double_fuzzer.cc

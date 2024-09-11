@@ -1,0 +1,283 @@
+functions:
+- name: buffer_copy_string_len_lc
+  params:
+  - name: b
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: void
+  signature: void buffer_copy_string_len_lc(const DW_TAG_restrict_typebuffer *, const
+    const DW_TAG_restrict_typechar *, const size_t)
+- name: buffer_copy_string
+  params:
+  - name: b
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: void buffer_copy_string(DW_TAG_restrict_typebuffer *, const DW_TAG_restrict_typechar
+    *)
+- name: buffer_commit
+  params:
+  - name: b
+    type: 'bool '
+  - name: size
+    type: size_t
+  return_type: void
+  signature: void buffer_commit(buffer *, size_t)
+- name: buffer_append_string_encoded
+  params:
+  - name: b
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: s_len
+    type: size_t
+  - name: encoding
+    type: int
+  return_type: void
+  signature: void buffer_append_string_encoded(const DW_TAG_restrict_typebuffer *,
+    const const DW_TAG_restrict_typechar *, size_t, buffer_encoding_t)
+- name: buffer_append_str2
+  params:
+  - name: b
+    type: 'bool '
+  - name: s1
+    type: 'bool '
+  - name: len1
+    type: size_t
+  - name: s2
+    type: 'bool '
+  - name: len2
+    type: size_t
+  return_type: void
+  signature: void buffer_append_str2(const DW_TAG_restrict_typebuffer *, const const
+    char *, const size_t, const const char *, const size_t)
+- name: ck_calloc
+  params:
+  - name: nmemb
+    type: size_t
+  - name: elt_sz
+    type: size_t
+  return_type: void
+  signature: void * ck_calloc(size_t, size_t)
+- name: li_base64_dec
+  params:
+  - name: result
+    type: 'bool '
+  - name: out_length
+    type: size_t
+  - name: in
+    type: 'bool '
+  - name: in_length
+    type: size_t
+  - name: charset
+    type: int
+  return_type: size_t
+  signature: size_t li_base64_dec(const unsigned char *, const size_t, const const
+    char *, const size_t, const base64_charset)
+- name: ck_realloc_u32
+  params:
+  - name: list
+    type: 'bool '
+  - name: n
+    type: size_t
+  - name: x
+    type: size_t
+  - name: elt_sz
+    type: size_t
+  return_type: void
+  signature: void * ck_realloc_u32(void **, size_t, size_t, size_t)
+- name: li_tohex_uc
+  params:
+  - name: buf
+    type: 'bool '
+  - name: buf_len
+    type: size_t
+  - name: s
+    type: 'bool '
+  - name: s_len
+    type: size_t
+  return_type: void
+  signature: void li_tohex_uc(const DW_TAG_restrict_typechar *, size_t, const const
+    DW_TAG_restrict_typechar *, size_t)
+- name: buffer_append_path_len
+  params:
+  - name: b
+    type: 'bool '
+  - name: a
+    type: 'bool '
+  - name: alen
+    type: size_t
+  return_type: void
+  signature: void buffer_append_path_len(DW_TAG_restrict_typebuffer *, const DW_TAG_restrict_typechar
+    *, size_t)
+- name: buffer_eq_icase_slen
+  params:
+  - name: b
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: slen
+    type: size_t
+  return_type: int
+  signature: int buffer_eq_icase_slen(const const buffer *, const const char *, const
+    size_t)
+- name: buffer_append_uint_hex_lc
+  params:
+  - name: b
+    type: 'bool '
+  - name: value
+    type: size_t
+  return_type: void
+  signature: void buffer_append_uint_hex_lc(buffer *, uintmax_t)
+- name: li_itostrn
+  params:
+  - name: buf
+    type: 'bool '
+  - name: buf_len
+    type: size_t
+  - name: val
+    type: size_t
+  return_type: size_t
+  signature: size_t li_itostrn(char *, size_t, intmax_t)
+- name: li_base64_enc
+  params:
+  - name: out
+    type: 'bool '
+  - name: out_length
+    type: size_t
+  - name: in
+    type: 'bool '
+  - name: in_length
+    type: size_t
+  - name: charset
+    type: int
+  - name: pad
+    type: int
+  return_type: size_t
+  signature: size_t li_base64_enc(const DW_TAG_restrict_typechar *, const size_t,
+    const const DW_TAG_restrict_typeunsigned char *, const size_t, const base64_charset,
+    const int)
+- name: buffer_append_string_c_escaped
+  params:
+  - name: b
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: s_len
+    type: size_t
+  return_type: void
+  signature: void buffer_append_string_c_escaped(const DW_TAG_restrict_typebuffer
+    *, const const DW_TAG_restrict_typechar *, size_t)
+- name: buffer_append_string_encoded_hex_uc
+  params:
+  - name: b
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: void
+  signature: void buffer_append_string_encoded_hex_uc(const DW_TAG_restrict_typebuffer
+    *, const const DW_TAG_restrict_typechar *, size_t)
+- name: buffer_is_valid_UTF8
+  params:
+  - name: b
+    type: 'bool '
+  return_type: int
+  signature: int buffer_is_valid_UTF8(const buffer *)
+- name: ck_malloc
+  params:
+  - name: nbytes
+    type: size_t
+  return_type: void
+  signature: void * ck_malloc(size_t)
+- name: li_utostrn
+  params:
+  - name: buf
+    type: 'bool '
+  - name: buf_len
+    type: size_t
+  - name: val
+    type: size_t
+  return_type: size_t
+  signature: size_t li_utostrn(char *, size_t, uintmax_t)
+- name: buffer_append_iovec
+  params:
+  - name: b
+    type: 'bool '
+  - name: iov
+    type: 'bool '
+  - name: n
+    type: size_t
+  return_type: void
+  signature: void buffer_append_iovec(const DW_TAG_restrict_typebuffer *, const const
+    struct const_iovec *, const size_t)
+- name: li_tohex_lc
+  params:
+  - name: buf
+    type: 'bool '
+  - name: buf_len
+    type: size_t
+  - name: s
+    type: 'bool '
+  - name: s_len
+    type: size_t
+  return_type: void
+  signature: void li_tohex_lc(const DW_TAG_restrict_typechar *, size_t, const const
+    DW_TAG_restrict_typechar *, size_t)
+- name: buffer_append_string_encoded_hex_lc
+  params:
+  - name: b
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: void
+  signature: void buffer_append_string_encoded_hex_lc(const DW_TAG_restrict_typebuffer
+    *, const const DW_TAG_restrict_typechar *, size_t)
+- name: buffer_string_prepare_append
+  params:
+  - name: b
+    type: 'bool '
+  - name: size
+    type: size_t
+  return_type: void
+  signature: char * buffer_string_prepare_append(const buffer *, const size_t)
+- name: buffer_append_str3
+  params:
+  - name: b
+    type: 'bool '
+  - name: s1
+    type: 'bool '
+  - name: len1
+    type: size_t
+  - name: s2
+    type: 'bool '
+  - name: len2
+    type: size_t
+  - name: s3
+    type: 'bool '
+  - name: len3
+    type: size_t
+  return_type: void
+  signature: void buffer_append_str3(const DW_TAG_restrict_typebuffer *, const const
+    char *, const size_t, const const char *, const size_t, const const char *, const
+    size_t)
+- name: buffer_append_string
+  params:
+  - name: b
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: void buffer_append_string(DW_TAG_restrict_typebuffer *, const DW_TAG_restrict_typechar
+    *)
+language: c
+project: lighttpd
+target_name: fuzz_burl
+target_path: /src/fuzz_burl.c

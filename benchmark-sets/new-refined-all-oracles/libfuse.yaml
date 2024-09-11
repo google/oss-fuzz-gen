@@ -1,0 +1,33 @@
+functions:
+- name: af_get_short
+  params:
+  - name: data
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  return_type: short
+  signature: short af_get_short(const uint8_t **, size_t *)
+- name: fuse_log_enable_syslog
+  params:
+  - name: ident
+    type: 'bool '
+  - name: option
+    type: int
+  - name: facility
+    type: int
+  return_type: void
+  signature: void fuse_log_enable_syslog(const char *, int, int)
+- name: af_gb_get_random_data
+  params:
+  - name: data
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  - name: to_get
+    type: size_t
+  return_type: void
+  signature: char * af_gb_get_random_data(const uint8_t **, size_t *, size_t)
+language: c
+project: libfuse
+target_name: fuzz_optparse
+target_path: /src/fuzz_optparse.c

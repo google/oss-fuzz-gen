@@ -1,0 +1,229 @@
+functions:
+- name: archive_entry_fflags_text
+  params:
+  - name: entry
+    type: 'bool '
+  return_type: void
+  signature: const char * archive_entry_fflags_text(struct archive_entry *)
+- name: archive_acl_to_text_w
+  params:
+  - name: acl
+    type: 'bool '
+  - name: text_len
+    type: 'bool '
+  - name: flags
+    type: int
+  - name: a
+    type: 'bool '
+  return_type: void
+  signature: wchar_t * archive_acl_to_text_w(struct archive_acl *, ssize_t *, int,
+    struct archive *)
+- name: _archive_entry_uname_l
+  params:
+  - name: entry
+    type: 'bool '
+  - name: p
+    type: 'bool '
+  - name: len
+    type: 'bool '
+  - name: sc
+    type: 'bool '
+  return_type: int
+  signature: int _archive_entry_uname_l(struct archive_entry *, const char **, size_t
+    *, struct archive_string_conv *)
+- name: archive_entry_hardlink_utf8
+  params:
+  - name: entry
+    type: 'bool '
+  return_type: void
+  signature: const char * archive_entry_hardlink_utf8(struct archive_entry *)
+- name: archive_acl_to_text_l
+  params:
+  - name: acl
+    type: 'bool '
+  - name: text_len
+    type: 'bool '
+  - name: flags
+    type: int
+  - name: sc
+    type: 'bool '
+  return_type: void
+  signature: char * archive_acl_to_text_l(struct archive_acl *, ssize_t *, int, struct
+    archive_string_conv *)
+- name: _archive_entry_pathname_l
+  params:
+  - name: entry
+    type: 'bool '
+  - name: p
+    type: 'bool '
+  - name: len
+    type: 'bool '
+  - name: sc
+    type: 'bool '
+  return_type: int
+  signature: int _archive_entry_pathname_l(struct archive_entry *, const char **,
+    size_t *, struct archive_string_conv *)
+- name: archive_mstring_get_mbs_l
+  params:
+  - name: a
+    type: 'bool '
+  - name: aes
+    type: 'bool '
+  - name: p
+    type: 'bool '
+  - name: length
+    type: 'bool '
+  - name: sc
+    type: 'bool '
+  return_type: int
+  signature: int archive_mstring_get_mbs_l(struct archive *, struct archive_mstring
+    *, const char **, size_t *, struct archive_string_conv *)
+- name: archive_entry_acl_to_text
+  params:
+  - name: entry
+    type: 'bool '
+  - name: len
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: void
+  signature: char * archive_entry_acl_to_text(struct archive_entry *, la_ssize_t *,
+    int)
+- name: archive_entry_sourcepath_w
+  params:
+  - name: entry
+    type: 'bool '
+  return_type: void
+  signature: const wchar_t * archive_entry_sourcepath_w(struct archive_entry *)
+- name: _archive_entry_acl_to_text_l
+  params:
+  - name: entry
+    type: 'bool '
+  - name: len
+    type: 'bool '
+  - name: flags
+    type: int
+  - name: sc
+    type: 'bool '
+  return_type: void
+  signature: char * _archive_entry_acl_to_text_l(struct archive_entry *, ssize_t *,
+    int, struct archive_string_conv *)
+- name: archive_entry_gname_utf8
+  params:
+  - name: entry
+    type: 'bool '
+  return_type: void
+  signature: const char * archive_entry_gname_utf8(struct archive_entry *)
+- name: _archive_entry_gname_l
+  params:
+  - name: entry
+    type: 'bool '
+  - name: p
+    type: 'bool '
+  - name: len
+    type: 'bool '
+  - name: sc
+    type: 'bool '
+  return_type: int
+  signature: int _archive_entry_gname_l(struct archive_entry *, const char **, size_t
+    *, struct archive_string_conv *)
+- name: archive_entry_update_uname_utf8
+  params:
+  - name: entry
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  return_type: int
+  signature: int archive_entry_update_uname_utf8(struct archive_entry *, const char
+    *)
+- name: archive_entry_update_gname_utf8
+  params:
+  - name: entry
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  return_type: int
+  signature: int archive_entry_update_gname_utf8(struct archive_entry *, const char
+    *)
+- name: archive_entry_acl_next
+  params:
+  - name: entry
+    type: 'bool '
+  - name: want_type
+    type: int
+  - name: type
+    type: 'bool '
+  - name: permset
+    type: 'bool '
+  - name: tag
+    type: 'bool '
+  - name: id
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  return_type: int
+  signature: int archive_entry_acl_next(struct archive_entry *, int, int *, int *,
+    int *, int *, const char **)
+- name: archive_entry_gname_w
+  params:
+  - name: entry
+    type: 'bool '
+  return_type: void
+  signature: const wchar_t * archive_entry_gname_w(struct archive_entry *)
+- name: archive_entry_update_link_utf8
+  params:
+  - name: entry
+    type: 'bool '
+  - name: target
+    type: 'bool '
+  return_type: int
+  signature: int archive_entry_update_link_utf8(struct archive_entry *, const char
+    *)
+- name: _archive_entry_hardlink_l
+  params:
+  - name: entry
+    type: 'bool '
+  - name: p
+    type: 'bool '
+  - name: len
+    type: 'bool '
+  - name: sc
+    type: 'bool '
+  return_type: int
+  signature: int _archive_entry_hardlink_l(struct archive_entry *, const char **,
+    size_t *, struct archive_string_conv *)
+- name: archive_entry_uname_w
+  params:
+  - name: entry
+    type: 'bool '
+  return_type: void
+  signature: const wchar_t * archive_entry_uname_w(struct archive_entry *)
+- name: _archive_entry_symlink_l
+  params:
+  - name: entry
+    type: 'bool '
+  - name: p
+    type: 'bool '
+  - name: len
+    type: 'bool '
+  - name: sc
+    type: 'bool '
+  return_type: int
+  signature: int _archive_entry_symlink_l(struct archive_entry *, const char **, size_t
+    *, struct archive_string_conv *)
+- name: archive_entry_symlink_utf8
+  params:
+  - name: entry
+    type: 'bool '
+  return_type: void
+  signature: const char * archive_entry_symlink_utf8(struct archive_entry *)
+- name: archive_entry_uname_utf8
+  params:
+  - name: entry
+    type: 'bool '
+  return_type: void
+  signature: const char * archive_entry_uname_utf8(struct archive_entry *)
+language: c++
+project: libarchive
+target_name: libarchive_fuzzer
+target_path: /src/libarchive_fuzzer.cc

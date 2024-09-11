@@ -1,0 +1,11 @@
+functions:
+- name: utf8proc_charwidth_ambiguous
+  params:
+  - name: ''
+    type: int
+  return_type: bool
+  signature: utf8proc_bool utf8proc_charwidth_ambiguous(utf8proc_int32_t)
+language: c
+project: utf8proc
+target_name: utf8proc_fuzzer
+target_path: /src/utf8proc/test/fuzzer.c

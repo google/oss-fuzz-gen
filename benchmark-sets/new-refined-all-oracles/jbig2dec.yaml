@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: jbig2dec
+target_name: jbig2_fuzzer
+target_path: /src/jbig2_fuzzer.cc

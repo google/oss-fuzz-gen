@@ -1,0 +1,116 @@
+functions:
+- name: cpuinfo_linux_detect_possible_processors
+  params:
+  - name: max_processors_count
+    type: int
+  - name: processor0_flags
+    type: 'bool '
+  - name: processor_struct_size
+    type: int
+  - name: possible_flag
+    type: int
+  return_type: bool
+  signature: bool cpuinfo_linux_detect_possible_processors(uint32_t, uint32_t *, uint32_t,
+    uint32_t)
+- name: cpuinfo_linux_get_max_possible_processor
+  params:
+  - name: max_processors_count
+    type: int
+  return_type: int
+  signature: uint32_t cpuinfo_linux_get_max_possible_processor(uint32_t)
+- name: cpuinfo_vlog_fatal
+  params:
+  - name: format
+    type: 'bool '
+  - name: args
+    type: 'bool '
+  return_type: void
+  signature: void cpuinfo_vlog_fatal(const char *, struct __va_list_tag *)
+- name: cpuinfo_linux_detect_core_cpus
+  params:
+  - name: max_processors_count
+    type: int
+  - name: processor
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: context
+    type: 'bool '
+  return_type: bool
+  signature: bool cpuinfo_linux_detect_core_cpus(uint32_t, uint32_t, cpuinfo_siblings_callback,
+    void *)
+- name: cpuinfo_linux_detect_core_siblings
+  params:
+  - name: max_processors_count
+    type: int
+  - name: processor
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: context
+    type: 'bool '
+  return_type: bool
+  signature: bool cpuinfo_linux_detect_core_siblings(uint32_t, uint32_t, cpuinfo_siblings_callback,
+    void *)
+- name: cpuinfo_linux_get_max_present_processor
+  params:
+  - name: max_processors_count
+    type: int
+  return_type: int
+  signature: uint32_t cpuinfo_linux_get_max_present_processor(uint32_t)
+- name: cpuinfo_linux_detect_thread_siblings
+  params:
+  - name: max_processors_count
+    type: int
+  - name: processor
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: context
+    type: 'bool '
+  return_type: bool
+  signature: bool cpuinfo_linux_detect_thread_siblings(uint32_t, uint32_t, cpuinfo_siblings_callback,
+    void *)
+- name: cpuinfo_linux_detect_present_processors
+  params:
+  - name: max_processors_count
+    type: int
+  - name: processor0_flags
+    type: 'bool '
+  - name: processor_struct_size
+    type: int
+  - name: present_flag
+    type: int
+  return_type: bool
+  signature: bool cpuinfo_linux_detect_present_processors(uint32_t, uint32_t *, uint32_t,
+    uint32_t)
+- name: cpuinfo_linux_detect_package_cpus
+  params:
+  - name: max_processors_count
+    type: int
+  - name: processor
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: context
+    type: 'bool '
+  return_type: bool
+  signature: bool cpuinfo_linux_detect_package_cpus(uint32_t, uint32_t, cpuinfo_siblings_callback,
+    void *)
+- name: cpuinfo_linux_detect_cluster_cpus
+  params:
+  - name: max_processors_count
+    type: int
+  - name: processor
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: context
+    type: 'bool '
+  return_type: bool
+  signature: bool cpuinfo_linux_detect_cluster_cpus(uint32_t, uint32_t, cpuinfo_siblings_callback,
+    void *)
+language: c
+project: cpuinfo
+target_name: fuzz_cpuinfo
+target_path: /src/fuzz_cpuinfo.c

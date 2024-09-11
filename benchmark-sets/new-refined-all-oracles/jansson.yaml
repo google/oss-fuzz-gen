@@ -1,0 +1,220 @@
+functions:
+- name: json_object_clear
+  params:
+  - name: json
+    type: 'bool '
+  return_type: int
+  signature: int json_object_clear(json_t *)
+- name: json_sprintf
+  params:
+  - name: fmt
+    type: 'bool '
+  return_type: void
+  signature: json_t * json_sprintf(const char *, void)
+- name: json_load_callback
+  params:
+  - name: callback
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  - name: flags
+    type: size_t
+  - name: error
+    type: 'bool '
+  return_type: void
+  signature: json_t * json_load_callback(json_load_callback_t, void *, size_t, json_error_t
+    *)
+- name: json_object_set_new_nocheck
+  params:
+  - name: json
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  return_type: int
+  signature: int json_object_set_new_nocheck(json_t *, const char *, json_t *)
+- name: json_vsprintf
+  params:
+  - name: fmt
+    type: 'bool '
+  - name: ap
+    type: 'bool '
+  return_type: void
+  signature: json_t * json_vsprintf(const char *, struct __va_list_tag *)
+- name: json_loadfd
+  params:
+  - name: input
+    type: int
+  - name: flags
+    type: size_t
+  - name: error
+    type: 'bool '
+  return_type: void
+  signature: json_t * json_loadfd(int, size_t, json_error_t *)
+- name: json_object_deln
+  params:
+  - name: json
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: key_len
+    type: size_t
+  return_type: int
+  signature: int json_object_deln(json_t *, const char *, size_t)
+- name: json_equal
+  params:
+  - name: json1
+    type: 'bool '
+  - name: json2
+    type: 'bool '
+  return_type: int
+  signature: int json_equal(const json_t *, const json_t *)
+- name: json_stringn
+  params:
+  - name: value
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: void
+  signature: json_t * json_stringn(const char *, size_t)
+- name: json_string
+  params:
+  - name: value
+    type: 'bool '
+  return_type: void
+  signature: json_t * json_string(const char *)
+- name: json_object_update_missing
+  params:
+  - name: object
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: int
+  signature: int json_object_update_missing(json_t *, json_t *)
+- name: json_string_setn
+  params:
+  - name: json
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: int
+  signature: int json_string_setn(json_t *, const char *, size_t)
+- name: json_loads
+  params:
+  - name: string
+    type: 'bool '
+  - name: flags
+    type: size_t
+  - name: error
+    type: 'bool '
+  return_type: void
+  signature: json_t * json_loads(const char *, size_t, json_error_t *)
+- name: json_copy
+  params:
+  - name: json
+    type: 'bool '
+  return_type: void
+  signature: json_t * json_copy(json_t *)
+- name: json_object_del
+  params:
+  - name: json
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  return_type: int
+  signature: int json_object_del(json_t *, const char *)
+- name: json_object_setn_new
+  params:
+  - name: json
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: key_len
+    type: size_t
+  - name: value
+    type: 'bool '
+  return_type: int
+  signature: int json_object_setn_new(json_t *, const char *, size_t, json_t *)
+- name: json_object_set_new
+  params:
+  - name: json
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  return_type: int
+  signature: int json_object_set_new(json_t *, const char *, json_t *)
+- name: json_array_insert_new
+  params:
+  - name: json
+    type: 'bool '
+  - name: index
+    type: size_t
+  - name: value
+    type: 'bool '
+  return_type: int
+  signature: int json_array_insert_new(json_t *, size_t, json_t *)
+- name: json_loadf
+  params:
+  - name: input
+    type: 'bool '
+  - name: flags
+    type: size_t
+  - name: error
+    type: 'bool '
+  return_type: void
+  signature: json_t * json_loadf(FILE *, size_t, json_error_t *)
+- name: json_object_update
+  params:
+  - name: object
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: int
+  signature: int json_object_update(json_t *, json_t *)
+- name: json_deep_copy
+  params:
+  - name: json
+    type: 'bool '
+  return_type: void
+  signature: json_t * json_deep_copy(const json_t *)
+- name: json_string_set
+  params:
+  - name: json
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  return_type: int
+  signature: int json_string_set(json_t *, const char *)
+- name: json_object_update_recursive
+  params:
+  - name: object
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: int
+  signature: int json_object_update_recursive(json_t *, json_t *)
+- name: json_array_append
+  params:
+  - name: array
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  return_type: int
+  signature: int json_array_append(json_t *, json_t *)
+- name: json_object_update_existing
+  params:
+  - name: object
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: int
+  signature: int json_object_update_existing(json_t *, json_t *)
+language: c++
+project: jansson
+target_name: json_load_dump_fuzzer
+target_path: /src/jansson/test/ossfuzz/json_load_dump_fuzzer.cc

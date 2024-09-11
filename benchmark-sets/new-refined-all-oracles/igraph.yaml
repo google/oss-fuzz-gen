@@ -1,0 +1,328 @@
+functions:
+- name: htmlCreateMemoryParserCtxt
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: htmlParserCtxtPtr htmlCreateMemoryParserCtxt(const char *, int)
+- name: xmlTextReaderReadOuterXml
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: xmlChar * xmlTextReaderReadOuterXml(xmlTextReaderPtr)
+- name: xmlACatalogResolvePublic
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: xmlChar * xmlACatalogResolvePublic(xmlCatalogPtr, const xmlChar *)
+- name: igraph_feedback_vertex_set
+  params:
+  - name: graph
+    type: 'bool '
+  - name: result
+    type: 'bool '
+  - name: vertex_weights
+    type: 'bool '
+  - name: algo
+    type: int
+  return_type: int
+  signature: igraph_error_t igraph_feedback_vertex_set(const igraph_t *, igraph_vector_int_t
+    *, const igraph_vector_t *, igraph_fvs_algorithm_t)
+- name: xmlACatalogResolveSystem
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: xmlChar * xmlACatalogResolveSystem(xmlCatalogPtr, const xmlChar *)
+- name: igraph_arpack_rssolve
+  params:
+  - name: fun
+    type: 'bool '
+  - name: extra
+    type: 'bool '
+  - name: options
+    type: 'bool '
+  - name: storage
+    type: 'bool '
+  - name: values
+    type: 'bool '
+  - name: vectors
+    type: 'bool '
+  return_type: int
+  signature: igraph_error_t igraph_arpack_rssolve(igraph_arpack_function_t *, void
+    *, igraph_arpack_options_t *, igraph_arpack_storage_t *, igraph_vector_t *, igraph_matrix_t
+    *)
+- name: xmlValidGetValidElements
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int xmlValidGetValidElements(xmlNode *, xmlNode *, const xmlChar **,
+    int)
+- name: xmlTextReaderRelaxNGValidate
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int xmlTextReaderRelaxNGValidate(xmlTextReaderPtr, const char *)
+- name: xmlTextReaderReadInnerXml
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: xmlChar * xmlTextReaderReadInnerXml(xmlTextReaderPtr)
+- name: xmlTextReaderRelaxNGValidateCtxt
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int xmlTextReaderRelaxNGValidateCtxt(xmlTextReaderPtr, xmlRelaxNGValidCtxtPtr,
+    int)
+- name: igraph_personalized_pagerank_vs
+  params:
+  - name: graph
+    type: 'bool '
+  - name: algo
+    type: int
+  - name: vector
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: vids
+    type: 'bool '
+  - name: directed
+    type: bool
+  - name: damping
+    type: double
+  - name: reset_vids
+    type: 'bool '
+  - name: weights
+    type: 'bool '
+  - name: options
+    type: 'bool '
+  return_type: int
+  signature: igraph_error_t igraph_personalized_pagerank_vs(const igraph_t *, igraph_pagerank_algo_t,
+    igraph_vector_t *, igraph_real_t *, const igraph_vs_t, igraph_bool_t, igraph_real_t,
+    igraph_vs_t, const igraph_vector_t *, igraph_arpack_options_t *)
+- name: xmlDocDumpFormatMemoryEnc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void xmlDocDumpFormatMemoryEnc(xmlDocPtr, xmlChar **, int *, const char
+    *, int)
+- name: htmlParseElement
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void htmlParseElement(htmlParserCtxtPtr)
+- name: xmlNewTextReaderFilename
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: xmlTextReaderPtr xmlNewTextReaderFilename(const char *)
+- name: htmlParseDocument
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int htmlParseDocument(htmlParserCtxtPtr)
+- name: xmlTextReaderSetup
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int xmlTextReaderSetup(xmlTextReaderPtr, xmlParserInputBufferPtr, const
+    char *, const char *, int)
+- name: igraph_sparsemat_arpack_rnsolve
+  params:
+  - name: A
+    type: 'bool '
+  - name: options
+    type: 'bool '
+  - name: storage
+    type: 'bool '
+  - name: values
+    type: 'bool '
+  - name: vectors
+    type: 'bool '
+  return_type: int
+  signature: igraph_error_t igraph_sparsemat_arpack_rnsolve(const igraph_sparsemat_t
+    *, igraph_arpack_options_t *, igraph_arpack_storage_t *, igraph_matrix_t *, igraph_matrix_t
+    *)
+- name: xmlCatalogLocalResolveURI
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: xmlChar * xmlCatalogLocalResolveURI(void *, const xmlChar *)
+- name: xmlParseCtxtExternalEntity
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int xmlParseCtxtExternalEntity(xmlParserCtxtPtr, const xmlChar *, const
+    xmlChar *, xmlNodePtr *)
+- name: xmlSchemaValPredefTypeNodeNoNorm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int xmlSchemaValPredefTypeNodeNoNorm(xmlSchemaTypePtr, const xmlChar
+    *, xmlSchemaValPtr *, xmlNodePtr)
+- name: xmlXIncludeProcessTreeFlagsData
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int xmlXIncludeProcessTreeFlagsData(xmlNodePtr, int, void *)
+- name: xmlXIncludeProcessTreeFlags
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int xmlXIncludeProcessTreeFlags(xmlNodePtr, int)
+- name: xmlXIncludeProcessFlagsData
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int xmlXIncludeProcessFlagsData(xmlDocPtr, int, void *)
+- name: xmlParseBalancedChunkMemory
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int xmlParseBalancedChunkMemory(xmlDocPtr, xmlSAXHandlerPtr, void *,
+    int, const xmlChar *, xmlNodePtr *)
+- name: xmlReadDoc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: xmlDocPtr xmlReadDoc(const xmlChar *, const char *, const char *, int)
+- name: htmlSAXParseFile
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: htmlDocPtr htmlSAXParseFile(const char *, const char *, htmlSAXHandlerPtr,
+    void *)
+- name: xmlTextReaderSchemaValidateCtxt
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int xmlTextReaderSchemaValidateCtxt(xmlTextReaderPtr, xmlSchemaValidCtxtPtr,
+    int)
+- name: xmlParseBalancedChunkMemoryRecover
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int xmlParseBalancedChunkMemoryRecover(xmlDocPtr, xmlSAXHandlerPtr, void
+    *, int, const xmlChar *, xmlNodePtr *, int)
+language: c
+project: igraph
+target_name: read_graphdb
+target_path: /src/igraph/fuzzing/read_graphdb.cpp

@@ -1,0 +1,87 @@
+functions:
+- name: SemDestroy
+  params:
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: void SemDestroy(SWelsDecSemphore *)
+- name: EventDestroy
+  params:
+  - name: e
+    type: 'bool '
+  return_type: void
+  signature: void EventDestroy(SWelsDecEvent *)
+- name: SemRelease
+  params:
+  - name: s
+    type: 'bool '
+  - name: o_pPrevCount
+    type: 'bool '
+  return_type: void
+  signature: void SemRelease(SWelsDecSemphore *, long *)
+- name: ThreadWait
+  params:
+  - name: t
+    type: 'bool '
+  return_type: int
+  signature: int ThreadWait(SWelsDecThread *)
+- name: EventCreate
+  params:
+  - name: e
+    type: 'bool '
+  - name: manualReset
+    type: int
+  - name: initialState
+    type: int
+  return_type: int
+  signature: int EventCreate(SWelsDecEvent *, int, int)
+- name: EventReset
+  params:
+  - name: e
+    type: 'bool '
+  return_type: void
+  signature: void EventReset(SWelsDecEvent *)
+- name: _ZNK10WelsCommon12CMemoryAlign20WelsGetCacheLineSizeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: int
+  signature: const uint32_t WelsCommon::CMemoryAlign::WelsGetCacheLineSize()
+- name: EventPost
+  params:
+  - name: e
+    type: 'bool '
+  return_type: void
+  signature: void EventPost(SWelsDecEvent *)
+- name: ThreadCreate
+  params:
+  - name: t
+    type: 'bool '
+  - name: tf
+    type: 'bool '
+  - name: ta
+    type: 'bool '
+  return_type: int
+  signature: int ThreadCreate(SWelsDecThread *, LPWELS_THREAD_ROUTINE, void *)
+- name: EventWait
+  params:
+  - name: e
+    type: 'bool '
+  - name: timeout
+    type: int
+  return_type: int
+  signature: int EventWait(SWelsDecEvent *, int32_t)
+- name: SemCreate
+  params:
+  - name: s
+    type: 'bool '
+  - name: value
+    type: size_t
+  - name: max
+    type: size_t
+  return_type: int
+  signature: int SemCreate(SWelsDecSemphore *, long, long)
+language: c++
+project: openh264
+target_name: decoder_fuzzer
+target_path: /src/decoder_fuzzer.cpp

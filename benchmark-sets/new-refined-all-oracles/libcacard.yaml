@@ -1,0 +1,11 @@
+functions:
+- name: vcard_emul_type_select
+  params:
+  - name: vreader
+    type: 'bool '
+  return_type: int
+  signature: VCardEmulType vcard_emul_type_select(VReader *)
+language: c
+project: libcacard
+target_name: fuzz_simpletlv
+target_path: /src/libcacard/fuzz/fuzz_simpletlv.c

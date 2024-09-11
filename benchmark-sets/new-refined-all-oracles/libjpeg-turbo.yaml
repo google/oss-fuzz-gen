@@ -1,0 +1,46 @@
+functions:
+- name: tjSaveImage
+  params:
+  - name: filename
+    type: 'bool '
+  - name: buffer
+    type: 'bool '
+  - name: width
+    type: int
+  - name: pitch
+    type: int
+  - name: height
+    type: int
+  - name: pixelFormat
+    type: int
+  - name: flags
+    type: int
+  return_type: int
+  signature: int tjSaveImage(const char *, unsigned char *, int, int, int, int, int)
+- name: tjEncodeYUV2
+  params:
+  - name: handle
+    type: 'bool '
+  - name: srcBuf
+    type: 'bool '
+  - name: width
+    type: int
+  - name: pitch
+    type: int
+  - name: height
+    type: int
+  - name: pixelFormat
+    type: int
+  - name: dstBuf
+    type: 'bool '
+  - name: subsamp
+    type: int
+  - name: flags
+    type: int
+  return_type: int
+  signature: int tjEncodeYUV2(tjhandle, unsigned char *, int, int, int, int, unsigned
+    char *, int, int)
+language: c
+project: libjpeg-turbo
+target_name: cjpeg_fuzzer_2_1_x
+target_path: /src/libjpeg-turbo.2.1.x/fuzz/cjpeg.cc

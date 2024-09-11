@@ -1,0 +1,61 @@
+functions:
+- name: track_get_filename
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: const char * track_get_filename(const Track *)
+- name: cd_get_mode
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeDiscMode cd_get_mode(const Cd *)
+- name: track_get_zero_pre
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: long track_get_zero_pre(const Track *)
+- name: track_get_mode
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeTrackMode track_get_mode(const Track *)
+- name: track_get_sub_mode
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeTrackSubMode track_get_sub_mode(const Track *)
+- name: track_get_zero_post
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: long track_get_zero_post(const Track *)
+- name: cd_get_ntrack
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int cd_get_ntrack(const Cd *)
+- name: cd_get_cdtextfile
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: const char * cd_get_cdtextfile(const Cd *)
+- name: track_is_set_flag
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int track_is_set_flag(const Track *, DW_TAG_enumeration_typeTrackFlag)
+language: c
+project: libcue
+target_name: fuzz
+target_path: /src/libcue/oss-fuzz/fuzz.cpp

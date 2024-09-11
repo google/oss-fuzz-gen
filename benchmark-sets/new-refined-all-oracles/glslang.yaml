@@ -1,0 +1,315 @@
+functions:
+- name: _ZN7glslang11HlslGrammar33acceptDefaultParameterDeclarationERKNS_5TTypeERPNS_12TIntermTypedE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptDefaultParameterDeclaration(const TType
+    &, TIntermTyped &*)
+- name: _ZN7glslang11HlslGrammar21acceptParenExpressionERPNS_12TIntermTypedE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptParenExpression(TIntermTyped &*)
+- name: _ZN7glslang11HlslGrammar17acceptAnnotationsERNS_10TQualifierE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptAnnotations(TQualifier &)
+- name: _ZN7glslang11HlslGrammar21acceptScopedStatementERP11TIntermNode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptScopedStatement(TIntermNode &*)
+- name: _ZN7glslang11HlslGrammar21acceptSwitchStatementERP11TIntermNodeRKNS_5TListINS_14TAttributeArgsEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptSwitchStatement(TIntermNode &*, const
+    TAttributes &)
+- name: _ZN7glslang11HlslGrammar24acceptConstantBufferTypeERNS_5TTypeE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptConstantBufferType(TType &)
+- name: _ZN7glslang16HlslParseContext22decomposeSampleMethodsERKNS_10TSourceLocERPNS_12TIntermTypedEP11TIntermNode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void glslang::HlslParseContext::decomposeSampleMethods(const struct TSourceLoc
+    &, TIntermTyped &*, TIntermNode *)
+- name: _ZN7glslang13TParseContext26vkRelaxedRemapFunctionCallERKNS_10TSourceLocEPNS_9TFunctionEP11TIntermNode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: TIntermTyped * glslang::TParseContext::vkRelaxedRemapFunctionCall(const
+    struct TSourceLoc &, TFunction *, TIntermNode *)
+- name: _ZN7glslang11HlslGrammar35acceptTessellationPatchTemplateTypeERNS_5TTypeE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptTessellationPatchTemplateType(TType
+    &)
+- name: _ZN7glslang11HlslGrammar22acceptStructBufferTypeERNS_5TTypeE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptStructBufferType(TType &)
+- name: _ZN7glslang16HlslParseContext18decomposeIntrinsicERKNS_10TSourceLocERPNS_12TIntermTypedEP11TIntermNode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void glslang::HlslParseContext::decomposeIntrinsic(const struct TSourceLoc
+    &, TIntermTyped &*, TIntermNode *)
+- name: _ZN7glslang11HlslGrammar17acceptInitializerERPNS_12TIntermTypedE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptInitializer(TIntermTyped &*)
+- name: _ZN7glslang16HlslParseContext27addGenMulArgumentConversionERKNS_10TSourceLocERNS_9TFunctionERPNS_12TIntermTypedE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void glslang::HlslParseContext::addGenMulArgumentConversion(const struct
+    TSourceLoc &, TFunction &, TIntermTyped &*)
+- name: _ZN7glslang16HlslParseContext26addPatchConstantInvocationEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void glslang::HlslParseContext::addPatchConstantInvocation()
+- name: _ZN7glslang11HlslGrammar27acceptStreamOutTemplateTypeERNS_5TTypeERNS_15TLayoutGeometryE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptStreamOutTemplateType(TType &, DW_TAG_enumeration_typeTLayoutGeometry
+    &)
+- name: _ZZN7glslang13TParseContext28vkRelaxedRemapUniformMembersERKNS_10TSourceLocERKNS_11TPublicTypeERKNS_5TTypeERKNSt3__112basic_stringIcNSA_11char_traitsIcEENS_14pool_allocatorIcEEEEENK3$_0clES9_SI_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void glslang::TParseContext::operator()(const void *, const TType &,
+    const TString &)
+- name: _ZN7glslang13TParseContext28vkRelaxedRemapUniformMembersERKNS_10TSourceLocERKNS_11TPublicTypeERKNS_5TTypeERKNSt3__112basic_stringIcNSA_11char_traitsIcEENS_14pool_allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void glslang::TParseContext::vkRelaxedRemapUniformMembers(const struct
+    TSourceLoc &, const TPublicType &, const TType &, const TString &)
+- name: _ZN7glslang16HlslParseContext20handleDotDereferenceERKNS_10TSourceLocEPNS_12TIntermTypedERKNSt3__112basic_stringIcNS6_11char_traitsIcEENS_14pool_allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: TIntermTyped * glslang::HlslParseContext::handleDotDereference(const
+    struct TSourceLoc &, TIntermTyped *, const TString &)
+- name: _ZN7glslang11HlslGrammar24acceptControlDeclarationERP11TIntermNode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptControlDeclaration(TIntermNode &*)
+- name: _ZN7glslang11HlslGrammar24acceptSelectionStatementERP11TIntermNodeRKNS_5TListINS_14TAttributeArgsEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptSelectionStatement(TIntermNode &*, const
+    TAttributes &)
+- name: _ZN7glslang11HlslGrammar23acceptTextureBufferTypeERNS_5TTypeE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptTextureBufferType(TType &)
+- name: _ZN7glslang11HlslGrammar15acceptCaseLabelERP11TIntermNode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptCaseLabel(TIntermNode &*)
+- name: _ZN7glslang16HlslParseContext22convertInitializerListERKNS_10TSourceLocERKNS_5TTypeEPNS_12TIntermTypedES8_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: TIntermTyped * glslang::HlslParseContext::convertInitializerList(const
+    struct TSourceLoc &, const TType &, TIntermTyped *, TIntermTyped *)
+- name: _ZN7glslang16HlslParseContext19transformEntryPointERKNS_10TSourceLocERNS_9TFunctionERKNS_5TListINS_14TAttributeArgsEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: TIntermNode * glslang::HlslParseContext::transformEntryPoint(const struct
+    TSourceLoc &, TFunction &, const TAttributes &)
+- name: _ZN7glslang13TParseContext29vkRelaxedRemapUniformVariableERKNS_10TSourceLocERNSt3__112basic_stringIcNS4_11char_traitsIcEENS_14pool_allocatorIcEEEERKNS_11TPublicTypeEPNS_11TArraySizesEPNS_12TIntermTypedERNS_5TTypeE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::TParseContext::vkRelaxedRemapUniformVariable(const struct
+    TSourceLoc &, TString &, const TPublicType &, struct TArraySizes *, TIntermTyped
+    *, TType &)
+- name: _ZN7glslang16HlslParseContext17handleConstructorERKNS_10TSourceLocEPNS_12TIntermTypedERKNS_5TTypeE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: TIntermTyped * glslang::HlslParseContext::handleConstructor(const struct
+    TSourceLoc &, TIntermTyped *, const TType &)
+- name: _ZN7glslang11HlslGrammar19acceptJumpStatementERP11TIntermNode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptJumpStatement(TIntermNode &*)
+- name: _ZN7glslang11HlslGrammar25acceptLayoutQualifierListERNS_10TQualifierE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptLayoutQualifierList(TQualifier &)
+- name: _ZN7glslang11HlslGrammar24acceptIterationStatementERP11TIntermNodeRKNS_5TListINS_14TAttributeArgsEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptIterationStatement(TIntermNode &*, const
+    TAttributes &)
+language: c++
+project: glslang
+target_name: compile_fuzzer
+target_path: /src/compile_fuzzer.cc

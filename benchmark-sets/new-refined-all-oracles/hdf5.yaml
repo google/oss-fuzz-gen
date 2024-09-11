@@ -1,0 +1,429 @@
+functions:
+- name: H5O__open_by_idx
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void * H5O__open_by_idx(const H5G_loc_t *, const char *, H5_index_t,
+    H5_iter_order_t, hsize_t, H5I_type_t *)
+- name: H5G_get_name_by_addr
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5G_get_name_by_addr(H5F_t *, const H5O_loc_t *, char *, size_t,
+    size_t *)
+- name: H5A__attr_post_copy_file
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5A__attr_post_copy_file(const H5O_loc_t *, const H5A_t *, H5O_loc_t
+    *, const H5A_t *, H5O_copy_t *)
+- name: H5G__get_info_by_idx
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5G__get_info_by_idx(const H5G_loc_t *, const char *, H5_index_t,
+    H5_iter_order_t, hsize_t, H5G_info_t *)
+- name: H5D__compact_copy
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5D__compact_copy(H5F_t *, H5O_storage_compact_t *, H5F_t *, H5O_storage_compact_t
+    *, H5T_t *, H5O_copy_t *)
+- name: H5G_get_name
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5G_get_name(const H5G_loc_t *, char *, size_t, size_t *, _Bool
+    *)
+- name: H5A__delete_by_name
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5A__delete_by_name(const H5G_loc_t *, const char *, const char
+    *)
+- name: H5VLget_connector_id_by_name
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: hid_t H5VLget_connector_id_by_name(const char *)
+- name: H5CX_get_ext_file_prefix
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5CX_get_ext_file_prefix(const char **)
+- name: H5VLis_connector_registered_by_name
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: htri_t H5VLis_connector_registered_by_name(const char *)
+- name: H5D__contig_copy
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5D__contig_copy(H5F_t *, const H5O_storage_contig_t *, H5F_t
+    *, H5O_storage_contig_t *, H5T_t *, H5O_copy_t *)
+- name: H5O__shared_post_copy_file
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5O__shared_post_copy_file(H5F_t *, const H5O_msg_class_t *, const
+    H5O_shared_t *, H5O_shared_t *, unsigned int *, H5O_copy_t *)
+- name: H5D__refresh
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: herr_t H5D__refresh(H5D_t *, hid_t)
+- name: H5G__node_copy
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int H5G__node_copy(H5F_t *, const void *, haddr_t, const void *, void
+    *)
+- name: H5F__efc_open
+  params:
+  - name: ''
+    type: bool
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: herr_t H5F__efc_open(bool, H5F_efc_t *, H5F_t **, const char *, unsigned
+    int, hid_t, hid_t)
+- name: H5D__set_extent
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5D__set_extent(H5D_t *, const hsize_t *)
+- name: H5O__visit
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: herr_t H5O__visit(H5G_loc_t *, const char *, H5_index_t, H5_iter_order_t,
+    H5O_iterate2_t, void *, unsigned int)
+- name: H5A__open_by_idx
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: H5A_t * H5A__open_by_idx(const H5G_loc_t *, const char *, H5_index_t,
+    H5_iter_order_t, hsize_t)
+- name: H5D__virtual_refresh_source_dsets
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5D__virtual_refresh_source_dsets(H5D_t *)
+- name: H5O_copy_expand_ref
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5O_copy_expand_ref(H5F_t *, const H5T_t *, void *, size_t, H5F_t
+    *, void *, H5O_copy_t *)
+- name: H5A__create_by_name
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: H5A_t * H5A__create_by_name(const H5G_loc_t *, const char *, const char
+    *, const H5T_t *, const H5S_t *, hid_t)
+- name: H5O__copy
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: herr_t H5O__copy(const H5G_loc_t *, const char *, H5G_loc_t *, const
+    char *, hid_t, hid_t)
+- name: H5CX_get_vds_prefix
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5CX_get_vds_prefix(const char **)
+- name: H5F_prefix_open_file
+  params:
+  - name: ''
+    type: bool
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: herr_t H5F_prefix_open_file(bool, H5F_t **, H5F_t *, H5F_prefix_open_t,
+    const char *, const char *, unsigned int, hid_t)
+- name: H5D__create
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: H5D_t * H5D__create(H5F_t *, hid_t, const H5S_t *, hid_t, hid_t)
+- name: H5P__open_class_path
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: H5P_genclass_t * H5P__open_class_path(const char *)
+- name: H5Z_xform_create
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: H5Z_data_xform_t * H5Z_xform_create(const char *)
+- name: H5A__iterate
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5A__iterate(const H5G_loc_t *, const char *, H5_index_t, H5_iter_order_t,
+    hsize_t *, H5A_operator2_t, void *)
+- name: H5FDis_driver_registered_by_name
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: htri_t H5FDis_driver_registered_by_name(const char *)
+- name: H5A__delete_by_idx
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: herr_t H5A__delete_by_idx(const H5G_loc_t *, const char *, H5_index_t,
+    H5_iter_order_t, hsize_t)
+- name: H5VLpeek_connector_id_by_name
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: hid_t H5VLpeek_connector_id_by_name(const char *)
+- name: H5O_copy_header_map
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5O_copy_header_map(const H5O_loc_t *, H5O_loc_t *, H5O_copy_t
+    *, bool, H5O_type_t *, void **)
+- name: H5F__start_swmr_write
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5F__start_swmr_write(H5F_t *)
+language: c
+project: hdf5
+target_name: h5_read_fuzzer
+target_path: /src/h5_read_fuzzer.c

@@ -1,0 +1,307 @@
+functions:
+- name: _ZN8tinygltfL17SerializeGltfNodeERKNS_4NodeERN8nlohmann10basic_jsonINSt3__13mapENS5_6vectorENS5_12basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEblmdSB_NS3_14adl_serializerENS7_IhNSB_IhEEEEEE
+  params:
+  - name: node
+    type: 'bool '
+  - name: o
+    type: 'bool '
+  return_type: void
+  signature: void tinygltf::SerializeGltfNode(const Node &, json &)
+- name: stbi_info
+  params:
+  - name: filename
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  return_type: int
+  signature: int stbi_info(const char *, int *, int *, int *)
+- name: stbi_load_from_file
+  params:
+  - name: f
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: stbi_uc * stbi_load_from_file(FILE *, int *, int *, int *, int)
+- name: stbi_loadf_from_memory
+  params:
+  - name: buffer
+    type: 'bool '
+  - name: len
+    type: int
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: float * stbi_loadf_from_memory(const stbi_uc *, int, int *, int *, int
+    *, int)
+- name: _ZNK8nlohmann6detail9iter_implINS_10basic_jsonINSt3__13mapENS3_6vectorENS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEblmdS9_NS_14adl_serializerENS5_IhNS9_IhEEEEEEEdeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: reference nlohmann::detail::iter_impl<nlohmann::basic_json<std::__1::map,
+    std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::adl_serializer,
+    std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > > >::operator*(const
+    iter_impl<nlohmann::basic_json<std::__1::map, std::__1::vector, std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >, bool, long, unsigned
+    long, double, std::__1::allocator, nlohmann::adl_serializer, std::__1::vector<unsigned
+    char, std::__1::allocator<unsigned char> > > > *)
+- name: stbi_loadf
+  params:
+  - name: filename
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: float * stbi_loadf(const char *, int *, int *, int *, int)
+- name: _ZN8tinygltfL18SerializeGltfModelEPKNS_5ModelERN8nlohmann10basic_jsonINSt3__13mapENS5_6vectorENS5_12basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEblmdSB_NS3_14adl_serializerENS7_IhNSB_IhEEEEEE
+  params:
+  - name: model
+    type: 'bool '
+  - name: o
+    type: 'bool '
+  return_type: void
+  signature: void tinygltf::SerializeGltfModel(const Model *, json &)
+- name: _ZN8tinygltfL21SerializeGltfAccessorERKNS_8AccessorERN8nlohmann10basic_jsonINSt3__13mapENS5_6vectorENS5_12basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEblmdSB_NS3_14adl_serializerENS7_IhNSB_IhEEEEEE
+  params:
+  - name: accessor
+    type: 'bool '
+  - name: o
+    type: 'bool '
+  return_type: void
+  signature: void tinygltf::SerializeGltfAccessor(const struct Accessor &, json &)
+- name: _ZN8nlohmann6detail28json_sax_dom_callback_parserINS_10basic_jsonINSt3__13mapENS3_6vectorENS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEblmdS9_NS_14adl_serializerENS5_IhNS9_IhEEEEEEE4nullEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool nlohmann::detail::json_sax_dom_callback_parser<nlohmann::basic_json<std::__1::map,
+    std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::adl_serializer,
+    std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > > >::null(json_sax_dom_callback_parser<nlohmann::basic_json<std::__1::map,
+    std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::adl_serializer,
+    std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > > > *)
+- name: stbi_is_16_bit_from_callbacks
+  params:
+  - name: c
+    type: 'bool '
+  - name: user
+    type: 'bool '
+  return_type: int
+  signature: int stbi_is_16_bit_from_callbacks(const stbi_io_callbacks *, void *)
+- name: _ZNK8nlohmann6detail9iter_implINS_10basic_jsonINSt3__13mapENS3_6vectorENS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEblmdS9_NS_14adl_serializerENS5_IhNS9_IhEEEEEEE5valueEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: reference nlohmann::detail::iter_impl<nlohmann::basic_json<std::__1::map,
+    std::__1::vector, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    >, bool, long, unsigned long, double, std::__1::allocator, nlohmann::adl_serializer,
+    std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > > >::value(const
+    iter_impl<nlohmann::basic_json<std::__1::map, std::__1::vector, std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >, bool, long, unsigned
+    long, double, std::__1::allocator, nlohmann::adl_serializer, std::__1::vector<unsigned
+    char, std::__1::allocator<unsigned char> > > > *)
+- name: _ZN8tinygltf6detail14JsonFromStringEPKc
+  params:
+  - name: s
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: json tinygltf::detail::JsonFromString(const char *)
+- name: _ZN8tinygltfL21SerializeGltfMaterialERKNS_8MaterialERN8nlohmann10basic_jsonINSt3__13mapENS5_6vectorENS5_12basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEblmdSB_NS3_14adl_serializerENS7_IhNSB_IhEEEEEE
+  params:
+  - name: material
+    type: 'bool '
+  - name: o
+    type: 'bool '
+  return_type: void
+  signature: void tinygltf::SerializeGltfMaterial(const struct Material &, json &)
+- name: stbi_load_16_from_callbacks
+  params:
+  - name: clbk
+    type: 'bool '
+  - name: user
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: channels_in_file
+    type: 'bool '
+  - name: desired_channels
+    type: int
+  return_type: void
+  signature: stbi_us * stbi_load_16_from_callbacks(const stbi_io_callbacks *, void
+    *, int *, int *, int *, int)
+- name: stbi_loadf_from_file
+  params:
+  - name: f
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: float * stbi_loadf_from_file(FILE *, int *, int *, int *, int)
+- name: stbi_load_16
+  params:
+  - name: filename
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: stbi_us * stbi_load_16(const char *, int *, int *, int *, int)
+- name: stbi_info_from_file
+  params:
+  - name: f
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  return_type: int
+  signature: int stbi_info_from_file(FILE *, int *, int *, int *)
+- name: stbi_is_16_bit_from_file
+  params:
+  - name: f
+    type: 'bool '
+  return_type: int
+  signature: int stbi_is_16_bit_from_file(FILE *)
+- name: stbi_load_from_file_16
+  params:
+  - name: f
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: stbi__uint16 * stbi_load_from_file_16(FILE *, int *, int *, int *, int)
+- name: stbi_is_16_bit
+  params:
+  - name: filename
+    type: 'bool '
+  return_type: int
+  signature: int stbi_is_16_bit(const char *)
+- name: stbi_info_from_callbacks
+  params:
+  - name: c
+    type: 'bool '
+  - name: user
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  return_type: int
+  signature: int stbi_info_from_callbacks(const stbi_io_callbacks *, void *, int *,
+    int *, int *)
+- name: _ZN8tinygltfL18SerializeGltfSceneERKNS_5SceneERN8nlohmann10basic_jsonINSt3__13mapENS5_6vectorENS5_12basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEblmdSB_NS3_14adl_serializerENS7_IhNSB_IhEEEEEE
+  params:
+  - name: scene
+    type: 'bool '
+  - name: o
+    type: 'bool '
+  return_type: void
+  signature: void tinygltf::SerializeGltfScene(const struct Scene &, json &)
+- name: _ZN8tinygltf14WriteImageDataEPKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES8_PKNS_5ImageEbPKNS_11FsCallbacksEPKNS_12URICallbacksEPS6_Pv
+  params:
+  - name: basepath
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  - name: image
+    type: 'bool '
+  - name: embedImages
+    type: bool
+  - name: fs_cb
+    type: 'bool '
+  - name: uri_cb
+    type: 'bool '
+  - name: out_uri
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool tinygltf::WriteImageData(const string *, const string *, const struct
+    Image *, bool, const struct FsCallbacks *, const struct URICallbacks *, string
+    *, void *)
+- name: stbi_loadf_from_callbacks
+  params:
+  - name: clbk
+    type: 'bool '
+  - name: user
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: float * stbi_loadf_from_callbacks(const stbi_io_callbacks *, void *,
+    int *, int *, int *, int)
+- name: stbi_load
+  params:
+  - name: filename
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: stbi_uc * stbi_load(const char *, int *, int *, int *, int)
+language: c++
+project: tinygltf
+target_name: fuzz_gltf
+target_path: /src/tinygltf/tests/fuzzer/fuzz_gltf.cc

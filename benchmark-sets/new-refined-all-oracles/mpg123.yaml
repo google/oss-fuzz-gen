@@ -1,0 +1,232 @@
+functions:
+- name: mpg123_length
+  params:
+  - name: mh
+    type: 'bool '
+  return_type: size_t
+  signature: off_t mpg123_length(mpg123_handle *)
+- name: mpg123_seek_frame
+  params:
+  - name: mh
+    type: 'bool '
+  - name: offset
+    type: size_t
+  - name: whence
+    type: int
+  return_type: size_t
+  signature: off_t mpg123_seek_frame(mpg123_handle *, off_t, int)
+- name: mpg123_scan
+  params:
+  - name: mh
+    type: 'bool '
+  return_type: int
+  signature: int mpg123_scan(mpg123_handle *)
+- name: INT123_frame_init
+  params:
+  - name: fr
+    type: 'bool '
+  return_type: void
+  signature: void INT123_frame_init(mpg123_handle *)
+- name: mpg123_length64
+  params:
+  - name: mh
+    type: 'bool '
+  return_type: size_t
+  signature: int64_t mpg123_length64(mpg123_handle *)
+- name: mpg123_open_fd
+  params:
+  - name: mh
+    type: 'bool '
+  - name: fd
+    type: int
+  return_type: int
+  signature: int mpg123_open_fd(mpg123_handle *, int)
+- name: mpg123_timeframe64
+  params:
+  - name: mh
+    type: 'bool '
+  - name: seconds
+    type: double
+  return_type: size_t
+  signature: int64_t mpg123_timeframe64(mpg123_handle *, double)
+- name: mpg123_info
+  params:
+  - name: mh
+    type: 'bool '
+  - name: mi
+    type: 'bool '
+  return_type: int
+  signature: int mpg123_info(mpg123_handle *, struct mpg123_frameinfo *)
+- name: mpg123_store_utf8_2
+  params:
+  - name: sb
+    type: 'bool '
+  - name: enc
+    type: int
+  - name: source
+    type: 'bool '
+  - name: source_size
+    type: size_t
+  return_type: int
+  signature: int mpg123_store_utf8_2(mpg123_string *, int, const unsigned char *,
+    size_t)
+- name: mpg123_seek
+  params:
+  - name: mh
+    type: 'bool '
+  - name: sampleoff
+    type: size_t
+  - name: whence
+    type: int
+  return_type: size_t
+  signature: off_t mpg123_seek(mpg123_handle *, off_t, int)
+- name: mpg123_info2
+  params:
+  - name: mh
+    type: 'bool '
+  - name: mi
+    type: 'bool '
+  return_type: int
+  signature: int mpg123_info2(mpg123_handle *, struct mpg123_frameinfo2 *)
+- name: mpg123_framelength64
+  params:
+  - name: mh
+    type: 'bool '
+  return_type: size_t
+  signature: int64_t mpg123_framelength64(mpg123_handle *)
+- name: mpg123_framebyframe_decode64
+  params:
+  - name: mh
+    type: 'bool '
+  - name: num
+    type: 'bool '
+  - name: audio
+    type: 'bool '
+  - name: bytes
+    type: 'bool '
+  return_type: int
+  signature: int mpg123_framebyframe_decode64(mpg123_handle *, int64_t *, unsigned
+    char **, size_t *)
+- name: mpg123_decoder
+  params:
+  - name: mh
+    type: 'bool '
+  - name: decoder
+    type: 'bool '
+  return_type: int
+  signature: int mpg123_decoder(mpg123_handle *, const char *)
+- name: mpg123_framebyframe_next
+  params:
+  - name: mh
+    type: 'bool '
+  return_type: int
+  signature: int mpg123_framebyframe_next(mpg123_handle *)
+- name: mpg123_getformat
+  params:
+  - name: mh
+    type: 'bool '
+  - name: rate
+    type: 'bool '
+  - name: channels
+    type: 'bool '
+  - name: encoding
+    type: 'bool '
+  return_type: int
+  signature: int mpg123_getformat(mpg123_handle *, long *, int *, int *)
+- name: mpg123_timeframe
+  params:
+  - name: mh
+    type: 'bool '
+  - name: seconds
+    type: double
+  return_type: size_t
+  signature: off_t mpg123_timeframe(mpg123_handle *, double)
+- name: mpg123_framelength
+  params:
+  - name: mh
+    type: 'bool '
+  return_type: size_t
+  signature: off_t mpg123_framelength(mpg123_handle *)
+- name: mpg123_open_handle
+  params:
+  - name: mh
+    type: 'bool '
+  - name: iohandle
+    type: 'bool '
+  return_type: int
+  signature: int mpg123_open_handle(mpg123_handle *, void *)
+- name: mpg123_store_utf8
+  params:
+  - name: sb
+    type: 'bool '
+  - name: enc
+    type: int
+  - name: source
+    type: 'bool '
+  - name: source_size
+    type: size_t
+  return_type: int
+  signature: int mpg123_store_utf8(mpg123_string *, DW_TAG_enumeration_typempg123_text_encoding,
+    const unsigned char *, size_t)
+- name: mpg123_framebyframe_decode
+  params:
+  - name: mh
+    type: 'bool '
+  - name: num
+    type: 'bool '
+  - name: audio
+    type: 'bool '
+  - name: bytes
+    type: 'bool '
+  return_type: int
+  signature: int mpg123_framebyframe_decode(mpg123_handle *, off_t *, unsigned char
+    **, size_t *)
+- name: mpg123_replace_reader
+  params:
+  - name: mh
+    type: 'bool '
+  - name: r_read
+    type: 'bool '
+  - name: r_lseek
+    type: 'bool '
+  return_type: int
+  signature: int mpg123_replace_reader(mpg123_handle *, DW_TAG_subroutine_typeInfinite
+    loop *, DW_TAG_subroutine_typeInfinite loop *)
+- name: mpg123_seek_frame64
+  params:
+  - name: mh
+    type: 'bool '
+  - name: offset
+    type: size_t
+  - name: whence
+    type: int
+  return_type: size_t
+  signature: int64_t mpg123_seek_frame64(mpg123_handle *, int64_t, int)
+- name: mpg123_seek64
+  params:
+  - name: mh
+    type: 'bool '
+  - name: sampleoff
+    type: size_t
+  - name: whence
+    type: int
+  return_type: size_t
+  signature: int64_t mpg123_seek64(mpg123_handle *, int64_t, int)
+- name: mpg123_getformat2
+  params:
+  - name: mh
+    type: 'bool '
+  - name: rate
+    type: 'bool '
+  - name: channels
+    type: 'bool '
+  - name: encoding
+    type: 'bool '
+  - name: clear_flag
+    type: int
+  return_type: int
+  signature: int mpg123_getformat2(mpg123_handle *, long *, int *, int *, int)
+language: c++
+project: mpg123
+target_name: decode_fuzzer
+target_path: /src/decode_fuzzer.cc

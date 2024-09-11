@@ -1,0 +1,318 @@
+functions:
+- name: psa_sign_message_builtin
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: psa_status_t psa_sign_message_builtin(const psa_key_attributes_t *, const
+    uint8_t *, size_t, psa_algorithm_t, const uint8_t *, size_t, uint8_t *, size_t,
+    size_t *)
+- name: psa_import_key
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: psa_status_t psa_import_key(const psa_key_attributes_t *, const uint8_t
+    *, size_t, mbedtls_svc_key_id_t *)
+- name: mbedtls_ssl_write
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: int mbedtls_ssl_write(mbedtls_ssl_context *, const unsigned char *, size_t)
+- name: SOPC_KeyCertPair_CreateFromPaths
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: SOPC_ReturnStatus SOPC_KeyCertPair_CreateFromPaths(const char *, const
+    char *, char *, SOPC_KeyCertPair **)
+- name: SOPC_SecureChannels_OnInputEvent
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void SOPC_SecureChannels_OnInputEvent(SOPC_EventHandler *, int32_t, uint32_t,
+    uintptr_t, uintptr_t)
+- name: psa_export_public_key
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: psa_status_t psa_export_public_key(mbedtls_svc_key_id_t, uint8_t *, size_t,
+    size_t *)
+- name: psa_sign_message
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: psa_status_t psa_sign_message(mbedtls_svc_key_id_t, psa_algorithm_t,
+    const uint8_t *, size_t, uint8_t *, size_t, size_t *)
+- name: psa_verify_message
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: psa_status_t psa_verify_message(mbedtls_svc_key_id_t, psa_algorithm_t,
+    const uint8_t *, size_t, const uint8_t *, size_t)
+- name: SOPC_CryptoProvider_Create
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: SOPC_CryptoProvider * SOPC_CryptoProvider_Create(const char *)
+- name: SOPC_CryptoProvider_CreatePubSub
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: SOPC_CryptoProvider * SOPC_CryptoProvider_CreatePubSub(const char *)
+- name: psa_asymmetric_encrypt
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: psa_status_t psa_asymmetric_encrypt(mbedtls_svc_key_id_t, psa_algorithm_t,
+    const uint8_t *, size_t, const uint8_t *, size_t, uint8_t *, size_t, size_t *)
+- name: SOPC_SecureChannels_OnSocketsEvent
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void SOPC_SecureChannels_OnSocketsEvent(SOPC_EventHandler *, int32_t,
+    uint32_t, uintptr_t, uintptr_t)
+- name: psa_sign_hash
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: psa_status_t psa_sign_hash(mbedtls_svc_key_id_t, psa_algorithm_t, const
+    uint8_t *, size_t, uint8_t *, size_t, size_t *)
+- name: SOPC_Looper_Create
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: SOPC_Looper * SOPC_Looper_Create(const char *)
+- name: SOPC_Logger_AddUserInstance
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: SOPC_Log_Instance * SOPC_Logger_AddUserInstance(const char *)
+- name: psa_sign_hash_builtin
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: psa_status_t psa_sign_hash_builtin(const psa_key_attributes_t *, const
+    uint8_t *, size_t, psa_algorithm_t, const uint8_t *, size_t, uint8_t *, size_t,
+    size_t *)
+- name: psa_verify_hash
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: psa_status_t psa_verify_hash(mbedtls_svc_key_id_t, psa_algorithm_t, const
+    uint8_t *, size_t, const uint8_t *, size_t)
+- name: psa_verify_message_builtin
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: psa_status_t psa_verify_message_builtin(const psa_key_attributes_t *,
+    const uint8_t *, size_t, psa_algorithm_t, const uint8_t *, size_t, const uint8_t
+    *, size_t)
+- name: psa_copy_key
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: psa_status_t psa_copy_key(mbedtls_svc_key_id_t, const psa_key_attributes_t
+    *, mbedtls_svc_key_id_t *)
+- name: psa_key_derivation_output_key
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: psa_status_t psa_key_derivation_output_key(const psa_key_attributes_t
+    *, psa_key_derivation_operation_t *, mbedtls_svc_key_id_t *)
+- name: psa_asymmetric_decrypt
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: psa_status_t psa_asymmetric_decrypt(mbedtls_svc_key_id_t, psa_algorithm_t,
+    const uint8_t *, size_t, const uint8_t *, size_t, uint8_t *, size_t, size_t *)
+language: c++
+project: s2opc
+target_name: parse_tcp_uri_fuzzer
+target_path: /src/S2OPC/tests/ClientServer/unit_tests/fuzzing/fuzz_parse_tcp_uri.c

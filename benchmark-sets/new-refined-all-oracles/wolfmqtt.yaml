@@ -1,0 +1,80 @@
+functions:
+- name: wolfSSL_writev
+  params:
+  - name: ssl
+    type: 'bool '
+  - name: iov
+    type: 'bool '
+  - name: iovcnt
+    type: int
+  return_type: int
+  signature: int wolfSSL_writev(WOLFSSL *, const struct iovec *, int)
+- name: wolfSSL_SendUserCanceled
+  params:
+  - name: ssl
+    type: 'bool '
+  return_type: int
+  signature: int wolfSSL_SendUserCanceled(WOLFSSL *)
+- name: wolfSSL_send
+  params:
+  - name: ssl
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: sz
+    type: int
+  - name: flags
+    type: int
+  return_type: int
+  signature: int wolfSSL_send(WOLFSSL *, const void *, int, int)
+- name: wolfSSL_connect_cert
+  params:
+  - name: ssl
+    type: 'bool '
+  return_type: int
+  signature: int wolfSSL_connect_cert(WOLFSSL *)
+- name: wolfSSL_CertManagerLoadCABuffer
+  params:
+  - name: cm
+    type: 'bool '
+  - name: buff
+    type: 'bool '
+  - name: sz
+    type: size_t
+  - name: format
+    type: int
+  return_type: int
+  signature: int wolfSSL_CertManagerLoadCABuffer(WOLFSSL_CERT_MANAGER *, const unsigned
+    char *, long, int)
+- name: wolfSSL_peek
+  params:
+  - name: ssl
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: sz
+    type: int
+  return_type: int
+  signature: int wolfSSL_peek(WOLFSSL *, void *, int)
+- name: wolfSSL_shutdown
+  params:
+  - name: ssl
+    type: 'bool '
+  return_type: int
+  signature: int wolfSSL_shutdown(WOLFSSL *)
+- name: wolfSSL_recv
+  params:
+  - name: ssl
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: sz
+    type: int
+  - name: flags
+    type: int
+  return_type: int
+  signature: int wolfSSL_recv(WOLFSSL *, void *, int, int)
+language: c
+project: wolfmqtt
+target_name: wolfmqtt-fuzzer
+target_path: /src/wolfmqtt-fuzzers/fuzzer.cpp

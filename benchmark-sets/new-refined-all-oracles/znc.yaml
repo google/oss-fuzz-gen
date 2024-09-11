@@ -1,0 +1,231 @@
+functions:
+- name: _ZN4CZNCD2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void CZNC::~~CZNC()
+- name: _ZN5CUserD2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void CUser::~~CUser()
+- name: _ZN5CUser10AddNetworkERK7CStringRS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: sNetwork
+    type: 'bool '
+  - name: sErrorRet
+    type: 'bool '
+  return_type: void
+  signature: CIRCNetwork * CUser::AddNetwork(const CString &, CString &)
+- name: _ZN11CIRCNetworkD2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void CIRCNetwork::~~CIRCNetwork()
+- name: _ZN7CClient11AcceptLoginER5CUser
+  params:
+  - name: this
+    type: 'bool '
+  - name: User
+    type: 'bool '
+  return_type: void
+  signature: void CClient::AcceptLogin(CUser &)
+- name: _ZN5CUser11ParseConfigEP7CConfigR7CString
+  params:
+  - name: this
+    type: 'bool '
+  - name: pConfig
+    type: 'bool '
+  - name: sError
+    type: 'bool '
+  return_type: bool
+  signature: bool CUser::ParseConfig(CConfig *, CString &)
+- name: _ZN11CClientAuth13AcceptedLoginER5CUser
+  params:
+  - name: this
+    type: 'bool '
+  - name: User
+    type: 'bool '
+  return_type: void
+  signature: void CClientAuth::AcceptedLogin(CUser &)
+- name: _ZN8CIRCSock8ReadLineERK7CString
+  params:
+  - name: this
+    type: 'bool '
+  - name: sData
+    type: 'bool '
+  return_type: void
+  signature: void CIRCSock::ReadLine(const CString &)
+- name: _ZN11CIRCNetworkC2EP5CUserRK7CString
+  params:
+  - name: this
+    type: 'bool '
+  - name: pUser
+    type: 'bool '
+  - name: sName
+    type: 'bool '
+  return_type: void
+  signature: void CIRCNetwork::CIRCNetwork(CUser *, const CString &)
+- name: _ZN7CClient12DisconnectedEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void CClient::Disconnected()
+- name: _ZN4CZNC9LoadUsersER7CConfigR7CString
+  params:
+  - name: this
+    type: 'bool '
+  - name: config
+    type: 'bool '
+  - name: sError
+    type: 'bool '
+  return_type: bool
+  signature: bool CZNC::LoadUsers(CConfig &, CString &)
+- name: _ZN8CWebSock13OnPageRequestERK7CString
+  params:
+  - name: this
+    type: 'bool '
+  - name: sURI
+    type: 'bool '
+  return_type: void
+  signature: void CWebSock::OnPageRequest(const CString &)
+- name: _ZN5CUser13CloneNetworksERKS_
+  params:
+  - name: this
+    type: 'bool '
+  - name: User
+    type: 'bool '
+  return_type: void
+  signature: void CUser::CloneNetworks(const CUser &)
+- name: _ZN4CZNC18HandleUserDeletionEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool CZNC::HandleUserDeletion()
+- name: _ZN7CClient10SetNetworkEP11CIRCNetworkbb
+  params:
+  - name: this
+    type: 'bool '
+  - name: pNetwork
+    type: 'bool '
+  - name: bDisconnect
+    type: bool
+  - name: bReconnect
+    type: bool
+  return_type: void
+  signature: void CClient::SetNetwork(CIRCNetwork *, bool, bool)
+- name: _ZN11CIRCNetworkC2EP5CUserRKS_
+  params:
+  - name: this
+    type: 'bool '
+  - name: pUser
+    type: 'bool '
+  - name: Network
+    type: 'bool '
+  return_type: void
+  signature: void CIRCNetwork::CIRCNetwork(CUser *, const CIRCNetwork &)
+- name: _ZN4CZNC4LoopEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void CZNC::Loop()
+- name: _ZN8CIRCSock16OnNumericMessageER15CNumericMessage
+  params:
+  - name: this
+    type: 'bool '
+  - name: Message
+    type: 'bool '
+  return_type: bool
+  signature: bool CIRCSock::OnNumericMessage(CNumericMessage &)
+- name: _ZN5CUser5CloneERKS_R7CStringb
+  params:
+  - name: this
+    type: 'bool '
+  - name: User
+    type: 'bool '
+  - name: sErrorRet
+    type: 'bool '
+  - name: bCloneNetworks
+    type: bool
+  return_type: bool
+  signature: bool CUser::Clone(const CUser &, CString &, bool)
+- name: _ZN11CIRCNetwork7SetUserEP5CUser
+  params:
+  - name: this
+    type: 'bool '
+  - name: pUser
+    type: 'bool '
+  return_type: void
+  signature: void CIRCNetwork::SetUser(CUser *)
+- name: _ZN8CWebSock21OnPageRequestInternalERK7CStringRS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: sURI
+    type: 'bool '
+  - name: sPageRet
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeEPageReqResult CWebSock::OnPageRequestInternal(const
+    CString &, CString &)
+- name: _ZN4CZNC11DeleteUsersEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void CZNC::DeleteUsers()
+- name: _ZN4cctz9time_zone4ImplC2ERKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  return_type: void
+  signature: void cctz::time_zone::Impl::Impl(const string &)
+- name: _ZN5CUser13DeleteNetworkERK7CString
+  params:
+  - name: this
+    type: 'bool '
+  - name: sNetwork
+    type: 'bool '
+  return_type: bool
+  signature: bool CUser::DeleteNetwork(const CString &)
+- name: _ZN4cctz10TimeZoneIf4LoadERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: name
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: unique_ptr<cctz::TimeZoneIf, std::__1::default_delete<cctz::TimeZoneIf>
+    > cctz::TimeZoneIf::Load(const string &)
+- name: _ZN11CIRCNetwork5CloneERKS_b
+  params:
+  - name: this
+    type: 'bool '
+  - name: Network
+    type: 'bool '
+  - name: bCloneName
+    type: bool
+  return_type: void
+  signature: void CIRCNetwork::Clone(const CIRCNetwork &, bool)
+- name: _ZN4cctz12TimeZoneInfo4LoadERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  return_type: bool
+  signature: bool cctz::TimeZoneInfo::Load(const string &)
+language: c++
+project: znc
+target_name: msg_parse_fuzzer
+target_path: /src/msg_parse_fuzzer.cpp

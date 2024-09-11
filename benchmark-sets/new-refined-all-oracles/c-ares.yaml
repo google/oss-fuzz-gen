@@ -1,0 +1,293 @@
+functions:
+- name: ares_send
+  params:
+  - name: channel
+    type: 'bool '
+  - name: qbuf
+    type: 'bool '
+  - name: qlen
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  return_type: void
+  signature: void ares_send(ares_channel_t *, const unsigned char *, int, ares_callback,
+    void *)
+- name: ares_gethostbyaddr
+  params:
+  - name: channel
+    type: 'bool '
+  - name: addr
+    type: 'bool '
+  - name: addrlen
+    type: int
+  - name: family
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  return_type: void
+  signature: void ares_gethostbyaddr(ares_channel_t *, const void *, int, int, ares_host_callback,
+    void *)
+- name: ares_reinit
+  params:
+  - name: channel
+    type: 'bool '
+  return_type: int
+  signature: ares_status_t ares_reinit(ares_channel_t *)
+- name: ares_set_servers_csv
+  params:
+  - name: channel
+    type: 'bool '
+  - name: _csv
+    type: 'bool '
+  return_type: int
+  signature: int ares_set_servers_csv(ares_channel_t *, const char *)
+- name: ares_event_thread_init
+  params:
+  - name: channel
+    type: 'bool '
+  return_type: int
+  signature: ares_status_t ares_event_thread_init(ares_channel_t *)
+- name: ares_query
+  params:
+  - name: channel
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: dnsclass
+    type: int
+  - name: type
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  return_type: void
+  signature: void ares_query(ares_channel_t *, const char *, int, int, ares_callback,
+    void *)
+- name: ares_process
+  params:
+  - name: channel
+    type: 'bool '
+  - name: read_fds
+    type: 'bool '
+  - name: write_fds
+    type: 'bool '
+  return_type: void
+  signature: void ares_process(ares_channel_t *, fd_set *, fd_set *)
+- name: ares_set_servers_ports
+  params:
+  - name: channel
+    type: 'bool '
+  - name: servers
+    type: 'bool '
+  return_type: int
+  signature: int ares_set_servers_ports(ares_channel_t *, const struct ares_addr_port_node
+    *)
+- name: ares_init_by_options
+  params:
+  - name: channel
+    type: 'bool '
+  - name: options
+    type: 'bool '
+  - name: optmask
+    type: int
+  return_type: int
+  signature: ares_status_t ares_init_by_options(ares_channel_t *, const struct ares_options
+    *, int)
+- name: ares_query_dnsrec
+  params:
+  - name: channel
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: dnsclass
+    type: int
+  - name: type
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  - name: qid
+    type: 'bool '
+  return_type: int
+  signature: ares_status_t ares_query_dnsrec(ares_channel_t *, const char *, ares_dns_class_t,
+    ares_dns_rec_type_t, ares_callback_dnsrec, void *, unsigned short *)
+- name: ares_init_by_sysconfig
+  params:
+  - name: channel
+    type: 'bool '
+  return_type: int
+  signature: ares_status_t ares_init_by_sysconfig(ares_channel_t *)
+- name: ares_process_pending_write
+  params:
+  - name: channel
+    type: 'bool '
+  return_type: void
+  signature: void ares_process_pending_write(ares_channel_t *)
+- name: ares_query_nolock
+  params:
+  - name: channel
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: dnsclass
+    type: int
+  - name: type
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  - name: qid
+    type: 'bool '
+  return_type: int
+  signature: ares_status_t ares_query_nolock(ares_channel_t *, const char *, ares_dns_class_t,
+    ares_dns_rec_type_t, ares_callback_dnsrec, void *, unsigned short *)
+- name: ares_destroy
+  params:
+  - name: channel
+    type: 'bool '
+  return_type: void
+  signature: void ares_destroy(ares_channel_t *)
+- name: ares_event_configchg_init
+  params:
+  - name: configchg
+    type: 'bool '
+  - name: e
+    type: 'bool '
+  return_type: int
+  signature: ares_status_t ares_event_configchg_init(ares_event_configchg_t **, ares_event_thread_t
+    *)
+- name: ares_send_dnsrec
+  params:
+  - name: channel
+    type: 'bool '
+  - name: dnsrec
+    type: 'bool '
+  - name: callback
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  - name: qid
+    type: 'bool '
+  return_type: int
+  signature: ares_status_t ares_send_dnsrec(ares_channel_t *, const ares_dns_record_t
+    *, ares_callback_dnsrec, void *, unsigned short *)
+- name: ares_set_servers
+  params:
+  - name: channel
+    type: 'bool '
+  - name: servers
+    type: 'bool '
+  return_type: int
+  signature: int ares_set_servers(ares_channel_t *, const struct ares_addr_node *)
+- name: ares_servers_update
+  params:
+  - name: channel
+    type: 'bool '
+  - name: server_list
+    type: 'bool '
+  - name: user_specified
+    type: int
+  return_type: int
+  signature: ares_status_t ares_servers_update(ares_channel_t *, ares_llist_t *, ares_bool_t)
+- name: ares_set_servers_ports_csv
+  params:
+  - name: channel
+    type: 'bool '
+  - name: _csv
+    type: 'bool '
+  return_type: int
+  signature: int ares_set_servers_ports_csv(ares_channel_t *, const char *)
+- name: ares_gethostbyaddr_nolock
+  params:
+  - name: channel
+    type: 'bool '
+  - name: addr
+    type: 'bool '
+  - name: addrlen
+    type: int
+  - name: family
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  return_type: void
+  signature: void ares_gethostbyaddr_nolock(ares_channel_t *, const void *, int, int,
+    ares_host_callback, void *)
+- name: ares_process_fd
+  params:
+  - name: channel
+    type: 'bool '
+  - name: read_fd
+    type: int
+  - name: write_fd
+    type: int
+  return_type: void
+  signature: void ares_process_fd(ares_channel_t *, ares_socket_t, ares_socket_t)
+- name: ares_search
+  params:
+  - name: channel
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: dnsclass
+    type: int
+  - name: type
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  return_type: void
+  signature: void ares_search(ares_channel_t *, const char *, int, int, ares_callback,
+    void *)
+- name: ares_search_dnsrec
+  params:
+  - name: channel
+    type: 'bool '
+  - name: dnsrec
+    type: 'bool '
+  - name: callback
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  return_type: int
+  signature: ares_status_t ares_search_dnsrec(ares_channel_t *, const ares_dns_record_t
+    *, ares_callback_dnsrec, void *)
+- name: ares_cookie_validate
+  params:
+  - name: query
+    type: 'bool '
+  - name: dnsresp
+    type: 'bool '
+  - name: conn
+    type: 'bool '
+  - name: now
+    type: 'bool '
+  return_type: int
+  signature: ares_status_t ares_cookie_validate(ares_query_t *, const ares_dns_record_t
+    *, ares_conn_t *, const ares_timeval_t *)
+- name: ares_process_fds
+  params:
+  - name: channel
+    type: 'bool '
+  - name: events
+    type: 'bool '
+  - name: nevents
+    type: size_t
+  - name: flags
+    type: int
+  return_type: int
+  signature: ares_status_t ares_process_fds(ares_channel_t *, const ares_fd_events_t
+    *, size_t, unsigned int)
+language: c++
+project: c-ares
+target_name: ares_create_query_fuzzer
+target_path: /src/c-ares/test/ares-test-fuzz-name.c

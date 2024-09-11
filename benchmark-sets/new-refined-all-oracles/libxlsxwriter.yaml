@@ -1,0 +1,367 @@
+functions:
+- name: worksheet_write_url_opt
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: url
+    type: 'bool '
+  - name: user_format
+    type: 'bool '
+  - name: string
+    type: 'bool '
+  - name: tooltip
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_url_opt(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    const char *, lxw_format *, const char *, const char *)
+- name: worksheet_embed_image_opt
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: filename
+    type: 'bool '
+  - name: user_options
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_embed_image_opt(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    const char *, lxw_image_options *)
+- name: worksheet_write_comment_opt
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: text
+    type: 'bool '
+  - name: options
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_comment_opt(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    const char *, lxw_comment_options *)
+- name: worksheet_write_dynamic_formula_num
+  params:
+  - name: self
+    type: 'bool '
+  - name: row
+    type: int
+  - name: col
+    type: short
+  - name: formula
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  - name: result
+    type: double
+  return_type: int
+  signature: lxw_error worksheet_write_dynamic_formula_num(lxw_worksheet *, lxw_row_t,
+    lxw_col_t, const char *, lxw_format *, double)
+- name: worksheet_write_dynamic_formula
+  params:
+  - name: self
+    type: 'bool '
+  - name: row
+    type: int
+  - name: col
+    type: short
+  - name: formula
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_dynamic_formula(lxw_worksheet *, lxw_row_t,
+    lxw_col_t, const char *, lxw_format *)
+- name: worksheet_write_url
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: url
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_url(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    const char *, lxw_format *)
+- name: worksheet_write_dynamic_array_formula
+  params:
+  - name: self
+    type: 'bool '
+  - name: first_row
+    type: int
+  - name: first_col
+    type: short
+  - name: last_row
+    type: int
+  - name: last_col
+    type: short
+  - name: formula
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_dynamic_array_formula(lxw_worksheet *, lxw_row_t,
+    lxw_col_t, lxw_row_t, lxw_col_t, const char *, lxw_format *)
+- name: worksheet_write_array_formula_num
+  params:
+  - name: self
+    type: 'bool '
+  - name: first_row
+    type: int
+  - name: first_col
+    type: short
+  - name: last_row
+    type: int
+  - name: last_col
+    type: short
+  - name: formula
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  - name: result
+    type: double
+  return_type: int
+  signature: lxw_error worksheet_write_array_formula_num(lxw_worksheet *, lxw_row_t,
+    lxw_col_t, lxw_row_t, lxw_col_t, const char *, lxw_format *, double)
+- name: worksheet_embed_image_buffer
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: image_buffer
+    type: 'bool '
+  - name: image_size
+    type: size_t
+  return_type: int
+  signature: lxw_error worksheet_embed_image_buffer(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    const unsigned char *, size_t)
+- name: worksheet_write_formula
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: formula
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_formula(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    const char *, lxw_format *)
+- name: worksheet_write_dynamic_array_formula_num
+  params:
+  - name: self
+    type: 'bool '
+  - name: first_row
+    type: int
+  - name: first_col
+    type: short
+  - name: last_row
+    type: int
+  - name: last_col
+    type: short
+  - name: formula
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  - name: result
+    type: double
+  return_type: int
+  signature: lxw_error worksheet_write_dynamic_array_formula_num(lxw_worksheet *,
+    lxw_row_t, lxw_col_t, lxw_row_t, lxw_col_t, const char *, lxw_format *, double)
+- name: worksheet_embed_image
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: filename
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_embed_image(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    const char *)
+- name: worksheet_merge_range
+  params:
+  - name: self
+    type: 'bool '
+  - name: first_row
+    type: int
+  - name: first_col
+    type: short
+  - name: last_row
+    type: int
+  - name: last_col
+    type: short
+  - name: string
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_merge_range(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    lxw_row_t, lxw_col_t, const char *, lxw_format *)
+- name: worksheet_write_unixtime
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: unixtime
+    type: size_t
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_unixtime(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    int64_t, lxw_format *)
+- name: worksheet_embed_image_buffer_opt
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: image_buffer
+    type: 'bool '
+  - name: image_size
+    type: size_t
+  - name: user_options
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_embed_image_buffer_opt(lxw_worksheet *, lxw_row_t,
+    lxw_col_t, const unsigned char *, size_t, lxw_image_options *)
+- name: worksheet_write_datetime
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: datetime
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_datetime(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    lxw_datetime *, lxw_format *)
+- name: worksheet_write_number
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: value
+    type: double
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_number(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    double, lxw_format *)
+- name: worksheet_write_array_formula
+  params:
+  - name: self
+    type: 'bool '
+  - name: first_row
+    type: int
+  - name: first_col
+    type: short
+  - name: last_row
+    type: int
+  - name: last_col
+    type: short
+  - name: formula
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_array_formula(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    lxw_row_t, lxw_col_t, const char *, lxw_format *)
+- name: worksheet_write_formula_num
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: formula
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  - name: result
+    type: double
+  return_type: int
+  signature: lxw_error worksheet_write_formula_num(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    const char *, lxw_format *, double)
+- name: worksheet_write_formula_str
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: formula
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  - name: result
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_formula_str(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    const char *, lxw_format *, const char *)
+- name: worksheet_write_comment
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: string
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_comment(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    const char *)
+- name: worksheet_write_boolean
+  params:
+  - name: self
+    type: 'bool '
+  - name: row_num
+    type: int
+  - name: col_num
+    type: short
+  - name: value
+    type: int
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: lxw_error worksheet_write_boolean(lxw_worksheet *, lxw_row_t, lxw_col_t,
+    int, lxw_format *)
+language: c
+project: libxlsxwriter
+target_name: xlsx_fuzzer
+target_path: /src/libxlsxwriter/dev/fuzzing/xlsx_fuzzer.cpp

@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: uriparser
+target_name: uri_dissect_query_malloc_fuzzer
+target_path: /src/uri_dissect_query_malloc_fuzzer.cc

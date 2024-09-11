@@ -1,0 +1,250 @@
+functions:
+- name: _ZN4abslneENS_7uint128ES0_
+  params:
+  - name: lhs
+    type: size_t
+  - name: rhs
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: bool
+  signature: bool absl::operator!=(uint128, uint128)
+- name: _ZN4abslgeENS_7uint128ES0_
+  params:
+  - name: lhs
+    type: size_t
+  - name: rhs
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: bool
+  signature: bool absl::operator>=(uint128, uint128)
+- name: _ZNK4absl11string_view16find_last_not_ofEcm
+  params:
+  - name: this
+    type: 'bool '
+  - name: c
+    type: char
+  - name: pos
+    type: size_t
+  return_type: size_t
+  signature: size_type absl::string_view::find_last_not_of(char, size_type)
+- name: _ZN4absl10FixedArrayIcLm18446744073709551615ENSt3__19allocatorIcEEEixEm
+  params:
+  - name: this
+    type: 'bool '
+  - name: i
+    type: size_t
+  return_type: void
+  signature: reference absl::FixedArray<char, 18446744073709551615ul, std::__1::allocator<char>
+    >::operator[](FixedArray<char, 18446744073709551615UL, std::__1::allocator<char>
+    > *, size_type)
+- name: _ZNK4absl11string_view5rfindES0_m
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: pos
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: size_t
+  signature: size_type absl::string_view::rfind(string_view, size_type)
+- name: _ZNK4absl10FixedArrayIcLm18446744073709551615ENSt3__19allocatorIcEEE4sizeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: size_t
+  signature: size_type absl::FixedArray<char, 18446744073709551615ul, std::__1::allocator<char>
+    >::size(const FixedArray<char, 18446744073709551615UL, std::__1::allocator<char>
+    > *)
+- name: _ZNK4absl4SpanIjEixEm
+  params:
+  - name: this
+    type: 'bool '
+  - name: i
+    type: size_t
+  return_type: void
+  signature: reference absl::Span<unsigned int>::operator[](size_type)
+- name: _ZNK4absl11string_view13find_first_ofEcm
+  params:
+  - name: this
+    type: 'bool '
+  - name: c
+    type: char
+  - name: pos
+    type: size_t
+  return_type: size_t
+  signature: size_type absl::string_view::find_first_of(char, size_type)
+- name: _ZNK4absl11string_view16find_last_not_ofES0_m
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: pos
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: size_t
+  signature: size_type absl::string_view::find_last_not_of(string_view, size_type)
+- name: _ZNK4absl11string_view17find_first_not_ofEcm
+  params:
+  - name: this
+    type: 'bool '
+  - name: c
+    type: char
+  - name: pos
+    type: size_t
+  return_type: size_t
+  signature: size_type absl::string_view::find_first_not_of(char, size_type)
+- name: _ZNK4absl11string_view12find_last_ofES0_m
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: pos
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: size_t
+  signature: size_type absl::string_view::find_last_of(string_view, size_type)
+- name: _ZNK4absl13InlinedVectorINS_19str_format_internal13FormatArgImplELm4ENSt3__19allocatorIS2_EEE4sizeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: size_t
+  signature: size_type absl::InlinedVector<absl::str_format_internal::FormatArgImpl,
+    4ul, std::__1::allocator<absl::str_format_internal::FormatArgImpl> >::size(const
+    InlinedVector<absl::str_format_internal::FormatArgImpl, 4UL, std::__1::allocator<absl::str_format_internal::FormatArgImpl>
+    > *)
+- name: _ZN4absl6int128mIES0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: int128 & absl::int128::operator-=(int128)
+- name: _ZNK4absl11string_view17find_first_not_ofES0_m
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: pos
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: size_t
+  signature: size_type absl::string_view::find_first_not_of(string_view, size_type)
+- name: _ZN4absl6int128pLES0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: int128 & absl::int128::operator+=(int128)
+- name: _ZN4absl10FixedArrayIcLm18446744073709551615ENSt3__19allocatorIcEEE7Storage5allocEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: allocator_type & absl::FixedArray<char, 18446744073709551615ul, std::__1::allocator<char>
+    >::Storage::alloc()
+- name: _ZNK4absl11string_view4findES0_m
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: pos
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: size_t
+  signature: size_type absl::string_view::find(string_view, size_type)
+- name: _ZZNK4absl19str_format_internal16ParsedFormatBase18MatchesConversionsEbSt16initializer_listINS_23FormatConversionCharSetEEENK3$_0clEic
+  params:
+  - name: this
+    type: 'bool '
+  - name: pos
+    type: int
+  - name: c
+    type: char
+  return_type: bool
+  signature: bool absl::str_format_internal::ParsedFormatBase::operator()(const void
+    *, int, char)
+- name: _ZNK4absl11string_view12find_last_ofEcm
+  params:
+  - name: this
+    type: 'bool '
+  - name: c
+    type: char
+  - name: pos
+    type: size_t
+  return_type: size_t
+  signature: size_type absl::string_view::find_last_of(char, size_type)
+- name: _ZNK4absl11string_view13find_first_ofES0_m
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: pos
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: size_t
+  signature: size_type absl::string_view::find_first_of(string_view, size_type)
+- name: _ZNK4absl10FixedArrayIcLm18446744073709551615ENSt3__19allocatorIcEEE7Storage4sizeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: size_t
+  signature: size_type absl::FixedArray<char, 18446744073709551615ul, std::__1::allocator<char>
+    >::Storage::size()
+- name: _ZNK4absl13InlinedVectorINS_19str_format_internal13FormatArgImplELm4ENSt3__19allocatorIS2_EEE4dataEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const_pointer absl::InlinedVector<absl::str_format_internal::FormatArgImpl,
+    4ul, std::__1::allocator<absl::str_format_internal::FormatArgImpl> >::data(const
+    InlinedVector<absl::str_format_internal::FormatArgImpl, 4UL, std::__1::allocator<absl::str_format_internal::FormatArgImpl>
+    > *)
+- name: _ZN4absl7uint128aNES0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: uint128 & absl::uint128::operator&=(uint128)
+- name: _ZNK4absl11string_view5rfindEcm
+  params:
+  - name: this
+    type: 'bool '
+  - name: c
+    type: char
+  - name: pos
+    type: size_t
+  return_type: size_t
+  signature: size_type absl::string_view::rfind(char, size_type)
+language: c++
+project: abseil-cpp
+target_name: string_escape_fuzzer
+target_path: /src/string_escape_fuzzer.cc

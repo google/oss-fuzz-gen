@@ -1,0 +1,155 @@
+functions:
+- name: Strshrink
+  params:
+  - name: s
+    type: 'bool '
+  - name: n
+    type: int
+  return_type: void
+  signature: void Strshrink(Str, int)
+- name: Strdelete
+  params:
+  - name: s
+    type: 'bool '
+  - name: pos
+    type: int
+  - name: n
+    type: int
+  return_type: void
+  signature: void Strdelete(Str, int, int)
+- name: Strnew_charp
+  params:
+  - name: p
+    type: 'bool '
+  return_type: void
+  signature: Str Strnew_charp(const char *)
+- name: Strdup
+  params:
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: Str Strdup(Str)
+- name: Strinsert_char
+  params:
+  - name: s
+    type: 'bool '
+  - name: pos
+    type: int
+  - name: c
+    type: char
+  return_type: void
+  signature: void Strinsert_char(Str, int, char)
+- name: Strinsert_charp
+  params:
+  - name: s
+    type: 'bool '
+  - name: pos
+    type: int
+  - name: p
+    type: 'bool '
+  return_type: void
+  signature: void Strinsert_charp(Str, int, const char *)
+- name: Strfgets
+  params:
+  - name: f
+    type: 'bool '
+  return_type: void
+  signature: Str Strfgets(FILE *)
+- name: Strcat_m_charp
+  params:
+  - name: x
+    type: 'bool '
+  return_type: void
+  signature: void Strcat_m_charp(Str, void)
+- name: Strfgetall
+  params:
+  - name: f
+    type: 'bool '
+  return_type: void
+  signature: Str Strfgetall(FILE *)
+- name: Strtruncate
+  params:
+  - name: s
+    type: 'bool '
+  - name: pos
+    type: int
+  return_type: void
+  signature: void Strtruncate(Str, int)
+- name: Strcopy_charp
+  params:
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  return_type: void
+  signature: void Strcopy_charp(Str, const char *)
+- name: Strcopy_charp_n
+  params:
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: n
+    type: int
+  return_type: void
+  signature: void Strcopy_charp_n(Str, const char *, int)
+- name: Strcat
+  params:
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  return_type: void
+  signature: void Strcat(Str, Str)
+- name: Strremovetrailingspaces
+  params:
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: void Strremovetrailingspaces(Str)
+- name: Strchop
+  params:
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: void Strchop(Str)
+- name: Strremovefirstspaces
+  params:
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: void Strremovefirstspaces(Str)
+- name: Strupper
+  params:
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: void Strupper(Str)
+- name: Strlower
+  params:
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: void Strlower(Str)
+- name: Strcopy
+  params:
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  return_type: void
+  signature: void Strcopy(Str, Str)
+- name: Strsubstr
+  params:
+  - name: s
+    type: 'bool '
+  - name: beg
+    type: int
+  - name: len
+    type: int
+  return_type: void
+  signature: Str Strsubstr(Str, int, int)
+language: c
+project: w3m
+target_name: fuzz_conv
+target_path: /src/w3m/fuzz/fuzz-conv.c

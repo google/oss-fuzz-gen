@@ -1,0 +1,321 @@
+functions:
+- name: stbi_zlib_decode_malloc
+  params:
+  - name: buffer
+    type: 'bool '
+  - name: len
+    type: int
+  - name: outlen
+    type: 'bool '
+  return_type: void
+  signature: char * stbi_zlib_decode_malloc(const char *, int, int *)
+- name: stbi_zlib_decode_malloc_guesssize
+  params:
+  - name: buffer
+    type: 'bool '
+  - name: len
+    type: int
+  - name: initial_size
+    type: int
+  - name: outlen
+    type: 'bool '
+  return_type: void
+  signature: char * stbi_zlib_decode_malloc_guesssize(const char *, int, int, int
+    *)
+- name: stbi_load_from_file
+  params:
+  - name: f
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: stbi_uc * stbi_load_from_file(FILE *, int *, int *, int *, int)
+- name: stbi_loadf_from_memory
+  params:
+  - name: buffer
+    type: 'bool '
+  - name: len
+    type: int
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: float * stbi_loadf_from_memory(const stbi_uc *, int, int *, int *, int
+    *, int)
+- name: stbi_loadf
+  params:
+  - name: filename
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: float * stbi_loadf(const char *, int *, int *, int *, int)
+- name: stbi_convert_iphone_png_to_rgb_thread
+  params:
+  - name: flag_true_if_should_convert
+    type: int
+  return_type: void
+  signature: void stbi_convert_iphone_png_to_rgb_thread(int)
+- name: stbi_is_16_bit_from_memory
+  params:
+  - name: buffer
+    type: 'bool '
+  - name: len
+    type: int
+  return_type: int
+  signature: int stbi_is_16_bit_from_memory(const stbi_uc *, int)
+- name: stbi_load_from_callbacks
+  params:
+  - name: clbk
+    type: 'bool '
+  - name: user
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: stbi_uc * stbi_load_from_callbacks(const stbi_io_callbacks *, void *,
+    int *, int *, int *, int)
+- name: stbi_is_hdr_from_callbacks
+  params:
+  - name: clbk
+    type: 'bool '
+  - name: user
+    type: 'bool '
+  return_type: int
+  signature: int stbi_is_hdr_from_callbacks(const stbi_io_callbacks *, void *)
+- name: stbi_is_16_bit_from_callbacks
+  params:
+  - name: c
+    type: 'bool '
+  - name: user
+    type: 'bool '
+  return_type: int
+  signature: int stbi_is_16_bit_from_callbacks(const stbi_io_callbacks *, void *)
+- name: stbi_zlib_decode_noheader_malloc
+  params:
+  - name: buffer
+    type: 'bool '
+  - name: len
+    type: int
+  - name: outlen
+    type: 'bool '
+  return_type: void
+  signature: char * stbi_zlib_decode_noheader_malloc(const char *, int, int *)
+- name: stbi_load_16_from_callbacks
+  params:
+  - name: clbk
+    type: 'bool '
+  - name: user
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: channels_in_file
+    type: 'bool '
+  - name: desired_channels
+    type: int
+  return_type: void
+  signature: stbi_us * stbi_load_16_from_callbacks(const stbi_io_callbacks *, void
+    *, int *, int *, int *, int)
+- name: stbi_ldr_to_hdr_scale
+  params:
+  - name: scale
+    type: float
+  return_type: void
+  signature: void stbi_ldr_to_hdr_scale(float)
+- name: stbi_loadf_from_file
+  params:
+  - name: f
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: float * stbi_loadf_from_file(FILE *, int *, int *, int *, int)
+- name: stbi_load_16
+  params:
+  - name: filename
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: stbi_us * stbi_load_16(const char *, int *, int *, int *, int)
+- name: stbi_load_gif_from_memory
+  params:
+  - name: buffer
+    type: 'bool '
+  - name: len
+    type: int
+  - name: delays
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: z
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: stbi_uc * stbi_load_gif_from_memory(const stbi_uc *, int, int **, int
+    *, int *, int *, int *, int)
+- name: stbi_load_from_file_16
+  params:
+  - name: f
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: stbi__uint16 * stbi_load_from_file_16(FILE *, int *, int *, int *, int)
+- name: stbi_load_16_from_memory
+  params:
+  - name: buffer
+    type: 'bool '
+  - name: len
+    type: int
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: channels_in_file
+    type: 'bool '
+  - name: desired_channels
+    type: int
+  return_type: void
+  signature: stbi_us * stbi_load_16_from_memory(const stbi_uc *, int, int *, int *,
+    int *, int)
+- name: stbi_is_hdr
+  params:
+  - name: filename
+    type: 'bool '
+  return_type: int
+  signature: int stbi_is_hdr(const char *)
+- name: stbi_hdr_to_ldr_scale
+  params:
+  - name: scale
+    type: float
+  return_type: void
+  signature: void stbi_hdr_to_ldr_scale(float)
+- name: stbi_info_from_callbacks
+  params:
+  - name: c
+    type: 'bool '
+  - name: user
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  return_type: int
+  signature: int stbi_info_from_callbacks(const stbi_io_callbacks *, void *, int *,
+    int *, int *)
+- name: stbi_zlib_decode_noheader_buffer
+  params:
+  - name: obuffer
+    type: 'bool '
+  - name: olen
+    type: int
+  - name: ibuffer
+    type: 'bool '
+  - name: ilen
+    type: int
+  return_type: int
+  signature: int stbi_zlib_decode_noheader_buffer(char *, int, const char *, int)
+- name: stbi_convert_iphone_png_to_rgb
+  params:
+  - name: flag_true_if_should_convert
+    type: int
+  return_type: void
+  signature: void stbi_convert_iphone_png_to_rgb(int)
+- name: stbi_loadf_from_callbacks
+  params:
+  - name: clbk
+    type: 'bool '
+  - name: user
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: float * stbi_loadf_from_callbacks(const stbi_io_callbacks *, void *,
+    int *, int *, int *, int)
+- name: stbi_load
+  params:
+  - name: filename
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: req_comp
+    type: int
+  return_type: void
+  signature: stbi_uc * stbi_load(const char *, int *, int *, int *, int)
+- name: stbi_zlib_decode_buffer
+  params:
+  - name: obuffer
+    type: 'bool '
+  - name: olen
+    type: int
+  - name: ibuffer
+    type: 'bool '
+  - name: ilen
+    type: int
+  return_type: int
+  signature: int stbi_zlib_decode_buffer(char *, int, const char *, int)
+language: c++
+project: stb
+target_name: stb_png_read_fuzzer
+target_path: /src/stb/tests/stbi_read_fuzzer.c

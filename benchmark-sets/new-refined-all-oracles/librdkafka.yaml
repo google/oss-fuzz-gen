@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: librdkafka
+target_name: fuzz_regex
+target_path: /src/librdkafka/tests/fuzzers/fuzz_regex.c

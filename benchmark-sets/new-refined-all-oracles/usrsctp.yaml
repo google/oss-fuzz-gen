@@ -1,0 +1,65 @@
+functions:
+- name: usrsctp_opt_info
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int usrsctp_opt_info(struct socket *, sctp_assoc_t, int, void *, socklen_t
+    *)
+- name: usrsctp_getladdrs
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int usrsctp_getladdrs(struct socket *, sctp_assoc_t, struct sockaddr
+    **)
+- name: usrsctp_getpaddrs
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int usrsctp_getpaddrs(struct socket *, sctp_assoc_t, struct sockaddr
+    **)
+- name: sctp_shutdown
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int sctp_shutdown(struct socket *)
+- name: usrsctp_init_nothreads
+  params:
+  - name: ''
+    type: short
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void usrsctp_init_nothreads(uint16_t, DW_TAG_subroutine_typeInfinite
+    loop *, DW_TAG_subroutine_typeuint16_t *)
+- name: usrsctp_deregister_address
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void usrsctp_deregister_address(void *)
+language: c++
+project: usrsctp
+target_name: fuzzer_listen
+target_path: /src/usrsctp/fuzzer/fuzzer_listen.c

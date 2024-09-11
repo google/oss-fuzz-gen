@@ -1,0 +1,23 @@
+functions:
+- name: ZydisFormatterBufferGetToken
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: ZyanStatus ZydisFormatterBufferGetToken(const ZydisFormatterBuffer *,
+    ZydisFormatterTokenConst **)
+- name: ZydisFormatterBufferRemember
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: ZyanStatus ZydisFormatterBufferRemember(const ZydisFormatterBuffer *,
+    ZyanUPointer *)
+language: c
+project: zydis
+target_name: ZydisFuzzReEncoding
+target_path: /src/zydis/tools/ZydisFuzzShared.c

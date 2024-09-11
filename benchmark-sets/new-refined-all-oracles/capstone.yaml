@@ -1,0 +1,307 @@
+functions:
+- name: printThumbAddrModeImm5S1Operand
+  params:
+  - name: MI
+    type: 'bool '
+  - name: Op
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printThumbAddrModeImm5S1Operand(MCInst *, unsigned int, SStream
+    *)
+- name: printVectorListFourSpacedAllLanes
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNum
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printVectorListFourSpacedAllLanes(MCInst *, unsigned int, SStream
+    *)
+- name: X86_lockrep
+  params:
+  - name: MI
+    type: 'bool '
+  - name: O
+    type: 'bool '
+  return_type: bool
+  signature: bool X86_lockrep(MCInst *, SStream *)
+- name: printAddrMode2Operand
+  params:
+  - name: MI
+    type: 'bool '
+  - name: Op
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printAddrMode2Operand(MCInst *, unsigned int, SStream *)
+- name: printAMNoIndex
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNum
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printAMNoIndex(MCInst *, unsigned int, SStream *)
+- name: printGPR64as32
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNum
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printGPR64as32(MCInst *, unsigned int, SStream *)
+- name: printSystemPStateField
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNum
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printSystemPStateField(MCInst *, unsigned int, SStream *)
+- name: printVectorList
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNum
+    type: int
+  - name: O
+    type: 'bool '
+  - name: LayoutSuffix
+    type: 'bool '
+  - name: MRI
+    type: 'bool '
+  - name: vas
+    type: int
+  return_type: void
+  signature: void printVectorList(MCInst *, unsigned int, SStream *, const char *)
+- name: printThumbAddrModeSPOperand
+  params:
+  - name: MI
+    type: 'bool '
+  - name: Op
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printThumbAddrModeSPOperand(MCInst *, unsigned int, SStream *)
+- name: LoongArch_getInstruction
+  params:
+  - name: handle
+    type: size_t
+  - name: code
+    type: 'bool '
+  - name: code_len
+    type: size_t
+  - name: instr
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  - name: address
+    type: size_t
+  - name: info
+    type: 'bool '
+  return_type: bool
+  signature: bool LoongArch_getInstruction(csh, const uint8_t *, size_t, MCInst *,
+    uint16_t *, uint64_t, void *)
+- name: cs_op_index
+  params:
+  - name: ud
+    type: size_t
+  - name: insn
+    type: 'bool '
+  - name: op_type
+    type: int
+  - name: post
+    type: int
+  return_type: int
+  signature: int cs_op_index(csh, const cs_insn *, unsigned int, unsigned int)
+- name: printImplicitlyTypedVectorList
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNum
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printImplicitlyTypedVectorList(MCInst *, unsigned int, SStream *)
+- name: printSysAlias
+  params:
+  - name: MI
+    type: 'bool '
+  - name: O
+    type: 'bool '
+  return_type: bool
+  signature: bool printSysAlias(MCInst *, SStream *)
+- name: printVectorListFourSpaced
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNum
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printVectorListFourSpaced(MCInst *, unsigned int, SStream *)
+- name: printVectorListFourAllLanes
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNum
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printVectorListFourAllLanes(MCInst *, unsigned int, SStream *)
+- name: cs_disasm_iter
+  params:
+  - name: ud
+    type: size_t
+  - name: code
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  - name: address
+    type: 'bool '
+  - name: insn
+    type: 'bool '
+  return_type: bool
+  signature: bool cs_disasm_iter(csh, const uint8_t **, size_t *, uint64_t *, cs_insn
+    *)
+- name: printMveSaturateOp
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNum
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printMveSaturateOp(MCInst *, unsigned int, SStream *)
+- name: printLdStmModeOperand
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNum
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printLdStmModeOperand(MCInst *, unsigned int, SStream *)
+- name: M68K_getInstruction
+  params:
+  - name: ud
+    type: size_t
+  - name: code
+    type: 'bool '
+  - name: code_len
+    type: size_t
+  - name: instr
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  - name: address
+    type: size_t
+  - name: inst_info
+    type: 'bool '
+  return_type: bool
+  signature: bool M68K_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t
+    *, uint64_t, void *)
+- name: SH_getInstruction
+  params:
+  - name: ud
+    type: size_t
+  - name: code
+    type: 'bool '
+  - name: code_len
+    type: size_t
+  - name: MI
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  - name: address
+    type: size_t
+  - name: inst_info
+    type: 'bool '
+  return_type: bool
+  signature: bool SH_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t
+    *, uint64_t, void *)
+- name: printBranchOperand
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNo
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printBranchOperand(MCInst *, uint64_t, unsigned int, SStream *)
+- name: printThumbAddrModeImm5S4Operand
+  params:
+  - name: MI
+    type: 'bool '
+  - name: Op
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printThumbAddrModeImm5S4Operand(MCInst *, unsigned int, SStream
+    *)
+- name: LoongArch_add_cs_detail
+  params:
+  - name: MI
+    type: 'bool '
+  - name: op_group
+    type: int
+  - name: args
+    type: 'bool '
+  return_type: void
+  signature: void LoongArch_add_cs_detail(MCInst *, int, struct __va_list_tag *)
+- name: printThumbAddrModeImm5S2Operand
+  params:
+  - name: MI
+    type: 'bool '
+  - name: Op
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printThumbAddrModeImm5S2Operand(MCInst *, unsigned int, SStream
+    *)
+- name: printAMIndexedWB
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNum
+    type: int
+  - name: Scale
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printAMIndexedWB(MCInst *, unsigned int, unsigned int, SStream *)
+- name: HPPA_printInst
+  params:
+  - name: MI
+    type: 'bool '
+  - name: O
+    type: 'bool '
+  - name: Info
+    type: 'bool '
+  return_type: void
+  signature: void HPPA_printInst(MCInst *, SStream *, void *)
+language: c++
+project: capstone
+target_name: fuzz_disasmv5
+target_path: /src/capstonev5/suite/fuzz/fuzz_disasm.c

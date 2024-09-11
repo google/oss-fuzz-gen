@@ -1,0 +1,404 @@
+functions:
+- name: FDK_sacenc_encode
+  params:
+  - name: hMp4SpaceEnc
+    type: 'bool '
+  - name: inBufDesc
+    type: 'bool '
+  - name: outBufDesc
+    type: 'bool '
+  - name: inargs
+    type: 'bool '
+  - name: outargs
+    type: 'bool '
+  return_type: int
+  signature: FDK_SACENC_ERROR FDK_sacenc_encode(const HANDLE_MP4SPACE_ENCODER, const
+    FDK_bufDescr *, const FDK_bufDescr *, const SACENC_InArgs *, SACENC_OutArgs *)
+- name: _Z28fdk_sacenc_writeSpatialFramePhiPiP12BSF_INSTANCE
+  params:
+  - name: pOutputBuffer
+    type: 'bool '
+  - name: outputBufferSize
+    type: int
+  - name: pnOutputBits
+    type: 'bool '
+  - name: selfPtr
+    type: 'bool '
+  return_type: int
+  signature: FDK_SACENC_ERROR fdk_sacenc_writeSpatialFrame(const UCHAR *, const INT,
+    const INT *, HANDLE_BSF_INSTANCE)
+- name: _Z28transportEnc_WriteAccessUnitP12TRANSPORTENCiii
+  params:
+  - name: hTp
+    type: 'bool '
+  - name: frameUsedBits
+    type: int
+  - name: bufferFullness
+    type: int
+  - name: ncc
+    type: int
+  return_type: int
+  signature: TRANSPORTENC_ERROR transportEnc_WriteAccessUnit(HANDLE_TRANSPORTENC,
+    INT, int, int)
+- name: _Z17FDK_MpegsEnc_InitP11MPS_ENCODER17AUDIO_OBJECT_TYPEjjjjjj
+  params:
+  - name: hMpsEnc
+    type: 'bool '
+  - name: audioObjectType
+    type: int
+  - name: samplingrate
+    type: int
+  - name: bitrate
+    type: int
+  - name: sbrRatio
+    type: int
+  - name: framelength
+    type: int
+  - name: inputBufferSizePerChannel
+    type: int
+  - name: coreCoderDelay
+    type: int
+  return_type: int
+  signature: MPS_ENCODER_ERROR FDK_MpegsEnc_Init(HANDLE_MPS_ENCODER, const AUDIO_OBJECT_TYPE,
+    const UINT, const UINT, const UINT, const UINT, const UINT, const UINT)
+- name: aacEncClose
+  params:
+  - name: phAacEncoder
+    type: 'bool '
+  return_type: int
+  signature: AACENC_ERROR aacEncClose(HANDLE_AACENCODER *)
+- name: sbrEncoder_EncodeFrame
+  params:
+  - name: hSbrEncoder
+    type: 'bool '
+  - name: samples
+    type: 'bool '
+  - name: samplesBufSize
+    type: int
+  - name: sbrDataBits
+    type: 'bool '
+  - name: sbrData
+    type: 'bool '
+  return_type: int
+  signature: 'INT sbrEncoder_EncodeFrame(HANDLE_SBR_ENCODER, INT_PCM *, UINT, UINT
+    *, DW_TAG_array_typeARRAY-SIZE: 256UCHAR *)'
+- name: _Z21CreateStreamMuxConfigP11LATM_STREAMP13FDK_BITSTREAMiP13CSTpCallBacks
+  params:
+  - name: hAss
+    type: 'bool '
+  - name: hBs
+    type: 'bool '
+  - name: bufferFullness
+    type: int
+  - name: cb
+    type: 'bool '
+  return_type: int
+  signature: TRANSPORTENC_ERROR CreateStreamMuxConfig(HANDLE_LATM_STREAM, HANDLE_FDK_BITSTREAM,
+    int, CSTpCallBacks *)
+- name: _Z23FDK_MetadataEnc_ProcessP20FDK_METADATA_ENCODERPsjiPK15AACENC_MetaDataPP18AACENC_EXT_PAYLOADPjPi
+  params:
+  - name: hMetaDataEnc
+    type: 'bool '
+  - name: pAudioSamples
+    type: 'bool '
+  - name: audioSamplesBufSize
+    type: int
+  - name: nAudioSamples
+    type: int
+  - name: pMetadata
+    type: 'bool '
+  - name: ppMetaDataExtPayload
+    type: 'bool '
+  - name: nMetaDataExtensions
+    type: 'bool '
+  - name: matrix_mixdown_idx
+    type: 'bool '
+  return_type: int
+  signature: FDK_METADATA_ERROR FDK_MetadataEnc_Process(HANDLE_FDK_METADATA_ENCODER,
+    const INT_PCM *, const UINT, const INT, const const AACENC_MetaData *, AACENC_EXT_PAYLOAD
+    **, UINT *, INT *)
+- name: _Z26FDKsbrEnc_TonCorrParamExtrP16SBR_TON_CORR_ESTP9INVF_MODEPiS3_PhS4_PK14SBR_FRAME_INFOS4_S4_i9XPOS_MODEj
+  params:
+  - name: hTonCorr
+    type: 'bool '
+  - name: infVec
+    type: 'bool '
+  - name: noiseLevels
+    type: 'bool '
+  - name: missingHarmonicFlag
+    type: 'bool '
+  - name: missingHarmonicsIndex
+    type: 'bool '
+  - name: envelopeCompensation
+    type: 'bool '
+  - name: frameInfo
+    type: 'bool '
+  - name: transientInfo
+    type: 'bool '
+  - name: freqBandTable
+    type: 'bool '
+  - name: nSfb
+    type: int
+  - name: xposType
+    type: int
+  - name: sbrSyntaxFlags
+    type: int
+  return_type: void
+  signature: void FDKsbrEnc_TonCorrParamExtr(HANDLE_SBR_TON_CORR_EST, INVF_MODE *,
+    FIXP_DBL *, INT *, UCHAR *, UCHAR *, const SBR_FRAME_INFO *, UCHAR *, UCHAR *,
+    INT, XPOS_MODE, UINT)
+- name: FDK_sacenc_init
+  params:
+  - name: hEnc
+    type: 'bool '
+  - name: dmxDelay
+    type: int
+  return_type: int
+  signature: FDK_SACENC_ERROR FDK_sacenc_init(HANDLE_MP4SPACE_ENCODER, const INT)
+- name: FDKaacEnc_Initialize
+  params:
+  - name: hAacEnc
+    type: 'bool '
+  - name: config
+    type: 'bool '
+  - name: hTpEnc
+    type: 'bool '
+  - name: initFlags
+    type: int
+  return_type: int
+  signature: AAC_ENCODER_ERROR FDKaacEnc_Initialize(HANDLE_AAC_ENC, struct AACENC_CONFIG
+    *, HANDLE_TRANSPORTENC, UINT)
+- name: aacDecoder_SetParam
+  params:
+  - name: self
+    type: 'bool '
+  - name: param
+    type: int
+  - name: value
+    type: int
+  return_type: int
+  signature: AAC_DECODER_ERROR aacDecoder_SetParam(const HANDLE_AACDECODER, const
+    AACDEC_PARAM, const INT)
+- name: mpegSurroundDecoder_Init
+  params:
+  - name: pMpegSurroundDecoder
+    type: 'bool '
+  return_type: int
+  signature: SACDEC_ERROR mpegSurroundDecoder_Init(CMpegSurroundDecoder *)
+- name: _Z20FDK_MpegsEnc_ProcessP11MPS_ENCODERPsiP18AACENC_EXT_PAYLOAD
+  params:
+  - name: hMpsEnc
+    type: 'bool '
+  - name: pAudioSamples
+    type: 'bool '
+  - name: nAudioSamples
+    type: int
+  - name: pMpsExtPayload
+    type: 'bool '
+  return_type: int
+  signature: MPS_ENCODER_ERROR FDK_MpegsEnc_Process(HANDLE_MPS_ENCODER, const INT_PCM
+    *, const INT, AACENC_EXT_PAYLOAD *)
+- name: _Z29FDKsbrEnc_extractSbrEnvelope1P15SBR_CONFIG_DATAP15SBR_HEADER_DATAP18SBR_BITSTREAM_DATAP11ENV_CHANNELP11COMMON_DATAP17SBR_ENV_TEMP_DATAP19SBR_FRAME_TEMP_DATA
+  params:
+  - name: h_con
+    type: 'bool '
+  - name: sbrHeaderData
+    type: 'bool '
+  - name: sbrBitstreamData
+    type: 'bool '
+  - name: hEnvChan
+    type: 'bool '
+  - name: hCmonData
+    type: 'bool '
+  - name: eData
+    type: 'bool '
+  - name: fData
+    type: 'bool '
+  return_type: void
+  signature: void FDKsbrEnc_extractSbrEnvelope1(HANDLE_SBR_CONFIG_DATA, HANDLE_SBR_HEADER_DATA,
+    HANDLE_SBR_BITSTREAM_DATA, HANDLE_ENV_CHANNEL, HANDLE_COMMON_DATA, SBR_ENV_TEMP_DATA
+    *, SBR_FRAME_TEMP_DATA *)
+- name: _Z18FDKsbrEnc_PSEncodeP11T_PS_ENCODEP8T_PS_OUTPhjPA2_A2_Piii
+  params:
+  - name: hPsEncode
+    type: 'bool '
+  - name: hPsOut
+    type: 'bool '
+  - name: dynBandScale
+    type: 'bool '
+  - name: maxEnvelopes
+    type: int
+  - name: hybridData
+    type: 'bool '
+  - name: frameSize
+    type: int
+  - name: sendHeader
+    type: int
+  return_type: int
+  signature: 'FDK_PSENC_ERROR FDKsbrEnc_PSEncode(HANDLE_PS_ENCODE, HANDLE_PS_OUT,
+    UCHAR *, UINT, DW_TAG_array_typeARRAY-SIZE: 2FIXP_DBL **, const INT, const INT)'
+- name: _Z17FDKaacEnc_psyMainiP11PSY_ELEMENTP11PSY_DYNAMICP17PSY_CONFIGURATIONP15PSY_OUT_ELEMENTPsjPii
+  params:
+  - name: channels
+    type: int
+  - name: psyElement
+    type: 'bool '
+  - name: psyDynamic
+    type: 'bool '
+  - name: psyConf
+    type: 'bool '
+  - name: psyOutElement
+    type: 'bool '
+  - name: pInput
+    type: 'bool '
+  - name: inputBufSize
+    type: int
+  - name: chIdx
+    type: 'bool '
+  - name: totalChannels
+    type: int
+  return_type: int
+  signature: AAC_ENCODER_ERROR FDKaacEnc_psyMain(INT, PSY_ELEMENT *, PSY_DYNAMIC *,
+    PSY_CONFIGURATION *, PSY_OUT_ELEMENT *, INT_PCM *, const UINT, INT *, INT)
+- name: _Z22transportEnc_LatmWriteP11LATM_STREAMP13FDK_BITSTREAMiiP13CSTpCallBacks
+  params:
+  - name: hAss
+    type: 'bool '
+  - name: hBs
+    type: 'bool '
+  - name: auBits
+    type: int
+  - name: bufferFullness
+    type: int
+  - name: cb
+    type: 'bool '
+  return_type: int
+  signature: TRANSPORTENC_ERROR transportEnc_LatmWrite(HANDLE_LATM_STREAM, HANDLE_FDK_BITSTREAM,
+    int, int, CSTpCallBacks *)
+- name: _Z29FDKsbrEnc_extractSbrEnvelope2P15SBR_CONFIG_DATAP15SBR_HEADER_DATAP19T_PARAMETRIC_STEREOP18SBR_BITSTREAM_DATAP11ENV_CHANNELS8_P11COMMON_DATAP17SBR_ENV_TEMP_DATAP19SBR_FRAME_TEMP_DATAi
+  params:
+  - name: h_con
+    type: 'bool '
+  - name: sbrHeaderData
+    type: 'bool '
+  - name: hParametricStereo
+    type: 'bool '
+  - name: sbrBitstreamData
+    type: 'bool '
+  - name: h_envChan0
+    type: 'bool '
+  - name: h_envChan1
+    type: 'bool '
+  - name: hCmonData
+    type: 'bool '
+  - name: eData
+    type: 'bool '
+  - name: fData
+    type: 'bool '
+  - name: clearOutput
+    type: int
+  return_type: void
+  signature: void FDKsbrEnc_extractSbrEnvelope2(HANDLE_SBR_CONFIG_DATA, HANDLE_SBR_HEADER_DATA,
+    HANDLE_PARAMETRIC_STEREO, HANDLE_SBR_BITSTREAM_DATA, HANDLE_ENV_CHANNEL, HANDLE_ENV_CHANNEL,
+    HANDLE_COMMON_DATA, SBR_ENV_TEMP_DATA *, SBR_FRAME_TEMP_DATA *, int)
+- name: _Z42FDKsbrEnc_PSEnc_ParametricStereoProcessingP19T_PARAMETRIC_STEREOPPsjPP15QMF_FILTER_BANKPPiS7_S1_S4_Pai
+  params:
+  - name: hParametricStereo
+    type: 'bool '
+  - name: samples
+    type: 'bool '
+  - name: samplesBufSize
+    type: int
+  - name: hQmfAnalysis
+    type: 'bool '
+  - name: downmixedRealQmfData
+    type: 'bool '
+  - name: downmixedImagQmfData
+    type: 'bool '
+  - name: downsampledOutSignal
+    type: 'bool '
+  - name: sbrSynthQmf
+    type: 'bool '
+  - name: qmfScale
+    type: 'bool '
+  - name: sendHeader
+    type: int
+  return_type: int
+  signature: FDK_PSENC_ERROR FDKsbrEnc_PSEnc_ParametricStereoProcessing(HANDLE_PARAMETRIC_STEREO,
+    INT_PCM **, UINT, struct QMF_FILTER_BANK **, FIXP_DBL **, FIXP_DBL **, INT_PCM
+    *, HANDLE_QMF_FILTER_BANK, SCHAR *, const int)
+- name: _Z17FDK_MpegsEnc_OpenPP11MPS_ENCODER
+  params:
+  - name: phMpsEnc
+    type: 'bool '
+  return_type: int
+  signature: MPS_ENCODER_ERROR FDK_MpegsEnc_Open(HANDLE_MPS_ENCODER *)
+- name: _Z20transportEnc_GetConfP12TRANSPORTENCP12CODER_CONFIGP13FDK_BITSTREAMPj
+  params:
+  - name: hTpEnc
+    type: 'bool '
+  - name: cc
+    type: 'bool '
+  - name: dataBuffer
+    type: 'bool '
+  - name: confType
+    type: 'bool '
+  return_type: int
+  signature: TRANSPORTENC_ERROR transportEnc_GetConf(HANDLE_TRANSPORTENC, CODER_CONFIG
+    *, FDK_BITSTREAM *, UINT *)
+- name: _Z22transportEnc_Latm_InitP11LATM_STREAMP13FDK_BITSTREAMP12CODER_CONFIGj14TRANSPORT_TYPEP13CSTpCallBacks
+  params:
+  - name: hAss
+    type: 'bool '
+  - name: hBs
+    type: 'bool '
+  - name: layerConfig
+    type: 'bool '
+  - name: audioMuxVersion
+    type: int
+  - name: tt
+    type: int
+  - name: cb
+    type: 'bool '
+  return_type: int
+  signature: TRANSPORTENC_ERROR transportEnc_Latm_Init(HANDLE_LATM_STREAM, HANDLE_FDK_BITSTREAM,
+    CODER_CONFIG *, UINT, TRANSPORT_TYPE, CSTpCallBacks *)
+- name: aacEncOpen
+  params:
+  - name: phAacEncoder
+    type: 'bool '
+  - name: encModules
+    type: int
+  - name: maxChannels
+    type: int
+  return_type: int
+  signature: AACENC_ERROR aacEncOpen(HANDLE_AACENCODER *, const UINT, const UINT)
+- name: aacEncInfo
+  params:
+  - name: hAacEncoder
+    type: 'bool '
+  - name: pInfo
+    type: 'bool '
+  return_type: int
+  signature: AACENC_ERROR aacEncInfo(const HANDLE_AACENCODER, AACENC_InfoStruct *)
+- name: _Z17transportEnc_InitP12TRANSPORTENCPhi14TRANSPORT_TYPEP12CODER_CONFIGj
+  params:
+  - name: hTpEnc
+    type: 'bool '
+  - name: bsBuffer
+    type: 'bool '
+  - name: bsBufferSize
+    type: int
+  - name: transportFmt
+    type: int
+  - name: cconfig
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: int
+  signature: TRANSPORTENC_ERROR transportEnc_Init(HANDLE_TRANSPORTENC, UCHAR *, INT,
+    TRANSPORT_TYPE, CODER_CONFIG *, UINT)
+language: c++
+project: libfdk-aac
+target_name: aacDecoder_Open
+target_path: /src/aacDecoder_Open.cpp

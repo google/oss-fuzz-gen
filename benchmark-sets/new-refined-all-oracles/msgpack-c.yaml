@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: msgpack-c
+target_name: unpack_pack_fuzzer
+target_path: /src/msgpack-c/fuzz/unpack_pack_fuzzer.cpp

@@ -1,0 +1,27 @@
+functions:
+- name: ldaclib_get_channel_config_index
+  params:
+  - name: ch
+    type: int
+  - name: p_chconfig_id
+    type: 'bool '
+  return_type: int
+  signature: LDAC_RESULT ldaclib_get_channel_config_index(int, int *)
+- name: ldacBT_get_eqmid
+  params:
+  - name: hLdacBT
+    type: 'bool '
+  return_type: int
+  signature: int ldacBT_get_eqmid(HANDLE_LDAC_BT)
+- name: ldaclib_get_sampling_rate
+  params:
+  - name: smplrate_id
+    type: int
+  - name: p_smplrate
+    type: 'bool '
+  return_type: int
+  signature: LDAC_RESULT ldaclib_get_sampling_rate(int, int *)
+language: c++
+project: libldac
+target_name: libldac_encode_fuzzer
+target_path: /src/libldac_encode_fuzzer.cc

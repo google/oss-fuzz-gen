@@ -1,0 +1,202 @@
+functions:
+- name: ogg_stream_pageout_fill
+  params:
+  - name: os
+    type: 'bool '
+  - name: og
+    type: 'bool '
+  - name: nfill
+    type: int
+  return_type: int
+  signature: int ogg_stream_pageout_fill(ogg_stream_state *, ogg_page *, int)
+- name: ov_time_seek_page
+  params:
+  - name: vf
+    type: 'bool '
+  - name: milliseconds
+    type: size_t
+  return_type: int
+  signature: int ov_time_seek_page(OggVorbis_File *, ogg_int64_t)
+- name: oggpack_write
+  params:
+  - name: b
+    type: 'bool '
+  - name: value
+    type: size_t
+  - name: bits
+    type: int
+  return_type: void
+  signature: void oggpack_write(oggpack_buffer *, unsigned long, int)
+- name: oggpack_writecopy
+  params:
+  - name: b
+    type: 'bool '
+  - name: source
+    type: 'bool '
+  - name: bits
+    type: size_t
+  return_type: void
+  signature: void oggpack_writecopy(oggpack_buffer *, void *, long)
+- name: ogg_sync_pageout
+  params:
+  - name: oy
+    type: 'bool '
+  - name: og
+    type: 'bool '
+  return_type: int
+  signature: int ogg_sync_pageout(ogg_sync_state *, ogg_page *)
+- name: vorbis_comment_query_count
+  params:
+  - name: vc
+    type: 'bool '
+  - name: tag
+    type: 'bool '
+  return_type: int
+  signature: int vorbis_comment_query_count(vorbis_comment *, char *)
+- name: ogg_stream_pageout
+  params:
+  - name: os
+    type: 'bool '
+  - name: og
+    type: 'bool '
+  return_type: int
+  signature: int ogg_stream_pageout(ogg_stream_state *, ogg_page *)
+- name: ov_bitrate
+  params:
+  - name: vf
+    type: 'bool '
+  - name: i
+    type: int
+  return_type: size_t
+  signature: long ov_bitrate(OggVorbis_File *, int)
+- name: ogg_stream_packetin
+  params:
+  - name: os
+    type: 'bool '
+  - name: op
+    type: 'bool '
+  return_type: int
+  signature: int ogg_stream_packetin(ogg_stream_state *, ogg_packet *)
+- name: ov_test_callbacks
+  params:
+  - name: f
+    type: 'bool '
+  - name: vf
+    type: 'bool '
+  - name: initial
+    type: 'bool '
+  - name: ibytes
+    type: size_t
+  - name: callbacks
+    type: 'bool '
+  return_type: int
+  signature: int ov_test_callbacks(void *, OggVorbis_File *, const char *, long, ov_callbacks)
+- name: ogg_stream_iovecin
+  params:
+  - name: os
+    type: 'bool '
+  - name: iov
+    type: 'bool '
+  - name: count
+    type: int
+  - name: e_o_s
+    type: size_t
+  - name: granulepos
+    type: size_t
+  return_type: int
+  signature: int ogg_stream_iovecin(ogg_stream_state *, ogg_iovec_t *, int, long,
+    ogg_int64_t)
+- name: oggpackB_write
+  params:
+  - name: b
+    type: 'bool '
+  - name: value
+    type: size_t
+  - name: bits
+    type: int
+  return_type: void
+  signature: void oggpackB_write(oggpack_buffer *, unsigned long, int)
+- name: oggpackB_writecopy
+  params:
+  - name: b
+    type: 'bool '
+  - name: source
+    type: 'bool '
+  - name: bits
+    type: size_t
+  return_type: void
+  signature: void oggpackB_writecopy(oggpack_buffer *, void *, long)
+- name: ov_time_tell
+  params:
+  - name: vf
+    type: 'bool '
+  return_type: size_t
+  signature: ogg_int64_t ov_time_tell(OggVorbis_File *)
+- name: ov_pcm_seek_page
+  params:
+  - name: vf
+    type: 'bool '
+  - name: pos
+    type: size_t
+  return_type: int
+  signature: int ov_pcm_seek_page(OggVorbis_File *, ogg_int64_t)
+- name: ogg_stream_flush_fill
+  params:
+  - name: os
+    type: 'bool '
+  - name: og
+    type: 'bool '
+  - name: nfill
+    type: int
+  return_type: int
+  signature: int ogg_stream_flush_fill(ogg_stream_state *, ogg_page *, int)
+- name: oggpack_writealign
+  params:
+  - name: b
+    type: 'bool '
+  return_type: void
+  signature: void oggpack_writealign(oggpack_buffer *)
+- name: ogg_stream_packetpeek
+  params:
+  - name: os
+    type: 'bool '
+  - name: op
+    type: 'bool '
+  return_type: int
+  signature: int ogg_stream_packetpeek(ogg_stream_state *, ogg_packet *)
+- name: ogg_stream_flush
+  params:
+  - name: os
+    type: 'bool '
+  - name: og
+    type: 'bool '
+  return_type: int
+  signature: int ogg_stream_flush(ogg_stream_state *, ogg_page *)
+- name: vorbis_comment_query
+  params:
+  - name: vc
+    type: 'bool '
+  - name: tag
+    type: 'bool '
+  - name: count
+    type: int
+  return_type: void
+  signature: char * vorbis_comment_query(vorbis_comment *, char *, int)
+- name: oggpackB_writealign
+  params:
+  - name: b
+    type: 'bool '
+  return_type: void
+  signature: void oggpackB_writealign(oggpack_buffer *)
+- name: vorbis_synthesis_trackonly
+  params:
+  - name: vb
+    type: 'bool '
+  - name: op
+    type: 'bool '
+  return_type: int
+  signature: int vorbis_synthesis_trackonly(vorbis_block *, ogg_packet *)
+language: c++
+project: tremor
+target_name: decode_fuzzer
+target_path: /src/tremor/decode_fuzzer.cc

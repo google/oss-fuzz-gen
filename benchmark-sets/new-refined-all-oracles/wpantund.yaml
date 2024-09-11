@@ -1,0 +1,220 @@
+functions:
+- name: _ZN19TunnelIPv6Interface21on_link_state_changedEbb
+  params:
+  - name: this
+    type: 'bool '
+  - name: isUp
+    type: bool
+  - name: isRunning
+    type: bool
+  return_type: void
+  signature: void TunnelIPv6Interface::on_link_state_changed(bool, bool)
+- name: _ZN2nl8wpantund17SpinelNCPInstance33get_prop_DatasetAllFiledsAsValMapEN5boost8functionIFviRKNS2_3anyEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  return_type: void
+  signature: void nl::wpantund::SpinelNCPInstance::get_prop_DatasetAllFiledsAsValMap(CallbackWithStatusArg1)
+- name: _ZN19TunnelIPv6Interface16on_address_addedERK8in6_addrh
+  params:
+  - name: this
+    type: 'bool '
+  - name: address
+    type: 'bool '
+  - name: prefix_len
+    type: char
+  return_type: void
+  signature: void TunnelIPv6Interface::on_address_added(const struct in6_addr &, uint8_t)
+- name: _ZN5boost8signals26signalIFvRKN2nl8wpantund21EnergyScanResultEntryEENS0_19optional_last_valueIvEEiNSt3__14lessIiEENS_8functionIS7_EENSD_IFvRKNS0_10connectionES6_EEENS0_5mutexEEclES6_
+  params:
+  - name: this
+    type: 'bool '
+  - name: args
+    type: 'bool '
+  return_type: void
+  signature: result_type boost::signals2::operator()(signal<void (const nl::wpantund::WPAN::NetworkInstance
+    &), boost::signals2::optional_last_value<void>, int, std::__1::less<int>, boost::function<void
+    (const nl::wpantund::WPAN::NetworkInstance &)>, boost::function<void (const boost::signals2::connection
+    &, const nl::wpantund::WPAN::NetworkInstance &)>, boost::signals2::mutex> *, const
+    struct NetworkInstance &)
+- name: _ZN2nl8wpantund13ThreadDataset22convert_to_string_listERNSt3__14listINS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS7_IS9_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: list
+    type: 'bool '
+  return_type: void
+  signature: void nl::wpantund::ThreadDataset::convert_to_string_list(list<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > > > &)
+- name: _ZN2nl8wpantund17SpinelNCPInstance30insert_prop_MACDenylistEntriesERKN5boost3anyENS2_8functionIFviEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  return_type: void
+  signature: void nl::wpantund::SpinelNCPInstance::insert_prop_MACDenylistEntries(const
+    any &, CallbackWithStatus)
+- name: _ZN2nl8wpantund17SpinelNCPInstance30remove_prop_MACDenylistEntriesERKN5boost3anyENS2_8functionIFviEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  return_type: void
+  signature: void nl::wpantund::SpinelNCPInstance::remove_prop_MACDenylistEntries(const
+    any &, CallbackWithStatus)
+- name: _ZN2nl8wpantund17SpinelNCPInstance31insert_prop_MACAllowlistEntriesERKN5boost3anyENS2_8functionIFviEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  return_type: void
+  signature: void nl::wpantund::SpinelNCPInstance::insert_prop_MACAllowlistEntries(const
+    any &, CallbackWithStatus)
+- name: _ZN19TunnelIPv6Interface27on_multicast_address_joinedERK8in6_addr
+  params:
+  - name: this
+    type: 'bool '
+  - name: address
+    type: 'bool '
+  return_type: void
+  signature: void TunnelIPv6Interface::on_multicast_address_joined(const struct in6_addr
+    &)
+- name: _ZN2nl8wpantund17SpinelNCPInstance31remove_prop_MACAllowlistEntriesERKN5boost3anyENS2_8functionIFviEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  return_type: void
+  signature: void nl::wpantund::SpinelNCPInstance::remove_prop_MACAllowlistEntries(const
+    any &, CallbackWithStatus)
+- name: _ZN2nl8wpantund13StatCollector18property_get_valueERKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEN5boost8functionIFviRKNSB_3anyEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  return_type: void
+  signature: void nl::wpantund::StatCollector::property_get_value(const string &,
+    CallbackWithStatusArg1)
+- name: _ZN2nl8wpantund25SpinelNCPControlInterface13netscan_startERKNSt3__13mapINS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEN5boost3anyENS2_4lessIS9_EENS7_INS2_4pairIKS9_SB_EEEEEENSA_8functionIFviEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: options
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  return_type: void
+  signature: void nl::wpantund::SpinelNCPControlInterface::netscan_start(const ValueMap
+    &, CallbackWithStatus)
+- name: _ZN2nl8wpantund17SpinelNCPInstance28remove_prop_MACFilterEntriesERKN5boost3anyENS2_8functionIFviEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  return_type: void
+  signature: void nl::wpantund::SpinelNCPInstance::remove_prop_MACFilterEntries(const
+    any &, CallbackWithStatus)
+- name: _ZN2nl8wpantund17SpinelNCPInstance28insert_prop_MACFilterEntriesERKN5boost3anyENS2_8functionIFviEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  return_type: void
+  signature: void nl::wpantund::SpinelNCPInstance::insert_prop_MACFilterEntries(const
+    any &, CallbackWithStatus)
+- name: _ZN2nl11SuperSocketC2ERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  return_type: void
+  signature: void nl::SuperSocket::SuperSocket(const string &)
+- name: _ZN19TunnelIPv6Interface18on_address_removedERK8in6_addrh
+  params:
+  - name: this
+    type: 'bool '
+  - name: address
+    type: 'bool '
+  - name: prefix_len
+    type: char
+  return_type: void
+  signature: void TunnelIPv6Interface::on_address_removed(const struct in6_addr &,
+    uint8_t)
+- name: _ZN19TunnelIPv6Interface25on_multicast_address_leftERK8in6_addr
+  params:
+  - name: this
+    type: 'bool '
+  - name: address
+    type: 'bool '
+  return_type: void
+  signature: void TunnelIPv6Interface::on_multicast_address_left(const struct in6_addr
+    &)
+- name: _ZN2nl8wpantund25SpinelNCPControlInterface11permit_joinEihtbN5boost8functionIFviEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: seconds
+    type: int
+  - name: traffic_type
+    type: char
+  - name: traffic_port
+    type: short
+  - name: network_wide
+    type: bool
+  - name: cb
+    type: 'bool '
+  return_type: void
+  signature: void nl::wpantund::SpinelNCPControlInterface::permit_join(int, uint8_t,
+    in_port_t, bool, CallbackWithStatus)
+- name: _ZN5boost8signals26detail11signal_implIFvRKN2nl8wpantund4WPAN15NetworkInstanceEENS0_19optional_last_valueIvEEiNSt3__14lessIiEENS_8functionIS9_EENSF_IFvRKNS0_10connectionES8_EEENS0_5mutexEEclES8_
+  params:
+  - name: this
+    type: 'bool '
+  - name: args
+    type: 'bool '
+  return_type: void
+  signature: result_type boost::signals2::detail::operator()(signal_impl<void (const
+    nl::wpantund::WPAN::NetworkInstance &), boost::signals2::optional_last_value<void>,
+    int, std::__1::less<int>, boost::function<void (const nl::wpantund::WPAN::NetworkInstance
+    &)>, boost::function<void (const boost::signals2::connection &, const nl::wpantund::WPAN::NetworkInstance
+    &)>, boost::signals2::mutex> *, const struct NetworkInstance &)
+- name: _ZN2nl8wpantund25SpinelNCPControlInterface4formERKNSt3__13mapINS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEN5boost3anyENS2_4lessIS9_EENS7_INS2_4pairIKS9_SB_EEEEEENSA_8functionIFviEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: options
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  return_type: void
+  signature: void nl::wpantund::SpinelNCPControlInterface::form(const ValueMap &,
+    CallbackWithStatus)
+language: c++
+project: wpantund
+target_name: wpantund-fuzz
+target_path: /src/wpantund/src/wpantund/wpantund-fuzz.cpp

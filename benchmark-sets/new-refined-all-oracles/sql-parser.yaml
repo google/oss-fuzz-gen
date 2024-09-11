@@ -1,0 +1,175 @@
+functions:
+- name: _ZN4hsql15SQLParserResult19getMutableStatementEm
+  params:
+  - name: this
+    type: 'bool '
+  - name: index
+    type: size_t
+  return_type: void
+  signature: struct SQLStatement * hsql::SQLParserResult::getMutableStatement(size_t)
+- name: _ZN4hsqleqERKNS_10ColumnTypeES2_
+  params:
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  return_type: bool
+  signature: bool hsql::operator==(const struct ColumnType &, const struct ColumnType
+    &)
+- name: _ZN4hsql9SQLParserC2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void hsql::SQLParser::SQLParser()
+- name: _ZN4hsql11AlterActionD0Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void hsql::AlterAction::~AlterAction(struct AlterAction *)
+- name: _ZNK4hsql15SQLParserResult9errorLineEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: int
+  signature: int hsql::SQLParserResult::errorLine()
+- name: _ZNK4hsql15SQLParserResult11errorColumnEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: int
+  signature: int hsql::SQLParserResult::errorColumn()
+- name: _ZNK4hsql4Expr8hasAliasEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool hsql::Expr::hasAlias(const struct Expr *)
+- name: _ZNK4hsql15SQLParserResult4sizeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: size_t
+  signature: size_t hsql::SQLParserResult::size()
+- name: _ZNK4hsql4Expr7getNameEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const char * hsql::Expr::getName(const struct Expr *)
+- name: _ZN4hsql14AlterStatementD2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void hsql::AlterStatement::~AlterStatement(struct AlterStatement *)
+- name: _ZNK4hsql15SQLParserResult13getStatementsEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const vector<hsql::SQLStatement *, std::__1::allocator<hsql::SQLStatement
+    *> > & hsql::SQLParserResult::getStatements()
+- name: _ZNK4hsql12SQLStatement2isENS_13StatementTypeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: type
+    type: int
+  return_type: bool
+  signature: bool hsql::SQLStatement::is(const struct SQLStatement *, DW_TAG_enumeration_typeStatementType)
+- name: _ZN4hsql15SQLParserResult17releaseStatementsEv
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: vector<hsql::SQLStatement *, std::__1::allocator<hsql::SQLStatement *>
+    > hsql::SQLParserResult::releaseStatements()
+- name: _ZNK4hsql15SQLParserResult7isValidEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool hsql::SQLParserResult::isValid()
+- name: _ZNK4hsql15SQLParserResult12getStatementEm
+  params:
+  - name: this
+    type: 'bool '
+  - name: index
+    type: size_t
+  return_type: void
+  signature: const struct SQLStatement * hsql::SQLParserResult::getStatement(size_t)
+- name: _ZN4hsql15SQLParserResultC2EPNS_12SQLStatementE
+  params:
+  - name: this
+    type: 'bool '
+  - name: stmt
+    type: 'bool '
+  return_type: void
+  signature: void hsql::SQLParserResult::SQLParserResult(struct SQLStatement *)
+- name: _ZNK4hsql4Expr6isTypeENS_8ExprTypeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: exprType
+    type: int
+  return_type: bool
+  signature: bool hsql::Expr::isType(const struct Expr *, DW_TAG_enumeration_typeExprType)
+- name: _ZNK4hsql12SQLStatement4typeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeStatementType hsql::SQLStatement::type(const struct
+    SQLStatement *)
+- name: _ZN4hsql16DropColumnActionD2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void hsql::DropColumnAction::~DropColumnAction(struct DropColumnAction
+    *)
+- name: _ZN4hsql15SQLParserResult10parametersEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const vector<hsql::Expr *, std::__1::allocator<hsql::Expr *> > & hsql::SQLParserResult::parameters()
+- name: _ZNK4hsql4Expr8hasTableEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool hsql::Expr::hasTable(const struct Expr *)
+- name: _ZN4hsqlneERKNS_10ColumnTypeES2_
+  params:
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  return_type: bool
+  signature: bool hsql::operator!=(const struct ColumnType &, const struct ColumnType
+    &)
+- name: _ZN4hsql15SQLParserResultaSEOS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: moved
+    type: 'bool '
+  return_type: void
+  signature: SQLParserResult & hsql::SQLParserResult::operator=(DW_TAG_rvalue_reference_typeSQLParserResult)
+- name: _ZNK4hsql12SQLStatement6isTypeENS_13StatementTypeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: type
+    type: int
+  return_type: bool
+  signature: bool hsql::SQLStatement::isType(const struct SQLStatement *, DW_TAG_enumeration_typeStatementType)
+language: c++
+project: sql-parser
+target_name: fuzz_sql_parse
+target_path: /src/sql-parser/fuzz_sql_parse.cpp

@@ -1,0 +1,5 @@
+functions: []
+language: c
+project: fribidi
+target_name: fribidi-fuzzer
+target_path: /src/fribidi/bin/fribidi-fuzzer.c

@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: fftw3
+target_name: fftw3_fuzzer
+target_path: /src/fftw3_fuzzer.cc

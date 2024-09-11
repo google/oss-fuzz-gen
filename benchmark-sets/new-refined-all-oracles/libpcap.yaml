@@ -1,0 +1,235 @@
+functions:
+- name: pcapint_find_or_add_dev
+  params:
+  - name: devlistp
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: flags
+    type: int
+  - name: get_flags_func
+    type: 'bool '
+  - name: description
+    type: 'bool '
+  - name: errbuf
+    type: 'bool '
+  return_type: void
+  signature: pcap_if_t * pcapint_find_or_add_dev(pcap_if_list_t *, const char *, bpf_u_int32,
+    get_if_flags_func, const char *, char *)
+- name: pcap_loop
+  params:
+  - name: p
+    type: 'bool '
+  - name: cnt
+    type: int
+  - name: callback
+    type: 'bool '
+  - name: user
+    type: 'bool '
+  return_type: int
+  signature: int pcap_loop(pcap_t *, int, pcap_handler, u_char *)
+- name: pcapint_add_addr_to_dev
+  params:
+  - name: curdev
+    type: 'bool '
+  - name: addr
+    type: 'bool '
+  - name: addr_size
+    type: size_t
+  - name: netmask
+    type: 'bool '
+  - name: netmask_size
+    type: size_t
+  - name: broadaddr
+    type: 'bool '
+  - name: broadaddr_size
+    type: size_t
+  - name: dstaddr
+    type: 'bool '
+  - name: dstaddr_size
+    type: size_t
+  - name: errbuf
+    type: 'bool '
+  return_type: int
+  signature: int pcapint_add_addr_to_dev(pcap_if_t *, struct sockaddr *, size_t, struct
+    sockaddr *, size_t, struct sockaddr *, size_t, struct sockaddr *, size_t, char
+    *)
+- name: pcap_dump_open_append
+  params:
+  - name: p
+    type: 'bool '
+  - name: fname
+    type: 'bool '
+  return_type: void
+  signature: pcap_dumper_t * pcap_dump_open_append(pcap_t *, const char *)
+- name: pcap_open_live
+  params:
+  - name: device
+    type: 'bool '
+  - name: snaplen
+    type: int
+  - name: promisc
+    type: int
+  - name: to_ms
+    type: int
+  - name: errbuf
+    type: 'bool '
+  return_type: void
+  signature: pcap_t * pcap_open_live(const char *, int, int, int, char *)
+- name: bpf_filter
+  params:
+  - name: pc
+    type: 'bool '
+  - name: p
+    type: 'bool '
+  - name: wirelen
+    type: int
+  - name: buflen
+    type: int
+  return_type: int
+  signature: u_int bpf_filter(const struct bpf_insn *, const u_char *, u_int, u_int)
+- name: pcapint_findalldevs_interfaces
+  params:
+  - name: devlistp
+    type: 'bool '
+  - name: errbuf
+    type: 'bool '
+  - name: check_usable
+    type: 'bool '
+  - name: get_flags_func
+    type: 'bool '
+  return_type: int
+  signature: int pcapint_findalldevs_interfaces(pcap_if_list_t *, char *, DW_TAG_subroutine_typechar
+    *, get_if_flags_func)
+- name: pcap_lookupnet
+  params:
+  - name: device
+    type: 'bool '
+  - name: netp
+    type: 'bool '
+  - name: maskp
+    type: 'bool '
+  - name: errbuf
+    type: 'bool '
+  return_type: int
+  signature: int pcap_lookupnet(const char *, bpf_u_int32 *, bpf_u_int32 *, char *)
+- name: pcap_create
+  params:
+  - name: device
+    type: 'bool '
+  - name: errbuf
+    type: 'bool '
+  return_type: void
+  signature: pcap_t * pcap_create(const char *, char *)
+- name: pcap_add_any_dev
+  params:
+  - name: devlistp
+    type: 'bool '
+  - name: errbuf
+    type: 'bool '
+  return_type: void
+  signature: pcap_if_t * pcap_add_any_dev(pcap_if_list_t *, char *)
+- name: pcap_activate
+  params:
+  - name: p
+    type: 'bool '
+  return_type: int
+  signature: int pcap_activate(pcap_t *)
+- name: pcap_dump_open
+  params:
+  - name: p
+    type: 'bool '
+  - name: fname
+    type: 'bool '
+  return_type: void
+  signature: pcap_dumper_t * pcap_dump_open(pcap_t *, const char *)
+- name: pcapint_create_interface
+  params:
+  - name: device
+    type: 'bool '
+  - name: ebuf
+    type: 'bool '
+  return_type: void
+  signature: pcap_t * pcapint_create_interface(const char *, char *)
+- name: pcapint_add_addr_to_if
+  params:
+  - name: devlistp
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: if_flags
+    type: size_t
+  - name: get_flags_func
+    type: 'bool '
+  - name: addr
+    type: 'bool '
+  - name: addr_size
+    type: size_t
+  - name: netmask
+    type: 'bool '
+  - name: netmask_size
+    type: size_t
+  - name: broadaddr
+    type: 'bool '
+  - name: broadaddr_size
+    type: size_t
+  - name: dstaddr
+    type: 'bool '
+  - name: dstaddr_size
+    type: size_t
+  - name: errbuf
+    type: 'bool '
+  return_type: int
+  signature: int pcapint_add_addr_to_if(pcap_if_list_t *, const char *, uint64_t,
+    get_if_flags_func, struct sockaddr *, size_t, struct sockaddr *, size_t, struct
+    sockaddr *, size_t, struct sockaddr *, size_t, char *)
+- name: pcapint_platform_finddevs
+  params:
+  - name: devlistp
+    type: 'bool '
+  - name: errbuf
+    type: 'bool '
+  return_type: int
+  signature: int pcapint_platform_finddevs(pcap_if_list_t *, char *)
+- name: pcapint_find_or_add_if
+  params:
+  - name: devlistp
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: if_flags
+    type: size_t
+  - name: get_flags_func
+    type: 'bool '
+  - name: errbuf
+    type: 'bool '
+  return_type: void
+  signature: pcap_if_t * pcapint_find_or_add_if(pcap_if_list_t *, const char *, uint64_t,
+    get_if_flags_func, char *)
+- name: pcap_dump_fopen
+  params:
+  - name: p
+    type: 'bool '
+  - name: f
+    type: 'bool '
+  return_type: void
+  signature: pcap_dumper_t * pcap_dump_fopen(pcap_t *, FILE *)
+- name: pcapint_add_dev
+  params:
+  - name: devlistp
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: flags
+    type: int
+  - name: description
+    type: 'bool '
+  - name: errbuf
+    type: 'bool '
+  return_type: void
+  signature: pcap_if_t * pcapint_add_dev(pcap_if_list_t *, const char *, bpf_u_int32,
+    const char *, char *)
+language: c++
+project: libpcap
+target_name: fuzz_filter
+target_path: /src/libpcap/testprogs/fuzz/fuzz_filter.c

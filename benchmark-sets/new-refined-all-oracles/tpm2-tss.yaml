@@ -1,0 +1,419 @@
+functions:
+- name: Tss2_Sys_ReadPublic
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: objectHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: outPublic
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: qualifiedName
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_ReadPublic(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const
+    TSS2L_SYS_AUTH_COMMAND *, TPM2B_PUBLIC *, TPM2B_NAME *, TPM2B_NAME *, TSS2L_SYS_AUTH_RESPONSE
+    *)
+- name: Tss2_Sys_GetTime
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: privacyAdminHandle
+    type: int
+  - name: signHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: qualifyingData
+    type: 'bool '
+  - name: inScheme
+    type: 'bool '
+  - name: timeInfo
+    type: 'bool '
+  - name: signature
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_GetTime(TSS2_SYS_CONTEXT *, TPMI_RH_ENDORSEMENT, TPMI_DH_OBJECT,
+    const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_DATA *, const TPMT_SIG_SCHEME *, TPM2B_ATTEST
+    *, TPMT_SIGNATURE *, TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_Sign
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: keyHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: digest
+    type: 'bool '
+  - name: inScheme
+    type: 'bool '
+  - name: validation
+    type: 'bool '
+  - name: signature
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_Sign(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND
+    *, const TPM2B_DIGEST *, const TPMT_SIG_SCHEME *, const TPMT_TK_HASHCHECK *, TPMT_SIGNATURE
+    *, TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_PCR_Read
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: pcrSelectionIn
+    type: 'bool '
+  - name: pcrUpdateCounter
+    type: 'bool '
+  - name: pcrSelectionOut
+    type: 'bool '
+  - name: pcrValues
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_PCR_Read(TSS2_SYS_CONTEXT *, const TSS2L_SYS_AUTH_COMMAND
+    *, const TPML_PCR_SELECTION *, UINT32 *, TPML_PCR_SELECTION *, TPML_DIGEST *,
+    TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_CreateLoaded
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: parentHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: inSensitive
+    type: 'bool '
+  - name: inPublic
+    type: 'bool '
+  - name: objectHandle
+    type: 'bool '
+  - name: outPrivate
+    type: 'bool '
+  - name: outPublic
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_CreateLoaded(TSS2_SYS_CONTEXT *, TPMI_RH_HIERARCHY,
+    const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_SENSITIVE_CREATE *, const TPM2B_TEMPLATE
+    *, TPM2_HANDLE *, TPM2B_PRIVATE *, TPM2B_PUBLIC *, TPM2B_NAME *, TSS2L_SYS_AUTH_RESPONSE
+    *)
+- name: Tss2_Sys_Certify
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: objectHandle
+    type: int
+  - name: signHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: qualifyingData
+    type: 'bool '
+  - name: inScheme
+    type: 'bool '
+  - name: certifyInfo
+    type: 'bool '
+  - name: signature
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_Certify(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, TPMI_DH_OBJECT,
+    const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_DATA *, const TPMT_SIG_SCHEME *, TPM2B_ATTEST
+    *, TPMT_SIGNATURE *, TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_LoadExternal
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: inPrivate
+    type: 'bool '
+  - name: inPublic
+    type: 'bool '
+  - name: hierarchy
+    type: int
+  - name: objectHandle
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_LoadExternal(TSS2_SYS_CONTEXT *, const TSS2L_SYS_AUTH_COMMAND
+    *, const TPM2B_SENSITIVE *, const TPM2B_PUBLIC *, TPMI_RH_HIERARCHY, TPM2_HANDLE
+    *, TPM2B_NAME *, TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_GetCommandAuditDigest
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: privacyHandle
+    type: int
+  - name: signHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: qualifyingData
+    type: 'bool '
+  - name: inScheme
+    type: 'bool '
+  - name: auditInfo
+    type: 'bool '
+  - name: signature
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_GetCommandAuditDigest(TSS2_SYS_CONTEXT *, TPMI_RH_ENDORSEMENT,
+    TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_DATA *, const TPMT_SIG_SCHEME
+    *, TPM2B_ATTEST *, TPMT_SIGNATURE *, TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_PolicySigned
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: authObject
+    type: int
+  - name: policySession
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: nonceTPM
+    type: 'bool '
+  - name: cpHashA
+    type: 'bool '
+  - name: policyRef
+    type: 'bool '
+  - name: expiration
+    type: int
+  - name: auth
+    type: 'bool '
+  - name: timeout
+    type: 'bool '
+  - name: policyTicket
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_PolicySigned(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, TPMI_SH_POLICY,
+    const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_NONCE *, const TPM2B_DIGEST *, const
+    TPM2B_NONCE *, INT32, const TPMT_SIGNATURE *, TPM2B_TIMEOUT *, TPMT_TK_AUTH *,
+    TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_Import
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: parentHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: encryptionKey
+    type: 'bool '
+  - name: objectPublic
+    type: 'bool '
+  - name: duplicate
+    type: 'bool '
+  - name: inSymSeed
+    type: 'bool '
+  - name: symmetricAlg
+    type: 'bool '
+  - name: outPrivate
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_Import(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND
+    *, const TPM2B_DATA *, const TPM2B_PUBLIC *, const TPM2B_PRIVATE *, const TPM2B_ENCRYPTED_SECRET
+    *, const TPMT_SYM_DEF_OBJECT *, TPM2B_PRIVATE *, TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_CertifyX509
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: objectHandle
+    type: int
+  - name: signHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: reserved
+    type: 'bool '
+  - name: inScheme
+    type: 'bool '
+  - name: partialCertificate
+    type: 'bool '
+  - name: addedToCertificate
+    type: 'bool '
+  - name: tbsDigest
+    type: 'bool '
+  - name: signature
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_CertifyX509(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, TPMI_DH_OBJECT,
+    const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_DATA *, const TPMT_SIG_SCHEME *, const
+    TPM2B_MAX_BUFFER *, TPM2B_MAX_BUFFER *, TPM2B_DIGEST *, TPMT_SIGNATURE *, TSS2L_SYS_AUTH_RESPONSE
+    *)
+- name: Tss2_Sys_TestParms
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: parameters
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_TestParms(TSS2_SYS_CONTEXT *, const TSS2L_SYS_AUTH_COMMAND
+    *, const TPMT_PUBLIC_PARMS *, TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_Load
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: parentHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: inPrivate
+    type: 'bool '
+  - name: inPublic
+    type: 'bool '
+  - name: objectHandle
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_Load(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND
+    *, const TPM2B_PRIVATE *, const TPM2B_PUBLIC *, TPM2_HANDLE *, TPM2B_NAME *, TSS2L_SYS_AUTH_RESPONSE
+    *)
+- name: Tss2_Sys_NV_Certify
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: signHandle
+    type: int
+  - name: authHandle
+    type: int
+  - name: nvIndex
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: qualifyingData
+    type: 'bool '
+  - name: inScheme
+    type: 'bool '
+  - name: size
+    type: short
+  - name: offset
+    type: short
+  - name: certifyInfo
+    type: 'bool '
+  - name: signature
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_NV_Certify(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, TPMI_RH_NV_AUTH,
+    TPMI_RH_NV_INDEX, const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_DATA *, const TPMT_SIG_SCHEME
+    *, UINT16, UINT16, TPM2B_ATTEST *, TPMT_SIGNATURE *, TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_Quote
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: signHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: qualifyingData
+    type: 'bool '
+  - name: inScheme
+    type: 'bool '
+  - name: PCRselect
+    type: 'bool '
+  - name: quoted
+    type: 'bool '
+  - name: signature
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_Quote(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND
+    *, const TPM2B_DATA *, const TPMT_SIG_SCHEME *, const TPML_PCR_SELECTION *, TPM2B_ATTEST
+    *, TPMT_SIGNATURE *, TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_CertifyCreation
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: signHandle
+    type: int
+  - name: objectHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: qualifyingData
+    type: 'bool '
+  - name: creationHash
+    type: 'bool '
+  - name: inScheme
+    type: 'bool '
+  - name: creationTicket
+    type: 'bool '
+  - name: certifyInfo
+    type: 'bool '
+  - name: signature
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_CertifyCreation(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT,
+    TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_DATA *, const TPM2B_DIGEST
+    *, const TPMT_SIG_SCHEME *, const TPMT_TK_CREATION *, TPM2B_ATTEST *, TPMT_SIGNATURE
+    *, TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_GetSessionAuditDigest
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: privacyAdminHandle
+    type: int
+  - name: signHandle
+    type: int
+  - name: sessionHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: qualifyingData
+    type: 'bool '
+  - name: inScheme
+    type: 'bool '
+  - name: auditInfo
+    type: 'bool '
+  - name: signature
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_GetSessionAuditDigest(TSS2_SYS_CONTEXT *, TPMI_RH_ENDORSEMENT,
+    TPMI_DH_OBJECT, TPMI_SH_HMAC, const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_DATA
+    *, const TPMT_SIG_SCHEME *, TPM2B_ATTEST *, TPMT_SIGNATURE *, TSS2L_SYS_AUTH_RESPONSE
+    *)
+language: c++
+project: tpm2-tss
+target_name: Tss2_Sys_DictionaryAttackLockReset_Prepare
+target_path: /src/tpm2-tss/test/fuzz/main-sys.c

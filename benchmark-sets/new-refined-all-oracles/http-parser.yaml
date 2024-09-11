@@ -1,0 +1,29 @@
+functions:
+- name: http_method_str
+  params:
+  - name: ''
+    type: int
+  return_type: void
+  signature: const char * http_method_str(DW_TAG_enumeration_typehttp_method)
+- name: http_parser_settings_init
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void http_parser_settings_init(http_parser_settings *)
+- name: http_parser_set_max_header_size
+  params:
+  - name: ''
+    type: int
+  return_type: void
+  signature: void http_parser_set_max_header_size(uint32_t)
+- name: http_body_is_final
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int http_body_is_final(const struct http_parser *)
+language: c++
+project: http-parser
+target_name: fuzz_url
+target_path: /src/http-parser/fuzzers/fuzz_url.c

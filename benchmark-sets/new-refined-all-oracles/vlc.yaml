@@ -1,0 +1,232 @@
+functions:
+- name: libvlc_InternalPlay
+  params:
+  - name: libvlc
+    type: 'bool '
+  return_type: void
+  signature: void libvlc_InternalPlay(libvlc_int_t *)
+- name: vlm_ControlInternal
+  params:
+  - name: p_vlm
+    type: 'bool '
+  - name: i_query
+    type: int
+  return_type: int
+  signature: int vlm_ControlInternal(vlm_t *, int, void)
+- name: vlm_Control
+  params:
+  - name: p_vlm
+    type: 'bool '
+  - name: i_query
+    type: int
+  return_type: int
+  signature: int vlm_Control(vlm_t *, int, void)
+- name: vlc_playlist_PlayerInit
+  params:
+  - name: playlist
+    type: 'bool '
+  - name: parent
+    type: 'bool '
+  return_type: bool
+  signature: bool vlc_playlist_PlayerInit(vlc_playlist_t *, vlc_object_t *)
+- name: vlc_input_decoder_Decode
+  params:
+  - name: p_owner
+    type: 'bool '
+  - name: frame
+    type: 'bool '
+  - name: b_do_pace
+    type: bool
+  return_type: void
+  signature: void vlc_input_decoder_Decode(vlc_input_decoder_t *, vlc_frame_t *, bool)
+- name: vlc_input_decoder_New
+  params:
+  - name: parent
+    type: 'bool '
+  - name: cfg
+    type: 'bool '
+  return_type: void
+  signature: vlc_input_decoder_t * vlc_input_decoder_New(vlc_object_t *, const struct
+    vlc_input_decoder_cfg *)
+- name: vlc_playlist_Remove
+  params:
+  - name: playlist
+    type: 'bool '
+  - name: index
+    type: size_t
+  - name: count
+    type: size_t
+  return_type: void
+  signature: void vlc_playlist_Remove(vlc_playlist_t *, size_t, size_t)
+- name: intf_Create
+  params:
+  - name: libvlc
+    type: 'bool '
+  - name: chain
+    type: 'bool '
+  return_type: int
+  signature: int intf_Create(libvlc_int_t *, const char *)
+- name: libvlc_InternalAddIntf
+  params:
+  - name: libvlc
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  return_type: int
+  signature: int libvlc_InternalAddIntf(libvlc_int_t *, const char *)
+- name: vlc_aout_stream_Play
+  params:
+  - name: stream
+    type: 'bool '
+  - name: block
+    type: 'bool '
+  return_type: int
+  signature: int vlc_aout_stream_Play(vlc_aout_stream *, block_t *)
+- name: vlm_Delete
+  params:
+  - name: p_vlm
+    type: 'bool '
+  return_type: void
+  signature: void vlm_Delete(vlm_t *)
+- name: vlc_input_decoder_Create
+  params:
+  - name: p_parent
+    type: 'bool '
+  - name: fmt
+    type: 'bool '
+  - name: es_id
+    type: 'bool '
+  - name: clock
+    type: 'bool '
+  - name: p_resource
+    type: 'bool '
+  return_type: void
+  signature: vlc_input_decoder_t * vlc_input_decoder_Create(vlc_object_t *, const
+    es_format_t *, const char *, struct vlc_clock_t *, input_resource_t *)
+- name: vlc_intf_GetMainPlaylist
+  params:
+  - name: intf
+    type: 'bool '
+  return_type: void
+  signature: vlc_playlist_t * vlc_intf_GetMainPlaylist(intf_thread_t *)
+- name: vlc_playlist_ExpandItemFromNode
+  params:
+  - name: playlist
+    type: 'bool '
+  - name: subitems
+    type: 'bool '
+  return_type: int
+  signature: int vlc_playlist_ExpandItemFromNode(vlc_playlist_t *, input_item_node_t
+    *)
+- name: vlc_playlist_ExpandItem
+  params:
+  - name: playlist
+    type: 'bool '
+  - name: index
+    type: size_t
+  - name: node
+    type: 'bool '
+  return_type: int
+  signature: int vlc_playlist_ExpandItem(vlc_playlist_t *, size_t, input_item_node_t
+    *)
+- name: Run
+  params:
+  - name: data
+    type: 'bool '
+  return_type: void
+  signature: void * Run(void *)
+- name: intf_InsertItem
+  params:
+  - name: libvlc
+    type: 'bool '
+  - name: mrl
+    type: 'bool '
+  - name: optc
+    type: int
+  - name: optv
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: int
+  signature: int intf_InsertItem(libvlc_int_t *, const char *, unsigned int, const
+    const char **, unsigned int)
+- name: vlc_player_New
+  params:
+  - name: parent
+    type: 'bool '
+  - name: lock_type
+    type: int
+  return_type: void
+  signature: vlc_player_t * vlc_player_New(vlc_object_t *, DW_TAG_enumeration_typevlc_player_lock_type)
+- name: vlc_playlist_New
+  params:
+  - name: parent
+    type: 'bool '
+  return_type: void
+  signature: vlc_playlist_t * vlc_playlist_New(vlc_object_t *)
+- name: intf_DestroyAll
+  params:
+  - name: libvlc
+    type: 'bool '
+  return_type: void
+  signature: void intf_DestroyAll(libvlc_int_t *)
+- name: vlc_aout_stream_New
+  params:
+  - name: p_aout
+    type: 'bool '
+  - name: cfg
+    type: 'bool '
+  return_type: void
+  signature: vlc_aout_stream * vlc_aout_stream_New(audio_output_t *, const struct
+    vlc_aout_stream_cfg *)
+- name: aout_filter_GetVout
+  params:
+  - name: filter
+    type: 'bool '
+  - name: fmt
+    type: 'bool '
+  return_type: void
+  signature: vout_thread_t * aout_filter_GetVout(filter_t *, const video_format_t
+    *)
+- name: vlm_ExecuteCommand
+  params:
+  - name: p_vlm
+    type: 'bool '
+  - name: psz_command
+    type: 'bool '
+  - name: pp_message
+    type: 'bool '
+  return_type: int
+  signature: int vlm_ExecuteCommand(vlm_t *, const char *, vlm_message_t **)
+- name: vlc_playlist_Next
+  params:
+  - name: playlist
+    type: 'bool '
+  return_type: int
+  signature: int vlc_playlist_Next(vlc_playlist_t *)
+- name: vlc_input_decoder_CreateSubDec
+  params:
+  - name: p_owner
+    type: 'bool '
+  - name: cfg
+    type: 'bool '
+  return_type: void
+  signature: vlc_input_decoder_t * vlc_input_decoder_CreateSubDec(vlc_input_decoder_t
+    *, const struct vlc_input_decoder_cfg *)
+- name: vlc_input_decoder_DecodeWithStatus
+  params:
+  - name: p_owner
+    type: 'bool '
+  - name: frame
+    type: 'bool '
+  - name: b_do_pace
+    type: bool
+  - name: status
+    type: 'bool '
+  return_type: void
+  signature: void vlc_input_decoder_DecodeWithStatus(vlc_input_decoder_t *, vlc_frame_t
+    *, bool, struct vlc_input_decoder_status *)
+language: c
+project: vlc
+target_name: vlc-demux-libfuzzer
+target_path: /src/vlc/test/vlc-demux-libfuzzer.c

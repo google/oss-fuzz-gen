@@ -1,0 +1,135 @@
+functions:
+- name: makeString
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: String * makeString(char *)
+- name: set_errcontext_domain
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int set_errcontext_domain(const char *)
+- name: MemoryContextAllocAligned
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: int
+  return_type: void
+  signature: void * MemoryContextAllocAligned(MemoryContext, Size, Size, int)
+- name: palloc0
+  params:
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void * palloc0(Size)
+- name: MemoryContextAllocExtended
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: int
+  return_type: void
+  signature: void * MemoryContextAllocExtended(MemoryContext, Size, int)
+- name: SystemFuncName
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: List * SystemFuncName(char *)
+- name: pstrdup
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: char * pstrdup(const char *)
+- name: GenerationFree
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void GenerationFree(void *)
+- name: pg_query_parse_opts
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: PgQueryParseResult pg_query_parse_opts(const char *, int)
+- name: SystemTypeName
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: TypeName * SystemTypeName(char *)
+- name: errcontext_msg
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int errcontext_msg(const char *, void)
+- name: AlignedAllocRealloc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void * AlignedAllocRealloc(void *, Size)
+- name: pg_query_parse
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PgQueryParseResult pg_query_parse(const char *)
+- name: SlabRealloc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void * SlabRealloc(void *, Size)
+- name: makeBitString
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: BitString * makeBitString(char *)
+- name: appendStringInfoSpaces
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void appendStringInfoSpaces(StringInfo, int)
+- name: internalerrquery
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int internalerrquery(const char *)
+- name: makeFloat
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Float * makeFloat(char *)
+language: c
+project: libpg_query
+target_name: fuzz_parser
+target_path: /src/libpg_query/test/fuzz/fuzz_parser.c

@@ -1,0 +1,232 @@
+functions:
+- name: add_picture_to_stack_re_enc
+  params:
+  - name: rate_control_api
+    type: 'bool '
+  - name: i4_enc_pic_id
+    type: int
+  - name: e_pic_type
+    type: int
+  return_type: void
+  signature: void add_picture_to_stack_re_enc(rate_control_api_t *, WORD32, picture_type_e)
+- name: get_error_bits_for_desired_buf
+  params:
+  - name: ps_cbr_buffer
+    type: 'bool '
+  - name: i4_lap_complexity_q7
+    type: int
+  - name: i4_bit_alloc_period
+    type: int
+  return_type: int
+  signature: WORD32 get_error_bits_for_desired_buf(cbr_buffer_t *, WORD32, WORD32)
+- name: change_cbr_buffer_delay
+  params:
+  - name: ps_cbr_buffer
+    type: 'bool '
+  - name: i4_buffer_delay
+    type: int
+  return_type: void
+  signature: void change_cbr_buffer_delay(cbr_buffer_t *, WORD32)
+- name: get_vbv_buf_fullness
+  params:
+  - name: ps_vbr_storage_vbv
+    type: 'bool '
+  - name: u4_bits
+    type: int
+  return_type: int
+  signature: WORD32 get_vbv_buf_fullness(vbr_storage_vbv_t *, UWORD32)
+- name: rc_get_vbv_fulness_with_cur_bits
+  params:
+  - name: ps_rate_control_api
+    type: 'bool '
+  - name: u4_bits
+    type: int
+  return_type: int
+  signature: WORD32 rc_get_vbv_fulness_with_cur_bits(rate_control_api_t *, UWORD32)
+- name: set_bit_allocation_i_frames
+  params:
+  - name: ps_bit_allocation
+    type: 'bool '
+  - name: ps_cbr_buffer
+    type: 'bool '
+  - name: ps_pic_handle
+    type: 'bool '
+  - name: i4_lap_window_comp
+    type: int
+  - name: i4_num_frames
+    type: int
+  return_type: void
+  signature: void set_bit_allocation_i_frames(bit_allocation_t *, cbr_buffer_handle,
+    pic_handling_handle, WORD32, WORD32)
+- name: change_frame_rate
+  params:
+  - name: ps_rate_control_api
+    type: 'bool '
+  - name: u4_frame_rate
+    type: int
+  - name: u4_src_ticks
+    type: int
+  - name: u4_tgt_ticks
+    type: int
+  return_type: void
+  signature: void change_frame_rate(rate_control_api_t *, UWORD32, UWORD32, UWORD32)
+- name: ihevce_compute_temporal_complexity_reset_Kp_Kb
+  params:
+  - name: ps_rc_lap_out
+    type: 'bool '
+  - name: pv_rc_ctxt
+    type: 'bool '
+  - name: i4_Kp_Kb_reset_flag
+    type: int
+  return_type: void
+  signature: void ihevce_compute_temporal_complexity_reset_Kp_Kb(rc_lap_out_params_t
+    *, void *, WORD32)
+- name: ihevce_q_get_filled_recon_buff
+  params:
+  - name: ps_hle_ctxt
+    type: 'bool '
+  - name: pi4_buff_id
+    type: 'bool '
+  - name: i4_blocking_mode
+    type: int
+  - name: i4_bitrate_instance_id
+    type: int
+  - name: i4_resolution_id
+    type: int
+  return_type: void
+  signature: void * ihevce_q_get_filled_recon_buff(ihevce_hle_ctxt_t *, WORD32 *,
+    WORD32, WORD32, WORD32)
+- name: ihevce_put_pic_timing_sei_params
+  params:
+  - name: ps_pt_sei
+    type: 'bool '
+  - name: ps_vui_params
+    type: 'bool '
+  - name: ps_bitstrm
+    type: 'bool '
+  return_type: int
+  signature: WORD32 ihevce_put_pic_timing_sei_params(pic_timing_sei_params_t *, vui_t
+    *, bitstrm_t *)
+- name: rc_set_bits_based_on_complexity
+  params:
+  - name: ps_rate_contro_api
+    type: 'bool '
+  - name: i4_lap_window_comp
+    type: int
+  - name: i4_num_frames
+    type: int
+  return_type: void
+  signature: void rc_set_bits_based_on_complexity(rate_control_api_t *, WORD32, WORD32)
+- name: ihevce_q_get_free_out_recon_buff
+  params:
+  - name: ps_hle_ctxt
+    type: 'bool '
+  - name: pi4_buff_id
+    type: 'bool '
+  - name: i4_blocking_mode
+    type: int
+  - name: i4_bitrate_instance
+    type: int
+  - name: i4_res_instance
+    type: int
+  return_type: void
+  signature: void * ihevce_q_get_free_out_recon_buff(ihevce_hle_ctxt_t *, WORD32 *,
+    WORD32, WORD32, WORD32)
+- name: change_vbr_vbv_frame_rate
+  params:
+  - name: ps_vbr_storage_vbv
+    type: 'bool '
+  - name: i4_frm_rate
+    type: int
+  return_type: void
+  signature: void change_vbr_vbv_frame_rate(vbr_storage_vbv_t *, WORD32)
+- name: get_est_sad
+  params:
+  - name: ps_est_sad
+    type: 'bool '
+  - name: e_pic_type
+    type: int
+  return_type: int
+  signature: UWORD32 get_est_sad(est_sad_t *, picture_type_e)
+- name: change_frm_rate_for_bit_alloc
+  params:
+  - name: ps_rate_control_api
+    type: 'bool '
+  - name: u4_frame_rate
+    type: int
+  return_type: void
+  signature: void change_frm_rate_for_bit_alloc(rate_control_api_t *, UWORD32)
+- name: update_vbr_vbv
+  params:
+  - name: ps_vbr_storage_vbv
+    type: 'bool '
+  - name: i4_total_bits_decoded
+    type: int
+  return_type: void
+  signature: void update_vbr_vbv(vbr_storage_vbv_t *, WORD32)
+- name: add_pic_to_stack_re_enc
+  params:
+  - name: ps_pic_handling
+    type: 'bool '
+  - name: i4_enc_pic_id
+    type: int
+  - name: e_pic_type
+    type: int
+  return_type: int
+  signature: WORD32 add_pic_to_stack_re_enc(pic_handling_t *, WORD32, picture_type_e)
+- name: change_vbr_vbv_bit_rate
+  params:
+  - name: ps_vbr_storage_vbv
+    type: 'bool '
+  - name: i4_max_bit_rate
+    type: int
+  return_type: void
+  signature: void change_vbr_vbv_bit_rate(vbr_storage_vbv_t *, WORD32)
+- name: change_cbr_vbv_tgt_frame_rate
+  params:
+  - name: ps_cbr_buffer
+    type: 'bool '
+  - name: i4_tgt_frm_rate
+    type: int
+  return_type: void
+  signature: void change_cbr_vbv_tgt_frame_rate(cbr_buffer_t *, WORD32)
+- name: rc_get_bits_per_frame
+  params:
+  - name: ps_rate_control_api
+    type: 'bool '
+  return_type: int
+  signature: WORD32 rc_get_bits_per_frame(rate_control_api_t *)
+- name: get_vbv_buffer_status
+  params:
+  - name: ps_vbr_storage_vbv
+    type: 'bool '
+  - name: i4_total_frame_bits
+    type: int
+  - name: pi4_num_bits_to_prevent_vbv_underflow
+    type: 'bool '
+  return_type: int
+  signature: vbv_buf_status_e get_vbv_buffer_status(vbr_storage_vbv_t *, WORD32, WORD32
+    *)
+- name: change_ba_peak_bit_rate
+  params:
+  - name: ps_bit_allocation
+    type: 'bool '
+  - name: ai4_peak_bit_rate
+    type: 'bool '
+  return_type: void
+  signature: void change_ba_peak_bit_rate(bit_allocation_t *, WORD32 *)
+- name: ihevce_put_buf_period_sei_params
+  params:
+  - name: ps_bp_sei
+    type: 'bool '
+  - name: ps_vui_params
+    type: 'bool '
+  - name: ps_bitstrm
+    type: 'bool '
+  return_type: int
+  signature: WORD32 ihevce_put_buf_period_sei_params(buf_period_sei_params_t *, vui_t
+    *, bitstrm_t *)
+language: c++
+project: libhevc
+target_name: hevc_dec_fuzzer
+target_path: /src/libhevc/fuzzer/hevc_dec_fuzzer.cpp

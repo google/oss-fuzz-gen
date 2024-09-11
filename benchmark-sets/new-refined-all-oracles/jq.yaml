@@ -1,0 +1,327 @@
+functions:
+- name: jv_is_integer
+  params:
+  - name: j
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int jv_is_integer(jv)
+- name: decNumberRemainderNear
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberRemainderNear(decNumber *, const decNumber *, const
+    decNumber *, decContext *)
+- name: decNumberLog10
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberLog10(decNumber *, const decNumber *, decContext
+    *)
+- name: decNumberNextToward
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberNextToward(decNumber *, const decNumber *, const
+    decNumber *, decContext *)
+- name: decNumberNextMinus
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberNextMinus(decNumber *, const decNumber *, decContext
+    *)
+- name: decNumberExp
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberExp(decNumber *, const decNumber *, decContext *)
+- name: decNumberMinus
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberMinus(decNumber *, const decNumber *, decContext
+    *)
+- name: decNumberLn
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberLn(decNumber *, const decNumber *, decContext *)
+- name: decNumberFMA
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: fhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberFMA(decNumber *, const decNumber *, const decNumber
+    *, const decNumber *, decContext *)
+- name: decNumberLogB
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberLogB(decNumber *, const decNumber *, decContext
+    *)
+- name: decNumberPower
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberPower(decNumber *, const decNumber *, const decNumber
+    *, decContext *)
+- name: decNumberToIntegralExact
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberToIntegralExact(decNumber *, const decNumber *,
+    decContext *)
+- name: decNumberNextPlus
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberNextPlus(decNumber *, const decNumber *, decContext
+    *)
+- name: decNumberPlus
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberPlus(decNumber *, const decNumber *, decContext
+    *)
+- name: decNumberDivideInteger
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberDivideInteger(decNumber *, const decNumber *, const
+    decNumber *, decContext *)
+- name: decNumberDivide
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberDivide(decNumber *, const decNumber *, const decNumber
+    *, decContext *)
+- name: decNumberAdd
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberAdd(decNumber *, const decNumber *, const decNumber
+    *, decContext *)
+- name: decNumberSquareRoot
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberSquareRoot(decNumber *, const decNumber *, decContext
+    *)
+- name: decNumberMinMag
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberMinMag(decNumber *, const decNumber *, const decNumber
+    *, decContext *)
+- name: onig_scan
+  params:
+  - name: reg
+    type: 'bool '
+  - name: str
+    type: 'bool '
+  - name: end
+    type: 'bool '
+  - name: region
+    type: 'bool '
+  - name: option
+    type: int
+  - name: scan_callback
+    type: 'bool '
+  - name: callback_arg
+    type: 'bool '
+  return_type: int
+  signature: int onig_scan(regex_t *, const OnigUChar *, const OnigUChar *, OnigRegion
+    *, OnigOptionType, DW_TAG_subroutine_typeInfinite loop *, void *)
+- name: decNumberAbs
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberAbs(decNumber *, const decNumber *, decContext *)
+- name: jv_load_file
+  params:
+  - name: filename
+    type: 'bool '
+  - name: raw
+    type: int
+  return_type: void
+  signature: jv jv_load_file(const char *, int)
+- name: decNumberCompareTotalMag
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberCompareTotalMag(decNumber *, const decNumber *,
+    const decNumber *, decContext *)
+- name: decNumberSubtract
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberSubtract(decNumber *, const decNumber *, const decNumber
+    *, decContext *)
+- name: decNumberRemainder
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberRemainder(decNumber *, const decNumber *, const
+    decNumber *, decContext *)
+- name: decNumberMultiply
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberMultiply(decNumber *, const decNumber *, const decNumber
+    *, decContext *)
+- name: decNumberToIntegralValue
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberToIntegralValue(decNumber *, const decNumber *,
+    decContext *)
+language: c
+project: jq
+target_name: jq_fuzz_parse_stream
+target_path: /src/jq/tests/jq_fuzz_parse_stream.c

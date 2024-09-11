@@ -1,0 +1,262 @@
+functions:
+- name: ppc_hash64_get_phys_page_debug
+  params:
+  - name: cpu
+    type: 'bool '
+  - name: addr
+    type: size_t
+  return_type: size_t
+  signature: hwaddr ppc_hash64_get_phys_page_debug(PowerPCCPU *, target_ulong)
+- name: decimal32FromString
+  params:
+  - name: result
+    type: 'bool '
+  - name: string
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decimal32 * decimal32FromString(decimal32 *, const char *, decContext
+    *)
+- name: decNumberRemainderNear
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberRemainderNear(decNumber *, const decNumber *, const
+    decNumber *, decContext *)
+- name: ppc64_v3_get_phys_page_debug
+  params:
+  - name: cpu
+    type: 'bool '
+  - name: eaddr
+    type: size_t
+  return_type: size_t
+  signature: hwaddr ppc64_v3_get_phys_page_debug(PowerPCCPU *, vaddr)
+- name: decNumberExp
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberExp(decNumber *, const decNumber *, decContext *)
+- name: decNumberFMA
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: fhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberFMA(decNumber *, const decNumber *, const decNumber
+    *, const decNumber *, decContext *)
+- name: decimal128Canonical
+  params:
+  - name: result
+    type: 'bool '
+  - name: d128
+    type: 'bool '
+  return_type: void
+  signature: decimal128 * decimal128Canonical(decimal128 *, const decimal128 *)
+- name: decimal128IsCanonical
+  params:
+  - name: d128
+    type: 'bool '
+  return_type: int
+  signature: uint32_t decimal128IsCanonical(const decimal128 *)
+- name: decimal32IsCanonical
+  params:
+  - name: d32
+    type: 'bool '
+  return_type: int
+  signature: uint32_t decimal32IsCanonical(const decimal32 *)
+- name: s390_cpu_get_phys_page_debug
+  params:
+  - name: cs
+    type: 'bool '
+  - name: vaddr
+    type: size_t
+  return_type: size_t
+  signature: hwaddr s390_cpu_get_phys_page_debug(CPUState *, vaddr)
+- name: ppc_radix64_handle_mmu_fault
+  params:
+  - name: cpu
+    type: 'bool '
+  - name: eaddr
+    type: size_t
+  - name: rwx
+    type: int
+  - name: mmu_idx
+    type: int
+  return_type: int
+  signature: int ppc_radix64_handle_mmu_fault(PowerPCCPU *, vaddr, int, int)
+- name: decimal64FromString
+  params:
+  - name: result
+    type: 'bool '
+  - name: string
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decimal64 * decimal64FromString(decimal64 *, const char *, decContext
+    *)
+- name: decNumberDivideInteger
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberDivideInteger(decNumber *, const decNumber *, const
+    decNumber *, decContext *)
+- name: tricore_cpu_tlb_fill
+  params:
+  - name: cs
+    type: 'bool '
+  - name: address
+    type: size_t
+  - name: size
+    type: int
+  - name: rw
+    type: int
+  - name: mmu_idx
+    type: int
+  - name: probe
+    type: bool
+  - name: retaddr
+    type: size_t
+  return_type: bool
+  signature: bool tricore_cpu_tlb_fill(CPUState *, vaddr, int, MMUAccessType, int,
+    bool, uintptr_t)
+- name: decimal64Canonical
+  params:
+  - name: result
+    type: 'bool '
+  - name: d64
+    type: 'bool '
+  return_type: void
+  signature: decimal64 * decimal64Canonical(decimal64 *, const decimal64 *)
+- name: decNumberDivide
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberDivide(decNumber *, const decNumber *, const decNumber
+    *, decContext *)
+- name: decimal32FromNumber
+  params:
+  - name: d32
+    type: 'bool '
+  - name: dn
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decimal32 * decimal32FromNumber(decimal32 *, const decNumber *, decContext
+    *)
+- name: decimal64FromNumber
+  params:
+  - name: d64
+    type: 'bool '
+  - name: dn
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decimal64 * decimal64FromNumber(decimal64 *, const decNumber *, decContext
+    *)
+- name: decimal64IsCanonical
+  params:
+  - name: d64
+    type: 'bool '
+  return_type: int
+  signature: uint32_t decimal64IsCanonical(const decimal64 *)
+- name: decimal128FromString
+  params:
+  - name: result
+    type: 'bool '
+  - name: string
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decimal128 * decimal128FromString(decimal128 *, const char *, decContext
+    *)
+- name: ppc_hash64_handle_mmu_fault
+  params:
+  - name: cpu
+    type: 'bool '
+  - name: eaddr
+    type: size_t
+  - name: rwx
+    type: int
+  - name: mmu_idx
+    type: int
+  return_type: int
+  signature: int ppc_hash64_handle_mmu_fault(PowerPCCPU *, vaddr, int, int)
+- name: s390_store_status
+  params:
+  - name: cpu
+    type: 'bool '
+  - name: addr
+    type: size_t
+  - name: store_arch
+    type: bool
+  return_type: int
+  signature: int s390_store_status(S390CPU *, hwaddr, bool)
+- name: decNumberRemainder
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberRemainder(decNumber *, const decNumber *, const
+    decNumber *, decContext *)
+- name: decimal32Canonical
+  params:
+  - name: result
+    type: 'bool '
+  - name: d32
+    type: 'bool '
+  return_type: void
+  signature: decimal32 * decimal32Canonical(decimal32 *, const decimal32 *)
+- name: do_restart_interrupt
+  params:
+  - name: env
+    type: 'bool '
+  return_type: void
+  signature: void do_restart_interrupt(CPUS390XState *)
+language: c++
+project: unicorn
+target_name: fuzz_emu_x86_16
+target_path: /src/unicorn/tests/fuzz/fuzz_emu_x86_16.c

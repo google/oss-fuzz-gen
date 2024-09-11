@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: tomlplusplus
+target_name: toml_fuzzer
+target_path: /src/tomlplusplus/fuzzing/toml_fuzzer.cpp

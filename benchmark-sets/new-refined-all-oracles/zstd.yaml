@@ -1,0 +1,321 @@
+functions:
+- name: ZSTDv07_decompressDCtx
+  params:
+  - name: dctx
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  - name: dstCapacity
+    type: size_t
+  - name: src
+    type: 'bool '
+  - name: srcSize
+    type: size_t
+  return_type: size_t
+  signature: size_t ZSTDv07_decompressDCtx(ZSTDv07_DCtx *, void *, size_t, const void
+    *, size_t)
+- name: ZSTD_compressBegin
+  params:
+  - name: cctx
+    type: 'bool '
+  - name: compressionLevel
+    type: int
+  return_type: size_t
+  signature: size_t ZSTD_compressBegin(ZSTD_CCtx *, int)
+- name: COVER_selectDict
+  params:
+  - name: customDictContent
+    type: 'bool '
+  - name: dictBufferCapacity
+    type: 'bool '
+  - name: dictContentSize
+    type: size_t
+  - name: samplesBuffer
+    type: size_t
+  - name: samplesSizes
+    type: 'bool '
+  - name: nbFinalizeSamples
+    type: 'bool '
+  - name: nbCheckSamples
+    type: int
+  - name: nbSamples
+    type: size_t
+  - name: params
+    type: size_t
+  - name: offsets
+    type: 'bool '
+  - name: totalCompressedSize
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: COVER_dictSelection_t COVER_selectDict(BYTE *, size_t, size_t, const
+    BYTE *, const size_t *, unsigned int, size_t, size_t, ZDICT_cover_params_t, size_t
+    *, size_t)
+- name: ZDICT_addEntropyTablesFromBuffer
+  params:
+  - name: dictBuffer
+    type: 'bool '
+  - name: dictContentSize
+    type: size_t
+  - name: dictBufferCapacity
+    type: size_t
+  - name: samplesBuffer
+    type: 'bool '
+  - name: samplesSizes
+    type: 'bool '
+  - name: nbSamples
+    type: int
+  return_type: size_t
+  signature: size_t ZDICT_addEntropyTablesFromBuffer(void *, size_t, size_t, const
+    void *, const size_t *, unsigned int)
+- name: ZSTD_createCDict_byReference
+  params:
+  - name: dict
+    type: 'bool '
+  - name: dictSize
+    type: size_t
+  - name: compressionLevel
+    type: int
+  return_type: void
+  signature: ZSTD_CDict * ZSTD_createCDict_byReference(const void *, size_t, int)
+- name: ZSTDv07_decompress
+  params:
+  - name: dst
+    type: 'bool '
+  - name: dstCapacity
+    type: size_t
+  - name: src
+    type: 'bool '
+  - name: srcSize
+    type: size_t
+  return_type: size_t
+  signature: size_t ZSTDv07_decompress(void *, size_t, const void *, size_t)
+- name: ZSTD_compressEnd
+  params:
+  - name: cctx
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  - name: dstCapacity
+    type: size_t
+  - name: src
+    type: 'bool '
+  - name: srcSize
+    type: size_t
+  return_type: size_t
+  signature: size_t ZSTD_compressEnd(ZSTD_CCtx *, void *, size_t, const void *, size_t)
+- name: HUF_decompress1X2_DCtx_wksp
+  params:
+  - name: DCtx
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  - name: dstSize
+    type: size_t
+  - name: cSrc
+    type: 'bool '
+  - name: cSrcSize
+    type: size_t
+  - name: workSpace
+    type: 'bool '
+  - name: wkspSize
+    type: size_t
+  - name: flags
+    type: int
+  return_type: size_t
+  signature: size_t HUF_decompress1X2_DCtx_wksp(HUF_DTable *, void *, size_t, const
+    void *, size_t, void *, size_t, int)
+- name: ZSTD_createCDict
+  params:
+  - name: dict
+    type: 'bool '
+  - name: dictSize
+    type: size_t
+  - name: compressionLevel
+    type: int
+  return_type: void
+  signature: ZSTD_CDict * ZSTD_createCDict(const void *, size_t, int)
+- name: ZSTD_compress_advanced
+  params:
+  - name: cctx
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  - name: dstCapacity
+    type: size_t
+  - name: src
+    type: 'bool '
+  - name: srcSize
+    type: size_t
+  - name: dict
+    type: 'bool '
+  - name: dictSize
+    type: size_t
+  - name: params
+    type: 'bool '
+  return_type: size_t
+  signature: size_t ZSTD_compress_advanced(ZSTD_CCtx *, void *, size_t, const void
+    *, size_t, const void *, size_t, ZSTD_parameters)
+- name: HUF_decompress1X_DCtx_wksp
+  params:
+  - name: dctx
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  - name: dstSize
+    type: size_t
+  - name: cSrc
+    type: 'bool '
+  - name: cSrcSize
+    type: size_t
+  - name: workSpace
+    type: 'bool '
+  - name: wkspSize
+    type: size_t
+  - name: flags
+    type: int
+  return_type: size_t
+  signature: size_t HUF_decompress1X_DCtx_wksp(HUF_DTable *, void *, size_t, const
+    void *, size_t, void *, size_t, int)
+- name: ZSTD_compressBegin_usingDict
+  params:
+  - name: cctx
+    type: 'bool '
+  - name: dict
+    type: 'bool '
+  - name: dictSize
+    type: size_t
+  - name: compressionLevel
+    type: int
+  return_type: size_t
+  signature: size_t ZSTD_compressBegin_usingDict(ZSTD_CCtx *, const void *, size_t,
+    int)
+- name: ZSTD_initStaticCDict
+  params:
+  - name: workspace
+    type: 'bool '
+  - name: workspaceSize
+    type: size_t
+  - name: dict
+    type: 'bool '
+  - name: dictSize
+    type: size_t
+  - name: dictLoadMethod
+    type: int
+  - name: dictContentType
+    type: int
+  - name: cParams
+    type: 'bool '
+  return_type: void
+  signature: const ZSTD_CDict * ZSTD_initStaticCDict(void *, size_t, const void *,
+    size_t, ZSTD_dictLoadMethod_e, ZSTD_dictContentType_e, ZSTD_compressionParameters)
+- name: ZSTD_DCtx_refPrefix
+  params:
+  - name: dctx
+    type: 'bool '
+  - name: prefix
+    type: 'bool '
+  - name: prefixSize
+    type: size_t
+  return_type: size_t
+  signature: size_t ZSTD_DCtx_refPrefix(ZSTD_DCtx *, const void *, size_t)
+- name: ZSTD_seekable_decompressFrame
+  params:
+  - name: zs
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  - name: dstSize
+    type: size_t
+  - name: frameIndex
+    type: int
+  return_type: size_t
+  signature: size_t ZSTD_seekable_decompressFrame(ZSTD_seekable *, void *, size_t,
+    unsigned int)
+- name: ZSTD_initDStream_usingDict
+  params:
+  - name: zds
+    type: 'bool '
+  - name: dict
+    type: 'bool '
+  - name: dictSize
+    type: size_t
+  return_type: size_t
+  signature: size_t ZSTD_initDStream_usingDict(ZSTD_DStream *, const void *, size_t)
+- name: ZSTD_decompressStream_simpleArgs
+  params:
+  - name: dctx
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  - name: dstCapacity
+    type: size_t
+  - name: dstPos
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  - name: srcSize
+    type: size_t
+  - name: srcPos
+    type: 'bool '
+  return_type: size_t
+  signature: size_t ZSTD_decompressStream_simpleArgs(ZSTD_DCtx *, void *, size_t,
+    size_t *, const void *, size_t, size_t *)
+- name: ZSTD_compressContinue
+  params:
+  - name: cctx
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  - name: dstCapacity
+    type: size_t
+  - name: src
+    type: 'bool '
+  - name: srcSize
+    type: size_t
+  return_type: size_t
+  signature: size_t ZSTD_compressContinue(ZSTD_CCtx *, void *, size_t, const void
+    *, size_t)
+- name: ZDICT_trainFromBuffer_cover
+  params:
+  - name: dictBuffer
+    type: 'bool '
+  - name: dictBufferCapacity
+    type: size_t
+  - name: samplesBuffer
+    type: 'bool '
+  - name: samplesSizes
+    type: 'bool '
+  - name: nbSamples
+    type: int
+  - name: parameters
+    type: 'bool '
+  return_type: size_t
+  signature: size_t ZDICT_trainFromBuffer_cover(void *, size_t, const void *, const
+    size_t *, unsigned int, ZDICT_cover_params_t)
+- name: COVER_checkTotalCompressedSize
+  params:
+  - name: parameters
+    type: 'bool '
+  - name: samplesSizes
+    type: 'bool '
+  - name: samples
+    type: 'bool '
+  - name: offsets
+    type: 'bool '
+  - name: nbTrainSamples
+    type: size_t
+  - name: nbSamples
+    type: size_t
+  - name: dict
+    type: 'bool '
+  - name: dictBufferCapacity
+    type: size_t
+  return_type: size_t
+  signature: size_t COVER_checkTotalCompressedSize(const ZDICT_cover_params_t, const
+    size_t *, const BYTE *, size_t *, size_t, size_t, const BYTE *, size_t)
+language: c++
+project: zstd
+target_name: decompress_cross_format
+target_path: /src/zstd/tests/fuzz/decompress_cross_format.c

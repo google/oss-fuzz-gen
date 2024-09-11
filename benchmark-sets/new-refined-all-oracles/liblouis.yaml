@@ -1,0 +1,93 @@
+functions:
+- name: _lou_findOpcodeNumber
+  params:
+  - name: toFind
+    type: 'bool '
+  return_type: int
+  signature: TranslationTableOpcode _lou_findOpcodeNumber(const char *)
+- name: _lou_showAttributes
+  params:
+  - name: a
+    type: size_t
+  return_type: void
+  signature: char * _lou_showAttributes(TranslationTableCharacterAttributes)
+- name: lou_readCharFromFile
+  params:
+  - name: fileName
+    type: 'bool '
+  - name: mode
+    type: 'bool '
+  return_type: int
+  signature: int lou_readCharFromFile(const char *, int *)
+- name: lou_setDataPath
+  params:
+  - name: path
+    type: 'bool '
+  return_type: void
+  signature: char * lou_setDataPath(const char *)
+- name: lou_dotsToChar
+  params:
+  - name: tableList
+    type: 'bool '
+  - name: inbuf
+    type: 'bool '
+  - name: outbuf
+    type: 'bool '
+  - name: length
+    type: int
+  - name: mode
+    type: int
+  return_type: int
+  signature: int lou_dotsToChar(const char *, widechar *, widechar *, int, int)
+- name: lou_charToDots
+  params:
+  - name: tableList
+    type: 'bool '
+  - name: inbuf
+    type: 'bool '
+  - name: outbuf
+    type: 'bool '
+  - name: length
+    type: int
+  - name: mode
+    type: int
+  return_type: int
+  signature: int lou_charToDots(const char *, const widechar *, widechar *, int, int)
+- name: lou_logFile
+  params:
+  - name: fileName
+    type: 'bool '
+  return_type: void
+  signature: void lou_logFile(const char *)
+- name: lou_registerTableResolver
+  params:
+  - name: resolver
+    type: 'bool '
+  return_type: void
+  signature: void lou_registerTableResolver(DW_TAG_subroutine_typeInfinite loop *)
+- name: _lou_compileTranslationRule
+  params:
+  - name: tableList
+    type: 'bool '
+  - name: inString
+    type: 'bool '
+  return_type: int
+  signature: int _lou_compileTranslationRule(const char *, const char *)
+- name: lou_logPrint
+  params:
+  - name: format
+    type: 'bool '
+  return_type: void
+  signature: void lou_logPrint(const char *, void)
+- name: _lou_compileDisplayRule
+  params:
+  - name: tableList
+    type: 'bool '
+  - name: inString
+    type: 'bool '
+  return_type: int
+  signature: int _lou_compileDisplayRule(const char *, const char *)
+language: c
+project: liblouis
+target_name: table_fuzzer
+target_path: /src/liblouis/tests/fuzzing/table_fuzzer.cc

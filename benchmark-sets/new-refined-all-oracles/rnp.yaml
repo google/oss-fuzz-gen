@@ -1,0 +1,322 @@
+functions:
+- name: _ZN9pgp_key_t7protectERK27rnp_key_protection_params_tRK23pgp_password_provider_tRN3rnp15SecurityContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool pgp_key_t::protect(struct pgp_key_t *, const rnp_key_protection_params_t
+    &, const pgp_password_provider_t &, SecurityContext &)
+- name: _ZN9pgp_key_t6unlockERK23pgp_password_provider_t8pgp_op_t
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: bool
+  signature: bool pgp_key_t::unlock(struct pgp_key_t *, const pgp_password_provider_t
+    &, pgp_op_t)
+- name: _ZN14ext_key_format22extended_private_key_t5parseERNS_22ext_key_input_stream_tE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void ext_key_format::extended_private_key_t::parse(ext_key_input_stream_t
+    &)
+- name: _ZN9pgp_key_t12sign_bindingERK13pgp_key_pkt_tR15pgp_signature_tRN3rnp15SecurityContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void pgp_key_t::sign_binding(struct pgp_key_t *, const pgp_key_pkt_t
+    &, pgp_signature_t &, SecurityContext &)
+- name: _ZN9pgp_key_tC2ERK13pgp_key_pkt_tRS_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void pgp_key_t::pgp_key_t(struct pgp_key_t *, const pgp_key_pkt_t &,
+    struct pgp_key_t &)
+- name: _ZN3rnp8KeyStore11add_key_sigERK17pgp_fingerprint_tRK15pgp_signature_tb
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: void
+  signature: pgp_subsig_t * rnp::KeyStore::add_key_sig(const pgp_fingerprint_t &,
+    const pgp_signature_t &, bool)
+- name: _ZN3rnp8KeyStore5writeER10pgp_dest_t
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool rnp::KeyStore::write(pgp_dest_t &)
+- name: _ZN9pgp_key_t15write_autocryptER10pgp_dest_tRS_j
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: bool
+  signature: bool pgp_key_t::write_autocrypt(struct pgp_key_t *, pgp_dest_t &, struct
+    pgp_key_t &, uint32_t)
+- name: _ZN3pgp20MlkemEcdhKeyMaterial8generateERK26rnp_keygen_crypto_params_t
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool pgp::MlkemEcdhKeyMaterial::generate(const rnp_keygen_crypto_params_t
+    &)
+- name: _ZN3pgp23DilithiumEccKeyMaterial8generateERK26rnp_keygen_crypto_params_t
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool pgp::DilithiumEccKeyMaterial::generate(const rnp_keygen_crypto_params_t
+    &)
+- name: _Z18pgp_decrypt_seckeyRK9pgp_key_tRK23pgp_password_provider_tRK18pgp_password_ctx_t
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: pgp_key_pkt_t * pgp_decrypt_seckey(const pgp_key_t &, const pgp_password_provider_t
+    &, const pgp_password_ctx_t &)
+- name: _ZN9pgp_key_t15add_sub_bindingERS_S0_RK26rnp_selfsig_binding_info_t14pgp_hash_alg_tRN3rnp15SecurityContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: char
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void pgp_key_t::add_sub_binding(struct pgp_key_t *, struct pgp_key_t
+    &, struct pgp_key_t &, const rnp_selfsig_binding_info_t &, pgp_hash_alg_t, SecurityContext
+    &)
+- name: _Z25pgp_subkey_set_expirationP9pgp_key_tS0_S0_jRK23pgp_password_provider_tRN3rnp15SecurityContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool pgp_subkey_set_expiration(pgp_key_t *, pgp_key_t *, pgp_key_t *,
+    uint32_t, const pgp_password_provider_t &, SecurityContext &)
+- name: _Z22pgp_key_set_expirationP9pgp_key_tS0_jRK23pgp_password_provider_tRN3rnp15SecurityContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool pgp_key_set_expiration(pgp_key_t *, pgp_key_t *, uint32_t, const
+    pgp_password_provider_t &, SecurityContext &)
+- name: _ZN9pgp_key_t11sign_directERK13pgp_key_pkt_tR15pgp_signature_tRN3rnp15SecurityContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void pgp_key_t::sign_direct(struct pgp_key_t *, const pgp_key_pkt_t &,
+    pgp_signature_t &, SecurityContext &)
+- name: _ZN3rnp8KeyStore9write_kbxER10pgp_dest_t
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool rnp::KeyStore::write_kbx(pgp_dest_t &)
+- name: _ZN9pgp_key_t14add_direct_sigER23rnp_selfsig_cert_info_t14pgp_hash_alg_tRN3rnp15SecurityContextEPS_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: char
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void pgp_key_t::add_direct_sig(struct pgp_key_t *, rnp_selfsig_cert_info_t
+    &, pgp_hash_alg_t, SecurityContext &, struct pgp_key_t *)
+- name: _ZN9pgp_key_t13write_sec_pgpER10pgp_dest_tR13pgp_key_pkt_tRKNSt3__112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERN3rnp3RNGE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool pgp_key_t::write_sec_pgp(struct pgp_key_t *, pgp_dest_t &, pgp_key_pkt_t
+    &, const string &, RNG &)
+- name: _ZN9pgp_key_t19sign_subkey_bindingERS_R15pgp_signature_tRN3rnp15SecurityContextEb
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: void
+  signature: void pgp_key_t::sign_subkey_binding(struct pgp_key_t *, struct pgp_key_t
+    &, pgp_signature_t &, SecurityContext &, bool)
+- name: _ZN3rnp8KeyStore5writeEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool rnp::KeyStore::write()
+- name: _ZN9pgp_key_t9sign_certERK13pgp_key_pkt_tRK16pgp_userid_pkt_tR15pgp_signature_tRN3rnp15SecurityContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void pgp_key_t::sign_cert(struct pgp_key_t *, const pgp_key_pkt_t &,
+    const pgp_userid_pkt_t &, pgp_signature_t &, SecurityContext &)
+- name: _ZN9pgp_key_t14gen_revocationERK12pgp_revoke_t14pgp_hash_alg_tRK13pgp_key_pkt_tR15pgp_signature_tRN3rnp15SecurityContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: char
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void pgp_key_t::gen_revocation(struct pgp_key_t *, const pgp_revoke_t
+    &, pgp_hash_alg_t, const pgp_key_pkt_t &, pgp_signature_t &, SecurityContext &)
+- name: _ZN9pgp_key_t7protectER13pgp_key_pkt_tRK27rnp_key_protection_params_tRKNSt3__112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEERN3rnp15SecurityContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool pgp_key_t::protect(struct pgp_key_t *, pgp_key_pkt_t &, const rnp_key_protection_params_t
+    &, const string &, SecurityContext &)
+- name: _ZNK3pgp20MlkemEcdhKeyMaterial7decryptERN3rnp15SecurityContextEPhRmRK24pgp_encrypted_material_t
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: rnp_result_t pgp::MlkemEcdhKeyMaterial::decrypt(SecurityContext &, uint8_t
+    *, size_t &, const pgp_encrypted_material_t &)
+- name: _ZN9pgp_key_t16write_sec_rawpktER13pgp_key_pkt_tRKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERN3rnp15SecurityContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool pgp_key_t::write_sec_rawpkt(struct pgp_key_t *, pgp_key_pkt_t &,
+    const string &, SecurityContext &)
+language: c++
+project: rnp
+target_name: fuzz_sigimport
+target_path: /src/rnp/src/fuzzing/sigimport.c

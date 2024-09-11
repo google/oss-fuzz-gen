@@ -1,0 +1,162 @@
+functions:
+- name: _ZNK4piex12binary_parse20CachedPagedByteArray12getFromCacheEmPm
+  params:
+  - name: this
+    type: 'bool '
+  - name: page_index
+    type: size_t
+  - name: cache_index
+    type: 'bool '
+  return_type: bool
+  signature: bool piex::binary_parse::CachedPagedByteArray::getFromCache(size_t, size_t
+    *)
+- name: _ZN7fuzzing5types9ContainerIhLb0ELb0EE8allocateEm
+  params:
+  - name: this
+    type: 'bool '
+  - name: size
+    type: size_t
+  return_type: void
+  signature: void fuzzing::types::Container<unsigned char, false, false>::allocate(Container<char,
+    true, false> *, size_t)
+- name: _ZN4piex22image_type_recognition12_GLOBAL__N_115TypeCheckerList8IsOfTypeERKNS_12binary_parse19RangeCheckedBytePtrENS0_13RawImageTypesE
+  params:
+  - name: this
+    type: 'bool '
+  - name: source
+    type: 'bool '
+  - name: type
+    type: int
+  return_type: bool
+  signature: bool piex::image_type_recognition::(anonymous namespace)::TypeCheckerList::IsOfType(const
+    RangeCheckedBytePtr &, const DW_TAG_enumeration_typeRawImageTypes)
+- name: _ZN4piex12binary_parse19RangeCheckedBytePtrC2EPNS0_14PagedByteArrayE
+  params:
+  - name: this
+    type: 'bool '
+  - name: array
+    type: 'bool '
+  return_type: void
+  signature: void piex::binary_parse::RangeCheckedBytePtr::RangeCheckedBytePtr(PagedByteArray
+    *)
+- name: _ZN4piex12binary_parse20CachedPagedByteArrayC2EPKNS0_14PagedByteArrayEm
+  params:
+  - name: this
+    type: 'bool '
+  - name: paged_byte_array
+    type: 'bool '
+  - name: cache_size
+    type: size_t
+  return_type: void
+  signature: void piex::binary_parse::CachedPagedByteArray::CachedPagedByteArray(const
+    PagedByteArray *, size_t)
+- name: _ZN4piex14tiff_directory13TiffDirectoryC2ERKS1_
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void piex::tiff_directory::TiffDirectory::~TiffDirectory(const TiffDirectory
+    &)
+- name: _ZN4piex12binary_parseeqERKNS0_19RangeCheckedBytePtrES3_
+  params:
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  return_type: bool
+  signature: bool piex::binary_parse::operator==(const RangeCheckedBytePtr &, const
+    RangeCheckedBytePtr &)
+- name: _ZN4piex22image_type_recognition9IsRawLiteERKNS_12binary_parse19RangeCheckedBytePtrE
+  params:
+  - name: source
+    type: 'bool '
+  return_type: bool
+  signature: bool piex::image_type_recognition::IsRawLite(const RangeCheckedBytePtr
+    &)
+- name: _ZN4piex12binary_parse19RangeCheckedBytePtr14invalidPointerEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: RangeCheckedBytePtr invalidPointer()
+- name: _ZN4piex12binary_parseneERKNS0_19RangeCheckedBytePtrES3_
+  params:
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  return_type: bool
+  signature: bool piex::binary_parse::operator!=(const RangeCheckedBytePtr &, const
+    RangeCheckedBytePtr &)
+- name: _ZN7fuzzing5types9ContainerIhLb0ELb0EE4freeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void fuzzing::types::Container<unsigned char, false, false>::free(Container<char,
+    true, false> *)
+- name: _ZN7fuzzing5types9ContainerIcLb1ELb0EE4freeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void fuzzing::types::Container<char, true, false>::free()
+- name: _ZN4piex22image_type_recognition5IsRawENS0_13RawImageTypesE
+  params:
+  - name: type
+    type: int
+  return_type: bool
+  signature: bool piex::image_type_recognition::IsRaw(const DW_TAG_enumeration_typeRawImageTypes)
+- name: _ZN4piex12binary_parse19RangeCheckedBytePtrppEi
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: RangeCheckedBytePtr piex::binary_parse::RangeCheckedBytePtr::operator++(int)
+- name: _ZNK4piex12binary_parse19RangeCheckedBytePtr13offsetInArrayEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: size_t
+  signature: size_t piex::binary_parse::RangeCheckedBytePtr::offsetInArray()
+- name: _ZN4piex22image_type_recognition8IsOfTypeERKNS_12binary_parse19RangeCheckedBytePtrENS0_13RawImageTypesE
+  params:
+  - name: source
+    type: 'bool '
+  - name: type
+    type: int
+  return_type: bool
+  signature: bool piex::image_type_recognition::IsOfType(const RangeCheckedBytePtr
+    &, const DW_TAG_enumeration_typeRawImageTypes)
+- name: _ZNK4piex12binary_parse20CachedPagedByteArray7getPageEmPPKhS4_PNSt3__110shared_ptrINS0_14PagedByteArray4PageEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: page_index
+    type: size_t
+  - name: begin
+    type: 'bool '
+  - name: end
+    type: 'bool '
+  - name: page
+    type: 'bool '
+  return_type: void
+  signature: void piex::binary_parse::CachedPagedByteArray::getPage(size_t, const
+    unsigned char **, const unsigned char **, PagePtr *)
+- name: _ZN4piex22image_type_recognition27GetNumberOfBytesForIsOfTypeENS0_13RawImageTypesE
+  params:
+  - name: type
+    type: int
+  return_type: size_t
+  signature: size_t piex::image_type_recognition::GetNumberOfBytesForIsOfType(const
+    DW_TAG_enumeration_typeRawImageTypes)
+language: c++
+project: piex
+target_name: fuzzer-tiff_parser
+target_path: /src/piex/fuzzers/tiff_parser.cpp

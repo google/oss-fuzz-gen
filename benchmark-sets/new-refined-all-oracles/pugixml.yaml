@@ -1,0 +1,203 @@
+functions:
+- name: _ZN4pugi8xml_textaSEj
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: int
+  return_type: void
+  signature: xml_text & pugi::xml_text::operator=(unsigned int)
+- name: _ZN4pugi8xml_textaSEx
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: size_t
+  return_type: void
+  signature: xml_text & pugi::xml_text::operator=(long long)
+- name: _ZN4pugi13xml_attributeaSEi
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: int
+  return_type: void
+  signature: xml_attribute & pugi::xml_attribute::operator=(int)
+- name: _ZN4pugi11xpath_queryaSEOS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  return_type: void
+  signature: xpath_query & pugi::xpath_query::operator=(DW_TAG_rvalue_reference_typexpath_query)
+- name: _ZN4pugi8xml_textaSEl
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: size_t
+  return_type: void
+  signature: xml_text & pugi::xml_text::operator=(long)
+- name: _ZN4pugi13xml_attributeaSEm
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: size_t
+  return_type: void
+  signature: xml_attribute & pugi::xml_attribute::operator=(unsigned long)
+- name: _ZN4pugi8xml_textaSEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  return_type: void
+  signature: xml_text & pugi::xml_text::operator=(const char_t *)
+- name: _ZN4pugi13xml_attributeaSEb
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: bool
+  return_type: void
+  signature: xml_attribute & pugi::xml_attribute::operator=(bool)
+- name: _ZN4pugi13xml_attributeaSEx
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: size_t
+  return_type: void
+  signature: xml_attribute & pugi::xml_attribute::operator=(long long)
+- name: _ZN4pugi8xml_textaSEm
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: size_t
+  return_type: void
+  signature: xml_text & pugi::xml_text::operator=(unsigned long)
+- name: _ZN4pugi13xml_attributeaSEf
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: float
+  return_type: void
+  signature: xml_attribute & pugi::xml_attribute::operator=(float)
+- name: _ZN4pugi12xml_documentaSEOS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  return_type: void
+  signature: xml_document & pugi::xml_document::operator=(DW_TAG_rvalue_reference_typexml_document)
+- name: _ZN4pugi8xml_textaSEy
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: size_t
+  return_type: void
+  signature: xml_text & pugi::xml_text::operator=(unsigned long long)
+- name: _ZN4pugi13xml_attributeaSEd
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: double
+  return_type: void
+  signature: xml_attribute & pugi::xml_attribute::operator=(double)
+- name: _ZN4pugi13xml_attributeaSEj
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: int
+  return_type: void
+  signature: xml_attribute & pugi::xml_attribute::operator=(unsigned int)
+- name: _ZN4pugi8xml_textaSEf
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: float
+  return_type: void
+  signature: xml_text & pugi::xml_text::operator=(float)
+- name: _ZN4pugi13xml_attributeaSEy
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: size_t
+  return_type: void
+  signature: xml_attribute & pugi::xml_attribute::operator=(unsigned long long)
+- name: _ZN4pugi18xpath_variable_setaSEOS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  return_type: void
+  signature: xpath_variable_set & pugi::xpath_variable_set::operator=(DW_TAG_rvalue_reference_typexpath_variable_set)
+- name: _ZN4pugi8xml_textaSEb
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: bool
+  return_type: void
+  signature: xml_text & pugi::xml_text::operator=(bool)
+- name: _ZN4pugi13xml_attributeaSEl
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: size_t
+  return_type: void
+  signature: xml_attribute & pugi::xml_attribute::operator=(long)
+- name: _ZN4pugi8xml_textaSEi
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: int
+  return_type: void
+  signature: xml_text & pugi::xml_text::operator=(int)
+- name: _ZN4pugi23xml_named_node_iteratormmEi
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: xml_named_node_iterator pugi::xml_named_node_iterator::operator--(int)
+- name: _ZN4pugi8xml_textaSEd
+  params:
+  - name: this
+    type: 'bool '
+  - name: rhs
+    type: double
+  return_type: void
+  signature: xml_text & pugi::xml_text::operator=(double)
+- name: _ZN4pugi23xml_named_node_iteratormmEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: xml_named_node_iterator & pugi::xml_named_node_iterator::operator--()
+- name: _ZNK4pugi14xpath_node_set5firstEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: xpath_node pugi::xpath_node_set::first()
+language: c++
+project: pugixml
+target_name: fuzz_parse
+target_path: /src/pugixml/tests/fuzz_parse.cpp

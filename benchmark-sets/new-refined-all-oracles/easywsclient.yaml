@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: easywsclient
+target_name: easyws_fuzzer
+target_path: /src/easyws_fuzzer.cpp

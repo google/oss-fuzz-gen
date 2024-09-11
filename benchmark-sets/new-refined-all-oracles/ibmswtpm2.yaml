@@ -1,0 +1,197 @@
+functions:
+- name: TPM2_CertifyCreation
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_CertifyCreation(CertifyCreation_In *, CertifyCreation_Out
+    *)
+- name: TPM2_Clear
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_Clear(Clear_In *)
+- name: TPM2_GetSessionAuditDigest
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_GetSessionAuditDigest(GetSessionAuditDigest_In *, GetSessionAuditDigest_Out
+    *)
+- name: TPM2_PolicyAuthorizeNV
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_PolicyAuthorizeNV(PolicyAuthorizeNV_In *)
+- name: TPM2_StartAuthSession
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_StartAuthSession(StartAuthSession_In *, StartAuthSession_Out
+    *)
+- name: TPM2_ContextSave
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_ContextSave(ContextSave_In *, ContextSave_Out *)
+- name: TPM2_GetTime
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_GetTime(GetTime_In *, GetTime_Out *)
+- name: TPM2_Startup
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_Startup(Startup_In *)
+- name: TPM2_MakeCredential
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_MakeCredential(MakeCredential_In *, MakeCredential_Out *)
+- name: TPM2_PolicySecret
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_PolicySecret(PolicySecret_In *, PolicySecret_Out *)
+- name: TPM2_Certify
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_Certify(Certify_In *, Certify_Out *)
+- name: TPM2_ObjectChangeAuth
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_ObjectChangeAuth(ObjectChangeAuth_In *, ObjectChangeAuth_Out
+    *)
+- name: TPM2_PolicyNV
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_PolicyNV(PolicyNV_In *)
+- name: TPM2_NV_Extend
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_NV_Extend(NV_Extend_In *)
+- name: TPM2_ChangeEPS
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_ChangeEPS(ChangeEPS_In *)
+- name: TPM2_PolicySigned
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_PolicySigned(PolicySigned_In *, PolicySigned_Out *)
+- name: TPM2_Quote
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_Quote(Quote_In *, Quote_Out *)
+- name: TPM2_Duplicate
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_Duplicate(Duplicate_In *, Duplicate_Out *)
+- name: TPM2_GetCommandAuditDigest
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_GetCommandAuditDigest(GetCommandAuditDigest_In *, GetCommandAuditDigest_Out
+    *)
+- name: TPM2_ActivateCredential
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_ActivateCredential(ActivateCredential_In *, ActivateCredential_Out
+    *)
+- name: TPM2_NV_Certify
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_NV_Certify(NV_Certify_In *, NV_Certify_Out *)
+- name: TPM2_LoadExternal
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_LoadExternal(LoadExternal_In *, LoadExternal_Out *)
+- name: TPM2_ChangePPS
+  params:
+  - name: in
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_ChangePPS(ChangePPS_In *)
+- name: TPM2_Rewrap
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_Rewrap(Rewrap_In *, Rewrap_Out *)
+- name: TPM2_ContextLoad
+  params:
+  - name: in
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: TPM_RC TPM2_ContextLoad(ContextLoad_In *, ContextLoad_Out *)
+language: c++
+project: ibmswtpm2
+target_name: fuzz_tpm_server
+target_path: /src/ibmswtpm2/src/fuzzer.cc

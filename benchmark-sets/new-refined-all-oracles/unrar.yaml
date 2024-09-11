@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: unrar
+target_name: unrar_fuzzer
+target_path: /src/unrar/unrar_fuzzer.cc

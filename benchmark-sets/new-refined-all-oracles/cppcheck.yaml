@@ -1,0 +1,381 @@
+functions:
+- name: _ZN18TemplateSimplifier17simplifyTemplatesEl
+  params:
+  - name: this
+    type: 'bool '
+  - name: maxtime
+    type: size_t
+  return_type: void
+  signature: void TemplateSimplifier::simplifyTemplates(const time_t)
+- name: _ZZN12_GLOBAL__N_18Executor11executeImplEPK5TokenENKUlS3_E_clES3_
+  params:
+  - name: this
+    type: 'bool '
+  - name: tok
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Value (anonymous namespace)::Executor::operator()(const void *, const
+    Token *)
+- name: _ZN7MathLib12toBigUNumberERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: str
+    type: 'bool '
+  return_type: size_t
+  signature: biguint MathLib::toBigUNumber(const string &)
+- name: _ZN7MathLib5valueC2ERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: void MathLib::value::value(const string &)
+- name: _ZZL28valueFlowLifetimeConstructorP5TokenRK9TokenListR11ErrorLoggerRK8SettingsENK3$_0clER13LifetimeStore
+  params:
+  - name: this
+    type: 'bool '
+  - name: ls
+    type: 'bool '
+  return_type: void
+  signature: void operator()(const void *, struct LifetimeStore &)
+- name: _ZZN12_GLOBAL__N_18Executor21executeMultiConditionEbPK5TokenENKUlS3_E_clES3_
+  params:
+  - name: this
+    type: 'bool '
+  - name: cond2
+    type: 'bool '
+  return_type: bool
+  signature: bool (anonymous namespace)::Executor::operator()(const void *, const
+    Token *)
+- name: _ZNK14CheckersReport9getReportERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: criticalErrors
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string CheckersReport::getReport(const string &)
+- name: _Z7executePK5ScopeR13ProgramMemoryRK8Settings
+  params:
+  - name: scope
+    type: 'bool '
+  - name: pm
+    type: 'bool '
+  - name: settings
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: vector<ValueFlow::Value, std::__1::allocator<ValueFlow::Value> > execute(const
+    Scope *, struct ProgramMemory &, const Settings &)
+- name: _ZN7MathLib3cosERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: tok
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string MathLib::cos(const string &)
+- name: _ZZL17valueFlowLifetimeR9TokenListR11ErrorLoggerRK8SettingsENK3$_3clEPK5Token15LifetimeCaptureRKNSt3__18functionIFbS9_EEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: tok2
+    type: 'bool '
+  - name: c
+    type: char
+  - name: pred
+    type: 'bool '
+  return_type: void
+  signature: void operator()(const void *, const Token *, DW_TAG_enumeration_typeLifetimeCapture,
+    const function<bool (const Token *)> &)
+- name: _Z23evaluateLibraryFunctionRKNSt3__113unordered_mapIiN9ValueFlow5ValueENS_4hashIiEENS_8equal_toIiEENS_9allocatorINS_4pairIKiS2_EEEEEERKNS_12basic_stringIcNS_11char_traitsIcEENS7_IcEEEERK8Settingsb
+  params:
+  - name: args
+    type: 'bool '
+  - name: returnValue
+    type: 'bool '
+  - name: settings
+    type: 'bool '
+  - name: cpp
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: void
+  signature: Value evaluateLibraryFunction(const unordered_map<int, ValueFlow::Value,
+    std::__1::hash<int>, std::__1::equal_to<int>, std::__1::allocator<std::__1::pair<const
+    int, ValueFlow::Value> > > &, const string &, const Settings &, bool)
+- name: _ZN7MathLib11toBigNumberERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: str
+    type: 'bool '
+  return_type: size_t
+  signature: bigint MathLib::toBigNumber(const string &)
+- name: _ZN9Tokenizer18simplifyTokenList1EPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: FileName
+    type: 'bool '
+  return_type: bool
+  signature: bool Tokenizer::simplifyTokenList1(const char *)
+- name: _ZN13ImportProject6importERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEP8Settings
+  params:
+  - name: this
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  - name: settings
+    type: 'bool '
+  return_type: char
+  signature: DW_TAG_enumeration_typeType ImportProject::import(const string &, Settings
+    *)
+- name: _ZN12ErrorMessage11deserializeERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  return_type: void
+  signature: void ErrorMessage::deserialize(const string &)
+- name: _ZN9ValueFlow24valueFlowConstantFoldASTEP5TokenRK8Settings
+  params:
+  - name: expr
+    type: 'bool '
+  - name: settings
+    type: 'bool '
+  return_type: void
+  signature: const Value * ValueFlow::valueFlowConstantFoldAST(Token *, const Settings
+    &)
+- name: _ZN9Tokenizer15simplifyTokens1ERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: configuration
+    type: 'bool '
+  return_type: bool
+  signature: bool Tokenizer::simplifyTokens1(const string &)
+- name: _ZZL28valueFlowLifetimeConstructorP5TokenRK9TokenListR11ErrorLoggerRK8SettingsENK3$_1clERK13LifetimeStore
+  params:
+  - name: this
+    type: 'bool '
+  - name: ls
+    type: 'bool '
+  return_type: void
+  signature: void operator()(const void *, const struct LifetimeStore &)
+- name: _ZZN18ProgramMemoryState18removeModifiedVarsEPK5TokenENK3$_1clES2_
+  params:
+  - name: this
+    type: 'bool '
+  - name: cond
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: vector<long long, std::__1::allocator<long long> > ProgramMemoryState::operator()(const
+    void *, const Token *)
+- name: _ZN5Check10logCheckerEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: id
+    type: 'bool '
+  return_type: void
+  signature: void Check::logChecker(const char *)
+- name: _ZN5Token9concatStrERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: b
+    type: 'bool '
+  return_type: void
+  signature: void Token::concatStr(const string &)
+- name: _ZN13ImportProject13importBcb6PrjERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: projectFilename
+    type: 'bool '
+  return_type: bool
+  signature: bool ImportProject::importBcb6Prj(const string &)
+- name: _ZN18TemplateSimplifier30simplifyTemplateInstantiationsERKNS_12TokenAndNameERKNSt3__14listIPK5TokenNS3_9allocatorIS7_EEEElRNS3_3setINS3_12basic_stringIcNS3_11char_traitsIcEENS8_IcEEEENS3_4lessISI_EENS8_ISI_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: templateDeclaration
+    type: 'bool '
+  - name: specializations
+    type: 'bool '
+  - name: maxtime
+    type: size_t
+  - name: expandedtemplates
+    type: 'bool '
+  return_type: bool
+  signature: bool TemplateSimplifier::simplifyTemplateInstantiations(const TokenAndName
+    &, const list<const Token *, std::__1::allocator<const Token *> > &, const time_t,
+    set<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    >, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>,
+    std::__1::allocator<char> > > > &)
+- name: _ZN12_GLOBAL__N_18Executor7executeEPK5Scope
+  params:
+  - name: this
+    type: 'bool '
+  - name: scope
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: vector<ValueFlow::Value, std::__1::allocator<ValueFlow::Value> > (anonymous
+    namespace)::Executor::execute(struct Executor *, const Scope *)
+- name: _ZN15SuppressionList12parseXmlFileEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string SuppressionList::parseXmlFile(const char *)
+- name: _ZN9Tokenizer11isOneNumberERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: s
+    type: 'bool '
+  return_type: bool
+  signature: bool Tokenizer::isOneNumber(const string &)
+- name: _ZN14CheckCondition27checkIncorrectLogicOperatorEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void CheckCondition::checkIncorrectLogicOperator()
+- name: _ZN13ImportProject13importVcxprojERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERNS0_3mapIS6_S6_N8cppcheck7stricmpENS4_INS0_4pairIS7_S6_EEEEEES8_RKNS0_6vectorIS6_NS4_IS6_EEEERNSH_INS_18SharedItemsProjectENS4_ISM_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  - name: variables
+    type: 'bool '
+  - name: additionalIncludeDirectories
+    type: 'bool '
+  - name: fileFilters
+    type: 'bool '
+  - name: cache
+    type: 'bool '
+  return_type: bool
+  signature: bool ImportProject::importVcxproj(const string &, map<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >, cppcheck::stricmp, std::__1::allocator<std::__1::pair<const
+    std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > > > > &, const string &, const vector<std::__1::basic_string<char, std::__1::char_traits<char>,
+    std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > > > &, vector<ImportProject::SharedItemsProject,
+    std::__1::allocator<ImportProject::SharedItemsProject> > &)
+- name: _ZN7MathLib14toDoubleNumberERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: str
+    type: 'bool '
+  return_type: double
+  signature: double MathLib::toDoubleNumber(const string &)
+- name: _ZZL21valueFlowForwardConstINSt3__16vectorIN9ValueFlow5ValueENS0_9allocatorIS3_EEEEEvP5TokenPKS7_PK8VariableRKT_RK8SettingsiENKUlvE_clEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void valueFlowForwardConst<std::__1::vector<ValueFlow::Value, std::__1::allocator<ValueFlow::operator()(const
+    void *)
+- name: _ZN7MathLib3sinERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: tok
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string MathLib::sin(const string &)
+- name: _ZNK5Token8printOutEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: title
+    type: 'bool '
+  return_type: void
+  signature: void Token::printOut(const char *)
+- name: _ZZL21valueFlowForwardConstISt16initializer_listIN9ValueFlow5ValueEEEvP5TokenPKS4_PK8VariableRKT_RK8SettingsiENKUlvE_clEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void valueFlowForwardConst<std::initializer_list<ValueFlow::operator()(const
+    void *)
+- name: _ZZL24valueFlowLibraryFunctionP5TokenRKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERK8SettingsENK3$_0clERKNS1_13unordered_mapIiN9ValueFlow5ValueENS1_4hashIiEENS1_8equal_toIiEENS5_INS1_4pairIKiSG_EEEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  return_type: void
+  signature: void operator()(const void *, const unordered_map<int, ValueFlow::Value,
+    std::__1::hash<int>, std::__1::equal_to<int>, std::__1::allocator<std::__1::pair<const
+    int, ValueFlow::Value> > > &)
+- name: _ZN13ImportProject9importSlnERNSt3__113basic_istreamIcNS0_11char_traitsIcEEEERKNS0_12basic_stringIcS3_NS0_9allocatorIcEEEERKNS0_6vectorIS9_NS7_IS9_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: istr
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  - name: fileFilters
+    type: 'bool '
+  return_type: bool
+  signature: bool ImportProject::importSln(istream &, const string &, const vector<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > > > &)
+- name: _ZNK18TemplateSimplifier8printOutERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: text
+    type: 'bool '
+  return_type: void
+  signature: void TemplateSimplifier::printOut(const string &)
+- name: _ZNK14SymbolDatabase8printOutEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: title
+    type: 'bool '
+  return_type: void
+  signature: void SymbolDatabase::printOut(const char *)
+- name: _ZZL21valueFlowForwardConstINSt3__14listIN9ValueFlow5ValueENS0_9allocatorIS3_EEEEEvP5TokenPKS7_PK8VariableRKT_RK8SettingsiENKUlvE_clEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void valueFlowForwardConst<std::__1::list<ValueFlow::Value, std::__1::allocator<ValueFlow::operator()(const
+    void *)
+- name: _ZN7MathLib3tanERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: tok
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string MathLib::tan(const string &)
+- name: _ZN9Tokenizer18simplifyTypedefCppEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void Tokenizer::simplifyTypedefCpp()
+language: c++
+project: cppcheck
+target_name: oss-fuzz-client
+target_path: /src/cppcheck/oss-fuzz/main.cpp

@@ -1,0 +1,527 @@
+functions:
+- name: pr_set_scoreboard
+  params:
+  - name: path
+    type: 'bool '
+  return_type: int
+  signature: int pr_set_scoreboard(const char *)
+- name: pr_json_array_get_number
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: idx
+    type: int
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_array_get_number(pool *, const pr_json_array_t *, unsigned
+    int, double *)
+- name: pr_unregister_fs
+  params:
+  - name: path
+    type: 'bool '
+  return_type: int
+  signature: int pr_unregister_fs(const char *)
+- name: pr_parser_config_ctxt_open
+  params:
+  - name: name
+    type: 'bool '
+  return_type: void
+  signature: config_rec * pr_parser_config_ctxt_open(const char *)
+- name: pr_fsio_rmdir
+  params:
+  - name: path
+    type: 'bool '
+  return_type: int
+  signature: int pr_fsio_rmdir(const char *)
+- name: init_ctrls2
+  params:
+  - name: socket_path
+    type: 'bool '
+  return_type: int
+  signature: int init_ctrls2(const char *)
+- name: pr_fsio_open_canon
+  params:
+  - name: name
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: void
+  signature: pr_fh_t * pr_fsio_open_canon(const char *, int)
+- name: pr_remove_fs
+  params:
+  - name: path
+    type: 'bool '
+  return_type: void
+  signature: pr_fs_t * pr_remove_fs(const char *)
+- name: pr_fsio_open
+  params:
+  - name: name
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: void
+  signature: pr_fh_t * pr_fsio_open(const char *, int)
+- name: pr_ctrls_connect
+  params:
+  - name: socket_file
+    type: 'bool '
+  return_type: int
+  signature: int pr_ctrls_connect(const char *)
+- name: pr_fs_is_nfs
+  params:
+  - name: path
+    type: 'bool '
+  return_type: int
+  signature: int pr_fs_is_nfs(const char *)
+- name: pr_ctrls_send_response
+  params:
+  - name: p
+    type: 'bool '
+  - name: fd
+    type: int
+  - name: status
+    type: int
+  - name: argc
+    type: int
+  - name: argv
+    type: 'bool '
+  return_type: int
+  signature: int pr_ctrls_send_response(pool *, int, int, unsigned int, char **)
+- name: pr_define_add
+  params:
+  - name: definition
+    type: 'bool '
+  - name: survive_restarts
+    type: int
+  return_type: int
+  signature: int pr_define_add(const char *, int)
+- name: pr_regexp_set_engine
+  params:
+  - name: engine
+    type: 'bool '
+  return_type: int
+  signature: int pr_regexp_set_engine(const char *)
+- name: pr_json_object_get_bool
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_object_get_bool(pool *, const pr_json_object_t *, const char
+    *, int *)
+- name: pr_json_object_get_null
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_object_get_null(pool *, const pr_json_object_t *, const char
+    *)
+- name: pr_json_object_get_number
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_object_get_number(pool *, const pr_json_object_t *, const
+    char *, double *)
+- name: pr_config_set_id
+  params:
+  - name: name
+    type: 'bool '
+  return_type: int
+  signature: unsigned int pr_config_set_id(const char *)
+- name: pr_ctrls_recv_request
+  params:
+  - name: cl
+    type: 'bool '
+  return_type: int
+  signature: int pr_ctrls_recv_request(pr_ctrls_cl_t *)
+- name: pr_fsio_chdir
+  params:
+  - name: path
+    type: 'bool '
+  - name: hidesymlink
+    type: int
+  return_type: int
+  signature: int pr_fsio_chdir(const char *, int)
+- name: pr_fsio_chroot
+  params:
+  - name: path
+    type: 'bool '
+  return_type: int
+  signature: int pr_fsio_chroot(const char *)
+- name: pr_json_array_get_array
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: idx
+    type: int
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_array_get_array(pool *, const pr_json_array_t *, unsigned
+    int, pr_json_array_t **)
+- name: pr_netaddr_clear_dnscache
+  params:
+  - name: ip_str
+    type: 'bool '
+  return_type: void
+  signature: void pr_netaddr_clear_dnscache(const char *)
+- name: pr_fs_getsize
+  params:
+  - name: path
+    type: 'bool '
+  return_type: size_t
+  signature: off_t pr_fs_getsize(char *)
+- name: pr_fsio_opendir
+  params:
+  - name: path
+    type: 'bool '
+  return_type: void
+  signature: void * pr_fsio_opendir(const char *)
+- name: pr_json_array_get_object
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: idx
+    type: int
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_array_get_object(pool *, const pr_json_array_t *, unsigned
+    int, pr_json_object_t **)
+- name: pr_json_object_get_object
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_object_get_object(pool *, const pr_json_object_t *, const
+    char *, pr_json_object_t **)
+- name: pr_ctrls_accept
+  params:
+  - name: fd
+    type: int
+  - name: uid
+    type: 'bool '
+  - name: gid
+    type: 'bool '
+  - name: pid
+    type: 'bool '
+  - name: max_age
+    type: int
+  return_type: int
+  signature: int pr_ctrls_accept(int, uid_t *, gid_t *, pid_t *, unsigned int)
+- name: pr_json_array_get_null
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: idx
+    type: int
+  return_type: int
+  signature: int pr_json_array_get_null(pool *, const pr_json_array_t *, unsigned
+    int)
+- name: pr_netaddr_clear_ipcache
+  params:
+  - name: name
+    type: 'bool '
+  return_type: void
+  signature: void pr_netaddr_clear_ipcache(const char *)
+- name: pr_jot_resolve_logfmt_id
+  params:
+  - name: p
+    type: 'bool '
+  - name: cmd
+    type: 'bool '
+  - name: filters
+    type: 'bool '
+  - name: logfmt_id
+    type: char
+  - name: logfmt_data
+    type: 'bool '
+  - name: logfmt_datalen
+    type: size_t
+  - name: ctx
+    type: 'bool '
+  - name: on_meta
+    type: 'bool '
+  - name: on_default
+    type: 'bool '
+  return_type: int
+  signature: int pr_jot_resolve_logfmt_id(pool *, cmd_rec *, pr_jot_filters_t *, unsigned
+    char, const char *, size_t, pr_jot_ctx_t *, DW_TAG_subroutine_typeInfinite loop
+    *, DW_TAG_subroutine_typeInfinite loop *)
+- name: pr_json_array_get_string
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: idx
+    type: int
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_array_get_string(pool *, const pr_json_array_t *, unsigned
+    int, char **)
+- name: pr_json_array_foreach
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  - name: user_data
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_array_foreach(pool *, const pr_json_array_t *, DW_TAG_subroutine_typeInfinite
+    loop *, void *)
+- name: pr_parser_server_ctxt_open
+  params:
+  - name: addrstr
+    type: 'bool '
+  return_type: void
+  signature: server_rec * pr_parser_server_ctxt_open(const char *)
+- name: log_opensyslog
+  params:
+  - name: fn
+    type: 'bool '
+  return_type: int
+  signature: int log_opensyslog(const char *)
+- name: pr_json_object_get_string
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_object_get_string(pool *, const pr_json_object_t *, const
+    char *, char **)
+- name: pr_ctrls_recv_response
+  params:
+  - name: p
+    type: 'bool '
+  - name: fd
+    type: int
+  - name: status
+    type: 'bool '
+  - name: respargv
+    type: 'bool '
+  return_type: int
+  signature: int pr_ctrls_recv_response(pool *, int, int *, char ***)
+- name: pr_ctrls_flush_response
+  params:
+  - name: ctrl
+    type: 'bool '
+  return_type: int
+  signature: int pr_ctrls_flush_response(pr_ctrls_t *)
+- name: pr_fs_setcwd
+  params:
+  - name: dir
+    type: 'bool '
+  return_type: int
+  signature: int pr_fs_setcwd(const char *)
+- name: exists
+  params:
+  - name: path
+    type: 'bool '
+  return_type: int
+  signature: int exists(const char *)
+- name: pr_fsio_unlink
+  params:
+  - name: name
+    type: 'bool '
+  return_type: int
+  signature: int pr_fsio_unlink(const char *)
+- name: get_param_ptr_next
+  params:
+  - name: name
+    type: 'bool '
+  - name: recurse
+    type: int
+  return_type: void
+  signature: void * get_param_ptr_next(const char *, int)
+- name: pr_class_find
+  params:
+  - name: name
+    type: 'bool '
+  return_type: void
+  signature: const pr_class_t * pr_class_find(const char *)
+- name: pr_module_get
+  params:
+  - name: name
+    type: 'bool '
+  return_type: void
+  signature: module * pr_module_get(const char *)
+- name: pr_json_array_get_bool
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: idx
+    type: int
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_array_get_bool(pool *, const pr_json_array_t *, unsigned
+    int, int *)
+- name: pr_fsio_chdir_canon
+  params:
+  - name: path
+    type: 'bool '
+  - name: hidesymlink
+    type: int
+  return_type: int
+  signature: int pr_fsio_chdir_canon(const char *, int)
+- name: dir_check_full
+  params:
+  - name: pp
+    type: 'bool '
+  - name: cmd
+    type: 'bool '
+  - name: group
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  - name: hidden
+    type: 'bool '
+  return_type: int
+  signature: int dir_check_full(pool *, cmd_rec *, const char *, const char *, int
+    *)
+- name: pr_json_object_foreach
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  - name: user_data
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_object_foreach(pool *, const pr_json_object_t *, DW_TAG_subroutine_typeInfinite
+    loop *, void *)
+- name: login_check_limits
+  params:
+  - name: set
+    type: 'bool '
+  - name: recurse
+    type: int
+  - name: and
+    type: int
+  - name: found
+    type: 'bool '
+  return_type: int
+  signature: int login_check_limits(xaset_t *, int, int, int *)
+- name: pr_json_object_get_array
+  params:
+  - name: p
+    type: 'bool '
+  - name: json
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int pr_json_object_get_array(pool *, const pr_json_object_t *, const
+    char *, pr_json_array_t **)
+- name: pr_ctrls_send_request
+  params:
+  - name: p
+    type: 'bool '
+  - name: fd
+    type: int
+  - name: action
+    type: 'bool '
+  - name: argc
+    type: int
+  - name: argv
+    type: 'bool '
+  return_type: int
+  signature: int pr_ctrls_send_request(pool *, int, const char *, unsigned int, char
+    **)
+- name: pr_fs_clear_cache2
+  params:
+  - name: path
+    type: 'bool '
+  return_type: int
+  signature: int pr_fs_clear_cache2(const char *)
+- name: pr_jot_resolve_logfmt
+  params:
+  - name: p
+    type: 'bool '
+  - name: cmd
+    type: 'bool '
+  - name: filters
+    type: 'bool '
+  - name: logfmt
+    type: 'bool '
+  - name: ctx
+    type: 'bool '
+  - name: on_meta
+    type: 'bool '
+  - name: on_default
+    type: 'bool '
+  - name: on_other
+    type: 'bool '
+  return_type: int
+  signature: int pr_jot_resolve_logfmt(pool *, cmd_rec *, pr_jot_filters_t *, unsigned
+    char *, pr_jot_ctx_t *, DW_TAG_subroutine_typeInfinite loop *, DW_TAG_subroutine_typeInfinite
+    loop *, DW_TAG_subroutine_typeuint64_t *)
+- name: dir_hide_file
+  params:
+  - name: path
+    type: 'bool '
+  return_type: char
+  signature: unsigned char dir_hide_file(const char *)
+- name: pr_data_open
+  params:
+  - name: filename
+    type: 'bool '
+  - name: reason
+    type: 'bool '
+  - name: direction
+    type: int
+  - name: size
+    type: size_t
+  return_type: int
+  signature: int pr_data_open(char *, char *, int, off_t)
+language: c
+project: proftpd
+target_name: fuzzer
+target_path: /src/fuzzer.c

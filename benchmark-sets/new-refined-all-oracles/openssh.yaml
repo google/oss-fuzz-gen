@@ -1,0 +1,311 @@
+functions:
+- name: ssh_packet_read_poll_seqnr
+  params:
+  - name: ssh
+    type: 'bool '
+  - name: typep
+    type: 'bool '
+  - name: seqnr_p
+    type: 'bool '
+  return_type: int
+  signature: int ssh_packet_read_poll_seqnr(struct ssh *, u_char *, u_int32_t *)
+- name: umac128_new
+  params:
+  - name: key
+    type: 'bool '
+  return_type: void
+  signature: struct umac128_ctx * umac128_new(const u_char *)
+- name: sshkey_certify
+  params:
+  - name: k
+    type: 'bool '
+  - name: ca
+    type: 'bool '
+  - name: alg
+    type: 'bool '
+  - name: sk_provider
+    type: 'bool '
+  - name: sk_pin
+    type: 'bool '
+  return_type: int
+  signature: int sshkey_certify(struct sshkey *, struct sshkey *, const char *, const
+    char *, const char *)
+- name: kex_names_valid
+  params:
+  - name: names
+    type: 'bool '
+  return_type: int
+  signature: int kex_names_valid(const char *)
+- name: kex_kem_mlkem768x25519_enc
+  params:
+  - name: kex
+    type: 'bool '
+  - name: client_blob
+    type: 'bool '
+  - name: server_blobp
+    type: 'bool '
+  - name: shared_secretp
+    type: 'bool '
+  return_type: int
+  signature: int kex_kem_mlkem768x25519_enc(struct kex *, const struct sshbuf *, struct
+    sshbuf **, struct sshbuf **)
+- name: kex_kem_mlkem768x25519_dec
+  params:
+  - name: kex
+    type: 'bool '
+  - name: server_blob
+    type: 'bool '
+  - name: shared_secretp
+    type: 'bool '
+  return_type: int
+  signature: int kex_kem_mlkem768x25519_dec(struct kex *, const struct sshbuf *, struct
+    sshbuf **)
+- name: umac_new
+  params:
+  - name: key
+    type: 'bool '
+  return_type: void
+  signature: struct umac_ctx * umac_new(const u_char *)
+- name: sshsig_match_principals
+  params:
+  - name: path
+    type: 'bool '
+  - name: principal
+    type: 'bool '
+  - name: principalsp
+    type: 'bool '
+  - name: nprincipalsp
+    type: 'bool '
+  return_type: int
+  signature: int sshsig_match_principals(const char *, const char *, char ***, size_t
+    *)
+- name: sshkey_private_serialize_maxsign
+  params:
+  - name: k
+    type: 'bool '
+  - name: b
+    type: 'bool '
+  - name: maxsign
+    type: int
+  - name: printerror
+    type: int
+  return_type: int
+  signature: int sshkey_private_serialize_maxsign(struct sshkey *, struct sshbuf *,
+    u_int32_t, int)
+- name: sshkey_private_serialize
+  params:
+  - name: key
+    type: 'bool '
+  - name: b
+    type: 'bool '
+  return_type: int
+  signature: int sshkey_private_serialize(struct sshkey *, struct sshbuf *)
+- name: sshsig_verify_fd
+  params:
+  - name: signature
+    type: 'bool '
+  - name: fd
+    type: int
+  - name: expect_namespace
+    type: 'bool '
+  - name: sign_keyp
+    type: 'bool '
+  - name: sig_details
+    type: 'bool '
+  return_type: int
+  signature: int sshsig_verify_fd(struct sshbuf *, int, const char *, struct sshkey
+    **, struct sshkey_sig_details **)
+- name: a2tun
+  params:
+  - name: s
+    type: 'bool '
+  - name: remote
+    type: 'bool '
+  return_type: int
+  signature: int a2tun(const char *, int *)
+- name: ssh_packet_put
+  params:
+  - name: ssh
+    type: 'bool '
+  - name: type
+    type: int
+  - name: data
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: int
+  signature: int ssh_packet_put(struct ssh *, int, const u_char *, size_t)
+- name: dispatch_protocol_error
+  params:
+  - name: type
+    type: int
+  - name: seq
+    type: int
+  - name: ssh
+    type: 'bool '
+  return_type: int
+  signature: int dispatch_protocol_error(int, u_int32_t, struct ssh *)
+- name: sshsig_signb
+  params:
+  - name: key
+    type: 'bool '
+  - name: hashalg
+    type: 'bool '
+  - name: sk_provider
+    type: 'bool '
+  - name: sk_pin
+    type: 'bool '
+  - name: message
+    type: 'bool '
+  - name: sig_namespace
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  - name: signer
+    type: 'bool '
+  - name: signer_ctx
+    type: 'bool '
+  return_type: int
+  signature: int sshsig_signb(struct sshkey *, const char *, const char *, const char
+    *, const struct sshbuf *, const char *, struct sshbuf **, sshsig_signer *, void
+    *)
+- name: kex_kem_mlkem768x25519_keypair
+  params:
+  - name: kex
+    type: 'bool '
+  return_type: int
+  signature: int kex_kem_mlkem768x25519_keypair(struct kex *)
+- name: sshsig_check_allowed_keys
+  params:
+  - name: path
+    type: 'bool '
+  - name: sign_key
+    type: 'bool '
+  - name: principal
+    type: 'bool '
+  - name: sig_namespace
+    type: 'bool '
+  - name: verify_time
+    type: size_t
+  return_type: int
+  signature: int sshsig_check_allowed_keys(const char *, const struct sshkey *, const
+    char *, const char *, uint64_t)
+- name: sshkey_private_to_fileblob
+  params:
+  - name: key
+    type: 'bool '
+  - name: blob
+    type: 'bool '
+  - name: passphrase
+    type: 'bool '
+  - name: comment
+    type: 'bool '
+  - name: format
+    type: int
+  - name: openssh_format_cipher
+    type: 'bool '
+  - name: openssh_format_rounds
+    type: int
+  return_type: int
+  signature: int sshkey_private_to_fileblob(struct sshkey *, struct sshbuf *, const
+    char *, const char *, int, const char *, int)
+- name: ssh_packet_send_debug
+  params:
+  - name: ssh
+    type: 'bool '
+  - name: fmt
+    type: 'bool '
+  return_type: void
+  signature: void ssh_packet_send_debug(struct ssh *, const char *, void)
+- name: ssh_packet_read_seqnr
+  params:
+  - name: ssh
+    type: 'bool '
+  - name: typep
+    type: 'bool '
+  - name: seqnr_p
+    type: 'bool '
+  return_type: int
+  signature: int ssh_packet_read_seqnr(struct ssh *, u_char *, u_int32_t *)
+- name: sshsig_find_principals
+  params:
+  - name: path
+    type: 'bool '
+  - name: sign_key
+    type: 'bool '
+  - name: verify_time
+    type: size_t
+  - name: principals
+    type: 'bool '
+  return_type: int
+  signature: int sshsig_find_principals(const char *, const struct sshkey *, uint64_t,
+    char **)
+- name: kex_server_update_ext_info
+  params:
+  - name: ssh
+    type: 'bool '
+  return_type: int
+  signature: int kex_server_update_ext_info(struct ssh *)
+- name: read_passphrase
+  params:
+  - name: prompt
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: void
+  signature: char * read_passphrase(const char *, int)
+- name: kex_input_ext_info
+  params:
+  - name: type
+    type: int
+  - name: seq
+    type: int
+  - name: ssh
+    type: 'bool '
+  return_type: int
+  signature: int kex_input_ext_info(int, u_int32_t, struct ssh *)
+- name: kex_exchange_identification
+  params:
+  - name: ssh
+    type: 'bool '
+  - name: timeout_ms
+    type: int
+  - name: version_addendum
+    type: 'bool '
+  return_type: int
+  signature: int kex_exchange_identification(struct ssh *, int, const char *)
+- name: ssh_packet_set_state
+  params:
+  - name: ssh
+    type: 'bool '
+  - name: m
+    type: 'bool '
+  return_type: int
+  signature: int ssh_packet_set_state(struct ssh *, struct sshbuf *)
+- name: sshsig_sign_fd
+  params:
+  - name: key
+    type: 'bool '
+  - name: hashalg
+    type: 'bool '
+  - name: sk_provider
+    type: 'bool '
+  - name: sk_pin
+    type: 'bool '
+  - name: fd
+    type: int
+  - name: sig_namespace
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  - name: signer
+    type: 'bool '
+  - name: signer_ctx
+    type: 'bool '
+  return_type: int
+  signature: int sshsig_sign_fd(struct sshkey *, const char *, const char *, const
+    char *, int, const char *, struct sshbuf **, sshsig_signer *, void *)
+language: c++
+project: openssh
+target_name: sshsigopt_fuzz
+target_path: /src/openssh/regress/misc/fuzz-harness/sshsigopt_fuzz.cc

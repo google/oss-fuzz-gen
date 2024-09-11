@@ -1,0 +1,360 @@
+functions:
+- name: PEM_write_bio_PKCS8PrivateKey
+  params:
+  - name: bp
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: enc
+    type: 'bool '
+  - name: pass
+    type: 'bool '
+  - name: pass_len
+    type: int
+  - name: cb
+    type: 'bool '
+  - name: u
+    type: 'bool '
+  return_type: int
+  signature: int PEM_write_bio_PKCS8PrivateKey(BIO *, const EVP_PKEY *, const EVP_CIPHER
+    *, const char *, int, pem_password_cb *, void *)
+- name: RSA_generate_key_ex
+  params:
+  - name: rsa
+    type: 'bool '
+  - name: bits
+    type: int
+  - name: e_value
+    type: 'bool '
+  - name: cb
+    type: 'bool '
+  return_type: int
+  signature: int RSA_generate_key_ex(RSA *, int, const BIGNUM *, BN_GENCB *)
+- name: a2i_IPADDRESS
+  params:
+  - name: ipasc
+    type: 'bool '
+  return_type: void
+  signature: ASN1_OCTET_STRING * a2i_IPADDRESS(const char *)
+- name: PEM_write_PKCS8PrivateKey
+  params:
+  - name: fp
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: enc
+    type: 'bool '
+  - name: pass
+    type: 'bool '
+  - name: pass_len
+    type: int
+  - name: cb
+    type: 'bool '
+  - name: u
+    type: 'bool '
+  return_type: int
+  signature: int PEM_write_PKCS8PrivateKey(FILE *, const EVP_PKEY *, const EVP_CIPHER
+    *, const char *, int, pem_password_cb *, void *)
+- name: X509_load_cert_file
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: file
+    type: 'bool '
+  - name: type
+    type: int
+  return_type: int
+  signature: int X509_load_cert_file(X509_LOOKUP *, const char *, int)
+- name: X509V3_EXT_nconf_nid
+  params:
+  - name: conf
+    type: 'bool '
+  - name: ctx
+    type: 'bool '
+  - name: ext_nid
+    type: int
+  - name: value
+    type: 'bool '
+  return_type: void
+  signature: X509_EXTENSION * X509V3_EXT_nconf_nid(const CONF *, const X509V3_CTX
+    *, int, const char *)
+- name: SSL_use_PrivateKey_ASN1
+  params:
+  - name: type
+    type: int
+  - name: ssl
+    type: 'bool '
+  - name: der
+    type: 'bool '
+  - name: der_len
+    type: size_t
+  return_type: int
+  signature: int SSL_use_PrivateKey_ASN1(int, SSL *, const uint8_t *, size_t)
+- name: SSL_CTX_use_PrivateKey_ASN1
+  params:
+  - name: type
+    type: int
+  - name: ctx
+    type: 'bool '
+  - name: der
+    type: 'bool '
+  - name: der_len
+    type: size_t
+  return_type: int
+  signature: int SSL_CTX_use_PrivateKey_ASN1(int, SSL_CTX *, const uint8_t *, size_t)
+- name: i2d_PKCS8PrivateKey_bio
+  params:
+  - name: bp
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: enc
+    type: 'bool '
+  - name: pass
+    type: 'bool '
+  - name: pass_len
+    type: int
+  - name: cb
+    type: 'bool '
+  - name: u
+    type: 'bool '
+  return_type: int
+  signature: int i2d_PKCS8PrivateKey_bio(BIO *, const EVP_PKEY *, const EVP_CIPHER
+    *, const char *, int, pem_password_cb *, void *)
+- name: d2i_PrivateKey_fp
+  params:
+  - name: fp
+    type: 'bool '
+  - name: obj
+    type: 'bool '
+  return_type: void
+  signature: EVP_PKEY * d2i_PrivateKey_fp(FILE *, EVP_PKEY **)
+- name: SSL_shutdown
+  params:
+  - name: ssl
+    type: 'bool '
+  return_type: int
+  signature: int SSL_shutdown(SSL *)
+- name: X509_load_cert_crl_file
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: file
+    type: 'bool '
+  - name: type
+    type: int
+  return_type: int
+  signature: int X509_load_cert_crl_file(X509_LOOKUP *, const char *, int)
+- name: PKCS7_sign
+  params:
+  - name: sign_cert
+    type: 'bool '
+  - name: pkey
+    type: 'bool '
+  - name: certs
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: void
+  signature: PKCS7 * PKCS7_sign(X509 *, EVP_PKEY *, struct stack_st_X509 *, BIO *,
+    int)
+- name: a2i_IPADDRESS_NC
+  params:
+  - name: ipasc
+    type: 'bool '
+  return_type: void
+  signature: ASN1_OCTET_STRING * a2i_IPADDRESS_NC(const char *)
+- name: X509V3_EXT_CRL_add_nconf
+  params:
+  - name: conf
+    type: 'bool '
+  - name: ctx
+    type: 'bool '
+  - name: section
+    type: 'bool '
+  - name: crl
+    type: 'bool '
+  return_type: int
+  signature: int X509V3_EXT_CRL_add_nconf(const CONF *, const X509V3_CTX *, const
+    char *, X509_CRL *)
+- name: X509V3_EXT_REQ_add_nconf
+  params:
+  - name: conf
+    type: 'bool '
+  - name: ctx
+    type: 'bool '
+  - name: section
+    type: 'bool '
+  - name: req
+    type: 'bool '
+  return_type: int
+  signature: int X509V3_EXT_REQ_add_nconf(const CONF *, const X509V3_CTX *, const
+    char *, X509_REQ *)
+- name: X509_print_ex_fp
+  params:
+  - name: fp
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: nmflag
+    type: size_t
+  - name: cflag
+    type: size_t
+  return_type: int
+  signature: int X509_print_ex_fp(FILE *, X509 *, unsigned long, unsigned long)
+- name: RSA_generate_key_fips
+  params:
+  - name: rsa
+    type: 'bool '
+  - name: bits
+    type: int
+  - name: cb
+    type: 'bool '
+  return_type: int
+  signature: int RSA_generate_key_fips(RSA *, int, BN_GENCB *)
+- name: PEM_write_PKCS8PrivateKey_nid
+  params:
+  - name: fp
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: nid
+    type: int
+  - name: pass
+    type: 'bool '
+  - name: pass_len
+    type: int
+  - name: cb
+    type: 'bool '
+  - name: u
+    type: 'bool '
+  return_type: int
+  signature: int PEM_write_PKCS8PrivateKey_nid(FILE *, const EVP_PKEY *, int, const
+    char *, int, pem_password_cb *, void *)
+- name: i2d_PKCS8PrivateKey_nid_fp
+  params:
+  - name: fp
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: nid
+    type: int
+  - name: pass
+    type: 'bool '
+  - name: pass_len
+    type: int
+  - name: cb
+    type: 'bool '
+  - name: u
+    type: 'bool '
+  return_type: int
+  signature: int i2d_PKCS8PrivateKey_nid_fp(FILE *, const EVP_PKEY *, int, const char
+    *, int, pem_password_cb *, void *)
+- name: PEM_write_bio_PKCS8PrivateKey_nid
+  params:
+  - name: bp
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: nid
+    type: int
+  - name: pass
+    type: 'bool '
+  - name: pass_len
+    type: int
+  - name: cb
+    type: 'bool '
+  - name: u
+    type: 'bool '
+  return_type: int
+  signature: int PEM_write_bio_PKCS8PrivateKey_nid(BIO *, const EVP_PKEY *, int, const
+    char *, int, pem_password_cb *, void *)
+- name: i2d_PKCS8PrivateKey_nid_bio
+  params:
+  - name: bp
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: nid
+    type: int
+  - name: pass
+    type: 'bool '
+  - name: pass_len
+    type: int
+  - name: cb
+    type: 'bool '
+  - name: u
+    type: 'bool '
+  return_type: int
+  signature: int i2d_PKCS8PrivateKey_nid_bio(BIO *, const EVP_PKEY *, int, const char
+    *, int, pem_password_cb *, void *)
+- name: X509_load_crl_file
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: file
+    type: 'bool '
+  - name: type
+    type: int
+  return_type: int
+  signature: int X509_load_crl_file(X509_LOOKUP *, const char *, int)
+- name: X509_print_fp
+  params:
+  - name: fp
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  return_type: int
+  signature: int X509_print_fp(FILE *, X509 *)
+- name: X509_policy_check
+  params:
+  - name: certs
+    type: 'bool '
+  - name: user_policies
+    type: 'bool '
+  - name: flags
+    type: size_t
+  - name: out_current_cert
+    type: 'bool '
+  return_type: int
+  signature: int X509_policy_check(const struct stack_st_X509 *, const struct stack_st_ASN1_OBJECT
+    *, unsigned long, X509 **)
+- name: X509V3_parse_list
+  params:
+  - name: line
+    type: 'bool '
+  return_type: void
+  signature: struct stack_st_CONF_VALUE * X509V3_parse_list(const char *)
+- name: i2d_PKCS8PrivateKey_fp
+  params:
+  - name: fp
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: enc
+    type: 'bool '
+  - name: pass
+    type: 'bool '
+  - name: pass_len
+    type: int
+  - name: cb
+    type: 'bool '
+  - name: u
+    type: 'bool '
+  return_type: int
+  signature: int i2d_PKCS8PrivateKey_fp(FILE *, const EVP_PKEY *, const EVP_CIPHER
+    *, const char *, int, pem_password_cb *, void *)
+- name: d2i_PrivateKey_bio
+  params:
+  - name: bio
+    type: 'bool '
+  - name: obj
+    type: 'bool '
+  return_type: void
+  signature: EVP_PKEY * d2i_PrivateKey_bio(BIO *, EVP_PKEY **)
+language: c++
+project: boringssl
+target_name: ocsp_parse_ocsp_response_data_fuzzer
+target_path: /src/boringssl/fuzz/ocsp_parse_ocsp_response_data_fuzzer.cc

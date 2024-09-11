@@ -1,0 +1,224 @@
+functions:
+- name: _ZN8jsonconsgtERKNS_12basic_bigintINSt3__19allocatorIhEEEEi
+  params:
+  - name: x
+    type: 'bool '
+  - name: y
+    type: int
+  return_type: bool
+  signature: bool jsoncons::operator>(const basic_bigint<std::__1::allocator<unsigned
+    char> > &, int)
+- name: _ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE14object_storage5valueEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: object & jsoncons::basic_json<char, jsoncons::order_preserving_policy,
+    std::__1::allocator<char> >::object_storage::value()
+- name: _ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE13array_storage6assignENS2_17integral_constantIbLb0EEERKS6_
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char>
+    >::array_storage::assign(false_type, const array_storage &)
+- name: _ZN8jsoncons6detail15make_error_codeENS0_15to_integer_errcE
+  params:
+  - name: e
+    type: char
+  return_type: void
+  signature: error_code jsoncons::detail::make_error_code(DW_TAG_enumeration_typeto_integer_errc)
+- name: _ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE19long_string_storage6assignERKS6_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char>
+    >::long_string_storage::~~assign(const long_string_storage &)
+- name: _ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE19byte_string_storage6assignENS2_17integral_constantIbLb0EEERKS6_
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char>
+    >::byte_string_storage::~~assign(false_type, const byte_string_storage &)
+- name: _ZN8jsoncons12basic_bigintINSt3__19allocatorIhEEEmIERKS4_
+  params:
+  - name: this
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  return_type: void
+  signature: basic_bigint<std::__1::allocator<unsigned char> > & jsoncons::basic_bigint<std::__1::allocator<unsigned
+    char> >::operator-=(basic_bigint<std::__1::allocator<unsigned char> > *, const
+    basic_bigint<std::__1::allocator<unsigned char> > &)
+- name: _ZNK8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE5emptyEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char>
+    >::empty(const basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char>
+    > *)
+- name: _ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE13array_storage6assignERKS6_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char>
+    >::array_storage::assign(const array_storage &)
+- name: _ZNK8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE3tagEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: char
+  signature: DW_TAG_enumeration_typesemantic_tag jsoncons::basic_json<char, jsoncons::order_preserving_policy,
+    std::__1::allocator<char> >::tag(const basic_json<char, jsoncons::sorted_policy,
+    std::__1::allocator<char> > *)
+- name: _ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE14object_storage6assignERKS6_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char>
+    >::object_storage::assign(const object_storage &)
+- name: _ZN8jsoncons17basic_json_cursorIcNS_13stream_sourceIcEENSt3__19allocatorIcEEE4nextEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::basic_json_cursor<char, jsoncons::stream_source<char>,
+    std::__1::allocator<char> >::next(basic_json_cursor<char, jsoncons::stream_source<char>,
+    std::__1::allocator<char> > *)
+- name: _ZNK8jsoncons6detail24conv_error_category_impl7messageEi
+  params:
+  - name: this
+    type: 'bool '
+  - name: ev
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: string jsoncons::detail::conv_error_category_impl::message(int)
+- name: _ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE18uninitialized_copyERKS5_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char>
+    >::uninitialized_copy(basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char>
+    > *, const basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char>
+    > &)
+- name: _ZNK8jsoncons10basic_jsonIcNS_13sorted_policyENSt3__19allocatorIcEEE3tagEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: char
+  signature: DW_TAG_enumeration_typesemantic_tag jsoncons::basic_json<char, jsoncons::sorted_policy,
+    std::__1::allocator<char> >::tag(const basic_json<char, jsoncons::sorted_policy,
+    std::__1::allocator<char> > *)
+- name: _ZN8jsonconsgtERKNS_12basic_bigintINSt3__19allocatorIhEEEES6_
+  params:
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  return_type: bool
+  signature: bool jsoncons::operator>(const basic_bigint<std::__1::allocator<unsigned
+    char> > &, const basic_bigint<std::__1::allocator<unsigned char> > &)
+- name: _ZNK8jsoncons9ser_error4whatEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: N/A ()
+- name: _ZNK8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE14object_storage5valueEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const object & jsoncons::basic_json<char, jsoncons::order_preserving_policy,
+    std::__1::allocator<char> >::object_storage::value()
+- name: _ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE14object_storage7destroyEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char>
+    >::object_storage::destroy()
+- name: _ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE19byte_string_storage6assignERKS6_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char>
+    >::byte_string_storage::~~assign(const byte_string_storage &)
+- name: _ZNK8jsoncons17basic_byte_stringINSt3__19allocatorIhEEE7compareERKS4_
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: int
+  signature: int jsoncons::basic_byte_string<std::__1::allocator<unsigned char> >::compare(const
+    basic_byte_string<std::__1::allocator<unsigned char> > *, const basic_byte_string<std::__1::allocator<unsigned
+    char> > &)
+- name: _ZNK8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE14object_storage13get_allocatorEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: allocator_type jsoncons::basic_json<char, jsoncons::order_preserving_policy,
+    std::__1::allocator<char> >::object_storage::get_allocator()
+- name: _ZN8jsonconsgeERKNS_12basic_bigintINSt3__19allocatorIhEEEEi
+  params:
+  - name: x
+    type: 'bool '
+  - name: y
+    type: int
+  return_type: bool
+  signature: bool jsoncons::operator>=(const basic_bigint<std::__1::allocator<unsigned
+    char> > &, int)
+- name: _ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE19long_string_storage6assignENS2_17integral_constantIbLb0EEERKS6_
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char>
+    >::long_string_storage::~~assign(false_type, const long_string_storage &)
+- name: _ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE14object_storage6assignENS2_17integral_constantIbLb0EEERKS6_
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char>
+    >::object_storage::assign(false_type, const object_storage &)
+- name: _ZNK8jsoncons6detail17to_integer_resultIlcE10error_codeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: error_code jsoncons::detail::to_integer_result<long, char>::error_code(const
+    struct to_integer_result<unsigned long, char> *)
+language: c++
+project: jsoncons
+target_name: fuzz_ubjson_parser_max
+target_path: /src/jsoncons/fuzzers/fuzz_ubjson_parser_max.cpp

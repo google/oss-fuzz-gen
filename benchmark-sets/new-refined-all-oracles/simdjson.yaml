@@ -1,0 +1,237 @@
+functions:
+- name: _ZNK8simdjson8internal49detect_best_supported_implementation_on_first_use13validate_utf8EPKcm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: bool
+  signature: bool simdjson::internal::detect_best_supported_implementation_on_first_use::validate_utf8(const
+    char *, size_t)
+- name: _ZNK8simdjson7haswell25dom_parser_implementation19parse_wobbly_stringEPKhPh
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: uint8_t * simdjson::haswell::dom_parser_implementation::parse_wobbly_string(const
+    uint8_t *, uint8_t *)
+- name: _ZNK8simdjson7icelake25dom_parser_implementation12parse_stringEPKhPhb
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: void
+  signature: uint8_t * simdjson::icelake::dom_parser_implementation::parse_string(const
+    uint8_t *, uint8_t *, bool)
+- name: _ZNK8simdjson8westmere25dom_parser_implementation12parse_stringEPKhPhb
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: void
+  signature: uint8_t * simdjson::westmere::dom_parser_implementation::parse_string(const
+    uint8_t *, uint8_t *, bool)
+- name: _ZN8simdjson6minifyEPKcmPcRm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeerror_code simdjson::minify(const char *, size_t,
+    char *, size_t &)
+- name: _ZN8simdjson7icelake12_GLOBAL__N_16stage121generic_validate_utf8EPKcm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: bool
+  signature: bool simdjson::icelake::(anonymous namespace)::stage1::generic_validate_utf8(const
+    char *, size_t)
+- name: _ZNK8simdjson8internal49detect_best_supported_implementation_on_first_use6minifyEPKhmPhRm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeerror_code simdjson::internal::detect_best_supported_implementation_on_first_use::minify(const
+    uint8_t *, size_t, uint8_t *, size_t &)
+- name: _ZN8simdjson7icelake13numberparsingL18slow_float_parsingEPKhPd
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeerror_code simdjson::icelake::numberparsing::slow_float_parsing(const
+    uint8_t *, double *)
+- name: _ZNK8simdjson8internal29available_implementation_list4sizeEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: size_t simdjson::internal::available_implementation_list::size()
+- name: _ZNK8simdjson7icelake14implementation6minifyEPKhmPhRm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeerror_code simdjson::icelake::implementation::minify(const
+    uint8_t *, size_t, uint8_t *, size_t &)
+- name: _ZNK8simdjson8fallback25dom_parser_implementation19parse_wobbly_stringEPKhPh
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: uint8_t * simdjson::fallback::dom_parser_implementation::parse_wobbly_string(const
+    uint8_t *, uint8_t *)
+- name: _ZN8simdjson13validate_utf8EPKcm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: bool
+  signature: bool simdjson::validate_utf8(const char *, size_t)
+- name: _ZNK8simdjson8westmere25dom_parser_implementation19parse_wobbly_stringEPKhPh
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: uint8_t * simdjson::westmere::dom_parser_implementation::parse_wobbly_string(const
+    uint8_t *, uint8_t *)
+- name: _ZNK8simdjson8fallback25dom_parser_implementation12parse_stringEPKhPhb
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: void
+  signature: uint8_t * simdjson::fallback::dom_parser_implementation::parse_string(const
+    uint8_t *, uint8_t *, bool)
+- name: _ZNK8simdjson8internal29available_implementation_listixERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: const implementation * simdjson::internal::available_implementation_list::operator[](const
+    string_view &)
+- name: _ZN8simdjson8internal10from_charsEPKcS2_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: double
+  signature: double simdjson::internal::from_chars(const char *, const char *)
+- name: _ZNK8simdjson7icelake14implementation13validate_utf8EPKcm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: bool
+  signature: bool simdjson::icelake::implementation::validate_utf8(const char *, size_t)
+- name: _ZNK8simdjson8internal49detect_best_supported_implementation_on_first_use11descriptionEv
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string simdjson::internal::detect_best_supported_implementation_on_first_use::description()
+- name: _ZNK8simdjson7icelake14implementation32create_dom_parser_implementationEmmRNSt3__110unique_ptrINS_8internal25dom_parser_implementationENS2_14default_deleteIS5_EEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeerror_code simdjson::icelake::implementation::create_dom_parser_implementation(size_t,
+    size_t, unique_ptr<simdjson::internal::dom_parser_implementation, std::__1::default_delete<simdjson::internal::dom_parser_implementation>
+    > &)
+- name: _ZNK8simdjson7icelake25dom_parser_implementation19parse_wobbly_stringEPKhPh
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: uint8_t * simdjson::icelake::dom_parser_implementation::parse_wobbly_string(const
+    uint8_t *, uint8_t *)
+- name: _ZNK8simdjson8internal49detect_best_supported_implementation_on_first_use4nameEv
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: string simdjson::internal::detect_best_supported_implementation_on_first_use::name()
+- name: _ZNK8simdjson8internal49detect_best_supported_implementation_on_first_use25required_instruction_setsEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: uint32_t simdjson::internal::detect_best_supported_implementation_on_first_use::required_instruction_sets()
+language: c++
+project: simdjson
+target_name: fuzz_padded
+target_path: /src/simdjson/fuzz/fuzz_padded.cpp

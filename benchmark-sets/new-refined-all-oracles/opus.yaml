@@ -1,0 +1,193 @@
+functions:
+- name: opus_dred_decoder_create
+  params:
+  - name: error
+    type: 'bool '
+  return_type: void
+  signature: OpusDREDDecoder * opus_dred_decoder_create(int *)
+- name: opus_decoder_create
+  params:
+  - name: Fs
+    type: int
+  - name: channels
+    type: int
+  - name: error
+    type: 'bool '
+  return_type: void
+  signature: OpusDecoder * opus_decoder_create(opus_int32, int, int *)
+- name: opus_decoder_dred_decode_float
+  params:
+  - name: st
+    type: 'bool '
+  - name: dred
+    type: 'bool '
+  - name: dred_offset
+    type: int
+  - name: pcm
+    type: 'bool '
+  - name: frame_size
+    type: int
+  return_type: int
+  signature: int opus_decoder_dred_decode_float(OpusDecoder *, const OpusDRED *, opus_int32,
+    float *, opus_int32)
+- name: opus_decoder_get_nb_samples
+  params:
+  - name: dec
+    type: 'bool '
+  - name: packet
+    type: 'bool '
+  - name: len
+    type: int
+  return_type: int
+  signature: int opus_decoder_get_nb_samples(const OpusDecoder *, const unsigned char
+    *, opus_int32)
+- name: opus_dred_decoder_destroy
+  params:
+  - name: dec
+    type: 'bool '
+  return_type: void
+  signature: void opus_dred_decoder_destroy(OpusDREDDecoder *)
+- name: opus_multistream_packet_unpad
+  params:
+  - name: data
+    type: 'bool '
+  - name: len
+    type: int
+  - name: nb_streams
+    type: int
+  return_type: int
+  signature: opus_int32 opus_multistream_packet_unpad(unsigned char *, opus_int32,
+    int)
+- name: opus_projection_decoder_ctl
+  params:
+  - name: st
+    type: 'bool '
+  - name: request
+    type: int
+  return_type: int
+  signature: int opus_projection_decoder_ctl(OpusProjectionDecoder *, int, void)
+- name: opus_repacketizer_out_range
+  params:
+  - name: rp
+    type: 'bool '
+  - name: begin
+    type: int
+  - name: end
+    type: int
+  - name: data
+    type: 'bool '
+  - name: maxlen
+    type: int
+  return_type: int
+  signature: opus_int32 opus_repacketizer_out_range(OpusRepacketizer *, int, int,
+    unsigned char *, opus_int32)
+- name: opus_dred_decoder_init
+  params:
+  - name: dec
+    type: 'bool '
+  return_type: int
+  signature: int opus_dred_decoder_init(OpusDREDDecoder *)
+- name: silk_inner_product_FLP_c
+  params:
+  - name: data1
+    type: 'bool '
+  - name: data2
+    type: 'bool '
+  - name: dataSize
+    type: int
+  return_type: double
+  signature: double silk_inner_product_FLP_c(const float *, const float *, int)
+- name: downmix_float
+  params:
+  - name: _x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  - name: subframe
+    type: int
+  - name: offset
+    type: int
+  - name: c1
+    type: int
+  - name: c2
+    type: int
+  - name: C
+    type: int
+  return_type: void
+  signature: void downmix_float(const void *, opus_val32 *, int, int, int, int, int)
+- name: opus_packet_has_lbrr
+  params:
+  - name: packet
+    type: 'bool '
+  - name: len
+    type: int
+  return_type: int
+  signature: int opus_packet_has_lbrr(const unsigned char *, opus_int32)
+- name: opus_ifft_c
+  params:
+  - name: st
+    type: 'bool '
+  - name: fin
+    type: 'bool '
+  - name: fout
+    type: 'bool '
+  return_type: void
+  signature: void opus_ifft_c(const kiss_fft_state *, const kiss_fft_cpx *, kiss_fft_cpx
+    *)
+- name: opus_decoder_destroy
+  params:
+  - name: st
+    type: 'bool '
+  return_type: void
+  signature: void opus_decoder_destroy(OpusDecoder *)
+- name: mapping_matrix_multiply_channel_in_float
+  params:
+  - name: matrix
+    type: 'bool '
+  - name: input
+    type: 'bool '
+  - name: input_rows
+    type: int
+  - name: output
+    type: 'bool '
+  - name: output_row
+    type: int
+  - name: output_rows
+    type: int
+  - name: frame_size
+    type: int
+  return_type: void
+  signature: void mapping_matrix_multiply_channel_in_float(const MappingMatrix *,
+    const float *, int, opus_val16 *, int, int, int)
+- name: opus_multistream_packet_pad
+  params:
+  - name: data
+    type: 'bool '
+  - name: len
+    type: int
+  - name: new_len
+    type: int
+  - name: nb_streams
+    type: int
+  return_type: int
+  signature: int opus_multistream_packet_pad(unsigned char *, opus_int32, opus_int32,
+    int)
+- name: opus_decoder_dred_decode
+  params:
+  - name: st
+    type: 'bool '
+  - name: dred
+    type: 'bool '
+  - name: dred_offset
+    type: int
+  - name: pcm
+    type: 'bool '
+  - name: frame_size
+    type: int
+  return_type: int
+  signature: int opus_decoder_dred_decode(OpusDecoder *, const OpusDRED *, opus_int32,
+    opus_int16 *, opus_int32)
+language: c++
+project: opus
+target_name: opus_repacketizer_fuzzer_fixed
+target_path: /src/opus/tests/opus_repacketizer_fuzzer.cc

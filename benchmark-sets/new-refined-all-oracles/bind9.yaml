@@ -1,0 +1,214 @@
+functions:
+- name: dns_zone_asyncload
+  params:
+  - name: zone
+    type: 'bool '
+  - name: newonly
+    type: bool
+  - name: done
+    type: 'bool '
+  - name: arg
+    type: 'bool '
+  return_type: int
+  signature: isc_result_t dns_zone_asyncload(dns_zone_t *, bool, dns_zt_callback_t
+    *, void *)
+- name: dns_viewlist_findzone
+  params:
+  - name: list
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: allclasses
+    type: bool
+  - name: rdclass
+    type: short
+  - name: zonep
+    type: 'bool '
+  return_type: int
+  signature: isc_result_t dns_viewlist_findzone(dns_viewlist_t *, const dns_name_t
+    *, bool, dns_rdataclass_t, dns_zone_t **)
+- name: dns_zt_load
+  params:
+  - name: zt
+    type: 'bool '
+  - name: stop
+    type: bool
+  - name: newonly
+    type: bool
+  return_type: int
+  signature: isc_result_t dns_zt_load(dns_zt_t *, bool, bool)
+- name: dns_zone_forwardupdate
+  params:
+  - name: zone
+    type: 'bool '
+  - name: msg
+    type: 'bool '
+  - name: callback
+    type: 'bool '
+  - name: callback_arg
+    type: 'bool '
+  return_type: int
+  signature: isc_result_t dns_zone_forwardupdate(dns_zone_t *, dns_message_t *, dns_updatecallback_t,
+    void *)
+- name: dns_zone_notifyreceive
+  params:
+  - name: zone
+    type: 'bool '
+  - name: from
+    type: 'bool '
+  - name: to
+    type: 'bool '
+  - name: msg
+    type: 'bool '
+  return_type: int
+  signature: isc_result_t dns_zone_notifyreceive(dns_zone_t *, isc_sockaddr_t *, isc_sockaddr_t
+    *, dns_message_t *)
+- name: dns_zone_stopxfr
+  params:
+  - name: zone
+    type: 'bool '
+  return_type: void
+  signature: void dns_zone_stopxfr(dns_zone_t *)
+- name: dns_zone_synckeyzone
+  params:
+  - name: zone
+    type: 'bool '
+  return_type: int
+  signature: isc_result_t dns_zone_synckeyzone(dns_zone_t *)
+- name: dns_zone_keydone
+  params:
+  - name: zone
+    type: 'bool '
+  - name: keystr
+    type: 'bool '
+  return_type: int
+  signature: isc_result_t dns_zone_keydone(dns_zone_t *, const char *)
+- name: dns_ntatable_add
+  params:
+  - name: ntatable
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: force
+    type: bool
+  - name: now
+    type: int
+  - name: lifetime
+    type: int
+  return_type: int
+  signature: isc_result_t dns_ntatable_add(dns_ntatable_t *, const dns_name_t *, bool,
+    isc_stdtime_t, uint32_t)
+- name: dns_view_setviewrevert
+  params:
+  - name: view
+    type: 'bool '
+  return_type: void
+  signature: void dns_view_setviewrevert(dns_view_t *)
+- name: dns_zone_setnsec3param
+  params:
+  - name: zone
+    type: 'bool '
+  - name: hash
+    type: char
+  - name: flags
+    type: char
+  - name: iter
+    type: short
+  - name: saltlen
+    type: char
+  - name: salt
+    type: 'bool '
+  - name: replace
+    type: bool
+  - name: resalt
+    type: bool
+  return_type: int
+  signature: isc_result_t dns_zone_setnsec3param(dns_zone_t *, uint8_t, uint8_t, uint16_t,
+    uint8_t, unsigned char *, bool, bool)
+- name: dns_zone_loadandthaw
+  params:
+  - name: zone
+    type: 'bool '
+  return_type: int
+  signature: isc_result_t dns_zone_loadandthaw(dns_zone_t *)
+- name: dns_zone_setserial
+  params:
+  - name: zone
+    type: 'bool '
+  - name: serial
+    type: int
+  return_type: int
+  signature: isc_result_t dns_zone_setserial(dns_zone_t *, uint32_t)
+- name: dns_view_load
+  params:
+  - name: view
+    type: 'bool '
+  - name: stop
+    type: bool
+  - name: newonly
+    type: bool
+  return_type: int
+  signature: isc_result_t dns_view_load(dns_view_t *, bool, bool)
+- name: load
+  params:
+  - name: zone
+    type: 'bool '
+  - name: uap
+    type: 'bool '
+  return_type: int
+  signature: void load(void *)
+- name: dns_master_loadfileasync
+  params:
+  - name: master_file
+    type: 'bool '
+  - name: top
+    type: 'bool '
+  - name: origin
+    type: 'bool '
+  - name: zclass
+    type: short
+  - name: options
+    type: int
+  - name: resign
+    type: int
+  - name: callbacks
+    type: 'bool '
+  - name: loop
+    type: 'bool '
+  - name: done
+    type: 'bool '
+  - name: done_arg
+    type: 'bool '
+  - name: lctxp
+    type: 'bool '
+  - name: include_cb
+    type: 'bool '
+  - name: include_arg
+    type: 'bool '
+  - name: mctx
+    type: 'bool '
+  - name: format
+    type: int
+  - name: maxttl
+    type: int
+  return_type: int
+  signature: isc_result_t dns_master_loadfileasync(const char *, dns_name_t *, dns_name_t
+    *, dns_rdataclass_t, unsigned int, uint32_t, dns_rdatacallbacks_t *, isc_loop_t
+    *, dns_loaddonefunc_t, void *, dns_loadctx_t **, dns_masterincludecb_t, void *,
+    isc_mem_t *, dns_masterformat_t, uint32_t)
+- name: dns_view_setviewcommit
+  params:
+  - name: view
+    type: 'bool '
+  return_type: void
+  signature: void dns_view_setviewcommit(dns_view_t *)
+- name: dns_view_loadnta
+  params:
+  - name: view
+    type: 'bool '
+  return_type: int
+  signature: isc_result_t dns_view_loadnta(dns_view_t *)
+language: c
+project: bind9
+target_name: dns_qp_fuzzer
+target_path: /src/bind9/fuzz/dns_qp.c

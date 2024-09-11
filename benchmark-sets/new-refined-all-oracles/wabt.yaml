@@ -1,0 +1,251 @@
+functions:
+- name: _ZN4wabt6interp6Thread3RunEiPNS0_6RefPtrINS0_4TrapEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: num_instructions
+    type: int
+  - name: out_trap
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeRunResult wabt::interp::Thread::Run(int, Ptr *)
+- name: _ZN4wabt10WastParser14ParseConstListEPNSt3__16vectorINS_5ConstENS1_9allocatorIS3_EEEENS0_9ConstTypeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: consts
+    type: 'bool '
+  - name: type
+    type: int
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseConstList(ConstVector *, DW_TAG_enumeration_typeConstType)
+- name: _ZN4wabt10WastParser11ParseActionEPNSt3__110unique_ptrINS_6ActionENS1_14default_deleteIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_action
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseAction(ActionPtr *)
+- name: _ZN4wabt10WastParser24ParseAssertReturnCommandEPNSt3__110unique_ptrINS_7CommandENS1_14default_deleteIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_command
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseAssertReturnCommand(CommandPtr *)
+- name: _ZN4wabt10WastParser18ParseOutputCommandEPNSt3__110unique_ptrINS_7CommandENS1_14default_deleteIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseOutputCommand(CommandPtr *)
+- name: _ZN4wabt10WastParser27ParseAssertExceptionCommandEPNSt3__110unique_ptrINS_7CommandENS1_14default_deleteIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_command
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseAssertExceptionCommand(CommandPtr
+    *)
+- name: _ZN4wabt10WastParser17ParseInputCommandEPNSt3__110unique_ptrINS_7CommandENS1_14default_deleteIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseInputCommand(CommandPtr *)
+- name: _ZNK4wabt6interp7Istream5TraceEPNS_6StreamEjPNS1_11TraceSourceE
+  params:
+  - name: this
+    type: 'bool '
+  - name: stream
+    type: 'bool '
+  - name: offset
+    type: int
+  - name: source
+    type: 'bool '
+  return_type: int
+  signature: Offset wabt::interp::Istream::Trace(Stream *, Offset, struct TraceSource
+    *)
+- name: _ZN4wabt10WastParser15ParseBindVarOptEPNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  return_type: bool
+  signature: bool wabt::WastParser::ParseBindVarOpt(string *)
+- name: _ZN4wabt6interp6Thread3RunEPNS0_6RefPtrINS0_4TrapEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_trap
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeRunResult wabt::interp::Thread::Run(Ptr *)
+- name: _ZNK4wabt6interp7Istream11DisassembleEPNS_6StreamEj
+  params:
+  - name: this
+    type: 'bool '
+  - name: stream
+    type: 'bool '
+  - name: offset
+    type: int
+  return_type: int
+  signature: Offset wabt::interp::Istream::Disassemble(Stream *, Offset)
+- name: _ZN4wabt10WastParser25ParseAssertInvalidCommandEPNSt3__110unique_ptrINS_7CommandENS1_14default_deleteIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_command
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseAssertInvalidCommand(CommandPtr
+    *)
+- name: _ZN4wabt6interp6Thread4StepEPNS0_6RefPtrINS0_4TrapEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_trap
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeRunResult wabt::interp::Thread::Step(Ptr *)
+- name: _ZNK4wabt6interp7Istream11DisassembleEPNS_6StreamEjj
+  params:
+  - name: this
+    type: 'bool '
+  - name: stream
+    type: 'bool '
+  - name: from
+    type: int
+  - name: to
+    type: int
+  return_type: void
+  signature: void wabt::interp::Istream::Disassemble(Stream *, Offset, Offset)
+- name: _ZN4wabt10WastParser28ParseAssertExhaustionCommandEPNSt3__110unique_ptrINS_7CommandENS1_14default_deleteIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_command
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseAssertExhaustionCommand(CommandPtr
+    *)
+- name: _ZN4wabt6interp6Thread12StepInternalEPNS0_6RefPtrINS0_4TrapEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_trap
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeRunResult wabt::interp::Thread::StepInternal(Ptr
+    *)
+- name: _ZN4wabt10WastParser13ParseLabelOptEPNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_label
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseLabelOpt(string *)
+- name: _ZN4wabt10WastParser27ParseAssertMalformedCommandEPNSt3__110unique_ptrINS_7CommandENS1_14default_deleteIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_command
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseAssertMalformedCommand(CommandPtr
+    *)
+- name: _ZN4wabt6interp11DefinedFunc6DoCallERNS0_6ThreadERKNSt3__16vectorINS0_5ValueENS4_9allocatorIS6_EEEERS9_PNS0_6RefPtrINS0_4TrapEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: thread
+    type: 'bool '
+  - name: params
+    type: 'bool '
+  - name: results
+    type: 'bool '
+  - name: out_trap
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::interp::DefinedFunc::DoCall(Thread &, const Values
+    &, Values &, Ptr *)
+- name: _ZN4wabt10WastParser11ParseEitherEPNSt3__16vectorINS_5ConstENS1_9allocatorIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: alternatives
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseEither(ConstVector *)
+- name: _ZNK4wabt6interp7Istream11DisassembleEPNS_6StreamE
+  params:
+  - name: this
+    type: 'bool '
+  - name: stream
+    type: 'bool '
+  return_type: void
+  signature: void wabt::interp::Istream::Disassemble(Stream *)
+- name: _ZN4wabt10WastParser19ParseExpectedValuesEPNSt3__110unique_ptrINS_11ExpectationENS1_14default_deleteIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: expectation
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseExpectedValues(ExpectationPtr *)
+- name: _ZNK4wabt6interp7Istream4ReadEPj
+  params:
+  - name: this
+    type: 'bool '
+  - name: offset
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct Instr wabt::interp::Istream::Read(Offset *)
+- name: _ZN4wabt10WastParser28ParseAssertUnlinkableCommandEPNSt3__110unique_ptrINS_7CommandENS1_14default_deleteIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_command
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseAssertUnlinkableCommand(CommandPtr
+    *)
+- name: _ZN4wabt10WastParser18ParseActionCommandEPNSt3__110unique_ptrINS_7CommandENS1_14default_deleteIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_command
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseActionCommand(CommandPtr *)
+- name: _ZN4wabt10WastParser20ParseRegisterCommandEPNSt3__110unique_ptrINS_7CommandENS1_14default_deleteIS3_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: out_command
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseRegisterCommand(CommandPtr *)
+- name: _ZN4wabt10WastParser16ParseEndLabelOptERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: begin_label
+    type: 'bool '
+  return_type: int
+  signature: struct Result wabt::WastParser::ParseEndLabelOpt(const string &)
+language: c++
+project: wabt
+target_name: wasm2wat_fuzzer
+target_path: /src/wasm2wat_fuzzer.cc

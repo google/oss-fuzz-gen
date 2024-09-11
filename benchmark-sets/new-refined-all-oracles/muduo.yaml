@@ -1,0 +1,197 @@
+functions:
+- name: _ZN5muduo3net6Buffer6readFdEiPi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: ssize_t muduo::net::Buffer::readFd(int, int *)
+- name: _ZNK5muduo8TimeZone13fromLocalTimeERKNS_8DateTimeEb
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: size_t
+  signature: int64_t muduo::TimeZone::fromLocalTime(const struct DateTime &, bool)
+- name: _ZN5muduo6ThreadC2ENSt3__18functionIFvvEEERKNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void muduo::Thread::Thread(ThreadFunc, const string &)
+- name: _ZN5muduo6Logger4Impl10formatTimeEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void muduo::Logger::Impl::formatTime()
+- name: _ZN5muduo8formatSIEl
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: string muduo::formatSI(int64_t)
+- name: _ZN5muduo9LogStreamlsEi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: LogStream & muduo::LogStream::operator<<(int)
+- name: _ZNK5muduo8TimeZone11toLocalTimeElPi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct DateTime muduo::TimeZone::toLocalTime(int64_t, int *)
+- name: _ZN5muduo6detail4File9readInt64Ev
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: int64_t muduo::detail::File::readInt64()
+- name: _ZN5muduo6LoggerD2Ev
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void muduo::Logger::~~Logger()
+- name: _ZNK5muduo14CountDownLatch8getCountEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int muduo::CountDownLatch::getCount()
+- name: _ZN5muduo9MutexLock13UnassignGuardD2Ev
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void muduo::MutexLock::UnassignGuard::~~UnassignGuard()
+- name: _ZN5muduo6detail4File9readInt32Ev
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int32_t muduo::detail::File::readInt32()
+- name: _ZN5muduo6Logger4ImplC2ENS0_8LogLevelEiRKNS0_10SourceFileEi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void muduo::Logger::Impl::Impl(LogLevel, int, const SourceFile &, int)
+- name: _ZN5muduo9formatIECEl
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: string muduo::formatIEC(int64_t)
+- name: _ZN5muduo6Logger4Impl6finishEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void muduo::Logger::Impl::finish()
+- name: _ZN5muduo9LogStreamlsEs
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: short
+  return_type: void
+  signature: LogStream & muduo::LogStream::operator<<(short)
+- name: _ZN5muduo14CountDownLatch9countDownEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void muduo::CountDownLatch::countDown()
+- name: _ZN5muduo9Condition4waitEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void muduo::Condition::wait()
+- name: _ZN5muduo9LogStreamlsEx
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: LogStream & muduo::LogStream::operator<<(long long)
+- name: _ZN5muduo9MutexLock4lockEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void muduo::MutexLock::lock()
+- name: _ZN5muduo6ThreadD2Ev
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void muduo::Thread::~~Thread()
+- name: _ZN5muduo9LogStreamlsEl
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: LogStream & muduo::LogStream::operator<<(long)
+- name: _ZN5muduo14CountDownLatch4waitEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void muduo::CountDownLatch::wait()
+- name: _ZN5muduo9LogStreamlsEt
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: short
+  return_type: void
+  signature: LogStream & muduo::LogStream::operator<<(unsigned short)
+- name: _ZN5muduo14MutexLockGuardC2ERNS_9MutexLockE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void muduo::MutexLockGuard::MutexLockGuard(MutexLock &)
+language: c++
+project: muduo
+target_name: muduo_http_fuzzer
+target_path: /src/muduo_http_fuzzer.cpp

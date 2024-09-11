@@ -1,0 +1,12 @@
+functions:
+- name: _ZNKRSt3__113move_iteratorIPPNS_7__stateIcEEE4baseB8ne200000Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const struct __state<char> &** std::__1::move_iterator<std::__1::__state<char>**>::base(const
+    move_iterator<std::__1::__state<char> **> *)
+language: c++
+project: llvm_libcxx
+target_name: search
+target_path: /src/llvm-project/libcxx/test/libcxx/fuzzing/search.pass.cpp

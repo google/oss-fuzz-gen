@@ -1,0 +1,361 @@
+functions:
+- name: BitstreamWriteVopHeader
+  params:
+  - name: bs
+    type: 'bool '
+  - name: pParam
+    type: 'bool '
+  - name: frame
+    type: 'bool '
+  - name: vop_coded
+    type: int
+  - name: quant
+    type: int
+  return_type: void
+  signature: void BitstreamWriteVopHeader(const Bitstream *, const MBParam *, const
+    const FRAMEINFO *, int, unsigned int)
+- name: xvid_me_ModeDecision_Fast
+  params:
+  - name: Data
+    type: 'bool '
+  - name: pMB
+    type: 'bool '
+  - name: pMBs
+    type: 'bool '
+  - name: x
+    type: int
+  - name: y
+    type: int
+  - name: pParam
+    type: 'bool '
+  - name: MotionFlags
+    type: int
+  - name: VopFlags
+    type: int
+  - name: VolFlags
+    type: int
+  - name: pCurrent
+    type: 'bool '
+  - name: pRef
+    type: 'bool '
+  - name: vGMC
+    type: 'bool '
+  - name: coding_type
+    type: int
+  - name: bound
+    type: int
+  return_type: void
+  signature: void xvid_me_ModeDecision_Fast(const SearchData *, const MACROBLOCK *,
+    const const MACROBLOCK *, const int, const int, const const MBParam *, const uint32_t,
+    const uint32_t, const uint32_t, const const IMAGE *, const const IMAGE *, const
+    const IMAGE *, const int, const int)
+- name: enc_destroy
+  params:
+  - name: pEnc
+    type: 'bool '
+  return_type: int
+  signature: int enc_destroy(Encoder *)
+- name: MBTransQuantInterBVOP
+  params:
+  - name: pParam
+    type: 'bool '
+  - name: frame
+    type: 'bool '
+  - name: pMB
+    type: 'bool '
+  - name: x_pos
+    type: int
+  - name: y_pos
+    type: int
+  - name: data
+    type: 'bool '
+  - name: qcoeff
+    type: 'bool '
+  return_type: char
+  signature: uint8_t MBTransQuantInterBVOP(const MBParam *, FRAMEINFO *, MACROBLOCK
+    *, const uint32_t, const uint32_t, int16_t *, int16_t *)
+- name: BitstreamWriteUserData
+  params:
+  - name: bs
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: length
+    type: int
+  return_type: void
+  signature: void BitstreamWriteUserData(const Bitstream *, const char *, const unsigned
+    int)
+- name: MBCodingBVOP
+  params:
+  - name: frame
+    type: 'bool '
+  - name: mb
+    type: 'bool '
+  - name: qcoeff
+    type: 'bool '
+  - name: fcode
+    type: int
+  - name: bcode
+    type: int
+  - name: bs
+    type: 'bool '
+  - name: pStat
+    type: 'bool '
+  return_type: void
+  signature: void MBCodingBVOP(const const FRAMEINFO *, const MACROBLOCK *, const
+    int16_t *, const int32_t, const int32_t, Bitstream *, Statistics *)
+- name: FullRefine_Fast
+  params:
+  - name: data
+    type: 'bool '
+  - name: CheckCandidate
+    type: 'bool '
+  - name: direction
+    type: int
+  return_type: void
+  signature: void FullRefine_Fast(SearchData *, CheckFunc *, int)
+- name: image_dump_yuvpgm
+  params:
+  - name: image
+    type: 'bool '
+  - name: edged_width
+    type: int
+  - name: width
+    type: int
+  - name: height
+    type: int
+  - name: filename
+    type: 'bool '
+  return_type: int
+  signature: int image_dump_yuvpgm(const IMAGE *, const uint32_t, const uint32_t,
+    const uint32_t, char *)
+- name: image_input
+  params:
+  - name: image
+    type: 'bool '
+  - name: width
+    type: int
+  - name: height
+    type: int
+  - name: edged_width
+    type: int
+  - name: src
+    type: 'bool '
+  - name: src_stride
+    type: 'bool '
+  - name: csp
+    type: int
+  - name: interlacing
+    type: int
+  return_type: int
+  signature: int image_input(IMAGE *, uint32_t, int, uint32_t, uint8_t **, int *,
+    int, int)
+- name: BitstreamWriteVolHeader
+  params:
+  - name: bs
+    type: 'bool '
+  - name: pParam
+    type: 'bool '
+  - name: frame
+    type: 'bool '
+  - name: num_slices
+    type: int
+  return_type: void
+  signature: void BitstreamWriteVolHeader(const Bitstream *, const MBParam *, const
+    const FRAMEINFO *, const int)
+- name: xvid_me_ModeDecision_RD
+  params:
+  - name: Data
+    type: 'bool '
+  - name: pMB
+    type: 'bool '
+  - name: pMBs
+    type: 'bool '
+  - name: x
+    type: int
+  - name: y
+    type: int
+  - name: pParam
+    type: 'bool '
+  - name: MotionFlags
+    type: int
+  - name: VopFlags
+    type: int
+  - name: VolFlags
+    type: int
+  - name: pCurrent
+    type: 'bool '
+  - name: pRef
+    type: 'bool '
+  - name: vGMC
+    type: 'bool '
+  - name: coding_type
+    type: int
+  - name: bound
+    type: int
+  return_type: void
+  signature: void xvid_me_ModeDecision_RD(const SearchData *, const MACROBLOCK *,
+    const const MACROBLOCK *, const int, const int, const const MBParam *, const uint32_t,
+    const uint32_t, const uint32_t, const const IMAGE *, const const IMAGE *, const
+    const IMAGE *, const int, const int)
+- name: CodeCoeffIntra_CalcBits
+  params:
+  - name: qcoeff
+    type: 'bool '
+  - name: zigzag
+    type: 'bool '
+  return_type: int
+  signature: int CodeCoeffIntra_CalcBits(const int16_t *, const uint16_t *)
+- name: ModeDecision_BVOP_RD
+  params:
+  - name: Data_d
+    type: 'bool '
+  - name: Data_b
+    type: 'bool '
+  - name: Data_f
+    type: 'bool '
+  - name: Data_i
+    type: 'bool '
+  - name: pMB
+    type: 'bool '
+  - name: b_mb
+    type: 'bool '
+  - name: f_predMV
+    type: 'bool '
+  - name: b_predMV
+    type: 'bool '
+  - name: MotionFlags
+    type: int
+  - name: VopFlags
+    type: int
+  - name: pParam
+    type: 'bool '
+  - name: x
+    type: int
+  - name: y
+    type: int
+  - name: best_sad
+    type: int
+  - name: force_direct
+    type: int
+  return_type: void
+  signature: void ModeDecision_BVOP_RD(const SearchData *, const SearchData *, const
+    SearchData *, const SearchData *, const MACROBLOCK *, const const MACROBLOCK *,
+    VECTOR *, VECTOR *, const uint32_t, const uint32_t, const const MBParam *, int,
+    int, int, int)
+- name: write_video_packet_header
+  params:
+  - name: bs
+    type: 'bool '
+  - name: pParam
+    type: 'bool '
+  - name: frame
+    type: 'bool '
+  - name: mbnum
+    type: int
+  return_type: void
+  signature: void write_video_packet_header(const Bitstream *, const MBParam *, const
+    const FRAMEINFO *, int)
+- name: MBTransQuantInter
+  params:
+  - name: pParam
+    type: 'bool '
+  - name: frame
+    type: 'bool '
+  - name: pMB
+    type: 'bool '
+  - name: x_pos
+    type: int
+  - name: y_pos
+    type: int
+  - name: data
+    type: 'bool '
+  - name: qcoeff
+    type: 'bool '
+  return_type: char
+  signature: uint8_t MBTransQuantInter(const const MBParam *, const const FRAMEINFO
+    *, const MACROBLOCK *, const uint32_t, const uint32_t, int16_t *, int16_t *)
+- name: image_chroma_optimize
+  params:
+  - name: img
+    type: 'bool '
+  - name: width
+    type: int
+  - name: height
+    type: int
+  - name: edged_width
+    type: int
+  return_type: void
+  signature: void image_chroma_optimize(IMAGE *, int, int, int)
+- name: xvid_me_interpolate16x16qpel
+  params:
+  - name: x
+    type: int
+  - name: y
+    type: int
+  - name: dir
+    type: int
+  - name: data
+    type: 'bool '
+  return_type: void
+  signature: uint8_t * xvid_me_interpolate16x16qpel(const int, const int, const uint32_t,
+    const const SearchData *)
+- name: MBTransQuantIntra
+  params:
+  - name: pParam
+    type: 'bool '
+  - name: frame
+    type: 'bool '
+  - name: pMB
+    type: 'bool '
+  - name: x_pos
+    type: int
+  - name: y_pos
+    type: int
+  - name: data
+    type: 'bool '
+  - name: qcoeff
+    type: 'bool '
+  return_type: void
+  signature: void MBTransQuantIntra(const const MBParam *, const const FRAMEINFO *,
+    const MACROBLOCK *, const uint32_t, const uint32_t, int16_t *, int16_t *)
+- name: xvid_me_interpolate8x8qpel
+  params:
+  - name: x
+    type: int
+  - name: y
+    type: int
+  - name: block
+    type: int
+  - name: dir
+    type: int
+  - name: data
+    type: 'bool '
+  return_type: void
+  signature: uint8_t * xvid_me_interpolate8x8qpel(const int, const int, const uint32_t,
+    const uint32_t, const const SearchData *)
+- name: enc_create
+  params:
+  - name: create
+    type: 'bool '
+  return_type: int
+  signature: int enc_create(xvid_enc_create_t *)
+- name: MBCoding
+  params:
+  - name: frame
+    type: 'bool '
+  - name: pMB
+    type: 'bool '
+  - name: qcoeff
+    type: 'bool '
+  - name: bs
+    type: 'bool '
+  - name: pStat
+    type: 'bool '
+  return_type: void
+  signature: void MBCoding(const const FRAMEINFO *, MACROBLOCK *, int16_t *, Bitstream
+    *, Statistics *)
+language: c++
+project: xvid
+target_name: fuzzer-decoder
+target_path: /src/oss-fuzz-fuzzers/xvid/fuzzer.cpp

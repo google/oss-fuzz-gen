@@ -1,0 +1,55 @@
+functions:
+- name: _ZNK6icu_596Locale15getKeywordValueEPKcPciR10UErrorCode
+  params:
+  - name: this
+    type: 'bool '
+  - name: keywordName
+    type: 'bool '
+  - name: buffer
+    type: 'bool '
+  - name: bufLen
+    type: int
+  - name: status
+    type: 'bool '
+  return_type: int
+  signature: int32_t icu_59::Locale::getKeywordValue(const char *, char *, int32_t,
+    UErrorCode &)
+- name: _ZN6icu_596Locale14createFromNameEPKc
+  params:
+  - name: name
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Locale icu_59::Locale::createFromName(const char *)
+- name: _ZN12_GLOBAL__N_123getAllItemsWithFallbackEPK15UResourceBundleRN6icu_5917ResourceDataValueERNS3_12ResourceSinkER10UErrorCode
+  params:
+  - name: bundle
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: sink
+    type: 'bool '
+  - name: errorCode
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::getAllItemsWithFallback(const UResourceBundle
+    *, ResourceDataValue &, ResourceSink &, UErrorCode &)
+- name: _ZN6icu_596Locale15createCanonicalEPKc
+  params:
+  - name: name
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Locale icu_59::Locale::createCanonical(const char *)
+- name: _ZN6icu_596Locale9getLocaleEi
+  params:
+  - name: locid
+    type: int
+  return_type: void
+  signature: const Locale & icu_59::Locale::getLocale(int)
+language: c++
+project: libpsl
+target_name: libpsl_load_fuzzer
+target_path: /src/libpsl/fuzz/libpsl_load_fuzzer.c

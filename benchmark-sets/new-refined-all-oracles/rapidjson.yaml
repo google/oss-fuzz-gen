@@ -1,0 +1,5 @@
+functions: []
+language: c++
+project: rapidjson
+target_name: fuzzer
+target_path: /src/rapidjson-fuzzers/fuzzer.cpp

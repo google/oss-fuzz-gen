@@ -1,0 +1,392 @@
+functions:
+- name: icalproperty_new_tzurl
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_tzurl(const char *)
+- name: icalproperty_new_recurlimit
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_recurlimit(const char *)
+- name: icalproperty_recurrence_is_excluded
+  params:
+  - name: comp
+    type: 'bool '
+  - name: dtstart
+    type: 'bool '
+  - name: recurtime
+    type: 'bool '
+  return_type: int
+  signature: int icalproperty_recurrence_is_excluded(icalcomponent *, struct icaltimetype
+    *, struct icaltimetype *)
+- name: icalrecur_iterator_prev
+  params:
+  - name: impl
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct icaltimetype icalrecur_iterator_prev(icalrecur_iterator *)
+- name: icalproperty_new_voter
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_voter(const char *)
+- name: icalproperty_new_url
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_url(const char *)
+- name: icalproperty_new_xlicmimeoptinfo
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_xlicmimeoptinfo(const char *)
+- name: icalcomponent_get_dtend
+  params:
+  - name: comp
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct icaltimetype icalcomponent_get_dtend(icalcomponent *)
+- name: icalproperty_new_xlicmimeencoding
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_xlicmimeencoding(const char *)
+- name: icalrecurrencetype_from_string
+  params:
+  - name: str
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct icalrecurrencetype icalrecurrencetype_from_string(const char *)
+- name: icalproperty_new_x
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_x(const char *)
+- name: icalproperty_new_scope
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_scope(const char *)
+- name: icalperiodtype_from_string
+  params:
+  - name: str
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct icalperiodtype icalperiodtype_from_string(const char *)
+- name: icalproperty_new_xlicclustercount
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_xlicclustercount(const char *)
+- name: icaltimezone_dump_changes
+  params:
+  - name: zone
+    type: 'bool '
+  - name: max_year
+    type: int
+  - name: fp
+    type: 'bool '
+  return_type: int
+  signature: int icaltimezone_dump_changes(icaltimezone *, int, FILE *)
+- name: icalproperty_new_xlicerror
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_xlicerror(const char *)
+- name: icalproperty_new_target
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_target(const char *)
+- name: icalproperty_new_from_string
+  params:
+  - name: str
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_from_string(const char *)
+- name: icalproperty_new_tzname
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_tzname(const char *)
+- name: icaltime_from_string
+  params:
+  - name: str
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct icaltimetype icaltime_from_string(const char *)
+- name: icalproperty_get_exdate
+  params:
+  - name: prop
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct icaltimetype icalproperty_get_exdate(const icalproperty *)
+- name: icaltimezone_get_builtin_timezone
+  params:
+  - name: location
+    type: 'bool '
+  return_type: void
+  signature: icaltimezone * icaltimezone_get_builtin_timezone(const char *)
+- name: icalproperty_new_relatedto
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_relatedto(const char *)
+- name: icalcomponent_get_due
+  params:
+  - name: comp
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct icaltimetype icalcomponent_get_due(icalcomponent *)
+- name: icalcomponent_new_from_string
+  params:
+  - name: str
+    type: 'bool '
+  return_type: void
+  signature: icalcomponent * icalcomponent_new_from_string(const char *)
+- name: icalcomponent_get_duration
+  params:
+  - name: comp
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct icaldurationtype icalcomponent_get_duration(icalcomponent *)
+- name: icalproperty_new_tzidaliasof
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_tzidaliasof(const char *)
+- name: icaltimezone_get_builtin_timezone_from_tzid
+  params:
+  - name: tzid
+    type: 'bool '
+  return_type: void
+  signature: icaltimezone * icaltimezone_get_builtin_timezone_from_tzid(const char
+    *)
+- name: icalproperty_new_storesexpanded
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_storesexpanded(const char *)
+- name: icalparser_parse_string
+  params:
+  - name: str
+    type: 'bool '
+  return_type: void
+  signature: icalcomponent * icalparser_parse_string(const char *)
+- name: icalcomponent_set_dtend
+  params:
+  - name: comp
+    type: 'bool '
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: void icalcomponent_set_dtend(icalcomponent *, struct icaltimetype)
+- name: icalrecur_iterator_set_range
+  params:
+  - name: impl
+    type: 'bool '
+  - name: from
+    type: 'bool '
+  - name: to
+    type: 'bool '
+  return_type: int
+  signature: int icalrecur_iterator_set_range(icalrecur_iterator *, struct icaltimetype,
+    struct icaltimetype)
+- name: icaltimezone_get_builtin_timezone_from_offset
+  params:
+  - name: offset
+    type: int
+  - name: tzname
+    type: 'bool '
+  return_type: void
+  signature: icaltimezone * icaltimezone_get_builtin_timezone_from_offset(int, const
+    char *)
+- name: icalproperty_get_datetime_with_component
+  params:
+  - name: prop
+    type: 'bool '
+  - name: comp
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct icaltimetype icalproperty_get_datetime_with_component(icalproperty
+    *, icalcomponent *)
+- name: icaltimezone_get_display_name
+  params:
+  - name: zone
+    type: 'bool '
+  return_type: void
+  signature: const char * icaltimezone_get_display_name(icaltimezone *)
+- name: icalproperty_new_xlicmimecid
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_xlicmimecid(const char *)
+- name: icalproperty_new_xlicmimecharset
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_xlicmimecharset(const char *)
+- name: icalproperty_new_recurexpand
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_recurexpand(const char *)
+- name: icalproperty_new_source
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_source(const char *)
+- name: icalproperty_new_xlicmimecontenttype
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_xlicmimecontenttype(const char *)
+- name: icalcomponent_get_timezone
+  params:
+  - name: comp
+    type: 'bool '
+  - name: tzid
+    type: 'bool '
+  return_type: void
+  signature: icaltimezone * icalcomponent_get_timezone(icalcomponent *, const char
+    *)
+- name: icalproperty_new_version
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_version(const char *)
+- name: icaltriggertype_from_string
+  params:
+  - name: str
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct icaltriggertype icaltriggertype_from_string(const char *)
+- name: icalproperty_new_xlicmimefilename
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_xlicmimefilename(const char *)
+- name: icalproperty_new_uid
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_uid(const char *)
+- name: icaltime_span_new
+  params:
+  - name: dtstart
+    type: 'bool '
+  - name: dtend
+    type: 'bool '
+  - name: is_busy
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: struct icaltime_span icaltime_span_new(struct icaltimetype, struct icaltimetype,
+    int)
+- name: icalcomponent_get_dtstart
+  params:
+  - name: comp
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct icaltimetype icalcomponent_get_dtstart(icalcomponent *)
+- name: icalproperty_new_styleddescription
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_styleddescription(const char *)
+- name: icalproperty_new_replyurl
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_replyurl(const char *)
+- name: icalproperty_new_tzid
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_tzid(const char *)
+- name: icalproperty_new_summary
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_summary(const char *)
+- name: icalproperty_new_resources
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_resources(const char *)
+- name: icalproperty_new_restriction
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_restriction(const char *)
+- name: icalproperty_new_relcalid
+  params:
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: icalproperty * icalproperty_new_relcalid(const char *)
+- name: icalcomponent_set_dtstart
+  params:
+  - name: comp
+    type: 'bool '
+  - name: v
+    type: 'bool '
+  return_type: void
+  signature: void icalcomponent_set_dtstart(icalcomponent *, struct icaltimetype)
+language: c++
+project: libical
+target_name: libical_fuzzer
+target_path: /src/libical_fuzzer.cc
