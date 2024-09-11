@@ -96,14 +96,19 @@ class CloudBuilder:
     """Archives and uploads local OFG repo to cloud build."""
     ofg_repo = subprocess.check_output(['git', 'rev-parse', '--show-toplevel'],
                                        text=True).strip()
-    files_to_include = subprocess.check_output(
-        ['git', 'ls-files', '--cached', '--others', '--exclude-standard'],
-        cwd=ofg_repo,
-        text=True).splitlines()
+    files_in_dir = set(
+        os.path.relpath(os.path.join(root, file))
+        for root, _, files in os.walk(ofg_repo)
+        for file in files)
+    files_in_git = set(
+        subprocess.check_output(['git', 'ls-files'], cwd=ofg_repo,
+                                text=True).splitlines())
+    file_to_upload = list(files_in_dir & files_in_git)
+
     with tempfile.TemporaryDirectory() as tmpdirname:
       archive_name = f'ofg-repo-{uuid.uuid4().hex}.tar.gz'
       archive_path = os.path.join(tmpdirname, archive_name)
-      tar_command = ['tar', '-cvzf', archive_path] + files_to_include
+      tar_command = ['tar', '-cvzf', archive_path] + file_to_upload
       subprocess.run(tar_command, cwd=ofg_repo, check=True)
       logging.info('Created archive: %s', archive_path)
       return self._upload_to_gcs(archive_path)
