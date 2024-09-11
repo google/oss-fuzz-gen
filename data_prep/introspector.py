@@ -808,8 +808,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
   elif language == 'python':
     filenames = [
         (f'{function["function_filename"].replace("...", "").replace(".", "/")}'
-         '.py')
-        for function in functions
+         '.py') for function in functions
     ]
   else:
     filenames = [
