@@ -807,7 +807,8 @@ def populate_benchmarks_using_introspector(project: str, language: str,
     ]
   elif language == 'python':
     filenames = [
-        f'{function["function_filename"].replace("...", "").replace(".", "/")}.py'
+        (f'{function["function_filename"].replace("...", "").replace(".", "/")}'
+         '.py')
         for function in functions
     ]
   else:
@@ -834,7 +835,8 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         # Filename of python fuzzers always starts with ...
         # Skipping them
         continue
-      if _get_arg_count(function) == 1 and _get_arg_names(function)[0] == 'self':
+      if _get_arg_count(function) == 1 and _get_arg_names(
+          function, project, language)[0] == 'self':
         # If a python function has only 1 arugment and the argument name
         # is 'self', it means that it is an instance function with no
         # arguments. Thus skipping it.

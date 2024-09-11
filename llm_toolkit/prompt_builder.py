@@ -1087,7 +1087,7 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
       arg_count = len(self.benchmark.params) - 1
       desc = ('This is an instance function. You MUST create the needed '
               f'class {signature_split[0]} before invoking the target '
-              f'function {signature_split[-1]}.'
+              f'function {signature_split[-1]}.')
     else:
       arg_count = len(self.benchmark.params)
       desc = 'This is a class function. You MUST invoke it directly.'
