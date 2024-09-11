@@ -829,10 +829,16 @@ def populate_benchmarks_using_introspector(project: str, language: str,
 
     filename = os.path.basename(function['function_filename'])
 
-    if language == 'python' and filename.startswith('...'):
-      # Filename of python fuzzers always starts with ...
-      # Skipping them
-      continue
+    if language == 'python':
+      if filename.startswith('...'):
+        # Filename of python fuzzers always starts with ...
+        # Skipping them
+        continue
+      if _get_arg_count(function) == 1 and _get_arg_names(function)[0] == 'self':
+        # If a python function has only 1 arugment and the argument name
+        # is 'self', it means that it is an instance function with no
+        # arguments. Thus skipping it.
+        continue
 
     if language == 'jvm':
       # Retrieve list of source file from introspector
