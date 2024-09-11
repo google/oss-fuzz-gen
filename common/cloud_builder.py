@@ -103,7 +103,7 @@ class CloudBuilder:
     with tempfile.TemporaryDirectory() as tmpdirname:
       archive_name = f'ofg-repo-{uuid.uuid4().hex}.tar.gz'
       archive_path = os.path.join(tmpdirname, archive_name)
-      tar_command = ['tar', '-czf', archive_path] + files_to_include
+      tar_command = ['tar', '-cvzf', archive_path] + files_to_include
       subprocess.run(tar_command, cwd=ofg_repo, check=True)
       logging.info('Created archive: %s', archive_path)
       return self._upload_to_gcs(archive_path)
