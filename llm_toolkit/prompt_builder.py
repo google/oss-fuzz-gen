@@ -1077,7 +1077,7 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
     with open(template_file) as file:
       return file.read()
 
-  def _format_target(self, signature: str) -> tuple[bool, str]:
+  def _format_target(self, signature: str) -> str:
     """Format the target function for the prompts creation."""
     target = self._get_template(self.problem_template_file)
     signature_split = signature.rsplit('.', 1)
@@ -1094,7 +1094,7 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
 
     target = target.replace('{METHOD_SIGNATURE}', signature)
     target = target.replace('{PACKAGE}', signature_split[0])
-    target = target.replace('{ARG_COUNT}', arg_count)
+    target = target.replace('{ARG_COUNT}', str(arg_count))
     target = target.replace('{CLASS_METHOD_OR_GENERAL_METHOD}', desc)
 
     return target
@@ -1102,11 +1102,10 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
   def _format_problem(self, signature: str) -> str:
     """Formats a problem based on the prompt template."""
     base = self._get_template(self.base_template_file)
+    target_str = self._format_target(signature)
+
     problem = base + self._get_template(self.problem_template_file)
-
-    is_constructor, target_str = self._format_target(signature)
     problem = problem.replace('{TARGET}', target_str)
-
     problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
     problem = problem.replace("{PROJECT_URL}", self.project_url)
 
