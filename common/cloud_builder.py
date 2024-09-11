@@ -182,8 +182,9 @@ class CloudBuilder:
                     'run', '--rm', '-v', '/workspace:/workspace', '-v',
                     '/var/run/docker.sock:/var/run/docker.sock',
                     '--network=cloudbuild', 'agent-image', 'python3.11', '-m',
-                    'agent.base_agent', '/workspace/pickles/agent.pkl',
-                    '/workspace/pickles/result_history.pkl',
+                    'agent.base_agent', '--agent',
+                    '/workspace/pickles/agent.pkl', '--result-history',
+                    '/workspace/pickles/result_history.pkl', '--result-new',
                     '/workspace/pickles/new_result.pkl'
                 ],
             },

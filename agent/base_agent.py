@@ -7,6 +7,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 import logger
+import utils
 from llm_toolkit.models import LLM
 from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
@@ -79,6 +80,34 @@ class BaseAgent(ABC):
                      f'{tool.tutorial()}')
     return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
 
+  @classmethod
+  def _parse_args(cls) -> argparse.Namespace:
+    """Parses command line args."""
+    parser = argparse.ArgumentParser(
+        description='Execute agent in cloud with pickle files.')
+    parser.add_argument('-a',
+                        '--agent',
+                        help='The pickle file path for the agent to execute.')
+    parser.add_argument(
+        '-rh',
+        '--result-history',
+        help='The pickle file path for the agent input result history.')
+    parser.add_argument(
+        '-rn',
+        '--result-new',
+        help='The pickle file path to store the agent output new result.')
+    return parser.parse_args()
+
+  @classmethod
+  def cloud_main(cls) -> None:
+    """Executes agent using pickle files. This is for cloud experiments."""
+    args = cls._parse_args()
+
+    agent = utils.deserialize_from_pickle(args.agent)
+    result_history = utils.deserialize_from_pickle(args.result_history)
+    result = agent.execute(result_history)
+    utils.serialize_to_pickle(result, args.result_new)
+
   @abstractmethod
   def _initial_prompt(self, results: list[Result]) -> Prompt:
     """The initial prompt of the agent."""
@@ -89,17 +118,5 @@ class BaseAgent(ABC):
 
 
 if __name__ == "__main__":
-  # Make this a class method so that child agents can inherit and reuse?
-  import sys
-
-  import utils
-
-  agent_pickle = sys.argv[1]
-  result_history_pickle = sys.argv[2]
-  new_result_pickle = sys.argv[3]
-
-  agent = utils.deserialize_from_pickle(agent_pickle)
-  result_history = utils.deserialize_from_pickle(result_history_pickle)
-
-  result = agent.execute(result_history)
-  utils.serialize_to_pickle(result, new_result_pickle)
+  # For cloud experiments.
+  BaseAgent.cloud_main()
