@@ -1,17 +1,20 @@
-"""A module to write logs and files."""
+"""A note-taker module to write experiment logs and result files. It attaches
+extra key info to logs and results (such as trial ID, function signature,
+project) to help identify log during debugging and result tracking."""
 import json
 import logging
 import os
 
 from results import Result
 
-RESULT_JSON = 'result.json'
+FINAL_RESULT_JSON = 'result.json'
 
 _trial_logger = None
 
 
 class CustomLoggerAdapter(logging.LoggerAdapter):
-  """A logger adapter to enrich log messages and save status files."""
+  """A note-taker to log and record experiment status, key info, and final
+  results."""
 
   def write_to_file(self, file_path: str, file_content: str) -> None:
     """Writes the |file_content| into a local |file_path|."""
@@ -34,7 +37,7 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
     """Writes the final result into JSON for report generation."""
     trial_result_dir = os.path.join(result_status_dir, f'{result.trial:02d}')
     os.makedirs(trial_result_dir, exist_ok=True)
-    with open(os.path.join(trial_result_dir, 'result.json'), 'w') as f:
+    with open(os.path.join(trial_result_dir, FINAL_RESULT_JSON), 'w') as f:
       json.dump(result.to_dict(), f)
 
 
