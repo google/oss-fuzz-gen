@@ -21,6 +21,7 @@ metadata:
 spec:
   template:
     spec:
+      serviceAccountName: 'llm-eval'
       nodeSelector:
         cloud.google.com/gke-nodepool: ofg-pr-exp
       containers:
