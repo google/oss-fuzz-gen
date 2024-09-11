@@ -1080,8 +1080,8 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
   def _format_target(self, signature: str) -> tuple[bool, str]:
     """Format the target function for the prompts creation."""
     target = self._get_template(self.problem_template_file)
-
     signature_split = signature.rsplit('.', 1)
+
     # Determine if the target is class function of instance function
     if self.benchmark.params[0].get('name', '') == 'self':
       arg_count = len(self.benchmark.params) - 1
@@ -1132,38 +1132,18 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
                          error_desc: Optional[str],
                          errors: list[str]) -> prompts.Prompt:
     """Builds a fixer prompt."""
-    # Do nothing for jvm project now.
+    # Do nothing for python project now.
     return self._prompt
 
   def build_triager_prompt(self, benchmark: Benchmark, driver_code: str,
                            crash_info: str, crash_func: dict) -> prompts.Prompt:
     """Builds a triager prompt."""
-    # Do nothing for jvm project now.
+    # Do nothing for python project now.
     return self._prompt
 
   def post_process_generated_code(self, generated_code: str) -> str:
     """Allows prompt builder to adjust the generated code."""
-    # From observation, the LLM model keeps using wrong method calls including
-    # FuzzedDataProvider::consumeObject() or FuzzedDataProvider::getObject() or
-    # FuzzedDataProvider::consumeInt(int) to generate random Object / Integer
-    # instance. These methods are not valid in FuzzedDataProvider.
-
-    # The fixes here change the calling of data.consumeObject() and
-    # data.getObject() to data.consumeString(int)
-    generated_code = generated_code.replace(
-        'data.consumeObject()', 'data.consumeString(data.remainingBytes()/2)')
-    generated_code = generated_code.replace(
-        'data.getObject()', 'data.consumeString(data.remainingBytes()/2)')
-
-    # The fixes here change the calling of data.consumeInt(int) to
-    # data.consumeInt(0, int). For example, data.consumeInt(12345) will
-    # be replaced by data.consumeInt(0, 12345)
-    for wrong_method_call in re.findall(r'(data\.consumeInt\(([0-9]+)\))',
-                                        generated_code):
-      old_method_call = wrong_method_call[0]
-      new_method_call = f'data.consumeInt(0, {wrong_method_call[1]})'
-      generated_code = generated_code.replace(old_method_call, new_method_call)
-
+    # Do nothing for python project now.
     return generated_code
 
 
