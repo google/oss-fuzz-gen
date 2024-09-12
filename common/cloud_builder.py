@@ -207,6 +207,7 @@ class CloudBuilder:
             f'projects/{self.project_id}/serviceAccounts/'
             f'{self.credentials.service_account_email}'  # type: ignore
     }
+    logging.info(cloud_build_config)
 
     # Convert to YAML string and submit the Cloud Build request
     build_info = self.builds.create(projectId=self.project_id,
