@@ -24,44 +24,7 @@ OF_REPO = 'https://github.com/google/oss-fuzz.git'
 US_CENTRAL_CLIENT_OPTIONS = google.api_core.client_options.ClientOptions(
     api_endpoint='https://us-central1-cloudbuild.googleapis.com/')
 
-AGENT_DOCKERFILE = """
-FROM ubuntu:22.04
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install Python 3.11 and pip
-RUN apt-get update && \
-    apt-get install -y software-properties-common curl && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt-get install -y python3.11 python3.11-dev python3.11-venv \
-        python3.11-distutils && \
-    curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11
-
-# Install Docker
-RUN apt-get install -y ca-certificates gnupg lsb-release && \
-    mkdir -p /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
-        gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) \
-        signed-by=/etc/apt/keyrings/docker.gpg] \
-        https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
-        tee /etc/apt/sources.list.d/docker.list > /dev/null && \
-    apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io \
-        docker-buildx-plugin docker-compose-plugin
-
-ENV DEBIAN_FRONTEND=dialog
-
-# Set the working directory
-WORKDIR /workspace/ofg
-
-# Copy the requirements file
-COPY requirements.txt /workspace/ofg/
-
-# Install Python dependencies
-RUN pip3.11 install --ignore-installed -r /workspace/ofg/requirements.txt
-"""
+AGENT_DOCKERFILE = 'Dockerfile.cloudbuild-agent'
 
 
 class CloudBuilder:
@@ -168,14 +131,11 @@ class CloudBuilder:
             {
                 'name':
                     'gcr.io/cloud-builders/docker',
-                'entrypoint':
-                    'bash',
                 'dir':
                     '/workspace/ofg',
                 'args': [
-                    '-c',
-                    (f'echo "{AGENT_DOCKERFILE}" > Dockerfile && '
-                     'docker build -t agent-image .')
+                    'docker', 'build', '-t', 'agent-image', '-f',
+                    AGENT_DOCKERFILE, '.'
                 ]
             },
             # Step 3: Run the Python script with the pickle files
