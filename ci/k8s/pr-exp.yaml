@@ -23,6 +23,7 @@ spec:
   template:
     spec:
       serviceAccountName: 'llm-eval'
+      automountServiceAccountToken: true
       nodeSelector:
         cloud.google.com/gke-nodepool: ofg-pr-exp
       containers:
