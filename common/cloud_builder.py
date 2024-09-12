@@ -179,17 +179,19 @@ class CloudBuilder:
 
   def _build_succeeds(self, build_id: str) -> bool:
     """Wait for a GCB build."""
-    while True:
+    prev_status = status = None
+    while status in [None, 'WORKING', 'QUEUED']:
       try:
         status = self.builds.get(projectId=self.project_id,
                                  id=build_id).execute().get('status')
-        logging.info('Cloud Build %s Status: %s', build_id, status)
-        if status in ['WORKING', 'QUEUED']:
-          time.sleep(60)  # Avoid rate limiting.
-          continue
-        return status == 'SUCCESS'
-      except (googleapiclient.errors.HttpError, BrokenPipeError):
+        if status != prev_status:
+          logging.info('Cloud Build %s Status: %s', build_id, status)
+          prev_status = status
+        time.sleep(60)  # Avoid rate limiting.
+      except (googleapiclient.errors.HttpError, BrokenPipeError) as e:
+        logging.error('Cloud build %s failed: %s', build_id, e)
         return False
+    return status == 'SUCCESS'
 
   def _cancel_build(self, build_id: str) -> None:
     """Cancel a GCB build"""
