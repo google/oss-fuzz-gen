@@ -24,8 +24,6 @@ OF_REPO = 'https://github.com/google/oss-fuzz.git'
 US_CENTRAL_CLIENT_OPTIONS = google.api_core.client_options.ClientOptions(
     api_endpoint='https://us-central1-cloudbuild.googleapis.com/')
 
-AGENT_DOCKERFILE = 'Dockerfile.cloudbuild-agent'
-
 
 class CloudBuilder:
   """A worker to execute llm-agents workflow in Google Cloud Build, providing a
@@ -128,15 +126,6 @@ class CloudBuilder:
                 'dir': '/workspace',
                 'args': ['clone', '--depth=1', OF_REPO, 'ofg/oss-fuzz']
             },
-            {
-                'name':
-                    'gcr.io/cloud-builders/docker',
-                'dir':
-                    '/workspace/ofg',
-                'args': [
-                    'build', '-t', 'agent-image', '-f', AGENT_DOCKERFILE, '.'
-                ]
-            },
             # Step 3: Run the Python script with the pickle files
             {
                 'id':
@@ -146,11 +135,12 @@ class CloudBuilder:
                 'args': [
                     'run', '--rm', '-v', '/workspace:/workspace', '-v',
                     '/var/run/docker.sock:/var/run/docker.sock',
-                    '--network=cloudbuild', 'agent-image', 'python3.11', '-m',
-                    'agent.base_agent', '--agent',
-                    '/workspace/pickles/agent.pkl', '--result-history',
-                    '/workspace/pickles/result_history.pkl', '--result-new',
-                    '/workspace/pickles/new_result.pkl'
+                    '--network=cloudbuild',
+                    ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
+                     'agent-image'), 'python3.11', '-m', 'agent.base_agent',
+                    '--agent', '/workspace/pickles/agent.pkl',
+                    '--result-history', '/workspace/pickles/result_history.pkl',
+                    '--result-new', '/workspace/pickles/new_result.pkl'
                 ],
             },
             # Step 4: Upload the result to GCS bucket
