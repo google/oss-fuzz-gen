@@ -445,7 +445,7 @@ class Evaluator:
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
 
-    if self.benchmark.language == 'python' or self.benchmark.language == 'jvm':
+    if self.benchmark.language in ['python', 'jvm']:
       # The Jacoco.xml coverage report used to generate summary.json on OSS-Fuzz
       # for JVM projects does not trace the source file location. Thus the
       # conversion may miss some classes because they are not present during
@@ -453,12 +453,12 @@ class Evaluator:
       # from the jacoco.xml report of the current run directly and compares it
       # with the total_lines retrieved from summary.json. Then the larger
       # total_lines is used which is assumed to be more accurate.
-      # This is the same case for python project which the total line calculation
+      # This is the same case for python project which the total line
       # is determined from the all_cov.json file.
       total_lines = run_result.coverage.total_lines
     elif coverage_summary:
-        total_lines = _compute_total_lines_without_fuzz_targets(
-            coverage_summary, generated_target_name)
+      total_lines = _compute_total_lines_without_fuzz_targets(
+          coverage_summary, generated_target_name)
     else:
       total_lines = 0
 

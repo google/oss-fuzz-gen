@@ -291,7 +291,6 @@ class Textcov:
 
     return textcov
 
-
   @classmethod
   def from_jvm_file(cls, file_handle) -> Textcov:
     """Read a textcov from a jacoco.xml file."""
@@ -435,15 +434,15 @@ class Textcov:
   def covered_lines(self):
     if self.language == 'python':
       return sum(f.covered_lines for f in self.files.values())
-    else:
-      return sum(f.covered_lines for f in self.functions.values())
+
+    return sum(f.covered_lines for f in self.functions.values())
 
   @property
   def total_lines(self):
     if self.language == 'python':
       return sum(len(f.lines) for f in self.files.values())
-    else:
-      return sum(len(f.lines) for f in self.functions.values())
+
+    return sum(len(f.lines) for f in self.functions.values())
 
   def is_fuzzer_class(self, class_item) -> bool:
     """Determine if the class_item is a fuzzer class."""
