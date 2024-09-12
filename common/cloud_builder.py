@@ -134,8 +134,7 @@ class CloudBuilder:
                 'dir':
                     '/workspace/ofg',
                 'args': [
-                    'docker', 'build', '-t', 'agent-image', '-f',
-                    AGENT_DOCKERFILE, '.'
+                    'build', '-t', 'agent-image', '-f', AGENT_DOCKERFILE, '.'
                 ]
             },
             # Step 3: Run the Python script with the pickle files
