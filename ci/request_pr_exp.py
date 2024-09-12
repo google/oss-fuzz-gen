@@ -37,6 +37,7 @@ DEFAULT_LOCATION = 'us-central1-c'
 TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'k8s', 'pr-exp.yaml')
 BENCHMARK_SET = 'comparison'
 LLM_NAME = 'vertex_ai_gemini-1-5'
+LLM_CHAT_NAME = 'vertex_ai_gemini-1-5-chat'
 EXP_DELAY = 0
 FUZZING_TIMEOUT = 300
 REQUEST_CPU = 6
@@ -166,6 +167,10 @@ def _parse_args(cmd) -> argparse.Namespace:
   args.experiment_name = f'{args.pr_id}'
   if args.name_suffix:
     args.experiment_name = f'{args.experiment_name}-{args.name_suffix}'
+
+  # Use Chat model by default in agent-enhance experiments.
+  if args.agent and args.llm == LLM_NAME:
+    args.llm = LLM_CHAT_NAME
 
   return args
 
