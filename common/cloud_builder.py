@@ -170,6 +170,7 @@ class CloudBuilder:
                 ]
             }
         ],
+        'tags': ['ofg', 'agent'],
         'timeout': '10800s',  # 3 hours
         'logsBucket': f'gs://{self.bucket_name}',
         'serviceAccount':
