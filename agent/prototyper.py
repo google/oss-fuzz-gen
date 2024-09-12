@@ -156,6 +156,7 @@ class Prototyper(BaseAgent):
         prompt = self._container_tool_reaction(cur_round, response,
                                                build_result)
         cur_round += 1
+        self._sleep_random_duration()
     finally:
       # Cleanup: stop and remove the container
       logger.debug('Stopping and removing the inspect container %s',

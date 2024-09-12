@@ -1,8 +1,10 @@
 """The abstract base class for LLM agents in stages."""
 import argparse
 import logging
+import random
 import re
 import subprocess as sp
+import time
 from abc import ABC, abstractmethod
 from typing import Optional
 
@@ -74,6 +76,13 @@ class BaseAgent(ABC):
                      'interaction protocols:\n'
                      f'{tool.tutorial()}')
     return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
+
+  def _sleep_random_duration(self, min_sec: int = 1, max_sec: int = 60) -> None:
+    """Sleeps for a random duration between min_sec and max_sec. Agents uses
+    this to avoid exceeding quota limit (e.g., LLM query frequency)."""
+    duration = random.randint(min_sec, max_sec)
+    logger.debug('Sleeping for %d before the next query', duration)
+    time.sleep(duration)
 
   @classmethod
   def _parse_args(cls) -> argparse.Namespace:
