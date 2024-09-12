@@ -162,7 +162,3 @@ class Prototyper(BaseAgent):
                    self.inspect_tool.container_id)
       self.inspect_tool.terminate()
     return build_result
-
-
-# if __name__ == "__main__":
-#   prototyper = Prototyper()

@@ -95,7 +95,11 @@ class BaseAgent(ABC):
 
   @classmethod
   def cloud_main(cls) -> None:
-    """Executes agent using pickle files. This is for cloud experiments."""
+    """Executes agent using pickle files. This is for cloud experiments launched
+    by cloud_builder.py. It runs `new_result = agent.execute(result_history)` in
+    the same way as local experiments, except `agent` and `result_history` are
+    deserialized from pickle files and new_result will be pickled to share data
+    with the cloud experiment requester."""
     args = cls._parse_args()
 
     agent = utils.deserialize_from_pickle(args.agent)

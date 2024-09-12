@@ -65,7 +65,12 @@ RUN pip3.11 install --ignore-installed -r /workspace/ofg/requirements.txt
 
 
 class CloudBuilder:
-  """Encapsulate functions to request Google Cloud Builds to execute agents."""
+  """A worker to execute llm-agents workflow in Google Cloud Build, providing a
+  scalable and distributed alternative to local executions:
+  - Request, monitor, and manage Google Cloud Build jobs.
+  - Execute agent in the cloud environment, replicating the local conditions.
+  - Transfer data and results between local and cloud environment.
+  """
 
   def __init__(self, args: argparse.Namespace) -> None:
     #TODO(dongge): extra tags.
