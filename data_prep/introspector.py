@@ -209,8 +209,10 @@ def _get_data(resp: Optional[requests.Response], key: str,
         resp.content.decode('utf-8').strip())
     return default_value
 
+  # To handle the case that some FI query could return empty list,
+  # empty dict or boolean value False
   content = data.get(key)
-  if content:
+  if content or key in data.keys():
     return content
 
   logger.error('Failed to get %s from FI:\n'
