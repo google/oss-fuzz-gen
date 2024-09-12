@@ -392,7 +392,7 @@ def _process_total_coverage_gain(
     try:
       coverage_summary_files = coverage_summary['data'][0]['files']
       lines = [f['summary']['lines']['count'] for f in coverage_summary_files]
-    except KeyError, TypeError:
+    except (KeyError, TypeError):
       lines = []
 
     total_lines = max(total_cov.total_lines, sum(lines))
