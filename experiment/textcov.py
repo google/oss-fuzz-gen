@@ -402,6 +402,12 @@ class Textcov:
 
   def merge(self, other: Textcov):
     """Merge another textcov"""
+    # The default language for Textcov is set to c++
+    # This logic fixes the language of Textcov object when
+    # merging an existing Textcov with different language
+    if self.language != other.language and self.language == 'c++':
+      self.language = other.language
+
     if self.language == 'python':
       for file in other.files.values():
         if file.name not in self.files:
