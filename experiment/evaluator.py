@@ -38,6 +38,7 @@ LLM_FIX_LIMIT = int(os.getenv('LLM_FIX_LIMIT', '5'))
 GENERATE_CORPUS = bool(os.getenv('LLM_GENERATE_CORPUS', ''))
 
 OSS_FUZZ_COVERAGE_BUCKET = 'oss-fuzz-coverage'
+OSS_FUZZ_INTROSPECTOR_BUCKET = 'oss-fuzz-introspector'
 
 
 @dataclasses.dataclass
@@ -124,6 +125,29 @@ def load_existing_jvm_textcov(project: str) -> textcov.Textcov:
   logger.info('Loading existing jacoco.xml textcov from %s', blob.name)
   with blob.open() as f:
     return textcov.Textcov.from_jvm_file(f)
+
+
+def load_existing_python_textcov(project: str) -> textcov.Textcov:
+  """Loads existing textcovs for python project."""
+  storage_client = storage.Client.create_anonymous_client()
+  bucket = storage_client.bucket(OSS_FUZZ_INTROSPECTOR_BUCKET)
+  blobs = storage_client.list_blobs(bucket,
+                                    prefix=f'{project}/inspector-report/',
+                                    delimiter='/')
+  # Iterate through all blobs first to get the prefixes (i.e. "subdirectories").
+  for blob in blobs:
+    continue
+
+  if not blobs.prefixes:  # type: ignore
+    # No existing coverage reports.
+    logger.info('No existing coverage report. Using empty.')
+    return textcov.Textcov()
+
+  latest_dir = sorted(blobs.prefixes)[-1]  # type: ignore
+  blob = bucket.blob(f'{latest_dir}all_cov.json')
+  logger.info('Loading existing all_cov.json textcov from %s', blob.name)
+  with blob.open() as f:
+    return textcov.Textcov.from_python_file(f)
 
 
 def load_existing_coverage_summary(project: str) -> dict:
@@ -421,13 +445,7 @@ class Evaluator:
     # Gets line coverage (diff) details.
     coverage_summary = self._load_existing_coverage_summary()
 
-    if coverage_summary:
-      total_lines = _compute_total_lines_without_fuzz_targets(
-          coverage_summary, generated_target_name)
-    else:
-      total_lines = 0
-
-    if self.benchmark.language == 'jvm':
+    if self.benchmark.language == 'python' or self.benchmark.language == 'jvm':
       # The Jacoco.xml coverage report used to generate summary.json on OSS-Fuzz
       # for JVM projects does not trace the source file location. Thus the
       # conversion may miss some classes because they are not present during
@@ -435,7 +453,14 @@ class Evaluator:
       # from the jacoco.xml report of the current run directly and compares it
       # with the total_lines retrieved from summary.json. Then the larger
       # total_lines is used which is assumed to be more accurate.
-      total_lines = max(total_lines, run_result.coverage.total_lines)
+      # This is the same case for python project which the total line calculation
+      # is determined from the all_cov.json file.
+      total_lines = run_result.coverage.total_lines
+    elif coverage_summary:
+        total_lines = _compute_total_lines_without_fuzz_targets(
+            coverage_summary, generated_target_name)
+    else:
+      total_lines = 0
 
     if run_result.total_pcs:
       coverage_percent = run_result.cov_pcs / run_result.total_pcs
@@ -474,5 +499,8 @@ class Evaluator:
     """Loads existing textcovs."""
     if self.benchmark.language == 'jvm':
       return load_existing_jvm_textcov(self.benchmark.project)
+
+    if self.benchmark.language == 'python':
+      return load_existing_python_textcov(self.benchmark.project)
 
     return load_existing_textcov(self.benchmark.project)
