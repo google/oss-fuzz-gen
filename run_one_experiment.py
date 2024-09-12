@@ -352,7 +352,7 @@ def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
       work_dirs=work_dirs,
       template_dir=args.template_directory,
       use_context=args.context,
-      example_pair=prompt_builder.EXAMPLES[benchmark.language],
+      example_pair=prompt_builder.EXAMPLES.get(benchmark.language, []),
       prompt_builder_to_use=args.prompt_builder,
       cloud_experiment_bucket=args.cloud_experiment_bucket)
 

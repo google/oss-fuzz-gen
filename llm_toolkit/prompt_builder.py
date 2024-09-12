@@ -1104,8 +1104,7 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
     base = self._get_template(self.base_template_file)
     target_str = self._format_target(signature)
 
-    problem = base + self._get_template(self.problem_template_file)
-    problem = problem.replace('{TARGET}', target_str)
+    problem = base + target_str
     problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
     problem = problem.replace("{PROJECT_URL}", self.project_url)
 
