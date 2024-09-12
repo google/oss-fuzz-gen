@@ -12,6 +12,7 @@ import google.api_core.client_options
 import googleapiclient.errors
 from google.api_core.exceptions import NotFound
 from google.auth import default
+from google.auth.transport.requests import Request
 from google.cloud import storage
 from googleapiclient.discovery import build as cloud_build
 
@@ -70,9 +71,13 @@ class CloudBuilder:
     #TODO(dongge): extra tags.
     self.credentials, self.project_id = default()
     assert self.project_id, 'Cloud experiment requires a Google cloud project.'
+    assert hasattr(
+        self.credentials,
+        'refresh'), ('Cloud experiment requires a service account email')
     assert hasattr(self.credentials, 'service_account_email'), (
         'Cloud experiment requires a service account email')
 
+    self.credentials.refresh(Request())  # type: ignore
     self.bucket_name = args.cloud_experiment_bucket
     self.bucket = storage.Client().bucket(self.bucket_name)
 
