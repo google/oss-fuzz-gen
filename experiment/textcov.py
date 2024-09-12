@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import dataclasses
+import json
 import logging
 import re
 import subprocess
@@ -139,10 +140,43 @@ class Function:
 
 
 @dataclasses.dataclass
+class File:
+  """Represents a file in a textcov, only for Python."""
+  name: str = ''
+  # Line contents -> Line object. We key on line contents to account for
+  # potential line number movements.
+  lines: dict[str, Line] = dataclasses.field(default_factory=dict)
+
+  def merge(self, other: File):
+    for line in other.lines.values():
+      if line.contents in self.lines:
+        self.lines[line.contents].hit_count += line.hit_count
+      else:
+        self.lines[line.contents] = Line(contents=line.contents,
+                                         hit_count=line.hit_count)
+
+  @property
+  def covered_lines(self):
+    return sum(1 for l in self.lines.values() if l.hit_count > 0)
+
+  def subtract_covered_lines(self, other: File):
+    """Subtract covered lines."""
+
+    for line_no, line in self.lines.items():
+      other_line = other.lines.get(line_no)
+      if other_line and other_line.hit_count > 0:
+        self.lines[line_no].hit_count = 0
+
+
+@dataclasses.dataclass
 class Textcov:
   """Textcov."""
   # Function name -> Function object.
+  # For JVM / C / C++
   functions: dict[str, Function] = dataclasses.field(default_factory=dict)
+  # File name -> File object.
+  # For Python
+  files: dict[str, File] = dataclasses.field(default_factory=dict)
   language: str = 'c++'
 
   @classmethod
@@ -228,6 +262,35 @@ class Textcov:
 
         continue
     return textcov
+
+  @classmethod
+  def from_python_file(cls, file_handle) -> Textcov:
+    """Read a textcov from a all_cov.json file for python."""
+    textcov = cls()
+    textcov.language = 'python'
+    coverage_report = json.load(file_handle)
+
+    # Process coverage report file by file
+    for file, data in coverage_report.get('files', {}).items():
+      # Retrieve pure file and directory name
+      filename = file.replace('/pythoncovmergedfiles/medio/medio/', '')
+      filename = filename.split('site-packages/', 1)[-1]
+      current_file = File(name=filename)
+
+      # Process line coverage information
+      covered_lines = data.get('executed_lines', [])
+      missed_lines = data.get('missing_lines', [])
+      for line_no in covered_lines:
+        line = f'Line{line_no}'
+        current_file.lines[line] = Line(contents=line, hit_count=1)
+      for line_no in missed_lines:
+        line = f'Line{line_no}'
+        current_file.lines[line] = Line(contents=line, hit_count=0)
+
+      textcov.files[filename] = current_file
+
+    return textcov
+
 
   @classmethod
   def from_jvm_file(cls, file_handle) -> Textcov:
@@ -322,9 +385,15 @@ class Textcov:
     return textcov
 
   def to_file(self, filename: str) -> None:
-    """Writes covered functions and lines to |filename|."""
+    """Writes covered functions/files and lines to |filename|."""
     file_content = ''
-    for func_obj in self.functions.values():
+
+    if self.language == 'python':
+      target = self.files
+    else:
+      target = self.functions
+
+    for func_obj in target.values():
       for line_content, line_obj in func_obj.lines.items():
         file_content += f'{line_content}\n' if line_obj.hit_count else ''
 
@@ -333,25 +402,42 @@ class Textcov:
 
   def merge(self, other: Textcov):
     """Merge another textcov"""
-    for function in other.functions.values():
-      if function.name not in self.functions:
-        self.functions[function.name] = Function(name=function.name)
-      self.functions[function.name].merge(function)
+    if self.language == 'python':
+      for file in other.files.values():
+        if file.name not in self.files:
+          self.files[file.name] = File(name=file.name)
+        self.files[file.name].merge(file)
+    else:
+      for function in other.functions.values():
+        if function.name not in self.functions:
+          self.functions[function.name] = Function(name=function.name)
+        self.functions[function.name].merge(function)
 
   def subtract_covered_lines(self, other: Textcov):
     """Diff another textcov"""
-    for function in other.functions.values():
-      if function.name in self.functions:
-        self.functions[function.name].subtract_covered_lines(
-            function, self.language)
+    if self.language == 'python':
+      for file in other.files.values():
+        if file.name in self.files:
+          self.files[file.name].subtract_covered_lines(file)
+    else:
+      for function in other.functions.values():
+        if function.name in self.functions:
+          self.functions[function.name].subtract_covered_lines(
+              function, self.language)
 
   @property
   def covered_lines(self):
-    return sum(f.covered_lines for f in self.functions.values())
+    if self.language == 'python':
+      return sum(f.covered_lines for f in self.files.values())
+    else:
+      return sum(f.covered_lines for f in self.functions.values())
 
   @property
   def total_lines(self):
-    return sum(len(f.lines) for f in self.functions.values())
+    if self.language == 'python':
+      return sum(len(f.lines) for f in self.files.values())
+    else:
+      return sum(len(f.lines) for f in self.functions.values())
 
   def is_fuzzer_class(self, class_item) -> bool:
     """Determine if the class_item is a fuzzer class."""
