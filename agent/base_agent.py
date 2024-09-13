@@ -88,33 +88,33 @@ class BaseAgent(ABC):
   def _parse_args(cls) -> argparse.Namespace:
     """Parses command line args."""
     parser = argparse.ArgumentParser(
-        description='Execute agent in cloud with pickle files.')
+        description='Execute agent in cloud with dill files.')
     parser.add_argument('-a',
                         '--agent',
-                        help='The pickle file path for the agent to execute.')
+                        help='The dill file path for the agent to execute.')
     parser.add_argument(
         '-rh',
         '--result-history',
-        help='The pickle file path for the agent input result history.')
+        help='The dill file path for the agent input result history.')
     parser.add_argument(
         '-rn',
         '--result-new',
-        help='The pickle file path to store the agent output new result.')
+        help='The dill file path to store the agent output new result.')
     return parser.parse_args()
 
   @classmethod
   def cloud_main(cls) -> None:
-    """Executes agent using pickle files. This is for cloud experiments launched
+    """Executes agent using dill files. This is for cloud experiments launched
     by cloud_builder.py. It runs `new_result = agent.execute(result_history)` in
     the same way as local experiments, except `agent` and `result_history` are
-    deserialized from pickle files and new_result will be pickled to share data
+    deserialized from dill files and new_result will be serialized to share data
     with the cloud experiment requester."""
     args = cls._parse_args()
 
-    agent = utils.deserialize_from_pickle(args.agent)
-    result_history = utils.deserialize_from_pickle(args.result_history)
+    agent = utils.deserialize_from_dill(args.agent)
+    result_history = utils.deserialize_from_dill(args.result_history)
     result = agent.execute(result_history)
-    utils.serialize_to_pickle(result, args.result_new)
+    utils.serialize_to_dill(result, args.result_new)
 
   @abstractmethod
   def _initial_prompt(self, results: list[Result]) -> Prompt:

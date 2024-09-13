@@ -1,30 +1,31 @@
 """General utility functions."""
 import logging
 import os
-import pickle
 from typing import Any
 
+import dill
 
-def serialize_to_pickle(variable: Any, pickle_path: str = '') -> str:
-  """Serializes |variable| to a pickle file under |path_prefix| and returns
+
+def serialize_to_dill(variable: Any, dill_path: str = '') -> str:
+  """Serializes |variable| to a dill file under |path_prefix| and returns
   the file path."""
-  path_prefix = os.path.dirname(pickle_path)
+  path_prefix = os.path.dirname(dill_path)
   os.makedirs(path_prefix, exist_ok=True)
-  with open(pickle_path, 'wb') as f:
-    pickle.dump(variable, f)
-  logging.info('Serialized %s to %s', variable, pickle_path)
-  return pickle_path
+  with open(dill_path, 'wb') as f:
+    dill.dump(variable, f)
+  logging.info('Serialized %s to %s', variable, dill_path)
+  return dill_path
 
 
-def deserialize_from_pickle(pickle_path: Any) -> Any:
-  """Serializes |variable| to a pickle file under |path_prefix| and returns
+def deserialize_from_dill(dill_path: Any) -> Any:
+  """Serializes |variable| to a dill file under |path_prefix| and returns
   the file path."""
   try:
-    with open(pickle_path, 'rb') as f:
-      obj = pickle.load(f)
-    logging.info('Deserialized %s to %s', pickle_path, obj)
+    with open(dill_path, 'rb') as f:
+      obj = dill.load(f)
+    logging.info('Deserialized %s to %s', dill_path, obj)
     return obj
   except FileNotFoundError as e:
     logging.error('Failed to deserialize %s: File does not exist: %s',
-                  pickle_path, e)
+                  dill_path, e)
     return None

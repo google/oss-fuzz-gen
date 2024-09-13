@@ -39,7 +39,7 @@ class WorkDirs:
     os.makedirs(self.build_logs, exist_ok=True)
     os.makedirs(self.run_logs, exist_ok=True)
     os.makedirs(self._corpus_base, exist_ok=True)
-    os.makedirs(self.pickles, exist_ok=True)
+    os.makedirs(self.dills, exist_ok=True)
 
   @property
   def base(self):
@@ -82,8 +82,8 @@ class WorkDirs:
     return os.path.join(self._base_dir, 'logs', 'build')
 
   @property
-  def pickles(self):
-    return os.path.join(self._base_dir, 'pickles')
+  def dills(self):
+    return os.path.join(self._base_dir, 'dills')
 
   @property
   def run_logs(self):

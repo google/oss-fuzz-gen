@@ -36,8 +36,8 @@ class BaseStage(ABC):
                            result_history: list[Result]) -> Result:
     """Executes agent in cloud build."""
     cloud_builder = CloudBuilder(self.args)
-    pickle_dir = result_history[-1].work_dirs.pickles
-    result = cloud_builder.run(agent, result_history, pickle_dir)
+    dill_dir = result_history[-1].work_dirs.dills
+    result = cloud_builder.run(agent, result_history, dill_dir)
     return result
 
   @abstractmethod

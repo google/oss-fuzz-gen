@@ -89,28 +89,28 @@ class CloudBuilder:
       logging.info('Created archive: %s', archive_path)
       return self._upload_to_gcs(archive_path)
 
-  def _request_cloud_build(self, ofg_repo_url: str, agent_pickle_url: str,
-                           results_pickle_url: str,
+  def _request_cloud_build(self, ofg_repo_url: str, agent_dill_url: str,
+                           results_dill_url: str,
                            new_result_filename: str) -> str:
     """Requests Cloud Build to execute the operation."""
     cloud_build_config = {
         'steps': [
-            # Step 1: Download the pickle files from GCS bucket.
+            # Step 1: Download the dill files from GCS bucket.
             {
                 'name': 'bash',
                 'dir': '/workspace',
-                'args': ['-c', 'mkdir -p pickles']
+                'args': ['-c', 'mkdir -p dills']
             },
             {
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'dir': '/workspace',
-                'args': ['cp', agent_pickle_url, 'pickles/agent.pkl']
+                'args': ['cp', agent_dill_url, 'dills/agent.pkl']
             },
             {
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'dir': '/workspace',
                 'args': [
-                    'cp', results_pickle_url, 'pickles/result_history.pkl'
+                    'cp', results_dill_url, 'dills/result_history.pkl'
                 ]
             },
             # Step 2: Prepare OFG and OF repos.
@@ -130,7 +130,7 @@ class CloudBuilder:
                 'dir': '/workspace',
                 'args': ['clone', '--depth=1', OF_REPO, 'ofg/oss-fuzz']
             },
-            # Step 3: Run the Python script with the pickle files
+            # Step 3: Run the Python script with the dill files
             {
                 'id':
                     'agent-step',
@@ -142,16 +142,16 @@ class CloudBuilder:
                     '--network=cloudbuild',
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
                      'agent-image'), 'python3.11', '-m', 'agent.base_agent',
-                    '--agent', '/workspace/pickles/agent.pkl',
-                    '--result-history', '/workspace/pickles/result_history.pkl',
-                    '--result-new', '/workspace/pickles/new_result.pkl'
+                    '--agent', '/workspace/dills/agent.pkl',
+                    '--result-history', '/workspace/dills/result_history.pkl',
+                    '--result-new', '/workspace/dills/new_result.pkl'
                 ],
             },
             # Step 4: Upload the result to GCS bucket
             {
                 'name': 'bash',
                 'dir': '/workspace',
-                'args': ['ls', '/workspace/pickles/']
+                'args': ['ls', '/workspace/dills/']
             },
             {
                 'name':
@@ -159,7 +159,7 @@ class CloudBuilder:
                 'dir':
                     '/workspace',
                 'args': [
-                    'cp', '/workspace/pickles/new_result.pkl',
+                    'cp', '/workspace/dills/new_result.pkl',
                     f'gs://{self.bucket_name}/{new_result_filename}'
                 ]
             }
@@ -222,36 +222,36 @@ class CloudBuilder:
     logging.info('Downloaded %s to %s', source_blob_name, destination_file_name)
 
   def run(self, agent: BaseAgent, result_history: list[Result],
-          pickle_dir: str) -> Any:
+          dill_dir: str) -> Any:
     """Runs agent on cloud build."""
-    # Step1: Generate pickle files.
-    agent_pickle = utils.serialize_to_pickle(
-        agent, os.path.join(pickle_dir, f'{uuid.uuid4().hex}.pkl'))
-    results_pickle = utils.serialize_to_pickle(
-        result_history, os.path.join(pickle_dir, f'{uuid.uuid4().hex}.pkl'))
-    # TODO(dongge): Encrypt pickle files?
+    # Step1: Generate dill files.
+    agent_dill = utils.serialize_to_dill(
+        agent, os.path.join(dill_dir, f'{uuid.uuid4().hex}.pkl'))
+    results_dill = utils.serialize_to_dill(
+        result_history, os.path.join(dill_dir, f'{uuid.uuid4().hex}.pkl'))
+    # TODO(dongge): Encrypt dill files?
 
-    # Step 2: Upload OFG repo and pickle files to GCS.
+    # Step 2: Upload OFG repo and dill files to GCS.
     ofg_url = self._prepare_and_upload_archive()
-    agent_url = self._upload_to_gcs(agent_pickle)
-    results_url = self._upload_to_gcs(results_pickle)
+    agent_url = self._upload_to_gcs(agent_dill)
+    results_url = self._upload_to_gcs(results_dill)
 
     # Step 3: Request Cloud Build.
     new_result_filename = f'{uuid.uuid4().hex}.pkl'
     build_id = self._request_cloud_build(ofg_url, agent_url, results_url,
                                          new_result_filename)
 
-    # Step 4: Download new result pickle.
-    new_result_pickle = os.path.join(pickle_dir, new_result_filename)
+    # Step 4: Download new result dill.
+    new_result_dill = os.path.join(dill_dir, new_result_filename)
     try:
       if self._build_succeeds(build_id):
-        self._download_from_gcs(new_result_pickle)
+        self._download_from_gcs(new_result_dill)
     except (KeyboardInterrupt, SystemExit):
       self._cancel_build(build_id)
     build_log = self._get_build_log(build_id)
 
-    # Step 4: Deserialize pickled file.
-    result = utils.deserialize_from_pickle(new_result_pickle)
+    # Step 4: Deserialize dilld file.
+    result = utils.deserialize_from_dill(new_result_dill)
     if not result:
       last_result = result_history[-1]
       result = BuildResult(benchmark=last_result.benchmark,
