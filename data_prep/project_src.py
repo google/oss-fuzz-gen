@@ -134,6 +134,8 @@ def _get_harness(src_file: str, out: str, language: str) -> tuple[str, str]:
   if language.lower(
   ) == 'jvm' and 'static void fuzzerTestOneInput' not in content:
     return '', ''
+  if language.lower() == 'python' and 'atheris.Fuzz()' not in content:
+    return '', ''
 
   short_path = src_file[len(out):]
   return short_path, content
