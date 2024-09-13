@@ -130,7 +130,7 @@ class Function:
       for line_no, line in self.lines.items():
         other_line = other.lines.get(line_no)
         if other_line and other_line.hit_count > 0:
-          self.lines[line_no].hit_count = 0
+          line.hit_count = 0
     else:
       # For our analysis purposes, we completely delete any lines that are
       # hit by the other, rather than subtracting hitcounts.
