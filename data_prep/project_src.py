@@ -165,14 +165,14 @@ def _copy_project_src(project: str,
   """Copies /|src| from cloud if bucket is available or from local image."""
   if cloud_experiment_bucket:
     logger.info(
-        f'Retrieving human-written fuzz targets of {project} from Google '
-        'Cloud Build.')
+        'Retrieving human-written fuzz targets of %s from Google Cloud Build.',
+        project)
     bucket_dirname = _build_project_on_cloud(project, cloud_experiment_bucket)
     _copy_project_src_from_cloud(bucket_dirname, out, cloud_experiment_bucket)
   else:
     logger.info(
-        f'Retrieving human-written fuzz targets of {project} from local '
-        'Docker build.')
+        'Retrieving human-written fuzz targets of %s from local Docker build.',
+        project)
     _build_project_local_docker(project)
     _copy_project_src_from_local(project, out, language)
 
@@ -231,9 +231,9 @@ def _copy_project_src_from_cloud(bucket_dirname: str, out: str,
 
     # Download the file
     blob.download_to_filename(local_file_path)
-    logger.info(f"Downloaded {blob.name} to {local_file_path}")
+    logger.info('Downloaded %s to %s', blob.name, local_file_path)
     blob.delete()
-    logger.info(f"Deleted {blob.name} from the bucket.")
+    logger.info('Deleted %s from the bucket.', blob.name)
 
 
 def _copy_project_src_from_local(project: str, out: str, language: str):
