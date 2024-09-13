@@ -314,8 +314,6 @@ class Results:
 
       return logs_beginning + '\n...truncated...\n' + logs_ending
 
-    return ''
-
   def get_triage(self, benchmark: str, sample: str) -> Triage:
     """Gets the triage of benchmark |benchmark| with sample ID |sample|."""
     result = ''
@@ -339,6 +337,28 @@ class Results:
           result = f.read()
 
     return Triage(result, triager_prompt)
+
+  def get_fuzz_target_build_script_pair(self, benchmark: str,
+                                        trial: str) -> list[Target]:
+    """Gets the fuzz targets of |benchmark| with |trial| ID."""
+    fuzz_target_dir = os.path.join(self._results_dir, benchmark, 'fuzz_target')
+    files = sorted(FileSystem(fuzz_target_dir).listdir())
+
+    fuzz_target_code = ''
+    if f'{trial:02s}.fuzz_target' in files:
+      fuzz_target_path = os.path.join(fuzz_target_dir,
+                                      f'{trial:02s}.fuzz_target')
+      with FileSystem(fuzz_target_path).open() as f:
+        fuzz_target_code = f.read()
+
+    build_script_code = ''
+    if f'{trial:02s}.build_script' in files:
+      build_script_path = os.path.join(fuzz_target_dir,
+                                       f'{trial:02s}.build_script')
+      with FileSystem(build_script_path).open() as f:
+        build_script_code = f.read()
+
+    return [Target(code=fuzz_target_code, fixer_prompt=build_script_code)]
 
   def get_targets(self, benchmark: str, sample: str) -> list[Target]:
     """Gets the targets of benchmark |benchmark| with sample ID |sample|."""

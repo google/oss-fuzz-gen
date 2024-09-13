@@ -148,7 +148,9 @@ class GenerateReport:
       self._write_benchmark_crash(benchmark, samples)
 
       for sample in samples:
-        sample_targets = self._results.get_targets(benchmark.id, sample.id)
+        sample_targets = (self._results.get_targets(benchmark.id, sample.id) or
+                          self._results.get_fuzz_target_build_script_pair(
+                              benchmark.id, sample.id))
         self._write_benchmark_sample(benchmark, sample, sample_targets)
 
     accumulated_results = self._results.get_macro_insights(benchmarks)

@@ -40,6 +40,7 @@ class WorkDirs:
     os.makedirs(self.run_logs, exist_ok=True)
     os.makedirs(self._corpus_base, exist_ok=True)
     os.makedirs(self.dills, exist_ok=True)
+    os.makedirs(self.fuzz_target, exist_ok=True)
 
   @property
   def base(self):
@@ -68,6 +69,10 @@ class WorkDirs:
   @property
   def prompt(self):
     return os.path.join(self._base_dir, 'prompt.txt')
+
+  @property
+  def fuzz_target(self):
+    return os.path.join(self._base_dir, 'fuzz_target')
 
   @property
   def raw_targets(self):
