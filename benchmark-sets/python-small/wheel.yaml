@@ -1,10 +1,4 @@
 "functions":
-- "name": "wheel.cli.convert_f"
-  "params":
-  - "name": "args"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "wheel.cli.convert_f"
 - "name": "wheel.cli.convert.convert"
   "params":
   - "name": "files"
@@ -15,6 +9,12 @@
     "type": "bool "
   "return_type": "void"
   "signature": "wheel.cli.convert.convert"
+- "name": "wheel.cli.convert_f"
+  "params":
+  - "name": "args"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "wheel.cli.convert_f"
 - "name": "wheel.cli.convert.wininst2wheel"
   "params":
   - "name": "path"

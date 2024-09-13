@@ -1,20 +1,4 @@
 "functions":
-- "name": "zipp.CompleteDirs.getinfo"
-  "params":
-  - "name": "self"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "zipp.CompleteDirs.getinfo"
-- "name": "zipp.Path.glob"
-  "params":
-  - "name": "self"
-    "type": "bool "
-  - "name": "pattern"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "zipp.Path.glob"
 - "name": "zipp.glob.Translator.translate"
   "params":
   - "name": "self"
@@ -31,6 +15,22 @@
     "type": "bool "
   "return_type": "void"
   "signature": "zipp.Path.rglob"
+- "name": "zipp.CompleteDirs.getinfo"
+  "params":
+  - "name": "self"
+    "type": "bool "
+  - "name": "name"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "zipp.CompleteDirs.getinfo"
+- "name": "zipp.Path.glob"
+  "params":
+  - "name": "self"
+    "type": "bool "
+  - "name": "pattern"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "zipp.Path.glob"
 "language": "python"
 "project": "zipp"
 "target_name": "fuzz_zipp"

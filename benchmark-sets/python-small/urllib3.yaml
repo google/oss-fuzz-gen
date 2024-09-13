@@ -71,5 +71,5 @@
   "signature": "_request_methods.RequestMethods.request_encode_url"
 "language": "python"
 "project": "urllib3"
-"target_name": "noxfile"
-"target_path": "/src/urllib3/noxfile.py"
+"target_name": "fuzz_requests"
+"target_path": "/src/fuzz_requests.py"

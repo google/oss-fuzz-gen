@@ -9,6 +9,12 @@
     "type": "bool "
   "return_type": "void"
   "signature": "imageio.plugins.lytro.LytroLfrFormat.Reader._open"
+- "name": "imageio.plugins._tifffile.main"
+  "params":
+  - "name": "argv"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "imageio.plugins._tifffile.main"
 - "name": "imageio.plugins._tifffile.TiffWriter.save"
   "params":
   - "name": "self"
@@ -57,12 +63,6 @@
     "type": "bool "
   "return_type": "void"
   "signature": "imageio.plugins._tifffile.TiffWriter.save"
-- "name": "imageio.plugins._tifffile.main"
-  "params":
-  - "name": "argv"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "imageio.plugins._tifffile.main"
 - "name": "imageio.plugins.tifffile.TiffFormat.Writer._append_data"
   "params":
   - "name": "self"
@@ -75,5 +75,5 @@
   "signature": "imageio.plugins.tifffile.TiffFormat.Writer._append_data"
 "language": "python"
 "project": "imageio"
-"target_name": "semantic_release_conf"
-"target_path": "/src/imageio/semantic_release_conf.py"
+"target_name": "fuzz_read"
+"target_path": "/src/imageio/tests/fuzzers/fuzz_read.py"
