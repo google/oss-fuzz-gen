@@ -2,17 +2,9 @@
 corresponding build scripts. This stage is responsible for creating new fuzz
 targets or improving existing ones to enhance code coverage and bug-finding
 capabilities."""
-import logging
 
 from results import Result
 from stage.base_stage import BaseStage
-
-logging.basicConfig(level=logging.DEBUG,
-                    format=('%(asctime)s [PID: %(process)d] %(levelname)s '
-                            '[%(module)s.%(funcName)s]: %(message)s'))
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
 
 class WritingStage(BaseStage):
@@ -38,7 +30,8 @@ class WritingStage(BaseStage):
       agent_result = self._refine_given_fuzz_targets(result_history)
     else:
       agent_result = self._write_new_fuzz_target(result_history)
-    logger.debug('Writing stage completed with with result:\n%s', agent_result)
+    self.logger.debug('Writing stage completed with with result:\n%s',
+                      agent_result)
     return agent_result
 
   # TODO(dongge): Save logs and more info into workdir.
