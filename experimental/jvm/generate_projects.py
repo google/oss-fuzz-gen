@@ -19,7 +19,7 @@ import logging
 import os
 import shutil
 
-import utils
+from experimental.jvm import utils
 
 silent_global = False
 
