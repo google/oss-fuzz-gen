@@ -15,13 +15,15 @@
 ###############################################################################
 """Provides a set of utils for oss-fuzz-gen on new Java projects integration"""
 
+import sys
+sys.path.append('../..')
+
 import logging
 import os
 import subprocess
 from typing import Optional
 
-import constants
-import oss_fuzz_templates
+from experimental.jvm import constants, oss_fuzz_templates
 from urllib3.util import parse_url
 
 logger = logging.getLogger(__name__)
