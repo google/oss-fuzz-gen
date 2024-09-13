@@ -109,9 +109,7 @@ class CloudBuilder:
             {
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'dir': '/workspace',
-                'args': [
-                    'cp', results_dill_url, 'dills/result_history.pkl'
-                ]
+                'args': ['cp', results_dill_url, 'dills/result_history.pkl']
             },
             # Step 2: Prepare OFG and OF repos.
             {
@@ -142,9 +140,9 @@ class CloudBuilder:
                     '--network=cloudbuild',
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
                      'agent-image'), 'python3.11', '-m', 'agent.base_agent',
-                    '--agent', '/workspace/dills/agent.pkl',
-                    '--result-history', '/workspace/dills/result_history.pkl',
-                    '--result-new', '/workspace/dills/new_result.pkl'
+                    '--agent', '/workspace/dills/agent.pkl', '--result-history',
+                    '/workspace/dills/result_history.pkl', '--result-new',
+                    '/workspace/dills/new_result.pkl'
                 ],
             },
             # Step 4: Upload the result to GCS bucket
