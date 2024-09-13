@@ -15,6 +15,7 @@
 """Manager for running auto-gen from scratch."""
 
 import sys
+
 sys.path.append('../../')
 
 import argparse
