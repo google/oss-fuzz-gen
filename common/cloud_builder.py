@@ -43,7 +43,11 @@ class CloudBuilder:
     assert hasattr(self.credentials, 'service_account_email'), (
         'Cloud experiment requires a service account email')
 
-    self.credentials.refresh(Request())  # type: ignore
+    try:
+      # TODO(dongge): Understand why this crashes in local experiments.
+      self.credentials.refresh(Request())  # type: ignore
+    except:
+      pass
     self.bucket_name = args.cloud_experiment_bucket
     self.bucket = storage.Client().bucket(self.bucket_name)
 
@@ -80,7 +84,7 @@ class CloudBuilder:
     with tempfile.TemporaryDirectory() as tmpdirname:
       archive_name = f'ofg-repo-{uuid.uuid4().hex}.tar.gz'
       archive_path = os.path.join(tmpdirname, archive_name)
-      tar_command = ['tar', '-cvzf', archive_path] + file_to_upload
+      tar_command = ['tar', '-czf', archive_path] + file_to_upload
       subprocess.run(tar_command, cwd=ofg_repo, check=True)
       logging.info('Created archive: %s', archive_path)
       return self._upload_to_gcs(archive_path)
