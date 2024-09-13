@@ -2,6 +2,7 @@
     "benchmarks": [
 {% for benchmark in benchmarks %}
     {
+        "project": "{{ benchmark.project }}",
         "benchmark": "{{ benchmark.signature }}",
         "status": "{{ benchmark.status }}",
         "build_success_rate": "{{ benchmark.result.build_success_rate|percent }}",
