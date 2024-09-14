@@ -549,7 +549,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     super().__init__(model)
     self._template_dir = template_dir
     self.benchmark = benchmark
-    self.project_url = oss_fuzz_checkout.get_project_repository(self.benchmark.project)
+    self.project_url = oss_fuzz_checkout.get_project_repository(
+        self.benchmark.project)
 
     # Retrieve additional properties for the target method
     temp_properties = introspector.query_introspector_function_props(
@@ -1020,7 +1021,8 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
     super().__init__(model)
     self._template_dir = template_dir
     self.benchmark = benchmark
-    self.project_url = oss_fuzz_checkout.get_project_repository(self.benchmark.project)
+    self.project_url = oss_fuzz_checkout.get_project_repository(
+        self.benchmark.project)
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir,
