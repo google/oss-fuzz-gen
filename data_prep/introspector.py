@@ -40,7 +40,7 @@ T = TypeVar('T', str, list, dict, int)  # Generic type.
 TIMEOUT = 45
 MAX_RETRY = 5
 
-USE_FI_TO_GET_TARGETS = bool(int(os.getenv('OSS_FI_TO_GET_TARGETS', '0')))
+USE_FI_TO_GET_TARGETS = bool(int(os.getenv('OSS_FI_TO_GET_TARGETS', '1')))
 
 # By default exclude static functions when identifying fuzz target candidates
 # to generate benchmarks.
@@ -734,7 +734,7 @@ def _get_harness_intrinsics(
     filenames,
     language='') -> tuple[Optional[str], Optional[str], Dict[str, str]]:
   """Returns a harness source path and executable from a given project."""
-  if USE_FI_TO_GET_TARGETS and language != 'jvm':
+  if USE_FI_TO_GET_TARGETS and language != 'jvm' and language != 'python':
     harnesses = query_introspector_for_harness_intrinsics(project)
     harness_dict = harnesses[0]
     harness = harness_dict['source']
