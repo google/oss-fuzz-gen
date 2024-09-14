@@ -22,8 +22,6 @@ from abc import abstractmethod
 from typing import Any, Optional, Tuple
 
 import jinja2
-import requests
-import yaml
 
 from data_prep import introspector, project_targets
 from experiment import oss_fuzz_checkout
