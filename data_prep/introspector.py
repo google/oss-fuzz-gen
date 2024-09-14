@@ -807,6 +807,11 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         f'{function["function_filename"].split("$")[0].replace(".", "/")}.java'
         for function in functions
     ]
+  elif language == 'python':
+    filenames = [
+        (f'{function["function_filename"].replace("...", "").replace(".", "/")}'
+         '.py') for function in functions
+    ]
   else:
     filenames = [
         os.path.basename(function['function_filename'])
@@ -826,6 +831,18 @@ def populate_benchmarks_using_introspector(project: str, language: str,
 
     filename = os.path.basename(function['function_filename'])
 
+    if language == 'python':
+      if filename.startswith('...'):
+        # Filename of python fuzzers always starts with ...
+        # Skipping them
+        continue
+      if _get_arg_count(function) == 1 and _get_arg_names(
+          function, project, language)[0] == 'self':
+        # If a python function has only 1 arugment and the argument name
+        # is 'self', it means that it is an instance function with no
+        # arguments. Thus skipping it.
+        continue
+
     if language == 'jvm':
       # Retrieve list of source file from introspector
       src_path_list = query_introspector_jvm_source_path(project)
@@ -839,7 +856,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         if src_file not in src_path_list:
           logger.error('error: %s %s', filename, interesting.keys())
           continue
-    elif interesting and filename not in [
+    elif language != 'python' and interesting and filename not in [
         os.path.basename(i) for i in interesting.keys()
     ]:
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."

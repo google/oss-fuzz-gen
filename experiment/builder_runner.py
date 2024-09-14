@@ -184,6 +184,16 @@ class BuilderRunner:
 
     return min_func_name in generated_code
 
+  def _contains_target_python_function(self, target_path: str) -> bool:
+    """Validates if the LLM-generated code contains the target function for
+    python projects."""
+    with open(target_path) as generated_code_file:
+      generated_code = generated_code_file.read()
+
+    min_func_name = self.benchmark.function_signature.rsplit('.', 1)[-1]
+
+    return min_func_name in generated_code
+
   def _pre_build_check(self, target_path: str,
                        build_result: BuildResult) -> bool:
     """Checks the generated target before building and running it."""
@@ -191,6 +201,8 @@ class BuilderRunner:
     # function.
     if self.benchmark.language == 'jvm':
       result = self._contains_target_jvm_method(target_path)
+    elif self.benchmark.language == 'python':
+      result = self._contains_target_python_function(target_path)
     else:
       result = self._contains_target_function(target_path)
 
@@ -491,10 +503,10 @@ class BuilderRunner:
     # Parse libfuzzer logs to get fuzz target runtime details.
     with open(self.work_dirs.run_logs_target(benchmark_target_name, iteration),
               'rb') as f:
-      # In many case JVM projects won't have much cov
-      # difference in short running. Adding the flag for JVM
+      # In many case JVM/python projects won't have much cov
+      # difference in short running. Adding the flag for JVM/python
       # projects to temporary skip the checking of coverage change.
-      flag = not self.benchmark.language == 'jvm'
+      flag = not self.benchmark.language in ['jvm', 'python']
       run_result.cov_pcs, run_result.total_pcs, \
         run_result.crashes, run_result.crash_info, \
           run_result.semantic_check = \
@@ -702,6 +714,12 @@ class BuilderRunner:
                                             'textcov_reports', 'jacoco.xml')
       with open(local_textcov_location) as f:
         new_textcov = textcov.Textcov.from_jvm_file(f)
+    elif self.benchmark.language == 'python':
+      local_textcov_location = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
+                                            'build', 'out', generated_project,
+                                            'textcov_reports', 'all_cov.json')
+      with open(local_textcov_location) as f:
+        new_textcov = textcov.Textcov.from_python_file(f)
     else:
       local_textcov_location = os.path.join(
           oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'out', generated_project,
@@ -931,6 +949,11 @@ class CloudBuilderRunner(BuilderRunner):
       if blob.exists():
         with blob.open() as f:
           run_result.coverage = textcov.Textcov.from_jvm_file(f)
+    elif self.benchmark.language == 'python':
+      blob = bucket.blob(f'{coverage_name}/textcov_reports/all_cov.json')
+      if blob.exists():
+        with blob.open() as f:
+          run_result.coverage = textcov.Textcov.from_python_file(f)
     else:
       # C/C++
       blob = bucket.blob(

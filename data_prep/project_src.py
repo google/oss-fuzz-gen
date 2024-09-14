@@ -18,6 +18,7 @@ import logging
 import os
 import subprocess as sp
 import tempfile
+import time
 import uuid
 from multiprocessing import pool
 from typing import Dict
@@ -132,6 +133,8 @@ def _get_harness(src_file: str, out: str, language: str) -> tuple[str, str]:
     return '', ''
   if language.lower(
   ) == 'jvm' and 'static void fuzzerTestOneInput' not in content:
+    return '', ''
+  if language.lower() == 'python' and 'atheris.Fuzz()' not in content:
     return '', ''
 
   short_path = src_file[len(out):]
@@ -266,7 +269,20 @@ def _copy_project_src_from_local(project: str, out: str, language: str):
                   capture_output=True,
                   stdin=sp.DEVNULL,
                   check=False)
+  if result.returncode and 'Conflict' in str(result.stderr):
+    # Sometimes the previous container need longer time to delete
+    # If the next docker run is invoked before the previous container
+    # completely removed, it will resulti n Conflict error.
+    # Sleep for 60 seconds and retry.
+    logger.warning('Failed to run OSS-Fuzz on %s, retry in 60 sec', project)
+    time.sleep(60)
+    result = sp.run(run_container,
+                    capture_output=True,
+                    stdin=sp.DEVNULL,
+                    check=False)
+
   if result.returncode:
+    # Still fail from conclict or other errors
     logger.error('Failed to run OSS-Fuzz image of %s:', project)
     logger.error('STDOUT: %s', result.stdout)
     logger.error('STDERR: %s', result.stderr)
@@ -324,6 +340,12 @@ def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
         if path.endswith(tuple(interesting_filenames)):
           interesting_filepaths.append(path)
         if path.endswith('.java'):
+          potential_harnesses.append(path)
+      elif language == 'python':
+        # For Python
+        if path.endswith(tuple(interesting_filenames)):
+          interesting_filepaths.append(path)
+        if path.endswith('.py'):
           potential_harnesses.append(path)
       else:
         # For C/C++
