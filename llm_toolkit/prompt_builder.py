@@ -22,8 +22,6 @@ from abc import abstractmethod
 from typing import Any, Optional, Tuple
 
 import jinja2
-import requests
-import yaml
 
 from data_prep import introspector, project_targets
 from experiment import oss_fuzz_checkout
@@ -549,7 +547,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     super().__init__(model)
     self._template_dir = template_dir
     self.benchmark = benchmark
-    self.project_url = self._find_project_url(self.benchmark.project)
+    self.project_url = oss_fuzz_checkout.get_project_repository(
+        self.benchmark.project)
 
     # Retrieve additional properties for the target method
     temp_properties = introspector.query_introspector_function_props(
@@ -580,23 +579,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         template_dir, 'jvm_object_arg_description.txt')
     self.import_template_file = self._find_template(template_dir,
                                                     'jvm_import_mapping.txt')
-
-  def _find_project_url(self, project_name: str) -> str:
-    """Discover project url from project's project.yaml in OSS-Fuzz"""
-    oss_fuzz_url = 'https://raw.githubusercontent.com/google/oss-fuzz/master'
-    project_url = f'{oss_fuzz_url}/projects/{project_name}/project.yaml'
-
-    try:
-      response = requests.get(project_url, timeout=20)
-      if response and response.status_code == 200:
-        project_yaml = yaml.load(response.content, Loader=yaml.SafeLoader)
-        if 'main_repo' in project_yaml:
-          return project_yaml['main_repo']
-    except:
-      pass
-
-    logger.info('Cannot retrieve project url of project %s', project_name)
-    return ''
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
     """Finds template file based on |template_dir|."""
@@ -1037,30 +1019,14 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
     super().__init__(model)
     self._template_dir = template_dir
     self.benchmark = benchmark
-    self.project_url = self._find_project_url(self.benchmark.project)
+    self.project_url = oss_fuzz_checkout.get_project_repository(
+        self.benchmark.project)
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir,
                                                   'python_base.txt')
     self.problem_template_file = self._find_template(template_dir,
                                                      'python_problem.txt')
-
-  def _find_project_url(self, project_name: str) -> str:
-    """Discover project url from project's project.yaml in OSS-Fuzz"""
-    oss_fuzz_url = 'https://raw.githubusercontent.com/google/oss-fuzz/master'
-    project_url = f'{oss_fuzz_url}/projects/{project_name}/project.yaml'
-
-    try:
-      response = requests.get(project_url, timeout=20)
-      if response and response.status_code == 200:
-        project_yaml = yaml.load(response.content, Loader=yaml.SafeLoader)
-        if 'main_repo' in project_yaml:
-          return project_yaml['main_repo']
-    except:
-      pass
-
-    logger.info('Cannot retrieve project url of project %s', project_name)
-    return ''
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
     """Finds template file based on |template_dir|."""
