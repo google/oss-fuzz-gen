@@ -188,6 +188,17 @@ class Benchmark:
       self.id = self.id.replace('[', '').replace(']', '')
       self.id = self.id.replace('(', '_').replace(')', '').replace(',', '_')
 
+    if self.language == 'python':
+      # For python projects, classes and methods name could begins with
+      # underscore character. This could affect the benchmark_id and cause
+      # OSS-Fuzz build failed if dot and underscore character is put together.
+      # Special handling of benchmark_id is needed to avoid this situation.
+      # For example, zipp._difference in zip project will have benchmark id of
+      # zipp-zipp._difference and the pattern '._' cause OSS-Fuzz failed to
+      # recognise the project name and needed to be replaced by
+      # zipp-zipp.difference.
+      self.id = self.id.replace('._', '.')
+
   def __str__(self):
     return (f'Benchmark<id={self.id}, project={self.project}, '
             f'language={self.language}, '

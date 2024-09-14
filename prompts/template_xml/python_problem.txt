@@ -1,0 +1,29 @@
+<task>
+Your goal is to write a fuzzing harness for the provided method signature to fuzz the method with random data. It is important that the provided solution compiles and actually calls the function specified by the method signature:
+<target>
+<method_signature>
+{METHOD_SIGNATURE}
+</method_signature>
+The target method is belonging to the Java project {PROJECT_NAME} ({PROJECT_URL}).
+This method requires {ARG_COUNT} arguments. You must prepare them with random seeded data.
+{CLASS_METHOD_OR_GENERAL_METHOD}
+</target>
+<requirements>
+<item>You MUST import all necessary python packages, including the pakage {PACKAGE} from the project.</item>
+<item>Try as many variations of these inputs as possible.</item>
+<item>Try creating the harness as complex as possible.</item>
+<item>Try adding some nested loop to invoke the target method for multiple times.</item>
+<item>The generated fuzzing harness should be wrapped with the <code> tag.</item>
+<item>Never call `with atheris.instrumented_function()`</item>
+<item>Never involve calls to functions the Atheris module.</item>
+<item>You MUST use `fdp=atheris.FuzzedDataProvider(data)` and `fdp.ConsumeUnicodeNoSurrogates(1024)` to seed the random fuzz data.
+<item>You MUST handle all possible exceptions</item>
+<item>Please avoid using any multithreading or multi-processing approach.</item>
+<item>You MUST include the following Atheris code in the generated harness.
+<code>
+  atheris.instrument_all()
+  atheris.Setup(sys.argv, TestOneInput)
+  atheris.Fuzz()
+</code></item>
+</requirements>
+</task>
