@@ -2,17 +2,9 @@
 corresponding build scripts. This stage is responsible for creating new fuzz
 targets or improving existing ones to enhance code coverage and bug-finding
 capabilities."""
-import logging
 
 from results import Result
 from stage.base_stage import BaseStage
-
-logging.basicConfig(level=logging.DEBUG,
-                    format=('%(asctime)s [PID: %(process)d] %(levelname)s '
-                            '[%(module)s.%(funcName)s]: %(message)s'))
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
 
 class WritingStage(BaseStage):
@@ -24,18 +16,25 @@ class WritingStage(BaseStage):
 
   def _write_new_fuzz_target(self, result_history: list[Result]) -> Result:
     """Writes a new fuzz target."""
-    return self.get_agent('Prototyper').execute(result_history)
+    agent = self.get_agent('Prototyper')
+    if self.args.cloud_experiment_name:
+      return self._execute_agent_cloud(agent, result_history)
+    return agent.execute(result_history)
 
   def _refine_given_fuzz_targets(self, result_history: list[Result]) -> Result:
     """Writes a new fuzz target."""
     return self.get_agent('Enhancer').execute(result_history)
 
   def execute(self, result_history: list[Result]) -> Result:
+    """Executes the writing stage."""
     if result_history and result_history[-1].fuzz_target_source:
       agent_result = self._refine_given_fuzz_targets(result_history)
     else:
       agent_result = self._write_new_fuzz_target(result_history)
-    logger.debug('Writing stage completed with with result:\n%s', agent_result)
-    return agent_result
 
-  # TODO(dongge): Save logs and more info into workdir.
+    # TODO(dongge): Save logs and more info into workdir.
+    self.logger.write_fuzz_target(agent_result)
+    self.logger.write_build_script(agent_result)
+    self.logger.debug('Writing stage completed with with result:\n%s',
+                      agent_result)
+    return agent_result

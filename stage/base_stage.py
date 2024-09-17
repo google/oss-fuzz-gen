@@ -3,7 +3,9 @@ import argparse
 from abc import ABC, abstractmethod
 from typing import Optional
 
+import logger
 from agent.base_agent import BaseAgent
+from common.cloud_builder import CloudBuilder
 from results import Result
 
 
@@ -15,6 +17,7 @@ class BaseStage(ABC):
                agents: Optional[list[BaseAgent]] = None) -> None:
     self.args = args
     self.agents: list[BaseAgent] = agents or []
+    self.logger = logger.get_trial_logger()
 
   def add_agent(self, agent: BaseAgent) -> 'BaseStage':
     """Adds an agent for the stage."""
@@ -28,6 +31,14 @@ class BaseStage(ABC):
       if agent.name == agent_name:
         return agent
     raise RuntimeError(f'Agent {agent_name} is undefined')
+
+  def _execute_agent_cloud(self, agent: BaseAgent,
+                           result_history: list[Result]) -> Result:
+    """Executes agent in cloud build."""
+    cloud_builder = CloudBuilder(self.args)
+    dill_dir = result_history[-1].work_dirs.dills
+    result = cloud_builder.run(agent, result_history, dill_dir)
+    return result
 
   @abstractmethod
   def execute(self, result_history: list[Result]) -> Result:

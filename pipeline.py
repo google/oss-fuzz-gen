@@ -2,6 +2,7 @@
 import argparse
 from typing import Optional
 
+import logger
 from agent.base_agent import BaseAgent
 from results import Result
 from stage.analysis_stage import AnalysisStage
@@ -27,6 +28,8 @@ class Pipeline():
                evaluation_stage_agents: Optional[list[BaseAgent]] = None,
                analysis_stage_agents: Optional[list[BaseAgent]] = None):
     self.args = args
+    self.logger = logger.get_trial_logger()
+    self.logger.debug('Pipline Initialized')
     self.writing_stage: WritingStage = WritingStage(args, writing_stage_agents)
     self.evaluation_stage: EvalationStage = EvalationStage(
         args, evaluation_stage_agents)
@@ -35,12 +38,19 @@ class Pipeline():
 
   def _terminate(self, result_history: list[Result]) -> bool:
     """Validates if the termination conditions have been satisfied."""
-    return bool(result_history and result_history[-1].fuzz_target_source)
+    conditions = bool(result_history and len(result_history) > 1)
+    self.logger.info('termination condition met: %s', conditions)
+    return conditions
 
-  def _execute_one_cycle(self, result_history: list[Result]) -> None:
+  def _execute_one_cycle(self, result_history: list[Result],
+                         cycle_count: int) -> None:
     """Executes the stages once."""
+    self.logger.info('Cycle %d initial result is %s', cycle_count,
+                     result_history[-1])
     result_history.append(
         self.writing_stage.execute(result_history=result_history))
+    self.logger.info('Cycle %d final result is %s', cycle_count,
+                     result_history[-1])
 
   def execute(self, result_history: list[Result]) -> list[Result]:
     """
@@ -52,6 +62,14 @@ class Pipeline():
     improvements.
     The process repeats until the termination conditions are met.
     """
+    self.logger.debug('Pipline starts')
+    cycle_count = 1
     while not self._terminate(result_history=result_history):
-      self._execute_one_cycle(result_history=result_history)
+      self._execute_one_cycle(result_history=result_history,
+                              cycle_count=cycle_count)
+      cycle_count += 1
+
+    final_result = result_history[-1]
+    self.logger.write_result(result_status_dir=final_result.work_dirs.status,
+                             result=final_result)
     return result_history
