@@ -1,3 +1,5 @@
+# TODO(dongge): Automatically build and push this to registry daily:
+# us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/agent-image
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
