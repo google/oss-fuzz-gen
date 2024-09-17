@@ -90,7 +90,7 @@ class Prototyper(BaseAgent):
     # Double-check binary.
     ls_result = compilation_tool.execute(f'ls /out/{benchmark.target_name}')
     binary_exists = ls_result.returncode == 0
-    logger.debug('ROUND  Final fuzz target binary exists: %s', cur_round,
+    logger.debug('ROUND %02d Final fuzz target binary exists: %s', cur_round,
                  binary_exists)
     compilation_tool.terminate()
 
