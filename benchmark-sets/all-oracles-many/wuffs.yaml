@@ -1,0 +1,15 @@
+"functions":
+- "name": "_ZNK32wuffs_base__range_ie_u64__struct6lengthEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "uint64_t wuffs_base__range_ie_u64__struct::length(const struct wuffs_base__range_ie_u64__struct *)"
+"language": "c++"
+"project": "wuffs"
+"target_name": "cbor_fuzzer"
+"target_path": "/src/wuffs/fuzz/c/fuzzlib/fuzzlib.c"
+"test_files":
+- "test_file_path": "/src/wuffs/script/manual-test-truncated-input.cc"
+- "test_file_path": "/src/wuffs/test/c/testlib/testlib.c"
+- "test_file_path": "/src/wuffs/script/manual-test-parse-number-f64.cc"
