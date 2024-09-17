@@ -49,7 +49,7 @@ Please feel free to create an issue or email us: oss-fuzz-team@google.com.
 
 ## Bugs Discovered
 
-So far, we have reported 17 new bugs/vulnerabilities found by automatically generated targets built
+So far, we have reported 20 new bugs/vulnerabilities found by automatically generated targets built
 by this framework:
 | Project |    Bug    |    LLM    | Prompt Builder | Target oracle |
 | ------- | --------- | --------- | --------------- | ------- |
@@ -70,6 +70,9 @@ by this framework:
 | Undisclosed | [OOB read/write](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71542) | Vertex AI | [Default](prompts/template_xml) | All |
 | Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71543) | Vertex AI | [Default](prompts/template_xml) | All |
 | Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71544) | Vertex AI | [Default](prompts/template_xml) | All |
+| Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71619) | Vertex AI | [Default](prompts/template_xml) | All |
+| Undisclosed | [OOB read/write](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71623) | Vertex AI | [Default](prompts/template_xml) | All |
+| Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71650) | Vertex AI | [Default](prompts/template_xml) | All |
 
 These bugs could only have been discovered with newly generated targets. They were not reachable with existing OSS-Fuzz targets.
 
