@@ -190,7 +190,7 @@ class CloudBuilder:
     logging.info('Cloud Build ID: %s', build_id)
     return build_id
 
-  def _build_succeeds(self, build_id: str) -> bool:
+  def _wait_for_build(self, build_id: str) -> bool:
     """Wait for a GCB build."""
     prev_status = status = None
     while status in [None, 'WORKING', 'QUEUED']:
@@ -253,7 +253,7 @@ class CloudBuilder:
     # Step 4: Download new result dill.
     new_result_dill = os.path.join(dill_dir, new_result_filename)
     try:
-      if self._build_succeeds(build_id):
+      if self._wait_for_build(build_id):
         self._download_from_gcs(new_result_dill)
     except (KeyboardInterrupt, SystemExit):
       self._cancel_build(build_id)
