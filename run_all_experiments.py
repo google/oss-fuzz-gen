@@ -261,7 +261,7 @@ def parse_args() -> argparse.Namespace:
                       '--prompt-builder',
                       help='The prompt builder to use for harness generation.',
                       default='DEFAULT')
-  parser.add_argument('-ae',
+  parser.add_argument('-ag',
                       '--agent',
                       action='store_true',
                       default=False,

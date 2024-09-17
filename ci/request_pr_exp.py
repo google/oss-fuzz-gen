@@ -153,7 +153,7 @@ def _parse_args(cmd) -> argparse.Namespace:
       default=VARY_TEMPERATURE,
       help=('Use different temperatures for each sample, default: '
             f'{VARY_TEMPERATURE}'))
-  parser.add_argument('-ae',
+  parser.add_argument('-ag',
                       '--agent',
                       action='store_true',
                       default=False,
