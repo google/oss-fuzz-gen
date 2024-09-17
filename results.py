@@ -29,6 +29,17 @@ class Result:
     return (f'{self.__class__.__name__}'
             f'({", ".join(f"{k}={v!r}" for k, v in vars(self).items())})')
 
+  def to_dict(self) -> dict:
+    return {
+        'function_signature': self.benchmark.function_signature,
+        'project': self.benchmark.project,
+        'project_commit': self.benchmark.commit,
+        'project_language': self.benchmark.language,
+        'trial': self.trial,
+        'fuzz_target_source': self.fuzz_target_source,
+        'build_script_source': self.build_script_source,
+    }
+
 
 class BuildResult(Result):
   """A benchmark generation result with build info."""
@@ -52,12 +63,27 @@ class BuildResult(Result):
     self.full_log: str = full_log  # Build full output.
     self.insight: str = insight  # Reason and fixes for build failure.
 
+  def to_dict(self) -> dict:
+    return super().to_dict() | {
+        'compiles': self.status,
+        'compile_error': self.error,
+        'compile_log': self.full_log,
+        'compile_insight': self.insight,
+    }
+
 
 class RunResult(Result):
   """The fuzzing run-time result info."""
   status: bool  # Run success/failure
   error: str  # Run error message
   full_log: str  # Run full output
+
+  def to_dict(self) -> dict:
+    return super().to_dict() | {
+        'crashes': self.status,
+        'crash_error': self.error,
+        'crash_log': self.full_log,
+    }
 
 
 class CrashResult(RunResult):

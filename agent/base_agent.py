@@ -1,11 +1,15 @@
 """The abstract base class for LLM agents in stages."""
 import argparse
 import logging
+import random
 import re
 import subprocess as sp
+import time
 from abc import ABC, abstractmethod
 from typing import Optional
 
+import logger
+import utils
 from llm_toolkit.models import LLM
 from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
@@ -28,18 +32,6 @@ class BaseAgent(ABC):
     self.args = args
     self.name: str = name or self.__class__.__name__
     self.dialog: str = ''  # Communication history between LLM and tool.
-
-    # TODO(dongge): Replace this with google-cloud-log in a module.
-    logging.basicConfig(level=logging.DEBUG,
-                        format=('%(asctime)s [Trial: %02d] %(levelname)s '
-                                '[%(module)s.%(funcName)s]: %(message)s'))
-
-    self.logger = logging.getLogger(__name__)
-    self.logger.setLevel(logging.DEBUG)
-
-  def write_to_file(self, file_path: str, file_content: str):
-    with open(file_path, 'w') as file:
-      file.writelines(file_content)
 
   def get_tool(self, tool_name: str) -> Optional[BaseTool]:
     """Gets a tool of the agent by name."""
@@ -77,14 +69,52 @@ class BaseAgent(ABC):
     if command:
       prompt_text = self._format_bash_execution_result(tool.execute(command))
     else:
-      self.logger.warning('ROUND %d No BASH command from LLM response: %s',
-                          cur_round,
-                          response,
-                          extra={'trial': self.trial})
+      logger.warning(
+          f'ROUND {cur_round} No BASH command from LLM response: {response}',
+          logging.WARNING)
       prompt_text = ('No bash command received, Please follow the '
                      'interaction protocols:\n'
                      f'{tool.tutorial()}')
     return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
+
+  def _sleep_random_duration(self, min_sec: int = 1, max_sec: int = 60) -> None:
+    """Sleeps for a random duration between min_sec and max_sec. Agents uses
+    this to avoid exceeding quota limit (e.g., LLM query frequency)."""
+    duration = random.randint(min_sec, max_sec)
+    logger.debug('Sleeping for %d before the next query', duration)
+    time.sleep(duration)
+
+  @classmethod
+  def _parse_args(cls) -> argparse.Namespace:
+    """Parses command line args."""
+    parser = argparse.ArgumentParser(
+        description='Execute agent in cloud with dill files.')
+    parser.add_argument('-a',
+                        '--agent',
+                        help='The dill file path for the agent to execute.')
+    parser.add_argument(
+        '-rh',
+        '--result-history',
+        help='The dill file path for the agent input result history.')
+    parser.add_argument(
+        '-rn',
+        '--result-new',
+        help='The dill file path to store the agent output new result.')
+    return parser.parse_args()
+
+  @classmethod
+  def cloud_main(cls) -> None:
+    """Executes agent using dill files. This is for cloud experiments launched
+    by cloud_builder.py. It runs `new_result = agent.execute(result_history)` in
+    the same way as local experiments, except `agent` and `result_history` are
+    deserialized from dill files and new_result will be serialized to share data
+    with the cloud experiment requester."""
+    args = cls._parse_args()
+
+    agent = utils.deserialize_from_dill(args.agent)
+    result_history = utils.deserialize_from_dill(args.result_history)
+    result = agent.execute(result_history)
+    utils.serialize_to_dill(result, args.result_new)
 
   @abstractmethod
   def _initial_prompt(self, results: list[Result]) -> Prompt:
@@ -93,3 +123,8 @@ class BaseAgent(ABC):
   @abstractmethod
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the agent based on previous result."""
+
+
+if __name__ == "__main__":
+  # For cloud experiments.
+  BaseAgent.cloud_main()
