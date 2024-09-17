@@ -92,10 +92,28 @@ To generate and evaluate the fuzz targets in a benchmark set via *local* experim
 # E.g., generate fuzz targets for TinyXML-2 with default template and fuzz for 30 seconds.
 # ./run_all_experiments.py -y ./benchmark-sets/comparison/tinyxml2.yaml
 ```
-where the `<model-name>` can be:
-1. `vertex_ai_code-bison` or `vertex_ai_code-bison-32k` for the Code Bison models on Vertex AI.
-2. `vertex_ai_gemini-pro` for Gemini Pro on Vertex AI.
-3. `gpt-3.5-turbo` or `gpt-4` for OpenAI.
+where the `<model-name>` must be the name of one of the supported models. The
+list of models supported by OSS-Fuzz-gen expands on a regular basis, and all
+of the models can be listed with `run_all_experiments.py --help`. At the time
+of writing the following models are supported, where `vertex` in the name means
+the model is supported by way of Vertex AI:
+
+1. `vertex_ai_code-bison`
+2. `vertex_ai_code-bison-32k`
+3. `vertex_ai_gemini-pro`
+4. `vertex_ai_gemini-1-5-chat`
+5. `vertex_ai_gemini-1-5`
+6. `vertex_ai_gemini-experimental`
+7. `vertex_ai_gemini-ultra`
+8. `vertex_ai_claude-3-5-sonnet`
+9. `vertex_ai_claude-3-opus`
+10. `vertex_ai_claude-3-haiku`
+11. `gpt-3.5-turbo-azure`
+12. `gpt-3.5-turbo`
+13. `gpt-4`
+14. `gpt-4o`
+15. `gpt-4o-azure`
+16. `gpt-4-azure`
 
 Experiments can also be run on Google Cloud using Google Cloud Build. You can
 do this by passing
@@ -103,10 +121,25 @@ do this by passing
 where `<bucket>` is the name of a Google Cloud Storage bucket your Google Cloud project.
 
 ### Benchmarks
-We currently offer two sets of benchmarks:
+
+In order to leverage LLMs for harness generation a set of code targets are needed.
+In OFG terminology we consider these "benchmarks" and they are basically target functions
+in a given OSS-Fuzz project or test-cases in a given OSS-Fuzz project. We need these
+benchmarks to direct the auto-harness approach towards a specific part of some project.
+
+We currently offer a variety of benchmark sets:
+
 1. [`comparison`](./benchmark-sets/comparison): A small selection of OSS-Fuzz C/C++ projects.
 2. [`all`](./benchmark-sets/all): All benchmarks across all OSS-Fuzz C/C++ projects.
-
+3. [`c-specific`](./benchmark-sets/c-specific): A benchmark set focused on C projects.
+4. [`from-test-large`](./benchmark-sets/from-test-large): A benchmark set comprising many test-cases for test-to-harness LLM generation.
+5. [`from-test-small`](./benchmark-sets/from-test-small): A benchmark set used for test-to-harness generation, including a limited number of projects.
+6. [`jvm-all`](./benchmark-sets/jvm-all): A large set of Java targets
+7. [`jvm-medium`](./benchmark-sets/jvm-medium): A medium set of Java targets
+8. [`jvm-small`](./benchmark-sets/jvm-small): A small set of Java targets
+9. [`python-small`](./benchmark-sets/python-small): A small set of Python targets
+10. [`test-and-func-mix`](./benchmark-sets/test-and-func-mix): A set of targets that mixes function-level targets and test-to-harness targets.
+11. [`test-to-harness-jvm-small`](./benchmark-sets/test-to-harness-jvm-small): A small set of Java targets focused on test-to-harness generation.
 
 ### Visualizing Results
 Once finished, the framework will output experiment results like this:
