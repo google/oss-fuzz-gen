@@ -135,13 +135,24 @@ class CloudBuilder:
                 'name':
                     'gcr.io/cloud-builders/docker',
                 'args': [
-                    'run', '--rm', '-v', '/workspace:/workspace', '-v',
+                    'run',
+                    '--rm',
+                    '-v',
+                    '/workspace:/workspace',
+                    '-v',
                     '/var/run/docker.sock:/var/run/docker.sock',
                     '--network=cloudbuild',
+                    # Built from this repo's `Dockerfile.cloudbuild-agent`.
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
-                     'agent-image'), 'python3.11', '-m', 'agent.base_agent',
-                    '--agent', '/workspace/dills/agent.pkl', '--result-history',
-                    '/workspace/dills/result_history.pkl', '--result-new',
+                     'agent-image'),
+                    'python3.11',
+                    '-m',
+                    'agent.base_agent',
+                    '--agent',
+                    '/workspace/dills/agent.pkl',
+                    '--result-history',
+                    '/workspace/dills/result_history.pkl',
+                    '--result-new',
                     '/workspace/dills/new_result.pkl'
                 ],
             },
