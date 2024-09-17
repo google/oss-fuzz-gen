@@ -21,6 +21,7 @@ from agent.base_agent import BaseAgent
 from results import BuildResult, Result
 
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
+OFG_ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 US_CENTRAL_CLIENT_OPTIONS = google.api_core.client_options.ClientOptions(
     api_endpoint='https://us-central1-cloudbuild.googleapis.com/')
 
@@ -70,14 +71,13 @@ class CloudBuilder:
 
   def _prepare_and_upload_archive(self) -> str:
     """Archives and uploads local OFG repo to cloud build."""
-    ofg_repo = subprocess.check_output(['git', 'rev-parse', '--show-toplevel'],
-                                       text=True).strip()
     files_in_dir = set(
         os.path.relpath(os.path.join(root, file))
-        for root, _, files in os.walk(ofg_repo)
+        for root, _, files in os.walk(OFG_ROOT_DIR)
         for file in files)
     files_in_git = set(
-        subprocess.check_output(['git', 'ls-files'], cwd=ofg_repo,
+        subprocess.check_output(['git', 'ls-files'],
+                                cwd=OFG_ROOT_DIR,
                                 text=True).splitlines())
     file_to_upload = list(files_in_dir & files_in_git)
 
@@ -85,7 +85,7 @@ class CloudBuilder:
       archive_name = f'ofg-repo-{uuid.uuid4().hex}.tar.gz'
       archive_path = os.path.join(tmpdirname, archive_name)
       tar_command = ['tar', '-czf', archive_path] + file_to_upload
-      subprocess.run(tar_command, cwd=ofg_repo, check=True)
+      subprocess.run(tar_command, cwd=OFG_ROOT_DIR, check=True)
       logging.info('Created archive: %s', archive_path)
       return self._upload_to_gcs(archive_path)
 
