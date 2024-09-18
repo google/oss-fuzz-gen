@@ -33,15 +33,21 @@ from string import Template
 logging.basicConfig(level=logging.INFO)
 
 DEFAULT_CLUSTER = 'llm-experiment'
+LARGE_CLUSTER = 'llm-experiment-large'
 DEFAULT_LOCATION = 'us-central1-c'
+LARGE_LOCATION = 'us-central1'
 TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'k8s', 'pr-exp.yaml')
+LARGE_TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'k8s',
+                                   'large-pr-exp.yaml')
 BENCHMARK_SET = 'comparison'
 LLM_NAME = 'vertex_ai_gemini-1-5'
 LLM_CHAT_NAME = 'vertex_ai_gemini-1-5-chat'
 EXP_DELAY = 0
 FUZZING_TIMEOUT = 300
 REQUEST_CPU = 6
+LARGE_REQUEST_CPU = 356
 REQUEST_MEM = 30
+LARGE_REQUEST_MEM = 1000
 NUM_SAMPLES = 2
 NUM_FIXES = 2
 VARY_TEMPERATURE = True
@@ -158,6 +164,12 @@ def _parse_args(cmd) -> argparse.Namespace:
                       action='store_true',
                       default=False,
                       help='Enables agent enhancement.')
+  parser.add_argument('-lg',
+                      '--large',
+                      action='store_true',
+                      default=False,
+                      help=('(Use sparingly) Do a large experiment with '
+                            'many more cores available.'))
   args = parser.parse_args(cmd)
 
   assert os.path.isfile(
@@ -171,6 +183,13 @@ def _parse_args(cmd) -> argparse.Namespace:
   # Use Chat model by default in agent-enhance experiments.
   if args.agent and args.llm == LLM_NAME:
     args.llm = LLM_CHAT_NAME
+
+  if args.large:
+    args.location = LARGE_LOCATION
+    args.cluster = LARGE_CLUSTER
+    args.request_cpus = LARGE_REQUEST_CPU
+    args.request_memory = LARGE_REQUEST_MEM
+    args.gke_template = LARGE_TEMPLATE_PATH
 
   return args
 
