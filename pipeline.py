@@ -6,7 +6,7 @@ import logger
 from agent.base_agent import BaseAgent
 from results import Result
 from stage.analysis_stage import AnalysisStage
-from stage.evaluation_stage import EvalationStage
+from stage.execution_stage import ExecutionStage
 from stage.writing_stage import WritingStage
 
 
@@ -31,7 +31,7 @@ class Pipeline():
     self.logger = logger.get_trial_logger()
     self.logger.debug('Pipline Initialized')
     self.writing_stage: WritingStage = WritingStage(args, writing_stage_agents)
-    self.evaluation_stage: EvalationStage = EvalationStage(
+    self.execution_stage: ExecutionStage = ExecutionStage(
         args, evaluation_stage_agents)
     self.analysis_stage: AnalysisStage = AnalysisStage(args,
                                                        analysis_stage_agents)
