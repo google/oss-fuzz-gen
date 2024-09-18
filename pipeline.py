@@ -4,7 +4,7 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
-from results import Result
+from results import BuildResult, Result
 from stage.analysis_stage import AnalysisStage
 from stage.execution_stage import ExecutionStage
 from stage.writing_stage import WritingStage
@@ -49,10 +49,16 @@ class Pipeline():
                      result_history[-1])
     result_history.append(
         self.writing_stage.execute(result_history=result_history))
-    self.logger.info('Cycle %d final result is %s', cycle_count,
-                     result_history[-1])
+    if (not isinstance(result_history[-1], BuildResult) or
+        not result_history[-1].status):
+      self.logger.warning('Cycle %d build failure, skipping the rest steps',
+                          cycle_count)
+
     result_history.append(
         self.execution_stage.execute(result_history=result_history))
+
+    self.logger.info('Cycle %d final result is %s', cycle_count,
+                     result_history[-1])
 
   def execute(self, result_history: list[Result]) -> list[Result]:
     """

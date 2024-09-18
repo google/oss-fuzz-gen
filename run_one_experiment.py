@@ -33,7 +33,7 @@ from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, output_parser, prompt_builder, prompts
-from results import BuildResult, ExperimentResult, Result
+from results import BuildResult, ExperimentResult, Result, RunResult
 
 # WARN: Avoid high value for NUM_EVA for local experiments.
 # NUM_EVA controls the number of fuzz targets to evaluate in parallel by each
@@ -85,21 +85,58 @@ class AggregatedResult:
 
   @classmethod
   def from_experiment_result(
-      cls, sample_results: list[ExperimentResult]) -> 'AggregatedResult':
-    """Aggereate experiment history results of all samples."""
-    if not sample_results:
+      cls, trial_results: list[ExperimentResult]) -> 'AggregatedResult':
+    """Aggregates experiment history results of all samples."""
+    if not trial_results:
       return AggregatedResult()
-    sample_final_build_results = [[
+
+    trial_final_build_results = [[
         result
-        for result in sample_result_history.history_results
+        for result in trial_result_history.history_results
         if isinstance(result, BuildResult)
     ][-1]
-                                  for sample_result_history in sample_results]
+                                 for trial_result_history in trial_results]
     build_success_rate = sum([
-        int(sample_final_result.status)
-        for sample_final_result in sample_final_build_results
-    ]) / len(sample_final_build_results)
-    return AggregatedResult(build_success_rate=build_success_rate,)
+        int(trial_final_result.status)
+        for trial_final_result in trial_final_build_results
+    ]) / len(trial_final_build_results)
+
+    trial_final_run_results = [[
+        result
+        for result in trial_result_history.history_results
+        if isinstance(result, RunResult)
+    ][-1]
+                               for trial_result_history in trial_results]
+    crash_rate = sum([
+        int(trial_result.status) for trial_result in trial_final_run_results
+    ]) / len(trial_final_run_results)
+
+    max_coverage = max([
+        trial_final_run_result.coverage
+        for trial_final_run_result in trial_final_run_results
+    ])
+    max_line_coverage_diff = max([
+        trial_final_run_result.line_coverage_diff
+        for trial_final_run_result in trial_final_run_results
+    ])
+
+    max_coverage_diff_report = ''
+
+    all_textcov = textcov.Textcov()
+    for trial_final_run_result in trial_final_run_results:
+
+      if trial_final_run_result.line_coverage_diff == max_line_coverage_diff:
+        max_coverage_diff_report = trial_final_run_result.coverage_report_path
+
+      if isinstance(trial_final_run_result.textcov_diff, textcov.Textcov):
+        all_textcov.merge(trial_final_run_result.textcov_diff)
+
+    return AggregatedResult(build_success_rate=build_success_rate,
+                            crash_rate=crash_rate,
+                            max_coverage=max_coverage,
+                            max_line_coverage_diff=max_line_coverage_diff,
+                            max_coverage_diff_report=max_coverage_diff_report,
+                            full_textcov_diff=all_textcov)
 
 
 def generate_targets(benchmark: Benchmark, model: models.LLM,

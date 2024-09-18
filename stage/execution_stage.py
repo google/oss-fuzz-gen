@@ -58,18 +58,55 @@ class ExecutionStage(BaseStage):
     # 1. Evaluating generated driver.
     try:
       _, run_result = evaluator.builder_runner.build_and_run(
-          generated_oss_fuzz_project, benchmark.target_path, 0,
-          benchmark.language)
+          generated_oss_fuzz_project, fuzz_target_path, 0, benchmark.language)
       if not run_result:
         raise Exception
-      runresult = RunResult(benchmark=benchmark,
-                            trial=last_result.trial,
-                            work_dirs=last_result.work_dirs,
-                            status=run_result.crashes,
-                            error=run_result.crash_info,
-                            full_log=run_result.log_path,
-                            fuzz_target_source=last_result.fuzz_target_source,
-                            build_script_source=last_result.build_script_source)
+      if run_result.coverage_summary is None or run_result.coverage is None:
+        self.logger.warning('No cov info in run result of %s',
+                            generated_oss_fuzz_project)
+        raise Exception
+
+      if run_result.coverage_summary:
+        total_lines = evaluator_lib._compute_total_lines_without_fuzz_targets(
+            run_result.coverage_summary, generated_target_name)
+      else:
+        total_lines = 0
+
+      if run_result.total_pcs:
+        coverage_percent = run_result.cov_pcs / run_result.total_pcs
+      else:
+        self.logger.warning('Warning: total_pcs == 0 in %s.',
+                            generated_oss_fuzz_project)
+        coverage_percent = 0.0
+
+      existing_textcov = evaluator._load_existing_textcov()
+      run_result.coverage.subtract_covered_lines(existing_textcov)
+
+      if total_lines:
+        coverage_diff = run_result.coverage.covered_lines / total_lines
+      else:
+        self.logger.warning('total_lines == 0 in %s',
+                            generated_oss_fuzz_project)
+      coverage_diff = 0.0
+      runresult = RunResult(
+          benchmark=benchmark,
+          trial=last_result.trial,
+          work_dirs=last_result.work_dirs,
+          status=run_result.crashes,
+          error=run_result.crash_info,
+          full_log=run_result.log_path,
+          coverage_summary=run_result.coverage_summary,
+          coverage=coverage_percent,
+          line_coverage_diff=coverage_diff,
+          reproducer_path=run_result.reproducer_path,
+          textcov_diff=run_result.coverage,
+          log_path=run_result.log_path,
+          corpus_path=run_result.corpus_path,
+          coverage_report_path=run_result.coverage_report_path,
+          cov_pcs=run_result.cov_pcs,
+          total_pcs=run_result.total_pcs,
+          fuzz_target_source=last_result.fuzz_target_source,
+          build_script_source=last_result.build_script_source)
     except Exception as e:
       logging.error(
           'Exception occurred when building and running fuzz target: %s', e)

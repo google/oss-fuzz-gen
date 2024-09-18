@@ -1,6 +1,7 @@
 """The data structure of all result kinds."""
 from typing import Any, Optional
 
+from experiment import textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 
@@ -51,7 +52,6 @@ class BuildResult(Result):
                status: bool = False,
                error: str = '',
                full_log: str = '',
-               insight: str = '',
                fuzz_target_source: str = '',
                build_script_source: str = '',
                author: Any = None,
@@ -61,25 +61,67 @@ class BuildResult(Result):
     self.status: bool = status  # Build success/failure.
     self.error: str = error  # Build error message.
     self.full_log: str = full_log  # Build full output.
-    self.insight: str = insight  # Reason and fixes for build failure.
 
   def to_dict(self) -> dict:
     return super().to_dict() | {
         'compiles': self.status,
         'compile_error': self.error,
         'compile_log': self.full_log,
-        'compile_insight': self.insight,
     }
 
 
 class RunResult(BuildResult):
   """The fuzzing run-time result info."""
 
+  def __init__(
+      self,
+      benchmark: Benchmark,
+      trial: int,
+      work_dirs: WorkDirs,
+      status: bool = False,  # Runtime crash.
+      error: str = '',  # Runtime crash error message.
+      full_log: str = '',  # Full fuzzing output.
+      coverage_summary: Optional[dict] = None,
+      coverage: float = 0.0,
+      line_coverage_diff: float = 0.0,
+      textcov_diff: Optional[textcov.Textcov] = None,
+      reproducer_path: str = '',
+      log_path: str = '',
+      corpus_path: str = '',
+      coverage_report_path: str = '',
+      cov_pcs: int = 0,
+      total_pcs: int = 0,
+      fuzz_target_source: str = '',
+      build_script_source: str = '',
+      author: Any = None,
+      agent_dialogs: Optional[dict] = None) -> None:
+    super().__init__(benchmark, trial, work_dirs, status, error, full_log,
+                     fuzz_target_source, build_script_source, author,
+                     agent_dialogs)
+    self.coverage_summary: dict = coverage_summary or {}
+    self.coverage: float = coverage
+    self.line_coverage_diff: float = line_coverage_diff
+    self.reproducer_path: str = reproducer_path
+    self.textcov_diff: Optional[textcov.Textcov] = textcov_diff
+    self.log_path: str = log_path
+    self.corpus_path: str = corpus_path
+    self.coverage_report_path: str = coverage_report_path
+    self.cov_pcs: int = cov_pcs
+    self.total_pcs: int = total_pcs
+
   def to_dict(self) -> dict:
     return super().to_dict() | {
         'crashes': self.status,
         'crash_error': self.error,
         'crash_log': self.full_log,
+        'coverage_summary': self.coverage_summary,
+        'coverage': self.coverage,
+        'line_coverage_diff': self.line_coverage_diff,
+        'log_path': self.log_path,
+        'corpus_path': self.corpus_path,
+        'coverage_report_path': self.coverage_report_path,
+        'cov_pcs': self.cov_pcs,
+        'total_pcs': self.total_pcs,
     }
 
 
