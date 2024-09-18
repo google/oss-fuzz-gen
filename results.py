@@ -72,11 +72,8 @@ class BuildResult(Result):
     }
 
 
-class RunResult(Result):
+class RunResult(BuildResult):
   """The fuzzing run-time result info."""
-  status: bool  # Run success/failure
-  error: str  # Run error message
-  full_log: str  # Run full output
 
   def to_dict(self) -> dict:
     return super().to_dict() | {

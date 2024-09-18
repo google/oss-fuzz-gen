@@ -51,6 +51,8 @@ class Pipeline():
         self.writing_stage.execute(result_history=result_history))
     self.logger.info('Cycle %d final result is %s', cycle_count,
                      result_history[-1])
+    result_history.append(
+        self.execution_stage.execute(result_history=result_history))
 
   def execute(self, result_history: list[Result]) -> list[Result]:
     """
