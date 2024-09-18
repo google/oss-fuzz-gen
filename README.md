@@ -1,6 +1,6 @@
 # A Framework for Fuzz Target Generation and Evaluation
 
-This framework generates fuzz targets for real-world `C`/`C++` projects with
+This framework generates fuzz targets for real-world `C`/`C++/Java/Python` projects with
 various Large Language Models (LLM) and benchmarks them via the
 [`OSS-Fuzz` platform](https://github.com/google/oss-fuzz).
 
