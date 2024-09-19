@@ -670,26 +670,28 @@ class BuilderRunner:
     """Get the filename of the text coverage file. This is language
     dependent."""
     lang_to_textcov_basename = {
-      'jvm': 'jacoco.xml',
-      'python': 'all_cov.json',
-      'c++': f'{self.benchmark.target_name}.covreport',
-      'c': f'{self.benchmark.target_name}.covreport'
+        'jvm': 'jacoco.xml',
+        'python': 'all_cov.json',
+        'c++': f'{self.benchmark.target_name}.covreport',
+        'c': f'{self.benchmark.target_name}.covreport'
     }
 
-    return os.path.join(get_build_artifact_dir(project_name, 'out'),
-                                            'textcov_reports', lang_to_textcov_basename[self.benchmark.language])
+    return os.path.join(get_build_artifact_dir(project_name,
+                                               'out'), 'textcov_reports',
+                        lang_to_textcov_basename[self.benchmark.language])
 
-
-  def _extract_local_textcoverage_data(self, project_name: str) -> textcov.Textcov:
+  def _extract_local_textcoverage_data(self,
+                                       project_name: str) -> textcov.Textcov:
     """Returns the textcoverage from a local coverage run."""
     local_textcov_location = self._get_coverage_text_filename(project_name)
     language_modes = {
-      'jvm': 'r',
-      'python': 'r',
-      'c': 'rb',
-      'c++': 'rb',
+        'jvm': 'r',
+        'python': 'r',
+        'c': 'rb',
+        'c++': 'rb',
     }
-    with open(local_textcov_location, language_modes.get(self.benchmark.language)) as f:
+    with open(local_textcov_location,
+              language_modes.get(self.benchmark.language, 'rb')) as f:
       if self.benchmark.language == 'jvm':
         new_textcov = textcov.Textcov.from_jvm_file(f)
       elif self.benchmark.language == 'python':
@@ -703,7 +705,6 @@ class BuilderRunner:
                 re.compile(r'^' + re.escape(target_basename) + ':')
             ])
       return new_textcov
-
 
   def get_coverage_local(
       self, generated_project: str,
@@ -755,13 +756,15 @@ class BuilderRunner:
 
     # Copy the code coverage to a folder in the results directory so
     # the coverage can be displayed in the result HTML page.
-    coverage_report = os.path.join(get_build_artifact_dir(generated_project, 'out'), 'report')
+    coverage_report = os.path.join(
+        get_build_artifact_dir(generated_project, 'out'), 'report')
     destination_coverage = self.work_dirs.code_coverage_report(
         benchmark_target_name)
     shutil.copytree(coverage_report, destination_coverage, dirs_exist_ok=True)
 
-    coverage_summary = os.path.join(get_build_artifact_dir(generated_project, 'out'), 'report', 'linux',
-                                    'summary.json')
+    coverage_summary = os.path.join(
+        get_build_artifact_dir(generated_project, 'out'), 'report', 'linux',
+        'summary.json')
     with open(coverage_summary) as f:
       coverage_summary = json.load(f)
 
