@@ -34,7 +34,6 @@ class CloudBuilder:
   """
 
   def __init__(self, args: argparse.Namespace) -> None:
-    # TODO(dongge): More tags, e.g., benchmark name, project name.
     self.tags = ['ofg', 'agent', args.cloud_experiment_name]
     self.credentials, self.project_id = default()
     assert self.project_id, 'Cloud experiment requires a Google cloud project.'
@@ -230,6 +229,9 @@ class CloudBuilder:
   def run(self, agent: BaseAgent, result_history: list[Result],
           dill_dir: str) -> Any:
     """Runs agent on cloud build."""
+    # Step 0: Add task-specific tags.
+    # TODO(dongge): More tags, e.g., benchmark name.
+    self.tags += [str(agent), result_history[-1].benchmark.project]
     # Step1: Generate dill files.
     agent_dill = utils.serialize_to_dill(
         agent, os.path.join(dill_dir, f'{uuid.uuid4().hex}.pkl'))

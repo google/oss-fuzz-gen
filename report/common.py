@@ -346,6 +346,12 @@ class Results:
 
   def get_targets(self, benchmark: str, sample: str) -> list[Target]:
     """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
+    return (self._get_targets(benchmark, sample) or
+            [self._get_targets_agent(benchmark, sample)])
+
+  def _get_targets(self, benchmark: str, sample: str) -> list[Target]:
+    """Gets the targets of benchmark |benchmark| with sample ID |sample| from
+    the OFG version 1 (single prompt)."""
     targets_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
     targets = []
 
@@ -361,6 +367,28 @@ class Results:
         targets.append(self._get_fixed_target(path))
 
     return targets
+
+  def _get_targets_agent(self, benchmark: str, trial: str) -> Target:
+    """Gets the targets of benchmark |benchmark| with trial ID |trial| from
+    the OFG version 2 (LLM agents)."""
+    fuzz_target_dir = os.path.join(self._results_dir, benchmark, 'fuzz_target')
+    files = sorted(FileSystem(fuzz_target_dir).listdir())
+
+    fuzz_target_code = ''
+    if f'{trial:02s}.fuzz_target' in files:
+      fuzz_target_path = os.path.join(fuzz_target_dir,
+                                      f'{trial:02s}.fuzz_target')
+      with FileSystem(fuzz_target_path).open() as f:
+        fuzz_target_code = f.read()
+
+    build_script_code = ''
+    if f'{trial:02s}.build_script' in files:
+      build_script_path = os.path.join(fuzz_target_dir,
+                                       f'{trial:02s}.build_script')
+      with FileSystem(build_script_path).open() as f:
+        build_script_code = f.read()
+
+    return Target(code=fuzz_target_code, fixer_prompt=build_script_code)
 
   def get_samples(self, results: list[evaluator.Result],
                   targets: list[str]) -> list[Sample]:
