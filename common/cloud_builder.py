@@ -262,10 +262,10 @@ class CloudBuilder:
     result = utils.deserialize_from_dill(new_result_dill)
     if not result:
       last_result = result_history[-1]
-      result = BuildResult(benchmark=last_result.benchmark,
-                           trial=last_result.trial,
-                           work_dirs=last_result.work_dirs,
-                           author=agent)
+      result = Result(benchmark=last_result.benchmark,
+                      trial=last_result.trial,
+                      work_dirs=last_result.work_dirs,
+                      author=agent)
     result.agent_dialogs = {agent.name: build_log_url}
 
     return result
