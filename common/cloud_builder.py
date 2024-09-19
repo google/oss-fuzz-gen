@@ -212,15 +212,12 @@ class CloudBuilder:
 
   def _get_build_log(self, build_id: str) -> str:
     """Downloads the build log"""
-    log_file_uri = f'log-{build_id}.txt'
     try:
-      bucket = self.storage_client.bucket(self.bucket_name)
-      blob = bucket.blob(log_file_uri)
-      log_content = blob.download_as_text()
-      logging.debug(log_content)
-      return log_content
-    except NotFound as e:
-      logging.error('Cloud build log %s not found: %s', log_file_uri, e)
+      log_url = self.builds.get(projectId=self.project_id,
+                                id=build_id).execute().get('logUrl', '')
+      return log_url
+    except Exception as e:
+      logging.error('Cloud build log %s not found: %s', build_id, e)
       return ''
 
   def _download_from_gcs(self, destination_file_name: str) -> None:
@@ -257,7 +254,7 @@ class CloudBuilder:
         self._download_from_gcs(new_result_dill)
     except (KeyboardInterrupt, SystemExit):
       self._cancel_build(build_id)
-    build_log = self._get_build_log(build_id)
+    build_log_url = self._get_build_log(build_id)
 
     # Step 4: Deserialize dilld file.
     result = utils.deserialize_from_dill(new_result_dill)
@@ -267,6 +264,6 @@ class CloudBuilder:
                            trial=last_result.trial,
                            work_dirs=last_result.work_dirs,
                            author=agent)
-    result.agent_dialogs = {agent.name: build_log}
+    result.agent_dialogs = {agent.name: build_log_url}
 
     return result
