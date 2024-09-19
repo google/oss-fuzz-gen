@@ -17,7 +17,7 @@ from googleapiclient.discovery import build as cloud_build
 
 import utils
 from agent.base_agent import BaseAgent
-from results import BuildResult, Result
+from results import Result
 
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
 OFG_ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))

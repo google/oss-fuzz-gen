@@ -67,8 +67,8 @@ class BuildResult(Result):
   def to_dict(self) -> dict:
     return super().to_dict() | {
         'compiles': self.compiles,
-        'build_script_source': self.build_script_source,
-        'build_script_source': self.build_script_source,
+        'compile_error': self.compile_error,
+        'compile_log': self.compile_log,
     }
 
 
