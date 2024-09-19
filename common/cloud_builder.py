@@ -34,7 +34,8 @@ class CloudBuilder:
   """
 
   def __init__(self, args: argparse.Namespace) -> None:
-    #TODO(dongge): extra tags.
+    # TODO(dongge): More tags, e.g., benchmark name, project name.
+    self.tags = ['ofg', 'agent', args.cloud_experiment_name]
     self.credentials, self.project_id = default()
     assert self.project_id, 'Cloud experiment requires a Google cloud project.'
     assert hasattr(
@@ -172,7 +173,7 @@ class CloudBuilder:
                 ]
             }
         ],
-        'tags': ['ofg', 'agent'],
+        'tags': self.tags,
         'timeout': '10800s',  # 3 hours
         'logsBucket': f'gs://{self.bucket_name}',
         'serviceAccount':
