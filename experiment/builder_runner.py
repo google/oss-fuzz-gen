@@ -666,10 +666,52 @@ class BuilderRunner:
                 sanitizer)
     return True
 
+  def _get_coverage_text_filename(self, project_name: str) -> str:
+    """Get the filename of the text coverage file. This is language
+    dependent."""
+    lang_to_textcov_basename = {
+        'jvm': 'jacoco.xml',
+        'python': 'all_cov.json',
+        'c++': f'{self.benchmark.target_name}.covreport',
+        'c': f'{self.benchmark.target_name}.covreport'
+    }
+
+    return os.path.join(get_build_artifact_dir(project_name,
+                                               'out'), 'textcov_reports',
+                        lang_to_textcov_basename[self.benchmark.language])
+
+  def _extract_local_textcoverage_data(self,
+                                       project_name: str) -> textcov.Textcov:
+    """Returns the textcoverage from a local coverage run."""
+    local_textcov_location = self._get_coverage_text_filename(project_name)
+    language_modes = {
+        'jvm': 'r',
+        'python': 'r',
+        'c': 'rb',
+        'c++': 'rb',
+    }
+    with open(local_textcov_location,
+              language_modes.get(self.benchmark.language, 'rb')) as f:
+      if self.benchmark.language == 'jvm':
+        new_textcov = textcov.Textcov.from_jvm_file(f)
+      elif self.benchmark.language == 'python':
+        new_textcov = textcov.Textcov.from_python_file(f)
+      else:
+        target_basename = os.path.basename(self.benchmark.target_path)
+        new_textcov = textcov.Textcov.from_file(
+            f,
+            ignore_function_patterns=[
+                # Don't include other functions defined in the target code.
+                re.compile(r'^' + re.escape(target_basename) + ':')
+            ])
+      return new_textcov
+
   def get_coverage_local(
       self, generated_project: str,
       benchmark_target_name: str) -> tuple[Optional[textcov.Textcov], Any]:
-    """Get coverage."""
+    """Builds the generate project with coverage sanitizer, runs OSS-Fuzz
+    coverage extraction and then returns the generated coverage reports, in
+    the form of the text coverage as well as the summary.json."""
     sample_id = os.path.splitext(benchmark_target_name)[0]
     log_path = os.path.join(self.work_dirs.build_logs,
                             f'{sample_id}-coverage.log')
@@ -708,46 +750,25 @@ class BuilderRunner:
                   generated_project, e.stdout, e.stderr)
       return None, None
 
-    if self.benchmark.language == 'jvm':
-      local_textcov_location = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                            'build', 'out', generated_project,
-                                            'textcov_reports', 'jacoco.xml')
-      with open(local_textcov_location) as f:
-        new_textcov = textcov.Textcov.from_jvm_file(f)
-    elif self.benchmark.language == 'python':
-      local_textcov_location = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                            'build', 'out', generated_project,
-                                            'textcov_reports', 'all_cov.json')
-      with open(local_textcov_location) as f:
-        new_textcov = textcov.Textcov.from_python_file(f)
-    else:
-      local_textcov_location = os.path.join(
-          oss_fuzz_checkout.OSS_FUZZ_DIR, 'build', 'out', generated_project,
-          'textcov_reports', f'{self.benchmark.target_name}.covreport')
-      target_basename = os.path.basename(self.benchmark.target_path)
+    # Get the local text xoverage, which includes the specific lines
+    # exercised in the target project.
+    local_textcov = self._extract_local_textcoverage_data(generated_project)
 
-      with open(local_textcov_location, 'rb') as f:
-        new_textcov = textcov.Textcov.from_file(
-            f,
-            ignore_function_patterns=[
-                # Don't include other functions defined in the target code.
-                re.compile(r'^' + re.escape(target_basename) + ':')
-            ])
-
-    coverage_report = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build',
-                                   'out', generated_project, 'report')
+    # Copy the code coverage to a folder in the results directory so
+    # the coverage can be displayed in the result HTML page.
+    coverage_report = os.path.join(
+        get_build_artifact_dir(generated_project, 'out'), 'report')
     destination_coverage = self.work_dirs.code_coverage_report(
         benchmark_target_name)
-
     shutil.copytree(coverage_report, destination_coverage, dirs_exist_ok=True)
 
-    coverage_summary = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build',
-                                    'out', generated_project, 'report', 'linux',
-                                    'summary.json')
+    coverage_summary = os.path.join(
+        get_build_artifact_dir(generated_project, 'out'), 'report', 'linux',
+        'summary.json')
     with open(coverage_summary) as f:
       coverage_summary = json.load(f)
 
-    return new_textcov, coverage_summary
+    return local_textcov, coverage_summary
 
 
 class CloudBuilderRunner(BuilderRunner):
