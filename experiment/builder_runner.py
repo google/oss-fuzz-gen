@@ -980,21 +980,6 @@ class CloudBuilderRunner(BuilderRunner):
     return build_result, run_result
 
 
-# TODO(metzman): Finish this.
-FUZZ_TARGET_MAGIC = b'ochangdonggeliumetzmanfuzzer'
-
-
-def find_generated_fuzz_target(directory):
-  for root, _, files in os.walk(directory):
-    for filename in files:
-      filepath = os.path.join(root, filename)
-      with open(filepath, 'rb') as fp:
-        data = fp.read()
-      if FUZZ_TARGET_MAGIC in data:
-        return filepath
-  return None
-
-
 def get_build_artifact_dir(generated_project: str, build_artifact: str) -> str:
   """
   Returns the |build_artifact| absolute directory path for |generated_project|.
