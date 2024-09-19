@@ -31,7 +31,8 @@ import anthropic
 import openai
 import tiktoken
 import vertexai
-from google.api_core.exceptions import GoogleAPICallError, InvalidArgument
+from google.api_core.exceptions import (GoogleAPICallError, InvalidArgument,
+                                        ResourceExhausted)
 from vertexai import generative_models
 from vertexai.preview.generative_models import ChatSession, GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
@@ -627,7 +628,7 @@ class GeminiV1D5Chat(GeminiV1D5):
     parameters_list = self._prepare_parameters()[0]
     response = self.with_retry_on_error(
         lambda: self._do_generate(client, prompt.get(), parameters_list),
-        [GoogleAPICallError, InvalidArgument]) or ''
+        [GoogleAPICallError, InvalidArgument, ResourceExhausted]) or ''
     return response
 
 
