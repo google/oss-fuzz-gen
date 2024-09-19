@@ -15,7 +15,8 @@ class ExecutionStage(BaseStage):
   """Executes fuzz targets and build scripts. This stage takes a fuzz target
   and its build script, runs them locally or on the cloud with OSS-Fuzz infra,
   and outputs code coverage report and run-time crash information for later
-  stages to analyze and improve on. It OSS-Fuzz infra to perform these tasks."""
+  stages to analyze and improve on. It uses OSS-Fuzz infra to perform these
+  tasks."""
 
   def execute(self, result_history: list[Result]) -> Result:
     last_result = result_history[-1]
