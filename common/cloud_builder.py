@@ -10,7 +10,6 @@ from typing import Any
 
 import google.api_core.client_options
 import googleapiclient.errors
-from google.api_core.exceptions import NotFound
 from google.auth import default
 from google.auth.transport.requests import Request
 from google.cloud import storage
