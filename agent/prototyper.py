@@ -109,7 +109,7 @@ class Prototyper(BaseAgent):
     self._update_fuzz_target_and_build_script(cur_round, response, build_result)
 
     self._validate_fuzz_target_and_build_script(cur_round, build_result)
-    if build_result.status:
+    if build_result.compiles:
       logger.info('***** Prototyper succeded in %02d rounds *****', cur_round)
       return None
 
@@ -120,7 +120,7 @@ class Prototyper(BaseAgent):
                    f'{build_result.fuzz_target_source}\n</fuzz target>\n'
                    f'<build script>\n{build_result.build_script_source}\n'
                    '</build script>\n'
-                   f'{build_result.full_log}')
+                   f'{build_result.compile_log}')
     prompt = DefaultTemplateBuilder(self.llm, initial=prompt_text).build([])
     return prompt
 
