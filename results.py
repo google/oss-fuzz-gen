@@ -39,6 +39,8 @@ class Result:
         'trial': self.trial,
         'fuzz_target_source': self.fuzz_target_source,
         'build_script_source': self.build_script_source,
+        'author': str(self.author),
+        'agent_dialogs': self.agent_dialogs,
     }
 
 

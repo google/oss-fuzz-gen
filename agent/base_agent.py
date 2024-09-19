@@ -33,6 +33,9 @@ class BaseAgent(ABC):
     self.name: str = name or self.__class__.__name__
     self.dialog: str = ''  # Communication history between LLM and tool.
 
+  def __repr__(self) -> str:
+    return self.__class__.__name__
+
   def get_tool(self, tool_name: str) -> Optional[BaseTool]:
     """Gets a tool of the agent by name."""
     for tool in self.tools:
