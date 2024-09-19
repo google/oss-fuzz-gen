@@ -7,7 +7,7 @@ import os
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as evaluator_lib
 from experiment.evaluator import Evaluator
-from results import Result, RunResult
+from results import BuildResult, Result, RunResult
 from stage.base_stage import BaseStage
 
 
@@ -89,10 +89,15 @@ class ExecutionStage(BaseStage):
         self.logger.warning('total_lines == 0 in %s',
                             generated_oss_fuzz_project)
       coverage_diff = 0.0
+      assert isinstance(last_result,
+                        BuildResult), 'RunResult must follow a BuildResult'
       runresult = RunResult(
           benchmark=benchmark,
           trial=last_result.trial,
           work_dirs=last_result.work_dirs,
+          compiles=last_result.compiles,
+          compile_error=last_result.compile_error,
+          compile_log=last_result.compile_log,
           crashes=run_result.crashes,
           run_error=run_result.crash_info,
           run_log=run_result.log_path,
