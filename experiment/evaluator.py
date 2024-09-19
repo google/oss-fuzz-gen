@@ -232,7 +232,10 @@ class Evaluator:
   def run_log_path(self, generated_target_name: str):
     return os.path.join(self.work_dirs.run_logs, f'{generated_target_name}.log')
 
-  def create_ossfuzz_project(self, name: str, target_file: str) -> str:
+  def create_ossfuzz_project(self,
+                             name: str,
+                             target_file: str,
+                             build_script_path: str = '') -> str:
     """Creates an OSS-Fuzz project with the generated target."""
     logger.info('target file: %s', target_file)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
@@ -255,6 +258,20 @@ class Evaluator:
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(f'\nCOPY {os.path.basename(target_file)} '
               f'{self.benchmark.target_path}\n')
+
+    if os.path.getsize(build_script_path) == 0:
+      return name
+
+    logger.info('Build script: %s', build_script_path)
+    # Copy generated build script to generated_project_path
+    shutil.copyfile(
+        build_script_path,
+        os.path.join(generated_project_path,
+                     os.path.basename('agent-build.sh')))
+
+    # Add additional statement in dockerfile to overwrite with generated fuzzer
+    with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
+      f.write('\nCOPY agent-build.sh /src/build.sh\n')
 
     return name
 

@@ -43,10 +43,12 @@ class ExecutionStage(BaseStage):
     generated_oss_fuzz_project = evaluator_lib._rectify_docker_tag(
         generated_oss_fuzz_project)
 
-    fuzz_target_path = os.path.join(last_result.work_dirs.raw_targets,
+    fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_target,
                                     f'{last_result.trial:02d}.fuzz_target')
+    build_script_path = os.path.join(last_result.work_dirs.fuzz_target,
+                                     f'{last_result.trial:02d}.build_script')
     evaluator.create_ossfuzz_project(generated_oss_fuzz_project,
-                                     fuzz_target_path)
+                                     fuzz_target_path, build_script_path)
 
     status_path = os.path.join(last_result.work_dirs.status, sample_id)
     os.makedirs(status_path, exist_ok=True)

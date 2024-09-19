@@ -29,13 +29,13 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
 
   def write_fuzz_target(self, result: Result) -> None:
     """Writes fuzz target."""
-    fuzz_target_path = os.path.join(result.work_dirs.raw_targets,
+    fuzz_target_path = os.path.join(result.work_dirs.fuzz_target,
                                     f'{result.trial:02d}.fuzz_target')
     self.write_to_file(fuzz_target_path, result.fuzz_target_source)
 
   def write_build_script(self, result: Result) -> None:
     """Writes build script."""
-    build_script_path = os.path.join(result.work_dirs.raw_targets,
+    build_script_path = os.path.join(result.work_dirs.fuzz_target,
                                      f'{result.trial:02d}.build_script')
     self.write_to_file(build_script_path, result.build_script_source)
 

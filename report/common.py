@@ -424,7 +424,8 @@ class Results:
     """
     Returns results of all samples. Items can be None if they're not complete.
     """
-    targets = self._get_generated_targets(benchmark)
+    targets = self._get_generated_targets(
+        benchmark) + self._get_agent_generated_targets(benchmark)
 
     results = []
     status_dir = os.path.join(self._results_dir, benchmark, 'status')
@@ -537,12 +538,26 @@ class Results:
                                 expected_dir)).isdir()
         for expected_dir in expected_dirs)
 
+  # TODO(dongge): Deprecate this.
   def _get_generated_targets(self, benchmark: str) -> list[str]:
+    """Gets the targets of benchmark |benchmark| from the OFG version 1 (single
+    prompt)."""
     targets = []
     raw_targets_dir = os.path.join(self._results_dir, benchmark, 'raw_targets')
     for filename in sorted(FileSystem(raw_targets_dir).listdir()):
       if os.path.splitext(filename)[1] in TARGET_EXTS:
         targets.append(os.path.join(raw_targets_dir, filename))
+
+    return targets
+
+  def _get_agent_generated_targets(self, benchmark: str) -> list[str]:
+    """Gets the targets of benchmark |benchmark| from the OFG version 2 (LLM
+    agent)."""
+    targets = []
+    fuzz_targets_dir = os.path.join(self._results_dir, benchmark, 'fuzz_target')
+    for filename in sorted(FileSystem(fuzz_targets_dir).listdir()):
+      if os.path.splitext(filename)[1] in TARGET_EXTS:
+        targets.append(os.path.join(fuzz_targets_dir, filename))
 
     return targets
 
