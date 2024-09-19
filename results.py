@@ -62,6 +62,13 @@ class BuildResult(Result):
     self.compile_error: str = compile_error  # Build error message.
     self.compile_log: str = compile_log  # Build full output.
 
+  def to_dict(self) -> dict:
+    return super().to_dict() | {
+        'compiles': self.compiles,
+        'build_script_source': self.build_script_source,
+        'build_script_source': self.build_script_source,
+    }
+
 
 class RunResult(BuildResult):
   """The fuzzing run-time result info."""
@@ -109,8 +116,20 @@ class RunResult(BuildResult):
     self.total_pcs: int = total_pcs
 
   def to_dict(self) -> dict:
-    return {
+    return super().to_dict() | {
+        'crashes': self.crashes,
+        'run_error': self.run_error,
+        'run_log': self.run_log,
+        'coverage_summary': self.coverage_summary or {},
+        'coverage': self.coverage,
+        'line_coverage_diff': self.line_coverage_diff,
+        'reproducer_path': self.reproducer_path,
         'textcov_diff': '',  # Class Textcov cannot be serialized.
+        'log_path': self.log_path,
+        'corpus_path': self.corpus_path,
+        'coverage_report_path': self.coverage_report_path,
+        'cov_pcs': self.cov_pcs,
+        'total_pcs': self.total_pcs,
     }
 
 
