@@ -41,6 +41,8 @@ spec:
         - mountPath: "/experiment/results"
           name: results-volume
         env:
+        - name: GCB_BUILDPOOL_NAME
+          value: projects/oss-fuzz/locations/us-central1/workerPools/buildpool-experiments2
         - name: LLM_NUM_EXP
           value: '40'
         - name: LLM_NUM_EVA
