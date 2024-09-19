@@ -179,6 +179,9 @@ class CloudBuilder:
             f'projects/{self.project_id}/serviceAccounts/'
             f'{self.credentials.service_account_email}'  # type: ignore
     }
+    pool_name = os.getenv('GCB_BUILDPOOL_NAME')
+    if pool_name:
+      cloud_build_config['pool'] = {'name': pool_name}
     logging.info(cloud_build_config)
 
     # Convert to YAML string and submit the Cloud Build request
