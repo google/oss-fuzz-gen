@@ -108,6 +108,11 @@ class RunResult(BuildResult):
     self.cov_pcs: int = cov_pcs
     self.total_pcs: int = total_pcs
 
+  def to_dict(self) -> dict:
+    return {
+        'textcov_diff': '',  # Class Textcov cannot be serialized.
+    }
+
 
 class CrashResult(RunResult):
   """The fuzzing run-time result with crash info."""
