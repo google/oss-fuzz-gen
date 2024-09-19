@@ -49,25 +49,18 @@ class BuildResult(Result):
                benchmark: Benchmark,
                trial: int,
                work_dirs: WorkDirs,
-               status: bool = False,
-               error: str = '',
-               full_log: str = '',
+               compiles: bool = False,
+               compile_error: str = '',
+               compile_log: str = '',
                fuzz_target_source: str = '',
                build_script_source: str = '',
                author: Any = None,
                agent_dialogs: Optional[dict] = None) -> None:
     super().__init__(benchmark, trial, work_dirs, fuzz_target_source,
                      build_script_source, author, agent_dialogs)
-    self.status: bool = status  # Build success/failure.
-    self.error: str = error  # Build error message.
-    self.full_log: str = full_log  # Build full output.
-
-  def to_dict(self) -> dict:
-    return super().to_dict() | {
-        'compiles': self.status,
-        'compile_error': self.error,
-        'compile_log': self.full_log,
-    }
+    self.compiles: bool = compiles  # Build success/failure.
+    self.compile_error: str = compile_error  # Build error message.
+    self.compile_log: str = compile_log  # Build full output.
 
 
 class RunResult(BuildResult):
@@ -78,9 +71,12 @@ class RunResult(BuildResult):
       benchmark: Benchmark,
       trial: int,
       work_dirs: WorkDirs,
-      status: bool = False,  # Runtime crash.
-      error: str = '',  # Runtime crash error message.
-      full_log: str = '',  # Full fuzzing output.
+      compiles: bool = False,
+      compile_error: str = '',
+      compile_log: str = '',
+      crashes: bool = False,  # Runtime crash.
+      run_error: str = '',  # Runtime crash error message.
+      run_log: str = '',  # Full fuzzing output.
       coverage_summary: Optional[dict] = None,
       coverage: float = 0.0,
       line_coverage_diff: float = 0.0,
@@ -95,9 +91,12 @@ class RunResult(BuildResult):
       build_script_source: str = '',
       author: Any = None,
       agent_dialogs: Optional[dict] = None) -> None:
-    super().__init__(benchmark, trial, work_dirs, status, error, full_log,
-                     fuzz_target_source, build_script_source, author,
-                     agent_dialogs)
+    super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
+                     compile_log, fuzz_target_source, build_script_source,
+                     author, agent_dialogs)
+    self.crashes: bool = crashes
+    self.run_error: str = run_error
+    self.run_log: str = run_log
     self.coverage_summary: dict = coverage_summary or {}
     self.coverage: float = coverage
     self.line_coverage_diff: float = line_coverage_diff
@@ -108,21 +107,6 @@ class RunResult(BuildResult):
     self.coverage_report_path: str = coverage_report_path
     self.cov_pcs: int = cov_pcs
     self.total_pcs: int = total_pcs
-
-  def to_dict(self) -> dict:
-    return super().to_dict() | {
-        'crashes': self.status,
-        'crash_error': self.error,
-        'crash_log': self.full_log,
-        'coverage_summary': self.coverage_summary,
-        'coverage': self.coverage,
-        'line_coverage_diff': self.line_coverage_diff,
-        'log_path': self.log_path,
-        'corpus_path': self.corpus_path,
-        'coverage_report_path': self.coverage_report_path,
-        'cov_pcs': self.cov_pcs,
-        'total_pcs': self.total_pcs,
-    }
 
 
 class CrashResult(RunResult):

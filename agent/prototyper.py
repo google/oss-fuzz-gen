@@ -55,9 +55,10 @@ class Prototyper(BaseAgent):
                            compile_process: sp.CompletedProcess,
                            status: bool) -> None:
     """Updates the build result with the latest info."""
-    buid_result.status = status
-    buid_result.error = compile_process.stderr
-    buid_result.full_log = self._format_bash_execution_result(compile_process)
+    buid_result.compiles = status
+    buid_result.compile_error = compile_process.stderr
+    buid_result.compile_log = self._format_bash_execution_result(
+        compile_process)
 
   def _validate_fuzz_target_and_build_script(self, cur_round: int,
                                              build_result: BuildResult) -> None:

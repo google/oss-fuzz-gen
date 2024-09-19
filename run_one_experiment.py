@@ -97,7 +97,7 @@ class AggregatedResult:
     ][-1]
                                  for trial_result_history in trial_results]
     build_success_rate = sum([
-        int(trial_final_result.status)
+        int(trial_final_result.compiles)
         for trial_final_result in trial_final_build_results
     ]) / len(trial_final_build_results)
 
@@ -108,7 +108,7 @@ class AggregatedResult:
     ][-1]
                                for trial_result_history in trial_results]
     crash_rate = sum([
-        int(trial_result.status) for trial_result in trial_final_run_results
+        int(trial_result.crashes) for trial_result in trial_final_run_results
     ]) / len(trial_final_run_results)
 
     max_coverage = max([
