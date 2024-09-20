@@ -120,7 +120,8 @@ class GenerateReport:
     for l in os.listdir(coverage_path):
       if l.split('.')[0] == sample.id:
         coverage_report = os.path.join(coverage_path, l)
-    if coverage_report:
+    if coverage_report and os.path.isdir(coverage_report) and len(
+        os.listdir(coverage_report)) > 1:
       # Copy coverage to reports out
       dst = os.path.join(self._output_dir, 'sample', benchmark.id, 'coverage')
       os.makedirs(dst, exist_ok=True)
