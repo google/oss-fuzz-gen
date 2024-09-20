@@ -960,7 +960,17 @@ class CloudBuilderRunner(BuilderRunner):
 
     blob = bucket.blob(f'{coverage_name}/report/linux/summary.json')
     if blob.exists():
-      with blob.open() as f:
+      # Download summary.json to our workdir.
+      cov_summary_folder = os.path.join(
+          self.work_dirs.code_coverage_report(generated_target_name),
+          'report/linux/')
+      os.makedirs(cov_summary_folder)
+      coverage_summary_file = os.path.join(cov_summary_folder, 'summary.json')
+      with open(coverage_summary_file, 'w') as f:
+        blob.download_to_file(f)
+
+      # Load the coverage summary
+      with open(coverage_summary_file, 'r') as f:
         run_result.coverage_summary = json.load(f)
 
     target_basename = os.path.basename(self.benchmark.target_path)
