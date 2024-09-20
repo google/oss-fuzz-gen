@@ -971,6 +971,7 @@ class CloudBuilderRunner(BuilderRunner):
 
     blob = bucket.blob(f'{coverage_name}/report/linux/summary.json')
     if blob.exists():
+      with blob.open() as f:
         run_result.coverage_summary = json.load(f)
 
     target_basename = os.path.basename(self.benchmark.target_path)
