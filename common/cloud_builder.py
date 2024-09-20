@@ -234,7 +234,10 @@ class CloudBuilder:
     """Runs agent on cloud build."""
     # Step 0: Add task-specific tags.
     # TODO(dongge): More tags, e.g., benchmark name.
-    self.tags += [str(agent), result_history[-1].benchmark.project]
+    self.tags += [
+        str(agent), result_history[-1].benchmark.project,
+        result_history[-1].trial
+    ]
     # Step1: Generate dill files.
     agent_dill = utils.serialize_to_dill(
         agent, os.path.join(dill_dir, f'{uuid.uuid4().hex}.pkl'))
