@@ -173,8 +173,8 @@ def load_existing_coverage_summary(project: str) -> dict:
     return json.load(f)
 
 
-def _compute_total_lines_without_fuzz_targets(
-    coverage_summary: dict, fuzz_target_base_name: str) -> int:
+def compute_total_lines_without_fuzz_targets(coverage_summary: dict,
+                                             fuzz_target_base_name: str) -> int:
   """Counts the total number of lines excluding the fuzz target."""
   # TODO(dongge): Exclude all fuzz targets if there are multiple.
   return sum([
@@ -184,7 +184,7 @@ def _compute_total_lines_without_fuzz_targets(
   ])
 
 
-def _rectify_docker_tag(docker_tag: str) -> str:
+def rectify_docker_tag(docker_tag: str) -> str:
   # Replace "::" and any character not \w, _, or . with "-".
   valid_docker_tag = re.sub(r'::', '-', docker_tag)
   valid_docker_tag = re.sub(r'[^\w_.]', '-', valid_docker_tag)
@@ -354,7 +354,7 @@ class Evaluator:
     generated_target_name = os.path.basename(target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
     generated_oss_fuzz_project = f'{self.benchmark.id}-{sample_id}'
-    generated_oss_fuzz_project = _rectify_docker_tag(generated_oss_fuzz_project)
+    generated_oss_fuzz_project = rectify_docker_tag(generated_oss_fuzz_project)
     self.create_ossfuzz_project(generated_oss_fuzz_project, target_path)
 
     status_path = os.path.join(self.work_dirs.status, sample_id)
@@ -474,7 +474,7 @@ class Evaluator:
       # is determined from the all_cov.json file.
       total_lines = run_result.coverage.total_lines
     elif coverage_summary:
-      total_lines = _compute_total_lines_without_fuzz_targets(
+      total_lines = compute_total_lines_without_fuzz_targets(
           coverage_summary, generated_target_name)
     else:
       total_lines = 0
@@ -486,7 +486,7 @@ class Evaluator:
           f'Warning: total_pcs == 0 in {generated_oss_fuzz_project}.')
       coverage_percent = 0.0
 
-    existing_textcov = self._load_existing_textcov()
+    existing_textcov = self.load_existing_textcov()
     run_result.coverage.subtract_covered_lines(existing_textcov)
 
     if total_lines:
@@ -512,7 +512,7 @@ class Evaluator:
     """Load existing summary.json."""
     return load_existing_coverage_summary(self.benchmark.project)
 
-  def _load_existing_textcov(self) -> textcov.Textcov:
+  def load_existing_textcov(self) -> textcov.Textcov:
     """Loads existing textcovs."""
     if self.benchmark.language == 'jvm':
       return load_existing_jvm_textcov(self.benchmark.project)

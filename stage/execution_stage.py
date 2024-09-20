@@ -19,6 +19,7 @@ class ExecutionStage(BaseStage):
   tasks."""
 
   def execute(self, result_history: list[Result]) -> Result:
+    """Executes the fuzz target and build script in the latest result."""
     last_result = result_history[-1]
     benchmark = last_result.benchmark
     if self.args.cloud_experiment_name:
@@ -40,7 +41,7 @@ class ExecutionStage(BaseStage):
     generated_target_name = os.path.basename(benchmark.target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
     generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}'
-    generated_oss_fuzz_project = evaluator_lib._rectify_docker_tag(
+    generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
         generated_oss_fuzz_project)
 
     fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_target,
@@ -70,7 +71,7 @@ class ExecutionStage(BaseStage):
         raise Exception
 
       if run_result.coverage_summary:
-        total_lines = evaluator_lib._compute_total_lines_without_fuzz_targets(
+        total_lines = evaluator_lib.compute_total_lines_without_fuzz_targets(
             run_result.coverage_summary, generated_target_name)
       else:
         total_lines = 0
@@ -82,7 +83,7 @@ class ExecutionStage(BaseStage):
                             generated_oss_fuzz_project)
         coverage_percent = 0.0
 
-      existing_textcov = evaluator._load_existing_textcov()
+      existing_textcov = evaluator.load_existing_textcov()
       run_result.coverage.subtract_covered_lines(existing_textcov)
 
       if total_lines:
