@@ -64,7 +64,17 @@ class ExecutionStage(BaseStage):
                       BuildResult), 'RunResult must follow a BuildResult'
     try:
       _, run_result = evaluator.builder_runner.build_and_run(
-          generated_oss_fuzz_project, fuzz_target_path, 0, benchmark.language)
+          generated_oss_fuzz_project,
+          fuzz_target_path,
+          0,
+          benchmark.language,
+          cloud_build_tags=[
+              str(last_result.trial),
+              'Executor',
+              'ofg',
+              # TODO(dongge): Tag function name, compatible with tag format.
+              last_result.benchmark.project,
+          ])
       if not run_result:
         raise Exception
       if run_result.coverage_summary is None or run_result.coverage is None:
