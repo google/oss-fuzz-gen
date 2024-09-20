@@ -38,6 +38,7 @@ from vertexai.preview.generative_models import ChatSession, GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
 
 from llm_toolkit import prompts
+from utils import retryable
 
 logger = logging.getLogger(__name__)
 
@@ -610,6 +611,11 @@ class GeminiV1D5Chat(GeminiV1D5):
   def get_chat_client(self, model: GenerativeModel) -> Any:
     return model.start_chat(response_validation=False)
 
+  @retryable(exceptions=[
+      GoogleAPICallError,
+      InvalidArgument,
+  ],
+             other_exceptions={ResourceExhausted: 100})
   def _do_generate(self, client: ChatSession, prompt: str,
                    config: dict[str, Any]) -> Any:
     """Generates chat response."""
@@ -626,9 +632,7 @@ class GeminiV1D5Chat(GeminiV1D5):
 
     # TODO(dongge): Use different values for different trials
     parameters_list = self._prepare_parameters()[0]
-    response = self.with_retry_on_error(
-        lambda: self._do_generate(client, prompt.get(), parameters_list),
-        [GoogleAPICallError, InvalidArgument, ResourceExhausted]) or ''
+    response = self._do_generate(client, prompt.get(), parameters_list) or ''
     return response
 
 
