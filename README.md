@@ -59,17 +59,17 @@ by this framework:
 | [`zstd`](https://github.com/google/oss-fuzz/tree/master/projects/zstd) | [OOB write](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=67497) | Vertex AI | [default](prompts/template_xml) | Far reach, low coverage |
 | [`gdbm`](https://github.com/google/oss-fuzz/tree/master/projects/gdbm) | [stack buffer underflow](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=67483) | Vertex AI | [default](prompts/template_xml) | Far reach, low coverage |
 | [`hoextdown`](https://github.com/google/oss-fuzz/tree/master/projects/hoextdown) | [use of unitialised memory](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=67516) | Vertex AI | [default](prompts/template_xml) | Far reach, low coverage |
+| [`pjsip`](https://github.com/google/oss-fuzz/tree/master/projects/pjsip) | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71356) | Vertex AI | [Default](prompts/template_xml) | Low coverage with fuzz keyword + easy params far reach |
+| [`pjsip`](https://github.com/google/oss-fuzz/tree/master/projects/pjsip)  | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71357) | Vertex AI | [Default](prompts/template_xml) | Low coverage with fuzz keyword + easy params far reach |
+| [`gpac`](https://github.com/google/oss-fuzz/tree/master/projects/gpac) | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71358) | Vertex AI | [Default](prompts/template_xml) | Low coverage with fuzz keyword + easy params far reach |
+| [`gpac`](https://github.com/google/oss-fuzz/tree/master/projects/gpac)  | [OOB read/write](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71542) | Vertex AI | [Default](prompts/template_xml) | All |
+| [`gpac`](https://github.com/google/oss-fuzz/tree/master/projects/gpac)  | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71543) | Vertex AI | [Default](prompts/template_xml) | All |
+| [`gpac`](https://github.com/google/oss-fuzz/tree/master/projects/gpac)  | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71544) | Vertex AI | [Default](prompts/template_xml) | All |
 | Undisclosed | Java RCE (pending maintainer triage) | Vertex AI |  [Default](prompts/template_xml) | Far reach, low coverage |
 | Undisclosed | Regexp DoS (pending maintainer triage) | Vertex AI |  [Default](prompts/template_xml) | Far reach, low coverage |
 | Undisclosed | [use of unitialised memory](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71354) | Vertex AI | Test-to-harness | Test identifier |
-| Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71356) | Vertex AI | [Default](prompts/template_xml) | Low coverage with fuzz keyword + easy params far reach |
-| Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71357) | Vertex AI | [Default](prompts/template_xml) | Low coverage with fuzz keyword + easy params far reach |
-| Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71358) | Vertex AI | [Default](prompts/template_xml) | Low coverage with fuzz keyword + easy params far reach |
 | Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71359) | Vertex AI | [Default](prompts/template_xml) | Low coverage with fuzz keyword + easy params far reach |
 | Undisclosed | [Use after free](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71360) | Vertex AI | [Default](prompts/template_xml) | Low coverage with fuzz keyword + easy params far reach |
-| Undisclosed | [OOB read/write](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71542) | Vertex AI | [Default](prompts/template_xml) | All |
-| Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71543) | Vertex AI | [Default](prompts/template_xml) | All |
-| Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71544) | Vertex AI | [Default](prompts/template_xml) | All |
 | Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71619) | Vertex AI | [Default](prompts/template_xml) | All |
 | Undisclosed | [OOB read/write](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71623) | Vertex AI | [Default](prompts/template_xml) | All |
 | Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71650) | Vertex AI | [Default](prompts/template_xml) | All |
