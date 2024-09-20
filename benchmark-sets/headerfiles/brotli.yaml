@@ -1,0 +1,58 @@
+"functions":
+- "exceptions": []
+  "name": "BrotliDecoderAttachDictionary"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int BrotliDecoderAttachDictionary(BrotliDecoderStateInternal *, BrotliSharedDictionaryType, size_t, const uint8_t *)"
+- "exceptions": []
+  "name": "BrotliDecoderIsFinished"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int BrotliDecoderIsFinished(const BrotliDecoderStateInternal *)"
+- "exceptions": []
+  "name": "BrotliSafeReadBits32Slow"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int BrotliSafeReadBits32Slow(const BrotliBitReader *, uint64_t, uint64_t *)"
+- "exceptions": []
+  "name": "BrotliDecoderDecompress"
+  "params":
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "BrotliDecoderResult BrotliDecoderDecompress(size_t, const uint8_t *, size_t *, uint8_t *)"
+- "exceptions": []
+  "name": "BrotliDecoderTakeOutput"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const uint8_t * BrotliDecoderTakeOutput(BrotliDecoderStateInternal *, size_t *)"
+"language": "c++"
+"project": "brotli"
+"target_name": "decode_fuzzer"
+"target_path": "/src/brotli/c/fuzz/decode_fuzzer.c"

@@ -23,6 +23,9 @@ from typing import Any, Optional, Tuple
 
 import jinja2
 
+# import headerfiles.api as headerfiles
+from headerfiles.headerfiles import api as headerfiles
+
 from data_prep import introspector, project_targets
 from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark, FileType
@@ -73,6 +76,7 @@ FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
 
 C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES = ['stdio.h', 'stdlib.h', 'stdint.h']
 
+HEADERFILES = bool(os.getenv('LLM_HEADERFILES', ''))
 
 class PromptBuilder:
   """Prompt builder."""
@@ -102,6 +106,21 @@ class PromptBuilder:
   def post_process_generated_code(self, generated_code: str) -> str:
     """Allows prompt builder to adjust the generated code."""
     # return the same by default
+    if not HEADERFILES:
+      return generated_code
+
+    lines = generated_code.splitlines()
+        
+    # filter error lines: "<solution>" or "</solution>"
+    filtered_lines = [line for line in lines if line not in ("<solution>", "</solution>")]
+    generated_code = "\n".join(filtered_lines)
+
+    # filter duplicate headers
+    headers_to_include = headerfiles.get_proj_headers(self.benchmark.project)
+    generated_headers = {line for line in generated_code.splitlines() if line.startswith('#include')}
+    headers_to_include = {f'#include "{header}"' for header in headers_to_include} - generated_headers
+    
+    generated_code = '\n'.join(headers_to_include) + '\n' + generated_code
     return generated_code
 
 
@@ -1162,9 +1181,14 @@ class CSpecificBuilder(PromptBuilder):
                                       function_source)
 
     # Set header inclusion string if there are any headers.
-    headers_to_include = \
-        introspector.query_introspector_header_files_to_include(
-        self.benchmark.project, self.benchmark.function_signature)
+    if HEADERFILES:
+      headers_to_include = headerfiles.get_proj_headers(self.benchmark.project)
+    else:
+      headers_to_include = []
+    for header in introspector.query_introspector_header_files_to_include(
+        self.benchmark.project, self.benchmark.function_signature):
+      if header not in headers_to_include:
+        headers_to_include.append(header)
     header_inclusion_string = ''
     if headers_to_include:
       header_inclusion_string = ', '.join(headers_to_include)

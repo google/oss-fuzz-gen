@@ -1,0 +1,48 @@
+"functions":
+- "exceptions": []
+  "name": "tidySaveStdout"
+  "params":
+  - "name": "tdoc"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int tidySaveStdout(TidyDoc)"
+- "exceptions": []
+  "name": "tidySaveString"
+  "params":
+  - "name": "tdoc"
+    "type": "bool "
+  - "name": "buffer"
+    "type": "bool "
+  - "name": "buflen"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int tidySaveString(TidyDoc, tmbstr, uint *)"
+- "exceptions": []
+  "name": "tidyParseSource"
+  "params":
+  - "name": "tdoc"
+    "type": "bool "
+  - "name": "source"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int tidyParseSource(TidyDoc, TidyInputSource *)"
+- "exceptions": []
+  "name": "tidyParseStdin"
+  "params":
+  - "name": "tdoc"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int tidyParseStdin(TidyDoc)"
+- "exceptions": []
+  "name": "tidySaveFile"
+  "params":
+  - "name": "tdoc"
+    "type": "bool "
+  - "name": "filnam"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int tidySaveFile(TidyDoc, ctmbstr)"
+"language": "c++"
+"project": "tidy-html5"
+"target_name": "tidy_fuzzer"
+"target_path": "/src/tidy_fuzzer.c"
