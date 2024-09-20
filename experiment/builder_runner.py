@@ -969,8 +969,8 @@ class CloudBuilderRunner(BuilderRunner):
       with open(coverage_summary_file, 'w') as f:
         blob.download_to_file(f)
 
-      # Load the coverage summary
-      with open(coverage_summary_file) as f:
+    blob = bucket.blob(f'{coverage_name}/report/linux/summary.json')
+    if blob.exists():
         run_result.coverage_summary = json.load(f)
 
     target_basename = os.path.basename(self.benchmark.target_path)
