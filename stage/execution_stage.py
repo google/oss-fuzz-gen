@@ -117,8 +117,7 @@ class ExecutionStage(BaseStage):
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source)
     except Exception as e:
-      logging.error(
-          'Exception occurred when building and running fuzz target: %s', e)
+      logging.error('Exception occurred on %s: %s', last_result, e)
       runresult = RunResult(benchmark=benchmark,
                             trial=last_result.trial,
                             work_dirs=last_result.work_dirs,
