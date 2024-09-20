@@ -46,6 +46,8 @@ spec:
           value: '10'
         - name: VERTEX_AI_LOCATIONS
           value: 'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,northamerica-northeast1,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4'
+        - name: GCB_BUILDPOOL_NAME
+          value: projects/oss-fuzz/locations/us-central1/workerPools/buildpool-experiments2
       # imagePullSecrets:
       # - name: oss-fuzz-base-artifect
       volumes:
