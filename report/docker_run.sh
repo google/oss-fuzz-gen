@@ -146,22 +146,25 @@ GCS_TREND_REPORT_PATH="${SUB_DIR:?}/${EXPERIMENT_NAME:?}.json"
 bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" "${BENCHMARK_SET:?}" "${MODEL:?}" &
 pid_report=$!
 
+EXP_ARGS="--benchmarks-directory \"benchmark-sets/${BENCHMARK_SET:?}\""
+EXP_ARGS="${EXP_ARGS} --run-timeout \"${RUN_TIMEOUT:?}\""
+EXP_ARGS="${EXP_ARGS} --cloud-experiment-name \"${EXPERIMENT_NAME:?}\""
+EXP_ARGS="${EXP_ARGS} --cloud-experiment-bucket 'oss-fuzz-gcb-experiment-run-logs'"
+EXP_ARGS="${EXP_ARGS} --template-directory 'prompts/template_xml'"
+EXP_ARGS="${EXP_ARGS} --work-dir \"${LOCAL_RESULTS_DIR:?}\""
+EXP_ARGS="${EXP_ARGS} --num-samples \"${NUM_SAMPLES:?}\""
+EXP_ARGS="${EXP_ARGS} --delay \"${DELAY:?}\""
+EXP_ARGS="${EXP_ARGS} --context"
+EXP_ARGS="${EXP_ARGS} --introspector-endpoint ${INTROSPECTOR_ENDPOINT}"
+EXP_ARGS="${EXP_ARGS} --temperature-list \"${VARY_TEMPERATURE[@]}\""
+EXP_ARGS="${EXP_ARGS} --model \"$MODEL\""
+EXP_ARGS="${EXP_ARGS} $AGENT_ARG"
 
-# Run the experiment
-$PYTHON run_all_experiments.py \
-  --benchmarks-directory "benchmark-sets/${BENCHMARK_SET:?}" \
-  --run-timeout "${RUN_TIMEOUT:?}" \
-  --cloud-experiment-name "${EXPERIMENT_NAME:?}" \
-  --cloud-experiment-bucket 'oss-fuzz-gcb-experiment-run-logs' \
-  --template-directory 'prompts/template_xml' \
-  --work-dir ${LOCAL_RESULTS_DIR:?} \
-  --num-samples "${NUM_SAMPLES:?}" \
-  --delay "${DELAY:?}" \
-  --context \
-  --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
-  --temperature-list "${VARY_TEMPERATURE[@]}" \
-  --model "$MODEL" \
-  $AGENT_ARG
+if [[ "${REDIRECT_OUTS}" = "" ]]; then
+  $PYTHON run_all_experiments.py ${EXP_ARGS}
+else
+  $PYTHON run_all_experiments.py ${EXP_ARGS} >> $LOCAL_RESULTS_DIR/logs-from-run.txt 2>&1
+fi
 
 export ret_val=$?
 

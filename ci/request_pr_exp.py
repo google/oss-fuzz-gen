@@ -170,6 +170,11 @@ def _parse_args(cmd) -> argparse.Namespace:
                       default=False,
                       help=('(Use sparingly) Do a large experiment with '
                             'many more cores available.'))
+  parser.add_argument('-rd',
+                      '--redirect-outs',
+                      action='store_true',
+                      default=False,
+                      help='Redirects experiments stdout/stderr to file')
   args = parser.parse_args(cmd)
 
   assert os.path.isfile(
@@ -306,6 +311,7 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['GKE_EXP_LLM_FIX_LIMIT'] = f'{args.llm_fix_limit}'
   exp_env_vars['GKE_EXP_VARY_TEMPERATURE'] = f'{args.vary_temperature}'.lower()
   exp_env_vars['GKE_EXP_AGENT'] = f'{args.agent}'.lower()
+  exp_env_vars['GKE_REDIRECT_OUTS'] = 'true' if args.redirect_outs else ''
 
   with open(args.gke_template, 'r') as file:
     yaml_template = file.read()
