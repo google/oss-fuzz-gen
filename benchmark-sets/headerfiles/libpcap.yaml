@@ -62,7 +62,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "char * pcap_lookupdev(char *)"
-"language": "c++"
+"language": "c"
 "project": "libpcap"
 "target_name": "fuzz_rserver"
 "target_path": "/src/libpcap/testprogs/fuzz/fuzz_rserver.c"

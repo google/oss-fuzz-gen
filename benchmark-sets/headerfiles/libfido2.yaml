@@ -40,7 +40,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void mutate_int(int *)"
-"language": "c++"
+"language": "c"
 "project": "libfido2"
 "target_name": "fuzz_netlink"
 "target_path": "/src/libfido2/fuzz/libfuzzer.c"

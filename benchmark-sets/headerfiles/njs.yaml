@@ -54,7 +54,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "njs_vm_t * njs_vm_clone(njs_vm_t *, njs_external_ptr_t)"
-"language": "c++"
+"language": "c"
 "project": "njs"
 "target_name": "njs_process_script_fuzzer"
 "target_path": "/src/njs/external/njs_shell.c"

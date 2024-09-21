@@ -50,7 +50,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "AvahiStringList * avahi_string_list_add_pair(AvahiStringList *, const char *, const char *)"
-"language": "c++"
+"language": "c"
 "project": "avahi"
 "target_name": "fuzz-packet"
 "target_path": "/src/avahi/fuzz/fuzz-packet.c"

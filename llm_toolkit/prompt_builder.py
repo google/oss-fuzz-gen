@@ -117,10 +117,13 @@ class PromptBuilder:
 
     # filter duplicate headers
     headers_to_include = headerfiles.get_proj_headers(self.benchmark.project)
-    generated_headers = {line for line in generated_code.splitlines() if line.startswith('#include')}
-    headers_to_include = {f'#include "{header}"' for header in headers_to_include} - generated_headers
-    
-    generated_code = '\n'.join(headers_to_include) + '\n' + generated_code
+    headers_to_include = [f'#include "{header}"' for header in headers_to_include]
+    existing_headers = [line for line in generated_code.splitlines() if line.startswith('#include')]
+    for line in existing_headers:
+      generated_code = generated_code.replace(line, '')
+    headers_to_append = [header for header in existing_headers if header not in headers_to_include]
+    headers_to_include.extend(headers_to_append)
+    generated_code = '\n'.join(headers_to_include) + '\n' + '\n' + generated_code.strip()
     return generated_code
 
 

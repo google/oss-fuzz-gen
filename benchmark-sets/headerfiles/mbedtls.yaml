@@ -47,7 +47,7 @@
     "type": "size_t"
   "return_type": "int"
   "signature": "int mbedtls_ssl_write_early_data(mbedtls_ssl_context *, const unsigned char *, size_t)"
-"language": "c++"
+"language": "c"
 "project": "mbedtls"
 "target_name": "usepsa-fuzz_x509csr"
 "target_path": "/src/mbedtls/programs/fuzz/fuzz_x509csr.c"

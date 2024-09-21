@@ -56,7 +56,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int sf_set_string(SNDFILE *, int, const char *)"
-"language": "c"
+"language": "c++"
 "project": "libsndfile"
 "target_name": "sndfile_fuzzer"
 "target_path": "/src/libsndfile/ossfuzz/sndfile_fuzzer.cc"

@@ -78,7 +78,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void AArch64_printer(MCInst *, SStream *, void *)"
-"language": "c++"
+"language": "c"
 "project": "capstone"
 "target_name": "driverbin"
 "target_path": "/src/capstonev5/suite/fuzz/driverbin.c"

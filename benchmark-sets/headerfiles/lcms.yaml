@@ -78,7 +78,7 @@
     "type": "int"
   "return_type": "void"
   "signature": "cmsHTRANSFORM cmsCreateProofingTransformTHR(cmsContext, cmsHPROFILE, cmsUInt32Number, cmsHPROFILE, cmsUInt32Number, cmsHPROFILE, cmsUInt32Number, cmsUInt32Number, cmsUInt32Number)"
-"language": "c++"
+"language": "c"
 "project": "lcms"
 "target_name": "cms_cie_cam02_fuzzer"
 "target_path": "/src/cms_cie_cam02_fuzzer.c"
