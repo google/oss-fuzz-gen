@@ -970,7 +970,7 @@ class CloudBuilderRunner(BuilderRunner):
       cov_summary_folder = os.path.join(
           self.work_dirs.code_coverage_report(generated_target_name),
           'report/linux/')
-      os.makedirs(cov_summary_folder)
+      os.makedirs(cov_summary_folder, exist_ok=True)
       coverage_summary_file = os.path.join(cov_summary_folder, 'summary.json')
       with open(coverage_summary_file, 'wb') as f:
         blob.download_to_file(f)
