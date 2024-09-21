@@ -762,11 +762,20 @@ class BuilderRunner:
         benchmark_target_name)
     shutil.copytree(coverage_report, destination_coverage, dirs_exist_ok=True)
 
+    textcov_dir = os.path.join(get_build_artifact_dir(generated_project,
+                                               'out'), 'textcov_reports')
+    dst_textcov = os.path.join(self.work_dirs.code_coverage_report(
+        benchmark_target_name), 'textcov')
+    shutil.copytree(textcov_dir, dst_textcov, dirs_exist_ok=True)
+
     coverage_summary = os.path.join(
         get_build_artifact_dir(generated_project, 'out'), 'report', 'linux',
         'summary.json')
     with open(coverage_summary) as f:
       coverage_summary = json.load(f)
+
+
+
 
     return local_textcov, coverage_summary
 
@@ -976,21 +985,22 @@ class CloudBuilderRunner(BuilderRunner):
     target_basename = os.path.basename(self.benchmark.target_path)
 
     # Load coverage reports.
+    textcov_blob_path = self._get_cloud_textcov_path(bucket, coverage_name)
     if self.benchmark.language == 'jvm':
-      blob = bucket.blob(f'{coverage_name}/textcov_reports/jacoco.xml')
+      blob = bucket.blob(textcov_blob_path)
       if blob.exists():
         with blob.open() as f:
           run_result.coverage = textcov.Textcov.from_jvm_file(f)
+        self._copy_textcov_to_workdir(bucket, textcov_blob_path, generated_target_name)
     elif self.benchmark.language == 'python':
-      blob = bucket.blob(f'{coverage_name}/textcov_reports/all_cov.json')
+      blob = bucket.blob(textcov_blob_path)
       if blob.exists():
         with blob.open() as f:
           run_result.coverage = textcov.Textcov.from_python_file(f)
+        self._copy_textcov_to_workdir(bucket, textcov_blob_path, generated_target_name)
     else:
       # C/C++
-      blob = bucket.blob(
-          f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
-          '.covreport')
+      blob = bucket.blob(textcov_blob_path)
       if blob.exists():
         with blob.open('rb') as f:
           run_result.coverage = textcov.Textcov.from_file(
@@ -999,6 +1009,7 @@ class CloudBuilderRunner(BuilderRunner):
                   # Don't include other functions defined in the target code.
                   re.compile(r'^' + re.escape(target_basename) + ':')
               ])
+        self._copy_textcov_to_workdir(bucket, textcov_blob_path, generated_target_name)
 
     # Parse libfuzzer logs to get fuzz target runtime details.
     with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
@@ -1010,6 +1021,28 @@ class CloudBuilderRunner(BuilderRunner):
       run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result
+
+
+  def _copy_textcov_to_workdir(self, bucket: storage.bucket.Bucket, textcov_blob_path: str, generated_target_name: str) -> None:
+    """Stores a given textcov blob into the workdir."""
+    blob = bucket.blob(textcov_blob_path)
+    textcov_dir = os.path.join(
+          self.work_dirs.code_coverage_report(generated_target_name), 'textcov')
+    os.makedirs(textcov_dir, exists_ok=True)
+    textcov_dst = os.path.join(textcov_dir, os.path.basename(textcov_blob_path))
+    with open(textcov_dst, 'wb') as f:
+      blob.download_to_file(f)
+    
+
+  def _get_cloud_textcov_path(self, coverage_name: str) -> str:
+    """Extracts textcov blob path for this benchmark."""
+    if self.benchmark.language == 'jvm':
+      return f'{coverage_name}/textcov_reports/jacoco.xml'
+    elif self.benchmark.language == 'python':
+      return f'{coverage_name}/textcov_reports/all_cov.json'
+    else:
+      return (f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
+          '.covreport')
 
 
 def get_build_artifact_dir(generated_project: str, build_artifact: str) -> str:
