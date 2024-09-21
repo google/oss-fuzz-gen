@@ -102,13 +102,6 @@ else
   echo "USE_LOCAL_INTROSPECTOR was not specified as the 7th argument. Defaulting to ${INTROSPECTOR_ENDPOINT:?}."
 fi
 
-#if [[ -z "${REDIRECT_OUTS}" ]]; then
-#  REDIRECT_EXP_OUTPUTS=""
-#else
-#  
-#  REDIRECT_EXP_OUTPUTS=">> $LOCAL_RESULTS_DIR/logs-from-run.txt 2>&1"
-#fi
-
 if [[ "$NUM_SAMPLES" = '' ]]
 then
   NUM_SAMPLES='10'
@@ -154,21 +147,39 @@ bash report/upload_report.sh "${LOCAL_RESULTS_DIR:?}" "${GCS_REPORT_DIR:?}" "${B
 pid_report=$!
 
 
-# Run the experiment
-$PYTHON run_all_experiments.py \
-  --benchmarks-directory "benchmark-sets/${BENCHMARK_SET:?}" \
-  --run-timeout "${RUN_TIMEOUT:?}" \
-  --cloud-experiment-name "${EXPERIMENT_NAME:?}" \
-  --cloud-experiment-bucket 'oss-fuzz-gcb-experiment-run-logs' \
-  --template-directory 'prompts/template_xml' \
-  --work-dir ${LOCAL_RESULTS_DIR:?} \
-  --num-samples "${NUM_SAMPLES:?}" \
-  --delay "${DELAY:?}" \
-  --context \
-  --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
-  --temperature-list "${VARY_TEMPERATURE[@]}" \
-  --model "$MODEL" \
-  $AGENT_ARG
+# Run the experiment and redirect to file if indicated.
+if [[ "${REDIRECT_OUTS}" = '' ]]
+then
+  $PYTHON run_all_experiments.py \
+    --benchmarks-directory "benchmark-sets/${BENCHMARK_SET:?}" \
+    --run-timeout "${RUN_TIMEOUT:?}" \
+    --cloud-experiment-name "${EXPERIMENT_NAME:?}" \
+    --cloud-experiment-bucket 'oss-fuzz-gcb-experiment-run-logs' \
+    --template-directory 'prompts/template_xml' \
+    --work-dir ${LOCAL_RESULTS_DIR:?} \
+    --num-samples "${NUM_SAMPLES:?}" \
+    --delay "${DELAY:?}" \
+    --context \
+    --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
+    --temperature-list "${VARY_TEMPERATURE[@]}" \
+    --model "$MODEL" \
+    $AGENT_ARG
+else
+  $PYTHON run_all_experiments.py \
+    --benchmarks-directory "benchmark-sets/${BENCHMARK_SET:?}" \
+    --run-timeout "${RUN_TIMEOUT:?}" \
+    --cloud-experiment-name "${EXPERIMENT_NAME:?}" \
+    --cloud-experiment-bucket 'oss-fuzz-gcb-experiment-run-logs' \
+    --template-directory 'prompts/template_xml' \
+    --work-dir ${LOCAL_RESULTS_DIR:?} \
+    --num-samples "${NUM_SAMPLES:?}" \
+    --delay "${DELAY:?}" \
+    --context \
+    --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
+    --temperature-list "${VARY_TEMPERATURE[@]}" \
+    --model "$MODEL" \
+    $AGENT_ARG >> $LOCAL_RESULTS_DIR/logs-from-run.txt 2>&1
+fi
 
 export ret_val=$?
 
