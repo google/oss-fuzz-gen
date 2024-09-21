@@ -161,7 +161,7 @@ $PYTHON run_all_experiments.py \
   --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
   --temperature-list "${VARY_TEMPERATURE[@]}" \
   --model "$MODEL" \
-  $AGENT_ARG >> $LOCAL_RESULTS_DIR/logs-from-run.txt 2>&1
+  $AGENT_ARG
 
 export ret_val=$?
 
