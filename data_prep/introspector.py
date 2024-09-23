@@ -38,7 +38,9 @@ logger = logging.getLogger(__name__)
 T = TypeVar('T', str, list, dict, int)  # Generic type.
 
 TIMEOUT = 45
-MAX_RETRY = 5
+# We intentionally set MAX_RETRY as 0 for just comparing the build success rate 
+# for initial generated drivers/fuzz targets.
+MAX_RETRY = 0
 
 USE_FI_TO_GET_TARGETS = bool(int(os.getenv('OSS_FI_TO_GET_TARGETS', '1')))
 

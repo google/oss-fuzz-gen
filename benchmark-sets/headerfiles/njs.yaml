@@ -1,0 +1,60 @@
+"functions":
+- "exceptions": []
+  "name": "njs_buffer_new"
+  "params":
+  - "name": "vm"
+    "type": "bool "
+  - "name": "value"
+    "type": "bool "
+  - "name": "start"
+    "type": "bool "
+  - "name": "size"
+    "type": "int"
+  "return_type": "int"
+  "signature": "njs_int_t njs_buffer_new(njs_vm_t *, njs_value_t *, const u_char *, uint32_t)"
+- "exceptions": []
+  "name": "njs_vm_query_string_parse"
+  "params":
+  - "name": "vm"
+    "type": "bool "
+  - "name": "start"
+    "type": "bool "
+  - "name": "end"
+    "type": "bool "
+  - "name": "retval"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "njs_int_t njs_vm_query_string_parse(njs_vm_t *, u_char *, u_char *, njs_value_t *)"
+- "exceptions": []
+  "name": "njs_vm_value_string"
+  "params":
+  - "name": "vm"
+    "type": "bool "
+  - "name": "dst"
+    "type": "bool "
+  - "name": "src"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "njs_int_t njs_vm_value_string(njs_vm_t *, njs_str_t *, njs_value_t *)"
+- "exceptions": []
+  "name": "njs_vm_exception_string"
+  "params":
+  - "name": "vm"
+    "type": "bool "
+  - "name": "dst"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "njs_int_t njs_vm_exception_string(njs_vm_t *, njs_str_t *)"
+- "exceptions": []
+  "name": "njs_vm_clone"
+  "params":
+  - "name": "vm"
+    "type": "bool "
+  - "name": "external"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "njs_vm_t * njs_vm_clone(njs_vm_t *, njs_external_ptr_t)"
+"language": "c"
+"project": "njs"
+"target_name": "njs_process_script_fuzzer"
+"target_path": "/src/njs/external/njs_shell.c"

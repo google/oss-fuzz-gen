@@ -1,0 +1,50 @@
+"functions":
+- "exceptions": []
+  "name": "rfbStartOnHoldClient"
+  "params":
+  - "name": "cl"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void rfbStartOnHoldClient(rfbClientPtr)"
+- "exceptions": []
+  "name": "rfbReverseConnection"
+  "params":
+  - "name": "rfbScreen"
+    "type": "bool "
+  - "name": "host"
+    "type": "bool "
+  - "name": "port"
+    "type": "int"
+  "return_type": "void"
+  "signature": "rfbClientPtr rfbReverseConnection(rfbScreenInfoPtr, char *, int)"
+- "exceptions": []
+  "name": "rfbUpdateClient"
+  "params":
+  - "name": "cl"
+    "type": "bool "
+  "return_type": "char"
+  "signature": "rfbBool rfbUpdateClient(rfbClientPtr)"
+- "exceptions": []
+  "name": "rfbProcessEvents"
+  "params":
+  - "name": "screen"
+    "type": "bool "
+  - "name": "usec"
+    "type": "size_t"
+  "return_type": "char"
+  "signature": "rfbBool rfbProcessEvents(rfbScreenInfoPtr, long)"
+- "exceptions": []
+  "name": "rfbRunEventLoop"
+  "params":
+  - "name": "screen"
+    "type": "bool "
+  - "name": "usec"
+    "type": "size_t"
+  - "name": "runInBackground"
+    "type": "char"
+  "return_type": "void"
+  "signature": "void rfbRunEventLoop(rfbScreenInfoPtr, long, rfbBool)"
+"language": "c"
+"project": "libvnc"
+"target_name": "fuzz_server"
+"target_path": "/src/libvncserver/test/fuzz_server.c"
