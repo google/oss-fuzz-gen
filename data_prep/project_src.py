@@ -245,7 +245,6 @@ def _copy_project_src_from_local(project: str, out: str, language: str):
       'docker',
       'run',
       '-d',
-      '--rm',
       '--shm-size=2g',
       '--platform',
       'linux/amd64',
@@ -286,7 +285,10 @@ def _copy_project_src_from_local(project: str, out: str, language: str):
     logger.error('Failed to run OSS-Fuzz image of %s:', project)
     logger.error('STDOUT: %s', result.stdout)
     logger.error('STDERR: %s', result.stderr)
-    raise Exception(f'Failed to run docker command: {" ".join(run_container)}')
+    # I silenced the following code to avoid the bug: "Docker: Error response from daemon: Conflict."
+    # Also, I deleted "-rm" in run_container to ensure that the container exists when copy_strc is executed.
+    # Otherwise, some projects like avahi can not be fully test.
+    #raise Exception(f'Failed to run docker command: {" ".join(run_container)}')
 
   try:
     copy_src = ['docker', 'cp', f'{project}-container:/src', out]
