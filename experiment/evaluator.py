@@ -25,6 +25,8 @@ from typing import Optional
 from google.cloud import storage
 
 # import headerfiles.api as headerfiles
+# Eventually we will use headerfiles as an external library for Pypi installation.
+# Now we use headerfiles as a module and want to see the performance difference first.
 from headerfiles.headerfiles import api as headerfiles
 
 from experiment import builder_runner, oss_fuzz_checkout, textcov

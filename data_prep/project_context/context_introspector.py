@@ -7,6 +7,8 @@ from difflib import SequenceMatcher
 from typing import Any, Optional
 
 # import headerfiles.api as headerfiles
+# Eventually we will use headerfiles as an external library for Pypi installation.
+# Now we use headerfiles as a module and want to see the performance difference first.
 from headerfiles.headerfiles import api as headerfiles
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
