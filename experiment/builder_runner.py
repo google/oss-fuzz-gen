@@ -901,9 +901,10 @@ class CloudBuilderRunner(BuilderRunner):
         f'--target={self.benchmark.target_name}',
         f'--upload_build_log={build_log_path}',
         f'--upload_err_log={err_log_path}',
-        f'--upload_output_log={run_log_path}', f'--upload_corpus={corpus_path}',
+        f'--upload_output_log={run_log_path}',
         f'--upload_coverage={coverage_path}',
         f'--upload_reproducer={reproducer_path}',
+        f'--upload_corpus={corpus_path}',
         f'--experiment_name={self.experiment_name}', '--'
     ] + self._libfuzzer_args()
 
