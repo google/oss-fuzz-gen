@@ -36,7 +36,7 @@ def deserialize_from_dill(dill_path: Any) -> Any:
 
 def retryable(exceptions=None,
               default_retries=5,
-              delay_fn=None,
+              delay_fn=lambda: random.uniform(0, 60),
               other_exceptions=None,
               default_return=None):
   """
@@ -73,11 +73,7 @@ def retryable(exceptions=None,
 
           # Get the number of retries for this exception, or use the default
           current_retries = exception_config.get(type(e), default_retries)
-          if delay_fn:
-            delay = delay_fn(exc_name, retry_count)
-          else:
-            delay = random.uniform(0, 60)
-          time.sleep(delay)
+          time.sleep(delay_fn(exc_name, retry_count))
 
           if retry_count >= current_retries:
             logging.error('Max retries reached for %s. Exiting.', exc_name)
