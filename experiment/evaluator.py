@@ -236,7 +236,9 @@ class Evaluator:
                              name: str,
                              target_file: str,
                              build_script_path: str = '') -> str:
-    """Creates an OSS-Fuzz project with the generated target."""
+    """Creates an OSS-Fuzz project with the generated target. The new project
+    will replicate an existing project |name| but replace its fuzz target
+    and build script with the new |target_file| and |build_script_path|."""
     logger.info('target file: %s', target_file)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects', name)
