@@ -30,7 +30,7 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
   def write_fuzz_target(self, result: Result) -> None:
     """Writes fuzz target."""
     fuzz_target_path = os.path.join(result.work_dirs.fuzz_targets,
-                                    f'{result.trial:02d}.fuzz_targets')
+                                    f'{result.trial:02d}.fuzz_target')
     self.write_to_file(fuzz_target_path, result.fuzz_target_source)
 
   def write_build_script(self, result: Result) -> None:
