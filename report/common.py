@@ -371,7 +371,7 @@ class Results:
   def _get_targets_agent(self, benchmark: str, trial: str) -> Target:
     """Gets the targets of benchmark |benchmark| with trial ID |trial| from
     the OFG version 2 (LLM agents)."""
-    fuzz_target_dir = os.path.join(self._results_dir, benchmark, 'fuzz_target')
+    fuzz_target_dir = os.path.join(self._results_dir, benchmark, 'fuzz_targets')
     files = sorted(FileSystem(fuzz_target_dir).listdir())
 
     fuzz_target_code = ''
@@ -554,7 +554,8 @@ class Results:
     """Gets the targets of benchmark |benchmark| from the OFG version 2 (LLM
     agent)."""
     targets = []
-    fuzz_targets_dir = os.path.join(self._results_dir, benchmark, 'fuzz_target')
+    fuzz_targets_dir = os.path.join(self._results_dir, benchmark,
+                                    'fuzz_targets')
     for filename in sorted(FileSystem(fuzz_targets_dir).listdir()):
       if os.path.splitext(filename)[1] in TARGET_EXTS:
         targets.append(os.path.join(fuzz_targets_dir, filename))

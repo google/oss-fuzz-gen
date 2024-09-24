@@ -40,7 +40,7 @@ class WorkDirs:
     os.makedirs(self.run_logs, exist_ok=True)
     os.makedirs(self._corpus_base, exist_ok=True)
     os.makedirs(self.dills, exist_ok=True)
-    os.makedirs(self.fuzz_target, exist_ok=True)
+    os.makedirs(self.fuzz_targets, exist_ok=True)
 
   @property
   def base(self):
@@ -71,8 +71,8 @@ class WorkDirs:
     return os.path.join(self._base_dir, 'prompt.txt')
 
   @property
-  def fuzz_target(self):
-    return os.path.join(self._base_dir, 'fuzz_target')
+  def fuzz_targets(self):
+    return os.path.join(self._base_dir, 'fuzz_targets')
 
   # TODO(dongge): Deprecate this.
   @property
