@@ -72,9 +72,8 @@ class BaseAgent(ABC):
     if command:
       prompt_text = self._format_bash_execution_result(tool.execute(command))
     else:
-      logger.warning(
-          f'ROUND {cur_round} No BASH command from LLM response: {response}',
-          logging.WARNING)
+      logger.warning('ROUND %02d No BASH command from LLM response: %s',
+                     cur_round, response)
       prompt_text = ('No bash command received, Please follow the '
                      'interaction protocols:\n'
                      f'{tool.tutorial()}')
