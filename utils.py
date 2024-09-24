@@ -37,8 +37,7 @@ def deserialize_from_dill(dill_path: Any) -> Any:
 def retryable(exceptions=None,
               default_retries=5,
               delay_fn=lambda: random.uniform(0, 60),
-              other_exceptions=None,
-              default_return=None):
+              other_exceptions=None):
   """
     Decorator that retries the function on specified exceptions.
     :param exceptions: List/Set of exceptions or a dictionary of exceptions with
@@ -46,7 +45,6 @@ def retryable(exceptions=None,
     :param default_retries: Number of retries if no custom count is provided.
     :param delay_fn: Function to determine the delay between retries. Default
       is random between 0-60 seconds.
-    :param default_return: The value returned if all retries fail.
     """
   exception_config = {
       exc: default_retries for exc in exceptions or {}
@@ -80,12 +78,11 @@ def retryable(exceptions=None,
             break
         except Exception as e:
           logging.error('Unhandled exception: %s. Exiting.', e)
-          break
+          raise e
 
       # Final return after all retries failed or unhandled exception
-      logging.warning('All retries failed for %s. Returning default value.',
-                      func.__name__)
-      return default_return
+      logging.error('All retries failed for %s.', func.__name__)
+      raise Exception
 
     return wrapper
 
