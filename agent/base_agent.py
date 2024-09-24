@@ -1,6 +1,5 @@
 """The abstract base class for LLM agents in stages."""
 import argparse
-import logging
 import random
 import re
 import subprocess as sp
