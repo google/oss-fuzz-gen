@@ -1,4 +1,5 @@
 """The data structure of all result kinds."""
+import dataclasses
 from typing import Any, Optional
 
 from experiment import textcov
@@ -40,7 +41,7 @@ class Result:
         'fuzz_target_source': self.fuzz_target_source,
         'build_script_source': self.build_script_source,
         'author': str(self.author),
-        'agent_dialogs': self.agent_dialogs,
+        'chat_history': self.chat_history,
     }
 
 
@@ -123,19 +124,32 @@ class RunResult(BuildResult):
 
   def to_dict(self) -> dict:
     return super().to_dict() | {
-        'crashes': self.crashes,
-        'run_error': self.run_error,
-        'run_log': self.run_log,
-        'coverage_summary': self.coverage_summary or {},
-        'coverage': self.coverage,
-        'line_coverage_diff': self.line_coverage_diff,
-        'reproducer_path': self.reproducer_path,
-        'textcov_diff': '',  # Class Textcov cannot be serialized.
-        'log_path': self.log_path,
-        'corpus_path': self.corpus_path,
-        'coverage_report_path': self.coverage_report_path,
-        'cov_pcs': self.cov_pcs,
-        'total_pcs': self.total_pcs,
+        'crashes':
+            self.crashes,
+        'run_error':
+            self.run_error,
+        'run_log':
+            self.run_log,
+        'coverage_summary':
+            self.coverage_summary or {},
+        'coverage':
+            self.coverage,
+        'line_coverage_diff':
+            self.line_coverage_diff,
+        'reproducer_path':
+            self.reproducer_path,
+        'textcov_diff':
+            dataclasses.asdict(self.textcov_diff) if self.textcov_diff else '',
+        'log_path':
+            self.log_path,
+        'corpus_path':
+            self.corpus_path,
+        'coverage_report_path':
+            self.coverage_report_path,
+        'cov_pcs':
+            self.cov_pcs,
+        'total_pcs':
+            self.total_pcs,
     }
 
   # TODO(dongge): Define success property to show if the fuzz target was run.
