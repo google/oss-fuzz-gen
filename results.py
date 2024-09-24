@@ -71,6 +71,10 @@ class BuildResult(Result):
         'compile_log': self.compile_log,
     }
 
+  @property
+  def success(self):
+    return self.compiles
+
 
 class RunResult(BuildResult):
   """The fuzzing run-time result info."""
@@ -133,6 +137,8 @@ class RunResult(BuildResult):
         'cov_pcs': self.cov_pcs,
         'total_pcs': self.total_pcs,
     }
+
+  # TODO(dongge): Define success property to show if the fuzz target was run.
 
 
 class CrashResult(RunResult):
