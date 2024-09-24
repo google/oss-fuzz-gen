@@ -219,7 +219,7 @@ class CloudBuilder:
     in_chat = False
     pattern = r'^Step\s+#(\d+)\s+-\s+"agent-step":\s+'
     chat_history = []
-    for log_line in full_log:
+    for log_line in full_log.splitlines():
       if not re.match(pattern, log_line):
         continue
       if 'ROUND 01 agent prompt:' in log_line:
@@ -235,9 +235,9 @@ class CloudBuilder:
     try:
       bucket = self.storage_client.bucket(self.bucket_name)
       blob = bucket.blob(log_file_uri)
-      log_content = blob.download_as_text()
-      logging.debug(log_content)
-      return self._extract_chat_history(log_content)
+      log_content = self._extract_chat_history(blob.download_as_text())
+      logging.warning(log_content)
+      return log_content
     except NotFound as e:
       logging.error('Cloud build log %s not found: %s', log_file_uri, e)
       return ''
@@ -284,7 +284,7 @@ class CloudBuilder:
         self._download_from_gcs(new_result_dill)
     except (KeyboardInterrupt, SystemExit):
       self._cancel_build(build_id)
-    build_log_url = self._get_build_log(build_id)
+    build_log = self._get_build_log(build_id)
 
     # Step 4: Deserialize dilld file.
     result = utils.deserialize_from_dill(new_result_dill)
@@ -294,6 +294,6 @@ class CloudBuilder:
                       trial=last_result.trial,
                       work_dirs=last_result.work_dirs,
                       author=agent)
-    result.chat_history = {agent.name: build_log_url}
+    result.chat_history = {agent.name: build_log}
 
     return result
