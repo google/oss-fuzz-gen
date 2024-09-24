@@ -404,7 +404,8 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
     total_cov = textcov.Textcov()
     for cov in cov_list:
       total_cov.merge(cov)
-
+    total_cov.to_file(os.path.join('results', '%s-textcov_merged'%(project)))
+    existing_textcov = evaluator.load_existing_textcov(project)
     coverage_summary = evaluator.load_existing_coverage_summary(project)
 
     try:
@@ -412,6 +413,15 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
       lines = [f['summary']['lines']['count'] for f in coverage_summary_files]
     except (KeyError, TypeError):
       lines = []
+
+    total_existing_lines = sum(lines)
+    print('Project: %s'%(project))
+    print('- total assembled: %d'%(total_cov.covered_lines))
+    print('- Total summary: %d'%(total_existing_lines))
+    print('- Existing textcov: %d'%(existing_textcov.covered_lines))
+    total_cov.subtract_covered_lines(existing_textcov)
+    print("- Subtracted: %d"%(total_cov.covered_lines))
+
 
     total_lines = max(total_cov.total_lines, sum(lines))
 
