@@ -81,7 +81,7 @@ def retryable(exceptions=None,
 
           if retry_count >= current_retries:
             logging.error('Max retries reached for %s. Exiting.', exc_name)
-            break
+            raise Exception
         except Exception as e:
           logging.error('Unhandled exception: %s. Exiting.', e)
           raise e
