@@ -905,12 +905,11 @@ class CloudBuilderRunner(BuilderRunner):
         f'--upload_coverage={coverage_path}',
         f'--upload_reproducer={reproducer_path}',
         f'--upload_corpus={corpus_path}',
-        f'--experiment_name={self.experiment_name}', '--'
-    ] + self._libfuzzer_args()
-
+        f'--experiment_name={self.experiment_name}'
+    ]
     if cloud_build_tags:
-      command.insert(2, '--tags')
-      command[3:3] = cloud_build_tags
+      command += ['--tags'] + cloud_build_tags
+    command += ['--'] + self._libfuzzer_args()
 
     if not self._run_with_retry_control(os.path.realpath(target_path),
                                         command,
