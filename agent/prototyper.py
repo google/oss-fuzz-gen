@@ -147,7 +147,7 @@ class Prototyper(BaseAgent):
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
                                author=self,
-                               agent_dialogs={self.name: ''})
+                               chat_history={self.name: ''})
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
       while prompt and cur_round < MAX_ROUND:

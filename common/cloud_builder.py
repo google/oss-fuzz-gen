@@ -2,6 +2,7 @@
 import argparse
 import logging
 import os
+import re
 import subprocess
 import tempfile
 import time
@@ -10,6 +11,7 @@ from typing import Any
 
 import google.api_core.client_options
 import googleapiclient.errors
+from google.api_core.exceptions import NotFound
 from google.auth import default
 from google.auth.transport.requests import Request
 from google.cloud import storage
@@ -212,14 +214,32 @@ class CloudBuilder:
     """Cancel a GCB build"""
     self.builds.cancel(projectId=self.project_id, id=build_id).execute()
 
+  def _extract_chat_history(self, full_log: str) -> str:
+    """Extracts the agent chat history from cloud build log."""
+    in_chat = False
+    pattern = r'^Step\s+#(\d+)\s+-\s+"agent-step":\s+'
+    chat_history = []
+    for log_line in full_log:
+      if not re.match(pattern, log_line):
+        continue
+      if 'ROUND 01 agent prompt:' in log_line:
+        in_chat = True
+      if in_chat:
+        stripped_line = re.sub(pattern, '', log_line)
+        chat_history.append(stripped_line)
+    return '\n'.join(chat_history)
+
   def _get_build_log(self, build_id: str) -> str:
     """Downloads the build log"""
+    log_file_uri = f'log-{build_id}.txt'
     try:
-      log_url = self.builds.get(projectId=self.project_id,
-                                id=build_id).execute().get('logUrl', '')
-      return log_url
-    except Exception as e:
-      logging.error('Cloud build log %s not found: %s', build_id, e)
+      bucket = self.storage_client.bucket(self.bucket_name)
+      blob = bucket.blob(log_file_uri)
+      log_content = blob.download_as_text()
+      logging.debug(log_content)
+      return self._extract_chat_history(log_content)
+    except NotFound as e:
+      logging.error('Cloud build log %s not found: %s', log_file_uri, e)
       return ''
 
   def _download_from_gcs(self, destination_file_name: str) -> None:
@@ -274,6 +294,6 @@ class CloudBuilder:
                       trial=last_result.trial,
                       work_dirs=last_result.work_dirs,
                       author=agent)
-    result.agent_dialogs = {agent.name: build_log_url}
+    result.chat_history = {agent.name: build_log_url}
 
     return result

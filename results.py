@@ -18,7 +18,7 @@ class Result:
                fuzz_target_source: str = '',
                build_script_source: str = '',
                author: Any = None,
-               agent_dialogs: Optional[dict] = None) -> None:
+               chat_history: Optional[dict] = None) -> None:
     self.benchmark: Benchmark = benchmark
     self.trial: int = trial
     self.work_dirs: WorkDirs = work_dirs
@@ -26,7 +26,7 @@ class Result:
     self.build_script_source: str = build_script_source
     self.author: Any = author
     # {'agent_name': LLM-Tool chat log}
-    self.agent_dialogs: dict = agent_dialogs or {}
+    self.chat_history: dict = chat_history or {}
 
   def __repr__(self) -> str:
     return (f'{self.__class__.__name__}'
@@ -49,9 +49,9 @@ class BuildResult(Result):
                fuzz_target_source: str = '',
                build_script_source: str = '',
                author: Any = None,
-               agent_dialogs: Optional[dict] = None) -> None:
+               chat_history: Optional[dict] = None) -> None:
     super().__init__(benchmark, trial, work_dirs, fuzz_target_source,
-                     build_script_source, author, agent_dialogs)
+                     build_script_source, author, chat_history)
     self.compiles: bool = compiles  # Build success/failure.
     self.compile_error: str = compile_error  # Build error message.
     self.compile_log: str = compile_log  # Build full output.
@@ -88,10 +88,10 @@ class RunResult(BuildResult):
       fuzz_target_source: str = '',
       build_script_source: str = '',
       author: Any = None,
-      agent_dialogs: Optional[dict] = None) -> None:
+      chat_history: Optional[dict] = None) -> None:
     super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
                      compile_log, fuzz_target_source, build_script_source,
-                     author, agent_dialogs)
+                     author, chat_history)
     self.crashes: bool = crashes
     self.run_error: str = run_error
     self.run_log: str = run_log
