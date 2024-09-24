@@ -34,9 +34,15 @@ def deserialize_from_dill(dill_path: Any) -> Any:
     return None
 
 
+def _default_retry_delay_fn(e: Exception, n: int):
+  """Delays retry by a random seconds between 0 to 1 minute."""
+  del e, n
+  return random.uniform(0, 60)
+
+
 def retryable(exceptions=None,
               default_retries=5,
-              delay_fn=lambda: random.uniform(0, 60),
+              delay_fn=_default_retry_delay_fn,
               other_exceptions=None):
   """
     Decorator that retries the function on specified exceptions.
@@ -71,7 +77,7 @@ def retryable(exceptions=None,
 
           # Get the number of retries for this exception, or use the default
           current_retries = exception_config.get(type(e), default_retries)
-          time.sleep(delay_fn(exc_name, retry_count))
+          time.sleep(delay_fn(e, retry_count))
 
           if retry_count >= current_retries:
             logging.error('Max retries reached for %s. Exiting.', exc_name)
