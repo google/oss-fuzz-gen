@@ -383,11 +383,13 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
     benchmark_used = benchmarklib.Benchmark.from_yaml(
         result_benchmark_used_path)
     if not benchmark_used:
+      logger.info('Did not find benchmark for %s', benchmark_dir)
       try:
         project_name = '-'.join(benchmark_dir.split('-')[1:-1])
       except:
         continue
     else:
+      logger.info('Found benchmark for %s', benchmark_dir)
       project_name = benchmark_used[0].project
       target_basename = os.path.basename(benchmark_used[0].target_path)
       ignore_patterns = [re.compile(r'^' + re.escape(target_basename) + ':')]
