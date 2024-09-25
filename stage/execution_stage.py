@@ -1,7 +1,6 @@
 """The Execution Stage class for measuring code coverage and capture run-time
 crashes of the fuzz targets. This stage will run the fuzz target with OSS-Fuzz
 infra and report its code coverage and crashes."""
-import logging
 import os
 
 from experiment import builder_runner as builder_runner_lib
@@ -78,11 +77,11 @@ class ExecutionStage(BaseStage):
               last_result.benchmark.project,
           ])
       if not run_result:
-        raise Exception
+        raise Exception('No RunResult received from build_and_run')
       if run_result.coverage_summary is None or run_result.coverage is None:
         self.logger.warning('No cov info in run result of %s',
                             generated_oss_fuzz_project)
-        raise Exception
+        raise Exception(f'No Coverage or Coverage Summary in {run_result}')
 
       if run_result.coverage_summary:
         total_lines = evaluator_lib.compute_total_lines_without_fuzz_targets(
@@ -131,7 +130,7 @@ class ExecutionStage(BaseStage):
           cov_pcs=run_result.cov_pcs,
           total_pcs=run_result.total_pcs)
     except Exception as e:
-      logging.error('Exception occurred on %s: %s', last_result, e)
+      self.logger.error('Exception %s occurred on %s', e, last_result)
       runresult = RunResult(benchmark=benchmark,
                             trial=last_result.trial,
                             work_dirs=last_result.work_dirs,

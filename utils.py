@@ -71,7 +71,7 @@ def retryable(exceptions=None,
         except valid_exceptions as e:  # pylint: disable=catching-non-exception
           exc_name = type(e).__name__
           retry_count += 1
-          logging.info(
+          logging.warning(
               'Retrying %s due to %s. Attempt %d with args=%s, kwargs=%s',
               func.__name__, exc_name, retry_count, args, kwargs)
 
@@ -80,15 +80,18 @@ def retryable(exceptions=None,
           time.sleep(delay_fn(e, retry_count))
 
           if retry_count >= current_retries:
-            logging.error('Max retries reached for %s. Exiting.', exc_name)
-            raise Exception
+            raise Exception(
+                f'Max retries {retry_count} reached for {func.__name__} with '
+                f'args={args} and kwargs={kwargs} due to {exc_name}')
         except Exception as e:
-          logging.error('Unhandled exception: %s. Exiting.', e)
+          logging.error(
+              'Failed %s due to unhandled exception %s. Attempt %d with '
+              'args=%s, kwargs=%s', func.__name__, e, retry_count, args, kwargs)
           raise e
 
       # Final return after all retries failed or unhandled exception
-      logging.error('All retries failed for %s.', func.__name__)
-      raise Exception
+      raise Exception(f'Max retries {retry_count} reached for {func.__name__} '
+                      f'with args={args} and kwargs={kwargs}')
 
     return wrapper
 
