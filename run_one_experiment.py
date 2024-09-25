@@ -90,46 +90,29 @@ class AggregatedResult:
     if not trial_results:
       return AggregatedResult()
 
-    trial_final_build_results = [[
-        result
-        for result in trial_result_history.history_results
-        if isinstance(result, BuildResult)
-    ][-1]
-                                 for trial_result_history in trial_results]
-    build_success_rate = sum([
-        int(trial_final_result.compiles)
-        for trial_final_result in trial_final_build_results
-    ]) / len(trial_final_build_results)
-
-    trial_final_run_results = [[
-        result
-        for result in trial_result_history.history_results
-        if isinstance(result, RunResult)
-    ][-1]
-                               for trial_result_history in trial_results]
-    crash_rate = sum([
-        int(trial_result.crashes) for trial_result in trial_final_run_results
-    ]) / len(trial_final_run_results)
-
-    max_coverage = max([
-        trial_final_run_result.coverage
-        for trial_final_run_result in trial_final_run_results
-    ])
-    max_line_coverage_diff = max([
-        trial_final_run_result.line_coverage_diff
-        for trial_final_run_result in trial_final_run_results
-    ])
-
+    compilable_trials = []
+    crash_trials = []
+    max_coverage = 0
+    max_line_coverage_diff = 0
     max_coverage_diff_report = ''
-
     all_textcov = textcov.Textcov()
-    for trial_final_run_result in trial_final_run_results:
+    for trial_result_history in trial_results:
+      trial_final_result = trial_result_history.history_results[-1]
+      if isinstance(trial_final_result, BuildResult):
+        compilable_trials.append(trial_final_result.compiles)
+      if isinstance(trial_final_result, RunResult):
+        crash_trials.append(trial_final_result.crashes)
+        # TODO(dongge): Do not assume the last coverage is the highest.
+        max_coverage = max(max_coverage, trial_final_result.coverage)
+        if trial_final_result.line_coverage_diff > max_line_coverage_diff:
+          max_line_coverage_diff = trial_final_result.line_coverage_diff
+          max_coverage_diff_report = trial_final_result.coverage_report_path
+        if isinstance(trial_final_result.textcov_diff, textcov.Textcov):
+          all_textcov.merge(trial_final_result.textcov_diff)
 
-      if trial_final_run_result.line_coverage_diff == max_line_coverage_diff:
-        max_coverage_diff_report = trial_final_run_result.coverage_report_path
-
-      if isinstance(trial_final_run_result.textcov_diff, textcov.Textcov):
-        all_textcov.merge(trial_final_run_result.textcov_diff)
+    build_success_rate = (sum(compilable_trials) /
+                          len(compilable_trials) if compilable_trials else 0)
+    crash_rate = sum(crash_trials) / len(crash_trials) if crash_trials else 0
 
     return AggregatedResult(build_success_rate=build_success_rate,
                             crash_rate=crash_rate,
