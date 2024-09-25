@@ -369,7 +369,7 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
   # Load all the textcov dirs
   for benchmark_dir in os.listdir(WORK_DIR):
     try:
-      project = benchmark_dir.split('-')[1]
+      project = '-'.join(benchmark_dir.split('-')[1:-1])
     except:
       continue
 
