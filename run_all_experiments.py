@@ -370,31 +370,31 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
   for benchmark_dir in os.listdir(WORK_DIR):
     try:
       project = benchmark_dir.split('-')[1]
-      benchmark = '-'.join(benchmark_dir.split('-')[2:])
     except:
       continue
 
-    coverage_reports = os.path.join(WORK_DIR, benchmark_dir, 'code-coverage-reports')
+    coverage_reports = os.path.join(WORK_DIR, benchmark_dir,
+                                    'code-coverage-reports')
     if not os.path.isdir(coverage_reports):
-        continue
+      continue
 
     if project not in textcov_dict:
       textcov_dict[project] = []
     for sample in os.listdir(coverage_reports):
-        summary = os.path.join(coverage_reports, sample, 'textcov')
-        if not os.path.isdir(summary):
-          continue
+      summary = os.path.join(coverage_reports, sample, 'textcov')
+      if not os.path.isdir(summary):
+        continue
 
-        for textcov_file in os.listdir(summary):
-          if textcov_file.endswith('.covreport'):
-            with open(os.path.join(summary, textcov_file), 'rb') as f:
-              textcov_dict[project].append(textcov.Textcov.from_file(f))
-          elif textcov_file == 'all_cov.json':
-            with open(os.path.join(summary, textcov_file)) as f:
-              textcov_dict[project].append(textcov.Textcov.from_python_file(f))
-          elif textcov_file == 'jacoco.xml':
-            with open(os.path.join(summary, textcov_file)) as f:
-              textcov_dict[project].append(textcov.Textcov.from_jvm_file(f))
+      for textcov_file in os.listdir(summary):
+        if textcov_file.endswith('.covreport'):
+          with open(os.path.join(summary, textcov_file), 'rb') as f:
+            textcov_dict[project].append(textcov.Textcov.from_file(f))
+        elif textcov_file == 'all_cov.json':
+          with open(os.path.join(summary, textcov_file)) as f:
+            textcov_dict[project].append(textcov.Textcov.from_python_file(f))
+        elif textcov_file == 'jacoco.xml':
+          with open(os.path.join(summary, textcov_file)) as f:
+            textcov_dict[project].append(textcov.Textcov.from_jvm_file(f))
 
   if not textcov_dict:
     return {}
@@ -416,7 +416,7 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
     total_existing_lines = sum(lines)
     total_cov.subtract_covered_lines(existing_textcov)
 
-    total_lines = max(total_cov.total_lines, sum(lines))
+    total_lines = max(total_cov.total_lines, total_existing_lines)
 
     if total_lines:
       coverage_gain[project] = {
