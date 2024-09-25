@@ -13,14 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Project source parser."""
-import argparse
+
 import logging
 import os
 import subprocess as sp
 import tempfile
 import time
 import uuid
-from multiprocessing import pool
 from typing import Dict
 
 from google.cloud import storage
@@ -31,45 +30,6 @@ logger = logging.getLogger(__name__)
 
 SEARCH_IGNORE_DIRS = ['aflplusplus', 'fuzztest', 'honggfuzz', 'libfuzzer']
 SEARCH_EXTS = ['.c', '.cc', '.cpp', '.cxx', '.c++']
-
-
-def _parse_arguments() -> argparse.Namespace:
-  """Parses command line args."""
-  parser = argparse.ArgumentParser(
-      description='Parse arguments to generate fuzz targets')
-
-  parser.add_argument('-p',
-                      '--project-name',
-                      type=str,
-                      required=True,
-                      help='Name of the project')
-
-  parser.add_argument('-r',
-                      '--result-dir',
-                      type=str,
-                      default='example_targets',
-                      help='Path to store the results')
-
-  parser.add_argument('-t',
-                      '--num-threads',
-                      type=int,
-                      default=4,
-                      help='Number of threads to use')
-
-  parser.add_argument('-f',
-                      '--interesting-filenames',
-                      nargs='*',
-                      type=str,
-                      default=[],
-                      help='Other interesting filenames to parse.')
-  parser.add_argument('-cb',
-                      '--cloud-experiment-bucket',
-                      type=str,
-                      default='',
-                      help='A gcloud bucket to store experiment files.')
-  args = parser.parse_args()
-  args.interesting_filenames = list(set(args.interesting_filenames))
-  return args
 
 
 def _read_harness(src_file: str, encoding_error_handling: str = 'replace'):
@@ -431,27 +391,3 @@ def search_source(
     for short_path in fuzz_targets.keys():
       _copy_fuzz_targets(os.path.join(out, short_path[1:]), result_dir, project)
   return fuzz_targets, interesting_files
-
-
-def main():
-  args = _parse_arguments()
-  projects = []
-  if args.project_name == 'all':
-    projects = oss_fuzz_checkout.list_c_cpp_projects()
-  else:
-    projects = [args.project_name]
-
-  configs = [[
-      project,
-      args.interesting_filenames,
-      args.result_dir,
-      args.cloud_experiment_bucket,
-  ] for project in projects]
-  oss_fuzz_checkout.clone_oss_fuzz()
-  oss_fuzz_checkout.postprocess_oss_fuzz()
-  with pool.ThreadPool(args.num_threads) as p:
-    p.starmap(search_source, configs)
-
-
-if __name__ == '__main__':
-  main()
