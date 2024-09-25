@@ -1049,7 +1049,7 @@ if __name__ == '__main__':
                                                       args.max_functions,
                                                       args.target_oracle)
   if benchmarks:
-    benchmarklib.Benchmark.to_yaml(benchmarks, args.out)
+    benchmarklib.Benchmark.to_yaml(benchmarks, outdir=args.out)
   else:
     logger.error('Nothing found for %s', args.project)
     sys.exit(1)
