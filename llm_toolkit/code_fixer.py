@@ -656,27 +656,28 @@ def _collect_instruction_extern(benchmark: benchmarklib.Benchmark) -> str:
       '\n</code>\n')
   return instruction
 
+
 def _collect_consume_buffers(fuzz_target_source_code: str) -> str:
   """Provides advice on the use of ConsumeBytes and ConsumeData"""
 
   help_msg = ''
-  
+
   if 'ConsumeBytes' in fuzz_target_source_code:
     help_msg += (
-      'Important: the harness source code contains a call to `ConsumeBytes`. This '
-      'call is often a candidate for bugs in the harness due to the mistakes: '
-      '1) The input size to `ConsumeBytes` is the max possible size, and not necessarily '
-      'the size of the returned vector. Each use of `ConsumeBytes` should be followed '
-      'by a size check on the returned vector to ensure, and the correct size of the '
-      'returned vector should be used appropriately in any future uses of the returned vector. '
-      '2) The vector returned by `ConsumeBytes` is cast to a char pointer, and this is not NULL terminated. '
-      'if the data from the returned call is used as a char pointer, make sure to guarantee the buffer is '
-      'NULL-terminated.\n'
-    )
+        'Important: the harness source code contains a call to `ConsumeBytes`. This '
+        'call is often a candidate for bugs in the harness due to the mistakes: '
+        '1) The input size to `ConsumeBytes` is the max possible size, and not necessarily '
+        'the size of the returned vector. Each use of `ConsumeBytes` should be followed '
+        'by a size check on the returned vector to ensure, and the correct size of the '
+        'returned vector should be used appropriately in any future uses of the returned vector. '
+        '2) The vector returned by `ConsumeBytes` is cast to a char pointer, and this is not NULL terminated. '
+        'if the data from the returned call is used as a char pointer, make sure to guarantee the buffer is '
+        'NULL-terminated.\n')
   if 'ConsumeData' in fuzz_target_source_code:
-     # Todo
-     pass
+    # Todo
+    pass
   return help_msg
+
 
 def main():
   args = parse_args()
