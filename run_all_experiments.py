@@ -372,14 +372,16 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
     if not os.path.isdir(os.path.join(WORK_DIR, benchmark_dir)):
       continue
 
-    result_benchmark_used_path = os.path.join(os.path.join(WORK_DIR, benchmark_dir, 'benchmark.yaml'))
+    result_benchmark_used_path = os.path.join(
+        os.path.join(WORK_DIR, benchmark_dir, 'benchmark.yaml'))
     if not os.path.isfile(result_benchmark_used_path):
       continue
-    
+
     project_name = ''
     ignore_patterns = []
-    
-    benchmark_used = benchmarklib.Benchmark.from_yaml(result_benchmark_used_path)
+
+    benchmark_used = benchmarklib.Benchmark.from_yaml(
+        result_benchmark_used_path)
     if not benchmark_used:
       try:
         project_name = '-'.join(benchmark_dir.split('-')[1:-1])
@@ -389,7 +391,7 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
       project_name = benchmark_used[0].project
       target_basename = os.path.basename(benchmark_used[0].target_path)
       ignore_patterns = [re.compile(r'^' + re.escape(target_basename) + ':')]
-      
+
     coverage_reports = os.path.join(WORK_DIR, benchmark_dir,
                                     'code-coverage-reports')
     if not os.path.isdir(coverage_reports):
@@ -405,12 +407,14 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
       for textcov_file in os.listdir(summary):
         if textcov_file.endswith('.covreport'):
           with open(os.path.join(summary, textcov_file), 'rb') as f:
-            
-            
-            textcov_dict[project_name].append(textcov.Textcov.from_file(f, ignore_function_patterns=ignore_patterns))
+
+            textcov_dict[project_name].append(
+                textcov.Textcov.from_file(
+                    f, ignore_function_patterns=ignore_patterns))
         elif textcov_file == 'all_cov.json':
           with open(os.path.join(summary, textcov_file)) as f:
-            textcov_dict[project_name].append(textcov.Textcov.from_python_file(f))
+            textcov_dict[project_name].append(
+                textcov.Textcov.from_python_file(f))
         elif textcov_file == 'jacoco.xml':
           with open(os.path.join(summary, textcov_file)) as f:
             textcov_dict[project_name].append(textcov.Textcov.from_jvm_file(f))

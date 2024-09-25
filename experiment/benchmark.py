@@ -43,7 +43,10 @@ class Benchmark:
   """Represents a benchmark."""
 
   @classmethod
-  def to_yaml(cls, benchmarks: list[Benchmark], outdir: str = './', out_basename: str = ''):
+  def to_yaml(cls,
+              benchmarks: list[Benchmark],
+              outdir: str = './',
+              out_basename: str = ''):
     """Converts and saves selected fields of a benchmark to a YAML file."""
     # Register the custom representer
     yaml.add_representer(str, quoted_string_presenter)
@@ -71,8 +74,7 @@ class Benchmark:
 
     if not out_basename:
       out_basename = f'{benchmarks[0].project}.yaml'
-    with open(os.path.join(outdir, out_basename),
-              'w') as file:
+    with open(os.path.join(outdir, out_basename), 'w') as file:
       yaml.dump(result, file, default_flow_style=False, width=sys.maxsize)
 
   @classmethod
@@ -83,7 +85,7 @@ class Benchmark:
       data = yaml.safe_load(benchmark_file)
     if not data:
       return []
-    
+
     project_name = data.get('project', '')
     use_context = data.get('use_context', False)
     use_project_examples = data.get('use_project_examples', True)

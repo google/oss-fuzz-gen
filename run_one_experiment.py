@@ -332,7 +332,9 @@ def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
   model.cloud_setup()
 
   # Save the benchmark in the working base
-  Benchmark.to_yaml([benchmark], outdir = work_dirs.base, out_basename='benchmark.yaml')
+  Benchmark.to_yaml([benchmark],
+                    outdir=work_dirs.base,
+                    out_basename='benchmark.yaml')
 
   if args.agent:
     # TODO(dongge): Make this default when it is ready.
