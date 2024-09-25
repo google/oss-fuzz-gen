@@ -110,6 +110,10 @@ class ExecutionStage(BaseStage):
           benchmark=benchmark,
           trial=last_result.trial,
           work_dirs=last_result.work_dirs,
+          fuzz_target_source=last_result.fuzz_target_source,
+          build_script_source=last_result.build_script_source,
+          chat_history=last_result.chat_history,
+          author=self,
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
           compile_log=last_result.compile_log,
@@ -125,18 +129,18 @@ class ExecutionStage(BaseStage):
           corpus_path=run_result.corpus_path,
           coverage_report_path=run_result.coverage_report_path,
           cov_pcs=run_result.cov_pcs,
-          total_pcs=run_result.total_pcs,
-          fuzz_target_source=last_result.fuzz_target_source,
-          build_script_source=last_result.build_script_source)
+          total_pcs=run_result.total_pcs)
     except Exception as e:
       logging.error('Exception occurred on %s: %s', last_result, e)
       runresult = RunResult(benchmark=benchmark,
                             trial=last_result.trial,
                             work_dirs=last_result.work_dirs,
+                            fuzz_target_source=last_result.fuzz_target_source,
+                            build_script_source=last_result.build_script_source,
+                            chat_history=last_result.chat_history,
+                            author=self,
                             compiles=last_result.compiles,
                             compile_error=last_result.compile_error,
-                            compile_log=last_result.compile_log,
-                            fuzz_target_source=last_result.fuzz_target_source,
-                            build_script_source=last_result.build_script_source)
+                            compile_log=last_result.compile_log)
 
     return runresult
