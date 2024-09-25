@@ -1,0 +1,12 @@
+"functions":
+# https://llm-exp.oss-fuzz.com/Result-reports/ofg-pr/2024-09-18-618-ochang-extra-large-all-oracles-many/sample/output-htslib-fai_path/03.html
+- "name": "fai_path"
+  "params":
+  - "name": "fa"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "char * fai_path(const char *)"
+"language": "c++"
+"project": "htslib"
+"target_name": "hts_open_fuzzer"
+"target_path": "/src/htslib/test/fuzz/hts_open_fuzzer.c"

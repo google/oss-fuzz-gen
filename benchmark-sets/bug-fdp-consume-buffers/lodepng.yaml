@@ -1,0 +1,22 @@
+"functions":
+# https://llm-exp.oss-fuzz.com/Result-reports/ofg-pr/2024-09-18-620-david-quick1234-lpng/sample/output-lodepng-_zn7lodepng6encodeernst3__16vectorihns0_9allocatoriheeeepkhjj16lodepngcolortypej/01.html
+- "name": "_ZN7lodepng6encodeERNSt3__16vectorIhNS0_9allocatorIhEEEEPKhjj16LodePNGColorTypej"
+  "params":
+  - "name": "out"
+    "type": "bool "
+  - "name": "in"
+    "type": "bool "
+  - "name": "w"
+    "type": "int"
+  - "name": "h"
+    "type": "int"
+  - "name": "colortype"
+    "type": "int"
+  - "name": "bitdepth"
+    "type": "int"
+  "return_type": "int"
+  "signature": "unsigned int lodepng::encode(vector<unsigned char, std::__1::allocator<unsigned char> > &, const unsigned char *, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
+"language": "c++"
+"project": "lodepng"
+"target_name": "lodepng_fuzzer"
+"target_path": "/src/lodepng/lodepng_fuzzer.cpp"
