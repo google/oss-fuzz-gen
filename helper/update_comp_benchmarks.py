@@ -77,7 +77,7 @@ def main():
       if b.function_name in functions:
         selected_bms.append(b)
 
-    Benchmark.to_yaml(selected_bms, target_path)
+    Benchmark.to_yaml(selected_bms, outdir=target_path)
     logging.info('Updated %s', file_name)
 
 
