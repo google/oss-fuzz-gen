@@ -60,8 +60,10 @@ class ExecutionStage(BaseStage):
     # TODO: Log run success/failure.
 
     # 1. Evaluating generated driver.
-    assert isinstance(last_result,
-                      BuildResult), 'RunResult must follow a BuildResult'
+    if not isinstance(last_result, BuildResult):
+      self.logger.error('RunResult must follow a BuildResult')
+      raise TypeError
+
     try:
       _, run_result = evaluator.builder_runner.build_and_run(
           generated_oss_fuzz_project,
