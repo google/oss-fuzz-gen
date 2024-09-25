@@ -414,13 +414,18 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
       lines = []
 
     total_existing_lines = sum(lines)
+    total_cov_covered_lines_before_subtraction = total_cov.covered_lines
     total_cov.subtract_covered_lines(existing_textcov)
 
     total_lines = max(total_cov.total_lines, total_existing_lines)
 
     if total_lines:
       coverage_gain[project] = {
-          'coverage_diff': total_cov.covered_lines / total_lines
+          'coverage_diff': total_cov.covered_lines / total_lines,
+          'coverage_ofg_total_covered_lines': total_cov_covered_lines_before_subtraction,
+          'coverage_ofg_total_new_covered_lines': total_cov.covered_lines,
+          'coverage_existing_total_covered_lines': existing_textcov.covered_lines,
+          'coverage_existing_total_lines': total_existing_lines,
       }
     else:
       # Fail safe when total_lines is 0 because of invalid coverage report
