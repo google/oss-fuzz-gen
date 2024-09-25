@@ -120,9 +120,9 @@ class GenerateReport:
     for l in os.listdir(coverage_path):
       if l.split('.')[0] == sample.id:
         coverage_report = os.path.join(coverage_path, l)
-    
+
     # On cloud runs there are two folders in code coverage reports, (report,
-    # textcov), If we have three files/dirs (linux, style.cssand textcov), then
+    # textcov). If we have three files/dirs (linux, style.cssand textcov), then
     # it's a local run. In that case copy over the code coverage reports so
     # they are visible in the HTML page.
     if coverage_report and os.path.isdir(coverage_report) and len(
