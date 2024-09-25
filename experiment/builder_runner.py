@@ -750,7 +750,7 @@ class BuilderRunner:
                   generated_project, e.stdout, e.stderr)
       return None, None
 
-    # Get the local text xoverage, which includes the specific lines
+    # Get the local text coverage, which includes the specific lines
     # exercised in the target project.
     local_textcov = self._extract_local_textcoverage_data(generated_project)
 
