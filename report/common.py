@@ -388,6 +388,7 @@ class Results:
       with FileSystem(build_script_path).open() as f:
         build_script_code = f.read()
 
+    # TODO(dongge): Properly show build script code in reports.
     return Target(code=fuzz_target_code, fixer_prompt=build_script_code)
 
   def get_samples(self, results: list[evaluator.Result],
