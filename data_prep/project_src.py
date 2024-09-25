@@ -13,14 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Project source parser."""
-import argparse
+
 import logging
 import os
 import subprocess as sp
 import tempfile
 import time
 import uuid
-from multiprocessing import pool
 from typing import Dict
 
 from google.cloud import storage
