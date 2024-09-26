@@ -41,60 +41,53 @@ def _default_retry_delay_fn(e: Exception, n: int):
 
 
 def retryable(exceptions=None,
-              default_retries=5,
+              default_attempts=5,
               delay_fn=_default_retry_delay_fn,
               other_exceptions=None):
   """
     Decorator that retries the function on specified exceptions.
     :param exceptions: List/Set of exceptions or a dictionary of exceptions with
       custom retry counts.
-    :param default_retries: Number of retries if no custom count is provided.
+    :param default_attempts: Number of retries if no custom count is provided.
     :param delay_fn: Function to determine the delay between retries. Default
       is random between 0-60 seconds.
     """
   exception_config = {
-      exc: default_retries for exc in exceptions or {}
+      exc: default_attempts for exc in exceptions or {}
   } | (other_exceptions or {})
-  valid_exceptions = tuple(e for e in exception_config.keys()
-                           if isinstance(e, type) and issubclass(e, Exception))
-  if not valid_exceptions:
-    raise ValueError("No valid exception classes provided.")
 
   def decorator(func):
 
     @wraps(func)
     def wrapper(*args, **kwargs):
-      retry_count = 0
-      while retry_count < default_retries:
+      attempt = 1  # TODO(dongge): A separate counter for each exception.
+      while True:
         try:
           return func(*args, **kwargs)
-        except valid_exceptions as e:  # pylint: disable=catching-non-exception
-          exc_name = type(e).__name__
-          logging.warning(
-              'Retrying %s due to %s. Attempt %d with args=%s, kwargs=%s',
-              func.__name__, exc_name, retry_count, args, kwargs)
-
-          # Get the number of retries for this exception, or use the default
-          current_retries = exception_config.get(type(e), default_retries)
-          delay_time = delay_fn(e, retry_count)
-          logging.debug('Wait for %d seconds before the next retry', delay_time)
-          time.sleep(delay_time)
-
-          exception_config[type(e)] -= 1
-          if current_retries <= 0:
-            raise Exception(
-                f'Max retries {retry_count} reached for {func.__name__} with '
-                f'args={args} and kwargs={kwargs} due to {exc_name}')
         except Exception as e:
-          retry_count += 1
-          logging.error(
-              'Failed %s due to unhandled exception %s. Attempt %d with '
-              'args=%s, kwargs=%s', func.__name__, e, retry_count, args, kwargs)
-          raise e
+          # Expected exceptions and their subclass.
+          num_attempts = next(
+              (attempts for exc_type, attempts in exception_config.items()
+               if isinstance(e, exc_type)), 1)
 
-      # Final return after all retries failed or unhandled exception
-      raise Exception(f'Max retries {retry_count} reached for {func.__name__} '
-                      f'with args={args} and kwargs={kwargs}')
+          logging.error(
+              'Exception %s on function %s(args=%s, kwargs=%s), attempt %d/%d',
+              e, func.__name__, args, kwargs, attempt, num_attempts)
+
+          if attempt >= num_attempts:
+            logging.error(
+                'Max attempts %d/%d reached for %s(args=%s, kwargs=%s) due to '
+                '%s', attempt, num_attempts, func.__name__, args, kwargs, e)
+            raise
+
+          attempt += 1
+
+          delay_time = delay_fn(e, attempt)
+          logging.warning(
+              'Delay %d seconds before re-attempting (%d/%d) function call %s('
+              'args=%s, kwargs=%s)', delay_time, attempt, num_attempts,
+              func.__name__, args, kwargs)
+          time.sleep(delay_time)
 
     return wrapper
 
