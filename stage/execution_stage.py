@@ -71,7 +71,7 @@ class ExecutionStage(BaseStage):
           benchmark.language,
           cloud_build_tags=[
               str(last_result.trial),
-              'Executor',
+              'Execution',
               'ofg',
               # TODO(dongge): Tag function name, compatible with tag format.
               last_result.benchmark.project,
