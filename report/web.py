@@ -156,9 +156,7 @@ class GenerateReport:
 
       for sample in samples:
         if sample.result.crashes:
-          samples_with_bugs.append(
-            {'benchmark': benchmark,
-             'sample': sample})
+          samples_with_bugs.append({'benchmark': benchmark, 'sample': sample})
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
         self._write_benchmark_sample(benchmark, sample, sample_targets)
 
@@ -188,7 +186,8 @@ class GenerateReport:
 
   def _write_index_html(self, benchmarks: List[Benchmark],
                         accumulated_results: AccumulatedResult,
-                        time_results: dict[str, Any], projects: list[Project], samples_with_bugs: dict[str, Any]):
+                        time_results: dict[str, Any], projects: list[Project],
+                        samples_with_bugs: list[dict[str, Any]]):
     """Generate the report index.html and write to filesystem."""
     rendered = self._jinja.render('index.html',
                                   benchmarks=benchmarks,
