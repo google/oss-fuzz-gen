@@ -139,6 +139,7 @@ class GenerateReport:
   def generate(self):
     """Generate and write every report file."""
     benchmarks = []
+    samples_with_bugs = []
     for benchmark_id in self._results.list_benchmark_ids():
       results, targets = self._results.get_results(benchmark_id)
       benchmark = self._results.match_benchmark(benchmark_id, results, targets)
@@ -154,6 +155,10 @@ class GenerateReport:
       self._write_benchmark_crash(benchmark, samples)
 
       for sample in samples:
+        if sample.result.crashes:
+          samples_with_bugs.append(
+            {'benchmark': benchmark,
+             'sample': sample})
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
         self._write_benchmark_sample(benchmark, sample, sample_targets)
 
@@ -163,7 +168,7 @@ class GenerateReport:
     time_results = self.read_timings()
 
     self._write_index_html(benchmarks, accumulated_results, time_results,
-                           projects)
+                           projects, samples_with_bugs)
     self._write_index_json(benchmarks)
 
   def _write(self, output_path: str, content: str):
@@ -183,13 +188,14 @@ class GenerateReport:
 
   def _write_index_html(self, benchmarks: List[Benchmark],
                         accumulated_results: AccumulatedResult,
-                        time_results: dict[str, Any], projects: list[Project]):
+                        time_results: dict[str, Any], projects: list[Project], samples_with_bugs: dict[str, Any]):
     """Generate the report index.html and write to filesystem."""
     rendered = self._jinja.render('index.html',
                                   benchmarks=benchmarks,
                                   accumulated_results=accumulated_results,
                                   time_results=time_results,
-                                  projects=projects)
+                                  projects=projects,
+                                  samples_with_bugs=samples_with_bugs)
     self._write('index.html', rendered)
 
   def _write_index_json(self, benchmarks: List[Benchmark]):
