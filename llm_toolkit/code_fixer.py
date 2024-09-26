@@ -665,15 +665,15 @@ def _collect_consume_buffers(fuzz_target_source_code: str) -> str:
   for buffer_method in ['ConsumeBytes', 'ConsumeData']:
     if buffer_method in fuzz_target_source_code:
       help_msg += (
-        f'Important: the harness source code contains a call to `{buffer_method}`. This '
-        'call is often a candidate for bugs in the harness due to the mistakes: '
-        f'1) The input size to `{buffer_method}` is the max possible size, and not necessarily '
-        f'the size of the returned vector. Each use of `{buffer_method}` should be followed '
-        'by a size check on the returned vector to ensure, and the correct size of the '
-        'returned vector should be used appropriately in any future uses of the returned vector. '
-        f'2) The vector returned by `{buffer_method}` is cast to a char pointer, and this is not NULL terminated. '
-        'if the data from the returned call is used as a char pointer, make sure to guarantee the buffer is '
-        'NULL-terminated.\n')
+          f'Important: the harness source code contains a call to `{buffer_method}`. This '
+          'call is often a candidate for bugs in the harness due to the mistakes: '
+          f'1) The input size to `{buffer_method}` is the max possible size, and not necessarily '
+          f'the size of the returned vector. Each use of `{buffer_method}` should be followed '
+          'by a size check on the returned vector to ensure, and the correct size of the '
+          'returned vector should be used appropriately in any future uses of the returned vector. '
+          f'2) The vector returned by `{buffer_method}` is cast to a char pointer, and this is not NULL terminated. '
+          'if the data from the returned call is used as a char pointer, make sure to guarantee the buffer is '
+          'NULL-terminated.\n')
 
   return help_msg
 
