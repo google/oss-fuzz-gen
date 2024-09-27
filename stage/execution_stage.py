@@ -91,9 +91,10 @@ class ExecutionStage(BaseStage):
 
       if run_result.total_pcs:
         coverage_percent = run_result.cov_pcs / run_result.total_pcs
+        self.logger.info('coverage percent == %s in %s.', coverage_percent,
+                         generated_oss_fuzz_project)
       else:
-        self.logger.warning('Warning: total_pcs == 0 in %s.',
-                            generated_oss_fuzz_project)
+        self.logger.warning('total_pcs == 0 in %s.', generated_oss_fuzz_project)
         coverage_percent = 0.0
 
       existing_textcov = evaluator.load_existing_textcov()
@@ -101,10 +102,12 @@ class ExecutionStage(BaseStage):
 
       if total_lines:
         coverage_diff = run_result.coverage.covered_lines / total_lines
+        self.logger.info('coverage diff == %s in %s.', coverage_diff,
+                         generated_oss_fuzz_project)
       else:
         self.logger.warning('total_lines == 0 in %s',
                             generated_oss_fuzz_project)
-      coverage_diff = 0.0
+        coverage_diff = 0.0
       runresult = RunResult(
           benchmark=benchmark,
           trial=last_result.trial,
