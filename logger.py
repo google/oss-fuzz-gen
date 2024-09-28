@@ -46,6 +46,15 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
     with open(os.path.join(trial_result_dir, FINAL_RESULT_JSON), 'w') as f:
       json.dump(result.to_dict(), f)
 
+  def write_chat_history(self, result: Result) -> None:
+    """Writes fuzz target."""
+    # TODO(dongge): Find a proper way to write this.
+    fuzz_target_path = os.path.join(result.work_dirs.base, 'prompt.txt')
+    chat_history = '\n'.join(
+        f'{agent_name}\n{chat_history}\n'
+        for agent_name, chat_history in result.chat_history.items())
+    self.write_to_file(fuzz_target_path, chat_history)
+
 
 def debug(msg: object,
           *args: object,

@@ -39,6 +39,7 @@ class WritingStage(BaseStage):
     # TODO(dongge): Save logs and more info into workdir.
     self.logger.write_fuzz_target(build_result)
     self.logger.write_build_script(build_result)
+    self.logger.write_chat_history(build_result)
     self.logger.debug('Writing stage completed with with result:\n%s',
                       build_result)
     return build_result
