@@ -9,6 +9,13 @@ from experiment.workdir import WorkDirs
 
 class Result:
   """A benchmark generation result."""
+  benchmark: Benchmark
+  trial: int
+  work_dirs: WorkDirs
+  fuzz_target_source: str
+  build_script_source: str
+  author: Any
+  chat_history: dict
 
   def __init__(self,
                benchmark: Benchmark,
@@ -18,14 +25,13 @@ class Result:
                build_script_source: str = '',
                author: Any = None,
                chat_history: Optional[dict] = None) -> None:
-    self.benchmark: Benchmark = benchmark
-    self.trial: int = trial
-    self.work_dirs: WorkDirs = work_dirs
-    self.fuzz_target_source: str = fuzz_target_source
-    self.build_script_source: str = build_script_source
-    self.author: Any = author
-    # {'agent_name': LLM-Tool chat log}
-    self.chat_history: dict = chat_history or {}
+    self.benchmark = benchmark
+    self.trial = trial
+    self.work_dirs = work_dirs
+    self.fuzz_target_source = fuzz_target_source
+    self.build_script_source = build_script_source
+    self.author = author
+    self.chat_history = chat_history or {}
 
   def __repr__(self) -> str:
     return (f'{self.__class__.__name__}'
@@ -47,6 +53,9 @@ class Result:
 
 class BuildResult(Result):
   """A benchmark generation result with build info."""
+  compiles: bool  # Build success/failure.
+  compile_error: str  # Build error message.
+  compile_log: str  # Build full output.
 
   def __init__(self,
                benchmark: Benchmark,
@@ -61,9 +70,9 @@ class BuildResult(Result):
                chat_history: Optional[dict] = None) -> None:
     super().__init__(benchmark, trial, work_dirs, fuzz_target_source,
                      build_script_source, author, chat_history)
-    self.compiles: bool = compiles  # Build success/failure.
-    self.compile_error: str = compile_error  # Build error message.
-    self.compile_log: str = compile_log  # Build full output.
+    self.compiles = compiles
+    self.compile_error = compile_error
+    self.compile_log = compile_log
 
   def to_dict(self) -> dict:
     return super().to_dict() | {
@@ -79,6 +88,19 @@ class BuildResult(Result):
 
 class RunResult(BuildResult):
   """The fuzzing run-time result info."""
+  crashes: bool
+  run_error: str
+  run_log: str
+  coverage_summary: dict
+  coverage: float
+  line_coverage_diff: float
+  reproducer_path: str
+  textcov_diff: Optional[textcov.Textcov]
+  log_path: str
+  corpus_path: str
+  coverage_report_path: str
+  cov_pcs: int
+  total_pcs: int
 
   def __init__(
       self,
@@ -108,19 +130,19 @@ class RunResult(BuildResult):
     super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
                      compile_log, fuzz_target_source, build_script_source,
                      author, chat_history)
-    self.crashes: bool = crashes
-    self.run_error: str = run_error
-    self.run_log: str = run_log
-    self.coverage_summary: dict = coverage_summary or {}
-    self.coverage: float = coverage
-    self.line_coverage_diff: float = line_coverage_diff
-    self.reproducer_path: str = reproducer_path
-    self.textcov_diff: Optional[textcov.Textcov] = textcov_diff
-    self.log_path: str = log_path
-    self.corpus_path: str = corpus_path
-    self.coverage_report_path: str = coverage_report_path
-    self.cov_pcs: int = cov_pcs
-    self.total_pcs: int = total_pcs
+    self.crashes = crashes
+    self.run_error = run_error
+    self.run_log = run_log
+    self.coverage_summary = coverage_summary or {}
+    self.coverage = coverage
+    self.line_coverage_diff = line_coverage_diff
+    self.reproducer_path = reproducer_path
+    self.textcov_diff = textcov_diff
+    self.log_path = log_path
+    self.corpus_path = corpus_path
+    self.coverage_report_path = coverage_report_path
+    self.cov_pcs = cov_pcs
+    self.total_pcs = total_pcs
 
   def to_dict(self) -> dict:
     return super().to_dict() | {
@@ -171,9 +193,10 @@ class CoverageResult(RunResult):
 
 class ExperimentResult:
   """All result history of a benchmark during a trial experiment."""
+  history_results: list[Result]
 
   def __init__(self, history_results: Optional[list[Result]] = None) -> None:
-    self.history_results: list[Result] = history_results or []
+    self.history_results = history_results or []
 
   def __repr__(self) -> str:
     """Summarizes results for the report."""
