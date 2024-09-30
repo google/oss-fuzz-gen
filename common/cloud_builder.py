@@ -25,6 +25,7 @@ OF_REPO = 'https://github.com/google/oss-fuzz.git'
 OFG_ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 US_CENTRAL_CLIENT_OPTIONS = google.api_core.client_options.ClientOptions(
     api_endpoint='https://us-central1-cloudbuild.googleapis.com/')
+_CHAT_HISTORY_PREFIX_PATTERN = r'^Step\s+#(\d+)\s+-\s+"agent-step":\s+'
 
 
 class CloudBuilder:
@@ -217,15 +218,14 @@ class CloudBuilder:
   def _extract_chat_history(self, full_log: str) -> str:
     """Extracts the agent chat history from cloud build log."""
     in_chat = False
-    pattern = r'^Step\s+#(\d+)\s+-\s+"agent-step":\s+'
     chat_history = []
     for log_line in full_log.splitlines():
-      if not re.match(pattern, log_line):
+      if not re.match(_CHAT_HISTORY_PREFIX_PATTERN, log_line):
         continue
       if 'ROUND 01 agent prompt:' in log_line:
         in_chat = True
       if in_chat:
-        stripped_line = re.sub(pattern, '', log_line)
+        stripped_line = re.sub(_CHAT_HISTORY_PREFIX_PATTERN, '', log_line)
         chat_history.append(stripped_line)
     return '\n'.join(chat_history)
 
