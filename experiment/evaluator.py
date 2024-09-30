@@ -264,7 +264,6 @@ class Evaluator:
     if os.path.getsize(build_script_path) == 0:
       return name
 
-    logger.info('Build script: %s', build_script_path)
     # Copy generated build script to generated_project_path
     shutil.copyfile(
         build_script_path,
