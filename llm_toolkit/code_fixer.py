@@ -666,8 +666,8 @@ def _collect_consume_buffers(fuzz_target_source_code: str) -> str:
     if buffer_method in fuzz_target_source_code:
       instruction += (
           'IMPORTANT: the harness source code contains a call to '
-          f'`{buffer_method}`. Whenever this function is used, you must check '
-          'the size of the vector returned, and make sure that the size of the '
+          f'`{buffer_method}`. Whenever this function is used, you MUST validate'
+          ' the size of the vector returned, and make sure that the size of the '
           f'vector is equal to argument given to `{buffer_method}`. If it is '
           'not equal, the harness should not proceed.\n')
       instruction += (
