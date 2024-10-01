@@ -128,6 +128,28 @@ td .signature {
     </tbody>
 </table>
 
+<h2>Crashes found by generated fuzz harnesses</h2>
+<table class="sortable-table" id="bug-summary-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th data-sort-string>Project</th>
+            <th data-sorted="asc">Benchmark</th>
+            <th data-sort-string>AI bug validation</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bug_sample in samples_with_bugs %}
+        <tr>
+            <td class="table-index">{{ loop.index }}</td>
+            <td data-sort-value="{{bug_sample.benchmark.project}}">{{bug_sample.benchmark.project}}</td>
+            <td data-sort-value="{{bug_sample.benchmark.id}}"><a href="sample/{{ bug_sample.benchmark.id|urlencode }}/{{ bug_sample.sample.id }}.html">{{bug_sample.benchmark.id}}-{{ bug_sample.sample.id }} </a> </td>
+            <td style="color: {{ 'red' if bug_sample.sample.result.crashes and not bug_sample.sample.result.is_semantic_error else 'green' }}" data-sort-value="{{'True positive' if bug_sample.sample.result.is_semantic_error else 'False positive'}}">{{'True positive' if bug_sample.sample.result.is_semantic_error else 'False positive'}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 <h2>Accumulated results</h2>
 <table>
   <thead>

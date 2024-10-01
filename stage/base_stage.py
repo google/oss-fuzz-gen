@@ -19,6 +19,9 @@ class BaseStage(ABC):
     self.agents: list[BaseAgent] = agents or []
     self.logger = logger.get_trial_logger()
 
+  def __repr__(self) -> str:
+    return self.__class__.__name__
+
   def add_agent(self, agent: BaseAgent) -> 'BaseStage':
     """Adds an agent for the stage."""
     agent.args = agent.args or self.args

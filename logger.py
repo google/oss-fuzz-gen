@@ -29,13 +29,13 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
 
   def write_fuzz_target(self, result: Result) -> None:
     """Writes fuzz target."""
-    fuzz_target_path = os.path.join(result.work_dirs.raw_targets,
+    fuzz_target_path = os.path.join(result.work_dirs.fuzz_targets,
                                     f'{result.trial:02d}.fuzz_target')
     self.write_to_file(fuzz_target_path, result.fuzz_target_source)
 
   def write_build_script(self, result: Result) -> None:
     """Writes build script."""
-    build_script_path = os.path.join(result.work_dirs.raw_targets,
+    build_script_path = os.path.join(result.work_dirs.fuzz_targets,
                                      f'{result.trial:02d}.build_script')
     self.write_to_file(build_script_path, result.build_script_source)
 
@@ -45,6 +45,15 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
     os.makedirs(trial_result_dir, exist_ok=True)
     with open(os.path.join(trial_result_dir, FINAL_RESULT_JSON), 'w') as f:
       json.dump(result.to_dict(), f)
+
+  def write_chat_history(self, result: Result) -> None:
+    """Writes fuzz target."""
+    # TODO(dongge): Find a proper way to write this.
+    fuzz_target_path = os.path.join(result.work_dirs.base, 'prompt.txt')
+    chat_history = '\n'.join(
+        f'{agent_name}\n{chat_history}\n'
+        for agent_name, chat_history in result.chat_history.items())
+    self.write_to_file(fuzz_target_path, chat_history)
 
 
 def debug(msg: object,

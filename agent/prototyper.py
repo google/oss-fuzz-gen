@@ -55,9 +55,10 @@ class Prototyper(BaseAgent):
                            compile_process: sp.CompletedProcess,
                            status: bool) -> None:
     """Updates the build result with the latest info."""
-    buid_result.status = status
-    buid_result.error = compile_process.stderr
-    buid_result.full_log = self._format_bash_execution_result(compile_process)
+    buid_result.compiles = status
+    buid_result.compile_error = compile_process.stderr
+    buid_result.compile_log = self._format_bash_execution_result(
+        compile_process)
 
   def _validate_fuzz_target_and_build_script(self, cur_round: int,
                                              build_result: BuildResult) -> None:
@@ -108,7 +109,7 @@ class Prototyper(BaseAgent):
     self._update_fuzz_target_and_build_script(cur_round, response, build_result)
 
     self._validate_fuzz_target_and_build_script(cur_round, build_result)
-    if build_result.status:
+    if build_result.compiles:
       logger.info('***** Prototyper succeded in %02d rounds *****', cur_round)
       return None
 
@@ -119,7 +120,7 @@ class Prototyper(BaseAgent):
                    f'{build_result.fuzz_target_source}\n</fuzz target>\n'
                    f'<build script>\n{build_result.build_script_source}\n'
                    '</build script>\n'
-                   f'{build_result.full_log}')
+                   f'{build_result.compile_log}')
     prompt = DefaultTemplateBuilder(self.llm, initial=prompt_text).build([])
     return prompt
 
@@ -146,7 +147,7 @@ class Prototyper(BaseAgent):
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
                                author=self,
-                               agent_dialogs={self.name: ''})
+                               chat_history={self.name: ''})
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
       while prompt and cur_round < MAX_ROUND:
