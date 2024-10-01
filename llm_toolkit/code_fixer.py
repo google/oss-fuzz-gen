@@ -670,6 +670,11 @@ def _collect_consume_buffers(fuzz_target_source_code: str) -> str:
           'the size of the vector returned, and make sure that the size of the '
           f'vector is equal to argument given to `{buffer_method}`. If it is '
           'not equal, the harness should not proceed.\n')
+      instruction += (
+          f'Furthermore, consider changing {buffer_method} to '
+          '`ConsumeRandomLengthString` for creating `char` buffers or strings. '
+          'In most cases, `ConsumeRandomLengthString` is preferred, and '
+          f'should be used instead of {buffer_method}\n')
 
   return instruction
 
