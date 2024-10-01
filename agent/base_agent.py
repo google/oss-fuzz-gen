@@ -1,6 +1,5 @@
 """The abstract base class for LLM agents in stages."""
 import argparse
-import logging
 import random
 import re
 import subprocess as sp
@@ -31,7 +30,10 @@ class BaseAgent(ABC):
     self.tools: list[BaseTool] = tools or []
     self.args = args
     self.name: str = name or self.__class__.__name__
-    self.dialog: str = ''  # Communication history between LLM and tool.
+    self.chat_history: str = ''  # Communication history between LLM and tool.
+
+  def __repr__(self) -> str:
+    return self.__class__.__name__
 
   def get_tool(self, tool_name: str) -> Optional[BaseTool]:
     """Gets a tool of the agent by name."""
@@ -69,9 +71,8 @@ class BaseAgent(ABC):
     if command:
       prompt_text = self._format_bash_execution_result(tool.execute(command))
     else:
-      logger.warning(
-          f'ROUND {cur_round} No BASH command from LLM response: {response}',
-          logging.WARNING)
+      logger.warning('ROUND %02d No BASH command from LLM response: %s',
+                     cur_round, response)
       prompt_text = ('No bash command received, Please follow the '
                      'interaction protocols:\n'
                      f'{tool.tutorial()}')

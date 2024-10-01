@@ -2,6 +2,7 @@
 import argparse
 import logging
 import os
+import re
 import subprocess
 import tempfile
 import time
@@ -18,12 +19,13 @@ from googleapiclient.discovery import build as cloud_build
 
 import utils
 from agent.base_agent import BaseAgent
-from results import BuildResult, Result
+from results import Result
 
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
 OFG_ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 US_CENTRAL_CLIENT_OPTIONS = google.api_core.client_options.ClientOptions(
     api_endpoint='https://us-central1-cloudbuild.googleapis.com/')
+_CHAT_HISTORY_PREFIX_PATTERN = r'^Step\s+#(\d+)\s+-\s+"agent-step":\s+'
 
 
 class CloudBuilder:
@@ -35,7 +37,7 @@ class CloudBuilder:
   """
 
   def __init__(self, args: argparse.Namespace) -> None:
-    #TODO(dongge): extra tags.
+    self.tags = ['ofg', 'agent', args.cloud_experiment_name]
     self.credentials, self.project_id = default()
     assert self.project_id, 'Cloud experiment requires a Google cloud project.'
     assert hasattr(
@@ -173,13 +175,16 @@ class CloudBuilder:
                 ]
             }
         ],
-        'tags': ['ofg', 'agent'],
+        'tags': self.tags,
         'timeout': '10800s',  # 3 hours
         'logsBucket': f'gs://{self.bucket_name}',
         'serviceAccount':
             f'projects/{self.project_id}/serviceAccounts/'
             f'{self.credentials.service_account_email}'  # type: ignore
     }
+    pool_name = os.getenv('GCB_BUILDPOOL_NAME')
+    if pool_name:
+      cloud_build_config.setdefault('options', {})['pool'] = {'name': pool_name}
     logging.info(cloud_build_config)
 
     # Convert to YAML string and submit the Cloud Build request
@@ -210,14 +215,28 @@ class CloudBuilder:
     """Cancel a GCB build"""
     self.builds.cancel(projectId=self.project_id, id=build_id).execute()
 
+  def _extract_chat_history(self, full_log: str) -> str:
+    """Extracts the agent chat history from cloud build log."""
+    in_chat = False
+    chat_history = []
+    for log_line in full_log.splitlines():
+      if not re.match(_CHAT_HISTORY_PREFIX_PATTERN, log_line):
+        continue
+      if 'ROUND 01 agent prompt:' in log_line:
+        in_chat = True
+      if in_chat:
+        stripped_line = re.sub(_CHAT_HISTORY_PREFIX_PATTERN, '', log_line)
+        chat_history.append(stripped_line)
+    return '\n'.join(chat_history)
+
   def _get_build_log(self, build_id: str) -> str:
     """Downloads the build log"""
     log_file_uri = f'log-{build_id}.txt'
     try:
       bucket = self.storage_client.bucket(self.bucket_name)
       blob = bucket.blob(log_file_uri)
-      log_content = blob.download_as_text()
-      logging.debug(log_content)
+      log_content = self._extract_chat_history(blob.download_as_text())
+      logging.warning(log_content)
       return log_content
     except NotFound as e:
       logging.error('Cloud build log %s not found: %s', log_file_uri, e)
@@ -233,6 +252,14 @@ class CloudBuilder:
   def run(self, agent: BaseAgent, result_history: list[Result],
           dill_dir: str) -> Any:
     """Runs agent on cloud build."""
+    # Step 0: Add task-specific tags.
+    # TODO(dongge): More tags, e.g., benchmark name.
+    self.tags += [
+        str(agent),
+        str(result_history[-1].benchmark.project),
+        # TODO(dongge): A tag for function name, compatible with tag format.
+        str(result_history[-1].trial)
+    ]
     # Step1: Generate dill files.
     agent_dill = utils.serialize_to_dill(
         agent, os.path.join(dill_dir, f'{uuid.uuid4().hex}.pkl'))
@@ -263,10 +290,10 @@ class CloudBuilder:
     result = utils.deserialize_from_dill(new_result_dill)
     if not result:
       last_result = result_history[-1]
-      result = BuildResult(benchmark=last_result.benchmark,
-                           trial=last_result.trial,
-                           work_dirs=last_result.work_dirs,
-                           author=agent)
-    result.agent_dialogs = {agent.name: build_log}
+      result = Result(benchmark=last_result.benchmark,
+                      trial=last_result.trial,
+                      work_dirs=last_result.work_dirs,
+                      author=agent)
+    result.chat_history = {agent.name: build_log}
 
     return result
