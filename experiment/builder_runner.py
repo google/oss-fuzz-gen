@@ -444,10 +444,16 @@ class BuilderRunner:
     return ParseResult(cov_pcs, total_pcs, crashes, '',
                        SemanticCheckResult(SemanticCheckResult.NO_SEMANTIC_ERR))
 
-  def build_and_run(self, generated_project: str, target_path: str,
-                    iteration: int,
-                    language: str) -> tuple[BuildResult, Optional[RunResult]]:
+  def build_and_run(
+      self,
+      generated_project: str,
+      target_path: str,
+      iteration: int,
+      language: str,
+      cloud_build_tags: Optional[list[str]] = None
+  ) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target for fuzzing."""
+    del cloud_build_tags
     build_result = BuildResult()
 
     if not self._pre_build_check(target_path, build_result):
@@ -830,9 +836,14 @@ class CloudBuilderRunner(BuilderRunner):
 
     return False
 
-  def build_and_run(self, generated_project: str, target_path: str,
-                    iteration: int,
-                    language: str) -> tuple[BuildResult, Optional[RunResult]]:
+  def build_and_run(
+      self,
+      generated_project: str,
+      target_path: str,
+      iteration: int,
+      language: str,
+      cloud_build_tags: Optional[list[str]] = None
+  ) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target for fuzzing."""
     build_result = BuildResult()
 
@@ -841,7 +852,7 @@ class CloudBuilderRunner(BuilderRunner):
 
     try:
       return self.build_and_run_cloud(generated_project, target_path, iteration,
-                                      build_result, language)
+                                      build_result, language, cloud_build_tags)
     except Exception as err:
       logger.warning(
           'Error occurred when building and running fuzz target on cloud'
@@ -850,9 +861,14 @@ class CloudBuilderRunner(BuilderRunner):
       raise err
 
   def build_and_run_cloud(
-      self, generated_project: str, target_path: str, iteration: int,
+      self,
+      generated_project: str,
+      target_path: str,
+      iteration: int,
       build_result: BuildResult,
-      language: str) -> tuple[BuildResult, Optional[RunResult]]:
+      language: str,
+      cloud_build_tags: Optional[list[str]] = None
+  ) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target locally for fuzzing."""
     logger.info('Evaluating %s on cloud.', os.path.realpath(target_path))
 
@@ -877,22 +893,26 @@ class CloudBuilderRunner(BuilderRunner):
     reproducer_name = f'{uid}.reproducer'
     reproducer_path = f'gs://{self.experiment_bucket}/{reproducer_name}'
 
-    if not self._run_with_retry_control(
-        os.path.realpath(target_path),
-        [
-            f'./{oss_fuzz_checkout.VENV_DIR}/bin/python3',
-            'infra/build/functions/target_experiment.py',
-            f'--project={generated_project}',
-            f'--target={self.benchmark.target_name}',
-            f'--upload_build_log={build_log_path}',
-            f'--upload_err_log={err_log_path}',
-            f'--upload_output_log={run_log_path}',
-            f'--upload_corpus={corpus_path}',
-            f'--upload_coverage={coverage_path}',
-            f'--upload_reproducer={reproducer_path}',
-            f'--experiment_name={self.experiment_name}', '--'
-        ] + self._libfuzzer_args(),
-        cwd=oss_fuzz_checkout.OSS_FUZZ_DIR):
+    command = [
+        f'./{oss_fuzz_checkout.VENV_DIR}/bin/python3',
+        'infra/build/functions/target_experiment.py',
+        f'--project={generated_project}',
+        f'--target={self.benchmark.target_name}',
+        f'--upload_build_log={build_log_path}',
+        f'--upload_err_log={err_log_path}',
+        f'--upload_output_log={run_log_path}',
+        f'--upload_coverage={coverage_path}',
+        f'--upload_reproducer={reproducer_path}',
+        f'--upload_corpus={corpus_path}',
+        f'--experiment_name={self.experiment_name}'
+    ]
+    if cloud_build_tags:
+      command += ['--tags'] + cloud_build_tags
+    command += ['--'] + self._libfuzzer_args()
+
+    if not self._run_with_retry_control(os.path.realpath(target_path),
+                                        command,
+                                        cwd=oss_fuzz_checkout.OSS_FUZZ_DIR):
       return build_result, None
 
     logger.info('Evaluated %s on cloud.', os.path.realpath(target_path))
