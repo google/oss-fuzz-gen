@@ -51,14 +51,15 @@ class Prototyper(BaseAgent):
       logger.debug('ROUND %02d No build script in conclusion: %s', cur_round,
                    response)
 
-  def _update_build_result(self, buid_result: BuildResult,
-                           compile_process: sp.CompletedProcess,
-                           status: bool) -> None:
+  def _update_build_result(self, build_result: BuildResult,
+                           compile_process: sp.CompletedProcess, status: bool,
+                           referenced: bool) -> None:
     """Updates the build result with the latest info."""
-    buid_result.compiles = status
-    buid_result.compile_error = compile_process.stderr
-    buid_result.compile_log = self._format_bash_execution_result(
+    build_result.compiles = status
+    build_result.compile_error = compile_process.stderr
+    build_result.compile_log = self._format_bash_execution_result(
         compile_process)
+    build_result.is_function_referenced = referenced
 
   def _validate_fuzz_target_and_build_script(self, cur_round: int,
                                              build_result: BuildResult) -> None:
@@ -93,11 +94,25 @@ class Prototyper(BaseAgent):
     binary_exists = ls_result.returncode == 0
     logger.debug('ROUND %02d Final fuzz target binary exists: %s', cur_round,
                  binary_exists)
-    compilation_tool.terminate()
 
+    # Validate if function-under-test is referenced by the fuzz target.
+    disassemble_result = compilation_tool.execute(
+        'objdump --disassemble=LLVMFuzzerTestOneInput -d '
+        f'/out/{benchmark.target_name}')
+    function_referenced = (disassemble_result.returncode == 0 and
+                           benchmark.function_name in disassemble_result.stdout)
+    logger.debug('ROUND %02d Final fuzz target function referenced: %s',
+                 cur_round, function_referenced)
+    if not function_referenced:
+      logger.debug(
+          'ROUND %02d Final fuzz target function not referenced:%s\n%s',
+          cur_round, benchmark.function_name, disassemble_result.stdout)
+
+    compilation_tool.terminate()
     self._update_build_result(build_result,
                               compile_process=compile_process,
-                              status=compile_succeed and binary_exists)
+                              status=compile_succeed and binary_exists,
+                              referenced=function_referenced)
 
   def _container_handle_conclusion(
       self, cur_round: int, response: str,
@@ -109,18 +124,33 @@ class Prototyper(BaseAgent):
     self._update_fuzz_target_and_build_script(cur_round, response, build_result)
 
     self._validate_fuzz_target_and_build_script(cur_round, build_result)
-    if build_result.compiles:
+    if build_result.success:
       logger.info('***** Prototyper succeded in %02d rounds *****', cur_round)
       return None
 
-    logger.info('***** Failed to recompile in %02d rounds *****', cur_round)
-    prompt_text = ('Failed to build fuzz target. Here is the fuzz target, build'
-                   ' script, compliation command, and other compilation runtime'
-                   ' output.\n<fuzz target>\n'
-                   f'{build_result.fuzz_target_source}\n</fuzz target>\n'
-                   f'<build script>\n{build_result.build_script_source}\n'
-                   '</build script>\n'
-                   f'{build_result.compile_log}')
+    if not build_result.compiles:
+      logger.info('***** Failed to recompile in %02d rounds *****', cur_round)
+      prompt_text = (
+          'Failed to build fuzz target. Here is the fuzz target, build'
+          ' script, compliation command, and other compilation runtime'
+          ' output.\n<fuzz target>\n'
+          f'{build_result.fuzz_target_source}\n</fuzz target>\n'
+          f'<build script>\n{build_result.build_script_source}\n'
+          '</build script>\n'
+          f'{build_result.compile_log}')
+    elif not build_result.is_function_referenced:
+      logger.info(
+          '***** Fuzz target does not reference function-under-test in %02d '
+          'rounds *****', cur_round)
+      prompt_text = (
+          'The fuzz target builds succeessfully, but the target function '
+          f'`{build_result.benchmark.function_signature}` was not used by '
+          '`LLVMFuzzerTestOneInput` in fuzz target. YOU MUST CALL FUNCTION '
+          f'`{build_result.benchmark.function_signature}` INSIDE FUNCTION '
+          '`LLVMFuzzerTestOneInput`.')
+    else:
+      prompt_text = ''
+
     prompt = DefaultTemplateBuilder(self.llm, initial=prompt_text).build([])
     return prompt
 
