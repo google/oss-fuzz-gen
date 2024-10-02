@@ -49,7 +49,7 @@ Please feel free to create an issue or email us: oss-fuzz-team@google.com.
 
 ## Bugs Discovered
 
-So far, we have reported 25 new bugs/vulnerabilities found by automatically generated targets built
+So far, we have reported 26 new bugs/vulnerabilities found by automatically generated targets built
 by this framework:
 | Project |    Bug    |    LLM    | Prompt Builder | Target oracle |
 | ------- | --------- | --------- | --------------- | ------- |
@@ -66,6 +66,9 @@ by this framework:
 | [`gpac`](https://github.com/google/oss-fuzz/tree/master/projects/gpac)  | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71543) | Vertex AI | [Default](prompts/template_xml) | All |
 | [`gpac`](https://github.com/google/oss-fuzz/tree/master/projects/gpac)  | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71544) | Vertex AI | [Default](prompts/template_xml) | All |
 | [`sqlite3`](https://github.com/google/oss-fuzz/tree/master/projects/sqlite3) | [OOB read](https://issues.oss-fuzz.com/issues/42538590) | Vertex AI | [Default](prompts/template_xml) | All |
+| [`htslib`](https://github.com/google/oss-fuzz/tree/master/projects/htslib) | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71740) | Vertex AI | [Default](prompts/template_xml) | All |
+| [`libical`](https://github.com/google/oss-fuzz/tree/master/projects/libical) | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71741) | Vertex AI | [Default](prompts/template_xml) | All |
+| [`croaring`](https://github.com/google/oss-fuzz/tree/master/projects/croaring) | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71738) | Vertex AI | [Test-to-harness](prompts/template_xml) | All |
 | Undisclosed | Java RCE (pending maintainer triage) | Vertex AI |  [Default](prompts/template_xml) | Far reach, low coverage |
 | Undisclosed | Regexp DoS (pending maintainer triage) | Vertex AI |  [Default](prompts/template_xml) | Far reach, low coverage |
 | Undisclosed | [Use of uninitialised memory](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71354) | Vertex AI | Test-to-harness | Test identifier |
@@ -74,10 +77,8 @@ by this framework:
 | Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71619) | Vertex AI | [Default](prompts/template_xml) | All |
 | Undisclosed | [OOB read/write](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71623) | Vertex AI | [Default](prompts/template_xml) | All |
 | Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71650) | Vertex AI | [Default](prompts/template_xml) | All |
-| Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71738) | Vertex AI | [Test-to-harness](prompts/template_xml) | All |
-| Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71740) | Vertex AI | [Default](prompts/template_xml) | All |
-| Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71741) | Vertex AI | [Default](prompts/template_xml) | All |
 | Undisclosed | [OOB read](https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=71759) | Vertex AI | [Default](prompts/template_xml) | All |
+| Undisclosed | [OOB read](https://issues.oss-fuzz.com/issues/370872803) | Vertex AI | Test-to-harness | Test identifier |
 
 These bugs could only have been discovered with newly generated targets. They were not reachable with existing OSS-Fuzz targets.
 
