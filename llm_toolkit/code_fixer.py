@@ -472,6 +472,7 @@ def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
   instruction += _collect_instruction_no_goto(fuzz_target_source_code)
   instruction += _collect_instruction_builtin_libs_first(benchmark, errors)
   instruction += _collect_instruction_extern(benchmark)
+  instruction += _collect_consume_buffers(fuzz_target_source_code)
 
   return instruction
 
@@ -653,6 +654,28 @@ def _collect_instruction_extern(benchmark: benchmarklib.Benchmark) -> str:
       'compilation and linkage between C and C++:\n<code>\nextern "C" {\n    //'
       'Include necessary C headers, source files, functions, and code here.\n}'
       '\n</code>\n')
+  return instruction
+
+
+def _collect_consume_buffers(fuzz_target_source_code: str) -> str:
+  """Provides advice on the use of ConsumeBytes and ConsumeData"""
+
+  instruction = ''
+
+  for buffer_method in ['ConsumeBytes', 'ConsumeData']:
+    if buffer_method in fuzz_target_source_code:
+      instruction += (
+          'IMPORTANT: the harness source code contains a call to '
+          f'`{buffer_method}`. Whenever this function is used, you MUST validate'
+          ' the size of the vector returned, and make sure that the size of the '
+          f'vector is equal to argument given to `{buffer_method}`. If it is '
+          'not equal, the harness should not proceed.\n')
+      instruction += (
+          f'Furthermore, consider changing {buffer_method} to '
+          '`ConsumeRandomLengthString` for creating `char` buffers or strings. '
+          'In most cases, `ConsumeRandomLengthString` is preferred, and '
+          f'should be used instead of {buffer_method}\n')
+
   return instruction
 
 
