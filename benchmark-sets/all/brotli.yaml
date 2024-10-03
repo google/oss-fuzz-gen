@@ -1,22 +1,4 @@
 "functions":
-- "name": "BrotliDecoderAttachDictionary"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int BrotliDecoderAttachDictionary(BrotliDecoderStateInternal *, BrotliSharedDictionaryType, size_t, const uint8_t *)"
-- "name": "BrotliDecoderIsFinished"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int BrotliDecoderIsFinished(const BrotliDecoderStateInternal *)"
 - "name": "BrotliSafeReadBits32Slow"
   "params":
   - "name": ""
@@ -39,6 +21,24 @@
     "type": "bool "
   "return_type": "int"
   "signature": "BrotliDecoderResult BrotliDecoderDecompress(size_t, const uint8_t *, size_t *, uint8_t *)"
+- "name": "BrotliDecoderAttachDictionary"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int BrotliDecoderAttachDictionary(BrotliDecoderStateInternal *, BrotliSharedDictionaryType, size_t, const uint8_t *)"
+- "name": "BrotliDecoderIsFinished"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int BrotliDecoderIsFinished(const BrotliDecoderStateInternal *)"
 - "name": "BrotliDecoderTakeOutput"
   "params":
   - "name": ""

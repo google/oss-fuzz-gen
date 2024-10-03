@@ -1,0 +1,11 @@
+"functions":
+- "name": "_cupsGetPassword"
+  "params":
+  - "name": "prompt"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * _cupsGetPassword(const char *)"
+"language": "c"
+"project": "cups"
+"target_name": "fuzz_array"
+"target_path": "/src/cups/ossfuzz/fuzz_array.c"

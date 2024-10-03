@@ -1,14 +1,4 @@
 "functions":
-- "name": "mp_lcm"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "mp_err mp_lcm(const mp_int *, const mp_int *, mp_int *)"
 - "name": "ltc_ecc_projective_add_point"
   "params":
   - "name": "P"
@@ -35,5 +25,5 @@
   "signature": "mp_err mp_prime_next_prime(mp_int *, int, int)"
 "language": "c++"
 "project": "dropbear"
-"target_name": "fuzzer-client"
-"target_path": "/src/dropbear/fuzz/fuzzer-client.c"
+"target_name": "fuzzer-pubkey"
+"target_path": "/src/dropbear/fuzz/fuzzer-pubkey.c"

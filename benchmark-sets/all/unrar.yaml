@@ -1,10 +1,4 @@
 "functions":
-- "name": "_ZN10MainHeaderD2Ev"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct MainHeader & MainHeader::operator=(struct MainHeader *, struct DW_TAG_rvalue_reference_typeMainHeader)"
 - "name": "_ZN4FileaSERS_"
   "params":
   - "name": "this"
@@ -13,6 +7,12 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void File::operator=(File &)"
+- "name": "_ZN10MainHeaderD2Ev"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct MainHeader & MainHeader::operator=(struct MainHeader *, struct DW_TAG_rvalue_reference_typeMainHeader)"
 "language": "c++"
 "project": "unrar"
 "target_name": "unrar_fuzzer"

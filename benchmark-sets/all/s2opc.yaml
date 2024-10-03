@@ -1,4 +1,10 @@
 "functions":
+- "name": "SOPC_SecureChannels_Initialize"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void SOPC_SecureChannels_Initialize(SOPC_SetListenerFunc *)"
 - "name": "SOPC_SecureChannels_OnInternalEvent"
   "params":
   - "name": ""
@@ -31,13 +37,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void SOPC_Services_Initialize(SOPC_SetListenerFunc *)"
-- "name": "SOPC_SecureChannels_Initialize"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void SOPC_SecureChannels_Initialize(SOPC_SetListenerFunc *)"
 "language": "c++"
 "project": "s2opc"
-"target_name": "sub_fuzzer"
-"target_path": "/src/S2OPC/tests/PubSub/fuzzing/fuzz_sub.c"
+"target_name": "parse_tcp_uri_fuzzer"
+"target_path": "/src/S2OPC/tests/ClientServer/unit_tests/fuzzing/fuzz_parse_tcp_uri.c"

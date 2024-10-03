@@ -1,0 +1,35 @@
+"functions":
+- "name": "llhttp_status_name"
+  "params":
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "const char * llhttp_status_name(llhttp_status_t)"
+- "name": "llhttp_method_name"
+  "params":
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "const char * llhttp_method_name(llhttp_method_t)"
+- "name": "llhttp_errno_name"
+  "params":
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "const char * llhttp_errno_name(llhttp_errno_t)"
+- "name": "llhttp_finish"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "llhttp_errno_t llhttp_finish(llhttp_t *)"
+- "name": "llhttp_reset"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void llhttp_reset(llhttp_t *)"
+"language": "c"
+"project": "llhttp"
+"target_name": "fuzz_parser"
+"target_path": "/src/llhttp/test/fuzzers/fuzz_parser.c"

@@ -1,22 +1,22 @@
 "functions":
-- "name": "tcp_init_children"
-  "params":
-  - "name": "woneinit"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int tcp_init_children(int *)"
-- "name": "tcp_receive_loop"
-  "params":
-  - "name": "unix_sock"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void tcp_receive_loop(int)"
 - "name": "fix_actions"
   "params":
   - "name": "a"
     "type": "bool "
   "return_type": "int"
   "signature": "int fix_actions(struct action *)"
+- "name": "tcp_receive_loop"
+  "params":
+  - "name": "unix_sock"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void tcp_receive_loop(int)"
+- "name": "tcp_init_children"
+  "params":
+  - "name": "woneinit"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int tcp_init_children(int *)"
 "language": "c"
 "project": "kamailio"
 "target_name": "fuzz_uri"

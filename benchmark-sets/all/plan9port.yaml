@@ -1,4 +1,14 @@
 "functions":
+- "name": "rsadecrypt"
+  "params":
+  - "name": "rsa"
+    "type": "bool "
+  - "name": "in"
+    "type": "bool "
+  - "name": "out"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "mpint * rsadecrypt(RSApriv *, mpint *, mpint *)"
 - "name": "X509gen"
   "params":
   - "name": "priv"
@@ -23,6 +33,12 @@
     "type": "int"
   "return_type": "void"
   "signature": "RSApub * X509toRSApub(uchar *, int, char *, int)"
+- "name": "__efgfmt"
+  "params":
+  - "name": "fmt"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int __efgfmt(Fmt *)"
 - "name": "X509req"
   "params":
   - "name": "priv"
@@ -33,22 +49,6 @@
     "type": "bool "
   "return_type": "void"
   "signature": "uchar * X509req(RSApriv *, char *, int *)"
-- "name": "rsadecrypt"
-  "params":
-  - "name": "rsa"
-    "type": "bool "
-  - "name": "in"
-    "type": "bool "
-  - "name": "out"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "mpint * rsadecrypt(RSApriv *, mpint *, mpint *)"
-- "name": "__efgfmt"
-  "params":
-  - "name": "fmt"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int __efgfmt(Fmt *)"
 "language": "c"
 "project": "plan9port"
 "target_name": "fuzz_libsec"

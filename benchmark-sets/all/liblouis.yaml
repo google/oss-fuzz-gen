@@ -1,4 +1,10 @@
 "functions":
+- "name": "lou_getEmphClasses"
+  "params":
+  - "name": "tableList"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char ** lou_getEmphClasses(const char *)"
 - "name": "_lou_defaultTableResolver"
   "params":
   - "name": "tableList"
@@ -7,20 +13,6 @@
     "type": "bool "
   "return_type": "void"
   "signature": "char ** _lou_defaultTableResolver(const char *, const char *)"
-- "name": "lou_getEmphClasses"
-  "params":
-  - "name": "tableList"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const char ** lou_getEmphClasses(const char *)"
-- "name": "lou_getTypeformForEmphClass"
-  "params":
-  - "name": "tableList"
-    "type": "bool "
-  - "name": "emphClass"
-    "type": "bool "
-  "return_type": "short"
-  "signature": "formtype lou_getTypeformForEmphClass(const char *, const char *)"
 - "name": "lou_translatePrehyphenated"
   "params":
   - "name": "tableList"
@@ -65,7 +57,15 @@
     "type": "int"
   "return_type": "int"
   "signature": "int lou_hyphenate(const char *, const widechar *, int, char *, int)"
+- "name": "lou_getTypeformForEmphClass"
+  "params":
+  - "name": "tableList"
+    "type": "bool "
+  - "name": "emphClass"
+    "type": "bool "
+  "return_type": "short"
+  "signature": "formtype lou_getTypeformForEmphClass(const char *, const char *)"
 "language": "c"
 "project": "liblouis"
-"target_name": "fuzz_translate_generic"
-"target_path": "/src/liblouis/tests/fuzzing/fuzz_translate_generic.c"
+"target_name": "table_fuzzer"
+"target_path": "/src/liblouis/tests/fuzzing/table_fuzzer.cc"
