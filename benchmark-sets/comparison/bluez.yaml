@@ -29,5 +29,5 @@
   "signature": "guint g_obex_get_req(GObex *, GObexDataConsumer, GObexFunc, gpointer, GError **, guint, void)"
 "language": "c"
 "project": "bluez"
-"target_name": "fuzz_sdp"
-"target_path": "/src/fuzz_sdp.c"
+"target_name": "fuzz_textfile"
+"target_path": "/src/fuzz_textfile.c"

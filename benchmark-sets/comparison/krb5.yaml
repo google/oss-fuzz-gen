@@ -21,5 +21,5 @@
   "signature": "OM_uint32 krb5_gss_store_cred(OM_uint32 *, gss_cred_id_t, gss_cred_usage_t, const gss_OID, OM_uint32, OM_uint32, gss_OID_set *, gss_cred_usage_t *)"
 "language": "c"
 "project": "krb5"
-"target_name": "fuzz_json"
-"target_path": "/src/krb5/src/tests/fuzzing/fuzz_json.c"
+"target_name": "fuzz_ndr"
+"target_path": "/src/krb5/src/tests/fuzzing/fuzz_ndr.c"

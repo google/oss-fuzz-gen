@@ -7,5 +7,5 @@
   "signature": "int brpc::policy::DiscoveryClient::DoRegister()"
 "language": "c++"
 "project": "brpc"
-"target_name": "fuzz_uri"
-"target_path": "/src/brpc/test/fuzzing/fuzz_uri.cpp"
+"target_name": "fuzz_butil"
+"target_path": "/src/brpc/test/fuzzing/fuzz_butil.cpp"

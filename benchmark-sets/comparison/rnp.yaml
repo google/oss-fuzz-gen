@@ -11,5 +11,5 @@
   "signature": "pgp_sig_import_status_t rnp::KeyStore::import_signature(pgp_key_t &, const pgp_signature_t &)"
 "language": "c++"
 "project": "rnp"
-"target_name": "fuzz_dump"
-"target_path": "/src/rnp/src/fuzzing/dump.c"
+"target_name": "fuzz_sigimport"
+"target_path": "/src/rnp/src/fuzzing/sigimport.c"
