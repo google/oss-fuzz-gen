@@ -16,6 +16,8 @@ class ProjectContainerTool(BaseTool):
     super().__init__(benchmark, name)
     self.image_name = self._prepare_project_image()
     self.container_id = self._start_docker_container()
+    self.execute('[ -f /usr/local/bin/recompile ] && '
+                 'mv /usr/local/bin/recompile /usr/local/bin/compile')
 
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
