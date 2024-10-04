@@ -199,11 +199,15 @@ class CloudBuilder:
     """Wait for a GCB build."""
     prev_status = status = None
     while status in [None, 'WORKING', 'QUEUED']:
-      status = self.builds.get(projectId=self.project_id,
-                               id=build_id).execute().get('status')
-      if status != prev_status:
-        logging.info('Cloud Build %s Status: %s', build_id, status)
-        prev_status = status
+      try:
+        status = self.builds.get(projectId=self.project_id,
+                                 id=build_id).execute().get('status')
+        if status != prev_status:
+          logging.info('Cloud Build %s Status: %s', build_id, status)
+          prev_status = status
+      except (googleapiclient.errors.HttpError, BrokenPipeError) as e:
+        logging.warning('Failed to check cloud build status %s: %s', build_id,
+                        e)
       time.sleep(60)  # Avoid rate limiting.
     return status or ''
 
@@ -281,15 +285,14 @@ class CloudBuilder:
       if cloud_build_final_status == 'SUCCESS':
         self._download_from_gcs(new_result_dill)
       else:
-        cloud_build_log += (f'Cloud build {build_id} terminated with status: '
+        logging.error('Cloud build %s failed with status: %s', build_id,
+                      cloud_build_final_status)
+        cloud_build_log += (f'Cloud build {build_id} failed with status: '
                             f'{cloud_build_final_status}.\n')
     except (KeyboardInterrupt, SystemExit) as e:
       self._cancel_build(build_id)
       logging.error('Cloud build %s cancled: %s', build_id, e)
       cloud_build_log += f'Cloud build {build_id} cancled: {e}.\n'
-    except (googleapiclient.errors.HttpError, BrokenPipeError) as e:
-      logging.error('Cloud build %s failed: %s', build_id, e)
-      cloud_build_log += f'Cloud build {build_id} failed: {e}.\n'
 
     cloud_build_log += self._get_build_log(build_id)
 
