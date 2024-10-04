@@ -387,8 +387,8 @@ def _image_exists_locally(image_name: str, project_name: str) -> bool:
                   image_name)
       return True
   except sp.CalledProcessError:
-    logger.info('Unable to use local cached image of %s: %s', project_name,
-                image_name)
+    logger.warning('Unable to use local cached image of %s: %s', project_name,
+                   image_name)
   return False
 
 
@@ -404,7 +404,7 @@ def _image_exists_online(image_name: str, project_name: str) -> bool:
     logger.info('Pulled online cached images of %s: %s', project_name,
                 online_image_name)
     sp.run([
-        'docker', 'run', '-it', '--entrypoint', '/usr/local/bin/recompile',
+        'docker', 'run', '--entrypoint', '/usr/local/bin/recompile',
         online_image_name
     ],
            stdout=sp.PIPE,
@@ -418,7 +418,7 @@ def _image_exists_online(image_name: str, project_name: str) -> bool:
     logger.info('Will use online cached images: %s', project_name)
     return True
   except sp.CalledProcessError:
-    logger.info('Unable to use online cached images: %s', project_name)
+    logger.warning('Unable to use online cached images: %s', project_name)
     return False
 
 
