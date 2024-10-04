@@ -195,21 +195,17 @@ class CloudBuilder:
     logging.info('Cloud Build ID: %s', build_id)
     return build_id
 
-  def _wait_for_build(self, build_id: str) -> bool:
+  def _wait_for_build(self, build_id: str) -> str:
     """Wait for a GCB build."""
     prev_status = status = None
     while status in [None, 'WORKING', 'QUEUED']:
-      try:
-        status = self.builds.get(projectId=self.project_id,
-                                 id=build_id).execute().get('status')
-        if status != prev_status:
-          logging.info('Cloud Build %s Status: %s', build_id, status)
-          prev_status = status
-        time.sleep(60)  # Avoid rate limiting.
-      except (googleapiclient.errors.HttpError, BrokenPipeError) as e:
-        logging.error('Cloud build %s failed: %s', build_id, e)
-        return False
-    return status == 'SUCCESS'
+      status = self.builds.get(projectId=self.project_id,
+                               id=build_id).execute().get('status')
+      if status != prev_status:
+        logging.info('Cloud Build %s Status: %s', build_id, status)
+        prev_status = status
+      time.sleep(60)  # Avoid rate limiting.
+    return status or ''
 
   def _cancel_build(self, build_id: str) -> None:
     """Cancel a GCB build"""
@@ -240,7 +236,7 @@ class CloudBuilder:
       return log_content
     except NotFound as e:
       logging.error('Cloud build log %s not found: %s', log_file_uri, e)
-      return ''
+      return f'Cloud build log {log_file_uri} not found: {e}.'
 
   def _download_from_gcs(self, destination_file_name: str) -> None:
     """Downloads the result file from GCS."""
@@ -278,22 +274,34 @@ class CloudBuilder:
                                          new_result_filename)
 
     # Step 4: Download new result dill.
+    cloud_build_log = ''
     new_result_dill = os.path.join(dill_dir, new_result_filename)
     try:
-      if self._wait_for_build(build_id):
+      cloud_build_final_status = self._wait_for_build(build_id)
+      if cloud_build_final_status == 'SUCCESS':
         self._download_from_gcs(new_result_dill)
-    except (KeyboardInterrupt, SystemExit):
+      else:
+        cloud_build_log += (f'Cloud build {build_id} terminated with status: '
+                            f'{cloud_build_final_status}.\n')
+    except (KeyboardInterrupt, SystemExit) as e:
       self._cancel_build(build_id)
-    build_log = self._get_build_log(build_id)
+      logging.error('Cloud build %s cancled: %s', build_id, e)
+      cloud_build_log += f'Cloud build {build_id} cancled: {e}.\n'
+    except (googleapiclient.errors.HttpError, BrokenPipeError) as e:
+      logging.error('Cloud build %s failed: %s', build_id, e)
+      cloud_build_log += f'Cloud build {build_id} failed: {e}.\n'
+
+    cloud_build_log += self._get_build_log(build_id)
 
     # Step 4: Deserialize dilld file.
     result = utils.deserialize_from_dill(new_result_dill)
     if not result:
+      cloud_build_log += f'Failed to deserialize from dill {new_result_dill}.\n'
       last_result = result_history[-1]
       result = Result(benchmark=last_result.benchmark,
                       trial=last_result.trial,
                       work_dirs=last_result.work_dirs,
                       author=agent)
-    result.chat_history = {agent.name: build_log}
+    result.chat_history = {agent.name: cloud_build_log}
 
     return result
