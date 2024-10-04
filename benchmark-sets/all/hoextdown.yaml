@@ -1,12 +1,4 @@
 "functions":
-- "name": "hoedown_buffer_putf"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "file"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int hoedown_buffer_putf(hoedown_buffer *, FILE *)"
 - "name": "hoedown_document_render_inline"
   "params":
   - "name": "doc"
@@ -41,6 +33,14 @@
     "type": "int"
   "return_type": "void"
   "signature": "hoedown_renderer * hoedown_html_toc_renderer_new(int)"
+- "name": "hoedown_buffer_putf"
+  "params":
+  - "name": "buf"
+    "type": "bool "
+  - "name": "file"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int hoedown_buffer_putf(hoedown_buffer *, FILE *)"
 "language": "c++"
 "project": "hoextdown"
 "target_name": "hoedown_fuzzer"

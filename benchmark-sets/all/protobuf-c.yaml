@@ -1,12 +1,4 @@
 "functions":
-- "name": "protobuf_c_message_pack_to_buffer"
-  "params":
-  - "name": "message"
-    "type": "bool "
-  - "name": "buffer"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t protobuf_c_message_pack_to_buffer(const ProtobufCMessage *, ProtobufCBuffer *)"
 - "name": "protobuf_c_message_check"
   "params":
   - "name": "message"
@@ -39,6 +31,14 @@
     "type": "int"
   "return_type": "void"
   "signature": "const ProtobufCFieldDescriptor * protobuf_c_message_descriptor_get_field(const ProtobufCMessageDescriptor *, unsigned int)"
+- "name": "protobuf_c_message_pack_to_buffer"
+  "params":
+  - "name": "message"
+    "type": "bool "
+  - "name": "buffer"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "size_t protobuf_c_message_pack_to_buffer(const ProtobufCMessage *, ProtobufCBuffer *)"
 "language": "c"
 "project": "protobuf-c"
 "target_name": "fuzzer"

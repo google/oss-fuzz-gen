@@ -1,4 +1,12 @@
 "functions":
+- "name": "GEOSMakeValidWithParams"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "Geometry * GEOSMakeValidWithParams(const Geometry *, const GEOSMakeValidParams *)"
 - "name": "GEOSMakeValid_r"
   "params":
   - "name": ""
@@ -39,14 +47,6 @@
     "type": "bool "
   "return_type": "void"
   "signature": "Geometry * GEOSMakeValidWithParams_r(GEOSContextHandle_t, const Geometry *, const GEOSMakeValidParams *)"
-- "name": "GEOSMakeValidWithParams"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Geometry * GEOSMakeValidWithParams(const Geometry *, const GEOSMakeValidParams *)"
 "language": "c++"
 "project": "geos"
 "target_name": "fuzz_geo2"

@@ -1,4 +1,12 @@
 "functions":
+- "name": "mdb_dump_catalog"
+  "params":
+  - "name": "mdb"
+    "type": "bool "
+  - "name": "obj_type"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void mdb_dump_catalog(MdbHandle *, int)"
 - "name": "mdb_data_dump"
   "params":
   - "name": "table"
@@ -19,14 +27,6 @@
     "type": "int"
   "return_type": "int"
   "signature": "int mdb_print_schema(MdbHandle *, FILE *, char *, char *, guint32)"
-- "name": "mdb_dump_catalog"
-  "params":
-  - "name": "mdb"
-    "type": "bool "
-  - "name": "obj_type"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void mdb_dump_catalog(MdbHandle *, int)"
 - "name": "mdb_table_dump"
   "params":
   - "name": "entry"

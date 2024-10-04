@@ -1,16 +1,22 @@
 "functions":
-- "name": "kex_gen_server"
-  "params":
-  - "name": "ssh"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int kex_gen_server(struct ssh *)"
 - "name": "kex_send_newkeys"
   "params":
   - "name": "ssh"
     "type": "bool "
   "return_type": "int"
   "signature": "int kex_send_newkeys(struct ssh *)"
+- "name": "kexgex_server"
+  "params":
+  - "name": "ssh"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int kexgex_server(struct ssh *)"
+- "name": "kex_gen_server"
+  "params":
+  - "name": "ssh"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int kex_gen_server(struct ssh *)"
 - "name": "kexgex_client"
   "params":
   - "name": "ssh"
@@ -23,13 +29,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int kex_gen_client(struct ssh *)"
-- "name": "kexgex_server"
-  "params":
-  - "name": "ssh"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int kexgex_server(struct ssh *)"
 "language": "c++"
 "project": "hpn-ssh"
-"target_name": "kex_fuzz"
-"target_path": "/src/hpn-ssh/regress/misc/fuzz-harness/kex_fuzz.cc"
+"target_name": "authopt_fuzz"
+"target_path": "/src/hpn-ssh/regress/misc/fuzz-harness/authopt_fuzz.cc"

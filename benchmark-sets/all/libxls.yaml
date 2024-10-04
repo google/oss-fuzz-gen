@@ -1,4 +1,10 @@
 "functions":
+- "name": "xls_close_summaryInfo"
+  "params":
+  - "name": "pSI"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void xls_close_summaryInfo(xlsSummaryInfo *)"
 - "name": "xls_open"
   "params":
   - "name": "file"
@@ -23,12 +29,6 @@
     "type": "bool "
   "return_type": "void"
   "signature": "xlsWorkBook * xls_open_file(const char *, const char *, xls_error_t *)"
-- "name": "xls_close_summaryInfo"
-  "params":
-  - "name": "pSI"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void xls_close_summaryInfo(xlsSummaryInfo *)"
 - "name": "xls_summaryInfo"
   "params":
   - "name": "pWB"

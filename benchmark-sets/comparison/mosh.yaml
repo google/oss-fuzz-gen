@@ -11,5 +11,5 @@
   "signature": "void Terminal::Framebuffer::resize(int, int)"
 "language": "c++"
 "project": "mosh"
-"target_name": "terminal_fuzzer"
-"target_path": "/src/mosh/src/fuzz/terminal_fuzzer.cc"
+"target_name": "terminal_parser_fuzzer"
+"target_path": "/src/mosh/src/fuzz/terminal_parser_fuzzer.cc"

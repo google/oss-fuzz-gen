@@ -1,0 +1,35 @@
+"functions":
+- "name": "_ZN6google10LogMessage15SaveOrSendToLogEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void google::LogMessage::SaveOrSendToLog()"
+- "name": "_ZN6google10LogMessageD2Ev"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void google::LogMessage::~~LogMessage()"
+- "name": "_ZN6google10LogMessage9SendToLogEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void google::LogMessage::SendToLog()"
+- "name": "_ZN6google15LogMessageFatalD2Ev"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void google::LogMessageFatal::~~LogMessageFatal()"
+- "name": "_ZN6google15ErrnoLogMessageD2Ev"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void google::ErrnoLogMessage::~~ErrnoLogMessage()"
+"language": "c++"
+"project": "myanmar-tools"
+"target_name": "zawgyi_detector_fuzz_target"
+"target_path": "/src/myanmar-tools/clients/cpp/zawgyi_detector_fuzz_target.cpp"

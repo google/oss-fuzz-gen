@@ -1,14 +1,18 @@
 "functions":
-- "name": "_ZNK2mu10ParserBase9StackDumpERKNSt3__15stackINS_11ParserTokenIdNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEENS1_5dequeISA_NS7_ISA_EEEEEESG_"
+- "name": "_ZNK2mu10ParserBase4EvalERi"
   "params":
   - "name": ""
     "type": "bool "
   - "name": ""
     "type": "bool "
+  "return_type": "void"
+  "signature": "value_type * mu::ParserBase::Eval(int &)"
+- "name": "_ZNK2mu10ParserBase10GetUsedVarEv"
+  "params":
   - "name": ""
     "type": "bool "
   "return_type": "void"
-  "signature": "void mu::ParserBase::StackDump(const stack<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::deque<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > > > &, const stack<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::deque<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > > > &)"
+  "signature": "const varmap_type & mu::ParserBase::GetUsedVar()"
 - "name": "_ZNK2mu10ParserBase12ApplyStrFuncERKNS_11ParserTokenIdNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEEERKNS2_6vectorIS9_NS6_IS9_EEEE"
   "params":
   - "name": ""
@@ -21,6 +25,16 @@
     "type": "bool "
   "return_type": "void"
   "signature": "token_type mu::ParserBase::ApplyStrFunc(const token_type &, const vector<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > > &)"
+- "name": "_ZNK2mu10ParserBase9StackDumpERKNSt3__15stackINS_11ParserTokenIdNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEENS1_5dequeISA_NS7_ISA_EEEEEESG_"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void mu::ParserBase::StackDump(const stack<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::deque<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > > > &, const stack<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::deque<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<mu::ParserToken<double, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > > > &)"
 - "name": "_ZN2mu10ParserBase4EvalEPdi"
   "params":
   - "name": ""
@@ -31,20 +45,6 @@
     "type": "int"
   "return_type": "void"
   "signature": "void mu::ParserBase::Eval(value_type *, int)"
-- "name": "_ZNK2mu10ParserBase10GetUsedVarEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const varmap_type & mu::ParserBase::GetUsedVar()"
-- "name": "_ZNK2mu10ParserBase4EvalERi"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "value_type * mu::ParserBase::Eval(int &)"
 "language": "c++"
 "project": "muparser"
 "target_name": "set_eval_fuzzer"

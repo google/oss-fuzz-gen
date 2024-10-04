@@ -1,10 +1,4 @@
 "functions":
-- "name": "m3_GetFunctionName"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const char * m3_GetFunctionName(IM3Function)"
 - "name": "m3_GetMemorySize"
   "params":
   - "name": ""

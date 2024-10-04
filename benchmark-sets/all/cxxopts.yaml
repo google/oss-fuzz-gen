@@ -5,6 +5,12 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void cxxopts::exceptions::exception::~~exception()"
+- "name": "_Z3absB7v180000l"
+  "params":
+  - "name": "__x"
+    "type": "size_t"
+  "return_type": "size_t"
+  "signature": "long abs(long)"
 - "name": "_ZN7cxxopts11OptionAdderclERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_RKNS1_10shared_ptrIKNS_5ValueEEES7_"
   "params":
   - "name": "this"

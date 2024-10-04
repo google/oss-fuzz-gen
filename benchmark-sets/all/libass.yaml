@@ -1,10 +1,4 @@
 "functions":
-- "name": "_ZN16hb_lazy_loader_tIN2OT18cff2_accelerator_tE21hb_face_lazy_loader_tIS1_Lj17EE9hb_face_tLj17ES1_E6createEPS4_"
-  "params":
-  - "name": "data"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct GSUB_accelerator_t * hb_lazy_loader_t<OT::cff2_accelerator_t, hb_face_lazy_loader_t<OT::cff2_accelerator_t, 17u>, hb_face_t, 17u, OT::cff2_accelerator_t>::create(struct hb_face_t *)"
 - "name": "_ZN22hb_table_lazy_loader_tIN2OT4COLRELj35ELb1EE6createEP9hb_face_t"
   "params":
   - "name": "face"
@@ -17,6 +11,12 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct GSUB_accelerator_t * hb_lazy_loader_t<OT::cff1_accelerator_t, hb_face_lazy_loader_t<OT::cff1_accelerator_t, 16u>, hb_face_t, 16u, OT::cff1_accelerator_t>::create(struct hb_face_t *)"
+- "name": "_ZN16hb_lazy_loader_tIN2OT18cff2_accelerator_tE21hb_face_lazy_loader_tIS1_Lj17EE9hb_face_tLj17ES1_E6createEPS4_"
+  "params":
+  - "name": "data"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct GSUB_accelerator_t * hb_lazy_loader_t<OT::cff2_accelerator_t, hb_face_lazy_loader_t<OT::cff2_accelerator_t, 17u>, hb_face_t, 17u, OT::cff2_accelerator_t>::create(struct hb_face_t *)"
 "language": "c++"
 "project": "libass"
 "target_name": "libass_fuzzer"

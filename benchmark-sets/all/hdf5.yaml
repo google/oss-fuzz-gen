@@ -1,18 +1,4 @@
 "functions":
-- "name": "H5D__get_space"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "hid_t H5D__get_space(const H5D_t *)"
-- "name": "H5D__write"
-  "params":
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "herr_t H5D__write(size_t, H5D_dset_io_info_t *)"
 - "name": "H5D__read"
   "params":
   - "name": ""
@@ -21,12 +7,12 @@
     "type": "bool "
   "return_type": "int"
   "signature": "herr_t H5D__read(size_t, H5D_dset_io_info_t *)"
-- "name": "H5D__virtual_set_extent_unlim"
+- "name": "H5D__get_space"
   "params":
   - "name": ""
     "type": "bool "
-  "return_type": "int"
-  "signature": "herr_t H5D__virtual_set_extent_unlim(const H5D_t *)"
+  "return_type": "size_t"
+  "signature": "hid_t H5D__get_space(const H5D_t *)"
 - "name": "H5D__chunk_copy"
   "params":
   - "name": ""
@@ -49,6 +35,20 @@
     "type": "bool "
   "return_type": "int"
   "signature": "herr_t H5D__chunk_copy(H5F_t *, H5O_storage_chunk_t *, H5O_layout_chunk_t *, H5F_t *, H5O_storage_chunk_t *, const H5S_extent_t *, H5T_t *, const H5O_pline_t *, H5O_copy_t *)"
+- "name": "H5D__virtual_set_extent_unlim"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "herr_t H5D__virtual_set_extent_unlim(const H5D_t *)"
+- "name": "H5D__write"
+  "params":
+  - "name": ""
+    "type": "size_t"
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "herr_t H5D__write(size_t, H5D_dset_io_info_t *)"
 "language": "c"
 "project": "hdf5"
 "target_name": "h5_read_fuzzer"

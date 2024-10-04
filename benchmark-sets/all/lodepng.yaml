@@ -1,4 +1,16 @@
 "functions":
+- "name": "_Z21lodepng_encode24_filePKcPKhjj"
+  "params":
+  - "name": "filename"
+    "type": "bool "
+  - "name": "image"
+    "type": "bool "
+  - "name": "w"
+    "type": "int"
+  - "name": "h"
+    "type": "int"
+  "return_type": "int"
+  "signature": "unsigned int lodepng_encode24_file(const char *, const unsigned char *, unsigned int, unsigned int)"
 - "name": "_Z19lodepng_encode_filePKcPKhjj16LodePNGColorTypej"
   "params":
   - "name": "filename"
@@ -43,18 +55,6 @@
     "type": "int"
   "return_type": "int"
   "signature": "unsigned int lodepng_encode32_file(const char *, const unsigned char *, unsigned int, unsigned int)"
-- "name": "_Z21lodepng_encode24_filePKcPKhjj"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "image"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int lodepng_encode24_file(const char *, const unsigned char *, unsigned int, unsigned int)"
 - "name": "_ZN7lodepng6encodeERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS0_6vectorIhNS4_IhEEEEjj16LodePNGColorTypej"
   "params":
   - "name": "filename"

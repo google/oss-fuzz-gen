@@ -19,5 +19,5 @@
   "signature": "void sljit_free_stack(struct sljit_stack *, void *)"
 "language": "c++"
 "project": "pcre2"
-"target_name": "pcre2_fuzzer_32_3l"
+"target_name": "pcre2_fuzzer_16_4l"
 "target_path": "/src/pcre2/src/pcre2_fuzzsupport.c"

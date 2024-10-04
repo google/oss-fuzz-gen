@@ -1,4 +1,22 @@
 "functions":
+- "name": "mutate_string"
+  "params":
+  - "name": "s"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void mutate_string(char *)"
+- "name": "mutate_blob"
+  "params":
+  - "name": "blob"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void mutate_blob(struct blob *)"
+- "name": "mutate_int"
+  "params":
+  - "name": "i"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void mutate_int(int *)"
 - "name": "mutate"
   "params":
   - "name": "p"
@@ -9,12 +27,6 @@
     "type": "int"
   "return_type": "void"
   "signature": "void mutate(struct param *, unsigned int, unsigned int)"
-- "name": "mutate_blob"
-  "params":
-  - "name": "blob"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void mutate_blob(struct blob *)"
 - "name": "pack_dummy"
   "params":
   - "name": "ptr"
@@ -23,18 +35,6 @@
     "type": "size_t"
   "return_type": "size_t"
   "signature": "size_t pack_dummy(uint8_t *, size_t)"
-- "name": "mutate_string"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void mutate_string(char *)"
-- "name": "mutate_int"
-  "params":
-  - "name": "i"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void mutate_int(int *)"
 "language": "c++"
 "project": "libfido2"
 "target_name": "fuzz_netlink"
