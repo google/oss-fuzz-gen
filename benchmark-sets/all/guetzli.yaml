@@ -1,5 +1,5 @@
 "functions":
-- "name": "_ZN11butteraugli18ButteraugliDiffmapERKNSt3__16vectorINS_5ImageIfEENS0_9allocatorIS3_EEEES8_RS3_"
+- "name": "_ZNK11butteraugli21ButteraugliComparator4MaskEPNSt3__16vectorINS_5ImageIfEENS1_9allocatorIS4_EEEES8_"
   "params":
   - "name": ""
     "type": "bool "
@@ -8,7 +8,7 @@
   - "name": ""
     "type": "bool "
   "return_type": "void"
-  "signature": "void butteraugli::ButteraugliDiffmap(const vector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > &, const vector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > &, ImageF &)"
+  "signature": "void butteraugli::ButteraugliComparator::Mask(DW_TAG_restrict_typevector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > *, DW_TAG_restrict_typevector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > *)"
 - "name": "_ZN7guetzli7ProcessERKNS_6ParamsEPNS_12ProcessStatsERKNSt3__16vectorIhNS5_9allocatorIhEEEEiiPNS5_12basic_stringIcNS5_11char_traitsIcEENS7_IcEEEE"
   "params":
   - "name": ""
@@ -25,6 +25,16 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool guetzli::Process(const struct Params &, struct ProcessStats *, const vector<unsigned char, std::__1::allocator<unsigned char> > &, int, int, string *)"
+- "name": "_ZN11butteraugli18ButteraugliDiffmapERKNSt3__16vectorINS_5ImageIfEENS0_9allocatorIS3_EEEES8_RS3_"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void butteraugli::ButteraugliDiffmap(const vector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > &, const vector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > &, ImageF &)"
 - "name": "_ZN7guetzli27BuildSequentialHuffmanCodesERKNS_8JPEGDataEPNSt3__16vectorINS_16HuffmanCodeTableENS3_9allocatorIS5_EEEES9_"
   "params":
   - "name": ""
@@ -35,16 +45,6 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void guetzli::BuildSequentialHuffmanCodes(const struct JPEGData &, vector<guetzli::HuffmanCodeTable, std::__1::allocator<guetzli::HuffmanCodeTable> > *, vector<guetzli::HuffmanCodeTable, std::__1::allocator<guetzli::HuffmanCodeTable> > *)"
-- "name": "_ZNK11butteraugli21ButteraugliComparator4MaskEPNSt3__16vectorINS_5ImageIfEENS1_9allocatorIS4_EEEES8_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void butteraugli::ButteraugliComparator::Mask(DW_TAG_restrict_typevector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > *, DW_TAG_restrict_typevector<butteraugli::Image<float>, std::__1::allocator<butteraugli::Image<float> > > *)"
 - "name": "_ZN11butteraugli20ButteraugliInterfaceERKNSt3__16vectorINS_5ImageIfEENS0_9allocatorIS3_EEEES8_RS3_Rd"
   "params":
   - "name": ""

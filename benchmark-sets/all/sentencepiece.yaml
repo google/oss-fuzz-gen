@@ -1,14 +1,4 @@
 "functions":
-- "name": "_ZN13sentencepiece10ModelProto14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ptr"
-    "type": "bool "
-  - "name": "ctx"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const char * sentencepiece::ModelProto::_InternalParse(const char *, ParseContext *)"
 - "name": "_ZN13sentencepiece22NBestSentencePieceText14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
   "params":
   - "name": "this"
@@ -49,6 +39,16 @@
     "type": "bool "
   "return_type": "void"
   "signature": "const char * sentencepiece::TrainerSpec::_InternalParse(const char *, ParseContext *)"
+- "name": "_ZN13sentencepiece10ModelProto14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "ptr"
+    "type": "bool "
+  - "name": "ctx"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * sentencepiece::ModelProto::_InternalParse(const char *, ParseContext *)"
 "language": "c++"
 "project": "sentencepiece"
 "target_name": "sample_encode_fuzzer"

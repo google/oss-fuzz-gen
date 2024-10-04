@@ -1,12 +1,4 @@
 "functions":
-- "name": "cmark_node_check"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cmark_node_check(cmark_node *, FILE *)"
 - "name": "cmark_node_replace"
   "params":
   - "name": ""
@@ -23,6 +15,14 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int cmark_node_append_child(cmark_node *, cmark_node *)"
+- "name": "cmark_node_check"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int cmark_node_check(cmark_node *, FILE *)"
 - "name": "cmark_node_insert_after"
   "params":
   - "name": ""

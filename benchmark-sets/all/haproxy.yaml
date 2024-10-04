@@ -9,5 +9,5 @@
   "signature": "void init(int, char **)"
 "language": "c++"
 "project": "haproxy"
-"target_name": "fuzz_cfg_parser"
-"target_path": "/src/fuzz_cfg_parser.c"
+"target_name": "fuzz_hpack_decode"
+"target_path": "/src/haproxy/fuzz_hpack_decode.c"

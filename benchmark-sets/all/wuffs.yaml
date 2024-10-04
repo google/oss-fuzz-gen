@@ -1,0 +1,11 @@
+"functions":
+- "name": "_ZNK32wuffs_base__range_ie_u64__struct6lengthEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "uint64_t wuffs_base__range_ie_u64__struct::length(const struct wuffs_base__range_ie_u64__struct *)"
+"language": "c++"
+"project": "wuffs"
+"target_name": "bzip2_fuzzer"
+"target_path": "/src/wuffs/fuzz/c/fuzzlib/fuzzlib.c"

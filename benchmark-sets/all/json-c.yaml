@@ -1,4 +1,10 @@
 "functions":
+- "name": "json_tokener_parse"
+  "params":
+  - "name": "str"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct json_object * json_tokener_parse(const char *)"
 - "name": "json_object_equal"
   "params":
   - "name": "jso1"
@@ -7,12 +13,12 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int json_object_equal(struct json_object *, struct json_object *)"
-- "name": "json_tokener_parse"
+- "name": "json_object_new_string"
   "params":
-  - "name": "str"
+  - "name": "s"
     "type": "bool "
   "return_type": "void"
-  "signature": "struct json_object * json_tokener_parse(const char *)"
+  "signature": "struct json_object * json_object_new_string(const char *)"
 - "name": "json_object_deep_copy"
   "params":
   - "name": "src"
@@ -31,13 +37,7 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct json_object * json_tokener_parse_verbose(const char *, DW_TAG_enumeration_typejson_tokener_error *)"
-- "name": "json_object_new_string"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct json_object * json_object_new_string(const char *)"
 "language": "c++"
 "project": "json-c"
 "target_name": "tokener_parse_ex_fuzzer"
-"target_path": "/src/json-c/fuzz/tokener_parse_ex_fuzzer.cc"
+"target_path": "/src/tokener_parse_ex_fuzzer.cc"

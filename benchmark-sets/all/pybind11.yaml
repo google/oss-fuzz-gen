@@ -1,26 +1,4 @@
 "functions":
-- "name": "_ZN8pybind116detail14clear_instanceEP7_object"
-  "params":
-  - "name": "self"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void pybind11::detail::clear_instance(PyObject *)"
-- "name": "pybind11_object_dealloc"
-  "params":
-  - "name": "self"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void pybind11_object_dealloc(PyObject *)"
-- "name": "_ZN8pybind1112cpp_function10dispatcherEP7_objectS2_S2_"
-  "params":
-  - "name": "self"
-    "type": "bool "
-  - "name": "args_in"
-    "type": "bool "
-  - "name": "kwargs_in"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "PyObject * pybind11::cpp_function::dispatcher(PyObject *, PyObject *, PyObject *)"
 - "name": "_ZN8pybind116detail8instance20get_value_and_holderEPKNS0_9type_infoEb"
   "params":
   - "name": "this"
@@ -33,6 +11,18 @@
     "type": "bool"
   "return_type": "void"
   "signature": "struct value_and_holder pybind11::detail::instance::get_value_and_holder(struct instance *, const struct type_info *, bool)"
+- "name": "_ZN8pybind116detail14clear_instanceEP7_object"
+  "params":
+  - "name": "self"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void pybind11::detail::clear_instance(PyObject *)"
+- "name": "pybind11_object_dealloc"
+  "params":
+  - "name": "self"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void pybind11_object_dealloc(PyObject *)"
 - "name": "_ZN8pybind116detail21traverse_offset_basesEPvPKNS0_9type_infoEPNS0_8instanceEPFbS1_S6_E"
   "params":
   - "name": "valueptr"
@@ -45,6 +35,16 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void pybind11::detail::traverse_offset_bases(void *, const struct type_info *, struct instance *, const DW_TAG_subroutine_typevector<pybind11::detail::type_info *, std::__1::allocator<pybind11::detail::type_info *> > *)"
+- "name": "_ZN8pybind1112cpp_function10dispatcherEP7_objectS2_S2_"
+  "params":
+  - "name": "self"
+    "type": "bool "
+  - "name": "args_in"
+    "type": "bool "
+  - "name": "kwargs_in"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "PyObject * pybind11::cpp_function::dispatcher(PyObject *, PyObject *, PyObject *)"
 "language": "c++"
 "project": "pybind11"
 "target_name": "pybind_fuzzer"

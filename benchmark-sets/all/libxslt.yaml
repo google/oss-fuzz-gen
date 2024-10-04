@@ -1,12 +1,4 @@
 "functions":
-- "name": "xmlXIncludeProcessTreeFlags"
-  "params":
-  - "name": "tree"
-    "type": "bool "
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int xmlXIncludeProcessTreeFlags(xmlNodePtr, int)"
 - "name": "xmlReadDoc"
   "params":
   - "name": "cur"
@@ -39,6 +31,14 @@
     "type": "bool "
   "return_type": "void"
   "signature": "htmlParserCtxtPtr htmlCreateFileParserCtxt(const char *, const char *)"
+- "name": "xmlXIncludeProcessTreeFlags"
+  "params":
+  - "name": "tree"
+    "type": "bool "
+  - "name": "flags"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int xmlXIncludeProcessTreeFlags(xmlNodePtr, int)"
 - "name": "xmlACatalogResolvePublic"
   "params":
   - "name": "catal"
@@ -49,5 +49,5 @@
   "signature": "xmlChar * xmlACatalogResolvePublic(xmlCatalogPtr, const xmlChar *)"
 "language": "c++"
 "project": "libxslt"
-"target_name": "xslt"
-"target_path": "/src/libxslt/tests/fuzz/xslt.c"
+"target_name": "xpath"
+"target_path": "/src/libxslt/tests/fuzz/xpath.c"

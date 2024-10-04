@@ -1,14 +1,4 @@
 "functions":
-- "name": "_ZNK4piex14tiff_directory13TiffDirectory3GetEjPNSt3__16vectorINS0_9SRationalENS2_9allocatorIS4_EEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "tag"
-    "type": "int"
-  - "name": "value"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool piex::tiff_directory::TiffDirectory::Get(const Tag, vector<piex::tiff_directory::SRational, std::__1::allocator<piex::tiff_directory::SRational> > *)"
 - "name": "_ZNK4piex14tiff_directory13TiffDirectory3GetEjPNS0_9SRationalE"
   "params":
   - "name": "this"
@@ -29,12 +19,6 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool piex::tiff_directory::TiffDirectory::Get(const Tag, struct Rational *)"
-- "name": "_ZN4piex5IsRawEPNS_15StreamInterfaceE"
-  "params":
-  - "name": "data"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool piex::IsRaw(StreamInterface *)"
 - "name": "_ZN4piex18GetExifOrientationEPNS_15StreamInterfaceEjPj"
   "params":
   - "name": "stream"
@@ -45,6 +29,22 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool piex::GetExifOrientation(StreamInterface *, const uint32_t, uint32_t *)"
+- "name": "_ZNK4piex14tiff_directory13TiffDirectory3GetEjPNSt3__16vectorINS0_9SRationalENS2_9allocatorIS4_EEEE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "tag"
+    "type": "int"
+  - "name": "value"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool piex::tiff_directory::TiffDirectory::Get(const Tag, vector<piex::tiff_directory::SRational, std::__1::allocator<piex::tiff_directory::SRational> > *)"
+- "name": "_ZN4piex5IsRawEPNS_15StreamInterfaceE"
+  "params":
+  - "name": "data"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool piex::IsRaw(StreamInterface *)"
 "language": "c++"
 "project": "piex"
 "target_name": "fuzzer-tiff_parser"

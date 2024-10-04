@@ -1,16 +1,22 @@
 "functions":
-- "name": "fxImportNow"
-  "params":
-  - "name": "the"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fxImportNow(txMachine *)"
 - "name": "fxLoadModulesRejected"
   "params":
   - "name": "the"
     "type": "bool "
   "return_type": "void"
   "signature": "void fxLoadModulesRejected(txMachine *)"
+- "name": "fxLoadModulesFulfilled"
+  "params":
+  - "name": "the"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void fxLoadModulesFulfilled(txMachine *)"
+- "name": "fxImport"
+  "params":
+  - "name": "the"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void fxImport(txMachine *)"
 - "name": "fxAwaitImport"
   "params":
   - "name": "the"
@@ -19,12 +25,6 @@
     "type": "int"
   "return_type": "void"
   "signature": "void fxAwaitImport(txMachine *, txBoolean)"
-- "name": "fxImport"
-  "params":
-  - "name": "the"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fxImport(txMachine *)"
 - "name": "yaml_emitter_dump"
   "params":
   - "name": "emitter"

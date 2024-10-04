@@ -1,4 +1,12 @@
 "functions":
+- "name": "flb_config_load_config_format"
+  "params":
+  - "name": "config"
+    "type": "bool "
+  - "name": "cf"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int flb_config_load_config_format(struct flb_config *, struct flb_cf *)"
 - "name": "vivo_http_server_create"
   "params":
   - "name": "ctx"
@@ -11,26 +19,18 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct vivo_http * vivo_http_server_create(struct vivo_exporter *, const char *, int, struct flb_config *)"
-- "name": "flb_config_load_config_format"
-  "params":
-  - "name": "config"
-    "type": "bool "
-  - "name": "cf"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int flb_config_load_config_format(struct flb_config *, struct flb_cf *)"
-- "name": "udp_conn_event"
-  "params":
-  - "name": "data"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int udp_conn_event(void *)"
 - "name": "flb_start_trace"
   "params":
   - "name": "ctx"
     "type": "bool "
   "return_type": "int"
   "signature": "int flb_start_trace(flb_ctx_t *)"
+- "name": "udp_conn_event"
+  "params":
+  - "name": "data"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int udp_conn_event(void *)"
 - "name": "in_metrics_init"
   "params":
   - "name": "in"
@@ -43,5 +43,5 @@
   "signature": "int in_metrics_init(struct flb_input_instance *, struct flb_config *, void *)"
 "language": "c++"
 "project": "fluent-bit"
-"target_name": "flb-it-fuzz-msgpack_to_gelf_fuzzer_OSSFUZZ"
-"target_path": "/src/fluent-bit/tests/internal/fuzzers/msgpack_to_gelf_fuzzer.c"
+"target_name": "flb-it-fuzz-ctrace_fuzzer_OSSFUZZ"
+"target_path": "/src/fluent-bit/tests/internal/fuzzers/ctrace_fuzzer.c"

@@ -1,4 +1,12 @@
 "functions":
+- "name": "rem_get"
+  "params":
+  - "name": ""
+    "type": "int"
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * rem_get(RemType, Rem *)"
 - "name": "cue_parse_file"
   "params":
   - "name": ""
@@ -11,22 +19,6 @@
     "type": "bool "
   "return_type": "void"
   "signature": "const char * track_get_isrc(const Track *)"
-- "name": "rem_get"
-  "params":
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const char * rem_get(RemType, Rem *)"
-- "name": "cd_get_track"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "Track * cd_get_track(const Cd *, int)"
 - "name": "cdtext_get"
   "params":
   - "name": ""
@@ -35,6 +27,14 @@
     "type": "bool "
   "return_type": "void"
   "signature": "const char * cdtext_get(DW_TAG_enumeration_typePti, const Cdtext *)"
+- "name": "cd_get_track"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "Track * cd_get_track(const Cd *, int)"
 "language": "c"
 "project": "libcue"
 "target_name": "fuzz"

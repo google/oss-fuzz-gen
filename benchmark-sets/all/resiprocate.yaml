@@ -1,4 +1,12 @@
 "functions":
+- "name": "_ZN5resip11SdpContentsaSERKS0_"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "SdpContents & resip::SdpContents::operator=(const SdpContents &)"
 - "name": "_ZNK5resip15ContentsFactoryINS_28MultipartAlternativeContentsEE6createERKNS_16HeaderFieldValueERKNS_4MimeE"
   "params":
   - "name": ""
@@ -9,14 +17,14 @@
     "type": "bool "
   "return_type": "void"
   "signature": "Contents * resip::ContentsFactory<resip::MultipartAlternativeContents>::create(const ContentsFactory<resip::MultipartSignedContents> *, const HeaderFieldValue &, const Mime &)"
-- "name": "_ZN5resip11SdpContentsaSERKS0_"
+- "name": "_ZN5resip19GenericPidfContentsaSERKS0_"
   "params":
   - "name": ""
     "type": "bool "
   - "name": ""
     "type": "bool "
   "return_type": "void"
-  "signature": "SdpContents & resip::SdpContents::operator=(const SdpContents &)"
+  "signature": "GenericPidfContents & resip::GenericPidfContents::operator=(const GenericPidfContents &)"
 - "name": "_ZNK5resip15ContentsFactoryINS_22MultipartMixedContentsEE6createERKNS_16HeaderFieldValueERKNS_4MimeE"
   "params":
   - "name": ""
@@ -27,14 +35,6 @@
     "type": "bool "
   "return_type": "void"
   "signature": "Contents * resip::ContentsFactory<resip::MultipartMixedContents>::create(const ContentsFactory<resip::MultipartSignedContents> *, const HeaderFieldValue &, const Mime &)"
-- "name": "_ZN5resip19GenericPidfContentsaSERKS0_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "GenericPidfContents & resip::GenericPidfContents::operator=(const GenericPidfContents &)"
 - "name": "_ZNK5resip15ContentsFactoryINS_23MultipartSignedContentsEE6createERKNS_16HeaderFieldValueERKNS_4MimeE"
   "params":
   - "name": ""

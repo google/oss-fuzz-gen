@@ -9,5 +9,5 @@
   "signature": "IINField opendnp3::FreezeRequestHandler::ProcessHeader(const RangeHeader &)"
 "language": "c++"
 "project": "opendnp3"
-"target_name": "fuzzoutstation"
-"target_path": "/src/opendnp3/cpp/tests/fuzz/fuzzoutstation.cpp"
+"target_name": "fuzzdecoder"
+"target_path": "/src/opendnp3/cpp/tests/fuzz/fuzzdecoder.cpp"
