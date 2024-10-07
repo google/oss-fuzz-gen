@@ -1,0 +1,50 @@
+"functions":
+- "exceptions": []
+  "name": "ixmlParseBuffer"
+  "params":
+  - "name": "buffer"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "IXML_Document * ixmlParseBuffer(const char *)"
+- "exceptions": []
+  "name": "ixmlParseBufferEx"
+  "params":
+  - "name": "buffer"
+    "type": "bool "
+  - "name": "retDoc"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int ixmlParseBufferEx(const char *, IXML_Document **)"
+- "exceptions": []
+  "name": "ixmlNode_cloneNode"
+  "params":
+  - "name": "nodeptr"
+    "type": "bool "
+  - "name": "deep"
+    "type": "int"
+  "return_type": "void"
+  "signature": "IXML_Node * ixmlNode_cloneNode(IXML_Node *, int)"
+- "exceptions": []
+  "name": "ixmlLoadDocument"
+  "params":
+  - "name": "xmlFile"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "IXML_Document * ixmlLoadDocument(const char *)"
+- "exceptions": []
+  "name": "ixmlDocument_importNode"
+  "params":
+  - "name": "doc"
+    "type": "bool "
+  - "name": "importNode"
+    "type": "bool "
+  - "name": "deep"
+    "type": "int"
+  - "name": "rtNode"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int ixmlDocument_importNode(IXML_Document *, IXML_Node *, int, IXML_Node **)"
+"language": "c"
+"project": "pupnp"
+"target_name": "FuzzIxml"
+"target_path": "/src/pupnp/fuzzer/FuzzIxml.c"

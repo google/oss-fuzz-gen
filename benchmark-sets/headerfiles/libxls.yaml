@@ -1,0 +1,46 @@
+"functions":
+- "exceptions": []
+  "name": "xls_open"
+  "params":
+  - "name": "file"
+    "type": "bool "
+  - "name": "charset"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "xlsWorkBook * xls_open(const char *, const char *)"
+- "exceptions": []
+  "name": "ole2_open_file"
+  "params":
+  - "name": "file"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "OLE2 * ole2_open_file(const char *)"
+- "exceptions": []
+  "name": "xls_open_file"
+  "params":
+  - "name": "file"
+    "type": "bool "
+  - "name": "charset"
+    "type": "bool "
+  - "name": "outError"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "xlsWorkBook * xls_open_file(const char *, const char *, xls_error_t *)"
+- "exceptions": []
+  "name": "xls_close_summaryInfo"
+  "params":
+  - "name": "pSI"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void xls_close_summaryInfo(xlsSummaryInfo *)"
+- "exceptions": []
+  "name": "xls_summaryInfo"
+  "params":
+  - "name": "pWB"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "xlsSummaryInfo * xls_summaryInfo(xlsWorkBook *)"
+"language": "c"
+"project": "libxls"
+"target_name": "fuzz_xls"
+"target_path": "/src/libxls/fuzz/fuzz_xls.c"
