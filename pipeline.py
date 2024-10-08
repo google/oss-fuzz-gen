@@ -4,7 +4,7 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
-from results import BuildResult, Result
+from results import BuildResult, Result, RunResult
 from stage.analysis_stage import AnalysisStage
 from stage.execution_stage import ExecutionStage
 from stage.writing_stage import WritingStage
@@ -38,7 +38,7 @@ class Pipeline():
 
   def _terminate(self, result_history: list[Result]) -> bool:
     """Validates if the termination conditions have been satisfied."""
-    conditions = bool(result_history and len(result_history) > 1)
+    conditions = bool(result_history and len(result_history) > 10)
     self.logger.info('termination condition met: %s', conditions)
     return conditions
 
@@ -48,16 +48,24 @@ class Pipeline():
     self.logger.info('Cycle %d initial result is %s', cycle_count,
                      result_history[-1])
     result_history.append(
-        self.writing_stage.execute(result_history=result_history))
-    if (not isinstance(result_history[-1], BuildResult) or
+        self.writing_stage.execute(result_history=result_history)) # append one BuildResult although chat many times
+    if (not isinstance(result_history[-1], BuildResult) or # fuzz target and build script are saved in BuildResult
         not result_history[-1].success):
       self.logger.error('Cycle %d build failure, skipping the rest steps',
                         cycle_count)
       return
 
     result_history.append(
-        self.execution_stage.execute(result_history=result_history))
-
+        self.execution_stage.execute(result_history=result_history)) # append one RunResult
+    if not isinstance(result_history[-1], RunResult): # if crash, artifact file path & name are saved in RunResult
+      self.logger.error('Cycle %d run failure, skipping the rest steps',
+                        cycle_count)
+      return
+    
+    if result_history[-1].crashes: # RunResult.crashes => True
+      result_history.append(
+        self.analysis_stage.execute(result_history=result_history)) # append one CrashResult
+        
     self.logger.info('Cycle %d final result is %s', cycle_count,
                      result_history[-1])
 
@@ -73,6 +81,8 @@ class Pipeline():
     """
     self.logger.debug('Pipline starts')
     cycle_count = 1
+    #TODO: delete comment
+    #origin: execute _execute_one_cycle twice
     while not self._terminate(result_history=result_history):
       self._execute_one_cycle(result_history=result_history,
                               cycle_count=cycle_count)
