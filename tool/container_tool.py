@@ -34,23 +34,30 @@ class ProjectContainerTool(BaseTool):
                        command: list[str],
                        in_container: bool = False) -> sp.CompletedProcess:
     """Executes the |command| in subprocess and log output."""
-    result = sp.run(command,
-                    stdout=sp.PIPE,
-                    stderr=sp.PIPE,
-                    check=False,
-                    text=True)
+    try:
+      result = sp.run(command,
+                      stdout=sp.PIPE,
+                      stderr=sp.PIPE,
+                      check=False,
+                      text=True,
+                      encoding='utf-8',
+                      errors='ignore')
 
-    if in_container:
-      logger.debug(
-          'Executing command (%s) in container %s: Return code %d. STDOUT: %s, '
-          'STDERR: %s', command, self.container_id, result.returncode,
-          result.stdout, result.stderr)
-    else:
-      logger.debug(
-          'Executing command (%s): Return code %d. STDOUT: %s, '
-          'STDERR: %s', command, result.returncode, result.stdout,
-          result.stderr)
-    return result
+      if in_container:
+        logger.debug(
+            'Executing command (%s) in container %s: Return code %d. STDOUT: %s'
+            ', STDERR: %s', command, self.container_id, result.returncode,
+            result.stdout, result.stderr)
+      else:
+        logger.debug(
+            'Executing command (%s): Return code %d. STDOUT: %s, '
+            'STDERR: %s', command, result.returncode, result.stdout,
+            result.stderr)
+      return result
+    except Exception as e:
+      logger.error('Executing command (%s) failed with Exception: %s', command,
+                   e)
+      return sp.CompletedProcess(command, returncode=1, stdout='', stderr='')
 
   def _start_docker_container(self) -> str:
     """Runs the project's OSS-Fuzz image as a background container and returns
@@ -60,6 +67,8 @@ class ProjectContainerTool(BaseTool):
         f'FUZZING_LANGUAGE={self.benchmark.language}', self.image_name
     ]
     result = self._execute_command(run_container_command)
+    if result.returncode:
+      logger.error('Failed to start container of image: %s', self.image_name)
     container_id = result.stdout.strip()
     return container_id
 
