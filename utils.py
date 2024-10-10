@@ -68,7 +68,7 @@ def retryable(exceptions=None,
           # Expected exceptions and their subclass.
           num_attempts = next(
               (attempts for exc_type, attempts in exception_config.items()
-               if isinstance(e, exc_type)), 1)
+               if type(e) is exc_type), 1)  # pylint: disable=unidiomatic-typecheck
 
           logging.error(
               'Exception %s on function %s(args=%s, kwargs=%s), attempt %d/%d',
