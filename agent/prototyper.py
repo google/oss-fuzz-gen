@@ -105,8 +105,7 @@ class Prototyper(BaseAgent):
 
     # Recompile.
     logger.info('===== ROUND %02d Recompile =====', cur_round)
-    compile_command = 'compile > /dev/null'
-    compile_process = compilation_tool.execute(compile_command)
+    compile_process = compilation_tool.compile(use_recompile=use_recompile)
     compile_succeed = compile_process.returncode == 0
     logger.debug('ROUND %02d Fuzz target compile Succeessfully: %s', cur_round,
                  compile_succeed)
@@ -192,7 +191,7 @@ class Prototyper(BaseAgent):
     prompt = self._initial_prompt(result_history)
     benchmark = last_result.benchmark
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
-    self.inspect_tool.execute('{compile && rm -rf /out/*} > /dev/null')
+    self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
     cur_round = 1
     prompt.append(self.inspect_tool.tutorial())
     build_result = BuildResult(benchmark=benchmark,
