@@ -64,6 +64,28 @@ class Prototyper(BaseAgent):
   def _validate_fuzz_target_and_build_script(self, cur_round: int,
                                              build_result: BuildResult) -> None:
     """Validates the new fuzz target and build script."""
+    # Steps:
+    #   1. Recompile without modifying the build script, in case LLM is wrong.
+    #   2. Recompile with the modified build script, if any.
+    build_script_source = build_result.build_script_source
+
+    logger.info('First compile fuzz target without modifying build script.')
+    build_result.build_script_source = ''
+    self._validate_fuzz_target_and_build_script_via_recompile(
+        cur_round, build_result)
+
+    if not build_result.success and build_script_source:
+      logger.info('Then compile fuzz target with modified build script.')
+      build_result.build_script_source = build_script_source
+      self._validate_fuzz_target_and_build_script_via_recompile(
+          cur_round, build_result, use_recompile=False)
+
+  def _validate_fuzz_target_and_build_script_via_recompile(
+      self,
+      cur_round: int,
+      build_result: BuildResult,
+      use_recompile: bool = True) -> None:
+    """Validates the new fuzz target and build script by recompiling them."""
     benchmark = build_result.benchmark
     compilation_tool = ProjectContainerTool(benchmark=benchmark)
 
