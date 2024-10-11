@@ -2,6 +2,7 @@
 import argparse
 import logging
 import os
+import random
 import re
 import subprocess
 import tempfile
@@ -23,8 +24,10 @@ from results import Result
 
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
 OFG_ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-US_CENTRAL_CLIENT_OPTIONS = google.api_core.client_options.ClientOptions(
-    api_endpoint='https://us-central1-cloudbuild.googleapis.com/')
+REGION = random.choice(
+    os.getenv('CLOUD_BUILD_LOCATIONS', 'us-west2').split(','))
+REGIONAL_CLIENT_OPTIONS = google.api_core.client_options.ClientOptions(
+    api_endpoint=f'https://{REGION}-cloudbuild.googleapis.com/')
 _CHAT_HISTORY_PREFIX_PATTERN = r'^Step\s+#(\d+)\s+-\s+"agent-step":\s+'
 
 
@@ -60,7 +63,7 @@ class CloudBuilder:
         'v1',
         credentials=self.credentials,
         cache_discovery=False,
-        client_options=US_CENTRAL_CLIENT_OPTIONS).projects().builds()
+        client_options=REGIONAL_CLIENT_OPTIONS).projects().builds()
     self.storage_client = storage.Client(credentials=self.credentials)
 
   def _upload_to_gcs(self, local_file_path: str) -> str:
@@ -192,7 +195,7 @@ class CloudBuilder:
                                     body=cloud_build_config).execute()
     build_id = build_info.get('metadata', {}).get('build', {}).get('id', '')
 
-    logging.info('Cloud Build ID: %s', build_id)
+    logging.info('Created Cloud Build ID %s at %s', build_id, REGION)
     return build_id
 
   def _wait_for_build(self, build_id: str) -> str:
