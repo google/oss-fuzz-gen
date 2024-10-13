@@ -62,6 +62,9 @@ class Pipeline():
                         cycle_count)
       return
     
+    #TODO(fdt622): delete print
+    print('RunResult reproducer_path: ', result_history[-1].reproducer_path)
+    
     if result_history[-1].crashes: # RunResult.crashes => True
       result_history.append(
         self.analysis_stage.execute(result_history=result_history)) # append one CrashResult

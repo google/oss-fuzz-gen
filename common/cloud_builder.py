@@ -286,7 +286,7 @@ class CloudBuilder:
       self._cancel_build(build_id)
     build_log = self._get_build_log(build_id)
 
-    # Step 4: Deserialize dilld file.
+    # Step 5: Deserialize dilld file.
     result = utils.deserialize_from_dill(new_result_dill)
     if not result:
       last_result = result_history[-1]

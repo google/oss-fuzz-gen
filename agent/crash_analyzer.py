@@ -122,7 +122,7 @@ class CrashAnalyzer(BaseAgent):
       return self._container_handle_conclusion(cur_round, response,
                                                crash_result) # if build success, return none <=> exit chat
     return self._container_handle_bash_command(cur_round, response,
-                                               self.inspect_tool) # return non-none prompt <=> continue chat
+                                               self.analyze_tool) # return non-none prompt <=> continue chat
   
   def execute(self, result_history: list[Result]) -> CrashResult:
     """Executes the agent based on previous run result."""
