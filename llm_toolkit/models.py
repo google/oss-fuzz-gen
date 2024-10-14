@@ -659,10 +659,10 @@ class GeminiV1D5Chat(GeminiV1D5):
 
     # Reserve 10000 tokens for raw prompt wrappers.
     max_raw_prompt_token_size = self.MAX_INPUT_TOKEN - extra_token_count - 10000
-    while token_count >= max_raw_prompt_token_size:
-      estimate_truncate_size = int(max_raw_prompt_token_size / token_count *
-                                   len(raw_prompt_text))
-      raw_prompt_text = raw_prompt_text[:estimate_truncate_size]
+    while token_count > max_raw_prompt_token_size:
+      estimate_truncate_size = int(
+          (1 - max_raw_prompt_token_size / token_count) * len(raw_prompt_text))
+      raw_prompt_text = raw_prompt_text[estimate_truncate_size + 1:]
 
       try:
         token_count = self.get_model().count_tokens(
