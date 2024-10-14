@@ -626,6 +626,7 @@ class GeminiV1D5Chat(GeminiV1D5):
           GoogleAPICallError,
           InvalidArgument,
           ValueError,  # TODO(dongge): Handle RECITATION specifically.
+          IndexError,  # A known error from vertexai.
       ],
       other_exceptions={ResourceExhausted: 100})
   def _do_generate(self, client: ChatSession, prompt: str,
