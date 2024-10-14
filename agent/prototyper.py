@@ -24,7 +24,6 @@ class Prototyper(BaseAgent):
     default_prompt_builder = DefaultTemplateBuilder(model=self.llm,
                                                     benchmark=benchmark)
     prompt = default_prompt_builder.build([])
-    # TODO(dongge): Find a way to save prompt and log for agents
     return prompt
 
   def _update_fuzz_target_and_build_script(self, cur_round: int, response: str,
