@@ -635,6 +635,7 @@ class GeminiV1D5Chat(GeminiV1D5):
 
   def truncate_prompt(self, raw_prompt_text: Any) -> Any:
     """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
+    raw_prompt_text = raw_prompt_text or ' '
     token_count = self.get_model().count_tokens(raw_prompt_text)
     # Reserve 200 tokens for raw prompt wrappers.
     max_raw_prompt_token_size = self.MAX_INPUT_TOKEN - 200
