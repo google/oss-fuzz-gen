@@ -50,7 +50,7 @@ spec:
         - name: CLOUD_BUILD_LOCATIONS
           value: 'us-west2'
         - name: GCB_BUILDPOOL_NAME
-          value: projects/oss-fuzz/locations/us-west2/workerPools/buildpool-experiments2
+          value: projects/oss-fuzz/locations/us-west2/workerPools/buildpool-llm-agents
         - name: REDIRECT_OUTS
           value: '${GKE_REDIRECT_OUTS}'
       # imagePullSecrets:
