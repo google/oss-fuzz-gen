@@ -56,6 +56,8 @@ class LLM:
   # TODO(mihaimaruseac): Should this be MAX_TOKENS or a different global?
   context_window: int = 2000  # Default token size.
 
+  MAX_INPUT_TOKEN: int = 0
+
   _max_attempts = 5  # Maximum number of attempts to get prediction response
 
   def __init__(
@@ -200,6 +202,10 @@ class LLM:
     raw_output_path = os.path.join(response_dir, f'{sample_id:02}.rawoutput')
     with open(raw_output_path, 'w+') as output_file:
       output_file.write(content)
+
+  def truncate_prompt(self, raw_prompt_text: Any) -> Any:
+    """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
+    return raw_prompt_text
 
   @abstractmethod
   def get_chat_client(self, model: Any) -> Any:
@@ -607,6 +613,7 @@ class GeminiV1D5(GeminiModel):
 class GeminiV1D5Chat(GeminiV1D5):
   """Gemini 1.5 for chat session."""
   name = 'vertex_ai_gemini-1-5-chat'
+  MAX_INPUT_TOKEN: int = 2000000
 
   def get_chat_client(self, model: GenerativeModel) -> Any:
     return model.start_chat(response_validation=False)
@@ -625,6 +632,19 @@ class GeminiV1D5Chat(GeminiV1D5):
         stream=False,
         generation_config=config,
         safety_settings=self.safety_config).text  # type: ignore
+
+  def truncate_prompt(self, raw_prompt_text: Any) -> Any:
+    """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
+    token_count = self.get_model().count_tokens(raw_prompt_text)
+    # Reserve 200 tokens for raw prompt wrappers.
+    max_raw_prompt_token_size = self.MAX_INPUT_TOKEN - 200
+
+    while token_count >= max_raw_prompt_token_size:
+      estimate_truncate_size = int(max_raw_prompt_token_size / token_count *
+                                   len(raw_prompt_text))
+      raw_prompt_text = raw_prompt_text[:estimate_truncate_size]
+      token_count = self.get_model().count_tokens(raw_prompt_text)
+    return raw_prompt_text
 
   def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:
     if self.ai_binary:

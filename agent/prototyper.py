@@ -149,6 +149,7 @@ class Prototyper(BaseAgent):
       return None
 
     if not build_result.compiles:
+      compile_log = self.llm.truncate_prompt(build_result.compile_log)
       logger.info('***** Failed to recompile in %02d rounds *****', cur_round)
       prompt_text = (
           'Failed to build fuzz target. Here is the fuzz target, build'
@@ -156,8 +157,8 @@ class Prototyper(BaseAgent):
           ' output.\n<fuzz target>\n'
           f'{build_result.fuzz_target_source}\n</fuzz target>\n'
           f'<build script>\n{build_result.build_script_source}\n'
-          '</build script>\n'
-          f'{build_result.compile_log}')
+          f'</build script>\n<compilation log>\n{compile_log}\n'
+          '</compilation log>\n')
     elif not build_result.is_function_referenced:
       logger.info(
           '***** Fuzz target does not reference function-under-test in %02d '

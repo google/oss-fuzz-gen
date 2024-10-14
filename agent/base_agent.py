@@ -59,9 +59,12 @@ class BaseAgent(ABC):
     return filtered_code_block
 
   def _format_bash_execution_result(self, process: sp.CompletedProcess) -> str:
+    stdout = self.llm.truncate_prompt(process.stdout)
+    # TODO(dongge): Check stdout + stderr if found a case where stderr goes over
+    # prompt token limit.
     return (f'<bash>\n{process.args}\n</bash>\n'
             f'<return code>\n{process.returncode}\n</return code>\n'
-            f'<stdout>\n{process.stdout}\n</stdout>\n'
+            f'<stdout>\n{stdout}\n</stdout>\n'
             f'<stderr>\n{process.stderr}\n</stderr>\n')
 
   def _container_handle_bash_command(self, cur_round: int, response: str,
