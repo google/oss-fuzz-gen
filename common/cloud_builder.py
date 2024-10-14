@@ -146,6 +146,9 @@ class CloudBuilder:
                     '/workspace:/workspace',
                     '-v',
                     '/var/run/docker.sock:/var/run/docker.sock',
+                    '-e',
+                    'VERTEX_AI_LOCATIONS=' +
+                    os.getenv("VERTEX_AI_LOCATIONS", ""),
                     '--network=cloudbuild',
                     # Built from this repo's `Dockerfile.cloudbuild-agent`.
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
