@@ -124,9 +124,8 @@ class Prototyper(BaseAgent):
     logger.debug('ROUND %02d Final fuzz target function referenced: %s',
                  cur_round, function_referenced)
     if not function_referenced:
-      logger.debug(
-          'ROUND %02d Final fuzz target function not referenced:%s\n%s',
-          cur_round, benchmark.function_name, disassemble_result.stdout)
+      logger.debug('ROUND %02d Final fuzz target function not referenced:%s',
+                   cur_round)
 
     compilation_tool.terminate()
     self._update_build_result(build_result,
