@@ -203,8 +203,11 @@ class LLM:
     with open(raw_output_path, 'w+') as output_file:
       output_file.write(content)
 
-  def truncate_prompt(self, raw_prompt_text: Any) -> Any:
+  def truncate_prompt(self,
+                      raw_prompt_text: Any,
+                      extra_text: Any = None) -> Any:
     """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
+    del extra_text
     return raw_prompt_text
 
   @abstractmethod
@@ -633,12 +636,19 @@ class GeminiV1D5Chat(GeminiV1D5):
         generation_config=config,
         safety_settings=self.safety_config).text  # type: ignore
 
-  def truncate_prompt(self, raw_prompt_text: Any) -> Any:
+  def truncate_prompt(self,
+                      raw_prompt_text: Any,
+                      extra_text: Any = None) -> Any:
     """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
     raw_prompt_text = raw_prompt_text or ' '
     try:
       original_token_count = self.get_model().count_tokens(
           raw_prompt_text).total_tokens
+      if extra_text:
+        extra_token_count = self.get_model().count_tokens(
+            extra_text).total_tokens
+      else:
+        extra_token_count = 0
       token_count = original_token_count
     except Exception as e:
       logger.error('Failed to get token count: %s; prompt_text: %s', e,
@@ -646,7 +656,7 @@ class GeminiV1D5Chat(GeminiV1D5):
       return raw_prompt_text
 
     # Reserve 10000 tokens for raw prompt wrappers.
-    max_raw_prompt_token_size = self.MAX_INPUT_TOKEN - 10000
+    max_raw_prompt_token_size = self.MAX_INPUT_TOKEN - extra_token_count - 10000
     while token_count >= max_raw_prompt_token_size:
       estimate_truncate_size = int(max_raw_prompt_token_size / token_count *
                                    len(raw_prompt_text))
@@ -660,7 +670,7 @@ class GeminiV1D5Chat(GeminiV1D5):
                      raw_prompt_text)
         break
       logger.warning('Truncated raw prompt from %d to %d tokens:',
-                  original_token_count, token_count)
+                     original_token_count, token_count)
 
     return raw_prompt_text
 
