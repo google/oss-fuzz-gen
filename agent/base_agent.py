@@ -113,6 +113,7 @@ class BaseAgent(ABC):
     args = cls._parse_args()
 
     agent = utils.deserialize_from_dill(args.agent)
+    agent.llm.cloud_setup()
     result_history = utils.deserialize_from_dill(args.result_history)
     result = agent.execute(result_history)
     utils.serialize_to_dill(result, args.result_new)
