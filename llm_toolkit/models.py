@@ -637,14 +637,16 @@ class GeminiV1D5Chat(GeminiV1D5):
     """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
     raw_prompt_text = raw_prompt_text or ' '
     try:
-      token_count = self.get_model().count_tokens(raw_prompt_text).total_tokens
+      original_token_count = self.get_model().count_tokens(
+          raw_prompt_text).total_tokens
+      token_count = original_token_count
     except Exception as e:
       logger.error('Failed to get token count: %s; prompt_text: %s', e,
                    raw_prompt_text)
       return raw_prompt_text
 
-    # Reserve 200 tokens for raw prompt wrappers.
-    max_raw_prompt_token_size = self.MAX_INPUT_TOKEN - 200
+    # Reserve 10000 tokens for raw prompt wrappers.
+    max_raw_prompt_token_size = self.MAX_INPUT_TOKEN - 10000
     while token_count >= max_raw_prompt_token_size:
       estimate_truncate_size = int(max_raw_prompt_token_size / token_count *
                                    len(raw_prompt_text))
@@ -657,6 +659,8 @@ class GeminiV1D5Chat(GeminiV1D5):
         logger.error('Failed to get token count: %s; prompt_text: %s', e,
                      raw_prompt_text)
         break
+      logger.warning('Truncated raw prompt from %d to %d tokens:',
+                  original_token_count, token_count)
 
     return raw_prompt_text
 
