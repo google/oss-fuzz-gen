@@ -621,11 +621,13 @@ class GeminiV1D5Chat(GeminiV1D5):
   def get_chat_client(self, model: GenerativeModel) -> Any:
     return model.start_chat(response_validation=False)
 
-  @retryable(exceptions=[
-      GoogleAPICallError,
-      InvalidArgument,
-  ],
-             other_exceptions={ResourceExhausted: 100})
+  @retryable(
+      exceptions=[
+          GoogleAPICallError,
+          InvalidArgument,
+          ValueError,  # TODO(dongge): Handle RECITATION specifically.
+      ],
+      other_exceptions={ResourceExhausted: 100})
   def _do_generate(self, client: ChatSession, prompt: str,
                    config: dict[str, Any]) -> Any:
     """Generates chat response."""
