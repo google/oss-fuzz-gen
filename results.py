@@ -79,7 +79,7 @@ class BuildResult(Result):
 
   def to_dict(self) -> dict:
     return super().to_dict() | {
-        'compiles': self.compiles,
+        'compiles': self.success,
         'compile_error': self.compile_error,
         'compile_log': self.compile_log,
         'is_function_referenced': self.is_function_referenced,
