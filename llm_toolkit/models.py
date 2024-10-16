@@ -419,6 +419,7 @@ class GoogleModel(LLM):
     """Estimates the number of tokens in |text|."""
     # A rough estimation for very large prompt: Gemini suggest 4 char per token,
     # using 3 here to be safer.
+    text = text or ''
     if len(text) // 3 > self.MAX_INPUT_TOKEN:
       return len(text) // 3
 
