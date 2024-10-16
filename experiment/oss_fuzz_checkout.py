@@ -394,8 +394,7 @@ def _image_exists_locally(image_name: str, project_name: str) -> bool:
 
 def _image_exists_online(image_name: str, project_name: str) -> bool:
   """Checks if the given |image_name| exits in the cloud registry."""
-  online_image_name = ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
-                       f'{project_name}-ofg-cached-asan')
+  online_image_name = _get_project_cache_image_name(project_name, 'address')
   try:
     sp.run(['docker', 'pull', online_image_name],
            stdout=sp.PIPE,
