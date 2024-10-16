@@ -417,7 +417,12 @@ class GoogleModel(LLM):
 
   def estimate_token_num(self, text) -> int:
     """Estimates the number of tokens in |text|."""
-    # Roughly 1.5 tokens per word:
+    # A rough estimation for very large prompt: Gemini suggest 4 char per token,
+    # using 3 here to be safer.
+    if len(text) // 3 > self.MAX_INPUT_TOKEN:
+      return len(text) // 3
+
+    # Otherwise, roughly 1.5 tokens per word:
     return int(len(re.split('[^a-zA-Z0-9]+', text)) * 1.5 + 0.5)
 
   # ============================== Generation ============================== #
@@ -651,43 +656,23 @@ class GeminiV1D5Chat(GeminiV1D5):
                       raw_prompt_text: Any,
                       extra_text: Any = None) -> Any:
     """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
-    raw_prompt_text = raw_prompt_text or ' '
+    original_token_count = self.estimate_token_num(raw_prompt_text)
 
-    # A rough estimation in case count_tokens failed on very large prompt.
-    # Gemini suggest 4 char per token, using 3 here to be safer. Normally,
-    # prompts should not be this large anyway.
-    if len(raw_prompt_text) > 3 * self.MAX_INPUT_TOKEN:
+    token_count = original_token_count
+    if token_count > self.MAX_INPUT_TOKEN:
       raw_prompt_text = raw_prompt_text[-3 * self.MAX_INPUT_TOKEN:]
 
-    try:
-      original_token_count = self.get_model().count_tokens(
-          raw_prompt_text).total_tokens
-      if extra_text:
-        extra_token_count = self.get_model().count_tokens(
-            extra_text).total_tokens
-      else:
-        extra_token_count = 0
-      token_count = original_token_count
-    except Exception as e:
-      logger.error('Failed to get token count: %s; prompt_text[:100]: %s', e,
-                   raw_prompt_text[:100])
-      return raw_prompt_text[-self.MAX_INPUT_TOKEN:]
-
+    extra_text_token_count = self.estimate_token_num(extra_text)
     # Reserve 10000 tokens for raw prompt wrappers.
-    max_raw_prompt_token_size = self.MAX_INPUT_TOKEN - extra_token_count - 10000
+    max_raw_prompt_token_size = (self.MAX_INPUT_TOKEN - extra_text_token_count -
+                                 10000)
+
     while token_count > max_raw_prompt_token_size:
       estimate_truncate_size = int(
           (1 - max_raw_prompt_token_size / token_count) * len(raw_prompt_text))
       raw_prompt_text = raw_prompt_text[estimate_truncate_size + 1:]
 
-      try:
-        token_count = self.get_model().count_tokens(
-            raw_prompt_text).total_tokens
-      except Exception as e:
-        logger.error('Failed to get token count: %s; prompt_text[:100]: %s', e,
-                     raw_prompt_text[:100])
-        return raw_prompt_text[-self.MAX_INPUT_TOKEN:]
-
+      token_count = self.estimate_token_num(raw_prompt_text)
       logger.warning('Truncated raw prompt from %d to %d tokens:',
                      original_token_count, token_count)
 
