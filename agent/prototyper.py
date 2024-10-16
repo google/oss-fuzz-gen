@@ -6,6 +6,7 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
+from experiment.benchmark import Benchmark
 from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
@@ -81,6 +82,23 @@ class Prototyper(BaseAgent):
       self._validate_fuzz_target_and_build_script_via_recompile(
           cur_round, build_result, use_recompile=False)
 
+  def _vadlidate_fuzz_target_references_function(
+      self, compilation_tool: ProjectContainerTool, benchmark: Benchmark,
+      cur_round: int) -> bool:
+    """Validates if the LLM generated fuzz target assembly code references
+    function-under-test."""
+    disassemble_result = compilation_tool.execute(
+        'objdump --disassemble=LLVMFuzzerTestOneInput -d '
+        f'/out/{benchmark.target_name}')
+    function_referenced = (disassemble_result.returncode == 0 and
+                           benchmark.function_name in disassemble_result.stdout)
+    logger.debug('ROUND %02d Final fuzz target function referenced: %s',
+                 cur_round, function_referenced)
+    if not function_referenced:
+      logger.debug('ROUND %02d Final fuzz target function not referenced',
+                   cur_round)
+    return function_referenced
+
   def _validate_fuzz_target_and_build_script_via_recompile(
       self,
       cur_round: int,
@@ -118,16 +136,8 @@ class Prototyper(BaseAgent):
                  binary_exists)
 
     # Validate if function-under-test is referenced by the fuzz target.
-    disassemble_result = compilation_tool.execute(
-        'objdump --disassemble=LLVMFuzzerTestOneInput -d '
-        f'/out/{benchmark.target_name}')
-    function_referenced = (disassemble_result.returncode == 0 and
-                           benchmark.function_name in disassemble_result.stdout)
-    logger.debug('ROUND %02d Final fuzz target function referenced: %s',
-                 cur_round, function_referenced)
-    if not function_referenced:
-      logger.debug('ROUND %02d Final fuzz target function not referenced',
-                   cur_round)
+    function_referenced = self._vadlidate_fuzz_target_references_function(
+        compilation_tool, benchmark, cur_round)
 
     compilation_tool.terminate()
     self._update_build_result(build_result,
