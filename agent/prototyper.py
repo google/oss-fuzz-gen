@@ -42,7 +42,9 @@ class Prototyper(BaseAgent):
 
     build_script_source = self._filter_code(
         self._parse_tag(response, 'build script'))
-    build_result.build_script_source = build_script_source
+    # Sometimes LLM adds chronos, which makes no sense for new build scripts.
+    build_result.build_script_source = build_script_source.replace(
+        'source /src/chronos.sh', '')
     if build_script_source:
       logger.debug('ROUND %02d Parsed build script from LLM: %s', cur_round,
                    build_script_source)
