@@ -618,7 +618,7 @@ class GeminiV1D5Chat(GeminiV1D5):
   name = 'vertex_ai_gemini-1-5-chat'
   _vertex_ai_model = 'gemini-1.5-pro-002'
 
-  # Avoids sending large prompt as requested by Gemini team.
+  # Avoids sending large prompts.
   MAX_INPUT_TOKEN: int = 128000  # max 2000000
 
   def get_chat_client(self, model: GenerativeModel) -> Any:
