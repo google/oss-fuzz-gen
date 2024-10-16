@@ -2,7 +2,6 @@
 import argparse
 import logging
 import os
-import random
 import re
 import subprocess
 import tempfile
@@ -24,8 +23,7 @@ from results import Result
 
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
 OFG_ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-REGION = random.choice(
-    os.getenv('CLOUD_BUILD_LOCATIONS', 'us-west2').split(','))
+REGION = os.getenv('CLOUD_BUILD_LOCATION', 'us-west2')
 REGIONAL_CLIENT_OPTIONS = google.api_core.client_options.ClientOptions(
     api_endpoint=f'https://{REGION}-cloudbuild.googleapis.com/')
 _CHAT_HISTORY_PREFIX_PATTERN = r'^Step\s+#(\d+)\s+-\s+"agent-step":\s+'
