@@ -71,13 +71,15 @@ def retryable(exceptions=None,
                if type(e) is exc_type), 1)  # pylint: disable=unidiomatic-typecheck
 
           logging.error(
-              'Exception %s on function %s(args=%s, kwargs=%s), attempt %d/%d',
-              e, func.__name__, args, kwargs, attempt, num_attempts)
+              'Exception %s (%s) on function %s(args=%s, kwargs=%s), attempt '
+              '%d/%d', type(e), e, func.__name__, args, kwargs, attempt,
+              num_attempts)
 
           if attempt >= num_attempts:
             logging.error(
                 'Max attempts %d/%d reached for %s(args=%s, kwargs=%s) due to '
-                '%s', attempt, num_attempts, func.__name__, args, kwargs, e)
+                '%s (%s)', attempt, num_attempts, func.__name__, args, kwargs,
+                type(e), e)
             raise
 
           attempt += 1
