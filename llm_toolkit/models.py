@@ -616,6 +616,7 @@ class GeminiV1D5(GeminiModel):
 class GeminiV1D5Chat(GeminiV1D5):
   """Gemini 1.5 for chat session."""
   name = 'vertex_ai_gemini-1-5-chat'
+  _vertex_ai_model = 'gemini-1.5-pro-002'
 
   # Avoids sending large prompt as requested by Gemini team.
   MAX_INPUT_TOKEN: int = 128000  # max 2000000
