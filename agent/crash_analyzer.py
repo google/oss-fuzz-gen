@@ -93,8 +93,7 @@ class CrashAnalyzer(BaseAgent):
   def _handle_conclusion(
       self, cur_round: int, response: str,
       crash_result: CrashResult):
-    """Runs a compilation tool to validate the new fuzz target and build script
-    from LLM."""
+    """Parses LLM conclusion, analysis and suggestion."""
     logger.info('----- ROUND %02d Received conclusion -----', cur_round)
 
     conclusion = self._parse_tag(response, 'conclusion')
@@ -143,11 +142,14 @@ class CrashAnalyzer(BaseAgent):
     self.analyze_tool.execute('compile > /dev/null')
     prompt = self._initial_prompt(last_result) # prompt to analyze crash
     prompt.append(self.analyze_tool.tutorial())
-    crash_result = CrashResult(benchmark=benchmark,
-                               trial=last_result.trial,
-                               work_dirs=last_result.work_dirs,
-                               author=self,
-                               chat_history={self.name: ''})
+    crash_result = CrashResult(
+      benchmark=benchmark,
+      trial=last_result.trial,
+      work_dirs=last_result.work_dirs,
+      fuzz_target_source=last_result.fuzz_target_source,
+      build_script_source=last_result.build_script_source,
+      author=self,
+      chat_history=last_result.chat_history)
     cur_round = 1
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
