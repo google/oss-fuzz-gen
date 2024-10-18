@@ -139,14 +139,14 @@ class Prototyper(BaseAgent):
     last_result = result_history[-1]
     prompt = self._initial_prompt(result_history) #prompt to first generate driver
     #TODO: delete
-    print('prototyper 1st prompt:', prompt)
+    print('prototyper initial prompt:', prompt)
     benchmark = last_result.benchmark
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect') #first time, prepare image, start container
     self.inspect_tool.execute('{compile && rm -rf /out/*} > /dev/null') #why compile here?
     cur_round = 1
-    prompt.append(self.inspect_tool.tutorial())
+    prompt.add_problem(self.inspect_tool.tutorial())
     #TODO: delete
-    print('prototyper 2nd prompt:', prompt)
+    print('prototyper after append tutorial prompt:', prompt)
     build_result = BuildResult(benchmark=benchmark,
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
