@@ -5,7 +5,7 @@ import subprocess as sp
 
 from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark
-from results import Result, RunResult
+from results import RunResult
 from tool.base_tool import BaseTool
 
 logger = logging.getLogger(__name__)
