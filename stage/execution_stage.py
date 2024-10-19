@@ -133,8 +133,8 @@ class ExecutionStage(BaseStage):
           coverage=coverage_percent,
           line_coverage_diff=coverage_diff,
           reproducer_path=run_result.
-          reproducer_path,  # cloud reproducer(stacktrace/target_binary/artifacts)
-          artifact_path=run_result.artifact_path,  # local artifact
+          reproducer_path,
+          artifact_path=run_result.artifact_path,
           artifact_name=run_result.artifact_name,
           sanitizer=run_result.sanitizer,
           textcov_diff=run_result.coverage,
@@ -146,8 +146,7 @@ class ExecutionStage(BaseStage):
     except Exception as e:
       self.logger.error('Exception %s occurred on %s', e, last_result)
       runresult = RunResult(
-          benchmark=
-          benchmark,  # if build and run failed, last result(writing stage/prototyper) => RunResult(execution stage)
+          benchmark=benchmark,
           trial=last_result.trial,
           work_dirs=last_result.work_dirs,
           fuzz_target_source=last_result.fuzz_target_source,
