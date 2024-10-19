@@ -55,11 +55,8 @@ class ExecutionStage(BaseStage):
     #TODO(fdt622):delete comment
     #probably return without replacing fuzz target and build script?
     #original purpose: replace fuzz target and build script here.
-    evaluator.create_ossfuzz_project(
-        generated_oss_fuzz_project,
-        fuzz_target_path,
-        build_script_path
-    )
+    evaluator.create_ossfuzz_project(generated_oss_fuzz_project,
+                                     fuzz_target_path, build_script_path)
 
     status_path = os.path.join(last_result.work_dirs.status, sample_id)
     os.makedirs(status_path, exist_ok=True)
@@ -77,7 +74,7 @@ class ExecutionStage(BaseStage):
     try:
       #TODO(fdt622): delete comment
       # build image, create and start container, compile, fuzz
-      _, run_result = evaluator.builder_runner.build_and_run(  
+      _, run_result = evaluator.builder_runner.build_and_run(
           generated_oss_fuzz_project,
           fuzz_target_path,
           0,
