@@ -103,6 +103,7 @@ class OpenAIPrompt(Prompt):
   def __init__(self, initial=None):
     if not initial:
       initial = []
+    # ugly here
     elif isinstance(initial, str):
       initial = [{'role': 'user', 'content': initial}]
 
