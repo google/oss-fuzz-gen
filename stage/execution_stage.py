@@ -42,7 +42,9 @@ class ExecutionStage(BaseStage):
     #TODO(fdt622): delete print
     print('generated_target_name: ', generated_target_name)
     print('sample_id: ', sample_id)
-    generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}'  #metric to identify different driver and build script under same api.
+    #TODO(fdt622): delete comment
+    #metric to identify different driver and build script under same api.
+    generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}'
     generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
         generated_oss_fuzz_project)
 
@@ -50,11 +52,14 @@ class ExecutionStage(BaseStage):
                                     f'{last_result.trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                      f'{last_result.trial:02d}.build_script')
+    #TODO(fdt622):delete comment
+    #probably return without replacing fuzz target and build script?
+    #original purpose: replace fuzz target and build script here.
     evaluator.create_ossfuzz_project(
-        generated_oss_fuzz_project,  #probably return without replacing fuzz target and build script?
+        generated_oss_fuzz_project,
         fuzz_target_path,
         build_script_path
-    )  #original purpose: replace fuzz target and build script here.
+    )
 
     status_path = os.path.join(last_result.work_dirs.status, sample_id)
     os.makedirs(status_path, exist_ok=True)
@@ -70,7 +75,9 @@ class ExecutionStage(BaseStage):
       raise TypeError
 
     try:
-      _, run_result = evaluator.builder_runner.build_and_run(  # build image, create and start container, compile, fuzz
+      #TODO(fdt622): delete comment
+      # build image, create and start container, compile, fuzz
+      _, run_result = evaluator.builder_runner.build_and_run(  
           generated_oss_fuzz_project,
           fuzz_target_path,
           0,
@@ -132,8 +139,7 @@ class ExecutionStage(BaseStage):
           coverage_summary=run_result.coverage_summary,
           coverage=coverage_percent,
           line_coverage_diff=coverage_diff,
-          reproducer_path=run_result.
-          reproducer_path,
+          reproducer_path=run_result.reproducer_path,
           artifact_path=run_result.artifact_path,
           artifact_name=run_result.artifact_name,
           sanitizer=run_result.sanitizer,
@@ -145,16 +151,15 @@ class ExecutionStage(BaseStage):
           total_pcs=run_result.total_pcs)
     except Exception as e:
       self.logger.error('Exception %s occurred on %s', e, last_result)
-      runresult = RunResult(
-          benchmark=benchmark,
-          trial=last_result.trial,
-          work_dirs=last_result.work_dirs,
-          fuzz_target_source=last_result.fuzz_target_source,
-          build_script_source=last_result.build_script_source,
-          chat_history=last_result.chat_history,
-          author=self,
-          compiles=last_result.compiles,
-          compile_error=last_result.compile_error,
-          compile_log=last_result.compile_log)
+      runresult = RunResult(benchmark=benchmark,
+                            trial=last_result.trial,
+                            work_dirs=last_result.work_dirs,
+                            fuzz_target_source=last_result.fuzz_target_source,
+                            build_script_source=last_result.build_script_source,
+                            chat_history=last_result.chat_history,
+                            author=self,
+                            compiles=last_result.compiles,
+                            compile_error=last_result.compile_error,
+                            compile_log=last_result.compile_log)
 
     return runresult
