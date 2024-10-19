@@ -67,7 +67,7 @@ class Pipeline():
 
     last_result = result_history[-1]
     language = last_result.benchmark.language.lower()
-    if last_result.crashes and (language == 'c' or language == 'c++'):
+    if last_result.crashes and language in {'c', 'c++'}:
       result_history.append(
           self.analysis_stage.execute(
               result_history=result_history))  # append one CrashResult
