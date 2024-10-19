@@ -1,16 +1,15 @@
 """A tool for LLM agents to interact within a LLDB."""
+import logging
 import os
 import shutil
-import logging
 import subprocess as sp
 
 from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark
+from results import CrashResult, Result, RunResult
 from tool.base_tool import BaseTool
-from results import Result, RunResult, CrashResult
 
 logger = logging.getLogger(__name__)
-
 
 # The directory in the oss-fuzz image
 JCC_DIR = '/usr/local/bin'
@@ -18,9 +17,9 @@ JCC_DIR = '/usr/local/bin'
 
 class LLDBTool(BaseTool):
   """A tool for LLM agents to interact within a LLDB."""
-  
-  def __init__(self, benchmark: Benchmark, 
-               name: str, project: str, result: Result) -> None:
+
+  def __init__(self, benchmark: Benchmark, name: str, project: str,
+               result: Result) -> None:
     super().__init__(benchmark, name)
     self.project = project
     self.result = result
@@ -47,7 +46,7 @@ class LLDBTool(BaseTool):
     except sp.CalledProcessError:
       logger.info('Failed to build image for %s', self.project)
       return ''
-  
+
   def _execute_command(self,
                        command: list[str],
                        in_container: bool = False) -> sp.CompletedProcess:
@@ -69,36 +68,17 @@ class LLDBTool(BaseTool):
           'STDERR: %s', command, result.returncode, result.stdout,
           result.stderr)
     return result
-  
+
   def _start_docker_container(self) -> str:
     """Runs the project's OSS-Fuzz image as a background container and returns
     the container ID."""
     run_container_command = [
-        'docker',
-        'run',
-        '-d',
-        '-i',
-        '-t',
-        '--privileged',
-        '--shm-size=2g',
-        '--entrypoint=/bin/bash', 
-        '--platform',
-        'linux/amd64',
-        '-e',
-        'FUZZING_ENGINE=libfuzzer',
-        '-e',
-        f'SANITIZER=address',
-        '-e',
-        'ARCHITECTURE=x86_64',
-        '-e',
-        f'PROJECT_NAME={self.project}',
-        '-e',
-        f'CXX={JCC_DIR}/clang++-jcc',
-        '-e',
-        f'CC={JCC_DIR}/clang-jcc',
-        '-e',
-        f'FUZZING_LANGUAGE={self.benchmark.language}',
-        '-v',
+        'docker', 'run', '-d', '-i', '-t', '--privileged', '--shm-size=2g',
+        '--entrypoint=/bin/bash', '--platform', 'linux/amd64', '-e',
+        'FUZZING_ENGINE=libfuzzer', '-e', f'SANITIZER=address', '-e',
+        'ARCHITECTURE=x86_64', '-e', f'PROJECT_NAME={self.project}', '-e',
+        f'CXX={JCC_DIR}/clang++-jcc', '-e', f'CC={JCC_DIR}/clang-jcc', '-e',
+        f'FUZZING_LANGUAGE={self.benchmark.language}', '-v',
         f'{self.result.artifact_path}:/artifact/{self.result.artifact_name}',
         self.image_name
     ]
@@ -120,7 +100,7 @@ class LLDBTool(BaseTool):
     process = self._execute_command(execute_command_in_container, True)
     process.args = command
     return process
-  
+
   def terminate(self) -> bool:
     """Terminates the container."""
     terminate_container_command = ['docker', 'stop', self.container_id]

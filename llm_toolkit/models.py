@@ -219,7 +219,7 @@ class GPT(LLM):
       temperature: float = TEMPERATURE,
       temperature_list: Optional[list[float]] = None,
   ):
-    super().__init__(ai_binary, max_tokens, num_samples, temperature, 
+    super().__init__(ai_binary, max_tokens, num_samples, temperature,
                      temperature_list)
     self.conversation_history = []
 
@@ -238,23 +238,24 @@ class GPT(LLM):
     if self.temperature_list:
       logger.info('OpenAI does not allow temperature list: %s',
                   self.temperature_list)
-      
+
     self.conversation_history.extend(prompt.get())
 
     completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=self.conversation_history,
-                                               model=self.name,
-                                               n=self.num_samples,
-                                               temperature=self.temperature),
-        [openai.OpenAIError])
-    
+        lambda: client.chat.completions.create(
+            messages=self.conversation_history,
+            model=self.name,
+            n=self.num_samples,
+            temperature=self.temperature), [openai.OpenAIError])
+
     # Choose the longest response
     longest_response = max(
-        (choice.message.content for choice in completion.choices),
-        key=len
-    )
-    self.conversation_history.append({'role': 'assistant', 'content': longest_response})
-    
+        (choice.message.content for choice in completion.choices), key=len)
+    self.conversation_history.append({
+        'role': 'assistant',
+        'content': longest_response
+    })
+
     return longest_response
 
   def _get_tiktoken_encoding(self, model_name: str):

@@ -88,14 +88,14 @@ class SemanticCheckResult:
 
     logging.warning('Failed to match crash information.')
     return ''
-  
+
   @classmethod
   def extract_artifact_name(cls, fuzzlog: str) -> str:
     """Extracts artifact file name from fuzzing logs."""
     match = cls.ARTIFACT_NAME.search(fuzzlog)
     if match:
       return match.group(0).strip()
-    
+
     logging.warning('Failed to match artifact file name.')
     return ''
 

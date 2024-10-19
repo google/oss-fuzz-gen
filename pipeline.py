@@ -48,28 +48,34 @@ class Pipeline():
     self.logger.info('Cycle %d initial result is %s', cycle_count,
                      result_history[-1])
     result_history.append(
-        self.writing_stage.execute(result_history=result_history)) # append one BuildResult although chat many times
-    if (not isinstance(result_history[-1], BuildResult) or # fuzz target and build script are saved in BuildResult
+        self.writing_stage.execute(result_history=result_history)
+    )  # append one BuildResult although chat many times
+    if (not isinstance(result_history[-1], BuildResult)
+        or  # fuzz target and build script are saved in BuildResult
         not result_history[-1].success):
       self.logger.error('Cycle %d build failure, skipping the rest steps',
                         cycle_count)
       return
 
     result_history.append(
-        self.execution_stage.execute(result_history=result_history)) # append one RunResult
-    if not isinstance(result_history[-1], RunResult): # if crash, artifact file path & name are saved in RunResult
+        self.execution_stage.execute(
+            result_history=result_history))  # append one RunResult
+    if not isinstance(
+        result_history[-1], RunResult
+    ):  # if crash, artifact file path & name are saved in RunResult
       self.logger.error('Cycle %d run failure, skipping the rest steps',
                         cycle_count)
       return
-    
+
     #TODO(fdt622): delete print
     print('RunResult reproducer_path: ', result_history[-1].reproducer_path)
-    
+
     if result_history[-1].crashes and (result_history[-1].benchmark.language.lower() == 'c' \
                                        or result_history[-1].benchmark.language.lower() == 'c++'): # RunResult.crashes => True
       result_history.append(
-        self.analysis_stage.execute(result_history=result_history)) # append one CrashResult
-        
+          self.analysis_stage.execute(
+              result_history=result_history))  # append one CrashResult
+
     self.logger.info('Cycle %d final result is %s', cycle_count,
                      result_history[-1])
 

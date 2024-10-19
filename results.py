@@ -115,7 +115,7 @@ class RunResult(BuildResult):
       compile_log: str = '',
       crashes: bool = False,  # Runtime crash.
       run_error: str = '',  # Runtime crash error message.
-      crash_func: str = '', # Crash stack func.
+      crash_func: str = '',  # Crash stack func.
       run_log: str = '',  # Full fuzzing output.
       coverage_summary: Optional[dict] = None,
       coverage: float = 0.0,
@@ -203,27 +203,27 @@ class CrashResult(RunResult):
   insight: str  # Reason and fixes for crashes
 
   def __init__(self,
-              benchmark: Benchmark,
-              trial: int,
-              work_dirs: WorkDirs,
-              fuzz_target_source: str = '',
-              build_script_source: str = '',
-              author: Any = None,
-              chat_history: Optional[dict] = None,
-              stacktrace: str = '',
-              true_bug: bool = False,
-              insight: str = '') -> None:
+               benchmark: Benchmark,
+               trial: int,
+               work_dirs: WorkDirs,
+               fuzz_target_source: str = '',
+               build_script_source: str = '',
+               author: Any = None,
+               chat_history: Optional[dict] = None,
+               stacktrace: str = '',
+               true_bug: bool = False,
+               insight: str = '') -> None:
     super().__init__(benchmark, trial, work_dirs, fuzz_target_source,
-                    build_script_source, author, chat_history)
+                     build_script_source, author, chat_history)
     self.stacktrace = stacktrace
     self.true_bug = true_bug
     self.insight = insight
 
   def to_dict(self) -> dict:
     return super().to_dict() | {
-      'stacktrace': self.stacktrace,
-      'true_bug': self.true_bug,
-      'insight': self.insight,
+        'stacktrace': self.stacktrace,
+        'true_bug': self.true_bug,
+        'insight': self.insight,
     }
 
 

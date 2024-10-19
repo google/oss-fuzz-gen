@@ -50,7 +50,7 @@ class WorkDirs:
   @property
   def _corpus_base(self) -> str:
     return os.path.join(self._base_dir, 'corpora')
-    
+
   @property
   def _artifact_base(self) -> str:
     return os.path.join(self._base_dir, 'artifacts')
@@ -59,10 +59,9 @@ class WorkDirs:
     corpus_dir = os.path.join(self._corpus_base, str(sample_id))
     os.makedirs(corpus_dir, exist_ok=True)
     return corpus_dir
-  
-  def artifact(self, generated_target_name: str, 
-               iteration: int) -> str:
-    artifact_dir = os.path.join(self._artifact_base, 
+
+  def artifact(self, generated_target_name: str, iteration: int) -> str:
+    artifact_dir = os.path.join(self._artifact_base,
                                 f'{generated_target_name}-F{iteration}')
     os.makedirs(artifact_dir, exist_ok=True)
     return artifact_dir
@@ -108,7 +107,7 @@ class WorkDirs:
   def run_logs(self) -> str:
     return os.path.join(self._base_dir, 'logs', 'run')
 
-  def build_logs_target(self, generated_target_name: str, 
+  def build_logs_target(self, generated_target_name: str,
                         iteration: int) -> str:
     return os.path.join(self.build_logs,
                         f'{generated_target_name}-F{iteration}.log')
@@ -118,8 +117,7 @@ class WorkDirs:
     return os.path.join(self.build_logs,
                         f'{generated_target_name}-F{iteration}.err.log')
 
-  def run_logs_target(self, generated_target_name: str, 
-                      iteration: int) -> str:
+  def run_logs_target(self, generated_target_name: str, iteration: int) -> str:
     return os.path.join(self.run_logs,
                         f'{generated_target_name}-F{iteration}.log')
 
