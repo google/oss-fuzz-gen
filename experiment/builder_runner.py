@@ -335,7 +335,7 @@ class BuilderRunner:
     except MemoryError as e:
       # Some logs from abnormal fuzz targets are too large to be parsed.
       logger.error('%s is too large to parse: %s', log_handle.name, e)
-      return ParseResult(0, 0, False, '',
+      return ParseResult(0, 0, False, '', '',
                          SemanticCheckResult(SemanticCheckResult.LOG_MESS_UP))
 
     cov_pcs, total_pcs, crashes = 0, 0, False
