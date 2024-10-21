@@ -56,7 +56,7 @@ class LLM:
   # TODO(mihaimaruseac): Should this be MAX_TOKENS or a different global?
   context_window: int = 2000  # Default token size.
 
-  MAX_INPUT_TOKEN: int = 0
+  MAX_INPUT_TOKEN: int = sys.maxsize
 
   _max_attempts = 5  # Maximum number of attempts to get prediction response
 
