@@ -30,27 +30,48 @@ class ProjectContainerTool(BaseTool):
       return image_name
     raise Exception(f'Failed to build image for {self.benchmark.project}')
 
-  def _execute_command(self,
-                       command: list[str],
-                       in_container: bool = False) -> sp.CompletedProcess:
+  def _execute_command_in_container(self,
+                                    command: list[str]) -> sp.CompletedProcess:
     """Executes the |command| in subprocess and log output."""
-    result = sp.run(command,
-                    stdout=sp.PIPE,
-                    stderr=sp.PIPE,
-                    check=False,
-                    text=True)
+    try:
+      result = sp.run(command,
+                      stdout=sp.PIPE,
+                      stderr=sp.PIPE,
+                      check=False,
+                      text=True,
+                      encoding='utf-8',
+                      errors='ignore')
 
-    if in_container:
       logger.debug(
           'Executing command (%s) in container %s: Return code %d. STDOUT: %s, '
           'STDERR: %s', command, self.container_id, result.returncode,
           result.stdout, result.stderr)
-    else:
+      return result
+    except Exception as e:
+      logger.error(
+          'Executing command (%s) in container failed with Exception: %s',
+          command, e)
+      return sp.CompletedProcess(command, returncode=1, stdout='', stderr='')
+
+  def _execute_command(self, command: list[str]) -> sp.CompletedProcess:
+    """Executes the |command| in subprocess and log output."""
+    try:
+      result = sp.run(command,
+                      stdout=sp.PIPE,
+                      stderr=sp.PIPE,
+                      check=False,
+                      text=True,
+                      encoding='utf-8',
+                      errors='ignore')
+
       logger.debug(
-          'Executing command (%s): Return code %d. STDOUT: %s, '
-          'STDERR: %s', command, result.returncode, result.stdout,
-          result.stderr)
-    return result
+          'Executing command (%s): Return code %d. STDOUT: %s, STDERR: %s',
+          command, result.returncode, result.stdout, result.stderr)
+      return result
+    except Exception as e:
+      logger.error('Executing command (%s) failed with Exception: %s', command,
+                   e)
+      return sp.CompletedProcess(command, returncode=1, stdout='', stderr='')
 
   def _start_docker_container(self) -> str:
     """Runs the project's OSS-Fuzz image as a background container and returns
@@ -60,6 +81,8 @@ class ProjectContainerTool(BaseTool):
         f'FUZZING_LANGUAGE={self.benchmark.language}', self.image_name
     ]
     result = self._execute_command(run_container_command)
+    if result.returncode:
+      logger.error('Failed to start container of image: %s', self.image_name)
     container_id = result.stdout.strip()
     return container_id
 
@@ -69,9 +92,24 @@ class ProjectContainerTool(BaseTool):
     execute_command_in_container = [
         'docker', 'exec', self.container_id, '/bin/bash', '-c', command
     ]
-    process = self._execute_command(execute_command_in_container, True)
+    process = self._execute_command_in_container(execute_command_in_container)
     process.args = command
     return process
+
+  def compile(self,
+              use_recompile: bool = True,
+              extra_commands: str = '') -> sp.CompletedProcess:
+    """Compiles or recompiles the fuzz target."""
+    if use_recompile:
+      logger.info('Will attempt to use recompile')
+      self.execute(
+          '[ -f /usr/local/bin/recompile ] && echo "Will use recompile" '
+          '&& mv /usr/local/bin/recompile /usr/local/bin/compile')
+    else:
+      logger.info('Will use the original compile')
+
+    command = 'compile > /dev/null' + extra_commands
+    return self.execute(command)
 
   def terminate(self) -> bool:
     """Terminates the container."""

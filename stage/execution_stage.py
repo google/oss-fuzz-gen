@@ -115,10 +115,11 @@ class ExecutionStage(BaseStage):
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,
           chat_history=last_result.chat_history,
-          author=self,
+          author=repr(self),
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
           compile_log=last_result.compile_log,
+          is_function_referenced=last_result.is_function_referenced,
           crashes=run_result.crashes,
           run_error=run_result.crash_info,
           run_log=run_result.log_path,
@@ -134,15 +135,17 @@ class ExecutionStage(BaseStage):
           total_pcs=run_result.total_pcs)
     except Exception as e:
       self.logger.error('Exception %s occurred on %s', e, last_result)
-      runresult = RunResult(benchmark=benchmark,
-                            trial=last_result.trial,
-                            work_dirs=last_result.work_dirs,
-                            fuzz_target_source=last_result.fuzz_target_source,
-                            build_script_source=last_result.build_script_source,
-                            chat_history=last_result.chat_history,
-                            author=self,
-                            compiles=last_result.compiles,
-                            compile_error=last_result.compile_error,
-                            compile_log=last_result.compile_log)
+      runresult = RunResult(
+          benchmark=benchmark,
+          trial=last_result.trial,
+          work_dirs=last_result.work_dirs,
+          fuzz_target_source=last_result.fuzz_target_source,
+          build_script_source=last_result.build_script_source,
+          chat_history=last_result.chat_history,
+          author=repr(self),
+          compiles=last_result.compiles,
+          compile_error=last_result.compile_error,
+          compile_log=last_result.compile_log,
+          is_function_referenced=last_result.is_function_referenced)
 
     return runresult
