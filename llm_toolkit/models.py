@@ -296,9 +296,15 @@ class GPT4(GPT):
 
 
 class GPT4o(GPT):
-  """OpenAI's GPTi-4 model."""
+  """OpenAI's GPTi-4o model."""
 
   name = 'gpt-4o'
+
+
+class GPT4oMini(GPT):
+  """OpenAI's GPTi-4o-mini model."""
+
+  name = 'gpt-4o-mini'
 
 
 class AzureGPT(GPT):
