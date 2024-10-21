@@ -56,6 +56,8 @@ class LLM:
   # TODO(mihaimaruseac): Should this be MAX_TOKENS or a different global?
   context_window: int = 2000  # Default token size.
 
+  MAX_INPUT_TOKEN: int = sys.maxsize
+
   _max_attempts = 5  # Maximum number of attempts to get prediction response
 
   def __init__(
@@ -200,6 +202,13 @@ class LLM:
     raw_output_path = os.path.join(response_dir, f'{sample_id:02}.rawoutput')
     with open(raw_output_path, 'w+') as output_file:
       output_file.write(content)
+
+  def truncate_prompt(self,
+                      raw_prompt_text: Any,
+                      extra_text: Any = None) -> Any:
+    """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
+    del extra_text
+    return raw_prompt_text
 
   @abstractmethod
   def get_chat_client(self, model: Any) -> Any:
@@ -408,7 +417,13 @@ class GoogleModel(LLM):
 
   def estimate_token_num(self, text) -> int:
     """Estimates the number of tokens in |text|."""
-    # Roughly 1.5 tokens per word:
+    # A rough estimation for very large prompt: Gemini suggest 4 char per token,
+    # using 3 here to be safer.
+    text = text or ''
+    if len(text) // 3 > self.MAX_INPUT_TOKEN:
+      return len(text) // 3
+
+    # Otherwise, roughly 1.5 tokens per word:
     return int(len(re.split('[^a-zA-Z0-9]+', text)) * 1.5 + 0.5)
 
   # ============================== Generation ============================== #
@@ -607,24 +622,62 @@ class GeminiV1D5(GeminiModel):
 class GeminiV1D5Chat(GeminiV1D5):
   """Gemini 1.5 for chat session."""
   name = 'vertex_ai_gemini-1-5-chat'
+  _vertex_ai_model = 'gemini-1.5-pro-002'
+
+  # Avoids sending large prompts.
+  MAX_INPUT_TOKEN: int = 128000  # max 2000000
 
   def get_chat_client(self, model: GenerativeModel) -> Any:
     return model.start_chat(response_validation=False)
 
-  @retryable(exceptions=[
-      GoogleAPICallError,
-      InvalidArgument,
-  ],
-             other_exceptions={ResourceExhausted: 100})
+  @retryable(
+      exceptions=[
+          GoogleAPICallError,
+          InvalidArgument,
+          ValueError,  # TODO(dongge): Handle RECITATION specifically.
+          IndexError,  # A known error from vertexai.
+      ],
+      other_exceptions={ResourceExhausted: 100})
   def _do_generate(self, client: ChatSession, prompt: str,
                    config: dict[str, Any]) -> Any:
     """Generates chat response."""
     logger.info('%s generating response with config: %s', self.name, config)
-    return client.send_message(
-        prompt,
-        stream=False,
-        generation_config=config,
-        safety_settings=self.safety_config).text  # type: ignore
+    try:
+      return client.send_message(
+          prompt,
+          stream=False,
+          generation_config=config,
+          safety_settings=self.safety_config).text  # type: ignore
+    except Exception as e:
+      logger.error('%s failed to generated response: %s; Config: %s', e,
+                   self.name, config)
+      return ''
+
+  def truncate_prompt(self,
+                      raw_prompt_text: Any,
+                      extra_text: Any = None) -> Any:
+    """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
+    original_token_count = self.estimate_token_num(raw_prompt_text)
+
+    token_count = original_token_count
+    if token_count > self.MAX_INPUT_TOKEN:
+      raw_prompt_text = raw_prompt_text[-3 * self.MAX_INPUT_TOKEN:]
+
+    extra_text_token_count = self.estimate_token_num(extra_text)
+    # Reserve 10000 tokens for raw prompt wrappers.
+    max_raw_prompt_token_size = (self.MAX_INPUT_TOKEN - extra_text_token_count -
+                                 10000)
+
+    while token_count > max_raw_prompt_token_size:
+      estimate_truncate_size = int(
+          (1 - max_raw_prompt_token_size / token_count) * len(raw_prompt_text))
+      raw_prompt_text = raw_prompt_text[estimate_truncate_size + 1:]
+
+      token_count = self.estimate_token_num(raw_prompt_text)
+      logger.warning('Truncated raw prompt from %d to %d tokens:',
+                     original_token_count, token_count)
+
+    return raw_prompt_text
 
   def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:
     if self.ai_binary:
