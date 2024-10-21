@@ -292,7 +292,7 @@ class GPT4o(GPT):
   name = 'gpt-4o'
 
 
-class GPT4o(GPT):
+class GPT4oMini(GPT):
   """OpenAI's GPTi-4o-mini model."""
 
   name = 'gpt-4o-mini'
