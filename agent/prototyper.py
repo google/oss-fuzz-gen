@@ -82,7 +82,7 @@ class Prototyper(BaseAgent):
       self._validate_fuzz_target_and_build_script_via_recompile(
           cur_round, build_result, use_recompile=False)
 
-  def _vadlidate_fuzz_target_references_function(
+  def _validate_fuzz_target_references_function(
       self, compilation_tool: ProjectContainerTool, benchmark: Benchmark,
       cur_round: int) -> bool:
     """Validates if the LLM generated fuzz target assembly code references
@@ -136,7 +136,7 @@ class Prototyper(BaseAgent):
                  binary_exists)
 
     # Validate if function-under-test is referenced by the fuzz target.
-    function_referenced = self._vadlidate_fuzz_target_references_function(
+    function_referenced = self._validate_fuzz_target_references_function(
         compilation_tool, benchmark, cur_round)
 
     compilation_tool.terminate()
@@ -175,7 +175,7 @@ class Prototyper(BaseAgent):
           '***** Fuzz target does not reference function-under-test in %02d '
           'rounds *****', cur_round)
       prompt_text = (
-          'The fuzz target builds succeessfully, but the target function '
+          'The fuzz target builds successfully, but the target function '
           f'`{build_result.benchmark.function_signature}` was not used by '
           '`LLVMFuzzerTestOneInput` in fuzz target. YOU MUST CALL FUNCTION '
           f'`{build_result.benchmark.function_signature}` INSIDE FUNCTION '
