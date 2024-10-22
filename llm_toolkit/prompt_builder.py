@@ -1242,6 +1242,9 @@ class TestToHarnessConverter(PromptBuilder):
     self._template_dir = template_dir
     self.benchmark = benchmark
 
+    self.harness_source_code = introspector.query_introspector_source_code(
+        self.benchmark.project, self.benchmark.target_path, 0, 10000)
+
     # Load templates.
     self.priming_template_file = self._find_template(
         template_dir, 'test_to_harness_priming.txt')
@@ -1329,13 +1332,44 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
       classes = introspector.query_introspector_public_classes(
           self.benchmark.project)
       prompt_text = prompt_text.replace('{PUBLIC_CLASSES}', ','.join(classes))
+      prompt_text = prompt_text.replace('{TARGET_SAMPLE_HARNESS}', '')
     else:
       included_header_files = self.extract_header_files(test_source_code)
-      self.language_text = ('The following header files are used in the '
-                            'test. Please make sure to include the same ones: '
-                            f'{included_header_files}')
+      if included_header_files:
+        harness_included_header_files = (
+            'The following header files are used in the '
+            'test source code. Please make sure to include the same ones: '
+            f'{included_header_files}')
+      else:
+        harness_included_header_files = ''
+      prompt_text = prompt_text.replace('{HARNESS_HEADERS}',
+                                        harness_included_header_files)
+
+      headers_to_include = \
+        introspector.query_introspector_header_files(
+        self.benchmark.project)
+      if headers_to_include:
+        header_inclusion_string = '<headers>\n'
+        header_inclusion_string += ''.join(
+            f'<elem>{h}</elem>\n' for h in headers_to_include)
+
+        header_inclusion_string += '</headers>\n'
+        header_inclusion_string = (
+            'The following header files exist in the project source code. '
+            'If the harness you create needs any header files make sure '
+            'they are in the list:\n'
+            f'{header_inclusion_string}')
+      else:
+        header_inclusion_string = ''
+      prompt_text = prompt_text.replace('{HEADER_FILE_LANG}',
+                                        header_inclusion_string)
       prompt_text = prompt_text.replace('{PROG_LANG}', self.benchmark.language)
-      prompt_text = prompt_text.replace('{HEADER_FILE_LANG}', language_text)
+
+      harness_sample_text = ('There are already harnesses targeting this '
+                             'project, and an example of this is:\n'
+                             f'<code>{self.harness_source_code}</code>')
+      prompt_text = prompt_text.replace('{TARGET_SAMPLE_HARNESS}',
+                                        harness_sample_text)
 
     self._prompt.add_priming(prompt_text)
     return self._prompt

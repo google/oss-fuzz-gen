@@ -17,4 +17,8 @@ Please write a fuzzing harness that is inspired by this unittest.
 
 {HEADER_FILE_LANG}
 
+{HARNESS_HEADERS}
+
+{TARGET_SAMPLE_HARNESS}
+
 In your response, include *only* the code for the harness, nothing more. You should wrap the code in <code></code> tags.
