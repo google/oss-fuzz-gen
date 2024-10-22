@@ -38,7 +38,7 @@ class Pipeline():
 
   def _terminate(self, result_history: list[Result]) -> bool:
     """Validates if the termination conditions have been satisfied."""
-    conditions = bool(result_history and len(result_history) > 10)
+    conditions = bool(result_history and len(result_history) > 2)
     self.logger.info('termination condition met: %s', conditions)
     return conditions
 
@@ -62,15 +62,16 @@ class Pipeline():
                         cycle_count)
       return
 
-    #TODO(fdt622): delete print(cloud experiment)
-    print('RunResult reproducer_path: ', result_history[-1].reproducer_path)
+    #TODO(fdt622): delete info(cloud experiment)
+    logger.info('RunResult reproducer_path: ', result_history[-1].reproducer_path)
 
     last_result = result_history[-1]
     language = last_result.benchmark.language.lower()
+    # Only analyze crashes of C and C++ projects
     if last_result.crashes and language in {'c', 'c++'}:
       result_history.append(
           self.analysis_stage.execute(
-              result_history=result_history))  # append one CrashResult
+              result_history=result_history))
 
     self.logger.info('Cycle %d final result is %s', cycle_count,
                      result_history[-1])
@@ -87,8 +88,6 @@ class Pipeline():
     """
     self.logger.debug('Pipline starts')
     cycle_count = 1
-    #TODO: delete comment
-    #origin: execute _execute_one_cycle twice
     while not self._terminate(result_history=result_history):
       self._execute_one_cycle(result_history=result_history,
                               cycle_count=cycle_count)
