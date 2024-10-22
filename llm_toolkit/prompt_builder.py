@@ -1352,8 +1352,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
         header_inclusion_string = '<headers>\n'
         header_inclusion_string += ''.join(
             f'<elem>{h}</elem>\n' for h in headers_to_include)
-        #for header in headers_to_include:
-        #  header_inclusion_string += f'<elem>{header}</elem>\n'
+
         header_inclusion_string += '</headers>\n'
         header_inclusion_string = (
             'The following header files exist in the project source code. '
@@ -1364,9 +1363,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
         header_inclusion_string = ''
       prompt_text = prompt_text.replace('{HEADER_FILE_LANG}',
                                         header_inclusion_string)
-
       prompt_text = prompt_text.replace('{PROG_LANG}', self.benchmark.language)
-      #prompt_text = prompt_text.replace('{HEADER_FILE_LANG}', language_text)
 
       harness_sample_text = ('There are already harnesses targeting this '
                              'project, and an example of this is:\n'
