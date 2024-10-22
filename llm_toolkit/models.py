@@ -290,21 +290,27 @@ class GPT(LLM):
 
 
 class GPT4(GPT):
-  """OpenAI's GPTi-4 model."""
+  """OpenAI's GPT-4 model."""
 
   name = 'gpt-4'
 
 
 class GPT4o(GPT):
-  """OpenAI's GPTi-4o model."""
+  """OpenAI's GPT-4o model."""
 
   name = 'gpt-4o'
 
 
 class GPT4oMini(GPT):
-  """OpenAI's GPTi-4o-mini model."""
+  """OpenAI's GPT-4o-mini model."""
 
   name = 'gpt-4o-mini'
+
+
+class GPT4Turbo(GPT):
+  """OpenAI's GPT-4 Turbo model."""
+
+  name = 'gpt-4-turbo'
 
 
 class AzureGPT(GPT):
