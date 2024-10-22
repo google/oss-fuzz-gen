@@ -41,7 +41,6 @@ class ExecutionStage(BaseStage):
     evaluator = Evaluator(builder_runner, benchmark, last_result.work_dirs)
     generated_target_name = os.path.basename(benchmark.target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
-    #TODO(fdt622): delete info
     logger.info('Execution benchmark.target_path: %s', benchmark.target_path)
     logger.info('Execution benchmark.id: %s', benchmark.id)
     logger.info('Execution generated_target_name: %s', generated_target_name)
@@ -77,8 +76,6 @@ class ExecutionStage(BaseStage):
       raise TypeError
 
     try:
-      #TODO(fdt622): delete comment
-      # build image, create and start container, compile, fuzz
       _, run_result = evaluator.builder_runner.build_and_run(
           generated_oss_fuzz_project,
           fuzz_target_path,
