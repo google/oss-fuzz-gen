@@ -240,16 +240,25 @@ class Evaluator:
     will replicate an existing project |name| but replace its fuzz target
     and build script with the new |target_file| and |build_script_path|."""
     logger.info('target file: %s', target_file)
+    #TODO(fdt622): delete info
+    logger.info('Execution create_ossfuzz_project name: %s', name)
+    logger.info('Execution create_ossfuzz_project buid_script_path: %s',
+                build_script_path)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects', name)
-    if os.path.exists(
-        generated_project_path
-    ):  #probably return here without replacing fuzz target and build script?
+    #TODO(fdt622): delete info
+    logger.info('Execution create_ossfuzz_project generated_project_path: %s', \
+                generated_project_path)
+    # identify here
+    if os.path.exists(generated_project_path):
       logger.info('Project %s already exists.', generated_project_path)
       return name
 
     existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                          'projects', self.benchmark.project)
+    #TODO(fdt622): delete info
+    logger.info('Execution create_ossfuzz_project existing_project_path: %s', \
+                existing_project_path)
 
     shutil.copytree(existing_project_path, generated_project_path)
 
@@ -257,6 +266,8 @@ class Evaluator:
     shutil.copyfile(
         target_file,
         os.path.join(generated_project_path, os.path.basename(target_file)))
+    logger.info('Execution dst os.path.join(generated_project_path, os.path.basename(target_file)): %s', \
+                os.path.join(generated_project_path, os.path.basename(target_file)))
 
     # Add additional statement in dockerfile to overwrite with generated fuzzer
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
