@@ -89,8 +89,8 @@ class RunResult:
   corpus_path: str = ''
   coverage_report_path: str = ''
   reproducer_path: str = ''
-  artifact_path: str = ''  # local artifact
-  artifact_name: str = ''
+  artifact_path: str = '' # local artifact path
+  artifact_name: str = 'testcase'
   sanitizer: str = ''
   cov_pcs: int = 0
   total_pcs: int = 0
@@ -510,7 +510,7 @@ class BuilderRunner:
     
     artifact_dir = self.work_dirs.artifact(benchmark_target_name, iteration)
     outdir = get_build_artifact_dir(generated_project, 'out')
-    # TODO(fdt622): maybe move to CustomLoggerAdapter
+    # TODO(fdt622): simplify and move to logger file?
     crash_files = [f for f in os.listdir(outdir) if f.startswith('crash-')]
     if len(crash_files) == 0:
       logger.info('No crash files found in %s.', outdir)
@@ -1065,8 +1065,7 @@ class CloudBuilderRunner(BuilderRunner):
     artifact_dir = self.work_dirs.artifact(generated_target_name, iteration)
     blob = bucket.blob(f'{reproducer_name}/artifacts')
     if blob.exists():
-      file_name = run_result.artifact_name \
-        if run_result.artifact_name else 'testcase'
+      file_name = run_result.artifact_name
       artifact_path = os.path.join(artifact_dir, file_name)
       with open(artifact_path, 'w') as f:
         blob.download_to_file(f)
