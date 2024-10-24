@@ -1,7 +1,12 @@
-{% if include_statement %}
-You must add the following #include statement in the fuzz target, its header file defines the function-under-test.
+{% if headers or include_statement %}
+We have prepared the following list of headers which covers all target project APIs and will prepend them as #include statments at the beginning of your generated fuzz target. Therefore, you only need to include the headers of non-target-project APIs used in your fuzz target.
 <code>
+{% if headers %}
+{{ headers }}
+{% endif %}
+{% if include_statement %}
 {{ include_statement }}
+{% endif %}
 </code>
 {% endif %}
 
