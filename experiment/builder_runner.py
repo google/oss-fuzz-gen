@@ -510,7 +510,6 @@ class BuilderRunner:
     
     artifact_dir = self.work_dirs.artifact(benchmark_target_name, iteration)
     outdir = get_build_artifact_dir(generated_project, 'out')
-    # TODO(fdt622): simplify and move to logger file?
     crash_files = [f for f in os.listdir(outdir) if f.startswith('crash-')]
     if len(crash_files) == 0:
       logger.info('No crash files found in %s.', outdir)
