@@ -143,7 +143,6 @@ class Prototyper(BaseAgent):
     self.inspect_tool.execute('{compile && rm -rf /out/*} > /dev/null')
     cur_round = 1
     prompt.add_problem(self.inspect_tool.tutorial())
-    logger.info('prototyper after append tutorial prompt: %s', prompt.get())
     build_result = BuildResult(benchmark=benchmark,
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
