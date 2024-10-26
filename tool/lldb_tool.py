@@ -61,16 +61,8 @@ class LLDBTool(BaseTool):
           'Executing command (%s) in container %s: Return code %d. STDOUT: %s, '
           'STDERR: %s', command, self.container_id, result.returncode,
           result.stdout, result.stderr)
-      logger.info(
-          'Executing command (%s) in container %s: Return code %d. STDOUT: %s, '
-          'STDERR: %s', command, self.container_id, result.returncode,
-          result.stdout, result.stderr)
     else:
       logger.debug(
-          'Executing command (%s): Return code %d. STDOUT: %s, '
-          'STDERR: %s', command, result.returncode, result.stdout,
-          result.stderr)
-      logger.info(
           'Executing command (%s): Return code %d. STDOUT: %s, '
           'STDERR: %s', command, result.returncode, result.stdout,
           result.stderr)
@@ -90,14 +82,11 @@ class LLDBTool(BaseTool):
         self.image_name
     ]
     result = self._execute_command(run_container_command)
-    logger.info('lldb _start_docker_container result: %s', result)
     container_id = result.stdout.strip()
-    logger.info('lldb _start_docker_container container_id: %s', container_id)
     return container_id
 
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
-    logger.info('lldb tutorial arfifact name: %s', self.result.artifact_name)
     return self._get_tutorial_file_content('lldb_tool.txt')\
       .replace('{AFTIFACT_NAME}', self.result.artifact_name)
 
