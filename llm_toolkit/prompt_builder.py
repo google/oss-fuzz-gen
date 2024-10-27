@@ -575,7 +575,7 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
                       f'{self.benchmark.function_signature}\n'
                       f'</code> in your solution!\n')
     if project_context_content:
-      final_problem += project_context_content['context']
+      final_problem += self.format_context(project_context_content)
     self._prepare_prompt(priming, final_problem, example_pair,
                          project_example_content)
     self._prompt.append(tool_guides)
