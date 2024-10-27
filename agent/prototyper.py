@@ -6,8 +6,11 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
+from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.benchmark import Benchmark
-from llm_toolkit.prompt_builder import DefaultTemplateBuilder
+from llm_toolkit.prompt_builder import EXAMPLES as EXAMPLE_FUZZ_TARGETS
+from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
+                                        PrototyperTemplateBuilder)
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
 from tool.container_tool import ProjectContainerTool
@@ -21,10 +24,18 @@ class Prototyper(BaseAgent):
   def _initial_prompt(self, results: list[Result]) -> Prompt:
     """Constructs initial prompt of the agent."""
     benchmark = results[-1].benchmark
-
-    default_prompt_builder = DefaultTemplateBuilder(model=self.llm,
-                                                    benchmark=benchmark)
-    prompt = default_prompt_builder.build([])
+    retriever = ContextRetriever(benchmark)
+    context_info = retriever.get_context_info()
+    prompt_builder = PrototyperTemplateBuilder(
+        model=self.llm,
+        benchmark=benchmark,
+    )
+    prompt = prompt_builder.build(example_pair=[],
+                                  project_context_content=context_info,
+                                  tool_guides=self.inspect_tool.tutorial())
+    # prompt = prompt_builder.build(example_pair=EXAMPLE_FUZZ_TARGETS.get(
+    #     benchmark.language, []),
+    #                               tool_guides=self.inspect_tool.tutorial())
     return prompt
 
   def _update_fuzz_target_and_build_script(self, cur_round: int, response: str,
@@ -217,17 +228,16 @@ class Prototyper(BaseAgent):
     """Executes the agent based on previous result."""
     logger.info('Executing Prototyper')
     last_result = result_history[-1]
-    prompt = self._initial_prompt(result_history)
     benchmark = last_result.benchmark
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
     cur_round = 1
-    prompt.append(self.inspect_tool.tutorial())
     build_result = BuildResult(benchmark=benchmark,
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
                                author=self,
                                chat_history={self.name: ''})
+    prompt = self._initial_prompt(result_history)
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
       while prompt and cur_round < MAX_ROUND:
