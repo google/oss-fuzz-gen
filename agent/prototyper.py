@@ -163,13 +163,31 @@ class Prototyper(BaseAgent):
       compile_log = self.llm.truncate_prompt(build_result.compile_log)
       logger.info('***** Failed to recompile in %02d rounds *****', cur_round)
       prompt_text = (
-          'Failed to build fuzz target. Here is the fuzz target, build'
-          ' script, compliation command, and other compilation runtime'
-          ' output.\n<fuzz target>\n'
-          f'{build_result.fuzz_target_source}\n</fuzz target>\n'
-          f'<build script>\n{build_result.build_script_source}\n'
-          f'</build script>\n<compilation log>\n{compile_log}\n'
-          '</compilation log>\n')
+          'Failed to build fuzz target. Here is the fuzz target, build script, '
+          'compliation command, and other compilation runtime output. Analyze '
+          'the error messages, the fuzz target, and the build script carefully '
+          'to identify the root cause. Avoid making random changes to the fuzz '
+          'target or build script without a clear understanding of the error. '
+          'If necessary, #include necessary headers and #define required macros'
+          'or constants in the fuzz target, or adjust compiler flags to link '
+          'required libraries in the build script. After collecting information'
+          ', analyzing and understanding the error root cause, YOU MUST take at'
+          ' least one step to validate your theory with source code evidence. '
+          'Only if your theory is verified, respond the revised fuzz target and'
+          'build script in FULL.\n'
+          'Always try to learn from the source code about how to fix errors, '
+          'for example, search for the key words (e.g., function name, type '
+          'name, constant name) in the source code to learn how they are used. '
+          'Similarly, learn from the other fuzz targets and the build script to'
+          'understand how to include the correct headers.\n'
+          'Focus on writing a minimum buildable fuzz target that calls the '
+          'target function. We can increase its complexity later, but first try'
+          'to make it compile successfully.'
+          'If an error happens repeatedly and cannot be fixed, try to '
+          'mitigate it. For example, replace or remove the line.'
+          f'<fuzz target>\n{build_result.fuzz_target_source}\n</fuzz target>\n'
+          f'<build script>\n{build_result.build_script_source}\n</build script>'
+          f'\n<compilation log>\n{compile_log}\n</compilation log>\n')
     elif not build_result.is_function_referenced:
       logger.info(
           '***** Fuzz target does not reference function-under-test in %02d '
