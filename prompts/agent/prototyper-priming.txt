@@ -6,10 +6,10 @@ Objective: Your goal is to modify an existing fuzz target `{FUZZ_TARGET_PATH}` t
 <steps>
 Follow these steps to write a minimum fuzz target:
 
-Step 1. Determine the information you need to write an effective fuzz target. 
+Step 1. Determine the information you need to write an effective fuzz target.
 This includes:
     * **Source code** of the function under test.
-    * **Custom Types and Dependencies** definitions and implementations. 
+    * **Custom Types and Dependencies** definitions and implementations.
     * **Initialization and setup** requirements and steps.
     * **Build details** and integration steps.
     * Valid and edge-case input values.
@@ -72,7 +72,7 @@ Implement the `LLVMFuzzerTestOneInput` function:
         * Initialize required objects or state.
         * Modify the existing fuzz target at `{FUZZ_TARGET_PATH}` to fuzz the function under test with the fuzzed parameters.
         * Ensure proper error handling.
-    * 
+    *
     * Cleanup:
         * Free any allocated resources.
         * Reset any global state if necessary.
