@@ -141,6 +141,7 @@ def get_trial_logger(name: str = __name__,
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(level)
+    logger.propagate = False
 
   _trial_logger = CustomLoggerAdapter(logger, {'trial': trial})
   return _trial_logger
