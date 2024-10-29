@@ -75,6 +75,7 @@ class Project:
   name: str
   count: int = 0
   coverage_gain: float = 0.0
+  coverage_relative_gain: float = 0.0
   coverage_ofg_total_new_covered_lines = 0
   coverage_existing_total_covered_lines = 0
   coverage_existing_total_lines = 0
@@ -466,6 +467,17 @@ class Results:
           benchmark.result.max_line_coverage_diff)
     return accumulated_results
 
+  def get_coverage_language_gains(self):
+    summary_path = os.path.join(self._results_dir, 'report.json')
+    if FileSystem(summary_path).exists():
+      with FileSystem(summary_path).open() as f:
+        try:
+          return json.load(f)
+        except ValueError:
+          # Skip if error
+          logging.debug('Failed to decode project_coverage_gain.json')
+    return {}
+
   def get_project_summary(self, benchmarks: list[Benchmark]) -> list[Project]:
     """Returns a list of project summary."""
     project_summary_dict = {}
@@ -491,6 +503,7 @@ class Results:
       for project in project_summary_list:
         if project.name in coverage_dict:
           project.coverage_gain = coverage_dict[project.name]['coverage_diff']
+          project.coverage_relative_gain = coverage_dict[project.name]['coverage_relative_gain']
           project.coverage_ofg_total_new_covered_lines = coverage_dict[
               project.name]['coverage_ofg_total_new_covered_lines']
           project.coverage_existing_total_covered_lines = coverage_dict[

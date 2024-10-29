@@ -162,11 +162,12 @@ class GenerateReport:
 
     accumulated_results = self._results.get_macro_insights(benchmarks)
     projects = self._results.get_project_summary(benchmarks)
+    coverage_language_gains = self._results.get_coverage_language_gains()
 
     time_results = self.read_timings()
 
     self._write_index_html(benchmarks, accumulated_results, time_results,
-                           projects, samples_with_bugs)
+                           projects, samples_with_bugs, coverage_language_gains)
     self._write_index_json(benchmarks)
 
   def _write(self, output_path: str, content: str):
@@ -187,14 +188,15 @@ class GenerateReport:
   def _write_index_html(self, benchmarks: List[Benchmark],
                         accumulated_results: AccumulatedResult,
                         time_results: dict[str, Any], projects: list[Project],
-                        samples_with_bugs: list[dict[str, Any]]):
+                        samples_with_bugs: list[dict[str, Any]], coverage_language_gains: dict[str, Any]):
     """Generate the report index.html and write to filesystem."""
     rendered = self._jinja.render('index.html',
                                   benchmarks=benchmarks,
                                   accumulated_results=accumulated_results,
                                   time_results=time_results,
                                   projects=projects,
-                                  samples_with_bugs=samples_with_bugs)
+                                  samples_with_bugs=samples_with_bugs,
+                                  coverage_language_gains=coverage_language_gains)
     self._write('index.html', rendered)
 
   def _write_index_json(self, benchmarks: List[Benchmark]):
