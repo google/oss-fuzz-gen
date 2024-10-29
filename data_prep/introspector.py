@@ -147,8 +147,7 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_JVM_PUBLIC_CLASSES = (
       f'{INTROSPECTOR_ENDPOINT}/all-public-classes')
   INTROSPECTOR_LANGUAGE_STATS = (
-    f'{INTROSPECTOR_ENDPOINT}/database-language-stats'
-  )
+      f'{INTROSPECTOR_ENDPOINT}/database-language-stats')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -465,6 +464,7 @@ def query_introspector_language_stats() -> dict:
 
   resp = _query_introspector(INTROSPECTOR_LANGUAGE_STATS, {})
   return _get_data(resp, 'stats', {})
+
 
 def query_introspector_type_info(project: str, type_name: str) -> list[dict]:
   """Queries FuzzIntrospector API for information of |type_name|."""

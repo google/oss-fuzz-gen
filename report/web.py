@@ -188,15 +188,17 @@ class GenerateReport:
   def _write_index_html(self, benchmarks: List[Benchmark],
                         accumulated_results: AccumulatedResult,
                         time_results: dict[str, Any], projects: list[Project],
-                        samples_with_bugs: list[dict[str, Any]], coverage_language_gains: dict[str, Any]):
+                        samples_with_bugs: list[dict[str, Any]],
+                        coverage_language_gains: dict[str, Any]):
     """Generate the report index.html and write to filesystem."""
-    rendered = self._jinja.render('index.html',
-                                  benchmarks=benchmarks,
-                                  accumulated_results=accumulated_results,
-                                  time_results=time_results,
-                                  projects=projects,
-                                  samples_with_bugs=samples_with_bugs,
-                                  coverage_language_gains=coverage_language_gains)
+    rendered = self._jinja.render(
+        'index.html',
+        benchmarks=benchmarks,
+        accumulated_results=accumulated_results,
+        time_results=time_results,
+        projects=projects,
+        samples_with_bugs=samples_with_bugs,
+        coverage_language_gains=coverage_language_gains)
     self._write('index.html', rendered)
 
   def _write_index_json(self, benchmarks: List[Benchmark]):

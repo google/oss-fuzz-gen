@@ -503,7 +503,8 @@ class Results:
       for project in project_summary_list:
         if project.name in coverage_dict:
           project.coverage_gain = coverage_dict[project.name]['coverage_diff']
-          project.coverage_relative_gain = coverage_dict[project.name]['coverage_relative_gain']
+          project.coverage_relative_gain = coverage_dict[
+              project.name]['coverage_relative_gain']
           project.coverage_ofg_total_new_covered_lines = coverage_dict[
               project.name]['coverage_ofg_total_new_covered_lines']
           project.coverage_existing_total_covered_lines = coverage_dict[
