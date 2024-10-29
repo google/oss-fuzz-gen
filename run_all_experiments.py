@@ -469,7 +469,8 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
     total_cov_covered_lines_before_subtraction = total_cov.covered_lines
     total_cov.subtract_covered_lines(existing_textcov)
     try:
-      cov_relative_gain = total_cov.covered_lines / existing_textcov.covered_lines
+      cov_relative_gain = (total_cov.covered_lines /
+                           existing_textcov.covered_lines)
     except ZeroDivisionError:
       cov_relative_gain = 0.0
 
