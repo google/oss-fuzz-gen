@@ -42,13 +42,13 @@ class BaseAgent(ABC):
         return tool
     return None
 
-  def chat_llm(self, round: int, client: Any, prompt: Prompt) -> str:
+  def chat_llm(self, cur_round: int, client: Any, prompt: Prompt) -> str:
     """Chat with LLM."""
-    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %2d>', round,
-                prompt.get())
+    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %2d>', cur_round,
+                prompt.get(), cur_round)
     response = self.llm.chat_llm(client=client, prompt=prompt)
     logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
-                round, response)
+                cur_round, response, cur_round)
     return response
 
   def _parse_tag(self, response: str, tag: str) -> str:

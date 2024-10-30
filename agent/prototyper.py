@@ -213,7 +213,7 @@ class Prototyper(BaseAgent):
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
       while prompt and cur_round < MAX_ROUND:
-        response = self.chat_llm(round, client=client, prompt=prompt)
+        response = self.chat_llm(cur_round, client=client, prompt=prompt)
         prompt = self._container_tool_reaction(cur_round, response,
                                                build_result)
         cur_round += 1
