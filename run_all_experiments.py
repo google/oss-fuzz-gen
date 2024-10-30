@@ -303,6 +303,38 @@ def parse_args() -> argparse.Namespace:
   return args
 
 
+def extend_report_with_coverage_gains() -> None:
+  """Process total gain from all generated harnesses for each projects and
+  update summary report. This makes it possible to view per-project stats
+  as experiments complete rather than only after all experiments run."""
+  coverage_gain_dict = _process_total_coverage_gain()
+  existing_oss_fuzz_cov = introspector.query_introspector_language_stats()
+
+  total_new_covgains = {}
+  for project_dict in coverage_gain_dict.values():
+    lang_gains = total_new_covgains.get(project_dict['language'], 0)
+    lang_gains += project_dict['coverage_ofg_total_new_covered_lines']
+    total_new_covgains[project_dict['language']] = lang_gains
+
+  comparative_cov_gains = {}
+  for language, lang_cov_gain in total_new_covgains.items():
+    comparative_cov_gains[language] = {
+        'total_coverage_increase':
+            round((lang_cov_gain / existing_oss_fuzz_cov[language]['total']) *
+                  100.0, 10),
+        'relative_coverage_increase':
+            round((lang_cov_gain / existing_oss_fuzz_cov[language]['covered']) *
+                  100.0, 10)
+    }
+  add_to_json_report(WORK_DIR, 'coverage_gains_per_language',
+                     total_new_covgains)
+  add_to_json_report(WORK_DIR, 'project_summary', coverage_gain_dict)
+  add_to_json_report(WORK_DIR, 'oss_fuzz_language_status',
+                     existing_oss_fuzz_cov)
+  add_to_json_report(WORK_DIR, 'comperative_coverage_gains',
+                     comparative_cov_gains)
+
+
 def _print_and_dump_experiment_result(result: Result):
   """Prints the |result| of a single experiment."""
   logger.info('\n**** Finished benchmark %s, %s ****\n%s',
@@ -310,12 +342,7 @@ def _print_and_dump_experiment_result(result: Result):
               result.result)
 
   EXPERIMENT_RESULTS.append(result)
-
-  # Process total gain from all generated harnesses for each projects and
-  # update summary report. This makes it possible to view per-project stats
-  # as experiments complete rather than only after all experiments run.
-  coverage_gain_dict = _process_total_coverage_gain()
-  add_to_json_report(WORK_DIR, 'project_summary', coverage_gain_dict)
+  extend_report_with_coverage_gains()
 
 
 def _print_experiment_results(results: list[Result],
@@ -441,13 +468,22 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
     total_existing_lines = sum(lines)
     total_cov_covered_lines_before_subtraction = total_cov.covered_lines
     total_cov.subtract_covered_lines(existing_textcov)
+    try:
+      cov_relative_gain = (total_cov.covered_lines /
+                           existing_textcov.covered_lines)
+    except ZeroDivisionError:
+      cov_relative_gain = 0.0
 
     total_lines = max(total_cov.total_lines, total_existing_lines)
 
     if total_lines:
       coverage_gain[project] = {
+          'language':
+              oss_fuzz_checkout.get_project_language(project),
           'coverage_diff':
               total_cov.covered_lines / total_lines,
+          'coverage_relative_gain':
+              cov_relative_gain,
           'coverage_ofg_total_covered_lines':
               total_cov_covered_lines_before_subtraction,
           'coverage_ofg_total_new_covered_lines':
@@ -513,9 +549,7 @@ def main():
       # Wait for all workers to complete.
       p.join()
 
-  # Process total gain from all generated harnesses for each projects
-  coverage_gain_dict = _process_total_coverage_gain()
-  add_to_json_report(args.work_dir, 'project_summary', coverage_gain_dict)
+  extend_report_with_coverage_gains()
 
   # Capture time at end
   end = time.time()
@@ -524,6 +558,7 @@ def main():
   add_to_json_report(args.work_dir, 'total_run_time',
                      str(timedelta(seconds=end - start)))
 
+  coverage_gain_dict = _process_total_coverage_gain()
   _print_experiment_results(EXPERIMENT_RESULTS, coverage_gain_dict)
 
 

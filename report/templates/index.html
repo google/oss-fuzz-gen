@@ -106,6 +106,7 @@ td .signature {
             <th data-sorted="asc">Project</th>
             <th data-sort-number>Total generated harnesses</th>
             <th data-sort-number>Total coverage gain</th>
+            <th data-sort-number>Total relative gain</th>
             <th data-sort-number>OSS-Fuzz-gen total covered lines</th>
             <th data-sort-number>OSS-Fuzz-gen new covered lines</th>
             <th data-sort-number>Existing covered lines</th>
@@ -118,11 +119,36 @@ td .signature {
             <td class="table-index">{{ loop.index }}</td>
             <td data-sort-value="{{ project.name }}">{{ project.name }}</td>
             <td data-sort-value="{{ project.count }}">{{ project.count }}</td>
-            <td data-sort-value="{{ project.coverage_gain|percent }}">{{ project.coverage_gain|percent }}</td>
+            <td data-sort-value="{{ project.coverage_gain|percent }}">{{ project.coverage_gain|percent }}%</td>
+            <td data-sort-value="{{ project.coverage_relative_gain|percent}}">{{ project.coverage_relative_gain | percent }}%</td>
             <td data-sort-value="{{ project.coverage_ofg_total_covered_lines}}">{{project.coverage_ofg_total_covered_lines}}</td>
             <td data-sort-value="{{ project.coverage_ofg_total_new_covered_lines}}">{{ project.coverage_ofg_total_new_covered_lines}}</td>
             <td data-sort-value="{{ project.coverage_existing_total_covered_lines}}">{{ project.coverage_existing_total_covered_lines}}</td>
             <td data-sort-value="{{ project.coverage_existing_total_lines}}">{{ project.coverage_existing_total_lines}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Language coverage gains</h2>
+<table class="sortable-table" id="language-coverage-gain">
+    <thead>
+        <th>language</th>
+        <th>OSS-Fuzz total lines</th>
+        <th>OSS-Fuzz coverage lines</th>
+        <th>Experiment new coverage lines</th>
+        <th>Increase of total</th>
+        <th>Increase of covered</th>
+    </thead>
+    <tbody>
+        {% for language in coverage_language_gains['coverage_gains_per_language'] %}
+        <tr>
+            <td>{{language}}</td>
+            <td>{{coverage_language_gains['oss_fuzz_language_status'][language]['total']}}</td>
+            <td>{{coverage_language_gains['oss_fuzz_language_status'][language]['covered']}}</td>
+            <td>{{coverage_language_gains['coverage_gains_per_language'][language]}}</td>
+            <td>{{coverage_language_gains['comperative_coverage_gains'][language]['total_coverage_increase']}}%</td>
+            <td>{{coverage_language_gains['comperative_coverage_gains'][language]['relative_coverage_increase']}}%</td>
         </tr>
         {% endfor %}
     </tbody>
