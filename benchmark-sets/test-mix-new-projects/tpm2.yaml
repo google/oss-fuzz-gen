@@ -1,7 +1,0 @@
-"language": "c++"
-"project": "tpm2"
-"target_name": "tpm2_execute_command_fuzzer"
-"target_path": "/src/tpm2/fuzz/execute-command.cc"
-"test_files":
-- "test_file_path": "/src/tpm2/Attest_spt.c"
-- "test_file_path": "/src/tpm2/marshal_test.c"
