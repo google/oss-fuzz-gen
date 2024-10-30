@@ -746,6 +746,10 @@ def _get_harness_intrinsics(
   """Returns a harness source path and executable from a given project."""
   if USE_FI_TO_GET_TARGETS and language != 'jvm' and language != 'python':
     harnesses = query_introspector_for_harness_intrinsics(project)
+    if not harnesses:
+      logger.error('No harness/source pairs found in project.')
+      return None, None, {}
+
     harness_dict = harnesses[0]
     harness = harness_dict['source']
     target_name = harness_dict['executable']
