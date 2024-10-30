@@ -129,6 +129,13 @@ class Triage:
   triager_prompt: str
 
 
+@dataclasses.dataclass
+class LogPart:
+  chat_prompt: bool = False
+  chat_response: bool = False
+  content: str = ''
+
+
 class FileSystem:
   """
   FileSystem provides a wrapper over standard library and GCS client and
@@ -267,6 +274,9 @@ class Results:
   def get_final_target_code(self, benchmark: str, sample: str) -> str:
     """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
     targets_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
+    # TODO(donggeliu): Make this consistent with agent output.
+    if not os.path.exists(targets_dir):
+      return ''
 
     for name in sorted(FileSystem(targets_dir).listdir()):
       path = os.path.join(targets_dir, name)
@@ -277,14 +287,14 @@ class Results:
         return code
     return ''
 
-  def get_logs(self, benchmark: str, sample: str) -> str:
+  def get_logs(self, benchmark: str, sample: str) -> list[LogPart]:
     status_dir = os.path.join(self._results_dir, benchmark, 'status')
     results_path = os.path.join(status_dir, sample, 'log.txt')
     if not FileSystem(results_path).exists():
-      return ''
+      return []
 
     with FileSystem(results_path).open() as f:
-      return f.read()
+      return _parse_log_parts(f.read())
 
   def get_run_logs(self, benchmark: str, sample: str) -> str:
     """Returns the content of the last run log."""
@@ -353,6 +363,10 @@ class Results:
     """Gets the targets of benchmark |benchmark| with sample ID |sample| from
     the OFG version 1 (single prompt)."""
     targets_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
+    # TODO(donggeliu): Make this consistent with agent output.
+    if not os.path.exists(targets_dir):
+      return []
+
     targets = []
 
     for name in sorted(FileSystem(targets_dir).listdir()):
@@ -533,7 +547,11 @@ class Results:
       return True
 
     # Check sub-directories.
-    expected_dirs = ['raw_targets', 'status', 'fixed_targets']
+    # TODO(donggeliu): Make this consistent with agent output.
+    # We used to expect 'fixed_targets' and 'raw_targets' here, but the agent
+    # workflow doesn't populate them. As a result, these directories don't get
+    # uploaded to GCS.
+    expected_dirs = ['status']
     return all(
         FileSystem(os.path.join(self._results_dir, cur_dir,
                                 expected_dir)).isdir()
@@ -545,6 +563,10 @@ class Results:
     prompt)."""
     targets = []
     raw_targets_dir = os.path.join(self._results_dir, benchmark, 'raw_targets')
+    # TODO(donggeliu): Make this consistent with agent output.
+    if not os.path.exists(raw_targets_dir):
+      return []
+
     for filename in sorted(FileSystem(raw_targets_dir).listdir()):
       if os.path.splitext(filename)[1] in TARGET_EXTS:
         targets.append(os.path.join(raw_targets_dir, filename))
@@ -623,3 +645,53 @@ class Results:
           matched_prefix_signature = function_signature
 
     return matched_prefix_signature
+
+
+def _parse_log_parts(log: str) -> list[LogPart]:
+  """Parse log into parts."""
+  _CHAT_PROMPT_START_MARKER = re.compile(r'<CHAT PROMPT:ROUND\s+\d+>')
+  _CHAT_PROMPT_END_MARKER = re.compile(r'</CHAT PROMPT:ROUND\s+\d+>')
+  _CHAT_RESPONSE_START_MARKER = re.compile(r'<CHAT RESPONSE:ROUND\s+\d+>')
+  _CHAT_RESPONSE_END_MARKER = re.compile(r'</CHAT RESPONSE:ROUND\s+\d+>')
+  parts = []
+  idx = 0
+  next_marker = _CHAT_PROMPT_START_MARKER
+
+  while idx < len(log):
+    match = next_marker.search(log, idx)
+    if not match:
+      parts.append(LogPart(content=log[idx:]))
+      break
+
+    if match.start() > idx:
+      # Log content in between chat logs.
+      parts.append(LogPart(content=log[idx:match.start()]))
+
+    # Read up to the start of the corresponding end marker.
+    end_idx = len(log)
+
+    chat_prompt = False
+    chat_response = False
+    if next_marker == _CHAT_PROMPT_START_MARKER:
+      end = _CHAT_PROMPT_END_MARKER.search(log, match.end())
+      chat_prompt = True
+      next_marker = _CHAT_RESPONSE_START_MARKER
+    else:
+      assert next_marker == _CHAT_RESPONSE_START_MARKER
+      end = _CHAT_RESPONSE_END_MARKER.search(log, match.end())
+      chat_response = True
+      next_marker = _CHAT_PROMPT_START_MARKER
+
+    if end:
+      end_idx = end.start()
+      # Skip past the end tag.
+      idx = end.end()
+    else:
+      # No corresponding end tag, just read till the end of the log.
+      end_idx = len(log)
+      idx = end_idx
+
+    parts.append(LogPart(chat_prompt=chat_prompt, chat_response=chat_response, content=log[match.end():end_idx]))
+
+
+  return parts
