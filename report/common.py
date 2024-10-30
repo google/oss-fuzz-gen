@@ -468,6 +468,7 @@ class Results:
     return accumulated_results
 
   def get_coverage_language_gains(self):
+    """Gets report.json created by experiment runners."""
     summary_path = os.path.join(self._results_dir, 'report.json')
     if FileSystem(summary_path).exists():
       with FileSystem(summary_path).open() as f:
