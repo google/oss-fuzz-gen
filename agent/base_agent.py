@@ -44,9 +44,11 @@ class BaseAgent(ABC):
 
   def chat_llm(self, round: int, client: Any, prompt: Prompt) -> str:
     """Chat with LLM."""
-    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %2d>', round, prompt.get())
+    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %2d>', round,
+                prompt.get())
     response = self.llm.chat_llm(client=client, prompt=prompt)
-    logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>', round, response)
+    logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
+                round, response)
     return response
 
   def _parse_tag(self, response: str, tag: str) -> str:
