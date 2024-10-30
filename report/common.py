@@ -34,6 +34,11 @@ MAX_RUN_LOGS_LEN = 16 * 1024
 
 TARGET_EXTS = project_src.SEARCH_EXTS + ['.java', '.py'] + ['.fuzz_target']
 
+_CHAT_PROMPT_START_MARKER = re.compile(r'<CHAT PROMPT:ROUND\s+\d+>')
+_CHAT_PROMPT_END_MARKER = re.compile(r'</CHAT PROMPT:ROUND\s+\d+>')
+_CHAT_RESPONSE_START_MARKER = re.compile(r'<CHAT RESPONSE:ROUND\s+\d+>')
+_CHAT_RESPONSE_END_MARKER = re.compile(r'</CHAT RESPONSE:ROUND\s+\d+>')
+
 
 @dataclasses.dataclass
 class AccumulatedResult:
@@ -649,10 +654,6 @@ class Results:
 
 def _parse_log_parts(log: str) -> list[LogPart]:
   """Parse log into parts."""
-  _CHAT_PROMPT_START_MARKER = re.compile(r'<CHAT PROMPT:ROUND\s+\d+>')
-  _CHAT_PROMPT_END_MARKER = re.compile(r'</CHAT PROMPT:ROUND\s+\d+>')
-  _CHAT_RESPONSE_START_MARKER = re.compile(r'<CHAT RESPONSE:ROUND\s+\d+>')
-  _CHAT_RESPONSE_END_MARKER = re.compile(r'</CHAT RESPONSE:ROUND\s+\d+>')
   parts = []
   idx = 0
   next_marker = _CHAT_PROMPT_START_MARKER
@@ -691,7 +692,9 @@ def _parse_log_parts(log: str) -> list[LogPart]:
       end_idx = len(log)
       idx = end_idx
 
-    parts.append(LogPart(chat_prompt=chat_prompt, chat_response=chat_response, content=log[match.end():end_idx]))
-
+    parts.append(
+        LogPart(chat_prompt=chat_prompt,
+                chat_response=chat_response,
+                content=log[match.end():end_idx]))
 
   return parts
