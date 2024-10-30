@@ -58,9 +58,11 @@ Crash reason: {{ sample.result.semantic_error }}
 {% endfor %}
 
 <h2>Logs</h2>
-<pre>
-{{ logs }}
+{% for part in logs %}
+<pre {% if part.chat_prompt %}class="chat_prompt"{% elif part.chat_response %}class="chat_response"{% endif %}>
+{{ part.content }}
 </pre>
+{% endfor %}
 
 <h2>Run logs</h2>
 <pre>

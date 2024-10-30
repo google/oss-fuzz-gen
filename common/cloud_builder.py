@@ -27,6 +27,7 @@ REGION = os.getenv('CLOUD_BUILD_LOCATION', 'us-west2')
 REGIONAL_CLIENT_OPTIONS = google.api_core.client_options.ClientOptions(
     api_endpoint=f'https://{REGION}-cloudbuild.googleapis.com/')
 _CHAT_HISTORY_PREFIX_PATTERN = r'^Step\s+#(\d+)\s+-\s+"agent-step":\s+'
+_CHAT_HISTORY_START_MARKER = '<CHAT PROMPT:ROUND 01>'
 
 
 class CloudBuilder:
@@ -226,7 +227,7 @@ class CloudBuilder:
     for log_line in full_log.splitlines():
       if not re.match(_CHAT_HISTORY_PREFIX_PATTERN, log_line):
         continue
-      if 'ROUND 01 agent prompt:' in log_line:
+      if _CHAT_HISTORY_START_MARKER in log_line:
         in_chat = True
       if in_chat:
         stripped_line = re.sub(_CHAT_HISTORY_PREFIX_PATTERN, '', log_line)
