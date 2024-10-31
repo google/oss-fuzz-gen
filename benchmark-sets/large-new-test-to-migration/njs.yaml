@@ -1,0 +1,13 @@
+"language": "c++"
+"project": "njs"
+"target_name": "njs_process_script_fuzzer"
+"target_path": "/src/njs/external/njs_shell.c"
+"test_files":
+- "test_file_path": "/src/njs/src/test/njs_unit_test.c"
+- "test_file_path": "/src/njs/test/webcrypto/asn12ieeep1336.c"
+- "test_file_path": "/src/njs/src/test/random_unit_test.c"
+- "test_file_path": "/src/njs/src/test/njs_benchmark.c"
+- "test_file_path": "/src/njs/src/test/lvlhsh_unit_test.c"
+- "test_file_path": "/src/njs/src/test/unicode_unit_test.c"
+- "test_file_path": "/src/njs/src/test/rbtree_unit_test.c"
+- "test_file_path": "/src/njs/src/test/njs_externals_test.c"

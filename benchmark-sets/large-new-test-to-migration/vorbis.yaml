@@ -1,0 +1,13 @@
+"language": "c++"
+"project": "vorbis"
+"target_name": "decode_fuzzer"
+"target_path": "/src/vorbis/contrib/oss-fuzz/decode_fuzzer.cc"
+"test_files":
+- "test_file_path": "/src/vorbis/examples/vorbisfile_example.c"
+- "test_file_path": "/src/vorbis/test/util.c"
+- "test_file_path": "/src/vorbis/test/write_read.c"
+- "test_file_path": "/src/vorbis/examples/seeking_example.c"
+- "test_file_path": "/src/vorbis/examples/decoder_example.c"
+- "test_file_path": "/src/vorbis/test/test.c"
+- "test_file_path": "/src/vorbis/examples/encoder_example.c"
+- "test_file_path": "/src/vorbis/examples/chaining_example.c"

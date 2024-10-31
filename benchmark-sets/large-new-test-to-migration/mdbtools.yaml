@@ -1,0 +1,7 @@
+"language": "c"
+"project": "mdbtools"
+"target_name": "fuzz_mdb"
+"target_path": "/src/mdbtools/src/fuzz/fuzz_mdb.c"
+"test_files":
+- "test_file_path": "/src/mdbtools/src/odbc/unittest.c"
+- "test_file_path": "/src/mdbtools/src/util/sargtest.c"

@@ -1,0 +1,7 @@
+"language": "c++"
+"project": "matio"
+"target_name": "matio_fuzzer"
+"target_path": "/src/matio/ossfuzz/matio_fuzzer.cpp"
+"test_files":
+- "test_file_path": "/src/matio/test/test_snprintf.c"
+- "test_file_path": "/src/matio/test/test_mat.c"

@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "keystone"
+"target_name": "fuzz_asm_systemz"
+"target_path": "/src/keystone/suite/fuzz/fuzz_asm_systemz.c"
+"test_files":
+- "test_file_path": "/src/keystone/samples/sample.c"

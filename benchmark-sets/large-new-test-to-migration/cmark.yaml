@@ -1,0 +1,8 @@
+"language": "c++"
+"project": "cmark"
+"target_name": "cmark_fuzzer"
+"target_path": "/src/cmark/fuzz/cmark-fuzz.c"
+"test_files":
+- "test_file_path": "/src/cmark/api_test/cplusplus.cpp"
+- "test_file_path": "/src/cmark/api_test/main.c"
+- "test_file_path": "/src/cmark/api_test/harness.c"

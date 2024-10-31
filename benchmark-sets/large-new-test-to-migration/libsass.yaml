@@ -1,0 +1,7 @@
+"language": "c++"
+"project": "libsass"
+"target_name": "data_context_fuzzer"
+"target_path": "/src/data_context_fuzzer.cc"
+"test_files":
+- "test_file_path": "/src/libsass/test/test_util_string.cpp"
+- "test_file_path": "/src/libsass/test/test_shared_ptr.cpp"

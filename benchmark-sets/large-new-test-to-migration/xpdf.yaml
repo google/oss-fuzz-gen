@@ -1,0 +1,9 @@
+"language": "c++"
+"project": "xpdf"
+"target_name": "fuzz_zxdoc"
+"target_path": "/src/fuzz_zxdoc.cc"
+"test_files":
+- "test_file_path": "/src/freetype/src/tools/test_bbox.c"
+- "test_file_path": "/src/freetype/src/tools/test_afm.c"
+- "test_file_path": "/src/freetype/src/tools/test_trig.c"
+- "test_file_path": "/src/freetype/tests/issue-1063/main.c"

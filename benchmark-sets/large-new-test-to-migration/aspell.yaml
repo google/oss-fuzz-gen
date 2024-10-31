@@ -1,0 +1,11 @@
+"language": "c++"
+"project": "aspell"
+"target_name": "aspell_fuzzer"
+"target_path": "/src/aspell-fuzz/aspell_fuzzer.cpp"
+"test_files":
+- "test_file_path": "/src/aspell/test/cxx_warnings_test.cpp"
+- "test_file_path": "/src/aspell/test/warning-settings.cpp"
+- "test_file_path": "/src/aspell/test/wide_test_invalid.c"
+- "test_file_path": "/src/aspell/test/wide_test_valid.c"
+- "test_file_path": "/src/aspell/examples/example-c.c"
+- "test_file_path": "/src/aspell/examples/list-dicts.c"

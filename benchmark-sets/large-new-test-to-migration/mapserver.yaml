@@ -1,0 +1,9 @@
+"language": "c++"
+"project": "mapserver"
+"target_name": "mapfuzzer"
+"target_path": "/src/MapServer/fuzzers/mapfuzzer.c"
+"test_files":
+- "test_file_path": "/src/MapServer/tests/unit/test.cpp"
+- "test_file_path": "/src/MapServer/src/apps/testexpr.c"
+- "test_file_path": "/src/MapServer/src/hittest.c"
+- "test_file_path": "/src/MapServer/src/apps/testcopy.c"

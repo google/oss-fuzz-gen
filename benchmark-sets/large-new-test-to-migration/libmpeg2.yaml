@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "libmpeg2"
+"target_name": "mpeg2_dec_fuzzer"
+"target_path": "/src/libmpeg2/fuzzer/mpeg2_dec_fuzzer.cpp"
+"test_files":
+- "test_file_path": "/src/libmpeg2/test/decoder/main.c"

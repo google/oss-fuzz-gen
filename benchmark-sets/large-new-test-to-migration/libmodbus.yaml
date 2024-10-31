@@ -1,0 +1,13 @@
+"language": "c"
+"project": "libmodbus"
+"target_name": "FuzzClient"
+"target_path": "/src/libmodbus/fuzz/FuzzClient.c"
+"test_files":
+- "test_file_path": "/src/libmodbus/tests/unit-test-server.c"
+- "test_file_path": "/src/libmodbus/tests/bandwidth-server-many-up.c"
+- "test_file_path": "/src/libmodbus/tests/version.c"
+- "test_file_path": "/src/libmodbus/tests/bandwidth-server-one.c"
+- "test_file_path": "/src/libmodbus/tests/unit-test-client.c"
+- "test_file_path": "/src/libmodbus/tests/random-test-client.c"
+- "test_file_path": "/src/libmodbus/tests/random-test-server.c"
+- "test_file_path": "/src/libmodbus/tests/bandwidth-client.c"

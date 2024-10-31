@@ -1,0 +1,8 @@
+"language": "c++"
+"project": "meshoptimizer"
+"target_name": "codecfuzzer"
+"target_path": "/src/meshoptimizer/tools/codecfuzz.cpp"
+"test_files":
+- "test_file_path": "/src/meshoptimizer/demo/tests.cpp"
+- "test_file_path": "/src/meshoptimizer/tools/vcachetester.cpp"
+- "test_file_path": "/src/meshoptimizer/tools/codectest.cpp"

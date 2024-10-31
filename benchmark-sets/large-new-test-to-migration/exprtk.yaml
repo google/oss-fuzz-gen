@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "exprtk"
+"target_name": "exprtk_fuzzer"
+"target_path": "/src/exprtk_fuzzer.cpp"
+"test_files":
+- "test_file_path": "/src/exprtk/exprtk_test.cpp"

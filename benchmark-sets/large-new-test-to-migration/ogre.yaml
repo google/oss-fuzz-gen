@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "ogre"
+"target_name": "stream_fuzz"
+"target_path": "/src/stream_fuzz.cpp"
+"test_files":
+- "test_file_path": "/src/ogre/RenderSystems/GL/src/nvparse/ps1.0__test_main.cpp"

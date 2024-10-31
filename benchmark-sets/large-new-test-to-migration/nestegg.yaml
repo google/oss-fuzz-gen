@@ -1,0 +1,8 @@
+"language": "c++"
+"project": "nestegg"
+"target_name": "fuzz"
+"target_path": "/src/nestegg/test/fuzz.cc"
+"test_files":
+- "test_file_path": "/src/nestegg/test/dump.c"
+- "test_file_path": "/src/nestegg/test/regress.c"
+- "test_file_path": "/src/nestegg/test/sha1.c"

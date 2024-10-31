@@ -1,0 +1,7 @@
+"language": "c"
+"project": "fribidi"
+"target_name": "fribidi-fuzzer"
+"target_path": "/src/fribidi/bin/fribidi-fuzzer.c"
+"test_files":
+- "test_file_path": "/src/fribidi/test/unicode-conformance/BidiTest.c"
+- "test_file_path": "/src/fribidi/test/unicode-conformance/BidiCharacterTest.c"

@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "libfdk-aac"
+"target_name": "aacDecoder_Open"
+"target_path": "/src/aacDecoder_Open.cpp"
+"test_files":
+- "test_file_path": "/src/aac/tests/AacDecBenchmark/AacDecBenchmark.cpp"
