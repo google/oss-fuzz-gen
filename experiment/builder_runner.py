@@ -516,7 +516,7 @@ class BuilderRunner:
         run_result.crashes, run_result.crash_info, \
           run_result.semantic_check = \
             self._parse_libfuzzer_logs(f, project_name, flag)
-      run_result.succeeded = not run_result.semantic_check.has_err
+      run_result.succeeded = run_result.semantic_check.has_err
 
     return build_result, run_result
 
