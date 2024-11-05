@@ -1,6 +1,7 @@
 """A note-taker module to write experiment logs and result files. It attaches
 extra key info to logs and results (such as trial ID, function signature,
 project) to help identify log during debugging and result tracking."""
+
 import json
 import logging
 import os
