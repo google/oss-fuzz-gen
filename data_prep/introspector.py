@@ -470,7 +470,7 @@ def query_introspector_type_info(project: str, type_name: str) -> list[dict]:
   """Queries FuzzIntrospector API for information of |type_name|."""
   resp = _query_introspector(INTROSPECTOR_TYPE, {
       'project': project,
-      'name': type_name
+      'type_name': type_name
   })
   return _get_data(resp, 'type_data', [])
 
