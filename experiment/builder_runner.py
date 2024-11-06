@@ -916,7 +916,7 @@ class CloudBuilderRunner(BuilderRunner):
       command.append('--use_cached_image')
 
       # Overwrite the Dockerfile to be caching friendly
-      oss_fuzz_checkout.rewrite_project_to_cached_project_cloud_ccache(
+      oss_fuzz_checkout.rewrite_project_to_cached_project_chronos(
           generated_project)
 
     if cloud_build_tags:

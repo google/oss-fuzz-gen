@@ -296,8 +296,8 @@ def is_image_cached(project_name: str, sanitizer: str) -> bool:
     return False
 
 
-def rewrite_project_to_cached_project_cloud_ccache(generated_project) -> None:
-  """Rewrites Dockerfile to work wiht ccache logic for cloud builds"""
+def rewrite_project_to_cached_project_chronos(generated_project) -> None:
+  """Rewrites Dockerfile to work with Chronos builds"""
 
   generated_project_folder = os.path.join(OSS_FUZZ_DIR, 'projects',
                                           generated_project)
