@@ -912,8 +912,12 @@ class CloudBuilderRunner(BuilderRunner):
     if oss_fuzz_checkout.ENABLE_CACHING and (
         oss_fuzz_checkout.is_image_cached(project_name, 'address') and
         oss_fuzz_checkout.is_image_cached(project_name, 'coverage')):
-      logger.info(f'Using cached image for {project_name}.')
+      logger.info('Using cached image for %s', project_name)
       command.append('--use_cached_image')
+
+      # Overwrite the Dockerfile to be caching friendly
+      oss_fuzz_checkout.rewrite_project_to_cached_project_chronos(
+          generated_project)
 
     if cloud_build_tags:
       command += ['--tags'] + cloud_build_tags
