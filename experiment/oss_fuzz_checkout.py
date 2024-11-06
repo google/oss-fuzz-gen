@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 BUILD_DIR: str = 'build'
 GLOBAL_TEMP_DIR: str = ''
-ENABLE_CACHING = bool(int(os.getenv('OFG_USE_CACHING', '0')))
+ENABLE_CACHING = bool(int(os.getenv('OFG_USE_CACHING', '1')))
 # Assume OSS-Fuzz is at repo root dir by default.
 # This will change if temp_dir is used.
 OSS_FUZZ_DIR: str = os.path.join(
@@ -285,7 +285,7 @@ def is_image_cached(project_name: str, sanitizer: str) -> bool:
   cached_image_name = _get_project_cache_image_name(project_name, sanitizer)
   try:
     sp.run(
-        ['docker', 'inspect', '--type=image', cached_image_name],
+        ['docker', 'manifest', 'inspect', cached_image_name],
         check=True,
         stdin=sp.DEVNULL,
         stdout=sp.DEVNULL,

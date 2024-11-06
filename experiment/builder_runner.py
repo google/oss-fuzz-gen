@@ -905,11 +905,21 @@ class CloudBuilderRunner(BuilderRunner):
         f'--upload_coverage={coverage_path}',
         f'--upload_reproducer={reproducer_path}',
         f'--upload_corpus={corpus_path}',
-        f'--experiment_name={self.experiment_name}'
+        f'--experiment_name={self.experiment_name}',
+        f'--real_project={project_name}',
     ]
+
+    if oss_fuzz_checkout.ENABLE_CACHING and (
+        oss_fuzz_checkout.is_image_cached(project_name, 'address') and
+        oss_fuzz_checkout.is_image_cached(project_name, 'coverage')):
+      logger.info(f'Using cached image for {project_name}.')
+      command.append('--use_cached_image')
+
     if cloud_build_tags:
       command += ['--tags'] + cloud_build_tags
     command += ['--'] + self._libfuzzer_args()
+
+    logger.info(f'Command: {command}')
 
     if not self._run_with_retry_control(os.path.realpath(target_path),
                                         command,
