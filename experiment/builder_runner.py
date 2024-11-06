@@ -905,7 +905,8 @@ class CloudBuilderRunner(BuilderRunner):
         f'--upload_coverage={coverage_path}',
         f'--upload_reproducer={reproducer_path}',
         f'--upload_corpus={corpus_path}',
-        f'--experiment_name={self.experiment_name}'
+        f'--experiment_name={self.experiment_name}',
+        f'--real_project={project_name}',
     ]
 
     if oss_fuzz_checkout.ENABLE_CACHING and (
