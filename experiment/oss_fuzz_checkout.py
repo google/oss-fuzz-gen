@@ -296,6 +296,47 @@ def is_image_cached(project_name: str, sanitizer: str) -> bool:
     return False
 
 
+def rewrite_project_to_cached_project_chronos(generated_project) -> None:
+  """Rewrites Dockerfile to work with Chronos builds"""
+
+  generated_project_folder = os.path.join(OSS_FUZZ_DIR, 'projects',
+                                          generated_project)
+
+  # Check if there is an original Dockerfile, because we should use that in
+  # case,as otherwise the "Dockerfile" may be a copy of another sanitizer.
+  original_dockerfile = os.path.join(generated_project_folder, 'Dockerfile')
+  with open(original_dockerfile, 'r') as f:
+    docker_content = f.read()
+
+  arg_line = 'ARG CACHE_IMAGE=gcr.io/MUST_PROVIDE_IMAGE'
+  docker_content = arg_line + '\n' + docker_content
+  docker_content = docker_content.replace(
+      'FROM gcr.io/oss-fuzz-base/base-builder', 'FROM $CACHE_IMAGE')
+
+  # Now comment out everything except the first FROM and the last COPY that
+  # was added earlier in the OFG process.
+  from_line = -1
+  copy_fuzzer_line = -1
+
+  for line_idx, line in enumerate(docker_content.split('\n')):
+    if line.startswith('FROM') and from_line == -1:
+      from_line = line_idx
+    if line.startswith('COPY'):
+      copy_fuzzer_line = line_idx
+
+  lines_to_keep = {from_line, copy_fuzzer_line}
+  new_content = ''
+  for line_idx, line in enumerate(docker_content.split('\n')):
+    if line_idx not in lines_to_keep:
+      new_content += f'# {line}\n'
+    else:
+      new_content += f'{line}\n'
+
+  # Overwrite the existing one
+  with open(original_dockerfile, 'w') as f:
+    f.write(new_content)
+
+
 def rewrite_project_to_cached_project(project_name: str, generated_project: str,
                                       sanitizer: str) -> None:
   """Rewrites Dockerfile of a project to enable cached build scripts."""
