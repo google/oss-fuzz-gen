@@ -17,6 +17,8 @@ Current supported models are:
 - OpenAI GPT-3.5-turbo
 - OpenAI GPT-4
 - OpenAI GPT-4o
+- OpenAI GPT-4o-mini
+- OpenAI GPT-4-turbo
 - OpenAI GPT-3.5-turbo (Azure)
 - OpenAI GPT-4 (Azure)
 - OpenAI GPT-4o (Azure)
