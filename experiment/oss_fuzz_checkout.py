@@ -323,7 +323,6 @@ def rewrite_project_to_cached_project(project_name: str, generated_project: str,
 
   docker_content = docker_content.replace(
       'FROM gcr.io/oss-fuzz-base/base-builder', f'FROM {cached_image_name}')
-  docker_content += '\n' + 'COPY adjusted_build.sh $SRC/build.sh\n'
 
   # Now comment out everything except the first FROM and the last two Dockers
   from_line = -1
@@ -348,10 +347,6 @@ def rewrite_project_to_cached_project(project_name: str, generated_project: str,
   # Overwrite the existing one
   with open(cached_dockerfile, 'w') as f:
     f.write(new_content)
-
-  # Copy over adjusted build script
-  shutil.copy(os.path.join('fuzzer_build_script', project_name),
-              os.path.join(generated_project_folder, 'adjusted_build.sh'))
 
 
 def prepare_build(project_name, sanitizer, generated_project):
