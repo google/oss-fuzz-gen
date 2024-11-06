@@ -1,0 +1,36 @@
+"functions":
+- "name": "_ZZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1B8ne180100EOS5_ENKUlRS5_E_clES7_"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "__s"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "DW_TAG_rvalue_reference_type__compressed_pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::__rep, std::__1::allocator<char> > std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::operator()(const void *, basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &)"
+- "name": "_Z3absB8ne180100l"
+  "params":
+  - "name": "__x"
+    "type": "size_t"
+  "return_type": "size_t"
+  "signature": "long abs(long)"
+- "name": "_ZNK7cxxopts10exceptions9exception4whatEv"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "const char * cxxopts::exceptions::exception::what()"
+- "name": "_ZN7cxxopts10exceptions9exceptionD0Ev"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void cxxopts::exceptions::exception::~~exception()"
+"language": "c++"
+"project": "cxxopts"
+"target_name": "cxxopts_fuzz_test"
+"target_path": "/src/cxxopts/test/fuzz.cpp"
+"test_files":
+- "test_file_path": "/src/cxxopts/test/link_b.cpp"
+- "test_file_path": "/src/cxxopts/test/options.cpp"
+- "test_file_path": "/src/cxxopts/test/main.cpp"
+- "test_file_path": "/src/cxxopts/test/link_a.cpp"

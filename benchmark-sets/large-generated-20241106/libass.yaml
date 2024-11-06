@@ -1,0 +1,15 @@
+"functions":
+- "name": "_ZN19hb_ot_map_builder_t11has_featureEj"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "tag"
+    "type": "int"
+  "return_type": "bool"
+  "signature": "bool hb_ot_map_builder_t::has_feature(struct hb_ot_map_builder_t *, hb_tag_t)"
+"language": "c++"
+"project": "libass"
+"target_name": "libass_fuzzer"
+"target_path": "/src/libass/fuzz/fuzz.c"
+"test_files":
+- "test_file_path": "/src/libass/test/test.c"
