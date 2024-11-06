@@ -285,7 +285,7 @@ def is_image_cached(project_name: str, sanitizer: str) -> bool:
   cached_image_name = _get_project_cache_image_name(project_name, sanitizer)
   try:
     sp.run(
-        ['docker', 'inspect', '--type=image', cached_image_name],
+        ['docker', 'manifest', 'inspect', cached_image_name],
         check=True,
         stdin=sp.DEVNULL,
         stdout=sp.DEVNULL,
