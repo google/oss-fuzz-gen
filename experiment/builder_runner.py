@@ -908,9 +908,10 @@ class CloudBuilderRunner(BuilderRunner):
         f'--experiment_name={self.experiment_name}'
     ]
 
-    if oss_fuzz_checkout.ENABLE_CACHING and oss_fuzz_checkout.is_image_cached(
-        self.benchmark.project, sanitizer):
-      logger.info('Using cached image')
+    if oss_fuzz_checkout.ENABLE_CACHING and (
+        oss_fuzz_checkout.is_image_cached(project_name, 'address') and
+        oss_fuzz_checkout.is_image_cached(project_name, 'coverage')):
+      logger.info(f'Using cached image for {project_name}.')
       command.append('--use_cached_image')
 
     if cloud_build_tags:
