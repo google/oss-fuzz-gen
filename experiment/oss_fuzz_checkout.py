@@ -295,7 +295,8 @@ def is_image_cached(project_name: str, sanitizer: str) -> bool:
   except sp.CalledProcessError:
     return False
 
-def rewrite_project_to_cached_project_cloud_ccache(generated_project) -> str:
+
+def rewrite_project_to_cached_project_cloud_ccache(generated_project) -> None:
   """Rewrites Dockerfile to work wiht ccache logic for cloud builds"""
 
   generated_project_folder = os.path.join(OSS_FUZZ_DIR, 'projects',
@@ -303,8 +304,7 @@ def rewrite_project_to_cached_project_cloud_ccache(generated_project) -> str:
 
   # Check if there is an original Dockerfile, because we should use that in
   # case,as otherwise the "Dockerfile" may be a copy of another sanitizer.
-  original_dockerfile = os.path.join(generated_project_folder,
-                                     'Dockerfile')
+  original_dockerfile = os.path.join(generated_project_folder, 'Dockerfile')
   with open(original_dockerfile, 'r') as f:
     docker_content = f.read()
 

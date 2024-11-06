@@ -848,7 +848,6 @@ class CloudBuilderRunner(BuilderRunner):
     """Builds and runs the fuzz target for fuzzing."""
     build_result = BuildResult()
 
-
     if not self._pre_build_check(target_path, build_result):
       return build_result, None
 
@@ -917,7 +916,8 @@ class CloudBuilderRunner(BuilderRunner):
       command.append('--use_cached_image')
 
       # Overwrite the Dockerfile to be caching friendly
-      oss_fuzz_checkout.rewrite_project_to_cached_project_cloud_ccache(generated_project)
+      oss_fuzz_checkout.rewrite_project_to_cached_project_cloud_ccache(
+          generated_project)
 
     if cloud_build_tags:
       command += ['--tags'] + cloud_build_tags
