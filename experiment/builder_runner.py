@@ -919,6 +919,8 @@ class CloudBuilderRunner(BuilderRunner):
       command += ['--tags'] + cloud_build_tags
     command += ['--'] + self._libfuzzer_args()
 
+    logger.info(f'Command: {command}')
+
     if not self._run_with_retry_control(os.path.realpath(target_path),
                                         command,
                                         cwd=oss_fuzz_checkout.OSS_FUZZ_DIR):
