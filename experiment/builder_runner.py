@@ -907,6 +907,12 @@ class CloudBuilderRunner(BuilderRunner):
         f'--upload_corpus={corpus_path}',
         f'--experiment_name={self.experiment_name}'
     ]
+
+    if oss_fuzz_checkout.ENABLE_CACHING and oss_fuzz_checkout.is_image_cached(
+        self.benchmark.project, sanitizer):
+      logger.info('Using cached image')
+      command.append('--use_cached_image')
+
     if cloud_build_tags:
       command += ['--tags'] + cloud_build_tags
     command += ['--'] + self._libfuzzer_args()
