@@ -229,7 +229,6 @@ class GPT(LLM):
   """OpenAI's GPT model encapsulator."""
 
   name = 'gpt-3.5-turbo'
-  MAX_INPUT_TOKEN = 100000
 
   def get_model(self) -> Any:
     """Returns the underlying model instance."""
