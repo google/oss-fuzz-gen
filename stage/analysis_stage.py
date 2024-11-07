@@ -36,9 +36,6 @@ class AnalysisStage(BaseStage):
       return self._execute_agent_cloud(agent, result_history)
     return agent.execute(result_history)
 
-  def _analyze_coverage(self, result_history: list[Result]) -> Result:
-    """Analyzes the coverage."""
-
   def execute(self, result_history: list[Result]) -> Result:
     """Selects agent based on run result and executes it."""
     self.logger.info('Analysis Stage')
