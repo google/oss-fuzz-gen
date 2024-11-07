@@ -152,7 +152,7 @@ class CrashAnalyzer(BaseAgent):
       fuzz_target_path = os.path.join(run_result.work_dirs.fuzz_targets,
                                       f'{run_result.trial:02d}.fuzz_target')
       build_script_path = os.path.join(run_result.work_dirs.fuzz_targets,
-                                      f'{run_result.trial:02d}.build_script')
+                                       f'{run_result.trial:02d}.build_script')
 
       self._create_ossfuzz_project_with_lldb(
           generated_oss_fuzz_project, fuzz_target_path, build_script_path,
@@ -162,6 +162,7 @@ class CrashAnalyzer(BaseAgent):
           benchmark,
           name='lldb',
           project=generated_oss_fuzz_project,
+          result=run_result,
       )
       self.analyze_tool.execute('compile > /dev/null')
       prompt = self._initial_prompt(result_history)  # prompt to analyze crash
@@ -206,15 +207,15 @@ class CrashAnalyzer(BaseAgent):
           response = self.llm.chat_llm(client=client, prompt=prompt)
           logger.debug('ROUND %02d LLM response: %s', cur_round, response)
           prompt = self._container_tool_reaction(cur_round, response,
-                                                crash_result)
+                                                 crash_result)
           cur_round += 1
           self._sleep_random_duration()
       finally:
         # Cleanup: stop the container
         logger.debug('Stopping the crash analyze container %s',
-                    self.analyze_tool.container_id)
+                     self.analyze_tool.container_id)
         self.analyze_tool.terminate()
 
       return crash_result
-  
+
     logger.error("Expected a RunResult object in results list")
