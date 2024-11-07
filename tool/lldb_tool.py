@@ -98,8 +98,9 @@ class LLDBTool(BaseTool):
         'FUZZING_ENGINE=libfuzzer', '-e', 'SANITIZER=address', '-e',
         'ARCHITECTURE=x86_64', '-e', f'PROJECT_NAME={self.project}', '-e',
         f'CXX={JCC_DIR}/clang++-jcc', '-e', f'CC={JCC_DIR}/clang-jcc', '-e',
-        f'FUZZING_LANGUAGE={self.benchmark.language}', '-e',
-        'LSAN_OPTIONS=detect_leaks=0', '-v',
+        f'FUZZING_LANGUAGE={self.benchmark.language}',
+        # '-e', 'LSAN_OPTIONS=detect_leaks=0',
+        '-v',
         f'{self.result.artifact_path}:/artifact/{self.result.artifact_name}',
         self.image_name
     ]
