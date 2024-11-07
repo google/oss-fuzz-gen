@@ -43,4 +43,6 @@ class AnalysisStage(BaseStage):
 
     crash_result = cast(CrashResult, agent_result)
 
+    #TODO(fdt622): Save logs and more info into workdir.
+
     return crash_result
