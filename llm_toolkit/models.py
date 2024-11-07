@@ -226,7 +226,19 @@ class GPT(LLM):
 
   name = 'gpt-3.5-turbo'
 
-  def get_model(self) -> Any:
+  def __init__(
+      self,
+      ai_binary: str,
+      max_tokens: int = MAX_TOKENS,
+      num_samples: int = NUM_SAMPLES,
+      temperature: float = TEMPERATURE,
+      temperature_list: Optional[list[float]] = None,
+  ):
+    super().__init__(ai_binary, max_tokens, num_samples, temperature,
+                     temperature_list)
+    self.conversation_history = []
+
+  def get_model(self) -> str:
     """Returns the underlying model instance."""
     self.name
 
@@ -234,7 +246,7 @@ class GPT(LLM):
     """Returns a new chat session."""
     return self._get_client()
 
-  def chat_llm(self, client: Any, prompt: prompts.OpenAIPrompt) -> Any:
+  def chat_llm(self, client: Any, prompt: prompts.OpenAIPrompt) -> str:
     """Queries the LLM in the given chat session and returns the response."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -243,15 +255,15 @@ class GPT(LLM):
                   self.temperature_list)
 
     completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=prompt.get(),
-                                               model=self.name,
-                                               n=self.num_samples,
-                                               temperature=self.temperature),
-        [openai.OpenAIError])
+        lambda: client.chat.completions.create(
+            messages=self.conversation_history,
+            model=self.name,
+            n=self.num_samples,
+            temperature=self.temperature), [openai.OpenAIError])
 
     # Choose the longest response
     longest_response = max(
-        (choice.message["content"] for choice in completion.choices), key=len)
+        (choice.message.content for choice in completion.choices), key=len)
 
     return longest_response
 
