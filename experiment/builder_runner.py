@@ -60,10 +60,10 @@ LIBFUZZER_LOG_STACK_FRAME_CPP = '/usr/local/bin/../include/c++'
 
 EARLY_FUZZING_ROUND_THRESHOLD = 3
 
-ParseResult = namedtuple(
-    'ParseResult',
-    ['cov_pcs', 'total_pcs', 'crashes', 'crash_info', 'artifact_name', 
-     'semantic_check_result'])
+ParseResult = namedtuple('ParseResult', [
+    'cov_pcs', 'total_pcs', 'crashes', 'crash_info', 'artifact_name',
+    'semantic_check_result'
+])
 
 
 @dataclasses.dataclass
@@ -88,8 +88,8 @@ class RunResult:
   log_path: str = ''
   corpus_path: str = ''
   coverage_report_path: str = ''
-  reproducer_path: str = '' # cloud reproducer(stacktrace/target_binary/artifacts)
-  artifact_path: str = '' # local artifact
+  reproducer_path: str = ''  # cloud reproducer(stacktrace/target_binary/artifacts)
+  artifact_path: str = ''  # local artifact
   artifact_name: str = ''
   sanitizer: str = ''
   cov_pcs: int = 0
@@ -528,16 +528,17 @@ class BuilderRunner:
     #TODO(fdt622): simplify this
     crash_files = [f for f in os.listdir(outdir) if f.startswith('crash-')]
     if len(crash_files) == 0:
-        logger.warning('No crash files found in %s.', outdir)
+      logger.warning('No crash files found in %s.', outdir)
     elif len(crash_files) > 1:
-        logger.warning('Multiple crash files found in %s: %s', outdir, crash_files)
+      logger.warning('Multiple crash files found in %s: %s', outdir,
+                     crash_files)
     else:
-        crash_file = crash_files[0]
-        src = os.path.join(outdir, crash_file)
-        dst = os.path.join(artifact_dir, crash_file)
-        run_result.artifact_path = dst
-        shutil.copy2(src, dst)
-        logger.info('Copied crash file %s to %s', crash_file, artifact_dir)
+      crash_file = crash_files[0]
+      src = os.path.join(outdir, crash_file)
+      dst = os.path.join(artifact_dir, crash_file)
+      run_result.artifact_path = dst
+      shutil.copy2(src, dst)
+      logger.info('Copied crash file %s to %s', crash_file, artifact_dir)
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
         generated_project, benchmark_target_name))
 

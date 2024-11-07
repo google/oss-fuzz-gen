@@ -254,6 +254,8 @@ class GPT(LLM):
       logger.info('OpenAI does not allow temperature list: %s',
                   self.temperature_list)
 
+    self.conversation_history.extend(prompt.get())
+
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(
             messages=self.conversation_history,
@@ -264,6 +266,10 @@ class GPT(LLM):
     # Choose the longest response
     longest_response = max(
         (choice.message.content for choice in completion.choices), key=len)
+    self.conversation_history.append({
+        'role': 'assistant',
+        'content': longest_response
+    })
 
     return longest_response
 
