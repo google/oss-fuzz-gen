@@ -68,7 +68,7 @@ def _set_temp_oss_fuzz_repo():
 def _clone_oss_fuzz_repo():
   """Clones OSS-Fuzz to |OSS_FUZZ_DIR|."""
   clone_command = [
-      'git', 'clone', '-b', 'fix-cached-build' 'https://github.com/google/oss-fuzz', '--depth', '1',
+      'git', 'clone', '-b', 'fix-cached-build', 'https://github.com/google/oss-fuzz', '--depth', '1',
       OSS_FUZZ_DIR
   ]
   proc = sp.Popen(clone_command,
