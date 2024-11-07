@@ -3,7 +3,6 @@ crashes of the fuzz targets. This stage will run the fuzz target with OSS-Fuzz
 infra and report its code coverage and crashes."""
 import os
 
-import logger
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as evaluator_lib
 from experiment.evaluator import Evaluator
