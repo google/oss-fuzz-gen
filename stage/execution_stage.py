@@ -3,6 +3,7 @@ crashes of the fuzz targets. This stage will run the fuzz target with OSS-Fuzz
 infra and report its code coverage and crashes."""
 import os
 
+import logger
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as evaluator_lib
 from experiment.evaluator import Evaluator
@@ -20,7 +21,7 @@ class ExecutionStage(BaseStage):
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the fuzz target and build script in the latest result."""
     last_result = result_history[-1]
-    benchmark = last_result.benchmark  # last buildresult.benchmark
+    benchmark = last_result.benchmark
     if self.args.cloud_experiment_name:
       builder_runner = builder_runner_lib.CloudBuilderRunner(
           benchmark=benchmark,
@@ -39,22 +40,25 @@ class ExecutionStage(BaseStage):
     evaluator = Evaluator(builder_runner, benchmark, last_result.work_dirs)
     generated_target_name = os.path.basename(benchmark.target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
-    #TODO(fdt622): delete print
-    print('generated_target_name: ', generated_target_name)
-    print('sample_id: ', sample_id)
-    #TODO(fdt622): delete comment
-    #metric to identify different driver and build script under same api.
+    #TODO(fdt622): delete info
+    logger.info('Execution benchmark.target_path: %s', benchmark.target_path)
+    logger.info('Execution benchmark.id: %s', benchmark.id)
+    logger.info('Execution generated_target_name: %s', generated_target_name)
+    logger.info('Execution sample_id: %s', sample_id)
     generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}'
+    logger.info('Execution generated_oss_fuzz_project: %s', \
+                generated_oss_fuzz_project)
     generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
         generated_oss_fuzz_project)
+    logger.info('Execution generated_oss_fuzz_project(after rectify): %s', \
+                generated_oss_fuzz_project)
 
     fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                     f'{last_result.trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                      f'{last_result.trial:02d}.build_script')
-    #TODO(fdt622):delete comment
-    #probably return without replacing fuzz target and build script?
-    #original purpose: replace fuzz target and build script here.
+    logger.info('Execution fuzz_target_path: %s', fuzz_target_path)
+    logger.info('Execution build_script_path: %s', build_script_path)
     evaluator.create_ossfuzz_project(generated_oss_fuzz_project,
                                      fuzz_target_path, build_script_path)
 
@@ -129,9 +133,9 @@ class ExecutionStage(BaseStage):
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
           compile_log=last_result.compile_log,
-          crashes=run_result.crashes,  # whether crash
-          run_error=run_result.crash_info,  # crash info
-          crash_func=run_result.semantic_check.crash_func,  # crash func
+          crashes=run_result.crashes,
+          run_error=run_result.crash_info,
+          crash_func=run_result.semantic_check.crash_func,
           run_log=run_result.log_path,
           coverage_summary=run_result.coverage_summary,
           coverage=coverage_percent,

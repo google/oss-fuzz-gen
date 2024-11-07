@@ -114,9 +114,9 @@ class RunResult(BuildResult):
       compiles: bool = False,
       compile_error: str = '',
       compile_log: str = '',
-      crashes: bool = False,  # Runtime crash.
-      run_error: str = '',  # Runtime crash error message.
-      crash_func: Optional[dict] = None,  # Crash stack func.
+      crashes: bool = False,
+      run_error: str = '',
+      crash_func: Optional[dict] = None,
       run_log: str = '',  # Full fuzzing output.
       coverage_summary: Optional[dict] = None,
       coverage: float = 0.0,
@@ -203,38 +203,37 @@ class CrashResult(RunResult):
   true_bug: bool  # True/False positive crash
   insight: str  # Reason and fixes for crashes
 
-  def __init__(
-      self,
-      benchmark: Benchmark,
-      trial: int,
-      work_dirs: WorkDirs,
-      compiles: bool = False,
-      compile_error: str = '',
-      compile_log: str = '',
-      crashes: bool = False,  # Runtime crash.
-      run_error: str = '',  # Runtime crash error message.
-      crash_func: Optional[dict] = None,  # Crash stack func.
-      run_log: str = '',  # Full fuzzing output.
-      coverage_summary: Optional[dict] = None,
-      coverage: float = 0.0,
-      line_coverage_diff: float = 0.0,
-      textcov_diff: Optional[textcov.Textcov] = None,
-      reproducer_path: str = '',
-      artifact_path: str = '',
-      artifact_name: str = '',
-      sanitizer: str = '',
-      log_path: str = '',
-      corpus_path: str = '',
-      coverage_report_path: str = '',
-      cov_pcs: int = 0,
-      total_pcs: int = 0,
-      fuzz_target_source: str = '',
-      build_script_source: str = '',
-      author: Any = None,
-      chat_history: Optional[dict] = None,
-      stacktrace: str = '',
-      true_bug: bool = False,
-      insight: str = '') -> None:
+  def __init__(self,
+               benchmark: Benchmark,
+               trial: int,
+               work_dirs: WorkDirs,
+               compiles: bool = False,
+               compile_error: str = '',
+               compile_log: str = '',
+               crashes: bool = False,
+               run_error: str = '',
+               crash_func: Optional[dict] = None,
+               run_log: str = '',
+               coverage_summary: Optional[dict] = None,
+               coverage: float = 0.0,
+               line_coverage_diff: float = 0.0,
+               textcov_diff: Optional[textcov.Textcov] = None,
+               reproducer_path: str = '',
+               artifact_path: str = '',
+               artifact_name: str = '',
+               sanitizer: str = '',
+               log_path: str = '',
+               corpus_path: str = '',
+               coverage_report_path: str = '',
+               cov_pcs: int = 0,
+               total_pcs: int = 0,
+               fuzz_target_source: str = '',
+               build_script_source: str = '',
+               author: Any = None,
+               chat_history: Optional[dict] = None,
+               stacktrace: str = '',
+               true_bug: bool = False,
+               insight: str = '') -> None:
     super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
                      compile_log, crashes, run_error, crash_func, run_log,
                      coverage_summary, coverage, line_coverage_diff,
