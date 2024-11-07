@@ -136,10 +136,11 @@ class CrashAnalyzer(BaseAgent):
     logger.info('Executing Crash Analyzer')
     last_result = result_history[-1]
     benchmark = last_result.benchmark
+    trial = last_result.trial
     if isinstance(last_result, RunResult):
       generated_target_name = os.path.basename(benchmark.target_path)
       sample_id = os.path.splitext(generated_target_name)[0]
-      generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}-lldb'
+      generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}-{trial:02d}-lldb'
       #TODO(fdt622): delete info
       logger.info('analyzer benchmark: %s', benchmark)
       logger.info('analyzer benchmark.id: %s', benchmark.id)
@@ -155,12 +156,12 @@ class CrashAnalyzer(BaseAgent):
                   %s', generated_oss_fuzz_project)
 
       fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                      f'{last_result.trial:02d}.fuzz_target')
+                                      f'{trial:02d}.fuzz_target')
       build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                       f'{last_result.trial:02d}.build_script')
+                                       f'{trial:02d}.build_script')
       #TODO(fdt622): delete info
-      logger.info('analyzer fuzz_target_path: ', fuzz_target_path)
-      logger.info('analyzer build_script_path:', build_script_path)
+      logger.info('analyzer fuzz_target_path: %s', fuzz_target_path)
+      logger.info('analyzer build_script_path: %s', build_script_path)
 
       self._create_ossfuzz_project_with_lldb(generated_oss_fuzz_project,
                                              fuzz_target_path,
@@ -181,7 +182,7 @@ class CrashAnalyzer(BaseAgent):
       logger.info('analyzer after append tutorial prompt: %s', prompt.get())
       crash_result = CrashResult(
           benchmark=benchmark,
-          trial=last_result.trial,
+          trial=trial,
           work_dirs=last_result.work_dirs,
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
@@ -231,7 +232,7 @@ class CrashAnalyzer(BaseAgent):
     logger.error("Expected a RunResult object in results list")
     crash_result = CrashResult(
         benchmark=benchmark,
-        trial=last_result.trial,
+        trial=trial,
         work_dirs=last_result.work_dirs,
         fuzz_target_source=last_result.fuzz_target_source,
         build_script_source=last_result.build_script_source,
