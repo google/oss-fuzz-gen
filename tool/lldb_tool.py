@@ -109,7 +109,7 @@ class LLDBTool(BaseTool):
     logger.info('lldb _start_docker_container result: %s', result)
     container_id = result.stdout.strip()
     #TODO(fdt622): delete info
-    logger.info('lldb _start_docker_container container_id: ', container_id)
+    logger.info('lldb _start_docker_container container_id: %s', container_id)
     return container_id
 
   def tutorial(self) -> str:
