@@ -217,7 +217,7 @@ class GPT(LLM):
 
   def get_chat_client(self, model: str) -> Any:
     """Returns a new chat session."""
-    return self._get_client
+    return self._get_client()
 
   def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
     """Queries the LLM in the given chat session and returns the response."""
@@ -228,7 +228,7 @@ class GPT(LLM):
                   self.temperature_list)
       
     completion = self.with_retry_on_error(
-        lambda: client.ChatCompletion.create(messages=prompt.get(),
+        lambda: client.chat.completions.create(messages=prompt.get(),
                                                model=self.name,
                                                n=self.num_samples,
                                                temperature=self.temperature),
