@@ -219,3 +219,12 @@ class CrashAnalyzer(BaseAgent):
       return crash_result
 
     logger.error("Expected a RunResult object in results list")
+    crash_result = CrashResult(
+          benchmark=benchmark,
+          trial=run_result.trial,
+          work_dirs=run_result.work_dirs,
+          fuzz_target_source=run_result.fuzz_target_source,
+          build_script_source=run_result.build_script_source,
+          author=self,
+          chat_history=run_result.chat_history)
+    return crash_result
