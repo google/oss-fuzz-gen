@@ -236,7 +236,7 @@ class GPT(LLM):
     
     # Choose the longest response
     longest_response = max(
-        (choice.message["content"] for choice in completion.choices),
+        (choice.message.content for choice in completion.choices),
         key=len
     )
     
