@@ -154,7 +154,11 @@ class CrashAnalyzer(BaseAgent):
                                  project=generated_oss_fuzz_project,)
     self.analyze_tool.execute('compile > /dev/null')
     prompt = self._initial_prompt(last_result) # prompt to analyze crash
+    #TODO: delete
+    print('analyzer 1st prompt:', prompt)
     prompt.append(self.analyze_tool.tutorial())
+    #TODO: delete
+    print('analyzer 2nd prompt:', prompt)
     crash_result = CrashResult(
       benchmark=benchmark,
       trial=last_result.trial,

@@ -234,7 +234,7 @@ class GPT(LLM):
     """Returns a new chat session."""
     return self._get_client()
 
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
+  def chat_llm(self, client: Any, prompt: prompts.OpenAIPrompt) -> Any:
     """Queries the LLM in the given chat session and returns the response."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
