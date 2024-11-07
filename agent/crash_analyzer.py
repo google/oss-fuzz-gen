@@ -39,12 +39,15 @@ class CrashAnalyzer(BaseAgent):
     """Constructs initial prompt of the agent."""
     run_result = results[-1]
 
-    default_prompt_builder = DefaultTemplateBuilder(
-        model=self.llm, benchmark=run_result.benchmark)
-    prompt = default_prompt_builder.build_triager_prompt(
-        run_result.fuzz_target_source, run_result.run_error,
-        run_result.crash_func)
-    return prompt
+    if isinstance(run_result, RunResult):
+      default_prompt_builder = DefaultTemplateBuilder(
+          model=self.llm, benchmark=run_result.benchmark)
+      prompt = default_prompt_builder.build_triager_prompt(
+          run_result.fuzz_target_source, run_result.run_error,
+          run_result.crash_func)
+      return prompt
+    else:
+      logger.error("Expected a RunResult object in results list")
 
   def _create_ossfuzz_project_with_lldb(self, name: str, target_file: str,
                                         build_script_path: str,
