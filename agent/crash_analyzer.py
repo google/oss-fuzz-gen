@@ -43,8 +43,13 @@ class CrashAnalyzer(BaseAgent):
     """Creates an OSS-Fuzz project with new dockerfile. The new project
     will replicate an existing project |name| but modify its dockerfile."""
     logger.info('target file: %s', target_file)
+    #TODO(fdt622):delete info
+    logger.info('_create_ossfuzz_project_with_lldb(name): %s', name)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects', name)
+    #TODO(fdt622):delete info
+    logger.info('_create_ossfuzz_project_with_lldb(generated_project_path): \
+                %s', generated_project_path)
     if os.path.exists(generated_project_path):
       logger.info('Project %s already exists.', generated_project_path)
       return name
@@ -65,7 +70,7 @@ class CrashAnalyzer(BaseAgent):
       with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
         f.write(
             '\nENV FUZZING_LANGUAGE=c++\n'
-            '\nRUN sed -i.bak "1s|^|export CFLAGS=${CFLAGS} -g" ' \
+            '\nRUN sed -i.bak "1s|^|export CFLAGS=\\${CFLAGS} -g|" ' \
             '"/src/build.sh"\n'
             '\nRUN apt-get update && apt-get install -y lldb\n')
       return name
@@ -82,7 +87,7 @@ class CrashAnalyzer(BaseAgent):
       f.write(
           '\nCOPY agent-build.sh /src/build.sh\n'
           '\nENV FUZZING_LANGUAGE=c++\n'
-          '\nRUN sed -i.bak "1s|^|export CFLAGS=${CFLAGS} -g" "/src/build.sh"\n'
+          '\nRUN sed -i.bak "1s|^|export CFLAGS=\\${CFLAGS} -g|" "/src/build.sh"\n'
           '\nRUN apt-get update && apt-get install -y lldb\n')
 
     return name
@@ -133,8 +138,14 @@ class CrashAnalyzer(BaseAgent):
       generated_target_name = os.path.basename(benchmark.target_path)
       sample_id = os.path.splitext(generated_target_name)[0]
       generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}-lldb'
+      #TODO(fdt622): delete info
+      logger.info('execute(generated_oss_fuzz_project)(before rectify): \
+                  %s', generated_oss_fuzz_project)
       generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
           generated_oss_fuzz_project)
+      #TODO(fdt622): delete info
+      logger.info('execute(generated_oss_fuzz_project)(after rectify): \
+                  %s', generated_oss_fuzz_project)
 
       fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                       f'{last_result.trial:02d}.fuzz_target')
