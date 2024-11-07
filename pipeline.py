@@ -84,7 +84,7 @@ class Pipeline():
                      result_history[-1])
     result_history.append(
         self.writing_stage.execute(result_history=result_history)
-    )  # append one BuildResult although chat many times
+    )
     if (not isinstance(result_history[-1], BuildResult)
         or  # fuzz target and build script are saved in BuildResult
         not result_history[-1].success):
