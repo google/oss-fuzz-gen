@@ -1,47 +1,47 @@
-"functions":
-- "name": "uriEmulateCalloc"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void * uriEmulateCalloc(UriMemoryManager *, size_t, size_t)"
-- "name": "uriEmulateReallocarray"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void * uriEmulateReallocarray(UriMemoryManager *, void *, size_t, size_t)"
-- "name": "uriTestMemoryManager"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int uriTestMemoryManager(UriMemoryManager *)"
-- "name": "uriCompleteMemoryManager"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int uriCompleteMemoryManager(UriMemoryManager *, UriMemoryManager *)"
-"language": "c++"
-"project": "uriparser"
-"target_name": "uri_dissect_query_malloc_fuzzer"
-"target_path": "/src/uri_dissect_query_malloc_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/uriparser/test/VersionSuite.cpp"
-- "test_file_path": "/src/uriparser/test/MemoryManagerSuite.cpp"
-- "test_file_path": "/src/uriparser/cmake/test_find_package/hello.c"
-- "test_file_path": "/src/uriparser/test/FourSuite.cpp"
-- "test_file_path": "/src/uriparser/test/test.cpp"
+functions:
+- name: uriEmulateCalloc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void * uriEmulateCalloc(UriMemoryManager *, size_t, size_t)
+- name: uriEmulateReallocarray
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void * uriEmulateReallocarray(UriMemoryManager *, void *, size_t, size_t)
+- name: uriTestMemoryManager
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int uriTestMemoryManager(UriMemoryManager *)
+- name: uriCompleteMemoryManager
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int uriCompleteMemoryManager(UriMemoryManager *, UriMemoryManager *)
+language: c++
+project: uriparser
+target_name: uri_dissect_query_malloc_fuzzer
+target_path: /src/uri_dissect_query_malloc_fuzzer.cc
+test_files:
+- test_file_path: /src/uriparser/test/VersionSuite.cpp
+- test_file_path: /src/uriparser/test/MemoryManagerSuite.cpp
+- test_file_path: /src/uriparser/cmake/test_find_package/hello.c
+- test_file_path: /src/uriparser/test/FourSuite.cpp
+- test_file_path: /src/uriparser/test/test.cpp

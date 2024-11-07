@@ -1,114 +1,62 @@
-"functions":
-- "name": "ssh_channel_accept_x11"
-  "params":
-  - "name": "channel"
-    "type": "bool "
-  - "name": "timeout_ms"
-    "type": "int"
-  "return_type": "void"
-  "signature": "ssh_channel ssh_channel_accept_x11(ssh_channel, int)"
-- "name": "ssh_forward_accept"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "timeout_ms"
-    "type": "int"
-  "return_type": "void"
-  "signature": "ssh_channel ssh_forward_accept(ssh_session, int)"
-- "name": "ssh_userauth_kbdint"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "user"
-    "type": "bool "
-  - "name": "submethods"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ssh_userauth_kbdint(ssh_session, const char *, const char *)"
-- "name": "ssh_channel_request_pty_size"
-  "params":
-  - "name": "channel"
-    "type": "bool "
-  - "name": "terminal"
-    "type": "bool "
-  - "name": "col"
-    "type": "int"
-  - "name": "row"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int ssh_channel_request_pty_size(ssh_channel, const char *, int, int)"
-- "name": "ssh_channel_open_forward_port"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "timeout_ms"
-    "type": "int"
-  - "name": "destination_port"
-    "type": "bool "
-  - "name": "originator"
-    "type": "bool "
-  - "name": "originator_port"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "ssh_channel ssh_channel_open_forward_port(ssh_session, int, int *, char **, int *)"
-- "name": "ssh_channel_request_pty"
-  "params":
-  - "name": "channel"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ssh_channel_request_pty(ssh_channel)"
-- "name": "ssh_channel_accept_forward"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "timeout_ms"
-    "type": "int"
-  - "name": "destination_port"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "ssh_channel ssh_channel_accept_forward(ssh_session, int, int *)"
-- "name": "ssh_message_channel_request_open_reply_accept"
-  "params":
-  - "name": "msg"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "ssh_channel ssh_message_channel_request_open_reply_accept(ssh_message)"
-- "name": "ssh_message_handle_channel_request"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "channel"
-    "type": "bool "
-  - "name": "packet"
-    "type": "bool "
-  - "name": "request"
-    "type": "bool "
-  - "name": "want_reply"
-    "type": "char"
-  "return_type": "int"
-  "signature": "int ssh_message_handle_channel_request(ssh_session, ssh_channel, ssh_buffer, const char *, uint8_t)"
-- "name": "ssh_userauth_agent_pubkey"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "username"
-    "type": "bool "
-  - "name": "publickey"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ssh_userauth_agent_pubkey(ssh_session, const char *, ssh_public_key)"
-"language": "c"
-"project": "libssh"
-"target_name": "ssh_privkey_fuzzer"
-"target_path": "/src/libssh/tests/fuzz/ssh_privkey_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/libssh/tests/unittests/torture_pki_dsa.c"
-- "test_file_path": "/src/libssh/tests/torture_pki.c"
-- "test_file_path": "/src/libssh/tests/server/torture_gssapi_server_delegation.c"
-- "test_file_path": "/src/libssh/tests/external_override/torture_override.c"
-- "test_file_path": "/src/libssh/tests/unittests/torture_knownhosts_parsing.c"
-- "test_file_path": "/src/libssh/tests/client/torture_sftp_expand_path.c"
-- "test_file_path": "/src/libssh/tests/unittests/torture_pki.c"
-- "test_file_path": "/src/libssh/examples/proxy.c"
-- "test_file_path": "/src/libssh/tests/client/torture_auth.c"
-- "test_file_path": "/src/libssh/tests/unittests/torture_packet.c"
+functions:
+- name: ssh_channel_accept_x11
+  params:
+  - name: channel
+    type: 'bool '
+  - name: timeout_ms
+    type: int
+  return_type: void
+  signature: ssh_channel ssh_channel_accept_x11(ssh_channel, int)
+- name: ssh_message_channel_request_open_reply_accept
+  params:
+  - name: msg
+    type: 'bool '
+  return_type: void
+  signature: ssh_channel ssh_message_channel_request_open_reply_accept(ssh_message)
+- name: ssh_forward_accept
+  params:
+  - name: session
+    type: 'bool '
+  - name: timeout_ms
+    type: int
+  return_type: void
+  signature: ssh_channel ssh_forward_accept(ssh_session, int)
+- name: ssh_channel_accept_forward
+  params:
+  - name: session
+    type: 'bool '
+  - name: timeout_ms
+    type: int
+  - name: destination_port
+    type: 'bool '
+  return_type: void
+  signature: ssh_channel ssh_channel_accept_forward(ssh_session, int, int *)
+- name: ssh_channel_request_pty_size
+  params:
+  - name: channel
+    type: 'bool '
+  - name: terminal
+    type: 'bool '
+  - name: col
+    type: int
+  - name: row
+    type: int
+  return_type: int
+  signature: int ssh_channel_request_pty_size(ssh_channel, const char *, int, int)
+- name: ssh_channel_request_pty
+  params:
+  - name: channel
+    type: 'bool '
+  return_type: int
+  signature: int ssh_channel_request_pty(ssh_channel)
+language: c
+project: libssh
+target_name: ssh_privkey_fuzzer
+target_path: /src/libssh/tests/fuzz/ssh_privkey_fuzzer.c
+test_files:
+- test_file_path: /src/libssh/tests/external_override/torture_override.c
+- test_file_path: /src/libssh/tests/unittests/torture_pki_dsa.c
+- test_file_path: /src/libssh/tests/unittests/torture_knownhosts_parsing.c
+- test_file_path: /src/libssh/tests/unittests/torture_packet.c
+- test_file_path: /src/libssh/tests/unittests/torture_pki.c
+- test_file_path: /src/libssh/tests/client/torture_sftp_expand_path.c

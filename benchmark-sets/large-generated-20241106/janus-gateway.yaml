@@ -1,137 +1,87 @@
-"functions":
-- "name": "janus_rtp_simulcasting_context_process_rtp"
-  "params":
-  - "name": "context"
-    "type": "bool "
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "int"
-  - "name": "dd_content"
-    "type": "bool "
-  - "name": "dd_len"
-    "type": "int"
-  - "name": "ssrcs"
-    "type": "bool "
-  - "name": "rids"
-    "type": "bool "
-  - "name": "vcodec"
-    "type": "int"
-  - "name": "sc"
-    "type": "bool "
-  - "name": "rid_mutex"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "gboolean janus_rtp_simulcasting_context_process_rtp(janus_rtp_simulcasting_context *, char *, int, uint8_t *, int, uint32_t *, char **, janus_videocodec, janus_rtp_switching_context *, janus_mutex *)"
-- "name": "janus_sdp_find_first_codec"
-  "params":
-  - "name": "sdp"
-    "type": "bool "
-  - "name": "type"
-    "type": "int"
-  - "name": "index"
-    "type": "int"
-  - "name": "codec"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void janus_sdp_find_first_codec(janus_sdp *, janus_sdp_mtype, int, const char **)"
-- "name": "janus_sdp_generate_offer"
-  "params":
-  - "name": "name"
-    "type": "bool "
-  - "name": "address"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "janus_sdp * janus_sdp_generate_offer(const char *, const char *, void)"
-- "name": "janus_sdp_generate_answer_mline"
-  "params":
-  - "name": "offer"
-    "type": "bool "
-  - "name": "answer"
-    "type": "bool "
-  - "name": "offered"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int janus_sdp_generate_answer_mline(janus_sdp *, janus_sdp *, janus_sdp_mline *, void)"
-- "name": "janus_sdp_get_codec_pt"
-  "params":
-  - "name": "sdp"
-    "type": "bool "
-  - "name": "index"
-    "type": "int"
-  - "name": "codec"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int janus_sdp_get_codec_pt(janus_sdp *, int, const char *)"
-- "name": "janus_sdp_find_preferred_codec"
-  "params":
-  - "name": "sdp"
-    "type": "bool "
-  - "name": "type"
-    "type": "int"
-  - "name": "index"
-    "type": "int"
-  - "name": "codec"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void janus_sdp_find_preferred_codec(janus_sdp *, janus_sdp_mtype, int, const char **)"
-- "name": "janus_rtp_svc_context_process_rtp"
-  "params":
-  - "name": "context"
-    "type": "bool "
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "int"
-  - "name": "dd_content"
-    "type": "bool "
-  - "name": "dd_len"
-    "type": "int"
-  - "name": "vcodec"
-    "type": "int"
-  - "name": "info"
-    "type": "bool "
-  - "name": "sc"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "gboolean janus_rtp_svc_context_process_rtp(janus_rtp_svc_context *, char *, int, uint8_t *, int, janus_videocodec, janus_vp9_svc_info *, janus_rtp_switching_context *)"
-- "name": "janus_rtcp_transport_wide_cc_feedback"
-  "params":
-  - "name": "packet"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  - "name": "ssrc"
-    "type": "int"
-  - "name": "media"
-    "type": "int"
-  - "name": "feedback_packet_count"
-    "type": "char"
-  - "name": "transport_wide_cc_stats"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int janus_rtcp_transport_wide_cc_feedback(char *, size_t, guint32, guint32, guint8, GQueue *)"
-- "name": "janus_sdp_generate_offer_mline"
-  "params":
-  - "name": "offer"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int janus_sdp_generate_offer_mline(janus_sdp *, void)"
-- "name": "janus_sdp_get_codec_pt_full"
-  "params":
-  - "name": "sdp"
-    "type": "bool "
-  - "name": "index"
-    "type": "int"
-  - "name": "codec"
-    "type": "bool "
-  - "name": "profile"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int janus_sdp_get_codec_pt_full(janus_sdp *, int, const char *, const char *)"
-"language": "c++"
-"project": "janus-gateway"
-"target_name": "rtp_fuzzer"
-"target_path": "/src/janus-gateway/fuzzers/rtp_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/janus-gateway/src/plugins/janus_echotest.c"
+functions:
+- name: janus_sdp_get_codec_pt
+  params:
+  - name: sdp
+    type: 'bool '
+  - name: index
+    type: int
+  - name: codec
+    type: 'bool '
+  return_type: int
+  signature: int janus_sdp_get_codec_pt(janus_sdp *, int, const char *)
+- name: janus_sdp_generate_offer
+  params:
+  - name: name
+    type: 'bool '
+  - name: address
+    type: 'bool '
+  return_type: void
+  signature: janus_sdp * janus_sdp_generate_offer(const char *, const char *, void)
+- name: janus_sdp_find_first_codec
+  params:
+  - name: sdp
+    type: 'bool '
+  - name: type
+    type: int
+  - name: index
+    type: int
+  - name: codec
+    type: 'bool '
+  return_type: void
+  signature: void janus_sdp_find_first_codec(janus_sdp *, janus_sdp_mtype, int, const
+    char **)
+- name: janus_rtcp_transport_wide_cc_feedback
+  params:
+  - name: packet
+    type: 'bool '
+  - name: size
+    type: size_t
+  - name: ssrc
+    type: int
+  - name: media
+    type: int
+  - name: feedback_packet_count
+    type: char
+  - name: transport_wide_cc_stats
+    type: 'bool '
+  return_type: int
+  signature: int janus_rtcp_transport_wide_cc_feedback(char *, size_t, guint32, guint32,
+    guint8, GQueue *)
+- name: janus_sdp_generate_offer_mline
+  params:
+  - name: offer
+    type: 'bool '
+  return_type: int
+  signature: int janus_sdp_generate_offer_mline(janus_sdp *, void)
+- name: janus_rtp_simulcasting_context_process_rtp
+  params:
+  - name: context
+    type: 'bool '
+  - name: buf
+    type: 'bool '
+  - name: len
+    type: int
+  - name: dd_content
+    type: 'bool '
+  - name: dd_len
+    type: int
+  - name: ssrcs
+    type: 'bool '
+  - name: rids
+    type: 'bool '
+  - name: vcodec
+    type: int
+  - name: sc
+    type: 'bool '
+  - name: rid_mutex
+    type: 'bool '
+  return_type: int
+  signature: gboolean janus_rtp_simulcasting_context_process_rtp(janus_rtp_simulcasting_context
+    *, char *, int, uint8_t *, int, uint32_t *, char **, janus_videocodec, janus_rtp_switching_context
+    *, janus_mutex *)
+language: c++
+project: janus-gateway
+target_name: rtp_fuzzer
+target_path: /src/janus-gateway/fuzzers/rtp_fuzzer.c
+test_files:
+- test_file_path: /src/janus-gateway/src/plugins/janus_echotest.c

@@ -1,38 +1,47 @@
-"functions":
-- "name": "_ZZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1B8ne180100EOS5_ENKUlRS5_E_clES7_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "__s"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "DW_TAG_rvalue_reference_type__compressed_pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::__rep, std::__1::allocator<char> > std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::operator()(const void *, basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &)"
-- "name": "_ZN4iter4impl10CompressedIRNSt3__16vectorIiNS2_9allocatorIiEEEERNS3_IbNS4_IbEEEEE8IteratorIRKS6_RKS9_E19increment_iteratorsEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void iter::impl::Compressed<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator<std::__1::vector<int, std::__1::allocator<int> > const&, std::__1::vector<bool, std::__1::allocator<bool> > const&>::increment_iterators(Iterator<const std::__1::vector<int, std::__1::allocator<int> > &, const std::__1::vector<bool, std::__1::allocator<bool> > &> *)"
-- "name": "_ZN4iter4impl10CompressedIRNSt3__16vectorIiNS2_9allocatorIiEEEERNS3_IbNS4_IbEEEEE8IteratorIS7_SA_EC2ERKSD_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void iter::impl::Compressed<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator(Iterator<std::__1::vector<int, std::__1::allocator<int> > &, std::__1::vector<bool, std::__1::allocator<bool> > &> *, const Iterator<std::__1::vector<int, std::__1::allocator<int> > &, std::__1::vector<bool, std::__1::allocator<bool> > &> &)"
-"language": "c++"
-"project": "cppitertools"
-"target_name": "fuzz_cppitertools"
-"target_path": "/src/fuzz_cppitertools.cpp"
-"test_files":
-- "test_file_path": "/src/cppitertools/examples/filterfalse_examples.cpp"
-- "test_file_path": "/src/cppitertools/test/test_compress.cpp"
-- "test_file_path": "/src/cppitertools/examples/chunked_examples.cpp"
-- "test_file_path": "/src/cppitertools/examples/repeat_examples.cpp"
-- "test_file_path": "/src/cppitertools/test/test_powerset.cpp"
-- "test_file_path": "/src/cppitertools/examples/unique_justseen_examples.cpp"
-- "test_file_path": "/src/cppitertools/test/test_groupby.cpp"
-- "test_file_path": "/src/cppitertools/examples/filter_examples.cpp"
-- "test_file_path": "/src/cppitertools/test/test_batched.cpp"
-- "test_file_path": "/src/cppitertools/examples/mixed_examples.cpp"
+functions:
+- name: _ZZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1B8ne180100EOS5_ENKUlRS5_E_clES7_
+  params:
+  - name: this
+    type: 'bool '
+  - name: __s
+    type: 'bool '
+  return_type: void
+  signature: DW_TAG_rvalue_reference_type__compressed_pair<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >::__rep, std::__1::allocator<char>
+    > std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    >::operator()(const void *, basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > &)
+- name: _ZN4iter4impl10CompressedIRNSt3__16vectorIiNS2_9allocatorIiEEEERNS3_IbNS4_IbEEEEE8IteratorIRKS6_RKS9_E19increment_iteratorsEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void iter::impl::Compressed<std::__1::vector<int, std::__1::allocator<int>
+    >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator<std::__1::vector<int,
+    std::__1::allocator<int> > const&, std::__1::vector<bool, std::__1::allocator<bool>
+    > const&>::increment_iterators(Iterator<const std::__1::vector<int, std::__1::allocator<int>
+    > &, const std::__1::vector<bool, std::__1::allocator<bool> > &> *)
+- name: _ZN4iter4impl10CompressedIRNSt3__16vectorIiNS2_9allocatorIiEEEERNS3_IbNS4_IbEEEEE8IteratorIS7_SA_EC2ERKSD_
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void iter::impl::Compressed<std::__1::vector<int, std::__1::allocator<int>
+    >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator<std::__1::vector<int,
+    std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool>
+    >&>::Iterator(Iterator<std::__1::vector<int, std::__1::allocator<int> > &, std::__1::vector<bool,
+    std::__1::allocator<bool> > &> *, const Iterator<std::__1::vector<int, std::__1::allocator<int>
+    > &, std::__1::vector<bool, std::__1::allocator<bool> > &> &)
+language: c++
+project: cppitertools
+target_name: fuzz_cppitertools
+target_path: /src/fuzz_cppitertools.cpp
+test_files:
+- test_file_path: /src/cppitertools/examples/filter_examples.cpp
+- test_file_path: /src/cppitertools/test/test_groupby.cpp
+- test_file_path: /src/cppitertools/test/test_compress.cpp
+- test_file_path: /src/cppitertools/test/test_batched.cpp
+- test_file_path: /src/cppitertools/examples/mixed_examples.cpp
+- test_file_path: /src/cppitertools/examples/filterfalse_examples.cpp

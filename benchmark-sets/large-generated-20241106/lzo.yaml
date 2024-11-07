@@ -1,23 +1,24 @@
-"functions":
-- "name": "lzo1z_999_compress_dict"
-  "params":
-  - "name": "in"
-    "type": "bool "
-  - "name": "in_len"
-    "type": "size_t"
-  - "name": "out"
-    "type": "bool "
-  - "name": "out_len"
-    "type": "bool "
-  - "name": "wrkmem"
-    "type": "bool "
-  - "name": "dict"
-    "type": "bool "
-  - "name": "dict_len"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int lzo1z_999_compress_dict(const unsigned char *, lzo_uint, unsigned char *, lzo_uint *, void *, const unsigned char *, lzo_uint)"
-"language": "c++"
-"project": "lzo"
-"target_name": "lzo_compress_target"
-"target_path": "/src/lzo_compress_target.c"
+functions:
+- name: lzo1z_999_compress_dict
+  params:
+  - name: in
+    type: 'bool '
+  - name: in_len
+    type: size_t
+  - name: out
+    type: 'bool '
+  - name: out_len
+    type: 'bool '
+  - name: wrkmem
+    type: 'bool '
+  - name: dict
+    type: 'bool '
+  - name: dict_len
+    type: size_t
+  return_type: int
+  signature: int lzo1z_999_compress_dict(const unsigned char *, lzo_uint, unsigned
+    char *, lzo_uint *, void *, const unsigned char *, lzo_uint)
+language: c++
+project: lzo
+target_name: lzo_compress_target
+target_path: /src/lzo_compress_target.c

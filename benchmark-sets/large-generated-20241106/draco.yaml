@@ -1,106 +1,77 @@
-"functions":
-- "name": "_ZN5draco10PointCloud12AddAttributeERKNS_17GeometryAttributeEbj"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool"
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int draco::PointCloud::AddAttribute(const GeometryAttribute &, bool, ValueType)"
-- "name": "_ZN5draco11CornerTable6CreateERKNS_15IndexTypeVectorINS_9IndexTypeIjNS_19FaceIndex_tag_type_EEENSt3__15arrayINS2_IjNS_21VertexIndex_tag_type_EEELm3EEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "unique_ptr<draco::CornerTable, std::__1::default_delete<draco::CornerTable> > draco::CornerTable::Create(const IndexTypeVector<draco::IndexType<unsigned int, draco::FaceIndex_tag_type_>, std::__1::array<draco::IndexType<unsigned int, draco::VertexIndex_tag_type_>, 3UL> > &)"
-- "name": "_ZN5draco28AttributeOctahedronTransform18TransformAttributeERKNS_14PointAttributeERKNSt3__16vectorINS_9IndexTypeIjNS_20PointIndex_tag_type_EEENS4_9allocatorIS8_EEEEPS1_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool draco::AttributeOctahedronTransform::TransformAttribute(const PointAttribute &, const vector<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>, std::__1::allocator<draco::IndexType<unsigned int, draco::PointIndex_tag_type_> > > &, PointAttribute *)"
-- "name": "_ZN5draco11CornerTable21BreakNonManifoldEdgesEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool draco::CornerTable::BreakNonManifoldEdges()"
-- "name": "_ZN5draco11CornerTable20ComputeVertexCornersEi"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "bool"
-  "signature": "bool draco::CornerTable::ComputeVertexCorners(int)"
-- "name": "_ZN5draco10PointCloud26DeduplicateAttributeValuesEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool draco::PointCloud::DeduplicateAttributeValues()"
-- "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "ValueType draco::PointAttribute::DeduplicateValues(const GeometryAttribute &)"
-- "name": "_ZN5draco11CornerTable4InitERKNS_15IndexTypeVectorINS_9IndexTypeIjNS_19FaceIndex_tag_type_EEENSt3__15arrayINS2_IjNS_21VertexIndex_tag_type_EEELm3EEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool draco::CornerTable::Init(const IndexTypeVector<draco::IndexType<unsigned int, draco::FaceIndex_tag_type_>, std::__1::array<draco::IndexType<unsigned int, draco::VertexIndex_tag_type_>, 3UL> > &)"
-- "name": "_ZN5draco24MeshAttributeCornerTable17InitFromAttributeEPKNS_4MeshEPKNS_11CornerTableEPKNS_14PointAttributeE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool draco::MeshAttributeCornerTable::InitFromAttribute(const Mesh *, const CornerTable *, const PointAttribute *)"
-- "name": "_ZN5draco14PointAttribute17DeduplicateValuesERKNS_17GeometryAttributeENS_9IndexTypeIjNS_29AttributeValueIndex_tag_type_EEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "ValueType draco::PointAttribute::DeduplicateValues(const GeometryAttribute &, AttributeValueIndex)"
-"language": "c++"
-"project": "draco"
-"target_name": "draco_mesh_decoder_without_dequantization_fuzzer"
-"target_path": "/src/draco/src/draco/tools/fuzz/draco_mesh_decoder_without_dequantization_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/draco/src/draco/metadata/metadata_test.cc"
-- "test_file_path": "/src/draco/src/draco/core/quantization_utils_test.cc"
-- "test_file_path": "/src/draco/src/draco/core/status_test.cc"
-- "test_file_path": "/src/draco/src/draco/mesh/mesh_are_equivalent_test.cc"
-- "test_file_path": "/src/draco/src/draco/mesh/triangle_soup_mesh_builder_test.cc"
-- "test_file_path": "/src/draco/src/draco/scene/scene_are_equivalent_test.cc"
-- "test_file_path": "/src/draco/src/draco/scene/light_test.cc"
-- "test_file_path": "/src/draco/src/draco/metadata/property_attribute_test.cc"
-- "test_file_path": "/src/draco/src/draco/animation/keyframe_animation_encoding_test.cc"
-- "test_file_path": "/src/draco/src/draco/io/stdio_file_writer_test.cc"
+functions:
+- name: _ZN5draco28AttributeOctahedronTransform18TransformAttributeERKNS_14PointAttributeERKNSt3__16vectorINS_9IndexTypeIjNS_20PointIndex_tag_type_EEENS4_9allocatorIS8_EEEEPS1_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool draco::AttributeOctahedronTransform::TransformAttribute(const PointAttribute
+    &, const vector<draco::IndexType<unsigned int, draco::PointIndex_tag_type_>, std::__1::allocator<draco::IndexType<unsigned
+    int, draco::PointIndex_tag_type_> > > &, PointAttribute *)
+- name: _ZN5draco11CornerTable21BreakNonManifoldEdgesEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool draco::CornerTable::BreakNonManifoldEdges()
+- name: _ZN5draco24MeshAttributeCornerTable17InitFromAttributeEPKNS_4MeshEPKNS_11CornerTableEPKNS_14PointAttributeE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool draco::MeshAttributeCornerTable::InitFromAttribute(const Mesh *,
+    const CornerTable *, const PointAttribute *)
+- name: _ZN5draco11CornerTable20ComputeVertexCornersEi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: bool
+  signature: bool draco::CornerTable::ComputeVertexCorners(int)
+- name: _ZN5draco11CornerTable6CreateERKNS_15IndexTypeVectorINS_9IndexTypeIjNS_19FaceIndex_tag_type_EEENSt3__15arrayINS2_IjNS_21VertexIndex_tag_type_EEELm3EEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: unique_ptr<draco::CornerTable, std::__1::default_delete<draco::CornerTable>
+    > draco::CornerTable::Create(const IndexTypeVector<draco::IndexType<unsigned int,
+    draco::FaceIndex_tag_type_>, std::__1::array<draco::IndexType<unsigned int, draco::VertexIndex_tag_type_>,
+    3UL> > &)
+- name: _ZN5draco10PointCloud12AddAttributeERKNS_17GeometryAttributeEbj
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  - name: ''
+    type: int
+  return_type: int
+  signature: int draco::PointCloud::AddAttribute(const GeometryAttribute &, bool,
+    ValueType)
+language: c++
+project: draco
+target_name: draco_mesh_decoder_without_dequantization_fuzzer
+target_path: /src/draco/src/draco/tools/fuzz/draco_mesh_decoder_without_dequantization_fuzzer.cc
+test_files:
+- test_file_path: /src/draco/src/draco/mesh/triangle_soup_mesh_builder_test.cc
+- test_file_path: /src/draco/src/draco/animation/keyframe_animation_encoding_test.cc
+- test_file_path: /src/draco/src/draco/scene/scene_are_equivalent_test.cc
+- test_file_path: /src/draco/src/draco/metadata/metadata_test.cc
+- test_file_path: /src/draco/src/draco/core/quantization_utils_test.cc
+- test_file_path: /src/draco/src/draco/metadata/property_attribute_test.cc

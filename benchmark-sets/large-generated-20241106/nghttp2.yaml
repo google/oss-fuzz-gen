@@ -1,138 +1,84 @@
-"functions":
-- "name": "nghttp2_session_recv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int nghttp2_session_recv(nghttp2_session *)"
-- "name": "nghttp2_session_upgrade"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int nghttp2_session_upgrade(nghttp2_session *, const uint8_t *, size_t, void *)"
-- "name": "pack_push_promise"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "char"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pack_push_promise(nghttp2_bufs *, nghttp2_hd_deflater *, int32_t, uint8_t, int32_t, const nghttp2_nv *, size_t, nghttp2_mem *)"
-- "name": "pack_headers"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "char"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pack_headers(nghttp2_bufs *, nghttp2_hd_deflater *, int32_t, uint8_t, const nghttp2_nv *, size_t, nghttp2_mem *)"
-- "name": "nghttp2_session_mem_recv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "size_t"
-  "signature": "ssize_t nghttp2_session_mem_recv(nghttp2_session *, const uint8_t *, size_t)"
-- "name": "nghttp2_session_mem_send"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "ssize_t nghttp2_session_mem_send(nghttp2_session *, const uint8_t **)"
-- "name": "nghttp2_session_set_local_window_size"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "char"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int nghttp2_session_set_local_window_size(nghttp2_session *, uint8_t, int32_t, int32_t)"
-- "name": "nghttp2_session_send"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int nghttp2_session_send(nghttp2_session *)"
-- "name": "nghttp2_session_upgrade2"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int nghttp2_session_upgrade2(nghttp2_session *, const uint8_t *, size_t, int, void *)"
-- "name": "nghttp2_submit_request2"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int32_t nghttp2_submit_request2(nghttp2_session *, const nghttp2_priority_spec *, const nghttp2_nv *, size_t, const nghttp2_data_provider2 *, void *)"
-"language": "c++"
-"project": "nghttp2"
-"target_name": "nghttp2_fuzzer_frames"
-"target_path": "/src/nghttp2/fuzz/fuzz_frames.cc"
-"test_files":
-- "test_file_path": "/src/nghttp2/third-party/mruby/mrbgems/mruby-test/driver.c"
-- "test_file_path": "/src/nghttp2/third-party/mruby/examples/mrbgems/c_extension_example/test/example.c"
-- "test_file_path": "/src/nghttp2/src/shrpx_downstream_test.cc"
-- "test_file_path": "/src/nghttp2/third-party/mruby/mrbgems/mruby-io/src/file_test.c"
-- "test_file_path": "/src/nghttp2/third-party/neverbleed/test.c"
-- "test_file_path": "/src/nghttp2/tests/malloc_wrapper.c"
-- "test_file_path": "/src/nghttp2/src/base64_test.cc"
-- "test_file_path": "/src/nghttp2/src/buffer_test.cc"
-- "test_file_path": "/src/nghttp2/examples/client.c"
-- "test_file_path": "/src/nghttp2/tests/nghttp2_http_test.c"
+functions:
+- name: pack_push_promise
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: char
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pack_push_promise(nghttp2_bufs *, nghttp2_hd_deflater *, int32_t,
+    uint8_t, int32_t, const nghttp2_nv *, size_t, nghttp2_mem *)
+- name: nghttp2_session_set_local_window_size
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: char
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: int
+  signature: int nghttp2_session_set_local_window_size(nghttp2_session *, uint8_t,
+    int32_t, int32_t)
+- name: nghttp2_session_send
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int nghttp2_session_send(nghttp2_session *)
+- name: nghttp2_session_mem_recv
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: size_t
+  signature: ssize_t nghttp2_session_mem_recv(nghttp2_session *, const uint8_t *,
+    size_t)
+- name: nghttp2_session_upgrade
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int nghttp2_session_upgrade(nghttp2_session *, const uint8_t *, size_t,
+    void *)
+- name: nghttp2_session_mem_send
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: ssize_t nghttp2_session_mem_send(nghttp2_session *, const uint8_t **)
+language: c++
+project: nghttp2
+target_name: nghttp2_fuzzer_frames
+target_path: /src/nghttp2/fuzz/fuzz_frames.cc
+test_files:
+- test_file_path: /src/nghttp2/tests/malloc_wrapper.c
+- test_file_path: /src/nghttp2/third-party/mruby/mrbgems/mruby-test/driver.c
+- test_file_path: /src/nghttp2/src/shrpx_downstream_test.cc
+- test_file_path: /src/nghttp2/third-party/mruby/examples/mrbgems/c_extension_example/test/example.c
+- test_file_path: /src/nghttp2/examples/client.c
+- test_file_path: /src/nghttp2/src/base64_test.cc

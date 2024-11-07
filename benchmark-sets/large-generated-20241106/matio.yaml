@@ -1,126 +1,88 @@
-"functions":
-- "name": "_Z9MatioReadPKc"
-  "params":
-  - "name": "file_name"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int MatioRead(const char *)"
-- "name": "H5D__compact_copy"
-  "params":
-  - "name": "f_src"
-    "type": "bool "
-  - "name": "_storage_src"
-    "type": "bool "
-  - "name": "f_dst"
-    "type": "bool "
-  - "name": "storage_dst"
-    "type": "bool "
-  - "name": "dt_src"
-    "type": "bool "
-  - "name": "cpy_info"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "herr_t H5D__compact_copy(H5F_t *, H5O_storage_compact_t *, H5F_t *, H5O_storage_compact_t *, H5T_t *, H5O_copy_t *)"
-- "name": "Mat_VarWriteAppend"
-  "params":
-  - "name": "mat"
-    "type": "bool "
-  - "name": "matvar"
-    "type": "bool "
-  - "name": "compress"
-    "type": "int"
-  - "name": "dim"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int Mat_VarWriteAppend(mat_t *, matvar_t *, DW_TAG_enumeration_typematio_compression, int)"
-- "name": "H5D__virtual_set_extent_unlim"
-  "params":
-  - "name": "dset"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "herr_t H5D__virtual_set_extent_unlim(const H5D_t *)"
-- "name": "H5D__get_space"
-  "params":
-  - "name": "dset"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "hid_t H5D__get_space(const H5D_t *)"
-- "name": "Mat_VarReadData"
-  "params":
-  - "name": "mat"
-    "type": "bool "
-  - "name": "matvar"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "start"
-    "type": "bool "
-  - "name": "stride"
-    "type": "bool "
-  - "name": "edge"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int Mat_VarReadData(mat_t *, matvar_t *, void *, const int *, const int *, const int *)"
-- "name": "Mat_VarDelete"
-  "params":
-  - "name": "mat"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int Mat_VarDelete(mat_t *, const char *)"
-- "name": "H5D__chunk_copy"
-  "params":
-  - "name": "f_src"
-    "type": "bool "
-  - "name": "storage_src"
-    "type": "bool "
-  - "name": "layout_src"
-    "type": "bool "
-  - "name": "f_dst"
-    "type": "bool "
-  - "name": "storage_dst"
-    "type": "bool "
-  - "name": "ds_extent_src"
-    "type": "bool "
-  - "name": "dt_src"
-    "type": "bool "
-  - "name": "pline_src"
-    "type": "bool "
-  - "name": "cpy_info"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "herr_t H5D__chunk_copy(H5F_t *, H5O_storage_chunk_t *, H5O_layout_chunk_t *, H5F_t *, H5O_storage_chunk_t *, const H5S_extent_t *, H5T_t *, const H5O_pline_t *, H5O_copy_t *)"
-- "name": "H5D__contig_copy"
-  "params":
-  - "name": "f_src"
-    "type": "bool "
-  - "name": "storage_src"
-    "type": "bool "
-  - "name": "f_dst"
-    "type": "bool "
-  - "name": "storage_dst"
-    "type": "bool "
-  - "name": "dt_src"
-    "type": "bool "
-  - "name": "cpy_info"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "herr_t H5D__contig_copy(H5F_t *, const H5O_storage_contig_t *, H5F_t *, H5O_storage_contig_t *, H5T_t *, H5O_copy_t *)"
-- "name": "Mat_VarWrite"
-  "params":
-  - "name": "mat"
-    "type": "bool "
-  - "name": "matvar"
-    "type": "bool "
-  - "name": "compress"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int Mat_VarWrite(mat_t *, matvar_t *, DW_TAG_enumeration_typematio_compression)"
-"language": "c++"
-"project": "matio"
-"target_name": "matio_fuzzer"
-"target_path": "/src/matio/ossfuzz/matio_fuzzer.cpp"
-"test_files":
-- "test_file_path": "/src/matio/test/test_snprintf.c"
-- "test_file_path": "/src/matio/test/test_mat.c"
+functions:
+- name: H5D__compact_copy
+  params:
+  - name: f_src
+    type: 'bool '
+  - name: _storage_src
+    type: 'bool '
+  - name: f_dst
+    type: 'bool '
+  - name: storage_dst
+    type: 'bool '
+  - name: dt_src
+    type: 'bool '
+  - name: cpy_info
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5D__compact_copy(H5F_t *, H5O_storage_compact_t *, H5F_t *, H5O_storage_compact_t
+    *, H5T_t *, H5O_copy_t *)
+- name: Mat_VarWrite
+  params:
+  - name: mat
+    type: 'bool '
+  - name: matvar
+    type: 'bool '
+  - name: compress
+    type: int
+  return_type: int
+  signature: int Mat_VarWrite(mat_t *, matvar_t *, DW_TAG_enumeration_typematio_compression)
+- name: H5D__get_space
+  params:
+  - name: dset
+    type: 'bool '
+  return_type: size_t
+  signature: hid_t H5D__get_space(const H5D_t *)
+- name: H5D__chunk_copy
+  params:
+  - name: f_src
+    type: 'bool '
+  - name: storage_src
+    type: 'bool '
+  - name: layout_src
+    type: 'bool '
+  - name: f_dst
+    type: 'bool '
+  - name: storage_dst
+    type: 'bool '
+  - name: ds_extent_src
+    type: 'bool '
+  - name: dt_src
+    type: 'bool '
+  - name: pline_src
+    type: 'bool '
+  - name: cpy_info
+    type: 'bool '
+  return_type: int
+  signature: herr_t H5D__chunk_copy(H5F_t *, H5O_storage_chunk_t *, H5O_layout_chunk_t
+    *, H5F_t *, H5O_storage_chunk_t *, const H5S_extent_t *, H5T_t *, const H5O_pline_t
+    *, H5O_copy_t *)
+- name: Mat_VarReadData
+  params:
+  - name: mat
+    type: 'bool '
+  - name: matvar
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: start
+    type: 'bool '
+  - name: stride
+    type: 'bool '
+  - name: edge
+    type: 'bool '
+  return_type: int
+  signature: int Mat_VarReadData(mat_t *, matvar_t *, void *, const int *, const int
+    *, const int *)
+- name: _Z9MatioReadPKc
+  params:
+  - name: file_name
+    type: 'bool '
+  return_type: int
+  signature: int MatioRead(const char *)
+language: c++
+project: matio
+target_name: matio_fuzzer
+target_path: /src/matio/ossfuzz/matio_fuzzer.cpp
+test_files:
+- test_file_path: /src/matio/test/test_snprintf.c
+- test_file_path: /src/matio/test/test_mat.c

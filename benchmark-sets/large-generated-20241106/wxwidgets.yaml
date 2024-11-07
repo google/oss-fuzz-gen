@@ -1,86 +1,62 @@
-"functions":
-- "name": "_ZN14wxPlatformInfoC2Ev"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void wxPlatformInfo::wxPlatformInfo()"
-- "name": "_ZN16wxFontMapperBase10ChangePathERK8wxStringPS0_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "pathNew"
-    "type": "bool "
-  - "name": "pathOld"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool wxFontMapperBase::ChangePath(const wxString &, wxString *)"
-- "name": "_ZN14wxPlatformInfo22InitForCurrentPlatformEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void wxPlatformInfo::InitForCurrentPlatform()"
-- "name": "_ZN16wxFontMapperBase31NonInteractiveCharsetToEncodingERK8wxString"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "charset"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int wxFontMapperBase::NonInteractiveCharsetToEncoding(const wxString &)"
-- "name": "_ZN13wxStackWalkerC2EPKc"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "argv0"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void wxStackWalker::wxStackWalker(const char *)"
-- "name": "_ZN23wxFontMapperPathChangerD2Ev"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void wxFontMapperPathChanger::~~wxFontMapperPathChanger()"
-- "name": "_ZN16wxFontMapperBase17CharsetToEncodingERK8wxStringb"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "charset"
-    "type": "bool "
-  - "name": ""
-    "type": "bool"
-  "return_type": "int"
-  "signature": "DW_TAG_enumeration_typewxFontEncoding wxFontMapperBase::CharsetToEncoding(const wxString &, bool)"
-- "name": "_ZN23wxFontMapperPathChangerC2EP16wxFontMapperBaseRK8wxString"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "fontMapper"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void wxFontMapperPathChanger::wxFontMapperPathChanger(wxFontMapperBase *, const wxString &)"
-- "name": "_Z26wxGetLinuxDistributionInfov"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct wxLinuxDistributionInfo wxGetLinuxDistributionInfo()"
-"language": "c++"
-"project": "wxwidgets"
-"target_name": "zip"
-"target_path": "/src/wxwidgets/tests/fuzz/zip.cpp"
-"test_files":
-- "test_file_path": "/src/wxwidgets/3rdparty/nanosvg/example/example2.c"
-- "test_file_path": "/src/wxwidgets/tests/interactive/input.cpp"
-- "test_file_path": "/src/wxwidgets/samples/opengl/pyramid/mathstuff.cpp"
-- "test_file_path": "/src/wxwidgets/tests/thread/tls.cpp"
-- "test_file_path": "/src/wxwidgets/samples/mdi/mdi.cpp"
-- "test_file_path": "/src/wxwidgets/tests/events/keyboard.cpp"
-- "test_file_path": "/src/wxwidgets/samples/except/except.cpp"
-- "test_file_path": "/src/wxwidgets/tests/any/anytest.cpp"
-- "test_file_path": "/src/wxwidgets/tests/drawing/fonttest.cpp"
-- "test_file_path": "/src/wxwidgets/samples/typetest/typetest.cpp"
+functions:
+- name: _ZN14wxPlatformInfoC2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void wxPlatformInfo::wxPlatformInfo()
+- name: _ZN16wxFontMapperBase31NonInteractiveCharsetToEncodingERK8wxString
+  params:
+  - name: this
+    type: 'bool '
+  - name: charset
+    type: 'bool '
+  return_type: int
+  signature: int wxFontMapperBase::NonInteractiveCharsetToEncoding(const wxString
+    &)
+- name: _ZN23wxFontMapperPathChangerC2EP16wxFontMapperBaseRK8wxString
+  params:
+  - name: this
+    type: 'bool '
+  - name: fontMapper
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  return_type: void
+  signature: void wxFontMapperPathChanger::wxFontMapperPathChanger(wxFontMapperBase
+    *, const wxString &)
+- name: _ZN14wxPlatformInfo22InitForCurrentPlatformEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void wxPlatformInfo::InitForCurrentPlatform()
+- name: _ZN13wxStackWalkerC2EPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: argv0
+    type: 'bool '
+  return_type: void
+  signature: void wxStackWalker::wxStackWalker(const char *)
+- name: _ZN16wxFontMapperBase10ChangePathERK8wxStringPS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: pathNew
+    type: 'bool '
+  - name: pathOld
+    type: 'bool '
+  return_type: bool
+  signature: bool wxFontMapperBase::ChangePath(const wxString &, wxString *)
+language: c++
+project: wxwidgets
+target_name: zip
+target_path: /src/wxwidgets/tests/fuzz/zip.cpp
+test_files:
+- test_file_path: /src/wxwidgets/samples/opengl/pyramid/mathstuff.cpp
+- test_file_path: /src/wxwidgets/tests/drawing/fonttest.cpp
+- test_file_path: /src/wxwidgets/samples/typetest/typetest.cpp
+- test_file_path: /src/wxwidgets/3rdparty/nanosvg/example/example2.c
+- test_file_path: /src/wxwidgets/tests/any/anytest.cpp
+- test_file_path: /src/wxwidgets/tests/events/keyboard.cpp

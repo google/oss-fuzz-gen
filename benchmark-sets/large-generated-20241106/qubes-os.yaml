@@ -1,81 +1,67 @@
-"functions":
-- "name": "handle_client_data"
-  "params":
-  - "name": "d"
-    "type": "bool "
-  - "name": "client"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "data_len"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int handle_client_data(struct db_daemon_data *, struct client *, char *, int)"
-- "name": "execute_qubes_rpc_command"
-  "params":
-  - "name": "cmdline"
-    "type": "bool "
-  - "name": "pid"
-    "type": "bool "
-  - "name": "stdin_fd"
-    "type": "bool "
-  - "name": "stdout_fd"
-    "type": "bool "
-  - "name": "stderr_fd"
-    "type": "bool "
-  - "name": "strip_username"
-    "type": "bool"
-  - "name": "stdin_buffer"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int execute_qubes_rpc_command(const char *, int *, int *, int *, int *, bool, struct buffer *)"
-- "name": "request_full_db_sync"
-  "params":
-  - "name": "d"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int request_full_db_sync(struct db_daemon_data *)"
-- "name": "process_io"
-  "params":
-  - "name": "req"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int process_io(const struct process_io_request *)"
-- "name": "init"
-  "params":
-  - "name": "xid"
-    "type": "int"
-  - "name": "opt_direct"
-    "type": "bool"
-  "return_type": "void"
-  "signature": "void init(int, bool)"
-- "name": "load_service_config"
-  "params":
-  - "name": "cmd"
-    "type": "bool "
-  - "name": "wait_for_session"
-    "type": "bool "
-  - "name": "user"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int load_service_config(struct qrexec_parsed_command *, int *, char **)"
-- "name": "qrexec_log"
-  "params":
-  - "name": "level"
-    "type": "int"
-  - "name": "errnoval"
-    "type": "int"
-  - "name": "file"
-    "type": "bool "
-  - "name": "line"
-    "type": "int"
-  - "name": "func"
-    "type": "bool "
-  - "name": "fmt"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void qrexec_log(int, int, const char *, int, const char *, const char *, void)"
-"language": "c++"
-"project": "qubes-os"
-"target_name": "input-proxy-receiver_fuzzer"
-"target_path": "/src/qubes-os/app-linux-input-proxy/fuzz/input-proxy-receiver_fuzzer.c"
+functions:
+- name: process_io
+  params:
+  - name: req
+    type: 'bool '
+  return_type: int
+  signature: int process_io(const struct process_io_request *)
+- name: execute_qubes_rpc_command
+  params:
+  - name: cmdline
+    type: 'bool '
+  - name: pid
+    type: 'bool '
+  - name: stdin_fd
+    type: 'bool '
+  - name: stdout_fd
+    type: 'bool '
+  - name: stderr_fd
+    type: 'bool '
+  - name: strip_username
+    type: bool
+  - name: stdin_buffer
+    type: 'bool '
+  return_type: int
+  signature: int execute_qubes_rpc_command(const char *, int *, int *, int *, int
+    *, bool, struct buffer *)
+- name: init
+  params:
+  - name: xid
+    type: int
+  - name: opt_direct
+    type: bool
+  return_type: void
+  signature: void init(int, bool)
+- name: load_service_config
+  params:
+  - name: cmd
+    type: 'bool '
+  - name: wait_for_session
+    type: 'bool '
+  - name: user
+    type: 'bool '
+  return_type: int
+  signature: int load_service_config(struct qrexec_parsed_command *, int *, char **)
+- name: handle_client_data
+  params:
+  - name: d
+    type: 'bool '
+  - name: client
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: data_len
+    type: int
+  return_type: int
+  signature: int handle_client_data(struct db_daemon_data *, struct client *, char
+    *, int)
+- name: request_full_db_sync
+  params:
+  - name: d
+    type: 'bool '
+  return_type: int
+  signature: int request_full_db_sync(struct db_daemon_data *)
+language: c++
+project: qubes-os
+target_name: input-proxy-receiver_fuzzer
+target_path: /src/qubes-os/app-linux-input-proxy/fuzz/input-proxy-receiver_fuzzer.c

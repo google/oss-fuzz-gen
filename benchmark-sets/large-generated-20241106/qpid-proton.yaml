@@ -1,96 +1,62 @@
-"functions":
-- "name": "pn_data_fill"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pn_data_fill(pn_data_t *, const char *, void)"
-- "name": "pn_condition_copy"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pn_condition_copy(pn_condition_t *, pn_condition_t *)"
-- "name": "pn_terminus_copy"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pn_terminus_copy(pn_terminus_t *, pn_terminus_t *)"
-- "name": "pn_data_vfill"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pn_data_vfill(pn_data_t *, const char *, struct __va_list_tag *)"
-- "name": "pn_condition_redirect_port"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pn_condition_redirect_port(pn_condition_t *)"
-- "name": "pn_data_scan"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pn_data_scan(pn_data_t *, const char *, void)"
-- "name": "pn_message_send"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "ssize_t pn_message_send(pn_message_t *, pn_link_t *, pn_rwbytes_t *)"
-- "name": "pn_message_data"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pn_message_data(pn_message_t *, pn_data_t *)"
-- "name": "pn_condition_redirect_host"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const char * pn_condition_redirect_host(pn_condition_t *)"
-- "name": "pn_message_set_inferred"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool"
-  "return_type": "int"
-  "signature": "int pn_message_set_inferred(pn_message_t *, bool)"
-"language": "c++"
-"project": "qpid-proton"
-"target_name": "fuzz-message-decode"
-"target_path": "/src/qpid-proton/c/tests/fuzz/fuzz-message-decode.c"
-"test_files":
-- "test_file_path": "/src/qpid-proton/c/examples/send-abort.c"
-- "test_file_path": "/src/qpid-proton/cpp/src/delivery_test.cpp"
-- "test_file_path": "/src/qpid-proton/cpp/src/connect_config_test.cpp"
-- "test_file_path": "/src/qpid-proton/c/tests/engine_test.cpp"
-- "test_file_path": "/src/qpid-proton/cpp/examples/colour_send.cpp"
-- "test_file_path": "/src/qpid-proton/cpp/examples/multithreaded_client.cpp"
-- "test_file_path": "/src/qpid-proton/cpp/examples/direct_recv.cpp"
-- "test_file_path": "/src/qpid-proton/cpp/examples/ssl_client_cert.cpp"
-- "test_file_path": "/src/qpid-proton/cpp/examples/connection_options.cpp"
-- "test_file_path": "/src/qpid-proton/c/tests/data_test.cpp"
+functions:
+- name: pn_terminus_copy
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_terminus_copy(pn_terminus_t *, pn_terminus_t *)
+- name: pn_condition_redirect_port
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_condition_redirect_port(pn_condition_t *)
+- name: pn_message_send
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: ssize_t pn_message_send(pn_message_t *, pn_link_t *, pn_rwbytes_t *)
+- name: pn_data_vfill
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_data_vfill(pn_data_t *, const char *, struct __va_list_tag *)
+- name: pn_data_scan
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_data_scan(pn_data_t *, const char *, void)
+- name: pn_data_fill
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int pn_data_fill(pn_data_t *, const char *, void)
+language: c++
+project: qpid-proton
+target_name: fuzz-message-decode
+target_path: /src/qpid-proton/c/tests/fuzz/fuzz-message-decode.c
+test_files:
+- test_file_path: /src/qpid-proton/cpp/src/delivery_test.cpp
+- test_file_path: /src/qpid-proton/cpp/examples/ssl_client_cert.cpp
+- test_file_path: /src/qpid-proton/cpp/examples/colour_send.cpp
+- test_file_path: /src/qpid-proton/cpp/examples/connection_options.cpp
+- test_file_path: /src/qpid-proton/cpp/src/connect_config_test.cpp
+- test_file_path: /src/qpid-proton/c/tests/data_test.cpp

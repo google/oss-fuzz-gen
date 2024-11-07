@@ -1,116 +1,86 @@
-"functions":
-- "name": "_ZN12_GLOBAL__N_116WritableReplDict5mergeERN7acommon7FStreamENS1_10ParmStringEPNS1_6ConfigE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "in"
-    "type": "bool "
-  - "name": "file_name"
-    "type": "bool "
-  - "name": "config"
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "PosibErr<void> (anonymous namespace)::WritableReplDict::merge(FStream &, ParmString, Config *)"
-- "name": "_ZN7acommon13check_versionEPKc"
-  "params":
-  - "name": "requirement"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "PosibErr<void> acommon::check_version(const char *)"
-- "name": "_ZN8aspeller16WordListIterator4initERN7acommon6ConfigE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "config"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "PosibErr<void> aspeller::WordListIterator::init(Config &)"
-- "name": "_ZN12_GLOBAL__N_111SuggestImpl8set_modeEN7acommon10ParmStringE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "mode"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "PosibErr<void> (anonymous namespace)::SuggestImpl::set_mode(ParmString)"
-- "name": "_ZN8aspeller28create_default_readonly_dictEPN7acommon17StringEnumerationERNS0_6ConfigE"
-  "params":
-  - "name": "els"
-    "type": "bool "
-  - "name": "config"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "PosibErr<void> aspeller::create_default_readonly_dict(StringEnumeration *, Config &)"
-- "name": "_ZN8aspeller11SpellerImpl14ConfigNotifier18run_together_limitEPS0_i"
-  "params":
-  - "name": "m"
-    "type": "bool "
-  - "name": "value"
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "PosibErr<void> aspeller::SpellerImpl::ConfigNotifier::run_together_limit(SpellerImpl *, int)"
-- "name": "_ZN7acommon16load_all_filtersEPNS_6ConfigE"
-  "params":
-  - "name": "config"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void acommon::load_all_filters(Config *)"
-- "name": "_ZN12_GLOBAL__N_112WritableDict5mergeERN7acommon7FStreamENS1_10ParmStringEPNS1_6ConfigE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "in"
-    "type": "bool "
-  - "name": "file_name"
-    "type": "bool "
-  - "name": "config"
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "PosibErr<void> (anonymous namespace)::WritableDict::merge(FStream &, ParmString, Config *)"
-- "name": "_ZN7acommon22available_filter_modesEPNS_6ConfigE"
-  "params":
-  - "name": "config"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "PosibErr<acommon::StringPairEnumeration *> acommon::available_filter_modes(Config *)"
-- "name": "aspell_config_remove"
-  "params":
-  - "name": "ths"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int aspell_config_remove(Config *, const char *)"
-"language": "c++"
-"project": "aspell"
-"target_name": "aspell_fuzzer"
-"target_path": "/src/aspell-fuzz/aspell_fuzzer.cpp"
-"test_files":
-- "test_file_path": "/src/aspell/test/wide_test_invalid.c"
-- "test_file_path": "/src/aspell/examples/list-dicts.c"
-- "test_file_path": "/src/aspell/test/cxx_warnings_test.cpp"
-- "test_file_path": "/src/aspell/test/warning-settings.cpp"
-- "test_file_path": "/src/aspell/test/wide_test_valid.c"
-- "test_file_path": "/src/aspell/examples/example-c.c"
+functions:
+- name: _ZN8aspeller28create_default_readonly_dictEPN7acommon17StringEnumerationERNS0_6ConfigE
+  params:
+  - name: els
+    type: 'bool '
+  - name: config
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PosibErr<void> aspeller::create_default_readonly_dict(StringEnumeration
+    *, Config &)
+- name: _ZN12_GLOBAL__N_116WritableReplDict5mergeERN7acommon7FStreamENS1_10ParmStringEPNS1_6ConfigE
+  params:
+  - name: this
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: file_name
+    type: 'bool '
+  - name: config
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PosibErr<void> (anonymous namespace)::WritableReplDict::merge(FStream
+    &, ParmString, Config *)
+- name: _ZN12_GLOBAL__N_112WritableDict5mergeERN7acommon7FStreamENS1_10ParmStringEPNS1_6ConfigE
+  params:
+  - name: this
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: file_name
+    type: 'bool '
+  - name: config
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PosibErr<void> (anonymous namespace)::WritableDict::merge(FStream &,
+    ParmString, Config *)
+- name: _ZN7acommon22available_filter_modesEPNS_6ConfigE
+  params:
+  - name: config
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PosibErr<acommon::StringPairEnumeration *> acommon::available_filter_modes(Config
+    *)
+- name: _ZN7acommon13check_versionEPKc
+  params:
+  - name: requirement
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: PosibErr<void> acommon::check_version(const char *)
+- name: _ZN12_GLOBAL__N_111SuggestImpl8set_modeEN7acommon10ParmStringE
+  params:
+  - name: this
+    type: 'bool '
+  - name: mode
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: PosibErr<void> (anonymous namespace)::SuggestImpl::set_mode(ParmString)
+language: c++
+project: aspell
+target_name: aspell_fuzzer
+target_path: /src/aspell-fuzz/aspell_fuzzer.cpp
+test_files:
+- test_file_path: /src/aspell/test/wide_test_invalid.c
+- test_file_path: /src/aspell/examples/list-dicts.c
+- test_file_path: /src/aspell/test/cxx_warnings_test.cpp
+- test_file_path: /src/aspell/test/warning-settings.cpp
+- test_file_path: /src/aspell/test/wide_test_valid.c
+- test_file_path: /src/aspell/examples/example-c.c

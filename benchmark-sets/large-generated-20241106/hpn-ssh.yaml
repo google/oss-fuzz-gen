@@ -1,88 +1,57 @@
-"functions":
-- "name": "kex_gen_client"
-  "params":
-  - "name": "ssh"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int kex_gen_client(struct ssh *)"
-- "name": "ssh_dispatch_run"
-  "params":
-  - "name": "ssh"
-    "type": "bool "
-  - "name": "mode"
-    "type": "int"
-  - "name": "done"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ssh_dispatch_run(struct ssh *, int, DW_TAG_volatile_typesig_atomic_t *)"
-- "name": "kex_gen_server"
-  "params":
-  - "name": "ssh"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int kex_gen_server(struct ssh *)"
-- "name": "kexgex_server"
-  "params":
-  - "name": "ssh"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int kexgex_server(struct ssh *)"
-- "name": "ssh_dispatch_run_fatal"
-  "params":
-  - "name": "ssh"
-    "type": "bool "
-  - "name": "mode"
-    "type": "int"
-  - "name": "done"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void ssh_dispatch_run_fatal(struct ssh *, int, DW_TAG_volatile_typesig_atomic_t *)"
-- "name": "ssh_packet_read"
-  "params":
-  - "name": "ssh"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ssh_packet_read(struct ssh *)"
-- "name": "a2tun"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  - "name": "remote"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int a2tun(const char *, int *)"
-- "name": "kex_send_newkeys"
-  "params":
-  - "name": "ssh"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int kex_send_newkeys(struct ssh *)"
-- "name": "kex_setup"
-  "params":
-  - "name": "ssh"
-    "type": "bool "
-  - "name": "proposal"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int kex_setup(struct ssh *, char **)"
-- "name": "kexgex_client"
-  "params":
-  - "name": "ssh"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int kexgex_client(struct ssh *)"
-"language": "c++"
-"project": "hpn-ssh"
-"target_name": "authopt_fuzz"
-"target_path": "/src/hpn-ssh/regress/misc/fuzz-harness/authopt_fuzz.cc"
-"test_files":
-- "test_file_path": "/src/hpn-ssh/regress/unittests/misc/tests.c"
-- "test_file_path": "/src/hpn-ssh/regress/unittests/hostkeys/tests.c"
-- "test_file_path": "/src/hpn-ssh/regress/unittests/utf8/tests.c"
-- "test_file_path": "/src/hpn-ssh/regress/unittests/hostkeys/test_iterate.c"
-- "test_file_path": "/src/hpn-ssh/regress/unittests/kex/test_kex.c"
-- "test_file_path": "/src/hpn-ssh/regress/unittests/misc/test_hpdelim.c"
-- "test_file_path": "/src/hpn-ssh/regress/unittests/sshkey/common.c"
-- "test_file_path": "/src/hpn-ssh/regress/unittests/sshbuf/test_sshbuf_fixed.c"
-- "test_file_path": "/src/hpn-ssh/regress/unittests/match/tests.c"
-- "test_file_path": "/src/hpn-ssh/regress/unittests/sshkey/test_sshkey.c"
+functions:
+- name: kexgex_server
+  params:
+  - name: ssh
+    type: 'bool '
+  return_type: int
+  signature: int kexgex_server(struct ssh *)
+- name: kex_send_newkeys
+  params:
+  - name: ssh
+    type: 'bool '
+  return_type: int
+  signature: int kex_send_newkeys(struct ssh *)
+- name: ssh_dispatch_run
+  params:
+  - name: ssh
+    type: 'bool '
+  - name: mode
+    type: int
+  - name: done
+    type: 'bool '
+  return_type: int
+  signature: int ssh_dispatch_run(struct ssh *, int, DW_TAG_volatile_typesig_atomic_t
+    *)
+- name: a2tun
+  params:
+  - name: s
+    type: 'bool '
+  - name: remote
+    type: 'bool '
+  return_type: int
+  signature: int a2tun(const char *, int *)
+- name: ssh_packet_read
+  params:
+  - name: ssh
+    type: 'bool '
+  return_type: int
+  signature: int ssh_packet_read(struct ssh *)
+- name: kex_setup
+  params:
+  - name: ssh
+    type: 'bool '
+  - name: proposal
+    type: 'bool '
+  return_type: int
+  signature: int kex_setup(struct ssh *, char **)
+language: c++
+project: hpn-ssh
+target_name: authopt_fuzz
+target_path: /src/hpn-ssh/regress/misc/fuzz-harness/authopt_fuzz.cc
+test_files:
+- test_file_path: /src/hpn-ssh/regress/unittests/misc/tests.c
+- test_file_path: /src/hpn-ssh/regress/unittests/sshbuf/test_sshbuf_fixed.c
+- test_file_path: /src/hpn-ssh/regress/unittests/hostkeys/tests.c
+- test_file_path: /src/hpn-ssh/regress/unittests/misc/test_hpdelim.c
+- test_file_path: /src/hpn-ssh/regress/unittests/sshkey/test_sshkey.c
+- test_file_path: /src/hpn-ssh/regress/unittests/kex/test_kex.c

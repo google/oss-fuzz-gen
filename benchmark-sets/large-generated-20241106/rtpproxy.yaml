@@ -1,136 +1,75 @@
-"functions":
-- "name": "icem_candpair_alloc"
-  "params":
-  - "name": "cpp"
-    "type": "bool "
-  - "name": "icem"
-    "type": "bool "
-  - "name": "lcand"
-    "type": "bool "
-  - "name": "rcand"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int icem_candpair_alloc(struct ice_candpair **, struct icem *, struct ice_cand *, struct ice_cand *)"
-- "name": "icem_rcand_add_prflx"
-  "params":
-  - "name": "rcp"
-    "type": "bool "
-  - "name": "icem"
-    "type": "bool "
-  - "name": "compid"
-    "type": "int"
-  - "name": "prio"
-    "type": "int"
-  - "name": "addr"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int icem_rcand_add_prflx(struct ice_cand **, struct icem *, unsigned int, uint32_t, const struct sa *)"
-- "name": "LLVMFuzzerInitialize"
-  "params":
-  - "name": "_argc"
-    "type": "bool "
-  - "name": "_argv"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int LLVMFuzzerInitialize(int *, char ***)"
-- "name": "icem_stund_recv"
-  "params":
-  - "name": "comp"
-    "type": "bool "
-  - "name": "src"
-    "type": "bool "
-  - "name": "req"
-    "type": "bool "
-  - "name": "presz"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int icem_stund_recv(struct icem_comp *, const struct sa *, struct stun_msg *, size_t)"
-- "name": "icem_candpair_make_valid"
-  "params":
-  - "name": "cp"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void icem_candpair_make_valid(struct ice_candpair *)"
-- "name": "icem_debug"
-  "params":
-  - "name": "pf"
-    "type": "bool "
-  - "name": "icem"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int icem_debug(struct re_printf *, const struct icem *)"
-- "name": "ucl_object_insert_key"
-  "params":
-  - "name": "top"
-    "type": "bool "
-  - "name": "elt"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "keylen"
-    "type": "size_t"
-  - "name": "copy_key"
-    "type": "bool"
-  "return_type": "bool"
-  "signature": "bool ucl_object_insert_key(ucl_object_t *, ucl_object_t *, const char *, size_t, bool)"
-- "name": "icem_lcand_add"
-  "params":
-  - "name": "icem"
-    "type": "bool "
-  - "name": "base"
-    "type": "bool "
-  - "name": "type"
-    "type": "int"
-  - "name": "addr"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int icem_lcand_add(struct icem *, struct ice_cand *, DW_TAG_enumeration_typeice_cand_type, const struct sa *)"
-- "name": "stun_recv"
-  "params":
-  - "name": "stun"
-    "type": "bool "
-  - "name": "mb"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int stun_recv(struct stun *, struct mbuf *)"
-- "name": "stun_ctrans_request"
-  "params":
-  - "name": "ctp"
-    "type": "bool "
-  - "name": "stun"
-    "type": "bool "
-  - "name": "proto"
-    "type": "int"
-  - "name": "sock"
-    "type": "bool "
-  - "name": "dst"
-    "type": "bool "
-  - "name": "mb"
-    "type": "bool "
-  - "name": "tid"
-    "type": "bool "
-  - "name": "met"
-    "type": "short"
-  - "name": "key"
-    "type": "bool "
-  - "name": "keylen"
-    "type": "size_t"
-  - "name": "resph"
-    "type": "bool "
-  - "name": "arg"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int stun_ctrans_request(struct stun_ctrans **, struct stun *, int, void *, const struct sa *, struct mbuf *, const uint8_t *, uint16_t, const uint8_t *, size_t, stun_resp_h *, void *)"
-"language": "c"
-"project": "rtpproxy"
-"target_name": "fuzz_rtp_parser"
-"target_path": "/src/rtpproxy/scripts/fuzz/fuzz_rtp_parser.c"
-"test_files":
-- "test_file_path": "/src/rtpproxy/src/rtpp_fintest.c"
-- "test_file_path": "/src/rtpproxy/modules/acct_rtcp_hep/rtcp2json_test.c"
-- "test_file_path": "/src/rtpproxy/libexecinfo/execinfo_testfunc.c"
-- "test_file_path": "/src/rtpproxy/src/rtpp_memdeb_test.c"
-- "test_file_path": "/src/rtpproxy/libucl/libucl_test.c"
-- "test_file_path": "/src/rtpproxy/libre/libre_test.c"
-- "test_file_path": "/src/rtpproxy/libelperiodic/src/testskew.c"
-- "test_file_path": "/src/rtpproxy/libexecinfo/execinfo_testfunc1.c"
+functions:
+- name: icem_rcand_add_prflx
+  params:
+  - name: rcp
+    type: 'bool '
+  - name: icem
+    type: 'bool '
+  - name: compid
+    type: int
+  - name: prio
+    type: int
+  - name: addr
+    type: 'bool '
+  return_type: int
+  signature: int icem_rcand_add_prflx(struct ice_cand **, struct icem *, unsigned
+    int, uint32_t, const struct sa *)
+- name: icem_lcand_add
+  params:
+  - name: icem
+    type: 'bool '
+  - name: base
+    type: 'bool '
+  - name: type
+    type: int
+  - name: addr
+    type: 'bool '
+  return_type: int
+  signature: int icem_lcand_add(struct icem *, struct ice_cand *, DW_TAG_enumeration_typeice_cand_type,
+    const struct sa *)
+- name: icem_stund_recv
+  params:
+  - name: comp
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  - name: req
+    type: 'bool '
+  - name: presz
+    type: size_t
+  return_type: int
+  signature: int icem_stund_recv(struct icem_comp *, const struct sa *, struct stun_msg
+    *, size_t)
+- name: icem_debug
+  params:
+  - name: pf
+    type: 'bool '
+  - name: icem
+    type: 'bool '
+  return_type: int
+  signature: int icem_debug(struct re_printf *, const struct icem *)
+- name: LLVMFuzzerInitialize
+  params:
+  - name: _argc
+    type: 'bool '
+  - name: _argv
+    type: 'bool '
+  return_type: int
+  signature: int LLVMFuzzerInitialize(int *, char ***)
+- name: icem_candpair_make_valid
+  params:
+  - name: cp
+    type: 'bool '
+  return_type: void
+  signature: void icem_candpair_make_valid(struct ice_candpair *)
+language: c
+project: rtpproxy
+target_name: fuzz_rtp_parser
+target_path: /src/rtpproxy/scripts/fuzz/fuzz_rtp_parser.c
+test_files:
+- test_file_path: /src/rtpproxy/libucl/libucl_test.c
+- test_file_path: /src/rtpproxy/modules/acct_rtcp_hep/rtcp2json_test.c
+- test_file_path: /src/rtpproxy/src/rtpp_memdeb_test.c
+- test_file_path: /src/rtpproxy/libexecinfo/execinfo_testfunc.c
+- test_file_path: /src/rtpproxy/libre/libre_test.c
+- test_file_path: /src/rtpproxy/libelperiodic/src/testskew.c

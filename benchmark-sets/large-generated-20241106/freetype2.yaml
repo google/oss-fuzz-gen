@@ -1,83 +1,68 @@
-"functions":
-- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E9parseExprEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Node * (anonymous namespace)::itanium_demangle::parseExpr(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)"
-- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E19parseUnresolvedNameEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Node * (anonymous namespace)::itanium_demangle::parseUnresolvedName(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)"
-- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E17parseCtorDtorNameERPNS0_4NodeEPNS5_9NameStateE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Node * (anonymous namespace)::itanium_demangle::parseCtorDtorName(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *, Node &*, struct NameState *)"
-- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E15parseNestedNameEPNS5_9NameStateE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Node * (anonymous namespace)::itanium_demangle::parseNestedName(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *, struct NameState *)"
-- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E13parseFoldExprEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Node * (anonymous namespace)::itanium_demangle::parseFoldExpr(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)"
-- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E16parseSpecialNameEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Node * (anonymous namespace)::itanium_demangle::parseSpecialName(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)"
-- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E17parseFunctionTypeEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Node * (anonymous namespace)::itanium_demangle::parseFunctionType(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)"
-- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E17parseOperatorNameEPNS5_9NameStateE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Node * (anonymous namespace)::itanium_demangle::parseOperatorName(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *, struct NameState *)"
-- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E9parseTypeEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Node * (anonymous namespace)::itanium_demangle::parseType(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)"
-- "name": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E5parseEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Node * (anonymous namespace)::itanium_demangle::parse(struct AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)"
-"language": "c++"
-"project": "freetype2"
-"target_name": "gzip"
-"target_path": "/src/freetype2-testing/fuzzing/src/fuzzers/template.cpp"
-"test_files":
-- "test_file_path": "/src/text-rendering-tests/src/fonttest/freestack_line.cpp"
-- "test_file_path": "/src/text-rendering-tests/src/fonttest/test_harness.cpp"
-- "test_file_path": "/src/text-rendering-tests/src/fonttest/freestack_engine.cpp"
-- "test_file_path": "/src/text-rendering-tests/src/fonttest/font_engine.cpp"
-- "test_file_path": "/src/text-rendering-tests/src/fonttest/tehreerstack_line.cpp"
-- "test_file_path": "/src/text-rendering-tests/src/fonttest/freestack_path.cpp"
-- "test_file_path": "/src/text-rendering-tests/src/fonttest/tehreerstack_engine.cpp"
-- "test_file_path": "/src/text-rendering-tests/src/fonttest/freestack_font.cpp"
-- "test_file_path": "/src/text-rendering-tests/src/fonttest/main.cpp"
+functions:
+- name: _ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E17parseOperatorNameEPNS5_9NameStateE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Node * (anonymous namespace)::itanium_demangle::parseOperatorName(struct
+    AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous
+    namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *, struct
+    NameState *)
+- name: _ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E19parseUnresolvedNameEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Node * (anonymous namespace)::itanium_demangle::parseUnresolvedName(struct
+    AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous
+    namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)
+- name: _ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E17parseFunctionTypeEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Node * (anonymous namespace)::itanium_demangle::parseFunctionType(struct
+    AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous
+    namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)
+- name: _ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E17parseCtorDtorNameERPNS0_4NodeEPNS5_9NameStateE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Node * (anonymous namespace)::itanium_demangle::parseCtorDtorName(struct
+    AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous
+    namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *, Node
+    &*, struct NameState *)
+- name: _ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E16parseSpecialNameEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Node * (anonymous namespace)::itanium_demangle::parseSpecialName(struct
+    AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous
+    namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator> *)
+- name: _ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E5parseEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Node * (anonymous namespace)::itanium_demangle::parse(struct AbstractManglingParser<(anonymous
+    namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>,
+    (anonymous namespace)::DefaultAllocator> *)
+language: c++
+project: freetype2
+target_name: gzip
+target_path: /src/freetype2-testing/fuzzing/src/fuzzers/template.cpp
+test_files:
+- test_file_path: /src/text-rendering-tests/src/fonttest/freestack_font.cpp
+- test_file_path: /src/text-rendering-tests/src/fonttest/main.cpp
+- test_file_path: /src/text-rendering-tests/src/fonttest/tehreerstack_line.cpp
+- test_file_path: /src/text-rendering-tests/src/fonttest/test_harness.cpp
+- test_file_path: /src/text-rendering-tests/src/fonttest/freestack_line.cpp
+- test_file_path: /src/text-rendering-tests/src/fonttest/tehreerstack_engine.cpp

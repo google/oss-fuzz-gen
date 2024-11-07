@@ -1,136 +1,93 @@
-"functions":
-- "name": "_cmsDefaultICCintents"
-  "params":
-  - "name": "ContextID"
-    "type": "bool "
-  - "name": "nProfiles"
-    "type": "int"
-  - "name": "TheIntents"
-    "type": "bool "
-  - "name": "hProfiles"
-    "type": "bool "
-  - "name": "BPC"
-    "type": "bool "
-  - "name": "AdaptationStates"
-    "type": "bool "
-  - "name": "dwFlags"
-    "type": "int"
-  "return_type": "void"
-  "signature": "cmsPipeline * _cmsDefaultICCintents(cmsContext, cmsUInt32Number, cmsUInt32Number *, cmsHPROFILE *, cmsBool *, cmsFloat64Number *, cmsUInt32Number)"
-- "name": "cmsCreateProofingTransform"
-  "params":
-  - "name": "InputProfile"
-    "type": "bool "
-  - "name": "InputFormat"
-    "type": "int"
-  - "name": "OutputProfile"
-    "type": "bool "
-  - "name": "OutputFormat"
-    "type": "int"
-  - "name": "ProofingProfile"
-    "type": "bool "
-  - "name": "nIntent"
-    "type": "int"
-  - "name": "ProofingIntent"
-    "type": "int"
-  - "name": "dwFlags"
-    "type": "int"
-  "return_type": "void"
-  "signature": "cmsHTRANSFORM cmsCreateProofingTransform(cmsHPROFILE, cmsUInt32Number, cmsHPROFILE, cmsUInt32Number, cmsHPROFILE, cmsUInt32Number, cmsUInt32Number, cmsUInt32Number)"
-- "name": "cmsCreateProofingTransformTHR"
-  "params":
-  - "name": "ContextID"
-    "type": "bool "
-  - "name": "InputProfile"
-    "type": "bool "
-  - "name": "InputFormat"
-    "type": "int"
-  - "name": "OutputProfile"
-    "type": "bool "
-  - "name": "OutputFormat"
-    "type": "int"
-  - "name": "ProofingProfile"
-    "type": "bool "
-  - "name": "nIntent"
-    "type": "int"
-  - "name": "ProofingIntent"
-    "type": "int"
-  - "name": "dwFlags"
-    "type": "int"
-  "return_type": "void"
-  "signature": "cmsHTRANSFORM cmsCreateProofingTransformTHR(cmsContext, cmsHPROFILE, cmsUInt32Number, cmsHPROFILE, cmsUInt32Number, cmsHPROFILE, cmsUInt32Number, cmsUInt32Number, cmsUInt32Number)"
-- "name": "cmsCreateDeviceLinkFromCubeFile"
-  "params":
-  - "name": "cFileName"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "cmsHPROFILE cmsCreateDeviceLinkFromCubeFile(const char *)"
-- "name": "cmsCreateDeviceLinkFromCubeFileTHR"
-  "params":
-  - "name": "ContextID"
-    "type": "bool "
-  - "name": "cFileName"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "cmsHPROFILE cmsCreateDeviceLinkFromCubeFileTHR(cmsContext, const char *)"
-- "name": "cmsCreateRGBProfile"
-  "params":
-  - "name": "WhitePoint"
-    "type": "bool "
-  - "name": "Primaries"
-    "type": "bool "
-  - "name": "TransferFunction"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "cmsHPROFILE cmsCreateRGBProfile(const cmsCIExyY *, const cmsCIExyYTRIPLE *, const cmsToneCurve **)"
-- "name": "cmsOpenProfileFromStream"
-  "params":
-  - "name": "ICCProfile"
-    "type": "bool "
-  - "name": "sAccess"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "cmsHPROFILE cmsOpenProfileFromStream(FILE *, const char *)"
-- "name": "cmsOpenProfileFromStreamTHR"
-  "params":
-  - "name": "ContextID"
-    "type": "bool "
-  - "name": "ICCProfile"
-    "type": "bool "
-  - "name": "sAccess"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "cmsHPROFILE cmsOpenProfileFromStreamTHR(cmsContext, FILE *, const char *)"
-- "name": "cmsOpenProfileFromIOhandler2THR"
-  "params":
-  - "name": "ContextID"
-    "type": "bool "
-  - "name": "io"
-    "type": "bool "
-  - "name": "write"
-    "type": "int"
-  "return_type": "void"
-  "signature": "cmsHPROFILE cmsOpenProfileFromIOhandler2THR(cmsContext, cmsIOHANDLER *, cmsBool)"
-- "name": "cmsOpenProfileFromIOhandlerTHR"
-  "params":
-  - "name": "ContextID"
-    "type": "bool "
-  - "name": "io"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "cmsHPROFILE cmsOpenProfileFromIOhandlerTHR(cmsContext, cmsIOHANDLER *)"
-"language": "c++"
-"project": "lcms"
-"target_name": "cms_dict_fuzzer"
-"target_path": "/src/cms_dict_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/lcms/utils/samples/roundtrip.c"
-- "test_file_path": "/src/lcms/plugins/fast_float/testbed/fast_float_testbed.c"
-- "test_file_path": "/src/lcms/plugins/fast_float/testbed/demo_cmyk.c"
-- "test_file_path": "/src/lcms/testbed/testthread.cpp"
-- "test_file_path": "/src/lcms/plugins/threaded/testbed/threaded_testbed.c"
-- "test_file_path": "/src/lcms/utils/samples/wtpt.c"
-- "test_file_path": "/src/lcms/utils/samples/itufax.c"
-- "test_file_path": "/src/lcms/testbed/alpha_test.c"
-- "test_file_path": "/src/lcms/testbed/testplugin.c"
-- "test_file_path": "/src/lcms/utils/samples/vericc.c"
+functions:
+- name: cmsOpenProfileFromIOhandler2THR
+  params:
+  - name: ContextID
+    type: 'bool '
+  - name: io
+    type: 'bool '
+  - name: write
+    type: int
+  return_type: void
+  signature: cmsHPROFILE cmsOpenProfileFromIOhandler2THR(cmsContext, cmsIOHANDLER
+    *, cmsBool)
+- name: cmsCreateProofingTransformTHR
+  params:
+  - name: ContextID
+    type: 'bool '
+  - name: InputProfile
+    type: 'bool '
+  - name: InputFormat
+    type: int
+  - name: OutputProfile
+    type: 'bool '
+  - name: OutputFormat
+    type: int
+  - name: ProofingProfile
+    type: 'bool '
+  - name: nIntent
+    type: int
+  - name: ProofingIntent
+    type: int
+  - name: dwFlags
+    type: int
+  return_type: void
+  signature: cmsHTRANSFORM cmsCreateProofingTransformTHR(cmsContext, cmsHPROFILE,
+    cmsUInt32Number, cmsHPROFILE, cmsUInt32Number, cmsHPROFILE, cmsUInt32Number, cmsUInt32Number,
+    cmsUInt32Number)
+- name: cmsOpenProfileFromIOhandlerTHR
+  params:
+  - name: ContextID
+    type: 'bool '
+  - name: io
+    type: 'bool '
+  return_type: void
+  signature: cmsHPROFILE cmsOpenProfileFromIOhandlerTHR(cmsContext, cmsIOHANDLER *)
+- name: cmsCreateRGBProfile
+  params:
+  - name: WhitePoint
+    type: 'bool '
+  - name: Primaries
+    type: 'bool '
+  - name: TransferFunction
+    type: 'bool '
+  return_type: void
+  signature: cmsHPROFILE cmsCreateRGBProfile(const cmsCIExyY *, const cmsCIExyYTRIPLE
+    *, const cmsToneCurve **)
+- name: cmsCreateDeviceLinkFromCubeFile
+  params:
+  - name: cFileName
+    type: 'bool '
+  return_type: void
+  signature: cmsHPROFILE cmsCreateDeviceLinkFromCubeFile(const char *)
+- name: cmsCreateProofingTransform
+  params:
+  - name: InputProfile
+    type: 'bool '
+  - name: InputFormat
+    type: int
+  - name: OutputProfile
+    type: 'bool '
+  - name: OutputFormat
+    type: int
+  - name: ProofingProfile
+    type: 'bool '
+  - name: nIntent
+    type: int
+  - name: ProofingIntent
+    type: int
+  - name: dwFlags
+    type: int
+  return_type: void
+  signature: cmsHTRANSFORM cmsCreateProofingTransform(cmsHPROFILE, cmsUInt32Number,
+    cmsHPROFILE, cmsUInt32Number, cmsHPROFILE, cmsUInt32Number, cmsUInt32Number, cmsUInt32Number)
+language: c++
+project: lcms
+target_name: cms_dict_fuzzer
+target_path: /src/cms_dict_fuzzer.c
+test_files:
+- test_file_path: /src/lcms/plugins/fast_float/testbed/fast_float_testbed.c
+- test_file_path: /src/lcms/plugins/threaded/testbed/threaded_testbed.c
+- test_file_path: /src/lcms/utils/samples/roundtrip.c
+- test_file_path: /src/lcms/testbed/testplugin.c
+- test_file_path: /src/lcms/utils/samples/wtpt.c
+- test_file_path: /src/lcms/utils/samples/itufax.c

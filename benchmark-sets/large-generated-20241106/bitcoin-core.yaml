@@ -1,84 +1,118 @@
-"functions":
-- "name": "_ZN6wallet12_GLOBAL__N_116WalletLoaderImpl6verifyEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool wallet::(anonymous namespace)::WalletLoaderImpl::verify()"
-- "name": "_ZZN6walletL13migratewalletEvENK3$_0clERK10RPCHelpManRK14JSONRPCRequest"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "self"
-    "type": "bool "
-  - "name": "request"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "UniValue wallet::operator()(const void *, const RPCHelpMan &, const JSONRPCRequest &)"
-- "name": "_ZNK5boost9iterators6detail20iterator_facade_baseINS_8signals26detail20slot_call_iterator_tINS4_21variadic_slot_invokerINS4_9void_typeEJEEENSt3__115__list_iteratorINS_10shared_ptrINS4_15connection_bodyINS9_4pairINS4_15slot_meta_groupENS_8optionalIiEEEENS3_4slotIFvvENS_8functionISJ_EEEENS3_5mutexEEEEEPvEESO_EES7_NS0_25single_pass_traversal_tagERKS7_lLb0ELb0EEdeEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "reference boost::iterators::detail::iterator_facade_base<boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<boost::signals2::detail::void_type>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::operator*(const iterator_facade_base<boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<bool, const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> >, void *>, boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> >, bool, boost::iterators::single_pass_traversal_tag, const bool &, long, false, false> *)"
-- "name": "_ZN5boost9iterators6detail20iterator_facade_baseINS_8signals26detail20slot_call_iterator_tINS4_21variadic_slot_invokerINS4_9void_typeEJEEENSt3__115__list_iteratorINS_10shared_ptrINS4_15connection_bodyINS9_4pairINS4_15slot_meta_groupENS_8optionalIiEEEENS3_4slotIFvvENS_8functionISJ_EEEENS3_5mutexEEEEEPvEESO_EES7_NS0_25single_pass_traversal_tagERKS7_lLb0ELb0EEppEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<bool, const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> >, void *>, boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> > & boost::iterators::detail::iterator_facade_base<boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<boost::signals2::detail::void_type>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::operator++(iterator_facade_base<boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<bool, const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> >, void *>, boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> >, bool, boost::iterators::single_pass_traversal_tag, const bool &, long, false, false> *)"
-- "name": "_ZN5boost8signals26detail20slot_call_iterator_tINS1_21variadic_slot_invokerINS1_9void_typeEJEEENSt3__115__list_iteratorINS_10shared_ptrINS1_15connection_bodyINS6_4pairINS1_15slot_meta_groupENS_8optionalIiEEEENS0_4slotIFvvENS_8functionISG_EEEENS0_5mutexEEEEEPvEESL_E9incrementEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<boost::signals2::detail::void_type>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::increment(slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<bool, const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> >, void *>, boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> > *)"
-- "name": "_ZNK5boost8signals26detail20slot_call_iterator_tINS1_21variadic_slot_invokerINS1_9void_typeEJEEENSt3__115__list_iteratorINS_10shared_ptrINS1_15connection_bodyINS6_4pairINS1_15slot_meta_groupENS_8optionalIiEEEENS0_4slotIFvvENS_8functionISG_EEEENS0_5mutexEEEEEPvEESL_E11dereferenceEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "reference boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<boost::signals2::detail::void_type>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::dereference(const slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<bool, const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> >, void *>, boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> > *)"
-- "name": "_ZNK5boost8signals26detail20slot_call_iterator_tINS1_21variadic_slot_invokerINS1_9void_typeEJbEEENSt3__115__list_iteratorINS_10shared_ptrINS1_15connection_bodyINS6_4pairINS1_15slot_meta_groupENS_8optionalIiEEEENS0_4slotIFvbENS_8functionISG_EEEENS0_5mutexEEEEEPvEESL_E11dereferenceEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "reference boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<boost::signals2::detail::void_type, bool>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::dereference(const slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<bool, const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> >, void *>, boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> > *)"
-- "name": "_ZN6wallet12_GLOBAL__N_116WalletLoaderImpl4loadEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool wallet::(anonymous namespace)::WalletLoaderImpl::load()"
-- "name": "_ZZN6wallet25MigrateLegacyToDescriptorERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS1_IcS3_16secure_allocatorIcEEERNS_13WalletContextEENK3$_1clERNS0_10shared_ptrINS_7CWalletEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "to_reload"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool wallet::operator()(const void *, shared_ptr<wallet::CWallet> &)"
-- "name": "_ZN5boost8signals26detail20slot_call_iterator_tINS1_21variadic_slot_invokerINS1_9void_typeEJbEEENSt3__115__list_iteratorINS_10shared_ptrINS1_15connection_bodyINS6_4pairINS1_15slot_meta_groupENS_8optionalIiEEEENS0_4slotIFvbENS_8functionISG_EEEENS0_5mutexEEEEEPvEESL_E9incrementEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<boost::signals2::detail::void_type, bool>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::increment(slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<bool, const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> >, void *>, boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >, boost::signals2::mutex> > *)"
-"language": "c++"
-"project": "bitcoin-core"
-"target_name": "build_and_compare_feerate_diagram"
-"target_path": "/src/bitcoin-core/src/test/fuzz/fuzz.cpp"
-"test_files":
-- "test_file_path": "/src/bitcoin-core/src/test/util/script.cpp"
-- "test_file_path": "/src/bitcoin-core/src/leveldb/issues/issue320_test.cc"
-- "test_file_path": "/src/bitcoin-core/src/test/ipc_test.cpp"
-- "test_file_path": "/src/bitcoin-core/src/test/main.cpp"
-- "test_file_path": "/src/bitcoin-core/src/wallet/test/wallet_test_fixture.cpp"
-- "test_file_path": "/src/bitcoin-core/src/leveldb/table/filter_block_test.cc"
-- "test_file_path": "/src/bitcoin-core/src/crc32c/src/crc32c_unittest.cc"
-- "test_file_path": "/src/bitcoin-core/src/wallet/test/init_test_fixture.cpp"
-- "test_file_path": "/src/bitcoin-core/src/wallet/test/coinselector_tests.cpp"
-- "test_file_path": "/src/bitcoin-core/src/crc32c/src/crc32c_test_main.cc"
+functions:
+- name: _ZNK5boost8signals26detail20slot_call_iterator_tINS1_21variadic_slot_invokerINS1_9void_typeEJbEEENSt3__115__list_iteratorINS_10shared_ptrINS1_15connection_bodyINS6_4pairINS1_15slot_meta_groupENS_8optionalIiEEEENS0_4slotIFvbENS_8functionISG_EEEENS0_5mutexEEEEEPvEESL_E11dereferenceEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: reference boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<boost::signals2::detail::void_type,
+    bool>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::dereference(const slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<bool,
+    const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>,
+    std::__1::allocator<char> > &, unsigned int>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const
+    std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >,
+    boost::signals2::mutex> >, void *>, boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const
+    std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >,
+    boost::signals2::mutex> > *)
+- name: _ZN6wallet12_GLOBAL__N_116WalletLoaderImpl4loadEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool wallet::(anonymous namespace)::WalletLoaderImpl::load()
+- name: _ZN6wallet12_GLOBAL__N_116WalletLoaderImpl6verifyEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool wallet::(anonymous namespace)::WalletLoaderImpl::verify()
+- name: _ZN5boost9iterators6detail20iterator_facade_baseINS_8signals26detail20slot_call_iterator_tINS4_21variadic_slot_invokerINS4_9void_typeEJEEENSt3__115__list_iteratorINS_10shared_ptrINS4_15connection_bodyINS9_4pairINS4_15slot_meta_groupENS_8optionalIiEEEENS3_4slotIFvvENS_8functionISJ_EEEENS3_5mutexEEEEEPvEESO_EES7_NS0_25single_pass_traversal_tagERKS7_lLb0ELb0EEppEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<bool,
+    const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>,
+    std::__1::allocator<char> > &, unsigned int>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const
+    std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >,
+    boost::signals2::mutex> >, void *>, boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const
+    std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >,
+    boost::signals2::mutex> > & boost::iterators::detail::iterator_facade_base<boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<boost::signals2::detail::void_type>,
+    std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::operator++(iterator_facade_base<boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<bool,
+    const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>,
+    std::__1::allocator<char> > &, unsigned int>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const
+    std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >,
+    boost::signals2::mutex> >, void *>, boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const
+    std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >,
+    boost::signals2::mutex> >, bool, boost::iterators::single_pass_traversal_tag,
+    const bool &, long, false, false> *)
+- name: _ZN5boost8signals26detail20slot_call_iterator_tINS1_21variadic_slot_invokerINS1_9void_typeEJbEEENSt3__115__list_iteratorINS_10shared_ptrINS1_15connection_bodyINS6_4pairINS1_15slot_meta_groupENS_8optionalIiEEEENS0_4slotIFvbENS_8functionISG_EEEENS0_5mutexEEEEEPvEESL_E9incrementEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<boost::signals2::detail::void_type,
+    bool>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::increment(slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<bool,
+    const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>,
+    std::__1::allocator<char> > &, unsigned int>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const
+    std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >,
+    boost::signals2::mutex> >, void *>, boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const
+    std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >,
+    boost::signals2::mutex> > *)
+- name: _ZNK5boost9iterators6detail20iterator_facade_baseINS_8signals26detail20slot_call_iterator_tINS4_21variadic_slot_invokerINS4_9void_typeEJEEENSt3__115__list_iteratorINS_10shared_ptrINS4_15connection_bodyINS9_4pairINS4_15slot_meta_groupENS_8optionalIiEEEENS3_4slotIFvvENS_8functionISJ_EEEENS3_5mutexEEEEEPvEESO_EES7_NS0_25single_pass_traversal_tagERKS7_lLb0ELb0EEdeEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: reference boost::iterators::detail::iterator_facade_base<boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<boost::signals2::detail::void_type>,
+    std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::operator*(const iterator_facade_base<boost::signals2::detail::slot_call_iterator_t<boost::signals2::detail::variadic_slot_invoker<bool,
+    const bilingual_str &, const std::__1::basic_string<char, std::__1::char_traits<char>,
+    std::__1::allocator<char> > &, unsigned int>, std::__1::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const
+    std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >,
+    boost::signals2::mutex> >, void *>, boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::slot<bool (const bilingual_str &, const
+    std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > &, unsigned int), boost::function<bool (const bilingual_str &, const std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > &, unsigned int)> >,
+    boost::signals2::mutex> >, bool, boost::iterators::single_pass_traversal_tag,
+    const bool &, long, false, false> *)
+language: c++
+project: bitcoin-core
+target_name: build_and_compare_feerate_diagram
+target_path: /src/bitcoin-core/src/test/fuzz/fuzz.cpp
+test_files:
+- test_file_path: /src/bitcoin-core/src/crc32c/src/crc32c_unittest.cc
+- test_file_path: /src/bitcoin-core/src/leveldb/table/filter_block_test.cc
+- test_file_path: /src/bitcoin-core/src/test/main.cpp
+- test_file_path: /src/bitcoin-core/src/test/util/script.cpp
+- test_file_path: /src/bitcoin-core/src/test/ipc_test.cpp
+- test_file_path: /src/bitcoin-core/src/leveldb/issues/issue320_test.cc

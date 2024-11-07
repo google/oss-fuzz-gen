@@ -1,106 +1,62 @@
-"functions":
-- "name": "wolfSSL_send"
-  "params":
-  - "name": "ssl"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "sz"
-    "type": "int"
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int wolfSSL_send(WOLFSSL *, const void *, int, int)"
-- "name": "MqttClient_Ping"
-  "params":
-  - "name": "client"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int MqttClient_Ping(MqttClient *)"
-- "name": "wolfSSL_peek"
-  "params":
-  - "name": "ssl"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "sz"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int wolfSSL_peek(WOLFSSL *, void *, int)"
-- "name": "MqttClient_Publish_ex"
-  "params":
-  - "name": "client"
-    "type": "bool "
-  - "name": "publish"
-    "type": "bool "
-  - "name": "pubCb"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int MqttClient_Publish_ex(MqttClient *, MqttPublish *, MqttPublishCb)"
-- "name": "MqttClient_Disconnect"
-  "params":
-  - "name": "client"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int MqttClient_Disconnect(MqttClient *)"
-- "name": "wolfSSL_writev"
-  "params":
-  - "name": "ssl"
-    "type": "bool "
-  - "name": "iov"
-    "type": "bool "
-  - "name": "iovcnt"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int wolfSSL_writev(WOLFSSL *, const struct iovec *, int)"
-- "name": "wolfSSL_CertManagerLoadCA"
-  "params":
-  - "name": "cm"
-    "type": "bool "
-  - "name": "file"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int wolfSSL_CertManagerLoadCA(WOLFSSL_CERT_MANAGER *, const char *, const char *)"
-- "name": "wolfSSL_recv"
-  "params":
-  - "name": "ssl"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "sz"
-    "type": "int"
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int wolfSSL_recv(WOLFSSL *, void *, int, int)"
-- "name": "wolfSSL_connect_cert"
-  "params":
-  - "name": "ssl"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int wolfSSL_connect_cert(WOLFSSL *)"
-- "name": "MqttClient_Disconnect_ex"
-  "params":
-  - "name": "client"
-    "type": "bool "
-  - "name": "p_disconnect"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int MqttClient_Disconnect_ex(MqttClient *, MqttDisconnect *)"
-"language": "c"
-"project": "wolfmqtt"
-"target_name": "wolfmqtt-fuzzer"
-"target_path": "/src/wolfmqtt-fuzzers/fuzzer.cpp"
-"test_files":
-- "test_file_path": "/src/wolfmqtt/examples/wiot/wiot.c"
-- "test_file_path": "/src/wolfmqtt/examples/nbclient/nbclient.c"
-- "test_file_path": "/src/wolfmqtt/IDE/Espressif/ESP-IDF/examples/AWS_IoT_MQTT/main/wifi_connect.c"
-- "test_file_path": "/src/wolfmqtt/examples/mqttsimple/mqttsimple.c"
-- "test_file_path": "/src/wolfmqtt/examples/pub-sub/mqtt-pub.c"
-- "test_file_path": "/src/wolfmqtt/IDE/Espressif/ESP-IDF/examples/AWS_IoT_MQTT/main/time_helper.c"
-- "test_file_path": "/src/wolfmqtt/examples/mqttnet.c"
-- "test_file_path": "/src/wolfmqtt/examples/firmware/fwpush.c"
-- "test_file_path": "/src/wolfmqtt/zephyr/samples/client.c"
-- "test_file_path": "/src/wolfmqtt/IDE/Espressif/ESP-IDF/examples/wolfmqtt_template/main/main.c"
+functions:
+- name: MqttClient_Ping
+  params:
+  - name: client
+    type: 'bool '
+  return_type: int
+  signature: int MqttClient_Ping(MqttClient *)
+- name: wolfSSL_peek
+  params:
+  - name: ssl
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: sz
+    type: int
+  return_type: int
+  signature: int wolfSSL_peek(WOLFSSL *, void *, int)
+- name: MqttClient_Disconnect
+  params:
+  - name: client
+    type: 'bool '
+  return_type: int
+  signature: int MqttClient_Disconnect(MqttClient *)
+- name: wolfSSL_connect_cert
+  params:
+  - name: ssl
+    type: 'bool '
+  return_type: int
+  signature: int wolfSSL_connect_cert(WOLFSSL *)
+- name: wolfSSL_recv
+  params:
+  - name: ssl
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: sz
+    type: int
+  - name: flags
+    type: int
+  return_type: int
+  signature: int wolfSSL_recv(WOLFSSL *, void *, int, int)
+- name: wolfSSL_writev
+  params:
+  - name: ssl
+    type: 'bool '
+  - name: iov
+    type: 'bool '
+  - name: iovcnt
+    type: int
+  return_type: int
+  signature: int wolfSSL_writev(WOLFSSL *, const struct iovec *, int)
+language: c
+project: wolfmqtt
+target_name: wolfmqtt-fuzzer
+target_path: /src/wolfmqtt-fuzzers/fuzzer.cpp
+test_files:
+- test_file_path: /src/wolfmqtt/examples/firmware/fwpush.c
+- test_file_path: /src/wolfmqtt/examples/nbclient/nbclient.c
+- test_file_path: /src/wolfmqtt/IDE/Espressif/ESP-IDF/examples/AWS_IoT_MQTT/main/time_helper.c
+- test_file_path: /src/wolfmqtt/examples/pub-sub/mqtt-pub.c
+- test_file_path: /src/wolfmqtt/examples/mqttsimple/mqttsimple.c
+- test_file_path: /src/wolfmqtt/zephyr/samples/client.c

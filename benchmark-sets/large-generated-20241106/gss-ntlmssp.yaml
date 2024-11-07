@@ -1,219 +1,141 @@
-"functions":
-- "name": "gss_acquire_cred_from"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "desired_name"
-    "type": "bool "
-  - "name": "time_req"
-    "type": "int"
-  - "name": "desired_mechs"
-    "type": "bool "
-  - "name": "cred_usage"
-    "type": "int"
-  - "name": "cred_store"
-    "type": "bool "
-  - "name": "output_cred_handle"
-    "type": "bool "
-  - "name": "actual_mechs"
-    "type": "bool "
-  - "name": "time_rec"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 gss_acquire_cred_from(OM_uint32 *, gss_name_t, OM_uint32, gss_OID_set, gss_cred_usage_t, gss_const_key_value_set_t, gss_cred_id_t *, gss_OID_set *, OM_uint32 *)"
-- "name": "gssntlm_inquire_cred_by_mech"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "cred_handle"
-    "type": "bool "
-  - "name": "mech_type"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "initiator_lifetime"
-    "type": "bool "
-  - "name": "acceptor_lifetime"
-    "type": "bool "
-  - "name": "cred_usage"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "uint32_t gssntlm_inquire_cred_by_mech(uint32_t *, gss_cred_id_t, gss_OID, gss_name_t *, uint32_t *, uint32_t *, gss_cred_usage_t *)"
-- "name": "gssntlm_inquire_cred"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "cred_handle"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "lifetime"
-    "type": "bool "
-  - "name": "cred_usage"
-    "type": "bool "
-  - "name": "mechanisms"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "uint32_t gssntlm_inquire_cred(uint32_t *, gss_cred_id_t, gss_name_t *, uint32_t *, gss_cred_usage_t *, gss_OID_set *)"
-- "name": "gss_inquire_cred"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "cred_handle"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "lifetime"
-    "type": "bool "
-  - "name": "cred_usage"
-    "type": "bool "
-  - "name": "mechanisms"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 gss_inquire_cred(OM_uint32 *, gss_cred_id_t, gss_name_t *, OM_uint32 *, gss_cred_usage_t *, gss_OID_set *)"
-- "name": "gss_acquire_cred"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "desired_name"
-    "type": "bool "
-  - "name": "time_req"
-    "type": "int"
-  - "name": "desired_mechs"
-    "type": "bool "
-  - "name": "cred_usage"
-    "type": "int"
-  - "name": "output_cred_handle"
-    "type": "bool "
-  - "name": "actual_mechs"
-    "type": "bool "
-  - "name": "time_rec"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 gss_acquire_cred(OM_uint32 *, gss_name_t, OM_uint32, gss_OID_set, gss_cred_usage_t, gss_cred_id_t *, gss_OID_set *, OM_uint32 *)"
-- "name": "gss_inquire_cred_by_mech"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "cred_handle"
-    "type": "bool "
-  - "name": "mech_type"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "initiator_lifetime"
-    "type": "bool "
-  - "name": "acceptor_lifetime"
-    "type": "bool "
-  - "name": "cred_usage"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 gss_inquire_cred_by_mech(OM_uint32 *, gss_cred_id_t, gss_OID, gss_name_t *, OM_uint32 *, OM_uint32 *, gss_cred_usage_t *)"
-- "name": "gssntlm_init_sec_context"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "claimant_cred_handle"
-    "type": "bool "
-  - "name": "context_handle"
-    "type": "bool "
-  - "name": "target_name"
-    "type": "bool "
-  - "name": "mech_type"
-    "type": "bool "
-  - "name": "req_flags"
-    "type": "int"
-  - "name": "time_req"
-    "type": "int"
-  - "name": "input_chan_bindings"
-    "type": "bool "
-  - "name": "input_token"
-    "type": "bool "
-  - "name": "actual_mech_type"
-    "type": "bool "
-  - "name": "output_token"
-    "type": "bool "
-  - "name": "ret_flags"
-    "type": "bool "
-  - "name": "time_rec"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "uint32_t gssntlm_init_sec_context(uint32_t *, gss_cred_id_t, gss_ctx_id_t *, gss_name_t, gss_OID, uint32_t, uint32_t, gss_channel_bindings_t, gss_buffer_t, gss_OID *, gss_buffer_t, uint32_t *, uint32_t *)"
-- "name": "gssntlm_cli_auth"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "cred"
-    "type": "bool "
-  - "name": "target_info"
-    "type": "bool "
-  - "name": "in_flags"
-    "type": "int"
-  - "name": "input_chan_bindings"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "uint32_t gssntlm_cli_auth(uint32_t *, struct gssntlm_ctx *, struct gssntlm_cred *, struct ntlm_buffer *, uint32_t, gss_channel_bindings_t)"
-- "name": "gss_accept_sec_context"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "context_handle"
-    "type": "bool "
-  - "name": "acceptor_cred_handle"
-    "type": "bool "
-  - "name": "input_token_buffer"
-    "type": "bool "
-  - "name": "input_chan_bindings"
-    "type": "bool "
-  - "name": "src_name"
-    "type": "bool "
-  - "name": "mech_type"
-    "type": "bool "
-  - "name": "output_token"
-    "type": "bool "
-  - "name": "ret_flags"
-    "type": "bool "
-  - "name": "time_rec"
-    "type": "bool "
-  - "name": "delegated_cred_handle"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 gss_accept_sec_context(OM_uint32 *, gss_ctx_id_t *, gss_cred_id_t, gss_buffer_t, gss_channel_bindings_t, gss_name_t *, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *, gss_cred_id_t *)"
-- "name": "gss_init_sec_context"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "claimant_cred_handle"
-    "type": "bool "
-  - "name": "context_handle"
-    "type": "bool "
-  - "name": "target_name"
-    "type": "bool "
-  - "name": "mech_type"
-    "type": "bool "
-  - "name": "req_flags"
-    "type": "int"
-  - "name": "time_req"
-    "type": "int"
-  - "name": "input_chan_bindings"
-    "type": "bool "
-  - "name": "input_token"
-    "type": "bool "
-  - "name": "actual_mech_type"
-    "type": "bool "
-  - "name": "output_token"
-    "type": "bool "
-  - "name": "ret_flags"
-    "type": "bool "
-  - "name": "time_rec"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 gss_init_sec_context(OM_uint32 *, gss_cred_id_t, gss_ctx_id_t *, gss_name_t, gss_OID, OM_uint32, OM_uint32, gss_channel_bindings_t, gss_buffer_t, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *)"
-"language": "c"
-"project": "gss-ntlmssp"
-"target_name": "fuzz-accept-sec-context"
-"target_path": "/src/gss-ntlmssp/fuzzing/fuzz-accept-sec-context.c"
-"test_files":
-- "test_file_path": "/src/gss-ntlmssp/tests/ntlmssptest.c"
+functions:
+- name: gss_inquire_cred
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: cred_handle
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: lifetime
+    type: 'bool '
+  - name: cred_usage
+    type: 'bool '
+  - name: mechanisms
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 gss_inquire_cred(OM_uint32 *, gss_cred_id_t, gss_name_t *,
+    OM_uint32 *, gss_cred_usage_t *, gss_OID_set *)
+- name: gss_inquire_cred_by_mech
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: cred_handle
+    type: 'bool '
+  - name: mech_type
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: initiator_lifetime
+    type: 'bool '
+  - name: acceptor_lifetime
+    type: 'bool '
+  - name: cred_usage
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 gss_inquire_cred_by_mech(OM_uint32 *, gss_cred_id_t, gss_OID,
+    gss_name_t *, OM_uint32 *, OM_uint32 *, gss_cred_usage_t *)
+- name: gss_accept_sec_context
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: context_handle
+    type: 'bool '
+  - name: acceptor_cred_handle
+    type: 'bool '
+  - name: input_token_buffer
+    type: 'bool '
+  - name: input_chan_bindings
+    type: 'bool '
+  - name: src_name
+    type: 'bool '
+  - name: mech_type
+    type: 'bool '
+  - name: output_token
+    type: 'bool '
+  - name: ret_flags
+    type: 'bool '
+  - name: time_rec
+    type: 'bool '
+  - name: delegated_cred_handle
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 gss_accept_sec_context(OM_uint32 *, gss_ctx_id_t *, gss_cred_id_t,
+    gss_buffer_t, gss_channel_bindings_t, gss_name_t *, gss_OID *, gss_buffer_t, OM_uint32
+    *, OM_uint32 *, gss_cred_id_t *)
+- name: gss_init_sec_context
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: claimant_cred_handle
+    type: 'bool '
+  - name: context_handle
+    type: 'bool '
+  - name: target_name
+    type: 'bool '
+  - name: mech_type
+    type: 'bool '
+  - name: req_flags
+    type: int
+  - name: time_req
+    type: int
+  - name: input_chan_bindings
+    type: 'bool '
+  - name: input_token
+    type: 'bool '
+  - name: actual_mech_type
+    type: 'bool '
+  - name: output_token
+    type: 'bool '
+  - name: ret_flags
+    type: 'bool '
+  - name: time_rec
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 gss_init_sec_context(OM_uint32 *, gss_cred_id_t, gss_ctx_id_t
+    *, gss_name_t, gss_OID, OM_uint32, OM_uint32, gss_channel_bindings_t, gss_buffer_t,
+    gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *)
+- name: gssntlm_cli_auth
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: ctx
+    type: 'bool '
+  - name: cred
+    type: 'bool '
+  - name: target_info
+    type: 'bool '
+  - name: in_flags
+    type: int
+  - name: input_chan_bindings
+    type: 'bool '
+  return_type: int
+  signature: uint32_t gssntlm_cli_auth(uint32_t *, struct gssntlm_ctx *, struct gssntlm_cred
+    *, struct ntlm_buffer *, uint32_t, gss_channel_bindings_t)
+- name: gss_acquire_cred
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: desired_name
+    type: 'bool '
+  - name: time_req
+    type: int
+  - name: desired_mechs
+    type: 'bool '
+  - name: cred_usage
+    type: int
+  - name: output_cred_handle
+    type: 'bool '
+  - name: actual_mechs
+    type: 'bool '
+  - name: time_rec
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 gss_acquire_cred(OM_uint32 *, gss_name_t, OM_uint32, gss_OID_set,
+    gss_cred_usage_t, gss_cred_id_t *, gss_OID_set *, OM_uint32 *)
+language: c
+project: gss-ntlmssp
+target_name: fuzz-accept-sec-context
+target_path: /src/gss-ntlmssp/fuzzing/fuzz-accept-sec-context.c
+test_files:
+- test_file_path: /src/gss-ntlmssp/tests/ntlmssptest.c

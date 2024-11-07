@@ -1,114 +1,70 @@
-"functions":
-- "name": "_ZN2c43yml6Parser16_handle_map_blckEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool c4::yml::Parser::_handle_map_blck()"
-- "name": "_ZNK2c415basic_substringIKcE9is_numberEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool c4::basic_substring<char const>::is_number(const struct basic_substring<const char> *)"
-- "name": "_ZN2c43yml14parse_in_arenaENS_15basic_substringIKcEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "Tree c4::yml::parse_in_arena(csubstr)"
-- "name": "_ZN2c43yml6Parser12_handle_lineEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void c4::yml::Parser::_handle_line()"
-- "name": "jsonnet_evaluate_file_multi"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "char * jsonnet_evaluate_file_multi(struct JsonnetVm *, const char *, int *)"
-- "name": "_ZN2c43yml6Parser14parse_in_arenaENS_15basic_substringIKcEES4_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "Tree c4::yml::Parser::parse_in_arena(csubstr, csubstr)"
-- "name": "jsonnet_evaluate_file"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "char * jsonnet_evaluate_file(struct JsonnetVm *, const char *, int *)"
-- "name": "_ZN2c43yml4Tree7resolveEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void c4::yml::Tree::resolve()"
-- "name": "jsonnet_evaluate_file_stream"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "char * jsonnet_evaluate_file_stream(struct JsonnetVm *, const char *, int *)"
-- "name": "_ZN2c43yml6Parser14parse_in_placeENS_15basic_substringIKcEENS2_IcEEPNS0_4TreeEm"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void c4::yml::Parser::parse_in_place(csubstr, substr, Tree *, size_t)"
-"language": "c++"
-"project": "jsonnet"
-"target_name": "convert_jsonnet_fuzzer_stream"
-"target_path": "/src/convert_jsonnet_fuzzer_stream.cc"
-"test_files":
-- "test_file_path": "/src/jsonnet/test_cmd/version2.golden.stdout.cpp"
-- "test_file_path": "/src/jsonnet/cpp/libjsonnet_test_locale.cpp"
-- "test_file_path": "/src/jsonnet/cpp/libjsonnet++_test.cpp"
-- "test_file_path": "/src/jsonnet/test_cmd/simple4.golden.stderr.cpp"
-- "test_file_path": "/src/jsonnet/test_cmd/help.golden.stdout.cpp"
-- "test_file_path": "/src/jsonnet/core/libjsonnet_test_file.c"
-- "test_file_path": "/src/jsonnet/core/libjsonnet_test.cpp"
-- "test_file_path": "/src/jsonnet/test_cmd/max_stack4.golden.stderr.cpp"
-- "test_file_path": "/src/jsonnet/core/libjsonnet_test_snippet.c"
-- "test_file_path": "/src/jsonnet/core/lexer_test.cpp"
+functions:
+- name: jsonnet_evaluate_file_multi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: char * jsonnet_evaluate_file_multi(struct JsonnetVm *, const char *,
+    int *)
+- name: _ZN2c43yml6Parser12_handle_lineEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void c4::yml::Parser::_handle_line()
+- name: _ZN2c43yml6Parser16_handle_map_blckEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool c4::yml::Parser::_handle_map_blck()
+- name: _ZN2c43yml6Parser14parse_in_placeENS_15basic_substringIKcEENS2_IcEEPNS0_4TreeEm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void c4::yml::Parser::parse_in_place(csubstr, substr, Tree *, size_t)
+- name: _ZN2c43yml14parse_in_arenaENS_15basic_substringIKcEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: Tree c4::yml::parse_in_arena(csubstr)
+- name: _ZNK2c415basic_substringIKcE9is_numberEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool c4::basic_substring<char const>::is_number(const struct basic_substring<const
+    char> *)
+language: c++
+project: jsonnet
+target_name: convert_jsonnet_fuzzer_stream
+target_path: /src/convert_jsonnet_fuzzer_stream.cc
+test_files:
+- test_file_path: /src/jsonnet/cpp/libjsonnet_test_locale.cpp
+- test_file_path: /src/jsonnet/test_cmd/max_stack4.golden.stderr.cpp
+- test_file_path: /src/jsonnet/test_cmd/version2.golden.stdout.cpp
+- test_file_path: /src/jsonnet/core/libjsonnet_test.cpp
+- test_file_path: /src/jsonnet/cpp/libjsonnet++_test.cpp
+- test_file_path: /src/jsonnet/test_cmd/help.golden.stdout.cpp

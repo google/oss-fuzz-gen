@@ -1,15 +1,11 @@
-"language": "c++"
-"project": "libspectre"
-"target_name": "spectre_read_fuzzer"
-"target_path": "/src/libspectre/test/spectre_read_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/libspectre/ghostscript/zlib/examples/gun.c"
-- "test_file_path": "/src/libspectre/ghostscript/tiff/test/strip.c"
-- "test_file_path": "/src/libspectre/ghostscript/cups/libs/cups/testlang.c"
-- "test_file_path": "/src/libspectre/ghostscript/tiff/test/raw_decode.c"
-- "test_file_path": "/src/libspectre/ghostscript/lcms2mt/utils/samples/itufax.c"
-- "test_file_path": "/src/libspectre/ghostscript/libpng/contrib/examples/simpleover.c"
-- "test_file_path": "/src/libspectre/ghostscript/zlib/contrib/testzlib/testzlib.c"
-- "test_file_path": "/src/libspectre/ghostscript/cups/libs/cups/testpwg.c"
-- "test_file_path": "/src/libspectre/ghostscript/tiff/test/short_tag.c"
-- "test_file_path": "/src/libspectre/ghostscript/libpng/contrib/libtests/pngvalid.c"
+language: c++
+project: libspectre
+target_name: spectre_read_fuzzer
+target_path: /src/libspectre/test/spectre_read_fuzzer.c
+test_files:
+- test_file_path: /src/libspectre/ghostscript/libpng/contrib/examples/simpleover.c
+- test_file_path: /src/libspectre/ghostscript/lcms2mt/utils/samples/itufax.c
+- test_file_path: /src/libspectre/ghostscript/tiff/test/short_tag.c
+- test_file_path: /src/libspectre/ghostscript/tiff/test/strip.c
+- test_file_path: /src/libspectre/ghostscript/cups/libs/cups/testlang.c
+- test_file_path: /src/libspectre/ghostscript/zlib/examples/gun.c

@@ -1,100 +1,66 @@
-"functions":
-- "name": "_ZN7CClient11UserCommandER7CString"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "sLine"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void CClient::UserCommand(CString &)"
-- "name": "_ZN4cctz9time_zone4ImplC2ERKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void cctz::time_zone::Impl::Impl(const string &)"
-- "name": "_ZN7CClient13OnTextMessageER12CTextMessage"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "Message"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool CClient::OnTextMessage(CTextMessage &)"
-- "name": "_ZN7CClient14OnOtherMessageER8CMessage"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "Message"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool CClient::OnOtherMessage(CMessage &)"
-- "name": "_ZN4CZNC11ParseConfigERK7CStringRS0_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "sConfig"
-    "type": "bool "
-  - "name": "sError"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool CZNC::ParseConfig(const CString &, CString &)"
-- "name": "_ZN7CClient8ReadLineERK7CString"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "sData"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void CClient::ReadLine(const CString &)"
-- "name": "_ZN5CUser11ParseConfigEP7CConfigR7CString"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "pConfig"
-    "type": "bool "
-  - "name": "sError"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool CUser::ParseConfig(CConfig *, CString &)"
-- "name": "_ZN4CZNC9LoadUsersER7CConfigR7CString"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "config"
-    "type": "bool "
-  - "name": "sError"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool CZNC::LoadUsers(CConfig &, CString &)"
-- "name": "_ZN4CZNC4LoopEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void CZNC::Loop()"
-- "name": "_ZN8CIRCSock8ReadLineERK7CString"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "sData"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void CIRCSock::ReadLine(const CString &)"
-"language": "c++"
-"project": "znc"
-"target_name": "msg_parse_fuzzer"
-"target_path": "/src/msg_parse_fuzzer.cpp"
-"test_files":
-- "test_file_path": "/src/znc/test/ModulesTest.cpp"
-- "test_file_path": "/src/znc/test/MessageTest.cpp"
-- "test_file_path": "/src/znc/test/ThreadTest.cpp"
-- "test_file_path": "/src/znc/test/integration/framework/base.cpp"
-- "test_file_path": "/src/znc/test/DebugTest.cpp"
-- "test_file_path": "/src/znc/test/ConfigTest.cpp"
-- "test_file_path": "/src/znc/test/integration/framework/main.cpp"
-- "test_file_path": "/src/znc/test/UtilsTest.cpp"
-- "test_file_path": "/src/znc/test/integration/tests/modules.cpp"
-- "test_file_path": "/src/znc/test/integration/tests/scripting.cpp"
+functions:
+- name: _ZN4cctz9time_zone4ImplC2ERKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  return_type: void
+  signature: void cctz::time_zone::Impl::Impl(const string &)
+- name: _ZN7CClient13OnTextMessageER12CTextMessage
+  params:
+  - name: this
+    type: 'bool '
+  - name: Message
+    type: 'bool '
+  return_type: bool
+  signature: bool CClient::OnTextMessage(CTextMessage &)
+- name: _ZN7CClient14OnOtherMessageER8CMessage
+  params:
+  - name: this
+    type: 'bool '
+  - name: Message
+    type: 'bool '
+  return_type: bool
+  signature: bool CClient::OnOtherMessage(CMessage &)
+- name: _ZN5CUser11ParseConfigEP7CConfigR7CString
+  params:
+  - name: this
+    type: 'bool '
+  - name: pConfig
+    type: 'bool '
+  - name: sError
+    type: 'bool '
+  return_type: bool
+  signature: bool CUser::ParseConfig(CConfig *, CString &)
+- name: _ZN4CZNC9LoadUsersER7CConfigR7CString
+  params:
+  - name: this
+    type: 'bool '
+  - name: config
+    type: 'bool '
+  - name: sError
+    type: 'bool '
+  return_type: bool
+  signature: bool CZNC::LoadUsers(CConfig &, CString &)
+- name: _ZN4CZNC11ParseConfigERK7CStringRS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: sConfig
+    type: 'bool '
+  - name: sError
+    type: 'bool '
+  return_type: bool
+  signature: bool CZNC::ParseConfig(const CString &, CString &)
+language: c++
+project: znc
+target_name: msg_parse_fuzzer
+target_path: /src/msg_parse_fuzzer.cpp
+test_files:
+- test_file_path: /src/znc/test/DebugTest.cpp
+- test_file_path: /src/znc/test/integration/tests/scripting.cpp
+- test_file_path: /src/znc/test/integration/tests/modules.cpp
+- test_file_path: /src/znc/test/integration/framework/base.cpp
+- test_file_path: /src/znc/test/UtilsTest.cpp
+- test_file_path: /src/znc/test/integration/framework/main.cpp

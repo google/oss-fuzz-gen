@@ -1,15 +1,11 @@
-"language": "c++"
-"project": "imagemagick"
-"target_name": "encoder_gradient_fuzzer"
-"target_path": "/src/imagemagick/oss-fuzz/encoder_gradient_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/imagemagick/Magick++/tests/averageImages.cpp"
-- "test_file_path": "/src/imagemagick/tests/wandtest.c"
-- "test_file_path": "/src/imagemagick/tests/validate.c"
-- "test_file_path": "/src/imagemagick/Magick++/tests/montageImages.cpp"
-- "test_file_path": "/src/imagemagick/Magick++/tests/geometry.cpp"
-- "test_file_path": "/src/imagemagick/tests/drawtest.c"
-- "test_file_path": "/src/imagemagick/api_examples/cli_operators.c"
-- "test_file_path": "/src/imagemagick/MagickWand/tests/add_norm.c"
-- "test_file_path": "/src/imagemagick/Magick++/tests/morphImages.cpp"
-- "test_file_path": "/src/imagemagick/MagickWand/tests/add_last_lists.c"
+language: c++
+project: imagemagick
+target_name: encoder_gradient_fuzzer
+target_path: /src/imagemagick/oss-fuzz/encoder_gradient_fuzzer.cc
+test_files:
+- test_file_path: /src/imagemagick/MagickWand/tests/add_norm.c
+- test_file_path: /src/imagemagick/MagickWand/tests/add_last_lists.c
+- test_file_path: /src/imagemagick/Magick++/tests/morphImages.cpp
+- test_file_path: /src/imagemagick/tests/validate.c
+- test_file_path: /src/imagemagick/Magick++/tests/geometry.cpp
+- test_file_path: /src/imagemagick/Magick++/tests/averageImages.cpp

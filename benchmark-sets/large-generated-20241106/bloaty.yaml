@@ -1,117 +1,84 @@
-"functions":
-- "name": "_ZN6google8protobuf7Message14_InternalParseEPKcPNS0_8internal12ParseContextE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const char * google::protobuf::Message::_InternalParse(const char *, ParseContext *)"
-- "name": "_ZN3re23RE2C2ERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void re2::RE2::RE2(const string &)"
-- "name": "_ZN6google8protobuf8internal10WireFormat39InternalSerializeWithCachedSizesToArrayERKNS0_7MessageEPhPNS0_2io19EpsCopyOutputStreamE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "uint8 * google::protobuf::internal::WireFormat::InternalSerializeWithCachedSizesToArray(const Message &, uint8 *, EpsCopyOutputStream *)"
-- "name": "_ZN6google8protobuf8internal10WireFormat22InternalSerializeFieldEPKNS0_15FieldDescriptorERKNS0_7MessageEPhPNS0_2io19EpsCopyOutputStreamE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "uint8 * google::protobuf::internal::WireFormat::InternalSerializeField(const FieldDescriptor *, const Message &, uint8 *, EpsCopyOutputStream *)"
-- "name": "_ZZN6google8protobuf7Message14_InternalParseEPKcPNS0_8internal12ParseContextEEN21ReflectiveFieldParser14_InternalParseES3_S6_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const char * google::protobuf::Message::_InternalParse(ReflectiveFieldParser *, const char *, ParseContext *)"
-- "name": "_ZNK6google8protobuf7Message39InternalSerializeWithCachedSizesToArrayEPhPNS0_2io19EpsCopyOutputStreamE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "uint8 * google::protobuf::Message::InternalSerializeWithCachedSizesToArray(uint8 *, EpsCopyOutputStream *)"
-- "name": "_ZN6google8protobuf19FileDescriptorProto8CopyFromERKNS0_7MessageE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void google::protobuf::FileDescriptorProto::CopyFrom(const Message &)"
-- "name": "_ZZN6google8protobuf7Message14_InternalParseEPKcPNS0_8internal12ParseContextEEN21ReflectiveFieldParser10ParseGroupEjS3_S6_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const char * google::protobuf::Message::ParseGroup(ReflectiveFieldParser *, uint32, const char *, ParseContext *)"
-- "name": "_ZN6bloaty12ParseOptionsEbPiPPPcPNS_7OptionsEPNS_13OutputOptionsEPNSt3__112basic_stringIcNS8_11char_traitsIcEENS8_9allocatorIcEEEE"
-  "params":
-  - "name": ""
-    "type": "bool"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "N/A ParseOptions()"
-- "name": "_ZN6google8protobuf17FileDescriptorSet8CopyFromERKNS0_7MessageE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void google::protobuf::FileDescriptorSet::CopyFrom(const Message &)"
-"language": "c++"
-"project": "bloaty"
-"target_name": "fuzz_target"
-"target_path": "/src/bloaty/tests/fuzz_target.cc"
-"test_files":
-- "test_file_path": "/src/bloaty/tests/bloaty_misc_test.cc"
-- "test_file_path": "/src/bloaty/tests/testdata/bar.c"
-- "test_file_path": "/src/bloaty/tests/testdata/foo.c"
-- "test_file_path": "/src/bloaty/tests/bloaty_test.cc"
-- "test_file_path": "/src/bloaty/tests/testdata/main.c"
-- "test_file_path": "/src/bloaty/tests/bloaty_test_pe.cc"
-- "test_file_path": "/src/bloaty/tests/range_map_test.cc"
+functions:
+- name: _ZN6google8protobuf8internal10WireFormat22InternalSerializeFieldEPKNS0_15FieldDescriptorERKNS0_7MessageEPhPNS0_2io19EpsCopyOutputStreamE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: uint8 * google::protobuf::internal::WireFormat::InternalSerializeField(const
+    FieldDescriptor *, const Message &, uint8 *, EpsCopyOutputStream *)
+- name: _ZN6bloaty12ParseOptionsEbPiPPPcPNS_7OptionsEPNS_13OutputOptionsEPNSt3__112basic_stringIcNS8_11char_traitsIcEENS8_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: bool
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: N/A ParseOptions()
+- name: _ZZN6google8protobuf7Message14_InternalParseEPKcPNS0_8internal12ParseContextEEN21ReflectiveFieldParser10ParseGroupEjS3_S6_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: const char * google::protobuf::Message::ParseGroup(ReflectiveFieldParser
+    *, uint32, const char *, ParseContext *)
+- name: _ZNK6google8protobuf7Message39InternalSerializeWithCachedSizesToArrayEPhPNS0_2io19EpsCopyOutputStreamE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: uint8 * google::protobuf::Message::InternalSerializeWithCachedSizesToArray(uint8
+    *, EpsCopyOutputStream *)
+- name: _ZN3re23RE2C2ERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void re2::RE2::RE2(const string &)
+- name: _ZN6google8protobuf8internal10WireFormat39InternalSerializeWithCachedSizesToArrayERKNS0_7MessageEPhPNS0_2io19EpsCopyOutputStreamE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: uint8 * google::protobuf::internal::WireFormat::InternalSerializeWithCachedSizesToArray(const
+    Message &, uint8 *, EpsCopyOutputStream *)
+language: c++
+project: bloaty
+target_name: fuzz_target
+target_path: /src/bloaty/tests/fuzz_target.cc
+test_files:
+- test_file_path: /src/bloaty/tests/bloaty_test_pe.cc
+- test_file_path: /src/bloaty/tests/testdata/foo.c
+- test_file_path: /src/bloaty/tests/range_map_test.cc
+- test_file_path: /src/bloaty/tests/bloaty_test.cc
+- test_file_path: /src/bloaty/tests/bloaty_misc_test.cc
+- test_file_path: /src/bloaty/tests/testdata/main.c

@@ -1,116 +1,66 @@
-"functions":
-- "name": "XML_GetCurrentColumnNumber"
-  "params":
-  - "name": "parser"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "XML_Size XML_GetCurrentColumnNumber(XML_Parser)"
-- "name": "XML_ResumeParser"
-  "params":
-  - "name": "parser"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "DW_TAG_enumeration_typeXML_Status XML_ResumeParser(XML_Parser)"
-- "name": "XmlInitUnknownEncoding"
-  "params":
-  - "name": "mem"
-    "type": "bool "
-  - "name": "table"
-    "type": "bool "
-  - "name": "convert"
-    "type": "bool "
-  - "name": "userData"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "ENCODING * XmlInitUnknownEncoding(void *, int *, CONVERTER, void *)"
-- "name": "XML_GetInputContext"
-  "params":
-  - "name": "parser"
-    "type": "bool "
-  - "name": "offset"
-    "type": "bool "
-  - "name": "size"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const char * XML_GetInputContext(XML_Parser, int *, int *)"
-- "name": "XML_DefaultCurrent"
-  "params":
-  - "name": "parser"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void XML_DefaultCurrent(XML_Parser)"
-- "name": "XmlInitUnknownEncodingNS"
-  "params":
-  - "name": "mem"
-    "type": "bool "
-  - "name": "table"
-    "type": "bool "
-  - "name": "convert"
-    "type": "bool "
-  - "name": "userData"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "ENCODING * XmlInitUnknownEncodingNS(void *, int *, CONVERTER, void *)"
-- "name": "XML_SetBase"
-  "params":
-  - "name": "parser"
-    "type": "bool "
-  - "name": "p"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "DW_TAG_enumeration_typeXML_Status XML_SetBase(XML_Parser, const XML_Char *)"
-- "name": "XmlParseXmlDeclNS"
-  "params":
-  - "name": "isGeneralTextEntity"
-    "type": "int"
-  - "name": "enc"
-    "type": "bool "
-  - "name": "ptr"
-    "type": "bool "
-  - "name": "end"
-    "type": "bool "
-  - "name": "badPtr"
-    "type": "bool "
-  - "name": "versionPtr"
-    "type": "bool "
-  - "name": "versionEndPtr"
-    "type": "bool "
-  - "name": "encodingName"
-    "type": "bool "
-  - "name": "encoding"
-    "type": "bool "
-  - "name": "standalone"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int XmlParseXmlDecl(int, const ENCODING *, const char *, const char *, const char **, const char **, const char **, const char **, const ENCODING **, int *)"
-- "name": "XML_SetBillionLaughsAttackProtectionMaximumAmplification"
-  "params":
-  - "name": "parser"
-    "type": "bool "
-  - "name": "maximumAmplificationFactor"
-    "type": "float"
-  "return_type": "char"
-  "signature": "XML_Bool XML_SetBillionLaughsAttackProtectionMaximumAmplification(XML_Parser, float)"
-- "name": "XML_SetEncoding"
-  "params":
-  - "name": "parser"
-    "type": "bool "
-  - "name": "encodingName"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "DW_TAG_enumeration_typeXML_Status XML_SetEncoding(XML_Parser, const XML_Char *)"
-"language": "c++"
-"project": "expat"
-"target_name": "xml_parsebuffer_fuzzer_UTF-8"
-"target_path": "/src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/expat/expat/tests/ns_tests.c"
-- "test_file_path": "/src/expat/expat/tests/alloc_tests_cxx.cpp"
-- "test_file_path": "/src/expat/expat/tests/memcheck_cxx.cpp"
-- "test_file_path": "/src/expat/expat/tests/structdata_cxx.cpp"
-- "test_file_path": "/src/expat/expat/tests/ns_tests_cxx.cpp"
-- "test_file_path": "/src/expat/expat/tests/dummy_cxx.cpp"
-- "test_file_path": "/src/expat/expat/tests/basic_tests.c"
-- "test_file_path": "/src/expat/expat/tests/runtests.c"
-- "test_file_path": "/src/expat/expat/tests/chardata_cxx.cpp"
-- "test_file_path": "/src/expat/expat/tests/handlers_cxx.cpp"
+functions:
+- name: XML_ResumeParser
+  params:
+  - name: parser
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeXML_Status XML_ResumeParser(XML_Parser)
+- name: XML_DefaultCurrent
+  params:
+  - name: parser
+    type: 'bool '
+  return_type: void
+  signature: void XML_DefaultCurrent(XML_Parser)
+- name: XML_SetBase
+  params:
+  - name: parser
+    type: 'bool '
+  - name: p
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeXML_Status XML_SetBase(XML_Parser, const XML_Char
+    *)
+- name: XmlInitUnknownEncodingNS
+  params:
+  - name: mem
+    type: 'bool '
+  - name: table
+    type: 'bool '
+  - name: convert
+    type: 'bool '
+  - name: userData
+    type: 'bool '
+  return_type: void
+  signature: ENCODING * XmlInitUnknownEncodingNS(void *, int *, CONVERTER, void *)
+- name: XML_SetBillionLaughsAttackProtectionMaximumAmplification
+  params:
+  - name: parser
+    type: 'bool '
+  - name: maximumAmplificationFactor
+    type: float
+  return_type: char
+  signature: XML_Bool XML_SetBillionLaughsAttackProtectionMaximumAmplification(XML_Parser,
+    float)
+- name: XmlInitUnknownEncoding
+  params:
+  - name: mem
+    type: 'bool '
+  - name: table
+    type: 'bool '
+  - name: convert
+    type: 'bool '
+  - name: userData
+    type: 'bool '
+  return_type: void
+  signature: ENCODING * XmlInitUnknownEncoding(void *, int *, CONVERTER, void *)
+language: c++
+project: expat
+target_name: xml_parsebuffer_fuzzer_UTF-8
+target_path: /src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c
+test_files:
+- test_file_path: /src/expat/expat/tests/ns_tests.c
+- test_file_path: /src/expat/expat/tests/runtests.c
+- test_file_path: /src/expat/expat/tests/alloc_tests_cxx.cpp
+- test_file_path: /src/expat/expat/tests/memcheck_cxx.cpp
+- test_file_path: /src/expat/expat/tests/dummy_cxx.cpp
+- test_file_path: /src/expat/expat/tests/ns_tests_cxx.cpp

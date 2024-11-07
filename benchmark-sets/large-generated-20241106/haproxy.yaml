@@ -1,15 +1,11 @@
-"language": "c++"
-"project": "haproxy"
-"target_name": "fuzz_hpack_decode"
-"target_path": "/src/fuzz_hpack_decode.c"
-"test_files":
-- "test_file_path": "/src/haproxy/tests/exp/testinet.c"
-- "test_file_path": "/src/haproxy/tests/exp/blocksig.c"
-- "test_file_path": "/src/haproxy/tests/unit/ist.c"
-- "test_file_path": "/src/haproxy/tests/unit/test-1-among.c"
-- "test_file_path": "/src/haproxy/tests/unit/test-arg.c"
-- "test_file_path": "/src/haproxy/tests/exp/uri_hash.c"
-- "test_file_path": "/src/haproxy/tests/exp/ip-hash.c"
-- "test_file_path": "/src/haproxy/tests/exp/filltab25.c"
-- "test_file_path": "/src/haproxy/tests/exp/test_hashes.c"
-- "test_file_path": "/src/haproxy/tests/unit/test-list.c"
+language: c++
+project: haproxy
+target_name: fuzz_hpack_decode
+target_path: /src/fuzz_hpack_decode.c
+test_files:
+- test_file_path: /src/haproxy/tests/exp/ip-hash.c
+- test_file_path: /src/haproxy/tests/unit/test-arg.c
+- test_file_path: /src/haproxy/tests/exp/filltab25.c
+- test_file_path: /src/haproxy/tests/exp/blocksig.c
+- test_file_path: /src/haproxy/tests/unit/test-list.c
+- test_file_path: /src/haproxy/tests/exp/testinet.c

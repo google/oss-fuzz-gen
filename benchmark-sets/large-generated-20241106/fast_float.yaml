@@ -1,15 +1,11 @@
-"language": "c++"
-"project": "fast_float"
-"target_name": "from_chars"
-"target_path": "/src/fast_float/fuzz/from_chars.cc"
-"test_files":
-- "test_file_path": "/src/fast_float/tests/long_test.cpp"
-- "test_file_path": "/src/fast_float/tests/bloat_analysis/main_ref.cpp"
-- "test_file_path": "/src/fast_float/tests/bloat_analysis/a2.cpp"
-- "test_file_path": "/src/fast_float/tests/random64.cpp"
-- "test_file_path": "/src/fast_float/tests/bloat_analysis/a3.cpp"
-- "test_file_path": "/src/fast_float/tests/bloat_analysis/a7.cpp"
-- "test_file_path": "/src/fast_float/tests/example_comma_test.cpp"
-- "test_file_path": "/src/fast_float/tests/bloat_analysis/a5.cpp"
-- "test_file_path": "/src/fast_float/tests/rcppfastfloat_test.cpp"
-- "test_file_path": "/src/fast_float/tests/bloat_analysis/a6.cpp"
+language: c++
+project: fast_float
+target_name: from_chars
+target_path: /src/fast_float/fuzz/from_chars.cc
+test_files:
+- test_file_path: /src/fast_float/tests/bloat_analysis/a7.cpp
+- test_file_path: /src/fast_float/tests/example_comma_test.cpp
+- test_file_path: /src/fast_float/tests/rcppfastfloat_test.cpp
+- test_file_path: /src/fast_float/tests/bloat_analysis/a2.cpp
+- test_file_path: /src/fast_float/tests/bloat_analysis/a6.cpp
+- test_file_path: /src/fast_float/tests/bloat_analysis/a5.cpp

@@ -1,120 +1,84 @@
-"functions":
-- "name": "lws_http_action"
-  "params":
-  - "name": "wsi"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int lws_http_action(struct lws *)"
-- "name": "lws_h2_do_pps_send"
-  "params":
-  - "name": "wsi"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int lws_h2_do_pps_send(struct lws *)"
-- "name": "lws_parse_mac"
-  "params":
-  - "name": "ads"
-    "type": "bool "
-  - "name": "result_6_bytes"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int lws_parse_mac(const char *, uint8_t *)"
-- "name": "lws_read_h2"
-  "params":
-  - "name": "wsi"
-    "type": "bool "
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int lws_read_h2(struct lws *, unsigned char *, lws_filepos_t)"
-- "name": "lws_adopt_socket_readbuf"
-  "params":
-  - "name": "context"
-    "type": "bool "
-  - "name": "accept_fd"
-    "type": "int"
-  - "name": "readbuf"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "struct lws * lws_adopt_socket_readbuf(struct lws_context *, lws_sockfd_type, const char *, size_t)"
-- "name": "lws_create_adopt_udp"
-  "params":
-  - "name": "vhost"
-    "type": "bool "
-  - "name": "ads"
-    "type": "bool "
-  - "name": "port"
-    "type": "int"
-  - "name": "flags"
-    "type": "int"
-  - "name": "protocol_name"
-    "type": "bool "
-  - "name": "ifname"
-    "type": "bool "
-  - "name": "parent_wsi"
-    "type": "bool "
-  - "name": "opaque"
-    "type": "bool "
-  - "name": "retry_policy"
-    "type": "bool "
-  - "name": "fi_wsi_name"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct lws * lws_create_adopt_udp(struct lws_vhost *, const char *, int, int, const char *, const char *, struct lws *, void *, const lws_retry_bo_t *, const char *)"
-- "name": "lws_create_context"
-  "params":
-  - "name": "info"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct lws_context * lws_create_context(const struct lws_context_creation_info *)"
-- "name": "lws_h2_parser"
-  "params":
-  - "name": "wsi"
-    "type": "bool "
-  - "name": "in"
-    "type": "bool "
-  - "name": "_inlen"
-    "type": "size_t"
-  - "name": "inused"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int lws_h2_parser(struct lws *, unsigned char *, lws_filepos_t, lws_filepos_t *)"
-- "name": "lws_handshake_server"
-  "params":
-  - "name": "wsi"
-    "type": "bool "
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int lws_handshake_server(struct lws *, unsigned char **, size_t)"
-- "name": "lws_read_h1"
-  "params":
-  - "name": "wsi"
-    "type": "bool "
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int lws_read_h1(struct lws *, unsigned char *, lws_filepos_t)"
-"language": "c"
-"project": "libwebsockets"
-"target_name": "lws_upng_inflate_fuzzer"
-"target_path": "/src/libwebsockets/lws_upng_inflate_fuzzer.cpp"
-"test_files":
-- "test_file_path": "/src/libwebsockets/minimal-examples/embedded/lhp/esp32-waveshare-600-448-7col/main/devices.c"
-- "test_file_path": "/src/libwebsockets/minimal-examples-lowlevel/http-server/minimal-http-server-form-get/minimal-http-server-form-get.c"
-- "test_file_path": "/src/libwebsockets/minimal-examples-lowlevel/raw/minimal-raw-serial/minimal-raw-file.c"
-- "test_file_path": "/src/libwebsockets/minimal-examples-lowlevel/http-server/minimal-http-server-tls/minimal-http-server-tls.c"
-- "test_file_path": "/src/libwebsockets/minimal-examples/embedded/pico/pico-sspc-binance/system.c"
-- "test_file_path": "/src/libwebsockets/minimal-examples-lowlevel/ws-client/minimal-ws-client-pmd-bulk/minimal-ws-client-pmd-bulk.c"
-- "test_file_path": "/src/libwebsockets/minimal-examples-lowlevel/http-server/minimal-http-server-eventlib-foreign/libuv.c"
-- "test_file_path": "/src/libwebsockets/test-apps/test-lejp.c"
-- "test_file_path": "/src/libwebsockets/minimal-examples-lowlevel/api-tests/api-test-jose/jwk.c"
-- "test_file_path": "/src/libwebsockets/minimal-examples/embedded/esp32/esp-wrover-kit/main/lws-minimal-esp32.c"
+functions:
+- name: lws_handshake_server
+  params:
+  - name: wsi
+    type: 'bool '
+  - name: buf
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: int
+  signature: int lws_handshake_server(struct lws *, unsigned char **, size_t)
+- name: lws_h2_parser
+  params:
+  - name: wsi
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: _inlen
+    type: size_t
+  - name: inused
+    type: 'bool '
+  return_type: int
+  signature: int lws_h2_parser(struct lws *, unsigned char *, lws_filepos_t, lws_filepos_t
+    *)
+- name: lws_h2_do_pps_send
+  params:
+  - name: wsi
+    type: 'bool '
+  return_type: int
+  signature: int lws_h2_do_pps_send(struct lws *)
+- name: lws_create_adopt_udp
+  params:
+  - name: vhost
+    type: 'bool '
+  - name: ads
+    type: 'bool '
+  - name: port
+    type: int
+  - name: flags
+    type: int
+  - name: protocol_name
+    type: 'bool '
+  - name: ifname
+    type: 'bool '
+  - name: parent_wsi
+    type: 'bool '
+  - name: opaque
+    type: 'bool '
+  - name: retry_policy
+    type: 'bool '
+  - name: fi_wsi_name
+    type: 'bool '
+  return_type: void
+  signature: struct lws * lws_create_adopt_udp(struct lws_vhost *, const char *, int,
+    int, const char *, const char *, struct lws *, void *, const lws_retry_bo_t *,
+    const char *)
+- name: lws_create_context
+  params:
+  - name: info
+    type: 'bool '
+  return_type: void
+  signature: struct lws_context * lws_create_context(const struct lws_context_creation_info
+    *)
+- name: lws_read_h1
+  params:
+  - name: wsi
+    type: 'bool '
+  - name: buf
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: int
+  signature: int lws_read_h1(struct lws *, unsigned char *, lws_filepos_t)
+language: c
+project: libwebsockets
+target_name: lws_upng_inflate_fuzzer
+target_path: /src/libwebsockets/lws_upng_inflate_fuzzer.cpp
+test_files:
+- test_file_path: /src/libwebsockets/minimal-examples/embedded/pico/pico-sspc-binance/system.c
+- test_file_path: /src/libwebsockets/minimal-examples-lowlevel/api-tests/api-test-jose/jwk.c
+- test_file_path: /src/libwebsockets/minimal-examples-lowlevel/http-server/minimal-http-server-form-get/minimal-http-server-form-get.c
+- test_file_path: /src/libwebsockets/minimal-examples-lowlevel/ws-client/minimal-ws-client-pmd-bulk/minimal-ws-client-pmd-bulk.c
+- test_file_path: /src/libwebsockets/minimal-examples-lowlevel/http-server/minimal-http-server-tls/minimal-http-server-tls.c
+- test_file_path: /src/libwebsockets/test-apps/test-lejp.c

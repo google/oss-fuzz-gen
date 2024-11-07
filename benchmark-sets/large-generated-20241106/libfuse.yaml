@@ -1,74 +1,60 @@
-"functions":
-- "name": "fuse_opt_add_opt_escaped"
-  "params":
-  - "name": "opts"
-    "type": "bool "
-  - "name": "opt"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int fuse_opt_add_opt_escaped(char **, const char *)"
-- "name": "af_gb_get_random_data"
-  "params":
-  - "name": "data"
-    "type": "bool "
-  - "name": "size"
-    "type": "bool "
-  - "name": "to_get"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "char * af_gb_get_random_data(const uint8_t **, size_t *, size_t)"
-- "name": "fuse_opt_match"
-  "params":
-  - "name": "opts"
-    "type": "bool "
-  - "name": "opt"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int fuse_opt_match(const struct fuse_opt *, const char *)"
-- "name": "af_gb_alloc_data"
-  "params":
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "char * af_gb_alloc_data(size_t)"
-- "name": "af_get_short"
-  "params":
-  - "name": "data"
-    "type": "bool "
-  - "name": "size"
-    "type": "bool "
-  "return_type": "short"
-  "signature": "short af_get_short(const uint8_t **, size_t *)"
-- "name": "fuse_log_enable_syslog"
-  "params":
-  - "name": "ident"
-    "type": "bool "
-  - "name": "option"
-    "type": "int"
-  - "name": "facility"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void fuse_log_enable_syslog(const char *, int, int)"
-- "name": "fuse_opt_add_opt"
-  "params":
-  - "name": "opts"
-    "type": "bool "
-  - "name": "opt"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int fuse_opt_add_opt(char **, const char *)"
-"language": "c"
-"project": "libfuse"
-"target_name": "fuzz_optparse"
-"target_path": "/src/fuzz_optparse.c"
-"test_files":
-- "test_file_path": "/src/libfuse/test/wrong_command.c"
-- "test_file_path": "/src/libfuse/test/release_unlink_race.c"
-- "test_file_path": "/src/libfuse/test/stracedecode.c"
-- "test_file_path": "/src/libfuse/example/notify_store_retrieve.c"
-- "test_file_path": "/src/libfuse/example/poll_client.c"
-- "test_file_path": "/src/libfuse/example/passthrough.c"
-- "test_file_path": "/src/libfuse/example/passthrough_fh.c"
-- "test_file_path": "/src/libfuse/example/ioctl_client.c"
-- "test_file_path": "/src/libfuse/example/notify_inval_entry.c"
-- "test_file_path": "/src/libfuse/test/test_syscalls.c"
+functions:
+- name: af_gb_get_random_data
+  params:
+  - name: data
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  - name: to_get
+    type: size_t
+  return_type: void
+  signature: char * af_gb_get_random_data(const uint8_t **, size_t *, size_t)
+- name: fuse_opt_add_opt_escaped
+  params:
+  - name: opts
+    type: 'bool '
+  - name: opt
+    type: 'bool '
+  return_type: int
+  signature: int fuse_opt_add_opt_escaped(char **, const char *)
+- name: fuse_opt_match
+  params:
+  - name: opts
+    type: 'bool '
+  - name: opt
+    type: 'bool '
+  return_type: int
+  signature: int fuse_opt_match(const struct fuse_opt *, const char *)
+- name: fuse_opt_add_opt
+  params:
+  - name: opts
+    type: 'bool '
+  - name: opt
+    type: 'bool '
+  return_type: int
+  signature: int fuse_opt_add_opt(char **, const char *)
+- name: af_gb_alloc_data
+  params:
+  - name: len
+    type: size_t
+  return_type: void
+  signature: char * af_gb_alloc_data(size_t)
+- name: af_get_short
+  params:
+  - name: data
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  return_type: short
+  signature: short af_get_short(const uint8_t **, size_t *)
+language: c
+project: libfuse
+target_name: fuzz_optparse
+target_path: /src/fuzz_optparse.c
+test_files:
+- test_file_path: /src/libfuse/example/poll_client.c
+- test_file_path: /src/libfuse/test/release_unlink_race.c
+- test_file_path: /src/libfuse/example/notify_inval_entry.c
+- test_file_path: /src/libfuse/example/passthrough.c
+- test_file_path: /src/libfuse/test/test_syscalls.c
+- test_file_path: /src/libfuse/example/passthrough_fh.c

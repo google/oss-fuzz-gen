@@ -1,96 +1,63 @@
-"functions":
-- "name": "mnt_table_parse_fstab"
-  "params":
-  - "name": "tb"
-    "type": "bool "
-  - "name": "filename"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mnt_table_parse_fstab(struct libmnt_table *, const char *)"
-- "name": "mnt_new_table_from_file"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct libmnt_table * mnt_new_table_from_file(const char *)"
-- "name": "mnt_table_parse_mtab"
-  "params":
-  - "name": "tb"
-    "type": "bool "
-  - "name": "filename"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mnt_table_parse_mtab(struct libmnt_table *, const char *)"
-- "name": "mnt_table_parse_dir"
-  "params":
-  - "name": "tb"
-    "type": "bool "
-  - "name": "dirname"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mnt_table_parse_dir(struct libmnt_table *, const char *)"
-- "name": "mnt_new_table_from_dir"
-  "params":
-  - "name": "dirname"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct libmnt_table * mnt_new_table_from_dir(const char *)"
-- "name": "__mnt_table_parse_mountinfo"
-  "params":
-  - "name": "tb"
-    "type": "bool "
-  - "name": "filename"
-    "type": "bool "
-  - "name": "u_tb"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int __mnt_table_parse_mountinfo(struct libmnt_table *, const char *, struct libmnt_table *)"
-- "name": "mnt_table_parse_file"
-  "params":
-  - "name": "tb"
-    "type": "bool "
-  - "name": "filename"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mnt_table_parse_file(struct libmnt_table *, const char *)"
-- "name": "__mnt_new_table_from_file"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "fmt"
-    "type": "int"
-  - "name": "empty_for_enoent"
-    "type": "int"
-  "return_type": "void"
-  "signature": "struct libmnt_table * __mnt_new_table_from_file(const char *, int, int)"
-- "name": "mnt_table_parse_swaps"
-  "params":
-  - "name": "tb"
-    "type": "bool "
-  - "name": "filename"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mnt_table_parse_swaps(struct libmnt_table *, const char *)"
-- "name": "mnt_table_is_fs_mounted"
-  "params":
-  - "name": "tb"
-    "type": "bool "
-  - "name": "fstab_fs"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mnt_table_is_fs_mounted(struct libmnt_table *, struct libmnt_fs *)"
-"language": "c"
-"project": "util-linux"
-"target_name": "test_last_fuzz"
-"target_path": "/src/util-linux/login-utils/last.c"
-"test_files":
-- "test_file_path": "/src/util-linux/libsmartcols/samples/colors.c"
-- "test_file_path": "/src/util-linux/tests/helpers/test_byteswap.c"
-- "test_file_path": "/src/util-linux/libblkid/samples/superblocks.c"
-- "test_file_path": "/src/util-linux/libsmartcols/samples/grouping-overlay.c"
-- "test_file_path": "/src/util-linux/libuuid/src/test_uuid.c"
-- "test_file_path": "/src/util-linux/libfdisk/samples/mkpart.c"
-- "test_file_path": "/src/util-linux/tests/helpers/test_sysinfo.c"
-- "test_file_path": "/src/util-linux/liblastlog2/src/tests/tst_remove_entry.c"
-- "test_file_path": "/src/util-linux/tests/helpers/test_mkfds_ppoll.c"
-- "test_file_path": "/src/util-linux/libblkid/samples/topology.c"
+functions:
+- name: mnt_table_parse_swaps
+  params:
+  - name: tb
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  return_type: int
+  signature: int mnt_table_parse_swaps(struct libmnt_table *, const char *)
+- name: __mnt_table_parse_mountinfo
+  params:
+  - name: tb
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  - name: u_tb
+    type: 'bool '
+  return_type: int
+  signature: int __mnt_table_parse_mountinfo(struct libmnt_table *, const char *,
+    struct libmnt_table *)
+- name: mnt_table_parse_fstab
+  params:
+  - name: tb
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  return_type: int
+  signature: int mnt_table_parse_fstab(struct libmnt_table *, const char *)
+- name: __mnt_new_table_from_file
+  params:
+  - name: filename
+    type: 'bool '
+  - name: fmt
+    type: int
+  - name: empty_for_enoent
+    type: int
+  return_type: void
+  signature: struct libmnt_table * __mnt_new_table_from_file(const char *, int, int)
+- name: mnt_new_table_from_file
+  params:
+  - name: filename
+    type: 'bool '
+  return_type: void
+  signature: struct libmnt_table * mnt_new_table_from_file(const char *)
+- name: mnt_table_is_fs_mounted
+  params:
+  - name: tb
+    type: 'bool '
+  - name: fstab_fs
+    type: 'bool '
+  return_type: int
+  signature: int mnt_table_is_fs_mounted(struct libmnt_table *, struct libmnt_fs *)
+language: c
+project: util-linux
+target_name: test_last_fuzz
+target_path: /src/util-linux/login-utils/last.c
+test_files:
+- test_file_path: /src/util-linux/tests/helpers/test_byteswap.c
+- test_file_path: /src/util-linux/libuuid/src/test_uuid.c
+- test_file_path: /src/util-linux/tests/helpers/test_sysinfo.c
+- test_file_path: /src/util-linux/libblkid/samples/superblocks.c
+- test_file_path: /src/util-linux/libfdisk/samples/mkpart.c
+- test_file_path: /src/util-linux/libblkid/samples/topology.c

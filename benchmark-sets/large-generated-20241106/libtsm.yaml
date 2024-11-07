@@ -1,105 +1,71 @@
-"functions":
-- "name": "tsm_ucs4_to_utf8_alloc"
-  "params":
-  - "name": "ucs4"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  - "name": "len_out"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "char * tsm_ucs4_to_utf8_alloc(const uint32_t *, size_t, size_t *)"
-- "name": "shl_htable_lookup"
-  "params":
-  - "name": "htable"
-    "type": "bool "
-  - "name": "obj"
-    "type": "bool "
-  - "name": "hash"
-    "type": "size_t"
-  - "name": "out"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool shl_htable_lookup(struct shl_htable *, const void *, size_t, void **)"
-- "name": "shl_htable_remove"
-  "params":
-  - "name": "htable"
-    "type": "bool "
-  - "name": "obj"
-    "type": "bool "
-  - "name": "hash"
-    "type": "size_t"
-  - "name": "out"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool shl_htable_remove(struct shl_htable *, const void *, size_t, void **)"
-- "name": "shl_htable_insert"
-  "params":
-  - "name": "htable"
-    "type": "bool "
-  - "name": "obj"
-    "type": "bool "
-  - "name": "hash"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int shl_htable_insert(struct shl_htable *, const void *, size_t)"
-- "name": "tsm_screen_move_line_end"
-  "params":
-  - "name": "con"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void tsm_screen_move_line_end(struct tsm_screen *)"
-- "name": "tsm_symbol_append"
-  "params":
-  - "name": "tbl"
-    "type": "bool "
-  - "name": "sym"
-    "type": "int"
-  - "name": "ucs4"
-    "type": "int"
-  "return_type": "int"
-  "signature": "tsm_symbol_t tsm_symbol_append(struct tsm_symbol_table *, tsm_symbol_t, uint32_t)"
-- "name": "tsm_vte_set_palette"
-  "params":
-  - "name": "vte"
-    "type": "bool "
-  - "name": "palette"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int tsm_vte_set_palette(struct tsm_vte *, const char *)"
-- "name": "tsm_screen_erase_cursor"
-  "params":
-  - "name": "con"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void tsm_screen_erase_cursor(struct tsm_screen *)"
-- "name": "tsm_screen_sb_page_up"
-  "params":
-  - "name": "con"
-    "type": "bool "
-  - "name": "num"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void tsm_screen_sb_page_up(struct tsm_screen *, unsigned int)"
-- "name": "tsm_vte_handle_keyboard"
-  "params":
-  - "name": "vte"
-    "type": "bool "
-  - "name": "keysym"
-    "type": "int"
-  - "name": "ascii"
-    "type": "int"
-  - "name": "mods"
-    "type": "int"
-  - "name": "unicode"
-    "type": "int"
-  "return_type": "bool"
-  "signature": "bool tsm_vte_handle_keyboard(struct tsm_vte *, uint32_t, uint32_t, unsigned int, uint32_t)"
-"language": "c++"
-"project": "libtsm"
-"target_name": "libtsm_fuzzer"
-"target_path": "/src/libtsm_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/libtsm/test/test_htable.c"
-- "test_file_path": "/src/libtsm/test/test_valgrind.c"
-- "test_file_path": "/src/libtsm/test/test_symbol.c"
+functions:
+- name: tsm_vte_set_palette
+  params:
+  - name: vte
+    type: 'bool '
+  - name: palette
+    type: 'bool '
+  return_type: int
+  signature: int tsm_vte_set_palette(struct tsm_vte *, const char *)
+- name: tsm_ucs4_to_utf8_alloc
+  params:
+  - name: ucs4
+    type: 'bool '
+  - name: len
+    type: size_t
+  - name: len_out
+    type: 'bool '
+  return_type: void
+  signature: char * tsm_ucs4_to_utf8_alloc(const uint32_t *, size_t, size_t *)
+- name: tsm_vte_handle_keyboard
+  params:
+  - name: vte
+    type: 'bool '
+  - name: keysym
+    type: int
+  - name: ascii
+    type: int
+  - name: mods
+    type: int
+  - name: unicode
+    type: int
+  return_type: bool
+  signature: bool tsm_vte_handle_keyboard(struct tsm_vte *, uint32_t, uint32_t, unsigned
+    int, uint32_t)
+- name: tsm_symbol_append
+  params:
+  - name: tbl
+    type: 'bool '
+  - name: sym
+    type: int
+  - name: ucs4
+    type: int
+  return_type: int
+  signature: tsm_symbol_t tsm_symbol_append(struct tsm_symbol_table *, tsm_symbol_t,
+    uint32_t)
+- name: shl_htable_insert
+  params:
+  - name: htable
+    type: 'bool '
+  - name: obj
+    type: 'bool '
+  - name: hash
+    type: size_t
+  return_type: int
+  signature: int shl_htable_insert(struct shl_htable *, const void *, size_t)
+- name: tsm_screen_sb_page_up
+  params:
+  - name: con
+    type: 'bool '
+  - name: num
+    type: int
+  return_type: void
+  signature: void tsm_screen_sb_page_up(struct tsm_screen *, unsigned int)
+language: c++
+project: libtsm
+target_name: libtsm_fuzzer
+target_path: /src/libtsm_fuzzer.c
+test_files:
+- test_file_path: /src/libtsm/test/test_htable.c
+- test_file_path: /src/libtsm/test/test_valgrind.c
+- test_file_path: /src/libtsm/test/test_symbol.c

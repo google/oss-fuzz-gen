@@ -1,114 +1,68 @@
-"functions":
-- "name": "_ZZN7httplib6detail21write_content_chunkedIZNS_6Server27write_content_with_providerERNS_6StreamERKNS_7RequestERNS_8ResponseERKNSt3__112basic_stringIcNSA_11char_traitsIcEENSA_9allocatorIcEEEESI_EUlvE_NS0_10compressorEEEbS4_RKNSA_8functionIFbmmRNS_8DataSinkEEEERKT_RT0_RNS_5ErrorEENKUlvE0_clEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void httplib::detail::write_content_chunked<httplib::Server::operator()(const void *)"
-- "name": "_ZNK7httplib10ClientImpl20create_client_socketERNS_5ErrorE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "error"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "socket_t httplib::ClientImpl::create_client_socket(DW_TAG_enumeration_typeError &)"
-- "name": "_ZZN7httplib6Server7routingERNS_7RequestERNS_8ResponseERNS_6StreamEENKUlNSt3__18functionIFbPKcmEEEE_clESC_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "receiver"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool httplib::Server::operator()(const void *, ContentReceiver)"
-- "name": "_ZN7httplib6Server34read_content_with_content_receiverERNS_6StreamERNS_7RequestERNS_8ResponseENSt3__18functionIFbPKcmEEENS8_IFbRKNS_17MultipartFormDataEEEESC_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "strm"
-    "type": "bool "
-  - "name": "req"
-    "type": "bool "
-  - "name": "res"
-    "type": "bool "
-  - "name": "receiver"
-    "type": "bool "
-  - "name": "multipart_header"
-    "type": "bool "
-  - "name": "multipart_receiver"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool httplib::Server::read_content_with_content_receiver(Stream &, struct Request &, struct Response &, ContentReceiver, MultipartContentHeader, ContentReceiver)"
-- "name": "_ZZN7httplib6detail21process_server_socketIZNS_6Server24process_and_close_socketEiEUlRNS_6StreamEbRbE_EEbRKNSt3__16atomicIiEEimlllllT_ENKUlbS5_E_clEbS5_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "close_connection"
-    "type": "bool"
-  - "name": "connection_closed"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool httplib::detail::process_server_socket<httplib::Server::operator()(const void *, bool, bool &)"
-- "name": "_ZZN7httplib6Server7routingERNS_7RequestERNS_8ResponseERNS_6StreamEENKUlNSt3__18functionIFbRKNS_17MultipartFormDataEEEENS8_IFbPKcmEEEE_clESD_SH_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "header"
-    "type": "bool "
-  - "name": "receiver"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool httplib::Server::operator()(const void *, MultipartContentHeader, ContentReceiver)"
-- "name": "_ZN7httplib6Server24process_and_close_socketEi"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "sock"
-    "type": "int"
-  "return_type": "bool"
-  "signature": "bool httplib::Server::process_and_close_socket(socket_t)"
-- "name": "_ZZN7httplib6Server24process_and_close_socketEiENKUlRNS_6StreamEbRbE_clES2_bS3_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "strm"
-    "type": "bool "
-  - "name": "close_connection"
-    "type": "bool"
-  - "name": "connection_closed"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool httplib::Server::operator()(const void *, Stream &, bool, bool &)"
-- "name": "_ZN7httplib10ClientImpl25create_and_connect_socketERNS0_6SocketERNS_5ErrorE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "socket"
-    "type": "bool "
-  - "name": "error"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool httplib::ClientImpl::create_and_connect_socket(struct Socket &, DW_TAG_enumeration_typeError &)"
-- "name": "_ZZN7httplib6detail21write_content_chunkedIZNS_6Server27write_content_with_providerERNS_6StreamERKNS_7RequestERNS_8ResponseERKNSt3__112basic_stringIcNSA_11char_traitsIcEENSA_9allocatorIcEEEESI_EUlvE_NS0_10compressorEEEbS4_RKNSA_8functionIFbmmRNS_8DataSinkEEEERKT_RT0_RNS_5ErrorEENKUlRKNSA_18unordered_multimapISG_SG_NS0_11case_ignore4hashENS10_8equal_toENSE_INSA_4pairISH_SG_EEEEEEE_clES18_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "trailer"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void httplib::detail::write_content_chunked<httplib::Server::operator()(const void *, const Headers &)"
-"language": "c++"
-"project": "cpp-httplib"
-"target_name": "server_fuzzer"
-"target_path": "/src/cpp-httplib/test/fuzzing/server_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/cpp-httplib/example/server.cc"
-- "test_file_path": "/src/cpp-httplib/test/test.cc"
-- "test_file_path": "/src/cpp-httplib/example/redirect.cc"
-- "test_file_path": "/src/cpp-httplib/example/server_and_client.cc"
-- "test_file_path": "/src/cpp-httplib/test/gtest/gtest_main.cc"
-- "test_file_path": "/src/cpp-httplib/example/simplecli.cc"
-- "test_file_path": "/src/cpp-httplib/example/ssecli.cc"
-- "test_file_path": "/src/cpp-httplib/example/simplesvr.cc"
-- "test_file_path": "/src/cpp-httplib/test/test_proxy.cc"
-- "test_file_path": "/src/cpp-httplib/example/client.cc"
+functions:
+- name: _ZNK7httplib10ClientImpl20create_client_socketERNS_5ErrorE
+  params:
+  - name: this
+    type: 'bool '
+  - name: error
+    type: 'bool '
+  return_type: int
+  signature: socket_t httplib::ClientImpl::create_client_socket(DW_TAG_enumeration_typeError
+    &)
+- name: _ZZN7httplib6Server7routingERNS_7RequestERNS_8ResponseERNS_6StreamEENKUlNSt3__18functionIFbRKNS_17MultipartFormDataEEEENS8_IFbPKcmEEEE_clESD_SH_
+  params:
+  - name: this
+    type: 'bool '
+  - name: header
+    type: 'bool '
+  - name: receiver
+    type: 'bool '
+  return_type: bool
+  signature: bool httplib::Server::operator()(const void *, MultipartContentHeader,
+    ContentReceiver)
+- name: _ZZN7httplib6detail21write_content_chunkedIZNS_6Server27write_content_with_providerERNS_6StreamERKNS_7RequestERNS_8ResponseERKNSt3__112basic_stringIcNSA_11char_traitsIcEENSA_9allocatorIcEEEESI_EUlvE_NS0_10compressorEEEbS4_RKNSA_8functionIFbmmRNS_8DataSinkEEEERKT_RT0_RNS_5ErrorEENKUlRKNSA_18unordered_multimapISG_SG_NS0_11case_ignore4hashENS10_8equal_toENSE_INSA_4pairISH_SG_EEEEEEE_clES18_
+  params:
+  - name: this
+    type: 'bool '
+  - name: trailer
+    type: 'bool '
+  return_type: void
+  signature: void httplib::detail::write_content_chunked<httplib::Server::operator()(const
+    void *, const Headers &)
+- name: _ZN7httplib6Server24process_and_close_socketEi
+  params:
+  - name: this
+    type: 'bool '
+  - name: sock
+    type: int
+  return_type: bool
+  signature: bool httplib::Server::process_and_close_socket(socket_t)
+- name: _ZZN7httplib6Server7routingERNS_7RequestERNS_8ResponseERNS_6StreamEENKUlNSt3__18functionIFbPKcmEEEE_clESC_
+  params:
+  - name: this
+    type: 'bool '
+  - name: receiver
+    type: 'bool '
+  return_type: bool
+  signature: bool httplib::Server::operator()(const void *, ContentReceiver)
+- name: _ZN7httplib10ClientImpl25create_and_connect_socketERNS0_6SocketERNS_5ErrorE
+  params:
+  - name: this
+    type: 'bool '
+  - name: socket
+    type: 'bool '
+  - name: error
+    type: 'bool '
+  return_type: bool
+  signature: bool httplib::ClientImpl::create_and_connect_socket(struct Socket &,
+    DW_TAG_enumeration_typeError &)
+language: c++
+project: cpp-httplib
+target_name: server_fuzzer
+target_path: /src/cpp-httplib/test/fuzzing/server_fuzzer.cc
+test_files:
+- test_file_path: /src/cpp-httplib/test/test.cc
+- test_file_path: /src/cpp-httplib/test/gtest/gtest_main.cc
+- test_file_path: /src/cpp-httplib/example/simplecli.cc
+- test_file_path: /src/cpp-httplib/example/ssecli.cc
+- test_file_path: /src/cpp-httplib/example/server_and_client.cc
+- test_file_path: /src/cpp-httplib/example/server.cc

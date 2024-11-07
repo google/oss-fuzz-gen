@@ -1,77 +1,49 @@
-"functions":
-- "name": "llhttp_errno_name"
-  "params":
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "const char * llhttp_errno_name(llhttp_errno_t)"
-- "name": "llhttp_finish"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "llhttp_errno_t llhttp_finish(llhttp_t *)"
-- "name": "llhttp_set_lenient_optional_lf_after_cr"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void llhttp_set_lenient_optional_lf_after_cr(llhttp_t *, int)"
-- "name": "llhttp_set_lenient_optional_cr_before_lf"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void llhttp_set_lenient_optional_cr_before_lf(llhttp_t *, int)"
-- "name": "llhttp_method_name"
-  "params":
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "const char * llhttp_method_name(llhttp_method_t)"
-- "name": "llhttp_set_lenient_optional_crlf_after_chunk"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void llhttp_set_lenient_optional_crlf_after_chunk(llhttp_t *, int)"
-- "name": "llhttp_status_name"
-  "params":
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "const char * llhttp_status_name(llhttp_status_t)"
-- "name": "llhttp_set_lenient_data_after_close"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void llhttp_set_lenient_data_after_close(llhttp_t *, int)"
-- "name": "llhttp_set_lenient_spaces_after_chunk_size"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void llhttp_set_lenient_spaces_after_chunk_size(llhttp_t *, int)"
-- "name": "llhttp_reset"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void llhttp_reset(llhttp_t *)"
-"language": "c"
-"project": "llhttp"
-"target_name": "fuzz_parser"
-"target_path": "/src/llhttp/test/fuzzers/fuzz_parser.c"
-"test_files":
-- "test_file_path": "/src/llhttp/test/fixtures/extra.c"
+functions:
+- name: llhttp_errno_name
+  params:
+  - name: ''
+    type: int
+  return_type: void
+  signature: const char * llhttp_errno_name(llhttp_errno_t)
+- name: llhttp_finish
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: llhttp_errno_t llhttp_finish(llhttp_t *)
+- name: llhttp_set_lenient_optional_cr_before_lf
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void llhttp_set_lenient_optional_cr_before_lf(llhttp_t *, int)
+- name: llhttp_set_lenient_optional_lf_after_cr
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void llhttp_set_lenient_optional_lf_after_cr(llhttp_t *, int)
+- name: llhttp_set_lenient_optional_crlf_after_chunk
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void llhttp_set_lenient_optional_crlf_after_chunk(llhttp_t *, int)
+- name: llhttp_status_name
+  params:
+  - name: ''
+    type: int
+  return_type: void
+  signature: const char * llhttp_status_name(llhttp_status_t)
+language: c
+project: llhttp
+target_name: fuzz_parser
+target_path: /src/llhttp/test/fuzzers/fuzz_parser.c
+test_files:
+- test_file_path: /src/llhttp/test/fixtures/extra.c

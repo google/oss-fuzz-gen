@@ -1,30 +1,30 @@
-"functions":
-- "name": "sljit_free_stack"
-  "params":
-  - "name": "stack"
-    "type": "bool "
-  - "name": "allocator_data"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void sljit_free_stack(struct sljit_stack *, void *)"
-- "name": "sljit_allocate_stack"
-  "params":
-  - "name": "start_size"
-    "type": "size_t"
-  - "name": "max_size"
-    "type": "size_t"
-  - "name": "allocator_data"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct sljit_stack * sljit_allocate_stack(sljit_uw, sljit_uw, void *)"
-"language": "c++"
-"project": "pcre2"
-"target_name": "pcre2_fuzzer_32"
-"target_path": "/src/pcre2/src/pcre2_fuzzsupport.c"
-"test_files":
-- "test_file_path": "/src/pcre2/src/pcre2test.c"
-- "test_file_path": "/src/pcre2/maint/ucptest.c"
-- "test_file_path": "/src/pcre2/src/pcre2_jit_test.c"
-- "test_file_path": "/src/pcre2/src/pcre2posix_test.c"
-- "test_file_path": "/src/pcre2/deps/sljit/test_src/sljitTest.c"
-- "test_file_path": "/src/pcre2/deps/sljit/test_src/sljitMain.c"
+functions:
+- name: sljit_free_stack
+  params:
+  - name: stack
+    type: 'bool '
+  - name: allocator_data
+    type: 'bool '
+  return_type: void
+  signature: void sljit_free_stack(struct sljit_stack *, void *)
+- name: sljit_allocate_stack
+  params:
+  - name: start_size
+    type: size_t
+  - name: max_size
+    type: size_t
+  - name: allocator_data
+    type: 'bool '
+  return_type: void
+  signature: struct sljit_stack * sljit_allocate_stack(sljit_uw, sljit_uw, void *)
+language: c++
+project: pcre2
+target_name: pcre2_fuzzer_32
+target_path: /src/pcre2/src/pcre2_fuzzsupport.c
+test_files:
+- test_file_path: /src/pcre2/src/pcre2test.c
+- test_file_path: /src/pcre2/maint/ucptest.c
+- test_file_path: /src/pcre2/src/pcre2_jit_test.c
+- test_file_path: /src/pcre2/src/pcre2posix_test.c
+- test_file_path: /src/pcre2/deps/sljit/test_src/sljitTest.c
+- test_file_path: /src/pcre2/deps/sljit/test_src/sljitMain.c

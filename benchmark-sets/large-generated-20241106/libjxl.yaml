@@ -1,134 +1,97 @@
-"functions":
-- "name": "JxlEncoderAddJPEGFrame"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "JxlEncoderStatus JxlEncoderAddJPEGFrame(const JxlEncoderFrameSettings *, const uint8_t *, size_t)"
-- "name": "BrotliEncoderCompress"
-  "params":
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int BrotliEncoderCompress(int, int, BrotliEncoderMode, size_t, const uint8_t *, size_t *, uint8_t *)"
-- "name": "_ZN3jxl6extras17ChunkedPNMDecoder4InitEPKc"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "StatusOr<jxl::extras::ChunkedPNMDecoder> jxl::extras::ChunkedPNMDecoder::Init(const char *)"
-- "name": "_ZZN3jxl4jpeg14EncodeJPEGDataEP22JxlMemoryManagerStructRNS0_8JPEGDataEPNSt3__16vectorIhNS5_9allocatorIhEEEERKNS_14CompressParamsEENK3$_0clERKS9_b"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool"
-  "return_type": "int"
-  "signature": "Status jxl::jpeg::operator()(const void *, const vector<unsigned char, std::__1::allocator<unsigned char> > &, bool)"
-- "name": "JxlEncoderAddChunkedFrame"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": "chunked_frame_input"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "JxlEncoderStatus JxlEncoderAddChunkedFrame(const JxlEncoderFrameSettings *, int, struct JxlChunkedFrameInputSource)"
-- "name": "_ZN3jxl6extras14EncodeImageJXLERKNS0_17JXLCompressParamsERKNS0_15PackedPixelFileEPKNSt3__16vectorIhNS7_9allocatorIhEEEEPSB_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool jxl::extras::EncodeImageJXL(const struct JXLCompressParams &, const PackedPixelFile &, const vector<unsigned char, std::__1::allocator<unsigned char> > *, vector<unsigned char, std::__1::allocator<unsigned char> > *)"
-- "name": "_ZN3jxl4test10EncodeFileERKNS_14CompressParamsEPNS_10CodecInOutEPNSt3__16vectorIhNS6_9allocatorIhEEEEPNS_10ThreadPoolE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "Status jxl::test::EncodeFile(const struct CompressParams &, CodecInOut *, vector<unsigned char, std::__1::allocator<unsigned char> > *, ThreadPool *)"
-- "name": "_ZN3jxl4test9RoundtripERKNS_6extras15PackedPixelFileERKNS1_17JXLCompressParamsENS1_19JXLDecompressParamsEPNS_10ThreadPoolEPS2_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t jxl::test::Roundtrip(const PackedPixelFile &, const struct JXLCompressParams &, struct JXLDecompressParams, ThreadPool *, PackedPixelFile *)"
-- "name": "_ZN3jxl4test9RoundtripEPNS_10CodecInOutERKNS_14CompressParamsENS_6extras19JXLDecompressParamsES2_RNSt3__118basic_stringstreamIcNS8_11char_traitsIcEENS8_9allocatorIcEEEEPmPNS_10ThreadPoolE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool jxl::test::Roundtrip(CodecInOut *, const struct CompressParams &, struct JXLDecompressParams, DW_TAG_restrict_typeCodecInOut *, stringstream &, size_t *, ThreadPool *)"
-- "name": "JxlEncoderFlushInput"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "JxlEncoderStatus JxlEncoderFlushInput(JxlEncoder *)"
-"language": "c++"
-"project": "libjxl"
-"target_name": "color_encoding_fuzzer"
-"target_path": "/src/libjxl/tools/color_encoding_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/libjxl/lib/jpegli/libjpeg_test_util.cc"
-- "test_file_path": "/src/libjxl/lib/jxl/enc_external_image_test.cc"
-- "test_file_path": "/src/libjxl/lib/jxl/gradient_test.cc"
-- "test_file_path": "/src/libjxl/lib/jpegli/decode_api_test.cc"
-- "test_file_path": "/src/libjxl/lib/jxl/color_encoding_internal_test.cc"
-- "test_file_path": "/src/libjxl/tools/libjxl_test.c"
-- "test_file_path": "/src/libjxl/lib/jpegli/transcode_api_test.cc"
-- "test_file_path": "/src/libjxl/tools/flicker_test/main.cc"
-- "test_file_path": "/src/libjxl/lib/jxl/simd_util_test.cc"
-- "test_file_path": "/src/libjxl/lib/jxl/decode_test.cc"
+functions:
+- name: BrotliEncoderCompress
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int BrotliEncoderCompress(int, int, BrotliEncoderMode, size_t, const
+    uint8_t *, size_t *, uint8_t *)
+- name: _ZN3jxl4test9RoundtripERKNS_6extras15PackedPixelFileERKNS1_17JXLCompressParamsENS1_19JXLDecompressParamsEPNS_10ThreadPoolEPS2_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: size_t jxl::test::Roundtrip(const PackedPixelFile &, const struct JXLCompressParams
+    &, struct JXLDecompressParams, ThreadPool *, PackedPixelFile *)
+- name: JxlEncoderFlushInput
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: JxlEncoderStatus JxlEncoderFlushInput(JxlEncoder *)
+- name: _ZZN3jxl4jpeg14EncodeJPEGDataEP22JxlMemoryManagerStructRNS0_8JPEGDataEPNSt3__16vectorIhNS5_9allocatorIhEEEERKNS_14CompressParamsEENK3$_0clERKS9_b
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: int
+  signature: Status jxl::jpeg::operator()(const void *, const vector<unsigned char,
+    std::__1::allocator<unsigned char> > &, bool)
+- name: _ZN3jxl4test9RoundtripEPNS_10CodecInOutERKNS_14CompressParamsENS_6extras19JXLDecompressParamsES2_RNSt3__118basic_stringstreamIcNS8_11char_traitsIcEENS8_9allocatorIcEEEEPmPNS_10ThreadPoolE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool jxl::test::Roundtrip(CodecInOut *, const struct CompressParams &,
+    struct JXLDecompressParams, DW_TAG_restrict_typeCodecInOut *, stringstream &,
+    size_t *, ThreadPool *)
+- name: _ZN3jxl6extras14EncodeImageJXLERKNS0_17JXLCompressParamsERKNS0_15PackedPixelFileEPKNSt3__16vectorIhNS7_9allocatorIhEEEEPSB_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool jxl::extras::EncodeImageJXL(const struct JXLCompressParams &, const
+    PackedPixelFile &, const vector<unsigned char, std::__1::allocator<unsigned char>
+    > *, vector<unsigned char, std::__1::allocator<unsigned char> > *)
+language: c++
+project: libjxl
+target_name: color_encoding_fuzzer
+target_path: /src/libjxl/tools/color_encoding_fuzzer.cc
+test_files:
+- test_file_path: /src/libjxl/tools/flicker_test/main.cc
+- test_file_path: /src/libjxl/lib/jxl/gradient_test.cc
+- test_file_path: /src/libjxl/lib/jpegli/transcode_api_test.cc
+- test_file_path: /src/libjxl/lib/jxl/simd_util_test.cc
+- test_file_path: /src/libjxl/lib/jxl/decode_test.cc
+- test_file_path: /src/libjxl/lib/jxl/color_encoding_internal_test.cc

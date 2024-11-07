@@ -1,15 +1,11 @@
-"language": "c++"
-"project": "libexif"
-"target_name": "exif_from_data_fuzzer"
-"target_path": "/src/exif_from_data_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/libexif/test/test-mnote.c"
-- "test_file_path": "/src/libexif/test/test-tagtable.c"
-- "test_file_path": "/src/libexif/test/test-parse-from-data.c"
-- "test_file_path": "/src/libexif/test/nls/print-localedir.c"
-- "test_file_path": "/src/libexif/test/test-gps.c"
-- "test_file_path": "/src/libexif/test/test-mem.c"
-- "test_file_path": "/src/libexif/test/test-integers.c"
-- "test_file_path": "/src/libexif/contrib/examples/photographer.c"
-- "test_file_path": "/src/libexif/test/test-sorted.c"
-- "test_file_path": "/src/libexif/test/test-null.c"
+language: c++
+project: libexif
+target_name: exif_from_data_fuzzer
+target_path: /src/exif_from_data_fuzzer.cc
+test_files:
+- test_file_path: /src/libexif/test/nls/print-localedir.c
+- test_file_path: /src/libexif/contrib/examples/photographer.c
+- test_file_path: /src/libexif/test/test-mnote.c
+- test_file_path: /src/libexif/test/test-mem.c
+- test_file_path: /src/libexif/test/test-gps.c
+- test_file_path: /src/libexif/test/test-tagtable.c

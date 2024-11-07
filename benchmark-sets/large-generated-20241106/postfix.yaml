@@ -1,90 +1,80 @@
-"functions":
-- "name": "get_mail_conf_int2"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int get_mail_conf_int2(const char *, const char *, int, int, int)"
-- "name": "tok822_scan_addr"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "TOK822 * tok822_scan_addr(const char *)"
-- "name": "get_mail_conf_int_fn_table"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void get_mail_conf_int_fn_table(const CONFIG_INT_FN_TABLE *)"
-- "name": "get_mail_conf_time"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int get_mail_conf_time(const char *, const char *, int, int)"
-- "name": "get_mail_conf_time2"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int get_mail_conf_time2(const char *, const char *, int, int, int, int)"
-- "name": "get_mail_conf_time_table"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void get_mail_conf_time_table(const CONFIG_TIME_TABLE *)"
-- "name": "get_mail_conf_long2"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  "return_type": "size_t"
-  "signature": "long get_mail_conf_long2(const char *, const char *, long, long, long)"
-"language": "c"
-"project": "postfix"
-"target_name": "fuzz_tok822"
-"target_path": "/src/fuzz_tok822.c"
-"test_files":
-- "test_file_path": "/src/postfix/postfix/src/postscreen/postscreen_tests.c"
-- "test_file_path": "/src/postfix/postfix/src/dns/dns_rr_test.c"
-- "test_file_path": "/src/postfix/postfix/src/bounce/bounce_notify_util_tester.c"
-- "test_file_path": "/src/postfix/postfix/src/util/dict_test.c"
-- "test_file_path": "/src/postfix/postfix/auxiliary/name-addr-test/getnameinfo.c"
-- "test_file_path": "/src/postfix/postfix/src/dns/test_dns_lookup.c"
-- "test_file_path": "/src/postfix/postfix/auxiliary/name-addr-test/gethostbyaddr.c"
-- "test_file_path": "/src/postfix/postfix/src/milter/test-milter.c"
-- "test_file_path": "/src/postfix/postfix/src/util/stream_test.c"
-- "test_file_path": "/src/postfix/postfix/auxiliary/name-addr-test/gethostbyname.c"
+functions:
+- name: get_mail_conf_int_fn_table
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void get_mail_conf_int_fn_table(const CONFIG_INT_FN_TABLE *)
+- name: get_mail_conf_long2
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: size_t
+  signature: long get_mail_conf_long2(const char *, const char *, long, long, long)
+- name: get_mail_conf_int2
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: int
+  signature: int get_mail_conf_int2(const char *, const char *, int, int, int)
+- name: tok822_scan_addr
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: TOK822 * tok822_scan_addr(const char *)
+- name: get_mail_conf_time2
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: int
+  signature: int get_mail_conf_time2(const char *, const char *, int, int, int, int)
+- name: get_mail_conf_time
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: int
+  signature: int get_mail_conf_time(const char *, const char *, int, int)
+language: c
+project: postfix
+target_name: fuzz_tok822
+target_path: /src/fuzz_tok822.c
+test_files:
+- test_file_path: /src/postfix/postfix/src/util/dict_test.c
+- test_file_path: /src/postfix/postfix/auxiliary/name-addr-test/gethostbyname.c
+- test_file_path: /src/postfix/postfix/src/util/stream_test.c
+- test_file_path: /src/postfix/postfix/auxiliary/name-addr-test/gethostbyaddr.c
+- test_file_path: /src/postfix/postfix/src/bounce/bounce_notify_util_tester.c
+- test_file_path: /src/postfix/postfix/src/milter/test-milter.c

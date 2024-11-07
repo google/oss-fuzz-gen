@@ -1,144 +1,94 @@
-"functions":
-- "name": "pcap_compile_nopcap"
-  "params":
-  - "name": "snaplen_arg"
-    "type": "int"
-  - "name": "linktype_arg"
-    "type": "int"
-  - "name": "program"
-    "type": "bool "
-  - "name": "buf"
-    "type": "bool "
-  - "name": "optimize"
-    "type": "int"
-  - "name": "mask"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int pcap_compile_nopcap(int, int, struct bpf_program *, const char *, int, bpf_u_int32)"
-- "name": "pcap_findalldevs_ex"
-  "params":
-  - "name": "source"
-    "type": "bool "
-  - "name": "auth"
-    "type": "bool "
-  - "name": "alldevs"
-    "type": "bool "
-  - "name": "errbuf"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pcap_findalldevs_ex(const char *, struct pcap_rmtauth *, pcap_if_t **, char *)"
-- "name": "pcap_open"
-  "params":
-  - "name": "source"
-    "type": "bool "
-  - "name": "snaplen"
-    "type": "int"
-  - "name": "flags"
-    "type": "int"
-  - "name": "read_timeout"
-    "type": "int"
-  - "name": "auth"
-    "type": "bool "
-  - "name": "errbuf"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "pcap_t * pcap_open(const char *, int, int, int, struct pcap_rmtauth *, char *)"
-- "name": "pcap_lookupdev"
-  "params":
-  - "name": "errbuf"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "char * pcap_lookupdev(char *)"
-- "name": "pcap_findalldevs"
-  "params":
-  - "name": "alldevsp"
-    "type": "bool "
-  - "name": "errbuf"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pcap_findalldevs(pcap_if_t **, char *)"
-- "name": "pcapint_platform_finddevs"
-  "params":
-  - "name": "devlistp"
-    "type": "bool "
-  - "name": "errbuf"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pcapint_platform_finddevs(pcap_if_list_t *, char *)"
-- "name": "pcap_open_live"
-  "params":
-  - "name": "device"
-    "type": "bool "
-  - "name": "snaplen"
-    "type": "int"
-  - "name": "promisc"
-    "type": "int"
-  - "name": "to_ms"
-    "type": "int"
-  - "name": "errbuf"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "pcap_t * pcap_open_live(const char *, int, int, int, char *)"
-- "name": "pcapint_findalldevs_interfaces"
-  "params":
-  - "name": "devlistp"
-    "type": "bool "
-  - "name": "errbuf"
-    "type": "bool "
-  - "name": "check_usable"
-    "type": "bool "
-  - "name": "get_flags_func"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pcapint_findalldevs_interfaces(pcap_if_list_t *, char *, DW_TAG_subroutine_typechar *, get_if_flags_func)"
-- "name": "pcap_parsesrcstr"
-  "params":
-  - "name": "source"
-    "type": "bool "
-  - "name": "type"
-    "type": "bool "
-  - "name": "host"
-    "type": "bool "
-  - "name": "port"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "errbuf"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pcap_parsesrcstr(const char *, int *, char *, char *, char *, char *)"
-- "name": "pcapint_parsesrcstr_ex"
-  "params":
-  - "name": "source"
-    "type": "bool "
-  - "name": "type"
-    "type": "bool "
-  - "name": "userinfo"
-    "type": "bool "
-  - "name": "host"
-    "type": "bool "
-  - "name": "port"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "uses_ssl"
-    "type": "bool "
-  - "name": "errbuf"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int pcapint_parsesrcstr_ex(const char *, int *, char *, char *, char *, char *, unsigned char *, char *)"
-"language": "c++"
-"project": "libpcap"
-"target_name": "fuzz_filter"
-"target_path": "/src/libpcap/testprogs/fuzz/fuzz_filter.c"
-"test_files":
-- "test_file_path": "/src/libpcap/testprogs/valgrindtest.c"
-- "test_file_path": "/src/libpcap/testprogs/nonblocktest.c"
-- "test_file_path": "/src/libpcap/testprogs/threadsignaltest.c"
-- "test_file_path": "/src/libpcap/testprogs/writecaptest.c"
-- "test_file_path": "/src/libpcap/testprogs/findalldevstest.c"
-- "test_file_path": "/src/libpcap/testprogs/findalldevstest-perf.c"
-- "test_file_path": "/src/libpcap/testprogs/reactivatetest.c"
-- "test_file_path": "/src/libpcap/testprogs/selpolltest.c"
-- "test_file_path": "/src/libpcap/testprogs/can_set_rfmon_test.c"
-- "test_file_path": "/src/libpcap/testprogs/opentest.c"
+functions:
+- name: pcap_findalldevs_ex
+  params:
+  - name: source
+    type: 'bool '
+  - name: auth
+    type: 'bool '
+  - name: alldevs
+    type: 'bool '
+  - name: errbuf
+    type: 'bool '
+  return_type: int
+  signature: int pcap_findalldevs_ex(const char *, struct pcap_rmtauth *, pcap_if_t
+    **, char *)
+- name: pcapint_platform_finddevs
+  params:
+  - name: devlistp
+    type: 'bool '
+  - name: errbuf
+    type: 'bool '
+  return_type: int
+  signature: int pcapint_platform_finddevs(pcap_if_list_t *, char *)
+- name: pcapint_findalldevs_interfaces
+  params:
+  - name: devlistp
+    type: 'bool '
+  - name: errbuf
+    type: 'bool '
+  - name: check_usable
+    type: 'bool '
+  - name: get_flags_func
+    type: 'bool '
+  return_type: int
+  signature: int pcapint_findalldevs_interfaces(pcap_if_list_t *, char *, DW_TAG_subroutine_typechar
+    *, get_if_flags_func)
+- name: pcap_open
+  params:
+  - name: source
+    type: 'bool '
+  - name: snaplen
+    type: int
+  - name: flags
+    type: int
+  - name: read_timeout
+    type: int
+  - name: auth
+    type: 'bool '
+  - name: errbuf
+    type: 'bool '
+  return_type: void
+  signature: pcap_t * pcap_open(const char *, int, int, int, struct pcap_rmtauth *,
+    char *)
+- name: pcap_compile_nopcap
+  params:
+  - name: snaplen_arg
+    type: int
+  - name: linktype_arg
+    type: int
+  - name: program
+    type: 'bool '
+  - name: buf
+    type: 'bool '
+  - name: optimize
+    type: int
+  - name: mask
+    type: int
+  return_type: int
+  signature: int pcap_compile_nopcap(int, int, struct bpf_program *, const char *,
+    int, bpf_u_int32)
+- name: pcap_open_live
+  params:
+  - name: device
+    type: 'bool '
+  - name: snaplen
+    type: int
+  - name: promisc
+    type: int
+  - name: to_ms
+    type: int
+  - name: errbuf
+    type: 'bool '
+  return_type: void
+  signature: pcap_t * pcap_open_live(const char *, int, int, int, char *)
+language: c++
+project: libpcap
+target_name: fuzz_filter
+target_path: /src/libpcap/testprogs/fuzz/fuzz_filter.c
+test_files:
+- test_file_path: /src/libpcap/testprogs/threadsignaltest.c
+- test_file_path: /src/libpcap/testprogs/opentest.c
+- test_file_path: /src/libpcap/testprogs/selpolltest.c
+- test_file_path: /src/libpcap/testprogs/valgrindtest.c
+- test_file_path: /src/libpcap/testprogs/can_set_rfmon_test.c
+- test_file_path: /src/libpcap/testprogs/findalldevstest.c

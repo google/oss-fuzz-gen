@@ -1,148 +1,97 @@
-"functions":
-- "name": "av1_rd_pick_partition"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "char"
-  - "name": ""
-    "type": "bool "
-  - "name": "best_rdc"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "char"
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool av1_rd_pick_partition(const AV1_COMP *, ThreadData *, TileDataEnc *, TokenExtra **, int, int, BLOCK_SIZE, RD_STATS *, RD_STATS, PC_TREE *, SIMPLE_MOTION_DATA_TREE *, int64_t *, SB_MULTI_PASS_MODE, RD_RECT_PART_WIN_INFO *)"
-- "name": "encoder_encode"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *, const aom_image_t *, aom_codec_pts_t, unsigned long, aom_enc_frame_flags_t)"
-- "name": "av1_encode_strategy"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int av1_encode_strategy(const AV1_COMP *, const size_t *, const uint8_t *, size_t, unsigned int *, const int64_t *, const int64_t *, const const aom_rational64_t *, const int *, int)"
-- "name": "av1_encode_tiles_row_mt"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void av1_encode_tiles_row_mt(AV1_COMP *)"
-- "name": "av1_get_compressed_data"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int av1_get_compressed_data(AV1_COMP *, const AV1_COMP_DATA *)"
-- "name": "vips_image_new_temp_file"
-  "params":
-  - "name": "format"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "VipsImage * vips_image_new_temp_file(const char *)"
-- "name": "vips__build_mosaic"
-  "params":
-  - "name": "st"
-    "type": "bool "
-  - "name": "out"
-    "type": "bool "
-  - "name": "tfn"
-    "type": "bool "
-  - "name": "a"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int vips__build_mosaic(SymbolTable *, VipsImage *, transform_fn, void *)"
-- "name": "av1_encode"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int av1_encode(const AV1_COMP *, const uint8_t *, size_t, const const EncodeFrameInput *, const const EncodeFrameParams *, const size_t *)"
-- "name": "av1_encode_tiles_mt"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void av1_encode_tiles_mt(AV1_COMP *)"
-- "name": "av1_determine_sc_tools_with_encoding"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void av1_determine_sc_tools_with_encoding(AV1_COMP *, const int)"
-"language": "c++"
-"project": "libvips"
-"target_name": "ppmsave_buffer_fuzzer"
-"target_path": "/src/libvips/fuzz/generic_buffer_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/libvips/libvips/resample/shrinkv.c"
-- "test_file_path": "/src/libvips/libvips/resample/similarity.c"
-- "test_file_path": "/src/libvips/cplusplus/examples/test_overloads.cpp"
-- "test_file_path": "/src/libvips/libvips/resample/resample.c"
-- "test_file_path": "/src/libvips/libvips/foreign/libnsgif/test/nsgif.c"
-- "test_file_path": "/src/libvips/libvips/deprecated/im_video_test.c"
-- "test_file_path": "/src/libvips/libvips/resample/shrink.c"
-- "test_file_path": "/src/libvips/examples/use-vips-func.c"
-- "test_file_path": "/src/libvips/libvips/resample/lbb.cpp"
-- "test_file_path": "/src/libvips/examples/annotate-animated.c"
+functions:
+- name: vips__build_mosaic
+  params:
+  - name: st
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  - name: tfn
+    type: 'bool '
+  - name: a
+    type: 'bool '
+  return_type: int
+  signature: int vips__build_mosaic(SymbolTable *, VipsImage *, transform_fn, void
+    *)
+- name: av1_encode_tiles_mt
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void av1_encode_tiles_mt(AV1_COMP *)
+- name: av1_get_compressed_data
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int av1_get_compressed_data(AV1_COMP *, const AV1_COMP_DATA *)
+- name: encoder_encode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *, const aom_image_t
+    *, aom_codec_pts_t, unsigned long, aom_enc_frame_flags_t)
+- name: av1_encode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int av1_encode(const AV1_COMP *, const uint8_t *, size_t, const const
+    EncodeFrameInput *, const const EncodeFrameParams *, const size_t *)
+- name: av1_encode_strategy
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int av1_encode_strategy(const AV1_COMP *, const size_t *, const uint8_t
+    *, size_t, unsigned int *, const int64_t *, const int64_t *, const const aom_rational64_t
+    *, const int *, int)
+language: c++
+project: libvips
+target_name: ppmsave_buffer_fuzzer
+target_path: /src/libvips/fuzz/generic_buffer_fuzzer.cc
+test_files:
+- test_file_path: /src/libvips/examples/use-vips-func.c
+- test_file_path: /src/libvips/libvips/foreign/libnsgif/test/nsgif.c
+- test_file_path: /src/libvips/libvips/resample/shrink.c
+- test_file_path: /src/libvips/libvips/resample/resample.c
+- test_file_path: /src/libvips/libvips/resample/lbb.cpp
+- test_file_path: /src/libvips/libvips/deprecated/im_video_test.c

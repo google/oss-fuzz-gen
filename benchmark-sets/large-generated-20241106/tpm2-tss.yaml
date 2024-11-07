@@ -1,212 +1,148 @@
-"functions":
-- "name": "Tss2_Sys_Quote"
-  "params":
-  - "name": "sysContext"
-    "type": "bool "
-  - "name": "signHandle"
-    "type": "int"
-  - "name": "cmdAuthsArray"
-    "type": "bool "
-  - "name": "qualifyingData"
-    "type": "bool "
-  - "name": "inScheme"
-    "type": "bool "
-  - "name": "PCRselect"
-    "type": "bool "
-  - "name": "quoted"
-    "type": "bool "
-  - "name": "signature"
-    "type": "bool "
-  - "name": "rspAuthsArray"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "TSS2_RC Tss2_Sys_Quote(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_DATA *, const TPMT_SIG_SCHEME *, const TPML_PCR_SELECTION *, TPM2B_ATTEST *, TPMT_SIGNATURE *, TSS2L_SYS_AUTH_RESPONSE *)"
-- "name": "Tss2_Sys_Create"
-  "params":
-  - "name": "sysContext"
-    "type": "bool "
-  - "name": "parentHandle"
-    "type": "int"
-  - "name": "cmdAuthsArray"
-    "type": "bool "
-  - "name": "inSensitive"
-    "type": "bool "
-  - "name": "inPublic"
-    "type": "bool "
-  - "name": "outsideInfo"
-    "type": "bool "
-  - "name": "creationPCR"
-    "type": "bool "
-  - "name": "outPrivate"
-    "type": "bool "
-  - "name": "outPublic"
-    "type": "bool "
-  - "name": "creationData"
-    "type": "bool "
-  - "name": "creationHash"
-    "type": "bool "
-  - "name": "creationTicket"
-    "type": "bool "
-  - "name": "rspAuthsArray"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "TSS2_RC Tss2_Sys_Create(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_SENSITIVE_CREATE *, const TPM2B_PUBLIC *, const TPM2B_DATA *, const TPML_PCR_SELECTION *, TPM2B_PRIVATE *, TPM2B_PUBLIC *, TPM2B_CREATION_DATA *, TPM2B_DIGEST *, TPMT_TK_CREATION *, TSS2L_SYS_AUTH_RESPONSE *)"
-- "name": "Tss2_Sys_CreatePrimary"
-  "params":
-  - "name": "sysContext"
-    "type": "bool "
-  - "name": "primaryHandle"
-    "type": "int"
-  - "name": "cmdAuthsArray"
-    "type": "bool "
-  - "name": "inSensitive"
-    "type": "bool "
-  - "name": "inPublic"
-    "type": "bool "
-  - "name": "outsideInfo"
-    "type": "bool "
-  - "name": "creationPCR"
-    "type": "bool "
-  - "name": "objectHandle"
-    "type": "bool "
-  - "name": "outPublic"
-    "type": "bool "
-  - "name": "creationData"
-    "type": "bool "
-  - "name": "creationHash"
-    "type": "bool "
-  - "name": "creationTicket"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "rspAuthsArray"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "TSS2_RC Tss2_Sys_CreatePrimary(TSS2_SYS_CONTEXT *, TPMI_RH_HIERARCHY, const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_SENSITIVE_CREATE *, const TPM2B_PUBLIC *, const TPM2B_DATA *, const TPML_PCR_SELECTION *, TPM2_HANDLE *, TPM2B_PUBLIC *, TPM2B_CREATION_DATA *, TPM2B_DIGEST *, TPMT_TK_CREATION *, TPM2B_NAME *, TSS2L_SYS_AUTH_RESPONSE *)"
-- "name": "test_esys_checks_pre"
-  "params":
-  - "name": "test_ctx"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int test_esys_checks_pre(TSS2_TEST_ESYS_CONTEXT *)"
-- "name": "iesys_gen_auths"
-  "params":
-  - "name": "esys_context"
-    "type": "bool "
-  - "name": "h1"
-    "type": "bool "
-  - "name": "h2"
-    "type": "bool "
-  - "name": "h3"
-    "type": "bool "
-  - "name": "auths"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "TSS2_RC iesys_gen_auths(ESYS_CONTEXT *, RSRC_NODE_T *, RSRC_NODE_T *, RSRC_NODE_T *, TSS2L_SYS_AUTH_COMMAND *)"
-- "name": "Tss2_Sys_CreateLoaded"
-  "params":
-  - "name": "sysContext"
-    "type": "bool "
-  - "name": "parentHandle"
-    "type": "int"
-  - "name": "cmdAuthsArray"
-    "type": "bool "
-  - "name": "inSensitive"
-    "type": "bool "
-  - "name": "inPublic"
-    "type": "bool "
-  - "name": "objectHandle"
-    "type": "bool "
-  - "name": "outPrivate"
-    "type": "bool "
-  - "name": "outPublic"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "rspAuthsArray"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "TSS2_RC Tss2_Sys_CreateLoaded(TSS2_SYS_CONTEXT *, TPMI_RH_HIERARCHY, const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_SENSITIVE_CREATE *, const TPM2B_TEMPLATE *, TPM2_HANDLE *, TPM2B_PRIVATE *, TPM2B_PUBLIC *, TPM2B_NAME *, TSS2L_SYS_AUTH_RESPONSE *)"
-- "name": "test_esys_checks_post"
-  "params":
-  - "name": "test_ctx"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int test_esys_checks_post(TSS2_TEST_ESYS_CONTEXT *)"
-- "name": "Tss2_Sys_Import"
-  "params":
-  - "name": "sysContext"
-    "type": "bool "
-  - "name": "parentHandle"
-    "type": "int"
-  - "name": "cmdAuthsArray"
-    "type": "bool "
-  - "name": "encryptionKey"
-    "type": "bool "
-  - "name": "objectPublic"
-    "type": "bool "
-  - "name": "duplicate"
-    "type": "bool "
-  - "name": "inSymSeed"
-    "type": "bool "
-  - "name": "symmetricAlg"
-    "type": "bool "
-  - "name": "outPrivate"
-    "type": "bool "
-  - "name": "rspAuthsArray"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "TSS2_RC Tss2_Sys_Import(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_DATA *, const TPM2B_PUBLIC *, const TPM2B_PRIVATE *, const TPM2B_ENCRYPTED_SECRET *, const TPMT_SYM_DEF_OBJECT *, TPM2B_PRIVATE *, TSS2L_SYS_AUTH_RESPONSE *)"
-- "name": "Tss2_Sys_ReadPublic"
-  "params":
-  - "name": "sysContext"
-    "type": "bool "
-  - "name": "objectHandle"
-    "type": "int"
-  - "name": "cmdAuthsArray"
-    "type": "bool "
-  - "name": "outPublic"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "qualifiedName"
-    "type": "bool "
-  - "name": "rspAuthsArray"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "TSS2_RC Tss2_Sys_ReadPublic(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND *, TPM2B_PUBLIC *, TPM2B_NAME *, TPM2B_NAME *, TSS2L_SYS_AUTH_RESPONSE *)"
-- "name": "Tss2_Sys_LoadExternal"
-  "params":
-  - "name": "sysContext"
-    "type": "bool "
-  - "name": "cmdAuthsArray"
-    "type": "bool "
-  - "name": "inPrivate"
-    "type": "bool "
-  - "name": "inPublic"
-    "type": "bool "
-  - "name": "hierarchy"
-    "type": "int"
-  - "name": "objectHandle"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "rspAuthsArray"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "TSS2_RC Tss2_Sys_LoadExternal(TSS2_SYS_CONTEXT *, const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_SENSITIVE *, const TPM2B_PUBLIC *, TPMI_RH_HIERARCHY, TPM2_HANDLE *, TPM2B_NAME *, TSS2L_SYS_AUTH_RESPONSE *)"
-"language": "c++"
-"project": "tpm2-tss"
-"target_name": "Tss2_Sys_Vendor_TCG_Test_Complete"
-"target_path": "/src/tpm2-tss/test/fuzz/main-sys.c"
-"test_files":
-- "test_file_path": "/src/tpm2-tss/test/integration/fapi-key-create-policy-signed.int.c"
-- "test_file_path": "/src/tpm2-tss/test/integration/esys-nv-ram-ordinary-index.int.c"
-- "test_file_path": "/src/tpm2-tss/test/unit/fapi-io.c"
-- "test_file_path": "/src/tpm2-tss/test/integration/esys-act-set-timeout.int.c"
-- "test_file_path": "/src/tpm2-tss/test/integration/fapi-nv-authorizenv-cphash.int.c"
-- "test_file_path": "/src/tpm2-tss/test/integration/sys-sys-initialize.int.c"
-- "test_file_path": "/src/tpm2-tss/test/integration/esys-check-auth-with-trailing-zero.int.c"
-- "test_file_path": "/src/tpm2-tss/test/integration/esys-tr-fromTpmPublic-key.int.c"
-- "test_file_path": "/src/tpm2-tss/test/integration/esys-hashsequencestart.int.c"
-- "test_file_path": "/src/tpm2-tss/test/integration/main-fapi.c"
+functions:
+- name: test_esys_checks_pre
+  params:
+  - name: test_ctx
+    type: 'bool '
+  return_type: int
+  signature: int test_esys_checks_pre(TSS2_TEST_ESYS_CONTEXT *)
+- name: Tss2_Sys_ReadPublic
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: objectHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: outPublic
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: qualifiedName
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_ReadPublic(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const
+    TSS2L_SYS_AUTH_COMMAND *, TPM2B_PUBLIC *, TPM2B_NAME *, TPM2B_NAME *, TSS2L_SYS_AUTH_RESPONSE
+    *)
+- name: Tss2_Sys_CreateLoaded
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: parentHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: inSensitive
+    type: 'bool '
+  - name: inPublic
+    type: 'bool '
+  - name: objectHandle
+    type: 'bool '
+  - name: outPrivate
+    type: 'bool '
+  - name: outPublic
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_CreateLoaded(TSS2_SYS_CONTEXT *, TPMI_RH_HIERARCHY,
+    const TSS2L_SYS_AUTH_COMMAND *, const TPM2B_SENSITIVE_CREATE *, const TPM2B_TEMPLATE
+    *, TPM2_HANDLE *, TPM2B_PRIVATE *, TPM2B_PUBLIC *, TPM2B_NAME *, TSS2L_SYS_AUTH_RESPONSE
+    *)
+- name: Tss2_Sys_Import
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: parentHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: encryptionKey
+    type: 'bool '
+  - name: objectPublic
+    type: 'bool '
+  - name: duplicate
+    type: 'bool '
+  - name: inSymSeed
+    type: 'bool '
+  - name: symmetricAlg
+    type: 'bool '
+  - name: outPrivate
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_Import(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND
+    *, const TPM2B_DATA *, const TPM2B_PUBLIC *, const TPM2B_PRIVATE *, const TPM2B_ENCRYPTED_SECRET
+    *, const TPMT_SYM_DEF_OBJECT *, TPM2B_PRIVATE *, TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_Quote
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: signHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: qualifyingData
+    type: 'bool '
+  - name: inScheme
+    type: 'bool '
+  - name: PCRselect
+    type: 'bool '
+  - name: quoted
+    type: 'bool '
+  - name: signature
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_Quote(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND
+    *, const TPM2B_DATA *, const TPMT_SIG_SCHEME *, const TPML_PCR_SELECTION *, TPM2B_ATTEST
+    *, TPMT_SIGNATURE *, TSS2L_SYS_AUTH_RESPONSE *)
+- name: Tss2_Sys_Create
+  params:
+  - name: sysContext
+    type: 'bool '
+  - name: parentHandle
+    type: int
+  - name: cmdAuthsArray
+    type: 'bool '
+  - name: inSensitive
+    type: 'bool '
+  - name: inPublic
+    type: 'bool '
+  - name: outsideInfo
+    type: 'bool '
+  - name: creationPCR
+    type: 'bool '
+  - name: outPrivate
+    type: 'bool '
+  - name: outPublic
+    type: 'bool '
+  - name: creationData
+    type: 'bool '
+  - name: creationHash
+    type: 'bool '
+  - name: creationTicket
+    type: 'bool '
+  - name: rspAuthsArray
+    type: 'bool '
+  return_type: int
+  signature: TSS2_RC Tss2_Sys_Create(TSS2_SYS_CONTEXT *, TPMI_DH_OBJECT, const TSS2L_SYS_AUTH_COMMAND
+    *, const TPM2B_SENSITIVE_CREATE *, const TPM2B_PUBLIC *, const TPM2B_DATA *, const
+    TPML_PCR_SELECTION *, TPM2B_PRIVATE *, TPM2B_PUBLIC *, TPM2B_CREATION_DATA *,
+    TPM2B_DIGEST *, TPMT_TK_CREATION *, TSS2L_SYS_AUTH_RESPONSE *)
+language: c++
+project: tpm2-tss
+target_name: Tss2_Sys_Vendor_TCG_Test_Complete
+target_path: /src/tpm2-tss/test/fuzz/main-sys.c
+test_files:
+- test_file_path: /src/tpm2-tss/test/integration/esys-tr-fromTpmPublic-key.int.c
+- test_file_path: /src/tpm2-tss/test/integration/esys-nv-ram-ordinary-index.int.c
+- test_file_path: /src/tpm2-tss/test/integration/fapi-nv-authorizenv-cphash.int.c
+- test_file_path: /src/tpm2-tss/test/integration/sys-sys-initialize.int.c
+- test_file_path: /src/tpm2-tss/test/integration/esys-check-auth-with-trailing-zero.int.c
+- test_file_path: /src/tpm2-tss/test/integration/esys-hashsequencestart.int.c

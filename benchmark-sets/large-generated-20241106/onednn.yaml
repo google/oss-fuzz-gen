@@ -1,15 +1,11 @@
-"language": "c++"
-"project": "onednn"
-"target_name": "fuzz_json"
-"target_path": "/src/fuzz_json.cpp"
-"test_files":
-- "test_file_path": "/src/oneDNN/tests/benchdnn/resampling/resampling.cpp"
-- "test_file_path": "/src/oneDNN/tests/benchdnn/concat/bench_concat.cpp"
-- "test_file_path": "/src/oneDNN/tests/gtests/api/test_memory_desc.cpp"
-- "test_file_path": "/src/oneDNN/examples/primitives/deconvolution.cpp"
-- "test_file_path": "/src/oneDNN/tests/benchdnn/dnn_types.cpp"
-- "test_file_path": "/src/oneDNN/tests/benchdnn/self/memory.cpp"
-- "test_file_path": "/src/oneDNN/tests/gtests/test_gemm_bf16bf16bf16.cpp"
-- "test_file_path": "/src/oneDNN/tests/benchdnn/shuffle/bench_shuffle.cpp"
-- "test_file_path": "/src/oneDNN/tests/benchdnn/self/conv.cpp"
-- "test_file_path": "/src/oneDNN/tests/benchdnn/conv/ref_conv.cpp"
+language: c++
+project: onednn
+target_name: fuzz_json
+target_path: /src/fuzz_json.cpp
+test_files:
+- test_file_path: /src/oneDNN/tests/benchdnn/resampling/resampling.cpp
+- test_file_path: /src/oneDNN/tests/gtests/api/test_memory_desc.cpp
+- test_file_path: /src/oneDNN/tests/benchdnn/concat/bench_concat.cpp
+- test_file_path: /src/oneDNN/tests/benchdnn/self/conv.cpp
+- test_file_path: /src/oneDNN/tests/benchdnn/dnn_types.cpp
+- test_file_path: /src/oneDNN/tests/benchdnn/conv/ref_conv.cpp

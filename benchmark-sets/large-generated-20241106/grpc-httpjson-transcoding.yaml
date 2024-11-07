@@ -1,120 +1,84 @@
-"functions":
-- "name": "_ZZN6google8protobuf13json_internal12_GLOBAL__N_113ParseSingularINS1_21ParseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_9JsonLexerENT_5FieldERNSA_3MsgEENKUlRKNS0_10DescriptorERNS4_3MsgEE0_clESG_SI_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "type"
-    "type": "bool "
-  - "name": "msg"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status google::protobuf::json_internal::(anonymous namespace)::ParseSingular<google::protobuf::json_internal::operator()(const void *, const Desc<google::protobuf::json_internal::ParseProto2Descriptor> &, Msg<google::protobuf::json_internal::ParseProto2Descriptor> &)"
-- "name": "_ZZN6google8protobuf13json_internal12_GLOBAL__N_110WriteValueINS1_23UnparseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_10JsonWriterERKNT_3MsgERKNSA_4DescEbENKUlRKNS0_10DescriptorEE_clESJ_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "type"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status google::protobuf::json_internal::(anonymous namespace)::WriteValue<google::protobuf::json_internal::operator()(const void *, const Desc<google::protobuf::json_internal::UnparseProto2Descriptor> &)"
-- "name": "_ZZN6google8protobuf13json_internal12_GLOBAL__N_18WriteAnyINS1_23UnparseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_10JsonWriterERKNT_3MsgERKNSA_4DescEENKUlRKNS0_10DescriptorEE_clESJ_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "any_desc"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status google::protobuf::json_internal::(anonymous namespace)::WriteAny<google::protobuf::json_internal::operator()(const void *, const Desc<google::protobuf::json_internal::UnparseProto2Descriptor> &)"
-- "name": "_ZZN6google8protobuf13json_internal12_GLOBAL__N_112ParseMessageINS1_21ParseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_9JsonLexerERKNT_4DescERNSA_3MsgEbENKUlRNS1_12LocationWithINS1_16MaybeOwnedStringEEEE_clESJ_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status google::protobuf::json_internal::(anonymous namespace)::ParseMessage<google::protobuf::json_internal::operator()(const void *, struct LocationWith<google::protobuf::json_internal::MaybeOwnedString> &)"
-- "name": "_ZZN6google8protobuf13json_internal12_GLOBAL__N_18ParseMapINS1_21ParseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_9JsonLexerENT_5FieldERNSA_3MsgEENKUlRNS1_12LocationWithINS1_16MaybeOwnedStringEEEE_clESH_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status google::protobuf::json_internal::(anonymous namespace)::ParseMap<google::protobuf::json_internal::operator()(const void *, struct LocationWith<google::protobuf::json_internal::MaybeOwnedString> &)"
-- "name": "_ZZN6google8protobuf13json_internal21ParseProto2Descriptor10NewDynamicIZNS1_12_GLOBAL__N_18ParseAnyIS2_EEN4absl12lts_202301256StatusERNS1_9JsonLexerERKNT_4DescERNSB_3MsgEEUlRKNS0_10DescriptorERNS2_3MsgEE_EES8_PKNS0_15FieldDescriptorERKNSt3__112basic_stringIcNSQ_11char_traitsIcEENSQ_9allocatorIcEEEESL_SB_ENKUlSJ_E_clESJ_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "desc"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status google::protobuf::json_internal::ParseProto2Descriptor::NewDynamic<google::protobuf::json_internal::(anonymous namespace)::ParseAny<google::protobuf::json_internal::operator()(const void *, const Desc &)"
-- "name": "_ZZN6google8protobuf13json_internal12_GLOBAL__N_18ParseAnyINS1_21ParseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_9JsonLexerERKNT_4DescERNSA_3MsgEENKUlRKNS0_10DescriptorERNS4_3MsgEE_clESI_SK_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "desc"
-    "type": "bool "
-  - "name": "msg"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status google::protobuf::json_internal::(anonymous namespace)::ParseAny<google::protobuf::json_internal::operator()(const void *, const Desc<google::protobuf::json_internal::ParseProto2Descriptor> &, Msg<google::protobuf::json_internal::ParseProto2Descriptor> &)"
-- "name": "_ZZZN6google8protobuf13json_internal12_GLOBAL__N_18ParseMapINS1_21ParseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_9JsonLexerENT_5FieldERNSA_3MsgEENKUlRNS1_12LocationWithINS1_16MaybeOwnedStringEEEE_clESH_ENKUlRKNS0_10DescriptorERNS4_3MsgEE_clESL_SN_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "type"
-    "type": "bool "
-  - "name": "entry"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status google::protobuf::json_internal::(anonymous namespace)::ParseMap<google::protobuf::json_internal::operator()(const void *, const Desc<google::protobuf::json_internal::ParseProto2Descriptor> &, Msg<google::protobuf::json_internal::ParseProto2Descriptor> &)"
-- "name": "_ZZN6google8protobuf13json_internal12_GLOBAL__N_110ParseArrayINS1_21ParseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_9JsonLexerENT_5FieldERNSA_3MsgEENKUlvE_clEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status google::protobuf::json_internal::(anonymous namespace)::ParseArray<google::protobuf::json_internal::operator()(const void *)"
-- "name": "_ZN4absl12lts_202301254CordaSENSt3__117basic_string_viewIcNS2_11char_traitsIcEEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "src"
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "Cord & absl::lts_20230125::Cord::operator=(string_view)"
-"language": "c++"
-"project": "grpc-httpjson-transcoding"
-"target_name": "http_template_fuzz_test"
-"target_path": "/proc/self/cwd/test/http_template_fuzz_test.cc"
-"test_files":
-- "test_file_path": "/src/grpc-httpjson-transcoding/perf_benchmark/utils_test.cc"
-- "test_file_path": "/src/grpc-httpjson-transcoding/test/prefix_writer_test.cc"
-- "test_file_path": "/src/grpc-httpjson-transcoding/perf_benchmark/benchmark_input_stream_translator_integration_test.cc"
-- "test_file_path": "/src/grpc-httpjson-transcoding/test/test_common.cc"
-- "test_file_path": "/src/grpc-httpjson-transcoding/test/message_stream_test.cc"
-- "test_file_path": "/src/grpc-httpjson-transcoding/test/request_message_translator_test.cc"
-- "test_file_path": "/src/grpc-httpjson-transcoding/test/json_request_translator_test.cc"
-- "test_file_path": "/src/grpc-httpjson-transcoding/perf_benchmark/benchmark_input_stream_test.cc"
-- "test_file_path": "/src/grpc-httpjson-transcoding/test/request_weaver_test.cc"
-- "test_file_path": "/src/grpc-httpjson-transcoding/test/request_translator_test_base.cc"
+functions:
+- name: _ZZN6google8protobuf13json_internal12_GLOBAL__N_110ParseArrayINS1_21ParseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_9JsonLexerENT_5FieldERNSA_3MsgEENKUlvE_clEv
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status google::protobuf::json_internal::(anonymous namespace)::ParseArray<google::protobuf::json_internal::operator()(const
+    void *)
+- name: _ZZN6google8protobuf13json_internal21ParseProto2Descriptor10NewDynamicIZNS1_12_GLOBAL__N_18ParseAnyIS2_EEN4absl12lts_202301256StatusERNS1_9JsonLexerERKNT_4DescERNSB_3MsgEEUlRKNS0_10DescriptorERNS2_3MsgEE_EES8_PKNS0_15FieldDescriptorERKNSt3__112basic_stringIcNSQ_11char_traitsIcEENSQ_9allocatorIcEEEESL_SB_ENKUlSJ_E_clESJ_
+  params:
+  - name: this
+    type: 'bool '
+  - name: desc
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status google::protobuf::json_internal::ParseProto2Descriptor::NewDynamic<google::protobuf::json_internal::(anonymous
+    namespace)::ParseAny<google::protobuf::json_internal::operator()(const void *,
+    const Desc &)
+- name: _ZZN6google8protobuf13json_internal12_GLOBAL__N_113ParseSingularINS1_21ParseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_9JsonLexerENT_5FieldERNSA_3MsgEENKUlRKNS0_10DescriptorERNS4_3MsgEE0_clESG_SI_
+  params:
+  - name: this
+    type: 'bool '
+  - name: type
+    type: 'bool '
+  - name: msg
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status google::protobuf::json_internal::(anonymous namespace)::ParseSingular<google::protobuf::json_internal::operator()(const
+    void *, const Desc<google::protobuf::json_internal::ParseProto2Descriptor> &,
+    Msg<google::protobuf::json_internal::ParseProto2Descriptor> &)
+- name: _ZZN6google8protobuf13json_internal12_GLOBAL__N_110WriteValueINS1_23UnparseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_10JsonWriterERKNT_3MsgERKNSA_4DescEbENKUlRKNS0_10DescriptorEE_clESJ_
+  params:
+  - name: this
+    type: 'bool '
+  - name: type
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status google::protobuf::json_internal::(anonymous namespace)::WriteValue<google::protobuf::json_internal::operator()(const
+    void *, const Desc<google::protobuf::json_internal::UnparseProto2Descriptor> &)
+- name: _ZZZN6google8protobuf13json_internal12_GLOBAL__N_18ParseMapINS1_21ParseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_9JsonLexerENT_5FieldERNSA_3MsgEENKUlRNS1_12LocationWithINS1_16MaybeOwnedStringEEEE_clESH_ENKUlRKNS0_10DescriptorERNS4_3MsgEE_clESL_SN_
+  params:
+  - name: this
+    type: 'bool '
+  - name: type
+    type: 'bool '
+  - name: entry
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status google::protobuf::json_internal::(anonymous namespace)::ParseMap<google::protobuf::json_internal::operator()(const
+    void *, const Desc<google::protobuf::json_internal::ParseProto2Descriptor> &,
+    Msg<google::protobuf::json_internal::ParseProto2Descriptor> &)
+- name: _ZZN6google8protobuf13json_internal12_GLOBAL__N_18ParseMapINS1_21ParseProto2DescriptorEEEN4absl12lts_202301256StatusERNS1_9JsonLexerENT_5FieldERNSA_3MsgEENKUlRNS1_12LocationWithINS1_16MaybeOwnedStringEEEE_clESH_
+  params:
+  - name: this
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status google::protobuf::json_internal::(anonymous namespace)::ParseMap<google::protobuf::json_internal::operator()(const
+    void *, struct LocationWith<google::protobuf::json_internal::MaybeOwnedString>
+    &)
+language: c++
+project: grpc-httpjson-transcoding
+target_name: http_template_fuzz_test
+target_path: /proc/self/cwd/test/http_template_fuzz_test.cc
+test_files:
+- test_file_path: /src/grpc-httpjson-transcoding/test/json_request_translator_test.cc
+- test_file_path: /src/grpc-httpjson-transcoding/perf_benchmark/benchmark_input_stream_test.cc
+- test_file_path: /src/grpc-httpjson-transcoding/test/request_translator_test_base.cc
+- test_file_path: /src/grpc-httpjson-transcoding/test/prefix_writer_test.cc
+- test_file_path: /src/grpc-httpjson-transcoding/perf_benchmark/utils_test.cc
+- test_file_path: /src/grpc-httpjson-transcoding/test/message_stream_test.cc

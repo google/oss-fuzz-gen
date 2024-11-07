@@ -1,86 +1,58 @@
-"functions":
-- "name": "constrainLat"
-  "params":
-  - "name": "lat"
-    "type": "double"
-  "return_type": "double"
-  "signature": "double constrainLat(double)"
-- "name": "bboxCenter"
-  "params":
-  - "name": "bbox"
-    "type": "bool "
-  - "name": "center"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void bboxCenter(const BBox *, LatLng *)"
-- "name": "iterStepRes"
-  "params":
-  - "name": "itR"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void iterStepRes(IterCellsResolution *)"
-- "name": "iterInitBaseCellNum"
-  "params":
-  - "name": "baseCellNum"
-    "type": "int"
-  - "name": "childRes"
-    "type": "int"
-  "return_type": "void"
-  "signature": "IterCellsChildren iterInitBaseCellNum(int, int)"
-- "name": "iterDestroyPolygon"
-  "params":
-  - "name": "iter"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void iterDestroyPolygon(IterCellsPolygon *)"
-- "name": "bboxEquals"
-  "params":
-  - "name": "b1"
-    "type": "bool "
-  - "name": "b2"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool bboxEquals(const BBox *, const BBox *)"
-- "name": "setGeoDegs"
-  "params":
-  - "name": "p"
-    "type": "bool "
-  - "name": "latDegs"
-    "type": "double"
-  - "name": "lngDegs"
-    "type": "double"
-  "return_type": "void"
-  "signature": "void setGeoDegs(LatLng *, double, double)"
-- "name": "iterInitRes"
-  "params":
-  - "name": "res"
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "IterCellsResolution iterInitRes(int)"
-- "name": "_setGeoRads"
-  "params":
-  - "name": "p"
-    "type": "bool "
-  - "name": "latRads"
-    "type": "double"
-  - "name": "lngRads"
-    "type": "double"
-  "return_type": "void"
-  "signature": "void _setGeoRads(LatLng *, double, double)"
-"language": "c"
-"project": "h3"
-"target_name": "fuzzerLatLngToCell"
-"target_path": "/src/h3/src/apps/fuzzers/fuzzerLatLngToCell.c"
-"test_files":
-- "test_file_path": "/src/h3/src/apps/testapps/testPolygonToCellsReportedExperimental.c"
-- "test_file_path": "/src/h3/src/apps/testapps/testH3NeighborRotations.c"
-- "test_file_path": "/src/h3/examples/compactCells.c"
-- "test_file_path": "/src/h3/src/apps/testapps/testBaseCellsInternal.c"
-- "test_file_path": "/src/h3/src/apps/applib/lib/test.c"
-- "test_file_path": "/src/h3/src/apps/testapps/testCellToLatLng.c"
-- "test_file_path": "/src/h3/examples/edge.c"
-- "test_file_path": "/src/h3/src/apps/testapps/testCellToLocalIjExhaustive.c"
-- "test_file_path": "/src/h3/src/apps/testapps/testGridDisk.c"
-- "test_file_path": "/src/h3/src/apps/testapps/testCellToChildrenSize.c"
+functions:
+- name: constrainLat
+  params:
+  - name: lat
+    type: double
+  return_type: double
+  signature: double constrainLat(double)
+- name: setGeoDegs
+  params:
+  - name: p
+    type: 'bool '
+  - name: latDegs
+    type: double
+  - name: lngDegs
+    type: double
+  return_type: void
+  signature: void setGeoDegs(LatLng *, double, double)
+- name: bboxCenter
+  params:
+  - name: bbox
+    type: 'bool '
+  - name: center
+    type: 'bool '
+  return_type: void
+  signature: void bboxCenter(const BBox *, LatLng *)
+- name: bboxEquals
+  params:
+  - name: b1
+    type: 'bool '
+  - name: b2
+    type: 'bool '
+  return_type: bool
+  signature: bool bboxEquals(const BBox *, const BBox *)
+- name: iterDestroyPolygon
+  params:
+  - name: iter
+    type: 'bool '
+  return_type: void
+  signature: void iterDestroyPolygon(IterCellsPolygon *)
+- name: iterInitBaseCellNum
+  params:
+  - name: baseCellNum
+    type: int
+  - name: childRes
+    type: int
+  return_type: void
+  signature: IterCellsChildren iterInitBaseCellNum(int, int)
+language: c
+project: h3
+target_name: fuzzerLatLngToCell
+target_path: /src/h3/src/apps/fuzzers/fuzzerLatLngToCell.c
+test_files:
+- test_file_path: /src/h3/src/apps/applib/lib/test.c
+- test_file_path: /src/h3/src/apps/testapps/testCellToLatLng.c
+- test_file_path: /src/h3/examples/compactCells.c
+- test_file_path: /src/h3/src/apps/testapps/testCellToLocalIjExhaustive.c
+- test_file_path: /src/h3/src/apps/testapps/testGridDisk.c
+- test_file_path: /src/h3/src/apps/testapps/testBaseCellsInternal.c

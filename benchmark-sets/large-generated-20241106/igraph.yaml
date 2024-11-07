@@ -1,108 +1,70 @@
-"functions":
-- "name": "xmlXIncludeProcessTreeFlags"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int xmlXIncludeProcessTreeFlags(xmlNodePtr, int)"
-- "name": "xmlTextReaderRelaxNGValidate"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int xmlTextReaderRelaxNGValidate(xmlTextReaderPtr, const char *)"
-- "name": "xmlTextReaderReadInnerXml"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "xmlChar * xmlTextReaderReadInnerXml(xmlTextReaderPtr)"
-- "name": "xmlXIncludeProcessTreeFlagsData"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int xmlXIncludeProcessTreeFlagsData(xmlNodePtr, int, void *)"
-- "name": "igraph_sparsemat_arpack_rssolve"
-  "params":
-  - "name": "A"
-    "type": "bool "
-  - "name": "options"
-    "type": "bool "
-  - "name": "storage"
-    "type": "bool "
-  - "name": "values"
-    "type": "bool "
-  - "name": "vectors"
-    "type": "bool "
-  - "name": "solvemethod"
-    "type": "int"
-  "return_type": "int"
-  "signature": "igraph_error_t igraph_sparsemat_arpack_rssolve(const igraph_sparsemat_t *, igraph_arpack_options_t *, igraph_arpack_storage_t *, igraph_vector_t *, igraph_matrix_t *, igraph_sparsemat_solve_t)"
-- "name": "htmlCreateMemoryParserCtxt"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "htmlParserCtxtPtr htmlCreateMemoryParserCtxt(const char *, int)"
-- "name": "xmlTextReaderReadOuterXml"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "xmlChar * xmlTextReaderReadOuterXml(xmlTextReaderPtr)"
-- "name": "xmlTextReaderSchemaValidateCtxt"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int xmlTextReaderSchemaValidateCtxt(xmlTextReaderPtr, xmlSchemaValidCtxtPtr, int)"
-- "name": "xmlXIncludeProcessFlagsData"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int xmlXIncludeProcessFlagsData(xmlDocPtr, int, void *)"
-- "name": "xmlTextReaderRelaxNGValidateCtxt"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int xmlTextReaderRelaxNGValidateCtxt(xmlTextReaderPtr, xmlRelaxNGValidCtxtPtr, int)"
-"language": "c"
-"project": "igraph"
-"target_name": "read_graphdb"
-"target_path": "/src/igraph/fuzzing/read_graphdb.cpp"
-"test_files":
-- "test_file_path": "/src/igraph/examples/simple/igraph_vs_nonadj.c"
-- "test_file_path": "/src/igraph/tests/unit/centralization.c"
-- "test_file_path": "/src/igraph/tests/unit/igraph_strvector.c"
-- "test_file_path": "/src/igraph/tests/unit/igraph_arpack_rnsolve.c"
-- "test_file_path": "/src/igraph/examples/simple/igraph_sparsemat4.c"
-- "test_file_path": "/src/igraph/tests/unit/igraph_modularity_matrix.c"
-- "test_file_path": "/src/igraph/tests/unit/igraph_eigen_matrix_symmetric_arpack.c"
-- "test_file_path": "/src/igraph/tests/unit/igraph_eulerian_path.c"
-- "test_file_path": "/src/igraph/examples/simple/igraph_erdos_renyi_game_gnp.c"
-- "test_file_path": "/src/igraph/tests/unit/igraph_empty.c"
+functions:
+- name: xmlXIncludeProcessTreeFlagsData
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int xmlXIncludeProcessTreeFlagsData(xmlNodePtr, int, void *)
+- name: xmlTextReaderReadOuterXml
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: xmlChar * xmlTextReaderReadOuterXml(xmlTextReaderPtr)
+- name: xmlTextReaderReadInnerXml
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: xmlChar * xmlTextReaderReadInnerXml(xmlTextReaderPtr)
+- name: htmlCreateMemoryParserCtxt
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: htmlParserCtxtPtr htmlCreateMemoryParserCtxt(const char *, int)
+- name: igraph_sparsemat_arpack_rssolve
+  params:
+  - name: A
+    type: 'bool '
+  - name: options
+    type: 'bool '
+  - name: storage
+    type: 'bool '
+  - name: values
+    type: 'bool '
+  - name: vectors
+    type: 'bool '
+  - name: solvemethod
+    type: int
+  return_type: int
+  signature: igraph_error_t igraph_sparsemat_arpack_rssolve(const igraph_sparsemat_t
+    *, igraph_arpack_options_t *, igraph_arpack_storage_t *, igraph_vector_t *, igraph_matrix_t
+    *, igraph_sparsemat_solve_t)
+- name: xmlXIncludeProcessFlagsData
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int xmlXIncludeProcessFlagsData(xmlDocPtr, int, void *)
+language: c
+project: igraph
+target_name: read_graphdb
+target_path: /src/igraph/fuzzing/read_graphdb.cpp
+test_files:
+- test_file_path: /src/igraph/examples/simple/igraph_vs_nonadj.c
+- test_file_path: /src/igraph/tests/unit/igraph_modularity_matrix.c
+- test_file_path: /src/igraph/tests/unit/centralization.c
+- test_file_path: /src/igraph/tests/unit/igraph_strvector.c
+- test_file_path: /src/igraph/tests/unit/igraph_eulerian_path.c
+- test_file_path: /src/igraph/tests/unit/igraph_eigen_matrix_symmetric_arpack.c

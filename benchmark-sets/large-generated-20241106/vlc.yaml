@@ -1,96 +1,65 @@
-"functions":
-- "name": "vlm_New"
-  "params":
-  - "name": "libvlc"
-    "type": "bool "
-  - "name": "psz_vlmconf"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "vlm_t * vlm_New(libvlc_int_t *, const char *)"
-- "name": "libvlc_InternalCleanup"
-  "params":
-  - "name": "p_libvlc"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void libvlc_InternalCleanup(libvlc_int_t *)"
-- "name": "intf_InsertItem"
-  "params":
-  - "name": "libvlc"
-    "type": "bool "
-  - "name": "mrl"
-    "type": "bool "
-  - "name": "optc"
-    "type": "int"
-  - "name": "optv"
-    "type": "bool "
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int intf_InsertItem(libvlc_int_t *, const char *, unsigned int, const const char **, unsigned int)"
-- "name": "vlm_ExecuteCommand"
-  "params":
-  - "name": "p_vlm"
-    "type": "bool "
-  - "name": "psz_command"
-    "type": "bool "
-  - "name": "pp_message"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int vlm_ExecuteCommand(vlm_t *, const char *, vlm_message_t **)"
-- "name": "vlm_ControlInternal"
-  "params":
-  - "name": "p_vlm"
-    "type": "bool "
-  - "name": "i_query"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int vlm_ControlInternal(vlm_t *, int, void)"
-- "name": "vlm_Delete"
-  "params":
-  - "name": "p_vlm"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void vlm_Delete(vlm_t *)"
-- "name": "Preparse"
-  "params":
-  - "name": "data"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void * Preparse(void *)"
-- "name": "ExecuteCommand"
-  "params":
-  - "name": "p_vlm"
-    "type": "bool "
-  - "name": "psz_command"
-    "type": "bool "
-  - "name": "pp_message"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ExecuteCommand(vlm_t *, const char *, vlm_message_t **)"
-- "name": "Run"
-  "params":
-  - "name": "data"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void * Run(void *)"
-- "name": "libvlc_release"
-  "params":
-  - "name": "p_instance"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void libvlc_release(libvlc_instance_t *)"
-"language": "c"
-"project": "vlc"
-"target_name": "vlc-demux-libfuzzer"
-"target_path": "/src/vlc/test/vlc-demux-libfuzzer.c"
-"test_files":
-- "test_file_path": "/src/vlc/test/libvlc/media_thumbnail.c"
-- "test_file_path": "/src/vlc/test/src/input/demux-run.c"
-- "test_file_path": "/src/vlc/modules/audio_filter/resampler/ugly.c"
-- "test_file_path": "/src/vlc/test/src/input/stream_fifo.c"
-- "test_file_path": "/src/vlc/modules/access/http/h1conn_test.c"
-- "test_file_path": "/src/vlc/src/test/timer.c"
-- "test_file_path": "/src/vlc/compat/test/strnstr.c"
-- "test_file_path": "/src/vlc/test/src/interface/dialog.c"
-- "test_file_path": "/src/vlc/test/src/misc/variables.c"
-- "test_file_path": "/src/vlc/modules/gui/qt/tests/test_renderer_manager_model.cpp"
+functions:
+- name: libvlc_InternalCleanup
+  params:
+  - name: p_libvlc
+    type: 'bool '
+  return_type: void
+  signature: void libvlc_InternalCleanup(libvlc_int_t *)
+- name: vlm_New
+  params:
+  - name: libvlc
+    type: 'bool '
+  - name: psz_vlmconf
+    type: 'bool '
+  return_type: void
+  signature: vlm_t * vlm_New(libvlc_int_t *, const char *)
+- name: intf_InsertItem
+  params:
+  - name: libvlc
+    type: 'bool '
+  - name: mrl
+    type: 'bool '
+  - name: optc
+    type: int
+  - name: optv
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: int
+  signature: int intf_InsertItem(libvlc_int_t *, const char *, unsigned int, const
+    const char **, unsigned int)
+- name: vlm_ExecuteCommand
+  params:
+  - name: p_vlm
+    type: 'bool '
+  - name: psz_command
+    type: 'bool '
+  - name: pp_message
+    type: 'bool '
+  return_type: int
+  signature: int vlm_ExecuteCommand(vlm_t *, const char *, vlm_message_t **)
+- name: vlm_Delete
+  params:
+  - name: p_vlm
+    type: 'bool '
+  return_type: void
+  signature: void vlm_Delete(vlm_t *)
+- name: vlm_ControlInternal
+  params:
+  - name: p_vlm
+    type: 'bool '
+  - name: i_query
+    type: int
+  return_type: int
+  signature: int vlm_ControlInternal(vlm_t *, int, void)
+language: c
+project: vlc
+target_name: vlc-demux-libfuzzer
+target_path: /src/vlc/test/vlc-demux-libfuzzer.c
+test_files:
+- test_file_path: /src/vlc/test/libvlc/media_thumbnail.c
+- test_file_path: /src/vlc/modules/gui/qt/tests/test_renderer_manager_model.cpp
+- test_file_path: /src/vlc/test/src/input/demux-run.c
+- test_file_path: /src/vlc/test/src/misc/variables.c
+- test_file_path: /src/vlc/modules/audio_filter/resampler/ugly.c
+- test_file_path: /src/vlc/test/src/input/stream_fifo.c

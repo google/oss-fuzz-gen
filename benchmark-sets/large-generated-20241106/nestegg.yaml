@@ -1,57 +1,58 @@
-"functions":
-- "name": "nestegg_sniff"
-  "params":
-  - "name": "buffer"
-    "type": "bool "
-  - "name": "length"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int nestegg_sniff(const unsigned char *, size_t)"
-- "name": "nestegg_get_cue_point"
-  "params":
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "cluster_num"
-    "type": "int"
-  - "name": "max_offset"
-    "type": "size_t"
-  - "name": "start_pos"
-    "type": "bool "
-  - "name": "end_pos"
-    "type": "bool "
-  - "name": "tstamp"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int nestegg_get_cue_point(nestegg *, unsigned int, int64_t, int64_t *, int64_t *, uint64_t *)"
-- "name": "nestegg_read_reset"
-  "params":
-  - "name": "ctx"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int nestegg_read_reset(nestegg *)"
-- "name": "nestegg_track_seek"
-  "params":
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "track"
-    "type": "int"
-  - "name": "tstamp"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int nestegg_track_seek(nestegg *, unsigned int, uint64_t)"
-- "name": "nestegg_offset_seek"
-  "params":
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "offset"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int nestegg_offset_seek(nestegg *, uint64_t)"
-"language": "c++"
-"project": "nestegg"
-"target_name": "fuzz"
-"target_path": "/src/nestegg/test/fuzz.cc"
-"test_files":
-- "test_file_path": "/src/nestegg/test/dump.c"
-- "test_file_path": "/src/nestegg/test/sha1.c"
-- "test_file_path": "/src/nestegg/test/regress.c"
+functions:
+- name: nestegg_sniff
+  params:
+  - name: buffer
+    type: 'bool '
+  - name: length
+    type: size_t
+  return_type: int
+  signature: int nestegg_sniff(const unsigned char *, size_t)
+- name: nestegg_get_cue_point
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: cluster_num
+    type: int
+  - name: max_offset
+    type: size_t
+  - name: start_pos
+    type: 'bool '
+  - name: end_pos
+    type: 'bool '
+  - name: tstamp
+    type: 'bool '
+  return_type: int
+  signature: int nestegg_get_cue_point(nestegg *, unsigned int, int64_t, int64_t *,
+    int64_t *, uint64_t *)
+- name: nestegg_read_reset
+  params:
+  - name: ctx
+    type: 'bool '
+  return_type: int
+  signature: int nestegg_read_reset(nestegg *)
+- name: nestegg_track_seek
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: track
+    type: int
+  - name: tstamp
+    type: size_t
+  return_type: int
+  signature: int nestegg_track_seek(nestegg *, unsigned int, uint64_t)
+- name: nestegg_offset_seek
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: offset
+    type: size_t
+  return_type: int
+  signature: int nestegg_offset_seek(nestegg *, uint64_t)
+language: c++
+project: nestegg
+target_name: fuzz
+target_path: /src/nestegg/test/fuzz.cc
+test_files:
+- test_file_path: /src/nestegg/test/dump.c
+- test_file_path: /src/nestegg/test/sha1.c
+- test_file_path: /src/nestegg/test/regress.c

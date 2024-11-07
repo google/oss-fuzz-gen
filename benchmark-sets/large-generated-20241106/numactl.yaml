@@ -1,60 +1,50 @@
-"functions":
-- "name": "numa_run_on_node"
-  "params":
-  - "name": "node"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int numa_run_on_node(int)"
-- "name": "numa_parse_nodestring_all"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct bitmask * numa_parse_nodestring_all(const char *)"
-- "name": "numa_node_size"
-  "params":
-  - "name": "node"
-    "type": "int"
-  - "name": "freep"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "long numa_node_size(int, long *)"
-- "name": "numa_run_on_node_mask_all"
-  "params":
-  - "name": "bmp"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int numa_run_on_node_mask_all(struct bitmask *)"
-- "name": "numa_set_preferred_many"
-  "params":
-  - "name": "bitmask"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void numa_set_preferred_many(struct bitmask *)"
-- "name": "numa_parse_cpustring_all"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct bitmask * numa_parse_cpustring_all(const char *)"
-- "name": "numa_node_of_cpu"
-  "params":
-  - "name": "cpu"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int numa_node_of_cpu(int)"
-"language": "c"
-"project": "numactl"
-"target_name": "fuzz_parse_str"
-"target_path": "/src/numactl/fuzz/fuzz_parse_str.c"
-"test_files":
-- "test_file_path": "/src/numactl/test/mbind_mig_pages.c"
-- "test_file_path": "/src/numactl/test/ftok.c"
-- "test_file_path": "/src/numactl/test/migrate_pages.c"
-- "test_file_path": "/src/numactl/test/node-parse.c"
-- "test_file_path": "/src/numactl/test/tshm.c"
-- "test_file_path": "/src/numactl/test/realloc_test.c"
-- "test_file_path": "/src/numactl/test/mynode.c"
-- "test_file_path": "/src/numactl/test/prefered.c"
-- "test_file_path": "/src/numactl/test/distance.c"
-- "test_file_path": "/src/numactl/test/pagesize.c"
+functions:
+- name: numa_parse_nodestring_all
+  params:
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: struct bitmask * numa_parse_nodestring_all(const char *)
+- name: numa_set_preferred_many
+  params:
+  - name: bitmask
+    type: 'bool '
+  return_type: void
+  signature: void numa_set_preferred_many(struct bitmask *)
+- name: numa_node_size
+  params:
+  - name: node
+    type: int
+  - name: freep
+    type: 'bool '
+  return_type: size_t
+  signature: long numa_node_size(int, long *)
+- name: numa_parse_cpustring_all
+  params:
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: struct bitmask * numa_parse_cpustring_all(const char *)
+- name: numa_run_on_node_mask_all
+  params:
+  - name: bmp
+    type: 'bool '
+  return_type: int
+  signature: int numa_run_on_node_mask_all(struct bitmask *)
+- name: numa_node_of_cpu
+  params:
+  - name: cpu
+    type: int
+  return_type: int
+  signature: int numa_node_of_cpu(int)
+language: c
+project: numactl
+target_name: fuzz_parse_str
+target_path: /src/numactl/fuzz/fuzz_parse_str.c
+test_files:
+- test_file_path: /src/numactl/test/realloc_test.c
+- test_file_path: /src/numactl/test/prefered.c
+- test_file_path: /src/numactl/test/ftok.c
+- test_file_path: /src/numactl/test/migrate_pages.c
+- test_file_path: /src/numactl/test/mbind_mig_pages.c
+- test_file_path: /src/numactl/test/distance.c

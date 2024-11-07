@@ -1,15 +1,11 @@
-"language": "c++"
-"project": "libraw"
-"target_name": "libraw_fuzzer"
-"target_path": "/src/libraw_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/libraw/samples/unprocessed_raw.cpp"
-- "test_file_path": "/src/libraw/samples/raw-identify.cpp"
-- "test_file_path": "/src/libraw/samples/multirender_test.cpp"
-- "test_file_path": "/src/libraw/samples/simple_dcraw.cpp"
-- "test_file_path": "/src/libraw/samples/rawtextdump.cpp"
-- "test_file_path": "/src/libraw/samples/half_mt.c"
-- "test_file_path": "/src/libraw/samples/4channels.cpp"
-- "test_file_path": "/src/libraw/samples/dcraw_emu.cpp"
-- "test_file_path": "/src/libraw/samples/mem_image_sample.cpp"
-- "test_file_path": "/src/libraw/samples/openbayer_sample.cpp"
+language: c++
+project: libraw
+target_name: libraw_fuzzer
+target_path: /src/libraw_fuzzer.cc
+test_files:
+- test_file_path: /src/libraw/samples/mem_image_sample.cpp
+- test_file_path: /src/libraw/samples/half_mt.c
+- test_file_path: /src/libraw/samples/openbayer_sample.cpp
+- test_file_path: /src/libraw/samples/raw-identify.cpp
+- test_file_path: /src/libraw/samples/unprocessed_raw.cpp
+- test_file_path: /src/libraw/samples/dcraw_emu.cpp

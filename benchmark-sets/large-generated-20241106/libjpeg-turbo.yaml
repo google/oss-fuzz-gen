@@ -1,131 +1,133 @@
-"functions":
-- "name": "tjDecompressToYUV"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  - "name": "jpegBuf"
-    "type": "bool "
-  - "name": "jpegSize"
-    "type": "size_t"
-  - "name": "dstBuf"
-    "type": "bool "
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int tjDecompressToYUV(tjhandle, unsigned char *, unsigned long, unsigned char *, int)"
-- "name": "tjEncodeYUV"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  - "name": "srcBuf"
-    "type": "bool "
-  - "name": "width"
-    "type": "int"
-  - "name": "pitch"
-    "type": "int"
-  - "name": "height"
-    "type": "int"
-  - "name": "pixelSize"
-    "type": "int"
-  - "name": "dstBuf"
-    "type": "bool "
-  - "name": "subsamp"
-    "type": "int"
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int tjEncodeYUV(tjhandle, unsigned char *, int, int, int, int, unsigned char *, int, int)"
-- "name": "tjDecompress"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  - "name": "jpegBuf"
-    "type": "bool "
-  - "name": "jpegSize"
-    "type": "size_t"
-  - "name": "dstBuf"
-    "type": "bool "
-  - "name": "width"
-    "type": "int"
-  - "name": "pitch"
-    "type": "int"
-  - "name": "height"
-    "type": "int"
-  - "name": "pixelSize"
-    "type": "int"
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int tjDecompress(tjhandle, unsigned char *, unsigned long, unsigned char *, int, int, int, int, int)"
-- "name": "tjEncodeYUV2"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  - "name": "srcBuf"
-    "type": "bool "
-  - "name": "width"
-    "type": "int"
-  - "name": "pitch"
-    "type": "int"
-  - "name": "height"
-    "type": "int"
-  - "name": "pixelFormat"
-    "type": "int"
-  - "name": "dstBuf"
-    "type": "bool "
-  - "name": "subsamp"
-    "type": "int"
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int tjEncodeYUV2(tjhandle, unsigned char *, int, int, int, int, unsigned char *, int, int)"
-- "name": "tj3SaveImage16"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  - "name": "filename"
-    "type": "bool "
-  - "name": "buffer"
-    "type": "bool "
-  - "name": "width"
-    "type": "int"
-  - "name": "pitch"
-    "type": "int"
-  - "name": "height"
-    "type": "int"
-  - "name": "pixelFormat"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int tj3SaveImage16(tjhandle, const char *, const J16SAMPLE *, int, int, int, int)"
-- "name": "tjSaveImage"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "buffer"
-    "type": "bool "
-  - "name": "width"
-    "type": "int"
-  - "name": "pitch"
-    "type": "int"
-  - "name": "height"
-    "type": "int"
-  - "name": "pixelFormat"
-    "type": "int"
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int tjSaveImage(const char *, unsigned char *, int, int, int, int, int)"
-"language": "c"
-"project": "libjpeg-turbo"
-"target_name": "cjpeg_fuzzer_2_1_x"
-"target_path": "/src/libjpeg-turbo.2.1.x/fuzz/cjpeg.cc"
-"test_files":
-- "test_file_path": "/src/libjpeg-turbo.3.0.x/strtest.c"
-- "test_file_path": "/src/libjpeg-turbo.2.1.x/tjunittest.c"
-- "test_file_path": "/src/libjpeg-turbo.main/src/strtest.c"
-- "test_file_path": "/src/libjpeg-turbo.2.1.x/strtest.c"
-- "test_file_path": "/src/libjpeg-turbo.2.1.x/jcstest.c"
-- "test_file_path": "/src/libjpeg-turbo.3.0.x/jcstest.c"
-- "test_file_path": "/src/libjpeg-turbo.main/src/tjunittest.c"
-- "test_file_path": "/src/libjpeg-turbo.3.0.x/tjunittest.c"
-- "test_file_path": "/src/libjpeg-turbo.main/src/jcstest.c"
+functions:
+- name: tjDecompressToYUV
+  params:
+  - name: handle
+    type: 'bool '
+  - name: jpegBuf
+    type: 'bool '
+  - name: jpegSize
+    type: size_t
+  - name: dstBuf
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: int
+  signature: int tjDecompressToYUV(tjhandle, unsigned char *, unsigned long, unsigned
+    char *, int)
+- name: tjEncodeYUV
+  params:
+  - name: handle
+    type: 'bool '
+  - name: srcBuf
+    type: 'bool '
+  - name: width
+    type: int
+  - name: pitch
+    type: int
+  - name: height
+    type: int
+  - name: pixelSize
+    type: int
+  - name: dstBuf
+    type: 'bool '
+  - name: subsamp
+    type: int
+  - name: flags
+    type: int
+  return_type: int
+  signature: int tjEncodeYUV(tjhandle, unsigned char *, int, int, int, int, unsigned
+    char *, int, int)
+- name: tjDecompress
+  params:
+  - name: handle
+    type: 'bool '
+  - name: jpegBuf
+    type: 'bool '
+  - name: jpegSize
+    type: size_t
+  - name: dstBuf
+    type: 'bool '
+  - name: width
+    type: int
+  - name: pitch
+    type: int
+  - name: height
+    type: int
+  - name: pixelSize
+    type: int
+  - name: flags
+    type: int
+  return_type: int
+  signature: int tjDecompress(tjhandle, unsigned char *, unsigned long, unsigned char
+    *, int, int, int, int, int)
+- name: tjEncodeYUV2
+  params:
+  - name: handle
+    type: 'bool '
+  - name: srcBuf
+    type: 'bool '
+  - name: width
+    type: int
+  - name: pitch
+    type: int
+  - name: height
+    type: int
+  - name: pixelFormat
+    type: int
+  - name: dstBuf
+    type: 'bool '
+  - name: subsamp
+    type: int
+  - name: flags
+    type: int
+  return_type: int
+  signature: int tjEncodeYUV2(tjhandle, unsigned char *, int, int, int, int, unsigned
+    char *, int, int)
+- name: tj3SaveImage16
+  params:
+  - name: handle
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  - name: buffer
+    type: 'bool '
+  - name: width
+    type: int
+  - name: pitch
+    type: int
+  - name: height
+    type: int
+  - name: pixelFormat
+    type: int
+  return_type: int
+  signature: int tj3SaveImage16(tjhandle, const char *, const J16SAMPLE *, int, int,
+    int, int)
+- name: tjSaveImage
+  params:
+  - name: filename
+    type: 'bool '
+  - name: buffer
+    type: 'bool '
+  - name: width
+    type: int
+  - name: pitch
+    type: int
+  - name: height
+    type: int
+  - name: pixelFormat
+    type: int
+  - name: flags
+    type: int
+  return_type: int
+  signature: int tjSaveImage(const char *, unsigned char *, int, int, int, int, int)
+language: c
+project: libjpeg-turbo
+target_name: cjpeg_fuzzer_2_1_x
+target_path: /src/libjpeg-turbo.2.1.x/fuzz/cjpeg.cc
+test_files:
+- test_file_path: /src/libjpeg-turbo.main/src/strtest.c
+- test_file_path: /src/libjpeg-turbo.3.0.x/strtest.c
+- test_file_path: /src/libjpeg-turbo.3.0.x/tjunittest.c
+- test_file_path: /src/libjpeg-turbo.2.1.x/strtest.c
+- test_file_path: /src/libjpeg-turbo.main/src/tjunittest.c
+- test_file_path: /src/libjpeg-turbo.2.1.x/tjunittest.c

@@ -1,15 +1,11 @@
-"language": "c"
-"project": "pacemaker"
-"target_name": "iso8601_fuzzer"
-"target_path": "/src/pacemaker/lib/common/fuzzers/iso8601_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/pacemaker/lib/common/unittest.c"
-- "test_file_path": "/src/pacemaker/lib/common/tests/utils/pcmk__getpid_s_test.c"
-- "test_file_path": "/src/pacemaker/lib/common/tests/agents/pcmk__effective_rc_test.c"
-- "test_file_path": "/src/pacemaker/lib/common/tests/strings/pcmk__scan_double_test.c"
-- "test_file_path": "/src/pacemaker/lib/common/tests/schemas/pcmk__find_x_0_schema_test.c"
-- "test_file_path": "/src/pacemaker/lib/common/tests/schemas/pcmk__schema_init_test.c"
-- "test_file_path": "/src/pacemaker/lib/common/tests/nodes/pcmk_node_is_pending_test.c"
-- "test_file_path": "/src/pacemaker/lib/cluster/tests/cpg/pcmk_cpg_set_deliver_fn_test.c"
-- "test_file_path": "/src/pacemaker/lib/pengine/tests/status/pe_find_node_id_test.c"
-- "test_file_path": "/src/pacemaker/lib/pacemaker/tests/pcmk_ticket/pcmk_ticket_info_test.c"
+language: c
+project: pacemaker
+target_name: iso8601_fuzzer
+target_path: /src/pacemaker/lib/common/fuzzers/iso8601_fuzzer.c
+test_files:
+- test_file_path: /src/pacemaker/lib/common/unittest.c
+- test_file_path: /src/pacemaker/lib/common/tests/schemas/pcmk__schema_init_test.c
+- test_file_path: /src/pacemaker/lib/pengine/tests/status/pe_find_node_id_test.c
+- test_file_path: /src/pacemaker/lib/pacemaker/tests/pcmk_ticket/pcmk_ticket_info_test.c
+- test_file_path: /src/pacemaker/lib/common/tests/utils/pcmk__getpid_s_test.c
+- test_file_path: /src/pacemaker/lib/common/tests/agents/pcmk__effective_rc_test.c

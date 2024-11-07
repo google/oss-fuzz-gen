@@ -1,102 +1,64 @@
-"functions":
-- "name": "gpsd_poll"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "gps_mask_t gpsd_poll(struct gps_device_t *)"
-- "name": "gps_mainloop"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int gps_mainloop(struct gps_data_t *, int, DW_TAG_subroutine_typeInfinite loop *)"
-- "name": "sirf_parse"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "size_t"
-  "signature": "gps_mask_t sirf_parse(struct gps_device_t *, unsigned char *, size_t)"
-- "name": "gpsd_activate"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int gpsd_activate(struct gps_device_t *, const int)"
-- "name": "gpsd_open"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int gpsd_open(struct gps_device_t *)"
-- "name": "gps_read"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "int gps_read(struct gps_data_t *, char *, int)"
-- "name": "ntrip_open"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "socket_t ntrip_open(struct gps_device_t *, char *)"
-- "name": "gpsd_multipoll"
-  "params":
-  - "name": ""
-    "type": "bool"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "float"
-  "return_type": "int"
-  "signature": "int gpsd_multipoll(const _Bool, struct gps_device_t *, DW_TAG_subroutine_typeInfinite loop *, float)"
-- "name": "netgnss_uri_open"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "gps_fd_t netgnss_uri_open(struct gps_device_t *, char *)"
-- "name": "gps_unpack"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int gps_unpack(const char *, struct gps_data_t *)"
-"language": "c"
-"project": "gpsd"
-"target_name": "FuzzJson"
-"target_path": "/src/gpsd/fuzzer/FuzzJson.c"
-"test_files":
-- "test_file_path": "/src/gpsd/tests/test_gpsdclient.c"
-- "test_file_path": "/src/gpsd/tests/test_json.c"
-- "test_file_path": "/src/gpsd/tests/test_float.c"
-- "test_file_path": "/src/gpsd/tests/test_bits.c"
-- "test_file_path": "/src/gpsd/tests/test_trig.c"
-- "test_file_path": "/src/gpsd/contrib/clock_test.c"
-- "test_file_path": "/src/gpsd/tests/test_libgps.c"
-- "test_file_path": "/src/gpsd/android/gps_test.c"
-- "test_file_path": "/src/gpsd/tests/test_matrix.c"
-- "test_file_path": "/src/gpsd/tests/test_timespec.c"
+functions:
+- name: gps_read
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int gps_read(struct gps_data_t *, char *, int)
+- name: netgnss_uri_open
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: gps_fd_t netgnss_uri_open(struct gps_device_t *, char *)
+- name: gpsd_activate
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: int gpsd_activate(struct gps_device_t *, const int)
+- name: gps_unpack
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int gps_unpack(const char *, struct gps_data_t *)
+- name: sirf_parse
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: size_t
+  signature: gps_mask_t sirf_parse(struct gps_device_t *, unsigned char *, size_t)
+- name: ntrip_open
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: socket_t ntrip_open(struct gps_device_t *, char *)
+language: c
+project: gpsd
+target_name: FuzzJson
+target_path: /src/gpsd/fuzzer/FuzzJson.c
+test_files:
+- test_file_path: /src/gpsd/android/gps_test.c
+- test_file_path: /src/gpsd/tests/test_trig.c
+- test_file_path: /src/gpsd/tests/test_float.c
+- test_file_path: /src/gpsd/tests/test_bits.c
+- test_file_path: /src/gpsd/tests/test_matrix.c
+- test_file_path: /src/gpsd/contrib/clock_test.c

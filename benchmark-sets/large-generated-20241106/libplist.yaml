@@ -1,121 +1,84 @@
-"functions":
-- "name": "plist_dict_copy_int"
-  "params":
-  - "name": "target_dict"
-    "type": "bool "
-  - "name": "source_dict"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "alt_source_key"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "plist_err_t plist_dict_copy_int(plist_t, plist_t, const char *, const char *)"
-- "name": "plist_read_from_file"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "plist"
-    "type": "bool "
-  - "name": "format"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "plist_err_t plist_read_from_file(const char *, plist_t *, plist_format_t *)"
-- "name": "plist_from_memory"
-  "params":
-  - "name": "plist_data"
-    "type": "bool "
-  - "name": "length"
-    "type": "int"
-  - "name": "plist"
-    "type": "bool "
-  - "name": "format"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "plist_err_t plist_from_memory(const char *, uint32_t, plist_t *, plist_format_t *)"
-- "name": "plist_dict_copy_uint"
-  "params":
-  - "name": "target_dict"
-    "type": "bool "
-  - "name": "source_dict"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "alt_source_key"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "plist_err_t plist_dict_copy_uint(plist_t, plist_t, const char *, const char *)"
-- "name": "plist_to_bin"
-  "params":
-  - "name": "plist"
-    "type": "bool "
-  - "name": "plist_bin"
-    "type": "bool "
-  - "name": "length"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "plist_err_t plist_to_bin(plist_t, char **, uint32_t *)"
-- "name": "plist_write_to_file"
-  "params":
-  - "name": "plist"
-    "type": "bool "
-  - "name": "filename"
-    "type": "bool "
-  - "name": "format"
-    "type": "int"
-  - "name": "options"
-    "type": "int"
-  "return_type": "int"
-  "signature": "plist_err_t plist_write_to_file(plist_t, const char *, plist_format_t, plist_write_options_t)"
-- "name": "plist_print"
-  "params":
-  - "name": "plist"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void plist_print(plist_t)"
-- "name": "plist_write_to_string"
-  "params":
-  - "name": "plist"
-    "type": "bool "
-  - "name": "output"
-    "type": "bool "
-  - "name": "length"
-    "type": "bool "
-  - "name": "format"
-    "type": "int"
-  - "name": "options"
-    "type": "int"
-  "return_type": "int"
-  "signature": "plist_err_t plist_write_to_string(plist_t, char **, uint32_t *, plist_format_t, plist_write_options_t)"
-- "name": "plist_dict_merge"
-  "params":
-  - "name": "target"
-    "type": "bool "
-  - "name": "source"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void plist_dict_merge(plist_t *, plist_t)"
-- "name": "plist_write_to_stream"
-  "params":
-  - "name": "plist"
-    "type": "bool "
-  - "name": "stream"
-    "type": "bool "
-  - "name": "format"
-    "type": "int"
-  - "name": "options"
-    "type": "int"
-  "return_type": "int"
-  "signature": "plist_err_t plist_write_to_stream(plist_t, FILE *, plist_format_t, plist_write_options_t)"
-"language": "c++"
-"project": "libplist"
-"target_name": "oplist_fuzzer"
-"target_path": "/src/libplist/fuzz/oplist_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/libplist/test/plist_otest.c"
-- "test_file_path": "/src/libplist/test/plist_test++.cpp"
-- "test_file_path": "/src/libplist/test/plist_cmp.c"
-- "test_file_path": "/src/libplist/test/integer_set.c"
-- "test_file_path": "/src/libplist/test/plist_btest.c"
-- "test_file_path": "/src/libplist/test/plist_jtest.c"
-- "test_file_path": "/src/libplist/test/plist_test.c"
+functions:
+- name: plist_read_from_file
+  params:
+  - name: filename
+    type: 'bool '
+  - name: plist
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: plist_err_t plist_read_from_file(const char *, plist_t *, plist_format_t
+    *)
+- name: plist_dict_merge
+  params:
+  - name: target
+    type: 'bool '
+  - name: source
+    type: 'bool '
+  return_type: void
+  signature: void plist_dict_merge(plist_t *, plist_t)
+- name: plist_dict_copy_int
+  params:
+  - name: target_dict
+    type: 'bool '
+  - name: source_dict
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: alt_source_key
+    type: 'bool '
+  return_type: int
+  signature: plist_err_t plist_dict_copy_int(plist_t, plist_t, const char *, const
+    char *)
+- name: plist_write_to_stream
+  params:
+  - name: plist
+    type: 'bool '
+  - name: stream
+    type: 'bool '
+  - name: format
+    type: int
+  - name: options
+    type: int
+  return_type: int
+  signature: plist_err_t plist_write_to_stream(plist_t, FILE *, plist_format_t, plist_write_options_t)
+- name: plist_dict_copy_uint
+  params:
+  - name: target_dict
+    type: 'bool '
+  - name: source_dict
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: alt_source_key
+    type: 'bool '
+  return_type: int
+  signature: plist_err_t plist_dict_copy_uint(plist_t, plist_t, const char *, const
+    char *)
+- name: plist_write_to_string
+  params:
+  - name: plist
+    type: 'bool '
+  - name: output
+    type: 'bool '
+  - name: length
+    type: 'bool '
+  - name: format
+    type: int
+  - name: options
+    type: int
+  return_type: int
+  signature: plist_err_t plist_write_to_string(plist_t, char **, uint32_t *, plist_format_t,
+    plist_write_options_t)
+language: c++
+project: libplist
+target_name: oplist_fuzzer
+target_path: /src/libplist/fuzz/oplist_fuzzer.cc
+test_files:
+- test_file_path: /src/libplist/test/plist_jtest.c
+- test_file_path: /src/libplist/test/plist_btest.c
+- test_file_path: /src/libplist/test/plist_otest.c
+- test_file_path: /src/libplist/test/integer_set.c
+- test_file_path: /src/libplist/test/plist_test++.cpp
+- test_file_path: /src/libplist/test/plist_cmp.c

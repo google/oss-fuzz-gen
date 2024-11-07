@@ -1,106 +1,76 @@
-"functions":
-- "name": "_ZN2ot7MeshCoP6Joiner7ConnectERNS1_12JoinerRouterE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "aRouter"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "Error ot::MeshCoP::Joiner::Connect(struct JoinerRouter &)"
-- "name": "_ZN2ot7MeshCoP6Joiner20HandleDiscoverResultEP18otActiveScanResultPv"
-  "params":
-  - "name": "aResult"
-    "type": "bool "
-  - "name": "aContext"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void ot::MeshCoP::Joiner::HandleDiscoverResult(ScanResult *, void *)"
-- "name": "_ZN2ot7MeshCoP6Joiner19TryNextJoinerRouterE7otError"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "aPrevError"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void ot::MeshCoP::Joiner::TryNextJoinerRouter(Error)"
-- "name": "_ZN2ot3Cli10TcpExample25HandleTcpReceiveAvailableEP13otTcpEndpointmbm"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "aEndpoint"
-    "type": "bool "
-  - "name": "aBytesAvailable"
-    "type": "size_t"
-  - "name": "aEndOfStream"
-    "type": "bool"
-  - "name": "aBytesRemaining"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void ot::Cli::TcpExample::HandleTcpReceiveAvailable(otTcpEndpoint *, size_t, bool, size_t)"
-- "name": "_ZN2ot3Cli10TcpExample33HandleTcpReceiveAvailableCallbackEP13otTcpEndpointmbm"
-  "params":
-  - "name": "aEndpoint"
-    "type": "bool "
-  - "name": "aBytesAvailable"
-    "type": "size_t"
-  - "name": "aEndOfStream"
-    "type": "bool"
-  - "name": "aBytesRemaining"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void ot::Cli::TcpExample::HandleTcpReceiveAvailableCallback(otTcpEndpoint *, size_t, bool, size_t)"
-- "name": "_ZN2ot3Dns16ServiceDiscovery6Server8Response15AppendPtrRecordEPKcj"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "aInstanceLabel"
-    "type": "bool "
-  - "name": "aTtl"
-    "type": "int"
-  "return_type": "int"
-  "signature": "Error ot::Dns::ServiceDiscovery::Server::Response::AppendPtrRecord(const char *, uint32_t)"
-- "name": "_ZN2ot7MeshCoP6Joiner29HandleSecureCoapClientConnectE24otCoapSecureConnectEventPv"
-  "params":
-  - "name": "aEvent"
-    "type": "int"
-  - "name": "aContext"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void ot::MeshCoP::Joiner::HandleSecureCoapClientConnect(ConnectEvent, void *)"
-- "name": "_ZN2ot8Notifier10EmitEventsEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void ot::Notifier::EmitEvents()"
-- "name": "_ZN2ot7MeshCoP6Joiner29HandleSecureCoapClientConnectE24otCoapSecureConnectEvent"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "aEvent"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void ot::MeshCoP::Joiner::HandleSecureCoapClientConnect(ConnectEvent)"
-- "name": "_ZN2ot7MeshCoP6Joiner20HandleDiscoverResultEP18otActiveScanResult"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "aResult"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void ot::MeshCoP::Joiner::HandleDiscoverResult(ScanResult *)"
-"language": "c++"
-"project": "openthread"
-"target_name": "ot-ip6-send-fuzzer"
-"target_path": "/src/openthread/tests/fuzz/ip6_send.cpp"
-"test_files":
-- "test_file_path": "/src/openthread/tests/unit/test_heap.cpp"
-- "test_file_path": "/src/openthread/tests/unit/test_ncp_infra_if.cpp"
-- "test_file_path": "/src/openthread/examples/platforms/utils/otns_utils.cpp"
-- "test_file_path": "/src/openthread/examples/platforms/simulation/misc.c"
-- "test_file_path": "/src/openthread/tests/unit/test_ncp_srp_server.cpp"
-- "test_file_path": "/src/openthread/tests/unit/test_spinel_decoder.cpp"
-- "test_file_path": "/src/openthread/tests/unit/test_dso.cpp"
-- "test_file_path": "/src/openthread/tests/unit/test_binary_search.cpp"
-- "test_file_path": "/src/openthread/examples/apps/ncp/main.c"
-- "test_file_path": "/src/openthread/tests/unit/test_util.cpp"
+functions:
+- name: _ZN2ot3Cli10TcpExample25HandleTcpReceiveAvailableEP13otTcpEndpointmbm
+  params:
+  - name: this
+    type: 'bool '
+  - name: aEndpoint
+    type: 'bool '
+  - name: aBytesAvailable
+    type: size_t
+  - name: aEndOfStream
+    type: bool
+  - name: aBytesRemaining
+    type: size_t
+  return_type: void
+  signature: void ot::Cli::TcpExample::HandleTcpReceiveAvailable(otTcpEndpoint *,
+    size_t, bool, size_t)
+- name: _ZN2ot7MeshCoP6Joiner29HandleSecureCoapClientConnectE24otCoapSecureConnectEventPv
+  params:
+  - name: aEvent
+    type: int
+  - name: aContext
+    type: 'bool '
+  return_type: void
+  signature: void ot::MeshCoP::Joiner::HandleSecureCoapClientConnect(ConnectEvent,
+    void *)
+- name: _ZN2ot7MeshCoP6Joiner7ConnectERNS1_12JoinerRouterE
+  params:
+  - name: this
+    type: 'bool '
+  - name: aRouter
+    type: 'bool '
+  return_type: int
+  signature: Error ot::MeshCoP::Joiner::Connect(struct JoinerRouter &)
+- name: _ZN2ot3Dns16ServiceDiscovery6Server8Response15AppendPtrRecordEPKcj
+  params:
+  - name: this
+    type: 'bool '
+  - name: aInstanceLabel
+    type: 'bool '
+  - name: aTtl
+    type: int
+  return_type: int
+  signature: Error ot::Dns::ServiceDiscovery::Server::Response::AppendPtrRecord(const
+    char *, uint32_t)
+- name: _ZN2ot3Cli10TcpExample33HandleTcpReceiveAvailableCallbackEP13otTcpEndpointmbm
+  params:
+  - name: aEndpoint
+    type: 'bool '
+  - name: aBytesAvailable
+    type: size_t
+  - name: aEndOfStream
+    type: bool
+  - name: aBytesRemaining
+    type: size_t
+  return_type: void
+  signature: void ot::Cli::TcpExample::HandleTcpReceiveAvailableCallback(otTcpEndpoint
+    *, size_t, bool, size_t)
+- name: _ZN2ot7MeshCoP6Joiner19TryNextJoinerRouterE7otError
+  params:
+  - name: this
+    type: 'bool '
+  - name: aPrevError
+    type: int
+  return_type: void
+  signature: void ot::MeshCoP::Joiner::TryNextJoinerRouter(Error)
+language: c++
+project: openthread
+target_name: ot-ip6-send-fuzzer
+target_path: /src/openthread/tests/fuzz/ip6_send.cpp
+test_files:
+- test_file_path: /src/openthread/tests/unit/test_binary_search.cpp
+- test_file_path: /src/openthread/examples/apps/ncp/main.c
+- test_file_path: /src/openthread/tests/unit/test_ncp_srp_server.cpp
+- test_file_path: /src/openthread/tests/unit/test_util.cpp
+- test_file_path: /src/openthread/tests/unit/test_spinel_decoder.cpp
+- test_file_path: /src/openthread/tests/unit/test_dso.cpp

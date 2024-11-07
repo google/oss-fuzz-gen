@@ -1,106 +1,70 @@
-"functions":
-- "name": "_ZN7osquery22rpmPackagesTablePlugin8generateERNS_12QueryContextE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "TableRows osquery::rpmPackagesTablePlugin::generate(struct QueryContext &)"
-- "name": "_ZNK7osquery15SQLiteSQLPlugin15getQueryColumnsERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERNS1_6vectorINS1_5tupleIJS7_NS_10ColumnTypeENS_13ColumnOptionsEEEENS5_ISE_EEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status osquery::SQLiteSQLPlugin::getQueryColumns(const string &, TableColumns &)"
-- "name": "_ZN7osquery6Config7refreshEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status osquery::Config::~refresh()"
-- "name": "_ZNK7osquery11Initializer5startEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void osquery::Initializer::start()"
-- "name": "_ZN7osquery12ConfigPlugin4callERKNSt3__13mapINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES8_NS1_4lessIS8_EENS6_INS1_4pairIKS8_S8_EEEEEERNS1_6vectorISF_NS6_ISF_EEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status osquery::ConfigPlugin::call(const PluginRequest &, PluginResponse &)"
-- "name": "_ZN7osquery3SQL13selectAllFromERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "QueryData osquery::SQL::selectAllFrom(const string &)"
-- "name": "_ZN7osquery19ConfigRefreshRunner5startEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void osquery::ConfigRefreshRunner::start()"
-- "name": "_ZN7osquery6Config4loadEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status osquery::Config::load()"
-- "name": "_ZN7osquery26rpmPackageFilesTablePlugin9generatorERN5boost11coroutines26detail14push_coroutineINSt3__110unique_ptrINS_8TableRowENS5_14default_deleteIS7_EEEEEERNS_12QueryContextE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void osquery::rpmPackageFilesTablePlugin::generator(RowYield &, struct QueryContext &)"
-- "name": "_ZN7osquery15yaraTablePlugin8generateERNS_12QueryContextE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "TableRows osquery::yaraTablePlugin::generate(struct QueryContext &)"
-"language": "c++"
-"project": "osquery"
-"target_name": "osqueryfuzz-sqlquery"
-"target_path": "/src/osquery/osquery/main/harnesses/fuzz_sqlquery.cpp"
-"test_files":
-- "test_file_path": "/src/osquery/tests/integration/tables/yum_sources.cpp"
-- "test_file_path": "/src/osquery/tests/integration/tables/cups_destinations.cpp"
-- "test_file_path": "/src/osquery/tests/integration/tables/etw_process_events.cpp"
-- "test_file_path": "/src/osquery/tests/integration/tables/scheduled_tasks.cpp"
-- "test_file_path": "/src/osquery/osquery/utils/system/tests/time.cpp"
-- "test_file_path": "/src/osquery/tests/integration/tables/services.cpp"
-- "test_file_path": "/src/osquery/tests/integration/tables/arp_cache.cpp"
-- "test_file_path": "/src/osquery/tests/integration/tables/default_environment.cpp"
-- "test_file_path": "/src/osquery/tests/integration/tables/xprotect_meta.cpp"
-- "test_file_path": "/src/osquery/osquery/utils/system/posix/tests/errno.cpp"
+functions:
+- name: _ZN7osquery6Config4loadEv
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status osquery::Config::load()
+- name: _ZNK7osquery15SQLiteSQLPlugin15getQueryColumnsERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERNS1_6vectorINS1_5tupleIJS7_NS_10ColumnTypeENS_13ColumnOptionsEEEENS5_ISE_EEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status osquery::SQLiteSQLPlugin::getQueryColumns(const string &, TableColumns
+    &)
+- name: _ZN7osquery3SQL13selectAllFromERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: QueryData osquery::SQL::selectAllFrom(const string &)
+- name: _ZN7osquery22rpmPackagesTablePlugin8generateERNS_12QueryContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: TableRows osquery::rpmPackagesTablePlugin::generate(struct QueryContext
+    &)
+- name: _ZN7osquery15yaraTablePlugin8generateERNS_12QueryContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: TableRows osquery::yaraTablePlugin::generate(struct QueryContext &)
+- name: _ZN7osquery6Config7refreshEv
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status osquery::Config::~refresh()
+language: c++
+project: osquery
+target_name: osqueryfuzz-sqlquery
+target_path: /src/osquery/osquery/main/harnesses/fuzz_sqlquery.cpp
+test_files:
+- test_file_path: /src/osquery/osquery/utils/system/posix/tests/errno.cpp
+- test_file_path: /src/osquery/tests/integration/tables/default_environment.cpp
+- test_file_path: /src/osquery/tests/integration/tables/etw_process_events.cpp
+- test_file_path: /src/osquery/tests/integration/tables/arp_cache.cpp
+- test_file_path: /src/osquery/tests/integration/tables/xprotect_meta.cpp
+- test_file_path: /src/osquery/osquery/utils/system/tests/time.cpp

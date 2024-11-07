@@ -1,76 +1,79 @@
-"functions":
-- "name": "_ZNK6icu_596Locale7getLCIDEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "uint32_t icu_59::Locale::getLCID()"
-- "name": "psl_latest"
-  "params":
-  - "name": "fname"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "psl_ctx_t * psl_latest(const char *)"
-- "name": "_ZN6icu_597CaseMap7toLowerEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode"
-  "params":
-  - "name": "locale"
-    "type": "bool "
-  - "name": "options"
-    "type": "int"
-  - "name": "src"
-    "type": "bool "
-  - "name": "srcLength"
-    "type": "int"
-  - "name": "dest"
-    "type": "bool "
-  - "name": "destCapacity"
-    "type": "int"
-  - "name": "edits"
-    "type": "bool "
-  - "name": "errorCode"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int32_t icu_59::CaseMap::toLower(const char *, uint32_t, const UChar *, int32_t, UChar *, int32_t, Edits *, UErrorCode &)"
-- "name": "_ZNK6icu_5920UnicodeSetStringSpan12spanBackUTF8EPKhi17USetSpanCondition"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "s"
-    "type": "bool "
-  - "name": "length"
-    "type": "int"
-  - "name": "spanCondition"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int32_t icu_59::UnicodeSetStringSpan::spanBackUTF8(const uint8_t *, int32_t, USetSpanCondition)"
-- "name": "_ZN6icu_597CaseMap7toUpperEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode"
-  "params":
-  - "name": "locale"
-    "type": "bool "
-  - "name": "options"
-    "type": "int"
-  - "name": "src"
-    "type": "bool "
-  - "name": "srcLength"
-    "type": "int"
-  - "name": "dest"
-    "type": "bool "
-  - "name": "destCapacity"
-    "type": "int"
-  - "name": "edits"
-    "type": "bool "
-  - "name": "errorCode"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int32_t icu_59::CaseMap::toUpper(const char *, uint32_t, const UChar *, int32_t, UChar *, int32_t, Edits *, UErrorCode &)"
-"language": "c++"
-"project": "libpsl"
-"target_name": "libpsl_load_fuzzer"
-"target_path": "/src/libpsl/fuzz/libpsl_load_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/libpsl/tests/test-registrable-domain.c"
-- "test_file_path": "/src/libpsl/tests/common.c"
-- "test_file_path": "/src/libpsl/tests/test-is-public-builtin.c"
-- "test_file_path": "/src/libpsl/tests/test-is-cookie-domain-acceptable.c"
-- "test_file_path": "/src/libpsl/tests/test-is-public.c"
-- "test_file_path": "/src/libpsl/tests/test-is-public-all.c"
+functions:
+- name: _ZNK6icu_596Locale7getLCIDEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: int
+  signature: uint32_t icu_59::Locale::getLCID()
+- name: psl_latest
+  params:
+  - name: fname
+    type: 'bool '
+  return_type: void
+  signature: psl_ctx_t * psl_latest(const char *)
+- name: _ZN6icu_597CaseMap7toLowerEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode
+  params:
+  - name: locale
+    type: 'bool '
+  - name: options
+    type: int
+  - name: src
+    type: 'bool '
+  - name: srcLength
+    type: int
+  - name: dest
+    type: 'bool '
+  - name: destCapacity
+    type: int
+  - name: edits
+    type: 'bool '
+  - name: errorCode
+    type: 'bool '
+  return_type: int
+  signature: int32_t icu_59::CaseMap::toLower(const char *, uint32_t, const UChar
+    *, int32_t, UChar *, int32_t, Edits *, UErrorCode &)
+- name: _ZNK6icu_5920UnicodeSetStringSpan12spanBackUTF8EPKhi17USetSpanCondition
+  params:
+  - name: this
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: length
+    type: int
+  - name: spanCondition
+    type: int
+  return_type: int
+  signature: int32_t icu_59::UnicodeSetStringSpan::spanBackUTF8(const uint8_t *, int32_t,
+    USetSpanCondition)
+- name: _ZN6icu_597CaseMap7toUpperEPKcjPKDsiPDsiPNS_5EditsER10UErrorCode
+  params:
+  - name: locale
+    type: 'bool '
+  - name: options
+    type: int
+  - name: src
+    type: 'bool '
+  - name: srcLength
+    type: int
+  - name: dest
+    type: 'bool '
+  - name: destCapacity
+    type: int
+  - name: edits
+    type: 'bool '
+  - name: errorCode
+    type: 'bool '
+  return_type: int
+  signature: int32_t icu_59::CaseMap::toUpper(const char *, uint32_t, const UChar
+    *, int32_t, UChar *, int32_t, Edits *, UErrorCode &)
+language: c++
+project: libpsl
+target_name: libpsl_load_fuzzer
+target_path: /src/libpsl/fuzz/libpsl_load_fuzzer.c
+test_files:
+- test_file_path: /src/libpsl/tests/test-registrable-domain.c
+- test_file_path: /src/libpsl/tests/common.c
+- test_file_path: /src/libpsl/tests/test-is-public-builtin.c
+- test_file_path: /src/libpsl/tests/test-is-cookie-domain-acceptable.c
+- test_file_path: /src/libpsl/tests/test-is-public.c
+- test_file_path: /src/libpsl/tests/test-is-public-all.c

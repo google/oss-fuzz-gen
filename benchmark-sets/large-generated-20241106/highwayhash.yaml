@@ -1,152 +1,103 @@
-"functions":
-- "name": "_ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPA2_m"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "fragments"
-    "type": "bool "
-  - "name": "num_fragments"
-    "type": "size_t"
-  - "name": "hash"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void highwayhash::HighwayHashCat<4u>::operator()(const struct HighwayHashCat<2U> *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t, DW_TAG_restrict_typeHHResult128 *)"
-- "name": "_ZN11highwayhash15HighwayHashCatTILj4EE6AppendEPKcm"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "bytes"
-    "type": "bool "
-  - "name": "num_bytes"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void highwayhash::HighwayHashCatT<4u>::Append(HighwayHashCatT<2U> *, const DW_TAG_restrict_typechar *, size_t)"
-- "name": "_ZNK11highwayhash11HighwayHashILj4EEclERA4_KmPKcmPA2_m"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "bytes"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  - "name": "hash"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void highwayhash::HighwayHash<4u>::operator()(const struct HighwayHash<2U> *, const HHKey &, const DW_TAG_restrict_typechar *, const size_t, DW_TAG_restrict_typeHHResult128 *)"
-- "name": "_ZNK11highwayhash14HighwayHashCatILj2EEclERA4_KmPKNS_10StringViewEmPm"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "fragments"
-    "type": "bool "
-  - "name": "num_fragments"
-    "type": "size_t"
-  - "name": "hash"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void highwayhash::HighwayHashCat<2u>::operator()(const struct HighwayHashCat<2U> *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t, DW_TAG_restrict_typeHHResult64 *)"
-- "name": "_ZNK11highwayhash11HighwayHashILj2EEclERA4_KmPKcmPA4_m"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "bytes"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  - "name": "hash"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void highwayhash::HighwayHash<2u>::operator()(const struct HighwayHash<2U> *, const HHKey &, const DW_TAG_restrict_typechar *, const size_t, DW_TAG_restrict_typeHHResult256 *)"
-- "name": "_ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPA4_m"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "fragments"
-    "type": "bool "
-  - "name": "num_fragments"
-    "type": "size_t"
-  - "name": "hash"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void highwayhash::HighwayHashCat<4u>::operator()(const struct HighwayHashCat<2U> *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t, DW_TAG_restrict_typeHHResult256 *)"
-- "name": "_ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPm"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "fragments"
-    "type": "bool "
-  - "name": "num_fragments"
-    "type": "size_t"
-  - "name": "hash"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void highwayhash::HighwayHashCat<4u>::operator()(const struct HighwayHashCat<2U> *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t, DW_TAG_restrict_typeHHResult64 *)"
-- "name": "_ZNK11highwayhash14HighwayHashCatILj2EEclERA4_KmPKNS_10StringViewEmPA2_m"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "fragments"
-    "type": "bool "
-  - "name": "num_fragments"
-    "type": "size_t"
-  - "name": "hash"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void highwayhash::HighwayHashCat<2u>::operator()(const struct HighwayHashCat<2U> *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t, DW_TAG_restrict_typeHHResult128 *)"
-- "name": "_ZNK11highwayhash14HighwayHashCatILj2EEclERA4_KmPKNS_10StringViewEmPA4_m"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "fragments"
-    "type": "bool "
-  - "name": "num_fragments"
-    "type": "size_t"
-  - "name": "hash"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void highwayhash::HighwayHashCat<2u>::operator()(const struct HighwayHashCat<2U> *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t, DW_TAG_restrict_typeHHResult256 *)"
-- "name": "_ZNK11highwayhash11HighwayHashILj4EEclERA4_KmPKcmPA4_m"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "bytes"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  - "name": "hash"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void highwayhash::HighwayHash<4u>::operator()(const struct HighwayHash<2U> *, const HHKey &, const DW_TAG_restrict_typechar *, const size_t, DW_TAG_restrict_typeHHResult256 *)"
-"language": "c++"
-"project": "highwayhash"
-"target_name": "sip_hash_fuzzer"
-"target_path": "/src/highwayhash/highwayhash/sip_hash_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/highwayhash/c/highwayhash_test.c"
-- "test_file_path": "/src/highwayhash/highwayhash/highwayhash_test_portable.cc"
-- "test_file_path": "/src/highwayhash/highwayhash/sip_hash_test.cc"
-- "test_file_path": "/src/highwayhash/highwayhash/highwayhash_test_vsx.cc"
-- "test_file_path": "/src/highwayhash/highwayhash/vector_test_neon.cc"
-- "test_file_path": "/src/highwayhash/highwayhash/highwayhash_test.cc"
-- "test_file_path": "/src/highwayhash/highwayhash/vector_test_target.cc"
-- "test_file_path": "/src/highwayhash/highwayhash/data_parallel_test.cc"
-- "test_file_path": "/src/highwayhash/highwayhash/highwayhash_test_sse41.cc"
-- "test_file_path": "/src/highwayhash/highwayhash/vector_test_portable.cc"
+functions:
+- name: _ZN11highwayhash15HighwayHashCatTILj4EE6AppendEPKcm
+  params:
+  - name: this
+    type: 'bool '
+  - name: bytes
+    type: 'bool '
+  - name: num_bytes
+    type: size_t
+  return_type: void
+  signature: void highwayhash::HighwayHashCatT<4u>::Append(HighwayHashCatT<2U> *,
+    const DW_TAG_restrict_typechar *, size_t)
+- name: _ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPA4_m
+  params:
+  - name: this
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: fragments
+    type: 'bool '
+  - name: num_fragments
+    type: size_t
+  - name: hash
+    type: 'bool '
+  return_type: void
+  signature: void highwayhash::HighwayHashCat<4u>::operator()(const struct HighwayHashCat<2U>
+    *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t,
+    DW_TAG_restrict_typeHHResult256 *)
+- name: _ZNK11highwayhash14HighwayHashCatILj2EEclERA4_KmPKNS_10StringViewEmPA2_m
+  params:
+  - name: this
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: fragments
+    type: 'bool '
+  - name: num_fragments
+    type: size_t
+  - name: hash
+    type: 'bool '
+  return_type: void
+  signature: void highwayhash::HighwayHashCat<2u>::operator()(const struct HighwayHashCat<2U>
+    *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t,
+    DW_TAG_restrict_typeHHResult128 *)
+- name: _ZNK11highwayhash14HighwayHashCatILj4EEclERA4_KmPKNS_10StringViewEmPm
+  params:
+  - name: this
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: fragments
+    type: 'bool '
+  - name: num_fragments
+    type: size_t
+  - name: hash
+    type: 'bool '
+  return_type: void
+  signature: void highwayhash::HighwayHashCat<4u>::operator()(const struct HighwayHashCat<2U>
+    *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t,
+    DW_TAG_restrict_typeHHResult64 *)
+- name: _ZNK11highwayhash14HighwayHashCatILj2EEclERA4_KmPKNS_10StringViewEmPA4_m
+  params:
+  - name: this
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: fragments
+    type: 'bool '
+  - name: num_fragments
+    type: size_t
+  - name: hash
+    type: 'bool '
+  return_type: void
+  signature: void highwayhash::HighwayHashCat<2u>::operator()(const struct HighwayHashCat<2U>
+    *, const HHKey &, const struct DW_TAG_restrict_typeStringView *, const size_t,
+    DW_TAG_restrict_typeHHResult256 *)
+- name: _ZNK11highwayhash11HighwayHashILj2EEclERA4_KmPKcmPA4_m
+  params:
+  - name: this
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: bytes
+    type: 'bool '
+  - name: size
+    type: size_t
+  - name: hash
+    type: 'bool '
+  return_type: void
+  signature: void highwayhash::HighwayHash<2u>::operator()(const struct HighwayHash<2U>
+    *, const HHKey &, const DW_TAG_restrict_typechar *, const size_t, DW_TAG_restrict_typeHHResult256
+    *)
+language: c++
+project: highwayhash
+target_name: sip_hash_fuzzer
+target_path: /src/highwayhash/highwayhash/sip_hash_fuzzer.cc
+test_files:
+- test_file_path: /src/highwayhash/highwayhash/highwayhash_test.cc
+- test_file_path: /src/highwayhash/highwayhash/highwayhash_test_sse41.cc
+- test_file_path: /src/highwayhash/highwayhash/vector_test_target.cc
+- test_file_path: /src/highwayhash/c/highwayhash_test.c
+- test_file_path: /src/highwayhash/highwayhash/sip_hash_test.cc
+- test_file_path: /src/highwayhash/highwayhash/highwayhash_test_vsx.cc

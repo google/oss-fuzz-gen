@@ -1,108 +1,64 @@
-"functions":
-- "name": "gzgetc_"
-  "params":
-  - "name": "file"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int gzgetc_(gzFile)"
-- "name": "gzsetparams"
-  "params":
-  - "name": "file"
-    "type": "bool "
-  - "name": "level"
-    "type": "int"
-  - "name": "strategy"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int gzsetparams(gzFile, int, int)"
-- "name": "gzvprintf"
-  "params":
-  - "name": "file"
-    "type": "bool "
-  - "name": "format"
-    "type": "bool "
-  - "name": "va"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int gzvprintf(gzFile, const char *, struct __va_list_tag *)"
-- "name": "gzflush"
-  "params":
-  - "name": "file"
-    "type": "bool "
-  - "name": "flush"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int gzflush(gzFile, int)"
-- "name": "gzfread"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  - "name": "nitems"
-    "type": "size_t"
-  - "name": "file"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "z_size_t gzfread(voidp, z_size_t, z_size_t, gzFile)"
-- "name": "gzprintf"
-  "params":
-  - "name": "file"
-    "type": "bool "
-  - "name": "format"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int gzprintf(gzFile, const char *, void)"
-- "name": "gzputs"
-  "params":
-  - "name": "file"
-    "type": "bool "
-  - "name": "s"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int gzputs(gzFile, const char *)"
-- "name": "gzwrite"
-  "params":
-  - "name": "file"
-    "type": "bool "
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int gzwrite(gzFile, voidpc, unsigned int)"
-- "name": "gzputc"
-  "params":
-  - "name": "file"
-    "type": "bool "
-  - "name": "c"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int gzputc(gzFile, int)"
-- "name": "gzfwrite"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  - "name": "nitems"
-    "type": "size_t"
-  - "name": "file"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "z_size_t gzfwrite(voidpc, z_size_t, z_size_t, gzFile)"
-"language": "c++"
-"project": "elfutils"
-"target_name": "fuzz-libdwfl"
-"target_path": "/src/fuzz-libdwfl.c"
-"test_files":
-- "test_file_path": "/src/elfutils/tests/funcretval.c"
-- "test_file_path": "/src/elfutils/tests/get-files-define-file.c"
-- "test_file_path": "/src/elfutils/tests/debuginfod_build_id_find.c"
-- "test_file_path": "/src/elfutils/tests/elfrdwrnop.c"
-- "test_file_path": "/src/elfutils/tests/attr-integrate-skel.c"
-- "test_file_path": "/src/elfutils/tests/funcscopes.c"
-- "test_file_path": "/src/elfutils/tests/sectiondump.c"
-- "test_file_path": "/src/elfutils/tests/newzdata.c"
-- "test_file_path": "/src/elfutils/tests/testfile_implicit_value.c"
-- "test_file_path": "/src/elfutils/tests/elfgetzdata.c"
+functions:
+- name: gzprintf
+  params:
+  - name: file
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: int
+  signature: int gzprintf(gzFile, const char *, void)
+- name: gzflush
+  params:
+  - name: file
+    type: 'bool '
+  - name: flush
+    type: int
+  return_type: int
+  signature: int gzflush(gzFile, int)
+- name: gzfwrite
+  params:
+  - name: buf
+    type: 'bool '
+  - name: size
+    type: size_t
+  - name: nitems
+    type: size_t
+  - name: file
+    type: 'bool '
+  return_type: size_t
+  signature: z_size_t gzfwrite(voidpc, z_size_t, z_size_t, gzFile)
+- name: gzgetc_
+  params:
+  - name: file
+    type: 'bool '
+  return_type: int
+  signature: int gzgetc_(gzFile)
+- name: gzvprintf
+  params:
+  - name: file
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  - name: va
+    type: 'bool '
+  return_type: int
+  signature: int gzvprintf(gzFile, const char *, struct __va_list_tag *)
+- name: gzputs
+  params:
+  - name: file
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: int
+  signature: int gzputs(gzFile, const char *)
+language: c++
+project: elfutils
+target_name: fuzz-libdwfl
+target_path: /src/fuzz-libdwfl.c
+test_files:
+- test_file_path: /src/elfutils/tests/sectiondump.c
+- test_file_path: /src/elfutils/tests/elfgetzdata.c
+- test_file_path: /src/elfutils/tests/elfrdwrnop.c
+- test_file_path: /src/elfutils/tests/funcretval.c
+- test_file_path: /src/elfutils/tests/attr-integrate-skel.c
+- test_file_path: /src/elfutils/tests/funcscopes.c

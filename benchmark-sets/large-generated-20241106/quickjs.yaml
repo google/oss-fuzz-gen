@@ -1,151 +1,96 @@
-"functions":
-- "name": "JS_ParseJSON2"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "JSValue JS_ParseJSON2(JSContext *, const char *, size_t, const char *, int)"
-- "name": "js_string_codePointRange"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "JSValue js_string_codePointRange(JSContext *, JSValue, int, JSValue *)"
-- "name": "JS_JSONStringify"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": "space0"
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "JSValue JS_JSONStringify(JSContext *, JSValue, JSValue, JSValue)"
-- "name": "JS_ParseJSON"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "JSValue JS_ParseJSON(JSContext *, const char *, size_t, const char *)"
-- "name": "JS_SetPropertyInt64"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": "val"
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int JS_SetPropertyInt64(JSContext *, JSValue, int64_t, JSValue)"
-- "name": "JS_ToInt64Ext"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int JS_ToInt64Ext(JSContext *, int64_t *, JSValue)"
-- "name": "JS_GetTypedArrayBuffer"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "JSValue JS_GetTypedArrayBuffer(JSContext *, JSValue, size_t *, size_t *, size_t *)"
-- "name": "JS_GetArrayBuffer"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "uint8_t * JS_GetArrayBuffer(JSContext *, size_t *, JSValue)"
-- "name": "JS_NewArrayBuffer"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "JSValue JS_NewArrayBuffer(JSContext *, uint8_t *, size_t, JSFreeArrayBufferDataFunc *, void *, BOOL)"
-- "name": "JS_NewTypedArray"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "JSValue JS_NewTypedArray(JSContext *, int, JSValue *, JSTypedArrayEnum)"
-"language": "c"
-"project": "quickjs"
-"target_name": "fuzz_regexp"
-"target_path": "/src/quickjs/fuzz/fuzz_regexp.c"
-"test_files":
-- "test_file_path": "/src/quickjs/examples/point.c"
-- "test_file_path": "/src/quickjs/compat/test-closefrom.c"
-- "test_file_path": "/src/quickjs/run-test262.c"
-- "test_file_path": "/src/quickjs/tests/bjson.c"
-- "test_file_path": "/src/quickjs/examples/fib.c"
+functions:
+- name: JS_GetArrayBuffer
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: uint8_t * JS_GetArrayBuffer(JSContext *, size_t *, JSValue)
+- name: JS_ParseJSON2
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: JSValue JS_ParseJSON2(JSContext *, const char *, size_t, const char *,
+    int)
+- name: JS_JSONStringify
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: space0
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: JSValue JS_JSONStringify(JSContext *, JSValue, JSValue, JSValue)
+- name: js_string_codePointRange
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: JSValue js_string_codePointRange(JSContext *, JSValue, int, JSValue *)
+- name: JS_ParseJSON
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: JSValue JS_ParseJSON(JSContext *, const char *, size_t, const char *)
+- name: JS_SetPropertyInt64
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: val
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: int JS_SetPropertyInt64(JSContext *, JSValue, int64_t, JSValue)
+language: c
+project: quickjs
+target_name: fuzz_regexp
+target_path: /src/quickjs/fuzz/fuzz_regexp.c
+test_files:
+- test_file_path: /src/quickjs/examples/point.c
+- test_file_path: /src/quickjs/compat/test-closefrom.c
+- test_file_path: /src/quickjs/run-test262.c
+- test_file_path: /src/quickjs/tests/bjson.c
+- test_file_path: /src/quickjs/examples/fib.c

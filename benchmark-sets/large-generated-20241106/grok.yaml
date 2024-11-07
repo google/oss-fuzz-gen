@@ -1,96 +1,65 @@
-"functions":
-- "name": "_ZN3grk8t1_part17T1Part110decompressEPNS_19DecompressBlockExecE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool grk::t1_part1::T1Part1::decompress(struct DecompressBlockExec *)"
-- "name": "_ZN3grk8GrkImage21applyColourManagementEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool grk::GrkImage::applyColourManagement()"
-- "name": "_ZN3grk20CodeStreamDecompress14decompressTileEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool grk::CodeStreamDecompress::decompressTile()"
-- "name": "_ZZN3grk18CodeStreamCompress8compressEP16_grk_plugin_tileENK3$_0clEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void grk::CodeStreamCompress::operator()(const void *)"
-- "name": "_ZN3grk8GrkImage8applyICCEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool grk::GrkImage::applyICC()"
-- "name": "_cmsDefaultICCintents"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "cmsPipeline * _cmsDefaultICCintents(cmsContext, cmsUInt32Number, cmsUInt32Number *, cmsHPROFILE *, cmsBool *, cmsFloat64Number *, cmsUInt32Number)"
-- "name": "_ZN3grk18CodeStreamCompress8compressEP16_grk_plugin_tile"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "N/A ()"
-- "name": "_ZN3grk13TileProcessor10doCompressEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool grk::TileProcessor::doCompress(struct TileProcessor *)"
-- "name": "_ZZN3grk20CodeStreamDecompress14decompressTileEtENK3$_0clEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool grk::CodeStreamDecompress::operator()(const void *)"
-- "name": "_ZN3grk18CodeStreamCompress4initEP16_grk_cparametersPNS_8GrkImageE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool grk::CodeStreamCompress::init(grk_cparameters *, GrkImage *)"
-"language": "c++"
-"project": "grok"
-"target_name": "grk_decompress_fuzzer"
-"target_path": "/src/grok/tests/fuzzers/grk_decompress_fuzzer.cpp"
-"test_files":
-- "test_file_path": "/src/grok/src/lib/core/highway/hwy/tests/shuffle4_test.cc"
-- "test_file_path": "/src/grok/tests/compare_raw_files.cpp"
-- "test_file_path": "/src/grok/src/lib/core/highway/hwy/contrib/math/math_test.cc"
-- "test_file_path": "/src/grok/src/lib/core/highway/hwy/tests/minmax_test.cc"
-- "test_file_path": "/src/grok/src/lib/core/highway/hwy/tests/reverse_test.cc"
-- "test_file_path": "/src/grok/src/lib/core/highway/hwy/contrib/unroller/unroller_test.cc"
-- "test_file_path": "/src/grok/src/lib/core/highway/hwy/tests/crypto_test.cc"
-- "test_file_path": "/src/grok/src/lib/core/highway/hwy/tests/convert_test.cc"
-- "test_file_path": "/src/grok/src/lib/core/highway/hwy/contrib/thread_pool/thread_pool_test.cc"
-- "test_file_path": "/src/grok/src/lib/core/highway/hwy/abort_test.cc"
+functions:
+- name: _ZN3grk8GrkImage8applyICCEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool grk::GrkImage::applyICC()
+- name: _ZN3grk20CodeStreamDecompress14decompressTileEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool grk::CodeStreamDecompress::decompressTile()
+- name: _ZN3grk18CodeStreamCompress4initEP16_grk_cparametersPNS_8GrkImageE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool grk::CodeStreamCompress::init(grk_cparameters *, GrkImage *)
+- name: _ZZN3grk18CodeStreamCompress8compressEP16_grk_plugin_tileENK3$_0clEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void grk::CodeStreamCompress::operator()(const void *)
+- name: _ZZN3grk20CodeStreamDecompress14decompressTileEtENK3$_0clEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool grk::CodeStreamDecompress::operator()(const void *)
+- name: _cmsDefaultICCintents
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: cmsPipeline * _cmsDefaultICCintents(cmsContext, cmsUInt32Number, cmsUInt32Number
+    *, cmsHPROFILE *, cmsBool *, cmsFloat64Number *, cmsUInt32Number)
+language: c++
+project: grok
+target_name: grk_decompress_fuzzer
+target_path: /src/grok/tests/fuzzers/grk_decompress_fuzzer.cpp
+test_files:
+- test_file_path: /src/grok/src/lib/core/highway/hwy/tests/crypto_test.cc
+- test_file_path: /src/grok/src/lib/core/highway/hwy/contrib/thread_pool/thread_pool_test.cc
+- test_file_path: /src/grok/src/lib/core/highway/hwy/contrib/unroller/unroller_test.cc
+- test_file_path: /src/grok/src/lib/core/highway/hwy/tests/shuffle4_test.cc
+- test_file_path: /src/grok/src/lib/core/highway/hwy/tests/reverse_test.cc
+- test_file_path: /src/grok/src/lib/core/highway/hwy/tests/convert_test.cc

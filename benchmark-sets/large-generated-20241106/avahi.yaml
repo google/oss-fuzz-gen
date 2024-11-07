@@ -1,100 +1,74 @@
-"functions":
-- "name": "avahi_string_list_new"
-  "params":
-  - "name": "txt"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "AvahiStringList * avahi_string_list_new(const char *, void)"
-- "name": "avahi_string_list_new_va"
-  "params":
-  - "name": "va"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "AvahiStringList * avahi_string_list_new_va(struct __va_list_tag *)"
-- "name": "avahi_string_list_add_pair"
-  "params":
-  - "name": "l"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "value"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "AvahiStringList * avahi_string_list_add_pair(AvahiStringList *, const char *, const char *)"
-- "name": "avahi_dns_packet_new_reply"
-  "params":
-  - "name": "p"
-    "type": "bool "
-  - "name": "mtu"
-    "type": "int"
-  - "name": "copy_queries"
-    "type": "int"
-  - "name": "aa"
-    "type": "int"
-  "return_type": "void"
-  "signature": "AvahiDnsPacket * avahi_dns_packet_new_reply(AvahiDnsPacket *, unsigned int, int, int)"
-- "name": "avahi_string_list_add_vprintf"
-  "params":
-  - "name": "l"
-    "type": "bool "
-  - "name": "format"
-    "type": "bool "
-  - "name": "va"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "AvahiStringList * avahi_string_list_add_vprintf(AvahiStringList *, const char *, struct __va_list_tag *)"
-- "name": "avahi_string_list_add_pair_arbitrary"
-  "params":
-  - "name": "l"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "value"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "AvahiStringList * avahi_string_list_add_pair_arbitrary(AvahiStringList *, const char *, const uint8_t *, size_t)"
-- "name": "avahi_string_list_add_printf"
-  "params":
-  - "name": "l"
-    "type": "bool "
-  - "name": "format"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "AvahiStringList * avahi_string_list_add_printf(AvahiStringList *, const char *, void)"
-- "name": "avahi_dns_packet_new_query"
-  "params":
-  - "name": "mtu"
-    "type": "int"
-  "return_type": "void"
-  "signature": "AvahiDnsPacket * avahi_dns_packet_new_query(unsigned int)"
-- "name": "avahi_dns_packet_new_response"
-  "params":
-  - "name": "mtu"
-    "type": "int"
-  - "name": "aa"
-    "type": "int"
-  "return_type": "void"
-  "signature": "AvahiDnsPacket * avahi_dns_packet_new_response(unsigned int, int)"
-- "name": "avahi_string_list_add_many"
-  "params":
-  - "name": "r"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "AvahiStringList * avahi_string_list_add_many(AvahiStringList *, void)"
-"language": "c++"
-"project": "avahi"
-"target_name": "fuzz-ini-file-parser"
-"target_path": "/src/avahi/fuzz/fuzz-ini-file-parser.c"
-"test_files":
-- "test_file_path": "/src/avahi/avahi-compat-howl/address-test.c"
-- "test_file_path": "/src/avahi/avahi-compat-howl/browse-domain-test.c"
-- "test_file_path": "/src/avahi/avahi-core/querier-test.c"
-- "test_file_path": "/src/avahi/avahi-client/client-test.c"
-- "test_file_path": "/src/avahi/avahi-compat-howl/samples/publish.c"
-- "test_file_path": "/src/avahi/avahi-core/conformance-test.c"
-- "test_file_path": "/src/avahi/avahi-daemon/ini-file-parser-test.c"
-- "test_file_path": "/src/avahi/examples/core-browse-services.c"
-- "test_file_path": "/src/avahi/avahi-common/alternative-test.c"
-- "test_file_path": "/src/avahi/avahi-compat-howl/samples/resolve.c"
+functions:
+- name: avahi_string_list_add_vprintf
+  params:
+  - name: l
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  - name: va
+    type: 'bool '
+  return_type: void
+  signature: AvahiStringList * avahi_string_list_add_vprintf(AvahiStringList *, const
+    char *, struct __va_list_tag *)
+- name: avahi_string_list_add_many
+  params:
+  - name: r
+    type: 'bool '
+  return_type: void
+  signature: AvahiStringList * avahi_string_list_add_many(AvahiStringList *, void)
+- name: avahi_string_list_add_pair
+  params:
+  - name: l
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  return_type: void
+  signature: AvahiStringList * avahi_string_list_add_pair(AvahiStringList *, const
+    char *, const char *)
+- name: avahi_string_list_add_pair_arbitrary
+  params:
+  - name: l
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  - name: size
+    type: size_t
+  return_type: void
+  signature: AvahiStringList * avahi_string_list_add_pair_arbitrary(AvahiStringList
+    *, const char *, const uint8_t *, size_t)
+- name: avahi_dns_packet_new_response
+  params:
+  - name: mtu
+    type: int
+  - name: aa
+    type: int
+  return_type: void
+  signature: AvahiDnsPacket * avahi_dns_packet_new_response(unsigned int, int)
+- name: avahi_dns_packet_new_reply
+  params:
+  - name: p
+    type: 'bool '
+  - name: mtu
+    type: int
+  - name: copy_queries
+    type: int
+  - name: aa
+    type: int
+  return_type: void
+  signature: AvahiDnsPacket * avahi_dns_packet_new_reply(AvahiDnsPacket *, unsigned
+    int, int, int)
+language: c++
+project: avahi
+target_name: fuzz-ini-file-parser
+target_path: /src/avahi/fuzz/fuzz-ini-file-parser.c
+test_files:
+- test_file_path: /src/avahi/examples/core-browse-services.c
+- test_file_path: /src/avahi/avahi-core/conformance-test.c
+- test_file_path: /src/avahi/avahi-compat-howl/address-test.c
+- test_file_path: /src/avahi/avahi-core/querier-test.c
+- test_file_path: /src/avahi/avahi-daemon/ini-file-parser-test.c
+- test_file_path: /src/avahi/avahi-compat-howl/browse-domain-test.c

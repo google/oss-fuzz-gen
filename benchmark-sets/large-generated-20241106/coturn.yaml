@@ -1,169 +1,110 @@
-"functions":
-- "name": "stun_attr_get_first_addr_str"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  - "name": "attr_type"
-    "type": "short"
-  - "name": "ca"
-    "type": "bool "
-  - "name": "default_addr"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool stun_attr_get_first_addr_str(const uint8_t *, size_t, uint16_t, ioa_addr *, const ioa_addr *)"
-- "name": "stun_attr_get_first_addr"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "attr_type"
-    "type": "short"
-  - "name": "ca"
-    "type": "bool "
-  - "name": "default_addr"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool stun_attr_get_first_addr(const stun_buffer *, uint16_t, ioa_addr *, const ioa_addr *)"
-- "name": "stun_set_allocate_response"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "tid"
-    "type": "bool "
-  - "name": "relayed_addr1"
-    "type": "bool "
-  - "name": "relayed_addr2"
-    "type": "bool "
-  - "name": "reflexive_addr"
-    "type": "bool "
-  - "name": "lifetime"
-    "type": "int"
-  - "name": "max_lifetime"
-    "type": "int"
-  - "name": "error_code"
-    "type": "int"
-  - "name": "reason"
-    "type": "bool "
-  - "name": "reservation_token"
-    "type": "size_t"
-  - "name": "mobile_id"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool stun_set_allocate_response(stun_buffer *, stun_tid *, const ioa_addr *, const ioa_addr *, const ioa_addr *, uint32_t, uint32_t, int, const uint8_t *, uint64_t, char *)"
-- "name": "stun_set_binding_response_str"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "bool "
-  - "name": "tid"
-    "type": "bool "
-  - "name": "reflexive_addr"
-    "type": "bool "
-  - "name": "error_code"
-    "type": "int"
-  - "name": "reason"
-    "type": "bool "
-  - "name": "cookie"
-    "type": "int"
-  - "name": "old_stun"
-    "type": "bool"
-  - "name": "no_stun_backward_compatibility"
-    "type": "bool"
-  "return_type": "bool"
-  "signature": "bool stun_set_binding_response_str(uint8_t *, size_t *, stun_tid *, const ioa_addr *, int, const uint8_t *, uint32_t, bool, bool)"
-- "name": "stun_set_binding_response"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "tid"
-    "type": "bool "
-  - "name": "reflexive_addr"
-    "type": "bool "
-  - "name": "error_code"
-    "type": "int"
-  - "name": "reason"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool stun_set_binding_response(stun_buffer *, stun_tid *, const ioa_addr *, int, const uint8_t *)"
-- "name": "stun_set_channel_bind_response_str"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "bool "
-  - "name": "tid"
-    "type": "bool "
-  - "name": "error_code"
-    "type": "int"
-  - "name": "reason"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void stun_set_channel_bind_response_str(uint8_t *, size_t *, stun_tid *, int, const uint8_t *)"
-- "name": "stun_set_channel_bind_request_str"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "bool "
-  - "name": "peer_addr"
-    "type": "bool "
-  - "name": "channel_number"
-    "type": "short"
-  "return_type": "short"
-  "signature": "uint16_t stun_set_channel_bind_request_str(uint8_t *, size_t *, const ioa_addr *, uint16_t)"
-- "name": "stun_set_allocate_response_str"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "bool "
-  - "name": "tid"
-    "type": "bool "
-  - "name": "relayed_addr1"
-    "type": "bool "
-  - "name": "relayed_addr2"
-    "type": "bool "
-  - "name": "reflexive_addr"
-    "type": "bool "
-  - "name": "lifetime"
-    "type": "int"
-  - "name": "max_lifetime"
-    "type": "int"
-  - "name": "error_code"
-    "type": "int"
-  - "name": "reason"
-    "type": "bool "
-  - "name": "reservation_token"
-    "type": "size_t"
-  - "name": "mobile_id"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool stun_set_allocate_response_str(uint8_t *, size_t *, stun_tid *, const ioa_addr *, const ioa_addr *, const ioa_addr *, uint32_t, uint32_t, int, const uint8_t *, uint64_t, char *)"
-- "name": "stun_set_channel_bind_request"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "peer_addr"
-    "type": "bool "
-  - "name": "channel_number"
-    "type": "short"
-  "return_type": "short"
-  "signature": "uint16_t stun_set_channel_bind_request(stun_buffer *, const ioa_addr *, uint16_t)"
-- "name": "stun_set_channel_bind_response"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "tid"
-    "type": "bool "
-  - "name": "error_code"
-    "type": "int"
-  - "name": "reason"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void stun_set_channel_bind_response(stun_buffer *, stun_tid *, int, const uint8_t *)"
-"language": "c"
-"project": "coturn"
-"target_name": "FuzzStunClient"
-"target_path": "/src/coturn/fuzzing/FuzzStunClient.c"
+functions:
+- name: stun_set_binding_response
+  params:
+  - name: buf
+    type: 'bool '
+  - name: tid
+    type: 'bool '
+  - name: reflexive_addr
+    type: 'bool '
+  - name: error_code
+    type: int
+  - name: reason
+    type: 'bool '
+  return_type: bool
+  signature: bool stun_set_binding_response(stun_buffer *, stun_tid *, const ioa_addr
+    *, int, const uint8_t *)
+- name: stun_attr_get_first_addr
+  params:
+  - name: buf
+    type: 'bool '
+  - name: attr_type
+    type: short
+  - name: ca
+    type: 'bool '
+  - name: default_addr
+    type: 'bool '
+  return_type: bool
+  signature: bool stun_attr_get_first_addr(const stun_buffer *, uint16_t, ioa_addr
+    *, const ioa_addr *)
+- name: stun_set_binding_response_str
+  params:
+  - name: buf
+    type: 'bool '
+  - name: len
+    type: 'bool '
+  - name: tid
+    type: 'bool '
+  - name: reflexive_addr
+    type: 'bool '
+  - name: error_code
+    type: int
+  - name: reason
+    type: 'bool '
+  - name: cookie
+    type: int
+  - name: old_stun
+    type: bool
+  - name: no_stun_backward_compatibility
+    type: bool
+  return_type: bool
+  signature: bool stun_set_binding_response_str(uint8_t *, size_t *, stun_tid *, const
+    ioa_addr *, int, const uint8_t *, uint32_t, bool, bool)
+- name: stun_set_allocate_response
+  params:
+  - name: buf
+    type: 'bool '
+  - name: tid
+    type: 'bool '
+  - name: relayed_addr1
+    type: 'bool '
+  - name: relayed_addr2
+    type: 'bool '
+  - name: reflexive_addr
+    type: 'bool '
+  - name: lifetime
+    type: int
+  - name: max_lifetime
+    type: int
+  - name: error_code
+    type: int
+  - name: reason
+    type: 'bool '
+  - name: reservation_token
+    type: size_t
+  - name: mobile_id
+    type: 'bool '
+  return_type: bool
+  signature: bool stun_set_allocate_response(stun_buffer *, stun_tid *, const ioa_addr
+    *, const ioa_addr *, const ioa_addr *, uint32_t, uint32_t, int, const uint8_t
+    *, uint64_t, char *)
+- name: stun_set_channel_bind_response
+  params:
+  - name: buf
+    type: 'bool '
+  - name: tid
+    type: 'bool '
+  - name: error_code
+    type: int
+  - name: reason
+    type: 'bool '
+  return_type: void
+  signature: void stun_set_channel_bind_response(stun_buffer *, stun_tid *, int, const
+    uint8_t *)
+- name: stun_set_channel_bind_request_str
+  params:
+  - name: buf
+    type: 'bool '
+  - name: len
+    type: 'bool '
+  - name: peer_addr
+    type: 'bool '
+  - name: channel_number
+    type: short
+  return_type: short
+  signature: uint16_t stun_set_channel_bind_request_str(uint8_t *, size_t *, const
+    ioa_addr *, uint16_t)
+language: c
+project: coturn
+target_name: FuzzStunClient
+target_path: /src/coturn/fuzzing/FuzzStunClient.c

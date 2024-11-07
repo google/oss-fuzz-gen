@@ -1,79 +1,48 @@
-"functions":
-- "name": "_ZNK12_GLOBAL__N_13$_37getNameEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "StringRef (anonymous namespace)::$_3::getName(const struct void *)"
-- "name": "_ZNK12_GLOBAL__N_13$_47getNameEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "StringRef (anonymous namespace)::$_4::getName(const struct void *)"
-- "name": "_ZN12_GLOBAL__N_19AsmParser3RunEbmb"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "NoInitialTextSection"
-    "type": "bool"
-  - "name": "Address"
-    "type": "size_t"
-  - "name": "NoFinalize"
-    "type": "bool"
-  "return_type": "size_t"
-  "signature": "size_t (anonymous namespace)::AsmParser::Run(bool, uint64_t, bool)"
-- "name": "_ZN12_GLOBAL__N_115ELFObjectWriter5resetEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void (anonymous namespace)::ELFObjectWriter::reset()"
-- "name": "_ZNK12_GLOBAL__N_114SystemZOperand5isMemENS_10MemoryKindENS_12RegisterKindE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "MemKind"
-    "type": "int"
-  - "name": "RegKind"
-    "type": "int"
-  "return_type": "bool"
-  "signature": "bool (anonymous namespace)::SystemZOperand::isMem(DW_TAG_enumeration_typeMemoryKind, DW_TAG_enumeration_typeRegisterKind)"
-- "name": "_ZNK12_GLOBAL__N_112SparcOperand5isMemEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool (anonymous namespace)::SparcOperand::isMem()"
-- "name": "ks_arch_supported"
-  "params":
-  - "name": "arch"
-    "type": "int"
-  "return_type": "bool"
-  "signature": "bool ks_arch_supported(ks_arch)"
-- "name": "ks_strerror"
-  "params":
-  - "name": "code"
-    "type": "int"
-  "return_type": "void"
-  "signature": "const char * ks_strerror(ks_err)"
-- "name": "_ZL16adjustFixupValuejm"
-  "params":
-  - "name": "Kind"
-    "type": "int"
-  - "name": "Value"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "unsigned int adjustFixupValue(unsigned int, uint64_t)"
-- "name": "_ZNK12_GLOBAL__N_13$_110getSubArchEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "StringRef (anonymous namespace)::$_1::getSubArch(const struct void *)"
-"language": "c++"
-"project": "keystone"
-"target_name": "fuzz_asm_systemz"
-"target_path": "/src/keystone/suite/fuzz/fuzz_asm_systemz.c"
-"test_files":
-- "test_file_path": "/src/keystone/samples/sample.c"
+functions:
+- name: _ZNK12_GLOBAL__N_13$_110getSubArchEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: StringRef (anonymous namespace)::$_1::getSubArch(const struct void *)
+- name: ks_arch_supported
+  params:
+  - name: arch
+    type: int
+  return_type: bool
+  signature: bool ks_arch_supported(ks_arch)
+- name: _ZNK12_GLOBAL__N_13$_47getNameEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: StringRef (anonymous namespace)::$_4::getName(const struct void *)
+- name: _ZNK12_GLOBAL__N_13$_37getNameEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: StringRef (anonymous namespace)::$_3::getName(const struct void *)
+- name: _ZNK12_GLOBAL__N_114SystemZOperand5isMemENS_10MemoryKindENS_12RegisterKindE
+  params:
+  - name: this
+    type: 'bool '
+  - name: MemKind
+    type: int
+  - name: RegKind
+    type: int
+  return_type: bool
+  signature: bool (anonymous namespace)::SystemZOperand::isMem(DW_TAG_enumeration_typeMemoryKind,
+    DW_TAG_enumeration_typeRegisterKind)
+- name: _ZN12_GLOBAL__N_115ELFObjectWriter5resetEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void (anonymous namespace)::ELFObjectWriter::reset()
+language: c++
+project: keystone
+target_name: fuzz_asm_systemz
+target_path: /src/keystone/suite/fuzz/fuzz_asm_systemz.c
+test_files:
+- test_file_path: /src/keystone/samples/sample.c

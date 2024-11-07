@@ -1,108 +1,63 @@
-"functions":
-- "name": "fxInt64Sub"
-  "params":
-  - "name": "the"
-    "type": "bool "
-  - "name": "host"
-    "type": "bool "
-  - "name": "offset"
-    "type": "int"
-  - "name": "slot"
-    "type": "bool "
-  - "name": "endian"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void fxInt64Sub(txMachine *, txSlot *, txInteger, txSlot *, int)"
-- "name": "fxInt64CompareExchange"
-  "params":
-  - "name": "the"
-    "type": "bool "
-  - "name": "host"
-    "type": "bool "
-  - "name": "offset"
-    "type": "int"
-  - "name": "slot"
-    "type": "bool "
-  - "name": "endian"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void fxInt64CompareExchange(txMachine *, txSlot *, txInteger, txSlot *, int)"
-- "name": "fxAwaitImport"
-  "params":
-  - "name": "the"
-    "type": "bool "
-  - "name": "defaultFlag"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void fxAwaitImport(txMachine *, txBoolean)"
-- "name": "fxInt64Xor"
-  "params":
-  - "name": "the"
-    "type": "bool "
-  - "name": "host"
-    "type": "bool "
-  - "name": "offset"
-    "type": "int"
-  - "name": "slot"
-    "type": "bool "
-  - "name": "endian"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void fxInt64Xor(txMachine *, txSlot *, txInteger, txSlot *, int)"
-- "name": "fxLoadModulesFulfilled"
-  "params":
-  - "name": "the"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fxLoadModulesFulfilled(txMachine *)"
-- "name": "fxImportNow"
-  "params":
-  - "name": "the"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fxImportNow(txMachine *)"
-- "name": "fxDemarshall"
-  "params":
-  - "name": "the"
-    "type": "bool "
-  - "name": "theData"
-    "type": "bool "
-  - "name": "alien"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void fxDemarshall(txMachine *, void *, txBoolean)"
-- "name": "yaml_emitter_dump"
-  "params":
-  - "name": "emitter"
-    "type": "bool "
-  - "name": "document"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int yaml_emitter_dump(yaml_emitter_t *, yaml_document_t *)"
-- "name": "fxImport"
-  "params":
-  - "name": "the"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fxImport(txMachine *)"
-- "name": "fxLoadModulesRejected"
-  "params":
-  - "name": "the"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fxLoadModulesRejected(txMachine *)"
-"language": "c"
-"project": "xs"
-"target_name": "xst_jsonparse"
-"target_path": "/src/moddable/xs/tools/xstFuzz.c"
-"test_files":
-- "test_file_path": "/src/moddable/examples/js/xs-in-c/rectangle.c"
-- "test_file_path": "/src/moddable/examples/js/repl/replcore.c"
-- "test_file_path": "/src/moddable/tools/testmc/hosttest.c"
-- "test_file_path": "/src/moddable/examples/pins/audioout/http-stream/calculatePower.c"
-- "test_file_path": "/src/moddable/examples/io/spi/display-ili9341/display.c"
-- "test_file_path": "/src/moddable/examples/pins/audioout/http-stream/wavstreamer.c"
-- "test_file_path": "/src/moddable/tools/test262/_262.c"
-- "test_file_path": "/src/moddable/examples/network/wifi/webConfigWifi/main.c"
-- "test_file_path": "/src/moddable/examples/js/repl/win/repl.c"
-- "test_file_path": "/src/moddable/examples/js/views/accessView.c"
+functions:
+- name: fxImportNow
+  params:
+  - name: the
+    type: 'bool '
+  return_type: void
+  signature: void fxImportNow(txMachine *)
+- name: fxLoadModulesFulfilled
+  params:
+  - name: the
+    type: 'bool '
+  return_type: void
+  signature: void fxLoadModulesFulfilled(txMachine *)
+- name: fxInt64CompareExchange
+  params:
+  - name: the
+    type: 'bool '
+  - name: host
+    type: 'bool '
+  - name: offset
+    type: int
+  - name: slot
+    type: 'bool '
+  - name: endian
+    type: int
+  return_type: void
+  signature: void fxInt64CompareExchange(txMachine *, txSlot *, txInteger, txSlot
+    *, int)
+- name: yaml_emitter_dump
+  params:
+  - name: emitter
+    type: 'bool '
+  - name: document
+    type: 'bool '
+  return_type: int
+  signature: int yaml_emitter_dump(yaml_emitter_t *, yaml_document_t *)
+- name: fxDemarshall
+  params:
+  - name: the
+    type: 'bool '
+  - name: theData
+    type: 'bool '
+  - name: alien
+    type: int
+  return_type: void
+  signature: void fxDemarshall(txMachine *, void *, txBoolean)
+- name: fxLoadModulesRejected
+  params:
+  - name: the
+    type: 'bool '
+  return_type: void
+  signature: void fxLoadModulesRejected(txMachine *)
+language: c
+project: xs
+target_name: xst_jsonparse
+target_path: /src/moddable/xs/tools/xstFuzz.c
+test_files:
+- test_file_path: /src/moddable/examples/js/repl/replcore.c
+- test_file_path: /src/moddable/examples/pins/audioout/http-stream/wavstreamer.c
+- test_file_path: /src/moddable/tools/testmc/hosttest.c
+- test_file_path: /src/moddable/examples/io/spi/display-ili9341/display.c
+- test_file_path: /src/moddable/examples/network/wifi/webConfigWifi/main.c
+- test_file_path: /src/moddable/examples/js/xs-in-c/rectangle.c

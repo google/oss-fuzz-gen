@@ -1,15 +1,11 @@
-"language": "c"
-"project": "mpv"
-"target_name": "fuzzer_json"
-"target_path": "/src/mpv/fuzzers/fuzzer_json.c"
-"test_files":
-- "test_file_path": "/src/mpv/test/scale_test.c"
-- "test_file_path": "/src/mpv/test/repack.c"
-- "test_file_path": "/src/mpv/test/paths.c"
-- "test_file_path": "/src/mpv/test/libmpv_lifetime.c"
-- "test_file_path": "/src/mpv/test/format.c"
-- "test_file_path": "/src/mpv/test/json.c"
-- "test_file_path": "/src/mpv/test/timer.c"
-- "test_file_path": "/src/mpv/test/chmap.c"
-- "test_file_path": "/src/mpv/test/language.c"
-- "test_file_path": "/src/mpv/test/codepoint_width.c"
+language: c
+project: mpv
+target_name: fuzzer_json
+target_path: /src/mpv/fuzzers/fuzzer_json.c
+test_files:
+- test_file_path: /src/mpv/test/repack.c
+- test_file_path: /src/mpv/test/chmap.c
+- test_file_path: /src/mpv/test/timer.c
+- test_file_path: /src/mpv/test/format.c
+- test_file_path: /src/mpv/test/libmpv_lifetime.c
+- test_file_path: /src/mpv/test/scale_test.c

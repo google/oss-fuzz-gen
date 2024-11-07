@@ -1,116 +1,76 @@
-"functions":
-- "name": "ppc64_v3_get_phys_page_debug"
-  "params":
-  - "name": "cpu"
-    "type": "bool "
-  - "name": "eaddr"
-    "type": "size_t"
-  "return_type": "size_t"
-  "signature": "hwaddr ppc64_v3_get_phys_page_debug(PowerPCCPU *, vaddr)"
-- "name": "ppc_hash64_handle_mmu_fault"
-  "params":
-  - "name": "cpu"
-    "type": "bool "
-  - "name": "eaddr"
-    "type": "size_t"
-  - "name": "rwx"
-    "type": "int"
-  - "name": "mmu_idx"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int ppc_hash64_handle_mmu_fault(PowerPCCPU *, vaddr, int, int)"
-- "name": "s390_store_status"
-  "params":
-  - "name": "cpu"
-    "type": "bool "
-  - "name": "addr"
-    "type": "size_t"
-  - "name": "store_arch"
-    "type": "bool"
-  "return_type": "int"
-  "signature": "int s390_store_status(S390CPU *, hwaddr, bool)"
-- "name": "decNumberExp"
-  "params":
-  - "name": "res"
-    "type": "bool "
-  - "name": "rhs"
-    "type": "bool "
-  - "name": "set"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "decNumber * decNumberExp(decNumber *, const decNumber *, decContext *)"
-- "name": "decNumberLog10"
-  "params":
-  - "name": "res"
-    "type": "bool "
-  - "name": "rhs"
-    "type": "bool "
-  - "name": "set"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "decNumber * decNumberLog10(decNumber *, const decNumber *, decContext *)"
-- "name": "decNumberLn"
-  "params":
-  - "name": "res"
-    "type": "bool "
-  - "name": "rhs"
-    "type": "bool "
-  - "name": "set"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "decNumber * decNumberLn(decNumber *, const decNumber *, decContext *)"
-- "name": "decNumberPower"
-  "params":
-  - "name": "res"
-    "type": "bool "
-  - "name": "lhs"
-    "type": "bool "
-  - "name": "rhs"
-    "type": "bool "
-  - "name": "set"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "decNumber * decNumberPower(decNumber *, const decNumber *, const decNumber *, decContext *)"
-- "name": "decNumberSquareRoot"
-  "params":
-  - "name": "res"
-    "type": "bool "
-  - "name": "rhs"
-    "type": "bool "
-  - "name": "set"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "decNumber * decNumberSquareRoot(decNumber *, const decNumber *, decContext *)"
-- "name": "ppc64_v3_handle_mmu_fault"
-  "params":
-  - "name": "cpu"
-    "type": "bool "
-  - "name": "eaddr"
-    "type": "size_t"
-  - "name": "rwx"
-    "type": "int"
-  - "name": "mmu_idx"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int ppc64_v3_handle_mmu_fault(PowerPCCPU *, vaddr, int, int)"
-- "name": "do_restart_interrupt"
-  "params":
-  - "name": "env"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void do_restart_interrupt(CPUS390XState *)"
-"language": "c++"
-"project": "unicorn"
-"target_name": "fuzz_emu_m68k_be"
-"target_path": "/src/unicorn/tests/fuzz/fuzz_emu_m68k_be.c"
-"test_files":
-- "test_file_path": "/src/unicorn/tests/regress/006-qemu__fatal__illegal_instruction__0421___00040026.c"
-- "test_file_path": "/src/unicorn/samples/sample_tricore.c"
-- "test_file_path": "/src/unicorn/tests/regress/00opcode_uc_crash.c"
-- "test_file_path": "/src/unicorn/tests/benchmarks/cow/benchmark.c"
-- "test_file_path": "/src/unicorn/samples/sample_x86_32_gdt_and_seg_regs.c"
-- "test_file_path": "/src/unicorn/tests/regress/block_test.c"
-- "test_file_path": "/src/unicorn/samples/sample_sparc.c"
-- "test_file_path": "/src/unicorn/tests/unit/test_ctl.c"
-- "test_file_path": "/src/unicorn/tests/regress/sparc_jump_to_zero.c"
-- "test_file_path": "/src/unicorn/tests/regress/emu_stop_in_hook_overrun.c"
+functions:
+- name: ppc64_v3_get_phys_page_debug
+  params:
+  - name: cpu
+    type: 'bool '
+  - name: eaddr
+    type: size_t
+  return_type: size_t
+  signature: hwaddr ppc64_v3_get_phys_page_debug(PowerPCCPU *, vaddr)
+- name: decNumberLn
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberLn(decNumber *, const decNumber *, decContext *)
+- name: decNumberPower
+  params:
+  - name: res
+    type: 'bool '
+  - name: lhs
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberPower(decNumber *, const decNumber *, const decNumber
+    *, decContext *)
+- name: decNumberSquareRoot
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberSquareRoot(decNumber *, const decNumber *, decContext
+    *)
+- name: decNumberExp
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberExp(decNumber *, const decNumber *, decContext *)
+- name: ppc64_v3_handle_mmu_fault
+  params:
+  - name: cpu
+    type: 'bool '
+  - name: eaddr
+    type: size_t
+  - name: rwx
+    type: int
+  - name: mmu_idx
+    type: int
+  return_type: int
+  signature: int ppc64_v3_handle_mmu_fault(PowerPCCPU *, vaddr, int, int)
+language: c++
+project: unicorn
+target_name: fuzz_emu_m68k_be
+target_path: /src/unicorn/tests/fuzz/fuzz_emu_m68k_be.c
+test_files:
+- test_file_path: /src/unicorn/tests/unit/test_ctl.c
+- test_file_path: /src/unicorn/samples/sample_sparc.c
+- test_file_path: /src/unicorn/tests/regress/block_test.c
+- test_file_path: /src/unicorn/tests/benchmarks/cow/benchmark.c
+- test_file_path: /src/unicorn/samples/sample_tricore.c
+- test_file_path: /src/unicorn/samples/sample_x86_32_gdt_and_seg_regs.c

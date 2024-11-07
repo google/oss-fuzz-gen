@@ -1,96 +1,65 @@
-"functions":
-- "name": "smux_accept"
-  "params":
-  - "name": "sd"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int smux_accept(int)"
-- "name": "smux_snmp_process"
-  "params":
-  - "name": "exact"
-    "type": "int"
-  - "name": "objid"
-    "type": "bool "
-  - "name": "len"
-    "type": "bool "
-  - "name": "return_len"
-    "type": "bool "
-  - "name": "return_type"
-    "type": "bool "
-  - "name": "sd"
-    "type": "int"
-  "return_type": "void"
-  "signature": "u_char * smux_snmp_process(int, oid *, size_t *, size_t *, u_char *, int)"
-- "name": "snmp_shutdown"
-  "params":
-  - "name": "type"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void snmp_shutdown(const char *)"
-- "name": "netsnmp_query_getnext"
-  "params":
-  - "name": "list"
-    "type": "bool "
-  - "name": "session"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int netsnmp_query_getnext(netsnmp_variable_list *, netsnmp_session *)"
-- "name": "agent_check_and_process"
-  "params":
-  - "name": "block"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int agent_check_and_process(int)"
-- "name": "snmpv3_probe_contextEngineID_rfc5343"
-  "params":
-  - "name": "slp"
-    "type": "bool "
-  - "name": "session"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int snmpv3_probe_contextEngineID_rfc5343(struct session_list *, netsnmp_session *)"
-- "name": "netsnmp_query_walk"
-  "params":
-  - "name": "list"
-    "type": "bool "
-  - "name": "session"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int netsnmp_query_walk(netsnmp_variable_list *, netsnmp_session *)"
-- "name": "smux_process"
-  "params":
-  - "name": "fd"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int smux_process(int)"
-- "name": "netsnmp_query_set"
-  "params":
-  - "name": "list"
-    "type": "bool "
-  - "name": "session"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int netsnmp_query_set(netsnmp_variable_list *, netsnmp_session *)"
-- "name": "netsnmp_query_get"
-  "params":
-  - "name": "list"
-    "type": "bool "
-  - "name": "session"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int netsnmp_query_get(netsnmp_variable_list *, netsnmp_session *)"
-"language": "c++"
-"project": "net-snmp"
-"target_name": "snmp_pdu_parse_fuzzer"
-"target_path": "/src/net-snmp/testing/fuzzing/snmp_pdu_parse_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/net-snmp/testing/fulltests/unit-tests/T103pdu_parse_clib.c"
-- "test_file_path": "/src/net-snmp/testing/fulltests/unit-tests/T007inet_pton_clib.c"
-- "test_file_path": "/src/net-snmp/testing/fulltests/unit-tests/T005table_dataset_cagentlib.c"
-- "test_file_path": "/src/net-snmp/testing/fulltests/unit-tests/T004snmp_enum_clib.c"
-- "test_file_path": "/src/net-snmp/testing/fulltests/unit-tests/T023varbind_set_var_value_int8_clib.c"
-- "test_file_path": "/src/net-snmp/agent/mibgroup/testhandler.c"
-- "test_file_path": "/src/net-snmp/testing/fulltests/unit-tests/T021netsnmp_sprint_realloc_no_type_clib.c"
-- "test_file_path": "/src/net-snmp/testing/fulltests/snmpv3/T050etimetest_capp.c"
-- "test_file_path": "/src/net-snmp/testing/fulltests/unit-tests/T017strtoull_clib.c"
-- "test_file_path": "/src/net-snmp/agent/mibgroup/examples/example.c"
+functions:
+- name: smux_snmp_process
+  params:
+  - name: exact
+    type: int
+  - name: objid
+    type: 'bool '
+  - name: len
+    type: 'bool '
+  - name: return_len
+    type: 'bool '
+  - name: return_type
+    type: 'bool '
+  - name: sd
+    type: int
+  return_type: void
+  signature: u_char * smux_snmp_process(int, oid *, size_t *, size_t *, u_char *,
+    int)
+- name: snmp_shutdown
+  params:
+  - name: type
+    type: 'bool '
+  return_type: void
+  signature: void snmp_shutdown(const char *)
+- name: netsnmp_query_getnext
+  params:
+  - name: list
+    type: 'bool '
+  - name: session
+    type: 'bool '
+  return_type: int
+  signature: int netsnmp_query_getnext(netsnmp_variable_list *, netsnmp_session *)
+- name: netsnmp_query_walk
+  params:
+  - name: list
+    type: 'bool '
+  - name: session
+    type: 'bool '
+  return_type: int
+  signature: int netsnmp_query_walk(netsnmp_variable_list *, netsnmp_session *)
+- name: netsnmp_query_set
+  params:
+  - name: list
+    type: 'bool '
+  - name: session
+    type: 'bool '
+  return_type: int
+  signature: int netsnmp_query_set(netsnmp_variable_list *, netsnmp_session *)
+- name: smux_accept
+  params:
+  - name: sd
+    type: int
+  return_type: int
+  signature: int smux_accept(int)
+language: c++
+project: net-snmp
+target_name: snmp_pdu_parse_fuzzer
+target_path: /src/net-snmp/testing/fuzzing/snmp_pdu_parse_fuzzer.c
+test_files:
+- test_file_path: /src/net-snmp/agent/mibgroup/testhandler.c
+- test_file_path: /src/net-snmp/agent/mibgroup/examples/example.c
+- test_file_path: /src/net-snmp/testing/fulltests/snmpv3/T050etimetest_capp.c
+- test_file_path: /src/net-snmp/testing/fulltests/unit-tests/T017strtoull_clib.c
+- test_file_path: /src/net-snmp/testing/fulltests/unit-tests/T023varbind_set_var_value_int8_clib.c
+- test_file_path: /src/net-snmp/testing/fulltests/unit-tests/T021netsnmp_sprint_realloc_no_type_clib.c

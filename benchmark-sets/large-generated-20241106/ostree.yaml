@@ -1,15 +1,11 @@
-"language": "c"
-"project": "ostree"
-"target_name": "fuzz-repo"
-"target_path": "/src/fuzz-repo.c"
-"test_files":
-- "test_file_path": "/src/ostree/tests/test-bsdiff.c"
-- "test_file_path": "/src/ostree/tests/test-repo-finder-avahi.c"
-- "test_file_path": "/src/ostree/tests/test-bloom.c"
-- "test_file_path": "/src/ostree/libglnx/tests/testing-helper.c"
-- "test_file_path": "/src/ostree/rust-bindings/sys/tests/layout.c"
-- "test_file_path": "/src/ostree/tests/test-kargs.c"
-- "test_file_path": "/src/ostree/tests/test-mock-gio.c"
-- "test_file_path": "/src/ostree/libglnx/tests/test-libglnx-fdio.c"
-- "test_file_path": "/src/ostree/tests/test-rfc2616-dates.c"
-- "test_file_path": "/src/ostree/rust-bindings/sys/tests/constant.c"
+language: c
+project: ostree
+target_name: fuzz-repo
+target_path: /src/fuzz-repo.c
+test_files:
+- test_file_path: /src/ostree/rust-bindings/sys/tests/layout.c
+- test_file_path: /src/ostree/tests/test-bloom.c
+- test_file_path: /src/ostree/rust-bindings/sys/tests/constant.c
+- test_file_path: /src/ostree/tests/test-rfc2616-dates.c
+- test_file_path: /src/ostree/libglnx/tests/test-libglnx-fdio.c
+- test_file_path: /src/ostree/tests/test-repo-finder-avahi.c

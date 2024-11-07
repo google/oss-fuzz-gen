@@ -1,108 +1,71 @@
-"functions":
-- "name": "ZydisFormatterBasePrintDecorator"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "ZyanStatus ZydisFormatterBasePrintDecorator(const ZydisFormatter *, ZydisFormatterBuffer *, ZydisFormatterContext *, ZydisDecorator)"
-- "name": "ZydisFormatterBasePrintPrefixes"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "ZyanStatus ZydisFormatterBasePrintPrefixes(const ZydisFormatter *, ZydisFormatterBuffer *, ZydisFormatterContext *)"
-- "name": "ZydisFormatterIntelFormatOperandMEM"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "ZyanStatus ZydisFormatterIntelFormatOperandMEM(const ZydisFormatter *, ZydisFormatterBuffer *, ZydisFormatterContext *)"
-- "name": "ZydisEncoderNopFill"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "ZyanStatus ZydisEncoderNopFill(void *, ZyanUSize)"
-- "name": "ZydisFormatterBufferRemember"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "ZyanStatus ZydisFormatterBufferRemember(const ZydisFormatterBuffer *, ZyanUPointer *)"
-- "name": "ZydisFormatterIntelFormatInstructionMASM"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "ZyanStatus ZydisFormatterIntelFormatInstructionMASM(const ZydisFormatter *, ZydisFormatterBuffer *, ZydisFormatterContext *)"
-- "name": "ZydisFormatterBufferRestore"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "ZyanStatus ZydisFormatterBufferRestore(ZydisFormatterBuffer *, ZyanUPointer)"
-- "name": "ZydisFormatterBufferGetToken"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "ZyanStatus ZydisFormatterBufferGetToken(const ZydisFormatterBuffer *, ZydisFormatterTokenConst **)"
-- "name": "ZydisFormatterSetHook"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "ZyanStatus ZydisFormatterSetHook(ZydisFormatter *, ZydisFormatterFunction, const void **)"
-- "name": "ZydisFormatterBufferGetString"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "ZyanStatus ZydisFormatterBufferGetString(ZydisFormatterBuffer *, ZyanString **)"
-"language": "c"
-"project": "zydis"
-"target_name": "ZydisFuzzReEncoding"
-"target_path": "/src/zydis/tools/ZydisFuzzShared.c"
-"test_files":
-- "test_file_path": "/src/zydis/examples/EncodeMov.c"
-- "test_file_path": "/src/zydis/dependencies/zycore/examples/Vector.c"
-- "test_file_path": "/src/zydis/examples/EncodeFromScratch.c"
-- "test_file_path": "/src/zydis/examples/Formatter02.c"
-- "test_file_path": "/src/zydis/dependencies/zycore/examples/String.c"
-- "test_file_path": "/src/zydis/dependencies/zycore/tests/String.cpp"
-- "test_file_path": "/src/zydis/examples/DisassembleSimple.c"
-- "test_file_path": "/src/zydis/examples/ZydisPerfTest.c"
-- "test_file_path": "/src/zydis/examples/Disassemble.c"
-- "test_file_path": "/src/zydis/examples/ZydisWinKernel.c"
+functions:
+- name: ZydisFormatterBufferGetToken
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: ZyanStatus ZydisFormatterBufferGetToken(const ZydisFormatterBuffer *,
+    ZydisFormatterTokenConst **)
+- name: ZydisFormatterIntelFormatInstructionMASM
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: ZyanStatus ZydisFormatterIntelFormatInstructionMASM(const ZydisFormatter
+    *, ZydisFormatterBuffer *, ZydisFormatterContext *)
+- name: ZydisEncoderNopFill
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: ZyanStatus ZydisEncoderNopFill(void *, ZyanUSize)
+- name: ZydisFormatterBufferRemember
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: ZyanStatus ZydisFormatterBufferRemember(const ZydisFormatterBuffer *,
+    ZyanUPointer *)
+- name: ZydisFormatterIntelFormatOperandMEM
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: ZyanStatus ZydisFormatterIntelFormatOperandMEM(const ZydisFormatter *,
+    ZydisFormatterBuffer *, ZydisFormatterContext *)
+- name: ZydisFormatterBasePrintPrefixes
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: ZyanStatus ZydisFormatterBasePrintPrefixes(const ZydisFormatter *, ZydisFormatterBuffer
+    *, ZydisFormatterContext *)
+language: c
+project: zydis
+target_name: ZydisFuzzReEncoding
+target_path: /src/zydis/tools/ZydisFuzzShared.c
+test_files:
+- test_file_path: /src/zydis/examples/ZydisWinKernel.c
+- test_file_path: /src/zydis/examples/DisassembleSimple.c
+- test_file_path: /src/zydis/examples/EncodeFromScratch.c
+- test_file_path: /src/zydis/examples/EncodeMov.c
+- test_file_path: /src/zydis/dependencies/zycore/examples/Vector.c
+- test_file_path: /src/zydis/examples/Disassemble.c

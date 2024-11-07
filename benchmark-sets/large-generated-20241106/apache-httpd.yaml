@@ -1,15 +1,11 @@
-"language": "c"
-"project": "apache-httpd"
-"target_name": "fuzz_preq"
-"target_path": "/src/fuzz_preq.c"
-"test_files":
-- "test_file_path": "/src/pcre2/src/pcre2test.c"
-- "test_file_path": "/src/httpd/modules/test/mod_optional_hook_import.c"
-- "test_file_path": "/src/httpd/test/unit/authn.c"
-- "test_file_path": "/src/httpd/modules/test/mod_optional_hook_export.c"
-- "test_file_path": "/src/expat-2.4.1/examples/elements.c"
-- "test_file_path": "/src/expat-2.4.1/tests/benchmark/benchmark.c"
-- "test_file_path": "/src/httpd/test/unit/mod_auth_digest.c"
-- "test_file_path": "/src/httpd/modules/examples/mod_example_ipc.c"
-- "test_file_path": "/src/httpd/test/test_limits.c"
-- "test_file_path": "/src/httpd/test/unit/base64.c"
+language: c
+project: apache-httpd
+target_name: fuzz_preq
+target_path: /src/fuzz_preq.c
+test_files:
+- test_file_path: /src/httpd/test/unit/authn.c
+- test_file_path: /src/httpd/test/test_limits.c
+- test_file_path: /src/httpd/modules/test/mod_optional_hook_import.c
+- test_file_path: /src/httpd/modules/test/mod_optional_hook_export.c
+- test_file_path: /src/httpd/test/unit/mod_auth_digest.c
+- test_file_path: /src/pcre2/src/pcre2test.c

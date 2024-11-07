@@ -1,78 +1,51 @@
-"functions":
-- "name": "freerdp_connect"
-  "params":
-  - "name": "instance"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "BOOL freerdp_connect(freerdp *)"
-- "name": "nego_connect"
-  "params":
-  - "name": "nego"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "BOOL nego_connect(rdpNego *)"
-- "name": "client_auto_reconnect"
-  "params":
-  - "name": "instance"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "BOOL client_auto_reconnect(freerdp *)"
-- "name": "freerdp_check_fds"
-  "params":
-  - "name": "instance"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "BOOL freerdp_check_fds(freerdp *)"
-- "name": "rdp_check_fds"
-  "params":
-  - "name": "rdp"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int rdp_check_fds(rdpRdp *)"
-- "name": "freerdp_check_event_handles"
-  "params":
-  - "name": "context"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "BOOL freerdp_check_event_handles(rdpContext *)"
-- "name": "freerdp_certificate_new_from_pem"
-  "params":
-  - "name": "pem"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "rdpCertificate * freerdp_certificate_new_from_pem(const char *)"
-- "name": "freerdp_reconnect"
-  "params":
-  - "name": "instance"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "BOOL freerdp_reconnect(freerdp *)"
-- "name": "rdp_client_connect"
-  "params":
-  - "name": "rdp"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "BOOL rdp_client_connect(rdpRdp *)"
-- "name": "client_auto_reconnect_ex"
-  "params":
-  - "name": "instance"
-    "type": "bool "
-  - "name": "window_events"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "BOOL client_auto_reconnect_ex(freerdp *, DW_TAG_subroutine_typeInfinite loop *)"
-"language": "c"
-"project": "freerdp"
-"target_name": "TestFuzzCryptoCertificateDataSetPEM"
-"target_path": "/src/FreeRDP/libfreerdp/core/test/TestFuzzCryptoCertificateDataSetPEM.c"
-"test_files":
-- "test_file_path": "/src/FreeRDP/winpr/libwinpr/ncrypt/test/TestNCryptSmartcard.c"
-- "test_file_path": "/src/FreeRDP/client/SDL/common/test/TestSDLPrefs.cpp"
-- "test_file_path": "/src/FreeRDP/winpr/libwinpr/sspi/test/TestSchannel.c"
-- "test_file_path": "/src/FreeRDP/winpr/libwinpr/path/test/TestPathIsUNCEx.c"
-- "test_file_path": "/src/FreeRDP/libfreerdp/primitives/test/TestPrimitivesSign.c"
-- "test_file_path": "/src/FreeRDP/winpr/libwinpr/io/test/TestIoGetOverlappedResult.c"
-- "test_file_path": "/src/FreeRDP/winpr/libwinpr/path/test/TestPathCchSkipRoot.c"
-- "test_file_path": "/src/FreeRDP/winpr/libwinpr/comm/test/TestSerialChars.c"
-- "test_file_path": "/src/FreeRDP/winpr/libwinpr/path/test/TestPathShell.c"
-- "test_file_path": "/src/FreeRDP/winpr/libwinpr/utils/test/TestQueue.c"
+functions:
+- name: client_auto_reconnect_ex
+  params:
+  - name: instance
+    type: 'bool '
+  - name: window_events
+    type: 'bool '
+  return_type: int
+  signature: BOOL client_auto_reconnect_ex(freerdp *, DW_TAG_subroutine_typeInfinite
+    loop *)
+- name: freerdp_connect
+  params:
+  - name: instance
+    type: 'bool '
+  return_type: int
+  signature: BOOL freerdp_connect(freerdp *)
+- name: freerdp_check_event_handles
+  params:
+  - name: context
+    type: 'bool '
+  return_type: int
+  signature: BOOL freerdp_check_event_handles(rdpContext *)
+- name: rdp_client_connect
+  params:
+  - name: rdp
+    type: 'bool '
+  return_type: int
+  signature: BOOL rdp_client_connect(rdpRdp *)
+- name: freerdp_check_fds
+  params:
+  - name: instance
+    type: 'bool '
+  return_type: int
+  signature: BOOL freerdp_check_fds(freerdp *)
+- name: client_auto_reconnect
+  params:
+  - name: instance
+    type: 'bool '
+  return_type: int
+  signature: BOOL client_auto_reconnect(freerdp *)
+language: c
+project: freerdp
+target_name: TestFuzzCryptoCertificateDataSetPEM
+target_path: /src/FreeRDP/libfreerdp/core/test/TestFuzzCryptoCertificateDataSetPEM.c
+test_files:
+- test_file_path: /src/FreeRDP/client/SDL/common/test/TestSDLPrefs.cpp
+- test_file_path: /src/FreeRDP/libfreerdp/primitives/test/TestPrimitivesSign.c
+- test_file_path: /src/FreeRDP/winpr/libwinpr/ncrypt/test/TestNCryptSmartcard.c
+- test_file_path: /src/FreeRDP/winpr/libwinpr/path/test/TestPathIsUNCEx.c
+- test_file_path: /src/FreeRDP/winpr/libwinpr/sspi/test/TestSchannel.c
+- test_file_path: /src/FreeRDP/winpr/libwinpr/path/test/TestPathCchSkipRoot.c

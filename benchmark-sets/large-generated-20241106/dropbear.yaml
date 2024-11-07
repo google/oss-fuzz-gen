@@ -1,64 +1,61 @@
-"functions":
-- "name": "mp_prime_next_prime"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "mp_err mp_prime_next_prime(mp_int *, int, int)"
-- "name": "mp_lcm"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "mp_err mp_lcm(const mp_int *, const mp_int *, mp_int *)"
-- "name": "send_msg_userauth_banner"
-  "params":
-  - "name": "banner"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void send_msg_userauth_banner(const buffer *)"
-- "name": "loadidentityfile"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "warnfail"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void loadidentityfile(const char *, int)"
-- "name": "ltc_ecc_projective_add_point"
-  "params":
-  - "name": "P"
-    "type": "bool "
-  - "name": "Q"
-    "type": "bool "
-  - "name": "R"
-    "type": "bool "
-  - "name": "modulus"
-    "type": "bool "
-  - "name": "mp"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ltc_ecc_projective_add_point(ecc_point *, ecc_point *, ecc_point *, void *, void *)"
-"language": "c++"
-"project": "dropbear"
-"target_name": "fuzzer-pubkey"
-"target_path": "/src/dropbear/fuzz/fuzzer-pubkey.c"
-"test_files":
-- "test_file_path": "/src/dropbear/libtomcrypt/src/modes/lrw/lrw_test.c"
-- "test_file_path": "/src/dropbear/libtomcrypt/notes/etc/whirltest.c"
-- "test_file_path": "/src/dropbear/libtomcrypt/testprof/mac_test.c"
-- "test_file_path": "/src/dropbear/libtomcrypt/testprof/base64_test.c"
-- "test_file_path": "/src/dropbear/libtomcrypt/demos/test.c"
-- "test_file_path": "/src/dropbear/libtomcrypt/tests/pkcs_1_emsa_test.c"
-- "test_file_path": "/src/dropbear/libtomcrypt/src/mac/blake2/blake2smac_test.c"
-- "test_file_path": "/src/dropbear/libtomcrypt/tests/common.c"
-- "test_file_path": "/src/dropbear/libtomcrypt/src/stream/sober128/sober128_test.c"
-- "test_file_path": "/src/dropbear/libtomcrypt/tests/katja_test.c"
+functions:
+- name: mp_prime_next_prime
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: int
+  signature: mp_err mp_prime_next_prime(mp_int *, int, int)
+- name: mp_lcm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: mp_err mp_lcm(const mp_int *, const mp_int *, mp_int *)
+- name: send_msg_userauth_banner
+  params:
+  - name: banner
+    type: 'bool '
+  return_type: void
+  signature: void send_msg_userauth_banner(const buffer *)
+- name: loadidentityfile
+  params:
+  - name: filename
+    type: 'bool '
+  - name: warnfail
+    type: int
+  return_type: void
+  signature: void loadidentityfile(const char *, int)
+- name: ltc_ecc_projective_add_point
+  params:
+  - name: P
+    type: 'bool '
+  - name: Q
+    type: 'bool '
+  - name: R
+    type: 'bool '
+  - name: modulus
+    type: 'bool '
+  - name: mp
+    type: 'bool '
+  return_type: int
+  signature: int ltc_ecc_projective_add_point(ecc_point *, ecc_point *, ecc_point
+    *, void *, void *)
+language: c++
+project: dropbear
+target_name: fuzzer-pubkey
+target_path: /src/dropbear/fuzz/fuzzer-pubkey.c
+test_files:
+- test_file_path: /src/dropbear/libtomcrypt/notes/etc/whirltest.c
+- test_file_path: /src/dropbear/libtomcrypt/testprof/mac_test.c
+- test_file_path: /src/dropbear/libtomcrypt/demos/test.c
+- test_file_path: /src/dropbear/libtomcrypt/tests/katja_test.c
+- test_file_path: /src/dropbear/libtomcrypt/tests/pkcs_1_emsa_test.c
+- test_file_path: /src/dropbear/libtomcrypt/src/modes/lrw/lrw_test.c

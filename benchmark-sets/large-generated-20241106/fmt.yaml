@@ -1,136 +1,78 @@
-"functions":
-- "name": "_ZN3fmt3v1119report_system_errorEiPKc"
-  "params":
-  - "name": "error_code"
-    "type": "int"
-  - "name": "message"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fmt::v11::report_system_error(int, const char *)"
-- "name": "_ZN3fmt3v116detail10fwrite_allEPKvmP8_IO_FILE"
-  "params":
-  - "name": "ptr"
-    "type": "bool "
-  - "name": "count"
-    "type": "size_t"
-  - "name": "stream"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fmt::v11::detail::fwrite_all(const void *, size_t, FILE *)"
-- "name": "_ZN3fmt3v118vprintlnEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
-  "params":
-  - "name": "f"
-    "type": "bool "
-  - "name": "fmt"
-    "type": "bool "
-  - "name": "args"
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fmt::v11::vprintln(FILE *, string_view, format_args)"
-- "name": "_ZN3fmt3v116detail17format_error_codeERNS1_6bufferIcEEiNS0_17basic_string_viewIcEE"
-  "params":
-  - "name": "out"
-    "type": "bool "
-  - "name": "error_code"
-    "type": "int"
-  - "name": "message"
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void fmt::v11::detail::format_error_code(buffer<char> &, int, string_view)"
-- "name": "_ZN3fmt3v116detail5printEP8_IO_FILENS0_17basic_string_viewIcEE"
-  "params":
-  - "name": "f"
-    "type": "bool "
-  - "name": "text"
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void fmt::v11::detail::print(FILE *, string_view)"
-- "name": "_ZN3fmt3v1113vsystem_errorEiNS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
-  "params":
-  - "name": "error_code"
-    "type": "bool "
-  - "name": "fmt"
-    "type": "int"
-  - "name": "args"
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "system_error fmt::v11::vsystem_error(int, string_view, format_args)"
-- "name": "_ZN3fmt3v1119format_system_errorERNS0_6detail6bufferIcEEiPKc"
-  "params":
-  - "name": "out"
-    "type": "bool "
-  - "name": "error_code"
-    "type": "int"
-  - "name": "message"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fmt::v11::format_system_error(buffer<char> &, int, const char *)"
-- "name": "_ZN3fmt3v116vprintENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
-  "params":
-  - "name": "fmt"
-    "type": "bool "
-  - "name": "args"
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fmt::v11::vprint(string_view, format_args)"
-- "name": "_ZN3fmt3v116vprintEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
-  "params":
-  - "name": "f"
-    "type": "bool "
-  - "name": "fmt"
-    "type": "bool "
-  - "name": "args"
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fmt::v11::vprint(FILE *, string_view, format_args)"
-- "name": "_ZN3fmt3v1115vprint_bufferedEP8_IO_FILENS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE"
-  "params":
-  - "name": "f"
-    "type": "bool "
-  - "name": "fmt"
-    "type": "bool "
-  - "name": "args"
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fmt::v11::vprint_buffered(FILE *, string_view, format_args)"
-"language": "c++"
-"project": "fmt"
-"target_name": "float-fuzzer"
-"target_path": "/src/fmt/test/fuzzing/float.cc"
-"test_files":
-- "test_file_path": "/src/fmt/test/args-test.cc"
-- "test_file_path": "/src/fmt/test/assert-test.cc"
-- "test_file_path": "/src/fmt/test/format-test.cc"
-- "test_file_path": "/src/fmt/test/perf-sanity.cc"
-- "test_file_path": "/src/fmt/test/compile-fp-test.cc"
-- "test_file_path": "/src/fmt/test/add-subdirectory-test/main.cc"
-- "test_file_path": "/src/fmt/test/gtest-extra.cc"
-- "test_file_path": "/src/fmt/test/color-test.cc"
-- "test_file_path": "/src/fmt/test/no-builtin-types-test.cc"
-- "test_file_path": "/src/fmt/test/gtest-extra-test.cc"
+functions:
+- name: _ZN3fmt3v116detail10fwrite_allEPKvmP8_IO_FILE
+  params:
+  - name: ptr
+    type: 'bool '
+  - name: count
+    type: size_t
+  - name: stream
+    type: 'bool '
+  return_type: void
+  signature: void fmt::v11::detail::fwrite_all(const void *, size_t, FILE *)
+- name: _ZN3fmt3v1119format_system_errorERNS0_6detail6bufferIcEEiPKc
+  params:
+  - name: out
+    type: 'bool '
+  - name: error_code
+    type: int
+  - name: message
+    type: 'bool '
+  return_type: void
+  signature: void fmt::v11::format_system_error(buffer<char> &, int, const char *)
+- name: _ZN3fmt3v116detail5printEP8_IO_FILENS0_17basic_string_viewIcEE
+  params:
+  - name: f
+    type: 'bool '
+  - name: text
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void fmt::v11::detail::print(FILE *, string_view)
+- name: _ZN3fmt3v1113vsystem_errorEiNS0_17basic_string_viewIcEENS0_17basic_format_argsINS0_7contextEEE
+  params:
+  - name: error_code
+    type: 'bool '
+  - name: fmt
+    type: int
+  - name: args
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: system_error fmt::v11::vsystem_error(int, string_view, format_args)
+- name: _ZN3fmt3v1119report_system_errorEiPKc
+  params:
+  - name: error_code
+    type: int
+  - name: message
+    type: 'bool '
+  return_type: void
+  signature: void fmt::v11::report_system_error(int, const char *)
+- name: _ZN3fmt3v116detail17format_error_codeERNS1_6bufferIcEEiNS0_17basic_string_viewIcEE
+  params:
+  - name: out
+    type: 'bool '
+  - name: error_code
+    type: int
+  - name: message
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void fmt::v11::detail::format_error_code(buffer<char> &, int, string_view)
+language: c++
+project: fmt
+target_name: float-fuzzer
+target_path: /src/fmt/test/fuzzing/float.cc
+test_files:
+- test_file_path: /src/fmt/test/assert-test.cc
+- test_file_path: /src/fmt/test/color-test.cc
+- test_file_path: /src/fmt/test/compile-fp-test.cc
+- test_file_path: /src/fmt/test/no-builtin-types-test.cc
+- test_file_path: /src/fmt/test/perf-sanity.cc
+- test_file_path: /src/fmt/test/format-test.cc

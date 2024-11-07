@@ -1,122 +1,80 @@
-"functions":
-- "name": "_ZN3re23RE2C2ENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void re2::RE2::RE2(string_view)"
-- "name": "_ZNK3re211FilteredRE214SlowFirstMatchENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int re2::FilteredRE2::SlowFirstMatch(string_view)"
-- "name": "_ZNK3re211FilteredRE210FirstMatchENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEERKNS1_6vectorIiNS1_9allocatorIiEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int re2::FilteredRE2::FirstMatch(string_view, const vector<int, std::__1::allocator<int> > &)"
-- "name": "_ZN3re23RE27ExtractENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEERKS0_S5_PNS1_12basic_stringIcS4_NS1_9allocatorIcEEEE"
-  "params":
-  - "name": "text"
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool re2::RE2::Extract(string_view, const RE2 &, string_view, string *)"
-- "name": "_ZN3re23RE2C2ERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void re2::RE2::RE2(const string &)"
-- "name": "_ZN3re24Prog14BuildEntireDFAENS0_9MatchKindERKNSt3__18functionIFvPKibEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int re2::Prog::BuildEntireDFA(DW_TAG_enumeration_typeMatchKind, const DFAStateCallback &)"
-- "name": "_ZN4absl10SimpleAtodENSt3__117basic_string_viewIcNS0_11char_traitsIcEEEEPd"
-  "params":
-  - "name": "str"
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool absl::SimpleAtod(string_view, Nonnull<double *>)"
-- "name": "_ZN3re26Regexp14SimplifyRegexpENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEENS0_10ParseFlagsEPNS1_12basic_stringIcS4_NS1_9allocatorIcEEEEPNS_12RegexpStatusE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool re2::Regexp::SimplifyRegexp(string_view, DW_TAG_enumeration_typeParseFlags, string *, RegexpStatus *)"
-- "name": "_ZN3re211FilteredRE2aSEOS0_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "FilteredRE2 & re2::FilteredRE2::operator=(DW_TAG_rvalue_reference_typeFilteredRE2)"
-- "name": "_ZN3re23RE2C2EPKc"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void re2::RE2::RE2(const char *)"
-"language": "c++"
-"project": "re2"
-"target_name": "re2_fuzzer"
-"target_path": "/src/re2/re2/fuzzing/re2_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/re2/testinstall.cc"
-- "test_file_path": "/src/re2/re2/testing/exhaustive_tester.cc"
-- "test_file_path": "/src/re2/re2/testing/charclass_test.cc"
-- "test_file_path": "/src/re2/re2/testing/exhaustive_test.cc"
-- "test_file_path": "/src/re2/re2/testing/regexp_benchmark.cc"
-- "test_file_path": "/src/re2/re2/testing/tester.cc"
-- "test_file_path": "/src/re2/re2/testing/dump.cc"
-- "test_file_path": "/src/re2/re2/testing/parse_test.cc"
-- "test_file_path": "/src/re2/re2/testing/mimics_pcre_test.cc"
-- "test_file_path": "/src/re2/re2/testing/compile_test.cc"
+functions:
+- name: _ZN4absl10SimpleAtodENSt3__117basic_string_viewIcNS0_11char_traitsIcEEEEPd
+  params:
+  - name: str
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool absl::SimpleAtod(string_view, Nonnull<double *>)
+- name: _ZN3re211FilteredRE2aSEOS0_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: FilteredRE2 & re2::FilteredRE2::operator=(DW_TAG_rvalue_reference_typeFilteredRE2)
+- name: _ZN3re26Regexp14SimplifyRegexpENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEENS0_10ParseFlagsEPNS1_12basic_stringIcS4_NS1_9allocatorIcEEEEPNS_12RegexpStatusE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool re2::Regexp::SimplifyRegexp(string_view, DW_TAG_enumeration_typeParseFlags,
+    string *, RegexpStatus *)
+- name: _ZN3re23RE2C2EPKc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void re2::RE2::RE2(const char *)
+- name: _ZNK3re211FilteredRE214SlowFirstMatchENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: int re2::FilteredRE2::SlowFirstMatch(string_view)
+- name: _ZN3re23RE27ExtractENSt3__117basic_string_viewIcNS1_11char_traitsIcEEEERKS0_S5_PNS1_12basic_stringIcS4_NS1_9allocatorIcEEEE
+  params:
+  - name: text
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool re2::RE2::Extract(string_view, const RE2 &, string_view, string
+    *)
+language: c++
+project: re2
+target_name: re2_fuzzer
+target_path: /src/re2/re2/fuzzing/re2_fuzzer.cc
+test_files:
+- test_file_path: /src/re2/re2/testing/compile_test.cc
+- test_file_path: /src/re2/re2/testing/exhaustive_tester.cc
+- test_file_path: /src/re2/re2/testing/mimics_pcre_test.cc
+- test_file_path: /src/re2/testinstall.cc
+- test_file_path: /src/re2/re2/testing/dump.cc
+- test_file_path: /src/re2/re2/testing/regexp_benchmark.cc

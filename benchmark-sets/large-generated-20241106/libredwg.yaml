@@ -1,15 +1,11 @@
-"language": "c"
-"project": "libredwg"
-"target_name": "llvmfuzz"
-"target_path": "/src/libredwg/examples/llvmfuzz.c"
-"test_files":
-- "test_file_path": "/src/libredwg/test/unit-testing/layoutprintconfig.c"
-- "test_file_path": "/src/libredwg/test/unit-testing/assocedgechamferactionbody.c"
-- "test_file_path": "/src/libredwg/test/unit-testing/pdfdefinition.c"
-- "test_file_path": "/src/libredwg/test/unit-testing/motionpath.c"
-- "test_file_path": "/src/libredwg/test/unit-testing/trace.c"
-- "test_file_path": "/src/libredwg/test/unit-testing/imagedef_reactor.c"
-- "test_file_path": "/src/libredwg/test/unit-testing/blockflipparameter.c"
-- "test_file_path": "/src/libredwg/test/unit-testing/leader.c"
-- "test_file_path": "/src/libredwg/test/unit-testing/proxy_object.c"
-- "test_file_path": "/src/libredwg/examples/bits.c"
+language: c
+project: libredwg
+target_name: llvmfuzz
+target_path: /src/libredwg/examples/llvmfuzz.c
+test_files:
+- test_file_path: /src/libredwg/test/unit-testing/proxy_object.c
+- test_file_path: /src/libredwg/test/unit-testing/imagedef_reactor.c
+- test_file_path: /src/libredwg/test/unit-testing/blockflipparameter.c
+- test_file_path: /src/libredwg/test/unit-testing/pdfdefinition.c
+- test_file_path: /src/libredwg/test/unit-testing/leader.c
+- test_file_path: /src/libredwg/test/unit-testing/motionpath.c

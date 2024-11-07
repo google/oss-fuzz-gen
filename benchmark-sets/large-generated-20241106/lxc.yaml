@@ -1,15 +1,11 @@
-"language": "c"
-"project": "lxc"
-"target_name": "fuzz-lxc-cgroup-init"
-"target_path": "/src/lxc/src/tests/fuzz-lxc-cgroup-init.c"
-"test_files":
-- "test_file_path": "/src/lxc/src/tests/cgpath.c"
-- "test_file_path": "/src/lxc/src/tests/console_log.c"
-- "test_file_path": "/src/lxc/src/tests/arch_parse.c"
-- "test_file_path": "/src/lxc/src/tests/saveconfig.c"
-- "test_file_path": "/src/lxc/src/tests/lxc_raw_clone.c"
-- "test_file_path": "/src/lxc/src/tests/sys_mixed.c"
-- "test_file_path": "/src/lxc/src/tests/get_item.c"
-- "test_file_path": "/src/lxc/src/tests/proc_pid.c"
-- "test_file_path": "/src/lxc/src/tests/api_reboot.c"
-- "test_file_path": "/src/lxc/src/tests/may_control.c"
+language: c
+project: lxc
+target_name: fuzz-lxc-cgroup-init
+target_path: /src/lxc/src/tests/fuzz-lxc-cgroup-init.c
+test_files:
+- test_file_path: /src/lxc/src/tests/saveconfig.c
+- test_file_path: /src/lxc/src/tests/may_control.c
+- test_file_path: /src/lxc/src/tests/cgpath.c
+- test_file_path: /src/lxc/src/tests/proc_pid.c
+- test_file_path: /src/lxc/src/tests/lxc_raw_clone.c
+- test_file_path: /src/lxc/src/tests/arch_parse.c

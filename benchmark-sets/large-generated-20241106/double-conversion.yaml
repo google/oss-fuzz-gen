@@ -1,118 +1,73 @@
-"functions":
-- "name": "_ZN17double_conversion6Bignum13SubtractTimesERKS0_i"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "other"
-    "type": "bool "
-  - "name": "factor"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void double_conversion::Bignum::SubtractTimes(const Bignum &, const int)"
-- "name": "_ZN17double_conversion6StrtofENS_6VectorIKcEEi"
-  "params":
-  - "name": "buffer"
-    "type": "bool "
-  - "name": "exponent"
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "float"
-  "signature": "float double_conversion::Strtof(Vector<const char>, int)"
-- "name": "_ZN17double_conversion6Bignum11PlusCompareERKS0_S2_S2_"
-  "params":
-  - "name": "a"
-    "type": "bool "
-  - "name": "b"
-    "type": "bool "
-  - "name": "c"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int double_conversion::Bignum::PlusCompare(const Bignum &, const Bignum &, const Bignum &)"
-- "name": "_ZN17double_conversion6StrtodENS_6VectorIKcEEi"
-  "params":
-  - "name": "buffer"
-    "type": "bool "
-  - "name": "exponent"
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "double"
-  "signature": "double double_conversion::Strtod(Vector<const char>, int)"
-- "name": "_ZN17double_conversion6Bignum21DivideModuloIntBignumERKS0_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "other"
-    "type": "bool "
-  "return_type": "short"
-  "signature": "uint16_t double_conversion::Bignum::DivideModuloIntBignum(const Bignum &)"
-- "name": "_ZN17double_conversion6Bignum14SubtractBignumERKS0_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "other"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void double_conversion::Bignum::SubtractBignum(const Bignum &)"
-- "name": "_ZNK17double_conversion23StringToDoubleConverter13StringToFloatEPKciPi"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "buffer"
-    "type": "bool "
-  - "name": "length"
-    "type": "int"
-  - "name": "processed_characters_count"
-    "type": "bool "
-  "return_type": "float"
-  "signature": "float double_conversion::StringToDoubleConverter::StringToFloat(const char *, int, int *)"
-- "name": "_ZNK17double_conversion23StringToDoubleConverter13StringToFloatEPKtiPi"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "buffer"
-    "type": "bool "
-  - "name": "length"
-    "type": "int"
-  - "name": "processed_characters_count"
-    "type": "bool "
-  "return_type": "float"
-  "signature": "float double_conversion::StringToDoubleConverter::StringToFloat(const uc16 *, int, int *)"
-- "name": "_ZN17double_conversion6Bignum17AssignPowerUInt16Eti"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "base"
-    "type": "short"
-  - "name": "power_exponent"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void double_conversion::Bignum::AssignPowerUInt16(uint16_t, const int)"
-- "name": "_ZNK17double_conversion23StringToDoubleConverter14StringToDoubleEPKtiPi"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "buffer"
-    "type": "bool "
-  - "name": "length"
-    "type": "int"
-  - "name": "processed_characters_count"
-    "type": "bool "
-  "return_type": "double"
-  "signature": "double double_conversion::StringToDoubleConverter::StringToDouble(const uc16 *, int, int *)"
-"language": "c++"
-"project": "double-conversion"
-"target_name": "string_to_double_fuzzer"
-"target_path": "/src/string_to_double_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/double-conversion/test/cctest/test-ieee.cc"
-- "test_file_path": "/src/double-conversion/test/cctest/test-dtoa.cc"
-- "test_file_path": "/src/double-conversion/test/cctest/gay-precision.cc"
-- "test_file_path": "/src/double-conversion/test/cctest/test-fixed-dtoa.cc"
-- "test_file_path": "/src/double-conversion/test/cctest/test-fast-dtoa.cc"
-- "test_file_path": "/src/double-conversion/test/cctest/cctest.cc"
-- "test_file_path": "/src/double-conversion/test/cctest/gay-shortest.cc"
-- "test_file_path": "/src/double-conversion/test/cctest/test-diy-fp.cc"
-- "test_file_path": "/src/double-conversion/test/cctest/gay-shortest-single.cc"
-- "test_file_path": "/src/double-conversion/test/cctest/test-conversions.cc"
+functions:
+- name: _ZN17double_conversion6Bignum13SubtractTimesERKS0_i
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  - name: factor
+    type: int
+  return_type: void
+  signature: void double_conversion::Bignum::SubtractTimes(const Bignum &, const int)
+- name: _ZN17double_conversion6StrtodENS_6VectorIKcEEi
+  params:
+  - name: buffer
+    type: 'bool '
+  - name: exponent
+    type: int
+  - name: ''
+    type: int
+  return_type: double
+  signature: double double_conversion::Strtod(Vector<const char>, int)
+- name: _ZN17double_conversion6Bignum14SubtractBignumERKS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: void
+  signature: void double_conversion::Bignum::SubtractBignum(const Bignum &)
+- name: _ZN17double_conversion6Bignum11PlusCompareERKS0_S2_S2_
+  params:
+  - name: a
+    type: 'bool '
+  - name: b
+    type: 'bool '
+  - name: c
+    type: 'bool '
+  return_type: int
+  signature: int double_conversion::Bignum::PlusCompare(const Bignum &, const Bignum
+    &, const Bignum &)
+- name: _ZNK17double_conversion23StringToDoubleConverter14StringToDoubleEPKtiPi
+  params:
+  - name: this
+    type: 'bool '
+  - name: buffer
+    type: 'bool '
+  - name: length
+    type: int
+  - name: processed_characters_count
+    type: 'bool '
+  return_type: double
+  signature: double double_conversion::StringToDoubleConverter::StringToDouble(const
+    uc16 *, int, int *)
+- name: _ZN17double_conversion6Bignum21DivideModuloIntBignumERKS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: short
+  signature: uint16_t double_conversion::Bignum::DivideModuloIntBignum(const Bignum
+    &)
+language: c++
+project: double-conversion
+target_name: string_to_double_fuzzer
+target_path: /src/string_to_double_fuzzer.cc
+test_files:
+- test_file_path: /src/double-conversion/test/cctest/test-ieee.cc
+- test_file_path: /src/double-conversion/test/cctest/gay-shortest-single.cc
+- test_file_path: /src/double-conversion/test/cctest/test-dtoa.cc
+- test_file_path: /src/double-conversion/test/cctest/gay-precision.cc
+- test_file_path: /src/double-conversion/test/cctest/cctest.cc
+- test_file_path: /src/double-conversion/test/cctest/test-fixed-dtoa.cc

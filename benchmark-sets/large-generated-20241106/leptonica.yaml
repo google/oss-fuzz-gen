@@ -1,152 +1,96 @@
-"functions":
-- "name": "png_image_finish_read"
-  "params":
-  - "name": "image"
-    "type": "bool "
-  - "name": "background"
-    "type": "bool "
-  - "name": "buffer"
-    "type": "bool "
-  - "name": "row_stride"
-    "type": "int"
-  - "name": "colormap"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int png_image_finish_read(png_imagep, png_const_colorp, void *, png_int_32, void *)"
-- "name": "WebPEncodeLosslessRGB"
-  "params":
-  - "name": "in"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "bps"
-    "type": "int"
-  - "name": "out"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t WebPEncodeLosslessRGB(const uint8_t *, int, int, int, uint8_t **)"
-- "name": "WebPEncodeBGRA"
-  "params":
-  - "name": "in"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "bps"
-    "type": "int"
-  - "name": "q"
-    "type": "float"
-  - "name": "out"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t WebPEncodeBGRA(const uint8_t *, int, int, int, float, uint8_t **)"
-- "name": "pixRead"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "PIX * pixRead(const char *)"
-- "name": "WebPEncodeBGR"
-  "params":
-  - "name": "in"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "bps"
-    "type": "int"
-  - "name": "q"
-    "type": "float"
-  - "name": "out"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t WebPEncodeBGR(const uint8_t *, int, int, int, float, uint8_t **)"
-- "name": "WebPEncodeRGB"
-  "params":
-  - "name": "in"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "bps"
-    "type": "int"
-  - "name": "q"
-    "type": "float"
-  - "name": "out"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t WebPEncodeRGB(const uint8_t *, int, int, int, float, uint8_t **)"
-- "name": "TIFFFdOpen"
-  "params":
-  - "name": "fd"
-    "type": "int"
-  - "name": "name"
-    "type": "bool "
-  - "name": "mode"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "TIFF * TIFFFdOpen(int, const char *, const char *)"
-- "name": "jbGetComponents"
-  "params":
-  - "name": "pixs"
-    "type": "bool "
-  - "name": "components"
-    "type": "int"
-  - "name": "maxwidth"
-    "type": "int"
-  - "name": "maxheight"
-    "type": "int"
-  - "name": "pboxad"
-    "type": "bool "
-  - "name": "ppixad"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "l_ok jbGetComponents(PIX *, l_int32, l_int32, l_int32, BOXA **, PIXA **)"
-- "name": "WebPEncodeLosslessBGRA"
-  "params":
-  - "name": "in"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "bps"
-    "type": "int"
-  - "name": "out"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t WebPEncodeLosslessBGRA(const uint8_t *, int, int, int, uint8_t **)"
-- "name": "WebPEncodeLosslessBGR"
-  "params":
-  - "name": "in"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "bps"
-    "type": "int"
-  - "name": "out"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t WebPEncodeLosslessBGR(const uint8_t *, int, int, int, uint8_t **)"
-"language": "c++"
-"project": "leptonica"
-"target_name": "jpegiostub_fuzzer"
-"target_path": "/src/leptonica/prog/fuzzing/jpegiostub_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/leptonica/prog/recogtest7.c"
-- "test_file_path": "/src/leptonica/prog/recogtest1.c"
-- "test_file_path": "/src/leptonica/prog/messagetest.c"
-- "test_file_path": "/src/leptonica/prog/warpertest.c"
-- "test_file_path": "/src/leptonica/prog/autogentest2.c"
-- "test_file_path": "/src/leptonica/prog/dewarptest3.c"
-- "test_file_path": "/src/leptonica/prog/misctest2.c"
-- "test_file_path": "/src/leptonica/prog/sheartest.c"
-- "test_file_path": "/src/leptonica/prog/partifytest.c"
-- "test_file_path": "/src/leptonica/prog/percolatetest.c"
+functions:
+- name: WebPEncodeBGRA
+  params:
+  - name: in
+    type: 'bool '
+  - name: w
+    type: int
+  - name: h
+    type: int
+  - name: bps
+    type: int
+  - name: q
+    type: float
+  - name: out
+    type: 'bool '
+  return_type: size_t
+  signature: size_t WebPEncodeBGRA(const uint8_t *, int, int, int, float, uint8_t
+    **)
+- name: pixRead
+  params:
+  - name: filename
+    type: 'bool '
+  return_type: void
+  signature: PIX * pixRead(const char *)
+- name: png_image_finish_read
+  params:
+  - name: image
+    type: 'bool '
+  - name: background
+    type: 'bool '
+  - name: buffer
+    type: 'bool '
+  - name: row_stride
+    type: int
+  - name: colormap
+    type: 'bool '
+  return_type: int
+  signature: int png_image_finish_read(png_imagep, png_const_colorp, void *, png_int_32,
+    void *)
+- name: WebPEncodeLosslessBGRA
+  params:
+  - name: in
+    type: 'bool '
+  - name: w
+    type: int
+  - name: h
+    type: int
+  - name: bps
+    type: int
+  - name: out
+    type: 'bool '
+  return_type: size_t
+  signature: size_t WebPEncodeLosslessBGRA(const uint8_t *, int, int, int, uint8_t
+    **)
+- name: WebPEncodeRGB
+  params:
+  - name: in
+    type: 'bool '
+  - name: w
+    type: int
+  - name: h
+    type: int
+  - name: bps
+    type: int
+  - name: q
+    type: float
+  - name: out
+    type: 'bool '
+  return_type: size_t
+  signature: size_t WebPEncodeRGB(const uint8_t *, int, int, int, float, uint8_t **)
+- name: WebPEncodeLosslessBGR
+  params:
+  - name: in
+    type: 'bool '
+  - name: w
+    type: int
+  - name: h
+    type: int
+  - name: bps
+    type: int
+  - name: out
+    type: 'bool '
+  return_type: size_t
+  signature: size_t WebPEncodeLosslessBGR(const uint8_t *, int, int, int, uint8_t
+    **)
+language: c++
+project: leptonica
+target_name: jpegiostub_fuzzer
+target_path: /src/leptonica/prog/fuzzing/jpegiostub_fuzzer.cc
+test_files:
+- test_file_path: /src/leptonica/prog/warpertest.c
+- test_file_path: /src/leptonica/prog/autogentest2.c
+- test_file_path: /src/leptonica/prog/messagetest.c
+- test_file_path: /src/leptonica/prog/partifytest.c
+- test_file_path: /src/leptonica/prog/recogtest7.c
+- test_file_path: /src/leptonica/prog/sheartest.c

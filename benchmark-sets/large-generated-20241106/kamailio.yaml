@@ -1,70 +1,54 @@
-"functions":
-- "name": "fix_actions"
-  "params":
-  - "name": "a"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int fix_actions(struct action *)"
-- "name": "tcp_init_children"
-  "params":
-  - "name": "woneinit"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int tcp_init_children(int *)"
-- "name": "tcp_receive_loop"
-  "params":
-  - "name": "unix_sock"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void tcp_receive_loop(int)"
-- "name": "pp_ifexp_eval"
-  "params":
-  - "name": "exval"
-    "type": "bool "
-  - "name": "exlen"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void pp_ifexp_eval(char *, int)"
-- "name": "handle_io"
-  "params":
-  - "name": "fm"
-    "type": "bool "
-  - "name": "events"
-    "type": "short"
-  - "name": "idx"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int handle_io(struct fd_map *, short, int)"
-- "name": "fix_expr"
-  "params":
-  - "name": "exp"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int fix_expr(struct expr *)"
-- "name": "fix_switch"
-  "params":
-  - "name": "t"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int fix_switch(struct action *)"
-- "name": "fix_rval_expr"
-  "params":
-  - "name": "p"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int fix_rval_expr(void *)"
-"language": "c"
-"project": "kamailio"
-"target_name": "fuzz_uri"
-"target_path": "/src/kamailio/misc/fuzz/fuzz_uri.c"
-"test_files":
-- "test_file_path": "/src/kamailio/test/misc/code/udp.c"
-- "test_file_path": "/src/kamailio/src/modules/ims_ipsec_pcscf/spi_list_tests.c"
-- "test_file_path": "/src/kamailio/test/misc/code/sock_disc.c"
-- "test_file_path": "/src/kamailio/test/misc/code/mips_lock.c"
-- "test_file_path": "/src/kamailio/src/modules/janssonrpcc/unit_tests/netstring.c"
-- "test_file_path": "/src/kamailio/src/modules/janssonrpcc/unit_tests/seatest/seatest.c"
-- "test_file_path": "/src/kamailio/test/misc/code/re_test.c"
-- "test_file_path": "/src/kamailio/test/mod_httpapitest/httpapitest.c"
-- "test_file_path": "/src/kamailio/src/modules/ndb_cassandra/test-cpp/cassandra_constants.cpp"
-- "test_file_path": "/src/kamailio/src/modules/ndb_cassandra/test-cpp/Cassandra.cpp"
+functions:
+- name: handle_io
+  params:
+  - name: fm
+    type: 'bool '
+  - name: events
+    type: short
+  - name: idx
+    type: int
+  return_type: int
+  signature: int handle_io(struct fd_map *, short, int)
+- name: fix_switch
+  params:
+  - name: t
+    type: 'bool '
+  return_type: int
+  signature: int fix_switch(struct action *)
+- name: tcp_init_children
+  params:
+  - name: woneinit
+    type: 'bool '
+  return_type: int
+  signature: int tcp_init_children(int *)
+- name: tcp_receive_loop
+  params:
+  - name: unix_sock
+    type: int
+  return_type: void
+  signature: void tcp_receive_loop(int)
+- name: fix_actions
+  params:
+  - name: a
+    type: 'bool '
+  return_type: int
+  signature: int fix_actions(struct action *)
+- name: pp_ifexp_eval
+  params:
+  - name: exval
+    type: 'bool '
+  - name: exlen
+    type: int
+  return_type: void
+  signature: void pp_ifexp_eval(char *, int)
+language: c
+project: kamailio
+target_name: fuzz_uri
+target_path: /src/kamailio/misc/fuzz/fuzz_uri.c
+test_files:
+- test_file_path: /src/kamailio/test/misc/code/re_test.c
+- test_file_path: /src/kamailio/test/misc/code/udp.c
+- test_file_path: /src/kamailio/src/modules/ims_ipsec_pcscf/spi_list_tests.c
+- test_file_path: /src/kamailio/test/misc/code/sock_disc.c
+- test_file_path: /src/kamailio/test/mod_httpapitest/httpapitest.c
+- test_file_path: /src/kamailio/test/misc/code/mips_lock.c

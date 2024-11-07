@@ -1,15 +1,11 @@
-"language": "c++"
-"project": "zlib-ng"
-"target_name": "fuzzer_checksum"
-"target_path": "/src/zlib-ng/test/fuzz/fuzzer_checksum.c"
-"test_files":
-- "test_file_path": "/src/zlib-ng/test/test_deflate_hash_head_0.cc"
-- "test_file_path": "/src/zlib-ng/test/test_gzio.cc"
-- "test_file_path": "/src/zlib-ng/test/test_compare256.cc"
-- "test_file_path": "/src/zlib-ng/test/test_main.cc"
-- "test_file_path": "/src/zlib-ng/test/test_version.cc"
-- "test_file_path": "/src/zlib-ng/test/gh1235.c"
-- "test_file_path": "/src/zlib-ng/test/test_raw.cc"
-- "test_file_path": "/src/zlib-ng/test/benchmarks/benchmark_compress.cc"
-- "test_file_path": "/src/zlib-ng/test/test_small_window.cc"
-- "test_file_path": "/src/zlib-ng/test/test_small_buffers.cc"
+language: c++
+project: zlib-ng
+target_name: fuzzer_checksum
+target_path: /src/zlib-ng/test/fuzz/fuzzer_checksum.c
+test_files:
+- test_file_path: /src/zlib-ng/test/test_small_buffers.cc
+- test_file_path: /src/zlib-ng/test/test_gzio.cc
+- test_file_path: /src/zlib-ng/test/test_raw.cc
+- test_file_path: /src/zlib-ng/test/test_small_window.cc
+- test_file_path: /src/zlib-ng/test/test_compare256.cc
+- test_file_path: /src/zlib-ng/test/test_main.cc

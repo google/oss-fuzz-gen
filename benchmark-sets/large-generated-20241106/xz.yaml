@@ -1,102 +1,62 @@
-"functions":
-- "name": "lzma_raw_decoder"
-  "params":
-  - "name": "strm"
-    "type": "bool "
-  - "name": "options"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "lzma_ret lzma_raw_decoder(lzma_stream *, const lzma_filter *)"
-- "name": "lzma_lzma_encoder_memusage"
-  "params":
-  - "name": "options"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "uint64_t lzma_lzma_encoder_memusage(const void *)"
-- "name": "lzma_raw_encoder"
-  "params":
-  - "name": "strm"
-    "type": "bool "
-  - "name": "filters"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "lzma_ret lzma_raw_encoder(lzma_stream *, const lzma_filter *)"
-- "name": "lzma_index_cat"
-  "params":
-  - "name": "dest"
-    "type": "bool "
-  - "name": "src"
-    "type": "bool "
-  - "name": "allocator"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "lzma_ret lzma_index_cat(DW_TAG_restrict_typelzma_index *, DW_TAG_restrict_typelzma_index *, const lzma_allocator *)"
-- "name": "lzma_index_dup"
-  "params":
-  - "name": "src"
-    "type": "bool "
-  - "name": "allocator"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "lzma_index * lzma_index_dup(const lzma_index *, const lzma_allocator *)"
-- "name": "lzma_block_encoder"
-  "params":
-  - "name": "strm"
-    "type": "bool "
-  - "name": "block"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "lzma_ret lzma_block_encoder(lzma_stream *, lzma_block *)"
-- "name": "lzma_mf_bt3_find"
-  "params":
-  - "name": "mf"
-    "type": "bool "
-  - "name": "matches"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "uint32_t lzma_mf_bt3_find(lzma_mf *, lzma_match *)"
-- "name": "lzma_lzma_encoder_init"
-  "params":
-  - "name": "next"
-    "type": "bool "
-  - "name": "allocator"
-    "type": "bool "
-  - "name": "filters"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "lzma_ret lzma_lzma_encoder_init(lzma_next_coder *, const lzma_allocator *, const lzma_filter_info *)"
-- "name": "lzma_index_buffer_encode"
-  "params":
-  - "name": "i"
-    "type": "bool "
-  - "name": "out"
-    "type": "bool "
-  - "name": "out_pos"
-    "type": "bool "
-  - "name": "out_size"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "lzma_ret lzma_index_buffer_encode(const lzma_index *, uint8_t *, size_t *, size_t)"
-- "name": "lzma_block_decoder"
-  "params":
-  - "name": "strm"
-    "type": "bool "
-  - "name": "block"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "lzma_ret lzma_block_decoder(lzma_stream *, lzma_block *)"
-"language": "c++"
-"project": "xz"
-"target_name": "fuzz_decode_alone"
-"target_path": "/src/xz/tests/ossfuzz/fuzz_decode_alone.c"
-"test_files":
-- "test_file_path": "/src/xz/tests/test_index_hash.c"
-- "test_file_path": "/src/xz/tests/test_microlzma.c"
-- "test_file_path": "/src/xz/tests/test_filter_flags.c"
-- "test_file_path": "/src/xz/tests/test_hardware.c"
-- "test_file_path": "/src/xz/tests/test_block_header.c"
-- "test_file_path": "/src/xz/tests/test_check.c"
-- "test_file_path": "/src/xz/tests/test_stream_flags.c"
-- "test_file_path": "/src/xz/debug/testfilegen-arm64.c"
-- "test_file_path": "/src/xz/doc/examples/04_compress_easy_mt.c"
-- "test_file_path": "/src/xz/tests/test_filter_str.c"
+functions:
+- name: lzma_block_encoder
+  params:
+  - name: strm
+    type: 'bool '
+  - name: block
+    type: 'bool '
+  return_type: int
+  signature: lzma_ret lzma_block_encoder(lzma_stream *, lzma_block *)
+- name: lzma_raw_encoder
+  params:
+  - name: strm
+    type: 'bool '
+  - name: filters
+    type: 'bool '
+  return_type: int
+  signature: lzma_ret lzma_raw_encoder(lzma_stream *, const lzma_filter *)
+- name: lzma_lzma_encoder_memusage
+  params:
+  - name: options
+    type: 'bool '
+  return_type: size_t
+  signature: uint64_t lzma_lzma_encoder_memusage(const void *)
+- name: lzma_index_cat
+  params:
+  - name: dest
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  - name: allocator
+    type: 'bool '
+  return_type: int
+  signature: lzma_ret lzma_index_cat(DW_TAG_restrict_typelzma_index *, DW_TAG_restrict_typelzma_index
+    *, const lzma_allocator *)
+- name: lzma_index_dup
+  params:
+  - name: src
+    type: 'bool '
+  - name: allocator
+    type: 'bool '
+  return_type: void
+  signature: lzma_index * lzma_index_dup(const lzma_index *, const lzma_allocator
+    *)
+- name: lzma_raw_decoder
+  params:
+  - name: strm
+    type: 'bool '
+  - name: options
+    type: 'bool '
+  return_type: int
+  signature: lzma_ret lzma_raw_decoder(lzma_stream *, const lzma_filter *)
+language: c++
+project: xz
+target_name: fuzz_decode_alone
+target_path: /src/xz/tests/ossfuzz/fuzz_decode_alone.c
+test_files:
+- test_file_path: /src/xz/tests/test_index_hash.c
+- test_file_path: /src/xz/tests/test_microlzma.c
+- test_file_path: /src/xz/tests/test_hardware.c
+- test_file_path: /src/xz/doc/examples/04_compress_easy_mt.c
+- test_file_path: /src/xz/tests/test_block_header.c
+- test_file_path: /src/xz/debug/testfilegen-arm64.c

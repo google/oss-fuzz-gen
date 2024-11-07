@@ -1,104 +1,58 @@
-"functions":
-- "name": "_ZN21ZMQCollectorInterface18startPacketPollingEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void ZMQCollectorInterface::startPacketPolling()"
-- "name": "_ZN13PcapInterface17processNextPacketEP4pcapii"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "pd"
-    "type": "bool "
-  - "name": "if_index"
-    "type": "int"
-  - "name": "datalink_type"
-    "type": "int"
-  "return_type": "bool"
-  "signature": "bool PcapInterface::processNextPacket(pcap_t *, int32_t, int)"
-- "name": "_ZN18ZMQParserInterface19parseSingleJSONFlowEP11json_objectj"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "o"
-    "type": "bool "
-  - "name": "source_id"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int ZMQParserInterface::parseSingleJSONFlow(json_object *, u_int32_t)"
-- "name": "_ZN18ZMQParserInterface18parseSingleTLVFlowEP15ndpi_serializerj"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "deserializer"
-    "type": "bool "
-  - "name": "source_id"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int ZMQParserInterface::parseSingleTLVFlow(ndpi_serializer *, u_int32_t)"
-- "name": "_ZN15ParserInterface11processFlowEP10ParsedFlow"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "zflow"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool ParserInterface::processFlow(ParsedFlow *)"
-- "name": "_ZN18ZMQParserInterface12parseTLVFlowEPKcijjPv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "payload"
-    "type": "bool "
-  - "name": "payload_size"
-    "type": "int"
-  - "name": "source_id"
-    "type": "int"
-  - "name": "msg_id"
-    "type": "int"
-  - "name": "data"
-    "type": "bool "
-  "return_type": "char"
-  "signature": "u_int8_t ZMQParserInterface::parseTLVFlow(const char *, int, u_int32_t, u_int32_t, void *)"
-- "name": "_ZN5Bloom6setBitEPc"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "str"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Bloom::setBit(char *)"
-- "name": "_ZN14DummyInterface18startPacketPollingEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void DummyInterface::startPacketPolling()"
-- "name": "_ZN13PcapInterface18startPacketPollingEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void PcapInterface::startPacketPolling()"
-- "name": "_ZN21ZMQCollectorInterface13collect_flowsEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void ZMQCollectorInterface::collect_flows()"
-"language": "c++"
-"project": "ntopng"
-"target_name": "fuzz_dissect_packet"
-"target_path": "/src/ntopng/fuzz/fuzz_dissect_packet.cpp"
-"test_files":
-- "test_file_path": "/src/ntopng/third-party/json-c/tests/test2.c"
-- "test_file_path": "/src/ntopng/third-party/json-c/tests/test_double_serializer.c"
-- "test_file_path": "/src/ntopng/third-party/json-c/tests/test_visit.c"
-- "test_file_path": "/src/ntopng/third-party/json-c/tests/test_null.c"
-- "test_file_path": "/src/ntopng/third-party/json-c/tests/parse_flags.c"
-- "test_file_path": "/src/ntopng/third-party/json-c/tests/test_util_file.c"
-- "test_file_path": "/src/ntopng/third-party/json-c/tests/test_set_serializer.c"
-- "test_file_path": "/src/ntopng/third-party/json-c/tests/test_set_value.c"
-- "test_file_path": "/src/ntopng/third-party/json-c/tests/test_parse.c"
-- "test_file_path": "/src/ntopng/third-party/json-c/tests/test_cast.c"
+functions:
+- name: _ZN5Bloom6setBitEPc
+  params:
+  - name: this
+    type: 'bool '
+  - name: str
+    type: 'bool '
+  return_type: void
+  signature: void Bloom::setBit(char *)
+- name: _ZN13PcapInterface17processNextPacketEP4pcapii
+  params:
+  - name: this
+    type: 'bool '
+  - name: pd
+    type: 'bool '
+  - name: if_index
+    type: int
+  - name: datalink_type
+    type: int
+  return_type: bool
+  signature: bool PcapInterface::processNextPacket(pcap_t *, int32_t, int)
+- name: _ZN21ZMQCollectorInterface18startPacketPollingEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void ZMQCollectorInterface::startPacketPolling()
+- name: _ZN14DummyInterface18startPacketPollingEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void DummyInterface::startPacketPolling()
+- name: _ZN15ParserInterface11processFlowEP10ParsedFlow
+  params:
+  - name: this
+    type: 'bool '
+  - name: zflow
+    type: 'bool '
+  return_type: bool
+  signature: bool ParserInterface::processFlow(ParsedFlow *)
+- name: _ZN21ZMQCollectorInterface13collect_flowsEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void ZMQCollectorInterface::collect_flows()
+language: c++
+project: ntopng
+target_name: fuzz_dissect_packet
+target_path: /src/ntopng/fuzz/fuzz_dissect_packet.cpp
+test_files:
+- test_file_path: /src/ntopng/third-party/json-c/tests/test_set_value.c
+- test_file_path: /src/ntopng/third-party/json-c/tests/test_set_serializer.c
+- test_file_path: /src/ntopng/third-party/json-c/tests/test_null.c
+- test_file_path: /src/ntopng/third-party/json-c/tests/test_parse.c
+- test_file_path: /src/ntopng/third-party/json-c/tests/test_cast.c
+- test_file_path: /src/ntopng/third-party/json-c/tests/test_visit.c

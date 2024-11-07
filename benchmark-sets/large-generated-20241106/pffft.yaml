@@ -1,6 +1,6 @@
-"language": "c++"
-"project": "pffft"
-"target_name": "pffft_complex_fuzzer"
-"target_path": "/src/pffft/pffft_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/pffft/test_pffft.c"
+language: c++
+project: pffft
+target_name: pffft_complex_fuzzer
+target_path: /src/pffft/pffft_fuzzer.cc
+test_files:
+- test_file_path: /src/pffft/test_pffft.c

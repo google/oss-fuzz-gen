@@ -1,96 +1,76 @@
-"functions":
-- "name": "janet_dobytes"
-  "params":
-  - "name": "env"
-    "type": "bool "
-  - "name": "bytes"
-    "type": "bool "
-  - "name": "len"
-    "type": "int"
-  - "name": "sourcePath"
-    "type": "bool "
-  - "name": "out"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int janet_dobytes(JanetTable *, const uint8_t *, int32_t, const char *, Janet *)"
-- "name": "janet_compile"
-  "params":
-  - "name": "source"
-    "type": "bool "
-  - "name": "env"
-    "type": "size_t"
-  - "name": "where"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "JanetCompileResult janet_compile(Janet, JanetTable *, const uint8_t *)"
-- "name": "janet_panic"
-  "params":
-  - "name": "message"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void janet_panic(const char *)"
-- "name": "janet_loop_fiber"
-  "params":
-  - "name": "fiber"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int janet_loop_fiber(JanetFiber *)"
-- "name": "janet_compile_lint"
-  "params":
-  - "name": "source"
-    "type": "bool "
-  - "name": "env"
-    "type": "size_t"
-  - "name": "where"
-    "type": "bool "
-  - "name": "lints"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "JanetCompileResult janet_compile_lint(Janet, JanetTable *, const uint8_t *, JanetArray *)"
-- "name": "janetc_value"
-  "params":
-  - "name": "opts"
-    "type": "bool "
-  - "name": "x"
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "JanetSlot janetc_value(JanetFopts, Janet)"
-- "name": "janet_dostring"
-  "params":
-  - "name": "env"
-    "type": "bool "
-  - "name": "str"
-    "type": "bool "
-  - "name": "sourcePath"
-    "type": "bool "
-  - "name": "out"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int janet_dostring(JanetTable *, const char *, const char *, Janet *)"
-- "name": "janetc_throwaway"
-  "params":
-  - "name": "opts"
-    "type": "bool "
-  - "name": "x"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void janetc_throwaway(JanetFopts, Janet)"
-"language": "c++"
-"project": "janet"
-"target_name": "fuzz_dostring"
-"target_path": "/src/janet/test/fuzzers/fuzz_dostring.c"
-"test_files":
-- "test_file_path": "/src/janet/src/boot/system_test.c"
-- "test_file_path": "/src/janet/examples/numarray/numarray.c"
-- "test_file_path": "/src/janet/test/amalg/main.c"
-- "test_file_path": "/src/janet/src/boot/buffer_test.c"
-- "test_file_path": "/src/janet/src/boot/array_test.c"
-- "test_file_path": "/src/janet/src/boot/table_test.c"
-- "test_file_path": "/src/janet/src/boot/number_test.c"
-- "test_file_path": "/src/janet/examples/ffi/so.c"
+functions:
+- name: janet_compile_lint
+  params:
+  - name: source
+    type: 'bool '
+  - name: env
+    type: size_t
+  - name: where
+    type: 'bool '
+  - name: lints
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: JanetCompileResult janet_compile_lint(Janet, JanetTable *, const uint8_t
+    *, JanetArray *)
+- name: janet_loop_fiber
+  params:
+  - name: fiber
+    type: 'bool '
+  return_type: int
+  signature: int janet_loop_fiber(JanetFiber *)
+- name: janet_compile
+  params:
+  - name: source
+    type: 'bool '
+  - name: env
+    type: size_t
+  - name: where
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: JanetCompileResult janet_compile(Janet, JanetTable *, const uint8_t *)
+- name: janet_dobytes
+  params:
+  - name: env
+    type: 'bool '
+  - name: bytes
+    type: 'bool '
+  - name: len
+    type: int
+  - name: sourcePath
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: int janet_dobytes(JanetTable *, const uint8_t *, int32_t, const char
+    *, Janet *)
+- name: janetc_value
+  params:
+  - name: opts
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: JanetSlot janetc_value(JanetFopts, Janet)
+- name: janet_panic
+  params:
+  - name: message
+    type: 'bool '
+  return_type: void
+  signature: void janet_panic(const char *)
+language: c++
+project: janet
+target_name: fuzz_dostring
+target_path: /src/janet/test/fuzzers/fuzz_dostring.c
+test_files:
+- test_file_path: /src/janet/examples/numarray/numarray.c
+- test_file_path: /src/janet/src/boot/table_test.c
+- test_file_path: /src/janet/src/boot/buffer_test.c
+- test_file_path: /src/janet/src/boot/number_test.c
+- test_file_path: /src/janet/src/boot/system_test.c
+- test_file_path: /src/janet/src/boot/array_test.c

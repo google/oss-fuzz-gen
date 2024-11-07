@@ -1,134 +1,92 @@
-"functions":
-- "name": "_ZN5boost4json5parseERNSt3__113basic_istreamIcNS1_11char_traitsIcEEEERNS_6system10error_codeENS0_11storage_ptrERKNS0_13parse_optionsE"
-  "params":
-  - "name": "is"
-    "type": "bool "
-  - "name": "ec"
-    "type": "bool "
-  - "name": "sp"
-    "type": "bool "
-  - "name": "opt"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "value boost::json::parse(istream &, error_code &, storage_ptr, const struct parse_options &)"
-- "name": "_ZN5boost4json5parseENS_4core17basic_string_viewIcEERNSt3__110error_codeENS0_11storage_ptrERKNS0_13parse_optionsE"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  - "name": "ec"
-    "type": "bool "
-  - "name": "sp"
-    "type": "size_t"
-  - "name": "opt"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "value boost::json::parse(string_view, error_code &, storage_ptr, const struct parse_options &)"
-- "name": "_ZN5boost4json5parseERNSt3__113basic_istreamIcNS1_11char_traitsIcEEEENS0_11storage_ptrERKNS0_13parse_optionsE"
-  "params":
-  - "name": "is"
-    "type": "bool "
-  - "name": "sp"
-    "type": "bool "
-  - "name": "opt"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "value boost::json::parse(istream &, storage_ptr, const struct parse_options &)"
-- "name": "_ZN5boost4json6string6assignERKS1_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "other"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "string & boost::json::string::assign(const string &)"
-- "name": "_ZN5boost4json5parseENS_4core17basic_string_viewIcEENS0_11storage_ptrERKNS0_13parse_optionsE"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  - "name": "sp"
-    "type": "bool "
-  - "name": "opt"
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "value boost::json::parse(string_view, storage_ptr, const struct parse_options &)"
-- "name": "_ZN5boost4json6parser5writeEPKcmRNSt3__110error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  - "name": "ec"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t boost::json::parser::write(const char *, size_t, error_code &)"
-- "name": "_ZN5boost4json5value14set_at_pointerENS_4core17basic_string_viewIcEENS0_9value_refERKNS0_19set_pointer_optionsE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "sv"
-    "type": "bool "
-  - "name": "ref"
-    "type": "size_t"
-  - "name": "opts"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "value & boost::json::value::set_at_pointer(string_view, value_ref, const struct set_pointer_options &)"
-- "name": "_ZN5boost4json13stream_parser5writeEPKcmRNSt3__110error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  - "name": "ec"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t boost::json::stream_parser::write(const char *, size_t, error_code &)"
-- "name": "_ZN5boost4jsonrsERNSt3__113basic_istreamIcNS1_11char_traitsIcEEEERNS0_5valueE"
-  "params":
-  - "name": "is"
-    "type": "bool "
-  - "name": "jv"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "istream & boost::json::operator>>(istream &, value &)"
-- "name": "_ZN5boost4json13stream_parser6finishERNSt3__110error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ec"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void boost::json::stream_parser::finish(error_code &)"
-"language": "c++"
-"project": "boost-json"
-"target_name": "fuzz_parse"
-"target_path": "/src/boost/libs/json/fuzzing/fuzz_parse.cpp"
-"test_files":
-- "test_file_path": "/src/boost/libs/config/test/no_cxx17_deduction_guides_pass.cpp"
-- "test_file_path": "/src/boost/libs/config/test/has_stdint_h_fail.cpp"
-- "test_file_path": "/src/boost/libs/describe/example/printing_enums_rt.cpp"
-- "test_file_path": "/src/boost/libs/system/test/constexpr_test2.cpp"
-- "test_file_path": "/src/boost/libs/config/test/threads/test_thread_fail1.cpp"
-- "test_file_path": "/src/boost/libs/type_traits/test/remove_volatile_test.cpp"
-- "test_file_path": "/src/boost/libs/mp11/test/mp_quote.cpp"
-- "test_file_path": "/src/boost/libs/winapi/test/run/file_mapping_abi.cpp"
-- "test_file_path": "/src/boost/libs/config/test/no_cxx98_binders_pass.cpp"
-- "test_file_path": "/src/boost/libs/config/test/no_cxx20_hdr_bit_fail.cpp"
+functions:
+- name: _ZN5boost4json5value14set_at_pointerENS_4core17basic_string_viewIcEENS0_9value_refERKNS0_19set_pointer_optionsE
+  params:
+  - name: this
+    type: 'bool '
+  - name: sv
+    type: 'bool '
+  - name: ref
+    type: size_t
+  - name: opts
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: value & boost::json::value::set_at_pointer(string_view, value_ref, const
+    struct set_pointer_options &)
+- name: _ZN5boost4json6parser5writeEPKcmRNSt3__110error_codeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: size
+    type: size_t
+  - name: ec
+    type: 'bool '
+  return_type: size_t
+  signature: size_t boost::json::parser::write(const char *, size_t, error_code &)
+- name: _ZN5boost4json5parseENS_4core17basic_string_viewIcEERNSt3__110error_codeENS0_11storage_ptrERKNS0_13parse_optionsE
+  params:
+  - name: s
+    type: 'bool '
+  - name: ec
+    type: 'bool '
+  - name: sp
+    type: size_t
+  - name: opt
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: value boost::json::parse(string_view, error_code &, storage_ptr, const
+    struct parse_options &)
+- name: _ZN5boost4json5parseENS_4core17basic_string_viewIcEENS0_11storage_ptrERKNS0_13parse_optionsE
+  params:
+  - name: s
+    type: 'bool '
+  - name: sp
+    type: 'bool '
+  - name: opt
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: value boost::json::parse(string_view, storage_ptr, const struct parse_options
+    &)
+- name: _ZN5boost4json5parseERNSt3__113basic_istreamIcNS1_11char_traitsIcEEEENS0_11storage_ptrERKNS0_13parse_optionsE
+  params:
+  - name: is
+    type: 'bool '
+  - name: sp
+    type: 'bool '
+  - name: opt
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: value boost::json::parse(istream &, storage_ptr, const struct parse_options
+    &)
+- name: _ZN5boost4json13stream_parser6finishERNSt3__110error_codeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: ec
+    type: 'bool '
+  return_type: void
+  signature: void boost::json::stream_parser::finish(error_code &)
+language: c++
+project: boost-json
+target_name: fuzz_parse
+target_path: /src/boost/libs/json/fuzzing/fuzz_parse.cpp
+test_files:
+- test_file_path: /src/boost/libs/describe/example/printing_enums_rt.cpp
+- test_file_path: /src/boost/libs/config/test/has_stdint_h_fail.cpp
+- test_file_path: /src/boost/libs/config/test/threads/test_thread_fail1.cpp
+- test_file_path: /src/boost/libs/type_traits/test/remove_volatile_test.cpp
+- test_file_path: /src/boost/libs/config/test/no_cxx20_hdr_bit_fail.cpp
+- test_file_path: /src/boost/libs/mp11/test/mp_quote.cpp

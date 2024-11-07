@@ -1,154 +1,104 @@
-"functions":
-- "name": "ossl_cmp_log_parse_metadata"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "level"
-    "type": "bool "
-  - "name": "func"
-    "type": "bool "
-  - "name": "file"
-    "type": "bool "
-  - "name": "line"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const char * ossl_cmp_log_parse_metadata(const char *, OSSL_CMP_severity *, char **, char **, int *)"
-- "name": "ASN1_parse"
-  "params":
-  - "name": "bp"
-    "type": "bool "
-  - "name": "pp"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  - "name": "indent"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int ASN1_parse(BIO *, const unsigned char *, long, int)"
-- "name": "BIO_parse_hostserv"
-  "params":
-  - "name": "hostserv"
-    "type": "bool "
-  - "name": "host"
-    "type": "bool "
-  - "name": "service"
-    "type": "bool "
-  - "name": "hostserv_prio"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int BIO_parse_hostserv(const char *, char **, char **, DW_TAG_enumeration_typeBIO_hostserv_priorities)"
-- "name": "EC_POINT_set_compressed_coordinates_GF2m"
-  "params":
-  - "name": "group"
-    "type": "bool "
-  - "name": "point"
-    "type": "bool "
-  - "name": "x"
-    "type": "bool "
-  - "name": "y_bit"
-    "type": "int"
-  - "name": "ctx"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int EC_POINT_set_compressed_coordinates_GF2m(const EC_GROUP *, EC_POINT *, const BIGNUM *, int, BN_CTX *)"
-- "name": "EC_POINT_set_compressed_coordinates_GFp"
-  "params":
-  - "name": "group"
-    "type": "bool "
-  - "name": "point"
-    "type": "bool "
-  - "name": "x"
-    "type": "bool "
-  - "name": "y_bit"
-    "type": "int"
-  - "name": "ctx"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int EC_POINT_set_compressed_coordinates_GFp(const EC_GROUP *, EC_POINT *, const BIGNUM *, int, BN_CTX *)"
-- "name": "ossl_decoder_parsed_properties"
-  "params":
-  - "name": "decoder"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const OSSL_PROPERTY_LIST * ossl_decoder_parsed_properties(const OSSL_DECODER *)"
-- "name": "ossl_encoder_parsed_properties"
-  "params":
-  - "name": "encoder"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const OSSL_PROPERTY_LIST * ossl_encoder_parsed_properties(const OSSL_ENCODER *)"
-- "name": "OSSL_HTTP_set1_request"
-  "params":
-  - "name": "rctx"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  - "name": "headers"
-    "type": "bool "
-  - "name": "content_type"
-    "type": "bool "
-  - "name": "req"
-    "type": "bool "
-  - "name": "expected_content_type"
-    "type": "bool "
-  - "name": "expect_asn1"
-    "type": "int"
-  - "name": "max_resp_len"
-    "type": "size_t"
-  - "name": "timeout"
-    "type": "int"
-  - "name": "keep_alive"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int OSSL_HTTP_set1_request(OSSL_HTTP_REQ_CTX *, const char *, const struct stack_st_CONF_VALUE *, const char *, BIO *, const char *, int, size_t, int, int)"
-- "name": "OSSL_HTTP_REQ_CTX_set_request_line"
-  "params":
-  - "name": "rctx"
-    "type": "bool "
-  - "name": "method_POST"
-    "type": "int"
-  - "name": "server"
-    "type": "bool "
-  - "name": "port"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int OSSL_HTTP_REQ_CTX_set_request_line(OSSL_HTTP_REQ_CTX *, int, const char *, const char *, const char *)"
-- "name": "OSSL_HTTP_parse_url"
-  "params":
-  - "name": "url"
-    "type": "bool "
-  - "name": "pssl"
-    "type": "bool "
-  - "name": "puser"
-    "type": "bool "
-  - "name": "phost"
-    "type": "bool "
-  - "name": "pport"
-    "type": "bool "
-  - "name": "pport_num"
-    "type": "bool "
-  - "name": "ppath"
-    "type": "bool "
-  - "name": "pquery"
-    "type": "bool "
-  - "name": "pfrag"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int OSSL_HTTP_parse_url(const char *, int *, char **, char **, char **, int *, char **, char **, char **)"
-"language": "c++"
-"project": "openssl"
-"target_name": "bndiv"
-"target_path": "/src/openssl/fuzz/driver.c"
-"test_files":
-- "test_file_path": "/src/openssl/test/trace_api_test.c"
-- "test_file_path": "/src/openssl32/test/quic_fifd_test.c"
-- "test_file_path": "/src/openssl/test/quicapitest.c"
-- "test_file_path": "/src/openssl30/test/mdc2test.c"
-- "test_file_path": "/src/openssl/test/ocspapitest.c"
-- "test_file_path": "/src/openssl/test/servername_test.c"
-- "test_file_path": "/src/openssl32/test/cmp_protect_test.c"
-- "test_file_path": "/src/openssl/test/dhtest.c"
-- "test_file_path": "/src/openssl/test/property_test.c"
-- "test_file_path": "/src/openssl/test/gmdifftest.c"
+functions:
+- name: OSSL_HTTP_parse_url
+  params:
+  - name: url
+    type: 'bool '
+  - name: pssl
+    type: 'bool '
+  - name: puser
+    type: 'bool '
+  - name: phost
+    type: 'bool '
+  - name: pport
+    type: 'bool '
+  - name: pport_num
+    type: 'bool '
+  - name: ppath
+    type: 'bool '
+  - name: pquery
+    type: 'bool '
+  - name: pfrag
+    type: 'bool '
+  return_type: int
+  signature: int OSSL_HTTP_parse_url(const char *, int *, char **, char **, char **,
+    int *, char **, char **, char **)
+- name: ossl_encoder_parsed_properties
+  params:
+  - name: encoder
+    type: 'bool '
+  return_type: void
+  signature: const OSSL_PROPERTY_LIST * ossl_encoder_parsed_properties(const OSSL_ENCODER
+    *)
+- name: EC_POINT_set_compressed_coordinates_GF2m
+  params:
+  - name: group
+    type: 'bool '
+  - name: point
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  - name: y_bit
+    type: int
+  - name: ctx
+    type: 'bool '
+  return_type: int
+  signature: int EC_POINT_set_compressed_coordinates_GF2m(const EC_GROUP *, EC_POINT
+    *, const BIGNUM *, int, BN_CTX *)
+- name: ossl_decoder_parsed_properties
+  params:
+  - name: decoder
+    type: 'bool '
+  return_type: void
+  signature: const OSSL_PROPERTY_LIST * ossl_decoder_parsed_properties(const OSSL_DECODER
+    *)
+- name: ossl_cmp_log_parse_metadata
+  params:
+  - name: buf
+    type: 'bool '
+  - name: level
+    type: 'bool '
+  - name: func
+    type: 'bool '
+  - name: file
+    type: 'bool '
+  - name: line
+    type: 'bool '
+  return_type: void
+  signature: const char * ossl_cmp_log_parse_metadata(const char *, OSSL_CMP_severity
+    *, char **, char **, int *)
+- name: OSSL_HTTP_set1_request
+  params:
+  - name: rctx
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  - name: headers
+    type: 'bool '
+  - name: content_type
+    type: 'bool '
+  - name: req
+    type: 'bool '
+  - name: expected_content_type
+    type: 'bool '
+  - name: expect_asn1
+    type: int
+  - name: max_resp_len
+    type: size_t
+  - name: timeout
+    type: int
+  - name: keep_alive
+    type: int
+  return_type: int
+  signature: int OSSL_HTTP_set1_request(OSSL_HTTP_REQ_CTX *, const char *, const struct
+    stack_st_CONF_VALUE *, const char *, BIO *, const char *, int, size_t, int, int)
+language: c++
+project: openssl
+target_name: bndiv
+target_path: /src/openssl/fuzz/driver.c
+test_files:
+- test_file_path: /src/openssl/test/servername_test.c
+- test_file_path: /src/openssl32/test/cmp_protect_test.c
+- test_file_path: /src/openssl32/test/quic_fifd_test.c
+- test_file_path: /src/openssl30/test/mdc2test.c
+- test_file_path: /src/openssl/test/gmdifftest.c
+- test_file_path: /src/openssl/test/quicapitest.c

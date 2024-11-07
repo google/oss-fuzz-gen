@@ -1,92 +1,63 @@
-"functions":
-- "name": "forward_request"
-  "params":
-  - "name": "msg"
-    "type": "bool "
-  - "name": "p"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int forward_request(struct sip_msg *, struct proxy_l *)"
-- "name": "start_timer_extra_processes"
-  "params":
-  - "name": "chd_rank"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int start_timer_extra_processes(int *)"
-- "name": "receive_msg"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "int"
-  - "name": "rcv_info"
-    "type": "bool "
-  - "name": "existing_context"
-    "type": "bool "
-  - "name": "msg_flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int receive_msg(char *, unsigned int, struct receive_info *, context_p, unsigned int)"
-- "name": "async_launch_resume"
-  "params":
-  - "name": "fd"
-    "type": "int"
-  - "name": "param"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int async_launch_resume(int, void *)"
-- "name": "parse_sdp"
-  "params":
-  - "name": "_m"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "sdp_info_t * parse_sdp(struct sip_msg *)"
-- "name": "forward_reply"
-  "params":
-  - "name": "msg"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int forward_reply(struct sip_msg *)"
-- "name": "parse_opensips_cfg"
-  "params":
-  - "name": "cfg_file"
-    "type": "bool "
-  - "name": "preproc_cmdline"
-    "type": "bool "
-  - "name": "ret_buffer"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int parse_opensips_cfg(const char *, const char *, str *)"
-- "name": "handle_io"
-  "params":
-  - "name": "fm"
-    "type": "bool "
-  - "name": "idx"
-    "type": "int"
-  - "name": "event_type"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int handle_io(struct fd_map *, int, int)"
-- "name": "resolvehost"
-  "params":
-  - "name": "name"
-    "type": "bool "
-  - "name": "no_ip_test"
-    "type": "int"
-  "return_type": "void"
-  "signature": "struct hostent * resolvehost(char *, int)"
-"language": "c"
-"project": "opensips"
-"target_name": "fuzz_csv_parser"
-"target_path": "/src/opensips/test/fuzz/fuzz_csv_parser.c"
-"test_files":
-- "test_file_path": "/src/opensips/parser/test/test_parse_authenticate_body.c"
-- "test_file_path": "/src/opensips/cachedb/test/test_cachedb.c"
-- "test_file_path": "/src/opensips/parser/test/test_parser.c"
-- "test_file_path": "/src/opensips/parser/test/test_oob.c"
-- "test_file_path": "/src/opensips/mem/test/test_malloc.c"
-- "test_file_path": "/src/opensips/modules/cfgutils/test/cfgutils.c"
-- "test_file_path": "/src/opensips/modules/registrar/test/test.c"
-- "test_file_path": "/src/opensips/lib/test/test_csv.c"
-- "test_file_path": "/src/opensips/lib/test/test_digest_auth.c"
-- "test_file_path": "/src/opensips/test/unit_tests.c"
+functions:
+- name: async_launch_resume
+  params:
+  - name: fd
+    type: int
+  - name: param
+    type: 'bool '
+  return_type: int
+  signature: int async_launch_resume(int, void *)
+- name: parse_sdp
+  params:
+  - name: _m
+    type: 'bool '
+  return_type: void
+  signature: sdp_info_t * parse_sdp(struct sip_msg *)
+- name: forward_reply
+  params:
+  - name: msg
+    type: 'bool '
+  return_type: int
+  signature: int forward_reply(struct sip_msg *)
+- name: start_timer_extra_processes
+  params:
+  - name: chd_rank
+    type: 'bool '
+  return_type: int
+  signature: int start_timer_extra_processes(int *)
+- name: receive_msg
+  params:
+  - name: buf
+    type: 'bool '
+  - name: len
+    type: int
+  - name: rcv_info
+    type: 'bool '
+  - name: existing_context
+    type: 'bool '
+  - name: msg_flags
+    type: int
+  return_type: int
+  signature: int receive_msg(char *, unsigned int, struct receive_info *, context_p,
+    unsigned int)
+- name: handle_io
+  params:
+  - name: fm
+    type: 'bool '
+  - name: idx
+    type: int
+  - name: event_type
+    type: int
+  return_type: int
+  signature: int handle_io(struct fd_map *, int, int)
+language: c
+project: opensips
+target_name: fuzz_csv_parser
+target_path: /src/opensips/test/fuzz/fuzz_csv_parser.c
+test_files:
+- test_file_path: /src/opensips/lib/test/test_digest_auth.c
+- test_file_path: /src/opensips/parser/test/test_parser.c
+- test_file_path: /src/opensips/cachedb/test/test_cachedb.c
+- test_file_path: /src/opensips/modules/cfgutils/test/cfgutils.c
+- test_file_path: /src/opensips/mem/test/test_malloc.c
+- test_file_path: /src/opensips/test/unit_tests.c

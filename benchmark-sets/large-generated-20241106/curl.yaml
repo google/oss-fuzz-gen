@@ -1,15 +1,11 @@
-"language": "c++"
-"project": "curl"
-"target_name": "curl_fuzzer"
-"target_path": "/src/curl_fuzzer/curl_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/curl/docs/examples/getinmemory.c"
-- "test_file_path": "/src/curl/docs/examples/hiperfifo.c"
-- "test_file_path": "/src/curl/tests/libtest/lib513.c"
-- "test_file_path": "/src/curl/tests/libtest/lib1513.c"
-- "test_file_path": "/src/curl/docs/examples/xmlstream.c"
-- "test_file_path": "/src/curl/docs/examples/getreferrer.c"
-- "test_file_path": "/src/curl/tests/libtest/lib586.c"
-- "test_file_path": "/src/curl/tests/libtest/lib3027.c"
-- "test_file_path": "/src/curl/tests/libtest/lib1905.c"
-- "test_file_path": "/src/curl/tests/libtest/libntlmconnect.c"
+language: c++
+project: curl
+target_name: curl_fuzzer
+target_path: /src/curl_fuzzer/curl_fuzzer.cc
+test_files:
+- test_file_path: /src/curl/docs/examples/getreferrer.c
+- test_file_path: /src/curl/tests/libtest/libntlmconnect.c
+- test_file_path: /src/curl/docs/examples/xmlstream.c
+- test_file_path: /src/curl/tests/libtest/lib586.c
+- test_file_path: /src/curl/tests/libtest/lib3027.c
+- test_file_path: /src/curl/docs/examples/getinmemory.c

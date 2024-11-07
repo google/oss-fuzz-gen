@@ -1,116 +1,64 @@
-"functions":
-- "name": "_ZN7Imf_3_413RgbaInputFile12setLayerNameERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Imf_3_4::RgbaInputFile::setLayerName(const string &)"
-- "name": "_ZN7Imf_3_410OutputFile10initializeERKNS_6HeaderE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Imf_3_4::OutputFile::initialize(const Header &)"
-- "name": "_ZN7Imf_3_418DeepTiledInputPart8readTileEiii"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void Imf_3_4::DeepTiledInputPart::readTile(int, int, int)"
-- "name": "_ZN7Imf_3_49InputFile4Data10readPixelsERKNS_11FrameBufferEii"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void Imf_3_4::InputFile::Data::readPixels(struct Data *, const FrameBuffer &, int, int)"
-- "name": "_ZN7Imf_3_414RgbaOutputFile11writePixelsEi"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void Imf_3_4::RgbaOutputFile::writePixels(int)"
-- "name": "_ZN7Imf_3_49InputFile10readPixelsERKNS_11FrameBufferEii"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void Imf_3_4::InputFile::readPixels(const FrameBuffer &, int, int)"
-- "name": "_ZN7Imf_3_410OutputFile10copyPixelsERNS_9InputFileE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Imf_3_4::OutputFile::copyPixels(InputFile &)"
-- "name": "_ZN7Imf_3_418DeepTiledInputPart20readPixelSampleCountEiii"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void Imf_3_4::DeepTiledInputPart::readPixelSampleCount(int, int, int)"
-- "name": "_ZN7Imf_3_410OutputFile10copyPixelsERNS_9InputPartE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Imf_3_4::OutputFile::copyPixels(InputPart &)"
-- "name": "_ZN7Imf_3_49InputPart10readPixelsERKNS_11FrameBufferEii"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void Imf_3_4::InputPart::readPixels(const FrameBuffer &, int, int)"
-"language": "c++"
-"project": "openexr"
-"target_name": "openexr_exrcorecheck_fuzzer"
-"target_path": "/src/openexr/src/test/OpenEXRFuzzTest/oss-fuzz/openexr_exrcorecheck_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/openexr/src/test/OpenEXRTest/testMagic.cpp"
-- "test_file_path": "/src/openexr/src/test/OpenEXRTest/testCopyMultiPartFile.cpp"
-- "test_file_path": "/src/openexr/src/test/OpenEXRUtilTest/testFlatImage.cpp"
-- "test_file_path": "/src/openexr/src/test/OpenEXRTest/testMultiScanlinePartThreading.cpp"
-- "test_file_path": "/src/openexr/src/test/OpenEXRCoreTest/compressionTables.cpp"
-- "test_file_path": "/src/openexr/src/test/OpenEXRTest/testMultiPartThreading.cpp"
-- "test_file_path": "/src/openexr/src/test/OpenEXRTest/compareB44.cpp"
-- "test_file_path": "/src/openexr/src/test/OpenEXRCoreTest/write.cpp"
-- "test_file_path": "/src/openexr/src/test/OpenEXRFuzzTest/testFuzzDeepTiles.cpp"
-- "test_file_path": "/src/openexr/src/test/OpenEXRCoreTest/buffer.cpp"
+functions:
+- name: _ZN7Imf_3_418DeepTiledInputPart20readPixelSampleCountEiii
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: void
+  signature: void Imf_3_4::DeepTiledInputPart::readPixelSampleCount(int, int, int)
+- name: _ZN7Imf_3_413RgbaInputFile12setLayerNameERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void Imf_3_4::RgbaInputFile::setLayerName(const string &)
+- name: _ZN7Imf_3_410OutputFile10initializeERKNS_6HeaderE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void Imf_3_4::OutputFile::initialize(const Header &)
+- name: _ZN7Imf_3_410OutputFile10copyPixelsERNS_9InputPartE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void Imf_3_4::OutputFile::copyPixels(InputPart &)
+- name: _ZN7Imf_3_414RgbaOutputFile11writePixelsEi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void Imf_3_4::RgbaOutputFile::writePixels(int)
+- name: _ZN7Imf_3_410OutputFile10copyPixelsERNS_9InputFileE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void Imf_3_4::OutputFile::copyPixels(InputFile &)
+language: c++
+project: openexr
+target_name: openexr_exrcorecheck_fuzzer
+target_path: /src/openexr/src/test/OpenEXRFuzzTest/oss-fuzz/openexr_exrcorecheck_fuzzer.cc
+test_files:
+- test_file_path: /src/openexr/src/test/OpenEXRTest/testMultiPartThreading.cpp
+- test_file_path: /src/openexr/src/test/OpenEXRCoreTest/write.cpp
+- test_file_path: /src/openexr/src/test/OpenEXRFuzzTest/testFuzzDeepTiles.cpp
+- test_file_path: /src/openexr/src/test/OpenEXRCoreTest/buffer.cpp
+- test_file_path: /src/openexr/src/test/OpenEXRTest/testMagic.cpp
+- test_file_path: /src/openexr/src/test/OpenEXRCoreTest/compressionTables.cpp

@@ -1,122 +1,74 @@
-"functions":
-- "name": "aug_load_file"
-  "params":
-  - "name": "aug"
-    "type": "bool "
-  - "name": "file"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int aug_load_file(struct augeas *, const char *)"
-- "name": "remove_file"
-  "params":
-  - "name": "aug"
-    "type": "bool "
-  - "name": "tree"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int remove_file(struct augeas *, struct tree *)"
-- "name": "aug_defnode"
-  "params":
-  - "name": "aug"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "expr"
-    "type": "bool "
-  - "name": "value"
-    "type": "bool "
-  - "name": "created"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int aug_defnode(augeas *, const char *, const char *, const char *, int *)"
-- "name": "text_retrieve"
-  "params":
-  - "name": "aug"
-    "type": "bool "
-  - "name": "lens_name"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  - "name": "tree"
-    "type": "bool "
-  - "name": "text_in"
-    "type": "bool "
-  - "name": "text_out"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int text_retrieve(struct augeas *, const char *, const char *, struct tree *, const char *, char **)"
-- "name": "aug_source"
-  "params":
-  - "name": "aug"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  - "name": "file_path"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int aug_source(const augeas *, const char *, char **)"
-- "name": "aug_save"
-  "params":
-  - "name": "aug"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int aug_save(struct augeas *)"
-- "name": "aug_preview"
-  "params":
-  - "name": "aug"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  - "name": "out"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int aug_preview(struct augeas *, const char *, char **)"
-- "name": "__aug_load_module_file"
-  "params":
-  - "name": "aug"
-    "type": "bool "
-  - "name": "filename"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int __aug_load_module_file(struct augeas *, const char *)"
-- "name": "transform_save"
-  "params":
-  - "name": "aug"
-    "type": "bool "
-  - "name": "xfm"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  - "name": "tree"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int transform_save(struct augeas *, struct tree *, const char *, struct tree *)"
-- "name": "aug_text_retrieve"
-  "params":
-  - "name": "aug"
-    "type": "bool "
-  - "name": "lens"
-    "type": "bool "
-  - "name": "node_in"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  - "name": "node_out"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int aug_text_retrieve(struct augeas *, const char *, const char *, const char *, const char *)"
-"language": "c++"
-"project": "augeas"
-"target_name": "augeas_escape_name_fuzzer"
-"target_path": "/src/augeas_escape_name_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/augeas/tests/test-api.c"
-- "test_file_path": "/src/augeas/tests/test-load.c"
-- "test_file_path": "/src/augeas/tests/test-run.c"
-- "test_file_path": "/src/augeas/tests/test-save.c"
-- "test_file_path": "/src/augeas/examples/fadot.c"
-- "test_file_path": "/src/augeas/tests/leak.c"
-- "test_file_path": "/src/augeas/examples/dump.c"
-- "test_file_path": "/src/augeas/tests/test-xpath.c"
-- "test_file_path": "/src/augeas/tests/cutest.c"
-- "test_file_path": "/src/augeas/tests/fatest.c"
+functions:
+- name: aug_preview
+  params:
+  - name: aug
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  - name: out
+    type: 'bool '
+  return_type: int
+  signature: int aug_preview(struct augeas *, const char *, char **)
+- name: aug_source
+  params:
+  - name: aug
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  - name: file_path
+    type: 'bool '
+  return_type: int
+  signature: int aug_source(const augeas *, const char *, char **)
+- name: transform_save
+  params:
+  - name: aug
+    type: 'bool '
+  - name: xfm
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  - name: tree
+    type: 'bool '
+  return_type: int
+  signature: int transform_save(struct augeas *, struct tree *, const char *, struct
+    tree *)
+- name: aug_save
+  params:
+  - name: aug
+    type: 'bool '
+  return_type: int
+  signature: int aug_save(struct augeas *)
+- name: aug_load_file
+  params:
+  - name: aug
+    type: 'bool '
+  - name: file
+    type: 'bool '
+  return_type: int
+  signature: int aug_load_file(struct augeas *, const char *)
+- name: aug_text_retrieve
+  params:
+  - name: aug
+    type: 'bool '
+  - name: lens
+    type: 'bool '
+  - name: node_in
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  - name: node_out
+    type: 'bool '
+  return_type: int
+  signature: int aug_text_retrieve(struct augeas *, const char *, const char *, const
+    char *, const char *)
+language: c++
+project: augeas
+target_name: augeas_escape_name_fuzzer
+target_path: /src/augeas_escape_name_fuzzer.cc
+test_files:
+- test_file_path: /src/augeas/tests/test-load.c
+- test_file_path: /src/augeas/tests/leak.c
+- test_file_path: /src/augeas/tests/test-xpath.c
+- test_file_path: /src/augeas/tests/test-save.c
+- test_file_path: /src/augeas/tests/test-run.c
+- test_file_path: /src/augeas/tests/fatest.c

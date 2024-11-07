@@ -1,98 +1,68 @@
-"functions":
-- "name": "_ZN7brunsli14BrunsliDecoderC2Ev"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void brunsli::BrunsliDecoder::BrunsliDecoder()"
-- "name": "BrotliDecoderIsFinished"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int BrotliDecoderIsFinished(const BrotliDecoderStateInternal *)"
-- "name": "_ZN7brunsli14BrunsliDecoder6DecodeEPmPPKhS1_PPh"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "DW_TAG_enumeration_typeStatus brunsli::BrunsliDecoder::Decode(size_t *, const uint8_t **, size_t *, uint8_t **)"
-- "name": "_ZN7brunsli14FindBestMatrixEPKibPh"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "uint32_t brunsli::FindBestMatrix(const int *, bool, uint8_t *)"
-- "name": "_ZN7brunsli37BrunsliEstimateDecoderPeakMemoryUsageEPKhm"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "size_t"
-  "signature": "size_t brunsli::BrunsliEstimateDecoderPeakMemoryUsage(const uint8_t *, const size_t)"
-- "name": "_ZN27BrunsliDecodeFuzzEmpty_Test8TestBodyEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void BrunsliDecodeFuzzEmpty_Test::TestBody()"
-- "name": "_ZN7brunsli12ReadTestDataERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "vector<unsigned char, std::__1::allocator<unsigned char> > brunsli::ReadTestData(const string &)"
-- "name": "_ZN7brunsli14ComponentStateC2Ev"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void brunsli::ComponentState::ComponentState(struct ComponentState *)"
-- "name": "_ZN36BrunsliDecodeStreamingFuzzEmpty_Test8TestBodyEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void BrunsliDecodeStreamingFuzzEmpty_Test::TestBody()"
-- "name": "BrotliDecoderDecompress"
-  "params":
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "BrotliDecoderResult BrotliDecoderDecompress(size_t, const uint8_t *, size_t *, uint8_t *)"
-"language": "c++"
-"project": "brunsli"
-"target_name": "fuzz_decode"
-"target_path": "/src/brunsli/c/tests/fuzz_decode.cc"
-"test_files":
-- "test_file_path": "/src/brunsli/c/tests/fallback_test.cc"
-- "test_file_path": "/src/brunsli/c/tests/huffman_tree_test.cc"
-- "test_file_path": "/src/brunsli/c/tests/quant_matrix_test.cc"
-- "test_file_path": "/src/brunsli/c/tests/build_huffman_table_test.cc"
-- "test_file_path": "/src/brunsli/c/tests/distributions_test.cc"
-- "test_file_path": "/src/brunsli/c/tests/context_test.cc"
-- "test_file_path": "/src/brunsli/c/tests/bit_reader_test.cc"
-- "test_file_path": "/src/brunsli/c/tests/headerless_test.cc"
-- "test_file_path": "/src/brunsli/c/tests/stream_decode_test.cc"
-- "test_file_path": "/src/brunsli/c/tests/lehmer_code_test.cc"
+functions:
+- name: BrotliDecoderIsFinished
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int BrotliDecoderIsFinished(const BrotliDecoderStateInternal *)
+- name: BrotliDecoderDecompress
+  params:
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: BrotliDecoderResult BrotliDecoderDecompress(size_t, const uint8_t *,
+    size_t *, uint8_t *)
+- name: _ZN7brunsli14FindBestMatrixEPKibPh
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: uint32_t brunsli::FindBestMatrix(const int *, bool, uint8_t *)
+- name: _ZN7brunsli14BrunsliDecoder6DecodeEPmPPKhS1_PPh
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeStatus brunsli::BrunsliDecoder::Decode(size_t
+    *, const uint8_t **, size_t *, uint8_t **)
+- name: _ZN7brunsli14BrunsliDecoderC2Ev
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void brunsli::BrunsliDecoder::BrunsliDecoder()
+- name: _ZN27BrunsliDecodeFuzzEmpty_Test8TestBodyEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void BrunsliDecodeFuzzEmpty_Test::TestBody()
+language: c++
+project: brunsli
+target_name: fuzz_decode
+target_path: /src/brunsli/c/tests/fuzz_decode.cc
+test_files:
+- test_file_path: /src/brunsli/c/tests/build_huffman_table_test.cc
+- test_file_path: /src/brunsli/c/tests/huffman_tree_test.cc
+- test_file_path: /src/brunsli/c/tests/headerless_test.cc
+- test_file_path: /src/brunsli/c/tests/distributions_test.cc
+- test_file_path: /src/brunsli/c/tests/stream_decode_test.cc
+- test_file_path: /src/brunsli/c/tests/fallback_test.cc

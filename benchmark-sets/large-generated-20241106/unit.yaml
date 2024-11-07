@@ -1,104 +1,66 @@
-"functions":
-- "name": "nxt_router_process_http_request"
-  "params":
-  - "name": "task"
-    "type": "bool "
-  - "name": "r"
-    "type": "bool "
-  - "name": "action"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void nxt_router_process_http_request(nxt_task_t *, nxt_http_request_t *, nxt_http_action_t *)"
-- "name": "nxt_process_start"
-  "params":
-  - "name": "task"
-    "type": "bool "
-  - "name": "process"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "nxt_int_t nxt_process_start(nxt_task_t *, nxt_process_t *)"
-- "name": "nxt_router_conf_apply"
-  "params":
-  - "name": "task"
-    "type": "bool "
-  - "name": "obj"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void nxt_router_conf_apply(nxt_task_t *, void *, void *)"
-- "name": "nxt_router_access_log_open"
-  "params":
-  - "name": "task"
-    "type": "bool "
-  - "name": "tmcf"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void nxt_router_access_log_open(nxt_task_t *, nxt_router_temp_conf_t *)"
-- "name": "nxt_main_process_start"
-  "params":
-  - "name": "thr"
-    "type": "bool "
-  - "name": "task"
-    "type": "bool "
-  - "name": "rt"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "nxt_int_t nxt_main_process_start(nxt_thread_t *, nxt_task_t *, nxt_runtime_t *)"
-- "name": "nxt_runtime_quit"
-  "params":
-  - "name": "task"
-    "type": "bool "
-  - "name": "status"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void nxt_runtime_quit(nxt_task_t *, nxt_uint_t)"
-- "name": "nxt_runtime_create"
-  "params":
-  - "name": "task"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "nxt_int_t nxt_runtime_create(nxt_task_t *)"
-- "name": "nxt_http_routes_create"
-  "params":
-  - "name": "task"
-    "type": "bool "
-  - "name": "tmcf"
-    "type": "bool "
-  - "name": "routes_conf"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "nxt_http_routes_t * nxt_http_routes_create(nxt_task_t *, nxt_router_temp_conf_t *, nxt_conf_value_t *)"
-- "name": "nxt_process_init_start"
-  "params":
-  - "name": "task"
-    "type": "bool "
-  - "name": "init"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "nxt_int_t nxt_process_init_start(nxt_task_t *, nxt_process_init_t)"
-- "name": "nxt_http_application_handler"
-  "params":
-  - "name": "task"
-    "type": "bool "
-  - "name": "r"
-    "type": "bool "
-  - "name": "action"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "nxt_http_action_t * nxt_http_application_handler(nxt_task_t *, nxt_http_request_t *, nxt_http_action_t *)"
-"language": "c"
-"project": "unit"
-"target_name": "fuzz_http_controller"
-"target_path": "/src/unit/fuzzing/nxt_http_controller_fuzz.c"
-"test_files":
-- "test_file_path": "/src/unit/src/test/nxt_mem_zone_test.c"
-- "test_file_path": "/src/unit/src/test/nxt_base64_test.c"
-- "test_file_path": "/src/unit/src/test/nxt_sprintf_test.c"
-- "test_file_path": "/src/unit/src/test/nxt_lvlhsh_test.c"
-- "test_file_path": "/src/unit/src/test/nxt_unit_app_test.c"
-- "test_file_path": "/src/unit/src/test/nxt_malloc_test.c"
-- "test_file_path": "/src/unit/src/test/nxt_rbtree1_test.c"
-- "test_file_path": "/src/unit/src/test/nxt_msec_diff_test.c"
-- "test_file_path": "/src/unit/src/test/nxt_utf8_test.c"
-- "test_file_path": "/src/unit/src/test/nxt_http_parse_test.c"
+functions:
+- name: nxt_router_conf_apply
+  params:
+  - name: task
+    type: 'bool '
+  - name: obj
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  return_type: void
+  signature: void nxt_router_conf_apply(nxt_task_t *, void *, void *)
+- name: nxt_runtime_quit
+  params:
+  - name: task
+    type: 'bool '
+  - name: status
+    type: int
+  return_type: void
+  signature: void nxt_runtime_quit(nxt_task_t *, nxt_uint_t)
+- name: nxt_main_process_start
+  params:
+  - name: thr
+    type: 'bool '
+  - name: task
+    type: 'bool '
+  - name: rt
+    type: 'bool '
+  return_type: int
+  signature: nxt_int_t nxt_main_process_start(nxt_thread_t *, nxt_task_t *, nxt_runtime_t
+    *)
+- name: nxt_http_application_handler
+  params:
+  - name: task
+    type: 'bool '
+  - name: r
+    type: 'bool '
+  - name: action
+    type: 'bool '
+  return_type: void
+  signature: nxt_http_action_t * nxt_http_application_handler(nxt_task_t *, nxt_http_request_t
+    *, nxt_http_action_t *)
+- name: nxt_process_start
+  params:
+  - name: task
+    type: 'bool '
+  - name: process
+    type: 'bool '
+  return_type: int
+  signature: nxt_int_t nxt_process_start(nxt_task_t *, nxt_process_t *)
+- name: nxt_runtime_create
+  params:
+  - name: task
+    type: 'bool '
+  return_type: int
+  signature: nxt_int_t nxt_runtime_create(nxt_task_t *)
+language: c
+project: unit
+target_name: fuzz_http_controller
+target_path: /src/unit/fuzzing/nxt_http_controller_fuzz.c
+test_files:
+- test_file_path: /src/unit/src/test/nxt_sprintf_test.c
+- test_file_path: /src/unit/src/test/nxt_lvlhsh_test.c
+- test_file_path: /src/unit/src/test/nxt_rbtree1_test.c
+- test_file_path: /src/unit/src/test/nxt_unit_app_test.c
+- test_file_path: /src/unit/src/test/nxt_base64_test.c
+- test_file_path: /src/unit/src/test/nxt_mem_zone_test.c

@@ -1,15 +1,11 @@
-"language": "c++"
-"project": "systemd"
-"target_name": "fuzz-nspawn-settings"
-"target_path": "/src/systemd/src/nspawn/fuzz-nspawn-settings.c"
-"test_files":
-- "test_file_path": "/src/systemd/src/test/test-path.c"
-- "test_file_path": "/src/systemd/src/resolve/test-resolved-dummy-server.c"
-- "test_file_path": "/src/systemd/src/test/test-set-disable-mempool.c"
-- "test_file_path": "/src/systemd/src/test/test-mkdir.c"
-- "test_file_path": "/src/systemd/src/libsystemd/sd-bus/test-bus-objects.c"
-- "test_file_path": "/src/systemd/src/test/test-bpf-foreign-programs.c"
-- "test_file_path": "/src/systemd/src/test/test-bpf-restrict-fs.c"
-- "test_file_path": "/src/systemd/src/test/test-rm-rf.c"
-- "test_file_path": "/src/systemd/src/test/test-lock-util.c"
-- "test_file_path": "/src/systemd/src/test/test-install.c"
+language: c++
+project: systemd
+target_name: fuzz-nspawn-settings
+target_path: /src/systemd/src/nspawn/fuzz-nspawn-settings.c
+test_files:
+- test_file_path: /src/systemd/src/test/test-install.c
+- test_file_path: /src/systemd/src/test/test-mkdir.c
+- test_file_path: /src/systemd/src/libsystemd/sd-bus/test-bus-objects.c
+- test_file_path: /src/systemd/src/resolve/test-resolved-dummy-server.c
+- test_file_path: /src/systemd/src/test/test-bpf-foreign-programs.c
+- test_file_path: /src/systemd/src/test/test-lock-util.c

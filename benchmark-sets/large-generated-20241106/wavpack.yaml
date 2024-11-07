@@ -1,6 +1,6 @@
-"language": "c++"
-"project": "wavpack"
-"target_name": "fuzzer"
-"target_path": "/src/wavpack/fuzzing/fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/wavpack/cli/wvtest.c"
+language: c++
+project: wavpack
+target_name: fuzzer
+target_path: /src/wavpack/fuzzing/fuzzer.cc
+test_files:
+- test_file_path: /src/wavpack/cli/wvtest.c

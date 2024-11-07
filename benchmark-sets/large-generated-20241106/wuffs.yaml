@@ -1,30 +1,31 @@
-"functions":
-- "name": "_ZZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1B8ne180100EOS5_ENKUlRS5_E_clES7_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "__s"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "DW_TAG_rvalue_reference_type__compressed_pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::__rep, std::__1::allocator<char> > std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::operator()(const void *, basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &)"
-- "name": "_ZNK32wuffs_base__range_ie_u64__struct6lengthEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "uint64_t wuffs_base__range_ie_u64__struct::length(const struct wuffs_base__range_ie_u64__struct *)"
-"language": "c++"
-"project": "wuffs"
-"target_name": "bzip2_fuzzer"
-"target_path": "/src/wuffs/fuzz/c/fuzzlib/fuzzlib.c"
-"test_files":
-- "test_file_path": "/src/wuffs/example/json-to-cbor/json-to-cbor.cc"
-- "test_file_path": "/src/wuffs/test/c/mimiclib/deflate-gzip-zlib.c"
-- "test_file_path": "/src/wuffs/example/mzcat/mzcat.c"
-- "test_file_path": "/src/wuffs/script/manual-test-truncated-input.cc"
-- "test_file_path": "/src/wuffs/test/c/mimiclib/openssl.c"
-- "test_file_path": "/src/wuffs/test/c/std/crc32.c"
-- "test_file_path": "/src/wuffs/test/c/std/json.c"
-- "test_file_path": "/src/wuffs/test/c/std/bzip2.c"
-- "test_file_path": "/src/wuffs/test/c/std/png.c"
-- "test_file_path": "/src/wuffs/test/c/std/gif.c"
+functions:
+- name: _ZZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1B8ne180100EOS5_ENKUlRS5_E_clES7_
+  params:
+  - name: this
+    type: 'bool '
+  - name: __s
+    type: 'bool '
+  return_type: void
+  signature: DW_TAG_rvalue_reference_type__compressed_pair<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >::__rep, std::__1::allocator<char>
+    > std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    >::operator()(const void *, basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > &)
+- name: _ZNK32wuffs_base__range_ie_u64__struct6lengthEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: size_t
+  signature: uint64_t wuffs_base__range_ie_u64__struct::length(const struct wuffs_base__range_ie_u64__struct
+    *)
+language: c++
+project: wuffs
+target_name: bzip2_fuzzer
+target_path: /src/wuffs/fuzz/c/fuzzlib/fuzzlib.c
+test_files:
+- test_file_path: /src/wuffs/test/c/std/crc32.c
+- test_file_path: /src/wuffs/test/c/std/json.c
+- test_file_path: /src/wuffs/example/json-to-cbor/json-to-cbor.cc
+- test_file_path: /src/wuffs/test/c/std/gif.c
+- test_file_path: /src/wuffs/test/c/std/png.c
+- test_file_path: /src/wuffs/test/c/mimiclib/openssl.c

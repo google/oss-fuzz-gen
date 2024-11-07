@@ -1,128 +1,94 @@
-"functions":
-- "name": "Service_CreateSession"
-  "params":
-  - "name": "server"
-    "type": "bool "
-  - "name": "channel"
-    "type": "bool "
-  - "name": "request"
-    "type": "bool "
-  - "name": "response"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Service_CreateSession(UA_Server *, UA_SecureChannel *, const UA_CreateSessionRequest *, UA_CreateSessionResponse *)"
-- "name": "UA_ReaderGroup_decodeAndProcessRT"
-  "params":
-  - "name": "psm"
-    "type": "bool "
-  - "name": "rg"
-    "type": "bool "
-  - "name": "buf"
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "UA_Boolean UA_ReaderGroup_decodeAndProcessRT(UA_PubSubManager *, UA_ReaderGroup *, UA_ByteString)"
-- "name": "UA_Server_addPubSubConnection"
-  "params":
-  - "name": "server"
-    "type": "bool "
-  - "name": "cc"
-    "type": "bool "
-  - "name": "cId"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "UA_StatusCode UA_Server_addPubSubConnection(UA_Server *, const UA_PubSubConnectionConfig *, UA_NodeId *)"
-- "name": "UA_Server_addDataSetWriter"
-  "params":
-  - "name": "server"
-    "type": "bool "
-  - "name": "writerGroup"
-    "type": "bool "
-  - "name": "dataSet"
-    "type": "bool "
-  - "name": "dataSetWriterConfig"
-    "type": "bool "
-  - "name": "writerIdentifier"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "UA_StatusCode UA_Server_addDataSetWriter(UA_Server *, const UA_NodeId, const UA_NodeId, const UA_DataSetWriterConfig *, UA_NodeId *)"
-- "name": "UA_Server_addDataSetReader"
-  "params":
-  - "name": "server"
-    "type": "bool "
-  - "name": "readerGroupIdentifier"
-    "type": "bool "
-  - "name": "dataSetReaderConfig"
-    "type": "bool "
-  - "name": "readerIdentifier"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "UA_StatusCode UA_Server_addDataSetReader(UA_Server *, UA_NodeId, const UA_DataSetReaderConfig *, UA_NodeId *)"
-- "name": "UA_ServerConfig_setDefaultWithFilestore"
-  "params":
-  - "name": "conf"
-    "type": "bool "
-  - "name": "portNumber"
-    "type": "short"
-  - "name": "certificate"
-    "type": "bool "
-  - "name": "privateKey"
-    "type": "bool "
-  - "name": "storePath"
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "UA_StatusCode UA_ServerConfig_setDefaultWithFilestore(UA_ServerConfig *, UA_UInt16, const UA_ByteString *, const UA_ByteString *, const UA_String)"
-- "name": "UA_Server_addReaderGroup"
-  "params":
-  - "name": "server"
-    "type": "bool "
-  - "name": "connectionIdentifier"
-    "type": "bool "
-  - "name": "readerGroupConfig"
-    "type": "bool "
-  - "name": "readerGroupIdentifier"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "UA_StatusCode UA_Server_addReaderGroup(UA_Server *, const UA_NodeId, const UA_ReaderGroupConfig *, UA_NodeId *)"
-- "name": "Service_CreateSubscription"
-  "params":
-  - "name": "server"
-    "type": "bool "
-  - "name": "session"
-    "type": "bool "
-  - "name": "request"
-    "type": "bool "
-  - "name": "response"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Service_CreateSubscription(UA_Server *, UA_Session *, const UA_CreateSubscriptionRequest *, UA_CreateSubscriptionResponse *)"
-- "name": "UA_Server_addWriterGroup"
-  "params":
-  - "name": "server"
-    "type": "bool "
-  - "name": "connection"
-    "type": "bool "
-  - "name": "writerGroupConfig"
-    "type": "bool "
-  - "name": "writerGroupIdentifier"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "UA_StatusCode UA_Server_addWriterGroup(UA_Server *, const UA_NodeId, const UA_WriterGroupConfig *, UA_NodeId *)"
-"language": "c++"
-"project": "open62541"
-"target_name": "fuzz_base64_encode"
-"target_path": "/src/open62541/tests/fuzz/fuzz_base64_encode.cc"
-"test_files":
-- "test_file_path": "/src/open62541/deps/nodesetLoader/backends/open62541/tests/issue_201.c"
-- "test_file_path": "/src/open62541/tests/client/check_client.c"
-- "test_file_path": "/src/open62541/tests/check_eventloop.c"
-- "test_file_path": "/src/open62541/deps/mqtt-c/examples/openssl_publisher_win.c"
-- "test_file_path": "/src/open62541/examples/pubsub/pubsub_publish_encrypted.c"
-- "test_file_path": "/src/open62541/examples/tutorial_server_method_async.c"
-- "test_file_path": "/src/open62541/examples/access_control/server_access_control.c"
-- "test_file_path": "/src/open62541/tests/server/check_server_password.c"
-- "test_file_path": "/src/open62541/tests/multithreading/check_mt_writeValueAttribute.c"
-- "test_file_path": "/src/open62541/examples/tutorial_server_historicaldata_circular.c"
+functions:
+- name: UA_ServerConfig_setDefaultWithFilestore
+  params:
+  - name: conf
+    type: 'bool '
+  - name: portNumber
+    type: short
+  - name: certificate
+    type: 'bool '
+  - name: privateKey
+    type: 'bool '
+  - name: storePath
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: UA_StatusCode UA_ServerConfig_setDefaultWithFilestore(UA_ServerConfig
+    *, UA_UInt16, const UA_ByteString *, const UA_ByteString *, const UA_String)
+- name: Service_CreateSubscription
+  params:
+  - name: server
+    type: 'bool '
+  - name: session
+    type: 'bool '
+  - name: request
+    type: 'bool '
+  - name: response
+    type: 'bool '
+  return_type: void
+  signature: void Service_CreateSubscription(UA_Server *, UA_Session *, const UA_CreateSubscriptionRequest
+    *, UA_CreateSubscriptionResponse *)
+- name: UA_Server_addPubSubConnection
+  params:
+  - name: server
+    type: 'bool '
+  - name: cc
+    type: 'bool '
+  - name: cId
+    type: 'bool '
+  return_type: int
+  signature: UA_StatusCode UA_Server_addPubSubConnection(UA_Server *, const UA_PubSubConnectionConfig
+    *, UA_NodeId *)
+- name: UA_Server_addDataSetReader
+  params:
+  - name: server
+    type: 'bool '
+  - name: readerGroupIdentifier
+    type: 'bool '
+  - name: dataSetReaderConfig
+    type: 'bool '
+  - name: readerIdentifier
+    type: 'bool '
+  return_type: int
+  signature: UA_StatusCode UA_Server_addDataSetReader(UA_Server *, UA_NodeId, const
+    UA_DataSetReaderConfig *, UA_NodeId *)
+- name: UA_Server_addDataSetWriter
+  params:
+  - name: server
+    type: 'bool '
+  - name: writerGroup
+    type: 'bool '
+  - name: dataSet
+    type: 'bool '
+  - name: dataSetWriterConfig
+    type: 'bool '
+  - name: writerIdentifier
+    type: 'bool '
+  return_type: int
+  signature: UA_StatusCode UA_Server_addDataSetWriter(UA_Server *, const UA_NodeId,
+    const UA_NodeId, const UA_DataSetWriterConfig *, UA_NodeId *)
+- name: UA_Server_addReaderGroup
+  params:
+  - name: server
+    type: 'bool '
+  - name: connectionIdentifier
+    type: 'bool '
+  - name: readerGroupConfig
+    type: 'bool '
+  - name: readerGroupIdentifier
+    type: 'bool '
+  return_type: int
+  signature: UA_StatusCode UA_Server_addReaderGroup(UA_Server *, const UA_NodeId,
+    const UA_ReaderGroupConfig *, UA_NodeId *)
+language: c++
+project: open62541
+target_name: fuzz_base64_encode
+target_path: /src/open62541/tests/fuzz/fuzz_base64_encode.cc
+test_files:
+- test_file_path: /src/open62541/deps/nodesetLoader/backends/open62541/tests/issue_201.c
+- test_file_path: /src/open62541/examples/access_control/server_access_control.c
+- test_file_path: /src/open62541/tests/server/check_server_password.c
+- test_file_path: /src/open62541/deps/mqtt-c/examples/openssl_publisher_win.c
+- test_file_path: /src/open62541/tests/multithreading/check_mt_writeValueAttribute.c
+- test_file_path: /src/open62541/tests/check_eventloop.c

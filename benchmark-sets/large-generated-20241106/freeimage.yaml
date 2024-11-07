@@ -1,136 +1,105 @@
-"functions":
-- "name": "_ZN6LibRaw14selectCRXTrackEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void LibRaw::selectCRXTrack()"
-- "name": "_ZN6LibRaw13parseCR3_CTMDEs"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "trackNum"
-    "type": "short"
-  "return_type": "int"
-  "signature": "int LibRaw::parseCR3_CTMD(short)"
-- "name": "_ZN6LibRaw13dcraw_processEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int LibRaw::dcraw_process()"
-- "name": "_ZN7Imf_2_29InputFileC2EPKci"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "fileName"
-    "type": "bool "
-  - "name": "numThreads"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void Imf_2_2::InputFile::InputFile(const char *, int)"
-- "name": "_ZN7Imf_2_29InputFileC2ERNS_7IStreamEi"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "is"
-    "type": "bool "
-  - "name": "numThreads"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void Imf_2_2::InputFile::InputFile(IStream &, int)"
-- "name": "_ZN7Imf_2_29InputFile23compatibilityInitializeERNS_7IStreamE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "is"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Imf_2_2::InputFile::compatibilityInitialize(IStream &)"
-- "name": "_Z10TIFFFdOpenPvPKcS1_"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "mode"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "TIFF * TIFFFdOpen(thandle_t, const char *, const char *)"
-- "name": "TIFFClientOpen"
-  "params":
-  - "name": "name"
-    "type": "bool "
-  - "name": "mode"
-    "type": "bool "
-  - "name": "clientdata"
-    "type": "bool "
-  - "name": "readproc"
-    "type": "bool "
-  - "name": "writeproc"
-    "type": "bool "
-  - "name": "seekproc"
-    "type": "bool "
-  - "name": "closeproc"
-    "type": "bool "
-  - "name": "sizeproc"
-    "type": "bool "
-  - "name": "mapproc"
-    "type": "bool "
-  - "name": "unmapproc"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "TIFF * TIFFClientOpen(const char *, const char *, thandle_t, TIFFReadWriteProc, TIFFReadWriteProc, TIFFSeekProc, TIFFCloseProc, TIFFSizeProc, TIFFMapFileProc, TIFFUnmapFileProc)"
-- "name": "TIFFClientOpenExt"
-  "params":
-  - "name": "name"
-    "type": "bool "
-  - "name": "mode"
-    "type": "bool "
-  - "name": "clientdata"
-    "type": "bool "
-  - "name": "readproc"
-    "type": "bool "
-  - "name": "writeproc"
-    "type": "bool "
-  - "name": "seekproc"
-    "type": "bool "
-  - "name": "closeproc"
-    "type": "bool "
-  - "name": "sizeproc"
-    "type": "bool "
-  - "name": "mapproc"
-    "type": "bool "
-  - "name": "unmapproc"
-    "type": "bool "
-  - "name": "opts"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "TIFF * TIFFClientOpenExt(const char *, const char *, thandle_t, TIFFReadWriteProc, TIFFReadWriteProc, TIFFSeekProc, TIFFCloseProc, TIFFSizeProc, TIFFMapFileProc, TIFFUnmapFileProc, TIFFOpenOptions *)"
-- "name": "_ZN7Imf_2_218MultiPartInputFileC2EPKcib"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "fileName"
-    "type": "bool "
-  - "name": "numThreads"
-    "type": "int"
-  - "name": "reconstructChunkOffsetTable"
-    "type": "bool"
-  "return_type": "void"
-  "signature": "void Imf_2_2::MultiPartInputFile::MultiPartInputFile(const char *, int, bool)"
-"language": "c++"
-"project": "freeimage"
-"target_name": "load_from_memory_fuzzer"
-"target_path": "/src/load_from_memory_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/freeimage-svn/FreeImage/trunk/TestAPI/testMemIO.cpp"
-- "test_file_path": "/src/freeimage-svn/FreeImage/trunk/TestAPI/testWrappedBuffer.cpp"
-- "test_file_path": "/src/freeimage-svn/FreeImage/trunk/TestAPI/testThumbnail.cpp"
-- "test_file_path": "/src/freeimage-svn/FreeImage/tags/3.18.0/TestAPI/testJPEG.cpp"
-- "test_file_path": "/src/freeimage-svn/FreeImage/trunk/Source/LibPNG/pngtest.c"
-- "test_file_path": "/src/freeimage-svn/FreeImage/tags/3.18.0/TestAPI/testChannels.cpp"
-- "test_file_path": "/src/freeimage-svn/FreeImage/trunk/TestAPI/testTools.cpp"
-- "test_file_path": "/src/freeimage-svn/FreeImage/tags/3.18.0/TestAPI/testMPageStream.cpp"
-- "test_file_path": "/src/freeimage-svn/FreeImage/tags/3.18.0/TestAPI/testMPage.cpp"
-- "test_file_path": "/src/freeimage-svn/FreeImage/trunk/TestAPI/testImageType.cpp"
+functions:
+- name: _ZN7Imf_2_29InputFileC2EPKci
+  params:
+  - name: this
+    type: 'bool '
+  - name: fileName
+    type: 'bool '
+  - name: numThreads
+    type: int
+  return_type: void
+  signature: void Imf_2_2::InputFile::InputFile(const char *, int)
+- name: TIFFClientOpen
+  params:
+  - name: name
+    type: 'bool '
+  - name: mode
+    type: 'bool '
+  - name: clientdata
+    type: 'bool '
+  - name: readproc
+    type: 'bool '
+  - name: writeproc
+    type: 'bool '
+  - name: seekproc
+    type: 'bool '
+  - name: closeproc
+    type: 'bool '
+  - name: sizeproc
+    type: 'bool '
+  - name: mapproc
+    type: 'bool '
+  - name: unmapproc
+    type: 'bool '
+  return_type: void
+  signature: TIFF * TIFFClientOpen(const char *, const char *, thandle_t, TIFFReadWriteProc,
+    TIFFReadWriteProc, TIFFSeekProc, TIFFCloseProc, TIFFSizeProc, TIFFMapFileProc,
+    TIFFUnmapFileProc)
+- name: _ZN7Imf_2_29InputFileC2ERNS_7IStreamEi
+  params:
+  - name: this
+    type: 'bool '
+  - name: is
+    type: 'bool '
+  - name: numThreads
+    type: int
+  return_type: void
+  signature: void Imf_2_2::InputFile::InputFile(IStream &, int)
+- name: _ZN7Imf_2_218MultiPartInputFileC2EPKcib
+  params:
+  - name: this
+    type: 'bool '
+  - name: fileName
+    type: 'bool '
+  - name: numThreads
+    type: int
+  - name: reconstructChunkOffsetTable
+    type: bool
+  return_type: void
+  signature: void Imf_2_2::MultiPartInputFile::MultiPartInputFile(const char *, int,
+    bool)
+- name: _ZN6LibRaw13dcraw_processEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: int
+  signature: int LibRaw::dcraw_process()
+- name: TIFFClientOpenExt
+  params:
+  - name: name
+    type: 'bool '
+  - name: mode
+    type: 'bool '
+  - name: clientdata
+    type: 'bool '
+  - name: readproc
+    type: 'bool '
+  - name: writeproc
+    type: 'bool '
+  - name: seekproc
+    type: 'bool '
+  - name: closeproc
+    type: 'bool '
+  - name: sizeproc
+    type: 'bool '
+  - name: mapproc
+    type: 'bool '
+  - name: unmapproc
+    type: 'bool '
+  - name: opts
+    type: 'bool '
+  return_type: void
+  signature: TIFF * TIFFClientOpenExt(const char *, const char *, thandle_t, TIFFReadWriteProc,
+    TIFFReadWriteProc, TIFFSeekProc, TIFFCloseProc, TIFFSizeProc, TIFFMapFileProc,
+    TIFFUnmapFileProc, TIFFOpenOptions *)
+language: c++
+project: freeimage
+target_name: load_from_memory_fuzzer
+target_path: /src/load_from_memory_fuzzer.cc
+test_files:
+- test_file_path: /src/freeimage-svn/FreeImage/trunk/TestAPI/testThumbnail.cpp
+- test_file_path: /src/freeimage-svn/FreeImage/tags/3.18.0/TestAPI/testMPage.cpp
+- test_file_path: /src/freeimage-svn/FreeImage/tags/3.18.0/TestAPI/testJPEG.cpp
+- test_file_path: /src/freeimage-svn/FreeImage/trunk/TestAPI/testMemIO.cpp
+- test_file_path: /src/freeimage-svn/FreeImage/trunk/TestAPI/testTools.cpp
+- test_file_path: /src/freeimage-svn/FreeImage/trunk/TestAPI/testWrappedBuffer.cpp

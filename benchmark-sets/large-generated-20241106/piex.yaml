@@ -1,89 +1,56 @@
-"functions":
-- "name": "_ZNK4piex14tiff_directory13TiffDirectory3GetEjPNS0_9SRationalE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "tag"
-    "type": "int"
-  - "name": "value"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool piex::tiff_directory::TiffDirectory::Get(const Tag, struct SRational *)"
-- "name": "_ZN4piex12binary_parse6strcmpERKNS0_19RangeCheckedBytePtrERKNSt3__112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEE"
-  "params":
-  - "name": "x"
-    "type": "bool "
-  - "name": "y"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int piex::binary_parse::strcmp(const RangeCheckedBytePtr &, const string &)"
-- "name": "_ZN4piex22image_type_recognition9IsRawLiteERKNS_12binary_parse19RangeCheckedBytePtrE"
-  "params":
-  - "name": "source"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool piex::image_type_recognition::IsRawLite(const RangeCheckedBytePtr &)"
-- "name": "_ZN4piex22image_type_recognition27GetNumberOfBytesForIsOfTypeENS0_13RawImageTypesE"
-  "params":
-  - "name": "type"
-    "type": "int"
-  "return_type": "size_t"
-  "signature": "size_t piex::image_type_recognition::GetNumberOfBytesForIsOfType(const DW_TAG_enumeration_typeRawImageTypes)"
-- "name": "_ZN4piex22image_type_recognition8IsOfTypeERKNS_12binary_parse19RangeCheckedBytePtrENS0_13RawImageTypesE"
-  "params":
-  - "name": "source"
-    "type": "bool "
-  - "name": "type"
-    "type": "int"
-  "return_type": "bool"
-  "signature": "bool piex::image_type_recognition::IsOfType(const RangeCheckedBytePtr &, const DW_TAG_enumeration_typeRawImageTypes)"
-- "name": "_ZN4piex5IsRawEPNS_15StreamInterfaceE"
-  "params":
-  - "name": "data"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool piex::IsRaw(StreamInterface *)"
-- "name": "_ZN4piex18GetExifOrientationEPNS_15StreamInterfaceEjPj"
-  "params":
-  - "name": "stream"
-    "type": "bool "
-  - "name": "offset"
-    "type": "int"
-  - "name": "orientation"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool piex::GetExifOrientation(StreamInterface *, const uint32_t, uint32_t *)"
-- "name": "_ZNK4piex14tiff_directory13TiffDirectory3GetEjPNSt3__16vectorINS0_9SRationalENS2_9allocatorIS4_EEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "tag"
-    "type": "int"
-  - "name": "value"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool piex::tiff_directory::TiffDirectory::Get(const Tag, vector<piex::tiff_directory::SRational, std::__1::allocator<piex::tiff_directory::SRational> > *)"
-- "name": "_ZN4piex12binary_parse6memcmpERKNS0_19RangeCheckedBytePtrES3_m"
-  "params":
-  - "name": "x"
-    "type": "bool "
-  - "name": "y"
-    "type": "bool "
-  - "name": "num"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int piex::binary_parse::memcmp(const RangeCheckedBytePtr &, const RangeCheckedBytePtr &, size_t)"
-- "name": "_ZNK4piex14tiff_directory13TiffDirectory3GetEjPNS0_8RationalE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "tag"
-    "type": "int"
-  - "name": "value"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool piex::tiff_directory::TiffDirectory::Get(const Tag, struct Rational *)"
-"language": "c++"
-"project": "piex"
-"target_name": "fuzzer-tiff_parser"
-"target_path": "/src/piex/fuzzers/tiff_parser.cpp"
+functions:
+- name: _ZNK4piex14tiff_directory13TiffDirectory3GetEjPNS0_9SRationalE
+  params:
+  - name: this
+    type: 'bool '
+  - name: tag
+    type: int
+  - name: value
+    type: 'bool '
+  return_type: bool
+  signature: bool piex::tiff_directory::TiffDirectory::Get(const Tag, struct SRational
+    *)
+- name: _ZN4piex22image_type_recognition8IsOfTypeERKNS_12binary_parse19RangeCheckedBytePtrENS0_13RawImageTypesE
+  params:
+  - name: source
+    type: 'bool '
+  - name: type
+    type: int
+  return_type: bool
+  signature: bool piex::image_type_recognition::IsOfType(const RangeCheckedBytePtr
+    &, const DW_TAG_enumeration_typeRawImageTypes)
+- name: _ZN4piex5IsRawEPNS_15StreamInterfaceE
+  params:
+  - name: data
+    type: 'bool '
+  return_type: bool
+  signature: bool piex::IsRaw(StreamInterface *)
+- name: _ZN4piex22image_type_recognition27GetNumberOfBytesForIsOfTypeENS0_13RawImageTypesE
+  params:
+  - name: type
+    type: int
+  return_type: size_t
+  signature: size_t piex::image_type_recognition::GetNumberOfBytesForIsOfType(const
+    DW_TAG_enumeration_typeRawImageTypes)
+- name: _ZNK4piex14tiff_directory13TiffDirectory3GetEjPNSt3__16vectorINS0_9SRationalENS2_9allocatorIS4_EEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: tag
+    type: int
+  - name: value
+    type: 'bool '
+  return_type: bool
+  signature: bool piex::tiff_directory::TiffDirectory::Get(const Tag, vector<piex::tiff_directory::SRational,
+    std::__1::allocator<piex::tiff_directory::SRational> > *)
+- name: _ZN4piex22image_type_recognition9IsRawLiteERKNS_12binary_parse19RangeCheckedBytePtrE
+  params:
+  - name: source
+    type: 'bool '
+  return_type: bool
+  signature: bool piex::image_type_recognition::IsRawLite(const RangeCheckedBytePtr
+    &)
+language: c++
+project: piex
+target_name: fuzzer-tiff_parser
+target_path: /src/piex/fuzzers/tiff_parser.cpp

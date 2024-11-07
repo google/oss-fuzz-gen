@@ -1,111 +1,69 @@
-"functions":
-- "name": "Hunspell_stem"
-  "params":
-  - "name": "pHunspell"
-    "type": "bool "
-  - "name": "slst"
-    "type": "bool "
-  - "name": "word"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int Hunspell_stem(Hunhandle *, char ***, const char *)"
-- "name": "Hunspell_suffix_suggest"
-  "params":
-  - "name": "pHunspell"
-    "type": "bool "
-  - "name": "slst"
-    "type": "bool "
-  - "name": "root_word"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int Hunspell_suffix_suggest(Hunhandle *, char ***, const char *)"
-- "name": "_ZN8Hunspell8generateEPPPcPKcS4_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "slst"
-    "type": "bool "
-  - "name": "word"
-    "type": "bool "
-  - "name": "pattern"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int Hunspell::generate(char ***, const char *, const char *)"
-- "name": "_ZN8Hunspell4stemEPPPcPKc"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "slst"
-    "type": "bool "
-  - "name": "word"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int Hunspell::stem(char ***, const char *)"
-- "name": "_ZN12HunspellImpl4stemEPPPcPKc"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "slst"
-    "type": "bool "
-  - "name": "word"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int HunspellImpl::stem(char ***, const char *)"
-- "name": "_ZN12HunspellImpl7suggestEPPPcPKc"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "slst"
-    "type": "bool "
-  - "name": "word"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int HunspellImpl::suggest(char ***, const char *)"
-- "name": "_ZN8Hunspell4stemERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "word"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > Hunspell::stem(const string &)"
-- "name": "_ZN8Hunspell7suggestEPPPcPKc"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "slst"
-    "type": "bool "
-  - "name": "word"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int Hunspell::suggest(char ***, const char *)"
-- "name": "Hunspell_generate"
-  "params":
-  - "name": "pHunspell"
-    "type": "bool "
-  - "name": "slst"
-    "type": "bool "
-  - "name": "word"
-    "type": "bool "
-  - "name": "pattern"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int Hunspell_generate(Hunhandle *, char ***, const char *, const char *)"
-- "name": "Hunspell_suggest"
-  "params":
-  - "name": "pHunspell"
-    "type": "bool "
-  - "name": "slst"
-    "type": "bool "
-  - "name": "word"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int Hunspell_suggest(Hunhandle *, char ***, const char *)"
-"language": "c++"
-"project": "hunspell"
-"target_name": "fuzzer"
-"target_path": "/src/hunspell/src/tools/fuzzer.cxx"
-"test_files":
-- "test_file_path": "/src/hunspell/src/parsers/testparser.cxx"
+functions:
+- name: Hunspell_stem
+  params:
+  - name: pHunspell
+    type: 'bool '
+  - name: slst
+    type: 'bool '
+  - name: word
+    type: 'bool '
+  return_type: int
+  signature: int Hunspell_stem(Hunhandle *, char ***, const char *)
+- name: _ZN8Hunspell4stemERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: word
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>,
+    std::__1::allocator<char> > > > Hunspell::stem(const string &)
+- name: Hunspell_suffix_suggest
+  params:
+  - name: pHunspell
+    type: 'bool '
+  - name: slst
+    type: 'bool '
+  - name: root_word
+    type: 'bool '
+  return_type: int
+  signature: int Hunspell_suffix_suggest(Hunhandle *, char ***, const char *)
+- name: _ZN12HunspellImpl7suggestEPPPcPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: slst
+    type: 'bool '
+  - name: word
+    type: 'bool '
+  return_type: int
+  signature: int HunspellImpl::suggest(char ***, const char *)
+- name: _ZN8Hunspell7suggestEPPPcPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: slst
+    type: 'bool '
+  - name: word
+    type: 'bool '
+  return_type: int
+  signature: int Hunspell::suggest(char ***, const char *)
+- name: _ZN12HunspellImpl4stemEPPPcPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: slst
+    type: 'bool '
+  - name: word
+    type: 'bool '
+  return_type: int
+  signature: int HunspellImpl::stem(char ***, const char *)
+language: c++
+project: hunspell
+target_name: fuzzer
+target_path: /src/hunspell/src/tools/fuzzer.cxx
+test_files:
+- test_file_path: /src/hunspell/src/parsers/testparser.cxx

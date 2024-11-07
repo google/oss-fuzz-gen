@@ -1,15 +1,11 @@
-"language": "c"
-"project": "gpac"
-"target_name": "fuzz_route"
-"target_path": "/src/gpac/testsuite/oss-fuzzers/fuzz_route.c"
-"test_files":
-- "test_file_path": "/src/gpac/applications/testapps/segmp4demux/main.c"
-- "test_file_path": "/src/gpac/applications/testapps/ts2udp/main.c"
-- "test_file_path": "/src/gpac/applications/testapps/fmp4demux/main.c"
-- "test_file_path": "/src/gpac/applications/testapps/atscdmx/main.c"
-- "test_file_path": "/src/gpac/src/utils/unittests/ut_os_config_init.c"
-- "test_file_path": "/src/gpac/applications/testapps/broadcaster/RTP_serv_packetizer.c"
-- "test_file_path": "/src/gpac/applications/testapps/broadcaster/RTP_serv_generator.c"
-- "test_file_path": "/src/gpac/applications/testapps/loadcompare/loadcompare.c"
-- "test_file_path": "/src/gpac/applications/testapps/broadcaster/RTP_serv_sender.c"
-- "test_file_path": "/src/gpac/applications/testapps/mpedemux/main.c"
+language: c
+project: gpac
+target_name: fuzz_route
+target_path: /src/gpac/testsuite/oss-fuzzers/fuzz_route.c
+test_files:
+- test_file_path: /src/gpac/applications/testapps/atscdmx/main.c
+- test_file_path: /src/gpac/applications/testapps/broadcaster/RTP_serv_packetizer.c
+- test_file_path: /src/gpac/applications/testapps/broadcaster/RTP_serv_generator.c
+- test_file_path: /src/gpac/applications/testapps/broadcaster/RTP_serv_sender.c
+- test_file_path: /src/gpac/applications/testapps/mpedemux/main.c
+- test_file_path: /src/gpac/applications/testapps/segmp4demux/main.c

@@ -1,122 +1,79 @@
-"functions":
-- "name": "xmlACatalogResolvePublic"
-  "params":
-  - "name": "catal"
-    "type": "bool "
-  - "name": "pubID"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "xmlChar * xmlACatalogResolvePublic(xmlCatalogPtr, const xmlChar *)"
-- "name": "xmlXIncludeProcessTreeFlags"
-  "params":
-  - "name": "tree"
-    "type": "bool "
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int xmlXIncludeProcessTreeFlags(xmlNodePtr, int)"
-- "name": "htmlCreateFileParserCtxt"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "encoding"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "htmlParserCtxtPtr htmlCreateFileParserCtxt(const char *, const char *)"
-- "name": "xmlParseBalancedChunkMemoryRecover"
-  "params":
-  - "name": "doc"
-    "type": "bool "
-  - "name": "sax"
-    "type": "bool "
-  - "name": "user_data"
-    "type": "bool "
-  - "name": "depth"
-    "type": "int"
-  - "name": "string"
-    "type": "bool "
-  - "name": "listOut"
-    "type": "bool "
-  - "name": "recover"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int xmlParseBalancedChunkMemoryRecover(xmlDocPtr, xmlSAXHandlerPtr, void *, int, const xmlChar *, xmlNodePtr *, int)"
-- "name": "htmlSAXParseFile"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "encoding"
-    "type": "bool "
-  - "name": "sax"
-    "type": "bool "
-  - "name": "userData"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "htmlDocPtr htmlSAXParseFile(const char *, const char *, htmlSAXHandlerPtr, void *)"
-- "name": "xmlACatalogResolveSystem"
-  "params":
-  - "name": "catal"
-    "type": "bool "
-  - "name": "sysID"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "xmlChar * xmlACatalogResolveSystem(xmlCatalogPtr, const xmlChar *)"
-- "name": "htmlCreateMemoryParserCtxt"
-  "params":
-  - "name": "buffer"
-    "type": "bool "
-  - "name": "size"
-    "type": "int"
-  "return_type": "void"
-  "signature": "htmlParserCtxtPtr htmlCreateMemoryParserCtxt(const char *, int)"
-- "name": "xmlTextReaderSchemaValidateCtxt"
-  "params":
-  - "name": "reader"
-    "type": "bool "
-  - "name": "ctxt"
-    "type": "bool "
-  - "name": "options"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int xmlTextReaderSchemaValidateCtxt(xmlTextReaderPtr, xmlSchemaValidCtxtPtr, int)"
-- "name": "xmlTextReaderRelaxNGValidateCtxt"
-  "params":
-  - "name": "reader"
-    "type": "bool "
-  - "name": "ctxt"
-    "type": "bool "
-  - "name": "options"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int xmlTextReaderRelaxNGValidateCtxt(xmlTextReaderPtr, xmlRelaxNGValidCtxtPtr, int)"
-- "name": "xmlParseBalancedChunkMemory"
-  "params":
-  - "name": "doc"
-    "type": "bool "
-  - "name": "sax"
-    "type": "bool "
-  - "name": "user_data"
-    "type": "bool "
-  - "name": "depth"
-    "type": "int"
-  - "name": "string"
-    "type": "bool "
-  - "name": "lst"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int xmlParseBalancedChunkMemory(xmlDocPtr, xmlSAXHandlerPtr, void *, int, const xmlChar *, xmlNodePtr *)"
-"language": "c++"
-"project": "libxml2"
-"target_name": "regexp"
-"target_path": "/src/libxml2/fuzz/regexp.c"
-"test_files":
-- "test_file_path": "/src/libxml2/example/io1.c"
-- "test_file_path": "/src/libxml2/example/xpath1.c"
-- "test_file_path": "/src/libxml2/testparser.c"
-- "test_file_path": "/src/libxml2/example/reader2.c"
-- "test_file_path": "/src/libxml2/example/xpath2.c"
-- "test_file_path": "/src/libxml2/testapi.c"
-- "test_file_path": "/src/libxml2/runtest.c"
-- "test_file_path": "/src/libxml2/testchar.c"
-- "test_file_path": "/src/libxml2/example/testWriter.c"
-- "test_file_path": "/src/libxml2/testlimits.c"
+functions:
+- name: xmlParseBalancedChunkMemoryRecover
+  params:
+  - name: doc
+    type: 'bool '
+  - name: sax
+    type: 'bool '
+  - name: user_data
+    type: 'bool '
+  - name: depth
+    type: int
+  - name: string
+    type: 'bool '
+  - name: listOut
+    type: 'bool '
+  - name: recover
+    type: int
+  return_type: int
+  signature: int xmlParseBalancedChunkMemoryRecover(xmlDocPtr, xmlSAXHandlerPtr, void
+    *, int, const xmlChar *, xmlNodePtr *, int)
+- name: htmlSAXParseFile
+  params:
+  - name: filename
+    type: 'bool '
+  - name: encoding
+    type: 'bool '
+  - name: sax
+    type: 'bool '
+  - name: userData
+    type: 'bool '
+  return_type: void
+  signature: htmlDocPtr htmlSAXParseFile(const char *, const char *, htmlSAXHandlerPtr,
+    void *)
+- name: xmlACatalogResolvePublic
+  params:
+  - name: catal
+    type: 'bool '
+  - name: pubID
+    type: 'bool '
+  return_type: void
+  signature: xmlChar * xmlACatalogResolvePublic(xmlCatalogPtr, const xmlChar *)
+- name: xmlTextReaderSchemaValidateCtxt
+  params:
+  - name: reader
+    type: 'bool '
+  - name: ctxt
+    type: 'bool '
+  - name: options
+    type: int
+  return_type: int
+  signature: int xmlTextReaderSchemaValidateCtxt(xmlTextReaderPtr, xmlSchemaValidCtxtPtr,
+    int)
+- name: xmlXIncludeProcessTreeFlags
+  params:
+  - name: tree
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: int
+  signature: int xmlXIncludeProcessTreeFlags(xmlNodePtr, int)
+- name: xmlACatalogResolveSystem
+  params:
+  - name: catal
+    type: 'bool '
+  - name: sysID
+    type: 'bool '
+  return_type: void
+  signature: xmlChar * xmlACatalogResolveSystem(xmlCatalogPtr, const xmlChar *)
+language: c++
+project: libxml2
+target_name: regexp
+target_path: /src/libxml2/fuzz/regexp.c
+test_files:
+- test_file_path: /src/libxml2/testlimits.c
+- test_file_path: /src/libxml2/example/io1.c
+- test_file_path: /src/libxml2/example/xpath1.c
+- test_file_path: /src/libxml2/testparser.c
+- test_file_path: /src/libxml2/testchar.c
+- test_file_path: /src/libxml2/example/reader2.c

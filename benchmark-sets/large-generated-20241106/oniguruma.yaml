@@ -1,44 +1,41 @@
-"functions":
-- "name": "onig_set_meta_char"
-  "params":
-  - "name": "enc"
-    "type": "bool "
-  - "name": "what"
-    "type": "int"
-  - "name": "code"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int onig_set_meta_char(OnigSyntaxType *, unsigned int, OnigCodePoint)"
-- "name": "onig_scan"
-  "params":
-  - "name": "reg"
-    "type": "bool "
-  - "name": "str"
-    "type": "bool "
-  - "name": "end"
-    "type": "bool "
-  - "name": "region"
-    "type": "bool "
-  - "name": "option"
-    "type": "int"
-  - "name": "scan_callback"
-    "type": "bool "
-  - "name": "callback_arg"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int onig_scan(regex_t *, const OnigUChar *, const OnigUChar *, OnigRegion *, OnigOptionType, DW_TAG_subroutine_typeInfinite loop *, void *)"
-"language": "c"
-"project": "oniguruma"
-"target_name": "fuzzer"
-"target_path": "/src/oniguruma/harnesses/base.c"
-"test_files":
-- "test_file_path": "/src/oniguruma/test/test_syntax.c"
-- "test_file_path": "/src/oniguruma/sample/listcap.c"
-- "test_file_path": "/src/oniguruma/test/testc.c"
-- "test_file_path": "/src/oniguruma/sample/encode.c"
-- "test_file_path": "/src/oniguruma/sample/posix.c"
-- "test_file_path": "/src/oniguruma/sample/count.c"
-- "test_file_path": "/src/oniguruma/sample/syntax.c"
-- "test_file_path": "/src/oniguruma/sample/sql.c"
-- "test_file_path": "/src/oniguruma/sample/user_property.c"
-- "test_file_path": "/src/oniguruma/sample/callout.c"
+functions:
+- name: onig_set_meta_char
+  params:
+  - name: enc
+    type: 'bool '
+  - name: what
+    type: int
+  - name: code
+    type: int
+  return_type: int
+  signature: int onig_set_meta_char(OnigSyntaxType *, unsigned int, OnigCodePoint)
+- name: onig_scan
+  params:
+  - name: reg
+    type: 'bool '
+  - name: str
+    type: 'bool '
+  - name: end
+    type: 'bool '
+  - name: region
+    type: 'bool '
+  - name: option
+    type: int
+  - name: scan_callback
+    type: 'bool '
+  - name: callback_arg
+    type: 'bool '
+  return_type: int
+  signature: int onig_scan(regex_t *, const OnigUChar *, const OnigUChar *, OnigRegion
+    *, OnigOptionType, DW_TAG_subroutine_typeInfinite loop *, void *)
+language: c
+project: oniguruma
+target_name: fuzzer
+target_path: /src/oniguruma/harnesses/base.c
+test_files:
+- test_file_path: /src/oniguruma/sample/posix.c
+- test_file_path: /src/oniguruma/test/test_syntax.c
+- test_file_path: /src/oniguruma/sample/listcap.c
+- test_file_path: /src/oniguruma/sample/count.c
+- test_file_path: /src/oniguruma/sample/user_property.c
+- test_file_path: /src/oniguruma/sample/sql.c

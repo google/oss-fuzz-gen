@@ -1,92 +1,65 @@
-"functions":
-- "name": "master_service_init_finish"
-  "params":
-  - "name": "service"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void master_service_init_finish(struct master_service *)"
-- "name": "master_service_client_connection_callback"
-  "params":
-  - "name": "service"
-    "type": "bool "
-  - "name": "conn"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void master_service_client_connection_callback(struct master_service *, struct master_service_connection *)"
-- "name": "t_push"
-  "params":
-  - "name": "marker"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "data_stack_frame_t t_push(const char *)"
-- "name": "master_service_client_connection_destroyed"
-  "params":
-  - "name": "service"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void master_service_client_connection_destroyed(struct master_service *)"
-- "name": "master_getopt_long"
-  "params":
-  - "name": "service"
-    "type": "bool "
-  - "name": "longopt_r"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int master_getopt_long(struct master_service *, const char **)"
-- "name": "master_service_client_connection_handled"
-  "params":
-  - "name": "service"
-    "type": "bool "
-  - "name": "conn"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void master_service_client_connection_handled(struct master_service *, struct master_service_connection *)"
-- "name": "master_service_io_listeners_add"
-  "params":
-  - "name": "service"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void master_service_io_listeners_add(struct master_service *)"
-- "name": "master_getopt"
-  "params":
-  - "name": "service"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int master_getopt(struct master_service *)"
-- "name": "master_service_haproxy_new"
-  "params":
-  - "name": "service"
-    "type": "bool "
-  - "name": "conn"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void master_service_haproxy_new(struct master_service *, struct master_service_connection *)"
-- "name": "master_service_init"
-  "params":
-  - "name": "name"
-    "type": "bool "
-  - "name": "flags"
-    "type": "int"
-  - "name": "argc"
-    "type": "bool "
-  - "name": "argv"
-    "type": "bool "
-  - "name": "getopt_str"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct master_service * master_service_init(const char *, DW_TAG_enumeration_typemaster_service_flags, int *, char ***, const char *)"
-"language": "c"
-"project": "dovecot"
-"target_name": "fuzz-imap-utf7"
-"target_path": "/src/dovecot/src/lib-imap/fuzz-imap-utf7.c"
-"test_files":
-- "test_file_path": "/src/dovecot/src/lib/test-time-util.c"
-- "test_file_path": "/src/dovecot/src/lib/test-istream-multiplex.c"
-- "test_file_path": "/src/dovecot/src/lib-storage/test-mailbox-get.c"
-- "test_file_path": "/src/dovecot/src/lib/test-env-util.c"
-- "test_file_path": "/src/dovecot/src/lib-program-client/test-program-client-unix.c"
-- "test_file_path": "/src/dovecot/src/lib-mail/test-istream-dot.c"
-- "test_file_path": "/src/dovecot/src/lib/test-file-cache.c"
-- "test_file_path": "/src/dovecot/src/lib-smtp/test-smtp-payload.c"
-- "test_file_path": "/src/dovecot/src/auth/test-auth.c"
-- "test_file_path": "/src/dovecot/src/lib/test-iostream-temp.c"
+functions:
+- name: master_service_init_finish
+  params:
+  - name: service
+    type: 'bool '
+  return_type: void
+  signature: void master_service_init_finish(struct master_service *)
+- name: master_getopt_long
+  params:
+  - name: service
+    type: 'bool '
+  - name: longopt_r
+    type: 'bool '
+  return_type: int
+  signature: int master_getopt_long(struct master_service *, const char **)
+- name: master_service_haproxy_new
+  params:
+  - name: service
+    type: 'bool '
+  - name: conn
+    type: 'bool '
+  return_type: void
+  signature: void master_service_haproxy_new(struct master_service *, struct master_service_connection
+    *)
+- name: master_getopt
+  params:
+  - name: service
+    type: 'bool '
+  return_type: int
+  signature: int master_getopt(struct master_service *)
+- name: master_service_init
+  params:
+  - name: name
+    type: 'bool '
+  - name: flags
+    type: int
+  - name: argc
+    type: 'bool '
+  - name: argv
+    type: 'bool '
+  - name: getopt_str
+    type: 'bool '
+  return_type: void
+  signature: struct master_service * master_service_init(const char *, DW_TAG_enumeration_typemaster_service_flags,
+    int *, char ***, const char *)
+- name: master_service_client_connection_handled
+  params:
+  - name: service
+    type: 'bool '
+  - name: conn
+    type: 'bool '
+  return_type: void
+  signature: void master_service_client_connection_handled(struct master_service *,
+    struct master_service_connection *)
+language: c
+project: dovecot
+target_name: fuzz-imap-utf7
+target_path: /src/dovecot/src/lib-imap/fuzz-imap-utf7.c
+test_files:
+- test_file_path: /src/dovecot/src/lib-smtp/test-smtp-payload.c
+- test_file_path: /src/dovecot/src/lib-program-client/test-program-client-unix.c
+- test_file_path: /src/dovecot/src/lib/test-env-util.c
+- test_file_path: /src/dovecot/src/lib/test-iostream-temp.c
+- test_file_path: /src/dovecot/src/auth/test-auth.c
+- test_file_path: /src/dovecot/src/lib-mail/test-istream-dot.c

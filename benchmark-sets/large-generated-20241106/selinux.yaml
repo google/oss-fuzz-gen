@@ -1,120 +1,78 @@
-"functions":
-- "name": "cil_write_post_ast"
-  "params":
-  - "name": "out"
-    "type": "bool "
-  - "name": "db"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cil_write_post_ast(FILE *, cil_db_t *)"
-- "name": "cil_write_build_ast"
-  "params":
-  - "name": "out"
-    "type": "bool "
-  - "name": "db"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cil_write_build_ast(FILE *, cil_db_t *)"
-- "name": "policydb_to_image"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  - "name": "policydb"
-    "type": "bool "
-  - "name": "newdata"
-    "type": "bool "
-  - "name": "newlen"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int policydb_to_image(sepol_handle_t *, policydb_t *, void **, size_t *)"
-- "name": "sepol_policydb_to_image"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  - "name": "p"
-    "type": "bool "
-  - "name": "newdata"
-    "type": "bool "
-  - "name": "newlen"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int sepol_policydb_to_image(sepol_handle_t *, sepol_policydb_t *, void **, size_t *)"
-- "name": "sepol_module_package_read"
-  "params":
-  - "name": "mod"
-    "type": "bool "
-  - "name": "spf"
-    "type": "bool "
-  - "name": "verbose"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int sepol_module_package_read(sepol_module_package_t *, struct sepol_policy_file *, int)"
-- "name": "sepol_policydb_read"
-  "params":
-  - "name": "p"
-    "type": "bool "
-  - "name": "pf"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int sepol_policydb_read(sepol_policydb_t *, sepol_policy_file_t *)"
-- "name": "cil_write_resolve_ast"
-  "params":
-  - "name": "out"
-    "type": "bool "
-  - "name": "db"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cil_write_resolve_ast(FILE *, cil_db_t *)"
-- "name": "sepol_policydb_from_image"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  - "name": "p"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int sepol_policydb_from_image(sepol_handle_t *, void *, size_t, sepol_policydb_t *)"
-- "name": "sepol_expand_module"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  - "name": "base"
-    "type": "bool "
-  - "name": "out"
-    "type": "bool "
-  - "name": "verbose"
-    "type": "int"
-  - "name": "check"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int sepol_expand_module(sepol_handle_t *, sepol_policydb_t *, sepol_policydb_t *, int, int)"
-- "name": "policydb_from_image"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  - "name": "policydb"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int policydb_from_image(sepol_handle_t *, void *, size_t, policydb_t *)"
-"language": "c"
-"project": "selinux"
-"target_name": "checkpolicy-fuzzer"
-"target_path": "/src/selinux/checkpolicy/fuzz/checkpolicy-fuzzer.c"
-"test_files":
-- "test_file_path": "/src/selinux/checkpolicy/test/dismod.c"
-- "test_file_path": "/src/selinux/libsemanage/tests/test_handle.c"
-- "test_file_path": "/src/selinux/libsepol/tests/test-ebitmap.c"
-- "test_file_path": "/src/selinux/libsepol/cil/test/unit/AllTests.c"
-- "test_file_path": "/src/selinux/libsepol/tests/test-linker.c"
-- "test_file_path": "/src/selinux/libsepol/tests/test-expander-users.c"
-- "test_file_path": "/src/selinux/libsemanage/tests/test_semanage_store.c"
-- "test_file_path": "/src/selinux/libsepol/cil/test/unit/test_cil_fqn.c"
-- "test_file_path": "/src/selinux/libsepol/tests/debug.c"
-- "test_file_path": "/src/selinux/libsepol/cil/test/unit/CuTest.c"
+functions:
+- name: cil_write_build_ast
+  params:
+  - name: out
+    type: 'bool '
+  - name: db
+    type: 'bool '
+  return_type: int
+  signature: int cil_write_build_ast(FILE *, cil_db_t *)
+- name: sepol_policydb_from_image
+  params:
+  - name: handle
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: len
+    type: size_t
+  - name: p
+    type: 'bool '
+  return_type: int
+  signature: int sepol_policydb_from_image(sepol_handle_t *, void *, size_t, sepol_policydb_t
+    *)
+- name: sepol_module_package_read
+  params:
+  - name: mod
+    type: 'bool '
+  - name: spf
+    type: 'bool '
+  - name: verbose
+    type: int
+  return_type: int
+  signature: int sepol_module_package_read(sepol_module_package_t *, struct sepol_policy_file
+    *, int)
+- name: sepol_policydb_read
+  params:
+  - name: p
+    type: 'bool '
+  - name: pf
+    type: 'bool '
+  return_type: int
+  signature: int sepol_policydb_read(sepol_policydb_t *, sepol_policy_file_t *)
+- name: policydb_to_image
+  params:
+  - name: handle
+    type: 'bool '
+  - name: policydb
+    type: 'bool '
+  - name: newdata
+    type: 'bool '
+  - name: newlen
+    type: 'bool '
+  return_type: int
+  signature: int policydb_to_image(sepol_handle_t *, policydb_t *, void **, size_t
+    *)
+- name: policydb_from_image
+  params:
+  - name: handle
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  - name: len
+    type: size_t
+  - name: policydb
+    type: 'bool '
+  return_type: int
+  signature: int policydb_from_image(sepol_handle_t *, void *, size_t, policydb_t
+    *)
+language: c
+project: selinux
+target_name: checkpolicy-fuzzer
+target_path: /src/selinux/checkpolicy/fuzz/checkpolicy-fuzzer.c
+test_files:
+- test_file_path: /src/selinux/libsemanage/tests/test_handle.c
+- test_file_path: /src/selinux/libsepol/cil/test/unit/AllTests.c
+- test_file_path: /src/selinux/libsepol/tests/test-linker.c
+- test_file_path: /src/selinux/libsemanage/tests/test_semanage_store.c
+- test_file_path: /src/selinux/libsepol/cil/test/unit/CuTest.c
+- test_file_path: /src/selinux/libsepol/tests/test-expander-users.c

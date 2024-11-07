@@ -1,100 +1,64 @@
-"functions":
-- "name": "redisAsyncRead"
-  "params":
-  - "name": "ac"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void redisAsyncRead(redisAsyncContext *)"
-- "name": "redisProcessCallbacks"
-  "params":
-  - "name": "ac"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void redisProcessCallbacks(redisAsyncContext *)"
-- "name": "redisCommand"
-  "params":
-  - "name": "c"
-    "type": "bool "
-  - "name": "format"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void * redisCommand(redisContext *, const char *, void)"
-- "name": "redisvCommand"
-  "params":
-  - "name": "c"
-    "type": "bool "
-  - "name": "format"
-    "type": "bool "
-  - "name": "ap"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void * redisvCommand(redisContext *, const char *, struct __va_list_tag *)"
-- "name": "redisCommandArgv"
-  "params":
-  - "name": "c"
-    "type": "bool "
-  - "name": "argc"
-    "type": "int"
-  - "name": "argv"
-    "type": "bool "
-  - "name": "argvlen"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void * redisCommandArgv(redisContext *, int, const char **, const size_t *)"
-- "name": "redisGetReply"
-  "params":
-  - "name": "c"
-    "type": "bool "
-  - "name": "reply"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int redisGetReply(redisContext *, void **)"
-- "name": "redisAsyncConnectUnix"
-  "params":
-  - "name": "path"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "redisAsyncContext * redisAsyncConnectUnix(const char *)"
-- "name": "redisAsyncConnectBindWithReuse"
-  "params":
-  - "name": "ip"
-    "type": "bool "
-  - "name": "port"
-    "type": "int"
-  - "name": "source_addr"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "redisAsyncContext * redisAsyncConnectBindWithReuse(const char *, int, const char *)"
-- "name": "redisAsyncConnectBind"
-  "params":
-  - "name": "ip"
-    "type": "bool "
-  - "name": "port"
-    "type": "int"
-  - "name": "source_addr"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "redisAsyncContext * redisAsyncConnectBind(const char *, int, const char *)"
-- "name": "redisAsyncConnect"
-  "params":
-  - "name": "ip"
-    "type": "bool "
-  - "name": "port"
-    "type": "int"
-  "return_type": "void"
-  "signature": "redisAsyncContext * redisAsyncConnect(const char *, int)"
-"language": "c"
-"project": "hiredis"
-"target_name": "format_command_fuzzer"
-"target_path": "/src/hiredis/fuzzing/format_command_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/hiredis/examples/example-libev.c"
-- "test_file_path": "/src/hiredis/examples/example-libuv.c"
-- "test_file_path": "/src/hiredis/examples/example-ssl.c"
-- "test_file_path": "/src/hiredis/examples/example-libhv.c"
-- "test_file_path": "/src/hiredis/examples/example-push.c"
-- "test_file_path": "/src/hiredis/test.c"
-- "test_file_path": "/src/hiredis/examples/example-libevent-ssl.c"
-- "test_file_path": "/src/hiredis/examples/example-macosx.c"
-- "test_file_path": "/src/hiredis/examples/example-qt.cpp"
-- "test_file_path": "/src/hiredis/examples/example-libsdevent.c"
+functions:
+- name: redisGetReply
+  params:
+  - name: c
+    type: 'bool '
+  - name: reply
+    type: 'bool '
+  return_type: int
+  signature: int redisGetReply(redisContext *, void **)
+- name: redisAsyncConnectBind
+  params:
+  - name: ip
+    type: 'bool '
+  - name: port
+    type: int
+  - name: source_addr
+    type: 'bool '
+  return_type: void
+  signature: redisAsyncContext * redisAsyncConnectBind(const char *, int, const char
+    *)
+- name: redisCommand
+  params:
+  - name: c
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: void
+  signature: void * redisCommand(redisContext *, const char *, void)
+- name: redisAsyncConnectBindWithReuse
+  params:
+  - name: ip
+    type: 'bool '
+  - name: port
+    type: int
+  - name: source_addr
+    type: 'bool '
+  return_type: void
+  signature: redisAsyncContext * redisAsyncConnectBindWithReuse(const char *, int,
+    const char *)
+- name: redisAsyncConnectUnix
+  params:
+  - name: path
+    type: 'bool '
+  return_type: void
+  signature: redisAsyncContext * redisAsyncConnectUnix(const char *)
+- name: redisAsyncConnect
+  params:
+  - name: ip
+    type: 'bool '
+  - name: port
+    type: int
+  return_type: void
+  signature: redisAsyncContext * redisAsyncConnect(const char *, int)
+language: c
+project: hiredis
+target_name: format_command_fuzzer
+target_path: /src/hiredis/fuzzing/format_command_fuzzer.c
+test_files:
+- test_file_path: /src/hiredis/examples/example-libsdevent.c
+- test_file_path: /src/hiredis/examples/example-libevent-ssl.c
+- test_file_path: /src/hiredis/examples/example-qt.cpp
+- test_file_path: /src/hiredis/examples/example-libuv.c
+- test_file_path: /src/hiredis/examples/example-macosx.c
+- test_file_path: /src/hiredis/examples/example-push.c

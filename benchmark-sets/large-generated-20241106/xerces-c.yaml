@@ -1,104 +1,68 @@
-"functions":
-- "name": "_ZN11xercesc_3_212IGXMLScanner11loadGrammarERKNS_11InputSourceEsb"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "src"
-    "type": "bool "
-  - "name": "grammarType"
-    "type": "short"
-  - "name": "toCache"
-    "type": "bool"
-  "return_type": "void"
-  "signature": "Grammar * xercesc_3_2::IGXMLScanner::loadGrammar(const InputSource &, const short, const bool)"
-- "name": "_ZN11xercesc_3_212IGXMLScanner28scanRawAttrListforNameSpacesEm"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "attCount"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void xercesc_3_2::IGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t)"
-- "name": "_ZN11xercesc_3_212IGXMLScanner19parseSchemaLocationEPKDsb"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "schemaLocationStr"
-    "type": "bool "
-  - "name": "ignoreLoadSchema"
-    "type": "bool"
-  "return_type": "void"
-  "signature": "void xercesc_3_2::IGXMLScanner::parseSchemaLocation(const const XMLCh *, bool)"
-- "name": "_ZN11xercesc_3_212SGXMLScanner12scanStartTagERb"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "gotData"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool xercesc_3_2::SGXMLScanner::scanStartTag(bool &)"
-- "name": "_ZN11xercesc_3_212IGXMLScanner8scanNextERNS_13XMLPScanTokenE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "token"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool xercesc_3_2::IGXMLScanner::scanNext(XMLPScanToken &)"
-- "name": "_ZN11xercesc_3_212SGXMLScanner19parseSchemaLocationEPKDsb"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "schemaLocationStr"
-    "type": "bool "
-  - "name": "ignoreLoadSchema"
-    "type": "bool"
-  "return_type": "void"
-  "signature": "void xercesc_3_2::SGXMLScanner::parseSchemaLocation(const const XMLCh *, bool)"
-- "name": "_ZN11xercesc_3_212IGXMLScanner14scanStartTagNSERb"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "gotData"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool xercesc_3_2::IGXMLScanner::scanStartTagNS(bool &)"
-- "name": "_ZN11xercesc_3_212IGXMLScanner12scanDocumentERKNS_11InputSourceE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "src"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void xercesc_3_2::IGXMLScanner::scanDocument(const InputSource &)"
-- "name": "_ZN11xercesc_3_212SGXMLScanner28scanRawAttrListforNameSpacesEm"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "attCount"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void xercesc_3_2::SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t)"
-- "name": "_ZN11xercesc_3_210XMLScanner12scanDocumentEPKc"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "systemId"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void xercesc_3_2::XMLScanner::scanDocument(const const char *)"
-"language": "c++"
-"project": "xerces-c"
-"target_name": "parse_target"
-"target_path": "/src/parse_target.cpp"
-"test_files":
-- "test_file_path": "/src/xerces-c/samples/src/DOMPrint/DOMPrint.cpp"
-- "test_file_path": "/src/xerces-c/tests/src/DOM/DOMMemTest/DOMMemTest.cpp"
-- "test_file_path": "/src/xerces-c/samples/src/Redirect/Redirect.cpp"
-- "test_file_path": "/src/xerces-c/tests/src/ThreadTest/ThreadTest.cpp"
-- "test_file_path": "/src/xerces-c/samples/src/SAX2Print/SAX2Print.cpp"
-- "test_file_path": "/src/xerces-c/tests/src/UtilTests/CoreTests_String.cpp"
-- "test_file_path": "/src/xerces-c/samples/src/SAXCount/SAXCount.cpp"
-- "test_file_path": "/src/xerces-c/samples/src/SEnumVal/SEnumVal.cpp"
-- "test_file_path": "/src/xerces-c/tests/src/UtilTests/CoreTests_ValueArray.cpp"
-- "test_file_path": "/src/xerces-c/tests/src/UtilTests/CoreTests_ValueStack.cpp"
+functions:
+- name: _ZN11xercesc_3_212SGXMLScanner19parseSchemaLocationEPKDsb
+  params:
+  - name: this
+    type: 'bool '
+  - name: schemaLocationStr
+    type: 'bool '
+  - name: ignoreLoadSchema
+    type: bool
+  return_type: void
+  signature: void xercesc_3_2::SGXMLScanner::parseSchemaLocation(const const XMLCh
+    *, bool)
+- name: _ZN11xercesc_3_210XMLScanner12scanDocumentEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: systemId
+    type: 'bool '
+  return_type: void
+  signature: void xercesc_3_2::XMLScanner::scanDocument(const const char *)
+- name: _ZN11xercesc_3_212IGXMLScanner11loadGrammarERKNS_11InputSourceEsb
+  params:
+  - name: this
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  - name: grammarType
+    type: short
+  - name: toCache
+    type: bool
+  return_type: void
+  signature: Grammar * xercesc_3_2::IGXMLScanner::loadGrammar(const InputSource &,
+    const short, const bool)
+- name: _ZN11xercesc_3_212SGXMLScanner28scanRawAttrListforNameSpacesEm
+  params:
+  - name: this
+    type: 'bool '
+  - name: attCount
+    type: size_t
+  return_type: void
+  signature: void xercesc_3_2::SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t)
+- name: _ZN11xercesc_3_212IGXMLScanner12scanDocumentERKNS_11InputSourceE
+  params:
+  - name: this
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  return_type: void
+  signature: void xercesc_3_2::IGXMLScanner::scanDocument(const InputSource &)
+- name: _ZN11xercesc_3_212IGXMLScanner8scanNextERNS_13XMLPScanTokenE
+  params:
+  - name: this
+    type: 'bool '
+  - name: token
+    type: 'bool '
+  return_type: bool
+  signature: bool xercesc_3_2::IGXMLScanner::scanNext(XMLPScanToken &)
+language: c++
+project: xerces-c
+target_name: parse_target
+target_path: /src/parse_target.cpp
+test_files:
+- test_file_path: /src/xerces-c/tests/src/ThreadTest/ThreadTest.cpp
+- test_file_path: /src/xerces-c/samples/src/SAXCount/SAXCount.cpp
+- test_file_path: /src/xerces-c/tests/src/DOM/DOMMemTest/DOMMemTest.cpp
+- test_file_path: /src/xerces-c/samples/src/DOMPrint/DOMPrint.cpp
+- test_file_path: /src/xerces-c/samples/src/Redirect/Redirect.cpp
+- test_file_path: /src/xerces-c/samples/src/SEnumVal/SEnumVal.cpp

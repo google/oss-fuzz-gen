@@ -1,112 +1,72 @@
-"functions":
-- "name": "psa_key_derivation_key_agreement"
-  "params":
-  - "name": "operation"
-    "type": "bool "
-  - "name": "step"
-    "type": "short"
-  - "name": "private_key"
-    "type": "int"
-  - "name": "peer_key_external"
-    "type": "bool "
-  - "name": "peer_key_length"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "psa_status_t psa_key_derivation_key_agreement(psa_key_derivation_operation_t *, psa_key_derivation_step_t, mbedtls_svc_key_id_t, const uint8_t *, size_t)"
-- "name": "mbedtls_ssl_close_notify"
-  "params":
-  - "name": "ssl"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mbedtls_ssl_close_notify(mbedtls_ssl_context *)"
-- "name": "mbedtls_ssl_write_early_data"
-  "params":
-  - "name": "ssl"
-    "type": "bool "
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int mbedtls_ssl_write_early_data(mbedtls_ssl_context *, const unsigned char *, size_t)"
-- "name": "mbedtls_ssl_write"
-  "params":
-  - "name": "ssl"
-    "type": "bool "
-  - "name": "buf"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int mbedtls_ssl_write(mbedtls_ssl_context *, const unsigned char *, size_t)"
-- "name": "mbedtls_pk_parse_keyfile"
-  "params":
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  - "name": "pwd"
-    "type": "bool "
-  - "name": "f_rng"
-    "type": "bool "
-  - "name": "p_rng"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mbedtls_pk_parse_keyfile(mbedtls_pk_context *, const char *, const char *, DW_TAG_subroutine_typeInfinite loop *, void *)"
-- "name": "mbedtls_strerror"
-  "params":
-  - "name": "ret"
-    "type": "int"
-  - "name": "buf"
-    "type": "bool "
-  - "name": "buflen"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void mbedtls_strerror(int, char *, size_t)"
-- "name": "mbedtls_pk_import_into_psa"
-  "params":
-  - "name": "pk"
-    "type": "bool "
-  - "name": "attributes"
-    "type": "bool "
-  - "name": "key_id"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mbedtls_pk_import_into_psa(const mbedtls_pk_context *, const psa_key_attributes_t *, mbedtls_svc_key_id_t *)"
-- "name": "mbedtls_ssl_send_fatal_handshake_failure"
-  "params":
-  - "name": "ssl"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mbedtls_ssl_send_fatal_handshake_failure(mbedtls_ssl_context *)"
-- "name": "mbedtls_ssl_check_record"
-  "params":
-  - "name": "ssl"
-    "type": "bool "
-  - "name": "buf"
-    "type": "bool "
-  - "name": "buflen"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int mbedtls_ssl_check_record(const mbedtls_ssl_context *, unsigned char *, size_t)"
-- "name": "mbedtls_aes_self_test"
-  "params":
-  - "name": "verbose"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int mbedtls_aes_self_test(int)"
-"language": "c++"
-"project": "mbedtls"
-"target_name": "usepsa-fuzz_x509csr"
-"target_path": "/src/mbedtls/programs/fuzz/fuzz_x509csr.c"
-"test_files":
-- "test_file_path": "/src/mbedtls/tests/src/drivers/test_driver_pake.c"
-- "test_file_path": "/src/mbedtls/programs/test/query_included_headers.c"
-- "test_file_path": "/src/mbedtls/tests/src/threading_helpers.c"
-- "test_file_path": "/src/mbedtls/programs/test/metatest.c"
-- "test_file_path": "/src/mbedtls/tests/src/drivers/platform_builtin_keys.c"
-- "test_file_path": "/src/mbedtls/tests/src/random.c"
-- "test_file_path": "/src/mbedtls/framework/psasim/test/server.c"
-- "test_file_path": "/src/mbedtls/tests/src/drivers/test_driver_key_management.c"
-- "test_file_path": "/src/mbedtls/tests/src/fake_external_rng_for_test.c"
-- "test_file_path": "/src/mbedtls/tests/src/psa_crypto_helpers.c"
+functions:
+- name: mbedtls_ssl_send_fatal_handshake_failure
+  params:
+  - name: ssl
+    type: 'bool '
+  return_type: int
+  signature: int mbedtls_ssl_send_fatal_handshake_failure(mbedtls_ssl_context *)
+- name: mbedtls_ssl_check_record
+  params:
+  - name: ssl
+    type: 'bool '
+  - name: buf
+    type: 'bool '
+  - name: buflen
+    type: size_t
+  return_type: int
+  signature: int mbedtls_ssl_check_record(const mbedtls_ssl_context *, unsigned char
+    *, size_t)
+- name: mbedtls_ssl_close_notify
+  params:
+  - name: ssl
+    type: 'bool '
+  return_type: int
+  signature: int mbedtls_ssl_close_notify(mbedtls_ssl_context *)
+- name: psa_key_derivation_key_agreement
+  params:
+  - name: operation
+    type: 'bool '
+  - name: step
+    type: short
+  - name: private_key
+    type: int
+  - name: peer_key_external
+    type: 'bool '
+  - name: peer_key_length
+    type: size_t
+  return_type: int
+  signature: psa_status_t psa_key_derivation_key_agreement(psa_key_derivation_operation_t
+    *, psa_key_derivation_step_t, mbedtls_svc_key_id_t, const uint8_t *, size_t)
+- name: mbedtls_ssl_write_early_data
+  params:
+  - name: ssl
+    type: 'bool '
+  - name: buf
+    type: 'bool '
+  - name: len
+    type: size_t
+  return_type: int
+  signature: int mbedtls_ssl_write_early_data(mbedtls_ssl_context *, const unsigned
+    char *, size_t)
+- name: mbedtls_pk_import_into_psa
+  params:
+  - name: pk
+    type: 'bool '
+  - name: attributes
+    type: 'bool '
+  - name: key_id
+    type: 'bool '
+  return_type: int
+  signature: int mbedtls_pk_import_into_psa(const mbedtls_pk_context *, const psa_key_attributes_t
+    *, mbedtls_svc_key_id_t *)
+language: c++
+project: mbedtls
+target_name: usepsa-fuzz_x509csr
+target_path: /src/mbedtls/programs/fuzz/fuzz_x509csr.c
+test_files:
+- test_file_path: /src/mbedtls/programs/test/metatest.c
+- test_file_path: /src/mbedtls/tests/src/drivers/platform_builtin_keys.c
+- test_file_path: /src/mbedtls/tests/src/psa_crypto_helpers.c
+- test_file_path: /src/mbedtls/tests/src/drivers/test_driver_pake.c
+- test_file_path: /src/mbedtls/tests/src/fake_external_rng_for_test.c
+- test_file_path: /src/mbedtls/tests/src/random.c

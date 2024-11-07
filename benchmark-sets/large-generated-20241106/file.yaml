@@ -1,94 +1,56 @@
-"functions":
-- "name": "magic_error"
-  "params":
-  - "name": "ms"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const char * magic_error(struct magic_set *)"
-- "name": "magic_errno"
-  "params":
-  - "name": "ms"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int magic_errno(struct magic_set *)"
-- "name": "cdf_tole4"
-  "params":
-  - "name": "sv"
-    "type": "int"
-  "return_type": "int"
-  "signature": "uint32_t cdf_tole4(uint32_t)"
-- "name": "cdf_tole8"
-  "params":
-  - "name": "sv"
-    "type": "size_t"
-  "return_type": "size_t"
-  "signature": "uint64_t cdf_tole8(uint64_t)"
-- "name": "magic_getparam"
-  "params":
-  - "name": "ms"
-    "type": "bool "
-  - "name": "param"
-    "type": "int"
-  - "name": "val"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int magic_getparam(struct magic_set *, int, void *)"
-- "name": "magic_load_buffers"
-  "params":
-  - "name": "ms"
-    "type": "bool "
-  - "name": "bufs"
-    "type": "bool "
-  - "name": "sizes"
-    "type": "bool "
-  - "name": "nbufs"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int magic_load_buffers(struct magic_set *, void **, size_t *, size_t)"
-- "name": "buffer_apprentice"
-  "params":
-  - "name": "ms"
-    "type": "bool "
-  - "name": "bufs"
-    "type": "bool "
-  - "name": "sizes"
-    "type": "bool "
-  - "name": "nbufs"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int buffer_apprentice(struct magic_set *, struct magic **, size_t *, size_t)"
-- "name": "magic_setparam"
-  "params":
-  - "name": "ms"
-    "type": "bool "
-  - "name": "param"
-    "type": "int"
-  - "name": "val"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int magic_setparam(struct magic_set *, int, const void *)"
-- "name": "cdf_print_classid"
-  "params":
-  - "name": "buf"
-    "type": "bool "
-  - "name": "buflen"
-    "type": "size_t"
-  - "name": "id"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cdf_print_classid(char *, size_t, const cdf_classid_t *)"
-- "name": "magic_list"
-  "params":
-  - "name": "ms"
-    "type": "bool "
-  - "name": "magicfile"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int magic_list(struct magic_set *, const char *)"
-"language": "c++"
-"project": "file"
-"target_name": "magic_fuzzer_loaddb"
-"target_path": "/src/magic_fuzzer_loaddb.cc"
-"test_files":
-- "test_file_path": "/src/file/src/memtest.c"
-- "test_file_path": "/src/file/tests/test.c"
+functions:
+- name: magic_load_buffers
+  params:
+  - name: ms
+    type: 'bool '
+  - name: bufs
+    type: 'bool '
+  - name: sizes
+    type: 'bool '
+  - name: nbufs
+    type: size_t
+  return_type: int
+  signature: int magic_load_buffers(struct magic_set *, void **, size_t *, size_t)
+- name: magic_setparam
+  params:
+  - name: ms
+    type: 'bool '
+  - name: param
+    type: int
+  - name: val
+    type: 'bool '
+  return_type: int
+  signature: int magic_setparam(struct magic_set *, int, const void *)
+- name: magic_errno
+  params:
+  - name: ms
+    type: 'bool '
+  return_type: int
+  signature: int magic_errno(struct magic_set *)
+- name: cdf_tole8
+  params:
+  - name: sv
+    type: size_t
+  return_type: size_t
+  signature: uint64_t cdf_tole8(uint64_t)
+- name: magic_error
+  params:
+  - name: ms
+    type: 'bool '
+  return_type: void
+  signature: const char * magic_error(struct magic_set *)
+- name: magic_list
+  params:
+  - name: ms
+    type: 'bool '
+  - name: magicfile
+    type: 'bool '
+  return_type: int
+  signature: int magic_list(struct magic_set *, const char *)
+language: c++
+project: file
+target_name: magic_fuzzer_loaddb
+target_path: /src/magic_fuzzer_loaddb.cc
+test_files:
+- test_file_path: /src/file/src/memtest.c
+- test_file_path: /src/file/tests/test.c

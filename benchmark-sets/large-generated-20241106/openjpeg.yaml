@@ -1,158 +1,111 @@
-"functions":
-- "name": "opj_t1_encode_cblks"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "OPJ_BOOL opj_t1_encode_cblks(opj_tcd_t *, opj_tcd_tile_t *, opj_tcp_t *, const OPJ_FLOAT64 *, OPJ_UINT32)"
-- "name": "opj_tcd_encode_tile"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OPJ_BOOL opj_tcd_encode_tile(opj_tcd_t *, OPJ_UINT32, OPJ_BYTE *, OPJ_UINT32 *, OPJ_UINT32, opj_codestream_info_t *, opj_tcd_marker_info_t *, opj_event_mgr_t *)"
-- "name": "opj_jp2_decode_tile"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OPJ_BOOL opj_jp2_decode_tile(opj_jp2_t *, OPJ_UINT32, OPJ_BYTE *, OPJ_UINT32, opj_stream_private_t *, opj_event_mgr_t *)"
-- "name": "opj_jp2_get_tile"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "OPJ_BOOL opj_jp2_get_tile(opj_jp2_t *, opj_stream_private_t *, opj_image_t *, opj_event_mgr_t *, OPJ_UINT32)"
-- "name": "opj_jp2_write_tile"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OPJ_BOOL opj_jp2_write_tile(opj_jp2_t *, OPJ_UINT32, OPJ_BYTE *, OPJ_UINT32, opj_stream_private_t *, opj_event_mgr_t *)"
-- "name": "opj_jp2_encode"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OPJ_BOOL opj_jp2_encode(opj_jp2_t *, opj_stream_private_t *, opj_event_mgr_t *)"
-- "name": "opj_j2k_write_tile"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OPJ_BOOL opj_j2k_write_tile(opj_j2k_t *, OPJ_UINT32, OPJ_BYTE *, OPJ_UINT32, opj_stream_private_t *, opj_event_mgr_t *)"
-- "name": "opj_j2k_get_tile"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "OPJ_BOOL opj_j2k_get_tile(opj_j2k_t *, opj_stream_private_t *, opj_image_t *, opj_event_mgr_t *, OPJ_UINT32)"
-- "name": "opj_j2k_encode"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OPJ_BOOL opj_j2k_encode(opj_j2k_t *, opj_stream_private_t *, opj_event_mgr_t *)"
-- "name": "opj_jp2_start_compress"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OPJ_BOOL opj_jp2_start_compress(opj_jp2_t *, opj_stream_private_t *, opj_image_t *, opj_event_mgr_t *)"
-"language": "c++"
-"project": "openjpeg"
-"target_name": "opj_decompress_fuzzer_JP2"
-"target_path": "/src/openjpeg/tests/fuzzers/opj_decompress_fuzzer_JP2.cpp"
-"test_files":
-- "test_file_path": "/src/openjpeg/tests/ppm2rgb3.c"
-- "test_file_path": "/src/openjpeg/tests/compare_raw_files.c"
-- "test_file_path": "/src/openjpeg/tests/compare_images.c"
-- "test_file_path": "/src/openjpeg/src/lib/openjp2/test_sparse_array.c"
-- "test_file_path": "/src/openjpeg/tests/include_openjpeg.c"
-- "test_file_path": "/src/openjpeg/tests/compare_dump_files.c"
-- "test_file_path": "/src/openjpeg/src/bin/jpip/opj_jpip_test.c"
-- "test_file_path": "/src/openjpeg/tests/test_tile_encoder.c"
-- "test_file_path": "/src/openjpeg/tests/j2k_random_tile_access.c"
-- "test_file_path": "/src/openjpeg/tests/test_tile_decoder.c"
+functions:
+- name: opj_jp2_decode_tile
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: OPJ_BOOL opj_jp2_decode_tile(opj_jp2_t *, OPJ_UINT32, OPJ_BYTE *, OPJ_UINT32,
+    opj_stream_private_t *, opj_event_mgr_t *)
+- name: opj_j2k_write_tile
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: OPJ_BOOL opj_j2k_write_tile(opj_j2k_t *, OPJ_UINT32, OPJ_BYTE *, OPJ_UINT32,
+    opj_stream_private_t *, opj_event_mgr_t *)
+- name: opj_j2k_encode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: OPJ_BOOL opj_j2k_encode(opj_j2k_t *, opj_stream_private_t *, opj_event_mgr_t
+    *)
+- name: opj_t1_encode_cblks
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: int
+  signature: OPJ_BOOL opj_t1_encode_cblks(opj_tcd_t *, opj_tcd_tile_t *, opj_tcp_t
+    *, const OPJ_FLOAT64 *, OPJ_UINT32)
+- name: opj_tcd_encode_tile
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: OPJ_BOOL opj_tcd_encode_tile(opj_tcd_t *, OPJ_UINT32, OPJ_BYTE *, OPJ_UINT32
+    *, OPJ_UINT32, opj_codestream_info_t *, opj_tcd_marker_info_t *, opj_event_mgr_t
+    *)
+- name: opj_jp2_write_tile
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: OPJ_BOOL opj_jp2_write_tile(opj_jp2_t *, OPJ_UINT32, OPJ_BYTE *, OPJ_UINT32,
+    opj_stream_private_t *, opj_event_mgr_t *)
+language: c++
+project: openjpeg
+target_name: opj_decompress_fuzzer_JP2
+target_path: /src/openjpeg/tests/fuzzers/opj_decompress_fuzzer_JP2.cpp
+test_files:
+- test_file_path: /src/openjpeg/src/bin/jpip/opj_jpip_test.c
+- test_file_path: /src/openjpeg/tests/compare_images.c
+- test_file_path: /src/openjpeg/tests/j2k_random_tile_access.c
+- test_file_path: /src/openjpeg/tests/compare_raw_files.c
+- test_file_path: /src/openjpeg/tests/compare_dump_files.c
+- test_file_path: /src/openjpeg/tests/ppm2rgb3.c

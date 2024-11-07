@@ -1,110 +1,80 @@
-"functions":
-- "name": "spng_set_splt"
-  "params":
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "splt"
-    "type": "bool "
-  - "name": "n_splt"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int spng_set_splt(spng_ctx *, struct spng_splt *, uint32_t)"
-- "name": "LLVMFuzzerCustomMutator"
-  "params":
-  - "name": "Data"
-    "type": "bool "
-  - "name": "Size"
-    "type": "size_t"
-  - "name": "MaxSize"
-    "type": "size_t"
-  - "name": "Seed"
-    "type": "int"
-  "return_type": "size_t"
-  "signature": "size_t LLVMFuzzerCustomMutator(uint8_t *, size_t, size_t, unsigned int)"
-- "name": "spng_set_gama_int"
-  "params":
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "gamma"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int spng_set_gama_int(spng_ctx *, uint32_t)"
-- "name": "spng_set_unknown_chunks"
-  "params":
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "chunks"
-    "type": "bool "
-  - "name": "n_chunks"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int spng_set_unknown_chunks(spng_ctx *, struct spng_unknown_chunk *, uint32_t)"
-- "name": "spng_set_offs"
-  "params":
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "offs"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int spng_set_offs(spng_ctx *, struct spng_offs *)"
-- "name": "_ZN10PngMutatorC2ERNSt3__113basic_istreamIcNS0_11char_traitsIcEEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "in"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void PngMutator::PngMutator(istream &)"
-- "name": "spng_set_exif"
-  "params":
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "exif"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int spng_set_exif(spng_ctx *, struct spng_exif *)"
-- "name": "spng_set_iccp"
-  "params":
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "iccp"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int spng_set_iccp(spng_ctx *, struct spng_iccp *)"
-- "name": "spng_set_text"
-  "params":
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "text"
-    "type": "bool "
-  - "name": "n_text"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int spng_set_text(spng_ctx *, struct spng_text *, uint32_t)"
-- "name": "LLVMFuzzerCustomCrossOver"
-  "params":
-  - "name": "Data1"
-    "type": "bool "
-  - "name": "Size1"
-    "type": "size_t"
-  - "name": "Data2"
-    "type": "bool "
-  - "name": "Size2"
-    "type": "size_t"
-  - "name": "Out"
-    "type": "bool "
-  - "name": "MaxOutSize"
-    "type": "size_t"
-  - "name": "Seed"
-    "type": "int"
-  "return_type": "size_t"
-  "signature": "size_t LLVMFuzzerCustomCrossOver(const uint8_t *, size_t, const uint8_t *, size_t, uint8_t *, size_t, unsigned int)"
-"language": "c++"
-"project": "libspng"
-"target_name": "spng_write_fuzzer"
-"target_path": "/src/libspng/tests/spng_write_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/libspng/tests/test.cpp"
-- "test_file_path": "/src/libspng/tests/testsuite.c"
-- "test_file_path": "/src/libspng/tests/target_clones.c"
-- "test_file_path": "/src/libspng/examples/example.c"
+functions:
+- name: LLVMFuzzerCustomMutator
+  params:
+  - name: Data
+    type: 'bool '
+  - name: Size
+    type: size_t
+  - name: MaxSize
+    type: size_t
+  - name: Seed
+    type: int
+  return_type: size_t
+  signature: size_t LLVMFuzzerCustomMutator(uint8_t *, size_t, size_t, unsigned int)
+- name: spng_set_exif
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: exif
+    type: 'bool '
+  return_type: int
+  signature: int spng_set_exif(spng_ctx *, struct spng_exif *)
+- name: LLVMFuzzerCustomCrossOver
+  params:
+  - name: Data1
+    type: 'bool '
+  - name: Size1
+    type: size_t
+  - name: Data2
+    type: 'bool '
+  - name: Size2
+    type: size_t
+  - name: Out
+    type: 'bool '
+  - name: MaxOutSize
+    type: size_t
+  - name: Seed
+    type: int
+  return_type: size_t
+  signature: size_t LLVMFuzzerCustomCrossOver(const uint8_t *, size_t, const uint8_t
+    *, size_t, uint8_t *, size_t, unsigned int)
+- name: spng_set_unknown_chunks
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: chunks
+    type: 'bool '
+  - name: n_chunks
+    type: int
+  return_type: int
+  signature: int spng_set_unknown_chunks(spng_ctx *, struct spng_unknown_chunk *,
+    uint32_t)
+- name: spng_set_splt
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: splt
+    type: 'bool '
+  - name: n_splt
+    type: int
+  return_type: int
+  signature: int spng_set_splt(spng_ctx *, struct spng_splt *, uint32_t)
+- name: spng_set_text
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: text
+    type: 'bool '
+  - name: n_text
+    type: int
+  return_type: int
+  signature: int spng_set_text(spng_ctx *, struct spng_text *, uint32_t)
+language: c++
+project: libspng
+target_name: spng_write_fuzzer
+target_path: /src/libspng/tests/spng_write_fuzzer.c
+test_files:
+- test_file_path: /src/libspng/tests/test.cpp
+- test_file_path: /src/libspng/tests/testsuite.c
+- test_file_path: /src/libspng/tests/target_clones.c
+- test_file_path: /src/libspng/examples/example.c

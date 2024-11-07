@@ -1,110 +1,66 @@
-"functions":
-- "name": "ogs_app_parse_local_conf"
-  "params":
-  - "name": "local"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ogs_app_parse_local_conf(const char *)"
-- "name": "ogs_nas_esm_decode"
-  "params":
-  - "name": "message"
-    "type": "bool "
-  - "name": "pkbuf"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ogs_nas_esm_decode(ogs_nas_eps_message_t *, ogs_pkbuf_t *)"
-- "name": "ogs_gtp2_send_error_message"
-  "params":
-  - "name": "xact"
-    "type": "bool "
-  - "name": "teid"
-    "type": "int"
-  - "name": "type"
-    "type": "char"
-  - "name": "cause_value"
-    "type": "char"
-  "return_type": "void"
-  "signature": "void ogs_gtp2_send_error_message(ogs_gtp_xact_t *, uint32_t, uint8_t, uint8_t)"
-- "name": "ogs_gtp_xact_receive"
-  "params":
-  - "name": "gnode"
-    "type": "bool "
-  - "name": "h"
-    "type": "bool "
-  - "name": "xact"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ogs_gtp_xact_receive(ogs_gtp_node_t *, ogs_gtp2_header_t *, ogs_gtp_xact_t **)"
-- "name": "ogs_gtp2_send_echo_response"
-  "params":
-  - "name": "xact"
-    "type": "bool "
-  - "name": "recovery"
-    "type": "char"
-  - "name": "features"
-    "type": "char"
-  "return_type": "void"
-  "signature": "void ogs_gtp2_send_echo_response(ogs_gtp_xact_t *, uint8_t, uint8_t)"
-- "name": "ogs_gtp2_send_echo_request"
-  "params":
-  - "name": "gnode"
-    "type": "bool "
-  - "name": "recovery"
-    "type": "char"
-  - "name": "features"
-    "type": "char"
-  "return_type": "void"
-  "signature": "void ogs_gtp2_send_echo_request(ogs_gtp_node_t *, uint8_t, uint8_t)"
-- "name": "ogs_gtp1_xact_receive"
-  "params":
-  - "name": "gnode"
-    "type": "bool "
-  - "name": "h"
-    "type": "bool "
-  - "name": "xact"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ogs_gtp1_xact_receive(ogs_gtp_node_t *, ogs_gtp1_header_t *, ogs_gtp_xact_t **)"
-- "name": "ogs_gtp1_xact_local_create"
-  "params":
-  - "name": "gnode"
-    "type": "bool "
-  - "name": "hdesc"
-    "type": "bool "
-  - "name": "pkbuf"
-    "type": "bool "
-  - "name": "cb"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "ogs_gtp_xact_t * ogs_gtp1_xact_local_create(ogs_gtp_node_t *, ogs_gtp1_header_t *, ogs_pkbuf_t *, DW_TAG_subroutine_typeInfinite loop *, void *)"
-- "name": "ogs_gtp_context_parse_config"
-  "params":
-  - "name": "local"
-    "type": "bool "
-  - "name": "remote"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ogs_gtp_context_parse_config(const char *, const char *)"
-- "name": "ogs_gtp_xact_commit"
-  "params":
-  - "name": "xact"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ogs_gtp_xact_commit(ogs_gtp_xact_t *)"
-"language": "c"
-"project": "open5gs"
-"target_name": "gtp_message_fuzz"
-"target_path": "/src/open5gs/tests/fuzzing/gtp-message-fuzz.c"
-"test_files":
-- "test_file_path": "/src/open5gs/tests/registration/simple-test.c"
-- "test_file_path": "/src/open5gs/tests/csfb/mo-sms-test.c"
-- "test_file_path": "/src/open5gs/tests/app/epc-init.c"
-- "test_file_path": "/src/open5gs/tests/common/nas-security.c"
-- "test_file_path": "/src/open5gs/tests/non3gpp/diameter-s6b-path.c"
-- "test_file_path": "/src/open5gs/tests/vonr/session-test.c"
-- "test_file_path": "/src/open5gs/tests/attach/issues-test.c"
-- "test_file_path": "/src/open5gs/tests/crypt/abts-main.c"
-- "test_file_path": "/src/open5gs/tests/volte/diameter-rx-path.c"
-- "test_file_path": "/src/open5gs/tests/common/gsm-build.c"
+functions:
+- name: ogs_gtp2_send_error_message
+  params:
+  - name: xact
+    type: 'bool '
+  - name: teid
+    type: int
+  - name: type
+    type: char
+  - name: cause_value
+    type: char
+  return_type: void
+  signature: void ogs_gtp2_send_error_message(ogs_gtp_xact_t *, uint32_t, uint8_t,
+    uint8_t)
+- name: ogs_nas_esm_decode
+  params:
+  - name: message
+    type: 'bool '
+  - name: pkbuf
+    type: 'bool '
+  return_type: int
+  signature: int ogs_nas_esm_decode(ogs_nas_eps_message_t *, ogs_pkbuf_t *)
+- name: ogs_gtp_xact_commit
+  params:
+  - name: xact
+    type: 'bool '
+  return_type: int
+  signature: int ogs_gtp_xact_commit(ogs_gtp_xact_t *)
+- name: ogs_app_parse_local_conf
+  params:
+  - name: local
+    type: 'bool '
+  return_type: int
+  signature: int ogs_app_parse_local_conf(const char *)
+- name: ogs_gtp1_xact_receive
+  params:
+  - name: gnode
+    type: 'bool '
+  - name: h
+    type: 'bool '
+  - name: xact
+    type: 'bool '
+  return_type: int
+  signature: int ogs_gtp1_xact_receive(ogs_gtp_node_t *, ogs_gtp1_header_t *, ogs_gtp_xact_t
+    **)
+- name: ogs_gtp2_send_echo_response
+  params:
+  - name: xact
+    type: 'bool '
+  - name: recovery
+    type: char
+  - name: features
+    type: char
+  return_type: void
+  signature: void ogs_gtp2_send_echo_response(ogs_gtp_xact_t *, uint8_t, uint8_t)
+language: c
+project: open5gs
+target_name: gtp_message_fuzz
+target_path: /src/open5gs/tests/fuzzing/gtp-message-fuzz.c
+test_files:
+- test_file_path: /src/open5gs/tests/attach/issues-test.c
+- test_file_path: /src/open5gs/tests/registration/simple-test.c
+- test_file_path: /src/open5gs/tests/common/gsm-build.c
+- test_file_path: /src/open5gs/tests/vonr/session-test.c
+- test_file_path: /src/open5gs/tests/non3gpp/diameter-s6b-path.c
+- test_file_path: /src/open5gs/tests/csfb/mo-sms-test.c

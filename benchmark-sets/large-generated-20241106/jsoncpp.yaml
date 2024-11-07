@@ -1,108 +1,75 @@
-"functions":
-- "name": "_ZN4Json6Reader5parseERNSt3__113basic_istreamIcNS1_11char_traitsIcEEEERNS_5ValueEb"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool"
-  "return_type": "bool"
-  "signature": "bool Json::Reader::parse(istream &, Value &, bool)"
-- "name": "_ZN4Json6Reader9readArrayERNS0_5TokenE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool Json::Reader::readArray(Token &)"
-- "name": "_ZN4Json6Reader10readObjectERNS0_5TokenE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool Json::Reader::readObject(Token &)"
-- "name": "_ZN4Json23BuiltStyledStreamWriter10writeValueERKNS_5ValueE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Json::BuiltStyledStreamWriter::writeValue(struct BuiltStyledStreamWriter *, const Value &)"
-- "name": "_ZN4Json18StyledStreamWriter10writeValueERKNS_5ValueE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Json::StyledStreamWriter::writeValue(const Value &)"
-- "name": "_ZN4Json6Reader5parseEPKcS2_RNS_5ValueEb"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool"
-  "return_type": "bool"
-  "signature": "bool Json::Reader::parse(const char *, const char *, Value &, bool)"
-- "name": "_ZN4Json6Reader5parseERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERNS_5ValueEb"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool"
-  "return_type": "bool"
-  "signature": "bool Json::Reader::parse(const string &, Value &, bool)"
-- "name": "_ZN4Json12StyledWriter10writeValueERKNS_5ValueE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Json::StyledWriter::writeValue(const Value &)"
-- "name": "_ZN4Json6Reader9readValueEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool Json::Reader::readValue()"
-- "name": "_ZN10json_proto12JsonParseAPI8CopyFromERKS0_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "from"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void json_proto::JsonParseAPI::CopyFrom(const JsonParseAPI &)"
-"language": "c++"
-"project": "jsoncpp"
-"target_name": "jsoncpp_fuzzer"
-"target_path": "/src/jsoncpp/src/test_lib_json/fuzz.cpp"
-"test_files":
-- "test_file_path": "/src/jsoncpp/libprotobuf-mutator/src/mutator_test.cc"
-- "test_file_path": "/src/jsoncpp/libprotobuf-mutator/examples/expat/expat_example_test.cc"
-- "test_file_path": "/src/jsoncpp/src/test_lib_json/jsontest.cpp"
-- "test_file_path": "/src/jsoncpp/example/readFromString/readFromString.cpp"
-- "test_file_path": "/src/jsoncpp/libprotobuf-mutator/examples/xml/xml_converter.cc"
-- "test_file_path": "/src/jsoncpp/example/stringWrite/stringWrite.cpp"
-- "test_file_path": "/src/jsoncpp/src/jsontestrunner/main.cpp"
-- "test_file_path": "/src/jsoncpp/libprotobuf-mutator/examples/libxml2/libxml2_example_test.cc"
-- "test_file_path": "/src/jsoncpp/libprotobuf-mutator/examples/xml/xml_writer.cc"
-- "test_file_path": "/src/jsoncpp/example/streamWrite/streamWrite.cpp"
+functions:
+- name: _ZN4Json6Reader5parseERNSt3__113basic_istreamIcNS1_11char_traitsIcEEEERNS_5ValueEb
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: bool
+  signature: bool Json::Reader::parse(istream &, Value &, bool)
+- name: _ZN4Json6Reader9readArrayERNS0_5TokenE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool Json::Reader::readArray(Token &)
+- name: _ZN4Json18StyledStreamWriter10writeValueERKNS_5ValueE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void Json::StyledStreamWriter::writeValue(const Value &)
+- name: _ZN4Json6Reader5parseERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERNS_5ValueEb
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: bool
+  signature: bool Json::Reader::parse(const string &, Value &, bool)
+- name: _ZN4Json6Reader5parseEPKcS2_RNS_5ValueEb
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: bool
+  return_type: bool
+  signature: bool Json::Reader::parse(const char *, const char *, Value &, bool)
+- name: _ZN4Json23BuiltStyledStreamWriter10writeValueERKNS_5ValueE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void Json::BuiltStyledStreamWriter::writeValue(struct BuiltStyledStreamWriter
+    *, const Value &)
+language: c++
+project: jsoncpp
+target_name: jsoncpp_fuzzer
+target_path: /src/jsoncpp/src/test_lib_json/fuzz.cpp
+test_files:
+- test_file_path: /src/jsoncpp/src/test_lib_json/jsontest.cpp
+- test_file_path: /src/jsoncpp/libprotobuf-mutator/examples/expat/expat_example_test.cc
+- test_file_path: /src/jsoncpp/libprotobuf-mutator/examples/xml/xml_converter.cc
+- test_file_path: /src/jsoncpp/libprotobuf-mutator/src/mutator_test.cc
+- test_file_path: /src/jsoncpp/example/stringWrite/stringWrite.cpp
+- test_file_path: /src/jsoncpp/libprotobuf-mutator/examples/xml/xml_writer.cc

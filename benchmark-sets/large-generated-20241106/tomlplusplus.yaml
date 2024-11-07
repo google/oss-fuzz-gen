@@ -1,96 +1,65 @@
-"functions":
-- "name": "_ZNK4toml2v35table14is_homogeneousENS0_9node_typeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ntype"
-    "type": "char"
-  "return_type": "bool"
-  "signature": "bool toml::v3::table::is_homogeneous(DW_TAG_enumeration_typenode_type)"
-- "name": "_ZNK4toml2v35array18is_array_of_tablesEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool toml::v3::array::is_array_of_tables()"
-- "name": "_ZN4toml2v35table14is_homogeneousENS0_9node_typeERPNS0_4nodeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ntype"
-    "type": "char"
-  - "name": "first_nonmatch"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool toml::v3::table::is_homogeneous(DW_TAG_enumeration_typenode_type, node &*)"
-- "name": "_ZN4toml2v35array14is_homogeneousENS0_9node_typeERPNS0_4nodeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ntype"
-    "type": "char"
-  - "name": "first_nonmatch"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool toml::v3::array::is_homogeneous(DW_TAG_enumeration_typenode_type, node &*)"
-- "name": "_ZNK4toml2v35array14is_homogeneousENS0_9node_typeERPKNS0_4nodeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ntype"
-    "type": "char"
-  - "name": "first_nonmatch"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool toml::v3::array::is_homogeneous(DW_TAG_enumeration_typenode_type, const node &*)"
-- "name": "_ZNK4toml2v35table14is_homogeneousENS0_9node_typeERPKNS0_4nodeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ntype"
-    "type": "char"
-  - "name": "first_nonmatch"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool toml::v3::table::is_homogeneous(DW_TAG_enumeration_typenode_type, const node &*)"
-- "name": "_ZN4toml2v35valueINS0_4dateEED2Ev"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void toml::v3::value<toml::v3::date>::~value(value<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > *)"
-- "name": "_ZN4toml2v35valueINS0_6stdopt9date_timeEED2Ev"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void toml::v3::value<toml::v3::stdopt::date_time>::~value(value<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > *)"
-- "name": "_ZN4toml2v35valueINS0_4timeEED2Ev"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void toml::v3::value<toml::v3::time>::~value(value<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > *)"
-- "name": "_ZNK4toml2v35array14is_homogeneousENS0_9node_typeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ntype"
-    "type": "char"
-  "return_type": "bool"
-  "signature": "bool toml::v3::array::is_homogeneous(DW_TAG_enumeration_typenode_type)"
-"language": "c++"
-"project": "tomlplusplus"
-"target_name": "toml_fuzzer"
-"target_path": "/src/tomlplusplus/fuzzing/toml_fuzzer.cpp"
-"test_files":
-- "test_file_path": "/src/tomlplusplus/tests/conformance_burntsushi_invalid.cpp"
-- "test_file_path": "/src/tomlplusplus/tests/at_path.cpp"
-- "test_file_path": "/src/tomlplusplus/tests/parsing_strings.cpp"
-- "test_file_path": "/src/tomlplusplus/tests/formatters.cpp"
-- "test_file_path": "/src/tomlplusplus/tests/impl_toml.cpp"
-- "test_file_path": "/src/tomlplusplus/examples/toml_generator.cpp"
-- "test_file_path": "/src/tomlplusplus/tests/visit.cpp"
-- "test_file_path": "/src/tomlplusplus/tests/parsing_floats.cpp"
-- "test_file_path": "/src/tomlplusplus/tests/odr_test_1.cpp"
-- "test_file_path": "/src/tomlplusplus/tests/for_each.cpp"
+functions:
+- name: _ZN4toml2v35valueINS0_6stdopt9date_timeEED2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void toml::v3::value<toml::v3::stdopt::date_time>::~value(value<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > > *)
+- name: _ZN4toml2v35valueINS0_4timeEED2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void toml::v3::value<toml::v3::time>::~value(value<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > > *)
+- name: _ZN4toml2v35array14is_homogeneousENS0_9node_typeERPNS0_4nodeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: ntype
+    type: char
+  - name: first_nonmatch
+    type: 'bool '
+  return_type: bool
+  signature: bool toml::v3::array::is_homogeneous(DW_TAG_enumeration_typenode_type,
+    node &*)
+- name: _ZNK4toml2v35array14is_homogeneousENS0_9node_typeERPKNS0_4nodeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: ntype
+    type: char
+  - name: first_nonmatch
+    type: 'bool '
+  return_type: bool
+  signature: bool toml::v3::array::is_homogeneous(DW_TAG_enumeration_typenode_type,
+    const node &*)
+- name: _ZNK4toml2v35table14is_homogeneousENS0_9node_typeERPKNS0_4nodeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: ntype
+    type: char
+  - name: first_nonmatch
+    type: 'bool '
+  return_type: bool
+  signature: bool toml::v3::table::is_homogeneous(DW_TAG_enumeration_typenode_type,
+    const node &*)
+- name: _ZNK4toml2v35array18is_array_of_tablesEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool toml::v3::array::is_array_of_tables()
+language: c++
+project: tomlplusplus
+target_name: toml_fuzzer
+target_path: /src/tomlplusplus/fuzzing/toml_fuzzer.cpp
+test_files:
+- test_file_path: /src/tomlplusplus/tests/conformance_burntsushi_invalid.cpp
+- test_file_path: /src/tomlplusplus/examples/toml_generator.cpp
+- test_file_path: /src/tomlplusplus/tests/formatters.cpp
+- test_file_path: /src/tomlplusplus/tests/odr_test_1.cpp
+- test_file_path: /src/tomlplusplus/tests/at_path.cpp
+- test_file_path: /src/tomlplusplus/tests/visit.cpp

@@ -1,15 +1,11 @@
-"language": "c"
-"project": "cairo"
-"target_name": "raster_fuzzer"
-"target_path": "/src/fuzz/raster_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/cairo/test/create-from-png.c"
-- "test_file_path": "/src/cairo/test/arc-direction.c"
-- "test_file_path": "/src/cairo/test/xcb-snapshot-assert.c"
-- "test_file_path": "/src/cairo/test/clip-mixed-antialias.c"
-- "test_file_path": "/src/cairo/test/clip-all.c"
-- "test_file_path": "/src/cairo/test/translate-show-surface.c"
-- "test_file_path": "/src/cairo/test/user-font-proxy.c"
-- "test_file_path": "/src/cairo/test/caps-joins.c"
-- "test_file_path": "/src/cairo/test/xcb-surface-source.c"
-- "test_file_path": "/src/cairo/test/aliasing.c"
+language: c
+project: cairo
+target_name: raster_fuzzer
+target_path: /src/fuzz/raster_fuzzer.c
+test_files:
+- test_file_path: /src/cairo/test/clip-all.c
+- test_file_path: /src/cairo/test/xcb-surface-source.c
+- test_file_path: /src/cairo/test/translate-show-surface.c
+- test_file_path: /src/cairo/test/aliasing.c
+- test_file_path: /src/cairo/test/arc-direction.c
+- test_file_path: /src/cairo/test/clip-mixed-antialias.c

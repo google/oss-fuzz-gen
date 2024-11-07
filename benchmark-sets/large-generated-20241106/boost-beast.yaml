@@ -1,128 +1,84 @@
-"functions":
-- "name": "_ZN5boost5beast4http12basic_parserILb1EE17parse_body_to_eofERPKcmRNS_6system10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "p"
-    "type": "bool "
-  - "name": "n"
-    "type": "size_t"
-  - "name": "ec"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void boost::beast::http::basic_parser<true>::parse_body_to_eof(const char &*, size_t, error_code &)"
-- "name": "_ZN5boost5beast4http12basic_parserILb1EE14put_from_stackINS_4asio14mutable_bufferEEEmmRKT_RNS_6system10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  - "name": "buffers"
-    "type": "bool "
-  - "name": "ec"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t unsigned long boost::beast::http::basic_parser<true>::put_from_stack<boost::asio::put_from_stack<boost::asio::mutable_buffer>(basic_parser<true> *, size_t, const mutable_buffer &, error_code &)"
-- "name": "_ZN5boost5beast4http12basic_parserILb1EE3putINS_4asio14mutable_bufferEEEmRKT_RNS_6system10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "buffers"
-    "type": "bool "
-  - "name": "ec"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t unsigned long boost::beast::http::basic_parser<true>::put<boost::asio::put<boost::asio::mutable_buffer>(basic_parser<true> *, const mutable_buffer &, error_code &)"
-- "name": "_ZN5boost5beast4http12basic_parserILb0EE14put_from_stackINS_4asio14mutable_bufferEEEmmRKT_RNS_6system10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  - "name": "buffers"
-    "type": "bool "
-  - "name": "ec"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t unsigned long boost::beast::http::basic_parser<false>::put_from_stack<boost::asio::put_from_stack<boost::asio::mutable_buffer>(basic_parser<true> *, size_t, const mutable_buffer &, error_code &)"
-- "name": "_ZN5boost5beast4http12basic_parserILb0EE3putINS_4asio14mutable_bufferEEEmRKT_RNS_6system10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "buffers"
-    "type": "bool "
-  - "name": "ec"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t unsigned long boost::beast::http::basic_parser<false>::put<boost::asio::put<boost::asio::mutable_buffer>(basic_parser<true> *, const mutable_buffer &, error_code &)"
-- "name": "_ZN5boost5beast4http12basic_parserILb1EE3putINS0_6detail12buffers_pairILb1EEEEEmRKT_RNS_6system10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "buffers"
-    "type": "bool "
-  - "name": "ec"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t unsigned long boost::beast::http::basic_parser<true>::put<boost::beast::detail::put<boost::asio::mutable_buffer>(basic_parser<true> *, const mutable_buffer &, error_code &)"
-- "name": "_ZN5boost5beast4http6parserILb1ENS1_10empty_bodyENSt3__19allocatorIcEEE18on_chunk_body_implEmNS_4core17basic_string_viewIcEERNS_6system10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "remain"
-    "type": "size_t"
-  - "name": "body"
-    "type": "bool "
-  - "name": "ec"
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t boost::beast::http::parser<true, boost::beast::http::empty_body, std::__1::allocator<char> >::on_chunk_body_impl(parser<true, boost::beast::http::basic_dynamic_body<boost::beast::basic_multi_buffer<std::__1::allocator<char> > >, std::__1::allocator<char> > *, uint64_t, string_view, error_code &)"
-- "name": "_ZN5boost5beast4http6parserILb1ENS1_10empty_bodyENSt3__19allocatorIcEEE12on_body_implENS_4core17basic_string_viewIcEERNS_6system10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "body"
-    "type": "bool "
-  - "name": "ec"
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t boost::beast::http::parser<true, boost::beast::http::empty_body, std::__1::allocator<char> >::on_body_impl(parser<true, boost::beast::http::basic_dynamic_body<boost::beast::basic_multi_buffer<std::__1::allocator<char> > >, std::__1::allocator<char> > *, string_view, error_code &)"
-- "name": "_ZN5boost5beast4http6parserILb1ENS1_18basic_dynamic_bodyINS0_18basic_multi_bufferINSt3__19allocatorIcEEEEEES7_E18on_chunk_body_implEmNS_4core17basic_string_viewIcEERNS_6system10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "remain"
-    "type": "size_t"
-  - "name": "body"
-    "type": "bool "
-  - "name": "ec"
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t boost::beast::http::parser<true, boost::beast::http::basic_dynamic_body<boost::beast::basic_multi_buffer<std::__1::allocator<char> > >, std::__1::allocator<char> >::on_chunk_body_impl(parser<true, boost::beast::http::basic_dynamic_body<boost::beast::basic_multi_buffer<std::__1::allocator<char> > >, std::__1::allocator<char> > *, uint64_t, string_view, error_code &)"
-- "name": "_ZN5boost4asio6detail12posix_thread4funcINS1_9scheduler15thread_functionEE3runEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void boost::asio::detail::posix_thread::func<boost::asio::detail::scheduler::thread_function>::run(func<boost::asio::detail::scheduler::thread_function> *)"
-"language": "c++"
-"project": "boost-beast"
-"target_name": "http_request"
-"target_path": "/src/boost/libs/beast/test/fuzz/http_request.cpp"
-"test_files":
-- "test_file_path": "/src/boost/libs/asio/example/cpp11/http/server3/mime_types.cpp"
-- "test_file_path": "/src/boost/libs/asio/test/time_traits.cpp"
-- "test_file_path": "/src/boost/libs/config/test/no_cxx17_deduction_guides_pass.cpp"
-- "test_file_path": "/src/boost/libs/config/test/has_stdint_h_fail.cpp"
-- "test_file_path": "/src/boost/libs/bind/test/bind_not_test.cpp"
-- "test_file_path": "/src/boost/libs/smart_ptr/test/allocate_local_shared_array_esft_test.cpp"
-- "test_file_path": "/src/boost/libs/mp11/test/mp_quote.cpp"
-- "test_file_path": "/src/boost/libs/optional/test/optional_test_cmp_none.cpp"
-- "test_file_path": "/src/boost/libs/ratio/test/ratio_arithmetic/ratio_divide_fail.cpp"
-- "test_file_path": "/src/boost/libs/smart_ptr/test/array_fail_sp_wpa_ma.cpp"
+functions:
+- name: _ZN5boost5beast4http12basic_parserILb1EE3putINS0_6detail12buffers_pairILb1EEEEEmRKT_RNS_6system10error_codeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: buffers
+    type: 'bool '
+  - name: ec
+    type: 'bool '
+  return_type: size_t
+  signature: size_t unsigned long boost::beast::http::basic_parser<true>::put<boost::beast::detail::put<boost::asio::mutable_buffer>(basic_parser<true>
+    *, const mutable_buffer &, error_code &)
+- name: _ZN5boost4asio6detail12posix_thread4funcINS1_9scheduler15thread_functionEE3runEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void boost::asio::detail::posix_thread::func<boost::asio::detail::scheduler::thread_function>::run(func<boost::asio::detail::scheduler::thread_function>
+    *)
+- name: _ZN5boost5beast4http12basic_parserILb0EE14put_from_stackINS_4asio14mutable_bufferEEEmmRKT_RNS_6system10error_codeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: size
+    type: size_t
+  - name: buffers
+    type: 'bool '
+  - name: ec
+    type: 'bool '
+  return_type: size_t
+  signature: size_t unsigned long boost::beast::http::basic_parser<false>::put_from_stack<boost::asio::put_from_stack<boost::asio::mutable_buffer>(basic_parser<true>
+    *, size_t, const mutable_buffer &, error_code &)
+- name: _ZN5boost5beast4http12basic_parserILb1EE3putINS_4asio14mutable_bufferEEEmRKT_RNS_6system10error_codeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: buffers
+    type: 'bool '
+  - name: ec
+    type: 'bool '
+  return_type: size_t
+  signature: size_t unsigned long boost::beast::http::basic_parser<true>::put<boost::asio::put<boost::asio::mutable_buffer>(basic_parser<true>
+    *, const mutable_buffer &, error_code &)
+- name: _ZN5boost5beast4http6parserILb1ENS1_18basic_dynamic_bodyINS0_18basic_multi_bufferINSt3__19allocatorIcEEEEEES7_E18on_chunk_body_implEmNS_4core17basic_string_viewIcEERNS_6system10error_codeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: remain
+    type: size_t
+  - name: body
+    type: 'bool '
+  - name: ec
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: size_t boost::beast::http::parser<true, boost::beast::http::basic_dynamic_body<boost::beast::basic_multi_buffer<std::__1::allocator<char>
+    > >, std::__1::allocator<char> >::on_chunk_body_impl(parser<true, boost::beast::http::basic_dynamic_body<boost::beast::basic_multi_buffer<std::__1::allocator<char>
+    > >, std::__1::allocator<char> > *, uint64_t, string_view, error_code &)
+- name: _ZN5boost5beast4http6parserILb1ENS1_10empty_bodyENSt3__19allocatorIcEEE12on_body_implENS_4core17basic_string_viewIcEERNS_6system10error_codeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: body
+    type: 'bool '
+  - name: ec
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: size_t boost::beast::http::parser<true, boost::beast::http::empty_body,
+    std::__1::allocator<char> >::on_body_impl(parser<true, boost::beast::http::basic_dynamic_body<boost::beast::basic_multi_buffer<std::__1::allocator<char>
+    > >, std::__1::allocator<char> > *, string_view, error_code &)
+language: c++
+project: boost-beast
+target_name: http_request
+target_path: /src/boost/libs/beast/test/fuzz/http_request.cpp
+test_files:
+- test_file_path: /src/boost/libs/smart_ptr/test/allocate_local_shared_array_esft_test.cpp
+- test_file_path: /src/boost/libs/optional/test/optional_test_cmp_none.cpp
+- test_file_path: /src/boost/libs/asio/test/time_traits.cpp
+- test_file_path: /src/boost/libs/config/test/has_stdint_h_fail.cpp
+- test_file_path: /src/boost/libs/ratio/test/ratio_arithmetic/ratio_divide_fail.cpp
+- test_file_path: /src/boost/libs/asio/example/cpp11/http/server3/mime_types.cpp

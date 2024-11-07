@@ -1,63 +1,66 @@
-"functions":
-- "name": "_ZN6google15TruncateLogFileEPKcll"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void google::TruncateLogFile(const char *, int64, int64)"
-- "name": "_ZN6google13SetLogSymlinkEiPKc"
-  "params":
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void google::SetLogSymlink(LogSeverity, const char *)"
-- "name": "_ZN6google14LogDestination13SetLogSymlinkEiPKc"
-  "params":
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void google::LogDestination::SetLogSymlink(LogSeverity, const char *)"
-- "name": "_ZN6google17InitGoogleLoggingEPKc"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void google::InitGoogleLogging(const char *)"
-- "name": "_ZN6googlelsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_15PRIVATE_CounterE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "ostream & google::operator<<(ostream &, const DW_TAG_enumeration_typePRIVATE_Counter &)"
-- "name": "_ZN6google10LogMessageC2EPKciiPNSt3__16vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void google::LogMessage::LogMessage(const char *, int, LogSeverity, vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > *)"
-"language": "c++"
-"project": "myanmar-tools"
-"target_name": "zawgyi_detector_fuzz_target"
-"target_path": "/src/myanmar-tools/clients/cpp/zawgyi_detector_fuzz_target.cpp"
-"test_files":
-- "test_file_path": "/src/myanmar-tools/clients/cpp/zawgyi_detector_unittest.c"
-- "test_file_path": "/src/myanmar-tools/clients/cpp/zawgyi_detector_unittest.cpp"
-- "test_file_path": "/src/myanmar-tools/samples/cpp/demo.cpp"
+functions:
+- name: _ZN6google15TruncateLogFileEPKcll
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: void google::TruncateLogFile(const char *, int64, int64)
+- name: _ZN6google13SetLogSymlinkEiPKc
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void google::SetLogSymlink(LogSeverity, const char *)
+- name: _ZN6google14LogDestination13SetLogSymlinkEiPKc
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void google::LogDestination::SetLogSymlink(LogSeverity, const char *)
+- name: _ZN6google17InitGoogleLoggingEPKc
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void google::InitGoogleLogging(const char *)
+- name: _ZN6googlelsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_15PRIVATE_CounterE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: ostream & google::operator<<(ostream &, const DW_TAG_enumeration_typePRIVATE_Counter
+    &)
+- name: _ZN6google10LogMessageC2EPKciiPNSt3__16vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void google::LogMessage::LogMessage(const char *, int, LogSeverity, vector<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > > > *)
+language: c++
+project: myanmar-tools
+target_name: zawgyi_detector_fuzz_target
+target_path: /src/myanmar-tools/clients/cpp/zawgyi_detector_fuzz_target.cpp
+test_files:
+- test_file_path: /src/myanmar-tools/clients/cpp/zawgyi_detector_unittest.c
+- test_file_path: /src/myanmar-tools/clients/cpp/zawgyi_detector_unittest.cpp
+- test_file_path: /src/myanmar-tools/samples/cpp/demo.cpp

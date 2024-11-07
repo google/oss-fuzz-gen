@@ -1,106 +1,76 @@
-"functions":
-- "name": "_ZN7spotify4json14encode_context10steal_dataEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "unique_ptr<void, void (*)(void *) noexcept> spotify::json::encode_context::steal_data(struct encode_context *)"
-- "name": "_ZN7spotify4json6detail14field_registryC2ERKS2_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void spotify::json::detail::field_registry::field_registry(const field_registry &)"
-- "name": "_ZN7spotify4json5codec12codec_detail13object_t_baseC2EPNS3_17construct_untypedE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "construct"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void spotify::json::codec::codec_detail::object_t_base::object_t_base(struct object_t_base *, struct construct_untyped *)"
-- "name": "_ZN7spotify4json14decode_contextC2EPKcm"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void spotify::json::decode_context::decode_context(struct decode_context *, const char *, size_t)"
-- "name": "_ZZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1B8ne180100EOS5_ENKUlRS5_E_clES7_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "__s"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "DW_TAG_rvalue_reference_type__compressed_pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::__rep, std::__1::allocator<char> > std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::operator()(const void *, basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &)"
-- "name": "_ZNK7spotify4json5codec8object_tIN12_GLOBAL__N_110custom_objEE16member_var_fieldIMS4_NSt3__112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS1_8string_tEE6encodeERNS0_14encode_contextERKSD_PKv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "context"
-    "type": "bool "
-  - "name": "key"
-    "type": "bool "
-  - "name": "object"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void spotify::json::codec::encode(const struct member_var_field<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > (anonymous namespace)::custom_obj::*, spotify::json::codec::string_t> *, struct encode_context &, const string &, const void *)"
-- "name": "_ZN7spotify4json16decode_exceptionC2EOS1_m"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "exception"
-    "type": "bool "
-  - "name": "offset"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void spotify::json::decode_exception::decode_exception(DW_TAG_rvalue_reference_typedecode_exception, size_t)"
-- "name": "_ZN7spotify4json5codec12codec_detail13object_t_baseC2ERKS3_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void spotify::json::codec::codec_detail::object_t_base::object_t_base(struct object_t_base *, const struct object_t_base &)"
-- "name": "_ZNK7spotify4json5codec12codec_detail13object_t_base6encodeERNS0_14encode_contextEPKv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "context"
-    "type": "bool "
-  - "name": "value"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void spotify::json::codec::codec_detail::object_t_base::encode(const struct object_t_base *, struct encode_context &, const void *)"
-- "name": "_ZN7spotify4json5codec12codec_detail13object_t_baseC2EOS3_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void spotify::json::codec::codec_detail::object_t_base::object_t_base(struct object_t_base *, struct DW_TAG_rvalue_reference_typeobject_t_base)"
-"language": "c++"
-"project": "spotify-json"
-"target_name": "fuzz_decode"
-"target_path": "/src/spotify-json/fuzzers/fuzz_decode.cpp"
-"test_files":
-- "test_file_path": "/src/spotify-json/test/src/test_encode_context.cpp"
-- "test_file_path": "/src/spotify-json/vendor/double-conversion/test/cctest/test-strtod.cc"
-- "test_file_path": "/src/spotify-json/test/src/test_map.cpp"
-- "test_file_path": "/src/spotify-json/test/src/test_any_value.cpp"
-- "test_file_path": "/src/spotify-json/test/src/test_macros.cpp"
-- "test_file_path": "/src/spotify-json/test/src/test_null.cpp"
-- "test_file_path": "/src/spotify-json/vendor/double-conversion/test/cctest/gay-shortest-single.cc"
-- "test_file_path": "/src/spotify-json/vendor/double-conversion/test/cctest/test-diy-fp.cc"
-- "test_file_path": "/src/spotify-json/test/src/test_skip_chars.cpp"
-- "test_file_path": "/src/spotify-json/test/src/test_encode_integer.cpp"
+functions:
+- name: _ZNK7spotify4json5codec8object_tIN12_GLOBAL__N_110custom_objEE16member_var_fieldIMS4_NSt3__112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS1_8string_tEE6encodeERNS0_14encode_contextERKSD_PKv
+  params:
+  - name: this
+    type: 'bool '
+  - name: context
+    type: 'bool '
+  - name: key
+    type: 'bool '
+  - name: object
+    type: 'bool '
+  return_type: void
+  signature: void spotify::json::codec::encode(const struct member_var_field<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > (anonymous namespace)::custom_obj::*,
+    spotify::json::codec::string_t> *, struct encode_context &, const string &, const
+    void *)
+- name: _ZN7spotify4json5codec12codec_detail13object_t_baseC2ERKS3_
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void spotify::json::codec::codec_detail::object_t_base::object_t_base(struct
+    object_t_base *, const struct object_t_base &)
+- name: _ZN7spotify4json16decode_exceptionC2EOS1_m
+  params:
+  - name: this
+    type: 'bool '
+  - name: exception
+    type: 'bool '
+  - name: offset
+    type: size_t
+  return_type: void
+  signature: void spotify::json::decode_exception::decode_exception(DW_TAG_rvalue_reference_typedecode_exception,
+    size_t)
+- name: _ZN7spotify4json6detail14field_registryC2ERKS2_
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void spotify::json::detail::field_registry::field_registry(const field_registry
+    &)
+- name: _ZNK7spotify4json5codec12codec_detail13object_t_base6encodeERNS0_14encode_contextEPKv
+  params:
+  - name: this
+    type: 'bool '
+  - name: context
+    type: 'bool '
+  - name: value
+    type: 'bool '
+  return_type: void
+  signature: void spotify::json::codec::codec_detail::object_t_base::encode(const
+    struct object_t_base *, struct encode_context &, const void *)
+- name: _ZN7spotify4json5codec12codec_detail13object_t_baseC2EPNS3_17construct_untypedE
+  params:
+  - name: this
+    type: 'bool '
+  - name: construct
+    type: 'bool '
+  return_type: void
+  signature: void spotify::json::codec::codec_detail::object_t_base::object_t_base(struct
+    object_t_base *, struct construct_untyped *)
+language: c++
+project: spotify-json
+target_name: fuzz_decode
+target_path: /src/spotify-json/fuzzers/fuzz_decode.cpp
+test_files:
+- test_file_path: /src/spotify-json/test/src/test_map.cpp
+- test_file_path: /src/spotify-json/test/src/test_null.cpp
+- test_file_path: /src/spotify-json/vendor/double-conversion/test/cctest/test-diy-fp.cc
+- test_file_path: /src/spotify-json/vendor/double-conversion/test/cctest/gay-shortest-single.cc
+- test_file_path: /src/spotify-json/vendor/double-conversion/test/cctest/test-strtod.cc
+- test_file_path: /src/spotify-json/test/src/test_any_value.cpp

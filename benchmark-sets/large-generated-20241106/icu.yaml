@@ -1,174 +1,111 @@
-"functions":
-- "name": "_ZNK6icu_7613MessageFormat22PluralSelectorProvider6selectEPvdR10UErrorCode"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "number"
-    "type": "bool "
-  - "name": "ec"
-    "type": "double"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "UnicodeString icu_76::MessageFormat::PluralSelectorProvider::select(void *, double, UErrorCode &)"
-- "name": "_ZNK6icu_7613MessageFormat6formatEiPKvPKNS_11FormattableEPKNS_13UnicodeStringEiRNS_17AppendableWrapperEPNS_13FieldPositionER10UErrorCode"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "msgStart"
-    "type": "int"
-  - "name": "plNumber"
-    "type": "bool "
-  - "name": "arguments"
-    "type": "bool "
-  - "name": "argumentNames"
-    "type": "bool "
-  - "name": "cnt"
-    "type": "int"
-  - "name": "appendTo"
-    "type": "bool "
-  - "name": "ignore"
-    "type": "bool "
-  - "name": "success"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void icu_76::MessageFormat::format(int32_t, const void *, const Formattable *, const UnicodeString *, int32_t, AppendableWrapper &, FieldPosition *, UErrorCode &)"
-- "name": "_ZNK6icu_768message217StandardFunctions8DateTime6formatEONS0_20FormattedPlaceholderEONS0_15FunctionOptionsER10UErrorCode"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "toFormat"
-    "type": "bool "
-  - "name": "opts"
-    "type": "bool "
-  - "name": "errorCode"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "FormattedPlaceholder icu_76::message2::StandardFunctions::DateTime::format(DW_TAG_rvalue_reference_typeFormattedPlaceholder, DW_TAG_rvalue_reference_typeFunctionOptions, UErrorCode &)"
-- "name": "_ZNK6icu_7613MessageFormat23formatComplexSubMessageEiPKvPKNS_11FormattableEPKNS_13UnicodeStringEiRNS_17AppendableWrapperER10UErrorCode"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "msgStart"
-    "type": "int"
-  - "name": "plNumber"
-    "type": "bool "
-  - "name": "arguments"
-    "type": "bool "
-  - "name": "argumentNames"
-    "type": "bool "
-  - "name": "cnt"
-    "type": "int"
-  - "name": "appendTo"
-    "type": "bool "
-  - "name": "success"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void icu_76::MessageFormat::formatComplexSubMessage(int32_t, const void *, const Formattable *, const UnicodeString *, int32_t, AppendableWrapper &, UErrorCode &)"
-- "name": "_ZN6icu_7613UnicodeStringC2EPKci"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "codepageData"
-    "type": "bool "
-  - "name": "dataLength"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void icu_76::UnicodeString::UnicodeString(const char *, int32_t)"
-- "name": "_ZNK6icu_7621RuleBasedNumberFormat6formatElRKNS_13UnicodeStringERS1_RNS_13FieldPositionER10UErrorCode"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "number"
-    "type": "size_t"
-  - "name": "ruleSetName"
-    "type": "bool "
-  - "name": "toAppendTo"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": "status"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "UnicodeString & icu_76::RuleBasedNumberFormat::format(int64_t, const UnicodeString &, UnicodeString &, FieldPosition &, UErrorCode &)"
-- "name": "_ZNK6icu_768message217StandardFunctions12TextSelector9selectKeyEONS0_20FormattedPlaceholderEONS0_15FunctionOptionsEPKNS_13UnicodeStringEiPS7_RiR10UErrorCode"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "toFormat"
-    "type": "bool "
-  - "name": "opts"
-    "type": "bool "
-  - "name": "keys"
-    "type": "bool "
-  - "name": "keysLen"
-    "type": "int"
-  - "name": "prefs"
-    "type": "bool "
-  - "name": "prefsLen"
-    "type": "bool "
-  - "name": "errorCode"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void icu_76::message2::StandardFunctions::TextSelector::selectKey(DW_TAG_rvalue_reference_typeFormattedPlaceholder, DW_TAG_rvalue_reference_typeFunctionOptions, const UnicodeString *, int32_t, UnicodeString *, int32_t &, UErrorCode &)"
-- "name": "_ZNK6icu_768message217StandardFunctions6Number6formatEONS0_20FormattedPlaceholderEONS0_15FunctionOptionsER10UErrorCode"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "arg"
-    "type": "bool "
-  - "name": "opts"
-    "type": "bool "
-  - "name": "errorCode"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "FormattedPlaceholder icu_76::message2::StandardFunctions::Number::format(DW_TAG_rvalue_reference_typeFormattedPlaceholder, DW_TAG_rvalue_reference_typeFunctionOptions, UErrorCode &)"
-- "name": "_ZNK6icu_7614TimeZoneFormat5parseE20UTimeZoneFormatStyleRKNS_13UnicodeStringERNS_13ParsePositionEiP23UTimeZoneFormatTimeType"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "style"
-    "type": "int"
-  - "name": "text"
-    "type": "bool "
-  - "name": "pos"
-    "type": "bool "
-  - "name": "parseOptions"
-    "type": "int"
-  - "name": "timeType"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "TimeZone * icu_76::TimeZoneFormat::parse(UTimeZoneFormatStyle, const UnicodeString &, ParsePosition &, int32_t, UTimeZoneFormatTimeType *)"
-- "name": "_ZNK6icu_768message220FormattedPlaceholder14formatToStringERKNS_6LocaleER10UErrorCode"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "locale"
-    "type": "bool "
-  - "name": "status"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "UnicodeString icu_76::message2::FormattedPlaceholder::formatToString(const Locale &, UErrorCode &)"
-"language": "c++"
-"project": "icu"
-"target_name": "uloc_canonicalize_fuzzer"
-"target_path": "/src/icu/icu4c/source/test/fuzzer/uloc_canonicalize_fuzzer.cpp"
-"test_files":
-- "test_file_path": "/src/icu/icu4c/source/test/intltest/ficoll.cpp"
-- "test_file_path": "/src/icu/icu4c/source/samples/translit/answers/unaccent.cpp"
-- "test_file_path": "/src/icu/icu4c/source/test/cintltst/uformattedvaluetst.c"
-- "test_file_path": "/src/icu/icu4c/source/test/cintltst/ucptrietest.c"
-- "test_file_path": "/src/icu/icu4c/source/test/perf/leperf/PortableFontInstance.cpp"
-- "test_file_path": "/src/icu/vendor/double-conversion/upstream/test/cctest/test-ieee.cc"
-- "test_file_path": "/src/icu/icu4c/source/test/cintltst/nucnvtst.c"
-- "test_file_path": "/src/icu/icu4c/source/test/cintltst/cdtrgtst.c"
-- "test_file_path": "/src/icu/icu4c/source/test/intltest/trcoll.cpp"
-- "test_file_path": "/src/icu/icu4c/source/test/intltest/ucharstrietest.cpp"
+functions:
+- name: _ZNK6icu_7613MessageFormat22PluralSelectorProvider6selectEPvdR10UErrorCode
+  params:
+  - name: this
+    type: 'bool '
+  - name: ctx
+    type: 'bool '
+  - name: number
+    type: 'bool '
+  - name: ec
+    type: double
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: UnicodeString icu_76::MessageFormat::PluralSelectorProvider::select(void
+    *, double, UErrorCode &)
+- name: _ZN6icu_7613UnicodeStringC2EPKci
+  params:
+  - name: this
+    type: 'bool '
+  - name: codepageData
+    type: 'bool '
+  - name: dataLength
+    type: int
+  return_type: void
+  signature: void icu_76::UnicodeString::UnicodeString(const char *, int32_t)
+- name: _ZNK6icu_768message217StandardFunctions8DateTime6formatEONS0_20FormattedPlaceholderEONS0_15FunctionOptionsER10UErrorCode
+  params:
+  - name: this
+    type: 'bool '
+  - name: toFormat
+    type: 'bool '
+  - name: opts
+    type: 'bool '
+  - name: errorCode
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: FormattedPlaceholder icu_76::message2::StandardFunctions::DateTime::format(DW_TAG_rvalue_reference_typeFormattedPlaceholder,
+    DW_TAG_rvalue_reference_typeFunctionOptions, UErrorCode &)
+- name: _ZNK6icu_7613MessageFormat23formatComplexSubMessageEiPKvPKNS_11FormattableEPKNS_13UnicodeStringEiRNS_17AppendableWrapperER10UErrorCode
+  params:
+  - name: this
+    type: 'bool '
+  - name: msgStart
+    type: int
+  - name: plNumber
+    type: 'bool '
+  - name: arguments
+    type: 'bool '
+  - name: argumentNames
+    type: 'bool '
+  - name: cnt
+    type: int
+  - name: appendTo
+    type: 'bool '
+  - name: success
+    type: 'bool '
+  return_type: void
+  signature: void icu_76::MessageFormat::formatComplexSubMessage(int32_t, const void
+    *, const Formattable *, const UnicodeString *, int32_t, AppendableWrapper &, UErrorCode
+    &)
+- name: _ZNK6icu_768message220FormattedPlaceholder14formatToStringERKNS_6LocaleER10UErrorCode
+  params:
+  - name: this
+    type: 'bool '
+  - name: locale
+    type: 'bool '
+  - name: status
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: UnicodeString icu_76::message2::FormattedPlaceholder::formatToString(const
+    Locale &, UErrorCode &)
+- name: _ZNK6icu_7613MessageFormat6formatEiPKvPKNS_11FormattableEPKNS_13UnicodeStringEiRNS_17AppendableWrapperEPNS_13FieldPositionER10UErrorCode
+  params:
+  - name: this
+    type: 'bool '
+  - name: msgStart
+    type: int
+  - name: plNumber
+    type: 'bool '
+  - name: arguments
+    type: 'bool '
+  - name: argumentNames
+    type: 'bool '
+  - name: cnt
+    type: int
+  - name: appendTo
+    type: 'bool '
+  - name: ignore
+    type: 'bool '
+  - name: success
+    type: 'bool '
+  return_type: void
+  signature: void icu_76::MessageFormat::format(int32_t, const void *, const Formattable
+    *, const UnicodeString *, int32_t, AppendableWrapper &, FieldPosition *, UErrorCode
+    &)
+language: c++
+project: icu
+target_name: uloc_canonicalize_fuzzer
+target_path: /src/icu/icu4c/source/test/fuzzer/uloc_canonicalize_fuzzer.cpp
+test_files:
+- test_file_path: /src/icu/vendor/double-conversion/upstream/test/cctest/test-ieee.cc
+- test_file_path: /src/icu/icu4c/source/test/intltest/trcoll.cpp
+- test_file_path: /src/icu/icu4c/source/test/cintltst/ucptrietest.c
+- test_file_path: /src/icu/icu4c/source/test/cintltst/nucnvtst.c
+- test_file_path: /src/icu/icu4c/source/test/intltest/ucharstrietest.cpp
+- test_file_path: /src/icu/icu4c/source/test/intltest/ficoll.cpp

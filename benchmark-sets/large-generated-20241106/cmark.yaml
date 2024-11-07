@@ -1,87 +1,57 @@
-"functions":
-- "name": "cmark_node_insert_after"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cmark_node_insert_after(cmark_node *, cmark_node *)"
-- "name": "cmark_node_set_on_exit"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cmark_node_set_on_exit(cmark_node *, const char *)"
-- "name": "cmark_node_new"
-  "params":
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "cmark_node * cmark_node_new(cmark_node_type)"
-- "name": "cmark_node_prepend_child"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cmark_node_prepend_child(cmark_node *, cmark_node *)"
-- "name": "cmark_node_replace"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cmark_node_replace(cmark_node *, cmark_node *)"
-- "name": "cmark_node_set_fence_info"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cmark_node_set_fence_info(cmark_node *, const char *)"
-- "name": "cmark_node_check"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cmark_node_check(cmark_node *, FILE *)"
-- "name": "cmark_node_set_title"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cmark_node_set_title(cmark_node *, const char *)"
-- "name": "cmark_node_set_url"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cmark_node_set_url(cmark_node *, const char *)"
-- "name": "cmark_node_append_child"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int cmark_node_append_child(cmark_node *, cmark_node *)"
-"language": "c++"
-"project": "cmark"
-"target_name": "cmark_fuzzer"
-"target_path": "/src/cmark/fuzz/cmark-fuzz.c"
-"test_files":
-- "test_file_path": "/src/cmark/api_test/main.c"
-- "test_file_path": "/src/cmark/api_test/cplusplus.cpp"
-- "test_file_path": "/src/cmark/api_test/harness.c"
+functions:
+- name: cmark_node_set_title
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int cmark_node_set_title(cmark_node *, const char *)
+- name: cmark_node_prepend_child
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int cmark_node_prepend_child(cmark_node *, cmark_node *)
+- name: cmark_node_set_fence_info
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int cmark_node_set_fence_info(cmark_node *, const char *)
+- name: cmark_node_check
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int cmark_node_check(cmark_node *, FILE *)
+- name: cmark_node_replace
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int cmark_node_replace(cmark_node *, cmark_node *)
+- name: cmark_node_insert_after
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int cmark_node_insert_after(cmark_node *, cmark_node *)
+language: c++
+project: cmark
+target_name: cmark_fuzzer
+target_path: /src/cmark/fuzz/cmark-fuzz.c
+test_files:
+- test_file_path: /src/cmark/api_test/main.c
+- test_file_path: /src/cmark/api_test/cplusplus.cpp
+- test_file_path: /src/cmark/api_test/harness.c

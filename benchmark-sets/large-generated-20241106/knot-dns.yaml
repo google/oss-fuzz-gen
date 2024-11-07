@@ -1,108 +1,71 @@
-"functions":
-- "name": "gnutls_record_recv_packet"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "packet"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "ssize_t gnutls_record_recv_packet(gnutls_session_t, gnutls_packet_t *)"
-- "name": "gnutls_session_ticket_send"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "nr"
-    "type": "int"
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int gnutls_session_ticket_send(gnutls_session_t, unsigned int, unsigned int)"
-- "name": "gnutls_bye"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "how"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int gnutls_bye(gnutls_session_t, gnutls_close_request_t)"
-- "name": "_gnutls13_send_session_ticket"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "nr"
-    "type": "int"
-  - "name": "again"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int _gnutls13_send_session_ticket(gnutls_session_t, unsigned int, unsigned int)"
-- "name": "gnutls_record_recv"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "data_size"
-    "type": "size_t"
-  "return_type": "size_t"
-  "signature": "ssize_t gnutls_record_recv(gnutls_session_t, void *, size_t)"
-- "name": "_gnutls13_handshake_server"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int _gnutls13_handshake_server(gnutls_session_t)"
-- "name": "handshake_client"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int handshake_client(gnutls_session_t)"
-- "name": "gnutls_handshake"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int gnutls_handshake(gnutls_session_t)"
-- "name": "gnutls_record_recv_seq"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "data_size"
-    "type": "size_t"
-  - "name": "seq"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "ssize_t gnutls_record_recv_seq(gnutls_session_t, void *, size_t, unsigned char *)"
-- "name": "_gnutls_recv_int"
-  "params":
-  - "name": "session"
-    "type": "bool "
-  - "name": "type"
-    "type": "int"
-  - "name": "data"
-    "type": "bool "
-  - "name": "data_size"
-    "type": "size_t"
-  - "name": "seq"
-    "type": "bool "
-  - "name": "ms"
-    "type": "int"
-  "return_type": "size_t"
-  "signature": "ssize_t _gnutls_recv_int(gnutls_session_t, content_type_t, uint8_t *, size_t, void *, unsigned int)"
-"language": "c++"
-"project": "knot-dns"
-"target_name": "fuzz_dname_to_str"
-"target_path": "/src/knot-dns/tests-fuzz/fuzz_dname_to_str.c"
-"test_files":
-- "test_file_path": "/src/knot-dns/tests/libknot/test_wire.c"
-- "test_file_path": "/src/knot-dns/tests/contrib/test_string.c"
-- "test_file_path": "/src/knot-dns/tests/contrib/test_wire_ctx.c"
-- "test_file_path": "/src/knot-dns/tests/utils/test_lookup.c"
-- "test_file_path": "/src/knot-dns/tests/knot/test_zonedb.c"
-- "test_file_path": "/src/knot-dns/tests/libdnssec/test_sign.c"
-- "test_file_path": "/src/knot-dns/tests/contrib/test_qp-trie.c"
-- "test_file_path": "/src/knot-dns/tests/libknot/test_probe.c"
-- "test_file_path": "/src/knot-dns/tests/contrib/test_qp-cow.c"
-- "test_file_path": "/src/knot-dns/tests/libknot/test_rrset.c"
+functions:
+- name: _gnutls_recv_int
+  params:
+  - name: session
+    type: 'bool '
+  - name: type
+    type: int
+  - name: data
+    type: 'bool '
+  - name: data_size
+    type: size_t
+  - name: seq
+    type: 'bool '
+  - name: ms
+    type: int
+  return_type: size_t
+  signature: ssize_t _gnutls_recv_int(gnutls_session_t, content_type_t, uint8_t *,
+    size_t, void *, unsigned int)
+- name: gnutls_session_ticket_send
+  params:
+  - name: session
+    type: 'bool '
+  - name: nr
+    type: int
+  - name: flags
+    type: int
+  return_type: int
+  signature: int gnutls_session_ticket_send(gnutls_session_t, unsigned int, unsigned
+    int)
+- name: gnutls_record_recv_packet
+  params:
+  - name: session
+    type: 'bool '
+  - name: packet
+    type: 'bool '
+  return_type: size_t
+  signature: ssize_t gnutls_record_recv_packet(gnutls_session_t, gnutls_packet_t *)
+- name: gnutls_handshake
+  params:
+  - name: session
+    type: 'bool '
+  return_type: int
+  signature: int gnutls_handshake(gnutls_session_t)
+- name: _gnutls13_handshake_server
+  params:
+  - name: session
+    type: 'bool '
+  return_type: int
+  signature: int _gnutls13_handshake_server(gnutls_session_t)
+- name: _gnutls13_send_session_ticket
+  params:
+  - name: session
+    type: 'bool '
+  - name: nr
+    type: int
+  - name: again
+    type: int
+  return_type: int
+  signature: int _gnutls13_send_session_ticket(gnutls_session_t, unsigned int, unsigned
+    int)
+language: c++
+project: knot-dns
+target_name: fuzz_dname_to_str
+target_path: /src/knot-dns/tests-fuzz/fuzz_dname_to_str.c
+test_files:
+- test_file_path: /src/knot-dns/tests/libknot/test_probe.c
+- test_file_path: /src/knot-dns/tests/libdnssec/test_sign.c
+- test_file_path: /src/knot-dns/tests/utils/test_lookup.c
+- test_file_path: /src/knot-dns/tests/libknot/test_rrset.c
+- test_file_path: /src/knot-dns/tests/contrib/test_qp-trie.c
+- test_file_path: /src/knot-dns/tests/libknot/test_wire.c

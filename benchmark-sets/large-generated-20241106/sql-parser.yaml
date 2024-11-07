@@ -1,85 +1,57 @@
-"functions":
-- "name": "_ZN4hsql15SelectStatementD2Ev"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void hsql::SelectStatement::~SelectStatement(struct SelectStatement *)"
-- "name": "_ZNK4hsql4Expr9isLiteralEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool hsql::Expr::isLiteral(const struct Expr *)"
-- "name": "_ZN4hsql9SQLParserC2Ev"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void hsql::SQLParser::SQLParser()"
-- "name": "_ZN4hsql9SQLParser14parseSQLStringERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEPNS_15SQLParserResultE"
-  "params":
-  - "name": "sql"
-    "type": "bool "
-  - "name": "result"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool hsql::SQLParser::parseSQLString(const string &, SQLParserResult *)"
-- "name": "_ZN4hsql15SQLParserResultaSEOS0_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "moved"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "SQLParserResult & hsql::SQLParserResult::operator=(DW_TAG_rvalue_reference_typeSQLParserResult)"
-- "name": "_ZN4hsql15SQLParserResultC2EOS0_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "moved"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void hsql::SQLParserResult::SQLParserResult(DW_TAG_rvalue_reference_typeSQLParserResult)"
-- "name": "_ZN4hsqllsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_10ColumnTypeE"
-  "params":
-  - "name": "stream"
-    "type": "bool "
-  - "name": "column_type"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "ostream & hsql::operator<<(ostream &, const struct ColumnType &)"
-- "name": "_ZN4hsqlneERKNS_10ColumnTypeES2_"
-  "params":
-  - "name": "lhs"
-    "type": "bool "
-  - "name": "rhs"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool hsql::operator!=(const struct ColumnType &, const struct ColumnType &)"
-- "name": "_ZN4hsql14AlterStatementD2Ev"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void hsql::AlterStatement::~AlterStatement(struct AlterStatement *)"
-- "name": "_ZN4hsql15SQLParserResultC2EPNS_12SQLStatementE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "stmt"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void hsql::SQLParserResult::SQLParserResult(struct SQLStatement *)"
-"language": "c++"
-"project": "sql-parser"
-"target_name": "fuzz_sql_parse"
-"target_path": "/src/sql-parser/fuzz_sql_parse.cpp"
-"test_files":
-- "test_file_path": "/src/sql-parser/test/sql_tests.cpp"
-- "test_file_path": "/src/sql-parser/test/sql_parser.cpp"
-- "test_file_path": "/src/sql-parser/test/prepare_tests.cpp"
-- "test_file_path": "/src/sql-parser/example/example.cpp"
-- "test_file_path": "/src/sql-parser/test/select_tests.cpp"
-- "test_file_path": "/src/sql-parser/test/tpc_h_tests.cpp"
-- "test_file_path": "/src/sql-parser/test/auto_query_file_test.cpp"
+functions:
+- name: _ZN4hsql15SQLParserResultaSEOS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: moved
+    type: 'bool '
+  return_type: void
+  signature: SQLParserResult & hsql::SQLParserResult::operator=(DW_TAG_rvalue_reference_typeSQLParserResult)
+- name: _ZN4hsqllsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_10ColumnTypeE
+  params:
+  - name: stream
+    type: 'bool '
+  - name: column_type
+    type: 'bool '
+  return_type: void
+  signature: ostream & hsql::operator<<(ostream &, const struct ColumnType &)
+- name: _ZN4hsql9SQLParser14parseSQLStringERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEPNS_15SQLParserResultE
+  params:
+  - name: sql
+    type: 'bool '
+  - name: result
+    type: 'bool '
+  return_type: bool
+  signature: bool hsql::SQLParser::parseSQLString(const string &, SQLParserResult
+    *)
+- name: _ZN4hsql15SQLParserResultC2EOS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: moved
+    type: 'bool '
+  return_type: void
+  signature: void hsql::SQLParserResult::SQLParserResult(DW_TAG_rvalue_reference_typeSQLParserResult)
+- name: _ZN4hsql15SelectStatementD2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void hsql::SelectStatement::~SelectStatement(struct SelectStatement *)
+- name: _ZN4hsql14AlterStatementD2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void hsql::AlterStatement::~AlterStatement(struct AlterStatement *)
+language: c++
+project: sql-parser
+target_name: fuzz_sql_parse
+target_path: /src/sql-parser/fuzz_sql_parse.cpp
+test_files:
+- test_file_path: /src/sql-parser/test/auto_query_file_test.cpp
+- test_file_path: /src/sql-parser/example/example.cpp
+- test_file_path: /src/sql-parser/test/prepare_tests.cpp
+- test_file_path: /src/sql-parser/test/sql_tests.cpp
+- test_file_path: /src/sql-parser/test/tpc_h_tests.cpp
+- test_file_path: /src/sql-parser/test/sql_parser.cpp

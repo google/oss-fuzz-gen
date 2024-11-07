@@ -1,180 +1,129 @@
-"functions":
-- "name": "ZDICT_optimizeTrainFromBuffer_fastCover"
-  "params":
-  - "name": "dictBuffer"
-    "type": "bool "
-  - "name": "dictBufferCapacity"
-    "type": "size_t"
-  - "name": "samplesBuffer"
-    "type": "bool "
-  - "name": "samplesSizes"
-    "type": "bool "
-  - "name": "nbSamples"
-    "type": "int"
-  - "name": "parameters"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t ZDICT_optimizeTrainFromBuffer_fastCover(void *, size_t, const void *, const size_t *, unsigned int, ZDICT_fastCover_params_t *)"
-- "name": "ZSTD_flushStream"
-  "params":
-  - "name": "zcs"
-    "type": "bool "
-  - "name": "output"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t ZSTD_flushStream(ZSTD_CStream *, ZSTD_outBuffer *)"
-- "name": "COVER_selectDict"
-  "params":
-  - "name": "customDictContent"
-    "type": "bool "
-  - "name": "dictBufferCapacity"
-    "type": "bool "
-  - "name": "dictContentSize"
-    "type": "size_t"
-  - "name": "samplesBuffer"
-    "type": "size_t"
-  - "name": "samplesSizes"
-    "type": "bool "
-  - "name": "nbFinalizeSamples"
-    "type": "bool "
-  - "name": "nbCheckSamples"
-    "type": "int"
-  - "name": "nbSamples"
-    "type": "size_t"
-  - "name": "params"
-    "type": "size_t"
-  - "name": "offsets"
-    "type": "bool "
-  - "name": "totalCompressedSize"
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "COVER_dictSelection_t COVER_selectDict(BYTE *, size_t, size_t, const BYTE *, const size_t *, unsigned int, size_t, size_t, ZDICT_cover_params_t, size_t *, size_t)"
-- "name": "ZDICT_trainFromBuffer"
-  "params":
-  - "name": "dictBuffer"
-    "type": "bool "
-  - "name": "dictBufferCapacity"
-    "type": "size_t"
-  - "name": "samplesBuffer"
-    "type": "bool "
-  - "name": "samplesSizes"
-    "type": "bool "
-  - "name": "nbSamples"
-    "type": "int"
-  "return_type": "size_t"
-  "signature": "size_t ZDICT_trainFromBuffer(void *, size_t, const void *, const size_t *, unsigned int)"
-- "name": "ZDICT_trainFromBuffer_cover"
-  "params":
-  - "name": "dictBuffer"
-    "type": "bool "
-  - "name": "dictBufferCapacity"
-    "type": "size_t"
-  - "name": "samplesBuffer"
-    "type": "bool "
-  - "name": "samplesSizes"
-    "type": "bool "
-  - "name": "nbSamples"
-    "type": "int"
-  - "name": "parameters"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t ZDICT_trainFromBuffer_cover(void *, size_t, const void *, const size_t *, unsigned int, ZDICT_cover_params_t)"
-- "name": "ZDICT_trainFromBuffer_legacy"
-  "params":
-  - "name": "dictBuffer"
-    "type": "bool "
-  - "name": "dictBufferCapacity"
-    "type": "size_t"
-  - "name": "samplesBuffer"
-    "type": "bool "
-  - "name": "samplesSizes"
-    "type": "bool "
-  - "name": "nbSamples"
-    "type": "int"
-  - "name": "params"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t ZDICT_trainFromBuffer_legacy(void *, size_t, const void *, const size_t *, unsigned int, ZDICT_legacy_params_t)"
-- "name": "COVER_checkTotalCompressedSize"
-  "params":
-  - "name": "parameters"
-    "type": "bool "
-  - "name": "samplesSizes"
-    "type": "bool "
-  - "name": "samples"
-    "type": "bool "
-  - "name": "offsets"
-    "type": "bool "
-  - "name": "nbTrainSamples"
-    "type": "size_t"
-  - "name": "nbSamples"
-    "type": "size_t"
-  - "name": "dict"
-    "type": "bool "
-  - "name": "dictBufferCapacity"
-    "type": "size_t"
-  "return_type": "size_t"
-  "signature": "size_t COVER_checkTotalCompressedSize(const ZDICT_cover_params_t, const size_t *, const BYTE *, size_t *, size_t, size_t, const BYTE *, size_t)"
-- "name": "ZSTD_compress"
-  "params":
-  - "name": "dst"
-    "type": "bool "
-  - "name": "dstCapacity"
-    "type": "size_t"
-  - "name": "src"
-    "type": "bool "
-  - "name": "srcSize"
-    "type": "size_t"
-  - "name": "compressionLevel"
-    "type": "int"
-  "return_type": "size_t"
-  "signature": "size_t ZSTD_compress(void *, size_t, const void *, size_t, int)"
-- "name": "ZDICT_optimizeTrainFromBuffer_cover"
-  "params":
-  - "name": "dictBuffer"
-    "type": "bool "
-  - "name": "dictBufferCapacity"
-    "type": "size_t"
-  - "name": "samplesBuffer"
-    "type": "bool "
-  - "name": "samplesSizes"
-    "type": "bool "
-  - "name": "nbSamples"
-    "type": "int"
-  - "name": "parameters"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t ZDICT_optimizeTrainFromBuffer_cover(void *, size_t, const void *, const size_t *, unsigned int, ZDICT_cover_params_t *)"
-- "name": "ZDICT_addEntropyTablesFromBuffer"
-  "params":
-  - "name": "dictBuffer"
-    "type": "bool "
-  - "name": "dictContentSize"
-    "type": "size_t"
-  - "name": "dictBufferCapacity"
-    "type": "size_t"
-  - "name": "samplesBuffer"
-    "type": "bool "
-  - "name": "samplesSizes"
-    "type": "bool "
-  - "name": "nbSamples"
-    "type": "int"
-  "return_type": "size_t"
-  "signature": "size_t ZDICT_addEntropyTablesFromBuffer(void *, size_t, size_t, const void *, const size_t *, unsigned int)"
-"language": "c++"
-"project": "zstd"
-"target_name": "decompress_cross_format"
-"target_path": "/src/zstd/tests/fuzz/decompress_cross_format.c"
-"test_files":
-- "test_file_path": "/src/zstd/examples/dictionary_decompression.c"
-- "test_file_path": "/src/zstd/contrib/seekable_format/examples/seekable_decompression_mem.c"
-- "test_file_path": "/src/zstd/zlibWrapper/examples/example.c"
-- "test_file_path": "/src/zstd/tests/decodecorpus.c"
-- "test_file_path": "/src/zstd/contrib/seekable_format/examples/parallel_compression.c"
-- "test_file_path": "/src/zstd/zlibWrapper/examples/fitblk_original.c"
-- "test_file_path": "/src/zstd/contrib/pzstd/utils/test/BufferTest.cpp"
-- "test_file_path": "/src/zstd/contrib/pzstd/utils/test/ThreadPoolTest.cpp"
-- "test_file_path": "/src/zstd/tests/fullbench.c"
-- "test_file_path": "/src/zstd/examples/simple_decompression.c"
+functions:
+- name: COVER_checkTotalCompressedSize
+  params:
+  - name: parameters
+    type: 'bool '
+  - name: samplesSizes
+    type: 'bool '
+  - name: samples
+    type: 'bool '
+  - name: offsets
+    type: 'bool '
+  - name: nbTrainSamples
+    type: size_t
+  - name: nbSamples
+    type: size_t
+  - name: dict
+    type: 'bool '
+  - name: dictBufferCapacity
+    type: size_t
+  return_type: size_t
+  signature: size_t COVER_checkTotalCompressedSize(const ZDICT_cover_params_t, const
+    size_t *, const BYTE *, size_t *, size_t, size_t, const BYTE *, size_t)
+- name: COVER_selectDict
+  params:
+  - name: customDictContent
+    type: 'bool '
+  - name: dictBufferCapacity
+    type: 'bool '
+  - name: dictContentSize
+    type: size_t
+  - name: samplesBuffer
+    type: size_t
+  - name: samplesSizes
+    type: 'bool '
+  - name: nbFinalizeSamples
+    type: 'bool '
+  - name: nbCheckSamples
+    type: int
+  - name: nbSamples
+    type: size_t
+  - name: params
+    type: size_t
+  - name: offsets
+    type: 'bool '
+  - name: totalCompressedSize
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: COVER_dictSelection_t COVER_selectDict(BYTE *, size_t, size_t, const
+    BYTE *, const size_t *, unsigned int, size_t, size_t, ZDICT_cover_params_t, size_t
+    *, size_t)
+- name: ZDICT_trainFromBuffer_legacy
+  params:
+  - name: dictBuffer
+    type: 'bool '
+  - name: dictBufferCapacity
+    type: size_t
+  - name: samplesBuffer
+    type: 'bool '
+  - name: samplesSizes
+    type: 'bool '
+  - name: nbSamples
+    type: int
+  - name: params
+    type: 'bool '
+  return_type: size_t
+  signature: size_t ZDICT_trainFromBuffer_legacy(void *, size_t, const void *, const
+    size_t *, unsigned int, ZDICT_legacy_params_t)
+- name: ZDICT_trainFromBuffer
+  params:
+  - name: dictBuffer
+    type: 'bool '
+  - name: dictBufferCapacity
+    type: size_t
+  - name: samplesBuffer
+    type: 'bool '
+  - name: samplesSizes
+    type: 'bool '
+  - name: nbSamples
+    type: int
+  return_type: size_t
+  signature: size_t ZDICT_trainFromBuffer(void *, size_t, const void *, const size_t
+    *, unsigned int)
+- name: ZDICT_optimizeTrainFromBuffer_cover
+  params:
+  - name: dictBuffer
+    type: 'bool '
+  - name: dictBufferCapacity
+    type: size_t
+  - name: samplesBuffer
+    type: 'bool '
+  - name: samplesSizes
+    type: 'bool '
+  - name: nbSamples
+    type: int
+  - name: parameters
+    type: 'bool '
+  return_type: size_t
+  signature: size_t ZDICT_optimizeTrainFromBuffer_cover(void *, size_t, const void
+    *, const size_t *, unsigned int, ZDICT_cover_params_t *)
+- name: ZDICT_trainFromBuffer_cover
+  params:
+  - name: dictBuffer
+    type: 'bool '
+  - name: dictBufferCapacity
+    type: size_t
+  - name: samplesBuffer
+    type: 'bool '
+  - name: samplesSizes
+    type: 'bool '
+  - name: nbSamples
+    type: int
+  - name: parameters
+    type: 'bool '
+  return_type: size_t
+  signature: size_t ZDICT_trainFromBuffer_cover(void *, size_t, const void *, const
+    size_t *, unsigned int, ZDICT_cover_params_t)
+language: c++
+project: zstd
+target_name: decompress_cross_format
+target_path: /src/zstd/tests/fuzz/decompress_cross_format.c
+test_files:
+- test_file_path: /src/zstd/examples/dictionary_decompression.c
+- test_file_path: /src/zstd/contrib/pzstd/utils/test/ThreadPoolTest.cpp
+- test_file_path: /src/zstd/contrib/seekable_format/examples/seekable_decompression_mem.c
+- test_file_path: /src/zstd/zlibWrapper/examples/example.c
+- test_file_path: /src/zstd/tests/fullbench.c
+- test_file_path: /src/zstd/zlibWrapper/examples/fitblk_original.c

@@ -1,132 +1,86 @@
-"functions":
-- "name": "parse_ofp_flow_mod_file"
-  "params":
-  - "name": "file_name"
-    "type": "bool "
-  - "name": "port_map"
-    "type": "bool "
-  - "name": "table_map"
-    "type": "bool "
-  - "name": "command"
-    "type": "int"
-  - "name": "fms"
-    "type": "bool "
-  - "name": "n_fms"
-    "type": "bool "
-  - "name": "usable_protocols"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "char * parse_ofp_flow_mod_file(const char *, const struct ofputil_port_map *, const struct ofputil_table_map *, int, struct ofputil_flow_mod **, size_t *, DW_TAG_enumeration_typeofputil_protocol *)"
-- "name": "json_from_file"
-  "params":
-  - "name": "file_name"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct json * json_from_file(const char *)"
-- "name": "dp_netdev_input"
-  "params":
-  - "name": "pmd"
-    "type": "bool "
-  - "name": "packets"
-    "type": "bool "
-  - "name": "port_no"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int32_t dp_netdev_input(struct dp_netdev_pmd_thread *, struct dp_packet_batch *, odp_port_t)"
-- "name": "parse_ofp_packet_out_str"
-  "params":
-  - "name": "po"
-    "type": "bool "
-  - "name": "str_"
-    "type": "bool "
-  - "name": "port_map"
-    "type": "bool "
-  - "name": "table_map"
-    "type": "bool "
-  - "name": "usable_protocols"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "char * parse_ofp_packet_out_str(struct ofputil_packet_out *, const char *, const struct ofputil_port_map *, const struct ofputil_table_map *, DW_TAG_enumeration_typeofputil_protocol *)"
-- "name": "parse_ofp_bundle_file"
-  "params":
-  - "name": "file_name"
-    "type": "bool "
-  - "name": "port_map"
-    "type": "bool "
-  - "name": "table_map"
-    "type": "bool "
-  - "name": "bms"
-    "type": "bool "
-  - "name": "n_bms"
-    "type": "bool "
-  - "name": "usable_protocols"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "char * parse_ofp_bundle_file(const char *, const struct ofputil_port_map *, const struct ofputil_table_map *, struct ofputil_bundle_msg **, size_t *, DW_TAG_enumeration_typeofputil_protocol *)"
-- "name": "parse_ofp_flow_stats_request_str"
-  "params":
-  - "name": "fsr"
-    "type": "bool "
-  - "name": "aggregate"
-    "type": "bool"
-  - "name": "string"
-    "type": "bool "
-  - "name": "port_map"
-    "type": "bool "
-  - "name": "table_map"
-    "type": "bool "
-  - "name": "usable_protocols"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "char * parse_ofp_flow_stats_request_str(struct ofputil_flow_stats_request *, bool, const char *, const struct ofputil_port_map *, const struct ofputil_table_map *, DW_TAG_enumeration_typeofputil_protocol *)"
-- "name": "dpif_open"
-  "params":
-  - "name": "name"
-    "type": "bool "
-  - "name": "type"
-    "type": "bool "
-  - "name": "dpifp"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int dpif_open(const char *, const char *, struct dpif **)"
-- "name": "ovsdb_idl_txn_commit_block"
-  "params":
-  - "name": "txn"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "DW_TAG_enumeration_typeovsdb_idl_txn_status ovsdb_idl_txn_commit_block(struct ovsdb_idl_txn *)"
-- "name": "dpif_create_and_open"
-  "params":
-  - "name": "name"
-    "type": "bool "
-  - "name": "type"
-    "type": "bool "
-  - "name": "dpifp"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int dpif_create_and_open(const char *, const char *, struct dpif **)"
-- "name": "dpif_create"
-  "params":
-  - "name": "name"
-    "type": "bool "
-  - "name": "type"
-    "type": "bool "
-  - "name": "dpifp"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int dpif_create(const char *, const char *, struct dpif **)"
-"language": "c++"
-"project": "openvswitch"
-"target_name": "json_parser_target"
-"target_path": "/src/openvswitch/tests/oss-fuzz/json_parser_target.c"
-"test_files":
-- "test_file_path": "/src/openvswitch/tests/test-ccmap.c"
-- "test_file_path": "/src/openvswitch/tests/test-packets.c"
-- "test_file_path": "/src/openvswitch/tests/test-bitmap.c"
-- "test_file_path": "/src/openvswitch/tests/test-uuid.c"
-- "test_file_path": "/src/openvswitch/tests/test-mpsc-queue.c"
-- "test_file_path": "/src/openvswitch/tests/test-lib.c"
-- "test_file_path": "/src/openvswitch/tests/test-aa.c"
-- "test_file_path": "/src/openvswitch/tests/test-stopwatch.c"
-- "test_file_path": "/src/openvswitch/tests/test-cmap.c"
-- "test_file_path": "/src/openvswitch/tests/ovstest.c"
+functions:
+- name: parse_ofp_packet_out_str
+  params:
+  - name: po
+    type: 'bool '
+  - name: str_
+    type: 'bool '
+  - name: port_map
+    type: 'bool '
+  - name: table_map
+    type: 'bool '
+  - name: usable_protocols
+    type: 'bool '
+  return_type: void
+  signature: char * parse_ofp_packet_out_str(struct ofputil_packet_out *, const char
+    *, const struct ofputil_port_map *, const struct ofputil_table_map *, DW_TAG_enumeration_typeofputil_protocol
+    *)
+- name: dpif_open
+  params:
+  - name: name
+    type: 'bool '
+  - name: type
+    type: 'bool '
+  - name: dpifp
+    type: 'bool '
+  return_type: int
+  signature: int dpif_open(const char *, const char *, struct dpif **)
+- name: parse_ofp_flow_mod_file
+  params:
+  - name: file_name
+    type: 'bool '
+  - name: port_map
+    type: 'bool '
+  - name: table_map
+    type: 'bool '
+  - name: command
+    type: int
+  - name: fms
+    type: 'bool '
+  - name: n_fms
+    type: 'bool '
+  - name: usable_protocols
+    type: 'bool '
+  return_type: void
+  signature: char * parse_ofp_flow_mod_file(const char *, const struct ofputil_port_map
+    *, const struct ofputil_table_map *, int, struct ofputil_flow_mod **, size_t *,
+    DW_TAG_enumeration_typeofputil_protocol *)
+- name: dpif_create
+  params:
+  - name: name
+    type: 'bool '
+  - name: type
+    type: 'bool '
+  - name: dpifp
+    type: 'bool '
+  return_type: int
+  signature: int dpif_create(const char *, const char *, struct dpif **)
+- name: ovsdb_idl_txn_commit_block
+  params:
+  - name: txn
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeovsdb_idl_txn_status ovsdb_idl_txn_commit_block(struct
+    ovsdb_idl_txn *)
+- name: dp_netdev_input
+  params:
+  - name: pmd
+    type: 'bool '
+  - name: packets
+    type: 'bool '
+  - name: port_no
+    type: int
+  return_type: int
+  signature: int32_t dp_netdev_input(struct dp_netdev_pmd_thread *, struct dp_packet_batch
+    *, odp_port_t)
+language: c++
+project: openvswitch
+target_name: json_parser_target
+target_path: /src/openvswitch/tests/oss-fuzz/json_parser_target.c
+test_files:
+- test_file_path: /src/openvswitch/tests/test-uuid.c
+- test_file_path: /src/openvswitch/tests/ovstest.c
+- test_file_path: /src/openvswitch/tests/test-ccmap.c
+- test_file_path: /src/openvswitch/tests/test-lib.c
+- test_file_path: /src/openvswitch/tests/test-aa.c
+- test_file_path: /src/openvswitch/tests/test-stopwatch.c

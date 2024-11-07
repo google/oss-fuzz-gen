@@ -1,110 +1,66 @@
-"functions":
-- "name": "_ZN7glslang11HlslGrammar27acceptStructDeclarationListERPNS_7TVectorINS_8TTypeLocEEERP11TIntermNodeRNS1_INS_19TFunctionDeclaratorEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool glslang::HlslGrammar::acceptStructDeclarationList(TTypeList &*, TIntermNode &*, TVector<glslang::TFunctionDeclarator> &)"
-- "name": "_ZN7glslang11HlslGrammar25acceptLayoutQualifierListERNS_10TQualifierE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool glslang::HlslGrammar::acceptLayoutQualifierList(TQualifier &)"
-- "name": "_ZN7glslang13TParseContext18parseShaderStringsERNS_10TPpContextERNS_13TInputScannerEb"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool"
-  "return_type": "bool"
-  "signature": "bool glslang::TParseContext::parseShaderStrings(TPpContext &, TInputScanner &, bool)"
-- "name": "_ZN7glslang11HlslGrammar15acceptArgumentsEPNS_9TFunctionERPNS_12TIntermTypedE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool glslang::HlslGrammar::acceptArguments(TFunction *, TIntermTyped &*)"
-- "name": "_ZN7glslang11HlslGrammar17acceptInitializerERPNS_12TIntermTypedE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool glslang::HlslGrammar::acceptInitializer(TIntermTyped &*)"
-- "name": "_ZN7glslang11HlslGrammar12acceptStructERNS_5TTypeERP11TIntermNode"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool glslang::HlslGrammar::acceptStruct(TType &, TIntermNode &*)"
-- "name": "_ZN7glslang11HlslGrammar15acceptPostDeclsERNS_10TQualifierE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool glslang::HlslGrammar::acceptPostDecls(TQualifier &)"
-- "name": "_ZN7glslang11HlslGrammar35acceptTessellationPatchTemplateTypeERNS_5TTypeE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool glslang::HlslGrammar::acceptTessellationPatchTemplateType(TType &)"
-- "name": "_ZN7glslang11HlslGrammar16acceptAttributesERNS_5TListINS_14TAttributeArgsEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void glslang::HlslGrammar::acceptAttributes(TAttributes &)"
-- "name": "_ZN7glslang11HlslGrammar33acceptDefaultParameterDeclarationERKNS_5TTypeERPNS_12TIntermTypedE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool glslang::HlslGrammar::acceptDefaultParameterDeclaration(const TType &, TIntermTyped &*)"
-"language": "c++"
-"project": "glslang"
-"target_name": "compile_fuzzer"
-"target_path": "/src/compile_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/glslang/gtests/TestFixture.cpp"
-- "test_file_path": "/src/glslang/gtests/Link.FromFile.Vk.cpp"
-- "test_file_path": "/src/glslang/gtests/GlslMapIO.FromFile.cpp"
-- "test_file_path": "/src/glslang/gtests/Hlsl.FromFile.cpp"
-- "test_file_path": "/src/glslang/gtests/Spv.FromFile.cpp"
-- "test_file_path": "/src/glslang/gtests/Settings.cpp"
-- "test_file_path": "/src/glslang/gtests/Link.FromFile.cpp"
-- "test_file_path": "/src/glslang/gtests/Pp.FromFile.cpp"
-- "test_file_path": "/src/glslang/gtests/Remap.FromFile.cpp"
-- "test_file_path": "/src/glslang/ndk_test/test.cpp"
+functions:
+- name: _ZN7glslang11HlslGrammar16acceptAttributesERNS_5TListINS_14TAttributeArgsEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void glslang::HlslGrammar::acceptAttributes(TAttributes &)
+- name: _ZN7glslang11HlslGrammar25acceptLayoutQualifierListERNS_10TQualifierE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptLayoutQualifierList(TQualifier &)
+- name: _ZN7glslang11HlslGrammar12acceptStructERNS_5TTypeERP11TIntermNode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptStruct(TType &, TIntermNode &*)
+- name: _ZN7glslang11HlslGrammar35acceptTessellationPatchTemplateTypeERNS_5TTypeE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptTessellationPatchTemplateType(TType
+    &)
+- name: _ZN7glslang11HlslGrammar33acceptDefaultParameterDeclarationERKNS_5TTypeERPNS_12TIntermTypedE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptDefaultParameterDeclaration(const TType
+    &, TIntermTyped &*)
+- name: _ZN7glslang11HlslGrammar15acceptPostDeclsERNS_10TQualifierE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptPostDecls(TQualifier &)
+language: c++
+project: glslang
+target_name: compile_fuzzer
+target_path: /src/compile_fuzzer.cc
+test_files:
+- test_file_path: /src/glslang/ndk_test/test.cpp
+- test_file_path: /src/glslang/gtests/TestFixture.cpp
+- test_file_path: /src/glslang/gtests/Link.FromFile.cpp
+- test_file_path: /src/glslang/gtests/Hlsl.FromFile.cpp
+- test_file_path: /src/glslang/gtests/Spv.FromFile.cpp
+- test_file_path: /src/glslang/gtests/GlslMapIO.FromFile.cpp

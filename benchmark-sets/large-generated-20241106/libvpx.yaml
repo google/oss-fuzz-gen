@@ -1,184 +1,107 @@
-"functions":
-- "name": "vpx_highbd_convolve8_avg_sse2"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void vpx_highbd_convolve8_avg_sse2(const uint16_t *, ptrdiff_t, uint16_t *, ptrdiff_t, const InterpKernel *, int, int, int, int, int, int, int)"
-- "name": "vpx_highbd_convolve8_sse2"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void vpx_highbd_convolve8_sse2(const uint16_t *, ptrdiff_t, uint16_t *, ptrdiff_t, const InterpKernel *, int, int, int, int, int, int, int)"
-- "name": "vp8_loop_filter_frame"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void vp8_loop_filter_frame(VP8_COMMON *, MACROBLOCKD *, int)"
-- "name": "vp9_loopfilter_job"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void vp9_loopfilter_job(LFWorkerData *, VP9LfSync *)"
-- "name": "vp8_post_proc_frame"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int vp8_post_proc_frame(VP8_COMMON *, YV12_BUFFER_CONFIG *, vp8_ppflags_t *)"
-- "name": "vp8_loop_filter_frame_yonly"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void vp8_loop_filter_frame_yonly(VP8_COMMON *, MACROBLOCKD *, int)"
-- "name": "vpx_convolve8_sse2"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void vpx_convolve8_sse2(const uint8_t *, ptrdiff_t, uint8_t *, ptrdiff_t, const InterpKernel *, int, int, int, int, int, int)"
-- "name": "vp9_loop_filter_frame"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void vp9_loop_filter_frame(YV12_BUFFER_CONFIG *, VP9_COMMON *, MACROBLOCKD *, int, int, int)"
-- "name": "vpx_convolve8_ssse3"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void vpx_convolve8_ssse3(const uint8_t *, ptrdiff_t, uint8_t *, ptrdiff_t, const InterpKernel *, int, int, int, int, int, int)"
-- "name": "vp8_multiframe_quality_enhance"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void vp8_multiframe_quality_enhance(VP8_COMMON *)"
-"language": "c++"
-"project": "libvpx"
-"target_name": "vpx_dec_fuzzer_vp8"
-"target_path": "/src/libvpx/examples/vpx_dec_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/libvpx/test/init_vpx_test.cc"
-- "test_file_path": "/src/libvpx/test/decode_perf_test.cc"
-- "test_file_path": "/src/libvpx/test/borders_test.cc"
-- "test_file_path": "/src/libvpx/test/vp8_ratectrl_rtc_test.cc"
-- "test_file_path": "/src/libvpx/examples/vpx_temporal_svc_encoder.c"
-- "test_file_path": "/src/libvpx/examples/decode_with_drops.c"
-- "test_file_path": "/src/libvpx/examples/vp8_multi_resolution_encoder.c"
-- "test_file_path": "/src/libvpx/test/predict_test.cc"
-- "test_file_path": "/src/libvpx/test/variance_test.cc"
-- "test_file_path": "/src/libvpx/test/partial_idct_test.cc"
+functions:
+- name: vpx_highbd_convolve8_sse2
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: void
+  signature: void vpx_highbd_convolve8_sse2(const uint16_t *, ptrdiff_t, uint16_t
+    *, ptrdiff_t, const InterpKernel *, int, int, int, int, int, int, int)
+- name: vp8_loop_filter_frame
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void vp8_loop_filter_frame(VP8_COMMON *, MACROBLOCKD *, int)
+- name: vp8_loop_filter_frame_yonly
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void vp8_loop_filter_frame_yonly(VP8_COMMON *, MACROBLOCKD *, int)
+- name: vp9_loopfilter_job
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void vp9_loopfilter_job(LFWorkerData *, VP9LfSync *)
+- name: vp8_post_proc_frame
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int vp8_post_proc_frame(VP8_COMMON *, YV12_BUFFER_CONFIG *, vp8_ppflags_t
+    *)
+- name: vpx_convolve8_sse2
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: void
+  signature: void vpx_convolve8_sse2(const uint8_t *, ptrdiff_t, uint8_t *, ptrdiff_t,
+    const InterpKernel *, int, int, int, int, int, int)
+language: c++
+project: libvpx
+target_name: vpx_dec_fuzzer_vp8
+target_path: /src/libvpx/examples/vpx_dec_fuzzer.cc
+test_files:
+- test_file_path: /src/libvpx/examples/decode_with_drops.c
+- test_file_path: /src/libvpx/test/borders_test.cc
+- test_file_path: /src/libvpx/test/variance_test.cc
+- test_file_path: /src/libvpx/examples/vpx_temporal_svc_encoder.c
+- test_file_path: /src/libvpx/test/init_vpx_test.cc
+- test_file_path: /src/libvpx/test/predict_test.cc

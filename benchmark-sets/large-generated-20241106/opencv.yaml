@@ -1,128 +1,87 @@
-"functions":
-- "name": "_ZN2cv11TiffEncoder18write_32FC3_SGILOGERKNS_3MatEPv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool cv::TiffEncoder::write_32FC3_SGILOG(const Mat &, void *)"
-- "name": "_ZN2cv13matchTemplateERKNS_11_InputArrayES2_RKNS_12_OutputArrayEiS2_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void cv::matchTemplate(InputArray, InputArray, OutputArray, int, InputArray)"
-- "name": "_ZN2cv11WebPEncoder5writeERKNS_3MatERKNSt3__16vectorIiNS4_9allocatorIiEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool cv::WebPEncoder::write(const Mat &, const vector<int, std::__1::allocator<int> > &)"
-- "name": "_ZN2cv3dnn14dnn4_v2024052121readNetFromTensorflowERKNSt3__16vectorIhNS2_9allocatorIhEEEES8_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Net cv::dnn::dnn4_v20240521::readNetFromTensorflow(const vector<unsigned char, std::__1::allocator<unsigned char> > &, const vector<unsigned char, std::__1::allocator<unsigned char> > &)"
-- "name": "cvMatchTemplate"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void cvMatchTemplate(const CvArr *, const CvArr *, CvArr *, int)"
-- "name": "_ZN2cv3dnn14dnn4_v2024052121readNetFromTensorflowERKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Net cv::dnn::dnn4_v20240521::readNetFromTensorflow(const String &, const String &)"
-- "name": "_ZN2cv11TiffEncoder10writemultiERKNSt3__16vectorINS_3MatENS1_9allocatorIS3_EEEERKNS2_IiNS4_IiEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool cv::TiffEncoder::writemulti(const vector<cv::Mat, std::__1::allocator<cv::Mat> > &, const vector<int, std::__1::allocator<int> > &)"
-- "name": "cvSmooth"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "double"
-  - "name": ""
-    "type": "double"
-  "return_type": "void"
-  "signature": "void cvSmooth(const void *, void *, int, int, int, double, double)"
-- "name": "_ZN2cv11TiffEncoder5writeERKNS_3MatERKNSt3__16vectorIiNS4_9allocatorIiEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool cv::TiffEncoder::write(const Mat &, const vector<int, std::__1::allocator<int> > &)"
-- "name": "_ZN2cv11FileStorage4Impl4putsEPKc"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void cv::FileStorage::Impl::puts(const char *)"
-"language": "c++"
-"project": "opencv"
-"target_name": "filestorage_read_filename_fuzzer"
-"target_path": "/src/filestorage_read_filename_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/opencv/samples/cpp/logistic_regression.cpp"
-- "test_file_path": "/src/opencv/samples/cpp/facedetect.cpp"
-- "test_file_path": "/src/opencv/modules/gapi/test/gapi_fluid_roi_test.cpp"
-- "test_file_path": "/src/opencv/samples/cpp/phase_corr.cpp"
-- "test_file_path": "/src/opencv/modules/gapi/test/streaming/gapi_streaming_sync_tests.cpp"
-- "test_file_path": "/src/opencv/modules/gapi/test/gapi_gpu_test.cpp"
-- "test_file_path": "/src/opencv/samples/cpp/tutorial_code/videoio/openni_orbbec_astra/openni_orbbec_astra.cpp"
-- "test_file_path": "/src/opencv/modules/gapi/test/gapi_scalar_tests.cpp"
-- "test_file_path": "/src/opencv/samples/wp8/OcvImageManipulation/PhoneXamlDirect3DApp1/PhoneXamlDirect3DApp1Comp/QuadRenderer.cpp"
-- "test_file_path": "/src/opencv/samples/winrt/ImageManipulations/common/LayoutAwarePage.cpp"
+functions:
+- name: _ZN2cv3dnn14dnn4_v2024052121readNetFromTensorflowERKNSt3__16vectorIhNS2_9allocatorIhEEEES8_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Net cv::dnn::dnn4_v20240521::readNetFromTensorflow(const vector<unsigned
+    char, std::__1::allocator<unsigned char> > &, const vector<unsigned char, std::__1::allocator<unsigned
+    char> > &)
+- name: _ZN2cv11FileStorage4Impl4putsEPKc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void cv::FileStorage::Impl::puts(const char *)
+- name: cvSmooth
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  - name: ''
+    type: double
+  - name: ''
+    type: double
+  return_type: void
+  signature: void cvSmooth(const void *, void *, int, int, int, double, double)
+- name: _ZN2cv3dnn14dnn4_v2024052121readNetFromTensorflowERKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Net cv::dnn::dnn4_v20240521::readNetFromTensorflow(const String &, const
+    String &)
+- name: cvMatchTemplate
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void cvMatchTemplate(const CvArr *, const CvArr *, CvArr *, int)
+- name: _ZN2cv13matchTemplateERKNS_11_InputArrayES2_RKNS_12_OutputArrayEiS2_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void cv::matchTemplate(InputArray, InputArray, OutputArray, int, InputArray)
+language: c++
+project: opencv
+target_name: filestorage_read_filename_fuzzer
+target_path: /src/filestorage_read_filename_fuzzer.cc
+test_files:
+- test_file_path: /src/opencv/samples/winrt/ImageManipulations/common/LayoutAwarePage.cpp
+- test_file_path: /src/opencv/modules/gapi/test/gapi_fluid_roi_test.cpp
+- test_file_path: /src/opencv/modules/gapi/test/gapi_scalar_tests.cpp
+- test_file_path: /src/opencv/samples/cpp/phase_corr.cpp
+- test_file_path: /src/opencv/modules/gapi/test/gapi_gpu_test.cpp
+- test_file_path: /src/opencv/samples/wp8/OcvImageManipulation/PhoneXamlDirect3DApp1/PhoneXamlDirect3DApp1Comp/QuadRenderer.cpp

@@ -1,104 +1,60 @@
-"functions":
-- "name": "_ZN8opendnp325StateSolicitedConfirmWait9OnConfirmERNS_8OContextERKNS_13ParsedRequestE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "request"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "OutstationState & opendnp3::StateSolicitedConfirmWait::OnConfirm(OContext &, const struct ParsedRequest &)"
-- "name": "_ZN8opendnp325StateSolicitedConfirmWait16OnNewReadRequestERNS_8OContextERKNS_13ParsedRequestE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "request"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "OutstationState & opendnp3::StateSolicitedConfirmWait::OnNewReadRequest(OContext &, const struct ParsedRequest &)"
-- "name": "_ZZN8opendnp38OContext22RestartSolConfirmTimerEvENK3$_0clEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void opendnp3::OContext::operator()(const void *)"
-- "name": "_ZN8opendnp321ASDUEventWriteHandler5WriteENS_32EventAnalogOutputStatusVariationERKNS_18AnalogOutputStatusERNS_16IEventCollectionIS2_EE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "variation"
-    "type": "char"
-  - "name": ""
-    "type": "bool "
-  - "name": "items"
-    "type": "bool "
-  "return_type": "short"
-  "signature": "uint16_t opendnp3::ASDUEventWriteHandler::Write(DW_TAG_enumeration_typeEventAnalogOutputStatusVariation, const AnalogOutputStatus &, IEventCollection<opendnp3::AnalogOutputStatus> &)"
-- "name": "_ZN8opendnp331StateNullUnsolicitedConfirmWait16OnNewReadRequestERNS_8OContextERKNS_13ParsedRequestE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "request"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "OutstationState & opendnp3::StateNullUnsolicitedConfirmWait::OnNewReadRequest(OContext &, const struct ParsedRequest &)"
-- "name": "_ZN8opendnp38OContext15HandleNewEventsEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void opendnp3::OContext::HandleNewEvents()"
-- "name": "_ZN8opendnp37Decoder10DecodeTPDUERKNS_6BufferE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void opendnp3::Decoder::DecodeTPDU(const struct Buffer &)"
-- "name": "_ZN8opendnp325StateSolicitedConfirmWait19OnNewNonReadRequestERNS_8OContextERKNS_13ParsedRequestE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "request"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "OutstationState & opendnp3::StateSolicitedConfirmWait::OnNewNonReadRequest(OContext &, const struct ParsedRequest &)"
-- "name": "_ZN8opendnp327StateUnsolicitedConfirmWait19OnNewNonReadRequestERNS_8OContextERKNS_13ParsedRequestE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "ctx"
-    "type": "bool "
-  - "name": "request"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "OutstationState & opendnp3::StateUnsolicitedConfirmWait::OnNewNonReadRequest(OContext &, const struct ParsedRequest &)"
-- "name": "_ZN8opendnp38OContext9OnTxReadyEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool opendnp3::OContext::OnTxReady()"
-"language": "c++"
-"project": "opendnp3"
-"target_name": "fuzzdecoder"
-"target_path": "/src/opendnp3/cpp/tests/fuzz/fuzzdecoder.cpp"
-"test_files":
-- "test_file_path": "/src/opendnp3/cpp/tests/unit/TestLinkLayer.cpp"
-- "test_file_path": "/src/opendnp3/cpp/examples/outstation-udp/main.cpp"
-- "test_file_path": "/src/opendnp3/cpp/tests/unit/TestCollectionTransform.cpp"
-- "test_file_path": "/src/opendnp3/cpp/tests/unit/TestLinkLayerKeepAlive.cpp"
-- "test_file_path": "/src/opendnp3/cpp/tests/integration/mocks/NullSOEHandler.cpp"
-- "test_file_path": "/src/opendnp3/cpp/tests/asiotests/tls/mocks/MockTLSPair.cpp"
-- "test_file_path": "/src/opendnp3/cpp/examples/tls/outstation/main.cpp"
-- "test_file_path": "/src/opendnp3/cpp/tests/integration/mocks/PerformanceStackPair.cpp"
-- "test_file_path": "/src/opendnp3/cpp/tests/unit/TestLinkAddresses.cpp"
-- "test_file_path": "/src/opendnp3/cpp/tests/unit/TestLog.cpp"
+functions:
+- name: _ZN8opendnp327StateUnsolicitedConfirmWait19OnNewNonReadRequestERNS_8OContextERKNS_13ParsedRequestE
+  params:
+  - name: this
+    type: 'bool '
+  - name: ctx
+    type: 'bool '
+  - name: request
+    type: 'bool '
+  return_type: void
+  signature: OutstationState & opendnp3::StateUnsolicitedConfirmWait::OnNewNonReadRequest(OContext
+    &, const struct ParsedRequest &)
+- name: _ZN8opendnp38OContext15HandleNewEventsEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void opendnp3::OContext::HandleNewEvents()
+- name: _ZZN8opendnp38OContext22RestartSolConfirmTimerEvENK3$_0clEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void opendnp3::OContext::operator()(const void *)
+- name: _ZN8opendnp38OContext9OnTxReadyEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool opendnp3::OContext::OnTxReady()
+- name: _ZN8opendnp37Decoder10DecodeTPDUERKNS_6BufferE
+  params:
+  - name: this
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  return_type: void
+  signature: void opendnp3::Decoder::DecodeTPDU(const struct Buffer &)
+- name: _ZN8opendnp331StateNullUnsolicitedConfirmWait16OnNewReadRequestERNS_8OContextERKNS_13ParsedRequestE
+  params:
+  - name: this
+    type: 'bool '
+  - name: ctx
+    type: 'bool '
+  - name: request
+    type: 'bool '
+  return_type: void
+  signature: OutstationState & opendnp3::StateNullUnsolicitedConfirmWait::OnNewReadRequest(OContext
+    &, const struct ParsedRequest &)
+language: c++
+project: opendnp3
+target_name: fuzzdecoder
+target_path: /src/opendnp3/cpp/tests/fuzz/fuzzdecoder.cpp
+test_files:
+- test_file_path: /src/opendnp3/cpp/tests/unit/TestCollectionTransform.cpp
+- test_file_path: /src/opendnp3/cpp/tests/integration/mocks/NullSOEHandler.cpp
+- test_file_path: /src/opendnp3/cpp/examples/tls/outstation/main.cpp
+- test_file_path: /src/opendnp3/cpp/tests/unit/TestLinkLayerKeepAlive.cpp
+- test_file_path: /src/opendnp3/cpp/examples/outstation-udp/main.cpp
+- test_file_path: /src/opendnp3/cpp/tests/integration/mocks/PerformanceStackPair.cpp

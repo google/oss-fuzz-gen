@@ -1,102 +1,64 @@
-"functions":
-- "name": "_ZN5capnp13DynamicStruct7Builder5adoptENS_12StructSchema5FieldEONS_6OrphanINS_12DynamicValueEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "field"
-    "type": "bool "
-  - "name": "orphan"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void capnp::DynamicStruct::Builder::adopt(Field, DW_TAG_rvalue_reference_typeOrphan<capnp::DynamicValue>)"
-- "name": "_ZN5capnp1_22initDynamicTestMessageENS_13DynamicStruct7BuilderE"
-  "params":
-  - "name": "builder"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void capnp::_::initDynamicTestMessage(Builder)"
-- "name": "_ZN5capnp13DynamicStruct7Builder6disownENS_12StructSchema5FieldE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "field"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Orphan<capnp::DynamicValue> capnp::DynamicStruct::Builder::disown(Field)"
-- "name": "_ZN5capnp13DynamicStruct7Builder6disownEN2kj9StringPtrE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "Orphan<capnp::DynamicValue> capnp::DynamicStruct::Builder::disown(StringPtr)"
-- "name": "_ZN5capnp10Capability6Server21internalUnimplementedEPKcm"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "actualInterfaceName"
-    "type": "bool "
-  - "name": "requestedTypeId"
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "struct DispatchCallResult capnp::Capability::Server::internalUnimplemented(const char *, uint64_t)"
-- "name": "_ZN5capnp1_20initDynamicTestListsENS_13DynamicStruct7BuilderE"
-  "params":
-  - "name": "builder"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void capnp::_::initDynamicTestLists(Builder)"
-- "name": "_ZN5capnp13DynamicStruct7Builder5adoptEN2kj9StringPtrEONS_6OrphanINS_12DynamicValueEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "orphan"
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void capnp::DynamicStruct::Builder::adopt(StringPtr, DW_TAG_rvalue_reference_typeOrphan<capnp::DynamicValue>)"
-- "name": "_ZN5capnp1_23checkDynamicTestMessageENS_13DynamicStruct7BuilderE"
-  "params":
-  - "name": "builder"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void capnp::_::checkDynamicTestMessage(Builder)"
-- "name": "_ZN5capnp1_21checkDynamicTestListsENS_13DynamicStruct7BuilderE"
-  "params":
-  - "name": "builder"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void capnp::_::checkDynamicTestLists(Builder)"
-- "name": "_ZN5capnp1_30checkDynamicTestMessageAllZeroENS_13DynamicStruct7BuilderE"
-  "params":
-  - "name": "builder"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void capnp::_::checkDynamicTestMessageAllZero(Builder)"
-"language": "c++"
-"project": "capnproto"
-"target_name": "capnp-llvm-fuzzer-testcase"
-"target_path": "/src/capnproto/c++/src/capnp/llvm-fuzzer-testcase.c++"
-"test_files":
-- "test_file_path": "/src/capnproto/c++/src/kj/compat/gzip-test.c++"
-- "test_file_path": "/src/capnproto/c++/src/kj/arena-test.c++"
-- "test_file_path": "/src/capnproto/c++/src/kj/async-coroutine-test.c++"
-- "test_file_path": "/src/capnproto/c++/src/capnp/compat/json-test.c++"
-- "test_file_path": "/src/capnproto/c++/src/capnp/compat/json-rpc-test.c++"
-- "test_file_path": "/src/capnproto/c++/src/capnp/common-test.c++"
-- "test_file_path": "/src/capnproto/c++/src/kj/mutex-test.c++"
-- "test_file_path": "/src/capnproto/c++/src/kj/filesystem-disk-test.c++"
-- "test_file_path": "/src/capnproto/c++/src/kj/io-test.c++"
-- "test_file_path": "/src/capnproto/c++/src/capnp/any-test.c++"
+functions:
+- name: _ZN5capnp1_23checkDynamicTestMessageENS_13DynamicStruct7BuilderE
+  params:
+  - name: builder
+    type: 'bool '
+  return_type: void
+  signature: void capnp::_::checkDynamicTestMessage(Builder)
+- name: _ZN5capnp1_22initDynamicTestMessageENS_13DynamicStruct7BuilderE
+  params:
+  - name: builder
+    type: 'bool '
+  return_type: void
+  signature: void capnp::_::initDynamicTestMessage(Builder)
+- name: _ZN5capnp13DynamicStruct7Builder6disownEN2kj9StringPtrE
+  params:
+  - name: this
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: void
+  signature: Orphan<capnp::DynamicValue> capnp::DynamicStruct::Builder::disown(StringPtr)
+- name: _ZN5capnp1_30checkDynamicTestMessageAllZeroENS_13DynamicStruct7BuilderE
+  params:
+  - name: builder
+    type: 'bool '
+  return_type: void
+  signature: void capnp::_::checkDynamicTestMessageAllZero(Builder)
+- name: _ZN5capnp13DynamicStruct7Builder5adoptEN2kj9StringPtrEONS_6OrphanINS_12DynamicValueEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: orphan
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void capnp::DynamicStruct::Builder::adopt(StringPtr, DW_TAG_rvalue_reference_typeOrphan<capnp::DynamicValue>)
+- name: _ZN5capnp13DynamicStruct7Builder6disownENS_12StructSchema5FieldE
+  params:
+  - name: this
+    type: 'bool '
+  - name: field
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Orphan<capnp::DynamicValue> capnp::DynamicStruct::Builder::disown(Field)
+language: c++
+project: capnproto
+target_name: capnp-llvm-fuzzer-testcase
+target_path: /src/capnproto/c++/src/capnp/llvm-fuzzer-testcase.c++
+test_files:
+- test_file_path: /src/capnproto/c++/src/kj/io-test.c++
+- test_file_path: /src/capnproto/c++/src/kj/async-coroutine-test.c++
+- test_file_path: /src/capnproto/c++/src/capnp/any-test.c++
+- test_file_path: /src/capnproto/c++/src/kj/compat/gzip-test.c++
+- test_file_path: /src/capnproto/c++/src/capnp/compat/json-rpc-test.c++
+- test_file_path: /src/capnproto/c++/src/kj/arena-test.c++

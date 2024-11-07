@@ -1,104 +1,74 @@
-"functions":
-- "name": "x86_cpu_policy_lookup_deep_deps"
-  "params":
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "const uint32_t * x86_cpu_policy_lookup_deep_deps(uint32_t)"
-- "name": "x86_decode_insn"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct x86_emulate_state * x86_decode_insn(struct x86_emulate_ctxt *, DW_TAG_subroutine_typeInfinite loop *)"
-- "name": "x86_cpuid_copy_to_buffer"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int x86_cpuid_copy_to_buffer(const struct cpu_policy *, xen_cpuid_leaf_t *, uint32_t *)"
-- "name": "x86_cpuid_copy_from_buffer"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int x86_cpuid_copy_from_buffer(struct cpu_policy *, const xen_cpuid_leaf_t *, uint32_t, uint32_t *, uint32_t *)"
-- "name": "x86emul_unhandleable_rw"
-  "params":
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int x86emul_unhandleable_rw(DW_TAG_enumeration_typex86_segment, unsigned long, void *, unsigned int, struct x86_emulate_ctxt *)"
-- "name": "emul_test_read_cr"
-  "params":
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int emul_test_read_cr(unsigned int, unsigned long *, struct x86_emulate_ctxt *)"
-- "name": "x86_emul_rmw"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int x86_emul_rmw(void *, unsigned int, uint32_t *, struct x86_emulate_state *, struct x86_emulate_ctxt *)"
-- "name": "x86_cpuid_vendor_to_str"
-  "params":
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "const char * x86_cpuid_vendor_to_str(unsigned int)"
-- "name": "x86_cpu_policy_clear_out_of_range_leaves"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void x86_cpu_policy_clear_out_of_range_leaves(struct cpu_policy *)"
-"language": "c"
-"project": "xen"
-"target_name": "x86_instruction_emulator"
-"target_path": "/src/xen/tools/fuzz/x86_instruction_emulator/fuzz-emul.c"
-"test_files":
-- "test_file_path": "/src/xen/xen/test/livepatch/xen_replace_world.c"
-- "test_file_path": "/src/xen/tools/tests/x86_emulator/simd-sg.c"
-- "test_file_path": "/src/xen/tools/console/testsuite/procpipe.c"
-- "test_file_path": "/src/xen/tools/libs/light/test_fdderegrace.c"
-- "test_file_path": "/src/xen/xen/test/livepatch/xen_action_hooks_marker.c"
-- "test_file_path": "/src/xen/xen/test/livepatch/xen_prepost_hooks_fail.c"
-- "test_file_path": "/src/xen/xen/test/livepatch/xen_bye_world_func.c"
-- "test_file_path": "/src/xen/tools/tests/resource/test-resource.c"
-- "test_file_path": "/src/xen/xen/test/livepatch/xen_action_hooks_nofunc.c"
-- "test_file_path": "/src/xen/xen/test/livepatch/xen_expectations_fail.c"
+functions:
+- name: x86_decode_insn
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct x86_emulate_state * x86_decode_insn(struct x86_emulate_ctxt *,
+    DW_TAG_subroutine_typeInfinite loop *)
+- name: x86emul_unhandleable_rw
+  params:
+  - name: ''
+    type: int
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int x86emul_unhandleable_rw(DW_TAG_enumeration_typex86_segment, unsigned
+    long, void *, unsigned int, struct x86_emulate_ctxt *)
+- name: x86_emul_rmw
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int x86_emul_rmw(void *, unsigned int, uint32_t *, struct x86_emulate_state
+    *, struct x86_emulate_ctxt *)
+- name: x86_cpu_policy_lookup_deep_deps
+  params:
+  - name: ''
+    type: int
+  return_type: void
+  signature: const uint32_t * x86_cpu_policy_lookup_deep_deps(uint32_t)
+- name: x86_cpuid_copy_to_buffer
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int x86_cpuid_copy_to_buffer(const struct cpu_policy *, xen_cpuid_leaf_t
+    *, uint32_t *)
+- name: x86_cpuid_vendor_to_str
+  params:
+  - name: ''
+    type: int
+  return_type: void
+  signature: const char * x86_cpuid_vendor_to_str(unsigned int)
+language: c
+project: xen
+target_name: x86_instruction_emulator
+target_path: /src/xen/tools/fuzz/x86_instruction_emulator/fuzz-emul.c
+test_files:
+- test_file_path: /src/xen/xen/test/livepatch/xen_bye_world_func.c
+- test_file_path: /src/xen/xen/test/livepatch/xen_expectations_fail.c
+- test_file_path: /src/xen/xen/test/livepatch/xen_action_hooks_nofunc.c
+- test_file_path: /src/xen/tools/libs/light/test_fdderegrace.c
+- test_file_path: /src/xen/tools/tests/resource/test-resource.c
+- test_file_path: /src/xen/xen/test/livepatch/xen_prepost_hooks_fail.c

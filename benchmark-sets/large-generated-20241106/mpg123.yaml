@@ -1,120 +1,84 @@
-"functions":
-- "name": "mpg123_open_fixed"
-  "params":
-  - "name": "mh"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  - "name": "channels"
-    "type": "int"
-  - "name": "encoding"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int mpg123_open_fixed(mpg123_handle *, const char *, int, int)"
-- "name": "mpg123_seek_frame"
-  "params":
-  - "name": "mh"
-    "type": "bool "
-  - "name": "offset"
-    "type": "size_t"
-  - "name": "whence"
-    "type": "int"
-  "return_type": "size_t"
-  "signature": "off_t mpg123_seek_frame(mpg123_handle *, off_t, int)"
-- "name": "mpg123_feedseek"
-  "params":
-  - "name": "mh"
-    "type": "bool "
-  - "name": "sampleoff"
-    "type": "size_t"
-  - "name": "whence"
-    "type": "int"
-  - "name": "input_offset"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "off_t mpg123_feedseek(mpg123_handle *, off_t, int, off_t *)"
-- "name": "mpg123_decode_frame"
-  "params":
-  - "name": "mh"
-    "type": "bool "
-  - "name": "num"
-    "type": "bool "
-  - "name": "audio"
-    "type": "bool "
-  - "name": "bytes"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mpg123_decode_frame(mpg123_handle *, off_t *, unsigned char **, size_t *)"
-- "name": "mpg123_new"
-  "params":
-  - "name": "decoder"
-    "type": "bool "
-  - "name": "error"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "mpg123_handle * mpg123_new(const char *, int *)"
-- "name": "mpg123_scan"
-  "params":
-  - "name": "mh"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mpg123_scan(mpg123_handle *)"
-- "name": "mpg123_seek"
-  "params":
-  - "name": "mh"
-    "type": "bool "
-  - "name": "sampleoff"
-    "type": "size_t"
-  - "name": "whence"
-    "type": "int"
-  "return_type": "size_t"
-  "signature": "off_t mpg123_seek(mpg123_handle *, off_t, int)"
-- "name": "mpg123_decode_frame64"
-  "params":
-  - "name": "mh"
-    "type": "bool "
-  - "name": "num"
-    "type": "bool "
-  - "name": "audio"
-    "type": "bool "
-  - "name": "bytes"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mpg123_decode_frame64(mpg123_handle *, int64_t *, unsigned char **, size_t *)"
-- "name": "mpg123_seek64"
-  "params":
-  - "name": "mh"
-    "type": "bool "
-  - "name": "sampleoff"
-    "type": "size_t"
-  - "name": "whence"
-    "type": "int"
-  "return_type": "size_t"
-  "signature": "int64_t mpg123_seek64(mpg123_handle *, int64_t, int)"
-- "name": "mpg123_feedseek64"
-  "params":
-  - "name": "mh"
-    "type": "bool "
-  - "name": "sampleoff"
-    "type": "size_t"
-  - "name": "whence"
-    "type": "int"
-  - "name": "input_offset"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "int64_t mpg123_feedseek64(mpg123_handle *, int64_t, int, int64_t *)"
-"language": "c++"
-"project": "mpg123"
-"target_name": "decode_fuzzer"
-"target_path": "/src/decode_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/mpg123/doc/examples/mpg123_to_wav_replaced_io.c"
-- "test_file_path": "/src/mpg123/src/tests/noise.c"
-- "test_file_path": "/src/mpg123/doc/examples/dump_seekindex.c"
-- "test_file_path": "/src/mpg123/doc/examples/mpg123_to_out123.c"
-- "test_file_path": "/src/mpg123/src/tests/seek_whence.c"
-- "test_file_path": "/src/mpg123/src/tests/decode_fixed.c"
-- "test_file_path": "/src/mpg123/src/libmpg123/testcpu.c"
-- "test_file_path": "/src/mpg123/test_c99.c"
-- "test_file_path": "/src/mpg123/src/tests/resample_total.c"
-- "test_file_path": "/src/mpg123/doc/examples/mpg123_to_wav_reader64.c"
+functions:
+- name: mpg123_decode_frame
+  params:
+  - name: mh
+    type: 'bool '
+  - name: num
+    type: 'bool '
+  - name: audio
+    type: 'bool '
+  - name: bytes
+    type: 'bool '
+  return_type: int
+  signature: int mpg123_decode_frame(mpg123_handle *, off_t *, unsigned char **, size_t
+    *)
+- name: mpg123_feedseek64
+  params:
+  - name: mh
+    type: 'bool '
+  - name: sampleoff
+    type: size_t
+  - name: whence
+    type: int
+  - name: input_offset
+    type: 'bool '
+  return_type: size_t
+  signature: int64_t mpg123_feedseek64(mpg123_handle *, int64_t, int, int64_t *)
+- name: mpg123_seek
+  params:
+  - name: mh
+    type: 'bool '
+  - name: sampleoff
+    type: size_t
+  - name: whence
+    type: int
+  return_type: size_t
+  signature: off_t mpg123_seek(mpg123_handle *, off_t, int)
+- name: mpg123_open_fixed
+  params:
+  - name: mh
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  - name: channels
+    type: int
+  - name: encoding
+    type: int
+  return_type: int
+  signature: int mpg123_open_fixed(mpg123_handle *, const char *, int, int)
+- name: mpg123_feedseek
+  params:
+  - name: mh
+    type: 'bool '
+  - name: sampleoff
+    type: size_t
+  - name: whence
+    type: int
+  - name: input_offset
+    type: 'bool '
+  return_type: size_t
+  signature: off_t mpg123_feedseek(mpg123_handle *, off_t, int, off_t *)
+- name: mpg123_decode_frame64
+  params:
+  - name: mh
+    type: 'bool '
+  - name: num
+    type: 'bool '
+  - name: audio
+    type: 'bool '
+  - name: bytes
+    type: 'bool '
+  return_type: int
+  signature: int mpg123_decode_frame64(mpg123_handle *, int64_t *, unsigned char **,
+    size_t *)
+language: c++
+project: mpg123
+target_name: decode_fuzzer
+target_path: /src/decode_fuzzer.cc
+test_files:
+- test_file_path: /src/mpg123/src/libmpg123/testcpu.c
+- test_file_path: /src/mpg123/src/tests/decode_fixed.c
+- test_file_path: /src/mpg123/doc/examples/mpg123_to_wav_reader64.c
+- test_file_path: /src/mpg123/src/tests/resample_total.c
+- test_file_path: /src/mpg123/test_c99.c
+- test_file_path: /src/mpg123/doc/examples/mpg123_to_wav_replaced_io.c

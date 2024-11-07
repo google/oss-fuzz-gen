@@ -1,103 +1,53 @@
-"functions":
-- "name": "jv_is_integer"
-  "params":
-  - "name": "j"
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int jv_is_integer(jv)"
-- "name": "onig_scan"
-  "params":
-  - "name": "reg"
-    "type": "bool "
-  - "name": "str"
-    "type": "bool "
-  - "name": "end"
-    "type": "bool "
-  - "name": "region"
-    "type": "bool "
-  - "name": "option"
-    "type": "int"
-  - "name": "scan_callback"
-    "type": "bool "
-  - "name": "callback_arg"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int onig_scan(regex_t *, const OnigUChar *, const OnigUChar *, OnigRegion *, OnigOptionType, DW_TAG_subroutine_typeInfinite loop *, void *)"
-- "name": "jq_util_input_next_input"
-  "params":
-  - "name": "state"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "jv jq_util_input_next_input(jq_util_input_state *)"
-- "name": "jv_show"
-  "params":
-  - "name": "x"
-    "type": "size_t"
-  - "name": "flags"
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void jv_show(jv, int)"
-- "name": "jv_number_with_literal"
-  "params":
-  - "name": "literal"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "jv jv_number_with_literal(const char *)"
-- "name": "jq_util_input_next_input_cb"
-  "params":
-  - "name": "jq"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "jv jq_util_input_next_input_cb(jq_state *, void *)"
-- "name": "decNumberLog10"
-  "params":
-  - "name": "res"
-    "type": "bool "
-  - "name": "rhs"
-    "type": "bool "
-  - "name": "set"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "decNumber * decNumberLog10(decNumber *, const decNumber *, decContext *)"
-- "name": "decNumberLn"
-  "params":
-  - "name": "res"
-    "type": "bool "
-  - "name": "rhs"
-    "type": "bool "
-  - "name": "set"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "decNumber * decNumberLn(decNumber *, const decNumber *, decContext *)"
-- "name": "jv_string_implode"
-  "params":
-  - "name": "j"
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "jv jv_string_implode(jv)"
-- "name": "decNumberPower"
-  "params":
-  - "name": "res"
-    "type": "bool "
-  - "name": "lhs"
-    "type": "bool "
-  - "name": "rhs"
-    "type": "bool "
-  - "name": "set"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "decNumber * decNumberPower(decNumber *, const decNumber *, const decNumber *, decContext *)"
-"language": "c"
-"project": "jq"
-"target_name": "jq_fuzz_parse"
-"target_path": "/src/jq/tests/jq_fuzz_parse.c"
-"test_files":
-- "test_file_path": "/src/jq/src/jq_test.c"
+functions:
+- name: decNumberLn
+  params:
+  - name: res
+    type: 'bool '
+  - name: rhs
+    type: 'bool '
+  - name: set
+    type: 'bool '
+  return_type: void
+  signature: decNumber * decNumberLn(decNumber *, const decNumber *, decContext *)
+- name: jv_string_implode
+  params:
+  - name: j
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: jv jv_string_implode(jv)
+- name: jq_util_input_next_input
+  params:
+  - name: state
+    type: 'bool '
+  return_type: void
+  signature: jv jq_util_input_next_input(jq_util_input_state *)
+- name: jv_is_integer
+  params:
+  - name: j
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int jv_is_integer(jv)
+- name: jv_number_with_literal
+  params:
+  - name: literal
+    type: 'bool '
+  return_type: void
+  signature: jv jv_number_with_literal(const char *)
+- name: jq_util_input_next_input_cb
+  params:
+  - name: jq
+    type: 'bool '
+  - name: data
+    type: 'bool '
+  return_type: void
+  signature: jv jq_util_input_next_input_cb(jq_state *, void *)
+language: c
+project: jq
+target_name: jq_fuzz_parse
+target_path: /src/jq/tests/jq_fuzz_parse.c
+test_files:
+- test_file_path: /src/jq/src/jq_test.c

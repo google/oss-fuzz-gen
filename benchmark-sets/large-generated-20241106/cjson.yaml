@@ -1,108 +1,66 @@
-"functions":
-- "name": "cJSON_Parse"
-  "params":
-  - "name": "value"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "cJSON * cJSON_Parse(const char *)"
-- "name": "cJSON_ParseWithLength"
-  "params":
-  - "name": "value"
-    "type": "bool "
-  - "name": "buffer_length"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "cJSON * cJSON_ParseWithLength(const char *, size_t)"
-- "name": "cJSON_PrintPreallocated"
-  "params":
-  - "name": "item"
-    "type": "bool "
-  - "name": "buffer"
-    "type": "bool "
-  - "name": "length"
-    "type": "int"
-  - "name": "format"
-    "type": "int"
-  "return_type": "int"
-  "signature": "cJSON_bool cJSON_PrintPreallocated(cJSON *, char *, const int, const cJSON_bool)"
-- "name": "cJSON_Compare"
-  "params":
-  - "name": "a"
-    "type": "bool "
-  - "name": "b"
-    "type": "bool "
-  - "name": "case_sensitive"
-    "type": "int"
-  "return_type": "int"
-  "signature": "cJSON_bool cJSON_Compare(const const cJSON *, const const cJSON *, const cJSON_bool)"
-- "name": "cJSON_ReplaceItemInObjectCaseSensitive"
-  "params":
-  - "name": "object"
-    "type": "bool "
-  - "name": "string"
-    "type": "bool "
-  - "name": "newitem"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "cJSON_bool cJSON_ReplaceItemInObjectCaseSensitive(cJSON *, const char *, cJSON *)"
-- "name": "cJSON_ReplaceItemInObject"
-  "params":
-  - "name": "object"
-    "type": "bool "
-  - "name": "string"
-    "type": "bool "
-  - "name": "newitem"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "cJSON_bool cJSON_ReplaceItemInObject(cJSON *, const char *, cJSON *)"
-- "name": "cJSON_DeleteItemFromObjectCaseSensitive"
-  "params":
-  - "name": "object"
-    "type": "bool "
-  - "name": "string"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void cJSON_DeleteItemFromObjectCaseSensitive(cJSON *, const char *)"
-- "name": "cJSON_DeleteItemFromObject"
-  "params":
-  - "name": "object"
-    "type": "bool "
-  - "name": "string"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void cJSON_DeleteItemFromObject(cJSON *, const char *)"
-- "name": "cJSON_AddNumberToObject"
-  "params":
-  - "name": "object"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "number"
-    "type": "double"
-  "return_type": "void"
-  "signature": "cJSON * cJSON_AddNumberToObject(const cJSON *, const const char *, const double)"
-- "name": "cJSON_AddRawToObject"
-  "params":
-  - "name": "object"
-    "type": "bool "
-  - "name": "name"
-    "type": "bool "
-  - "name": "raw"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "cJSON * cJSON_AddRawToObject(const cJSON *, const const char *, const const char *)"
-"language": "c++"
-"project": "cjson"
-"target_name": "cjson_read_fuzzer"
-"target_path": "/src/cjson/fuzzing/cjson_read_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/cjson/tests/parse_object.c"
-- "test_file_path": "/src/cjson/tests/unity/test/expectdata/testsample_run1.c"
-- "test_file_path": "/src/cjson/tests/unity/examples/example_1/test/TestProductionCode.c"
-- "test_file_path": "/src/cjson/test.c"
-- "test_file_path": "/src/cjson/tests/unity/extras/fixture/test/unity_fixture_Test.c"
-- "test_file_path": "/src/cjson/tests/unity/test/expectdata/testsample_def.c"
-- "test_file_path": "/src/cjson/tests/cjson_add.c"
-- "test_file_path": "/src/cjson/tests/unity/test/expectdata/testsample_run2.c"
-- "test_file_path": "/src/cjson/tests/unity/test/expectdata/testsample_new2.c"
-- "test_file_path": "/src/cjson/tests/unity/test/testdata/testRunnerGeneratorSmall.c"
+functions:
+- name: cJSON_AddNumberToObject
+  params:
+  - name: object
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: number
+    type: double
+  return_type: void
+  signature: cJSON * cJSON_AddNumberToObject(const cJSON *, const const char *, const
+    double)
+- name: cJSON_DeleteItemFromObject
+  params:
+  - name: object
+    type: 'bool '
+  - name: string
+    type: 'bool '
+  return_type: void
+  signature: void cJSON_DeleteItemFromObject(cJSON *, const char *)
+- name: cJSON_Parse
+  params:
+  - name: value
+    type: 'bool '
+  return_type: void
+  signature: cJSON * cJSON_Parse(const char *)
+- name: cJSON_ParseWithLength
+  params:
+  - name: value
+    type: 'bool '
+  - name: buffer_length
+    type: size_t
+  return_type: void
+  signature: cJSON * cJSON_ParseWithLength(const char *, size_t)
+- name: cJSON_AddRawToObject
+  params:
+  - name: object
+    type: 'bool '
+  - name: name
+    type: 'bool '
+  - name: raw
+    type: 'bool '
+  return_type: void
+  signature: cJSON * cJSON_AddRawToObject(const cJSON *, const const char *, const
+    const char *)
+- name: cJSON_ReplaceItemInObject
+  params:
+  - name: object
+    type: 'bool '
+  - name: string
+    type: 'bool '
+  - name: newitem
+    type: 'bool '
+  return_type: int
+  signature: cJSON_bool cJSON_ReplaceItemInObject(cJSON *, const char *, cJSON *)
+language: c++
+project: cjson
+target_name: cjson_read_fuzzer
+target_path: /src/cjson/fuzzing/cjson_read_fuzzer.c
+test_files:
+- test_file_path: /src/cjson/tests/unity/extras/fixture/test/unity_fixture_Test.c
+- test_file_path: /src/cjson/tests/unity/test/expectdata/testsample_new2.c
+- test_file_path: /src/cjson/tests/cjson_add.c
+- test_file_path: /src/cjson/tests/unity/examples/example_1/test/TestProductionCode.c
+- test_file_path: /src/cjson/test.c
+- test_file_path: /src/cjson/tests/parse_object.c

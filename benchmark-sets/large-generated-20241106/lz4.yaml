@@ -1,146 +1,92 @@
-"functions":
-- "name": "LZ4F_createCDict_advanced"
-  "params":
-  - "name": "cmem"
-    "type": "bool "
-  - "name": "dictBuffer"
-    "type": "bool "
-  - "name": "dictSize"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "LZ4F_CDict * LZ4F_createCDict_advanced(LZ4F_CustomMem, const void *, size_t)"
-- "name": "LZ4_compressHC2_limitedOutput_withStateHC"
-  "params":
-  - "name": "state"
-    "type": "bool "
-  - "name": "src"
-    "type": "bool "
-  - "name": "dst"
-    "type": "bool "
-  - "name": "srcSize"
-    "type": "int"
-  - "name": "maxDstSize"
-    "type": "int"
-  - "name": "cLevel"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int LZ4_compressHC2_limitedOutput_withStateHC(void *, const char *, char *, int, int, int)"
-- "name": "LZ4F_compressBegin_usingDict"
-  "params":
-  - "name": "cctx"
-    "type": "bool "
-  - "name": "dstBuffer"
-    "type": "bool "
-  - "name": "dstCapacity"
-    "type": "size_t"
-  - "name": "dict"
-    "type": "bool "
-  - "name": "dictSize"
-    "type": "size_t"
-  - "name": "preferencesPtr"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t LZ4F_compressBegin_usingDict(LZ4F_cctx *, void *, size_t, const void *, size_t, const LZ4F_preferences_t *)"
-- "name": "LZ4_decompress_fast_usingDict"
-  "params":
-  - "name": "source"
-    "type": "bool "
-  - "name": "dest"
-    "type": "bool "
-  - "name": "originalSize"
-    "type": "int"
-  - "name": "dictStart"
-    "type": "bool "
-  - "name": "dictSize"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int LZ4_decompress_fast_usingDict(const char *, char *, int, const char *, int)"
-- "name": "LZ4_compress_HC_continue_destSize"
-  "params":
-  - "name": "LZ4_streamHCPtr"
-    "type": "bool "
-  - "name": "src"
-    "type": "bool "
-  - "name": "dst"
-    "type": "bool "
-  - "name": "srcSizePtr"
-    "type": "bool "
-  - "name": "targetDestSize"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int LZ4_compress_HC_continue_destSize(LZ4_streamHC_t *, const char *, char *, int *, int)"
-- "name": "LZ4_decompress_fast"
-  "params":
-  - "name": "source"
-    "type": "bool "
-  - "name": "dest"
-    "type": "bool "
-  - "name": "originalSize"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int LZ4_decompress_fast(const char *, char *, int)"
-- "name": "LZ4_compress_destSize_extState"
-  "params":
-  - "name": "state"
-    "type": "bool "
-  - "name": "src"
-    "type": "bool "
-  - "name": "dst"
-    "type": "bool "
-  - "name": "srcSizePtr"
-    "type": "bool "
-  - "name": "targetDstSize"
-    "type": "int"
-  - "name": "acceleration"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int LZ4_compress_destSize_extState(void *, const char *, char *, int *, int, int)"
-- "name": "LZ4F_createCDict"
-  "params":
-  - "name": "dictBuffer"
-    "type": "bool "
-  - "name": "dictSize"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "LZ4F_CDict * LZ4F_createCDict(const void *, size_t)"
-- "name": "LZ4_compressHC2_limitedOutput"
-  "params":
-  - "name": "src"
-    "type": "bool "
-  - "name": "dst"
-    "type": "bool "
-  - "name": "srcSize"
-    "type": "int"
-  - "name": "maxDstSize"
-    "type": "int"
-  - "name": "cLevel"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int LZ4_compressHC2_limitedOutput(const char *, char *, int, int, int)"
-- "name": "LZ4F_getFrameInfo"
-  "params":
-  - "name": "dctx"
-    "type": "bool "
-  - "name": "frameInfoPtr"
-    "type": "bool "
-  - "name": "srcBuffer"
-    "type": "bool "
-  - "name": "srcSizePtr"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t LZ4F_getFrameInfo(LZ4F_dctx *, LZ4F_frameInfo_t *, const void *, size_t *)"
-"language": "c++"
-"project": "lz4"
-"target_name": "decompress_fuzzer"
-"target_path": "/src/lz4/ossfuzz/decompress_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/lz4/examples/streamingHC_ringBuffer.c"
-- "test_file_path": "/src/lz4/tests/fullbench.c"
-- "test_file_path": "/src/lz4/examples/blockStreaming_ringBuffer.c"
-- "test_file_path": "/src/lz4/tests/checkFrame.c"
-- "test_file_path": "/src/lz4/examples/print_version.c"
-- "test_file_path": "/src/lz4/examples/dictionaryRandomAccess.c"
-- "test_file_path": "/src/lz4/tests/datagen.c"
-- "test_file_path": "/src/lz4/tests/decompress-partial-usingDict.c"
-- "test_file_path": "/src/lz4/examples/blockStreaming_lineByLine.c"
-- "test_file_path": "/src/lz4/examples/bench_functions.c"
+functions:
+- name: LZ4F_createCDict
+  params:
+  - name: dictBuffer
+    type: 'bool '
+  - name: dictSize
+    type: size_t
+  return_type: void
+  signature: LZ4F_CDict * LZ4F_createCDict(const void *, size_t)
+- name: LZ4_compress_HC_continue_destSize
+  params:
+  - name: LZ4_streamHCPtr
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  - name: srcSizePtr
+    type: 'bool '
+  - name: targetDestSize
+    type: int
+  return_type: int
+  signature: int LZ4_compress_HC_continue_destSize(LZ4_streamHC_t *, const char *,
+    char *, int *, int)
+- name: LZ4_compressHC2_limitedOutput
+  params:
+  - name: src
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  - name: srcSize
+    type: int
+  - name: maxDstSize
+    type: int
+  - name: cLevel
+    type: int
+  return_type: int
+  signature: int LZ4_compressHC2_limitedOutput(const char *, char *, int, int, int)
+- name: LZ4_decompress_fast_usingDict
+  params:
+  - name: source
+    type: 'bool '
+  - name: dest
+    type: 'bool '
+  - name: originalSize
+    type: int
+  - name: dictStart
+    type: 'bool '
+  - name: dictSize
+    type: int
+  return_type: int
+  signature: int LZ4_decompress_fast_usingDict(const char *, char *, int, const char
+    *, int)
+- name: LZ4_compress_destSize_extState
+  params:
+  - name: state
+    type: 'bool '
+  - name: src
+    type: 'bool '
+  - name: dst
+    type: 'bool '
+  - name: srcSizePtr
+    type: 'bool '
+  - name: targetDstSize
+    type: int
+  - name: acceleration
+    type: int
+  return_type: int
+  signature: int LZ4_compress_destSize_extState(void *, const char *, char *, int
+    *, int, int)
+- name: LZ4F_createCDict_advanced
+  params:
+  - name: cmem
+    type: 'bool '
+  - name: dictBuffer
+    type: 'bool '
+  - name: dictSize
+    type: size_t
+  return_type: void
+  signature: LZ4F_CDict * LZ4F_createCDict_advanced(LZ4F_CustomMem, const void *,
+    size_t)
+language: c++
+project: lz4
+target_name: decompress_fuzzer
+target_path: /src/lz4/ossfuzz/decompress_fuzzer.c
+test_files:
+- test_file_path: /src/lz4/examples/dictionaryRandomAccess.c
+- test_file_path: /src/lz4/tests/decompress-partial-usingDict.c
+- test_file_path: /src/lz4/examples/blockStreaming_lineByLine.c
+- test_file_path: /src/lz4/examples/blockStreaming_ringBuffer.c
+- test_file_path: /src/lz4/tests/datagen.c
+- test_file_path: /src/lz4/tests/fullbench.c

@@ -1,136 +1,89 @@
-"functions":
-- "name": "_ZN7rocksdb18WriteUnpreparedTxn27RollbackToSavePointInternalEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status rocksdb::WriteUnpreparedTxn::RollbackToSavePointInternal()"
-- "name": "_ZN7rocksdb13TransactionDB4OpenERKNS_9DBOptionsERKNS_20TransactionDBOptionsERKNSt3__112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEERKNS7_6vectorINS_22ColumnFamilyDescriptorENSB_ISH_EEEEPNSG_IPNS_18ColumnFamilyHandleENSB_ISN_EEEEPPS0_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status rocksdb::TransactionDB::Open(const struct DBOptions &, const struct TransactionDBOptions &, const string &, const vector<rocksdb::ColumnFamilyDescriptor, std::__1::allocator<rocksdb::ColumnFamilyDescriptor> > &, vector<rocksdb::ColumnFamilyHandle *, std::__1::allocator<rocksdb::ColumnFamilyHandle *> > *, TransactionDB **)"
-- "name": "_ZNK7rocksdb6DBImpl29GetDbIdentityFromIdentityFileEPNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status rocksdb::DBImpl::GetDbIdentityFromIdentityFile(string *)"
-- "name": "_ZN7rocksdb13TransactionDB4OpenERKNS_7OptionsERKNS_20TransactionDBOptionsERKNSt3__112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEEPPS0_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status rocksdb::TransactionDB::Open(const struct Options &, const struct TransactionDBOptions &, const string &, TransactionDB **)"
-- "name": "_ZN7rocksdb20WriteUnpreparedTxnDB10InitializeERKNSt3__16vectorImNS1_9allocatorImEEEERKNS2_IPNS_18ColumnFamilyHandleENS3_IS9_EEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status rocksdb::WriteUnpreparedTxnDB::Initialize(const vector<unsigned long, std::__1::allocator<unsigned long> > &, const vector<rocksdb::ColumnFamilyHandle *, std::__1::allocator<rocksdb::ColumnFamilyHandle *> > &)"
-- "name": "_ZN7rocksdb18WriteUnpreparedTxn12SingleDeleteEPNS_18ColumnFamilyHandleERKNS_10SlicePartsEb"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool"
-  "return_type": "void"
-  "signature": "Status rocksdb::WriteUnpreparedTxn::SingleDelete(ColumnFamilyHandle *, const struct SliceParts &, const bool)"
-- "name": "_ZN7rocksdb2DB18OpenAndTrimHistoryERKNS_9DBOptionsERKNSt3__112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERKNS4_6vectorINS_22ColumnFamilyDescriptorENS8_ISE_EEEEPNSD_IPNS_18ColumnFamilyHandleENS8_ISK_EEEEPPS0_SA_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status rocksdb::DB::OpenAndTrimHistory(const struct DBOptions &, const string &, const vector<rocksdb::ColumnFamilyDescriptor, std::__1::allocator<rocksdb::ColumnFamilyDescriptor> > &, vector<rocksdb::ColumnFamilyHandle *, std::__1::allocator<rocksdb::ColumnFamilyHandle *> > *, DB **, string)"
-- "name": "_ZN7rocksdb18WriteUnpreparedTxn19RollbackToSavePointEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status rocksdb::WriteUnpreparedTxn::RollbackToSavePoint()"
-- "name": "_ZN7rocksdb6DBImpl19IngestExternalFilesERKNSt3__16vectorINS_21IngestExternalFileArgENS1_9allocatorIS3_EEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status rocksdb::DBImpl::IngestExternalFiles(const vector<rocksdb::IngestExternalFileArg, std::__1::allocator<rocksdb::IngestExternalFileArg> > &)"
-- "name": "_ZN7rocksdb18WriteUnpreparedTxn16RollbackInternalEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status rocksdb::WriteUnpreparedTxn::RollbackInternal()"
-"language": "c++"
-"project": "rocksdb"
-"target_name": "db_map_fuzzer"
-"target_path": "/src/rocksdb/fuzz/db_map_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/rocksdb/db/db_basic_test.cc"
-- "test_file_path": "/src/rocksdb/test_util/mock_time_env.cc"
-- "test_file_path": "/src/rocksdb/test_util/testutil.cc"
-- "test_file_path": "/src/rocksdb/test_util/testutil_test.cc"
-- "test_file_path": "/src/rocksdb/tools/ldb_cmd_test.cc"
-- "test_file_path": "/src/rocksdb/db/db_follower_test.cc"
-- "test_file_path": "/src/rocksdb/examples/rocksdb_backup_restore_example.cc"
-- "test_file_path": "/src/rocksdb/util/heap_test.cc"
-- "test_file_path": "/src/rocksdb/db/external_sst_file_test.cc"
-- "test_file_path": "/src/rocksdb/db/db_iter_test.cc"
+functions:
+- name: _ZN7rocksdb13TransactionDB4OpenERKNS_9DBOptionsERKNS_20TransactionDBOptionsERKNSt3__112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEERKNS7_6vectorINS_22ColumnFamilyDescriptorENSB_ISH_EEEEPNSG_IPNS_18ColumnFamilyHandleENSB_ISN_EEEEPPS0_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status rocksdb::TransactionDB::Open(const struct DBOptions &, const struct
+    TransactionDBOptions &, const string &, const vector<rocksdb::ColumnFamilyDescriptor,
+    std::__1::allocator<rocksdb::ColumnFamilyDescriptor> > &, vector<rocksdb::ColumnFamilyHandle
+    *, std::__1::allocator<rocksdb::ColumnFamilyHandle *> > *, TransactionDB **)
+- name: _ZN7rocksdb13TransactionDB4OpenERKNS_7OptionsERKNS_20TransactionDBOptionsERKNSt3__112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEEPPS0_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status rocksdb::TransactionDB::Open(const struct Options &, const struct
+    TransactionDBOptions &, const string &, TransactionDB **)
+- name: _ZN7rocksdb6DBImpl19IngestExternalFilesERKNSt3__16vectorINS_21IngestExternalFileArgENS1_9allocatorIS3_EEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status rocksdb::DBImpl::IngestExternalFiles(const vector<rocksdb::IngestExternalFileArg,
+    std::__1::allocator<rocksdb::IngestExternalFileArg> > &)
+- name: _ZN7rocksdb20WriteUnpreparedTxnDB10InitializeERKNSt3__16vectorImNS1_9allocatorImEEEERKNS2_IPNS_18ColumnFamilyHandleENS3_IS9_EEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status rocksdb::WriteUnpreparedTxnDB::Initialize(const vector<unsigned
+    long, std::__1::allocator<unsigned long> > &, const vector<rocksdb::ColumnFamilyHandle
+    *, std::__1::allocator<rocksdb::ColumnFamilyHandle *> > &)
+- name: _ZN7rocksdb18WriteUnpreparedTxn19RollbackToSavePointEv
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status rocksdb::WriteUnpreparedTxn::RollbackToSavePoint()
+- name: _ZN7rocksdb18WriteUnpreparedTxn16RollbackInternalEv
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status rocksdb::WriteUnpreparedTxn::RollbackInternal()
+language: c++
+project: rocksdb
+target_name: db_map_fuzzer
+target_path: /src/rocksdb/fuzz/db_map_fuzzer.cc
+test_files:
+- test_file_path: /src/rocksdb/tools/ldb_cmd_test.cc
+- test_file_path: /src/rocksdb/util/heap_test.cc
+- test_file_path: /src/rocksdb/test_util/testutil.cc
+- test_file_path: /src/rocksdb/db/db_iter_test.cc
+- test_file_path: /src/rocksdb/test_util/testutil_test.cc
+- test_file_path: /src/rocksdb/db/db_basic_test.cc

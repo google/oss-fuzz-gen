@@ -1,134 +1,64 @@
-"functions":
-- "name": "_ZN5boost12basic_formatIcNSt3__111char_traitsIcEENS1_9allocatorIcEEErmERi"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "x"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "basic_format<char, std::__1::char_traits<char>, std::__1::allocator<char> > & boost::basic_format<char, std::__1::char_traits<char>, std::__1::allocator<char> >::operator%(basic_format<char, std::__1::char_traits<char>, std::__1::allocator<char> > *, int &)"
-- "name": "_ZN6YaHTTP11AsyncLoaderINS_8ResponseEE4feedERKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "somedata"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool YaHTTP::AsyncLoader<YaHTTP::Response>::feed(AsyncLoader<YaHTTP::Response> *, const string &)"
-- "name": "_ZN18DNSDistPacketCache6insertEjRKN5boost8optionalI7NetmaskEEtbRK7DNSNamettRKNSt3__16vectorIh14noinit_adaptorINS9_9allocatorIhEEEEEbhNS1_IjEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "key"
-    "type": "int"
-  - "name": "subnet"
-    "type": "bool "
-  - "name": "queryFlags"
-    "type": "short"
-  - "name": "dnssecOK"
-    "type": "bool"
-  - "name": "qname"
-    "type": "bool "
-  - "name": "qtype"
-    "type": "short"
-  - "name": "qclass"
-    "type": "short"
-  - "name": "response"
-    "type": "bool "
-  - "name": "receivedOverUDP"
-    "type": "bool"
-  - "name": "rcode"
-    "type": "char"
-  - "name": "tempFailureTTL"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void DNSDistPacketCache::insert(uint32_t, const optional<Netmask> &, uint16_t, bool, const DNSName &, uint16_t, uint16_t, const PacketBuffer &, bool, uint8_t, optional<unsigned int>)"
-- "name": "_ZN6YaHTTP9CookieJar20parseSetCookieHeaderERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "cookiestr"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void YaHTTP::CookieJar::parseSetCookieHeader(const string &)"
-- "name": "_ZN6YaHTTPlsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_7RequestE"
-  "params":
-  - "name": "os"
-    "type": "bool "
-  - "name": "req"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "ostream & YaHTTP::operator<<(ostream &, const Request &)"
-- "name": "_ZN6YaHTTPlsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_8ResponseE"
-  "params":
-  - "name": "os"
-    "type": "bool "
-  - "name": "resp"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "ostream & YaHTTP::operator<<(ostream &, const Response &)"
-- "name": "_ZN6YaHTTPrsERNSt3__113basic_istreamIcNS0_11char_traitsIcEEEERNS_7RequestE"
-  "params":
-  - "name": "is"
-    "type": "bool "
-  - "name": "req"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "istream & YaHTTP::operator>>(istream &, Request &)"
-- "name": "_ZN18DNSDistPacketCache3getER11DNSQuestiontPjRN5boost8optionalI7NetmaskEEbbjbbb"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "dnsQuestion"
-    "type": "bool "
-  - "name": "queryId"
-    "type": "short"
-  - "name": "keyOut"
-    "type": "bool "
-  - "name": "subnet"
-    "type": "bool "
-  - "name": "dnssecOK"
-    "type": "bool"
-  - "name": "receivedOverUDP"
-    "type": "bool"
-  - "name": "allowExpired"
-    "type": "int"
-  - "name": "skipAging"
-    "type": "bool"
-  - "name": "truncatedOK"
-    "type": "bool"
-  - "name": "recordMiss"
-    "type": "bool"
-  "return_type": "bool"
-  "signature": "bool DNSDistPacketCache::get(struct DNSQuestion &, uint16_t, uint32_t *, optional<Netmask> &, bool, bool, uint32_t, bool, bool, bool)"
-- "name": "_ZNK6YaHTTP8HTTPBase5writeERNSt3__113basic_ostreamIcNS1_11char_traitsIcEEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "os"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void YaHTTP::HTTPBase::write(ostream &)"
-- "name": "_ZN6YaHTTPrsERNSt3__113basic_istreamIcNS0_11char_traitsIcEEEERNS_8ResponseE"
-  "params":
-  - "name": "is"
-    "type": "bool "
-  - "name": "resp"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "istream & YaHTTP::operator>>(istream &, Response &)"
-"language": "c++"
-"project": "powerdns"
-"target_name": "fuzz_target_proxyprotocol"
-"target_path": "/src/pdns/pdns/fuzz_proxyprotocol.cc"
-"test_files":
-- "test_file_path": "/src/pdns/pdns/recursordist/test-reczones-helpers.cc"
-- "test_file_path": "/src/pdns/pdns/test-dnswriter_cc.cc"
-- "test_file_path": "/src/pdns/pdns/dnsdistdist/test-dnsparser_cc.cc"
-- "test_file_path": "/src/pdns/pdns/test-dnsrecordcontent.cc"
-- "test_file_path": "/src/pdns/pdns/dnsdistdist/test-base64_cc.cc"
-- "test_file_path": "/src/pdns/pdns/recursordist/test-iputils_hh.cc"
-- "test_file_path": "/src/pdns/pdns/recursordist/testrunner.cc"
-- "test_file_path": "/src/pdns/pdns/recursordist/test-dnsparser_hh.cc"
-- "test_file_path": "/src/pdns/pdns/recursordist/test-base32_cc.cc"
-- "test_file_path": "/src/pdns/pdns/recursordist/test-dnsrecords_cc.cc"
+functions:
+- name: _ZN5boost12basic_formatIcNSt3__111char_traitsIcEENS1_9allocatorIcEEErmERi
+  params:
+  - name: this
+    type: 'bool '
+  - name: x
+    type: 'bool '
+  return_type: void
+  signature: basic_format<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > & boost::basic_format<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    >::operator%(basic_format<char, std::__1::char_traits<char>, std::__1::allocator<char>
+    > *, int &)
+- name: _ZN6YaHTTP11AsyncLoaderINS_8ResponseEE4feedERKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: somedata
+    type: 'bool '
+  return_type: bool
+  signature: bool YaHTTP::AsyncLoader<YaHTTP::Response>::feed(AsyncLoader<YaHTTP::Response>
+    *, const string &)
+- name: _ZNK6YaHTTP8HTTPBase5writeERNSt3__113basic_ostreamIcNS1_11char_traitsIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: os
+    type: 'bool '
+  return_type: void
+  signature: void YaHTTP::HTTPBase::write(ostream &)
+- name: _ZN6YaHTTP9CookieJar20parseSetCookieHeaderERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: cookiestr
+    type: 'bool '
+  return_type: void
+  signature: void YaHTTP::CookieJar::parseSetCookieHeader(const string &)
+- name: _ZN6YaHTTPlsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_7RequestE
+  params:
+  - name: os
+    type: 'bool '
+  - name: req
+    type: 'bool '
+  return_type: void
+  signature: ostream & YaHTTP::operator<<(ostream &, const Request &)
+- name: _ZN6YaHTTPlsERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEERKNS_8ResponseE
+  params:
+  - name: os
+    type: 'bool '
+  - name: resp
+    type: 'bool '
+  return_type: void
+  signature: ostream & YaHTTP::operator<<(ostream &, const Response &)
+language: c++
+project: powerdns
+target_name: fuzz_target_proxyprotocol
+target_path: /src/pdns/pdns/fuzz_proxyprotocol.cc
+test_files:
+- test_file_path: /src/pdns/pdns/recursordist/testrunner.cc
+- test_file_path: /src/pdns/pdns/recursordist/test-iputils_hh.cc
+- test_file_path: /src/pdns/pdns/recursordist/test-reczones-helpers.cc
+- test_file_path: /src/pdns/pdns/dnsdistdist/test-dnsparser_cc.cc
+- test_file_path: /src/pdns/pdns/test-dnswriter_cc.cc
+- test_file_path: /src/pdns/pdns/dnsdistdist/test-base64_cc.cc

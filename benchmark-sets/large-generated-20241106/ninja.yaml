@@ -1,126 +1,83 @@
-"functions":
-- "name": "_ZN7DepsLog12OpenForWriteERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEPS6_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  - "name": "err"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool DepsLog::OpenForWrite(struct DepsLog *, const string &, string *)"
-- "name": "_ZN8BuildLog13RecordCommandEP4Edgeiil"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "edge"
-    "type": "bool "
-  - "name": "start_time"
-    "type": "int"
-  - "name": "end_time"
-    "type": "int"
-  - "name": "mtime"
-    "type": "size_t"
-  "return_type": "bool"
-  "signature": "bool BuildLog::RecordCommand(struct BuildLog *, struct Edge *, int, int, TimeStamp)"
-- "name": "_ZN7DepsLog9RecompactERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEPS6_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  - "name": "err"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool DepsLog::Recompact(struct DepsLog *, const string &, string *)"
-- "name": "_ZN17ImplicitDepLoader8LoadDepsEP4EdgePNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "edge"
-    "type": "bool "
-  - "name": "err"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool ImplicitDepLoader::LoadDeps(struct ImplicitDepLoader *, struct Edge *, string *)"
-- "name": "_ZN14DependencyScan18RecomputeNodeDirtyEP4NodePNSt3__16vectorIS1_NS2_9allocatorIS1_EEEES7_PNS2_12basic_stringIcNS2_11char_traitsIcEENS4_IcEEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "node"
-    "type": "bool "
-  - "name": "stack"
-    "type": "bool "
-  - "name": "validation_nodes"
-    "type": "bool "
-  - "name": "err"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool DependencyScan::RecomputeNodeDirty(struct DependencyScan *, struct Node *, vector<Node *, std::__1::allocator<Node *> > *, vector<Node *, std::__1::allocator<Node *> > *, string *)"
-- "name": "_ZN17ImplicitDepLoader11LoadDepFileEP4EdgeRKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEPS8_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "edge"
-    "type": "bool "
-  - "name": "path"
-    "type": "bool "
-  - "name": "err"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool ImplicitDepLoader::LoadDepFile(struct ImplicitDepLoader *, struct Edge *, const string &, string *)"
-- "name": "_ZN12DyndepParser9ParseEdgeEPNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "err"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool DyndepParser::ParseEdge(struct DyndepParser *, string *)"
-- "name": "_ZN14DependencyScan14RecomputeDirtyEP4NodePNSt3__16vectorIS1_NS2_9allocatorIS1_EEEEPNS2_12basic_stringIcNS2_11char_traitsIcEENS4_IcEEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "initial_node"
-    "type": "bool "
-  - "name": "validation_nodes"
-    "type": "bool "
-  - "name": "err"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool DependencyScan::RecomputeDirty(struct DependencyScan *, struct Node *, vector<Node *, std::__1::allocator<Node *> > *, string *)"
-- "name": "_ZN12DyndepParser5ParseERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES8_PS6_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "filename"
-    "type": "bool "
-  - "name": "input"
-    "type": "bool "
-  - "name": "err"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool DyndepParser::Parse(struct DyndepParser *, const string &, const string &, string *)"
-- "name": "_ZN12DyndepParser18ParseDyndepVersionEPNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "err"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool DyndepParser::ParseDyndepVersion(struct DyndepParser *, string *)"
-"language": "c++"
-"project": "ninja"
-"target_name": "fuzzer"
-"target_path": "/src/ninja/misc/manifest_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/ninja/src/build_test.cc"
-- "test_file_path": "/src/ninja/src/manifest_parser_perftest.cc"
-- "test_file_path": "/src/ninja/src/edit_distance_test.cc"
-- "test_file_path": "/src/ninja/src/string_piece_util_test.cc"
-- "test_file_path": "/src/ninja/src/state_test.cc"
-- "test_file_path": "/src/ninja/src/clparser_test.cc"
-- "test_file_path": "/src/ninja/src/msvc_helper_test.cc"
-- "test_file_path": "/src/ninja/src/lexer_test.cc"
-- "test_file_path": "/src/ninja/src/build_log_perftest.cc"
-- "test_file_path": "/src/ninja/src/depfile_parser_test.cc"
+functions:
+- name: _ZN14DependencyScan18RecomputeNodeDirtyEP4NodePNSt3__16vectorIS1_NS2_9allocatorIS1_EEEES7_PNS2_12basic_stringIcNS2_11char_traitsIcEENS4_IcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: node
+    type: 'bool '
+  - name: stack
+    type: 'bool '
+  - name: validation_nodes
+    type: 'bool '
+  - name: err
+    type: 'bool '
+  return_type: bool
+  signature: bool DependencyScan::RecomputeNodeDirty(struct DependencyScan *, struct
+    Node *, vector<Node *, std::__1::allocator<Node *> > *, vector<Node *, std::__1::allocator<Node
+    *> > *, string *)
+- name: _ZN12DyndepParser5ParseERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES8_PS6_
+  params:
+  - name: this
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  - name: input
+    type: 'bool '
+  - name: err
+    type: 'bool '
+  return_type: bool
+  signature: bool DyndepParser::Parse(struct DyndepParser *, const string &, const
+    string &, string *)
+- name: _ZN17ImplicitDepLoader8LoadDepsEP4EdgePNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: edge
+    type: 'bool '
+  - name: err
+    type: 'bool '
+  return_type: bool
+  signature: bool ImplicitDepLoader::LoadDeps(struct ImplicitDepLoader *, struct Edge
+    *, string *)
+- name: _ZN14DependencyScan14RecomputeDirtyEP4NodePNSt3__16vectorIS1_NS2_9allocatorIS1_EEEEPNS2_12basic_stringIcNS2_11char_traitsIcEENS4_IcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: initial_node
+    type: 'bool '
+  - name: validation_nodes
+    type: 'bool '
+  - name: err
+    type: 'bool '
+  return_type: bool
+  signature: bool DependencyScan::RecomputeDirty(struct DependencyScan *, struct Node
+    *, vector<Node *, std::__1::allocator<Node *> > *, string *)
+- name: _ZN7DepsLog12OpenForWriteERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEPS6_
+  params:
+  - name: this
+    type: 'bool '
+  - name: path
+    type: 'bool '
+  - name: err
+    type: 'bool '
+  return_type: bool
+  signature: bool DepsLog::OpenForWrite(struct DepsLog *, const string &, string *)
+- name: _ZN12DyndepParser9ParseEdgeEPNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+  params:
+  - name: this
+    type: 'bool '
+  - name: err
+    type: 'bool '
+  return_type: bool
+  signature: bool DyndepParser::ParseEdge(struct DyndepParser *, string *)
+language: c++
+project: ninja
+target_name: fuzzer
+target_path: /src/ninja/misc/manifest_fuzzer.cc
+test_files:
+- test_file_path: /src/ninja/src/build_log_perftest.cc
+- test_file_path: /src/ninja/src/state_test.cc
+- test_file_path: /src/ninja/src/depfile_parser_test.cc
+- test_file_path: /src/ninja/src/manifest_parser_perftest.cc
+- test_file_path: /src/ninja/src/clparser_test.cc
+- test_file_path: /src/ninja/src/string_piece_util_test.cc

@@ -1,162 +1,115 @@
-"functions":
-- "name": "printAMNoIndex"
-  "params":
-  - "name": "MI"
-    "type": "bool "
-  - "name": "OpNum"
-    "type": "int"
-  - "name": "O"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void printAMNoIndex(MCInst *, unsigned int, SStream *)"
-- "name": "AArch64_getInstruction"
-  "params":
-  - "name": "ud"
-    "type": "size_t"
-  - "name": "code"
-    "type": "bool "
-  - "name": "code_len"
-    "type": "size_t"
-  - "name": "instr"
-    "type": "bool "
-  - "name": "size"
-    "type": "bool "
-  - "name": "address"
-    "type": "size_t"
-  - "name": "info"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool AArch64_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t *, uint64_t, void *)"
-- "name": "printImplicitlyTypedVectorList"
-  "params":
-  - "name": "MI"
-    "type": "bool "
-  - "name": "OpNum"
-    "type": "int"
-  - "name": "O"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void printImplicitlyTypedVectorList(MCInst *, unsigned int, SStream *)"
-- "name": "ARM_getInstruction"
-  "params":
-  - "name": "ud"
-    "type": "size_t"
-  - "name": "code"
-    "type": "bool "
-  - "name": "code_len"
-    "type": "size_t"
-  - "name": "instr"
-    "type": "bool "
-  - "name": "size"
-    "type": "bool "
-  - "name": "address"
-    "type": "size_t"
-  - "name": "info"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool ARM_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t *, uint64_t, void *)"
-- "name": "decodeInstruction"
-  "params":
-  - "name": "DecodeTable"
-    "type": "bool "
-  - "name": "MI"
-    "type": "bool "
-  - "name": "insn"
-    "type": "int"
-  - "name": "Address"
-    "type": "size_t"
-  - "name": "DisAsm"
-    "type": "bool "
-  - "name": "feature"
-    "type": "int"
-  "return_type": "int"
-  "signature": "DecodeStatus decodeInstruction(const uint8_t *, MCInst *, uint32_t, uint64_t, MCRegisterInfo *, int)"
-- "name": "LoongArch_printer"
-  "params":
-  - "name": "MI"
-    "type": "bool "
-  - "name": "O"
-    "type": "bool "
-  - "name": "info"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void LoongArch_printer(MCInst *, SStream *, void *)"
-- "name": "BPF_getInstruction"
-  "params":
-  - "name": "ud"
-    "type": "size_t"
-  - "name": "code"
-    "type": "bool "
-  - "name": "code_len"
-    "type": "size_t"
-  - "name": "instr"
-    "type": "bool "
-  - "name": "size"
-    "type": "bool "
-  - "name": "address"
-    "type": "size_t"
-  - "name": "info"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool BPF_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t *, uint64_t, void *)"
-- "name": "Mips_getInstruction"
-  "params":
-  - "name": "ud"
-    "type": "size_t"
-  - "name": "code"
-    "type": "bool "
-  - "name": "code_len"
-    "type": "size_t"
-  - "name": "instr"
-    "type": "bool "
-  - "name": "size"
-    "type": "bool "
-  - "name": "address"
-    "type": "size_t"
-  - "name": "info"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool Mips_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t *, uint64_t, void *)"
-- "name": "PPC_getInstruction"
-  "params":
-  - "name": "ud"
-    "type": "size_t"
-  - "name": "code"
-    "type": "bool "
-  - "name": "code_len"
-    "type": "size_t"
-  - "name": "instr"
-    "type": "bool "
-  - "name": "size"
-    "type": "bool "
-  - "name": "address"
-    "type": "size_t"
-  - "name": "info"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool PPC_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t *, uint64_t, void *)"
-- "name": "AArch64_printer"
-  "params":
-  - "name": "MI"
-    "type": "bool "
-  - "name": "O"
-    "type": "bool "
-  - "name": "info"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void AArch64_printer(MCInst *, SStream *, void *)"
-"language": "c++"
-"project": "capstone"
-"target_name": "fuzz_disasmv5"
-"target_path": "/src/capstonev5/suite/fuzz/fuzz_disasm.c"
-"test_files":
-- "test_file_path": "/src/capstonenext/tests/integration/compat_header/src/test_sysz_compatibility_header.c"
-- "test_file_path": "/src/capstonenext/suite/cstest/src/test_detail_sparc.c"
-- "test_file_path": "/src/capstonenext/suite/cstest/src/test_detail_sh.c"
-- "test_file_path": "/src/capstonenext/tests/integration/test_litbase.c"
-- "test_file_path": "/src/capstonev5/suite/cstest/src/m68k_detail.c"
-- "test_file_path": "/src/capstonenext/suite/cstest/src/test_detail_evm.c"
-- "test_file_path": "/src/capstonev5/tests/test_tms320c64x.c"
-- "test_file_path": "/src/capstonenext/suite/cstest/src/test_detail_systemz.c"
-- "test_file_path": "/src/capstonenext/tests/integration/test_winkernel.cpp"
-- "test_file_path": "/src/capstonev5/tests/test_tricore.c"
+functions:
+- name: BPF_getInstruction
+  params:
+  - name: ud
+    type: size_t
+  - name: code
+    type: 'bool '
+  - name: code_len
+    type: size_t
+  - name: instr
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  - name: address
+    type: size_t
+  - name: info
+    type: 'bool '
+  return_type: bool
+  signature: bool BPF_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t
+    *, uint64_t, void *)
+- name: ARM_getInstruction
+  params:
+  - name: ud
+    type: size_t
+  - name: code
+    type: 'bool '
+  - name: code_len
+    type: size_t
+  - name: instr
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  - name: address
+    type: size_t
+  - name: info
+    type: 'bool '
+  return_type: bool
+  signature: bool ARM_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t
+    *, uint64_t, void *)
+- name: Mips_getInstruction
+  params:
+  - name: ud
+    type: size_t
+  - name: code
+    type: 'bool '
+  - name: code_len
+    type: size_t
+  - name: instr
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  - name: address
+    type: size_t
+  - name: info
+    type: 'bool '
+  return_type: bool
+  signature: bool Mips_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t
+    *, uint64_t, void *)
+- name: printAMNoIndex
+  params:
+  - name: MI
+    type: 'bool '
+  - name: OpNum
+    type: int
+  - name: O
+    type: 'bool '
+  return_type: void
+  signature: void printAMNoIndex(MCInst *, unsigned int, SStream *)
+- name: decodeInstruction
+  params:
+  - name: DecodeTable
+    type: 'bool '
+  - name: MI
+    type: 'bool '
+  - name: insn
+    type: int
+  - name: Address
+    type: size_t
+  - name: DisAsm
+    type: 'bool '
+  - name: feature
+    type: int
+  return_type: int
+  signature: DecodeStatus decodeInstruction(const uint8_t *, MCInst *, uint32_t, uint64_t,
+    MCRegisterInfo *, int)
+- name: AArch64_getInstruction
+  params:
+  - name: ud
+    type: size_t
+  - name: code
+    type: 'bool '
+  - name: code_len
+    type: size_t
+  - name: instr
+    type: 'bool '
+  - name: size
+    type: 'bool '
+  - name: address
+    type: size_t
+  - name: info
+    type: 'bool '
+  return_type: bool
+  signature: bool AArch64_getInstruction(csh, const uint8_t *, size_t, MCInst *, uint16_t
+    *, uint64_t, void *)
+language: c++
+project: capstone
+target_name: fuzz_disasmv5
+target_path: /src/capstonev5/suite/fuzz/fuzz_disasm.c
+test_files:
+- test_file_path: /src/capstonenext/tests/integration/compat_header/src/test_sysz_compatibility_header.c
+- test_file_path: /src/capstonenext/suite/cstest/src/test_detail_systemz.c
+- test_file_path: /src/capstonev5/tests/test_tricore.c
+- test_file_path: /src/capstonenext/tests/integration/test_winkernel.cpp
+- test_file_path: /src/capstonenext/suite/cstest/src/test_detail_evm.c
+- test_file_path: /src/capstonenext/suite/cstest/src/test_detail_sparc.c

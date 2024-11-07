@@ -1,94 +1,66 @@
-"functions":
-- "name": "_ZN7leveldb6DBImpl33TEST_MaxNextLevelOverlappingBytesEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "int64_t leveldb::DBImpl::TEST_MaxNextLevelOverlappingBytes()"
-- "name": "_ZN7leveldb10VersionSet19ApproximateOffsetOfEPNS_7VersionERKNS_11InternalKeyE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "uint64_t leveldb::VersionSet::ApproximateOffsetOf(Version *, const InternalKey &)"
-- "name": "_ZN7leveldb6DBImpl24TEST_NewInternalIteratorEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Iterator * leveldb::DBImpl::TEST_NewInternalIterator()"
-- "name": "_ZN7leveldb6DBImpl19GetApproximateSizesEPKNS_5RangeEiPm"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void leveldb::DBImpl::GetApproximateSizes(const struct Range *, int, uint64_t *)"
-- "name": "_ZN7leveldb12_GLOBAL__N_16DBIter10SeekToLastEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void leveldb::(anonymous namespace)::DBIter::SeekToLast()"
-- "name": "_ZN7leveldb12_GLOBAL__N_16DBIter4SeekERKNS_5SliceE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void leveldb::(anonymous namespace)::DBIter::Seek(const Slice &)"
-- "name": "_ZNK7leveldb5Table19ApproximateOffsetOfERKNS_5SliceE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "uint64_t leveldb::Table::ApproximateOffsetOf(const Slice &)"
-- "name": "_ZN7leveldb9DestroyDBERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS_7OptionsE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Status leveldb::DestroyDB(const string &, const struct Options &)"
-- "name": "_ZN7leveldb12_GLOBAL__N_16DBIter4PrevEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void leveldb::(anonymous namespace)::DBIter::Prev()"
-- "name": "_ZN7leveldb5Block4Iter4PrevEv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void leveldb::Block::Iter::Prev()"
-"language": "c++"
-"project": "leveldb"
-"target_name": "fuzz_db"
-"target_path": "/src/leveldb/fuzz_db.cc"
-"test_files":
-- "test_file_path": "/src/leveldb/db/version_set_test.cc"
-- "test_file_path": "/src/leveldb/util/no_destructor_test.cc"
-- "test_file_path": "/src/leveldb/db/version_edit_test.cc"
-- "test_file_path": "/src/leveldb/issues/issue200_test.cc"
-- "test_file_path": "/src/leveldb/util/bloom_test.cc"
-- "test_file_path": "/src/leveldb/helpers/memenv/memenv_test.cc"
-- "test_file_path": "/src/leveldb/db/filename_test.cc"
-- "test_file_path": "/src/leveldb/db/log_test.cc"
-- "test_file_path": "/src/leveldb/db/recovery_test.cc"
-- "test_file_path": "/src/leveldb/issues/issue178_test.cc"
+functions:
+- name: _ZN7leveldb6DBImpl19GetApproximateSizesEPKNS_5RangeEiPm
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void leveldb::DBImpl::GetApproximateSizes(const struct Range *, int,
+    uint64_t *)
+- name: _ZN7leveldb9DestroyDBERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS_7OptionsE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: Status leveldb::DestroyDB(const string &, const struct Options &)
+- name: _ZN7leveldb12_GLOBAL__N_16DBIter4SeekERKNS_5SliceE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void leveldb::(anonymous namespace)::DBIter::Seek(const Slice &)
+- name: _ZN7leveldb12_GLOBAL__N_16DBIter4PrevEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void leveldb::(anonymous namespace)::DBIter::Prev()
+- name: _ZN7leveldb5Block4Iter4PrevEv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void leveldb::Block::Iter::Prev()
+- name: _ZN7leveldb10VersionSet19ApproximateOffsetOfEPNS_7VersionERKNS_11InternalKeyE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: uint64_t leveldb::VersionSet::ApproximateOffsetOf(Version *, const InternalKey
+    &)
+language: c++
+project: leveldb
+target_name: fuzz_db
+target_path: /src/leveldb/fuzz_db.cc
+test_files:
+- test_file_path: /src/leveldb/helpers/memenv/memenv_test.cc
+- test_file_path: /src/leveldb/issues/issue178_test.cc
+- test_file_path: /src/leveldb/db/version_edit_test.cc
+- test_file_path: /src/leveldb/util/no_destructor_test.cc
+- test_file_path: /src/leveldb/issues/issue200_test.cc
+- test_file_path: /src/leveldb/db/recovery_test.cc

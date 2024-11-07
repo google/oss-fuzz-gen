@@ -1,108 +1,71 @@
-"functions":
-- "name": "mrb_load_detect_file_cxt"
-  "params":
-  - "name": "mrb"
-    "type": "bool "
-  - "name": "fp"
-    "type": "bool "
-  - "name": "c"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "mrb_value mrb_load_detect_file_cxt(mrb_state *, FILE *, mrb_ccontext *)"
-- "name": "mrb_parse_string"
-  "params":
-  - "name": "mrb"
-    "type": "bool "
-  - "name": "s"
-    "type": "bool "
-  - "name": "c"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct mrb_parser_state * mrb_parse_string(mrb_state *, const char *, mrb_ccontext *)"
-- "name": "_ZN11ruby_fuzzer9Statement8CopyFromERKS0_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "from"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void ruby_fuzzer::Statement::CopyFrom(const Statement &)"
-- "name": "mrb_load_irep_file"
-  "params":
-  - "name": "mrb"
-    "type": "bool "
-  - "name": "fp"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "mrb_value mrb_load_irep_file(mrb_state *, FILE *)"
-- "name": "mrb_load_irep"
-  "params":
-  - "name": "mrb"
-    "type": "bool "
-  - "name": "bin"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "mrb_value mrb_load_irep(mrb_state *, const uint8_t *)"
-- "name": "mrb_load_irep_file_cxt"
-  "params":
-  - "name": "mrb"
-    "type": "bool "
-  - "name": "fp"
-    "type": "bool "
-  - "name": "c"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "mrb_value mrb_load_irep_file_cxt(mrb_state *, FILE *, mrb_ccontext *)"
-- "name": "mrb_load_file"
-  "params":
-  - "name": "mrb"
-    "type": "bool "
-  - "name": "f"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "mrb_value mrb_load_file(mrb_state *, FILE *)"
-- "name": "mrb_load_nstring"
-  "params":
-  - "name": "mrb"
-    "type": "bool "
-  - "name": "s"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "size_t"
-  "signature": "mrb_value mrb_load_nstring(mrb_state *, const char *, size_t)"
-- "name": "mrb_load_file_cxt"
-  "params":
-  - "name": "mrb"
-    "type": "bool "
-  - "name": "f"
-    "type": "bool "
-  - "name": "c"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "mrb_value mrb_load_file_cxt(mrb_state *, FILE *, mrb_ccontext *)"
-- "name": "mrb_parse_file"
-  "params":
-  - "name": "mrb"
-    "type": "bool "
-  - "name": "f"
-    "type": "bool "
-  - "name": "c"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct mrb_parser_state * mrb_parse_file(mrb_state *, FILE *, mrb_ccontext *)"
-"language": "c++"
-"project": "mruby"
-"target_name": "mruby_fuzzer"
-"target_path": "/src/mruby/oss-fuzz/mruby_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/mruby/mrbgems/mruby-proc-ext/test/proc.c"
-- "test_file_path": "/src/mruby/mrbgems/mruby-socket/test/sockettest.c"
-- "test_file_path": "/src/mruby/examples/mrbgems/cdata_extension_example/test/example.c"
-- "test_file_path": "/src/mruby/mrbgems/mruby-io/src/file_test.c"
-- "test_file_path": "/src/mruby/mrbgems/mruby-proc-binding/test/proc-binding.c"
-- "test_file_path": "/src/mruby/examples/mrbgems/c_extension_example/src/example.c"
-- "test_file_path": "/src/mruby/mrbgems/mruby-binding/test/binding.c"
-- "test_file_path": "/src/mruby/mrbgems/mruby-dir/test/dirtest.c"
-- "test_file_path": "/src/mruby/examples/mrbgems/c_and_ruby_extension_example/src/example.c"
-- "test_file_path": "/src/mruby/mrbgems/mruby-test-inline-struct/test/inline.c"
+functions:
+- name: mrb_parse_string
+  params:
+  - name: mrb
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  - name: c
+    type: 'bool '
+  return_type: void
+  signature: struct mrb_parser_state * mrb_parse_string(mrb_state *, const char *,
+    mrb_ccontext *)
+- name: mrb_parse_file
+  params:
+  - name: mrb
+    type: 'bool '
+  - name: f
+    type: 'bool '
+  - name: c
+    type: 'bool '
+  return_type: void
+  signature: struct mrb_parser_state * mrb_parse_file(mrb_state *, FILE *, mrb_ccontext
+    *)
+- name: mrb_load_file_cxt
+  params:
+  - name: mrb
+    type: 'bool '
+  - name: f
+    type: 'bool '
+  - name: c
+    type: 'bool '
+  return_type: size_t
+  signature: mrb_value mrb_load_file_cxt(mrb_state *, FILE *, mrb_ccontext *)
+- name: mrb_load_file
+  params:
+  - name: mrb
+    type: 'bool '
+  - name: f
+    type: 'bool '
+  return_type: size_t
+  signature: mrb_value mrb_load_file(mrb_state *, FILE *)
+- name: mrb_load_detect_file_cxt
+  params:
+  - name: mrb
+    type: 'bool '
+  - name: fp
+    type: 'bool '
+  - name: c
+    type: 'bool '
+  return_type: size_t
+  signature: mrb_value mrb_load_detect_file_cxt(mrb_state *, FILE *, mrb_ccontext
+    *)
+- name: _ZN11ruby_fuzzer9Statement8CopyFromERKS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: from
+    type: 'bool '
+  return_type: void
+  signature: void ruby_fuzzer::Statement::CopyFrom(const Statement &)
+language: c++
+project: mruby
+target_name: mruby_fuzzer
+target_path: /src/mruby/oss-fuzz/mruby_fuzzer.c
+test_files:
+- test_file_path: /src/mruby/mrbgems/mruby-proc-ext/test/proc.c
+- test_file_path: /src/mruby/mrbgems/mruby-binding/test/binding.c
+- test_file_path: /src/mruby/examples/mrbgems/c_and_ruby_extension_example/src/example.c
+- test_file_path: /src/mruby/mrbgems/mruby-dir/test/dirtest.c
+- test_file_path: /src/mruby/mrbgems/mruby-test-inline-struct/test/inline.c
+- test_file_path: /src/mruby/mrbgems/mruby-proc-binding/test/proc-binding.c

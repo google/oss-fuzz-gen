@@ -1,97 +1,61 @@
-"functions":
-- "name": "vorbis_synthesis_trackonly"
-  "params":
-  - "name": "vb"
-    "type": "bool "
-  - "name": "op"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int vorbis_synthesis_trackonly(vorbis_block *, ogg_packet *)"
-- "name": "ov_test"
-  "params":
-  - "name": "f"
-    "type": "bool "
-  - "name": "vf"
-    "type": "bool "
-  - "name": "initial"
-    "type": "bool "
-  - "name": "ibytes"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int ov_test(FILE *, OggVorbis_File *, const char *, long)"
-- "name": "ov_test_callbacks"
-  "params":
-  - "name": "f"
-    "type": "bool "
-  - "name": "vf"
-    "type": "bool "
-  - "name": "initial"
-    "type": "bool "
-  - "name": "ibytes"
-    "type": "size_t"
-  - "name": "callbacks"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ov_test_callbacks(void *, OggVorbis_File *, const char *, long, ov_callbacks)"
-- "name": "ov_pcm_seek_page"
-  "params":
-  - "name": "vf"
-    "type": "bool "
-  - "name": "pos"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int ov_pcm_seek_page(OggVorbis_File *, ogg_int64_t)"
-- "name": "ov_time_seek"
-  "params":
-  - "name": "vf"
-    "type": "bool "
-  - "name": "milliseconds"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int ov_time_seek(OggVorbis_File *, ogg_int64_t)"
-- "name": "ov_open"
-  "params":
-  - "name": "f"
-    "type": "bool "
-  - "name": "vf"
-    "type": "bool "
-  - "name": "initial"
-    "type": "bool "
-  - "name": "ibytes"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int ov_open(FILE *, OggVorbis_File *, const char *, long)"
-- "name": "ov_pcm_seek"
-  "params":
-  - "name": "vf"
-    "type": "bool "
-  - "name": "pos"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int ov_pcm_seek(OggVorbis_File *, ogg_int64_t)"
-- "name": "ov_test_open"
-  "params":
-  - "name": "vf"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ov_test_open(OggVorbis_File *)"
-- "name": "ov_time_seek_page"
-  "params":
-  - "name": "vf"
-    "type": "bool "
-  - "name": "milliseconds"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int ov_time_seek_page(OggVorbis_File *, ogg_int64_t)"
-- "name": "ogg_stream_packetin"
-  "params":
-  - "name": "os"
-    "type": "bool "
-  - "name": "op"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int ogg_stream_packetin(ogg_stream_state *, ogg_packet *)"
-"language": "c++"
-"project": "tremor"
-"target_name": "decode_fuzzer"
-"target_path": "/src/tremor/decode_fuzzer.cc"
+functions:
+- name: ov_time_seek_page
+  params:
+  - name: vf
+    type: 'bool '
+  - name: milliseconds
+    type: size_t
+  return_type: int
+  signature: int ov_time_seek_page(OggVorbis_File *, ogg_int64_t)
+- name: ov_test
+  params:
+  - name: f
+    type: 'bool '
+  - name: vf
+    type: 'bool '
+  - name: initial
+    type: 'bool '
+  - name: ibytes
+    type: size_t
+  return_type: int
+  signature: int ov_test(FILE *, OggVorbis_File *, const char *, long)
+- name: ov_open
+  params:
+  - name: f
+    type: 'bool '
+  - name: vf
+    type: 'bool '
+  - name: initial
+    type: 'bool '
+  - name: ibytes
+    type: size_t
+  return_type: int
+  signature: int ov_open(FILE *, OggVorbis_File *, const char *, long)
+- name: ov_pcm_seek_page
+  params:
+  - name: vf
+    type: 'bool '
+  - name: pos
+    type: size_t
+  return_type: int
+  signature: int ov_pcm_seek_page(OggVorbis_File *, ogg_int64_t)
+- name: vorbis_synthesis_trackonly
+  params:
+  - name: vb
+    type: 'bool '
+  - name: op
+    type: 'bool '
+  return_type: int
+  signature: int vorbis_synthesis_trackonly(vorbis_block *, ogg_packet *)
+- name: ogg_stream_packetin
+  params:
+  - name: os
+    type: 'bool '
+  - name: op
+    type: 'bool '
+  return_type: int
+  signature: int ogg_stream_packetin(ogg_stream_state *, ogg_packet *)
+language: c++
+project: tremor
+target_name: decode_fuzzer
+target_path: /src/tremor/decode_fuzzer.cc

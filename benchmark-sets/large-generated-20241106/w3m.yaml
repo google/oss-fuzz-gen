@@ -1,81 +1,53 @@
-"functions":
-- "name": "Strsubstr"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  - "name": "beg"
-    "type": "int"
-  - "name": "len"
-    "type": "int"
-  "return_type": "void"
-  "signature": "Str Strsubstr(Str, int, int)"
-- "name": "Stralign_right"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  - "name": "width"
-    "type": "int"
-  "return_type": "void"
-  "signature": "Str Stralign_right(Str, int)"
-- "name": "Strfgets"
-  "params":
-  - "name": "f"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Str Strfgets(FILE *)"
-- "name": "Strnew_m_charp"
-  "params":
-  - "name": "p"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Str Strnew_m_charp(const char *, void)"
-- "name": "Stralign_center"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  - "name": "width"
-    "type": "int"
-  "return_type": "void"
-  "signature": "Str Stralign_center(Str, int)"
-- "name": "Strinsert_charp"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  - "name": "pos"
-    "type": "int"
-  - "name": "p"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Strinsert_charp(Str, int, const char *)"
-- "name": "Strcat_m_charp"
-  "params":
-  - "name": "x"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void Strcat_m_charp(Str, void)"
-- "name": "Stralign_left"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  - "name": "width"
-    "type": "int"
-  "return_type": "void"
-  "signature": "Str Stralign_left(Str, int)"
-- "name": "Strfgetall"
-  "params":
-  - "name": "f"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Str Strfgetall(FILE *)"
-- "name": "Sprintf"
-  "params":
-  - "name": "fmt"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "Str Sprintf(char *, void)"
-"language": "c"
-"project": "w3m"
-"target_name": "fuzz_conv"
-"target_path": "/src/w3m/fuzz/fuzz-conv.c"
-"test_files":
-- "test_file_path": "/src/w3m/libwc/test.c"
+functions:
+- name: Stralign_center
+  params:
+  - name: s
+    type: 'bool '
+  - name: width
+    type: int
+  return_type: void
+  signature: Str Stralign_center(Str, int)
+- name: Strnew_m_charp
+  params:
+  - name: p
+    type: 'bool '
+  return_type: void
+  signature: Str Strnew_m_charp(const char *, void)
+- name: Stralign_left
+  params:
+  - name: s
+    type: 'bool '
+  - name: width
+    type: int
+  return_type: void
+  signature: Str Stralign_left(Str, int)
+- name: Stralign_right
+  params:
+  - name: s
+    type: 'bool '
+  - name: width
+    type: int
+  return_type: void
+  signature: Str Stralign_right(Str, int)
+- name: Strinsert_charp
+  params:
+  - name: s
+    type: 'bool '
+  - name: pos
+    type: int
+  - name: p
+    type: 'bool '
+  return_type: void
+  signature: void Strinsert_charp(Str, int, const char *)
+- name: Sprintf
+  params:
+  - name: fmt
+    type: 'bool '
+  return_type: void
+  signature: Str Sprintf(char *, void)
+language: c
+project: w3m
+target_name: fuzz_conv
+target_path: /src/w3m/fuzz/fuzz-conv.c
+test_files:
+- test_file_path: /src/w3m/libwc/test.c

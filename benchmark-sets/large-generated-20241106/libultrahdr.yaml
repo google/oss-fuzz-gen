@@ -1,113 +1,75 @@
-"functions":
-- "name": "_ZNK22photos_editing_formats8image_io11JpegSegment25FindXmpPropertyValueBeginEmPKc"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t photos_editing_formats::image_io::JpegSegment::FindXmpPropertyValueBegin(size_t, const char *)"
-- "name": "jpeg_skip_scanlines"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "int"
-  "signature": "JDIMENSION jpeg_skip_scanlines(j_decompress_ptr, JDIMENSION)"
-- "name": "_ZN22photos_editing_formats8image_io7XmlRule5ParseENS0_17XmlHandlerContextE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "DataMatchResult photos_editing_formats::image_io::XmlRule::Parse(XmlHandlerContext)"
-- "name": "_ZNK22photos_editing_formats8image_io11JpegSegment24GetPayloadHexDumpStringsEmPNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEES9_"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void photos_editing_formats::image_io::JpegSegment::GetPayloadHexDumpStrings(size_t, string *, string *)"
-- "name": "_ZN22photos_editing_formats8image_io9XmlReader5ParseERKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool photos_editing_formats::image_io::XmlReader::Parse(const string &)"
-- "name": "_ZN22photos_editing_formats8image_io11DataScanner16SetInternalErrorERKNS0_11DataContextERKNSt3__112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEPNS0_15DataMatchResultE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void photos_editing_formats::image_io::DataScanner::SetInternalError(const DataContext &, const string &, DataMatchResult *)"
-- "name": "_ZN22photos_editing_formats8image_io15JpegInfoBuilder17SetPrimaryXmpGuidERKNS0_11JpegSegmentE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void photos_editing_formats::image_io::JpegInfoBuilder::SetPrimaryXmpGuid(const JpegSegment &)"
-- "name": "_ZN22photos_editing_formats8image_io18JpegXmpInfoBuilder14ProcessSegmentERKNS0_11JpegSegmentE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void photos_editing_formats::image_io::JpegXmpInfoBuilder::ProcessSegment(const JpegSegment &)"
-- "name": "_ZN22photos_editing_formats8image_io15JpegInfoBuilder14SetXmpMimeTypeERKNS0_11JpegSegmentENS0_11JpegXmpInfo4TypeE"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
-  "return_type": "void"
-  "signature": "void photos_editing_formats::image_io::JpegInfoBuilder::SetXmpMimeType(const JpegSegment &, DW_TAG_enumeration_typeType)"
-- "name": "_ZNK22photos_editing_formats8image_io11JpegSegment23ExtractXmpPropertyValueEmPKc"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "string photos_editing_formats::image_io::JpegSegment::ExtractXmpPropertyValue(size_t, const char *)"
-"language": "c++"
-"project": "libultrahdr"
-"target_name": "ultrahdr_dec_fuzzer"
-"target_path": "/src/libultrahdr/fuzzer/ultrahdr_dec_fuzzer.cpp"
-"test_files":
-- "test_file_path": "/src/libultrahdr/tests/gainmapmath_test.cpp"
-- "test_file_path": "/src/libultrahdr/tests/jpegencoderhelper_test.cpp"
-- "test_file_path": "/src/libultrahdr/tests/jpegdecoderhelper_test.cpp"
-- "test_file_path": "/src/libultrahdr/tests/gainmapmetadata_test.cpp"
-- "test_file_path": "/src/libultrahdr/tests/jpegr_test.cpp"
-- "test_file_path": "/src/libultrahdr/tests/icchelper_test.cpp"
-- "test_file_path": "/src/libultrahdr/benchmark/benchmark_test.cpp"
-- "test_file_path": "/src/libultrahdr/tests/editorhelper_test.cpp"
-- "test_file_path": "/src/libultrahdr/examples/ultrahdr_app.cpp"
+functions:
+- name: _ZN22photos_editing_formats8image_io9XmlReader5ParseERKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool photos_editing_formats::image_io::XmlReader::Parse(const string
+    &)
+- name: _ZNK22photos_editing_formats8image_io11JpegSegment24GetPayloadHexDumpStringsEmPNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEES9_
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void photos_editing_formats::image_io::JpegSegment::GetPayloadHexDumpStrings(size_t,
+    string *, string *)
+- name: _ZN22photos_editing_formats8image_io7XmlRule5ParseENS0_17XmlHandlerContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: DataMatchResult photos_editing_formats::image_io::XmlRule::Parse(XmlHandlerContext)
+- name: _ZNK22photos_editing_formats8image_io11JpegSegment25FindXmpPropertyValueBeginEmPKc
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: size_t
+  signature: size_t photos_editing_formats::image_io::JpegSegment::FindXmpPropertyValueBegin(size_t,
+    const char *)
+- name: _ZN22photos_editing_formats8image_io15JpegInfoBuilder14SetXmpMimeTypeERKNS0_11JpegSegmentENS0_11JpegXmpInfo4TypeE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  return_type: void
+  signature: void photos_editing_formats::image_io::JpegInfoBuilder::SetXmpMimeType(const
+    JpegSegment &, DW_TAG_enumeration_typeType)
+- name: _ZN22photos_editing_formats8image_io18JpegXmpInfoBuilder14ProcessSegmentERKNS0_11JpegSegmentE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void photos_editing_formats::image_io::JpegXmpInfoBuilder::ProcessSegment(const
+    JpegSegment &)
+language: c++
+project: libultrahdr
+target_name: ultrahdr_dec_fuzzer
+target_path: /src/libultrahdr/fuzzer/ultrahdr_dec_fuzzer.cpp
+test_files:
+- test_file_path: /src/libultrahdr/tests/jpegdecoderhelper_test.cpp
+- test_file_path: /src/libultrahdr/tests/jpegr_test.cpp
+- test_file_path: /src/libultrahdr/tests/jpegencoderhelper_test.cpp
+- test_file_path: /src/libultrahdr/tests/gainmapmath_test.cpp
+- test_file_path: /src/libultrahdr/tests/editorhelper_test.cpp
+- test_file_path: /src/libultrahdr/tests/gainmapmetadata_test.cpp

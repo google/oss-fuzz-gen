@@ -1,88 +1,51 @@
-"functions":
-- "name": "json_tokener_parse"
-  "params":
-  - "name": "str"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct json_object * json_tokener_parse(const char *)"
-- "name": "json_tokener_parse_verbose"
-  "params":
-  - "name": "str"
-    "type": "bool "
-  - "name": "error"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct json_object * json_tokener_parse_verbose(const char *, DW_TAG_enumeration_typejson_tokener_error *)"
-- "name": "json_object_deep_copy"
-  "params":
-  - "name": "src"
-    "type": "bool "
-  - "name": "dst"
-    "type": "bool "
-  - "name": "shallow_copy"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int json_object_deep_copy(struct json_object *, struct json_object **, json_c_shallow_copy_fn *)"
-- "name": "json_object_equal"
-  "params":
-  - "name": "jso1"
-    "type": "bool "
-  - "name": "jso2"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int json_object_equal(struct json_object *, struct json_object *)"
-- "name": "json_object_new_string"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct json_object * json_object_new_string(const char *)"
-- "name": "json_object_to_file_ext"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "obj"
-    "type": "bool "
-  - "name": "flags"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int json_object_to_file_ext(const char *, struct json_object *, int)"
-- "name": "json_object_get_uint64"
-  "params":
-  - "name": "jso"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "uint64_t json_object_get_uint64(const struct json_object *)"
-- "name": "json_object_get_int64"
-  "params":
-  - "name": "jso"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "int64_t json_object_get_int64(const struct json_object *)"
-- "name": "json_object_get_int"
-  "params":
-  - "name": "jso"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int32_t json_object_get_int(const struct json_object *)"
-- "name": "json_object_new_int"
-  "params":
-  - "name": "i"
-    "type": "int"
-  "return_type": "void"
-  "signature": "struct json_object * json_object_new_int(int32_t)"
-"language": "c++"
-"project": "json-c"
-"target_name": "tokener_parse_ex_fuzzer"
-"target_path": "/src/tokener_parse_ex_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/json-c/tests/testReplaceExisting.c"
-- "test_file_path": "/src/json-c/tests/test_set_serializer.c"
-- "test_file_path": "/src/json-c/tests/test_visit.c"
-- "test_file_path": "/src/json-c/tests/test_json_patch.c"
-- "test_file_path": "/src/json-c/tests/test_charcase.c"
-- "test_file_path": "/src/json-c/tests/test_int_get.c"
-- "test_file_path": "/src/json-c/tests/test_cast.c"
-- "test_file_path": "/src/json-c/tests/test_util_file.c"
-- "test_file_path": "/src/json-c/tests/test_float.c"
-- "test_file_path": "/src/json-c/tests/test_object_iterator.c"
+functions:
+- name: json_object_new_string
+  params:
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: struct json_object * json_object_new_string(const char *)
+- name: json_tokener_parse
+  params:
+  - name: str
+    type: 'bool '
+  return_type: void
+  signature: struct json_object * json_tokener_parse(const char *)
+- name: json_tokener_parse_verbose
+  params:
+  - name: str
+    type: 'bool '
+  - name: error
+    type: 'bool '
+  return_type: void
+  signature: struct json_object * json_tokener_parse_verbose(const char *, DW_TAG_enumeration_typejson_tokener_error
+    *)
+- name: json_object_get_int
+  params:
+  - name: jso
+    type: 'bool '
+  return_type: int
+  signature: int32_t json_object_get_int(const struct json_object *)
+- name: json_object_get_int64
+  params:
+  - name: jso
+    type: 'bool '
+  return_type: size_t
+  signature: int64_t json_object_get_int64(const struct json_object *)
+- name: json_object_new_int
+  params:
+  - name: i
+    type: int
+  return_type: void
+  signature: struct json_object * json_object_new_int(int32_t)
+language: c++
+project: json-c
+target_name: tokener_parse_ex_fuzzer
+target_path: /src/tokener_parse_ex_fuzzer.cc
+test_files:
+- test_file_path: /src/json-c/tests/test_set_serializer.c
+- test_file_path: /src/json-c/tests/test_util_file.c
+- test_file_path: /src/json-c/tests/test_cast.c
+- test_file_path: /src/json-c/tests/test_visit.c
+- test_file_path: /src/json-c/tests/test_float.c
+- test_file_path: /src/json-c/tests/testReplaceExisting.c

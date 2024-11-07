@@ -1,226 +1,141 @@
-"functions":
-- "name": "krb5_gss_store_cred"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "input_cred_handle"
-    "type": "bool "
-  - "name": "cred_usage"
-    "type": "int"
-  - "name": "desired_mech"
-    "type": "bool "
-  - "name": "overwrite_cred"
-    "type": "int"
-  - "name": "default_cred"
-    "type": "int"
-  - "name": "elements_stored"
-    "type": "bool "
-  - "name": "cred_usage_stored"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 krb5_gss_store_cred(OM_uint32 *, gss_cred_id_t, gss_cred_usage_t, const gss_OID, OM_uint32, OM_uint32, gss_OID_set *, gss_cred_usage_t *)"
-- "name": "kg_cred_resolve"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "context"
-    "type": "bool "
-  - "name": "cred_handle"
-    "type": "bool "
-  - "name": "target_name"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 kg_cred_resolve(OM_uint32 *, krb5_context, gss_cred_id_t, gss_name_t)"
-- "name": "krb5_gss_store_cred_into"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "input_cred_handle"
-    "type": "bool "
-  - "name": "cred_usage"
-    "type": "int"
-  - "name": "desired_mech"
-    "type": "bool "
-  - "name": "overwrite_cred"
-    "type": "int"
-  - "name": "default_cred"
-    "type": "int"
-  - "name": "cred_store"
-    "type": "bool "
-  - "name": "elements_stored"
-    "type": "bool "
-  - "name": "cred_usage_stored"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 krb5_gss_store_cred_into(OM_uint32 *, gss_cred_id_t, gss_cred_usage_t, const gss_OID, OM_uint32, OM_uint32, gss_const_key_value_set_t, gss_OID_set *, gss_cred_usage_t *)"
-- "name": "iakerb_gss_accept_sec_context"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "context_handle"
-    "type": "bool "
-  - "name": "verifier_cred_handle"
-    "type": "bool "
-  - "name": "input_token"
-    "type": "bool "
-  - "name": "input_chan_bindings"
-    "type": "bool "
-  - "name": "src_name"
-    "type": "bool "
-  - "name": "mech_type"
-    "type": "bool "
-  - "name": "output_token"
-    "type": "bool "
-  - "name": "ret_flags"
-    "type": "bool "
-  - "name": "time_rec"
-    "type": "bool "
-  - "name": "delegated_cred_handle"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 iakerb_gss_accept_sec_context(OM_uint32 *, gss_ctx_id_t *, gss_cred_id_t, gss_buffer_t, gss_channel_bindings_t, gss_name_t *, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *, gss_cred_id_t *)"
-- "name": "iakerb_gss_acquire_cred_from"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "desired_name"
-    "type": "bool "
-  - "name": "time_req"
-    "type": "int"
-  - "name": "desired_mechs"
-    "type": "bool "
-  - "name": "cred_usage"
-    "type": "int"
-  - "name": "cred_store"
-    "type": "bool "
-  - "name": "output_cred_handle"
-    "type": "bool "
-  - "name": "actual_mechs"
-    "type": "bool "
-  - "name": "time_rec"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 iakerb_gss_acquire_cred_from(OM_uint32 *, const gss_name_t, OM_uint32, const gss_OID_set, gss_cred_usage_t, gss_const_key_value_set_t, gss_cred_id_t *, gss_OID_set *, OM_uint32 *)"
-- "name": "iakerb_gss_acquire_cred_with_password"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "desired_name"
-    "type": "bool "
-  - "name": "password"
-    "type": "bool "
-  - "name": "time_req"
-    "type": "int"
-  - "name": "desired_mechs"
-    "type": "bool "
-  - "name": "cred_usage"
-    "type": "int"
-  - "name": "output_cred_handle"
-    "type": "bool "
-  - "name": "actual_mechs"
-    "type": "bool "
-  - "name": "time_rec"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 iakerb_gss_acquire_cred_with_password(OM_uint32 *, const gss_name_t, const gss_buffer_t, OM_uint32, const gss_OID_set, int, gss_cred_id_t *, gss_OID_set *, OM_uint32 *)"
-- "name": "gss_krb5int_import_cred"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "cred_handle"
-    "type": "bool "
-  - "name": "desired_oid"
-    "type": "bool "
-  - "name": "value"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 gss_krb5int_import_cred(OM_uint32 *, gss_cred_id_t *, const gss_OID, const gss_buffer_t)"
-- "name": "krb5_gss_acquire_cred_with_password"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "desired_name"
-    "type": "bool "
-  - "name": "password"
-    "type": "bool "
-  - "name": "time_req"
-    "type": "int"
-  - "name": "desired_mechs"
-    "type": "bool "
-  - "name": "cred_usage"
-    "type": "int"
-  - "name": "output_cred_handle"
-    "type": "bool "
-  - "name": "actual_mechs"
-    "type": "bool "
-  - "name": "time_rec"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 krb5_gss_acquire_cred_with_password(OM_uint32 *, const gss_name_t, const gss_buffer_t, OM_uint32, const gss_OID_set, int, gss_cred_id_t *, gss_OID_set *, OM_uint32 *)"
-- "name": "krb5_gss_acquire_cred_impersonate_name"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "impersonator_cred_handle"
-    "type": "bool "
-  - "name": "desired_name"
-    "type": "bool "
-  - "name": "time_req"
-    "type": "int"
-  - "name": "desired_mechs"
-    "type": "bool "
-  - "name": "cred_usage"
-    "type": "int"
-  - "name": "output_cred_handle"
-    "type": "bool "
-  - "name": "actual_mechs"
-    "type": "bool "
-  - "name": "time_rec"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 krb5_gss_acquire_cred_impersonate_name(OM_uint32 *, const gss_cred_id_t, const gss_name_t, OM_uint32, const gss_OID_set, gss_cred_usage_t, gss_cred_id_t *, gss_OID_set *, OM_uint32 *)"
-- "name": "iakerb_gss_init_sec_context"
-  "params":
-  - "name": "minor_status"
-    "type": "bool "
-  - "name": "claimant_cred_handle"
-    "type": "bool "
-  - "name": "context_handle"
-    "type": "bool "
-  - "name": "target_name"
-    "type": "bool "
-  - "name": "mech_type"
-    "type": "bool "
-  - "name": "req_flags"
-    "type": "int"
-  - "name": "time_req"
-    "type": "int"
-  - "name": "input_chan_bindings"
-    "type": "bool "
-  - "name": "input_token"
-    "type": "bool "
-  - "name": "actual_mech_type"
-    "type": "bool "
-  - "name": "output_token"
-    "type": "bool "
-  - "name": "ret_flags"
-    "type": "bool "
-  - "name": "time_rec"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "OM_uint32 iakerb_gss_init_sec_context(OM_uint32 *, gss_cred_id_t, gss_ctx_id_t *, gss_name_t, gss_OID, OM_uint32, OM_uint32, gss_channel_bindings_t, gss_buffer_t, gss_OID *, gss_buffer_t, OM_uint32 *, OM_uint32 *)"
-"language": "c"
-"project": "krb5"
-"target_name": "fuzz_profile"
-"target_path": "/src/krb5/src/tests/fuzzing/fuzz_profile.c"
-"test_files":
-- "test_file_path": "/src/krb5/src/plugins/kdb/db2/libdb2/test/hash1.tests/tverify.c"
-- "test_file_path": "/src/krb5/src/ccapi/test/test_cc_seq_fetch_NCs_next.c"
-- "test_file_path": "/src/krb5/src/ccapi/test/test_ccapi_iterators.c"
-- "test_file_path": "/src/krb5/src/tests/gssapi/t_gssexts.c"
-- "test_file_path": "/src/krb5/src/ccapi/test/test_ccapi_check.c"
-- "test_file_path": "/src/krb5/src/tests/misc/test_nfold.c"
-- "test_file_path": "/src/krb5/src/tests/asn.1/make-vectors.c"
-- "test_file_path": "/src/krb5/src/tests/asn.1/ktest.c"
-- "test_file_path": "/src/krb5/src/plugins/gssapi/negoextest/main.c"
-- "test_file_path": "/src/krb5/src/ccapi/test/test_cc_context_create_new_ccache.c"
+functions:
+- name: krb5_gss_store_cred
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: input_cred_handle
+    type: 'bool '
+  - name: cred_usage
+    type: int
+  - name: desired_mech
+    type: 'bool '
+  - name: overwrite_cred
+    type: int
+  - name: default_cred
+    type: int
+  - name: elements_stored
+    type: 'bool '
+  - name: cred_usage_stored
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 krb5_gss_store_cred(OM_uint32 *, gss_cred_id_t, gss_cred_usage_t,
+    const gss_OID, OM_uint32, OM_uint32, gss_OID_set *, gss_cred_usage_t *)
+- name: krb5_gss_acquire_cred_with_password
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: desired_name
+    type: 'bool '
+  - name: password
+    type: 'bool '
+  - name: time_req
+    type: int
+  - name: desired_mechs
+    type: 'bool '
+  - name: cred_usage
+    type: int
+  - name: output_cred_handle
+    type: 'bool '
+  - name: actual_mechs
+    type: 'bool '
+  - name: time_rec
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 krb5_gss_acquire_cred_with_password(OM_uint32 *, const gss_name_t,
+    const gss_buffer_t, OM_uint32, const gss_OID_set, int, gss_cred_id_t *, gss_OID_set
+    *, OM_uint32 *)
+- name: krb5_gss_acquire_cred_impersonate_name
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: impersonator_cred_handle
+    type: 'bool '
+  - name: desired_name
+    type: 'bool '
+  - name: time_req
+    type: int
+  - name: desired_mechs
+    type: 'bool '
+  - name: cred_usage
+    type: int
+  - name: output_cred_handle
+    type: 'bool '
+  - name: actual_mechs
+    type: 'bool '
+  - name: time_rec
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 krb5_gss_acquire_cred_impersonate_name(OM_uint32 *, const gss_cred_id_t,
+    const gss_name_t, OM_uint32, const gss_OID_set, gss_cred_usage_t, gss_cred_id_t
+    *, gss_OID_set *, OM_uint32 *)
+- name: iakerb_gss_acquire_cred_from
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: desired_name
+    type: 'bool '
+  - name: time_req
+    type: int
+  - name: desired_mechs
+    type: 'bool '
+  - name: cred_usage
+    type: int
+  - name: cred_store
+    type: 'bool '
+  - name: output_cred_handle
+    type: 'bool '
+  - name: actual_mechs
+    type: 'bool '
+  - name: time_rec
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 iakerb_gss_acquire_cred_from(OM_uint32 *, const gss_name_t,
+    OM_uint32, const gss_OID_set, gss_cred_usage_t, gss_const_key_value_set_t, gss_cred_id_t
+    *, gss_OID_set *, OM_uint32 *)
+- name: kg_cred_resolve
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: context
+    type: 'bool '
+  - name: cred_handle
+    type: 'bool '
+  - name: target_name
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 kg_cred_resolve(OM_uint32 *, krb5_context, gss_cred_id_t, gss_name_t)
+- name: krb5_gss_store_cred_into
+  params:
+  - name: minor_status
+    type: 'bool '
+  - name: input_cred_handle
+    type: 'bool '
+  - name: cred_usage
+    type: int
+  - name: desired_mech
+    type: 'bool '
+  - name: overwrite_cred
+    type: int
+  - name: default_cred
+    type: int
+  - name: cred_store
+    type: 'bool '
+  - name: elements_stored
+    type: 'bool '
+  - name: cred_usage_stored
+    type: 'bool '
+  return_type: int
+  signature: OM_uint32 krb5_gss_store_cred_into(OM_uint32 *, gss_cred_id_t, gss_cred_usage_t,
+    const gss_OID, OM_uint32, OM_uint32, gss_const_key_value_set_t, gss_OID_set *,
+    gss_cred_usage_t *)
+language: c
+project: krb5
+target_name: fuzz_profile
+target_path: /src/krb5/src/tests/fuzzing/fuzz_profile.c
+test_files:
+- test_file_path: /src/krb5/src/tests/asn.1/make-vectors.c
+- test_file_path: /src/krb5/src/plugins/gssapi/negoextest/main.c
+- test_file_path: /src/krb5/src/ccapi/test/test_cc_context_create_new_ccache.c
+- test_file_path: /src/krb5/src/ccapi/test/test_cc_seq_fetch_NCs_next.c
+- test_file_path: /src/krb5/src/ccapi/test/test_ccapi_check.c
+- test_file_path: /src/krb5/src/ccapi/test/test_ccapi_iterators.c

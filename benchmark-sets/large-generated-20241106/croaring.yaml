@@ -1,94 +1,66 @@
-"functions":
-- "name": "roaring_bitmap_add_offset"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "roaring_bitmap_t * roaring_bitmap_add_offset(const roaring_bitmap_t *, int64_t)"
-- "name": "roaring64_bitmap_and"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "roaring64_bitmap_t * roaring64_bitmap_and(const roaring64_bitmap_t *, const roaring64_bitmap_t *)"
-- "name": "roaring_bitmap_xor_many"
-  "params":
-  - "name": ""
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "roaring_bitmap_t * roaring_bitmap_xor_many(size_t, const roaring_bitmap_t **)"
-- "name": "roaring64_bitmap_and_inplace"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void roaring64_bitmap_and_inplace(roaring64_bitmap_t *, const roaring64_bitmap_t *)"
-- "name": "roaring64_bitmap_andnot_inplace"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void roaring64_bitmap_andnot_inplace(roaring64_bitmap_t *, const roaring64_bitmap_t *)"
-- "name": "roaring64_bitmap_xor"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "roaring64_bitmap_t * roaring64_bitmap_xor(const roaring64_bitmap_t *, const roaring64_bitmap_t *)"
-- "name": "roaring64_bitmap_andnot"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "roaring64_bitmap_t * roaring64_bitmap_andnot(const roaring64_bitmap_t *, const roaring64_bitmap_t *)"
-- "name": "roaring64_bitmap_or_inplace"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void roaring64_bitmap_or_inplace(roaring64_bitmap_t *, const roaring64_bitmap_t *)"
-- "name": "roaring64_bitmap_xor_inplace"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void roaring64_bitmap_xor_inplace(roaring64_bitmap_t *, const roaring64_bitmap_t *)"
-- "name": "roaring_bitmap_portable_deserialize"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "roaring_bitmap_t * roaring_bitmap_portable_deserialize(const char *)"
-"language": "c"
-"project": "croaring"
-"target_name": "croaring_fuzzer"
-"target_path": "/src/croaring_fuzzer.c"
-"test_files":
-- "test_file_path": "/src/croaring/tests/container_comparison_unit.c"
-- "test_file_path": "/src/croaring/tests/robust_deserialization_unit.c"
-- "test_file_path": "/src/croaring/tests/art_unit.cpp"
-- "test_file_path": "/src/croaring/tests/add_offset.c"
-- "test_file_path": "/src/croaring/tests/cpp_unit.cpp"
-- "test_file_path": "/src/croaring/tests/realdata_unit.c"
-- "test_file_path": "/src/croaring/tests/mixed_container_unit.c"
-- "test_file_path": "/src/croaring/tests/roaring64_unit.cpp"
-- "test_file_path": "/src/croaring/tests/run_container_unit.c"
-- "test_file_path": "/src/croaring/tests/threads_unit.cpp"
+functions:
+- name: roaring64_bitmap_and
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: roaring64_bitmap_t * roaring64_bitmap_and(const roaring64_bitmap_t *,
+    const roaring64_bitmap_t *)
+- name: roaring64_bitmap_andnot_inplace
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void roaring64_bitmap_andnot_inplace(roaring64_bitmap_t *, const roaring64_bitmap_t
+    *)
+- name: roaring64_bitmap_or_inplace
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void roaring64_bitmap_or_inplace(roaring64_bitmap_t *, const roaring64_bitmap_t
+    *)
+- name: roaring64_bitmap_and_inplace
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void roaring64_bitmap_and_inplace(roaring64_bitmap_t *, const roaring64_bitmap_t
+    *)
+- name: roaring64_bitmap_xor
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: roaring64_bitmap_t * roaring64_bitmap_xor(const roaring64_bitmap_t *,
+    const roaring64_bitmap_t *)
+- name: roaring_bitmap_xor_many
+  params:
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: roaring_bitmap_t * roaring_bitmap_xor_many(size_t, const roaring_bitmap_t
+    **)
+language: c
+project: croaring
+target_name: croaring_fuzzer
+target_path: /src/croaring_fuzzer.c
+test_files:
+- test_file_path: /src/croaring/tests/art_unit.cpp
+- test_file_path: /src/croaring/tests/robust_deserialization_unit.c
+- test_file_path: /src/croaring/tests/realdata_unit.c
+- test_file_path: /src/croaring/tests/add_offset.c
+- test_file_path: /src/croaring/tests/container_comparison_unit.c
+- test_file_path: /src/croaring/tests/run_container_unit.c

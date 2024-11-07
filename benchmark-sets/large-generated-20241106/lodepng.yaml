@@ -1,166 +1,113 @@
-"functions":
-- "name": "_Z21lodepng_encode32_filePKcPKhjj"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "image"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int lodepng_encode32_file(const char *, const unsigned char *, unsigned int, unsigned int)"
-- "name": "_Z19lodepng_encode_filePKcPKhjj16LodePNGColorTypej"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "image"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "colortype"
-    "type": "int"
-  - "name": "bitdepth"
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int lodepng_encode_file(const char *, const unsigned char *, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
-- "name": "_Z21lodepng_encode24_filePKcPKhjj"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "image"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int lodepng_encode24_file(const char *, const unsigned char *, unsigned int, unsigned int)"
-- "name": "_ZN7lodepng6encodeERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEPKhjj16LodePNGColorTypej"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "in"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "colortype"
-    "type": "int"
-  - "name": "bitdepth"
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int lodepng::encode(const string &, const unsigned char *, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
-- "name": "_ZN7lodepng6encodeERNSt3__16vectorIhNS0_9allocatorIhEEEEPKhjj16LodePNGColorTypej"
-  "params":
-  - "name": "out"
-    "type": "bool "
-  - "name": "in"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "colortype"
-    "type": "int"
-  - "name": "bitdepth"
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int lodepng::encode(vector<unsigned char, std::__1::allocator<unsigned char> > &, const unsigned char *, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
-- "name": "_Z16lodepng_encode32PPhPmPKhjj"
-  "params":
-  - "name": "out"
-    "type": "bool "
-  - "name": "outsize"
-    "type": "bool "
-  - "name": "image"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int lodepng_encode32(unsigned char **, size_t *, const unsigned char *, unsigned int, unsigned int)"
-- "name": "_ZN7lodepng6encodeERNSt3__16vectorIhNS0_9allocatorIhEEEERKS4_jj16LodePNGColorTypej"
-  "params":
-  - "name": "out"
-    "type": "bool "
-  - "name": "in"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "colortype"
-    "type": "int"
-  - "name": "bitdepth"
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int lodepng::encode(vector<unsigned char, std::__1::allocator<unsigned char> > &, const vector<unsigned char, std::__1::allocator<unsigned char> > &, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
-- "name": "_Z16lodepng_encode24PPhPmPKhjj"
-  "params":
-  - "name": "out"
-    "type": "bool "
-  - "name": "outsize"
-    "type": "bool "
-  - "name": "image"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int lodepng_encode24(unsigned char **, size_t *, const unsigned char *, unsigned int, unsigned int)"
-- "name": "_Z21lodepng_encode_memoryPPhPmPKhjj16LodePNGColorTypej"
-  "params":
-  - "name": "out"
-    "type": "bool "
-  - "name": "outsize"
-    "type": "bool "
-  - "name": "image"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "colortype"
-    "type": "int"
-  - "name": "bitdepth"
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int lodepng_encode_memory(unsigned char **, size_t *, const unsigned char *, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
-- "name": "_ZN7lodepng6encodeERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS0_6vectorIhNS4_IhEEEEjj16LodePNGColorTypej"
-  "params":
-  - "name": "filename"
-    "type": "bool "
-  - "name": "in"
-    "type": "bool "
-  - "name": "w"
-    "type": "int"
-  - "name": "h"
-    "type": "int"
-  - "name": "colortype"
-    "type": "int"
-  - "name": "bitdepth"
-    "type": "int"
-  "return_type": "int"
-  "signature": "unsigned int lodepng::encode(const string &, const vector<unsigned char, std::__1::allocator<unsigned char> > &, unsigned int, unsigned int, LodePNGColorType, unsigned int)"
-"language": "c++"
-"project": "lodepng"
-"target_name": "lodepng_fuzzer"
-"target_path": "/src/lodepng/lodepng_fuzzer.cpp"
-"test_files":
-- "test_file_path": "/src/lodepng/examples/example_4bit_palette.cpp"
-- "test_file_path": "/src/lodepng/examples/example_optimize_png.cpp"
-- "test_file_path": "/src/lodepng/examples/example_decode.cpp"
-- "test_file_path": "/src/lodepng/examples/example_encode_type.cpp"
-- "test_file_path": "/src/lodepng/lodepng_unittest.cpp"
-- "test_file_path": "/src/lodepng/examples/example_png_info.cpp"
-- "test_file_path": "/src/lodepng/examples/example_gzip.cpp"
-- "test_file_path": "/src/lodepng/examples/example_sdl.cpp"
-- "test_file_path": "/src/lodepng/examples/example_bmp2png.cpp"
-- "test_file_path": "/src/lodepng/examples/example_opengl.cpp"
+functions:
+- name: _Z21lodepng_encode_memoryPPhPmPKhjj16LodePNGColorTypej
+  params:
+  - name: out
+    type: 'bool '
+  - name: outsize
+    type: 'bool '
+  - name: image
+    type: 'bool '
+  - name: w
+    type: int
+  - name: h
+    type: int
+  - name: colortype
+    type: int
+  - name: bitdepth
+    type: int
+  return_type: int
+  signature: unsigned int lodepng_encode_memory(unsigned char **, size_t *, const
+    unsigned char *, unsigned int, unsigned int, LodePNGColorType, unsigned int)
+- name: _ZN7lodepng6encodeERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS0_6vectorIhNS4_IhEEEEjj16LodePNGColorTypej
+  params:
+  - name: filename
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: w
+    type: int
+  - name: h
+    type: int
+  - name: colortype
+    type: int
+  - name: bitdepth
+    type: int
+  return_type: int
+  signature: unsigned int lodepng::encode(const string &, const vector<unsigned char,
+    std::__1::allocator<unsigned char> > &, unsigned int, unsigned int, LodePNGColorType,
+    unsigned int)
+- name: _ZN7lodepng6encodeERNSt3__16vectorIhNS0_9allocatorIhEEEEPKhjj16LodePNGColorTypej
+  params:
+  - name: out
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: w
+    type: int
+  - name: h
+    type: int
+  - name: colortype
+    type: int
+  - name: bitdepth
+    type: int
+  return_type: int
+  signature: unsigned int lodepng::encode(vector<unsigned char, std::__1::allocator<unsigned
+    char> > &, const unsigned char *, unsigned int, unsigned int, LodePNGColorType,
+    unsigned int)
+- name: _ZN7lodepng6encodeERNSt3__16vectorIhNS0_9allocatorIhEEEERKS4_jj16LodePNGColorTypej
+  params:
+  - name: out
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: w
+    type: int
+  - name: h
+    type: int
+  - name: colortype
+    type: int
+  - name: bitdepth
+    type: int
+  return_type: int
+  signature: unsigned int lodepng::encode(vector<unsigned char, std::__1::allocator<unsigned
+    char> > &, const vector<unsigned char, std::__1::allocator<unsigned char> > &,
+    unsigned int, unsigned int, LodePNGColorType, unsigned int)
+- name: _Z16lodepng_encode32PPhPmPKhjj
+  params:
+  - name: out
+    type: 'bool '
+  - name: outsize
+    type: 'bool '
+  - name: image
+    type: 'bool '
+  - name: w
+    type: int
+  - name: h
+    type: int
+  return_type: int
+  signature: unsigned int lodepng_encode32(unsigned char **, size_t *, const unsigned
+    char *, unsigned int, unsigned int)
+- name: _Z21lodepng_encode24_filePKcPKhjj
+  params:
+  - name: filename
+    type: 'bool '
+  - name: image
+    type: 'bool '
+  - name: w
+    type: int
+  - name: h
+    type: int
+  return_type: int
+  signature: unsigned int lodepng_encode24_file(const char *, const unsigned char
+    *, unsigned int, unsigned int)
+language: c++
+project: lodepng
+target_name: lodepng_fuzzer
+target_path: /src/lodepng/lodepng_fuzzer.cpp
+test_files:
+- test_file_path: /src/lodepng/examples/example_decode.cpp
+- test_file_path: /src/lodepng/examples/example_optimize_png.cpp
+- test_file_path: /src/lodepng/examples/example_bmp2png.cpp
+- test_file_path: /src/lodepng/examples/example_png_info.cpp
+- test_file_path: /src/lodepng/examples/example_opengl.cpp
+- test_file_path: /src/lodepng/examples/example_gzip.cpp

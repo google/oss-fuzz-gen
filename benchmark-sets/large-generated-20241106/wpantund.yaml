@@ -1,90 +1,70 @@
-"functions":
-- "name": "_ZN19TunnelIPv6Interface16processNetlinkFDEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void TunnelIPv6Interface::processNetlinkFD()"
-- "name": "_ZNK5boost8signals26detail15connection_bodyINSt3__14pairINS1_15slot_meta_groupENS_8optionalIiEEEENS0_4slotIFvRKNS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERKNS_3anyEENS_8functionISL_EEEENS0_5mutexEE9connectedEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::connected(const connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group, boost::optional<int> >, boost::signals2::slot<void (const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, const boost::any &), boost::function<void (const std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > &, const boost::any &)> >, boost::signals2::mutex> *)"
-- "name": "_ZN2nl8wpantund32SpinelNCPTaskJoinerCommissioning14vprocess_eventEiP13__va_list_tag"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "event"
-    "type": "int"
-  - "name": "args"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int nl::wpantund::SpinelNCPTaskJoinerCommissioning::vprocess_event(int, struct __va_list_tag *)"
-- "name": "_ZN2nl8wpantund17SpinelNCPInstance18ncp_to_driver_pumpEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "char"
-  "signature": "char nl::wpantund::SpinelNCPInstance::ncp_to_driver_pump()"
-- "name": "_ZN5boost8signals26signalIFvRKN2nl8wpantund4WPAN15NetworkInstanceEENS0_19optional_last_valueIvEEiNSt3__14lessIiEENS_8functionIS8_EENSE_IFvRKNS0_10connectionES7_EEENS0_5mutexEEclES7_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "args"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "result_type boost::signals2::operator()(signal<void (const nl::wpantund::WPAN::NetworkInstance &), boost::signals2::optional_last_value<void>, int, std::__1::less<int>, boost::function<void (const nl::wpantund::WPAN::NetworkInstance &)>, boost::function<void (const boost::signals2::connection &, const nl::wpantund::WPAN::NetworkInstance &)>, boost::signals2::mutex> *, const struct NetworkInstance &)"
-- "name": "_ZN2nl8wpantund15NCPInstanceBase23enable_legacy_interfaceEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void nl::wpantund::NCPInstanceBase::enable_legacy_interface()"
-- "name": "_ZN2nl8wpantund17SpinelNCPTaskJoin14vprocess_eventEiP13__va_list_tag"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "event"
-    "type": "int"
-  - "name": "args"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int nl::wpantund::SpinelNCPTaskJoin::vprocess_event(int, struct __va_list_tag *)"
-- "name": "_ZN19TunnelIPv6Interface21on_link_state_changedEbb"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "isUp"
-    "type": "bool"
-  - "name": "isRunning"
-    "type": "bool"
-  "return_type": "void"
-  "signature": "void TunnelIPv6Interface::on_link_state_changed(bool, bool)"
-- "name": "_ZN2nl8wpantund17SpinelNCPTaskForm14vprocess_eventEiP13__va_list_tag"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "event"
-    "type": "int"
-  - "name": "args"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int nl::wpantund::SpinelNCPTaskForm::vprocess_event(int, struct __va_list_tag *)"
-- "name": "_ZN2nl8wpantund17SpinelNCPTaskScan14vprocess_eventEiP13__va_list_tag"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "event"
-    "type": "int"
-  - "name": "args"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int nl::wpantund::SpinelNCPTaskScan::vprocess_event(int, struct __va_list_tag *)"
-"language": "c++"
-"project": "wpantund"
-"target_name": "wpantund-fuzz"
-"target_path": "/src/wpantund/src/wpantund/wpantund-fuzz.cpp"
-"test_files":
-- "test_file_path": "/src/wpantund/src/missing/strlcat/strlcat_test.c"
-- "test_file_path": "/src/wpantund/src/missing/strlcpy/strlcpy_test.c"
+functions:
+- name: _ZN2nl8wpantund17SpinelNCPInstance18ncp_to_driver_pumpEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: char
+  signature: char nl::wpantund::SpinelNCPInstance::ncp_to_driver_pump()
+- name: _ZN5boost8signals26signalIFvRKN2nl8wpantund4WPAN15NetworkInstanceEENS0_19optional_last_valueIvEEiNSt3__14lessIiEENS_8functionIS8_EENSE_IFvRKNS0_10connectionES7_EEENS0_5mutexEEclES7_
+  params:
+  - name: this
+    type: 'bool '
+  - name: args
+    type: 'bool '
+  return_type: void
+  signature: result_type boost::signals2::operator()(signal<void (const nl::wpantund::WPAN::NetworkInstance
+    &), boost::signals2::optional_last_value<void>, int, std::__1::less<int>, boost::function<void
+    (const nl::wpantund::WPAN::NetworkInstance &)>, boost::function<void (const boost::signals2::connection
+    &, const nl::wpantund::WPAN::NetworkInstance &)>, boost::signals2::mutex> *, const
+    struct NetworkInstance &)
+- name: _ZN2nl8wpantund32SpinelNCPTaskJoinerCommissioning14vprocess_eventEiP13__va_list_tag
+  params:
+  - name: this
+    type: 'bool '
+  - name: event
+    type: int
+  - name: args
+    type: 'bool '
+  return_type: int
+  signature: int nl::wpantund::SpinelNCPTaskJoinerCommissioning::vprocess_event(int,
+    struct __va_list_tag *)
+- name: _ZN19TunnelIPv6Interface21on_link_state_changedEbb
+  params:
+  - name: this
+    type: 'bool '
+  - name: isUp
+    type: bool
+  - name: isRunning
+    type: bool
+  return_type: void
+  signature: void TunnelIPv6Interface::on_link_state_changed(bool, bool)
+- name: _ZN2nl8wpantund17SpinelNCPTaskForm14vprocess_eventEiP13__va_list_tag
+  params:
+  - name: this
+    type: 'bool '
+  - name: event
+    type: int
+  - name: args
+    type: 'bool '
+  return_type: int
+  signature: int nl::wpantund::SpinelNCPTaskForm::vprocess_event(int, struct __va_list_tag
+    *)
+- name: _ZNK5boost8signals26detail15connection_bodyINSt3__14pairINS1_15slot_meta_groupENS_8optionalIiEEEENS0_4slotIFvRKNS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERKNS_3anyEENS_8functionISL_EEEENS0_5mutexEE9connectedEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: bool
+  signature: bool boost::signals2::detail::connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::connected(const connection_body<std::__1::pair<boost::signals2::detail::slot_meta_group,
+    boost::optional<int> >, boost::signals2::slot<void (const std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> > &, const boost::any &),
+    boost::function<void (const std::__1::basic_string<char, std::__1::char_traits<char>,
+    std::__1::allocator<char> > &, const boost::any &)> >, boost::signals2::mutex>
+    *)
+language: c++
+project: wpantund
+target_name: wpantund-fuzz
+target_path: /src/wpantund/src/wpantund/wpantund-fuzz.cpp
+test_files:
+- test_file_path: /src/wpantund/src/missing/strlcat/strlcat_test.c
+- test_file_path: /src/wpantund/src/missing/strlcpy/strlcpy_test.c

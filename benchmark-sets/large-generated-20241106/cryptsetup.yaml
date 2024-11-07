@@ -1,15 +1,11 @@
-"language": "c"
-"project": "cryptsetup"
-"target_name": "crypt2_load_ondisk_fuzz"
-"target_path": "/src/cryptsetup/tests/fuzz/crypt2_load_ondisk_fuzz.cc"
-"test_files":
-- "test_file_path": "/src/cryptsetup/docs/examples/crypt_luks_usage.c"
-- "test_file_path": "/src/cryptsetup/tests/api-test.c"
-- "test_file_path": "/src/cryptsetup/tests/differ.c"
-- "test_file_path": "/src/cryptsetup/tests/unit-utils-crypt.c"
-- "test_file_path": "/src/cryptsetup/tests/unit-wipe.c"
-- "test_file_path": "/src/cryptsetup/tests/unit-utils-io.c"
-- "test_file_path": "/src/cryptsetup/tests/fake_systemd_tpm_path.c"
-- "test_file_path": "/src/cryptsetup/tests/api-test-2.c"
-- "test_file_path": "/src/cryptsetup/tests/crypto-check.c"
-- "test_file_path": "/src/cryptsetup/docs/examples/crypt_log_usage.c"
+language: c
+project: cryptsetup
+target_name: crypt2_load_ondisk_fuzz
+target_path: /src/cryptsetup/tests/fuzz/crypt2_load_ondisk_fuzz.cc
+test_files:
+- test_file_path: /src/cryptsetup/docs/examples/crypt_luks_usage.c
+- test_file_path: /src/cryptsetup/docs/examples/crypt_log_usage.c
+- test_file_path: /src/cryptsetup/tests/unit-wipe.c
+- test_file_path: /src/cryptsetup/tests/unit-utils-io.c
+- test_file_path: /src/cryptsetup/tests/api-test.c
+- test_file_path: /src/cryptsetup/tests/unit-utils-crypt.c

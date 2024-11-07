@@ -1,126 +1,70 @@
-"functions":
-- "name": "_ZN9tesseract11TessBaseAPI12ProcessPagesEPKcS2_iPNS_18TessResultRendererE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "filename"
-    "type": "bool "
-  - "name": "retry_config"
-    "type": "bool "
-  - "name": "timeout_millisec"
-    "type": "int"
-  - "name": "renderer"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool tesseract::TessBaseAPI::ProcessPages(const char *, const char *, int, TessResultRenderer *)"
-- "name": "_ZN9tesseract19TessBoxTextRenderer15AddImageHandlerEPNS_11TessBaseAPIE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "api"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool tesseract::TessBoxTextRenderer::AddImageHandler(TessBaseAPI *)"
-- "name": "_ZN9tesseract11TessBaseAPI10GetBoxTextEi"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "page_number"
-    "type": "int"
-  "return_type": "void"
-  "signature": "char * tesseract::TessBaseAPI::GetBoxText(int)"
-- "name": "_ZN9tesseract15TessTsvRenderer15AddImageHandlerEPNS_11TessBaseAPIE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "api"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool tesseract::TessTsvRenderer::AddImageHandler(TessBaseAPI *)"
-- "name": "_ZN9tesseract11TessBaseAPI10GetTSVTextEi"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "page_number"
-    "type": "int"
-  "return_type": "void"
-  "signature": "char * tesseract::TessBaseAPI::GetTSVText(int)"
-- "name": "_ZN9tesseract11TessBaseAPI25ProcessPagesMultipageTiffEPKhmPKcS4_iPNS_18TessResultRendererEi"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": "size"
-    "type": "size_t"
-  - "name": "filename"
-    "type": "bool "
-  - "name": "retry_config"
-    "type": "bool "
-  - "name": "timeout_millisec"
-    "type": "int"
-  - "name": "renderer"
-    "type": "bool "
-  - "name": "tessedit_page_number"
-    "type": "int"
-  "return_type": "bool"
-  "signature": "bool tesseract::TessBaseAPI::ProcessPagesMultipageTiff(const l_uint8 *, size_t, const char *, const char *, int, TessResultRenderer *, int)"
-- "name": "_ZN9tesseract11TessBaseAPI20ProcessPagesInternalEPKcS2_iPNS_18TessResultRendererE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "filename"
-    "type": "bool "
-  - "name": "retry_config"
-    "type": "bool "
-  - "name": "timeout_millisec"
-    "type": "int"
-  - "name": "renderer"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool tesseract::TessBaseAPI::ProcessPagesInternal(const char *, const char *, int, TessResultRenderer *)"
-- "name": "_ZN9tesseract9Tesseract19classify_word_pass1ERKNS_8WordDataEPPNS_8WERD_RESEPNS_13PointerVectorIS4_EE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "word_data"
-    "type": "bool "
-  - "name": "in_word"
-    "type": "bool "
-  - "name": "out_words"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void tesseract::Tesseract::classify_word_pass1(const struct WordData &, WERD_RES **, PointerVector<tesseract::WERD_RES> *)"
-- "name": "_ZNK9tesseract4Dict10valid_wordEPKc"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "string"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int tesseract::Dict::valid_word(const char *)"
-- "name": "_ZN9tesseract11TessBaseAPI14AdaptToWordStrENS_11PageSegModeEPKc"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "mode"
-    "type": "int"
-  - "name": "wordstr"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool tesseract::TessBaseAPI::AdaptToWordStr(DW_TAG_enumeration_typePageSegMode, const char *)"
-"language": "c++"
-"project": "tesseract-ocr"
-"target_name": "fuzzer-api"
-"target_path": "/src/tesseract/unittest/fuzzers/fuzzer-api.cpp"
-"test_files":
-- "test_file_path": "/src/tesseract/unittest/capiexample_test.cc"
-- "test_file_path": "/src/tesseract/unittest/applybox_test.cc"
-- "test_file_path": "/src/leptonica/prog/messagetest.c"
-- "test_file_path": "/src/leptonica/prog/partifytest.c"
-- "test_file_path": "/src/tesseract/unittest/intsimdmatrix_test.cc"
-- "test_file_path": "/src/leptonica/prog/maptest.c"
-- "test_file_path": "/src/leptonica/prog/listtest.c"
-- "test_file_path": "/src/tesseract/unittest/denorm_test.cc"
-- "test_file_path": "/src/tesseract/unittest/rect_test.cc"
-- "test_file_path": "/src/tesseract/unittest/unicharset_test.cc"
+functions:
+- name: _ZN9tesseract11TessBaseAPI12ProcessPagesEPKcS2_iPNS_18TessResultRendererE
+  params:
+  - name: this
+    type: 'bool '
+  - name: filename
+    type: 'bool '
+  - name: retry_config
+    type: 'bool '
+  - name: timeout_millisec
+    type: int
+  - name: renderer
+    type: 'bool '
+  return_type: bool
+  signature: bool tesseract::TessBaseAPI::ProcessPages(const char *, const char *,
+    int, TessResultRenderer *)
+- name: _ZN9tesseract11TessBaseAPI14AdaptToWordStrENS_11PageSegModeEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: mode
+    type: int
+  - name: wordstr
+    type: 'bool '
+  return_type: bool
+  signature: bool tesseract::TessBaseAPI::AdaptToWordStr(DW_TAG_enumeration_typePageSegMode,
+    const char *)
+- name: _ZN9tesseract19TessBoxTextRenderer15AddImageHandlerEPNS_11TessBaseAPIE
+  params:
+  - name: this
+    type: 'bool '
+  - name: api
+    type: 'bool '
+  return_type: bool
+  signature: bool tesseract::TessBoxTextRenderer::AddImageHandler(TessBaseAPI *)
+- name: _ZN9tesseract15TessTsvRenderer15AddImageHandlerEPNS_11TessBaseAPIE
+  params:
+  - name: this
+    type: 'bool '
+  - name: api
+    type: 'bool '
+  return_type: bool
+  signature: bool tesseract::TessTsvRenderer::AddImageHandler(TessBaseAPI *)
+- name: _ZNK9tesseract4Dict10valid_wordEPKc
+  params:
+  - name: this
+    type: 'bool '
+  - name: string
+    type: 'bool '
+  return_type: int
+  signature: int tesseract::Dict::valid_word(const char *)
+- name: _ZN9tesseract11TessBaseAPI10GetBoxTextEi
+  params:
+  - name: this
+    type: 'bool '
+  - name: page_number
+    type: int
+  return_type: void
+  signature: char * tesseract::TessBaseAPI::GetBoxText(int)
+language: c++
+project: tesseract-ocr
+target_name: fuzzer-api
+target_path: /src/tesseract/unittest/fuzzers/fuzzer-api.cpp
+test_files:
+- test_file_path: /src/leptonica/prog/messagetest.c
+- test_file_path: /src/leptonica/prog/partifytest.c
+- test_file_path: /src/tesseract/unittest/rect_test.cc
+- test_file_path: /src/leptonica/prog/listtest.c
+- test_file_path: /src/leptonica/prog/maptest.c
+- test_file_path: /src/tesseract/unittest/capiexample_test.cc

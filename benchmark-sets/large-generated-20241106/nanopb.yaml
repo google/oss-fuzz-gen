@@ -1,38 +1,35 @@
-"functions":
-- "name": "pb_encode_ex"
-  "params":
-  - "name": "stream"
-    "type": "bool "
-  - "name": "fields"
-    "type": "bool "
-  - "name": "src_struct"
-    "type": "bool "
-  - "name": "flags"
-    "type": "int"
-  "return_type": "bool"
-  "signature": "bool pb_encode_ex(pb_ostream_t *, const pb_msgdesc_t *, const void *, unsigned int)"
-- "name": "pb_get_encoded_size"
-  "params":
-  - "name": "size"
-    "type": "bool "
-  - "name": "fields"
-    "type": "bool "
-  - "name": "src_struct"
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool pb_get_encoded_size(size_t *, const pb_msgdesc_t *, const void *)"
-"language": "c++"
-"project": "nanopb"
-"target_name": "fuzztest_io_errors"
-"target_path": "/src/nanopb/tests/build/fuzztest/fuzztest.c"
-"test_files":
-- "test_file_path": "/src/nanopb/tests/regression/issue_547/test.c"
-- "test_file_path": "/src/nanopb/tests/alltypes_proto3/decode_alltypes.c"
-- "test_file_path": "/src/nanopb/tests/regression/issue_544/submsg_callback.c"
-- "test_file_path": "/src/nanopb/tests/msgid/encode_msgid.c"
-- "test_file_path": "/src/nanopb/tests/map/encode_map.c"
-- "test_file_path": "/src/nanopb/tests/site_scons/platforms/avr/run_test.c"
-- "test_file_path": "/src/nanopb/tests/io_errors/io_errors.c"
-- "test_file_path": "/src/nanopb/tests/regression/GHSA-gcx3-7m76-287p/test.c"
-- "test_file_path": "/src/nanopb/tests/alltypes_proto3_callback/decode_alltypes_callback.c"
-- "test_file_path": "/src/nanopb/tests/map/decode_map.c"
+functions:
+- name: pb_encode_ex
+  params:
+  - name: stream
+    type: 'bool '
+  - name: fields
+    type: 'bool '
+  - name: src_struct
+    type: 'bool '
+  - name: flags
+    type: int
+  return_type: bool
+  signature: bool pb_encode_ex(pb_ostream_t *, const pb_msgdesc_t *, const void *,
+    unsigned int)
+- name: pb_get_encoded_size
+  params:
+  - name: size
+    type: 'bool '
+  - name: fields
+    type: 'bool '
+  - name: src_struct
+    type: 'bool '
+  return_type: bool
+  signature: bool pb_get_encoded_size(size_t *, const pb_msgdesc_t *, const void *)
+language: c++
+project: nanopb
+target_name: fuzztest_io_errors
+target_path: /src/nanopb/tests/build/fuzztest/fuzztest.c
+test_files:
+- test_file_path: /src/nanopb/tests/msgid/encode_msgid.c
+- test_file_path: /src/nanopb/tests/regression/issue_547/test.c
+- test_file_path: /src/nanopb/tests/map/decode_map.c
+- test_file_path: /src/nanopb/tests/regression/GHSA-gcx3-7m76-287p/test.c
+- test_file_path: /src/nanopb/tests/map/encode_map.c
+- test_file_path: /src/nanopb/tests/site_scons/platforms/avr/run_test.c

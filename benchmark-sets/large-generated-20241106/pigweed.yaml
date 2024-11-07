@@ -1,80 +1,53 @@
-"functions":
-- "name": "_ZN2pw17InlineBasicStringIcLm65535EE4dataEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "pointer pw::InlineBasicString<char, 65535ul>::data(InlineBasicString<char, 65535UL> *)"
-- "name": "_ZNK2pw6VectorIKmLm18446744073709551615EE4dataEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const DW_TAG_enumeration_typebyte * pw::Vector<unsigned long const, 18446744073709551615ul>::data(const Vector<std::byte, 18446744073709551615UL> *)"
-- "name": "_ZN2pw6VectorISt4byteLm18446744073709551615EE4dataEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "unsigned int * pw::Vector<std::byte, 18446744073709551615ul>::data(Vector<unsigned int, 18446744073709551615UL> *)"
-- "name": "_ZNK2pw6VectorIKhLm18446744073709551615EE4dataEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const DW_TAG_enumeration_typebyte * pw::Vector<unsigned char const, 18446744073709551615ul>::data(const Vector<std::byte, 18446744073709551615UL> *)"
-- "name": "_ZN3fit8internal11null_targetIvE6invokeEPv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void fit::internal::null_target<void>::invoke(void *)"
-- "name": "_ZZN2pw6base646EncodeENS_4spanIKSt4byteLm18446744073709551615EEERNS_17InlineBasicStringIcLm65535EEEENK3$_0clEPcm"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "data"
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "size_t"
-  "signature": "size_t pw::base64::operator()(const void *, char *, size_t)"
-- "name": "_ZNK2pw6VectorIKjLm18446744073709551615EE4dataEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const DW_TAG_enumeration_typebyte * pw::Vector<unsigned int const, 18446744073709551615ul>::data(const Vector<std::byte, 18446744073709551615UL> *)"
-- "name": "_ZN2pw6VectorIbLm18446744073709551615EE4dataEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "unsigned int * pw::Vector<bool, 18446744073709551615ul>::data(Vector<unsigned int, 18446744073709551615UL> *)"
-- "name": "_ZNK2pw6VectorIKSt4byteLm18446744073709551615EE4dataEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const DW_TAG_enumeration_typebyte * pw::Vector<std::byte const, 18446744073709551615ul>::data(const Vector<std::byte, 18446744073709551615UL> *)"
-- "name": "_ZNK2pw17InlineBasicStringIcLm65535EE4dataEv"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "const_pointer pw::InlineBasicString<char, 65535ul>::data(const InlineBasicString<char, 65535UL> *)"
-"language": "c++"
-"project": "pigweed"
-"target_name": "uart_transport_fuzzer"
-"target_path": "/src/pigweed/pw_bluetooth_hci/uart_transport_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/pigweed/pw_sync/interrupt_spin_lock_facade_test_c.c"
-- "test_file_path": "/src/pigweed/pw_async_basic/heap_dispatcher_test.cc"
-- "test_file_path": "/src/pigweed/pw_rpc/integration_testing.cc"
-- "test_file_path": "/src/pigweed/pw_bluetooth_sapphire/host/l2cap/enhanced_retransmission_mode_tx_engine_test.cc"
-- "test_file_path": "/src/pigweed/pw_i2c_linux/initiator_test.cc"
-- "test_file_path": "/src/pigweed/pw_protobuf/serialized_size_test.cc"
-- "test_file_path": "/src/pigweed/pw_trace/trace_backend_compile_test.cc"
-- "test_file_path": "/src/pigweed/pw_rpc/packet_test.cc"
-- "test_file_path": "/src/pigweed/pw_tokenizer/tokenize_c99_test_entry_point.cc"
-- "test_file_path": "/src/pigweed/pw_spi_linux/spi_test.cc"
+functions:
+- name: _ZNK2pw17InlineBasicStringIcLm65535EE4dataEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const_pointer pw::InlineBasicString<char, 65535ul>::data(const InlineBasicString<char,
+    65535UL> *)
+- name: _ZN3fit8internal11null_targetIvE6invokeEPv
+  params:
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: void fit::internal::null_target<void>::invoke(void *)
+- name: _ZNK2pw6VectorIKSt4byteLm18446744073709551615EE4dataEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const DW_TAG_enumeration_typebyte * pw::Vector<std::byte const, 18446744073709551615ul>::data(const
+    Vector<std::byte, 18446744073709551615UL> *)
+- name: _ZNK2pw6VectorIKmLm18446744073709551615EE4dataEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const DW_TAG_enumeration_typebyte * pw::Vector<unsigned long const, 18446744073709551615ul>::data(const
+    Vector<std::byte, 18446744073709551615UL> *)
+- name: _ZNK2pw6VectorIKjLm18446744073709551615EE4dataEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const DW_TAG_enumeration_typebyte * pw::Vector<unsigned int const, 18446744073709551615ul>::data(const
+    Vector<std::byte, 18446744073709551615UL> *)
+- name: _ZNK2pw6VectorIKhLm18446744073709551615EE4dataEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const DW_TAG_enumeration_typebyte * pw::Vector<unsigned char const, 18446744073709551615ul>::data(const
+    Vector<std::byte, 18446744073709551615UL> *)
+language: c++
+project: pigweed
+target_name: uart_transport_fuzzer
+target_path: /src/pigweed/pw_bluetooth_hci/uart_transport_fuzzer.cc
+test_files:
+- test_file_path: /src/pigweed/pw_bluetooth_sapphire/host/l2cap/enhanced_retransmission_mode_tx_engine_test.cc
+- test_file_path: /src/pigweed/pw_rpc/packet_test.cc
+- test_file_path: /src/pigweed/pw_tokenizer/tokenize_c99_test_entry_point.cc
+- test_file_path: /src/pigweed/pw_trace/trace_backend_compile_test.cc
+- test_file_path: /src/pigweed/pw_spi_linux/spi_test.cc
+- test_file_path: /src/pigweed/pw_async_basic/heap_dispatcher_test.cc

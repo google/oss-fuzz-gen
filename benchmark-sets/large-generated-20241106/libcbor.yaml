@@ -1,28 +1,24 @@
-"functions":
-- "name": "cbor_refcount"
-  "params":
-  - "name": "item"
-    "type": "bool "
-  "return_type": "size_t"
-  "signature": "size_t cbor_refcount(const cbor_item_t *)"
-- "name": "cbor_intermediate_decref"
-  "params":
-  - "name": "item"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void cbor_intermediate_decref(cbor_item_t *)"
-"language": "c++"
-"project": "libcbor"
-"target_name": "cbor_load_fuzzer"
-"target_path": "/src/libcbor/oss-fuzz/cbor_load_fuzzer.cc"
-"test_files":
-- "test_file_path": "/src/libcbor/test/negint_encoders_test.c"
-- "test_file_path": "/src/libcbor/test/map_encoders_test.c"
-- "test_file_path": "/src/libcbor/test/uint_test.c"
-- "test_file_path": "/src/libcbor/examples/create_items.c"
-- "test_file_path": "/src/libcbor/test/string_test.c"
-- "test_file_path": "/src/libcbor/test/cpp_linkage_test.cpp"
-- "test_file_path": "/src/libcbor/examples/bazel/src/hello_test.cc"
-- "test_file_path": "/src/libcbor/examples/readfile.c"
-- "test_file_path": "/src/libcbor/test/uint_encoders_test.c"
-- "test_file_path": "/src/libcbor/test/stream_expectations.c"
+functions:
+- name: cbor_refcount
+  params:
+  - name: item
+    type: 'bool '
+  return_type: size_t
+  signature: size_t cbor_refcount(const cbor_item_t *)
+- name: cbor_intermediate_decref
+  params:
+  - name: item
+    type: 'bool '
+  return_type: void
+  signature: void cbor_intermediate_decref(cbor_item_t *)
+language: c++
+project: libcbor
+target_name: cbor_load_fuzzer
+target_path: /src/libcbor/oss-fuzz/cbor_load_fuzzer.cc
+test_files:
+- test_file_path: /src/libcbor/test/uint_test.c
+- test_file_path: /src/libcbor/test/cpp_linkage_test.cpp
+- test_file_path: /src/libcbor/test/map_encoders_test.c
+- test_file_path: /src/libcbor/test/negint_encoders_test.c
+- test_file_path: /src/libcbor/test/uint_encoders_test.c
+- test_file_path: /src/libcbor/examples/readfile.c

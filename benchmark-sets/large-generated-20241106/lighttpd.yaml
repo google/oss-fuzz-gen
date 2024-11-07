@@ -1,124 +1,79 @@
-"functions":
-- "name": "buffer_append_base64_enc"
-  "params":
-  - "name": "out"
-    "type": "bool "
-  - "name": "in"
-    "type": "bool "
-  - "name": "in_length"
-    "type": "size_t"
-  - "name": "charset"
-    "type": "int"
-  - "name": "pad"
-    "type": "int"
-  "return_type": "void"
-  "signature": "char * buffer_append_base64_enc(buffer *, const unsigned char *, size_t, base64_charset, int)"
-- "name": "buffer_append_path_len"
-  "params":
-  - "name": "b"
-    "type": "bool "
-  - "name": "a"
-    "type": "bool "
-  - "name": "alen"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void buffer_append_path_len(DW_TAG_restrict_typebuffer *, const DW_TAG_restrict_typechar *, size_t)"
-- "name": "buffer_append_iovec"
-  "params":
-  - "name": "b"
-    "type": "bool "
-  - "name": "iov"
-    "type": "bool "
-  - "name": "n"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void buffer_append_iovec(const DW_TAG_restrict_typebuffer *, const const struct const_iovec *, const size_t)"
-- "name": "buffer_append_string"
-  "params":
-  - "name": "b"
-    "type": "bool "
-  - "name": "s"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void buffer_append_string(DW_TAG_restrict_typebuffer *, const DW_TAG_restrict_typechar *)"
-- "name": "buffer_append_strftime"
-  "params":
-  - "name": "b"
-    "type": "bool "
-  - "name": "format"
-    "type": "bool "
-  - "name": "tm"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void buffer_append_strftime(const DW_TAG_restrict_typebuffer *, const const DW_TAG_restrict_typechar *, const const struct DW_TAG_restrict_typetm *)"
-- "name": "buffer_append_int"
-  "params":
-  - "name": "b"
-    "type": "bool "
-  - "name": "val"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void buffer_append_int(buffer *, intmax_t)"
-- "name": "buffer_append_string_c_escaped"
-  "params":
-  - "name": "b"
-    "type": "bool "
-  - "name": "s"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void buffer_append_string_c_escaped(const DW_TAG_restrict_typebuffer *, const const DW_TAG_restrict_typechar *, size_t)"
-- "name": "buffer_copy_path_len2"
-  "params":
-  - "name": "b"
-    "type": "bool "
-  - "name": "s1"
-    "type": "bool "
-  - "name": "len1"
-    "type": "size_t"
-  - "name": "s2"
-    "type": "bool "
-  - "name": "len2"
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void buffer_copy_path_len2(const DW_TAG_restrict_typebuffer *, const const DW_TAG_restrict_typechar *, size_t, const const DW_TAG_restrict_typechar *, size_t)"
-- "name": "buffer_append_base64_decode"
-  "params":
-  - "name": "out"
-    "type": "bool "
-  - "name": "in"
-    "type": "bool "
-  - "name": "in_length"
-    "type": "size_t"
-  - "name": "charset"
-    "type": "int"
-  "return_type": "void"
-  "signature": "unsigned char * buffer_append_base64_decode(buffer *, const char *, size_t, base64_charset)"
-- "name": "buffer_append_string_encoded"
-  "params":
-  - "name": "b"
-    "type": "bool "
-  - "name": "s"
-    "type": "bool "
-  - "name": "len"
-    "type": "size_t"
-  - "name": "encoding"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void buffer_append_string_encoded(const DW_TAG_restrict_typebuffer *, const const DW_TAG_restrict_typechar *, size_t, buffer_encoding_t)"
-"language": "c"
-"project": "lighttpd"
-"target_name": "fuzz_burl"
-"target_path": "/src/fuzz_burl.c"
-"test_files":
-- "test_file_path": "/src/lighttpd1.4/src/t/test_mod_alias.c"
-- "test_file_path": "/src/lighttpd1.4/src/t/test_configfile.c"
-- "test_file_path": "/src/lighttpd1.4/src/t/test_http_kv.c"
-- "test_file_path": "/src/lighttpd1.4/src/t/test_array.c"
-- "test_file_path": "/src/lighttpd1.4/src/t/test_mod_simple_vhost.c"
-- "test_file_path": "/src/lighttpd1.4/tests/fcgi-responder.c"
-- "test_file_path": "/src/lighttpd1.4/src/t/test_mod_staticfile.c"
-- "test_file_path": "/src/lighttpd1.4/src/t/test_mod_ssi.c"
-- "test_file_path": "/src/lighttpd1.4/src/t/test_mod_userdir.c"
-- "test_file_path": "/src/lighttpd1.4/src/t/test_mod_expire.c"
+functions:
+- name: buffer_append_base64_decode
+  params:
+  - name: out
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: in_length
+    type: size_t
+  - name: charset
+    type: int
+  return_type: void
+  signature: unsigned char * buffer_append_base64_decode(buffer *, const char *, size_t,
+    base64_charset)
+- name: buffer_append_int
+  params:
+  - name: b
+    type: 'bool '
+  - name: val
+    type: size_t
+  return_type: void
+  signature: void buffer_append_int(buffer *, intmax_t)
+- name: buffer_append_base64_enc
+  params:
+  - name: out
+    type: 'bool '
+  - name: in
+    type: 'bool '
+  - name: in_length
+    type: size_t
+  - name: charset
+    type: int
+  - name: pad
+    type: int
+  return_type: void
+  signature: char * buffer_append_base64_enc(buffer *, const unsigned char *, size_t,
+    base64_charset, int)
+- name: buffer_append_iovec
+  params:
+  - name: b
+    type: 'bool '
+  - name: iov
+    type: 'bool '
+  - name: n
+    type: size_t
+  return_type: void
+  signature: void buffer_append_iovec(const DW_TAG_restrict_typebuffer *, const const
+    struct const_iovec *, const size_t)
+- name: buffer_append_path_len
+  params:
+  - name: b
+    type: 'bool '
+  - name: a
+    type: 'bool '
+  - name: alen
+    type: size_t
+  return_type: void
+  signature: void buffer_append_path_len(DW_TAG_restrict_typebuffer *, const DW_TAG_restrict_typechar
+    *, size_t)
+- name: buffer_append_string
+  params:
+  - name: b
+    type: 'bool '
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: void buffer_append_string(DW_TAG_restrict_typebuffer *, const DW_TAG_restrict_typechar
+    *)
+language: c
+project: lighttpd
+target_name: fuzz_burl
+target_path: /src/fuzz_burl.c
+test_files:
+- test_file_path: /src/lighttpd1.4/src/t/test_array.c
+- test_file_path: /src/lighttpd1.4/src/t/test_mod_simple_vhost.c
+- test_file_path: /src/lighttpd1.4/src/t/test_http_kv.c
+- test_file_path: /src/lighttpd1.4/src/t/test_mod_userdir.c
+- test_file_path: /src/lighttpd1.4/src/t/test_mod_staticfile.c
+- test_file_path: /src/lighttpd1.4/src/t/test_mod_expire.c

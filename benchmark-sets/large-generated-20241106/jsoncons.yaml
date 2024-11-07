@@ -1,110 +1,90 @@
-"functions":
-- "name": "_ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE15move_assignmentEOS5_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "other"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >::move_assignment(basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > *, DW_TAG_rvalue_reference_typebasic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> >)"
-- "name": "_ZN8jsoncons12json_decoderINS_10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEES5_E10visit_halfEtNS_12semantic_tagERKNS_11ser_contextERNS3_10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "value"
-    "type": "short"
-  - "name": "tag"
-    "type": "char"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool jsoncons::json_decoder<jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >, std::__1::allocator<char> >::visit_half(json_decoder<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> >, std::__1::allocator<char> > *, uint16_t, DW_TAG_enumeration_typesemantic_tag, const ser_context &, error_code &)"
-- "name": "_ZN8jsoncons12json_decoderINS_10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEES5_E17visit_byte_stringERKNS_16byte_string_viewEmRKNS_11ser_contextERNS3_10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "b"
-    "type": "bool "
-  - "name": "ext_tag"
-    "type": "size_t"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool jsoncons::json_decoder<jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >, std::__1::allocator<char> >::visit_byte_string(json_decoder<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> >, std::__1::allocator<char> > *, const byte_string_view &, uint64_t, const ser_context &, error_code &)"
-- "name": "_ZN8jsoncons10basic_jsonIcNS_13sorted_policyENSt3__19allocatorIcEEE24create_object_implicitlyENS2_17integral_constantIbLb1EEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> >::create_object_implicitly(basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > *, true_type)"
-- "name": "_ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEE24create_object_implicitlyENS2_17integral_constantIbLb1EEE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >::create_object_implicitly(basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > *, true_type)"
-- "name": "_ZN8jsoncons12json_decoderINS_10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEES5_E17visit_byte_stringERKNS_16byte_string_viewENS_12semantic_tagERKNS_11ser_contextERNS3_10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "b"
-    "type": "bool "
-  - "name": "tag"
-    "type": "char"
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool jsoncons::json_decoder<jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >, std::__1::allocator<char> >::visit_byte_string(json_decoder<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> >, std::__1::allocator<char> > *, const byte_string_view &, DW_TAG_enumeration_typesemantic_tag, const ser_context &, error_code &)"
-- "name": "_ZN8jsoncons12json_decoderINS_10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEES5_E16visit_end_objectERKNS_11ser_contextERNS3_10error_codeE"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "bool"
-  "signature": "bool jsoncons::json_decoder<jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >, std::__1::allocator<char> >::visit_end_object(json_decoder<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> >, std::__1::allocator<char> > *, const ser_context &, error_code &)"
-- "name": "_ZN8jsoncons15index_key_valueINS_10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEEEaSEOS7_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": ""
-    "type": "bool "
-  "return_type": "void"
-  "signature": "struct index_key_value<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > > & jsoncons::index_key_value<jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> > >::operator=(struct index_key_value<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > > *, struct DW_TAG_rvalue_reference_typeindex_key_value<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > >)"
-- "name": "_ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEaSEOS5_"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "other"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > & jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char> >::operator=(basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> > *, DW_TAG_rvalue_reference_typebasic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> >)"
-- "name": "_ZN8jsoncons18sorted_json_objectINSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS_10basic_jsonIcNS_13sorted_policyES6_EENS1_6vectorEED2Ev"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void jsoncons::sorted_json_object<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> >, std::__1::vector>::~sorted_json_object(sorted_json_object<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> >, std::__1::vector> *)"
-"language": "c++"
-"project": "jsoncons"
-"target_name": "fuzz_bson_parser_max"
-"target_path": "/src/jsoncons/fuzzers/fuzz_bson_parser_max.cpp"
-"test_files":
-- "test_file_path": "/src/jsoncons/test/corelib/src/wjson_tests.cpp"
-- "test_file_path": "/src/jsoncons/test/jsonschema/src/range_collection_tests.cpp"
-- "test_file_path": "/src/jsoncons/test/corelib/src/json_as_tests.cpp"
-- "test_file_path": "/src/jsoncons/examples/src/ubjson_examples.cpp"
-- "test_file_path": "/src/jsoncons/examples/src/type_extensibility_examples.cpp"
-- "test_file_path": "/src/jsoncons/test/bson/src/bson_reader_tests.cpp"
-- "test_file_path": "/src/jsoncons/test/corelib/src/json_storage_tests.cpp"
-- "test_file_path": "/src/jsoncons/test/jsonschema/src/jsonschema_draft202012_tests.cpp"
-- "test_file_path": "/src/jsoncons/test/corelib/src/json_bitset_traits_tests.cpp"
-- "test_file_path": "/src/jsoncons/test/corelib/src/json_comparator_tests.cpp"
+functions:
+- name: _ZN8jsoncons12json_decoderINS_10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEES5_E17visit_byte_stringERKNS_16byte_string_viewEmRKNS_11ser_contextERNS3_10error_codeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: b
+    type: 'bool '
+  - name: ext_tag
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool jsoncons::json_decoder<jsoncons::basic_json<char, jsoncons::order_preserving_policy,
+    std::__1::allocator<char> >, std::__1::allocator<char> >::visit_byte_string(json_decoder<jsoncons::basic_json<char,
+    jsoncons::sorted_policy, std::__1::allocator<char> >, std::__1::allocator<char>
+    > *, const byte_string_view &, uint64_t, const ser_context &, error_code &)
+- name: _ZN8jsoncons18sorted_json_objectINSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS_10basic_jsonIcNS_13sorted_policyES6_EENS1_6vectorEED2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::sorted_json_object<std::__1::basic_string<char, std::__1::char_traits<char>,
+    std::__1::allocator<char> >, jsoncons::basic_json<char, jsoncons::sorted_policy,
+    std::__1::allocator<char> >, std::__1::vector>::~sorted_json_object(sorted_json_object<std::__1::basic_string<char,
+    std::__1::char_traits<char>, std::__1::allocator<char> >, jsoncons::basic_json<char,
+    jsoncons::sorted_policy, std::__1::allocator<char> >, std::__1::vector> *)
+- name: _ZN8jsoncons12json_decoderINS_10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEES5_E10visit_halfEtNS_12semantic_tagERKNS_11ser_contextERNS3_10error_codeE
+  params:
+  - name: this
+    type: 'bool '
+  - name: value
+    type: short
+  - name: tag
+    type: char
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool jsoncons::json_decoder<jsoncons::basic_json<char, jsoncons::order_preserving_policy,
+    std::__1::allocator<char> >, std::__1::allocator<char> >::visit_half(json_decoder<jsoncons::basic_json<char,
+    jsoncons::sorted_policy, std::__1::allocator<char> >, std::__1::allocator<char>
+    > *, uint16_t, DW_TAG_enumeration_typesemantic_tag, const ser_context &, error_code
+    &)
+- name: _ZN8jsoncons15index_key_valueINS_10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEEEaSEOS7_
+  params:
+  - name: this
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: struct index_key_value<jsoncons::basic_json<char, jsoncons::sorted_policy,
+    std::__1::allocator<char> > > & jsoncons::index_key_value<jsoncons::basic_json<char,
+    jsoncons::order_preserving_policy, std::__1::allocator<char> > >::operator=(struct
+    index_key_value<jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char>
+    > > *, struct DW_TAG_rvalue_reference_typeindex_key_value<jsoncons::basic_json<char,
+    jsoncons::sorted_policy, std::__1::allocator<char> > >)
+- name: _ZN8jsoncons10basic_jsonIcNS_13sorted_policyENSt3__19allocatorIcEEE24create_object_implicitlyENS2_17integral_constantIbLb1EEE
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void jsoncons::basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char>
+    >::create_object_implicitly(basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char>
+    > *, true_type)
+- name: _ZN8jsoncons10basic_jsonIcNS_23order_preserving_policyENSt3__19allocatorIcEEEaSEOS5_
+  params:
+  - name: this
+    type: 'bool '
+  - name: other
+    type: 'bool '
+  return_type: void
+  signature: basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char> >
+    & jsoncons::basic_json<char, jsoncons::order_preserving_policy, std::__1::allocator<char>
+    >::operator=(basic_json<char, jsoncons::sorted_policy, std::__1::allocator<char>
+    > *, DW_TAG_rvalue_reference_typebasic_json<char, jsoncons::sorted_policy, std::__1::allocator<char>
+    >)
+language: c++
+project: jsoncons
+target_name: fuzz_bson_parser_max
+target_path: /src/jsoncons/fuzzers/fuzz_bson_parser_max.cpp
+test_files:
+- test_file_path: /src/jsoncons/test/jsonschema/src/jsonschema_draft202012_tests.cpp
+- test_file_path: /src/jsoncons/test/corelib/src/wjson_tests.cpp
+- test_file_path: /src/jsoncons/examples/src/ubjson_examples.cpp
+- test_file_path: /src/jsoncons/test/corelib/src/json_as_tests.cpp
+- test_file_path: /src/jsoncons/examples/src/type_extensibility_examples.cpp
+- test_file_path: /src/jsoncons/test/bson/src/bson_reader_tests.cpp

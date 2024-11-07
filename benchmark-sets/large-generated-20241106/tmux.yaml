@@ -1,110 +1,67 @@
-"functions":
-- "name": "server_client_open"
-  "params":
-  - "name": "c"
-    "type": "bool "
-  - "name": "cause"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int server_client_open(struct client *, char **)"
-- "name": "server_client_lost"
-  "params":
-  - "name": "c"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "void server_client_lost(struct client *)"
-- "name": "server_start"
-  "params":
-  - "name": "client"
-    "type": "bool "
-  - "name": "flags"
-    "type": "size_t"
-  - "name": "base"
-    "type": "bool "
-  - "name": "lockfd"
-    "type": "int"
-  - "name": "lockfile"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int server_start(struct tmuxproc *, uint64_t, struct event_base *, int, char *)"
-- "name": "tty_open"
-  "params":
-  - "name": "tty"
-    "type": "bool "
-  - "name": "cause"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int tty_open(struct tty *, char **)"
-- "name": "server_add_accept"
-  "params":
-  - "name": "timeout"
-    "type": "int"
-  "return_type": "void"
-  "signature": "void server_add_accept(int)"
-- "name": "args_escape"
-  "params":
-  - "name": "s"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "char * args_escape(const char *)"
-- "name": "cmd_attach_session"
-  "params":
-  - "name": "item"
-    "type": "bool "
-  - "name": "tflag"
-    "type": "bool "
-  - "name": "dflag"
-    "type": "int"
-  - "name": "xflag"
-    "type": "int"
-  - "name": "rflag"
-    "type": "int"
-  - "name": "cflag"
-    "type": "bool "
-  - "name": "Eflag"
-    "type": "int"
-  - "name": "fflag"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "DW_TAG_enumeration_typecmd_retval cmd_attach_session(struct cmdq_item *, const char *, int, int, int, const char *, int, const char *)"
-- "name": "client_main"
-  "params":
-  - "name": "base"
-    "type": "bool "
-  - "name": "argc"
-    "type": "int"
-  - "name": "argv"
-    "type": "bool "
-  - "name": "flags"
-    "type": "size_t"
-  - "name": "feat"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int client_main(struct event_base *, int, char **, uint64_t, int)"
-- "name": "server_client_create"
-  "params":
-  - "name": "fd"
-    "type": "int"
-  "return_type": "void"
-  "signature": "struct client * server_client_create(int)"
-- "name": "tty_keys_next"
-  "params":
-  - "name": "tty"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int tty_keys_next(struct tty *)"
-"language": "c"
-"project": "tmux"
-"target_name": "input-fuzzer"
-"target_path": "/src/tmux/fuzz/input-fuzzer.c"
-"test_files":
-- "test_file_path": "/src/libevent/test/regress_zlib.c"
-- "test_file_path": "/src/libevent/sample/ws-chat-server.c"
-- "test_file_path": "/src/libevent/sample/hello-world.c"
-- "test_file_path": "/src/libevent/test/regress_testutils.c"
-- "test_file_path": "/src/libevent/test/test-closed.c"
-- "test_file_path": "/src/libevent/sample/becat.c"
-- "test_file_path": "/src/libevent/test/regress_et.c"
-- "test_file_path": "/src/libevent/sample/http-connect.c"
-- "test_file_path": "/src/libevent/test/regress_bufferevent.c"
-- "test_file_path": "/src/libevent/test/regress_ssl.c"
+functions:
+- name: server_start
+  params:
+  - name: client
+    type: 'bool '
+  - name: flags
+    type: size_t
+  - name: base
+    type: 'bool '
+  - name: lockfd
+    type: int
+  - name: lockfile
+    type: 'bool '
+  return_type: int
+  signature: int server_start(struct tmuxproc *, uint64_t, struct event_base *, int,
+    char *)
+- name: args_escape
+  params:
+  - name: s
+    type: 'bool '
+  return_type: void
+  signature: char * args_escape(const char *)
+- name: tty_keys_next
+  params:
+  - name: tty
+    type: 'bool '
+  return_type: int
+  signature: int tty_keys_next(struct tty *)
+- name: tty_open
+  params:
+  - name: tty
+    type: 'bool '
+  - name: cause
+    type: 'bool '
+  return_type: int
+  signature: int tty_open(struct tty *, char **)
+- name: server_client_create
+  params:
+  - name: fd
+    type: int
+  return_type: void
+  signature: struct client * server_client_create(int)
+- name: client_main
+  params:
+  - name: base
+    type: 'bool '
+  - name: argc
+    type: int
+  - name: argv
+    type: 'bool '
+  - name: flags
+    type: size_t
+  - name: feat
+    type: int
+  return_type: int
+  signature: int client_main(struct event_base *, int, char **, uint64_t, int)
+language: c
+project: tmux
+target_name: input-fuzzer
+target_path: /src/tmux/fuzz/input-fuzzer.c
+test_files:
+- test_file_path: /src/libevent/test/regress_ssl.c
+- test_file_path: /src/libevent/sample/hello-world.c
+- test_file_path: /src/libevent/test/regress_testutils.c
+- test_file_path: /src/libevent/sample/becat.c
+- test_file_path: /src/libevent/test/regress_bufferevent.c
+- test_file_path: /src/libevent/test/test-closed.c
