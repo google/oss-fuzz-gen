@@ -65,7 +65,8 @@ class Pipeline():
     #TODO(fdt622): delete print
     print('RunResult reproducer_path: ', result_history[-1].reproducer_path)
     
-    if result_history[-1].crashes: # RunResult.crashes => True
+    if result_history[-1].crashes and (result_history[-1].benchmark.language.lower() == 'c' \
+                                       or result_history[-1].benchmark.language.lower() == 'c++'): # RunResult.crashes => True
       result_history.append(
         self.analysis_stage.execute(result_history=result_history)) # append one CrashResult
         
