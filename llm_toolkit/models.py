@@ -228,7 +228,7 @@ class GPT(LLM):
 
   def get_model(self) -> Any:
     """Returns the underlying model instance."""
-    # Placeholder: No suitable implementation/usage yet.
+    self.name
 
   def get_chat_client(self, model: Any) -> Any:
     """Returns a new chat session."""
@@ -236,8 +236,24 @@ class GPT(LLM):
 
   def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
     """Queries the LLM in the given chat session and returns the response."""
-    del client, prompt
-    # Placeholder: To Be Implemented.
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('OpenAI does not allow temperature list: %s',
+                  self.temperature_list)
+
+    completion = self.with_retry_on_error(
+        lambda: client.chat.completions.create(messages=prompt.get(),
+                                               model=self.name,
+                                               n=self.num_samples,
+                                               temperature=self.temperature),
+        [openai.OpenAIError])
+
+    # Choose the longest response
+    longest_response = max(
+        (choice.message["content"] for choice in completion.choices), key=len)
+
+    return longest_response
 
   def _get_tiktoken_encoding(self, model_name: str):
     """Returns the tiktoken encoding for the model."""
