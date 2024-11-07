@@ -8,7 +8,10 @@ steps:
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: 'gcloud'
   args:
-    - auth configure-docker us-central1-docker.pkg.dev --quiet
+    - auth
+    - configure-docker
+    - us-central1-docker.pkg.dev
+    - '--quiet'
 - name: 'gcr.io/cloud-builders/docker'
   args:
   - push
