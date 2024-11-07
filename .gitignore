@@ -9,4 +9,3 @@ venv/
 .venv/
 __pycache__/
 *.swp
-output*
