@@ -49,7 +49,8 @@ class CrashAnalyzer(BaseAgent):
   def _create_ossfuzz_project_with_lldb(self, 
                                         name: str, 
                                         target_file: str, 
-                                        build_script_path: str) -> str:
+                                        build_script_path: str,
+                                        run_result: RunResult) -> str:
     """Creates an OSS-Fuzz project with new dockerfile. The new project
     will replicate an existing project |name| but modify its dockerfile."""
     logger.info('target file: %s', target_file)
@@ -60,7 +61,7 @@ class CrashAnalyzer(BaseAgent):
       return name
 
     existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                         'projects', self.benchmark.project)
+                                         'projects', run_result.benchmark.project)
 
     shutil.copytree(existing_project_path, generated_project_path)
 
@@ -148,7 +149,8 @@ class CrashAnalyzer(BaseAgent):
                                      f'{last_result.trial:02d}.build_script')
     
     self._create_ossfuzz_project_with_lldb(generated_oss_fuzz_project, 
-                                           fuzz_target_path, build_script_path) # probably return without modifying dockerfile?
+                                           fuzz_target_path, build_script_path,
+                                           last_result) # probably return without modifying dockerfile?
                                            
     self.analyze_tool = LLDBTool(benchmark, name='lldb', 
                                  project=generated_oss_fuzz_project,)
