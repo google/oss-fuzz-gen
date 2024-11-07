@@ -89,7 +89,7 @@ class RunResult:
   corpus_path: str = ''
   coverage_report_path: str = ''
   reproducer_path: str = ''
-  artifact_path: str = '' # local artifact path
+  artifact_path: str = ''  # local artifact path
   artifact_name: str = 'testcase'
   sanitizer: str = ''
   cov_pcs: int = 0
@@ -538,7 +538,7 @@ class BuilderRunner:
       run_result.artifact_path = dst
       shutil.copy2(src, dst)
       logger.info('Copied crash file %s to %s', crash_file, artifact_dir)
-      
+
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
         generated_project, benchmark_target_name))
 
