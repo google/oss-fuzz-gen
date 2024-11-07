@@ -90,6 +90,7 @@ class RunResult(BuildResult):
   """The fuzzing run-time result info."""
   crashes: bool
   run_error: str
+  crash_func: str
   run_log: str
   coverage_summary: dict
   coverage: float
