@@ -273,6 +273,8 @@ class Evaluator:
     shutil.copyfile(
         target_file,
         os.path.join(generated_project_path, os.path.basename(target_file)))
+    logger.info('Execution dst os.path.join(generated_project_path, os.path.basename(target_file)): %s', \
+                os.path.join(generated_project_path, os.path.basename(target_file)))
 
     # Add additional statement in dockerfile to overwrite with generated fuzzer
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
