@@ -14,7 +14,13 @@
 """The Analysis Stage class for examining the performance of fuzz targets. This
 stage is responsible for categorizing run-time crashes and detecting untested
 code blocks."""
-from results import Result
+import os
+
+from typing import cast
+from experiment import builder_runner as builder_runner_lib
+from experiment import evaluator as evaluator_lib
+from experiment.evaluator import Evaluator
+from results import Result, CrashResult, RunResult
 from stage.base_stage import BaseStage
 
 
@@ -27,13 +33,35 @@ class AnalysisStage(BaseStage):
   crashes due to a bug in the project under test or if all major code paths have
   been sufficiently covered."""
 
+  def _analyze_crash(self, result_history: list[Result]) -> Result:
+    """Analyzes a runtime crash."""
+    agent = self.get_agent('Crash_analyzer')
+    #TODO(fdt622): add _execute_agent_cloud
+    # if self.args.cloud_experiment_name:
+    #   return self._execute_agent_cloud(agent, result_history)
+    return agent.execute(result_history)
+
+  def _analyze_coverage(self, result_history: list[Result]) -> Result:
+    """Analyzes the coverage."""
+    pass
+  
   def execute(self, result_history: list[Result]) -> Result:
-    self.logger.info('Analysis Stage')
-    agent = self.get_agent()
-    analysis_result = agent.execute(result_history)
+    """Executes the analysis stage."""
+    last_result = result_history[-1]
+    if not isinstance(last_result, RunResult):
+      self.logger.error('CrashResult must follow a RunResult')
+      raise TypeError
+
+    # 1. Analyzing the runtime crash.
+    agent_result = self._analyze_crash(result_history)
+    crash_result = cast(CrashResult, agent_result)
 
     # TODO(dongge): Save logs and more info into workdir.
-    self.logger.write_chat_history(analysis_result)
+    self.logger.write_chat_history(crash_result)
     self.logger.debug('Analysis stage completed with with result:\n%s',
-                      analysis_result)
-    return analysis_result
+                      crash_result)
+
+    return crash_result
+
+
+    
