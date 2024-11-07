@@ -56,15 +56,11 @@ class ExecutionStage(BaseStage):
     generated_oss_fuzz_project = f'{benchmark.id}-{last_result.trial}'
     generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
         generated_oss_fuzz_project)
-    logger.info('Execution generated_oss_fuzz_project(after rectify): %s', \
-                generated_oss_fuzz_project)
 
     fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                     f'{trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                      f'{trial:02d}.build_script')
-    logger.info('Execution fuzz_target_path: %s', fuzz_target_path)
-    logger.info('Execution build_script_path: %s', build_script_path)
     evaluator.create_ossfuzz_project(generated_oss_fuzz_project,
                                      fuzz_target_path, build_script_path)
 
