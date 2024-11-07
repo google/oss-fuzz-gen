@@ -41,24 +41,14 @@ class ExecutionStage(BaseStage):
     evaluator = Evaluator(builder_runner, benchmark, last_result.work_dirs)
     generated_target_name = os.path.basename(benchmark.target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
-    logger.info('Execution benchmark.target_path: %s', benchmark.target_path)
-    logger.info('Execution benchmark.id: %s', benchmark.id)
-    logger.info('Execution generated_target_name: %s', generated_target_name)
-    logger.info('Execution sample_id: %s', sample_id)
     generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}-{trial:02d}'
-    logger.info('Execution generated_oss_fuzz_project: %s', \
-                generated_oss_fuzz_project)
     generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
         generated_oss_fuzz_project)
-    logger.info('Execution generated_oss_fuzz_project(after rectify): %s', \
-                generated_oss_fuzz_project)
 
     fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                     f'{trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                      f'{trial:02d}.build_script')
-    logger.info('Execution fuzz_target_path: %s', fuzz_target_path)
-    logger.info('Execution build_script_path: %s', build_script_path)
     evaluator.create_ossfuzz_project(generated_oss_fuzz_project,
                                      fuzz_target_path, build_script_path)
 

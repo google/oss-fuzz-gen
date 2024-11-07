@@ -43,12 +43,8 @@ class CrashAnalyzer(BaseAgent):
     """Creates an OSS-Fuzz project with new dockerfile. The new project
     will replicate an existing project |name| but modify its dockerfile."""
     logger.info('target file: %s', target_file)
-    logger.info('analyzer _create_ossfuzz_project_with_lldb(name): %s', name)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects', name)
-    logger.info(
-        'analyzer _create_ossfuzz_project_with_lldb(generated_project_path): \
-                %s', generated_project_path)
     if os.path.exists(generated_project_path):
       logger.info('Project %s already exists.', generated_project_path)
       return name
@@ -56,8 +52,6 @@ class CrashAnalyzer(BaseAgent):
     existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                          'projects',
                                          run_result.benchmark.project)
-    logger.info('analyzer _create_ossfuzz_project_with_lldb(existing_project_path): %s', \
-                existing_project_path)
 
     shutil.copytree(existing_project_path, generated_project_path)
 
@@ -136,24 +130,13 @@ class CrashAnalyzer(BaseAgent):
       generated_target_name = os.path.basename(benchmark.target_path)
       sample_id = os.path.splitext(generated_target_name)[0]
       generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}-{trial:02d}-lldb'
-      logger.info('analyzer benchmark: %s', benchmark)
-      logger.info('analyzer benchmark.id: %s', benchmark.id)
-      logger.info('analyzer sample_id: %s', sample_id)
-      logger.info('analyzer generated_target_name: %s', generated_target_name)
-      logger.info('analyzer generated_oss_fuzz_project: \
-                  %s', generated_oss_fuzz_project)
       generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
           generated_oss_fuzz_project)
-      logger.info(
-          'analyzer generated_oss_fuzz_project(after rectify): \
-                  %s', generated_oss_fuzz_project)
 
       fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                       f'{trial:02d}.fuzz_target')
       build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                        f'{trial:02d}.build_script')
-      logger.info('analyzer fuzz_target_path: %s', fuzz_target_path)
-      logger.info('analyzer build_script_path: %s', build_script_path)
 
       self._create_ossfuzz_project_with_lldb(generated_oss_fuzz_project,
                                              fuzz_target_path,
@@ -167,9 +150,7 @@ class CrashAnalyzer(BaseAgent):
       )
       self.analyze_tool.execute('compile > /dev/null')
       prompt = self._initial_prompt(result_history)
-      logger.info('analyzer initial prompt: %s', prompt.get())
       prompt.add_problem(self.analyze_tool.tutorial())
-      logger.info('analyzer after append tutorial prompt: %s', prompt.get())
       crash_result = CrashResult(
           benchmark=benchmark,
           trial=trial,
