@@ -175,7 +175,7 @@ class RunResult(BuildResult):
                      chat_history)
     self.crashes = crashes
     self.run_error = run_error
-    self.crash_func = crash_func
+    self.crash_func = crash_func or {}
     self.run_log = run_log
     self.coverage_summary = coverage_summary or {}
     self.coverage = coverage
@@ -248,7 +248,7 @@ class CrashResult(RunResult):
       compile_log: str = '',
       crashes: bool = False,  # Runtime crash.
       run_error: str = '',  # Runtime crash error message.
-      crash_func: str = '',  # Crash stack func.
+      crash_func: Optional[dict] = None,  # Crash stack func.
       run_log: str = '',  # Full fuzzing output.
       coverage_summary: Optional[dict] = None,
       coverage: float = 0.0,
