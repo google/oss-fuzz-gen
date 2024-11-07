@@ -38,8 +38,7 @@ class ExecutionStage(BaseStage):
 
     evaluator = Evaluator(builder_runner, benchmark, last_result.work_dirs)
     generated_target_name = os.path.basename(benchmark.target_path)
-    sample_id = os.path.splitext(generated_target_name)[0]
-    generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}'
+    generated_oss_fuzz_project = f'{benchmark.id}-{last_result.trial}'
     generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
         generated_oss_fuzz_project)
 
@@ -50,7 +49,8 @@ class ExecutionStage(BaseStage):
     evaluator.create_ossfuzz_project(generated_oss_fuzz_project,
                                      fuzz_target_path, build_script_path)
 
-    status_path = os.path.join(last_result.work_dirs.status, sample_id)
+    status_path = os.path.join(last_result.work_dirs.status,
+                               f'{last_result.trial:02}')
     os.makedirs(status_path, exist_ok=True)
 
     # Try building and running the new target.
