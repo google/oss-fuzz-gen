@@ -37,8 +37,8 @@ logger = logging.getLogger(__name__)
 
 T = TypeVar('T', str, list, dict, int)  # Generic type.
 
-TIMEOUT = 45
-MAX_RETRY = 5
+TIMEOUT = 1
+MAX_RETRY = 1
 
 USE_FI_TO_GET_TARGETS = bool(int(os.getenv('OSS_FI_TO_GET_TARGETS', '1')))
 
