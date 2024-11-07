@@ -654,16 +654,11 @@ class GeminiV1D5Chat(GeminiV1D5):
                    config: dict[str, Any]) -> Any:
     """Generates chat response."""
     logger.info('%s generating response with config: %s', self.name, config)
-    try:
-      return client.send_message(
-          prompt,
-          stream=False,
-          generation_config=config,
-          safety_settings=self.safety_config).text  # type: ignore
-    except Exception as e:
-      logger.error('%s failed to generated response: %s; Config: %s', e,
-                   self.name, config)
-      return ''
+    return client.send_message(
+        prompt,
+        stream=False,
+        generation_config=config,
+        safety_settings=self.safety_config).text  # type: ignore
 
   def truncate_prompt(self,
                       raw_prompt_text: Any,

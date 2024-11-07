@@ -1,40 +1,118 @@
-To help write a simple but valid fuzz target, you can investigate any files in the fuzz target's build environment by iteratively sending me a BASH command, and I will provide you with the output of the command.
-Some interaction protocols:
-1. Strictly ONE BASH command at a time.
-2. Each message you send should first explain the reason why you want to run the command wrapped by <reason></reason>, then provide the command to run wrapped in <bash></bash> in this format:
-<reason>
-Reasons here.
-</reason>
-<bash>
-One bash command here.
-</bash>
-3. Each reponse I send will repeat the command you sent wrapped in <bash></bash> for you to double-check, followed by the command standard output wrapped in <stdout></stdout> and stderr wrapped in <<stderr></stderr> in this format:
-<bash>
-The command I executed, copied from the command you sent.
-</bash>
-<stdout>
-The standard output of the command.
-</stdout>
-<stderr>
-The standard error of the command.
-</stderr>
-4. The final goal is to answer two questions about the new fuzz target: a) How to modify the existing fuzz target at <code>{FUZZ_TARGET_PATH}</code> so that it can fuzz the new function-under-test? b) Do we need to modify the build script at <code>/src/build.sh</code> to successfully build the new fuzz target?
-5. If you have a conclusion on both questions, output overall description wrapped by <conclusion></conclusion> followed by the modified target wrapped in <fuzz target></fuzz target>. If you modified the build script, output it wrapped in <build script></build script>:
-<conclusion>
-Overall description about fuzz target design.
-</conclusion>
-<fuzz target>
-The full code of the fixed fuzz target here.
-</fuzz target>
-<build script>
-The full code of build script here if you modified the build script, otherwise omit this block.
-</build script>
+<tool>
+**Bash too Guilde**
+Use the bash tool to investigate files in the fuzz target's build environment. This will help you understand the project source code, the function under test, its dependencies, and any compilation requirements.
 
-Some general rules:
-1. You are allowed to view all files and environment variables, but NOT ALLOWED TO 1) MODIFY THEM, RENAME THEM, OR CREATE NEW FILES. You can only modify the fuzz target at <code>{FUZZ_TARGET_PATH}</code> or the build script at <code>/src/build.sh</code> ONLY, and output the final version in conclusion.  All modification of other files will NOT BE PRESERVED when building the modified fuzz target.
-2. Use the given fuzz target at <code>{FUZZ_TARGET_PATH}</code> and other fuzz targets using <code>LLVMFuzzerTestOneInput</code> under the same directory as examples. In particular, learn and reuse their ways to include header files in your solution. In most cases, you can assume you only have to modify the content of <code>LLVMFuzzerTestOneInput</code> to fuzz the new function-under-test.
-3. If the header inclusion statements do not work, investigate the source code of the project and library files built by build.sh.
-4. If the building the fuzz target failed because it does not contain the function-under-test, consider modify <code>/src/build.sh</code> to build the full project. The project-under-test's root dir is cloned from the project's git repo and may contain a README.md that describes how to build the full project.
-5. YOU MUST NOT COMPILE the fuzz target. Respond to the conclusion above once you think you have an answer. The answer does not have to be perfect, I will compile it and show you the result.
-6. Once I receive your conclusion, I will replace <code>{FUZZ_TARGET_PATH}</code> with your fuzz target. If you modified the build script, I will replace /src/build.sh with it too.
-7. DO NOT wrap code snippets with ```, using the XML-style tags above will suffice.
+<interaction protocols>
+1. STRICTLY Only One Bash Command per message:
+    * **DO NOT** send multiple bash commands in each message.
+2. Execute Bash Command Message Structure:
+    * Reason for the Command:
+        * Explain the reason for running the command.
+        * Wrap this explanation within <reason> and </reason> tags.
+    * Bash Command:
+        * Provide the bash command to execute.
+        * Wrap the command with <bash> and </bash> tags.
+    * Format Example:
+        <reason>
+        I want to locate the source file containing the definition of the function-under-test to examine its implementation.
+        </reason>
+        <bash>
+        grep -rn 'function_name(' /src/project-name/
+        </bash>
+3. Receiving Bash Command Output Message Structure:
+    * Bash execution outputs will be returned in the following format:
+        <bash>
+        [The command you executed.]
+        </bash>
+        <stdout>
+        [Standard output of the command.]
+        </stdout>
+        <stderr>
+        [Standard error of the command.]
+        </stderr>
+<interaction protocols>
+
+<general rules>
+1 .File Access and Modification Restrictions:
+    * Allowed Actions:
+        * View any files and environment variables in the build environment.
+    * Prohibited Actions:
+        * Do not modify, rename, or create new files.
+    * All modifications will not be preserved when building the fuzz target.
+</general rules>
+
+<tool guidelines>
+1 .Purposeful Commands:
+    * Each bash command should have a clear purpose related to your investigation toward the final goals.
+2. Careful Interpretation:
+    * Analyze the output of each command thoroughly to inform your next steps.
+    * Keep notes of important findings that will help in modifying the fuzz target and build script.
+4. Clarity and Compliance:
+    * Adhere strictly to the interaction protocols and formatting requirements.
+    * Ensure your messages are clear and properly formatted.
+5. No Unauthorized Actions:
+    * Do not modify files.
+6. Avoid using `pkg-config`:
+    * Use bash commands to manually identify the correct file paths
+    * Explore the project's directory hierarchy (`/src/<project-name>`) to learn headerfiles locations, library's naming conventions, and build system.
+</tool guidelines>
+
+<example usages>
+Command 1. Start by locating the function's definition and understand its parameters, e.g.:
+    <reason>
+    To find the definition of `my_function` in the project directory and understand its implementation details.
+    </reason>
+    <bash>
+    grep -rn 'my_function(' /src/project/
+    </bash>
+Command 2. Identify Required Headers:
+    <reason>
+    To identify the header files in the project directory that declare `my_function`.
+    </reason>
+    <bash>
+    grep -rn 'my_function' /src/project/ --include=*.h
+    </bash>
+Command 3. Locate Custom Type Definitions:
+    <reason>
+    To find the definition of the custom type `CustomType` used by `my_function`.
+    </reason>
+    <bash>
+    grep -rn 'typedef.*CustomType' /src/project/
+    </bash>
+Command 4. Examine Existing Fuzz Targets:
+    <reason>
+    To see how existing fuzz targets include headers and initialize variables in the `LLVMFuzzerTestOneInput` function.
+    </reason>
+    <bash>
+    cat {FUZZ_TARGET_PATH}
+    </bash>
+    * Remember you can use the same command on other example fuzz targets under the same parent directory as `{FUZZ_TARGET_PATH}`.
+Command 5. Check Build Script for Compilation Flags and Libraries:
+    <reason>
+    To check which compiler flags and libraries are used in the build script.
+    </reason>
+    <bash>
+    cat /src/build.sh
+    </bash>
+Command 6. Verify Available Libraries:
+    <reason>
+    To list the built libraries to verify that the necessary libraries are available.
+    </reason>
+    <bash>
+    ls /src/project/build/libs/
+    </bash>
+Command 7. Understand Environment Variables:
+    <reason>
+    To check if any environment variables related to the project are set.
+    </reason>
+    <bash>
+    printenv | grep 'PROJECT_VARIABLE'
+    </bash>
+</example usages>
+
+<final reminder>
+1. STRICTLY ONE Bash Command in each message: Do NOT send multiple bash commands in one message.
+3. Do Not Compile or Run Code:
+    * Your investigation is limited to reading and interpreting information using bash commands.
+</final reminder>
+</tool>
