@@ -98,10 +98,10 @@ class LLDBTool(BaseTool):
     container_id = result.stdout.strip()
     return container_id
 
-  def tutorial(self, run_result: RunResult) -> str:
+  def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
     return self._get_tutorial_file_content('lldb_tool.txt')\
-      .replace('{AFTIFACT_NAME}', run_result.artifact_name)
+      .replace('{AFTIFACT_NAME}', self.result.artifact_name)
 
   def execute(self, command: str) -> sp.CompletedProcess:
     """Executes the |command| in the container and returns the output."""
