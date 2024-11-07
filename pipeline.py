@@ -48,20 +48,16 @@ class Pipeline():
     self.logger.info('Cycle %d initial result is %s', cycle_count,
                      result_history[-1])
     result_history.append(
-        self.writing_stage.execute(result_history=result_history)
-    )
-    if (not isinstance(result_history[-1], BuildResult)
-        or not result_history[-1].success):
+        self.writing_stage.execute(result_history=result_history))
+    if (not isinstance(result_history[-1], BuildResult) or
+        not result_history[-1].success):
       self.logger.error('Cycle %d build failure, skipping the rest steps',
                         cycle_count)
       return
 
     result_history.append(
-        self.execution_stage.execute(
-            result_history=result_history))
-    if not isinstance(
-        result_history[-1], RunResult
-    ):
+        self.execution_stage.execute(result_history=result_history))
+    if not isinstance(result_history[-1], RunResult):
       self.logger.error('Cycle %d run failure, skipping the rest steps',
                         cycle_count)
       return

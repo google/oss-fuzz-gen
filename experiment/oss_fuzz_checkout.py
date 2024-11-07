@@ -355,7 +355,7 @@ def prepare_build(project_name, sanitizer, generated_project):
     shutil.copy(original_dockerfile, dockerfile_to_use)
 
 
-def _image_exists(image_name: str) -> bool:
+def image_exists(image_name: str) -> bool:
   """Checks if the given |image_name| exits."""
   try:
     all_images = sp.run(['docker', 'images', '--format', '{{.Repository}}'],
@@ -371,7 +371,7 @@ def _image_exists(image_name: str) -> bool:
 def prepare_project_image(project: str) -> str:
   """Prepares original image of the |project|'s fuzz target build container."""
   image_name = f'gcr.io/oss-fuzz/{project}'
-  if _image_exists(image_name):
+  if image_exists(image_name):
     logger.info('Using existing project image for %s', project)
     return image_name
   logger.info('Unable to find existing project image for %s', project)

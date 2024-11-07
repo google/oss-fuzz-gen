@@ -30,7 +30,7 @@ class LLDBTool(BaseTool):
     """
     image_name = f'gcr.io/oss-fuzz/{self.project}'
     #TODO(fdt622): image cache
-    if oss_fuzz_checkout._image_exists(image_name):
+    if oss_fuzz_checkout.image_exists(image_name):
       logger.info('Using existing project image for %s', self.project)
       return image_name
     logger.info('Unable to find existing project image for %s', self.project)
@@ -74,7 +74,7 @@ class LLDBTool(BaseTool):
     run_container_command = [
         'docker', 'run', '-d', '-i', '-t', '--privileged', '--shm-size=2g',
         '--entrypoint=/bin/bash', '--platform', 'linux/amd64', '-e',
-        'FUZZING_ENGINE=libfuzzer', '-e', f'SANITIZER=address', '-e',
+        'FUZZING_ENGINE=libfuzzer', '-e', 'SANITIZER=address', '-e',
         'ARCHITECTURE=x86_64', '-e', f'PROJECT_NAME={self.project}', '-e',
         f'CXX={JCC_DIR}/clang++-jcc', '-e', f'CC={JCC_DIR}/clang-jcc', '-e',
         f'FUZZING_LANGUAGE={self.benchmark.language}', '-v',
