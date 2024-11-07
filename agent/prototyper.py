@@ -138,7 +138,6 @@ class Prototyper(BaseAgent):
     logger.info('Executing Prototyper')
     last_result = result_history[-1]
     prompt = self._initial_prompt(result_history)
-    logger.info('prototyper initial prompt: %s', prompt.get())
     benchmark = last_result.benchmark
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
     self.inspect_tool.execute('{compile && rm -rf /out/*} > /dev/null')
