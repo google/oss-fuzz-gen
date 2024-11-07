@@ -62,7 +62,6 @@ class Pipeline():
                         cycle_count)
       return
 
-    #TODO(fdt622): delete info(cloud experiment)
     logger.info('RunResult reproducer_path: ', result_history[-1].reproducer_path)
 
     last_result = result_history[-1]

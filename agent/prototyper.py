@@ -138,14 +138,12 @@ class Prototyper(BaseAgent):
     logger.info('Executing Prototyper')
     last_result = result_history[-1]
     prompt = self._initial_prompt(result_history)
-    #TODO: delete info
     logger.info('prototyper initial prompt: %s', prompt.get())
     benchmark = last_result.benchmark
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
     self.inspect_tool.execute('{compile && rm -rf /out/*} > /dev/null')
     cur_round = 1
     prompt.add_problem(self.inspect_tool.tutorial())
-    #TODO: delete info
     logger.info('prototyper after append tutorial prompt: %s', prompt.get())
     build_result = BuildResult(benchmark=benchmark,
                                trial=last_result.trial,
