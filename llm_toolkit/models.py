@@ -211,16 +211,16 @@ class GPT(LLM):
 
   name = 'gpt-3.5-turbo'
 
-  def get_model(self) -> Any:
+  def get_model(self) -> Any: #TODO(fdt622)
     """Returns the underlying model instance."""
     # Placeholder: No suitable implementation/usage yet.
 
-  def get_chat_client(self, model: Any) -> Any:
+  def get_chat_client(self, model: Any) -> Any: #TODO(fdt622)
     """Returns a new chat session."""
     del model
     # Placeholder: To Be Implemented.
 
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any: #TODO(fdt622)
     """Queries the LLM in the given chat session and returns the response."""
     del client, prompt
     # Placeholder: To Be Implemented.

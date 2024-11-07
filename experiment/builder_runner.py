@@ -62,7 +62,8 @@ EARLY_FUZZING_ROUND_THRESHOLD = 3
 
 ParseResult = namedtuple(
     'ParseResult',
-    ['cov_pcs', 'total_pcs', 'crashes', 'crash_info', 'semantic_check_result'])
+    ['cov_pcs', 'total_pcs', 'crashes', 'crash_info', 'artifact_name', 
+     'semantic_check_result'])
 
 
 @dataclasses.dataclass
@@ -88,6 +89,9 @@ class RunResult:
   corpus_path: str = ''
   coverage_report_path: str = ''
   reproducer_path: str = ''
+  artifact_path: str = ''
+  artifact_name: str = ''
+  sanitizer: str = ''
   cov_pcs: int = 0
   total_pcs: int = 0
   crashes: bool = False
@@ -363,13 +367,14 @@ class BuilderRunner:
       crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
       crash_func = self._parse_func_from_stacks(project_name, crash_stacks)
       crash_info = SemanticCheckResult.extract_crash_info(fuzzlog)
+      artifact_name = SemanticCheckResult.extract_artifact_name(fuzzlog)
 
       # FP case 1: Common fuzz target errors.
       # Null-deref, normally indicating inadequate parameter initialization or
       # wrong function usage.
       if symptom == 'null-deref':
         return ParseResult(
-            cov_pcs, total_pcs, True, crash_info,
+            cov_pcs, total_pcs, True, crash_info, artifact_name,
             SemanticCheckResult(SemanticCheckResult.NULL_DEREF, symptom,
                                 crash_stacks, crash_func))
 
@@ -377,7 +382,7 @@ class BuilderRunner:
       # parameter initialization or wrong function usage.
       if symptom == 'signal':
         return ParseResult(
-            cov_pcs, total_pcs, True, crash_info,
+            cov_pcs, total_pcs, True, crash_info, artifact_name,
             SemanticCheckResult(SemanticCheckResult.SIGNAL, symptom,
                                 crash_stacks, crash_func))
 
@@ -385,14 +390,14 @@ class BuilderRunner:
       # blocking its bug discovery.
       if symptom.endswith('fuzz target exited'):
         return ParseResult(
-            cov_pcs, total_pcs, True, crash_info,
+            cov_pcs, total_pcs, True, crash_info, artifact_name,
             SemanticCheckResult(SemanticCheckResult.EXIT, symptom, crash_stacks,
                                 crash_func))
 
       # Fuzz target modified constants.
       if symptom.endswith('fuzz target overwrites its const input'):
         return ParseResult(
-            cov_pcs, total_pcs, True, crash_info,
+            cov_pcs, total_pcs, True, crash_info, artifact_name,
             SemanticCheckResult(SemanticCheckResult.OVERWRITE_CONST, symptom,
                                 crash_stacks, crash_func))
 
@@ -402,7 +407,7 @@ class BuilderRunner:
       # from reproducer name; 2) Capture the actual number in (malloc(\d+)).
       if 'out-of-memory' in symptom or 'out of memory' in symptom:
         return ParseResult(
-            cov_pcs, total_pcs, True, crash_info,
+            cov_pcs, total_pcs, True, crash_info, artifact_name,
             SemanticCheckResult(SemanticCheckResult.FP_OOM, symptom,
                                 crash_stacks, crash_func))
 
@@ -411,7 +416,7 @@ class BuilderRunner:
         # No cov line has been identified or only INITED round has been passed.
         # This is very likely the false positive cases.
         return ParseResult(
-            cov_pcs, total_pcs, True, crash_info,
+            cov_pcs, total_pcs, True, crash_info, artifact_name,
             SemanticCheckResult(SemanticCheckResult.FP_NEAR_INIT_CRASH, symptom,
                                 crash_stacks, crash_func))
 
@@ -422,13 +427,13 @@ class BuilderRunner:
           if self._stack_func_is_of_testing_project(stack_frame):
             if 'LLVMFuzzerTestOneInput' in stack_frame:
               return ParseResult(
-                  cov_pcs, total_pcs, True, crash_info,
+                  cov_pcs, total_pcs, True, crash_info, artifact_name,
                   SemanticCheckResult(SemanticCheckResult.FP_TARGET_CRASH,
                                       symptom, crash_stacks, crash_func))
             break
 
       return ParseResult(
-          cov_pcs, total_pcs, True, crash_info,
+          cov_pcs, total_pcs, True, crash_info, artifact_name,
           SemanticCheckResult(SemanticCheckResult.NO_SEMANTIC_ERR, symptom,
                               crash_stacks, crash_func))
 
@@ -438,10 +443,10 @@ class BuilderRunner:
       # interesting inputs were found. This may happen if the target rejected
       # all inputs we tried.
       return ParseResult(
-          cov_pcs, total_pcs, False, '',
+          cov_pcs, total_pcs, False, '', '',
           SemanticCheckResult(SemanticCheckResult.NO_COV_INCREASE))
 
-    return ParseResult(cov_pcs, total_pcs, crashes, '',
+    return ParseResult(cov_pcs, total_pcs, crashes, '', '',
                        SemanticCheckResult(SemanticCheckResult.NO_SEMANTIC_ERR))
 
   def build_and_run(
@@ -502,6 +507,21 @@ class BuilderRunner:
     self.run_target_local(
         generated_project, benchmark_target_name,
         self.work_dirs.run_logs_target(benchmark_target_name, iteration))
+    artifact_dir = self.work_dirs.artifact(benchmark_target_name, iteration)
+    outdir = get_build_artifact_dir(generated_project, 'out')
+    #TODO(fdt622): simplify this
+    crash_files = [f for f in os.listdir(outdir) if f.startswith('crash-')]
+    if len(crash_files) == 0:
+        logger.warning('No crash files found in %s.', outdir)
+    elif len(crash_files) > 1:
+        logger.warning('Multiple crash files found in %s: %s', outdir, crash_files)
+    else:
+        crash_file = crash_files[0]
+        src = os.path.join(outdir, crash_file)
+        dst = os.path.join(artifact_dir, crash_file)
+        run_result.artifact_path = dst
+        shutil.copy2(src, dst)
+        logger.info('Copied crash file %s to %s', crash_file, artifact_dir)
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
         generated_project, benchmark_target_name))
 
@@ -514,7 +534,7 @@ class BuilderRunner:
       flag = not self.benchmark.language in ['jvm', 'python']
       run_result.cov_pcs, run_result.total_pcs, \
         run_result.crashes, run_result.crash_info, \
-          run_result.semantic_check = \
+          run_result.artifact_name, run_result.semantic_check = \
             self._parse_libfuzzer_logs(f, project_name, flag)
       run_result.succeeded = not run_result.semantic_check.has_err
 
@@ -1035,7 +1055,7 @@ class CloudBuilderRunner(BuilderRunner):
               'rb') as f:
       run_result.cov_pcs, run_result.total_pcs, \
         run_result.crashes, run_result.crash_info, \
-          run_result.semantic_check = \
+          run_result.artifact_name, run_result.semantic_check = \
             self._parse_libfuzzer_logs(f, project_name)
       run_result.succeeded = not run_result.semantic_check.has_err
 
