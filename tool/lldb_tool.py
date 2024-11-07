@@ -74,8 +74,16 @@ class LLDBTool(BaseTool):
           'Executing command (%s) in container %s: Return code %d. STDOUT: %s, '
           'STDERR: %s', command, self.container_id, result.returncode,
           result.stdout, result.stderr)
+      logger.info(
+          'Executing command (%s) in container %s: Return code %d. STDOUT: %s, '
+          'STDERR: %s', command, self.container_id, result.returncode,
+          result.stdout, result.stderr)
     else:
       logger.debug(
+          'Executing command (%s): Return code %d. STDOUT: %s, '
+          'STDERR: %s', command, result.returncode, result.stdout,
+          result.stderr)
+      logger.info(
           'Executing command (%s): Return code %d. STDOUT: %s, '
           'STDERR: %s', command, result.returncode, result.stdout,
           result.stderr)
@@ -90,7 +98,8 @@ class LLDBTool(BaseTool):
         'FUZZING_ENGINE=libfuzzer', '-e', 'SANITIZER=address', '-e',
         'ARCHITECTURE=x86_64', '-e', f'PROJECT_NAME={self.project}', '-e',
         f'CXX={JCC_DIR}/clang++-jcc', '-e', f'CC={JCC_DIR}/clang-jcc', '-e',
-        f'FUZZING_LANGUAGE={self.benchmark.language}', '-v',
+        f'FUZZING_LANGUAGE={self.benchmark.language}',
+        'LSAN_OPTIONS=detect_leaks=0', '-v',
         f'{self.result.artifact_path}:/artifact/{self.result.artifact_name}',
         self.image_name
     ]
