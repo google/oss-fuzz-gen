@@ -211,6 +211,18 @@ class GPT(LLM):
 
   name = 'gpt-3.5-turbo'
 
+  def __init__(
+      self,
+      ai_binary: str,
+      max_tokens: int = MAX_TOKENS,
+      num_samples: int = NUM_SAMPLES,
+      temperature: float = TEMPERATURE,
+      temperature_list: Optional[list[float]] = None,
+  ):
+    super().__init__(ai_binary, max_tokens, num_samples, temperature, 
+                     temperature_list)
+    self.conversation_history = []
+
   def get_model(self) -> str:
     """Returns the underlying model instance."""
     self.name
@@ -219,7 +231,7 @@ class GPT(LLM):
     """Returns a new chat session."""
     return self._get_client()
 
-  def chat_llm(self, client: Any, prompt: prompts.OpenAIPrompt) -> Any:
+  def chat_llm(self, client: Any, prompt: prompts.OpenAIPrompt) -> str:
     """Queries the LLM in the given chat session and returns the response."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -227,8 +239,10 @@ class GPT(LLM):
       logger.info('OpenAI does not allow temperature list: %s',
                   self.temperature_list)
       
+    self.conversation_history.extend(prompt.get())
+
     completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=prompt.get(),
+        lambda: client.chat.completions.create(messages=self.conversation_history,
                                                model=self.name,
                                                n=self.num_samples,
                                                temperature=self.temperature),
@@ -239,6 +253,7 @@ class GPT(LLM):
         (choice.message.content for choice in completion.choices),
         key=len
     )
+    self.conversation_history.append({'role': 'assistant', 'content': longest_response})
     
     return longest_response
 
