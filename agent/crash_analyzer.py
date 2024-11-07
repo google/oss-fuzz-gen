@@ -76,10 +76,10 @@ class CrashAnalyzer(BaseAgent):
     if os.path.getsize(build_script_path) == 0:
       # Add additional statement in dockerfile to enable -g and install lldb.
       with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
-        f.write(
-            '\nENV FUZZING_LANGUAGE=c++\n'
-            '\nRUN sed -i.bak \'1i export CFLAGS="${CFLAGS} -g"\' /src/build.sh\n'
-            '\nRUN apt-get update && apt-get install -y lldb\n')
+        f.write('\nENV FUZZING_LANGUAGE=c++\n'
+                '\nRUN sed -i.bak \'1i export CFLAGS="${CFLAGS} -g"\' '
+                '/src/build.sh\n'
+                '\nRUN apt-get update && apt-get install -y lldb\n')
       return name
 
     # Copy generated build script to generated_project_path
@@ -142,7 +142,8 @@ class CrashAnalyzer(BaseAgent):
     if isinstance(last_result, RunResult):
       generated_target_name = os.path.basename(benchmark.target_path)
       sample_id = os.path.splitext(generated_target_name)[0]
-      generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}-{trial:02d}-lldb'
+      generated_oss_fuzz_project = (
+          f'{benchmark.id}-{sample_id}-{trial:02d}-lldb')
       generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
           generated_oss_fuzz_project)
 
