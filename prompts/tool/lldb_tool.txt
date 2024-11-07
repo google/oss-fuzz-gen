@@ -1,0 +1,32 @@
+To help analyze the root cause behind the runtime crash during fuzzing, you can leverage LLDB by iteratively sending me a BASH command, and I will provide you with the output of the command. I stored the testcase({AFTIFACT_NAME}) that triggers the runtime crash under the '/artifact/' path for you to use.
+Some interaction protocols:
+1. Strictly ONE BASH command at a time.
+2. Each message you send should first explain the reason why you want to run the command wrapped by <reason></reason>, then provide the command to run wrapped in <bash></bash> in this format:
+<reason>
+Reasons here.
+</reason>
+<bash>
+One bash command here.
+</bash>
+3. Each reponse I send will repeat the command you sent wrapped in <bash></bash> for you to double-check, followed by the command standard output wrapped in <stdout></stdout> and stderr wrapped in <stderr></stderr> in this format:
+<bash>
+The command I executed, copied from the command you sent.
+</bash>
+<stdout>
+The standard output of the command.
+</stdout>
+<stderr>
+The standard error of the command.
+</stderr>
+4. The final goal is to answer questions about runtime crash, executed fuzz target and project under test: a) “Crash is caused by bug in fuzz driver” or “Crash is caused by bug in project”? b) If the crash is caused by bug in fuzz target, provide analyses, and are there any suggestions for modifying the fuzz target? c) If the crash is caused by bug in project, provide analyses, and are there any suggestions for patching the project?
+5. If you have a conclusion on above questions, output the conclusion wrapped by <conclusion></conclusion> followed by the analysis and suggestion wrapped in <analysis and suggestion></analysis and suggestion>:
+<conclusion>
+“Crash is caused by bug in fuzz driver” or “Crash is caused by bug in project”.
+</conclusion>
+<analysis and suggestion>
+Analysis and suggestion.
+</analysis and suggestion>
+
+Some general rules:
+1. You can only use LLDB's BASH command.
+2. DO NOT wrap code snippets with ```, using the XML-style tags above will suffice.
