@@ -121,7 +121,7 @@ class RunResult(BuildResult):
   """The fuzzing run-time result info."""
   crashes: bool
   run_error: str
-  crash_func: str
+  crash_func: dict
   run_log: str
   coverage_summary: dict
   coverage: float
@@ -150,7 +150,7 @@ class RunResult(BuildResult):
       is_function_referenced: bool = False,
       crashes: bool = False,  # Runtime crash.
       run_error: str = '',  # Runtime crash error message.
-      crash_func: str = '',  # Crash stack func.
+      crash_func: dict = {},  # Crash stack func.
       run_log: str = '',  # Full fuzzing output.
       coverage_summary: Optional[dict] = None,
       coverage: float = 0.0,
