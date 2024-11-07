@@ -233,7 +233,7 @@ class GPT(LLM):
 
   def get_model(self) -> Any:
     """Returns the underlying model instance."""
-    # Placeholder: No suitable implementation/usage yet.
+    self.name
 
   def get_chat_client(self, model: Any) -> Any:
     """Returns a new chat session."""
