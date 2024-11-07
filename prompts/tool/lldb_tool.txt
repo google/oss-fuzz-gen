@@ -18,10 +18,10 @@ The standard output of the command.
 <stderr>
 The standard error of the command.
 </stderr>
-4. The final goal is to answer questions about runtime crash, executed fuzz target and project under test: a) “Crash is caused by bug in fuzz driver” or “Crash is caused by bug in project”? b) If the crash is caused by bug in fuzz target, provide analyses, and are there any suggestions for modifying the fuzz target? c) If the crash is caused by bug in project, provide analyses, and are there any suggestions for patching the project?
+4. The final goal is to answer questions about runtime crash, executed fuzz target and project under test: a) ‘Crash is caused by bug in fuzz driver’ or ‘Crash is caused by bug in project’? b) If the crash is caused by bug in fuzz target, provide analyses, and are there any suggestions for modifying the fuzz target? c) If the crash is caused by bug in project, provide analyses, and are there any suggestions for patching the project?
 5. If you have a conclusion on above questions, output the conclusion wrapped by <conclusion></conclusion> followed by the analysis and suggestion wrapped in <analysis and suggestion></analysis and suggestion>:
 <conclusion>
-“Crash is caused by bug in fuzz driver” or “Crash is caused by bug in project”.
+‘Crash is caused by bug in fuzz driver’ or ‘Crash is caused by bug in project’.
 </conclusion>
 <analysis and suggestion>
 Analysis and suggestion.
