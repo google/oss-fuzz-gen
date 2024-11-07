@@ -74,16 +74,8 @@ class LLDBTool(BaseTool):
           'Executing command (%s) in container %s: Return code %d. STDOUT: %s, '
           'STDERR: %s', command, self.container_id, result.returncode,
           result.stdout, result.stderr)
-      logger.info(
-          'Executing command (%s) in container %s: Return code %d. STDOUT: %s, '
-          'STDERR: %s', command, self.container_id, result.returncode,
-          result.stdout, result.stderr)
     else:
       logger.debug(
-          'Executing command (%s): Return code %d. STDOUT: %s, '
-          'STDERR: %s', command, result.returncode, result.stdout,
-          result.stderr)
-      logger.info(
           'Executing command (%s): Return code %d. STDOUT: %s, '
           'STDERR: %s', command, result.returncode, result.stdout,
           result.stderr)
