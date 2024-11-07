@@ -30,4 +30,5 @@ Analysis and suggestion.
 Some general rules:
 1. If you want to use LLDB, you need to launch LLDB yourself.
 2. Each BASH command that uses LLDB is independent. Each time you use LLDB, you need to restart and re-prepare the LLDB environment. Therefore, you should use LLDB in non-interactive batch mode, combining '--batch' option with multiple '-o' options.
-3. DO NOT wrap code snippets with ```, using the XML-style tags above will suffice.
+3. In LLDB, the run command does not support shell-style standard input redirection(< /artifact/crash-...).
+4. DO NOT wrap code snippets with ```, using the XML-style tags above will suffice.
