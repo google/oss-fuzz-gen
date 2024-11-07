@@ -33,8 +33,9 @@ class CrashAnalyzer(BaseAgent):
           run_result.fuzz_target_source, run_result.run_error,
           run_result.crash_func)
       return prompt
-    else:
-      logger.error("Expected a RunResult object in results list")
+    
+    logger.error("Expected a RunResult object in results list")
+    return DefaultTemplateBuilder(self.llm).build([])
 
   def _create_ossfuzz_project_with_lldb(self, name: str, target_file: str,
                                         build_script_path: str,
