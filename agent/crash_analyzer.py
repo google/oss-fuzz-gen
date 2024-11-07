@@ -30,7 +30,7 @@ class CrashAnalyzer(BaseAgent):
       default_prompt_builder = DefaultTemplateBuilder(
           model=self.llm, benchmark=run_result.benchmark)
       prompt = default_prompt_builder.build_triager_prompt(
-          run_result.benchmark, run_result.fuzz_target_source, 
+          run_result.benchmark, run_result.fuzz_target_source,
           run_result.run_error, run_result.crash_func)
       return prompt
 
@@ -127,78 +127,81 @@ class CrashAnalyzer(BaseAgent):
   def execute(self, result_history: list[Result]) -> CrashResult:
     """Executes the agent based on previous run result."""
     logger.info('Executing Crash Analyzer')
-    last_result = result_history[-1]
-    benchmark = last_result.benchmark
-    generated_target_name = os.path.basename(benchmark.target_path)
-    sample_id = os.path.splitext(generated_target_name)[0]
-    generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}-lldb'
-    generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
-        generated_oss_fuzz_project)
+    run_result = result_history[-1]
+    if isinstance(run_result, RunResult):
+      benchmark = run_result.benchmark
+      generated_target_name = os.path.basename(benchmark.target_path)
+      sample_id = os.path.splitext(generated_target_name)[0]
+      generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}-lldb'
+      generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
+          generated_oss_fuzz_project)
 
-    fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                    f'{last_result.trial:02d}.fuzz_target')
-    build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                     f'{last_result.trial:02d}.build_script')
+      fuzz_target_path = os.path.join(run_result.work_dirs.fuzz_targets,
+                                      f'{run_result.trial:02d}.fuzz_target')
+      build_script_path = os.path.join(run_result.work_dirs.fuzz_targets,
+                                      f'{run_result.trial:02d}.build_script')
 
-    self._create_ossfuzz_project_with_lldb(
-        generated_oss_fuzz_project, fuzz_target_path, build_script_path,
-        last_result)  # probably return without modifying dockerfile?
+      self._create_ossfuzz_project_with_lldb(
+          generated_oss_fuzz_project, fuzz_target_path, build_script_path,
+          run_result)  # probably return without modifying dockerfile?
 
-    self.analyze_tool = LLDBTool(
-        benchmark,
-        name='lldb',
-        project=generated_oss_fuzz_project,
-    )
-    self.analyze_tool.execute('compile > /dev/null')
-    prompt = self._initial_prompt(result_history)  # prompt to analyze crash
-    #TODO: delete
-    logger.info('analyzer initial prompt: %s', prompt.get())
-    prompt.add_problem(self.analyze_tool.tutorial())
-    #TODO: delete
-    logger.info('analyzer after append tutorial prompt: %s', prompt.get())
-    crash_result = CrashResult(
-        benchmark=benchmark,
-        trial=last_result.trial,
-        work_dirs=last_result.work_dirs,
-        compiles=last_result.compiles,
-        compile_error=last_result.compile_error,
-        compile_log=last_result.compile_log,
-        crashes=last_result.crashes,
-        run_error=last_result.run_error,
-        crash_func=last_result.crash_func,
-        run_log=last_result.run_log,
-        coverage_summary=last_result.coverage_summary,
-        coverage=last_result.coverage,
-        line_coverage_diff=last_result.line_coverage_diff,
-        textcov_diff=last_result.textcov_diff,
-        reproducer_path=last_result.reproducer_path,
-        artifact_path=last_result.artifact_path,
-        artifact_name=last_result.artifact_name,
-        sanitizer=last_result.sanitizer,
-        log_path=last_result.log_path,
-        corpus_path=last_result.corpus_path,
-        coverage_report_path=last_result.coverage_report_path,
-        cov_pcs=last_result.cov_pcs,
-        total_pcs=last_result.total_pcs,
-        fuzz_target_source=last_result.fuzz_target_source,
-        build_script_source=last_result.build_script_source,
-        author=self,
-        chat_history=last_result.chat_history)
-    cur_round = 1
-    try:
-      client = self.llm.get_chat_client(model=self.llm.get_model())
-      while prompt and cur_round < MAX_ROUND:
-        logger.info('ROUND %02d agent prompt: %s', cur_round, prompt.get())
-        response = self.llm.chat_llm(client=client, prompt=prompt)
-        logger.debug('ROUND %02d LLM response: %s', cur_round, response)
-        prompt = self._container_tool_reaction(cur_round, response,
-                                               crash_result)
-        cur_round += 1
-        self._sleep_random_duration()
-    finally:
-      # Cleanup: stop the container
-      logger.debug('Stopping the crash analyze container %s',
-                   self.analyze_tool.container_id)
-      self.analyze_tool.terminate()
+      self.analyze_tool = LLDBTool(
+          benchmark,
+          name='lldb',
+          project=generated_oss_fuzz_project,
+      )
+      self.analyze_tool.execute('compile > /dev/null')
+      prompt = self._initial_prompt(result_history)  # prompt to analyze crash
+      #TODO: delete
+      logger.info('analyzer initial prompt: %s', prompt.get())
+      prompt.add_problem(self.analyze_tool.tutorial())
+      #TODO: delete
+      logger.info('analyzer after append tutorial prompt: %s', prompt.get())
+      crash_result = CrashResult(
+          benchmark=benchmark,
+          trial=run_result.trial,
+          work_dirs=run_result.work_dirs,
+          compiles=run_result.compiles,
+          compile_error=run_result.compile_error,
+          compile_log=run_result.compile_log,
+          crashes=run_result.crashes,
+          run_error=run_result.run_error,
+          crash_func=run_result.crash_func,
+          run_log=run_result.run_log,
+          coverage_summary=run_result.coverage_summary,
+          coverage=run_result.coverage,
+          line_coverage_diff=run_result.line_coverage_diff,
+          textcov_diff=run_result.textcov_diff,
+          reproducer_path=run_result.reproducer_path,
+          artifact_path=run_result.artifact_path,
+          artifact_name=run_result.artifact_name,
+          sanitizer=run_result.sanitizer,
+          log_path=run_result.log_path,
+          corpus_path=run_result.corpus_path,
+          coverage_report_path=run_result.coverage_report_path,
+          cov_pcs=run_result.cov_pcs,
+          total_pcs=run_result.total_pcs,
+          fuzz_target_source=run_result.fuzz_target_source,
+          build_script_source=run_result.build_script_source,
+          author=self,
+          chat_history=run_result.chat_history)
+      cur_round = 1
+      try:
+        client = self.llm.get_chat_client(model=self.llm.get_model())
+        while prompt and cur_round < MAX_ROUND:
+          logger.info('ROUND %02d agent prompt: %s', cur_round, prompt.get())
+          response = self.llm.chat_llm(client=client, prompt=prompt)
+          logger.debug('ROUND %02d LLM response: %s', cur_round, response)
+          prompt = self._container_tool_reaction(cur_round, response,
+                                                crash_result)
+          cur_round += 1
+          self._sleep_random_duration()
+      finally:
+        # Cleanup: stop the container
+        logger.debug('Stopping the crash analyze container %s',
+                    self.analyze_tool.container_id)
+        self.analyze_tool.terminate()
 
-    return crash_result
+      return crash_result
+  
+    logger.error("Expected a RunResult object in results list")
