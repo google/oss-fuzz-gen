@@ -43,8 +43,8 @@ class CrashAnalyzer(BaseAgent):
       default_prompt_builder = DefaultTemplateBuilder(
           model=self.llm, benchmark=run_result.benchmark)
       prompt = default_prompt_builder.build_triager_prompt(
-          run_result.fuzz_target_source, run_result.run_error,
-          run_result.crash_func)
+          run_result.benchmark, run_result.fuzz_target_source, 
+          run_result.run_error, run_result.crash_func)
       return prompt
 
     logger.error("Expected a RunResult object in results list")
