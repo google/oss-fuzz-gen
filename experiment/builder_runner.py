@@ -88,7 +88,7 @@ class RunResult:
   log_path: str = ''
   corpus_path: str = ''
   coverage_report_path: str = ''
-  reproducer_path: str = ''  # cloud reproducer(stacktrace/target_binary/artifacts)
+  reproducer_path: str = ''
   artifact_path: str = ''  # local artifact
   artifact_name: str = ''
   sanitizer: str = ''
@@ -1063,7 +1063,8 @@ class CloudBuilderRunner(BuilderRunner):
     artifact_dir = self.work_dirs.artifact(generated_target_name, iteration)
     blob = bucket.blob(f'{reproducer_name}/artifacts')
     if blob.exists():
-      file_name = run_result.artifact_name if run_result.artifact_name else 'testcase'
+      file_name = run_result.artifact_name \
+        if run_result.artifact_name else 'testcase'
       artifact_path = os.path.join(artifact_dir, file_name)
       with open(artifact_path, 'w') as f:
         blob.download_to_file(f)

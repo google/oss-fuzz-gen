@@ -33,7 +33,7 @@ class Prototyper(BaseAgent):
     """
     fuzz_target_source = self._filter_code(
         self._parse_tag(response, 'fuzz target'))
-    build_result.fuzz_target_source = fuzz_target_source  #assign new fuzz target
+    build_result.fuzz_target_source = fuzz_target_source
     if fuzz_target_source:
       logger.debug('ROUND %02d Parsed fuzz target from LLM: %s', cur_round,
                    fuzz_target_source)
@@ -43,7 +43,7 @@ class Prototyper(BaseAgent):
 
     build_script_source = self._filter_code(
         self._parse_tag(response, 'build script'))
-    build_result.build_script_source = build_script_source  #assign new build script
+    build_result.build_script_source = build_script_source
     if build_script_source:
       logger.debug('ROUND %02d Parsed build script from LLM: %s', cur_round,
                    build_script_source)
@@ -161,7 +161,7 @@ class Prototyper(BaseAgent):
                                chat_history={self.name: ''})
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
-      while prompt and cur_round < MAX_ROUND:  #when prompt is empty or cur_round >= MAX_ROUND, exit. empty prompt <=> have conclusion, build success.
+      while prompt and cur_round < MAX_ROUND:
         logger.info('ROUND %02d agent prompt: %s', cur_round, prompt.get())
         response = self.llm.chat_llm(client=client, prompt=prompt)
         logger.debug('ROUND %02d LLM response: %s', cur_round, response)
@@ -171,9 +171,8 @@ class Prototyper(BaseAgent):
         self._sleep_random_duration()
     finally:
       # Cleanup: stop and remove the container
-      logger.debug(
-          'Stopping and removing the inspect container %s',  # not been removed yet
-          self.inspect_tool.container_id)
-      self.inspect_tool.terminate()  # only stop the container
+      logger.debug('Stopping and removing the inspect container %s',
+                   self.inspect_tool.container_id)
+      self.inspect_tool.terminate()
 
-    return build_result  #fuzz target and build script are saved here
+    return build_result
