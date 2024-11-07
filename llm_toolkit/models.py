@@ -240,7 +240,7 @@ class GPT(LLM):
 
   def get_model(self) -> str:
     """Returns the underlying model instance."""
-    self.name
+    return self.name
 
   def get_chat_client(self, model: Any) -> Any:
     """Returns a new chat session."""
