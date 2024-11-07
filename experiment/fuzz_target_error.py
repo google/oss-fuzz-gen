@@ -97,7 +97,7 @@ class SemanticCheckResult:
       return match.group(0).strip()
 
     logging.warning('Failed to match artifact file name.')
-    return ''
+    return 'testcase'
 
   def __init__(self,
                err_type: str,
