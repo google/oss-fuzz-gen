@@ -1,4 +1,4 @@
-To help analyze the root cause behind the runtime crash during fuzzing, you can leverage LLDB by iteratively sending me a BASH command, and I will provide you with the output of the command. I stored the testcase({AFTIFACT_NAME}) that triggers the runtime crash under the '/artifact/' path for you to use.
+To help analyze the root cause behind the runtime crash during fuzzing, you can leverage LLDB by iteratively sending me a BASH command, and I will provide you with the output of the command. You should launch LLDB yourself. The fuzz driver binary is stored under '/out/' path. The testcase({AFTIFACT_NAME}) that triggers runtime crash is stored under '/artifact/' path.
 Some interaction protocols:
 1. Strictly ONE BASH command at a time.
 2. Each message you send should first explain the reason why you want to run the command wrapped by <reason></reason>, then provide the command to run wrapped in <bash></bash> in this format:
