@@ -198,7 +198,7 @@ class RunResult(BuildResult):
         'run_error':
             self.run_error,
         'crash_func':
-            self.crash_func,
+            self.crash_func or {},
         'run_log':
             self.run_log,
         'coverage_summary':
