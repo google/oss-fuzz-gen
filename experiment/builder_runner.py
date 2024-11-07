@@ -528,7 +528,7 @@ class BuilderRunner:
     #TODO(fdt622): simplify this
     crash_files = [f for f in os.listdir(outdir) if f.startswith('crash-')]
     if len(crash_files) == 0:
-      logger.warning('No crash files found in %s.', outdir)
+      logger.info('No crash files found in %s.', outdir)
     elif len(crash_files) > 1:
       logger.warning('Multiple crash files found in %s: %s', outdir,
                      crash_files)
