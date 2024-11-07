@@ -90,36 +90,31 @@ class CrashAnalyzer(BaseAgent):
     logger.debug('Sleeping for %d before the next query', duration)
     time.sleep(duration)
 
-  def _container_handle_conclusion(
+  def _handle_conclusion(
       self, cur_round: int, response: str,
-      build_result: BuildResult) -> Optional[Prompt]:
+      crash_result: CrashResult):
     """Runs a compilation tool to validate the new fuzz target and build script
     from LLM."""
     logger.info('----- ROUND %02d Received conclusion -----', cur_round)
 
-    self._update_fuzz_target_and_build_script(cur_round, response, build_result)
+    conclusion = self._parse_tag(response, 'conclusion')
+    if conclusion == 'Crash is caused by bug in fuzz driver':
+      crash_result.true_bug = False
+    elif conclusion == 'Crash is caused by bug in project':
+      crash_result.true_bug = True
+    else:
+      logger.error('***** Failed to match conclusion in %02d rounds *****', cur_round)
 
-    self._validate_fuzz_target_and_build_script(cur_round, build_result)
-    if build_result.compiles:
-      logger.info('***** Prototyper succeded in %02d rounds *****', cur_round)
-      return None # if success, return None
-
-    logger.info('***** Failed to recompile in %02d rounds *****', cur_round)
-    prompt_text = ('Failed to build fuzz target. Here is the fuzz target, build'
-                   ' script, compliation command, and other compilation runtime'
-                   ' output.\n<fuzz target>\n'
-                   f'{build_result.fuzz_target_source}\n</fuzz target>\n'
-                   f'<build script>\n{build_result.build_script_source}\n'
-                   '</build script>\n'
-                   f'{build_result.compile_log}')
-    prompt = DefaultTemplateBuilder(self.llm, initial=prompt_text).build([])
-    return prompt
+    crash_result.insight = self._parse_tag(response, 'analysis and suggestion')
+    if not crash_result.insight:
+      logger.error('Round %02d No analysis and suggestion in conclusion: %s', 
+                  cur_round, response)
 
   def _container_tool_reaction(self, cur_round: int, response: str,
                                crash_result: CrashResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
     if self._parse_tag(response, 'conclusion'):
-      return self._container_handle_conclusion(cur_round, response,
+      return self._handle_conclusion(cur_round, response,
                                                crash_result) # if build success, return none <=> exit chat
     return self._container_handle_bash_command(cur_round, response,
                                                self.analyze_tool) # return non-none prompt <=> continue chat
