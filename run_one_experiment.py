@@ -27,6 +27,7 @@ import pipeline
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper
+from agent.crash_analyzer import CrashAnalyzer
 from agent.semantic_analyzer import SemanticAnalyzer
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
@@ -244,7 +245,8 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
     p = pipeline.Pipeline(
         args=args,
         trial=trial,
-        writing_stage_agents=[Prototyper(trial=trial, llm=model, args=args)])
+        writing_stage_agents=[Prototyper(trial=trial, llm=model, args=args)],
+        analysis_stage_agents=[CrashAnalyzer(trial=trial, llm=model, args=args)])
   else:
     p = pipeline.Pipeline(args=args,
                           trial=trial,

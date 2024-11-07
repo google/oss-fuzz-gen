@@ -143,8 +143,8 @@ class ExecutionStage(BaseStage):
           coverage_summary=run_result.coverage_summary,
           coverage=coverage_percent,
           line_coverage_diff=coverage_diff,
-          reproducer_path=run_result.reproducer_path,
-          artifact_path=run_result.artifact_path,
+          reproducer_path=run_result.reproducer_path, # cloud reproducer(stacktrace/target_binary/artifacts)
+          artifact_path=run_result.artifact_path, # local artifact
           artifact_name=run_result.artifact_name,
           sanitizer=run_result.sanitizer,
           textcov_diff=run_result.coverage,
