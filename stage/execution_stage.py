@@ -33,7 +33,7 @@ class ExecutionStage(BaseStage):
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the fuzz target and build script in the latest result."""
     last_result = result_history[-1]
-    benchmark = last_result.benchmark # last buildresult.benchmark
+    benchmark = last_result.benchmark  # last buildresult.benchmark
     if self.args.cloud_experiment_name:
       builder_runner = builder_runner_lib.CloudBuilderRunner(
           benchmark=benchmark,
@@ -59,8 +59,11 @@ class ExecutionStage(BaseStage):
                                     f'{last_result.trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                      f'{last_result.trial:02d}.build_script')
-    evaluator.create_ossfuzz_project(generated_oss_fuzz_project, #probably return without replacing fuzz target and build script?
-                                     fuzz_target_path, build_script_path) #original purpose: replace fuzz target and build script here.
+    evaluator.create_ossfuzz_project(
+        generated_oss_fuzz_project,  #probably return without replacing fuzz target and build script?
+        fuzz_target_path,
+        build_script_path
+    )  #original purpose: replace fuzz target and build script here.
 
     status_path = os.path.join(last_result.work_dirs.status,
                                f'{last_result.trial:02}')
@@ -143,8 +146,9 @@ class ExecutionStage(BaseStage):
           coverage_summary=run_result.coverage_summary,
           coverage=coverage_percent,
           line_coverage_diff=coverage_diff,
-          reproducer_path=run_result.reproducer_path, # cloud reproducer(stacktrace/target_binary/artifacts)
-          artifact_path=run_result.artifact_path, # local artifact
+          reproducer_path=run_result.
+          reproducer_path,  # cloud reproducer(stacktrace/target_binary/artifacts)
+          artifact_path=run_result.artifact_path,  # local artifact
           artifact_name=run_result.artifact_name,
           sanitizer=run_result.sanitizer,
           textcov_diff=run_result.coverage,

@@ -26,7 +26,6 @@ import logger
 import pipeline
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
-from agent.prototyper import Prototyper
 from agent.crash_analyzer import CrashAnalyzer
 from agent.semantic_analyzer import SemanticAnalyzer
 from experiment import builder_runner as builder_runner_lib

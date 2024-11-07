@@ -277,7 +277,9 @@ class Evaluator:
     logger.info('target file: %s', target_file)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects', name)
-    if os.path.exists(generated_project_path): #probably return here without replacing fuzz target and build script?
+    if os.path.exists(
+        generated_project_path
+    ):  #probably return here without replacing fuzz target and build script?
       logger.info('Project %s already exists.', generated_project_path)
       return name
 
