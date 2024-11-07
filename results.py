@@ -150,7 +150,7 @@ class RunResult(BuildResult):
       is_function_referenced: bool = False,
       crashes: bool = False,  # Runtime crash.
       run_error: str = '',  # Runtime crash error message.
-      crash_func: dict = {},  # Crash stack func.
+      crash_func: Optional[dict] = None,  # Crash stack func.
       run_log: str = '',  # Full fuzzing output.
       coverage_summary: Optional[dict] = None,
       coverage: float = 0.0,
