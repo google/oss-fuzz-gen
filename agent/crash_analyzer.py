@@ -142,10 +142,10 @@ class CrashAnalyzer(BaseAgent):
     self.analyze_tool.execute('compile > /dev/null')
     prompt = self._initial_prompt(last_result) # prompt to analyze crash
     #TODO: delete
-    print('analyzer initial prompt:', prompt)
+    logger.info('analyzer initial prompt: %s', prompt.get())
     prompt.add_problem(self.analyze_tool.tutorial())
     #TODO: delete
-    print('analyzer after append tutorial prompt:', prompt)
+    logger.info('analyzer after append tutorial prompt: %s', prompt.get())
     crash_result = CrashResult(
       benchmark=benchmark,
       trial=last_result.trial,
