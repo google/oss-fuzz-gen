@@ -22,7 +22,7 @@ MAX_ROUND = 100
 class CrashAnalyzer(BaseAgent):
   """The Agent to analyze a runtime crash and provide insight to fuzz target."""
 
-  def _initial_prompt(self, run_result: Result) -> Prompt:
+  def _initial_prompt(self, run_result: RunResult) -> Prompt:
     """Constructs initial prompt of the agent."""
 
     default_prompt_builder = DefaultTemplateBuilder(
