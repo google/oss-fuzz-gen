@@ -334,7 +334,7 @@ class CloudBuilder:
 
     cloud_build_log += self._get_build_log(build_id)
 
-    # Step 4: Deserialize dilld file.
+    # Step 5: Deserialize dilld file.
     result = utils.deserialize_from_dill(new_result_dill)
     if not result:
       cloud_build_log += f'Failed to deserialize from dill {new_result_dill}.\n'

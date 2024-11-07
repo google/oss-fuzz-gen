@@ -88,8 +88,8 @@ class RunResult:
   log_path: str = ''
   corpus_path: str = ''
   coverage_report_path: str = ''
-  reproducer_path: str = ''
-  artifact_path: str = ''
+  reproducer_path: str = '' # cloud reproducer(stacktrace/target_binary/artifacts)
+  artifact_path: str = '' # local artifact
   artifact_name: str = ''
   sanitizer: str = ''
   cov_pcs: int = 0
