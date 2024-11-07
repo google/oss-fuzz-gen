@@ -33,7 +33,7 @@ class Prototyper(BaseAgent):
     """
     fuzz_target_source = self._filter_code(
         self._parse_tag(response, 'fuzz target'))
-    build_result.fuzz_target_source = fuzz_target_source #assign new fuzz target
+    build_result.fuzz_target_source = fuzz_target_source  #assign new fuzz target
     if fuzz_target_source:
       logger.debug('ROUND %02d Parsed fuzz target from LLM: %s', cur_round,
                    fuzz_target_source)
@@ -43,7 +43,7 @@ class Prototyper(BaseAgent):
 
     build_script_source = self._filter_code(
         self._parse_tag(response, 'build script'))
-    build_result.build_script_source = build_script_source #assign new build script
+    build_result.build_script_source = build_script_source  #assign new build script
     if build_script_source:
       logger.debug('ROUND %02d Parsed build script from LLM: %s', cur_round,
                    build_script_source)
@@ -64,7 +64,9 @@ class Prototyper(BaseAgent):
                                              build_result: BuildResult) -> None:
     """Validates the new fuzz target and build script."""
     benchmark = build_result.benchmark
-    compilation_tool = ProjectContainerTool(benchmark=benchmark) #second time, use existing image, create new container
+    compilation_tool = ProjectContainerTool(
+        benchmark=benchmark
+    )  #second time, use existing image, create new container
 
     # Replace fuzz target and build script in the container.
     replace_file_content_command = (
@@ -111,7 +113,7 @@ class Prototyper(BaseAgent):
     self._validate_fuzz_target_and_build_script(cur_round, build_result)
     if build_result.compiles:
       logger.info('***** Prototyper succeded in %02d rounds *****', cur_round)
-      return None # if success, return None
+      return None  # if success, return None
 
     logger.info('***** Failed to recompile in %02d rounds *****', cur_round)
     prompt_text = ('Failed to build fuzz target. Here is the fuzz target, build'
@@ -128,21 +130,26 @@ class Prototyper(BaseAgent):
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
     if self._parse_tag(response, 'conclusion'):
-      return self._container_handle_conclusion(cur_round, response,
-                                               build_result) # if build success, return none <=> exit chat
-    return self._container_handle_bash_command(cur_round, response,
-                                               self.inspect_tool) # return non-none prompt <=> continue chat
+      return self._container_handle_conclusion(
+          cur_round, response,
+          build_result)  # if build success, return none <=> exit chat
+    return self._container_handle_bash_command(
+        cur_round, response,
+        self.inspect_tool)  # return non-none prompt <=> continue chat
 
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
     logger.info('Executing Prototyper')
     last_result = result_history[-1]
-    prompt = self._initial_prompt(result_history) #prompt to first generate driver
+    prompt = self._initial_prompt(
+        result_history)  #prompt to first generate driver
     #TODO: delete
     logger.info('prototyper initial prompt: %s', prompt.get())
     benchmark = last_result.benchmark
-    self.inspect_tool = ProjectContainerTool(benchmark, name='inspect') #first time, prepare image, start container
-    self.inspect_tool.execute('{compile && rm -rf /out/*} > /dev/null') #why compile here?
+    self.inspect_tool = ProjectContainerTool(
+        benchmark, name='inspect')  #first time, prepare image, start container
+    self.inspect_tool.execute(
+        '{compile && rm -rf /out/*} > /dev/null')  #why compile here?
     cur_round = 1
     prompt.add_problem(self.inspect_tool.tutorial())
     #TODO: delete
@@ -154,7 +161,7 @@ class Prototyper(BaseAgent):
                                chat_history={self.name: ''})
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
-      while prompt and cur_round < MAX_ROUND: #when prompt is empty or cur_round >= MAX_ROUND, exit. empty prompt <=> have conclusion, build success.
+      while prompt and cur_round < MAX_ROUND:  #when prompt is empty or cur_round >= MAX_ROUND, exit. empty prompt <=> have conclusion, build success.
         logger.info('ROUND %02d agent prompt: %s', cur_round, prompt.get())
         response = self.llm.chat_llm(client=client, prompt=prompt)
         logger.debug('ROUND %02d LLM response: %s', cur_round, response)
@@ -164,8 +171,9 @@ class Prototyper(BaseAgent):
         self._sleep_random_duration()
     finally:
       # Cleanup: stop and remove the container
-      logger.debug('Stopping and removing the inspect container %s', # not been removed yet
-                   self.inspect_tool.container_id)
-      self.inspect_tool.terminate() # only stop the container
-      
-    return build_result #fuzz target and build script are saved here
+      logger.debug(
+          'Stopping and removing the inspect container %s',  # not been removed yet
+          self.inspect_tool.container_id)
+      self.inspect_tool.terminate()  # only stop the container
+
+    return build_result  #fuzz target and build script are saved here

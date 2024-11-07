@@ -2,12 +2,12 @@
 stage is responsible for categorizing run-time crashes and detecting untested
 code blocks."""
 import os
-
 from typing import cast
+
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as evaluator_lib
 from experiment.evaluator import Evaluator
-from results import Result, CrashResult, RunResult
+from results import CrashResult, Result, RunResult
 from stage.base_stage import BaseStage
 
 
@@ -30,7 +30,7 @@ class AnalysisStage(BaseStage):
   def _analyze_coverage(self, result_history: list[Result]) -> Result:
     """Analyzes the coverage."""
     pass
-  
+
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the analysis stage."""
     last_result = result_history[-1]
