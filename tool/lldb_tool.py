@@ -31,7 +31,7 @@ class LLDBTool(BaseTool):
   """A tool for LLM agents to interact within a LLDB."""
 
   def __init__(self, benchmark: Benchmark, name: str, project: str,
-               result: Result) -> None:
+               result: RunResult) -> None:
     super().__init__(benchmark, name)
     self.project = project
     self.result = result
@@ -84,23 +84,19 @@ class LLDBTool(BaseTool):
   def _start_docker_container(self) -> str:
     """Runs the project's OSS-Fuzz image as a background container and returns
     the container ID."""
-    if isinstance(self.result, RunResult):
-      run_container_command = [
-          'docker', 'run', '-d', '-i', '-t', '--privileged', '--shm-size=2g',
-          '--entrypoint=/bin/bash', '--platform', 'linux/amd64', '-e',
-          'FUZZING_ENGINE=libfuzzer', '-e', 'SANITIZER=address', '-e',
-          'ARCHITECTURE=x86_64', '-e', f'PROJECT_NAME={self.project}', '-e',
-          f'CXX={JCC_DIR}/clang++-jcc', '-e', f'CC={JCC_DIR}/clang-jcc', '-e',
-          f'FUZZING_LANGUAGE={self.benchmark.language}', '-v',
-          f'{self.result.artifact_path}:/artifact/{self.result.artifact_name}',
-          self.image_name
-      ]
-      result = self._execute_command(run_container_command)
-      container_id = result.stdout.strip()
-      return container_id
-    
-    logger.error("Expected a RunResult object")
-    return ''
+    run_container_command = [
+        'docker', 'run', '-d', '-i', '-t', '--privileged', '--shm-size=2g',
+        '--entrypoint=/bin/bash', '--platform', 'linux/amd64', '-e',
+        'FUZZING_ENGINE=libfuzzer', '-e', 'SANITIZER=address', '-e',
+        'ARCHITECTURE=x86_64', '-e', f'PROJECT_NAME={self.project}', '-e',
+        f'CXX={JCC_DIR}/clang++-jcc', '-e', f'CC={JCC_DIR}/clang-jcc', '-e',
+        f'FUZZING_LANGUAGE={self.benchmark.language}', '-v',
+        f'{self.result.artifact_path}:/artifact/{self.result.artifact_name}',
+        self.image_name
+    ]
+    result = self._execute_command(run_container_command)
+    container_id = result.stdout.strip()
+    return container_id
 
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
