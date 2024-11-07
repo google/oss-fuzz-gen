@@ -228,7 +228,7 @@ class GPT(LLM):
                   self.temperature_list)
       
     completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=prompt.get(),
+        lambda: client.ChatCompletion.create(messages=prompt.get(),
                                                model=self.name,
                                                n=self.num_samples,
                                                temperature=self.temperature),
