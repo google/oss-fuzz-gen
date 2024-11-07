@@ -507,7 +507,7 @@ def main():
 
   args = parse_args()
   _setup_logging(args.log_level)
-  logger.info('Starting experiments')
+  logger.info('Starting experiments on PR branch')
 
   # Capture time at start
   start = time.time()
