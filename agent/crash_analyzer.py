@@ -154,7 +154,6 @@ class CrashAnalyzer(BaseAgent):
       generated_target_name = os.path.basename(benchmark.target_path)
       sample_id = os.path.splitext(generated_target_name)[0]
       generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}-{trial:02d}-lldb'
-      #TODO(fdt622): delete info
       logger.info('analyzer benchmark: %s', benchmark)
       logger.info('analyzer benchmark.id: %s', benchmark.id)
       logger.info('analyzer sample_id: %s', sample_id)
@@ -163,7 +162,6 @@ class CrashAnalyzer(BaseAgent):
                   %s', generated_oss_fuzz_project)
       generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
           generated_oss_fuzz_project)
-      #TODO(fdt622): delete info
       logger.info(
           'analyzer generated_oss_fuzz_project(after rectify): \
                   %s', generated_oss_fuzz_project)
@@ -172,7 +170,6 @@ class CrashAnalyzer(BaseAgent):
                                       f'{trial:02d}.fuzz_target')
       build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                        f'{trial:02d}.build_script')
-      #TODO(fdt622): delete info
       logger.info('analyzer fuzz_target_path: %s', fuzz_target_path)
       logger.info('analyzer build_script_path: %s', build_script_path)
 
@@ -188,10 +185,8 @@ class CrashAnalyzer(BaseAgent):
       )
       self.analyze_tool.execute('compile > /dev/null')
       prompt = self._initial_prompt(result_history)
-      #TODO: delete
       logger.info('analyzer initial prompt: %s', prompt.get())
       prompt.add_problem(self.analyze_tool.tutorial())
-      #TODO: delete
       logger.info('analyzer after append tutorial prompt: %s', prompt.get())
       crash_result = CrashResult(
           benchmark=benchmark,
