@@ -71,7 +71,7 @@ class TextPrompt(Prompt):
     self._text = initial
 
   def append(self, text: str, to_existing: bool = False) -> None:
-    """Gets the final formatted prompt."""
+    """Appends the final formatted prompt."""
     # TextPrompt only got one text element, ignoring to_existing flag
     self._text += text
 
@@ -92,7 +92,7 @@ class TextPrompt(Prompt):
     self._text += f'{problem_content}\n'
 
   def add_solution(self, solution_content: str) -> None:
-    """Constructs the prompt problem in the required format."""
+    """Constructs the prompt solution in the required format."""
     self._text += f'{solution_content}\n'
 
   def create_prompt_piece(self, content: str, role: str) -> Any:
@@ -116,6 +116,11 @@ class OpenAIPrompt(Prompt):
       initial = []
 
     self._prompt = initial
+
+  def append(self, text: str) -> None:
+    """Appends to the formatted prompt."""
+    # A placeholder for now.
+    del text
 
   def get(self) -> Any:
     """Gets the final formatted prompt."""
@@ -152,7 +157,7 @@ class OpenAIPrompt(Prompt):
     })
 
   def add_solution(self, solution_content: str) -> None:
-    """Constructs the prompt problem in the required format."""
+    """Constructs the prompt solution in the required format."""
     if not solution_content:
       logger.warning('Content is empty, skipping the prompt append process')
       return
