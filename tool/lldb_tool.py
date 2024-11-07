@@ -1,12 +1,11 @@
 """A tool for LLM agents to interact within a LLDB."""
 import logging
 import os
-import shutil
 import subprocess as sp
 
 from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark
-from results import CrashResult, Result, RunResult
+from results import Result, RunResult
 from tool.base_tool import BaseTool
 
 logger = logging.getLogger(__name__)

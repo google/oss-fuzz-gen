@@ -4,7 +4,6 @@ Use it as a usual module locally, or as script in cloud builds.
 import os
 import random
 import shutil
-import subprocess as sp
 import time
 from typing import Optional
 
@@ -14,7 +13,7 @@ from experiment import evaluator as evaluator_lib
 from experiment import oss_fuzz_checkout
 from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
-from results import BuildResult, CrashResult, Result, RunResult
+from results import CrashResult, Result, RunResult
 from tool.lldb_tool import LLDBTool
 
 MAX_ROUND = 100
