@@ -35,6 +35,7 @@ class ExecutionStage(BaseStage):
     """Executes the fuzz target and build script in the latest result."""
     last_result = result_history[-1]
     benchmark = last_result.benchmark
+    trial = last_result.trial
     if self.args.cloud_experiment_name:
       builder_runner = builder_runner_lib.CloudBuilderRunner(
           benchmark=benchmark,
@@ -59,9 +60,9 @@ class ExecutionStage(BaseStage):
                 generated_oss_fuzz_project)
 
     fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                    f'{last_result.trial:02d}.fuzz_target')
+                                    f'{trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                     f'{last_result.trial:02d}.build_script')
+                                     f'{trial:02d}.build_script')
     logger.info('Execution fuzz_target_path: %s', fuzz_target_path)
     logger.info('Execution build_script_path: %s', build_script_path)
     evaluator.create_ossfuzz_project(generated_oss_fuzz_project,
@@ -88,7 +89,7 @@ class ExecutionStage(BaseStage):
           0,
           benchmark.language,
           cloud_build_tags=[
-              str(last_result.trial),
+              str(trial),
               'Execution',
               'ofg',
               # TODO(dongge): Tag function name, compatible with tag format.
@@ -129,7 +130,7 @@ class ExecutionStage(BaseStage):
         coverage_diff = 0.0
       runresult = RunResult(
           benchmark=benchmark,
-          trial=last_result.trial,
+          trial=trial,
           work_dirs=last_result.work_dirs,
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,
