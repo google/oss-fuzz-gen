@@ -46,7 +46,7 @@ class CrashAnalyzer(BaseAgent):
           run_result.fuzz_target_source, run_result.run_error,
           run_result.crash_func)
       return prompt
-    
+
     logger.error("Expected a RunResult object in results list")
     return DefaultTemplateBuilder(self.llm).build([])
 
