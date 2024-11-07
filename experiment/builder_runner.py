@@ -1081,6 +1081,15 @@ class CloudBuilderRunner(BuilderRunner):
           run_result.artifact_name, run_result.semantic_check = \
             self._parse_libfuzzer_logs(f, project_name)
 
+    artifact_dir = self.work_dirs.artifact(generated_target_name, iteration)
+    blob = bucket.blob(f'{reproducer_name}/artifacts')
+    if blob.exists():
+      file_name = run_result.artifact_name if run_result.artifact_name else 'testcase'
+      artifact_path = os.path.join(artifact_dir, file_name)
+      with open(artifact_path, 'w') as f:
+        blob.download_to_file(f)
+      run_result.artifact_path = artifact_path
+
     return build_result, run_result
 
   def _copy_textcov_to_workdir(self, bucket, textcov_blob_path: str,
