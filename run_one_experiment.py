@@ -25,6 +25,7 @@ from typing import List, Optional
 import logger
 import pipeline
 from agent.prototyper import Prototyper
+from agent.crash_analyzer import CrashAnalyzer
 from data_prep import project_targets
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment import builder_runner as builder_runner_lib
@@ -325,7 +326,8 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
   trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
   trial_logger.info('Trial Starts')
   p = pipeline.Pipeline(
-      args=args, writing_stage_agents=[Prototyper(trial=trial, llm=model)])
+      args=args, writing_stage_agents=[Prototyper(trial=trial, llm=model)],
+      analysis_stage_agents=[CrashAnalyzer(trial=trial, llm=model)])
   results = p.execute(result_history=[
       Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
   ])
