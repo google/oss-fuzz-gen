@@ -122,12 +122,9 @@ class CrashAnalyzer(BaseAgent):
                                crash_result: CrashResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
     if self._parse_tag(response, 'conclusion'):
-      return self._handle_conclusion(
-          cur_round, response,
-          crash_result)
-    return self._container_handle_bash_command(
-        cur_round, response,
-        self.analyze_tool)
+      return self._handle_conclusion(cur_round, response, crash_result)
+    return self._container_handle_bash_command(cur_round, response,
+                                               self.analyze_tool)
 
   def execute(self, result_history: list[Result]) -> CrashResult:
     """Executes the agent based on previous run result."""
