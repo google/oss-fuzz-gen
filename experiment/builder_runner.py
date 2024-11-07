@@ -507,6 +507,7 @@ class BuilderRunner:
     self.run_target_local(
         generated_project, benchmark_target_name,
         self.work_dirs.run_logs_target(benchmark_target_name, iteration))
+    
     artifact_dir = self.work_dirs.artifact(benchmark_target_name, iteration)
     outdir = get_build_artifact_dir(generated_project, 'out')
     # TODO(fdt622): maybe move to CustomLoggerAdapter
@@ -523,6 +524,7 @@ class BuilderRunner:
       run_result.artifact_path = dst
       shutil.copy2(src, dst)
       logger.info('Copied crash file %s to %s', crash_file, artifact_dir)
+      
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
         generated_project, benchmark_target_name))
 

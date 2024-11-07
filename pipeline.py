@@ -62,9 +62,6 @@ class Pipeline():
                         cycle_count)
       return
 
-    logger.info('RunResult reproducer_path: ',
-                result_history[-1].reproducer_path)
-
     last_result = result_history[-1]
     language = last_result.benchmark.language.lower()
     # Only analyze crashes of C and C++ projects
