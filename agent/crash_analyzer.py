@@ -152,7 +152,8 @@ class CrashAnalyzer(BaseAgent):
                                            fuzz_target_path, build_script_path) # probably return without modifying dockerfile?
                                            
     self.analyze_tool = LLDBTool(benchmark, name='lldb', 
-                                 project=generated_oss_fuzz_project,) 
+                                 project=generated_oss_fuzz_project,)
+    self.analyze_tool.execute('compile > /dev/null')
     prompt = self._initial_prompt(last_result) # prompt to analyze crash
     prompt.append(self.analyze_tool.tutorial())
     crash_result = CrashResult(benchmark=benchmark,
