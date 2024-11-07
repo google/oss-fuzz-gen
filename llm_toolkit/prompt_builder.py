@@ -32,6 +32,7 @@ from llm_toolkit import models, prompts
 logger = logging.getLogger(__name__)
 
 DEFAULT_TEMPLATE_DIR: str = 'prompts/template_xml/'
+AGENT_TEMPLATE_DIR: str = 'prompts/agent/'
 
 # TODO(Dongge): Refactor this tot avoid hard-coding.
 # Example files.
@@ -141,13 +142,13 @@ class DefaultTemplateBuilder(PromptBuilder):
     self.triager_problem_template_file = self._find_template(
         template_dir, 'triager_problem.txt')
 
-  def _format_priming(self, target_file_type: FileType,
-                      needs_extern: bool) -> str:
+  def _format_priming(self, benchmark: Benchmark) -> str:
     """Formats a priming based on the prompt template."""
     priming = self._get_template(self.priming_template_file)
-    priming = priming.replace('{LANGUAGE}', target_file_type.value)
+    priming = priming.replace('{LANGUAGE}', benchmark.file_type.value)
+    priming = priming.replace('{FUZZ_TARGET_PATH}', benchmark.target_path)
     # TODO(Dongge): Add project name and fuzz target file path.
-    if needs_extern:
+    if benchmark.needs_extern:
       priming += (
           'IMPORTANT: The fuzz target is written in C++, whereas the '
           'project-under-test is written in C. All headers, functions, and code'
@@ -155,7 +156,7 @@ class DefaultTemplateBuilder(PromptBuilder):
           '<code>extern "C"</code> to ensure error-free compilation and linkage'
           'between C and C++:\n<code>\nextern "C" {\n    //Include necessary C '
           'headers, source files, functions, and code here.\n}\n</code>\n')
-    if target_file_type == FileType.CPP:
+    if benchmark.file_type == FileType.CPP:
       type_specific_priming = self._get_template(self.cpp_priming_filler_file)
     else:
       type_specific_priming = ''
@@ -287,8 +288,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Constructs a prompt using the templates in |self| and saves it."""
     if not self.benchmark:
       return self._prompt
-    priming = self._format_priming(self.benchmark.file_type,
-                                   self.benchmark.needs_extern)
+    priming = self._format_priming(self.benchmark)
     final_problem = self.format_problem(self.benchmark.function_signature)
     final_problem += (f'You MUST call <code>\n'
                       f'{self.benchmark.function_signature}\n'
@@ -535,6 +535,51 @@ class DefaultTemplateBuilder(PromptBuilder):
     logger.warning('Failed to slice Project: %s Function: %s at Lines: %s',
                    project, func_name, target_lines)
     return ''
+
+
+class PrototyperTemplateBuilder(DefaultTemplateBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model)
+    self._template_dir = template_dir
+    self.agent_templare_dir = AGENT_TEMPLATE_DIR
+    self.benchmark = benchmark
+
+    # Load templates.
+    self.priming_template_file = self._find_template(self.agent_templare_dir,
+                                                     'prototyper-priming.txt')
+    self.cpp_priming_filler_file = self._find_template(
+        template_dir, 'cpp-specific-priming-filler.txt')
+    self.problem_template_file = self._find_template(template_dir,
+                                                     'problem.txt')
+    self.solution_template_file = self._find_template(template_dir,
+                                                      'solution.txt')
+    self.context_template_file = self._find_template(template_dir,
+                                                     'context.txt')
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    if not self.benchmark:
+      return self._prompt
+    priming = self._format_priming(self.benchmark)
+    final_problem = self.format_problem(self.benchmark.function_signature)
+    final_problem += (f'You MUST call <code>\n'
+                      f'{self.benchmark.function_signature}\n'
+                      f'</code> in your solution!\n')
+    if project_context_content:
+      final_problem += self.format_context(project_context_content)
+    self._prepare_prompt(priming, final_problem, example_pair,
+                         project_example_content)
+    self._prompt.append(tool_guides)
+    return self._prompt
 
 
 class DefaultJvmTemplateBuilder(PromptBuilder):
