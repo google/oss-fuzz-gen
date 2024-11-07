@@ -14,7 +14,13 @@
 """The Analysis Stage class for examining the performance of fuzz targets. This
 stage is responsible for categorizing run-time crashes and detecting untested
 code blocks."""
-from results import Result, RunResult
+import os
+
+from typing import cast
+from experiment import builder_runner as builder_runner_lib
+from experiment import evaluator as evaluator_lib
+from experiment.evaluator import Evaluator
+from results import Result, CrashResult, RunResult, RunResult
 from stage.base_stage import BaseStage
 
 
@@ -26,6 +32,18 @@ class AnalysisStage(BaseStage):
   Additionally, it prepares to terminate the experiment if the fuzz target
   crashes due to a bug in the project under test or if all major code paths have
   been sufficiently covered."""
+
+  def _analyze_crash(self, result_history: list[Result]) -> Result:
+    """Analyzes a runtime crash."""
+    agent = self.get_agent('Crash_analyzer')
+    #TODO(fdt622): add _execute_agent_cloud
+    # if self.args.cloud_experiment_name:
+    #   return self._execute_agent_cloud(agent, result_history)
+    return agent.execute(result_history)
+
+  def _analyze_coverage(self, result_history: list[Result]) -> Result:
+    """Analyzes the coverage."""
+    pass
 
   def execute(self, result_history: list[Result]) -> Result:
     """Selects agent based on run result and executes it."""
@@ -42,7 +60,8 @@ class AnalysisStage(BaseStage):
     analysis_result = self._execute_agent(agent, result_history)
 
     # TODO(dongge): Save logs and more info into workdir.
-    self.logger.write_chat_history(analysis_result)
+    self.logger.write_chat_history(crash_result)
     self.logger.debug('Analysis stage completed with with result:\n%s',
-                      analysis_result)
-    return analysis_result
+                      crash_result)
+
+    return crash_result
