@@ -315,16 +315,23 @@ def rewrite_project_to_cached_project_chronos(generated_project) -> None:
 
   # Now comment out everything except the first FROM and the last COPY that
   # was added earlier in the OFG process.
+  arg_line = -1
+  workdir_line = -1
   from_line = -1
   copy_fuzzer_line = -1
 
   for line_idx, line in enumerate(docker_content.split('\n')):
+    if line.startswith('WORKDIR') and workdir_line == -1:
+      # OSS-Fuzz infra relies on parsing WORKDIR.
+      workdir_line = line_idx
+    if line.startswith('ARG') and arg_line == -1:
+      arg_line = line_idx
     if line.startswith('FROM') and from_line == -1:
       from_line = line_idx
     if line.startswith('COPY'):
       copy_fuzzer_line = line_idx
 
-  lines_to_keep = {from_line, copy_fuzzer_line}
+  lines_to_keep = {arg_line, from_line, copy_fuzzer_line, workdir_line}
   new_content = ''
   for line_idx, line in enumerate(docker_content.split('\n')):
     if line_idx not in lines_to_keep:
