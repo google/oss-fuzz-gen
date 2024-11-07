@@ -3,7 +3,7 @@ steps:
   args:
   - build
   - '-t'
-  - us-central1-docker.pkg.dev/oss-fuzz-base/oss-fuzz-gen:pr-${_PR_NUMBER}
+  - us-central1-docker.pkg.dev/oss-fuzz-base/testing/oss-fuzz-gen-pull-request:pr-${_PR_NUMBER}
   - .
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: 'gcloud'
