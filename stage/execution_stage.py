@@ -59,11 +59,14 @@ class ExecutionStage(BaseStage):
                                     f'{last_result.trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                      f'{last_result.trial:02d}.build_script')
+    #TODO(fdt622):delete comment
+    #probably return without replacing fuzz target and build script?
+    #original purpose: replace fuzz target and build script here.
     evaluator.create_ossfuzz_project(
-        generated_oss_fuzz_project,  #probably return without replacing fuzz target and build script?
+        generated_oss_fuzz_project,
         fuzz_target_path,
         build_script_path
-    )  #original purpose: replace fuzz target and build script here.
+    )
 
     status_path = os.path.join(last_result.work_dirs.status,
                                f'{last_result.trial:02}')
@@ -146,8 +149,7 @@ class ExecutionStage(BaseStage):
           coverage_summary=run_result.coverage_summary,
           coverage=coverage_percent,
           line_coverage_diff=coverage_diff,
-          reproducer_path=run_result.
-          reproducer_path,
+          reproducer_path=run_result.reproducer_path,
           artifact_path=run_result.artifact_path,
           artifact_name=run_result.artifact_name,
           sanitizer=run_result.sanitizer,
