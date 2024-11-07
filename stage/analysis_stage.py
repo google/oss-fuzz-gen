@@ -14,7 +14,6 @@
 """The Analysis Stage class for examining the performance of fuzz targets. This
 stage is responsible for categorizing run-time crashes and detecting untested
 code blocks."""
-import os
 from typing import cast
 
 from results import CrashResult, Result, RunResult
@@ -39,7 +38,6 @@ class AnalysisStage(BaseStage):
 
   def _analyze_coverage(self, result_history: list[Result]) -> Result:
     """Analyzes the coverage."""
-    pass
 
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the analysis stage."""
