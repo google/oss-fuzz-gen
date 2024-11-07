@@ -57,11 +57,12 @@ class CrashAnalyzer(BaseAgent):
     will replicate an existing project |name| but modify its dockerfile."""
     logger.info('target file: %s', target_file)
     #TODO(fdt622):delete info
-    logger.info('_create_ossfuzz_project_with_lldb(name): %s', name)
+    logger.info('analyzer _create_ossfuzz_project_with_lldb(name): %s', name)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects', name)
     #TODO(fdt622):delete info
-    logger.info('_create_ossfuzz_project_with_lldb(generated_project_path): \
+    logger.info(
+        'analyzer _create_ossfuzz_project_with_lldb(generated_project_path): \
                 %s', generated_project_path)
     if os.path.exists(generated_project_path):
       logger.info('Project %s already exists.', generated_project_path)
@@ -70,6 +71,8 @@ class CrashAnalyzer(BaseAgent):
     existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                          'projects',
                                          run_result.benchmark.project)
+    logger.info('analyzer _create_ossfuzz_project_with_lldb(existing_project_path): %s', \
+                existing_project_path)
 
     shutil.copytree(existing_project_path, generated_project_path)
 
@@ -151,22 +154,30 @@ class CrashAnalyzer(BaseAgent):
       sample_id = os.path.splitext(generated_target_name)[0]
       generated_oss_fuzz_project = f'{benchmark.id}-{sample_id}-lldb'
       #TODO(fdt622): delete info
-      logger.info('execute(generated_oss_fuzz_project)(before rectify): \
+      logger.info('analyzer benchmark: %s', benchmark)
+      logger.info('analyzer benchmark.id: %s', benchmark.id)
+      logger.info('analyzer sample_id: %s', sample_id)
+      logger.info('analyzer generated_target_name: %s', generated_target_name)
+      logger.info('analyzer generated_oss_fuzz_project: \
                   %s', generated_oss_fuzz_project)
       generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
           generated_oss_fuzz_project)
       #TODO(fdt622): delete info
-      logger.info('execute(generated_oss_fuzz_project)(after rectify): \
+      logger.info(
+          'analyzer generated_oss_fuzz_project(after rectify): \
                   %s', generated_oss_fuzz_project)
 
       fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                       f'{last_result.trial:02d}.fuzz_target')
       build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                        f'{last_result.trial:02d}.build_script')
+      #TODO(fdt622): delete info
+      logger.info('analyzer fuzz_target_path: ', fuzz_target_path)
+      logger.info('analyzer build_script_path:', build_script_path)
 
-      self._create_ossfuzz_project_with_lldb(
-          generated_oss_fuzz_project, fuzz_target_path, build_script_path,
-          last_result)  # probably return without modifying dockerfile?
+      self._create_ossfuzz_project_with_lldb(generated_oss_fuzz_project,
+                                             fuzz_target_path,
+                                             build_script_path, last_result)
 
       self.analyze_tool = LLDBTool(
           benchmark,
@@ -175,7 +186,7 @@ class CrashAnalyzer(BaseAgent):
           result=last_result,
       )
       self.analyze_tool.execute('compile > /dev/null')
-      prompt = self._initial_prompt(result_history)  # prompt to analyze crash
+      prompt = self._initial_prompt(result_history)
       #TODO: delete
       logger.info('analyzer initial prompt: %s', prompt.get())
       prompt.add_problem(self.analyze_tool.tutorial())
@@ -213,9 +224,11 @@ class CrashAnalyzer(BaseAgent):
       try:
         client = self.llm.get_chat_client(model=self.llm.get_model())
         while prompt and cur_round < MAX_ROUND:
-          logger.info('ROUND %02d agent prompt: %s', cur_round, prompt.get())
+          logger.info('CrashAnalyzer ROUND %02d agent prompt: %s', cur_round,
+                      prompt.get())
           response = self.llm.chat_llm(client=client, prompt=prompt)
-          logger.debug('ROUND %02d LLM response: %s', cur_round, response)
+          logger.debug('CrashAnalyzer ROUND %02d LLM response: %s', cur_round,
+                       response)
           prompt = self._container_tool_reaction(cur_round, response,
                                                  crash_result)
           cur_round += 1

@@ -151,9 +151,7 @@ class Prototyper(BaseAgent):
       self, cur_round: int, build_result: BuildResult) -> None:
     """Validates the new fuzz target and build script by recompiling them."""
     benchmark = build_result.benchmark
-    compilation_tool = ProjectContainerTool(
-        benchmark=benchmark
-    )  #second time, use existing image, create new container
+    compilation_tool = ProjectContainerTool(benchmark=benchmark)
 
     # Replace fuzz target and build script in the container.
     replace_file_content_command = (
