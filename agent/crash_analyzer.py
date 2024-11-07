@@ -70,8 +70,7 @@ class CrashAnalyzer(BaseAgent):
       with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
         f.write(
             '\nENV FUZZING_LANGUAGE=c++\n'
-            '\nRUN sed -i.bak "1s|^|export CFLAGS=\\"\\${CFLAGS} -g\\"\\n|" ' \
-            '"/src/build.sh"\n'
+            '\nRUN sed -i.bak \'1i export CFLAGS="\${CFLAGS} -g"\' /src/build.sh\n'
             '\nRUN apt-get update && apt-get install -y lldb\n')
       return name
 
@@ -87,7 +86,7 @@ class CrashAnalyzer(BaseAgent):
       f.write(
           '\nCOPY agent-build.sh /src/build.sh\n'
           '\nENV FUZZING_LANGUAGE=c++\n'
-          '\nRUN sed -i.bak "1s|^|export CFLAGS=\\"\\${CFLAGS} -g\\"\\n|" "/src/build.sh"\n'
+          '\nRUN sed -i.bak \'1i export CFLAGS="\${CFLAGS} -g"\' /src/build.sh\n'
           '\nRUN apt-get update && apt-get install -y lldb\n')
 
     return name
