@@ -73,7 +73,8 @@ class CrashAnalyzer(BaseAgent):
       with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
         f.write(
             '\nENV FUZZING_LANGUAGE=c++\n'
-            '\nRUN sed -i.bak "1s|^|export CFLAGS=${CFLAGS} -g" "/src/build.sh"\n'
+            '\nRUN sed -i.bak "1s|^|export CFLAGS=${CFLAGS} -g" ' \
+            '"/src/build.sh"\n'
             '\nRUN apt-get update && apt-get install -y lldb\n')
       return name
 
@@ -83,8 +84,8 @@ class CrashAnalyzer(BaseAgent):
         os.path.join(generated_project_path,
                      os.path.basename('agent-build.sh')))
 
-    # Add additional statement in dockerfile to overwrite with generated fuzzer, \
-    # enable -g and install lldb
+    # Add additional statement in dockerfile to overwrite with \
+    # generated fuzzer, enable -g and install lldb
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(
           '\nCOPY agent-build.sh /src/build.sh\n'
@@ -174,7 +175,7 @@ class CrashAnalyzer(BaseAgent):
     cur_round = 1
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
-      while prompt and cur_round < MAX_ROUND:  #when prompt is empty or cur_round >= MAX_ROUND, exit.
+      while prompt and cur_round < MAX_ROUND:
         logger.info('ROUND %02d agent prompt: %s', cur_round, prompt.get())
         response = self.llm.chat_llm(client=client, prompt=prompt)
         logger.debug('ROUND %02d LLM response: %s', cur_round, response)
@@ -186,6 +187,6 @@ class CrashAnalyzer(BaseAgent):
       # Cleanup: stop the container
       logger.debug('Stopping the crash analyze container %s',
                    self.analyze_tool.container_id)
-      self.analyze_tool.terminate()  # only stop the container
+      self.analyze_tool.terminate()
 
     return crash_result
