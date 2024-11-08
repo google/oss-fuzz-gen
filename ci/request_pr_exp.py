@@ -294,36 +294,6 @@ def _get_gke_credential(args: argparse.Namespace):
     logging.error('Failed to authenticate gcloud: %s', e)
 
 
-def _build_image(args: argparse.Namespace):
-  """Authenticates gcloud account."""
-  try:
-    sp.run([
-        'docker',
-        'build',
-        '-t',
-        ('us-central1-docker.pkg.dev/oss-fuzz-base/testing/'
-         f'oss-fuzz-gen-pull-request:pr-{args.pr_id}'),
-        '.',
-    ],
-           check=False)
-  except Exception as e:
-    logging.error('Failed to build image for PR: %s', e)
-
-
-def _push_image(args: argparse.Namespace):
-  """Authenticates gcloud account."""
-  try:
-    sp.run([
-        'docker',
-        'push',
-        ('us-central1-docker.pkg.dev/oss-fuzz-base/testing/'
-         f'oss-fuzz-gen-pull-request:pr-{args.pr_id}'),
-    ],
-           check=False)
-  except Exception as e:
-    logging.error('Failed to push image to artifact registry: %s', e)
-
-
 def _fill_template(args: argparse.Namespace) -> str:
   """Fills the GKE template with |args| and returns the result YAML path."""
   exp_env_vars = os.environ.copy()
@@ -365,8 +335,6 @@ def main(cmd=None):
   args = _parse_args(cmd)
   gke_job_name, bucket_link, bucket_gs_link = _prepare_experiment_info(args)
   _get_gke_credential(args)
-  _build_image(args)
-  _push_image(args)
   _remove_existing_job_bucket(gke_job_name, bucket_link, bucket_gs_link)
   _request_experiment(_fill_template(args))
 
