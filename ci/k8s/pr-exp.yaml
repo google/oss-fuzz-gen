@@ -32,6 +32,8 @@ spec:
         # For benchmark sets that need more disk, increase the results volume
         # size too.
         command: ["/bin/bash", "report/docker_run.sh", "${GKE_EXP_BENCHMARK}", "${GKE_EXP_NAME}", "${GKE_EXP_FUZZING_TIMEOUT}", "ofg-pr", "${GKE_EXP_LLM}", "${GKE_EXP_DELAY}", "${GKE_EXP_LOCAL_INTROSPECTOR}", "${GKE_EXP_NUM_SAMPLES}", "${GKE_EXP_LLM_FIX_LIMIT}", "${GKE_EXP_VARY_TEMPERATURE}", "${GKE_EXP_AGENT}"]
+        securityContext:
+          privileged: true
         resources:
           requests:
             cpu: ${GKE_EXP_REQ_CPU}
