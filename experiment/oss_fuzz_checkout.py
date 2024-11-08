@@ -416,68 +416,75 @@ def prepare_build(project_name, sanitizer, generated_project):
     shutil.copy(original_dockerfile, dockerfile_to_use)
 
 
-def _image_exists_locally(image_name: str, project_name: str) -> bool:
-  """Checks if the given |image_name| exits locally."""
+# def _image_exists_locally(image_name: str, project_name: str) -> bool:
+#   """Checks if the given |image_name| exits locally."""
+#   try:
+#     all_images = sp.run(['docker', 'images', '--format', '{{.Repository}}'],
+#                         stdout=sp.PIPE,
+#                         text=True,
+#                         check=True).stdout.splitlines()
+#     if image_name in all_images:
+#       logger.info('Will use local cached images of %s: %s', project_name,
+#                   image_name)
+#       return True
+#   except sp.CalledProcessError:
+#     logger.warning('Unable to use local cached image of %s: %s', project_name,
+#                    image_name)
+#   return False
+
+# def _image_exists_online(image_name: str, project_name: str) -> bool:
+#   """Checks if the given |image_name| exits in the cloud registry."""
+#   online_image_name = _get_project_cache_image_name(project_name, 'address')
+#   try:
+#     sp.run(['docker', 'pull', online_image_name],
+#            stdout=sp.PIPE,
+#            text=True,
+#            check=True)
+#     logger.info('Pulled online cached images of %s: %s', project_name,
+#                 online_image_name)
+
+#     sp.run(['docker', 'tag', online_image_name, image_name],
+#            stdout=sp.PIPE,
+#            text=True,
+#            check=True)
+#     logger.info('Will use online cached images: %s', project_name)
+#     return True
+#   except sp.CalledProcessError:
+#     logger.warning('Unable to use online cached images: %s', project_name)
+#     return False
+
+
+def _build_image(project_name: str) -> str:
+  """Builds project image in OSS-Fuzz"""
+  adjusted_env = os.environ | {
+      'FUZZING_LANGUAGE': get_project_language(project_name)
+  }
+  command = [
+      'python3', 'infra/helper.py', 'build_image', '--pull', project_name
+  ]
   try:
-    all_images = sp.run(['docker', 'images', '--format', '{{.Repository}}'],
-                        stdout=sp.PIPE,
-                        text=True,
-                        check=True).stdout.splitlines()
-    if image_name in all_images:
-      logger.info('Will use local cached images of %s: %s', project_name,
-                  image_name)
-      return True
+    sp.run(command, cwd=OSS_FUZZ_DIR, env=adjusted_env, check=True)
+    logger.info('Successfully build project image for %s', project_name)
+    return f'gcr.io/oss-fuzz/{project_name}'
   except sp.CalledProcessError:
-    logger.warning('Unable to use local cached image of %s: %s', project_name,
-                   image_name)
-  return False
-
-
-def _image_exists_online(image_name: str, project_name: str) -> bool:
-  """Checks if the given |image_name| exits in the cloud registry."""
-  online_image_name = _get_project_cache_image_name(project_name, 'address')
-  try:
-    sp.run(['docker', 'pull', online_image_name],
-           stdout=sp.PIPE,
-           text=True,
-           check=True)
-    logger.info('Pulled online cached images of %s: %s', project_name,
-                online_image_name)
-    sp.run([
-        'docker', 'run', '--entrypoint', '/usr/local/bin/recompile',
-        online_image_name
-    ],
-           stdout=sp.PIPE,
-           text=True,
-           check=True)
-
-    sp.run(['docker', 'tag', online_image_name, image_name],
-           stdout=sp.PIPE,
-           text=True,
-           check=True)
-    logger.info('Will use online cached images: %s', project_name)
-    return True
-  except sp.CalledProcessError:
-    logger.warning('Unable to use online cached images: %s', project_name)
-    return False
+    logger.info('Failed to build project image for %s', project_name)
+    return ''
 
 
 def prepare_project_image(project: str) -> str:
   """Prepares original image of the |project|'s fuzz target build container."""
   image_name = f'gcr.io/oss-fuzz/{project}'
-  if (_image_exists_locally(image_name, project_name=project) or
-      _image_exists_online(image_name, project_name=project)):
-    logger.info('Using existing project image for %s', project)
+  if ENABLE_CACHING and is_image_cached(project, 'address'):
+    # if (_image_exists_locally(image_name, project_name=project) or
+    #     _image_exists_online(image_name, project_name=project)):
+    sp.run([
+        'docker', 'tag',
+        _get_project_cache_image_name(project, 'address'), image_name
+    ],
+           stdout=sp.PIPE,
+           text=True,
+           check=True)
+    logger.info('Using cached project image for %s', project)
     return image_name
   logger.info('Unable to find existing project image for %s', project)
-  adjusted_env = os.environ | {
-      'FUZZING_LANGUAGE': get_project_language(project)
-  }
-  command = ['python3', 'infra/helper.py', 'build_image', '--pull', project]
-  try:
-    sp.run(command, cwd=OSS_FUZZ_DIR, env=adjusted_env, check=True)
-    logger.info('Successfully build project image for %s', project)
-    return image_name
-  except sp.CalledProcessError:
-    logger.info('Failed to build project image for %s', project)
-    return ''
+  return _build_image(project)
