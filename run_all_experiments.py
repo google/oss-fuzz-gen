@@ -536,7 +536,7 @@ def main():
       _print_and_dump_experiment_result(result)
   else:
     experiment_tasks = []
-    with Pool(NUM_EXP) as p:
+    with Pool(NUM_EXP, maxtasksperchild=1) as p:
       for target_benchmark in experiment_targets:
         experiment_task = p.apply_async(
             run_experiments, (target_benchmark, args),
