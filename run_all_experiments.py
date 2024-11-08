@@ -337,7 +337,7 @@ def extend_report_with_coverage_gains_process():
   """A process that continuously runs to update coverage gains in the
   background."""
   while True:
-    time.sleep(120)  # 2 minutes.
+    time.sleep(300)  # 5 minutes.
     try:
       extend_report_with_coverage_gains()
     except Exception:
