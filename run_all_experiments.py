@@ -334,7 +334,8 @@ def extend_report_with_coverage_gains() -> None:
 
 
 def extend_report_with_coverage_gains_process():
-  """A process that continuously runs to update coverage gains in the background."""
+  """A process that continuously runs to update coverage gains in the
+  background."""
   while True:
     time.sleep(120)  # 2 minutes.
     try:
@@ -550,9 +551,9 @@ def main():
     experiment_tasks = []
     with Pool(NUM_EXP, maxtasksperchild=1) as p:
       for target_benchmark in experiment_targets:
-        experiment_task = p.apply_async(
-            run_experiments, (target_benchmark, args),
-            callback=_print_experiment_result)
+        experiment_task = p.apply_async(run_experiments,
+                                        (target_benchmark, args),
+                                        callback=_print_experiment_result)
         experiment_tasks.append(experiment_task)
         time.sleep(args.delay)
 
