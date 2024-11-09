@@ -27,6 +27,7 @@ import yaml
 from experiment import benchmark as benchmarklib
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 BUILD_DIR: str = 'build'
 GLOBAL_TEMP_DIR: str = ''
@@ -416,42 +417,43 @@ def prepare_build(project_name, sanitizer, generated_project):
     shutil.copy(original_dockerfile, dockerfile_to_use)
 
 
-# def _image_exists_locally(image_name: str, project_name: str) -> bool:
-#   """Checks if the given |image_name| exits locally."""
-#   try:
-#     all_images = sp.run(['docker', 'images', '--format', '{{.Repository}}'],
-#                         stdout=sp.PIPE,
-#                         text=True,
-#                         check=True).stdout.splitlines()
-#     if image_name in all_images:
-#       logger.info('Will use local cached images of %s: %s', project_name,
-#                   image_name)
-#       return True
-#   except sp.CalledProcessError:
-#     logger.warning('Unable to use local cached image of %s: %s', project_name,
-#                    image_name)
-#   return False
+def _image_exists_locally(image_name: str, project_name: str) -> bool:
+  """Checks if the given |image_name| exits locally."""
+  try:
+    all_images = sp.run(['docker', 'images', '--format', '{{.Repository}}'],
+                        stdout=sp.PIPE,
+                        text=True,
+                        check=True).stdout.splitlines()
+    if image_name in all_images:
+      logger.info('Will use local cached images of %s: %s', project_name,
+                  image_name)
+      return True
+  except sp.CalledProcessError:
+    logger.warning('Unable to use local cached image of %s: %s', project_name,
+                   image_name)
+  return False
 
-# def _image_exists_online(image_name: str, project_name: str) -> bool:
-#   """Checks if the given |image_name| exits in the cloud registry."""
-#   online_image_name = _get_project_cache_image_name(project_name, 'address')
-#   try:
-#     sp.run(['docker', 'pull', online_image_name],
-#            stdout=sp.PIPE,
-#            text=True,
-#            check=True)
-#     logger.info('Pulled online cached images of %s: %s', project_name,
-#                 online_image_name)
 
-#     sp.run(['docker', 'tag', online_image_name, image_name],
-#            stdout=sp.PIPE,
-#            text=True,
-#            check=True)
-#     logger.info('Will use online cached images: %s', project_name)
-#     return True
-#   except sp.CalledProcessError:
-#     logger.warning('Unable to use online cached images: %s', project_name)
-#     return False
+def _image_exists_online(image_name: str, project_name: str) -> bool:
+  """Checks if the given |image_name| exits in the cloud registry."""
+  online_image_name = _get_project_cache_image_name(project_name, 'address')
+  try:
+    sp.run(['docker', 'pull', online_image_name],
+           stdout=sp.PIPE,
+           text=True,
+           check=True)
+    logger.info('Pulled online cached images of %s: %s', project_name,
+                online_image_name)
+
+    sp.run(['docker', 'tag', online_image_name, image_name],
+           stdout=sp.PIPE,
+           text=True,
+           check=True)
+    logger.info('Will use online cached images: %s', project_name)
+    return True
+  except sp.CalledProcessError:
+    logger.warning('Unable to use online cached images: %s', project_name)
+    return False
 
 
 def _build_image(project_name: str) -> str:
@@ -474,17 +476,10 @@ def _build_image(project_name: str) -> str:
 def prepare_project_image(project: str) -> str:
   """Prepares original image of the |project|'s fuzz target build container."""
   image_name = f'gcr.io/oss-fuzz/{project}'
-  if ENABLE_CACHING and is_image_cached(project, 'address'):
-    # if (_image_exists_locally(image_name, project_name=project) or
-    #     _image_exists_online(image_name, project_name=project)):
-    sp.run([
-        'docker', 'tag',
-        _get_project_cache_image_name(project, 'address'), image_name
-    ],
-           stdout=sp.PIPE,
-           text=True,
-           check=True)
+  if (ENABLE_CACHING and is_image_cached(project, 'address') and
+      (_image_exists_locally(image_name, project_name=project) or
+       _image_exists_online(image_name, project_name=project))):
     logger.info('Using cached project image for %s', project)
     return image_name
-  logger.info('Unable to find existing project image for %s', project)
+  logger.warning('Unable to find cached project image for %s', project)
   return _build_image(project)
