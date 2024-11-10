@@ -114,6 +114,7 @@ These bugs could only have been discovered with newly generated targets. They we
 of source code compiled during the OSS-Fuzz build process for the entire
 project. "Total relative gain" is the increase in coverage compared to the old
 number of covered lines.
+
 \* Additional code from the project-under-test maybe included when compiling the new fuzz targets and result in high percentage gains.
 
 ## Citing This Work
