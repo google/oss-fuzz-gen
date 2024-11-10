@@ -27,6 +27,7 @@ import yaml
 from experiment import benchmark as benchmarklib
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 BUILD_DIR: str = 'build'
 GLOBAL_TEMP_DIR: str = ''
@@ -443,13 +444,6 @@ def _image_exists_online(image_name: str, project_name: str) -> bool:
            check=True)
     logger.info('Pulled online cached images of %s: %s', project_name,
                 online_image_name)
-    sp.run([
-        'docker', 'run', '--entrypoint', '/usr/local/bin/recompile',
-        online_image_name
-    ],
-           stdout=sp.PIPE,
-           text=True,
-           check=True)
 
     sp.run(['docker', 'tag', online_image_name, image_name],
            stdout=sp.PIPE,
@@ -462,22 +456,30 @@ def _image_exists_online(image_name: str, project_name: str) -> bool:
     return False
 
 
+def _build_image(project_name: str) -> str:
+  """Builds project image in OSS-Fuzz"""
+  adjusted_env = os.environ | {
+      'FUZZING_LANGUAGE': get_project_language(project_name)
+  }
+  command = [
+      'python3', 'infra/helper.py', 'build_image', '--pull', project_name
+  ]
+  try:
+    sp.run(command, cwd=OSS_FUZZ_DIR, env=adjusted_env, check=True)
+    logger.info('Successfully build project image for %s', project_name)
+    return f'gcr.io/oss-fuzz/{project_name}'
+  except sp.CalledProcessError:
+    logger.info('Failed to build project image for %s', project_name)
+    return ''
+
+
 def prepare_project_image(project: str) -> str:
   """Prepares original image of the |project|'s fuzz target build container."""
   image_name = f'gcr.io/oss-fuzz/{project}'
-  if (_image_exists_locally(image_name, project_name=project) or
-      _image_exists_online(image_name, project_name=project)):
-    logger.info('Using existing project image for %s', project)
+  if (ENABLE_CACHING and is_image_cached(project, 'address') and
+      (_image_exists_locally(image_name, project_name=project) or
+       _image_exists_online(image_name, project_name=project))):
+    logger.info('Using cached project image for %s', project)
     return image_name
-  logger.info('Unable to find existing project image for %s', project)
-  adjusted_env = os.environ | {
-      'FUZZING_LANGUAGE': get_project_language(project)
-  }
-  command = ['python3', 'infra/helper.py', 'build_image', '--pull', project]
-  try:
-    sp.run(command, cwd=OSS_FUZZ_DIR, env=adjusted_env, check=True)
-    logger.info('Successfully build project image for %s', project)
-    return image_name
-  except sp.CalledProcessError:
-    logger.info('Failed to build project image for %s', project)
-    return ''
+  logger.warning('Unable to find cached project image for %s', project)
+  return _build_image(project)
