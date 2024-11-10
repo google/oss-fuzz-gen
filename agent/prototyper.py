@@ -3,6 +3,7 @@ Use it as a usual module locally, or as script in cloud builds.
 """
 import subprocess as sp
 import time
+from datetime import timedelta
 from typing import Optional
 
 import logger
@@ -136,7 +137,8 @@ class Prototyper(BaseAgent):
     start_time = time.time()
     compile_process = compilation_tool.compile()
     end_time = time.time()
-    logger.debug('ROUND %02d compilation time: %s', end_time - start_time)
+    logger.debug('ROUND %02d compilation time: %s', cur_round,
+                 timedelta(seconds=end_time - start_time))
     compile_succeed = compile_process.returncode == 0
     logger.debug('ROUND %02d Fuzz target compiles: %s', cur_round,
                  compile_succeed)
