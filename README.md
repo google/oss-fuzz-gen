@@ -86,27 +86,34 @@ These bugs could only have been discovered with newly generated targets. They we
 
 ## Current top coverage improvements by project
 
-| Project  | Coverage increase % * |
-|----------|-------------------|
-| tinyxml2 | 29.84 |
-| inih | 29.67 |   
-| lodepng | 26.21 |
-| libarchive | 23.39 |
-| cmark | 21.61 | 
-| fribidi | 18.20 |    
-| lighttpd | 17.56 |
-| libmodbus | 16.59 |
-| valijson | 16.21 |
-| libiec61850 | 13.53 |
-| hiredis | 13.50 |
-| cmake | 12.62 | 
-| pugixml | 12.43 | 
-| meshoptimizer | 12.23 |
-| libusb | 11.12 | 
-| json | 10.84 |
+| Project | Total coverage gain	| Total relative gain	| OSS-Fuzz-gen total covered lines | OSS-Fuzz-gen new covered lines | Existing covered lines | Total project lines |
+| --------| ------------------- | ------------------- | -------------------------------- | ------------------------------ | ---------------------- | ------------------- |
+| phmap | 98.42% | 205.75% | 1601 | 1181 | 574 | 1120 |
+| usbguard | 97.62% | 26.04% | 24550 | 5463 | 20979 | 3564 |
+| onednn | 96.67% | 7057.14% | 5434 | 5434 | 77 | 210 |
+| avahi | 82.06% | 155.90% | 3358 | 2814 | 1805 | 3046 |
+| pugixml | 72.98% | 194.95% | 9015 | 6646 | 3409 | 7662 |
+| librdkafka | 66.88% | 845.57% | 5019 | 4490 | 531 | 1169 |
+| casync | 66.75% | 903.23% | 1171 | 1120 | 124 | 1678 |
+| tomlplusplus | 61.06% | 331.10% | 4755 | 3652 | 1103 | 5981 |
+| astc-encoder | 59.35% | 177.88% | 2726 | 1745 | 981 | 2940 |
+| mruby | 48.56% | 0.00% | 34493 | 34493 | 0 | 71038 |
+| arduinojson | 42.10% | 85.80% | 3344 | 1800 | 2098 | 4276 |
+| json | 41.13% | 66.51% | 5051 | 3339 | 5020 | 8119 |
+| double-conversion | 40.40% | 88.12% | 1663 | 779 | 884 | 1928 |
+| tinyobjloader | 38.26% | 77.01% | 1157 | 717 | 931 | 1874 |
+| glog | 38.18% | 58.69% | 895 | 331 | 564 | 867 |
+| cppitertools | 35.78% | 45.07% | 253 | 151 | 335 | 422 |
+| eigen | 35.38% | 190.70% | 2643 | 1947 | 1021 | 5503 |
+| glaze | 34.55% | 30.06% | 2920 | 2416 | 8036 | 6993 |
+| rapidjson | 31.83% | 148.07% | 1585 | 958 | 647 | 3010 |
+| libunwind | 30.58% | 83.25% | 2899 | 1342 | 1612 | 4388 |
+| openh264 | 30.07% | 50.14% | 6607 | 5751 | 11470 | 19123 |
 
-\* Percentage coverage is calculated using a denominator of the total lines of source code compiled during the
-OSS-Fuzz build process for the entire project.
+\* "Total coverage gain" is calculated using a denominator of the total lines
+of source code compiled during the OSS-Fuzz build process for the entire
+project. "Total relative gain" is the increase in coverage compared to the old
+number of covered lines.
 
 ## Citing This Work
 Please click on the _'Cite this repository'_ button located on the right-hand side of this GitHub page for citation details.
