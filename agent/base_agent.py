@@ -68,6 +68,7 @@ class BaseAgent(ABC):
     return filtered_code_block
 
   def _format_bash_execution_result(self, process: sp.CompletedProcess) -> str:
+    """Formats a prompt based on bash execution result."""
     stdout = self.llm.truncate_prompt(process.stdout)
     # TODO(dongge) Share input limit evenly if both stdout and stderr overlong.
     stderr = self.llm.truncate_prompt(process.stderr, stdout)
@@ -76,18 +77,16 @@ class BaseAgent(ABC):
             f'<stdout>\n{stdout}\n</stdout>\n'
             f'<stderr>\n{stderr}\n</stderr>\n')
 
-  def _container_handle_bash_command(self, cur_round: int, response: str,
+  def _container_handle_bash_command(self, command: str,
                                      tool: BaseTool) -> Prompt:
-    """Handles the command from LLM with container tool."""
-    command = self._parse_tag(response, 'bash')
-    if command:
-      prompt_text = self._format_bash_execution_result(tool.execute(command))
-    else:
-      logger.warning('ROUND %02d No BASH command from LLM response: %s',
-                     cur_round, response)
-      prompt_text = ('No bash command received, Please follow the '
-                     'interaction protocols:\n'
-                     f'{tool.tutorial()}')
+    """Handles the command from LLM with container |tool|."""
+    prompt_text = self._format_bash_execution_result(tool.execute(command))
+    return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
+
+  def _container_handle_invalid_tool_usage(self, tool: BaseTool) -> Prompt:
+    """Formats a prompt to re-teach LLM how to use the |tool|."""
+    prompt_text = (f'No valid instruction received, Please follow the '
+                   f'interaction protocols:\n{tool.tutorial()}')
     return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
 
   def _sleep_random_duration(self, min_sec: int = 1, max_sec: int = 60) -> None:
