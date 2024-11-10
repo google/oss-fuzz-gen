@@ -96,18 +96,8 @@ class ProjectContainerTool(BaseTool):
     process.args = command
     return process
 
-  def compile(self,
-              use_recompile: bool = True,
-              extra_commands: str = '') -> sp.CompletedProcess:
-    """Compiles or recompiles the fuzz target."""
-    if use_recompile:
-      logger.info('Will attempt to use recompile')
-      self.execute(
-          '[ -f /usr/local/bin/recompile ] && echo "Will use recompile" '
-          '&& mv /usr/local/bin/recompile /usr/local/bin/compile')
-    else:
-      logger.info('Will use the original compile')
-
+  def compile(self, extra_commands: str = '') -> sp.CompletedProcess:
+    """Compiles the fuzz target."""
     command = 'compile > /dev/null' + extra_commands
     return self.execute(command)
 

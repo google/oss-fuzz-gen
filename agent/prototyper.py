@@ -2,6 +2,8 @@
 Use it as a usual module locally, or as script in cloud builds.
 """
 import subprocess as sp
+import time
+from datetime import timedelta
 from typing import Optional
 
 import logger
@@ -84,14 +86,14 @@ class Prototyper(BaseAgent):
 
     logger.info('First compile fuzz target without modifying build script.')
     build_result.build_script_source = ''
-    self._validate_fuzz_target_and_build_script_via_recompile(
+    self._validate_fuzz_target_and_build_script_via_compile(
         cur_round, build_result)
 
     if not build_result.success and build_script_source:
       logger.info('Then compile fuzz target with modified build script.')
       build_result.build_script_source = build_script_source
-      self._validate_fuzz_target_and_build_script_via_recompile(
-          cur_round, build_result, use_recompile=False)
+      self._validate_fuzz_target_and_build_script_via_compile(
+          cur_round, build_result)
 
   def _validate_fuzz_target_references_function(
       self, compilation_tool: ProjectContainerTool, benchmark: Benchmark,
@@ -110,11 +112,8 @@ class Prototyper(BaseAgent):
                    cur_round)
     return function_referenced
 
-  def _validate_fuzz_target_and_build_script_via_recompile(
-      self,
-      cur_round: int,
-      build_result: BuildResult,
-      use_recompile: bool = True) -> None:
+  def _validate_fuzz_target_and_build_script_via_compile(
+      self, cur_round: int, build_result: BuildResult) -> None:
     """Validates the new fuzz target and build script by recompiling them."""
     benchmark = build_result.benchmark
     compilation_tool = ProjectContainerTool(benchmark=benchmark)
@@ -135,9 +134,13 @@ class Prototyper(BaseAgent):
 
     # Recompile.
     logger.info('===== ROUND %02d Recompile =====', cur_round)
-    compile_process = compilation_tool.compile(use_recompile=use_recompile)
+    start_time = time.time()
+    compile_process = compilation_tool.compile()
+    end_time = time.time()
+    logger.debug('ROUND %02d compilation time: %s', cur_round,
+                 timedelta(seconds=end_time - start_time))
     compile_succeed = compile_process.returncode == 0
-    logger.debug('ROUND %02d Fuzz target compile Succeessfully: %s', cur_round,
+    logger.debug('ROUND %02d Fuzz target compiles: %s', cur_round,
                  compile_succeed)
 
     # Double-check binary.
