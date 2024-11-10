@@ -10,7 +10,6 @@ import logger
 from agent.base_agent import BaseAgent
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.benchmark import Benchmark
-from llm_toolkit.prompt_builder import EXAMPLES as EXAMPLE_FUZZ_TARGETS
 from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
                                         PrototyperTemplateBuilder)
 from llm_toolkit.prompts import Prompt
@@ -35,9 +34,6 @@ class Prototyper(BaseAgent):
     prompt = prompt_builder.build(example_pair=[],
                                   project_context_content=context_info,
                                   tool_guides=self.inspect_tool.tutorial())
-    # prompt = prompt_builder.build(example_pair=EXAMPLE_FUZZ_TARGETS.get(
-    #     benchmark.language, []),
-    #                               tool_guides=self.inspect_tool.tutorial())
     return prompt
 
   def _update_fuzz_target_and_build_script(self, cur_round: int, response: str,
