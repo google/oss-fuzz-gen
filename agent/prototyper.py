@@ -221,11 +221,17 @@ class Prototyper(BaseAgent):
   def _container_tool_reaction(self, cur_round: int, response: str,
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
+    # Prioritize Bash instructions.
+    if command := self._parse_tag(response, 'bash'):
+      return self._container_handle_bash_command(command, self.inspect_tool)
+
     if self._parse_tag(response, 'conclusion'):
       return self._container_handle_conclusion(cur_round, response,
                                                build_result)
-    return self._container_handle_bash_command(cur_round, response,
-                                               self.inspect_tool)
+    # Other responses are invalid.
+    logger.warning('ROUND %02d Invalid response from LLM: %s', cur_round,
+                   response)
+    return self._container_handle_invalid_tool_usage(self.inspect_tool)
 
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
