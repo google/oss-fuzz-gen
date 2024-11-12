@@ -98,12 +98,21 @@ Respond the FULL {LANGUAGE} implementation of the fuzz target in your conclusion
 1. You should send the conclusion with the following two-section format:
 1.1. Summarize all important findings and explain your fuzz target design in detail, wrapped within <summary> and </summary> tags.
 1.2. Full fuzz target implementation, wrapped within <fuzz target> and </fuzz target> tags.
-1.3. Wrap 1.1. and 1.2. within <conclusion> and </conclusion> tags.
+1.3. Full build script, wrapped within <build script> and </build script> tags.
+1.4. Wrap 1.1., 1.2., and 1.3. within <conclusion> and </conclusion> tags.
 2. Conclusion Example:
 <conclusion>
 <summary>
 The function-under-test `{FUNCTION_UNDER_TEST}` needs to initialize project-specific parameters `X` and invoke some project-specific setup statements `Y`.
+Other important findings.
 </summary>
+</conclusion>
+<fuzz target>
+[Your modified fuzz target code here.]
+</fuzz target>
+<build script>
+[Your modified build script code here, if applicable. Otherwise you must leave this part empty.]
+</build script>
 </conclusion>
 </conclusion protocol>
 
