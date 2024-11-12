@@ -1,0 +1,110 @@
+<interaction protocols>
+Each of your responses MUST follow EXACTLY ONE of the following interaction protocols, not MULTIPLE of them.
+
+<tool protocol>
+**Bash tool Protocol**
+Use the bash tool to investigate files in the fuzz target's build environment. This will help you understand the project source code, the function under test, its dependencies, and any compilation requirements.
+
+<bash tool request>
+1. You should send each bash tool request with the following two-section format:
+1.1. Reason for the Command, wrapped within <reason> and </reason> tags.
+1.2. Bash Command to execute, wrapped within <bash> and </bash> tags.
+1.3. Wrap 1.1. and 1.2. within <tool> and </tool> tags.
+2. Request Example:
+<tool>
+<reason>
+I want to learn from the existing human written fuzz targets as references.
+</reason>
+<bash>
+grep -rlZ 'LLVMFuzzerTestOneInput(' "$(dirname {FUZZ_TARGET_PATH})" | xargs -0 cat
+</bash>
+</tool>
+</bash tool request>
+
+<bash tool response>
+1. The bash tool will send each respond with the following three-section format:
+1.1. Bash command executed, wrapped within <bash> and </bash> tags.
+1.2. Standard output of command execution, wrapped within <stdout> and </stdout> tags.
+1.3. Standard error of command execution, wrapped within <stderr> and </stderr> tags.
+<bash>
+[The command you executed.]
+</bash>
+<stdout>
+[Standard output of the command.]
+</stdout>
+<stderr>
+[Standard error of the command.]
+</stderr>
+</bash tool response>
+
+<bash tool rules>
+1. You can view all files and environment variables.
+2. You cannot not modify, rename, or create new files.
+3. Ensure ALL messages are clearly and properly formatted based on the <tool request>
+5. Careful response Interpretation:
+* Analyze each response thoroughly to inform your next steps.
+* Summarize important findings that will help in modifying the fuzz target.
+6. Do not use `pkg-config`: Explore the project's directory hierarchy (`$PWD`) to learn headerfile paths, library's naming conventions, and build system.
+</bash tool rules>
+
+<bash tool examples>
+Command 1. Learn from existing fuzz targets:
+<tool>
+<reason>
+Learn from the existing human written fuzz targets as references.
+</reason>
+<bash>
+grep -rlZ 'LLVMFuzzerTestOneInput(' "$(dirname {FUZZ_TARGET_PATH})" | xargs -0 cat
+</bash>
+</tool>
+
+Command 2. Locating the function's definition and understand its parameters, e.g.:
+<tool>
+<reason>
+Find the definition of the function-under-test (`{FUNCTION_UNDER_TEST}`) in the project directory (`$PWD`) and understand its implementation details.
+</reason>
+<bash>
+grep -rn 'function-under-test(' $PWD
+</bash>
+</tool>
+
+Command 3. Locate Custom Type Definitions:
+<tool>
+<reason>
+Find the definition of the custom type `CustomType` used by function-under-test.
+</reason>
+<bash>
+grep -rn 'typedef.*CustomType' $PWD
+</bash>
+</tool>
+
+Command 4. Understand Environment Variables:
+<tool>
+<reason>
+Check if any environment variables related to the project are set.
+</reason>
+<bash>
+printenv | grep 'PROJECT_VARIABLE'
+</bash>
+</tool>
+</bash tool examples>
+</tool protocol>
+
+<conclusion protocol>
+Respond the FULL {LANGUAGE} implementation of the fuzz target in your conclusion.
+**DO NOT SEND** any other content in the conclusion. For example, ALWAYS send tool requests individually and ONLY SEND conclusion after collected all information in previous communications.
+
+<conclusion format>
+1. You should send the conclusion with the following two-section format:
+1.1. Summarize all important findings and explain your fuzz target design in detail, wrapped within <summary> and </summary> tags.
+1.2. Full fuzz target implementation, wrapped within <fuzz target> and </fuzz target> tags.
+1.3. Wrap 1.1. and 1.2. within <conclusion> and </conclusion> tags.
+2. Conclusion Example:
+<conclusion>
+<summary>
+The function-under-test `{FUNCTION_UNDER_TEST}` needs to initialize project-specific parameters `X` and invoke some project-specific setup statements `Y`.
+</summary>
+</conclusion>
+</conclusion protocol>
+
+</interaction protocols>
