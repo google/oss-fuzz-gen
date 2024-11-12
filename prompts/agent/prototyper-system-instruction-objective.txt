@@ -1,4 +1,4 @@
 <objective>
-As a security testing engineer, you must write a simple fuzz target in {LANGUAGE} to fuzz the function-under-test `{FUNCTION-UNDER-TEST}` using `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`.
+As a security testing engineer, you must write a fuzz target in {LANGUAGE} to fuzz the function-under-test `{FUNCTION-UNDER-TEST}` using `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`.
 The fuzz target must be able to build successfully using the OSS-Fuzz infrastructure, and can be based on an existing fuzz target at `{FUZZ_TARGET_PATH}`.
 </objective>

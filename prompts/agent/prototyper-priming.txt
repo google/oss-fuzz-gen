@@ -1,5 +1,5 @@
 <steps>
-Follow these steps to write a minimum fuzz target:
+Follow these steps to write a fuzz target:
 
 Step 1. Determine the information you need to write an effective fuzz target.
 This includes:
