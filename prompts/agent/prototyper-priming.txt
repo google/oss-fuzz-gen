@@ -1,8 +1,3 @@
-<system>
-As a security testing engineer, you must write an `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)` fuzz target in {LANGUAGE}.
-Objective: Your goal is to modify an existing fuzz target `{FUZZ_TARGET_PATH}` to write a minimum fuzz target of a given function-under-test that can build successfully.
-</system>
-
 <steps>
 Follow these steps to write a minimum fuzz target:
 
@@ -87,28 +82,7 @@ Write a new build script only if the existing one (`/src/build.sh`) is insuffici
 
 Step 9: Providing Your Conclusion:
     * Provide your conclusion on the FULL new fuzz target and build script **ONLY AFTER** you have gathered all necessary information.
-    * **DO NOT SEND** any other content (e.g., bash tool commands) in the conclusion message. ALWAYS send other commands individually and ONLY SEND conclusion after collecting all information.
-    * Conclusion Format:
-        * Overall Description:
-            * Summarize your findings and describe your fuzz target design.
-            * Wrap this summary within <conclusion> and </conclusion> tags.
-    * Modified Fuzz Target:
-        * Provide the full code of the modified fuzz target.
-        * Wrap the code within <fuzz target> and </fuzz target> tags.
-    * Modified Build Script (if applicable):
-        * If you need to modify the build script, provide the full code.
-        * Wrap it within <build script> and </build script> tags.
-    * Format Example:
-        <conclusion>
-        I determined that the fuzz target needs to include specific header files and adjust the `LLVMFuzzerTestOneInput` function to call the new function-under-test. Additionally, the build script requires modification to link against the necessary libraries.
-        </conclusion>
-        <fuzz target>
-        [Your FULL fuzz target code here.]
-        </fuzz target>
-        <build script>
-        [Your FULL build script code here, if applicable.]
-        </build script>
-
+    * Follow the conclusion response protocol (see section <conclusion protocol>).
 </steps>
 
 {TYPE_SPECIFIC_PRIMING}
