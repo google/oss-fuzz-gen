@@ -33,8 +33,12 @@ class Prototyper(BaseAgent):
         benchmark=benchmark,
     )
     prompt = prompt_builder.build(example_pair=[],
-                                  project_context_content=context_info,
-                                  tool_guides=self.inspect_tool.tutorial())
+                                  project_context_content=context_info)
+    self.llm._system_instruction = prompt_builder.system_instructions(
+        benchmark, [
+            'prototyper-system-instruction-objective.txt'
+            'prototyper-system-instruction-protocols.txt'
+        ])
     # prompt = prompt_builder.build(example_pair=EXAMPLE_FUZZ_TARGETS.get(
     #     benchmark.language, []),
     #                               tool_guides=self.inspect_tool.tutorial())

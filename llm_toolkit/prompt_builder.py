@@ -581,6 +581,30 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     self._prompt.append(tool_guides)
     return self._prompt
 
+  def _get_instruction(self, benchmark: Benchmark,
+                       instruction_name: str) -> str:
+    """Gets the agent objective."""
+    if not instruction_name:
+      return ''
+    template_file = self._find_template(self.agent_templare_dir,
+                                        instruction_name)
+    instruction = self._get_template(template_file).replace(
+        '{LANGUAGE}', benchmark.file_type.value).replace(
+            '{FUNCTION-UNDER-TEST}',
+            benchmark.function_signature).replace('{FUZZ_TARGET_PATH}',
+                                                  benchmark.target_path)
+    return instruction
+
+  def system_instructions(self, benchmark: Benchmark,
+                          instruction_names: list[str]) -> list[str]:
+    """Constructs a list of system instructions in plain text."""
+    instructions = []
+    for instruction_name in instruction_names:
+      instruction = self._get_instruction(benchmark, instruction_name)
+      if instruction:
+        instructions.append(instruction)
+    return instructions
+
 
 class DefaultJvmTemplateBuilder(PromptBuilder):
   """Default builder for JVM projects."""
