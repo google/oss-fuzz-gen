@@ -666,7 +666,12 @@ class GeminiV1D5Chat(GeminiV1D5):
                       raw_prompt_text: Any,
                       extra_text: Any = None) -> Any:
     """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
-    original_token_count = self.estimate_token_num(raw_prompt_text)
+    if self.system_instruction:
+      system_instructions = ''.join(self.system_instruction)
+    else:
+      system_instructions = ''
+    original_token_count = self.estimate_token_num(raw_prompt_text +
+                                                   system_instructions)
 
     token_count = original_token_count
     if token_count > self.MAX_INPUT_TOKEN:
