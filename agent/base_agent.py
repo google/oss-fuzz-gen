@@ -88,12 +88,13 @@ class BaseAgent(ABC):
     prompt_text = self._format_bash_execution_result(tool.execute(command))
     return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
 
-  def _container_handle_bash_commands(self, response: str,
+  def _container_handle_bash_commands(self, commands: list[str],
                                       tool: BaseTool) -> Prompt:
     """Handles the command from LLM with container |tool|."""
     prompt_text = ''
-    for command in self._parse_tags(response, 'bash'):
-      prompt_text += self._format_bash_execution_result(tool.execute(command))
+    for command in commands:
+      prompt_text += self._format_bash_execution_result(
+          tool.execute(command)) + '\n'
     return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
 
   def _sleep_random_duration(self, min_sec: int = 1, max_sec: int = 60) -> None:

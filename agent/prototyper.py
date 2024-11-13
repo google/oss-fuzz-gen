@@ -175,7 +175,7 @@ class Prototyper(BaseAgent):
       return None
 
     if not build_result.compiles:
-      compile_log = self.llm.truncate_prompt(build_result.compile_log)
+      compile_log = self.llm.truncate_prompt(build_result.compile_log).strip()
       logger.info('***** Failed to recompile in %02d rounds *****', cur_round)
       prompt_text = (
           'Failed to build fuzz target. Here is the fuzz target, build script, '
@@ -229,8 +229,8 @@ class Prototyper(BaseAgent):
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
     # Prioritize Bash instructions.
-    if self._parse_tag(response, 'tool'):
-      return self._container_handle_bash_commands(response, self.inspect_tool)
+    if commands := self._parse_tags(response, 'bash'):
+      return self._container_handle_bash_commands(commands, self.inspect_tool)
 
     if self._parse_tag(response, 'conclusion'):
       return self._container_handle_conclusion(cur_round, response,
