@@ -69,9 +69,9 @@ class BaseAgent(ABC):
 
   def _format_bash_execution_result(self, process: sp.CompletedProcess) -> str:
     """Formats a prompt based on bash execution result."""
-    stdout = self.llm.truncate_prompt(process.stdout)
+    stdout = self.llm.truncate_prompt(process.stdout).strip()
     # TODO(dongge) Share input limit evenly if both stdout and stderr overlong.
-    stderr = self.llm.truncate_prompt(process.stderr, stdout)
+    stderr = self.llm.truncate_prompt(process.stderr, stdout).strip()
     return (f'<bash>\n{process.args}\n</bash>\n'
             f'<return code>\n{process.returncode}\n</return code>\n'
             f'<stdout>\n{stdout}\n</stdout>\n'
