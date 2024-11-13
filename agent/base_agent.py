@@ -56,6 +56,11 @@ class BaseAgent(ABC):
     match = re.search(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
     return match.group(1).strip() if match else ''
 
+  def _parse_tags(self, response: str, tag: str) -> list[str]:
+    """Parses the XML-style tags from LLM response."""
+    matches = re.findall(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
+    return [content.strip() for content in matches]
+
   def _filter_code(self, raw_code_block: str) -> str:
     """Filters out irrelevant lines from |raw_code_block|."""
     # TODO(dongge): Move this function to a separate module.
@@ -83,10 +88,12 @@ class BaseAgent(ABC):
     prompt_text = self._format_bash_execution_result(tool.execute(command))
     return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
 
-  def _container_handle_invalid_tool_usage(self, tool: BaseTool) -> Prompt:
-    """Formats a prompt to re-teach LLM how to use the |tool|."""
-    prompt_text = (f'No valid instruction received, Please follow the '
-                   f'interaction protocols:\n{tool.tutorial()}')
+  def _container_handle_bash_commands(self, response: str,
+                                      tool: BaseTool) -> Prompt:
+    """Handles the command from LLM with container |tool|."""
+    prompt_text = ''
+    for command in self._parse_tags(response, 'bash'):
+      prompt_text += self._format_bash_execution_result(tool.execute(command))
     return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
 
   def _sleep_random_duration(self, min_sec: int = 1, max_sec: int = 60) -> None:

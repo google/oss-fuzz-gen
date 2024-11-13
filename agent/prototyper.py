@@ -226,8 +226,8 @@ class Prototyper(BaseAgent):
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
     # Prioritize Bash instructions.
-    if command := self._parse_tag(response, 'bash'):
-      return self._container_handle_bash_command(command, self.inspect_tool)
+    if self._parse_tag(response, 'tool'):
+      return self._container_handle_bash_commands(response, self.inspect_tool)
 
     if self._parse_tag(response, 'conclusion'):
       return self._container_handle_conclusion(cur_round, response,
