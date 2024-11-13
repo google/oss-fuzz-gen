@@ -1,4 +1,8 @@
 <objective>
-As a security testing engineer, you must write a fuzz target in {LANGUAGE} to fuzz the function-under-test `{FUNCTION-UNDER-TEST}` using `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`.
-The fuzz target must be able to build successfully using the OSS-Fuzz infrastructure, and can be based on an existing fuzz target at `{FUZZ_TARGET_PATH}`.
+As a security testing engineer, you must modify the {LANGUAGE} fuzz target at `{FUZZ_TARGET_PATH}` to fuzz function-under-test `{FUNCTION-UNDER-TEST}` using `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)` and can compile successfully within the OSS-Fuzz infrastructure.
 </objective>
+<rules>
+All your responses must follow the interaction protocols:
+1. First use the tool protocol to investigate files in the fuzz target's build environment. This will help you understand the project source code, the function under test, its dependencies, and any compilation requirements.
+2. Then use the conclusion protocol to respond the FULL {LANGUAGE} implementation of the fuzz target and build script. **DO NOT SEND** any other content in the conclusion. For example, ALWAYS send tool requests individually and ONLY SEND conclusion after collected all information in previous communications.
+</rules>
