@@ -10,7 +10,6 @@ import logger
 from agent.base_agent import BaseAgent
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.benchmark import Benchmark
-from llm_toolkit.prompt_builder import EXAMPLES as EXAMPLE_FUZZ_TARGETS
 from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
                                         PrototyperTemplateBuilder)
 from llm_toolkit.prompts import Prompt
@@ -34,14 +33,12 @@ class Prototyper(BaseAgent):
     )
     prompt = prompt_builder.build(example_pair=[],
                                   project_context_content=context_info)
-    self.llm._system_instruction = prompt_builder.system_instructions(
+    self.llm.system_instruction = prompt_builder.system_instructions(
         benchmark, [
             'prototyper-system-instruction-objective.txt',
             'prototyper-system-instruction-protocols.txt'
         ])
-    # prompt = prompt_builder.build(example_pair=EXAMPLE_FUZZ_TARGETS.get(
-    #     benchmark.language, []),
-    #                               tool_guides=self.inspect_tool.tutorial())
+    self.protocol = self.llm.system_instruction[-1]
     return prompt
 
   def _update_fuzz_target_and_build_script(self, cur_round: int, response: str,
@@ -222,6 +219,12 @@ class Prototyper(BaseAgent):
     prompt = DefaultTemplateBuilder(self.llm, initial=prompt_text).build([])
     return prompt
 
+  def _container_handle_invalid_tool_usage(self) -> Prompt:
+    """Formats a prompt to re-teach LLM how to use the |tool|."""
+    prompt_text = (f'No valid instruction received, Please follow the system '
+                   f'instructions:\n{self.protocol}')
+    return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
+
   def _container_tool_reaction(self, cur_round: int, response: str,
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
@@ -235,7 +238,7 @@ class Prototyper(BaseAgent):
     # Other responses are invalid.
     logger.warning('ROUND %02d Invalid response from LLM: %s', cur_round,
                    response)
-    return self._container_handle_invalid_tool_usage(self.inspect_tool)
+    return self._container_handle_invalid_tool_usage()
 
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""

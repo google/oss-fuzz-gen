@@ -59,6 +59,7 @@ class LLM:
   MAX_INPUT_TOKEN: int = sys.maxsize
 
   _max_attempts = 5  # Maximum number of attempts to get prediction response
+  system_instruction: Optional[list] = None
 
   def __init__(
       self,
@@ -564,7 +565,8 @@ class GeminiModel(VertexAIModel):
   ]
 
   def get_model(self) -> Any:
-    return GenerativeModel(self._vertex_ai_model)
+    return GenerativeModel(self._vertex_ai_model,
+                           system_instruction=self.system_instruction)
 
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
     # Loosen inapplicable restrictions just in case.
