@@ -104,7 +104,7 @@ class BaseAgent(ABC):
     for command in self._parse_tags(response, 'bash'):
       prompt_text += self._format_bash_execution_result(
           tool.execute(command), previous_prompt=prompt) + '\n'
-    prompt.append(prompt_text)
+      prompt.append(prompt_text)
     return prompt
 
   def _sleep_random_duration(self, min_sec: int = 1, max_sec: int = 60) -> None:

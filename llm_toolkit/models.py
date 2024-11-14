@@ -686,7 +686,7 @@ class GeminiV1D5Chat(GeminiV1D5):
                                  10000)
     logger.warning('max_raw_prompt_token_size: %s', max_raw_prompt_token_size)
 
-    while token_count > max_raw_prompt_token_size:
+    while token_count > max_raw_prompt_token_size // 4:
       estimate_truncate_size = int(
           (1 - max_raw_prompt_token_size / token_count) * len(raw_prompt_text))
 
