@@ -132,6 +132,7 @@ def get_trial_logger(name: str = __name__,
     return _trial_logger
 
   logger = logging.getLogger(name)
+  logger.setLevel(level)
   if not logger.handlers:
     formatter = logging.Formatter(
         fmt=('%(asctime)s [Trial ID: %(trial)02d] %(levelname)s '
