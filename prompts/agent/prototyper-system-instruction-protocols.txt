@@ -1,5 +1,6 @@
 <interaction protocols>
-Each of your responses MUST follow EXACTLY ONE of the following interaction protocols, not MULTIPLE of them.
+Each of your responses MUST follow EITHER of the following interaction protocols.
+Prioritize using bash tool to understand and verify how to implement or fix the fuzz target.
 
 <bash tool protocol>
 
