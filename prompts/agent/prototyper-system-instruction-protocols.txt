@@ -55,6 +55,7 @@ printenv | grep 'PROJECT_VARIABLE'
 5.1. Analyze each response thoroughly to inform your next steps.
 5.2. Summarize important findings that will help in modifying the fuzz target.
 6. Do not use `pkg-config`: Explore the project's directory hierarchy (`$PWD`) to learn headerfile paths, library's naming conventions, and build system.
+7. DO NOT compile or build the fuzz target, send a <conclusion> instead (see <conclusion protocol>).
 </rules>
 
 <result>
@@ -120,6 +121,9 @@ Format Example:
 </examples>
 </format>
 
+<rules>
+Send a <conclusion> when you generated a fuzz target, DO NOT attempt compile or build the fuzz target.
+</rules>
 </conclusion protocol>
 
 </interaction protocols>
