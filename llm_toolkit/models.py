@@ -31,7 +31,8 @@ import anthropic
 import openai
 import tiktoken
 import vertexai
-from google.api_core.exceptions import (GoogleAPICallError, InvalidArgument,
+from google.api_core.exceptions import (GoogleAPICallError,
+                                        InternalServerError, InvalidArgument,
                                         ResourceExhausted)
 from vertexai import generative_models
 from vertexai.preview.generative_models import ChatSession, GenerativeModel
@@ -650,6 +651,7 @@ class GeminiV1D5Chat(GeminiV1D5):
           InvalidArgument,
           ValueError,  # TODO(dongge): Handle RECITATION specifically.
           IndexError,  # A known error from vertexai.
+          InternalServerError,  # A known error from vertexai.
       ],
       other_exceptions={ResourceExhausted: 100})
   def _do_generate(self, client: ChatSession, prompt: str,
