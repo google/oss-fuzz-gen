@@ -674,17 +674,17 @@ class GeminiV1D5Chat(GeminiV1D5):
                                                    system_instructions)
 
     token_count = original_token_count
-    logger.info('original_token_count: %s', original_token_count)
-    logger.info('self.MAX_INPUT_TOKEN: %s', self.MAX_INPUT_TOKEN)
+    logger.warning('original_token_count: %s', original_token_count)
+    logger.warning('self.MAX_INPUT_TOKEN: %s', self.MAX_INPUT_TOKEN)
     if token_count > self.MAX_INPUT_TOKEN:
       raw_prompt_text = raw_prompt_text[-3 * self.MAX_INPUT_TOKEN:]
 
-    logger.info('raw_prompt_text: %s', raw_prompt_text)
+    logger.warning('raw_prompt_text: %s', raw_prompt_text)
     extra_text_token_count = self.estimate_token_num(extra_text)
     # Reserve 10000 tokens for raw prompt wrappers.
     max_raw_prompt_token_size = (self.MAX_INPUT_TOKEN - extra_text_token_count -
                                  10000)
-    logger.info('max_raw_prompt_token_size: %s', max_raw_prompt_token_size)
+    logger.warning('max_raw_prompt_token_size: %s', max_raw_prompt_token_size)
 
     while token_count > max_raw_prompt_token_size:
       estimate_truncate_size = int(
@@ -700,7 +700,7 @@ class GeminiV1D5Chat(GeminiV1D5):
       logger.warning('Truncated raw prompt from %d to %d tokens:',
                      original_token_count, token_count)
 
-    logger.info('Final token_count: %s', token_count)
+    logger.warning('Final token_count: %s', token_count)
     return raw_prompt_text
 
   def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:
