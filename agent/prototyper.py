@@ -51,20 +51,19 @@ class Prototyper(BaseAgent):
         self._parse_tag(conclusion, 'fuzz target'))
     build_result.fuzz_target_source = fuzz_target_source
     if fuzz_target_source:
-      logger.debug('ROUND %02d Parsed fuzz target from LLM: %s', cur_round,
+      logger.debug('ROUND %02d Parsed fuzz target from LLM:\n%s', cur_round,
                    fuzz_target_source)
     else:
-      logger.error('ROUND %02d No fuzz target source code in conclusion: %s',
-                   cur_round, conclusion)
+      logger.error('ROUND %02d No fuzz target source code in conclusion.',
+                   cur_round)
 
     build_script_source = self._filter_code(
         self._parse_tag(conclusion, 'build script'))
     if build_script_source:
-      logger.debug('ROUND %02d Parsed build script from LLM: %s', cur_round,
+      logger.debug('ROUND %02d Parsed build script from LLM:\n%s', cur_round,
                    build_script_source)
     else:
-      logger.debug('ROUND %02d No build script in conclusion: %s', cur_round,
-                   conclusion)
+      logger.debug('ROUND %02d No build script in conclusion.', cur_round)
 
   def _update_build_result(self, build_result: BuildResult,
                            compile_process: sp.CompletedProcess, status: bool,
