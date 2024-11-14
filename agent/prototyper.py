@@ -74,8 +74,10 @@ class Prototyper(BaseAgent):
     build_result.compile_log = self._format_bash_execution_result(
         compile_process)
     # Remove the compile command, e.g., <bash>compile</bash>
-    build_result.compile_log = re.sub(r'<bash>.*?</bash>', '',
-                                      build_result.compile_log)
+    build_result.compile_log = re.sub(r'<bash>.*?</bash>',
+                                      '',
+                                      build_result.compile_log,
+                                      flags=re.DOTALL)
     build_result.is_function_referenced = referenced
 
   def _validate_fuzz_target_and_build_script(self, cur_round: int,
