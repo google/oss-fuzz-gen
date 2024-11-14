@@ -685,7 +685,11 @@ class GeminiV1D5Chat(GeminiV1D5):
     while token_count > max_raw_prompt_token_size:
       estimate_truncate_size = int(
           (1 - max_raw_prompt_token_size / token_count) * len(raw_prompt_text))
-      raw_prompt_text = raw_prompt_text[estimate_truncate_size + 1:]
+
+      raw_prompt_init = raw_prompt_text[100:] + (
+          '\n...(truncated due to exceeding input token limit)...\n')
+      raw_prompt_text = raw_prompt_init + raw_prompt_text[
+          100 + estimate_truncate_size + 1:]
 
       token_count = self.estimate_token_num(raw_prompt_text)
       logger.warning('Truncated raw prompt from %d to %d tokens:',

@@ -72,11 +72,20 @@ class BaseAgent(ABC):
     filtered_code_block = '\n'.join(filtered_lines)
     return filtered_code_block
 
-  def _format_bash_execution_result(self, process: sp.CompletedProcess) -> str:
+  def _format_bash_execution_result(
+      self,
+      process: sp.CompletedProcess,
+      previous_prompt: Optional[Prompt] = None) -> str:
     """Formats a prompt based on bash execution result."""
-    stdout = self.llm.truncate_prompt(process.stdout).strip()
+    if previous_prompt:
+      previous_prompt_text = previous_prompt.get()
+    else:
+      previous_prompt_text = ''
+    stdout = self.llm.truncate_prompt(process.stdout,
+                                      previous_prompt_text).strip()
     # TODO(dongge) Share input limit evenly if both stdout and stderr overlong.
-    stderr = self.llm.truncate_prompt(process.stderr, stdout).strip()
+    stderr = self.llm.truncate_prompt(process.stderr,
+                                      stdout + previous_prompt_text).strip()
     return (f'<bash>\n{process.args}\n</bash>\n'
             f'<return code>\n{process.returncode}\n</return code>\n'
             f'<stdout>\n{stdout}\n</stdout>\n'
@@ -88,14 +97,15 @@ class BaseAgent(ABC):
     prompt_text = self._format_bash_execution_result(tool.execute(command))
     return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
 
-  def _container_handle_bash_commands(self, commands: list[str],
-                                      tool: BaseTool) -> Prompt:
+  def _container_handle_bash_commands(self, response: str, tool: BaseTool,
+                                      prompt: Prompt) -> Prompt:
     """Handles the command from LLM with container |tool|."""
     prompt_text = ''
-    for command in commands:
+    for command in self._parse_tags(response, 'bash'):
       prompt_text += self._format_bash_execution_result(
-          tool.execute(command)) + '\n'
-    return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
+          tool.execute(command), previous_prompt=prompt) + '\n'
+    prompt.append(prompt_text)
+    return prompt
 
   def _sleep_random_duration(self, min_sec: int = 1, max_sec: int = 60) -> None:
     """Sleeps for a random duration between min_sec and max_sec. Agents uses
