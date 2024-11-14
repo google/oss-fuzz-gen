@@ -1,6 +1,7 @@
 """An LLM agent to generate a simple fuzz target prototype that can build.
 Use it as a usual module locally, or as script in cloud builds.
 """
+import re
 import subprocess as sp
 import time
 from datetime import timedelta
@@ -73,6 +74,9 @@ class Prototyper(BaseAgent):
     build_result.compile_error = compile_process.stderr
     build_result.compile_log = self._format_bash_execution_result(
         compile_process)
+    # Remove the compile command, e.g., <bash>compile</bash>
+    build_result.compile_log = re.sub(r'<bash>.*?</bash>', '',
+                                      build_result.compile_log)
     build_result.is_function_referenced = referenced
 
   def _validate_fuzz_target_and_build_script(self, cur_round: int,
