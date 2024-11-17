@@ -60,6 +60,9 @@ class LLM:
 
   _max_attempts = 5  # Maximum number of attempts to get prediction response
 
+  tools: list = []
+  tool_config = None
+
   def __init__(
       self,
       ai_binary: str,
@@ -564,7 +567,9 @@ class GeminiModel(VertexAIModel):
   ]
 
   def get_model(self) -> Any:
-    return GenerativeModel(self._vertex_ai_model)
+    return GenerativeModel(self._vertex_ai_model,
+                           tools=self.tools,
+                           tool_config=self.tool_config)
 
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
     # Loosen inapplicable restrictions just in case.
@@ -654,11 +659,16 @@ class GeminiV1D5Chat(GeminiV1D5):
                    config: dict[str, Any]) -> Any:
     """Generates chat response."""
     logger.info('%s generating response with config: %s', self.name, config)
-    return client.send_message(
-        prompt,
-        stream=False,
-        generation_config=config,
-        safety_settings=self.safety_config).text  # type: ignore
+    response = client.send_message(prompt,
+                                   stream=False,
+                                   generation_config=config,
+                                   safety_settings=self.safety_config)
+    try:
+      return response.text
+    except ValueError:
+      # A known error in Tool usage: response.text triggers ValueError when
+      # response.candiates[0].content has multiple values.
+      return response
 
   def truncate_prompt(self,
                       raw_prompt_text: Any,
