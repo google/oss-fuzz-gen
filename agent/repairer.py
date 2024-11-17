@@ -7,15 +7,17 @@ import time
 from datetime import timedelta
 from typing import Optional
 
-from vertexai.preview.generative_models import ChatSession
+from google.cloud.aiplatform_v1beta1.types.tool import FunctionCall
+from vertexai.preview.generative_models import (ChatSession,
+                                                FunctionDeclaration,
+                                                GenerationResponse, Part, Tool,
+                                                ToolConfig)
 
 import logger
 from agent.base_agent import BaseAgent
-from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.benchmark import Benchmark
-from llm_toolkit import models, prompt_builder
 from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
-                                        PrototyperTemplateBuilder)
+                                        RepairerTemplateBuilder)
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
 from tool.base_tool import BaseTool
@@ -24,36 +26,30 @@ from tool.container_tool import ProjectContainerTool
 MAX_ROUND = 100
 
 
-class Prototyper(BaseAgent):
+class Repairer(BaseAgent):
   """The Agent to generate a simple but valid fuzz target from scratch."""
 
   def _initial_prompt(self, results: list[Result]) -> Prompt:
     """Constructs initial prompt of the agent."""
     benchmark = results[-1].benchmark
-    retriever = ContextRetriever(benchmark)
-    context_info = retriever.get_context_info()
-    prompt_builder = PrototyperTemplateBuilder(
+    assert isinstance(results[-1], BuildResult)
+    prompt_builder = RepairerTemplateBuilder(
         model=self.llm,
         benchmark=benchmark,
+        build_result=results[-1],
     )
-    prompt = prompt_builder.build(example_pair=[],
-                                  project_context_content=context_info)
-    self.llm.system_instruction = prompt_builder.system_instructions(
-        benchmark,
-        [
-            'prototyper-system-instruction-objective.txt',
-            # 'prototyper-system-instruction-protocols.txt'
-        ])
-    self.protocol = 'Use the execute_bash_command tool'
+    prompt = prompt_builder.build(example_pair=[])
+    self.protocol = (
+        'Use the run_bash_command_or_submit_revised_fuzz_target_and_build_script tool to inspect code or the  submit the fuzz target and '
+        'build script')
     return prompt
 
   def _update_fuzz_target_and_build_script(self, cur_round: int,
-                                           conclusion: str,
+                                           fuzz_target_source: str,
+                                           build_script_source: str,
                                            build_result: BuildResult) -> None:
     """Updates fuzz target and build script in build_result with LLM response.
     """
-    fuzz_target_source = self._filter_code(
-        self._parse_tag(conclusion, 'fuzz target'))
     build_result.fuzz_target_source = fuzz_target_source
     if fuzz_target_source:
       logger.debug('ROUND %02d Parsed fuzz target from LLM:\n%s', cur_round,
@@ -62,8 +58,6 @@ class Prototyper(BaseAgent):
       logger.error('ROUND %02d No fuzz target source code in conclusion.',
                    cur_round)
 
-    build_script_source = self._filter_code(
-        self._parse_tag(conclusion, 'build script'))
     if build_script_source:
       logger.debug('ROUND %02d Parsed build script from LLM:\n%s', cur_round,
                    build_script_source)
@@ -168,126 +162,200 @@ class Prototyper(BaseAgent):
                               status=compile_succeed and binary_exists,
                               referenced=function_referenced)
 
-  def _container_handle_conclusion(self, cur_round: int, response: str,
-                                   build_result: BuildResult,
-                                   prompt: Prompt) -> Optional[Prompt]:
+  def _submit_conclusion(self, cur_round: int, summary: str,
+                         fuzz_target_source: str, build_script_source: str,
+                         build_result: BuildResult,
+                         result_parts: list[Part]) -> Optional[dict[str, str]]:
     """Runs a compilation tool to validate the new fuzz target and build script
     from LLM."""
-    conclusion = self._parse_tag(response, 'conclusion')
-    if not conclusion:
-      return prompt
     logger.info('----- ROUND %02d Received conclusion -----', cur_round)
 
-    self._update_fuzz_target_and_build_script(cur_round, response, build_result)
+    self._update_fuzz_target_and_build_script(cur_round, fuzz_target_source,
+                                              build_script_source, build_result)
 
     self._validate_fuzz_target_and_build_script(cur_round, build_result)
     if build_result.success:
-      logger.info('***** Prototyper succeeded in %02d rounds *****', cur_round)
+      logger.info('***** Repairer succeeded in %02d rounds *****', cur_round)
       return None
 
     if not build_result.compiles:
-      compile_log = self.llm.truncate_prompt(build_result.compile_log,
-                                             extra_text=prompt.get()).strip()
+      compile_log = self.llm.truncate_prompt(
+          build_result.compile_log,
+          extra_text='\n'.join(
+              str(part.function_response) for part in result_parts)).strip()
       logger.info('***** Failed to recompile in %02d rounds *****', cur_round)
-      prompt_text = (
-          'Failed to build fuzz target. Here is the fuzz target, build script, '
-          'compliation command, and other compilation runtime output. Analyze '
-          'the error messages, the fuzz target, and the build script carefully '
-          'to identify the root cause. Avoid making random changes to the fuzz '
-          'target or build script without a clear understanding of the error. '
-          'If necessary, #include necessary headers and #define required macros'
-          'or constants in the fuzz target, or adjust compiler flags to link '
-          'required libraries in the build script. After collecting information'
-          ', analyzing and understanding the error root cause, YOU MUST take at'
-          ' least one step to validate your theory with source code evidence. '
-          'Only if your theory is verified, respond the revised fuzz target and'
-          'build script in FULL.\n'
-          'Always try to learn from the source code about how to fix errors, '
-          'for example, search for the key words (e.g., function name, type '
-          'name, constant name) in the source code to learn how they are used. '
-          'Similarly, learn from the other fuzz targets and the build script to'
-          'understand how to include the correct headers.\n'
-          'Focus on writing a minimum buildable fuzz target that calls the '
-          'target function. We can increase its complexity later, but first try'
-          'to make it compile successfully.'
-          'If an error happens repeatedly and cannot be fixed, try to '
-          'mitigate it. For example, replace or remove the line.\n'
-          f'<fuzz target>\n{build_result.fuzz_target_source}\n</fuzz target>\n'
-          f'<build script>\n{build_result.build_script_source}\n</build script>'
-          f'\n<compilation log>\n{compile_log}\n</compilation log>\n')
+      content = {
+          'summary': summary,
+          'fuzz target': fuzz_target_source,
+          'build script': build_script_source,
+          'build result': compile_log,
+      }
     elif not build_result.is_function_referenced:
       logger.info(
           '***** Fuzz target does not reference function-under-test in %02d '
           'rounds *****', cur_round)
-      prompt_text = (
+      not_referenced_text = (
           'The fuzz target builds successfully, but the target function '
           f'`{build_result.benchmark.function_signature}` was not used by '
           '`LLVMFuzzerTestOneInput` in fuzz target. YOU MUST CALL FUNCTION '
           f'`{build_result.benchmark.function_signature}` INSIDE FUNCTION '
           '`LLVMFuzzerTestOneInput`.')
+      content = {
+          'summary': summary,
+          'fuzz target': fuzz_target_source,
+          'build script': build_script_source,
+          'build result': not_referenced_text,
+      }
     else:
-      prompt_text = ''
+      prompt_text = 'This should never happen.'
+      content = {
+          'summary': summary,
+          'fuzz target': fuzz_target_source,
+          'build script': build_script_source,
+          'build result': prompt_text,
+      }
 
-    prompt.append(prompt_text)
-    return prompt
+    return content
 
-  def _container_handle_invalid_tool_usage(self, cur_round: int, response: str,
-                                           prompt: Prompt) -> Prompt:
+  def _execute_bash_command(self, reason: str, command: str) -> dict[str, str]:
+    """Handles the command from LLM with container |tool|."""
+    process = self.inspect_tool.execute(command)
+    stdout = self.llm.truncate_prompt(process.stdout)
+    stderr = self.llm.truncate_prompt(process.stderr, stdout)
+    content = {
+        'reason': reason,
+        'command': process.args,
+        'return code': str(process.returncode),
+        'stdout': stdout,
+        'stderr': stderr,
+    }
+    return content
+
+  def invalid_function_usage(self, cur_round: int, call: FunctionCall) -> Part:
     """Formats a prompt to re-teach LLM how to use the |tool|."""
-    logger.warning('ROUND %02d Invalid response from LLM: %s', cur_round,
-                   response)
-    prompt_text = (f'No valid instruction received, Please follow the system '
+    logger.warning('ROUND %02d Invalid response from LLM: %s', cur_round, call)
+    prompt_text = (f'Invalid function call (call), Please follow the system '
                    f'instructions:\n{self.protocol}')
-    prompt.append(prompt_text)
-    return prompt
+    return Part.from_function_response(name=call.name,
+                                       response={'content': prompt_text})
 
-  def _container_tool_reaction(self, cur_round: int, response: str,
+  def call_function(self, cur_round: int, reason: str, command: str,
+                    summary: str, fuzz_target: str, build_script: str,
+                    build_result: BuildResult,
+                    results: list[Part]) -> Optional[Part]:
+    content1 = {}
+    content2 = {}
+    if command:
+      content1 = self._execute_bash_command(reason, command)
+    if fuzz_target:
+      content2 = self._submit_conclusion(cur_round, summary, fuzz_target,
+                                         build_script, build_result, results)
+      if content2 is None:
+        return None
+
+    return Part.from_function_response(
+        name='run_bash_command_or_submit_revised_fuzz_target_and_build_script',
+        response={'content': content1 | content2})
+
+  def _container_tool_reaction(self, cur_round: int,
+                               response: GenerationResponse,
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
-    prompt = DefaultTemplateBuilder(self.llm, None).build([])
-
-    # First execute bash commands.
-    prompt = self._container_handle_bash_commands(response, self.inspect_tool,
-                                                  prompt)
-
-    # Then build fuzz target.
-    prompt = self._container_handle_conclusion(cur_round, response,
-                                               build_result, prompt)
-    if prompt is None:
-      # Succeeded.
-      return None
-
-    # Finally check invalid responses.
-    if not prompt.get():
-      prompt = self._container_handle_invalid_tool_usage(
-          cur_round, response, prompt)
-
-    return prompt
+    results = []
+    for call in response.candidates[0].function_calls:
+      if call.name == 'run_bash_command_or_submit_revised_fuzz_target_and_build_script':
+        result = self.call_function(
+            cur_round,
+            call.args.get('reason'),
+            call.args.get('command'),
+            call.args.get('summary'),
+            call.args.get('fuzz_target'),
+            call.args.get('build_script', ''),
+            build_result,
+            results,
+        )
+        if not result:
+          return None
+        results.append(result)
+      else:
+        results.append(self.invalid_function_usage(cur_round, call))
+    return DefaultTemplateBuilder(self.llm, initial=results).build([])
 
   def _initialize_chat_session(self, tools: list[BaseTool]) -> ChatSession:
     """Initializes the LLM chat session with |tools|"""
 
-    import pdb
-    pdb.set_trace()
-    self.llm.tools = [tool.tool for tool in tools if tool.tool]
-
+    functions = [
+        FunctionDeclaration(
+            name=
+            'run_bash_command_or_submit_revised_fuzz_target_and_build_script',
+            description=
+            ('Use parameter reason and command to inspect files and environment variables to collect information to assist writing a fuzz target. '
+             'Or use parameter summary, fuzz_target, and build_script to submit the final revied fuzz target and build script.'
+            ),
+            parameters={
+                'type': 'object',
+                'properties': {
+                    'reason': {
+                        'type':
+                            'string',
+                        'description': (
+                            'The reason to execute the command. E.g., Inspect and '
+                            'learn from all existing human written fuzz targets as '
+                            'examples.')
+                    },
+                    'command': {
+                        'type':
+                            'string',
+                        'description': (
+                            'The bash command to execute. E.g., grep -rlZ '
+                            '"LLVMFuzzerTestOneInput(" "$(dirname {FUZZ_TARGET_PATH})"'
+                            ' | xargs -0 cat')
+                    },
+                    'summary': {
+                        'type':
+                            'string',
+                        'description':
+                            ('Recording the important findings, lessons, and '
+                             'insights of the fuzz target to avoid making or '
+                             'assist in fixing the same mistake next time')
+                    },
+                    'fuzz_target': {
+                        'type':
+                            'string',
+                        'description':
+                            ('The revised fuzz target in full. Do not omit any '
+                             'code even if it is the same as the previous one.')
+                    },
+                    'build_script': {
+                        'type':
+                            'string',
+                        'description':
+                            ('The full build script if different from the '
+                             'existing one. Do not omit any code even if it is '
+                             'the same as the previous one.')
+                    },
+                },
+            },
+        ),
+    ]
+    self.llm.tools = [Tool(function_declarations=[func]) for func in functions]
+    self.llm.tool_config = ToolConfig(
+        function_calling_config=ToolConfig.FunctionCallingConfig(
+            mode=ToolConfig.FunctionCallingConfig.Mode.ANY))
     model = self.llm.get_model()
     logger.info('Tools: %s', model._tools)
     return self.llm.get_chat_client(model=model)
 
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
-    logger.info('Executing Prototyper')
+    logger.info('Executing Repairer')
     last_result = result_history[-1]
     benchmark = last_result.benchmark
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
     cur_round = 1
-    build_result = BuildResult(benchmark=benchmark,
-                               trial=last_result.trial,
-                               work_dirs=last_result.work_dirs,
-                               author=self,
-                               chat_history={self.name: ''})
+    build_result = result_history[-1]
+    assert isinstance(build_result, BuildResult)
     prompt = self._initial_prompt(result_history)
     try:
       client = self._initialize_chat_session([self.inspect_tool])
