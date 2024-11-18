@@ -162,14 +162,15 @@ class Repairer(BaseAgent):
                               status=compile_succeed and binary_exists,
                               referenced=function_referenced)
 
-  def _submit_conclusion(self, cur_round: int, summary: str,
-                         fuzz_target_source: str, build_script_source: str,
+  def _submit_conclusion(self, cur_round: int, params: dict[str, str],
                          build_result: BuildResult,
                          result_parts: list[Part]) -> Optional[dict[str, str]]:
     """Runs a compilation tool to validate the new fuzz target and build script
     from LLM."""
     logger.info('----- ROUND %02d Received conclusion -----', cur_round)
 
+    fuzz_target_source = params.get('fuzz_target', '')
+    build_script_source = params.get('build_script', '')
     self._update_fuzz_target_and_build_script(cur_round, fuzz_target_source,
                                               build_script_source, build_result)
 
@@ -184,10 +185,7 @@ class Repairer(BaseAgent):
           extra_text='\n'.join(
               str(part.function_response) for part in result_parts)).strip()
       logger.info('***** Failed to recompile in %02d rounds *****', cur_round)
-      content = {
-          'summary': summary,
-          'fuzz target': fuzz_target_source,
-          'build script': build_script_source,
+      content = params | {
           'build result': compile_log,
       }
     elif not build_result.is_function_referenced:
@@ -200,36 +198,29 @@ class Repairer(BaseAgent):
           '`LLVMFuzzerTestOneInput` in fuzz target. YOU MUST CALL FUNCTION '
           f'`{build_result.benchmark.function_signature}` INSIDE FUNCTION '
           '`LLVMFuzzerTestOneInput`.')
-      content = {
-          'summary': summary,
-          'fuzz target': fuzz_target_source,
-          'build script': build_script_source,
+      content = params | {
           'build result': not_referenced_text,
       }
     else:
       prompt_text = 'This should never happen.'
-      content = {
-          'summary': summary,
-          'fuzz target': fuzz_target_source,
-          'build script': build_script_source,
+      content = params | {
           'build result': prompt_text,
       }
 
     return content
 
-  def _execute_bash_command(self, reason: str, command: str) -> dict[str, str]:
+  def _execute_bash_command(self, params: dict[str, str]) -> dict[str, str]:
     """Handles the command from LLM with container |tool|."""
+    command = params.get('command', '')
     process = self.inspect_tool.execute(command)
     stdout = self.llm.truncate_prompt(process.stdout)
     stderr = self.llm.truncate_prompt(process.stderr, stdout)
-    content = {
-        'reason': reason,
+    return params | {
         'command': process.args,
         'return code': str(process.returncode),
         'stdout': stdout,
         'stderr': stderr,
     }
-    return content
 
   def invalid_function_usage(self, cur_round: int, call: FunctionCall) -> Part:
     """Formats a prompt to re-teach LLM how to use the |tool|."""
@@ -239,23 +230,39 @@ class Repairer(BaseAgent):
     return Part.from_function_response(name=call.name,
                                        response={'content': prompt_text})
 
-  def call_function(self, cur_round: int, reason: str, command: str,
-                    summary: str, fuzz_target: str, build_script: str,
+  def call_function(self, cur_round: int, call: FunctionCall,
                     build_result: BuildResult,
                     results: list[Part]) -> Optional[Part]:
-    content1 = {}
-    content2 = {}
-    if command:
-      content1 = self._execute_bash_command(reason, command)
-    if fuzz_target:
-      content2 = self._submit_conclusion(cur_round, summary, fuzz_target,
-                                         build_script, build_result, results)
-      if content2 is None:
-        return None
+    if call.name != 'inspect_code_or_conclude_fuzz_target':
+      return Part.from_function_response(
+          name=call.name,
+          response={
+              'content': call.args | {
+                  'error': 'Malformatted function calls.'
+              },
+          })
+
+    content = {}
+    for name in call.args.keys():
+      params = call.args.get(name)
+      if name == 'inspect':
+        content[name] = self._execute_bash_command(params)
+      if name == 'conclude':
+        build_feedback = self._submit_conclusion(cur_round, params,
+                                                 build_result, results)
+        if build_feedback is None:
+          return None
+        content[name] = build_feedback
+      else:
+        content[name] = {
+            name: params | {
+                'error': 'Malformatted function calls.'
+            }
+        }
 
     return Part.from_function_response(
-        name='run_bash_command_or_submit_revised_fuzz_target_and_build_script',
-        response={'content': content1 | content2})
+        name='inspect_code_or_conclude_fuzz_target',
+        response={'content': content})
 
   def _container_tool_reaction(self, cur_round: int,
                                response: GenerationResponse,
@@ -263,77 +270,73 @@ class Repairer(BaseAgent):
     """Validates LLM conclusion or executes its command."""
     results = []
     for call in response.candidates[0].function_calls:
-      if call.name == 'run_bash_command_or_submit_revised_fuzz_target_and_build_script':
-        result = self.call_function(
-            cur_round,
-            call.args.get('reason'),
-            call.args.get('command'),
-            call.args.get('summary'),
-            call.args.get('fuzz_target'),
-            call.args.get('build_script', ''),
-            build_result,
-            results,
-        )
-        if not result:
-          return None
-        results.append(result)
-      else:
-        results.append(self.invalid_function_usage(cur_round, call))
+      result = self.call_function(cur_round, call, build_result, results)
+      results.append(result)
     return DefaultTemplateBuilder(self.llm, initial=results).build([])
 
   def _initialize_chat_session(self, tools: list[BaseTool]) -> ChatSession:
     """Initializes the LLM chat session with |tools|"""
-
     functions = [
         FunctionDeclaration(
-            name=
-            'run_bash_command_or_submit_revised_fuzz_target_and_build_script',
+            name='inspect_code_or_conclude_fuzz_target',
             description=
-            ('Use parameter reason and command to inspect files and environment variables to collect information to assist writing a fuzz target. '
-             'Or use parameter summary, fuzz_target, and build_script to submit the final revied fuzz target and build script.'
+            ('Inspect source code and environment variables with parameters `reason` and `command` or conclude the revised fuzz target generation result with parameters `summary`, `fuzz_target`, and `build_script`. '
             ),
             parameters={
                 'type': 'object',
                 'properties': {
-                    'reason': {
-                        'type':
-                            'string',
-                        'description': (
-                            'The reason to execute the command. E.g., Inspect and '
-                            'learn from all existing human written fuzz targets as '
-                            'examples.')
+                    'inspect': {
+                        'type': 'object',
+                        'properties': {
+                            'reason': {
+                                'type':
+                                    'string',
+                                'description': (
+                                    'The reason to execute the command. E.g., Inspect and '
+                                    'learn from all existing human written fuzz targets as '
+                                    'examples.')
+                            },
+                            'command': {
+                                'type':
+                                    'string',
+                                'description': (
+                                    'The bash command to execute. E.g., grep -rlZ '
+                                    '"LLVMFuzzerTestOneInput(" "$(dirname {FUZZ_TARGET_PATH})"'
+                                    ' | xargs -0 cat')
+                            }
+                        },
+                        'required': ['reason', 'command']
                     },
-                    'command': {
-                        'type':
-                            'string',
-                        'description': (
-                            'The bash command to execute. E.g., grep -rlZ '
-                            '"LLVMFuzzerTestOneInput(" "$(dirname {FUZZ_TARGET_PATH})"'
-                            ' | xargs -0 cat')
-                    },
-                    'summary': {
-                        'type':
-                            'string',
-                        'description':
-                            ('Recording the important findings, lessons, and '
-                             'insights of the fuzz target to avoid making or '
-                             'assist in fixing the same mistake next time')
-                    },
-                    'fuzz_target': {
-                        'type':
-                            'string',
-                        'description':
-                            ('The revised fuzz target in full. Do not omit any '
-                             'code even if it is the same as the previous one.')
-                    },
-                    'build_script': {
-                        'type':
-                            'string',
-                        'description':
-                            ('The full build script if different from the '
-                             'existing one. Do not omit any code even if it is '
-                             'the same as the previous one.')
-                    },
+                    'conclude': {
+                        'type': 'object',
+                        'properties': {
+                            'summary': {
+                                'type':
+                                    'string',
+                                'description': (
+                                    'The reason to execute the command. E.g., Inspect and '
+                                    'learn from all existing human written fuzz targets as '
+                                    'examples.')
+                            },
+                            'fuzz_target': {
+                                'type':
+                                    'string',
+                                'description': (
+                                    'The revised fuzz target in full. Do not omit any '
+                                    'code even if it is the same as the previous one.'
+                                )
+                            },
+                            'build_script': {
+                                'type':
+                                    'string',
+                                'description': (
+                                    'The full build script if different from the '
+                                    'existing one. Do not omit any code even if it is '
+                                    'the same as the previous one.')
+                            }
+                        },
+                        'required': ['summary', 'fuzz_target', 'build_script']
+                    }
                 },
             },
         ),
