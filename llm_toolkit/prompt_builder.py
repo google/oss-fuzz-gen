@@ -147,6 +147,8 @@ class DefaultTemplateBuilder(PromptBuilder):
     priming = self._get_template(self.priming_template_file)
     priming = priming.replace('{LANGUAGE}', benchmark.file_type.value)
     priming = priming.replace('{FUZZ_TARGET_PATH}', benchmark.target_path)
+    priming = priming.replace('{FUNCTION_UNDER_TEST}',
+                              benchmark.function_signature)
     # TODO(Dongge): Add project name and fuzz target file path.
     if benchmark.needs_extern:
       priming += (
