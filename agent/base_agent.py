@@ -44,8 +44,7 @@ class BaseAgent(ABC):
         return tool
     return None
 
-  def chat_llm(self, cur_round: int, client: Any,
-               prompt: Prompt) -> str | GenerationResponse:
+  def chat_llm(self, cur_round: int, client: Any, prompt: Prompt) -> Any:
     """Chat with LLM."""
     logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
                 cur_round, prompt.get(), cur_round)

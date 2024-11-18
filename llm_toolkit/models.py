@@ -61,7 +61,7 @@ class LLM:
   _max_attempts = 5  # Maximum number of attempts to get prediction response
 
   tools: list = []
-  tool_config = None
+  tool_config: Optional[Any] = None
 
   def __init__(
       self,
@@ -696,7 +696,7 @@ class GeminiV1D5Chat(GeminiV1D5):
 
     return raw_prompt_text
 
-  def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:
+  def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> Any:
     if self.ai_binary:
       logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
 

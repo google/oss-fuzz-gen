@@ -7,8 +7,7 @@ import time
 from datetime import timedelta
 from typing import Optional
 
-from google.cloud.aiplatform_v1beta1.types.tool import FunctionCall
-from vertexai.preview.generative_models import (ChatSession,
+from vertexai.preview.generative_models import (ChatSession, FunctionCall,
                                                 FunctionDeclaration,
                                                 GenerationResponse, Part, Tool,
                                                 ToolConfig)
@@ -233,18 +232,19 @@ class Repairer(BaseAgent):
   def call_function(self, cur_round: int, call: FunctionCall,
                     build_result: BuildResult,
                     results: list[Part]) -> Optional[Part]:
+    args = dict(call.args)
     if call.name != 'inspect_code_or_conclude_fuzz_target':
       return Part.from_function_response(
           name=call.name,
           response={
-              'content': call.args | {
+              'content': args | {
                   'error': 'Malformatted function calls.'
               },
           })
 
     content = {}
-    for name in call.args.keys():
-      params = call.args.get(name)
+    for name in args.keys():
+      params = args.get(name, {})
       if name == 'inspect':
         content[name] = self._execute_bash_command(params)
       if name == 'conclude':
