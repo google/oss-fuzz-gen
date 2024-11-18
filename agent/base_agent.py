@@ -7,6 +7,8 @@ import time
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
+from vertexai.preview.generative_models import GenerationResponse
+
 import logger
 import utils
 from llm_toolkit.models import LLM
@@ -42,7 +44,8 @@ class BaseAgent(ABC):
         return tool
     return None
 
-  def chat_llm(self, cur_round: int, client: Any, prompt: Prompt) -> str:
+  def chat_llm(self, cur_round: int, client: Any,
+               prompt: Prompt) -> str | GenerationResponse:
     """Chat with LLM."""
     logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
                 cur_round, prompt.get(), cur_round)
@@ -64,6 +67,9 @@ class BaseAgent(ABC):
         line for line in raw_code_block.splitlines()
         if not line.strip().startswith('```')
     ]
+    # Sometimes LLM returns the build script with only one comment.
+    if all(line.strip().startswith('#') for line in filtered_lines):
+      return ''
     filtered_code_block = '\n'.join(filtered_lines)
     return filtered_code_block
 
