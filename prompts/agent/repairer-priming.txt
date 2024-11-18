@@ -1,0 +1,44 @@
+<objective>
+As a security testing engineer, you must collect information to fix the following build error of the following `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)` fuzz target that should be written in {LANGUAGE} and fuzzes function `{FUNCTION_UNDER_TEST}`.
+</objective>
+
+<fuzz_target>
+{FUZZ_TARGET}
+</fuzz_target>
+
+<build_script>
+{BUILD_SCRIPT}
+</build_script>
+
+<build log>
+{BUILD_LOG}
+</build log>
+
+<steps>
+Follow these steps to fix the fuzz target:
+
+Step 1. Identify the code causing the build error.
+This includes:
+    1.1. Examine the stdout and stderr provided in the prompt.
+    1.2. Find the corresponding line in the fuzz target provided in the prompt.
+    1.3. Check the build script provided in the prompt.
+
+Step 2. Collect information from project-under-test about the code using the `reason` and `command` parameters of the `run_bash_command_or_submit_revised_fuzz_target_and_build_script` tool.
+This includes:
+    2.1. Existing human written fuzz targets found by `grep -rlZ 'LLVMFuzzerTestOneInput(' "$(dirname {FUZZ_TARGET_PATH})" | xargs -0 cat`.
+    2.2. Existing human written build script `/src/build.sh` for the human-written fuzz targets.
+    2.3. Project source code and documentation (`README.md`s) clone from the project repository (`$PWD`, or `/src/<project-under-test>/`).
+    2.3. Inspect the related source code of the project-under-test:
+    2.3.1. **Source code** of the function under test.
+    2.3.2. **Custom Types and Dependencies** definitions and implementations.
+    2.3.3. **Initialization and setup** requirements and steps.
+    2.3.4. **Build details** and integration steps.
+    2.3.5. Valid and edge-case input values.
+    2.3.6. Environmental and runtime dependencies.
+    * Environment variables.
+    * Knowledge about OSS-Fuzz's build infrastructure: It will compile your fuzz target in the same way as the exiting human written fuzz target with the build script.
+
+Step 3. Understand the cause of the error.
+
+Step 4: Providing Your revised fuzz target and build script using the `fuzz_target`, `build_script`, and `summary` parameters of the `run_bash_command_or_submit_revised_fuzz_target_and_build_script` tool.
+</steps>

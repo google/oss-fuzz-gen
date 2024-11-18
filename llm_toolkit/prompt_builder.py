@@ -28,6 +28,7 @@ from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
+from results import BuildResult
 
 logger = logging.getLogger(__name__)
 
@@ -581,6 +582,44 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     self._prepare_prompt(priming, final_problem, example_pair,
                          project_example_content)
     self._prompt.append(tool_guides)
+    return self._prompt
+
+
+class RepairerTemplateBuilder(PrototyperTemplateBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               build_result: BuildResult,
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model, benchmark, template_dir)
+    self.build_result = build_result
+
+    # Load templates.
+    self.priming_template_file = self._find_template(self.agent_templare_dir,
+                                                     'repairer-priming.txt')
+
+  def _format_priming(self, benchmark: Benchmark) -> str:
+    """Formats a priming based on the prompt template."""
+    priming = super()._format_priming(benchmark)
+    priming = priming.replace('{FUZZ_TARGET}',
+                              self.build_result.fuzz_target_source)
+    priming = priming.replace('{BUILD_SCRIPT}',
+                              self.build_result.build_script_source)
+    priming = priming.replace('{BUILD_LOG}', self.build_result.compile_log)
+    return priming
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    if not self.benchmark:
+      return self._prompt
+    priming = self._format_priming(self.benchmark)
+    self._prepare_prompt(priming, '', example_pair, project_example_content)
     return self._prompt
 
 
