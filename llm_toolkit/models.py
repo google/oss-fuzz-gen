@@ -32,7 +32,7 @@ import openai
 import tiktoken
 import vertexai
 from google.api_core.exceptions import (GoogleAPICallError, InvalidArgument,
-                                        ResourceExhausted)
+                                        ResourceExhausted, TooManyRequests)
 from vertexai import generative_models
 from vertexai.preview.generative_models import ChatSession, GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
@@ -654,7 +654,10 @@ class GeminiV1D5Chat(GeminiV1D5):
           ValueError,  # TODO(dongge): Handle RECITATION specifically.
           IndexError,  # A known error from vertexai.
       ],
-      other_exceptions={ResourceExhausted: 100})
+      other_exceptions={
+          ResourceExhausted: 100,
+          TooManyRequests: 100,
+      })
   def _do_generate(self, client: ChatSession, prompt: str,
                    config: dict[str, Any]) -> Any:
     """Generates chat response."""
