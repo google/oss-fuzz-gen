@@ -44,7 +44,7 @@ gcloud auth application-default set-quota-project <your-project>
 You'll also need to specify the GCP projects and locations where you have Vertex AI quota (comma delimited):
 ```bash
 export CLOUD_ML_PROJECT_ID=<gcp-project-id>
-export VERTEX_AI_LOCATIONS=us-west1,us-west4,us-east4,us-central1,northamerica-northeast1
+export VERTEX_AI_LOCATIONS=us-west1,us-west4,us-east4,us-central1
 ```
 
 #### OpenAI
