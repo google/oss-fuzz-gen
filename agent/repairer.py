@@ -237,9 +237,12 @@ class Repairer(BaseAgent):
       return Part.from_function_response(
           name=call.name,
           response={
-              'content': args | {
-                  'error': 'Malformatted function calls.'
-              },
+              'content':
+                  args | {
+                      'error':
+                          ('Malformatted function calls, function name is not '
+                           f'{call.name}')
+                  },
           })
 
     content = {}
@@ -253,11 +256,14 @@ class Repairer(BaseAgent):
         if build_feedback is None:
           return None
         content[name] = build_feedback
-      else:
+
+      if content.get(name) is None:
         content[name] = {
-            name: params | {
-                'error': 'Malformatted function calls.'
-            }
+            name:
+                params | {
+                    'error':
+                        f'Malformatted function calls, no feature name: {name}.'
+                }
         }
 
     return Part.from_function_response(
