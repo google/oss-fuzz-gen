@@ -39,8 +39,8 @@ class Repairer(BaseAgent):
     )
     prompt = prompt_builder.build(example_pair=[])
     self.protocol = (
-        'Use the run_bash_command_or_submit_revised_fuzz_target_and_build_script tool to inspect code or the  submit the fuzz target and '
-        'build script')
+        'Use the inspect_code_or_conclude_fuzz_target tool to inspect code or '
+        'the  submit the fuzz target and build script')
     return prompt
 
   def _update_fuzz_target_and_build_script(self, cur_round: int,
@@ -232,6 +232,7 @@ class Repairer(BaseAgent):
   def call_function(self, cur_round: int, call: FunctionCall,
                     build_result: BuildResult,
                     results: list[Part]) -> Optional[Part]:
+    """Calls tool functions based on LLM response."""
     args = dict(call.args)
     if call.name != 'inspect_code_or_conclude_fuzz_target':
       return Part.from_function_response(
