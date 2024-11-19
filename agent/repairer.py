@@ -281,14 +281,16 @@ class Repairer(BaseAgent):
       results.append(result)
     return DefaultTemplateBuilder(self.llm, initial=results).build([])
 
-  def _initialize_chat_session(self, tools: list[BaseTool]) -> ChatSession:
+  def _initialize_chat_session(self) -> ChatSession:
     """Initializes the LLM chat session with |tools|"""
     functions = [
         FunctionDeclaration(
             name='inspect_code_or_conclude_fuzz_target',
             description=
-            ('Inspect source code and environment variables with parameters `reason` and `command` or conclude the revised fuzz target generation result with parameters `summary`, `fuzz_target`, and `build_script`. '
-            ),
+            ('Inspect source code and environment variables with parameters '
+             '`reason` and `command` or conclude the revised fuzz target '
+             'generation result with parameters `summary`, `fuzz_target`, and '
+             '`build_script`.'),
             parameters={
                 'type': 'object',
                 'properties': {
@@ -299,17 +301,17 @@ class Repairer(BaseAgent):
                                 'type':
                                     'string',
                                 'description': (
-                                    'The reason to execute the command. E.g., Inspect and '
-                                    'learn from all existing human written fuzz targets as '
-                                    'examples.')
+                                    'The reason to execute the command. E.g., '
+                                    'Inspect and learn from all existing human '
+                                    'written fuzz targets as examples.')
                             },
                             'command': {
                                 'type':
                                     'string',
                                 'description': (
-                                    'The bash command to execute. E.g., grep -rlZ '
-                                    '"LLVMFuzzerTestOneInput(" "$(dirname {FUZZ_TARGET_PATH})"'
-                                    ' | xargs -0 cat')
+                                    'The bash command to execute. E.g., grep '
+                                    '-rlZ "LLVMFuzzerTestOneInput(" "$(dirname '
+                                    '{FUZZ_TARGET_PATH})" | xargs -0 cat')
                             }
                         },
                         'required': ['reason', 'command']
@@ -321,25 +323,28 @@ class Repairer(BaseAgent):
                                 'type':
                                     'string',
                                 'description': (
-                                    'The reason to execute the command. E.g., Inspect and '
-                                    'learn from all existing human written fuzz targets as '
-                                    'examples.')
+                                    'The important notes, insights, and lessons'
+                                    'learnt above when generating the fuzz '
+                                    'target and the build script.')
                             },
                             'fuzz_target': {
                                 'type':
                                     'string',
                                 'description': (
-                                    'The revised fuzz target in full. Do not omit any '
-                                    'code even if it is the same as the previous one.'
-                                )
+                                    'The **entire** revised fuzz target. Ensure'
+                                    ' the modified code is correctly integrated'
+                                    ' into the full code context, do not omit '
+                                    'any unchanged part of the original code.')
                             },
                             'build_script': {
                                 'type':
                                     'string',
                                 'description': (
-                                    'The full build script if different from the '
-                                    'existing one. Do not omit any code even if it is '
-                                    'the same as the previous one.')
+                                    'The **entire** revised build script. '
+                                    'Ensure the modified code is correctly '
+                                    'integrated into the full code context, do '
+                                    'not omit any unchanged part of the '
+                                    'original code.')
                             }
                         },
                         'required': ['summary', 'fuzz_target', 'build_script']
@@ -353,7 +358,6 @@ class Repairer(BaseAgent):
         function_calling_config=ToolConfig.FunctionCallingConfig(
             mode=ToolConfig.FunctionCallingConfig.Mode.ANY))
     model = self.llm.get_model()
-    logger.info('Tools: %s', model._tools)
     return self.llm.get_chat_client(model=model)
 
   def execute(self, result_history: list[Result]) -> BuildResult:
@@ -368,7 +372,7 @@ class Repairer(BaseAgent):
     assert isinstance(build_result, BuildResult)
     prompt = self._initial_prompt(result_history)
     try:
-      client = self._initialize_chat_session([self.inspect_tool])
+      client = self._initialize_chat_session()
       while prompt and cur_round < MAX_ROUND:
         response = self.chat_llm(cur_round, client=client, prompt=prompt)
         prompt = self._container_tool_reaction(cur_round, response,
