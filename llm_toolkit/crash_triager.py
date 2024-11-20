@@ -70,7 +70,7 @@ def llm_triage(
     logging.warning('LLM did not generate rawoutput for %s', prompt_path)
     return TriageResult.NOT_APPLICABLE
 
-  # TODO(fdt622): Use the common vote
+  # TODO(maoyixie): Use the common vote
   # Currently, we prefer the longest triage.
   preferred_triage_path, preferred_triage = max(triage_candidates,
                                                 key=lambda x: len(x[1]))
