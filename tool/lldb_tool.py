@@ -42,7 +42,7 @@ class LLDBTool(BaseTool):
     """Prepares the project's OSS-Fuzz docker image and returns the image name.
     """
     image_name = f'gcr.io/oss-fuzz/{self.project}'
-    # TODO(fdt622): implement image cache
+    # TODO(maoyixie): implement image cache
     if oss_fuzz_checkout.image_exists(image_name):
       logger.info('Using existing project image for %s', self.project)
       return image_name
