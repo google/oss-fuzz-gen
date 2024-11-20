@@ -4,13 +4,14 @@ project) to help identify log during debugging and result tracking."""
 import json
 import logging
 import os
+import threading
 from typing import Mapping
 
 from results import Result
 
 FINAL_RESULT_JSON = 'result.json'
 
-_trial_logger = None
+_thread_local = threading.local()
 
 
 class CustomLoggerAdapter(logging.LoggerAdapter):
@@ -126,22 +127,17 @@ def error(msg: object,
 def get_trial_logger(name: str = __name__,
                      trial: int = 0,
                      level=logging.DEBUG) -> CustomLoggerAdapter:
-  """Sets up or retrieves the singleton instance of CustomLoggerAdapter."""
-  global _trial_logger
-  if _trial_logger:
-    return _trial_logger
-
-  logger = logging.getLogger(name)
-  if not logger.handlers:
-    formatter = logging.Formatter(
-        fmt=('%(asctime)s [Trial ID: %(trial)02d] %(levelname)s '
-             '[%(module)s.%(funcName)s]: %(message)s'),
-        datefmt='%Y-%m-%d %H:%M:%S')
-    handler = logging.StreamHandler()
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.setLevel(level)
-    logger.propagate = False
-
-  _trial_logger = CustomLoggerAdapter(logger, {'trial': trial})
-  return _trial_logger
+  """Sets up or retrieves a thread-local CustomLoggerAdapter for each thread."""
+  if not hasattr(_thread_local, 'trial_logger'):
+    logger = logging.getLogger(f'{name}_trial_{trial}')
+    if not logger.handlers:
+      formatter = logging.Formatter(
+          fmt=('%(asctime)s [Trial ID: %(trial)02d] %(levelname)s '
+               '[%(module)s.%(funcName)s]: %(message)s'),
+          datefmt='%Y-%m-%d %H:%M:%S')
+      handler = logging.StreamHandler()
+      handler.setFormatter(formatter)
+      logger.addHandler(handler)
+      logger.setLevel(level)
+    _thread_local.trial_logger = CustomLoggerAdapter(logger, {'trial': trial})
+  return _thread_local.trial_logger
