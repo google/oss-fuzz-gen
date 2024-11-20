@@ -38,8 +38,8 @@ class CrashAnalyzer(BaseAgent):
     return DefaultTemplateBuilder(self.llm).build([])
 
   def _create_ossfuzz_project_with_lldb(self, name: str, target_file: str,
-                                        build_script_path: str,
-                                        run_result: RunResult) -> str:
+                                        run_result: RunResult,
+                                        build_script_path: str = '') -> str:
     """Creates an OSS-Fuzz project with new dockerfile. The new project
     will replicate an existing project |name| but modify its dockerfile."""
     logger.info('target file: %s', target_file)
@@ -60,10 +60,10 @@ class CrashAnalyzer(BaseAgent):
         target_file,
         os.path.join(generated_project_path, os.path.basename(target_file)))
 
-    if os.path.getsize(build_script_path) == 0:
+    if not build_script_path or os.path.getsize(build_script_path) == 0:
       # Add additional statement in dockerfile to enable -g and install lldb.
       with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
-        f.write('\nENV FUZZING_LANGUAGE=c++\n'
+        f.write('\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
                 '\nRUN sed -i.bak \'1i export CFLAGS="${CFLAGS} -g"\' '
                 '/src/build.sh\n'
                 '\nRUN apt-get update && apt-get install -y lldb\n')
@@ -80,7 +80,7 @@ class CrashAnalyzer(BaseAgent):
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(
           '\nCOPY agent-build.sh /src/build.sh\n'
-          '\nENV FUZZING_LANGUAGE=c++\n'
+          '\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
           '\nRUN sed -i.bak \'1i export CFLAGS="${CFLAGS} -g"\' /src/build.sh\n'
           '\nRUN apt-get update && apt-get install -y lldb\n')
 
@@ -141,7 +141,7 @@ class CrashAnalyzer(BaseAgent):
 
       self._create_ossfuzz_project_with_lldb(generated_oss_fuzz_project,
                                              fuzz_target_path,
-                                             build_script_path, last_result)
+                                             last_result, build_script_path)
 
       self.analyze_tool = LLDBTool(
           benchmark,
