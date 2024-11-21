@@ -53,5 +53,5 @@
   "signature": "int stbi_is_16_bit_from_file(FILE *)"
 "language": "c++"
 "project": "stb"
-"target_name": "stb_png_read_fuzzer"
+"target_name": "stbi_read_fuzzer"
 "target_path": "/src/stb/tests/stbi_read_fuzzer.c"
