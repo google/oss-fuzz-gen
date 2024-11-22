@@ -4,14 +4,11 @@ project) to help identify log during debugging and result tracking."""
 import json
 import logging
 import os
-import threading
 from typing import Mapping
 
 from results import Result
 
 FINAL_RESULT_JSON = 'result.json'
-
-_thread_local = threading.local()
 
 
 class CustomLoggerAdapter(logging.LoggerAdapter):
@@ -62,82 +59,86 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
 
 def debug(msg: object,
           *args: object,
+          trial: int,
           exc_info=None,
           stack_info: bool = False,
           stacklevel: int = 1,
           extra: Mapping[str, object] | None = None,
           **kwargs: object) -> None:
-  return get_trial_logger().debug(msg,
-                                  *args,
-                                  exc_info=exc_info,
-                                  stack_info=stack_info,
-                                  stacklevel=stacklevel,
-                                  extra=extra,
-                                  **kwargs)
+  return get_trial_logger(trial=trial).debug(msg,
+                                             *args,
+                                             exc_info=exc_info,
+                                             stack_info=stack_info,
+                                             stacklevel=stacklevel,
+                                             extra=extra,
+                                             **kwargs)
 
 
 def info(msg: object,
          *args: object,
+         trial: int,
          exc_info=None,
          stack_info: bool = False,
          stacklevel: int = 1,
          extra: Mapping[str, object] | None = None,
          **kwargs: object) -> None:
-  return get_trial_logger().info(msg,
-                                 *args,
-                                 exc_info=exc_info,
-                                 stack_info=stack_info,
-                                 stacklevel=stacklevel,
-                                 extra=extra,
-                                 **kwargs)
+  return get_trial_logger(trial=trial).info(msg,
+                                            *args,
+                                            exc_info=exc_info,
+                                            stack_info=stack_info,
+                                            stacklevel=stacklevel,
+                                            extra=extra,
+                                            **kwargs)
 
 
 def warning(msg: object,
             *args: object,
+            trial: int,
             exc_info=None,
             stack_info: bool = False,
             stacklevel: int = 1,
             extra: Mapping[str, object] | None = None,
             **kwargs: object) -> None:
-  return get_trial_logger().warning(msg,
-                                    *args,
-                                    exc_info=exc_info,
-                                    stack_info=stack_info,
-                                    stacklevel=stacklevel,
-                                    extra=extra,
-                                    **kwargs)
+  return get_trial_logger(trial=trial).warning(msg,
+                                               *args,
+                                               exc_info=exc_info,
+                                               stack_info=stack_info,
+                                               stacklevel=stacklevel,
+                                               extra=extra,
+                                               **kwargs)
 
 
 def error(msg: object,
           *args: object,
+          trial: int,
           exc_info=None,
           stack_info: bool = False,
           stacklevel: int = 1,
           extra: Mapping[str, object] | None = None,
           **kwargs: object) -> None:
-  return get_trial_logger().error(msg,
-                                  *args,
-                                  exc_info=exc_info,
-                                  stack_info=stack_info,
-                                  stacklevel=stacklevel,
-                                  extra=extra,
-                                  **kwargs)
+  return get_trial_logger(trial=trial).error(msg,
+                                             *args,
+                                             exc_info=exc_info,
+                                             stack_info=stack_info,
+                                             stacklevel=stacklevel,
+                                             extra=extra,
+                                             **kwargs)
 
 
 def get_trial_logger(name: str = __name__,
                      trial: int = 0,
                      level=logging.DEBUG) -> CustomLoggerAdapter:
   """Sets up or retrieves a thread-local CustomLoggerAdapter for each thread."""
-  if not hasattr(_thread_local, 'trial_logger'):
-    logger = logging.getLogger(f'{name}_trial_{trial}')
-    if not logger.handlers:
-      formatter = logging.Formatter(
-          fmt=('%(asctime)s [Trial ID: %(trial)02d] %(levelname)s '
-               '[%(module)s.%(funcName)s]: %(message)s'),
-          datefmt='%Y-%m-%d %H:%M:%S')
-      handler = logging.StreamHandler()
-      handler.setFormatter(formatter)
-      logger.addHandler(handler)
-      logger.setLevel(level)
-    _thread_local.trial_logger = CustomLoggerAdapter(logger, {'trial': trial})
-  return _thread_local.trial_logger
+  logger = logging.getLogger(name)
+  if not logger.handlers:
+    formatter = logging.Formatter(
+        fmt=('%(asctime)s [Trial ID: %(trial)02d] %(levelname)s '
+             '[%(module)s.%(funcName)s]: %(message)s'),
+        datefmt='%Y-%m-%d %H:%M:%S')
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(level)
+    logger.propagate = False
+
+  return CustomLoggerAdapter(logger, {'trial': trial})

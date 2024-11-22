@@ -49,10 +49,10 @@ class Prototyper(BaseAgent):
     build_result.fuzz_target_source = fuzz_target_source
     if fuzz_target_source:
       logger.debug('ROUND %02d Parsed fuzz target from LLM: %s', cur_round,
-                   fuzz_target_source)
+                   fuzz_target_source, trial=build_result.trial)
     else:
       logger.error('ROUND %02d No fuzz target source code in conclusion: %s',
-                   cur_round, response)
+                   cur_round, response, trial=build_result.trial)
 
     build_script_source = self._filter_code(
         self._parse_tag(response, 'build script'))
@@ -61,10 +61,10 @@ class Prototyper(BaseAgent):
         'source /src/chronos.sh', '')
     if build_script_source:
       logger.debug('ROUND %02d Parsed build script from LLM: %s', cur_round,
-                   build_script_source)
+                   build_script_source, trial=build_result.trial)
     else:
       logger.debug('ROUND %02d No build script in conclusion: %s', cur_round,
-                   response)
+                   response, trial=build_result.trial)
 
   def _update_build_result(self, build_result: BuildResult,
                            compile_process: sp.CompletedProcess, status: bool,
@@ -84,20 +84,20 @@ class Prototyper(BaseAgent):
     #   2. Recompile with the modified build script, if any.
     build_script_source = build_result.build_script_source
 
-    logger.info('First compile fuzz target without modifying build script.')
+    logger.info('First compile fuzz target without modifying build script.', trial=build_result.trial)
     build_result.build_script_source = ''
     self._validate_fuzz_target_and_build_script_via_compile(
         cur_round, build_result)
 
     if not build_result.success and build_script_source:
-      logger.info('Then compile fuzz target with modified build script.')
+      logger.info('Then compile fuzz target with modified build script.', trial=build_result.trial)
       build_result.build_script_source = build_script_source
       self._validate_fuzz_target_and_build_script_via_compile(
           cur_round, build_result)
 
   def _validate_fuzz_target_references_function(
       self, compilation_tool: ProjectContainerTool, benchmark: Benchmark,
-      cur_round: int) -> bool:
+      cur_round: int, trial: int) -> bool:
     """Validates if the LLM generated fuzz target assembly code references
     function-under-test."""
     disassemble_result = compilation_tool.execute(
@@ -106,10 +106,10 @@ class Prototyper(BaseAgent):
     function_referenced = (disassemble_result.returncode == 0 and
                            benchmark.function_name in disassemble_result.stdout)
     logger.debug('ROUND %02d Final fuzz target function referenced: %s',
-                 cur_round, function_referenced)
+                 cur_round, function_referenced, trial=trial)
     if not function_referenced:
       logger.debug('ROUND %02d Final fuzz target function not referenced',
-                   cur_round)
+                   cur_round, trial=trial)
     return function_referenced
 
   def _validate_fuzz_target_and_build_script_via_compile(
@@ -133,25 +133,25 @@ class Prototyper(BaseAgent):
               file_content=build_result.build_script_source))
 
     # Recompile.
-    logger.info('===== ROUND %02d Recompile =====', cur_round)
+    logger.info('===== ROUND %02d Recompile =====', cur_round, trial=build_result.trial)
     start_time = time.time()
     compile_process = compilation_tool.compile()
     end_time = time.time()
     logger.debug('ROUND %02d compilation time: %s', cur_round,
-                 timedelta(seconds=end_time - start_time))
+                 timedelta(seconds=end_time - start_time), trial=build_result.trial)
     compile_succeed = compile_process.returncode == 0
     logger.debug('ROUND %02d Fuzz target compiles: %s', cur_round,
-                 compile_succeed)
+                 compile_succeed, trial=build_result.trial)
 
     # Double-check binary.
     ls_result = compilation_tool.execute(f'ls /out/{benchmark.target_name}')
     binary_exists = ls_result.returncode == 0
     logger.debug('ROUND %02d Final fuzz target binary exists: %s', cur_round,
-                 binary_exists)
+                 binary_exists, trial=build_result.trial)
 
     # Validate if function-under-test is referenced by the fuzz target.
     function_referenced = self._validate_fuzz_target_references_function(
-        compilation_tool, benchmark, cur_round)
+        compilation_tool, benchmark, cur_round, build_result.trial)
 
     compilation_tool.terminate()
     self._update_build_result(build_result,
@@ -164,18 +164,18 @@ class Prototyper(BaseAgent):
       build_result: BuildResult) -> Optional[Prompt]:
     """Runs a compilation tool to validate the new fuzz target and build script
     from LLM."""
-    logger.info('----- ROUND %02d Received conclusion -----', cur_round)
+    logger.info('----- ROUND %02d Received conclusion -----', cur_round, trial=build_result.trial)
 
     self._update_fuzz_target_and_build_script(cur_round, response, build_result)
 
     self._validate_fuzz_target_and_build_script(cur_round, build_result)
     if build_result.success:
-      logger.info('***** Prototyper succeded in %02d rounds *****', cur_round)
+      logger.info('***** Prototyper succeded in %02d rounds *****', cur_round, trial=build_result.trial)
       return None
 
     if not build_result.compiles:
       compile_log = self.llm.truncate_prompt(build_result.compile_log)
-      logger.info('***** Failed to recompile in %02d rounds *****', cur_round)
+      logger.info('***** Failed to recompile in %02d rounds *****', cur_round, trial=build_result.trial)
       prompt_text = (
           'Failed to build fuzz target. Here is the fuzz target, build script, '
           'compliation command, and other compilation runtime output. Analyze '
@@ -205,7 +205,7 @@ class Prototyper(BaseAgent):
     elif not build_result.is_function_referenced:
       logger.info(
           '***** Fuzz target does not reference function-under-test in %02d '
-          'rounds *****', cur_round)
+          'rounds *****', cur_round, trial=build_result.trial)
       prompt_text = (
           'The fuzz target builds successfully, but the target function '
           f'`{build_result.benchmark.function_signature}` was not used by '
@@ -230,13 +230,13 @@ class Prototyper(BaseAgent):
                                                build_result)
     # Other responses are invalid.
     logger.warning('ROUND %02d Invalid response from LLM: %s', cur_round,
-                   response)
+                   response, trial=build_result.trial)
     return self._container_handle_invalid_tool_usage(self.inspect_tool)
 
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
-    logger.info('Executing Prototyper')
     last_result = result_history[-1]
+    logger.info('Executing Prototyper', trial=last_result.trial)
     benchmark = last_result.benchmark
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
@@ -250,13 +250,13 @@ class Prototyper(BaseAgent):
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
       while prompt and cur_round < MAX_ROUND:
-        response = self.chat_llm(cur_round, client=client, prompt=prompt)
+        response = self.chat_llm(cur_round, client=client, prompt=prompt, trial=last_result.trial)
         prompt = self._container_tool_reaction(cur_round, response,
                                                build_result)
         cur_round += 1
     finally:
       # Cleanup: stop and remove the container
       logger.debug('Stopping and removing the inspect container %s',
-                   self.inspect_tool.container_id)
+                   self.inspect_tool.container_id, trial=last_result.trial)
       self.inspect_tool.terminate()
     return build_result

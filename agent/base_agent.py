@@ -42,13 +42,13 @@ class BaseAgent(ABC):
         return tool
     return None
 
-  def chat_llm(self, cur_round: int, client: Any, prompt: Prompt) -> str:
+  def chat_llm(self, cur_round: int, client: Any, prompt: Prompt, trial: int) -> str:
     """Chat with LLM."""
     logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
-                cur_round, prompt.get(), cur_round)
+                cur_round, prompt.get(), cur_round, trial=trial)
     response = self.llm.chat_llm(client=client, prompt=prompt)
     logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
-                cur_round, response, cur_round)
+                cur_round, response, cur_round, trial=trial)
     return response
 
   def _parse_tag(self, response: str, tag: str) -> str:
@@ -89,11 +89,11 @@ class BaseAgent(ABC):
                    f'interaction protocols:\n{tool.tutorial()}')
     return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
 
-  def _sleep_random_duration(self, min_sec: int = 1, max_sec: int = 60) -> None:
+  def _sleep_random_duration(self, trial: int, min_sec: int = 1, max_sec: int = 60, ) -> None:
     """Sleeps for a random duration between min_sec and max_sec. Agents uses
     this to avoid exceeding quota limit (e.g., LLM query frequency)."""
     duration = random.randint(min_sec, max_sec)
-    logger.debug('Sleeping for %d before the next query', duration)
+    logger.debug('Sleeping for %d before the next query', duration, trial=trial)
     time.sleep(duration)
 
   @classmethod

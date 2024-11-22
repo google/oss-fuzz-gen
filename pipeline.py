@@ -24,17 +24,18 @@ class Pipeline():
 
   def __init__(self,
                args: argparse.Namespace,
+               trial: int,
                writing_stage_agents: Optional[list[BaseAgent]] = None,
                evaluation_stage_agents: Optional[list[BaseAgent]] = None,
                analysis_stage_agents: Optional[list[BaseAgent]] = None):
     self.args = args
-    self.logger = logger.get_trial_logger()
+    self.trial = trial
+    self.logger = logger.get_trial_logger(trial=trial)
     self.logger.debug('Pipeline Initialized')
-    self.writing_stage: WritingStage = WritingStage(args, writing_stage_agents)
+    self.writing_stage: WritingStage = WritingStage(args, trial, writing_stage_agents)
     self.execution_stage: ExecutionStage = ExecutionStage(
-        args, evaluation_stage_agents)
-    self.analysis_stage: AnalysisStage = AnalysisStage(args,
-                                                       analysis_stage_agents)
+        args, trial, evaluation_stage_agents)
+    self.analysis_stage: AnalysisStage = AnalysisStage(args, trial, analysis_stage_agents)
 
   def _terminate(self, result_history: list[Result]) -> bool:
     """Validates if the termination conditions have been satisfied."""
