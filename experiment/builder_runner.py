@@ -650,7 +650,7 @@ class BuilderRunner:
         ])
         pre_build_command.extend(
             ['git', '-C', repo, 'checkout', commit, '-f', '&&'])
-    
+
     post_build_command.extend(['&&', 'chmod', '777', '-R', '/out/*'])
 
     build_command = pre_build_command + ['compile'] + post_build_command
@@ -924,7 +924,7 @@ class CloudBuilderRunner(BuilderRunner):
       command += ['--tags'] + cloud_build_tags
     command += ['--'] + self._libfuzzer_args()
 
-    logger.info(f'Command: {command}')
+    logger.info('Command: %s', command)
 
     if not self._run_with_retry_control(os.path.realpath(target_path),
                                         command,
