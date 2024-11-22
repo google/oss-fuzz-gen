@@ -325,7 +325,9 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
   trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
   trial_logger.info('Trial Starts')
   p = pipeline.Pipeline(
-      args=args, trial=trial, writing_stage_agents=[Prototyper(trial=trial, llm=model)])
+      args=args,
+      trial=trial,
+      writing_stage_agents=[Prototyper(trial=trial, llm=model)])
   results = p.execute(result_history=[
       Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
   ])
