@@ -8,6 +8,7 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
+from agent.repairer import Repairer
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.benchmark import Benchmark
 from llm_toolkit.prompt_builder import EXAMPLES as EXAMPLE_FUZZ_TARGETS
@@ -32,9 +33,10 @@ class Prototyper(BaseAgent):
         model=self.llm,
         benchmark=benchmark,
     )
-    prompt = prompt_builder.build(example_pair=[],
-                                  project_context_content=context_info,
-                                  tool_guides=self.inspect_tool.tutorial())
+    prompt = prompt_builder.build(
+        example_pair=[],
+        # project_context_content=context_info,
+        tool_guides=self.inspect_tool.tutorial())
     # prompt = prompt_builder.build(example_pair=EXAMPLE_FUZZ_TARGETS.get(
     #     benchmark.language, []),
     #                               tool_guides=self.inspect_tool.tutorial())
@@ -176,33 +178,11 @@ class Prototyper(BaseAgent):
     if not build_result.compiles:
       compile_log = self.llm.truncate_prompt(build_result.compile_log)
       logger.info('***** Failed to recompile in %02d rounds *****', cur_round)
-      prompt_text = (
-          'Failed to build fuzz target. Here is the fuzz target, build script, '
-          'compliation command, and other compilation runtime output. Analyze '
-          'the error messages, the fuzz target, and the build script carefully '
-          'to identify the root cause. Avoid making random changes to the fuzz '
-          'target or build script without a clear understanding of the error. '
-          'If necessary, #include necessary headers and #define required macros'
-          'or constants in the fuzz target, or adjust compiler flags to link '
-          'required libraries in the build script. After collecting information'
-          ', analyzing and understanding the error root cause, YOU MUST take at'
-          ' least one step to validate your theory with source code evidence. '
-          'Only if your theory is verified, respond the revised fuzz target and'
-          'build script in FULL.\n'
-          'Always try to learn from the source code about how to fix errors, '
-          'for example, search for the key words (e.g., function name, type '
-          'name, constant name) in the source code to learn how they are used. '
-          'Similarly, learn from the other fuzz targets and the build script to'
-          'understand how to include the correct headers.\n'
-          'Focus on writing a minimum buildable fuzz target that calls the '
-          'target function. We can increase its complexity later, but first try'
-          'to make it compile successfully.'
-          'If an error happens repeatedly and cannot be fixed, try to '
-          'mitigate it. For example, replace or remove the line.'
-          f'<fuzz target>\n{build_result.fuzz_target_source}\n</fuzz target>\n'
-          f'<build script>\n{build_result.build_script_source}\n</build script>'
-          f'\n<compilation log>\n{compile_log}\n</compilation log>\n')
-    elif not build_result.is_function_referenced:
+      logger.info('compile_log: %s', compile_log)
+      repairer = Repairer(self.trial, llm=self.llm, args=self.args)
+      build_result = repairer.execute([build_result])
+      return None
+    if not build_result.is_function_referenced:
       logger.info(
           '***** Fuzz target does not reference function-under-test in %02d '
           'rounds *****', cur_round)

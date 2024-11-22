@@ -32,7 +32,7 @@ import openai
 import tiktoken
 import vertexai
 from google.api_core.exceptions import (GoogleAPICallError, InvalidArgument,
-                                        ResourceExhausted)
+                                        ResourceExhausted, TooManyRequests)
 from vertexai import generative_models
 from vertexai.preview.generative_models import ChatSession, GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
@@ -59,6 +59,9 @@ class LLM:
   MAX_INPUT_TOKEN: int = sys.maxsize
 
   _max_attempts = 5  # Maximum number of attempts to get prediction response
+
+  tools: list = []
+  tool_config: Optional[Any] = None
 
   def __init__(
       self,
@@ -564,7 +567,9 @@ class GeminiModel(VertexAIModel):
   ]
 
   def get_model(self) -> Any:
-    return GenerativeModel(self._vertex_ai_model)
+    return GenerativeModel(self._vertex_ai_model,
+                           tools=self.tools,
+                           tool_config=self.tool_config)
 
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
     # Loosen inapplicable restrictions just in case.
@@ -649,16 +654,24 @@ class GeminiV1D5Chat(GeminiV1D5):
           ValueError,  # TODO(dongge): Handle RECITATION specifically.
           IndexError,  # A known error from vertexai.
       ],
-      other_exceptions={ResourceExhausted: 100})
+      other_exceptions={
+          ResourceExhausted: 100,
+          TooManyRequests: 100,
+      })
   def _do_generate(self, client: ChatSession, prompt: str,
                    config: dict[str, Any]) -> Any:
     """Generates chat response."""
     logger.info('%s generating response with config: %s', self.name, config)
-    return client.send_message(
-        prompt,
-        stream=False,
-        generation_config=config,
-        safety_settings=self.safety_config).text  # type: ignore
+    response = client.send_message(prompt,
+                                   stream=False,
+                                   generation_config=config,
+                                   safety_settings=self.safety_config)
+    try:
+      return response.text
+    except ValueError:
+      # A known error in Tool usage: response.text triggers ValueError when
+      # response.candiates[0].content has multiple values.
+      return response
 
   def truncate_prompt(self,
                       raw_prompt_text: Any,
@@ -686,7 +699,7 @@ class GeminiV1D5Chat(GeminiV1D5):
 
     return raw_prompt_text
 
-  def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:
+  def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> Any:
     if self.ai_binary:
       logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
 
