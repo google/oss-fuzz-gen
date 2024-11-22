@@ -19,6 +19,6 @@ The function we're fuzzing and corresponding types are included in the following
 
 {FUNCTION_ARG_TYPES_MSG}
 
-The most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code as simple as possible in order to secure it can be build.
+The most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code can be built.
 
 {ADDITIONAL_INFORMATION}

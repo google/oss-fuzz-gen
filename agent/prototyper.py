@@ -1,6 +1,7 @@
 """An LLM agent to generate a simple fuzz target prototype that can build.
 Use it as a usual module locally, or as script in cloud builds.
 """
+import re
 import subprocess as sp
 import time
 from datetime import timedelta
@@ -10,7 +11,6 @@ import logger
 from agent.base_agent import BaseAgent
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.benchmark import Benchmark
-from llm_toolkit.prompt_builder import EXAMPLES as EXAMPLE_FUZZ_TARGETS
 from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
                                         PrototyperTemplateBuilder)
 from llm_toolkit.prompts import Prompt
@@ -33,38 +33,37 @@ class Prototyper(BaseAgent):
         benchmark=benchmark,
     )
     prompt = prompt_builder.build(example_pair=[],
-                                  project_context_content=context_info,
-                                  tool_guides=self.inspect_tool.tutorial())
-    # prompt = prompt_builder.build(example_pair=EXAMPLE_FUZZ_TARGETS.get(
-    #     benchmark.language, []),
-    #                               tool_guides=self.inspect_tool.tutorial())
+                                  project_context_content=context_info)
+    self.llm.system_instruction = prompt_builder.system_instructions(
+        benchmark, [
+            'prototyper-system-instruction-objective.txt',
+            'prototyper-system-instruction-protocols.txt'
+        ])
+    self.protocol = self.llm.system_instruction[-1]
     return prompt
 
-  def _update_fuzz_target_and_build_script(self, cur_round: int, response: str,
+  def _update_fuzz_target_and_build_script(self, cur_round: int,
+                                           conclusion: str,
                                            build_result: BuildResult) -> None:
     """Updates fuzz target and build script in build_result with LLM response.
     """
     fuzz_target_source = self._filter_code(
-        self._parse_tag(response, 'fuzz target'))
+        self._parse_tag(conclusion, 'fuzz target'))
     build_result.fuzz_target_source = fuzz_target_source
     if fuzz_target_source:
-      logger.debug('ROUND %02d Parsed fuzz target from LLM: %s', cur_round,
+      logger.debug('ROUND %02d Parsed fuzz target from LLM:\n%s', cur_round,
                    fuzz_target_source)
     else:
-      logger.error('ROUND %02d No fuzz target source code in conclusion: %s',
-                   cur_round, response)
+      logger.error('ROUND %02d No fuzz target source code in conclusion.',
+                   cur_round)
 
     build_script_source = self._filter_code(
-        self._parse_tag(response, 'build script'))
-    # Sometimes LLM adds chronos, which makes no sense for new build scripts.
-    build_result.build_script_source = build_script_source.replace(
-        'source /src/chronos.sh', '')
+        self._parse_tag(conclusion, 'build script'))
     if build_script_source:
-      logger.debug('ROUND %02d Parsed build script from LLM: %s', cur_round,
+      logger.debug('ROUND %02d Parsed build script from LLM:\n%s', cur_round,
                    build_script_source)
     else:
-      logger.debug('ROUND %02d No build script in conclusion: %s', cur_round,
-                   response)
+      logger.debug('ROUND %02d No build script in conclusion.', cur_round)
 
   def _update_build_result(self, build_result: BuildResult,
                            compile_process: sp.CompletedProcess, status: bool,
@@ -74,6 +73,11 @@ class Prototyper(BaseAgent):
     build_result.compile_error = compile_process.stderr
     build_result.compile_log = self._format_bash_execution_result(
         compile_process)
+    # Remove the compile command, e.g., <bash>compile</bash>
+    build_result.compile_log = re.sub(r'<bash>.*?</bash>',
+                                      '',
+                                      build_result.compile_log,
+                                      flags=re.DOTALL)
     build_result.is_function_referenced = referenced
 
   def _validate_fuzz_target_and_build_script(self, cur_round: int,
@@ -159,22 +163,26 @@ class Prototyper(BaseAgent):
                               status=compile_succeed and binary_exists,
                               referenced=function_referenced)
 
-  def _container_handle_conclusion(
-      self, cur_round: int, response: str,
-      build_result: BuildResult) -> Optional[Prompt]:
+  def _container_handle_conclusion(self, cur_round: int, response: str,
+                                   build_result: BuildResult,
+                                   prompt: Prompt) -> Optional[Prompt]:
     """Runs a compilation tool to validate the new fuzz target and build script
     from LLM."""
+    conclusion = self._parse_tag(response, 'conclusion')
+    if not conclusion:
+      return prompt
     logger.info('----- ROUND %02d Received conclusion -----', cur_round)
 
     self._update_fuzz_target_and_build_script(cur_round, response, build_result)
 
     self._validate_fuzz_target_and_build_script(cur_round, build_result)
     if build_result.success:
-      logger.info('***** Prototyper succeded in %02d rounds *****', cur_round)
+      logger.info('***** Prototyper succeeded in %02d rounds *****', cur_round)
       return None
 
     if not build_result.compiles:
-      compile_log = self.llm.truncate_prompt(build_result.compile_log)
+      compile_log = self.llm.truncate_prompt(build_result.compile_log,
+                                             extra_text=prompt.get()).strip()
       logger.info('***** Failed to recompile in %02d rounds *****', cur_round)
       prompt_text = (
           'Failed to build fuzz target. Here is the fuzz target, build script, '
@@ -198,7 +206,7 @@ class Prototyper(BaseAgent):
           'target function. We can increase its complexity later, but first try'
           'to make it compile successfully.'
           'If an error happens repeatedly and cannot be fixed, try to '
-          'mitigate it. For example, replace or remove the line.'
+          'mitigate it. For example, replace or remove the line.\n'
           f'<fuzz target>\n{build_result.fuzz_target_source}\n</fuzz target>\n'
           f'<build script>\n{build_result.build_script_source}\n</build script>'
           f'\n<compilation log>\n{compile_log}\n</compilation log>\n')
@@ -215,23 +223,41 @@ class Prototyper(BaseAgent):
     else:
       prompt_text = ''
 
-    prompt = DefaultTemplateBuilder(self.llm, initial=prompt_text).build([])
+    prompt.append(prompt_text)
+    return prompt
+
+  def _container_handle_invalid_tool_usage(self, cur_round: int, response: str,
+                                           prompt: Prompt) -> Prompt:
+    """Formats a prompt to re-teach LLM how to use the |tool|."""
+    logger.warning('ROUND %02d Invalid response from LLM: %s', cur_round,
+                   response)
+    prompt_text = (f'No valid instruction received, Please follow the system '
+                   f'instructions:\n{self.protocol}')
+    prompt.append(prompt_text)
     return prompt
 
   def _container_tool_reaction(self, cur_round: int, response: str,
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
-    # Prioritize Bash instructions.
-    if command := self._parse_tag(response, 'bash'):
-      return self._container_handle_bash_command(command, self.inspect_tool)
+    prompt = DefaultTemplateBuilder(self.llm, None).build([])
 
-    if self._parse_tag(response, 'conclusion'):
-      return self._container_handle_conclusion(cur_round, response,
-                                               build_result)
-    # Other responses are invalid.
-    logger.warning('ROUND %02d Invalid response from LLM: %s', cur_round,
-                   response)
-    return self._container_handle_invalid_tool_usage(self.inspect_tool)
+    # First execute bash commands.
+    prompt = self._container_handle_bash_commands(response, self.inspect_tool,
+                                                  prompt)
+
+    # Then build fuzz target.
+    prompt = self._container_handle_conclusion(cur_round, response,
+                                               build_result, prompt)
+    if prompt is None:
+      # Succeeded.
+      return None
+
+    # Finally check invalid responses.
+    if not prompt.get():
+      prompt = self._container_handle_invalid_tool_usage(
+          cur_round, response, prompt)
+
+    return prompt
 
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""

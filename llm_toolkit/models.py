@@ -31,7 +31,8 @@ import anthropic
 import openai
 import tiktoken
 import vertexai
-from google.api_core.exceptions import (GoogleAPICallError, InvalidArgument,
+from google.api_core.exceptions import (GoogleAPICallError,
+                                        InternalServerError, InvalidArgument,
                                         ResourceExhausted)
 from vertexai import generative_models
 from vertexai.preview.generative_models import ChatSession, GenerativeModel
@@ -59,6 +60,7 @@ class LLM:
   MAX_INPUT_TOKEN: int = sys.maxsize
 
   _max_attempts = 5  # Maximum number of attempts to get prediction response
+  system_instruction: Optional[list] = None
 
   def __init__(
       self,
@@ -564,7 +566,8 @@ class GeminiModel(VertexAIModel):
   ]
 
   def get_model(self) -> Any:
-    return GenerativeModel(self._vertex_ai_model)
+    return GenerativeModel(self._vertex_ai_model,
+                           system_instruction=self.system_instruction)
 
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
     # Loosen inapplicable restrictions just in case.
@@ -648,6 +651,7 @@ class GeminiV1D5Chat(GeminiV1D5):
           InvalidArgument,
           ValueError,  # TODO(dongge): Handle RECITATION specifically.
           IndexError,  # A known error from vertexai.
+          InternalServerError,  # A known error from vertexai.
       ],
       other_exceptions={ResourceExhausted: 100})
   def _do_generate(self, client: ChatSession, prompt: str,
@@ -664,26 +668,41 @@ class GeminiV1D5Chat(GeminiV1D5):
                       raw_prompt_text: Any,
                       extra_text: Any = None) -> Any:
     """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
-    original_token_count = self.estimate_token_num(raw_prompt_text)
+    if self.system_instruction:
+      system_instructions = ''.join(self.system_instruction)
+    else:
+      system_instructions = ''
+    original_token_count = self.estimate_token_num(raw_prompt_text +
+                                                   system_instructions)
 
     token_count = original_token_count
+    logger.warning('original_token_count: %s', original_token_count)
+    logger.warning('self.MAX_INPUT_TOKEN: %s', self.MAX_INPUT_TOKEN)
     if token_count > self.MAX_INPUT_TOKEN:
       raw_prompt_text = raw_prompt_text[-3 * self.MAX_INPUT_TOKEN:]
 
+    logger.warning('raw_prompt_text: %s', raw_prompt_text)
     extra_text_token_count = self.estimate_token_num(extra_text)
     # Reserve 10000 tokens for raw prompt wrappers.
     max_raw_prompt_token_size = (self.MAX_INPUT_TOKEN - extra_text_token_count -
                                  10000)
+    logger.warning('max_raw_prompt_token_size: %s', max_raw_prompt_token_size)
 
-    while token_count > max_raw_prompt_token_size:
+    while token_count > max_raw_prompt_token_size // 4:
       estimate_truncate_size = int(
           (1 - max_raw_prompt_token_size / token_count) * len(raw_prompt_text))
-      raw_prompt_text = raw_prompt_text[estimate_truncate_size + 1:]
+
+      logger.warning('estimate_truncate_size: %s', estimate_truncate_size)
+      raw_prompt_init = raw_prompt_text[:100] + (
+          '\n...(truncated due to exceeding input token limit)...\n')
+      raw_prompt_text = raw_prompt_init + raw_prompt_text[
+          100 + estimate_truncate_size + 1:]
 
       token_count = self.estimate_token_num(raw_prompt_text)
       logger.warning('Truncated raw prompt from %d to %d tokens:',
                      original_token_count, token_count)
 
+    logger.warning('Final token_count: %s', token_count)
     return raw_prompt_text
 
   def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:

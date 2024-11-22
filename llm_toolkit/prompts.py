@@ -23,6 +23,7 @@ from typing import Any
 class Prompt:
   """Base prompt."""
 
+  @abstractmethod
   def __init__(self, initial=None):
     """Constructor."""
 

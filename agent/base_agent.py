@@ -44,10 +44,10 @@ class BaseAgent(ABC):
 
   def chat_llm(self, cur_round: int, client: Any, prompt: Prompt) -> str:
     """Chat with LLM."""
-    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
+    logger.info('<CHAT PROMPT:ROUND %02d>\n%s\n</CHAT PROMPT:ROUND %02d>',
                 cur_round, prompt.get(), cur_round)
     response = self.llm.chat_llm(client=client, prompt=prompt)
-    logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
+    logger.info('<CHAT RESPONSE:ROUND %02d>\n%s\n</CHAT RESPONSE:ROUND %02d>',
                 cur_round, response, cur_round)
     return response
 
@@ -55,6 +55,11 @@ class BaseAgent(ABC):
     """Parses the XML-style tags from LLM response."""
     match = re.search(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
     return match.group(1).strip() if match else ''
+
+  def _parse_tags(self, response: str, tag: str) -> list[str]:
+    """Parses the XML-style tags from LLM response."""
+    matches = re.findall(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
+    return [content.strip() for content in matches]
 
   def _filter_code(self, raw_code_block: str) -> str:
     """Filters out irrelevant lines from |raw_code_block|."""
@@ -67,11 +72,20 @@ class BaseAgent(ABC):
     filtered_code_block = '\n'.join(filtered_lines)
     return filtered_code_block
 
-  def _format_bash_execution_result(self, process: sp.CompletedProcess) -> str:
+  def _format_bash_execution_result(
+      self,
+      process: sp.CompletedProcess,
+      previous_prompt: Optional[Prompt] = None) -> str:
     """Formats a prompt based on bash execution result."""
-    stdout = self.llm.truncate_prompt(process.stdout)
+    if previous_prompt:
+      previous_prompt_text = previous_prompt.get()
+    else:
+      previous_prompt_text = ''
+    stdout = self.llm.truncate_prompt(process.stdout,
+                                      previous_prompt_text).strip()
     # TODO(dongge) Share input limit evenly if both stdout and stderr overlong.
-    stderr = self.llm.truncate_prompt(process.stderr, stdout)
+    stderr = self.llm.truncate_prompt(process.stderr,
+                                      stdout + previous_prompt_text).strip()
     return (f'<bash>\n{process.args}\n</bash>\n'
             f'<return code>\n{process.returncode}\n</return code>\n'
             f'<stdout>\n{stdout}\n</stdout>\n'
@@ -83,11 +97,15 @@ class BaseAgent(ABC):
     prompt_text = self._format_bash_execution_result(tool.execute(command))
     return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
 
-  def _container_handle_invalid_tool_usage(self, tool: BaseTool) -> Prompt:
-    """Formats a prompt to re-teach LLM how to use the |tool|."""
-    prompt_text = (f'No valid instruction received, Please follow the '
-                   f'interaction protocols:\n{tool.tutorial()}')
-    return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
+  def _container_handle_bash_commands(self, response: str, tool: BaseTool,
+                                      prompt: Prompt) -> Prompt:
+    """Handles the command from LLM with container |tool|."""
+    prompt_text = ''
+    for command in self._parse_tags(response, 'bash'):
+      prompt_text += self._format_bash_execution_result(
+          tool.execute(command), previous_prompt=prompt) + '\n'
+      prompt.append(prompt_text)
+    return prompt
 
   def _sleep_random_duration(self, min_sec: int = 1, max_sec: int = 60) -> None:
     """Sleeps for a random duration between min_sec and max_sec. Agents uses

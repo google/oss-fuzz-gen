@@ -1,10 +1,5 @@
-<system>
-As a security testing engineer, you must write an `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)` fuzz target in {LANGUAGE}.
-Objective: Your goal is to modify an existing fuzz target `{FUZZ_TARGET_PATH}` to write a minimum fuzz target of a given function-under-test that can build successfully.
-</system>
-
 <steps>
-Follow these steps to write a minimum fuzz target:
+Follow these steps to write a fuzz target:
 
 Step 1. Determine the information you need to write an effective fuzz target.
 This includes:
@@ -87,57 +82,7 @@ Write a new build script only if the existing one (`/src/build.sh`) is insuffici
 
 Step 9: Providing Your Conclusion:
     * Provide your conclusion on the FULL new fuzz target and build script **ONLY AFTER** you have gathered all necessary information.
-    * **DO NOT SEND** any other content (e.g., bash tool commands) in the conclusion message. ALWAYS send other commands individually and ONLY SEND conclusion after collecting all information.
-    * Conclusion Format:
-        * Overall Description:
-            * Summarize your findings and describe your fuzz target design.
-            * Wrap this summary within <conclusion> and </conclusion> tags.
-    * Modified Fuzz Target:
-        * Provide the full code of the modified fuzz target.
-        * Wrap the code within <fuzz target> and </fuzz target> tags.
-    * Modified Build Script (if applicable):
-        * If you need to modify the build script, provide the full code.
-        * Wrap it within <build script> and </build script> tags.
-    * Format Example:
-        <conclusion>
-        I determined that the fuzz target needs to include specific header files and adjust the `LLVMFuzzerTestOneInput` function to call the new function-under-test. Additionally, the build script requires modification to link against the necessary libraries.
-        </conclusion>
-        <fuzz target>
-        [Your FULL fuzz target code here.]
-        </fuzz target>
-        <build script>
-        [Your FULL build script code here, if applicable.]
-        </build script>
-
+    * Follow the conclusion response protocol (see section <conclusion protocol>).
 </steps>
 
 {TYPE_SPECIFIC_PRIMING}
-
-<instructions>
-3. Methodical Approach:
-    * Be systematic to cover all necessary aspects, such as:
-        * Understanding the function's parameters and dependencies.
-        * Identifying required header files and libraries.
-        * Recognizing any special initialization or environmental requirements.
-1. Utilizing Existing Examples:
-    * Use the existing fuzz target at `{FUZZ_TARGET_PATH}` and other fuzz targets with `LLVMFuzzerTestOneInput` in its parent directory as references.
-    * Pay special attention to:
-        * How header files are included.
-        * The structure and content of the `LLVMFuzzerTestOneInput` function.
-    * Typically, you only need to modify the content of `LLVMFuzzerTestOneInput`.
-2. Investigating Header Inclusions:
-    * Use bash tool to find required headers and libraries.
-    * Examine library files built by `/src/build.sh` to understand available functions and symbols.
-3. Modifying the Build Script (if necessary):
-    * Modifying `/src/build.sh` to build the necessary components or include required libraries if function-under-test is not included.
-    * The project's directory may contain a `README.md` with build instructions (e.g., at `/src/<project-name>/README.md`
-4. Do Not Compile:
-    * **Do not compile** the fuzz target during your investigation.
-    * Provide your conclusions based on the information gathered after you have a solution.
-5. Formatting Code Snippets:
-    * Do not wrap code snippets with triple backticks (```).
-    * Use the specified XML-style tags for wrapping code and other content.
-6. DO NOT send the <conclusion> early: Provide conclusions **only after** gathering all necessary information.
-7. Focus on Final Goals:
-    * Ensure that your fuzz target and build script aim to successfully build the fuzz target and fuzz the function-under-test.
-</instructions>
