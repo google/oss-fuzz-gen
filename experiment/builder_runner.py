@@ -650,7 +650,8 @@ class BuilderRunner:
         ])
         pre_build_command.extend(
             ['git', '-C', repo, 'checkout', commit, '-f', '&&'])
-      post_build_command.extend(['&&', 'chmod', '777', '-R', '/out/*'])
+    
+    post_build_command.extend(['&&', 'chmod', '777', '-R', '/out/*'])
 
     build_command = pre_build_command + ['compile'] + post_build_command
     build_bash_command = ['-c', ' '.join(build_command)]
