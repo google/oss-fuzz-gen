@@ -132,7 +132,16 @@ class CloudBuilder:
                 'dir': '/workspace',
                 'args': ['clone', '--depth=1', OF_REPO, 'ofg/oss-fuzz']
             },
-            # Step 3: Run the Python script with the dill files
+            # Step 3: Run the Python script with the dill files.
+            {
+                'name': 'gcr.io/cloud-builders/docker',
+                'args': [
+                    'build', '.', '-t',
+                    ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
+                     'agent-image'), '-f', 'Dockerfile.cloudbuild-agent'
+                ],
+                'dir': '/workspace/ofg/',
+            },
             {
                 'id':
                     'agent-step',
