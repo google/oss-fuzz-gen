@@ -61,6 +61,9 @@ class LLM:
 
   _max_attempts = 5  # Maximum number of attempts to get prediction response
 
+  tools: list = []
+  tool_config: Optional[Any] = None
+
   def __init__(
       self,
       ai_binary: str,
@@ -136,7 +139,7 @@ class LLM:
     """Queries the LLM and stores responses in |response_dir|."""
 
   @abstractmethod
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
     """Queries the LLM in the given chat session and returns the response."""
 
   @abstractmethod
@@ -565,7 +568,9 @@ class GeminiModel(VertexAIModel):
   ]
 
   def get_model(self) -> Any:
-    return GenerativeModel(self._vertex_ai_model)
+    return GenerativeModel(self._vertex_ai_model,
+                           tools=self.tools,
+                           tool_config=self.tool_config)
 
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
     # Loosen inapplicable restrictions just in case.
@@ -634,7 +639,7 @@ class GeminiV1D5(GeminiModel):
 
 class GeminiV1D5Chat(GeminiV1D5):
   """Gemini 1.5 for chat session."""
-  name = 'vertex_ai_gemini-1-5-chat'
+  name = 'vertex_ai_gemini-1-5-chat-text'
   _vertex_ai_model = 'gemini-1.5-pro-002'
 
   # Avoids sending large prompts.
@@ -691,7 +696,7 @@ class GeminiV1D5Chat(GeminiV1D5):
 
     return raw_prompt_text
 
-  def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:
+  def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> Any:
     if self.ai_binary:
       logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
 
@@ -699,6 +704,41 @@ class GeminiV1D5Chat(GeminiV1D5):
     parameters_list = self._prepare_parameters()[0]
     response = self._do_generate(client, prompt.get(), parameters_list) or ''
     return response
+
+
+class GeminiV1D5ChatTool(GeminiV1D5Chat):
+  """Gemini 1.5 for chat session that uses tools."""
+  name = 'vertex_ai_gemini-1-5-chat-tool'
+  _vertex_ai_model = 'gemini-1.5-pro-002'
+
+  @retryable(
+      exceptions=[
+          GoogleAPICallError,
+          InvalidArgument,
+          ValueError,  # TODO(dongge): Handle RECITATION specifically.
+          IndexError,  # A known error from vertexai.
+      ],
+      other_exceptions={
+          ResourceExhausted: 100,
+          TooManyRequests: 100,
+          ServiceUnavailable: 100,
+      })
+  def _do_generate(self, client: ChatSession, prompt: str,
+                   config: dict[str, Any]) -> Any:
+    """Generates chat response."""
+    logger.info('%s generating response with config: %s', self.name, config)
+    return client.send_message(prompt,
+                               stream=False,
+                               generation_config=config,
+                               safety_settings=self.safety_config)
+
+  def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> Any:
+    if self.ai_binary:
+      logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
+
+    # TODO(dongge): Use different values for different trials
+    parameters_list = self._prepare_parameters()[0]
+    return self._do_generate(client, prompt.get(), parameters_list)
 
 
 class AIBinaryModel(GoogleModel):
