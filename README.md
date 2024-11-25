@@ -110,10 +110,9 @@ These bugs could only have been discovered with newly generated targets. They we
 | libunwind | 30.58% | 83.25% | 2899 | 1342 | 1612 | 4388 |
 | openh264 | 30.07% | 50.14% | 6607 | 5751 | 11470 | 19123 |
 
-\* "Total coverage gain" is calculated using a denominator of the total lines
-of source code compiled during the OSS-Fuzz build process for the entire
-project. "Total relative gain" is the increase in coverage compared to the old
-number of covered lines.
+\* "Total project lines" measures the source code of the project-under-test compiled and linked by the preexisting human-written fuzz targets from OSS-Fuzz. 
+
+\* "Total coverage gain" is calculated using a denominator of the "Total project lines". "Total relative gain" is the increase in coverage compared to the old number of covered lines.
 
 \* Additional code from the project-under-test maybe included when compiling the new fuzz targets and result in high percentage gains.
 
