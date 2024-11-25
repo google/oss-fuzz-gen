@@ -466,7 +466,9 @@ def query_introspector_language_stats() -> dict:
   result = _get_data(resp, 'stats', {})
   if result:
     # FI returns java as the key for jvm projects
-    result = {'jvm' if key == 'java' else key: value for key, value in result.items()}
+    result = {
+        'jvm' if key == 'java' else key: value for key, value in result.items()
+    }
 
   return result
 
