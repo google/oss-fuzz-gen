@@ -463,7 +463,12 @@ def query_introspector_language_stats() -> dict:
   """Queries introspector for language stats"""
 
   resp = _query_introspector(INTROSPECTOR_LANGUAGE_STATS, {})
-  return _get_data(resp, 'stats', {})
+  result = _get_data(resp, 'stats', {})
+  if result:
+    # FI returns java as the key for jvm projects
+    result = {'jvm' if key == 'java' else key: value for key, value in result.items()}
+
+  return result
 
 
 def query_introspector_type_info(project: str, type_name: str) -> list[dict]:
