@@ -424,12 +424,10 @@ def image_exists(image_name: str) -> bool:
                         text=True,
                         check=True).stdout.splitlines()
     if image_name in all_images:
-      logger.info('Will use local cached images of %s: %s', project_name,
-                  image_name)
+      logger.info('Will use local cached images: %s', image_name)
       return True
   except sp.CalledProcessError:
-    logger.warning('Unable to use local cached image of %s: %s', project_name,
-                   image_name)
+    logger.warning('Unable to use local cached image: %s', image_name)
   return False
 
 
@@ -465,8 +463,7 @@ def _image_exists_online(image_name: str, project_name: str) -> bool:
 def prepare_project_image(project: str) -> str:
   """Prepares original image of the |project|'s fuzz target build container."""
   image_name = f'gcr.io/oss-fuzz/{project}'
-  if (_image_exists_locally(image_name, project_name=project) or
-      _image_exists_online(image_name, project_name=project)):
+  if _image_exists_online(image_name, project_name=project):
     logger.info('Using existing project image for %s', project)
     return image_name
   logger.info('Unable to find existing project image for %s', project)
