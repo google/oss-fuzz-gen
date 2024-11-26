@@ -45,7 +45,7 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
       json.dump(result.to_dict(), f)
 
   def write_chat_history(self, result: Result) -> None:
-    """Writes fuzz target."""
+    """Writes chat history."""
     # TODO(dongge): Find a proper way to write this.
     trial_result_dir = os.path.join(result.work_dirs.status,
                                     f'{result.trial:02d}')
