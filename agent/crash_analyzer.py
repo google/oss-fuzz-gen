@@ -42,8 +42,8 @@ class CrashAnalyzer(BaseAgent):
                                         target_file: str,
                                         run_result: RunResult,
                                         build_script_path: str = '') -> str:
-    """Creates an OSS-Fuzz project with new dockerfile and fuzz target. 
-    The new project will replicate an existing project |name| but modify 
+    """Creates an OSS-Fuzz project with new dockerfile and fuzz target.
+    The new project will replicate an existing project |name| but modify
     its dockerfile."""
     logger.info('target file: %s', target_file)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
