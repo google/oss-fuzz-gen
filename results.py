@@ -141,8 +141,7 @@ class RunResult(BuildResult):
       author: Any = None,
       chat_history: Optional[dict] = None) -> None:
     super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
-                     compile_log, 
-                     , fuzz_target_source,
+                     compile_log, is_function_referenced, fuzz_target_source,
                      build_script_source, author, chat_history)
     self.crashes = crashes
     self.run_error = run_error
@@ -217,6 +216,7 @@ class CrashResult(RunResult):
                compile_error: str = '',
                compile_log: str = '',
                crashes: bool = False,
+               is_function_referenced: bool = False,
                run_error: str = '',
                crash_func: Optional[dict] = None,
                run_log: str = '',
@@ -241,11 +241,11 @@ class CrashResult(RunResult):
                true_bug: bool = False,
                insight: str = '') -> None:
     super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
-                     compile_log, crashes, run_error, crash_func, run_log,
-                     coverage_summary, coverage, line_coverage_diff,
-                     textcov_diff, reproducer_path, artifact_path,
-                     artifact_name, sanitizer, log_path, corpus_path,
-                     coverage_report_path, cov_pcs, total_pcs,
+                     compile_log, crash_func, is_function_referenced, crashes,
+                     run_error, run_log, coverage_summary, coverage,
+                     line_coverage_diff, textcov_diff, reproducer_path,
+                     artifact_path, artifact_name, sanitizer, log_path,
+                     corpus_path, coverage_report_path, cov_pcs, total_pcs,
                      fuzz_target_source, build_script_source, author,
                      chat_history)
     self.stacktrace = stacktrace

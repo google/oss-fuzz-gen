@@ -24,8 +24,7 @@ class ExecutionStage(BaseStage):
     trial = last_result.trial
     if self.args.cloud_experiment_name:
       builder_runner = builder_runner_lib.CloudBuilderRunner(
-          
-        
+          benchmark=benchmark,
           work_dirs=last_result.work_dirs,
           run_timeout=self.args.run_timeout,
           experiment_name=self.args.cloud_experiment_name,
