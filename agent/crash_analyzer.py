@@ -37,7 +37,9 @@ class CrashAnalyzer(BaseAgent):
     logger.error("Expected a RunResult object in results list")
     return DefaultTemplateBuilder(self.llm).build([])
 
-  def _create_ossfuzz_project_with_lldb(self, name: str, target_file: str,
+  def _create_ossfuzz_project_with_lldb(self,
+                                        name: str,
+                                        target_file: str,
                                         run_result: RunResult,
                                         build_script_path: str = '') -> str:
     """Creates an OSS-Fuzz project with new dockerfile and fuzz target. 
@@ -141,8 +143,8 @@ class CrashAnalyzer(BaseAgent):
                                        f'{trial:02d}.build_script')
 
       self._create_ossfuzz_project_with_lldb(generated_oss_fuzz_project,
-                                             fuzz_target_path,
-                                             last_result, build_script_path)
+                                             fuzz_target_path, last_result,
+                                             build_script_path)
 
       self.analyze_tool = LLDBTool(
           benchmark,
