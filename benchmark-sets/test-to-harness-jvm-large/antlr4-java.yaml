@@ -1,0 +1,6 @@
+"language": "jvm"
+"project": "antlr4-java"
+"target_name": "GrammarFuzzer"
+"target_path": "/src/GrammarFuzzer.java"
+"test_files":
+- "test_file_path": "org/antlr/mojo/antlr4/Antlr4MojoTest.java"
