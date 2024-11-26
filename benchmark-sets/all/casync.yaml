@@ -1,10 +1,4 @@
 "functions":
-- "name": "var_tmp_dir"
-  "params":
-  - "name": "ret"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int var_tmp_dir(const char **)"
 - "name": "tmp_dir"
   "params":
   - "name": "ret"
@@ -19,6 +13,12 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int tempfn_random(const char *, char **)"
+- "name": "var_tmp_dir"
+  "params":
+  - "name": "ret"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int var_tmp_dir(const char **)"
 - "name": "compressor_encode"
   "params":
   - "name": "c"

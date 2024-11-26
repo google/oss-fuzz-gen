@@ -1,4 +1,12 @@
 "functions":
+- "name": "sudo_set_grlist"
+  "params":
+  - "name": "pw"
+    "type": "bool "
+  - "name": "groups"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int sudo_set_grlist(struct passwd *, const char **)"
 - "name": "sudo_mkstemps"
   "params":
   - "name": "path"
@@ -15,22 +23,6 @@
     "type": "bool "
   "return_type": "void"
   "signature": "struct cache_item * sudo_make_grlist_item(const struct passwd *, const char **)"
-- "name": "sudo_set_grlist"
-  "params":
-  - "name": "pw"
-    "type": "bool "
-  - "name": "groups"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int sudo_set_grlist(struct passwd *, const char **)"
-- "name": "sudo_mkdtempat"
-  "params":
-  - "name": "dfd"
-    "type": "int"
-  - "name": "path"
-    "type": "bool "
-  "return_type": "void"
-  "signature": "char * sudo_mkdtempat(int, char *)"
 - "name": "free_cmndspec"
   "params":
   - "name": "cs"
@@ -39,7 +31,15 @@
     "type": "bool "
   "return_type": "void"
   "signature": "void free_cmndspec(struct cmndspec *, struct cmndspec_list *)"
+- "name": "sudo_mkdtempat"
+  "params":
+  - "name": "dfd"
+    "type": "int"
+  - "name": "path"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "char * sudo_mkdtempat(int, char *)"
 "language": "c"
 "project": "sudoers"
-"target_name": "fuzz_stubs"
-"target_path": "/src/sudo/plugins/sudoers/regress/fuzz/fuzz_stubs.c"
+"target_name": "fuzz_iolog_legacy"
+"target_path": "/src/sudo/lib/iolog/regress/fuzz/fuzz_iolog_legacy.c"

@@ -1,4 +1,20 @@
 "functions":
+- "name": "fuse_opt_add_opt"
+  "params":
+  - "name": "opts"
+    "type": "bool "
+  - "name": "opt"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int fuse_opt_add_opt(char **, const char *)"
+- "name": "fuse_opt_add_opt_escaped"
+  "params":
+  - "name": "opts"
+    "type": "bool "
+  - "name": "opt"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int fuse_opt_add_opt_escaped(char **, const char *)"
 - "name": "fuse_opt_match"
   "params":
   - "name": "opts"
@@ -13,22 +29,6 @@
     "type": "size_t"
   "return_type": "void"
   "signature": "char * af_gb_alloc_data(size_t)"
-- "name": "fuse_opt_add_opt_escaped"
-  "params":
-  - "name": "opts"
-    "type": "bool "
-  - "name": "opt"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int fuse_opt_add_opt_escaped(char **, const char *)"
-- "name": "fuse_opt_add_opt"
-  "params":
-  - "name": "opts"
-    "type": "bool "
-  - "name": "opt"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int fuse_opt_add_opt(char **, const char *)"
 "language": "c"
 "project": "libfuse"
 "target_name": "fuzz_optparse"

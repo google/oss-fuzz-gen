@@ -1,4 +1,12 @@
 "functions":
+- "name": "lzma_block_encoder"
+  "params":
+  - "name": "strm"
+    "type": "bool "
+  - "name": "block"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "lzma_ret lzma_block_encoder(lzma_stream *, lzma_block *)"
 - "name": "lzma_index_buffer_encode"
   "params":
   - "name": "i"
@@ -37,14 +45,6 @@
     "type": "bool "
   "return_type": "int"
   "signature": "lzma_ret lzma_raw_decoder(lzma_stream *, const lzma_filter *)"
-- "name": "lzma_block_encoder"
-  "params":
-  - "name": "strm"
-    "type": "bool "
-  - "name": "block"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "lzma_ret lzma_block_encoder(lzma_stream *, lzma_block *)"
 "language": "c++"
 "project": "xz"
 "target_name": "fuzz_decode_alone"

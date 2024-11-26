@@ -29,7 +29,7 @@ class Pipeline():
                analysis_stage_agents: Optional[list[BaseAgent]] = None):
     self.args = args
     self.logger = logger.get_trial_logger()
-    self.logger.debug('Pipline Initialized')
+    self.logger.debug('Pipeline Initialized')
     self.writing_stage: WritingStage = WritingStage(args, writing_stage_agents)
     self.execution_stage: ExecutionStage = ExecutionStage(
         args, execution_stage_agents)
@@ -82,7 +82,7 @@ class Pipeline():
     improvements.
     The process repeats until the termination conditions are met.
     """
-    self.logger.debug('Pipline starts')
+    self.logger.debug('Pipeline starts')
     cycle_count = 1
     while not self._terminate(result_history=result_history):
       self._execute_one_cycle(result_history=result_history,

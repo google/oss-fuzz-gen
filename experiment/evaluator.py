@@ -261,7 +261,7 @@ class Evaluator:
       f.write(f'\nCOPY {os.path.basename(target_file)} '
               f'{self.benchmark.target_path}\n')
 
-    if os.path.getsize(build_script_path) == 0:
+    if not build_script_path or os.path.getsize(build_script_path) == 0:
       return name
 
     # Copy generated build script to generated_project_path

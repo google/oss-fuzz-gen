@@ -1,4 +1,14 @@
 "functions":
+- "name": "th_comment_query"
+  "params":
+  - "name": "_tc"
+    "type": "bool "
+  - "name": "_tag"
+    "type": "bool "
+  - "name": "_count"
+    "type": "int"
+  "return_type": "void"
+  "signature": "char * th_comment_query(th_comment *, const char *, int)"
 - "name": "th_decode_ctl"
   "params":
   - "name": "_dec"
@@ -57,16 +67,6 @@
     "type": "int"
   "return_type": "void"
   "signature": "void oc_state_loop_filter_frag_rows_c(const oc_theora_state *, signed char *, int, int, int, int)"
-- "name": "th_comment_query"
-  "params":
-  - "name": "_tc"
-    "type": "bool "
-  - "name": "_tag"
-    "type": "bool "
-  - "name": "_count"
-    "type": "int"
-  "return_type": "void"
-  "signature": "char * th_comment_query(th_comment *, const char *, int)"
 "language": "c++"
 "project": "libtheora"
 "target_name": "fuzzer-decoder"

@@ -1,10 +1,4 @@
 "functions":
-- "name": "mz_zip_entry_is_symlink"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int32_t mz_zip_entry_is_symlink(void *)"
 - "name": "mz_zip_attrib_is_symlink"
   "params":
   - "name": "attrib"
@@ -13,6 +7,20 @@
     "type": "int"
   "return_type": "int"
   "signature": "int32_t mz_zip_attrib_is_symlink(uint32_t, int32_t)"
+- "name": "mz_zip_entry_is_symlink"
+  "params":
+  - "name": "handle"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int32_t mz_zip_entry_is_symlink(void *)"
+- "name": "mz_zip_goto_entry"
+  "params":
+  - "name": "handle"
+    "type": "bool "
+  - "name": "cd_pos"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int32_t mz_zip_goto_entry(void *, int64_t)"
 - "name": "mz_zip_locate_first_entry"
   "params":
   - "name": "handle"
@@ -23,14 +31,6 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int32_t mz_zip_locate_first_entry(void *, void *, mz_zip_locate_entry_cb)"
-- "name": "mz_zip_goto_entry"
-  "params":
-  - "name": "handle"
-    "type": "bool "
-  - "name": "cd_pos"
-    "type": "size_t"
-  "return_type": "int"
-  "signature": "int32_t mz_zip_goto_entry(void *, int64_t)"
 - "name": "mz_zip_locate_next_entry"
   "params":
   - "name": "handle"
@@ -43,5 +43,5 @@
   "signature": "int32_t mz_zip_locate_next_entry(void *, void *, mz_zip_locate_entry_cb)"
 "language": "c++"
 "project": "minizip"
-"target_name": "unzip_fuzzer"
-"target_path": "/src/minizip-ng/test/fuzz/unzip_fuzzer.c"
+"target_name": "zip_fuzzer"
+"target_path": "/src/minizip-ng/test/fuzz/zip_fuzzer.c"

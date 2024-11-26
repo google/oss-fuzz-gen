@@ -7,12 +7,12 @@
     "type": "int"
   "return_type": "void"
   "signature": "Str Stralign_left(Str, int)"
-- "name": "Strnew_m_charp"
+- "name": "Sprintf"
   "params":
-  - "name": "p"
+  - "name": "fmt"
     "type": "bool "
   "return_type": "void"
-  "signature": "Str Strnew_m_charp(const char *, void)"
+  "signature": "Str Sprintf(char *, void)"
 - "name": "Stralign_center"
   "params":
   - "name": "s"
@@ -21,12 +21,12 @@
     "type": "int"
   "return_type": "void"
   "signature": "Str Stralign_center(Str, int)"
-- "name": "Sprintf"
+- "name": "Strnew_m_charp"
   "params":
-  - "name": "fmt"
+  - "name": "p"
     "type": "bool "
   "return_type": "void"
-  "signature": "Str Sprintf(char *, void)"
+  "signature": "Str Strnew_m_charp(const char *, void)"
 - "name": "Stralign_right"
   "params":
   - "name": "s"

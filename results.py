@@ -56,6 +56,7 @@ class BuildResult(Result):
   compiles: bool  # Build success/failure.
   compile_error: str  # Build error message.
   compile_log: str  # Build full output.
+  is_function_referenced: bool  # Fuzz target references function-under-test.
 
   def __init__(self,
                benchmark: Benchmark,
@@ -64,6 +65,7 @@ class BuildResult(Result):
                compiles: bool = False,
                compile_error: str = '',
                compile_log: str = '',
+               is_function_referenced: bool = False,
                fuzz_target_source: str = '',
                build_script_source: str = '',
                author: Any = None,
@@ -73,17 +75,19 @@ class BuildResult(Result):
     self.compiles = compiles
     self.compile_error = compile_error
     self.compile_log = compile_log
+    self.is_function_referenced = is_function_referenced
 
   def to_dict(self) -> dict:
     return super().to_dict() | {
-        'compiles': self.compiles,
+        'compiles': self.success,
         'compile_error': self.compile_error,
         'compile_log': self.compile_log,
+        'is_function_referenced': self.is_function_referenced,
     }
 
   @property
   def success(self):
-    return self.compiles
+    return self.compiles and self.is_function_referenced
 
 
 class RunResult(BuildResult):
@@ -114,9 +118,10 @@ class RunResult(BuildResult):
       compiles: bool = False,
       compile_error: str = '',
       compile_log: str = '',
-      crashes: bool = False,
-      run_error: str = '',
       crash_func: Optional[dict] = None,
+      is_function_referenced: bool = False,
+      crashes: bool = False,  # Runtime crash.
+      run_error: str = '',  # Runtime crash error message.
       run_log: str = '',  # Full fuzzing output.
       coverage_summary: Optional[dict] = None,
       coverage: float = 0.0,
@@ -136,8 +141,9 @@ class RunResult(BuildResult):
       author: Any = None,
       chat_history: Optional[dict] = None) -> None:
     super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
-                     compile_log, fuzz_target_source, build_script_source,
-                     author, chat_history)
+                     compile_log, 
+                     , fuzz_target_source,
+                     build_script_source, author, chat_history)
     self.crashes = crashes
     self.run_error = run_error
     self.crash_func = crash_func or {}

@@ -1,10 +1,4 @@
 "functions":
-- "name": "smux_accept"
-  "params":
-  - "name": "sd"
-    "type": "int"
-  "return_type": "int"
-  "signature": "int smux_accept(int)"
 - "name": "netsnmp_query_getnext"
   "params":
   - "name": "list"
@@ -13,6 +7,20 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int netsnmp_query_getnext(netsnmp_variable_list *, netsnmp_session *)"
+- "name": "smux_accept"
+  "params":
+  - "name": "sd"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int smux_accept(int)"
+- "name": "netsnmp_query_set"
+  "params":
+  - "name": "list"
+    "type": "bool "
+  - "name": "session"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int netsnmp_query_set(netsnmp_variable_list *, netsnmp_session *)"
 - "name": "agent_check_and_process"
   "params":
   - "name": "block"
@@ -27,15 +35,7 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int netsnmp_query_walk(netsnmp_variable_list *, netsnmp_session *)"
-- "name": "netsnmp_query_set"
-  "params":
-  - "name": "list"
-    "type": "bool "
-  - "name": "session"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int netsnmp_query_set(netsnmp_variable_list *, netsnmp_session *)"
 "language": "c++"
 "project": "net-snmp"
-"target_name": "snmp_pdu_parse_fuzzer"
-"target_path": "/src/net-snmp/testing/fuzzing/snmp_pdu_parse_fuzzer.c"
+"target_name": "snmp_scoped_pdu_parse_fuzzer"
+"target_path": "/src/net-snmp/testing/fuzzing/snmp_scoped_pdu_parse_fuzzer.c"

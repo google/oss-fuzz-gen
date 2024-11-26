@@ -1,4 +1,12 @@
 "functions":
+- "name": "mnt_table_parse_mtab"
+  "params":
+  - "name": "tb"
+    "type": "bool "
+  - "name": "filename"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int mnt_table_parse_mtab(struct libmnt_table *, const char *)"
 - "name": "mnt_table_parse_fstab"
   "params":
   - "name": "tb"
@@ -31,14 +39,6 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int __mnt_table_parse_mountinfo(struct libmnt_table *, const char *, struct libmnt_table *)"
-- "name": "mnt_table_parse_mtab"
-  "params":
-  - "name": "tb"
-    "type": "bool "
-  - "name": "filename"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int mnt_table_parse_mtab(struct libmnt_table *, const char *)"
 "language": "c"
 "project": "util-linux"
 "target_name": "test_last_fuzz"

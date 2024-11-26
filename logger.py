@@ -49,11 +49,14 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
   def write_chat_history(self, result: Result) -> None:
     """Writes fuzz target."""
     # TODO(dongge): Find a proper way to write this.
-    fuzz_target_path = os.path.join(result.work_dirs.base, 'prompt.txt')
+    trial_result_dir = os.path.join(result.work_dirs.status,
+                                    f'{result.trial:02d}')
+    os.makedirs(trial_result_dir, exist_ok=True)
+    chat_history_path = os.path.join(trial_result_dir, 'log.txt')
     chat_history = '\n'.join(
         f'{agent_name}\n{chat_history}\n'
         for agent_name, chat_history in result.chat_history.items())
-    self.write_to_file(fuzz_target_path, chat_history)
+    self.write_to_file(chat_history_path, chat_history)
 
 
 def debug(msg: object,
@@ -138,6 +141,7 @@ def get_trial_logger(name: str = __name__,
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(level)
+    logger.propagate = False
 
   _trial_logger = CustomLoggerAdapter(logger, {'trial': trial})
   return _trial_logger

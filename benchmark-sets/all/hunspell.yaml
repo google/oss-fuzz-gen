@@ -1,4 +1,14 @@
 "functions":
+- "name": "_ZN12HunspellImpl7suggestEPPPcPKc"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "slst"
+    "type": "bool "
+  - "name": "word"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int HunspellImpl::suggest(char ***, const char *)"
 - "name": "Hunspell_suggest"
   "params":
   - "name": "pHunspell"
@@ -31,16 +41,6 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int Hunspell::suggest(char ***, const char *)"
-- "name": "_ZN12HunspellImpl7suggestEPPPcPKc"
-  "params":
-  - "name": "this"
-    "type": "bool "
-  - "name": "slst"
-    "type": "bool "
-  - "name": "word"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int HunspellImpl::suggest(char ***, const char *)"
 - "name": "Hunspell_stem2"
   "params":
   - "name": "pHunspell"
@@ -55,5 +55,5 @@
   "signature": "int Hunspell_stem2(Hunhandle *, char ***, char **, int)"
 "language": "c++"
 "project": "hunspell"
-"target_name": "fuzzer"
-"target_path": "/src/hunspell/src/tools/fuzzer.cxx"
+"target_name": "affdicfuzzer"
+"target_path": "/src/hunspell/src/tools/affdicfuzzer.cxx"

@@ -5,7 +5,7 @@ import re
 import subprocess as sp
 import time
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Any, Optional
 
 import logger
 import utils
@@ -42,6 +42,15 @@ class BaseAgent(ABC):
         return tool
     return None
 
+  def chat_llm(self, cur_round: int, client: Any, prompt: Prompt) -> str:
+    """Chat with LLM."""
+    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
+                cur_round, prompt.get(), cur_round)
+    response = self.llm.chat_llm(client=client, prompt=prompt)
+    logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
+                cur_round, response, cur_round)
+    return response
+
   def _parse_tag(self, response: str, tag: str) -> str:
     """Parses the XML-style tags from LLM response."""
     match = re.search(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
@@ -59,10 +68,13 @@ class BaseAgent(ABC):
     return filtered_code_block
 
   def _format_bash_execution_result(self, process: sp.CompletedProcess) -> str:
+    stdout = self.llm.truncate_prompt(process.stdout)
+    # TODO(dongge) Share input limit evenly if both stdout and stderr overlong.
+    stderr = self.llm.truncate_prompt(process.stderr, stdout)
     return (f'<bash>\n{process.args}\n</bash>\n'
             f'<return code>\n{process.returncode}\n</return code>\n'
-            f'<stdout>\n{process.stdout}\n</stdout>\n'
-            f'<stderr>\n{process.stderr}\n</stderr>\n')
+            f'<stdout>\n{stdout}\n</stdout>\n'
+            f'<stderr>\n{stderr}\n</stderr>\n')
 
   def _container_handle_bash_command(self, cur_round: int, response: str,
                                      tool: BaseTool) -> Prompt:
@@ -113,6 +125,7 @@ class BaseAgent(ABC):
     args = cls._parse_args()
 
     agent = utils.deserialize_from_dill(args.agent)
+    agent.llm.cloud_setup()
     result_history = utils.deserialize_from_dill(args.result_history)
     result = agent.execute(result_history)
     utils.serialize_to_dill(result, args.result_new)

@@ -1,12 +1,4 @@
 "functions":
-- "name": "TPM2_Load"
-  "params":
-  - "name": "in"
-    "type": "bool "
-  - "name": "out"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "TPM_RC TPM2_Load(Load_In *, Load_Out *)"
 - "name": "TPM2_Import"
   "params":
   - "name": "in"
@@ -15,14 +7,6 @@
     "type": "bool "
   "return_type": "int"
   "signature": "TPM_RC TPM2_Import(Import_In *, Import_Out *)"
-- "name": "TPM2_Create"
-  "params":
-  - "name": "in"
-    "type": "bool "
-  - "name": "out"
-    "type": "bool "
-  "return_type": "int"
-  "signature": "TPM_RC TPM2_Create(Create_In *, Create_Out *)"
 - "name": "TPM2_NV_Certify"
   "params":
   - "name": "in"
@@ -31,6 +15,22 @@
     "type": "bool "
   "return_type": "int"
   "signature": "TPM_RC TPM2_NV_Certify(NV_Certify_In *, NV_Certify_Out *)"
+- "name": "TPM2_Create"
+  "params":
+  - "name": "in"
+    "type": "bool "
+  - "name": "out"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "TPM_RC TPM2_Create(Create_In *, Create_Out *)"
+- "name": "TPM2_Load"
+  "params":
+  - "name": "in"
+    "type": "bool "
+  - "name": "out"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "TPM_RC TPM2_Load(Load_In *, Load_Out *)"
 - "name": "TPM2_CertifyX509"
   "params":
   - "name": "in"

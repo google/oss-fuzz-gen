@@ -70,6 +70,7 @@ INTROSPECTOR_ALL_HEADER_FILES = ''
 INTROSPECTOR_ALL_FUNC_TYPES = ''
 INTROSPECTOR_TEST_SOURCE = ''
 INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = ''
+INTROSPECTOR_LANGUAGE_STATS = ''
 
 INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
@@ -107,7 +108,7 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE, \
       INTROSPECTOR_ORACLE_ALL_TESTS, INTROSPECTOR_JVM_PROPERTIES, \
       INTROSPECTOR_TEST_SOURCE, INTROSPECTOR_HARNESS_SOURCE_AND_EXEC, \
-      INTROSPECTOR_JVM_PUBLIC_CLASSES
+      INTROSPECTOR_JVM_PUBLIC_CLASSES, INTROSPECTOR_LANGUAGE_STATS
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -145,6 +146,8 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/harness-source-and-executable')
   INTROSPECTOR_JVM_PUBLIC_CLASSES = (
       f'{INTROSPECTOR_ENDPOINT}/all-public-classes')
+  INTROSPECTOR_LANGUAGE_STATS = (
+      f'{INTROSPECTOR_ENDPOINT}/database-language-stats')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -456,11 +459,18 @@ def query_introspector_cross_references(project: str,
   return xref_source
 
 
+def query_introspector_language_stats() -> dict:
+  """Queries introspector for language stats"""
+
+  resp = _query_introspector(INTROSPECTOR_LANGUAGE_STATS, {})
+  return _get_data(resp, 'stats', {})
+
+
 def query_introspector_type_info(project: str, type_name: str) -> list[dict]:
   """Queries FuzzIntrospector API for information of |type_name|."""
   resp = _query_introspector(INTROSPECTOR_TYPE, {
       'project': project,
-      'name': type_name
+      'type_name': type_name
   })
   return _get_data(resp, 'type_data', [])
 
@@ -736,6 +746,10 @@ def _get_harness_intrinsics(
   """Returns a harness source path and executable from a given project."""
   if USE_FI_TO_GET_TARGETS and language != 'jvm' and language != 'python':
     harnesses = query_introspector_for_harness_intrinsics(project)
+    if not harnesses:
+      logger.error('No harness/source pairs found in project.')
+      return None, None, {}
+
     harness_dict = harnesses[0]
     harness = harness_dict['source']
     target_name = harness_dict['executable']

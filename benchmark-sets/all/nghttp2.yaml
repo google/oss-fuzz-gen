@@ -1,10 +1,4 @@
 "functions":
-- "name": "nghttp2_session_recv"
-  "params":
-  - "name": ""
-    "type": "bool "
-  "return_type": "int"
-  "signature": "int nghttp2_session_recv(nghttp2_session *)"
 - "name": "nghttp2_session_mem_send"
   "params":
   - "name": ""
@@ -45,7 +39,13 @@
     "type": "bool "
   "return_type": "int"
   "signature": "int nghttp2_session_send(nghttp2_session *)"
+- "name": "nghttp2_session_recv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int nghttp2_session_recv(nghttp2_session *)"
 "language": "c++"
 "project": "nghttp2"
-"target_name": "nghttp2_fuzzer_fdp"
-"target_path": "/src/nghttp2/fuzz/fuzz_target_fdp.cc"
+"target_name": "nghttp2_fuzzer_frames"
+"target_path": "/src/nghttp2/fuzz/fuzz_frames.cc"

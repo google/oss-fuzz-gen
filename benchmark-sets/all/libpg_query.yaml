@@ -1,14 +1,12 @@
 "functions":
-- "name": "pg_query_parse_protobuf_opts"
+- "name": "GenerationRealloc"
   "params":
   - "name": ""
     "type": "bool "
   - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "int"
+    "type": "size_t"
   "return_type": "void"
-  "signature": "PgQueryProtobufParseResult pg_query_parse_protobuf_opts(const char *, int)"
+  "signature": "void * GenerationRealloc(void *, Size)"
 - "name": "raw_expression_tree_walker_impl"
   "params":
   - "name": ""
@@ -19,14 +17,6 @@
     "type": "bool "
   "return_type": "bool"
   "signature": "bool raw_expression_tree_walker_impl(Node *, tree_walker_callback, void *)"
-- "name": "GenerationRealloc"
-  "params":
-  - "name": ""
-    "type": "bool "
-  - "name": ""
-    "type": "size_t"
-  "return_type": "void"
-  "signature": "void * GenerationRealloc(void *, Size)"
 - "name": "pg_query_parse_protobuf"
   "params":
   - "name": ""
@@ -35,6 +25,16 @@
     "type": "bool "
   "return_type": "void"
   "signature": "PgQueryProtobufParseResult pg_query_parse_protobuf(const char *)"
+- "name": "pg_query_parse_protobuf_opts"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "int"
+  "return_type": "void"
+  "signature": "PgQueryProtobufParseResult pg_query_parse_protobuf_opts(const char *, int)"
 - "name": "SlabAlloc"
   "params":
   - "name": ""

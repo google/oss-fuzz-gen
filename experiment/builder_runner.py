@@ -654,6 +654,7 @@ class BuilderRunner:
     os.makedirs(workspacedir, exist_ok=True)
     if self.benchmark.cppify_headers:
       command.extend(['-e', 'JCC_CPPIFY_PROJECT_HEADERS=1'])
+    command.extend(['--entrypoint', '/bin/bash'])
     command.append(f'gcr.io/oss-fuzz/{generated_project}')
 
     pre_build_command = []
@@ -674,7 +675,7 @@ class BuilderRunner:
       post_build_command.extend(['&&', 'chmod', '777', '-R', '/out/*'])
 
     build_command = pre_build_command + ['compile'] + post_build_command
-    build_bash_command = ['/bin/bash', '-c', ' '.join(build_command)]
+    build_bash_command = ['-c', ' '.join(build_command)]
     command.extend(build_bash_command)
     with open(log_path, 'w+') as log_file:
       try:
@@ -926,11 +927,25 @@ class CloudBuilderRunner(BuilderRunner):
         f'--upload_coverage={coverage_path}',
         f'--upload_reproducer={reproducer_path}',
         f'--upload_corpus={corpus_path}',
-        f'--experiment_name={self.experiment_name}'
+        f'--experiment_name={self.experiment_name}',
+        f'--real_project={project_name}',
     ]
+
+    if oss_fuzz_checkout.ENABLE_CACHING and (
+        oss_fuzz_checkout.is_image_cached(project_name, 'address') and
+        oss_fuzz_checkout.is_image_cached(project_name, 'coverage')):
+      logger.info('Using cached image for %s', project_name)
+      command.append('--use_cached_image')
+
+      # Overwrite the Dockerfile to be caching friendly
+      oss_fuzz_checkout.rewrite_project_to_cached_project_chronos(
+          generated_project)
+
     if cloud_build_tags:
       command += ['--tags'] + cloud_build_tags
     command += ['--'] + self._libfuzzer_args()
+
+    logger.info(f'Command: {command}')
 
     if not self._run_with_retry_control(os.path.realpath(target_path),
                                         command,
