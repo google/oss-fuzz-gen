@@ -1,7 +1,9 @@
 """The Analysis Stage class for examining the performance of fuzz targets. This
 stage is responsible for categorizing run-time crashes and detecting untested
 code blocks."""
-from results import Result
+from typing import cast
+
+from results import CrashResult, Result, RunResult
 from stage.base_stage import BaseStage
 
 
@@ -14,6 +16,25 @@ class AnalysisStage(BaseStage):
   crashes due to a bug in the project under test or if all major code paths have
   been sufficiently covered."""
 
+  def _analyze_crash(self, result_history: list[Result]) -> Result:
+    """Analyzes a runtime crash."""
+    agent = self.get_agent('CrashAnalyzer')
+    if self.args.cloud_experiment_name:
+      return self._execute_agent_cloud(agent, result_history)
+    return agent.execute(result_history)
+
   def execute(self, result_history: list[Result]) -> Result:
-    # A placeholder for now.
-    return result_history[-1]
+    """Executes the analysis stage."""
+    last_result = result_history[-1]
+    if not isinstance(last_result, RunResult):
+      self.logger.error('CrashResult must follow a RunResult')
+      raise TypeError
+
+    # 1. Analyzing the runtime crash.
+    agent_result = self._analyze_crash(result_history)
+
+    crash_result = cast(CrashResult, agent_result)
+
+    # TODO(maoyixie): Save logs and more info into workdir.
+
+    return crash_result

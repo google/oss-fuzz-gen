@@ -65,7 +65,7 @@ class TextPrompt(Prompt):
     self._text = initial
 
   def append(self, text: str) -> None:
-    """Gets the final formatted prompt."""
+    """Appends the final formatted prompt."""
     self._text += text
 
   def get(self) -> Any:
@@ -81,7 +81,7 @@ class TextPrompt(Prompt):
     self._text += f'{problem_content}\n'
 
   def add_solution(self, solution_content: str) -> None:
-    """Constructs the prompt problem in the required format."""
+    """Constructs the prompt solution in the required format."""
     self._text += f'{solution_content}\n'
 
   def create_prompt_piece(self, content: str, role: str) -> Any:
@@ -103,8 +103,16 @@ class OpenAIPrompt(Prompt):
   def __init__(self, initial=None):
     if not initial:
       initial = []
+    # ugly here
+    elif isinstance(initial, str):
+      initial = [{'role': 'user', 'content': initial}]
 
     self._prompt = initial
+
+  def append(self, text: str) -> None:
+    """Appends to the formatted prompt."""
+    # A placeholder for now.
+    del text
 
   def get(self) -> Any:
     """Gets the final formatted prompt."""
@@ -125,7 +133,7 @@ class OpenAIPrompt(Prompt):
     })
 
   def add_solution(self, solution_content: str) -> None:
-    """Constructs the prompt problem in the required format."""
+    """Constructs the prompt solution in the required format."""
     self._prompt.append({
         'role': 'assistant',
         'content': solution_content,
@@ -141,11 +149,6 @@ class OpenAIPrompt(Prompt):
     """Saves the prompt to a filelocation."""
     with open(location, 'w+') as prompt_file:
       json.dump(self._prompt, prompt_file)
-
-  def append(self, text: str) -> None:
-    """Appends to the formatted prompt."""
-    # A placeholder for now.
-    del text
 
 
 class ClaudePrompt(OpenAIPrompt):

@@ -51,6 +51,8 @@ class SemanticCheckResult:
 
   # Regex for extract crash information.
   INFO_CRASH = re.compile(r'ERROR: (.*?)(?=SUMMARY)', re.DOTALL)
+  # Regex for extract artifact file name.
+  ARTIFACT_NAME = re.compile(r'(?<=written to ./)crash-[\w]+')
 
   NO_COV_INCREASE_MSG_PREFIX = 'No code coverage increasement'
 
@@ -86,6 +88,16 @@ class SemanticCheckResult:
 
     logging.warning('Failed to match crash information.')
     return ''
+
+  @classmethod
+  def extract_artifact_name(cls, fuzzlog: str) -> str:
+    """Extracts artifact file name from fuzzing logs."""
+    match = cls.ARTIFACT_NAME.search(fuzzlog)
+    if match:
+      return match.group(0).strip()
+
+    logging.warning('Failed to match artifact file name.')
+    return 'testcase'
 
   def __init__(self,
                err_type: str,

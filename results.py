@@ -47,7 +47,7 @@ class Result:
         'fuzz_target_source': self.fuzz_target_source,
         'build_script_source': self.build_script_source,
         'author': str(self.author),
-        'chat_history': self.chat_history,
+        'chat_history': self.chat_history or {},
     }
 
 
@@ -94,11 +94,15 @@ class RunResult(BuildResult):
   """The fuzzing run-time result info."""
   crashes: bool
   run_error: str
+  crash_func: dict
   run_log: str
   coverage_summary: dict
   coverage: float
   line_coverage_diff: float
   reproducer_path: str
+  artifact_path: str
+  artifact_name: str
+  sanitizer: str
   textcov_diff: Optional[textcov.Textcov]
   log_path: str
   corpus_path: str
@@ -114,6 +118,7 @@ class RunResult(BuildResult):
       compiles: bool = False,
       compile_error: str = '',
       compile_log: str = '',
+      crash_func: Optional[dict] = None,
       is_function_referenced: bool = False,
       crashes: bool = False,  # Runtime crash.
       run_error: str = '',  # Runtime crash error message.
@@ -123,6 +128,9 @@ class RunResult(BuildResult):
       line_coverage_diff: float = 0.0,
       textcov_diff: Optional[textcov.Textcov] = None,
       reproducer_path: str = '',
+      artifact_path: str = '',
+      artifact_name: str = '',
+      sanitizer: str = '',
       log_path: str = '',
       corpus_path: str = '',
       coverage_report_path: str = '',
@@ -133,15 +141,20 @@ class RunResult(BuildResult):
       author: Any = None,
       chat_history: Optional[dict] = None) -> None:
     super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
-                     compile_log, is_function_referenced, fuzz_target_source,
+                     compile_log, 
+                     , fuzz_target_source,
                      build_script_source, author, chat_history)
     self.crashes = crashes
     self.run_error = run_error
+    self.crash_func = crash_func or {}
     self.run_log = run_log
     self.coverage_summary = coverage_summary or {}
     self.coverage = coverage
     self.line_coverage_diff = line_coverage_diff
     self.reproducer_path = reproducer_path
+    self.artifact_path = artifact_path
+    self.artifact_name = artifact_name
+    self.sanitizer = sanitizer
     self.textcov_diff = textcov_diff
     self.log_path = log_path
     self.corpus_path = corpus_path
@@ -155,6 +168,8 @@ class RunResult(BuildResult):
             self.crashes,
         'run_error':
             self.run_error,
+        'crash_func':
+            self.crash_func or {},
         'run_log':
             self.run_log,
         'coverage_summary':
@@ -165,6 +180,12 @@ class RunResult(BuildResult):
             self.line_coverage_diff,
         'reproducer_path':
             self.reproducer_path,
+        'artifact_path':
+            self.artifact_path,
+        'artifact_name':
+            self.artifact_name,
+        'sanitizer':
+            self.sanitizer,
         'textcov_diff':
             dataclasses.asdict(self.textcov_diff) if self.textcov_diff else '',
         'log_path':
@@ -187,6 +208,56 @@ class CrashResult(RunResult):
   stacktrace: str
   true_bug: bool  # True/False positive crash
   insight: str  # Reason and fixes for crashes
+
+  def __init__(self,
+               benchmark: Benchmark,
+               trial: int,
+               work_dirs: WorkDirs,
+               compiles: bool = False,
+               compile_error: str = '',
+               compile_log: str = '',
+               crashes: bool = False,
+               run_error: str = '',
+               crash_func: Optional[dict] = None,
+               run_log: str = '',
+               coverage_summary: Optional[dict] = None,
+               coverage: float = 0.0,
+               line_coverage_diff: float = 0.0,
+               textcov_diff: Optional[textcov.Textcov] = None,
+               reproducer_path: str = '',
+               artifact_path: str = '',
+               artifact_name: str = '',
+               sanitizer: str = '',
+               log_path: str = '',
+               corpus_path: str = '',
+               coverage_report_path: str = '',
+               cov_pcs: int = 0,
+               total_pcs: int = 0,
+               fuzz_target_source: str = '',
+               build_script_source: str = '',
+               author: Any = None,
+               chat_history: Optional[dict] = None,
+               stacktrace: str = '',
+               true_bug: bool = False,
+               insight: str = '') -> None:
+    super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
+                     compile_log, crashes, run_error, crash_func, run_log,
+                     coverage_summary, coverage, line_coverage_diff,
+                     textcov_diff, reproducer_path, artifact_path,
+                     artifact_name, sanitizer, log_path, corpus_path,
+                     coverage_report_path, cov_pcs, total_pcs,
+                     fuzz_target_source, build_script_source, author,
+                     chat_history)
+    self.stacktrace = stacktrace
+    self.true_bug = true_bug
+    self.insight = insight
+
+  def to_dict(self) -> dict:
+    return super().to_dict() | {
+        'stacktrace': self.stacktrace,
+        'true_bug': self.true_bug,
+        'insight': self.insight,
+    }
 
 
 class CoverageResult(RunResult):
