@@ -1,5 +1,6 @@
 """The abstract base class for LLM agents in stages."""
 import argparse
+import codecs
 import random
 import re
 import subprocess as sp
@@ -67,6 +68,9 @@ class BaseAgent(ABC):
     """Filters out irrelevant lines from |raw_code_block|."""
     # TODO(dongge): Move this function to a separate module.
     # Remove markdown-style code block symbols.
+
+    raw_code_block = codecs.decode(raw_code_block, 'unicode_escape').strip()
+
     filtered_lines = [
         line for line in raw_code_block.splitlines()
         if not line.strip().startswith('```')
