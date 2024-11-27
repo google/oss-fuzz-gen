@@ -54,7 +54,8 @@ class Result:
 class BuildResult(Result):
   """A benchmark generation result with build info."""
   compiles: bool  # Build success/failure.
-  compile_error: str  # Build error message.
+  compile_stdout: str  # Build stdout.
+  compile_stderr: str  # Build stderr.
   compile_log: str  # Build full output.
   is_function_referenced: bool  # Fuzz target references function-under-test.
 
@@ -63,7 +64,8 @@ class BuildResult(Result):
                trial: int,
                work_dirs: WorkDirs,
                compiles: bool = False,
-               compile_error: str = '',
+               compile_stdout: str = '',
+               compile_stderr: str = '',
                compile_log: str = '',
                is_function_referenced: bool = False,
                fuzz_target_source: str = '',
@@ -73,14 +75,15 @@ class BuildResult(Result):
     super().__init__(benchmark, trial, work_dirs, fuzz_target_source,
                      build_script_source, author, chat_history)
     self.compiles = compiles
-    self.compile_error = compile_error
+    self.compile_stdout = compile_stdout
+    self.compile_stderr = compile_stderr
     self.compile_log = compile_log
     self.is_function_referenced = is_function_referenced
 
   def to_dict(self) -> dict:
     return super().to_dict() | {
         'compiles': self.success,
-        'compile_error': self.compile_error,
+        'compile_error': self.compile_stderr,
         'compile_log': self.compile_log,
         'is_function_referenced': self.is_function_referenced,
     }
@@ -112,7 +115,8 @@ class RunResult(BuildResult):
       trial: int,
       work_dirs: WorkDirs,
       compiles: bool = False,
-      compile_error: str = '',
+      compile_stdout: str = '',
+      compile_stderr: str = '',
       compile_log: str = '',
       is_function_referenced: bool = False,
       crashes: bool = False,  # Runtime crash.
@@ -132,9 +136,10 @@ class RunResult(BuildResult):
       build_script_source: str = '',
       author: Any = None,
       chat_history: Optional[dict] = None) -> None:
-    super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
-                     compile_log, is_function_referenced, fuzz_target_source,
-                     build_script_source, author, chat_history)
+    super().__init__(benchmark, trial, work_dirs, compiles, compile_stdout,
+                     compile_stderr, compile_log, is_function_referenced,
+                     fuzz_target_source, build_script_source, author,
+                     chat_history)
     self.crashes = crashes
     self.run_error = run_error
     self.run_log = run_log

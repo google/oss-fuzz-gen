@@ -11,7 +11,6 @@ from typing import Any, Optional
 import logger
 import utils
 from llm_toolkit.models import LLM
-from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
 from results import Result
 from tool.base_tool import BaseTool
@@ -44,7 +43,7 @@ class BaseAgent(ABC):
     return None
 
   def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
-               trial: int) -> str:
+               trial: int) -> Any:
     """Chat with LLM."""
     logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
                 cur_round,
@@ -78,27 +77,30 @@ class BaseAgent(ABC):
     filtered_code_block = '\n'.join(filtered_lines)
     return filtered_code_block
 
-  def _format_bash_execution_result(self, process: sp.CompletedProcess) -> str:
+  def _format_bash_execution_result(self, process: sp.CompletedProcess) -> dict:
     """Formats a prompt based on bash execution result."""
     stdout = self.llm.truncate_prompt(process.stdout)
     # TODO(dongge) Share input limit evenly if both stdout and stderr overlong.
     stderr = self.llm.truncate_prompt(process.stderr, stdout)
-    return (f'<bash>\n{process.args}\n</bash>\n'
-            f'<return code>\n{process.returncode}\n</return code>\n'
-            f'<stdout>\n{stdout}\n</stdout>\n'
-            f'<stderr>\n{stderr}\n</stderr>\n')
+    return {
+        'command': process.args,
+        'returncode': process.returncode,
+        'stdout': stdout,
+        'stderr': stderr,
+    }
 
-  def _container_handle_bash_command(self, command: str,
-                                     tool: BaseTool) -> Prompt:
+  def _container_handle_bash_command(self, args: dict, tool: BaseTool) -> dict:
     """Handles the command from LLM with container |tool|."""
-    prompt_text = self._format_bash_execution_result(tool.execute(command))
-    return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
+    return args | self._format_bash_execution_result(
+        tool.execute(self._filter_code(args.get('command', ''))))
 
-  def _container_handle_invalid_tool_usage(self, tool: BaseTool) -> Prompt:
+  def _container_handle_invalid_tool_usage(self, args: dict,
+                                           tool: BaseTool) -> dict:
     """Formats a prompt to re-teach LLM how to use the |tool|."""
-    prompt_text = (f'No valid instruction received, Please follow the '
-                   f'interaction protocols:\n{tool.tutorial()}')
-    return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
+    return args | {
+        'error': ('Malformatted function call, function name is not in '
+                  f'{[decl.name for decl in tool.declarations()]}')
+    }
 
   def _sleep_random_duration(
       self,

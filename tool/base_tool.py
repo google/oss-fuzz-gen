@@ -25,6 +25,10 @@ class BaseTool(ABC):
       return tool_tutorial_path.read()
 
   @abstractmethod
+  def declarations(self) -> list[Any]:
+    """Declares the function call APIs for LLM interaction."""
+
+  @abstractmethod
   def tutorial(self) -> str:
     """Constructs a guide for LLM, e.g., based on self.command_usages."""
 
