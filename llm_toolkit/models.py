@@ -682,8 +682,9 @@ class GeminiV1D5Chat(GeminiV1D5):
 
     extra_text_token_count = self.estimate_token_num(extra_text)
     # Reserve 10000 tokens for raw prompt wrappers.
+    # Also assume no more than 5 commands per query.
     max_raw_prompt_token_size = (self.MAX_INPUT_TOKEN - extra_text_token_count -
-                                 10000)
+                                 10000) // 5
 
     while token_count > max_raw_prompt_token_size:
       estimate_truncate_size = int(
