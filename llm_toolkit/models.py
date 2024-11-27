@@ -710,7 +710,7 @@ class GeminiV1D5Chat(GeminiV1D5):
 class GeminiV1D5ChatTool(GeminiV1D5Chat):
   """Gemini 1.5 for chat session that uses tools."""
   name = 'vertex_ai_gemini-1-5-chat-tool'
-  _vertex_ai_model = 'gemini-1.5-pro-002'
+  _vertex_ai_model = 'gemini-1.5-pro-001'
 
   @retryable(
       exceptions=[
