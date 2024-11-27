@@ -121,6 +121,8 @@ class BuilderRunner:
   def _libfuzzer_args(self) -> list[str]:
     return [
         '-print_final_stats=1',
+        # We intentionally set it to 0 to speed up our testing for headerfiles.
+        '-runs=0',
         f'-max_total_time={self.run_timeout}',
         # Without this flag, libFuzzer only consider short inputs in short
         # experiments, which lowers the coverage for quick performance tests.

@@ -1,0 +1,60 @@
+"functions":
+- "exceptions": []
+  "name": "mbedtls_cipher_write_tag"
+  "params":
+  - "name": "ctx"
+    "type": "bool "
+  - "name": "tag"
+    "type": "bool "
+  - "name": "tag_len"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int mbedtls_cipher_write_tag(mbedtls_cipher_context_t *, unsigned char *, size_t)"
+- "exceptions": []
+  "name": "mbedtls_cipher_update_ad"
+  "params":
+  - "name": "ctx"
+    "type": "bool "
+  - "name": "ad"
+    "type": "bool "
+  - "name": "ad_len"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int mbedtls_cipher_update_ad(mbedtls_cipher_context_t *, const unsigned char *, size_t)"
+- "exceptions": []
+  "name": "mbedtls_cipher_check_tag"
+  "params":
+  - "name": "ctx"
+    "type": "bool "
+  - "name": "tag"
+    "type": "bool "
+  - "name": "tag_len"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int mbedtls_cipher_check_tag(mbedtls_cipher_context_t *, const unsigned char *, size_t)"
+- "exceptions": []
+  "name": "libinjection_sqli_get_token"
+  "params":
+  - "name": "sql_state"
+    "type": "bool "
+  - "name": "i"
+    "type": "int"
+  "return_type": "void"
+  "signature": "struct libinjection_sqli_token * libinjection_sqli_get_token(struct libinjection_sqli_state *, int)"
+- "exceptions": []
+  "name": "libinjection_sqli_lookup_word"
+  "params":
+  - "name": "sql_state"
+    "type": "bool "
+  - "name": "lookup_type"
+    "type": "int"
+  - "name": "str"
+    "type": "bool "
+  - "name": "len"
+    "type": "size_t"
+  "return_type": "char"
+  "signature": "char libinjection_sqli_lookup_word(struct libinjection_sqli_state *, int, const char *, size_t)"
+"language": "c"
+"project": "ndpi"
+"target_name": "fuzz_filecfg_risk_domains"
+"target_path": "/src/ndpi/fuzz/fuzz_filecfg_risk_domains.c"
