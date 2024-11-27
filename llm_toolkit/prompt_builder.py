@@ -1368,16 +1368,24 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
                                       language_text)
 
     if self.benchmark.language == 'jvm':
+      prompt_text = prompt_text.replace('{HEADER_FILE_LANG}', '')
+      prompt_text = prompt_text.replace('{HARNESS_HEADERS}', '')
+
       # Fuzz Introspector use JVM as it support other JVM languages in addition
       # to Java. Currently, the logic in OSS-Fuzz-Gen is only working on Java.
       prompt_text = prompt_text.replace('{PROG_LANG}', 'Java')
-      prompt_text = prompt_text.replace('{HEADER_FILE_LANG}', '')
 
       # Provide list of public classes of this project
       classes = introspector.query_introspector_public_classes(
           self.benchmark.project)
       prompt_text = prompt_text.replace('{PUBLIC_CLASSES}', ','.join(classes))
-      prompt_text = prompt_text.replace('{TARGET_SAMPLE_HARNESS}', '')
+
+      # Proivde sample harness code
+      harness_sample_text = ('There are already harnesses targeting this '
+                             'project, and an example of this is:\n'
+                             f'<code>\n{self.harness_source_code}\n</code>')
+      prompt_text = prompt_text.replace('{TARGET_SAMPLE_HARNESS}',
+                                        harness_sample_text)
     else:
       included_header_files = self.extract_header_files(test_source_code)
       if included_header_files:
