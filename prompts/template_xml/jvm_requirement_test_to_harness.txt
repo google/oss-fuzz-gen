@@ -44,7 +44,7 @@ public class {HARNESS_NAME} {
 }
 </code></item>
 <item>
-Here is a comma-separated list of all publicly accessible classes in this project. You can use any of these classes, as well as classes from the JVM library. Please AVOID using other classes in the project, even if it exists in the following test or sample code as they are not publicly accessible.
+Here is a comma-separated list of all publicly accessible classes in this project. You can use any of these classes, as well as classes from the JVM library. Please AVOID using other classes in the project, even if it exists in the following test or sample code as they are not publicly accessible. Please import all necessary classes from this list.
 {PUBLIC_CLASSES}
 </item>
 <item>
