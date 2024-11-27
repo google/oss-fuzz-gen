@@ -718,6 +718,8 @@ class GeminiV1D5ChatTool(GeminiV1D5Chat):
           InvalidArgument,
           ValueError,  # TODO(dongge): Handle RECITATION specifically.
           IndexError,  # A known error from vertexai.
+          # TODO(dongge): Handle empty function param specifically.
+          TypeError,
       ],
       other_exceptions={
           ResourceExhausted: 100,
