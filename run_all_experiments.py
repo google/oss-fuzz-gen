@@ -56,7 +56,7 @@ TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
 WORK_DIR = ''
 
-LOG_LEVELS = {'debug', 'info'}
+LOG_LEVELS = ['debug', 'info']
 LOG_FMT = ('%(asctime)s.%(msecs)03d %(levelname)s '
            '%(module)s - %(funcName)s: %(message)s')
 
@@ -183,7 +183,7 @@ def parse_args() -> argparse.Namespace:
                       '--cloud-experiment-name',
                       type=str,
                       default='',
-                      help='The name of the cloud experiment')
+                      help='The name of the cloud experiment.')
   parser.add_argument('-cb',
                       '--cloud-experiment-bucket',
                       type=str,
@@ -193,7 +193,7 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument('-y',
                       '--benchmark-yaml',
                       type=str,
-                      help='A benchmark YAML file')
+                      help='A benchmark YAML file.')
   parser.add_argument('-to', '--run-timeout', type=int, default=RUN_TIMEOUT)
   parser.add_argument('-a',
                       '--ai-binary',
@@ -206,7 +206,7 @@ def parse_args() -> argparse.Namespace:
                       '--model',
                       default=models.DefaultModel.name,
                       help=('Models available: '
-                            f'{", ".join(models.LLM.all_llm_names())}'))
+                            f'{", ".join(models.LLM.all_llm_names())}.'))
   parser.add_argument('-td',
                       '--template-directory',
                       type=str,
@@ -223,13 +223,14 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument(
       '-lo',
       '--log-level',
-      help='Sets the logging level. Options available: [{LOG_LEVELS}]',
+      help=
+      f'Sets the logging level. Options available: {", ".join(LOG_LEVELS)}.',
       default='info')
   parser.add_argument(
       '-of',
       '--oss-fuzz-dir',
       help=
-      'Path to OSS-Fuzz dir to use. If not set will create temporary directory',
+      'Path to OSS-Fuzz dir to use. If not set will create temporary directory.',
       default='')
   parser.add_argument(
       '-g',
@@ -237,7 +238,7 @@ def parse_args() -> argparse.Namespace:
       help=('Generate benchmarks and use those for analysis. This is a string '
             'of comma-separated heuristics to use when identifying benchmark '
             'targets. Options available: '
-            f'{", ".join(introspector.get_oracle_dict().keys())}'),
+            f'{", ".join(introspector.get_oracle_dict().keys())}.'),
       type=str)
   parser.add_argument(
       '-gp',
