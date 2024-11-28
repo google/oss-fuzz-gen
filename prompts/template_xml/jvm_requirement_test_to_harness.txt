@@ -48,6 +48,10 @@ Here is a comma-separated list of all publicly accessible classes in this projec
 {PUBLIC_CLASSES}
 </item>
 <item>
+Here is a list of import statements that you many needed for create the harness. If use use any classes that is not from java.lang package, you must import it by referencing these import statements below.
+{IMPORT_STATEMENTS}
+</item>
+<item>
 You MUST ONLY use any of the following methods from the FuzzedDataProvider of the Jazzer framework for generating random data for fuzzing.
 If the needed return value is not found in the table, try use constructors or methods to create the needed random object. But you MUST try your best to randomise the random object with the methods in the table.
 
