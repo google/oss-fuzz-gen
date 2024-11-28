@@ -223,7 +223,8 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument(
       '-lo',
       '--log-level',
-      help=f'Sets the logging level. Options available: {", ".join(LOG_LEVELS)}.',
+      help=
+      f'Sets the logging level. Options available: {", ".join(LOG_LEVELS)}.',
       default='info')
   parser.add_argument(
       '-of',
