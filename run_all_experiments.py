@@ -56,7 +56,7 @@ TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
 WORK_DIR = ''
 
-LOG_LEVELS = {'debug', 'info'}
+LOG_LEVELS = ['debug', 'info']
 LOG_FMT = ('%(asctime)s.%(msecs)03d %(levelname)s '
            '%(module)s - %(funcName)s: %(message)s')
 
@@ -223,7 +223,7 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument(
       '-lo',
       '--log-level',
-      help='Sets the logging level. Options available: [{LOG_LEVELS}]',
+      help=f'Sets the logging level. Options available: {", ".join(LOG_LEVELS)}',
       default='info')
   parser.add_argument(
       '-of',
