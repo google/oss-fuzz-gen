@@ -1334,7 +1334,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
     with open(template_file) as file:
       return file.read()
 
-  def _extract_jvm_imports(self, src: str, cls: list[str]) -> tuple[list[str], list[str]]:
+  def _extract_jvm_imports(self, src: str,
+                           cls: list[str]) -> tuple[list[str], list[str]]:
     """Extract and interpret import statements from java source."""
 
     # Extract import statements
@@ -1359,7 +1360,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
 
     results = set()
     others = set()
-    for full_import, is_static, cls_name in imports:
+    for full_import, _, cls_name in imports:
       found = False
       if '*' in cls_name:
         # Resolve generic import
@@ -1371,7 +1372,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
               found = True
 
         if not found:
-            others.add(full_import)
+          others.add(full_import)
       else:
         if cls_name in cls:
           results.add(full_import)
@@ -1434,7 +1435,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
                                         harness_sample_text)
 
       # Extract import list
-      import_list, other_import_list = self._extract_jvm_imports(test_source_code, classes)
+      import_list, other_import_list = self._extract_jvm_imports(
+          test_source_code, classes)
       prompt_text = prompt_text.replace('{IMPORT_STATEMENTS}',
                                         '\n'.join(import_list))
       prompt_text = prompt_text.replace('{OTHER_IMPORT_STATEMENTS}',
