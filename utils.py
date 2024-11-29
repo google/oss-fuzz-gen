@@ -37,7 +37,7 @@ def deserialize_from_dill(dill_path: Any) -> Any:
 def _default_retry_delay_fn(e: Exception, n: int):
   """Delays retry by a random seconds between 0 to 1 minute."""
   del e, n
-  return random.uniform(0, 60)
+  random.uniform(60, 120)
 
 
 def retryable(exceptions=None,
