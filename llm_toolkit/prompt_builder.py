@@ -1334,7 +1334,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
     with open(template_file) as file:
       return file.read()
 
-  def _extract_jvm_imports(self, src: str, cls: list[str]) -> list[str]:
+  def _extract_jvm_imports(self, src: str, cls: list[str]) -> tuple[list[str], list[str]]:
     """Extract and interpret import statements from java source."""
 
     # Extract import statements
@@ -1358,7 +1358,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
         cls_map[package].append(name)
 
     results = set()
+    others = set()
     for full_import, is_static, cls_name in imports:
+      found = False
       if '*' in cls_name:
         # Resolve generic import
         package = cls_name.rstrip('.*')
@@ -1366,11 +1368,17 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
           for name in cls_map[package]:
             if name in used_cls:
               results.add(f"import {package}.{name};")
-      else:
-        # Keep all other import
-        results.add(full_import)
+              found = True
 
-    return list(sorted(results))
+        if not found:
+            others.add(full_import)
+      else:
+        if cls_name in cls:
+          results.add(full_import)
+        else:
+          others.add(full_import)
+
+    return list(sorted(results)), list(sorted(others))
 
   def extract_header_files(self, text):
     # Include any weird macros defined that does not have any values. This
@@ -1426,9 +1434,11 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
                                         harness_sample_text)
 
       # Extract import list
-      import_list = self._extract_jvm_imports(test_source_code, classes)
+      import_list, other_import_list = self._extract_jvm_imports(test_source_code, classes)
       prompt_text = prompt_text.replace('{IMPORT_STATEMENTS}',
                                         '\n'.join(import_list))
+      prompt_text = prompt_text.replace('{OTHER_IMPORT_STATEMENTS}',
+                                        '\n'.join(other_import_list))
     else:
       included_header_files = self.extract_header_files(test_source_code)
       if included_header_files:
