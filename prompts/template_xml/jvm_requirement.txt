@@ -6,6 +6,7 @@
 <item>NEVER use any methods from the <code>java.lang.Random</code> class in the generated code.</item>
 <item>NEVER use any classes or methods in the <code>java.lang.reflect</code> package in the generated code.</item>
 <item>NEVER use the @FuzzTest annotation for specifying the fuzzing method.</item>
+<item>NEVER use any assert, printing and logging statements in the generated harness.</item>
 <item>Please avoid using any multithreading or multi-processing approach.</item>
 <item>Please add import statements for necessary classes, except for classes in the java.lang package.</item>
 <item>You MUST create the object before calling the target method.</item>
