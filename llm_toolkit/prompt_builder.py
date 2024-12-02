@@ -1372,6 +1372,15 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
 
     return list(sorted(results))
 
+  def _get_jvm_public_candidates(self, proj: str) -> list[str]:
+    """Helper function to retrieve list of public candidates for jvm."""
+    method_set = set()
+    methods = introspector.query_introspector_jvm_all_public_candidates(proj)
+    for method in methods:
+      if "<init>" not in method['function_name']:
+        method_set.add(method['function_name'])
+    return list(method_set)
+
   def extract_header_files(self, text):
     # Include any weird macros defined that does not have any values. This
     # was found empirically to be valuable.
@@ -1424,6 +1433,10 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
                              f'<code>\n{self.harness_source_code}\n</code>')
       prompt_text = prompt_text.replace('{TARGET_SAMPLE_HARNESS}',
                                         harness_sample_text)
+
+      # Extract must included methods
+      methods = self._get_jvm_public_candidates(self.benchmark.project)
+      prompt_text = prompt_text.replace('{PUBLIC_METHODS}', ','.join(methods))
 
       # Extract import list
       import_list = self._extract_jvm_imports(test_source_code, classes)

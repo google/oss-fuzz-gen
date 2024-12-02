@@ -15,6 +15,11 @@ Here is a list of requirements that you MUST follow.
 <item>Please use {HARNESS_NAME} as the Java class name.</item>
 <item>You MUST invoke the close method of any resource class objects that implements the java.lang.AutoCloseable interface in the finally block after the target method is invoked.</item>
 <item>You MUST use similar approach as the examples and tests to catch exceptions.</item>
+<item>
+Here is a comma separated list of public project methods. You must include the invocation of at least one of them in the generated harness. Each of the method signature follows the format of <code>[Full qualified name of the class].method_name(method_arguments)</code>.
+{PUBLIC_METHODS}
+</item>
+<item>
 <item>Do not create new variables with the same names as existing variables.
 WRONG:
 <code>
