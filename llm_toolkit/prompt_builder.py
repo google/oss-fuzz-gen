@@ -1338,8 +1338,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
     with open(template_file) as file:
       return file.read()
 
-  def _extract_jvm_imports(self, src: str,
-                           cls: list[str]) -> list[str]:
+  def _extract_jvm_imports(self, src: str, cls: list[str]) -> list[str]:
     """Extract and interpret import statements from java source."""
 
     # Extract import statements
@@ -1360,13 +1359,13 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
 
     # Generalise public classes import statements
     results = set()
-    for package, cls in cls_map.items():
-      if len(cls) >= 3:
+    for package, cls_name_list in cls_map.items():
+      if len(cls_name_list) >= 3:
         # Generalise the import package if it has more than three items
         results.add(f'import {package}.*;')
       else:
         # Import each class separately
-        for cls_name in cls:
+        for cls_name in cls_name_list:
           results.add(f'import {package}.{cls_name};')
 
     # Retrieve other import statements for reference
@@ -1510,7 +1509,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
 
   def post_process_generated_code(self, generated_code: str) -> str:
     """Adds specific C headers we always want in the harnesses for C/C++.
-    Add general import statements and remove print and assert statment for JVM"""
+    Add general import statements and remove unnecessary statments for JVM"""
     if self.benchmark.language.lower() == 'jvm':
       # For JVM
       # Remove assert and out statements
@@ -1531,6 +1530,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
       generated_code += '\n'
       if self.benchmark.language.lower() == 'c':
         generated_code = generated_code.replace(
-            'extern "C" int LLVMFuzzerTestOneInput', 'int LLVMFuzzerTestOneInput')
+            'extern "C" int LLVMFuzzerTestOneInput',
+            'int LLVMFuzzerTestOneInput')
 
     return generated_code
