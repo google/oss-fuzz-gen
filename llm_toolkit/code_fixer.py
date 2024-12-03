@@ -230,8 +230,7 @@ def remove_const_from_png_symbols(content: str) -> str:
 # ========================= LLM Fixes ========================= #
 
 
-def extract_error_message(log_path: str,
-                          project_target_basename: str,
+def extract_error_message(log_path: str, project_target_basename: str,
                           language: str) -> list[str]:
   """Extracts error message and its context from the file in |log_path|."""
 
@@ -451,7 +450,8 @@ def apply_llm_fix(ai_binary: str,
     instruction = _collect_instructions(benchmark, errors,
                                         fuzz_target_source_code)
     prompt = builder.build_fixer_prompt(benchmark, fuzz_target_source_code,
-                                        error_desc, errors, context, instruction)
+                                        error_desc, errors, context,
+                                        instruction)
     prompt.save(prompt_path)
 
   fixer_model.query_llm(prompt, response_dir)
@@ -691,10 +691,10 @@ def _collect_consume_buffers(fuzz_target_source_code: str) -> str:
   for buffer_method in ['ConsumeBytes', 'ConsumeData']:
     if buffer_method in fuzz_target_source_code:
       instruction += (
-          'IMPORTANT: the harness source code contains a call to '
-          f'`{buffer_method}`. Whenever this function is used, you MUST validate'
-          ' the size of the vector returned, and make sure that the size of the '
-          f'vector is equal to argument given to `{buffer_method}`. If it is '
+          'IMPORTANT: the harness source code contains a call to `'
+          f'{buffer_method}`. Whenever this function is used, you MUST validate'
+          ' the size of the vector returned, and make sure that the size of the'
+          f' vector is equal to argument given to `{buffer_method}`. If it is '
           'not equal, the harness should not proceed.\n')
       instruction += (
           f'Furthermore, consider changing {buffer_method} to '

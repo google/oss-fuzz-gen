@@ -1070,8 +1070,8 @@ class JvmErrorFixingBuilder(PromptBuilder):
     self.error_str = '\n'.join(errors)
 
     # Load templates.
-    self.template_file = self._find_template(template_dir,
-                                             'jvm_requirement_error_fixing.txt')
+    self.template_file = self._find_template(
+        template_dir, 'jvm_requirement_error_fixing.txt')
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
     """Finds template file based on |template_dir|."""
@@ -1106,7 +1106,7 @@ class JvmErrorFixingBuilder(PromptBuilder):
 
     # Add the generated harness and error string to prompt
     prompt_text = prompt_text.replace('{GENERATED_HARNESS}',
-                                       self.generated_harness)
+                                      self.generated_harness)
     prompt_text = prompt_text.replace('{ERRORS}', self.error_str)
 
     self._prompt.add_priming(prompt_text)
@@ -1595,4 +1595,3 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
       generated_code = generated_code.replace(
           'extern "C" int LLVMFuzzerTestOneInput', 'int LLVMFuzzerTestOneInput')
     return generated_code
-
