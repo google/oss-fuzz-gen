@@ -1290,6 +1290,10 @@ class TestToHarnessConverter(PromptBuilder):
     self.harness_source_code = introspector.query_introspector_source_code(
         self.benchmark.project, self.benchmark.target_path, 0, 10000)
 
+    self.general_jvm_imports = [
+        'import com.code_intelligence.jazzer.api.FuzzedDataProvider;'
+    ]
+
     # Load templates.
     self.priming_template_file = self._find_template(
         template_dir, 'test_to_harness_priming.txt')
@@ -1335,19 +1339,15 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
       return file.read()
 
   def _extract_jvm_imports(self, src: str,
-                           cls: list[str]) -> tuple[list[str], list[str]]:
+                           cls: list[str]) -> list[str]:
     """Extract and interpret import statements from java source."""
 
     # Extract import statements
     # General import statemet: import test.Test;
     # Static import statement: import static test.Test.InnerTest;
     # Generic import statement: import test.*;
-    import_pattern = r'^\s*(import\s+(static\s+)?([\w.*]+));'
+    import_pattern = r'^\s*(import\s+(static\s+)?([\w.*]+);)'
     imports = re.compile(import_pattern, re.MULTILINE).findall(src)
-
-    # Extract all used classes
-    cls_pattern = r'\b[A-Z][a-zA-Z0-9_]*\b'
-    used_cls = set(re.compile(cls_pattern).findall(src))
 
     # Group public classes by packages
     cls_map = {}
@@ -1358,28 +1358,31 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
           cls_map[package] = []
         cls_map[package].append(name)
 
+    # Generalise public classes import statements
     results = set()
+    for package, cls in cls_map.items():
+      if len(cls) >= 3:
+        # Generalise the import package if it has more than three items
+        results.add(f'import {package}.*;')
+      else:
+        # Import each class separately
+        for cls_name in cls:
+          results.add(f'import {package}.{cls_name};')
+
+    # Retrieve other import statements for reference
     others = set()
     for full_import, _, cls_name in imports:
-      found = False
-      if '*' in cls_name:
-        # Resolve generic import
+      if cls_name.startswith('java'):
+        results.add(full_import)
+      elif '*' in cls_name:
         package = cls_name.rstrip('.*')
-        if package in cls_map:
-          for name in cls_map[package]:
-            if name in used_cls:
-              results.add(f"import {package}.{name};")
-              found = True
-
-        if not found:
+        if package not in cls_map:
           others.add(full_import)
       else:
-        if cls_name in cls:
-          results.add(full_import)
-        else:
-          others.add(full_import)
+        others.add(full_import)
 
-    return list(sorted(results)), list(sorted(others))
+    self.general_jvm_imports = list(sorted(results))
+    return list(sorted(others))
 
   def _get_jvm_public_candidates(self, proj: str) -> list[str]:
     """Helper function to retrieve list of public candidates for jvm."""
@@ -1448,10 +1451,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
       prompt_text = prompt_text.replace('{PUBLIC_METHODS}', ','.join(methods))
 
       # Extract import list
-      import_list, other_import_list = self._extract_jvm_imports(
-          test_source_code, classes)
+      other_import_list = self._extract_jvm_imports(test_source_code, classes)
       prompt_text = prompt_text.replace('{IMPORT_STATEMENTS}',
-                                        '\n'.join(import_list))
+                                        '\n'.join(self.general_jvm_imports))
       prompt_text = prompt_text.replace('{OTHER_IMPORT_STATEMENTS}',
                                         '\n'.join(other_import_list))
     else:
@@ -1507,15 +1509,28 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
     return self._prompt
 
   def post_process_generated_code(self, generated_code: str) -> str:
-    """Adds specific C headers we always want in the harnesses.
-    Ignore this step for java projects"""
+    """Adds specific C headers we always want in the harnesses for C/C++.
+    Add general import statements and remove print and assert statment for JVM"""
     if self.benchmark.language.lower() == 'jvm':
-      return generated_code
+      # For JVM
+      # Remove assert and out statements
+      fixed_code = []
+      prefixes = ['assert', 'System.out']
+      for line in generated_code.split('\n'):
+        if not any(line.lstrip().startswith(prefix) for prefix in prefixes):
+          fixed_code.append(line)
 
-    for header in C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES:
-      generated_code = f'#include <{header}>\n{generated_code}'
-    generated_code += '\n'
-    if self.benchmark.language.lower() == 'c':
-      generated_code = generated_code.replace(
-          'extern "C" int LLVMFuzzerTestOneInput', 'int LLVMFuzzerTestOneInput')
+      # Add general import statements
+      import_str = '\n'.join(self.general_jvm_imports)
+      generated_code = '\n'.join(fixed_code)
+      generated_code = f'{import_str}\n{generated_code}'
+    else:
+      # For C/C++
+      for header in C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES:
+        generated_code = f'#include <{header}>\n{generated_code}'
+      generated_code += '\n'
+      if self.benchmark.language.lower() == 'c':
+        generated_code = generated_code.replace(
+            'extern "C" int LLVMFuzzerTestOneInput', 'int LLVMFuzzerTestOneInput')
+
     return generated_code
