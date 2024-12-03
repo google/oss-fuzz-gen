@@ -281,9 +281,9 @@ class Evaluator:
                                  target_path: str, iteration: int,
                                  build_result: BuildResult,
                                  run_result: Optional[RunResult],
-                                 dual_logger: _Logger):
+                                 dual_logger: _Logger, language: str):
     """Fixes the generated fuzz target."""
-    if build_result.succeeded:
+    if build_result.succeeded and not language == 'jvm':
       if run_result:
         error_desc, errors = run_result.semantic_check.get_error_info()
       else:
@@ -293,7 +293,8 @@ class Evaluator:
     else:
       error_desc, errors = None, build_result.errors
     code_fixer.llm_fix(ai_binary, target_path, self.benchmark, iteration,
-                       error_desc, errors, self.builder_runner.fixer_model_name)
+                       error_desc, errors, self.builder_runner.fixer_model_name,
+                       language)
     shutil.copyfile(
         target_path,
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
@@ -393,9 +394,7 @@ class Evaluator:
         # Exit cond 2: fix limit is reached.
         break
 
-      # 2. Fixing generated driver. Skipped for jvm projects.
-      if self.benchmark.language == 'jvm':
-        break
+      # 2. Fixing generated driver
       llm_fix_count += 1
       dual_logger.log(f'Fixing {target_path} with '
                       f'{self.builder_runner.fixer_model_name}, '
@@ -403,7 +402,8 @@ class Evaluator:
       try:
         self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
                                         target_path, llm_fix_count,
-                                        build_result, run_result, dual_logger)
+                                        build_result, run_result, dual_logger,
+                                        self.benchmark.language)
       except Exception as e:
         dual_logger.log('Exception occurred when fixing fuzz target in attempt '
                         f'{llm_fix_count}: {e}')

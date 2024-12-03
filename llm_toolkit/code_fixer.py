@@ -231,12 +231,29 @@ def remove_const_from_png_symbols(content: str) -> str:
 
 
 def extract_error_message(log_path: str,
-                          project_target_basename: str) -> list[str]:
+                          project_target_basename: str,
+                          language: str) -> list[str]:
   """Extracts error message and its context from the file in |log_path|."""
 
   with open(log_path) as log_file:
     # A more accurate way to extract the error message.
     log_lines = log_file.readlines()
+
+  # Error message extraction for Java projects
+  if language == 'jvm':
+    started = False
+    errors = []
+    for log_line in log_lines:
+      if started:
+        errors.append(log_line)
+        if log_line == 'ERROR:__main__:Building fuzzers failed.':
+          break
+      else:
+        if ': error:' in log_line:
+          errors.append(log_line)
+          started = True
+
+    return errors
 
   target_name, _ = os.path.splitext(project_target_basename)
 
@@ -352,7 +369,7 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
 
 def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
             llm_fix_id: int, error_desc: Optional[str], errors: list[str],
-            fixer_model_name: str) -> None:
+            fixer_model_name: str, language: str) -> None:
   """Reads and fixes |target_path| in place with LLM based on |error_log|."""
   fuzz_target_source_code = parser.parse_code(target_path)
 
@@ -368,6 +385,7 @@ def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
                 errors,
                 prompt_path,
                 response_dir,
+                language,
                 fixer_model_name,
                 temperature=0.5 - llm_fix_id * 0.04)
 
@@ -409,6 +427,7 @@ def apply_llm_fix(ai_binary: str,
                   errors: list[str],
                   prompt_path: str,
                   response_dir: str,
+                  language: str,
                   fixer_model_name: str = models.DefaultModel.name,
                   temperature: float = 0.4):
   """Queries LLM to fix the code."""
@@ -419,14 +438,21 @@ def apply_llm_fix(ai_binary: str,
       temperature=temperature,
   )
 
-  builder = prompt_builder.DefaultTemplateBuilder(fixer_model)
+  if language == 'jvm':
+    builder = prompt_builder.JvmErrorFixingBuilder(fixer_model, benchmark,
+                                                   fuzz_target_source_code,
+                                                   errors)
+    prompt = builder.build([], None, None)
+    prompt.save(prompt_path)
+  else:
+    builder = prompt_builder.DefaultTemplateBuilder(fixer_model)
 
-  context = _collect_context(benchmark, errors)
-  instruction = _collect_instructions(benchmark, errors,
-                                      fuzz_target_source_code)
-  prompt = builder.build_fixer_prompt(benchmark, fuzz_target_source_code,
-                                      error_desc, errors, context, instruction)
-  prompt.save(prompt_path)
+    context = _collect_context(benchmark, errors)
+    instruction = _collect_instructions(benchmark, errors,
+                                        fuzz_target_source_code)
+    prompt = builder.build_fixer_prompt(benchmark, fuzz_target_source_code,
+                                        error_desc, errors, context, instruction)
+    prompt.save(prompt_path)
 
   fixer_model.query_llm(prompt, response_dir)
 

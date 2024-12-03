@@ -264,7 +264,8 @@ def generate_targets_for_analysis(
     use_context: bool,
     example_pair: list[list[str]],
     prompt_builder_to_use: str = 'DEFAULT',
-    cloud_experiment_bucket: str = '') -> List[str]:
+    cloud_experiment_bucket: str = '',
+    jvm_error_fix: tuple[str, str] = None) -> List[str]:
   """Generates a set of harnesses and build scripts ready to be evaluated
     by `check_targets`. This is where the core first LLM logic is used to
     generate harnesses.
@@ -286,8 +287,14 @@ def generate_targets_for_analysis(
   else:
     context_info = {}
 
-  # If this is a test benchmark then we will use a test prompt builder.
-  if benchmark.test_file_path:
+  if jvm_error_fix:
+    # If jvm error fix tuple is provided, use error fixing prompt builder.
+    logger.info('Fixing generated JVM harness')
+    code, error = jvm_error_fix
+    builder = prompt_builder.JvmErrorFixingBuilder(model, benchmark,
+                                                   template_dir, code, error)
+  elif benchmark.test_file_path:
+    # If this is a test benchmark then we will use a test prompt builder.
     logging.info('Generating a target for test case: %s',
                  benchmark.test_file_path)
     builder = prompt_builder.TestToHarnessConverter(model, benchmark,
