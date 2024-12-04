@@ -1054,6 +1054,82 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     return generated_code
 
 
+class JvmErrorFixingBuilder(PromptBuilder):
+  """Prompt builder for fixing JVM harness with complication error."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               generated_harness: str,
+               errors: list[str],
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model)
+    self._template_dir = template_dir
+    self.benchmark = benchmark
+    self.generated_harness = generated_harness
+    self.error_str = '\n'.join(errors)
+
+    # Load templates.
+    self.template_file = self._find_template(
+        template_dir, 'jvm_requirement_error_fixing.txt')
+
+  def _find_template(self, template_dir: str, template_name: str) -> str:
+    """Finds template file based on |template_dir|."""
+    preferred_template = os.path.join(template_dir, template_name)
+    # Use the preferred template if it exists.
+    if os.path.isfile(preferred_template):
+      return preferred_template
+    # Fall back to the default template.
+    default_template = os.path.join(DEFAULT_TEMPLATE_DIR, template_name)
+    return default_template
+
+  def _get_template(self, template_file: str) -> str:
+    """Reads the template for prompts."""
+    with open(template_file) as file:
+      return file.read()
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it.
+       Ignore target_file_type, project_example_content
+       and project_context_content parameters.
+    """
+    with open(self.template_file, 'r') as f:
+      prompt_text = f.read()
+
+    # Format the repository
+    target_repository = oss_fuzz_checkout.get_project_repository(
+        self.benchmark.project)
+    prompt_text = prompt_text.replace('{TARGET_REPO}', target_repository)
+
+    # Add the generated harness and error string to prompt
+    prompt_text = prompt_text.replace('{GENERATED_HARNESS}',
+                                      self.generated_harness)
+    prompt_text = prompt_text.replace('{ERRORS}', self.error_str)
+
+    self._prompt.add_priming(prompt_text)
+    return self._prompt
+
+  def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
+                         error_desc: Optional[str],
+                         errors: list[str]) -> prompts.Prompt:
+    """Builds a fixer prompt."""
+    # Do nothing for jvm project now.
+    return self._prompt
+
+  def build_triager_prompt(self, benchmark: Benchmark, driver_code: str,
+                           crash_info: str, crash_func: dict) -> prompts.Prompt:
+    """Builds a triager prompt."""
+    # Do nothing for jvm project now.
+    return self._prompt
+
+  def post_process_generated_code(self, generated_code: str) -> str:
+    """Allows prompt builder to adjust the generated code."""
+    return generated_code
+
+
 class DefaultPythonTemplateBuilder(PromptBuilder):
   """Default builder for Python projects."""
 
