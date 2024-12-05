@@ -2,18 +2,18 @@ I'm a security engineer looking to write good fuzzing harnesses. I want you help
 
 The target library is {TARGET_REPO}.
 
-The target project is implemented in the Java programming language; therefore, the harness should also be written in Java.  
-The fuzzing harness must be executable within the Jazzer fuzzing framework.  
+The target project is implemented in the Java programming language; therefore, the harness should also be written in Java.
+The fuzzing harness must be executable within the Jazzer fuzzing framework.
 
-Below is the source code of the target fuzzing harness that I would like to improve:  
-<code>  
-{GENERATED_HARNESS}  
-</code>  
+Below is the source code of the target fuzzing harness that I would like to improve:
+<code>
+{GENERATED_HARNESS}
+</code>
 
 For reference, the source code for all existing harnesses of the project is provided below, separated by `---`:
-<code>  
-{EXISTING_HARNESS}  
-</code>  
+<code>
+{EXISTING_HARNESS}
+</code>
 
 Additionally, a list of all public methods and constructors of the project is included for your reference, you should try to expand the fuzzing harness that calls these targets to improve the overall fuzzing coverage:
 {PUBLIC_METHODS}
