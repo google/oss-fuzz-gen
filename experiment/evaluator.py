@@ -388,7 +388,12 @@ class Evaluator:
         build_result = BuildResult()
         run_result = None
 
-      gen_succ = build_result.succeeded and run_result and run_result.succeeded
+      if self.benchmark.language == 'jvm':
+        # Unexpected exceptions that crash JVM fuzzers does not need to be fixed.
+        gen_succ = build_result.succeeded and run_result
+      else:
+        gen_succ = build_result.succeeded and run_result and run_result.succeeded
+
       if gen_succ or llm_fix_count >= LLM_FIX_LIMIT:
         # Exit cond 1: successfully generate the fuzz target.
         # Exit cond 2: fix limit is reached.
