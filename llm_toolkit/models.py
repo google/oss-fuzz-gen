@@ -31,10 +31,9 @@ import anthropic
 import openai
 import tiktoken
 import vertexai
-from google.api_core.exceptions import (GoogleAPICallError,
-                                        InternalServerError, InvalidArgument,
-                                        ResourceExhausted, ServiceUnavailable,
-                                        TooManyRequests)
+from google.api_core.exceptions import (GoogleAPICallError, InternalServerError,
+                                        InvalidArgument, ResourceExhausted,
+                                        ServiceUnavailable, TooManyRequests)
 from vertexai import generative_models
 from vertexai.preview.generative_models import ChatSession, GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
