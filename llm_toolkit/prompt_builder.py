@@ -1073,11 +1073,11 @@ class JvmErrorFixingBuilder(PromptBuilder):
 
     # Load templates.
     if self.jvm_cov_fix:
-        self.template_file = self._find_template(
-            template_dir, 'jvm_requirement_coverage_fixing.txt')
+      self.template_file = self._find_template(
+          template_dir, 'jvm_requirement_coverage_fixing.txt')
     else:
-        self.template_file = self._find_template(
-            template_dir, 'jvm_requirement_error_fixing.txt')
+      self.template_file = self._find_template(
+          template_dir, 'jvm_requirement_error_fixing.txt')
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
     """Finds template file based on |template_dir|."""
@@ -1105,6 +1105,8 @@ class JvmErrorFixingBuilder(PromptBuilder):
     with open(self.template_file, 'r') as f:
       prompt_text = f.read()
 
+    proj = self.benchmark.project
+
     # Format the repository
     target_repository = oss_fuzz_checkout.get_project_repository(
         self.benchmark.project)
@@ -1122,13 +1124,13 @@ class JvmErrorFixingBuilder(PromptBuilder):
       harnesses = introspector.query_introspector_for_harness_intrinsics(proj)
       for pair in harnesses:
         path = pair.get('source', '')
-        if source_path:
+        if path:
           source = introspector.query_introspector_source_code(proj, path)
           if source:
             source_list.append(source)
 
       prompt_text = prompt_text.replace('{EXISTING_HARNESS}',
-                                          '\n---\n'.join(source_list))
+                                        '\n---\n'.join(source_list))
 
       # Add all public candidates to prompt
       methods = introspector.query_introspector_jvm_all_public_candidates(proj)

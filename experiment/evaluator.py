@@ -284,6 +284,7 @@ class Evaluator:
                                  dual_logger: _Logger, language: str):
     """Fixes the generated fuzz target."""
     jvm_coverage_fix = False
+    error_desc, errors = '', []
     if build_result.succeeded:
       if language == 'jvm':
         jvm_coverage_fix = True
@@ -293,7 +294,6 @@ class Evaluator:
         else:
           dual_logger.log(f'Warning: Build succeed but no run_result in '
                           f'{generated_oss_fuzz_project}.')
-          error_desc, errors = '', []
     else:
       error_desc, errors = None, build_result.errors
 
@@ -402,7 +402,7 @@ class Evaluator:
         # Gets line coverage (diff) details.
         coverage_summary = self._load_existing_coverage_summary()
 
-        if self.benchmark.language in ['python', 'jvm']:
+        if self.benchmark.language in ['python', 'jvm'] and run_result.coverage:
           # The Jacoco.xml coverage report used to generate summary.json on
           # OSS-Fuzz for JVM projects does not trace the source file location.
           # Thus the conversion may miss some classes because they are not
@@ -427,9 +427,10 @@ class Evaluator:
           coverage_percent = 0.0
 
         existing_textcov = self.load_existing_textcov()
-        run_result.coverage.subtract_covered_lines(existing_textcov)
+        if run_result.coverage:
+          run_result.coverage.subtract_covered_lines(existing_textcov)
 
-        if total_lines:
+        if total_lines and run_result.coverage:
           coverage_diff = run_result.coverage.covered_lines / total_lines
         else:
           dual_logger.log(
@@ -441,7 +442,7 @@ class Evaluator:
         # 1) Build success and run crashed (expected for exceptions)
         # 2) Build success, run success and coverage diff > 0
         gen_succ = build_result.succeeded and run_result
-        if gen_succ and run_result.succeeded:
+        if gen_succ and run_result and run_result.succeeded:
           gen_succ = gen_succ and (coverage_diff > 0)
       else:
         gen_succ = build_result.succeeded and run_result and run_result.succeeded
