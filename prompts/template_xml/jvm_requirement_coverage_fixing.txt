@@ -1,23 +1,24 @@
-I'm a security engineer looking to write a good fuzzing harnesses. I got some compilation errors and want you to help fix them.
+I'm a security engineer looking to write good fuzzing harnesses. I want you help me improve my fuzzing harness so it could covers more part of the code.
 
 The target library is {TARGET_REPO}.
 
-The target project is written in the Java programming language.
+The target project is implemented in the Java programming language; therefore, the harness should also be written in Java.  
+The fuzzing harness must be executable within the Jazzer fuzzing framework.  
 
-This is a Java programming language so the harness should be written in Java.
-The fuzzing harness should be executable under the Jazzer fuzzing framework.
+Below is the source code of the target fuzzing harness that I would like to improve:  
+<code>  
+{GENERATED_HARNESS}  
+</code>  
 
-I have already done the conversion and here is my harness code.
-<code>
-{GENERATED_HARNESS}
-</code>
+For reference, the source code for all existing harnesses of the project is provided below, separated by `---`:
+<code>  
+{EXISTING_HARNESS}  
+</code>  
 
-And I got the following errors from the compiler. Please help me fix them while keeping all the format and other logics unchanged.
-<error>
-{ERRORS}
-</error>
+Additionally, a list of all public methods and constructors of the project is included for your reference, you should try to expand the fuzzing harness that calls these targets to improve the overall fuzzing coverage:
+{PUBLIC_METHODS}
 
-If missing imports for classes used are found but failed to locate the correct import statements, try removing the use of that class.
+Your task is to improve the target fuzzing harness provided above to increase code coverage for additional parts of the project that are not covered by the existing fuzzing harnesses. Please ensure that the changes made are minimal.
 In your response, include ONLY the code for the harness, nothing more. You should wrap the code in <code></code> tags.
 
 Here is an additional list of requirements that you MUST follow.

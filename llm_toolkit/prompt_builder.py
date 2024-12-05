@@ -1062,16 +1062,22 @@ class JvmErrorFixingBuilder(PromptBuilder):
                benchmark: Benchmark,
                generated_harness: str,
                errors: list[str],
+               jvm_cov_fix: bool,
                template_dir: str = DEFAULT_TEMPLATE_DIR):
     super().__init__(model)
     self._template_dir = template_dir
     self.benchmark = benchmark
     self.generated_harness = generated_harness
     self.error_str = '\n'.join(errors)
+    self.jvm_cov_fix = jvm_cov_fix
 
     # Load templates.
-    self.template_file = self._find_template(
-        template_dir, 'jvm_requirement_error_fixing.txt')
+    if self.jvm_cov_fix:
+        self.template_file = self._find_template(
+            template_dir, 'jvm_requirement_coverage_fixing.txt')
+    else:
+        self.template_file = self._find_template(
+            template_dir, 'jvm_requirement_error_fixing.txt')
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
     """Finds template file based on |template_dir|."""
@@ -1103,11 +1109,34 @@ class JvmErrorFixingBuilder(PromptBuilder):
     target_repository = oss_fuzz_checkout.get_project_repository(
         self.benchmark.project)
     prompt_text = prompt_text.replace('{TARGET_REPO}', target_repository)
+    prompt_text = prompt_text.replace('{HARNESS_NAME}',
+                                      self.benchmark.target_name)
 
-    # Add the generated harness and error string to prompt
+    # Add the generated harness to prompt
     prompt_text = prompt_text.replace('{GENERATED_HARNESS}',
                                       self.generated_harness)
-    prompt_text = prompt_text.replace('{ERRORS}', self.error_str)
+
+    if self.jvm_cov_fix:
+      # Add source code of all existing harnesses to prompt
+      source_list = []
+      harnesses = introspector.query_introspector_for_harness_intrinsics(proj)
+      for pair in harnesses:
+        path = pair.get('source', '')
+        if source_path:
+          source = introspector.query_introspector_source_code(proj, path)
+          if source:
+            source_list.append(source)
+
+      prompt_text = prompt_text.replace('{EXISTING_HARNESS}',
+                                          '\n---\n'.join(source_list))
+
+      # Add all public candidates to prompt
+      methods = introspector.query_introspector_jvm_all_public_candidates(proj)
+      name = [method['function_name'] for method in methods]
+      prompt_text = prompt_text.replace('{PUBLIC_METHODS}', ','.join(name))
+    else:
+      # Add the error string to prompt
+      prompt_text = prompt_text.replace('{ERRORS}', self.error_str)
 
     self._prompt.add_priming(prompt_text)
     return self._prompt

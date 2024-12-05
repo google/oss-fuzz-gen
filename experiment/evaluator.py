@@ -283,18 +283,23 @@ class Evaluator:
                                  run_result: Optional[RunResult],
                                  dual_logger: _Logger, language: str):
     """Fixes the generated fuzz target."""
-    if build_result.succeeded and not language == 'jvm':
-      if run_result:
-        error_desc, errors = run_result.semantic_check.get_error_info()
+    jvm_coverage_fix = False
+    if build_result.succeeded:
+      if language == 'jvm':
+        jvm_coverage_fix = True
       else:
-        dual_logger.log(f'Warning: Build succeed but no run_result in '
-                        f'{generated_oss_fuzz_project}.')
-        error_desc, errors = '', []
+        if run_result:
+          error_desc, errors = run_result.semantic_check.get_error_info()
+        else:
+          dual_logger.log(f'Warning: Build succeed but no run_result in '
+                          f'{generated_oss_fuzz_project}.')
+          error_desc, errors = '', []
     else:
       error_desc, errors = None, build_result.errors
+
     code_fixer.llm_fix(ai_binary, target_path, self.benchmark, iteration,
                        error_desc, errors, self.builder_runner.fixer_model_name,
-                       language)
+                       language, jvm_coverage_fix)
     shutil.copyfile(
         target_path,
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
@@ -388,9 +393,56 @@ class Evaluator:
         build_result = BuildResult()
         run_result = None
 
+      # 2. Calculate coverage percentage and coverage diff
+      coverage_summary = None
+      total_lines = 0
+      coverage_percent = 0.0
+      coverage_diff = 0.0
+      if run_result:
+        # Gets line coverage (diff) details.
+        coverage_summary = self._load_existing_coverage_summary()
+
+        if self.benchmark.language in ['python', 'jvm']:
+          # The Jacoco.xml coverage report used to generate summary.json on
+          # OSS-Fuzz for JVM projects does not trace the source file location.
+          # Thus the conversion may miss some classes because they are not
+          # present during coverage report generation. This fix gets the total
+          # line calculation from the jacoco.xml report of the current run
+          # directly and compares it with the total_lines retrieved from
+          # summary.json. Then the larger total_lines is used which is assumed
+          # to be more accurate. This is the same case for python project which
+          # the total line is determined from the all_cov.json file.
+          total_lines = run_result.coverage.total_lines
+        elif coverage_summary:
+          total_lines = compute_total_lines_without_fuzz_targets(
+              coverage_summary, generated_target_name)
+        else:
+          total_lines = 0
+
+        if run_result.total_pcs:
+          coverage_percent = run_result.cov_pcs / run_result.total_pcs
+        else:
+          dual_logger.log(
+              f'Warning: total_pcs == 0 in {generated_oss_fuzz_project}.')
+          coverage_percent = 0.0
+
+        existing_textcov = self.load_existing_textcov()
+        run_result.coverage.subtract_covered_lines(existing_textcov)
+
+        if total_lines:
+          coverage_diff = run_result.coverage.covered_lines / total_lines
+        else:
+          dual_logger.log(
+              f'Warning: total_lines == 0 in {generated_oss_fuzz_project}.')
+          coverage_diff = 0.0
+
       if self.benchmark.language == 'jvm':
-        # Unexpected exceptions that crash JVM fuzzers does not need to be fixed.
+        # For JVM, the generation is consider success if either is true
+        # 1) Build success and run crashed (expected for exceptions)
+        # 2) Build success, run success and coverage diff > 0
         gen_succ = build_result.succeeded and run_result
+        if gen_succ and run_result.succeeded:
+          gen_succ = gen_succ and (coverage_diff > 0)
       else:
         gen_succ = build_result.succeeded and run_result and run_result.succeeded
 
@@ -464,43 +516,6 @@ class Evaluator:
           Result(True, run_result.crashes, 0.0, 0.0,
                  run_result.coverage_report_path, run_result.reproducer_path,
                  True, run_result.semantic_check.type, run_result.triage))
-
-    # Gets line coverage (diff) details.
-    coverage_summary = self._load_existing_coverage_summary()
-
-    if self.benchmark.language in ['python', 'jvm']:
-      # The Jacoco.xml coverage report used to generate summary.json on OSS-Fuzz
-      # for JVM projects does not trace the source file location. Thus the
-      # conversion may miss some classes because they are not present during
-      # coverage report generation. This fix gets the total line calculation
-      # from the jacoco.xml report of the current run directly and compares it
-      # with the total_lines retrieved from summary.json. Then the larger
-      # total_lines is used which is assumed to be more accurate.
-      # This is the same case for python project which the total line
-      # is determined from the all_cov.json file.
-      total_lines = run_result.coverage.total_lines
-    elif coverage_summary:
-      total_lines = compute_total_lines_without_fuzz_targets(
-          coverage_summary, generated_target_name)
-    else:
-      total_lines = 0
-
-    if run_result.total_pcs:
-      coverage_percent = run_result.cov_pcs / run_result.total_pcs
-    else:
-      dual_logger.log(
-          f'Warning: total_pcs == 0 in {generated_oss_fuzz_project}.')
-      coverage_percent = 0.0
-
-    existing_textcov = self.load_existing_textcov()
-    run_result.coverage.subtract_covered_lines(existing_textcov)
-
-    if total_lines:
-      coverage_diff = run_result.coverage.covered_lines / total_lines
-    else:
-      dual_logger.log(
-          f'Warning: total_lines == 0 in {generated_oss_fuzz_project}.')
-      coverage_diff = 0.0
 
     dual_logger.log(
         f'Result for {generated_oss_fuzz_project}: '
