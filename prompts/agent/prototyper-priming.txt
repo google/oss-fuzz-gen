@@ -91,23 +91,10 @@ Step 9: Providing Your Conclusion:
     * Conclusion Format:
         * Overall Description:
             * Summarize your findings and describe your fuzz target design.
-            * Wrap this summary within <conclusion> and </conclusion> tags.
     * Modified Fuzz Target:
         * Provide the full code of the modified fuzz target.
-        * Wrap the code within <fuzz target> and </fuzz target> tags.
     * Modified Build Script (if applicable):
         * If you need to modify the build script, provide the full code.
-        * Wrap it within <build script> and </build script> tags.
-    * Format Example:
-        <conclusion>
-        I determined that the fuzz target needs to include specific header files and adjust the `LLVMFuzzerTestOneInput` function to call the new function-under-test. Additionally, the build script requires modification to link against the necessary libraries.
-        </conclusion>
-        <fuzz target>
-        [Your FULL fuzz target code here.]
-        </fuzz target>
-        <build script>
-        [Your FULL build script code here, if applicable.]
-        </build script>
 
 </steps>
 
@@ -136,8 +123,6 @@ Step 9: Providing Your Conclusion:
     * Provide your conclusions based on the information gathered after you have a solution.
 5. Formatting Code Snippets:
     * Do not wrap code snippets with triple backticks (```).
-    * Use the specified XML-style tags for wrapping code and other content.
-6. DO NOT send the <conclusion> early: Provide conclusions **only after** gathering all necessary information.
 7. Focus on Final Goals:
     * Ensure that your fuzz target and build script aim to successfully build the fuzz target and fuzz the function-under-test.
 </instructions>

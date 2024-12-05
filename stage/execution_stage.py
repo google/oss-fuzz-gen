@@ -117,7 +117,8 @@ class ExecutionStage(BaseStage):
           chat_history=last_result.chat_history,
           author=repr(self),
           compiles=last_result.compiles,
-          compile_error=last_result.compile_error,
+          compile_stdout=last_result.compile_stdout,
+          compile_stderr=last_result.compile_stderr,
           compile_log=last_result.compile_log,
           is_function_referenced=last_result.is_function_referenced,
           crashes=run_result.crashes,
@@ -144,7 +145,8 @@ class ExecutionStage(BaseStage):
           chat_history=last_result.chat_history,
           author=repr(self),
           compiles=last_result.compiles,
-          compile_error=last_result.compile_error,
+          compile_stdout=last_result.compile_stdout,
+          compile_stderr=last_result.compile_stderr,
           compile_log=last_result.compile_log,
           is_function_referenced=last_result.is_function_referenced)
 
