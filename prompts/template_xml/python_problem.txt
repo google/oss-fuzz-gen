@@ -4,7 +4,7 @@ Your goal is to write a fuzzing harness for the provided method signature to fuz
 <method_signature>
 {METHOD_SIGNATURE}
 </method_signature>
-The target method is belonging to the Python project {PROJECT_NAME} ({PROJECT_URL}).
+The target method belongs to the Python project {PROJECT_NAME} ({PROJECT_URL}).
 This method requires {ARG_COUNT} arguments. You must prepare them with random seeded data.
 {CLASS_METHOD_OR_GENERAL_METHOD}
 </target>
