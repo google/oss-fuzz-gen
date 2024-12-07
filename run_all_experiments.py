@@ -26,12 +26,20 @@ from datetime import timedelta
 from multiprocessing import Pool, Process
 from typing import Any
 
+import google.cloud.logging
+
 import run_one_experiment
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
+
+try:
+  client = google.cloud.logging.Client()
+  client.setup_logging()
+except google.auth.exceptions.DefaultCredentialsError:
+  pass
 
 logger = logging.getLogger(__name__)
 
@@ -515,6 +523,9 @@ def main():
 
   args = parse_args()
   _setup_logging(args.log_level)
+  logging.info('Starting experiments on PR branch')
+  logging.warning('Warning from logging')
+  logging.error('Error from exp')
   logger.info('Starting experiments on PR branch')
 
   # Capture time at start
