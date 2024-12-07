@@ -343,8 +343,10 @@ def query_introspector_public_classes(project: str) -> list[str]:
   return _get_data(resp, 'classes', [])
 
 
-def query_introspector_source_code(project: str, filepath: str, begin_line: int,
-                                   end_line: int) -> str:
+def query_introspector_source_code(project: str,
+                                   filepath: str,
+                                   begin_line: int = 0,
+                                   end_line: int = 10000) -> str:
   """Queries FuzzIntrospector API for source code of a
     file |filepath| between |begin_line| and |end_line|."""
 
