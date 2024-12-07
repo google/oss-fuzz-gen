@@ -26,12 +26,21 @@ from datetime import timedelta
 from multiprocessing import Pool, Process
 from typing import Any
 
+from google.cloud import logging as cloud_logging
+
 import run_one_experiment
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
+
+try:
+  client = cloud_logging.Client()
+  client.setup_logging()
+except Exception as e:
+  # For local runs we continue
+  pass
 
 logger = logging.getLogger(__name__)
 
