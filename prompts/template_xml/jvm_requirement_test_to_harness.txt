@@ -17,7 +17,7 @@ Here is a list of requirements that you MUST follow.
 <item>You MUST invoke the close method of any resource class objects that implements the java.lang.AutoCloseable interface in the finally block after the target method is invoked.</item>
 <item>You MUST use similar approach as the examples and tests to catch exceptions.</item>
 <item>
-Here is a comma separated list of public project methods. You must include the invocation of at least one of them in the generated harness. Each of the method signature follows the format of <code>[Full qualified name of the class].method_name(method_arguments)</code>.
+Here is a comma separated list of public project methods. You must include the invocation of at least one of them in the generated harness. Each of the method signatures follows the format of <code>[Full qualified name of the class].method_name(method_arguments)</code>.
 {PUBLIC_METHODS}
 </item>
 <item>
@@ -54,7 +54,7 @@ Here is a comma-separated list of all publicly accessible classes in this projec
 {PUBLIC_CLASSES}
 </item>
 <item>
-Here is a list of import statements that you MUST add to the generated harness needed for create the harness.
+Here is a list of import statements that you MUST add to the generated harness.
 {IMPORT_STATEMENTS}
 </item>
 <item>
@@ -63,7 +63,7 @@ Here is a list of other import statements for reference that you may need to mak
 </item>
 <item>
 You MUST ONLY use any of the following methods from the FuzzedDataProvider of the Jazzer framework for generating random data for fuzzing.
-If the needed return value is not found in the table, try use constructors or methods to create the needed random object. But you MUST try your best to randomise the random object with the methods in the table.
+If the needed return value is not found in the table, try to use constructors or methods to create the needed random object. But you MUST try your best to randomise the random object with the methods in the table.
 
 | Method                                      | Return Value                          |
 |---------------------------------------------|---------------------------------------|

@@ -1,4 +1,4 @@
-I'm a security engineer looking to write a good fuzzing harnesses. I got some compilation errors and want you to help fix them.
+I'm a security engineer looking to write a good fuzzing harness. I got some compilation errors and want you to help fix them.
 
 The target library is {TARGET_REPO}.
 
@@ -53,7 +53,7 @@ public class {HARNESS_NAME} {
 </code></item>
 <item>
 You MUST ONLY use any of the following methods from the FuzzedDataProvider of the Jazzer framework for generating random data for fuzzing.
-If the needed return value is not found in the table, try use constructors or methods to create the needed random object. But you MUST try your best to randomise the random object with the methods in the table.
+If the needed return value is not found in the table, try to use constructors or methods to create the needed random object. But you MUST try your best to randomise the random object with the methods in the table.
 
 | Method                                      | Return Value                          |
 |---------------------------------------------|---------------------------------------|
