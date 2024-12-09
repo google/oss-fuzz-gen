@@ -179,11 +179,13 @@ class Prototyper(BaseAgent):
                               status=compile_succeed and binary_exists,
                               referenced=function_referenced)
 
-  def _container_handle_conclusion(
-      self, cur_round: int, response: str,
-      build_result: BuildResult) -> Optional[Prompt]:
+  def _container_handle_conclusion(self, cur_round: int, response: str,
+                                   build_result: BuildResult,
+                                   prompt: Prompt) -> Optional[Prompt]:
     """Runs a compilation tool to validate the new fuzz target and build script
     from LLM."""
+    if not self._parse_tag(response, 'fuzz target'):
+      return prompt
     logger.info('----- ROUND %02d Received conclusion -----',
                 cur_round,
                 trial=build_result.trial)
@@ -198,7 +200,8 @@ class Prototyper(BaseAgent):
       return None
 
     if not build_result.compiles:
-      compile_log = self.llm.truncate_prompt(build_result.compile_log)
+      compile_log = self.llm.truncate_prompt(build_result.compile_log,
+                                             extra_text=prompt.get()).strip()
       logger.info('***** Failed to recompile in %02d rounds *****',
                   cur_round,
                   trial=build_result.trial)
@@ -243,25 +246,29 @@ class Prototyper(BaseAgent):
     else:
       prompt_text = ''
 
-    prompt = DefaultTemplateBuilder(self.llm, initial=prompt_text).build([])
+    prompt.append(prompt_text)
     return prompt
 
   def _container_tool_reaction(self, cur_round: int, response: str,
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
-    # Prioritize Bash instructions.
-    if command := self._parse_tag(response, 'bash'):
-      return self._container_handle_bash_command(command, self.inspect_tool)
+    prompt = DefaultTemplateBuilder(self.llm, None).build([])
+    prompt = self._container_handle_bash_commands(response, self.inspect_tool,
+                                                  prompt)
 
-    if self._parse_tag(response, 'conclusion'):
-      return self._container_handle_conclusion(cur_round, response,
-                                               build_result)
-    # Other responses are invalid.
-    logger.warning('ROUND %02d Invalid response from LLM: %s',
-                   cur_round,
-                   response,
-                   trial=build_result.trial)
-    return self._container_handle_invalid_tool_usage(self.inspect_tool)
+    # Then build fuzz target.
+    prompt = self._container_handle_conclusion(cur_round, response,
+                                               build_result, prompt)
+    if prompt is None:
+      # Succeeded.
+      return None
+
+    # Finally check invalid responses.
+    if not prompt.get():
+      prompt = self._container_handle_invalid_tool_usage(
+          self.inspect_tool, cur_round, response, prompt)
+
+    return prompt
 
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
