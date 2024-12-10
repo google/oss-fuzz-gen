@@ -105,6 +105,7 @@ td .signature {
             <th></th>
             <th data-sorted="asc">Project</th>
             <th data-sort-number>Total generated harnesses</th>
+            <th data-sort-number>Total successful harnesses</th>
             <th data-sort-number>Total coverage gain</th>
             <th data-sort-number>Total relative gain</th>
             <th data-sort-number>OSS-Fuzz-gen total covered lines</th>
@@ -119,6 +120,7 @@ td .signature {
             <td class="table-index">{{ loop.index }}</td>
             <td data-sort-value="{{ project.name }}">{{ project.name }}</td>
             <td data-sort-value="{{ project.count }}">{{ project.count }}</td>
+            <td data-sort-value="{{ project.success }}">{{ project.success }}</td>
             <td data-sort-value="{{ project.coverage_gain|percent }}">{{ project.coverage_gain|percent }}%</td>
             <td data-sort-value="{{ project.coverage_relative_gain|percent}}">{{ project.coverage_relative_gain | percent }}%</td>
             <td data-sort-value="{{ project.coverage_ofg_total_covered_lines}}">{{project.coverage_ofg_total_covered_lines}}</td>
