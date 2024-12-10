@@ -25,7 +25,7 @@ import tempfile
 import time
 import traceback
 from abc import abstractmethod
-from typing import Any, Callable, Optional, Type
+from typing import Any, Callable, Optional, Type, TypedDict
 
 import anthropic
 import openai
@@ -697,6 +697,34 @@ class GeminiV1D5Chat(GeminiV1D5):
 
     # TODO(dongge): Use different values for different trials
     parameters_list = self._prepare_parameters()[0]
+    response = self._do_generate(client, prompt.get(), parameters_list) or ''
+    return response
+
+
+class GeminiV1D5ChatJSON(GeminiV1D5Chat):
+  """Gemini 1.5 for chat session, requiring JSON response."""
+  name = 'vertex_ai_gemini-1-5-json'
+
+  class Recipe(TypedDict):
+    recipe_name: str
+    ingredients: list[str]
+
+  def _prepare_parameters(self) -> list[dict]:
+    """Prepares the parameter dictionary for LLM query."""
+    return [{
+        'temperature':
+            self.temperature_list[index % len(self.temperature_list)]
+            if self.temperature_list else self.temperature,
+        'max_output_tokens':
+            self._max_output_tokens
+    } for index in range(self.num_samples)]
+
+  def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:
+    if self.ai_binary:
+      logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
+
+    # TODO(dongge): Use different values for different trials
+    parameters_list = self._prepare_parameters()[0] | {}
     response = self._do_generate(client, prompt.get(), parameters_list) or ''
     return response
 
