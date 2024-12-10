@@ -1,0 +1,60 @@
+"functions":
+- "exceptions": []
+  "name": "icalcomponent_foreach_recurrence"
+  "params":
+  - "name": "comp"
+    "type": "bool "
+  - "name": "start"
+    "type": "bool "
+  - "name": "end"
+    "type": "bool "
+  - "name": "callback"
+    "type": "bool "
+  - "name": "callback_data"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void icalcomponent_foreach_recurrence(icalcomponent *, struct icaltimetype, struct icaltimetype, DW_TAG_subroutine_typeInfinite loop *, void *)"
+- "exceptions": []
+  "name": "icalcomponent_set_due"
+  "params":
+  - "name": "comp"
+    "type": "bool "
+  - "name": "v"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void icalcomponent_set_due(icalcomponent *, struct icaltimetype)"
+- "exceptions": []
+  "name": "icaltimezone_truncate_vtimezone"
+  "params":
+  - "name": "vtz"
+    "type": "bool "
+  - "name": "start"
+    "type": "bool "
+  - "name": "end"
+    "type": "bool "
+  - "name": "ms_compatible"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void icaltimezone_truncate_vtimezone(icalcomponent *, icaltimetype, icaltimetype, int)"
+- "exceptions": []
+  "name": "icalcomponent_merge_component"
+  "params":
+  - "name": "comp"
+    "type": "bool "
+  - "name": "comp_to_merge"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void icalcomponent_merge_component(icalcomponent *, icalcomponent *)"
+- "exceptions": []
+  "name": "icalcomponent_get_span"
+  "params":
+  - "name": "comp"
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct icaltime_span icalcomponent_get_span(icalcomponent *)"
+"language": "c++"
+"project": "libical"
+"target_name": "libical_extended_fuzzer"
+"target_path": "/src/libical_extended_fuzzer.cc"
