@@ -79,6 +79,7 @@ class Project:
   """Results for a project entire."""
   name: str
   count: int = 0
+  success: int = 0
   coverage_gain: float = 0.0
   coverage_relative_gain: float = 0.0
   coverage_ofg_total_new_covered_lines = 0
@@ -446,7 +447,7 @@ class Results:
     Returns results of all samples. Items can be None if they're not complete.
     """
     targets = self._get_generated_targets(
-        benchmark) + self._get_agent_generated_targets(benchmark)
+        benchmark) or self._get_agent_generated_targets(benchmark)
 
     results = []
     status_dir = os.path.join(self._results_dir, benchmark, 'status')
@@ -505,6 +506,8 @@ class Results:
       if benchmark.project not in project_summary_dict:
         project_summary_dict[benchmark.project] = Project(benchmark.project)
       project_summary_dict[benchmark.project].count += 1
+      project_summary_dict[benchmark.project].success += (
+          benchmark.result.build_success_count > 0)
 
     # Retrieve coverage gain information
     coverage_dict = {}
