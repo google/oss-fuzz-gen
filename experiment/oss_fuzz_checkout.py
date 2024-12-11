@@ -465,11 +465,17 @@ def _build_image(project_name: str) -> str:
       'python3', 'infra/helper.py', 'build_image', '--pull', project_name
   ]
   try:
-    sp.run(command, cwd=OSS_FUZZ_DIR, env=adjusted_env, check=True)
+    sp.run(command,
+           cwd=OSS_FUZZ_DIR,
+           env=adjusted_env,
+           stdout=sp.PIPE,
+           stderr=sp.PIPE,
+           check=True)
     logger.info('Successfully build project image for %s', project_name)
     return f'gcr.io/oss-fuzz/{project_name}'
-  except sp.CalledProcessError:
-    logger.info('Failed to build project image for %s', project_name)
+  except sp.CalledProcessError as e:
+    logger.error('Failed to build project image for %s: %s', project_name,
+                 e.stderr.decode('utf-8'))
     return ''
 
 
