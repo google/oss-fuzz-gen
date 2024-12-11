@@ -701,6 +701,16 @@ class GeminiV1D5Chat(GeminiV1D5):
     return response
 
 
+class GeminiV2Flash(GeminiModel):
+  """Gemini 2 flash."""
+
+  _max_output_tokens = 8192
+  context_window =  1048576
+
+  name = 'vertex_ai_gemini-2-flash'
+  _vertex_ai_model = 'gemini-2.0-flash-exp'
+
+
 class AIBinaryModel(GoogleModel):
   """A customized model hosted internally."""
 
