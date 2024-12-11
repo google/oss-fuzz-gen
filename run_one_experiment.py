@@ -61,6 +61,7 @@ RESULTS_DIR = './results'
 @dataclasses.dataclass
 class AggregatedResult:
   """Aggregated evaluation result."""
+  build_success_count: int = 0
   build_success_rate: float = 0.0
   crash_rate: float = 0.0
   found_bug: int = 0
@@ -110,11 +111,14 @@ class AggregatedResult:
         if isinstance(trial_final_result.textcov_diff, textcov.Textcov):
           all_textcov.merge(trial_final_result.textcov_diff)
 
-    build_success_rate = (sum(compilable_trials) /
+    build_success_count = sum(compilable_trials)
+    build_success_rate = (build_success_count /
                           len(compilable_trials) if compilable_trials else 0)
+
     crash_rate = sum(crash_trials) / len(crash_trials) if crash_trials else 0
 
-    return AggregatedResult(build_success_rate=build_success_rate,
+    return AggregatedResult(build_success_count=build_success_count,
+                            build_success_rate=build_success_rate,
                             crash_rate=crash_rate,
                             max_coverage=max_coverage,
                             max_line_coverage_diff=max_line_coverage_diff,
@@ -169,8 +173,8 @@ def fix_code(work_dirs: WorkDirs, generated_targets: List[str]) -> List[str]:
 def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
                       generated_targets: list[str]) -> AggregatedResult:
   """Aggregates experiment status and results of a targets."""
-  build_success_rate = sum([int(stat.compiles) for _, stat in target_stats
-                           ]) / len(target_stats)
+  build_success_count = sum([int(stat.compiles) for _, stat in target_stats])
+  build_success_rate = build_success_count / len(target_stats)
   crash_rate = sum([int(stat.crashes) for _, stat in target_stats
                    ]) / len(target_stats)
   found_bug = sum([
@@ -197,8 +201,8 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
     if isinstance(stat.textcov_diff, textcov.Textcov):
       all_textcov.merge(stat.textcov_diff)
 
-  return AggregatedResult(build_success_rate, crash_rate, found_bug,
-                          max_coverage, max_line_coverage_diff,
+  return AggregatedResult(build_success_count, build_success_rate, crash_rate,
+                          found_bug, max_coverage, max_line_coverage_diff,
                           max_coverage_sample, max_coverage_diff_sample,
                           max_coverage_diff_report, all_textcov)
 
