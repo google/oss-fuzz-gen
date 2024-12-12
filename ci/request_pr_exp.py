@@ -41,7 +41,7 @@ LARGE_TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'k8s',
                                    'large-pr-exp.yaml')
 BENCHMARK_SET = 'comparison'
 LLM_NAME = 'vertex_ai_gemini-1-5'
-LLM_CHAT_NAME = 'vertex_ai_gemini-1-5-chat'
+LLM_CHAT_NAME = 'vertex_ai_gemini-1-5-chat-tool'
 EXP_DELAY = 0
 FUZZING_TIMEOUT = 300
 REQUEST_CPU = 6

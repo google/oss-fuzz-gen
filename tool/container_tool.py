@@ -1,6 +1,9 @@
 """A tool for LLM agents to interact within a project's docker container."""
 import logging
 import subprocess as sp
+from typing import Any
+
+from vertexai.preview.generative_models import FunctionDeclaration
 
 from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark
@@ -16,6 +19,84 @@ class ProjectContainerTool(BaseTool):
     super().__init__(benchmark, name)
     self.image_name = self._prepare_project_image()
     self.container_id = self._start_docker_container()
+
+  def declarations(self) -> list[Any]:
+    """Declares the function call APIs for LLM interaction."""
+    return [
+        FunctionDeclaration(
+            name='bash',
+            description=('Inspects source code, environment variables, and file'
+                         ' systems with bash commands to collect information '
+                         'for fuzz target and build script generation.'),
+            parameters={
+                'type': 'object',
+                'properties': {
+                    'reason': {
+                        'type':
+                            'string',
+                        'description': (
+                            'The reason to execute the bash command. E.g., '
+                            'Inspect and learn from all existing human written '
+                            'fuzz targets as examples.'),
+                    },
+                    'command': {
+                        'type':
+                            'string',
+                        'description':
+                            ('The bash command to execute. E.g., grep -rlZ '
+                             '"LLVMFuzzerTestOneInput(" "$(dirname '
+                             f'{self.benchmark.target_path})" | xargs -0 cat'),
+                    },
+                    # TODO(dongge): Another parameter to judge if the previous
+                    # bash command is useful? We can save the useful commands
+                    # and outputs to speed up future generations.
+                },
+                'required': ['reason', 'command'],
+            },
+        ),
+        FunctionDeclaration(
+            name='compile',
+            description=('Submits the **entire** source code of the fuzz target'
+                         ' and build script for compilation and fuzzing. Use '
+                         'this function call only if you have thorougly studied'
+                         ' the function and the project under test.'),
+            parameters={
+                'type': 'object',
+                'properties': {
+                    'summary': {
+                        'type':
+                            'string',
+                        'description':
+                            ('The important notes, insights, and lessons learnt'
+                             ' above when generating the fuzz target and the '
+                             'build script.'),
+                    },
+                    'fuzz_target': {
+                        'type':
+                            'string',
+                        'description':
+                            ('The **entire** fuzz target immediately ready for '
+                             'compilation and fuzzing.'),
+                    },
+                    'build_script': {
+                        'type':
+                            'string',
+                        'description': (
+                            'The **entire** build script immediately ready for '
+                            'compilation and fuzzing.'),
+                    },
+                    'referenced': {
+                        'type':
+                            'boolean',
+                        'description': (
+                            'Pass True if the function-under-test is invoked by'
+                            ' the fuzz_target; Otherwise return False.'),
+                    },
+                },
+                'required': ['summary', 'fuzz_target', 'referenced'],
+            },
+        ),
+    ]
 
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
