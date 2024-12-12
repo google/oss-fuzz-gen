@@ -49,5 +49,5 @@
   "signature": "ssize_t gnutls_record_recv_seq(gnutls_session_t, void *, size_t, unsigned char *)"
 "language": "c++"
 "project": "gnutls"
-"target_name": "libtasn1_gnutls_der_fuzzer"
-"target_path": "/src/libtasn1/fuzz/libtasn1_gnutls_der_fuzzer.c"
+"target_name": "gnutls_private_key_parser_fuzzer"
+"target_path": "/src/gnutls/fuzz/gnutls_private_key_parser_fuzzer.c"
