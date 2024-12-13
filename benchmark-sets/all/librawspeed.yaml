@@ -47,5 +47,5 @@
   "signature": "RawImage rawspeed::DngDecoder::decodeRawInternal()"
 "language": "c++"
 "project": "librawspeed"
-"target_name": "/src/librawspeed/fuzz/librawspeed/codes/PrefixCodeDecoder/Solo.cpp"
-"target_path": "/src/librawspeed/fuzz/librawspeed/codes/PrefixCodeDecoder/Solo.cpp"
+"target_name": "BitVacuumerRoundtripFuzzer"
+"target_path": "/src/librawspeed/fuzz/librawspeed/bitstreams/BitVacuumerRoundtrip.cpp"
