@@ -31,9 +31,9 @@ import anthropic
 import openai
 import tiktoken
 import vertexai
-from google.api_core.exceptions import (GoogleAPICallError, InvalidArgument,
-                                        ResourceExhausted, ServiceUnavailable,
-                                        TooManyRequests)
+from google.api_core.exceptions import (GoogleAPICallError, InternalServerError,
+                                        InvalidArgument, ResourceExhausted,
+                                        ServiceUnavailable, TooManyRequests)
 from vertexai import generative_models
 from vertexai.preview.generative_models import ChatSession, GenerativeModel
 from vertexai.preview.language_models import CodeGenerationModel
@@ -649,6 +649,7 @@ class GeminiV1D5Chat(GeminiV1D5):
           InvalidArgument,
           ValueError,  # TODO(dongge): Handle RECITATION specifically.
           IndexError,  # A known error from vertexai.
+          InternalServerError,
       ],
       other_exceptions={
           ResourceExhausted: 100,
@@ -677,17 +678,22 @@ class GeminiV1D5Chat(GeminiV1D5):
 
     extra_text_token_count = self.estimate_token_num(extra_text)
     # Reserve 10000 tokens for raw prompt wrappers.
-    max_raw_prompt_token_size = (self.MAX_INPUT_TOKEN - extra_text_token_count -
-                                 10000)
-
+    max_raw_prompt_token_size = (self.MAX_INPUT_TOKEN * 0.9 -
+                                 extra_text_token_count) // 4
     while token_count > max_raw_prompt_token_size:
       estimate_truncate_size = int(
           (1 - max_raw_prompt_token_size / token_count) * len(raw_prompt_text))
-      raw_prompt_text = raw_prompt_text[estimate_truncate_size + 1:]
+
+      num_init_tokens = min(100, int(max_raw_prompt_token_size * 0.1))
+      raw_prompt_init = raw_prompt_text[:num_init_tokens] + (
+          '\n...(truncated due to exceeding input token limit)...\n')
+      raw_prompt_text = raw_prompt_init + raw_prompt_text[
+          min(num_init_tokens + estimate_truncate_size + 1,
+              len(raw_prompt_text) - 100):]
 
       token_count = self.estimate_token_num(raw_prompt_text)
-      logger.warning('Truncated raw prompt from %d to %d tokens:',
-                     original_token_count, token_count)
+      logger.warning('Truncated %d raw prompt chars from %d to %d tokens.',
+                     estimate_truncate_size, original_token_count, token_count)
 
     return raw_prompt_text
 
