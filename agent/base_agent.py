@@ -10,7 +10,6 @@ from typing import Any, Optional
 import logger
 import utils
 from llm_toolkit.models import LLM
-from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
 from results import Result
 from tool.base_tool import BaseTool
@@ -63,6 +62,11 @@ class BaseAgent(ABC):
     match = re.search(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
     return match.group(1).strip() if match else ''
 
+  def _parse_tags(self, response: str, tag: str) -> list[str]:
+    """Parses the XML-style tags from LLM response."""
+    matches = re.findall(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
+    return [content.strip() for content in matches]
+
   def _filter_code(self, raw_code_block: str) -> str:
     """Filters out irrelevant lines from |raw_code_block|."""
     # TODO(dongge): Move this function to a separate module.
@@ -74,27 +78,56 @@ class BaseAgent(ABC):
     filtered_code_block = '\n'.join(filtered_lines)
     return filtered_code_block
 
-  def _format_bash_execution_result(self, process: sp.CompletedProcess) -> str:
+  def _format_bash_execution_result(
+      self,
+      process: sp.CompletedProcess,
+      previous_prompt: Optional[Prompt] = None) -> str:
     """Formats a prompt based on bash execution result."""
-    stdout = self.llm.truncate_prompt(process.stdout)
-    # TODO(dongge) Share input limit evenly if both stdout and stderr overlong.
-    stderr = self.llm.truncate_prompt(process.stderr, stdout)
+    if previous_prompt:
+      previous_prompt_text = previous_prompt.get()
+    else:
+      previous_prompt_text = ''
+    stdout = self.llm.truncate_prompt(process.stdout,
+                                      previous_prompt_text).strip()
+    stderr = self.llm.truncate_prompt(process.stderr,
+                                      stdout + previous_prompt_text).strip()
     return (f'<bash>\n{process.args}\n</bash>\n'
             f'<return code>\n{process.returncode}\n</return code>\n'
             f'<stdout>\n{stdout}\n</stdout>\n'
             f'<stderr>\n{stderr}\n</stderr>\n')
 
-  def _container_handle_bash_command(self, command: str,
-                                     tool: BaseTool) -> Prompt:
+  def _container_handle_bash_command(self, response: str, tool: BaseTool,
+                                     prompt: Prompt) -> Prompt:
     """Handles the command from LLM with container |tool|."""
-    prompt_text = self._format_bash_execution_result(tool.execute(command))
-    return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
+    prompt_text = ''
+    for command in self._parse_tags(response, 'bash'):
+      prompt_text += self._format_bash_execution_result(
+          tool.execute(command), previous_prompt=prompt) + '\n'
+      prompt.append(prompt_text)
+    return prompt
 
-  def _container_handle_invalid_tool_usage(self, tool: BaseTool) -> Prompt:
+  def _container_handle_invalid_tool_usage(self, tool: BaseTool, cur_round: int,
+                                           response: str,
+                                           prompt: Prompt) -> Prompt:
     """Formats a prompt to re-teach LLM how to use the |tool|."""
+    logger.warning('ROUND %02d Invalid response from LLM: %s',
+                   cur_round,
+                   response,
+                   trial=self.trial)
     prompt_text = (f'No valid instruction received, Please follow the '
                    f'interaction protocols:\n{tool.tutorial()}')
-    return DefaultTemplateBuilder(self.llm, None, initial=prompt_text).build([])
+    prompt.append(prompt_text)
+    return prompt
+
+  def _container_handle_bash_commands(self, response: str, tool: BaseTool,
+                                      prompt: Prompt) -> Prompt:
+    """Handles the command from LLM with container |tool|."""
+    prompt_text = ''
+    for command in self._parse_tags(response, 'bash'):
+      prompt_text += self._format_bash_execution_result(
+          tool.execute(command), previous_prompt=prompt) + '\n'
+      prompt.append(prompt_text)
+    return prompt
 
   def _sleep_random_duration(
       self,
