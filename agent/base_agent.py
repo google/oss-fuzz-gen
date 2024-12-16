@@ -75,6 +75,9 @@ class BaseAgent(ABC):
         line for line in raw_code_block.splitlines()
         if not line.strip().startswith('```')
     ]
+    # Sometimes LLM returns a build script containing only comments.
+    if all(line.strip().startswith('#') for line in filtered_lines):
+      return ''
     filtered_code_block = '\n'.join(filtered_lines)
     return filtered_code_block
 
