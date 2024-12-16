@@ -41,5 +41,5 @@
   "signature": "vector<unsigned char, std::__1::allocator<unsigned char> > perfetto::protos::gen::Trace::SerializeAsArray()"
 "language": "c++"
 "project": "perfetto"
-"target_name": "/work/build/../../src/perfetto/src/profiling/memory/shared_ring_buffer_write_fuzzer.cc"
+"target_name": "shared_ring_buffer_write_fuzzer"
 "target_path": "/src/perfetto/src/profiling/memory/shared_ring_buffer_write_fuzzer.cc"
