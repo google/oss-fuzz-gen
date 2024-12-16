@@ -1,45 +1,35 @@
 
-<instruction>
-
-Use <code>FuzzedDataProvider</code> to generate these inputs, it is a single-header C++ library that is helpful for splitting a fuzz input into multiple parts of various types. It can be included via
-<code>
-#include <fuzzer/FuzzedDataProvider.h>
-</code>
-
-## Main concepts
-1. FuzzedDataProvider is a class whose constructor accepts <code>const uint8_t*</code>, <code>size_t</code> arguments. Usually, you would call it in the beginning of your LLVMFuzzerTestOneInput and pass the data, size parameters provided by the fuzzing engine, like this:
-<code>
-FuzzedDataProvider stream(data, size);
-</code>
-2. Once an FDP object is constructed using the fuzz input, you can consume the data from the input by calling the FDP methods listed below.
-3. If there is not enough data left to consume, FDP will consume all the remaining bytes. For example, if you call <code>ConsumeBytes(10)</code> when there are only 4 bytes left in the fuzz input, FDP will return a vector of length 4.
-4. If there is no data left, FDP will return the default value for the requested type or an empty container (when consuming a sequence of bytes).
-5. If you consume data from FDP in a loop, make sure to check the value returned by <code>remaining_bytes()</code> between loop iterations.
-6. Do not use the methods that return <code>std::string</code> unless your API requires a string object or a C-style string with a trailing null byte. This is a common mistake that hides off-by-one buffer overflows from AddressSanitizer.
-
-## Methods for extracting individual values
-1. <code>ConsumeBool</code>, <code>ConsumeIntegral</code>, <code>ConsumeIntegralInRange</code> methods are helpful for extracting a single boolean or integer value (the exact type is defined by a template parameter), e.g. some flag for the target API, or a number of iterations for a loop, or length of a part of the fuzz input.
-2. <code>ConsumeProbability</code>, <code>ConsumeFloatingPoint</code>, <code>ConsumeFloatingPointInRange</code> methods are very similar to the ones mentioned above. The difference is that these methods return a floating point value.
-3. <code>ConsumeEnum</code> and <code>PickValueInArray</code> methods are handy when the fuzz input needs to be selected from a predefined set of values, such as an enum or an array.
-
-These methods are using the last bytes of the fuzz input for deriving the requested values. This allows to use valid / test files as a seed corpus in some cases.
-
-## Methods for extracting sequences of bytes
-Many of these methods have a length argument. You can always know how many bytes are left inside the provider object by calling <code>remaining_bytes()</code> method on it.
-
-1. <code>ConsumeBytes</code> and <code>ConsumeBytesWithTerminator</code> methods return a <code>std::vector</code> of AT MOST UP TO the requested size. These methods are helpful when you know how long a certain part of the fuzz input should be. Use <code>.data()</code> and <code>.size()</code> methods of the resulting object if your API works with raw memory arguments.
-2. <code>ConsumeBytesAsString</code> method returns a <code>std::string</code> of AT MOST UP TO the requested length. This is useful when you need a null-terminated C-string. Calling <code>c_str()</code> on the resulting object is the best way to obtain it.
-3. <code>ConsumeRandomLengthString</code> method returns a <code>std::string</code> as well, but its length is derived from the fuzz input and typically is hard to predict, though always deterministic. The caller can provide the max length argument.
-4. <code>ConsumeRemainingBytes</code> and <code>ConsumeRemainingBytesAsString</code> methods return <code>std::vector</code> and <code>std::string</code> objects respectively, initialized with all the bytes from the fuzz input that left unused.
-5. <code>ConsumeData</code> method copies AT MOST UP TO the requested number of bytes from the fuzz input to the given pointer (<code>void *destination</code>). The method is useful when you need to fill an existing buffer or object (e.g. a <code>struct</code>) with fuzzing data.
-
-## General guidelines
-1. When consuming a sequence of bytes, the returned length may be less than the requested size if there is insufficient data left. Always use the <code>.size()</code> method to determine the actual length of the data consumed.
-2. When the returned length is smaller than the requested length, the fuzz target should terminate early to prevent false positive crashes from subsequent function calls due to insufficient data in parameters.
-3. For parameters that require a project-specific format (e.g., image, PDF), it is best to use the project's built-in constructors or initialization steps. Apply Fuzzing Data Provider for each primitive type variable during this process.
-
-Here are some sample code snippets to exemplify its usage:
-<code>
+{
+    "instruction": "Use `FuzzedDataProvider` to generate these inputs, it is a single-header C++ library that is helpful for splitting a fuzz input into multiple parts of various types. It can be included via `#include <fuzzer/FuzzedDataProvider.h>`.",
+    "Main concepts": [
+        "1. FuzzedDataProvider is a class whose constructor accepts `const uint8_t*`, `size_t` arguments. Usually, you would call it in the beginning of your LLVMFuzzerTestOneInput and pass the data, size parameters provided by the fuzzing engine, like this: `FuzzedDataProvider stream(data, size);`",
+        "2. Once an FDP object is constructed using the fuzz input, you can consume the data from the input by calling the FDP methods listed below.",
+        "3. If there is not enough data left to consume, FDP will consume all the remaining bytes. For example, if you call `ConsumeBytes(10)` when there are only 4 bytes left in the fuzz input, FDP will return a vector of length 4.",
+        "4. If there is no data left, FDP will return the default value for the requested type or an empty container (when consuming a sequence of bytes).",
+        "5. If you consume data from FDP in a loop, make sure to check the value returned by `remaining_bytes()` between loop iterations.",
+        "6. Do not use the methods that return `std::string` unless your API requires a string object or a C-style string with a trailing null byte. This is a common mistake that hides off-by-one buffer overflows from AddressSanitizer.",
+    ],
+    "Methods for extracting individual values":[
+        "These methods are using the last bytes of the fuzz input for deriving the requested values. This allows to use valid / test files as a seed corpus in some cases.",
+        "1. `ConsumeBool`, `ConsumeIntegral`, `ConsumeIntegralInRange` methods are helpful for extracting a single boolean or integer value (the exact type is defined by a template parameter), e.g. some flag for the target API, or a number of iterations for a loop, or length of a part of the fuzz input.",
+        "2. `ConsumeProbability`, `ConsumeFloatingPoint`, `ConsumeFloatingPointInRange` methods are very similar to the ones mentioned above. The difference is that these methods return a floating point value.",
+        "3. `ConsumeEnum` and `PickValueInArray` methods are handy when the fuzz input needs to be selected from a predefined set of values, such as an enum or an array.",
+    ],
+    "Methods for extracting sequences of bytes":[
+        "Many of these methods have a length argument. You can always know how many bytes are left inside the provider object by calling `remaining_bytes()` method on it.",
+        "1. `ConsumeBytes` and `ConsumeBytesWithTerminator` methods return a `std::vector` of AT MOST UP TO the requested size. These methods are helpful when you know how long a certain part of the fuzz input should be. Use `.data()` and `.size()` methods of the resulting object if your API works with raw memory arguments.",
+        "2. `ConsumeBytesAsString` method returns a `std::string` of AT MOST UP TO the requested length. This is useful when you need a null-terminated C-string. Calling `c_str()` on the resulting object is the best way to obtain it.",
+        "3. `ConsumeRandomLengthString` method returns a `std::string` as well, but its length is derived from the fuzz input and typically is hard to predict, though always deterministic. The caller can provide the max length argument.",
+        "4. `ConsumeRemainingBytes` and `ConsumeRemainingBytesAsString` methods return `std::vector` and `std::string` objects respectively, initialized with all the bytes from the fuzz input that left unused.",
+        "5. `ConsumeData` method copies AT MOST UP TO the requested number of bytes from the fuzz input to the given pointer (`void *destination`). The method is useful when you need to fill an existing buffer or object (e.g. a `struct`) with fuzzing data.",
+    ],
+    "General guidelines":[
+        "1. When consuming a sequence of bytes, the returned length may be less than the requested size if there is insufficient data left. Always use the `.size()` method to determine the actual length of the data consumed.",
+        "2. When the returned length is smaller than the requested length, the fuzz target should terminate early to prevent false positive crashes from subsequent function calls due to insufficient data in parameters.",
+        "3. For parameters that require a project-specific format (e.g., image, PDF), it is best to use the project's built-in constructors or initialization steps. Apply Fuzzing Data Provider for each primitive type variable during this process.",
+    ],
+    "Sample code snippets to exemplify its usage":[
+"```
 // Extract integral values
 FuzzedDataProvider fuzzed_data(data, size);
 
@@ -52,9 +42,9 @@ std::vector<uint8_t> second_part =
 
 net::der::Input in1(first_part.data(), first_part.size());
 net::der::Input in2(second_part.data(), second_part.size());
-</code>
+```",
 
-<code>
+"```
 FuzzedDataProvider fuzzed_data_provider(data, size);
 
 // Store all chunks in a function scope list, as the API requires the caller
@@ -73,40 +63,41 @@ while (fuzzed_data_provider.remaining_bytes() > 0) {
     continue;
 
   http2::DecodeBuffer frame_data(chunk.data(), chunk.size());
-</code>
+```
+",
 
-<code>
+"```
 FuzzedDataProvider data_provider(data, size);
 std::string spki_hash = data_provider.ConsumeBytesAsString(32);
 std::string issuer_hash = data_provider.ConsumeBytesAsString(32);
 size_t serial_length = data_provider.ConsumeIntegralInRange(4, 19);
 std::string serial = data_provider.ConsumeBytesAsString(serial_length);
 std::string crlset_data = data_provider.ConsumeRemainingBytesAsString();
-</code>
+```",
 
-<code>
+"```
 FuzzedDataProvider data_provider(data, size);
 std::string spki_hash = data_provider.ConsumeBytesAsString(32);
 std::string issuer_hash = data_provider.ConsumeBytesAsString(32);
 size_t serial_length = data_provider.ConsumeIntegralInRange(4, 19);
 std::string serial = data_provider.ConsumeBytesAsString(serial_length);
 std::string crlset_data = data_provider.ConsumeRemainingBytesAsString();
-</code>
+```",
 
-<code>
+"```
 // Extract floating point values
 float probability = stream.ConsumeProbability();
 double double_arg = stream.ConsumeFloatingPoint<double>();
 double double_arg_in_range = stream.ConsumeFloatingPointInRange(-1.0, 1.0);
-</code>
+```",
 
-<code>
+"```
 // Extract value from predefined set, such as enum or array
 EnumType enum = stream.ConsumeEnum<EnumType>();
 int valid_values = stream.PickValueInArray({FLAG_1, FLAG_2, FLAG_3});
-</code>
+```",
 
-<code>
+"```
 // Extract an array of bytes as a vector. You MUST call .data() to use result as pointer and call .size() to use result as array size.
 std::vector<uint8_t> bytes = stream.ConsumeBytes<uint8_t>(stream.ConsumeIntegralInRange(0, max_size));
 void *data_ptr = bytes.data();
@@ -114,9 +105,9 @@ int data_size = bytes.size();
 std::vector<uint8_t> bytes2 = stream.ConsumeBytes<uint8_t>(requested_size);
 void *data2_ptr = bytes2.data();
 int data2_size = bytes.size();
-</code>
+```",
 
-<code>
+"```
 // Extract a string. You MUST use .c_str() to use result as pointer and call .size() to use result as string size.
 std::string str = stream.ConsumeBytesAsString(stream.ConsumeIntegralInRange(0, max_size));
 char *ptr = str.c_str();
@@ -127,22 +118,21 @@ char size2 = str2.size();
 std::string str3 = stream.ConsumeRandomLengthString();
 char *ptr3 = str3.c_str();
 char size3 = str3.size();
-</code>
+```",
 
-<code>
+"```
 // Extract to user defined object
 struct_type_t obj;
 size_t consumed = stream.ConsumeData(&obj, sizeof(obj));
-</code>
+```",
 
-There MUST be AT MOST ONE call to <code>ConsumeRemainingBytes</code> to consume remaining input!
-<code>
+"There MUST be AT MOST ONE call to `ConsumeRemainingBytes` to consume remaining input!
+```
 FuzzedDataProvider stream(data, size);
 
 std::vector<uint8_t> bytes3 = stream.ConsumeRemainingBytes();
 void *data3_ptr = bytes3.data();
 void *data3_size = bytes3.size();
-</code>
-
-</instruction>
-
+```",
+    ]
+}
