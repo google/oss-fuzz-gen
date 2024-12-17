@@ -8,4 +8,4 @@
 "language": "c++"
 "project": "wuffs"
 "target_name": "bzip2_fuzzer"
-"target_path": "/src/wuffs/fuzz/c/fuzzlib/fuzzlib.c"
+"target_path": "/src/wuffs/fuzz/c/std/bzip2_fuzzer.c"
