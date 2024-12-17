@@ -79,5 +79,5 @@
   "signature": "CK_RV s_open(const char *, const char *, const char *, int, int, int, SDB **, SDB **, int *)"
 "language": "c++"
 "project": "nss"
-"target_name": "mpi-mod"
-"target_path": "/src/nss/fuzz/mpi_mod_target.cc"
+"target_name": "certDN"
+"target_path": "OFG_UNIQUE_PREFIX_/src/nss/fuzz/targets/certDN.cc"

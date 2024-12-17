@@ -57,5 +57,5 @@
   "signature": "int mutt_send_message(SendFlags, struct Email *, const char *, struct Mailbox *, struct EmailArray *, struct ConfigSubset *)"
 "language": "c++"
 "project": "neomutt"
-"target_name": "fuzz/date.c"
-"target_path": "/src/neomutt/fuzz/date.c"
+"target_name": "address-fuzz"
+"target_path": "/src/neomutt/fuzz/address.c"

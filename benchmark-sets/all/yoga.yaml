@@ -27,5 +27,5 @@
   "signature": "bool facebook::yoga::Style::operator!=(const Style &)"
 "language": "c++"
 "project": "yoga"
-"target_name": "/src/yoga/fuzz/FuzzLayout.cpp"
+"target_name": "fuzz_layout"
 "target_path": "/src/yoga/fuzz/FuzzLayout.cpp"

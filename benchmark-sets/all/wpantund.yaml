@@ -47,5 +47,5 @@
   "signature": "int nl::wpantund::SpinelNCPTaskScan::vprocess_event(int, struct __va_list_tag *)"
 "language": "c++"
 "project": "wpantund"
-"target_name": "ncp-spinel-fuzz"
-"target_path": "/src/wpantund/src/ncp-spinel/ncp-spinel-fuzz.cpp"
+"target_name": "wpantund-fuzz"
+"target_path": "/src/wpantund/src/wpantund/wpantund-fuzz.cpp"
