@@ -132,7 +132,7 @@ class Prototyper(BaseAgent):
 
     # Replace fuzz target and build script in the container.
     replace_file_content_command = (
-        'cat << "EOF" > {file_path}\n{file_content}\nEOF')
+        'cat << "OFG_EOF" > {file_path}\n{file_content}\nOFG_EOF')
     compilation_tool.execute(
         replace_file_content_command.format(
             file_path=benchmark.target_path,
