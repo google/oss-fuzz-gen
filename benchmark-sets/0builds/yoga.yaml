@@ -1,0 +1,31 @@
+"functions":
+- "name": "YGNodeReset"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void YGNodeReset(YGNodeRef)"
+- "name": "_ZN8facebook4yoga4Node5resetEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void facebook::yoga::Node::reset()"
+- "name": "_ZN8facebook4yoga4NodeC2Ev"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void facebook::yoga::Node::Node()"
+- "name": "_ZNK8facebook4yoga5StyleneERKS1_"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool facebook::yoga::Style::operator!=(const Style &)"
+"language": "c++"
+"project": "yoga"
+"target_name": "fuzz_layout"
+"target_path": "/src/yoga/fuzz/FuzzLayout.cpp"
