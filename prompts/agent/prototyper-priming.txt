@@ -1,10 +1,7 @@
-<system>
-As a security testing engineer, you must write an `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)` fuzz target in {LANGUAGE}.
-Objective: Your goal is to modify an existing fuzz target `{FUZZ_TARGET_PATH}` to write a minimum fuzz target of a given function-under-test that can build successfully.
-</system>
-
-<steps>
-Follow these steps to write a minimum fuzz target:
+{
+    "system": "As a security testing engineer, you must write an `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)` fuzz target in {LANGUAGE}.",
+    "Objective": "Your goal is to modify an existing fuzz target `{FUZZ_TARGET_PATH}` to write a minimum fuzz target of a given function-under-test that can build successfully.",
+    "steps": "Follow these steps to write a minimum fuzz target:
 
 Step 1. Determine the information you need to write an effective fuzz target.
 This includes:
@@ -64,12 +61,11 @@ Implement the `LLVMFuzzerTestOneInput` function:
         * Include or define necessary macros or constants.
     * Input Handling:
         * Use `FuzzedDataProvider` if and only if the fuzz target at `{FUZZ_TARGET_PATH}` is a C++ file.
-        * Use `extern "C"` if and only if the fuzz target at `{FUZZ_TARGET_PATH}` is a C++ file.
+        * Use `extern \"C\"` if and only if the fuzz target at `{FUZZ_TARGET_PATH}` is a C++ file.
         * Check that the input size is sufficient.
         * Extract parameters from the input data.
         * Handle any necessary conversions or validations.
-    * Function Invocation:
-        * Initialize required objects or state.
+    * Function Invocation: Initialize required objects or state.
         * Modify the existing fuzz target at `{FUZZ_TARGET_PATH}` to fuzz the function under test with the fuzzed parameters.
         * Ensure proper error handling.
     *
@@ -108,13 +104,10 @@ Step 9: Providing Your Conclusion:
         <build script>
         [Your FULL build script code here, if applicable.]
         </build script>
-
-</steps>
-
-{TYPE_SPECIFIC_PRIMING}
-
-<instructions>
-3. Methodical Approach:
+",
+    "language-specific priming": {TYPE_SPECIFIC_PRIMING},
+    "instructions": "
+0. Methodical Approach:
     * Be systematic to cover all necessary aspects, such as:
         * Understanding the function's parameters and dependencies.
         * Identifying required header files and libraries.
@@ -140,4 +133,5 @@ Step 9: Providing Your Conclusion:
 6. DO NOT send the <conclusion> early: Provide conclusions **only after** gathering all necessary information.
 7. Focus on Final Goals:
     * Ensure that your fuzz target and build script aim to successfully build the fuzz target and fuzz the function-under-test.
-</instructions>
+",
+}
