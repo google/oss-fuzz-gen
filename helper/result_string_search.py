@@ -36,11 +36,18 @@ def _parse_args() -> argparse.Namespace:
   parser = argparse.ArgumentParser(
       description=
       'Search for all benchmark that contains the <string> in <result>')
-  parser.add_argument('-s',
-                      '--string',
+  parser.add_argument('-is',
+                      '--include-strings',
                       type=str,
-                      required=True,
-                      help='The string to search in result.')
+                      nargs='+',
+                      default=[],
+                      help='The string to include in result.')
+  parser.add_argument('-es',
+                      '--exclude-strings',
+                      type=str,
+                      nargs='+',
+                      default=[],
+                      help='The string to exclude in result.')
   parser.add_argument('-r',
                       '--result',
                       type=str,
@@ -72,38 +79,50 @@ def _parse_args() -> argparse.Namespace:
   return args
 
 
-def find_in_dir(search_lines: list[str],
-                file_paths: list[str]) -> Optional[str]:
-  """Returns True if any file in |file_paths| contains |search_lines|."""
+def find_in_file(include_lines: list[str], exclude_lines: list[str],
+                 file_path: str) -> bool:
+  """Returns True if the file_path matches the in/exclude strings."""
+  with open(file_path) as f:
+    lines = f.readlines()
+
+  for line in lines:
+    if any(exclude_line in line for exclude_line in exclude_lines):
+      return False
+
+  for include_line in include_lines:
+    if not any(include_line in line for line in lines):
+      return False
+
+  # logging.info('Matched in %s', file_path)
+  return True
+
+
+def find_in_dir(include_lines: list[str], exclude_lines: list[str],
+                file_paths: list[str]) -> list[str]:
+  """Returns files in |file_paths| that contain |include_lines|."""
   # Caveat: With support for multiline search in potentially large files
   # (e.g. log files), this function does not search for the exact substring
   # in the file containing the new line char. Instead, it returns True when:
   # other_text <search line 1> other_text
   # other_text <search line 2> other_text
   # can be found in the file.
-  for file_path in file_paths:
-    with open(file_path) as f:
-      count = 0
-      for _, line in enumerate(f):
-        if search_lines[count] in line:
-          count += 1
-          if count == len(search_lines):
-            logging.info('Found in %s', file_path)
-            return file_path
-        else:
-          count = 0
-
-  return None
+  return [
+      file_path for file_path in file_paths
+      if find_in_file(include_lines, exclude_lines, file_path)
+  ]
 
 
 def main():
   args = _parse_args()
   result_dir = args.result
-  search_string = args.string
+  include_lines = args.include_strings
+  exclude_lines = args.exclude_strings
   sub = args.sub
   hits = []
-  search_lines = search_string.split('\n')
 
+  logging.info(
+      'Search files including string:\n\t%s\nBut exclude string:\n\t%s\n',
+      '\n\t'.join(include_lines), '\n\t'.join(exclude_lines))
   # Iterates through all output-*/
   for output_dir in sorted(os.listdir(result_dir)):
     if not os.path.isdir(os.path.join(result_dir, output_dir)):
@@ -117,18 +136,20 @@ def main():
         sub_dir.remove('corpora')
 
       # Iterates through all files in directory.
-      if file_path := find_in_dir(
-          search_lines, [os.path.join(path, file_name) for file_name in files]):
-        hits.append(file_path)
+      if file_paths := find_in_dir(
+          include_lines, exclude_lines,
+          [os.path.join(path, file_name) for file_name in files]):
+        hits.extend(file_paths)
         break
 
+  hits.sort()
   url = args.url
   if url:
     benchmark_report = '\n'.join([f'{url}/{hit}' for hit in hits])
   else:
     benchmark_report = '\n'.join(hits)
-  logging.info('Search string:\n%s\nwas found in:\n%s', search_string,
-               benchmark_report)
+  logging.info('Found Report URLs:')
+  print(benchmark_report)
 
 
 if __name__ == '__main__':
