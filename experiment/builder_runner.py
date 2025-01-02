@@ -204,6 +204,7 @@ class BuilderRunner:
     elif self.benchmark.language == 'python':
       result = self._contains_target_python_function(target_path)
     else:
+      # For C/C++/Rust
       result = self._contains_target_function(target_path)
 
     if not result:
@@ -481,8 +482,8 @@ class BuilderRunner:
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
 
-    # Copy err.log into work dir (Ignored for JVM projects)
-    if language != 'jvm':
+    # Copy err.log into work dir (Ignored for JVM/Rust projects)
+    if language not in ['jvm', 'rust']:
       try:
         shutil.copyfile(
             os.path.join(get_build_artifact_dir(generated_project, "workspace"),
@@ -511,7 +512,8 @@ class BuilderRunner:
       # In many case JVM/python projects won't have much cov
       # difference in short running. Adding the flag for JVM/python
       # projects to temporary skip the checking of coverage change.
-      flag = not self.benchmark.language in ['jvm', 'python']
+      # Also skipping for rust projects in initial implementation.
+      flag = not self.benchmark.language in ['jvm', 'python', 'rust']
       run_result.cov_pcs, run_result.total_pcs, \
         run_result.crashes, run_result.crash_info, \
           run_result.semantic_check = \
@@ -680,7 +682,8 @@ class BuilderRunner:
         'jvm': 'jacoco.xml',
         'python': 'all_cov.json',
         'c++': f'{self.benchmark.target_name}.covreport',
-        'c': f'{self.benchmark.target_name}.covreport'
+        'c': f'{self.benchmark.target_name}.covreport',
+        'rust': f'{self.benchmark.target_name}.covreport',
     }
 
     return os.path.join(get_build_artifact_dir(project_name,
@@ -696,6 +699,7 @@ class BuilderRunner:
         'python': 'r',
         'c': 'rb',
         'c++': 'rb',
+        'rust': 'rb',
     }
     with open(local_textcov_location,
               language_modes.get(self.benchmark.language, 'rb')) as f:
@@ -1033,7 +1037,7 @@ class CloudBuilderRunner(BuilderRunner):
         self._copy_textcov_to_workdir(bucket, textcov_blob_path,
                                       generated_target_name)
     else:
-      # C/C++
+      # C/C++/Rust
       blob = bucket.blob(textcov_blob_path)
       if blob.exists():
         with blob.open('rb') as f:
@@ -1075,6 +1079,7 @@ class CloudBuilderRunner(BuilderRunner):
     if self.benchmark.language == 'python':
       return f'{coverage_name}/textcov_reports/all_cov.json'
 
+    # For C/C++/Rust
     return (f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
             '.covreport')
 

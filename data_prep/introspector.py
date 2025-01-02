@@ -57,7 +57,7 @@ INTROSPECTOR_CFG = ''
 INTROSPECTOR_ORACLE_FAR_REACH = ''
 INTROSPECTOR_ORACLE_KEYWORD = ''
 INTROSPECTOR_ORACLE_EASY_PARAMS = ''
-INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES = ''
+INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES = ''
 INTROSPECTOR_ORACLE_OPTIMAL = ''
 INTROSPECTOR_ORACLE_ALL_TESTS = ''
 INTROSPECTOR_FUNCTION_SOURCE = ''
@@ -90,6 +90,7 @@ def get_oracle_dict() -> Dict[str, Any]:
       'jvm-public-candidates': query_introspector_jvm_all_public_candidates,
       'optimal-targets': query_introspector_for_optimal_targets,
       'test-migration': query_introspector_for_tests,
+      'all-public-candidates': query_introspector_all_public_candidates,
   }
   return oracle_dict
 
@@ -102,7 +103,7 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
       INTROSPECTOR_ALL_HEADER_FILES, INTROSPECTOR_ALL_FUNC_TYPES, \
       INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS, \
-      INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES, \
+      INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES, \
       INTROSPECTOR_ALL_JVM_SOURCE_PATH, INTROSPECTOR_ORACLE_OPTIMAL, \
       INTROSPECTOR_HEADERS_FOR_FUNC, \
       INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE, \
@@ -119,7 +120,7 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/far-reach-low-cov-fuzz-keyword')
   INTROSPECTOR_ORACLE_EASY_PARAMS = (
       f'{INTROSPECTOR_ENDPOINT}/easy-params-far-reach')
-  INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES = (
+  INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES = (
       f'{INTROSPECTOR_ENDPOINT}/all-public-candidates')
   INTROSPECTOR_ORACLE_OPTIMAL = f'{INTROSPECTOR_ENDPOINT}/optimal-targets'
   INTROSPECTOR_FUNCTION_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
@@ -278,7 +279,16 @@ def query_introspector_jvm_all_public_candidates(project: str) -> list[dict]:
   constructor candidates.
   """
   return query_introspector_oracle(
-      project, INTROSPECTOR_ORACLE_ALL_JVM_PUBLIC_CANDIDATES)
+      project, INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES)
+
+
+def query_introspector_all_public_candidates(project: str) -> list[dict]:
+  """Queries Fuzz Introspector for all public accessible function or
+  constructor candidates.
+  """
+  #TODO May combine this with query_introspector_jvm_all_public_candidates
+  return query_introspector_oracle(
+      project, INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES)
 
 
 def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
@@ -859,7 +869,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         # arguments. Thus skipping it.
         continue
 
-    if language == 'jvm':
+    elif language == 'jvm':
       # Retrieve list of source file from introspector
       src_path_list = query_introspector_jvm_source_path(project)
       if src_path_list:
@@ -872,7 +882,8 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         if src_file not in src_path_list:
           logger.error('error: %s %s', filename, interesting.keys())
           continue
-    elif language != 'python' and interesting and filename not in [
+
+    elif language != 'rust' and interesting and filename not in [
         os.path.basename(i) for i in interesting.keys()
     ]:
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
