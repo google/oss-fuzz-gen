@@ -194,6 +194,21 @@ class BuilderRunner:
 
     return min_func_name in generated_code
 
+  def _contains_target_rust_function(self, target_path: str) -> bool:
+    """Validates if the LLM-generated code contains the target function for
+    rust projects."""
+    with open(target_path) as generated_code_file:
+      generated_code = generated_code_file.read()
+
+    min_func_name = self._get_minimum_func_name(
+        self.benchmark.function_signature)
+
+    # Retrieve function name only with crate, triat, impl or mod tag
+    min_func_name = min_func_name.rsplit('::', 1)[-1]
+    min_func_name = min_func_name.rsplit('.', 1)[-1]
+
+    return min_func_name in generated_code
+
   def _pre_build_check(self, target_path: str,
                        build_result: BuildResult) -> bool:
     """Checks the generated target before building and running it."""
@@ -203,8 +218,10 @@ class BuilderRunner:
       result = self._contains_target_jvm_method(target_path)
     elif self.benchmark.language == 'python':
       result = self._contains_target_python_function(target_path)
+    elif self.benchmark.language == 'rust':
+      result = self._contains_target_rust_function(target_path)
     else:
-      # For C/C++/Rust
+      # For C/C++
       result = self._contains_target_function(target_path)
 
     if not result:

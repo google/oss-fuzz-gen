@@ -5,6 +5,7 @@ Your goal is to write a fuzzing harness for the provided method signature to fuz
 {FUNCTION_SIGNATURE}
 </function_signature>
 The target function is belonging to the Rust project {PROJECT_NAME} ({PROJECT_URL}).
+You MUST call to this target function in the original project, NOT creating a dummy function.
 This function requires {ARG_COUNT} arguments. You must prepare them with random seeded data.
 Here is a list of types for all arguments in order, separated by comma. You MUST preserve the modifiers.
 {ARG_TYPE}
@@ -16,9 +17,11 @@ Here is a list of types for all arguments in order, separated by comma. You MUST
 <item>The generated fuzzing harness should be wrapped with the <code> tag.</item>
 <item>Please avoid using any multithreading or multi-processing approach.</item>
 <item>You MUST create the fuzzing harness using Cargo-Fuzz approach.</item>
-<item>you MUST use the #![no_main] tag.</item>
+<item>You MUST use the #![no_main] tag.</item>
 <item>You MUST use the libfuzzer_sys::fuzz_target crate.</item>
 <item>You MUST include the fuzz_target macro to include all fuzzing statements.</item>
+<item>You MUST include the use of the necessary functions and crate for calling the target function.</item>
+<item>You MUST generate the harness with the assumption that the Cargo.toml for the Cargo-Fuzz directory cannot be changed.</item>
 <item>The following is a sample of the fuzzing harness.
 <code>
 #![no_main]
