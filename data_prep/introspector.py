@@ -278,8 +278,8 @@ def query_introspector_jvm_all_public_candidates(project: str) -> list[dict]:
   """Queries Fuzz Introspector for all public accessible function or
   constructor candidates.
   """
-  return query_introspector_oracle(
-      project, INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES)
+  return query_introspector_oracle(project,
+                                   INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES)
 
 
 def query_introspector_all_public_candidates(project: str) -> list[dict]:
@@ -287,8 +287,8 @@ def query_introspector_all_public_candidates(project: str) -> list[dict]:
   constructor candidates.
   """
   #TODO May combine this with query_introspector_jvm_all_public_candidates
-  return query_introspector_oracle(
-      project, INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES)
+  return query_introspector_oracle(project,
+                                   INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES)
 
 
 def query_introspector_for_targets(project, target_oracle) -> list[Dict]:

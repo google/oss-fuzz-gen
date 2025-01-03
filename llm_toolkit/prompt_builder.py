@@ -1068,8 +1068,7 @@ class DefaultRustTemplateBuilder(PromptBuilder):
         self.benchmark.project)
 
     # Load templates.
-    self.base_template_file = self._find_template(template_dir,
-                                                  'rust_base.txt')
+    self.base_template_file = self._find_template(template_dir, 'rust_base.txt')
     self.problem_template_file = self._find_template(template_dir,
                                                      'rust_problem.txt')
 

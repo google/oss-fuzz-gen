@@ -307,8 +307,8 @@ def generate_targets_for_analysis(
 
   elif benchmark.language == 'rust':
     # For Rust projects
-    builder = prompt_builder.DefaultRustTemplateBuilder(
-        model, benchmark, template_dir)
+    builder = prompt_builder.DefaultRustTemplateBuilder(model, benchmark,
+                                                        template_dir)
 
   elif prompt_builder_to_use == 'CSpecific':
     builder = prompt_builder.CSpecificBuilder(model, benchmark, template_dir)
