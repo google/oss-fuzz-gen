@@ -254,6 +254,22 @@ def extract_error_message(log_path: str, project_target_basename: str,
 
     return errors
 
+  # Error message extraction for Rust projects
+  if language == 'rust':
+    started = False
+    errors = []
+    for log_line in log_lines:
+      if started:
+        errors.append(log_line)
+        if log_line == 'error: could not compile':
+          break
+      else:
+        if log_line.startswith(('error[E', 'warning:')):
+          errors.append(log_line)
+          started = True
+
+    return errors
+
   target_name, _ = os.path.splitext(project_target_basename)
 
   error_lines_range: list[Optional[int]] = [None, None]

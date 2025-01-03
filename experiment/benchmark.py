@@ -204,6 +204,13 @@ class Benchmark:
       # zipp-zipp.difference.
       self.id = self.id.replace('._', '.')
 
+    if self.language == 'rust':
+      # For rust projects, double colon (::) is sometime used to identify
+      # crate, impl or trait name of a function. This could affect the
+      # benchmark_id and cause OSS-Fuzz build failed.
+      # Special handling of benchmark_id is needed to avoid this situation.
+      self.id = self.id.replace('::', '-')
+
   def __str__(self):
     return (f'Benchmark<id={self.id}, project={self.project}, '
             f'language={self.language}, '
