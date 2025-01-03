@@ -1,7 +1,7 @@
 from utils import load_compile_commands, process_compile_args, is_path_contained_in, extract_lines
 from clang.cindex import Cursor
 from clang import cindex  # 导入 Clang 的 Python 接口模块
-from typing import List, Tuple, Optional, Dict, Any, Set
+from typing import List, Tuple, Optional
 import os
 from tqdm import tqdm
 import re
