@@ -90,7 +90,7 @@ To generate and evaluate the fuzz targets in a benchmark set via *local* experim
     [--work-dir=results-dir]
     [...]
 # E.g., generate fuzz targets for TinyXML-2 with default template and fuzz for 30 seconds.
-# ./run_all_experiments.py -y ./benchmark-sets/comparison/tinyxml2.yaml
+# ./run_all_experiments.py -y ./benchmark-sets/all/tinyxml2.yaml
 ```
 where the `<model-name>` must be the name of one of the supported models. The
 list of models supported by OSS-Fuzz-gen expands on a regular basis, and all
@@ -188,7 +188,7 @@ Configure and use framework in the following steps:
 ### Configure Benchmark
 Prepare a [benchmark YAML](data_prep/README.md#Benchmark-YAML) that specifies
 the function to test, here is
-[an example](benchmark-sets/comparison/tinyxml2.yaml). Follow the link above
+[an example](benchmark-sets/all/tinyxml2.yaml). Follow the link above
 to automatically generate one for a `C`/`C++` project in `OSS-Fuzz`. Note that
 the project under test needs to be integrated into `OSS-Fuzz` to build.
 
