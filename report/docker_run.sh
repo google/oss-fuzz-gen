@@ -194,7 +194,7 @@ fi
 # Wait for the report process to finish uploading.
 wait $pid_report
 
-$PYTHON -m report.trends_report \
+$PYTHON -m report.trends_report.upload_summary \
   --results-dir ${LOCAL_RESULTS_DIR:?} \
   --output-path "gs://oss-fuzz-gcb-experiment-run-logs/trend-reports/${GCS_TREND_REPORT_PATH:?}" \
   --name ${EXPERIMENT_NAME:?} \
