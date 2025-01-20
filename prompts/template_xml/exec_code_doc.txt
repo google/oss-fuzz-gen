@@ -1,0 +1,54 @@
+<FunctionUnderTest>
+{function_under_test}
+</FunctionUnderTest>
+
+<FunctionDeclarationUnderTest>
+{function_declare_under_test}
+</FunctionDeclarationUnderTest>
+
+<UnitTestCodeFragments>
+{unit_test_code_fragments}
+</UnitTestCodeFragments>
+
+<FunctionDocumentationTemplate>
+# Function Overview and Details
+## 1. Function: [Function Name]
+ - **Function Declaration**: The function declaration of this function.
+ - **Description**: Briefly describe what the function does and the problem it solves.
+ - **Purpose**: Explain the design intent or typical usage scenarios of the function, especially for complex functions.
+
+### Parameters
+For each parameter, provide the following details:
+ - **Parameter Name**:\n"
+ - **Type**: Specify the data type of the parameter.
+ - **Purpose**: Describe the role of the parameter in the function.
+ - **Constraints**: Mention any specific restrictions or relationships (e.g., value range, dependencies between parameters).
+ - **Actual Argument**: The value of this parameter in the unit test. If it is a basic data type, write the value directly here. If it is a custom type, write the construction code for the parameter.
+
+### Return Value
+ - **Return Type**: Describe the data type of the return value.
+ - **Explanation**:
+  - State what the return value represents.\n"
+  - List potential return values and the conditions under which they occur (e.g., 0 for success, -1 for error).
+  - For complex data types, provide a brief description of the structure or content.
+
+### Example Usage
+Provide a specific example of how to use this function, strictly based on the unit test code fragments provided. The example should include:
+ - The function call with arguments exactly as used in the unit test case.
+ - Necessary setup or context to ensure the example is complete and ready to execute.
+ - No additional validation or assertions; focus only on demonstrating the function's invocation.
+
+<code>
+// Example for [Function Name]
+[Setup code, if required]
+function_name(param1, param2); // Function call derived from unit test
+</code>
+
+</FunctionDocumentationTemplate>
+
+<caution>
+Make sure all content in the document you generated should be sourced from Unit Test Case.
+Do not output any charactor unrelated except the document.
+You must write documentation for all functions listed under the `<FunctionUnderTest>` tag.
+Let's think step by step.
+</caution>

@@ -1,0 +1,17 @@
+<Instruction>
+Based on the following function documentation, understand the use cases of the functions and write a C++ program that calls the target functions mentioned in the documentation, covering common usage scenarios and possible edge cases. Ensure that the program is logically correct and properly demonstrates the core functionality and typical use cases of the target functions. Additionally, make sure the program can compile successfully and run correctly when linked with the {target_lib_name} library.
+</Instruction>
+
+<FunctionDocumentation>
+{function_documentation}
+</FunctionDocumentation>
+
+The following header files that must be included in the C++ program.
+<Headers>
+{header}
+</Headers>
+
+<caution>
+Please output only the code and do not include any irrelevant characters, as they may cause the program to fail to compile.
+Let's think step by step.
+</caution>
