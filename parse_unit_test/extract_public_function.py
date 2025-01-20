@@ -5,7 +5,7 @@ import os
 
 def append_functions_to_json(target_lib, folder_path):
     # 确保输出目录存在
-    output_dir = os.path.join(os.getcwd(), 'parse_unit_test_result', target_lib)
+    output_dir = os.path.join(os.getcwd(), 'parse_unit_test', 'parse_unit_test_result', target_lib)
     os.makedirs(output_dir, exist_ok=True)
     output_file = os.path.join(output_dir, 'target_function.json')
 

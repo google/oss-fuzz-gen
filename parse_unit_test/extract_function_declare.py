@@ -1,7 +1,7 @@
 import os
 import json
 from clang import cindex
-from utils import extract_lines
+from .utils import extract_lines
 import logging
 
 # 配置日志
@@ -29,7 +29,7 @@ def parse_source_file_and_get_cursor(src_file: str) -> cindex.Cursor:
 
 
 def load_target_functions(target_lib: str, binary_name: str) -> set:
-    json_path = os.path.join('parse_unit_test_result', target_lib, 'target_function.json')
+    json_path = os.path.join('parse_unit_test','parse_unit_test_result', target_lib, 'target_function.json')
     if not os.path.exists(json_path):
         raise FileNotFoundError(f"JSON file {json_path} does not exist.")
     with open(json_path, 'r') as f:
@@ -59,17 +59,19 @@ def save_api_declare_to_json(api_declare: dict, output_file: str) -> None:
         json.dump(api_declare, file, indent=4)
 
 
+
 def main(target_lib_dir: str, target_lib: str, binary_name: str) -> None:
     logging.info("Generating API declarations from header files based on target functions.")
     target_functions = load_target_functions(target_lib, binary_name)
 
     api_declare = {}
-    function_kind = [cindex.CursorKind.FUNCTION_DECL, cindex.CursorKind.CXX_METHOD, cindex.CursorKind.FUNCTION_TEMPLATE]
+    function_kind = {cindex.CursorKind.FUNCTION_DECL, cindex.CursorKind.CXX_METHOD, cindex.CursorKind.FUNCTION_TEMPLATE, cindex.CursorKind.CONVERSION_FUNCTION}
 
     for root, dirs, files in os.walk(target_lib_dir):
         for file in files:
             if file.endswith((".h", ".hpp")):
                 file_path = os.path.join(root, file)
+                print("文件", file_path)
                 cursor = parse_source_file_and_get_cursor(file_path)
                 for child in cursor.walk_preorder():
                     if child.kind in function_kind and os.path.basename(
@@ -79,7 +81,7 @@ def main(target_lib_dir: str, target_lib: str, binary_name: str) -> None:
                             if binary_name not in api_declare:
                                 api_declare[binary_name] = {}
                             api_declare[binary_name][child.spelling] = function_declaration
-    output_dir = os.path.join('parse_unit_test_result', target_lib)
+    output_dir = os.path.join('parse_unit_test','parse_unit_test_result', target_lib)
     os.makedirs(output_dir, exist_ok=True)
     output_file = os.path.join(output_dir, 'api_declare.json')
     save_api_declare_to_json(api_declare, output_file)

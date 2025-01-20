@@ -17,8 +17,8 @@ def execute_command_with_env(test_case_id, command, target_lib):
     env_var_name = "LLVM_PROFILE_FILE"
     test_case_id_file = test_case_id.replace(".", "_")
 
-    profraw_output_path = os.path.join("result", target_lib, "profraw", f"{test_case_id_file}.profraw")
-    xml_output_path = os.path.join("result", target_lib, "xml", f"{test_case_id_file}.xml")
+    profraw_output_path = os.path.join("test_case_exec","exec_code_result", target_lib, "profraw", f"{test_case_id_file}.profraw")
+    xml_output_path = os.path.join("test_case_exec","exec_code_result", target_lib, "xml", f"{test_case_id_file}.xml")
 
     os.makedirs(os.path.dirname(profraw_output_path), exist_ok=True)
     os.makedirs(os.path.dirname(xml_output_path), exist_ok=True)
@@ -110,24 +110,35 @@ def convert_profraw_to_txt(target_lib, command_path):
                 logging.error(f"Failed to delete {profdata_path}: {e}")
 
 
-def extract_high_frequency_lines(file_path, output_path=None):
+def extract_high_frequency_lines(file_path, target_lib_name, language):
     """
-    从指定文件中提取执行次数大于1的代码行，并保存到另一个文件中。
+    Extract lines with execution count greater than 1 from the specified file and save to another file.
 
-    参数:
-    file_path (str): 输入文件的路径。
-    output_path (str, 可选): 输出文件的路径。如果不指定，则不保存文件。
+    Args:
+    file_path (str): Path to the input file.
+    target_lib_name (str): Name of the target library used to construct the output path.
+    language (str): Programming language ('C' or 'C++') to determine the file extension.
 
-    返回:
-    list: 包含执行次数大于1的代码行的列表。
+    Returns:
+    list: A list of lines with execution count greater than 1.
     """
+    # Determine the output directory and file name
+    base_dir = os.path.join("test_case_exec", "exec_code_result", target_lib_name)
+    output_dir = os.path.join(base_dir, "exec_code")
+    os.makedirs(output_dir, exist_ok=True)  # Ensure the directory exists
+
+    # Determine the file extension based on the language
+    file_extension = ".c" if language == "C" else ".cpp"
+    output_file_name = os.path.splitext(os.path.basename(file_path))[0] + file_extension
+    output_path = os.path.join(output_dir, output_file_name)
+
     high_frequency_lines = []
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             for line in file:
                 parts = line.strip().split('|')
                 if len(parts) < 3:
-                    continue  # 跳过格式不正确的行
+                    continue  # Skip improperly formatted lines
                 exec_count_str = parts[1].strip()
                 if not exec_count_str:
                     exec_count = 0
@@ -135,25 +146,27 @@ def extract_high_frequency_lines(file_path, output_path=None):
                     try:
                         exec_count = int(exec_count_str)
                     except ValueError:
-                        continue  # 执行次数不是有效整数，跳过
-                if exec_count > 0:
+                        continue  # Skip lines with invalid execution count
+                if exec_count > 1:
                     code_line = parts[2].strip() + '\n'
                     high_frequency_lines.append(code_line)
-        if output_path:
-            with open(output_path, 'w', encoding='utf-8') as output_file:
-                output_file.writelines(high_frequency_lines)
+
+        # Write the high-frequency lines to the output file
+        with open(output_path, 'w', encoding='utf-8') as output_file:
+            output_file.writelines(high_frequency_lines)
     except FileNotFoundError:
-        print(f"文件 {file_path} 未找到。")
+        print(f"File {file_path} not found.")
     except IOError as e:
-        print(f"读写错误: {e}")
+        print(f"IO error: {e}")
     except Exception as e:
-        print(f"意外错误: {e}")
+        print(f"Unexpected error: {e}")
     return high_frequency_lines
 
 
 def convert_profraw_to_lcov(target_lib, command_path):
-    profraw_dir = os.path.join("result", target_lib, "profraw")
-    coverage_dir = os.path.join("result", target_lib, "coverage")
+    base_dir = os.path.join("test_case_exec","exec_code_result", target_lib)
+    profraw_dir = os.path.join(base_dir, "profraw")
+    coverage_dir = os.path.join(base_dir, "coverage")
 
     os.makedirs(coverage_dir, exist_ok=True)
 
@@ -202,16 +215,17 @@ import os
 import logging
 
 
-def extract_and_generate_files(lcov_file_path, target_lib, target_path, language):
-    target_path = os.path.abspath(target_path)
-    coverage_dir = os.path.join("result", target_lib, "exec_code")
+def extract_and_generate_files(lcov_file_path, target_lib_name, ut_path, language):
+    ut_path = os.path.abspath(ut_path)
+    coverage_dir = os.path.join("test_case_exec","exec_code_result", target_lib_name, "exec_code")
     os.makedirs(coverage_dir, exist_ok=True)
 
     # Determine the output filename based on the lcov file name and language
     lcov_base_name = os.path.splitext(os.path.basename(lcov_file_path))[0]
-    if language == "C":
+    language = language.lower()
+    if language == "c":
         output_extension = '.c'
-    elif language == "C++":
+    elif language == "c++":
         output_extension = '.cpp'
     else:
         output_extension = '.txt'
@@ -234,11 +248,11 @@ def extract_and_generate_files(lcov_file_path, target_lib, target_path, language
             elif line.startswith('SF:'):
                 if current_file:
                     # Process the previous file
-                    process_file(current_file, current_executed_lines, all_executed_lines, target_path)
+                    process_file(current_file, current_executed_lines, all_executed_lines, ut_path)
                     current_executed_lines = []
                 file_path = line[len('SF:'):].strip()
                 current_file = os.path.abspath(file_path)
-                if not current_file.startswith(target_path):
+                if not current_file.startswith(ut_path):
                     skip_until_end = True
                 else:
                     skip_until_end = False
@@ -255,14 +269,14 @@ def extract_and_generate_files(lcov_file_path, target_lib, target_path, language
                             continue
             elif line == 'end_of_record':
                 if current_file:
-                    process_file(current_file, current_executed_lines, all_executed_lines, target_path)
+                    process_file(current_file, current_executed_lines, all_executed_lines, ut_path)
                     current_file = None
                     current_executed_lines = []
                 skip_until_end = False
 
     # Process the last file if any
     if current_file:
-        process_file(current_file, current_executed_lines, all_executed_lines, target_path)
+        process_file(current_file, current_executed_lines, all_executed_lines, ut_path)
 
     # Write all executed lines into the single output file
     with open(output_file_path, 'w', encoding='utf-8') as output_file:
@@ -283,11 +297,9 @@ def process_file(source_file, executed_lines, all_executed_lines, target_path):
         logging.error(f"Failed to process file {source_file}: {e}")
 
 
-
-
 if __name__ == "__main__":
     test_case_id = "AomImageTest.AomImgAllocHugeWidth"
-    command_path = "/media/fengxiao/3d47419b-aaf4-418e-8ddd-4f2c62bebd8b/workSpace/aom/build/test_libaom"
+    command_path = "/media/fengxiao/3d47419b-aaf4-418e-8ddd-4f2c62bebd8b/8/aom/build/test_libaom"
     target_lib = "my_target_lib"
     ut = "/media/fengxiao/3d47419b-aaf4-418e-8ddd-4f2c62bebd8b/workSpace/aom/test"
     output = "output.txt"
@@ -299,8 +311,6 @@ if __name__ == "__main__":
         logging.error(f"ValueError: {ve}")
     except subprocess.CalledProcessError as cpe:
         logging.error(f"CalledProcessError: {cpe}")
-
-    #convert_profraw_to_txt(target_lib, command_path)
 
     convert_profraw_to_lcov(target_lib,command_path)
 

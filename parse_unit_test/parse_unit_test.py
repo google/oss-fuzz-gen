@@ -1,4 +1,4 @@
-from utils import load_compile_commands, process_compile_args, is_path_contained_in, extract_lines
+from .utils import load_compile_commands, process_compile_args, is_path_contained_in, extract_lines
 from clang.cindex import Cursor
 from clang import cindex  # 导入 Clang 的 Python 接口模块
 from typing import List, Tuple, Optional
@@ -8,12 +8,12 @@ import re
 import json
 import logging
 
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("parse_unit_test.log"),  # Log to a file
         logging.StreamHandler()  # Log to the console
     ]
 )
@@ -156,8 +156,11 @@ def main(compile_cmd_dir: str, unit_test_dir: str, target_lib_name: str):
         else:
             logging.info(f"No test cases found in file: {src_file}")
 
+    # 获取当前脚本所在目录
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
     # 创建 parse_unit_test_result 文件夹
-    base_folder = 'parse_unit_test_result'
+    base_folder = os.path.join('parse_unit_test', 'parse_unit_test_result')
     if not os.path.exists(base_folder):
         logging.info(f"Creating base folder: {base_folder}")
         os.makedirs(base_folder)
