@@ -25,7 +25,7 @@ git clone https://github.com/dvhar/dateparse
 git clone https://github.com/google/oss-fuzz-gen
 cd oss-fuzz-gen
 
-# Generate a tool
+# Generate a harness
 python3 -m experimental.from_scratch.generate \
   -l ${MODEL} \
   -f dateparse \
@@ -33,6 +33,7 @@ python3 -m experimental.from_scratch.generate \
 
 # Show harness
 cat responses/01.rawoutput
+"""
 #include <stdio.h>
 #include <string.h>
 
@@ -56,4 +57,5 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     free(datestr);
     return 0;
 }
+"""
 ```
