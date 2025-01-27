@@ -17,13 +17,13 @@
 import argparse
 import os
 import sys
-
-from llm_toolkit import models, prompts, prompt_builder
-from experiment import benchmark as benchmarklib
 from typing import Optional
 
 # pyright: reportMissingImports = false
 from fuzz_introspector.frontends import oss_fuzz as fi_oss_fuzz
+
+from experiment import benchmark as benchmarklib
+from llm_toolkit import models, prompt_builder, prompts
 
 NUM_SAMPLES: int = 1
 TEMPERATURE: float = 1
