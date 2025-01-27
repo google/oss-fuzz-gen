@@ -14,7 +14,6 @@
 # limitations under the License.
 """Module for generating harnesses in arbitrary projects."""
 
-
 import argparse
 import os
 import sys
@@ -23,6 +22,7 @@ from llm_toolkit import models, prompts, prompt_builder
 from experiment import benchmark as benchmarklib
 from typing import Optional
 
+# pyright: reportMissingImports = false
 from fuzz_introspector.frontends import oss_fuzz as fi_oss_fuzz
 
 NUM_SAMPLES: int = 1
