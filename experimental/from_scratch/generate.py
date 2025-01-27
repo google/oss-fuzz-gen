@@ -112,7 +112,7 @@ def main():
   print('-' * 40)
   print(fuzz_prompt.get())
   print('-' * 40)
-  print(f'Running query and writing results in {args.reponse_dir}')
+  print(f'Running query and writing results in {args.response_dir}')
   model.query_llm(fuzz_prompt, response_dir=args.response_dir)
 
 
