@@ -6,7 +6,7 @@ base you want to analyse.
 
 Sample run where `${MODEL}` holds your model name:
 
-``sh
+```sh
 # Create virtual environment
 python3.11 -m virtualenv .venv
 . .venv/bin/activate
