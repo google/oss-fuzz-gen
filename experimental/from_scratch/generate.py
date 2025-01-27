@@ -12,6 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Module for generating harnesses in arbitrary projects."""
+
 
 import argparse
 import os
@@ -110,7 +112,7 @@ def main():
   print('-' * 40)
   print(fuzz_prompt.get())
   print('-' * 40)
-  print('Running query and writing results in %s' % (args.response_dir))
+  print(f'Running query and writing results in {args.reponse_dir}')
   model.query_llm(fuzz_prompt, response_dir=args.response_dir)
 
 
