@@ -63,8 +63,8 @@ def setup_model(args) -> models.LLM:
 
 
 def get_target_benchmark(
-    language, target_dir,
-    target_function_name) -> Tuple[Optional[benchmarklib.Benchmark], Optional[dict[str, Any]]]:
+    language, target_dir, target_function_name
+) -> Tuple[Optional[benchmarklib.Benchmark], Optional[dict[str, Any]]]:
   """Run introspector analysis on a target directory and extract benchmark"""
   project = fi_oss_fuzz.analyse_folder(language=language,
                                        directory=target_dir,
