@@ -17,7 +17,7 @@
 import argparse
 import os
 import sys
-from typing import Optional
+from typing import Any, Optional, Tuple
 
 # pyright: reportMissingImports = false
 from fuzz_introspector.frontends import oss_fuzz as fi_oss_fuzz
@@ -64,7 +64,7 @@ def setup_model(args) -> models.LLM:
 
 def get_target_benchmark(
     language, target_dir,
-    target_function_name) -> Optional[benchmarklib.Benchmark]:
+    target_function_name) -> Tuple[Optional[benchmarklib.Benchmark], Optional[dict[str, Any]]]:
   """Run introspector analysis on a target directory and extract benchmark"""
   project = fi_oss_fuzz.analyse_folder(language=language,
                                        directory=target_dir,
@@ -78,6 +78,19 @@ def get_target_benchmark(
       for idx, arg_name in function.arg_names:
         param_list.append({'name': arg_name, 'type': function.arg_types[idx]})
 
+      # Build a context.
+      function_source = function.function_source_code_as_text()
+      xrefs = project.get_cross_references(function)
+      xref_strings = [xref.function_source_code_as_text() for xref in xrefs]
+
+      context = {
+          'func_source': function_source,
+          'files': [],
+          'decl': '',
+          'xrefs': xref_strings,
+          'header': '',
+      }
+
       return benchmarklib.Benchmark(
           benchmark_id='sample',
           project='no-name',
@@ -86,14 +99,14 @@ def get_target_benchmark(
           function_signature=function.sig,
           return_type=function.return_type,
           params=param_list,
-          target_path=function.parent_source.source_file)
-  return None
+          target_path=function.parent_source.source_file), context
+  return None, None
 
 
-def construct_fuzz_prompt(model, benchmark) -> prompts.Prompt:
+def construct_fuzz_prompt(model, benchmark, context) -> prompts.Prompt:
   """Local benchmarker"""
   builder = prompt_builder.DefaultTemplateBuilder(model, benchmark=benchmark)
-  fuzz_prompt = builder.build([])
+  fuzz_prompt = builder.build([], project_context_content=context)
   return fuzz_prompt
 
 
@@ -115,12 +128,13 @@ def main():
   args = parse_args()
   model = setup_model(args)
 
-  target_benchmark = get_target_benchmark('c++', args.target_dir, args.function)
+  target_benchmark, context = get_target_benchmark('c++', args.target_dir,
+                                                   args.function)
   if target_benchmark is None:
     print('Could not find target function. Exiting.')
     sys.exit(0)
 
-  fuzz_prompt = construct_fuzz_prompt(model, target_benchmark)
+  fuzz_prompt = construct_fuzz_prompt(model, target_benchmark, context)
   print_prompt(fuzz_prompt)
   os.makedirs(args.response_dir, exist_ok=True)
   print(f'Running query and writing results in {args.response_dir}')
