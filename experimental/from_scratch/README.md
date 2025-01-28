@@ -24,6 +24,7 @@ git clone https://github.com/dvhar/dateparse
 # Clone oss-fuzz-gen
 git clone https://github.com/google/oss-fuzz-gen
 cd oss-fuzz-gen
+python3 -m pip install -r ./requirements.txt
 
 # Generate a harness
 python3 -m experimental.from_scratch.generate \
