@@ -97,6 +97,20 @@ def construct_fuzz_prompt(model, benchmark) -> prompts.Prompt:
   return fuzz_prompt
 
 
+def print_prompt(fuzz_prompt: prompts.Prompt) -> None:
+  """Prints prompt to stdout."""
+  print('Querying with the prompt')
+  print('-' * 40)
+  raw_prompt = fuzz_prompt.get()
+  if isinstance(raw_prompt, list):
+    for elem in raw_prompt:
+      if isinstance(elem, dict) and 'content' in elem:
+        print(elem['content'])
+  else:
+    print(raw_prompt)
+  print('-' * 40)
+
+
 def main():
   args = parse_args()
   model = setup_model(args)
@@ -107,11 +121,8 @@ def main():
     sys.exit(0)
 
   fuzz_prompt = construct_fuzz_prompt(model, target_benchmark)
+  print_prompt(fuzz_prompt)
   os.makedirs(args.response_dir, exist_ok=True)
-  print('Querying with the prompt')
-  print('-' * 40)
-  print(fuzz_prompt.get())
-  print('-' * 40)
   print(f'Running query and writing results in {args.response_dir}')
   model.query_llm(fuzz_prompt, response_dir=args.response_dir)
 
