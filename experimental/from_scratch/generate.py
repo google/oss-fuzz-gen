@@ -20,7 +20,7 @@ import sys
 from typing import Any, Optional, Tuple
 
 # pyright: reportMissingImports = false
-from fuzz_introspector.frontends import oss_fuzz as fi_oss_fuzz
+from fuzz_introspector import commands as fi_commands
 
 from experiment import benchmark as benchmarklib
 from llm_toolkit import models, prompt_builder, prompts
@@ -66,9 +66,16 @@ def get_target_benchmark(
     language, target_dir, target_function_name
 ) -> Tuple[Optional[benchmarklib.Benchmark], Optional[dict[str, Any]]]:
   """Run introspector analysis on a target directory and extract benchmark"""
-  project = fi_oss_fuzz.analyse_folder(language=language,
-                                       directory=target_dir,
-                                       dump_output=False)
+  _, report = fi_commands.analyse_end_to_end(
+      arg_language=language,
+      target_dir=target_dir,
+      entrypoint='LLVMFuzzerTestOneInput',
+      out_dir='.',
+      coverage_url='',
+      report_name='report-name',
+      module_only=True)
+  project = report['light-project']
+
   # Trigger some analysis
   project.dump_module_logic(report_name='', dump_output=False)
 
