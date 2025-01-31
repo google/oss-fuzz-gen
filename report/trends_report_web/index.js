@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 const BASE_URL = 'https://llm-exp.oss-fuzz.com/trend-reports';
 
 class Dropdown {
@@ -313,16 +314,27 @@ class Page {
     const data = [];
     for (let n of this.filteredNames) {
       const report = this.reports.get(n);
-      data.push({reportName: report.name, key: 'compiles', value: report.accumulated_results.compiles});
-      data.push({reportName: report.name, key: 'crash_cases', value: report.accumulated_results.crash_cases});
-      data.push({reportName: report.name, key: 'crashes', value: report.accumulated_results.crashes});
-      data.push({reportName: report.name, key: 'total_coverage', value: report.accumulated_results.total_coverage});
-      data.push({reportName: report.name, key: 'total_line_coverage_diff', value: report.accumulated_results.total_line_coverage_diff});
+      const toRate = (x) => {
+        if (report.accumulated_results.total_runs == 0) {
+          return 0;
+        }
+        return x / report.accumulated_results.total_runs * 100;
+      }
+      data.push({reportName: report.name, key: 'Build Rate %', value: toRate(report.accumulated_results.compiles)});
+      data.push({reportName: report.name, key: 'Crash Cases', value: report.accumulated_results.crash_cases});
+      data.push({reportName: report.name, key: 'Crashes', value: report.accumulated_results.crashes});
+      data.push({reportName: report.name, key: 'Average Coverage %', value: toRate(report.accumulated_results.total_coverage)});
+      data.push({reportName: report.name, key: 'Average Line Coverage Diff %', value: toRate(report.accumulated_results.total_line_coverage_diff)});
     }
 
     const chart = Plot.plot({
       width: container.clientWidth,
-      x: { tickRotate: -30 },
+      color: {legend: true},
+      // Remove y axis label since each line is a different value
+      y: {label: null},
+      // Rotate the report names (x scale) but also increase the bottom margin
+      // so they're not cut off
+      x: {label: null, tickRotate: -45},
       marginBottom: 200,
       marks: [
           Plot.ruleY([0]),
@@ -331,7 +343,7 @@ class Page {
             y: 'value',
             stroke: 'key',
             marker: 'circle',
-            tip: 'x',
+            tip: true,
             sort: {x: null},
           }),
       ]
@@ -354,7 +366,7 @@ class Page {
     tableContainer.appendChild(table);
 
 
-    for (let h of ['Report', 'Compiles', 'Crashes', 'Crash Cases', 'Total Coverage', 'Total Line Coverage Diff']) {
+    for (let h of ['Report Name', 'Build Rate', 'Crashes', 'Crash Cases', 'Average Coverage', 'Average Line Coverage Diff']) {
       const th = document.createElement('th');
       th.innerText = h;
       thead.appendChild(th);
@@ -365,24 +377,37 @@ class Page {
       tbody.appendChild(tr);
 
       const report = this.reports.get(n);
-      const reportCell = document.createElement('td');
-      reportCell.innerText = report.name;
-      tr.appendChild(reportCell);
-      const compiles = document.createElement('td');
-      compiles.innerText = report.accumulated_results.compiles;
-      tr.appendChild(compiles);
+      const toRate = (x) => {
+        if (report.accumulated_results.total_runs == 0) {
+          return '0';
+        }
+        return (x / report.accumulated_results.total_runs * 100).toFixed(2);
+      }
+      const reportName = document.createElement('td');
+      const reportLink = document.createElement('a');
+      reportLink.innerText = report.name;
+      reportLink.href = report.url.endsWith('/') ? report.url : `${report.url}/`;
+      reportLink.target = '_blank';
+      reportName.appendChild(reportLink);
+      tr.appendChild(reportName);
+      const buildRate = document.createElement('td');
+      const buildRateVal = toRate(report.accumulated_results.compiles);
+      buildRate.innerText = `${buildRateVal}%`;
+      tr.appendChild(buildRate);
       const crashes = document.createElement('td');
       crashes.innerText = report.accumulated_results.crashes;
       tr.appendChild(crashes);
       const crashCases = document.createElement('td');
       crashCases.innerText = report.accumulated_results.crash_cases;
       tr.appendChild(crashCases);
-      const totalCoverage = document.createElement('td');
-      totalCoverage.innerText = report.accumulated_results.total_coverage;
-      tr.appendChild(totalCoverage);
-      const totalLineCoverageDiff = document.createElement('td');
-      totalLineCoverageDiff.innerText = report.accumulated_results.total_line_coverage_diff;
-      tr.appendChild(totalLineCoverageDiff);
+      const coverage = document.createElement('td');
+      const coverageVal = toRate(report.accumulated_results.total_coverage);
+      coverage.innerText = `${coverageVal}%`;
+      tr.appendChild(coverage);
+      const lineCoverageDiff = document.createElement('td');
+      const lineCoverageDiffVal = toRate(report.accumulated_results.total_line_coverage_diff);
+      lineCoverageDiff.innerText = `${lineCoverageDiffVal}%`;
+      tr.appendChild(lineCoverageDiff);
     }
   }
 
@@ -398,25 +423,32 @@ class Page {
       const report = this.reports.get(n);
       for (let project of report.projects) {
         data.push({
-          projectName: project.name,
-          reportName: report.name,
-          coverageGain: project.coverage_gain,
+          'Project Name': project.name,
+          'Report Name': report.name,
+          // Don't do *100 because the y axis is marked as a percentage.
+          'Coverage Gain': project.coverage_gain,
+          'Relative Coverage Gain %': project.coverage_relative_gain * 100,
         });
       }
     }
 
     const chart = Plot.plot({
       width: container.clientWidth,
-      x: { tickRotate: -30 },
+      color: {legend: true},
+      y: {label: 'Coverage Gain %', percent: true},
+      // Rotate the report names (x scale) but also increase the bottom margin
+      // so they're not cut off
+      x: {label: null, tickRotate: -45},
       marginBottom: 200,
       marks: [
           Plot.ruleY([0]),
           Plot.lineY(data, {
-            x: 'reportName',
-            y: 'coverageGain',
-            stroke: 'projectName',
+            x: 'Report Name',
+            y: 'Coverage Gain',
+            stroke: 'Project Name',
             marker: 'circle',
-            tip: 'x',
+            tip: true,
+            channels: {'Relative Coverage Gain %': 'Relative Coverage Gain %'},
             sort: {x: null},
           }),
       ]
@@ -498,7 +530,11 @@ class Page {
 
     const coverageChart = Plot.plot({
       width: coverageContainer.clientWidth,
-      x: { tickRotate: -30 },
+      color: {legend: true},
+      y: {label: 'Max Line Coverage Diff %', percent: true},
+      // Rotate the report names (x scale) but also increase the bottom margin
+      // so they're not cut off
+      x: {label: null, tickRotate: -45},
       marginBottom: 200,
       marks: [
           Plot.ruleY([0]),
@@ -507,7 +543,7 @@ class Page {
             y: 'maxLineCoverageDiff',
             stroke: 'signature',
             marker: 'circle',
-            tip: 'x',
+            tip: true,
             sort: {x: null},
           }),
       ]
@@ -515,7 +551,11 @@ class Page {
     coverageContainer.append(coverageChart);
     const crashChart = Plot.plot({
       width: crashContainer.clientWidth,
-      x: { tickRotate: -30 },
+      color: {legend: true},
+      y: {label: 'Crash Rate %', percent: true},
+      // Rotate the report names (x scale) but also increase the bottom margin
+      // so they're not cut off
+      x: {label: null, tickRotate: -45},
       marginBottom: 200,
       marks: [
           Plot.ruleY([0]),
@@ -524,7 +564,7 @@ class Page {
             y: 'crashRate',
             stroke: 'signature',
             marker: 'circle',
-            tip: 'x',
+            tip: true,
             sort: {x: null},
           }),
       ]
@@ -532,7 +572,11 @@ class Page {
     crashContainer.append(crashChart);
     const buildChart = Plot.plot({
       width: buildContainer.clientWidth,
-      x: { tickRotate: -30 },
+      color: {legend: true},
+      y: {label: 'Build Success Rate %', percent: true},
+      // Rotate the report names (x scale) but also increase the bottom margin
+      // so they're not cut off
+      x: {label: null, tickRotate: -45},
       marginBottom: 200,
       marks: [
           Plot.ruleY([0]),
@@ -541,7 +585,7 @@ class Page {
             y: 'buildSuccessRate',
             stroke: 'signature',
             marker: 'circle',
-            tip: 'x',
+            tip: true,
             sort: {x: null},
           }),
       ]
@@ -607,10 +651,14 @@ class Page {
         tbody.appendChild(rowElem);
 
         const reportElem = document.createElement('td');
-        reportElem.innerText = report.name;
+        const reportLink = document.createElement('a');
+        reportLink.innerText = report.name;
+        reportLink.href = report.url.endsWith('/') ? report.url : `${report.url}/`;
+        reportLink.target = '_blank';
+        reportElem.appendChild(reportLink);
         rowElem.appendChild(reportElem);
         const coverageElem = document.createElement('td');
-        coverageElem.innerText = project.coverage_gain;
+        coverageElem.innerText = `${(project.coverage_gain * 100).toFixed(2)}%`;
         rowElem.appendChild(coverageElem);
 
         for (let sig of signatures) {
@@ -619,7 +667,7 @@ class Page {
 
           const benchmark = report.benchmarks.find(b => b.signature === sig);
           if (benchmark) {
-            sigElem.innerText = benchmark.max_line_coverage_diff;
+            sigElem.innerText = `${(benchmark.max_line_coverage_diff * 100).toFixed(2)}%`;
           }
         }
       }
