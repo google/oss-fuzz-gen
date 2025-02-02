@@ -1,0 +1,173 @@
+/*
+Copyright 2025 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+html {
+  font-size: 16px;
+  line-height: 1.15;
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  margin: 0;
+}
+
+button {
+  font-size: 1em;
+}
+
+.material-symbols-outlined {
+  vertical-align: text-top;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.loading-shadow-box {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-shadow-box .material-symbols-outlined {
+  font-size: 100px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*
+ * Filters
+ */
+.filters-toggle {
+  cursor: pointer;
+}
+
+.filters {
+  display: flex;
+  gap: 20px 50px;
+}
+
+.filter-autocomplete {
+  position: absolute;
+  background: #fff;
+  border: #ccc 1px solid;
+  border-radius: 5px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.filter-autocomplete > div {
+  padding: 3px;
+  cursor: pointer;
+}
+
+.filter-autocomplete > div.hovered {
+  background: #ddd;
+}
+
+.selected-values {
+  margin-top: 10px;
+}
+
+.selected-values .chip {
+  padding: 5px 10px;
+  background: #dedede;
+  border-radius: 99px;
+}
+
+.selected-values .chip > button {
+  cursor: pointer;
+  appearance: none;
+  background: inherit;
+  border: none;
+  padding: 0;
+  margin-left: 5px;
+}
+
+/*
+ * Projects
+ */
+.projects {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 10px 5px;
+}
+
+.projects button {
+  cursor: pointer;
+  appearance: none;
+  background: inherit;
+  border: 1px #ccc solid;
+  border-radius: 99px;
+  padding: 10px;
+}
+
+.projects button.selected {
+  background: #eee;
+}
+
+/*
+ * Data Table
+ */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td, th {
+  border-right: 1px #dedede solid;
+  border-bottom: 1px #dedede solid;
+  padding: 5px;
+  text-align: left;
+}
+td:first-child, th:first-child {
+  border-left: 1px #dedede solid;
+}
+th {
+  border-top: 1px #dedede solid;
+  font-weight: 500;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #f4f5ff;
+}
+
+/*
+ * Chart
+ */
+.chart {
+  margin: 20px 0;
+}
+
+svg > g > text {
+  font-size: 14px;
+}
