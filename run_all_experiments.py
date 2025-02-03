@@ -144,6 +144,7 @@ def run_experiments(benchmark: benchmarklib.Benchmark, args) -> Result:
   """Runs an experiment based on the |benchmark| config."""
   try:
     work_dirs = WorkDirs(os.path.join(args.work_dir, f'output-{benchmark.id}'))
+    args.work_dirs = work_dirs
     model = models.LLM.setup(
         ai_binary=args.ai_binary,
         name=args.model,
