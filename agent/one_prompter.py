@@ -56,14 +56,13 @@ class OnePrompter(BaseAgent):
     last_result = results[-1]
     benchmark = last_result.benchmark
 
-    # if benchmark.use_project_examples:
-    #   project_examples = project_targets.generate_data(
-    #       benchmark.project,
-    #       benchmark.language,
-    #       cloud_experiment_bucket=self.args.cloud_experiment_bucket)
-    # else:
-    #   project_examples = []
-    project_examples = []
+    if benchmark.use_project_examples:
+      project_examples = project_targets.generate_data(
+          benchmark.project,
+          benchmark.language,
+          cloud_experiment_bucket=self.args.cloud_experiment_bucket)
+    else:
+      project_examples = []
 
     if self.args.context:
       retriever = ContextRetriever(benchmark)
