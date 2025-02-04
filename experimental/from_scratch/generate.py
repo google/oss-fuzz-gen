@@ -51,6 +51,14 @@ def parse_args() -> argparse.Namespace:
                       '--target-dir',
                       help='Directory with project source.',
                       required=True)
+  parser.add_argument('-e',
+                      '--language',
+                      help='Main language of the target project source.',
+                      required=True)
+  parser.add_argument('--only-exact-match',
+                      action='store_true',
+                      help=('Flag to indicate if exact function name'
+                            'matching is needed.'))
   return parser.parse_args()
 
 
@@ -62,14 +70,37 @@ def setup_model(args) -> models.LLM:
                           temperature=TEMPERATURE)
 
 
+def find_function_by_name(
+    all_functions, target_function_name, only_exact_match):
+  """Helper function to find the matching function."""
+  for function in all_functions:
+    if function.name == target_function_name:
+      return function
+
+  if not only_exact_match:
+    for function in all_functions:
+      if target_function_name in function.name:
+        return function
+
+  return None
+
+
 def get_target_benchmark(
-    language, target_dir, target_function_name
+    language, target_dir, target_function_name, only_exact_match
 ) -> Tuple[Optional[benchmarklib.Benchmark], Optional[dict[str, Any]]]:
   """Run introspector analysis on a target directory and extract benchmark"""
+  if language in ['c', 'c++']:
+    entrypoint = 'LLVMFuzzerTestOneInput'
+  elif language == 'jvm':
+    entrypoint = 'fuzzerTestOneInput'
+  else:
+    # Not supporting other language yet
+    entrypoint = ''
+
   _, report = fi_commands.analyse_end_to_end(
       arg_language=language,
       target_dir=target_dir,
-      entrypoint='LLVMFuzzerTestOneInput',
+      entrypoint=entrypoint,
       out_dir='.',
       coverage_url='',
       report_name='report-name',
@@ -79,40 +110,55 @@ def get_target_benchmark(
   # Trigger some analysis
   project.dump_module_logic(report_name='', dump_output=False)
 
-  for function in project.all_functions:
-    if function.name == target_function_name:
-      param_list = []
-      for idx, arg_name in function.arg_names:
-        param_list.append({'name': arg_name, 'type': function.arg_types[idx]})
+  # Get target function
+  function = find_function_by_name(project.all_functions,
+                                   target_function_name,
+                                   only_exact_match)
 
-      # Build a context.
-      function_source = function.function_source_code_as_text()
-      xrefs = project.get_cross_references(function)
-      xref_strings = [xref.function_source_code_as_text() for xref in xrefs]
+  if function:
+    param_list = []
 
-      context = {
-          'func_source': function_source,
-          'files': [],
-          'decl': '',
-          'xrefs': xref_strings,
-          'header': '',
-      }
+    for idx, arg_name in function.arg_names:
+      param_list.append({'name': arg_name, 'type': function.arg_types[idx]})
 
-      return benchmarklib.Benchmark(
-          benchmark_id='sample',
-          project='no-name',
-          language=language,
-          function_name=function.name,
-          function_signature=function.sig,
-          return_type=function.return_type,
-          params=param_list,
-          target_path=function.parent_source.source_file), context
+    # Build a context.
+    function_source = function.function_source_code_as_text()
+    xrefs = project.get_cross_references(function)
+    if len(xrefs) > 10:
+      xrefs = xrefs[:10]
+    xref_strings = [xref.function_source_code_as_text() for xref in xrefs]
+
+    context = {
+        'func_source': function_source,
+        'files': [],
+        'decl': '',
+        'xrefs': xref_strings,
+        'header': '',
+    }
+
+    return benchmarklib.Benchmark(
+        benchmark_id='sample',
+        project='no-name',
+        language=language,
+        function_name=function.name,
+        function_signature=function.sig,
+        return_type=function.return_type,
+        params=param_list,
+        target_path=function.parent_source.source_file), context
+
   return None, None
 
 
-def construct_fuzz_prompt(model, benchmark, context) -> prompts.Prompt:
+def construct_fuzz_prompt(model, benchmark,
+                          context, language) -> prompts.Prompt:
   """Local benchmarker"""
-  builder = prompt_builder.DefaultTemplateBuilder(model, benchmark=benchmark)
+  if language in ['c', 'c++']:
+      builder = prompt_builder.DefaultTemplateBuilder(model,
+                                                      benchmark=benchmark)
+  else:
+      builder = prompt_builder.DefaultJvmTemplateBuilder(model,
+                                                         benchmark=benchmark)
+
   fuzz_prompt = builder.build([], project_context_content=context)
   return fuzz_prompt
 
@@ -135,13 +181,25 @@ def main():
   args = parse_args()
   model = setup_model(args)
 
-  target_benchmark, context = get_target_benchmark('c++', args.target_dir,
-                                                   args.function)
+  if args.language == 'c':
+    language = 'c'
+  elif args.language in ['c++', 'cpp']:
+    language = 'c++'
+  elif args.language in ['jvm', 'java']:
+    language = 'jvm'
+  else:
+    print(f'Language {args.language} not support.')
+    sys.exit(0)
+
+  target_benchmark, context = get_target_benchmark(language,
+                                                   args.target_dir,
+                                                   args.function,
+                                                   args.only_exact_match)
   if target_benchmark is None:
     print('Could not find target function. Exiting.')
     sys.exit(0)
 
-  fuzz_prompt = construct_fuzz_prompt(model, target_benchmark, context)
+  fuzz_prompt = construct_fuzz_prompt(model, target_benchmark, context, language)
   print_prompt(fuzz_prompt)
   os.makedirs(args.response_dir, exist_ok=True)
   print(f'Running query and writing results in {args.response_dir}')
