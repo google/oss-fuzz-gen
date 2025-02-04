@@ -116,7 +116,7 @@ def get_target_benchmark(
   if function:
     param_list = []
 
-    for idx, arg_name in function.arg_names:
+    for idx, arg_name in enumerate(function.arg_names):
       param_list.append({'name': arg_name, 'type': function.arg_types[idx]})
 
     # Build a context.
