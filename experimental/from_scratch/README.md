@@ -15,7 +15,9 @@ python3.11 -m virtualenv .venv
 git clone https://github.com/ossf/fuzz-introspector
 cd fuzz-introspector/src
 python3 -m pip install -e .
-cd ../../
+cd ../
+python3 -m pip install -r ./requirements.txt
+cd ../
 
 
 # Prepare a target
@@ -28,6 +30,7 @@ python3 -m pip install -r ./requirements.txt
 
 # Generate a harness
 python3 -m experimental.from_scratch.generate \
+  -e c++ \
   -l ${MODEL} \
   -f dateparse \
   -t ../dateparse/
