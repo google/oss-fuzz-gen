@@ -161,6 +161,8 @@ class OnePrompter(BaseAgent):
   ) -> BuildResult:
     """Builds all targets in the fixed target directory."""
 
+    # TODO(Dongge): Split Builder and Runner.
+    # Only run builder here.
     if self.args.cloud_experiment_name:
       builder_runner = builder_runner_lib.CloudBuilderRunner(
           benchmark,

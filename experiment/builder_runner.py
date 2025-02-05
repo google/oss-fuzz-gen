@@ -497,6 +497,8 @@ class BuilderRunner:
       build_result.errors = errors
       return build_result, None
 
+    # TODO(Dongge): Split Builder and Runner:
+    # Make the rest lines in an independent function.
     run_result = RunResult()
 
     self.run_target_local(
@@ -965,6 +967,9 @@ class CloudBuilderRunner(BuilderRunner):
           logger.warning('Cannot find jcc error log of %s: %s',
                          os.path.realpath(target_path), err_log_name)
 
+    # TODO(Dongge): Split Builder and Runner:
+    # Set build_result.succeeded based on existence of fuzz target binary.
+    # Separate the rest lines into an independent function.
     with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
               'wb') as f:
       blob = bucket.blob(run_log_name)
