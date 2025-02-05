@@ -39,6 +39,7 @@ from llm_toolkit.crash_triager import TriageResult
 from llm_toolkit.models import DefaultModel
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 # The directory in the oss-fuzz image
 JCC_DIR = '/usr/local/bin'
@@ -837,6 +838,7 @@ class CloudBuilderRunner(BuilderRunner):
             '%s\n%s', os.path.realpath(target_path), attempt_id, delay, stdout,
             stderr)
         time.sleep(delay)
+    logger.info('Evaluate %s on cloud.', os.path.realpath(target_path))
 
     return False
 
