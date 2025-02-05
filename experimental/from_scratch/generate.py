@@ -43,10 +43,6 @@ def parse_args() -> argparse.Namespace:
                       '--response-dir',
                       default='./responses',
                       help='LLM response directory.')
-  parser.add_argument('-f',
-                      '--function',
-                      help='Name of function to generate a target for.',
-                      required=True)
   parser.add_argument('-t',
                       '--target-dir',
                       help='Directory with project source.',
@@ -59,7 +55,34 @@ def parse_args() -> argparse.Namespace:
                       action='store_true',
                       help=('Flag to indicate if exact function name'
                             'matching is needed.'))
+  parser.add_argument('-f',
+                      '--function',
+                      help='Name of function to generate a target for.',
+                      default='')
+  parser.add_argument('-s',
+                      '--source-file',
+                      help='Source file name to locate target function.',
+                      default='')
+  parser.add_argument('-sl',
+                      '--source-line',
+                      type=int,
+                      help='Source line number to locate target function.',
+                      default=0)
+
   return parser.parse_args()
+
+
+def check_args(args) -> bool:
+  """Check arguments."""
+  if args.function and not args.source_file and not args.source_line:
+    return True
+
+  if not args.function and args.source_file and args.source_line:
+    return True
+
+  print('You must include either target function name by --function or target'
+        'source file and line number by --source-file and --source-line')
+  return False
 
 
 def setup_model(args) -> models.LLM:
@@ -85,8 +108,22 @@ def find_function_by_name(all_functions, target_function_name,
   return None
 
 
+def find_function_by_source_line(all_functions, target_source_file,
+                                 target_source_line):
+  """Helper function to find the matchin function by source
+  file and source file."""
+  for function in all_functions:
+    source_file = function.parent_source.source_file
+    if source_file.endswith(target_source_file):
+      if function.start_line <= target_source_line <= function.end_line:
+        return function
+
+  return None
+
+
 def get_target_benchmark(
-    language, target_dir, target_function_name, only_exact_match
+    language, target_dir, target_function_name, only_exact_match,
+    target_source_file, target_source_line
 ) -> Tuple[Optional[benchmarklib.Benchmark], Optional[dict[str, Any]]]:
   """Run introspector analysis on a target directory and extract benchmark"""
   if language in ['c', 'c++']:
@@ -110,8 +147,17 @@ def get_target_benchmark(
   project.dump_module_logic(report_name='', dump_output=False)
 
   # Get target function
-  function = find_function_by_name(project.all_functions, target_function_name,
-                                   only_exact_match)
+  if target_function_name:
+    function = find_function_by_name(project.all_functions,
+                                     target_function_name, only_exact_match)
+
+  elif target_source_file and target_source_line > 0:
+    function = find_function_by_source_line(project.all_functions,
+                                            target_source_file,
+                                            target_source_line)
+
+  else:
+    function = None
 
   if function:
     param_list = []
@@ -178,6 +224,9 @@ def main():
   args = parse_args()
   model = setup_model(args)
 
+  if not check_args(args):
+    sys.exit(0)
+
   if args.language == 'c':
     language = 'c'
   elif args.language in ['c++', 'cpp']:
@@ -185,13 +234,17 @@ def main():
   elif args.language in ['jvm', 'java']:
     language = 'jvm'
   else:
-    print(f'Language {args.language} not support.')
+    print(f'Language {args.language} not support. Exiting.')
     sys.exit(0)
 
   target_benchmark, context = get_target_benchmark(language, args.target_dir,
                                                    args.function,
-                                                   args.only_exact_match)
+                                                   args.only_exact_match,
+                                                   args.source_file,
+                                                   args.source_line)
+
   if target_benchmark is None:
+
     print('Could not find target function. Exiting.')
     sys.exit(0)
 
