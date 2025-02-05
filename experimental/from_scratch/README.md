@@ -15,10 +15,7 @@ python3.11 -m virtualenv .venv
 git clone https://github.com/ossf/fuzz-introspector
 cd fuzz-introspector/src
 python3 -m pip install -e .
-cd ../
-python3 -m pip install -r ./requirements.txt
-cd ../
-
+cd ../../
 
 # Prepare a target
 git clone https://github.com/dvhar/dateparse
