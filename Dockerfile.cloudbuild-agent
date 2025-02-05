@@ -38,4 +38,5 @@ WORKDIR /workspace/ofg
 COPY requirements.txt /workspace/ofg/
 
 # Install Python dependencies
-RUN pip3.11 install --ignore-installed -r /workspace/ofg/requirements.txt
+RUN pip3.11 install --ignore-installed -r /workspace/ofg/requirements.txt && \
+    ln -sf /usr/bin/python3.11 /usr/bin/python3

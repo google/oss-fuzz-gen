@@ -3,7 +3,6 @@ Use it as a usual module locally, or as script in cloud builds.
 """
 import os
 import shutil
-from typing import List, Optional
 
 import logger
 from agent.base_agent import BaseAgent
@@ -88,6 +87,7 @@ class OnePrompter(BaseAgent):
     """Executes the agent based on previous result."""
     last_result = result_history[-1]
     benchmark = last_result.benchmark
+    WorkDirs(self.args.work_dirs.base)
     build_result = BuildResult(benchmark=benchmark,
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,

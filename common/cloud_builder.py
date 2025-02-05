@@ -127,12 +127,7 @@ class CloudBuilder:
                     f'tar -xzf /tmp/ofg-repo.tar.gz -C /workspace/ofg'
                 ]
             },
-            {
-                'name': 'gcr.io/cloud-builders/git',
-                'dir': '/workspace',
-                'args': ['clone', '--depth=1', OF_REPO, 'ofg/oss-fuzz']
-            },
-            # Step 3: Run the Python script with the dill files.
+            # Step 3: Prepare agent base image.
             {
                 'name': 'gcr.io/cloud-builders/docker',
                 'args': [
@@ -142,6 +137,22 @@ class CloudBuilder:
                 ],
                 'dir': '/workspace/ofg/',
             },
+            # Step 4: Prepare OSS-Fuzz repo.
+            {
+                'name':
+                    'gcr.io/cloud-builders/docker',
+                'dir':
+                    '/workspace/ofg/',
+                'args': [
+                    'run', '--rm', '-v', '/workspace/ofg:/workspace/ofg',
+                    ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
+                     'agent-image'), 'python3.11', '-c',
+                    'import os; from experiment import oss_fuzz_checkout; '
+                    'oss_fuzz_checkout.clone_oss_fuzz("oss-fuzz"); '
+                    'oss_fuzz_checkout.postprocess_oss_fuzz(); '
+                ],
+            },
+            # Step 5: Run the Python script with the dill files.
             {
                 'id':
                     'agent-step',
