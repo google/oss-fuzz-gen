@@ -15,9 +15,9 @@
 """Module for generating harnesses in arbitrary projects."""
 
 import argparse
+import logging
 import os
 import sys
-import logging
 from typing import Any, Optional, Tuple
 
 # pyright: reportMissingImports = false
