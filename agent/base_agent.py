@@ -21,8 +21,8 @@ class BaseAgent(ABC):
   def __init__(self,
                trial: int,
                llm: LLM,
+               args: argparse.Namespace,
                tools: Optional[list[BaseTool]] = None,
-               args: Optional[argparse.Namespace] = None,
                name: str = ''):
     self.trial: int = trial
     self.llm: LLM = llm

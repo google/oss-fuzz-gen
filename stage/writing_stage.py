@@ -18,7 +18,7 @@ class WritingStage(BaseStage):
 
   def _write_new_fuzz_target(self, result_history: list[Result]) -> Result:
     """Writes a new fuzz target."""
-    agent = self.get_agent('Prototyper')
+    agent = self.get_agent()
     if self.args.cloud_experiment_name:
       return self._execute_agent_cloud(agent, result_history)
     return agent.execute(result_history)

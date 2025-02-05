@@ -144,6 +144,7 @@ def run_experiments(benchmark: benchmarklib.Benchmark, args) -> Result:
   """Runs an experiment based on the |benchmark| config."""
   try:
     work_dirs = WorkDirs(os.path.join(args.work_dir, f'output-{benchmark.id}'))
+    args.work_dirs = work_dirs
     model = models.LLM.setup(
         ai_binary=args.ai_binary,
         name=args.model,
@@ -238,8 +239,7 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument(
       '-of',
       '--oss-fuzz-dir',
-      help=
-      'Path to OSS-Fuzz dir to use. If not set will create temporary directory.',
+      help='OSS-Fuzz dir path to use. Create temporary directory by default.',
       default='')
   parser.add_argument(
       '-g',
@@ -547,9 +547,12 @@ def main():
   # Set global variables that are updated throughout experiment runs.
   WORK_DIR = args.work_dir
 
-  coverage_gains_process = Process(
-      target=extend_report_with_coverage_gains_process)
-  coverage_gains_process.start()
+  if args.cloud_experiment_name:
+    coverage_gains_process = Process(
+        target=extend_report_with_coverage_gains_process)
+    coverage_gains_process.start()
+  else:
+    coverage_gains_process = None
 
   experiment_results = []
   if NUM_EXP == 1:
@@ -575,9 +578,10 @@ def main():
       # Wait for all workers to complete.
       p.join()
 
-  # Do a final coverage aggregation.
-  coverage_gains_process.kill()
-  extend_report_with_coverage_gains()
+  if coverage_gains_process:
+    # Do a final coverage aggregation.
+    coverage_gains_process.kill()
+    extend_report_with_coverage_gains()
 
   # Capture time at end
   end = time.time()
