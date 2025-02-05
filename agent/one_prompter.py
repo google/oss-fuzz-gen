@@ -12,7 +12,7 @@ from experiment import benchmark as benchmarklib
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
 from experiment.workdir import WorkDirs
-from llm_toolkit import models, output_parser, prompt_builder, prompts
+from llm_toolkit import output_parser, prompt_builder, prompts
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
 
@@ -96,19 +96,16 @@ class OnePrompter(BaseAgent):
 
     prompt = self._initial_prompt(result_history)
     generated_target = self._generate_targets(
-        self.llm, prompt, self.args.work_dirs,
-        self._prompt_builder(result_history), result_history)[0]
+        prompt, self._prompt_builder(result_history), result_history)[0]
     logger.info('Final fuzz target path:\n %s',
                 generated_target,
                 trial=last_result.trial)
     build_result.fuzz_target_source = self._read_from_file(generated_target)
-    build_result = self._check_targets(self.args.ai_binary, benchmark,
-                                       generated_target, build_result,
-                                       self.llm.name)
+    build_result = self._check_targets(benchmark, generated_target,
+                                       build_result)
     return build_result
 
-  def _generate_targets(self, model: models.LLM, prompt: prompts.Prompt,
-                        work_dirs: WorkDirs,
+  def _generate_targets(self, prompt: prompts.Prompt,
                         builder: prompt_builder.PromptBuilder,
                         result_history: list[Result]) -> list[str]:
     """Generates fuzz target with LLM."""
@@ -118,21 +115,21 @@ class OnePrompter(BaseAgent):
     logger.info('Generating targets for %s %s using %s..',
                 benchmark.project,
                 benchmark.function_signature,
-                model.name,
+                self.llm.name,
                 trial=last_result.trial)
-    model.query_llm(prompt, response_dir=work_dirs.raw_targets)
+    self.llm.query_llm(prompt, response_dir=self.args.work_dirs.raw_targets)
 
     _, target_ext = os.path.splitext(benchmark.target_path)
     generated_targets = []
-    for file in os.listdir(work_dirs.raw_targets):
+    for file in os.listdir(self.args.work_dirs.raw_targets):
       if not output_parser.is_raw_output(file):
         continue
-      raw_output = os.path.join(work_dirs.raw_targets, file)
+      raw_output = os.path.join(self.args.work_dirs.raw_targets, file)
       target_code = output_parser.parse_code(raw_output)
       target_code = builder.post_process_generated_code(target_code)
       target_id, _ = os.path.splitext(raw_output)
       target_file = f'{target_id}{target_ext}'
-      target_path = os.path.join(work_dirs.raw_targets, target_file)
+      target_path = os.path.join(self.args.work_dirs.raw_targets, target_file)
       output_parser.save_output(target_code, target_path)
       generated_targets.append(target_path)
 
@@ -150,7 +147,7 @@ class OnePrompter(BaseAgent):
     fixed_targets = []
     # Prepare all LLM-generated targets for code fixes.
     for file in generated_targets:
-      fixed_target = os.path.join(work_dirs.fixed_targets,
+      fixed_target = os.path.join(self.args.work_dirs.fixed_targets,
                                   os.path.basename(file))
       shutil.copyfile(file, fixed_target)
       fixed_targets.append(fixed_target)
@@ -158,11 +155,9 @@ class OnePrompter(BaseAgent):
 
   def _check_targets(
       self,
-      ai_binary: str,
       benchmark: benchmarklib.Benchmark,
       generated_target: str,
       build_result: BuildResult,
-      fixer_model_name: str = models.DefaultModel.name,
   ) -> BuildResult:
     """Builds all targets in the fixed target directory."""
 
@@ -171,7 +166,7 @@ class OnePrompter(BaseAgent):
           benchmark,
           self.args.work_dirs,
           self.args.run_timeout,
-          fixer_model_name,
+          self.llm.name,
           experiment_name=self.args.cloud_experiment_name,
           experiment_bucket=self.args.cloud_experiment_bucket,
       )
@@ -179,12 +174,12 @@ class OnePrompter(BaseAgent):
       builder_runner = builder_runner_lib.BuilderRunner(benchmark,
                                                         self.args.work_dirs,
                                                         self.args.run_timeout,
-                                                        fixer_model_name)
+                                                        self.llm.name)
 
     evaluator = exp_evaluator.Evaluator(builder_runner, benchmark,
                                         self.args.work_dirs)
 
-    target_stat = evaluator.check_target(ai_binary, generated_target)
+    target_stat = evaluator.check_target(self.args.ai_binary, generated_target)
     if target_stat is None:
       logger.error('This should never happen: Error evaluating target: %s',
                    generated_target,
