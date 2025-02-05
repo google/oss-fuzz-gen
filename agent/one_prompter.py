@@ -165,16 +165,13 @@ class OnePrompter(BaseAgent):
       builder_runner = builder_runner_lib.CloudBuilderRunner(
           benchmark,
           self.args.work_dirs,
-          self.args.run_timeout,
-          self.llm.name,
+          fixer_model_name=self.llm.name,
           experiment_name=self.args.cloud_experiment_name,
           experiment_bucket=self.args.cloud_experiment_bucket,
       )
     else:
-      builder_runner = builder_runner_lib.BuilderRunner(benchmark,
-                                                        self.args.work_dirs,
-                                                        self.args.run_timeout,
-                                                        self.llm.name)
+      builder_runner = builder_runner_lib.BuilderRunner(
+          benchmark, self.args.work_dirs, fixer_model_name=self.llm.name)
 
     evaluator = exp_evaluator.Evaluator(builder_runner, benchmark,
                                         self.args.work_dirs)
