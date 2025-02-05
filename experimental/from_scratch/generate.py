@@ -84,6 +84,7 @@ def check_args(args) -> bool:
         'source file and line number by --source-file and --source-line')
   return False
 
+
 def setup_model(args) -> models.LLM:
   return models.LLM.setup(ai_binary='',
                           name=args.model,
@@ -92,8 +93,8 @@ def setup_model(args) -> models.LLM:
                           temperature=TEMPERATURE)
 
 
-def find_function_by_name(
-    all_functions, target_function_name, only_exact_match):
+def find_function_by_name(all_functions, target_function_name,
+                          only_exact_match):
   """Helper function to find the matching function."""
   for function in all_functions:
     if function.name == target_function_name:
@@ -107,8 +108,8 @@ def find_function_by_name(
   return None
 
 
-def find_function_by_source_line(
-    all_functions, target_source_file, target_source_line):
+def find_function_by_source_line(all_functions, target_source_file,
+                                 target_source_line):
   """Helper function to find the matchin function by source
   file and source file."""
   for function in all_functions:
@@ -133,14 +134,13 @@ def get_target_benchmark(
     # Not supporting other language yet
     entrypoint = ''
 
-  _, report = fi_commands.analyse_end_to_end(
-      arg_language=language,
-      target_dir=target_dir,
-      entrypoint=entrypoint,
-      out_dir='.',
-      coverage_url='',
-      report_name='report-name',
-      module_only=True)
+  _, report = fi_commands.analyse_end_to_end(arg_language=language,
+                                             target_dir=target_dir,
+                                             entrypoint=entrypoint,
+                                             out_dir='.',
+                                             coverage_url='',
+                                             report_name='report-name',
+                                             module_only=True)
   project = report['light-project']
 
   # Trigger some analysis
@@ -149,8 +149,7 @@ def get_target_benchmark(
   # Get target function
   if target_function_name:
     function = find_function_by_name(project.all_functions,
-                                     target_function_name,
-                                     only_exact_match)
+                                     target_function_name, only_exact_match)
 
   elif target_source_file and target_source_line > 0:
     function = find_function_by_source_line(project.all_functions,
@@ -194,15 +193,14 @@ def get_target_benchmark(
   return None, None
 
 
-def construct_fuzz_prompt(model, benchmark,
-                          context, language) -> prompts.Prompt:
+def construct_fuzz_prompt(model, benchmark, context,
+                          language) -> prompts.Prompt:
   """Local benchmarker"""
   if language in ['c', 'c++']:
-      builder = prompt_builder.DefaultTemplateBuilder(model,
-                                                      benchmark=benchmark)
+    builder = prompt_builder.DefaultTemplateBuilder(model, benchmark=benchmark)
   else:
-      builder = prompt_builder.DefaultJvmTemplateBuilder(model,
-                                                         benchmark=benchmark)
+    builder = prompt_builder.DefaultJvmTemplateBuilder(model,
+                                                       benchmark=benchmark)
 
   fuzz_prompt = builder.build([], project_context_content=context)
   return fuzz_prompt
@@ -239,8 +237,7 @@ def main():
     print(f'Language {args.language} not support. Exiting.')
     sys.exit(0)
 
-  target_benchmark, context = get_target_benchmark(language,
-                                                   args.target_dir,
+  target_benchmark, context = get_target_benchmark(language, args.target_dir,
                                                    args.function,
                                                    args.only_exact_match,
                                                    args.source_file,
@@ -251,7 +248,8 @@ def main():
     print('Could not find target function. Exiting.')
     sys.exit(0)
 
-  fuzz_prompt = construct_fuzz_prompt(model, target_benchmark, context, language)
+  fuzz_prompt = construct_fuzz_prompt(model, target_benchmark, context,
+                                      language)
   print_prompt(fuzz_prompt)
   os.makedirs(args.response_dir, exist_ok=True)
   print(f'Running query and writing results in {args.response_dir}')
