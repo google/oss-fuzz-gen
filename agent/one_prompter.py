@@ -184,4 +184,7 @@ class OnePrompter(BaseAgent):
                    generated_target,
                    trial=self.trial)
     build_result.compiles = target_stat.compiles
+    build_result.is_function_referenced = True
+    build_result.compile_error = target_stat.compile_error
+    build_result.compile_log = target_stat.compile_log
     return build_result
