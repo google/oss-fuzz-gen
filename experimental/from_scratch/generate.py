@@ -15,6 +15,7 @@
 """Module for generating harnesses in arbitrary projects."""
 
 import argparse
+import logging
 import os
 import sys
 from typing import Any, Optional, Tuple
@@ -24,6 +25,16 @@ from fuzz_introspector import commands as fi_commands
 
 from experiment import benchmark as benchmarklib
 from llm_toolkit import models, prompt_builder, prompts
+
+LOG_FMT = ('%(asctime)s.%(msecs)03d %(levelname)s '
+           '%(module)s - %(funcName)s: %(message)s')
+
+logging.basicConfig(
+    level=logging.INFO,
+    format=LOG_FMT,
+    datefmt='%Y-%m-%d %H:%M:%S',
+)
+logger = logging.getLogger(name=__name__)
 
 NUM_SAMPLES: int = 1
 TEMPERATURE: float = 1
@@ -140,11 +151,9 @@ def get_target_benchmark(
                                              out_dir='.',
                                              coverage_url='',
                                              report_name='report-name',
-                                             module_only=True)
+                                             module_only=True,
+                                             dump_files=False)
   project = report['light-project']
-
-  # Trigger some analysis
-  project.dump_module_logic(report_name='', dump_output=False)
 
   # Get target function
   if target_function_name:
