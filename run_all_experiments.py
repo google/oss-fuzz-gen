@@ -239,8 +239,7 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument(
       '-of',
       '--oss-fuzz-dir',
-      help=
-      'Path to OSS-Fuzz dir to use. If not set will create temporary directory.',
+      help='OSS-Fuzz dir path to use. Create temporary directory by default.',
       default='')
   parser.add_argument(
       '-g',

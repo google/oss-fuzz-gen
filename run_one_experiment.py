@@ -26,8 +26,6 @@ import logger
 import pipeline
 from agent.one_prompter import OnePrompter
 from agent.prototyper import Prototyper
-from data_prep import project_targets
-from data_prep.project_context.context_introspector import ContextRetriever
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
 from experiment import oss_fuzz_checkout, textcov
