@@ -26,6 +26,9 @@ RUN apt-get install -y ca-certificates gnupg lsb-release && \
     apt-get install -y docker-ce docker-ce-cli containerd.io \
     docker-buildx-plugin docker-compose-plugin
 
+# Install c++filt
+RUN apt-get install -y build-essential
+
 ENV DEBIAN_FRONTEND=dialog
 
 # Set the working directory
@@ -35,4 +38,5 @@ WORKDIR /workspace/ofg
 COPY requirements.txt /workspace/ofg/
 
 # Install Python dependencies
-RUN pip3.11 install --ignore-installed -r /workspace/ofg/requirements.txt
+RUN pip3.11 install --ignore-installed -r /workspace/ofg/requirements.txt && \
+    ln -sf /usr/bin/python3.11 /usr/bin/python3
