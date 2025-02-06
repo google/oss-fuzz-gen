@@ -24,9 +24,8 @@ from typing import List, Optional
 
 import logger
 import pipeline
+from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper
-from data_prep import project_targets
-from data_prep.project_context.context_introspector import ContextRetriever
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
 from experiment import oss_fuzz_checkout, textcov
@@ -260,84 +259,26 @@ def prepare(oss_fuzz_dir: str) -> None:
   oss_fuzz_checkout.postprocess_oss_fuzz()
 
 
-def generate_targets_for_analysis(
-    model: models.LLM,
-    benchmark: Benchmark,
-    work_dirs: WorkDirs,
-    template_dir: str,
-    use_context: bool,
-    example_pair: list[list[str]],
-    prompt_builder_to_use: str = 'DEFAULT',
-    cloud_experiment_bucket: str = '') -> List[str]:
-  """Generates a set of harnesses and build scripts ready to be evaluated
-    by `check_targets`. This is where the core first LLM logic is used to
-    generate harnesses.
-
-    Returns a list of folders with the generated artifacts.
-    """
-  logging.info('Generating targets')
-  if benchmark.use_project_examples:
-    project_examples = project_targets.generate_data(
-        benchmark.project,
-        benchmark.language,
-        cloud_experiment_bucket=cloud_experiment_bucket)
-  else:
-    project_examples = []
-
-  if use_context:
-    retriever = ContextRetriever(benchmark)
-    context_info = retriever.get_context_info()
-  else:
-    context_info = {}
-
-  # If this is a test benchmark then we will use a test prompt builder.
-  if benchmark.test_file_path:
-    logging.info('Generating a target for test case: %s',
-                 benchmark.test_file_path)
-    builder = prompt_builder.TestToHarnessConverter(model, benchmark,
-                                                    template_dir)
-  elif benchmark.language == 'jvm':
-    # For Java projects
-    builder = prompt_builder.DefaultJvmTemplateBuilder(model, benchmark,
-                                                       template_dir)
-  elif benchmark.language == 'python':
-    # For Python projects
-    builder = prompt_builder.DefaultPythonTemplateBuilder(
-        model, benchmark, template_dir)
-
-  elif benchmark.language == 'rust':
-    # For Rust projects
-    builder = prompt_builder.DefaultRustTemplateBuilder(model, benchmark,
-                                                        template_dir)
-
-  elif prompt_builder_to_use == 'CSpecific':
-    builder = prompt_builder.CSpecificBuilder(model, benchmark, template_dir)
-  else:
-    # Use default
-    builder = prompt_builder.DefaultTemplateBuilder(model, benchmark,
-                                                    template_dir)
-
-  prompt = builder.build(example_pair,
-                         project_example_content=project_examples,
-                         project_context_content=context_info)
-  prompt.save(work_dirs.prompt)
-
-  generated_targets = generate_targets(benchmark, model, prompt, work_dirs,
-                                       builder)
-  generated_targets = fix_code(work_dirs, generated_targets)
-  return generated_targets
-
-
 def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                       args: argparse.Namespace, work_dirs: WorkDirs,
                       trial: int) -> ExperimentResult:
   """Runs the predefined 3-stage pipeline for one trial."""
   trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
   trial_logger.info('Trial Starts')
-  p = pipeline.Pipeline(
-      args=args,
-      trial=trial,
-      writing_stage_agents=[Prototyper(trial=trial, llm=model)])
+  if args.agent:
+    p = pipeline.Pipeline(
+        args=args,
+        trial=trial,
+        writing_stage_agents=[Prototyper(trial=trial, llm=model, args=args)])
+  else:
+    p = pipeline.Pipeline(args=args,
+                          trial=trial,
+                          writing_stage_agents=[
+                              OnePromptPrototyper(trial=trial,
+                                                  llm=model,
+                                                  args=args)
+                          ])
+
   results = p.execute(result_history=[
       Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
   ])
@@ -368,24 +309,4 @@ def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
                     outdir=work_dirs.base,
                     out_basename='benchmark.yaml')
 
-  if args.agent:
-    # TODO(dongge): Make this default when it is ready.
-    return _fuzzing_pipelines(benchmark, model, args, work_dirs)
-
-  generated_targets = generate_targets_for_analysis(
-      model=model,
-      benchmark=benchmark,
-      work_dirs=work_dirs,
-      template_dir=args.template_directory,
-      use_context=args.context,
-      example_pair=prompt_builder.EXAMPLES.get(benchmark.language, []),
-      prompt_builder_to_use=args.prompt_builder,
-      cloud_experiment_bucket=args.cloud_experiment_bucket)
-
-  logging.info('Generated %d targets', len(generated_targets))
-  if not generated_targets:
-    return None
-
-  return check_targets(model.ai_binary, benchmark, work_dirs, generated_targets,
-                       args.cloud_experiment_name, args.cloud_experiment_bucket,
-                       args.run_timeout, model.name)
+  return _fuzzing_pipelines(benchmark, model, args, work_dirs)

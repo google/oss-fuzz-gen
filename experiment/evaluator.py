@@ -60,6 +60,8 @@ class Result:
   # TODO https://github.com/google/oss-fuzz-gen/issues/215
   is_driver_fuzz_err: bool = dataclasses.field(kw_only=True, default=False)
   driver_fuzz_err: str = dataclasses.field(kw_only=True, default='')
+  compile_error: str = ''
+  compile_log: str = ''
 
   def __post_init__(self, *args, **kwargs):  # pylint: disable=unused-argument
     if self.is_driver_fuzz_err:
@@ -473,9 +475,17 @@ class Evaluator:
                       f'{self.builder_runner.fixer_model_name} in '
                       f'{llm_fix_count} iterations of fixing.')
       return dual_logger.return_result(
-          Result(False, False, 0.0, 0.0, '', '', False,
+          Result(False,
+                 False,
+                 0.0,
+                 0.0,
+                 '',
+                 '',
+                 False,
                  SemanticCheckResult.NOT_APPLICABLE,
-                 TriageResult.NOT_APPLICABLE))
+                 TriageResult.NOT_APPLICABLE,
+                 compile_error=build_result.log_path,
+                 compile_log=build_result.log_path))
 
     dual_logger.log(f'Successfully built {target_path} with '
                     f'{self.builder_runner.fixer_model_name} in '
@@ -485,9 +495,17 @@ class Evaluator:
       dual_logger.log(
           f'Warning: no run result in {generated_oss_fuzz_project}.')
       return dual_logger.return_result(
-          Result(True, False, 0.0, 0.0, '', '', False,
+          Result(True,
+                 False,
+                 0.0,
+                 0.0,
+                 '',
+                 '',
+                 False,
                  SemanticCheckResult.NOT_APPLICABLE,
-                 TriageResult.NOT_APPLICABLE))
+                 TriageResult.NOT_APPLICABLE,
+                 compile_error=build_result.log_path,
+                 compile_log=build_result.log_path))
 
     # Triage the crash with LLM
     dual_logger.log(f'Triaging the crash related to {target_path} with '
@@ -505,18 +523,34 @@ class Evaluator:
           f'Warning: No cov info in run result of {generated_oss_fuzz_project}.'
       )
       return dual_logger.return_result(
-          Result(True, run_result.crashes, 0.0, 0.0, '', '',
-                 not run_result.succeeded, run_result.semantic_check.type,
-                 run_result.triage))
+          Result(True,
+                 run_result.crashes,
+                 0.0,
+                 0.0,
+                 '',
+                 '',
+                 not run_result.succeeded,
+                 run_result.semantic_check.type,
+                 run_result.triage,
+                 compile_error=build_result.log_path,
+                 compile_log=build_result.log_path))
 
     if not run_result.succeeded:
       dual_logger.log(f'Warning: Failed to fix semantic error '
                       f'{run_result.semantic_check.type}'
                       f' in {generated_oss_fuzz_project}.')
       return dual_logger.return_result(
-          Result(True, run_result.crashes, 0.0, 0.0,
-                 run_result.coverage_report_path, run_result.reproducer_path,
-                 True, run_result.semantic_check.type, run_result.triage))
+          Result(True,
+                 run_result.crashes,
+                 0.0,
+                 0.0,
+                 run_result.coverage_report_path,
+                 run_result.reproducer_path,
+                 True,
+                 run_result.semantic_check.type,
+                 run_result.triage,
+                 compile_error=build_result.log_path,
+                 compile_log=build_result.log_path))
 
     dual_logger.log(
         f'Result for {generated_oss_fuzz_project}: '
@@ -525,10 +559,18 @@ class Evaluator:
         f'coverage diff={coverage_diff} '
         f'({run_result.coverage.covered_lines}/{total_lines})')
     return dual_logger.return_result(
-        Result(True, run_result.crashes, coverage_percent, coverage_diff,
-               run_result.coverage_report_path, run_result.reproducer_path,
-               not run_result.succeeded, run_result.semantic_check.type,
-               run_result.triage, run_result.coverage))
+        Result(True,
+               run_result.crashes,
+               coverage_percent,
+               coverage_diff,
+               run_result.coverage_report_path,
+               run_result.reproducer_path,
+               not run_result.succeeded,
+               run_result.semantic_check.type,
+               run_result.triage,
+               run_result.coverage,
+               compile_error=build_result.log_path,
+               compile_log=build_result.log_path))
 
   def _load_existing_coverage_summary(self) -> dict:
     """Load existing summary.json."""
