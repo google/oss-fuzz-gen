@@ -31,7 +31,7 @@ class WorkDirs:
     if os.path.exists(self._base_dir) and not keep:
       # Clear existing directory.
       rmtree(self._base_dir, ignore_errors=True)
-
+    print(self.status)
     os.makedirs(self._base_dir, exist_ok=True)
     os.makedirs(self.status, exist_ok=True)
     os.makedirs(self.raw_targets, exist_ok=True)
