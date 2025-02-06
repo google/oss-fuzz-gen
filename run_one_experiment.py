@@ -24,7 +24,7 @@ from typing import List, Optional
 
 import logger
 import pipeline
-from agent.one_prompter import OnePrompter
+from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
@@ -271,10 +271,13 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
         trial=trial,
         writing_stage_agents=[Prototyper(trial=trial, llm=model, args=args)])
   else:
-    p = pipeline.Pipeline(
-        args=args,
-        trial=trial,
-        writing_stage_agents=[OnePrompter(trial=trial, llm=model, args=args)])
+    p = pipeline.Pipeline(args=args,
+                          trial=trial,
+                          writing_stage_agents=[
+                              OnePromptPrototyper(trial=trial,
+                                                  llm=model,
+                                                  args=args)
+                          ])
 
   results = p.execute(result_history=[
       Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)

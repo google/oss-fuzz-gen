@@ -32,7 +32,7 @@ from results import BuildResult, Result
 MAX_ROUND = 100
 
 
-class OnePrompter(BaseAgent):
+class OnePromptPrototyper(BaseAgent):
   """The Agent to generate a simple but valid fuzz target from scratch."""
 
   def _prompt_builder(self,
