@@ -119,34 +119,6 @@ def setup_model(args) -> models.LLM:
                           temperature=TEMPERATURE)
 
 
-def find_function_by_name(all_functions, target_function_name,
-                          only_exact_match):
-  """Helper function to find the matching function."""
-  for function in all_functions:
-    if function.name == target_function_name:
-      return function
-
-  if not only_exact_match:
-    for function in all_functions:
-      if target_function_name in function.name:
-        return function
-
-  return None
-
-
-def find_function_by_source_line(all_functions, target_source_file,
-                                 target_source_line):
-  """Helper function to find the matchin function by source
-  file and source file."""
-  for function in all_functions:
-    source_file = function.parent_source.source_file
-    if source_file.endswith(target_source_file):
-      if function.start_line <= target_source_line <= function.end_line:
-        return function
-
-  return None
-
-
 def get_target_benchmark(
     language, target_dir, target_function_name, only_exact_match,
     target_source_file, target_source_line
@@ -175,14 +147,12 @@ def get_target_benchmark(
 
   # Get target function
   if target_function_name:
-    function = find_function_by_name(project.all_functions,
-                                     target_function_name, only_exact_match)
+    function = project.find_function_by_name(target_function_name,
+                                             only_exact_match)
 
   elif target_source_file and target_source_line > 0:
-    function = find_function_by_source_line(project.all_functions,
-                                            target_source_file,
-                                            target_source_line)
-
+    function = project.get_function_by_source_suffix_line(
+        target_source_file, target_source_line)
   else:
     function = None
 
@@ -301,9 +271,7 @@ def get_far_reach_benchmarks(
     # Get target function
     target_function_name = target_function['function_name']
     if target_function_name:
-      function = find_function_by_name(project.all_functions,
-                                       target_function_name, True)
-
+      function = project.find_function_by_name(target_function_name, True)
     else:
       function = None
 
