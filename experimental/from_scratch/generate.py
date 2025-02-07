@@ -225,6 +225,9 @@ def construct_fuzz_prompt(model, benchmark, context,
   """Local benchmarker"""
   if language in ['c', 'c++']:
     builder = prompt_builder.DefaultTemplateBuilder(model, benchmark=benchmark)
+  elif language == 'rust':
+    builder = prompt_builder.DefaultRustTemplateBuilder(model,
+                                                        benchmark=benchmark)
   else:
     builder = prompt_builder.DefaultJvmTemplateBuilder(model,
                                                        benchmark=benchmark)
@@ -264,6 +267,8 @@ def introspector_lang_to_entrypoint(language: str) -> str:
     return 'LLVMFuzzerTestOneInput'
   elif language == 'jvm':
     return 'fuzzerTestOneInput'
+  elif language == 'rust':
+    return 'fuzz_target'
   else:
     # Not supporting other language yet
     return ''
@@ -371,6 +376,8 @@ def get_introspector_language(args) -> str:
     return 'c++'
   elif args.language in ['jvm', 'java']:
     return 'jvm'
+  elif args.language in ['rs', 'rust']:
+    return 'rust'
   else:
     print(f'Language {args.language} not support. Exiting.')
     sys.exit(0)
