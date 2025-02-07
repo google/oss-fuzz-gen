@@ -47,7 +47,7 @@ python3 -m experimental.from_scratch.generate \
 
 # Show harness
 cat responses_cpp/01.rawoutput
-```
+"""
 #include <stdio.h>
 #include <string.h>
 
@@ -71,10 +71,10 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     free(datestr);
     return 0;
 }
-```
+"""
 
 cat responses_java/01.rawoutput
-```java
+"""
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import org.json.JSONArray;
 
@@ -104,4 +104,6 @@ public class JSONArray {
         }
     }
 }
+"""
 ```
+
