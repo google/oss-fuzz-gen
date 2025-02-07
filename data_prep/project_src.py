@@ -235,9 +235,9 @@ def _copy_project_src_from_local(project: str, out: str, language: str):
     # Sometimes the previous container need longer time to delete
     # If the next docker run is invoked before the previous container
     # completely removed, it will resulti n Conflict error.
-    # Sleep for 60 seconds and retry.
-    logger.warning('Failed to run OSS-Fuzz on %s, retry in 60 sec', project)
-    time.sleep(60)
+    # Sleep for 180 seconds and retry.
+    logger.warning('Failed to run OSS-Fuzz on %s, retry in 180 sec', project)
+    time.sleep(180)
     result = sp.run(run_container,
                     capture_output=True,
                     stdin=sp.DEVNULL,
