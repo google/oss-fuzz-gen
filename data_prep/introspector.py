@@ -885,14 +885,13 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         print(src_file)
         print(src_path_list)
         if not any(src_path.endswith(src_file) for src_path in src_path_list):
-#        if not src_file in src_path_list:
-          logger.error('errora: %s %s', filename, interesting.keys())
+          logger.error('error: %s %s', filename, interesting.keys())
           continue
 
     elif (language not in ['rust', 'jvm'] and interesting and
           filename not in [os.path.basename(i) for i in interesting.keys()]):
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
-      logger.error('errorb: %s %s', filename, interesting.keys())
+      logger.error('error: %s %s', filename, interesting.keys())
       continue
 
     function_signature = get_function_signature(function, project)
