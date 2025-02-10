@@ -195,6 +195,20 @@ class BuilderRunner:
 
     return min_func_name in generated_code
 
+  def _contains_target_go_function(self, target_path: str) -> bool:
+    """Validates if the LLM-generated code contains the target function for
+    go projects."""
+    with open(target_path) as generated_code_file:
+      generated_code = generated_code_file.read()
+
+    min_func_name = self._get_minimum_func_name(
+        self.benchmark.function_signature)
+
+    # Retrieve function name only without packages
+    min_func_name = min_func_name.rsplit('.', 1)[-1]
+
+    return min_func_name in generated_code
+
   def _pre_build_check(self, target_path: str,
                        build_result: BuildResult) -> bool:
     """Checks the generated target before building and running it."""
@@ -204,6 +218,8 @@ class BuilderRunner:
       result = self._contains_target_jvm_method(target_path)
     elif self.benchmark.language == 'python':
       result = self._contains_target_python_function(target_path)
+    elif self.benchmark.language == 'go':
+      result = self._contains_target_go	_function(target_path)
     else:
       result = self._contains_target_function(target_path)
 
@@ -483,7 +499,7 @@ class BuilderRunner:
                                                      benchmark_log_path)
 
     # Copy err.log into work dir (Ignored for JVM projects)
-    if language != 'jvm':
+    if language not in ['jvm', 'rust', 'go']:
       try:
         shutil.copyfile(
             os.path.join(get_build_artifact_dir(generated_project, "workspace"),
@@ -514,7 +530,8 @@ class BuilderRunner:
       # In many case JVM/python projects won't have much cov
       # difference in short running. Adding the flag for JVM/python
       # projects to temporary skip the checking of coverage change.
-      flag = not self.benchmark.language in ['jvm', 'python']
+      # Also skipping for rust/golang projects in initial implementation.
+      flag = not self.benchmark.language in ['jvm', 'python', 'rust', 'go']
       run_result.cov_pcs, run_result.total_pcs, \
         run_result.crashes, run_result.crash_info, \
           run_result.semantic_check = \
@@ -683,7 +700,8 @@ class BuilderRunner:
         'jvm': 'jacoco.xml',
         'python': 'all_cov.json',
         'c++': f'{self.benchmark.target_name}.covreport',
-        'c': f'{self.benchmark.target_name}.covreport'
+        'c': f'{self.benchmark.target_name}.covreport',
+        'go': 'fuzz.cov',
     }
 
     return os.path.join(get_build_artifact_dir(project_name,
@@ -699,6 +717,7 @@ class BuilderRunner:
         'python': 'r',
         'c': 'rb',
         'c++': 'rb',
+        'go': 'r',
     }
     with open(local_textcov_location,
               language_modes.get(self.benchmark.language, 'rb')) as f:
@@ -706,6 +725,8 @@ class BuilderRunner:
         new_textcov = textcov.Textcov.from_jvm_file(f)
       elif self.benchmark.language == 'python':
         new_textcov = textcov.Textcov.from_python_file(f)
+      elif self.benchmark.language == 'go':
+        new_textcov = textcov.Textcov.from_go_file(f)
       else:
         target_basename = os.path.basename(self.benchmark.target_path)
         new_textcov = textcov.Textcov.from_file(
@@ -1081,6 +1102,8 @@ class CloudBuilderRunner(BuilderRunner):
       return f'{coverage_name}/textcov_reports/jacoco.xml'
     if self.benchmark.language == 'python':
       return f'{coverage_name}/textcov_reports/all_cov.json'
+    if self.benchmark.language == 'go':
+      return f'{coverage_name}/textcov_reports/fuzz.cov'
 
     return (f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
             '.covreport')

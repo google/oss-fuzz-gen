@@ -307,6 +307,12 @@ def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
           interesting_filepaths.append(path)
         if path.endswith('.py'):
           potential_harnesses.append(path)
+      elif language == 'go':
+        # For Rust
+        if path.endswith(tuple(interesting_filenames)):
+          interesting_filepaths.append(path)
+        if path.endswith(('.go', '.cgo')):
+          potential_harnesses.append(path)
       else:
         # For C/C++
         short_path = path[len(out):]

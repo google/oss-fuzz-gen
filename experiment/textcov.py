@@ -292,6 +292,14 @@ class Textcov:
     return textcov
 
   @classmethod
+  def from_go_file(cls, file_hnadle) -> Textcov:
+    """Read a textcov from a fuzz.cov file for golang project."""
+    textcov = cls()
+    textcov.language = 'go'
+
+    return textcov
+
+  @classmethod
   def from_jvm_file(cls, file_handle) -> Textcov:
     """Read a textcov from a jacoco.xml file."""
     textcov = cls()
