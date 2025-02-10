@@ -141,12 +141,14 @@ def get_target_benchmark(
     for analysis in introspector_project.optional_analyses:
       logger.info(analysis.name)
       if analysis.name == 'FarReachLowCoverageAnalyser':
-        logger.info(analysis.get_json_string_result())
+        pass
+#        logger.info(analysis.get_json_string_result())
   else:
     logger.info('Did not find any introspector project')
 
   # Get target function
   if target_function_name:
+    print(type(project))
     function = project.find_function_by_name(target_function_name,
                                              only_exact_match)
 
@@ -195,6 +197,9 @@ def construct_fuzz_prompt(model, benchmark, context,
   """Local benchmarker"""
   if language in ['c', 'c++']:
     builder = prompt_builder.DefaultTemplateBuilder(model, benchmark=benchmark)
+  elif language == 'go':
+    builder = prompt_builder.DefaultGoTemplateBuilder(model,
+                                                      benchmark=benchmark)
   else:
     builder = prompt_builder.DefaultJvmTemplateBuilder(model,
                                                        benchmark=benchmark)
@@ -235,7 +240,7 @@ def introspector_lang_to_entrypoint(language: str) -> str:
   elif language == 'jvm':
     return 'fuzzerTestOneInput'
   else:
-    # Not supporting other language yet
+    # Other supported languages have no fixed entry point
     return ''
 
 
@@ -339,6 +344,8 @@ def get_introspector_language(args) -> str:
     return 'c++'
   elif args.language in ['jvm', 'java']:
     return 'jvm'
+  elif args.language in ['go', 'cgo']:
+    return 'go'
   else:
     print(f'Language {args.language} not support. Exiting.')
     sys.exit(0)
