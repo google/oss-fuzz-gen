@@ -30,10 +30,10 @@ class BaseStage(ABC):
     self.agents.append(agent)
     return self
 
-  def get_agent(self, agent_name: str = '') -> BaseAgent:
+  def get_agent(self, index: int = 0, agent_name: str = '') -> BaseAgent:
     """Finds the agent by its name."""
     if not agent_name:
-      return self.agents[0]
+      return self.agents[index]
     for agent in self.agents:
       if agent.name == agent_name:
         return agent
