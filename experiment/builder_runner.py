@@ -216,8 +216,8 @@ class BuilderRunner:
            f'`{self.benchmark.function_signature}` INSIDE FUNCTION '
            '`LLVMFuzzerTestOneInput`.')
       ]
-      logger.info('Missing target function: %s does not contain %s',
-                  target_path, self.benchmark.function_signature)
+      logger.warning('Missing target function: %s does not contain %s',
+                     target_path, self.benchmark.function_signature)
 
     return result
 
@@ -451,18 +451,20 @@ class BuilderRunner:
       target_path: str,
       iteration: int,
       language: str,
-      cloud_build_tags: Optional[list[str]] = None
+      cloud_build_tags: Optional[list[str]] = None,
+      trial: int = 0,
   ) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target for fuzzing."""
     del cloud_build_tags
     build_result = BuildResult()
 
     if not self._pre_build_check(target_path, build_result):
+      logger.warning('Pre-build check failure: %s', build_result)
       return build_result, None
 
     try:
       return self.build_and_run_local(generated_project, target_path, iteration,
-                                      build_result, language)
+                                      build_result, language, trial)
     except Exception as err:
       logger.warning(
           'Error occurred when building and running fuzz target locally'
@@ -470,9 +472,14 @@ class BuilderRunner:
       raise err
 
   def build_and_run_local(
-      self, generated_project: str, target_path: str, iteration: int,
+      self,
+      generated_project: str,
+      target_path: str,
+      iteration: int,
       build_result: BuildResult,
-      language: str) -> tuple[BuildResult, Optional[RunResult]]:
+      language: str,
+      trial: int = 0,
+  ) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target locally for fuzzing."""
     project_name = self.benchmark.project
     benchmark_target_name = os.path.basename(target_path)
@@ -502,12 +509,14 @@ class BuilderRunner:
     # Make the rest lines in an independent function.
     run_result = RunResult()
 
-    self.run_target_local(
-        generated_project, benchmark_target_name,
-        self.work_dirs.run_logs_target(benchmark_target_name, iteration))
+    # run_log_path = self.work_dirs.run_logs_target(benchmark_target_name,
+    #                                               iteration)
+    run_log_path = os.path.join(self.work_dirs.run_logs, f'{trial:02d}.log')
+    self.run_target_local(generated_project, benchmark_target_name,
+                          run_log_path)
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
         generated_project, benchmark_target_name))
-
+    run_result.log_path = run_log_path
     # Parse libfuzzer logs to get fuzz target runtime details.
     with open(self.work_dirs.run_logs_target(benchmark_target_name, iteration),
               'rb') as f:
@@ -590,8 +599,8 @@ class BuilderRunner:
                stdout=log_file,
                stderr=sp.STDOUT,
                check=True)
-      except sp.CalledProcessError:
-        logger.info('Failed to build image for %s', generated_project)
+      except sp.CalledProcessError as e:
+        logger.info('Failed to build image for %s: %s', generated_project, e)
         return False
 
     outdir = get_build_artifact_dir(generated_project, 'out')
@@ -848,17 +857,19 @@ class CloudBuilderRunner(BuilderRunner):
       target_path: str,
       iteration: int,
       language: str,
-      cloud_build_tags: Optional[list[str]] = None
+      cloud_build_tags: Optional[list[str]] = None,
+      trial: int = 0,
   ) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target for fuzzing."""
     build_result = BuildResult()
-
     if not self._pre_build_check(target_path, build_result):
+      logger.warning('Pre-build check failure: %s', build_result)
       return build_result, None
 
     try:
       return self.build_and_run_cloud(generated_project, target_path, iteration,
-                                      build_result, language, cloud_build_tags)
+                                      build_result, language, cloud_build_tags,
+                                      trial)
     except Exception as err:
       logger.warning(
           'Error occurred when building and running fuzz target on cloud'
@@ -873,7 +884,8 @@ class CloudBuilderRunner(BuilderRunner):
       iteration: int,
       build_result: BuildResult,
       language: str,
-      cloud_build_tags: Optional[list[str]] = None
+      cloud_build_tags: Optional[list[str]] = None,
+      trial: int = 0,
   ) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target locally for fuzzing."""
     logger.info('Evaluating %s on cloud.', os.path.realpath(target_path))
@@ -972,8 +984,8 @@ class CloudBuilderRunner(BuilderRunner):
     # TODO(Dongge): Split Builder and Runner:
     # Set build_result.succeeded based on existence of fuzz target binary.
     # Separate the rest lines into an independent function.
-    with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
-              'wb') as f:
+    run_log_path = os.path.join(self.work_dirs.run_logs, f'{trial:02d}.log')
+    with open(run_log_path, 'wb') as f:
       blob = bucket.blob(run_log_name)
       if blob.exists():
         build_result.succeeded = True
