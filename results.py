@@ -4,6 +4,7 @@ from typing import Any, Optional
 
 from experiment import textcov
 from experiment.benchmark import Benchmark
+from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
 
 
@@ -194,6 +195,39 @@ class CoverageResult(RunResult):
   coverage_percentage: float
   coverage_reports: dict[str, str]  # {source_file: coverage_report_content}
   insight: str  # Reason and fixes for low coverage
+
+
+class AnalysisResult(Result):
+  """Analysis of the fuzzing run-time result."""
+  run_result: RunResult
+  semantic_result: SemanticCheckResult
+  crash_result: Optional[CrashResult]
+  coverage_result: Optional[CoverageResult]
+
+  def __init__(self,
+               run_result: RunResult,
+               semantic_result: SemanticCheckResult,
+               crash_result: Optional[CrashResult] = None,
+               coverage_result: Optional[CoverageResult] = None) -> None:
+    super().__init__(run_result.benchmark, run_result.trial,
+                     run_result.work_dirs, run_result.fuzz_target_source,
+                     run_result.build_script_source, run_result.author,
+                     run_result.chat_history)
+    self.run_result = run_result
+    self.semantic_result = semantic_result
+    self.crash_result = crash_result
+    self.coverage_result = coverage_result
+
+  def to_dict(self) -> dict:
+    return super().to_dict() | {
+        'semantic_result': self.semantic_result.to_dict(),
+        'crash_result': self.crash_result,
+        'coverage_result': self.coverage_result,
+    }
+
+  @property
+  def success(self):
+    return not self.semantic_result.has_err
 
 
 class ExperimentResult:
