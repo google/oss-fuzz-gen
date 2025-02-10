@@ -24,8 +24,10 @@ from typing import List, Optional
 
 import logger
 import pipeline
+from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper
+from agent.semantic_analyzer import SemnaticAnalyzer
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
 from experiment import oss_fuzz_checkout, textcov
@@ -276,7 +278,15 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                           writing_stage_agents=[
                               OnePromptPrototyper(trial=trial,
                                                   llm=model,
-                                                  args=args)
+                                                  args=args),
+                              OnePromptEnhancer(trial=trial,
+                                                llm=model,
+                                                args=args),
+                          ],
+                          analysis_stage_agents=[
+                              SemnaticAnalyzer(trial=trial,
+                                               llm=model,
+                                               args=args)
                           ])
 
   results = p.execute(result_history=[
