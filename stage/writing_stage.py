@@ -25,7 +25,7 @@ class WritingStage(BaseStage):
 
   def _refine_given_fuzz_targets(self, result_history: list[Result]) -> Result:
     """Writes a new fuzz target."""
-    return self.get_agent('Enhancer').execute(result_history)
+    return self.get_agent(index=1).execute(result_history)
 
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the writing stage."""
