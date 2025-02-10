@@ -172,10 +172,10 @@ class File:
 class Textcov:
   """Textcov."""
   # Function name -> Function object.
-  # For JVM / C / C++
+  # For JVM / C / C++ / Rust
   functions: dict[str, Function] = dataclasses.field(default_factory=dict)
   # File name -> File object.
-  # For Python
+  # For Python / Go
   files: dict[str, File] = dataclasses.field(default_factory=dict)
   language: str = 'c++'
 
@@ -296,6 +296,38 @@ class Textcov:
     """Read a textcov from a fuzz.cov file for golang project."""
     textcov = cls()
     textcov.language = 'go'
+    line_coverage = {}
+
+    # Extract the fuzz.cov coverage line information
+    cov_line = file_handle.readlines()[1:]
+
+    # Process line coverage from fuzz.cov
+    # Line format
+    # <file>:<start_line>.<start_col>,<end_line>.<end_col> <stmts_count> <hit>
+    for line in cov_line:
+      file_name, data = line.split(':', 1)
+      line_split = re.split('[:., ]', data)
+      start_line = int(line_split[0])
+      end_line = int(line_split[2])
+      hit_count = int(line_split[5])
+
+      # Process line coverage information
+      line_dict = line_coverage.get(file_name, {})
+      for count in range(start_line, end_line + 1):
+        hit_count = max(hit_count, line_dict.get(count, -1))
+        line_dict[count] = hit_count
+
+      line_coverage[file_name] = line_dict
+
+    # Process coverage per file
+    for file_name, line_dict = line_coverage.items():
+      current_file = File(name=file_name)
+
+      for line_no, hit_count in line_dict.items():
+        line = f'Line{line_no}'
+        current_file.lines[line] = Line(contents=line, hit_count=hit_count)
+
+      textcov.files[filename] = current_file
 
     return textcov
 
