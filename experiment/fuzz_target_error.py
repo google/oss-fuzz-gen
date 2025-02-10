@@ -163,3 +163,12 @@ class SemanticCheckResult:
   @property
   def has_err(self) -> bool:
     return self.type not in (self.NOT_APPLICABLE, self.NO_SEMANTIC_ERR)
+
+  def to_dict(self):
+    return {
+        'has_err': self.has_err,
+        'err_type': self.type,
+        'crash_symptom': self.crash_symptom,
+        'crash_stacks': self.crash_stacks,
+        'crash_func': self.crash_func,
+    }
