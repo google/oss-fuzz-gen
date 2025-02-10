@@ -42,7 +42,8 @@ class SemanticCheckResult:
   #  e.g. ERROR: AddressSanitizer: attempting use-after-free on xxx
   #  e.g. ERROR: AddressSanitizer: attempting stack-overflow on xxx
   #  e.g. ERROR: AddressSanitizer: attempting negative-size-param on xxx
-  # Full list here: https://github.com/occia/fuzzdrivergpt/blob/35b0e957a61be8bd506017cda621a50e75f5acdb/validation/libVR.py#L466-L485.
+  # Full list here:
+  # https://github.com/occia/fuzzdrivergpt/blob/35b0e957a61be8bd506017cda621a50e75f5acdb/validation/libVR.py#L466-L485.
   SYMPTOM_ASAN = re.compile(r'ERROR: AddressSanitizer: (.*)\n')
   # Matches 'ERROR: libFuzzer: timeout after xxx'
   SYMPTOM_LIBFUZZER = re.compile(r'ERROR: libFuzzer: (.*)\n')
