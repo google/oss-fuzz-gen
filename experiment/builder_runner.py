@@ -219,7 +219,7 @@ class BuilderRunner:
     elif self.benchmark.language == 'python':
       result = self._contains_target_python_function(target_path)
     elif self.benchmark.language == 'go':
-      result = self._contains_target_go	_function(target_path)
+      result = self._contains_target_go_function(target_path)
     else:
       result = self._contains_target_function(target_path)
 
