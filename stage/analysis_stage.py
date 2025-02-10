@@ -15,5 +15,6 @@ class AnalysisStage(BaseStage):
   been sufficiently covered."""
 
   def execute(self, result_history: list[Result]) -> Result:
-    # A placeholder for now.
-    return result_history[-1]
+    self.logger.info('Analysis Stage')
+    agent = self.get_agent()
+    return agent.execute(result_history)
