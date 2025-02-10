@@ -141,8 +141,7 @@ def get_target_benchmark(
     for analysis in introspector_project.optional_analyses:
       logger.info(analysis.name)
       if analysis.name == 'FarReachLowCoverageAnalyser':
-        pass
-#        logger.info(analysis.get_json_string_result())
+        logger.info(analysis.get_json_string_result())
   else:
     logger.info('Did not find any introspector project')
 
