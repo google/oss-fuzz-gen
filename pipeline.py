@@ -4,7 +4,7 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
-from results import BuildResult, Result
+from results import AnalysisResult, BuildResult, Result
 from stage.analysis_stage import AnalysisStage
 from stage.execution_stage import ExecutionStage
 from stage.writing_stage import WritingStage
@@ -26,7 +26,7 @@ class Pipeline():
                args: argparse.Namespace,
                trial: int,
                writing_stage_agents: Optional[list[BaseAgent]] = None,
-               evaluation_stage_agents: Optional[list[BaseAgent]] = None,
+               execution_stage_agents: Optional[list[BaseAgent]] = None,
                analysis_stage_agents: Optional[list[BaseAgent]] = None):
     self.args = args
     self.trial = trial
@@ -35,15 +35,34 @@ class Pipeline():
     self.writing_stage: WritingStage = WritingStage(args, trial,
                                                     writing_stage_agents)
     self.execution_stage: ExecutionStage = ExecutionStage(
-        args, trial, evaluation_stage_agents)
+        args, trial, execution_stage_agents)
     self.analysis_stage: AnalysisStage = AnalysisStage(args, trial,
                                                        analysis_stage_agents)
 
-  def _terminate(self, result_history: list[Result]) -> bool:
+  def _terminate(self, result_history: list[Result], cycle_count: int) -> bool:
     """Validates if the termination conditions have been satisfied."""
-    conditions = bool(result_history and len(result_history) > 1)
-    self.logger.info('termination condition met: %s', conditions)
-    return conditions
+    if cycle_count == 1:
+      return False
+
+    last_result = result_history[-1]
+    if cycle_count > 5:
+      self.logger.warning('[Cycle %d] Terminate after 5 cycles: %s',
+                          cycle_count, result_history)
+      return True
+
+    if not isinstance(last_result, AnalysisResult):
+      self.logger.error('[Cycle %d] Last result is not AnalysisResult: %s',
+                        cycle_count, result_history)
+      return True
+
+    if last_result.success:
+      self.logger.info('[Cycle %d] Generation succeeds: %s', cycle_count,
+                       result_history)
+      return True
+
+    self.logger.info('[Cycle %d] Generation continues: %s', cycle_count,
+                     result_history)
+    return False
 
   def _execute_one_cycle(self, result_history: list[Result],
                          cycle_count: int) -> None:
@@ -61,6 +80,9 @@ class Pipeline():
     result_history.append(
         self.execution_stage.execute(result_history=result_history))
 
+    result_history.append(
+        self.analysis_stage.execute(result_history=result_history))
+
     self.logger.info('Cycle %d final result is %s', cycle_count,
                      result_history[-1])
 
@@ -76,7 +98,8 @@ class Pipeline():
     """
     self.logger.debug('Pipeline starts')
     cycle_count = 1
-    while not self._terminate(result_history=result_history):
+    while not self._terminate(result_history=result_history,
+                              cycle_count=cycle_count):
       self._execute_one_cycle(result_history=result_history,
                               cycle_count=cycle_count)
       cycle_count += 1
