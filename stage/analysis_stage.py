@@ -17,4 +17,10 @@ class AnalysisStage(BaseStage):
   def execute(self, result_history: list[Result]) -> Result:
     self.logger.info('Analysis Stage')
     agent = self.get_agent()
-    return agent.execute(result_history)
+    analysis_result = agent.execute(result_history)
+
+    # TODO(dongge): Save logs and more info into workdir.
+    self.logger.write_chat_history(analysis_result)
+    self.logger.debug('Analysis stage completed with with result:\n%s',
+                      analysis_result)
+    return analysis_result

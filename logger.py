@@ -25,7 +25,7 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
 
   def write_to_file(self, file_path: str, file_content: str) -> None:
     """Writes the |file_content| into a local |file_path|."""
-    with open(file_path, 'w') as file:
+    with open(file_path, 'a') as file:
       file.writelines(file_content)
 
   def write_fuzz_target(self, result: Result) -> None:

@@ -21,12 +21,9 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
-from data_prep import project_targets
-from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.fuzz_target_error import SemanticCheckResult
-from llm_toolkit import prompt_builder
 from llm_toolkit.prompts import Prompt
-from results import AnalysisResult, BuildResult, CrashResult, Result, RunResult
+from results import AnalysisResult, Result, RunResult
 
 # Regex for extract function name.
 FUNC_NAME = re.compile(r'(?:^|\s|\b)([\w:]+::)*(\w+)(?:<[^>]*>)?(?=\(|$)')
@@ -72,6 +69,7 @@ class SemnaticAnalyzer(BaseAgent):
 
     analysis_result = AnalysisResult(run_result=last_result,
                                      semantic_result=semantic_result)
+    analysis_result.chat_history = {self.name: semantic_result.to_dict()}
     return analysis_result
 
   def _parse_libfuzzer_logs(self,
