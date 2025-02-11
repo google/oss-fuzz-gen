@@ -32,7 +32,8 @@ from experiment.workdir import WorkDirs
 
 MAX_RUN_LOGS_LEN = 16 * 1024
 
-TARGET_EXTS = project_src.SEARCH_EXTS + ['.java', '.py'] + ['.fuzz_target']
+TARGET_EXTS = project_src.SEARCH_EXTS + ['.java', '.py', '.go', '.cgo'
+                                        ] + ['.fuzz_target']
 
 _CHAT_PROMPT_START_MARKER = re.compile(r'<CHAT PROMPT:ROUND\s+\d+>')
 _CHAT_PROMPT_END_MARKER = re.compile(r'</CHAT PROMPT:ROUND\s+\d+>')

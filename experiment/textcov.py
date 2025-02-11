@@ -141,7 +141,7 @@ class Function:
 
 @dataclasses.dataclass
 class File:
-  """Represents a file in a textcov, only for Python."""
+  """Represents a file in a textcov, only for Python / Golang."""
   name: str = ''
   # Line contents -> Line object. We key on line contents to account for
   # potential line number movements.
@@ -427,7 +427,7 @@ class Textcov:
     """Writes covered functions/files and lines to |filename|."""
     file_content = ''
 
-    if self.language == 'python':
+    if self.language in ['python', 'go']:
       target = self.files
     else:
       target = self.functions
@@ -447,7 +447,7 @@ class Textcov:
     if self.language != other.language and self.language == 'c++':
       self.language = other.language
 
-    if self.language == 'python':
+    if self.language in ['python', 'go']:
       for file in other.files.values():
         if file.name not in self.files:
           self.files[file.name] = File(name=file.name)
@@ -460,7 +460,7 @@ class Textcov:
 
   def subtract_covered_lines(self, other: Textcov):
     """Diff another textcov"""
-    if self.language == 'python':
+    if self.language in ['python', 'go']:
       for file in other.files.values():
         if file.name in self.files:
           self.files[file.name].subtract_covered_lines(file)
@@ -472,14 +472,14 @@ class Textcov:
 
   @property
   def covered_lines(self):
-    if self.language == 'python':
+    if self.language in ['python', 'go']:
       return sum(f.covered_lines for f in self.files.values())
 
     return sum(f.covered_lines for f in self.functions.values())
 
   @property
   def total_lines(self):
-    if self.language == 'python':
+    if self.language in ['python', 'go']:
       return sum(len(f.lines) for f in self.files.values())
 
     return sum(len(f.lines) for f in self.functions.values())

@@ -97,6 +97,11 @@ def _get_harness(src_file: str, out: str, language: str) -> tuple[str, str]:
   if language.lower() == 'python' and 'atheris.Fuzz()' not in content:
     return '', ''
 
+  if language.lower() == 'go' and any(
+      target not in content for target in ['testing.F', 'testing.T', '.Fuzz']):
+    return '', ''
+
+
   short_path = src_file[len(out):]
   return short_path, content
 
