@@ -238,6 +238,16 @@ def extract_error_message(log_path: str, project_target_basename: str,
     # A more accurate way to extract the error message.
     log_lines = log_file.readlines()
 
+  errors = extract_error_from_lines(log_lines, project_target_basename,
+                                    language)
+  if not errors:
+    logger.warning('Failed to parse error message from %s.', log_path)
+  return errors
+
+
+def extract_error_from_lines(log_lines: list[str], project_target_basename: str,
+                             language: str) -> list[str]:
+  """Extracts error message and its context from the file in |log_path|."""
   # Error message extraction for Java projects
   if language == 'jvm':
     started = False
@@ -302,8 +312,6 @@ def extract_error_message(log_path: str, project_target_basename: str,
         line.rstrip()
         for line in log_lines[error_lines_range[0]:error_lines_range[1] + 1])
 
-  if not errors:
-    logger.warning('Failed to parse error message from %s.', log_path)
   return group_error_messages(errors)
 
 
@@ -448,9 +456,9 @@ def apply_llm_fix(ai_binary: str,
   else:
     builder = prompt_builder.DefaultTemplateBuilder(fixer_model)
 
-    context = _collect_context(benchmark, errors)
-    instruction = _collect_instructions(benchmark, errors,
-                                        fuzz_target_source_code)
+    context = collect_context(benchmark, errors)
+    instruction = collect_instructions(benchmark, errors,
+                                       fuzz_target_source_code)
     prompt = builder.build_fixer_prompt(benchmark, fuzz_target_source_code,
                                         error_desc, errors, context,
                                         instruction)
@@ -459,8 +467,8 @@ def apply_llm_fix(ai_binary: str,
   fixer_model.query_llm(prompt, response_dir)
 
 
-def _collect_context(benchmark: benchmarklib.Benchmark,
-                     errors: list[str]) -> str:
+def collect_context(benchmark: benchmarklib.Benchmark,
+                    errors: list[str]) -> str:
   """Collects the useful context to fix the errors."""
   if not errors:
     return ''
@@ -483,8 +491,8 @@ def _collect_context_no_member(benchmark: benchmarklib.Benchmark,
   return ci.get_type_def(target_type)
 
 
-def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
-                          fuzz_target_source_code: str) -> str:
+def collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
+                         fuzz_target_source_code: str) -> str:
   """Collects the useful instructions to fix the errors."""
   if not errors:
     return ''
