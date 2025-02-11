@@ -93,12 +93,6 @@ class OnePromptPrototyper(BaseAgent):
 
     return prompt
 
-  def _read_from_file(self, file_path: str) -> str:
-    """Reads the file content from a local |file_path|."""
-    with open(file_path, 'r') as file:
-      file_lines = file.readlines()
-    return '\n'.join(file_lines)
-
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
     last_result = result_history[-1]
