@@ -67,9 +67,11 @@ class SemnaticAnalyzer(BaseAgent):
       _, _, _, _, semantic_result = self._parse_libfuzzer_logs(
           fuzzer_log, last_result.benchmark.project)
 
-    analysis_result = AnalysisResult(run_result=last_result,
-                                     semantic_result=semantic_result)
-    analysis_result.chat_history = {self.name: semantic_result.to_dict()}
+    analysis_result = AnalysisResult(
+        author=repr(self),
+        run_result=last_result,
+        semantic_result=semantic_result,
+        chat_history={self.name: semantic_result.to_dict()})
     return analysis_result
 
   def _parse_libfuzzer_logs(self,
