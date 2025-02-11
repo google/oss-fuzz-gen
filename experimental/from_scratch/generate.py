@@ -104,10 +104,9 @@ def check_args(args) -> bool:
       not args.source_line):
     return True
 
-  print(
-      'You must include either:\n (1) target function name by --function;\n '
-      '(2) target source file and line number by --source-file and '
-      '--source-line;\n (3) --far-reach')
+  print('You must include either:\n (1) target function name by --function;\n '
+        '(2) target source file and line number by --source-file and '
+        '--source-line;\n (3) --far-reach')
   return False
 
 
@@ -339,15 +338,15 @@ def get_introspector_language(args) -> str:
   """Gets the language in introspector style from the CLI args."""
   if args.language == 'c':
     return 'c'
-  elif args.language in ['c++', 'cpp']:
+  if args.language in ['c++', 'cpp']:
     return 'c++'
-  elif args.language in ['jvm', 'java']:
+  if args.language in ['jvm', 'java']:
     return 'jvm'
-  elif args.language in ['go', 'cgo']:
+  if args.language in ['go', 'cgo']:
     return 'go'
-  else:
-    print(f'Language {args.language} not support. Exiting.')
-    sys.exit(0)
+
+  print(f'Language {args.language} not support. Exiting.')
+  sys.exit(0)
 
 
 def generate_far_reach_targets(args):
