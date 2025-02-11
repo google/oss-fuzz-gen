@@ -204,6 +204,15 @@ class Benchmark:
       # zipp-zipp.difference.
       self.id = self.id.replace('._', '.')
 
+    if self.language == 'go':
+      # For golang projects, full signature of functions/methods can contains
+      # special characters that result in confusion in the directory name of
+      # benchmarks.
+      self.id = self.id.replace('*', '').replace('&', '')
+      self.id = self.id.replace('<', '').replace('>', '')
+      self.id = self.id.replace('[', '').replace(']', '')
+      self.id = self.id.replace('(', '_').replace(')', '').replace(',', '_')
+
   def __str__(self):
     return (f'Benchmark<id={self.id}, project={self.project}, '
             f'language={self.language}, '
