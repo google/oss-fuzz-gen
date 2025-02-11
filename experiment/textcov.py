@@ -320,7 +320,7 @@ class Textcov:
       line_coverage[file_name] = line_dict
 
     # Process coverage per file
-    for file_name, line_dict = line_coverage.items():
+    for file_name, line_dict in line_coverage.items():
       current_file = File(name=file_name)
 
       for line_no, hit_count in line_dict.items():
