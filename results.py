@@ -205,21 +205,22 @@ class AnalysisResult(Result):
   coverage_result: Optional[CoverageResult]
 
   def __init__(self,
+               author: str,
                run_result: RunResult,
                semantic_result: SemanticCheckResult,
                crash_result: Optional[CrashResult] = None,
-               coverage_result: Optional[CoverageResult] = None) -> None:
+               coverage_result: Optional[CoverageResult] = None,
+               chat_history: Optional[dict] = None) -> None:
     super().__init__(run_result.benchmark, run_result.trial,
                      run_result.work_dirs, run_result.fuzz_target_source,
-                     run_result.build_script_source, run_result.author,
-                     run_result.chat_history)
+                     run_result.build_script_source, author, chat_history)
     self.run_result = run_result
     self.semantic_result = semantic_result
     self.crash_result = crash_result
     self.coverage_result = coverage_result
 
   def to_dict(self) -> dict:
-    return super().to_dict() | {
+    return self.run_result.to_dict() | {
         'semantic_result': self.semantic_result.to_dict(),
         'crash_result': self.crash_result,
         'coverage_result': self.coverage_result,
