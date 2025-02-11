@@ -115,6 +115,7 @@ class OnePromptEnhancer(BaseAgent):
     build_result.fuzz_target_source = self._read_from_file(generated_target)
     build_result = self._check_targets(benchmark, generated_target,
                                        build_result)
+    build_result.chat_history[self.name] = '**** PLACE HOLDER FOR ENAHNCER ****'
     return build_result
 
   def _generate_targets(self, prompt: prompts.Prompt,
