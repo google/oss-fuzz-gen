@@ -165,7 +165,7 @@ class File:
     for line_no, line in self.lines.items():
       other_line = other.lines.get(line_no)
       if other_line and other_line.hit_count > 0:
-        self.lines[line_no].hit_count = 0
+        line.hit_count = 0
 
 
 @dataclasses.dataclass
@@ -292,7 +292,7 @@ class Textcov:
     return textcov
 
   @classmethod
-  def from_go_file(cls, file_hnadle) -> Textcov:
+  def from_go_file(cls, file_handle) -> Textcov:
     """Read a textcov from a fuzz.cov file for golang project."""
     textcov = cls()
     textcov.language = 'go'
@@ -327,7 +327,7 @@ class Textcov:
         line = f'Line{line_no}'
         current_file.lines[line] = Line(contents=line, hit_count=hit_count)
 
-      textcov.files[filename] = current_file
+      textcov.files[file_name] = current_file
 
     return textcov
 

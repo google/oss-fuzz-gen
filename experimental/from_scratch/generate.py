@@ -105,9 +105,9 @@ def check_args(args) -> bool:
     return True
 
   print(
-      'You must include either:\n (1) target function name by --function;\n (2) target '
-      'source file and line number by --source-file and --source-line;\n (3) '
-      '--far-reach')
+      'You must include either:\n (1) target function name by --function;\n '
+      '(2) target source file and line number by --source-file and '
+      '--source-line;\n (3) --far-reach')
   return False
 
 
@@ -236,11 +236,11 @@ def introspector_lang_to_entrypoint(language: str) -> str:
   """Map an introspector language to entrypoint function."""
   if language in ['c', 'c++']:
     return 'LLVMFuzzerTestOneInput'
-  elif language == 'jvm':
+  if language == 'jvm':
     return 'fuzzerTestOneInput'
-  else:
-    # Other supported languages have no fixed entry point
-    return ''
+
+  # Other supported languages have no fixed entry point
+  return ''
 
 
 def get_far_reach_benchmarks(
