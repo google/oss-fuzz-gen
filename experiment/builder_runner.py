@@ -205,7 +205,8 @@ class BuilderRunner:
     elif self.benchmark.language == 'python':
       result = self._contains_target_python_function(target_path)
     else:
-      result = self._contains_target_function(target_path)
+      # C/C++ pre-build check is done in agents.
+      return True
 
     if not result:
       build_result.errors = [
