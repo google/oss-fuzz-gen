@@ -480,7 +480,8 @@ class Evaluator:
         if gen_succ and run_result and run_result.succeeded:
           gen_succ = gen_succ and (coverage_diff > 0)
       else:
-        gen_succ = build_result.succeeded and run_result and run_result.succeeded
+        gen_succ = (build_result.succeeded and run_result and
+                    run_result.succeeded)
 
       if gen_succ or llm_fix_count >= LLM_FIX_LIMIT:
         # Exit cond 1: successfully generate the fuzz target.

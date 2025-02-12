@@ -59,12 +59,11 @@ def _discard_fuzz_target_lines(covreport_content: str) -> str:
   # fairer to only consider lines in the project and not the code of targets.
   # Assumption 1: llvm-cov separates lines from different files with an empty
   # line by default in the coverage report.
-  # Assumption 2: All and only fuzz targets contain 'LLVMFuzzerTestOneInput' (C/C++)
-  # or 'fuzz_target' (Rust).
+  # Assumption 2: All and only fuzz targets contain
+  # 'LLVMFuzzerTestOneInput'(C/C++) or 'fuzz_target' (Rust).
   project_file_contents = [
       sec for sec in covreport_content.split('\n\n')
-      if 'LLVMFuzzerTestOneInput' not in sec or
-      'fuzz_target' not in sec
+      if 'LLVMFuzzerTestOneInput' not in sec or 'fuzz_target' not in sec
   ]
   return '\n\n'.join(project_file_contents)
 
@@ -168,7 +167,7 @@ class File:
     for line_no, line in self.lines.items():
       other_line = other.lines.get(line_no)
       if other_line and other_line.hit_count > 0:
-        self.lines[line_no].hit_count = 0
+        line.hit_count = 0
 
 
 @dataclasses.dataclass

@@ -104,10 +104,9 @@ def check_args(args) -> bool:
       not args.source_line):
     return True
 
-  print(
-      'You must include either:\n (1) target function name by --function;\n (2) target '
-      'source file and line number by --source-file and --source-line;\n (3) '
-      '--far-reach')
+  print('You must include either:\n (1) target function name by --function;\n'
+        '(2) target source file and line number by --source-file and '
+        '--source-line;\n (3) --far-reach')
   return False
 
 
