@@ -19,12 +19,12 @@ import dataclasses
 import json
 import logging
 import re
-import rust_demangler
 import subprocess
 import xml.etree.ElementTree as ET
 from typing import BinaryIO, List, Optional
 
 import chardet
+import rust_demangler
 
 logger = logging.getLogger(__name__)
 
