@@ -50,6 +50,7 @@ class OnePromptPrototyper(BaseAgent):
                   trial=last_result.trial)
       return prompt_builder.TestToHarnessConverter(self.llm, benchmark,
                                                    self.args.template_directory)
+    # TODO: Do these in separate agents.
     if benchmark.language == 'jvm':
       # For Java projects
       return prompt_builder.DefaultJvmTemplateBuilder(
@@ -96,6 +97,7 @@ class OnePromptPrototyper(BaseAgent):
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
     last_result = result_history[-1]
+    logger.info('Executing One Prompt Prototyper', trial=last_result.trial)
     WorkDirs(self.args.work_dirs.base)
 
     prompt = self._initial_prompt(result_history)
@@ -106,7 +108,7 @@ class OnePromptPrototyper(BaseAgent):
                                author=self,
                                chat_history={self.name: prompt.get()})
 
-    while prompt and cur_round < MAX_ROUND:
+    while prompt and cur_round <= MAX_ROUND:
       self._generate_fuzz_target(prompt, result_history, build_result,
                                  cur_round)
 
