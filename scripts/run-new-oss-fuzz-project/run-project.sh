@@ -17,7 +17,7 @@ OSS_FUZZ_GEN_DIR=$PWD
 OSS_FUZZ_GEN_MODEL=${MODEL}
 OSS_FUZZ_DIR=$OSS_FUZZ_GEN_DIR/work/oss-fuzz
 FI_DIR=$OSS_FUZZ_GEN_DIR/work/fuzz-introspector
-BENCHMARK_HEURISTICS=far-reach-low-coverage,low-cov-with-fuzz-keyword
+BENCHMARK_HEURISTICS=far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach
 VAR_HARNESSES_PER_PROJECT=4
 PROJECT=$1
 
