@@ -859,7 +859,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         # arguments. Thus skipping it.
         continue
 
-    if language == 'jvm':
+    elif language == 'jvm':
       # Retrieve list of source file from introspector
       src_path_list = query_introspector_jvm_source_path(project)
       if src_path_list:
@@ -868,12 +868,17 @@ def populate_benchmarks_using_introspector(project: str, language: str,
         # forms part of the directory pattern of the source file that is needed
         # for checking. For example, the source file of class a.b.c.d is always
         # stored as <SOURCE_BASE>/a/b/c/d.java
-        src_file = f'{filename.replace(".", "/")}.java'
-        if src_file not in src_path_list:
+        if filename.endswith('.java'):
+          src_file = filename
+        else:
+          src_file = f'{filename.replace(".", "/")}.java'
+
+        if not any(src_path.endswith(src_file) for src_path in src_path_list):
           logger.error('error: %s %s', filename, interesting.keys())
           continue
     elif (language not in ['rust', 'go'] and interesting and
           filename not in [os.path.basename(i) for i in interesting.keys()]):
+
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
       logger.error('error: %s %s', filename, interesting.keys())
       continue
