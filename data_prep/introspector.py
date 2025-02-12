@@ -882,13 +882,8 @@ def populate_benchmarks_using_introspector(project: str, language: str,
           src_file = filename
         else:
           src_file = f'{filename.replace(".", "/")}.java'
-        print(src_file)
-        print(src_path_list)
-        if not any(src_path.endswith(src_file) for src_path in src_path_list):
-          logger.error('error: %s %s', filename, interesting.keys())
-          continue
 
-    elif (language not in ['rust', 'jvm'] and interesting and
+    elif (language not in ['rust'] and interesting and
           filename not in [os.path.basename(i) for i in interesting.keys()]):
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
       logger.error('error: %s %s', filename, interesting.keys())
