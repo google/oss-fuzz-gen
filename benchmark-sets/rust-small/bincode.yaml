@@ -1,0 +1,29 @@
+"functions":
+- "name": "DeriveStruct::generate_decode"
+  "params":
+  - "name": "generator"
+    "type": "&mut Generator"
+  "return_type": "Result"
+  "signature": "pub fn generate_decode(self, generator: &mut Generator) -> Result<()>"
+- "name": "AllTypes::encode"
+  "params":
+  - "name": "encoder"
+    "type": "& mut __E"
+  "return_type": "core :: result :: Result"
+  "signature": "fn encode < __E : :: bincode :: enc :: Encoder >(& self, encoder : & mut __E) ->core :: result :: Result < (), :: bincode:: error :: EncodeError >"
+- "name": "DeriveEnum::generate_borrow_decode"
+  "params":
+  - "name": "generator"
+    "type": "&mut Generator"
+  "return_type": "Result"
+  "signature": "pub fn generate_borrow_decode(self, generator: &mut Generator) -> Result<()>"
+- "name": "AllTypes::borrow_decode"
+  "params":
+  - "name": "decoder"
+    "type": "& mut __D"
+  "return_type": "core :: result :: Result"
+  "signature": "fn borrow_decode < __D : :: bincode :: de :: BorrowDecoder < '__de > >(decoder : & mut __D) ->core :: result :: Result < Self, :: bincode ::error :: DecodeError >"
+"language": "rust"
+"project": "bincode"
+"target_name": "roundtrip"
+"target_path": "/src/bincode/fuzz/fuzz_targets/roundtrip.rs"

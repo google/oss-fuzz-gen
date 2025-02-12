@@ -231,6 +231,8 @@ requests==2.32.3
     #   tiktoken
 rsa==4.9
     # via google-auth
+rust-demangler==1.0
+    # via -r requirements.in
 shapely==2.0.6
     # via google-cloud-aiplatform
 six==1.16.0

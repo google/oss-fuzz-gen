@@ -235,13 +235,13 @@ def introspector_lang_to_entrypoint(language: str) -> str:
   """Map an introspector language to entrypoint function."""
   if language in ['c', 'c++']:
     return 'LLVMFuzzerTestOneInput'
-  elif language == 'jvm':
+  if language == 'jvm':
     return 'fuzzerTestOneInput'
-  elif language == 'rust':
+  if language == 'rust':
     return 'fuzz_target'
-  else:
-    # Not supporting other language yet
-    return ''
+
+  # Not supporting other language yet
+  return ''
 
 
 def get_far_reach_benchmarks(
@@ -340,15 +340,15 @@ def get_introspector_language(args) -> str:
   """Gets the language in introspector style from the CLI args."""
   if args.language == 'c':
     return 'c'
-  elif args.language in ['c++', 'cpp']:
+  if args.language in ['c++', 'cpp']:
     return 'c++'
-  elif args.language in ['jvm', 'java']:
+  if args.language in ['jvm', 'java']:
     return 'jvm'
-  elif args.language in ['rs', 'rust']:
+  if args.language in ['rs', 'rust']:
     return 'rust'
-  else:
-    print(f'Language {args.language} not support. Exiting.')
-    sys.exit(0)
+
+  print(f'Language {args.language} not support. Exiting.')
+  sys.exit(0)
 
 
 def generate_far_reach_targets(args):
