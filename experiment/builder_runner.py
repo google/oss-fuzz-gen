@@ -206,6 +206,7 @@ class BuilderRunner:
 
     # Retrieve function name only without packages
     min_func_name = min_func_name.rsplit('.', 1)[-1]
+    min_func_name = min_func_name.split('(', 1)[0]
 
     return min_func_name in generated_code
 
