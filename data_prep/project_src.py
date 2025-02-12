@@ -96,6 +96,8 @@ def _get_harness(src_file: str, out: str, language: str) -> tuple[str, str]:
     return '', ''
   if language.lower() == 'python' and 'atheris.Fuzz()' not in content:
     return '', ''
+  if language.lower() == 'rust' and 'fuzz_target!' not in content:
+    return '', ''
 
   short_path = src_file[len(out):]
   return short_path, content
@@ -233,9 +235,9 @@ def _copy_project_src_from_local(project: str, out: str, language: str):
     # Sometimes the previous container need longer time to delete
     # If the next docker run is invoked before the previous container
     # completely removed, it will resulti n Conflict error.
-    # Sleep for 60 seconds and retry.
-    logger.warning('Failed to run OSS-Fuzz on %s, retry in 60 sec', project)
-    time.sleep(60)
+    # Sleep for 180 seconds and retry.
+    logger.warning('Failed to run OSS-Fuzz on %s, retry in 180 sec', project)
+    time.sleep(180)
     result = sp.run(run_container,
                     capture_output=True,
                     stdin=sp.DEVNULL,
@@ -306,6 +308,12 @@ def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
         if path.endswith(tuple(interesting_filenames)):
           interesting_filepaths.append(path)
         if path.endswith('.py'):
+          potential_harnesses.append(path)
+      elif language == 'rust':
+        # For Rust
+        if path.endswith(tuple(interesting_filenames)):
+          interesting_filepaths.append(path)
+        if path.endswith('.rs'):
           potential_harnesses.append(path)
       else:
         # For C/C++

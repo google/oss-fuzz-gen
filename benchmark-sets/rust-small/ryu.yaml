@@ -1,0 +1,35 @@
+"functions":
+- "name": "s2f"
+  "params":
+  - "name": "buffer"
+    "type": "&[u8]"
+  "return_type": "Result"
+  "signature": "pub fn s2f(buffer: &[u8]) -> Result<f32, Error>"
+- "name": "s2d"
+  "params":
+  - "name": "buffer"
+    "type": "&[u8]"
+  "return_type": "Result"
+  "signature": "pub fn s2d(buffer: &[u8]) -> Result<f64, Error>"
+- "name": "Buffer::format"
+  "params":
+  - "name": "f"
+    "type": "F"
+  "return_type": "&str"
+  "signature": "pub fn format<F: Float>(&mut self, f: F) -> &str"
+- "name": "compute_pow5"
+  "params":
+  - "name": "i"
+    "type": "u32"
+  "return_type": "(u64, u64)"
+  "signature": "pub unsafe fn compute_pow5(i: u32) -> (u64, u64)"
+- "name": "compute_inv_pow5"
+  "params":
+  - "name": "i"
+    "type": "u32"
+  "return_type": "(u64, u64)"
+  "signature": "pub unsafe fn compute_inv_pow5(i: u32) -> (u64, u64)"
+"language": "rust"
+"project": "ryu"
+"target_name": "fuzz_ryu"
+"target_path": "/src/ryu/fuzz/fuzz_targets/fuzz_ryu.rs"
