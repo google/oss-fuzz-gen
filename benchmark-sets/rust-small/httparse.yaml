@@ -1,0 +1,23 @@
+"functions":
+- "name": "parse_reason"
+  "params":
+  - "name": "bytes"
+    "type": "&mut Bytes<'a>"
+  "return_type": "Result"
+  "signature": "fn parse_reason<'a>(bytes: &mut Bytes<'a>) -> Result<&'a str>"
+- "name": "enable_simd"
+  "params":
+  - "name": "version"
+    "type": "Version"
+  "return_type": "void"
+  "signature": "fn enable_simd(version: Version)"
+- "name": "match_uri_vectored"
+  "params":
+  - "name": "bytes"
+    "type": "&mut Bytes"
+  "return_type": "void"
+  "signature": "fn match_uri_vectored(bytes: &mut Bytes)"
+"language": "rust"
+"project": "httparse"
+"target_name": "parse_chunk_size"
+"target_path": "Did-not-find-sourcefile"
