@@ -101,7 +101,7 @@ class OnePromptPrototyper(BaseAgent):
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
     last_result = result_history[-1]
-    logger.info('Executing One Prompt Prototyper', trial=last_result.trial)
+    logger.info('Executing %s', self.name, trial=last_result.trial)
     WorkDirs(self.args.work_dirs.base)
 
     prompt = self._initial_prompt(result_history)
@@ -126,7 +126,8 @@ class OnePromptPrototyper(BaseAgent):
                           cur_round: int) -> Optional[Prompt]:
     """Returns a prompt to fix fuzz target based on its build result errors."""
     if build_result.success:
-      logger.info('***** OnePromptPrototyper succeded in %02d rounds *****',
+      logger.info('***** %s succeded in %02d rounds *****',
+                  self.name,
                   cur_round,
                   trial=build_result.trial)
       return None
