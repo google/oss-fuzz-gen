@@ -79,20 +79,34 @@ def parse_args() -> argparse.Namespace:
                       type=int,
                       help='Source line number to locate target function.',
                       default=0)
+  parser.add_argument(
+      '--far-reach',
+      action='store_true',
+      help='If set, will generate targets for all functions in far reach.')
 
   return parser.parse_args()
 
 
 def check_args(args) -> bool:
   """Check arguments."""
-  if args.function and not args.source_file and not args.source_line:
+  # Function name target
+  if (args.function and not args.source_file and not args.source_line and
+      not args.far_reach):
     return True
 
-  if not args.function and args.source_file and args.source_line:
+  # Source code location target
+  if (not args.function and args.source_file and args.source_line and
+      not args.far_reach):
     return True
 
-  print('You must include either target function name by --function or target'
-        'source file and line number by --source-file and --source-line')
+  # Far-reach target.
+  if (args.far_reach and not args.function and not args.source_file and
+      not args.source_line):
+    return True
+
+  print('You must include either:\n (1) target function name by --function;\n'
+        '(2) target source file and line number by --source-file and '
+        '--source-line;\n (3) --far-reach')
   return False
 
 
@@ -104,46 +118,12 @@ def setup_model(args) -> models.LLM:
                           temperature=TEMPERATURE)
 
 
-def find_function_by_name(all_functions, target_function_name,
-                          only_exact_match):
-  """Helper function to find the matching function."""
-  for function in all_functions:
-    if function.name == target_function_name:
-      return function
-
-  if not only_exact_match:
-    for function in all_functions:
-      if target_function_name in function.name:
-        return function
-
-  return None
-
-
-def find_function_by_source_line(all_functions, target_source_file,
-                                 target_source_line):
-  """Helper function to find the matchin function by source
-  file and source file."""
-  for function in all_functions:
-    source_file = function.parent_source.source_file
-    if source_file.endswith(target_source_file):
-      if function.start_line <= target_source_line <= function.end_line:
-        return function
-
-  return None
-
-
 def get_target_benchmark(
     language, target_dir, target_function_name, only_exact_match,
     target_source_file, target_source_line
 ) -> Tuple[Optional[benchmarklib.Benchmark], Optional[dict[str, Any]]]:
   """Run introspector analysis on a target directory and extract benchmark"""
-  if language in ['c', 'c++']:
-    entrypoint = 'LLVMFuzzerTestOneInput'
-  elif language == 'jvm':
-    entrypoint = 'fuzzerTestOneInput'
-  else:
-    # Not supporting other language yet
-    entrypoint = ''
+  entrypoint = introspector_lang_to_entrypoint(language)
 
   _, report = fi_commands.analyse_end_to_end(arg_language=language,
                                              target_dir=target_dir,
@@ -154,17 +134,24 @@ def get_target_benchmark(
                                              module_only=True,
                                              dump_files=False)
   project = report['light-project']
+  introspector_project = report.get('introspector-project', None)
+  if introspector_project:
+    logger.info('Found introspector repoject')
+    for analysis in introspector_project.optional_analyses:
+      logger.info(analysis.name)
+      if analysis.name == 'FarReachLowCoverageAnalyser':
+        logger.info(analysis.get_json_string_result())
+  else:
+    logger.info('Did not find any introspector project')
 
   # Get target function
   if target_function_name:
-    function = find_function_by_name(project.all_functions,
-                                     target_function_name, only_exact_match)
+    function = project.find_function_by_name(target_function_name,
+                                             only_exact_match)
 
   elif target_source_file and target_source_line > 0:
-    function = find_function_by_source_line(project.all_functions,
-                                            target_source_file,
-                                            target_source_line)
-
+    function = project.get_function_by_source_suffix_line(
+        target_source_file, target_source_line)
   else:
     function = None
 
@@ -207,6 +194,9 @@ def construct_fuzz_prompt(model, benchmark, context,
   """Local benchmarker"""
   if language in ['c', 'c++']:
     builder = prompt_builder.DefaultTemplateBuilder(model, benchmark=benchmark)
+  elif language == 'rust':
+    builder = prompt_builder.DefaultRustTemplateBuilder(model,
+                                                        benchmark=benchmark)
   else:
     builder = prompt_builder.DefaultJvmTemplateBuilder(model,
                                                        benchmark=benchmark)
@@ -229,23 +219,165 @@ def print_prompt(fuzz_prompt: prompts.Prompt) -> None:
   print('-' * 40)
 
 
-def main():
-  args = parse_args()
-  model = setup_model(args)
+def get_fuzz_prompt_str(fuzz_prompt: prompts.Prompt) -> str:
+  """Prints prompt to stdout."""
+  prompt_string = ''
+  raw_prompt = fuzz_prompt.get()
+  if isinstance(raw_prompt, list):
+    for elem in raw_prompt:
+      if isinstance(elem, dict) and 'content' in elem:
+        prompt_string += elem['content']
+  return prompt_string
 
-  if not check_args(args):
+
+def introspector_lang_to_entrypoint(language: str) -> str:
+  """Map an introspector language to entrypoint function."""
+  if language in ['c', 'c++']:
+    return 'LLVMFuzzerTestOneInput'
+  if language == 'jvm':
+    return 'fuzzerTestOneInput'
+  if language == 'rust':
+    return 'fuzz_target'
+
+  # Not supporting other language yet
+  return ''
+
+
+def get_far_reach_benchmarks(
+    language, target_dir
+) -> list[Tuple[Optional[benchmarklib.Benchmark], Optional[dict[str, Any]]]]:
+  """Run introspector analysis to extract fear-reaching targets and generate
+  harnesses for it."""
+  entrypoint = introspector_lang_to_entrypoint(language)
+
+  _, report = fi_commands.analyse_end_to_end(arg_language=language,
+                                             target_dir=target_dir,
+                                             entrypoint=entrypoint,
+                                             out_dir='.',
+                                             coverage_url='',
+                                             report_name='report-name',
+                                             module_only=True,
+                                             dump_files=False)
+  project = report['light-project']
+  introspector_project = report.get('introspector-project', None)
+  result_dict = {}
+  if introspector_project:
+    logger.info('Found introspector repoject')
+    for analysis in introspector_project.optional_analyses:
+      if analysis.name == 'FarReachLowCoverageAnalyser':
+        result_dict = analysis.json_results
+  if not result_dict:
+    logger.info('Found no analysis results from far-reach')
     sys.exit(0)
 
+  target_benchmarks = []
+  for target_function in result_dict.get('functions', []):
+    # Get target function
+    target_function_name = target_function['function_name']
+    if target_function_name:
+      function = project.find_function_by_name(target_function_name, True)
+    else:
+      function = None
+
+    if function:
+      param_list = []
+
+      for idx, arg_name in enumerate(function.arg_names):
+        param_list.append({'name': arg_name, 'type': function.arg_types[idx]})
+
+      # Build a context.
+      # Shorten the source function text if necessary.
+      function_source = function.function_source_code_as_text()
+      if len(function_source) > 1000:
+        logger.info('Function source is %d bytes. Shortening to 1000',
+                    len(function_source))
+        function_source = function_source[:1000] + '\n ....'
+
+      xrefs = project.get_cross_references(function)
+      if len(xrefs) > 10:
+        xrefs = xrefs[:10]
+      xref_strings = []
+      for xref in xrefs:
+        source_str = xref.function_source_code_as_text()
+        # Only include xref if it's not too large.
+        if len(source_str) > 2000:
+          continue
+        xref_strings.append(source_str)
+
+      context = {
+          'func_source': function_source,
+          'files': [],
+          'decl': '',
+          'xrefs': xref_strings,
+          'header': '',
+      }
+
+      target_benchmarks.append((benchmarklib.Benchmark(
+          benchmark_id='sample',
+          project='no-name',
+          language=language,
+          function_name=function.name,
+          function_signature=function.sig,
+          return_type=function.return_type,
+          params=param_list,
+          target_path=function.parent_source.source_file), context))
+
+  return target_benchmarks
+
+
+def get_next_response_dir(response_dir: str) -> str:
+  """Prepare next folder to put generate harness in."""
+  idx = 0
+  while True:
+    target_response = os.path.join(response_dir, str(idx))
+    if not os.path.isdir(target_response):
+      return target_response
+    idx += 1
+
+
+def get_introspector_language(args) -> str:
+  """Gets the language in introspector style from the CLI args."""
   if args.language == 'c':
-    language = 'c'
-  elif args.language in ['c++', 'cpp']:
-    language = 'c++'
-  elif args.language in ['jvm', 'java']:
-    language = 'jvm'
-  else:
-    print(f'Language {args.language} not support. Exiting.')
-    sys.exit(0)
+    return 'c'
+  if args.language in ['c++', 'cpp']:
+    return 'c++'
+  if args.language in ['jvm', 'java']:
+    return 'jvm'
+  if args.language in ['rs', 'rust']:
+    return 'rust'
 
+  print(f'Language {args.language} not support. Exiting.')
+  sys.exit(0)
+
+
+def generate_far_reach_targets(args):
+  """Generates a set of harnesses based on far-reach analysis."""
+  model = setup_model(args)
+  language = get_introspector_language(args)
+  # Get the benchmarks corresponding to far-reach analysis.
+  target_pairs = get_far_reach_benchmarks(language, args.target_dir)
+  for target_benchmark, context in target_pairs:
+    fuzz_prompt = construct_fuzz_prompt(model, target_benchmark, context,
+                                        language)
+    str_prompt = get_fuzz_prompt_str(fuzz_prompt)
+    if len(str_prompt) > 15000:
+      logger.info('Skipping prompt because its too large')
+      print_prompt(fuzz_prompt)
+      continue
+    print_prompt(fuzz_prompt)
+    response_dir = get_next_response_dir(args.response_dir)
+    os.makedirs(response_dir, exist_ok=True)
+    print(f'Running query and writing results in {response_dir}')
+    try:
+      model.query_llm(fuzz_prompt, response_dir=response_dir)
+    except:
+      pass
+
+
+def generate_for_target_function(args):
+  """Generate harness for single function/source location"""
+  model = setup_model(args)
+  language = get_introspector_language(args)
   target_benchmark, context = get_target_benchmark(language, args.target_dir,
                                                    args.function,
                                                    args.only_exact_match,
@@ -253,7 +385,6 @@ def main():
                                                    args.source_line)
 
   if target_benchmark is None:
-
     print('Could not find target function. Exiting.')
     sys.exit(0)
 
@@ -263,6 +394,18 @@ def main():
   os.makedirs(args.response_dir, exist_ok=True)
   print(f'Running query and writing results in {args.response_dir}')
   model.query_llm(fuzz_prompt, response_dir=args.response_dir)
+
+
+def main():
+  """Entrypoint"""
+  args = parse_args()
+  if not check_args(args):
+    sys.exit(0)
+
+  if args.far_reach:
+    generate_far_reach_targets(args)
+  else:
+    generate_for_target_function(args)
 
 
 if __name__ == "__main__":

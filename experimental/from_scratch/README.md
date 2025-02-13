@@ -18,22 +18,35 @@ python3 -m pip install -e .
 cd ../../
 
 # Prepare a target
+## C++
 git clone https://github.com/dvhar/dateparse
+## Java
+git clone https://github.com/stleary/JSON-java json-java
 
 # Clone oss-fuzz-gen
 git clone https://github.com/google/oss-fuzz-gen
 cd oss-fuzz-gen
 python3 -m pip install -r ./requirements.txt
 
-# Generate a harness
+# Generate a harness (C++) (with function name)
 python3 -m experimental.from_scratch.generate \
   -e c++ \
   -l ${MODEL} \
   -f dateparse \
-  -t ../dateparse/
+  -t ../dateparse/ \
+  -r responses_cpp
+
+# Generate a harness (Java) (with source file and line)
+python3 -m experimental.from_scratch.generate \
+  -e java \
+  -l ${MODEL} \
+  -s JSONArray.java \
+  -sl 1200 \
+  -t ../json-java/ \
+  -r responses_java
 
 # Show harness
-cat responses/01.rawoutput
+cat responses_cpp/01.rawoutput
 """
 #include <stdio.h>
 #include <string.h>
@@ -59,4 +72,38 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     return 0;
 }
 """
+
+cat responses_java/01.rawoutput
+"""
+import com.code_intelligence.jazzer.api.FuzzedDataProvider;
+import org.json.JSONArray;
+
+public class JSONArray {
+    public static void fuzzerInitialize() {
+        // Initializing objects for fuzzing
+    }
+
+    public static void fuzzerTearDown() {
+        // Tear down objects after fuzzing
+    }
+
+    public static void fuzzerTestOneInput(FuzzedDataProvider data) {
+        boolean bool = data.consumeBoolean();
+
+        JSONArray jsonArray = new JSONArray();
+        try {
+            jsonArray.put(bool);
+        } catch (RuntimeException e) {
+            // Catch potential RuntimeException
+        } finally {
+            try {
+                jsonArray.close();
+            } catch (Exception ignored) {
+                // Ignoring any exception in closing the resource
+            }
+        }
+    }
+}
+"""
 ```
+

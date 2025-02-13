@@ -152,6 +152,39 @@ def load_existing_python_textcov(project: str) -> textcov.Textcov:
     return textcov.Textcov.from_python_file(f)
 
 
+def load_existing_rust_textcov(project: str) -> textcov.Textcov:
+  """Loads existing textcovs for rust project."""
+  storage_client = storage.Client.create_anonymous_client()
+  bucket = storage_client.bucket(OSS_FUZZ_INTROSPECTOR_BUCKET)
+  blobs = storage_client.list_blobs(bucket,
+                                    prefix=f'{project}/inspector-report/',
+                                    delimiter='/')
+  # Iterate through all blobs first to get the prefixes (i.e. "subdirectories").
+  for blob in blobs:
+    continue
+
+  if not blobs.prefixes:  # type: ignore
+    # No existing coverage reports.
+    logger.info('No existing coverage report. Using empty.')
+    return textcov.Textcov()
+
+  # Find the latest generated textcov date.
+  latest_dir = sorted(blobs.prefixes)[-1]  # type: ignore
+  blobs = storage_client.list_blobs(bucket, prefix=latest_dir)
+
+  # Download and merge them.
+  existing_textcov = textcov.Textcov()
+  for blob in blobs:
+    if not blob.name.endswith('.covreport'):
+      continue
+
+    logger.info('Loading existing textcov from %s', blob.name)
+    with blob.open('rb') as f:
+      existing_textcov.merge(textcov.Textcov.from_rust_file(f))
+
+  return existing_textcov
+
+
 def load_existing_coverage_summary(project: str) -> dict:
   """Load existing summary.json."""
   storage_client = storage.Client.create_anonymous_client()
@@ -587,5 +620,8 @@ class Evaluator:
 
     if self.benchmark.language == 'python':
       return load_existing_python_textcov(self.benchmark.project)
+
+    if self.benchmark.language == 'rust':
+      return load_existing_rust_textcov(self.benchmark.project)
 
     return load_existing_textcov(self.benchmark.project)

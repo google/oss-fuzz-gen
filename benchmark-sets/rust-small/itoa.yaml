@@ -1,0 +1,25 @@
+"functions":
+- "name": "udivmod_1e19"
+  "params":
+  - "name": "n"
+    "type": "u128"
+  "return_type": "(u128, u64)"
+  "signature": "pub fn udivmod_1e19(n: u128) -> (u128, u64)"
+- "name": "u128_mulhi"
+  "params":
+  - "name": "x"
+    "type": "u128"
+  - "name": "y"
+    "type": "u128"
+  "return_type": "u128"
+  "signature": "fn u128_mulhi(x: u128, y: u128) -> u128"
+- "name": "Buffer::format"
+  "params":
+  - "name": "i"
+    "type": "I"
+  "return_type": "&str"
+  "signature": "pub fn format<I: Integer>(&mut self, i: I) -> &str"
+"language": "rust"
+"project": "itoa"
+"target_name": "fuzz_itoa"
+"target_path": "/src/itoa/fuzz/fuzz_targets/fuzz_itoa.rs"
