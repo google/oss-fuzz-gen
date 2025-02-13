@@ -302,4 +302,8 @@ class SemnaticAnalyzer(BaseAgent):
                 func_name,
                 project_name,
                 trial=self.trial)
-    return func_info
+
+    return {
+        func_name: list(line_numbers)
+        for func_name, line_numbers in func_info.items()
+    }
