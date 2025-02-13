@@ -123,6 +123,7 @@ class ExecutionStage(BaseStage):
           is_function_referenced=last_result.is_function_referenced,
           crashes=run_result.crashes,
           run_error=run_result.crash_info,
+          # TODO: This should be the content of log_path.
           run_log=run_result.log_path,
           coverage_summary=run_result.coverage_summary,
           coverage=coverage_percent,
