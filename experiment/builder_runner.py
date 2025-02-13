@@ -198,6 +198,7 @@ class BuilderRunner:
   def _contains_target_go_function(self, target_path: str) -> bool:
     """Validates if the LLM-generated code contains the target function for
     go projects."""
+
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
 
@@ -207,6 +208,22 @@ class BuilderRunner:
     # Retrieve function name only without packages
     min_func_name = min_func_name.rsplit('.', 1)[-1]
     min_func_name = min_func_name.split('(', 1)[0]
+
+    return min_func_name in generated_code
+
+  def _contains_target_rust_function(self, target_path: str) -> bool:
+    """Validates if the LLM-generated code contains the target function for
+    rust projects."""
+
+    with open(target_path) as generated_code_file:
+      generated_code = generated_code_file.read()
+
+    min_func_name = self._get_minimum_func_name(
+        self.benchmark.function_signature)
+
+    # Retrieve function name only with crate, triat, impl or mod tag
+    min_func_name = min_func_name.rsplit('::', 1)[-1]
+    min_func_name = min_func_name.rsplit('.', 1)[-1]
 
     return min_func_name in generated_code
 
@@ -221,7 +238,10 @@ class BuilderRunner:
       result = self._contains_target_python_function(target_path)
     elif self.benchmark.language == 'go':
       result = self._contains_target_go_function(target_path)
+    elif self.benchmark.language == 'rust':
+      result = self._contains_target_rust_function(target_path)
     else:
+      # For C/C++
       result = self._contains_target_function(target_path)
 
     if not result:
@@ -703,6 +723,7 @@ class BuilderRunner:
         'c++': f'{self.benchmark.target_name}.covreport',
         'c': f'{self.benchmark.target_name}.covreport',
         'go': 'fuzz.cov',
+        'rust': f'{self.benchmark.target_name}.covreport',
     }
 
     return os.path.join(get_build_artifact_dir(project_name,
@@ -719,6 +740,7 @@ class BuilderRunner:
         'c': 'rb',
         'c++': 'rb',
         'go': 'r',
+        'rust': 'rb',
     }
     with open(local_textcov_location,
               language_modes.get(self.benchmark.language, 'rb')) as f:
@@ -1062,7 +1084,7 @@ class CloudBuilderRunner(BuilderRunner):
         self._copy_textcov_to_workdir(bucket, textcov_blob_path,
                                       generated_target_name)
     else:
-      # C/C++
+      # C/C++/Rust
       blob = bucket.blob(textcov_blob_path)
       if blob.exists():
         with blob.open('rb') as f:
@@ -1106,6 +1128,7 @@ class CloudBuilderRunner(BuilderRunner):
     if self.benchmark.language == 'go':
       return f'{coverage_name}/textcov_reports/fuzz.cov'
 
+    # For C/C++/Rust
     return (f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
             '.covreport')
 

@@ -24,6 +24,7 @@ import xml.etree.ElementTree as ET
 from typing import BinaryIO, List, Optional
 
 import chardet
+import rust_demangler
 
 logger = logging.getLogger(__name__)
 
@@ -58,10 +59,11 @@ def _discard_fuzz_target_lines(covreport_content: str) -> str:
   # fairer to only consider lines in the project and not the code of targets.
   # Assumption 1: llvm-cov separates lines from different files with an empty
   # line by default in the coverage report.
-  # Assumption 2: All and only fuzz targets contain 'LLVMFuzzerTestOneInput'.
+  # Assumption 2: All and only fuzz targets contain
+  # 'LLVMFuzzerTestOneInput'(C/C++) or 'fuzz_target' (Rust).
   project_file_contents = [
       sec for sec in covreport_content.split('\n\n')
-      if 'LLVMFuzzerTestOneInput' not in sec
+      if 'LLVMFuzzerTestOneInput' not in sec or 'fuzz_target' not in sec
   ]
   return '\n\n'.join(project_file_contents)
 
@@ -421,6 +423,68 @@ class Textcov:
 
       textcov.functions[full_method_name] = current_method
 
+    return textcov
+
+  @classmethod
+  def from_rust_file(
+      cls,
+      file_handle,
+      ignore_function_patterns: Optional[List[re.Pattern]] = None) -> Textcov:
+    """Read a textcov from a file handle for rust project."""
+    if ignore_function_patterns is None:
+      ignore_function_patterns = []
+
+    textcov = cls()
+    textcov.language = 'rust'
+
+    current_function_name: str = ''
+    current_function: Function = Function()
+
+    try:
+      file_content = cls._read_file_with_fallback(file_handle)
+      demangled = rust_demangler.demangle(file_content)
+    except Exception as e:
+      logger.warning('Decoding failure: %s', e)
+      demangled = ''
+    demangled = _discard_fuzz_target_lines(demangled)
+
+    for line in demangled.split('\n'):
+      match = FUNCTION_PATTERN.match(line)
+      if match:
+        # Normalize templates.
+        current_function_name = normalize_template_args(match.group(1))
+        if any(
+            p.match(current_function_name) for p in ignore_function_patterns):
+          # Ignore this function.
+          current_function_name = ''
+          continue
+
+        if current_function_name in textcov.functions:
+          current_function = textcov.functions[current_function_name]
+        else:
+          current_function = Function(name=current_function_name)
+          textcov.functions[current_function_name] = current_function
+
+        continue
+
+      if not current_function_name:
+        # No current functions. This can happen if we're currently in an
+        # ignored function.
+        continue
+
+      match = LINE_PATTERN.match(line)
+      if match:
+        hit_count = _parse_hitcount(match.group(1))
+        # Ignore whitespace differences
+        line_contents = match.group(2).strip()
+
+        if line_contents in current_function.lines:
+          current_function.lines[line_contents].hit_count += hit_count
+        else:
+          current_function.lines[line_contents] = Line(contents=line_contents,
+                                                       hit_count=hit_count)
+
+        continue
     return textcov
 
   def to_file(self, filename: str) -> None:
