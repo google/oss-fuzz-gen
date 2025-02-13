@@ -55,6 +55,12 @@ class OnePromptPrototyper(BaseAgent):
       # For Python projects
       return prompt_builder.DefaultPythonTemplateBuilder(
           self.llm, benchmark, self.args.template_directory)
+
+    if benchmark.language == 'go':
+      # For golang projects
+      return prompt_builder.DefaultGoTemplateBuilder(
+          self.llm, benchmark, self.args.template_directory)
+
     if benchmark.language == 'rust':
       # For Rust projects
       return prompt_builder.DefaultRustTemplateBuilder(

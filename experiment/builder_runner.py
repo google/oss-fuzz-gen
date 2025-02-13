@@ -195,9 +195,26 @@ class BuilderRunner:
 
     return min_func_name in generated_code
 
+  def _contains_target_go_function(self, target_path: str) -> bool:
+    """Validates if the LLM-generated code contains the target function for
+    go projects."""
+
+    with open(target_path) as generated_code_file:
+      generated_code = generated_code_file.read()
+
+    min_func_name = self._get_minimum_func_name(
+        self.benchmark.function_signature)
+
+    # Retrieve function name only without packages
+    min_func_name = min_func_name.rsplit('.', 1)[-1]
+    min_func_name = min_func_name.split('(', 1)[0]
+
+    return min_func_name in generated_code
+
   def _contains_target_rust_function(self, target_path: str) -> bool:
     """Validates if the LLM-generated code contains the target function for
     rust projects."""
+
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
 
@@ -219,6 +236,8 @@ class BuilderRunner:
       result = self._contains_target_jvm_method(target_path)
     elif self.benchmark.language == 'python':
       result = self._contains_target_python_function(target_path)
+    elif self.benchmark.language == 'go':
+      result = self._contains_target_go_function(target_path)
     elif self.benchmark.language == 'rust':
       result = self._contains_target_rust_function(target_path)
     else:
@@ -500,8 +519,8 @@ class BuilderRunner:
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
 
-    # Copy err.log into work dir (Ignored for JVM/Rust projects)
-    if language not in ['jvm', 'rust']:
+    # Copy err.log into work dir (Ignored for JVM projects)
+    if language not in ['jvm', 'rust', 'go']:
       try:
         shutil.copyfile(
             os.path.join(get_build_artifact_dir(generated_project, "workspace"),
@@ -532,8 +551,8 @@ class BuilderRunner:
       # In many case JVM/python projects won't have much cov
       # difference in short running. Adding the flag for JVM/python
       # projects to temporary skip the checking of coverage change.
-      # Also skipping for rust projects in initial implementation.
-      flag = not self.benchmark.language in ['jvm', 'python', 'rust']
+      # Also skipping for rust/golang projects in initial implementation.
+      flag = not self.benchmark.language in ['jvm', 'python', 'rust', 'go']
       run_result.cov_pcs, run_result.total_pcs, \
         run_result.crashes, run_result.crash_info, \
           run_result.semantic_check = \
@@ -703,6 +722,7 @@ class BuilderRunner:
         'python': 'all_cov.json',
         'c++': f'{self.benchmark.target_name}.covreport',
         'c': f'{self.benchmark.target_name}.covreport',
+        'go': 'fuzz.cov',
         'rust': f'{self.benchmark.target_name}.covreport',
     }
 
@@ -719,6 +739,7 @@ class BuilderRunner:
         'python': 'r',
         'c': 'rb',
         'c++': 'rb',
+        'go': 'r',
         'rust': 'rb',
     }
     with open(local_textcov_location,
@@ -727,6 +748,8 @@ class BuilderRunner:
         new_textcov = textcov.Textcov.from_jvm_file(f)
       elif self.benchmark.language == 'python':
         new_textcov = textcov.Textcov.from_python_file(f)
+      elif self.benchmark.language == 'go':
+        new_textcov = textcov.Textcov.from_go_file(f)
       else:
         target_basename = os.path.basename(self.benchmark.target_path)
         new_textcov = textcov.Textcov.from_file(
@@ -1102,6 +1125,8 @@ class CloudBuilderRunner(BuilderRunner):
       return f'{coverage_name}/textcov_reports/jacoco.xml'
     if self.benchmark.language == 'python':
       return f'{coverage_name}/textcov_reports/all_cov.json'
+    if self.benchmark.language == 'go':
+      return f'{coverage_name}/textcov_reports/fuzz.cov'
 
     # For C/C++/Rust
     return (f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'

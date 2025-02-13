@@ -1733,3 +1733,95 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
             'int LLVMFuzzerTestOneInput')
 
     return generated_code
+
+
+class DefaultGoTemplateBuilder(PromptBuilder):
+  """Default builder for Go projects."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model)
+    self._template_dir = template_dir
+    self.benchmark = benchmark
+    self.project_url = oss_fuzz_checkout.get_project_repository(
+        self.benchmark.project)
+
+    # Load templates.
+    self.base_template_file = self._find_template(template_dir, 'go_base.txt')
+    self.problem_template_file = self._find_template(template_dir,
+                                                     'go_problem.txt')
+
+  def _find_template(self, template_dir: str, template_name: str) -> str:
+    """Finds template file based on |template_dir|."""
+    preferred_template = os.path.join(template_dir, template_name)
+    # Use the preferred template if it exists.
+    if os.path.isfile(preferred_template):
+      return preferred_template
+
+    # Fall back to the default template.
+    default_template = os.path.join(DEFAULT_TEMPLATE_DIR, template_name)
+    return default_template
+
+  def _get_template(self, template_file: str) -> str:
+    """Reads the template for prompts."""
+    with open(template_file) as file:
+      return file.read()
+
+  def _format_target(self, signature: str) -> str:
+    """Format the target function for the prompts creation."""
+    target = self._get_template(self.problem_template_file)
+    arg_count = len(self.benchmark.params)
+    arg_type = [arg_dict['type'] for arg_dict in self.benchmark.params]
+
+    target = target.replace('{FUNCTION_SIGNATURE}', signature)
+    target = target.replace('{ARG_COUNT}', str(arg_count))
+    target = target.replace('{ARG_TYPE}', ','.join(arg_type))
+
+    return target
+
+  def _format_problem(self, signature: str) -> str:
+    """Formats a problem based on the prompt template."""
+    base = self._get_template(self.base_template_file)
+    target_str = self._format_target(signature)
+
+    problem = base + target_str
+    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
+    problem = problem.replace("{PROJECT_URL}", self.project_url)
+
+    return problem
+
+  def _prepare_prompt(self, prompt_str: str):
+    """Constructs a prompt using the parameters and saves it."""
+    self._prompt.add_priming(prompt_str)
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it.
+       Ignore target_file_type, project_example_content
+       and project_context_content parameters.
+    """
+    final_problem = self._format_problem(self.benchmark.function_signature)
+    self._prepare_prompt(final_problem)
+    return self._prompt
+
+  def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
+                         error_desc: Optional[str],
+                         errors: list[str]) -> prompts.Prompt:
+    """Builds a fixer prompt."""
+    # Do nothing for go project now.
+    return self._prompt
+
+  def build_triager_prompt(self, benchmark: Benchmark, driver_code: str,
+                           crash_info: str, crash_func: dict) -> prompts.Prompt:
+    """Builds a triager prompt."""
+    # Do nothing for go project now.
+    return self._prompt
+
+  def post_process_generated_code(self, generated_code: str) -> str:
+    """Allows prompt builder to adjust the generated code."""
+    # Do nothing for go project now.
+    return generated_code

@@ -143,7 +143,7 @@ class Function:
 
 @dataclasses.dataclass
 class File:
-  """Represents a file in a textcov, only for Python."""
+  """Represents a file in a textcov, only for Python / Golang."""
   name: str = ''
   # Line contents -> Line object. We key on line contents to account for
   # potential line number movements.
@@ -177,7 +177,7 @@ class Textcov:
   # For JVM / C / C++ / Rust
   functions: dict[str, Function] = dataclasses.field(default_factory=dict)
   # File name -> File object.
-  # For Python
+  # For Python / Go
   files: dict[str, File] = dataclasses.field(default_factory=dict)
   language: str = 'c++'
 
@@ -290,6 +290,46 @@ class Textcov:
         current_file.lines[line] = Line(contents=line, hit_count=0)
 
       textcov.files[filename] = current_file
+
+    return textcov
+
+  @classmethod
+  def from_go_file(cls, file_handle) -> Textcov:
+    """Read a textcov from a fuzz.cov file for golang project."""
+    textcov = cls()
+    textcov.language = 'go'
+    line_coverage = {}
+
+    # Extract the fuzz.cov coverage line information
+    cov_line = file_handle.readlines()[1:]
+
+    # Process line coverage from fuzz.cov
+    # Line format
+    # <file>:<start_line>.<start_col>,<end_line>.<end_col> <stmts_count> <hit>
+    for line in cov_line:
+      file_name, data = line.split(':', 1)
+      line_split = re.split('[:., ]', data)
+      start_line = int(line_split[0])
+      end_line = int(line_split[2])
+      hit_count = int(line_split[5])
+
+      # Process line coverage information
+      line_dict = line_coverage.get(file_name, {})
+      for count in range(start_line, end_line + 1):
+        hit_count = max(hit_count, line_dict.get(count, -1))
+        line_dict[count] = hit_count
+
+      line_coverage[file_name] = line_dict
+
+    # Process coverage per file
+    for file_name, line_dict in line_coverage.items():
+      current_file = File(name=file_name)
+
+      for line_no, hit_count in line_dict.items():
+        line = f'Line{line_no}'
+        current_file.lines[line] = Line(contents=line, hit_count=hit_count)
+
+      textcov.files[file_name] = current_file
 
     return textcov
 
@@ -451,7 +491,7 @@ class Textcov:
     """Writes covered functions/files and lines to |filename|."""
     file_content = ''
 
-    if self.language == 'python':
+    if self.language in ['python', 'go']:
       target = self.files
     else:
       target = self.functions
@@ -471,7 +511,7 @@ class Textcov:
     if self.language != other.language and self.language == 'c++':
       self.language = other.language
 
-    if self.language == 'python':
+    if self.language in ['python', 'go']:
       for file in other.files.values():
         if file.name not in self.files:
           self.files[file.name] = File(name=file.name)
@@ -484,7 +524,7 @@ class Textcov:
 
   def subtract_covered_lines(self, other: Textcov):
     """Diff another textcov"""
-    if self.language == 'python':
+    if self.language in ['python', 'go']:
       for file in other.files.values():
         if file.name in self.files:
           self.files[file.name].subtract_covered_lines(file)
@@ -496,14 +536,14 @@ class Textcov:
 
   @property
   def covered_lines(self):
-    if self.language == 'python':
+    if self.language in ['python', 'go']:
       return sum(f.covered_lines for f in self.files.values())
 
     return sum(f.covered_lines for f in self.functions.values())
 
   @property
   def total_lines(self):
-    if self.language == 'python':
+    if self.language in ['python', 'go']:
       return sum(len(f.lines) for f in self.files.values())
 
     return sum(len(f.lines) for f in self.functions.values())

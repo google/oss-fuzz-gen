@@ -99,6 +99,10 @@ def _get_harness(src_file: str, out: str, language: str) -> tuple[str, str]:
   if language.lower() == 'rust' and 'fuzz_target!' not in content:
     return '', ''
 
+  if language.lower() == 'go' and any(
+      target not in content for target in ['testing.F', 'testing.T', '.Fuzz']):
+    return '', ''
+
   short_path = src_file[len(out):]
   return short_path, content
 
@@ -308,6 +312,12 @@ def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
         if path.endswith(tuple(interesting_filenames)):
           interesting_filepaths.append(path)
         if path.endswith('.py'):
+          potential_harnesses.append(path)
+      elif language == 'go':
+        # For Rust
+        if path.endswith(tuple(interesting_filenames)):
+          interesting_filepaths.append(path)
+        if path.endswith(('.go', '.cgo')):
           potential_harnesses.append(path)
       elif language == 'rust':
         # For Rust

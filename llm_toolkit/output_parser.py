@@ -79,6 +79,7 @@ def parse_code(response_path: str) -> str:
   lines = _parse_code_block_by_marker(lines, '```python', '```')
   lines = _parse_code_block_by_marker(lines, '```rust', '```')
   lines = _parse_code_block_by_marker(lines, '```java_code', '```')
+  lines = _parse_code_block_by_marker(lines, '```go', '```')
   lines = _parse_code_block_by_marker(lines, '<code>', '</code>')
   lines = _parse_code_block_by_marker(lines, '<java_code>', '</java_code>')
 

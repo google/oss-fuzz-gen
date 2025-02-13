@@ -204,6 +204,15 @@ class Benchmark:
       # zipp-zipp.difference.
       self.id = self.id.replace('._', '.')
 
+    if self.language == 'go':
+      # For golang projects, full signature of functions/methods can contains
+      # special characters that result in confusion in the directory name of
+      # benchmarks.
+      self.id = self.id.replace('*', '').replace('&', '')
+      self.id = self.id.replace('<', '').replace('>', '')
+      self.id = self.id.replace('[', '').replace(']', '')
+      self.id = self.id.replace('(', '_').replace(')', '').replace(',', '_')
+
     if self.language == 'rust':
       # For rust projects, double colon (::) is sometime used to identify
       # crate, impl or trait name of a function. This could affect the

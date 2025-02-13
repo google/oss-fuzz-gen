@@ -887,7 +887,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
           logger.error('error: %s %s', filename, interesting.keys())
           continue
 
-    elif (language not in ['rust'] and interesting and
+    elif (language not in ['rust', 'go'] and interesting and
           filename not in [os.path.basename(i) for i in interesting.keys()]):
       # TODO: Bazel messes up paths to include "/proc/self/cwd/..."
       logger.error('error: %s %s', filename, interesting.keys())

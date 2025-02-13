@@ -104,7 +104,7 @@ def check_args(args) -> bool:
       not args.source_line):
     return True
 
-  print('You must include either:\n (1) target function name by --function;\n'
+  print('You must include either:\n (1) target function name by --function;\n '
         '(2) target source file and line number by --source-file and '
         '--source-line;\n (3) --far-reach')
   return False
@@ -146,6 +146,7 @@ def get_target_benchmark(
 
   # Get target function
   if target_function_name:
+    print(type(project))
     function = project.find_function_by_name(target_function_name,
                                              only_exact_match)
 
@@ -194,6 +195,10 @@ def construct_fuzz_prompt(model, benchmark, context,
   """Local benchmarker"""
   if language in ['c', 'c++']:
     builder = prompt_builder.DefaultTemplateBuilder(model, benchmark=benchmark)
+
+  elif language == 'go':
+    builder = prompt_builder.DefaultGoTemplateBuilder(model,
+                                                      benchmark=benchmark)
   elif language == 'rust':
     builder = prompt_builder.DefaultRustTemplateBuilder(model,
                                                         benchmark=benchmark)
@@ -236,10 +241,11 @@ def introspector_lang_to_entrypoint(language: str) -> str:
     return 'LLVMFuzzerTestOneInput'
   if language == 'jvm':
     return 'fuzzerTestOneInput'
+
   if language == 'rust':
     return 'fuzz_target'
 
-  # Not supporting other language yet
+  # Other supported languages have no fixed entry point
   return ''
 
 
@@ -343,6 +349,8 @@ def get_introspector_language(args) -> str:
     return 'c++'
   if args.language in ['jvm', 'java']:
     return 'jvm'
+  if args.language in ['go', 'cgo']:
+    return 'go'
   if args.language in ['rs', 'rust']:
     return 'rust'
 
