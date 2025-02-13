@@ -98,6 +98,10 @@ class SemanticCheckResult:
     self.crash_stacks = crash_stacks if crash_stacks else []
     self.crash_func = crash_func if crash_func else {}
 
+  def __repr__(self) -> str:
+    return (f'{self.__class__.__name__}'
+            f'({", ".join(f"{k}={v!r}" for k, v in vars(self).items())})')
+
   def _get_error_desc(self) -> str:
     """Returns one sentence error description used in fix prompt."""
     if self.type == self.LOG_MESS_UP:
