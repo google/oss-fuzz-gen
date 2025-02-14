@@ -135,6 +135,11 @@ class LLM:
   def query_llm(self, prompt: prompts.Prompt, response_dir: str) -> None:
     """Queries the LLM and stores responses in |response_dir|."""
 
+  def ask_llm(self, prompt: prompts.Prompt) -> str:
+    """Queries LLM a single prompt and returns its response."""
+    del prompt
+    return ''
+
   @abstractmethod
   def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
     """Queries the LLM in the given chat session and returns the response."""
@@ -538,6 +543,18 @@ class VertexAIModel(GoogleModel):
           lambda i=i: self.do_generate(model, prompt.get(), parameters_list[i]),
           [GoogleAPICallError]) or ''
       self._save_output(i, response, response_dir)
+
+  def ask_llm(self, prompt: prompts.Prompt) -> str:
+    if self.ai_binary:
+      logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
+
+    model = self.get_model()
+    # TODO: Allow each trial to customize its parameters_list.
+    parameter = self._prepare_parameters()[0]
+    response = self.with_retry_on_error(
+        lambda: self.do_generate(model, prompt.get(), parameter),
+        [GoogleAPICallError]) or ''
+    return response
 
 
 class GeminiModel(VertexAIModel):

@@ -42,7 +42,8 @@ class SemanticCheckResult:
   #  e.g. ERROR: AddressSanitizer: attempting use-after-free on xxx
   #  e.g. ERROR: AddressSanitizer: attempting stack-overflow on xxx
   #  e.g. ERROR: AddressSanitizer: attempting negative-size-param on xxx
-  # Full list here: https://github.com/occia/fuzzdrivergpt/blob/35b0e957a61be8bd506017cda621a50e75f5acdb/validation/libVR.py#L466-L485.
+  # Full list here:
+  # https://github.com/occia/fuzzdrivergpt/blob/35b0e957a61be8bd506017cda621a50e75f5acdb/validation/libVR.py#L466-L485.
   SYMPTOM_ASAN = re.compile(r'ERROR: AddressSanitizer: (.*)\n')
   # Matches 'ERROR: libFuzzer: timeout after xxx'
   SYMPTOM_LIBFUZZER = re.compile(r'ERROR: libFuzzer: (.*)\n')
@@ -96,6 +97,10 @@ class SemanticCheckResult:
     self.crash_symptom = crash_symptom
     self.crash_stacks = crash_stacks if crash_stacks else []
     self.crash_func = crash_func if crash_func else {}
+
+  def __repr__(self) -> str:
+    return (f'{self.__class__.__name__}'
+            f'({", ".join(f"{k}={v!r}" for k, v in vars(self).items())})')
 
   def _get_error_desc(self) -> str:
     """Returns one sentence error description used in fix prompt."""
@@ -162,3 +167,12 @@ class SemanticCheckResult:
   @property
   def has_err(self) -> bool:
     return self.type not in (self.NOT_APPLICABLE, self.NO_SEMANTIC_ERR)
+
+  def to_dict(self):
+    return {
+        'has_err': self.has_err,
+        'err_type': self.type,
+        'crash_symptom': self.crash_symptom,
+        'crash_stacks': self.crash_stacks,
+        'crash_func': self.crash_func,
+    }
