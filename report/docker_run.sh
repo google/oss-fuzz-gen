@@ -51,6 +51,9 @@ if [[ $GOOGLE_APPLICATION_CREDENTIALS != '' ]]
 then
   echo "GOOGLE APPLICATION CREDENTIALS set: ${GOOGLE_APPLICATION_CREDENTIALS}."
   gcloud auth activate-service-account LLM-EVAL@oss-fuzz.iam.gserviceaccount.com --key-file="${GOOGLE_APPLICATION_CREDENTIALS:?}"
+else
+  # TODO: Set GOOGLE_APPLICATION_CREDENTIALS and ensure cloud build uses it too.
+  echo "GOOGLE APPLICATION CREDENTIALS is not set."
 fi
 
 if [[ $BENCHMARK_SET = '' ]]
