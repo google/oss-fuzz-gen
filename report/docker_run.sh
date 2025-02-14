@@ -49,6 +49,7 @@ export PYTHON
 # When running on GCP this step is unnecessary.
 if [[ $GOOGLE_APPLICATION_CREDENTIALS != '' ]]
 then
+  echo "GOOGLE APPLICATION CREDENTIALS set: ${GOOGLE_APPLICATION_CREDENTIALS}."
   gcloud auth activate-service-account LLM-EVAL@oss-fuzz.iam.gserviceaccount.com --key-file="${GOOGLE_APPLICATION_CREDENTIALS:?}"
 fi
 
