@@ -727,6 +727,8 @@ class BuilderRunner:
         new_textcov = textcov.Textcov.from_jvm_file(f)
       elif self.benchmark.language == 'python':
         new_textcov = textcov.Textcov.from_python_file(f)
+      elif self.benchmark.language == 'rust':
+        new_textcov = textcov.Textcov.from_rust_file(f)
       else:
         target_basename = os.path.basename(self.benchmark.target_path)
         new_textcov = textcov.Textcov.from_file(
@@ -1060,8 +1062,15 @@ class CloudBuilderRunner(BuilderRunner):
           run_result.coverage = textcov.Textcov.from_python_file(f)
         self._copy_textcov_to_workdir(bucket, textcov_blob_path,
                                       generated_target_name)
+    elif self.benchmark.language == 'rust':
+      blob = bucket.blob(textcov_blob_path)
+      if blob.exists():
+        with blob.open() as f:
+          run_result.coverage = textcov.Textcov.from_rust_file(f)
+        self._copy_textcov_to_workdir(bucket, textcov_blob_path,
+                                      generated_target_name)
     else:
-      # C/C++/Rust
+      # C/C++
       blob = bucket.blob(textcov_blob_path)
       if blob.exists():
         with blob.open('rb') as f:
