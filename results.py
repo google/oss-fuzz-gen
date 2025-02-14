@@ -52,6 +52,8 @@ class Result:
     }
 
 
+# TODO: Make this class an attribute of Result, avoid too many attributes in one
+# class.
 class BuildResult(Result):
   """A benchmark generation result with build info."""
   compiles: bool  # Build success/failure.
@@ -91,6 +93,8 @@ class BuildResult(Result):
     return self.compiles and self.is_function_referenced
 
 
+# TODO: Make this class an attribute of Result, avoid too many attributes in one
+# class.
 class RunResult(BuildResult):
   """The fuzzing run-time result info."""
   crashes: bool
@@ -197,6 +201,8 @@ class CoverageResult(RunResult):
   insight: str  # Reason and fixes for low coverage
 
 
+# TODO: Make this class an attribute of Result, avoid too many attributes in one
+# class.
 class AnalysisResult(Result):
   """Analysis of the fuzzing run-time result."""
   run_result: RunResult
