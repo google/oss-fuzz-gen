@@ -537,20 +537,19 @@ class BuilderRunner:
 
     run_result.log_path = run_log_path
 
-    # # Parse libfuzzer logs to get fuzz target runtime details.
-    # with open(self.work_dirs.run_logs_target(benchmark_target_name, iteration),
-    #           'rb') as f:
-    #   # In many case JVM/python projects won't have much cov
-    #   # difference in short running. Adding the flag for JVM/python
-    #   # projects to temporary skip the checking of coverage change.
-    #   # Also skipping for rust projects in initial implementation.
-    #   flag = not self.benchmark.language in ['jvm', 'python', 'rust']
-    #   run_result.cov_pcs, run_result.total_pcs, \
-    #     run_result.crashes, run_result.crash_info, \
-    #       run_result.semantic_check = \
-    #         self._parse_libfuzzer_logs(f, project_name, flag)
-    #   run_result.succeeded = not run_result.semantic_check.has_err
-    #   # TODO: Save more attributes of run_result.
+    # Parse libfuzzer logs to get fuzz target runtime details.
+    with open(run_log_path, 'rb') as f:
+      # In many case JVM/python projects won't have much cov
+      # difference in short running. Adding the flag for JVM/python
+      # projects to temporary skip the checking of coverage change.
+      # Also skipping for rust projects in initial implementation.
+      flag = not self.benchmark.language in ['jvm', 'python', 'rust']
+      run_result.cov_pcs, run_result.total_pcs, \
+        run_result.crashes, run_result.crash_info, \
+          run_result.semantic_check = \
+            self._parse_libfuzzer_logs(f, project_name, flag)
+      # run_result.succeeded = not run_result.semantic_check.has_err
+      # TODO: Save more attributes of run_result.
 
     return build_result, run_result
 
@@ -1093,14 +1092,13 @@ class CloudBuilderRunner(BuilderRunner):
         self._copy_textcov_to_workdir(bucket, textcov_blob_path,
                                       generated_target_name)
 
-    # # Parse libfuzzer logs to get fuzz target runtime details.
-    # with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
-    #           'rb') as f:
-    #   run_result.cov_pcs, run_result.total_pcs, \
-    #     run_result.crashes, run_result.crash_info, \
-    #       run_result.semantic_check = \
-    #         self._parse_libfuzzer_logs(f, project_name)
-    #   run_result.succeeded = not run_result.semantic_check.has_err
+    # Parse libfuzzer logs to get fuzz target runtime details.
+    with open(run_log_path, 'rb') as f:
+      run_result.cov_pcs, run_result.total_pcs, \
+        run_result.crashes, run_result.crash_info, \
+          run_result.semantic_check = \
+            self._parse_libfuzzer_logs(f, project_name)
+      # run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result
 
