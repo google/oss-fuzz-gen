@@ -566,7 +566,7 @@ class BuilderRunner:
         generated_project, self.benchmark.target_name, '--'
     ] + self._libfuzzer_args()
 
-    with open(log_path, 'w') as f:
+    with open(log_path, 'a') as f:
       proc = sp.Popen(command,
                       stdin=sp.DEVNULL,
                       stdout=f,
@@ -613,7 +613,7 @@ class BuilderRunner:
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
                      generated_project)
     ]
-    with open(log_path, 'w+') as log_file:
+    with open(log_path, 'a+') as log_file:
       try:
         sp.run(command,
                cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
@@ -690,7 +690,7 @@ class BuilderRunner:
     build_command = pre_build_command + ['compile'] + post_build_command
     build_bash_command = ['-c', ' '.join(build_command)]
     command.extend(build_bash_command)
-    with open(log_path, 'w+') as log_file:
+    with open(log_path, 'a+') as log_file:
       try:
         sp.run(command,
                cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
@@ -985,7 +985,7 @@ class CloudBuilderRunner(BuilderRunner):
     generated_target_name = os.path.basename(target_path)
     with open(
         self.work_dirs.build_logs_target(generated_target_name, iteration),
-        'wb') as f:
+        'ab') as f:
       blob = bucket.blob(build_log_name)
       if blob.exists():
         logger.info('Downloading cloud build log of %s: %s to %s',
@@ -999,7 +999,7 @@ class CloudBuilderRunner(BuilderRunner):
     if language != 'jvm':
       with open(
           self.work_dirs.error_logs_target(generated_target_name, iteration),
-          'wb') as f:
+          'ab') as f:
         blob = bucket.blob(err_log_name)
         if blob.exists():
           logger.info('Downloading jcc error log of %s: %s to %s',
@@ -1013,7 +1013,7 @@ class CloudBuilderRunner(BuilderRunner):
     # Set build_result.succeeded based on existence of fuzz target binary.
     # Separate the rest lines into an independent function.
     run_log_path = os.path.join(self.work_dirs.run_logs, f'{trial:02d}.log')
-    with open(run_log_path, 'wb') as f:
+    with open(run_log_path, 'ab') as f:
       blob = bucket.blob(run_log_name)
       if blob.exists():
         build_result.succeeded = True
@@ -1036,7 +1036,7 @@ class CloudBuilderRunner(BuilderRunner):
                 os.path.realpath(target_path))
 
     corpus_dir = self.work_dirs.corpus(generated_target_name)
-    with open(os.path.join(corpus_dir, 'corpus.zip'), 'wb') as f:
+    with open(os.path.join(corpus_dir, 'corpus.zip'), 'ab') as f:
       blob = bucket.blob(corpus_name)
       if blob.exists():
         blob.download_to_file(f)
@@ -1054,7 +1054,7 @@ class CloudBuilderRunner(BuilderRunner):
           'report/linux/')
       os.makedirs(cov_summary_folder, exist_ok=True)
       coverage_summary_file = os.path.join(cov_summary_folder, 'summary.json')
-      with open(coverage_summary_file, 'wb') as f:
+      with open(coverage_summary_file, 'ab') as f:
         blob.download_to_file(f)
 
       # Load the coverage summary
@@ -1112,7 +1112,7 @@ class CloudBuilderRunner(BuilderRunner):
         self.work_dirs.code_coverage_report(generated_target_name), 'textcov')
     os.makedirs(textcov_dir, exist_ok=True)
     textcov_dst = os.path.join(textcov_dir, os.path.basename(textcov_blob_path))
-    with open(textcov_dst, 'wb') as f:
+    with open(textcov_dst, 'ab') as f:
       blob.download_to_file(f)
 
   def _get_cloud_textcov_path(self, coverage_name: str) -> str:
