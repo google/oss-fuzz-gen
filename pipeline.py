@@ -81,7 +81,7 @@ class Pipeline():
         self.execution_stage.execute(result_history=result_history))
     if (not isinstance(result_history[-1], RunResult) or
         not result_history[-1].log_path):
-      self.logger.warning('[Cycle %d] Build failure, skipping the rest steps',
+      self.logger.warning('[Cycle %d] Run failure, skipping the rest steps',
                           cycle_count)
       return
 
