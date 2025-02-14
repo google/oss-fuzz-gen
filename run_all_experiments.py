@@ -453,10 +453,12 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
       for textcov_file in os.listdir(summary):
         if textcov_file.endswith('.covreport'):
           with open(os.path.join(summary, textcov_file), 'rb') as f:
-
-            textcov_dict[project_name].append(
-                textcov.Textcov.from_file(
-                    f, ignore_function_patterns=ignore_patterns))
+            if benchmark_used[0].language == 'rust':
+              textcov_dict[project_name].append(textcov.Textcov.from_file(f))
+            else:
+              textcov_dict[project_name].append(
+                  textcov.Textcov.from_rust_file(
+                      f, ignore_function_patterns=ignore_patterns))
         elif textcov_file == 'all_cov.json':
           with open(os.path.join(summary, textcov_file)) as f:
             textcov_dict[project_name].append(
