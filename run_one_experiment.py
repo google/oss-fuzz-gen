@@ -34,7 +34,7 @@ from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, output_parser, prompt_builder, prompts
-from results import BuildResult, ExperimentResult, Result, RunResult
+from results import BenchmarkResult, Result, TrialResult
 
 # WARN: Avoid high value for NUM_EVA for local experiments.
 # NUM_EVA controls the number of fuzz targets to evaluate in parallel by each
@@ -86,45 +86,18 @@ class AggregatedResult:
         f'max coverage diff report: {self.max_coverage_diff_report or "None"}')
 
   @classmethod
-  def from_experiment_result(
-      cls, trial_results: list[ExperimentResult]) -> 'AggregatedResult':
+  def from_benchmark_result(
+      cls, benchmark_result: BenchmarkResult) -> 'AggregatedResult':
     """Aggregates experiment history results of all samples."""
-    if not trial_results:
-      return AggregatedResult()
 
-    compilable_trials = []
-    crash_trials = []
-    max_coverage = 0
-    max_line_coverage_diff = 0
-    max_coverage_diff_report = ''
-    all_textcov = textcov.Textcov()
-    for trial_result_history in trial_results:
-      trial_final_result = trial_result_history.history_results[-1]
-      if isinstance(trial_final_result, BuildResult):
-        compilable_trials.append(trial_final_result.compiles)
-      if isinstance(trial_final_result, RunResult):
-        crash_trials.append(trial_final_result.crashes)
-        # TODO(dongge): Do not assume the last coverage is the highest.
-        max_coverage = max(max_coverage, trial_final_result.coverage)
-        if trial_final_result.line_coverage_diff > max_line_coverage_diff:
-          max_line_coverage_diff = trial_final_result.line_coverage_diff
-          max_coverage_diff_report = trial_final_result.coverage_report_path
-        if isinstance(trial_final_result.textcov_diff, textcov.Textcov):
-          all_textcov.merge(trial_final_result.textcov_diff)
-
-    build_success_count = sum(compilable_trials)
-    build_success_rate = (build_success_count /
-                          len(compilable_trials) if compilable_trials else 0)
-
-    crash_rate = sum(crash_trials) / len(crash_trials) if crash_trials else 0
-
-    return AggregatedResult(build_success_count=build_success_count,
-                            build_success_rate=build_success_rate,
-                            crash_rate=crash_rate,
-                            max_coverage=max_coverage,
-                            max_line_coverage_diff=max_line_coverage_diff,
-                            max_coverage_diff_report=max_coverage_diff_report,
-                            full_textcov_diff=all_textcov)
+    return AggregatedResult(
+        build_success_count=benchmark_result.build_success_count,
+        build_success_rate=benchmark_result.build_success_rate,
+        crash_rate=benchmark_result.crash_rate,
+        max_coverage=benchmark_result.coverage,
+        max_line_coverage_diff=benchmark_result.line_coverage_diff,
+        max_coverage_diff_report=benchmark_result.line_coverage_report,
+        full_textcov_diff=benchmark_result.textcov_diff)
 
 
 def generate_targets(benchmark: Benchmark, model: models.LLM,
@@ -263,7 +236,7 @@ def prepare(oss_fuzz_dir: str) -> None:
 
 def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                       args: argparse.Namespace, work_dirs: WorkDirs,
-                      trial: int) -> ExperimentResult:
+                      trial: int) -> TrialResult:
   """Runs the predefined 3-stage pipeline for one trial."""
   trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
   trial_logger.info('Trial Starts')
@@ -293,20 +266,25 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
       Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
   ])
 
-  return ExperimentResult(results)
+  return TrialResult(benchmark=benchmark,
+                     trial=trial,
+                     work_dirs=work_dirs,
+                     result_history=results)
 
 
 def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
                        args: argparse.Namespace,
-                       work_dirs: WorkDirs) -> AggregatedResult:
+                       work_dirs: WorkDirs) -> BenchmarkResult:
   """Runs all trial experiments in their pipelines."""
   # Create a pool of worker processes
   with pool.ThreadPool(processes=NUM_EVA) as p:
     # Initialize thread-local storage in each worker before processing
     task_args = [(benchmark, model, args, work_dirs, trial)
                  for trial in range(1, NUM_EVA + 1)]
-    results = p.starmap(_fuzzing_pipeline, task_args)
-  return AggregatedResult.from_experiment_result(results)
+    trial_results = p.starmap(_fuzzing_pipeline, task_args)
+  return BenchmarkResult(benchmark=benchmark,
+                         work_dirs=work_dirs,
+                         trial_results=trial_results)
 
 
 def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
@@ -319,4 +297,5 @@ def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
                     outdir=work_dirs.base,
                     out_basename='benchmark.yaml')
 
-  return _fuzzing_pipelines(benchmark, model, args, work_dirs)
+  return AggregatedResult.from_benchmark_result(
+      _fuzzing_pipelines(benchmark, model, args, work_dirs))

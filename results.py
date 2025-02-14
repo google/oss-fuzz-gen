@@ -231,13 +231,131 @@ class AnalysisResult(Result):
     return not self.semantic_result.has_err
 
 
-class ExperimentResult:
-  """All result history of a benchmark during a trial experiment."""
-  history_results: list[Result]
+class TrialResult:
+  """All history results for a trial of a benchmark in an experiment."""
+  benchmark: Benchmark
+  trial: int
+  work_dirs: WorkDirs
+  result_history: list[Result]
 
-  def __init__(self, history_results: Optional[list[Result]] = None) -> None:
-    self.history_results = history_results or []
+  def __init__(self,
+               benchmark: Benchmark,
+               trial: int,
+               work_dirs: WorkDirs,
+               result_history: Optional[list[Result]] = None) -> None:
+    self.benchmark = benchmark
+    self.trial = trial
+    self.work_dirs = work_dirs
+    self.result_history = result_history or []
 
-  def __repr__(self) -> str:
-    """Summarizes results for the report."""
-    raise NotImplementedError
+  @property
+  def build_success(self) -> bool:
+    """True if there is any build success."""
+    return any(result.success
+               for result in self.result_history
+               if isinstance(result, BuildResult))
+
+  @property
+  def crash(self) -> bool:
+    """True if there is any run crash not caused by semantic error."""
+    return any(result.run_result.crashes and result.success
+               for result in self.result_history
+               if isinstance(result, AnalysisResult))
+
+  @property
+  def coverage(self) -> float:
+    """Max line coverage diff."""
+    return max(result.coverage
+               for result in self.result_history
+               if isinstance(result, RunResult))
+
+  @property
+  def line_coverage_diff(self) -> float:
+    """Max line coverage diff."""
+    return max(result.line_coverage_diff
+               for result in self.result_history
+               if isinstance(result, RunResult))
+
+  @property
+  def line_coverage_report(self) -> str:
+    """Max line coverage diff report."""
+    for result in self.result_history:
+      if not isinstance(result, RunResult):
+        continue
+      if result.line_coverage_diff == self.line_coverage_diff:
+        return result.coverage_report_path
+    return ''
+
+  @property
+  def textcov_diff(self) -> textcov.Textcov:
+    """Sum textcov diff."""
+    all_textcov = textcov.Textcov()
+    for result in self.result_history:
+      if isinstance(result, RunResult) and result.textcov_diff:
+        all_textcov.merge(result.textcov_diff)
+    return all_textcov
+
+
+class BenchmarkResult:
+  """All trial results for a benchmark in an experiment."""
+  benchmark: Benchmark
+  work_dirs: WorkDirs
+  trial_results: list[TrialResult]
+
+  def __init__(self,
+               benchmark: Benchmark,
+               work_dirs: WorkDirs,
+               trial_results: Optional[list[TrialResult]] = None) -> None:
+    self.benchmark = benchmark
+    self.work_dirs = work_dirs
+    self.trial_results = trial_results or []
+
+  @property
+  def trial_count(self) -> int:
+    """Total number of trials."""
+    return len(self.trial_results)
+
+  @property
+  def build_success_count(self) -> int:
+    """Build success count."""
+    return sum(result.build_success for result in self.trial_results)
+
+  @property
+  def build_success_rate(self) -> float:
+    """Build success Ratio."""
+    if self.trial_count == 0:
+      return 0
+    return self.build_success_count / self.trial_count
+
+  @property
+  def crash_rate(self) -> float:
+    """True if there is any run crash not caused by semantic error."""
+    if self.trial_count == 0:
+      return 0
+    return sum(result.crash for result in self.trial_results) / self.trial_count
+
+  @property
+  def coverage(self) -> float:
+    """Max line coverage diff."""
+    return max(result.coverage for result in self.trial_results)
+
+  @property
+  def line_coverage_diff(self) -> float:
+    """Max line coverage diff."""
+    return max(result.line_coverage_diff for result in self.trial_results)
+
+  @property
+  def line_coverage_report(self) -> str:
+    """Max line coverage diff report."""
+    for result in self.trial_results:
+      if result.line_coverage_diff == self.line_coverage_diff:
+        return result.line_coverage_report
+    return ''
+
+  @property
+  def textcov_diff(self) -> textcov.Textcov:
+    """Sum textcov diff."""
+    all_textcov = textcov.Textcov()
+    for result in self.trial_results:
+      all_textcov.merge(result.textcov_diff)
+    return all_textcov
