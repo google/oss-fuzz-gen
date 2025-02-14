@@ -839,6 +839,8 @@ class CloudBuilderRunner(BuilderRunner):
         # As mentioned in pr #151.
         ('BrokenPipeError: [Errno 32] Broken pipe',
          lambda x: 5 * 2**x + random.randint(1, 5)),
+        # Service Unavailable.
+        ('Service Unavailable', lambda x: 5 * 2**x + random.randint(1, 5)),
         # Temp workaround for issue #12.
         ('You do not currently have an active account selected',
          lambda x: 5 * 2**x),
