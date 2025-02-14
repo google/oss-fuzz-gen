@@ -4,6 +4,7 @@ project) to help identify log during debugging and result tracking."""
 import json
 import logging
 import os
+import tempfile
 from typing import Mapping
 from urllib.parse import urlparse
 
@@ -73,7 +74,17 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
     blob = bucket.blob(blob_name)
 
     if blob.exists():
-      blob.download_to_filename(local_path)
+      # Download blob to a temporary file
+      with tempfile.NamedTemporaryFile(delete=False) as tmp:
+        tmp_path = tmp.name
+      blob.download_to_filename(tmp_path)
+      # Append the temporary file's content to the local file
+      with open(tmp_path, 'rb') as tmp_file, open(local_path,
+                                                  'ab') as local_file:
+        local_file.write(tmp_file.read())
+
+      os.remove(tmp_path)
+      # blob.download_to_filename(local_path)
       return True
     return False
 
