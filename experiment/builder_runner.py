@@ -851,7 +851,7 @@ class CloudBuilderRunner(BuilderRunner):
 
     for attempt_id in range(1, CLOUD_EXP_MAX_ATTEMPT + 1):
       try:
-        sp.run(*args, capture_output=True, check=True, **kwargs)
+        sp.run(*args, check=True, **kwargs)
         return True
       except sp.CalledProcessError as e:
         # Replace \n for single log entry on cloud.
@@ -937,6 +937,8 @@ class CloudBuilderRunner(BuilderRunner):
     reproducer_name = f'{uid}.reproducer'
     reproducer_path = f'gs://{self.experiment_bucket}/{reproducer_name}'
 
+    logger.info('Servie account key: %s',
+                os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'))
     command = [
         f'./{oss_fuzz_checkout.VENV_DIR}/bin/python3',
         'infra/build/functions/target_experiment.py',
