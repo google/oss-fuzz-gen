@@ -4,7 +4,11 @@
 To run this you need a local version of Fuzz Introspector and a target code
 base you want to analyse.
 
-Sample run where `${MODEL}` holds your model name:
+## Setup
+
+The first step is to create a virtual environment with Fuzz Introspector
+installed and also OSS-Fuzz-gen dependencies installed. The following
+commands achieve this:
 
 ```sh
 # Create virtual environment
@@ -17,17 +21,25 @@ cd fuzz-introspector/src
 python3 -m pip install -e .
 cd ../../
 
-# Prepare a target
-## C++
-git clone https://github.com/dvhar/dateparse
-## Java
-git clone https://github.com/stleary/JSON-java json-java
-
+# Clone OSS-Fuzz-gen and install dependencies
 # Clone oss-fuzz-gen
 git clone https://github.com/google/oss-fuzz-gen
 cd oss-fuzz-gen
 python3 -m pip install -r ./requirements.txt
+```
 
+## Run analysis on sample C code
+
+Sample run where `${MODEL}` holds your model name:
+
+Perform the following operations from inside the OSS-Fuzz-gen repository
+at the root of the repository. In this example, we generate a target based
+on the function name of the target function.
+
+```sh
+# Prepare a target
+## C++
+git clone https://github.com/dvhar/dateparse ../dateparse
 # Generate a harness (C++) (with function name)
 python3 -m experimental.from_scratch.generate \
   -e c++ \
@@ -35,15 +47,6 @@ python3 -m experimental.from_scratch.generate \
   -f dateparse \
   -t ../dateparse/ \
   -r responses_cpp
-
-# Generate a harness (Java) (with source file and line)
-python3 -m experimental.from_scratch.generate \
-  -e java \
-  -l ${MODEL} \
-  -s JSONArray.java \
-  -sl 1200 \
-  -t ../json-java/ \
-  -r responses_java
 
 # Show harness
 cat responses_cpp/01.rawoutput
@@ -72,6 +75,30 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     return 0;
 }
 """
+```
+
+## Run on Java code
+Sample run where `${MODEL}` holds your model name:
+
+Perform the following operations from inside the OSS-Fuzz-gen repository
+at the root of the repository.
+
+In comparison to the C example above, in this example we provide souce
+file and source line of the function we would to fuzz. In this case,
+it's line 1200 of `JSONArray.java` which is the [put](https://github.com/stleary/JSON-java/blob/42afb3404556726a6324a2eb135124d9c39eb13d/src/main/java/org/json/JSONArray.java#L1200) function.
+
+```sh
+## Java
+git clone https://github.com/stleary/JSON-java ../json-java
+
+# Generate a harness (Java) (with source file and line)
+python3 -m experimental.from_scratch.generate \
+  -e java \
+  -l ${MODEL} \
+  -s JSONArray.java \
+  -sl 1200 \
+  -t ../json-java/ \
+  -r responses_java
 
 cat responses_java/01.rawoutput
 """
@@ -106,4 +133,3 @@ public class JSONArray {
 }
 """
 ```
-
