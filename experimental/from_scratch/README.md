@@ -4,7 +4,7 @@
 To run this you need a local version of Fuzz Introspector and a target code
 base you want to analyse.
 
-## Setup
+## Setting up
 
 The first step is to create a virtual environment with Fuzz Introspector
 installed and also OSS-Fuzz-gen dependencies installed. The following
@@ -18,7 +18,7 @@ python3.11 -m virtualenv .venv
 # Install Fuzz Introspector in virtual environment
 git clone https://github.com/ossf/fuzz-introspector
 cd fuzz-introspector/src
-python3 -m pip install -e .
+python3 -m pip install .
 cd ../../
 
 # Clone OSS-Fuzz-gen and install dependencies
