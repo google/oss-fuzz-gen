@@ -38,9 +38,10 @@ on the function name of the target function.
 
 ```sh
 # Prepare a target
-## C++
+
 git clone https://github.com/dvhar/dateparse ../dateparse
-# Generate a harness (C++) (with function name)
+
+# Generate a harness with function name
 python3 -m experimental.from_scratch.generate \
   -e c++ \
   -l ${MODEL} \
@@ -91,7 +92,7 @@ it's line 1200 of `JSONArray.java` which is the [put](https://github.com/stleary
 ## Java
 git clone https://github.com/stleary/JSON-java ../json-java
 
-# Generate a harness (Java) (with source file and line)
+# Generate a harness with source file and line
 python3 -m experimental.from_scratch.generate \
   -e java \
   -l ${MODEL} \
