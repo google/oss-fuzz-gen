@@ -38,7 +38,6 @@ on the function name of the target function.
 
 ```sh
 # Prepare a target
-
 git clone https://github.com/dvhar/dateparse ../dateparse
 
 # Generate a harness with function name
@@ -89,7 +88,7 @@ file and source line of the function we would to fuzz. In this case,
 it's line 1200 of `JSONArray.java` which is the [put](https://github.com/stleary/JSON-java/blob/42afb3404556726a6324a2eb135124d9c39eb13d/src/main/java/org/json/JSONArray.java#L1200) function.
 
 ```sh
-## Java
+# Prepare a target
 git clone https://github.com/stleary/JSON-java ../json-java
 
 # Generate a harness with source file and line
