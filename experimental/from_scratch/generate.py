@@ -163,7 +163,8 @@ def get_target_benchmark(
 
     # Build a context.
     function_source = function.function_source_code_as_text()
-    xrefs = project.get_cross_references(function)
+    xrefs = project.get_cross_references_by_name(function.name)
+    logger.info('Total xrefs found %d', len(xrefs))
     if len(xrefs) > 10:
       xrefs = xrefs[:10]
     xref_strings = [xref.function_source_code_as_text() for xref in xrefs]
