@@ -28,7 +28,7 @@ cd oss-fuzz-gen
 python3 -m pip install -r ./requirements.txt
 ```
 
-## Run analysis on sample C code
+## Run harness generation on C code
 
 Sample run where `${MODEL}` holds your model name:
 
@@ -77,7 +77,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 """
 ```
 
-## Run on Java code
+## Run harness generation on Java code
 Sample run where `${MODEL}` holds your model name:
 
 Perform the following operations from inside the OSS-Fuzz-gen repository
