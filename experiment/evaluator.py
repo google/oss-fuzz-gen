@@ -572,23 +572,6 @@ class Evaluator:
                  compile_error=build_result.log_path,
                  compile_log=build_result.log_path))
 
-    # if not run_result.succeeded:
-    #   dual_logger.log(f'Warning: Failed to fix semantic error '
-    #                   f'{run_result.semantic_check.type}'
-    #                   f' in {generated_oss_fuzz_project}.')
-    #   return dual_logger.return_result(
-    #       Result(True,
-    #              run_result.crashes,
-    #              0.0,
-    #              0.0,
-    #              run_result.coverage_report_path,
-    #              run_result.reproducer_path,
-    #              True,
-    #              run_result.semantic_check.type,
-    #              run_result.triage,
-    #              compile_error=build_result.log_path,
-    #              compile_log=build_result.log_path))
-
     dual_logger.log(
         f'Result for {generated_oss_fuzz_project}: '
         f'crashes={run_result.crashes}, coverage={coverage_percent} '

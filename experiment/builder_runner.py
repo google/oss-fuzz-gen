@@ -527,8 +527,6 @@ class BuilderRunner:
     # Make the rest lines in an independent function.
     run_result = RunResult()
 
-    # run_log_path = self.work_dirs.run_logs_target(benchmark_target_name,
-    #                                               iteration)
     run_log_path = os.path.join(self.work_dirs.run_logs, f'{trial:02d}.log')
     self.run_target_local(generated_project, benchmark_target_name,
                           run_log_path)
@@ -548,8 +546,6 @@ class BuilderRunner:
         run_result.crashes, run_result.crash_info, \
           run_result.semantic_check = \
             self._parse_libfuzzer_logs(f, project_name, flag)
-      # run_result.succeeded = not run_result.semantic_check.has_err
-      # TODO: Save more attributes of run_result.
 
     return build_result, run_result
 
@@ -953,6 +949,8 @@ class CloudBuilderRunner(BuilderRunner):
         f'--real_project={project_name}',
     ]
 
+    # Temporarily comment out due to error in cached images.
+    # TODO(dongge): Add this back when the cached image works again.
     # if oss_fuzz_checkout.ENABLE_CACHING and (
     #     oss_fuzz_checkout.is_image_cached(project_name, 'address') and
     #     oss_fuzz_checkout.is_image_cached(project_name, 'coverage')):
@@ -1098,7 +1096,6 @@ class CloudBuilderRunner(BuilderRunner):
         run_result.crashes, run_result.crash_info, \
           run_result.semantic_check = \
             self._parse_libfuzzer_logs(f, project_name)
-      # run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result
 

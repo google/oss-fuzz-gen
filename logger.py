@@ -97,7 +97,6 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
         local_file.write(tmp_file.read())
 
       os.remove(tmp_path)
-      # blob.download_to_filename(local_path)
       return True
     return False
 
