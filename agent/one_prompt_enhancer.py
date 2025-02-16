@@ -22,7 +22,7 @@ from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
 from llm_toolkit.prompts import Prompt
 from results import AnalysisResult, BuildResult, Result
 
-MAX_ROUND = 5
+MAX_ROUND = 10
 
 
 class OnePromptEnhancer(OnePromptPrototyper):

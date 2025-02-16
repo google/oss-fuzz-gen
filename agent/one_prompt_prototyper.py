@@ -32,7 +32,7 @@ from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
 from tool.container_tool import ProjectContainerTool
 
-MAX_ROUND = 5
+MAX_ROUND = 10
 
 
 class OnePromptPrototyper(BaseAgent):
