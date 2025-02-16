@@ -1,9 +1,23 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """The data structure of all result kinds."""
 import dataclasses
 from typing import Any, Optional
 
 from experiment import textcov
 from experiment.benchmark import Benchmark
+from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
 
 
@@ -51,6 +65,8 @@ class Result:
     }
 
 
+# TODO: Make this class an attribute of Result, avoid too many attributes in one
+# class.
 class BuildResult(Result):
   """A benchmark generation result with build info."""
   compiles: bool  # Build success/failure.
@@ -90,6 +106,8 @@ class BuildResult(Result):
     return self.compiles and self.is_function_referenced
 
 
+# TODO: Make this class an attribute of Result, avoid too many attributes in one
+# class.
 class RunResult(BuildResult):
   """The fuzzing run-time result info."""
   crashes: bool
@@ -196,13 +214,167 @@ class CoverageResult(RunResult):
   insight: str  # Reason and fixes for low coverage
 
 
-class ExperimentResult:
-  """All result history of a benchmark during a trial experiment."""
-  history_results: list[Result]
+# TODO: Make this class an attribute of Result, avoid too many attributes in one
+# class.
+class AnalysisResult(Result):
+  """Analysis of the fuzzing run-time result."""
+  run_result: RunResult
+  semantic_result: SemanticCheckResult
+  crash_result: Optional[CrashResult]
+  coverage_result: Optional[CoverageResult]
 
-  def __init__(self, history_results: Optional[list[Result]] = None) -> None:
-    self.history_results = history_results or []
+  def __init__(self,
+               author: str,
+               run_result: RunResult,
+               semantic_result: SemanticCheckResult,
+               crash_result: Optional[CrashResult] = None,
+               coverage_result: Optional[CoverageResult] = None,
+               chat_history: Optional[dict] = None) -> None:
+    super().__init__(run_result.benchmark, run_result.trial,
+                     run_result.work_dirs, run_result.fuzz_target_source,
+                     run_result.build_script_source, author, chat_history)
+    self.run_result = run_result
+    self.semantic_result = semantic_result
+    self.crash_result = crash_result
+    self.coverage_result = coverage_result
 
-  def __repr__(self) -> str:
-    """Summarizes results for the report."""
-    raise NotImplementedError
+  def to_dict(self) -> dict:
+    return self.run_result.to_dict() | {
+        'semantic_result': self.semantic_result.to_dict(),
+        'crash_result': self.crash_result,
+        'coverage_result': self.coverage_result,
+    }
+
+  @property
+  def success(self):
+    return not self.semantic_result.has_err
+
+
+class TrialResult:
+  """All history results for a trial of a benchmark in an experiment."""
+  benchmark: Benchmark
+  trial: int
+  work_dirs: WorkDirs
+  result_history: list[Result]
+
+  def __init__(self,
+               benchmark: Benchmark,
+               trial: int,
+               work_dirs: WorkDirs,
+               result_history: Optional[list[Result]] = None) -> None:
+    self.benchmark = benchmark
+    self.trial = trial
+    self.work_dirs = work_dirs
+    self.result_history = result_history or []
+
+  @property
+  def build_success(self) -> bool:
+    """True if there is any build success."""
+    return any(result.success
+               for result in self.result_history
+               if isinstance(result, BuildResult))
+
+  @property
+  def crash(self) -> bool:
+    """True if there is any run crash not caused by semantic error."""
+    return any(result.run_result.crashes and result.success
+               for result in self.result_history
+               if isinstance(result, AnalysisResult))
+
+  @property
+  def coverage(self) -> float:
+    """Max line coverage diff."""
+    return max(result.coverage
+               for result in self.result_history
+               if isinstance(result, RunResult))
+
+  @property
+  def line_coverage_diff(self) -> float:
+    """Max line coverage diff."""
+    return max(result.line_coverage_diff
+               for result in self.result_history
+               if isinstance(result, RunResult))
+
+  @property
+  def line_coverage_report(self) -> str:
+    """Max line coverage diff report."""
+    for result in self.result_history:
+      if not isinstance(result, RunResult):
+        continue
+      if result.line_coverage_diff == self.line_coverage_diff:
+        return result.coverage_report_path
+    return ''
+
+  @property
+  def textcov_diff(self) -> textcov.Textcov:
+    """Sum textcov diff."""
+    all_textcov = textcov.Textcov()
+    for result in self.result_history:
+      if isinstance(result, RunResult) and result.textcov_diff:
+        all_textcov.merge(result.textcov_diff)
+    return all_textcov
+
+
+class BenchmarkResult:
+  """All trial results for a benchmark in an experiment."""
+  benchmark: Benchmark
+  work_dirs: WorkDirs
+  trial_results: list[TrialResult]
+
+  def __init__(self,
+               benchmark: Benchmark,
+               work_dirs: WorkDirs,
+               trial_results: Optional[list[TrialResult]] = None) -> None:
+    self.benchmark = benchmark
+    self.work_dirs = work_dirs
+    self.trial_results = trial_results or []
+
+  @property
+  def trial_count(self) -> int:
+    """Total number of trials."""
+    return len(self.trial_results)
+
+  @property
+  def build_success_count(self) -> int:
+    """Build success count."""
+    return sum(result.build_success for result in self.trial_results)
+
+  @property
+  def build_success_rate(self) -> float:
+    """Build success Ratio."""
+    if self.trial_count == 0:
+      return 0
+    return self.build_success_count / self.trial_count
+
+  @property
+  def crash_rate(self) -> float:
+    """True if there is any run crash not caused by semantic error."""
+    if self.trial_count == 0:
+      return 0
+    return sum(result.crash for result in self.trial_results) / self.trial_count
+
+  @property
+  def coverage(self) -> float:
+    """Max line coverage diff."""
+    return max(result.coverage for result in self.trial_results)
+
+  @property
+  def line_coverage_diff(self) -> float:
+    """Max line coverage diff."""
+    return max(result.line_coverage_diff for result in self.trial_results)
+
+  @property
+  def line_coverage_report(self) -> str:
+    """Max line coverage diff report."""
+    for result in self.trial_results:
+      if result.line_coverage_diff == self.line_coverage_diff:
+        return result.line_coverage_report
+    return ''
+
+  @property
+  def textcov_diff(self) -> textcov.Textcov:
+    """Sum textcov diff."""
+    all_textcov = textcov.Textcov()
+    for result in self.trial_results:
+      all_textcov.merge(result.textcov_diff)
+    return all_textcov

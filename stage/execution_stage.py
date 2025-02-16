@@ -64,7 +64,7 @@ class ExecutionStage(BaseStage):
       raise TypeError
 
     try:
-      _, run_result = evaluator.builder_runner.build_and_run(
+      build_result, run_result = evaluator.builder_runner.build_and_run(
           generated_oss_fuzz_project,
           fuzz_target_path,
           0,
@@ -75,7 +75,8 @@ class ExecutionStage(BaseStage):
               'ofg',
               # TODO(dongge): Tag function name, compatible with tag format.
               last_result.benchmark.project,
-          ])
+          ],
+          trial=last_result.trial)
       if not run_result:
         raise Exception('No RunResult received from build_and_run')
       if run_result.coverage_summary is None or run_result.coverage is None:
@@ -122,6 +123,7 @@ class ExecutionStage(BaseStage):
           is_function_referenced=last_result.is_function_referenced,
           crashes=run_result.crashes,
           run_error=run_result.crash_info,
+          # TODO: This should be the content of log_path.
           run_log=run_result.log_path,
           coverage_summary=run_result.coverage_summary,
           coverage=coverage_percent,

@@ -480,8 +480,11 @@ class Evaluator:
         if gen_succ and run_result and run_result.succeeded:
           gen_succ = gen_succ and (coverage_diff > 0)
       else:
-        gen_succ = (build_result.succeeded and run_result and
-                    run_result.succeeded)
+        # Should not concern run_result.succeeded for generation otherwise
+        # it may make a good fuzz target bad.
+        # Should concern run_result.succeeded for analyzes to know semantic
+        # errors
+        gen_succ = build_result.succeeded  # and run_result and run_result.succeeded
 
       if gen_succ or llm_fix_count >= LLM_FIX_LIMIT:
         # Exit cond 1: successfully generate the fuzz target.
@@ -564,23 +567,6 @@ class Evaluator:
                  '',
                  '',
                  not run_result.succeeded,
-                 run_result.semantic_check.type,
-                 run_result.triage,
-                 compile_error=build_result.log_path,
-                 compile_log=build_result.log_path))
-
-    if not run_result.succeeded:
-      dual_logger.log(f'Warning: Failed to fix semantic error '
-                      f'{run_result.semantic_check.type}'
-                      f' in {generated_oss_fuzz_project}.')
-      return dual_logger.return_result(
-          Result(True,
-                 run_result.crashes,
-                 0.0,
-                 0.0,
-                 run_result.coverage_report_path,
-                 run_result.reproducer_path,
-                 True,
                  run_result.semantic_check.type,
                  run_result.triage,
                  compile_error=build_result.log_path,
