@@ -1,12 +1,29 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """A note-taker module to write experiment logs and result files. It attaches
 extra key info to logs and results (such as trial ID, function signature,
 project) to help identify log during debugging and result tracking."""
 import json
 import logging
 import os
+import tempfile
 from typing import Mapping
+from urllib.parse import urlparse
 
-from results import Result
+from google.cloud import storage
+
+from results import Result, RunResult
 
 FINAL_RESULT_JSON = 'result.json'
 
@@ -22,7 +39,7 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
 
   def write_to_file(self, file_path: str, file_content: str) -> None:
     """Writes the |file_content| into a local |file_path|."""
-    with open(file_path, 'w') as file:
+    with open(file_path, 'a') as file:
       file.writelines(file_content)
 
   def write_fuzz_target(self, result: Result) -> None:
@@ -55,6 +72,47 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
         f'{agent_name}\n{chat_history}\n'
         for agent_name, chat_history in result.chat_history.items())
     self.write_to_file(chat_history_path, chat_history)
+
+  def download_gcs_file(self, local_path: str, gs_url: str) -> bool:
+    """Downloads a file from Google Cloud storage to a local file."""
+    parsed_url = urlparse(gs_url)
+    if parsed_url.scheme != "gs":
+      logging.error("URL must start with 'gs://': %s", parsed_url)
+
+    bucket_name = parsed_url.netloc
+    blob_name = parsed_url.path.lstrip("/")
+
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    if blob.exists():
+      # Download blob to a temporary file
+      with tempfile.NamedTemporaryFile(delete=False) as tmp:
+        tmp_path = tmp.name
+      blob.download_to_filename(tmp_path)
+      # Append the temporary file's content to the local file
+      with open(tmp_path, 'rb') as tmp_file, open(local_path,
+                                                  'ab') as local_file:
+        local_file.write(tmp_file.read())
+
+      os.remove(tmp_path)
+      return True
+    return False
+
+  def download_run_log(self, result: RunResult) -> None:
+    local_run_log_path = os.path.join(result.work_dirs.run_logs,
+                                      f'{result.trial:02d}.log')
+    if self.download_gcs_file(local_run_log_path, result.run_log):
+      info('Downloading cloud run log: %s to %s',
+           result.log_path,
+           local_run_log_path,
+           trial=result.trial)
+    else:
+      warning('Cloud run log gsc file does not exit: %s to %s',
+              result.log_path,
+              local_run_log_path,
+              trial=result.trial)
 
 
 def debug(msg: object,

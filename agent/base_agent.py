@@ -57,6 +57,21 @@ class BaseAgent(ABC):
                 trial=trial)
     return response
 
+  def ask_llm(self, cur_round: int, prompt: Prompt, trial: int) -> str:
+    """Chat with LLM."""
+    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
+                cur_round,
+                prompt.get(),
+                cur_round,
+                trial=trial)
+    response = self.llm.ask_llm(prompt=prompt)
+    logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
+                cur_round,
+                response,
+                cur_round,
+                trial=trial)
+    return response
+
   def _parse_tag(self, response: str, tag: str) -> str:
     """Parses the XML-style tags from LLM response."""
     match = re.search(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)

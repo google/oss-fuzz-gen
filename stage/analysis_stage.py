@@ -15,5 +15,12 @@ class AnalysisStage(BaseStage):
   been sufficiently covered."""
 
   def execute(self, result_history: list[Result]) -> Result:
-    # A placeholder for now.
-    return result_history[-1]
+    self.logger.info('Analysis Stage')
+    agent = self.get_agent()
+    analysis_result = agent.execute(result_history)
+
+    # TODO(dongge): Save logs and more info into workdir.
+    self.logger.write_chat_history(analysis_result)
+    self.logger.debug('Analysis stage completed with with result:\n%s',
+                      analysis_result)
+    return analysis_result

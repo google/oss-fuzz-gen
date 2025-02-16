@@ -1,10 +1,23 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """The fuzzing main pipeline."""
 import argparse
 from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
-from results import BuildResult, Result
+from results import AnalysisResult, BuildResult, Result, RunResult
 from stage.analysis_stage import AnalysisStage
 from stage.execution_stage import ExecutionStage
 from stage.writing_stage import WritingStage
@@ -26,7 +39,7 @@ class Pipeline():
                args: argparse.Namespace,
                trial: int,
                writing_stage_agents: Optional[list[BaseAgent]] = None,
-               evaluation_stage_agents: Optional[list[BaseAgent]] = None,
+               execution_stage_agents: Optional[list[BaseAgent]] = None,
                analysis_stage_agents: Optional[list[BaseAgent]] = None):
     self.args = args
     self.trial = trial
@@ -35,34 +48,61 @@ class Pipeline():
     self.writing_stage: WritingStage = WritingStage(args, trial,
                                                     writing_stage_agents)
     self.execution_stage: ExecutionStage = ExecutionStage(
-        args, trial, evaluation_stage_agents)
+        args, trial, execution_stage_agents)
     self.analysis_stage: AnalysisStage = AnalysisStage(args, trial,
                                                        analysis_stage_agents)
 
-  def _terminate(self, result_history: list[Result]) -> bool:
+  def _terminate(self, result_history: list[Result], cycle_count: int) -> bool:
     """Validates if the termination conditions have been satisfied."""
-    conditions = bool(result_history and len(result_history) > 1)
-    self.logger.info('termination condition met: %s', conditions)
-    return conditions
+    if not cycle_count:
+      return False
+
+    last_result = result_history[-1]
+    if cycle_count > 5:
+      self.logger.warning('[Cycle %d] Terminate after 5 cycles: %s',
+                          cycle_count, result_history)
+      return True
+
+    if not isinstance(last_result, AnalysisResult):
+      self.logger.warning('[Cycle %d] Last result is not AnalysisResult: %s',
+                          cycle_count, result_history)
+      return True
+
+    if last_result.success:
+      self.logger.info('[Cycle %d] Generation succeeds: %s', cycle_count,
+                       result_history)
+      return True
+
+    self.logger.info('[Cycle %d] Generation continues: %s', cycle_count,
+                     result_history)
+    return False
 
   def _execute_one_cycle(self, result_history: list[Result],
                          cycle_count: int) -> None:
     """Executes the stages once."""
-    self.logger.info('Cycle %d initial result is %s', cycle_count,
+    self.logger.info('[Cycle %d] Initial result is %s', cycle_count,
                      result_history[-1])
     result_history.append(
         self.writing_stage.execute(result_history=result_history))
     if (not isinstance(result_history[-1], BuildResult) or
         not result_history[-1].success):
-      self.logger.error('Cycle %d build failure, skipping the rest steps',
-                        cycle_count)
+      self.logger.warning('[Cycle %d] Build failure, skipping the rest steps',
+                          cycle_count)
       return
 
     result_history.append(
         self.execution_stage.execute(result_history=result_history))
+    if (not isinstance(result_history[-1], RunResult) or
+        not result_history[-1].log_path):
+      self.logger.warning('[Cycle %d] Run failure, skipping the rest steps',
+                          cycle_count)
+      return
 
-    self.logger.info('Cycle %d final result is %s', cycle_count,
-                     result_history[-1])
+    result_history.append(
+        self.analysis_stage.execute(result_history=result_history))
+
+    self.logger.info('[Cycle %d] Analysis result %s: %s', cycle_count,
+                     result_history[-1].success, result_history[-1])
 
   def execute(self, result_history: list[Result]) -> list[Result]:
     """
@@ -75,11 +115,12 @@ class Pipeline():
     The process repeats until the termination conditions are met.
     """
     self.logger.debug('Pipeline starts')
-    cycle_count = 1
-    while not self._terminate(result_history=result_history):
+    cycle_count = 0
+    while not self._terminate(result_history=result_history,
+                              cycle_count=cycle_count):
+      cycle_count += 1
       self._execute_one_cycle(result_history=result_history,
                               cycle_count=cycle_count)
-      cycle_count += 1
 
     final_result = result_history[-1]
     self.logger.write_result(result_status_dir=final_result.work_dirs.status,

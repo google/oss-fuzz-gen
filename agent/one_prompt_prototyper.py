@@ -15,21 +15,24 @@
 Use it as a usual module locally, or as script in cloud builds.
 """
 import os
-import shutil
+import subprocess as sp
+import time
+from datetime import timedelta
+from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
 from data_prep import project_targets
 from data_prep.project_context.context_introspector import ContextRetriever
-from experiment import benchmark as benchmarklib
-from experiment import builder_runner as builder_runner_lib
-from experiment import evaluator as exp_evaluator
+from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
-from llm_toolkit import output_parser, prompt_builder, prompts
+from llm_toolkit import (code_fixer, models, output_parser, prompt_builder,
+                         prompts)
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
+from tool.container_tool import ProjectContainerTool
 
-MAX_ROUND = 100
+MAX_ROUND = 10
 
 
 class OnePromptPrototyper(BaseAgent):
@@ -47,6 +50,7 @@ class OnePromptPrototyper(BaseAgent):
                   trial=last_result.trial)
       return prompt_builder.TestToHarnessConverter(self.llm, benchmark,
                                                    self.args.template_directory)
+    # TODO: Do these in separate agents.
     if benchmark.language == 'jvm':
       # For Java projects
       return prompt_builder.DefaultJvmTemplateBuilder(
@@ -94,114 +98,165 @@ class OnePromptPrototyper(BaseAgent):
 
     return prompt
 
-  def _read_from_file(self, file_path: str) -> str:
-    """Reads the file content from a local |file_path|."""
-    with open(file_path, 'r') as file:
-      file_lines = file.readlines()
-    return '\n'.join(file_lines)
-
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
     last_result = result_history[-1]
-    benchmark = last_result.benchmark
+    logger.info('Executing %s', self.name, trial=last_result.trial)
     WorkDirs(self.args.work_dirs.base)
-    build_result = BuildResult(benchmark=benchmark,
+
+    prompt = self._initial_prompt(result_history)
+    cur_round = 1
+    build_result = BuildResult(benchmark=last_result.benchmark,
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
                                author=self,
-                               chat_history={self.name: ''})
+                               chat_history={self.name: prompt.get()})
 
-    prompt = self._initial_prompt(result_history)
-    generated_target = self._generate_targets(
-        prompt, self._prompt_builder(result_history), result_history)[0]
-    logger.info('Final fuzz target path:\n %s',
-                generated_target,
-                trial=last_result.trial)
-    build_result.fuzz_target_source = self._read_from_file(generated_target)
-    build_result = self._check_targets(benchmark, generated_target,
-                                       build_result)
+    while prompt and cur_round <= MAX_ROUND:
+      self._generate_fuzz_target(prompt, result_history, build_result,
+                                 cur_round)
+
+      self._validate_fuzz_target(cur_round, build_result)
+      prompt = self._advice_fuzz_target(build_result, cur_round)
+      cur_round += 1
+
     return build_result
 
-  def _generate_targets(self, prompt: prompts.Prompt,
-                        builder: prompt_builder.PromptBuilder,
-                        result_history: list[Result]) -> list[str]:
-    """Generates fuzz target with LLM."""
-    last_result = result_history[-1]
-    benchmark = last_result.benchmark
+  def _advice_fuzz_target(self, build_result: BuildResult,
+                          cur_round: int) -> Optional[Prompt]:
+    """Returns a prompt to fix fuzz target based on its build result errors."""
+    if build_result.success:
+      logger.info('***** %s succeded in %02d rounds *****',
+                  self.name,
+                  cur_round,
+                  trial=build_result.trial)
+      return None
+    fixer_model = models.LLM.setup(ai_binary=self.args.ai_binary,
+                                   name=self.llm.name,
+                                   num_samples=1,
+                                   temperature=self.args.temperature)
+
+    errors = code_fixer.extract_error_from_lines(
+        build_result.compile_log.split('\n'),
+        os.path.basename(build_result.benchmark.target_path),
+        build_result.benchmark.language)
+    build_result.compile_error = '\n'.join(errors)
+    if build_result.benchmark.language == 'jvm':
+      builder = prompt_builder.JvmErrorFixingBuilder(
+          fixer_model, build_result.benchmark, build_result.fuzz_target_source,
+          build_result.compile_error.split('\n'), False)
+      prompt = builder.build([], None, None)
+    else:
+      builder = prompt_builder.DefaultTemplateBuilder(fixer_model)
+
+      context = code_fixer.collect_context(build_result.benchmark, errors)
+      instruction = code_fixer.collect_instructions(
+          build_result.benchmark, errors, build_result.fuzz_target_source)
+      prompt = builder.build_fixer_prompt(build_result.benchmark,
+                                          build_result.fuzz_target_source, '',
+                                          errors, context, instruction)
+
+    return prompt
+
+  def _generate_fuzz_target(self, prompt: prompts.Prompt,
+                            result_history: list[Result],
+                            build_result: BuildResult, cur_round: int) -> None:
+    """Generates and iterates fuzz target with LLM."""
+    benchmark = build_result.benchmark
 
     logger.info('Generating targets for %s %s using %s..',
                 benchmark.project,
                 benchmark.function_signature,
                 self.llm.name,
-                trial=last_result.trial)
-    self.llm.query_llm(prompt, response_dir=self.args.work_dirs.raw_targets)
+                trial=build_result.trial)
 
-    _, target_ext = os.path.splitext(benchmark.target_path)
-    generated_targets = []
-    for file in os.listdir(self.args.work_dirs.raw_targets):
-      if not output_parser.is_raw_output(file):
-        continue
-      raw_output = os.path.join(self.args.work_dirs.raw_targets, file)
-      target_code = output_parser.parse_code(raw_output)
-      target_code = builder.post_process_generated_code(target_code)
-      target_id, _ = os.path.splitext(raw_output)
-      target_file = f'{target_id}{target_ext}'
-      target_path = os.path.join(self.args.work_dirs.raw_targets, target_file)
-      output_parser.save_output(target_code, target_path)
-      generated_targets.append(target_path)
+    target_code = self.ask_llm(cur_round, prompt, self.trial)
+    target_code = output_parser.filter_code(target_code)
+    target_code = self._prompt_builder(
+        result_history).post_process_generated_code(target_code)
+    build_result.fuzz_target_source = target_code
 
-    if generated_targets:
-      targets_relpath = map(os.path.relpath, generated_targets)
-      targets_relpath_str = '\n '.join(targets_relpath)
-      logger.info('Generated:\n %s',
-                  targets_relpath_str,
-                  trial=last_result.trial)
-    else:
-      logger.info('Failed to generate targets: %s',
-                  generated_targets,
-                  trial=last_result.trial)
+  def _validate_fuzz_target(self, cur_round: int,
+                            build_result: BuildResult) -> None:
+    """Validates the new fuzz target by recompiling it."""
+    benchmark = build_result.benchmark
+    compilation_tool = ProjectContainerTool(benchmark=benchmark)
 
-    fixed_targets = []
-    # Prepare all LLM-generated targets for code fixes.
-    for file in generated_targets:
-      fixed_target = os.path.join(self.args.work_dirs.fixed_targets,
-                                  os.path.basename(file))
-      shutil.copyfile(file, fixed_target)
-      fixed_targets.append(fixed_target)
-    return fixed_targets
+    # Replace fuzz target and build script in the container.
+    replace_file_content_command = (
+        'cat << "OFG_EOF" > {file_path}\n{file_content}\nOFG_EOF')
+    compilation_tool.execute(
+        replace_file_content_command.format(
+            file_path=benchmark.target_path,
+            file_content=build_result.fuzz_target_source))
 
-  def _check_targets(
-      self,
-      benchmark: benchmarklib.Benchmark,
-      generated_target: str,
-      build_result: BuildResult,
-  ) -> BuildResult:
-    """Builds all targets in the fixed target directory."""
+    if build_result.build_script_source:
+      compilation_tool.execute(
+          replace_file_content_command.format(
+              file_path='/src/build.sh',
+              file_content=build_result.build_script_source))
 
-    # TODO(Dongge): Split Builder and Runner.
-    # Only run builder here.
-    if self.args.cloud_experiment_name:
-      builder_runner = builder_runner_lib.CloudBuilderRunner(
-          benchmark,
-          self.args.work_dirs,
-          fixer_model_name=self.llm.name,
-          experiment_name=self.args.cloud_experiment_name,
-          experiment_bucket=self.args.cloud_experiment_bucket,
-      )
-    else:
-      builder_runner = builder_runner_lib.BuilderRunner(
-          benchmark, self.args.work_dirs, fixer_model_name=self.llm.name)
+    # Recompile.
+    logger.info('===== ROUND %02d Recompile =====',
+                cur_round,
+                trial=build_result.trial)
+    start_time = time.time()
+    compile_process = compilation_tool.compile()
+    end_time = time.time()
+    logger.debug('ROUND %02d compilation time: %s',
+                 cur_round,
+                 timedelta(seconds=end_time - start_time),
+                 trial=build_result.trial)
+    compile_succeed = compile_process.returncode == 0
+    logger.debug('ROUND %02d Fuzz target compiles: %s',
+                 cur_round,
+                 compile_succeed,
+                 trial=build_result.trial)
 
-    evaluator = exp_evaluator.Evaluator(builder_runner, benchmark,
-                                        self.args.work_dirs)
+    # Double-check binary.
+    ls_result = compilation_tool.execute(f'ls /out/{benchmark.target_name}')
+    binary_exists = ls_result.returncode == 0
+    logger.debug('ROUND %02d Final fuzz target binary exists: %s',
+                 cur_round,
+                 binary_exists,
+                 trial=build_result.trial)
 
-    target_stat = evaluator.check_target(self.args.ai_binary, generated_target)
-    if target_stat is None:
-      logger.error('This should never happen: Error evaluating target: %s',
-                   generated_target,
-                   trial=self.trial)
-    build_result.compiles = target_stat.compiles
-    build_result.is_function_referenced = True
-    build_result.compile_error = target_stat.compile_error
-    build_result.compile_log = target_stat.compile_log
-    return build_result
+    # Validate if function-under-test is referenced by the fuzz target.
+    function_referenced = self._validate_fuzz_target_references_function(
+        compilation_tool, benchmark, cur_round, build_result.trial)
+
+    compilation_tool.terminate()
+    self._update_build_result(build_result,
+                              compile_process=compile_process,
+                              status=compile_succeed and binary_exists,
+                              referenced=function_referenced)
+
+  def _validate_fuzz_target_references_function(
+      self, compilation_tool: ProjectContainerTool, benchmark: Benchmark,
+      cur_round: int, trial: int) -> bool:
+    """Validates if the LLM generated fuzz target assembly code references
+    function-under-test."""
+    disassemble_result = compilation_tool.execute(
+        'objdump --disassemble=LLVMFuzzerTestOneInput -d '
+        f'/out/{benchmark.target_name}')
+    function_referenced = (disassemble_result.returncode == 0 and
+                           benchmark.function_name in disassemble_result.stdout)
+    logger.debug('ROUND %02d Final fuzz target function referenced: %s',
+                 cur_round,
+                 function_referenced,
+                 trial=trial)
+    if not function_referenced:
+      logger.debug('ROUND %02d Final fuzz target function not referenced',
+                   cur_round,
+                   trial=trial)
+    return function_referenced
+
+  def _update_build_result(self, build_result: BuildResult,
+                           compile_process: sp.CompletedProcess, status: bool,
+                           referenced: bool) -> None:
+    """Updates the build result with the latest info."""
+    build_result.compiles = status
+    build_result.compile_error = compile_process.stderr
+    build_result.compile_log = self._format_bash_execution_result(
+        compile_process)
+    build_result.is_function_referenced = referenced
