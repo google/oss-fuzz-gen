@@ -42,14 +42,14 @@ git clone https://github.com/dvhar/dateparse ../dateparse
 
 # Generate a harness with function name
 python3 -m experimental.from_scratch.generate \
-  -e c++ \
-  -l ${MODEL} \
+  -l c++ \
+  -m ${MODEL} \
   -f dateparse \
   -t ../dateparse/ \
-  -r responses_cpp
+  -o out_cpp
 
 # Show harness
-cat responses_cpp/01.rawoutput
+cat out_cpp/01.rawoutput
 """
 #include <stdio.h>
 #include <string.h>
@@ -93,14 +93,14 @@ git clone https://github.com/stleary/JSON-java ../json-java
 
 # Generate a harness with source file and line
 python3 -m experimental.from_scratch.generate \
-  -e java \
-  -l ${MODEL} \
+  -l java \
+  -m ${MODEL} \
   -s JSONArray.java \
   -sl 1200 \
   -t ../json-java/ \
-  -r responses_java
+  -o out_java
 
-cat responses_java/01.rawoutput
+cat out_java/01.rawoutput
 """
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import org.json.JSONArray;
