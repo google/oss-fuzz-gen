@@ -1,0 +1,65 @@
+[build-system]
+requires = [
+  "setuptools>=65.0",
+  "setuptools-scm>=8.0"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "OSS-Fuzz-gen"
+version = "0.1.0"
+description = "Fuzz Harness Generation."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+"anthropic==0.31.2",
+"chardet==5.2.0",
+"cxxfilt==0.3.0",
+"GitPython==3.1.43",
+"google-api-python-client==2.143.0",
+"google-cloud-aiplatform==1.64.0",
+"google-cloud-storage==2.9.0",
+"google-cloud-logging==3.11.2",
+"Jinja2==3.1.5",
+"openai==1.60.0",
+"pandas==2.2.2",
+"pylint==3.2.5",
+"pyright==1.1.345",
+"PyYAML==6.0.1",
+"requests==2.32.3",
+"rust-demangler==1.0",
+"tiktoken==0.7.0",
+"yapf==0.40.1",
+"fuzz-introspector==0.1.10"
+]
+
+[tool.setuptools]
+py-modules = [
+  "data_prep.introspector",
+  "data_prep.project_targets",
+  "data_prep.project_src",
+  "data_prep.target_collector",
+  "experimental.from_scratch.generate",
+  "experiment.benchmark",
+  "experiment.oss_fuzz_checkout",
+  "experiment.fuzz_target_error",
+  "llm_toolkit.prompt_builder",
+  "llm_toolkit.prompts",
+  "llm_toolkit.models",
+  "utils"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools.package-data]
+"*" = ["*.txt"]
+
+[project.scripts]
+fuzz-generator = "experimental.from_scratch.generate:main"
