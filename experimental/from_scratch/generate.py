@@ -45,20 +45,20 @@ def parse_args() -> argparse.Namespace:
   """Parses command line arguments."""
   parser = argparse.ArgumentParser(
       description='Run all experiments that evaluates all target functions.')
-  parser.add_argument('-l',
+  parser.add_argument('-m',
                       '--model',
                       default=models.DefaultModel.name,
                       help=('Models available: '
                             f'{", ".join(models.LLM.all_llm_names())}'))
-  parser.add_argument('-r',
-                      '--response-dir',
-                      default='./responses',
-                      help='LLM response directory.')
+  parser.add_argument('-o',
+                      '--out-dir',
+                      default='./results',
+                      help='Directory where results will be stored.')
   parser.add_argument('-t',
                       '--target-dir',
                       help='Directory with project source.',
                       required=True)
-  parser.add_argument('-e',
+  parser.add_argument('-l',
                       '--language',
                       help='Main language of the target project source.',
                       required=True)
@@ -326,11 +326,11 @@ def get_far_reach_benchmarks(
   return target_benchmarks
 
 
-def get_next_response_dir(response_dir: str) -> str:
+def get_next_out_dir(out_dir: str) -> str:
   """Prepare next folder to put generate harness in."""
   idx = 0
   while True:
-    target_response = os.path.join(response_dir, str(idx))
+    target_response = os.path.join(out_dir, str(idx))
     if not os.path.isdir(target_response):
       return target_response
     idx += 1
@@ -366,7 +366,7 @@ def generate_far_reach_targets(args):
       print_prompt(fuzz_prompt)
       continue
     print_prompt(fuzz_prompt)
-    response_dir = get_next_response_dir(args.response_dir)
+    response_dir = get_next_out_dir(args.out_dir)
     os.makedirs(response_dir, exist_ok=True)
     print(f'Running query and writing results in {response_dir}')
     try:
@@ -392,9 +392,9 @@ def generate_for_target_function(args):
   fuzz_prompt = construct_fuzz_prompt(model, target_benchmark, context,
                                       language)
   print_prompt(fuzz_prompt)
-  os.makedirs(args.response_dir, exist_ok=True)
-  print(f'Running query and writing results in {args.response_dir}')
-  model.query_llm(fuzz_prompt, response_dir=args.response_dir)
+  os.makedirs(args.out_dir, exist_ok=True)
+  print(f'Running query and writing results in {args.out_dir}')
+  model.query_llm(fuzz_prompt, response_dir=args.out_dir)
 
 
 def main():
