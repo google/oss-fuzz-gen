@@ -87,7 +87,6 @@ def get_oracle_dict() -> Dict[str, Any]:
       'far-reach-low-coverage': get_unreached_functions,
       'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets,
       'easy-params-far-reach': query_introspector_for_easy_param_targets,
-      'jvm-public-candidates': query_introspector_jvm_all_public_candidates,
       'optimal-targets': query_introspector_for_optimal_targets,
       'test-migration': query_introspector_for_tests,
       'all-public-candidates': query_introspector_all_public_candidates,
@@ -274,19 +273,10 @@ def query_introspector_for_easy_param_targets(project: str) -> list[dict]:
   return query_introspector_oracle(project, INTROSPECTOR_ORACLE_EASY_PARAMS)
 
 
-def query_introspector_jvm_all_public_candidates(project: str) -> list[dict]:
-  """Queries Fuzz Introspector for all public accessible function or
-  constructor candidates.
-  """
-  return query_introspector_oracle(project,
-                                   INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES)
-
-
 def query_introspector_all_public_candidates(project: str) -> list[dict]:
   """Queries Fuzz Introspector for all public accessible function or
   constructor candidates.
   """
-  #TODO May combine this with query_introspector_jvm_all_public_candidates
   return query_introspector_oracle(project,
                                    INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES)
 

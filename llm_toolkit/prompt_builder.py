@@ -1225,7 +1225,7 @@ class JvmErrorFixingBuilder(PromptBuilder):
                                         '\n---\n'.join(source_list))
 
       # Add all public candidates to prompt
-      methods = introspector.query_introspector_jvm_all_public_candidates(proj)
+      methods = introspector.query_introspector_all_public_candidates(proj)
       name = [method['function_name'] for method in methods]
       prompt_text = prompt_text.replace('{PUBLIC_METHODS}', ','.join(name))
     else:
@@ -1585,7 +1585,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
   def _get_jvm_public_candidates(self, proj: str) -> list[str]:
     """Helper function to retrieve list of public candidates for jvm."""
     method_set = set()
-    methods = introspector.query_introspector_jvm_all_public_candidates(proj)
+    methods = introspector.query_introspector_all_public_candidates(proj)
     for method in methods:
       if "<init>" not in method['function_name']:
         method_set.add(method['function_name'])
