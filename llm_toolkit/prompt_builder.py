@@ -31,12 +31,15 @@ from llm_toolkit import models, prompts
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_TEMPLATE_DIR: str = 'prompts/template_xml/'
-AGENT_TEMPLATE_DIR: str = 'prompts/agent/'
+DEFAULT_TEMPLATE_DIR: str = os.path.join(os.path.dirname(__file__),
+                                         '../prompts/template_xml/')
+AGENT_TEMPLATE_DIR: str = os.path.join(os.path.dirname(__file__),
+                                       '../prompts/agent/')
 
 # TODO(Dongge): Refactor this tot avoid hard-coding.
 # Example files.
-EXAMPLE_PATH = os.path.join('prompts', 'example')
+EXAMPLE_PATH = os.path.join(os.path.dirname(__file__), '..', 'prompts',
+                            'example')
 # Example with FuzzeDataProvider.
 FDP_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'gdImageString-problem.txt')
 FDP_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH, 'gdImageString-solution.cc')
