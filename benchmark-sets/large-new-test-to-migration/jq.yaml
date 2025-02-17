@@ -1,0 +1,6 @@
+"language": "c"
+"project": "jq"
+"target_name": "jq_fuzz_parse"
+"target_path": "/src/jq/tests/jq_fuzz_parse.c"
+"test_files":
+- "test_file_path": "/src/jq/src/jq_test.c"

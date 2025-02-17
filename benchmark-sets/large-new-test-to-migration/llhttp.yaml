@@ -1,0 +1,6 @@
+"language": "c"
+"project": "llhttp"
+"target_name": "fuzz_parser"
+"target_path": "/src/llhttp/test/fuzzers/fuzz_parser.c"
+"test_files":
+- "test_file_path": "/src/llhttp/test/fixtures/extra.c"

@@ -1,0 +1,12 @@
+"language": "c++"
+"project": "libzip"
+"target_name": "zip_write_encrypt_pkware_file_fuzzer"
+"target_path": "/src/libzip/ossfuzz/zip_write_encrypt_pkware_file_fuzzer.c"
+"test_files":
+- "test_file_path": "/src/libzip/regress/nonrandomopentest.c"
+- "test_file_path": "/src/libzip/examples/autoclose-archive.c"
+- "test_file_path": "/src/libzip/examples/windows-open.c"
+- "test_file_path": "/src/libzip/examples/in-memory.c"
+- "test_file_path": "/src/libzip/regress/liboverride-test.c"
+- "test_file_path": "/src/libzip/examples/cmake-project/cmake-example.c"
+- "test_file_path": "/src/libzip/examples/add-compressed-data.c"
