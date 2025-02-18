@@ -284,16 +284,18 @@ class TrialResult:
   @property
   def coverage(self) -> float:
     """Max line coverage diff."""
-    return max(result.coverage
-               for result in self.result_history
-               if isinstance(result, RunResult))
+    return max((result.coverage
+                for result in self.result_history
+                if isinstance(result, RunResult)),
+               default=0)
 
   @property
   def line_coverage_diff(self) -> float:
     """Max line coverage diff."""
-    return max(result.line_coverage_diff
-               for result in self.result_history
-               if isinstance(result, RunResult))
+    return max((result.line_coverage_diff
+                for result in self.result_history
+                if isinstance(result, RunResult)),
+               default=0)
 
   @property
   def line_coverage_report(self) -> str:
@@ -356,12 +358,13 @@ class BenchmarkResult:
   @property
   def coverage(self) -> float:
     """Max line coverage diff."""
-    return max(result.coverage for result in self.trial_results)
+    return max((result.coverage for result in self.trial_results), default=0)
 
   @property
   def line_coverage_diff(self) -> float:
     """Max line coverage diff."""
-    return max(result.line_coverage_diff for result in self.trial_results)
+    return max((result.line_coverage_diff for result in self.trial_results),
+               default=0)
 
   @property
   def line_coverage_report(self) -> str:
