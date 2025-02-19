@@ -668,7 +668,7 @@ class GeminiV1D5(GeminiModel):
 
 
 class GeminiV2Flash(GeminiV1D5):
-  """Gemini 2."""
+  """Gemini 2 Flash."""
   name = 'vertex_ai_gemini-2-flash'
   _vertex_ai_model = 'gemini-2.0-flash-001'
 
