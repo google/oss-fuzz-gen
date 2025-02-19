@@ -1,0 +1,14 @@
+allowedCopyrightHolders:
+  - 'Google LLC'
+allowedLicenses:
+  - 'Apache-2.0'
+sourceFileExtensions:
+  - 'py'
+  - 'js'
+  - 'java'
+  - 'Dockerfile'
+  - 'css'
+  - 'html'
+  - 'htm'
+  - 'sh'
+  - 'bash'
