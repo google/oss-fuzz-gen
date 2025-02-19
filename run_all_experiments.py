@@ -35,13 +35,6 @@ from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
 
-try:
-  client = cloud_logging.Client()
-  client.setup_logging()
-except Exception as e:
-  # For local runs we continue
-  pass
-
 logger = logging.getLogger(__name__)
 
 # WARN: Avoid large NUM_EXP for local experiments.
@@ -375,8 +368,17 @@ def _print_experiment_results(results: list[Result],
     logger.info('*%s: %s', project, cov_gain[project]["coverage_diff"])
 
 
-def _setup_logging(verbose: str = 'info') -> None:
+def _setup_logging(verbose: str = 'info', is_cloud: bool = False) -> None:
   """Set up logging level."""
+
+  if is_cloud:
+    try:
+      client = cloud_logging.Client()
+      client.setup_logging()
+    except Exception as e:
+      # For local runs we continue
+      pass
+
   if verbose == "debug":
     log_level = logging.DEBUG
   else:
@@ -525,7 +527,7 @@ def main():
   global WORK_DIR
 
   args = parse_args()
-  _setup_logging(args.log_level)
+  _setup_logging(args.log_level, is_cloud=args.cloud_experiment_name != '')
   logger.info('Starting experiments on PR branch')
 
   # Capture time at start
