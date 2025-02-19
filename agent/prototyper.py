@@ -1,6 +1,7 @@
 """An LLM agent to generate a simple fuzz target prototype that can build.
 Use it as a usual module locally, or as script in cloud builds.
 """
+import os
 import subprocess as sp
 import time
 from datetime import timedelta
@@ -86,13 +87,14 @@ class Prototyper(BaseAgent):
                    trial=build_result.trial)
 
   def _update_build_result(self, build_result: BuildResult,
-                           compile_process: sp.CompletedProcess, status: bool,
-                           referenced: bool) -> None:
+                           compile_process: sp.CompletedProcess, compiles: bool,
+                           binary_exists: bool, referenced: bool) -> None:
     """Updates the build result with the latest info."""
-    build_result.compiles = status
+    build_result.compiles = compiles
     build_result.compile_error = compile_process.stderr
     build_result.compile_log = self._format_bash_execution_result(
         compile_process)
+    build_result.binary_exists = binary_exists
     build_result.is_function_referenced = referenced
 
   def _validate_fuzz_target_and_build_script(self, cur_round: int,
@@ -188,7 +190,8 @@ class Prototyper(BaseAgent):
     compilation_tool.terminate()
     self._update_build_result(build_result,
                               compile_process=compile_process,
-                              status=compile_succeed and binary_exists,
+                              compiles=compile_succeed,
+                              binary_exists=binary_exists,
                               referenced=function_referenced)
 
   def _container_handle_conclusion(self, cur_round: int, response: str,
@@ -203,6 +206,7 @@ class Prototyper(BaseAgent):
                 trial=build_result.trial)
 
     self._update_fuzz_target_and_build_script(cur_round, response, build_result)
+    build_script_source = build_result.build_script_source
 
     self._validate_fuzz_target_and_build_script(cur_round, build_result)
     if build_result.success:
@@ -211,7 +215,15 @@ class Prototyper(BaseAgent):
                   trial=build_result.trial)
       return None
 
+    fuzz_target_source = build_result.fuzz_target_source
+    default_build_script_works = (build_script_source
+                                  != build_result.build_script_source)
+    build_script_source = build_result.build_script_source
+    compile_log = self.llm.truncate_prompt(build_result.compile_log,
+                                           extra_text=prompt.get()).strip()
+    prompt_text = ''
     if not build_result.compiles:
+      # Build script here must be from LLM, as it will be attempted last.
       compile_log = self.llm.truncate_prompt(build_result.compile_log,
                                              extra_text=prompt.get()).strip()
       logger.info('***** Failed to recompile in %02d rounds *****',
@@ -240,23 +252,55 @@ class Prototyper(BaseAgent):
           'to make it compile successfully.'
           'If an error happens repeatedly and cannot be fixed, try to '
           'mitigate it. For example, replace or remove the line.'
-          f'<fuzz target>\n{build_result.fuzz_target_source}\n</fuzz target>\n'
-          f'<build script>\n{build_result.build_script_source}\n</build script>'
+          f'<fuzz target>\n{fuzz_target_source}\n</fuzz target>\n'
+          f'<build script>\n{build_script_source}\n</build script>'
           f'\n<compilation log>\n{compile_log}\n</compilation log>\n')
+    elif not build_result.binary_exists:
+      # Build script here must be from LLM, as default script won't miss binary.
+      binary_path = os.path.join('/out', build_result.benchmark.target_name)
+      logger.info(
+          '***** Fuzz target binary does not exist at %s in %02d rounds *****',
+          binary_path,
+          cur_round,
+          trial=build_result.trial)
+      prompt_text = (
+          'The following fuzz target and build script compiles successfully, '
+          'but the fuzz target binary was not saved to the expected path '
+          f'`{binary_path}`.\n'
+          f'<fuzz target>\n{fuzz_target_source}\n</fuzz target>\n'
+          f'<build script>\n{build_script_source}\n</build script>\n'
+          f'<compilation log>\n{compile_log}\n</compilation log>\n'
+          'YOU MUST MODIFY THE BUILD SCRIPT to ensure the binary is saved to '
+          f'{binary_path}.\n')
     elif not build_result.is_function_referenced:
       logger.info(
           '***** Fuzz target does not reference function-under-test in %02d '
           'rounds *****',
           cur_round,
           trial=build_result.trial)
+      function_signature = build_result.benchmark.function_signature
       prompt_text = (
           'The fuzz target builds successfully, but the target function '
-          f'`{build_result.benchmark.function_signature}` was not used by '
-          '`LLVMFuzzerTestOneInput` in fuzz target. YOU MUST CALL FUNCTION '
-          f'`{build_result.benchmark.function_signature}` INSIDE FUNCTION '
-          '`LLVMFuzzerTestOneInput`.')
-    else:
-      prompt_text = ''
+          f'`{function_signature}` was not used by `LLVMFuzzerTestOneInput` in '
+          'fuzz target.\n'
+          f'<fuzz target>\n{fuzz_target_source}\n</fuzz target>\n'
+          f'<build script>\n{build_script_source}\n</build script>\n'
+          f'<compilation log>\n{compile_log}\n</compilation log>\n'
+          'YOU MUST MODIFY THE FUZZ TARGET to CALL FUNCTION '
+          f'`{function_signature}` in `LLVMFuzzerTestOneInput`.\n')
+      # Build script here may be default.
+      if default_build_script_works:
+        prompt_text += (
+            'The build_script is empty, because the default build script at '
+            '/src/build.sh works perfectly. Considering using that instead.')
+
+    prompt_text += (
+        'When you have a solution later, make sure you output the FULL fuzz '
+        'target')
+    if build_result.build_script_source:
+      prompt_text += ' and the FULL build script'
+    prompt_text += (
+        '. YOU MUST NOT OMIT ANY CODE even if it is the same as before.')
 
     prompt.append(prompt_text)
     return prompt

@@ -120,6 +120,7 @@ class ExecutionStage(BaseStage):
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
           compile_log=last_result.compile_log,
+          binary_exists=last_result.binary_exists,
           is_function_referenced=last_result.is_function_referenced,
           crashes=run_result.crashes,
           run_error=run_result.crash_info,
@@ -148,6 +149,7 @@ class ExecutionStage(BaseStage):
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
           compile_log=last_result.compile_log,
+          binary_exists=last_result.binary_exists,
           is_function_referenced=last_result.is_function_referenced)
 
     return runresult
