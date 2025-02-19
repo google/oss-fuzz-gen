@@ -109,6 +109,13 @@ class Prototyper(BaseAgent):
       cur_round: int, trial: int) -> bool:
     """Validates if the LLM generated fuzz target assembly code references
     function-under-test."""
+
+    # LLVMFuzzerTestOneInput and binary dumps are only valid
+    # for C/C++ projects.
+    # Temporary skipping this check for other language.
+    if benchmark.language in ['jvm', 'python', 'rust']:
+      return True
+
     disassemble_result = compilation_tool.execute(
         'objdump --disassemble=LLVMFuzzerTestOneInput -d '
         f'/out/{benchmark.target_name}')
