@@ -37,7 +37,6 @@ _CHECK_LICENSE_EXTENSIONS = [
     '.h',
     '.htm',
     '.html',
-    '.java',
     '.proto',
     '.py',
     '.rs',
