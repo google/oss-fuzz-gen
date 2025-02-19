@@ -17,8 +17,8 @@
 """Pre submit checks in same style as OSS-Fuzz"""
 
 import os
-import sys
 import subprocess
+import sys
 
 
 def do_checks(changed_files):
@@ -27,6 +27,7 @@ def do_checks(changed_files):
       check_license,
   ]
   return all([check(changed_files) for check in checks])
+
 
 _CHECK_LICENSE_FILENAMES = ['Dockerfile']
 _CHECK_LICENSE_EXTENSIONS = [
@@ -81,6 +82,7 @@ def bool_to_returncode(success):
   print('Failed.')
   return 1
 
+
 def get_all_files():
   """Returns a list of absolute paths of files in this repo."""
   get_all_files_command = ['git', 'ls-files']
@@ -89,9 +91,9 @@ def get_all_files():
 
 
 def main():
-    relevant_files = get_all_files()
-    success = do_checks(relevant_files)
-    return bool_to_returncode(success)
+  relevant_files = get_all_files()
+  success = do_checks(relevant_files)
+  return bool_to_returncode(success)
 
 
 if __name__ == '__main__':
