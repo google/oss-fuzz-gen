@@ -8,10 +8,10 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
+from data_prep import project_targets
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.benchmark import Benchmark
-from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
-                                        PrototyperTemplateBuilder)
+from llm_toolkit import prompt_builder
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
 from tool.container_tool import ProjectContainerTool
@@ -25,18 +25,30 @@ class Prototyper(BaseAgent):
   def _initial_prompt(self, results: list[Result]) -> Prompt:
     """Constructs initial prompt of the agent."""
     benchmark = results[-1].benchmark
-    retriever = ContextRetriever(benchmark)
-    context_info = retriever.get_context_info()
-    prompt_builder = PrototyperTemplateBuilder(
+
+    if benchmark.use_project_examples:
+      project_examples = project_targets.generate_data(
+          benchmark.project,
+          benchmark.language,
+          cloud_experiment_bucket=self.args.cloud_experiment_bucket)
+    else:
+      project_examples = []
+
+    if self.args.context:
+      retriever = ContextRetriever(benchmark)
+      context_info = retriever.get_context_info()
+    else:
+      context_info = {}
+
+    builder = prompt_builder.PrototyperTemplateBuilder(
         model=self.llm,
         benchmark=benchmark,
     )
-    prompt = prompt_builder.build(example_pair=[],
-                                  project_context_content=context_info,
-                                  tool_guides=self.inspect_tool.tutorial())
-    # prompt = prompt_builder.build(example_pair=EXAMPLE_FUZZ_TARGETS.get(
-    #     benchmark.language, []),
-    #                               tool_guides=self.inspect_tool.tutorial())
+    prompt = builder.build(example_pair=prompt_builder.EXAMPLES.get(
+        benchmark.language, []),
+                           project_example_content=project_examples,
+                           project_context_content=context_info,
+                           tool_guides=self.inspect_tool.tutorial())
     return prompt
 
   def _update_fuzz_target_and_build_script(self, cur_round: int, response: str,
@@ -252,7 +264,7 @@ class Prototyper(BaseAgent):
   def _container_tool_reaction(self, cur_round: int, response: str,
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
-    prompt = DefaultTemplateBuilder(self.llm, None).build([])
+    prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
     prompt = self._container_handle_bash_commands(response, self.inspect_tool,
                                                   prompt)
 
