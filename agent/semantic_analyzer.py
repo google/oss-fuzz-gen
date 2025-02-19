@@ -48,7 +48,7 @@ ParseResult = namedtuple(
     ['cov_pcs', 'total_pcs', 'crashes', 'crash_info', 'semantic_check_result'])
 
 
-class SemnaticAnalyzer(BaseAgent):
+class SemanticAnalyzer(BaseAgent):
   """The Agent to generate a simple but valid fuzz target from scratch."""
 
   def _initial_prompt(self, results: list[Result]) -> Prompt:
