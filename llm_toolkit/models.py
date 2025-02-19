@@ -667,6 +667,12 @@ class GeminiV1D5(GeminiModel):
   _vertex_ai_model = 'gemini-1.5-pro-002'
 
 
+class GeminiV2Flash(GeminiV1D5):
+  """Gemini 2."""
+  name = 'vertex_ai_gemini-2-flash'
+  _vertex_ai_model = 'gemini-2.0-flash-001'
+
+
 class GeminiV2(GeminiV1D5):
   """Gemini 2."""
   name = 'vertex_ai_gemini-2'
@@ -752,6 +758,12 @@ class GeminiV1D5Chat(GeminiV1D5):
     parameters_list = self._prepare_parameters()[0]
     response = self._do_generate(client, prompt.get(), parameters_list) or ''
     return response
+
+
+class GeminiV2FlashChat(GeminiV1D5Chat):
+  """Gemini 2 Flash for chat session."""
+  name = 'vertex_ai_gemini-2-flash-chat'
+  _vertex_ai_model = 'gemini-2.0-flash-001'
 
 
 class GeminiV2Chat(GeminiV1D5Chat):
