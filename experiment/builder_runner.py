@@ -42,7 +42,6 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 # The directory in the oss-fuzz image
-JCC_DIR = '/usr/local/bin'
 RUN_TIMEOUT: int = 30
 CLOUD_EXP_MAX_ATTEMPT = 5
 
@@ -506,17 +505,6 @@ class BuilderRunner:
         benchmark_target_name, iteration)
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
-
-    # Copy err.log into work dir (Ignored for JVM/Rust projects)
-    if language not in ['jvm', 'rust']:
-      try:
-        shutil.copyfile(
-            os.path.join(get_build_artifact_dir(generated_project, "workspace"),
-                         'err.log'),
-            self.work_dirs.error_logs_target(benchmark_target_name, iteration))
-      except FileNotFoundError as e:
-        logger.error('Cannot get err.log for %s: %s', generated_project, e)
-
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(benchmark_log_path,
                                                 project_target_name, language)
@@ -622,7 +610,6 @@ class BuilderRunner:
 
     outdir = get_build_artifact_dir(generated_project, 'out')
     workdir = get_build_artifact_dir(generated_project, 'work')
-    workspacedir = get_build_artifact_dir(generated_project, 'workspace')
     command = [
         'docker',
         'run',
@@ -641,26 +628,15 @@ class BuilderRunner:
         '-e',
         f'PROJECT_NAME={generated_project}',
         '-e',
-        f'CXX={JCC_DIR}/clang++-jcc',
-        '-e',
-        f'CC={JCC_DIR}/clang-jcc',
-        '-e',
         f'FUZZING_LANGUAGE={self.benchmark.language}',
         '-v',
         f'{outdir}:/out',
         '-v',
         f'{workdir}:/work',
-        # Allows jcc to write err.log.
-        # https://github.com/google/oss-fuzz/blob/090e0d6/infra/base-images/base-builder/jcc/jcc.go#L360
-        '-v',
-        f'{workspacedir}:/workspace',
     ]
     # Avoid permissions errors.
     os.makedirs(outdir, exist_ok=True)
     os.makedirs(workdir, exist_ok=True)
-    os.makedirs(workspacedir, exist_ok=True)
-    if self.benchmark.cppify_headers:
-      command.extend(['-e', 'JCC_CPPIFY_PROJECT_HEADERS=1'])
     command.extend(['--entrypoint', '/bin/bash'])
     command.append(f'gcr.io/oss-fuzz/{generated_project}')
 
@@ -668,8 +644,7 @@ class BuilderRunner:
     post_build_command = []
 
     # Cleanup mounted dirs.
-    pre_build_command.extend(
-        ['rm', '-rf', '/out/*', '/work/*', '/workspace/*', '&&'])
+    pre_build_command.extend(['rm', '-rf', '/out/*', '/work/*', '&&'])
 
     if self.benchmark.commit:
       # TODO(metzman): Try to use build_specified_commit here.
@@ -922,9 +897,6 @@ class CloudBuilderRunner(BuilderRunner):
     build_log_name = f'{uid}.build.log'
     build_log_path = f'gs://{self.experiment_bucket}/{build_log_name}'
 
-    err_log_name = f'{uid}.err.log'
-    err_log_path = f'gs://{self.experiment_bucket}/{err_log_name}'
-
     corpus_name = f'{uid}.corpus.zip'
     corpus_path = f'gs://{self.experiment_bucket}/{corpus_name}'
 
@@ -942,7 +914,6 @@ class CloudBuilderRunner(BuilderRunner):
         f'--project={generated_project}',
         f'--target={self.benchmark.target_name}',
         f'--upload_build_log={build_log_path}',
-        f'--upload_err_log={err_log_path}',
         f'--upload_output_log={run_log_path}',
         f'--upload_coverage={coverage_path}',
         f'--upload_reproducer={reproducer_path}',
@@ -993,20 +964,6 @@ class CloudBuilderRunner(BuilderRunner):
       else:
         logger.warning('Cannot find cloud build log of %s: %s',
                        os.path.realpath(target_path), build_log_name)
-
-    # Ignored for JVM project since JVM project does not generate err.log
-    if language != 'jvm':
-      with open(
-          self.work_dirs.error_logs_target(generated_target_name, iteration),
-          'wb') as f:
-        blob = bucket.blob(err_log_name)
-        if blob.exists():
-          logger.info('Downloading jcc error log of %s: %s to %s',
-                      os.path.realpath(target_path), err_log_name, f)
-          blob.download_to_file(f)
-        else:
-          logger.warning('Cannot find jcc error log of %s: %s',
-                         os.path.realpath(target_path), err_log_name)
 
     # TODO(Dongge): Split Builder and Runner:
     # Set build_result.succeeded based on existence of fuzz target binary.
