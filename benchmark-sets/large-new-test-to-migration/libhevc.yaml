@@ -1,0 +1,7 @@
+"language": "c++"
+"project": "libhevc"
+"target_name": "hevc_dec_fuzzer"
+"target_path": "/src/libhevc/fuzzer/hevc_dec_fuzzer.cpp"
+"test_files":
+- "test_file_path": "/src/libhevc/test/decoder/main.c"
+- "test_file_path": "/src/libhevc/test/encoder/main.c"

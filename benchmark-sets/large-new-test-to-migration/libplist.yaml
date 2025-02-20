@@ -1,0 +1,12 @@
+"language": "c++"
+"project": "libplist"
+"target_name": "bplist_fuzzer"
+"target_path": "/src/libplist/fuzz/bplist_fuzzer.cc"
+"test_files":
+- "test_file_path": "/src/libplist/test/plist_test.c"
+- "test_file_path": "/src/libplist/test/plist_test++.cpp"
+- "test_file_path": "/src/libplist/test/integer_set.c"
+- "test_file_path": "/src/libplist/test/plist_btest.c"
+- "test_file_path": "/src/libplist/test/plist_cmp.c"
+- "test_file_path": "/src/libplist/test/plist_jtest.c"
+- "test_file_path": "/src/libplist/test/plist_otest.c"
