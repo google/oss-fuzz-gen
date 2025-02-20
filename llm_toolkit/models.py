@@ -232,13 +232,7 @@ class GPT(LLM):
 
   def get_chat_client(self, model: Any) -> Any:
     """Returns a new chat session."""
-    del model
-    # Placeholder: To Be Implemented.
-
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
-    """Queries the LLM in the given chat session and returns the response."""
-    del client, prompt
-    # Placeholder: To Be Implemented.
+    return self._get_client()
 
   def _get_tiktoken_encoding(self, model_name: str):
     """Returns the tiktoken encoding for the model."""
@@ -272,6 +266,23 @@ class GPT(LLM):
   def prompt_type(self) -> type[prompts.Prompt]:
     """Returns the expected prompt type."""
     return prompts.OpenAIPrompt
+
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
+    """Queries LLM a single prompt and returns its response."""
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('OpenAI does not allow temperature list: %s',
+                  self.temperature_list)
+
+    completion = self.with_retry_on_error(
+        lambda: client.chat.completions.create(messages=prompt.get(),
+                                               model=self.name,
+                                               n=self.num_samples,
+                                               temperature=self.temperature),
+        [openai.OpenAIError])
+
+    return completion.choices[0].message.content
 
   def ask_llm(self, prompt: prompts.Prompt) -> str:
     """Queries LLM a single prompt and returns its response."""
