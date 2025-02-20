@@ -289,10 +289,9 @@ class Prototyper(BaseAgent):
     if self.benchmark.language == 'jvm':
       # TODO: Do this in a separate agent for JVM coverage.
       jvm_coverage_fix = True
-      error_desc, errors = '', []
       builder = JvmErrorFixingBuilder(self.llm, self.benchmark,
-                                      build_result.fuzz_target_source,
-                                      errors, jvm_coverage_fix)
+                                      build_result.fuzz_target_source, [],
+                                      jvm_coverage_fix)
       prompt = builder.build([], None, None)
     else:
       prompt = DefaultTemplateBuilder(self.llm, None).build([])
