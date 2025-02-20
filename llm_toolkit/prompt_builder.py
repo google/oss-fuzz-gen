@@ -616,7 +616,7 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
       build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
                     '</build script>')
     else:
-      build_text = 'Build script reuses `/src/build.sh`.'
+      build_text = 'Build script reuses `/src/build.bk.sh`.'
     prompt = self._get_template(self.priming_template_file)
     prompt = prompt.replace('{FUZZ_TARGET_SOURCE}',
                             self.build_result.fuzz_target_source)

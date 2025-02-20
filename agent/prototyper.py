@@ -251,8 +251,8 @@ class Prototyper(BaseAgent):
       # binary to expected path, but does not reference function-under-test.
       prompt_text.replace(
           '{BUILD_TEXT}',
-          'Althoug `/src/build.sh` compiles and saves the binary to the correct'
-          ' path:')
+          'Althoug `/src/build.bk.sh` compiles and saves the binary to the '
+          'correct path:')
       # NOTE: Unsafe to say the following, because /src/build.sh may miss a
       # library required by the function-under-test, and the fuzz target did not
       # invoke the function-under-test either.
@@ -310,8 +310,8 @@ class Prototyper(BaseAgent):
           build_result.benchmark.target_name,
           trial=build_result.trial)
       prompt_text = (
-          'The fuzz target compiles successfully with /src/build.sh, but the '
-          'final fuzz target binary was not saved to the expected path at '
+          'The fuzz target compiles successfully with /src/build.bk.sh, but the'
+          ' final fuzz target binary was not saved to the expected path at '
           f'`{binary_path}`.\n'
           f'<fuzz target>\n{fuzz_target_source}\n</fuzz target>\n'
           f'<compilation log>\n{compile_log}\n</compilation log>\n'

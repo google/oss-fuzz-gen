@@ -73,6 +73,14 @@ class ProjectContainerTool(BaseTool):
                    e)
       return sp.CompletedProcess(command, returncode=1, stdout='', stderr='')
 
+  def _backup_default_build_script(self) -> None:
+    """Creates a copy of the human-written /src/build.sh for LLM to use"""
+    backup_command = ['cp', '/src/build.sh', '/src/build.bk.sh']
+    process = self._execute_command_in_container(backup_command)
+    if process.returncode:
+      logger.error('Failed to create a backup of /src/build.sh: %s',
+                   self.image_name)
+
   def _start_docker_container(self) -> str:
     """Runs the project's OSS-Fuzz image as a background container and returns
     the container ID."""
@@ -83,6 +91,8 @@ class ProjectContainerTool(BaseTool):
     result = self._execute_command(run_container_command)
     if result.returncode:
       logger.error('Failed to start container of image: %s', self.image_name)
+    else:
+      self._backup_default_build_script()
     container_id = result.stdout.strip()
     return container_id
 
