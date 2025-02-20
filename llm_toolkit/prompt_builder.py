@@ -28,6 +28,7 @@ from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
+from results import BuildResult
 
 logger = logging.getLogger(__name__)
 
@@ -582,6 +583,49 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     self._prepare_prompt(priming, final_problem, example_pair,
                          project_example_content)
     self._prompt.append(tool_guides)
+    return self._prompt
+
+
+class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               build_result: BuildResult,
+               compile_log: str,
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model, benchmark, template_dir)
+    # Load templates.
+    self.priming_template_file = self._find_template(self.agent_templare_dir,
+                                                     'prototyper-fixing.txt')
+    self.build_result = build_result
+    self.compile_log = compile_log
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    del (example_pair, project_example_content, project_context_content,
+         tool_guides)
+    if not self.benchmark:
+      return self._prompt
+    if self.build_result.build_script_source:
+      build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
+                    '</build script>')
+    else:
+      build_text = 'Build script reuses `/src/build.sh`.'
+
+    prompt = self.priming_template_file.replace(
+        '{FUZZ_TARGET_SOURCE}', self.build_result.fuzz_target_source)
+    prompt = prompt.replace('{BUILD_TEXT}', build_text)
+    prompt = prompt.replace('{COMPILE_LOG}', self.compile_log)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}',
+                            self.benchmark.function_signature)
+    self._prompt.append(prompt)
+
     return self._prompt
 
 
