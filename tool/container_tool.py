@@ -16,6 +16,7 @@ class ProjectContainerTool(BaseTool):
     super().__init__(benchmark, name)
     self.image_name = self._prepare_project_image()
     self.container_id = self._start_docker_container()
+    self._backup_default_build_script()
 
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
@@ -91,8 +92,6 @@ class ProjectContainerTool(BaseTool):
     result = self._execute_command(run_container_command)
     if result.returncode:
       logger.error('Failed to start container of image: %s', self.image_name)
-    else:
-      self._backup_default_build_script()
     container_id = result.stdout.strip()
     return container_id
 
