@@ -1,0 +1,13 @@
+"language": "jvm"
+"project": "json-simple"
+"target_name": "JsonParserFuzzer"
+"target_path": "/src/project-parent/fuzz-targets/src/test/java/com/example/JsonParserFuzzer.java"
+"test_files":
+- "test_file_path": "org/json/simple/Test.java"
+- "test_file_path": "com/example/JsonEncodeDecodeFuzzer.java"
+- "test_file_path": "org/json/simple/JSONValueTest.java"
+- "test_file_path": "org/json/simple/JSONArrayTest.java"
+- "test_file_path": "org/json/simple/parser/YylexTest.java"
+- "test_file_path": "JsonParserFuzzer.java"
+- "test_file_path": "JsonEncodeDecodeFuzzer.java"
+- "test_file_path": "com/example/JsonParserFuzzer.java"
