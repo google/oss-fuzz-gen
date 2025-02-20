@@ -1057,6 +1057,34 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     return generated_code
 
 
+class JvmPrototyperTemplateBuilder(DefaultJvmTemplateBuilder):
+  """Prototyper template builder for JVM projects."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model, benchmark, template_dir)
+    self.agent_templare_dir = AGENT_TEMPLATE_DIR
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it.
+    Ignore project_example_content and project_context_content parameters."""
+
+    if not self.benchmark:
+      return self._prompt
+
+    final_problem = self._format_problem(self.benchmark.function_signature)
+    self._prepare_prompt(final_problem)
+    self._prompt.append(tool_guides)
+
+    return self._prompt
+
+
 class DefaultRustTemplateBuilder(PromptBuilder):
   """Default builder for Rust projects."""
 

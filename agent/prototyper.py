@@ -24,7 +24,9 @@ from agent.base_agent import BaseAgent
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.benchmark import Benchmark
 from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
-                                        PrototyperTemplateBuilder)
+                                        PrototyperTemplateBuilder,
+                                        JvmPrototyperTemplateBuilder,
+                                        JvmErrorFixingBuilder)
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
 from tool.container_tool import ProjectContainerTool
@@ -40,13 +42,25 @@ class Prototyper(BaseAgent):
     benchmark = results[-1].benchmark
     retriever = ContextRetriever(benchmark)
     context_info = retriever.get_context_info()
-    prompt_builder = PrototyperTemplateBuilder(
-        model=self.llm,
-        benchmark=benchmark,
-    )
-    prompt = prompt_builder.build(example_pair=[],
-                                  project_context_content=context_info,
-                                  tool_guides=self.inspect_tool.tutorial())
+
+    if benchmark.language == 'jvm':
+      prompt_builder = JvmPrototyperTemplateBuilder(
+          model=self.llm,
+          benchmark=benchmark,
+      )
+
+      # TODO: arthurscchan add tool_guides for jvm project
+      prompt = prompt_builder.build(example_pair=[],
+                                    project_context_content=context_info)
+    else:
+      prompt_builder = PrototyperTemplateBuilder(
+          model=self.llm,
+          benchmark=benchmark,
+      )
+
+      prompt = prompt_builder.build(example_pair=[],
+                                    project_context_content=context_info,
+                                    tool_guides=self.inspect_tool.tutorial())
     # prompt = prompt_builder.build(example_pair=EXAMPLE_FUZZ_TARGETS.get(
     #     benchmark.language, []),
     #                               tool_guides=self.inspect_tool.tutorial())
@@ -204,7 +218,7 @@ class Prototyper(BaseAgent):
                                    prompt: Prompt) -> Optional[Prompt]:
     """Runs a compilation tool to validate the new fuzz target and build script
     from LLM."""
-    if not self._parse_tag(response, 'fuzz target'):
+    if not response or not self._parse_tag(response, 'fuzz target'):
       return prompt
     logger.info('----- ROUND %02d Received conclusion -----',
                 cur_round,
@@ -272,9 +286,18 @@ class Prototyper(BaseAgent):
   def _container_tool_reaction(self, cur_round: int, response: str,
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
-    prompt = DefaultTemplateBuilder(self.llm, None).build([])
-    prompt = self._container_handle_bash_commands(response, self.inspect_tool,
-                                                  prompt)
+    if self.benchmark.language == 'jvm':
+      # TODO: Do this in a separate agent for JVM coverage.
+      jvm_coverage_fix = True
+      error_desc, errors = '', []
+      builder = JvmErrorFixingBuilder(self.llm, self.benchmark,
+                                      build_result.fuzz_target_source,
+                                      errors, jvm_coverage_fix)
+      prompt = builder.build([], None, None)
+    else:
+      prompt = DefaultTemplateBuilder(self.llm, None).build([])
+      prompt = self._container_handle_bash_commands(response, self.inspect_tool,
+                                                    prompt)
 
     # Then build fuzz target.
     prompt = self._container_handle_conclusion(cur_round, response,
@@ -295,6 +318,7 @@ class Prototyper(BaseAgent):
     last_result = result_history[-1]
     logger.info('Executing Prototyper', trial=last_result.trial)
     benchmark = last_result.benchmark
+    self.benchmark = benchmark
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
     cur_round = 1
