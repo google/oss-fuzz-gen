@@ -76,8 +76,8 @@ class ProjectContainerTool(BaseTool):
 
   def _backup_default_build_script(self) -> None:
     """Creates a copy of the human-written /src/build.sh for LLM to use"""
-    backup_command = ['cp', '/src/build.sh', '/src/build.bk.sh']
-    process = self._execute_command_in_container(backup_command)
+    backup_command = 'cp /src/build.sh /src/build.bk.sh'
+    process = self.execute(backup_command)
     if process.returncode:
       logger.error('Failed to create a backup of /src/build.sh: %s',
                    self.image_name)
