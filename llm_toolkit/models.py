@@ -234,11 +234,6 @@ class GPT(LLM):
     """Returns a new chat session."""
     return self._get_client()
 
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
-    """Queries the LLM in the given chat session and returns the response."""
-    del client, prompt
-    # Placeholder: To Be Implemented.
-
   def _get_tiktoken_encoding(self, model_name: str):
     """Returns the tiktoken encoding for the model."""
     try:
