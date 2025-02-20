@@ -43,6 +43,7 @@ class BaseAgent(ABC):
     self.args = args
     self.name: str = name or self.__class__.__name__
     self.chat_history: str = ''  # Communication history between LLM and tool.
+    self.max_round = self.args.agent_max_round
 
   def __repr__(self) -> str:
     return self.__class__.__name__
