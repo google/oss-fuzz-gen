@@ -24,9 +24,9 @@ from agent.base_agent import BaseAgent
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.benchmark import Benchmark
 from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
-                                        PrototyperTemplateBuilder,
+                                        JvmErrorFixingBuilder,
                                         JvmPrototyperTemplateBuilder,
-                                        JvmErrorFixingBuilder)
+                                        PrototyperTemplateBuilder)
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
 from tool.container_tool import ProjectContainerTool
