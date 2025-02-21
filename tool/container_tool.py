@@ -108,7 +108,11 @@ class ProjectContainerTool(BaseTool):
   def compile(self, extra_commands: str = '') -> sp.CompletedProcess:
     """Compiles the fuzz target."""
     command = 'compile > /dev/null' + extra_commands
-    return self.execute(command)
+    compile_process = self.execute(command)
+    # Hide Compilation command so that LLM won't reuse it in the inspection tool
+    # and be distracted by irrelevant errors, e.g., `build/ already exits`.
+    compile_process.args = '# Compiles the fuzz target.'
+    return compile_process
 
   def terminate(self) -> bool:
     """Terminates the container."""
