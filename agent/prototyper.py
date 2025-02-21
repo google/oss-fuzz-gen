@@ -288,10 +288,9 @@ class Prototyper(BaseAgent):
     """Validates LLM conclusion or executes its command."""
     if self.benchmark.language == 'jvm':
       # TODO: Do this in a separate agent for JVM coverage.
-      jvm_coverage_fix = True
       builder = JvmErrorFixingBuilder(self.llm, self.benchmark,
                                       build_result.fuzz_target_source, [],
-                                      jvm_coverage_fix)
+                                      False, True)
       prompt = builder.build([], None, None)
     else:
       prompt = DefaultTemplateBuilder(self.llm, None).build([])
