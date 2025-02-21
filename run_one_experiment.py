@@ -241,10 +241,19 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
   trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
   trial_logger.info('Trial Starts')
   if args.agent:
-    p = pipeline.Pipeline(
-        args=args,
-        trial=trial,
-        writing_stage_agents=[Prototyper(trial=trial, llm=model, args=args)])
+    p = pipeline.Pipeline(args=args,
+                          trial=trial,
+                          writing_stage_agents=[
+                              Prototyper(trial=trial, llm=model, args=args),
+                              OnePromptEnhancer(trial=trial,
+                                                llm=model,
+                                                args=args),
+                          ],
+                          analysis_stage_agents=[
+                              SemanticAnalyzer(trial=trial,
+                                               llm=model,
+                                               args=args),
+                          ])
   else:
     p = pipeline.Pipeline(args=args,
                           trial=trial,
@@ -259,7 +268,7 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                           analysis_stage_agents=[
                               SemanticAnalyzer(trial=trial,
                                                llm=model,
-                                               args=args)
+                                               args=args),
                           ])
 
   results = p.execute(result_history=[
