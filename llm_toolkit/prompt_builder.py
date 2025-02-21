@@ -1057,6 +1057,45 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     return generated_code
 
 
+class JvmPrototyperTemplateBuilder(DefaultJvmTemplateBuilder):
+  """Prototyper template builder for JVM projects."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model, benchmark, template_dir)
+    self.agent_templare_dir = AGENT_TEMPLATE_DIR
+
+    # Load templates.
+    self.jvm_agent_format_file = self._find_template(template_dir,
+                                                     'jvm_agent_format.txt')
+
+  def _add_conclusion_for_agent(self, base_problem: str) -> str:
+    """Add conlusion requirements and format in the prompt str."""
+    agent_format = self._get_template(self.jvm_agent_format_file)
+    return base_problem + '\n' + agent_format
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it.
+    Ignore project_example_content and project_context_content parameters."""
+
+    if not self.benchmark:
+      return self._prompt
+
+    base_problem = self._format_problem(self.benchmark.function_signature)
+    final_problem = self._add_conclusion_for_agent(base_problem)
+    self._prepare_prompt(final_problem)
+    self._prepare_prompt(final_problem)
+    self._prompt.append(tool_guides)
+
+    return self._prompt
+
+
 class DefaultRustTemplateBuilder(PromptBuilder):
   """Default builder for Rust projects."""
 
@@ -1158,6 +1197,7 @@ class JvmErrorFixingBuilder(PromptBuilder):
                generated_harness: str,
                errors: list[str],
                jvm_cov_fix: bool,
+               from_agent: bool = False,
                template_dir: str = DEFAULT_TEMPLATE_DIR):
     super().__init__(model)
     self._template_dir = template_dir
@@ -1165,6 +1205,7 @@ class JvmErrorFixingBuilder(PromptBuilder):
     self.generated_harness = generated_harness
     self.error_str = '\n'.join(errors)
     self.jvm_cov_fix = jvm_cov_fix
+    self.from_agent = from_agent
 
     # Load templates.
     if self.jvm_cov_fix:
@@ -1173,6 +1214,9 @@ class JvmErrorFixingBuilder(PromptBuilder):
     else:
       self.template_file = self._find_template(
           template_dir, 'jvm_requirement_error_fixing.txt')
+
+    self.jvm_agent_format_file = self._find_template(template_dir,
+                                                     'jvm_agent_format.txt')
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
     """Finds template file based on |template_dir|."""
@@ -1188,6 +1232,11 @@ class JvmErrorFixingBuilder(PromptBuilder):
     """Reads the template for prompts."""
     with open(template_file) as file:
       return file.read()
+
+  def _add_conclusion_for_agent(self, base_problem: str) -> str:
+    """Add conlusion requirements and format in the prompt str."""
+    agent_format = self._get_template(self.jvm_agent_format_file)
+    return base_problem + '\n' + agent_format
 
   def build(self,
             example_pair: list[list[str]],
@@ -1234,6 +1283,9 @@ class JvmErrorFixingBuilder(PromptBuilder):
     else:
       # Add the error string to prompt
       prompt_text = prompt_text.replace('{ERRORS}', self.error_str)
+
+    if self.from_agent:
+      prompt_text = self._add_conclusion_for_agent(prompt_text)
 
     self._prompt.add_priming(prompt_text)
     return self._prompt

@@ -1,0 +1,13 @@
+You MUST provide all of the following results and follow the given format.
+
+1) An overall description
+    * The overall description should summarise your analysis, findings and describe your fuzzing harness design and logics.
+    * The overall description must be wrapped within the <conclusion> and </conclusion> tags.
+2) Final fuzzing harness
+    * Provide the full code of the fuzzing harness generated that fuzz the target method.
+    * Wrap the code within the <fuzz target> and </fuzz_target> tags.
+    * Avoid using markdown code tags like "```" or "```java".
+
+Here is a sample result that you MUST follow.
+    <conclusion>[YOUR CONCLUSION HERE]</conclusion>
+    <fuzz target>[YOUR FULL FUZZING HARNESS]</fuzz target>
