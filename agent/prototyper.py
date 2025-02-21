@@ -238,18 +238,18 @@ class Prototyper(BaseAgent):
                                            extra_text=prompt.get()).strip()
     prompt_text = (
         "The fuzz target's `LLVMFuzzerTestOneInput` did not invoke the "
-        f'function-under-test `{function_signature}`:'
+        f'function-under-test `{function_signature}`:\n'
         f'<fuzz target>\n{fuzz_target_source}\n</fuzz target>\n'
         '{BUILD_TEXT}\n'
         f'<compilation log>\n{compile_log}\n</compilation log>\n'
         'That is NOT enough. YOU MUST MODIFY THE FUZZ TARGET to CALL '
         f'FUNCTION `{function_signature}` **EXPLICITLY OR IMPLICITLY** in '
-        '`LLVMFuzzerTestOneInput` to generate a valid fuzz target. Study the '
+        '`LLVMFuzzerTestOneInput` to generate a valid fuzz target.\nStudy the '
         'source code for function usages to know how.\n')
     if build_result_alt and build_result_alt.binary_exists:
       # Preference 3: New fuzz target + default build.sh can compile and save
       # binary to expected path, but does not reference function-under-test.
-      prompt_text.replace(
+      prompt_text = prompt_text.replace(
           '{BUILD_TEXT}',
           'Althoug `/src/build.bk.sh` compiles and saves the binary to the '
           'correct path:')
@@ -262,14 +262,14 @@ class Prototyper(BaseAgent):
       #     '<build script></build script> empty.')
       prompt_text += (
           'When you have a solution later, make sure you output the FULL fuzz '
-          'target. YOU MUST NOT OMIT ANY '
-          'CODE even if it is the same as before.\n')
+          'target. YOU MUST NOT OMIT ANY CODE even if it is the same as before.'
+          '\n')
       prompt.append(prompt_text)
       return build_result_alt, prompt
     if build_result_ori and build_result_ori.binary_exists:
       # Preference 4: New fuzz target + New build.sh can compile and save
       # binary to expected path, but does not reference function-under-test.
-      prompt_text.replace(
+      prompt_text = prompt_text.replace(
           '{BUILD_TEXT}',
           'Althoug your build script compiles and saves the binary to the '
           'correct path:\n'
