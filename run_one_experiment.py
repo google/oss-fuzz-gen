@@ -24,6 +24,7 @@ from typing import List, Optional
 
 import logger
 import pipeline
+from agent.enhancer import Enhancer
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper
@@ -245,9 +246,7 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                           trial=trial,
                           writing_stage_agents=[
                               Prototyper(trial=trial, llm=model, args=args),
-                              OnePromptEnhancer(trial=trial,
-                                                llm=model,
-                                                args=args),
+                              Enhancer(trial=trial, llm=model, args=args),
                           ],
                           analysis_stage_agents=[
                               SemanticAnalyzer(trial=trial,
