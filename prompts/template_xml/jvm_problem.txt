@@ -1,15 +1,58 @@
-<task>
-Your goal is to write a fuzzing harness for the provided method signature to fuzz the method with random data. It is important that the provided solution compiles and actually calls the function specified by the method signature:
-{TARGET}
-{ARGUMENTS}
-{CONSTRUCTORS}
-{EXCEPTIONS}
-Here is the source code of the target {METHOD_OR_CONSTRUCTOR} for reference.
+<steps>
+Follow these steps to write a fuzzing harness for the provided method signature.
+
+Step 1. Analyse the structure and source code of the target method.
+  * Here is the source code of the target {METHOD_OR_CONSTRUCTOR} for reference.
 <code>
 {SELF_SOURCE}
 </code>
-Here is a list of source codes of methods/constructors that directly invoke the target {METHOD_OR_CONSTRUCTOR} for reference.
+
+  * Additional information that you may need to consider.
+    * **Purpose and functionality** of the method.
+    * **Input processing** and internal logic.
+
+Step 2. Analyse the signature and other properties of the target methods.
+  * Understand the target methods signature and its properties given below:
+    * **<target>** tag contains the methods signature and basic properties    
+    * **<arguments>** tag contains the description of all arguments of the target method.
+
+{TARGET}
+{ARGUMENTS}
+
+Step 3. Understand initialization requirements.
+  * Identify what is needed to properly initialize the object for invoking the target method:    * **<constructors>** is an optional tag contains the description of constructors that could create the needed objects if the target method is non static methods.
+
+{CONSTRUCTORS}
+
+Step 4. Understand exception handling requirements.
+  * Indentify what exceptions is thrown from the target method and explicitly handle them if necessary.
+    * **<exceptions>** is an optional tag contains all the exceptions directly thrown from the target methods that you MUST handle in your written fuzzing harness.
+
+{EXCEPTIONS}
+  
+Step 5. Understand how to correctly invoke the target method.
+  * Here is a list of source codes of methods/constructors that directly invoke the target {METHOD_OR_CONSTRUCTOR} for reference. Please be reminded that this section maybe empty if non of those source codes are found.
 {CROSS_SOURCE}
+
+Step 6. Understand general requirements for Java fuzzing harness writing.
+  * **<requirements>** tag contains a list of additional requirements for the fuzzing harness generation that you MUST follow.
 {REQUIREMENTS}
+
+Step 7. Understand Constraints and edge cases.
+For each input parameter, understand:
+  * Valid ranges and data types.
+  * Invalid or edge-case values (e.g., zero, NULL, predefined constants, maximum values).
+  * Special values that trigger different code paths.
+
+Step 8: Plan Fuzz Target Implementation.
+Decide how to implement the fuzz target:
+    * **Extract parameters** from the `FuzzedDataProvider` class by following the mapping table and additional description wrapped in the **<data_mapping>** tag.
 {DATA_MAPPING}
-</task>
+
+Step 9: **Write** the fuzz target code.
+  * Implement the fuzzing harness following all the analysis result from previous steps:
+    * Must follow Jazzer framework and the given fuzzing harness template.
+    * Create the necessary objects and initialise necessary arguments.
+    * Make sure the code can be compiled successfully with correctly built and retrieved dependencies.
+    * Make sure to handle the exceptions generated in additional to those directly thrown from invoking the target methods.
+    * Make sure to close resources and add clean up logic in the fuzzerTearDown.
