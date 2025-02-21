@@ -19,7 +19,7 @@ Step 2. Collect information using the Bash tool.
 Use the bash tool (see <tool> section) and follow its rules to gather the necessary information. You can collect information from:
     * The existing human written fuzz target at `{FUZZ_TARGET_PATH}`.
     * The existing human written build script `/src/build.bk.sh`.
-    * The project source code (in `.`, or `/src/<project-under-test>/`) clone from the project repository.
+    * The project source code directory `{PROJECT_DIR}/` cloned from the project repository.
     * Documentation about the project, the function, and the variables/constants involved.
     * Environment variables.
     * Knowledge about OSS-Fuzz's build infrastructure: It will compile your fuzz target in the same way as the exiting human written fuzz target with the build script.

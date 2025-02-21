@@ -50,7 +50,8 @@ class Prototyper(BaseAgent):
         benchmark.language, []),
                            project_example_content=project_examples,
                            project_context_content=context_info,
-                           tool_guides=self.inspect_tool.tutorial())
+                           tool_guides=self.inspect_tool.tutorial(),
+                           project_dir=self.inspect_tool.project_dir)
     return prompt
 
   def _update_fuzz_target_and_build_script(self, cur_round: int, response: str,
@@ -371,7 +372,8 @@ class Prototyper(BaseAgent):
         build_result=build_result,
         compile_log=compile_log,
         initial=prompt.get())
-    prompt = builder.build(example_pair=[])
+    prompt = builder.build(example_pair=[],
+                           project_dir=self.inspect_tool.project_dir)
     return build_result, prompt
 
   def _container_handle_conclusion(self, cur_round: int, response: str,

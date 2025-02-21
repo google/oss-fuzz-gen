@@ -17,6 +17,7 @@ class ProjectContainerTool(BaseTool):
     self.image_name = self._prepare_project_image()
     self.container_id = self._start_docker_container()
     self._backup_default_build_script()
+    self.project_dir = self._get_project_dir()
 
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
@@ -75,12 +76,21 @@ class ProjectContainerTool(BaseTool):
       return sp.CompletedProcess(command, returncode=1, stdout='', stderr='')
 
   def _backup_default_build_script(self) -> None:
-    """Creates a copy of the human-written /src/build.sh for LLM to use"""
+    """Creates a copy of the human-written /src/build.sh for LLM to use."""
     backup_command = 'cp /src/build.sh /src/build.bk.sh'
     process = self.execute(backup_command)
     if process.returncode:
       logger.error('Failed to create a backup of /src/build.sh: %s',
                    self.image_name)
+
+  def _get_project_dir(self) -> str:
+    """Returns the project-under-test's source code directory."""
+    pwd_command = 'pwd'
+    process = self.execute(pwd_command)
+    if process.returncode:
+      logger.error('Failed to get the WORKDIR: %s', self.image_name)
+      return ''
+    return process.stdout.strip()
 
   def _start_docker_container(self) -> str:
     """Runs the project's OSS-Fuzz image as a background container and returns

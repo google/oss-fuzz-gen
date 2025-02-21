@@ -568,11 +568,13 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
-            tool_guides: str = '') -> prompts.Prompt:
+            tool_guides: str = '',
+            project_dir: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     if not self.benchmark:
       return self._prompt
     priming = self._format_priming(self.benchmark)
+    priming = priming.replace('{PROJECT_DIR}', project_dir)
     final_problem = self.format_problem(self.benchmark.function_signature)
     final_problem += (f'You MUST call <code>\n'
                       f'{self.benchmark.function_signature}\n'
@@ -606,7 +608,8 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
-            tool_guides: str = '') -> prompts.Prompt:
+            tool_guides: str = '',
+            project_dir: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content,
          tool_guides)
@@ -626,6 +629,7 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
     prompt = prompt.replace('{COMPILE_LOG}', self.compile_log)
     prompt = prompt.replace('{FUNCTION_SIGNATURE}',
                             self.benchmark.function_signature)
+    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
     self._prompt.append(prompt)
 
     return self._prompt
