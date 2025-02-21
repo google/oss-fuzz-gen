@@ -13,7 +13,7 @@ Step 1. Analyse the structure and source code of the target method.
 
 Step 2. Analyse the signature and other properties of the target methods.
   * Understand the target methods signature and its properties given below:
-    * **<target>** tag contains the methods signature and basic properties    
+    * **<target>** tag contains the methods signature and basic properties
     * **<arguments>** tag contains the description of all arguments of the target method.
 
 {TARGET}
@@ -29,7 +29,7 @@ Step 4. Understand exception handling requirements.
     * **<exceptions>** is an optional tag contains all the exceptions directly thrown from the target methods that you MUST handle in your written fuzzing harness.
 
 {EXCEPTIONS}
-  
+
 Step 5. Understand how to correctly invoke the target method.
   * Here is a list of source codes of methods/constructors that directly invoke the target {METHOD_OR_CONSTRUCTOR} for reference. Please be reminded that this section maybe empty if non of those source codes are found.
 {CROSS_SOURCE}
