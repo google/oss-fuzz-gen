@@ -547,11 +547,10 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
   def __init__(self,
                model: models.LLM,
                benchmark: Benchmark,
-               template_dir: str = DEFAULT_TEMPLATE_DIR):
-    super().__init__(model)
-    self._template_dir = template_dir
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
     self.agent_templare_dir = AGENT_TEMPLATE_DIR
-    self.benchmark = benchmark
 
     # Load templates.
     self.priming_template_file = self._find_template(self.agent_templare_dir,
@@ -594,8 +593,9 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
                benchmark: Benchmark,
                build_result: BuildResult,
                compile_log: str,
-               template_dir: str = DEFAULT_TEMPLATE_DIR):
-    super().__init__(model, benchmark, template_dir)
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
     # Load templates.
     self.priming_template_file = self._find_template(self.agent_templare_dir,
                                                      'prototyper-fixing.txt')
@@ -612,11 +612,13 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
          tool_guides)
     if not self.benchmark:
       return self._prompt
+
     if self.build_result.build_script_source:
       build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
                     '</build script>')
     else:
       build_text = 'Build script reuses `/src/build.bk.sh`.'
+
     prompt = self._get_template(self.priming_template_file)
     prompt = prompt.replace('{FUZZ_TARGET_SOURCE}',
                             self.build_result.fuzz_target_source)

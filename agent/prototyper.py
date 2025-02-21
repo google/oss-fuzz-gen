@@ -331,7 +331,8 @@ class Prototyper(BaseAgent):
         model=self.llm,
         benchmark=build_result.benchmark,
         build_result=build_result,
-        compile_log=compile_log)
+        compile_log=compile_log,
+        initial=prompt.get())
     prompt = builder.build(example_pair=[])
     return build_result, prompt
 
