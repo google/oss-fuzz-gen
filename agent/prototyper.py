@@ -266,8 +266,22 @@ class Prototyper(BaseAgent):
           '\n')
       prompt.append(prompt_text)
       return build_result_alt, prompt
+    if (build_result_ori and build_result_ori.binary_exists and
+        not build_result_ori.build_script_source):
+      # Preference 4.1: New fuzz target + default build.sh can compile and save
+      # binary to expected path, but does not reference function-under-test.
+      prompt_text = prompt_text.replace(
+          '{BUILD_TEXT}',
+          'Althoug `/src/build.bk.sh` compiles and saves the binary to the '
+          'correct path:')
+      prompt_text += (
+          'When you have a solution later, make sure you output the FULL fuzz '
+          'target. YOU MUST NOT OMIT ANY CODE even if it is the same as before.'
+          '\n')
+      prompt.append(prompt_text)
+      return build_result_ori, prompt
     if build_result_ori and build_result_ori.binary_exists:
-      # Preference 4: New fuzz target + New build.sh can compile and save
+      # Preference 4.2: New fuzz target + New build.sh can compile and save
       # binary to expected path, but does not reference function-under-test.
       prompt_text = prompt_text.replace(
           '{BUILD_TEXT}',
@@ -283,8 +297,9 @@ class Prototyper(BaseAgent):
 
     # Case 3: Compiles, meaning the binary is not saved.
     binary_path = os.path.join('/out', build_result.benchmark.target_name)
-    if build_result_ori and build_result_ori.compiles:
-      # Preference 6: New fuzz target + new build.sh can compile, but does
+    if (build_result_ori and build_result_ori.compiles and
+        build_result_ori.build_script_source):
+      # Preference 5.1: New fuzz target + new build.sh can compile, but does
       # not save binary to expected path.
       prompt_text = (
           'The fuzz target and build script compiles successfully, but the '
@@ -301,8 +316,31 @@ class Prototyper(BaseAgent):
           'CODE even if it is the same as before.\n')
       prompt.append(prompt_text)
       return build_result_ori, prompt
+    if (build_result_ori and build_result_ori.compiles and
+        not build_result_ori.build_script_source):
+      # Preference 5.2: New fuzz target + default build.sh can compile, but does
+      # not save binary to expected path, indicating benchmark data error.
+      logger.error(
+          'The human-written build.sh does not save the fuzz target binary to '
+          'expected path /out/%s, indicating incorrect info in benchmark YAML.',
+          build_result.benchmark.target_name,
+          trial=build_result.trial)
+      prompt_text = (
+          'The fuzz target compiles successfully with /src/build.bk.sh, but the'
+          ' final fuzz target binary was not saved to the expected path at '
+          f'`{binary_path}`.\n'
+          f'<fuzz target>\n{fuzz_target_source}\n</fuzz target>\n'
+          f'<compilation log>\n{compile_log}\n</compilation log>\n'
+          'YOU MUST MODIFY THE BUILD SCRIPT to ensure the binary is saved to '
+          f'{binary_path}.\n')
+      prompt_text += (
+          'When you have a solution later, make sure you output the FULL fuzz '
+          'target (and the FULL build script, if any). YOU MUST NOT OMIT ANY '
+          'CODE even if it is the same as before.\n')
+      prompt.append(prompt_text)
+      return build_result_ori, prompt
     if build_result_alt and build_result_alt.compiles:
-      # Preference 5: New fuzz target + default build.sh can compile, but does
+      # Preference 6: New fuzz target + default build.sh can compile, but does
       # not save binary to expected path, indicating benchmark data error.
       logger.error(
           'The human-written build.sh does not save the fuzz target binary to '
