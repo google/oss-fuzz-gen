@@ -47,7 +47,7 @@ class Prototyper(BaseAgent):
         benchmark=benchmark,
     )
     prompt = builder.build(example_pair=prompt_builder.EXAMPLES.get(
-        benchmark.language, []),
+        benchmark.file_type.value.lower(), []),
                            project_example_content=project_examples,
                            project_context_content=context_info,
                            tool_guides=self.inspect_tool.tutorial(),

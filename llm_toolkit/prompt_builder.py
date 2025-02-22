@@ -553,8 +553,16 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     self.agent_templare_dir = AGENT_TEMPLATE_DIR
 
     # Load templates.
-    self.priming_template_file = self._find_template(self.agent_templare_dir,
-                                                     'prototyper-priming.txt')
+    if benchmark.is_c_target:
+      self.priming_template_file = self._find_template(
+          self.agent_templare_dir, 'prototyper-priming.c.txt')
+    elif benchmark.is_cpp_target:
+      self.priming_template_file = self._find_template(
+          self.agent_templare_dir, 'prototyper-priming.cpp.txt')
+    else:
+      self.problem_template_file = self._find_template(
+          self.agent_templare_dir, 'prototyper-priming.txt')
+
     self.cpp_priming_filler_file = self._find_template(
         template_dir, 'cpp-specific-priming-filler.txt')
     self.problem_template_file = self._find_template(template_dir,
