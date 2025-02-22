@@ -72,6 +72,7 @@ class BuildResult(Result):
   compiles: bool  # Build success/failure.
   compile_error: str  # Build error message.
   compile_log: str  # Build full output.
+  binary_exists: bool  # Fuzz target binary generated successfully.
   is_function_referenced: bool  # Fuzz target references function-under-test.
 
   def __init__(self,
@@ -81,6 +82,7 @@ class BuildResult(Result):
                compiles: bool = False,
                compile_error: str = '',
                compile_log: str = '',
+               binary_exists: bool = False,
                is_function_referenced: bool = False,
                fuzz_target_source: str = '',
                build_script_source: str = '',
@@ -91,6 +93,7 @@ class BuildResult(Result):
     self.compiles = compiles
     self.compile_error = compile_error
     self.compile_log = compile_log
+    self.binary_exists = binary_exists
     self.is_function_referenced = is_function_referenced
 
   def to_dict(self) -> dict:
@@ -98,12 +101,13 @@ class BuildResult(Result):
         'compiles': self.success,
         'compile_error': self.compile_error,
         'compile_log': self.compile_log,
+        'binary_exists': self.binary_exists,
         'is_function_referenced': self.is_function_referenced,
     }
 
   @property
   def success(self):
-    return self.compiles and self.is_function_referenced
+    return self.compiles and self.binary_exists and self.is_function_referenced
 
 
 # TODO: Make this class an attribute of Result, avoid too many attributes in one
@@ -132,6 +136,7 @@ class RunResult(BuildResult):
       compiles: bool = False,
       compile_error: str = '',
       compile_log: str = '',
+      binary_exists: bool = False,
       is_function_referenced: bool = False,
       crashes: bool = False,  # Runtime crash.
       run_error: str = '',  # Runtime crash error message.
@@ -151,8 +156,9 @@ class RunResult(BuildResult):
       author: Any = None,
       chat_history: Optional[dict] = None) -> None:
     super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
-                     compile_log, is_function_referenced, fuzz_target_source,
-                     build_script_source, author, chat_history)
+                     compile_log, binary_exists, is_function_referenced,
+                     fuzz_target_source, build_script_source, author,
+                     chat_history)
     self.crashes = crashes
     self.run_error = run_error
     self.run_log = run_log

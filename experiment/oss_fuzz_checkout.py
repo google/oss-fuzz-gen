@@ -70,7 +70,7 @@ def _clone_oss_fuzz_repo():
   """Clones OSS-Fuzz to |OSS_FUZZ_DIR|."""
   clone_command = [
       'git', 'clone', 'https://github.com/google/oss-fuzz', '--depth', '1',
-      '--branch', 'target-exp-log-account', OSS_FUZZ_DIR
+      OSS_FUZZ_DIR
   ]
   proc = sp.Popen(clone_command,
                   stdout=sp.PIPE,

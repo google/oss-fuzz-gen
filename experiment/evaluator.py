@@ -307,6 +307,8 @@ class Evaluator:
 
     # Add additional statement in dockerfile to overwrite with generated fuzzer
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
+      f.write('\nRUN cp /src/build.sh /src/build.bk.sh\n')
+    with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write('\nCOPY agent-build.sh /src/build.sh\n')
 
     return name

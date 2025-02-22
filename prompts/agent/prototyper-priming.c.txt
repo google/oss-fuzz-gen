@@ -63,8 +63,6 @@ Implement the `LLVMFuzzerTestOneInput` function:
     * Macros or Constants:
         * Include or define necessary macros or constants.
     * Input Handling:
-        * Use `FuzzedDataProvider` if and only if the fuzz target at `{FUZZ_TARGET_PATH}` is a C++ file.
-        * Use `extern "C"` if and only if the fuzz target at `{FUZZ_TARGET_PATH}` is a C++ file.
         * Check that the input size is sufficient.
         * Extract parameters from the input data.
         * Handle any necessary conversions or validations.
