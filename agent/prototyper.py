@@ -23,6 +23,7 @@ import logger
 from agent.base_agent import BaseAgent
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.benchmark import Benchmark
+from experiment.workdir import WorkDirs
 from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
                                         PrototyperTemplateBuilder)
 from llm_toolkit.prompts import Prompt
@@ -292,6 +293,7 @@ class Prototyper(BaseAgent):
 
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
+    WorkDirs(self.args.work_dirs.base)
     last_result = result_history[-1]
     logger.info('Executing %s', self.name, trial=last_result.trial)
     benchmark = last_result.benchmark
