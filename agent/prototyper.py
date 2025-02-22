@@ -54,39 +54,19 @@ class Prototyper(BaseAgent):
                            project_dir=self.inspect_tool.project_dir)
     return prompt
 
-  def _update_fuzz_target_and_build_script(self, cur_round: int, response: str,
+  def _update_fuzz_target_and_build_script(self, response: str,
                                            build_result: BuildResult) -> None:
     """Updates fuzz target and build script in build_result with LLM response.
     """
     fuzz_target_source = self._filter_code(
         self._parse_tag(response, 'fuzz target'))
     build_result.fuzz_target_source = fuzz_target_source
-    if fuzz_target_source:
-      logger.debug('ROUND %02d Parsed fuzz target from LLM: %s',
-                   cur_round,
-                   fuzz_target_source,
-                   trial=build_result.trial)
-    else:
-      logger.error('ROUND %02d No fuzz target source code in conclusion: %s',
-                   cur_round,
-                   response,
-                   trial=build_result.trial)
 
     build_script_source = self._filter_code(
         self._parse_tag(response, 'build script'))
     # Sometimes LLM adds chronos, which makes no sense for new build scripts.
     build_result.build_script_source = build_script_source.replace(
         'source /src/chronos.sh', '')
-    if build_script_source:
-      logger.debug('ROUND %02d Parsed build script from LLM: %s',
-                   cur_round,
-                   build_script_source,
-                   trial=build_result.trial)
-    else:
-      logger.debug('ROUND %02d No build script in conclusion: %s',
-                   cur_round,
-                   response,
-                   trial=build_result.trial)
 
   def _update_build_result(self, build_result: BuildResult,
                            compile_process: sp.CompletedProcess, compiles: bool,
@@ -387,7 +367,7 @@ class Prototyper(BaseAgent):
                 cur_round,
                 trial=build_result.trial)
 
-    self._update_fuzz_target_and_build_script(cur_round, response, build_result)
+    self._update_fuzz_target_and_build_script(response, build_result)
 
     build_result_alt, build_result_ori = (
         self._validate_fuzz_target_and_build_script(cur_round, build_result))
