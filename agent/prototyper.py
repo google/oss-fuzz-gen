@@ -27,8 +27,6 @@ from data_prep import project_targets
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
-from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
-                                        PrototyperTemplateBuilder)
 from llm_toolkit import prompt_builder
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
