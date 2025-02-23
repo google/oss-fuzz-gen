@@ -92,7 +92,7 @@ Command 5. Check Build Script for Compilation Flags and Libraries:
     To check which compiler flags and libraries are used in the build script.
     </reason>
     <bash>
-    cat /src/build.sh
+    cat /src/build.bk.sh
     </bash>
 Command 6. Verify Available Libraries:
     <reason>
@@ -111,8 +111,7 @@ Command 7. Understand Environment Variables:
 </example usages>
 
 <final reminder>
-1. STRICTLY ONE Bash Command in each message: Do NOT send multiple bash commands in one message.
-3. Do Not Compile or Run Code:
+1. Do Not Compile or Run Code:
     * Your investigation is limited to reading and interpreting information using bash commands.
 </final reminder>
 </tool>
