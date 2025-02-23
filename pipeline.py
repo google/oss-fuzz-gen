@@ -57,25 +57,30 @@ class Pipeline():
     if not cycle_count:
       return False
 
-    last_result = result_history[-1]
     if cycle_count > 5:
-      self.logger.warning('[Cycle %d] Terminate after 5 cycles: %s',
-                          cycle_count, result_history)
+      self.logger.info('[Cycle %d] Terminate after 5 cycles: %s', cycle_count,
+                       result_history)
       return True
 
-    if not isinstance(last_result, AnalysisResult):
-      self.logger.warning('[Cycle %d] Last result is not AnalysisResult: %s',
-                          cycle_count, result_history)
+    last_result = result_history[-1]
+    if isinstance(last_result, BuildResult) and not last_result.success:
+      self.logger.debug('[Cycle %d] Last result is failed BuildResult: %s',
+                        cycle_count, last_result)
       return True
 
-    if last_result.success:
+    if isinstance(last_result, AnalysisResult) and last_result.success:
       self.logger.info('[Cycle %d] Generation succeeds: %s', cycle_count,
                        result_history)
       return True
 
-    self.logger.info('[Cycle %d] Generation continues: %s', cycle_count,
-                     result_history)
-    return False
+    if isinstance(last_result, AnalysisResult) and not last_result.success:
+      self.logger.info('[Cycle %d] Generation continues: %s', cycle_count,
+                       result_history)
+      return False
+
+    self.logger.warning('[Cycle %d] Last result is unexpeceted: %s',
+                        cycle_count, last_result)
+    return True
 
   def _execute_one_cycle(self, result_history: list[Result],
                          cycle_count: int) -> None:
