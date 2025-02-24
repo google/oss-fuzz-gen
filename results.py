@@ -30,6 +30,7 @@ class Result:
   build_script_source: str
   author: Any
   chat_history: dict
+  _repr_exclude = {'chat_history'}
 
   def __init__(self,
                benchmark: Benchmark,
@@ -48,8 +49,12 @@ class Result:
     self.chat_history = chat_history or {}
 
   def __repr__(self) -> str:
+    attributes_to_show = [
+        f'{k}={v!r}' for k, v in vars(self).items()
+        if k not in self._repr_exclude
+    ]
     return (f'{self.__class__.__name__}'
-            f'({", ".join(f"{k}={v!r}" for k, v in vars(self).items())})')
+            f'({', '.join(attributes_to_show)})')
 
   def to_dict(self) -> dict:
     return {
@@ -74,6 +79,7 @@ class BuildResult(Result):
   compile_log: str  # Build full output.
   binary_exists: bool  # Fuzz target binary generated successfully.
   is_function_referenced: bool  # Fuzz target references function-under-test.
+  _repr_exclude = Result._repr_exclude | {'compile_log'}
 
   def __init__(self,
                benchmark: Benchmark,
@@ -127,6 +133,7 @@ class RunResult(BuildResult):
   coverage_report_path: str
   cov_pcs: int
   total_pcs: int
+  _repr_exclude = BuildResult._repr_exclude | {'textcov_diff'}
 
   def __init__(
       self,

@@ -211,7 +211,7 @@ class Benchmark:
       # Special handling of benchmark_id is needed to avoid this situation.
       self.id = self.id.replace('::', '-')
 
-  def __str__(self):
+  def __repr__(self):
     return (f'Benchmark<id={self.id}, project={self.project}, '
             f'language={self.language}, '
             f'function_signature={self.function_signature}, '
