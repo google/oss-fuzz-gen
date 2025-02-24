@@ -49,12 +49,11 @@ class Result:
     self.chat_history = chat_history or {}
 
   def __repr__(self) -> str:
-    attributes_to_show = [
+    attributes = [
         f'{k}={v!r}' for k, v in vars(self).items()
         if k not in self._repr_exclude
     ]
-    return (f'{self.__class__.__name__}'
-            f'({', '.join(attributes_to_show)})')
+    return f'{self.__class__.__name__}({", ".join(attributes)})'
 
   def to_dict(self) -> dict:
     return {
