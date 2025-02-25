@@ -1,0 +1,13 @@
+"functions":
+- "name": "_ZNSt12length_errorC2B8ne180100EPKc"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "__s"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void std::length_error::length_error(const char *)"
+"language": "c++"
+"project": "onednn"
+"target_name": "fuzz_json"
+"target_path": "/src/fuzz_json.cpp"
