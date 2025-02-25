@@ -17,7 +17,7 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
-from results import AnalysisResult, BuildResult, Result, RunResult
+from results import AnalysisResult, BuildResult, Result, RunResult, TrialResult
 from stage.analysis_stage import AnalysisStage
 from stage.execution_stage import ExecutionStage
 from stage.writing_stage import WritingStage
@@ -82,30 +82,44 @@ class Pipeline():
                         cycle_count, last_result)
     return True
 
+  def _update_status(self, result_history: list[Result]) -> None:
+    trial_result = TrialResult(benchmark=result_history[-1].benchmark,
+                               trial=self.trial,
+                               work_dirs=result_history[-1].work_dirs,
+                               result_history=result_history)
+    self.logger.write_result(
+        result_status_dir=trial_result.best_result.work_dirs.status,
+        result=trial_result)
+
   def _execute_one_cycle(self, result_history: list[Result],
                          cycle_count: int) -> None:
     """Executes the stages once."""
     self.logger.info('[Cycle %d] Initial result is %s', cycle_count,
                      result_history[-1])
+    # Writing stage.
     result_history.append(
         self.writing_stage.execute(result_history=result_history))
+    self._update_status(result_history=result_history)
     if (not isinstance(result_history[-1], BuildResult) or
         not result_history[-1].success):
       self.logger.warning('[Cycle %d] Build failure, skipping the rest steps',
                           cycle_count)
       return
 
+    # Execution stage.
     result_history.append(
         self.execution_stage.execute(result_history=result_history))
+    self._update_status(result_history=result_history)
     if (not isinstance(result_history[-1], RunResult) or
         not result_history[-1].log_path):
       self.logger.warning('[Cycle %d] Run failure, skipping the rest steps',
                           cycle_count)
       return
 
+    # Analysis stage.
     result_history.append(
         self.analysis_stage.execute(result_history=result_history))
-
+    self._update_status(result_history=result_history)
     self.logger.info('[Cycle %d] Analysis result %s: %s', cycle_count,
                      result_history[-1].success, result_history[-1])
 
