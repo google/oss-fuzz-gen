@@ -28,9 +28,9 @@ class Pipeline():
     1. Writing stage generates or refines the fuzz target and its associated
        build script to improve code coverage and enhance bug-finding
        capabilities for the function under test.
-    2. Evaluation stage assesses the fuzz target's performance by measuring
+    2. Execution stage assesses the fuzz target's performance by measuring
        code coverage and detecting runtime crashes.
-    3. Analysis stage examines the results from the evaluation stage, extracting
+    3. Analysis stage examines the results from the execution stage, extracting
        insights from the coverage and crash data to suggest improvements for the
        writing stage in the next iteration.
     """
@@ -83,8 +83,7 @@ class Pipeline():
     self.logger.info('[Cycle %d] Initial result is %s', cycle_count,
                      result_history[-1])
     result_history.append(
-        self.writing_stage.execute(result_history=result_history)
-    )
+        self.writing_stage.execute(result_history=result_history))
     if (not isinstance(result_history[-1], BuildResult)
         or  # fuzz target and build script are saved in BuildResult
         not result_history[-1].success):
