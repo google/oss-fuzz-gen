@@ -28,9 +28,9 @@ class Pipeline():
     1. Writing stage generates or refines the fuzz target and its associated
        build script to improve code coverage and enhance bug-finding
        capabilities for the function under test.
-    2. Evaluation stage assesses the fuzz target's performance by measuring
+    2. Execution stage assesses the fuzz target's performance by measuring
        code coverage and detecting runtime crashes.
-    3. Analysis stage examines the results from the evaluation stage, extracting
+    3. Analysis stage examines the results from the execution stage, extracting
        insights from the coverage and crash data to suggest improvements for the
        writing stage in the next iteration.
     """
