@@ -126,8 +126,4 @@ class Pipeline():
       cycle_count += 1
       self._execute_one_cycle(result_history=result_history,
                               cycle_count=cycle_count)
-
-    final_result = result_history[-1]
-    self.logger.write_result(result_status_dir=final_result.work_dirs.status,
-                             result=final_result)
     return result_history

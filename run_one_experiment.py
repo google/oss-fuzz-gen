@@ -274,10 +274,14 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
       Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
   ])
 
-  return TrialResult(benchmark=benchmark,
-                     trial=trial,
-                     work_dirs=work_dirs,
-                     result_history=results)
+  trial_result = TrialResult(benchmark=benchmark,
+                             trial=trial,
+                             work_dirs=work_dirs,
+                             result_history=results)
+  trial_logger.write_result(
+      result_status_dir=trial_result.best_result.work_dirs.status,
+      result=trial_result)
+  return trial_result
 
 
 def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
