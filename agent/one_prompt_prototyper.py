@@ -130,8 +130,6 @@ class OnePromptPrototyper(BaseAgent):
                   cur_round,
                   trial=build_result.trial)
       return None
-    else:
-      logger.info('Did not succeed', trial=0)
     fixer_model = models.LLM.setup(ai_binary=self.args.ai_binary,
                                    name=self.llm.name,
                                    num_samples=1,
