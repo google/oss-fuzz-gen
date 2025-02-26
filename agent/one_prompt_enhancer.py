@@ -22,8 +22,6 @@ from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
 from llm_toolkit.prompts import Prompt
 from results import AnalysisResult, BuildResult, Result
 
-MAX_ROUND = 10
-
 
 class OnePromptEnhancer(OnePromptPrototyper):
   """The Agent to generate a simple but valid fuzz target from scratch."""
@@ -75,7 +73,7 @@ class OnePromptEnhancer(OnePromptPrototyper):
                                author=self,
                                chat_history={self.name: prompt.get()})
 
-    while prompt and cur_round <= MAX_ROUND:
+    while prompt and cur_round <= self.max_round:
       self._generate_fuzz_target(prompt, result_history, build_result,
                                  cur_round)
 
