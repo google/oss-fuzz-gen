@@ -1,0 +1,47 @@
+"functions":
+- "name": "Sass::Parser::parse_css_block"
+  "params":
+  - "name": "is_root"
+    "type": "bool"
+  "return_type": "Block_Obj"
+  "signature": "Parser::parse_css_block(bool is_root)"
+- "name": "Sass::Parser::parse_if_directive"
+  "params":
+  - "name": "else_if"
+    "type": "bool"
+  "return_type": "If_Obj"
+  "signature": "Parser::parse_if_directive(bool else_if)"
+- "name": "Sass::Parser::parse_block"
+  "params":
+  - "name": "is_root"
+    "type": "bool"
+  "return_type": "Block_Obj"
+  "signature": "Parser::parse_block(bool is_root)"
+- "name": "Sass::Parser::parse_definition"
+  "params":
+  - "name": "which_type"
+    "type": "Definition::Type"
+  "return_type": "Definition_Obj"
+  "signature": "Parser::parse_definition(Definition::Type which_type)"
+- "name": "Sass::Parser::parse_block_node"
+  "params":
+  - "name": "is_root"
+    "type": "bool"
+  "return_type": "bool"
+  "signature": "Parser::parse_block_node(bool is_root)"
+- "name": "Sass::Parser::parse_block_nodes"
+  "params":
+  - "name": "is_root"
+    "type": "bool"
+  "return_type": "bool"
+  "signature": "Parser::parse_block_nodes(bool is_root)"
+- "name": "Sass::Parser::parse_ruleset"
+  "params":
+  - "name": "lookahead"
+    "type": "Lookahead"
+  "return_type": "StyleRuleObj"
+  "signature": "Parser::parse_ruleset(Lookahead lookahead)"
+"language": "c++"
+"project": "libsass"
+"target_name": "data_context_fuzzer"
+"target_path": "/src/data_context_fuzzer.cc"
