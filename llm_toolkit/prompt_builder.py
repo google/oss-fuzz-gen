@@ -559,6 +559,9 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     elif benchmark.is_cpp_target:
       self.priming_template_file = self._find_template(
           self.agent_templare_dir, 'prototyper-priming.cpp.txt')
+    elif benchmark.is_java_target:
+      self.priming_template_file = self._find_template(
+          self.agent_templare_dir, 'prototyper-priming.jvm.txt')
     else:
       self.problem_template_file = self._find_template(
           self.agent_templare_dir, 'prototyper-priming.txt')
@@ -572,6 +575,53 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     self.context_template_file = self._find_template(template_dir,
                                                      'context.txt')
 
+  def _format_jvm_requirement(self, signature: str) -> str:
+    """Formats a requirement based on the prompt template for JVM."""
+    requirement = self._get_template(self._find_template(
+        self._template_dir, 'jvm_requirement.txt'))
+
+    harness_name = os.path.basename(self.benchmark.target_path).replace(
+        '.java', '')
+    if harness_name:
+      requirement = requirement.replace('{HARNESS_NAME}', harness_name)
+    else:
+      requirement = requirement.replace('{HARNESS_NAME}', 'Fuzz')
+
+    requirement = requirement.replace('{IMPORT_MAPPINGS}', '')
+    requirement = requirement.replace('{STATIC_OR_INSTANCE}', '')
+    requirement = requirement.replace('{NEED_CLOSE}', '')
+
+    return requirement
+
+  def format_jvm_problem(self, signature: str, priming: str) -> str:
+    """Format target problem specifically for JVM project."""
+    if '<init>' in signature:
+      template_file = self._find_template(self._template_dir,
+                                          'jvm_problem_constructor.txt')
+    else:
+      template_file = self._find_template(self._template_dir,
+                                          'jvm_problem_method.txt')
+
+    class_name = signature.split('].')[0][1:]
+
+    target = self._get_template(template_file)
+    target = target.replace('{CONSTRUCTOR_CLASS}', class_name)
+    target = target.replace('{CONSTRUCTOR_SIGNATURE}', signature)
+    target = target.replace('{METHOD_SIGNATURE}', signature)
+    target = target.replace('{PROJECT_NAME}', self.benchmark.project)
+    target = target.replace(
+        '{PROJECT_URL}',
+        oss_fuzz_checkout.get_project_repository(self.benchmark.project))
+
+    priming = priming.replace('{TARGET}', target)
+    priming = priming.replace('{REQUIREMENTS}',
+                              self._format_jvm_requirement(signature))
+    priming = priming.replace(
+        '{DATA_MAPPING}', self._get_template(self._find_template(
+            self._template_dir, 'jvm_specific_data_filler.txt')))
+
+    return priming
+
   def build(self,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
@@ -583,10 +633,18 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
       return self._prompt
     priming = self._format_priming(self.benchmark)
     priming = priming.replace('{PROJECT_DIR}', project_dir)
-    final_problem = self.format_problem(self.benchmark.function_signature)
-    final_problem += (f'You MUST call <code>\n'
-                      f'{self.benchmark.function_signature}\n'
-                      f'</code> in your solution!\n')
+
+    if self.benchmark.language == 'jvm':
+      priming = self.format_jvm_problem(self.benchmark.function_signature,
+                                        priming)
+      format_problem = ''
+      # TODO Add tool guides for JVM projects
+      tool_guides = ''
+    else:
+      final_problem = self.format_problem(self.benchmark.function_signature)
+      final_problem += (f'You MUST call <code>\n'
+                        f'{self.benchmark.function_signature}\n'
+                        f'</code> in your solution!\n')
     if project_context_content:
       final_problem += self.format_context(project_context_content)
     self._prepare_prompt(priming, final_problem, example_pair,

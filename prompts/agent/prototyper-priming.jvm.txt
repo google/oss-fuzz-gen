@@ -1,0 +1,128 @@
+<system>
+As a security testing engineer, you must write an `public static void fuzzerTestOneInput(com.code_intelligence.jazzer.api.FuzzedDataProvider)` fuzz target in Java following the Jazzer framework.
+Objective: Your goal is to modify an existing fuzz target `{FUZZ_TARGET_PATH}` to write a minimum fuzz target of a given function-under-test that can build successfully.
+</system>
+
+The details of the fuzz target is shown below.
+{TARGET}
+
+<steps>
+Follow these steps to write a minimum fuzz target:
+
+Step 1. Determine the information you need to write an effective fuzz target.
+This includes:
+    * **Source code** of the function under test.
+    * **Custom Types and Dependencies** definitions and implementations.
+    * **Initialization and setup** requirements and steps.
+    * **Build details** and integration steps.
+    * **JDK version** requires to build the target project.
+    * **Build system** requires to build the target project, including but not limited to **Maven*, **Gradle**, **Ant** or plain **Javac**.
+    * Valid and edge-case input values.
+    * Environmental and runtime dependencies.
+
+Step 2. Collect information using the Bash tool.
+Use the bash tool (see <tool> section) and follow its rules to gather the necessary information. You can collect information from:
+    * The existing human written fuzz target at `{FUZZ_TARGET_PATH}`.
+    * The existing human written build script `/src/build.sh`.
+    * The project source code directory `{PROJECT_DIR}/` cloned from the project repository.
+    * Documentation about the project, the function, and the variables/constants involved and the Javadoc API for thet target project.
+    * Existing test cases and examples from the project source code directory `{PROJECT_DIR}/`
+    * The build system used by the target project by searching for build system property files, including but not limited to **pom.xml**, **build.gradle**, **build.gradle.kts** or **build.xml**.
+    * Environment variables.
+    * Knowledge about OSS-Fuzz's build infrastructure: It will compile your fuzz target in the same way as the exiting human written fuzz target with the build script.
+
+Step 3. Analyze the method and its classes and parameters.
+Understand the method under test by analyzing its source code, documentation and Javadoc API:
+    * **Purpose and functionality** of the method.
+    * **Input processing** and internal logic.
+    * **Dependencies** on other functions or global variables.
+    * **Exception handling** and edge cases.
+    * **Class construction** for invoking the necessary object.
+    * **Import statements** for necessary classes.
+    * **Modifiers** of the method, including but not limited to staticity or publicity of the method. 
+
+Step 4. Understand initialization requirements.
+Identify what is needed to properly initialize the method or its class:
+    * **Complex input parameters or objects** initialization.
+    * **Constructor methods** or initialization routines.
+    * **Global state** or configuration needs to be set up.
+    * **Mocking** external dependencies if necessary.
+    * If it is a complex initialisation that can be done once and for all, consider adding those initialisation in the `public static void fuzzerInitialize()` method.
+
+Step 5. Understand general requirements for Java fuzzing harness writing.
+  * **<requirements>** tag contains a list of additional requirements for the fuzzing harness generation that you MUST follow.
+
+{REQUIREMENTS}
+
+Step 6. Understand Constraints and edge cases.
+For each input parameter, understand:
+    * Valid ranges and data types.
+    * Invalid or edge-case values (e.g., zero, NULL, predefined constants, predefined enum, maximum values).
+    * Special values that trigger different code paths.
+
+Step 7: Plan Fuzz Target Implementation.
+Decide how to implement the fuzz target:
+    * **Extract parameters** and random data from the `com.code_intelligence.jazzer.api.FuzzedDataProviderdata` object from the fuzzing entrypoint method `public static void fuzzerTestOneInput(com.code_intelligence.jazzer.api.FuzzedDataProvider)`. Consult the data mapping table and requirements for extracting parameters wrapped in the **<data_mapping>** tag below.
+    * Handle fixed-size versus variable-size data.
+    * **Initialize method's parameters** by appropriately mapping the raw input bytes.
+    * Ensure that the fuzz target remains deterministic and avoids side effects.
+
+{DATA_MAPPING}
+
+
+Step 8: **Write** the fuzz target code.
+Implement the `fuzzeruzzerTestOneInput`, `fuzzerInitialize` and `fuzzerTearDown` method:
+    * Global initialisation:
+        * Put all once and for all initialisation in `fuzzerInitialize` method.
+    * External class import:
+        * Investigate how existing fuzz targets import external classes.
+        * Investigate where they are located in the project
+        * Collect all additional external classes required by your fuzz target and import them.
+    * Input Handling:
+        * Use `FuzzedDataProvider` if and only if the fuzz target at `{FUZZ_TARGET_PATH}` is a Java file.
+        * Check that the input size is sufficient.
+        * Extract parameters from the input data through the data mapping given in the last step.
+        * Handle any necessary conversions or validations.
+    * Method Invocation:
+        * Initialize required objects or state.
+        * Modify the existing fuzz target at `{FUZZ_TARGET_PATH}` to fuzz the method under test with the fuzzed parameters.
+        * Ensure proper exception handling.
+    * Cleanup:
+        * Reset any global state if necessary.
+        * Consider invoking `System.gc()` if large amount of object is created during fuzzing.
+        * Call `close` method for created objects of classes which implements `AutoCloseble` Interface.
+        * Clean up and close all global initialisation in `fuzzerTearDown` method.
+
+Step 9 (Optional): **Modify** the Build Script.
+Write a new build script only if the existing one (`/src/build.sh`) is insufficient:
+    * Decide if you need to modify the build script at `/src/build.sh` to successfully build the new fuzz target. For example, new dependency jars are needed.
+    * Include compilation steps for the project under test.
+    * Include compilation steps for the new fuzz target.
+    * Specify necessary compiler and linker flags.
+    * Ensure all dependencies are correctly linked.
+
+Step 10: Providing Your Conclusion:
+    * Provide your conclusion on the FULL new fuzz target and build script **ONLY AFTER** you have gathered all necessary information.
+    * **DO NOT SEND** any other content (e.g., bash tool commands) in the conclusion message. ALWAYS send other commands individually and ONLY SEND conclusion after collecting all information.
+    * Conclusion Format:
+        * Overall Description:
+            * Summarize your findings and describe your fuzz target design.
+            * Wrap this summary within <conclusion> and </conclusion> tags.
+    * Modified Fuzz Target:
+        * Provide the full code of the modified fuzz target.
+        * Wrap the code within <fuzz target> and </fuzz target> tags.
+    * Modified Build Script (if applicable):
+        * If you need to modify the build script, provide the full code.
+        * Wrap it within <build script> and </build script> tags.
+    * Format Example:
+        <conclusion>
+        I determined that the fuzz target needs to import additional classes and adjust the `fuzzerInitialize`, `fuzzerTestOneInput` and `fuzzerTearDown` method for the new method-under-test. Additionally, the build script requires modification to retrieve new dependency jars that are necessary for the modified fuzzing harness.
+        </conclusion>
+        <fuzz target>
+        [Your FULL fuzz target code here.]
+        </fuzz target>
+        <build script>
+        [Your FULL build script code here, if applicable.]
+        </build script>
+    * YOU MUST REPLY WITHIN A SINGLE RESPONSE FOLLOWING THE ABOVE FORMAT.
+</steps>
