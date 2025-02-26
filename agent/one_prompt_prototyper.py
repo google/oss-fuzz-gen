@@ -262,8 +262,7 @@ class OnePromptPrototyper(BaseAgent):
 
   def _update_build_result(self, build_result: BuildResult,
                            compile_process: sp.CompletedProcess, compiles: bool,
-                           binary_exists: bool,
-                           referenced: bool) -> None:
+                           binary_exists: bool, referenced: bool) -> None:
     """Updates the build result with the latest info."""
     build_result.compiles = compiles
     build_result.binary_exists = binary_exists
