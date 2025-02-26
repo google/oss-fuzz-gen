@@ -1,0 +1,218 @@
+"functions":
+- "name": "gdev_pdf_fill_path"
+  "params":
+  - "name": "dev"
+    "type": "gx_device*"
+  - "name": "pgs"
+    "type": "gs_gstate*"
+  - "name": "ppath"
+    "type": "gx_path*"
+  - "name": "params"
+    "type": "gx_fill_params*"
+  - "name": "pdcolor"
+    "type": "gx_drawing_color*"
+  - "name": "pcpath"
+    "type": "gx_clip_path*"
+  "return_type": "int"
+  "signature": |-
+    gdev_pdf_fill_path(gx_device * dev, const gs_gstate * pgs, gx_path * ppath,
+                       const gx_fill_params * params,
+                  const gx_drawing_color * pdcolor, const gx_clip_path * pcpath)
+- "name": "gdev_pdf_fill_mask"
+  "params":
+  - "name": "dev"
+    "type": "gx_device*"
+  - "name": "data"
+    "type": "byte*"
+  - "name": "data_x"
+    "type": "int"
+  - "name": "raster"
+    "type": "int"
+  - "name": "id"
+    "type": "gx_bitmap_id"
+  - "name": "x"
+    "type": "int"
+  - "name": "y"
+    "type": "int"
+  - "name": "width"
+    "type": "int"
+  - "name": "height"
+    "type": "int"
+  - "name": "pdcolor"
+    "type": "gx_drawing_color*"
+  - "name": "depth"
+    "type": "int"
+  - "name": "lop"
+    "type": "gs_logical_operation_t"
+  - "name": "pcpath"
+    "type": "gx_clip_path*"
+  "return_type": "int"
+  "signature": |-
+    gdev_pdf_fill_mask(gx_device * dev,
+                     const byte * data, int data_x, int raster, gx_bitmap_id id,
+                       int x, int y, int width, int height,
+                       const gx_drawing_color * pdcolor, int depth,
+                       gs_logical_operation_t lop, const gx_clip_path * pcpath)
+- "name": "gdev_pdf_fill_stroke_path"
+  "params":
+  - "name": "dev"
+    "type": "gx_device*"
+  - "name": "pgs"
+    "type": "gs_gstate*"
+  - "name": "ppath"
+    "type": "gx_path*"
+  - "name": "fill_params"
+    "type": "gx_fill_params*"
+  - "name": "pdcolor_fill"
+    "type": "gx_drawing_color*"
+  - "name": "stroke_params"
+    "type": "gx_stroke_params*"
+  - "name": "pdcolor_stroke"
+    "type": "gx_drawing_color*"
+  - "name": "pcpath"
+    "type": "gx_clip_path*"
+  "return_type": "int"
+  "signature": |-
+    gdev_pdf_fill_stroke_path(gx_device *dev, const gs_gstate *pgs, gx_path *ppath,
+                              const gx_fill_params *fill_params, const gx_drawing_color *pdcolor_fill,
+                              const gx_stroke_params *stroke_params, const gx_drawing_color *pdcolor_stroke,
+        const gx_clip_path *pcpath)
+- "name": "gdev_pdf_begin_typed_image"
+  "params":
+  - "name": "dev"
+    "type": "gx_device*"
+  - "name": "pgs"
+    "type": "gs_gstate*"
+  - "name": "pmat"
+    "type": "gs_matrix*"
+  - "name": "pic"
+    "type": "gs_image_common_t*"
+  - "name": "prect"
+    "type": "gs_int_rect*"
+  - "name": "pdcolor"
+    "type": "gx_drawing_color*"
+  - "name": "pcpath"
+    "type": "gx_clip_path*"
+  - "name": "mem"
+    "type": "gs_memory_t*"
+  - "name": "pinfo"
+    "type": "gx_image_enum_common_t**"
+  "return_type": "int"
+  "signature": |-
+    gdev_pdf_begin_typed_image(gx_device * dev, const gs_gstate * pgs,
+                               const gs_matrix *pmat, const gs_image_common_t *pic,
+                               const gs_int_rect * prect,
+                               const gx_drawing_color * pdcolor,
+                               const gx_clip_path * pcpath, gs_memory_t * mem,
+                               gx_image_enum_common_t ** pinfo)
+- "name": "pdf_text_process"
+  "params":
+  - "name": "pte"
+    "type": "gs_text_enum_t*"
+  "return_type": "int"
+  "signature": "pdf_text_process(gs_text_enum_t *pte)"
+- "name": "gdev_pdf_fill_rectangle_hl_color"
+  "params":
+  - "name": "dev"
+    "type": "gx_device*"
+  - "name": "rect"
+    "type": "gs_fixed_rect*"
+  - "name": "pgs"
+    "type": "gs_gstate*"
+  - "name": "pdcolor"
+    "type": "gx_drawing_color*"
+  - "name": "pcpath"
+    "type": "gx_clip_path*"
+  "return_type": "int"
+  "signature": |-
+    gdev_pdf_fill_rectangle_hl_color(gx_device *dev, const gs_fixed_rect *rect,
+        const gs_gstate *pgs, const gx_drawing_color *pdcolor,
+        const gx_clip_path *pcpath)
+- "name": "gdev_pdf_text_begin"
+  "params":
+  - "name": "dev"
+    "type": "gx_device*"
+  - "name": "pgs"
+    "type": "gs_gstate*"
+  - "name": "text"
+    "type": "gs_text_params_t*"
+  - "name": "font"
+    "type": "gs_font*"
+  - "name": "path0"
+    "type": "gx_path*"
+  - "name": "pdcolor"
+    "type": "gx_device_color*"
+  - "name": "pcpath"
+    "type": "gx_clip_path*"
+  - "name": "mem"
+    "type": "gs_memory_t*"
+  - "name": "ppte"
+    "type": "gs_text_enum_t**"
+  "return_type": "int"
+  "signature": |-
+    gdev_pdf_text_begin(gx_device * dev, gs_gstate * pgs,
+                        const gs_text_params_t *text, gs_font * font,
+                        gx_path * path0, const gx_device_color * pdcolor,
+                        const gx_clip_path * pcpath,
+                        gs_memory_t * mem, gs_text_enum_t ** ppte)
+- "name": "pdf_dump_converted_image"
+  "params":
+  - "name": "pdev"
+    "type": "gx_device_pdf*"
+  - "name": "cvd"
+    "type": "pdf_lcvd_t*"
+  "return_type": "int"
+  "signature": "pdf_dump_converted_image(gx_device_pdf *pdev, pdf_lcvd_t *cvd)"
+- "name": "gdev_pdf_copy_mono"
+  "params":
+  - "name": "dev"
+    "type": "gx_device*"
+  - "name": "base"
+    "type": "byte*"
+  - "name": "sourcex"
+    "type": "int"
+  - "name": "raster"
+    "type": "int"
+  - "name": "id"
+    "type": "gx_bitmap_id"
+  - "name": "x"
+    "type": "int"
+  - "name": "y"
+    "type": "int"
+  - "name": "w"
+    "type": "int"
+  - "name": "h"
+    "type": "int"
+  - "name": "zero"
+    "type": "gx_color_index"
+  - "name": "one"
+    "type": "gx_color_index"
+  "return_type": "int"
+  "signature": |-
+    gdev_pdf_copy_mono(gx_device * dev,
+                       const byte * base, int sourcex, int raster, gx_bitmap_id id,
+                       int x, int y, int w, int h, gx_color_index zero,
+                       gx_color_index one)
+- "name": "gdev_pdf_stroke_path"
+  "params":
+  - "name": "dev"
+    "type": "gx_device*"
+  - "name": "pgs"
+    "type": "gs_gstate*"
+  - "name": "ppath"
+    "type": "gx_path*"
+  - "name": "params"
+    "type": "gx_stroke_params*"
+  - "name": "pdcolor"
+    "type": "gx_drawing_color*"
+  - "name": "pcpath"
+    "type": "gx_clip_path*"
+  "return_type": "int"
+  "signature": |-
+    gdev_pdf_stroke_path(gx_device * dev, const gs_gstate * pgs,
+                         gx_path * ppath, const gx_stroke_params * params,
+                  const gx_drawing_color * pdcolor, const gx_clip_path * pcpath)
+"language": "c++"
+"project": "libspectre"
+"target_name": "spectre_read_fuzzer"
+"target_path": "/src/libspectre/test/spectre_read_fuzzer.c"
