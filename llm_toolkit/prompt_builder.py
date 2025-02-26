@@ -637,9 +637,7 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     if self.benchmark.language == 'jvm':
       priming = self.format_jvm_problem(self.benchmark.function_signature,
                                         priming)
-      format_problem = ''
-      # TODO Add tool guides for JVM projects
-      tool_guides = ''
+      final_problem = ''
     else:
       final_problem = self.format_problem(self.benchmark.function_signature)
       final_problem += (f'You MUST call <code>\n'
