@@ -267,6 +267,11 @@ def parse_args() -> argparse.Namespace:
                       action='store_true',
                       default=False,
                       help='Enables agent enhancement.')
+  parser.add_argument('-mr',
+                      '--agent-max-round',
+                      type=int,
+                      default=10,
+                      help='Max trial round for agents.')
 
   args = parser.parse_args()
   if args.num_samples:

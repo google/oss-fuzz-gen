@@ -1,0 +1,102 @@
+"functions":
+- "name": "event_queue_start"
+  "params":
+  - "name": "manager"
+    "type": "Manager*"
+  "return_type": "int"
+  "signature": "event_queue_start(Manager *manager)"
+- "name": "socket_enter_start_pre"
+  "params":
+  - "name": "s"
+    "type": "Socket*"
+  "return_type": "void"
+  "signature": "socket_enter_start_pre(Socket *s)"
+- "name": "socket_dispatch_io"
+  "params":
+  - "name": "source"
+    "type": "sd_event_source*"
+  - "name": "fd"
+    "type": "int"
+  - "name": "revents"
+    "type": "uint32_t"
+  - "name": "userdata"
+    "type": "void*"
+  "return_type": "int"
+  "signature": "socket_dispatch_io(sd_event_source *source, int fd, uint32_t revents, void *userdata)"
+- "name": "socket_sigchld_event"
+  "params":
+  - "name": "u"
+    "type": "Unit*"
+  - "name": "pid"
+    "type": "pid_t"
+  - "name": "code"
+    "type": "int"
+  - "name": "status"
+    "type": "int"
+  "return_type": "void"
+  "signature": "socket_sigchld_event(Unit *u, pid_t pid, int code, int status)"
+- "name": "socket_start"
+  "params":
+  - "name": "u"
+    "type": "Unit*"
+  "return_type": "int"
+  "signature": "socket_start(Unit *u)"
+- "name": "on_post"
+  "params":
+  - "name": "s"
+    "type": "sd_event_source*"
+  - "name": "userdata"
+    "type": "void*"
+  "return_type": "int"
+  "signature": "on_post(sd_event_source *s, void *userdata)"
+- "name": "mount_sigchld_event"
+  "params":
+  - "name": "u"
+    "type": "Unit*"
+  - "name": "pid"
+    "type": "pid_t"
+  - "name": "code"
+    "type": "int"
+  - "name": "status"
+    "type": "int"
+  "return_type": "void"
+  "signature": "mount_sigchld_event(Unit *u, pid_t pid, int code, int status)"
+- "name": "mount_start"
+  "params":
+  - "name": "u"
+    "type": "Unit*"
+  "return_type": "int"
+  "signature": "mount_start(Unit *u)"
+- "name": "socket_enter_start_open"
+  "params":
+  - "name": "s"
+    "type": "Socket*"
+  "return_type": "void"
+  "signature": "socket_enter_start_open(Socket *s)"
+- "name": "exec_invoke"
+  "params":
+  - "name": "command"
+    "type": "ExecCommand*"
+  - "name": "context"
+    "type": "ExecContext*"
+  - "name": "params"
+    "type": "ExecParameters*"
+  - "name": "runtime"
+    "type": "ExecRuntime*"
+  - "name": "cgroup_context"
+    "type": "CGroupContext*"
+  - "name": "exit_status"
+    "type": "int*"
+  "return_type": "int"
+  "signature": |-
+    exec_invoke(
+                    const ExecCommand *command,
+                    const ExecContext *context,
+                    ExecParameters *params,
+                    ExecRuntime *runtime,
+                    const CGroupContext *cgroup_context,
+                    int *exit_status)
+"language": "c++"
+"project": "systemd"
+"target_name": "fuzz-udev-rule-parse-value"
+"target_path": "/src/systemd/src/udev/fuzz-udev-rule-parse-value.c"

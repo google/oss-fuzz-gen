@@ -1,0 +1,172 @@
+"functions":
+- "name": "g_desktop_app_info_launch_uris_as_manager_with_fds"
+  "params":
+  - "name": "appinfo"
+    "type": "GDesktopAppInfo*"
+  - "name": "uris"
+    "type": "GList*"
+  - "name": "launch_context"
+    "type": "GAppLaunchContext*"
+  - "name": "spawn_flags"
+    "type": "GSpawnFlags"
+  - "name": "user_setup"
+    "type": "GSpawnChildSetupFunc"
+  - "name": "user_setup_data"
+    "type": "gpointer"
+  - "name": "pid_callback"
+    "type": "GDesktopAppLaunchCallback"
+  - "name": "pid_callback_data"
+    "type": "gpointer"
+  - "name": "stdin_fd"
+    "type": "gint"
+  - "name": "stdout_fd"
+    "type": "gint"
+  - "name": "stderr_fd"
+    "type": "gint"
+  - "name": "error"
+    "type": "GError**"
+  "return_type": "gboolean"
+  "signature": |-
+    g_desktop_app_info_launch_uris_as_manager_with_fds (GDesktopAppInfo            *appinfo,
+                                                        GList                      *uris,
+                                                        GAppLaunchContext          *launch_context,
+                                                        GSpawnFlags                 spawn_flags,
+                                                        GSpawnChildSetupFunc        user_setup,
+                                                        gpointer                    user_setup_data,
+                                                        GDesktopAppLaunchCallback   pid_callback,
+                                                        gpointer                    pid_callback_data,
+                                                        gint                        stdin_fd,
+                                                        gint                        stdout_fd,
+                                                        gint                        stderr_fd,
+                                                        GError                    **error)
+- "name": "g_application_impl_register"
+  "params":
+  - "name": "application"
+    "type": "GApplication*"
+  - "name": "appid"
+    "type": "gchar*"
+  - "name": "flags"
+    "type": "GApplicationFlags"
+  - "name": "exported_actions"
+    "type": "GActionGroup*"
+  - "name": "remote_actions"
+    "type": "GRemoteActionGroup**"
+  - "name": "cancellable"
+    "type": "GCancellable*"
+  - "name": "error"
+    "type": "GError**"
+  "return_type": "GApplicationImpl"
+  "signature": |-
+    *
+    g_application_impl_register (GApplication        *application,
+                                 const gchar         *appid,
+                                 GApplicationFlags    flags,
+                                 GActionGroup        *exported_actions,
+                                 GRemoteActionGroup **remote_actions,
+                                 GCancellable        *cancellable,
+                                 GError             **error)
+- "name": "g_app_info_launch_default_for_uri"
+  "params":
+  - "name": "uri"
+    "type": "char*"
+  - "name": "launch_context"
+    "type": "GAppLaunchContext*"
+  - "name": "error"
+    "type": "GError**"
+  "return_type": "gboolean"
+  "signature": |-
+    g_app_info_launch_default_for_uri (const char         *uri,
+                                       GAppLaunchContext  *launch_context,
+                                       GError            **error)
+- "name": "g_application_run"
+  "params":
+  - "name": "application"
+    "type": "GApplication*"
+  - "name": "argc"
+    "type": "int"
+  - "name": "argv"
+    "type": "char**"
+  "return_type": "int"
+  "signature": |-
+    g_application_run (GApplication  *application,
+                       int            argc,
+                       char         **argv)
+- "name": "g_desktop_app_info_launch_uris_as_manager"
+  "params":
+  - "name": "appinfo"
+    "type": "GDesktopAppInfo*"
+  - "name": "uris"
+    "type": "GList*"
+  - "name": "launch_context"
+    "type": "GAppLaunchContext*"
+  - "name": "spawn_flags"
+    "type": "GSpawnFlags"
+  - "name": "user_setup"
+    "type": "GSpawnChildSetupFunc"
+  - "name": "user_setup_data"
+    "type": "gpointer"
+  - "name": "pid_callback"
+    "type": "GDesktopAppLaunchCallback"
+  - "name": "pid_callback_data"
+    "type": "gpointer"
+  - "name": "error"
+    "type": "GError**"
+  "return_type": "gboolean"
+  "signature": |-
+    g_desktop_app_info_launch_uris_as_manager (GDesktopAppInfo            *appinfo,
+                                               GList                      *uris,
+                                               GAppLaunchContext          *launch_context,
+                                               GSpawnFlags                 spawn_flags,
+                                               GSpawnChildSetupFunc        user_setup,
+                                               gpointer                    user_setup_data,
+                                               GDesktopAppLaunchCallback   pid_callback,
+                                               gpointer                    pid_callback_data,
+                                               GError                    **error)
+- "name": "g_application_register"
+  "params":
+  - "name": "application"
+    "type": "GApplication*"
+  - "name": "cancellable"
+    "type": "GCancellable*"
+  - "name": "error"
+    "type": "GError**"
+  "return_type": "gboolean"
+  "signature": |-
+    g_application_register (GApplication  *application,
+                            GCancellable  *cancellable,
+                            GError       **error)
+- "name": "g_desktop_app_info_get_implementations"
+  "params":
+  - "name": "interface"
+    "type": "gchar*"
+  "return_type": "GList"
+  "signature": |-
+    *
+    g_desktop_app_info_get_implementations (const gchar *interface)
+- "name": "handle_launch"
+  "params":
+  - "name": "argc"
+    "type": "int"
+  - "name": "argv"
+    "type": "char*[]"
+  - "name": "do_help"
+    "type": "gboolean"
+  "return_type": "int"
+  "signature": "handle_launch (int argc, char *argv[], gboolean do_help)"
+- "name": "g_desktop_app_info_launch_action"
+  "params":
+  - "name": "info"
+    "type": "GDesktopAppInfo*"
+  - "name": "action_name"
+    "type": "gchar*"
+  - "name": "launch_context"
+    "type": "GAppLaunchContext*"
+  "return_type": "void"
+  "signature": |-
+    g_desktop_app_info_launch_action (GDesktopAppInfo   *info,
+                                      const gchar       *action_name,
+                                      GAppLaunchContext *launch_context)
+"language": "c++"
+"project": "glib"
+"target_name": "fuzz_date_time_new_from_iso8601"
+"target_path": "/src/glib/fuzzing/fuzz_date_time_new_from_iso8601.c"

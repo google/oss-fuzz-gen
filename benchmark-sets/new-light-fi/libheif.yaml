@@ -1,0 +1,112 @@
+"functions":
+- "name": "enc_row_mt_worker_hook"
+  "params":
+  - "name": "arg1"
+    "type": "void*"
+  - "name": "unused"
+    "type": "void*"
+  "return_type": "int"
+  "signature": "enc_row_mt_worker_hook(void *arg1, void *unused)"
+- "name": "av1_encode_sb_row"
+  "params":
+  - "name": "cpi"
+    "type": "AV1_COMP*"
+  - "name": "td"
+    "type": "ThreadData*"
+  - "name": "tile_row"
+    "type": "int"
+  - "name": "tile_col"
+    "type": "int"
+  - "name": "mi_row"
+    "type": "int"
+  "return_type": "void"
+  "signature": |-
+    av1_encode_sb_row(AV1_COMP *cpi, ThreadData *td, int tile_row,
+                           int tile_col, int mi_row)
+- "name": "gm_mt_worker_hook"
+  "params":
+  - "name": "arg1"
+    "type": "void*"
+  - "name": "unused"
+    "type": "void*"
+  "return_type": "int"
+  "signature": "gm_mt_worker_hook(void *arg1, void *unused)"
+- "name": "global_motion_estimation"
+  "params":
+  - "name": "cpi"
+    "type": "AV1_COMP*"
+  "return_type": "AOM_INLINE"
+  "signature": "global_motion_estimation(AV1_COMP *cpi)"
+- "name": "encode_frame_internal"
+  "params":
+  - "name": "cpi"
+    "type": "AV1_COMP*"
+  "return_type": "AOM_INLINE"
+  "signature": "encode_frame_internal(AV1_COMP *cpi)"
+- "name": "av1_compute_gm_for_valid_ref_frames"
+  "params":
+  - "name": "cpi"
+    "type": "AV1_COMP*"
+  - "name": "ref_buf"
+    "type": "YV12_BUFFER_CONFIG*[]"
+  - "name": "frame"
+    "type": "int"
+  - "name": "num_src_corners"
+    "type": "int"
+  - "name": "src_corners"
+    "type": "int*"
+  - "name": "src_buffer"
+    "type": "unsigned char*"
+  - "name": "params_by_motion"
+    "type": "MotionModel*"
+  - "name": "segment_map"
+    "type": "uint8_t*"
+  - "name": "segment_map_w"
+    "type": "int"
+  - "name": "segment_map_h"
+    "type": "int"
+  "return_type": "void"
+  "signature": |-
+    av1_compute_gm_for_valid_ref_frames(
+        AV1_COMP *cpi, YV12_BUFFER_CONFIG *ref_buf[REF_FRAMES], int frame,
+        int num_src_corners, int *src_corners, unsigned char *src_buffer,
+        MotionModel *params_by_motion, uint8_t *segment_map, int segment_map_w,
+        int segment_map_h)
+- "name": "av1_compute_global_motion_facade"
+  "params":
+  - "name": "cpi"
+    "type": "AV1_COMP*"
+  "return_type": "void"
+  "signature": "av1_compute_global_motion_facade(AV1_COMP *cpi)"
+- "name": "av1_encode_tile"
+  "params":
+  - "name": "cpi"
+    "type": "AV1_COMP*"
+  - "name": "td"
+    "type": "ThreadData*"
+  - "name": "tile_row"
+    "type": "int"
+  - "name": "tile_col"
+    "type": "int"
+  "return_type": "void"
+  "signature": |-
+    av1_encode_tile(AV1_COMP *cpi, ThreadData *td, int tile_row,
+                         int tile_col)
+- "name": "enc_worker_hook"
+  "params":
+  - "name": "arg1"
+    "type": "void*"
+  - "name": "unused"
+    "type": "void*"
+  "return_type": "int"
+  "signature": "enc_worker_hook(void *arg1, void *unused)"
+- "name": "encode_tiles"
+  "params":
+  - "name": "cpi"
+    "type": "AV1_COMP*"
+  "return_type": "AOM_INLINE"
+  "signature": "encode_tiles(AV1_COMP *cpi)"
+"language": "c++"
+"project": "libheif"
+"target_name": "encoder_fuzzer"
+"target_path": "/src/libheif/fuzzing/encoder_fuzzer.cc"
