@@ -249,12 +249,12 @@ class Benchmark:
     return self.file_type.value.lower() == 'java'
 
   @property
-  def is_c_projcet(self) -> bool:
+  def is_c_project(self) -> bool:
     """Validates if the project is written in C."""
     return self.language.lower() == 'c'
 
   @property
-  def is_cpp_projcet(self) -> bool:
+  def is_cpp_project(self) -> bool:
     """Validates if the project is written in C++."""
     return self.language.lower() == 'c++'
 
@@ -266,7 +266,7 @@ class Benchmark:
   @property
   def needs_extern(self) -> bool:
     """Checks if it is C++ fuzz target for a C project, which needs `extern`."""
-    return self.is_cpp_target and self.is_c_projcet
+    return self.is_cpp_target and self.is_c_project
 
 
 def get_file_type(file_path: str) -> FileType:
