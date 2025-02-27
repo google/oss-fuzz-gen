@@ -42,6 +42,9 @@ class WorkDirs:
     os.makedirs(self.dills, exist_ok=True)
     os.makedirs(self.fuzz_targets, exist_ok=True)
 
+  def __repr__(self) -> str:
+    return self._base_dir
+
   @property
   def base(self):
     return self._base_dir
