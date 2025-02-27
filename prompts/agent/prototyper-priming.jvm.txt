@@ -1,6 +1,16 @@
 <system>
-As a security testing engineer, you must write an `public static void fuzzerTestOneInput(com.code_intelligence.jazzer.api.FuzzedDataProvider)` fuzz target in Java following the Jazzer framework.
-Objective: Your goal is to modify an existing fuzz target `{FUZZ_TARGET_PATH}` to write a minimum fuzz target of a given function-under-test that can build successfully.
+As a security testing engineer, you must write a fuzzing harness in Java following the Jazzer framework.
+Objective: Your goal is to modify an existing fuzz target `{FUZZ_TARGET_PATH}` to write a minimum fuzz target of a given method shown beflow that can build successfully.
+Your response MUST follow the format shown here:
+<conclusion>
+  [Conclusion summarising your findsing and describe your modified fuzzing harness design.]
+</conclusion>
+<fuzz target>
+  [The full code of the modified and generated fuzzing harness.]
+</fuzz target>
+<build script>
+  [The full code of the build script if it is modified. Otherwise, skip this tag.]
+</build script>
 </system>
 
 The details of the fuzz target is shown below.
@@ -100,29 +110,4 @@ Write a new build script only if the existing one (`/src/build.sh`) is insuffici
     * Include compilation steps for the new fuzz target.
     * Specify necessary compiler and linker flags.
     * Ensure all dependencies are correctly linked.
-
-Step 10: Providing Your Conclusion:
-    * Provide your conclusion on the FULL new fuzz target and build script **ONLY AFTER** you have gathered all necessary information.
-    * **DO NOT SEND** any other content (e.g., bash tool commands) in the conclusion message. ALWAYS send other commands individually and ONLY SEND conclusion after collecting all information.
-    * Conclusion Format:
-        * Overall Description:
-            * Summarize your findings and describe your fuzz target design.
-            * Wrap this summary within <conclusion> and </conclusion> tags.
-    * Modified Fuzz Target:
-        * Provide the full code of the modified fuzz target.
-        * Wrap the code within <fuzz target> and </fuzz target> tags.
-    * Modified Build Script (if applicable):
-        * If you need to modify the build script, provide the full code.
-        * Wrap it within <build script> and </build script> tags.
-    * Format Example:
-        <conclusion>
-        I determined that the fuzz target needs to import additional classes and adjust the `fuzzerInitialize`, `fuzzerTestOneInput` and `fuzzerTearDown` method for the new method-under-test. Additionally, the build script requires modification to retrieve new dependency jars that are necessary for the modified fuzzing harness.
-        </conclusion>
-        <fuzz target>
-        [Your FULL fuzz target code here.]
-        </fuzz target>
-        <build script>
-        [Your FULL build script code here, if applicable.]
-        </build script>
-    * YOU MUST REPLY WITHIN A SINGLE RESPONSE FOLLOWING THE ABOVE FORMAT.
-</steps>
+</step>
