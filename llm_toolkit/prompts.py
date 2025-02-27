@@ -144,8 +144,10 @@ class OpenAIPrompt(Prompt):
 
   def append(self, text: str) -> None:
     """Appends to the formatted prompt."""
-    # A placeholder for now.
-    del text
+    self._prompt.append({
+        'role': 'system',
+        'content': text,
+    })
 
 
 class ClaudePrompt(OpenAIPrompt):
