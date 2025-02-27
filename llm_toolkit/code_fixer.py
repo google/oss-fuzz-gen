@@ -547,7 +547,7 @@ def _collect_instruction_undefined_reference(
           'You must add the following #include statement to fix the error of '
           f'<error>undefined reference to {undefined_func}</error>:\n<code>\n'
           f'{header_file}\n</code>.\n')
-    elif not header_file and benchmark.is_c_projcet:
+    elif not header_file and benchmark.is_c_project:
       instruction += (
           f'You must remove the function <code>{undefined_func}</code> from the'
           ' generated fuzz target, because the function does not exist.\n')
