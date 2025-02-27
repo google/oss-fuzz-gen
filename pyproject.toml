@@ -52,7 +52,8 @@ py-modules = [
   "llm_toolkit.prompt_builder",
   "llm_toolkit.prompts",
   "llm_toolkit.models",
-  "utils"
+  "utils",
+  "results"
 ]
 
 [tool.setuptools.packages.find]
