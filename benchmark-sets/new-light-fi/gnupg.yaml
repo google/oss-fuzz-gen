@@ -1,0 +1,123 @@
+"functions":
+- "name": "import_old_secring"
+  "params":
+  - "name": "ctrl"
+    "type": "ctrl_t"
+  - "name": "fname"
+    "type": "char*"
+  "return_type": "gpg_error_t"
+  "signature": "import_old_secring (ctrl_t ctrl, const char *fname)"
+- "name": "decrypt_message_fd"
+  "params":
+  - "name": "ctrl"
+    "type": "ctrl_t"
+  - "name": "input_fd"
+    "type": "gnupg_fd_t"
+  - "name": "output_fd"
+    "type": "gnupg_fd_t"
+  "return_type": "gpg_error_t"
+  "signature": |-
+    decrypt_message_fd (ctrl_t ctrl, gnupg_fd_t input_fd,
+                        gnupg_fd_t output_fd)
+- "name": "migrate_secring"
+  "params":
+  - "name": "ctrl"
+    "type": "ctrl_t"
+  "return_type": "void"
+  "signature": "migrate_secring (ctrl_t ctrl)"
+- "name": "proc_signature_packets_by_fd"
+  "params":
+  - "name": "ctrl"
+    "type": "ctrl_t"
+  - "name": "anchor"
+    "type": "void*"
+  - "name": "a"
+    "type": "iobuf_t"
+  - "name": "signed_data_fd"
+    "type": "gnupg_fd_t"
+  "return_type": "int"
+  "signature": |-
+    proc_signature_packets_by_fd (ctrl_t ctrl, void *anchor, iobuf_t a,
+                                  gnupg_fd_t signed_data_fd)
+- "name": "keyserver_fetch"
+  "params":
+  - "name": "ctrl"
+    "type": "ctrl_t"
+  - "name": "urilist"
+    "type": "strlist_t"
+  - "name": "origin"
+    "type": "int"
+  "return_type": "int"
+  "signature": "keyserver_fetch (ctrl_t ctrl, strlist_t urilist, int origin)"
+- "name": "keyserver_refresh"
+  "params":
+  - "name": "ctrl"
+    "type": "ctrl_t"
+  - "name": "users"
+    "type": "strlist_t"
+  "return_type": "gpg_error_t"
+  "signature": "keyserver_refresh (ctrl_t ctrl, strlist_t users)"
+- "name": "import_keys_es_stream"
+  "params":
+  - "name": "ctrl"
+    "type": "ctrl_t"
+  - "name": "fp"
+    "type": "estream_t"
+  - "name": "stats_handle"
+    "type": "import_stats_t"
+  - "name": "fpr"
+    "type": "unsigned char**"
+  - "name": "fpr_len"
+    "type": "size_t*"
+  - "name": "options"
+    "type": "unsigned int"
+  - "name": "screener"
+    "type": "import_screener_t"
+  - "name": "screener_arg"
+    "type": "void*"
+  - "name": "origin"
+    "type": "int"
+  - "name": "url"
+    "type": "char*"
+  "return_type": "gpg_error_t"
+  "signature": |-
+    import_keys_es_stream (ctrl_t ctrl, estream_t fp,
+                           import_stats_t stats_handle,
+                           unsigned char **fpr, size_t *fpr_len,
+                           unsigned int options,
+                           import_screener_t screener, void *screener_arg,
+                           int origin, const char *url)
+- "name": "gpg_verify"
+  "params":
+  - "name": "ctrl"
+    "type": "ctrl_t"
+  - "name": "sig_fd"
+    "type": "gnupg_fd_t"
+  - "name": "data_fd"
+    "type": "gnupg_fd_t"
+  - "name": "out_fp"
+    "type": "estream_t"
+  "return_type": "int"
+  "signature": |-
+    gpg_verify (ctrl_t ctrl, gnupg_fd_t sig_fd, gnupg_fd_t data_fd,
+                estream_t out_fp)
+- "name": "card_edit"
+  "params":
+  - "name": "ctrl"
+    "type": "ctrl_t"
+  - "name": "commands"
+    "type": "strlist_t"
+  "return_type": "void"
+  "signature": "card_edit (ctrl_t ctrl, strlist_t commands)"
+- "name": "keyserver_import"
+  "params":
+  - "name": "ctrl"
+    "type": "ctrl_t"
+  - "name": "users"
+    "type": "strlist_t"
+  "return_type": "int"
+  "signature": "keyserver_import (ctrl_t ctrl, strlist_t users)"
+"language": "c++"
+"project": "gnupg"
+"target_name": "fuzz_import.c"
+"target_path": "/src/fuzz_import.c"
