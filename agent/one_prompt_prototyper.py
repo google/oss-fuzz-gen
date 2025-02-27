@@ -32,8 +32,6 @@ from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
 from tool.container_tool import ProjectContainerTool
 
-MAX_ROUND = 10
-
 
 class OnePromptPrototyper(BaseAgent):
   """The Agent to generate a simple but valid fuzz target from scratch."""
@@ -112,10 +110,9 @@ class OnePromptPrototyper(BaseAgent):
                                author=self,
                                chat_history={self.name: prompt.get()})
 
-    while prompt and cur_round <= MAX_ROUND:
+    while prompt and cur_round <= self.max_round:
       self._generate_fuzz_target(prompt, result_history, build_result,
                                  cur_round)
-
       self._validate_fuzz_target(cur_round, build_result)
       prompt = self._advice_fuzz_target(build_result, cur_round)
       cur_round += 1
@@ -228,7 +225,8 @@ class OnePromptPrototyper(BaseAgent):
     compilation_tool.terminate()
     self._update_build_result(build_result,
                               compile_process=compile_process,
-                              status=compile_succeed and binary_exists,
+                              compiles=compile_succeed,
+                              binary_exists=binary_exists,
                               referenced=function_referenced)
 
   def _validate_fuzz_target_references_function(
@@ -259,10 +257,11 @@ class OnePromptPrototyper(BaseAgent):
     return function_referenced
 
   def _update_build_result(self, build_result: BuildResult,
-                           compile_process: sp.CompletedProcess, status: bool,
-                           referenced: bool) -> None:
+                           compile_process: sp.CompletedProcess, compiles: bool,
+                           binary_exists: bool, referenced: bool) -> None:
     """Updates the build result with the latest info."""
-    build_result.compiles = status
+    build_result.compiles = compiles
+    build_result.binary_exists = binary_exists
     build_result.compile_error = compile_process.stderr
     build_result.compile_log = self._format_bash_execution_result(
         compile_process)
