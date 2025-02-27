@@ -577,8 +577,8 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
 
   def _format_jvm_requirement(self, signature: str) -> str:
     """Formats a requirement based on the prompt template for JVM."""
-    requirement = self._get_template(self._find_template(
-        self._template_dir, 'jvm_requirement.txt'))
+    requirement = self._get_template(
+        self._find_template(self._template_dir, 'jvm_requirement.txt'))
 
     harness_name = os.path.basename(self.benchmark.target_path).replace(
         '.java', '')
@@ -617,8 +617,10 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     priming = priming.replace('{REQUIREMENTS}',
                               self._format_jvm_requirement(signature))
     priming = priming.replace(
-        '{DATA_MAPPING}', self._get_template(self._find_template(
-            self._template_dir, 'jvm_specific_data_filler.txt')))
+        '{DATA_MAPPING}',
+        self._get_template(
+            self._find_template(self._template_dir,
+                                'jvm_specific_data_filler.txt')))
 
     return priming
 
