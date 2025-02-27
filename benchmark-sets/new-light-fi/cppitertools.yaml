@@ -1,0 +1,21 @@
+"functions":
+- "name": "_ZN4iter4impl10CompressedIRNSt3__16vectorIiNS2_9allocatorIiEEEERNS3_IbNS4_IbEEEEE8IteratorIS7_SA_EC2ERKSD_"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void iter::impl::Compressed<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator<std::__1::vector<int, std::__1::allocator<int> >&, std::__1::vector<bool, std::__1::allocator<bool> >&>::Iterator(Iterator<std::__1::vector<int, std::__1::allocator<int> > &, std::__1::vector<bool, std::__1::allocator<bool> > &> *, const Iterator<std::__1::vector<int, std::__1::allocator<int> > &, std::__1::vector<bool, std::__1::allocator<bool> > &> &)"
+- "name": "_ZNSt12length_errorC2B8ne180100EPKc"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "__s"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void std::length_error::length_error(const char *)"
+"language": "c++"
+"project": "cppitertools"
+"target_name": "fuzz_cppitertools"
+"target_path": "/src/fuzz_cppitertools.cpp"

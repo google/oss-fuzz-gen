@@ -31,8 +31,6 @@ from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
 from tool.container_tool import ProjectContainerTool
 
-MAX_ROUND = 100
-
 
 class Prototyper(BaseAgent):
   """The Agent to generate a simple but valid fuzz target from scratch."""
@@ -435,7 +433,7 @@ class Prototyper(BaseAgent):
     prompt = self._initial_prompt(result_history)
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
-      while prompt and cur_round < MAX_ROUND:
+      while prompt and cur_round < self.max_round:
         response = self.chat_llm(cur_round,
                                  client=client,
                                  prompt=prompt,

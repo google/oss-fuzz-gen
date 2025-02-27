@@ -1,0 +1,11 @@
+"functions":
+- "name": "fuzzer_read_data"
+  "params":
+  - "name": "file_descriptor"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void fuzzer_read_data(char *)"
+"language": "c++"
+"project": "bzip2"
+"target_name": "bzip2_decompress_target"
+"target_path": "/src/bzip2_decompress_target.c"

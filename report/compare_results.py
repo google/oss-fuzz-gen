@@ -50,8 +50,8 @@ def merge_tables(file1, file2):
   basename1 = extract_basename_from_filename(file1)
   basename2 = extract_basename_from_filename(file2)
 
-  df1 = pd.read_csv(file1)
-  df2 = pd.read_csv(file2)
+  df1 = pd.concat((chunk for chunk in pd.read_csv(file1, chunksize=5000)))
+  df2 = pd.concat((chunk for chunk in pd.read_csv(file2, chunksize=5000)))
 
   merged_df = df1.merge(df2,
                         on='Benchmark',
