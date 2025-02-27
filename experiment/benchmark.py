@@ -244,6 +244,11 @@ class Benchmark:
     return self.file_type.value.lower() == 'c++'
 
   @property
+  def is_java_target(self) -> bool:
+    """Validates if the project is written in Java."""
+    return self.file_type.value.lower() == 'java'
+
+  @property
   def is_c_projcet(self) -> bool:
     """Validates if the project is written in C."""
     return self.language.lower() == 'c'
@@ -252,6 +257,11 @@ class Benchmark:
   def is_cpp_projcet(self) -> bool:
     """Validates if the project is written in C++."""
     return self.language.lower() == 'c++'
+
+  @property
+  def is_java_project(self) -> bool:
+    """Validates if the project is written in Java."""
+    return self.language.lower() == 'jvm'
 
   @property
   def needs_extern(self) -> bool:
@@ -279,3 +289,8 @@ def is_c_file(file_path: str) -> bool:
 def is_cpp_file(file_path: str) -> bool:
   """Validates if |file_path| is a C++ file by its extension."""
   return get_file_type(file_path) == FileType.CPP
+
+
+def is_java_file(file_path: str) -> bool:
+  """Validates if |file_path| is a Java file by its extension."""
+  return get_file_type(file_path) == FileType.JAVA
