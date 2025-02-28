@@ -112,6 +112,9 @@ class OpenAIPrompt(Prompt):
 
   def add_priming(self, priming_content: str) -> None:
     """Constructs the prompt priming in the required format."""
+    if not priming_content:
+      return
+
     self._prompt.append({
         'role': 'system',
         'content': priming_content,
@@ -119,6 +122,9 @@ class OpenAIPrompt(Prompt):
 
   def add_problem(self, problem_content: str) -> None:
     """Constructs the prompt problem in the required format."""
+    if not problem_content:
+      return
+
     self._prompt.append({
         'role': 'user',
         'content': problem_content,
@@ -126,6 +132,9 @@ class OpenAIPrompt(Prompt):
 
   def add_solution(self, solution_content: str) -> None:
     """Constructs the prompt problem in the required format."""
+    if not solution_content:
+      return
+
     self._prompt.append({
         'role': 'assistant',
         'content': solution_content,
@@ -135,6 +144,9 @@ class OpenAIPrompt(Prompt):
     """Returns a prompt piece in the format wanted by OpenAI."""
     # TODO(mihaimaruseac): We might want to consider stripping the XML tags
     # here? The roles kind of simulate them.
+    if not content or not role:
+      return []
+
     return [{'role': role, 'content': content}]
 
   def save(self, location: str) -> None:
