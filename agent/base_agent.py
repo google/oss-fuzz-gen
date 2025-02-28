@@ -23,7 +23,7 @@ from typing import Any, Optional
 import logger
 import utils
 from llm_toolkit.models import LLM
-from llm_toolkit.prompts import Prompt
+from llm_toolkit.prompts import Prompt, OpenAIPrompt
 from results import Result
 from tool.base_tool import BaseTool
 
@@ -116,7 +116,10 @@ class BaseAgent(ABC):
       previous_prompt: Optional[Prompt] = None) -> str:
     """Formats a prompt based on bash execution result."""
     if previous_prompt:
-      previous_prompt_text = previous_prompt.get()
+      if isinstance(previous_prompt, OpenAIPrompt):
+        previous_prompt_text = previous_prompt.gettext()
+      else:
+        previous_prompt_text = previous_prompt.get()
     else:
       previous_prompt_text = ''
     stdout = self.llm.truncate_prompt(process.stdout,

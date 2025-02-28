@@ -110,6 +110,14 @@ class OpenAIPrompt(Prompt):
     """Gets the final formatted prompt."""
     return self._prompt
 
+  def gettext(self) -> str:
+    """Retrieve, group and return all prompt text."""
+    result = ''
+    for item in self._prompt:
+      result = f'{result}\n{item.get("content", "")}'
+
+    return result
+
   def add_priming(self, priming_content: str) -> None:
     """Constructs the prompt priming in the required format."""
     self._prompt.append({
