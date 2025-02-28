@@ -1,0 +1,58 @@
+"functions":
+- "exceptions": []
+  "name": "op_read"
+  "params":
+  - "name": "_of"
+    "type": "bool "
+  - "name": "_pcm"
+    "type": "bool "
+  - "name": "_buf_size"
+    "type": "int"
+  - "name": "_li"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int op_read(OggOpusFile *, opus_int16 *, int, int *)"
+- "exceptions": []
+  "name": "op_test_open"
+  "params":
+  - "name": "_of"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int op_test_open(OggOpusFile *)"
+- "exceptions": []
+  "name": "op_read_float"
+  "params":
+  - "name": "_of"
+    "type": "bool "
+  - "name": "_pcm"
+    "type": "bool "
+  - "name": "_buf_size"
+    "type": "int"
+  - "name": "_li"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int op_read_float(OggOpusFile *, float *, int, int *)"
+- "exceptions": []
+  "name": "op_read_float_stereo"
+  "params":
+  - "name": "_of"
+    "type": "bool "
+  - "name": "_pcm"
+    "type": "bool "
+  - "name": "_buf_size"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int op_read_float_stereo(OggOpusFile *, float *, int)"
+- "exceptions": []
+  "name": "op_open_file"
+  "params":
+  - "name": "_path"
+    "type": "bool "
+  - "name": "_error"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "OggOpusFile * op_open_file(const char *, int *)"
+"language": "c"
+"project": "opusfile"
+"target_name": "opusfile_fuzzer"
+"target_path": "/src/opusfile_fuzzer.c"

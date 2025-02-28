@@ -28,6 +28,8 @@
 
 # TODO(dongge): Re-write this script in Python as it gets more complex.
 
+export LLM_HEADERFILES=1
+
 BENCHMARK_SET=$1
 FREQUENCY_LABEL=$2
 RUN_TIMEOUT=$3

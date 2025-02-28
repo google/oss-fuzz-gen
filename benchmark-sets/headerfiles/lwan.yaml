@@ -1,0 +1,46 @@
+"functions":
+- "exceptions": []
+  "name": "lwan_response"
+  "params":
+  - "name": "request"
+    "type": "bool "
+  - "name": "status"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void lwan_response(struct lwan_request *, DW_TAG_enumeration_typelwan_http_status)"
+- "exceptions": []
+  "name": "lwan_init"
+  "params":
+  - "name": "l"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void lwan_init(struct lwan *)"
+- "exceptions": []
+  "name": "lwan_process_request"
+  "params":
+  - "name": "l"
+    "type": "bool "
+  - "name": "request"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void lwan_process_request(struct lwan *, struct lwan_request *)"
+- "exceptions": []
+  "name": "lwan_init_with_config"
+  "params":
+  - "name": "l"
+    "type": "bool "
+  - "name": "config"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void lwan_init_with_config(struct lwan *, const struct lwan_config *)"
+- "exceptions": []
+  "name": "lwan_thread_init"
+  "params":
+  - "name": "l"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void lwan_thread_init(struct lwan *)"
+"language": "c++"
+"project": "lwan"
+"target_name": "h2_huffman_fuzzer"
+"target_path": "/src/lwan/src/bin/fuzz/h2_huffman_fuzzer.cc"

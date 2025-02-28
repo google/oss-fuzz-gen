@@ -1,0 +1,46 @@
+"functions":
+- "exceptions": []
+  "name": "ExecuteCommand"
+  "params":
+  - "name": "p_vlm"
+    "type": "bool "
+  - "name": "psz_command"
+    "type": "bool "
+  - "name": "pp_message"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int ExecuteCommand(vlm_t *, const char *, vlm_message_t **)"
+- "exceptions": []
+  "name": "Preparse"
+  "params":
+  - "name": "data"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void * Preparse(void *)"
+- "exceptions": []
+  "name": "libvlc_release"
+  "params":
+  - "name": "p_instance"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void libvlc_release(libvlc_instance_t *)"
+- "exceptions": []
+  "name": "vlm_New"
+  "params":
+  - "name": "libvlc"
+    "type": "bool "
+  - "name": "psz_vlmconf"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "vlm_t * vlm_New(libvlc_int_t *, const char *)"
+- "exceptions": []
+  "name": "libvlc_InternalCleanup"
+  "params":
+  - "name": "p_libvlc"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void libvlc_InternalCleanup(libvlc_int_t *)"
+"language": "c"
+"project": "vlc"
+"target_name": "vlc-demux-libfuzzer"
+"target_path": "/src/vlc/test/vlc-demux-libfuzzer.c"
