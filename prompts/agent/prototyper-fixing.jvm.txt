@@ -1,0 +1,32 @@
+Failed to build fuzz target. Please help fixing it.
+
+Your response MUST follow the format shown here:
+<conclusion>
+  [Conclusion summarising your finding and describe your modified fuzzing harness design.]
+</conclusion>
+<fuzz target>
+  [The full code of the modified and generated fuzzing harness.]
+</fuzz target>
+<build script>
+  [The full code of the build script if it is modified. Otherwise, skip this tag.]
+</build script>
+</system>
+
+
+Here is the full Java fuzz target, build script, compilation command, and compilation output.
+<fuzz target>\n{FUZZ_TARGET_SOURCE}\n</fuzz target>
+{BUILD_TEXT}
+<compilation log>\n{COMPILE_LOG}\n</compilation log>
+YOU MUST first analyze the error messages with the fuzz target and the build script carefully to identify the root cause.
+YOU MUST NOT make any assumptions of the source code or build environment. Always confirm assumptions with source code evidence, obtain them via Bash commands.
+Once you are absolutely certain of the error root cause, output the FULL SOURCE CODE of the fuzz target (and only output FULL SOURCE CODE of build script, if /src/build.sh is insufficient and requires modification).
+
+TIPS:
+1. If necessary, add additional import statements for missing class dependencies.
+2. Consult existing cross refencing code or unit testing to help you identify the error roort cause.
+3. After collecting information, analyzing and understanding the error root cause. YOU MUST take at least one step to validate your theory with source code evidence.
+4. Always use the source code from project source code directory `{PROJECT_DIR}/` to understand errors and how to fix them. For example, search for the key words (e.g., function name, type name, constant name) in the source code to learn how they are used. Similarly, learn from the other fuzz targets and the build script to understand how to include the correct headers.
+5. Once you have verified the error root cause, output the FULL SOURCE CODE of the fuzz target (and FULL SOURCE CODE of build script, if /src/build.sh is insufficient or required modification).
+6. Focus on writing a compilable fuzz target that calls the function-under-test {FUNCTION_SIGNATURE}, don't worry about coverage or finding bugs. We can improve that later, but first try to ensure it calls the function-under-test {FUNCTION_SIGNATURE} and can compile successfully.
+7. If an error happens repeatedly and cannot be fixed, try to mitigate it. For example, replace or remove the line.
+

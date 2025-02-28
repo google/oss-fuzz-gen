@@ -49,7 +49,7 @@ Understand the method under test by analyzing its source code, documentation and
     * **Exception handling** and edge cases.
     * **Class construction** for invoking the necessary object.
     * **Import statements** for necessary classes.
-    * **Modifiers** of the method, including but not limited to staticity or publicity of the method. 
+    * **Modifiers** of the method, including but not limited to staticity or publicity of the method.
 
 Step 4. Understand initialization requirements.
 Identify what is needed to properly initialize the method or its class:
