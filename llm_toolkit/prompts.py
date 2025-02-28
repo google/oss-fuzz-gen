@@ -113,7 +113,7 @@ class OpenAIPrompt(Prompt):
   def gettext(self) -> str:
     """Retrieve, group and return all prompt text."""
     result = ''
-    for item in self._prompt:
+    for item in self.get():
       result = f'{result}\n{item.get("content", "")}'
 
     return result
