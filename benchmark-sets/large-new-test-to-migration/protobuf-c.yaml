@@ -1,0 +1,7 @@
+"language": "c"
+"project": "protobuf-c"
+"target_name": "fuzzer"
+"target_path": "/src/protobuf-c-fuzzers/fuzzer.cpp"
+"test_files":
+- "test_file_path": "/src/protobuf-c/t/generated-code2/test-generated-code2.c"
+- "test_file_path": "/src/protobuf-c/t/generated-code/test-generated-code.c"

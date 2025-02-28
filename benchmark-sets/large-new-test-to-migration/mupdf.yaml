@@ -1,0 +1,11 @@
+"language": "c++"
+"project": "mupdf"
+"target_name": "pdf_fuzzer"
+"target_path": "/src/pdf_fuzzer.cc"
+"test_files":
+- "test_file_path": "/src/mupdf/docs/examples/example.c"
+- "test_file_path": "/src/mupdf/docs/examples/multi-threaded.c"
+- "test_file_path": "/src/mupdf/docs/examples/storytest.c"
+- "test_file_path": "/src/mupdf/source/tests/mu-office-test.c"
+- "test_file_path": "/src/mupdf/source/fitz/test-device.c"
+- "test_file_path": "/src/mupdf/scripts/mupdfwrap_test.cpp"
