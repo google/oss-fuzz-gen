@@ -23,7 +23,7 @@ from typing import Any, Optional
 import logger
 import utils
 from llm_toolkit.models import LLM
-from llm_toolkit.prompts import Prompt, OpenAIPrompt
+from llm_toolkit.prompts import OpenAIPrompt, Prompt
 from results import Result
 from tool.base_tool import BaseTool
 
