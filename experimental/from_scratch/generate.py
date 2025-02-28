@@ -21,8 +21,8 @@ import sys
 from typing import Any, Optional, Tuple
 
 # pyright: reportMissingImports = false
-import fuzz_introspector
 from fuzz_introspector import commands as fi_commands
+from fuzz_introspector.analyses import far_reach_low_coverage_analyser
 
 from experiment import benchmark as benchmarklib
 from llm_toolkit import models, prompt_builder, prompts
@@ -263,13 +263,12 @@ def get_far_reach_benchmarks(
   project = report['light-project']
   introspector_project = report.get('introspector-project', None)
 
-  target_analysis = fuzz_introspector.analyses.far_reach_low_coverage_analyser.FarReachLowCoverageAnalyser(
-  )
-  target_analysis.standalone_analysis(introspector_project.proj_profile,
-                                      introspector_project.profiles, '')
+  far_analysis = far_reach_low_coverage_analyser.FarReachLowCoverageAnalyser()
+  far_analysis.standalone_analysis(introspector_project.proj_profile,
+                                   introspector_project.profiles, '')
 
   target_benchmarks = []
-  for target_function in target_analysis.json_results.get('functions', []):
+  for target_function in far_analysis.json_results.get('functions', []):
     # Get target function
     target_function_name = target_function['function_name']
     if target_function_name:
