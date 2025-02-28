@@ -66,8 +66,8 @@ class TextPrompt(Prompt):
 
   def append(self, text: str, to_existing: bool = False) -> None:
     """Gets the final formatted prompt."""
-   # TextPrompt only got one text element, ignoring to_existing flag
-   self._text += text
+    # TextPrompt only got one text element, ignoring to_existing flag
+    self._text += text
 
   def get(self) -> Any:
     """Gets the final formatted prompt."""
