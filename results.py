@@ -351,6 +351,7 @@ class AnalysisResult(Result):
             self.coverage_result.to_dict() if self.coverage_result else {},
     }
 
+  # TODO(maoyi): maybe we should redefine success property or rename the property
   @property
   def success(self) -> bool:
     if self.semantic_result:
