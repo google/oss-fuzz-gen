@@ -34,7 +34,6 @@ class ExecutionStage(BaseStage):
     """Executes the fuzz target and build script in the latest result."""
     last_result = result_history[-1]
     benchmark = last_result.benchmark
-    trial = last_result.trial
     if self.args.cloud_experiment_name:
       builder_runner = builder_runner_lib.CloudBuilderRunner(
           benchmark=benchmark,
@@ -52,19 +51,19 @@ class ExecutionStage(BaseStage):
 
     evaluator = Evaluator(builder_runner, benchmark, last_result.work_dirs)
     generated_target_name = os.path.basename(benchmark.target_path)
-    generated_oss_fuzz_project = f'{benchmark.id}-{last_result.trial}'
+    generated_oss_fuzz_project = f'{benchmark.id}-{self.trial}'
     generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
         generated_oss_fuzz_project)
 
     fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                    f'{trial:02d}.fuzz_target')
+                                    f'{self.trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                     f'{trial:02d}.build_script')
+                                     f'{self.trial:02d}.build_script')
     evaluator.create_ossfuzz_project(generated_oss_fuzz_project,
                                      fuzz_target_path, build_script_path)
 
     status_path = os.path.join(last_result.work_dirs.status,
-                               f'{last_result.trial:02}')
+                               f'{self.trial:02d}')
     os.makedirs(status_path, exist_ok=True)
 
     # Try building and running the new target.
@@ -84,13 +83,13 @@ class ExecutionStage(BaseStage):
           0,
           benchmark.language,
           cloud_build_tags=[
-              str(trial),
+              str(self.trial),
               'Execution',
               'ofg',
               # TODO(dongge): Tag function name, compatible with tag format.
               last_result.benchmark.project,
           ],
-          trial=last_result.trial)
+          trial=self.trial)
       if not run_result:
         raise Exception('No RunResult received from build_and_run')
       if run_result.coverage_summary is None or run_result.coverage is None:
@@ -125,7 +124,7 @@ class ExecutionStage(BaseStage):
         coverage_diff = 0.0
       runresult = RunResult(
           benchmark=benchmark,
-          trial=trial,
+          trial=self.trial,
           work_dirs=last_result.work_dirs,
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,
@@ -158,7 +157,7 @@ class ExecutionStage(BaseStage):
       self.logger.error('Exception %s occurred on %s', e, last_result)
       runresult = RunResult(
           benchmark=benchmark,
-          trial=last_result.trial,
+          trial=self.trial,
           work_dirs=last_result.work_dirs,
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,
