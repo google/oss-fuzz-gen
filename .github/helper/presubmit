@@ -1,4 +1,5 @@
 #! /bin/bash -eu
+
 GIT_ROOT=$(git rev-parse --show-toplevel)
 
 # Disable shellcheck false warning as it assumes incorrect path of `activate`.
@@ -38,8 +39,6 @@ done
 pyright "$GIT_ROOT" \
     --project="$GIT_ROOT/.pyrightconfig.json" \
     --venvpath="$VIRTUAL_ENV"
-
-
 
 # Check and remove trailing spaces.
 ## Exclude Markdown which allows trailing spaces.
