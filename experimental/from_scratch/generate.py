@@ -26,7 +26,7 @@ from fuzz_introspector.analyses import (far_reach_low_coverage_analyser,
                                         test_analyser)
 
 from experiment import benchmark as benchmarklib
-from llm_toolkit import models, prompt_builder, prompts, output_parser
+from llm_toolkit import models, output_parser, prompt_builder, prompts
 
 LOG_FMT = ('%(asctime)s.%(msecs)03d %(levelname)s '
            '%(module)s - %(funcName)s: %(message)s')
