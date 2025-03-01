@@ -78,8 +78,8 @@ class Pipeline():
                        result_history)
       return False
 
-    self.logger.warning('[Cycle %d] Last result is unexpeceted: %s',
-                        cycle_count, last_result)
+    self.logger.warning('[Cycle %d] Last result is unexpected: %s', cycle_count,
+                        last_result)
     return True
 
   def _update_status(self, result_history: list[Result]) -> None:

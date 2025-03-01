@@ -22,14 +22,9 @@ from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
 from llm_toolkit.prompts import Prompt
 from results import AnalysisResult, Result
 
-# from results import AnalysisResult, BuildResult, Result
-# from tool.container_tool import ProjectContainerTool
-
-MAX_ROUND = 10
-
 
 class Enhancer(Prototyper):
-  """The Agent to generate a simple but valid fuzz target from scratch."""
+  """The Agent to refine a compilable fuzz target for higher coverage."""
 
   def _initial_prompt(self, results: list[Result]) -> Prompt:
     """Constructs initial prompt of the agent."""
