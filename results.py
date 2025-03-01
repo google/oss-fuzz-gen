@@ -327,6 +327,7 @@ class AnalysisResult(Result):
         'coverage_result': self.coverage_result,
     }
 
+  # TODO(maoyi): maybe we should redefine success property or rename the property
   @property
   def success(self):
     return not self.semantic_result.has_err

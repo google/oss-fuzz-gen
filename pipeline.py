@@ -119,6 +119,11 @@ class Pipeline():
     # Analysis stage.
     result_history.append(
         self.analysis_stage.execute(result_history=result_history))
+    # TODO(maoyi): add the indicator for the success of analysis stage
+    if not isinstance(result_history[-1], AnalysisResult):
+      self.logger.warning(
+          '[Cycle %d] Analysis failure, skipping the rest steps', cycle_count)
+      return
     self._update_status(result_history=result_history)
     self.logger.info('[Cycle %d] Analysis result %s: %s', cycle_count,
                      result_history[-1].success, result_history[-1])
