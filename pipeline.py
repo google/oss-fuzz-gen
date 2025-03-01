@@ -66,7 +66,7 @@ class Pipeline():
     if not isinstance(last_result, AnalysisResult):
       self.logger.warning('[Cycle %d] Last result is not AnalysisResult: %s',
                           cycle_count, result_history)
-      return True
+      return False
 
     if last_result.success:
       self.logger.info('[Cycle %d] Generation succeeds: %s', cycle_count,
@@ -100,6 +100,11 @@ class Pipeline():
 
     result_history.append(
         self.analysis_stage.execute(result_history=result_history))
+    # TODO(maoyi): add the indicator for the success of analysis stage
+    if not isinstance(result_history[-1], AnalysisResult):
+      self.logger.warning(
+          '[Cycle %d] Analysis failure, skipping the rest steps', cycle_count)
+      return
 
     self.logger.info('[Cycle %d] Analysis result %s: %s', cycle_count,
                      result_history[-1].success, result_history[-1])
