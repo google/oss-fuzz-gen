@@ -15,6 +15,7 @@
 stage is responsible for categorizing run-time crashes and detecting untested
 code blocks."""
 from typing import cast
+
 from experiment.fuzz_target_error import SemanticCheckResult
 
 from results import Result, CrashResult, RunResult, RunResult
@@ -36,6 +37,10 @@ class AnalysisStage(BaseStage):
     if self.args.cloud_experiment_name:
       return self._execute_agent_cloud(agent, result_history)
     return agent.execute(result_history)
+
+  def _analyze_coverage(self, result_history: list[Result]) -> Result:
+    """Analyzes code coverage."""
+    pass
 
   def execute(self, result_history: list[Result]) -> Result:
     """Selects agent based on run result and executes it."""
