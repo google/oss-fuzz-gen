@@ -1,10 +1,12 @@
 #! /bin/bash -eu
-
 GIT_ROOT=$(git rev-parse --show-toplevel)
 
 # Disable shellcheck false warning as it assumes incorrect path of `activate`.
 # shellcheck disable=SC1091
-source "$GIT_ROOT/.venv/bin/activate"
+
+if [[ -z "${VIRTUAL_ENV:-""}" ]]; then
+    source "$GIT_ROOT/.venv/bin/activate"
+fi
 
 # Always use the latest Pyright.
 export PYRIGHT_PYTHON_FORCE_VERSION=latest
@@ -35,7 +37,7 @@ done
 # Type Check and lint all Python code.
 pyright "$GIT_ROOT" \
     --project="$GIT_ROOT/.pyrightconfig.json" \
-    --venvpath="$GIT_ROOT/.venv"
+    --venvpath="$VIRTUAL_ENV"
 
 
 
