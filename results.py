@@ -137,6 +137,7 @@ class RunResult(BuildResult):
   cov_pcs: int
   total_pcs: int
   _repr_exclude = BuildResult._repr_exclude | {'textcov_diff'}
+  semantic_check: SemanticCheckResult
 
   def __init__(self,
                benchmark: Benchmark,
@@ -167,7 +168,8 @@ class RunResult(BuildResult):
                fuzz_target_source: str = '',
                build_script_source: str = '',
                author: Any = None,
-               chat_history: Optional[dict] = None) -> None:
+               chat_history: Optional[dict] = None,
+               semantic_check: Optional[SemanticCheckResult] = None) -> None:
     super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
                      compile_log, binary_exists, is_function_referenced,
                      fuzz_target_source, build_script_source, author,
@@ -189,6 +191,7 @@ class RunResult(BuildResult):
     self.coverage_report_path = coverage_report_path
     self.cov_pcs = cov_pcs
     self.total_pcs = total_pcs
+    self.semantic_check = semantic_check
 
   def to_dict(self) -> dict:
     return super().to_dict() | {
@@ -226,6 +229,9 @@ class RunResult(BuildResult):
             self.cov_pcs,
         'total_pcs':
             self.total_pcs,
+        'semantic_check':
+            dataclasses.asdict(self.semantic_check)
+            if self.semantic_check else '',
     }
 
   # TODO(dongge): Define success property to show if the fuzz target was run.
