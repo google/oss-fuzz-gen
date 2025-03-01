@@ -33,12 +33,12 @@ class AnalysisStage(BaseStage):
 
   def _analyze_crash(self, result_history: list[Result]) -> Result:
     """Analyzes a runtime crash."""
-    agent = self.get_agent('CrashAnalyzer')
+    agent = self.get_agent(agent_name='CrashAnalyzer')
     if self.args.cloud_experiment_name:
       return self._execute_agent_cloud(agent, result_history)
     return agent.execute(result_history)
 
-  def _analyze_coverage(self, result_history: list[Result]) -> Result:
+  def _analyze_coverage(self, result_history: list[Result]) -> None:
     """Analyzes code coverage."""
     pass
 
