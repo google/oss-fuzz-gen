@@ -15,6 +15,7 @@
 stage is responsible for categorizing run-time crashes and detecting untested
 code blocks."""
 from typing import cast
+from experiment.fuzz_target_error import SemanticCheckResult
 
 from results import Result, CrashResult, RunResult, RunResult
 from stage.base_stage import BaseStage
@@ -53,6 +54,6 @@ class AnalysisStage(BaseStage):
     # TODO(dongge): Save logs and more info into workdir.
     self.logger.write_chat_history(crash_result)
     self.logger.debug('Analysis stage completed with with result:\n%s',
-                      crash_result)
+                      analysis_result)
 
     return crash_result
