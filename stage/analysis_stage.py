@@ -15,8 +15,8 @@
 stage is responsible for categorizing run-time crashes and detecting untested
 code blocks."""
 from typing import cast
-from experiment.fuzz_target_error import SemanticCheckResult
 
+from experiment.fuzz_target_error import SemanticCheckResult
 from results import CrashResult, Result, RunResult, AnalysisResult
 from stage.base_stage import BaseStage
 
@@ -37,6 +37,10 @@ class AnalysisStage(BaseStage):
       return self._execute_agent_cloud(agent, result_history)
     return agent.execute(result_history)
 
+  def _analyze_coverage(self, result_history: list[Result]) -> Result:
+    """Analyzes code coverage."""
+    pass
+
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the analysis stage."""
     last_result = result_history[-1]
@@ -44,18 +48,20 @@ class AnalysisStage(BaseStage):
     if not isinstance(last_result, RunResult):
       self.logger.error('AnalysisResult must follow a RunResult')
       raise TypeError
-    semantic_check_result = SemanticCheckResult()
-    analysis_result = AnalysisResult(author=repr(self), run_result=last_result)
+    semantic_check_result = last_result.semantic_check_result
+    analysis_result = AnalysisResult(author=repr(self),
+                                     run_result=last_result,
+                                     semantic_result=semantic_check_result)
 
     # 1. Analyzing c++/c's runtime crash.
     if last_result.crashes and language in {'c', 'c++'}:
       agent_result = self._analyze_crash(result_history)
       crash_result = cast(CrashResult, agent_result)
+      analysis_result.crash_result = crash_result
       # TODO(dongge): Save logs and more info into workdir.
       self.logger.write_chat_history(crash_result)
-      analysis_result.crash_result = crash_result
 
-    self.logger.debug('Analysis stage completed with with result:\n%s',
+    self.logger.debug('Analysis stage completed with result:\n%s',
                       analysis_result)
 
     return analysis_result
