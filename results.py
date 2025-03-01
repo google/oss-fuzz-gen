@@ -244,6 +244,8 @@ class CrashResult(RunResult):
                compiles: bool = False,
                compile_error: str = '',
                compile_log: str = '',
+               binary_exists: bool = False,
+               is_function_referenced: bool = False,
                crashes: bool = False,
                run_error: str = '',
                crash_func: Optional[dict] = None,
@@ -269,12 +271,12 @@ class CrashResult(RunResult):
                true_bug: bool = False,
                insight: str = '') -> None:
     super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
-                     compile_log, crashes, run_error, crash_func, run_log,
-                     coverage_summary, coverage, line_coverage_diff,
-                     textcov_diff, reproducer_path, artifact_path,
-                     artifact_name, sanitizer, log_path, corpus_path,
-                     coverage_report_path, cov_pcs, total_pcs,
-                     fuzz_target_source, build_script_source, author,
+                     compile_log, binary_exists, is_function_referenced,
+                     crashes, run_error, crash_func, run_log, coverage_summary,
+                     coverage, line_coverage_diff, textcov_diff,
+                     reproducer_path, artifact_path, artifact_name, sanitizer,
+                     log_path, corpus_path, coverage_report_path, cov_pcs,
+                     total_pcs, fuzz_target_source, build_script_source, author,
                      chat_history)
     self.stacktrace = stacktrace
     self.true_bug = true_bug
@@ -326,7 +328,8 @@ class AnalysisResult(Result):
         'coverage_result': self.coverage_result,
     }
 
-  # TODO(maoyi): maybe we should redefine success property or rename the property
+  # TODO(maoyi): maybe we should redefine success property or
+  # rename the property
   @property
   def success(self):
     return not self.semantic_result.has_err
