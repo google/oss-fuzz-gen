@@ -22,10 +22,11 @@ from typing import Any, Optional, Tuple
 
 # pyright: reportMissingImports = false
 from fuzz_introspector import commands as fi_commands
-from fuzz_introspector.analyses import far_reach_low_coverage_analyser
+from fuzz_introspector.analyses import (far_reach_low_coverage_analyser,
+                                        test_analyser)
 
 from experiment import benchmark as benchmarklib
-from llm_toolkit import models, prompt_builder, prompts
+from llm_toolkit import models, output_parser, prompt_builder, prompts
 
 LOG_FMT = ('%(asctime)s.%(msecs)03d %(levelname)s '
            '%(module)s - %(funcName)s: %(message)s')
@@ -84,6 +85,9 @@ def parse_args() -> argparse.Namespace:
       '--far-reach',
       action='store_true',
       help='If set, will generate targets for all functions in far reach.')
+  parser.add_argument('--test-to-harness',
+                      action='store_true',
+                      help='If set, will perform test to harness conversion.')
 
   return parser.parse_args()
 
@@ -103,6 +107,9 @@ def check_args(args) -> bool:
   # Far-reach target.
   if (args.far_reach and not args.function and not args.source_file and
       not args.source_line):
+    return True
+
+  if args.test_to_harness:
     return True
 
   print('You must include either:\n (1) target function name by --function;\n'
@@ -371,6 +378,63 @@ def generate_far_reach_targets(args):
       pass
 
 
+def generate_test_to_harness_targets(args):
+  """Test to harness converter"""
+  model = setup_model(args)
+  language = get_introspector_language(args)
+
+  entrypoint = introspector_lang_to_entrypoint(args.language)
+
+  _, report = fi_commands.analyse_end_to_end(arg_language=language,
+                                             target_dir=args.target_dir,
+                                             entrypoint=entrypoint,
+                                             out_dir='.',
+                                             coverage_url='',
+                                             report_name='report-name',
+                                             module_only=True,
+                                             dump_files=False)
+  introspector_project = report.get('introspector-project', None)
+
+  tth_analysis = test_analyser.TestAnalyser()
+  tth_analysis.standalone_analysis(introspector_project.proj_profile,
+                                   introspector_project.profiles, '')
+  tests = tth_analysis.test_file_paths
+  for test_file_path in tests:
+    benchmark = benchmarklib.Benchmark(benchmark_id='sample',
+                                       project='no-name',
+                                       language=language,
+                                       function_name='',
+                                       function_signature='',
+                                       return_type='',
+                                       params=[],
+                                       target_path='',
+                                       test_file_path=test_file_path)
+
+    with open(test_file_path, 'r', encoding='utf-8') as f:
+      test_source = f.read()
+
+      # If the test source code is above a certain limit we'll reduce
+      # the size of it to avoid having a too long token count.
+      if len(test_source) > 5000:
+        test_source = test_source[:2400] + '\n.....\n' + test_source[-2400:]
+    builder = prompt_builder.TestToHarnessConverter(model, benchmark=benchmark)
+    fuzz_prompt = builder.build([], test_source_code=test_source)
+
+    try:
+      raw_result = model.ask_llm(fuzz_prompt)
+    except:
+      continue
+
+    logger.info('Filtering code')
+    generated_source = output_parser.filter_code(raw_result)
+    logger.info('Done filtering code')
+
+    response_dir = get_next_out_dir(args.out_dir)
+    os.makedirs(response_dir, exist_ok=True)
+    with open(os.path.join(response_dir, 'fuzz.c'), 'w', encoding='utf-8') as f:
+      f.write(generated_source)
+
+
 def generate_for_target_function(args):
   """Generate harness for single function/source location"""
   model = setup_model(args)
@@ -401,6 +465,8 @@ def main():
 
   if args.far_reach:
     generate_far_reach_targets(args)
+  elif args.test_to_harness:
+    generate_test_to_harness_targets(args)
   else:
     generate_for_target_function(args)
 
