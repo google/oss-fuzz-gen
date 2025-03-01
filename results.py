@@ -30,7 +30,7 @@ class Result:
   build_script_source: str
   author: Any
   chat_history: dict
-  _repr_exclude = {'chat_history'}
+  _repr_exclude = {'_repr_exclude', 'chat_history'}
 
   def __init__(self,
                benchmark: Benchmark,
