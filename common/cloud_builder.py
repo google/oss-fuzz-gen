@@ -196,7 +196,7 @@ class CloudBuilder:
                     '/workspace/dills/new_result.pkl'
                 ],
             },
-            # Step 4: Upload the result to GCS bucket
+            # Step 6: Upload the result to GCS bucket
             {
                 'name': 'bash',
                 'dir': '/workspace',
