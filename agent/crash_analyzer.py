@@ -15,9 +15,7 @@
 Use it as a usual module locally, or as script in cloud builds.
 """
 import os
-import random
 import shutil
-import time
 from typing import Optional
 
 import logger
@@ -47,20 +45,25 @@ class CrashAnalyzer(BaseAgent):
           last_result.run_error, last_result.crash_func)
       return prompt
 
-    logger.error("Expected a RunResult object in results list")
+    logger.error("Expected a RunResult object in results list",
+                 trial=self.trial)
     return DefaultTemplateBuilder(self.llm).build([])
 
-  def _create_ossfuzz_project_with_lldb(self, name: str, target_file: str,
+  def _create_ossfuzz_project_with_lldb(self,
+                                        name: str,
+                                        target_file: str,
                                         run_result: RunResult,
                                         build_script_path: str = '') -> str:
     """Creates an OSS-Fuzz project with new dockerfile and fuzz target. 
     The new project will replicate an existing project |name| but modify 
     its dockerfile."""
-    logger.info('target file: %s', target_file)
+    logger.info('target file: %s', target_file, trial=self.trial)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects', name)
     if os.path.exists(generated_project_path):
-      logger.info('Project %s already exists.', generated_project_path)
+      logger.info('Project %s already exists.',
+                  generated_project_path,
+                  trial=self.trial)
       return name
 
     existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
@@ -100,17 +103,12 @@ class CrashAnalyzer(BaseAgent):
 
     return name
 
-  def _sleep_random_duration(self, min_sec: int = 1, max_sec: int = 60) -> None:
-    """Sleeps for a random duration between min_sec and max_sec. Agents uses
-    this to avoid exceeding quota limit (e.g., LLM query frequency)."""
-    duration = random.randint(min_sec, max_sec)
-    logger.debug('Sleeping for %d before the next query', duration)
-    time.sleep(duration)
-
   def _handle_conclusion(self, cur_round: int, response: str,
                          crash_result: CrashResult):
     """Parses LLM conclusion, analysis and suggestion."""
-    logger.info('----- ROUND %02d Received conclusion -----', cur_round)
+    logger.info('----- ROUND %02d Received conclusion -----',
+                cur_round,
+                trial=self.trial)
 
     conclusion = self._parse_tag(response, 'conclusion')
     if conclusion == 'Crash is caused by bug in fuzz driver.':
@@ -119,12 +117,15 @@ class CrashAnalyzer(BaseAgent):
       crash_result.true_bug = True
     else:
       logger.error('***** Failed to match conclusion in %02d rounds *****',
-                   cur_round)
+                   cur_round,
+                   trial=self.trial)
 
     crash_result.insight = self._parse_tag(response, 'analysis and suggestion')
     if not crash_result.insight:
       logger.error('Round %02d No analysis and suggestion in conclusion: %s',
-                   cur_round, response)
+                   cur_round,
+                   response,
+                   trial=self.trial)
 
   def _container_tool_reaction(self, cur_round: int, response: str,
                                crash_result: CrashResult) -> Optional[Prompt]:
@@ -136,26 +137,25 @@ class CrashAnalyzer(BaseAgent):
 
   def execute(self, result_history: list[Result]) -> CrashResult:
     """Executes the agent based on previous run result."""
-    logger.info('Executing Crash Analyzer')
     last_result = result_history[-1]
     benchmark = last_result.benchmark
-    trial = last_result.trial
+    logger.info('Executing Crash Analyzer', trial=self.trial)
     if isinstance(last_result, RunResult):
       generated_target_name = os.path.basename(benchmark.target_path)
       sample_id = os.path.splitext(generated_target_name)[0]
       generated_oss_fuzz_project = (
-          f'{benchmark.id}-{sample_id}-{trial:02d}-lldb')
+          f'{benchmark.id}-{sample_id}-{self.trial:02d}-lldb')
       generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
           generated_oss_fuzz_project)
 
       fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                      f'{trial:02d}.fuzz_target')
+                                      f'{self.trial:02d}.fuzz_target')
       build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                       f'{trial:02d}.build_script')
+                                       f'{self.trial:02d}.build_script')
 
       self._create_ossfuzz_project_with_lldb(generated_oss_fuzz_project,
-                                             fuzz_target_path,
-                                             last_result, build_script_path)
+                                             fuzz_target_path, last_result,
+                                             build_script_path)
 
       self.analyze_tool = LLDBTool(
           benchmark,
@@ -168,7 +168,7 @@ class CrashAnalyzer(BaseAgent):
       prompt.add_problem(self.analyze_tool.tutorial())
       crash_result = CrashResult(
           benchmark=benchmark,
-          trial=trial,
+          trial=self.trial,
           work_dirs=last_result.work_dirs,
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
@@ -198,27 +198,33 @@ class CrashAnalyzer(BaseAgent):
       try:
         client = self.llm.get_chat_client(model=self.llm.get_model())
         while prompt and cur_round < MAX_ROUND:
-          logger.info('CrashAnalyzer ROUND %02d agent prompt: %s', cur_round,
-                      prompt.get())
+          logger.info('CrashAnalyzer ROUND %02d agent prompt: %s',
+                      cur_round,
+                      prompt.get(),
+                      trial=self.trial)
           response = self.llm.chat_llm(client=client, prompt=prompt)
-          logger.debug('CrashAnalyzer ROUND %02d LLM response: %s', cur_round,
-                       response)
+          logger.debug('CrashAnalyzer ROUND %02d LLM response: %s',
+                       cur_round,
+                       response,
+                       trial=self.trial)
           prompt = self._container_tool_reaction(cur_round, response,
                                                  crash_result)
           cur_round += 1
-          self._sleep_random_duration()
+          self._sleep_random_duration(trial=self.trial)
       finally:
         # Cleanup: stop the container
         logger.debug('Stopping the crash analyze container %s',
-                     self.analyze_tool.container_id)
+                     self.analyze_tool.container_id,
+                     trial=self.trial)
         self.analyze_tool.terminate()
 
       return crash_result
 
-    logger.error("Expected a RunResult object in results list")
+    logger.error("Expected a RunResult object in results list",
+                 trial=self.trial)
     crash_result = CrashResult(
         benchmark=benchmark,
-        trial=trial,
+        trial=self.trial,
         work_dirs=last_result.work_dirs,
         fuzz_target_source=last_result.fuzz_target_source,
         build_script_source=last_result.build_script_source,
