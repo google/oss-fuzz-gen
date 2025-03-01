@@ -406,7 +406,7 @@ def generate_test_to_harness_targets(args):
                                        function_name='',
                                        function_signature='',
                                        return_type='',
-                                       params='',
+                                       params=[],
                                        target_path='',
                                        test_file_path=test_file_path)
 
