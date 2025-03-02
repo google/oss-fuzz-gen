@@ -236,7 +236,7 @@ class AnalysisResult(Result):
   coverage_result: Optional[CoverageResult]
 
   def __init__(self,
-               author: str,
+               author: Any,
                run_result: RunResult,
                semantic_result: SemanticCheckResult,
                crash_result: Optional[CrashResult] = None,
