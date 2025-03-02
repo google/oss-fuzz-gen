@@ -64,7 +64,7 @@ class Result:
         'trial': self.trial,
         'fuzz_target_source': self.fuzz_target_source,
         'build_script_source': self.build_script_source,
-        'author': str(self.author),
+        'author': self.author.name,
         'chat_history': self.chat_history,
     }
 
@@ -78,7 +78,7 @@ class BuildResult(Result):
   compile_log: str  # Build full output.
   binary_exists: bool  # Fuzz target binary generated successfully.
   is_function_referenced: bool  # Fuzz target references function-under-test.
-  _repr_exclude = Result._repr_exclude | {'compile_log'}
+  _repr_exclude = Result._repr_exclude | {'compile_log', 'compile_error'}
 
   def __init__(self,
                benchmark: Benchmark,
@@ -349,7 +349,7 @@ class TrialResult:
     return self.best_result.build_script_source
 
   @property
-  def author(self) -> str:
+  def author(self) -> Any:
     """The author of the best result."""
     return self.best_result.author
 
@@ -455,25 +455,44 @@ class TrialResult:
 
   def to_dict(self) -> dict:
     return {
-        'function_signature': self.function_signature,
-        'project': self.project,
-        'project_commit': self.project_commit,
-        'project_language': self.project_language,
-        'fuzz_target_source': self.fuzz_target_source,
-        'build_script_source': self.build_script_source,
-        'author': self.author,
-        'chat_history': self.chat_history,
-        'build_success': self.build_success,
-        'crash': self.crash,
-        'coverage': self.coverage,
-        'line_coverage_diff': self.line_coverage_diff,
-        'cov_pcs': self.cov_pcs,
-        'total_pcs': self.total_pcs,
-        'line_coverage_report': self.line_coverage_report,
-        'textcov_diff': self.textcov_diff,
-        'run_error': self.run_error,
-        'run_log': self.run_log,
-        'log_path': self.log_path,
+        'function_signature':
+            self.function_signature,
+        'project':
+            self.project,
+        'project_commit':
+            self.project_commit,
+        'project_language':
+            self.project_language,
+        'fuzz_target_source':
+            self.fuzz_target_source,
+        'build_script_source':
+            self.build_script_source,
+        'author':
+            self.author.name,
+        'chat_history':
+            self.chat_history,
+        'build_success':
+            self.build_success,
+        'crash':
+            self.crash,
+        'coverage':
+            self.coverage,
+        'line_coverage_diff':
+            self.line_coverage_diff,
+        'cov_pcs':
+            self.cov_pcs,
+        'total_pcs':
+            self.total_pcs,
+        'line_coverage_report':
+            self.line_coverage_report,
+        'textcov_diff':
+            dataclasses.asdict(self.textcov_diff) if self.textcov_diff else '',
+        'run_error':
+            self.run_error,
+        'run_log':
+            self.run_log,
+        'log_path':
+            self.log_path,
     }
 
 
