@@ -48,7 +48,7 @@ spec:
         - name: LLM_NUM_EVA
           value: '10'
         - name: VERTEX_AI_LOCATIONS
-          value: 'us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4'
+          value: 'europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west4,europe-west8,europe-west9,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4'
         - name: CLOUD_BUILD_LOCATION
           value: 'us-west2'
         - name: GCB_BUILDPOOL_NAME
