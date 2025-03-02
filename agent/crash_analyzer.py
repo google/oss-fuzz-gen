@@ -2,7 +2,7 @@
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# You may obtain a copy of the License a
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -22,9 +22,10 @@ import logger
 from agent.base_agent import BaseAgent
 from experiment import evaluator as evaluator_lib
 from experiment import oss_fuzz_checkout
-from llm_toolkit.prompt_builder import DefaultTemplateBuilder
+from llm_toolkit import prompt_builder
 from llm_toolkit.prompts import Prompt
 from results import CrashResult, Result, RunResult
+from tool.base_tool import BaseTool
 from tool.lldb_tool import LLDBTool
 
 MAX_ROUND = 100
@@ -38,7 +39,7 @@ class CrashAnalyzer(BaseAgent):
     last_result = results[-1]
 
     if isinstance(last_result, RunResult):
-      default_prompt_builder = DefaultTemplateBuilder(
+      default_prompt_builder = prompt_builder.DefaultTemplateBuilder(
           model=self.llm, benchmark=last_result.benchmark)
       prompt = default_prompt_builder.build_triager_prompt(
           last_result.benchmark, last_result.fuzz_target_source,
@@ -47,15 +48,15 @@ class CrashAnalyzer(BaseAgent):
 
     logger.error("Expected a RunResult object in results list",
                  trial=self.trial)
-    return DefaultTemplateBuilder(self.llm).build([])
+    return prompt_builder.DefaultTemplateBuilder(self.llm).build([])
 
   def _create_ossfuzz_project_with_lldb(self,
                                         name: str,
                                         target_file: str,
                                         run_result: RunResult,
                                         build_script_path: str = '') -> str:
-    """Creates an OSS-Fuzz project with new dockerfile and fuzz target. 
-    The new project will replicate an existing project |name| but modify 
+    """Creates an OSS-Fuzz project with new dockerfile and fuzz target.
+    The new project will replicate an existing project |name| but modify
     its dockerfile."""
     logger.info('target file: %s', target_file, trial=self.trial)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
@@ -92,7 +93,7 @@ class CrashAnalyzer(BaseAgent):
         os.path.join(generated_project_path,
                      os.path.basename('agent-build.sh')))
 
-    # Add additional statement in dockerfile to overwrite with \
+    # Add additional statement in dockerfile to overwrite with
     # generated fuzzer, enable -g and install lldb
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(
@@ -127,13 +128,24 @@ class CrashAnalyzer(BaseAgent):
                    response,
                    trial=self.trial)
 
+  def _container_handle_bash_command(self, response: str, tool: BaseTool,
+                                     prompt: Prompt) -> Prompt:
+    """Handles the command from LLM with container |tool|."""
+    prompt_text = ''
+    for command in self._parse_tags(response, 'bash'):
+      prompt_text += self._format_bash_execution_result(
+          tool.execute(command), previous_prompt=prompt) + '\n'
+      prompt.add_problem(prompt_text)
+    return prompt
+
   def _container_tool_reaction(self, cur_round: int, response: str,
                                crash_result: CrashResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
     if self._parse_tag(response, 'conclusion'):
       return self._handle_conclusion(cur_round, response, crash_result)
-    return self._container_handle_bash_command(cur_round, response,
-                                               self.analyze_tool)
+    prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
+    return self._container_handle_bash_command(response, self.analyze_tool,
+                                               prompt)
 
   def execute(self, result_history: list[Result]) -> CrashResult:
     """Executes the agent based on previous run result."""
@@ -193,20 +205,16 @@ class CrashAnalyzer(BaseAgent):
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,
           author=self,
-          chat_history=last_result.chat_history)
+          chat_history=last_result.chat_history,
+          semantic_check=last_result.semantic_check)
       cur_round = 1
       try:
         client = self.llm.get_chat_client(model=self.llm.get_model())
         while prompt and cur_round < MAX_ROUND:
-          logger.info('CrashAnalyzer ROUND %02d agent prompt: %s',
-                      cur_round,
-                      prompt.get(),
-                      trial=self.trial)
-          response = self.llm.chat_llm(client=client, prompt=prompt)
-          logger.debug('CrashAnalyzer ROUND %02d LLM response: %s',
-                       cur_round,
-                       response,
-                       trial=self.trial)
+          response = self.chat_llm(cur_round=cur_round,
+                                   client=client,
+                                   prompt=prompt,
+                                   trial=self.trial)
           prompt = self._container_tool_reaction(cur_round, response,
                                                  crash_result)
           cur_round += 1

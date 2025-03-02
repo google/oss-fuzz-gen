@@ -38,7 +38,7 @@ class AnalysisStage(BaseStage):
 
   def _analyze_coverage(self, result_history: list[Result]) -> None:
     """Analyzes code coverage."""
-    pass
+    del result_history
 
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the analysis stage."""
