@@ -43,7 +43,7 @@ class LLDBTool(BaseTool):
     """
     image_name = f'gcr.io/oss-fuzz/{self.project}'
     # TODO(maoyi): implement image cache
-    if oss_fuzz_checkout._image_exists_locally(image_name, self.project):
+    if oss_fuzz_checkout.image_exists_locally(image_name, self.project):
       logger.info('Using existing project image for %s', self.project)
       return image_name
     logger.info('Unable to find existing project image for %s', self.project)
