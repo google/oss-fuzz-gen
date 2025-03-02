@@ -32,7 +32,10 @@ class BaseStage(ABC):
     self.args = args
     self.trial = trail
     self.agents: list[BaseAgent] = agents or []
-    self.logger = logger.get_trial_logger(trial=trail)
+    self.logger = logger.get_trial_logger(
+        trial=trail,
+        is_cloud=args.cloud_experiment_name != '',
+    )
 
   def __repr__(self) -> str:
     return self.__class__.__name__
