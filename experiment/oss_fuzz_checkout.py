@@ -418,7 +418,7 @@ def prepare_build(project_name, sanitizer, generated_project):
     shutil.copy(original_dockerfile, dockerfile_to_use)
 
 
-def _image_exists_locally(image_name: str, project_name: str) -> bool:
+def image_exists_locally(image_name: str, project_name: str) -> bool:
   """Checks if the given |image_name| exits locally."""
   try:
     all_images = sp.run(['docker', 'images', '--format', '{{.Repository}}'],
@@ -484,7 +484,7 @@ def prepare_project_image(project: str) -> str:
   """Prepares original image of the |project|'s fuzz target build container."""
   image_name = f'gcr.io/oss-fuzz/{project}'
   if (ENABLE_CACHING and is_image_cached(project, 'address') and
-      (_image_exists_locally(image_name, project_name=project) or
+      (image_exists_locally(image_name, project_name=project) or
        _image_exists_online(image_name, project_name=project))):
     logger.info('Using cached project image for %s', project)
     return image_name
