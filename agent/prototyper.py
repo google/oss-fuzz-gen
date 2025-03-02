@@ -445,10 +445,6 @@ class Prototyper(BaseAgent):
                                  client=client,
                                  prompt=prompt,
                                  trial=last_result.trial)
-        logger.info('Prototyper ROUND %02d LLM response: %s',
-                    cur_round,
-                    response,
-                    trial=self.trial)
         prompt = self._container_tool_reaction(cur_round, response,
                                                build_result)
         cur_round += 1
