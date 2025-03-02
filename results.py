@@ -455,6 +455,8 @@ class TrialResult:
 
   def to_dict(self) -> dict:
     return {
+        'trial':
+            self.trial,
         'function_signature':
             self.function_signature,
         'project':
@@ -471,7 +473,7 @@ class TrialResult:
             self.author.name,
         'chat_history':
             self.chat_history,
-        'build_success':
+        'compiles':
             self.build_success,
         'crash':
             self.crash,
