@@ -17,7 +17,7 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
-from results import AnalysisResult, BuildResult, Result, RunResult
+from results import AnalysisResult, BuildResult, Result, RunResult, TrialResult
 from stage.analysis_stage import AnalysisStage
 from stage.execution_stage import ExecutionStage
 from stage.writing_stage import WritingStage
@@ -57,50 +57,69 @@ class Pipeline():
     if not cycle_count:
       return False
 
-    last_result = result_history[-1]
     if cycle_count > 5:
-      self.logger.warning('[Cycle %d] Terminate after 5 cycles: %s',
-                          cycle_count, result_history)
+      self.logger.info('[Cycle %d] Terminate after 5 cycles: %s', cycle_count,
+                       result_history)
       return True
 
-    if not isinstance(last_result, AnalysisResult):
-      self.logger.warning('[Cycle %d] Last result is not AnalysisResult: %s',
-                          cycle_count, result_history)
+    last_result = result_history[-1]
+    if isinstance(last_result, BuildResult) and not last_result.success:
+      self.logger.debug('[Cycle %d] Last result is failed BuildResult: %s',
+                        cycle_count, last_result)
       return True
 
-    if last_result.success:
+    if isinstance(last_result, AnalysisResult) and last_result.success:
       self.logger.info('[Cycle %d] Generation succeeds: %s', cycle_count,
                        result_history)
       return True
 
-    self.logger.info('[Cycle %d] Generation continues: %s', cycle_count,
-                     result_history)
-    return False
+    if isinstance(last_result, AnalysisResult) and not last_result.success:
+      self.logger.info('[Cycle %d] Generation continues: %s', cycle_count,
+                       result_history)
+      return False
+
+    self.logger.warning('[Cycle %d] Last result is unexpected: %s', cycle_count,
+                        last_result)
+    return True
+
+  def _update_status(self, result_history: list[Result]) -> None:
+    trial_result = TrialResult(benchmark=result_history[-1].benchmark,
+                               trial=self.trial,
+                               work_dirs=result_history[-1].work_dirs,
+                               result_history=result_history)
+    self.logger.write_result(
+        result_status_dir=trial_result.best_result.work_dirs.status,
+        result=trial_result)
 
   def _execute_one_cycle(self, result_history: list[Result],
                          cycle_count: int) -> None:
     """Executes the stages once."""
     self.logger.info('[Cycle %d] Initial result is %s', cycle_count,
                      result_history[-1])
+    # Writing stage.
     result_history.append(
         self.writing_stage.execute(result_history=result_history))
+    self._update_status(result_history=result_history)
     if (not isinstance(result_history[-1], BuildResult) or
         not result_history[-1].success):
       self.logger.warning('[Cycle %d] Build failure, skipping the rest steps',
                           cycle_count)
       return
 
+    # Execution stage.
     result_history.append(
         self.execution_stage.execute(result_history=result_history))
+    self._update_status(result_history=result_history)
     if (not isinstance(result_history[-1], RunResult) or
         not result_history[-1].log_path):
       self.logger.warning('[Cycle %d] Run failure, skipping the rest steps',
                           cycle_count)
       return
 
+    # Analysis stage.
     result_history.append(
         self.analysis_stage.execute(result_history=result_history))
-
+    self._update_status(result_history=result_history)
     self.logger.info('[Cycle %d] Analysis result %s: %s', cycle_count,
                      result_history[-1].success, result_history[-1])
 
@@ -121,8 +140,4 @@ class Pipeline():
       cycle_count += 1
       self._execute_one_cycle(result_history=result_history,
                               cycle_count=cycle_count)
-
-    final_result = result_history[-1]
-    self.logger.write_result(result_status_dir=final_result.work_dirs.status,
-                             result=final_result)
     return result_history

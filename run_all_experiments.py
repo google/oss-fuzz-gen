@@ -382,7 +382,7 @@ def _setup_logging(verbose: str = 'info', is_cloud: bool = False) -> None:
       client.setup_logging()
     except Exception as e:
       # For local runs we continue
-      pass
+      logger.warning('Error setting up cloud logging client: %s', e)
 
   if verbose == "debug":
     log_level = logging.DEBUG
