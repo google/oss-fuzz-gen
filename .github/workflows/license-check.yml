@@ -1,0 +1,32 @@
+name: Check License Headers
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  check-license-headers:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu environment
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Set up Python (needed for the header-checker-lint tool)
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    
+    - name: Install header-checker-lint tool
+      run: |
+        pip install header-checker-lint
+
+    - name: Run header-checker-lint to validate license headers
+      run: |
+        header-checker-lint --allowed-copyright-holders "Google LLC" \
+                            --allowed-licenses "Apache-2.0" \
+                            --source-file-extensions "ts,js,java,Dockerfile,c,h,cc,cpp,css,html,htm,go,sh,bash,rs,proto,swift"
