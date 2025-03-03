@@ -24,6 +24,7 @@ from typing import List, Optional
 
 import logger
 import pipeline
+from agent.enhancer import Enhancer
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper
@@ -241,10 +242,17 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
   trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
   trial_logger.info('Trial Starts')
   if args.agent:
-    p = pipeline.Pipeline(
-        args=args,
-        trial=trial,
-        writing_stage_agents=[Prototyper(trial=trial, llm=model, args=args)])
+    p = pipeline.Pipeline(args=args,
+                          trial=trial,
+                          writing_stage_agents=[
+                              Prototyper(trial=trial, llm=model, args=args),
+                              Enhancer(trial=trial, llm=model, args=args),
+                          ],
+                          analysis_stage_agents=[
+                              SemanticAnalyzer(trial=trial,
+                                               llm=model,
+                                               args=args),
+                          ])
   else:
     p = pipeline.Pipeline(args=args,
                           trial=trial,
@@ -259,17 +267,21 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                           analysis_stage_agents=[
                               SemanticAnalyzer(trial=trial,
                                                llm=model,
-                                               args=args)
+                                               args=args),
                           ])
 
   results = p.execute(result_history=[
       Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
   ])
 
-  return TrialResult(benchmark=benchmark,
-                     trial=trial,
-                     work_dirs=work_dirs,
-                     result_history=results)
+  trial_result = TrialResult(benchmark=benchmark,
+                             trial=trial,
+                             work_dirs=work_dirs,
+                             result_history=results)
+  trial_logger.write_result(
+      result_status_dir=trial_result.best_result.work_dirs.status,
+      result=trial_result)
+  return trial_result
 
 
 def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
