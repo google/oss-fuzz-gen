@@ -591,7 +591,7 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
       final_problem += self.format_context(project_context_content)
     self._prepare_prompt(priming, final_problem, example_pair,
                          project_example_content)
-    self._prompt.append(tool_guides)
+    self._prompt.append(tool_guides, True)
     return self._prompt
 
 
