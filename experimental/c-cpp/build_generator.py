@@ -707,8 +707,8 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
   all_files = manager.get_all_files_in_path(abspath_of_target)
   all_checks = [
       AutogenConfScanner(),
-      #PureCFileCompiler(),
-      #PureCFileCompilerFind(),
+      PureCFileCompiler(),
+      PureCFileCompilerFind(),
       PureCPPFileCompilerFind(),
       PureMakefileScanner(),
       PureMakefileScannerWithPThread(),

@@ -349,14 +349,9 @@ class FuzzerGenHeuristic6(FuzzHeuristicGeneratorBase):
     for idx, arg in enumerate(func['debug_function_info']['args']):
       if '::' in func["function_signature"] and idx == 0:
         object_warning = '- This is a function in a class object. So this argument is the object itself and should, therefore, not be added to the actual argument list'
-        real_idx = 1
         continue
-      else:
-        object_warning = ''
-      if object_warning:
-        type_constraints += object_warning + '\n'
-      else:
-        type_constraints += f'- Argument {idx+1 - real_idx} is of type `{arg}`.\n'
+
+      type_constraints += f'- Argument {idx+1 - real_idx} is of type `{arg}`.\n'
 
     type_constraints += (
         'You must make sure the arguments passed to the ' +
@@ -540,15 +535,9 @@ class FuzzerGenHeuristic5(FuzzHeuristicGeneratorBase):
     real_idx = 0
     for idx, arg in enumerate(func['debug_function_info']['args']):
       if '::' in func["function_signature"] and idx == 0:
-        object_warning = '- This is a function in a class object. So this argument is the object itself and should, therefore, not be added to the actual argument list'
-        real_idx = 1
         continue
-      else:
-        object_warning = ''
-      if object_warning:
-        type_constraints += object_warning + '\n'
-      else:
-        type_constraints += f'- Argument {idx+1-real_idx} is of type `{arg}`.\n'
+
+      type_constraints += f'- Argument {idx+1-real_idx} is of type `{arg}`.\n'
 
     type_constraints += (
         'You must make sure the arguments passed to the function match the ' +
@@ -631,15 +620,9 @@ class FuzzerGenHeuristic4(FuzzHeuristicGeneratorBase):
     real_idx = 0
     for idx, arg in enumerate(func['debug_function_info']['args']):
       if '::' in func["function_signature"] and idx == 0:
-        object_warning = '- This is likely a function in a class object. So this argument is the object itself and should, therefore, not be added to the actual argument list'
-        real_idx = 1
         continue
-      else:
-        object_warning = ''
-      if object_warning:
-        type_constraints += object_warning + '\n'
-      else:
-        type_constraints += f'- Argument {idx+1-real_idx} is of type `{arg}`.\n'
+
+      type_constraints += f'- Argument {idx+1-real_idx} is of type `{arg}`.\n'
 
     type_constraints += (
         'You must make sure the arguments passed to the function match the ' +
@@ -718,15 +701,9 @@ class FuzzerGenHeuristic1(FuzzHeuristicGeneratorBase):
     real_idx = 0
     for idx, arg in enumerate(func['debug_function_info']['args']):
       if '::' in func["function_signature"] and idx == 0:
-        object_warning = 'This is a function in a class object. So this argument is the object itself and should, therefore, not be added to the actual argument list'
-        real_idx = 1
         continue
-      else:
-        object_warning = ''
-      if object_warning:
-        type_constraints += object_warning + '\n'
-      else:
-        type_constraints += f'- Argument {idx+1-real_idx} is of type `{arg}`.\n'
+
+      type_constraints += f'- Argument {idx+1-real_idx} is of type `{arg}`.\n'
 
     type_constraints += (
         'You must make sure the arguments passed to the function match the ' +
@@ -801,15 +778,9 @@ class FuzzerGenHeuristic2(FuzzHeuristicGeneratorBase):
 
     for idx, arg in enumerate(func['debug_function_info']['args']):
       if '::' in func["function_signature"] and idx == 0:
-        object_warning = 'This is a function in a class object. So this argument is the object itself and should, therefore, not be added to the actual argument list'
-        real_idx = 1
+
         continue
-      else:
-        object_warning = ''
-      if object_warning:
-        type_constraints += object_warning + '\n'
-      else:
-        type_constraints += f'- Argument {idx+1-real_idx} is of type `{arg}`.\n'
+      type_constraints += f'- Argument {idx+1-real_idx} is of type `{arg}`.\n'
 
     type_constraints += (
         'You must make sure the arguments passed to the function match the ' +
@@ -885,14 +856,9 @@ class FuzzerGenHeuristic3(FuzzHeuristicGeneratorBase):
     type_constraints = 'the types of types function are:\n'
     for idx, arg in enumerate(func['debug_function_info']['args']):
       if '::' in func["function_signature"] and idx == 0:
-        object_warning = 'This is likely a function in a class object. So this argument is the object itself and should, therefore, not be added to the actual argument list'
         continue
-      else:
-        object_warning = ''
-      if object_warning:
-        type_constraints += object_warning + '\n'
-      else:
-        type_constraints += f'- Argument {idx+1} is of type `{arg}`.\n'
+
+      type_constraints += f'- Argument {idx+1} is of type `{arg}`.\n'
 
     type_constraints += (
         'You must make sure the arguments passed to the function match the ' +
