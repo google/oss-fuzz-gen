@@ -1,0 +1,97 @@
+"functions":
+- "name": "msCGIDispatchBrowseRequest"
+  "params":
+  - "name": "mapserv"
+    "type": "mapservObj*"
+  "return_type": "int"
+  "signature": "msCGIDispatchBrowseRequest(mapservObj *mapserv)"
+- "name": "msCGIHandler"
+  "params":
+  - "name": "query_string"
+    "type": "char*"
+  - "name": "out_buffer"
+    "type": "void**"
+  - "name": "buffer_length"
+    "type": "size_t*"
+  "return_type": "int"
+  "signature": |-
+    msCGIHandler(const char *query_string, void **out_buffer,
+                     size_t *buffer_length)
+- "name": "msCGIDispatchQueryRequest"
+  "params":
+  - "name": "mapserv"
+    "type": "mapservObj*"
+  "return_type": "int"
+  "signature": "msCGIDispatchQueryRequest(mapservObj *mapserv)"
+- "name": "msCGIDispatchLegendRequest"
+  "params":
+  - "name": "mapserv"
+    "type": "mapservObj*"
+  "return_type": "int"
+  "signature": "msCGIDispatchLegendRequest(mapservObj *mapserv)"
+- "name": "msOWSDispatch"
+  "params":
+  - "name": "map"
+    "type": "mapObj*"
+  - "name": "request"
+    "type": "cgiRequestObj*"
+  - "name": "ows_mode"
+    "type": "int"
+  "return_type": "int"
+  "signature": "msOWSDispatch(mapObj *map, cgiRequestObj *request, int ows_mode)"
+- "name": "msWMSDispatch"
+  "params":
+  - "name": "map"
+    "type": "mapObj*"
+  - "name": "req"
+    "type": "cgiRequestObj*"
+  - "name": "ows_request"
+    "type": "owsRequestObj*"
+  - "name": "force_wms_mode"
+    "type": "int"
+  "return_type": "int"
+  "signature": |-
+    msWMSDispatch(mapObj *map, cgiRequestObj *req, owsRequestObj *ows_request,
+                      int force_wms_mode)
+- "name": "msWFSDispatch"
+  "params":
+  - "name": "map"
+    "type": "mapObj*"
+  - "name": "requestobj"
+    "type": "cgiRequestObj*"
+  - "name": "ows_request"
+    "type": "owsRequestObj*"
+  - "name": "force_wfs_mode"
+    "type": "int"
+  "return_type": "int"
+  "signature": |-
+    msWFSDispatch(mapObj *map, cgiRequestObj *requestobj,
+                      owsRequestObj *ows_request, int force_wfs_mode)
+- "name": "msCGIDispatchRequest"
+  "params":
+  - "name": "mapserv"
+    "type": "mapservObj*"
+  "return_type": "int"
+  "signature": "msCGIDispatchRequest(mapservObj *mapserv)"
+- "name": "msReturnTemplateQuery"
+  "params":
+  - "name": "mapserv"
+    "type": "mapservObj*"
+  - "name": "queryFormat"
+    "type": "char*"
+  - "name": "papszBuffer"
+    "type": "char**"
+  "return_type": "int"
+  "signature": |-
+    msReturnTemplateQuery(mapservObj *mapserv, char *queryFormat,
+                              char **papszBuffer)
+- "name": "mapserver_handler"
+  "params":
+  - "name": "r"
+    "type": "request_rec*"
+  "return_type": "int"
+  "signature": "mapserver_handler(request_rec *r)"
+"language": "c++"
+"project": "mapserver"
+"target_name": "configfuzzer"
+"target_path": "/src/MapServer/fuzzers/configfuzzer.c"

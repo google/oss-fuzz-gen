@@ -1,0 +1,223 @@
+"functions":
+- "name": "sqlite3GenerateRowDelete"
+  "params":
+  - "name": "pParse"
+    "type": "Parse*"
+  - "name": "pTab"
+    "type": "Table*"
+  - "name": "pTrigger"
+    "type": "Trigger*"
+  - "name": "iDataCur"
+    "type": "int"
+  - "name": "iIdxCur"
+    "type": "int"
+  - "name": "iPk"
+    "type": "int"
+  - "name": "nPk"
+    "type": "i16"
+  - "name": "count"
+    "type": "u8"
+  - "name": "onconf"
+    "type": "u8"
+  - "name": "eMode"
+    "type": "u8"
+  - "name": "iIdxNoSeek"
+    "type": "int"
+  "return_type": "SQLITE_PRIVATE"
+  "signature": |-
+    sqlite3GenerateRowDelete(
+      Parse *pParse,     /* Parsing context */
+      Table *pTab,       /* Table containing the row to be deleted */
+      Trigger *pTrigger, /* List of triggers to (potentially) fire */
+      int iDataCur,      /* Cursor from which column data is extracted */
+      int iIdxCur,       /* First index cursor */
+      int iPk,           /* First memory cell containing the PRIMARY KEY */
+      i16 nPk,           /* Number of PRIMARY KEY memory cells */
+      u8 count,          /* If non-zero, increment the row change counter */
+      u8 onconf,         /* Default ON CONFLICT policy for triggers */
+      u8 eMode,          /* ONEPASS_OFF, _SINGLE, or _MULTI.  See above */
+      int iIdxNoSeek     /* Cursor number of cursor that does not need seeking */
+    )
+- "name": "sqlite3Pragma"
+  "params":
+  - "name": "pParse"
+    "type": "Parse*"
+  - "name": "pId1"
+    "type": "Token*"
+  - "name": "pId2"
+    "type": "Token*"
+  - "name": "pValue"
+    "type": "Token*"
+  - "name": "minusFlag"
+    "type": "int"
+  "return_type": "SQLITE_PRIVATE"
+  "signature": |-
+    sqlite3Pragma(
+      Parse *pParse,
+      Token *pId1,        /* First part of [schema.]id field */
+      Token *pId2,        /* Second part of [schema.]id field, or NULL */
+      Token *pValue,      /* Token for <value>, or NULL */
+      int minusFlag       /* True if a '-' sign preceded <value> */
+    )
+- "name": "sqlite3Insert"
+  "params":
+  - "name": "pParse"
+    "type": "Parse*"
+  - "name": "pTabList"
+    "type": "SrcList*"
+  - "name": "pSelect"
+    "type": "Select*"
+  - "name": "pColumn"
+    "type": "IdList*"
+  - "name": "onError"
+    "type": "int"
+  - "name": "pUpsert"
+    "type": "Upsert*"
+  "return_type": "SQLITE_PRIVATE"
+  "signature": |-
+    sqlite3Insert(
+      Parse *pParse,        /* Parser context */
+      SrcList *pTabList,    /* Name of table into which we are inserting */
+      Select *pSelect,      /* A SELECT statement to use as the data source */
+      IdList *pColumn,      /* Column names corresponding to IDLIST, or NULL. */
+      int onError,          /* How to handle constraint errors */
+      Upsert *pUpsert       /* ON CONFLICT clauses for upsert, or NULL */
+    )
+- "name": "sqlite3FkActions"
+  "params":
+  - "name": "pParse"
+    "type": "Parse*"
+  - "name": "pTab"
+    "type": "Table*"
+  - "name": "pChanges"
+    "type": "ExprList*"
+  - "name": "regOld"
+    "type": "int"
+  - "name": "aChange"
+    "type": "int*"
+  - "name": "bChngRowid"
+    "type": "int"
+  "return_type": "SQLITE_PRIVATE"
+  "signature": |-
+    sqlite3FkActions(
+      Parse *pParse,                  /* Parse context */
+      Table *pTab,                    /* Table being updated or deleted from */
+      ExprList *pChanges,             /* Change-list for UPDATE, NULL for DELETE */
+      int regOld,                     /* Address of array containing old row */
+      int *aChange,                   /* Array indicating UPDATEd columns (or 0) */
+      int bChngRowid                  /* True if rowid is UPDATEd */
+    )
+- "name": "sqlite3DropTable"
+  "params":
+  - "name": "pParse"
+    "type": "Parse*"
+  - "name": "pName"
+    "type": "SrcList*"
+  - "name": "isView"
+    "type": "int"
+  - "name": "noErr"
+    "type": "int"
+  "return_type": "SQLITE_PRIVATE"
+  "signature": "sqlite3DropTable(Parse *pParse, SrcList *pName, int isView, int noErr)"
+- "name": "sqlite3Parser"
+  "params":
+  - "name": "yyp"
+    "type": "void*"
+  - "name": "yymajor"
+    "type": "int"
+  - "name": "sqlite3ParserARG_PDECL"
+    "type": "sqlite3ParserTOKENTYPE"
+  "return_type": "SQLITE_PRIVATE"
+  "signature": |-
+    sqlite3Parser(
+      void *yyp,                   /* The parser */
+      int yymajor,                 /* The major token code number */
+      sqlite3ParserTOKENTYPE yyminor       /* The value for the token */
+      sqlite3ParserARG_PDECL               /* Optional %extra_argument parameter */
+    )
+- "name": "sqlite3GenerateConstraintChecks"
+  "params":
+  - "name": "pParse"
+    "type": "Parse*"
+  - "name": "pTab"
+    "type": "Table*"
+  - "name": "aRegIdx"
+    "type": "int*"
+  - "name": "iDataCur"
+    "type": "int"
+  - "name": "iIdxCur"
+    "type": "int"
+  - "name": "regNewData"
+    "type": "int"
+  - "name": "regOldData"
+    "type": "int"
+  - "name": "pkChng"
+    "type": "u8"
+  - "name": "overrideError"
+    "type": "u8"
+  - "name": "ignoreDest"
+    "type": "int"
+  - "name": "pbMayReplace"
+    "type": "int*"
+  - "name": "aiChng"
+    "type": "int*"
+  - "name": "pUpsert"
+    "type": "Upsert*"
+  "return_type": "SQLITE_PRIVATE"
+  "signature": |-
+    sqlite3GenerateConstraintChecks(
+      Parse *pParse,       /* The parser context */
+      Table *pTab,         /* The table being inserted or updated */
+      int *aRegIdx,        /* Use register aRegIdx[i] for index i.  0 for unused */
+      int iDataCur,        /* Canonical data cursor (main table or PK index) */
+      int iIdxCur,         /* First index cursor */
+      int regNewData,      /* First register in a range holding values to insert */
+      int regOldData,      /* Previous content.  0 for INSERTs */
+      u8 pkChng,           /* Non-zero if the rowid or PRIMARY KEY changed */
+      u8 overrideError,    /* Override onError to this if not OE_Default */
+      int ignoreDest,      /* Jump to this label on an OE_Ignore resolution */
+      int *pbMayReplace,   /* OUT: Set to true if constraint may cause a replace */
+      int *aiChng,         /* column i is unchanged if aiChng[i]<0 */
+      Upsert *pUpsert      /* ON CONFLICT clauses, if any.  NULL otherwise */
+    )
+- "name": "sqlite3FkDropTable"
+  "params":
+  - "name": "pParse"
+    "type": "Parse*"
+  - "name": "pName"
+    "type": "SrcList*"
+  - "name": "pTab"
+    "type": "Table*"
+  "return_type": "SQLITE_PRIVATE"
+  "signature": "sqlite3FkDropTable(Parse *pParse, SrcList *pName, Table *pTab)"
+- "name": "sqlite3DeleteFrom"
+  "params":
+  - "name": "pParse"
+    "type": "Parse*"
+  - "name": "pTabList"
+    "type": "SrcList*"
+  - "name": "pWhere"
+    "type": "Expr*"
+  - "name": "pOrderBy"
+    "type": "ExprList*"
+  - "name": "pLimit"
+    "type": "Expr*"
+  "return_type": "SQLITE_PRIVATE"
+  "signature": |-
+    sqlite3DeleteFrom(
+      Parse *pParse,         /* The parser context */
+      SrcList *pTabList,     /* The table from which we should delete things */
+      Expr *pWhere,          /* The WHERE clause.  May be null */
+      ExprList *pOrderBy,    /* ORDER BY clause. May be null */
+      Expr *pLimit           /* LIMIT clause. May be null */
+    )
+- "name": "checkMutexFree"
+  "params":
+  - "name": "p"
+    "type": "sqlite3_mutex*"
+  "return_type": "void"
+  "signature": "checkMutexFree(sqlite3_mutex *p)"
+"language": "c++"
+"project": "fast-dds"
+"target_name": "fuzz_processCDRMsg"
+"target_path": "/src/Fast-DDS/fuzz/C++/fuzz_processCDRMsg/fuzz_processCDRMsg.cxx"

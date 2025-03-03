@@ -1,0 +1,83 @@
+"functions":
+- "name": "AbcWriteJob::setup"
+  "params":
+  - "name": "iFrame"
+    "type": "double"
+  - "name": "iParent"
+    "type": "MayaTransformWriterPtr"
+  "return_type": "void"
+  "signature": "AbcWriteJob::setup(double iFrame, MayaTransformWriterPtr iParent)"
+- "name": "createScene"
+  "params":
+  - "name": " iArgData"
+    "type": "ArgData"
+  "return_type": "MString"
+  "signature": "createScene(ArgData & iArgData)"
+- "name": "testDeepScanLineBasic"
+  "params":
+  - "name": "tempDir"
+    "type": "std::string"
+  "return_type": "void"
+  "signature": "testDeepScanLineBasic (const std::string &tempDir)"
+- "name": "MayaTransformWriter::MayaTransformWriter"
+  "params":
+  - "name": " iParent"
+    "type": "MayaTransformWriter"
+  - "name": " iDag"
+    "type": "MDagPath"
+  - "name": "iTimeIndex"
+    "type": "Alembic::Util::uint32_t"
+  - "name": " iArgs"
+    "type": "JobArgs"
+  "return_type": "void"
+  "signature": |-
+    MayaTransformWriter::MayaTransformWriter(MayaTransformWriter & iParent,
+        MDagPath & iDag, Alembic::Util::uint32_t iTimeIndex, const JobArgs & iArgs)
+- "name": "AbcWriteJob::eval"
+  "params":
+  - "name": "iFrame"
+    "type": "double"
+  "return_type": "bool"
+  "signature": "AbcWriteJob::eval(double iFrame)"
+- "name": "AbcImport::doIt"
+  "params":
+  - "name": " args"
+    "type": "MArgList"
+  "return_type": "MStatus"
+  "signature": "AbcImport::doIt(const MArgList & args)"
+- "name": "AlembicNode::compute"
+  "params":
+  - "name": " plug"
+    "type": "MPlug"
+  - "name": " dataBlock"
+    "type": "MDataBlock"
+  "return_type": "MStatus"
+  "signature": "AlembicNode::compute(const MPlug & plug, MDataBlock & dataBlock)"
+- "name": "CreateSceneVisitor::operator()(Alembic::AbcGeom::ISubD& iNode)"
+  "params":
+  - "name": " iNode"
+    "type": "Alembic::AbcGeom::ISubD"
+  "return_type": "MStatus"
+  "signature": "CreateSceneVisitor::operator()(Alembic::AbcGeom::ISubD& iNode)"
+- "name": |-
+    CreateSceneVisitor::operator()(Alembic::AbcGeom::IXform & iNode,
+                                           AlembicObjectPtr iNodeObject)
+  "params":
+  - "name": " iNode"
+    "type": "Alembic::AbcGeom::IXform"
+  - "name": "iNodeObject"
+    "type": "AlembicObjectPtr"
+  "return_type": "MStatus"
+  "signature": |-
+    CreateSceneVisitor::operator()(Alembic::AbcGeom::IXform & iNode,
+                                           AlembicObjectPtr iNodeObject)
+- "name": "CreateSceneVisitor::operator()(Alembic::AbcGeom::IPolyMesh& iNode)"
+  "params":
+  - "name": " iNode"
+    "type": "Alembic::AbcGeom::IPolyMesh"
+  "return_type": "MStatus"
+  "signature": "CreateSceneVisitor::operator()(Alembic::AbcGeom::IPolyMesh& iNode)"
+"language": "c++"
+"project": "alembic"
+"target_name": "alembic_dump_info_fuzzer"
+"target_path": "/src/alembic_dump_info_fuzzer.cc"

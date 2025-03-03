@@ -129,10 +129,11 @@ class ExecutionStage(BaseStage):
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,
           chat_history=last_result.chat_history,
-          author=repr(self),
+          author=self,
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
           compile_log=last_result.compile_log,
+          binary_exists=last_result.binary_exists,
           is_function_referenced=last_result.is_function_referenced,
           crashes=run_result.crashes,
           run_error=run_result.crash_info,
@@ -157,10 +158,11 @@ class ExecutionStage(BaseStage):
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,
           chat_history=last_result.chat_history,
-          author=repr(self),
+          author=self,
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
           compile_log=last_result.compile_log,
+          binary_exists=last_result.binary_exists,
           is_function_referenced=last_result.is_function_referenced)
 
     return runresult
