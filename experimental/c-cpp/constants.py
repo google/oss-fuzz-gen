@@ -18,5 +18,6 @@ SHARED_MEMORY_RESULTS_DIR = 'autogen-results'
 PROJECT_BASE = 'temp-project-'
 
 MODEL_GPT_35_TURBO = 'gpt-3.5-turbo'
+MODEL_GPT_4 = 'gpt-4'
 MODEL_VERTEX = 'vertex'
 MODELS = [MODEL_GPT_35_TURBO, MODEL_VERTEX]
