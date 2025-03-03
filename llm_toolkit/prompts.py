@@ -35,6 +35,10 @@ class Prompt:
     """Gets the final formatted prompt."""
 
   @abstractmethod
+  def gettext(self) -> Any:
+    """Gets the final formatted prompt in plain text."""
+
+  @abstractmethod
   def create_prompt_piece(self, content: str, role: str) -> Any:
     """Creates prompt based on the |content| and |role|."""
 
@@ -71,6 +75,10 @@ class TextPrompt(Prompt):
   def get(self) -> Any:
     """Gets the final formatted prompt."""
     return self._text
+
+  def gettext(self) -> Any:
+    """Gets the final formatted prompt in plain text."""
+    return self.get()
 
   def add_priming(self, priming_content: str) -> None:
     """Constructs the prompt priming in the required format."""
@@ -111,7 +119,7 @@ class OpenAIPrompt(Prompt):
     return self._prompt
 
   def gettext(self) -> str:
-    """Retrieve, group and return all prompt text."""
+    """Gets the final formatted prompt in plain text."""
     result = ''
     for item in self.get():
       result = f'{result}\n{item.get("content", "")}'
