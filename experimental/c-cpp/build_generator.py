@@ -195,6 +195,41 @@ llvm-ar rcs libfuzz.a *.o
     return 'pureCFileCompilerFind'
 
 
+class PureCPPFileCompilerFind(AutoBuildBase):
+  """Builder for compiling .cpp files direcetly in root repo dir, using find."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        '.cpp': [],
+        '.c': [],
+    }
+
+  def match_files(self, file_list):
+    """Matches files needed for the build heuristic."""
+    for fi in file_list:
+      for key, val in self.matches_found.items():
+        if fi.endswith(key):
+          val.append(fi)
+
+  def steps_to_build(self) -> Iterator[AutoBuildContainer]:
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = [
+        '''find . -name "*.cpp" -exec $CXX $CXXFLAGS -I./src -c {} \\;
+find . -name "*.o" -exec cp {} . \\;
+
+rm -f ./test*.o
+llvm-ar rcs libfuzz.a *.o
+'''
+    ]
+    build_container.heuristic_id = self.name + '1'
+    yield build_container
+
+  @property
+  def name(self):
+    return 'PureCPPFileCompilerFind'
+
+
 class PureMakefileScanner(AutoBuildBase):
   """Auto builder for pure Makefile projects, only relying on "make"."""
 
@@ -672,8 +707,9 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
   all_files = manager.get_all_files_in_path(abspath_of_target)
   all_checks = [
       AutogenConfScanner(),
-      PureCFileCompiler(),
-      PureCFileCompilerFind(),
+      #PureCFileCompiler(),
+      #PureCFileCompilerFind(),
+      PureCPPFileCompilerFind(),
       PureMakefileScanner(),
       PureMakefileScannerWithPThread(),
       PureMakefileScannerWithSubstitutions(),
