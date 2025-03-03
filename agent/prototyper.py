@@ -394,8 +394,11 @@ class Prototyper(BaseAgent):
         self._validate_fuzz_target_and_build_script(cur_round, build_result))
 
     # Updates build_result with _alt or _ori, depending on their status.
-    build_result, prompt_final = self._generate_prompt_from_build_result(
+    final_build_result, prompt_final = self._generate_prompt_from_build_result(
         build_result_alt, build_result_ori, build_result, prompt, cur_round)
+    # Ensure build_result is consistent with the one selected.
+    if final_build_result is not None:
+      build_result.__dict__.update(final_build_result.__dict__)
 
     return prompt_final
 
