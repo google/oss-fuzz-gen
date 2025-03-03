@@ -1664,18 +1664,22 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
   def build(self,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
-            project_context_content: Optional[dict] = None) -> prompts.Prompt:
+            project_context_content: Optional[dict] = None,
+            target_repository: str = '',
+            test_source_code: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
 
     with open(self.priming_template_file, 'r') as f:
       prompt_text = f.read()
 
     # Format the priming
-    target_repository = oss_fuzz_checkout.get_project_repository(
-        self.benchmark.project)
-    test_source_code = introspector.query_introspector_test_source(
-        self.benchmark.project,
-        self.benchmark.test_file_path.replace('//', '/'))
+    if not target_repository:
+      target_repository = oss_fuzz_checkout.get_project_repository(
+          self.benchmark.project)
+    if not test_source_code:
+      test_source_code = introspector.query_introspector_test_source(
+          self.benchmark.project,
+          self.benchmark.test_file_path.replace('//', '/'))
 
     prompt_text = prompt_text.replace("{TARGET_REPO}", target_repository)
     prompt_text = prompt_text.replace("{TEST_SOURCE_CODE}", test_source_code)
