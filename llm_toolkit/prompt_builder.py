@@ -671,10 +671,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         template_dir, 'jvm_requirement.txt')
     self.problem_template_file = self._find_template(template_dir,
                                                      'jvm_problem.txt')
-    self.constructor_template_file = self._find_template(
-        template_dir, 'jvm_problem_constructor.txt')
-    self.method_template_file = self._find_template(template_dir,
-                                                    'jvm_problem_method.txt')
+    self.target_template_file = self._find_template(template_dir,
+                                                    'jvm_target.txt')
     self.arg_description_template_file = self._find_template(
         template_dir, 'jvm_arg_description.txt')
     self.generic_arg_description_template_file = self._find_template(
@@ -700,23 +698,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Reads the template for prompts."""
     with open(template_file) as file:
       return file.read()
-
-  def _format_target_constructor(self, signature: str) -> str:
-    """Formats a constructor based on the prompt template."""
-    class_name = signature.split('].')[0][1:]
-
-    constructor = self._get_template(self.constructor_template_file)
-    constructor = constructor.replace('{CONSTRUCTOR_CLASS}', class_name)
-    constructor = constructor.replace('{CONSTRUCTOR_SIGNATURE}', signature)
-
-    return constructor
-
-  def _format_target_method(self, signature: str) -> str:
-    """Formats a method based on the prompt template."""
-    method = self._get_template(self.method_template_file)
-    method = method.replace('{METHOD_SIGNATURE}', signature)
-
-    return method
 
   def _format_exceptions(self) -> str:
     """Formats the exception thrown from this method or constructor."""
@@ -811,15 +792,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     argument = argument.replace('{ARG_COUNT}', str(count))
     argument = argument.replace('{ARG_TYPE}', arg_type)
     return argument
-
-  def _format_target(self, signature: str) -> tuple[bool, str]:
-    """Determine if the signature is a constructor or a general
-       method and format it for the prompts creation.
-    """
-    if '<init>' in signature:
-      return True, self._format_target_constructor(signature)
-
-    return False, self._format_target_method(signature)
 
   def _format_requirement(self, signature: str) -> str:
     """Formats a requirement based on the prompt template."""
@@ -960,10 +932,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _format_problem(self, signature: str) -> str:
     """Formats a problem based on the prompt template."""
+    is_constructor = bool('<init>' in signature)
+
     base = self._get_template(self.base_template_file)
     problem = base + self._get_template(self.problem_template_file)
-    is_constructor, target_str = self._format_target(signature)
-    problem = problem.replace('{TARGET}', target_str)
+    problem = problem.replace('{TARGET}',
+                              self._get_template(self.target_template_file))
+    problem = problem.replace('{SIGNATURE}', signature)
+    problem = problem.replace('{CLASS}', signature.split('].')[0][1:])
     problem = problem.replace('{REQUIREMENTS}',
                               self._format_requirement(signature))
     problem = problem.replace('{ARGUMENTS}', self._format_arguments())
@@ -973,15 +949,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self_source, cross_source = self._format_source_reference(signature)
     problem = problem.replace('{SELF_SOURCE}', self_source)
     problem = problem.replace('{CROSS_SOURCE}', cross_source)
+    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
+    problem = problem.replace("{PROJECT_URL}", self.project_url)
+    problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
+
     if is_constructor:
       problem = problem.replace('{METHOD_OR_CONSTRUCTOR}', 'constructor')
     else:
       problem = problem.replace('{METHOD_OR_CONSTRUCTOR}', 'method')
-
-    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
-    problem = problem.replace("{PROJECT_URL}", self.project_url)
-
-    problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
 
     return problem
 

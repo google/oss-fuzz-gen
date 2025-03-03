@@ -1,0 +1,16 @@
+<target>
+The target is a {METHOD_OR_CONSTRUCTOR} of the class {CLASS} with the following signature.
+<signature>
+{SIGNATURE}
+</signature>
+The signature follows the format of <code>[Full qualified name of the class].method_name(method_arguments)</code>. The method_name will be <init> for constructors.
+For examples:
+
+1) For the constructor of class <code>Test</code> of package <code>org.test</code> which takes in a single integer would have the following signature:
+<code>[org.test.Test].<init>(int)</code>
+
+2) The method signature follows the format of <code>[Full qualified name of the class].method_name(method_arguments)</code>.
+<code>[org.test.Test].test(int)</code>
+
+The target method belongs to the Java project {PROJECT_NAME} ({PROJECT_URL}).
+</target>
