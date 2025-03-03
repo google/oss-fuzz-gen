@@ -359,7 +359,8 @@ def parse_commandline():
   parser.add_argument('--max_successful',
                       '-ma',
                       help='Max number of successful builds to generate.',
-                      type=int)
+                      type=int,
+                      default=-1)
   return parser.parse_args()
 
 
