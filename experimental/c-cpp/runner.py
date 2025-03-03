@@ -163,6 +163,9 @@ def run_autogen(github_url,
   elif model == constants.MODEL_GPT_35_TURBO:
     extra_environment.append('-e')
     extra_environment.append(f'OPENAI_API_KEY={openai_api_key}')
+  elif model == constants.MODEL_GPT_4:
+    extra_environment.append('-e')
+    extra_environment.append(f'OPENAI_API_KEY={openai_api_key}')
 
   cmd = [
       'docker',
