@@ -600,19 +600,13 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     if not self.benchmark:
       return ''
 
-    if '<init>' in signature:
-      template_file = self._find_template(self._template_dir,
-                                          'jvm_problem_constructor.txt')
-    else:
-      template_file = self._find_template(self._template_dir,
-                                          'jvm_problem_method.txt')
+    template_file = self._find_template(self._template_dir, 'jvm_target.txt')
 
     class_name = signature.split('].')[0][1:]
 
     target = self._get_template(template_file)
-    target = target.replace('{CONSTRUCTOR_CLASS}', class_name)
-    target = target.replace('{CONSTRUCTOR_SIGNATURE}', signature)
-    target = target.replace('{METHOD_SIGNATURE}', signature)
+    target = target.replace('{CLASS}', class_name)
+    target = target.replace('{SIGNATURE}', signature)
     target = target.replace('{PROJECT_NAME}', self.benchmark.project)
     target = target.replace(
         '{PROJECT_URL}',
