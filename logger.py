@@ -23,7 +23,7 @@ from urllib.parse import urlparse
 
 from google.cloud import storage
 
-from results import Result, RunResult
+from results import Result, RunResult, TrialResult
 
 FINAL_RESULT_JSON = 'result.json'
 
@@ -54,7 +54,7 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
                                      f'{result.trial:02d}.build_script')
     self.write_to_file(build_script_path, result.build_script_source)
 
-  def write_result(self, result_status_dir: str, result: Result) -> None:
+  def write_result(self, result_status_dir: str, result: TrialResult) -> None:
     """Writes the final result into JSON for report generation."""
     trial_result_dir = os.path.join(result_status_dir, f'{result.trial:02d}')
     os.makedirs(trial_result_dir, exist_ok=True)
