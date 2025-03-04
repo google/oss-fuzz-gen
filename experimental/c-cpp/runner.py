@@ -163,6 +163,9 @@ def run_autogen(github_url,
   elif model == constants.MODEL_GPT_35_TURBO:
     extra_environment.append('-e')
     extra_environment.append(f'OPENAI_API_KEY={openai_api_key}')
+  elif model == constants.MODEL_GPT_4:
+    extra_environment.append('-e')
+    extra_environment.append(f'OPENAI_API_KEY={openai_api_key}')
 
   cmd = [
       'docker',
@@ -359,7 +362,8 @@ def parse_commandline():
   parser.add_argument('--max_successful',
                       '-ma',
                       help='Max number of successful builds to generate.',
-                      type=int)
+                      type=int,
+                      default=-1)
   return parser.parse_args()
 
 

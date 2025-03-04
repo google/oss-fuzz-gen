@@ -68,7 +68,7 @@ class SemanticAnalyzer(BaseAgent):
           fuzzer_log, last_result.benchmark.project)
 
     analysis_result = AnalysisResult(
-        author=repr(self),
+        author=self,
         run_result=last_result,
         semantic_result=semantic_result,
         chat_history={self.name: semantic_result.to_dict()})
