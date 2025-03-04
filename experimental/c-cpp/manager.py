@@ -1578,8 +1578,13 @@ def get_all_test_scripts(target_source_path) -> List[Test]:
       continue
     # Let's say this is a test
     logger.info('Found test: %s', file)
-    with open(file, 'r') as f:
-      file_content = f.read()
+    try:
+      with open(file, 'r') as f:
+        file_content = f.read()
+    except UnicodeDecodeError:
+      # Likely not a test file.
+      continue
+
     all_tests.append(Test(file, file_content))
   return all_tests
 
