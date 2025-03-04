@@ -26,6 +26,7 @@ from agent.base_agent import BaseAgent
 from data_prep import project_targets
 from data_prep.project_context.context_introspector import ContextRetriever
 from experiment.benchmark import Benchmark
+from experiment.workdir import WorkDirs
 from llm_toolkit import prompt_builder
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
@@ -391,8 +392,11 @@ class Prototyper(BaseAgent):
         self._validate_fuzz_target_and_build_script(cur_round, build_result))
 
     # Updates build_result with _alt or _ori, depending on their status.
-    build_result, prompt_final = self._generate_prompt_from_build_result(
+    final_build_result, prompt_final = self._generate_prompt_from_build_result(
         build_result_alt, build_result_ori, build_result, prompt, cur_round)
+    # Ensure build_result is consistent with the one selected.
+    if final_build_result is not None:
+      build_result.__dict__.update(final_build_result.__dict__)
 
     return prompt_final
 
@@ -421,8 +425,9 @@ class Prototyper(BaseAgent):
 
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
+    WorkDirs(self.args.work_dirs.base)
     last_result = result_history[-1]
-    logger.info('Executing Prototyper', trial=last_result.trial)
+    logger.info('Executing %s', self.name, trial=last_result.trial)
     benchmark = last_result.benchmark
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')

@@ -116,7 +116,7 @@ RUN rm /usr/local/bin/cargo && \\
  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \\
  apt-get install -y cargo
 RUN python3 -m pip install --upgrade pip && \\
-    python3 -m pip install pydantic-core pyyaml cxxfilt openai==1.16.2
+    python3 -m pip install pydantic-core pyyaml cxxfilt openai==1.60.0
 RUN python3 -m pip install --upgrade google-cloud-aiplatform
 COPY *.py *.json $SRC/
 WORKDIR $SRC

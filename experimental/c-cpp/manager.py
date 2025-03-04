@@ -226,16 +226,15 @@ class FuzzHeuristicGeneratorBase:
   def run_prompt_and_get_fuzzer_source(self, prompt):
     """Communicate to OpenAI prompt and extract harness source code."""
 
-    if LLM_MODEL == constants.MODEL_GPT_35_TURBO:
+    if LLM_MODEL == constants.MODEL_GPT_35_TURBO or LLM_MODEL == constants.MODEL_GPT_4:
       client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-      completion = client.chat.completions.create(
-          model=constants.MODEL_GPT_35_TURBO,
-          messages=[
-              {
-                  'role': 'system',
-                  'content': prompt
-              },
-          ])
+      completion = client.chat.completions.create(model=LLM_MODEL,
+                                                  messages=[
+                                                      {
+                                                          'role': 'system',
+                                                          'content': prompt
+                                                      },
+                                                  ])
       fuzzer_source = completion.choices[0].message.content
       if fuzzer_source is None:
         return ''
@@ -337,13 +336,27 @@ class FuzzerGenHeuristic6(FuzzHeuristicGeneratorBase):
     (headers_to_include, _,
      build_command_includes) = self.get_header_intrinsics()
 
+    if '::' in func['function_signature']:
+      try:
+        func_sig = cxxfilt.demangle(func['raw-function-name'])
+      except:
+        func_sig = func['function_signature']
+    else:
+      func_sig = func['function_signature']
+
     type_constraints = 'the types of types function are:\n'
+    real_idx = 0
     for idx, arg in enumerate(func['debug_function_info']['args']):
-      type_constraints += f'- Argument {idx+1} is of type `{arg}`\n'
+      if '::' in func["function_signature"] and idx == 0:
+        object_warning = '- This is a function in a class object. So this argument is the object itself and should, therefore, not be added to the actual argument list'
+        continue
+
+      type_constraints += f'- Argument {idx+1 - real_idx} is of type `{arg}`.\n'
+
     type_constraints += (
         'You must make sure the arguments passed to the ' +
         'function match the types of the function. Do this by casting ' +
-        ' appropriately.')
+        ' appropriately.\n')
 
     func_source_code = get_fuzzer_source_code(func)
 
@@ -375,7 +388,7 @@ class FuzzerGenHeuristic6(FuzzHeuristicGeneratorBase):
 
 The target project is {self.github_url} which is a open source project written in C. The harness you write should be in pure C as well.
 
-I would like for you to write the harness targeting the function `{func["function_signature"]}.`
+I would like for you to write the harness targeting the function `{func_sig}.`
 
 The source code for the function is: ```{func_source_code}```
 
@@ -385,8 +398,7 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 
 Make sure the ensure strings passed to the target are null-terminated.
 
-There is one rule that your harness must satisfy: all of the header files in this library is {str(headers_to_include)}. Make sure to not include any header files not in this list.
-
+There is one rule that your harness must satisfy: all of the header files in this library is {str(headers_to_include)}. Make sure to not include any header files not in this list and only include the ones relevant for the target function.
 Finally, {type_constraints}
 
 The most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code as simple as possible in order to secure it can be build.
@@ -461,7 +473,7 @@ a libFuzzer-stlye structure. This means the harness should use `int LLMVFuzzerTe
 
 Any macros defined in the test should also be included in the fuzz harness.
 
-There is one rule that your harness must satisfy: all of the header files in this library is {str(headers_to_include)}. Make sure to not include any header files not in this list.
+There is one rule that your harness must satisfy: all of the header files in this library is {str(headers_to_include)}. Make sure to not include any header files not in this list and only include the ones relevant for the target function.
 
 In your response, include *only* the code for the harness, nothing more. You should wrap the code in <code></code> tags.
 '''
@@ -511,12 +523,25 @@ class FuzzerGenHeuristic5(FuzzHeuristicGeneratorBase):
     (headers_to_include, _,
      build_command_includes) = self.get_header_intrinsics()
 
+    if '::' in func['function_signature']:
+      try:
+        func_sig = cxxfilt.demangle(func['raw-function-name'])
+      except:
+        func_sig = func['function_signature']
+    else:
+      func_sig = func['function_signature']
+
     type_constraints = 'the types of types function are:\n'
+    real_idx = 0
     for idx, arg in enumerate(func['debug_function_info']['args']):
-      type_constraints += f'- Argument {idx+1} is of type \"{arg}\"\n'
+      if '::' in func["function_signature"] and idx == 0:
+        continue
+
+      type_constraints += f'- Argument {idx+1-real_idx} is of type `{arg}`.\n'
+
     type_constraints += (
         'You must make sure the arguments passed to the function match the ' +
-        'types of the function. Do this by casting appropriately.')
+        'types of the function. Do this by casting appropriately.\n')
 
     func_source_code = get_fuzzer_source_code(func)
 
@@ -525,7 +550,7 @@ class FuzzerGenHeuristic5(FuzzHeuristicGeneratorBase):
 
 The target project is {self.github_url} which is a open source project written in C. The harness you write should be in pure C as well.
 
-I would like for you to write the harness targeting the function `{func['function_signature']}`
+I would like for you to write the harness targeting the function `{func_sig}`
 
 The source code for the function is: ```{func_source_code}```
 
@@ -535,7 +560,7 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 
 Make sure the ensure strings passed to the target are null-terminated.
 
-There is one rule that your harness must satisfy: all of the header files in this library is {headers_to_include}. Make sure to not include any header files not in this list.
+There is one rule that your harness must satisfy: all of the header files in this library is {headers_to_include}. Make sure to not include any header files not in this list and only include the ones relevant for the target function.
 
 Finally, {type_constraints}
 
@@ -583,19 +608,32 @@ class FuzzerGenHeuristic4(FuzzHeuristicGeneratorBase):
     (headers_to_include, _,
      build_command_includes) = self.get_header_intrinsics()
 
+    if '::' in func['function_signature']:
+      try:
+        func_sig = cxxfilt.demangle(func['raw-function-name'])
+      except:
+        func_sig = func['function_signature']
+    else:
+      func_sig = func['function_signature']
+
     type_constraints = 'the types of types function are:\n'
+    real_idx = 0
     for idx, arg in enumerate(func['debug_function_info']['args']):
-      type_constraints += f'- Argument {idx+1} is of type \"{arg}\"\n'
+      if '::' in func["function_signature"] and idx == 0:
+        continue
+
+      type_constraints += f'- Argument {idx+1-real_idx} is of type `{arg}`.\n'
+
     type_constraints += (
         'You must make sure the arguments passed to the function match the ' +
-        'types of the function. Do this by casting appropriately.')
+        'types of the function. Do this by casting appropriately.\n')
 
     logger.info('Sample targets:')
     prompt = f'''Hi, please write a fuzz harness for me.
 
 The target project is {self.github_url} which is a open source project written in C. The harness you write should be in pure C as well.
 
-I would like for you to write the harness targeting the function `{func['function_signature']}.`
+I would like for you to write the harness targeting the function `{func_sig}.`
 
 The harness should be in libFuzzer style, with the code wrapped in `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`.
 
@@ -603,7 +641,7 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 
 Make sure the ensure strings passed to the target are null-terminated.
 
-There is one rule that your harness must satisfy: all of the header files in this library is {headers_to_include}. Make sure to not include any header files not in this list.
+There is one rule that your harness must satisfy: all of the header files in this library is {headers_to_include}. Make sure to not include any header files not in this list and only include the ones relevant for the target function.
 
 Finally, {type_constraints}
 
@@ -651,19 +689,32 @@ class FuzzerGenHeuristic1(FuzzHeuristicGeneratorBase):
   def get_fuzzer_intrinsics(self, func: Dict[str, Any]) -> Dict[str, Any]:
     headers_to_include, _, build_command_includes = self.get_header_intrinsics()
 
+    if '::' in func['function_signature']:
+      try:
+        func_sig = cxxfilt.demangle(func['raw-function-name'])
+      except:
+        func_sig = func['function_signature']
+    else:
+      func_sig = func['function_signature']
+
     type_constraints = 'the types of types function are:\n'
+    real_idx = 0
     for idx, arg in enumerate(func['debug_function_info']['args']):
-      type_constraints += f'- Argument {idx+1} is of type \"{arg}\"\n'
+      if '::' in func["function_signature"] and idx == 0:
+        continue
+
+      type_constraints += f'- Argument {idx+1-real_idx} is of type `{arg}`.\n'
+
     type_constraints += (
         'You must make sure the arguments passed to the function match the ' +
-        'types of the function. Do this by casting appropriately.')
+        'types of the function. Do this by casting appropriately.\n')
 
     logger.info('Sample targets:')
     prompt = f'''Hi, please write a fuzz harness for me.
 
 The target project is {self.github_url} which is a open source project written in C. The harness you write should be in pure C as well.
 
-I would like for you to write the harness targeting the function `{func['function_signature']}`
+I would like for you to write the harness targeting the function `{func_sig}`
 
 The harness should be in libFuzzer style, with the code wrapped in LLVMFuzzerTestOneInput.
 
@@ -671,7 +722,7 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 
 Make sure the ensure strings passed to the target are null-terminated.
 
-There is one rule that your harness must satisfy: all of the header files in this library is {str(headers_to_include)}. Make sure to not include any header files not in this list.
+There is one rule that your harness must satisfy: all of the header files in this library is {str(headers_to_include)}. Make sure to not include any header files not in this list and only include the ones relevant for the target function.
 
 Finally, {type_constraints}
 '''
@@ -715,18 +766,32 @@ class FuzzerGenHeuristic2(FuzzHeuristicGeneratorBase):
   def get_fuzzer_intrinsics(self, func: Dict[str, Any]) -> Dict[str, Any]:
     headers_to_include, _, build_command_includes = self.get_header_intrinsics()
     type_constraints = 'the types of types function are:\n'
+    real_idx = 0
+
+    if '::' in func['function_signature']:
+      try:
+        func_sig = cxxfilt.demangle(func['raw-function-name'])
+      except:
+        func_sig = func['function_signature']
+    else:
+      func_sig = func['function_signature']
+
     for idx, arg in enumerate(func['debug_function_info']['args']):
-      type_constraints += f'- Argument {idx+1} is of type \"{arg}\"\n'
+      if '::' in func["function_signature"] and idx == 0:
+
+        continue
+      type_constraints += f'- Argument {idx+1-real_idx} is of type `{arg}`.\n'
+
     type_constraints += (
         'You must make sure the arguments passed to the function match the ' +
-        'types of the function. Do this by casting appropriately.')
+        'types of the function. Do this by casting appropriately.\n')
 
     logger.info('Sample targets:')
     prompt = f'''Hi, please write a fuzz harness for me.
 
 The target project is {self.github_url} which is a open source project written in CPP.
 
-I would like for you to write the harness targeting the function `{func['function_signature']}`.
+I would like for you to write the harness targeting the function `{func_sig}`.
 
 The harness should be in libFuzzer style, with the code wrapped in LLVMFuzzerTestOneInput.
 
@@ -734,7 +799,7 @@ Please wrap all code in <code> tags and you should include nothing else but the 
 
 Make sure the ensure strings passed to the target are null-terminated.
 
-There are two rules that your harness must satisfy: First, all of the header files in this library is {str(headers_to_include)}. Make sure to not include any header files not in this list. Second, you must wrap the harness such that it catches all exceptions (use "...") thrown by the target code.
+There are two rules that your harness must satisfy: First, all of the header files in this library is {str(headers_to_include)}. Make sure to not include any header files not in this list and only include the ones relevant for the target function. Second, you must wrap the harness such that it catches all exceptions (use "...") thrown by the target code.
 
 Finally, {type_constraints}
 '''
@@ -780,18 +845,30 @@ class FuzzerGenHeuristic3(FuzzHeuristicGeneratorBase):
     """Harness generator."""
     headers_to_include, _, build_command_includes = self.get_header_intrinsics()
 
+    if '::' in func['function_signature']:
+      try:
+        func_sig = cxxfilt.demangle(func['raw-function-name'])
+      except:
+        func_sig = func['function_signature']
+    else:
+      func_sig = func['function_signature']
+
     type_constraints = 'the types of types function are:\n'
     for idx, arg in enumerate(func['debug_function_info']['args']):
-      type_constraints += f'- Argument {idx+1} is of type \"{arg}\"\n'
-      type_constraints += (
-          'You must make sure the arguments passed to the function match the ' +
-          'types of the function. Do this by casting appropriately.')
+      if '::' in func["function_signature"] and idx == 0:
+        continue
+
+      type_constraints += f'- Argument {idx+1} is of type `{arg}`.\n'
+
+    type_constraints += (
+        'You must make sure the arguments passed to the function match the ' +
+        'types of the function. Do this by casting appropriately.')
 
     prompt = f'''Hi, please write a fuzz harness for me.
 
 The target project is {self.github_url} which is a open source project written in CPP.
 
-I would like for you to write the harness targeting the function `{func['function_signature']}`.
+I would like for you to write the harness targeting the function `{func_sig}`.
 
 The harness should be in libFuzzer style, with the code wrapped in LLVMFuzzerTestOneInput.
 
@@ -868,8 +945,12 @@ def refine_and_filter_introspector_functions(all_functions_in_project):
 
 def get_all_header_files(all_files: List[str]) -> List[str]:
   all_header_files = []
+  to_avoids = ['stdlib.h', 'stdio.h', 'unistd.h']
   for yaml_file in all_files:
     if yaml_file.endswith('.h'):
+      header_basename = os.path.basename(yaml_file)
+      if header_basename in to_avoids:
+        continue
       all_header_files.append(yaml_file)
   return all_header_files
 
@@ -1228,6 +1309,72 @@ def evaluate_heuristic(test_dir, auto_generated_harness: AutogeneratedHarness,
                                              auto_generated_harness.language)
 
 
+def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
+                                     language: str, test_dir) -> None:
+  """Converts a successful empty fuzzer build into an OSS-Fuzz project."""
+
+  # Save the results
+  nidx = 0
+  oss_fuzz_folder = f'/out/empty-build-{nidx}'
+  while os.path.isdir(oss_fuzz_folder):
+    nidx += 1
+    oss_fuzz_folder = f'/out/empty-build-{nidx}'
+
+  os.makedirs(oss_fuzz_folder)
+
+  introspector_vanilla_build_script = build_worker.build_script
+  (fuzz_compiler, fuzz_flags, empty_fuzzer_file,
+   fuzz_template) = get_language_defaults(language)
+
+  with open(os.path.join(oss_fuzz_folder, os.path.basename(empty_fuzzer_file)),
+            'w') as f:
+    f.write(fuzz_template)
+
+  # Try to link the fuzzer to the static libs
+  fuzzer_build_cmd = [
+      fuzz_compiler, fuzz_flags, '$LIB_FUZZING_ENGINE', empty_fuzzer_file
+  ]
+  for refined_static_lib in build_worker.executable_files_build[
+      'refined-static-libs']:
+    fuzzer_build_cmd.append('-Wl,--whole-archive')
+    fuzzer_build_cmd.append(os.path.join(test_dir, refined_static_lib))
+
+  fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
+  introspector_vanilla_build_script += '\n'
+  introspector_vanilla_build_script += ' '.join(fuzzer_build_cmd)
+
+  #with open(os.path.join(oss_fuzz_folder, 'build.sh'), 'w') as bs:
+  #  bs.write(introspector_vanilla_build_script)
+
+  # Project yaml
+  project_yaml = {
+      'homepage': github_repo,
+      'language': language,
+      'primary_contact': 'add_your_email@here.com',
+      'main_repo': github_repo
+  }
+  with open(os.path.join(oss_fuzz_folder, 'project.yaml'), 'w') as project_out:
+    yaml.dump(project_yaml, project_out)
+
+  # Create Dockerfile
+  project_repo_dir = github_repo.split('/')[-1]
+  dockerfile = templates.CLEAN_OSS_FUZZ_DOCKER.format(
+      repo_url=github_repo, project_repo_dir=project_repo_dir)
+  with open(os.path.join(oss_fuzz_folder, 'Dockerfile'), 'w') as docker_out:
+    docker_out.write(dockerfile)
+
+  logger.info('Build script:')
+  logger.info(introspector_vanilla_build_script)
+  logger.info('-' * 45)
+
+  # Build file
+  clean_build_content = convert_test_build_to_clean_build(
+      introspector_vanilla_build_script, project_repo_dir)
+
+  with open(os.path.join(oss_fuzz_folder, 'build.sh'), 'w') as f:
+    f.write(clean_build_content)
+
+
 def create_clean_oss_fuzz_from_success(github_repo: str, out_dir: str,
                                        language: str) -> None:
   """Converts a successful out dir into a working OSS-Fuzz project."""
@@ -1320,7 +1467,7 @@ def convert_fuzz_build_line_to_loop(clean_build_content: str,
   split_lines = clean_build_content.split('\n')
   target_line_idx = -1
   for idx, tmp_line in enumerate(split_lines):
-    if '/src/generated-fuzzer' in tmp_line:
+    if '/src/generated-fuzzer' in tmp_line or '/src/empty-fuzzer' in tmp_line:
       target_line_idx = idx
       break
   if target_line_idx == -1:
@@ -1344,6 +1491,9 @@ done'''
           '/src/empty-fuzzer.cpp',
           '${fuzzer}').replace('/src/empty-fuzzer.c', '${fuzzer}').replace(
               '/src/', '$SRC/').replace(original_build_folder, project_repo_dir)
+
+  if '$OUT/${fuzzer_target}' not in target_line:
+    target_line += ' -o $OUT/${fuzzer_target}'
 
   wrapper_script = wrapper_script.replace('LINE_TO_SUBSTITUTE', target_line)
   split_lines[target_line_idx] = wrapper_script
@@ -1462,14 +1612,15 @@ def auto_generate(github_url,
             AutoBuildContainer]] = build_generator.extract_build_suggestions(
                 target_source_path, 'test-fuzz-build-')
 
-  # return now if we don't need to test build scripts
-  if disable_testing_build_scripts is True:
-    return
-
   # Check each of the build scripts.
   logger.info('[+] Testing build suggestions')
   build_results = build_generator.raw_build_evaluation(all_build_scripts)
   logger.info('Checking results of %d build generators', len(build_results))
+
+  if disable_testing_build_scripts:
+    logger.info('disabling testing build scripts')
+    return
+
   for test_dir, build_worker in build_results.items():
     build_heuristic = build_worker.build_suggestion.heuristic_id
     static_libs = build_worker.executable_files_build['static-libs']
@@ -1545,6 +1696,9 @@ def auto_generate(github_url,
     all_header_files = get_all_header_files(get_all_files_in_path(test_dir))
 
     append_to_report(outdir, f'Total functions in {test_dir} : {func_count}')
+
+    create_clean_oss_fuzz_from_empty(github_url, build_worker, language,
+                                     test_dir)
 
     if disable_fuzzgen:
       continue
