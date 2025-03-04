@@ -677,12 +677,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
                                                     'jvm_problem_method.txt')
     self.arg_description_template_file = self._find_template(
         template_dir, 'jvm_arg_description.txt')
-    self.generic_arg_description_template_file = self._find_template(
-        template_dir, 'jvm_generic_arg_description.txt')
-    self.simple_arg_description_template_file = self._find_template(
-        template_dir, 'jvm_simple_arg_description.txt')
-    self.object_arg_description_template_file = self._find_template(
-        template_dir, 'jvm_object_arg_description.txt')
     self.import_template_file = self._find_template(template_dir,
                                                     'jvm_import_mapping.txt')
 
@@ -750,22 +744,20 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     new_types = []
     generic_desc = []
     for generic_type in generic_types:
-      if generic_type.endswith(('Object', 'T', 'K', 'V')):
-        # java.lang.Object generic type
-        desc = self._get_template(self.object_arg_description_template_file)
-        desc = 'For generic type of Object\n' + desc
-        new_types.append('Object')
-      else:
-        new_types.append(generic_type)
-        desc = self._get_template(self.generic_arg_description_template_file)
-        desc = desc.replace('{GENERIC_TYPE}', generic_type)
+      if generic_type.endswith(('T', 'K', 'V')):
+        generic_type = 'java.lang.Object'
 
-        method_str = self._get_methods_for_simple_type(generic_type)
-        if method_str:
-          desc = desc.replace('{RANDOM_METHODS}', method_str)
-        else:
-          desc = desc.replace('{RANDOM_METHODS}',
-                              'correct constructors or static methods')
+      new_types.append(generic_type)
+
+      desc = (f'For generic type of {generic_type}, you MUST use '
+              '{RANDOM_METHODS} to generate the needed variable.')
+
+      method_str = self._get_methods_for_simple_type(generic_type)
+      if method_str:
+        desc = desc.replace('{RANDOM_METHODS}', method_str)
+      else:
+        desc = desc.replace('{RANDOM_METHODS}',
+                            'correct constructors or static methods')
 
       generic_desc.append(desc)
 
@@ -779,37 +771,44 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats general argument description."""
     method_str = self._get_methods_for_simple_type(arg_type)
 
-    # java.lang.Object argument
-    if 'Object' in arg_type.split('.')[-1]:
-      base = self._get_template(self.object_arg_description_template_file)
-      prefix = f'Argument #{count} requires an Object instance\n'
-      argument = f'<argument>{prefix}{base}</argument>'
-      return argument
-
     # Simple arguments
-    if method_str:
-      argument = self._get_template(self.simple_arg_description_template_file)
-      argument = argument.replace('{ARG_COUNT}', str(count))
-      argument = argument.replace('{RANDOM_METHODS}', method_str)
-      if '[]' in arg_type:
-        arg_type_no_array = arg_type.replace('[]', '')
-        argument = argument.replace('{SIMPLE_TYPE}',
-                                    f'an array of {arg_type_no_array}')
-        argument = argument.replace(
-            '{ARRAY_OR_NOT}',
-            (f'multiple {arg_type_no_array} variables and '
-             'initialise an array of {arg_type_no_array} with the generated '
-             'variables.'))
-      else:
-        argument = argument.replace('{SIMPLE_TYPE}', f'a {arg_type}')
-        argument = argument.replace('{ARRAY_OR_NOT}', 'the needed variables.')
-
-      return argument
-
-    # All other object arguments
     argument = self._get_template(self.arg_description_template_file)
     argument = argument.replace('{ARG_COUNT}', str(count))
-    argument = argument.replace('{ARG_TYPE}', arg_type)
+
+    if method_str:
+      type_str = '{SIMPLE_TYPE} variable.'
+      desc_str = f'You must use {method_str} to generate {{ARRAY_OR_NOT}}.'
+    else:
+      type_str = '{SIMPLE_TYPE} instance {GENERIC_TYPE}.'
+      desc_str = ('Please generate {ARRAY_OR_NOT}. You should use constructors '
+                  'or static methods for the generation.\nPlease also insert '
+                  'random data into the created instance.')
+
+    argument = argument.replace('{TYPE}', type_str)
+    argument = argument.replace('{GENERAL_DESC}', desc_str)
+
+    # Array handling
+    if '[]' in arg_type:
+      arg_type_no_array = arg_type.replace('[]', '').split('<')[0]
+      argument = argument.replace('{SIMPLE_TYPE}',
+                                  f'an array of {arg_type_no_array} ')
+      argument = argument.replace(
+          '{ARRAY_OR_NOT}',
+          (f'multiple {arg_type_no_array} objects and initialise an array '
+           'of {arg_type_no_array} with the generated objects.'))
+    else:
+      argument = argument.replace('{SIMPLE_TYPE}', f'a {arg_type}')
+      argument = argument.replace('{ARRAY_OR_NOT}', 'the needed parameter.')
+
+    # Generic type handling
+    generic_type = ''
+    generic_desc = ''
+    if self._has_generic(arg_type):
+      generic_type, generic_desc = self._format_generic_argument(arg_type)
+
+    argument = argument.replace('{GENERIC_TYPE}', generic_type)
+    argument = argument.replace('{GENERIC_DESC}', generic_desc)
+
     return argument
 
   def _format_target(self, signature: str) -> tuple[bool, str]:
@@ -882,14 +881,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     for count, function_arg in enumerate(self.benchmark.params):
       arg_type = function_arg['type']
       argument = self._format_argument(count, arg_type)
-
-      generic_type = ''
-      generic_desc = ''
-      if self._has_generic(arg_type):
-        generic_type, generic_desc = self._format_generic_argument(arg_type)
-
-      argument = argument.replace('{GENERIC_TYPE}', generic_type)
-      argument = argument.replace('{GENERIC_DESC}', generic_desc)
       argument_descriptions.append(argument)
 
     return '<arguments>' + '\n'.join(argument_descriptions) + '</arguments>'
