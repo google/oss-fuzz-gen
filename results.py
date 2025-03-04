@@ -30,6 +30,7 @@ class Result:
   build_script_source: str
   author: Any
   chat_history: dict
+  _repr_exclude = {'_repr_exclude', 'chat_history'}
 
   def __init__(self,
                benchmark: Benchmark,
@@ -48,8 +49,11 @@ class Result:
     self.chat_history = chat_history or {}
 
   def __repr__(self) -> str:
-    return (f'{self.__class__.__name__}'
-            f'({", ".join(f"{k}={v!r}" for k, v in vars(self).items())})')
+    attributes = [
+        f'{k}={v!r}' for k, v in vars(self).items()
+        if k not in self._repr_exclude
+    ]
+    return f'{self.__class__.__name__}({", ".join(attributes)})'
 
   def to_dict(self) -> dict:
     return {
@@ -60,7 +64,7 @@ class Result:
         'trial': self.trial,
         'fuzz_target_source': self.fuzz_target_source,
         'build_script_source': self.build_script_source,
-        'author': str(self.author),
+        'author': self.author.name,
         'chat_history': self.chat_history,
     }
 
@@ -74,6 +78,7 @@ class BuildResult(Result):
   compile_log: str  # Build full output.
   binary_exists: bool  # Fuzz target binary generated successfully.
   is_function_referenced: bool  # Fuzz target references function-under-test.
+  _repr_exclude = Result._repr_exclude | {'compile_log', 'compile_error'}
 
   def __init__(self,
                benchmark: Benchmark,
@@ -127,6 +132,7 @@ class RunResult(BuildResult):
   coverage_report_path: str
   cov_pcs: int
   total_pcs: int
+  _repr_exclude = BuildResult._repr_exclude | {'textcov_diff'}
 
   def __init__(
       self,
@@ -230,7 +236,7 @@ class AnalysisResult(Result):
   coverage_result: Optional[CoverageResult]
 
   def __init__(self,
-               author: str,
+               author: Any,
                run_result: RunResult,
                semantic_result: SemanticCheckResult,
                crash_result: Optional[CrashResult] = None,
@@ -274,6 +280,85 @@ class TrialResult:
     self.result_history = result_history or []
 
   @property
+  def function_signature(self) -> str:
+    """Function signature of the benchmark."""
+    return self.benchmark.function_signature
+
+  @property
+  def project(self) -> str:
+    """Project name of the benchmark."""
+    return self.benchmark.project
+
+  @property
+  def project_commit(self) -> str:
+    """Project commit of the benchmark."""
+    return self.benchmark.commit or ''
+
+  @property
+  def project_language(self) -> str:
+    """Project language of the benchmark."""
+    return self.benchmark.language
+
+  @property
+  def best_result(self) -> Result:
+    """Best result in trial."""
+    # Preference order:
+    #   1. Highest coverage diff (RunResult)
+    #   2. Highest coverage (RunResult)
+    #   3. Last Build success (BuildResult)
+    #   4. Last Result
+    best_result = None
+
+    max_cov_diff = 0
+    for result in self.result_history:
+      if (isinstance(result, RunResult) and
+          result.line_coverage_diff > max_cov_diff):
+        max_cov_diff = result.line_coverage_diff
+        best_result = result
+    if best_result:
+      return best_result
+
+    max_cov = 0
+    for result in self.result_history:
+      if (isinstance(result, RunResult) and result.coverage > max_cov):
+        max_cov = result.coverage
+        best_result = result
+    if best_result:
+      return best_result
+
+    for result in self.result_history[::-1]:
+      if isinstance(result, BuildResult) and result.success:
+        return result
+
+    return self.result_history[-1]
+
+  @property
+  def fuzz_target_source(self) -> str:
+    """The best fuzz target source code."""
+    result = self.best_result
+    if isinstance(result, AnalysisResult):
+      return result.run_result.fuzz_target_source
+    return self.best_result.fuzz_target_source
+
+  @property
+  def build_script_source(self) -> str:
+    """The best build script source code."""
+    result = self.best_result
+    if isinstance(result, AnalysisResult):
+      return result.run_result.build_script_source
+    return self.best_result.build_script_source
+
+  @property
+  def author(self) -> Any:
+    """The author of the best result."""
+    return self.best_result.author
+
+  @property
+  def chat_history(self) -> dict:
+    """The chat history of the best result."""
+    return self.best_result.chat_history
+
+  @property
   def build_success(self) -> bool:
     """True if there is any build success."""
     return any(result.success
@@ -304,6 +389,22 @@ class TrialResult:
                default=0)
 
   @property
+  def cov_pcs(self) -> int:
+    """Log path of the best result if it is RunResult."""
+    return max((result.cov_pcs
+                for result in self.result_history
+                if isinstance(result, RunResult)),
+               default=0)
+
+  @property
+  def total_pcs(self) -> int:
+    """Log path of the best result if it is RunResult."""
+    return max((result.total_pcs
+                for result in self.result_history
+                if isinstance(result, RunResult)),
+               default=0)
+
+  @property
   def line_coverage_report(self) -> str:
     """Max line coverage diff report."""
     for result in self.result_history:
@@ -321,6 +422,80 @@ class TrialResult:
       if isinstance(result, RunResult) and result.textcov_diff:
         all_textcov.merge(result.textcov_diff)
     return all_textcov
+
+  @property
+  def run_error(self) -> str:
+    """Run error of the best result if it is RunResult."""
+    result = self.best_result
+    if isinstance(result, RunResult):
+      return result.run_error
+    if isinstance(result, AnalysisResult):
+      return result.run_result.run_error
+    return ''
+
+  @property
+  def run_log(self) -> str:
+    """Run log of the best result if it is RunResult."""
+    result = self.best_result
+    if isinstance(result, RunResult):
+      return result.run_log
+    if isinstance(result, AnalysisResult):
+      return result.run_result.run_log
+    return ''
+
+  @property
+  def log_path(self) -> str:
+    """Log path of the best result if it is RunResult."""
+    result = self.best_result
+    if isinstance(result, RunResult):
+      return result.log_path
+    if isinstance(result, AnalysisResult):
+      return result.run_result.log_path
+    return ''
+
+  def to_dict(self) -> dict:
+    return {
+        'trial':
+            self.trial,
+        'function_signature':
+            self.function_signature,
+        'project':
+            self.project,
+        'project_commit':
+            self.project_commit,
+        'project_language':
+            self.project_language,
+        'fuzz_target_source':
+            self.fuzz_target_source,
+        'build_script_source':
+            self.build_script_source,
+        'author':
+            self.author.name,
+        'chat_history':
+            self.chat_history,
+        'compiles':
+            self.build_success,
+        'crash':
+            self.crash,
+        'coverage':
+            self.coverage,
+        'line_coverage_diff':
+            self.line_coverage_diff,
+        'cov_pcs':
+            self.cov_pcs,
+        'total_pcs':
+            self.total_pcs,
+        'line_coverage_report':
+            self.line_coverage_report,
+        'textcov_diff':
+            dataclasses.asdict(self.textcov_diff) if self.textcov_diff else '',
+        'run_error':
+            self.run_error,
+        'run_log':
+            self.run_log,
+        'log_path':
+            self.log_path,
+    }
 
 
 class BenchmarkResult:
