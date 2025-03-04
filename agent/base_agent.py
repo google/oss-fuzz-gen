@@ -155,11 +155,10 @@ class BaseAgent(ABC):
                                       prompt: Prompt) -> Prompt:
     """Handles the command from LLM with container |tool|."""
     prompt_text = ''
-    if response:
-      for command in self._parse_tags(response, 'bash'):
-        prompt_text += self._format_bash_execution_result(
-            tool.execute(command), previous_prompt=prompt) + '\n'
-        prompt.append(prompt_text)
+    for command in self._parse_tags(response, 'bash'):
+      prompt_text += self._format_bash_execution_result(
+          tool.execute(command), previous_prompt=prompt) + '\n'
+      prompt.append(prompt_text)
     return prompt
 
   def _sleep_random_duration(
