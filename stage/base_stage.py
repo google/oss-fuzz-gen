@@ -28,11 +28,13 @@ class BaseStage(ABC):
   def __init__(self,
                args: argparse.Namespace,
                trail: int,
-               agents: Optional[list[BaseAgent]] = None) -> None:
+               agents: Optional[list[BaseAgent]] = None,
+               name: str = '') -> None:
     self.args = args
     self.trial = trail
     self.agents: list[BaseAgent] = agents or []
     self.logger = logger.get_trial_logger(trial=trail)
+    self.name: str = name or self.__class__.__name__
 
   def __repr__(self) -> str:
     return self.__class__.__name__
