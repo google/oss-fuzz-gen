@@ -787,7 +787,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     argument = argument.replace('{TYPE}', type_str)
     argument = argument.replace('{GENERAL_DESC}', desc_str)
 
-
     # Array handling
     if '[]' in arg_type:
       arg_type_no_array = arg_type.replace('[]', '').split('<')[0]
@@ -820,7 +819,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       return True, self._format_target_constructor(signature)
 
     return False, self._format_target_method(signature)
-
 
   def _format_requirement(self, signature: str) -> str:
     """Formats a requirement based on the prompt template."""
