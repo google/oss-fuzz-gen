@@ -44,9 +44,9 @@ spec:
           name: results-volume
         env:
         - name: LLM_NUM_EXP
-          value: '40'
+          value: '1'
         - name: LLM_NUM_EVA
-          value: '10'
+          value: '1'
         - name: VERTEX_AI_LOCATIONS
           value: 'us-central1'
         - name: CLOUD_BUILD_LOCATION
