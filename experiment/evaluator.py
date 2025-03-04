@@ -320,12 +320,9 @@ class Evaluator:
                                  run_result: Optional[RunResult],
                                  dual_logger: _Logger, language: str):
     """Fixes the generated fuzz target."""
-    jvm_coverage_fix = False
     error_desc, errors = '', []
     if build_result.succeeded:
-      if language == 'jvm':
-        jvm_coverage_fix = True
-      else:
+      if language != 'jvm':
         if run_result:
           error_desc, errors = run_result.semantic_check.get_error_info()
         else:
@@ -336,7 +333,7 @@ class Evaluator:
 
     code_fixer.llm_fix(ai_binary, target_path, self.benchmark, iteration,
                        error_desc, errors, self.builder_runner.fixer_model_name,
-                       language, jvm_coverage_fix)
+                       language)
     shutil.copyfile(
         target_path,
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
@@ -486,7 +483,7 @@ class Evaluator:
         # it may make a good fuzz target bad.
         # Should concern run_result.succeeded for analyzes to know semantic
         # errors
-        gen_succ = build_result.succeeded  # and run_result and run_result.succeeded
+        gen_succ = build_result.succeeded
 
       if gen_succ or llm_fix_count >= LLM_FIX_LIMIT:
         # Exit cond 1: successfully generate the fuzz target.
