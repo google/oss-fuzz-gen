@@ -399,10 +399,10 @@ class Prototyper(BaseAgent):
   def _container_tool_reaction(self, cur_round: int, response: str,
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
+    prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
+
     if response:
-      prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
-      prompt = self._container_handle_bash_commands(response,
-                                                    self.inspect_tool,
+      prompt = self._container_handle_bash_commands(response, self.inspect_tool,
                                                     prompt)
 
       # Then build fuzz target.
