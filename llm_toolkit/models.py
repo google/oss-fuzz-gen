@@ -473,6 +473,20 @@ class GoogleModel(LLM):
     # Otherwise, roughly 1.5 tokens per word:
     return int(len(re.split('[^a-zA-Z0-9]+', text)) * 1.5 + 0.5)
 
+  def _estimate_char_index(self, token_target: int, text: str) -> int:
+    """
+      Estimates a character index in `text` corresponding to approximately
+      `token_target` tokens. It uses the total token count for `text` and
+      assumes a roughly linear relation between token count and character
+      length.
+      """
+    total_tokens = self.estimate_token_num(text)
+    if not total_tokens:
+      return 0
+    # Proportional mapping: If text has T tokens over L characters, then
+    # token_target corresponds to roughly (token_target / T) * L characters.
+    return int(len(text) * token_target / total_tokens)
+
   # ============================== Generation ============================== #
   def query_llm(self, prompt: prompts.Prompt, response_dir: str) -> None:
     """Queries a Google LLM and stores results in |response_dir|."""
@@ -734,32 +748,44 @@ class GeminiV1D5Chat(GeminiV1D5):
                       raw_prompt_text: Any,
                       extra_text: Any = None) -> Any:
     """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
-    original_token_count = self.estimate_token_num(raw_prompt_text)
+    extra_text = extra_text or ''
+    extra_tokens = self.estimate_token_num(extra_text)
+    total_tokens = self.estimate_token_num(raw_prompt_text)
 
-    token_count = original_token_count
-    if token_count > self.MAX_INPUT_TOKEN:
-      raw_prompt_text = raw_prompt_text[-3 * self.MAX_INPUT_TOKEN:]
+    # Allow some buffer for token limit.
+    allowed_tokens = int((self.MAX_INPUT_TOKEN * 0.9 - extra_tokens) // 4)
 
-    extra_text_token_count = self.estimate_token_num(extra_text)
-    # Reserve 10000 tokens for raw prompt wrappers.
-    max_raw_prompt_token_size = (self.MAX_INPUT_TOKEN * 0.9 -
-                                 extra_text_token_count) // 4
-    while token_count > max_raw_prompt_token_size:
-      estimate_truncate_size = int(
-          (1 - max_raw_prompt_token_size / token_count) * len(raw_prompt_text))
+    # raw_prompt_text already fits within the allowed #tokens, return it as is.
+    if total_tokens <= allowed_tokens:
+      return raw_prompt_text
 
-      num_init_tokens = min(100, int(max_raw_prompt_token_size * 0.1))
-      raw_prompt_init = raw_prompt_text[:num_init_tokens] + (
-          '\n...(truncated due to exceeding input token limit)...\n')
-      raw_prompt_text = raw_prompt_init + raw_prompt_text[
-          min(num_init_tokens + estimate_truncate_size + 1,
-              len(raw_prompt_text) - 100):]
+    marker = '\n...(truncated due to exceeding input token limit)...\n'
+    marker_tokens = self.estimate_token_num(marker)
 
-      token_count = self.estimate_token_num(raw_prompt_text)
-      logger.warning('Truncated %d raw prompt chars from %d to %d tokens.',
-                     estimate_truncate_size, original_token_count, token_count)
+    # extra_tokens is too large that allowed_tokens cannot include the marker,
+    # return just a prefix of raw_prompt_text.
+    if allowed_tokens < marker_tokens:
+      prefix_index = self._estimate_char_index(allowed_tokens, raw_prompt_text)
+      logger.warning('Insufficient tokens to add marker: %d', allowed_tokens)
+      return self.truncate_prompt(raw_prompt_text[:prefix_index], extra_tokens)
 
-    return raw_prompt_text
+    # Prefix of the truncated prompt, 100 tokens by default.
+    prefix_tokens = min(100, allowed_tokens - marker_tokens)
+    prefix_index = self._estimate_char_index(prefix_tokens, raw_prompt_text)
+
+    # Extra tokens beyond the allowed limit, with a 10-token buffer.
+    excess_tokens = total_tokens - allowed_tokens + 50
+    # Suffix keeps the last portion after removal_tokens, that is, remove a
+    # block and keep the last (total_tokens - removal_tokens) tokens.
+    tokens_before_suffix = prefix_tokens + marker_tokens + excess_tokens
+    suffix_index = self._estimate_char_index(tokens_before_suffix,
+                                             raw_prompt_text)
+
+    truncated_prompt = (raw_prompt_text[:prefix_index] + marker +
+                        raw_prompt_text[suffix_index:])
+    logger.warning('Truncated %d tokens from %d to %d chars.', excess_tokens,
+                   len(raw_prompt_text), len(truncated_prompt))
+    return self.truncate_prompt(truncated_prompt, extra_text)
 
   def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:
     if self.ai_binary:
