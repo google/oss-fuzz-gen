@@ -748,12 +748,19 @@ class GeminiV1D5Chat(GeminiV1D5):
                       raw_prompt_text: Any,
                       extra_text: Any = None) -> Any:
     """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
+    # TODO(dongge): Move this to prompt builder (e.g., `append()`), dynamically
+    # reduce extra_text size if there is no space for raw_prompt_text.
+
     extra_text = extra_text or ''
     extra_tokens = self.estimate_token_num(extra_text)
     total_tokens = self.estimate_token_num(raw_prompt_text)
 
-    # Allow some buffer for token limit.
-    allowed_tokens = int((self.MAX_INPUT_TOKEN * 0.9 - extra_tokens) // 4)
+    # Allow buffer space for potential prompts that will be appended later.
+    allowed_tokens = self.MAX_INPUT_TOKEN // 10 - extra_tokens
+    if allowed_tokens <= 0:
+      logger.warning('Insufficient tokens to add any text: %d, %d',
+                     extra_tokens, allowed_tokens)
+      return ''
 
     # raw_prompt_text already fits within the allowed #tokens, return it as is.
     if total_tokens <= allowed_tokens:
@@ -766,14 +773,15 @@ class GeminiV1D5Chat(GeminiV1D5):
     # return just a prefix of raw_prompt_text.
     if allowed_tokens < marker_tokens:
       prefix_index = self._estimate_char_index(allowed_tokens, raw_prompt_text)
-      logger.warning('Insufficient tokens to add marker: %d', allowed_tokens)
+      logger.warning('Insufficient tokens to add marker: %d, %d', extra_tokens,
+                     allowed_tokens)
       return self.truncate_prompt(raw_prompt_text[:prefix_index], extra_text)
 
     # Prefix of the truncated prompt, 100 tokens by default.
     prefix_tokens = min(100, allowed_tokens - marker_tokens)
     prefix_index = self._estimate_char_index(prefix_tokens, raw_prompt_text)
 
-    # Extra tokens beyond the allowed limit, with a 10-token buffer.
+    # Extra tokens beyond the allowed limit, with a 50-token buffer.
     excess_tokens = total_tokens - allowed_tokens + 50
     # Suffix keeps the last portion after removal_tokens, that is, remove a
     # block and keep the last (total_tokens - removal_tokens) tokens.
@@ -783,8 +791,8 @@ class GeminiV1D5Chat(GeminiV1D5):
 
     truncated_prompt = (raw_prompt_text[:prefix_index] + marker +
                         raw_prompt_text[suffix_index:])
-    logger.warning('Truncated %d tokens from %d to %d chars.', excess_tokens,
-                   len(raw_prompt_text), len(truncated_prompt))
+    logger.info('Truncated %d tokens from %d to %d chars.', excess_tokens,
+                len(raw_prompt_text), len(truncated_prompt))
     return self.truncate_prompt(truncated_prompt, extra_text)
 
   def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:
