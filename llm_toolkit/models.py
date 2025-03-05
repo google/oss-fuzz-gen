@@ -748,14 +748,15 @@ class GeminiV1D5Chat(GeminiV1D5):
                       raw_prompt_text: Any,
                       extra_text: Any = None) -> Any:
     """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
-    # TODO(dongge): Move this to prompt builder (e.g., `append()`), dynamically
-    # reduce extra_text size if there is no space for raw_prompt_text.
-
     extra_text = extra_text or ''
     extra_tokens = self.estimate_token_num(extra_text)
     total_tokens = self.estimate_token_num(raw_prompt_text)
 
     # Allow buffer space for potential prompts that will be appended later.
+    # Allocates 1/10 of MAX_INPUT_TOKEN per prompt text block, assuming up to 10
+    # blocks in the final prompt.
+    # TODO(dongge): Move this to prompt builder (e.g., `append()`), dynamically
+    # reduce each prompt text block if there is no space for raw_prompt_text.
     allowed_tokens = self.MAX_INPUT_TOKEN // 10 - extra_tokens
     if allowed_tokens <= 0:
       logger.warning('Insufficient tokens to add any text: %d, %d',
