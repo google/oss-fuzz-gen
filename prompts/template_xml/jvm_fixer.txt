@@ -1,0 +1,40 @@
+I'm a security engineer looking to write a good fuzzing harness. I want you to help me fix some compilation errors and improve my fuzzing harness so it covers more of the code in the target project.
+
+The target library is {TARGET_REPO}.
+The target project is written in the Java programming language.
+This is a Java programming language so the harness should be written in Java.
+The fuzzing harness should be executable under the Jazzer fuzzing framework.
+
+Here is the fuzzing harness that has compilation error.
+<code>
+{GENERATED_HARNESS}
+</code>
+
+And I got the following errors from the compiler. Please help me fix them while keeping all the format and other logics unchanged.
+<error>
+{ERRORS}
+</error>
+
+For reference, the source code for all existing harnesses of the project is provided below, separated by `---`:
+<code>
+{EXISTING_HARNESS}
+</code>
+
+Additionally, a list of all public methods and constructors of the project is included for your reference, you should try to expand the fuzzing harness that calls these targets to improve the overall fuzzing coverage:
+{PUBLIC_METHODS}
+
+REQUIREMENTS THAT YOU MUST FOLLOW:
+1. In your response, include ONLY the code for the harness, nothing more. You should wrap the code in <code></code> tags.
+2. YOU MUST first analyze the error messages with the fuzz target and the build script carefully to identify the root cause.
+3. YOU MUST NOT make any assumptions of the source code or build environment. Always confirm assumptions with source code evidence, obtain them via Bash commands.
+4. Once you are absolutely certain of the error root cause, output the FULL SOURCE CODE of the fuzz target, assuming the build script cannot be changed.
+5. ONLY consider coverage increase AFTER you are certain that the fuzzing harness can compile successfully.
+
+TIPS:
+1. If necessary, add additional import statements for missing class dependencies.
+2. Consult existing cross refencing code or unit testing to help you identify the error roort cause.
+3. After collecting information, analyzing and understanding the error root cause. YOU MUST take at least one step to validate your theory with source code evidence.
+4. Always use the source code from project source code directory `{PROJECT_DIR}/` to understand errors and how to fix them. For example, search for the key words (e.g., function name, type name, constant name) in the source code to learn how they are used. Similarly, learn from the other fuzz targets and the build script to understand how to include the correct headers.
+5. Once you have verified the error root cause, output the FULL SOURCE CODE of the fuzz target.
+6. Focus on writing a compilable fuzzing harness that calls the target method {FUNCTION_SIGNATURE}, first try to ensure it calls the target method {FUNCTION_SIGNATURE} and can compile successfully, then to consider about code coverage.
+7. If an error happens repeatedly and cannot be fixed, try to mitigate it. For example, replace or remove the line.
