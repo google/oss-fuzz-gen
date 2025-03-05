@@ -767,7 +767,7 @@ class GeminiV1D5Chat(GeminiV1D5):
     if allowed_tokens < marker_tokens:
       prefix_index = self._estimate_char_index(allowed_tokens, raw_prompt_text)
       logger.warning('Insufficient tokens to add marker: %d', allowed_tokens)
-      return self.truncate_prompt(raw_prompt_text[:prefix_index], extra_tokens)
+      return self.truncate_prompt(raw_prompt_text[:prefix_index], extra_text)
 
     # Prefix of the truncated prompt, 100 tokens by default.
     prefix_tokens = min(100, allowed_tokens - marker_tokens)
