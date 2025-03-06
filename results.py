@@ -61,7 +61,7 @@ class Result:
         'fuzz_target_source': self.fuzz_target_source,
         'build_script_source': self.build_script_source,
         'author': str(self.author),
-        'chat_history': self.chat_history or {},
+        'chat_history': self.chat_history
     }
 
 
