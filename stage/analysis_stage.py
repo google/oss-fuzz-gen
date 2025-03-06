@@ -47,6 +47,16 @@ class AnalysisStage(BaseStage):
     self.logger.info('Analysis Stage')
     last_result = result_history[-1]
     assert isinstance(last_result, RunResult)
+
+    semantic_check_result = SemanticCheckResult(last_result.err_type,
+                                                last_result.crash_sypmtom,
+                                                last_result.crash_stacks,
+                                                last_result.crash_func)
+    analysis_result = AnalysisResult(author=repr(self),
+                                     run_result=last_result,
+                                     semantic_result=semantic_check_result)
+
+    # 1. Analyzing runtime crash.
     if last_result.crashes:
       agent = self.get_agent(agent_name='SemanticAnalyzer')
     else:
