@@ -81,10 +81,13 @@ class CrashAnalyzer(BaseAgent):
     if not build_script_path or os.path.getsize(build_script_path) == 0:
       # Add additional statement in dockerfile to enable -g and install lldb.
       with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
-        f.write('\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
-                '\nENV CFLAGS="${CFLAGS} -g"\n'
-                '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
-                '\nRUN apt-get update && apt-get install -y lldb\n')
+        f.write(
+            '\nRUN mkdir -p /artifact\n'
+            f'\nCOPY {os.path.basename(run_result.artifact_path)} /artifact/\n'
+            '\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
+            '\nENV CFLAGS="${CFLAGS} -g"\n'
+            '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
+            '\nRUN apt-get update && apt-get install -y lldb\n')
       return name
 
     # Copy generated build script to generated_project_path
@@ -96,11 +99,14 @@ class CrashAnalyzer(BaseAgent):
     # Add additional statement in dockerfile to overwrite with
     # generated fuzzer, enable -g and install lldb
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
-      f.write('\nCOPY agent-build.sh /src/build.sh\n'
-              '\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
-              '\nENV CFLAGS="${CFLAGS} -g"\n'
-              '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
-              '\nRUN apt-get update && apt-get install -y lldb\n')
+      f.write(
+          '\nCOPY agent-build.sh /src/build.sh\n'
+          '\nRUN mkdir -p /artifact\n'
+          f'\nCOPY {os.path.basename(run_result.artifact_path)} /artifact/\n'
+          '\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
+          '\nENV CFLAGS="${CFLAGS} -g"\n'
+          '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
+          '\nRUN apt-get update && apt-get install -y lldb\n')
 
     return name
 
