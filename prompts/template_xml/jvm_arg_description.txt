@@ -1,6 +1,6 @@
 <argument>
-Argument #{ARG_COUNT} requires an instance of {ARG_TYPE}{GENERIC_TYPE}.
-Please generate the needed instance with constructors or static methods.
-Please also insert random data into the created instance.
+Argument #{ARG_COUNT} requires {TYPE}.
+{GENERAL_DESC}
 {GENERIC_DESC}
 </argument>
+
