@@ -68,7 +68,12 @@ class Pipeline():
                         cycle_count, last_result)
       return True
 
-    if isinstance(last_result, AnalysisResult) and last_result.success:
+    if not isinstance(last_result, AnalysisResult):
+      self.logger.warning('[Cycle %d] Last result is not AnalysisResult: %s',
+                          cycle_count, result_history)
+      return True
+
+    if last_result.success:
       self.logger.info('[Cycle %d] Generation succeeds: %s', cycle_count,
                        result_history)
       return True
