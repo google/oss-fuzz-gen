@@ -82,8 +82,8 @@ class CrashAnalyzer(BaseAgent):
       # Add additional statement in dockerfile to enable -g and install lldb.
       with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
         f.write('\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
-                '\nRUN sed -i.bak \'1i export CFLAGS="${CFLAGS} -g"\' '
-                '/src/build.sh\n'
+                '\nENV CFLAGS="${CFLAGS} -g"\n'
+                '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
                 '\nRUN apt-get update && apt-get install -y lldb\n')
       return name
 
@@ -96,11 +96,11 @@ class CrashAnalyzer(BaseAgent):
     # Add additional statement in dockerfile to overwrite with
     # generated fuzzer, enable -g and install lldb
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
-      f.write(
-          '\nCOPY agent-build.sh /src/build.sh\n'
-          '\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
-          '\nRUN sed -i.bak \'1i export CFLAGS="${CFLAGS} -g"\' /src/build.sh\n'
-          '\nRUN apt-get update && apt-get install -y lldb\n')
+      f.write('\nCOPY agent-build.sh /src/build.sh\n'
+              '\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
+              '\nENV CFLAGS="${CFLAGS} -g"\n'
+              '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
+              '\nRUN apt-get update && apt-get install -y lldb\n')
 
     return name
 
