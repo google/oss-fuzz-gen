@@ -392,7 +392,7 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
 
 def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
             llm_fix_id: int, error_desc: Optional[str], errors: list[str],
-            fixer_model_name: str, language: str, jvm_cov_fix: bool) -> None:
+            fixer_model_name: str, language: str) -> None:
   """Reads and fixes |target_path| in place with LLM based on |error_log|."""
   fuzz_target_source_code = parser.parse_code(target_path)
 
@@ -409,7 +409,6 @@ def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
                 prompt_path,
                 response_dir,
                 language,
-                jvm_cov_fix,
                 fixer_model_name,
                 temperature=0.5 - llm_fix_id * 0.04)
 
@@ -452,7 +451,6 @@ def apply_llm_fix(ai_binary: str,
                   prompt_path: str,
                   response_dir: str,
                   language: str,
-                  jvm_cov_fix: bool,
                   fixer_model_name: str = models.DefaultModel.name,
                   temperature: float = 0.4):
   """Queries LLM to fix the code."""
@@ -464,9 +462,8 @@ def apply_llm_fix(ai_binary: str,
   )
 
   if language == 'jvm':
-    builder = prompt_builder.JvmErrorFixingBuilder(fixer_model, benchmark,
-                                                   fuzz_target_source_code,
-                                                   errors, jvm_cov_fix)
+    builder = prompt_builder.JvmFixingBuilder(fixer_model, benchmark,
+                                              fuzz_target_source_code, errors)
     prompt = builder.build([], None, None)
     prompt.save(prompt_path)
   else:

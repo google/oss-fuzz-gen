@@ -671,18 +671,10 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
         template_dir, 'jvm_requirement.txt')
     self.problem_template_file = self._find_template(template_dir,
                                                      'jvm_problem.txt')
-    self.constructor_template_file = self._find_template(
-        template_dir, 'jvm_problem_constructor.txt')
-    self.method_template_file = self._find_template(template_dir,
-                                                    'jvm_problem_method.txt')
+    self.target_template_file = self._find_template(template_dir,
+                                                    'jvm_target.txt')
     self.arg_description_template_file = self._find_template(
         template_dir, 'jvm_arg_description.txt')
-    self.generic_arg_description_template_file = self._find_template(
-        template_dir, 'jvm_generic_arg_description.txt')
-    self.simple_arg_description_template_file = self._find_template(
-        template_dir, 'jvm_simple_arg_description.txt')
-    self.object_arg_description_template_file = self._find_template(
-        template_dir, 'jvm_object_arg_description.txt')
     self.import_template_file = self._find_template(template_dir,
                                                     'jvm_import_mapping.txt')
 
@@ -700,23 +692,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Reads the template for prompts."""
     with open(template_file) as file:
       return file.read()
-
-  def _format_target_constructor(self, signature: str) -> str:
-    """Formats a constructor based on the prompt template."""
-    class_name = signature.split('].')[0][1:]
-
-    constructor = self._get_template(self.constructor_template_file)
-    constructor = constructor.replace('{CONSTRUCTOR_CLASS}', class_name)
-    constructor = constructor.replace('{CONSTRUCTOR_SIGNATURE}', signature)
-
-    return constructor
-
-  def _format_target_method(self, signature: str) -> str:
-    """Formats a method based on the prompt template."""
-    method = self._get_template(self.method_template_file)
-    method = method.replace('{METHOD_SIGNATURE}', signature)
-
-    return method
 
   def _format_exceptions(self) -> str:
     """Formats the exception thrown from this method or constructor."""
@@ -750,22 +725,20 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     new_types = []
     generic_desc = []
     for generic_type in generic_types:
-      if generic_type.endswith(('Object', 'T', 'K', 'V')):
-        # java.lang.Object generic type
-        desc = self._get_template(self.object_arg_description_template_file)
-        desc = 'For generic type of Object\n' + desc
-        new_types.append('Object')
-      else:
-        new_types.append(generic_type)
-        desc = self._get_template(self.generic_arg_description_template_file)
-        desc = desc.replace('{GENERIC_TYPE}', generic_type)
+      if generic_type.endswith(('T', 'K', 'V')):
+        generic_type = 'java.lang.Object'
 
-        method_str = self._get_methods_for_simple_type(generic_type)
-        if method_str:
-          desc = desc.replace('{RANDOM_METHODS}', method_str)
-        else:
-          desc = desc.replace('{RANDOM_METHODS}',
-                              'correct constructors or static methods')
+      new_types.append(generic_type)
+
+      desc = (f'For generic type of {generic_type}, you MUST use '
+              '{RANDOM_METHODS} to generate the needed variable.')
+
+      method_str = self._get_methods_for_simple_type(generic_type)
+      if method_str:
+        desc = desc.replace('{RANDOM_METHODS}', method_str)
+      else:
+        desc = desc.replace('{RANDOM_METHODS}',
+                            'correct constructors or static methods')
 
       generic_desc.append(desc)
 
@@ -779,47 +752,45 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats general argument description."""
     method_str = self._get_methods_for_simple_type(arg_type)
 
-    # java.lang.Object argument
-    if 'Object' in arg_type.split('.')[-1]:
-      base = self._get_template(self.object_arg_description_template_file)
-      prefix = f'Argument #{count} requires an Object instance\n'
-      argument = f'<argument>{prefix}{base}</argument>'
-      return argument
-
     # Simple arguments
-    if method_str:
-      argument = self._get_template(self.simple_arg_description_template_file)
-      argument = argument.replace('{ARG_COUNT}', str(count))
-      argument = argument.replace('{RANDOM_METHODS}', method_str)
-      if '[]' in arg_type:
-        arg_type_no_array = arg_type.replace('[]', '')
-        argument = argument.replace('{SIMPLE_TYPE}',
-                                    f'an array of {arg_type_no_array}')
-        argument = argument.replace(
-            '{ARRAY_OR_NOT}',
-            (f'multiple {arg_type_no_array} variables and '
-             'initialise an array of {arg_type_no_array} with the generated '
-             'variables.'))
-      else:
-        argument = argument.replace('{SIMPLE_TYPE}', f'a {arg_type}')
-        argument = argument.replace('{ARRAY_OR_NOT}', 'the needed variables.')
-
-      return argument
-
-    # All other object arguments
     argument = self._get_template(self.arg_description_template_file)
     argument = argument.replace('{ARG_COUNT}', str(count))
-    argument = argument.replace('{ARG_TYPE}', arg_type)
+
+    if method_str:
+      type_str = '{SIMPLE_TYPE} variable.'
+      desc_str = f'You must use {method_str} to generate {{ARRAY_OR_NOT}}.'
+    else:
+      type_str = '{SIMPLE_TYPE} instance {GENERIC_TYPE}.'
+      desc_str = ('Please generate {ARRAY_OR_NOT}. You should use constructors '
+                  'or static methods for the generation.\nPlease also insert '
+                  'random data into the created instance.')
+
+    argument = argument.replace('{TYPE}', type_str)
+    argument = argument.replace('{GENERAL_DESC}', desc_str)
+
+    # Array handling
+    if '[]' in arg_type:
+      arg_type_no_array = arg_type.replace('[]', '').split('<')[0]
+      argument = argument.replace('{SIMPLE_TYPE}',
+                                  f'an array of {arg_type_no_array} ')
+      argument = argument.replace(
+          '{ARRAY_OR_NOT}',
+          (f'multiple {arg_type_no_array} objects and initialise an array '
+           'of {arg_type_no_array} with the generated objects.'))
+    else:
+      argument = argument.replace('{SIMPLE_TYPE}', f'a {arg_type}')
+      argument = argument.replace('{ARRAY_OR_NOT}', 'the needed parameter.')
+
+    # Generic type handling
+    generic_type = ''
+    generic_desc = ''
+    if self._has_generic(arg_type):
+      generic_type, generic_desc = self._format_generic_argument(arg_type)
+
+    argument = argument.replace('{GENERIC_TYPE}', generic_type)
+    argument = argument.replace('{GENERIC_DESC}', generic_desc)
+
     return argument
-
-  def _format_target(self, signature: str) -> tuple[bool, str]:
-    """Determine if the signature is a constructor or a general
-       method and format it for the prompts creation.
-    """
-    if '<init>' in signature:
-      return True, self._format_target_constructor(signature)
-
-    return False, self._format_target_method(signature)
 
   def _format_requirement(self, signature: str) -> str:
     """Formats a requirement based on the prompt template."""
@@ -882,14 +853,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     for count, function_arg in enumerate(self.benchmark.params):
       arg_type = function_arg['type']
       argument = self._format_argument(count, arg_type)
-
-      generic_type = ''
-      generic_desc = ''
-      if self._has_generic(arg_type):
-        generic_type, generic_desc = self._format_generic_argument(arg_type)
-
-      argument = argument.replace('{GENERIC_TYPE}', generic_type)
-      argument = argument.replace('{GENERIC_DESC}', generic_desc)
       argument_descriptions.append(argument)
 
     return '<arguments>' + '\n'.join(argument_descriptions) + '</arguments>'
@@ -960,10 +923,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _format_problem(self, signature: str) -> str:
     """Formats a problem based on the prompt template."""
+    is_constructor = bool('<init>' in signature)
+
     base = self._get_template(self.base_template_file)
     problem = base + self._get_template(self.problem_template_file)
-    is_constructor, target_str = self._format_target(signature)
-    problem = problem.replace('{TARGET}', target_str)
+    problem = problem.replace('{TARGET}',
+                              self._get_template(self.target_template_file))
+    problem = problem.replace('{SIGNATURE}', signature)
+    problem = problem.replace('{CLASS}', signature.split('].')[0][1:])
     problem = problem.replace('{REQUIREMENTS}',
                               self._format_requirement(signature))
     problem = problem.replace('{ARGUMENTS}', self._format_arguments())
@@ -973,15 +940,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self_source, cross_source = self._format_source_reference(signature)
     problem = problem.replace('{SELF_SOURCE}', self_source)
     problem = problem.replace('{CROSS_SOURCE}', cross_source)
+    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
+    problem = problem.replace("{PROJECT_URL}", self.project_url)
+    problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
+
     if is_constructor:
       problem = problem.replace('{METHOD_OR_CONSTRUCTOR}', 'constructor')
     else:
       problem = problem.replace('{METHOD_OR_CONSTRUCTOR}', 'method')
-
-    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
-    problem = problem.replace("{PROJECT_URL}", self.project_url)
-
-    problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
 
     return problem
 
@@ -1207,30 +1173,24 @@ class DefaultRustTemplateBuilder(PromptBuilder):
     return generated_code
 
 
-class JvmErrorFixingBuilder(PromptBuilder):
-  """Prompt builder for fixing JVM harness with complication error."""
+class JvmFixingBuilder(PromptBuilder):
+  """Prompt builder for fixing JVM harness with complication error or
+  to increase code coverage."""
 
   def __init__(self,
                model: models.LLM,
                benchmark: Benchmark,
                generated_harness: str,
                errors: list[str],
-               jvm_cov_fix: bool,
                template_dir: str = DEFAULT_TEMPLATE_DIR):
     super().__init__(model)
     self._template_dir = template_dir
     self.benchmark = benchmark
     self.generated_harness = generated_harness
     self.error_str = '\n'.join(errors)
-    self.jvm_cov_fix = jvm_cov_fix
 
     # Load templates.
-    if self.jvm_cov_fix:
-      self.template_file = self._find_template(
-          template_dir, 'jvm_requirement_coverage_fixing.txt')
-    else:
-      self.template_file = self._find_template(
-          template_dir, 'jvm_requirement_error_fixing.txt')
+    self.template_file = self._find_template(template_dir, 'jvm_fixer.txt')
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
     """Finds template file based on |template_dir|."""
@@ -1263,34 +1223,37 @@ class JvmErrorFixingBuilder(PromptBuilder):
     # Format the repository
     target_repository = oss_fuzz_checkout.get_project_repository(
         self.benchmark.project)
+
+    # Add information
     prompt_text = prompt_text.replace('{TARGET_REPO}', target_repository)
     prompt_text = prompt_text.replace('{HARNESS_NAME}',
                                       self.benchmark.target_name)
-
-    # Add the generated harness to prompt
     prompt_text = prompt_text.replace('{GENERATED_HARNESS}',
                                       self.generated_harness)
 
-    if self.jvm_cov_fix:
-      # Add source code of all existing harnesses to prompt
-      source_list = []
-      harnesses = introspector.query_introspector_for_harness_intrinsics(proj)
-      for pair in harnesses:
-        path = pair.get('source', '')
-        if path:
-          source = introspector.query_introspector_source_code(proj, path)
-          if source:
-            source_list.append(source)
+    # Add all public candidates to prompt
+    methods = introspector.query_introspector_all_public_candidates(proj)
+    name = [method['function_name'] for method in methods]
+    prompt_text = prompt_text.replace('{PUBLIC_METHODS}', ','.join(name))
 
-      prompt_text = prompt_text.replace('{EXISTING_HARNESS}',
-                                        '\n---\n'.join(source_list))
+    # Add source code of all existing harnesses to prompt
+    source_list = []
+    harnesses = introspector.query_introspector_for_harness_intrinsics(proj)
+    for pair in harnesses:
+      path = pair.get('source', '')
+      if path:
+        source = introspector.query_introspector_source_code(proj, path)
+        if source:
+          source_list.append(source)
 
-      # Add all public candidates to prompt
-      methods = introspector.query_introspector_all_public_candidates(proj)
-      name = [method['function_name'] for method in methods]
-      prompt_text = prompt_text.replace('{PUBLIC_METHODS}', ','.join(name))
+    prompt_text = prompt_text.replace('{EXISTING_HARNESS}',
+                                      '\n---\n'.join(source_list))
+
+    if self.error_str:
+      prompt_text = prompt_text.replace('{ERRORS}',
+                                        ('There are no errors, please consider '
+                                         'increasing the code coverage.'))
     else:
-      # Add the error string to prompt
       prompt_text = prompt_text.replace('{ERRORS}', self.error_str)
 
     self._prompt.add_priming(prompt_text)

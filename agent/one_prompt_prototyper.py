@@ -139,9 +139,9 @@ class OnePromptPrototyper(BaseAgent):
         build_result.benchmark.language)
     build_result.compile_error = '\n'.join(errors)
     if build_result.benchmark.language == 'jvm':
-      builder = prompt_builder.JvmErrorFixingBuilder(
+      builder = prompt_builder.JvmFixingBuilder(
           fixer_model, build_result.benchmark, build_result.fuzz_target_source,
-          build_result.compile_error.split('\n'), False)
+          build_result.compile_error.split('\n'))
       prompt = builder.build([], None, None)
     else:
       builder = prompt_builder.DefaultTemplateBuilder(fixer_model)

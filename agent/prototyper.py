@@ -404,18 +404,20 @@ class Prototyper(BaseAgent):
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
     prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
-    prompt = self._container_handle_bash_commands(response, self.inspect_tool,
-                                                  prompt)
 
-    # Then build fuzz target.
-    prompt = self._container_handle_conclusion(cur_round, response,
-                                               build_result, prompt)
-    if prompt is None:
-      # Succeeded.
-      return None
+    if response:
+      prompt = self._container_handle_bash_commands(response, self.inspect_tool,
+                                                    prompt)
+
+      # Then build fuzz target.
+      prompt = self._container_handle_conclusion(cur_round, response,
+                                                 build_result, prompt)
+      if prompt is None:
+        # Succeeded.
+        return None
 
     # Finally check invalid responses.
-    if not prompt.get():
+    if not response or not prompt.get():
       prompt = self._container_handle_invalid_tool_usage(
           self.inspect_tool, cur_round, response, prompt)
 
