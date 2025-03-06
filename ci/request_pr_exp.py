@@ -182,7 +182,8 @@ def _parse_args(cmd) -> argparse.Namespace:
 
   # Construct experiment name and save it under args for simplicity.
   args.experiment_name = f'{args.pr_id}'
-  args.experiment_name = f'{args.experiment_name}-{args.name_suffix}'
+  if args.name_suffix:
+    args.experiment_name = f'{args.experiment_name}-{args.name_suffix}'
 
   # Use Chat model by default in agent-enhance experiments.
   if args.agent and args.llm == LLM_NAME:
