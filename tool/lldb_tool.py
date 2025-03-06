@@ -38,7 +38,7 @@ class LLDBTool(BaseTool):
   def _prepare_project_image(self) -> str:
     """Prepares the project's OSS-Fuzz docker image and returns the image name.
     """
-    image_name = f'gcr.io/oss-fuzz/{self.project}'
+    image_name = f'gcr.io/oss-fuzz/{self.project}-lldb'
     # TODO(maoyi): implement image cache
     if oss_fuzz_checkout.image_exists_locally(image_name, self.project):
       logger.info('Using existing project image for %s', self.project)
