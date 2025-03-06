@@ -77,7 +77,7 @@ class ExecutionStage(BaseStage):
       raise TypeError
 
     try:
-      _, run_result = evaluator.builder_runner.build_and_run(
+      build_result, run_result = evaluator.builder_runner.build_and_run(
           generated_oss_fuzz_project,
           fuzz_target_path,
           0,
