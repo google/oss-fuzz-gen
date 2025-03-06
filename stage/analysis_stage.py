@@ -43,7 +43,6 @@ class AnalysisStage(BaseStage):
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the analysis stage."""
     last_result = result_history[-1]
-    language = last_result.benchmark.language.lower()
     if not isinstance(last_result, RunResult):
       self.logger.error('AnalysisResult must follow a RunResult')
       raise TypeError
