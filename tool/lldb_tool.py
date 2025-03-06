@@ -23,9 +23,6 @@ from tool.base_tool import BaseTool
 
 logger = logging.getLogger(__name__)
 
-# The directory in the oss-fuzz image
-JCC_DIR = '/usr/local/bin'
-
 
 class LLDBTool(BaseTool):
   """A tool for LLM agents to interact within a LLDB."""
@@ -89,7 +86,6 @@ class LLDBTool(BaseTool):
         '--entrypoint=/bin/bash', '--platform', 'linux/amd64', '-e',
         'FUZZING_ENGINE=libfuzzer', '-e', 'SANITIZER=address', '-e',
         'ARCHITECTURE=x86_64', '-e', f'PROJECT_NAME={self.project}', '-e',
-        f'CXX={JCC_DIR}/clang++-jcc', '-e', f'CC={JCC_DIR}/clang-jcc', '-e',
         f'FUZZING_LANGUAGE={self.benchmark.language}', '-v',
         f'{self.result.artifact_path}:/artifact/{self.result.artifact_name}',
         self.image_name
