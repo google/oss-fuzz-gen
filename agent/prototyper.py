@@ -451,5 +451,4 @@ class Prototyper(BaseAgent):
                    self.inspect_tool.container_id,
                    trial=last_result.trial)
       self.inspect_tool.terminate()
-
     return build_result
