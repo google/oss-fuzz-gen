@@ -43,9 +43,8 @@ class AnalysisStage(BaseStage):
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the analysis stage."""
     last_result = result_history[-1]
-    if not isinstance(last_result, RunResult):
-      self.logger.error('AnalysisResult must follow a RunResult')
-      raise TypeError
+    assert isinstance(last_result, RunResult)
+
     semantic_check_result = last_result.semantic_check
     analysis_result = AnalysisResult(author=repr(self),
                                      run_result=last_result,
