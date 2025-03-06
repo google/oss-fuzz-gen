@@ -268,9 +268,9 @@ def parse_args() -> argparse.Namespace:
                       default=False,
                       help='Enables agent enhancement.')
   parser.add_argument('-mr',
-                      '--agent-max-round',
+                      '--max-round',
                       type=int,
-                      default=10,
+                      default=100,
                       help='Max trial round for agents.')
 
   args = parser.parse_args()
