@@ -274,7 +274,6 @@ class CloudBuilder:
       bucket = self.storage_client.bucket(self.bucket_name)
       blob = bucket.blob(log_file_uri)
       log_content = self._extract_chat_history(blob.download_as_text())
-      logging.warning(log_content)
       return log_content
     except NotFound as e:
       logging.error('Cloud build log %s not found: %s', log_file_uri, e)
