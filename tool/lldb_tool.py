@@ -19,16 +19,19 @@ import subprocess as sp
 from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark
 from results import RunResult
-from tool.base_tool import BaseTool
+from tool.container_tool import ProjectContainerTool
 
 logger = logging.getLogger(__name__)
 
 
-class LLDBTool(BaseTool):
+class LLDBTool(ProjectContainerTool):
   """A tool for LLM agents to interact within a LLDB."""
 
-  def __init__(self, benchmark: Benchmark, name: str, project: str,
-               result: RunResult) -> None:
+  def __init__(self,
+               benchmark: Benchmark,
+               project: str,
+               result: RunResult,
+               name: str = '') -> None:
     super().__init__(benchmark, name)
     self.project = project
     self.result = result
@@ -56,44 +59,6 @@ class LLDBTool(BaseTool):
       logger.info('Failed to build image for %s', self.project)
       return ''
 
-  def _execute_command(self,
-                       command: list[str],
-                       in_container: bool = False) -> sp.CompletedProcess:
-    """Executes the |command| in subprocess and log output."""
-    result = sp.run(command,
-                    stdout=sp.PIPE,
-                    stderr=sp.PIPE,
-                    check=False,
-                    text=True)
-
-    if in_container:
-      logger.debug(
-          'Executing command (%s) in container %s: Return code %d. STDOUT: %s, '
-          'STDERR: %s', command, self.container_id, result.returncode,
-          result.stdout, result.stderr)
-    else:
-      logger.debug(
-          'Executing command (%s): Return code %d. STDOUT: %s, '
-          'STDERR: %s', command, result.returncode, result.stdout,
-          result.stderr)
-    return result
-
-  def _start_docker_container(self) -> str:
-    """Runs the project's OSS-Fuzz image as a background container and returns
-    the container ID."""
-    run_container_command = [
-        'docker', 'run', '-d', '-t', '--privileged', '--shm-size=2g',
-        '--entrypoint=/bin/bash', '--platform', 'linux/amd64', '-e',
-        'FUZZING_ENGINE=libfuzzer', '-e', 'SANITIZER=address', '-e',
-        'ARCHITECTURE=x86_64', '-e', f'PROJECT_NAME={self.project}', '-e',
-        f'FUZZING_LANGUAGE={self.benchmark.language}', '-v',
-        f'{self.result.artifact_path}:/artifact/{self.result.artifact_name}',
-        self.image_name
-    ]
-    result = self._execute_command(run_container_command)
-    container_id = result.stdout.strip()
-    return container_id
-
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
     return self._get_tutorial_file_content('lldb_tool.txt')\
@@ -105,12 +70,6 @@ class LLDBTool(BaseTool):
     execute_command_in_container = [
         'docker', 'exec', self.container_id, '/bin/bash', '-c', command
     ]
-    process = self._execute_command(execute_command_in_container, True)
+    process = self._execute_command_in_container(execute_command_in_container)
     process.args = command
     return process
-
-  def terminate(self) -> bool:
-    """Terminates the container."""
-    terminate_container_command = ['docker', 'stop', self.container_id]
-    result = self._execute_command(terminate_container_command)
-    return result.returncode == 0

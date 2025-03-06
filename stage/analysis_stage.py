@@ -51,11 +51,12 @@ class AnalysisStage(BaseStage):
                                      semantic_result=semantic_check_result)
 
     # 1. Analyzing runtime crash.
-    agent_result = self._analyze_crash(result_history)
-    crash_result = cast(CrashResult, agent_result)
-    analysis_result.crash_result = crash_result
-    # TODO(dongge): Save logs and more info into workdir.
-    self.logger.write_chat_history(crash_result)
+    if last_result.crashes:
+      agent_result = self._analyze_crash(result_history)
+      crash_result = cast(CrashResult, agent_result)
+      analysis_result.crash_result = crash_result
+      # TODO(dongge): Save logs and more info into workdir.
+      self.logger.write_chat_history(crash_result)
 
     self.logger.debug('Analysis stage completed with result:\n%s',
                       analysis_result)
