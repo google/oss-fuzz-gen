@@ -149,10 +149,10 @@ class RunResult(BuildResult):
       compile_log: str = '',
       binary_exists: bool = False,
       is_function_referenced: bool = False,
-      crashes: bool = False,
-      run_error: str = '',
+      crashes: bool = False,  # Runtime crash.
+      run_error: str = '',  # Runtime crash error message.
       crash_func: Optional[dict] = None,
-      run_log: str = '',
+      run_log: str = '',  # Full fuzzing output.
       coverage_summary: Optional[dict] = None,
       coverage: float = 0.0,
       line_coverage_diff: float = 0.0,
