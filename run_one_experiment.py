@@ -292,7 +292,7 @@ def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
   with pool.ThreadPool(processes=NUM_EVA) as p:
     # Initialize thread-local storage in each worker before processing
     task_args = [(benchmark, model, args, work_dirs, trial)
-                 for trial in range(1, NUM_EVA + 1)]
+                 for trial in range(1, 11)]
     trial_results = p.starmap(_fuzzing_pipeline, task_args)
   return BenchmarkResult(benchmark=benchmark,
                          work_dirs=work_dirs,

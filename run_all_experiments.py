@@ -270,7 +270,7 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument('-mr',
                       '--agent-max-round',
                       type=int,
-                      default=10,
+                      default=100,
                       help='Max trial round for agents.')
 
   args = parser.parse_args()
