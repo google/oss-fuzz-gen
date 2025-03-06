@@ -45,7 +45,7 @@ NUM_EXP = int(os.getenv('LLM_NUM_EXP', '2'))
 
 # Default LLM hyper-parameters.
 MAX_TOKENS: int = run_one_experiment.MAX_TOKENS
-NUM_SAMPLES: int = run_one_experiment.NUM_SAMPLES
+NUM_TRIALS: int = run_one_experiment.NUM_TRIALS
 RUN_TIMEOUT: int = run_one_experiment.RUN_TIMEOUT
 TEMPERATURE: float = run_one_experiment.TEMPERATURE
 
@@ -142,7 +142,7 @@ def run_experiments(benchmark: benchmarklib.Benchmark, args) -> Result:
         ai_binary=args.ai_binary,
         name=args.model,
         max_tokens=MAX_TOKENS,
-        num_samples=args.num_samples,
+        num_samples=args.num_trials,
         temperature=args.temperature,
         temperature_list=args.temperature_list,
     )
@@ -163,10 +163,10 @@ def parse_args() -> argparse.Namespace:
   parser = argparse.ArgumentParser(
       description='Run all experiments that evaluates all target functions.')
   parser.add_argument('-n',
-                      '--num-samples',
+                      '--num-trials',
                       type=int,
-                      default=NUM_SAMPLES,
-                      help='The number of samples to request from LLM.')
+                      default=NUM_TRIALS,
+                      help='The number of trials to request from LLM.')
   parser.add_argument(
       '-t',
       '--temperature',
@@ -181,7 +181,7 @@ def parse_args() -> argparse.Namespace:
       type=float,
       default=[],
       help=('A list of values representing the temperatures will be used by '
-            'each sample LLM query.'))
+            'each trial LLM query.'))
   parser.add_argument('-c',
                       '--cloud-experiment-name',
                       type=str,
@@ -274,8 +274,8 @@ def parse_args() -> argparse.Namespace:
                       help='Max trial round for agents.')
 
   args = parser.parse_args()
-  if args.num_samples:
-    assert args.num_samples > 0, '--num-samples must take a positive integer.'
+  if args.num_trials:
+    assert args.num_trials > 0, '--num-trials must take a positive integer.'
 
   if args.temperature:
     assert 2 >= args.temperature >= 0, '--temperature must be within 0 and 2.'
@@ -452,8 +452,8 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
 
     if project_name not in textcov_dict:
       textcov_dict[project_name] = []
-    for sample in os.listdir(coverage_reports):
-      summary = os.path.join(coverage_reports, sample, 'textcov')
+    for trial in os.listdir(coverage_reports):
+      summary = os.path.join(coverage_reports, trial, 'textcov')
       if not os.path.isdir(summary):
         continue
 

@@ -44,14 +44,14 @@ from results import BenchmarkResult, Result, TrialResult
 NUM_EVA = int(os.getenv('LLM_NUM_EVA', '3'))
 
 # Default LLM hyper-parameters.
-# #182 shows Gemini returns NUM_SAMPLES independent responses via repeated
+# #182 shows Gemini returns NUM_TRIALS independent responses via repeated
 #  queries, which generally performs better than top-k responses from one
 #  query [1].
 # [1] TODO(@happy-qop): Update the link.
-# WARN: Avoid large NUM_SAMPLES in highly parallelized local experiments.
+# WARN: Avoid large NUM_TRIALS in highly parallelized local experiments.
 # It controls the number of LLM responses per prompt, which may exceed your
 # LLM's limit on query-per-second.
-NUM_SAMPLES = 2
+NUM_TRIALS = 2
 MAX_TOKENS: int = 4096
 RUN_TIMEOUT: int = 30
 TEMPERATURE: float = 0.4
