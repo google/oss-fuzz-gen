@@ -116,7 +116,7 @@ class BaseAgent(ABC):
       previous_prompt: Optional[Prompt] = None) -> str:
     """Formats a prompt based on bash execution result."""
     if previous_prompt:
-      previous_prompt_text = previous_prompt.get()
+      previous_prompt_text = previous_prompt.gettext()
     else:
       previous_prompt_text = ''
     stdout = self.llm.truncate_prompt(process.stdout,

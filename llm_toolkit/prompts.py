@@ -27,12 +27,16 @@ class Prompt:
     """Constructor."""
 
   @abstractmethod
-  def append(self, text: str) -> None:
+  def append(self, text: str, to_existing: bool = False) -> None:
     """Appends to the formatted prompt."""
 
   @abstractmethod
   def get(self) -> Any:
     """Gets the final formatted prompt."""
+
+  @abstractmethod
+  def gettext(self) -> Any:
+    """Gets the final formatted prompt in plain text."""
 
   @abstractmethod
   def create_prompt_piece(self, content: str, role: str) -> Any:
@@ -64,13 +68,18 @@ class TextPrompt(Prompt):
 
     self._text = initial
 
-  def append(self, text: str) -> None:
+  def append(self, text: str, to_existing: bool = False) -> None:
     """Gets the final formatted prompt."""
+    # TextPrompt only got one text element, ignoring to_existing flag
     self._text += text
 
   def get(self) -> Any:
     """Gets the final formatted prompt."""
     return self._text
+
+  def gettext(self) -> Any:
+    """Gets the final formatted prompt in plain text."""
+    return self.get()
 
   def add_priming(self, priming_content: str) -> None:
     """Constructs the prompt priming in the required format."""
@@ -110,6 +119,14 @@ class OpenAIPrompt(Prompt):
     """Gets the final formatted prompt."""
     return self._prompt
 
+  def gettext(self) -> str:
+    """Gets the final formatted prompt in plain text."""
+    result = ''
+    for item in self.get():
+      result = f'{result}\n{item.get("content", "")}'
+
+    return result
+
   def add_priming(self, priming_content: str) -> None:
     """Constructs the prompt priming in the required format."""
     self._prompt.append({
@@ -142,10 +159,18 @@ class OpenAIPrompt(Prompt):
     with open(location, 'w+') as prompt_file:
       json.dump(self._prompt, prompt_file)
 
-  def append(self, text: str) -> None:
+  def append(self, text: str, to_existing: bool = False) -> None:
     """Appends to the formatted prompt."""
-    # A placeholder for now.
-    del text
+    if to_existing and self._prompt:
+      # With to_existing flag, attach the string to the original content
+      # of the existing prompt
+      self._prompt[-1]['content'] += text
+    elif self._prompt:
+      # With no to_existing flag, append a new prompt with role user
+      self.add_problem(text)
+    else:
+      # There are no prompt exists, append the text as priming prompt
+      self.add_priming(text)
 
 
 class ClaudePrompt(OpenAIPrompt):
