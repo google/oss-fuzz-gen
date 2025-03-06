@@ -153,7 +153,9 @@ class ExecutionStage(BaseStage):
           coverage_report_path=run_result.coverage_report_path,
           cov_pcs=run_result.cov_pcs,
           total_pcs=run_result.total_pcs,
-          semantic_check=run_result.semantic_check)
+          err_type=run_result.semantic_check.type,
+          crash_sypmtom=run_result.semantic_check.crash_sypmtom,
+          crash_stacks=run_result.semantic_check.crash_stacks)
     except Exception as e:
       self.logger.error('Exception %s occurred on %s', e, last_result)
       runresult = RunResult(

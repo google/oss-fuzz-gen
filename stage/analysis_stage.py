@@ -17,6 +17,7 @@ code blocks."""
 from typing import cast
 
 from results import AnalysisResult, CrashResult, Result, RunResult
+from experiment.fuzz_target_error import SemanticCheckResult
 from stage.base_stage import BaseStage
 
 
@@ -45,7 +46,10 @@ class AnalysisStage(BaseStage):
     last_result = result_history[-1]
     assert isinstance(last_result, RunResult)
 
-    semantic_check_result = last_result.semantic_check
+    semantic_check_result = SemanticCheckResult(last_result.err_type,
+                                                last_result.crash_sypmtom,
+                                                last_result.crash_stacks,
+                                                last_result.crash_func)
     analysis_result = AnalysisResult(author=repr(self),
                                      run_result=last_result,
                                      semantic_result=semantic_check_result)

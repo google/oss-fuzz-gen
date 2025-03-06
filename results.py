@@ -137,7 +137,9 @@ class RunResult(BuildResult):
   cov_pcs: int
   total_pcs: int
   _repr_exclude = BuildResult._repr_exclude | {'textcov_diff'}
-  semantic_check: SemanticCheckResult
+  err_type: str
+  crash_sypmtom: str
+  crash_stacks: Optional[list[list[str]]]
 
   def __init__(
       self,
@@ -166,13 +168,13 @@ class RunResult(BuildResult):
       coverage_report_path: str = '',
       cov_pcs: int = 0,
       total_pcs: int = 0,
+      err_type: str = SemanticCheckResult.NOT_APPLICABLE,
+      crash_sypmtom: str = '',
+      crash_stacks: Optional[list[list[str]]] = None,
       fuzz_target_source: str = '',
       build_script_source: str = '',
       author: Any = None,
-      chat_history: Optional[dict] = None,
-      semantic_check: SemanticCheckResult = SemanticCheckResult(
-          SemanticCheckResult.NOT_APPLICABLE)
-  ) -> None:
+      chat_history: Optional[dict] = None) -> None:
     super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
                      compile_log, binary_exists, is_function_referenced,
                      fuzz_target_source, build_script_source, author,
@@ -194,7 +196,9 @@ class RunResult(BuildResult):
     self.coverage_report_path = coverage_report_path
     self.cov_pcs = cov_pcs
     self.total_pcs = total_pcs
-    self.semantic_check = semantic_check
+    self.err_type = err_type
+    self.crash_sypmtom = crash_sypmtom
+    self.crash_stacks = crash_stacks or []
 
   def to_dict(self) -> dict:
     return super().to_dict() | {
@@ -232,8 +236,12 @@ class RunResult(BuildResult):
             self.cov_pcs,
         'total_pcs':
             self.total_pcs,
-        'semantic_check':
-            self.semantic_check.to_dict(),
+        'err_type':
+            self.err_type,
+        'crash_sypmtom':
+            self.crash_sypmtom,
+        'crash_stacks':
+            self.crash_stacks,
     }
 
   # TODO(dongge): Define success property to show if the fuzz target was run.
@@ -271,12 +279,13 @@ class CrashResult(RunResult):
                coverage_report_path: str = '',
                cov_pcs: int = 0,
                total_pcs: int = 0,
+               err_type: str = SemanticCheckResult.NOT_APPLICABLE,
+               crash_sypmtom: str = '',
+               crash_stacks: Optional[list[list[str]]] = None,
                fuzz_target_source: str = '',
                build_script_source: str = '',
                author: Any = None,
                chat_history: Optional[dict] = None,
-               semantic_check: SemanticCheckResult = SemanticCheckResult(
-                   SemanticCheckResult.NOT_APPLICABLE),
                stacktrace: str = '',
                true_bug: bool = False,
                insight: str = '') -> None:
@@ -286,8 +295,9 @@ class CrashResult(RunResult):
                      coverage, line_coverage_diff, textcov_diff,
                      reproducer_path, artifact_path, artifact_name, sanitizer,
                      log_path, corpus_path, coverage_report_path, cov_pcs,
-                     total_pcs, fuzz_target_source, build_script_source, author,
-                     chat_history, semantic_check)
+                     total_pcs, err_type, crash_sypmtom, crash_stacks,
+                     fuzz_target_source, build_script_source, author,
+                     chat_history)
     self.stacktrace = stacktrace
     self.true_bug = true_bug
     self.insight = insight
