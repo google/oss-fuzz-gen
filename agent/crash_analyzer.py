@@ -163,7 +163,7 @@ class CrashAnalyzer(BaseAgent):
     generated_target_name = os.path.basename(benchmark.target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
     generated_oss_fuzz_project = (
-        f'{benchmark.id}-{sample_id}-{self.trial:02d}-lldb')
+        f'{benchmark.id}-{sample_id}-lldb-{self.trial:02d}')
     generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
         generated_oss_fuzz_project)
 
@@ -178,10 +178,10 @@ class CrashAnalyzer(BaseAgent):
 
     self.analyze_tool = LLDBTool(
         benchmark,
-        name='lldb',
-        project=generated_oss_fuzz_project,
+        # project=generated_oss_fuzz_project,
         result=last_result,
-    )
+        name='lldb',
+        project_name=generated_oss_fuzz_project)
     self.analyze_tool.execute('compile > /dev/null')
     prompt = self._initial_prompt(result_history)
     prompt.add_problem(self.analyze_tool.tutorial())

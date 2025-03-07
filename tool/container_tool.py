@@ -25,9 +25,13 @@ logger = logging.getLogger(__name__)
 class ProjectContainerTool(BaseTool):
   """A tool for LLM agents to interact within a project's docker container."""
 
-  def __init__(self, benchmark: Benchmark, name: str = '') -> None:
+  def __init__(self,
+               benchmark: Benchmark,
+               name: str = '',
+               project_name: str = '') -> None:
     super().__init__(benchmark, name)
-    self.image_name = self._prepare_project_image()
+    project_name = project_name or benchmark.project
+    self.image_name = self._prepare_project_image(project_name)
     self.container_id = self._start_docker_container()
     self._backup_default_build_script()
     self.project_dir = self._get_project_dir()
@@ -37,13 +41,13 @@ class ProjectContainerTool(BaseTool):
     return self._get_tutorial_file_content('container_tool.txt').replace(
         '{FUZZ_TARGET_PATH}', self.benchmark.target_path)
 
-  def _prepare_project_image(self) -> str:
+  def _prepare_project_image(self, project_name: str) -> str:
     """Prepares the project's OSS-Fuzz docker image and returns the image name.
     """
-    image_name = oss_fuzz_checkout.prepare_project_image(self.benchmark.project)
+    image_name = oss_fuzz_checkout.prepare_project_image(project_name)
     if image_name:
       return image_name
-    raise Exception(f'Failed to build image for {self.benchmark.project}')
+    raise Exception(f'Failed to build image for {project_name}')
 
   def _execute_command_in_container(self,
                                     command: list[str]) -> sp.CompletedProcess:
