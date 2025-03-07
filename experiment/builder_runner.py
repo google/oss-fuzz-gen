@@ -523,7 +523,8 @@ class BuilderRunner:
     run_log_path = os.path.join(self.work_dirs.run_logs, f'{trial:02d}.log')
     self.run_target_local(generated_project, benchmark_target_name,
                           run_log_path)
-    artifact_dir = self.work_dirs.artifact(benchmark_target_name, iteration)
+    artifact_dir = self.work_dirs.artifact(benchmark_target_name, iteration,
+                                           trial)
     outdir = get_build_artifact_dir(generated_project, 'out')
     crash_files = [f for f in os.listdir(outdir) if f.startswith('crash-')]
     if len(crash_files) == 0:
@@ -1082,7 +1083,8 @@ class CloudBuilderRunner(BuilderRunner):
           run_result.artifact_name, run_result.semantic_check = \
             self._parse_libfuzzer_logs(f, project_name)
 
-    artifact_dir = self.work_dirs.artifact(generated_target_name, iteration)
+    artifact_dir = self.work_dirs.artifact(generated_target_name, iteration,
+                                           trial)
     blob = bucket.blob(f'{reproducer_name}/artifacts')
     if blob.exists():
       file_name = run_result.artifact_name
