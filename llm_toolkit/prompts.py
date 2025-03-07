@@ -117,11 +117,6 @@ class OpenAIPrompt(Prompt):
 
     self._prompt = initial
 
-  def append(self, text: str) -> None:
-    """Appends to the formatted prompt."""
-    # A placeholder for now.
-    del text
-
   def get(self) -> Any:
     """Gets the final formatted prompt."""
     return self._prompt
