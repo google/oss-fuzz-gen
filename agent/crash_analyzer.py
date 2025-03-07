@@ -141,7 +141,7 @@ class CrashAnalyzer(BaseAgent):
     for command in self._parse_tags(response, 'bash'):
       prompt_text += self._format_bash_execution_result(
           tool.execute(command), previous_prompt=prompt) + '\n'
-      prompt.add_problem(prompt_text)
+      prompt.append(prompt_text)
     return prompt
 
   def _container_tool_reaction(self, cur_round: int, response: str,
@@ -209,11 +209,13 @@ class CrashAnalyzer(BaseAgent):
         coverage_report_path=last_result.coverage_report_path,
         cov_pcs=last_result.cov_pcs,
         total_pcs=last_result.total_pcs,
+        err_type=last_result.err_type,
+        crash_sypmtom=last_result.crash_sypmtom,
+        crash_stacks=last_result.crash_stacks,
         fuzz_target_source=last_result.fuzz_target_source,
         build_script_source=last_result.build_script_source,
         author=self,
-        chat_history=last_result.chat_history,
-        semantic_check=last_result.semantic_check)
+        chat_history=last_result.chat_history)
     cur_round = 1
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
