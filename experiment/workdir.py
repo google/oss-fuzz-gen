@@ -63,9 +63,11 @@ class WorkDirs:
     os.makedirs(corpus_dir, exist_ok=True)
     return corpus_dir
 
-  def artifact(self, generated_target_name: str, iteration: int) -> str:
-    artifact_dir = os.path.join(self._artifact_base,
-                                f'{generated_target_name}-F{iteration}')
+  def artifact(self, generated_target_name: str, iteration: int,
+               trial: int) -> str:
+    artifact_dir = os.path.join(
+        self._artifact_base,
+        f'{generated_target_name}-F{iteration}-{trial:02d}')
     os.makedirs(artifact_dir, exist_ok=True)
     return artifact_dir
 
