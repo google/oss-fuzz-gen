@@ -106,11 +106,6 @@ class OpenAIPrompt(Prompt):
 
     self._prompt = initial
 
-  def append(self, text: str) -> None:
-    """Appends to the formatted prompt."""
-    # A placeholder for now.
-    del text
-
   def get(self) -> Any:
     """Gets the final formatted prompt."""
     return self._prompt
@@ -146,6 +141,13 @@ class OpenAIPrompt(Prompt):
     """Saves the prompt to a filelocation."""
     with open(location, 'w+') as prompt_file:
       json.dump(self._prompt, prompt_file)
+
+  def append(self, text: str, role: str = 'user') -> None:
+    """Appends to the formatted prompt."""
+    self._prompt.append({
+        'role': role,
+        'content': text,
+    })
 
 
 class ClaudePrompt(OpenAIPrompt):
