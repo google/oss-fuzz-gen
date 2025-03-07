@@ -223,7 +223,6 @@ class CloudBuilder:
     pool_name = os.getenv('GCB_BUILDPOOL_NAME')
     if pool_name:
       cloud_build_config.setdefault('options', {})['pool'] = {'name': pool_name}
-    logging.info(cloud_build_config)
 
     # Convert to YAML string and submit the Cloud Build request
     build_info = self.builds.create(projectId=self.project_id,
