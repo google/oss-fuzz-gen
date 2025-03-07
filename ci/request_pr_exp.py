@@ -51,6 +51,7 @@ LARGE_REQUEST_MEM = 1000
 NUM_SAMPLES = 2
 NUM_FIXES = 2
 VARY_TEMPERATURE = True
+MAX_ROUND = 100
 
 PR_LINK_PREFIX = 'https://github.com/google/oss-fuzz-gen/pull'
 JOB_LINK_PREFIX = ('https://console.cloud.google.com/kubernetes/job/'
@@ -159,6 +160,11 @@ def _parse_args(cmd) -> argparse.Namespace:
       default=VARY_TEMPERATURE,
       help=('Use different temperatures for each sample, default: '
             f'{VARY_TEMPERATURE}'))
+  parser.add_argument('-mr',
+                      '--max-round',
+                      type=int,
+                      default=MAX_ROUND,
+                      help=f'Max trial round for agents, default: {MAX_ROUND}.')
   parser.add_argument('-ag',
                       '--agent',
                       action='store_true',
@@ -196,6 +202,9 @@ def _parse_args(cmd) -> argparse.Namespace:
     args.request_memory = LARGE_REQUEST_MEM
     args.gke_template = LARGE_TEMPLATE_PATH
 
+  if (args.max_round == 100 and
+      any(args.name_suffix.startswith(suffix) for suffix in ['ascc-', 'dgk-'])):
+    args.max_round = 10
   return args
 
 
@@ -312,6 +321,7 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['GKE_EXP_VARY_TEMPERATURE'] = f'{args.vary_temperature}'.lower()
   exp_env_vars['GKE_EXP_AGENT'] = f'{args.agent}'.lower()
   exp_env_vars['GKE_REDIRECT_OUTS'] = 'true' if args.redirect_outs else ''
+  exp_env_vars['GKE_EXP_MAX_ROUND'] = args.max_round
 
   with open(args.gke_template, 'r') as file:
     yaml_template = file.read()
