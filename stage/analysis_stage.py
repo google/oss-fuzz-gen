@@ -16,8 +16,8 @@ stage is responsible for categorizing run-time crashes and detecting untested
 code blocks."""
 from typing import cast
 
-from results import AnalysisResult, CrashResult, Result, RunResult
 from experiment.fuzz_target_error import SemanticCheckResult
+from results import AnalysisResult, CrashResult, Result, RunResult
 from stage.base_stage import BaseStage
 
 
