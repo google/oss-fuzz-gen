@@ -110,8 +110,8 @@ class CrashAnalyzer(BaseAgent):
 
     return name
 
-  def _handle_conclusion(self, cur_round: int, response: str,
-                         crash_result: CrashResult):
+  def _container_handle_conclusion(self, cur_round: int, response: str,
+                                   crash_result: CrashResult):
     """Parses LLM conclusion, analysis and suggestion."""
     logger.info('----- ROUND %02d Received conclusion -----',
                 cur_round,
@@ -138,7 +138,8 @@ class CrashAnalyzer(BaseAgent):
                                crash_result: CrashResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
     if self._parse_tag(response, 'conclusion'):
-      return self._handle_conclusion(cur_round, response, crash_result)
+      return self._container_handle_conclusion(cur_round, response,
+                                               crash_result)
     prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
     return self._container_handle_bash_command(response, self.analyze_tool,
                                                prompt)
