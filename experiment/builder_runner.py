@@ -90,7 +90,7 @@ class RunResult:
   coverage_report_path: str = ''
   reproducer_path: str = ''
   artifact_path: str = ''  # local artifact path
-  artifact_name: str = 'testcase'
+  artifact_name: str = ''
   sanitizer: str = ''
   cov_pcs: int = 0
   total_pcs: int = 0
