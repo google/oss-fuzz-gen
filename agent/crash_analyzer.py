@@ -134,16 +134,6 @@ class CrashAnalyzer(BaseAgent):
                    response,
                    trial=self.trial)
 
-  def _container_handle_bash_command(self, response: str, tool: BaseTool,
-                                     prompt: Prompt) -> Prompt:
-    """Handles the command from LLM with container |tool|."""
-    prompt_text = ''
-    for command in self._parse_tags(response, 'bash'):
-      prompt_text += self._format_bash_execution_result(
-          tool.execute(command), previous_prompt=prompt) + '\n'
-      prompt.append(prompt_text)
-    return prompt
-
   def _container_tool_reaction(self, cur_round: int, response: str,
                                crash_result: CrashResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
