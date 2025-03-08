@@ -25,7 +25,6 @@ from experiment import oss_fuzz_checkout
 from llm_toolkit import prompt_builder
 from llm_toolkit.prompts import Prompt
 from results import CrashResult, Result, RunResult
-from tool.base_tool import BaseTool
 from tool.lldb_tool import LLDBTool
 
 MAX_ROUND = 100
@@ -176,37 +175,7 @@ class CrashAnalyzer(BaseAgent):
     self.analyze_tool.execute('compile > /dev/null')
     prompt = self._initial_prompt(result_history)
     prompt.add_problem(self.analyze_tool.tutorial())
-    crash_result = CrashResult(
-        benchmark=benchmark,
-        trial=self.trial,
-        work_dirs=last_result.work_dirs,
-        compiles=last_result.compiles,
-        compile_error=last_result.compile_error,
-        compile_log=last_result.compile_log,
-        crashes=last_result.crashes,
-        run_error=last_result.run_error,
-        crash_func=last_result.crash_func,
-        run_log=last_result.run_log,
-        coverage_summary=last_result.coverage_summary,
-        coverage=last_result.coverage,
-        line_coverage_diff=last_result.line_coverage_diff,
-        textcov_diff=last_result.textcov_diff,
-        reproducer_path=last_result.reproducer_path,
-        artifact_path=last_result.artifact_path,
-        artifact_name=last_result.artifact_name,
-        sanitizer=last_result.sanitizer,
-        log_path=last_result.log_path,
-        corpus_path=last_result.corpus_path,
-        coverage_report_path=last_result.coverage_report_path,
-        cov_pcs=last_result.cov_pcs,
-        total_pcs=last_result.total_pcs,
-        err_type=last_result.err_type,
-        crash_sypmtom=last_result.crash_sypmtom,
-        crash_stacks=last_result.crash_stacks,
-        fuzz_target_source=last_result.fuzz_target_source,
-        build_script_source=last_result.build_script_source,
-        author=self,
-        chat_history=last_result.chat_history)
+    crash_result = CrashResult.from_existing_result(last_result)
     cur_round = 1
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())

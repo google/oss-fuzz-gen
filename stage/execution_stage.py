@@ -154,7 +154,7 @@ class ExecutionStage(BaseStage):
           cov_pcs=run_result.cov_pcs,
           total_pcs=run_result.total_pcs,
           err_type=run_result.semantic_check.type,
-          crash_sypmtom=run_result.semantic_check.crash_sypmtom,
+          crash_sypmtom=run_result.semantic_check.crash_symptom,
           crash_stacks=run_result.semantic_check.crash_stacks)
     except Exception as e:
       self.logger.error('Exception %s occurred on %s', e, last_result)

@@ -254,50 +254,12 @@ class CrashResult(RunResult):
   insight: str  # Reason and fixes for crashes
 
   def __init__(self,
-               benchmark: Benchmark,
-               trial: int,
-               work_dirs: WorkDirs,
-               compiles: bool = False,
-               compile_error: str = '',
-               compile_log: str = '',
-               binary_exists: bool = False,
-               is_function_referenced: bool = False,
-               crashes: bool = False,
-               run_error: str = '',
-               crash_func: Optional[dict] = None,
-               run_log: str = '',
-               coverage_summary: Optional[dict] = None,
-               coverage: float = 0.0,
-               line_coverage_diff: float = 0.0,
-               textcov_diff: Optional[textcov.Textcov] = None,
-               reproducer_path: str = '',
-               artifact_path: str = '',
-               artifact_name: str = '',
-               sanitizer: str = '',
-               log_path: str = '',
-               corpus_path: str = '',
-               coverage_report_path: str = '',
-               cov_pcs: int = 0,
-               total_pcs: int = 0,
-               err_type: str = SemanticCheckResult.NOT_APPLICABLE,
-               crash_sypmtom: str = '',
-               crash_stacks: Optional[list[list[str]]] = None,
-               fuzz_target_source: str = '',
-               build_script_source: str = '',
-               author: Any = None,
-               chat_history: Optional[dict] = None,
+               *args,
                stacktrace: str = '',
                true_bug: bool = False,
-               insight: str = '') -> None:
-    super().__init__(benchmark, trial, work_dirs, compiles, compile_error,
-                     compile_log, binary_exists, is_function_referenced,
-                     crashes, run_error, crash_func, run_log, coverage_summary,
-                     coverage, line_coverage_diff, textcov_diff,
-                     reproducer_path, artifact_path, artifact_name, sanitizer,
-                     log_path, corpus_path, coverage_report_path, cov_pcs,
-                     total_pcs, err_type, crash_sypmtom, crash_stacks,
-                     fuzz_target_source, build_script_source, author,
-                     chat_history)
+               insight: str = '',
+               **kwargs):
+    super().__init__(*args, **kwargs)
     self.stacktrace = stacktrace
     self.true_bug = true_bug
     self.insight = insight
@@ -308,6 +270,12 @@ class CrashResult(RunResult):
         'true_bug': self.true_bug,
         'insight': self.insight,
     }
+
+  @classmethod
+  def from_existing_result(cls, result: RunResult, **overrides):
+    result_dict = result.to_dict()
+    result_dict.update(overrides)
+    return cls(**result_dict)
 
 
 class CoverageResult(RunResult):
