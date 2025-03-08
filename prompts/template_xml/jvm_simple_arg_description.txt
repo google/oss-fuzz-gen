@@ -1,4 +1,8 @@
-<argument>
-Argument #{ARG_COUNT} requires the {SIMPLE_TYPE} variable.
-You must use {RANDOM_METHODS} to generate {ARRAY_OR_NOT}.
-</argument>
+{
+  "argument": {
+    "index": "{ARG_COUNT}",
+    "required_variable": "{SIMPLE_TYPE}",
+    "generation_method": "{RANDOM_METHODS}",
+    "array_status": "{ARRAY_OR_NOT}"
+  }
+}

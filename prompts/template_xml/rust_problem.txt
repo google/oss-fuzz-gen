@@ -1,36 +1,23 @@
-<task>
-Your goal is to write a fuzzing harness for the provided method signature to fuzz the method with random data. It is important that the provided solution compiles and actually calls the function specified by the method signature:
-<target>
-<function_signature>
-{FUNCTION_SIGNATURE}
-</function_signature>
-The target function is belonging to the Rust project {PROJECT_NAME} ({PROJECT_URL}).
-You MUST call to this target function in the original project, NOT creating a dummy function.
-This function requires {ARG_COUNT} arguments. You must prepare them with random seeded data.
-Here is a list of types for all arguments in order, separated by comma. You MUST preserve the modifiers.
-{ARG_TYPE}
-</target>
-<requirements>
-<item>Try as many variations of these inputs as possible.</item>
-<item>Try creating the harness as complex as possible.</item>
-<item>Try adding some nested loop to invoke the target method for multiple times.</item>
-<item>The generated fuzzing harness should be wrapped with the <code> tag.</item>
-<item>Please avoid using any multithreading or multi-processing approach.</item>
-<item>You MUST create the fuzzing harness using Cargo-Fuzz approach.</item>
-<item>You MUST use the #![no_main] tag.</item>
-<item>You MUST use the libfuzzer_sys::fuzz_target crate.</item>
-<item>You MUST include the fuzz_target macro to include all fuzzing statements.</item>
-<item>You MUST include the use of the necessary functions and crate for calling the target function.</item>
-<item>You MUST generate the harness with the assumption that the Cargo.toml for the Cargo-Fuzz directory cannot be changed.</item>
-<item>The following is a sample of the fuzzing harness.
-<code>
-#![no_main]
-use libfuzzer_sys::fuzz_target;
-
-fuzz_target!(|data: &[u8]| {
-    // This is the macro acts as the entry point for the fuzzing harness.
-    // Add fuzzing logic here.
-});
-</code></item>
-</requirements>
-</task>
+{
+  "task": "Your goal is to write a fuzzing harness for the provided method signature to fuzz the method with random data. It is important that the provided solution compiles and actually calls the function specified by the method signature:",
+  
+  "target": {
+    "function_signature": "{FUNCTION_SIGNATURE}",
+    "description": "The target function is belonging to the Rust project {PROJECT_NAME} ({PROJECT_URL}).\nYou MUST call to this target function in the original project, NOT creating a dummy function.\nThis function requires {ARG_COUNT} arguments. You must prepare them with random seeded data.\nHere is a list of types for all arguments in order, separated by comma. You MUST preserve the modifiers.\n{ARG_TYPE}"
+  },
+  
+  "requirements": [
+    "Try as many variations of these inputs as possible.",
+    "Try creating the harness as complex as possible.",
+    "Try adding some nested loop to invoke the target method for multiple times.",
+    "The generated fuzzing harness should be wrapped with the code tag.",
+    "Please avoid using any multithreading or multi-processing approach.",
+    "You MUST create the fuzzing harness using Cargo-Fuzz approach.",
+    "You MUST use the #![no_main] tag.",
+    "You MUST use the libfuzzer_sys::fuzz_target crate.",
+    "You MUST include the fuzz_target macro to include all fuzzing statements.",
+    "You MUST include the use of the necessary functions and crate for calling the target function.",
+    "You MUST generate the harness with the assumption that the Cargo.toml for the Cargo-Fuzz directory cannot be changed.",
+    "The following is a sample of the fuzzing harness.\n#![no_main]\nuse libfuzzer_sys::fuzz_target;\n\nfuzz_target!(|data: &[u8]| {\n    // This is the macro acts as the entry point for the fuzzing harness.\n    // Add fuzzing logic here.\n});"
+  ]
+}

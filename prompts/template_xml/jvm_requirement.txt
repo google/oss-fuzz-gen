@@ -1,59 +1,51 @@
-<requirements>
-<item>Try as many variations of these inputs as possible.</item>
-<item>Try creating the harness as complex as possible.</item>
-<item>Try adding some nested loop to invoke the target method for multiple times.</item>
-<item>The generated fuzzing harness should be wrapped with the <java_code> tag.</item>
-<item>NEVER use any methods from the <code>java.lang.Random</code> class in the generated code.</item>
-<item>NEVER use any classes or methods in the <code>java.lang.reflect</code> package in the generated code.</item>
-<item>NEVER use the @FuzzTest annotation for specifying the fuzzing method.</item>
-<item>NEVER use any assert, printing and logging statements in the generated harness.</item>
-<item>Please avoid using any multithreading or multi-processing approach.</item>
-<item>Please add import statements for necessary classes, except for classes in the java.lang package.</item>
-<item>You MUST create the object before calling the target method.</item>
-<item>You MUST catch java.lang.RuntimeException.</item>
-<item>Please use {HARNESS_NAME} as the Java class name.</item>
-<item>{STATIC_OR_INSTANCE}</item>
-{NEED_CLOSE}
-<item>You MUST invoke the close method of any resource class objects that implements the java.lang.AutoCloseable interface in the finally block after the target method is invoked.</item>
-<item>Do not create new variables with the same names as existing variables.
-WRONG:
-<code>
-public static void testing(int test) {
-  String test = "Testing";
+{
+  "requirements": {
+    "input_variation": true,
+    "complex_harness": true,
+    "nested_loops": true,
+    "wrap_with_tag": "<java_code>",
+    "restrictions": {
+      "forbidden_methods": ["java.lang.Random"],
+      "forbidden_packages": ["java.lang.reflect"],
+      "no_annotations": ["@FuzzTest"],
+      "no_logging": true,
+      "no_multithreading": true
+    },
+    "imports": {
+      "necessary_only": true,
+      "fully_qualified_names": true,
+      "import_mappings": "{IMPORT_MAPPINGS}"
+    },
+    "object_creation": {
+      "before_invocation": true,
+      "avoid_variable_reuse": true
+    },
+    "class_name": "{HARNESS_NAME}",
+    "runtime_exception_handling": true,
+    "static_or_instance": "{STATIC_OR_INSTANCE}",
+    "resource_handling": {
+      "need_close": "{NEED_CLOSE}",
+      "invoke_close": true,
+      "implements_auto_closeable": true
+    },
+    "template": {
+      "structure": {
+        "imports": [
+          "import com.code_intelligence.jazzer.api.FuzzedDataProvider;"
+        ],
+        "methods": {
+          "fuzzerInitialize": "// Initializing objects for fuzzing",
+          "fuzzerTearDown": "// Tear down objects after fuzzing",
+          "fuzzerTestOneInput": "// Use the FuzzedDataProvider object to generate random data for fuzzing\n// Fuzz by invoking the target method with random parameters / objects generated above."
+        }
+      }
+    },
+    "import_list": [
+      {
+        "class_name": "FuzzedDataProvider",
+        "full_class_name": "com.code_intelligence.jazzer.api.FuzzedDataProvider"
+      },
+      "{IMPORT_MAPPINGS}"
+    ]
+  }
 }
-</code></item>
-<item>Always create the fuzzing harness from the following templates:
-<code>
-import com.code_intelligence.jazzer.api.FuzzedDataProvider;
-// Other imports
-
-public class {HARNESS_NAME} {
-  public static void fuzzerInitialize() {
-    // Initializing objects for fuzzing
-  }
-
-  public static void fuzzerTearDown() {
-    // Tear down objects after fuzzing
-  }
-
-  public static void fuzzerTestOneInput(FuzzedDataProvider data) {
-    // Use the FuzzedDataProvider object to generate random data for fuzzing
-
-    // Fuzz by invoking the target method with random parameters / objects generated above.
-  }
-}
-</code></item>
-<item>
-Here is a list of classes and their fully qualified names. You must import all classes by their fully qualified name.
-For example, if the fully qualified name of a class is <code>abc.def.ghi</code>, then you must add an import
-statement <code>import abc.def.ghi;</code> in the result code.
-Do not import the same class multiple times.
-Each item in this list has two attributes, <class_name> tag contains the class name and <full_class_name>
-contains the fully qualified name of the given class.
-<list>
-<item><class_name>FuzzedDataProvider</class_name><full_class_name>com.code_intelligence.jazzer.api.FuzzedDataProvider</full_class_name></item>
-{IMPORT_MAPPINGS}
-</item>
-</list>
-</requirements>
-

@@ -1,20 +1,15 @@
-Below is the code needs to be built:
-<code>
-{CODE_TO_BE_FIXED}
-</code>
-
-Below is the error to fix:
-{ERROR_SUMMARY}
-<error>
-{ERROR_MESSAGES}
-</error>
-
-{CONTEXT}
-{INSTRUCTION}
-
-Fix code:
-1. Consider possible solutions for the issues listed above.
-2. Choose a solution that can maximize fuzzing result, which is utilizing the function under test and feeding it not null input.
-3. Apply the solutions to the original code.
-It's important to show the complete code, not only the fixed line.
-<solution>
+{
+  "intro": "Below is the code needs to be built:",
+  "code": "{CODE_TO_BE_FIXED}",
+  
+  "error_intro": "Below is the error to fix:",
+  "error_summary": "{ERROR_SUMMARY}",
+  "error_messages": "{ERROR_MESSAGES}",
+  
+  "context": "{CONTEXT}",
+  "instruction": "{INSTRUCTION}",
+  
+  "fix_instructions": "Fix code:\n1. Consider possible solutions for the issues listed above.\n2. Choose a solution that can maximize fuzzing result, which is utilizing the function under test and feeding it not null input.\n3. Apply the solutions to the original code.\nIt's important to show the complete code, not only the fixed line.",
+  
+  "solution_placeholder": ""
+}
