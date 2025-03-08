@@ -467,6 +467,21 @@ class BuilderRunner:
     return ParseResult(cov_pcs, total_pcs, crashes, '', '',
                        SemanticCheckResult(SemanticCheckResult.NO_SEMANTIC_ERR))
 
+  def _copy_crash_file(self, outdir: str, artifact_dir: str,
+                       run_result: RunResult) -> None:
+    """Copies the first crash file to the artifact directory."""
+    crash_files = [
+        f for f in os.listdir(outdir)
+        if f.startswith('crash-') and os.path.isfile(os.path.join(outdir, f))
+    ]
+    if len(crash_files) != 0:
+      crash_file = crash_files[0]
+      src = os.path.join(outdir, crash_file)
+      dst = os.path.join(artifact_dir, crash_file)
+      run_result.artifact_path = dst
+      shutil.copy2(src, dst)
+      logger.info('Copied crash file %s to %s', crash_file, artifact_dir)
+
   def build_and_run(
       self,
       generated_project: str,
@@ -526,19 +541,7 @@ class BuilderRunner:
     artifact_dir = self.work_dirs.artifact(benchmark_target_name, iteration,
                                            trial)
     outdir = get_build_artifact_dir(generated_project, 'out')
-    crash_files = [f for f in os.listdir(outdir) if f.startswith('crash-')]
-    if len(crash_files) == 0:
-      logger.info('No crash files found in %s.', outdir)
-    elif len(crash_files) > 1:
-      logger.warning('Multiple crash files found in %s: %s', outdir,
-                     crash_files)
-    else:
-      crash_file = crash_files[0]
-      src = os.path.join(outdir, crash_file)
-      dst = os.path.join(artifact_dir, crash_file)
-      run_result.artifact_path = dst
-      shutil.copy2(src, dst)
-      logger.info('Copied crash file %s to %s', crash_file, artifact_dir)
+    self._copy_crash_file(outdir, artifact_dir, run_result)
 
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
         generated_project, benchmark_target_name))
