@@ -1,1 +1,6 @@
-<item><class_name>{CLASS_NAME}</class_name><full_class_name>{FULL_CLASS_NAME}</full_class_name></item>
+{
+  "item": {
+    "class_name": "{CLASS_NAME}",
+    "full_class_name": "{FULL_CLASS_NAME}"
+  }
+}

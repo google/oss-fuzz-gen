@@ -1,6 +1,3 @@
-<argument>
-Argument #{ARG_COUNT} requires {TYPE}.
-{GENERAL_DESC}
-{GENERIC_DESC}
-</argument>
-
+{
+  "argument": "Argument #{ARG_COUNT} requires an instance of {ARG_TYPE}{GENERIC_TYPE}.\nPlease generate the needed instance with constructors or static methods.\nPlease also insert random data into the created instance.\n{GENERIC_DESC}"
+}

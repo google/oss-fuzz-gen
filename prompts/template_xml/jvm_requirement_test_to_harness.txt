@@ -1,104 +1,82 @@
-This is a Java programming language so the harness should be written in Java.
-The fuzzing harness should be executable under the Jazzer fuzzing framework.
-Here is a list of requirements that you MUST follow.
-<requirements>
-<item>Try as many variations of these inputs as possible.</item>
-<item>Try creating the harness as complex as possible.</item>
-<item>Try adding some nested loop to invoke the target method for multiple times.</item>
-<item>The generated fuzzing harness should be wrapped with the <java_code> tag.</item>
-<item>NEVER use any methods from the <code>java.lang.Random</code> class in the generated code.</item>
-<item>NEVER use any classes or methods in the <code>java.lang.reflect</code> package in the generated code.</item>
-<item>NEVER use the @FuzzTest annotation for specifying the fuzzing method.</item>
-<item>NEVER use any assert, printing and logging statements in the generated harness.</item>
-<item>Please avoid using any multithreading or multi-processing approach.</item>
-<item>Please add import statements for necessary classes, except for classes in the java.lang package.</item>
-<item>You MUST create the object before calling the target method.</item>
-<item>Please use {HARNESS_NAME} as the Java class name.</item>
-<item>You MUST invoke the close method of any resource class objects that implements the java.lang.AutoCloseable interface in the finally block after the target method is invoked.</item>
-<item>You MUST use similar approach as the examples and tests to catch exceptions.</item>
-<item>
-Here is a comma separated list of public project methods. You must include the invocation of at least one of them in the generated harness. Each of the method signatures follows the format of <code>[Full qualified name of the class].method_name(method_arguments)</code>.
-{PUBLIC_METHODS}
-</item>
-<item>
-<item>Do not create new variables with the same names as existing variables.
-WRONG:
-<code>
-public static void testing(int test) {
-  String test = "Testing";
+{
+  "language": "Java",
+  "framework": "Jazzer",
+  "requirements": {
+    "input_variation": true,
+    "complex_harness": true,
+    "nested_loops": true,
+    "wrap_with_tag": "<java_code>",
+    "restrictions": {
+      "forbidden_methods": ["java.lang.Random"],
+      "forbidden_packages": ["java.lang.reflect"],
+      "no_annotations": ["@FuzzTest"],
+      "no_logging": true,
+      "no_multithreading": true
+    },
+    "imports": {
+      "necessary_only": true,
+      "required_imports": "{IMPORT_STATEMENTS}",
+      "optional_imports": "{OTHER_IMPORT_STATEMENTS}"
+    },
+    "object_creation": {
+      "before_invocation": true,
+      "avoid_variable_reuse": true
+    },
+    "class_name": "{HARNESS_NAME}",
+    "resource_handling": {
+      "invoke_close": true,
+      "implements_auto_closeable": true
+    },
+    "exception_handling": "follow_examples",
+    "method_invocation": {
+      "public_methods": "{PUBLIC_METHODS}",
+      "at_least_one": true
+    },
+    "public_classes": "{PUBLIC_CLASSES}",
+    "template": {
+      "structure": {
+        "imports": ["import com.code_intelligence.jazzer.api.FuzzedDataProvider;"],
+        "methods": {
+          "fuzzerInitialize": "// Initializing objects for fuzzing",
+          "fuzzerTearDown": "// Tear down objects after fuzzing",
+          "fuzzerTestOneInput": "// Use the FuzzedDataProvider object to generate random data for fuzzing\n// Fuzz by invoking the target method with random parameters / objects generated above."
+        }
+      }
+    },
+    "data_generation": {
+      "allowed_methods": [
+        "consumeBytes(int length)",
+        "consumeRemainingAsBytes()",
+        "consumeString(int length)",
+        "consumeRemainingAsString()",
+        "consumeBoolean()",
+        "consumeInt(int min, int max)",
+        "consumeInt()",
+        "consumeLong(long min, long max)",
+        "consumeLong()",
+        "consumeFloat(float min, float max)",
+        "consumeFloat()",
+        "consumeDouble(double min, double max)",
+        "consumeDouble()",
+        "consumeChar()",
+        "consumeChar(char min, char max)",
+        "consumeShort(short min, short max)",
+        "consumeShort()",
+        "consumeRemainingAsCharSequence()",
+        "consumeBytestring()",
+        "consumeBigInteger(int minNumBits)",
+        "consumeEnum(Class<E> enumType)",
+        "consumeProbabilityDouble()",
+        "consumeFraction()",
+        "pickValue(T... values)",
+        "pickValue(List<T> values)",
+        "consumeByte()",
+        "consumeIntList(int length)",
+        "consumeLongList(int length)",
+        "consumeFloatList(int length)",
+        "consumeDoubleList(int length)",
+        "consumeCharList(int length)"
+      ]
+    }
+  }
 }
-</code></item>
-<item>Always create the fuzzing harness from the following templates:
-<code>
-import com.code_intelligence.jazzer.api.FuzzedDataProvider;
-// Other imports
-
-public class {HARNESS_NAME} {
-  public static void fuzzerInitialize() {
-    // Initializing objects for fuzzing
-  }
-
-  public static void fuzzerTearDown() {
-    // Tear down objects after fuzzing
-  }
-
-  public static void fuzzerTestOneInput(FuzzedDataProvider data) {
-    // Use the FuzzedDataProvider object to generate random data for fuzzing
-
-    // Fuzz by invoking the target method with random parameters / objects generated above.
-  }
-}
-</code></item>
-<item>
-Here is a comma-separated list of all publicly accessible classes in this project. You can use any of these classes, as well as classes from the JVM library. Please AVOID using other classes in the project, even if it exists in the following test or sample code as they are not publicly accessible. Please import all necessary classes from this list.
-{PUBLIC_CLASSES}
-</item>
-<item>
-Here is a list of import statements that you MUST add to the generated harness.
-{IMPORT_STATEMENTS}
-</item>
-<item>
-Here is a list of other import statements for reference that you may need to make the generated harness compiles. Please only add them if necessary.
-{OTHER_IMPORT_STATEMENTS}
-</item>
-<item>
-You MUST ONLY use any of the following methods from the FuzzedDataProvider of the Jazzer framework for generating random data for fuzzing.
-If the needed return value is not found in the table, try to use constructors or methods to create the needed random object. But you MUST try your best to randomise the random object with the methods in the table.
-
-| Method                                      | Return Value                          |
-|---------------------------------------------|---------------------------------------|
-| `consumeBytes(int length)`                  | `byte[]`                              |
-| `consumeRemainingAsBytes()`                 | `byte[]`                              |
-| `consumeString(int length)`                 | `String`                              |
-| `consumeRemainingAsString()`                | `String`                              |
-| `consumeBoolean()`                          | `boolean`                             |
-| `consumeInt(int min, int max)`              | `int`                                 |
-| `consumeInt()`                              | `int`                                 |
-| `consumeLong(long min, long max)`           | `long`                                |
-| `consumeLong()`                             | `long`                                |
-| `consumeFloat(float min, float max)`        | `float`                               |
-| `consumeFloat()`                            | `float`                               |
-| `consumeDouble(double min, double max)`     | `double`                              |
-| `consumeDouble()`                           | `double`                              |
-| `consumeChar()`                             | `char`                                |
-| `consumeChar(char min, char max)`           | `char`                                |
-| `consumeShort(short min, short max)`        | `short`                               |
-| `consumeShort()`                            | `short`                               |
-| `consumeRemainingAsCharSequence()`          | `CharSequence`                        |
-| `consumeBytestring()`                       | `byte[]`                              |
-| `consumeBigInteger(int minNumBits)`         | `BigInteger`                          |
-| `consumeEnum(Class<E> enumType)`            | `E` (Enum type)                       |
-| `consumeProbabilityDouble()`                | `double`                              |
-| `consumeFraction()`                         | `double`                              |
-| `pickValue(T... values)`                    | `T` (Type of value)                   |
-| `pickValue(List<T> values)`                 | `T` (Type of value)                   |
-| `consumeByte()`                             | `byte`                                |
-| `consumeIntList(int length)`                | `List<Integer>`                       |
-| `consumeLongList(int length)`               | `List<Long>`                          |
-| `consumeFloatList(int length)`              | `List<Float>`                         |
-| `consumeDoubleList(int length)`             | `List<Double>`                        |
-| `consumeCharList(int length)`               | `List<Character>`                     |
-
-</item>
-</requirements>
-

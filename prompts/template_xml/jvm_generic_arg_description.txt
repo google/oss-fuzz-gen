@@ -1,0 +1,3 @@
+{
+  "generic_description": "For generic type of {GENERIC_TYPE}, you MUST use {RANDOM_METHODS} to generate the needed variable."
+}

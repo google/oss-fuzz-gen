@@ -1,24 +1,3 @@
-<system>
-Hello! I need you to write a fuzzing harness. The target codebase is written purely in the C language so the harness should be in pure C.
-
-The Codebase we are targeting is located in the repository {TARGET_REPO}.
-
-I would like for you to write the harness targeting the function {TARGET_FUNCTION}
-
-The source code for the function is:
-
-{TARGET_FUNCTION_SOURCE_CODE}
-
-The harness should be in libFuzzer style, with the code wrapped in `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`. Specifically, do not include `extern "C"` in the fuzzer code.
-
-Please wrap all code in <code> tags and you should include nothing else but the code in your reply. Do not include any other text.
-
-Make sure the ensure strings passed to the target are null-terminated.
-
-The function we're fuzzing and corresponding types are included in the following header files: {TARGET_HEADER_FILES}. Please include these files in the target harness and use the full path to the header file as outlined in the list.
-
-{FUNCTION_ARG_TYPES_MSG}
-
-The most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code as simple as possible in order to secure it can be build.
-
-{ADDITIONAL_INFORMATION}
+{
+  "system": "Hello! I need you to write a fuzzing harness. The target codebase is written purely in the C language so the harness should be in pure C.\n\nThe Codebase we are targeting is located in the repository {TARGET_REPO}.\n\nI would like for you to write the harness targeting the function {TARGET_FUNCTION}\n\nThe source code for the function is:\n\n{TARGET_FUNCTION_SOURCE_CODE}\n\nThe harness should be in libFuzzer style, with the code wrapped in `int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`. Specifically, do not include `extern \"C\"` in the fuzzer code.\n\nPlease wrap all code in code tags and you should include nothing else but the code in your reply. Do not include any other text.\n\nMake sure the ensure strings passed to the target are null-terminated.\n\nThe function we're fuzzing and corresponding types are included in the following header files: {TARGET_HEADER_FILES}. Please include these files in the target harness and use the full path to the header file as outlined in the list.\n\n{FUNCTION_ARG_TYPES_MSG}\n\nThe most important part of the harness is that it will build and compile correctly against the target code. Please focus on making the code as simple as possible in order to secure it can be build.\n\n{ADDITIONAL_INFORMATION}"
+}
