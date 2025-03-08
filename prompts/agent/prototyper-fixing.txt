@@ -1,16 +1,23 @@
-Failed to build fuzz target. Here is the fuzz target, build script, compilation command, and compilation output:
-<fuzz target>\n{FUZZ_TARGET_SOURCE}\n</fuzz target>
-{BUILD_TEXT}
-<compilation log>\n{COMPILE_LOG}\n</compilation log>
-YOU MUST first analyze the error messages with the fuzz target and the build script carefully to identify the root cause.
-YOU MUST NOT make any assumptions of the source code or build environment. Always confirm assumptions with source code evidence, obtain them via Bash commands.
-Once you are absolutely certain of the error root cause, output the FULL SOURCE CODE of the fuzz target (and FULL SOURCE CODE of build script, if /src/build.bk.sh is insufficient).
-TIPS:
-1. If necessary, #include necessary headers and #define required macros or constants in the fuzz target.
-2. Adjust compiler flags to link required libraries in the build script.
-3. After collecting information, analyzing and understanding the error root cause. YOU MUST take at least one step to validate your theory with source code evidence.
-4. Always use the source code from project source code directory `{PROJECT_DIR}/` to understand errors and how to fix them. For example, search for the key words (e.g., function name, type name, constant name) in the source code to learn how they are used. Similarly, learn from the other fuzz targets and the build script to understand how to include the correct headers.
-5. Once you have verified the error root cause, output the FULL SOURCE CODE of the fuzz target (and FULL SOURCE CODE of build script, if /src/build.bk.sh is insufficient).
-6. Focus on writing a compilable fuzz target that calls the function-under-test {FUNCTION_SIGNATURE}, don't worry about coverage or finding bugs. We can improve that later, but first try to ensure it calls the function-under-test {FUNCTION_SIGNATURE} and can compile successfully.
-7. If an error happens repeatedly and cannot be fixed, try to mitigate it. For example, replace or remove the line.
+{
+  "message": "Failed to build fuzz target. Here is the fuzz target, build script, compilation command, and compilation output:",
+  "fuzz_target_source": "{FUZZ_TARGET_SOURCE}",
+  "build_text": "{BUILD_TEXT}",
+  "compile_log": "{COMPILE_LOG}",
+  "instructions": [
+    "YOU MUST first analyze the error messages with the fuzz target and the build script carefully to identify the root cause.",
+    "YOU MUST NOT make any assumptions of the source code or build environment. Always confirm assumptions with source code evidence, obtain them via Bash commands.",
+    "Once you are absolutely certain of the error root cause, output the FULL SOURCE CODE of the fuzz target (and FULL SOURCE CODE of build script, if /src/build.bk.sh is insufficient)."
+  ],
+  "tips": [
+    "If necessary, #include necessary headers and #define required macros or constants in the fuzz target.",
+    "Adjust compiler flags to link required libraries in the build script.",
+    "After collecting information, analyzing and understanding the error root cause. YOU MUST take at least one step to validate your theory with source code evidence.",
+    "Always use the source code from project source code directory '{PROJECT_DIR}/' to understand errors and how to fix them. For example, search for the key words (e.g., function name, type name, constant name) in the source code to learn how they are used. Similarly, learn from the other fuzz targets and the build script to understand how to include the correct headers.",
+    "Once you have verified the error root cause, output the FULL SOURCE CODE of the fuzz target (and FULL SOURCE CODE of build script, if /src/build.bk.sh is insufficient).",
+    "Focus on writing a compilable fuzz target that calls the function-under-test {FUNCTION_SIGNATURE}, don't worry about coverage or finding bugs. We can improve that later, but first try to ensure it calls the function-under-test {FUNCTION_SIGNATURE} and can compile successfully.",
+    "If an error happens repeatedly and cannot be fixed, try to mitigate it. For example, replace or remove the line."
+  ],
+  "function_signature": "{FUNCTION_SIGNATURE}",
+  "project_dir": "{PROJECT_DIR}"
+}
 

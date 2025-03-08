@@ -1,0 +1,75 @@
+{
+  "user_role": "security_engineer",
+  "goal": "Write a good fuzzing harness and fix compilation errors.",
+  "target_library": "{TARGET_REPO}",
+  "target_project": {
+    "language": "Java",
+    "fuzzing_framework": "Jazzer"
+  },
+  "harness": {
+    "code": "{GENERATED_HARNESS}",
+    "errors": "{ERRORS}",
+    "class_name": "{HARNESS_NAME}"
+  },
+  "requirements": {
+    "general": [
+      "The harness should be written in Java.",
+      "The fuzzing harness should be executable under the Jazzer fuzzing framework.",
+      "Keep all format and logic unchanged while fixing errors."
+    ],
+    "error_handling": [
+      "If missing imports for classes are found but the correct import statements cannot be located, remove the use of that class."
+    ],
+    "restrictions": [
+      "NEVER use any methods from the java.lang.Random class.",
+      "NEVER use any classes or methods in the java.lang.reflect package.",
+      "NEVER use the @FuzzTest annotation for specifying the fuzzing method.",
+      "NEVER use any assert, printing, or logging statements.",
+      "NEVER use multithreading or multi-processing."
+    ],
+    "execution": [
+      "Create the object before calling the target method.",
+      "Invoke the close method of any resource class objects that implement java.lang.AutoCloseable in the finally block after invoking the target method."
+    ],
+    "structure": {
+      "template": "Use the following template for the fuzzing harness.",
+      "code_template": "import com.code_intelligence.jazzer.api.FuzzedDataProvider;\n// Other imports\n\npublic class {HARNESS_NAME} {\n  public static void fuzzerInitialize() {\n    // Initializing objects for fuzzing\n  }\n\n  public static void fuzzerTearDown() {\n    // Tear down objects after fuzzing\n  }\n\n  public static void fuzzerTestOneInput(FuzzedDataProvider data) {\n    // Use the FuzzedDataProvider object to generate random data for fuzzing\n\n    // Fuzz by invoking the target method with random parameters / objects generated above.\n  }\n}"
+    },
+    "data_generation": {
+      "allowed_methods": [
+        "consumeBytes(int length)",
+        "consumeRemainingAsBytes()",
+        "consumeString(int length)",
+        "consumeRemainingAsString()",
+        "consumeBoolean()",
+        "consumeInt(int min, int max)",
+        "consumeInt()",
+        "consumeLong(long min, long max)",
+        "consumeLong()",
+        "consumeFloat(float min, float max)",
+        "consumeFloat()",
+        "consumeDouble(double min, double max)",
+        "consumeDouble()",
+        "consumeChar()",
+        "consumeChar(char min, char max)",
+        "consumeShort(short min, short max)",
+        "consumeShort()",
+        "consumeRemainingAsCharSequence()",
+        "consumeBytestring()",
+        "consumeBigInteger(int minNumBits)",
+        "consumeEnum(Class<E> enumType)",
+        "consumeProbabilityDouble()",
+        "consumeFraction()",
+        "pickValue(T... values)",
+        "pickValue(List<T> values)",
+        "consumeByte()",
+        "consumeIntList(int length)",
+        "consumeLongList(int length)",
+        "consumeFloatList(int length)",
+        "consumeDoubleList(int length)",
+        "consumeCharList(int length)"
+      ],
+      "fallback": "If the required return value is not found in the table, use constructors or methods to create the needed random object while ensuring randomization with the allowed methods."
+    }
+  }
+}

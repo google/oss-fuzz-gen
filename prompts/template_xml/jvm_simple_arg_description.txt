@@ -1,0 +1,8 @@
+{
+  "argument": {
+    "index": "{ARG_COUNT}",
+    "required_variable": "{SIMPLE_TYPE}",
+    "generation_method": "{RANDOM_METHODS}",
+    "array_status": "{ARRAY_OR_NOT}"
+  }
+}

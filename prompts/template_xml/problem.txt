@@ -1,6 +1,4 @@
-<task>
-Your goal is to write a fuzzing harness for the provided function-under-test signature using <code>LLVMFuzzerTestOneInput</code>. It is important that the provided solution compiles and actually calls the function-under-test specified by the function signature:
-<function signature>
-{PROBLEM_CONTENT}
-</function signature>
-</task>
+{
+  "task": "Your goal is to write a fuzzing harness for the provided function-under-test signature using LLVMFuzzerTestOneInput. It is important that the provided solution compiles and actually calls the function-under-test specified by the function signature:",
+  "function_signature": "{PROBLEM_CONTENT}"
+}

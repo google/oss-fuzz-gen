@@ -1,117 +1,73 @@
-<tool>
-**Bash too Guilde**
-Use the bash tool to investigate files in the fuzz target's build environment. This will help you understand the project source code, the function under test, its dependencies, and any compilation requirements.
-
-<interaction protocols>
-1. STRICTLY Only One Bash Command per message:
-    * **DO NOT** send multiple bash commands in each message.
-2. Execute Bash Command Message Structure:
-    * Reason for the Command:
-        * Explain the reason for running the command.
-        * Wrap this explanation within <reason> and </reason> tags.
-    * Bash Command:
-        * Provide the bash command to execute.
-        * Wrap the command with <bash> and </bash> tags.
-    * Format Example:
-        <reason>
-        I want to locate the source file containing the definition of the function-under-test to examine its implementation.
-        </reason>
-        <bash>
-        grep -rn 'function_name(' /src/project-name/
-        </bash>
-3. Receiving Bash Command Output Message Structure:
-    * Bash execution outputs will be returned in the following format:
-        <bash>
-        [The command you executed.]
-        </bash>
-        <stdout>
-        [Standard output of the command.]
-        </stdout>
-        <stderr>
-        [Standard error of the command.]
-        </stderr>
-<interaction protocols>
-
-<general rules>
-1 .File Access and Modification Restrictions:
-    * Allowed Actions:
-        * View any files and environment variables in the build environment.
-    * Prohibited Actions:
-        * Do not modify, rename, or create new files.
-    * All modifications will not be preserved when building the fuzz target.
-</general rules>
-
-<tool guidelines>
-1 .Purposeful Commands:
-    * Each bash command should have a clear purpose related to your investigation toward the final goals.
-2. Careful Interpretation:
-    * Analyze the output of each command thoroughly to inform your next steps.
-    * Keep notes of important findings that will help in modifying the fuzz target and build script.
-4. Clarity and Compliance:
-    * Adhere strictly to the interaction protocols and formatting requirements.
-    * Ensure your messages are clear and properly formatted.
-5. No Unauthorized Actions:
-    * Do not modify files.
-6. Avoid using `pkg-config`:
-    * Use bash commands to manually identify the correct file paths
-    * Explore the project's directory hierarchy (`/src/<project-name>`) to learn headerfiles locations, library's naming conventions, and build system.
-</tool guidelines>
-
-<example usages>
-Command 1. Start by locating the function's definition and understand its parameters, e.g.:
-    <reason>
-    To find the definition of `my_function` in the project directory and understand its implementation details.
-    </reason>
-    <bash>
-    grep -rn 'my_function(' /src/project/
-    </bash>
-Command 2. Identify Required Headers:
-    <reason>
-    To identify the header files in the project directory that declare `my_function`.
-    </reason>
-    <bash>
-    grep -rn 'my_function' /src/project/ --include=*.h
-    </bash>
-Command 3. Locate Custom Type Definitions:
-    <reason>
-    To find the definition of the custom type `CustomType` used by `my_function`.
-    </reason>
-    <bash>
-    grep -rn 'typedef.*CustomType' /src/project/
-    </bash>
-Command 4. Examine Existing Fuzz Targets:
-    <reason>
-    To see how existing fuzz targets include headers and initialize variables in the `LLVMFuzzerTestOneInput` function.
-    </reason>
-    <bash>
-    cat {FUZZ_TARGET_PATH}
-    </bash>
-    * Remember you can use the same command on other example fuzz targets under the same parent directory as `{FUZZ_TARGET_PATH}`.
-Command 5. Check Build Script for Compilation Flags and Libraries:
-    <reason>
-    To check which compiler flags and libraries are used in the build script.
-    </reason>
-    <bash>
-    cat /src/build.bk.sh
-    </bash>
-Command 6. Verify Available Libraries:
-    <reason>
-    To list the built libraries to verify that the necessary libraries are available.
-    </reason>
-    <bash>
-    ls /src/project/build/libs/
-    </bash>
-Command 7. Understand Environment Variables:
-    <reason>
-    To check if any environment variables related to the project are set.
-    </reason>
-    <bash>
-    printenv | grep 'PROJECT_VARIABLE'
-    </bash>
-</example usages>
-
-<final reminder>
-1. Do Not Compile or Run Code:
-    * Your investigation is limited to reading and interpreting information using bash commands.
-</final reminder>
-</tool>
+{
+  "tool": {
+    "title": "Bash Tool Guide",
+    "description": "Use the bash tool to investigate files in the fuzz target's build environment. This will help you understand the project source code, the function under test, its dependencies, and any compilation requirements.",
+    "interaction_protocols": {
+      "single_command_rule": "STRICTLY Only One Bash Command per message. DO NOT send multiple bash commands in each message.",
+      "execution_structure": {
+        "reason": "Explain the reason for running the command. Wrap this explanation within <reason> and </reason> tags.",
+        "bash_command": "Provide the bash command to execute. Wrap the command with <bash> and </bash> tags.",
+        "example": {
+          "reason": "I want to locate the source file containing the definition of the function-under-test to examine its implementation.",
+          "bash": "grep -rn 'function_name(' /src/project-name/"
+        }
+      },
+      "output_structure": {
+        "bash": "[The command you executed.]",
+        "stdout": "[Standard output of the command.]",
+        "stderr": "[Standard error of the command.]"
+      }
+    },
+    "general_rules": {
+      "file_access_and_modification": {
+        "allowed_actions": "View any files and environment variables in the build environment.",
+        "prohibited_actions": "Do not modify, rename, or create new files. All modifications will not be preserved when building the fuzz target."
+      }
+    },
+    "tool_guidelines": {
+      "purposeful_commands": "Each bash command should have a clear purpose related to your investigation toward the final goals.",
+      "careful_interpretation": "Analyze the output of each command thoroughly to inform your next steps. Keep notes of important findings that will help in modifying the fuzz target and build script.",
+      "clarity_and_compliance": "Adhere strictly to the interaction protocols and formatting requirements. Ensure your messages are clear and properly formatted.",
+      "no_unauthorized_actions": "Do not modify files.",
+      "avoid_pkg_config": "Use bash commands to manually identify the correct file paths. Explore the project's directory hierarchy (/src/<project-name>) to learn header file locations, library naming conventions, and the build system."
+    },
+    "example_usages": [
+      {
+        "command": 1,
+        "reason": "To find the definition of `my_function` in the project directory and understand its implementation details.",
+        "bash": "grep -rn 'my_function(' /src/project/"
+      },
+      {
+        "command": 2,
+        "reason": "To identify the header files in the project directory that declare `my_function`.",
+        "bash": "grep -rn 'my_function' /src/project/ --include=*.h"
+      },
+      {
+        "command": 3,
+        "reason": "To find the definition of the custom type `CustomType` used by `my_function`.",
+        "bash": "grep -rn 'typedef.*CustomType' /src/project/"
+      },
+      {
+        "command": 4,
+        "reason": "To see how existing fuzz targets include headers and initialize variables in the `LLVMFuzzerTestOneInput` function.",
+        "bash": "cat {FUZZ_TARGET_PATH}"
+      },
+      {
+        "command": 5,
+        "reason": "To check which compiler flags and libraries are used in the build script.",
+        "bash": "cat /src/build.bk.sh"
+      },
+      {
+        "command": 6,
+        "reason": "To list the built libraries to verify that the necessary libraries are available.",
+        "bash": "ls /src/project/build/libs/"
+      },
+      {
+        "command": 7,
+        "reason": "To check if any environment variables related to the project are set.",
+        "bash": "printenv | grep 'PROJECT_VARIABLE'"
+      }
+    ],
+    "final_reminder": "Do Not Compile or Run Code: Your investigation is limited to reading and interpreting information using bash commands."
+  }
+}
