@@ -267,9 +267,16 @@ class Results:
                FileSystem(self._results_dir).listdir()))
 
   def match_benchmark(self, benchmark_id: str, results: list[evaluator.Result],
-                      targets: list[str]) -> Benchmark:
+                  targets: list[str]) -> Benchmark:
     """Returns a benchmark class based on |benchmark_id|."""
-    status = 'Done' if results and all(results) else 'Running'
+    # Check if all expected trials are present and completed
+    total_expected_trials = len(targets)
+    total_present_trials = len(results)
+    
+    # Mark as 'Done' only if all expected trials are present and completed
+    status = 'Done' if (total_present_trials == total_expected_trials and 
+                        results and all(results)) else 'Running'
+    
     filtered_results = [(i, stat) for i, stat in enumerate(results) if stat]
 
     if filtered_results:
