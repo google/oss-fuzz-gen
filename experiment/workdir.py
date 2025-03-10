@@ -112,14 +112,16 @@ class WorkDirs:
   def run_logs(self) -> str:
     return os.path.join(self._base_dir, 'logs', 'run')
 
-  def build_logs_target(self, generated_target_name: str,
-                        iteration: int) -> str:
-    return os.path.join(self.build_logs,
-                        f'{generated_target_name}-F{iteration}.log')
+  def build_logs_target(self, generated_target_name: str, iteration: int,
+                        trial: int) -> str:
+    return os.path.join(
+        self.build_logs,
+        f'{generated_target_name}-F{iteration}-{trial:02d}.log')
 
-  def run_logs_target(self, generated_target_name: str, iteration: int) -> str:
-    return os.path.join(self.run_logs,
-                        f'{generated_target_name}-F{iteration}.log')
+  def run_logs_target(self, generated_target_name: str, iteration: int,
+                      trial: int) -> str:
+    return os.path.join(
+        self.run_logs, f'{generated_target_name}-F{iteration}-{trial:02d}.log')
 
   @classmethod
   def get_run_log_iteration(cls, filename: str) -> Optional[int]:
