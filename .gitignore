@@ -9,3 +9,4 @@ venv/
 .venv/
 __pycache__/
 *.swp
+run-auto.sh
