@@ -225,53 +225,21 @@ class GPT(LLM):
   """OpenAI's GPT model encapsulator."""
 
   name = 'gpt-3.5-turbo'
-
-  def __init__(
-      self,
-      ai_binary: str,
-      max_tokens: int = MAX_TOKENS,
-      num_samples: int = NUM_SAMPLES,
-      temperature: float = TEMPERATURE,
-      temperature_list: Optional[list[float]] = None,
-  ):
-    super().__init__(ai_binary, max_tokens, num_samples, temperature,
-                     temperature_list)
-    self.conversation_history = []
+  _gpt_ai_model = 'gpt-3.5-turbo'
 
   def get_model(self) -> str:
     """Returns the underlying model instance."""
-    return self.name
+    # Placeholder: No suitable implementation/usage yet.
 
   def get_chat_client(self, model: Any) -> Any:
     """Returns a new chat session."""
-    return self._get_client()
+    del model
+    # Placeholder: To Be Implemented.
 
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
     """Queries the LLM in the given chat session and returns the response."""
-    if self.ai_binary:
-      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
-    if self.temperature_list:
-      logger.info('OpenAI does not allow temperature list: %s',
-                  self.temperature_list)
-
-    self.conversation_history.extend(prompt.get())
-
-    completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(
-            messages=self.conversation_history,
-            model=self.name,
-            n=self.num_samples,
-            temperature=self.temperature), [openai.OpenAIError])
-
-    # Choose the longest response
-    longest_response = max(
-        (choice.message.content for choice in completion.choices), key=len)
-    self.conversation_history.append({
-        'role': 'assistant',
-        'content': longest_response
-    })
-
-    return longest_response
+    del client, prompt
+    # Placeholder: To Be Implemented.
 
   def _get_tiktoken_encoding(self, model_name: str):
     """Returns the tiktoken encoding for the model."""
@@ -290,7 +258,7 @@ class GPT(LLM):
     """Estimates the number of tokens in |text|."""
     # https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
 
-    encoder = self._get_tiktoken_encoding(self.name)
+    encoder = self._get_tiktoken_encoding(self._gpt_ai_model)
 
     num_tokens = 0
     for message in text:
@@ -335,7 +303,7 @@ class GPT(LLM):
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(messages=prompt.get(),
-                                               model=self.name,
+                                               model=self._gpt_ai_model,
                                                n=self.num_samples,
                                                temperature=self.temperature),
         [openai.OpenAIError])
@@ -354,7 +322,7 @@ class GPT(LLM):
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(messages=prompt.get(),
-                                               model=self.name,
+                                               model=self._gpt_ai_model,
                                                n=self.num_samples,
                                                temperature=self.temperature),
         [openai.OpenAIError])
@@ -367,30 +335,109 @@ class GPT4(GPT):
   """OpenAI's GPT-4 model."""
 
   name = 'gpt-4'
+  _gpt_ai_model = 'gpt-4'
 
 
 class GPT4o(GPT):
   """OpenAI's GPT-4o model."""
 
   name = 'gpt-4o'
+  _gpt_ai_model = 'gpt-4o'
 
 
 class GPT4oMini(GPT):
   """OpenAI's GPT-4o-mini model."""
 
   name = 'gpt-4o-mini'
+  _gpt_ai_model = 'gpt-4o-mini'
 
 
 class GPT4Turbo(GPT):
   """OpenAI's GPT-4 Turbo model."""
 
   name = 'gpt-4-turbo'
+  _gpt_ai_model = 'gpt-4-turbo'
+
+
+class ChatGPT(GPT):
+  """OpenAI's GPT model with chat session."""
+
+  name = 'chatgpt-3.5-turbo'
+  _gpt_ai_model = 'gpt-3.5-turbo'
+
+  def __init__(
+      self,
+      ai_binary: str,
+      max_tokens: int = MAX_TOKENS,
+      num_samples: int = NUM_SAMPLES,
+      temperature: float = TEMPERATURE,
+      temperature_list: Optional[list[float]] = None,
+  ):
+    super().__init__(ai_binary, max_tokens, num_samples, temperature,
+                     temperature_list)
+    self.conversation_history = []
+
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
+    """Queries the LLM in the given chat session and returns the response."""
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('OpenAI does not allow temperature list: %s',
+                  self.temperature_list)
+
+    self.conversation_history.extend(prompt.get())
+
+    completion = self.with_retry_on_error(
+        lambda: client.chat.completions.create(
+            messages=self.conversation_history,
+            model=self._gpt_ai_model,
+            n=self.num_samples,
+            temperature=self.temperature), [openai.OpenAIError])
+
+    # Choose the longest response
+    longest_response = max(
+        (choice.message.content for choice in completion.choices), key=len)
+    self.conversation_history.append({
+        'role': 'assistant',
+        'content': longest_response
+    })
+
+    return longest_response
+
+
+class ChatGPT4(ChatGPT):
+  """OpenAI's GPT4 model with chat session."""
+
+  name = 'chatgpt-4'
+  _gpt_ai_model = 'gpt-4'
+
+
+class ChatGPT4o(ChatGPT):
+  """OpenAI's GPT-4o model with chat session."""
+
+  name = 'chatgpt-4o'
+  _gpt_ai_model = 'gpt-4o'
+
+
+class ChatGPT4oMini(ChatGPT):
+  """OpenAI's GPT-4o-mini model with chat session."""
+
+  name = 'chatgpt-4o-mini'
+  _gpt_ai_model = 'gpt-4o-mini'
+
+
+class ChatGPT4Turbo(ChatGPT):
+  """OpenAI's GPT-4 Turbo model with chat session."""
+
+  name = 'chatgpt-4-turbo'
+  _gpt_ai_model = 'gpt-4-turbo'
 
 
 class AzureGPT(GPT):
   """Azure's GPT model."""
 
   name = 'gpt-3.5-turbo-azure'
+  _gpt_ai_model = 'gpt-3.5-turbo-azure'
 
   def _get_tiktoken_encoding(self, model_name: str):
     """Returns the tiktoken encoding for the model."""
@@ -409,12 +456,14 @@ class AzureGPT4(AzureGPT):
   """Azure's GPTi-4 model."""
 
   name = 'gpt-4-azure'
+  _gpt_ai_model = 'gpt-4-azure'
 
 
 class AzureGPT4o(AzureGPT):
   """Azure's GPTi-4 model."""
 
   name = 'gpt-4o-azure'
+  _gpt_ai_model = 'gpt-4o-azure'
 
 
 class Claude(LLM):
