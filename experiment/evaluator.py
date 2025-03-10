@@ -260,12 +260,15 @@ class Evaluator:
     self.benchmark = benchmark
     self.work_dirs = work_dirs
 
-  def build_log_path(self, generated_target_name: str, iteration: int):
-    return os.path.join(self.work_dirs.run_logs,
-                        f'{generated_target_name}-F{iteration}.log')
+  def build_log_path(self, generated_target_name: str, iteration: int,
+                     trial: int):
+    return os.path.join(
+        self.work_dirs.run_logs,
+        f'{generated_target_name}-F{iteration}-{trial:02d}.log')
 
-  def run_log_path(self, generated_target_name: str):
-    return os.path.join(self.work_dirs.run_logs, f'{generated_target_name}.log')
+  def run_log_path(self, generated_target_name: str, trial: int):
+    return os.path.join(self.work_dirs.run_logs,
+                        f'{generated_target_name}-{trial:02d}.log')
 
   def create_ossfuzz_project(self,
                              name: str,

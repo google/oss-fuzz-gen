@@ -470,6 +470,7 @@ class BuilderRunner:
   def _copy_crash_file(self, outdir: str, artifact_dir: str,
                        run_result: RunResult) -> None:
     """Copies the first crash file to the artifact directory."""
+    # Only consider testcases starting with 'crash-'
     crash_files = [
         f for f in os.listdir(outdir)
         if f.startswith('crash-') and os.path.isfile(os.path.join(outdir, f))
@@ -522,7 +523,7 @@ class BuilderRunner:
     benchmark_target_name = os.path.basename(target_path)
     project_target_name = os.path.basename(self.benchmark.target_path)
     benchmark_log_path = self.work_dirs.build_logs_target(
-        benchmark_target_name, iteration)
+        benchmark_target_name, iteration, trial)
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
     if not build_result.succeeded:
@@ -977,8 +978,8 @@ class CloudBuilderRunner(BuilderRunner):
 
     generated_target_name = os.path.basename(target_path)
     with open(
-        self.work_dirs.build_logs_target(generated_target_name, iteration),
-        'wb') as f:
+        self.work_dirs.build_logs_target(generated_target_name, iteration,
+                                         trial), 'wb') as f:
       blob = bucket.blob(build_log_name)
       if blob.exists():
         logger.info('Downloading cloud build log of %s: %s to %s',
@@ -1005,7 +1006,8 @@ class CloudBuilderRunner(BuilderRunner):
 
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(
-          self.work_dirs.build_logs_target(generated_target_name, iteration),
+          self.work_dirs.build_logs_target(generated_target_name, iteration,
+                                           trial),
           os.path.basename(self.benchmark.target_path), language)
       build_result.errors = errors
       logger.info('Cloud evaluation of %s indicates a failure: %s',
