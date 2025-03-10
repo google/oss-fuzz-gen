@@ -30,8 +30,8 @@ class ProjectContainerTool(BaseTool):
                name: str = '',
                project_name: str = '') -> None:
     super().__init__(benchmark, name)
-    project_name = project_name or benchmark.project
-    self.image_name = self._prepare_project_image(project_name)
+    self.project_name = project_name or benchmark.project
+    self.image_name = self._prepare_project_image(self.project_name)
     self.container_id = self._start_docker_container()
     self._backup_default_build_script()
     self.project_dir = self._get_project_dir()
