@@ -27,39 +27,13 @@ logger = logging.getLogger(__name__)
 class LLDBTool(ProjectContainerTool):
   """A tool for LLM agents to interact within a LLDB."""
 
-  def __init__(
-      self,
-      benchmark: Benchmark,
-      #  project: str,
-      result: RunResult,
-      name: str = '',
-      project_name: str = '') -> None:
-    super().__init__(benchmark, name)
-    # self.project = project
+  def __init__(self,
+               benchmark: Benchmark,
+               result: RunResult,
+               name: str = '',
+               project_name: str = '') -> None:
+    super().__init__(benchmark, name, project_name)
     self.result = result
-    # self.image_name = self._prepare_project_image()
-    # self.container_id = self._start_docker_container()
-
-  # def _prepare_project_image(self) -> str:
-  #   """Prepares the project's OSS-Fuzz docker image and returns the image name.
-  #   """
-  #   image_name = f'gcr.io/oss-fuzz/{self.project}-lldb'
-  #   # TODO(maoyi): implement image cache
-  #   if oss_fuzz_checkout.image_exists_locally(image_name, self.project):
-  #     logger.info('Using existing project image for %s', self.project)
-  #     return image_name
-  #   logger.info('Unable to find existing project image for %s', self.project)
-  #   command = [
-  #       'docker', 'build', '-t', image_name,
-  #       os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects', self.project)
-  #   ]
-  #   try:
-  #     sp.run(command, cwd=oss_fuzz_checkout.OSS_FUZZ_DIR, check=True)
-  #     logger.info('Successfully build project image for %s', self.project)
-  #     return image_name
-  #   except sp.CalledProcessError:
-  #     logger.info('Failed to build image for %s', self.project)
-  #     return ''
 
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
