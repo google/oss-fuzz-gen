@@ -269,7 +269,10 @@ class Results:
   def match_benchmark(self, benchmark_id: str, results: list[evaluator.Result],
                       targets: list[str]) -> Benchmark:
     """Returns a benchmark class based on |benchmark_id|."""
-    status = 'Done' if results and all(results) else 'Running'
+    expected_trials = self._get_expected_trials_count(benchmark_id)
+    status = 'Done' if (results and len(results) == expected_trials and
+                        all(results)) else 'Running'
+
     filtered_results = [(i, stat) for i, stat in enumerate(results) if stat]
 
     if filtered_results:
@@ -278,6 +281,35 @@ class Results:
       result = run_one_experiment.AggregatedResult()
 
     return self._create_benchmark(benchmark_id, status, result)
+
+  def _get_expected_trials_count(self, benchmark_id: str) -> int:
+    """Returns the expected number of trials for a benchmark."""
+    fuzz_targets_dir = os.path.join(self._results_dir, benchmark_id,
+                                    'fuzz_targets')
+    if not FileSystem(fuzz_targets_dir).exists():
+      # Counting files in raw_targets directory for older experiments
+      raw_targets_dir = os.path.join(self._results_dir, benchmark_id,
+                                     'raw_targets')
+      if not FileSystem(raw_targets_dir).exists():
+        return 0
+      targets = [
+          f for f in FileSystem(raw_targets_dir).listdir()
+          if os.path.splitext(f)[1] in TARGET_EXTS
+      ]
+      return len(targets)
+
+    # Count unique trial IDs in the fuzz_targets directory
+    trial_ids = set()
+    for filename in FileSystem(fuzz_targets_dir).listdir():
+      if os.path.splitext(filename)[1] in TARGET_EXTS:
+        # Extract trial ID from filenames like "01.fuzz_target"
+        try:
+          trial_id = os.path.splitext(filename)[0]
+          trial_ids.add(trial_id)
+        except (ValueError, IndexError):
+          continue
+
+    return len(trial_ids)
 
   def get_final_target_code(self, benchmark: str, sample: str) -> str:
     """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
