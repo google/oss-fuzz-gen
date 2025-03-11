@@ -43,10 +43,8 @@ TEMPERATURE: float = 1
 MAX_TOKENS: int = 8192
 
 
-def parse_args() -> argparse.Namespace:
-  """Parses command line arguments."""
-  parser = argparse.ArgumentParser(
-      description='Run all experiments that evaluates all target functions.')
+def _add_default_args(parser):
+  """Default arguments for subparsers"""
   parser.add_argument('-m',
                       '--model',
                       default=models.DefaultModel.name,
@@ -64,58 +62,57 @@ def parse_args() -> argparse.Namespace:
                       '--language',
                       help='Main language of the target project source.',
                       required=True)
-  parser.add_argument('--only-exact-match',
-                      action='store_true',
-                      help=('Flag to indicate if exact function name'
-                            'matching is needed.'))
-  parser.add_argument('-f',
-                      '--function',
-                      help='Name of function to generate a target for.',
-                      default='')
-  parser.add_argument('-s',
-                      '--source-file',
-                      help='Source file name to locate target function.',
-                      default='')
-  parser.add_argument('-sl',
-                      '--source-line',
-                      type=int,
-                      help='Source line number to locate target function.',
-                      default=0)
-  parser.add_argument(
-      '--far-reach',
+
+
+def parse_args() -> argparse.Namespace:
+  """Parses command line arguments."""
+  parser = argparse.ArgumentParser(description='Fuzz generation helpers.')
+  subparsers = parser.add_subparsers(dest='command')
+
+  # Far reach generator
+  far_reach_low_cov_generator = subparsers.add_parser(
+      'generate-far-reach-targets',
+      help='Generate fuzzing harnesses for far reaching functions')
+  _add_default_args(far_reach_low_cov_generator)
+
+  # Function specific generation
+  function_target_generator = subparsers.add_parser(
+      'generate-for-function',
+      help='Generate fuzzing harness for specific function.')
+  _add_default_args(function_target_generator)
+  function_target_generator.add_argument('-f',
+                                         '--function',
+                                         help=('Function to target.'))
+  function_target_generator.add_argument(
+      '--only-exact-match',
       action='store_true',
-      help='If set, will generate targets for all functions in far reach.')
-  parser.add_argument('--test-to-harness',
-                      action='store_true',
-                      help='If set, will perform test to harness conversion.')
+      help=('Flag to indicate if exact function name'
+            'matching is needed.'))
+
+  # Source code location generator
+  source_location_generator = subparsers.add_parser(
+      'generate-for-source',
+      help='Generate fuzzing harness for source code location')
+  _add_default_args(source_location_generator)
+  source_location_generator.add_argument(
+      '-s',
+      '--source-file',
+      help='Source file name to locate target function.',
+      default='')
+  source_location_generator.add_argument(
+      '-sl',
+      '--source-line',
+      type=int,
+      help='Source line number to locate target function.',
+      default=0)
+
+  # Test to harness generator
+  test_to_harness_all_generator = subparsers.add_parser(
+      'generate-test-to-harness',
+      help='Convert all tests in target to fuzz harnesses.')
+  _add_default_args(test_to_harness_all_generator)
 
   return parser.parse_args()
-
-
-def check_args(args) -> bool:
-  """Check arguments."""
-  # Function name target
-  if (args.function and not args.source_file and not args.source_line and
-      not args.far_reach):
-    return True
-
-  # Source code location target
-  if (not args.function and args.source_file and args.source_line and
-      not args.far_reach):
-    return True
-
-  # Far-reach target.
-  if (args.far_reach and not args.function and not args.source_file and
-      not args.source_line):
-    return True
-
-  if args.test_to_harness:
-    return True
-
-  print('You must include either:\n (1) target function name by --function;\n'
-        '(2) target source file and line number by --source-file and '
-        '--source-line;\n (3) --far-reach')
-  return False
 
 
 def setup_model(args) -> models.LLM:
@@ -126,9 +123,8 @@ def setup_model(args) -> models.LLM:
                           temperature=TEMPERATURE)
 
 
-def get_target_benchmark(
-    language, target_dir, target_function_name, only_exact_match,
-    target_source_file, target_source_line
+def get_target_benchmark_for_function(
+    language, target_dir, target_function_name, only_exact_match
 ) -> Tuple[Optional[benchmarklib.Benchmark], Optional[dict[str, Any]]]:
   """Run introspector analysis on a target directory and extract benchmark"""
   entrypoint = introspector_lang_to_entrypoint(language)
@@ -153,15 +149,72 @@ def get_target_benchmark(
     logger.info('Did not find any introspector project')
 
   # Get target function
-  if target_function_name:
-    function = project.find_function_by_name(target_function_name,
-                                             only_exact_match)
+  function = project.find_function_by_name(target_function_name,
+                                           only_exact_match)
 
-  elif target_source_file and target_source_line > 0:
-    function = project.get_function_by_source_suffix_line(
-        target_source_file, target_source_line)
+  if function:
+    param_list = []
+
+    for idx, arg_name in enumerate(function.arg_names):
+      param_list.append({'name': arg_name, 'type': function.arg_types[idx]})
+
+    # Build a context.
+    function_source = function.function_source_code_as_text()
+    xrefs = project.get_cross_references_by_name(function.name)
+    logger.info('Total xrefs found %d', len(xrefs))
+    if len(xrefs) > 10:
+      xrefs = xrefs[:10]
+    xref_strings = [xref.function_source_code_as_text() for xref in xrefs]
+
+    context = {
+        'func_source': function_source,
+        'files': [],
+        'decl': '',
+        'xrefs': xref_strings,
+        'header': '',
+    }
+
+    return benchmarklib.Benchmark(
+        benchmark_id='sample',
+        project='no-name',
+        language=language,
+        function_name=function.name,
+        function_signature=function.sig,
+        return_type=function.return_type,
+        params=param_list,
+        target_path=function.parent_source.source_file), context
+
+  return None, None
+
+
+def get_target_benchmark_for_source(
+    language, target_dir, target_source_file, target_source_line
+) -> Tuple[Optional[benchmarklib.Benchmark], Optional[dict[str, Any]]]:
+  """Run introspector analysis on a target directory and extract benchmark"""
+  entrypoint = introspector_lang_to_entrypoint(language)
+
+  _, report = fi_commands.analyse_end_to_end(arg_language=language,
+                                             target_dir=target_dir,
+                                             entrypoint=entrypoint,
+                                             out_dir='.',
+                                             coverage_url='',
+                                             report_name='report-name',
+                                             module_only=True,
+                                             dump_files=False)
+  project = report['light-project']
+  introspector_project = report.get('introspector-project', None)
+  if introspector_project:
+    logger.info('Found introspector repoject')
+    for analysis in introspector_project.optional_analyses:
+      logger.info(analysis.name)
+      if analysis.name == 'FarReachLowCoverageAnalyser':
+        logger.info(analysis.get_json_string_result())
   else:
-    function = None
+    logger.info('Did not find any introspector project')
+
+  # Get target function
+  function = project.get_function_by_source_suffix_line(target_source_file,
+                                                        target_source_line)
 
   if function:
     param_list = []
@@ -458,11 +511,13 @@ def generate_for_target_function(args):
   """Generate harness for single function/source location"""
   model = setup_model(args)
   language = get_introspector_language(args)
-  target_benchmark, context = get_target_benchmark(language, args.target_dir,
-                                                   args.function,
-                                                   args.only_exact_match,
-                                                   args.source_file,
-                                                   args.source_line)
+  if args.command == 'generate-for-function':
+
+    target_benchmark, context = get_target_benchmark_for_function(
+        language, args.target_dir, args.function, args.only_exact_match)
+  else:
+    target_benchmark, context = get_target_benchmark_for_source(
+        language, args.target_dir, args.source_file, args.source_line)
 
   if target_benchmark is None:
     print('Could not find target function. Exiting.')
@@ -498,12 +553,10 @@ def generate_for_target_function(args):
 def main():
   """Entrypoint"""
   args = parse_args()
-  if not check_args(args):
-    sys.exit(0)
 
-  if args.far_reach:
+  if args.command == 'generate-far-reach-targets':
     generate_far_reach_targets(args)
-  elif args.test_to_harness:
+  elif args.command == 'generate-test-to-harness':
     generate_test_to_harness_targets(args)
   else:
     generate_for_target_function(args)
