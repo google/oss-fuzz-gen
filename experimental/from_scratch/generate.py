@@ -333,7 +333,7 @@ def get_next_out_dir(out_dir: str) -> str:
   """Prepare next folder to put generate harness in."""
   idx = 0
   while True:
-    target_response = os.path.join(out_dir, str(idx))
+    target_response = out_dir + f'-{idx}'  #  os.path.join(out_dir, str(idx))
     if not os.path.isdir(target_response):
       return target_response
     idx += 1
@@ -360,6 +360,7 @@ def generate_far_reach_targets(args):
   language = get_introspector_language(args)
   # Get the benchmarks corresponding to far-reach analysis.
   target_pairs = get_far_reach_benchmarks(language, args.target_dir)
+  fuzz_harnesses = []
   for target_benchmark, context in target_pairs:
     fuzz_prompt = construct_fuzz_prompt(model, target_benchmark, context,
                                         language)
@@ -369,13 +370,31 @@ def generate_far_reach_targets(args):
       print_prompt(fuzz_prompt)
       continue
     print_prompt(fuzz_prompt)
-    response_dir = get_next_out_dir(args.out_dir)
-    os.makedirs(response_dir, exist_ok=True)
-    print(f'Running query and writing results in {response_dir}')
+
     try:
-      model.query_llm(fuzz_prompt, response_dir=response_dir)
-    except:
+      fuzz_harness_response = model.ask_llm(fuzz_prompt)
+      fuzz_harness_source = output_parser.filter_code(fuzz_harness_response)
+      fuzz_harnesses.append(fuzz_harness_source)
+    except Exception:  # pylint: disable=broad-exception-caught
       pass
+
+  response_dir = get_next_out_dir(args.out_dir)
+  os.makedirs(response_dir, exist_ok=True)
+  extension = '.raw'
+  if args.language == 'c++':
+    extension = '.cpp'
+  elif args.language == 'c':
+    extension = '.c'
+  for idx, fuzz_harness in enumerate(fuzz_harnesses):
+    # adjust extension if needed
+    if extension == '.cpp' and 'extern "C"' not in fuzz_harness:
+      act_ext = '.c'
+    else:
+      act_ext = extension
+    with open(os.path.join(response_dir, f'harness_{idx}{act_ext}'),
+              'w',
+              encoding='utf-8') as f:
+      f.write(fuzz_harness)
 
 
 def generate_test_to_harness_targets(args):
@@ -422,7 +441,7 @@ def generate_test_to_harness_targets(args):
 
     try:
       raw_result = model.ask_llm(fuzz_prompt)
-    except:
+    except Exception:  # pylint: disable=broad-exception-caught
       continue
 
     logger.info('Filtering code')
@@ -454,7 +473,26 @@ def generate_for_target_function(args):
   print_prompt(fuzz_prompt)
   os.makedirs(args.out_dir, exist_ok=True)
   print(f'Running query and writing results in {args.out_dir}')
-  model.query_llm(fuzz_prompt, response_dir=args.out_dir)
+  raw_response = model.ask_llm(fuzz_prompt)
+  generated_fuzz_harness = output_parser.filter_code(raw_response)
+
+  response_dir = get_next_out_dir(args.out_dir)
+  os.makedirs(response_dir, exist_ok=True)
+  extension = '.raw'
+  if args.language == 'c++':
+    extension = '.cpp'
+  elif args.language == 'c':
+    extension = '.c'
+
+  if extension == '.cpp' and 'extern "C"' not in generated_fuzz_harness:
+    act_ext = '.c'
+  else:
+    act_ext = extension
+
+  with open(os.path.join(response_dir, f'harness{act_ext}'),
+            'w',
+            encoding='utf-8') as f:
+    f.write(generated_fuzz_harness)
 
 
 def main():
