@@ -394,6 +394,8 @@ def rewrite_project_to_cached_project(project_name: str, generated_project: str,
     else:
       new_content += f'{line}\n'
 
+  # Temporarily unset CAPTURE_REPLAY_SCRIPT for testing purpose.
+  new_content += 'ENV CAPTURE_REPLAY_SCRIPT=\n'
   # Overwrite the existing one
   with open(cached_dockerfile, 'w') as f:
     f.write(new_content)
