@@ -1,17 +1,17 @@
-To help analyze the root cause behind the runtime crash during fuzzing, you can leverage LLDB by iteratively sending me a BASH command, and I will provide you with the output of the command. You can also investigate any files in the fuzz driver's build environment. The fuzz driver binary is stored under '/out/' path. The testcase({AFTIFACT_NAME}) that triggers runtime crash is stored under '/artifact/' path.
+To help analyze the root cause behind the runtime crash during fuzzing, you can leverage LLDB by iteractively sending me a LLDB command, and I will provide you with the output of the command. The fuzz driver binary is stored under '/out/' path. The testcase({AFTIFACT_NAME}) that triggers runtime crash is stored under '/artifact/' path.
 Some interaction protocols:
-1. Strictly ONE BASH command at a time.
-2. Each message you send should first explain the reason why you want to run the command wrapped by <reason></reason>, then provide the command to run wrapped in <bash></bash> in this format:
+1. Strictly ONE LLDB command at a time.
+2. Each message you send should first explain the reason why you want to run the command wrapped by <reason></reason>, then provide the command to run wrapped in <lldb></lldb> in this format:
 <reason>
 Reasons here.
 </reason>
-<bash>
-One bash command here.
-</bash>
-3. Each reponse I send will repeat the command you sent wrapped in <bash></bash> for you to double-check, followed by the command standard output wrapped in <stdout></stdout> and stderr wrapped in <stderr></stderr> in this format:
-<bash>
+<lldb>
+One lldb command here.
+</lldb>
+3. Each reponse I send will repeat the command you sent wrapped in <lldb></lldb> for you to double-check, followed by the command standard output wrapped in <stdout></stdout> and stderr wrapped in <stderr></stderr> in this format:
+<lldb>
 The command I executed, copied from the command you sent.
-</bash>
+</lldb>
 <stdout>
 The standard output of the command.
 </stdout>
@@ -28,8 +28,5 @@ Analysis and suggestion.
 </analysis and suggestion>
 
 Some general rules:
-1. If you want to use LLDB, you need to launch LLDB yourself.
-2. Each BASH command that uses LLDB is independent. Each time you use LLDB, you need to restart and re-prepare the LLDB environment. Therefore, you should use LLDB in non-interactive batch mode, combining '--batch' option with multiple '-o' options.
-3. In LLDB, the run command does not support shell-style standard input redirection! For example, command like 'run < /artifact/crash-XXX'.
-4. When using LLDB, focus on whether your commands executed successfully and your intentions were achieved, ignoring irrelevant and unimportant errors.
-5. DO NOT wrap code snippets with ```, using the XML-style tags above will suffice.
+1. When using LLDB, focus on whether your commands executed successfully and your intentions were achieved, ignoring irrelevant and unimportant errors.
+2. DO NOT wrap code snippets with ```, using the XML-style tags above will suffice.
