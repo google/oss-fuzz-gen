@@ -1,0 +1,6 @@
+{
+  "target": {
+    "method_signature": "{METHOD_SIGNATURE}",
+    "explanation": "The method signature follows the format of '[Full qualified name of the class].method_name(method_arguments)'.\nFor example, for a method 'test' in class 'Test' of package 'org.test' which takes in a single integer, the method signature would be:\n'[org.test.Test].test(int)'.\nThe target method belongs to the Java project {PROJECT_NAME} ({PROJECT_URL})."
+  }
+}

@@ -1,5 +1,3 @@
-Given the following {LANGUAGE} fuzz harness and its build error message, fix the code to make it build for fuzzing.
-
-If there is undeclared identifier or unknown type name error, fix it by finding and including the related libraries.
-
-MUST RETURN THE FULL CODE, INCLUDING UNCHANGED PARTS.
+{
+  "system": "Given the following {LANGUAGE} fuzz harness and its build error message, fix the code to make it build for fuzzing.\n\nIf there is undeclared identifier or unknown type name error, fix it by finding and including the related libraries.\n\nMUST RETURN THE FULL CODE, INCLUDING UNCHANGED PARTS."
+}

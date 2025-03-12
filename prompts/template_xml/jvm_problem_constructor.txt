@@ -1,0 +1,8 @@
+{
+  "target": {
+    "description": "The target method is the constructor of {CONSTRUCTOR_CLASS} with the following signature.",
+    "constructor_signature": "{CONSTRUCTOR_SIGNATURE}",
+    "explanation": "The constructor signature follows the format of <code>[Full qualified name of the class].(method_arguments)</code>.\nFor example, for the constructor of class <code>Test</code> of package <code>org.test</code> which takes in a single integer would have the following signature:\n<code>[org.test.Test].<init>(int)</code>\nThe target method belongs to the Java project {PROJECT_NAME} ({PROJECT_URL})."
+  }
+}
+

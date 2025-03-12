@@ -1,0 +1,5 @@
+{
+  "instruction": "You must use the generateObject() method to retrieve a random Object instance. Here is an example of the generateObject() method. DON'T USE IT DIRECTLY. You MUST change the content of the method to include ALL types in the list below. If the type is any of the Collection class, please also insert contents into the object before returning.",
+  
+  "example_code": "private static Object generateObject(data) {\n  int choice = data.consumeInt(1, <number_of_type>)\n  switch(choice) {\n    case 1: return data.consumeInt(); break;\n    case 2: List list = new ArrayList<String>(); list.add(data.consumeString(10)); return list; break;\n    case 3: return data.consumeRemainingAsBytes(); break;\n    // Add more options for all types in the list\n    default: return data.consumeByte();\n  }\n}"
+}

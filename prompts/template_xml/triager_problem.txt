@@ -1,16 +1,6 @@
-Below is crash report:
-<log>
-{CRASH_REPORT}
-</log>
-
-Below is driver code:
-<code>
-{DRIVER_CODE}
-</code>
-
-Below is relevant project function code:
-<code>
-{PROJECT_FUNCTION_CODE}
-</code>
-
-<solution>
+{
+  "crash_report": "{CRASH_REPORT}",
+  "driver_code": "{DRIVER_CODE}",
+  "project_function_code": "{PROJECT_FUNCTION_CODE}",
+  "solution": ""
+}

@@ -1,4 +1,4 @@
-<solution>
-{SOLUTION_CONTENT}
-</solution>
+{
+  "solution": "{SOLUTION_CONTENT}"
+}
 
