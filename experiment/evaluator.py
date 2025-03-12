@@ -308,11 +308,38 @@ class Evaluator:
         os.path.join(generated_project_path,
                      os.path.basename('agent-build.sh')))
 
-    # Add additional statement in dockerfile to overwrite with generated fuzzer
+    # Add additional statement in dockerfile to overwrite with generated
+    # build script
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write('\nRUN cp /src/build.sh /src/build.bk.sh\n')
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write('\nCOPY agent-build.sh /src/build.sh\n')
+
+    return name
+
+  def create_ossfuzz_project_with_lldb(self,
+                                       name: str,
+                                       target_file: str,
+                                       run_result: RunResult,
+                                       build_script_path: str = '') -> str:
+    """Creates an OSS-Fuzz project with the generated target and new dockerfile.
+    The new project will replicate an existing project |name| but replace its 
+    fuzz target and build script with the new |target_file| and |build_script_path| 
+    and modify its dockerfile."""
+    self.create_ossfuzz_project(name, target_file, build_script_path)
+    generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
+                                          'projects', name)
+
+    # Add additional statement in dockerfile to copy testcase,
+    # enable -g and install lldb
+    with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
+      f.write(
+          '\nRUN mkdir -p /artifact\n'
+          f'\nCOPY {os.path.basename(run_result.artifact_path)} /artifact/\n'
+          '\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
+          '\nENV CFLAGS="${CFLAGS} -g"\n'
+          '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
+          '\nRUN apt-get update && apt-get install -y lldb\n')
 
     return name
 

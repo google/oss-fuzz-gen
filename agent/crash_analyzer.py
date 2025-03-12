@@ -50,66 +50,6 @@ class CrashAnalyzer(BaseAgent):
                  trial=self.trial)
     return prompt_builder.DefaultTemplateBuilder(self.llm).build([])
 
-  def _create_ossfuzz_project_with_lldb(self,
-                                        name: str,
-                                        target_file: str,
-                                        run_result: RunResult,
-                                        build_script_path: str = '') -> str:
-    """Creates an OSS-Fuzz project with new dockerfile and fuzz target.
-    The new project will replicate an existing project |name| but modify
-    its dockerfile."""
-    logger.info('target file: %s', target_file, trial=self.trial)
-    generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                          'projects', name)
-    if os.path.exists(generated_project_path):
-      logger.info('Project %s already exists.',
-                  generated_project_path,
-                  trial=self.trial)
-      return name
-
-    existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                         'projects',
-                                         run_result.benchmark.project)
-
-    shutil.copytree(existing_project_path, generated_project_path)
-
-    # Copy generated fuzzers to generated_project_path
-    shutil.copyfile(
-        target_file,
-        os.path.join(generated_project_path, os.path.basename(target_file)))
-
-    if not build_script_path or os.path.getsize(build_script_path) == 0:
-      # Add additional statement in dockerfile to enable -g and install lldb.
-      with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
-        f.write(
-            '\nRUN mkdir -p /artifact\n'
-            f'\nCOPY {os.path.basename(run_result.artifact_path)} /artifact/\n'
-            '\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
-            '\nENV CFLAGS="${CFLAGS} -g"\n'
-            '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
-            '\nRUN apt-get update && apt-get install -y lldb\n')
-      return name
-
-    # Copy generated build script to generated_project_path
-    shutil.copyfile(
-        build_script_path,
-        os.path.join(generated_project_path,
-                     os.path.basename('agent-build.sh')))
-
-    # Add additional statement in dockerfile to overwrite with
-    # generated fuzzer, enable -g and install lldb
-    with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
-      f.write(
-          '\nCOPY agent-build.sh /src/build.sh\n'
-          '\nRUN mkdir -p /artifact\n'
-          f'\nCOPY {os.path.basename(run_result.artifact_path)} /artifact/\n'
-          '\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
-          '\nENV CFLAGS="${CFLAGS} -g"\n'
-          '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
-          '\nRUN apt-get update && apt-get install -y lldb\n')
-
-    return name
-
   def _format_lldb_execution_result(
       self,
       process: sp.CompletedProcess,
@@ -191,9 +131,9 @@ class CrashAnalyzer(BaseAgent):
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                      f'{self.trial:02d}.build_script')
 
-    self._create_ossfuzz_project_with_lldb(generated_oss_fuzz_project,
-                                           fuzz_target_path, last_result,
-                                           build_script_path)
+    evaluator_lib.Evaluator.create_ossfuzz_project_with_lldb(
+        generated_oss_fuzz_project, fuzz_target_path, last_result,
+        build_script_path)
 
     self.analyze_tool = LLDBTool(
         benchmark,
