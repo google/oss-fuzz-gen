@@ -46,7 +46,7 @@ logger = logging.getLogger(__name__)
 # Model hyper-parameters.
 MAX_TOKENS: int = 2000
 NUM_SAMPLES: int = 1
-TEMPERATURE: float = 0.4
+TEMPERATURE: float = 1.0
 
 
 class LLM:

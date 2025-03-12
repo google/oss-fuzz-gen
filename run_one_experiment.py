@@ -54,7 +54,7 @@ NUM_EVA = int(os.getenv('LLM_NUM_EVA', '3'))
 NUM_SAMPLES = 2
 MAX_TOKENS: int = 4096
 RUN_TIMEOUT: int = 30
-TEMPERATURE: float = 0.4
+TEMPERATURE: float = 1.0
 
 RESULTS_DIR = './results'
 
@@ -311,3 +311,30 @@ def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
 
   return AggregatedResult.from_benchmark_result(
       _fuzzing_pipelines(benchmark, model, args, work_dirs))
+
+
+def get_model_temperature(args: argparse.Namespace) -> float:
+  """Retrieves model temperature default value."""
+  default_temperatures = {models.VertexAICodeBisonModel.name: 0.2,
+                          models.VertexAICodeBison32KModel.name: 0.2,
+                          models.GeminiPro.name: 0.9,
+                          models.GeminiUltra.name: 0.2,
+                          models.GeminiExperimental.name: 1.0,
+                          models.GeminiV1D5.name: 1.0,
+                          models.GeminiV2Flash.name: 1.0,
+                          models.GeminiV2.name: 1.0,
+                          models.GeminiV2Think.name: 0.7,
+                          models.ClaudeHaikuV3.name: 0.5,
+                          models.ClaudeOpusV3.name: 0.5,
+                          models.ClaudeSonnetV3D5.name: 0.5,
+                          models.GPT.name: 1.0,
+                          models.GPT4.name: 1.0,
+                          models.GPT4o.name: 1.0,
+                          models.GPT4oMini.name: 1.0,
+                          models.GPT4Turbo.name: 1.0}
+  if args.model.endswith('-chat') or args.model.endswith('-azure'):
+    model_name = '-'.join(args.model.split('-')[:-1])
+  else:
+    model_name = args.model
+  
+  return default_temperatures[model_name]

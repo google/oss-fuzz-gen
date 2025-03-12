@@ -279,6 +279,9 @@ def parse_args() -> argparse.Namespace:
 
   if args.temperature:
     assert 2 >= args.temperature >= 0, '--temperature must be within 0 and 2.'
+    
+  if args.temperature == TEMPERATURE and args.model in models.LLM.all_llm_names():
+    args.temperature = run_one_experiment.get_model_temperature(args)
 
   benchmark_yaml = args.benchmark_yaml
   if benchmark_yaml:
