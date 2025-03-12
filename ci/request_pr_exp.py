@@ -63,7 +63,7 @@ BUCKET_LINK_PREFIX = ('https://console.cloud.google.com/storage/browser/'
 BUCKET_GS_LINK_PREFIX = (
     'gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/ofg-pr')
 
-DEFAULT_VERTEX_AI_LOCATIONS = 'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,northamerica-northeast1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4,me-central2,me-central1,me-west1'
+DEFAULT_VERTEX_AI_LOCATIONS = 'us-central1'
 VERTEX_AI_LOCATIONS = {
   'vertex_ai_gemini-pro': 'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,northamerica-northeast1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4,me-central2,me-central1,me-west1',
   'vertex_ai_gemini-ultra': 'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,northamerica-northeast1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4,me-central2,me-central1,me-west1',
