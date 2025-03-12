@@ -13,10 +13,8 @@
 # limitations under the License.
 """A tool for LLM agents to interact within a LLDB."""
 import logging
-import os
 import subprocess as sp
 
-from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark
 from results import RunResult
 from tool.container_tool import ProjectContainerTool

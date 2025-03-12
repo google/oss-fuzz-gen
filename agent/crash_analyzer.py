@@ -16,6 +16,7 @@ Use it as a usual module locally, or as script in cloud builds.
 """
 import os
 import shutil
+import subprocess as sp
 from typing import Optional
 
 import logger
@@ -109,6 +110,34 @@ class CrashAnalyzer(BaseAgent):
 
     return name
 
+  def _format_lldb_execution_result(
+      self,
+      process: sp.CompletedProcess,
+      previous_prompt: Optional[Prompt] = None) -> str:
+    """Formats a prompt based on lldb execution result."""
+    if previous_prompt:
+      previous_prompt_text = previous_prompt.get()
+    else:
+      previous_prompt_text = ''
+    stdout = self.llm.truncate_prompt(process.stdout,
+                                      previous_prompt_text).strip()
+    stderr = self.llm.truncate_prompt(process.stderr,
+                                      stdout + previous_prompt_text).strip()
+    return (f'<lldb>\n{process.args}\n</lldb>\n'
+            f'<return code>\n{process.returncode}\n</return code>\n'
+            f'<stdout>\n{stdout}\n</stdout>\n'
+            f'<stderr>\n{stderr}\n</stderr>\n')
+
+  def _container_handle_lldb_command(self, response: str, tool: LLDBTool,
+                                     prompt: Prompt) -> Prompt:
+    """Handles the command from LLM with lldb |tool|."""
+    prompt_text = ''
+    for command in self._parse_tags(response, 'lldb'):
+      prompt_text += self._format_lldb_execution_result(
+          tool.execute(command), previous_prompt=prompt) + '\n'
+      prompt.append(prompt_text)
+    return prompt
+
   def _container_handle_conclusion(self, cur_round: int, response: str,
                                    crash_result: CrashResult):
     """Parses LLM conclusion, analysis and suggestion."""
@@ -140,7 +169,7 @@ class CrashAnalyzer(BaseAgent):
       return self._container_handle_conclusion(cur_round, response,
                                                crash_result)
     prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
-    return self._container_handle_bash_command(response, self.analyze_tool,
+    return self._container_handle_lldb_command(response, self.analyze_tool,
                                                prompt)
 
   def execute(self, result_history: list[Result]) -> CrashResult:
@@ -173,6 +202,7 @@ class CrashAnalyzer(BaseAgent):
         name='lldb',
         project_name=generated_oss_fuzz_project)
     self.analyze_tool.execute('compile > /dev/null')
+    self.analyze_tool.execute('lldb')
     prompt = self._initial_prompt(result_history)
     prompt.add_problem(self.analyze_tool.tutorial())
     crash_result = CrashResult.from_existing_result(last_result)
