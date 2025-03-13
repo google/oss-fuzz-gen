@@ -324,7 +324,8 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['GKE_EXP_NAME'] = args.experiment_name
   exp_env_vars['GKE_EXP_REQ_CPU'] = args.request_cpus
   exp_env_vars['GKE_EXP_REQ_MEM'] = f'{args.request_memory}'
-  exp_env_vars['GKE_EXP_LOCAL_INTROSPECTOR'] = f'{args.local_introspector}'.lower()
+  exp_env_vars[
+      'GKE_EXP_LOCAL_INTROSPECTOR'] = f'{args.local_introspector}'.lower()
   exp_env_vars['GKE_EXP_NUM_SAMPLES'] = f'{args.num_samples}'
   exp_env_vars['GKE_EXP_LLM_FIX_LIMIT'] = f'{args.llm_fix_limit}'
   exp_env_vars['GKE_EXP_VARY_TEMPERATURE'] = f'{args.vary_temperature}'.lower()
