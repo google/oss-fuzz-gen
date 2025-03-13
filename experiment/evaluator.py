@@ -2,7 +2,7 @@
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
-# You may obtain a copy of the License a
+# You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -64,7 +64,7 @@ class Result:
   compile_error: str = ''
   compile_log: str = ''
 
-  def __post_init__(self, *args, **kwargs):  # pylint: disable=unused-argumen
+  def __post_init__(self, *args, **kwargs):  # pylint: disable=unused-argument
     if self.is_driver_fuzz_err:
       self.is_semantic_error = self.is_driver_fuzz_err
     if self.driver_fuzz_err:
@@ -276,8 +276,8 @@ class Evaluator:
                              name: str,
                              target_file: str,
                              build_script_path: str = '') -> str:
-    """Creates an OSS-Fuzz project with the generated target. The new projec
-    will replicate an existing project |name| but replace its fuzz targe
+    """Creates an OSS-Fuzz project with the generated target. The new project
+    will replicate an existing project |name| but replace its fuzz target
     and build script with the new |target_file| and |build_script_path|."""
     logger.info('target file: %s', target_file)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
@@ -473,7 +473,7 @@ class Evaluator:
         if self.benchmark.language in ['python', 'jvm'] and run_result.coverage:
           # The Jacoco.xml coverage report used to generate summary.json on
           # OSS-Fuzz for JVM projects does not trace the source file location.
-          # Thus the conversion may miss some classes because they are no
+          # Thus the conversion may miss some classes because they are not
           # present during coverage report generation. This fix gets the total
           # line calculation from the jacoco.xml report of the current run
           # directly and compares it with the total_lines retrieved from
