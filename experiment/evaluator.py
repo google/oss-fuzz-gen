@@ -27,11 +27,11 @@ from google.cloud import storage
 import results
 from experiment import builder_runner, oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
-from experiment.builder_runner import BuildResult, RunResul
-from experiment.fuzz_target_error import SemanticCheckResul
+from experiment.builder_runner import BuildResult, RunResult
+from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
 from llm_toolkit import code_fixer, corpus_generator, crash_triager
-from llm_toolkit.crash_triager import TriageResul
+from llm_toolkit.crash_triager import TriageResult
 
 logger = logging.getLogger(__name__)
 
@@ -249,7 +249,7 @@ class _Logger:
     with open(self._result_path, 'w') as f:
       json.dump(result.to_dict(), f)
 
-    return resul
+    return result
 
 
 class Evaluator:
@@ -509,7 +509,7 @@ class Evaluator:
         # For JVM, the generation is consider success if either is true
         # 1) Build success and run crashed (expected for exceptions)
         # 2) Build success, run success and coverage diff > 0
-        gen_succ = build_result.succeeded and run_resul
+        gen_succ = build_result.succeeded and run_result
         if gen_succ and run_result and run_result.succeeded:
           gen_succ = gen_succ and (coverage_diff > 0)
       else:
