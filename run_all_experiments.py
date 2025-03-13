@@ -535,6 +535,9 @@ def main():
   _setup_logging(args.log_level, is_cloud=args.cloud_experiment_name != '')
   logger.info('Starting experiments on PR branch')
 
+  # Store the trial count in an environment variable
+  os.environ['BENCHMARK_TRIAL_COUNT'] = str(args.num_samples)
+
   # Capture time at start
   start = time.time()
   add_to_json_report(args.work_dir, 'start_time',
