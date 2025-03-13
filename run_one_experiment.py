@@ -24,8 +24,8 @@ from typing import List, Optional
 
 import logger
 import pipeline
-from agent.enhancer import Enhancer
 from agent.crash_analyzer import CrashAnalyzer
+from agent.enhancer import Enhancer
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper

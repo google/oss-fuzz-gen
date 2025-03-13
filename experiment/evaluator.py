@@ -324,8 +324,8 @@ class Evaluator:
                                        build_script_path: str = '') -> str:
     """Creates an OSS-Fuzz project with the generated target and new dockerfile.
     The new project will replicate an existing project |name| but replace its 
-    fuzz target and build script with the new |target_file| and |build_script_path| 
-    and modify its dockerfile."""
+    fuzz target and build script with the new |target_file| and 
+    |build_script_path| and modify its dockerfile."""
     self.create_ossfuzz_project(name, target_file, build_script_path)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects', name)
