@@ -27,6 +27,7 @@ import pipeline
 from agent.coverage_analyzer import CoverageAnalyzer
 from agent.enhancer import Enhancer
 from agent.crash_analyzer import CrashAnalyzer
+from agent.enhancer import Enhancer
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper

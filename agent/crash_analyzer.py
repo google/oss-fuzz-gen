@@ -15,14 +15,12 @@
 Use it as a usual module locally, or as script in cloud builds.
 """
 import os
-import shutil
 import subprocess as sp
 from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
 from experiment import evaluator as evaluator_lib
-from experiment import oss_fuzz_checkout
 from llm_toolkit import prompt_builder
 from llm_toolkit.prompts import Prompt
 from results import CrashResult, Result, RunResult
