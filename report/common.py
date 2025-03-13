@@ -302,17 +302,13 @@ class Results:
       for filename in FileSystem(fuzz_targets_dir).listdir():
         if os.path.splitext(filename)[1] in TARGET_EXTS:
           # Extract trial ID from filenames like "01.fuzz_target"
+          trial_id = os.path.splitext(filename)[0]
+          trial_ids.add(trial_id)
           try:
-            trial_id = os.path.splitext(filename)[0]
-            trial_ids.add(trial_id)
-
-            try:
-              trial_num = int(trial_id)
-              max_trial_id = max(max_trial_id, trial_num)
-            except ValueError:
-              pass
-          except (ValueError, IndexError):
-            continue
+            trial_num = int(trial_id)
+            max_trial_id = max(max_trial_id, trial_num)
+          except ValueError:
+            pass
 
       if max_trial_id > 0:
         return max_trial_id
