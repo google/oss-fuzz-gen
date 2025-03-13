@@ -227,7 +227,7 @@ class GPT(LLM):
   name = 'gpt-3.5-turbo'
   _gpt_ai_model = 'gpt-3.5-turbo'
 
-  def get_model(self) -> str:
+  def get_model(self) -> Any:
     """Returns the underlying model instance."""
     # Placeholder: No suitable implementation/usage yet.
 

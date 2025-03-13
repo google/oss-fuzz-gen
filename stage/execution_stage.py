@@ -59,7 +59,7 @@ class ExecutionStage(BaseStage):
                                     f'{self.trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                      f'{self.trial:02d}.build_script')
-    evaluator.create_ossfuzz_project(generated_oss_fuzz_project,
+    evaluator.create_ossfuzz_project(benchmark, generated_oss_fuzz_project,
                                      fuzz_target_path, build_script_path)
 
     status_path = os.path.join(last_result.work_dirs.status,

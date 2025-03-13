@@ -2,7 +2,7 @@
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# You may obtain a copy of the License a
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -24,13 +24,14 @@ from typing import Optional
 
 from google.cloud import storage
 
+import results
 from experiment import builder_runner, oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
-from experiment.builder_runner import BuildResult, RunResult
-from experiment.fuzz_target_error import SemanticCheckResult
+from experiment.builder_runner import BuildResult, RunResul
+from experiment.fuzz_target_error import SemanticCheckResul
 from experiment.workdir import WorkDirs
 from llm_toolkit import code_fixer, corpus_generator, crash_triager
-from llm_toolkit.crash_triager import TriageResult
+from llm_toolkit.crash_triager import TriageResul
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +64,7 @@ class Result:
   compile_error: str = ''
   compile_log: str = ''
 
-  def __post_init__(self, *args, **kwargs):  # pylint: disable=unused-argument
+  def __post_init__(self, *args, **kwargs):  # pylint: disable=unused-argumen
     if self.is_driver_fuzz_err:
       self.is_semantic_error = self.is_driver_fuzz_err
     if self.driver_fuzz_err:
@@ -248,7 +249,7 @@ class _Logger:
     with open(self._result_path, 'w') as f:
       json.dump(result.to_dict(), f)
 
-    return result
+    return resul
 
 
 class Evaluator:
@@ -270,12 +271,13 @@ class Evaluator:
     return os.path.join(self.work_dirs.run_logs,
                         f'{generated_target_name}-{trial:02d}.log')
 
-  def create_ossfuzz_project(self,
+  @staticmethod
+  def create_ossfuzz_project(benchmark: Benchmark,
                              name: str,
                              target_file: str,
                              build_script_path: str = '') -> str:
-    """Creates an OSS-Fuzz project with the generated target. The new project
-    will replicate an existing project |name| but replace its fuzz target
+    """Creates an OSS-Fuzz project with the generated target. The new projec
+    will replicate an existing project |name| but replace its fuzz targe
     and build script with the new |target_file| and |build_script_path|."""
     logger.info('target file: %s', target_file)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
@@ -285,7 +287,7 @@ class Evaluator:
       return name
 
     existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                         'projects', self.benchmark.project)
+                                         'projects', benchmark.project)
 
     shutil.copytree(existing_project_path, generated_project_path)
 
@@ -297,7 +299,7 @@ class Evaluator:
     # Add additional statement in dockerfile to overwrite with generated fuzzer
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(f'\nCOPY {os.path.basename(target_file)} '
-              f'{self.benchmark.target_path}\n')
+              f'{benchmark.target_path}\n')
 
     if not build_script_path or os.path.getsize(build_script_path) == 0:
       return name
@@ -309,7 +311,7 @@ class Evaluator:
                      os.path.basename('agent-build.sh')))
 
     # Add additional statement in dockerfile to overwrite with generated
-    # build script
+    # build scrip
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write('\nRUN cp /src/build.sh /src/build.bk.sh\n')
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
@@ -317,16 +319,18 @@ class Evaluator:
 
     return name
 
-  def create_ossfuzz_project_with_lldb(self,
+  @staticmethod
+  def create_ossfuzz_project_with_lldb(benchmark: Benchmark,
                                        name: str,
                                        target_file: str,
-                                       run_result: RunResult,
+                                       run_result: results.RunResult,
                                        build_script_path: str = '') -> str:
     """Creates an OSS-Fuzz project with the generated target and new dockerfile.
-    The new project will replicate an existing project |name| but replace its 
-    fuzz target and build script with the new |target_file| and 
+    The new project will replicate an existing project |name| but replace its
+    fuzz target and build script with the new |target_file| and
     |build_script_path| and modify its dockerfile."""
-    self.create_ossfuzz_project(name, target_file, build_script_path)
+    Evaluator.create_ossfuzz_project(benchmark, name, target_file,
+                                     build_script_path)
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects', name)
 
@@ -336,7 +340,6 @@ class Evaluator:
       f.write(
           '\nRUN mkdir -p /artifact\n'
           f'\nCOPY {os.path.basename(run_result.artifact_path)} /artifact/\n'
-          '\nENV FUZZING_LANGUAGE={run_result.benchmark.language}\n'
           '\nENV CFLAGS="${CFLAGS} -g"\n'
           '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
           '\nRUN apt-get update && apt-get install -y lldb\n')
@@ -426,7 +429,8 @@ class Evaluator:
     sample_id = os.path.splitext(generated_target_name)[0]
     generated_oss_fuzz_project = f'{self.benchmark.id}-{sample_id}'
     generated_oss_fuzz_project = rectify_docker_tag(generated_oss_fuzz_project)
-    self.create_ossfuzz_project(generated_oss_fuzz_project, target_path)
+    Evaluator.create_ossfuzz_project(self.benchmark, generated_oss_fuzz_project,
+                                     target_path)
 
     status_path = os.path.join(self.work_dirs.status, sample_id)
     os.makedirs(status_path, exist_ok=True)
@@ -469,7 +473,7 @@ class Evaluator:
         if self.benchmark.language in ['python', 'jvm'] and run_result.coverage:
           # The Jacoco.xml coverage report used to generate summary.json on
           # OSS-Fuzz for JVM projects does not trace the source file location.
-          # Thus the conversion may miss some classes because they are not
+          # Thus the conversion may miss some classes because they are no
           # present during coverage report generation. This fix gets the total
           # line calculation from the jacoco.xml report of the current run
           # directly and compares it with the total_lines retrieved from
@@ -505,7 +509,7 @@ class Evaluator:
         # For JVM, the generation is consider success if either is true
         # 1) Build success and run crashed (expected for exceptions)
         # 2) Build success, run success and coverage diff > 0
-        gen_succ = build_result.succeeded and run_result
+        gen_succ = build_result.succeeded and run_resul
         if gen_succ and run_result and run_result.succeeded:
           gen_succ = gen_succ and (coverage_diff > 0)
       else:
