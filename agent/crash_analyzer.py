@@ -130,7 +130,7 @@ class CrashAnalyzer(BaseAgent):
                                      f'{self.trial:02d}.build_script')
 
     evaluator_lib.Evaluator.create_ossfuzz_project_with_lldb(
-        generated_oss_fuzz_project, fuzz_target_path, last_result,
+        benchmark, generated_oss_fuzz_project, fuzz_target_path, last_result,
         build_script_path)
 
     self.analyze_tool = LLDBTool(
