@@ -292,7 +292,8 @@ class Results:
         pass
 
     # Check fuzz_targets directory for new experiments
-    fuzz_targets_dir = os.path.join(self._results_dir, benchmark_id, 'fuzz_targets')
+    fuzz_targets_dir = os.path.join(self._results_dir, benchmark_id,
+                                    'fuzz_targets')
     if FileSystem(fuzz_targets_dir).exists():
       # For new experiments, use the max trial ID as the expected count
       # This handles the case where trials come out of order
@@ -318,7 +319,8 @@ class Results:
         return len(trial_ids)
 
     # Check raw_targets directory for older experiments
-    raw_targets_dir = os.path.join(self._results_dir, benchmark_id, 'raw_targets')
+    raw_targets_dir = os.path.join(self._results_dir, benchmark_id,
+                                   'raw_targets')
     if FileSystem(raw_targets_dir).exists():
       targets = [
           f for f in FileSystem(raw_targets_dir).listdir()
