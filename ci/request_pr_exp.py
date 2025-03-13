@@ -63,6 +63,16 @@ BUCKET_LINK_PREFIX = ('https://console.cloud.google.com/storage/browser/'
 BUCKET_GS_LINK_PREFIX = (
     'gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/ofg-pr')
 
+DEFAULT_VERTEX_AI_LOCATION = 'us-central1'
+VERTEX_AI_LOCATIONS = {
+  'vertex_ai_gemini-pro': 'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+  'vertex_ai_gemini-ultra': 'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+  'vertex_ai_gemini-1-5': 'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+  'vertex_ai_gemini-2-flash': 'europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west4,europe-west8,europe-west9,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+  'vertex_ai_gemini-1-5-chat': 'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+  'vertex_ai_gemini-2-flash-chat': 'europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west4,europe-west8,europe-west9,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4'
+}
+
 
 def _parse_args(cmd) -> argparse.Namespace:
   """Parses the command line arguments."""
@@ -111,6 +121,12 @@ def _parse_args(cmd) -> argparse.Namespace:
                       type=str,
                       default=LLM_NAME,
                       help=f'Large Language Model name, default: {LLM_NAME}.')
+  parser.add_argument(
+      '-ll',
+      '--llm-locations',
+      type=str,
+      help=('Comma-separated list of locations where the LLM is available. '
+            'If not provided, default locations will be used based on the LLM.'))
   parser.add_argument(
       '-d',
       '--delay',
@@ -194,6 +210,9 @@ def _parse_args(cmd) -> argparse.Namespace:
   # Use Chat model by default in agent-enhance experiments.
   if args.agent and args.llm == LLM_NAME:
     args.llm = LLM_CHAT_NAME
+
+  if not args.llm_locations:
+    args.llm_locations = VERTEX_AI_LOCATIONS.get(args.llm, DEFAULT_VERTEX_AI_LOCATION)
 
   if args.large:
     args.location = LARGE_LOCATION
@@ -309,6 +328,7 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['PR_ID'] = str(args.pr_id)
   exp_env_vars['GKE_EXP_BENCHMARK'] = args.benchmark_set
   exp_env_vars['GKE_EXP_LLM'] = args.llm
+  exp_env_vars['GKE_EXP_VERTEX_AI_LOCATIONS'] = args.llm_locations
   exp_env_vars['GKE_EXP_DELAY'] = args.delay
   exp_env_vars['GKE_EXP_FUZZING_TIMEOUT'] = str(args.fuzzing_timeout)
   exp_env_vars['GKE_EXP_NAME'] = args.experiment_name
