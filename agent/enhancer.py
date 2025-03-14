@@ -16,10 +16,9 @@ Use it as a usual module locally, or as script in cloud builds.
 """
 import logger
 from agent.prototyper import Prototyper
-#from experiment.workdir import WorkDirs
-from llm_toolkit.prompt_builder import DefaultTemplateBuilder, JvmFixingBuilder
+from llm_toolkit.prompt_builder import EnhancerTemplateBuilder, JvmFixingBuilder
 from llm_toolkit.prompts import Prompt
-from results import AnalysisResult, Result
+from results import AnalysisResult, BuildResult, Result
 
 
 class Enhancer(Prototyper):
@@ -36,6 +35,17 @@ class Enhancer(Prototyper):
                    trial=self.trial)
       return Prompt()
 
+    last_build_result = None
+    for result in results[::-1]:
+      if isinstance(result, BuildResult):
+        last_build_result = result
+        break
+    if not last_build_result:
+      logger.error('Unable to find the last build result in Enhancer : %s',
+                   results,
+                   trial=self.trial)
+      return Prompt()
+
     if benchmark.language == 'jvm':
       # TODO: Do this in a separate agent for JVM coverage.
       builder = JvmFixingBuilder(self.llm, benchmark,
@@ -43,13 +53,10 @@ class Enhancer(Prototyper):
       prompt = builder.build([], None, None)
     else:
       error_desc, errors = last_result.semantic_result.get_error_info()
-      builder = DefaultTemplateBuilder(self.llm)
-      prompt = builder.build_fixer_prompt(benchmark,
-                                          last_result.fuzz_target_source,
-                                          error_desc,
-                                          errors,
-                                          context='',
-                                          instruction='')
+      builder = EnhancerTemplateBuilder(self.llm, benchmark, last_build_result,
+                                        error_desc, errors)
+      prompt = builder.build(example_pair=[],
+                             project_dir=self.inspect_tool.project_dir)
       # TODO: A different file name/dir.
       prompt.save(self.args.work_dirs.prompt)
 

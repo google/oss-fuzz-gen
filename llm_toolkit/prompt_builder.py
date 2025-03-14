@@ -643,6 +643,59 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
     return self._prompt
 
 
+class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               build_result: BuildResult,
+               error_desc: str,
+               errors: list[str],
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+    # Load templates.
+    self.priming_template_file = self._find_template(self.agent_templare_dir,
+                                                     'enhancer-priming.txt')
+    self.build_result = build_result
+    self.error_desc = error_desc
+    self.errors = errors
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    del (example_pair, project_example_content, project_context_content,
+         tool_guides)
+    if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.priming_template_file)
+    prompt = prompt.replace('{LANGUAGE}', self.benchmark.file_type.value)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}',
+                            self.benchmark.function_signature)
+    # TODO(dongge): Add build script to .
+    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
+    if self.build_result.build_script_source:
+      build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
+                    '</build script>')
+    else:
+      build_text = 'Build script reuses `/src/build.bk.sh`.'
+    prompt = prompt.replace('{BUILD_TEXT}', build_text)
+    priming_weight = self._model.estimate_token_num(prompt)
+
+    problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
+                                         self.error_desc, self.errors,
+                                         priming_weight, '', '')
+
+    self._prepare_prompt(prompt, problem)
+    return self._prompt
+
+
 class DefaultJvmTemplateBuilder(PromptBuilder):
   """Default builder for JVM projects."""
 
