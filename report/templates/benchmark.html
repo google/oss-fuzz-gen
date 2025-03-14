@@ -40,9 +40,9 @@ td, th {
         <td><a href="../../sample/{{ benchmark|urlencode }}/{{ sample.id }}.html">{{ sample.id }}</a></li></td>
         <td>{{ sample.status }}</td>
         {% if sample.result %}
-        <td style="color: {{ 'green' if sample.result.compiles else 'black' }}">{{ sample.result.compiles }}</td>
-        <td style="color: {{ 'red' if sample.result.crashes else 'black' }}">{{ sample.result.crashes }}</td>
-        <td style="color: {{ 'red' if sample.result.crashes and not sample.result.is_semantic_error else 'black' }}">{{ sample.result.crashes and not sample.result.is_semantic_error }}</td>
+        <td style="background-color: {{ '#C8E6C9' if sample.result.compiles }}">{{ sample.result.compiles }}</td>
+        <td style="background-color: {{ '#FFCDD2' if not sample.result.crashes }}">{{ sample.result.crashes }}</td>
+        <td style="background-color: {{ '#FFCDD2' if not sample.result.crashes and not sample.result.is_semantic_error }}">{{ sample.result.crashes and not sample.result.is_semantic_error }}</td>
         <td>{{ sample.result.semantic_error }} </td>
         <td>{{ sample.result.triage }}</td>
         <td>{{ sample.result.coverage |percent }}</td>
