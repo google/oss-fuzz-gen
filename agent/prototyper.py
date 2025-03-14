@@ -217,7 +217,8 @@ class Prototyper(BaseAgent):
           'Default /src/build.sh works perfectly, no need for a new '
           'buid script',
           trial=build_result.trial)
-      logger.info('***** Prototyper succeded in %02d rounds *****',
+      logger.info('***** %s succeeded in %02d rounds *****',
+                  self.name,
                   cur_round,
                   trial=build_result.trial)
       return build_result_alt, None
@@ -225,7 +226,8 @@ class Prototyper(BaseAgent):
     if build_result_ori and build_result_ori.success:
       # Preference 2: New fuzz target + new build.sh can compile, save
       # binary to expected path, and reference function-under-test.
-      logger.info('***** Prototyper succeded in %02d rounds *****',
+      logger.info('***** %s succeeded in %02d rounds *****',
+                  self.name,
                   cur_round,
                   trial=build_result.trial)
       return build_result_ori, None
