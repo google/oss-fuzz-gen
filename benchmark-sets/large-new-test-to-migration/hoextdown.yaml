@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "hoextdown"
+"target_name": "hoedown_fuzzer"
+"target_path": "/src/hoextdown/test/hoedown_fuzzer.c"
+"test_files":
+- "test_file_path": "/src/hoextdown/src/context_test.c"
