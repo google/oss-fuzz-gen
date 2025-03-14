@@ -35,6 +35,13 @@ from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
 
+# New imports for hot-reloading
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+import subprocess
+import threading
+
+
 logger = logging.getLogger(__name__)
 
 # WARN: Avoid large NUM_EXP for local experiments.
@@ -272,6 +279,10 @@ def parse_args() -> argparse.Namespace:
                       type=int,
                       default=100,
                       help='Max trial round for agents.')
+  parser.add_argument('--watch',
+                      action='store_true',
+                      default=False,
+                      help='Enable hot-reloading for reports. Watches the results directory and auto-updates the report.')
 
   args = parser.parse_args()
   if args.num_samples:
@@ -527,6 +538,27 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
 
   return coverage_gain
 
+class ReportUpdater(FileSystemEventHandler):
+    def on_modified(self, event):
+        """Trigger report update when a new result is detected."""
+        if event.is_directory:
+            return
+        print(f"Detected changes in {event.src_path}. Updating reports...")
+        subprocess.run(["python", "-m", "report.web", "-r", "results", "-o", "results-report"])
+
+def watch_results_directory():
+    """Monitor the results directory for changes and update reports."""
+    observer = Observer()
+    event_handler = ReportUpdater()
+    observer.schedule(event_handler, path="results", recursive=True)
+    observer.start()
+
+    try:
+        while True:
+            time.sleep(5)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
 
 def main():
   global WORK_DIR
@@ -534,6 +566,11 @@ def main():
   args = parse_args()
   _setup_logging(args.log_level, is_cloud=args.cloud_experiment_name != '')
   logger.info('Starting experiments on PR branch')
+
+  # Start watching results directory in a separate thread if --watch is enabled
+  if args.watch:
+      watcher_thread = threading.Thread(target=watch_results_directory, daemon=True)
+      watcher_thread.start()
 
   # Capture time at start
   start = time.time()
@@ -579,7 +616,7 @@ def main():
 
       experiment_results = [task.get() for task in experiment_tasks]
 
-      # Signal that no more work will be submitte to the pool.
+      # Signal that no more work will be submitted to the pool.
       p.close()
 
       # Wait for all workers to complete.
