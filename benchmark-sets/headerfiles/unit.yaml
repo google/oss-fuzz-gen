@@ -1,0 +1,52 @@
+"functions":
+- "exceptions": []
+  "name": "nxt_runtime_create"
+  "params":
+  - "name": "task"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "nxt_int_t nxt_runtime_create(nxt_task_t *)"
+- "exceptions": []
+  "name": "nxt_process_init_start"
+  "params":
+  - "name": "task"
+    "type": "bool "
+  - "name": "init"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "nxt_int_t nxt_process_init_start(nxt_task_t *, nxt_process_init_t)"
+- "exceptions": []
+  "name": "nxt_main_process_start"
+  "params":
+  - "name": "thr"
+    "type": "bool "
+  - "name": "task"
+    "type": "bool "
+  - "name": "rt"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "nxt_int_t nxt_main_process_start(nxt_thread_t *, nxt_task_t *, nxt_runtime_t *)"
+- "exceptions": []
+  "name": "nxt_process_start"
+  "params":
+  - "name": "task"
+    "type": "bool "
+  - "name": "process"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "nxt_int_t nxt_process_start(nxt_task_t *, nxt_process_t *)"
+- "exceptions": []
+  "name": "nxt_http_application_handler"
+  "params":
+  - "name": "task"
+    "type": "bool "
+  - "name": "r"
+    "type": "bool "
+  - "name": "action"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "nxt_http_action_t * nxt_http_application_handler(nxt_task_t *, nxt_http_request_t *, nxt_http_action_t *)"
+"language": "c"
+"project": "unit"
+"target_name": "fuzz_http_h1p_peer"
+"target_path": "/src/unit/fuzzing/nxt_http_h1p_peer_fuzz.c"

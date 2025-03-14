@@ -1,0 +1,54 @@
+"functions":
+- "exceptions": []
+  "name": "mdb_data_dump"
+  "params":
+  - "name": "table"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void mdb_data_dump(MdbTableDef *)"
+- "exceptions": []
+  "name": "mdb_print_schema"
+  "params":
+  - "name": "mdb"
+    "type": "bool "
+  - "name": "outfile"
+    "type": "bool "
+  - "name": "tabname"
+    "type": "bool "
+  - "name": "dbnamespace"
+    "type": "bool "
+  - "name": "export_options"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int mdb_print_schema(MdbHandle *, FILE *, char *, char *, guint32)"
+- "exceptions": []
+  "name": "mdb_dump_catalog"
+  "params":
+  - "name": "mdb"
+    "type": "bool "
+  - "name": "obj_type"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void mdb_dump_catalog(MdbHandle *, int)"
+- "exceptions": []
+  "name": "mdb_table_dump"
+  "params":
+  - "name": "entry"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void mdb_table_dump(MdbCatalogEntry *)"
+- "exceptions": []
+  "name": "mdb_read_table_by_name"
+  "params":
+  - "name": "mdb"
+    "type": "bool "
+  - "name": "table_name"
+    "type": "bool "
+  - "name": "obj_type"
+    "type": "int"
+  "return_type": "void"
+  "signature": "MdbTableDef * mdb_read_table_by_name(MdbHandle *, gchar *, int)"
+"language": "c"
+"project": "mdbtools"
+"target_name": "fuzz_mdb"
+"target_path": "/src/mdbtools/src/fuzz/fuzz_mdb.c"
