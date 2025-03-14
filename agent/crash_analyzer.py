@@ -113,7 +113,7 @@ class CrashAnalyzer(BaseAgent):
 
   def execute(self, result_history: list[Result]) -> CrashResult:
     """Executes the agent based on previous run result."""
-    WorkDirs(self.args.work_dirs.base) 
+    WorkDirs(self.args.work_dirs.base)
     last_result = result_history[-1]
     benchmark = last_result.benchmark
     logger.info('Executing Crash Analyzer', trial=self.trial)
