@@ -66,6 +66,40 @@ tbody tr:nth-child(odd) {
     overflow: scroll;
     margin-left: auto;
 }
+
+.code-container {
+    display: flex;
+    border: 1px solid #dedede;
+    background-color: #f8f8f8;
+    overflow-x: auto;
+    font-family: monospace;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.line-numbers {
+    margin: 0;
+    padding: 0.5em;
+    text-align: right;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+    user-select: none;
+    min-width: 2.5em;
+    color: #999;
+}
+
+.code-content {
+    margin: 0;
+    padding: 0.5em;
+    flex-grow: 0;
+}
+
+.line-numbers span,
+.code-content code {
+    display: block;
+    line-height: 1.5;
+    white-space: pre;
+}
 </style>
 <body>
     LLM: {{ model }}

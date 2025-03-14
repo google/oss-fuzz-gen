@@ -483,10 +483,28 @@ def _build_image(project_name: str) -> str:
 def prepare_project_image(project: str) -> str:
   """Prepares original image of the |project|'s fuzz target build container."""
   image_name = f'gcr.io/oss-fuzz/{project}'
-  if (ENABLE_CACHING and is_image_cached(project, 'address') and
-      (_image_exists_locally(image_name, project_name=project) or
-       _image_exists_online(image_name, project_name=project))):
-    logger.info('Using cached project image for %s', project)
-    return image_name
+  if ENABLE_CACHING and is_image_cached(project, 'address'):
+    logger.info('We should use cached instance.')
+    # Rewrite for caching.
+    rewrite_project_to_cached_project(project, project, 'address')
+    # Prepare build
+    prepare_build(project, 'address', project)
+    # Build the image
+    command = [
+        'docker', 'build', '-t', image_name,
+        os.path.join('projects', project)
+    ]
+    try:
+      sp.run(command,
+             cwd=OSS_FUZZ_DIR,
+             stdin=sp.DEVNULL,
+             stdout=sp.PIPE,
+             stderr=sp.PIPE,
+             check=True)
+      logger.info('Using cached project image for %s: %s', project, image_name)
+      return image_name
+    except sp.CalledProcessError as e:
+      logger.warning('Failed to build image for %s: %s', project, e)
+
   logger.warning('Unable to find cached project image for %s', project)
   return _build_image(project)
