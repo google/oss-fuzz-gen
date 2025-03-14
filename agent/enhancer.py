@@ -56,6 +56,7 @@ class Enhancer(Prototyper):
       builder = EnhancerTemplateBuilder(self.llm, benchmark, last_build_result,
                                         error_desc, errors)
       prompt = builder.build(example_pair=[],
+                             tool_guides=self.inspect_tool.tutorial(),
                              project_dir=self.inspect_tool.project_dir)
       # TODO: A different file name/dir.
       prompt.save(self.args.work_dirs.prompt)

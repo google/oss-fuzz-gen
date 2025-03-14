@@ -669,30 +669,30 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
             tool_guides: str = '',
             project_dir: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
-    del (example_pair, project_example_content, project_context_content,
-         tool_guides)
+    del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:
       return self._prompt
 
-    prompt = self._get_template(self.priming_template_file)
-    prompt = prompt.replace('{LANGUAGE}', self.benchmark.file_type.value)
-    prompt = prompt.replace('{FUNCTION_SIGNATURE}',
-                            self.benchmark.function_signature)
+    priming = self._get_template(self.priming_template_file)
+    priming = priming.replace('{LANGUAGE}', self.benchmark.file_type.value)
+    priming = priming.replace('{FUNCTION_SIGNATURE}',
+                              self.benchmark.function_signature)
     # TODO(dongge): Add build script to .
-    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
+    priming = priming.replace('{PROJECT_DIR}', project_dir)
     if self.build_result.build_script_source:
       build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
                     '</build script>')
     else:
       build_text = 'Build script reuses `/src/build.bk.sh`.'
-    prompt = prompt.replace('{BUILD_TEXT}', build_text)
-    priming_weight = self._model.estimate_token_num(prompt)
+    priming = priming.replace('{BUILD_TEXT}', build_text)
+    priming = priming.replace('{TOOL_GUIDES}', tool_guides)
+    priming_weight = self._model.estimate_token_num(priming)
 
     problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
                                          self.error_desc, self.errors,
                                          priming_weight, '', '')
 
-    self._prepare_prompt(prompt, problem)
+    self._prepare_prompt(priming, problem)
     return self._prompt
 
 

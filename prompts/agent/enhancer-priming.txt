@@ -90,3 +90,8 @@ Additionally, the build script requires modification to link against the necessa
 </build script>
 
 </steps>
+
+<tool>
+{TOOL_GUIDES}
+</tool>
+
