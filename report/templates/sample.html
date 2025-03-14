@@ -53,7 +53,7 @@ Crash reason: {{ sample.result.semantic_error }}
 <h3>Code #{{ loop.index - 1}}</h3>
 {% endif %}
 <pre>
-{{ target.code }}
+{{ target.code | add_line_numbers }}
 </pre>
 {% endfor %}
 

@@ -65,6 +65,22 @@ class JinjaEnv:
       return link_path + 'index.html'
     return link_path + 'report.html'
 
+  @staticmethod
+  def _add_line_numbers(code_text):
+    """Add line numbers to code text."""
+    if not code_text:
+        return code_text
+    
+    numbered_lines = []
+    lines = code_text.split('\n')
+    line_number_width = len(str(len(lines)))
+    
+    for i, line in enumerate(lines, 1):
+        line_num = str(i).rjust(line_number_width)
+        numbered_lines.append(f"{line_num}: {line}")
+    
+    return '\n'.join(numbered_lines)
+
   def __init__(self, template_globals: Optional[Dict[str, Any]] = None):
     self._env = jinja2.Environment(
         loader=jinja2.FileSystemLoader("report/templates"),
@@ -73,6 +89,7 @@ class JinjaEnv:
     self._env.filters['urlencode_filter'] = self._urlencode_filter
     self._env.filters['percent'] = self._percent
     self._env.filters['cov_report_link'] = self._cov_report_link
+    self._env.filters['add_line_numbers'] = self._add_line_numbers
 
     if template_globals:
       for key, val in template_globals.items():
