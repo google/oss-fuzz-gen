@@ -425,7 +425,8 @@ class Prototyper(BaseAgent):
 
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
-    WorkDirs(self.args.work_dirs.base)
+    # Use keep to avoid deleting files, such as benchmark.yaml
+    WorkDirs(self.args.work_dirs.base, keep=True)
     last_result = result_history[-1]
     logger.info('Executing %s', self.name, trial=last_result.trial)
     benchmark = last_result.benchmark

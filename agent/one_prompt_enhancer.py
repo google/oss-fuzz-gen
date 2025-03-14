@@ -59,7 +59,8 @@ class OnePromptEnhancer(OnePromptPrototyper):
     """Executes the agent based on previous result."""
     last_result = result_history[-1]
     logger.info('Executing One Prompt Enhancer', trial=last_result.trial)
-    WorkDirs(self.args.work_dirs.base)
+    # Use keep to avoid deleting files, such as benchmark.yaml
+    WorkDirs(self.args.work_dirs.base, keep=True)
 
     prompt = self._initial_prompt(result_history)
     cur_round = 1
