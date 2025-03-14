@@ -489,7 +489,22 @@ def prepare_project_image(project: str) -> str:
     rewrite_project_to_cached_project(project, project, 'address')
     # Prepare build
     prepare_build(project, 'address', project)
-    logger.info('Using cached project image for %s', project)
-    return image_name
+    # Build the image
+    command = [
+        'docker', 'build', '-t', image_name,
+        os.path.join('projects', project)
+    ]
+    try:
+      sp.run(command,
+             cwd=OSS_FUZZ_DIR,
+             stdin=sp.DEVNULL,
+             stdout=sp.PIPE,
+             stderr=sp.PIPE,
+             check=True)
+      logger.info('Using cached project image for %s: %s', project, image_name)
+      return image_name
+    except sp.CalledProcessError as e:
+      logger.warning('Failed to build image for %s: %s', project, e)
+
   logger.warning('Unable to find cached project image for %s', project)
   return _build_image(project)
