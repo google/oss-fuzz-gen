@@ -366,7 +366,7 @@ class TrialResult:
                if isinstance(result, BuildResult))
 
   @property
-  def crash(self) -> bool:
+  def crashes(self) -> bool:
     """True if there is any run crash not caused by semantic error."""
     # TODO(dongge): Add back result.success when analyzer is ready.
     return any(result.run_result.crashes  # and result.success
@@ -476,8 +476,8 @@ class TrialResult:
             self.chat_history,
         'compiles':
             self.build_success,
-        'crash':
-            self.crash,
+        'crashes':
+            self.crashes,
         'coverage':
             self.coverage,
         'line_coverage_diff':
@@ -535,7 +535,8 @@ class BenchmarkResult:
     """True if there is any run crash not caused by semantic error."""
     if self.trial_count == 0:
       return 0
-    return sum(result.crash for result in self.trial_results) / self.trial_count
+    return sum(
+        result.crashes for result in self.trial_results) / self.trial_count
 
   @property
   def coverage(self) -> float:
