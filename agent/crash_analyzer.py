@@ -119,6 +119,7 @@ class CrashAnalyzer(BaseAgent):
     logger.info('Executing Crash Analyzer', trial=self.trial)
     assert isinstance(last_result, RunResult)
 
+    # TODO(dongge): Move these to oss_fuzz_checkout.
     generated_target_name = os.path.basename(benchmark.target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
     generated_oss_fuzz_project = (
@@ -126,10 +127,18 @@ class CrashAnalyzer(BaseAgent):
     generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
         generated_oss_fuzz_project)
 
+    # TODO(dongge): Write to OSS-Fuzz project dir files directly.
     fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                     f'{self.trial:02d}.fuzz_target')
-    build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                     f'{self.trial:02d}.build_script')
+    with open(fuzz_target_path, 'w') as ft_file:
+      ft_file.write(last_result.fuzz_target_source)
+    if last_result.build_script_source:
+      build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
+                                       f'{self.trial:02d}.build_script')
+      with open(build_script_path, 'w') as ft_file:
+        ft_file.write(last_result.build_script_source)
+    else:
+      build_script_path = ''
 
     evaluator_lib.Evaluator.create_ossfuzz_project_with_lldb(
         benchmark, generated_oss_fuzz_project, fuzz_target_path, last_result,
