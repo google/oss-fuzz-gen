@@ -1326,6 +1326,7 @@ def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
   (fuzz_compiler, fuzz_flags, empty_fuzzer_file,
    fuzz_template) = get_language_defaults(language)
 
+  # Write empty fuzzer
   with open(os.path.join(oss_fuzz_folder, os.path.basename(empty_fuzzer_file)),
             'w') as f:
     f.write(fuzz_template)
@@ -1340,6 +1341,25 @@ def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
     fuzzer_build_cmd.append(os.path.join(test_dir, refined_static_lib))
 
   fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
+
+  # Add inclusion of header file paths. This is anticipating any harnesses
+  # will make an effort to include relevant header files.
+  all_header_files = get_all_header_files(get_all_files_in_path(test_dir))
+  paths_to_include = set()
+  for header_file in all_header_files:
+    if not header_file.startswith('/src/'):
+      header_file = '/src/' + header_file
+    if '/test/' in header_file:
+      continue
+    if 'googletest' in header_file:
+      continue
+
+    path_to_include = '/'.join(header_file.split('/')[:-1])
+    paths_to_include.add(path_to_include)
+  for path_to_include in paths_to_include:
+    logger.info('Path to include: %s', path_to_include)
+    fuzzer_build_cmd.append(f'-I{path_to_include}')
+
   introspector_vanilla_build_script += '\n'
   introspector_vanilla_build_script += ' '.join(fuzzer_build_cmd)
 
