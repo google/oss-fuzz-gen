@@ -368,8 +368,7 @@ class TrialResult:
   @property
   def crashes(self) -> bool:
     """True if there is any run crash not caused by semantic error."""
-    # TODO(dongge): Add back result.success when analyzer is ready.
-    return any(result.run_result.crashes  # and result.success
+    return any(result.run_result.crashes and result.success
                for result in self.result_history
                if isinstance(result, AnalysisResult))
 
