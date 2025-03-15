@@ -66,8 +66,35 @@ tbody tr:nth-child(odd) {
     overflow: scroll;
     margin-left: auto;
 }
+.dashboard-title {
+  display: flex;
+  justify-content: center;
+  padding: 15px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #f8f9fa;
+  width: 100%;
+}
+
+.dashboard-title h1 {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.logo {
+  vertical-align: middle;
+  margin-right: 10px;
+  height: 32px;
+  width: auto;
+} 
+
 </style>
 <body>
+    <div class="dashboard-title">
+        <h1><img class="logo"  src="https://avatars.githubusercontent.com/u/1342004?s=48&v=4" alt="Fuzzing Dashboard" />OSS Fuzz Gen Report</h1>
+    </div>
     LLM: {{ model }}
     {% block content %}{% endblock %}
 </body>
