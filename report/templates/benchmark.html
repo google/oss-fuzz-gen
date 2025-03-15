@@ -29,7 +29,7 @@ td, th {
         <th>Status</th>
         <th>Builds</th>
         <th>Crashes</th>
-        <th>Bug</th>
+        <th>Potential Vulnerability</th>
         <th>Diagnosis</th>
         <th>Triage</th>
         <th>Coverage</th>
@@ -41,8 +41,8 @@ td, th {
         <td>{{ sample.status }}</td>
         {% if sample.result %}
         <td style="background-color: {{ '#C8E6C9' if sample.result.compiles }}">{{ sample.result.compiles }}</td>
-        <td style="background-color: {{ '#FFCDD2' if not sample.result.crashes }}">{{ sample.result.crashes }}</td>
-        <td style="background-color: {{ '#FFCDD2' if not sample.result.crashes and not sample.result.is_semantic_error }}">{{ sample.result.crashes and not sample.result.is_semantic_error }}</td>
+        <td style="background-color: {{ '#FFCDD2' if sample.result.crashes }}">{{ sample.result.crashes }}</td>
+        <td style="background-color: {{ '#FFCDD2' if sample.result.crashes and not sample.result.is_semantic_error }}">{{ sample.result.crashes and not sample.result.is_semantic_error }}</td>
         <td>{{ sample.result.semantic_error }} </td>
         <td>{{ sample.result.triage }}</td>
         <td>{{ sample.result.coverage |percent }}</td>
