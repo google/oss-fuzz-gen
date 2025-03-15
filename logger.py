@@ -37,22 +37,25 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
     kwargs['extra'] = {**(self.extra or {}), **(kwargs.get('extra') or {})}
     return msg, kwargs
 
-  def write_to_file(self, file_path: str, file_content: str) -> None:
+  def write_to_file(self,
+                    file_path: str,
+                    file_content: str,
+                    mode: str = 'a') -> None:
     """Writes the |file_content| into a local |file_path|."""
-    with open(file_path, 'a') as file:
+    with open(file_path, mode) as file:
       file.writelines(file_content)
 
   def write_fuzz_target(self, result: Result) -> None:
     """Writes fuzz target."""
     fuzz_target_path = os.path.join(result.work_dirs.fuzz_targets,
                                     f'{result.trial:02d}.fuzz_target')
-    self.write_to_file(fuzz_target_path, result.fuzz_target_source)
+    self.write_to_file(fuzz_target_path, result.fuzz_target_source, 'w')
 
   def write_build_script(self, result: Result) -> None:
     """Writes build script."""
     build_script_path = os.path.join(result.work_dirs.fuzz_targets,
                                      f'{result.trial:02d}.build_script')
-    self.write_to_file(build_script_path, result.build_script_source)
+    self.write_to_file(build_script_path, result.build_script_source, 'w')
 
   def write_result(self, result_status_dir: str, result: TrialResult) -> None:
     """Writes the final result into JSON for report generation."""
