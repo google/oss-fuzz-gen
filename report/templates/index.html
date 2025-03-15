@@ -61,6 +61,49 @@ td .signature {
     content: ' \25b4';
     color: #000;
 }
+.status-indicator {
+  display: inline-block;
+  width: 80px;
+  height: 16px;
+  border-radius: 8px;
+  background-color: #e0e0e0;
+  margin-right: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.status-indicator-fill {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.5s ease;
+}
+
+.status-running .status-indicator-fill {
+  background-color: #FFC107; /* Yellow for running */
+  width: 60%;
+  animation: pulse 1.5s infinite;
+}
+
+.status-success .status-indicator-fill {
+  background-color: #4CAF50; /* Green for success */
+  width: 100%;
+}
+
+.status-failed .status-indicator-fill {
+  background-color: #F44336; /* Red for failed */
+  width: 100%;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.status-text {
+  display: inline-block;
+  vertical-align: middle;
+}
 
 </style>
 
@@ -87,7 +130,12 @@ td .signature {
                     <a href="benchmark/{{ benchmark.id|urlencode }}/index.html">{{ benchmark.signature }}</a>
                 </pre>
             </td>
-            <td data-sort-value="{{ benchmark.status }}">{{ benchmark.status }}</td>
+            <td data-sort-value="{{ benchmark.status }}">
+                <div class="status-indicator status-{{ benchmark.status|lower }}">
+                  <div class="status-indicator-fill"></div>
+                </div>
+                <span class="status-text">{{ benchmark.status }}</span>
+              </td>
             <td data-sort-value="{{ benchmark.result.build_success_rate|percent }}">{{ benchmark.result.build_success_rate|percent}}</td>
             <td data-sort-value="{{ benchmark.result.crash_rate|percent }}"><a href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{ benchmark.result.crash_rate|percent }} </a></td>
             <td data-sort-value="{{ benchmark.result.found_bug }}">{{ benchmark.result.found_bug }}</td>
