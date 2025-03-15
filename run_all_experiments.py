@@ -345,12 +345,12 @@ def extend_report_with_coverage_gains_process():
   """A process that continuously runs to update coverage gains in the
   background."""
   while True:
-    time.sleep(300)  # 5 minutes.
     try:
       extend_report_with_coverage_gains()
     except Exception:
       logger.error('Failed to extend report with coverage gains')
       traceback.print_exc()
+    time.sleep(300)  # 5 minutes.
 
 
 def _print_experiment_result(result: Result):
