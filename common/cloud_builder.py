@@ -196,7 +196,7 @@ class CloudBuilder:
                     '/workspace/dills/new_result.pkl'
                 ],
             },
-            # Step 4: Upload the result to GCS bucket
+            # Step 6: Upload the result to GCS bucket
             {
                 'name': 'bash',
                 'dir': '/workspace',
@@ -334,7 +334,7 @@ class CloudBuilder:
 
     cloud_build_log += self._get_build_log(build_id)
 
-    # Step 4: Deserialize dilld file.
+    # Step 5: Deserialize dilld file.
     result = utils.deserialize_from_dill(new_result_dill)
     if not result:
       cloud_build_log += f'Failed to deserialize from dill {new_result_dill}.\n'
