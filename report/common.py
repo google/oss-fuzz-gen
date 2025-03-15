@@ -269,7 +269,10 @@ class Results:
   def match_benchmark(self, benchmark_id: str, results: list[evaluator.Result],
                       targets: list[str]) -> Benchmark:
     """Returns a benchmark class based on |benchmark_id|."""
-    status = 'Done' if results and all(results) else 'Running'
+    expected_trials = self._get_expected_trials_count(benchmark_id)
+    status = 'Done' if (results and len(results) == expected_trials and
+                        all(results)) else 'Running'
+
     filtered_results = [(i, stat) for i, stat in enumerate(results) if stat]
 
     if filtered_results:
@@ -278,6 +281,54 @@ class Results:
       result = run_one_experiment.AggregatedResult()
 
     return self._create_benchmark(benchmark_id, status, result)
+
+  def _get_expected_trials_count(self, benchmark_id: str) -> int:
+    """Returns the expected number of trials for a benchmark."""
+    env_trial_count = os.environ.get('BENCHMARK_TRIAL_COUNT')
+    if env_trial_count:
+      try:
+        return int(env_trial_count)
+      except ValueError:
+        pass
+
+    # Check fuzz_targets directory for new experiments
+    fuzz_targets_dir = os.path.join(self._results_dir, benchmark_id,
+                                    'fuzz_targets')
+    if FileSystem(fuzz_targets_dir).exists():
+      # For new experiments, use the max trial ID as the expected count
+      # This handles the case where trials come out of order
+      max_trial_id = 0
+      trial_ids = set()
+
+      for filename in FileSystem(fuzz_targets_dir).listdir():
+        if os.path.splitext(filename)[1] in TARGET_EXTS:
+          # Extract trial ID from filenames like "01.fuzz_target"
+          trial_id = os.path.splitext(filename)[0]
+          trial_ids.add(trial_id)
+          try:
+            trial_num = int(trial_id)
+            max_trial_id = max(max_trial_id, trial_num)
+          except ValueError:
+            pass
+
+      if max_trial_id > 0:
+        return max_trial_id
+
+      # Fallback: if we couldn't parse trial IDs as integers, use the count
+      if trial_ids:
+        return len(trial_ids)
+
+    # Check raw_targets directory for older experiments
+    raw_targets_dir = os.path.join(self._results_dir, benchmark_id,
+                                   'raw_targets')
+    if FileSystem(raw_targets_dir).exists():
+      targets = [
+          f for f in FileSystem(raw_targets_dir).listdir()
+          if os.path.splitext(f)[1] in TARGET_EXTS
+      ]
+      return len(targets)
+
+    return 1
 
   def get_final_target_code(self, benchmark: str, sample: str) -> str:
     """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
