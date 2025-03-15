@@ -1067,11 +1067,17 @@ def run_introspector_on_dir(build_worker, test_dir,
     fuzzer_build_cmd.append(os.path.join(test_dir, refined_static_lib))
 
   fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
+
+  fuzzer_build_cmd.append('-o /src/compiled_binary')
+
   introspector_vanilla_build_script += '\n'
   introspector_vanilla_build_script += ' '.join(fuzzer_build_cmd)
 
   with open('/src/build.sh', 'w') as bs:
     bs.write(introspector_vanilla_build_script)
+
+  if os.path.isfile('/src/compiled_binary'):
+    os.remove('/src/compiled_binary')
 
   modified_env = os.environ
   modified_env['SANITIZER'] = 'introspector'
@@ -1087,6 +1093,10 @@ def run_introspector_on_dir(build_worker, test_dir,
     build_returned_error = False
   except subprocess.CalledProcessError:
     build_returned_error = True
+
+  if not os.path.isfile('/src/compiled_binary'):
+    build_returned_error = True
+
   logger.info('Introspector build: %s', str(build_returned_error))
   return build_returned_error, fuzzer_build_cmd
 
@@ -1698,13 +1708,18 @@ def auto_generate(github_url,
     if os.path.isdir(INTROSPECTOR_OSS_FUZZ_DIR):
       shutil.rmtree(INTROSPECTOR_OSS_FUZZ_DIR)
 
-    _, fuzzer_build_cmd = run_introspector_on_dir(build_worker, test_dir,
-                                                  language)
+    build_returned_error, fuzzer_build_cmd = run_introspector_on_dir(
+        build_worker, test_dir, language)
 
     if os.path.isdir(INTROSPECTOR_OSS_FUZZ_DIR):
       logger.info('Introspector build success')
     else:
       logger.info('Failed to get introspector results')
+
+    if build_returned_error:
+      logger.info(
+          'Introspector build returned error, but light version worked.')
+      continue
 
     # Identify the relevant functions
     introspector_report = load_introspector_report()
