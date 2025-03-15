@@ -14,9 +14,9 @@
 """Module for running OFG on multiple new OSS-Fuzz projects. This module
 must be run from the base of OFG."""
 import os
-import sys
 import shutil
 import subprocess
+import sys
 
 source_dir = sys.argv[1]
 
