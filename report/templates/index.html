@@ -18,6 +18,48 @@ limitations under the License.
 {% block content %}
 
 <style>
+.search-container {
+  margin: 20px 0;
+  max-width: 600px;
+  position: relative;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 16px;
+  border: 2px solid gainsboro;
+  border-radius: 5px;
+  background-color: white;
+  transition: all 0.3s ease;
+  outline: none;
+  color: black;
+}
+
+.search-container::before {
+  content: "🔍";
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.search-container input::placeholder {
+  color: #555;
+  font-weight: 300;
+}
+
+.search-container input:focus {
+  border-color: 'skyblue';
+}
+
+.search-container:focus-within::before {
+  color: 'skyblue';
+}
+
 td .benchmark .function,
 td .signature {
     overflow-wrap: anywhere;
@@ -64,6 +106,10 @@ td .signature {
 
 </style>
 
+<div class="search-container">
+  <input type="text" id="searchInput" placeholder="Search...">
+</div>
+
 <table class="sortable-table" id="benchmark-table">
     <thead>
         <tr>
@@ -79,7 +125,9 @@ td .signature {
     </thead>
     <tbody>
         {% for benchmark in benchmarks %}
-        <tr>
+        <tr class="searchable-row" 
+            data-project="{{ benchmark.project }}"
+            data-benchmark="{{ benchmark.signature }}">
             <td class="table-index">{{ loop.index }}</td>
             <td data-sort-value="{{ benchmark.id }}">
                 <div class="project">{{ benchmark.project }}</div>
@@ -116,7 +164,8 @@ td .signature {
     </thead>
     <tbody>
         {% for project in projects %}
-        <tr>
+        <tr class="searchable-row" 
+            data-project="{{ project.name }}">
             <td class="table-index">{{ loop.index }}</td>
             <td data-sort-value="{{ project.name }}">{{ project.name }}</td>
             <td data-sort-value="{{ project.count }}">{{ project.count }}</td>
@@ -269,5 +318,24 @@ td .signature {
 
     }
 })();
+
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  const searchTerm = e.target.value.toLowerCase();
+  const rows = document.getElementsByClassName('searchable-row');
+  
+  Array.from(rows).forEach(row => {
+    // TODO(myanvoos): Expand search criteria
+    const project = row.dataset.project.toLowerCase();
+
+    let matches = project.includes(searchTerm) 
+
+    if (row.dataset.benchmark) {
+        const benchmark = row.dataset.benchmark.toLowerCase();
+        matches = matches || benchmark.includes(searchTerm);
+    }
+    
+    row.style.display = matches ? '' : 'none';
+  });
+});
 </script>
 {% endblock %}
