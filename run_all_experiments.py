@@ -324,13 +324,22 @@ def extend_report_with_coverage_gains() -> None:
 
   comparative_cov_gains = {}
   for language, lang_cov_gain in total_new_covgains.items():
+    try:
+      total_coverage_increase = round(
+          (lang_cov_gain / existing_oss_fuzz_cov[language]['total']) * 100.0,
+          10)
+    except (KeyError, ZeroDivisionError):
+      total_coverage_increase = 0
+
+    try:
+      relative_coverage_increase = round(
+          (lang_cov_gain / existing_oss_fuzz_cov[language]['covered']) * 100.0,
+          10)
+    except (KeyError, ZeroDivisionError):
+      relative_coverage_increase = 0
     comparative_cov_gains[language] = {
-        'total_coverage_increase':
-            round((lang_cov_gain / existing_oss_fuzz_cov[language]['total']) *
-                  100.0, 10),
-        'relative_coverage_increase':
-            round((lang_cov_gain / existing_oss_fuzz_cov[language]['covered']) *
-                  100.0, 10)
+        'total_coverage_increase': total_coverage_increase,
+        'relative_coverage_increase': relative_coverage_increase,
     }
   add_to_json_report(WORK_DIR, 'coverage_gains_per_language',
                      total_new_covgains)
