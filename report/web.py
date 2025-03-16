@@ -235,7 +235,8 @@ class GenerateReport:
     try:
       rendered = self._jinja.render(
           'sample.html',
-          benchmark=benchmark.id,
+          benchmark=benchmark,
+          benchmark_id=benchmark.id,
           sample=sample,
           logs=self._results.get_logs(benchmark.id, sample.id),
           run_logs=self._results.get_run_logs(benchmark.id, sample.id),

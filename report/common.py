@@ -24,6 +24,7 @@ from typing import List, Optional
 
 import yaml
 from google.cloud import storage
+import glob
 
 import run_one_experiment
 from data_prep import project_src
@@ -73,6 +74,7 @@ class Benchmark:
   signature: str = ''
   project: str = ''
   function: str = ''
+  language: str = ''
 
 
 @dataclasses.dataclass
@@ -129,6 +131,7 @@ class Sample:
 class Target:
   code: str
   fixer_prompt: Optional[str] = None
+  build_script_code: Optional[str] = None
 
 
 @dataclasses.dataclass
@@ -411,7 +414,7 @@ class Results:
         build_script_code = f.read()
 
     # TODO(dongge): Properly show build script code in reports.
-    return Target(code=fuzz_target_code, fixer_prompt=build_script_code)
+    return Target(code=fuzz_target_code, fixer_prompt=None, build_script_code=build_script_code)
 
   def get_samples(self, results: list[evaluator.Result],
                   targets: list[str]) -> list[Sample]:
@@ -638,7 +641,8 @@ class Results:
     function = benchmark_id.split('-')[-1]
     signature = self._find_benchmark_signature(project,
                                                function) or benchmark_id
-    return Benchmark(benchmark_id, status, result, signature, project, function)
+    language = self._find_benchmark_language(project, function)
+    return Benchmark(benchmark_id, status, result, signature, project, function, language)
 
   def _find_benchmark_signature(self, project: str,
                                 target_function: str) -> str:
@@ -670,6 +674,25 @@ class Results:
 
     return matched_prefix_signature
 
+  def _find_benchmark_language(self, project: str, target_function: str) -> str:
+    """Finds the programming language of the benchmark."""
+    if not self._benchmark_dir:
+      return ''
+    
+    # looks for a YAML file with the project name
+    benchmark_glob = os.path.join(self._benchmark_dir, '*', f'{project}.yaml')
+    benchmark_files = glob.glob(benchmark_glob)
+    
+    if not benchmark_files:
+      return ''
+    
+    try:
+      with open(benchmark_files[0], 'r') as f:
+        benchmark_data = yaml.safe_load(f)
+        return benchmark_data.get('language', '')
+    except Exception as e:
+      logging.error('Failed to read benchmark file %s: %s', benchmark_files[0], e)
+      return ''
 
 def _parse_log_parts(log: str) -> list[LogPart]:
   """Parse log into parts."""

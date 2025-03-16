@@ -16,7 +16,7 @@ limitations under the License.
 #}{% extends 'base.html' %}
 
 {% block content %}
-<h1>{{ benchmark }} / {{ sample.id }}</h1>
+<h1>{{ benchmark_id }} / {{ sample.id }}</h1>
 Bug: {{ sample.result.crashes and not sample.result.is_semantic_error }}
 <br>
 Crash reason: {{ sample.result.semantic_error }}
@@ -52,10 +52,19 @@ Crash reason: {{ sample.result.semantic_error }}
 {% else %}
 <h3>Code #{{ loop.index - 1}}</h3>
 {% endif %}
+
 <div class="code-container">
     <pre class="line-numbers">{% for line in target.code.splitlines() %}<span>{{ loop.index }}</span>{% endfor %}</pre>
-    <pre class="code-content">{% for line in target.code.splitlines() %}<code>{{ line }}</code>{% endfor %}</pre>
+    <pre class="code-content"><code class="syntax-highlight language-{% if benchmark.language %}{{ benchmark.language | lower }}{% else %}plaintext{% endif %}">{{ target.code }}</code></pre>
 </div>
+
+{% if target.build_script_code %}
+<h3>Build Script</h3>
+<div class="code-container">
+    <pre class="line-numbers">{% for line in target.build_script_code.splitlines() %}<span>{{ loop.index }}</span>{% endfor %}</pre>
+    <pre class="code-content"><code class="syntax-highlight language-bash">{{ target.build_script_code }}</code></pre>
+</div>
+{% endif %}
 {% endfor %}
 
 <h2>Logs</h2>
