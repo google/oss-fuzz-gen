@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import argparse
 import datetime
 import logging
 import os
-import shlex
 import subprocess
 import sys
 
@@ -126,8 +125,9 @@ def _parse_args(cmd) -> argparse.Namespace:
       'Redirects experiments stdout/stderr to file. Set to "true" to enable.')
 
   args, additional_args = parser.parse_known_args(cmd)
-  args.additional_args = additional_args[
-      1:]  # first element is the separator itself ("--")
+
+  # Arguments after the first element ("--") separator.
+  args.additional_args = additional_args[1:]
 
   # Parse boolean arguments
   args.local_introspector = args.local_introspector.lower() == "true"
@@ -138,10 +138,8 @@ def _parse_args(cmd) -> argparse.Namespace:
   return args
 
 
-def _run_command(command, shell=False):
+def _run_command(command: list[str], shell=False):
   """Runs a command and return its exit code."""
-  if isinstance(command, str) and not shell:
-    command = shlex.split(command)
   process = subprocess.run(command, shell=shell)
   return process.returncode
 
@@ -182,7 +180,7 @@ def main(cmd=None):
     os.environ["BENCHMARK_SET"] = args.benchmark_set
     introspector_endpoint = "http://127.0.0.1:8080/api"
     logging.info("LOCAL_INTROSPECTOR is enabled: %s", introspector_endpoint)
-    _run_command("bash report/launch_local_introspector.sh", shell=True)
+    _run_command(['bash', 'report/launch_local_introspector.sh'], shell=True)
   else:
     introspector_endpoint = "https://introspector.oss-fuzz.com/api"
     logging.info("LOCAL_INTROSPECTOR was not specified. Defaulting to %s.",

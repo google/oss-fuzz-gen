@@ -323,7 +323,7 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['GKE_EXP_FUZZING_TIMEOUT'] = str(args.fuzzing_timeout)
   exp_env_vars['GKE_EXP_NAME'] = args.experiment_name
   exp_env_vars['GKE_EXP_REQ_CPU'] = args.request_cpus
-  exp_env_vars['GKE_EXP_REQ_MEM'] = f'{args.request_memory}'
+  exp_env_vars['GKE_EXP_REQ_MEM'] = f'{args.request_memory}Gi'
   exp_env_vars[
       'GKE_EXP_LOCAL_INTROSPECTOR'] = f'{args.local_introspector}'.lower()
   exp_env_vars['GKE_EXP_NUM_SAMPLES'] = f'{args.num_samples}'
