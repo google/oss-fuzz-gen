@@ -28,7 +28,6 @@ from typing import Any, Dict, List, Optional
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-import subprocess
 import threading
 
 
@@ -263,10 +262,12 @@ class ReportWatcher(FileSystemEventHandler):
     self.server = None  
     
     if args.watch_filesystem:
+      logging.info(f"Watching filesystem for changes in {args.results_dir}")
       self.observer.schedule(self, args.results_dir, recursive=True)
         
     if args.watch_template:
-      self.observer.schedule(self, "report/", recursive=True)
+      logging.info(f"DEV: Watching for changes in the report folder")
+      self.observer.schedule(self, "report", recursive=True)
 
     if args.serve:
       self.server_thread = threading.Thread(target=self._start_server)
@@ -292,6 +293,7 @@ class ReportWatcher(FileSystemEventHandler):
     self.observer.join()
 
   def on_modified(self, event):
+    """Restart the server when the watcher detects a change"""
     logging.info(f"{event.src_path} has been modified. Regenerating report...")
     generate_report(self.args)
     

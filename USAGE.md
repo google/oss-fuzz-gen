@@ -171,10 +171,13 @@ python -m report.web -r <results-dir> -o <output-dir>
 python -m http.server <port> -d <output-dir>
 ```
 Where `<results-dir>` is the directory passed to `--work-dir` in your
-experiments (default value `./results`).
+experiments (default value `./results`). 
 
 Then navigate to `http://localhost:<port>` to view the result in [a table](#result-table).
 
+> Tip:
+You can also pass `-w` to watch for changes in `results-dir` and automatically
+update the results report. Refresh the page to see the updated report.
 
 ## Detailed workflows
 Configure and use framework in the following steps:
