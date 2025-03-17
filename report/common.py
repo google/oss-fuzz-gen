@@ -679,19 +679,16 @@ class Results:
     if not self._benchmark_dir:
       return ''
     
-    # looks for a YAML file with the project name
-    benchmark_glob = os.path.join(self._benchmark_dir, '*', f'{project}.yaml')
-    benchmark_files = glob.glob(benchmark_glob)
-    
-    if not benchmark_files:
+    project_path = os.path.join(self._benchmark_dir, f'{project}.yaml')
+    if not FileSystem(project_path).isfile():
       return ''
     
     try:
-      with open(benchmark_files[0], 'r') as f:
+      with FileSystem(project_path).open() as f:
         benchmark_data = yaml.safe_load(f)
         return benchmark_data.get('language', '')
     except Exception as e:
-      logging.error('Failed to read benchmark file %s: %s', benchmark_files[0], e)
+      logging.error('Failed to read benchmark file %s: %s', project_path, e)
       return ''
 
 def _parse_log_parts(log: str) -> list[LogPart]:
