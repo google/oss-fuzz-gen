@@ -26,6 +26,12 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Dict, List, Optional
 
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+import subprocess
+import threading
+
+
 import jinja2
 
 from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
@@ -246,6 +252,58 @@ class GenerateReport:
       logging.error('Failed to write sample/%s/%s:\n%s', benchmark.id,
                     sample.id, e)
 
+class ReportWatcher(FileSystemEventHandler):
+  """Watches for file changes and regenerates reports."""
+  
+  def __init__(self, args: argparse.Namespace):
+    super().__init__()
+    self.args = args
+    self.observer = Observer()
+    self.server_thread = None
+    self.server = None  
+    
+    if args.watch_filesystem:
+      self.observer.schedule(self, args.results_dir, recursive=True)
+        
+    if args.watch_template:
+      self.observer.schedule(self, "report/", recursive=True)
+
+    if args.serve:
+      self.server_thread = threading.Thread(target=self._start_server)
+      self.server_thread.daemon = True
+      self.server_thread.start()
+
+  def _start_server(self):
+    """Helper method to start the server."""
+    handler = partial(SimpleHTTPRequestHandler, directory=self.args.output_dir)
+    self.server = ThreadingHTTPServer((LOCAL_HOST, self.args.port), handler)
+    self.server.daemon_threads = True
+    self.server.allow_reuse_address = True
+    self.server.serve_forever()
+
+  def start(self):
+    """Start watching if either watch flag is enabled."""
+    if self.args.watch_filesystem or self.args.watch_template:
+      self.observer.start()
+
+  def stop(self):
+    """Stop watching and clean up."""
+    self.observer.stop()
+    self.observer.join()
+
+  def on_modified(self, event):
+    logging.info(f"{event.src_path} has been modified. Regenerating report...")
+    generate_report(self.args)
+    
+    if self.args.serve:
+      if self.server:
+        self.server.shutdown()
+        self.server.server_close()
+      
+      self.server_thread = threading.Thread(target=self._start_server)
+      self.server_thread.daemon = True
+      self.server_thread.start()
+
 
 def generate_report(args: argparse.Namespace) -> None:
   """Generates static web server files."""
@@ -319,22 +377,28 @@ def _parse_arguments() -> argparse.Namespace:
 
 
 def main():
-  args = _parse_arguments()
-
-  if not args.serve:
-    generate_report(args)
-  else:
+    args = _parse_arguments()
     logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'INFO').upper())
-    # Launch web server
-    thread = threading.Thread(target=launch_webserver, args=(args,))
-    thread.start()
 
-    # Generate results continuously while the process runs.
-    while True:
-      generate_report(args)
-      try:
-        time.sleep(90)
-      except KeyboardInterrupt:
+    watcher = ReportWatcher(args)
+    watcher.start()
+
+    try:
+        should_continue = args.serve or args.watch_filesystem or args.watch_template
+        
+        while should_continue:
+            generate_report(args)
+            # If interval is specified, wait and regenerate
+            if args.interval_seconds > 0:
+                time.sleep(args.interval_seconds)
+            # If only watching filesystem and no interval, just wait
+            else:
+                time.sleep(1)
+        else:
+            generate_report(args)
+            
+    except KeyboardInterrupt:
+        watcher.stop()
         logging.info('Exiting.')
         os._exit(0)
 
