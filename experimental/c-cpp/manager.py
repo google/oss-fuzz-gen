@@ -1084,6 +1084,9 @@ def run_introspector_on_dir(build_worker, test_dir,
   modified_env['FUZZ_INTROSPECTOR_AUTO_FUZZ'] = '1'
   modified_env['PROJECT_NAME'] = 'auto-fuzz-proj'
   modified_env['FUZZINTRO_OUTDIR'] = test_dir
+
+  # Disable FI light because we want to make sure we can compile as well.
+  modified_env['FI_DISABLE_LIGHT'] = "1"
   try:
     subprocess.check_call('compile',
                           shell=True,
