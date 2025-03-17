@@ -65,6 +65,18 @@ class JinjaEnv:
       return link_path + 'index.html'
     return link_path + 'report.html'
 
+  @staticmethod
+  def _remove_trailing_empty_lines(code: str) -> str:
+    """Remove trailing empty lines from code."""
+    if not code:
+      return code
+    
+    lines = code.splitlines()
+    while lines and not lines[-1].strip():
+      lines.pop()
+    
+    return '\n'.join(lines)
+
   def __init__(self, template_globals: Optional[Dict[str, Any]] = None):
     self._env = jinja2.Environment(
         loader=jinja2.FileSystemLoader("report/templates"),
@@ -73,6 +85,7 @@ class JinjaEnv:
     self._env.filters['urlencode_filter'] = self._urlencode_filter
     self._env.filters['percent'] = self._percent
     self._env.filters['cov_report_link'] = self._cov_report_link
+    self._env.filters['remove_trailing_empty_lines'] = self._remove_trailing_empty_lines
 
     if template_globals:
       for key, val in template_globals.items():
