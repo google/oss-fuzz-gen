@@ -301,6 +301,19 @@ def _parse_arguments() -> argparse.Namespace:
                       help='Port to launch webserver on.',
                       type=int,
                       default=8012)
+  parser.add_argument('--interval-seconds',
+                      '-i',
+                      help='Interval in seconds to generate report.',
+                      type=int,
+                      default=600)
+  parser.add_argument('--watch-filesystem',
+                      '-w',
+                      help='Watch filesystem for changes and generate report.',
+                      action='store_true')
+  parser.add_argument('--watch-template',
+                      '-t',
+                      help='Watch the report templates for changes and generate report. For development purposes.',
+                      action='store_true')
 
   return parser.parse_args()
 
