@@ -286,15 +286,14 @@ class Results:
     """Returns the expected number of trials for a benchmark."""
     # First try to get the value from report.json
     report_path = os.path.join(self._results_dir, 'report.json')
-    if os.path.exists(report_path):
-      try:
-        with open(report_path, 'r') as f:
-          report_data = json.load(f)
-          if 'num_samples' in report_data:
-            return report_data['num_samples']
-      except (json.JSONDecodeError, OSError):
-        # If there's an error reading the file, continue to fallbacks
-        pass
+    try:
+      with open(report_path, 'r') as f:
+        report_data = json.load(f)
+        if 'num_samples' in report_data:
+          return report_data['num_samples']
+    except (json.JSONDecodeError, OSError, FileNotFoundError):
+      # If there's an error reading the file, continue to fallbacks
+      pass
 
     # Check fuzz_targets directory for new experiments
     fuzz_targets_dir = os.path.join(self._results_dir, benchmark_id,
