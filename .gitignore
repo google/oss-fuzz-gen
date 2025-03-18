@@ -11,3 +11,4 @@ __pycache__/
 *.swp
 *.egg-info
 .vscode/
+.DS_Store
