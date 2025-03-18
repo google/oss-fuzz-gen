@@ -24,7 +24,6 @@ from typing import List, Optional
 
 import yaml
 from google.cloud import storage
-import glob
 
 import run_one_experiment
 from data_prep import project_src
