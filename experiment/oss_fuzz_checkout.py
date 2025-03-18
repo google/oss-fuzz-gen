@@ -328,8 +328,11 @@ def rewrite_project_to_cached_project(project_name: str, generated_project: str,
   docker_content = re.sub(r'FROM gcr.io/oss-fuzz-base/base-builder.*',
                           'FROM $CACHE_IMAGE', docker_content)
 
-  # Now comment out everything except the first FROM and the last COPY that
-  # was added earlier in the OFG process.
+  # Now comment out everything except:
+  # - The first FROM.
+  # - The WORKDIR (required by OSS-Fuzz infra).
+  # - The ARG we just added.
+  # - The last 2 COPY commands (for the build script and the target we added).
   arg_line = -1
   workdir_line = -1
   from_line = -1
