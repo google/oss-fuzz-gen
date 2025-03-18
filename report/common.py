@@ -284,12 +284,16 @@ class Results:
 
   def _get_expected_trials_count(self, benchmark_id: str) -> int:
     """Returns the expected number of trials for a benchmark."""
-    env_trial_count = os.environ.get('BENCHMARK_TRIAL_COUNT')
-    if env_trial_count:
-      try:
-        return int(env_trial_count)
-      except ValueError:
-        pass
+    # First try to get the value from report.json
+    report_path = os.path.join(self._results_dir, 'report.json')
+    try:
+      with open(report_path, 'r') as f:
+        report_data = json.load(f)
+        if 'num_samples' in report_data:
+          return report_data['num_samples']
+    except (json.JSONDecodeError, OSError, FileNotFoundError):
+      # If there's an error reading the file, continue to fallbacks
+      pass
 
     # Check fuzz_targets directory for new experiments
     fuzz_targets_dir = os.path.join(self._results_dir, benchmark_id,
