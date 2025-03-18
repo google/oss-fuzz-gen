@@ -356,12 +356,12 @@ def parse_args() -> argparse.Namespace:
                            help='Destination folder to store projects.',
                            required=True)
 
-  extract_builds = subparsers.add_parser(
+  extract_builds_parser = subparsers.add_parser(
       'extract-builds',
       help='Extracts the generated projects with valid empty builds.')
 
-  extract_builds.add_argument('--oss-fuzz', help='OSS-Fuzz directory.')
-  extract_builds.add_argument('--dst', help='Destination folder.')
+  extract_builds_parser.add_argument('--oss-fuzz', help='OSS-Fuzz directory.')
+  extract_builds_parser.add_argument('--dst', help='Destination folder.')
 
   args = parser.parse_args()
   return args
