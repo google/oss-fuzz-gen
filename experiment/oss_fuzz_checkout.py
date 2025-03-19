@@ -330,19 +330,14 @@ def rewrite_project_to_cached_project(project_name: str, generated_project: str,
 
   # Now comment out everything except:
   # - The first FROM.
-  # - The WORKDIR (required by OSS-Fuzz infra).
   # - The ARG we just added.
   # - The last 2 COPY commands (for the build script and the target we added).
   arg_line = -1
-  workdir_line = -1
   from_line = -1
   copy_fuzzer_line = -1
   copy_build_line = -1
 
   for line_idx, line in enumerate(docker_content.split('\n')):
-    if line.startswith('WORKDIR') and workdir_line == -1:
-      # OSS-Fuzz infra relies on parsing WORKDIR.
-      workdir_line = line_idx
     if line.startswith('ARG') and arg_line == -1:
       arg_line = line_idx
     if line.startswith('FROM') and from_line == -1:
@@ -351,9 +346,7 @@ def rewrite_project_to_cached_project(project_name: str, generated_project: str,
       copy_fuzzer_line = copy_build_line
       copy_build_line = line_idx
 
-  lines_to_keep = {
-      arg_line, from_line, copy_fuzzer_line, copy_build_line, workdir_line
-  }
+  lines_to_keep = {arg_line, from_line, copy_fuzzer_line, copy_build_line}
   new_content = ''
   for line_idx, line in enumerate(docker_content.split('\n')):
     if line_idx not in lines_to_keep:
