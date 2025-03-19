@@ -346,9 +346,7 @@ def rewrite_project_to_cached_project(project_name: str, generated_project: str,
       copy_fuzzer_line = copy_build_line
       copy_build_line = line_idx
 
-  lines_to_keep = {
-      arg_line, from_line, copy_fuzzer_line, copy_build_line
-  }
+  lines_to_keep = {arg_line, from_line, copy_fuzzer_line, copy_build_line}
   new_content = ''
   for line_idx, line in enumerate(docker_content.split('\n')):
     if line_idx not in lines_to_keep:
