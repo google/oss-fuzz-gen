@@ -34,6 +34,7 @@ from experiment import benchmark as benchmarklib
 from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
+from experiment import coverage as coverage_utils
 
 logger = logging.getLogger(__name__)
 
@@ -510,13 +511,15 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
       cov_relative_gain = 0.0
 
     total_lines = max(total_cov.total_lines, total_existing_lines)
+    union_linked_lines = max(total_cov.total_lines, total_existing_lines)
 
     if total_lines:
       coverage_gain[project] = {
           'language':
               oss_fuzz_checkout.get_project_language(project),
           'coverage_diff':
-              total_cov.covered_lines / total_lines,
+            coverage_utils.calculate_coverage_improvement(
+            total_cov, existing_textcov, union_linked_lines),
           'coverage_relative_gain':
               cov_relative_gain,
           'coverage_ofg_total_covered_lines':

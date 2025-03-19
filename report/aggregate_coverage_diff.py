@@ -28,6 +28,7 @@ import traceback
 from google.cloud import storage
 
 from experiment import evaluator, textcov
+from experiment import coverage as coverage_utils
 
 
 def compute_coverage_diff(project: str, coverage_links: list[str]):
@@ -53,14 +54,16 @@ def compute_coverage_diff(project: str, coverage_links: list[str]):
         # TODO: skip other functions defined the target.
         new_textcov.merge(textcov.Textcov.from_file(f))
 
-  new_textcov.subtract_covered_lines(existing_textcov)
+  # union of linked lines
   try:
-    total_lines = coverage_summary['data'][0]['totals']['lines']['count']
+    existing_lines = coverage_summary['data'][0]['totals']['lines']['count']
   except KeyError:
-    total_lines = 1
+    existing_lines = 0
 
-  return new_textcov.covered_lines / total_lines
-  #print(f'{project}:', new_textcov.covered_lines / total_lines)
+  union_linked_lines = max(new_textcov.total_lines, existing_lines)
+
+  return coverage_utils.calculate_coverage_improvement(
+      new_textcov, existing_textcov, union_linked_lines)
 
 
 def main():

@@ -21,6 +21,7 @@ from experiment import evaluator as evaluator_lib
 from experiment.evaluator import Evaluator
 from results import BuildResult, Result, RunResult
 from stage.base_stage import BaseStage
+from experiment import coverage as coverage_utils
 
 
 class ExecutionStage(BaseStage):
@@ -112,16 +113,20 @@ class ExecutionStage(BaseStage):
         coverage_percent = 0.0
 
       existing_textcov = evaluator.load_existing_textcov()
-      run_result.coverage.subtract_covered_lines(existing_textcov)
+      # Calculate linked lines union using both textcov objects to determine
+      # the total number of lines that could be covered
+      union_linked_lines = max(total_lines, existing_textcov.total_lines)
 
-      if total_lines:
-        coverage_diff = run_result.coverage.covered_lines / total_lines
+      if union_linked_lines:
+        coverage_diff = coverage_utils.calculate_coverage_improvement(
+            run_result.coverage, existing_textcov, union_linked_lines)
         self.logger.info('coverage diff == %s in %s.', coverage_diff,
                          generated_oss_fuzz_project)
       else:
-        self.logger.warning('total_lines == 0 in %s',
+        self.logger.warning('No linked lines found in %s',
                             generated_oss_fuzz_project)
         coverage_diff = 0.0
+
       runresult = RunResult(
           benchmark=benchmark,
           trial=last_result.trial,

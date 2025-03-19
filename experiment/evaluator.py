@@ -24,7 +24,7 @@ from typing import Optional
 
 from google.cloud import storage
 
-from experiment import builder_runner, oss_fuzz_checkout, textcov
+from experiment import builder_runner, oss_fuzz_checkout, textcov, coverage as coverage_utils
 from experiment.benchmark import Benchmark
 from experiment.builder_runner import BuildResult, RunResult
 from experiment.fuzz_target_error import SemanticCheckResult
@@ -465,7 +465,9 @@ class Evaluator:
           run_result.coverage.subtract_covered_lines(existing_textcov)
 
         if total_lines and run_result.coverage:
-          coverage_diff = run_result.coverage.covered_lines / total_lines
+          union_linked_lines = max(run_result.coverage.total_lines, total_lines)
+          coverage_diff = coverage_utils.calculate_coverage_improvement(
+              run_result.coverage, existing_textcov, union_linked_lines)
         else:
           dual_logger.log(
               f'Warning: total_lines == 0 in {generated_oss_fuzz_project}.')
