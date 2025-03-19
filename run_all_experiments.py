@@ -31,10 +31,10 @@ from google.cloud import logging as cloud_logging
 import run_one_experiment
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
+from experiment import coverage as coverage_utils
 from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
-from experiment import coverage as coverage_utils
 
 logger = logging.getLogger(__name__)
 
@@ -518,8 +518,8 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
           'language':
               oss_fuzz_checkout.get_project_language(project),
           'coverage_diff':
-            coverage_utils.calculate_coverage_improvement(
-            total_cov, existing_textcov, union_linked_lines),
+              coverage_utils.calculate_coverage_improvement(
+                  total_cov, existing_textcov, union_linked_lines),
           'coverage_relative_gain':
               cov_relative_gain,
           'coverage_ofg_total_covered_lines':

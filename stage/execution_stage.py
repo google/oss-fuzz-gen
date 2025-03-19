@@ -17,11 +17,11 @@ infra and report its code coverage and crashes."""
 import os
 
 from experiment import builder_runner as builder_runner_lib
+from experiment import coverage as coverage_utils
 from experiment import evaluator as evaluator_lib
 from experiment.evaluator import Evaluator
 from results import BuildResult, Result, RunResult
 from stage.base_stage import BaseStage
-from experiment import coverage as coverage_utils
 
 
 class ExecutionStage(BaseStage):
@@ -123,7 +123,7 @@ class ExecutionStage(BaseStage):
         self.logger.info('coverage diff == %s in %s.', coverage_diff,
                          generated_oss_fuzz_project)
       else:
-        self.logger.warning('No linked lines found in %s',
+        self.logger.warning('total_lines == 0 in %s',
                             generated_oss_fuzz_project)
         coverage_diff = 0.0
 

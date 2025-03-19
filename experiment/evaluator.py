@@ -24,7 +24,9 @@ from typing import Optional
 
 from google.cloud import storage
 
-from experiment import builder_runner, oss_fuzz_checkout, textcov, coverage as coverage_utils
+from experiment import builder_runner
+from experiment import coverage as coverage_utils
+from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.builder_runner import BuildResult, RunResult
 from experiment.fuzz_target_error import SemanticCheckResult
