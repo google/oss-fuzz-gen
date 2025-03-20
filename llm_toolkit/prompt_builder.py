@@ -717,7 +717,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self.need_close = temp_properties.get('need_close', False)
 
     # Load templates.
-    self.priming_template_file = self._find_template(template_dir, 'jvm_priming.txt')
+    self.priming_template_file = self._find_template(template_dir,
+                                                     'jvm_priming.txt')
     self.data_filler_template_file = self._find_template(
         template_dir, 'jvm_specific_data_filler.txt')
     self.requirement_template_file = self._find_template(
