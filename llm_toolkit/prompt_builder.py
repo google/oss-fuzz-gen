@@ -1148,7 +1148,8 @@ class DefaultRustTemplateBuilder(PromptBuilder):
         self.benchmark.project)
 
     # Load templates.
-    self.base_template_file = self._find_template(template_dir, 'rust_base.txt')
+    self.priming_template_file = self._find_template(template_dir,
+                                                     'rust_priming.txt')
     self.problem_template_file = self._find_template(template_dir,
                                                      'rust_problem.txt')
 
@@ -1182,18 +1183,18 @@ class DefaultRustTemplateBuilder(PromptBuilder):
 
   def _format_problem(self, signature: str) -> str:
     """Formats a problem based on the prompt template."""
-    base = self._get_template(self.base_template_file)
     target_str = self._format_target(signature)
 
-    problem = base + target_str
-    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
-    problem = problem.replace("{PROJECT_URL}", self.project_url)
+    problem = target_str + problem.replace('{PROJECT_NAME}',
+                                           self.benchmark.project)
+    problem = problem.replace('{PROJECT_URL}', self.project_url)
 
     return problem
 
   def _prepare_prompt(self, prompt_str: str):
     """Constructs a prompt using the parameters and saves it."""
-    self._prompt.add_priming(prompt_str)
+    self._prompt.add_priming(self._get_template(self.priming_template_file))
+    self._prompt.add_problem(prompt_str)
 
   def build(self,
             example_pair: list[list[str]],
