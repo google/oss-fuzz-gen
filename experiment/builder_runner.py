@@ -1098,6 +1098,7 @@ class CloudBuilderRunner(BuilderRunner):
     if blobs:
       blob = blobs[0]
       artifact_path = os.path.join(artifact_dir, os.path.basename(blob.name))
+      # TOOD: Some try-catch here.
       blob.download_to_filename(artifact_path)
       run_result.artifact_path = artifact_path
     else:
