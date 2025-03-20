@@ -1005,7 +1005,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _prepare_prompt(self, prompt_str: str):
     """Constructs a prompt using the parameters and saves it."""
-    self._prompt.add_priming(prompt_str)
+    self._prompt.add_priming(self._get_template(self.priming_template_file))
+    self._prompt.add_problem(prompt_str)
 
   def _has_generic(self, arg: str) -> bool:
     """Determine if the argument type contains generic type."""
