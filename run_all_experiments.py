@@ -324,13 +324,22 @@ def extend_report_with_coverage_gains() -> None:
 
   comparative_cov_gains = {}
   for language, lang_cov_gain in total_new_covgains.items():
+    try:
+      total_coverage_increase = round(
+          (lang_cov_gain / existing_oss_fuzz_cov[language]['total']) * 100.0,
+          10)
+    except (KeyError, ZeroDivisionError):
+      total_coverage_increase = 0
+
+    try:
+      relative_coverage_increase = round(
+          (lang_cov_gain / existing_oss_fuzz_cov[language]['covered']) * 100.0,
+          10)
+    except (KeyError, ZeroDivisionError):
+      relative_coverage_increase = 0
     comparative_cov_gains[language] = {
-        'total_coverage_increase':
-            round((lang_cov_gain / existing_oss_fuzz_cov[language]['total']) *
-                  100.0, 10),
-        'relative_coverage_increase':
-            round((lang_cov_gain / existing_oss_fuzz_cov[language]['covered']) *
-                  100.0, 10)
+        'total_coverage_increase': total_coverage_increase,
+        'relative_coverage_increase': relative_coverage_increase,
     }
   add_to_json_report(WORK_DIR, 'coverage_gains_per_language',
                      total_new_covgains)
@@ -460,7 +469,7 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
       for textcov_file in os.listdir(summary):
         if textcov_file.endswith('.covreport'):
           with open(os.path.join(summary, textcov_file), 'rb') as f:
-            if benchmark_used[0].language == 'rust':
+            if benchmark_used[0].language != 'rust':
               textcov_dict[project_name].append(textcov.Textcov.from_file(f))
             else:
               textcov_dict[project_name].append(
@@ -556,12 +565,10 @@ def main():
   # Set global variables that are updated throughout experiment runs.
   WORK_DIR = args.work_dir
 
-  if args.cloud_experiment_name:
-    coverage_gains_process = Process(
-        target=extend_report_with_coverage_gains_process)
-    coverage_gains_process.start()
-  else:
-    coverage_gains_process = None
+  # Start parallel coverage aggregate analysis
+  coverage_gains_process = Process(
+      target=extend_report_with_coverage_gains_process)
+  coverage_gains_process.start()
 
   experiment_results = []
   if NUM_EXP == 1:

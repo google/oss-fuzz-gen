@@ -1067,17 +1067,26 @@ def run_introspector_on_dir(build_worker, test_dir,
     fuzzer_build_cmd.append(os.path.join(test_dir, refined_static_lib))
 
   fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
+
+  fuzzer_build_cmd.append('-o /src/compiled_binary')
+
   introspector_vanilla_build_script += '\n'
   introspector_vanilla_build_script += ' '.join(fuzzer_build_cmd)
 
   with open('/src/build.sh', 'w') as bs:
     bs.write(introspector_vanilla_build_script)
 
+  if os.path.isfile('/src/compiled_binary'):
+    os.remove('/src/compiled_binary')
+
   modified_env = os.environ
   modified_env['SANITIZER'] = 'introspector'
   modified_env['FUZZ_INTROSPECTOR_AUTO_FUZZ'] = '1'
   modified_env['PROJECT_NAME'] = 'auto-fuzz-proj'
   modified_env['FUZZINTRO_OUTDIR'] = test_dir
+
+  # Disable FI light because we want to make sure we can compile as well.
+  modified_env['FI_DISABLE_LIGHT'] = "1"
   try:
     subprocess.check_call('compile',
                           shell=True,
@@ -1087,6 +1096,10 @@ def run_introspector_on_dir(build_worker, test_dir,
     build_returned_error = False
   except subprocess.CalledProcessError:
     build_returned_error = True
+
+  if not os.path.isfile('/src/compiled_binary'):
+    build_returned_error = True
+
   logger.info('Introspector build: %s', str(build_returned_error))
   return build_returned_error, fuzzer_build_cmd
 
@@ -1326,6 +1339,7 @@ def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
   (fuzz_compiler, fuzz_flags, empty_fuzzer_file,
    fuzz_template) = get_language_defaults(language)
 
+  # Write empty fuzzer
   with open(os.path.join(oss_fuzz_folder, os.path.basename(empty_fuzzer_file)),
             'w') as f:
     f.write(fuzz_template)
@@ -1340,6 +1354,25 @@ def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
     fuzzer_build_cmd.append(os.path.join(test_dir, refined_static_lib))
 
   fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
+
+  # Add inclusion of header file paths. This is anticipating any harnesses
+  # will make an effort to include relevant header files.
+  all_header_files = get_all_header_files(get_all_files_in_path(test_dir))
+  paths_to_include = set()
+  for header_file in all_header_files:
+    if not header_file.startswith('/src/'):
+      header_file = '/src/' + header_file
+    if '/test/' in header_file:
+      continue
+    if 'googletest' in header_file:
+      continue
+
+    path_to_include = '/'.join(header_file.split('/')[:-1])
+    paths_to_include.add(path_to_include)
+  for path_to_include in paths_to_include:
+    logger.info('Path to include: %s', path_to_include)
+    fuzzer_build_cmd.append(f'-I{path_to_include}')
+
   introspector_vanilla_build_script += '\n'
   introspector_vanilla_build_script += ' '.join(fuzzer_build_cmd)
 
@@ -1678,13 +1711,18 @@ def auto_generate(github_url,
     if os.path.isdir(INTROSPECTOR_OSS_FUZZ_DIR):
       shutil.rmtree(INTROSPECTOR_OSS_FUZZ_DIR)
 
-    _, fuzzer_build_cmd = run_introspector_on_dir(build_worker, test_dir,
-                                                  language)
+    build_returned_error, fuzzer_build_cmd = run_introspector_on_dir(
+        build_worker, test_dir, language)
 
     if os.path.isdir(INTROSPECTOR_OSS_FUZZ_DIR):
       logger.info('Introspector build success')
     else:
       logger.info('Failed to get introspector results')
+
+    if build_returned_error:
+      logger.info(
+          'Introspector build returned error, but light version worked.')
+      continue
 
     # Identify the relevant functions
     introspector_report = load_introspector_report()

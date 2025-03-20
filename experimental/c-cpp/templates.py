@@ -118,6 +118,10 @@ RUN rm /usr/local/bin/cargo && \\
 RUN python3 -m pip install --upgrade pip && \\
     python3 -m pip install pydantic-core pyyaml cxxfilt openai==1.60.0
 RUN python3 -m pip install --upgrade google-cloud-aiplatform
+# Some projects may have recurisve modules from github without use of ssl,
+# and this needs to be trusted. The below command can be removed if this
+# project is not doing such.
+RUN mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 COPY *.py *.json $SRC/
 WORKDIR $SRC
 COPY build.sh $SRC/'''
@@ -135,6 +139,10 @@ CLEAN_OSS_FUZZ_DOCKER = BASE_DOCKER_HEAD + '''
 COPY *.sh $SRC/
 RUN mkdir $SRC/fuzzers
 COPY *.cpp *.c $SRC/fuzzers/
+# Some projects may have recurisve modules from github without use of ssl,
+# and this needs to be trusted. The below command can be removed if this
+# project is not doing such.
+RUN mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 RUN git clone --recurse-submodules {repo_url} {project_repo_dir}
 WORKDIR $SRC/{project_repo_dir}
 '''
