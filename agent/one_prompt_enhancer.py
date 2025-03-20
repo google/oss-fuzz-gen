@@ -17,8 +17,7 @@ Use it as a usual module locally, or as script in cloud builds.
 import logger
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from experiment.workdir import WorkDirs
-from llm_toolkit.prompt_builder import (DefaultTemplateBuilder,
-                                        JvmErrorFixingBuilder)
+from llm_toolkit.prompt_builder import DefaultTemplateBuilder, JvmFixingBuilder
 from llm_toolkit.prompts import Prompt
 from results import AnalysisResult, BuildResult, Result
 
@@ -39,11 +38,8 @@ class OnePromptEnhancer(OnePromptPrototyper):
 
     if benchmark.language == 'jvm':
       # TODO: Do this in a separate agent for JVM coverage.
-      jvm_coverage_fix = True
-      error_desc, errors = '', []
-      builder = JvmErrorFixingBuilder(self.llm, benchmark,
-                                      last_result.run_result.fuzz_target_source,
-                                      errors, jvm_coverage_fix)
+      builder = JvmFixingBuilder(self.llm, benchmark,
+                                 last_result.run_result.fuzz_target_source, [])
       prompt = builder.build([], None, None)
     else:
       error_desc, errors = last_result.semantic_result.get_error_info()
@@ -63,7 +59,8 @@ class OnePromptEnhancer(OnePromptPrototyper):
     """Executes the agent based on previous result."""
     last_result = result_history[-1]
     logger.info('Executing One Prompt Enhancer', trial=last_result.trial)
-    WorkDirs(self.args.work_dirs.base)
+    # Use keep to avoid deleting files, such as benchmark.yaml
+    WorkDirs(self.args.work_dirs.base, keep=True)
 
     prompt = self._initial_prompt(result_history)
     cur_round = 1

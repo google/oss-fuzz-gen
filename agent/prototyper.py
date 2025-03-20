@@ -217,7 +217,8 @@ class Prototyper(BaseAgent):
           'Default /src/build.sh works perfectly, no need for a new '
           'buid script',
           trial=build_result.trial)
-      logger.info('***** Prototyper succeded in %02d rounds *****',
+      logger.info('***** %s succeeded in %02d rounds *****',
+                  self.name,
                   cur_round,
                   trial=build_result.trial)
       return build_result_alt, None
@@ -225,7 +226,8 @@ class Prototyper(BaseAgent):
     if build_result_ori and build_result_ori.success:
       # Preference 2: New fuzz target + new build.sh can compile, save
       # binary to expected path, and reference function-under-test.
-      logger.info('***** Prototyper succeded in %02d rounds *****',
+      logger.info('***** %s succeeded in %02d rounds *****',
+                  self.name,
                   cur_round,
                   trial=build_result.trial)
       return build_result_ori, None
@@ -404,18 +406,20 @@ class Prototyper(BaseAgent):
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
     prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
-    prompt = self._container_handle_bash_commands(response, self.inspect_tool,
-                                                  prompt)
 
-    # Then build fuzz target.
-    prompt = self._container_handle_conclusion(cur_round, response,
-                                               build_result, prompt)
-    if prompt is None:
-      # Succeeded.
-      return None
+    if response:
+      prompt = self._container_handle_bash_commands(response, self.inspect_tool,
+                                                    prompt)
+
+      # Then build fuzz target.
+      prompt = self._container_handle_conclusion(cur_round, response,
+                                                 build_result, prompt)
+      if prompt is None:
+        # Succeeded.
+        return None
 
     # Finally check invalid responses.
-    if not prompt.get():
+    if not response or not prompt.get():
       prompt = self._container_handle_invalid_tool_usage(
           self.inspect_tool, cur_round, response, prompt)
 
@@ -423,7 +427,8 @@ class Prototyper(BaseAgent):
 
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
-    WorkDirs(self.args.work_dirs.base)
+    # Use keep to avoid deleting files, such as benchmark.yaml
+    WorkDirs(self.args.work_dirs.base, keep=True)
     last_result = result_history[-1]
     logger.info('Executing %s', self.name, trial=last_result.trial)
     benchmark = last_result.benchmark

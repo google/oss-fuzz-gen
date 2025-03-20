@@ -292,7 +292,7 @@ def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
   with pool.ThreadPool(processes=NUM_EVA) as p:
     # Initialize thread-local storage in each worker before processing
     task_args = [(benchmark, model, args, work_dirs, trial)
-                 for trial in range(1, NUM_EVA + 1)]
+                 for trial in range(1, args.num_samples + 1)]
     trial_results = p.starmap(_fuzzing_pipeline, task_args)
   return BenchmarkResult(benchmark=benchmark,
                          work_dirs=work_dirs,
@@ -304,7 +304,9 @@ def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
   """Generates code via LLM, and evaluates them."""
   model.cloud_setup()
 
-  # Save the benchmark in the working base
+  # Save the benchmark in the WorkDir base. This is saved to the working
+  # directory, and should not be deleted in future executions. As such,
+  # from here on, do not erase all WorkDir contents.
   Benchmark.to_yaml([benchmark],
                     outdir=work_dirs.base,
                     out_basename='benchmark.yaml')

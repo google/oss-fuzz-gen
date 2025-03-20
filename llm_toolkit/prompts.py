@@ -14,10 +14,12 @@
 """
 LLM prompt definitions.
 """
-
 import json
+import logging
 from abc import abstractmethod
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 
 class Prompt:
@@ -129,6 +131,10 @@ class OpenAIPrompt(Prompt):
 
   def add_priming(self, priming_content: str) -> None:
     """Constructs the prompt priming in the required format."""
+    if not priming_content:
+      logger.warning('Content is empty, skipping the prompt append process')
+      return
+
     self._prompt.append({
         'role': 'system',
         'content': priming_content,
@@ -136,6 +142,10 @@ class OpenAIPrompt(Prompt):
 
   def add_problem(self, problem_content: str) -> None:
     """Constructs the prompt problem in the required format."""
+    if not problem_content:
+      logger.warning('Content is empty, skipping the prompt append process')
+      return
+
     self._prompt.append({
         'role': 'user',
         'content': problem_content,
@@ -143,6 +153,10 @@ class OpenAIPrompt(Prompt):
 
   def add_solution(self, solution_content: str) -> None:
     """Constructs the prompt problem in the required format."""
+    if not solution_content:
+      logger.warning('Content is empty, skipping the prompt append process')
+      return
+
     self._prompt.append({
         'role': 'assistant',
         'content': solution_content,
@@ -152,6 +166,11 @@ class OpenAIPrompt(Prompt):
     """Returns a prompt piece in the format wanted by OpenAI."""
     # TODO(mihaimaruseac): We might want to consider stripping the XML tags
     # here? The roles kind of simulate them.
+    if not content or not role:
+      logger.warning('Content or role is empty, '
+                     'skipping the prompt append process')
+      return []
+
     return [{'role': role, 'content': content}]
 
   def save(self, location: str) -> None:

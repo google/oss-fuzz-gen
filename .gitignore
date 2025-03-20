@@ -9,3 +9,6 @@ venv/
 .venv/
 __pycache__/
 *.swp
+*.egg-info
+.vscode/
+.DS_Store

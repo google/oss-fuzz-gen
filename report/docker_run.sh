@@ -39,6 +39,7 @@ NUM_SAMPLES=$8
 LLM_FIX_LIMIT=$9
 VARY_TEMPERATURE=${10}
 AGENT=${11}
+MAX_ROUND=${12:-100}
 
 # Uses python3 by default and /venv/bin/python3 for Docker containers.
 PYTHON="$( [[ -x "/venv/bin/python3" ]] && echo "/venv/bin/python3" || echo "python3" )"
@@ -167,6 +168,7 @@ then
     --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
     --temperature-list "${VARY_TEMPERATURE[@]}" \
     --model "$MODEL" \
+    --max-round "$MAX_ROUND" \
     $AGENT_ARG
 else
   $PYTHON run_all_experiments.py \
@@ -182,6 +184,7 @@ else
     --introspector-endpoint ${INTROSPECTOR_ENDPOINT} \
     --temperature-list "${VARY_TEMPERATURE[@]}" \
     --model "$MODEL" \
+    --max-round "$MAX_ROUND" \
     $AGENT_ARG >> $LOCAL_RESULTS_DIR/logs-from-run.txt 2>&1
 fi
 
