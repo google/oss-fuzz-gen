@@ -1388,10 +1388,9 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
 
   def _format_problem(self, signature: str) -> str:
     """Formats a problem based on the prompt template."""
-    target_str = self._format_target(signature)
+    problem = self._format_target(signature)
 
-    problem = target_str + problem.replace('{PROJECT_NAME}',
-                                           self.benchmark.project)
+    problem = problem.replace('{PROJECT_NAME}', self.benchmark.project)
     problem = problem.replace('{PROJECT_URL}', self.project_url)
 
     return problem
