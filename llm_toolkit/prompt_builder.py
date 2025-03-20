@@ -717,7 +717,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self.need_close = temp_properties.get('need_close', False)
 
     # Load templates.
-    self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
+    self.priming_template_file = self._find_template(template_dir, 'jvm_priming.txt')
     self.data_filler_template_file = self._find_template(
         template_dir, 'jvm_specific_data_filler.txt')
     self.requirement_template_file = self._find_template(
@@ -978,8 +978,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats a problem based on the prompt template."""
     is_constructor = bool('<init>' in signature)
 
-    base = self._get_template(self.base_template_file)
-    problem = base + self._get_template(self.problem_template_file)
+    problem = self._get_template(self.problem_template_file)
     problem = problem.replace('{TARGET}',
                               self._get_template(self.target_template_file))
     problem = problem.replace('{SIGNATURE}', signature)
@@ -1309,7 +1308,7 @@ class JvmFixingBuilder(PromptBuilder):
     else:
       prompt_text = prompt_text.replace('{ERRORS}', self.error_str)
 
-    self._prompt.add_priming(prompt_text)
+    self._prompt.add_problem(prompt_text)
     return self._prompt
 
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
