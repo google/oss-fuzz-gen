@@ -1090,13 +1090,16 @@ class CloudBuilderRunner(BuilderRunner):
 
     artifact_dir = self.work_dirs.artifact(generated_target_name, iteration,
                                            trial)
-    blob = bucket.blob(f'{reproducer_name}/artifacts')
-    if blob.exists():
-      file_name = run_result.artifact_name
-      artifact_path = os.path.join(artifact_dir, file_name)
-      with open(artifact_path, 'w') as f:
-        blob.download_to_file(f)
+    blobs = list(bucket.list_blobs(prefix=f'{reproducer_name}/artifacts/'))
+    if blobs:
+      blob = blobs[0]
+      artifact_path = os.path.join(artifact_dir, os.path.basename(blob.name))
+      blob.download_to_filename(artifact_path)
       run_result.artifact_path = artifact_path
+    else:
+      logger.warning('Cloud evaluation of %s failed to downlod artifact:%s',
+                     os.path.realpath(target_path),
+                     f'{reproducer_name}/artifacts/')
 
     return build_result, run_result
 
