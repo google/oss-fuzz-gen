@@ -50,7 +50,7 @@ class AnalysisStage(BaseStage):
                                                 last_result.crash_sypmtom,
                                                 last_result.crash_stacks,
                                                 last_result.crash_func)
-    analysis_result = AnalysisResult(author=repr(self),
+    analysis_result = AnalysisResult(author=self,
                                      run_result=last_result,
                                      semantic_result=semantic_check_result)
 
