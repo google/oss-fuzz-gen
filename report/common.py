@@ -310,7 +310,7 @@ class Results:
     targets_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
     # TODO(donggeliu): Make this consistent with agent output.
     if not os.path.exists(targets_dir):
-      return ''
+      return None
 
     for name in sorted(FileSystem(targets_dir).listdir()):
       path = os.path.join(targets_dir, name)
@@ -319,7 +319,7 @@ class Results:
           code = f.read()
           code = json.dumps(code)
         return code
-    return ''
+    return None
 
   def get_logs(self, benchmark: str, sample: str) -> list[LogPart]:
     status_dir = os.path.join(self._results_dir, benchmark, 'status')
