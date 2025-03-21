@@ -171,7 +171,11 @@ class CrashAnalyzer(BaseAgent):
     self.analyze_tool.execute('lldb')
     prompt = self._initial_prompt(result_history)
     prompt.add_problem(self.analyze_tool.tutorial())
-    crash_result = CrashResult()
+    crash_result = CrashResult(benchmark=benchmark,
+                               trial=last_result.trial,
+                               work_dirs=last_result.work_dirs,
+                               author=self,
+                               chat_history={self.name: ''})
     cur_round = 1
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
