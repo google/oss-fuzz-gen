@@ -218,12 +218,13 @@ class GenerateReport:
   def _write_benchmark_crash(self, benchmark: Benchmark, samples: List[Sample]):
     """Generate the benchmark crash.json and write to filesystem."""
     try:
-      rendered = self._jinja.render('crash.json',
-                                    benchmark=benchmark.signature,
-                                    samples=samples,
-                                    get_benchmark_final_target_code=partial(
-                                        self._results.get_final_target_code,
-                                        benchmark.id))
+      rendered = self._jinja.render(
+          'crash.json',
+          benchmark=benchmark.signature,
+          samples=samples,
+          # Changed line below to use new error-handling method
+          get_benchmark_final_target_code=self._results.get_benchmark_final_target_code
+      )
       self._write(f'benchmark/{benchmark.id}/crash.json', rendered)
     except Exception as e:
       logging.error('Failed to write benchmark/%s/crash.json:\n%s',
