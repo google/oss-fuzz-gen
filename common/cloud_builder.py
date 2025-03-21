@@ -32,7 +32,7 @@ from googleapiclient.discovery import build as cloud_build
 
 import utils
 from agent.base_agent import BaseAgent
-from results import Result
+from results import Result, RunResult
 
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
 OFG_ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -107,12 +107,12 @@ class CloudBuilder:
       return self._upload_to_gcs(archive_path)
 
   def _request_cloud_build(self, ofg_repo_url: str, agent_dill_url: str,
-                           results_dill_url: str,
+                           results_dill_url: str, artifact_url: str,
                            new_result_filename: str) -> str:
     """Requests Cloud Build to execute the operation."""
     cloud_build_config = {
         'steps': [
-            # Step 1: Download the dill files from GCS bucket.
+            # Step 1: Download the dill and artifact files from GCS bucket.
             {
                 'name': 'bash',
                 'dir': '/workspace',
@@ -127,6 +127,16 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'dir': '/workspace',
                 'args': ['cp', results_dill_url, 'dills/result_history.pkl']
+            },
+            {
+                'name': 'gcr.io/cloud-builders/gsutil',
+                'dir': '/workspace',
+                'args': [
+                    'cp', artifact_url,
+                    f'/workspace/{os.path.basename(artifact_url)}'
+                ],
+                # artifact_url only exists in crash analyzer.
+                'allowFailure': True,
             },
             # Step 2: Prepare OFG and OF repos.
             {
@@ -309,11 +319,15 @@ class CloudBuilder:
     ofg_url = self._prepare_and_upload_archive()
     agent_url = self._upload_to_gcs(agent_dill)
     results_url = self._upload_to_gcs(results_dill)
+    last_result = result_history[-1]
+    artifact_url = 'ARTIFACT_URL DOES NOT EXISTS'
+    if isinstance(last_result, RunResult) and last_result.artifact_path:
+      artifact_url = self._upload_to_gcs(last_result.artifact_path)
 
     # Step 3: Request Cloud Build.
     new_result_filename = f'{uuid.uuid4().hex}.pkl'
     build_id = self._request_cloud_build(ofg_url, agent_url, results_url,
-                                         new_result_filename)
+                                         artifact_url, new_result_filename)
 
     # Step 4: Download new result dill.
     cloud_build_log = ''

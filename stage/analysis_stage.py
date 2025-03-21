@@ -59,8 +59,9 @@ class AnalysisStage(BaseStage):
       agent_result = self._analyze_crash(result_history)
       crash_result = cast(CrashResult, agent_result)
       analysis_result.crash_result = crash_result
+      analysis_result.chat_history = crash_result.chat_history
       # TODO(dongge): Save logs and more info into workdir.
-      self.logger.write_chat_history(crash_result)
+    self.logger.write_chat_history(analysis_result)
 
     self.logger.debug('Analysis stage completed with result:\n%s',
                       analysis_result)

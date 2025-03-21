@@ -1,4 +1,4 @@
-To help analyze the root cause behind the runtime crash during fuzzing, you can leverage LLDB by iteractively sending me a LLDB command, and I will provide you with the output of the command. The fuzz driver binary is stored under '/out/' path. The testcase({AFTIFACT_NAME}) that triggers runtime crash is stored under '/artifact/' path.
+To help analyze the root cause behind the runtime crash during fuzzing, you can leverage LLDB by iteractively sending me a LLDB command, and I will provide you with the output of the command. The fuzz driver binary is stored under '/out/' path. The testcase that triggers runtime crash is stored at '/artifact/{AFTIFACT_NAME}'.
 Some interaction protocols:
 1. Strictly ONE LLDB command at a time.
 2. Each message you send should first explain the reason why you want to run the command wrapped by <reason></reason>, then provide the command to run wrapped in <lldb></lldb> in this format:

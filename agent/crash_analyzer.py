@@ -15,6 +15,7 @@
 Use it as a usual module locally, or as script in cloud builds.
 """
 import os
+import shutil
 import subprocess as sp
 from typing import Optional
 
@@ -119,6 +120,22 @@ class CrashAnalyzer(BaseAgent):
     logger.info('Executing Crash Analyzer', trial=self.trial)
     assert isinstance(last_result, RunResult)
 
+    # TODO(maoyi): Organize this block to be suitable for both local and cloud
+    # experiments. E.g, move to a new function, check if it is cloud build, etc.
+    cloud_build_artifact_path = (
+        f'/workspace/{os.path.basename(last_result.artifact_path)}')
+    if os.path.exists(cloud_build_artifact_path):
+      os.makedirs(os.path.dirname(last_result.artifact_path), exist_ok=True)
+      shutil.copyfile(cloud_build_artifact_path, last_result.artifact_path)
+      logger.info('Copied artifact from %s to %s',
+                  cloud_build_artifact_path,
+                  last_result.artifact_path,
+                  trial=self.trial)
+    else:
+      logger.warning('Unable to find artifact_path in cloud build: %s',
+                     cloud_build_artifact_path,
+                     trial=self.trial)
+
     # TODO(dongge): Move these to oss_fuzz_checkout.
     generated_target_name = os.path.basename(benchmark.target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
@@ -142,7 +159,7 @@ class CrashAnalyzer(BaseAgent):
 
     evaluator_lib.Evaluator.create_ossfuzz_project_with_lldb(
         benchmark, generated_oss_fuzz_project, fuzz_target_path, last_result,
-        build_script_path)
+        build_script_path, last_result.artifact_path)
 
     self.analyze_tool = LLDBTool(
         benchmark,
@@ -154,7 +171,7 @@ class CrashAnalyzer(BaseAgent):
     self.analyze_tool.execute('lldb')
     prompt = self._initial_prompt(result_history)
     prompt.add_problem(self.analyze_tool.tutorial())
-    crash_result = CrashResult.from_existing_result(last_result)
+    crash_result = CrashResult()
     cur_round = 1
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())

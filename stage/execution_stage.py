@@ -145,7 +145,6 @@ class ExecutionStage(BaseStage):
           line_coverage_diff=coverage_diff,
           reproducer_path=run_result.reproducer_path,
           artifact_path=run_result.artifact_path,
-          artifact_name=run_result.artifact_name,
           sanitizer=run_result.sanitizer,
           textcov_diff=run_result.coverage,
           log_path=run_result.log_path,

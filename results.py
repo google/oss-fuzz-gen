@@ -13,6 +13,7 @@
 # limitations under the License.
 """The data structure of all result kinds."""
 import dataclasses
+import os
 from typing import Any, Optional
 
 from experiment import textcov
@@ -128,7 +129,6 @@ class RunResult(BuildResult):
   line_coverage_diff: float
   reproducer_path: str
   artifact_path: str
-  artifact_name: str
   sanitizer: str
   textcov_diff: Optional[textcov.Textcov]
   log_path: str
@@ -161,7 +161,6 @@ class RunResult(BuildResult):
       textcov_diff: Optional[textcov.Textcov] = None,
       reproducer_path: str = '',
       artifact_path: str = '',
-      artifact_name: str = '',
       sanitizer: str = '',
       log_path: str = '',
       corpus_path: str = '',
@@ -188,7 +187,6 @@ class RunResult(BuildResult):
     self.line_coverage_diff = line_coverage_diff
     self.reproducer_path = reproducer_path
     self.artifact_path = artifact_path
-    self.artifact_name = artifact_name
     self.sanitizer = sanitizer
     self.textcov_diff = textcov_diff
     self.log_path = log_path
@@ -199,6 +197,10 @@ class RunResult(BuildResult):
     self.err_type = err_type
     self.crash_sypmtom = crash_sypmtom
     self.crash_stacks = crash_stacks or []
+
+  @property
+  def artifact_name(self) -> str:
+    return os.path.basename(self.artifact_path)
 
   def to_dict(self) -> dict:
     return super().to_dict() | {
@@ -247,7 +249,7 @@ class RunResult(BuildResult):
   # TODO(dongge): Define success property to show if the fuzz target was run.
 
 
-class CrashResult(RunResult):
+class CrashResult(Result):
   """The fuzzing run-time result with crash info."""
   stacktrace: str
   true_bug: bool  # True/False positive crash
@@ -265,17 +267,11 @@ class CrashResult(RunResult):
     self.insight = insight
 
   def to_dict(self) -> dict:
-    return super().to_dict() | {
+    return {
         'stacktrace': self.stacktrace,
         'true_bug': self.true_bug,
         'insight': self.insight,
     }
-
-  @classmethod
-  def from_existing_result(cls, result: RunResult, **overrides):
-    result_dict = result.to_dict()
-    result_dict.update(overrides)
-    return cls(**result_dict)
 
 
 class CoverageResult(RunResult):

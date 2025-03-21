@@ -324,7 +324,8 @@ class Evaluator:
                                        name: str,
                                        target_file: str,
                                        run_result: results.RunResult,
-                                       build_script_path: str = '') -> str:
+                                       build_script_path: str = '',
+                                       artifact_path: str = '') -> str:
     """Creates an OSS-Fuzz project with the generated target and new dockerfile.
     The new project will replicate an existing project |name| but replace its
     fuzz target and build script with the new |target_file| and
@@ -334,6 +335,9 @@ class Evaluator:
     generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
                                           'projects', name)
 
+    shutil.copyfile(
+        artifact_path,
+        os.path.join(generated_project_path, os.path.basename(artifact_path)))
     # Add additional statement in dockerfile to copy testcase,
     # enable -g and install lldb
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
