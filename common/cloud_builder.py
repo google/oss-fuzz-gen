@@ -32,7 +32,7 @@ from googleapiclient.discovery import build as cloud_build
 
 import utils
 from agent.base_agent import BaseAgent
-from results import Result
+from results import Result, RunResult
 
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
 OFG_ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -167,7 +167,7 @@ class CloudBuilder:
 
     cloud_build_config = {
         'steps': [
-            # Step 1: Download the dill files from GCS bucket.
+            # Step 1: Download the dill and artifact files from GCS bucket.
             {
                 'name': 'bash',
                 'dir': '/workspace',
@@ -182,6 +182,16 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'dir': '/workspace',
                 'args': ['cp', results_dill_url, 'dills/result_history.pkl']
+            },
+            {
+                'name': 'gcr.io/cloud-builders/gsutil',
+                'dir': '/workspace',
+                'args': [
+                    'cp', artifact_url,
+                    f'/workspace/{os.path.basename(artifact_url)}'
+                ],
+                # artifact_url only exists in crash analyzer.
+                'allowFailure': True,
             },
             # Step 2: Prepare OFG and OF repos.
             {
