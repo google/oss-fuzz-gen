@@ -18,6 +18,9 @@ Usage:
   python -m report.request_pr_exp -p <PR-ID> -n <YOUR-NAME>
 e.g.,
   python -m report.request_pr_exp -p 73 -n dg
+
+You can also pass arbitrary flags to experiments after -- separator:
+  python -m report.request_pr_exp -p 73 -n dg -- --context --debug
 """
 
 import argparse
@@ -204,7 +207,10 @@ def _parse_args(cmd) -> argparse.Namespace:
                       action='store_true',
                       default=False,
                       help='Redirects experiments stdout/stderr to file')
-  args = parser.parse_args(cmd)
+
+  # Allow piping arbitrary args to run_all_experiments.py
+  args, additional_args = parser.parse_known_args(cmd)
+  args.additional_args = additional_args
 
   assert os.path.isfile(
       args.gke_template), (f'GKE template does not exist: {args.gke_template}')
@@ -232,6 +238,10 @@ def _parse_args(cmd) -> argparse.Namespace:
   if (args.max_round == 100 and
       any(args.name_suffix.startswith(suffix) for suffix in ['ascc-', 'dgk-'])):
     args.max_round = 10
+
+  if args.additional_args:
+    logging.info("Additional args: %s", args.additional_args)
+
   return args
 
 
@@ -342,14 +352,17 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['GKE_EXP_NAME'] = args.experiment_name
   exp_env_vars['GKE_EXP_REQ_CPU'] = args.request_cpus
   exp_env_vars['GKE_EXP_REQ_MEM'] = f'{args.request_memory}Gi'
-  if args.local_introspector:
-    exp_env_vars['GKE_EXP_LOCAL_INTROSPECTOR'] = 'true'
+  exp_env_vars[
+      'GKE_EXP_LOCAL_INTROSPECTOR'] = f'{args.local_introspector}'.lower()
   exp_env_vars['GKE_EXP_NUM_SAMPLES'] = f'{args.num_samples}'
   exp_env_vars['GKE_EXP_LLM_FIX_LIMIT'] = f'{args.llm_fix_limit}'
   exp_env_vars['GKE_EXP_VARY_TEMPERATURE'] = f'{args.vary_temperature}'.lower()
   exp_env_vars['GKE_EXP_AGENT'] = f'{args.agent}'.lower()
-  exp_env_vars['GKE_REDIRECT_OUTS'] = 'true' if args.redirect_outs else ''
+  exp_env_vars['GKE_REDIRECT_OUTS'] = f'{args.redirect_outs}'.lower()
   exp_env_vars['GKE_EXP_MAX_ROUND'] = args.max_round
+
+  # Add additional args as a space-separated string
+  exp_env_vars['GKE_EXP_ADDITIONAL_ARGS'] = ' '.join(args.additional_args)
 
   with open(args.gke_template, 'r') as file:
     yaml_template = file.read()
