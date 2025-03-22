@@ -225,7 +225,8 @@ def run_on_targets(target,
                    idx,
                    llm_model,
                    semaphore=None,
-                   build_heuristics='all'):
+                   build_heuristics='all',
+                   output=''):
   """Thread entry point for single project auto-gen."""
 
   if semaphore is not None:
@@ -253,6 +254,9 @@ def run_on_targets(target,
   except subprocess.CalledProcessError:
     pass
 
+  # Write to output directory
+  copy_result_to_out(worker_project_name, oss_fuzz_base, output)
+
   if semaphore is not None:
     semaphore.release()
 
@@ -271,8 +275,56 @@ def get_next_worker_project(oss_fuzz_base: str) -> str:
   return f'{constants.PROJECT_BASE}{max_idx+1}'
 
 
+def copy_result_to_out(project_generated, oss_fuzz_base, output) -> None:
+  """Copy raw results into an output directory and in a refined format."""
+  # Go through the output
+  os.makedirs(output, exist_ok=True)
+  raw_result_dir = os.path.join(output, 'raw-results')
+  os.makedirs(raw_result_dir, exist_ok=True)
+
+  project_directory = os.path.join(oss_fuzz_base, 'build', 'out',
+                                   project_generated)
+  if not os.path.isdir(project_directory):
+    logger.info('Could not find project %s', project_directory)
+    return
+  shutil.copytree(project_directory,
+                  os.path.join(raw_result_dir, project_generated))
+
+  oss_fuzz_projects = os.path.join(output, 'oss-fuzz-projects')
+  os.makedirs(oss_fuzz_projects, exist_ok=True)
+
+  # get project name
+  report_txt = os.path.join(raw_result_dir, project_generated,
+                            'autogen-results', 'report.txt')
+  if not os.path.isfile(report_txt):
+    return
+  project_name = ''
+  with open(report_txt, 'r') as f:
+    for line in f:
+      if 'Analysing' in line:
+        project_name = line.split('/')[-1].replace('\n', '')
+  if not project_name:
+    return
+
+  idx = 0
+  while True:
+    base_build_dir = f'empty-build-{idx}'
+    idx += 1
+
+    build_dir = os.path.join(raw_result_dir, project_generated, base_build_dir)
+    if not os.path.isdir(build_dir):
+      break
+
+    dst_project = f'{project_name}-{base_build_dir}'
+    dst_dir = os.path.join(oss_fuzz_projects, dst_project)
+    if os.path.isdir(dst_dir):
+      logger.info('Destination dir alrady exists: %s. Skipping', dst_dir)
+      continue
+    shutil.copytree(build_dir, dst_dir)
+
+
 def run_parallels(oss_fuzz_base, target_repositories, llm_model,
-                  build_heuristics):
+                  build_heuristics, output):
   """Run auto-gen on a list of projects in parallel.
 
   Parallelisation is done by way of threads. Practically
@@ -281,14 +333,16 @@ def run_parallels(oss_fuzz_base, target_repositories, llm_model,
   semaphore_count = 6
   semaphore = threading.Semaphore(semaphore_count)
   jobs = []
+  projects_generated = []
   for idx, target in enumerate(target_repositories):
     worker_project_name = get_next_worker_project(oss_fuzz_base)
-    logger.info('Worker project name %s', worker_project_name)
-
+    logger.info('Worker project name: %s', worker_project_name)
+    projects_generated.append(worker_project_name)
     setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
     proc = threading.Thread(target=run_on_targets,
                             args=(target, oss_fuzz_base, worker_project_name,
-                                  idx, llm_model, semaphore, build_heuristics))
+                                  idx, llm_model, semaphore, build_heuristics,
+                                  output))
     jobs.append(proc)
     proc.start()
 
@@ -296,20 +350,15 @@ def run_parallels(oss_fuzz_base, target_repositories, llm_model,
     proc.join()
 
 
-def run_sequential(oss_fuzz_base, target_repositories, llm_model,
-                   build_heuristics):
-  """Run auto-gen on a list of projects sequentially."""
-  for idx, target in enumerate(target_repositories):
-    worker_project_name = get_next_worker_project(oss_fuzz_base)
-    run_on_targets(target, oss_fuzz_base, worker_project_name, idx, llm_model,
-                   None, build_heuristics)
-
-
 def parse_commandline():
   """Parse the commandline."""
   parser = argparse.ArgumentParser()
-  parser.add_argument('--oss-fuzz', '-o', help='OSS-Fuzz base')
+  parser.add_argument('--oss-fuzz', '-of', help='OSS-Fuzz base')
   parser.add_argument('--input', '-i', help='Input to analyze')
+  parser.add_argument('--out',
+                      '-o',
+                      default='Generated builds',
+                      help='Directory to store output.')
   parser.add_argument('--silent',
                       '-s',
                       help='Disable logging in subprocess.',
@@ -348,17 +397,8 @@ def main():
   target_repositories = extract_target_repositories(args.input)
   silent_global = args.silent
 
-  use_multithreading = True
-  if use_multithreading:
-    run_parallels(
-        os.path.abspath(args.oss_fuzz),
-        target_repositories,
-        args.model,
-        args.build_heuristics,
-    )
-  else:
-    run_sequential(os.path.abspath(args.oss_fuzz), target_repositories,
-                   args.model, args.build_heuristics)
+  run_parallels(os.path.abspath(args.oss_fuzz), target_repositories, args.model,
+                args.build_heuristics, args.out)
 
 
 if __name__ == '__main__':
