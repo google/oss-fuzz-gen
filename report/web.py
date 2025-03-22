@@ -26,12 +26,9 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Dict, List, Optional
 
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
-import threading
-
-
 import jinja2
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
                            Results, Sample, Target)
@@ -251,28 +248,30 @@ class GenerateReport:
       logging.error('Failed to write sample/%s/%s:\n%s', benchmark.id,
                     sample.id, e)
 
+
 class ReportWatcher(FileSystemEventHandler):
   """Watches for file changes and regenerates reports."""
-  
+
   def __init__(self, args: argparse.Namespace):
     super().__init__()
     self.args = args
     self.observer = Observer()
     self.server_thread = None
-    self.server = None  
-    
+    self.server = None
+
     if args.watch_filesystem:
-      logging.info(f"Watching filesystem for changes in {args.results_dir}")
+      logging.info("Watching filesystem for changes in %s", args.results_dir)
       self.observer.schedule(self, args.results_dir, recursive=True)
-        
+
     if args.watch_template:
-      logging.info(f"DEV: Watching for changes in the report folder")
+      logging.info("DEV: Watching for changes in the report folder")
       self.observer.schedule(self, "report", recursive=True)
 
     if args.serve:
       self.server_thread = threading.Thread(target=self._start_server)
       self.server_thread.daemon = True
       self.server_thread.start()
+      logging.info("Launching webserver at %s:%d", LOCAL_HOST, self.args.port)
 
   def _start_server(self):
     """Helper method to start the server."""
@@ -294,14 +293,14 @@ class ReportWatcher(FileSystemEventHandler):
 
   def on_modified(self, event):
     """Restart the server when the watcher detects a change"""
-    logging.info(f"{event.src_path} has been modified. Regenerating report...")
+    logging.info("%s has been modified. Regenerating report...", event.src_path)
     generate_report(self.args)
-    
+
     if self.args.serve:
       if self.server:
         self.server.shutdown()
         self.server.server_close()
-      
+
       self.server_thread = threading.Thread(target=self._start_server)
       self.server_thread.daemon = True
       self.server_thread.start()
@@ -309,7 +308,7 @@ class ReportWatcher(FileSystemEventHandler):
 
 def generate_report(args: argparse.Namespace) -> None:
   """Generates static web server files."""
-  logging.info('Generating web page files in %s', args.output_dir)
+  logging.info("Generating web page files in %s", args.output_dir)
   results = Results(results_dir=args.results_dir,
                     benchmark_set=args.benchmark_set)
   jinja_env = JinjaEnv(template_globals={'model': args.model})
@@ -322,7 +321,7 @@ def generate_report(args: argparse.Namespace) -> None:
 
 def launch_webserver(args):
   """Launches a local web server to browse results."""
-  logging.info('Launching webserver at %s:%d', LOCAL_HOST, args.port)
+  logging.info("Launching webserver at %s:%d", LOCAL_HOST, args.port)
   server = ThreadingHTTPServer((LOCAL_HOST, args.port),
                                partial(SimpleHTTPRequestHandler,
                                        directory=args.output_dir))
@@ -365,44 +364,39 @@ def _parse_arguments() -> argparse.Namespace:
                       '-i',
                       help='Interval in seconds to generate report.',
                       type=int,
-                      default=600)
+                      default=90)
   parser.add_argument('--watch-filesystem',
-                      '-w',
+                      '-wf',
                       help='Watch filesystem for changes and generate report.',
                       action='store_true')
-  parser.add_argument('--watch-template',
-                      '-t',
-                      help='Watch the report templates for changes and generate report. For development purposes.',
-                      action='store_true')
+  parser.add_argument(
+      '--watch-template',
+      '-wt',
+      help='Watch the report templates for changes and generate report. '
+      'For development purposes.',
+      action='store_true')
 
   return parser.parse_args()
 
 
 def main():
-    args = _parse_arguments()
-    logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'INFO').upper())
+  args = _parse_arguments()
+  logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'INFO').upper())
 
-    watcher = ReportWatcher(args)
-    watcher.start()
+  watcher = ReportWatcher(args)
+  watcher.start()
 
-    try:
-        should_continue = args.serve or args.watch_filesystem or args.watch_template
-        
-        while should_continue:
-            generate_report(args)
-            # If interval is specified, wait and regenerate
-            if args.interval_seconds > 0:
-                time.sleep(args.interval_seconds)
-            # If only watching filesystem and no interval, just wait
-            else:
-                time.sleep(1)
-        else:
-            generate_report(args)
-            
-    except KeyboardInterrupt:
-        watcher.stop()
-        logging.info('Exiting.')
-        os._exit(0)
+  try:
+    should_continue = args.serve or args.watch_filesystem or args.watch_template
+
+    while should_continue:
+      generate_report(args)
+      time.sleep(args.interval_seconds)
+
+  except KeyboardInterrupt:
+    watcher.stop()
+    logging.info('Exiting.')
+    os._exit(0)
 
 
 if __name__ == '__main__':
