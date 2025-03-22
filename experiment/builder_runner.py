@@ -929,8 +929,12 @@ class CloudBuilderRunner(BuilderRunner):
       command.append('--use_cached_image')
 
       # Overwrite the Dockerfile to be caching friendly
-      oss_fuzz_checkout.rewrite_project_to_cached_project_chronos(
-          generated_project)
+      # We hardcode 'address' here, but this is irrelevant and will be
+      # overridden later via a Docker argument.
+      oss_fuzz_checkout.rewrite_project_to_cached_project(
+          project_name, generated_project, 'address')
+      oss_fuzz_checkout.prepare_build(project_name, 'address',
+                                      generated_project)
 
     if cloud_build_tags:
       command += ['--tags'] + cloud_build_tags
