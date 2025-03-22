@@ -56,7 +56,7 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
 
   # Copy over the generator
   files_to_copy = {
-      'build_generator.py', 'manager.py', 'templates.py', 'constants.py'
+      'build_script_generator.py', 'manager.py', 'templates.py', 'constants.py'
   }
   for target_file in files_to_copy:
     shutil.copyfile(
