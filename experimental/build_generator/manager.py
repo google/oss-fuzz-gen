@@ -22,7 +22,7 @@ import shutil
 import subprocess
 from typing import List, Optional, Tuple
 
-import build_generator
+import build_script_generator
 import templates
 import yaml
 
@@ -548,14 +548,14 @@ def auto_generate(github_url, disable_testing_build_scripts=False, outdir=''):
 
   # record the path
   logger.info('[+] Extracting build scripts statically')
-  all_build_scripts: List[
-      Tuple[str, str, build_generator.
-            AutoBuildContainer]] = build_generator.extract_build_suggestions(
-                target_source_path, 'test-fuzz-build-')
+  all_build_scripts: List[Tuple[
+      str, str, build_script_generator.
+      AutoBuildContainer]] = build_script_generator.extract_build_suggestions(
+          target_source_path, 'test-fuzz-build-')
 
   # Check each of the build scripts.
   logger.info('[+] Testing build suggestions')
-  build_results = build_generator.raw_build_evaluation(all_build_scripts)
+  build_results = build_script_generator.raw_build_evaluation(all_build_scripts)
   logger.info('Checking results of %d build generators', len(build_results))
 
   if disable_testing_build_scripts:

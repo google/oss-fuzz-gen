@@ -23,8 +23,7 @@ import sys
 import threading
 from typing import List
 
-from experimental.build_generator import constants
-from experimental.build_generator import templates
+from experimental.build_generator import constants, templates
 
 silent_global = False
 
