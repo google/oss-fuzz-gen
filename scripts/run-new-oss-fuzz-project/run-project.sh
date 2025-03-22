@@ -43,7 +43,7 @@ cd ${OSS_FUZZ_DIR}
 
 for p2 in ${PROJECTS}; do
   python3 $FI_DIR/oss_fuzz_integration/runner.py \
-    introspector $p2 10 --disable-webserver
+    introspector $p2 1 --disable-webserver
   # Reset is necessary because some project exeuction
   # could break the display encoding which affect
   # the later oss-fuzz-gen execution.
