@@ -256,6 +256,32 @@ class FileSystem:
 class Results:
   """Results provides functions to explore the experiment results in a
   particular directory."""
+  
+  def get_benchmark_final_target_code(self, sample_id: str) -> Optional[str]:
+    """Retrieve source code for a sample_id (format: 'benchmark/sample').
+
+    Args:
+        sample_id: A string in the format 'benchmark/sample'.
+
+    Returns:
+        The source code as a string, or None if the source code is missing or the sample_id is invalid.
+    """
+    try:
+        # Split the sample_id into benchmark and sample
+        benchmark, sample = sample_id.split('/')
+    except ValueError:
+        # Log an error if the sample_id format is invalid
+        logging.error(f"Invalid sample_id format: '{sample_id}'. Expected 'benchmark/sample'.")
+        return None
+
+    # Retrieve the source code using the existing method
+    code = self.get_final_target_code(benchmark, sample)
+    if not code:
+        # Log a warning if the source code is missing
+        logging.warning(f"Missing source code for {sample_id}")
+        return None
+
+    return code
 
   def __init__(self, results_dir='results', benchmark_set='all'):
     self._results_dir = results_dir
@@ -284,7 +310,7 @@ class Results:
     targets_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
     # TODO(donggeliu): Make this consistent with agent output.
     if not os.path.exists(targets_dir):
-      return ''
+      return None
 
     for name in sorted(FileSystem(targets_dir).listdir()):
       path = os.path.join(targets_dir, name)
@@ -293,7 +319,7 @@ class Results:
           code = f.read()
           code = json.dumps(code)
         return code
-    return ''
+    return None
 
   def get_logs(self, benchmark: str, sample: str) -> list[LogPart]:
     status_dir = os.path.join(self._results_dir, benchmark, 'status')
