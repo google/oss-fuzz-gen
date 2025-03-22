@@ -139,20 +139,14 @@ def run_autogen(github_url,
                 outdir,
                 oss_fuzz_base,
                 worker_project,
-                disable_autofuzz,
                 model,
                 openai_api_key=None,
-                targets_per_heuristic=5,
                 build_heuristics='all',
-                generator_heuristics='all',
                 max_successful_builds: int = -1):
   """Launch auto-gen analysis within OSS-Fuzz container."""
 
   initiator_cmd = f'python3 /src/manager.py {github_url} -o {outdir}'
-  if disable_autofuzz:
-    initiator_cmd += ' --disable-fuzzgen'
   initiator_cmd += f' --model={model}'
-  initiator_cmd += f' --targets-per-heuristic={targets_per_heuristic}'
   if max_successful_builds > 0:
     initiator_cmd += f' --max-successful={max_successful_builds}'
 
@@ -183,8 +177,6 @@ def run_autogen(github_url,
       'FUZZING_LANGUAGE=c++',
       '-e',
       f'BUILD_HEURISTICS={build_heuristics}',
-      '-e',
-      f'GENERATOR_HEURISTICS={generator_heuristics}',
   ] + extra_environment
 
   cmd += [
@@ -234,11 +226,7 @@ def run_on_targets(target,
                    idx,
                    llm_model,
                    semaphore=None,
-                   disable_autofuzz=False,
-                   targets_per_heuristic=5,
-                   build_heuristics='all',
-                   generator_heuristics='all',
-                   max_successful_builds: int = -1):
+                   build_heuristics='all'):
   """Thread entry point for single project auto-gen."""
 
   if semaphore is not None:
@@ -253,13 +241,9 @@ def run_on_targets(target,
               outdir,
               oss_fuzz_base,
               worker_project_name,
-              disable_autofuzz,
               llm_model,
-              targets_per_heuristic=targets_per_heuristic,
               openai_api_key=openai_api_key,
-              build_heuristics=build_heuristics,
-              generator_heuristics=generator_heuristics,
-              max_successful_builds=max_successful_builds)
+              build_heuristics=build_heuristics)
 
   # Cleanup the OSS-Fuzz docker image
   clean_up_cmd = [
@@ -288,9 +272,8 @@ def get_next_worker_project(oss_fuzz_base: str) -> str:
   return f'{constants.PROJECT_BASE}{max_idx+1}'
 
 
-def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
-                  targets_per_heuristic, llm_model, build_heuristics,
-                  generator_heuristics, max_successful_builds):
+def run_parallels(oss_fuzz_base, target_repositories, llm_model,
+                  build_heuristics):
   """Run auto-gen on a list of projects in parallel.
 
   Parallelisation is done by way of threads. Practically
@@ -306,9 +289,7 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
     setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
     proc = threading.Thread(target=run_on_targets,
                             args=(target, oss_fuzz_base, worker_project_name,
-                                  idx, llm_model, semaphore, disable_autofuzz,
-                                  targets_per_heuristic, build_heuristics,
-                                  generator_heuristics, max_successful_builds))
+                                  idx, llm_model, semaphore, build_heuristics))
     jobs.append(proc)
     proc.start()
 
@@ -316,15 +297,13 @@ def run_parallels(oss_fuzz_base, target_repositories, disable_autofuzz,
     proc.join()
 
 
-def run_sequential(oss_fuzz_base, target_repositories, disable_autofuzz,
-                   targets_per_heuristic, llm_model, build_heuristics,
-                   generator_heuristics):
+def run_sequential(oss_fuzz_base, target_repositories, llm_model,
+                   build_heuristics):
   """Run auto-gen on a list of projects sequentially."""
   for idx, target in enumerate(target_repositories):
     worker_project_name = get_next_worker_project(oss_fuzz_base)
     run_on_targets(target, oss_fuzz_base, worker_project_name, idx, llm_model,
-                   None, disable_autofuzz, targets_per_heuristic,
-                   build_heuristics, generator_heuristics)
+                   None, build_heuristics)
 
 
 def parse_commandline():
@@ -332,15 +311,6 @@ def parse_commandline():
   parser = argparse.ArgumentParser()
   parser.add_argument('--oss-fuzz', '-o', help='OSS-Fuzz base')
   parser.add_argument('--input', '-i', help='Input to analyze')
-  parser.add_argument('--disable-fuzzgen',
-                      '-d',
-                      action='store_true',
-                      help='Disable fuzz generation')
-  parser.add_argument('--targets-per-heuristic',
-                      '-t',
-                      help='Number of harness to generate per heuristic.',
-                      type=int,
-                      default=15)
   parser.add_argument('--silent',
                       '-s',
                       help='Disable logging in subprocess.',
@@ -350,20 +320,10 @@ def parse_commandline():
                       help='Comma-separated string of build heuristics to use',
                       default='all')
   parser.add_argument(
-      '--generator-heuristics',
-      '-g',
-      help='Comma-separated string of generator heuristics to use.',
-      default='all')
-  parser.add_argument(
       '--model',
       '-m',
       help=f'LLM model to use. Available: {str(constants.MODELS)}',
       type=str)
-  parser.add_argument('--max_successful',
-                      '-ma',
-                      help='Max number of successful builds to generate.',
-                      type=int,
-                      default=-1)
   return parser.parse_args()
 
 
@@ -391,14 +351,15 @@ def main():
 
   use_multithreading = True
   if use_multithreading:
-    run_parallels(os.path.abspath(args.oss_fuzz), target_repositories,
-                  args.disable_fuzzgen, args.targets_per_heuristic, args.model,
-                  args.build_heuristics, args.generator_heuristics,
-                  args.max_successful)
+    run_parallels(
+        os.path.abspath(args.oss_fuzz),
+        target_repositories,
+        args.model,
+        args.build_heuristics,
+    )
   else:
     run_sequential(os.path.abspath(args.oss_fuzz), target_repositories,
-                   args.disable_fuzzgen, args.targets_per_heuristic, args.model,
-                   args.build_heuristics, args.generator_heuristics)
+                   args.model, args.build_heuristics)
 
 
 if __name__ == '__main__':
