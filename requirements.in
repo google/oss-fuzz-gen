@@ -17,3 +17,4 @@ requests==2.32.3
 rust-demangler==1.0
 tiktoken==0.7.0
 yapf==0.40.1
+watchdog==6.0.0
