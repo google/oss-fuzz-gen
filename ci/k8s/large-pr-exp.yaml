@@ -30,7 +30,11 @@ spec:
         # Modify the follow command to customize one-off experiments.
         # For benchmark sets that need more disk, increase the results volume
         # size too.
-        command: ["/bin/bash", "report/docker_run.sh", "${GKE_EXP_BENCHMARK}", "${GKE_EXP_NAME}", "${GKE_EXP_FUZZING_TIMEOUT}", "ofg-pr", "${GKE_EXP_LLM}", "${GKE_EXP_DELAY}", "${GKE_EXP_LOCAL_INTROSPECTOR}", "${GKE_EXP_NUM_SAMPLES}", "${GKE_EXP_LLM_FIX_LIMIT}", "${GKE_EXP_VARY_TEMPERATURE}", "${GKE_EXP_AGENT}"]
+        command: [
+          "/bin/bash",
+          "-c",
+          "/venv/bin/python3 report/docker_run.py --benchmark-set=${GKE_EXP_BENCHMARK} --frequency-label=${GKE_EXP_NAME} --run-timeout=${GKE_EXP_FUZZING_TIMEOUT} --sub-dir=ofg-pr --model=${GKE_EXP_LLM} --delay=${GKE_EXP_DELAY} --num-samples=${GKE_EXP_NUM_SAMPLES} --llm-fix-limit=${GKE_EXP_LLM_FIX_LIMIT} --max-round=${GKE_EXP_MAX_ROUND} --local-introspector=${GKE_EXP_LOCAL_INTROSPECTOR} --vary-temperature=${GKE_EXP_VARY_TEMPERATURE} --agent=${GKE_EXP_AGENT} --redirect-outs=${GKE_REDIRECT_OUTS} ${GKE_EXP_ADDITIONAL_ARGS}"
+        ]
         securityContext:
           privileged: true
         resources:
@@ -52,8 +56,6 @@ spec:
           value: 'us-west1'
         - name: GCB_BUILDPOOL_NAME
           value: projects/oss-fuzz/locations/us-west1/workerPools/buildpool-large-pr
-        - name: REDIRECT_OUTS
-          value: '${GKE_REDIRECT_OUTS}'
       # imagePullSecrets:
       # - name: oss-fuzz-base-artifect
       volumes:
