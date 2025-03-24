@@ -119,7 +119,7 @@ def postprocess_oss_fuzz() -> None:
 
   # If already in a virtualenv environment assume all is set up
   venv_path = os.path.split(os.environ.get('VIRTUAL_ENV', ''))
-  if venv_path:
+  if venv_path and venv_path[0].endswith(os.path.split(OSS_FUZZ_DIR)[-1]):
     return
 
   result = sp.run(['python3', '-m', 'venv', VENV_DIR],

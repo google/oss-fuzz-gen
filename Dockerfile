@@ -65,4 +65,4 @@ RUN apt-get update && \
 COPY . /experiment
 WORKDIR /experiment
 RUN /venv/bin/pip install --disable-pip-version-check -r requirements.txt
-ENTRYPOINT ["./report/docker_run.sh"]
+ENTRYPOINT ["/venv/bin/python3", "./report/docker_run.py"]

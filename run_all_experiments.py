@@ -551,6 +551,8 @@ def main():
   start = time.time()
   add_to_json_report(args.work_dir, 'start_time',
                      time.strftime(TIME_STAMP_FMT, time.gmtime(start)))
+  # Add num_samples to report.json
+  add_to_json_report(args.work_dir, 'num_samples', args.num_samples)
 
   # Set introspector endpoint before performing any operations to ensure the
   # right API endpoint is used throughout.
