@@ -503,12 +503,6 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
 
     total_existing_lines = sum(lines)
     total_cov_covered_lines_before_subtraction = total_cov.covered_lines
-    total_cov.subtract_covered_lines(existing_textcov)
-    try:
-      cov_relative_gain = (total_cov.covered_lines /
-                           existing_textcov.covered_lines)
-    except ZeroDivisionError:
-      cov_relative_gain = 0.0
 
     total_lines = max(total_cov.total_lines, total_existing_lines)
     union_linked_lines = max(total_cov.total_lines, total_existing_lines)
@@ -520,8 +514,6 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
           'coverage_diff':
               coverage_utils.calculate_coverage_improvement(
                   total_cov, existing_textcov, union_linked_lines),
-          'coverage_relative_gain':
-              cov_relative_gain,
           'coverage_ofg_total_covered_lines':
               total_cov_covered_lines_before_subtraction,
           'coverage_ofg_total_new_covered_lines':
