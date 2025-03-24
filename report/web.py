@@ -260,18 +260,18 @@ class ReportWatcher(FileSystemEventHandler):
     self.server = None
 
     if args.watch_filesystem:
-      logging.info("Watching filesystem for changes in %s", args.results_dir)
+      logging.info('Watching filesystem for changes in %s', args.results_dir)
       self.observer.schedule(self, args.results_dir, recursive=True)
 
     if args.watch_template:
-      logging.info("DEV: Watching for changes in the report folder")
+      logging.info('DEV: Watching for changes in the report folder')
       self.observer.schedule(self, "report", recursive=True)
 
     if args.serve:
       self.server_thread = threading.Thread(target=self._start_server)
       self.server_thread.daemon = True
       self.server_thread.start()
-      logging.info("Launching webserver at %s:%d", LOCAL_HOST, self.args.port)
+      logging.info('Launching webserver at %s:%d', LOCAL_HOST, self.args.port)
 
   def _start_server(self):
     """Helper method to start the server."""
@@ -293,7 +293,7 @@ class ReportWatcher(FileSystemEventHandler):
 
   def on_modified(self, event):
     """Restart the server when the watcher detects a change"""
-    logging.info("%s has been modified. Regenerating report...", event.src_path)
+    logging.info('%s has been modified. Regenerating report...', event.src_path)
     generate_report(self.args)
 
     if self.args.serve:
@@ -308,7 +308,7 @@ class ReportWatcher(FileSystemEventHandler):
 
 def generate_report(args: argparse.Namespace) -> None:
   """Generates static web server files."""
-  logging.info("Generating web page files in %s", args.output_dir)
+  logging.info('Generating web page files in %s', args.output_dir)
   results = Results(results_dir=args.results_dir,
                     benchmark_set=args.benchmark_set)
   jinja_env = JinjaEnv(template_globals={'model': args.model})
@@ -321,7 +321,7 @@ def generate_report(args: argparse.Namespace) -> None:
 
 def launch_webserver(args):
   """Launches a local web server to browse results."""
-  logging.info("Launching webserver at %s:%d", LOCAL_HOST, args.port)
+  logging.info('Launching webserver at %s:%d', LOCAL_HOST, args.port)
   server = ThreadingHTTPServer((LOCAL_HOST, args.port),
                                partial(SimpleHTTPRequestHandler,
                                        directory=args.output_dir))
