@@ -15,6 +15,7 @@
 
 from __future__ import annotations
 
+import copy
 import dataclasses
 import json
 import logging
@@ -576,20 +577,4 @@ class Textcov:
 
   def copy(self) -> 'Textcov':
     """Create a deep copy of this Textcov oject."""
-    new_cov = Textcov()
-    # Copy all the functions and files
-    for name, func in self.functions.items():
-      new_func = Function(name=func.name)
-      for content, line in func.lines.items():
-        new_func.lines[content] = Line(contents=line.contents,
-                                       hit_count=line.hit_count)
-      new_cov.functions[name] = new_func
-
-    for name, file in self.files.items():
-      new_file = File(name=file.name)
-      for content, line in file.lines.items():
-        new_file.lines[content] = Line(contents=line.contents,
-                                       hit_count=line.hit_count)
-      new_cov.files[name] = new_file
-
-    return new_cov
+    return copy.deepcopy(self)

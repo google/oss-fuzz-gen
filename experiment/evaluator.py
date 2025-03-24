@@ -463,9 +463,6 @@ class Evaluator:
           coverage_percent = 0.0
 
         existing_textcov = self.load_existing_textcov()
-        if run_result.coverage:
-          run_result.coverage.subtract_covered_lines(existing_textcov)
-
         if total_lines and run_result.coverage:
           union_linked_lines = max(run_result.coverage.total_lines, total_lines)
           coverage_diff = coverage_utils.calculate_coverage_improvement(
