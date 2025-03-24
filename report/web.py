@@ -27,6 +27,8 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Dict, List, Optional
 
 import jinja2
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
                            Results, Sample, Target)
@@ -247,6 +249,63 @@ class GenerateReport:
                     sample.id, e)
 
 
+class ReportWatcher(FileSystemEventHandler):
+  """Watches for file changes and regenerates reports."""
+
+  def __init__(self, args: argparse.Namespace):
+    super().__init__()
+    self.args = args
+    self.observer = Observer()
+    self.server_thread = None
+    self.server = None
+
+    if args.watch_filesystem:
+      logging.info('Watching filesystem for changes in %s', args.results_dir)
+      self.observer.schedule(self, args.results_dir, recursive=True)
+
+    if args.watch_template:
+      logging.info('DEV: Watching for changes in the report folder')
+      self.observer.schedule(self, "report", recursive=True)
+
+    if args.serve:
+      self.server_thread = threading.Thread(target=self._start_server)
+      self.server_thread.daemon = True
+      self.server_thread.start()
+      logging.info('Launching webserver at %s:%d', LOCAL_HOST, self.args.port)
+
+  def _start_server(self):
+    """Helper method to start the server."""
+    handler = partial(SimpleHTTPRequestHandler, directory=self.args.output_dir)
+    self.server = ThreadingHTTPServer((LOCAL_HOST, self.args.port), handler)
+    self.server.daemon_threads = True
+    self.server.allow_reuse_address = True
+    self.server.serve_forever()
+
+  def start(self):
+    """Start watching if either watch flag is enabled."""
+    if self.args.watch_filesystem or self.args.watch_template:
+      self.observer.start()
+
+  def stop(self):
+    """Stop watching and clean up."""
+    self.observer.stop()
+    self.observer.join()
+
+  def on_modified(self, event):
+    """Restart the server when the watcher detects a change"""
+    logging.info('%s has been modified. Regenerating report...', event.src_path)
+    generate_report(self.args)
+
+    if self.args.serve:
+      if self.server:
+        self.server.shutdown()
+        self.server.server_close()
+
+      self.server_thread = threading.Thread(target=self._start_server)
+      self.server_thread.daemon = True
+      self.server_thread.start()
+
+
 def generate_report(args: argparse.Namespace) -> None:
   """Generates static web server files."""
   logging.info('Generating web page files in %s', args.output_dir)
@@ -301,29 +360,43 @@ def _parse_arguments() -> argparse.Namespace:
                       help='Port to launch webserver on.',
                       type=int,
                       default=8012)
+  parser.add_argument('--interval-seconds',
+                      '-i',
+                      help='Interval in seconds to generate report.',
+                      type=int,
+                      default=90)
+  parser.add_argument('--watch-filesystem',
+                      '-wf',
+                      help='Watch filesystem for changes and generate report.',
+                      action='store_true')
+  parser.add_argument(
+      '--watch-template',
+      '-wt',
+      help='Watch the report templates for changes and generate report. '
+      'For development purposes.',
+      action='store_true')
 
   return parser.parse_args()
 
 
 def main():
   args = _parse_arguments()
+  logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'INFO').upper())
 
-  if not args.serve:
-    generate_report(args)
-  else:
-    logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'INFO').upper())
-    # Launch web server
-    thread = threading.Thread(target=launch_webserver, args=(args,))
-    thread.start()
+  watcher = ReportWatcher(args)
+  watcher.start()
 
-    # Generate results continuously while the process runs.
-    while True:
+  try:
+    should_continue = args.serve or args.watch_filesystem or args.watch_template
+
+    while should_continue:
       generate_report(args)
-      try:
-        time.sleep(90)
-      except KeyboardInterrupt:
-        logging.info('Exiting.')
-        os._exit(0)
+      time.sleep(args.interval_seconds)
+
+  except KeyboardInterrupt:
+    watcher.stop()
+    logging.info('Exiting.')
+    os._exit(0)
 
 
 if __name__ == '__main__':
