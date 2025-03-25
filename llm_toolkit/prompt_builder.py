@@ -28,7 +28,7 @@ from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
-from results import BuildResult
+from results import BuildResult, RunResult
 
 logger = logging.getLogger(__name__)
 
@@ -640,6 +640,47 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
     prompt = prompt.replace('{PROJECT_DIR}', project_dir)
     self._prompt.append(prompt)
 
+    return self._prompt
+
+
+class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               run_result: RunResult,
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+    # Load templates.
+    self.priming_template_file = self._find_template(
+        self.agent_templare_dir, 'coverage-analyzer-priming.txt')
+    self.run_result = run_result
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    del (example_pair, project_example_content, project_context_content)
+    if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.priming_template_file)
+    prompt = prompt.replace('{LANGUAGE}', self.benchmark.file_type.value)
+    prompt = prompt.replace('{PROJECT}', self.benchmark.project)
+    prompt = prompt.replace('{PROJECT_LANGUAGE}', self.benchmark.language)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}',
+                            self.benchmark.function_signature)
+    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
+    prompt = prompt.replace('{FUZZ_TARGET}', self.run_result.fuzz_target_source)
+    prompt = prompt.replace('{FUZZING_LOG}', self.run_result.run_log)
+    prompt = prompt.replace('{TOOL_GUIDES}', tool_guides)
+
+    self._prompt.append(prompt)
     return self._prompt
 
 
