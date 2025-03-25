@@ -159,6 +159,7 @@ Here is the revised fuzz target:
 
     logger.info('Executing %s', self.name, trial=last_result.trial)
     benchmark = last_result.benchmark
+    # TODO(dongge): Use the generated fuzz target and build script here.
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
     cur_round = 1
