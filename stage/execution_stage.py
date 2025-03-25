@@ -77,7 +77,7 @@ class ExecutionStage(BaseStage):
       raise TypeError
 
     try:
-      build_result, run_result = evaluator.builder_runner.build_and_run(
+      _, run_result = evaluator.builder_runner.build_and_run(
           generated_oss_fuzz_project,
           fuzz_target_path,
           0,
@@ -122,6 +122,13 @@ class ExecutionStage(BaseStage):
         self.logger.warning('total_lines == 0 in %s',
                             generated_oss_fuzz_project)
         coverage_diff = 0.0
+
+      if run_result.log_path and os.path.isfile(run_result.log_path):
+        with open(run_result.log_path, 'r') as f:
+          run_log_content = f.read()
+      else:
+        run_log_content = ''
+
       runresult = RunResult(
           benchmark=benchmark,
           trial=last_result.trial,
@@ -138,7 +145,7 @@ class ExecutionStage(BaseStage):
           crashes=run_result.crashes,
           run_error=run_result.crash_info,
           # TODO: This should be the content of log_path.
-          run_log=run_result.log_path,
+          run_log=run_log_content,
           coverage_summary=run_result.coverage_summary,
           coverage=coverage_percent,
           line_coverage_diff=coverage_diff,
