@@ -62,7 +62,7 @@ class CoverageAnalyzer(BaseAgent):
                 cur_round,
                 trial=self.trial)
 
-    coverage_result.improve_required = conclusion.lower == 'true'
+    coverage_result.improve_required = conclusion.strip().lower() == 'true'
     coverage_result.insight = self._parse_tag(response, 'insights')
     coverage_result.suggestions = self._parse_tag(response, 'suggestions')
 
