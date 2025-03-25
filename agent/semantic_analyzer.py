@@ -71,24 +71,13 @@ class SemanticAnalyzer(BaseAgent):
     return analysis_result
 
   def _parse_libfuzzer_logs(self,
-                            log_handle,
+                            fuzzlog,
                             project_name: str,
                             check_cov_increase: bool = True) -> ParseResult:
     """Parses libFuzzer logs."""
     lines = None
-    try:
-      fuzzlog = log_handle.read(-1)
-      # Some crashes can mess up the libfuzzer output and raise decode error.
-      fuzzlog = fuzzlog.decode('utf-8', errors='ignore')
-      lines = fuzzlog.split('\n')
-    except MemoryError as e:
-      # Some logs from abnormal fuzz targets are too large to be parsed.
-      logger.error('%s is too large to parse: %s',
-                   log_handle.name,
-                   e,
-                   trial=self.trial)
-      return ParseResult(0, 0, False, '',
-                         SemanticCheckResult(SemanticCheckResult.LOG_MESS_UP))
+    # Some crashes can mess up the libfuzzer output and raise decode error.
+    lines = fuzzlog.split('\n')
 
     cov_pcs, total_pcs, crashes = 0, 0, False
 
