@@ -14,7 +14,6 @@
 """An LLM agent to generate a simple fuzz target prototype that can build.
 Use it as a usual module locally, or as script in cloud builds.
 """
-import os
 import re
 from collections import defaultdict, namedtuple
 from typing import Optional
@@ -61,11 +60,8 @@ class SemanticAnalyzer(BaseAgent):
     last_result = result_history[-1]
     assert isinstance(last_result, RunResult)
 
-    with open(
-        os.path.join(last_result.work_dirs.run_logs, f'{self.trial:02}.log'),
-        'rb') as fuzzer_log:
-      _, _, _, _, semantic_result = self._parse_libfuzzer_logs(
-          fuzzer_log, last_result.benchmark.project)
+    _, _, _, _, semantic_result = self._parse_libfuzzer_logs(
+        last_result.run_log, last_result.benchmark.project)
 
     analysis_result = AnalysisResult(
         author=self,
