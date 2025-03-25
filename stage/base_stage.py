@@ -62,6 +62,12 @@ class BaseStage(ABC):
     result = cloud_builder.run(agent, result_history, dill_dir)
     return result
 
+  def _execute_agent(self, agent: BaseAgent,
+                     result_history: list[Result]) -> Result:
+    if self.args.cloud_experiment_name:
+      return self._execute_agent_cloud(agent, result_history)
+    return agent.execute(result_history)
+
   @abstractmethod
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the stage-specific actions using agents."""

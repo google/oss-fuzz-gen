@@ -36,7 +36,7 @@ class AnalysisStage(BaseStage):
       agent = self.get_agent(agent_name='SemanticAnalyzer')
     else:
       agent = self.get_agent(agent_name='CoverageAnalyzer')
-    analysis_result = agent.execute(result_history)
+    analysis_result = self._execute_agent(agent, result_history)
 
     # TODO(dongge): Save logs and more info into workdir.
     self.logger.write_chat_history(analysis_result)
