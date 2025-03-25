@@ -70,3 +70,4 @@ Here is the revised fuzz target:
 ```
 </suggestions>
 
+{TOOL_GUIDES}
