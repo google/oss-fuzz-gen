@@ -28,7 +28,7 @@ from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
-from results import BuildResult, RunResult
+from results import BuildResult, CoverageResult, RunResult
 
 logger = logging.getLogger(__name__)
 
@@ -309,12 +309,20 @@ class DefaultTemplateBuilder(PromptBuilder):
                          raw_code: str,
                          error_desc: Optional[str],
                          errors: list[str],
+                         coverage_result: Optional[CoverageResult] = None,
                          context: str = '',
                          instruction: str = '') -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming(benchmark)
-    problem = self._format_fixer_problem(raw_code, error_desc, errors,
-                                         priming_weight, context, instruction)
+    if error_desc and errors:
+      problem = self._format_fixer_problem(raw_code, error_desc, errors,
+                                           priming_weight, context, instruction)
+    else:
+      assert coverage_result
+      problem = self._format_fixer_problem(
+          raw_code, coverage_result.insight,
+          coverage_result.suggestions.splitlines(), priming_weight, context,
+          instruction)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -691,8 +699,9 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
                model: models.LLM,
                benchmark: Benchmark,
                build_result: BuildResult,
-               error_desc: str,
-               errors: list[str],
+               error_desc: str = '',
+               errors: Optional[list[str]] = None,
+               coverage_result: Optional[CoverageResult] = None,
                template_dir: str = DEFAULT_TEMPLATE_DIR,
                initial: Any = None):
     super().__init__(model, benchmark, template_dir, initial)
@@ -702,6 +711,7 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     self.build_result = build_result
     self.error_desc = error_desc
     self.errors = errors
+    self.coverage_result = coverage_result
 
   def build(self,
             example_pair: list[list[str]],
@@ -718,20 +728,28 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     priming = priming.replace('{LANGUAGE}', self.benchmark.file_type.value)
     priming = priming.replace('{FUNCTION_SIGNATURE}',
                               self.benchmark.function_signature)
-    # TODO(dongge): Add build script to .
     priming = priming.replace('{PROJECT_DIR}', project_dir)
-    if self.build_result.build_script_source:
-      build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
-                    '</build script>')
-    else:
-      build_text = 'Build script reuses `/src/build.bk.sh`.'
-    priming = priming.replace('{BUILD_TEXT}', build_text)
     priming = priming.replace('{TOOL_GUIDES}', tool_guides)
-    priming_weight = self._model.estimate_token_num(priming)
+    # TODO(dongge): Refine this logic.
+    if self.error_desc and self.errors:
+      if self.build_result.build_script_source:
+        build_text = (
+            f'<build script>\n{self.build_result.build_script_source}\n'
+            '</build script>')
+      else:
+        build_text = 'Build script reuses `/src/build.bk.sh`.'
+      priming = priming.replace('{BUILD_TEXT}', build_text)
+      priming_weight = self._model.estimate_token_num(priming)
 
-    problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
-                                         self.error_desc, self.errors,
-                                         priming_weight, '', '')
+      problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
+                                           self.error_desc, self.errors,
+                                           priming_weight, '', '')
+    else:
+      priming_weight = self._model.estimate_token_num(priming)
+      assert self.coverage_result
+      problem = self._format_fixer_problem(
+          self.build_result.fuzz_target_source, self.coverage_result.insight,
+          self.coverage_result.suggestions.splitlines(), priming_weight, '', '')
 
     self._prepare_prompt(priming, problem)
     return self._prompt

@@ -52,9 +52,17 @@ class Enhancer(Prototyper):
                                  last_result.run_result.fuzz_target_source, [])
       prompt = builder.build([], None, None)
     else:
-      error_desc, errors = last_result.semantic_result.get_error_info()
-      builder = EnhancerTemplateBuilder(self.llm, benchmark, last_build_result,
-                                        error_desc, errors)
+      # TODO(dongge): Refine this logic.
+      if last_result.semantic_result:
+        error_desc, errors = last_result.semantic_result.get_error_info()
+        builder = EnhancerTemplateBuilder(self.llm, benchmark,
+                                          last_build_result, error_desc, errors)
+      else:
+        builder = EnhancerTemplateBuilder(
+            self.llm,
+            benchmark,
+            last_build_result,
+            coverage_result=last_result.coverage_result)
       prompt = builder.build(example_pair=[],
                              tool_guides=self.inspect_tool.tutorial(),
                              project_dir=self.inspect_tool.project_dir)

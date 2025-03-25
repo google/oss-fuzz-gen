@@ -151,8 +151,11 @@ class OnePromptPrototyper(BaseAgent):
       instruction = code_fixer.collect_instructions(
           build_result.benchmark, errors, build_result.fuzz_target_source)
       prompt = builder.build_fixer_prompt(build_result.benchmark,
-                                          build_result.fuzz_target_source, '',
-                                          errors, context, instruction)
+                                          build_result.fuzz_target_source,
+                                          '',
+                                          errors,
+                                          context=context,
+                                          instruction=instruction)
 
     return prompt
 
