@@ -19,6 +19,7 @@ metadata:
   labels:
     customLabel: "myCustomValue"
 spec:
+  activeDeadlineSeconds: 604800  # 7 days. We don't want large experiments to run indefinitely and eat up resources.
   template:
     spec:
       nodeSelector:
