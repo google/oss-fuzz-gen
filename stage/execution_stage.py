@@ -125,7 +125,13 @@ class ExecutionStage(BaseStage):
 
       if run_result.log_path and os.path.isfile(run_result.log_path):
         with open(run_result.log_path, 'r') as f:
-          run_log_content = f.read()
+          run_log_lines = f.readlines()
+          if len(run_log_lines) > 30:
+            run_log_lines = (run_log_lines[:20] + [
+                f'...({len(run_log_lines) - 30} lines of fuzzing log truncated)'
+                '...'
+            ] + run_log_lines[-10:])
+          run_log_content = '\n'.join(run_log_lines)
       else:
         run_log_content = ''
 
