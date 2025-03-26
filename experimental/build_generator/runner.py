@@ -291,36 +291,6 @@ def run_parallels(oss_fuzz_base, target_repositories, llm_model,
     proc.join()
 
 
-def run_harness_generation(out_gen):
-  """Runs harness generation based on the projects in `out`"""
-
-  projects_dir = os.path.join(out_gen, 'oss-fuzz-projects')
-  if not os.path.isdir(projects_dir):
-    logger.info('Found no projects.')
-    return
-
-  # Set up if needed
-  if not os.path.isdir('work'):
-    subprocess.check_call('./scripts/run-new-oss-fuzz-project/setup.sh',
-                          shell=True)
-
-  # Copy projects over
-  projects_to_run = []
-  for project in os.listdir(projects_dir):
-    dst = os.path.join('work', 'oss-fuzz', 'projects', project)
-    if os.path.isdir(dst):
-      shutil.rmtree(dst)
-    shutil.copytree(os.path.join(projects_dir, project),
-                    os.path.join('work', 'oss-fuzz', 'projects', project))
-    projects_to_run.append(project)
-
-  # Run project generation
-  project_string = ' '.join(projects_to_run)
-  subprocess.check_call(
-      f'./scripts/run-new-oss-fuzz-project/run-project.sh {project_string}',
-      shell=True)
-
-
 def parse_commandline():
   """Parse the commandline."""
   parser = argparse.ArgumentParser()
@@ -343,10 +313,6 @@ def parse_commandline():
       '-m',
       help=f'LLM model to use. Available: {str(constants.MODELS)}',
       type=str)
-  parser.add_argument(
-      '--generate-harness',
-      action='store_true',
-      help='Will run OFG harness creation on generated projects.')
   return parser.parse_args()
 
 
@@ -374,9 +340,6 @@ def main():
 
   run_parallels(os.path.abspath(args.oss_fuzz), target_repositories, args.model,
                 args.build_heuristics, args.out)
-
-  if args.generate_harness:
-    run_harness_generation(args.out)
 
 
 if __name__ == '__main__':
