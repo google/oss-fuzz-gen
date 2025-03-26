@@ -1,0 +1,12 @@
+"language": "jvm"
+"project": "evo-inflector"
+"target_name": "EnglishFuzzer"
+"target_path": "/src/EnglishFuzzer.java"
+"test_files":
+- "test_file_path": "org/atteo/evo/inflector/EnglishInflectorTest.java"
+- "test_file_path": "org/atteo/evo/inflector/WikiParser.java"
+- "test_file_path": "org/atteo/evo/inflector/Revision.java"
+- "test_file_path": "org/atteo/evo/inflector/WikiNoun.java"
+- "test_file_path": "org/atteo/evo/inflector/Page.java"
+- "test_file_path": "org/atteo/evo/inflector/WikiNounTest.java"
+- "test_file_path": "org/atteo/evo/inflector/NounType.java"
