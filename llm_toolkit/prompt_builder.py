@@ -788,20 +788,21 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     if not self.benchmark:
       return self._prompt
 
-    priming = self._get_template(self.priming_template_file)
-    priming = priming.replace('{TOOL_GUIDES}', tool_guides)
-    priming = priming.replace('{LANGUAGE}', self.benchmark.file_type.value)
-    priming = priming.replace('{FUNCTION_SIGNATURE}',
-                              self.benchmark.function_signature)
-    priming = priming.replace('{PROJECT_DIR}', project_dir)
+    prompt = self._get_template(self.priming_template_file)
+    prompt = prompt.replace('{TOOL_GUIDES}', tool_guides)
+    prompt = prompt.replace('{LANGUAGE}', self.benchmark.file_type.value)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}',
+                            self.benchmark.function_signature)
+    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
     if self.build_result.build_script_source:
       build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
                     '</build script>')
     else:
       build_text = 'Build script reuses `/src/build.bk.sh`.'
-    priming = priming.replace('{BUILD_TEXT}', build_text)
-    priming = priming.replace('{INSIGHTS}', self.coverage_result.insight)
-    priming = priming.replace('{SUGGESTIONS}', self.coverage_result.suggestions)
+    prompt = prompt.replace('{BUILD_TEXT}', build_text)
+    prompt = prompt.replace('{INSIGHTS}', self.coverage_result.insight)
+    prompt = prompt.replace('{SUGGESTIONS}', self.coverage_result.suggestions)
+    self._prompt.append(prompt)
     return self._prompt
 
 
