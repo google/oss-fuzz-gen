@@ -813,9 +813,10 @@ def raw_build_evaluation(
     with open('/src/build.sh', 'w') as bf:
       bf.write(build_script)
     try:
-      subprocess.check_call('compile', shell=True,
-      stdout=subprocess.DEVNULL,
-      stderr=subprocess.DEVNULL)
+      subprocess.check_call('compile',
+                            shell=True,
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError:
       pass
     logger.info('Finished evaluation.')
