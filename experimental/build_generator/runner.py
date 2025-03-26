@@ -341,5 +341,6 @@ def main():
   run_parallels(os.path.abspath(args.oss_fuzz), target_repositories, args.model,
                 args.build_heuristics, args.out)
 
+
 if __name__ == '__main__':
   main()
