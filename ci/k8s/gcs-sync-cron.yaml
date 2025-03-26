@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: oss-fuzz-gcs-sync
 spec:
-  schedule: "0 3 * * *"
+  schedule: "0 3 * * *"  # Daily 3AM UTC
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -22,4 +22,9 @@ spec:
               limits:
                 memory: "2Gi"
                 cpu: "1"
+            livenessProbe:
+              exec:
+                command: ["pgrep", "-f", "python3 gcs_sync.py"]
+              initialDelaySeconds: 5
+              periodSeconds: 60
           restartPolicy: OnFailure

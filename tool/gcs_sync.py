@@ -15,10 +15,12 @@
 import json
 import logging
 import os
+import time
 from datetime import datetime
 from typing import Dict, List, Optional
 
 from google.cloud import storage
+from google.api_core.retry import Retry
 from data_prep.introspector import get_project_funcs, set_introspector_endpoints
 from data_prep.target_collector import _get_targets
 from experiment import oss_fuzz_checkout
@@ -59,30 +61,32 @@ class GCSSynchronizer:
         return {
             "project": project,
             "timestamp": datetime.utcnow().isoformat(),
-            "targets": [{
-                "path": target,
-                "signatures": self._get_function_signatures(project, target),
-                "language": self._detect_language(project, target)
-            } for target in targets]
+            "targets": [self._format_target(t, project) for t in targets]
         }
 
-    def _get_function_signatures(self, project: str, target: str) -> List[str]:
-        """Extract function signatures from introspector."""
+    def _format_target(self, target: str, project: str) -> Dict:
+        """Format target metadata with validation."""
         funcs = get_project_funcs(project).get(target, [])
-        return [
-            f['function_signature'] for f in funcs
-            if 'LLVMFuzzerTestOneInput' not in f.get('function_name', '')
-        ]
+        if not funcs:
+            return {"path": target, "signatures": [], "language": "unknown"}
+            
+        return {
+            "path": target,
+            "signatures": [
+                f['function_signature'] for f in funcs
+                if 'LLVMFuzzerTestOneInput' not in f.get('function_name', '')
+            ],
+            "language": funcs[0].get('language', 'unknown')
+        }
 
-    def _detect_language(self, project: str, target: str) -> str:
-        """Detect implementation language."""
-        funcs = get_project_funcs(project).get(target, [])
-        return funcs[0]['language'] if funcs else "unknown"
-
+    @Retry()
     def _upload_project_data(self, project: str, bucket, data: Dict):
-        """Upload JSON metadata to GCS."""
+        """Upload JSON metadata to GCS with retries."""
         blob = bucket.blob(f"projects/{project}/metadata.json")
-        blob.upload_from_string(json.dumps(data, indent=2))
+        blob.upload_from_string(
+            json.dumps(data, indent=2),
+            content_type="application/json"
+        )
 
 if __name__ == "__main__":
     GCSSynchronizer().sync_all()

@@ -30,11 +30,12 @@ jobs:
           us-central1-docker.pkg.dev/oss-fuzz-base/testing/gcs-sync:latest
         push: true
 
-    - name: Deploy to GKE
-      uses: google-github-actions/deploy-cloudrun@v1
+    - name: Authenticate to GKE
+      uses: google-github-actions/get-gke-credentials@v1
       with:
-        service: oss-fuzz-gcs-sync
-        image: us-central1-docker.pkg.dev/oss-fuzz-base/testing/gcs-sync:latest
-        cluster: your-cluster-name
+        cluster_name: your-cluster-name
         location: us-central1
         credentials: ${{ secrets.GKE_CREDENTIALS }}
+
+    - name: Deploy CronJob
+      run: kubectl apply -f k8s/gcs-sync-cron.yaml
