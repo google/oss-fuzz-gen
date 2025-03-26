@@ -680,20 +680,13 @@ class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
     prompt = self._get_template(self.priming_template_file)
     prompt = prompt.replace('{LANGUAGE}', self.benchmark.file_type.value)
     prompt = prompt.replace('{PROJECT}', self.benchmark.project)
+    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
     prompt = prompt.replace('{PROJECT_LANGUAGE}', self.benchmark.language)
     prompt = prompt.replace('{FUNCTION_SIGNATURE}',
                             self.benchmark.function_signature)
-    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
     prompt = prompt.replace('{FUZZ_TARGET}', self.run_result.fuzz_target_source)
     prompt = prompt.replace('{TOOL_GUIDES}', tool_guides)
-    run_log_lines = self.run_result.run_log.splitlines()
-    if len(run_log_lines) > 30:
-      run_log_content = '\n'.join(run_log_lines[:20] +
-                                  ['...(fuzzing log truncated)...'] +
-                                  run_log_lines[-6:])
-    else:
-      run_log_content = self.run_result.run_log
-    prompt = prompt.replace('{FUZZING_LOG}', run_log_content)
+    prompt = prompt.replace('{FUZZING_LOG}', self.run_result.run_log)
 
     self._prompt.append(prompt)
     return self._prompt
@@ -791,9 +784,14 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     prompt = self._get_template(self.priming_template_file)
     prompt = prompt.replace('{TOOL_GUIDES}', tool_guides)
     prompt = prompt.replace('{LANGUAGE}', self.benchmark.file_type.value)
+    prompt = prompt.replace('{PROJECT}', self.benchmark.project)
+    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
+    prompt = prompt.replace('{PROJECT_LANGUAGE}', self.benchmark.language)
+    prompt = prompt.replace('{FUZZ_TARGET}',
+                            self.build_result.fuzz_target_source)
     prompt = prompt.replace('{FUNCTION_SIGNATURE}',
                             self.benchmark.function_signature)
-    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
+
     if self.build_result.build_script_source:
       build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
                     '</build script>')
