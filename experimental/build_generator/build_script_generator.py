@@ -814,15 +814,17 @@ def raw_build_evaluation(
       bf.write(build_script)
     try:
       subprocess.check_call('compile',
-                            shell=True,
-                            stdout=subprocess.DEVNULL,
-                            stderr=subprocess.DEVNULL)
+                            shell=True)#,
+                            #stdout=subprocess.DEVNULL,
+                            #stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError:
       pass
-
+    logger.info('Finished evaluation.')
     # Identify any binary artifacts built that weren't there prior
     # to running the build.
+    logger.info('Finding executables')
     binary_files_build = get_all_binary_files_from_folder(test_dir)
+    logger.info('Finished looking for executables.')
 
     build_worker = BuildWorker(build_suggestion, build_script, test_dir,
                                binary_files_build)
