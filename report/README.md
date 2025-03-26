@@ -11,7 +11,7 @@
 
 ## Trends Report
 
-1. After each experiment is finished, `docker_run.sh` uploads a summary json
+1. After each experiment is finished, `docker_run.py` uploads a summary json
    file to `gs://oss-fuzz-gcb-experiment-run-logs/trend-reports/`.
 2. Upload of the summary json triggers a
    [Cloud Run Function](https://pantheon.corp.google.com/functions/details/us-central1/llm-trends-report-index?env=gen1&project=oss-fuzz)
