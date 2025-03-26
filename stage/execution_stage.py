@@ -131,7 +131,7 @@ class ExecutionStage(BaseStage):
                 f'...({len(run_log_lines) - 30} lines of fuzzing log truncated)'
                 '...'
             ] + run_log_lines[-10:])
-          run_log_content = '\n'.join(run_log_lines)
+          run_log_content = ''.join(run_log_lines)
       else:
         run_log_content = ''
 
