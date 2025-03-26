@@ -685,8 +685,15 @@ class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
                             self.benchmark.function_signature)
     prompt = prompt.replace('{PROJECT_DIR}', project_dir)
     prompt = prompt.replace('{FUZZ_TARGET}', self.run_result.fuzz_target_source)
-    prompt = prompt.replace('{FUZZING_LOG}', self.run_result.run_log)
     prompt = prompt.replace('{TOOL_GUIDES}', tool_guides)
+    run_log_lines = self.run_result.run_log.splitlines()
+    if len(run_log_lines) > 30:
+      run_log_content = '\n'.join(run_log_lines[:20] +
+                                  ['...(fuzzing log truncated)...'] +
+                                  run_log_lines[-6:])
+    else:
+      run_log_content = self.run_result.run_log
+    prompt = prompt.replace('{FUZZING_LOG}', run_log_content)
 
     self._prompt.append(prompt)
     return self._prompt
@@ -730,28 +737,71 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
                               self.benchmark.function_signature)
     priming = priming.replace('{PROJECT_DIR}', project_dir)
     priming = priming.replace('{TOOL_GUIDES}', tool_guides)
+    if self.build_result.build_script_source:
+      build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
+                    '</build script>')
+    else:
+      build_text = 'Build script reuses `/src/build.bk.sh`.'
+    priming = priming.replace('{BUILD_TEXT}', build_text)
+    priming_weight = self._model.estimate_token_num(priming)
     # TODO(dongge): Refine this logic.
     if self.error_desc and self.errors:
-      if self.build_result.build_script_source:
-        build_text = (
-            f'<build script>\n{self.build_result.build_script_source}\n'
-            '</build script>')
-      else:
-        build_text = 'Build script reuses `/src/build.bk.sh`.'
-      priming = priming.replace('{BUILD_TEXT}', build_text)
-      priming_weight = self._model.estimate_token_num(priming)
 
       problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
                                            self.error_desc, self.errors,
                                            priming_weight, '', '')
     else:
-      priming_weight = self._model.estimate_token_num(priming)
       assert self.coverage_result
       problem = self._format_fixer_problem(
           self.build_result.fuzz_target_source, self.coverage_result.insight,
           self.coverage_result.suggestions.splitlines(), priming_weight, '', '')
 
     self._prepare_prompt(priming, problem)
+    return self._prompt
+
+
+class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               build_result: BuildResult,
+               coverage_result: CoverageResult,
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+    # Load templates.
+    self.priming_template_file = self._find_template(
+        self.agent_templare_dir, 'enhancer-coverage-priming.txt')
+    self.build_result = build_result
+    self.coverage_result = coverage_result
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    del (example_pair, project_example_content, project_context_content)
+    if not self.benchmark:
+      return self._prompt
+
+    priming = self._get_template(self.priming_template_file)
+    priming = priming.replace('{TOOL_GUIDES}', tool_guides)
+    priming = priming.replace('{LANGUAGE}', self.benchmark.file_type.value)
+    priming = priming.replace('{FUNCTION_SIGNATURE}',
+                              self.benchmark.function_signature)
+    priming = priming.replace('{PROJECT_DIR}', project_dir)
+    if self.build_result.build_script_source:
+      build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
+                    '</build script>')
+    else:
+      build_text = 'Build script reuses `/src/build.bk.sh`.'
+    priming = priming.replace('{BUILD_TEXT}', build_text)
+    priming = priming.replace('{INSIGHTS}', self.coverage_result.insight)
+    priming = priming.replace('{SUGGESTIONS}', self.coverage_result.suggestions)
     return self._prompt
 
 
