@@ -19,11 +19,8 @@ import logging
 import os
 import shutil
 import subprocess
-import sys
-import threading
-from typing import List
 
-from experimental.build_generator import constants, templates, runner
+from experimental.build_generator import constants, runner
 
 silent_global = False
 
@@ -31,8 +28,9 @@ logger = logging.getLogger(name=__name__)
 LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
            ': %(funcName)s: %(message)s')
 
-def run_harness_generation(out_gen):
-  """Runs harness generation based on the projects in `out`"""
+
+def run_harness_generation(out_gen, model):
+  """Runs harness generation based on the projects in `out_gen`"""
 
   projects_dir = os.path.join(out_gen, 'oss-fuzz-projects')
   if not os.path.isdir(projects_dir):
@@ -56,9 +54,12 @@ def run_harness_generation(out_gen):
 
   # Run project generation
   project_string = ' '.join(projects_to_run)
+  environ = os.environ
+  environ['MODEL'] = model
   subprocess.check_call(
       f'./scripts/run-new-oss-fuzz-project/run-project.sh {project_string}',
       shell=True)
+
 
 def parse_commandline():
   """Parse the commandline."""
@@ -73,19 +74,11 @@ def parse_commandline():
                       '-s',
                       help='Disable logging in subprocess.',
                       action='store_true')
-  parser.add_argument('--build-heuristics',
-                      '-b',
-                      help='Comma-separated string of build heuristics to use',
-                      default='all')
   parser.add_argument(
       '--model',
       '-m',
       help=f'LLM model to use. Available: {str(constants.MODELS)}',
       type=str)
-  parser.add_argument(
-      '--generate-harness',
-      action='store_true',
-      help='Will run OFG harness creation on generated projects.')
   return parser.parse_args()
 
 
@@ -95,11 +88,10 @@ def setup_logging():
 
 def run_analysis(oss_fuzz_dir, input_file, out, model):
   target_repositories = runner.extract_target_repositories(input_file)
-  runner.run_parallels(os.path.abspath(oss_fuzz_dir), target_repositories, model,
-                'all', out)
-  
+  runner.run_parallels(os.path.abspath(oss_fuzz_dir), target_repositories,
+                       model, 'all', out)
 
-  run_harness_generation(out)
+  run_harness_generation(out, model)
 
 
 def main():
