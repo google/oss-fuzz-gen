@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: oss-fuzz-gcs-sync
+spec:
+  schedule: "0 3 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: oss-fuzz-sync-sa
+          containers:
+          - name: sync-container
+            image: gcr.io/oss-fuzz-gen/gcs-sync:latest
+            env:
+            - name: GCS_BUCKET
+              value: "oss-fuzz-gen-targets"
+            - name: INTROSPECTOR_ENDPOINT
+              value: "https://introspector.oss-fuzz.com/api"
+            resources:
+              limits:
+                memory: "2Gi"
+                cpu: "1"
+          restartPolicy: OnFailure
