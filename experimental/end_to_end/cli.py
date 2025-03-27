@@ -17,10 +17,11 @@
 import argparse
 import logging
 import os
-import sys
 import shutil
-import time
 import subprocess
+import sys
+import time
+
 import requests
 
 from experimental.build_generator import runner
@@ -107,7 +108,6 @@ def create_fi_db(workdir):
     logger.info('Created database successfully')
   except subprocess.CalledProcessError:
     logger.info('Failed creation of DB')
-  return
 
 
 def launch_fi_webapp(workdir):
@@ -125,8 +125,6 @@ def launch_fi_webapp(workdir):
                         shell=True,
                         cwd=fi_webapp_dir,
                         env=environ)
-
-  return
 
 
 def wait_until_fi_webapp_is_launched():
@@ -181,7 +179,7 @@ def copy_generated_projects_to_harness_gen(out_gen):
   projects_dir = os.path.join(out_gen, 'oss-fuzz-projects')
   if not os.path.isdir(projects_dir):
     logger.info('Found no projects.')
-    return
+    return set()
 
   # Copy projects over
   projects_to_run = []
