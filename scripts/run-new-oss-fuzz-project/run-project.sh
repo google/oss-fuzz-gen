@@ -86,17 +86,20 @@ done
 echo "[+] Running OSS-Fuzz-gen experiment"
 cd ${OSS_FUZZ_GEN_DIR}
 
+# Hack to ensure no complaints from: https://github.com/google/oss-fuzz-gen/blob/54d4acc02ef5b15288f1e0718f00bfbf8f5024c5/experiment/oss_fuzz_checkout.py#L117-L123
+mkdir -p ${OSS_FUZZ_DIR}/venv
 
 # Run OSS-Fuzz-gen
 # - Generate benchmarks
 # - Use a local version version of OSS-Fuzz (the one in /work/oss-fuzz)
+EXTRA_ARGS="${EXTRA_OFG_ARGS}"
 LLM_NUM_EVA=4 LLM_NUM_EXP=4 ./run_all_experiments.py \
     --model=$OSS_FUZZ_GEN_MODEL \
     -g ${BENCHMARK_HEURISTICS} \
     -gp ${comma_separated} \
     -gm ${VAR_HARNESSES_PER_PROJECT} \
     -of ${OSS_FUZZ_DIR} \
-    -e http://127.0.0.1:8080/api
+    -e http://127.0.0.1:8080/api ${EXTRA_ARGS}
 
 echo "Shutting down started webserver"
 curl --silent http://localhost:8080/api/shutdown || true
