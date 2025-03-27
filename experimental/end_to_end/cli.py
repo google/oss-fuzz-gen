@@ -21,6 +21,7 @@ import shutil
 import subprocess
 import sys
 import time
+import tempfile
 
 import requests
 
@@ -34,10 +35,14 @@ LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
            ': %(funcName)s: %(message)s')
 
 
-def setup_workdirs():
+def setup_workdirs(defined_dir):
   """Sets up the working directory."""
 
-  workdir = 'work'
+  if defined_dir:
+    workdir = defined_dir
+  else:
+    workdir = tempfile.mkdtemp()
+  logger.info('Using work directory: %s', workdir)
   os.makedirs(workdir, exist_ok=True)
 
   # Clone two OSS-Fuzz projects
@@ -144,25 +149,27 @@ def wait_until_fi_webapp_is_launched():
   sys.exit(0)
 
 
-def run_ofg_generation(model, projects_to_run, agent, workdir):
+def run_ofg_generation(projects_to_run, workdir, args):
   """Runs harness generation"""
   logger.info('Running OFG experiment: %s', os.getcwd())
   oss_fuzz_dir = os.path.join(workdir, 'oss-fuzz')
   cmd = ['python3', 'run_all_experiments.py']
   cmd.append('--model')
-  cmd.append(model)
+  cmd.append(args.model)
   cmd.append('-g')
   cmd.append(
       'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach')
   cmd.append('-gp')
   cmd.append(','.join(projects_to_run))
   cmd.append('-gm')
-  cmd.append('4')
+  cmd.append(str(args.generate_benchmarks_max))
   cmd.append('-of')
   cmd.append(oss_fuzz_dir)
   cmd.append('-e')
   cmd.append('http://127.0.0.1:8080/api')
-  if agent:
+  cmd.append('-mr')
+  cmd.append(str(args.max_round))
+  if args.agent:
     cmd.append('--agent')
 
   environ = os.environ.copy()
@@ -174,7 +181,7 @@ def run_ofg_generation(model, projects_to_run, agent, workdir):
   subprocess.check_call(' '.join(cmd), shell=True, env=environ)
 
 
-def copy_generated_projects_to_harness_gen(out_gen):
+def copy_generated_projects_to_harness_gen(out_gen, workdir):
   """Copies projects from build generation ready for harness generation."""
   projects_dir = os.path.join(out_gen, 'oss-fuzz-projects')
   if not os.path.isdir(projects_dir):
@@ -184,55 +191,80 @@ def copy_generated_projects_to_harness_gen(out_gen):
   # Copy projects over
   projects_to_run = []
   for project in os.listdir(projects_dir):
-    dst = os.path.join('work', 'oss-fuzz', 'projects', project)
+    dst = os.path.join(workdir, 'oss-fuzz', 'projects', project)
     if os.path.isdir(dst):
       shutil.rmtree(dst)
     logger.info('Copying: %s :: %s', os.path.join(projects_dir, project),
-                os.path.join('work', 'oss-fuzz', 'projects', project))
+                os.path.join(workdir, 'oss-fuzz', 'projects', project))
     shutil.copytree(os.path.join(projects_dir, project),
-                    os.path.join('work', 'oss-fuzz', 'projects', project))
+                    os.path.join(workdir, 'oss-fuzz', 'projects', project))
     projects_to_run.append(project)
   return projects_to_run
 
 
-def run_harness_generation(out_gen, model, agent, workdir):
+def run_harness_generation(out_gen, workdir, args):
   """Runs harness generation based on the projects in `out_gen`"""
 
-  abs_workdir = os.path.abspath(workdir)
-  projects_to_run = copy_generated_projects_to_harness_gen(out_gen)
-  extract_introspector_reports_for_benchmarks(projects_to_run, abs_workdir)
+  projects_to_run = copy_generated_projects_to_harness_gen(out_gen, workdir)
+  extract_introspector_reports_for_benchmarks(projects_to_run, workdir)
   shutdown_fi_webapp()
-  create_fi_db(abs_workdir)
+  create_fi_db(workdir)
   shutdown_fi_webapp()
-  launch_fi_webapp(abs_workdir)
+  launch_fi_webapp(workdir)
   wait_until_fi_webapp_is_launched()
-  run_ofg_generation(model, projects_to_run, agent, abs_workdir)
+  run_ofg_generation(projects_to_run, workdir, args)
+  return projects_to_run
 
 
 def setup_logging():
+  """Initiate logging."""
   logging.basicConfig(level=logging.INFO, format=LOG_FMT)
 
 
-def run_analysis(input_file, out, model, agent):
-  workdir = setup_workdirs()
+def get_next_out_folder():
+  """Get next pre-named work directory."""
+  idx = 0
+  while True:
+    if not os.path.isdir(f'generated-projects-{idx}'):
+      break
+    idx += 1
+  return f'generated-projects-{idx}'
 
-  oss_fuzz_dir = os.path.join('work', 'oss-fuzz-1')
-  target_repositories = runner.extract_target_repositories(input_file)
+
+def run_analysis(args):
+  """Generates builds and harnesses for repositories in input."""
+  workdir = setup_workdirs(args.workdir)
+  abs_workdir = os.path.abspath(workdir)
+  if not args.out:
+    out_folder = get_next_out_folder()
+  else:
+    out_folder = args.out
+
+  if os.path.isdir('results'):
+    shutil.rmtree('results')
+
+  oss_fuzz_dir = os.path.join(abs_workdir, 'oss-fuzz-1')
+  target_repositories = runner.extract_target_repositories(args.input)
   runner.run_parallels(os.path.abspath(oss_fuzz_dir), target_repositories,
-                       model, 'all', out)
+                       args.model, 'all', out_folder)
 
-  run_harness_generation(out, model, agent, workdir)
+  projects_run = run_harness_generation(out_folder, abs_workdir, args)
+
+  logger.info('Finished analysis')
+  logger.info('Results in %s', out_folder)
+  logger.info('Projects generated (%d): ', len(projects_run))
+  for project in projects_run:
+    logger.info('- %s', project)
+
+  if os.path.isdir('results'):
+    shutil.copytree('results', os.path.join(out_folder, 'harness-results'))
 
 
 def parse_commandline():
   """Parse the commandline."""
   parser = argparse.ArgumentParser()
-  # parser.add_argument('--oss-fuzz', '-of', help='OSS-Fuzz base')
   parser.add_argument('--input', '-i', help='Input to analyze')
-  parser.add_argument('--out',
-                      '-o',
-                      default='Generated builds',
-                      help='Directory to store output.')
+  parser.add_argument('--out', '-o', help='Directory to store output.')
   parser.add_argument('--silent',
                       '-s',
                       help='Disable logging in subprocess.',
@@ -246,6 +278,17 @@ def parse_commandline():
                       '-a',
                       help='Enable agent workflow',
                       action='store_true')
+  parser.add_argument('-gm',
+                      '--generate-benchmarks-max',
+                      help='Max targets to generate per benchmark heuristic.',
+                      type=int,
+                      default=5)
+  parser.add_argument('-mr',
+                      '--max-round',
+                      type=int,
+                      default=5,
+                      help='Max trial round for agents.')
+  parser.add_argument('-w', '--workdir', help='Work directory to use')
   return parser.parse_args()
 
 
@@ -254,7 +297,7 @@ def main():
   args = parse_commandline()
   setup_logging()
   silent_global = args.silent
-  run_analysis(args.input, args.out, args.model, args.agent)
+  run_analysis(args)
 
 
 if __name__ == '__main__':
