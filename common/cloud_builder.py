@@ -53,6 +53,7 @@ class CloudBuilder:
 
   def __init__(self, args: argparse.Namespace) -> None:
     self.tags = ['ofg', 'agent', args.cloud_experiment_name]
+    self.exp_args = args
     self.credentials, self.project_id = default()
     assert self.project_id, 'Cloud experiment requires a Google cloud project.'
     assert hasattr(
@@ -88,18 +89,23 @@ class CloudBuilder:
 
   def _prepare_and_upload_archive(self) -> str:
     """Archives and uploads local OFG repo to cloud build."""
-    files_in_dir = set(
+    dir_files = set(
         os.path.relpath(os.path.join(root, file))
         for root, _, files in os.walk(OFG_ROOT_DIR)
         for file in files)
-    files_in_git = set(
+    git_files = set(
         subprocess.check_output(['git', 'ls-files'],
                                 cwd=OFG_ROOT_DIR,
                                 text=True).splitlines())
-    file_to_upload = list(files_in_dir & files_in_git)
+    result_files = set(
+        os.path.relpath(os.path.join(root, file))
+        for root, _, files in os.walk(self.exp_args.work_dir)
+        for file in files)
+    file_to_upload = list((dir_files & git_files) | result_files)
 
     with tempfile.TemporaryDirectory() as tmpdirname:
-      archive_name = f'ofg-repo-{uuid.uuid4().hex}.tar.gz'
+      archive_name = (f'{self.exp_args.cloud_experiment_name}-ofg-repo-'
+                      '{uuid.uuid4().hex}.tar.gz')
       archive_path = os.path.join(tmpdirname, archive_name)
       tar_command = ['tar', '-czf', archive_path] + file_to_upload
       subprocess.run(tar_command, cwd=OFG_ROOT_DIR, check=True)
@@ -295,7 +301,7 @@ class CloudBuilder:
     self.tags += [
         str(agent),
         str(result_history[-1].benchmark.project),
-        # TODO(dongge): A tag for function name, compatible with tag format.
+        str(result_history[-1].benchmark.function_name),
         str(result_history[-1].trial)
     ]
     # Step1: Generate dill files.
