@@ -87,7 +87,7 @@ class CloudBuilder:
     logging.info('Uploaded %s to %s', local_file_path, bucket_file_url)
     return bucket_file_url
 
-  def _prepare_and_upload_archive(self) -> str:
+  def _prepare_and_upload_archive(self, result_history: list[Result]) -> str:
     """Archives and uploads local OFG repo to cloud build."""
     dir_files = set(
         os.path.relpath(os.path.join(root, file))
@@ -99,13 +99,13 @@ class CloudBuilder:
                                 text=True).splitlines())
     result_files = set(
         os.path.relpath(os.path.join(root, file))
-        for root, _, files in os.walk(self.exp_args.work_dir)
+        for root, _, files in os.walk(result_history[-1].work_dirs.base)
         for file in files)
     file_to_upload = list((dir_files & git_files) | result_files)
 
     with tempfile.TemporaryDirectory() as tmpdirname:
       archive_name = (f'{self.exp_args.cloud_experiment_name}-ofg-repo-'
-                      '{uuid.uuid4().hex}.tar.gz')
+                      f'{uuid.uuid4().hex}.tar.gz')
       archive_path = os.path.join(tmpdirname, archive_name)
       tar_command = ['tar', '-czf', archive_path] + file_to_upload
       subprocess.run(tar_command, cwd=OFG_ROOT_DIR, check=True)
@@ -312,7 +312,7 @@ class CloudBuilder:
     # TODO(dongge): Encrypt dill files?
 
     # Step 2: Upload OFG repo and dill files to GCS.
-    ofg_url = self._prepare_and_upload_archive()
+    ofg_url = self._prepare_and_upload_archive(result_history)
     agent_url = self._upload_to_gcs(agent_dill)
     results_url = self._upload_to_gcs(results_dill)
 
