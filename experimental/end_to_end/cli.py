@@ -30,6 +30,43 @@ LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
            ': %(funcName)s: %(message)s')
 
 
+
+def setup_workdirs():
+  """Sets up the working directory."""
+
+  os.makedirs('work', exist_ok=True)
+
+  # Clone two OSS-Fuzz projects
+  subprocess.check_call('git clone https://github.com/google/oss-fuzz oss-fuzz-1', shell=True, cwd='work')
+
+  # Clone another OSS-Fuzz, for OFG core
+  subprocess.check_call('git clone https://github.com/google/oss-fuzz oss-fuzz', shell=True, cwd='work')
+
+  # Clone Fuzz Introspector
+  subprocess.check_call('git clone https://github.com/ossf/fuzz-introspector', shell=True, cwd='work')
+
+def extract_introspector_reports_for_benchmarks():
+  """Runs introspector through each report to collect program analysis data."""
+  return
+
+def shutdown_fi_webapp():
+  """Shutsdown the FI webapp if it exists."""
+  return
+
+def create_fi_db():
+  """Creates the FI webapp database"""
+  return
+
+def launch_fi_webapp():
+  return
+
+def wait_until_fi_webapp_is_launched():
+  return
+
+def run_ofg_generation():
+  return
+
+
 def run_harness_generation(out_gen, model, agent):
   """Runs harness generation based on the projects in `out_gen`"""
 
@@ -39,9 +76,9 @@ def run_harness_generation(out_gen, model, agent):
     return
 
   # Set up if needed
-  if not os.path.isdir('work'):
-    subprocess.check_call('./scripts/run-new-oss-fuzz-project/setup.sh',
-                          shell=True)
+  #if not os.path.isdir('work'):
+  #  subprocess.check_call('./scripts/run-new-oss-fuzz-project/setup.sh',
+  #                        shell=True)
 
   # Copy projects over
   projects_to_run = []
@@ -52,6 +89,15 @@ def run_harness_generation(out_gen, model, agent):
     shutil.copytree(os.path.join(projects_dir, project),
                     os.path.join('work', 'oss-fuzz', 'projects', project))
     projects_to_run.append(project)
+
+  extract_introspector_reports_for_benchmarks()
+  shutdown_fi_webapp()
+  create_fi_db()
+  shutdown_fi_webapp()
+  launch_fi_webapp()
+  wait_until_fi_webapp_is_launched()
+  # make venv dir
+  run_ofg_generation()
 
   # Run project generation
   project_string = ' '.join(projects_to_run)
@@ -67,7 +113,7 @@ def run_harness_generation(out_gen, model, agent):
 def parse_commandline():
   """Parse the commandline."""
   parser = argparse.ArgumentParser()
-  parser.add_argument('--oss-fuzz', '-of', help='OSS-Fuzz base')
+  # parser.add_argument('--oss-fuzz', '-of', help='OSS-Fuzz base')
   parser.add_argument('--input', '-i', help='Input to analyze')
   parser.add_argument('--out',
                       '-o',
@@ -93,7 +139,10 @@ def setup_logging():
   logging.basicConfig(level=logging.INFO, format=LOG_FMT)
 
 
-def run_analysis(oss_fuzz_dir, input_file, out, model, agent):
+def run_analysis(input_file, out, model, agent):
+  setup_workdirs()
+
+  oss_fuzz_dir = os.path.join('work', 'oss-fuzz-1')
   target_repositories = runner.extract_target_repositories(input_file)
   runner.run_parallels(os.path.abspath(oss_fuzz_dir), target_repositories,
                        model, 'all', out)
@@ -106,7 +155,7 @@ def main():
   args = parse_commandline()
   setup_logging()
   silent_global = args.silent
-  run_analysis(args.oss_fuzz, args.input, args.out, args.model, args.agent)
+  run_analysis(args.input, args.out, args.model, args.agent)
 
 
 if __name__ == '__main__':
