@@ -144,5 +144,4 @@ class Pipeline():
       cycle_count += 1
       self._execute_one_cycle(result_history=result_history,
                               cycle_count=cycle_count)
-    self._update_status(result_history=result_history, finished=True)
     return result_history
