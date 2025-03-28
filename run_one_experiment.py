@@ -280,7 +280,8 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                              result_history=results)
   trial_logger.write_result(
       result_status_dir=trial_result.best_result.work_dirs.status,
-      result=trial_result)
+      result=trial_result,
+      finished=True)
   return trial_result
 
 
