@@ -34,6 +34,6 @@ class AnalysisStage(BaseStage):
 
     # TODO(dongge): Save logs and more info into workdir.
     self.logger.write_chat_history(analysis_result)
-    self.logger.debug('Analysis stage completed with with result:\n%s',
+    self.logger.debug('Analysis stage completed with with result: %s',
                       analysis_result)
     return analysis_result
