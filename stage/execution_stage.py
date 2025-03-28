@@ -18,6 +18,7 @@ import os
 
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as evaluator_lib
+from experiment import oss_fuzz_checkout
 from experiment.evaluator import Evaluator
 from results import BuildResult, Result, RunResult
 from stage.base_stage import BaseStage
@@ -52,7 +53,7 @@ class ExecutionStage(BaseStage):
     evaluator = Evaluator(builder_runner, benchmark, last_result.work_dirs)
     generated_target_name = os.path.basename(benchmark.target_path)
     generated_oss_fuzz_project = f'{benchmark.id}-{last_result.trial}'
-    generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
+    generated_oss_fuzz_project = oss_fuzz_checkout.rectify_docker_tag(
         generated_oss_fuzz_project)
 
     fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
