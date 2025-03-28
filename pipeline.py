@@ -82,14 +82,17 @@ class Pipeline():
                         last_result)
     return True
 
-  def _update_status(self, result_history: list[Result]) -> None:
+  def _update_status(self,
+                     result_history: list[Result],
+                     finished: bool = False) -> None:
     trial_result = TrialResult(benchmark=result_history[-1].benchmark,
                                trial=self.trial,
                                work_dirs=result_history[-1].work_dirs,
                                result_history=result_history)
     self.logger.write_result(
         result_status_dir=trial_result.best_result.work_dirs.status,
-        result=trial_result)
+        result=trial_result,
+        finished=finished)
 
   def _execute_one_cycle(self, result_history: list[Result],
                          cycle_count: int) -> None:
@@ -140,4 +143,5 @@ class Pipeline():
       cycle_count += 1
       self._execute_one_cycle(result_history=result_history,
                               cycle_count=cycle_count)
+    self._update_status(result_history=result_history, finished=True)
     return result_history

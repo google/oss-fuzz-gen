@@ -270,8 +270,8 @@ class Results:
                       targets: list[str]) -> Benchmark:
     """Returns a benchmark class based on |benchmark_id|."""
     expected_trials = self._get_expected_trials_count(benchmark_id)
-    status = 'Done' if (results and len(results) == expected_trials and
-                        all(results)) else 'Running'
+    status = 'Done' if all(result.finished for result in results) else (
+        f'Running ({len(results)}/{expected_trials})')
 
     filtered_results = [(i, stat) for i, stat in enumerate(results) if stat]
 
