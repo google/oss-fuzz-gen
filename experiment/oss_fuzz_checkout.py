@@ -32,7 +32,7 @@ logger.setLevel(logging.DEBUG)
 
 BUILD_DIR: str = 'build'
 GLOBAL_TEMP_DIR: str = ''
-ENABLE_CACHING = bool(int(os.getenv('OFG_USE_CACHING', '1')))
+ENABLE_CACHING = bool(int(os.getenv('OFG_USE_CACHING', '')))
 # Assume OSS-Fuzz is at repo root dir by default.
 # This will change if temp_dir is used.
 OSS_FUZZ_DIR: str = os.path.join(
