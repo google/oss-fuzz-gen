@@ -26,8 +26,8 @@ from experiment.workdir import WorkDirs
 from llm_toolkit import prompt_builder
 from llm_toolkit.prompts import Prompt
 from results import CrashResult, Result, RunResult
-from tool.lldb_tool import LLDBTool
 from tool.container_tool import ProjectContainerTool
+from tool.lldb_tool import LLDBTool
 
 MAX_ROUND = 100
 
@@ -40,8 +40,10 @@ class CrashAnalyzer(BaseAgent):
     last_result = results[-1]
 
     if isinstance(last_result, RunResult):
-      crash_analyzer_prompt_builder = prompt_builder.CrashAnalyzerTemplateBuilder(
-          model=self.llm, benchmark=last_result.benchmark)
+      crash_analyzer_prompt_builder = \
+        prompt_builder.CrashAnalyzerTemplateBuilder(
+          model=self.llm,
+          benchmark=last_result.benchmark)
       prompt = crash_analyzer_prompt_builder.build_crash_analyzer_prompt(
           last_result.benchmark, last_result.fuzz_target_source,
           last_result.run_error, last_result.crash_func)
@@ -80,7 +82,7 @@ class CrashAnalyzer(BaseAgent):
     return prompt
 
   def _container_handle_conclusion(self, cur_round: int, response: str,
-                                   crash_result: CrashResult):
+                                   crash_result: CrashResult) -> None:
     """Parses LLM conclusion, analysis and suggestion."""
     logger.info('----- ROUND %02d Received conclusion -----',
                 cur_round,
@@ -117,6 +119,7 @@ class CrashAnalyzer(BaseAgent):
     if self._parse_tag(response, 'bash'):
       return self._container_handle_bash_command(response, self.check_tool,
                                                  prompt)
+    return None
 
   def _copy_cloud_artifact(self, artifact_path: str) -> None:
     """Copies the artifact from cloud build."""
