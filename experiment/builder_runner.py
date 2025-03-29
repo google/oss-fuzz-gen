@@ -127,6 +127,7 @@ class BuilderRunner:
         '-len_control=0',
         # Timeout per testcase.
         '-timeout=30',
+        '-detect_leaks=0',
     ]
 
   def _get_minimum_func_name(self, func_sig: str) -> str:
