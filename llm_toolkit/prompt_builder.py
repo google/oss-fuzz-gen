@@ -876,7 +876,12 @@ class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     self.crash_analyzer_priming_template_file = self._find_template(
         self.agent_templare_dir, 'crash_analyzer-priming.txt')
 
-  def _prepare_prompt(self, priming: str):
+  def _prepare_prompt(
+      self,
+      priming: str,
+      final_problem: str,
+      example_pair: Optional[list[list[str]]] = None,
+      project_example_content: Optional[list[list[str]]] = None):
     """Constructs a prompt using the parameters and saves it."""
     self._prompt.add_priming(priming)
 
@@ -934,7 +939,7 @@ class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):
       priming.replace('{PROJECT_FUNCTION_CODE}', \
                            'No relevant project function code')
 
-    self._prepare_prompt(priming)
+    self._prepare_prompt(priming, '')
     return self._prompt
 
 
