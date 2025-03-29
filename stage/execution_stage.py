@@ -142,7 +142,6 @@ class ExecutionStage(BaseStage):
           work_dirs=last_result.work_dirs,
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,
-          chat_history=last_result.chat_history,
           author=self,
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
@@ -162,7 +161,8 @@ class ExecutionStage(BaseStage):
           corpus_path=run_result.corpus_path,
           coverage_report_path=run_result.coverage_report_path,
           cov_pcs=run_result.cov_pcs,
-          total_pcs=run_result.total_pcs)
+          total_pcs=run_result.total_pcs,
+          chat_history={self.name: run_log_content})
     except Exception as e:
       self.logger.error('Exception %s occurred on %s', e, last_result)
       runresult = RunResult(
@@ -171,7 +171,7 @@ class ExecutionStage(BaseStage):
           work_dirs=last_result.work_dirs,
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,
-          chat_history=last_result.chat_history,
+          chat_history={self.name: 'Exuection Failed'},
           author=self,
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
@@ -179,4 +179,5 @@ class ExecutionStage(BaseStage):
           binary_exists=last_result.binary_exists,
           is_function_referenced=last_result.is_function_referenced)
 
+    self.logger.write_chat_history(runresult)
     return runresult
