@@ -27,6 +27,7 @@ from llm_toolkit import prompt_builder
 from llm_toolkit.prompts import Prompt
 from results import CrashResult, Result, RunResult
 from tool.lldb_tool import LLDBTool
+from tool.container_tool import ProjectContainerTool
 
 MAX_ROUND = 100
 
@@ -39,16 +40,16 @@ class CrashAnalyzer(BaseAgent):
     last_result = results[-1]
 
     if isinstance(last_result, RunResult):
-      default_prompt_builder = prompt_builder.DefaultTemplateBuilder(
+      crash_analyzer_prompt_builder = prompt_builder.CrashAnalyzerTemplateBuilder(
           model=self.llm, benchmark=last_result.benchmark)
-      prompt = default_prompt_builder.build_triager_prompt(
+      prompt = crash_analyzer_prompt_builder.build_crash_analyzer_prompt(
           last_result.benchmark, last_result.fuzz_target_source,
           last_result.run_error, last_result.crash_func)
       return prompt
 
     logger.error("Expected a RunResult object in results list",
                  trial=self.trial)
-    return prompt_builder.DefaultTemplateBuilder(self.llm).build([])
+    return prompt_builder.CrashAnalyzerTemplateBuilder(self.llm).build([])
 
   def _format_lldb_execution_result(
       self,
@@ -108,9 +109,14 @@ class CrashAnalyzer(BaseAgent):
     if self._parse_tag(response, 'conclusion'):
       return self._container_handle_conclusion(cur_round, response,
                                                crash_result)
-    prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
-    return self._container_handle_lldb_command(response, self.analyze_tool,
-                                               prompt)
+    prompt = prompt_builder.CrashAnalyzerTemplateBuilder(self.llm,
+                                                         None).build([])
+    if self._parse_tag(response, 'lldb'):
+      return self._container_handle_lldb_command(response, self.analyze_tool,
+                                                 prompt)
+    if self._parse_tag(response, 'bash'):
+      return self._container_handle_bash_command(response, self.check_tool,
+                                                 prompt)
 
   def _copy_cloud_artifact(self, artifact_path: str) -> None:
     """Copies the artifact from cloud build."""
@@ -170,8 +176,12 @@ class CrashAnalyzer(BaseAgent):
                                  project_name=generated_oss_fuzz_project)
     self.analyze_tool.execute('compile > /dev/null')
     self.analyze_tool.execute('lldb')
+    self.check_tool = ProjectContainerTool(
+        benchmark, name='check', project_name=generated_oss_fuzz_project)
+    self.check_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
     prompt = self._initial_prompt(result_history)
     prompt.add_problem(self.analyze_tool.tutorial())
+    prompt.add_problem(self.check_tool.tutorial())
     crash_result = CrashResult(benchmark=benchmark,
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
