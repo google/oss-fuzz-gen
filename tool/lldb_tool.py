@@ -47,3 +47,12 @@ class LLDBTool(ProjectContainerTool):
     process = self._execute_command_in_container(execute_command_in_container)
     process.args = command
     return process
+
+  def execute_in_screen(self, lldb_command: str) -> sp.CompletedProcess:
+    """Sends a command to the lldb_session screen running in the container."""
+    # Escape any double quotes and ensure newline is injected
+    safe_cmd = lldb_command.replace('"', '\\"') + '\n'
+    # Wrap it into a screen command
+    screen_command = f'screen -S lldb_session -X stuff "{safe_cmd}"'
+
+    return self.execute(screen_command)
