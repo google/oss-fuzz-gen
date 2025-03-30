@@ -322,14 +322,16 @@ class Evaluator:
         artifact_path,
         os.path.join(generated_project_path, os.path.basename(artifact_path)))
     # Add additional statement in dockerfile to copy testcase,
-    # enable -g and install lldb
+    # enable -g, install lldb and screen
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(
           '\nRUN mkdir -p /artifact\n'
           f'\nCOPY {os.path.basename(run_result.artifact_path)} /artifact/\n'
           '\nENV CFLAGS="${CFLAGS} -g"\n'
           '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
-          '\nRUN apt-get update && apt-get install -y lldb\n')
+          '\nRUN apt-get update\n'
+          '\napt-get install -y lldb\n'
+          '\napt-get install -y screen\n')
 
     return name
 
