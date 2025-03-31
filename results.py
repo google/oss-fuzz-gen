@@ -183,6 +183,8 @@ class RunResult(BuildResult):
     return super().to_dict() | {
         'crashes':
             self.crashes,
+        'success':
+            self.success,
         'run_error':
             self.run_error,
         'run_log':
@@ -208,6 +210,14 @@ class RunResult(BuildResult):
         'total_pcs':
             self.total_pcs,
     }
+    
+  @property
+  def success(self) -> bool:
+    basic_success = not self.crashes and self.run_error == ""
+    # adding a minimal coverage threshold of 0.1% to ensure run
+    coverage_threshold = 0.001
+    coverage_success = self.coverage > coverage_threshold
+    return coverage_success and basic_success
 
   # TODO(dongge): Define success property to show if the fuzz target was run.
 
