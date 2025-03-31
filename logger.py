@@ -57,12 +57,15 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
                                      f'{result.trial:02d}.build_script')
     self.write_to_file(build_script_path, result.build_script_source, 'w')
 
-  def write_result(self, result_status_dir: str, result: TrialResult) -> None:
+  def write_result(self,
+                   result_status_dir: str,
+                   result: TrialResult,
+                   finished: bool = False) -> None:
     """Writes the final result into JSON for report generation."""
     trial_result_dir = os.path.join(result_status_dir, f'{result.trial:02d}')
     os.makedirs(trial_result_dir, exist_ok=True)
     with open(os.path.join(trial_result_dir, FINAL_RESULT_JSON), 'w') as f:
-      json.dump(result.to_dict(), f)
+      json.dump(result.to_dict() | {'finished': finished}, f)
 
   def write_chat_history(self, result: Result) -> None:
     """Writes chat history."""

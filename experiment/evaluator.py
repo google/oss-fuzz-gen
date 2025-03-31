@@ -44,6 +44,7 @@ OSS_FUZZ_INTROSPECTOR_BUCKET = 'oss-fuzz-introspector'
 @dataclasses.dataclass
 class Result:
   """Evaluation result."""
+  finished: bool = False
   compiles: bool = False
   crashes: bool = False
   coverage: float = 0.0
@@ -513,6 +514,7 @@ class Evaluator:
       return dual_logger.return_result(
           Result(False,
                  False,
+                 False,
                  0.0,
                  0.0,
                  '',
@@ -531,7 +533,8 @@ class Evaluator:
       dual_logger.log(
           f'Warning: no run result in {generated_oss_fuzz_project}.')
       return dual_logger.return_result(
-          Result(True,
+          Result(False,
+                 True,
                  False,
                  0.0,
                  0.0,
@@ -559,7 +562,8 @@ class Evaluator:
           f'Warning: No cov info in run result of {generated_oss_fuzz_project}.'
       )
       return dual_logger.return_result(
-          Result(True,
+          Result(False,
+                 True,
                  run_result.crashes,
                  0.0,
                  0.0,
@@ -578,7 +582,8 @@ class Evaluator:
         f'coverage diff={coverage_diff} '
         f'({run_result.coverage.covered_lines}/{total_lines})')
     return dual_logger.return_result(
-        Result(True,
+        Result(False,
+               True,
                run_result.crashes,
                coverage_percent,
                coverage_diff,

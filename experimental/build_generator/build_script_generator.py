@@ -102,7 +102,8 @@ class HeaderOnlyCBuilder(AutoBuildBase):
 
     header_writers = ''
     for header_file in self.matches_found['.h']:
-      header_writers += f'echo "#include \\"{header_file}\\"" >> empty_wrapper.c\n'
+      header_writers += f'echo "#include \\"{header_file}\\""'
+      header_writers += ' >> empty_wrapper.c\n'
 
     build_container.list_of_commands = [
         f'''touch empty_wrapper.c
@@ -741,8 +742,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
     scanner.match_files(all_files)
     if scanner.is_matched():
       logger.info('Matched: %s', scanner.name)
-      for auto_build_gen in scanner.steps_to_build():
-        yield auto_build_gen
+      yield from scanner.steps_to_build()
 
 
 def get_all_binary_files_from_folder(path: str) -> Dict[str, List[str]]:
@@ -819,10 +819,12 @@ def raw_build_evaluation(
                             stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError:
       pass
-
+    logger.info('Finished evaluation.')
     # Identify any binary artifacts built that weren't there prior
     # to running the build.
+    logger.info('Finding executables')
     binary_files_build = get_all_binary_files_from_folder(test_dir)
+    logger.info('Finished looking for executables.')
 
     build_worker = BuildWorker(build_suggestion, build_script, test_dir,
                                binary_files_build)

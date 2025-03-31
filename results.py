@@ -64,7 +64,7 @@ class Result:
         'trial': self.trial,
         'fuzz_target_source': self.fuzz_target_source,
         'build_script_source': self.build_script_source,
-        'author': self.author.name,
+        'author': self.author.name if self.author else '',
         'chat_history': self.chat_history,
     }
 
@@ -525,7 +525,7 @@ class TrialResult:
         'build_script_source':
             self.build_script_source,
         'author':
-            self.author.name,
+            self.author.name if self.author else '',
         'chat_history':
             self.chat_history,
         'compiles':
