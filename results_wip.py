@@ -21,7 +21,7 @@ from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 
 
-class FuzzTargetErrorType(Enum):
+class FuzzTargetResult(Enum):
     """Error types for fuzz target analysis.
     
     These categories represent different kinds of errors that can occur
@@ -37,17 +37,17 @@ class FuzzTargetErrorType(Enum):
     NORM_NOT_APPLICABLE = auto()
     NORM_NO_SEMANTIC_ERR = auto()
 
-    # False Positives (FP) - Issues with the fuzzing infrastructure
+    # False Positives (FP) - Issues with the fuzzing targets
     FP_NEAR_INIT_CRASH = auto()  # Crashes immediately at runtime
     FP_TARGET_CRASH = auto()  # Crashes caused by fuzz target code
     FP_MEMLEAK = auto()  # Memory leaks in the fuzz target
     FP_OOM = auto()  # Out of memory errors in the fuzz target
     FP_TIMEOUT = auto()  # Fuzz target timed out
 
-    # Real Crashes (Actual bugs detected)
-    CRASH_NULL_DEREF = auto()  # Null pointer dereference
-    CRASH_SIGNAL = auto()  # Abort with signal, indicating assertion violations
-    CRASH_EXIT = auto()  # Controlled exit without memory corruption
+    # Not Security-Related Crashes
+    NON_SEC_CRASH_NULL_DEREF = auto()  # Null pointer dereference
+    NON_SEC_CRASH_SIGNAL = auto()  # Abort with signal, indicating assertion violations
+    NON_SEC_CRASH_EXIT = auto()  # Controlled exit without memory corruption
 
     # General Problems
     GEN_LOG_MESS_UP = auto()  # Issues with fuzzing logs
@@ -57,7 +57,7 @@ class FuzzTargetErrorType(Enum):
     COV_NO_INCREASE = auto()  # No code coverage increase
 
     @classmethod
-    def from_string(self, value: str) -> 'FuzzTargetErrorType':
+    def from_string(self, value: str) -> 'FuzzTargetResult':
         """Convert legacy string error types to enum values."""
         mapping = {
             '-': self.NORM_NOT_APPLICABLE,
@@ -67,9 +67,9 @@ class FuzzTargetErrorType(Enum):
             'FP_MEMLEAK': self.FP_MEMLEAK,
             'FP_OOM': self.FP_OOM,
             'FP_TIMEOUT': self.FP_TIMEOUT,
-            'NULL_DEREF': self.CRASH_NULL_DEREF,
-            'SIGNAL': self.CRASH_SIGNAL,
-            'EXIT': self.CRASH_EXIT,
+            'NULL_DEREF': self.NON_SEC_CRASH_NULL_DEREF,
+            'SIGNAL': self.NON_SEC_CRASH_SIGNAL,
+            'EXIT': self.NON_SEC_CRASH_EXIT,
             'LOG_MESS_UP': self.GEN_LOG_MESS_UP,
             'OVERWRITE_CONST': self.GEN_OVERWRITE_CONST,
             'NO_COV_INCREASE': self.COV_NO_INCREASE,
@@ -86,9 +86,9 @@ class FuzzTargetErrorType(Enum):
             self.FP_MEMLEAK: 'FP_MEMLEAK',
             self.FP_OOM: 'FP_OOM',
             self.FP_TIMEOUT: 'FP_TIMEOUT',
-            self.CRASH_NULL_DEREF: 'NULL_DEREF',
-            self.CRASH_SIGNAL: 'SIGNAL',
-            self.CRASH_EXIT: 'EXIT',
+            self.NON_SEC_CRASH_NULL_DEREF: 'NULL_DEREF',
+            self.NON_SEC_CRASH_SIGNAL: 'SIGNAL',
+            self.NON_SEC_CRASH_EXIT: 'EXIT',
             self.GEN_LOG_MESS_UP: 'LOG_MESS_UP',
             self.GEN_OVERWRITE_CONST: 'OVERWRITE_CONST',
             self.COV_NO_INCREASE: 'NO_COV_INCREASE',
@@ -120,14 +120,14 @@ class FuzzTargetErrorType(Enum):
             self.COV_NO_INCREASE:
                 'No code coverage increasement, indicating the fuzz target'
                 ' ineffectively invokes the function under test.',
-            self.CRASH_NULL_DEREF:
+            self.NON_SEC_CRASH_NULL_DEREF:
                 'Accessing a null pointer, indicating improper parameter '
                 'initialization or incorrect function usages in the fuzz target.',
-            self.CRASH_SIGNAL:
+            self.NON_SEC_CRASH_SIGNAL:
                 'Abort with signal, indicating the fuzz target has violated some '
                 'assertion in the project, likely due to improper parameter '
                 'initialization or incorrect function usages.',
-            self.CRASH_EXIT:
+            self.NON_SEC_CRASH_EXIT:
                 'Fuzz target exited in a controlled manner without showing any '
                 'sign of memory corruption, likely due to the fuzz target is not '
                 'well designed to effectively find memory corruption '
@@ -223,14 +223,14 @@ class CrashAnalysis:
 @dataclass
 class CoverageAnalysis:
     """Analysis of code coverage from fuzzing."""
-    improve_required: bool = False
+    improvement_required: bool = False
     insight: str = ""
     suggestions: str = ""
 
     def to_dict(self) -> Dict:
         """Convert to a dictionary for serialization."""
         return {
-            'improve_required': self.improve_required,
+            'improve_required': self.improvement_required,
             'insight': self.insight,
             'suggestions': self.suggestions,
         }
@@ -241,13 +241,13 @@ class AnalysisInfo:
     """Analysis of fuzzing results including crash and coverage information."""
     crash_analysis: Optional[CrashAnalysis] = None
     coverage_analysis: Optional[CoverageAnalysis] = None
-    error_type: Optional[FuzzTargetErrorType] = None
+    error_type: Optional[FuzzTargetResult] = None
 
     @property
     def success(self) -> bool:
         """Whether the analysis indicates success (no errors)."""
         crash_success = not (self.crash_analysis and self.crash_analysis.has_err)
-        coverage_success = not (self.coverage_analysis and self.coverage_analysis.improve_required)
+        coverage_success = not (self.coverage_analysis and self.coverage_analysis.improvement_required)
         return crash_success and coverage_success
 
     def to_dict(self) -> Dict:
