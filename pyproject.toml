@@ -64,3 +64,4 @@ where = ["."]
 
 [project.scripts]
 fuzz-generator = "experimental.from_scratch.generate:main"
+oss-fuzz-generator = "experimental.end_to_end.cli:main"
