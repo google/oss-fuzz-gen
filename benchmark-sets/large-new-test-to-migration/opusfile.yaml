@@ -1,0 +1,8 @@
+"language": "c"
+"project": "opusfile"
+"target_name": "opusfile_fuzzer"
+"target_path": "/src/opusfile_fuzzer.c"
+"test_files":
+- "test_file_path": "/src/opusfile/examples/opusfile_example.c"
+- "test_file_path": "/src/opusfile/examples/win32utf8.c"
+- "test_file_path": "/src/opusfile/examples/seeking_example.c"

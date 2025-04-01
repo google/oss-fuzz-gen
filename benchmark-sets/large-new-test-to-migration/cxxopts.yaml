@@ -1,0 +1,9 @@
+"language": "c++"
+"project": "cxxopts"
+"target_name": "cxxopts_fuzz_test"
+"target_path": "/src/cxxopts/test/fuzz.cpp"
+"test_files":
+- "test_file_path": "/src/cxxopts/test/main.cpp"
+- "test_file_path": "/src/cxxopts/test/link_a.cpp"
+- "test_file_path": "/src/cxxopts/test/options.cpp"
+- "test_file_path": "/src/cxxopts/test/link_b.cpp"

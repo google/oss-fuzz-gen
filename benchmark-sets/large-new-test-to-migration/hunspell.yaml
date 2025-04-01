@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "hunspell"
+"target_name": "fuzzer"
+"target_path": "/src/hunspell/src/tools/fuzzer.cxx"
+"test_files":
+- "test_file_path": "/src/hunspell/src/parsers/testparser.cxx"
