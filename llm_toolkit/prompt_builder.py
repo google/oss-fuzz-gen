@@ -643,6 +643,59 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
     return self._prompt
 
 
+class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               build_result: BuildResult,
+               error_desc: str,
+               errors: list[str],
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+    # Load templates.
+    self.priming_template_file = self._find_template(self.agent_templare_dir,
+                                                     'enhancer-priming.txt')
+    self.build_result = build_result
+    self.error_desc = error_desc
+    self.errors = errors
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    del (example_pair, project_example_content, project_context_content)
+    if not self.benchmark:
+      return self._prompt
+
+    priming = self._get_template(self.priming_template_file)
+    priming = priming.replace('{LANGUAGE}', self.benchmark.file_type.value)
+    priming = priming.replace('{FUNCTION_SIGNATURE}',
+                              self.benchmark.function_signature)
+    # TODO(dongge): Add build script to .
+    priming = priming.replace('{PROJECT_DIR}', project_dir)
+    if self.build_result.build_script_source:
+      build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
+                    '</build script>')
+    else:
+      build_text = 'Build script reuses `/src/build.bk.sh`.'
+    priming = priming.replace('{BUILD_TEXT}', build_text)
+    priming = priming.replace('{TOOL_GUIDES}', tool_guides)
+    priming_weight = self._model.estimate_token_num(priming)
+
+    problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
+                                         self.error_desc, self.errors,
+                                         priming_weight, '', '')
+
+    self._prepare_prompt(priming, problem)
+    return self._prompt
+
+
 class DefaultJvmTemplateBuilder(PromptBuilder):
   """Default builder for JVM projects."""
 
@@ -664,7 +717,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self.need_close = temp_properties.get('need_close', False)
 
     # Load templates.
-    self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
+    self.priming_template_file = self._find_template(template_dir,
+                                                     'jvm_priming.txt')
     self.data_filler_template_file = self._find_template(
         template_dir, 'jvm_specific_data_filler.txt')
     self.requirement_template_file = self._find_template(
@@ -925,8 +979,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     """Formats a problem based on the prompt template."""
     is_constructor = bool('<init>' in signature)
 
-    base = self._get_template(self.base_template_file)
-    problem = base + self._get_template(self.problem_template_file)
+    problem = self._get_template(self.problem_template_file)
     problem = problem.replace('{TARGET}',
                               self._get_template(self.target_template_file))
     problem = problem.replace('{SIGNATURE}', signature)
@@ -953,7 +1006,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _prepare_prompt(self, prompt_str: str):
     """Constructs a prompt using the parameters and saves it."""
-    self._prompt.add_priming(prompt_str)
+    self._prompt.add_priming(self._get_template(self.priming_template_file))
+    self._prompt.add_problem(prompt_str)
 
   def _has_generic(self, arg: str) -> bool:
     """Determine if the argument type contains generic type."""
@@ -1095,7 +1149,8 @@ class DefaultRustTemplateBuilder(PromptBuilder):
         self.benchmark.project)
 
     # Load templates.
-    self.base_template_file = self._find_template(template_dir, 'rust_base.txt')
+    self.priming_template_file = self._find_template(template_dir,
+                                                     'rust_priming.txt')
     self.problem_template_file = self._find_template(template_dir,
                                                      'rust_problem.txt')
 
@@ -1129,18 +1184,17 @@ class DefaultRustTemplateBuilder(PromptBuilder):
 
   def _format_problem(self, signature: str) -> str:
     """Formats a problem based on the prompt template."""
-    base = self._get_template(self.base_template_file)
-    target_str = self._format_target(signature)
+    problem = self._format_target(signature)
 
-    problem = base + target_str
-    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
-    problem = problem.replace("{PROJECT_URL}", self.project_url)
+    problem = problem.replace('{PROJECT_NAME}', self.benchmark.project)
+    problem = problem.replace('{PROJECT_URL}', self.project_url)
 
     return problem
 
   def _prepare_prompt(self, prompt_str: str):
     """Constructs a prompt using the parameters and saves it."""
-    self._prompt.add_priming(prompt_str)
+    self._prompt.add_priming(self._get_template(self.priming_template_file))
+    self._prompt.add_problem(prompt_str)
 
   def build(self,
             example_pair: list[list[str]],
@@ -1256,7 +1310,7 @@ class JvmFixingBuilder(PromptBuilder):
     else:
       prompt_text = prompt_text.replace('{ERRORS}', self.error_str)
 
-    self._prompt.add_priming(prompt_text)
+    self._prompt.add_problem(prompt_text)
     return self._prompt
 
   def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
@@ -1291,8 +1345,8 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
         self.benchmark.project)
 
     # Load templates.
-    self.base_template_file = self._find_template(template_dir,
-                                                  'python_base.txt')
+    self.priming_template_file = self._find_template(template_dir,
+                                                     'python_priming.txt')
     self.problem_template_file = self._find_template(template_dir,
                                                      'python_problem.txt')
 
@@ -1335,18 +1389,17 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
 
   def _format_problem(self, signature: str) -> str:
     """Formats a problem based on the prompt template."""
-    base = self._get_template(self.base_template_file)
-    target_str = self._format_target(signature)
+    problem = self._format_target(signature)
 
-    problem = base + target_str
-    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
-    problem = problem.replace("{PROJECT_URL}", self.project_url)
+    problem = problem.replace('{PROJECT_NAME}', self.benchmark.project)
+    problem = problem.replace('{PROJECT_URL}', self.project_url)
 
     return problem
 
   def _prepare_prompt(self, prompt_str: str):
     """Constructs a prompt using the parameters and saves it."""
-    self._prompt.add_priming(prompt_str)
+    self._prompt.add_priming(self._get_template(self.priming_template_file))
+    self._prompt.add_problem(prompt_str)
 
   def build(self,
             example_pair: list[list[str]],

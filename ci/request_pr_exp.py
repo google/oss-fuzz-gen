@@ -18,6 +18,9 @@ Usage:
   python -m report.request_pr_exp -p <PR-ID> -n <YOUR-NAME>
 e.g.,
   python -m report.request_pr_exp -p 73 -n dg
+
+You can also pass arbitrary flags to experiments after -- separator:
+  python -m report.request_pr_exp -p 73 -n dg -- --context --debug
 """
 
 import argparse
@@ -62,6 +65,22 @@ BUCKET_LINK_PREFIX = ('https://console.cloud.google.com/storage/browser/'
                       'oss-fuzz-gcb-experiment-run-logs/Result-reports/ofg-pr')
 BUCKET_GS_LINK_PREFIX = (
     'gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/ofg-pr')
+
+DEFAULT_VERTEX_AI_LOCATION = 'us-central1'
+VERTEX_AI_LOCATIONS = {
+    'vertex_ai_gemini-pro':
+        'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+    'vertex_ai_gemini-ultra':
+        'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+    'vertex_ai_gemini-1-5':
+        'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+    'vertex_ai_gemini-1-5-chat':
+        'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+    'vertex_ai_gemini-2-flash':
+        'europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west4,europe-west8,europe-west9,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+    'vertex_ai_gemini-2-flash-chat':
+        'europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west4,europe-west8,europe-west9,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4'
+}
 
 
 def _parse_args(cmd) -> argparse.Namespace:
@@ -111,6 +130,13 @@ def _parse_args(cmd) -> argparse.Namespace:
                       type=str,
                       default=LLM_NAME,
                       help=f'Large Language Model name, default: {LLM_NAME}.')
+  parser.add_argument(
+      '-ll',
+      '--llm-locations',
+      type=str,
+      help=(
+          'Comma-separated list of locations where the LLM is available. '
+          'If not provided, default locations will be used based on the LLM.'))
   parser.add_argument(
       '-d',
       '--delay',
@@ -181,7 +207,10 @@ def _parse_args(cmd) -> argparse.Namespace:
                       action='store_true',
                       default=False,
                       help='Redirects experiments stdout/stderr to file')
-  args = parser.parse_args(cmd)
+
+  # Allow piping arbitrary args to run_all_experiments.py
+  args, additional_args = parser.parse_known_args(cmd)
+  args.additional_args = additional_args
 
   assert os.path.isfile(
       args.gke_template), (f'GKE template does not exist: {args.gke_template}')
@@ -195,6 +224,10 @@ def _parse_args(cmd) -> argparse.Namespace:
   if args.agent and args.llm == LLM_NAME:
     args.llm = LLM_CHAT_NAME
 
+  if not args.llm_locations:
+    args.llm_locations = VERTEX_AI_LOCATIONS.get(args.llm,
+                                                 DEFAULT_VERTEX_AI_LOCATION)
+
   if args.large:
     args.location = LARGE_LOCATION
     args.cluster = LARGE_CLUSTER
@@ -205,6 +238,10 @@ def _parse_args(cmd) -> argparse.Namespace:
   if (args.max_round == 100 and
       any(args.name_suffix.startswith(suffix) for suffix in ['ascc-', 'dgk-'])):
     args.max_round = 10
+
+  if args.additional_args:
+    logging.info("Additional args: %s", args.additional_args)
+
   return args
 
 
@@ -309,19 +346,23 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['PR_ID'] = str(args.pr_id)
   exp_env_vars['GKE_EXP_BENCHMARK'] = args.benchmark_set
   exp_env_vars['GKE_EXP_LLM'] = args.llm
+  exp_env_vars['GKE_EXP_VERTEX_AI_LOCATIONS'] = args.llm_locations
   exp_env_vars['GKE_EXP_DELAY'] = args.delay
   exp_env_vars['GKE_EXP_FUZZING_TIMEOUT'] = str(args.fuzzing_timeout)
   exp_env_vars['GKE_EXP_NAME'] = args.experiment_name
   exp_env_vars['GKE_EXP_REQ_CPU'] = args.request_cpus
   exp_env_vars['GKE_EXP_REQ_MEM'] = f'{args.request_memory}Gi'
-  if args.local_introspector:
-    exp_env_vars['GKE_EXP_LOCAL_INTROSPECTOR'] = 'true'
+  exp_env_vars[
+      'GKE_EXP_LOCAL_INTROSPECTOR'] = f'{args.local_introspector}'.lower()
   exp_env_vars['GKE_EXP_NUM_SAMPLES'] = f'{args.num_samples}'
   exp_env_vars['GKE_EXP_LLM_FIX_LIMIT'] = f'{args.llm_fix_limit}'
   exp_env_vars['GKE_EXP_VARY_TEMPERATURE'] = f'{args.vary_temperature}'.lower()
   exp_env_vars['GKE_EXP_AGENT'] = f'{args.agent}'.lower()
-  exp_env_vars['GKE_REDIRECT_OUTS'] = 'true' if args.redirect_outs else ''
+  exp_env_vars['GKE_REDIRECT_OUTS'] = f'{args.redirect_outs}'.lower()
   exp_env_vars['GKE_EXP_MAX_ROUND'] = args.max_round
+
+  # Add additional args as a space-separated string
+  exp_env_vars['GKE_EXP_ADDITIONAL_ARGS'] = ' '.join(args.additional_args)
 
   with open(args.gke_template, 'r') as file:
     yaml_template = file.read()

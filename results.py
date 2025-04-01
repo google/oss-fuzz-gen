@@ -64,7 +64,7 @@ class Result:
         'trial': self.trial,
         'fuzz_target_source': self.fuzz_target_source,
         'build_script_source': self.build_script_source,
-        'author': self.author.name,
+        'author': self.author.name if self.author else '',
         'chat_history': self.chat_history,
     }
 
@@ -258,8 +258,28 @@ class AnalysisResult(Result):
     }
 
   @property
-  def success(self):
+  def success(self) -> bool:
     return not self.semantic_result.has_err
+
+  @property
+  def crashes(self) -> bool:
+    return self.run_result.crashes
+
+  @property
+  def coverage(self) -> float:
+    return self.run_result.coverage
+
+  @property
+  def line_coverage_diff(self) -> float:
+    return self.run_result.line_coverage_diff
+
+  @property
+  def run_log(self) -> str:
+    return self.run_result.run_log
+
+  @property
+  def log_path(self) -> str:
+    return self.run_result.log_path
 
 
 class TrialResult:
@@ -300,19 +320,41 @@ class TrialResult:
     return self.benchmark.language
 
   @property
+  def best_analysis_result(self) -> Optional[AnalysisResult]:
+    """Last AnalysisResult in trial, prefer crashed and a non-semantic error."""
+    # 1. Crashed for a non-semantic error
+    for result in self.result_history[::-1]:
+      if (isinstance(result, AnalysisResult) and result.crashes and
+          not result.semantic_result.has_err):
+        return result
+
+    # 2. Crashed
+    for result in self.result_history[::-1]:
+      if isinstance(result, AnalysisResult) and result.crashes:
+        return result
+
+    # 3. AnalysisResult
+    for result in self.result_history[::-1]:
+      if isinstance(result, AnalysisResult):
+        return result
+    return None
+
+  @property
   def best_result(self) -> Result:
-    """Best result in trial."""
+    """Best result in trial based on coverage."""
     # Preference order:
-    #   1. Highest coverage diff (RunResult)
-    #   2. Highest coverage (RunResult)
-    #   3. Last Build success (BuildResult)
-    #   4. Last Result
+    #   1. Highest coverage diff (AnalysisResult)
+    #   2. Highest coverage diff (RunResult)
+    #   3. Highest coverage (AnalysisResult)
+    #   3. Highest coverage (RunResult)
+    #   4. Last Build success (BuildResult)
+    #   5. Last Result
     best_result = None
 
     max_cov_diff = 0
     for result in self.result_history:
-      if (isinstance(result, RunResult) and
-          result.line_coverage_diff > max_cov_diff):
+      if (isinstance(result, (RunResult, AnalysisResult)) and
+          result.line_coverage_diff >= max_cov_diff):
         max_cov_diff = result.line_coverage_diff
         best_result = result
     if best_result:
@@ -320,7 +362,8 @@ class TrialResult:
 
     max_cov = 0
     for result in self.result_history:
-      if (isinstance(result, RunResult) and result.coverage > max_cov):
+      if (isinstance(result, (RunResult, AnalysisResult)) and
+          result.coverage >= max_cov):
         max_cov = result.coverage
         best_result = result
     if best_result:
@@ -366,11 +409,11 @@ class TrialResult:
                if isinstance(result, BuildResult))
 
   @property
-  def crash(self) -> bool:
-    """True if there is any run crash not caused by semantic error."""
-    return any(result.run_result.crashes and result.success
+  def crashes(self) -> bool:
+    """True if there is any runtime crash."""
+    return any(result.crashes
                for result in self.result_history
-               if isinstance(result, AnalysisResult))
+               if isinstance(result, RunResult))
 
   @property
   def coverage(self) -> float:
@@ -437,21 +480,33 @@ class TrialResult:
   def run_log(self) -> str:
     """Run log of the best result if it is RunResult."""
     result = self.best_result
-    if isinstance(result, RunResult):
+    if isinstance(result, (RunResult, AnalysisResult)):
       return result.run_log
-    if isinstance(result, AnalysisResult):
-      return result.run_result.run_log
     return ''
 
   @property
   def log_path(self) -> str:
     """Log path of the best result if it is RunResult."""
     result = self.best_result
-    if isinstance(result, RunResult):
+    if isinstance(result, (RunResult, AnalysisResult)):
       return result.log_path
-    if isinstance(result, AnalysisResult):
-      return result.run_result.log_path
     return ''
+
+  @property
+  def is_semantic_error(self) -> bool:
+    """Validates if the best AnalysisResult has semantic error."""
+    result = self.best_analysis_result
+    if result:
+      return result.semantic_result.has_err
+    return False
+
+  @property
+  def semantic_error(self) -> str:
+    """Semantic error type of the best AnalysisResult."""
+    result = self.best_analysis_result
+    if result:
+      return result.semantic_result.type
+    return '-'
 
   def to_dict(self) -> dict:
     return {
@@ -470,13 +525,13 @@ class TrialResult:
         'build_script_source':
             self.build_script_source,
         'author':
-            self.author.name,
+            self.author.name if self.author else '',
         'chat_history':
             self.chat_history,
         'compiles':
             self.build_success,
-        'crash':
-            self.crash,
+        'crashes':
+            self.crashes,
         'coverage':
             self.coverage,
         'line_coverage_diff':
@@ -495,6 +550,10 @@ class TrialResult:
             self.run_log,
         'log_path':
             self.log_path,
+        'is_semantic_error':
+            self.is_semantic_error,
+        'semantic_error':
+            self.semantic_error,
     }
 
 
@@ -534,7 +593,8 @@ class BenchmarkResult:
     """True if there is any run crash not caused by semantic error."""
     if self.trial_count == 0:
       return 0
-    return sum(result.crash for result in self.trial_results) / self.trial_count
+    return sum(
+        result.crashes for result in self.trial_results) / self.trial_count
 
   @property
   def coverage(self) -> float:

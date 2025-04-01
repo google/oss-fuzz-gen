@@ -280,7 +280,8 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                              result_history=results)
   trial_logger.write_result(
       result_status_dir=trial_result.best_result.work_dirs.status,
-      result=trial_result)
+      result=trial_result,
+      finished=True)
   return trial_result
 
 
@@ -304,7 +305,9 @@ def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
   """Generates code via LLM, and evaluates them."""
   model.cloud_setup()
 
-  # Save the benchmark in the working base
+  # Save the benchmark in the WorkDir base. This is saved to the working
+  # directory, and should not be deleted in future executions. As such,
+  # from here on, do not erase all WorkDir contents.
   Benchmark.to_yaml([benchmark],
                     outdir=work_dirs.base,
                     out_basename='benchmark.yaml')

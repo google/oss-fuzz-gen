@@ -19,7 +19,15 @@ OSS_FUZZ_DIR=$OSS_FUZZ_GEN_DIR/work/oss-fuzz
 FI_DIR=$OSS_FUZZ_GEN_DIR/work/fuzz-introspector
 BENCHMARK_HEURISTICS=far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach
 VAR_HARNESSES_PER_PROJECT=4
-PROJECT=$1
+PROJECTS=${@}
+
+comma_separated=""
+for proj in ${PROJECTS}; do
+  echo ${proj}
+  comma_separated="${comma_separated}${proj},"
+done
+comma_separated=${comma_separated::-1}
+
 
 # Specifify OSS-Fuzz-gen to not clean up the OSS-Fuzz project. Enabling
 # this will cause all changes in the OSS-Fuzz repository to be nullified.
@@ -32,11 +40,15 @@ echo "Targeting project: $project"
 echo "Creating introspector reports"
 cd ${OSS_FUZZ_DIR}
 
-python3 $FI_DIR/oss_fuzz_integration/runner.py \
-      introspector $PROJECT 10 --disable-webserver
-# Reset is necessary because some project execution can break the display
-# encoding which affect the later oss-fuzz-gen execution.
-reset
+
+for p2 in ${PROJECTS}; do
+  python3 $FI_DIR/oss_fuzz_integration/runner.py \
+    introspector $p2 1 --disable-webserver
+  # Reset is necessary because some project exeuction
+  # could break the display encoding which affect
+  # the later oss-fuzz-gen execution.
+  reset
+done
 
 # Shut down the existing webapp if it's running
 curl --silent http://localhost:8080/api/shutdown || true
@@ -74,17 +86,20 @@ done
 echo "[+] Running OSS-Fuzz-gen experiment"
 cd ${OSS_FUZZ_GEN_DIR}
 
+# Hack to ensure no complaints from: https://github.com/google/oss-fuzz-gen/blob/54d4acc02ef5b15288f1e0718f00bfbf8f5024c5/experiment/oss_fuzz_checkout.py#L117-L123
+mkdir -p ${OSS_FUZZ_DIR}/venv
 
 # Run OSS-Fuzz-gen
 # - Generate benchmarks
 # - Use a local version version of OSS-Fuzz (the one in /work/oss-fuzz)
-LLM_NUM_EVA=1 LLM_NUM_EXP=1 ./run_all_experiments.py \
+EXTRA_ARGS="${EXTRA_OFG_ARGS}"
+LLM_NUM_EVA=4 LLM_NUM_EXP=4 ./run_all_experiments.py \
     --model=$OSS_FUZZ_GEN_MODEL \
     -g ${BENCHMARK_HEURISTICS} \
-    -gp ${PROJECT} \
+    -gp ${comma_separated} \
     -gm ${VAR_HARNESSES_PER_PROJECT} \
     -of ${OSS_FUZZ_DIR} \
-    -e http://127.0.0.1:8080/api
+    -e http://127.0.0.1:8080/api ${EXTRA_ARGS}
 
 echo "Shutting down started webserver"
 curl --silent http://localhost:8080/api/shutdown || true

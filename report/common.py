@@ -269,7 +269,10 @@ class Results:
   def match_benchmark(self, benchmark_id: str, results: list[evaluator.Result],
                       targets: list[str]) -> Benchmark:
     """Returns a benchmark class based on |benchmark_id|."""
-    status = 'Done' if results and all(results) else 'Running'
+    num_finished_trials = len([result for result in results if result.finished])
+    status = 'Done' if num_finished_trials == len(results) else (
+        f'Running ({num_finished_trials}/{len(results)})')
+
     filtered_results = [(i, stat) for i, stat in enumerate(results) if stat]
 
     if filtered_results:

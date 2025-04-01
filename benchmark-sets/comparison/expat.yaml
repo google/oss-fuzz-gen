@@ -1,0 +1,11 @@
+"functions":
+- "name": "XML_ResumeParser"
+  "params":
+  - "name": "parser"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "DW_TAG_enumeration_typeXML_Status XML_ResumeParser(XML_Parser)"
+"language": "c++"
+"project": "expat"
+"target_name": "xml_parsebuffer_fuzzer_UTF-8"
+"target_path": "/src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c"

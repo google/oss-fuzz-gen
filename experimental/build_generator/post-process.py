@@ -18,6 +18,7 @@ import json
 import logging
 import os
 import shutil
+import sys
 from typing import Any, Dict, List, Optional
 
 import constants
@@ -265,6 +266,62 @@ def copy_top_projects_to_dst(oss_fuzz_dir: str, destination: str) -> None:
     logger.info('- Created OSS-Fuzz project: %s', dst_oss_project)
 
 
+def extract_builds(oss_fuzz_dir, dst_dir):
+  """Extracts valid empty builds and copies to dst."""
+
+  if os.path.isdir(dst_dir):
+    logger.info('Destination directory exsits. Please delete it first.')
+    sys.exit(0)
+
+  os.makedirs(dst_dir, exist_ok=True)
+
+  projects_added = set()
+  for build_project in os.listdir(os.path.join(oss_fuzz_dir, 'build', 'out')):
+    if 'temp-project-' not in build_project:
+      continue
+
+    project_dir = os.path.join(oss_fuzz_dir, 'build', 'out', build_project)
+
+    # Get project name and the number of functions in potential builds.
+    report_txt = os.path.join(project_dir, 'autogen-results', 'report.txt')
+
+    if not os.path.isfile(report_txt):
+      continue
+
+    project_name = ''
+    build_function_counts = []
+    with open(report_txt, 'r', encoding='utf-8') as f:
+      for line in f:
+        if 'Analysing:' in line:
+          project_name = line.split('/')[-1].replace('\n', '')
+        if 'Total functions in' in line:
+          build_function_counts.append(
+              int(line.split(' ')[-1].replace('\n', '')))
+
+    if project_name and build_function_counts:
+      logger.debug('Project: %s', project_name)
+      for idx, function_count in enumerate(build_function_counts):
+        logger.debug('- %d, %d', idx, function_count)
+        # Only include if we have at least two functions identified in the
+        # fuzz introspector build
+        if function_count >= 2:
+          # Copy to destination.
+          src_proj = os.path.join(project_dir, f'empty-build-{idx}')
+          dst_proj = os.path.join(dst_dir, f'{project_name}-empty-build-{idx}')
+
+          if os.path.isdir(dst_proj):
+            logger.warning('Skipping %s to %s as dst already exists', src_proj,
+                           dst_proj)
+            continue
+          shutil.copytree(src_proj, dst_proj)
+
+          # Save project name for stats
+          projects_added.add(project_name)
+  logger.info('Found a total of %d projects', len(projects_added))
+  for project in projects_added:
+    logger.info('- %s', project)
+
+
 def parse_args() -> argparse.Namespace:
   """Parses commandline arguments."""
   parser = argparse.ArgumentParser()
@@ -298,6 +355,14 @@ def parse_args() -> argparse.Namespace:
                            type=str,
                            help='Destination folder to store projects.',
                            required=True)
+
+  extract_builds_parser = subparsers.add_parser(
+      'extract-builds',
+      help='Extracts the generated projects with valid empty builds.')
+
+  extract_builds_parser.add_argument('--oss-fuzz', help='OSS-Fuzz directory.')
+  extract_builds_parser.add_argument('--dst', help='Destination folder.')
+
   args = parser.parse_args()
   return args
 
@@ -317,6 +382,8 @@ def main() -> None:
     get_top_projects(args.oss_fuzz_dir)
   elif args.command == 'extract-top':
     copy_top_projects_to_dst(args.oss_fuzz_dir, args.destination)
+  elif args.command == 'extract-builds':
+    extract_builds(args.oss_fuzz, args.dst)
 
 
 if __name__ == '__main__':
