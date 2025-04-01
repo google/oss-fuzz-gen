@@ -34,7 +34,9 @@ logger = logging.getLogger(name=__name__)
 LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
            ': %(funcName)s: %(message)s')
 
-OFG_BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
+OFG_BASE_DIR = os.path.abspath(
+    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
+
 
 def setup_workdirs(defined_dir):
   """Sets up the working directory."""
@@ -206,7 +208,6 @@ def copy_generated_projects_to_harness_gen(out_gen, workdir):
 def run_harness_generation(out_gen, workdir, args):
   """Runs harness generation based on the projects in `out_gen`"""
 
-  
   projects_to_run = copy_generated_projects_to_harness_gen(out_gen, workdir)
   extract_introspector_reports_for_benchmarks(projects_to_run, workdir)
   shutdown_fi_webapp()
