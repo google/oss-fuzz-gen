@@ -75,6 +75,11 @@ class Result:
 def get_next_generated_benchmarks_dir() -> str:
   """Retuns the next folder to be used for generated benchmarks."""
   max_idx = -1
+  # When generating benchmarks dynamically sometimes we may not have a
+  # benchmark folder, as the command will be run from an arbitrary directory.
+  # Create the benchmark folder if this is the case.
+  if not os.path.isdir(BENCHMARK_ROOT):
+    os.makedirs(BENCHMARK_ROOT)
   for benchmark_folder in os.listdir(BENCHMARK_ROOT):
     try:
       max_idx = max(max_idx,
