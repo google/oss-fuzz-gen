@@ -332,8 +332,19 @@ def run_analysis(args):
 
   oss_fuzz_dir = os.path.join(abs_workdir, 'oss-fuzz-1')
   target_repositories = runner.extract_target_repositories(args.input)
-  runner.run_parallels(os.path.abspath(oss_fuzz_dir), target_repositories,
-                       args.model, 'all', out_folder)
+  runner.run_parallels(os.path.abspath(oss_fuzz_dir),
+                       target_repositories,
+                       args.model,
+                       'all',
+                       out_folder,
+                       parallel_jobs=args.build_jobs,
+                       max_timeout=args.build_timeout)
+
+  # Exit if only builds are required.
+  if args.build_only:
+    logger.info('Finished analysis')
+    logger.info('Results in %s', out_folder)
+    return
 
   projects_run = run_harness_generation(out_folder, abs_workdir, args)
 
@@ -375,6 +386,18 @@ def parse_commandline():
                       type=int,
                       default=5,
                       help='Max trial round for agents.')
+  parser.add_argument('--build-only',
+                      help='Only generated builds',
+                      action='store_true')
+  parser.add_argument('--build-jobs',
+                      help='Parallel build-generator jobs to run.',
+                      default=2,
+                      type=int)
+  parser.add_argument(
+      '--build-timeout',
+      help='Timeout for build generation per project, in seconds.',
+      default=0,
+      type=int)
   parser.add_argument('-w', '--workdir', help='Work directory to use')
   return parser.parse_args()
 
