@@ -298,6 +298,11 @@ def run_harness_generation(out_gen, workdir, args):
   shutdown_fi_webapp()
   launch_fi_webapp(workdir)
   wait_until_fi_webapp_is_launched()
+
+  if args.all_but_ofg_core:
+    # do a prompt exist
+    sys.exit(0)
+
   run_ofg_generation(projects_to_run, workdir, args)
   create_merged_oss_fuzz_projects(out_gen)
   return projects_to_run
@@ -321,6 +326,7 @@ def get_next_out_folder():
 def run_analysis(args):
   """Generates builds and harnesses for repositories in input."""
   workdir = setup_workdirs(args.workdir)
+
   abs_workdir = os.path.abspath(workdir)
   if not args.out:
     out_folder = get_next_out_folder()
@@ -393,6 +399,7 @@ def parse_commandline():
                       help='Parallel build-generator jobs to run.',
                       default=2,
                       type=int)
+  parser.add_argument('--all-but-ofg-core', action='store_true')
   parser.add_argument(
       '--build-timeout',
       help='Timeout for build generation per project, in seconds.',
