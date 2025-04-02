@@ -182,7 +182,7 @@ def run_new(cmd=None):
 
   # Write the target input file
   with open('input.txt', 'w', encoding='utf-8') as f:
-    f.write('https://github.com/gregjesl/simpleson\n')
+    f.write('https://github.com/codeplea/tinyexpr\n')
 
   # Create the builds and do everything up until run_all_experiments
   target_workdir='/tmp/our-workdir'
