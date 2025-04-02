@@ -348,8 +348,8 @@ def run_analysis(args):
   else:
     out_folder = args.out
 
-  if os.path.isdir('results'):
-    shutil.rmtree('results')
+  #if os.path.isdir('results'):
+  #  shutil.rmtree('results')
 
   oss_fuzz_dir = os.path.join(abs_workdir, 'oss-fuzz-1')
   target_repositories = runner.extract_target_repositories(args.input)
