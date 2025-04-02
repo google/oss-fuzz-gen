@@ -15,6 +15,7 @@
 """Create OSS-Fuzz projects from scratch."""
 
 import argparse
+import json
 import logging
 import os
 import shutil
@@ -22,9 +23,9 @@ import subprocess
 import sys
 import tempfile
 import time
-import yaml
-import json
+
 import requests
+import yaml
 
 from experimental.build_generator import runner
 from llm_toolkit import models
