@@ -22,7 +22,8 @@ import subprocess
 import sys
 import tempfile
 import time
-
+import yaml
+import json
 import requests
 
 from experimental.build_generator import runner
@@ -205,6 +206,87 @@ def copy_generated_projects_to_harness_gen(out_gen, workdir):
   return projects_to_run
 
 
+def create_merged_oss_fuzz_projects(workdir) -> None:
+  """Create OSS-Fuzz projects using successful harnesses."""
+  generated_projects_dir = os.path.join(workdir, 'oss-fuzz-projects')
+
+  # Get list of projects created auto-building for.
+  generated_projects = []
+  for project_name in os.listdir(generated_projects_dir):
+    project_yaml = os.path.join(generated_projects_dir, project_name,
+                                'project.yaml')
+    if not os.path.isfile(project_yaml):
+      continue
+    with open(project_yaml, 'r', encoding='utf-8') as f:
+      project_dict = yaml.safe_load(f)
+
+    generated_projects.append({
+        'name': project_name,
+        'language': project_dict['language']
+    })
+
+  # Iterate results and copy fuzz harnesses into dedicated project folder.
+  results_dir = 'results'
+  for result in os.listdir(results_dir):
+    # Find project name
+    project = {}
+    for project_gen in generated_projects:
+      if result.startswith(f'output-{project_gen["name"]}'):
+        project = project_gen
+    if not project:
+      continue
+
+    # Copy the harness over
+    #if not os.path.isdir('final-oss-fuzz-projects'):
+    #  os.makedirs('final-oss-fuzz-projects')
+    project_dir = os.path.join('final-oss-fuzz-projects', project['name'])
+    #if not os.path.isdir(project_dir):
+    #  os.makedirs(project_dir)
+    os.makedirs(project_dir, exist_ok=True)
+
+    # Check if it was successful
+    result_json = os.path.join('results', result, 'status', '01', 'result.json')
+    if not os.path.isfile(result_json):
+      continue
+    with open(result_json, 'r') as f:
+      json_dict = json.loads(f.read())
+
+    if not json_dict['compiles']:
+      continue
+
+    # Copy over the harness
+    fuzz_src = os.path.join('results', result, 'fuzz_targets', '01.fuzz_target')
+
+    idx = 0
+
+    while True:
+      if project['language'] == 'c':
+        fuzz_dst = os.path.join(project_dir, f'fuzzer-{idx}.c')
+      else:
+        fuzz_dst = os.path.join(project_dir, f'fuzzer-{idx}.cpp')
+      if not os.path.isfile(fuzz_dst):
+        break
+      idx += 1
+
+    # Copy the harness
+    build_src = os.path.join(workdir, 'oss-fuzz-projects', project['name'],
+                             'build.sh')
+    build_dst = os.path.join(project_dir, 'build.sh')
+    shutil.copy(build_src, build_dst)
+
+    docker_src = os.path.join(workdir, 'oss-fuzz-projects', project['name'],
+                              'Dockerfile')
+    docker_dst = os.path.join(project_dir, 'Dockerfile')
+    shutil.copy(docker_src, docker_dst)
+
+    project_yaml_src = os.path.join(workdir, 'oss-fuzz-projects',
+                                    project['name'], 'project.yaml')
+    project_yaml_dst = os.path.join(project_dir, 'project.yaml')
+    shutil.copy(project_yaml_src, project_yaml_dst)
+
+    shutil.copy(fuzz_src, fuzz_dst)
+
+
 def run_harness_generation(out_gen, workdir, args):
   """Runs harness generation based on the projects in `out_gen`"""
 
@@ -216,6 +298,7 @@ def run_harness_generation(out_gen, workdir, args):
   launch_fi_webapp(workdir)
   wait_until_fi_webapp_is_launched()
   run_ofg_generation(projects_to_run, workdir, args)
+  create_merged_oss_fuzz_projects(out_gen)
   return projects_to_run
 
 
