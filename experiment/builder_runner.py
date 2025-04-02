@@ -923,19 +923,19 @@ class CloudBuilderRunner(BuilderRunner):
         f'--real_project={project_name}',
     ]
 
-    if oss_fuzz_checkout.ENABLE_CACHING and (
-        oss_fuzz_checkout.is_image_cached(project_name, 'address') and
-        oss_fuzz_checkout.is_image_cached(project_name, 'coverage')):
-      logger.info('Using cached image for %s', project_name)
-      command.append('--use_cached_image')
+    # if oss_fuzz_checkout.ENABLE_CACHING and (
+    #     oss_fuzz_checkout.is_image_cached(project_name, 'address') and
+    #     oss_fuzz_checkout.is_image_cached(project_name, 'coverage')):
+    #   logger.info('Using cached image for %s', project_name)
+    #   command.append('--use_cached_image')
 
-      # Overwrite the Dockerfile to be caching friendly
-      # We hardcode 'address' here, but this is irrelevant and will be
-      # overridden later via a Docker argument.
-      oss_fuzz_checkout.rewrite_project_to_cached_project(
-          project_name, generated_project, 'address')
-      oss_fuzz_checkout.prepare_build(project_name, 'address',
-                                      generated_project)
+    #   # Overwrite the Dockerfile to be caching friendly
+    #   # We hardcode 'address' here, but this is irrelevant and will be
+    #   # overridden later via a Docker argument.
+    #   oss_fuzz_checkout.rewrite_project_to_cached_project(
+    #       project_name, generated_project, 'address')
+    #   oss_fuzz_checkout.prepare_build(project_name, 'address',
+    #                                   generated_project)
 
     if cloud_build_tags:
       command += ['--tags'] + cloud_build_tags
