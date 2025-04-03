@@ -21,7 +21,7 @@ from experiment import evaluator as evaluator_lib
 from experiment.evaluator import Evaluator
 from results import BuildResult, Result, RunResult
 from stage.base_stage import BaseStage
-
+from threading import Semaphore  
 
 class ExecutionStage(BaseStage):
   """Executes fuzz targets and build scripts. This stage takes a fuzz target
@@ -29,9 +29,11 @@ class ExecutionStage(BaseStage):
   and outputs code coverage report and run-time crash information for later
   stages to analyze and improve on. It uses OSS-Fuzz infra to perform these
   tasks."""
+  _build_semaphore = Semaphore(4)
 
   def execute(self, result_history: list[Result]) -> Result:
-    """Executes the fuzz target and build script in the latest result."""
+   """Executes the fuzz target and build script in the latest result."""
+   with self._build_semaphore:
     last_result = result_history[-1]
     benchmark = last_result.benchmark
     if self.args.cloud_experiment_name:
