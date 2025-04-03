@@ -718,17 +718,32 @@ class KConfigBuildScanner(AutoBuildBase):
     return True
 
   def steps_to_build(self) -> Iterator[AutoBuildContainer]:
-    build_container = AutoBuildContainer()
-    build_container.list_of_commands = [
-'''
+    base_command = ['''
 make defconfig
 make
 find . -type f -name "*.o" > objfiles
 llvm-ar rcs libfuzz.a $(cat objfiles)
-'''
-]
+''']
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = base_command
     build_container.heuristic_id = self.name + '1'
     yield build_container
+
+    # Alternative to avoid Gold lld
+    build_container_2 = AutoBuildContainer()
+    base_command.append('export CFLAGS="${CFLAGS} -fuse-ld=lld"')
+    base_command.append('export CFXXLAGS="${CXXFLAGS} -fuse-ld=lld"')
+    build_container_2.list_of_commands = base_command
+    build_container.heuristic_id = self.name + '2'
+    yield build_container_2
+
+    # Alternative to avoid Gold lld and add thread/crypt libraries
+    build_container_3 = AutoBuildContainer()
+    base_command.append('export CFLAGS="${CFLAGS} -lpthread -lcrypt"')
+    base_command.append('export CFXXLAGS="${CXXFLAGS} -lpthread -lcrypt"')
+    build_container_3.list_of_commands = base_command
+    build_container.heuristic_id = self.name + '3'
+    yield build_container_3
 
   @property
   def name(self):
