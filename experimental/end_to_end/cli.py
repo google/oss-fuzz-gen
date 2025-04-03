@@ -310,6 +310,9 @@ def run_harness_generation(out_gen, workdir, args):
   extract_introspector_reports_for_benchmarks(projects_to_run, workdir)
   shutdown_fi_webapp()
   create_fi_db(workdir)
+  if args.until_fi_db:
+    logger.info('Fuzz Introspector webapp created. Exiting.')
+    sys.exit(0)
   shutdown_fi_webapp()
   launch_fi_webapp(workdir)
   wait_until_fi_webapp_is_launched()
@@ -319,6 +322,7 @@ def run_harness_generation(out_gen, workdir, args):
     sys.exit(0)
 
   run_ofg_generation(projects_to_run, workdir, args)
+
   create_merged_oss_fuzz_projects(out_gen)
   return projects_to_run
 
@@ -420,6 +424,10 @@ def parse_commandline():
       help='Timeout for build generation per project, in seconds.',
       default=0,
       type=int)
+  parser.add_argument(
+      '--until-fi-db',
+      help='Run until Fuzz Introspector DB creation and then exit.',
+      action='store_true')
   parser.add_argument('-w', '--workdir', help='Work directory to use')
   return parser.parse_args()
 
