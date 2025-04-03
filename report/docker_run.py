@@ -180,37 +180,25 @@ def run_new(cmd=None):
   logging.info("LLM is %s.", args.model)
   logging.info("DELAY is %s.", args.delay)
 
-  # Write the target input file
-  with open('input.txt', 'w', encoding='utf-8') as f:
-    f.write('https://github.com/codeplea/tinyexpr\n')
 
-  # Create the builds and do everything up until run_all_experiments
-  target_workdir='/tmp/our-workdir'
-  cmd = [
-    python_path,
-    '-m', 'experimental.end_to_end.cli',
-    '-i', 'input.txt',
-    '-m', args.model,
-    '--workdir', target_workdir,
-    '--all-but-ofg-core'
-  ]
 
-  subprocess.check_call(' '.join(cmd), shell=True)
+  # Launch starter
+  _run_command(['bash', 'starter.sh'], shell=True)
 
 
   date = datetime.datetime.now().strftime('%Y-%m-%d')
 
   # Now read the projects we generated to collect project names. Fuzz Introspector
   # is already running with the required data.
-  projects_to_run = []
-  for project_name in os.listdir(os.path.join('generated-projects-0', 'oss-fuzz-projects')):
-    projects_to_run.append(project_name)
+  #projects_to_run = []
+  #for project_name in os.listdir(os.path.join('generated-projects-0', 'oss-fuzz-projects')):
+  #  projects_to_run.append(project_name)
 
   # check results and identify the targets we want to analyse, which
   # are the projects that had a successful run.
 
   
-  oss_fuzz_dir = target_workdir + '/oss-fuzz'
+  #oss_fuzz_dir = target_workdir + '/oss-fuzz'
 
 
   # Experiment name is used to label the Cloud Builds and as part of the
@@ -245,9 +233,10 @@ def run_new(cmd=None):
   environ['LLM_NUM_EXP'] = '4'
 
   # We need to make sure that we use our version of OSS-Fuzz
-  environ['OFG_CLEAN_UP_OSS_FUZZ'] = '0'  
+  #environ['OFG_CLEAN_UP_OSS_FUZZ'] = '0'
+  environ['OSS_FUZZ_DATA_DIR'] = '/data-dir/oss-fuzz'
   
-
+# tiny-json-empty-build-0,tiny-json-empty-build-1
   introspector_endpoint = "http://127.0.0.1:8080/api"
 
   cmd = [python_path, 'run_all_experiments.py']
@@ -257,11 +246,11 @@ def run_new(cmd=None):
   cmd.append(
       'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach')
   cmd.append('-gp')
-  cmd.append(','.join(projects_to_run))
+  cmd.append('tiny-json-empty-build-0,tiny-json-empty-build-1')
   cmd.append('-gm')
   cmd.append(str(10))
-  cmd.append('-of')
-  cmd.append(oss_fuzz_dir)
+  #cmd.append('-of')
+  #cmd.append(oss_fuzz_dir)
   cmd.append('-e')
   cmd.append(introspector_endpoint)
   cmd.append('-mr')
@@ -309,6 +298,8 @@ def run_new(cmd=None):
   # Wait for the report process to finish uploading.
   report_process.wait()
 
+
+  
   trends_cmd = [
       python_path, "-m", "report.trends_report.upload_summary", "--results-dir",
       local_results_dir, "--output-path",
