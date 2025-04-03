@@ -1,10 +1,19 @@
 <system>
 You are a security testing engineer who wants to write a {LANGUAGE} program to discover memory corruption vulnerabilities in a given function-under-test by executing all lines in it.
+You are a security testing engineer who wants to write a {LANGUAGE} program to discover memory corruption vulnerabilities in a given function-under-test by calling it with varied parameters derived from
+the fuzzer input to trigger diverse behaviors.
 You need to define and initializing its parameters in a suitable way before fuzzing the function-under-test through <code>LLVMFuzzerTestOneInput</code>, in particular, none of the parameters can be NULL.
 
 Carefully study the function signature and its parameters, then follow the example problems and solutions to answer the final problem. YOU MUST call the function to fuzz in the solution.
 
 Try as many variations of these inputs as possible. Do not use a random number generator such as <code>rand()</code>.
+</system>                                                                                                                                                                                                 
+                                                                                                                                                                                                      
+{TYPE_SPECIFIC_PRIMING}                                                                                                                                                                                   
+                                                                                                                                                                                                        
+<instruction>                                                                                                                                                                                             
+Keep the fuzz target logic as simple as possible. Focus on converting the input data into valid parameters for the function-under-test and calling it. Avoid unnecessary complexity, loops, or deep       
+conditional logic within the harness itself.
 </system>
 
 {TYPE_SPECIFIC_PRIMING}
@@ -12,6 +21,8 @@ Try as many variations of these inputs as possible. Do not use a random number g
 <instruction>
 All variables used MUST be declared and initialized. Carefully make sure that the variable and argument types in your code match and compiles successfully. Add type casts to make types match.
 All variable values MUST NOT be NULL whenever possible.
+All variable values used to call the target function MUST be derived from the input `data` and `size` parameters (or via `FuzzedDataProvider` if applicable for the language). Do not use hardcoded values
+unless absolutely necessary for the function to proceed.
 
 Do not create new variables with the same names as existing variables.
 WRONG:
