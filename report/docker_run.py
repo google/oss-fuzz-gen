@@ -188,8 +188,9 @@ def run_new(cmd=None):
 
   # Launch starter
   logging.info('Running starter script')
-  retcode = _run_command(['bash', '/experiment/starter.sh'], shell=True)
-  logging.info('Retvalue: %d', retcode)
+  subprocess.check_call('/experiment/starter.sh', shell=True)
+  #retcode = _run_command(['bash', '/experiment/starter.sh'], shell=True)
+  #logging.info('Retvalue: %d', retcode)
   for l in os.listdir(os.getcwd()):
     logging.info('Dir: %s', l)
   logging.info('Finished running starter script.')
