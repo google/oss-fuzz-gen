@@ -1,6 +1,6 @@
 #!/bin/bash
 set -x
-cd /
+
 BASE=$PWD
 DATA_DIR="data-dir"
 
