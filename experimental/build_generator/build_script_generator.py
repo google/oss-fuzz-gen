@@ -699,6 +699,42 @@ class CMakeScanner(AutoBuildBase):
     return 'cmake'
 
 
+class KConfigBuildScanner(AutoBuildBase):
+  """Auto builder for KConfig-based projects."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        'Config.in': [],
+        'Makefile': [],
+    }
+
+  def is_matched(self):
+    """Returns True if the build heuristic found matching files."""
+    # Ensure both Config.in and Makefile exists
+    for found_matches in self.matches_found.values():
+      if len(found_matches) == 0:
+        return False
+    return True
+
+  def steps_to_build(self) -> Iterator[AutoBuildContainer]:
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = [
+'''
+make defconfig
+make
+find . -type f -name "*.o" > objfiles
+llvm-ar rcs libfuzz.a $(cat objfiles)
+'''
+]
+    build_container.heuristic_id = self.name + '1'
+    yield build_container
+
+  @property
+  def name(self):
+    return 'kconfig'
+
+
 def match_build_heuristics_on_folder(abspath_of_target: str):
   """Yields AutoBuildContainer objects.
 
@@ -722,6 +758,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
       BootstrapScanner(),
       AutogenScannerSH(),
       HeaderOnlyCBuilder(),
+      KConfigBuildScanner(),
   ]
 
   checks_to_test = []
