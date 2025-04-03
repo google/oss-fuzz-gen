@@ -170,6 +170,8 @@ def get_project_language(project: str) -> str:
   """Returns the |project| language read from its project.yaml."""
   project_yaml_path = os.path.join(OSS_FUZZ_DIR, 'projects', project,
                                    'project.yaml')
+  logger.info('Looking for %s',project_yaml_path)
+  logger.warning('Looking for %s',project_yaml_path)
   if not os.path.isfile(project_yaml_path):
     logger.warning('Failed to find the project yaml of %s, assuming it is C++',
                    project)
