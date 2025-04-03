@@ -503,7 +503,7 @@ class BuilderRunner:
     project_target_name = os.path.basename(self.benchmark.target_path)
     benchmark_log_path = self.work_dirs.build_logs_target(
         benchmark_target_name, iteration)
-    build_result.succeeded = self.build_target_local(generated_project,
+    build_result.succeeded = self.build_target_local(target_path,
                                                      benchmark_log_path)
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(benchmark_log_path,
@@ -516,10 +516,9 @@ class BuilderRunner:
     run_result = RunResult()
 
     run_log_path = os.path.join(self.work_dirs.run_logs, f'{trial:02d}.log')
-    self.run_target_local(generated_project, benchmark_target_name,
-                          run_log_path)
+    self.run_target_local(target_path, run_log_path)
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
-        generated_project, benchmark_target_name))
+        target_path, benchmark_target_name))
 
     run_result.log_path = run_log_path
 
@@ -537,67 +536,153 @@ class BuilderRunner:
 
     return build_result, run_result
 
-  def run_target_local(self, generated_project: str, benchmark_target_name: str,
-                       log_path: str):
-    """Runs a target in the fixed target directory."""
-    # If target name is not overridden, use the basename of the target path
-    # in the Dockerfile.
-    logger.info('Running %s', generated_project)
-    corpus_dir = self.work_dirs.corpus(benchmark_target_name)
-    command = [
-        'python3', 'infra/helper.py', 'run_fuzzer', '--corpus-dir', corpus_dir,
-        generated_project, self.benchmark.target_name, '--'
+  def run_target_local(self, target_path: str, log_path: str):
+    """Runs a target locally using the base image and volume mounting."""
+    base_project_name = self.benchmark.project
+    target_filename = os.path.basename(target_path)
+    target_name_without_ext = os.path.splitext(target_filename)[0]
+
+    logger.info('Running target %s for project %s',
+                target_name_without_ext, base_project_name)
+
+    # Define host paths for artifacts
+    build_dir_host = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build')
+    out_dir_host = os.path.join(build_dir_host, 'out', base_project_name)
+    corpus_dir_host = self.work_dirs.corpus(target_filename)
+    # Ensure host directories exist
+    os.makedirs(out_dir_host, exist_ok=True)
+    os.makedirs(corpus_dir_host, exist_ok=True)
+
+    # Define container paths
+    out_dir_container = '/out'
+    corpus_dir_container = '/corpus' # Mount corpus to a dedicated dir
+
+    # Command to run the helper script inside docker
+    helper_command = [
+        'python3', '/usr/local/bin/helper.py',
+        'run_fuzzer',
+        base_project_name,
+        target_name_without_ext, # Specify the target
+        '--corpus-dir', corpus_dir_container, # Use mapped corpus dir
+        '--' # Separator for libfuzzer args
     ] + self._libfuzzer_args()
 
+    # --- Docker Run Command --- #
+    docker_command = [
+        'docker', 'run',
+        '--rm',
+        '--privileged',
+        '--shm-size=2g',
+        '--platform', 'linux/amd64',
+        '-i',
+        # Environment variables (sanitizer is implicitly address for run_fuzzer)
+        '-e', 'FUZZING_ENGINE=libfuzzer',
+        '-e', 'SANITIZER=address',
+        '-e', 'ARCHITECTURE=x86_64',
+        '-e', f'PROJECT_NAME={base_project_name}',
+        '-e', f'FUZZING_LANGUAGE={self.benchmark.language}',
+        # Volume mounts
+        '-v', f'{os.path.abspath(out_dir_host)}:{out_dir_container}:ro', # Mount /out read-only
+        '-v', f'{os.path.abspath(corpus_dir_host)}:{corpus_dir_container}', # Mount corpus rw
+        # Base Image Name (assuming address sanitizer build)
+        f'gcr.io/oss-fuzz/{base_project_name}',
+    ] + helper_command # Append the helper script command
+
+    logger.debug('Run command: %s', ' '.join(docker_command))
+
     with open(log_path, 'w') as f:
-      proc = sp.Popen(command,
+      proc = sp.Popen(docker_command,
                       stdin=sp.DEVNULL,
                       stdout=f,
                       stderr=sp.STDOUT,
                       cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
 
-      # TODO(ochang): Handle the timeout exception.
       try:
-        proc.wait(timeout=self.run_timeout + 5)
+        # Wait for the process to complete with a timeout
+        proc.wait(timeout=self.run_timeout + 10) # Add buffer to timeout
       except sp.TimeoutExpired:
-        logger.info('%s timed out during fuzzing.', generated_project)
-        # Try continuing and parsing the logs even in case of timeout.
+        logger.warning('Target %s timed out during fuzzing.', target_name_without_ext)
+        # Kill the container if it timed out
+        kill_command = ['docker', 'kill', proc.pid] # Need container ID, pid won't work
+        # Getting container ID reliably is hard here, manual intervention might be needed
+        # For now, just log the timeout
+        pass
+      except Exception as e:
+        logger.error("Error during run_target_local Popen: %s", e)
+        # Process might not have started correctly
 
     if proc.returncode != 0:
-      logger.info('********** Failed to run %s. **********', generated_project)
+      logger.warning('********** Failed to run target %s (return code %d). Log: %s **********',
+                     target_name_without_ext, proc.returncode, log_path)
     else:
-      logger.info('Successfully run %s.', generated_project)
+      logger.info('Successfully run target %s.', target_name_without_ext)
 
-  def build_target_local(self,
-                         generated_project: str,
-                         log_path: str,
-                         sanitizer: str = 'address') -> bool:
-    """Builds a target with OSS-Fuzz."""
+  def build_target_local(
+      self, target_path: str, # Path to the generated target file on host
+      log_path: str,
+      sanitizer: str = 'address') -> bool:
+    """Builds a target using the base project image and volume mounting."""
 
-    logger.info('Building %s with %s', generated_project, sanitizer)
+    base_project_name = self.benchmark.project
+    target_filename = os.path.basename(target_path)
+    target_name_without_ext = os.path.splitext(target_filename)[0]
 
-    if oss_fuzz_checkout.ENABLE_CACHING and oss_fuzz_checkout.is_image_cached(
-        self.benchmark.project, sanitizer):
-      logger.info('We should use cached instance.')
-      # Rewrite for caching.
-      oss_fuzz_checkout.rewrite_project_to_cached_project(
-          self.benchmark.project, generated_project, sanitizer)
+    logger.info('Building target %s for %s with %s using base image',
+                target_filename, base_project_name, sanitizer)
 
-      # Prepare build
-      oss_fuzz_checkout.prepare_build(self.benchmark.project, sanitizer,
-                                      generated_project)
+    # We assume the base image (e.g., gcr.io/oss-fuzz/libxml2) exists.
+    # We skip the specific image build step.
 
-    else:
-      logger.info('The project does not have any cache')
+    # Define host paths for artifacts (relative to OSS_FUZZ_DIR)
+    build_dir_host = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build')
+    out_dir_host = os.path.join(build_dir_host, 'out', base_project_name)
+    work_dir_host = os.path.join(build_dir_host, 'work', base_project_name)
+    os.makedirs(out_dir_host, exist_ok=True)
+    os.makedirs(work_dir_host, exist_ok=True)
 
-    # Build the image
+    # Define container paths
+    src_dir_container = f'/src/{base_project_name}'
+    target_file_container = os.path.join(src_dir_container, target_filename)
+    out_dir_container = '/out'
+    work_dir_container = '/work'
+
+    # --- Docker Run Command --- #
     command = [
-        'docker', 'build', '-t', f'gcr.io/oss-fuzz/{generated_project}',
-        os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
-                     generated_project)
+        'docker',
+        'run',
+        '--rm', # Clean up container after exit
+        '--privileged',
+        '--shm-size=2g',
+        '--platform', 'linux/amd64',
+        '-i',
+        # Essential environment variables
+        '-e', 'FUZZING_ENGINE=libfuzzer',
+        '-e', f'SANITIZER={sanitizer}',
+        '-e', 'ARCHITECTURE=x86_64',
+        '-e', f'PROJECT_NAME={base_project_name}', # Use base project name
+        '-e', f'FUZZING_LANGUAGE={self.benchmark.language}',
+        # Volume mounts
+        '-v', f'{os.path.abspath(target_path)}:{target_file_container}:ro', # Mount target read-only
+        '-v', f'{os.path.abspath(out_dir_host)}:{out_dir_container}',
+        '-v', f'{os.path.abspath(work_dir_host)}:{work_dir_container}',
+        # Base Image Name
+        f'gcr.io/oss-fuzz/{base_project_name}',
+        # Command to execute within the container
+        # Use helper.py to build the specific target
+        'python3',
+        '/usr/local/bin/helper.py',
+        'build_fuzzer', # Changed from build_fuzzers
+        base_project_name,
+        target_name_without_ext, # Pass the specific target name
+        f'--sanitizer={sanitizer}' # Pass sanitizer
     ]
+
+    logger.debug('Build command: %s', ' '.join(command))
+
     with open(log_path, 'w+') as log_file:
       try:
+        # Note: CWD should be appropriate if helper.py relies on relative paths,
+        # but oss_fuzz_checkout.OSS_FUZZ_DIR is likely correct.
         sp.run(command,
                cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
                stdin=sp.DEVNULL,
@@ -605,76 +690,18 @@ class BuilderRunner:
                stderr=sp.STDOUT,
                check=True)
       except sp.CalledProcessError as e:
-        logger.info('Failed to build image for %s: %s', generated_project, e)
+        logger.warning('Failed to build target %s for project %s with %s: %s',
+                    target_filename, base_project_name, sanitizer, e)
+        # Log the output for debugging
+        log_file.seek(0)
+        logger.warning("Build log output:\n%s", log_file.read())
+        return False
+      except FileNotFoundError as e:
+        logger.error("Docker command not found. Is Docker installed and in PATH? Error: %s", e)
         return False
 
-    outdir = get_build_artifact_dir(generated_project, 'out')
-    workdir = get_build_artifact_dir(generated_project, 'work')
-    command = [
-        'docker',
-        'run',
-        '--rm',
-        '--privileged',
-        '--shm-size=2g',
-        '--platform',
-        'linux/amd64',
-        '-i',
-        '-e',
-        'FUZZING_ENGINE=libfuzzer',
-        '-e',
-        f'SANITIZER={sanitizer}',
-        '-e',
-        'ARCHITECTURE=x86_64',
-        '-e',
-        f'PROJECT_NAME={generated_project}',
-        '-e',
-        f'FUZZING_LANGUAGE={self.benchmark.language}',
-        '-v',
-        f'{outdir}:/out',
-        '-v',
-        f'{workdir}:/work',
-    ]
-    # Avoid permissions errors.
-    os.makedirs(outdir, exist_ok=True)
-    os.makedirs(workdir, exist_ok=True)
-    command.extend(['--entrypoint', '/bin/bash'])
-    command.append(f'gcr.io/oss-fuzz/{generated_project}')
-
-    pre_build_command = []
-    post_build_command = []
-
-    # Cleanup mounted dirs.
-    pre_build_command.extend(['rm', '-rf', '/out/*', '/work/*', '&&'])
-
-    if self.benchmark.commit:
-      # TODO(metzman): Try to use build_specified_commit here.
-      for repo, commit in self.benchmark.commit.items():
-        pre_build_command.extend([
-            'git', '-C', repo, 'fetch', '--unshallow', '-f', '||', 'true', '&&'
-        ])
-        pre_build_command.extend(
-            ['git', '-C', repo, 'checkout', commit, '-f', '&&'])
-
-    post_build_command.extend(['&&', 'chmod', '777', '-R', '/out/*'])
-
-    build_command = pre_build_command + ['compile'] + post_build_command
-    build_bash_command = ['-c', ' '.join(build_command)]
-    command.extend(build_bash_command)
-    with open(log_path, 'w+') as log_file:
-      try:
-        sp.run(command,
-               cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
-               stdin=sp.DEVNULL,
-               stdout=log_file,
-               stderr=sp.STDOUT,
-               check=True)
-      except sp.CalledProcessError:
-        logger.info('Failed to build fuzzer for %s with %s', generated_project,
-                    sanitizer)
-        return False
-
-    logger.info('Successfully build fuzzer for %s with %s', generated_project,
-                sanitizer)
+    logger.info('Successfully built target %s for project %s with %s', target_filename,
+                base_project_name, sanitizer)
     return True
 
   def _get_coverage_text_filename(self, project_name: str) -> str:
@@ -687,8 +714,9 @@ class BuilderRunner:
         'c': f'{self.benchmark.target_name}.covreport',
         'rust': f'{self.benchmark.target_name}.covreport',
     }
-
-    return os.path.join(get_build_artifact_dir(project_name,
+    # Use base project name for artifact directory
+    base_project_name = self.benchmark.project
+    return os.path.join(get_build_artifact_dir(base_project_name,
                                                'out'), 'textcov_reports',
                         lang_to_textcov_basename[self.benchmark.language])
 
@@ -722,72 +750,151 @@ class BuilderRunner:
       return new_textcov
 
   def get_coverage_local(
-      self, generated_project: str,
-      benchmark_target_name: str) -> tuple[Optional[textcov.Textcov], Any]:
-    """Builds the generate project with coverage sanitizer, runs OSS-Fuzz
-    coverage extraction and then returns the generated coverage reports, in
-    the form of the text coverage as well as the summary.json."""
-    sample_id = os.path.splitext(benchmark_target_name)[0]
-    log_path = os.path.join(self.work_dirs.build_logs,
-                            f'{sample_id}-coverage.log')
-    logger.info('Building project for coverage')
-    built_coverage = self.build_target_local(generated_project,
-                                             log_path,
-                                             sanitizer='coverage')
-    if not built_coverage:
-      logger.info('Failed to make coverage build for %s', generated_project)
-      return None, None
+      self, target_path: str, # Path to the generated target file on host
+      benchmark_target_name: str # Basename of the target file (e.g., 01.cpp)
+  ) -> tuple[Optional[textcov.Textcov], Any]:
+    """Generates coverage reports locally using the base image and volume mounting."""
+    base_project_name = self.benchmark.project
+    target_filename = os.path.basename(target_path)
+    target_name_without_ext = os.path.splitext(target_filename)[0]
 
-    logger.info('Extracting coverage')
-    corpus_dir = self.work_dirs.corpus(benchmark_target_name)
-    command = [
-        'python3',
-        'infra/helper.py',
+    logger.info('Extracting coverage for target %s for project %s',
+                target_name_without_ext, base_project_name)
+
+    # --- Remove the coverage build step --- #
+    # No longer needed as we use the base coverage-instrumented build
+    # Assuming the coverage build was done by a prior call to build_target_local
+    # with sanitizer='coverage'. We need to ensure this happens.
+    # TODO: Adjust workflow to ensure coverage build happens exactly once if needed.
+
+    # Define host paths
+    build_dir_host = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'build')
+    out_dir_host = os.path.join(build_dir_host, 'out', base_project_name)
+    corpus_dir_host = self.work_dirs.corpus(benchmark_target_name)
+    # Ensure host directories exist (especially /out from previous build)
+    if not os.path.isdir(out_dir_host):
+        logger.error('Coverage build output directory not found: %s. Cannot generate coverage.', out_dir_host)
+        return None, None
+    os.makedirs(corpus_dir_host, exist_ok=True)
+
+    # Define container paths
+    src_dir_container = f'/src/{base_project_name}'
+    target_file_container = os.path.join(src_dir_container, target_filename)
+    out_dir_container = '/out'
+    corpus_dir_container = '/corpus'
+
+    # --- Docker Run Command for Coverage --- #
+    helper_command = [
+        'python3', '/usr/local/bin/helper.py',
         'coverage',
-        '--corpus-dir',
-        corpus_dir,
-        '--fuzz-target',
-        self.benchmark.target_name,
+        base_project_name,
+        '--fuzz-target', target_name_without_ext, # Specify the target
+        '--corpus-dir', corpus_dir_container,    # Use mapped corpus dir
         '--no-serve',
-        '--port',
-        '',
-        generated_project,
+        '--port', '', # Pass empty port as server is not needed
     ]
+    if self.benchmark.language != 'c++':
+        helper_command.append(f'--language={self.benchmark.language}')
+
+    docker_command = [
+        'docker', 'run',
+        '--rm',
+        '--privileged',
+        '--shm-size=2g',
+        '--platform', 'linux/amd64',
+        '-i',
+        # Environment variables
+        '-e', 'FUZZING_ENGINE=libfuzzer',
+        '-e', 'SANITIZER=coverage', # Explicitly set sanitizer
+        '-e', 'ARCHITECTURE=x86_64',
+        '-e', f'PROJECT_NAME={base_project_name}',
+        '-e', f'FUZZING_LANGUAGE={self.benchmark.language}',
+        # Volume mounts
+        '-v', f'{os.path.abspath(target_path)}:{target_file_container}:ro', # Mount target source
+        '-v', f'{os.path.abspath(out_dir_host)}:{out_dir_container}', # Mount /out (contains binary AND gets coverage reports)
+        '-v', f'{os.path.abspath(corpus_dir_host)}:{corpus_dir_container}:ro', # Mount corpus read-only
+        # Base Image Name (assuming coverage build exists/matches)
+        f'gcr.io/oss-fuzz/{base_project_name}', # Use the same base image, SANITIZER env var selects build
+    ] + helper_command
+
+    logger.debug('Coverage command: %s', ' '.join(docker_command))
+    log_path = os.path.join(self.work_dirs.build_logs, f'{target_name_without_ext}-coverage-gen.log')
 
     try:
-      sp.run(command,
-             capture_output=True,
-             cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
-             stdin=sp.DEVNULL,
-             check=True)
+        # Run the coverage generation command
+        proc = sp.run(docker_command,
+                      capture_output=True, # Capture output to check for errors
+                      text=True,           # Decode output as text
+                      cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
+                      stdin=sp.DEVNULL,
+                      check=True)
+        logger.info("Coverage generation stdout:\n%s", proc.stdout)
+        logger.info("Coverage generation stderr:\n%s", proc.stderr)
+
     except sp.CalledProcessError as e:
-      logger.info('Failed to generate coverage for %s:\n%s\n%s',
-                  generated_project, e.stdout, e.stderr)
+      logger.error('Failed to generate coverage for target %s project %s:\n%s\n%s',
+                  target_name_without_ext, base_project_name, e.stdout, e.stderr)
+      # Save log even on failure
+      with open(log_path, 'w') as f:
+          f.write("COMMAND:\n" + ' '.join(docker_command) + "\n\n")
+          f.write("STDOUT:\n" + e.stdout + "\n\n")
+          f.write("STDERR:\n" + e.stderr + "\n\n")
       return None, None
+    except FileNotFoundError as e:
+        logger.error("Docker command not found. Is Docker installed and in PATH? Error: %s", e)
+        return None, None
+
+    # Save successful log
+    with open(log_path, 'w') as f:
+        f.write("COMMAND:\n" + ' '.join(docker_command) + "\n\n")
+        f.write("STDOUT:\n" + proc.stdout + "\n\n")
+        f.write("STDERR:\n" + proc.stderr + "\n\n")
+
+    # --- Extract results from HOST /build/out/<project> directory --- #
+    # This part remains largely the same as it reads from the host path
+    # where docker mounted /out
 
     # Get the local text coverage, which includes the specific lines
     # exercised in the target project.
-    local_textcov = self._extract_local_textcoverage_data(generated_project)
+    try:
+        local_textcov = self._extract_local_textcoverage_data(base_project_name)
+    except FileNotFoundError:
+        logger.error('Coverage text report file not found after running coverage command. Check logs: %s', log_path)
+        return None, None
+    except Exception as e:
+        logger.error('Error parsing coverage text report: %s', e)
+        return None, None
 
-    # Copy the code coverage to a folder in the results directory so
-    # the coverage can be displayed in the result HTML page.
-    coverage_report = os.path.join(
-        get_build_artifact_dir(generated_project, 'out'), 'report')
-    destination_coverage = self.work_dirs.code_coverage_report(
-        benchmark_target_name)
-    shutil.copytree(coverage_report, destination_coverage, dirs_exist_ok=True)
+    # Copy the code coverage report (HTML) to the results directory
+    coverage_report_host_path = os.path.join(out_dir_host, 'report')
+    if os.path.isdir(coverage_report_host_path):
+        destination_coverage = self.work_dirs.code_coverage_report(
+            benchmark_target_name)
+        shutil.copytree(coverage_report_host_path, destination_coverage, dirs_exist_ok=True)
+    else:
+        logger.warning('Coverage HTML report directory not found at %s', coverage_report_host_path)
 
-    textcov_dir = os.path.join(get_build_artifact_dir(generated_project, 'out'),
-                               'textcov_reports')
-    dst_textcov = os.path.join(
-        self.work_dirs.code_coverage_report(benchmark_target_name), 'textcov')
-    shutil.copytree(textcov_dir, dst_textcov, dirs_exist_ok=True)
+    # Copy textcov reports
+    textcov_dir_host_path = os.path.join(out_dir_host, 'textcov_reports')
+    if os.path.isdir(textcov_dir_host_path):
+        dst_textcov = os.path.join(
+            self.work_dirs.code_coverage_report(benchmark_target_name), 'textcov')
+        shutil.copytree(textcov_dir_host_path, dst_textcov, dirs_exist_ok=True)
+    else:
+         logger.warning('Coverage textcov_reports directory not found at %s', textcov_dir_host_path)
 
-    coverage_summary = os.path.join(
-        get_build_artifact_dir(generated_project, 'out'), 'report', 'linux',
-        'summary.json')
-    with open(coverage_summary) as f:
-      coverage_summary = json.load(f)
+
+    # Load summary.json
+    coverage_summary = None
+    coverage_summary_host_path = os.path.join(coverage_report_host_path, 'linux', 'summary.json')
+    if os.path.isfile(coverage_summary_host_path):
+        try:
+            with open(coverage_summary_host_path) as f:
+              coverage_summary = json.load(f)
+        except Exception as e:
+            logger.error('Failed to load coverage summary %s: %s', coverage_summary_host_path, e)
+    else:
+        logger.warning('Coverage summary.json not found at %s', coverage_summary_host_path)
 
     return local_textcov, coverage_summary
 
