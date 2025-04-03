@@ -49,6 +49,9 @@ class Result:
   crashes: bool = False
   coverage: float = 0.0
   line_coverage_diff: float = 0.0
+  newly_covered_lines: int = 0
+  total_lines: int = 0
+  baseline_total_lines: int = 0
   coverage_report_path: str = ''
   reproducer_path: str = ''
   # Grammatically correct but has false positive or no cov increase at all.
@@ -260,6 +263,20 @@ class Evaluator:
     self.builder_runner = runner
     self.benchmark = benchmark
     self.work_dirs = work_dirs
+    self.baseline_total_lines = 0
+    try:
+      # Load baseline coverage summary to get total lines.
+      baseline_summary = load_existing_coverage_summary(self.benchmark.project)
+      if baseline_summary:
+          target_basename = os.path.basename(self.benchmark.target_path)
+          self.baseline_total_lines = \
+              compute_total_lines_without_fuzz_targets(
+                  baseline_summary, target_basename)
+      logger.info('Baseline total lines for %s: %d', self.benchmark.project,
+                  self.baseline_total_lines)
+    except Exception as e:
+        logger.error('Failed to load baseline summary/calculate total lines: %s', e)
+        # Keep baseline_total_lines as 0
 
   def build_log_path(self, generated_target_name: str, iteration: int):
     return os.path.join(self.work_dirs.run_logs,
@@ -433,6 +450,7 @@ class Evaluator:
       total_lines = 0
       coverage_percent = 0.0
       coverage_diff = 0.0
+      newly_covered_lines = 0
       if run_result:
         # Gets line coverage (diff) details.
         coverage_summary = self._load_existing_coverage_summary()
@@ -464,12 +482,15 @@ class Evaluator:
         existing_textcov = self.load_existing_textcov()
         if run_result.coverage:
           run_result.coverage.subtract_covered_lines(existing_textcov)
+          newly_covered_lines = run_result.coverage.covered_lines
 
-        if total_lines and run_result.coverage:
-          coverage_diff = run_result.coverage.covered_lines / total_lines
+        if self.baseline_total_lines > 0 and run_result.coverage:
+          coverage_diff = newly_covered_lines / self.baseline_total_lines
         else:
-          dual_logger.log(
-              f'Warning: total_lines == 0 in {generated_oss_fuzz_project}.')
+          if self.baseline_total_lines == 0:
+              dual_logger.log(
+                  f'Warning: baseline_total_lines is 0 for {self.benchmark.project}. Cannot calculate coverage diff.'
+              )
           coverage_diff = 0.0
 
       if self.benchmark.language == 'jvm':
@@ -517,6 +538,9 @@ class Evaluator:
                  False,
                  0.0,
                  0.0,
+                 0,
+                 0,
+                 0,
                  '',
                  '',
                  False,
@@ -538,6 +562,9 @@ class Evaluator:
                  False,
                  0.0,
                  0.0,
+                 0,
+                 0,
+                 0,
                  '',
                  '',
                  False,
@@ -567,11 +594,15 @@ class Evaluator:
                  run_result.crashes,
                  0.0,
                  0.0,
+                 0,
+                 0,
+                 0,
                  '',
                  '',
                  not run_result.succeeded,
                  run_result.semantic_check.type,
                  run_result.triage,
+                 textcov.Textcov(),
                  compile_error=build_result.log_path,
                  compile_log=build_result.log_path))
 
@@ -579,14 +610,18 @@ class Evaluator:
         f'Result for {generated_oss_fuzz_project}: '
         f'crashes={run_result.crashes}, coverage={coverage_percent} '
         f'({run_result.cov_pcs}/{run_result.total_pcs}), '
+        f'newly covered lines={newly_covered_lines}, total lines={total_lines}, baseline total lines={self.baseline_total_lines}, '
         f'coverage diff={coverage_diff} '
-        f'({run_result.coverage.covered_lines}/{total_lines})')
+    )
     return dual_logger.return_result(
         Result(False,
                True,
                run_result.crashes,
                coverage_percent,
                coverage_diff,
+               newly_covered_lines,
+               total_lines,
+               self.baseline_total_lines,
                run_result.coverage_report_path,
                run_result.reproducer_path,
                not run_result.succeeded,

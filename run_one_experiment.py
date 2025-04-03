@@ -69,6 +69,9 @@ class AggregatedResult:
   found_bug: int = 0
   max_coverage: float = 0.0
   max_line_coverage_diff: float = 0.0
+  max_newly_covered_lines: int = 0
+  total_lines: int = 0
+  baseline_total_lines: int = 0
   max_coverage_sample: str = ''
   max_coverage_diff_sample: str = ''
   max_coverage_diff_report: str = ''
@@ -81,7 +84,10 @@ class AggregatedResult:
         f'crash rate: {self.crash_rate}, '
         f'found bug: {self.found_bug}, '
         f'max coverage: {self.max_coverage}, '
-        f'max line coverage diff: {self.max_line_coverage_diff}\n'
+        f'max line coverage diff: {self.max_line_coverage_diff}, '
+        f'max newly covered lines: {self.max_newly_covered_lines}, '
+        f'total lines: {self.total_lines}, '
+        f'baseline total lines: {self.baseline_total_lines}\n'
         f'max coverage sample: {self.max_coverage_sample}\n'
         f'max coverage diff sample: {self.max_coverage_diff_sample}\n'
         f'max coverage diff report: {self.max_coverage_diff_report or "None"}')
@@ -160,6 +166,23 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
   max_line_coverage_diff = max(
       [stat.line_coverage_diff for _, stat in target_stats])
 
+  # Added for #727
+  max_newly_covered_lines = 0
+  total_lines = 0
+  baseline_total_lines = 0
+  # We assume total_lines and baseline_total_lines are the same across results
+  # for the same benchmark, so we take the first valid one.
+  for _, stat in target_stats:
+      if stat.total_lines > 0:
+          total_lines = stat.total_lines
+      if stat.baseline_total_lines > 0:
+          baseline_total_lines = stat.baseline_total_lines
+      if total_lines > 0 and baseline_total_lines > 0:
+          break # Found both, no need to continue loop
+  # Find max newly covered lines
+  max_newly_covered_lines = max(
+      [stat.newly_covered_lines for _, stat in target_stats], default=0)
+
   max_coverage_sample = ''
   max_coverage_diff_sample = ''
   max_coverage_diff_report = ''
@@ -176,10 +199,21 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
     if isinstance(stat.textcov_diff, textcov.Textcov):
       all_textcov.merge(stat.textcov_diff)
 
-  return AggregatedResult(build_success_count, build_success_rate, crash_rate,
-                          found_bug, max_coverage, max_line_coverage_diff,
-                          max_coverage_sample, max_coverage_diff_sample,
-                          max_coverage_diff_report, all_textcov)
+  # Pass all arguments as keywords to avoid errors
+  return AggregatedResult(
+      build_success_count=build_success_count,
+      build_success_rate=build_success_rate,
+      crash_rate=crash_rate,
+      found_bug=found_bug,
+      max_coverage=max_coverage,
+      max_line_coverage_diff=max_line_coverage_diff,
+      max_newly_covered_lines=max_newly_covered_lines, # Added for #727
+      total_lines=total_lines, # Added for #727
+      baseline_total_lines=baseline_total_lines, # Added for #727
+      max_coverage_sample=max_coverage_sample,
+      max_coverage_diff_sample=max_coverage_diff_sample,
+      max_coverage_diff_report=max_coverage_diff_report,
+      full_textcov_diff=all_textcov)
 
 
 def check_targets(
