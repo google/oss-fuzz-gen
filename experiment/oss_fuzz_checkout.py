@@ -32,7 +32,7 @@ logger.setLevel(logging.DEBUG)
 
 BUILD_DIR: str = 'build'
 GLOBAL_TEMP_DIR: str = ''
-ENABLE_CACHING = bool(int(os.getenv('OFG_USE_CACHING', '1')))
+ENABLE_CACHING = False # bool(int(os.getenv('OFG_USE_CACHING', '0')))
 # Assume OSS-Fuzz is at repo root dir by default.
 # This will change if temp_dir is used.
 OSS_FUZZ_DIR: str = os.path.join(
@@ -110,6 +110,7 @@ def clone_oss_fuzz(oss_fuzz_dir: str = ''):
     for proj in os.listdir(src_projects):
       src_project = os.path.join(src_projects, proj)
       dst_project = os.path.join(OSS_FUZZ_DIR, 'projects', proj)
+      logger.info('Copying: %s to %s', src_project, dst_project)
       shutil.copytree(src_project, dst_project)
 
 
