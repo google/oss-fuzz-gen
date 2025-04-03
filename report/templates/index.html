@@ -146,11 +146,11 @@ td .signature {
         {% for language in coverage_language_gains['coverage_gains_per_language'] %}
         <tr>
             <td>{{language}}</td>
-            <td>{{coverage_language_gains['oss_fuzz_language_status'][language]['total']}}</td>
-            <td>{{coverage_language_gains['oss_fuzz_language_status'][language]['covered']}}</td>
-            <td>{{coverage_language_gains['coverage_gains_per_language'][language]}}</td>
-            <td>{{coverage_language_gains['comperative_coverage_gains'][language]['total_coverage_increase']}}%</td>
-            <td>{{coverage_language_gains['comperative_coverage_gains'][language]['relative_coverage_increase']}}%</td>
+            <td>{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('total', 'N/A') }}</td>
+            <td>{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('covered', 'N/A') }}</td>
+            <td>{{ coverage_language_gains['coverage_gains_per_language'].get(language, 'N/A') }}</td>
+            <td>{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('total_coverage_increase', 'N/A') }}%</td>
+            <td>{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('relative_coverage_increase', 'N/A') }}%</td>
         </tr>
         {% endfor %}
     </tbody>
