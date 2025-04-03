@@ -102,6 +102,14 @@ def clone_oss_fuzz(oss_fuzz_dir: str = ''):
            check=True,
            cwd=OSS_FUZZ_DIR)
 
+  # Sync oss-fuzz data if needed.
+  if os.environ.get('OSS_FUZZ_DATA_DIR', ''):
+    src_projects = os.path.join(os.environ['OSS_FUZZ_DATA_DIR'], 'projects')
+    for proj in os.listdir(src_projects):
+      src_project = os.path.join(src_projects, proj)
+      dst_project = os.path.join(OSS_FUZZ_DIR, 'projects', proj)
+      shutil.copytree(src_project, dst_project)
+
 
 def postprocess_oss_fuzz() -> None:
   """Prepares the oss-fuzz directory for experiments."""
