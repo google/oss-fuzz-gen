@@ -183,8 +183,11 @@ def run_new(cmd=None):
 
 
   # Launch starter
+  logging.info('Running starter script')
   _run_command(['bash', 'starter.sh'], shell=True)
-
+  for l in os.listdir(os.getcwd()):
+    logging.info('Dir: %s', l)
+  logging.info('Finished running starter script.')
 
   date = datetime.datetime.now().strftime('%Y-%m-%d')
 
@@ -240,8 +243,8 @@ def run_new(cmd=None):
   introspector_endpoint = "http://127.0.0.1:8080/api"
 
   cmd = [python_path, 'run_all_experiments.py']
-  cmd.append('--model')
-  cmd.append(args.model)
+  #cmd.append('--model')
+  #cmd.append(args.model)
   cmd.append('-g')
   cmd.append(
       'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach')
@@ -266,9 +269,9 @@ def run_new(cmd=None):
       local_results_dir, "--num-samples",
       str(args.num_samples), "--delay",
       str(args.delay), "--context", "--temperature-list",
-      *[str(temp) for temp in vary_temperature], "--model", args.model,
-      "--max-round",
-      str(args.max_round)
+      *[str(temp) for temp in vary_temperature]#, "--model", args.model
+      #"--max-round",
+      #str(args.max_round)
   ]
 
   # Run the experiment and redirect to file if indicated.
@@ -306,7 +309,7 @@ def run_new(cmd=None):
       f"gs://oss-fuzz-gcb-experiment-run-logs/trend-reports/{gcs_trend_report_path}",
       "--name", experiment_name, "--date", date, "--url",
       f"https://llm-exp.oss-fuzz.com/Result-reports/{gcs_report_dir}",
-      "--benchmark-set", args.benchmark_set, "--run-timeout",
+      "--run-timeout",
       str(args.run_timeout), "--num-samples",
       str(args.num_samples), "--llm-fix-limit",
       str(args.llm_fix_limit), "--model", args.model, "--tags",
