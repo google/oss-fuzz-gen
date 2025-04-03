@@ -140,7 +140,11 @@ def _parse_args(cmd) -> argparse.Namespace:
 
 def _run_command(command: list[str], shell=False):
   """Runs a command and return its exit code."""
-  process = subprocess.run(command, shell=shell)
+  process = subprocess.run(command, shell=shell, capture_output=True)
+  logging.info('stdout: ')
+  logging.info(process.stdout)
+  logging.info('stderr:')
+  logging.info(process.stderr)
   return process.returncode
 
 
