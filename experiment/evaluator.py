@@ -27,7 +27,7 @@ from google.cloud import storage
 from experiment import builder_runner, oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.builder_runner import BuildResult, RunResult
-from experiment.fuzz_target_error import SemanticCheckResult
+from results_wip import FuzzTargetResult
 from experiment.workdir import WorkDirs
 from llm_toolkit import code_fixer, corpus_generator, crash_triager
 from llm_toolkit.crash_triager import TriageResult
@@ -520,7 +520,7 @@ class Evaluator:
                  '',
                  '',
                  False,
-                 SemanticCheckResult.NOT_APPLICABLE,
+                 FuzzTargetResult.NORM_NOT_APPLICABLE.to_string(),
                  TriageResult.NOT_APPLICABLE,
                  compile_error=build_result.log_path,
                  compile_log=build_result.log_path))
@@ -541,7 +541,7 @@ class Evaluator:
                  '',
                  '',
                  False,
-                 SemanticCheckResult.NOT_APPLICABLE,
+                 FuzzTargetResult.NORM_NOT_APPLICABLE.to_string(),
                  TriageResult.NOT_APPLICABLE,
                  compile_error=build_result.log_path,
                  compile_log=build_result.log_path))
