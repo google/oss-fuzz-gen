@@ -243,7 +243,7 @@ def run_new(cmd=None):
 
   # We need to make sure that we use our version of OSS-Fuzz
   #environ['OFG_CLEAN_UP_OSS_FUZZ'] = '0'
-  environ['OSS_FUZZ_DATA_DIR'] = '/experiment/data-dir/oss-fuzz'
+  environ['OSS_FUZZ_DATA_DIR'] = '/experiment/data-dir/oss-fuzz2'
   
 # tiny-json-empty-build-0,tiny-json-empty-build-1
   introspector_endpoint = "http://127.0.0.1:8080/api"

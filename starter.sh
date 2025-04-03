@@ -5,7 +5,7 @@ BASE=$PWD
 DATA_DIR="data-dir"
 
 PROJECTS_TO_ANALYSE=""
-for d in $DATA_DIR/oss-fuzz/projects/*; do
+for d in $DATA_DIR/oss-fuzz2/projects/*; do
   PROJECTS_TO_ANALYSE="${PROJECTS_TO_ANALYSE}$(basename $d),"
 done
 
@@ -16,7 +16,7 @@ echo "${PROJECTS_TO_ANALYSE}"
 git clone --depth=1 https://github.com/google/oss-fuzz
 
 cd oss-fuzz
-rsync -avu "$BASE/$DATA_DIR/oss-fuzz/" .
+rsync -avu "$BASE/$DATA_DIR/oss-fuzz2/" .
 
 ############ Start a Fuzz Introspector server
 cd $BASE
@@ -32,7 +32,7 @@ rm -rf ./db
 cp -rf $BASE/$DATA_DIR/fuzz_introspector_db db
 cd ../../
 # Launch the server
-FUZZ_INTROSPECTOR_SHUTDOWN=1 FUZZ_INTROSPECTOR_LOCAL_OSS_FUZZ=$BASE/$DATA_DIR/oss-fuzz ${PYTHON} main.py >>/dev/null &
+FUZZ_INTROSPECTOR_SHUTDOWN=1 FUZZ_INTROSPECTOR_LOCAL_OSS_FUZZ=$BASE/$DATA_DIR/oss-fuzz2 ${PYTHON} main.py >>/dev/null &
 
 # Wait until the server has launched
 SECONDS=5
