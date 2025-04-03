@@ -718,12 +718,14 @@ class KConfigBuildScanner(AutoBuildBase):
     return True
 
   def steps_to_build(self) -> Iterator[AutoBuildContainer]:
-    base_command = ['''
+    base_command = [
+        '''
 make defconfig
 make
 find . -type f -name "*.o" > objfiles
 llvm-ar rcs libfuzz.a $(cat objfiles)
-''']
+'''
+    ]
     build_container = AutoBuildContainer()
     build_container.list_of_commands = base_command
     build_container.heuristic_id = self.name + '1'
