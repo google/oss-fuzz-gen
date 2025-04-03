@@ -29,27 +29,13 @@ class WritingStage(BaseStage):
   from previous iterations to produce a revised fuzz target.
   It leverages LLM agents to perform these tasks."""
 
-  def _write_new_fuzz_target(self, result_history: list[Result]) -> Result:
-    """Writes a new fuzz target."""
-    agent = self.get_agent()
-    if self.args.cloud_experiment_name:
-      return self._execute_agent_cloud(agent, result_history)
-    return agent.execute(result_history)
-
-  def _refine_given_fuzz_targets(self, result_history: list[Result]) -> Result:
-    """Writes a new fuzz target."""
-    agent = self.get_agent(index=1)
-    if self.args.cloud_experiment_name:
-      return self._execute_agent_cloud(agent, result_history)
-    return agent.execute(result_history)
-
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the writing stage."""
     if result_history and result_history[-1].fuzz_target_source:
-      agent_result = self._refine_given_fuzz_targets(result_history)
+      agent = self.get_agent(index=1)
     else:
-      agent_result = self._write_new_fuzz_target(result_history)
-
+      agent = self.get_agent()
+    agent_result = self._execute_agent(agent, result_history)
     build_result = cast(BuildResult, agent_result)
 
     # TODO(dongge): Save logs and more info into workdir.

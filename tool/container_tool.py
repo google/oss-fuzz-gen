@@ -40,7 +40,7 @@ class ProjectContainerTool(BaseTool):
   def _prepare_project_image(self) -> str:
     """Prepares the project's OSS-Fuzz docker image and returns the image name.
     """
-    image_name = oss_fuzz_checkout.prepare_project_image(self.benchmark.project)
+    image_name = oss_fuzz_checkout.prepare_project_image(self.benchmark)
     if image_name:
       return image_name
     raise Exception(f'Failed to build image for {self.benchmark.project}')

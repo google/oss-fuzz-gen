@@ -14,7 +14,6 @@
 """An LLM agent to generate a simple fuzz target prototype that can build.
 Use it as a usual module locally, or as script in cloud builds.
 """
-import os
 import re
 from collections import defaultdict, namedtuple
 from typing import Optional
@@ -61,11 +60,8 @@ class SemanticAnalyzer(BaseAgent):
     last_result = result_history[-1]
     assert isinstance(last_result, RunResult)
 
-    with open(
-        os.path.join(last_result.work_dirs.run_logs, f'{self.trial:02}.log'),
-        'rb') as fuzzer_log:
-      _, _, _, _, semantic_result = self._parse_libfuzzer_logs(
-          fuzzer_log, last_result.benchmark.project)
+    _, _, _, _, semantic_result = self._parse_libfuzzer_logs(
+        last_result.run_log, last_result.benchmark.project)
 
     analysis_result = AnalysisResult(
         author=self,
@@ -75,24 +71,13 @@ class SemanticAnalyzer(BaseAgent):
     return analysis_result
 
   def _parse_libfuzzer_logs(self,
-                            log_handle,
+                            fuzzlog,
                             project_name: str,
                             check_cov_increase: bool = True) -> ParseResult:
     """Parses libFuzzer logs."""
     lines = None
-    try:
-      fuzzlog = log_handle.read(-1)
-      # Some crashes can mess up the libfuzzer output and raise decode error.
-      fuzzlog = fuzzlog.decode('utf-8', errors='ignore')
-      lines = fuzzlog.split('\n')
-    except MemoryError as e:
-      # Some logs from abnormal fuzz targets are too large to be parsed.
-      logger.error('%s is too large to parse: %s',
-                   log_handle.name,
-                   e,
-                   trial=self.trial)
-      return ParseResult(0, 0, False, '',
-                         SemanticCheckResult(SemanticCheckResult.LOG_MESS_UP))
+    # Some crashes can mess up the libfuzzer output and raise decode error.
+    lines = fuzzlog.split('\n')
 
     cov_pcs, total_pcs, crashes = 0, 0, False
 

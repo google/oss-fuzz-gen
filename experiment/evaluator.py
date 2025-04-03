@@ -18,7 +18,6 @@ import dataclasses
 import json
 import logging
 import os
-import re
 import shutil
 from typing import Optional
 
@@ -220,15 +219,6 @@ def compute_total_lines_without_fuzz_targets(coverage_summary: dict,
   ])
 
 
-def rectify_docker_tag(docker_tag: str) -> str:
-  # Replace "::" and any character not \w, _, or . with "-".
-  valid_docker_tag = re.sub(r'::', '-', docker_tag)
-  valid_docker_tag = re.sub(r'[^\w_.]', '-', valid_docker_tag)
-  # Docker fails with tags containing -_ or _-.
-  valid_docker_tag = re.sub(r'[-_]{2,}', '-', valid_docker_tag)
-  return valid_docker_tag
-
-
 # TODO(Dongge): Make this universally available.
 class _Logger:
   """Log evaluation progress."""
@@ -273,19 +263,11 @@ class Evaluator:
                              target_file: str,
                              build_script_path: str = '') -> str:
     """Creates an OSS-Fuzz project with the generated target. The new project
-    will replicate an existing project |name| but replace its fuzz target
+    will replicate an existing project to |name| but replace its fuzz target
     and build script with the new |target_file| and |build_script_path|."""
     logger.info('target file: %s', target_file)
-    generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                          'projects', name)
-    if os.path.exists(generated_project_path):
-      logger.info('Project %s already exists.', generated_project_path)
-      return name
-
-    existing_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
-                                         'projects', self.benchmark.project)
-
-    shutil.copytree(existing_project_path, generated_project_path)
+    generated_project_path = oss_fuzz_checkout.create_ossfuzz_project(
+        self.benchmark, name)
 
     # Copy generated fuzzers to generated_project_path
     shutil.copyfile(
@@ -396,7 +378,8 @@ class Evaluator:
     generated_target_name = os.path.basename(target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
     generated_oss_fuzz_project = f'{self.benchmark.id}-{sample_id}'
-    generated_oss_fuzz_project = rectify_docker_tag(generated_oss_fuzz_project)
+    generated_oss_fuzz_project = oss_fuzz_checkout.rectify_docker_tag(
+        generated_oss_fuzz_project)
     self.create_ossfuzz_project(generated_oss_fuzz_project, target_path)
 
     status_path = os.path.join(self.work_dirs.status, sample_id)

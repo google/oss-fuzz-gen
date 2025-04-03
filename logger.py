@@ -75,7 +75,8 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
     os.makedirs(trial_result_dir, exist_ok=True)
     chat_history_path = os.path.join(trial_result_dir, 'log.txt')
     chat_history = '\n'.join(
-        f'{agent_name}\n{chat_history}\n'
+        f'\n\n\n************************{agent_name}************************\n'
+        f'{chat_history}\n'
         for agent_name, chat_history in result.chat_history.items())
     self.write_to_file(chat_history_path, chat_history)
 
