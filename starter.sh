@@ -48,3 +48,4 @@ do
   sleep ${SECONDS}
 done
 echo "Local version of introspector is up and running"
+exit 0
