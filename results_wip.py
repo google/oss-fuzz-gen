@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from enum import Enum, auto
 from typing import Any, Dict, List, Optional
 
+from experiment import textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 
@@ -223,6 +224,12 @@ class CrashAnalysis:
 @dataclass
 class CoverageAnalysis:
     """Analysis of code coverage from fuzzing."""
+    coverage: float
+    line_coverage_diff: float
+    coverage_report_path: str
+    textcov_diff: Optional[textcov.Textcov]
+    cov_pcs: int
+    total_pcs: int
     improvement_required: bool = False
     insight: str = ""
     suggestions: str = ""
@@ -317,3 +324,274 @@ class Result:
             result.update(self.analysis_info.to_dict())
 
         return result
+
+
+class TrialResult:
+    """All history results for a trial of a benchmark in an experiment."""
+    benchmark: Benchmark
+    trial: int
+    work_dirs: WorkDirs
+    result_history: list[Result]
+
+    def __init__(
+            self,
+            benchmark: Benchmark,
+            trial: int,
+            work_dirs: WorkDirs,
+            result_history: Optional[list[Result]] = None,
+    ) -> None:
+        self.benchmark = benchmark
+        self.trial = trial
+        self.work_dirs = work_dirs
+        self.result_history = result_history or []
+
+    @property
+    def function_signature(self) -> str:
+        """Function signature of the benchmark."""
+        return self.benchmark.function_signature
+
+    @property
+    def project(self) -> str:
+        """Project name of the benchmark."""
+        return self.benchmark.project
+
+    @property
+    def project_commit(self) -> str:
+        """Project commit of the benchmark."""
+        return self.benchmark.commit or ''
+
+    @property
+    def project_language(self) -> str:
+        """Project language of the benchmark."""
+        return self.benchmark.language
+
+    @property
+    def best_analysis_result(self) -> Optional[Result]:
+        """Last Result with AnalysisInfo in trial, prefer crashed and a non-semantic error."""
+        # 1. Crashed for a non-semantic error
+        for result in self.result_history[::-1]:
+            analysis = result.analysis_info
+            if analysis and not result.is_semantic_error() and result.run_info and result.run_info.crashes:
+                return result
+
+        # 2. Crashed
+        for result in self.result_history[::-1]:
+            if result.run_info and result.run_info.crashes:
+                return result
+
+        # 3. Result with AnalysisInfo
+        for result in self.result_history[::-1]:
+            if result.analysis_info:
+                return result
+        return None
+
+    @property
+    def best_result(self) -> Result:
+        """Best result in trial based on coverage."""
+        # Preference order:
+        #   1. Highest coverage diff (AnalysisResult)
+        #   2. Highest coverage diff (RunResult)
+        #   3. Highest coverage (AnalysisResult)
+        #   3. Highest coverage (RunResult)
+        #   4. Last Build success (BuildResult)
+        #   5. Last Result
+        best_result = None
+
+        max_cov_diff = 0
+        for result in self.result_history:
+            if result.analysis_info:
+                analysis_info = result.analysis_info
+                if analysis_info.coverage_analysis and analysis_info.coverage_analysis.line_coverage_diff > max_cov_diff:
+                    max_cov_diff = analysis_info.coverage_analysis.line_coverage_diff
+                    best_result = result
+        if best_result:
+            return best_result
+
+        max_cov = -1
+        for result in self.result_history:
+            if result.analysis_info:
+                analysis_info = result.analysis_info
+                if analysis_info.coverage_analysis and analysis_info.coverage_analysis.coverage > max_cov:
+                    max_cov = analysis_info.coverage_analysis.coverage
+                    best_result = result
+        if best_result:
+            return best_result
+
+        for result in self.result_history:
+            if result.is_build_successful():
+                return result
+
+        # If no result has coverage info, return the last result
+        return self.result_history[-1]
+
+    @property
+    def fuzz_target_source(self) -> str:
+        """The best fuzz target source code."""
+        result = self.best_result
+        return result.get_fuzz_target_source() if result else ""
+
+    @property
+    def build_script_source(self) -> str:
+        """The best build script source code."""
+        result = self.best_result
+        return result.get_build_script_source() if result else ""
+
+    @property
+    def author(self) -> Any:
+        """The author of the best result."""
+        result = self.best_result
+        return result.author if result else None
+
+    @property
+    def chat_history(self) -> dict:
+        """The chat history of the best result."""
+        result = self.best_result
+        return result.chat_history if result else {}
+
+    @property
+    def build_success(self) -> bool:
+        """True if there is any build success."""
+        return any(result.is_build_successful() for result in self.result_history)
+
+    @property
+    def crashes(self) -> bool:
+        """True if there is any runtime crash."""
+        return any(
+            result.run_info and result.run_info.crashes
+            for result in self.result_history
+        )
+
+    @property
+    def is_semantic_error(self) -> bool:
+        """True if the best result has a semantic error."""
+        result = self.best_analysis_result
+        return result.is_semantic_error() if result else False
+
+    @property
+    def error_type(self) -> Optional[FuzzTargetResult]:
+        """Error type of the best result."""
+        result = self.best_analysis_result
+        return result.analysis_info.error_type if result and result.analysis_info else None
+
+    def to_dict(self) -> Dict:
+        """Convert to a dictionary for serialization."""
+        return {
+            'function_signature': self.function_signature,
+            'project': self.project,
+            'project_commit': self.project_commit,
+            'project_language': self.project_language,
+            'trial': self.trial,
+            'fuzz_target_source': self.fuzz_target_source,
+            'build_script_source': self.build_script_source,
+            'author': self.author.name if self.author else '',
+            'chat_history': self.chat_history,
+            'build_success': self.build_success,
+            'crashes': self.crashes,
+            'error_type': self.error_type.to_string() if self.error_type else '',
+            'is_semantic_error': self.is_semantic_error,
+        }
+
+
+class BenchmarkResult:
+    """All trial results for a benchmark in an experiment."""
+    benchmark: Benchmark
+    work_dirs: WorkDirs
+    trial_results: list[TrialResult]
+
+    def __init__(
+            self,
+            benchmark: Benchmark,
+            work_dirs: WorkDirs,
+            trial_results: Optional[list[TrialResult]] = None,
+    ) -> None:
+        self.benchmark = benchmark
+        self.work_dirs = work_dirs
+        self.trial_results = trial_results or []
+
+    @property
+    def trial_count(self) -> int:
+        """Total number of trials."""
+        return len(self.trial_results)
+
+    @property
+    def build_success_count(self) -> int:
+        """Build success count."""
+        return sum(1 for trial in self.trial_results if trial.build_success)
+
+    @property
+    def build_success_rate(self) -> float:
+        """Build success Ratio."""
+        if not self.trial_count:
+            return 0.0
+        return self.build_success_count / self.trial_count
+
+    @property
+    def crash_rate(self) -> float:
+        """True if there is any run crash not caused by semantic error."""
+        if not self.trial_count:
+            return 0.0
+
+        crash_count = sum(
+            1 for trial in self.trial_results
+            if trial.crashes and not trial.is_semantic_error
+        )
+        return crash_count / self.trial_count
+
+    @property
+    def coverage(self) -> float:
+        """Max coverage across all trials."""
+        if not self.trial_results:
+            return 0.0
+
+        return max((
+            trial.best_result.analysis_info.coverage_analysis.coverage
+            for trial in self.trial_results
+            if trial.best_result and hasattr(trial.best_result,
+                                             'analysis_info') and trial.best_result.analysis_info.coverage_analysis
+        ), default=0.0)
+
+    @property
+    def line_coverage_diff(self) -> float:
+        """Max line coverage diff across all trials."""
+        if not self.trial_results:
+            return 0.0
+
+        return max((
+            trial.best_result.analysis_info.coverage_analysis.line_coverage_diff
+            for trial in self.trial_results
+            if trial.best_result and hasattr(trial.best_result,
+                                             'analysis_info') and trial.best_result.analysis_info.coverage_analysis
+        ), default=0.0)
+
+    @property
+    def line_coverage_report(self) -> str:
+        """Return the coverage report path for the trial with highest line coverage diff."""
+        if not self.trial_results:
+            return ''
+
+        max_diff = -1.0
+        report_path = ''
+
+        for trial in self.trial_results:
+            if not (
+                    trial.best_result and trial.best_result.analysis_info and trial.best_result.analysis_info.coverage_analysis):
+                coverage_analysis = trial.best_result.analysis_info.coverage_analysis
+                if coverage_analysis.line_coverage_diff > max_diff:
+                    max_diff = coverage_analysis.line_coverage_diff
+                    report_path = coverage_analysis.coverage_report_path
+
+        return report_path
+
+    @property
+    def textcov_diff(self) -> textcov.Textcov:
+        """Merge all textcov diffs from all trials."""
+        all_textcov = textcov.Textcov()
+
+        for trial in self.trial_results:
+            if not (
+                    trial.best_result and trial.best_result.analysis_info and trial.best_result.analysis_info.coverage_analysis):
+                coverage_analysis = trial.best_result.analysis_info.coverage_analysis
+                if coverage_analysis.textcov_diff:
+                    all_textcov.merge(coverage_analysis.textcov_diff)
+
+        return all_textcov
