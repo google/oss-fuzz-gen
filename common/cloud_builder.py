@@ -196,15 +196,15 @@ class CloudBuilder:
                 'dir':
                     '/workspace/ofg/',
                 'args': [
-                    'run', '--rm', '-v', '/workspace/ofg:/workspace/ofg',
-                    '-e', f'OSS_FUZZ_DATA_DIR={oss_fuzz_data_dir}',
+                    'run', '--rm', '-v', '/workspace:/workspace',
+                    '-e', 'OSS_FUZZ_DATA_DIR=/workspace/oss-fuzz-data',
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
                      'agent-image'), 'python3.11', '-c',
                     'import os; from experiment import oss_fuzz_checkout; '
                     'oss_fuzz_checkout.clone_oss_fuzz("oss-fuzz"); '
                     'oss_fuzz_checkout.postprocess_oss_fuzz(); '
                 ],
-                'env': [f'OSS_FUZZ_DATA_DIR={oss_fuzz_data_dir}'],
+                #'env': [f'OSS_FUZZ_DATA_DIR={oss_fuzz_data_dir}'],
             },
             # Step 5: Run the Python script with the dill files.
             {
