@@ -279,6 +279,8 @@ def run_new(cmd=None):
       #"--max-round",
       #str(args.max_round)
   ]
+  if args.agent:
+    cmd.append("--agent")
 
   # Run the experiment and redirect to file if indicated.
   if args.redirect_outs:
