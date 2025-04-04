@@ -20,7 +20,7 @@ import re
 import shutil
 import subprocess
 from abc import abstractmethod
-from typing import Dict, Iterator, List, Tuple, Optional
+from typing import Dict, Iterator, List, Optional, Tuple
 
 import constants
 import manager
@@ -32,6 +32,7 @@ logger = logging.getLogger(name=__name__)
 #### Logic for auto building a given source code folder ####
 ############################################################
 class AutoBuildContainer:
+  """Auto build data container."""
 
   def __init__(self, old: Optional["AutoBuildContainer"] = None):
     if old:
@@ -82,18 +83,17 @@ class AutoBuildBase:
         return True
     return False
 
-  def determine_required_packages(self, config_file_str: str) -> List[Tuple[str,str]]:
+  def determine_required_packages(
+      self, config_file_str: str) -> List[Tuple[str, str]]:
     """Determine additional required package for installation in Dockerfile."""
 
     # Find all -l<lib> flags in makefile or other configurations
     libs = re.findall(r"-l(\w+)", config_file_str)
 
     # Map to packages, skipping built-in or unmapped ones
-    required_packages = [
-        (f'-l{lib}', constants.LIBRARY_PACKAGE_MAP[lib])
-        for lib in libs
-        if lib in constants.LIBRARY_PACKAGE_MAP
-    ]
+    required_packages = [(f'-l{lib}', constants.LIBRARY_PACKAGE_MAP[lib])
+                         for lib in libs
+                         if lib in constants.LIBRARY_PACKAGE_MAP]
 
     return list(set(required_packages))
 
@@ -359,7 +359,6 @@ class PureMakefileScannerWithLibFlag(AutoBuildBase):
     ]
     build_container.heuristic_id = self.name + '1'
     yield build_container
-
 
     # Route 2: Overriding CXXFLAGS
     build_container_2 = AutoBuildContainer(build_container)
