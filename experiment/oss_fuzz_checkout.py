@@ -176,6 +176,11 @@ def get_project_language(project: str) -> str:
     logger.warning('Failed to find the project yaml of %s, assuming it is C++',
                    project)
     return 'C++'
+  
+  if os.path.isdir('/workspace/oss-fuzz-data'):
+    logger.info('is a directory: /workspace/oss-fuzz-data')
+  else:
+    logger.info('is not a directory: /workspace/oss-fuzz-data')
 
   with open(project_yaml_path, 'r') as benchmark_file:
     data = yaml.safe_load(benchmark_file)
