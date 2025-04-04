@@ -257,6 +257,7 @@ def run_introspector_on_dir(build_worker, test_dir,
 
   # Disable FI light because we want to make sure we can compile as well.
   modified_env['FI_DISABLE_LIGHT'] = "1"
+
   try:
     subprocess.check_call('compile',
                           shell=True,
@@ -343,8 +344,10 @@ def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
 
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
+  additional_packages = build_worker.build_suggestion.list_of_required_packages
   dockerfile = templates.CLEAN_OSS_FUZZ_DOCKER.format(
-      repo_url=github_repo, project_repo_dir=project_repo_dir)
+      repo_url=github_repo, project_repo_dir=project_repo_dir,
+      additional_packages=' '.join(additional_packages))
   with open(os.path.join(oss_fuzz_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
@@ -361,7 +364,7 @@ def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
 
 
 def create_clean_oss_fuzz_from_success(github_repo: str, out_dir: str,
-                                       language: str) -> None:
+                                       pkgs: List[str], language: str) -> None:
   """Converts a successful out dir into a working OSS-Fuzz project."""
   oss_fuzz_folder = os.path.join(out_dir, 'oss-fuzz-project')
   os.makedirs(oss_fuzz_folder)
@@ -386,7 +389,8 @@ def create_clean_oss_fuzz_from_success(github_repo: str, out_dir: str,
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
   dockerfile = templates.CLEAN_OSS_FUZZ_DOCKER.format(
-      repo_url=github_repo, project_repo_dir=project_repo_dir)
+      repo_url=github_repo, project_repo_dir=project_repo_dir,
+      additional_packages=' '.join(pkgs))
   with open(os.path.join(oss_fuzz_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
@@ -402,6 +406,7 @@ def create_clean_oss_fuzz_from_success(github_repo: str, out_dir: str,
 
 
 def create_clean_clusterfuzz_lite_from_success(github_repo: str, out_dir: str,
+                                               pkgs: List[str],
                                                language: str) -> None:
   """Converts a successful out dir into a working ClusterFuzzLite project."""
   cflite_folder = os.path.join(out_dir, 'clusterfuzz-lite-project')
@@ -424,7 +429,7 @@ def create_clean_clusterfuzz_lite_from_success(github_repo: str, out_dir: str,
   # Create Dockerfile
   project_repo_dir = github_repo.split('/')[-1]
   dockerfile = templates.CLEAN_DOCKER_CFLITE.format(
-      project_repo_dir=project_repo_dir)
+      project_repo_dir=project_repo_dir, additional_packages=' '.join(pkgs))
   with open(os.path.join(cflite_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
