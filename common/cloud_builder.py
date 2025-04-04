@@ -197,6 +197,7 @@ class CloudBuilder:
                     '/workspace/ofg/',
                 'args': [
                     'run', '--rm', '-v', '/workspace/ofg:/workspace/ofg',
+                    '-e', f'OSS_FUZZ_DATA_DIR={oss_fuzz_data_dir}',
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
                      'agent-image'), 'python3.11', '-c',
                     'import os; from experiment import oss_fuzz_checkout; '
