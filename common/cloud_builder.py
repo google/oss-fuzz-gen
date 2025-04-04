@@ -86,6 +86,15 @@ class CloudBuilder:
     logging.info('Uploaded %s to %s', local_file_path, bucket_file_url)
     return bucket_file_url
 
+  def _upload_files(self, archive_name: str, dir: str, files_to_upload: list[str]) -> str:
+    """Archive and upload files to GCS."""
+    with tempfile.TemporaryDirectory() as tmpdirname:
+      archive_path = os.path.join(tmpdirname, archive_name)
+      tar_command = ['tar', '-czf', archive_path] + files_to_upload
+      subprocess.run(tar_command, cwd=dir, check=True)
+      logging.info('Created archive: %s', archive_path)
+      return self._upload_to_gcs(archive_path)
+
   def _prepare_and_upload_archive(self) -> str:
     """Archives and uploads local OFG repo to cloud build."""
     files_in_dir = set(
@@ -97,19 +106,33 @@ class CloudBuilder:
                                 cwd=OFG_ROOT_DIR,
                                 text=True).splitlines())
     file_to_upload = list(files_in_dir & files_in_git)
+    return self._upload_files(
+        f'ofg-repo-{uuid.uuid4().hex}.tar.gz', OFG_ROOT_DIR, file_to_upload)
 
-    with tempfile.TemporaryDirectory() as tmpdirname:
-      archive_name = f'ofg-repo-{uuid.uuid4().hex}.tar.gz'
-      archive_path = os.path.join(tmpdirname, archive_name)
-      tar_command = ['tar', '-czf', archive_path] + file_to_upload
-      subprocess.run(tar_command, cwd=OFG_ROOT_DIR, check=True)
-      logging.info('Created archive: %s', archive_path)
-      return self._upload_to_gcs(archive_path)
+  def _upload_oss_fuzz_data(self) -> str:
+    """Archives and uploads OSS_FUZZ_DATA_DIR, if any."""
+    oss_fuzz_data_dir = os.getenv('OSS_FUZZ_DATA_DIR')
+    if not oss_fuzz_data_dir:
+      return ''
+
+    files_to_upload = [
+        os.path.relpath(os.path.join(root, file), oss_fuzz_data_dir)
+        for root, _, files in os.walk(oss_fuzz_data_dir)
+        for file in files]
+    return self._upload_files(
+        f'oss-fuzz-{uuid.uuid4().hex}.tar.gz', oss_fuzz_data_dir, files_to_upload)
 
   def _request_cloud_build(self, ofg_repo_url: str, agent_dill_url: str,
-                           results_dill_url: str,
+                           results_dill_url: str, oss_fuzz_data_url: str,
                            new_result_filename: str) -> str:
     """Requests Cloud Build to execute the operation."""
+
+    # Used for injecting additional OSS-Fuzz project integrations not in
+    # upstream OSS-Fuzz.
+    oss_fuzz_data_dir = ''
+    if oss_fuzz_data_url:
+      oss_fuzz_data_dir = '/workspace/oss-fuzz-data'
+
     cloud_build_config = {
         'steps': [
             # Step 1: Download the dill files from GCS bucket.
@@ -153,6 +176,18 @@ class CloudBuilder:
             # Step 4: Prepare OSS-Fuzz repo.
             {
                 'name':
+                    'gcr.io/cloud-builders/gsutil',
+                'entrypoint':
+                    'bash',
+                'args': [
+                    '-c', f'test -n "{oss_fuzz_data_url}" && gsutil cp {oss_fuzz_data_url} /tmp/oss-fuzz-data.tar.gz && '
+                    'mkdir /workspace/oss-fuzz-data && '
+                    f'tar -xzf /tmp/oss-fuzz-data.tar.gz -C /workspace/oss-fuzz-data'
+                ],
+                'allowFailure': True,
+            },
+            {
+                'name':
                     'gcr.io/cloud-builders/docker',
                 'dir':
                     '/workspace/ofg/',
@@ -164,6 +199,7 @@ class CloudBuilder:
                     'oss_fuzz_checkout.clone_oss_fuzz("oss-fuzz"); '
                     'oss_fuzz_checkout.postprocess_oss_fuzz(); '
                 ],
+                'env': [f'OSS_FUZZ_DATA_DIR={oss_fuzz_data_dir}'],
             },
             # Step 5: Run the Python script with the dill files.
             {
@@ -309,10 +345,12 @@ class CloudBuilder:
     ofg_url = self._prepare_and_upload_archive()
     agent_url = self._upload_to_gcs(agent_dill)
     results_url = self._upload_to_gcs(results_dill)
+    oss_fuzz_data_url = self._upload_oss_fuzz_data()
 
     # Step 3: Request Cloud Build.
     new_result_filename = f'{uuid.uuid4().hex}.pkl'
     build_id = self._request_cloud_build(ofg_url, agent_url, results_url,
+                                         oss_fuzz_data_url,
                                          new_result_filename)
 
     # Step 4: Download new result dill.
