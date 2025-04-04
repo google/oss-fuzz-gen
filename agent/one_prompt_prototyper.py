@@ -82,10 +82,13 @@ class OnePromptPrototyper(BaseAgent):
     else:
       project_examples = []
 
+    logger.info('Deciding context', self.name, trial=last_result.trial)
     if self.args.context:
+      logger.info('Getting context info', self.name, trial=last_result.trial)
       retriever = ContextRetriever(benchmark)
       context_info = retriever.get_context_info()
     else:
+      logger.info('No context retrieval.', self.name, trial=last_result.trial)
       context_info = {}
 
     builder = self._prompt_builder(results)
