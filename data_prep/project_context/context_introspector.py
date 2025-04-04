@@ -190,7 +190,7 @@ class ContextRetriever:
         'header': header,
     }
 
-    logging.debug('Context: %s', context_info)
+    logging.info('Context: %s', context_info)
 
     return context_info
 
