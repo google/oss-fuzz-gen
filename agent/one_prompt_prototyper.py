@@ -69,6 +69,13 @@ class OnePromptPrototyper(BaseAgent):
     return prompt_builder.DefaultTemplateBuilder(self.llm, benchmark,
                                                  self.args.template_directory)
 
+  def prepare_context(self, result_history):
+    last_result = result_history[-1]
+    benchmark = last_result.benchmark
+    retriever = ContextRetriever(benchmark)
+    self.context_info = retriever.get_context_info()
+
+
   def _initial_prompt(self, results: list[Result]) -> Prompt:
     """Constructs initial prompt of the agent."""
     last_result = results[-1]
@@ -86,17 +93,18 @@ class OnePromptPrototyper(BaseAgent):
     if self.args.context:
       logger.info('Getting context info', self.name, trial=last_result.trial)
       retriever = ContextRetriever(benchmark)
-      context_info = retriever.get_context_info()
+      if not self.context_info:
+        self.context_info = retriever.get_context_info()
     else:
       logger.info('No context retrieval.', self.name, trial=last_result.trial)
-      context_info = {}
+      self.context_info = {}
 
     builder = self._prompt_builder(results)
     prompt = builder.build(prompt_builder.EXAMPLES.get(benchmark.language, []),
                            project_example_content=project_examples,
-                           project_context_content=context_info)
+                           project_context_content=self.context_info)
     prompt.save(self.args.work_dirs.prompt)
-
+    self.context_info = {}
     return prompt
 
   def execute(self, result_history: list[Result]) -> BuildResult:

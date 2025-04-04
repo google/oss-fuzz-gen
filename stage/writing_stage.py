@@ -34,6 +34,15 @@ class WritingStage(BaseStage):
   def _write_new_fuzz_target(self, result_history: list[Result]) -> Result:
     """Writes a new fuzz target."""
     agent = self.get_agent()
+
+    self.logger.info('checking if we should get context')
+    if type(agent) == OnePromptPrototyper:
+      self.logger.info('getting context')
+      agent.prepare_context(result_history)
+    else:
+      self.logger.info('checking if we should get context')
+
+
     if self.args.cloud_experiment_name:
       return self._execute_agent_cloud(agent, result_history)
     return agent.execute(result_history)

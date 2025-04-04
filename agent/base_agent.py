@@ -45,6 +45,8 @@ class BaseAgent(ABC):
     self.chat_history: str = ''  # Communication history between LLM and tool.
     self.max_round = self.args.max_round
 
+    self.context_info = {}
+
   def __repr__(self) -> str:
     return self.__class__.__name__
 
