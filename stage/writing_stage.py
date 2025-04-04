@@ -21,6 +21,8 @@ from typing import cast
 from results import BuildResult, Result
 from stage.base_stage import BaseStage
 
+from agent.one_prompt_enhancer import OnePromptEnhancer
+from agent.one_prompt_prototyper import OnePromptPrototyper
 
 class WritingStage(BaseStage):
   """Handles the creation and refinement of fuzz targets and build scripts.
@@ -32,7 +34,8 @@ class WritingStage(BaseStage):
   def _write_new_fuzz_target(self, result_history: list[Result]) -> Result:
     """Writes a new fuzz target."""
     agent = self.get_agent()
-    if self.args.cloud_experiment_name:
+
+    if self.args.cloud_experiment_name and type(agent) != OnePromptPrototyper:
       return self._execute_agent_cloud(agent, result_history)
     return agent.execute(result_history)
 
