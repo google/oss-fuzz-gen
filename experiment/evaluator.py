@@ -446,52 +446,54 @@ class Evaluator:
         run_result = None
 
       # 2. Calculate coverage percentage and coverage diff
-      coverage_summary = None
-      total_lines = 0
       coverage_percent = 0.0
       coverage_diff = 0.0
       newly_covered_lines = 0
+      union_total_lines = 0
+      current_coverage_copy = None
+
+      if run_result and run_result.coverage:
+          current_coverage_copy = run_result.coverage.copy()
+
       if run_result:
-        # Gets line coverage (diff) details.
-        coverage_summary = self._load_existing_coverage_summary()
+          existing_textcov = self.load_existing_textcov()
 
-        if self.benchmark.language in ['python', 'jvm'] and run_result.coverage:
-          # The Jacoco.xml coverage report used to generate summary.json on
-          # OSS-Fuzz for JVM projects does not trace the source file location.
-          # Thus the conversion may miss some classes because they are not
-          # present during coverage report generation. This fix gets the total
-          # line calculation from the jacoco.xml report of the current run
-          # directly and compares it with the total_lines retrieved from
-          # summary.json. Then the larger total_lines is used which is assumed
-          # to be more accurate. This is the same case for python project which
-          # the total line is determined from the all_cov.json file.
-          total_lines = run_result.coverage.total_lines
-        elif coverage_summary:
-          total_lines = compute_total_lines_without_fuzz_targets(
-              coverage_summary, generated_target_name)
-        else:
-          total_lines = 0
+          if current_coverage_copy:
+              current_coverage_copy.merge(existing_textcov)
+              union_total_lines = current_coverage_copy.total_lines
+          else:
+              union_total_lines = existing_textcov.total_lines
 
-        if run_result.total_pcs:
-          coverage_percent = run_result.cov_pcs / run_result.total_pcs
-        else:
-          dual_logger.log(
-              f'Warning: total_pcs == 0 in {generated_oss_fuzz_project}.')
-          coverage_percent = 0.0
+          if run_result.coverage:
+              run_result.coverage.subtract_covered_lines(existing_textcov)
+              newly_covered_lines = run_result.coverage.covered_lines
+          else:
+              newly_covered_lines = 0
 
-        existing_textcov = self.load_existing_textcov()
-        if run_result.coverage:
-          run_result.coverage.subtract_covered_lines(existing_textcov)
-          newly_covered_lines = run_result.coverage.covered_lines
+          if union_total_lines > 0:
+              coverage_diff = newly_covered_lines / union_total_lines
+          else:
+              if newly_covered_lines > 0:
+                   dual_logger.log(
+                       f'Warning: union_total_lines is 0 but newly_covered_lines is {newly_covered_lines}. Cannot calculate coverage diff accurately.'
+                   )
+              coverage_diff = 0.0
 
-        if self.baseline_total_lines > 0 and run_result.coverage:
-          coverage_diff = newly_covered_lines / self.baseline_total_lines
-        else:
-          if self.baseline_total_lines == 0:
+          total_lines_for_percent = 0
+          if self.benchmark.language in ['python', 'jvm'] and run_result.coverage:
+             if current_coverage_copy:
+                 total_lines_for_percent = current_coverage_copy.total_lines
+          elif self._load_existing_coverage_summary():
+              coverage_summary = self._load_existing_coverage_summary()
+              total_lines_for_percent = compute_total_lines_without_fuzz_targets(
+                  coverage_summary, generated_target_name)
+
+          if run_result.total_pcs:
+              coverage_percent = run_result.cov_pcs / run_result.total_pcs
+          else:
               dual_logger.log(
-                  f'Warning: baseline_total_lines is 0 for {self.benchmark.project}. Cannot calculate coverage diff.'
-              )
-          coverage_diff = 0.0
+                  f'Warning: Could not determine total lines for percentage calculation in {generated_oss_fuzz_project}.')
+              coverage_percent = 0.0
 
       if self.benchmark.language == 'jvm':
         # For JVM, the generation is consider success if either is true
@@ -608,10 +610,10 @@ class Evaluator:
 
     dual_logger.log(
         f'Result for {generated_oss_fuzz_project}: '
-        f'crashes={run_result.crashes}, coverage={coverage_percent} '
+        f'crashes={run_result.crashes}, coverage={coverage_percent:.4f} '
         f'({run_result.cov_pcs}/{run_result.total_pcs}), '
-        f'newly covered lines={newly_covered_lines}, total lines={total_lines}, baseline total lines={self.baseline_total_lines}, '
-        f'coverage diff={coverage_diff} '
+        f'newly covered lines={newly_covered_lines}, union total lines={union_total_lines}, baseline total lines={self.baseline_total_lines}, '
+        f'coverage diff={coverage_diff:.4f}'
     )
     return dual_logger.return_result(
         Result(False,
@@ -620,7 +622,7 @@ class Evaluator:
                coverage_percent,
                coverage_diff,
                newly_covered_lines,
-               total_lines,
+               union_total_lines,
                self.baseline_total_lines,
                run_result.coverage_report_path,
                run_result.reproducer_path,
