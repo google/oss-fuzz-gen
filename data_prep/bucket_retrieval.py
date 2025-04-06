@@ -14,7 +14,7 @@ OSS_FUZZ_EXP_BUCKET = 'oss-fuzz-llm-public'
 CACHE_DIR = os.path.join(os.path.dirname(__file__), "cached-info")
 
 #TO DO: Implement functions to retrieve signatures, paths, and targets separately
-def fetch_project_info(project_name: str) -> dict:
+def retrieve_from_bucket(project_name: str) -> dict:
     """Connects and Fetches the Project Info from the Cloud Bucket."""
     storage_client = storage.Client.create_anonymous_client()
     bucket = storage_client.bucket(OSS_FUZZ_EXP_BUCKET)
@@ -61,7 +61,7 @@ def retrieve_project_info(project_name: str) -> dict:
             return yaml.safe_load(cache_file)
 
     logger.info(f"Fetching Project Info for project {project_name} from Bucket.")
-    project_data = fetch_project_info(project_name)
+    project_data = retrieve_from_bucket(project_name)
     if project_data:
         cache_project_info(project_name, project_data)
     return project_data
