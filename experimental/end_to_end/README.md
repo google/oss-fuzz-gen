@@ -13,9 +13,9 @@ cd oss-fuzz-gen
 python3.11 -m virtualenv .venv
 . .venv/bin/activate
 
-git clone https://github.com/google/oss-fuzz
+echo "https://github.com/kgabis/parson" > input.txt
 
-python3 -m experimental.end_to_end.cli --oss-fuzz oss-fuzz/ --input=../inp.txt --model=${MODEL} -o gen5
+python3 -m experimental.end_to_end.cli --input=input.txt --model=${MODEL}
 ```
 
 

@@ -85,7 +85,8 @@ def run_autogen(github_url,
                 model,
                 openai_api_key=None,
                 build_heuristics='all',
-                max_successful_builds: int = -1):
+                max_successful_builds: int = -1,
+                max_timeout: int = 0):
   """Launch auto-gen analysis within OSS-Fuzz container."""
 
   initiator_cmd = f'python3 /src/manager.py {github_url} -o {outdir}'
@@ -121,6 +122,9 @@ def run_autogen(github_url,
       '-e',
       f'BUILD_HEURISTICS={build_heuristics}',
   ] + extra_environment
+
+  if max_timeout:
+    cmd = ['timeout', str(max_timeout)] + cmd
 
   cmd += [
       '-v',
@@ -167,7 +171,8 @@ def run_on_targets(target,
                    llm_model,
                    semaphore=None,
                    build_heuristics='all',
-                   output=''):
+                   output='',
+                   max_timeout: int = 0):
   """Thread entry point for single project auto-gen."""
 
   if semaphore is not None:
@@ -184,7 +189,8 @@ def run_on_targets(target,
               worker_project_name,
               llm_model,
               openai_api_key=openai_api_key,
-              build_heuristics=build_heuristics)
+              build_heuristics=build_heuristics,
+              max_timeout=max_timeout)
 
   # Cleanup the OSS-Fuzz docker image
   clean_up_cmd = [
@@ -264,15 +270,19 @@ def copy_result_to_out(project_generated, oss_fuzz_base, output) -> None:
     shutil.copytree(build_dir, dst_dir)
 
 
-def run_parallels(oss_fuzz_base, target_repositories, llm_model,
-                  build_heuristics, output):
+def run_parallels(oss_fuzz_base,
+                  target_repositories,
+                  llm_model,
+                  build_heuristics,
+                  output,
+                  parallel_jobs=6,
+                  max_timeout=0):
   """Run auto-gen on a list of projects in parallel.
 
   Parallelisation is done by way of threads. Practically
   all of the computation will happen inside an OSS-Fuzz
   Docker container and not within this Python script as such."""
-  semaphore_count = 6
-  semaphore = threading.Semaphore(semaphore_count)
+  semaphore = threading.Semaphore(parallel_jobs)
   jobs = []
   projects_generated = []
   for idx, target in enumerate(target_repositories):
@@ -283,7 +293,7 @@ def run_parallels(oss_fuzz_base, target_repositories, llm_model,
     proc = threading.Thread(target=run_on_targets,
                             args=(target, oss_fuzz_base, worker_project_name,
                                   idx, llm_model, semaphore, build_heuristics,
-                                  output))
+                                  output, max_timeout))
     jobs.append(proc)
     proc.start()
 
