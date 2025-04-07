@@ -203,7 +203,7 @@ class BaseAgent(ABC):
     if not os.path.isdir('/workspace/data-dir'):
       logger.info('This does not require a local FI.', trial=0)
       return
-    
+    logger.info('We should use local FI.', trial=0)
 
     # Clone Fuzz Introspector
     sp.check_call('git clone https://github.com/ossf/fuzz-introspector /workspace/fuzz-introspector',
@@ -228,24 +228,22 @@ class BaseAgent(ABC):
     sp.check_call(f'{python_path} main.py >> /dev/null &', shell=True, environ=fi_environ, cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app')
   
 
-  logger.info('Waiting for the webapp to start', trial=0)
+    logger.info('Waiting for the webapp to start', trial=0)
 
-  sec_to_wait = 10
-  RNG = 10
-  for idx in range(RNG):
-    time.sleep(sec_to_wait)
+    sec_to_wait = 10
+    RNG = 10
+    for idx in range(RNG):
+      time.sleep(sec_to_wait)
 
-    resp = requests.get('http://127.0.0.1:8080', timeout=10)
-    if 'Fuzzing' in resp.text:
-      break
-  if idx == RNG-1:
-    logger.info('Failed to start webapp', trial=10)
-  else:
-    logger.info('FI webapp started', trial=0)
-  
+      resp = requests.get('http://127.0.0.1:8080', timeout=10)
+      if 'Fuzzing' in resp.text:
+        break
+    if idx == RNG-1:
+      logger.info('Failed to start webapp', trial=10)
+    else:
+      logger.info('FI webapp started', trial=0)
 
-  logger.info('We should use local FI.', trial=0)
-  introspector.set_introspector_endpoints('http://127.0.0.1:8080/api')
+    introspector.set_introspector_endpoints('http://127.0.0.1:8080/api')
 
   @classmethod
   def cloud_main(cls) -> None:
