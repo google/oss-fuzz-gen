@@ -205,7 +205,7 @@ class CloudBuilder:
                 'allowFailure': True,
             },
             {
-                'name': 'gcr.io/cloud-builders/docker',
+                'name': 'gcr.io/cloud-builders/gsutil',
                 'entrypoint': 'bash',
                 'args': [
                     '-c',
