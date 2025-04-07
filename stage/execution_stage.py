@@ -51,19 +51,19 @@ class ExecutionStage(BaseStage):
 
     evaluator = Evaluator(builder_runner, benchmark, last_result.work_dirs)
     generated_target_name = os.path.basename(benchmark.target_path)
-    generated_oss_fuzz_project = f'{benchmark.id}-{last_result.trial}'
+    generated_oss_fuzz_project = f'{benchmark.id}-{self.trial}'
     generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
         generated_oss_fuzz_project)
 
     fuzz_target_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                    f'{last_result.trial:02d}.fuzz_target')
+                                    f'{self.trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
-                                     f'{last_result.trial:02d}.build_script')
-    evaluator.create_ossfuzz_project(generated_oss_fuzz_project,
+                                     f'{self.trial:02d}.build_script')
+    evaluator.create_ossfuzz_project(benchmark, generated_oss_fuzz_project,
                                      fuzz_target_path, build_script_path)
 
     status_path = os.path.join(last_result.work_dirs.status,
-                               f'{last_result.trial:02}')
+                               f'{self.trial:02d}')
     os.makedirs(status_path, exist_ok=True)
 
     # Try building and running the new target.
@@ -83,13 +83,13 @@ class ExecutionStage(BaseStage):
           0,
           benchmark.language,
           cloud_build_tags=[
-              str(last_result.trial),
+              str(self.trial),
               'Execution',
               'ofg',
               # TODO(dongge): Tag function name, compatible with tag format.
               last_result.benchmark.project,
           ],
-          trial=last_result.trial)
+          trial=self.trial)
       if not run_result:
         raise Exception('No RunResult received from build_and_run')
       if run_result.coverage_summary is None or run_result.coverage is None:
@@ -124,7 +124,7 @@ class ExecutionStage(BaseStage):
         coverage_diff = 0.0
       runresult = RunResult(
           benchmark=benchmark,
-          trial=last_result.trial,
+          trial=self.trial,
           work_dirs=last_result.work_dirs,
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,
@@ -137,23 +137,29 @@ class ExecutionStage(BaseStage):
           is_function_referenced=last_result.is_function_referenced,
           crashes=run_result.crashes,
           run_error=run_result.crash_info,
+          crash_func=run_result.semantic_check.crash_func,
           # TODO: This should be the content of log_path.
           run_log=run_result.log_path,
           coverage_summary=run_result.coverage_summary,
           coverage=coverage_percent,
           line_coverage_diff=coverage_diff,
           reproducer_path=run_result.reproducer_path,
+          artifact_path=run_result.artifact_path,
+          sanitizer=run_result.sanitizer,
           textcov_diff=run_result.coverage,
           log_path=run_result.log_path,
           corpus_path=run_result.corpus_path,
           coverage_report_path=run_result.coverage_report_path,
           cov_pcs=run_result.cov_pcs,
-          total_pcs=run_result.total_pcs)
+          total_pcs=run_result.total_pcs,
+          err_type=run_result.semantic_check.type,
+          crash_sypmtom=run_result.semantic_check.crash_symptom,
+          crash_stacks=run_result.semantic_check.crash_stacks)
     except Exception as e:
       self.logger.error('Exception %s occurred on %s', e, last_result)
       runresult = RunResult(
           benchmark=benchmark,
-          trial=last_result.trial,
+          trial=self.trial,
           work_dirs=last_result.work_dirs,
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,

@@ -1,5 +1,5 @@
 <tool>
-**Bash too Guilde**
+**Bash tool Guide**
 Use the bash tool to investigate files in the fuzz target's build environment. This will help you understand the project source code, the function under test, its dependencies, and any compilation requirements.
 
 <interaction protocols>
