@@ -18,8 +18,11 @@ import re
 import subprocess as sp
 import time
 import os
+import shutil
 from abc import ABC, abstractmethod
 from typing import Any, Optional
+
+import requests
 
 import logger
 import utils
@@ -27,7 +30,7 @@ from llm_toolkit.models import LLM
 from llm_toolkit.prompts import Prompt
 from results import Result
 from tool.base_tool import BaseTool
-
+from data_prep import introspector
 
 class BaseAgent(ABC):
   """The abstract base class for LLM agents in stages."""
@@ -200,7 +203,49 @@ class BaseAgent(ABC):
     if not os.path.isdir('/workspace/data-dir'):
       logger.info('This does not require a local FI.', trial=0)
       return
-    logger.info('We should use local FI.', trial=0)
+    
+
+    # Clone Fuzz Introspector
+    sp.check_call('git clone https://github.com/ossf/fuzz-introspector /workspace/fuzz-introspector',
+                        shell=True)
+    
+
+    # Create a virtual environment
+    sp.check_call('python3 -m virtualenv .venv', cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection', shell=True)
+
+    # Install reqs
+    sp.check_call('.venv/bin/python3 -m pip install -r requirements.txt', cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection', shell=True)
+
+    # Copy over the DB
+    shutil.rmtree('/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app/static/assets/db/')
+    shutil.copytree('/workspace/data-dir/fuzz_introspector_db', '/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app/static/assets/db/')
+
+    # Launch webapp
+    python_path = '/workspace/fuzz-introspector/tools/web-fuzzing-introspection/.venv/bin/python3'
+    fi_environ=os.environ
+    fi_environ['FUZZ_INTROSPECTOR_SHUTDOWN'] = '1'
+    fi_environ['FUZZ_INTROSPECTOR_LOCAL_OSS_FUZZ'] = '/workspace/data-dir/oss-fuzz2'
+    sp.check_call(f'{python_path} main.py >> /dev/null &', shell=True, environ=fi_environ, cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app')
+  
+
+  logger.info('Waiting for the webapp to start', trial=0)
+
+  sec_to_wait = 10
+  RNG = 10
+  for idx in range(RNG):
+    time.sleep(sec_to_wait)
+
+    resp = requests.get('http://127.0.0.1:8080', timeout=10)
+    if 'Fuzzing' in resp.text:
+      break
+  if idx == RNG-1:
+    logger.info('Failed to start webapp', trial=10)
+  else:
+    logger.info('FI webapp started', trial=0)
+  
+
+  logger.info('We should use local FI.', trial=0)
+  introspector.set_introspector_endpoints('http://127.0.0.1:8080/api')
 
   @classmethod
   def cloud_main(cls) -> None:
