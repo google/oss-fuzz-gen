@@ -211,21 +211,21 @@ class BaseAgent(ABC):
     
 
     # Create a virtual environment
-    sp.check_call('python3 -m virtualenv .venv', cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection', shell=True)
+    #sp.check_call('python3 -m virtualenv .venv', cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection', shell=True)
 
     # Install reqs
-    sp.check_call('.venv/bin/python3 -m pip install -r requirements.txt', cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection', shell=True)
+    sp.check_call('python3.11 -m pip install -r requirements.txt', cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection', shell=True)
 
     # Copy over the DB
     shutil.rmtree('/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app/static/assets/db/')
     shutil.copytree('/workspace/data-dir/fuzz_introspector_db', '/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app/static/assets/db/')
 
     # Launch webapp
-    python_path = '/workspace/fuzz-introspector/tools/web-fuzzing-introspection/.venv/bin/python3'
+    #python_path = '/workspace/fuzz-introspector/tools/web-fuzzing-introspection/.venv/bin/python3'
     fi_environ=os.environ
     fi_environ['FUZZ_INTROSPECTOR_SHUTDOWN'] = '1'
     fi_environ['FUZZ_INTROSPECTOR_LOCAL_OSS_FUZZ'] = '/workspace/data-dir/oss-fuzz2'
-    sp.check_call(f'{python_path} main.py >> /dev/null &', shell=True, environ=fi_environ, cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app')
+    sp.check_call('python3.11 main.py >> /dev/null &', shell=True, environ=fi_environ, cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app')
   
 
     logger.info('Waiting for the webapp to start', trial=0)
