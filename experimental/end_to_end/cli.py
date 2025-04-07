@@ -22,8 +22,8 @@ import shutil
 import subprocess
 import sys
 import tempfile
-import time
 import threading
+import time
 
 import requests
 import yaml
