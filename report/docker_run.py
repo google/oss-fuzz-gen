@@ -255,7 +255,7 @@ def run_new(cmd=None):
   cmd.append(
       'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach')
   cmd.append('-gp')
-  cmd.append('tiny-json-empty-build-0,tiny-json-empty-build-1')
+  cmd.append('iniparser-empty-build-1,parson-empty-build-4,nanosvg-empty-build-3,argtable3-empty-build-5,libjson-empty-build-2,minmea-empty-build-3,minmea-empty-build-4,tiny-json-empty-build-0,nanosvg-empty-build-2,iniparser-empty-build-2,minmea-empty-build-1,argtable3-empty-build-3,nanosvg-empty-build-1,iniparser-empty-build-4,pdjson-empty-build-0,mpc-empty-build-0,nanosvg-empty-build-4,parson-empty-build-2,minmea-empty-build-0,simpleson-empty-build-3,minmea-empty-build-2,argtable3-empty-build-0,simpleson-empty-build-1,tinyexpr-empty-build-1,picohttpparser-empty-build-1,pdjson-empty-build-1,argtable3-empty-build-1,libjson-empty-build-0,argtable3-empty-build-7,tinyexpr-empty-build-0,simpleson-empty-build-0,http-parser-empty-build-0,argtable3-empty-build-2,parson-empty-build-3,iniparser-empty-build-5,mpc-empty-build-1,libjson-empty-build-1,iniparser-empty-build-0,iniparser-empty-build-3,picohttpparser-empty-build-0,parson-empty-build-1,tiny-json-empty-build-1,argtable3-empty-build-6,lorawan-parser-empty-build-0,nanosvg-empty-build-0,mpc-empty-build-2,lorawan-parser-empty-build-1,simpleson-empty-build-2,argtable3-empty-build-4,parson-empty-build-0,sqlite-createtable-parser-empty-build-0')
   cmd.append('-gm')
   cmd.append(str(10))
   #cmd.append('-of')
