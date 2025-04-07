@@ -225,7 +225,7 @@ class BaseAgent(ABC):
     fi_environ=os.environ
     fi_environ['FUZZ_INTROSPECTOR_SHUTDOWN'] = '1'
     fi_environ['FUZZ_INTROSPECTOR_LOCAL_OSS_FUZZ'] = '/workspace/data-dir/oss-fuzz2'
-    sp.check_call('python3.11 main.py >> /dev/null &', shell=True, environ=fi_environ, cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app')
+    sp.check_call('python3.11 main.py >> /dev/null &', shell=True, env=fi_environ, cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app')
   
 
     logger.info('Waiting for the webapp to start', trial=0)
