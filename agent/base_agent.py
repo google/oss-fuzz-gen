@@ -214,7 +214,7 @@ class BaseAgent(ABC):
     #sp.check_call('python3 -m virtualenv .venv', cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection', shell=True)
 
     # Install reqs
-    sp.check_call('python3.11 -m pip install -r requirements.txt', cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection', shell=True)
+    sp.check_call('python3.11 -m pip install --ignore-installed -r requirements.txt', cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection', shell=True)
 
     # Copy over the DB
     shutil.rmtree('/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app/static/assets/db/')
