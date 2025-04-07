@@ -100,13 +100,13 @@ def _run_introspector_collection(runner_script, project, wd, semaphore):
   semaphore.release()
 
 
-def extract_introspector_reports_for_benchmarks(projects_to_run, workdir):
+def extract_introspector_reports_for_benchmarks(projects_to_run, workdir, args):
   """Runs introspector through each report to collect program analysis data."""
   oss_fuzz_dir = os.path.join(workdir, 'oss-fuzz')
   runner_script = os.path.join(workdir, 'fuzz-introspector',
                                'oss_fuzz_integration', 'runner.py')
 
-  semaphore = threading.Semaphore(6)
+  semaphore = threading.Semaphore(args.build_jobs)
   jobs = []
 
   for project in projects_to_run:
@@ -320,7 +320,7 @@ def run_harness_generation(out_gen, workdir, args):
   """Runs harness generation based on the projects in `out_gen`"""
 
   projects_to_run = copy_generated_projects_to_harness_gen(out_gen, workdir)
-  extract_introspector_reports_for_benchmarks(projects_to_run, workdir)
+  extract_introspector_reports_for_benchmarks(projects_to_run, workdir, args)
   shutdown_fi_webapp()
   create_fi_db(workdir)
   if args.until_fi_db:
