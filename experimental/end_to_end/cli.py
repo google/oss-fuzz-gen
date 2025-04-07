@@ -23,6 +23,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import threading
 
 import requests
 import yaml
@@ -77,19 +78,46 @@ def setup_workdirs(defined_dir):
   return workdir
 
 
+def _run_introspector_collection(runner_script, project, wd, semaphore):
+  """Run introspector on the given project."""
+  semaphore.acquire()
+  cmd = ['python3']
+  cmd.append(runner_script)  # introspector helper script
+  cmd.append('introspector')  # force an introspector run
+  cmd.append(project)  # target project
+  cmd.append('1')  # run the harness for 1 second
+  cmd.append('--disable-webserver')  # do not launch FI webapp
+
+  try:
+    logger.info('Collecting introspector information on %s', project)
+    subprocess.check_call(' '.join(cmd),
+                          shell=True,
+                          cwd=wd,
+                          stdout=subprocess.DEVNULL,
+                          stderr=subprocess.STDOUT)
+  except subprocess.CalledProcessError:
+    pass
+  semaphore.release()
+
+
 def extract_introspector_reports_for_benchmarks(projects_to_run, workdir):
   """Runs introspector through each report to collect program analysis data."""
   oss_fuzz_dir = os.path.join(workdir, 'oss-fuzz')
   runner_script = os.path.join(workdir, 'fuzz-introspector',
                                'oss_fuzz_integration', 'runner.py')
+
+  semaphore = threading.Semaphore(6)
+  jobs = []
+
   for project in projects_to_run:
-    cmd = ['python3']
-    cmd.append(runner_script)  # introspector helper script
-    cmd.append('introspector')  # force an introspector run
-    cmd.append(project)  # target project
-    cmd.append('1')  # run the harness for 1 second
-    cmd.append('--disable-webserver')  # do not launch FI webapp
-    subprocess.check_call(' '.join(cmd), shell=True, cwd=oss_fuzz_dir)
+    proc = threading.Thread(target=_run_introspector_collection,
+                            args=(runner_script, project, oss_fuzz_dir,
+                                  semaphore))
+    jobs.append(proc)
+    proc.start()
+
+  for proc in jobs:
+    proc.join()
 
 
 def shutdown_fi_webapp():
