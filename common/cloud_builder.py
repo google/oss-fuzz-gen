@@ -149,7 +149,7 @@ class CloudBuilder:
       oss_fuzz_data_dir = '/workspace/oss-fuzz-data'
 
     target_data_dir = ''
-    if data_dir:
+    if data_dir_url:
       target_data_dir = '/workspace/data-dir'
 
     cloud_build_config = {
@@ -376,12 +376,12 @@ class CloudBuilder:
     agent_url = self._upload_to_gcs(agent_dill)
     results_url = self._upload_to_gcs(results_dill)
     oss_fuzz_data_url = self._upload_oss_fuzz_data()
-    data_dir = self._upload_fi_oss_fuzz_data()
+    data_dir_url = self._upload_fi_oss_fuzz_data()
 
     # Step 3: Request Cloud Build.
     new_result_filename = f'{uuid.uuid4().hex}.pkl'
     build_id = self._request_cloud_build(ofg_url, agent_url, results_url,
-                                         oss_fuzz_data_url, data_dir,
+                                         oss_fuzz_data_url, data_dir_url,
                                          new_result_filename)
 
     # Step 4: Download new result dill.
